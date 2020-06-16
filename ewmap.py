@@ -1835,7 +1835,17 @@ async def print_map_data(cmd):
 			
 		if poi.is_transport:
 			transports_count += 1
+			
+	client = ewutils.get_client()
+	server = client.get_server(cmd.message.server.id)
+			
+	rolenames = []
+	for role in server.roles:
+		rolenames.append(role.name)
 		
+	rolenames.sort()
+	for name in rolenames:
+		print(name)
 	
 	print("\n\nPOI LIST STATISTICS:\n{} districts\n{} subzones\n{} apartments\n{} outskirts\n{} streets\n{} transports\n\n".format(districts_count, subzones_count, apartments_count, outskirts_count, streets_count, transports_count))
 	

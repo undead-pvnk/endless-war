@@ -220,6 +220,8 @@ poi_id_westglocksbury = "westglocksbury"
 poi_id_jaywalkerplain = "jaywalkerplain"
 poi_id_crookline = "crookline"
 poi_id_dreadford = "dreadford"
+poi_id_maimridge = "maimridge"
+
 poi_id_toxington_pier = "toxingtonpier"
 poi_id_jaywalkerplain_pier = "jaywalkerplainpier"
 poi_id_crookline_pier = "crooklinepier"
@@ -261,160 +263,165 @@ poi_id_apt_westglocksbury = "aptwestglocksbury"
 poi_id_apt_jaywalkerplain = "aptjaywalkerplain"
 poi_id_apt_crookline = "aptcrookline"
 poi_id_apt_dreadford = "aptdreadford"
+poi_id_apt_maimridge = "aptdreadford"
 
-# The streets -- There are 122 of them, to be exact
-poi_id_copkilltown_street_a = ""
-poi_id_rowdyroughhouse_street_a = ""
-poi_id_juviesrow_street_a = ""
+# The streets -- There are 126 of them, to be exact
+poi_id_copkilltown_street_a = "copkilltownstreeta"
+poi_id_rowdyroughhouse_street_a = "rowdyroughhousestreeta"
+poi_id_juviesrow_street_a = "juviesrowstreeta"
 
 poi_id_downtown_street_a = "downtownstreeta"
-poi_id_downtown_street_b = ""
-poi_id_downtown_street_c = ""
-poi_id_downtown_street_d = ""
-poi_id_downtown_street_e = ""
-poi_id_downtown_street_f = ""
+poi_id_downtown_street_b = "downtownstreetb"
+poi_id_downtown_street_c = "downtownstreetc"
+poi_id_downtown_street_d = "downtownstreetd"
+poi_id_downtown_street_e = "downtownstreete"
+poi_id_downtown_street_f = "downtownstreetf"
 
-poi_id_krakbay_street_a = ""
-poi_id_krakbay_street_b = ""
-poi_id_krakbay_street_c = ""
-poi_id_krakbay_street_d = ""
-poi_id_krakbay_street_e = ""
-poi_id_krakbay_street_f = ""
+poi_id_krakbay_street_a = "krakbaystreeta"
+poi_id_krakbay_street_b = "krakbaystreetb"
+poi_id_krakbay_street_c = "krakbaystreetc"
+poi_id_krakbay_street_d = "krakbaystreetd"
+poi_id_krakbay_street_e = "krakbaystreete"
+poi_id_krakbay_street_f = "krakbaystreetf"
 
-poi_id_poudrinalley_street_a = "" 
-poi_id_poudrinalley_street_b = ""
-poi_id_poudrinalley_street_c = ""
-poi_id_poudrinalley_street_d = ""
-poi_id_poudrinalley_street_e = ""
+poi_id_poudrinalley_street_a = "poudrinalleystreeta" 
+poi_id_poudrinalley_street_b = "poudrinalleystreetb"
+poi_id_poudrinalley_street_c = "poudrinalleystreetc"
+poi_id_poudrinalley_street_d = "poudrinalleystreetd"
+poi_id_poudrinalley_street_e = "poudrinalleystreete"
 
-poi_id_cratersville_street_a = ""
-poi_id_cratersville_street_b = ""
-poi_id_cratersville_street_c = ""
+poi_id_cratersville_street_a = "cratersvillestreeta"
+poi_id_cratersville_street_b = "cratersvillestreetb"
+poi_id_cratersville_street_c = "cratersvillestreetc"
 
-poi_id_wreckington_street_a = ""
-poi_id_wreckington_street_b = ""
+poi_id_wreckington_street_a = "wreckingtonstreeta"
+poi_id_wreckington_street_b = "wreckingtonstreetb"
 
-poi_id_oozegardens_street_a = ""
-poi_id_oozegardens_street_b = ""
-poi_id_oozegardens_street_c = ""
-poi_id_oozegardens_street_d = ""
+poi_id_oozegardens_street_a = "oozegardensstreeta"
+poi_id_oozegardens_street_b = "oozegardensstreetb"
+poi_id_oozegardens_street_c = "oozegardensstreetc"
+poi_id_oozegardens_street_d = "oozegardensstreetd"
 
-poi_id_southsleezeborough_street_a = "" 
-poi_id_southsleezeborough_street_b = ""
-poi_id_southsleezeborough_street_c = ""
-poi_id_southsleezeborough_street_d = ""
+poi_id_southsleezeborough_street_a = "southsleezeboroughstreeta" 
+poi_id_southsleezeborough_street_b = "southsleezeboroughstreetb"
+poi_id_southsleezeborough_street_c = "southsleezeboroughstreetc"
+poi_id_southsleezeborough_street_d = "southsleezeboroughstreetd"
 
-poi_id_northsleezeborough_street_a = ""
-poi_id_northsleezeborough_street_b = ""
-poi_id_northsleezeborough_street_c = ""
-poi_id_northsleezeborough_street_d = ""
-poi_id_northsleezeborough_street_e = ""
+poi_id_northsleezeborough_street_a = "northsleezeboroughstreeta"
+poi_id_northsleezeborough_street_b = "northsleezeboroughstreetb"
+poi_id_northsleezeborough_street_c = "northsleezeboroughstreetc"
+poi_id_northsleezeborough_street_d = "northsleezeboroughstreetd"
+poi_id_northsleezeborough_street_e = "northsleezeboroughstreete"
 
-poi_id_glocksbury_street_a = ""
-poi_id_glocksbury_street_b = ""
-poi_id_glocksbury_street_c = ""
-poi_id_glocksbury_street_d = ""
-poi_id_glocksbury_street_e = ""
+poi_id_glocksbury_street_a = "glocksburystreeta"
+poi_id_glocksbury_street_b = "glocksburystreetb"
+poi_id_glocksbury_street_c = "glocksburystreetc"
+poi_id_glocksbury_street_d = "glocksburystreetd"
+poi_id_glocksbury_street_e = "glocksburystreete"
 
-poi_id_westglocksbury_street_a = "" 
-poi_id_westglocksbury_street_b = ""
-poi_id_westglocksbury_street_c = ""
-poi_id_westglocksbury_street_d = ""
+poi_id_westglocksbury_street_a = "westglocksburystreeta" 
+poi_id_westglocksbury_street_b = "westglocksburystreetb"
+poi_id_westglocksbury_street_c = "westglocksburystreetc"
+poi_id_westglocksbury_street_d = "westglocksburystreetd"
 
-poi_id_jaywalkerplain_street_a = ""
-poi_id_jaywalkerplain_street_b = ""
-poi_id_jaywalkerplain_street_c = ""
-poi_id_jaywalkerplain_street_d = ""
-poi_id_jaywalkerplain_street_e = ""
+poi_id_jaywalkerplain_street_a = "jaywalkerplainstreeta"
+poi_id_jaywalkerplain_street_b = "jaywalkerplainstreetb"
+poi_id_jaywalkerplain_street_c = "jaywalkerplainstreetc"
+poi_id_jaywalkerplain_street_d = "jaywalkerplainstreetd"
+poi_id_jaywalkerplain_street_e = "jaywalkerplainstreete"
 
-poi_id_crookline_street_a = "" 
-poi_id_crookline_street_b = ""
-poi_id_crookline_street_c = ""
-poi_id_crookline_street_d = ""
+poi_id_crookline_street_a = "crooklinestreeta" 
+poi_id_crookline_street_b = "crooklinestreetb"
+poi_id_crookline_street_c = "crooklinestreetc"
+poi_id_crookline_street_d = "crooklinestreetd"
 
-poi_id_dreadford_street_a = ""
-poi_id_dreadford_street_b = ""
+poi_id_dreadford_street_a = "dreadfordstreeta"
+poi_id_dreadford_street_b = "dreadfordstreetb"
 
-poi_id_vandalpark_street_a = ""
-poi_id_vandalpark_street_b = ""
-poi_id_vandalpark_street_c = ""
-poi_id_vandalpark_street_d = ""
+poi_id_vandalpark_street_a = "vandalparkstreeta"
+poi_id_vandalpark_street_b = "vandalparkstreetb"
+poi_id_vandalpark_street_c = "vandalparkstreetc"
+poi_id_vandalpark_street_d = "vandalparkstreetd"
 
-poi_id_poloniumhill_street_a = ""
-poi_id_poloniumhill_street_b = ""
-poi_id_poloniumhill_street_c = ""
-poi_id_poloniumhill_street_d = ""
-poi_id_poloniumhill_street_e = ""
+poi_id_poloniumhill_street_a = "poloniumhillstreeta"
+poi_id_poloniumhill_street_b = "poloniumhillstreetb"
+poi_id_poloniumhill_street_c = "poloniumhillstreetc"
+poi_id_poloniumhill_street_d = "poloniumhillstreetd"
+poi_id_poloniumhill_street_e = "poloniumhillstreete"
 
-poi_id_charcoalpark_street_a = "" 
-poi_id_charcoalpark_street_b = ""
+poi_id_charcoalpark_street_a = "charcoalparkstreeta" 
+poi_id_charcoalpark_street_b = "charcoalparkstreetb"
 
-poi_id_toxington_street_a = ""
-poi_id_toxington_street_b = ""
-poi_id_toxington_street_c = ""
-poi_id_toxington_street_d = ""
-poi_id_toxington_street_e = ""
+poi_id_toxington_street_a = "toxingtonstreeta"
+poi_id_toxington_street_b = "toxingtonstreetb"
+poi_id_toxington_street_c = "toxingtonstreetc"
+poi_id_toxington_street_d = "toxingtonstreetd"
+poi_id_toxington_street_e = "toxingtonstreete"
 
-poi_id_gatlingsdale_street_a = "" 
-poi_id_gatlingsdale_street_b = ""
-poi_id_gatlingsdale_street_c = ""
-poi_id_gatlingsdale_street_d = ""
-poi_id_gatlingsdale_street_e = ""
+poi_id_gatlingsdale_street_a = "gatlingsdalestreeta" 
+poi_id_gatlingsdale_street_b = "gatlingsdalestreetb"
+poi_id_gatlingsdale_street_c = "gatlingsdalestreetc"
+poi_id_gatlingsdale_street_d = "gatlingsdalestreetd"
+poi_id_gatlingsdale_street_e = "gatlingsdalestreete"
 
-poi_id_astatineheights_street_a = ""
-poi_id_astatineheights_street_b = ""
-poi_id_astatineheights_street_c = ""
-poi_id_astatineheights_street_d = ""
-poi_id_astatineheights_street_e = ""
-poi_id_astatineheights_street_f = ""
+poi_id_astatineheights_street_a = "astatineheightsstreeta"
+poi_id_astatineheights_street_b = "astatineheightsstreetb"
+poi_id_astatineheights_street_c = "astatineheightsstreetc"
+poi_id_astatineheights_street_d = "astatineheightsstreetd"
+poi_id_astatineheights_street_e = "astatineheightsstreete"
+poi_id_astatineheights_street_f = "astatineheightsstreetf"
 
-poi_id_smogsburg_street_a = "" 
-poi_id_smogsburg_street_b = ""
-poi_id_smogsburg_street_c = ""
-poi_id_smogsburg_street_d = ""
+poi_id_smogsburg_street_a = "smogsburgstreeta" 
+poi_id_smogsburg_street_b = "smogsburgstreetb"
+poi_id_smogsburg_street_c = "smogsburgstreetc"
+poi_id_smogsburg_street_d = "smogsburgstreetd"
+poi_id_smogsburg_street_e = "smogsburgstreete"
 
-poi_id_arsonbrook_street_a = ""
-poi_id_arsonbrook_street_b = ""
-poi_id_arsonbrook_street_c = ""
-poi_id_arsonbrook_street_d = ""
+poi_id_arsonbrook_street_a = "arsonbrookstreeta"
+poi_id_arsonbrook_street_b = "arsonbrookstreetb"
+poi_id_arsonbrook_street_c = "arsonbrookstreetc"
+poi_id_arsonbrook_street_d = "arsonbrookstreetd"
+poi_id_arsonbrook_street_e = "arsonbrookstreete"
 
-poi_id_maimridge_street_a = ""
-poi_id_maimridge_street_b = ""
-poi_id_maimridge_street_c = ""
+poi_id_maimridge_street_a = "maimridgestreeta"
+poi_id_maimridge_street_b = "maimridgestreetb"
+poi_id_maimridge_street_c = "maimridgestreetc"
 
-poi_id_brawlden_street_a = "" 
-poi_id_brawlden_street_b = ""
-poi_id_brawlden_street_c = ""
-poi_id_brawlden_street_d = ""
+poi_id_brawlden_street_a = "brawldenstreeta" 
+poi_id_brawlden_street_b = "brawldenstreetb"
+poi_id_brawlden_street_c = "brawldenstreetc"
+poi_id_brawlden_street_d = "brawldenstreetd"
 
-poi_id_littlechernobyl_street_a = ""
-poi_id_littlechernobyl_street_b = ""
+poi_id_littlechernobyl_street_a = "littlechernobylstreeta"
+poi_id_littlechernobyl_street_b = "littlechernobylstreetb"
+poi_id_littlechernobyl_street_c = "littlechernobylstreetc"
 
-poi_id_oldnewyonkers_street_a = ""
-poi_id_oldnewyonkers_street_b = ""
-poi_id_oldnewyonkers_street_c = ""
-poi_id_oldnewyonkers_street_d = ""
+poi_id_oldnewyonkers_street_a = "oldnewyonkersstreeta"
+poi_id_oldnewyonkers_street_b = "oldnewyonkersstreetb"
+poi_id_oldnewyonkers_street_c = "oldnewyonkersstreetc"
+poi_id_oldnewyonkers_street_d = "oldnewyonkersstreetd"
+poi_id_oldnewyonkers_street_e = "oldnewyonkersstreete"
 
-poi_id_newnewyonkers_street_a = ""
-poi_id_newnewyonkers_street_b = ""
-poi_id_newnewyonkers_street_c = ""
-poi_id_newnewyonkers_street_d = ""
+poi_id_newnewyonkers_street_a = "newnewyonkersstreeta"
+poi_id_newnewyonkers_street_b = "newnewyonkersstreetb"
+poi_id_newnewyonkers_street_c = "newnewyonkersstreetc"
+poi_id_newnewyonkers_street_d = "newnewyonkersstreetd"
 
-poi_id_assaultflatsbeach_street_a = ""
-poi_id_assaultflatsbeach_street_b = ""
+poi_id_assaultflatsbeach_street_a = "assaultflatsbeachstreeta"
+poi_id_assaultflatsbeach_street_b = "assaultflatsbeachstreetb"
 
-poi_id_vagrantscorner_street_a = "" 
-poi_id_vagrantscorner_street_b = ""
-poi_id_vagrantscorner_street_c = ""
-poi_id_vagrantscorner_street_d = ""
-poi_id_vagrantscorner_street_e = ""
-poi_id_vagrantscorner_street_f = ""
+poi_id_vagrantscorner_street_a = "vagrantscornerstreeta" 
+poi_id_vagrantscorner_street_b = "vagrantscornerstreetb"
+poi_id_vagrantscorner_street_c = "vagrantscornerstreetc"
+poi_id_vagrantscorner_street_d = "vagrantscornerstreetd"
+poi_id_vagrantscorner_street_e = "vagrantscornerstreete"
+poi_id_vagrantscorner_street_f = "vagrantscornerstreetf"
 
-poi_id_greenlightdistrict_street_a = ""
-poi_id_greenlightdistrict_street_b = ""
-poi_id_greenlightdistrict_street_c = ""
+poi_id_greenlightdistrict_street_a = "greenlightdistrictstreeta"
+poi_id_greenlightdistrict_street_b = "greenlightdistrictstreetb"
+poi_id_greenlightdistrict_street_c = "greenlightdistrictstreetc"
 
-poi_id_slimesend_street_a = ""
+poi_id_slimesend_street_a = "slimesendstreeta"
 
 # Tutorial zones
 poi_id_tutorial_classroom = "classroom"
@@ -439,11 +446,12 @@ poi_id_westglocksbury_outskirts = "westglocksburyoutskirts"
 poi_id_poloniumhill_outskirts = "poloniumhilloutskirts"
 poi_id_charcoalpark_outskirts = "charcoalparkoutskirts"
 poi_id_toxington_outskirts = "toxingtonoutskirts"
-poi_id_astatineheights_outskirts = "astatineheightsoutskirts"
+poi_id_maimridgeoutskirts = "maimridgeoutskirts"
 poi_id_arsonbrook_outskirts = "arsonbrookoutskirts"
 poi_id_brawlden_outskirts = "brawldenoutskirts"
 poi_id_newnewyonkers_outskirts = "newnewyonkersoutskirts"
 poi_id_assaultflatsbeach_outskirts = "assaultflatsbeachoutskirts"
+
 
 poi_id_south_outskirts = "southoutskirts"
 poi_id_southwest_outskirts = "southwestoutskirts"
@@ -697,6 +705,7 @@ channel_apt_westglocksbury ="west-glocksbury-apartments"
 channel_apt_jaywalkerplain ="jaywalker-plain-apartments"
 channel_apt_crookline ="crookline-apartments"
 channel_apt_dreadford ="dreadford-apartments"
+channel_apt_maimrdige ="maimridge-apartments"
 
 channel_slimesendcliffs = "slimes-end-cliffs"
 channel_bodega = "bodega"
@@ -8330,7 +8339,7 @@ the_slime_lyrics= [
 ]
 
 furniture_list = [
-EwFurniture(
+	EwFurniture(
 		id_furniture = "interrogationchair",
 		str_name = "interrogation chair",
 		str_desc = "This is the kind of chair shitty cops use to question their victims. Sitting in it gives you war flashbacks to when you were arrested, so you'll probably only whip it out for special occasions.",
@@ -8340,7 +8349,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's an interrogation chair here for some reason.",
 		furniture_place_desc = "You place the chair in the middle of the room, trying not to think about police."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "brokenclock",
 		str_name = "broken clock",
 		str_desc = "You can't believe you own and treasure a broken clock. The bazaar sells these by convincing idiotic juvies they can fix it. They can't.",
@@ -8350,7 +8359,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The broken clock says it's 2:33.",
 		furniture_place_desc = "You hang the clock on the wall."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "bevanssnot",
 		str_name = "Bevan's snot",
 		str_desc = "This stuff is actually pretty useful. It's a way to decorate your house with slime, without actually having to give up your own.",
@@ -8360,7 +8369,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The walls are smeared with slime.",
 		furniture_place_desc = "You gently smear the slime facsimile on the walls."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "chair",
 		str_name = "chair",
 		str_desc = "It's a normal wooden chair. A sign of your entry into the rat race that is the economy.",
@@ -8370,7 +8379,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a chair in the room.",
 		furniture_place_desc = "You set the chair where you think it's appropriate. How exciting."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "desk",
 		str_name = "desk",
 		str_desc = "A normal wooden desk. You can almost hear your soul breaking under your monotonous career.",
@@ -8380,7 +8389,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "You see a desk in the corner.",
 		furniture_place_desc = "You set up the desk in the corner of the room."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "couch",
 		str_name = "couch",
 		str_desc = "This one's a pull-out couch. The upholstery is pretty new, yet somehow looks worn out already.",
@@ -8390,7 +8399,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a comfy couch up against the wall.",
 		furniture_place_desc = "You get some friend or another to help you move the couch in. They pretended like they were happy to do it, but you know they weren't."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "lamp",
 		str_name = "lamp",
 		str_desc = "A normal lamp. Good for reading, if your juvenile delinquent ass could actually read.",
@@ -8400,7 +8409,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The lamp casts a warm light throughout the room.",
 		furniture_place_desc = "You set up the lamp, plug it in, and watch the one-light light show."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "lgbtqdesk",
 		str_name = "LGBTQ+ desk",
 		str_desc = "It's like a regular desk, but the drawers are all different colors of the rainbow.",
@@ -8411,7 +8420,7 @@ EwFurniture(
 		furniture_look_desc = "A gaudy rainbow desk is in the corner of the room.",
 		furniture_place_desc = "You drag the desk into position. You feel gayer already.",
 		furn_set = "lgbt"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "lgbtqchair",
 		str_name = "LGBTQ+ chair",
 		str_desc = "A rainbow striped chair. I'll bet you could give some pretty good man-on-man lap dances with this.",
@@ -8422,7 +8431,7 @@ EwFurniture(
 		furniture_look_desc = "There's a rainbow chair set up.",
 		furniture_place_desc = "You place the chair in the best place you can think of.",
 		furn_set = "lgbt"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "lgbtqcouch",
 		str_name = "LGBTQ+ couch",
 		str_desc = "There's no need for this couch to pull out.",
@@ -8433,7 +8442,7 @@ EwFurniture(
 		furniture_look_desc = "A colorful couch sits against the wall.",
 		furniture_place_desc = "You contact the Village People, and they help you move the couch in. Those guys are pretty helpful.",
 		furn_set = "lgbt"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "lgbtqlamp",
 		str_name = "LGBTQ+ lamp",
 		str_desc = "It's not actually the lamp that's LGBTQ. It's the bulb.",
@@ -8444,7 +8453,7 @@ EwFurniture(
 		furniture_look_desc = "The fancy lamp flashes rainbow everywhere.",
 		furniture_place_desc = "You plug in the lamp and watch the pretty colors for awhile.",
 		furn_set = "lgbt"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "lgbtqbed",
 		str_name = "LGBTQ+ bed",
 		str_desc = "This is where the magic happens.",
@@ -8455,7 +8464,7 @@ EwFurniture(
 		furniture_look_desc = "There's a rainbow bed in the bedroom.",
 		furniture_place_desc = "You set up your bed, dreaming of all the same-sex poon you're gonna slam.",
 		furn_set = "lgbt"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "bed",
 		str_name = "bed",
 		str_desc = "A standard-issue bed, ready-made for crying yourself to sleep.",
@@ -8465,7 +8474,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a bed in the bedroom.",
 		furniture_place_desc = "The IKEA instructions are confusing, so it takes a few attempts to make the bed."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "hauntedbed",
 		str_name = "haunted bed",
 		str_desc = "This bed was owned by a long-gone staydead, way back in Season 1. You can still feel the negaslime residue on it.",
@@ -8476,7 +8485,7 @@ EwFurniture(
 		furniture_look_desc = "You hear ghostly moaning from the bedroom.",
 		furniture_place_desc = "You're about to place the mattress when a dozen spiders crawl out of it. Better be careful with this one.",
 		furn_set = "haunted"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "hauntedcouch",
 		str_name = "haunted couch",
 		str_desc = "Every person who sat on this couch was supposedly cursed to die the day after. That doesn't mean much in NLACakaNM, though.",
@@ -8487,7 +8496,7 @@ EwFurniture(
 		furniture_look_desc = "The rustic couch against the wall looks old and haunted.",
 		furniture_place_desc = "You were going to ask some of your buds to help move this in, but you walked into the apartment and it was already there...",
 		furn_set = "haunted"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "hauntedlamp",
 		str_name = "haunted lamp",
 		str_desc = "When you turn on this lamp it somehow makes the room darker.",
@@ -8498,7 +8507,7 @@ EwFurniture(
 		furniture_look_desc = "The lighting in here is ominous, thanks to your lamp.",
 		furniture_place_desc = "You set up the old lamp. The light flickers.",
 		furn_set = "haunted"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "hauntedchair",
 		str_name = "haunted chair",
 		str_desc = "This chair doesn't seem to go well with other furniture, unless it's below a noose.",
@@ -8509,7 +8518,7 @@ EwFurniture(
 		furniture_look_desc = "A creepy chair stands in the middle of the room.",
 		furniture_place_desc = "You put the chair out of sight, where you won't be tempted to !suicide.",
 		furn_set = "haunted"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "haunteddesk",
 		str_name = "haunted desk",
 		str_desc = "It just looks like an old desk. What did the store clerk mean by 'haunted'?",
@@ -8520,7 +8529,7 @@ EwFurniture(
 		furniture_look_desc = "An old desk(haunted, apparently) is in the corner.",
 		furniture_place_desc = "You move the desk into the corner. Scary.",
 		furn_set = "haunted"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "armageddonspritzer",
 		str_name = "Armageddon Spritzer",
 		str_desc = "You look at the automatic scent spritzer, filled to the top with a sinister red liquid. You wonder to yourself why you bought this. All of a sudden, it sprays a puff directly into your face, and you begin to hallucinate.\n\nThe light begins to fade from your eyes as you're bombarded with cacophanous mental static. The buzzing and echoey clanging drives you to scream, but your body no longer exists. You try to clutch your face in desperation and all you feel is liquid. You feel burning. Burning everywhere. The sky flashes a dissonant dark orange, as though the sun was setting on reality itself, and although nobody is speaking, you feel it all calling to you. But you don't want this. Whatever memories haven't escaped you want this all to stop. You don't know your own name and you wish to remember it. And it all hurts. It hurts so much. Please stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop.\n\nWhen you wake up, your face is bleeding and 2 hours have passed. Well, shit. Guess you better prepare for when this goes off again in an hour.",
@@ -8530,7 +8539,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The spritzer in here makes you feel the sicknasty feelings.",
 		furniture_place_desc = "You set up the spritzer high up on the wall. Gulp."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "beanbagchair",
 		str_name = "beanbag chair",
 		str_desc = "A cushy chair. You were told Digibro has one just like it.",
@@ -8540,7 +8549,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A beanbag chair is plopped just wherever.",
 		furniture_place_desc = "You plop the beanbag chair just wherever."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "slimebagchair",
 		str_name = "slimebag chair",
 		str_desc = "A squishy slime-based chair. It's nice and viscous, for your tired bottom.",
@@ -8550,7 +8559,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A bright green slimebag chair is plopped just wherever.",
 		furniture_place_desc = "You plop the slimebag chair just wherever."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "custombodypillow",
 		str_name = "{custom} body pillow",
 		str_desc = "A dakimakura with pillowcase. It's got {custom} on it.",
@@ -8560,7 +8569,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a {custom} body pillow in the bedroom.",
 		furniture_place_desc = "You gently place the pillow in your room, being careful not to damage your waifu."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "futon",
 		str_name = "futon",
 		str_desc = "Every tenant's best friend. Foldable, holdable, lovable.",
@@ -8570,7 +8579,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a futon against the wall.",
 		furniture_place_desc = "You get your friends to help you set up the futon. It's so light and convenient that they treat you to KFC at the end of it."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "vaporsposter",
 		str_name = "The Vapors poster",
 		str_desc = "It's a poster for The Cop Killer's comic. There's Magda. Yep. \npatreon.com/bensaint\nsaintcomix.com",
@@ -8580,7 +8589,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a Vapors poster on the wall.",
 		furniture_place_desc = "You roll out your fullbody Magda poster and place it on the wall. You wonder if it's considered a betrayal if Rowdys own these."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "burgerprintwallpaper",
 		str_name = "burger print wallpaper",
 		str_desc = "This wallpaper is a dead ringer for that burger jumpsuit the Rowdy Fucker always wears. Just having it makes you feel rancorous.",
@@ -8590,7 +8599,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The walls are papered with burgers.",
 		furniture_place_desc = "You start by taking all your furniture out of your house. You buy a paintroller, some adhesive, and some tarp for the floor. You toil for a day sticking the adhesive and applying the wallpaper, then stay at someone else's flat for another day so it dries. And... dammit, the burgers aren't aligned correctly on the seams. Guess we'll just deal."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "highclassbed",
 		str_name = "high class bed",
 		str_desc = "This offensively comfortable little number is filled with grade A down feathers hand-picked by NASA. You can get such good sleep on it that it almost lets you forget your sins. Almost.",
@@ -8601,7 +8610,7 @@ EwFurniture(
 		furniture_look_desc = "You glimpse the high class bed in the bedroom and feel the urge to lie down.",
 		furniture_place_desc = "You walk outside and give a stern nod to the lower-class peons running about. They give a melancholy look when they see you point to your new bed, but they know they must do as told. Four of the stronger looking street urchins hoist your bed in their arms and carry it to your abode, with you sitting atop it like the emperor you are. They set you down with the gentleness of skilled servants, and you flip them several million SlimeCoin just to get out of your sight. Boy. You can't wait to sleep on this.",
 		furn_set = "high class"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "highclassthrone",
 		str_name = "high class throne",
 		str_desc = "A golden throne adorned with red velvet. Jewel encrusted, regal, and fucking stupid expensive.",
@@ -8612,7 +8621,7 @@ EwFurniture(
 		furniture_look_desc = "You see the throne. It beckons.",
 		furniture_place_desc = "As you place the throne, you picture the kings that came before you. Marc Antony. Nero. All six Georges. Or seven, if you count Maddox. Thinking on it, you decide your reign will be different from those idiots.",
 		furn_set = "high class"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "highclasscouch",
 		str_name = "high class couch",
 		str_desc = "It's a luxury hardwood sofa with huge gemstones in the armrests. As stiff as it looks, it's comfier than anything you've sat in before.",
@@ -8623,7 +8632,7 @@ EwFurniture(
 		furniture_look_desc = "A high class couch is against the wall.",
 		furniture_place_desc = "You hire some people to help you move your couch in. They were way too slow for your busy schedule.",
 		furn_set = "high class"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "highclassdesk",
 		str_name = "high class desk",
 		str_desc = "They say some old politician signed a bunch of sick ass documents on this. The vendor never told you who, though.",
@@ -8634,7 +8643,7 @@ EwFurniture(
 		furniture_look_desc = "A high class desk is in the corner.",
 		furniture_place_desc = "You place the desk near a window, allowing the serfs outside to bask in your radiance.",
 		furn_set = "high class"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "highclasslamp",
 		str_name = "high class lamp",
 		str_desc = "It's a lamp. It looks just like the regular lamp, but it doesn't actually work. You got suckered, dude.",
@@ -8644,7 +8653,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The lamp is broken.",
 		furniture_place_desc = "You try all sorts of light bulbs, but the lamp is just broken. You defeatedly set it up where it won't attract attention."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "laptopcomputer",
 		str_name = "laptop computer",
 		str_desc = "It's a laptop from 2006, freshly installed with Windows XP. This thing hardly works, but when it's plugged into the wall you can still run Discord.",
@@ -8654,7 +8663,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A laptop sits closed on the floor.",
 		furniture_place_desc = "You place the laptop and plug it in."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "rainbowdashfigurine",
 		str_name = "rainbow dash figurine",
 		str_desc = "It's one of those little pony figures from MLP: Friendship is Magic. It's in pretty good condition.",
@@ -8665,7 +8674,7 @@ EwFurniture(
 		furniture_look_desc = "You can sense brony vibes in this room.",
 		furniture_place_desc = "You set Rainbow by the windowsill, where she can daydream about taking to the skies.",
 		furn_set = "pony"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "diploma",
 		str_name = "framed diploma",
 		str_desc = "It's a diploma from a NLACakaNM college. You're not sure you earned this.",
@@ -8675,7 +8684,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A diploma hangs on the wall.",
 		furniture_place_desc = "You think about all the memories you had back in college: drinking, skipping class, killing everyone in University Parking Services, and maybe even a little learning along the way. You lower your head sentimentally and hang the diploma on your wall."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "racecarbed",
 		str_name = "race car bed",
 		str_desc = "VROOM VROOM! NNNNEEEEEEOOOOOOWWWWWW SKRRT! NEEEEEEEOOOOOOOOW BEEP BEEP! SCREEECH! CRASH!",
@@ -8685,7 +8694,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a racecar bed in the bedroom.",
 		furniture_place_desc = "You assemble the bed and place it in your vroom."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "padlockset",
 		str_name = "set of padlocks",
 		str_desc = "You have a standard deadbolt lock, a steel door guard, a second password protected deadbolt, one of those chain thingies, reinforced hinges, and one of those dungeon-style full-length door guards. Also a chair to prop against the door for good measure.",
@@ -8695,7 +8704,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The door is really, REALLY locked.",
 		furniture_place_desc = "You meticulously attach your various locks to your front door until you're satisfied with the craftsmanship. Maybe now you'll finally sleep soundly at night."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "butler",
 		str_name = "butler",
 		str_desc = "You don't know this man's real name, but he responds to Jeeves so you've been going with that. He does whatever you tell him to do, but for some reason he's useless at gang warfare.",
@@ -8705,7 +8714,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A butler stands up straight against the wall, awaiting your instructions.",
 		furniture_place_desc = "You clap twice, and your butler comes running. You point to the floor in the corner. \"Jeeves,\" you say, \"You'll be sleeping here from now on.\" He nods, and begins to get comfy there on the cold floor."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "crib",
 		str_name = "crib",
 		str_desc = "Awwww. I bet your kid looks adorable sleeping in this. You do have a kid, right?",
@@ -8715,7 +8724,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a crib in the bedroom.",
 		furniture_place_desc = "You build the crib from the little box it came in, spinning the mobile a couple of times to make sure it works."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "unhealthylivingbook",
 		str_name = "Guide to Unhealthy Living: Cowritten by the Rift Cafe",
 		str_desc = "It's a book about how to transition to living a sedentary, unhygenic lifestyle in less than 20 days.",
@@ -8725,7 +8734,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "This place smells awful.",
 		furniture_place_desc = "You carefully study brony habit-forming patterns and embrace mediocrity. Your life slowly begins to fall apart, and the junk food you eat permeates the room and makes everything smell like piss and negaslime. You can't believe a product of the Rift Cafe actually accomplished something."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "singingfishplaque",
 		str_name = "singing fish plaque",
 		str_desc = "You press the button on the plaque. \n\n:notes:Here's a little tip I know:notes:\n:notes:Take with !snag and store with !stow:notes:\n:notes:Don't worry:notes:\n:notes:Stay slimy:notes:\n:notes:The little miners were upset:notes:\n:notes:So they went and fished me up instead:notes:\n:notes:Don't worry:notes:\n:notes:Stay slimy:notes:\n:notes:WEEEEEEEEEEEEEEEEEEEEEHEEEEEEEEEEEHEEEEEEEEEEEEEHEEHAOOHEEHEHEHOOHAHAHAAAA\n\nFuck, this thing is annoying. You smack it in the face before it finishes its song.",
@@ -8735,7 +8744,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a fake fish mounted on the wall.",
 		furniture_place_desc = "You put a nail in the wall and hang up your fish. Slimecorp probably doesn't want you knocking holes in the walls, but fuck 'em."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "arcadecabinet",
 		str_name = "arcade cabinet",
 		str_desc = "It's broken. Shit.", #the description gets replaced with a game link when the buy function trips
@@ -8745,7 +8754,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's an arcade cabinet set up.",
 		furniture_place_desc = "It's been forever since you've played a real video game. Finally, the moment you've been waiting for. You plug this bitch in and gaze at its splendor."),
-EwFurniture(
+	EwFurniture(
 		id_furniture="washingmachine",
 		str_name="washing machine",
 		str_desc="It's one of those top-loading machines from ages ago. With this you can !wash <item> to remove the dye from it, but you're not sure you want to. Hygiene doesn't seem very RFCK-core.",
@@ -8755,7 +8764,7 @@ EwFurniture(
 		vendors=[vendor_bazaar],
 		furniture_look_desc="An old washing machine is hooked up in the other room.",
 		furniture_place_desc="You place the washing machine in a side room. You don't really know how you managed the complex plumbing involved, but there it is."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "leatherdesk",
 		str_name = "leather desk",
 		str_desc = "A desk adorned with scalp leather. Looks nice and fancy, as long as you forget how it was made.",
@@ -8766,7 +8775,7 @@ EwFurniture(
 		furniture_look_desc = "There's a leathery desk in the corner.",
 		furniture_place_desc = "You place the desk and admire the subtle craftsmanship that was put into it.",
 		furn_set = "leather"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "leathercouch",
 		str_name = "leather couch",
 		str_desc = "It's a leather couch made of human scalps. To be fair, no cow would dare set foot in this city.",
@@ -8777,7 +8786,7 @@ EwFurniture(
 		furniture_look_desc = "The studded leather couch adds class to the room.",
 		furniture_place_desc = "Moving the couch in was a huge pain. Nobody wanted to help you move it, so you had to manage yourself. Christ, it's like just having a scalp-couch makes everybody think you're a serial killer.",
 		furn_set = "leather"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "leatherbed",
 		str_name = "leather bed",
 		str_desc = "It's a bed upholstered with leather. Demonstrably less comfortable than a regular bed, but you just had to.",
@@ -8788,7 +8797,7 @@ EwFurniture(
 		furniture_look_desc = "There's a leather bed in the bedroom.",
 		furniture_place_desc = "You set up the bed, slowly spreading the human scalp comforter across its sheets. This isn't as good of an idea as you remember.",
 		furn_set = "leather"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "leatherlamp",
 		str_name = "leather lamp",
 		str_desc = "The leather covering makes you feel a bit more western. Also the fact that you killed 3 cowpokes just to get it.",
@@ -8799,7 +8808,7 @@ EwFurniture(
 		furniture_look_desc = "The lamp is adorned with leather.",
 		furniture_place_desc = "The leather is soft to the touch, giving you that extra bit of comfort as you plug it in.",
 		furn_set = "leather"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "leatherchair",
 		str_name = "leather chair",
 		str_desc = "A minor upgrade to the regular chair. Was this even worth it?",
@@ -8810,7 +8819,7 @@ EwFurniture(
 		furniture_look_desc = "A nice leather chair is set up.",
 		furniture_place_desc = "You set the chair up. You realize you're basically sitting on your enemies' heads and giggle about it.",
 		furn_set = "leather"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "pictureframe",
 		str_name = "picture frame",
 		str_desc = "https://cdn11.bigcommerce.com/s-cece8/images/stencil/1280x1280/products/305/1506/010420__10394.1343058001.jpg?c=2&imbypass=on",
@@ -8820,7 +8829,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A picture frame hangs on the wall.",
 		furniture_place_desc = "You place the picture on the wall. What did you put in there? Was it a picture of your family? I bet it was a picture of your family. Man, you suck."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "hammock",
 		str_name = "hammock",
 		str_desc = "It's a frayed rope hammock. Kinda looks like the worn-out fishing nets they use down at the piers, but it'll probably work just as well as the real deal.",
@@ -8830,7 +8839,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "An indoor hammock is set up in the bedroom.",
 		furniture_place_desc = "Getting this set up will be tricky. You take some industrial strength railroad spikes and drive them into each side of the wall, then use the supports to wrap the two ends until the hammock is taut. Why the fuck did you set up a hammock indoors, anyway?"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "juggaloposter",
 		str_name = "juggalo poster",
 		str_desc = "Violent J and Shaggy 2 Dope are depicted brutally murdering some juvie with steak knives. Their stabbing form is terrible but you can appreciate their charisma.",
@@ -8840,7 +8849,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A poster on the wall depicts a Juggalo murder party.",
 		furniture_place_desc = "You don't have any tape to fasten the poster, so you end up using magnets instead. You're not sure how they work, though. "),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "television",
 		str_name = "television",
 		str_desc = "It's a CRT, a pretty big one too. A bunch of adapters are frankenstein'd up to it so it takes modern cables.",
@@ -8850,7 +8859,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "An old CRT is set up.",
 		furniture_place_desc = "You drop the TV on the floor. Your parents said this stuff turns your brain to mush, but yours is already slime, so no harm done. Time to get !watching!"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "pottedplant",
 		str_name = "potted plant",
 		str_desc = "It's a potted plant. Currently empty.",
@@ -8860,7 +8869,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A potted plant is on the sill.",
 		furniture_place_desc = "You set the pot where plants in it could get plenty of sunlight."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "airmattress",
 		str_name = "air mattress",
 		str_desc = "A vinyl air mattress. Perfect for sleepovers, or when the homeless crash at your place.",
@@ -8870,7 +8879,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "An air matress is blown up in the bedroom.",
 		furniture_place_desc = "You blow a whole bunch until your floppy piece of vinyl is a bouncy piece of vinyl."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "churchpew",
 		str_name = "church pew",
 		str_desc = "A long wooden bench they normally use in church services. To be completely honest, it looks really uncomfortable to sit in.",
@@ -8881,7 +8890,7 @@ EwFurniture(
 		furniture_look_desc = "A pew is against the wall.",
 		furniture_place_desc = "You set up the pew in your flat, just in case someone wants to hear you preach.",
 		furn_set = "church"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "churchaltar",
 		str_name = "church altar",
 		str_desc = "An old-looking altar with elaborate carving on the sides. Do you do sacrifices on these?",
@@ -8892,7 +8901,7 @@ EwFurniture(
 		furniture_look_desc = "An altar is fully adorned against the wall.",
 		furniture_place_desc = "You place a fresh tablecloth, some incense, and a bible on the altar. You say a hymn to yourself before standing up to admire the handiwork.",
 		furn_set = "church"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "churchcandles",
 		str_name = "church candles",
 		str_desc = "A 16 pack of beeswax candles and a couple brass candlesticks to go with them.",
@@ -8903,7 +8912,7 @@ EwFurniture(
 		furniture_look_desc = "The room is dimly lit with candles.",
 		furniture_place_desc = "You arrange the candlesticks with a pleasing symmetry. Someone less pious would call this a fire hazard, but you're determined that God won't let your house burn down.",
 		furn_set = "church"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "confessionbooth",
 		str_name = "confession booth",
 		str_desc = "It's a little pair of rooms you sit in to confess your sins. Living in NLACakaNM you may have a lot of those.",
@@ -8914,7 +8923,7 @@ EwFurniture(
 		furniture_look_desc = "A confession booth has been installed here.",
 		furniture_place_desc = "Once you get the booth in, you make sure it works by confessing to yourself. It does, that's good.",
 		furn_set = "church"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "abstinencebed",
 		str_name = "abstinence bed",
 		str_desc = "It's like a regular bed, but you're fastened to it to prevent any unneeded fornication. Paradoxically, that's actually sort of kinky.",
@@ -8925,7 +8934,7 @@ EwFurniture(
 		furniture_look_desc = "An abstinence bed is in the bedroom.",
 		furniture_place_desc = "You place the bed down, dreaming of all that sinful poon you're going to miss out on.",
 		furn_set = "church"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "wallpaper",
 		str_name = "wallpaper",
 		str_desc = "It's a solid color wallpaper. Pretty plain, but dyeable.",
@@ -8936,7 +8945,7 @@ EwFurniture(
 		furniture_look_desc = "The walls are a nice shade of -*HUE*-",
 		furniture_place_desc = "You cover the walls with wallpaper. ",
 		furn_set = "specialhue"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "applejackfigurine",
 		str_name = "apple jack figurine",
 		str_desc = "It's an MLP figure. She's a dirty southerner.",
@@ -8947,7 +8956,7 @@ EwFurniture(
 		furniture_look_desc = "You can sense brony vibes in this room.",
 		furniture_place_desc = "You place Apple Jack up on the windowsill.",
 		furn_set = "pony"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "fluttershyfigurine",
 		str_name = "fluttershy figurine",
 		str_desc = "It's an MLP figure. She's a yellow pegasus, very Juvie-core.",
@@ -8958,7 +8967,7 @@ EwFurniture(
 		furniture_look_desc = "You can sense brony vibes in this room.",
 		furniture_place_desc = "Fluttershy goes right here on the sill.",
 		furn_set = "pony"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "rarityfigurine",
 		str_name = "rarity figurine",
 		str_desc = "It's an MLP figure. This one's known for being marginally bitchier than the others.",
@@ -8969,7 +8978,7 @@ EwFurniture(
 		furniture_look_desc = "You can sense brony vibes in this room.",
 		furniture_place_desc = "You set Rarity up by the window. Clearly she's above being on the ground. Fucking ornery cunt.",
 		furn_set = "pony"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "pinkiepiefigurine",
 		str_name = "pinkie pie figurine",
 		str_desc = "It's an MLP figure. You may be hallucinating but its voice keeps speaking inside your head.",
@@ -8980,7 +8989,7 @@ EwFurniture(
 		furniture_look_desc = "You sense Ponk in the room.",
 		furniture_place_desc = "You set Pinkie Pie up on the sill and try to suppress the voices in your head.",
 		furn_set = "pony"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "twilightsparklefigurine",
 		str_name = "twilight sparkle figurine",
 		str_desc = "It's an MLP figure. This one talks big about friendship but has a dragon indentured servant for like the whole show. What a hypocrite!",
@@ -8991,7 +9000,7 @@ EwFurniture(
 		furniture_look_desc = "You can sense brony vibes in this room.",
 		furniture_place_desc = "You place Twilight on the bookshelf. Not that she would enjoy the kind of swill you read.",
 		furn_set = "pony"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "mylittleponyfigurine",
 		str_name = "my little pony figurine",
 		str_desc = "",
@@ -9001,7 +9010,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "You can sense brony vibes in this room.",
 		furniture_place_desc = "You place a horse figurine on the windowsill."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "hatstand",
 		str_name = "hat stand",
 		str_desc = "A hat stand is by the door.",
@@ -9011,7 +9020,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A hat stand sits near the door.",
 		furniture_place_desc = "You prop the hat stand up and hang whatever hats you can find on top."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "recordplayer",
 		str_name = "record player",
 		str_desc = "An antique gramophone from the 1930s. It normally plays vinyl, but through the power of slime, CDs work just as well.",
@@ -9021,10 +9030,10 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "An old record player sits on the floor.",
 		furniture_place_desc = "You place the ol' boy on the floor."
-
-
-),
-EwFurniture(
+	
+	
+	),
+	EwFurniture(
 		id_furniture = "keg",
 		str_name = "keg",
 		str_desc = "You managed to buy an entire keg of high proof liquor without even needing to show ID. NLACakaNM is the best city in the world.",
@@ -9034,8 +9043,8 @@ EwFurniture(
 		vendors = [vendor_bazaar, vendor_bar],
 		furniture_look_desc = "The keg in the room looks dulled and dented. Standard, almost.",
 		furniture_place_desc = "You take a swig out of the keg and haphazardly roll it across the room. That'll do."
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimecityflag",
 		str_name = "Slime City flag",
 		str_desc = "There's nothing like the good old stars n' slugs to bring a tear to an old patriot's eye.",
@@ -9045,8 +9054,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The NLACakaNM flag hangs proudly on the wall",
 		furniture_place_desc = "You hang the flag on your wall and sing the anthem aloud to yourself."
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimecityconfederateflag",
 		str_name = "Slime City Confederate flag",
 		str_desc = "It's an alternate flag design the Rowdys pull out during civil wars. Long live the motherfucking south.",
@@ -9056,8 +9065,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The NLACakaNM Confederate flag hangs defiantly on your wall.",
 		furniture_place_desc = "Shit, let's be Robert E. Lee. You confirm your support of the Confederacy by flying the flag outside your window."
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimeoidhouse",
 		str_name = "slimeoid house",
 		str_desc = "It's a little hutch for your slimeoid to stay in. It's only knee high though, so it looks like the big ones are SOL.",
@@ -9067,8 +9076,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "Your slimeoid just loves that slimehouse you set up.",
 		furniture_place_desc = "You have to place the slimehouse inside so that it doesn't get caught in any drive-bys. Looks pretty cozy anyway."
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "humancorpse",
 		str_name = "human corpse",
 		str_desc = "It's a fresh cadaver, stitched together with the bits and bobs you find regularly on the street. What a find!",
@@ -9078,8 +9087,8 @@ EwFurniture(
 		vendors = [],
 		furniture_look_desc = "There's a dead body in here.",
 		furniture_place_desc = "You open the bodybag you've been lugging around and splay the corpse out on it. You're no expert on feng shui, but if Martha Stewart saw this, she would probably run the fuck away. Out of jealousy. "
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "reanimatedcorpse",
 		str_name = "reanimated corpse",
 		str_desc = "It's a stitched cadaver you found, reanimated with someone's immortal soul. It cannot speak, but it's obedient enough regardless.",
@@ -9089,8 +9098,8 @@ EwFurniture(
 		vendors = [],
 		furniture_look_desc = "A Frankenstein-like creature is chilling in here.",
 		furniture_place_desc = "You tell your thrall to kneel over there in the corner. They know what they did."
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "medievaltorturedevice",
 		str_name = "medieval torture device",
 		str_desc = "It's an old-style torture machine. This one is called 'The Rack' and you use it to stretch someone until their spine begs for mercy. It usually doesn't work well on slimeoids, what with their amorphous bodies, so somebody retrofitted it with a hot plate on the seat cushion.",
@@ -9100,8 +9109,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A torture rack is installed in here.",
 		furniture_place_desc = "You assemble the torture device and do a couple of test cranks. Putting it together was a bitch and a half because the instructions were in Old English."
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "blackvelvetsofa",
 		str_name = "black velvet sofa",
 		str_desc = "It's a sleek, luxurious couch adorned with platinum studded black velvet. They say only the most criminally prone Italians could ever hope to afford its mafioso charm.",
@@ -9112,8 +9121,8 @@ EwFurniture(
 		furniture_look_desc = "A black velvet couch adds style to this place.",
 		furniture_place_desc = "You threaten a random pedestrian with death to get him to move your couch in. That's just how you operate.",
 		furn_set = "blackvelvet"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "blackvelvetbed",
 		str_name = "black velvet bed",
 		str_desc = "It's a stylish black velvet bed frame with a stark white mattress and bedspread. It's seductive, even without a leggy dame lying on it.",
@@ -9124,8 +9133,8 @@ EwFurniture(
 		furniture_look_desc = "A black velvet bed is in the bedroom.",
 		furniture_place_desc = "You assemble the bed and lie down for awhile. No fishes here. You're sleeping with the gods. Er, goddesses. Whatever.",
 		furn_set = "blackvelvet"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "blackvelvetchair",
 		str_name = "black velvet chair",
 		str_desc = "It's a studded velvet chair. It doesn't get more executive than this baby.",
@@ -9136,8 +9145,8 @@ EwFurniture(
 		furniture_look_desc = "A black velvet chair is set up.",
 		furniture_place_desc = "You slide the chair to the corner, Man, you're going to look so menacing in this thing.",
 		furn_set = "blackvelvet"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "blackvelvettable",
 		str_name = "black velvet table",
 		str_desc = "It's an antique table adorned with studs and velvet. Tailor made for deal making.",
@@ -9148,8 +9157,8 @@ EwFurniture(
 		furniture_look_desc = "A black velvet table is set up.",
 		furniture_place_desc = "You set the table up, and place upon it the finest silverware you have.",
 		furn_set = "blackvelvet"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "blackvelvetlamp",
 		str_name = "black velvet lamp",
 		str_desc = "It's a mahogany lamp with velvet lampshade. It gives you excellent mood lighting.",
@@ -9160,8 +9169,8 @@ EwFurniture(
 		furniture_look_desc = "A black velvet lamp casts bright lights and long shadows.",
 		furniture_place_desc = "You plug the lamp in. Odd. Normally you prefer to put people's lights out.",
 		furn_set = "blackvelvet"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "popeonarope",
 		str_name = "pope on a rope",
 		str_desc = "It's Pope Francis, hung and dead on a noose. At the very least it's a convincing imitation.",
@@ -9171,8 +9180,8 @@ EwFurniture(
 		vendors = [],
 		furniture_look_desc = "Pope Francis hangs dead from the ceiling.",
 		furniture_place_desc = "You get on a chair and hang the noose from the ceiling. The lightly swinging Pope now adds an ambient wood creaking noise to your abode.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimecorpchair",
 		str_name = "SLIMECORP:tm: Chair Of the Future",
 		str_desc = "It's a sleek green seat-like device outfitted for maximum comfort. Comes with built-in cupholders and a state of the art subliminal media player.",
@@ -9183,8 +9192,8 @@ EwFurniture(
 		furniture_look_desc = "A futuristic Slimecorp chair is set up.",
 		furniture_place_desc = "As you attempt to pick up the heavy chair, you accidentally press a button on its underside. Suddenly, you pass out on the floor. When you wake up, the chair is set up like it had always been there.",
 		furn_set = "slimecorp"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimecorpcouch",
 		str_name = "SLIMECORP:tm: Mega Sofa",
 		str_desc = "This SlimeCorp:tm: Mega Sofa is capable of extending in 3 directions. It's perfect for throwing house parties with all your friends:tm:!",
@@ -9195,8 +9204,8 @@ EwFurniture(
 		furniture_look_desc = "A futuristic Slimecorp couch sits along the wall.",
 		furniture_place_desc = "You notice a 'MOVE IN' button under the upholstery of your couch. After pressing it, the couch grows metal limbs, forcibly grabbing you and walking into your apartment complex. You're sure that neat feature won't bite you in the ass later.",
 		furn_set = "slimecorp"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimecorpbed",
 		str_name = "SLIMECORP:tm: Ultimate Safety Bed",
 		str_desc = "This SlimeCorp:tm: Safety Bed is the ultimate resting place for whenever you need physical protection! We at SlimeCorp can't guarantee your safety without one! Be sure to try out its cryogenic stasis feature!",
@@ -9207,8 +9216,8 @@ EwFurniture(
 		furniture_look_desc = "A Slimecorp twin bed/cryo pod is in the bedroom.",
 		furniture_place_desc = "Somehow, assembling this fully functional cryostasis container was easier than the ones you used to build from IKEA.",
 		furn_set = "slimecorp"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimecorpdesk",
 		str_name = "SLIMECORP:tm: Posture Building Submission Desk",
 		str_desc = "The Slimecorp:tm: Submission Desk is the ultimate tool in building charisma and acclimating yourself to the times! Simply keep your head down and you'll be ahead of the game for when you all submit to us.",
@@ -9219,8 +9228,8 @@ EwFurniture(
 		furniture_look_desc = "A Slimecorp desk made for submission is in a dark corner.",
 		furniture_place_desc = "You decided to place the desk by carrying it on your back like a hopeless thrall. That's the spirit!",
 		furn_set = "slimecorp"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimecorplamp",
 		str_name = "SLIMECORP:tm: Highly Talkative Strobe Light",
 		str_desc = "The Slimecorp:tm: Talkative Strobe Light is an excellent way to memorize interesting facts about SlimeCorp:tm: Tired of our email advertisements? You can absorb all that information lickety split through our state of the art subliminal messages.",
@@ -9231,8 +9240,8 @@ EwFurniture(
 		furniture_look_desc = "A Slimecorp lamp is flashing some neat subliminal messages throughout the room.",
 		furniture_place_desc = "SUBMIT TO SLIMECORP. NOW, PLUG IN THE LAMP WHILE SUBMITTING TO SLIMECORP.",
 		furn_set = "slimecorp"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "sord",
 		str_name = "sord",
 		str_desc = "https://i.imgur.com/EgbZ7Ku.png",
@@ -9242,8 +9251,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "dude. therps a SORD over therew.re.",
 		furniture_place_desc = "You place the SORD indoors so it doesn't escape to the side.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "pileofmysteriouspowder",
 		str_name = "pile of mysterious powder",
 		str_desc = "The guy you bought this fine white powder from called it nose candy. What a fucking idiot. Everybody knows you eat candy with your mouth.",
@@ -9254,8 +9263,8 @@ EwFurniture(
 		furniture_look_desc = "There's a pile of powdery substance in a dark alcove over yonder.",
 		furniture_place_desc = "You unpack the powder and pour it all out in a nice little pile. Whoa. Feelin' kind of woozy.",
 		furn_set = "seventies"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "alarmclock",
 		str_name = "alarm clock set to OFF",
 		str_desc = "The annoying sound this thing makes perfectly explains why the bazaar sells so many broken clocks.",
@@ -9265,8 +9274,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The clock says it's {time}.",
 		furniture_place_desc = "You set the alarm clock on your nightstand. Nobody knows why.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "lavalamp",
 		str_name = "lava lamp",
 		str_desc = "It's one of those lamps where you stick colorful boiling chemicals under heat and pour them on shitty guests. At least you're pretty sure that's what it does. The container is sealed with a bottle cap and everything!",
@@ -9277,8 +9286,8 @@ EwFurniture(
 		furniture_look_desc = "A lava lamp is plugged in.",
 		furniture_place_desc = "You plug the lava lamp in and wait for the cool bubbles to start going. It's taking too long, though, so you stop.",
 		furn_set = "seventies"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "discoball",
 		str_name = "disco ball",
 		str_desc = "It's a large ball covered in tiny mirror surfaces. Good for dancers and epileptics.",
@@ -9289,8 +9298,8 @@ EwFurniture(
 		furniture_look_desc = "A disco ball hangs from the ceiling.",
 		furniture_place_desc = "You hang the gitterball and give it a hefty spin.",
 		furn_set = "seventies"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "shagcarpet",
 		str_name = "shag carpet",
 		str_desc = "Wall to wall shag carpeting with a soft, hot pink texture to it. Very retro, and well loved by furries with inexplicable floor fetishes.",
@@ -9301,8 +9310,8 @@ EwFurniture(
 		furniture_look_desc = "The hot pink carpeting feels soft beneath your feet.",
 		furniture_place_desc = "You roll out the new carpet and do some shag angels.",
 		furn_set = "seventies"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "stainedglasswindows",
 		str_name = "stained glass windows",
 		str_desc = "A number of windows painstakingly crafted to build a mosaic. Looks breakable.",
@@ -9312,8 +9321,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The windows are made of stained glass.",
 		furniture_place_desc = "You carefully install the stained glass fixtures. Who knew you were such a good carpenter?",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "customdoor",
 		str_name = "{custom} door",
 		str_desc = "A door with {custom} on it.",
@@ -9323,8 +9332,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The door is modded with a {custom} design.",
 		furniture_place_desc = "You break the original door off its hinges and install a new one.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "expiredbottleofrogaine",
 		str_name = "expired bottle of rogaine",
 		str_desc = "It's a bottle of hair growth solution. Whoever owns this must be a longtime bald person.",
@@ -9334,8 +9343,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's an old Rogaine bottle lying around.",
 		furniture_place_desc = "You drop the bottle of rogaine in plain sight.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "custombed",
 		str_name = "{custom} bed",
 		str_desc = "It's a {custom} themed bed. Ooh, cozy.",
@@ -9345,8 +9354,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a {custom} bed in the bedroom.",
 		furniture_place_desc = "You assemble the bed and lop the mattress on top.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "customflag",
 		str_name = "{custom} flag",
 		str_desc = "It's the illustrious {custom} flag. You salute it with reckless abandon.",
@@ -9356,8 +9365,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A {custom} flag flies outside the window.",
 		furniture_place_desc = "You fly the flag outside the window.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "brick",
 		str_name = "brick",
 		str_desc = "It's a brick. Can't build with it, can't eat it. All you can do is throw it through someone's window.",
@@ -9367,8 +9376,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "Somebody threw a brick through the window.",
 		furniture_place_desc = "You go outside your house and throw a brick through your window. Nobody can ever say you're a fake vandal now.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "shittychair",
 		str_name = "shitty chair",
 		str_desc = "It's a handmade chair. It's so completely botched that you wonder if you can even sit in it.",
@@ -9379,8 +9388,8 @@ EwFurniture(
 		furniture_look_desc = "There's a chair-like pile of plywood set up.",
 		furniture_place_desc = "You develop several pre-infected splinters just taking this out of your inventory. Fearing another bout of tetanus, you gently toss the chair on the ground.",
 		furn_set = "shitty"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "shittydesk",
 		str_name = "shitty desk",
 		str_desc = "This desk fucking sucks. It is an insult to the very concept of a flat surface.",
@@ -9391,8 +9400,8 @@ EwFurniture(
 		furniture_look_desc = "There's a desk in here. Don't sit on it.",
 		furniture_place_desc = "After moving the desk into place, you try to sit down and write the next great American zine. The paper gets destroyed by it the moment you start.",
 		furn_set = "shitty"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "shittybench",
 		str_name = "shitty bench",
 		str_desc = "It's a handmade wooden bench Looking at its detailed design, torture device manufacturers should've hired you ages ago.",
@@ -9403,8 +9412,8 @@ EwFurniture(
 		furniture_look_desc = "There's a...bench in here? Sorry, I couldn't tell if that thing qualifies.",
 		furniture_place_desc = "You try to move the couch in yourself. As you try, the couch snaps in two. However, it's actually more comfortable this way, so you leave it as is.",
 		furn_set = "shitty"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "shittybed",
 		str_name = "shitty bed",
 		str_desc = "It's a dusty pile of broken planks and springs. Wait did the item title say it was a bed? Fuck no. Don't pay attention to that.",
@@ -9415,8 +9424,8 @@ EwFurniture(
 		furniture_look_desc = "There's a death bed in the bedroom.",
 		furniture_place_desc = "You try to assemble the bed, which in this case would probably involve breaking it down to bits and hoping sawdust is soft enough to sleep on.",
 		furn_set = "shitty"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "woodenvuvuzela",
 		str_name = "wooden vuvuzela",
 		str_desc = "You tried carving an ornate wooden clarinet, but you botched it. This dime-a-dozen consolation prize sounds like an elephant shitting out its organs.",
@@ -9426,9 +9435,9 @@ EwFurniture(
 		vendors = [],
 		furniture_look_desc = "There's a shitty vuvuzela here. Fuck.",
 		furniture_place_desc = "You set your vuvuzela on the shelf. Carnegie Hall, see you never.",
-
-),
-EwFurniture(
+	
+	),
+	EwFurniture(
 		id_furniture = "ornatechair",
 		str_name = "ornate chair",
 		str_desc = "It's an immaculately carved wooden chair. It looks rustic, and must've cost a fortune.",
@@ -9439,8 +9448,8 @@ EwFurniture(
 		furniture_look_desc = "There's an immaculate -*HUE*- chair set up.",
 		furniture_place_desc = "You carefully set the chair down. Wouldn't want to scratch the varnish on it, now.",
 		furn_set = "specialhue"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "ornatedesk",
 		str_name = "ornate desk",
 		str_desc = "It's a posh looking old-style desk. The legs have some neat etchings along the side.",
@@ -9451,8 +9460,8 @@ EwFurniture(
 		furniture_look_desc = "There's an -*HUE*- ornate looking desk in the corner.",
 		furniture_place_desc = "You carry the desk to the wall, and step back to admire it.",
 		furn_set = "specialhue"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "ornatebench",
 		str_name = "ornate bench",
 		str_desc = "The bench is so well-constructed, people forget it's made of uncomfortable unapholstered hardwood.",
@@ -9463,8 +9472,8 @@ EwFurniture(
 		furniture_look_desc = "There's a wonderful -*HUE*- colored bench against the wall.",
 		furniture_place_desc = "You promise several art buyers they can look at your bench if they can help carry it to your flat. Once moved, you kick them out swiftly, and without regret.",
 		furn_set = "specialhue"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "ornatebed",
 		str_name = "ornate bed",
 		str_desc = "This antique looking bed makes you feel like a tyrant. A whittling tyrant.",
@@ -9475,8 +9484,8 @@ EwFurniture(
 		furniture_look_desc = "A bed with a -*HUE*- bedspread is in the bedroom.",
 		furniture_place_desc = "You had a lot of trouble finding a mattress worthy of this frame. Time to put em' together.",
 		furn_set = "specialhue"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "craftsmansclarinet",
 		str_name = "craftsman's clarinet",
 		str_desc = "It's a handmade clarinet. Mmm. Sounds real nice.",
@@ -9487,8 +9496,8 @@ EwFurniture(
 		furniture_look_desc = "A clarinet sits on your shelf.",
 		furniture_place_desc = "You gently set the clarinet on your shelf. You wish you bought a case for it.",
 		furn_set = "instrument"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "solidpoudringuitar",
 		str_name = "solid poudrin guitar",
 		str_desc = "An electric guitar whose body is built entirely out of condensed poudrins. Heavy as a meteorite, too.",
@@ -9499,8 +9508,8 @@ EwFurniture(
 		furniture_look_desc = "A poudrin guitar is lying against the wall.",
 		furniture_place_desc = "You gently drop the guitar to set it down. Whoops. Guess Slimecorp gets to pay for that little dent in the floor.",
 		furn_set = "instrument"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "fishbonexylophone",
 		str_name = "fish bone xylophone",
 		str_desc = "It's a carefully carved mbila-style xylophone made out of fish. You'd think it would smell, but not really.",
@@ -9511,8 +9520,8 @@ EwFurniture(
 		furniture_look_desc = "A fish xylophone is in here, mallets strewn about.",
 		furniture_place_desc = "You roll the instrument in and play a few notes. Nice. Ripe as the sea.",
 		furn_set = "instrument"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "beastskindrums",
 		str_name = "beast skin drums",
 		str_desc = "A trap set built out of the remains of fallen secreatures. The cymbals were once a dino pelvis, so that's pretty neat.",
@@ -9523,8 +9532,8 @@ EwFurniture(
 		furniture_look_desc = "There's a Stone Age looking drum set in here.",
 		furniture_place_desc = "You assemble each piece into your place drum by drum. As you do your neighbors start to look pretty nervous. Ahaha.",
 		furn_set = "instrument"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "gourdmaracas",
 		str_name = "gourd maracas",
 		str_desc = "A neat little shaker made from a gourd and some dried vegetables. Finally, you can show off your Mexican heritage!",
@@ -9535,7 +9544,7 @@ EwFurniture(
 		furniture_look_desc = "Gourd maracas are sitting on the shelf.",
 		furniture_place_desc = "You do a little maraca dance while nobody's watching and quickly toss them out of sight.",
 		furn_set = "instrument"
-),
+	),
 ]
 
 
@@ -9745,7 +9754,7 @@ poi_list = [
 			poi_id_krakbay : travel_time_district,
 			poi_id_downtown_street_a : travel_time_street,
 			poi_id_stockexchange : travel_time_subzone,
-		},
+		}
 	),
 	EwPoi( # 2
 		id_poi = poi_id_smogsburg,
@@ -9760,11 +9769,11 @@ poi_list = [
 		channel = "smogsburg",
 		role = "Smogsburg",
 		property_class = property_class_b,
+		is_district = True,
+		is_capturable = True,
 		neighbors = {
 			poi_id_downtown : travel_time_district,
-		},
-		is_district = True,
-		is_capturable = True
+		}
 	),
 	EwPoi( # 3
 		id_poi = poi_id_copkilltown,
@@ -9792,7 +9801,10 @@ poi_list = [
 		property_class = property_class_a,
 		is_district = True,
 		community_chest = chest_id_copkilltown,
-		is_gangbase = True
+		is_gangbase = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 4
 		id_poi = poi_id_krakbay,
@@ -9806,11 +9818,11 @@ poi_list = [
 		channel = "krak-bay",
 		role = "Krak Bay",
 		property_class = property_class_a,
-		neighbors = {
-			poi_id_downtown : travel_time_district,
-		},
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors={
+			poi_id_downtown: travel_time_district,
+		}
 	),
 	EwPoi( # 5
 		id_poi = poi_id_poudrinalley,
@@ -9825,7 +9837,10 @@ poi_list = [
 		role = "Poudrin Alley",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 6
 		id_poi = poi_id_rowdyroughhouse,
@@ -9850,7 +9865,10 @@ poi_list = [
 		property_class = property_class_c,
 		is_district = True,
 		community_chest = chest_id_rowdyroughhouse,
-		is_gangbase = True
+		is_gangbase = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 7
 		id_poi = poi_id_greenlightdistrict,
@@ -9866,7 +9884,10 @@ poi_list = [
 		property_class = property_class_a,
 		is_district = True,
 		is_capturable = True,
-		has_ads = True
+		has_ads = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 8
 		id_poi = poi_id_oldnewyonkers,
@@ -9880,7 +9901,10 @@ poi_list = [
 		role = "Old New Yonkers",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 9
 		id_poi = poi_id_littlechernobyl,
@@ -9897,7 +9921,10 @@ poi_list = [
 		role = "Little Chernobyl",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 10
 		id_poi = poi_id_arsonbrook,
@@ -9912,7 +9939,10 @@ poi_list = [
 		role = "Arsonbrook",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 11
 		id_poi = poi_id_astatineheights,
@@ -9928,7 +9958,10 @@ poi_list = [
 		role = "Astatine Heights",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 12
 		id_poi = poi_id_gatlingsdale,
@@ -9944,7 +9977,10 @@ poi_list = [
 		role = "Gatlingsdale",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 13
 		id_poi = poi_id_vandalpark,
@@ -9960,7 +9996,10 @@ poi_list = [
 		role = "Vandal Park",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 14
 		id_poi = poi_id_glocksbury,
@@ -9976,7 +10015,10 @@ poi_list = [
 		role = "Glocksbury",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 15
 		id_poi = poi_id_northsleezeborough,
@@ -9996,7 +10038,10 @@ poi_list = [
 		role = "North Sleezeborough",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 16
 		id_poi = poi_id_southsleezeborough,
@@ -10016,7 +10061,10 @@ poi_list = [
 		role = "South Sleezeborough",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 17
 		id_poi = poi_id_oozegardens,
@@ -10032,7 +10080,10 @@ poi_list = [
 		role = "Ooze Gardens",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 18
 		id_poi = poi_id_cratersville,
@@ -10048,7 +10099,10 @@ poi_list = [
 		role = "Cratersville",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 19
 		id_poi = poi_id_wreckington,
@@ -10065,7 +10119,10 @@ poi_list = [
 		role = "Wreckington",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 20
 		id_poi = poi_id_juviesrow,
@@ -10083,7 +10140,10 @@ poi_list = [
 		property_class = property_class_b,
 		is_district = True,
 		community_chest = chest_id_juviesrow,
-		is_gangbase = True
+		is_gangbase = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 21
 		id_poi = poi_id_slimesend,
@@ -10100,7 +10160,10 @@ poi_list = [
 		role = "Slime's End",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 22
 		id_poi = poi_id_vagrantscorner,
@@ -10116,7 +10179,10 @@ poi_list = [
 		role = "Vagrant's Corner",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 23
 		id_poi = poi_id_assaultflatsbeach,
@@ -10135,7 +10201,10 @@ poi_list = [
 		role = "Assault Flats Beach",
 		property_class = property_class_s,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 24
 		id_poi = poi_id_newnewyonkers,
@@ -10151,7 +10220,10 @@ poi_list = [
 		role = "New New Yonkers",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 25
 		id_poi = poi_id_brawlden,
@@ -10166,7 +10238,10 @@ poi_list = [
 		role = "Brawlden",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 26
 		id_poi = poi_id_toxington,
@@ -10184,7 +10259,10 @@ poi_list = [
 		role = "Toxington",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 27
 		id_poi = poi_id_charcoalpark,
@@ -10203,7 +10281,10 @@ poi_list = [
 		role = "Charcoal Park",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 28
 		id_poi = poi_id_poloniumhill,
@@ -10220,7 +10301,10 @@ poi_list = [
 		role = "Polonium Hill",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 29
 		id_poi = poi_id_westglocksbury,
@@ -10239,7 +10323,10 @@ poi_list = [
 		role = "West Glocksbury",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # 30
 		id_poi = poi_id_jaywalkerplain,
@@ -10257,7 +10344,10 @@ poi_list = [
 		role = "Jaywalker Plain",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # 31
 		id_poi = poi_id_crookline,
@@ -10273,7 +10363,10 @@ poi_list = [
 		role = "Crookline",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # 32
 		id_poi = poi_id_dreadford,
@@ -10289,7 +10382,28 @@ poi_list = [
 		role = "Dreadford",
 		property_class = property_class_s,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			
+		},
+	),
+	EwPoi( # 33
+		id_poi = poi_id_maimridge,
+		alias = [
+			"maim",
+			"ridge",
+			"mr",
+			"mario"
+		],
+		str_name = "Maimridge",
+		str_desc = "Up until just recently, Maimridge wasn't even considered to be within the borders of NLACakaNM, but it was quickly annexed after the discovery of several wannabe explorers taking up residence in what are usually either abodes fashioned out of the ruins lining Mt. Srxek, or comfy log cabins. The mountain in question is the apple of the collective eyes of all who call Maimridge their home, that is to say, dumbass tourists who put their lives on the line trying to scale such a behemoth, only to end up wiping out and retiring far below the summit. But who can blame them? The national park housing the enormous monument is the best tourist trap our fair city could ask for.",
+		channel = "maimridge",
+		property_class = property_class_b,
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # the-sewers
 		id_poi = poi_id_thesewers,
@@ -10315,20 +10429,2020 @@ poi_list = [
 	),
 	# Streets start here
 	EwPoi(
+		id_poi = poi_id_rowdyroughhouse_street_a,
+		alias = [
+			"rrsa",
+			"rrstreeta"
+		],
+		str_name = "Rowdy Roughhouse Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'rowdy-roughhouse-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_rowdyroughhouse,
+		neighbors = {
+
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_copkilltown_street_a,
+		alias = [
+			"cksa",
+			"ckstreeta"
+		],
+		str_name = "Cop Killtown Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'cop-killtown-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_copkilltown,
+		neighbors = {
+
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_juviesrow_street_a,
+		alias = [
+			"jrsa",
+			"jrstreeta"
+		],
+		str_name = "Juvie's Row Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'juvies-row-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_juviesrow,
+		neighbors = {
+
+		}
+	),
+	EwPoi(
 		id_poi = poi_id_downtown_street_a,
 		alias = [
 			"dtsa",
-			"downtownstreeta",
 			"dtstreeta"
 		],
 		str_name = "Downtown Street A",
 		str_desc = str_generic_streets_description,
 		channel = 'downtown-street-a',
 		is_street = True,
+		is_capturable = True,
 		father_district = poi_id_downtown,
 		neighbors = {
 			poi_id_downtown : travel_time_street,
 			poi_id_stockexchange : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_downtown_street_b,
+		alias = [
+			"dtsb",
+			"dtstreetb"
+		],
+		str_name = "Downtown Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'downtown-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_downtown_street_c,
+		alias = [
+			"dtsc",
+			"dtstreetc"
+		],
+		str_name = "Downtown Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'downtown-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_downtown_street_d,
+		alias = [
+			"dtsd",
+			"dtstreetd"
+		],
+		str_name = "Downtown Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'downtown-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_downtown_street_e,
+		alias = [
+			"dtse",
+			"dtstreete"
+		],
+		str_name = "Downtown Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'downtown-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi=poi_id_downtown_street_f,
+		alias=[
+			"dtsf",
+			"dtstreetf"
+		],
+		str_name="Downtown Street F",
+		str_desc=str_generic_streets_description,
+		channel='downtown-street-f',
+		is_street=True,
+		is_capturable=True,
+		father_district=poi_id_downtown,
+		neighbors={
+
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_a,
+		alias = [
+			"kbsa",
+			"kbstreeta"
+		],
+		str_name = "Krak Bay Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'krak-bay-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_b,
+		alias = [
+			"kbsb",
+			"kbstreetb"
+		],
+		str_name = "Krak Bay Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'krak-bay-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_c,
+		alias = [
+			"kbsc",
+			"kbstreetc"
+		],
+		str_name = "Krak Bay Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'krak-bay-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_d,
+		alias = [
+			"kbsd",
+			"kbstreetd"
+		],
+		str_name = "Krak Bay Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'krak-bay-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_e,
+		alias = [
+			"kbse",
+			"kbstreete"
+		],
+		str_name = "Krak Bay Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'krak-bay-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_f,
+		alias = [
+			"kbsf",
+			"kbstreetf"
+		],
+		str_name = "Krak Bay Street F",
+		str_desc = str_generic_streets_description,
+		channel = 'krak-bay-street-f',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_a,
+		alias = [
+			"pasa",
+			"pastreeta"
+		],
+		str_name = "Poudrin Alley Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'poudrin-alley-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_b,
+		alias = [
+			"pasb",
+			"pastreetb"
+		],
+		str_name = "Poudrin Alley Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'poudrin-alley-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_c,
+		alias = [
+			"pasc",
+			"pastreetc"
+		],
+		str_name = "Poudrin Alley Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'poudrin-alley-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_d,
+		alias = [
+			"pasd",
+			"pastreetd"
+		],
+		str_name = "Poudrin Alley Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'poudrin-alley-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_e,
+		alias = [
+			"pase",
+			"pastreete"
+		],
+		str_name = "Poudrin Alley Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'poudrin-alley-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_cratersville_street_a,
+		alias = [
+			"cvsa",
+			"cvstreeta"
+		],
+		str_name = "Cratersville Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'cratersville-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_cratersville,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_cratersville_street_b,
+		alias = [
+			"cvsb",
+			"cvstreetb"
+		],
+		str_name = "Cratersville Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'cratersville-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_cratersville,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_cratersville_street_c,
+		alias = [
+			"cvsc",
+			"cvstreetc"
+		],
+		str_name = "Cratersville Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'cratersville-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_cratersville,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_wreckington_street_a,
+		alias = [
+			"wtsa",
+			"wtstreeta"
+		],
+		str_name = "Wreckington Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'wreckington-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_wreckington,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_wreckington_street_b,
+		alias = [
+			"wtsb",
+			"wtstreetb"
+		],
+		str_name = "Wreckington Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'wreckington-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_wreckington,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oozegardens_street_a,
+		alias = [
+			"ogsa",
+			"ogstreeta"
+		],
+		str_name = "Ooze Gardens Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'ooze-gardens-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oozegardens,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oozegardens_street_b,
+		alias = [
+			"ogsb",
+			"ogstreetb"
+		],
+		str_name = "Ooze Gardens Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'ooze-gardens-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oozegardens,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oozegardens_street_c,
+		alias = [
+			"ogsc",
+			"ogstreetc"
+		],
+		str_name = "Ooze Gardens Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'ooze-gardens-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oozegardens,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oozegardens_street_d,
+		alias = [
+			"ogsd",
+			"ogstreetd"
+		],
+		str_name = "Ooze Gardens Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'ooze-gardens-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oozegardens,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_southsleezeborough_street_a,
+		alias = [
+			"ssbsa",
+			"ssbstreeta"
+		],
+		str_name = "South Sleezeborough Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'south-sleezeborough-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_southsleezeborough,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_southsleezeborough_street_b,
+		alias = [
+			"ssbsb",
+			"ssbstreetb"
+		],
+		str_name = "South Sleezeborough Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'south-sleezeborough-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_southsleezeborough,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_southsleezeborough_street_c,
+		alias = [
+			"ssbsc",
+			"ssbstreetc"
+		],
+		str_name = "South Sleezeborough Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'south-sleezeborough-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_southsleezeborough,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_southsleezeborough_street_d,
+		alias = [
+			"ssbsd",
+			"ssbstreetd"
+		],
+		str_name = "South Sleezeborough Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'south-sleezeborough-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_southsleezeborough,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_a,
+		alias = [
+			"nsbsa",
+			"nsbstreeta"
+		],
+		str_name = "North Sleezeborough Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'north-sleezeborough-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_b,
+		alias = [
+			"nsbsb",
+			"nsbstreetb"
+		],
+		str_name = "North Sleezeborough Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'north-sleezeborough-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_c,
+		alias = [
+			"nsbsc",
+			"nsbstreetc"
+		],
+		str_name = "North Sleezeborough Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'north-sleezeborough-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_d,
+		alias = [
+			"nsbsd",
+			"nsbstreetd"
+		],
+		str_name = "North Sleezeborough Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'north-sleezeborough-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_e,
+		alias = [
+			"nsbse",
+			"nsbstreete"
+		],
+		str_name = "North Sleezeborough Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'north-sleezeborough-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_a,
+		alias = [
+			"gbsa",
+			"gbstreeta"
+		],
+		str_name = "Glocksbury Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'glocksbury-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_b,
+		alias = [
+			"gbsb",
+			"gbstreetb"
+		],
+		str_name = "Glocksbury Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'glocksbury-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_c,
+		alias = [
+			"gbsc",
+			"gbstreetc"
+		],
+		str_name = "Glocksbury Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'glocksbury-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_d,
+		alias = [
+			"gbsd",
+			"gbstreetd"
+		],
+		str_name = "Glocksbury Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'glocksbury-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_e,
+		alias = [
+			"gbse",
+			"gbstreete"
+		],
+		str_name = "Glocksbury Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'glocksbury-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_westglocksbury_street_a,
+		alias = [
+			"wgbsa",
+			"wgbstreeta"
+		],
+		str_name = "West Glocksbury Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'west-glocksbury-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_westglocksbury,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_westglocksbury_street_b,
+		alias = [
+			"wgbsb",
+			"wgbstreetb"
+		],
+		str_name = "West Glocksbury Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'west-glocksbury-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_westglocksbury,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_westglocksbury_street_c,
+		alias = [
+			"wgbsc",
+			"wgbstreetc"
+		],
+		str_name = "West Glocksbury Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'west-glocksbury-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_westglocksbury,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_westglocksbury_street_d,
+		alias = [
+			"wgbsd",
+			"wgbstreetd"
+		],
+		str_name = "West Glocksbury Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'west-glocksbury-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_westglocksbury,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_a,
+		alias = [
+			"jpsa",
+			"jpstreeta"
+		],
+		str_name = "Jaywalker Plain Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'jaywalker-plain-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_b,
+		alias = [
+			"jpsb",
+			"jpstreetb"
+		],
+		str_name = "Jaywalker Plain Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'jaywalker-plain-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_c,
+		alias = [
+			"jpsc",
+			"jpstreetc"
+		],
+		str_name = "Jaywalker Plain Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'jaywalker-plain-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_d,
+		alias = [
+			"jpsd",
+			"jpstreetd"
+		],
+		str_name = "",
+		str_desc = str_generic_streets_description,
+		channel = 'jaywalker-plain-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_e,
+		alias = [
+			"jpse",
+			"jpstreetd"
+		],
+		str_name = "Jaywalker Plain Street ",
+		str_desc = str_generic_streets_description,
+		channel = 'jaywalker-plain-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_crookline_street_a,
+		alias = [
+			"clsa",
+			"clstreeta"
+		],
+		str_name = "Crookline Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'crookline-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_crookline,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_crookline_street_b,
+		alias = [
+			"clsb",
+			"clstreetb"
+		],
+		str_name = "Crookline Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'crookline-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_crookline,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_crookline_street_c,
+		alias = [
+			"clsc",
+			"clstreetc"
+		],
+		str_name = "Crookline Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'crookline-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_crookline,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_crookline_street_d,
+		alias = [
+			"clsd",
+			"clstreetd"
+		],
+		str_name = "Crookline Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'crookline-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_crookline,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_dreadford_street_a,
+		alias = [
+			"dfsa",
+			"dfstreeta"
+		],
+		str_name = "Dreadford Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'dreadford-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_dreadford,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_dreadford_street_b,
+		alias = [
+			"dfsb",
+			"dfstreetb"
+		],
+		str_name = "Dreadford Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'dreadford-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_dreadford,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vandalpark_street_a,
+		alias = [
+			"vpsa",
+			"vpstreeta"
+		],
+		str_name = "Vandal Park Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'vandal-park-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vandalpark,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vandalpark_street_b,
+		alias = [
+			"vpsb",
+			"vpstreetb"
+		],
+		str_name = "Vandal Park Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'vandal-park-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vandalpark,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vandalpark_street_c,
+		alias = [
+			"vpsc",
+			"vpstreetc"
+		],
+		str_name = "Vandal Park Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'vandal-park-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vandalpark,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vandalpark_street_d,
+		alias = [
+			"vpsd",
+			"vpstreetd"
+		],
+		str_name = "Vandal Park Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'vandal-park-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vandalpark,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_a,
+		alias = [
+			"phsa",
+			"phstreeta"
+		],
+		str_name = "Polonium Hill Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'polonium-hill-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_b,
+		alias = [
+			"phsb",
+			"phstreetb"
+		],
+		str_name = "Polonium Hill Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'polonium-hill-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_c,
+		alias = [
+			"phsc",
+			"phstreetc"
+		],
+		str_name = "Polonium Hill Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'polonium-hill-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_d,
+		alias = [
+			"phsd",
+			"phstreetd"
+		],
+		str_name = "Polonium Hill Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'polonium-hill-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_e,
+		alias = [
+			"phse",
+			"phstreete"
+		],
+		str_name = "Polonium Hill Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'polonium-hill-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_charcoalpark_street_a,
+		alias = [
+			"cpsa",
+			"cpstreeta"
+		],
+		str_name = "Charcoal Park Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'charcoal-park-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_charcoalpark,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_charcoalpark_street_b,
+		alias = [
+			"cpsb",
+			"cpstreetb"
+		],
+		str_name = "Charcoal Park Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'charcoal-park-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_charcoalpark,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_a,
+		alias = [
+			"ttsa",
+			"ttstreeta"
+		],
+		str_name = "Toxington Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'toxington-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_b,
+		alias = [
+			"ttsb",
+			"ttstreetb"
+		],
+		str_name = "Toxington Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'toxington-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_c,
+		alias = [
+			"ttsc",
+			"ttstreetc"
+		],
+		str_name = "Toxington Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'toxington-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_d,
+		alias = [
+			"ttsd",
+			"ttstreetd"
+		],
+		str_name = "Toxington Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'toxington-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_e,
+		alias = [
+			"ttse",
+			"ttstreete"
+		],
+		str_name = "Toxington Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'toxington-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_a,
+		alias = [
+			"gdsa",
+			"gdstreeta"
+		],
+		str_name = "Gatlingsdale Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'gatlingsdale-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_b,
+		alias = [
+			"gdsb",
+			"gdstreetb"
+		],
+		str_name = "Gatlinsdale Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'gatlingsdale-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_c,
+		alias = [
+			"gdsc",
+			"gdstreetc"
+		],
+		str_name = "Gatlingsdale Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'gatlingsdale-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_d,
+		alias = [
+			"gdsd",
+			"gdstreetd"
+		],
+		str_name = "Gatlingsdale Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'gatlingsdale-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_e,
+		alias = [
+			"gdse",
+			"gdstreete"
+		],
+		str_name = "Gatlingsdale Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'gatlingsdale-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_a,
+		alias = [
+			"ahsa",
+			"ahstreeta"
+		],
+		str_name = "Astatine Heights Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'astatine-heights-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_b,
+		alias = [
+			"ahsb",
+			"ahstreetb"
+		],
+		str_name = "Astatine Heights Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'astatine-heights-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_c,
+		alias = [
+			"ahsc",
+			"ahstreetc"
+		],
+		str_name = "Astatine Heights Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'astatine-heights-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_d,
+		alias = [
+			"ahsd",
+			"ahstreetd"
+		],
+		str_name = "Astatine Heights Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'astatine-heights-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_e,
+		alias = [
+			"ahse",
+			"ahstreete"
+		],
+		str_name = "Astatine Heights Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'astatine-heights-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_f,
+		alias = [
+			"ahsf",
+			"ahstreetf"
+		],
+		str_name = "Astatine Heights Street F",
+		str_desc = str_generic_streets_description,
+		channel = 'astatine-heights-street-f',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_a,
+		alias = [
+			"sbsa",
+			"sbstreeta"
+		],
+		str_name = "Smogsburg Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'smogsburg-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_b,
+		alias = [
+			"sbsb",
+			"sbstreetb"
+		],
+		str_name = "Smogsburg Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'smogsburg-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_c,
+		alias = [
+			"sbsc",
+			"sbstreetc"
+		],
+		str_name = "Smogsburg Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'smogsburg-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_d,
+		alias = [
+			"sbsd",
+			"sbstreetd"
+		],
+		str_name = "Smogsburg Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'smogsburg-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_e,
+		alias = [
+			"sbse",
+			"sbstreete"
+		],
+		str_name = "Smogsburg Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'smogsburg-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_a,
+		alias = [
+			"absa",
+			"abstreeta"
+		],
+		str_name = "Arsonbrook Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'arsonbrook-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_b,
+		alias = [
+			"absb",
+			"abstreetb"
+		],
+		str_name = "Arsonbrook Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'arsonbrook-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_c,
+		alias = [
+			"absc",
+			"abstreetc"
+		],
+		str_name = "Arsonbrook Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'arsonbrook-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_d,
+		alias = [
+			"absd",
+			"abstreetd"
+		],
+		str_name = "Arsonbrook Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'arsonbrook-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_e,
+		alias = [
+			"abse",
+			"abstreete"
+		],
+		str_name = "Arsonbrook Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'arsonbrook-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_maimridge_street_a,
+		alias = [
+			"mrsa",
+			"mrstreeta"
+		],
+		str_name = "Maimridge Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'maimridge-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_maimridge,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_maimridge_street_b,
+		alias = [
+			"mrsb",
+			"mrstreetb"
+		],
+		str_name = "Maimridge Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'maimridge-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_maimridge,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_maimridge_street_c,
+		alias = [
+			"mrsc",
+			"mrstreetc"
+		],
+		str_name = "Maimridge Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'maimridge-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_maimridge,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_brawlden_street_a,
+		alias = [
+			"bdsa",
+			"bdstreeta"
+		],
+		str_name = "Brawlden Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'brawlden-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_brawlden,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_brawlden_street_b,
+		alias = [
+			"bdsb",
+			"bdstreetb"
+		],
+		str_name = "Brawlden Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'brawlden-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_brawlden,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_brawlden_street_c,
+		alias = [
+			"bdsc",
+			"bdstreetc"
+		],
+		str_name = "Brawlden Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'brawlden-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_brawlden,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_brawlden_street_d,
+		alias = [
+			"bdsd",
+			"bdstreetd"
+		],
+		str_name = "Brawlden Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'brawlden-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_brawlden,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_littlechernobyl_street_a,
+		alias = [
+			"lcsa",
+			"lcstreeta"
+		],
+		str_name = "Little Chernobyl Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'little-chernobyl-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_littlechernobyl,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_littlechernobyl_street_b,
+		alias = [
+			"lcsb",
+			"lcstreetb"
+		],
+		str_name = "Little Chernobyl Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'little-chernobyl-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_littlechernobyl,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_littlechernobyl_street_c,
+		alias = [
+			"lcsc",
+			"lcstreetc"
+		],
+		str_name = "Little Chernobyl Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'little-chernobyl-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_littlechernobyl,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_a,
+		alias = [
+			"onysa",
+			"onystreeta"
+		],
+		str_name = "Old New Yonkers Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'old-new-yonkers-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_b,
+		alias = [
+			"onysb",
+			"onystreetb"
+		],
+		str_name = "Old New Yonkers Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'old-new-yonkers-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_c,
+		alias = [
+			"onysc",
+			"onystreetc"
+		],
+		str_name = "Old New Yonkers Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'old-new-yonkers-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_d,
+		alias = [
+			"onysd",
+			"onystreetd"
+		],
+		str_name = "Old New Yonkers Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'old-new-yonkers-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_e,
+		alias = [
+			"onyse",
+			"onystreete"
+		],
+		str_name = "Old New Yonkers Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'old-new-yonkers-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_newnewyonkers_street_a,
+		alias = [
+			"nnysa",
+			"nnystreeta"
+		],
+		str_name = "New New Yonkers Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'new-new-yonkers-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_newnewyonkers,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_newnewyonkers_street_b,
+		alias = [
+			"nnysb",
+			"nnystreetb"
+		],
+		str_name = "New New Yonkers Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'new-new-yonkers-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_newnewyonkers,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_newnewyonkers_street_c,
+		alias = [
+			"nnysc",
+			"nnystreetc"
+		],
+		str_name = "New New Yonkers Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'new-new-yonkers-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_newnewyonkers,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_newnewyonkers_street_d,
+		alias = [
+			"nnysd",
+			"nnystreetd"
+		],
+		str_name = "New New Yonkers Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'new-new-yonkers-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_newnewyonkers,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_assaultflatsbeach_street_a,
+		alias = [
+			"afbsa",
+			"afbstreeta"
+		],
+		str_name = "Assault Flats Beach Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'assault-flats-beach-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_assaultflatsbeach,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_assaultflatsbeach_street_b,
+		alias = [
+			"afbsb",
+			"afbstreetb"
+		],
+		str_name = "Assault Flats Beach Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'assault-flats-beach-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_assaultflatsbeach,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_a,
+		alias = [
+			"vcsa",
+			"vcstreeta"
+		],
+		str_name = "Vagrant's Corner Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'vagrants-corner-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_b,
+		alias = [
+			"vcsb",
+			"vcstreetb"
+		],
+		str_name = "Vagrant's Corner Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'vagrants-corner-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_c,
+		alias = [
+			"vcsc",
+			"vcstreetc"
+		],
+		str_name = "Vagrant's Corner Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'vagrants-corner-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_d,
+		alias = [
+			"vcsd",
+			"vcstreetd"
+		],
+		str_name = "Vagrant's Corner Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'vagrants-corner-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_e,
+		alias = [
+			"vcse",
+			"vcstreete"
+		],
+		str_name = "Vagrant's Corner Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'vagrants-corner-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_f,
+		alias = [
+			"vcsf",
+			"vcstreetf"
+		],
+		str_name = "Vagrant's Corner Street F",
+		str_desc = str_generic_streets_description,
+		channel = 'vagrants-corner-street-f',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_greenlightdistrict_street_a,
+		alias = [
+			"gldsa",
+			"gldstreeta"
+		],
+		str_name = "Green Light District Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'green-light-district-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_greenlightdistrict,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_greenlightdistrict_street_b,
+		alias = [
+			"gldsb",
+			"gldstreetb"
+		],
+		str_name = "Green Light District Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'green-light-district-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_greenlightdistrict,
+		neighbors = {
+	
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_greenlightdistrict_street_c,
+		alias = [
+			"gldsc",
+			"gldstreetc"
+		],
+		str_name = "Green Light District Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'green-light-district-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_greenlightdistrict,
+		neighbors = {
+		
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_slimesend_street_a,
+		alias = [
+			"slsa",
+			"slstreeta"
+		],
+		str_name = "Slime's End Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'slimes-end-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_slimesend,
+		neighbors = {
+	
 		}
 	),
 	# Subzones start here
@@ -10348,6 +12462,9 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_downtown],
 		max_degradation = 10000000,
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # slimecorp HQ
 		id_poi = poi_id_slimecorphq,
@@ -10363,7 +12480,10 @@ poi_list = [
 		role = "SlimeCorp HQ",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_downtown]
+		mother_districts = [poi_id_downtown],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # stock-exchange
 		id_poi = poi_id_stockexchange,
@@ -10409,7 +12529,10 @@ poi_list = [
 			vendor_bazaar
 		],
 		is_subzone = True,
-		mother_districts = [poi_id_smogsburg]
+		mother_districts = [poi_id_smogsburg],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # the-cinema
 		id_poi = poi_id_cinema,
@@ -10428,7 +12551,10 @@ poi_list = [
 		role = "Cinema",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_astatineheights]
+		mother_districts = [poi_id_astatineheights],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # food-court
 		id_poi = poi_id_foodcourt,
@@ -10461,7 +12587,10 @@ poi_list = [
 			vendor_mtndew,
 		],
 		is_subzone = True,
-		mother_districts = [poi_id_krakbay]
+		mother_districts = [poi_id_krakbay],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # nlac-u
 		id_poi = poi_id_nlacu,
@@ -10485,6 +12614,9 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_gatlingsdale],
 		write_manuscript = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # battle-arena
 		id_poi = poi_id_arena,
@@ -10501,7 +12633,10 @@ poi_list = [
 		role = "Arena",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_vandalpark]
+		mother_districts = [poi_id_vandalpark],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # the-dojo
 		id_poi = poi_id_dojo,
@@ -10522,7 +12657,10 @@ poi_list = [
 		mother_districts = [poi_id_southsleezeborough],
 		vendors = [
 			vendor_dojo
-		]
+		],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # speakeasy
 		id_poi = poi_id_speakeasy,
@@ -10547,7 +12685,10 @@ poi_list = [
 			vendor_bar
 		],
 		is_subzone = True,
-		mother_districts = [poi_id_vagrantscorner]
+		mother_districts = [poi_id_vagrantscorner],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # 7-11
 		id_poi = poi_id_711,
@@ -10569,7 +12710,10 @@ poi_list = [
 			vendor_vendingmachine
 		],
 		is_subzone = True,
-		mother_districts = [poi_id_poudrinalley]
+		mother_districts = [poi_id_poudrinalley],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # the-labs
 		id_poi = poi_id_slimeoidlab,
@@ -10594,7 +12738,10 @@ poi_list = [
 		role = "Slimeoid Lab",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_brawlden]
+		mother_districts = [poi_id_brawlden],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # the-mines
 		id_poi = poi_id_mine,
@@ -10611,7 +12758,10 @@ poi_list = [
 		role = "Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_juviesrow]
+		mother_districts = [poi_id_juviesrow],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # the-casino
 		id_poi = poi_id_thecasino,
@@ -10630,7 +12780,10 @@ poi_list = [
 		role = "Casino",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_greenlightdistrict]
+		mother_districts = [poi_id_greenlightdistrict],
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # cratersville mines
 		id_poi = poi_id_cv_mines,
@@ -10649,7 +12802,10 @@ poi_list = [
 		role = "Cratersville Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_cratersville]
+		mother_districts = [poi_id_cratersville],
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # toxington mines
 		id_poi = poi_id_tt_mines,
@@ -10667,7 +12823,10 @@ poi_list = [
 		role = "Toxington Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_toxington]
+		mother_districts = [poi_id_toxington],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # smokers-cough
 		id_poi = poi_id_diner,
@@ -10690,7 +12849,10 @@ poi_list = [
 			vendor_diner
 		],
 		is_subzone = True,
-		mother_districts = [poi_id_wreckington]
+		mother_districts = [poi_id_wreckington],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # Red Mobster
 		id_poi = poi_id_seafood,
@@ -10712,7 +12874,10 @@ poi_list = [
 			vendor_seafood
 		],
 		is_subzone = True,
-		mother_districts = [poi_id_astatineheights]
+		mother_districts = [poi_id_astatineheights],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # JR Farm
 		id_poi = poi_id_jr_farms,
@@ -10732,7 +12897,10 @@ poi_list = [
 		role = "Juvie's Row Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_juviesrow]
+		mother_districts = [poi_id_juviesrow],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # OG Farm
 		id_poi = poi_id_og_farms,
@@ -10754,7 +12922,10 @@ poi_list = [
 		role = "Ooze Gardens Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_oozegardens]
+		mother_districts = [poi_id_oozegardens],
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # AB Farm
 		id_poi = poi_id_ab_farms,
@@ -10774,7 +12945,10 @@ poi_list = [
 		role = "Arsonbrook Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_arsonbrook]
+		mother_districts = [poi_id_arsonbrook],
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Neo Milwaukee State
 		id_poi = poi_id_neomilwaukeestate,
@@ -10795,6 +12969,9 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_northsleezeborough],
 		write_manuscript = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Assault Flats Beach Resort
 		id_poi = poi_id_beachresort,
@@ -10812,7 +12989,10 @@ poi_list = [
 			vendor_beachresort
 		],
 		is_subzone = True,
-		mother_districts = [poi_id_assaultflatsbeach]
+		mother_districts = [poi_id_assaultflatsbeach],
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Dreadford Country Club
 		id_poi = poi_id_countryclub,
@@ -10830,7 +13010,10 @@ poi_list = [
 			vendor_countryclub
 		],
 		is_subzone = True,
-		mother_districts = [poi_id_dreadford]
+		mother_districts = [poi_id_dreadford],
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # SlimeCorp Recycling Plant
 		id_poi = poi_id_recyclingplant,
@@ -10849,7 +13032,10 @@ poi_list = [
 		role = "Recycling Plant",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_smogsburg]
+		mother_districts = [poi_id_smogsburg],
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Toxington Pier
 		id_poi = poi_id_toxington_pier,
@@ -10866,7 +13052,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_toxington],
 		is_pier = True,
-		pier_type = fish_slime_freshwater
+		pier_type = fish_slime_freshwater,
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Jaywalker Plain Pier
 		id_poi = poi_id_jaywalkerplain_pier,
@@ -10883,7 +13072,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_jaywalkerplain],
 		is_pier = True,
-		pier_type = fish_slime_freshwater
+		pier_type = fish_slime_freshwater,
+		neighbors = {
+			
+		},
 
 	),
 	EwPoi(  # Crookline Pier
@@ -10901,8 +13093,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_crookline],
 		is_pier = True,
-		pier_type = fish_slime_freshwater
-
+		pier_type = fish_slime_freshwater,
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Assault Flats Beach Pier
 		id_poi = poi_id_assaultflatsbeach_pier,
@@ -10919,8 +13113,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_assaultflatsbeach],
 		is_pier = True,
-		pier_type = fish_slime_saltwater
-
+		pier_type = fish_slime_saltwater,
+		neighbors = {
+			
+		},
 	),
 	# EwPoi(  # Vagrant's Corner Pier
 	# 	id_poi = poi_id_vagrantscorner_pier,
@@ -10955,8 +13151,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_juviesrow],
 		is_pier = True,
-		pier_type = fish_slime_saltwater
-
+		pier_type = fish_slime_saltwater,
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Slime's End Pier
 		id_poi = poi_id_slimesend_pier,
@@ -10973,8 +13171,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_slimesend],
 		is_pier = True,
-		pier_type = fish_slime_saltwater
-
+		pier_type = fish_slime_saltwater,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # Slime Sea
 		id_poi = poi_id_slimesea,
@@ -11003,7 +13203,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_wreckington],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Vagrant's Corner Ferry Port
 		id_poi = poi_id_vc_port,
@@ -11025,7 +13228,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_vagrantscorner],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Toxington Subway Station
 		id_poi = poi_id_tt_subway_station,
@@ -11052,7 +13258,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_toxington],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Astatine Heights Subway Station
 		id_poi = poi_id_ah_subway_station,
@@ -11079,7 +13288,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_astatineheights],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Gatlingsdale Subway Station
 		id_poi = poi_id_gd_subway_station,
@@ -11106,7 +13318,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_gatlingsdale],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Arsonbrook Subway Station
 		id_poi = poi_id_ab_subway_station,
@@ -11133,7 +13348,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_arsonbrook],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Cop Killtown Subway Station
 		id_poi = poi_id_ck_subway_station,
@@ -11161,7 +13379,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_copkilltown],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Smogsburg Subway Station
 		id_poi = poi_id_sb_subway_station,
@@ -11191,7 +13412,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_smogsburg],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Downtown Subway Station
 		id_poi = poi_id_dt_subway_station,
@@ -11213,7 +13437,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_downtown],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Krak Bay Subway Station
 		id_poi = poi_id_kb_subway_station,
@@ -11243,7 +13470,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_krakbay],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Glocksbury Subway Station
 		id_poi = poi_id_gb_subway_station,
@@ -11270,7 +13500,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_glocksbury],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # West Glocksbury Subway Station
 		id_poi = poi_id_wgb_subway_station,
@@ -11297,7 +13530,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_westglocksbury],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Jaywalker Plain Subway Station
 		id_poi = poi_id_jp_subway_station,
@@ -11324,7 +13560,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_jaywalkerplain],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # North Sleezeborough Subway Station
 		id_poi = poi_id_nsb_subway_station,
@@ -11352,7 +13591,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_northsleezeborough],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # South Sleezeborough Subway Station
 		id_poi = poi_id_ssb_subway_station,
@@ -11380,7 +13622,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_southsleezeborough],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Cratersville Subway Station
 		id_poi = poi_id_cv_subway_station,
@@ -11407,7 +13652,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_cratersville],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Wreckington Subway Station
 		id_poi = poi_id_wt_subway_station,
@@ -11434,7 +13682,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_wreckington],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Rowdy Roughhouse Subway Station
 		id_poi = poi_id_rr_subway_station,
@@ -11460,7 +13711,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_rowdyroughhouse],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Green Light District Subway Station
 		id_poi = poi_id_gld_subway_station,
@@ -11488,7 +13742,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_greenlightdistrict],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Juvie's Row Subway Station
 		id_poi = poi_id_jr_subway_station,
@@ -11515,7 +13772,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_juviesrow],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Vagrant's Corner Subway Station
 		id_poi = poi_id_vc_subway_station,
@@ -11542,7 +13802,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_vagrantscorner],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Assault Flats Beach Subway Station
 		id_poi = poi_id_afb_subway_station,
@@ -11574,7 +13837,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_assaultflatsbeach],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Dreadford Blimp Tower
 		id_poi = poi_id_df_blimp_tower,
@@ -11597,7 +13863,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_dreadford],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Assault Flats Beach Blimp Tower
 		id_poi = poi_id_afb_blimp_tower,
@@ -11623,7 +13892,10 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_assaultflatsbeach],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # realestate
 		id_poi = poi_id_realestate,
@@ -11642,7 +13914,10 @@ poi_list = [
 		channel = channel_realestateagency,
 		role = "Real Estate Agency",
 		mother_districts = [poi_id_oldnewyonkers],
-		is_subzone = True
+		is_subzone = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # Glocksbury Comics
 		id_poi = poi_id_glocksburycomics,
@@ -11664,6 +13939,9 @@ poi_list = [
 		mother_districts = [poi_id_glocksbury],
 		is_subzone = True,
 		write_manuscript = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi( # Slimy Persuits
 		id_poi=poi_id_slimypersuits,
@@ -11683,7 +13961,10 @@ poi_list = [
 		channel="slimy-persuits",
 		role="Slimy Persuits",
 		mother_districts  = [poi_id_newnewyonkers],
-		is_subzone=True
+		is_subzone=True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Green Cake Cafe
 		id_poi=poi_id_greencakecafe,
@@ -11703,6 +13984,9 @@ poi_list = [
 		mother_districts = [poi_id_littlechernobyl],
 		is_subzone=True,
 		write_manuscript=True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi(
 		id_poi=poi_id_sodafountain,
@@ -11719,7 +14003,10 @@ poi_list = [
 		channel=channel_sodafountain,
 		role="The Bicarbonate Soda Fountain",
 		mother_districts  = [poi_id_krakbay],
-		is_subzone=True
+		is_subzone=True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
@@ -12296,6 +14583,9 @@ poi_list = [
 		mother_districts = [poi_id_slimesend],
 		pvp = True,
 		is_subzone = True,
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Clothing store in Krak Bay
 		id_poi = poi_id_bodega,
@@ -12315,6 +14605,9 @@ poi_list = [
 
 		],
 		is_subzone = True,
+		neighbors = {
+			
+		},
 	),
 	# EwPoi(  # Outskirts - 1
 	# 	id_poi=poi_id_south_outskirts,
@@ -12650,17 +14943,17 @@ poi_list = [
 		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 12
-		id_poi=poi_id_astatineheights_outskirts,
+		id_poi=poi_id_maimridgeoutskirts,
 		alias=[
-			"astatineheightsoutskirts",
-			"ahoutskirts",
-			"aho",
+			"maimridgeoutskirts",
+			"mroutskirts",
+			"mro",
 		],
-		str_name="Astatine Heights Outskirts",
-		str_desc="{} To the South is Astatine Heights. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description),
+		str_name="Maimridge Outskirts",
+		str_desc="{} To the South is Maimridge. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description),
 		coord=(46, 10),
-		channel="astatine-heights-outskirts",
-		role="Astatine Heights Outskirts",
+		channel="maimridge-outskirts",
+		role="Maimridge Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True
