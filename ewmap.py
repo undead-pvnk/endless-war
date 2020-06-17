@@ -1819,8 +1819,8 @@ async def print_map_data(cmd):
 		if poi.is_district:
 			districts_count += 1
 			
-			print(poi.major_role)
-			print(poi.minor_role)
+			#print(poi.major_role)
+			#print(poi.minor_role)
 			
 		if poi.is_subzone:
 			subzones_count += 1
@@ -1831,21 +1831,29 @@ async def print_map_data(cmd):
 		if poi.is_street:
 			streets_count += 1
 			
-			print(poi.minor_role)
+			#print(poi.minor_role)
 			
 		if poi.is_transport:
 			transports_count += 1
-			
-	client = ewutils.get_client()
-	server = client.get_server(cmd.message.server.id)
-			
-	rolenames = []
-	for role in server.roles:
-		rolenames.append(role.name)
 		
-	rolenames.sort()
-	for name in rolenames:
-		print(name)
+		neighbor_count = 0
+		for neighbor_poi in ewcfg.poi_list:
+			if poi.id_poi in neighbor_poi.neighbors.keys():
+				neighbor_count += 1
+		
+		if poi.is_district:		
+			print('found {} neighbors for {}'.format(neighbor_count, poi.id_poi))
+			
+	# client = ewutils.get_client()
+	# server = client.get_server(cmd.message.server.id)
+	# 		
+	# rolenames = []
+	# for role in server.roles:
+	# 	rolenames.append(role.name)
+	# 	
+	# rolenames.sort()
+	# for name in rolenames:
+	# 	print(name)
 	
 	print("\n\nPOI LIST STATISTICS:\n{} districts\n{} subzones\n{} apartments\n{} outskirts\n{} streets\n{} transports\n\n".format(districts_count, subzones_count, apartments_count, outskirts_count, streets_count, transports_count))
 	

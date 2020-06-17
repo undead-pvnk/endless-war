@@ -9750,9 +9750,18 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
+			poi_id_krakbay: travel_time_district,
 			poi_id_smogsburg : travel_time_district,
-			poi_id_krakbay : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_rowdyroughhouse : travel_time_district,
+			poi_id_copkilltown : travel_time_district,
+			poi_id_greenlightdistrict : travel_time_district,
 			poi_id_downtown_street_a : travel_time_street,
+			poi_id_downtown_street_b : travel_time_street,
+			poi_id_downtown_street_c : travel_time_street,
+			poi_id_downtown_street_d : travel_time_street,
+			poi_id_downtown_street_e : travel_time_street,
+			poi_id_downtown_street_f : travel_time_street,
 			poi_id_stockexchange : travel_time_subzone,
 		}
 	),
@@ -9773,6 +9782,15 @@ poi_list = [
 		is_capturable = True,
 		neighbors = {
 			poi_id_downtown : travel_time_district,
+			poi_id_copkilltown : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_smogsburg_street_a : travel_time_street,
+			poi_id_smogsburg_street_b : travel_time_street,
+			poi_id_smogsburg_street_c : travel_time_street,
+			poi_id_smogsburg_street_d : travel_time_street,
+			poi_id_smogsburg_street_e : travel_time_street,
 		}
 	),
 	EwPoi( # 3
@@ -9803,7 +9821,11 @@ poi_list = [
 		community_chest = chest_id_copkilltown,
 		is_gangbase = True,
 		neighbors = {
-			
+			poi_id_downtown : travel_time_district,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_copkilltown_street_a : travel_time_street,
 		},
 	),
 	EwPoi( # 4
@@ -9821,7 +9843,18 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors={
-			poi_id_downtown: travel_time_district,
+			poi_id_downtown : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_oozegardens : travel_time_district,
+			poi_id_southsleezeborough : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_glocksbury : travel_time_district,
+			poi_id_krakbay_street_a : travel_time_street,
+			poi_id_krakbay_street_b : travel_time_street,
+			poi_id_krakbay_street_c : travel_time_street,
+			poi_id_krakbay_street_d : travel_time_street,
+			poi_id_krakbay_street_e : travel_time_street,
+			poi_id_krakbay_street_f : travel_time_street,
 		}
 	),
 	EwPoi( # 5
@@ -9839,7 +9872,16 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_downtown : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_oozegardens : travel_time_district,
+			poi_id_cratersville : travel_time_district,
+			poi_id_rowdyroughhouse : travel_time_district,
+			poi_id_poudrinalley_street_a : travel_time_street,
+			poi_id_poudrinalley_street_b : travel_time_street,
+			poi_id_poudrinalley_street_c : travel_time_street,
+			poi_id_poudrinalley_street_d : travel_time_street,
+			poi_id_poudrinalley_street_e : travel_time_street,
 		},
 	),
 	EwPoi( # 6
@@ -9867,7 +9909,10 @@ poi_list = [
 		community_chest = chest_id_rowdyroughhouse,
 		is_gangbase = True,
 		neighbors = {
-			
+			poi_id_downtown : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_wreckington : travel_time_district,
+			poi_id_rowdyroughhouse_street_a : travel_time_street,
 		},
 	),
 	EwPoi( # 7
@@ -9886,7 +9931,12 @@ poi_list = [
 		is_capturable = True,
 		has_ads = True,
 		neighbors = {
-			
+			poi_id_downtown : travel_time_district,
+			poi_id_juviesrow : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_greenlightdistrict_street_a : travel_time_street,
+			poi_id_greenlightdistrict_street_b : travel_time_street,
+			poi_id_greenlightdistrict_street_c : travel_time_street,
 		},
 	),
 	EwPoi( # 8
@@ -9903,7 +9953,16 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_brawlden : travel_time_district,
+			poi_id_newnewyonkers : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_littlechernobyl : travel_time_district,
+			poi_id_oldnewyonkers_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_b : travel_time_street,
+			poi_id_oldnewyonkers_street_c : travel_time_street,
+			poi_id_oldnewyonkers_street_d : travel_time_street,
+			poi_id_oldnewyonkers_street_e : travel_time_street,
 		},
 	),
 	EwPoi( # 9
@@ -9923,7 +9982,12 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_brawlden : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_littlechernobyl_street_a : travel_time_street,
+			poi_id_littlechernobyl_street_b : travel_time_street,
+			poi_id_littlechernobyl_street_c : travel_time_street,
 		},
 	),
 	EwPoi( # 10
@@ -9941,7 +10005,16 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_maimridge : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_littlechernobyl : travel_time_district,
+			poi_id_brawlden : travel_time_district,
+			poi_id_arsonbrook_street_a : travel_time_street,
+			poi_id_arsonbrook_street_b : travel_time_street,
+			poi_id_arsonbrook_street_c : travel_time_street,
+			poi_id_arsonbrook_street_d : travel_time_street,
+			poi_id_arsonbrook_street_e : travel_time_street,
 		},
 	),
 	EwPoi( # 11
@@ -9960,7 +10033,18 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_copkilltown : travel_time_district,
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_toxington : travel_time_district,
+			poi_id_maimridge : travel_time_district,
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_astatineheights_street_a : travel_time_street,
+			poi_id_astatineheights_street_b : travel_time_street,
+			poi_id_astatineheights_street_c : travel_time_street,
+			poi_id_astatineheights_street_d : travel_time_street,
+			poi_id_astatineheights_street_e : travel_time_street,
+			poi_id_astatineheights_street_f : travel_time_street,
 		},
 	),
 	EwPoi( # 12
@@ -9979,7 +10063,16 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_toxington : travel_time_district,
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_vandalpark : travel_time_district,
+			poi_id_copkilltown : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_gatlingsdale_street_a : travel_time_street,
+			poi_id_gatlingsdale_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_c : travel_time_street,
+			poi_id_gatlingsdale_street_d : travel_time_street,
+			poi_id_gatlingsdale_street_e : travel_time_street,
 		},
 	),
 	EwPoi( # 13
@@ -9998,7 +10091,14 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_westglocksbury : travel_time_district,
+			poi_id_glocksbury : travel_time_district,
+			poi_id_vandalpark_street_a : travel_time_street,
+			poi_id_vandalpark_street_b : travel_time_street,
+			poi_id_vandalpark_street_c : travel_time_street,
+			poi_id_vandalpark_street_d : travel_time_street,
 		},
 	),
 	EwPoi( # 14
@@ -10017,7 +10117,16 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_vandalpark : travel_time_district,
+			poi_id_westglocksbury : travel_time_district,
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_glocksbury_street_a : travel_time_street,
+			poi_id_glocksbury_street_b : travel_time_street,
+			poi_id_glocksbury_street_c : travel_time_street,
+			poi_id_glocksbury_street_d : travel_time_street,
+			poi_id_glocksbury_street_e : travel_time_street,
 		},
 	),
 	EwPoi( # 15
@@ -10040,7 +10149,16 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_glocksbury : travel_time_district,
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_crookline : travel_time_district,
+			poi_id_southsleezeborough : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_northsleezeborough_street_a : travel_time_street,
+			poi_id_northsleezeborough_street_b : travel_time_street,
+			poi_id_northsleezeborough_street_c : travel_time_street,
+			poi_id_northsleezeborough_street_d : travel_time_street,
+			poi_id_northsleezeborough_street_e : travel_time_street,
 		},
 	),
 	EwPoi( # 16
@@ -10063,7 +10181,14 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_crookline : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_oozegardens : travel_time_district,
+			poi_id_southsleezeborough_street_a : travel_time_street,
+			poi_id_southsleezeborough_street_b : travel_time_street,
+			poi_id_southsleezeborough_street_c : travel_time_street,
+			poi_id_southsleezeborough_street_d : travel_time_street,
 		},
 	),
 	EwPoi( # 17
@@ -10082,7 +10207,14 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_southsleezeborough : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_cratersville : travel_time_district,
+			poi_id_oozegardens_street_a : travel_time_street,
+			poi_id_oozegardens_street_b : travel_time_street,
+			poi_id_oozegardens_street_c : travel_time_street,
+			poi_id_oozegardens_street_d : travel_time_street,
 		},
 	),
 	EwPoi( # 18
@@ -10101,7 +10233,12 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_oozegardens : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_wreckington : travel_time_district,
+			poi_id_cratersville_street_a : travel_time_street,
+			poi_id_cratersville_street_b: travel_time_street,
+			poi_id_cratersville_street_c: travel_time_street,
 		},
 	),
 	EwPoi( # 19
@@ -10121,7 +10258,10 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_cratersville : travel_time_district,
+			poi_id_rowdyroughhouse : travel_time_district,
+			poi_id_wreckington_street_a : travel_time_street,
+			poi_id_wreckington_street_b : travel_time_street,
 		},
 	),
 	EwPoi( # 20
@@ -10142,7 +10282,9 @@ poi_list = [
 		community_chest = chest_id_juviesrow,
 		is_gangbase = True,
 		neighbors = {
-			
+			poi_id_greenlightdistrict : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_juviesrow_street_a : travel_time_district,
 		},
 	),
 	EwPoi( # 21
@@ -10162,7 +10304,8 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_slimesend_street_a : travel_time_street,
 		},
 	),
 	EwPoi( # 22
@@ -10181,7 +10324,18 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_greenlightdistrict : travel_time_district,
+			poi_id_juviesrow : travel_time_district,
+			poi_id_slimesend : travel_time_district,
+			poi_id_assaultflatsbeach : travel_time_district,
+			poi_id_newnewyonkers : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_vagrantscorner_street_a : travel_time_street,
+			poi_id_vagrantscorner_street_b : travel_time_street,
+			poi_id_vagrantscorner_street_c : travel_time_street,
+			poi_id_vagrantscorner_street_d : travel_time_street,
+			poi_id_vagrantscorner_street_e : travel_time_street,
+			poi_id_vagrantscorner_street_f : travel_time_street,
 		},
 	),
 	EwPoi( # 23
@@ -10203,7 +10357,10 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_newnewyonkers : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_assaultflatsbeach_street_a : travel_time_street,
+			poi_id_assaultflatsbeach_street_b: travel_time_street,
 		},
 	),
 	EwPoi( # 24
@@ -10222,7 +10379,14 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_brawlden : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_assaultflatsbeach : travel_time_district,
+			poi_id_newnewyonkers_street_a : travel_time_street,
+			poi_id_newnewyonkers_street_b : travel_time_street,
+			poi_id_newnewyonkers_street_c : travel_time_street,
+			poi_id_newnewyonkers_street_d : travel_time_street,
 		},
 	),
 	EwPoi( # 25
@@ -10240,7 +10404,14 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_littlechernobyl : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_newnewyonkers : travel_time_district,
+			poi_id_brawlden_street_a : travel_time_street,
+			poi_id_brawlden_street_b : travel_time_street,
+			poi_id_brawlden_street_c : travel_time_street,
+			poi_id_brawlden_street_d : travel_time_street,
 		},
 	),
 	EwPoi( # 26
@@ -10261,7 +10432,16 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_charcoalpark : travel_time_district,
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_maimridge : travel_time_district,
+			poi_id_toxington_street_a : travel_time_street,
+			poi_id_toxington_street_b : travel_time_street,
+			poi_id_toxington_street_c : travel_time_street,
+			poi_id_toxington_street_d : travel_time_street,
+			poi_id_toxington_street_e : travel_time_street,
 		},
 	),
 	EwPoi( # 27
@@ -10283,7 +10463,10 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_toxington : travel_time_district,
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_charcoalpark_street_a : travel_time_street,
+			poi_id_charcoalpark_street_b : travel_time_street,
 		},
 	),
 	EwPoi( # 28
@@ -10303,7 +10486,16 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_charcoalpark : travel_time_district,
+			poi_id_toxington : travel_time_district,
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_vandalpark : travel_time_district,
+			poi_id_westglocksbury : travel_time_district,
+			poi_id_poloniumhill_street_a : travel_time_street,
+			poi_id_poloniumhill_street_b : travel_time_street,
+			poi_id_poloniumhill_street_c : travel_time_street,
+			poi_id_poloniumhill_street_d : travel_time_street,
+			poi_id_poloniumhill_street_e : travel_time_street,
 		},
 	),
 	EwPoi( # 29
@@ -10325,7 +10517,14 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_vandalpark : travel_time_district,
+			poi_id_glocksbury : travel_time_district,
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_westglocksbury_street_a : travel_time_district,
+			poi_id_westglocksbury_street_b : travel_time_district,
+			poi_id_westglocksbury_street_c : travel_time_district,
+			poi_id_westglocksbury_street_d : travel_time_district,
 		},
 	),
 	EwPoi(  # 30
@@ -10346,7 +10545,16 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_westglocksbury : travel_time_district,
+			poi_id_glocksbury : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_crookline : travel_time_district,
+			poi_id_dreadford : travel_time_district,
+			poi_id_jaywalkerplain_street_a : travel_time_street,
+			poi_id_jaywalkerplain_street_b : travel_time_street,
+			poi_id_jaywalkerplain_street_c : travel_time_street,
+			poi_id_jaywalkerplain_street_d : travel_time_street,
+			poi_id_jaywalkerplain_street_e : travel_time_street,
 		},
 	),
 	EwPoi(  # 31
@@ -10365,7 +10573,14 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_dreadford : travel_time_district,
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_southsleezeborough : travel_time_district,
+			poi_id_crookline_street_a : travel_time_street,
+			poi_id_crookline_street_b : travel_time_street,
+			poi_id_crookline_street_c : travel_time_street,
+			poi_id_crookline_street_d : travel_time_street,
 		},
 	),
 	EwPoi(  # 32
@@ -10384,7 +10599,10 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_crookline : travel_time_district,
+			poi_id_dreadford_street_a : travel_time_street,
+			poi_id_dreadford_street_b : travel_time_street,
 		},
 	),
 	EwPoi( # 33
@@ -10402,7 +10620,12 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			
+			poi_id_toxington : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_maimridge_street_a : travel_time_street,
+			poi_id_maimridge_street_b : travel_time_street,
+			poi_id_maimridge_street_c : travel_time_street,
 		},
 	),
 	EwPoi( # the-sewers
@@ -10441,7 +10664,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_rowdyroughhouse,
 		neighbors = {
-
+			poi_id_rowdyroughhouse : travel_time_street,
+			poi_id_downtown_street_c : travel_time_street,
+			poi_id_poudrinalley_street_a : travel_time_street,
+			poi_id_wreckington_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10457,7 +10683,11 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_copkilltown,
 		neighbors = {
-
+			poi_id_copkilltown : travel_time_street,
+			poi_id_gatlingsdale_street_a : travel_time_street,
+			poi_id_astatineheights_street_f : travel_time_street,
+			poi_id_smogsburg_street_c : travel_time_street,
+			poi_id_downtown_street_f : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10473,7 +10703,9 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_juviesrow,
 		neighbors = {
-
+			poi_id_juviesrow : travel_time_street,
+			poi_id_greenlightdistrict_street_b : travel_time_street,
+			poi_id_vagrantscorner_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10490,7 +10722,9 @@ poi_list = [
 		father_district = poi_id_downtown,
 		neighbors = {
 			poi_id_downtown : travel_time_street,
-			poi_id_stockexchange : travel_time_subzone,
+			poi_id_downtown_street_f : travel_time_street,
+			poi_id_downtown_street_b : travel_time_street,
+			poi_id_smogsburg_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10506,7 +10740,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_downtown,
 		neighbors = {
-	
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_a : travel_time_street,
+			poi_id_downtown_street_c : travel_time_street,
+			poi_id_greenlightdistrict_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10522,7 +10759,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_downtown,
 		neighbors = {
-	
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_d : travel_time_street,
+			poi_id_downtown_street_b : travel_time_street,
+			poi_id_rowdyroughhouse_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10538,7 +10778,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_downtown,
 		neighbors = {
-	
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_c : travel_time_street,
+			poi_id_downtown_street_e : travel_time_street,
+			poi_id_poudrinalley_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10554,7 +10797,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_downtown,
 		neighbors = {
-	
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_d : travel_time_street,
+			poi_id_downtown_street_f : travel_time_street,
+			poi_id_krakbay_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10570,7 +10816,10 @@ poi_list = [
 		is_capturable=True,
 		father_district=poi_id_downtown,
 		neighbors={
-
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_e : travel_time_street,
+			poi_id_downtown_street_a : travel_time_street,
+			poi_id_copkilltown_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10586,7 +10835,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_krakbay,
 		neighbors = {
-	
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_f : travel_time_street,
+			poi_id_krakbay_street_b : travel_time_street,
+			poi_id_downtown_street_e : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10602,7 +10854,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_krakbay,
 		neighbors = {
-	
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_a : travel_time_street,
+			poi_id_krakbay_street_c : travel_time_street,
+			poi_id_poudrinalley_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10618,7 +10873,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_krakbay,
 		neighbors = {
-	
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_b : travel_time_street,
+			poi_id_krakbay_street_d : travel_time_street,
+			poi_id_oozegardens_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10634,7 +10892,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_krakbay,
 		neighbors = {
-	
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_c : travel_time_street,
+			poi_id_krakbay_street_e : travel_time_street,
+			poi_id_southsleezeborough_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10650,7 +10911,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_krakbay,
 		neighbors = {
-	
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_d : travel_time_street,
+			poi_id_krakbay_street_f : travel_time_street,
+			poi_id_northsleezeborough_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10666,7 +10930,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_krakbay,
 		neighbors = {
-	
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_e : travel_time_street,
+			poi_id_krakbay_street_a : travel_time_street,
+			poi_id_glocksbury_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10682,7 +10949,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_poudrinalley,
 		neighbors = {
-	
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_e : travel_time_street,
+			poi_id_poudrinalley_street_b : travel_time_street,
+			poi_id_rowdyroughhouse_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10698,7 +10968,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_poudrinalley,
 		neighbors = {
-	
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_a : travel_time_street,
+			poi_id_poudrinalley_street_c : travel_time_street,
+			poi_id_downtown_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10714,7 +10987,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_poudrinalley,
 		neighbors = {
-	
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_b : travel_time_street,
+			poi_id_poudrinalley_street_d : travel_time_street,
+			poi_id_krakbay_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10730,7 +11006,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_poudrinalley,
 		neighbors = {
-	
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_c : travel_time_street,
+			poi_id_poudrinalley_street_e : travel_time_street,
+			poi_id_oozegardens_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10746,7 +11025,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_poudrinalley,
 		neighbors = {
-	
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_d : travel_time_street,
+			poi_id_poudrinalley_street_a : travel_time_street,
+			poi_id_cratersville_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10762,7 +11044,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_cratersville,
 		neighbors = {
-	
+			poi_id_cratersville : travel_time_street,
+			poi_id_cratersville_street_b : travel_time_street,
+			poi_id_cratersville_street_c : travel_time_street,
+			poi_id_wreckington_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10778,7 +11063,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_cratersville,
 		neighbors = {
-	
+			poi_id_cratersville : travel_time_street,
+			poi_id_cratersville_street_a : travel_time_street,
+			poi_id_cratersville_street_c : travel_time_street,
+			poi_id_poudrinalley_street_e : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10794,7 +11082,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_cratersville,
 		neighbors = {
-	
+			poi_id_cratersville : travel_time_street,
+			poi_id_cratersville_street_a : travel_time_street,
+			poi_id_cratersville_street_b : travel_time_street,
+			poi_id_oozegardens_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10810,7 +11101,9 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_wreckington,
 		neighbors = {
-	
+			poi_id_wreckington : travel_time_street,
+			poi_id_wreckington_street_b : travel_time_street,
+			poi_id_cratersville_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10826,7 +11119,9 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_wreckington,
 		neighbors = {
-	
+			poi_id_wreckington : travel_time_street,
+			poi_id_wreckington_street_a : travel_time_street,
+			poi_id_rowdyroughhouse_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10842,7 +11137,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_oozegardens,
 		neighbors = {
-	
+			poi_id_oozegardens : travel_time_street,
+			poi_id_oozegardens_street_d : travel_time_street,
+			poi_id_oozegardens_street_b : travel_time_street,
+			poi_id_southsleezeborough_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10858,7 +11156,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_oozegardens,
 		neighbors = {
-	
+			poi_id_oozegardens : travel_time_street,
+			poi_id_oozegardens_street_a : travel_time_street,
+			poi_id_oozegardens_street_c : travel_time_street,
+			poi_id_krakbay_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10874,7 +11175,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_oozegardens,
 		neighbors = {
-	
+			poi_id_oozegardens : travel_time_street,
+			poi_id_oozegardens_street_b : travel_time_street,
+			poi_id_oozegardens_street_d : travel_time_street,
+			poi_id_poudrinalley_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10890,7 +11194,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_oozegardens,
 		neighbors = {
-	
+			poi_id_oozegardens : travel_time_street,
+			poi_id_oozegardens_street_c : travel_time_street,
+			poi_id_oozegardens_street_a : travel_time_street,
+			poi_id_cratersville_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10906,7 +11213,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_southsleezeborough,
 		neighbors = {
-	
+			poi_id_southsleezeborough : travel_time_street,
+			poi_id_southsleezeborough_street_d : travel_time_street,
+			poi_id_southsleezeborough_street_b : travel_time_street,
+			poi_id_crookline_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10922,7 +11232,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_southsleezeborough,
 		neighbors = {
-	
+			poi_id_southsleezeborough : travel_time_street,
+			poi_id_southsleezeborough_street_a : travel_time_street,
+			poi_id_southsleezeborough_street_c : travel_time_street,
+			poi_id_northsleezeborough_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10938,7 +11251,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_southsleezeborough,
 		neighbors = {
-	
+			poi_id_southsleezeborough : travel_time_street,
+			poi_id_southsleezeborough_street_b : travel_time_street,
+			poi_id_southsleezeborough_street_d : travel_time_street,
+			poi_id_krakbay_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10954,7 +11270,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_southsleezeborough,
 		neighbors = {
-	
+			poi_id_southsleezeborough : travel_time_street,
+			poi_id_southsleezeborough_street_c : travel_time_street,
+			poi_id_southsleezeborough_street_a : travel_time_street,
+			poi_id_oozegardens_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10970,7 +11289,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_northsleezeborough,
 		neighbors = {
-	
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_e : travel_time_street,
+			poi_id_northsleezeborough_street_b : travel_time_street,
+			poi_id_krakbay_street_e : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -10986,7 +11308,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_northsleezeborough,
 		neighbors = {
-	
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_a : travel_time_street,
+			poi_id_northsleezeborough_street_c : travel_time_street,
+			poi_id_southsleezeborough_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11002,7 +11327,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_northsleezeborough,
 		neighbors = {
-	
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_b : travel_time_street,
+			poi_id_northsleezeborough_street_d : travel_time_street,
+			poi_id_crookline_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11018,7 +11346,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_northsleezeborough,
 		neighbors = {
-	
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_c : travel_time_street,
+			poi_id_northsleezeborough_street_e : travel_time_street,
+			poi_id_jaywalkerplain_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11034,7 +11365,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_northsleezeborough,
 		neighbors = {
-	
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_d : travel_time_street,
+			poi_id_northsleezeborough_street_a : travel_time_street,
+			poi_id_glocksbury_street_e : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11050,7 +11384,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_glocksbury,
 		neighbors = {
-	
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_e : travel_time_street,
+			poi_id_glocksbury_street_b : travel_time_street,
+			poi_id_krakbay_street_f : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11066,7 +11403,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_glocksbury,
 		neighbors = {
-	
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_a : travel_time_street,
+			poi_id_glocksbury_street_c : travel_time_street,
+			poi_id_vandalpark_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11082,7 +11422,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_glocksbury,
 		neighbors = {
-	
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_b : travel_time_street,
+			poi_id_glocksbury_street_d : travel_time_street,
+			poi_id_westglocksbury_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11098,7 +11441,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_glocksbury,
 		neighbors = {
-	
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_c : travel_time_street,
+			poi_id_glocksbury_street_e : travel_time_street,
+			poi_id_jaywalkerplain_street_e : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11114,7 +11460,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_glocksbury,
 		neighbors = {
-	
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_d : travel_time_street,
+			poi_id_glocksbury_street_a : travel_time_street,
+			poi_id_northsleezeborough_street_e : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11130,7 +11479,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_westglocksbury,
 		neighbors = {
-	
+			poi_id_westglocksbury : travel_time_street,
+			poi_id_westglocksbury_street_d : travel_time_street,
+			poi_id_westglocksbury_street_b : travel_time_street,
+			poi_id_glocksbury_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11146,7 +11498,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_westglocksbury,
 		neighbors = {
-	
+			poi_id_westglocksbury : travel_time_street,
+			poi_id_westglocksbury_street_a : travel_time_street,
+			poi_id_westglocksbury_street_c : travel_time_street,
+			poi_id_vandalpark_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11162,7 +11517,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_westglocksbury,
 		neighbors = {
-	
+			poi_id_westglocksbury : travel_time_street,
+			poi_id_westglocksbury_street_b : travel_time_street,
+			poi_id_westglocksbury_street_d : travel_time_street,
+			poi_id_poloniumhill_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11178,7 +11536,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_westglocksbury,
 		neighbors = {
-	
+			poi_id_westglocksbury : travel_time_street,
+			poi_id_westglocksbury_street_c : travel_time_street,
+			poi_id_westglocksbury_street_a : travel_time_street,
+			poi_id_jaywalkerplain_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11194,7 +11555,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_jaywalkerplain,
 		neighbors = {
-	
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_e : travel_time_street,
+			poi_id_jaywalkerplain_street_b : travel_time_street,
+			poi_id_northsleezeborough_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11210,7 +11574,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_jaywalkerplain,
 		neighbors = {
-	
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_a : travel_time_street,
+			poi_id_jaywalkerplain_street_c : travel_time_street,
+			poi_id_crookline_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11226,7 +11593,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_jaywalkerplain,
 		neighbors = {
-	
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_b : travel_time_street,
+			poi_id_jaywalkerplain_street_d : travel_time_street,
+			poi_id_dreadford_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11242,7 +11612,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_jaywalkerplain,
 		neighbors = {
-	
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_c : travel_time_street,
+			poi_id_jaywalkerplain_street_e : travel_time_street,
+			poi_id_westglocksbury_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11258,7 +11631,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_jaywalkerplain,
 		neighbors = {
-	
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_d : travel_time_street,
+			poi_id_jaywalkerplain_street_a : travel_time_street,
+			poi_id_glocksbury_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11274,7 +11650,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_crookline,
 		neighbors = {
-	
+			poi_id_crookline : travel_time_street,
+			poi_id_crookline_street_d : travel_time_street,
+			poi_id_crookline_street_b : travel_time_street,
+			poi_id_dreadford_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11290,7 +11669,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_crookline,
 		neighbors = {
-	
+			poi_id_crookline : travel_time_street,
+			poi_id_crookline_street_a : travel_time_street,
+			poi_id_crookline_street_c : travel_time_street,
+			poi_id_southsleezeborough_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11306,7 +11688,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_crookline,
 		neighbors = {
-	
+			poi_id_crookline : travel_time_street,
+			poi_id_crookline_street_b : travel_time_street,
+			poi_id_crookline_street_d : travel_time_street,
+			poi_id_northsleezeborough_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11322,7 +11707,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_crookline,
 		neighbors = {
-	
+			poi_id_crookline : travel_time_street,
+			poi_id_crookline_street_c : travel_time_street,
+			poi_id_crookline_street_a : travel_time_street,
+			poi_id_jaywalkerplain_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11338,7 +11726,9 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_dreadford,
 		neighbors = {
-	
+			poi_id_dreadford : travel_time_street,
+			poi_id_dreadford_street_b : travel_time_street,
+			poi_id_jaywalkerplain_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11354,7 +11744,9 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_dreadford,
 		neighbors = {
-	
+			poi_id_dreadford : travel_time_street,
+			poi_id_dreadford_street_a : travel_time_street,
+			poi_id_crookline_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11370,7 +11762,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_vandalpark,
 		neighbors = {
-	
+			poi_id_vandalpark : travel_time_street,
+			poi_id_vandalpark_street_d : travel_time_street,
+			poi_id_vandalpark_street_b : travel_time_street,
+			poi_id_westglocksbury_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11386,7 +11781,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_vandalpark,
 		neighbors = {
-	
+			poi_id_vandalpark : travel_time_street,
+			poi_id_vandalpark_street_a : travel_time_street,
+			poi_id_vandalpark_street_c : travel_time_street,
+			poi_id_glocksbury_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11402,7 +11800,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_vandalpark,
 		neighbors = {
-	
+			poi_id_vandalpark : travel_time_street,
+			poi_id_vandalpark_street_b : travel_time_street,
+			poi_id_vandalpark_street_d : travel_time_street,
+			poi_id_gatlingsdale_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11418,7 +11819,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_vandalpark,
 		neighbors = {
-	
+			poi_id_vandalpark : travel_time_street,
+			poi_id_vandalpark_street_c : travel_time_street,
+			poi_id_vandalpark_street_a : travel_time_street,
+			poi_id_poloniumhill_street_e : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11434,7 +11838,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_poloniumhill,
 		neighbors = {
-	
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_e : travel_time_street,
+			poi_id_poloniumhill_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11450,7 +11857,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_poloniumhill,
 		neighbors = {
-	
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_a : travel_time_street,
+			poi_id_poloniumhill_street_c : travel_time_street,
+			poi_id_toxington_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11466,7 +11876,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_poloniumhill,
 		neighbors = {
-	
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_b : travel_time_street,
+			poi_id_poloniumhill_street_d : travel_time_street,
+			poi_id_charcoalpark_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11482,7 +11895,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_poloniumhill,
 		neighbors = {
-	
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_c : travel_time_street,
+			poi_id_poloniumhill_street_e : travel_time_street,
+			poi_id_westglocksbury_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11498,7 +11914,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_poloniumhill,
 		neighbors = {
-	
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_d : travel_time_street,
+			poi_id_poloniumhill_street_a : travel_time_street,
+			poi_id_vandalpark_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11514,7 +11933,9 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_charcoalpark,
 		neighbors = {
-	
+			poi_id_charcoalpark : travel_time_street,
+			poi_id_charcoalpark_street_b : travel_time_street,
+			poi_id_toxington_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11530,7 +11951,9 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_charcoalpark,
 		neighbors = {
-	
+			poi_id_charcoalpark : travel_time_street,
+			poi_id_charcoalpark_street_a : travel_time_street,
+			poi_id_poloniumhill_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11546,7 +11969,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_toxington,
 		neighbors = {
-	
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_e : travel_time_street,
+			poi_id_toxington_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11562,7 +11988,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_toxington,
 		neighbors = {
-	
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_a : travel_time_street,
+			poi_id_toxington_street_c : travel_time_street,
+			poi_id_poloniumhill_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11578,7 +12007,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_toxington,
 		neighbors = {
-	
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_b : travel_time_street,
+			poi_id_toxington_street_d : travel_time_street,
+			poi_id_charcoalpark_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11594,7 +12026,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_toxington,
 		neighbors = {
-	
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_c : travel_time_street,
+			poi_id_toxington_street_e : travel_time_street,
+			poi_id_maimridge_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11610,7 +12045,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_toxington,
 		neighbors = {
-	
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_d : travel_time_street,
+			poi_id_toxington_street_a : travel_time_street,
+			poi_id_astatineheights_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11626,7 +12064,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_gatlingsdale,
 		neighbors = {
-	
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_e : travel_time_street,
+			poi_id_gatlingsdale_street_b : travel_time_street,
+			poi_id_copkilltown_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11642,7 +12083,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_gatlingsdale,
 		neighbors = {
-	
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_a : travel_time_street,
+			poi_id_gatlingsdale_street_c : travel_time_street,
+			poi_id_vandalpark_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11658,7 +12102,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_gatlingsdale,
 		neighbors = {
-	
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_d : travel_time_street,
+			poi_id_poloniumhill_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11674,7 +12121,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_gatlingsdale,
 		neighbors = {
-	
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_c : travel_time_street,
+			poi_id_gatlingsdale_street_e : travel_time_street,
+			poi_id_toxington_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11690,7 +12140,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_gatlingsdale,
 		neighbors = {
-	
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_d : travel_time_street,
+			poi_id_gatlingsdale_street_a : travel_time_street,
+			poi_id_astatineheights_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11706,7 +12159,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_astatineheights,
 		neighbors = {
-	
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_f : travel_time_street,
+			poi_id_astatineheights_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_e : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11722,7 +12178,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_astatineheights,
 		neighbors = {
-	
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_a : travel_time_street,
+			poi_id_astatineheights_street_c : travel_time_street,
+			poi_id_toxington_street_e : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11738,7 +12197,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_astatineheights,
 		neighbors = {
-	
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_b : travel_time_street,
+			poi_id_astatineheights_street_d : travel_time_street,
+			poi_id_maimridge_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11754,7 +12216,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_astatineheights,
 		neighbors = {
-	
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_c : travel_time_street,
+			poi_id_astatineheights_street_e : travel_time_street,
+			poi_id_arsonbrook_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11770,7 +12235,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_astatineheights,
 		neighbors = {
-	
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_d : travel_time_street,
+			poi_id_astatineheights_street_f : travel_time_street,
+			poi_id_smogsburg_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11786,7 +12254,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_astatineheights,
 		neighbors = {
-	
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_e : travel_time_street,
+			poi_id_astatineheights_street_a : travel_time_street,
+			poi_id_copkilltown_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11802,7 +12273,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_smogsburg,
 		neighbors = {
-	
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_e : travel_time_street,
+			poi_id_smogsburg_street_b : travel_time_street,
+			poi_id_arsonbrook_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11818,7 +12292,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_smogsburg,
 		neighbors = {
-	
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_a : travel_time_street,
+			poi_id_smogsburg_street_c : travel_time_street,
+			poi_id_astatineheights_street_e : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11834,7 +12311,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_smogsburg,
 		neighbors = {
-	
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_b : travel_time_street,
+			poi_id_smogsburg_street_d : travel_time_street,
+			poi_id_copkilltown_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11850,7 +12330,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_smogsburg,
 		neighbors = {
-	
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_c : travel_time_street,
+			poi_id_smogsburg_street_e : travel_time_street,
+			poi_id_downtown_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11866,7 +12349,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_smogsburg,
 		neighbors = {
-	
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_d : travel_time_street,
+			poi_id_smogsburg_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11882,7 +12368,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_arsonbrook,
 		neighbors = {
-	
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_e : travel_time_street,
+			poi_id_arsonbrook_street_b : travel_time_street,
+			poi_id_smogsburg_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11898,7 +12387,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_arsonbrook,
 		neighbors = {
-	
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_a : travel_time_street,
+			poi_id_arsonbrook_street_c : travel_time_street,
+			poi_id_astatineheights_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11914,7 +12406,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_arsonbrook,
 		neighbors = {
-	
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_b : travel_time_street,
+			poi_id_arsonbrook_street_d : travel_time_street,
+			poi_id_maimridge_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11930,7 +12425,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_arsonbrook,
 		neighbors = {
-	
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_c : travel_time_street,
+			poi_id_arsonbrook_street_e : travel_time_street,
+			poi_id_brawlden_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11946,7 +12444,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_arsonbrook,
 		neighbors = {
-	
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_d : travel_time_street,
+			poi_id_arsonbrook_street_a : travel_time_street,
+			poi_id_littlechernobyl_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11962,7 +12463,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_maimridge,
 		neighbors = {
-	
+			poi_id_maimridge : travel_time_street,
+			poi_id_maimridge_street_c : travel_time_street,
+			poi_id_maimridge_street_b : travel_time_street,
+			poi_id_astatineheights_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11978,7 +12482,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_maimridge,
 		neighbors = {
-	
+			poi_id_maimridge : travel_time_street,
+			poi_id_maimridge_street_a : travel_time_street,
+			poi_id_maimridge_street_c : travel_time_street,
+			poi_id_arsonbrook_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -11994,7 +12501,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_maimridge,
 		neighbors = {
-	
+			poi_id_maimridge : travel_time_street,
+			poi_id_maimridge_street_b : travel_time_street,
+			poi_id_maimridge_street_a : travel_time_street,
+			poi_id_toxington_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12010,7 +12520,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_brawlden,
 		neighbors = {
-	
+			poi_id_brawlden : travel_time_street,
+			poi_id_brawlden_street_d : travel_time_street,
+			poi_id_brawlden_street_b : travel_time_street,
+			poi_id_arsonbrook_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12026,7 +12539,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_brawlden,
 		neighbors = {
-	
+			poi_id_brawlden : travel_time_street,
+			poi_id_brawlden_street_a : travel_time_street,
+			poi_id_brawlden_street_c : travel_time_street,
+			poi_id_newnewyonkers_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12042,7 +12558,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_brawlden,
 		neighbors = {
-	
+			poi_id_brawlden : travel_time_street,
+			poi_id_brawlden_street_b : travel_time_street,
+			poi_id_brawlden_street_d : travel_time_street,
+			poi_id_oldnewyonkers_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12058,7 +12577,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_brawlden,
 		neighbors = {
-	
+			poi_id_brawlden : travel_time_street,
+			poi_id_brawlden_street_c : travel_time_street,
+			poi_id_brawlden_street_a : travel_time_street,
+			poi_id_littlechernobyl_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12074,7 +12596,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_littlechernobyl,
 		neighbors = {
-	
+			poi_id_littlechernobyl : travel_time_street,
+			poi_id_littlechernobyl_street_c : travel_time_street,
+			poi_id_littlechernobyl_street_b : travel_time_street,
+			poi_id_arsonbrook_street_e : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12090,7 +12615,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_littlechernobyl,
 		neighbors = {
-	
+			poi_id_littlechernobyl : travel_time_street,
+			poi_id_littlechernobyl_street_a : travel_time_street,
+			poi_id_littlechernobyl_street_c : travel_time_street,
+			poi_id_brawlden_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12106,7 +12634,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_littlechernobyl,
 		neighbors = {
-	
+			poi_id_littlechernobyl : travel_time_street,
+			poi_id_littlechernobyl_street_b : travel_time_street,
+			poi_id_littlechernobyl_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12122,7 +12653,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_oldnewyonkers,
 		neighbors = {
-	
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_e : travel_time_street,
+			poi_id_oldnewyonkers_street_b : travel_time_street,
+			poi_id_smogsburg_street_e : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12138,7 +12672,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_oldnewyonkers,
 		neighbors = {
-	
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_c : travel_time_street,
+			poi_id_littlechernobyl_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12154,7 +12691,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_oldnewyonkers,
 		neighbors = {
-	
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_b : travel_time_street,
+			poi_id_oldnewyonkers_street_d : travel_time_street,
+			poi_id_brawlden_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12170,7 +12710,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_oldnewyonkers,
 		neighbors = {
-	
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_c : travel_time_street,
+			poi_id_oldnewyonkers_street_e : travel_time_street,
+			poi_id_newnewyonkers_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12186,7 +12729,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_oldnewyonkers,
 		neighbors = {
-	
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_d : travel_time_street,
+			poi_id_oldnewyonkers_street_a : travel_time_street,
+			poi_id_vagrantscorner_street_e : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12202,7 +12748,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_newnewyonkers,
 		neighbors = {
-	
+			poi_id_newnewyonkers : travel_time_street,
+			poi_id_newnewyonkers_street_d : travel_time_street,
+			poi_id_newnewyonkers_street_b : travel_time_street,
+			poi_id_brawlden_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12218,7 +12767,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_newnewyonkers,
 		neighbors = {
-	
+			poi_id_newnewyonkers : travel_time_street,
+			poi_id_newnewyonkers_street_a : travel_time_street,
+			poi_id_newnewyonkers_street_c : travel_time_street,
+			poi_id_assaultflatsbeach_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12234,7 +12786,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_newnewyonkers,
 		neighbors = {
-	
+			poi_id_newnewyonkers : travel_time_street,
+			poi_id_newnewyonkers_street_b : travel_time_street,
+			poi_id_newnewyonkers_street_d : travel_time_street,
+			poi_id_vagrantscorner_street_f : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12250,7 +12805,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_newnewyonkers,
 		neighbors = {
-	
+			poi_id_newnewyonkers : travel_time_street,
+			poi_id_newnewyonkers_street_c : travel_time_street,
+			poi_id_newnewyonkers_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12266,7 +12824,9 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_assaultflatsbeach,
 		neighbors = {
-	
+			poi_id_assaultflatsbeach : travel_time_street,
+			poi_id_assaultflatsbeach_street_b : travel_time_street,
+			poi_id_newnewyonkers_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12282,7 +12842,9 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_assaultflatsbeach,
 		neighbors = {
-	
+			poi_id_assaultflatsbeach : travel_time_street,
+			poi_id_assaultflatsbeach_street_a : travel_time_street,
+			poi_id_vagrantscorner_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12298,7 +12860,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_vagrantscorner,
 		neighbors = {
-	
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_f : travel_time_street,
+			poi_id_vagrantscorner_street_b : travel_time_street,
+			poi_id_assaultflatsbeach_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12314,7 +12879,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_vagrantscorner,
 		neighbors = {
-	
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_a : travel_time_street,
+			poi_id_vagrantscorner_street_c : travel_time_street,
+			poi_id_slimesend_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12330,7 +12898,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_vagrantscorner,
 		neighbors = {
-	
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_b : travel_time_street,
+			poi_id_vagrantscorner_street_d : travel_time_street,
+			poi_id_juviesrow_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12346,7 +12917,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_vagrantscorner,
 		neighbors = {
-	
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_c : travel_time_street,
+			poi_id_vagrantscorner_street_e : travel_time_street,
+			poi_id_greenlightdistrict_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12362,7 +12936,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_vagrantscorner,
 		neighbors = {
-	
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_d : travel_time_street,
+			poi_id_vagrantscorner_street_f : travel_time_street,
+			poi_id_oldnewyonkers_street_e : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12378,7 +12955,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_vagrantscorner,
 		neighbors = {
-	
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_e : travel_time_street,
+			poi_id_vagrantscorner_street_a : travel_time_street,
+			poi_id_newnewyonkers_street_c : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12394,7 +12974,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_greenlightdistrict,
 		neighbors = {
-	
+			poi_id_greenlightdistrict : travel_time_street,
+			poi_id_greenlightdistrict_street_c : travel_time_street,
+			poi_id_greenlightdistrict_street_b : travel_time_street,
+			poi_id_vagrantscorner_street_d : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12410,7 +12993,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_greenlightdistrict,
 		neighbors = {
-	
+			poi_id_greenlightdistrict : travel_time_street,
+			poi_id_greenlightdistrict_street_a : travel_time_street,
+			poi_id_greenlightdistrict_street_c : travel_time_street,
+			poi_id_juviesrow_street_a : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12426,7 +13012,10 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_greenlightdistrict,
 		neighbors = {
-		
+			poi_id_greenlightdistrict : travel_time_street,
+			poi_id_greenlightdistrict_street_b : travel_time_street,
+			poi_id_greenlightdistrict_street_a : travel_time_street,
+			poi_id_downtown_street_b : travel_time_street,
 		}
 	),
 	EwPoi(
@@ -12442,7 +13031,8 @@ poi_list = [
 		is_capturable = True,
 		father_district = poi_id_slimesend,
 		neighbors = {
-	
+			poi_id_slimesend : travel_time_street,
+			poi_id_vagrantscorner_street_b : travel_time_street,
 		}
 	),
 	# Subzones start here
