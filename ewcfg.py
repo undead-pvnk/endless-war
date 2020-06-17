@@ -435,6 +435,24 @@ compartment_id_bookshelf = "bookshelf"
 location_id_empty = "empty"
 
 # Outskirts
+# Layer 1
+poi_id_wreckington_outskirts_edge = "wreckingtonoutskirtsedge"
+poi_id_cratersville_outskirts_edge = "cratersvilleoutskirtsedge"
+poi_id_oozegardens_outskirts_edge = "oozegardensoutskirtsedge"
+poi_id_southsleezeborough_outskirts_edge = "southsleezeboroughoutskirtsedge"
+poi_id_crookline_outskirts_edge = "crooklineoutskirtsedge"
+poi_id_dreadford_outskirts_edge = "dreadfordoutskirtsedge"
+poi_id_jaywalkerplain_outskirts_edge = "jaywalkerplainoutskirtsedge"
+poi_id_westglocksbury_outskirts_edge = "westglocksburyoutskirtsedge"
+poi_id_poloniumhill_outskirts_edge = "poloniumhilloutskirtsedge"
+poi_id_charcoalpark_outskirts_edge = "charcoalparkoutskirtsedge"
+poi_id_toxington_outskirts_edge = "toxingtonoutskirtsedge"
+poi_id_maimridge_outskirts_edge = "maimridgeoutskirtsedge"
+poi_id_arsonbrook_outskirts_edge = "arsonbrookoutskirtsedge"
+poi_id_brawlden_outskirts_edge = "brawldenoutskirtsedge"
+poi_id_newnewyonkers_outskirts_edge = "newnewyonkersoutskirtsedge"
+poi_id_assaultflatsbeach_outskirts_edge = "assaultflatsbeachoutskirtsedge"
+# Layer 2
 poi_id_wreckington_outskirts = "wreckingtonoutskirts"
 poi_id_cratersville_outskirts = "cratersvilleoutskirts"
 poi_id_oozegardens_outskirts = "oozegardensoutskirts"
@@ -446,11 +464,28 @@ poi_id_westglocksbury_outskirts = "westglocksburyoutskirts"
 poi_id_poloniumhill_outskirts = "poloniumhilloutskirts"
 poi_id_charcoalpark_outskirts = "charcoalparkoutskirts"
 poi_id_toxington_outskirts = "toxingtonoutskirts"
-poi_id_maimridgeoutskirts = "maimridgeoutskirts"
+poi_id_maimridge_outskirts = "maimridgeoutskirts"
 poi_id_arsonbrook_outskirts = "arsonbrookoutskirts"
 poi_id_brawlden_outskirts = "brawldenoutskirts"
 poi_id_newnewyonkers_outskirts = "newnewyonkersoutskirts"
 poi_id_assaultflatsbeach_outskirts = "assaultflatsbeachoutskirts"
+# Layer 3
+poi_id_wreckington_outskirts_depths = "wreckingtonoutskirtsdepths"
+poi_id_cratersville_outskirts_depths = "cratersvilleoutskirtsdepths"
+poi_id_oozegardens_outskirts_depths = "oozegardensoutskirtsdepths"
+poi_id_southsleezeborough_outskirts_depths = "southsleezeboroughoutskirtsdepths"
+poi_id_crookline_outskirts_depths = "crooklineoutskirtsdepths"
+poi_id_dreadford_outskirts_depths = "dreadfordoutskirtsdepths"
+poi_id_jaywalkerplain_outskirts_depths = "jaywalkerplainoutskirtsdepths"
+poi_id_westglocksbury_outskirts_depths = "westglocksburyoutskirtsdepths"
+poi_id_poloniumhill_outskirts_depths = "poloniumhilloutskirtsdepths"
+poi_id_charcoalpark_outskirts_depths = "charcoalparkoutskirtsdepths"
+poi_id_toxington_outskirts_depths = "toxingtonoutskirtsdepths"
+poi_id_maimridge_outskirts_depths = "maimridgeoutskirtsdepths"
+poi_id_arsonbrook_outskirts_depths = "arsonbrookoutskirtsdepths"
+poi_id_brawlden_outskirts_depths = "brawldenoutskirtsdepths"
+poi_id_newnewyonkers_outskirts_depths = "newnewyonkersoutskirtsdepths"
+poi_id_assaultflatsbeach_outskirts_depths = "assaultflatsbeachoutskirtsdepths"
 
 
 poi_id_south_outskirts = "southoutskirts"
@@ -1724,7 +1759,9 @@ str_yellow_subway_station_description = "It's absolutely fucking disgusting. By 
 str_subway_connecting_sentence = "Below it, on a lower level of the station, is a {} line terminal."
 
 # TODO: Add descriptions for each outskirt/street.
+str_generic_outskirts_description_edge = "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble."
 str_generic_outskirts_description = "It's a wasteland, devoid of all life except for slime beasts."
+str_generic_outskirts_description_depths = "The lion's den of the biggest and baddest Secreatures. Stay around too long, and you'll wind up in the jaws of god knows what lurks around here."
 
 str_generic_streets_description = "It's a street. Not much more to be said."
 
@@ -11048,6 +11085,7 @@ poi_list = [
 			poi_id_cratersville_street_b : travel_time_street,
 			poi_id_cratersville_street_c : travel_time_street,
 			poi_id_wreckington_street_a : travel_time_street,
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11086,6 +11124,7 @@ poi_list = [
 			poi_id_cratersville_street_a : travel_time_street,
 			poi_id_cratersville_street_b : travel_time_street,
 			poi_id_oozegardens_street_d : travel_time_street,
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11104,6 +11143,7 @@ poi_list = [
 			poi_id_wreckington : travel_time_street,
 			poi_id_wreckington_street_b : travel_time_street,
 			poi_id_cratersville_street_a : travel_time_street,
+			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11122,6 +11162,7 @@ poi_list = [
 			poi_id_wreckington : travel_time_street,
 			poi_id_wreckington_street_a : travel_time_street,
 			poi_id_rowdyroughhouse_street_a : travel_time_street,
+			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11141,6 +11182,7 @@ poi_list = [
 			poi_id_oozegardens_street_d : travel_time_street,
 			poi_id_oozegardens_street_b : travel_time_street,
 			poi_id_southsleezeborough_street_d : travel_time_street,
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11198,6 +11240,7 @@ poi_list = [
 			poi_id_oozegardens_street_c : travel_time_street,
 			poi_id_oozegardens_street_a : travel_time_street,
 			poi_id_cratersville_street_c : travel_time_street,
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11217,6 +11260,7 @@ poi_list = [
 			poi_id_southsleezeborough_street_d : travel_time_street,
 			poi_id_southsleezeborough_street_b : travel_time_street,
 			poi_id_crookline_street_b : travel_time_street,
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11274,6 +11318,7 @@ poi_list = [
 			poi_id_southsleezeborough_street_c : travel_time_street,
 			poi_id_southsleezeborough_street_a : travel_time_street,
 			poi_id_oozegardens_street_a : travel_time_street,
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11521,6 +11566,7 @@ poi_list = [
 			poi_id_westglocksbury_street_b : travel_time_street,
 			poi_id_westglocksbury_street_d : travel_time_street,
 			poi_id_poloniumhill_street_d : travel_time_street,
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11540,6 +11586,7 @@ poi_list = [
 			poi_id_westglocksbury_street_c : travel_time_street,
 			poi_id_westglocksbury_street_a : travel_time_street,
 			poi_id_jaywalkerplain_street_d : travel_time_street,
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11597,6 +11644,7 @@ poi_list = [
 			poi_id_jaywalkerplain_street_b : travel_time_street,
 			poi_id_jaywalkerplain_street_d : travel_time_street,
 			poi_id_dreadford_street_a : travel_time_street,
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11616,6 +11664,7 @@ poi_list = [
 			poi_id_jaywalkerplain_street_c : travel_time_street,
 			poi_id_jaywalkerplain_street_e : travel_time_street,
 			poi_id_westglocksbury_street_d : travel_time_street,
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11654,6 +11703,7 @@ poi_list = [
 			poi_id_crookline_street_d : travel_time_street,
 			poi_id_crookline_street_b : travel_time_street,
 			poi_id_dreadford_street_b : travel_time_street,
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11673,6 +11723,7 @@ poi_list = [
 			poi_id_crookline_street_a : travel_time_street,
 			poi_id_crookline_street_c : travel_time_street,
 			poi_id_southsleezeborough_street_a : travel_time_street,
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11729,6 +11780,7 @@ poi_list = [
 			poi_id_dreadford : travel_time_street,
 			poi_id_dreadford_street_b : travel_time_street,
 			poi_id_jaywalkerplain_street_c : travel_time_street,
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11747,6 +11799,7 @@ poi_list = [
 			poi_id_dreadford : travel_time_street,
 			poi_id_dreadford_street_a : travel_time_street,
 			poi_id_crookline_street_a : travel_time_street,
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11880,6 +11933,7 @@ poi_list = [
 			poi_id_poloniumhill_street_b : travel_time_street,
 			poi_id_poloniumhill_street_d : travel_time_street,
 			poi_id_charcoalpark_street_b : travel_time_street,
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11899,6 +11953,7 @@ poi_list = [
 			poi_id_poloniumhill_street_c : travel_time_street,
 			poi_id_poloniumhill_street_e : travel_time_street,
 			poi_id_westglocksbury_street_c : travel_time_street,
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11936,6 +11991,7 @@ poi_list = [
 			poi_id_charcoalpark : travel_time_street,
 			poi_id_charcoalpark_street_b : travel_time_street,
 			poi_id_toxington_street_c : travel_time_street,
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -11954,6 +12010,7 @@ poi_list = [
 			poi_id_charcoalpark : travel_time_street,
 			poi_id_charcoalpark_street_a : travel_time_street,
 			poi_id_poloniumhill_street_c : travel_time_street,
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -12011,6 +12068,7 @@ poi_list = [
 			poi_id_toxington_street_b : travel_time_street,
 			poi_id_toxington_street_d : travel_time_street,
 			poi_id_charcoalpark_street_a : travel_time_street,
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -12030,6 +12088,7 @@ poi_list = [
 			poi_id_toxington_street_c : travel_time_street,
 			poi_id_toxington_street_e : travel_time_street,
 			poi_id_maimridge_street_c : travel_time_street,
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -12410,6 +12469,7 @@ poi_list = [
 			poi_id_arsonbrook_street_b : travel_time_street,
 			poi_id_arsonbrook_street_d : travel_time_street,
 			poi_id_maimridge_street_b : travel_time_street,
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -12429,6 +12489,7 @@ poi_list = [
 			poi_id_arsonbrook_street_c : travel_time_street,
 			poi_id_arsonbrook_street_e : travel_time_street,
 			poi_id_brawlden_street_a : travel_time_street,
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -12486,6 +12547,7 @@ poi_list = [
 			poi_id_maimridge_street_a : travel_time_street,
 			poi_id_maimridge_street_c : travel_time_street,
 			poi_id_arsonbrook_street_c : travel_time_street,
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -12505,6 +12567,7 @@ poi_list = [
 			poi_id_maimridge_street_b : travel_time_street,
 			poi_id_maimridge_street_a : travel_time_street,
 			poi_id_toxington_street_d : travel_time_street,
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -12524,6 +12587,7 @@ poi_list = [
 			poi_id_brawlden_street_d : travel_time_street,
 			poi_id_brawlden_street_b : travel_time_street,
 			poi_id_arsonbrook_street_d : travel_time_street,
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -12543,6 +12607,7 @@ poi_list = [
 			poi_id_brawlden_street_a : travel_time_street,
 			poi_id_brawlden_street_c : travel_time_street,
 			poi_id_newnewyonkers_street_a : travel_time_street,
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -12752,6 +12817,7 @@ poi_list = [
 			poi_id_newnewyonkers_street_d : travel_time_street,
 			poi_id_newnewyonkers_street_b : travel_time_street,
 			poi_id_brawlden_street_b : travel_time_street,
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -12771,6 +12837,7 @@ poi_list = [
 			poi_id_newnewyonkers_street_a : travel_time_street,
 			poi_id_newnewyonkers_street_c : travel_time_street,
 			poi_id_assaultflatsbeach_street_a : travel_time_street,
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -12827,6 +12894,7 @@ poi_list = [
 			poi_id_assaultflatsbeach : travel_time_street,
 			poi_id_assaultflatsbeach_street_b : travel_time_street,
 			poi_id_newnewyonkers_street_b : travel_time_street,
+			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -12845,6 +12913,7 @@ poi_list = [
 			poi_id_assaultflatsbeach : travel_time_street,
 			poi_id_assaultflatsbeach_street_a : travel_time_street,
 			poi_id_vagrantscorner_street_a : travel_time_street,
+			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -15356,7 +15425,358 @@ poi_list = [
 		role = "The Sphere",
 		is_subzone = True
 	),
+	# Outskirts start here
 	EwPoi(  # Outskirts - 1
+		id_poi=poi_id_wreckington_outskirts_edge,
+		alias=[
+			"wreckingtonoutskirtsedge",
+			"wtoutskirtsedge",
+			"wtoedge",
+			"wtoe",
+		],
+		str_name="Wreckington Outskirts Edge",
+		str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="wreckington-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_wreckington_street_a : travel_time_outskirt,
+			poi_id_wreckington_street_b : travel_time_outskirt,
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_wreckington_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 2
+		id_poi=poi_id_cratersville_outskirts_edge,
+		alias=[
+			"cratersvilleoutskirtsedge",
+			"cvoutskirtsedge",
+			"cvoedge",
+			"cvoe",
+		],
+		str_name="Cratersville Outskirts Edge",
+		str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description_edge),
+		channel="cratersville-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_cratersville_street_a : travel_time_outskirt,
+			poi_id_cratersville_street_c : travel_time_outskirt,
+			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_cratersville_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 3
+		id_poi=poi_id_oozegardens_outskirts_edge,
+		alias=[
+			"oozegardensoutskirtsedge",
+			"ogoutskirtsedge",
+			"ogoedge"
+			"ogoe",
+		],
+		str_name="Ooze Gardens Outskirts Edge",
+		str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="ooze-gardens-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_oozegardens_street_a : travel_time_outskirt,
+			poi_id_oozegardens_street_d : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_oozegardens_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 4
+		id_poi=poi_id_southsleezeborough_outskirts_edge,
+		alias=[
+			"southsleezeboroughoutskirtsedge",
+			"ssboutskirtsedge",
+			"ssboedge",
+			"ssboe",
+		],
+		str_name="South Sleezeborough Outskirts Edge",
+		str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="south-sleezeborough-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_southsleezeborough_street_a : travel_time_outskirt,
+			poi_id_southsleezeborough_street_d : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 5
+		id_poi=poi_id_crookline_outskirts_edge,
+		alias=[
+			"crooklineoutskirtsedge",
+			"cloutskirtsedge",
+			"cloedge",
+			"cloe",
+		],
+		str_name="Crookline Outskirts Edge",
+		str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="crookline-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_crookline_street_a : travel_time_outskirt,
+			poi_id_crookline_street_b : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 6
+		id_poi=poi_id_dreadford_outskirts_edge,
+		alias=[
+			"dreadfordoutskirtsedge",
+			"dfoutskirtsedge",
+			"dfoedge"
+			"dfoe",
+		],
+		str_name="Dreadford Outskirts Edge",
+		str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="dreadford-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_dreadford_street_a : travel_time_outskirt,
+			poi_id_dreadford_street_b : travel_time_outskirt,
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_dreadford_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 7
+		id_poi=poi_id_jaywalkerplain_outskirts_edge,
+		alias=[
+			"jaywalkerplainoutskirtsedge",
+			"jpoutskirtsedge",
+			"jpoedge",
+			"jpoe",
+		],
+		str_name="Jaywalker Plain Outskirts Edge",
+		str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="jaywalker-plain-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_jaywalkerplain_street_c : travel_time_outskirt,
+			poi_id_jaywalkerplain_street_d : travel_time_outskirt,
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 8
+		id_poi=poi_id_westglocksbury_outskirts_edge,
+		alias=[
+			"westglocksburyoutskirtsedge",
+			"wgboutskirtsedge",
+			"wgboedge",
+			"wgboe"
+		],
+		str_name="West Glocksbury Outskirts Edge",
+		str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="west-glocksbury-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_westglocksbury_street_c : travel_time_outskirt,
+			poi_id_westglocksbury_street_d : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 9
+		id_poi=poi_id_poloniumhill_outskirts_edge,
+		alias=[
+			"poloniumhilloutskirtsedge",
+			"phoutskirtsedge",
+			"phoedge",
+			"phoe",
+		],
+		str_name="Polonium Hill Outskirts Edge",
+		str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="polonium-hill-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_poloniumhill_street_c : travel_time_outskirt,
+			poi_id_poloniumhill_street_d : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 10
+		id_poi=poi_id_charcoalpark_outskirts_edge,
+		alias=[
+			"charcoalparkoutskirtsedge",
+			"cpoutskirtsedge",
+			"cpoedge",
+			"cpoe",
+		],
+		str_name="Charcoal Park Outskirts Edge",
+		str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="charcoal-park-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_charcoalpark_street_a : travel_time_outskirt,
+			poi_id_charcoalpark_street_b : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 11
+		id_poi=poi_id_toxington_outskirts_edge,
+		alias=[
+			"toxingtonoutskirtsedge",
+			"ttoutskirtsedge",
+			"ttoedge",
+			"ttoe",
+		],
+		str_name="Toxington Outskirts Edge",
+		str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="toxington-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_toxington_street_c : travel_time_outskirt,
+			poi_id_toxington_street_d : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+			poi_id_toxington_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 12
+		id_poi=poi_id_maimridge_outskirts_edge,
+		alias=[
+			"maimridgeoutskirtsedge",
+			"mroutskirtsedge",
+			"mroedge",
+			"mroe",
+		],
+		str_name="Maimridge Outskirts Edge",
+		str_desc="{} To the South is Maimridge. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="maimridge-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_maimridge_street_b : travel_time_outskirt,
+			poi_id_maimridge_street_c : travel_time_outskirt,
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+			poi_id_maimridge_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 13
+		id_poi=poi_id_arsonbrook_outskirts_edge,
+		alias=[
+			"arsonbrookoutskirtsedge",
+			"aboutskirtsedge",
+			"aboedge",
+			"aboe",
+		],
+		str_name="Arsonbrook Outskirts Edge",
+		str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="arsonbrook-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_arsonbrook_street_c : travel_time_outskirt,
+			poi_id_arsonbrook_street_d : travel_time_outskirt,
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 14
+		id_poi=poi_id_brawlden_outskirts_edge,
+		alias=[
+			"brawldenoutskirtsedge",
+			"bdoutskirtsedge",
+			"bdoedge",
+			"bdoe",
+		],
+		str_name="Brawlden Outskirts Edge",
+		str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="brawlden-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_brawlden_street_a : travel_time_outskirt,
+			poi_id_brawlden_street_b : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_brawlden_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 15
+		id_poi=poi_id_newnewyonkers_outskirts_edge,
+		alias=[
+			"newnewyonkersoutskirtsedge",
+			"nnyoutskirtsedge",
+			"nnyoedge",
+			"nnyoe",
+		],
+		str_name="New New Yonkers Outskirts Edge",
+		str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="new-new-yonkers-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_newnewyonkers_street_a : travel_time_outskirt,
+			poi_id_newnewyonkers_street_b : travel_time_outskirt,
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 16
+		id_poi=poi_id_assaultflatsbeach_outskirts_edge,
+		alias=[
+			"assaultflatsbeachoutskirtsedge",
+			"afboutskirtsedge",
+			"afboedge",
+			"afboe",
+		],
+		str_name="Assault Flats Beach Outskirts Edge",
+		str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="assault-flats-beach-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_assaultflatsbeach_street_a : travel_time_outskirt,
+			poi_id_assaultflatsbeach_street_b : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 17
 		id_poi=poi_id_wreckington_outskirts,
 		alias=[
 			"wreckingtonoutskirts",
@@ -15370,9 +15790,14 @@ poi_list = [
 		role="Wreckington Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_cratersville_outskirts : travel_time_outskirt,
+			poi_id_wreckington_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 2
+	EwPoi(  # Outskirts - 18
 		id_poi=poi_id_cratersville_outskirts,
 		alias=[
 			"cratersvilleoutskirts",
@@ -15386,9 +15811,15 @@ poi_list = [
 		role="Cratersville Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_wreckington_outskirts: travel_time_outskirt,
+			poi_id_oozegardens_outskirts : travel_time_outskirt,
+			poi_id_cratersville_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 3
+	EwPoi(  # Outskirts - 19
 		id_poi=poi_id_oozegardens_outskirts,
 		alias=[
 			"oozegardensoutskirts",
@@ -15402,9 +15833,15 @@ poi_list = [
 		role="Ooze Gardens Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_cratersville_outskirts : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 4
+	EwPoi(  # Outskirts - 20
 		id_poi=poi_id_southsleezeborough_outskirts,
 		alias=[
 			"southsleezeboroughoutskirts",
@@ -15418,9 +15855,15 @@ poi_list = [
 		role="South Sleezeborough Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_oozegardens_outskirts : travel_time_outskirt,
+			poi_id_crookline_outskirts : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 5
+	EwPoi(  # Outskirts - 21
 		id_poi=poi_id_crookline_outskirts,
 		alias=[
 			"crooklineoutskirts",
@@ -15434,9 +15877,15 @@ poi_list = [
 		role="Crookline Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
+			poi_id_dreadford_outskirts : travel_time_outskirt,
+			poi_id_crookline_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 6
+	EwPoi(  # Outskirts - 22
 		id_poi=poi_id_dreadford_outskirts,
 		alias=[
 			"dreadfordoutskirts",
@@ -15450,9 +15899,15 @@ poi_list = [
 		role="Dreadford Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_outskirts : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
+			poi_id_dreadford_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 7
+	EwPoi(  # Outskirts - 23
 		id_poi=poi_id_jaywalkerplain_outskirts,
 		alias=[
 			"jaywalkerplainoutskirts",
@@ -15466,9 +15921,15 @@ poi_list = [
 		role="Jaywalker Plain Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_dreadford_outskirts : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 8
+	EwPoi(  # Outskirts - 24
 		id_poi=poi_id_westglocksbury_outskirts,
 		alias=[
 			"westglocksburyoutskirts",
@@ -15482,9 +15943,15 @@ poi_list = [
 		role="West Glocksbury Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 9
+	EwPoi(  # Outskirts - 25
 		id_poi=poi_id_poloniumhill_outskirts,
 		alias=[
 			"poloniumhilloutskirts",
@@ -15498,9 +15965,15 @@ poi_list = [
 		role="Polonium Hill Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 10
+	EwPoi(  # Outskirts - 26
 		id_poi=poi_id_charcoalpark_outskirts,
 		alias=[
 			"charcoalparkoutskirts",
@@ -15514,9 +15987,15 @@ poi_list = [
 		role="Charcoal Park Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts : travel_time_outskirt,
+			poi_id_toxington_outskirts : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 11
+	EwPoi(  # Outskirts - 27
 		id_poi=poi_id_toxington_outskirts,
 		alias=[
 			"toxingtonoutskirts",
@@ -15530,10 +16009,16 @@ poi_list = [
 		role="Toxington Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+			poi_id_maimridge_outskirts : travel_time_outskirt,
+			poi_id_toxington_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 12
-		id_poi=poi_id_maimridgeoutskirts,
+	EwPoi(  # Outskirts - 28
+		id_poi=poi_id_maimridge_outskirts,
 		alias=[
 			"maimridgeoutskirts",
 			"mroutskirts",
@@ -15546,9 +16031,15 @@ poi_list = [
 		role="Maimridge Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+			poi_id_toxington_outskirts : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts : travel_time_outskirt,
+			poi_id_maimridge_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 13
+	EwPoi(  # Outskirts - 29
 		id_poi=poi_id_arsonbrook_outskirts,
 		alias=[
 			"arsonbrookoutskirts",
@@ -15562,9 +16053,15 @@ poi_list = [
 		role="Arsonbrook Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+			poi_id_maimridge_outskirts : travel_time_outskirt,
+			poi_id_brawlden_outskirts : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 14
+	EwPoi(  # Outskirts - 30
 		id_poi=poi_id_brawlden_outskirts,
 		alias=[
 			"brawldenoutskirts",
@@ -15578,9 +16075,15 @@ poi_list = [
 		role="Brawlden Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
+			poi_id_brawlden_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 15
+	EwPoi(  # Outskirts - 31
 		id_poi=poi_id_newnewyonkers_outskirts,
 		alias=[
 			"newnewyonkersoutskirts",
@@ -15594,9 +16097,15 @@ poi_list = [
 		role="New New Yonkers Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_brawlden_outskirts : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 16
+	EwPoi(  # Outskirts - 32
 		id_poi=poi_id_assaultflatsbeach_outskirts,
 		alias=[
 			"assaultflatsbeachoutskirts",
@@ -15610,7 +16119,330 @@ poi_list = [
 		role="Assault Flats Beach Outskirts",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts = True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 33
+		id_poi=poi_id_wreckington_outskirts_depths,
+		alias=[
+			"wreckingtonoutskirtsdepths",
+			"wtoutskirtsdepths",
+			"wtodepths",
+			"wtod",
+		],
+		str_name="Wreckington Outskirts Depths",
+		str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="wreckington-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_wreckington_outskirts : travel_time_outskirt,
+			poi_id_cratersville_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 34
+		id_poi=poi_id_cratersville_outskirts_depths,
+		alias=[
+			"cratersvilleoutskirtsdepths",
+			"cvoutskirtsdepths",
+			"cvodepths",
+			"cvod",
+		],
+		str_name="Cratersville Outskirts Depths",
+		str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description_depths),
+		channel="cratersville-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_cratersville_outskirts : travel_time_outskirt,
+			poi_id_wreckington_outskirts_depths : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 35
+		id_poi=poi_id_oozegardens_outskirts_depths,
+		alias=[
+			"oozegardensoutskirtsdepths",
+			"ogoutskirtsdepths",
+			"ogodepths",
+			"ogod",
+		],
+		str_name="Ooze Gardens Outskirts Depths",
+		str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="ooze-gardens-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_oozegardens_outskirts : travel_time_outskirt,
+			poi_id_cratersville_outskirts_depths : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 36
+		id_poi=poi_id_southsleezeborough_outskirts_depths,
+		alias=[
+			"southsleezeboroughoutskirtsdepths",
+			"ssboutskirtsdepths",
+			"ssbodepths",
+			"ssbod",
+		],
+		str_name="South Sleezeborough Outskirts Depths",
+		str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="south-sleezeborough-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_depths : travel_time_outskirt,
+			poi_id_crookline_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 37
+		id_poi=poi_id_crookline_outskirts_depths,
+		alias=[
+			"crooklineoutskirtsdepths",
+			"cloutskirtsdepths",
+			"clodepths",
+			"clod",
+		],
+		str_name="Crookline Outskirts Depths",
+		str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="crookline-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_crookline_outskirts : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_depths : travel_time_outskirt,
+			poi_id_dreadford_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 38
+		id_poi=poi_id_dreadford_outskirts_depths,
+		alias=[
+			"dreadfordoutskirtsdepths",
+			"dfoutskirtsdepths",
+			"dfodepths",
+			"dfod",
+		],
+		str_name="Dreadford Outskirts Depths",
+		str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="dreadford-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_dreadford_outskirts : travel_time_outskirt,
+			poi_id_crookline_outskirts_depths : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 39
+		id_poi=poi_id_jaywalkerplain_outskirts_depths,
+		alias=[
+			"jaywalkerplainoutskirtsdepths",
+			"jpoutskirtsdepths",
+			"jpodepths",
+			"jpod",
+		],
+		str_name="Jaywalker Plain Outskirts Depths",
+		str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="jaywalker-plain-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
+			poi_id_dreadford_outskirts_depths : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 40
+		id_poi=poi_id_westglocksbury_outskirts_depths,
+		alias=[
+			"westglocksburyoutskirtsdepths",
+			"wgboutskirtsdepths",
+			"wgbodepths"
+			"wgbod",
+		],
+		str_name="West Glocksbury Outskirts Depths",
+		str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="west-glocksbury-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_westglocksbury_outskirts : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_depths : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 41
+		id_poi=poi_id_poloniumhill_outskirts_depths,
+		alias=[
+			"poloniumhilloutskirtsdepths",
+			"phoutskirtsdepths",
+			"phodepths",
+			"phod",
+		],
+		str_name="Polonium Hill Outskirts Depths",
+		str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="polonium-hill-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_poloniumhill_outskirts : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_depths : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 42
+		id_poi=poi_id_charcoalpark_outskirts_depths,
+		alias=[
+			"charcoalparkoutskirtsdepths",
+			"cpoutskirtsdepths",
+			"cpodepths",
+			"cpod",
+		],
+		str_name="Charcoal Park Outskirts Depths",
+		str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="charcoal-park-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_depths : travel_time_outskirt,
+			poi_id_toxington_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 43
+		id_poi=poi_id_toxington_outskirts_depths,
+		alias=[
+			"toxingtonoutskirtsdepths",
+			"ttoutskirtsdepths",
+			"ttodepths",
+			"ttod",
+		],
+		str_name="Toxington Outskirts Depths",
+		str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="toxington-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_toxington_outskirts : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_depths : travel_time_outskirt,
+			poi_id_maimridge_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 44
+		id_poi=poi_id_maimridge_outskirts_depths,
+		alias=[
+			"maimridgeoutskirtsdepths",
+			"mroutskirtsdepths",
+			"mrodepths",
+			"mrod",
+		],
+		str_name="Maimridge Outskirts Depths",
+		str_desc="{} To the South is Maimridge. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="maimridge-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_maimridge_outskirts : travel_time_outskirt,
+			poi_id_toxington_outskirts_depths : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 45
+		id_poi=poi_id_arsonbrook_outskirts_depths,
+		alias=[
+			"arsonbrookoutskirtsdepths",
+			"aboutskirtsdepths",
+			"abodepths",
+			"abod",
+		],
+		str_name="Arsonbrook Outskirts Depths",
+		str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="arsonbrook-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_arsonbrook_outskirts : travel_time_outskirt,
+			poi_id_maimridge_outskirts_depths : travel_time_outskirt,
+			poi_id_brawlden_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 46
+		id_poi=poi_id_brawlden_outskirts_depths,
+		alias=[
+			"brawldenoutskirtsdepths",
+			"bdoutskirtsdepths",
+			"bdodepths",
+			"bdod",
+		],
+		str_name="Brawlden Outskirts Depths",
+		str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="brawlden-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_brawlden_outskirts : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_depths : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 47
+		id_poi=poi_id_newnewyonkers_outskirts_depths,
+		alias=[
+			"newnewyonkersoutskirtsdepths",
+			"nnyoutskirtsdepths",
+			"nnyodepths",
+			"nnyod",
+		],
+		str_name="New New Yonkers Outskirts Depths",
+		str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="new-new-yonkers-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
+			poi_id_brawlden_outskirts_depths : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 48
+		id_poi=poi_id_assaultflatsbeach_outskirts_depths,
+		alias=[
+			"assaultflatsbeachoutskirtsdepths",
+			"afboutskirtsdepths",
+			"afbodepths",
+			"afbod",
+		],
+		str_name="Assault Flats Beach Outskirts Depths",
+		str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="assault-flats-beach-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_assaultflatsbeach_outskirts : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_depths : travel_time_outskirt,
+		},
 	)
 ]
 	
@@ -15632,6 +16464,9 @@ transport_stops = []
 transport_stops_ch = []
 piers = []
 outskirts = []
+outskirts_edges = []
+outskirts_middle = []
+outskirts_depths = []
 streets = []
 tutorial_pois = []
 zine_mother_districts = []
@@ -15703,6 +16538,15 @@ for poi in poi_list:
 
 	if poi.is_outskirts:
 		outskirts.append(poi.id_poi)
+		# For spawning purposes. Rarer enemies will spawn more often in the father layers of the 48 outskirts.
+		
+		# It's a bit of a simplistic solution, but this way we don't have to add an attribute to EwPoi
+		if 'edge' in poi.str_name.lower():
+			outskirts_edges.append(poi.id_poi)
+		elif 'depths' in poi.str_name.lower():
+			outskirts_depths.append(poi.id_poi)
+		else:
+			outskirts_middle.append(poi.id_poi)
 		
 	if poi.is_street:
 		streets.append(poi.id_poi)

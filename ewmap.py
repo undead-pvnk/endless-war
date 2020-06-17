@@ -1837,11 +1837,15 @@ async def print_map_data(cmd):
 			transports_count += 1
 		
 		neighbor_count = 0
+		
+		print('\n\nNeighbors for {}\n====================='.format(poi.str_name))
 		for neighbor_poi in ewcfg.poi_list:
+			#if neighbor_poi.id_poi in poi.neighbors.keys():
 			if poi.id_poi in neighbor_poi.neighbors.keys():
 				neighbor_count += 1
+				#print(neighbor_poi.str_name)
 		
-		if poi.is_district:		
+		if poi.is_outskirts:
 			print('found {} neighbors for {}'.format(neighbor_count, poi.id_poi))
 			
 	# client = ewutils.get_client()
