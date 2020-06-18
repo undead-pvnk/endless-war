@@ -2344,13 +2344,16 @@ def get_subzone_controlling_faction(subzone_id, id_server):
 	district_data = None
 
 	for mother_poi in mother_pois:
-		if mother_poi.is_district:
+		
+		mother_poi_data = ewcfg.id_to_poi.get(mother_poi)
+		
+		if mother_poi_data.is_district:
 			# One of the mother pois was a district, get its controlling faction
 			district_data = EwDistrict(district=mother_poi, id_server=id_server)
 			break
 		else:
 			# One of the mother pois was a street, get the father district of that street and its controlling faction
-			father_poi = mother_poi.father_poi
+			father_poi = mother_poi_data.father_district
 			district_data = EwDistrict(district=father_poi, id_server=id_server)
 			break
 
