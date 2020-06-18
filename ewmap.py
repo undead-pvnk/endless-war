@@ -1097,7 +1097,7 @@ async def teleport(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		# 30 second windup before teleport goes through
-		windup_finished = False
+		windup_finished = True
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You get a running start to charge up your Quantum Legs..."))
 		try:
 			msg = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author)
