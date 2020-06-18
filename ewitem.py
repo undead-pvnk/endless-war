@@ -1162,6 +1162,8 @@ async def item_look(cmd):
 						original_durability = int(original_item.durability)
 
 					current_durability = int(item.item_props['durability'])
+					
+					print('DEBUG -- DURABILITY COMPARISON\nCURRENT DURABILITY: {}, ORIGINAL DURABILITY: {}'.format(current_durability, original_durability))
 
 					if current_durability == original_durability:
 						response += "It looks brand new.\n"
@@ -1179,7 +1181,7 @@ async def item_look(cmd):
 							response += "It's going to break soon!\n"
 
 					else:
-						response += "You have no idea how much longer this'll last."
+						response += "You have no idea how much longer this'll last. "
 
 				if item.item_props['size'] == 0:
 					response += "It doesn't take up any space at all.\n"
