@@ -147,7 +147,7 @@ class EwResponseContainer:
 			else:
 				current_channel = channel
 			#try:
-			print('DEBUG: CURRENT CHANNEL IS {}'.format(current_channel))
+			#print('DEBUG: CURRENT CHANNEL IS {}'.format(current_channel))
 			
 			response = ""
 			while len(self.channel_responses[ch]) > 0:
@@ -1323,7 +1323,7 @@ def get_client():
 """
 async def send_message(client, channel, text):
 	#try:
-	print('DEBUG: CURRENT CHANNEL IS {}'.format(channel))
+	#print('DEBUG: CURRENT CHANNEL IS {}'.format(channel))
 	return await client.send_message(channel, text)
 		
 	# except discord.errors.Forbidden:
