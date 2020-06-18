@@ -1102,10 +1102,8 @@ async def teleport(cmd):
 		try:
 			msg = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author)
 
-			if msg != None:
+			if msg != None and msg.content.startswith(ewcfg.cmd_prefix):
 				windup_finished = False
-			else:
-				windup_finished = True
 				
 		except:
 			windup_finished = True

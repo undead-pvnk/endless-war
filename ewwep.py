@@ -332,7 +332,7 @@ def canAttack(cmd):
 
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
-		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
+		user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 		user_isshambler = user_data.life_state == ewcfg.life_state_shambler
 
 		if (time_now - user_data.time_lastkill) < ewcfg.cd_kill:
@@ -361,7 +361,7 @@ def canAttack(cmd):
 
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
-		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
+		user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 		user_isshambler = user_data.life_state == ewcfg.life_state_shambler
   
 		weapon_possession_data = user_data.get_weapon_possession()
@@ -1484,6 +1484,7 @@ async def spar(cmd):
 
 			user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 			user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
+			user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 			user_isdead = user_data.life_state == ewcfg.life_state_corpse
 
 			if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
