@@ -262,6 +262,10 @@ def gen_fish(x, fisher, has_fishingrod):
 				fish_pool.remove(fish)
 
 	fish = random.choice(fish_pool)
+	
+	# Get fucked
+	if fisher.pier.id_poi == ewcfg.poi_id_juviesrow_pier:
+		fish = ewcfg.fish_map["plebefish"]
 
 	return fish
 

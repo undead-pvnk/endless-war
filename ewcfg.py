@@ -1258,6 +1258,7 @@ travel_time_subzone = 20
 travel_time_district = 60
 travel_time_street = 30
 travel_time_outskirt = 60
+travel_time_infinite = 900
 
 # ads
 slimecoin_toadvertise = 1000000
@@ -1352,7 +1353,7 @@ slimes_toannex = {
 capture_lock_per_gangster = 60 * 60  # 60 min
 
 # capture lock messages
-capture_lock_milestone = 5 * 60 # 5 min
+capture_lock_milestone = 15 * 60 # 5 min
 
 # capture messages
 capture_milestone = 5  # after how many percent of progress the players are notified of the progress
@@ -9800,6 +9801,8 @@ poi_list = [
 			poi_id_downtown_street_e : travel_time_street,
 			poi_id_downtown_street_f : travel_time_street,
 			poi_id_stockexchange : travel_time_subzone,
+			poi_id_endlesswar : travel_time_subzone,
+			poi_id_slimecorphq : travel_time_subzone,
 		}
 	),
 	EwPoi( # 2
@@ -9828,6 +9831,8 @@ poi_list = [
 			poi_id_smogsburg_street_c : travel_time_street,
 			poi_id_smogsburg_street_d : travel_time_street,
 			poi_id_smogsburg_street_e : travel_time_street,
+			poi_id_bazaar : travel_time_subzone,
+			poi_id_recyclingplant : travel_time_subzone,
 		}
 	),
 	EwPoi( # 3
@@ -9892,6 +9897,9 @@ poi_list = [
 			poi_id_krakbay_street_d : travel_time_street,
 			poi_id_krakbay_street_e : travel_time_street,
 			poi_id_krakbay_street_f : travel_time_street,
+			poi_id_bodega : travel_time_subzone,
+			poi_id_foodcourt : travel_time_subzone,
+			poi_id_sodafountain : travel_time_subzone,
 		}
 	),
 	EwPoi( # 5
@@ -9919,6 +9927,7 @@ poi_list = [
 			poi_id_poudrinalley_street_c : travel_time_street,
 			poi_id_poudrinalley_street_d : travel_time_street,
 			poi_id_poudrinalley_street_e : travel_time_street,
+			poi_id_711 : travel_time_subzone,
 		},
 	),
 	EwPoi( # 6
@@ -9974,6 +9983,7 @@ poi_list = [
 			poi_id_greenlightdistrict_street_a : travel_time_street,
 			poi_id_greenlightdistrict_street_b : travel_time_street,
 			poi_id_greenlightdistrict_street_c : travel_time_street,
+			poi_id_thecasino : travel_time_subzone,
 		},
 	),
 	EwPoi( # 8
@@ -10000,6 +10010,7 @@ poi_list = [
 			poi_id_oldnewyonkers_street_c : travel_time_street,
 			poi_id_oldnewyonkers_street_d : travel_time_street,
 			poi_id_oldnewyonkers_street_e : travel_time_street,
+			poi_id_realestate : travel_time_subzone,
 		},
 	),
 	EwPoi( # 9
@@ -10025,6 +10036,7 @@ poi_list = [
 			poi_id_littlechernobyl_street_a : travel_time_street,
 			poi_id_littlechernobyl_street_b : travel_time_street,
 			poi_id_littlechernobyl_street_c : travel_time_street,
+			poi_id_greencakecafe : travel_time_subzone,
 		},
 	),
 	EwPoi( # 10
@@ -10082,6 +10094,7 @@ poi_list = [
 			poi_id_astatineheights_street_d : travel_time_street,
 			poi_id_astatineheights_street_e : travel_time_street,
 			poi_id_astatineheights_street_f : travel_time_street,
+			poi_id_cinema : travel_time_subzone,
 		},
 	),
 	EwPoi( # 12
@@ -10110,6 +10123,7 @@ poi_list = [
 			poi_id_gatlingsdale_street_c : travel_time_street,
 			poi_id_gatlingsdale_street_d : travel_time_street,
 			poi_id_gatlingsdale_street_e : travel_time_street,
+			poi_id_nlacu : travel_time_subzone,
 		},
 	),
 	EwPoi( # 13
@@ -10136,6 +10150,7 @@ poi_list = [
 			poi_id_vandalpark_street_b : travel_time_street,
 			poi_id_vandalpark_street_c : travel_time_street,
 			poi_id_vandalpark_street_d : travel_time_street,
+			poi_id_arena : travel_time_subzone,
 		},
 	),
 	EwPoi( # 14
@@ -10164,6 +10179,7 @@ poi_list = [
 			poi_id_glocksbury_street_c : travel_time_street,
 			poi_id_glocksbury_street_d : travel_time_street,
 			poi_id_glocksbury_street_e : travel_time_street,
+			poi_id_glocksburycomics : travel_time_subzone,
 		},
 	),
 	EwPoi( # 15
@@ -10196,6 +10212,7 @@ poi_list = [
 			poi_id_northsleezeborough_street_c : travel_time_street,
 			poi_id_northsleezeborough_street_d : travel_time_street,
 			poi_id_northsleezeborough_street_e : travel_time_street,
+			poi_id_neomilwaukeestate : travel_time_subzone,
 		},
 	),
 	EwPoi( # 16
@@ -10322,6 +10339,9 @@ poi_list = [
 			poi_id_greenlightdistrict : travel_time_district,
 			poi_id_vagrantscorner : travel_time_district,
 			poi_id_juviesrow_street_a : travel_time_district,
+			poi_id_mine : travel_time_subzone,
+			poi_id_jr_farms : travel_time_subzone,
+			poi_id_juviesrow_pier : travel_time_subzone,
 		},
 	),
 	EwPoi( # 21
@@ -10343,6 +10363,7 @@ poi_list = [
 		neighbors = {
 			poi_id_vagrantscorner : travel_time_district,
 			poi_id_slimesend_street_a : travel_time_street,
+			poi_id_slimesendcliffs : travel_time_subzone,
 		},
 	),
 	EwPoi( # 22
@@ -10373,6 +10394,7 @@ poi_list = [
 			poi_id_vagrantscorner_street_d : travel_time_street,
 			poi_id_vagrantscorner_street_e : travel_time_street,
 			poi_id_vagrantscorner_street_f : travel_time_street,
+			poi_id_speakeasy : travel_time_subzone,
 		},
 	),
 	EwPoi( # 23
@@ -10398,6 +10420,7 @@ poi_list = [
 			poi_id_vagrantscorner : travel_time_district,
 			poi_id_assaultflatsbeach_street_a : travel_time_street,
 			poi_id_assaultflatsbeach_street_b: travel_time_street,
+			poi_id_beachresort : travel_time_subzone,
 		},
 	),
 	EwPoi( # 24
@@ -10424,6 +10447,7 @@ poi_list = [
 			poi_id_newnewyonkers_street_b : travel_time_street,
 			poi_id_newnewyonkers_street_c : travel_time_street,
 			poi_id_newnewyonkers_street_d : travel_time_street,
+			poi_id_slimypersuits : travel_time_subzone,
 		},
 	),
 	EwPoi( # 25
@@ -10449,6 +10473,7 @@ poi_list = [
 			poi_id_brawlden_street_b : travel_time_street,
 			poi_id_brawlden_street_c : travel_time_street,
 			poi_id_brawlden_street_d : travel_time_street,
+			poi_id_slimeoidlab : travel_time_subzone,
 		},
 	),
 	EwPoi( # 26
@@ -10640,6 +10665,7 @@ poi_list = [
 			poi_id_crookline : travel_time_district,
 			poi_id_dreadford_street_a : travel_time_street,
 			poi_id_dreadford_street_b : travel_time_street,
+			poi_id_countryclub : travel_time_subzone,
 		},
 	),
 	EwPoi( # 33
@@ -10743,6 +10769,9 @@ poi_list = [
 			poi_id_juviesrow : travel_time_street,
 			poi_id_greenlightdistrict_street_b : travel_time_street,
 			poi_id_vagrantscorner_street_c : travel_time_street,
+			poi_id_mine: travel_time_subzone,
+			poi_id_jr_farms : travel_time_subzone,
+			poi_id_juviesrow_pier : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -10933,6 +10962,7 @@ poi_list = [
 			poi_id_krakbay_street_c : travel_time_street,
 			poi_id_krakbay_street_e : travel_time_street,
 			poi_id_southsleezeborough_street_c : travel_time_street,
+			poi_id_foodcourt : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11009,6 +11039,7 @@ poi_list = [
 			poi_id_poudrinalley_street_a : travel_time_street,
 			poi_id_poudrinalley_street_c : travel_time_street,
 			poi_id_downtown_street_d : travel_time_street,
+			poi_id_711 : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11125,6 +11156,7 @@ poi_list = [
 			poi_id_cratersville_street_b : travel_time_street,
 			poi_id_oozegardens_street_d : travel_time_street,
 			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_cv_mines : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11163,6 +11195,8 @@ poi_list = [
 			poi_id_wreckington_street_a : travel_time_street,
 			poi_id_rowdyroughhouse_street_a : travel_time_street,
 			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_diner : travel_time_subzone,
+			poi_id_wt_port : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11221,6 +11255,7 @@ poi_list = [
 			poi_id_oozegardens_street_b : travel_time_street,
 			poi_id_oozegardens_street_d : travel_time_street,
 			poi_id_poudrinalley_street_d : travel_time_street,
+			poi_id_og_farms : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11241,6 +11276,7 @@ poi_list = [
 			poi_id_oozegardens_street_a : travel_time_street,
 			poi_id_cratersville_street_c : travel_time_street,
 			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_og_farms : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11280,6 +11316,7 @@ poi_list = [
 			poi_id_southsleezeborough_street_a : travel_time_street,
 			poi_id_southsleezeborough_street_c : travel_time_street,
 			poi_id_northsleezeborough_street_b : travel_time_street,
+			poi_id_dojo : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11645,6 +11682,7 @@ poi_list = [
 			poi_id_jaywalkerplain_street_d : travel_time_street,
 			poi_id_dreadford_street_a : travel_time_street,
 			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_pier : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11665,6 +11703,7 @@ poi_list = [
 			poi_id_jaywalkerplain_street_e : travel_time_street,
 			poi_id_westglocksbury_street_d : travel_time_street,
 			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_pier : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11704,6 +11743,7 @@ poi_list = [
 			poi_id_crookline_street_b : travel_time_street,
 			poi_id_dreadford_street_b : travel_time_street,
 			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_pier : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11724,6 +11764,7 @@ poi_list = [
 			poi_id_crookline_street_c : travel_time_street,
 			poi_id_southsleezeborough_street_a : travel_time_street,
 			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_pier : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11800,6 +11841,7 @@ poi_list = [
 			poi_id_dreadford_street_a : travel_time_street,
 			poi_id_crookline_street_a : travel_time_street,
 			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_df_blimp_tower : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12030,6 +12072,7 @@ poi_list = [
 			poi_id_toxington_street_e : travel_time_street,
 			poi_id_toxington_street_b : travel_time_street,
 			poi_id_gatlingsdale_street_d : travel_time_street,
+			poi_id_tt_mines : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12089,6 +12132,7 @@ poi_list = [
 			poi_id_toxington_street_e : travel_time_street,
 			poi_id_maimridge_street_c : travel_time_street,
 			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_toxington_pier : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12108,6 +12152,7 @@ poi_list = [
 			poi_id_toxington_street_d : travel_time_street,
 			poi_id_toxington_street_a : travel_time_street,
 			poi_id_astatineheights_street_b : travel_time_street,
+			poi_id_toxington_pier : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12241,6 +12286,7 @@ poi_list = [
 			poi_id_astatineheights_street_a : travel_time_street,
 			poi_id_astatineheights_street_c : travel_time_street,
 			poi_id_toxington_street_e : travel_time_street,
+			poi_id_seafood : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12431,6 +12477,7 @@ poi_list = [
 			poi_id_arsonbrook_street_e : travel_time_street,
 			poi_id_arsonbrook_street_b : travel_time_street,
 			poi_id_smogsburg_street_a : travel_time_street,
+			poi_id_ab_farms : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12450,6 +12497,7 @@ poi_list = [
 			poi_id_arsonbrook_street_a : travel_time_street,
 			poi_id_arsonbrook_street_c : travel_time_street,
 			poi_id_astatineheights_street_d : travel_time_street,
+			poi_id_ab_farms : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12895,6 +12943,8 @@ poi_list = [
 			poi_id_assaultflatsbeach_street_b : travel_time_street,
 			poi_id_newnewyonkers_street_b : travel_time_street,
 			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_assaultflatsbeach_pier : travel_time_subzone,
+			poi_id_afb_blimp_tower : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12914,6 +12964,7 @@ poi_list = [
 			poi_id_assaultflatsbeach_street_a : travel_time_street,
 			poi_id_vagrantscorner_street_a : travel_time_street,
 			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_assaultflatsbeach_pier : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12933,6 +12984,7 @@ poi_list = [
 			poi_id_vagrantscorner_street_f : travel_time_street,
 			poi_id_vagrantscorner_street_b : travel_time_street,
 			poi_id_assaultflatsbeach_street_b : travel_time_street,
+			poi_id_vc_port : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12952,6 +13004,7 @@ poi_list = [
 			poi_id_vagrantscorner_street_a : travel_time_street,
 			poi_id_vagrantscorner_street_c : travel_time_street,
 			poi_id_slimesend_street_a : travel_time_street,
+			poi_id_vc_port : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -13102,6 +13155,7 @@ poi_list = [
 		neighbors = {
 			poi_id_slimesend : travel_time_street,
 			poi_id_vagrantscorner_street_b : travel_time_street,
+			poi_id_slimesend_pier : travel_time_subzone,
 		}
 	),
 	# Subzones start here
@@ -13122,7 +13176,7 @@ poi_list = [
 		mother_districts = [poi_id_downtown],
 		max_degradation = 10000000,
 		neighbors = {
-			
+			poi_id_downtown : travel_time_subzone,
 		},
 	),
 	EwPoi(  # slimecorp HQ
@@ -13141,7 +13195,7 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_downtown],
 		neighbors = {
-			
+			poi_id_downtown : travel_time_subzone,
 		},
 	),
 	EwPoi( # stock-exchange
@@ -13168,7 +13222,6 @@ poi_list = [
 		mother_districts = [poi_id_downtown],
 		neighbors = {
 			poi_id_downtown : travel_time_subzone,
-			poi_id_downtown_street_a : travel_time_subzone,
 		}
 	),
 	EwPoi( # the-bazaar
@@ -13190,7 +13243,7 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_smogsburg],
 		neighbors = {
-			
+			poi_id_smogsburg : travel_time_subzone,
 		},
 	),
 	EwPoi( # the-cinema
@@ -13212,7 +13265,7 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_astatineheights],
 		neighbors = {
-			
+			poi_id_astatineheights : travel_time_subzone,
 		},
 	),
 	EwPoi( # food-court
@@ -13246,9 +13299,10 @@ poi_list = [
 			vendor_mtndew,
 		],
 		is_subzone = True,
-		mother_districts = [poi_id_krakbay],
+		mother_districts = [poi_id_krakbay, poi_id_krakbay_street_d],
 		neighbors = {
-			
+			poi_id_krakbay : travel_time_subzone,
+			poi_id_krakbay_street_d : travel_time_subzone,
 		},
 	),
 	EwPoi( # nlac-u
@@ -13274,7 +13328,7 @@ poi_list = [
 		mother_districts = [poi_id_gatlingsdale],
 		write_manuscript = True,
 		neighbors = {
-			
+			poi_id_gatlingsdale : travel_time_subzone,
 		},
 	),
 	EwPoi( # battle-arena
@@ -13294,7 +13348,7 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_vandalpark],
 		neighbors = {
-			
+			poi_id_vandalpark : travel_time_subzone,
 		},
 	),
 	EwPoi( # the-dojo
@@ -13313,12 +13367,12 @@ poi_list = [
 		role = "Dojo",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_southsleezeborough],
+		mother_districts = [poi_id_southsleezeborough_street_b],
 		vendors = [
 			vendor_dojo
 		],
 		neighbors = {
-			
+			poi_id_southsleezeborough_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi( # speakeasy
@@ -13346,7 +13400,7 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_vagrantscorner],
 		neighbors = {
-			
+			poi_id_vagrantscorner : travel_time_subzone,
 		},
 	),
 	EwPoi( # 7-11
@@ -13369,9 +13423,10 @@ poi_list = [
 			vendor_vendingmachine
 		],
 		is_subzone = True,
-		mother_districts = [poi_id_poudrinalley],
+		mother_districts = [poi_id_poudrinalley, poi_id_poudrinalley_street_b],
 		neighbors = {
-			
+			poi_id_poudrinalley : travel_time_subzone,
+			poi_id_poudrinalley_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi( # the-labs
@@ -13399,7 +13454,7 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_brawlden],
 		neighbors = {
-			
+			poi_id_brawlden : travel_time_subzone,
 		},
 	),
 	EwPoi( # the-mines
@@ -13417,9 +13472,10 @@ poi_list = [
 		role = "Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_juviesrow],
+		mother_districts = [poi_id_juviesrow, poi_id_juviesrow_street_a],
 		neighbors = {
-			
+			poi_id_juviesrow : travel_time_subzone,
+			poi_id_juviesrow_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi( # the-casino
@@ -13441,7 +13497,7 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_greenlightdistrict],
 		neighbors = {
-			
+			poi_id_greenlightdistrict : travel_time_subzone,
 		},
 	),
 	EwPoi(  # cratersville mines
@@ -13461,9 +13517,9 @@ poi_list = [
 		role = "Cratersville Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_cratersville],
+		mother_districts = [poi_id_cratersville_street_c],
 		neighbors = {
-			
+			poi_id_cratersville_street_c : travel_time_subzone,
 		},
 	),
 	EwPoi(  # toxington mines
@@ -13482,9 +13538,9 @@ poi_list = [
 		role = "Toxington Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_toxington],
+		mother_districts = [poi_id_toxington_street_a],
 		neighbors = {
-			
+			poi_id_toxington_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi( # smokers-cough
@@ -13508,9 +13564,9 @@ poi_list = [
 			vendor_diner
 		],
 		is_subzone = True,
-		mother_districts = [poi_id_wreckington],
+		mother_districts = [poi_id_wreckington_street_b],
 		neighbors = {
-			
+			poi_id_wreckington_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi( # Red Mobster
@@ -13533,9 +13589,9 @@ poi_list = [
 			vendor_seafood
 		],
 		is_subzone = True,
-		mother_districts = [poi_id_astatineheights],
+		mother_districts = [poi_id_astatineheights_street_b],
 		neighbors = {
-			
+			poi_id_astatineheights_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi( # JR Farm
@@ -13556,9 +13612,10 @@ poi_list = [
 		role = "Juvie's Row Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_juviesrow],
+		mother_districts = [poi_id_juviesrow, poi_id_juviesrow_street_a],
 		neighbors = {
-			
+			poi_id_juviesrow : travel_time_subzone,
+			poi_id_juviesrow_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi( # OG Farm
@@ -13581,9 +13638,10 @@ poi_list = [
 		role = "Ooze Gardens Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_oozegardens],
+		mother_districts = [poi_id_oozegardens_street_c, poi_id_oozegardens_street_d],
 		neighbors = {
-			
+			poi_id_oozegardens_street_c : travel_time_subzone,
+			poi_id_oozegardens_street_d : travel_time_subzone,
 		},
 	),
 	EwPoi( # AB Farm
@@ -13604,9 +13662,10 @@ poi_list = [
 		role = "Arsonbrook Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_arsonbrook],
+		mother_districts = [poi_id_arsonbrook_street_a, poi_id_arsonbrook_street_b],
 		neighbors = {
-			
+			poi_id_arsonbrook_street_a : travel_time_subzone,
+			poi_id_arsonbrook_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Neo Milwaukee State
@@ -13629,7 +13688,7 @@ poi_list = [
 		mother_districts = [poi_id_northsleezeborough],
 		write_manuscript = True,
 		neighbors = {
-			
+			poi_id_northsleezeborough : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Assault Flats Beach Resort
@@ -13650,7 +13709,7 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_assaultflatsbeach],
 		neighbors = {
-			
+			poi_id_assaultflatsbeach : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Dreadford Country Club
@@ -13671,7 +13730,7 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_dreadford],
 		neighbors = {
-			
+			poi_id_dreadford : travel_time_subzone,
 		},
 	),
 	EwPoi(  # SlimeCorp Recycling Plant
@@ -13693,7 +13752,7 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_smogsburg],
 		neighbors = {
-			
+			poi_id_smogsburg : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Toxington Pier
@@ -13709,11 +13768,12 @@ poi_list = [
 		role = "Toxington Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_toxington],
+		mother_districts = [poi_id_toxington_street_d, poi_id_toxington_street_e],
 		is_pier = True,
 		pier_type = fish_slime_freshwater,
 		neighbors = {
-			
+			poi_id_toxington_street_d : travel_time_subzone,
+			poi_id_toxington_street_e : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Jaywalker Plain Pier
@@ -13729,11 +13789,12 @@ poi_list = [
 		role = "Jaywalker Plain Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_jaywalkerplain],
+		mother_districts = [poi_id_jaywalkerplain_street_c, poi_id_jaywalkerplain_street_d],
 		is_pier = True,
 		pier_type = fish_slime_freshwater,
 		neighbors = {
-			
+			poi_id_jaywalkerplain_street_c : travel_time_subzone,
+			poi_id_jaywalkerplain_street_d : travel_time_subzone,
 		},
 
 	),
@@ -13750,11 +13811,12 @@ poi_list = [
 		role = "Crookline Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_crookline],
+		mother_districts = [poi_id_crookline_street_a, poi_id_crookline_street_b],
 		is_pier = True,
 		pier_type = fish_slime_freshwater,
 		neighbors = {
-			
+			poi_id_crookline_street_a : travel_time_subzone,
+			poi_id_crookline_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Assault Flats Beach Pier
@@ -13770,11 +13832,12 @@ poi_list = [
 		role = "Assault Flats Beach Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_assaultflatsbeach],
+		mother_districts = [poi_id_assaultflatsbeach_street_a, poi_id_assaultflatsbeach_street_b],
 		is_pier = True,
 		pier_type = fish_slime_saltwater,
 		neighbors = {
-			
+			poi_id_assaultflatsbeach_street_a : travel_time_subzone,
+			poi_id_assaultflatsbeach_street_b : travel_time_subzone,
 		},
 	),
 	# EwPoi(  # Vagrant's Corner Pier
@@ -13808,11 +13871,12 @@ poi_list = [
 		role = "Juvie's Row Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_juviesrow],
+		mother_districts = [poi_id_juviesrow, poi_id_juviesrow_street_a],
 		is_pier = True,
 		pier_type = fish_slime_saltwater,
 		neighbors = {
-			
+			poi_id_juviesrow : travel_time_subzone,
+			poi_id_juviesrow_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Slime's End Pier
@@ -13828,11 +13892,11 @@ poi_list = [
 		role = "Slime's End Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_slimesend],
+		mother_districts = [poi_id_slimesend_street_a],
 		is_pier = True,
 		pier_type = fish_slime_saltwater,
 		neighbors = {
-			
+			poi_id_slimesend_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi( # Slime Sea
@@ -13860,11 +13924,11 @@ poi_list = [
 		role = "Wreckington Port",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_wreckington],
+		mother_districts = [poi_id_wreckington_street_b],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_wreckington_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Vagrant's Corner Ferry Port
@@ -13885,11 +13949,12 @@ poi_list = [
 		role = "Vagrant's Corner Port",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_vagrantscorner],
+		mother_districts = [poi_id_vagrantscorner_street_a, poi_id_vagrantscorner_street_b],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_vagrantscorner_street_a : travel_time_subzone,
+			poi_id_vagrantscorner_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Toxington Subway Station
@@ -13979,7 +14044,7 @@ poi_list = [
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+
 		},
 	),
 	EwPoi(  # Arsonbrook Subway Station
@@ -14520,11 +14585,11 @@ poi_list = [
 		role = "Dreadford Blimp Tower",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_dreadford],
+		mother_districts = [poi_id_dreadford_street_b],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_dreadford_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Assault Flats Beach Blimp Tower
@@ -14549,11 +14614,11 @@ poi_list = [
 		role = "Assault Flats Beach Blimp Tower",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_assaultflatsbeach],
+		mother_districts = [poi_id_assaultflatsbeach_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_assaultflatsbeach_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi( # realestate
@@ -14575,7 +14640,7 @@ poi_list = [
 		mother_districts = [poi_id_oldnewyonkers],
 		is_subzone = True,
 		neighbors = {
-			
+			poi_id_oldnewyonkers : travel_time_subzone,
 		},
 	),
 	EwPoi( # Glocksbury Comics
@@ -14599,7 +14664,7 @@ poi_list = [
 		is_subzone = True,
 		write_manuscript = True,
 		neighbors = {
-			
+			poi_id_glocksbury : travel_time_subzone,
 		},
 	),
 	EwPoi( # Slimy Persuits
@@ -14622,7 +14687,7 @@ poi_list = [
 		mother_districts  = [poi_id_newnewyonkers],
 		is_subzone=True,
 		neighbors = {
-			
+			poi_id_newnewyonkers : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Green Cake Cafe
@@ -14644,7 +14709,7 @@ poi_list = [
 		is_subzone=True,
 		write_manuscript=True,
 		neighbors = {
-			
+			poi_id_littlechernobyl : travel_time_subzone,
 		},
 	),
 	EwPoi(
@@ -14664,7 +14729,7 @@ poi_list = [
 		mother_districts  = [poi_id_krakbay],
 		is_subzone=True,
 		neighbors = {
-			
+			poi_id_krakbay : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Ferry
@@ -14684,7 +14749,6 @@ poi_list = [
 		default_stop = poi_id_wt_port,
 		is_pier = True,
 		pier_type = fish_slime_saltwater
-
 	),
 	EwPoi(  # Subway train on the red line
 		id_poi = poi_id_subway_red01,
@@ -14809,17 +14873,6 @@ poi_list = [
 		transport_type = transport_type_blimp,
 		default_line = transport_line_blimp_df_to_afb,
 		default_stop = poi_id_df_blimp_tower
-	),
-	EwPoi( # apt
-		id_poi = poi_id_apt,
-		alias = [
-		],
-		str_name = "an apartment",
-		str_desc = "",
-		channel = channel_apt,
-		role = "Apartments",
-		pvp = False,
-		is_subzone = False,
 	),
 	EwPoi( # apt-downtown
 		id_poi = poi_id_apt_downtown,
@@ -14980,7 +15033,7 @@ poi_list = [
 		alias=[
 
 		],
-		str_name="your Glocksbury apartment",
+		str_name="a Glocksbury apartment",
 		str_desc="",
 		channel=channel_apt_glocksbury,
 		role="Glocksbury Apartments",
@@ -14994,7 +15047,7 @@ poi_list = [
 		alias=[
 
 		],
-		str_name="your North Sleezeborough apartment",
+		str_name="a North Sleezeborough apartment",
 		str_desc="",
 		channel=channel_apt_northsleezeborough,
 		role="North Sleezeborough Apartments",
@@ -15050,7 +15103,7 @@ poi_list = [
 		alias=[
 
 		],
-		str_name="your Wreckington apartment",
+		str_name="a Wreckington apartment",
 		str_desc="",
 		channel=channel_apt_wreckington,
 		role="Wreckington Apartments",
@@ -15092,7 +15145,7 @@ poi_list = [
 		alias=[
 
 		],
-		str_name="your Assault Flats Beach apartment",
+		str_name="a Assault Flats Beach apartment",
 		str_desc="",
 		channel=channel_apt_assaultflatsbeach,
 		role="Assault Flats Beach Apartments",
@@ -15106,7 +15159,7 @@ poi_list = [
 		alias=[
 
 		],
-		str_name="your New New Yonkers apartment",
+		str_name="a New New Yonkers apartment",
 		str_desc="",
 		channel=channel_apt_newnewyonkers,
 		role="New New Yonkers Apartments",
@@ -15243,7 +15296,7 @@ poi_list = [
 		pvp = True,
 		is_subzone = True,
 		neighbors = {
-			
+			poi_id_slimesend : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Clothing store in Krak Bay
@@ -15265,139 +15318,9 @@ poi_list = [
 		],
 		is_subzone = True,
 		neighbors = {
-			
+			poi_id_krakbay : travel_time_subzone,
 		},
 	),
-	# EwPoi(  # Outskirts - 1
-	# 	id_poi=poi_id_south_outskirts,
-	# 	alias=[
-	# 		"southoutskirts",
-	# 		"soutskirts",
-	# 		"so",
-	# 	],
-	# 	str_name="Southern Outskirts",
-	# 	str_desc="{} These outskirts lay just beyond the boundaries of Wreckington, Cratersville, and Ooze Gardens. If you kept wandering, you could probably wind up in the Southwestern Outskirts too.".format(str_generic_outskirts_description),
-	# 	coord = (19, 37),
-	# 	coord_alias = [
-	# 		(20, 37),
-	# 		(21, 37)
-	# 	],
-	# 	channel="south-outskirts",
-	# 	role="Southern Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 2
-	# 	id_poi=poi_id_southwest_outskirts,
-	# 	alias=[
-	# 		"southwesternoutskirts",
-	# 		"swoutskirts",
-	# 		"swo",
-	# 	],
-	# 	str_name="Southwestern Outskirts",
-	# 	str_desc="{} These outskirts lay just beyond the boundaries of South Sleezeborough, Crookline, and Dreadford. If you kept wandering, you could probably wind up in the Western or Southern Outskirts too.".format(str_generic_outskirts_description),
-	# 	coord = (6, 37),
-	# 	coord_alias = [
-	# 		(7, 37),
-	# 		(8, 37),
-	# 		(9, 37),
-	# 		(10, 37)
-	# 	],
-	# 	channel="southwest-outskirts",
-	# 	role="Southwestern Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 3
-	# 	id_poi=poi_id_west_outskirts,
-	# 	alias=[
-	# 		"westernoutskirts",
-	# 		"woutskirts",
-	# 		"wo",
-	# 	],
-	# 	str_name="Western Outskirts",
-	# 	str_desc="{} These outskirts lay just beyond the boundaries of Jaywalker Plain, West Glocksbury, and Polonium Hill. If you kept wandering, you could probably wind up in the Southwestern or Northwestern Outskirts too.".format(str_generic_outskirts_description),
-	# 	coord = (3, 10),
-	# 	coord_alias = [
-	# 		(3, 11),
-	# 		(3, 12),
-	# 		(3, 13),
-	# 		(3, 14),
-	# 	],
-	# 	channel="west-outskirts",
-	# 	role="Western Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 4
-	# 	id_poi=poi_id_northwest_outskirts,
-	# 	alias=[
-	# 		"northwesternoutskirts",
-	# 		"nwoutskirts",
-	# 		"nwo",
-	# 	],
-	# 	str_name="Northwestern Outskirts",
-	# 	str_desc="{} These outskirts lay just beyond the boundaries of Charcoal Park, Toxington, and Astatine Heights. If you kept wandering, you could probably wind up in the Western or Northern Outskirts too.".format(str_generic_outskirts_description),
-	# 	coord = (22, 2),
-	# 	coord_alias = [
-	# 		(21, 2),
-	# 		(20, 2),
-	# 		(19, 2),
-	# 		(18, 2),
-	# 	],
-	# 	channel="northwest-outskirts",
-	# 	role="Northwestern Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 5
-	# 	id_poi=poi_id_north_outskirts,
-	# 	alias=[
-	# 		"northernoutskirts",
-	# 		"noutskirts",
-	# 		"no",
-	# 	],
-	# 	str_name="North Outskirts",
-	# 	str_desc="{}  These outskirts lay just beyond the boundaries of Arsonbrook, Brawlden, and New New Yonkers. If you kept wandering, you could probably wind up in the Northwestern Outskirts or the Nuclear Beach too.".format(str_generic_outskirts_description),
-	# 	coord = (37, 2),
-	# 	coord_alias = [
-	# 		(36, 2),
-	# 		(35, 2),
-	# 		(34, 2),
-	# 		(33, 2)
-	# 	],
-	# 	channel="north-outskirts",
-	# 	role="Northern Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi( # Outskirts - 6
-	# 	id_poi=poi_id_nuclear_beach,
-	# 	alias=[
-	# 		"nuclearbeach",
-	# 		"nuclearbeachoutskirts",
-	# 		"nb",
-	# 		"nbeach",
-	# 		"afbo",
-	# 		"afboutskirts",
-	# 	],
-	# 	str_name="Nuclear Beach",
-	# 	str_desc="{}  A place only the fiercest secreatures call home, right next to Assault Flats Beach. Stay around too long, and you'll wind up in the jaws of god knows what lurks around here.".format(str_generic_outskirts_description),
-	# 	coord = (47, 6),
-	# 	coord_alias = [
-	# 		(47, 7)
-	# 	],
-	# 	channel="nuclear-beach",
-	# 	role="Nuclear Beach",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
 	EwPoi(  # Tutorial - 1
 		id_poi = poi_id_tutorial_classroom,
 		channel="classroom",
@@ -15486,7 +15409,7 @@ poi_list = [
 		neighbors = {
 			poi_id_oozegardens_street_a : travel_time_outskirt,
 			poi_id_oozegardens_street_d : travel_time_outskirt,
-			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
 			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
 			poi_id_oozegardens_outskirts : travel_time_outskirt,
 		},
@@ -15992,7 +15915,7 @@ poi_list = [
 			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
 			poi_id_poloniumhill_outskirts : travel_time_outskirt,
 			poi_id_toxington_outskirts : travel_time_outskirt,
-			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_depths : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 27
@@ -16488,20 +16411,26 @@ for poi in poi_list:
 		poi.major_role = '{}_major'.format(poi.id_poi)
 	
 	# Subzones and streets need the same major roles as their mother/father districts.
-	if poi.is_subzone:
-		for mother_poi in poi_list:
-			if mother_poi.id_poi in poi.mother_districts:
-				poi.major_role = mother_poi.major_role
-				break
-	
 	if poi.is_street:
 		for father_poi in poi_list:
 			if father_poi.id_poi == poi.father_district:
 				poi.major_role = father_poi.major_role
+				break
+	
+	if poi.is_subzone:
+		for mother_poi in poi_list:
+			if mother_poi.id_poi in poi.mother_districts:
+				if mother_poi.major_role != None:
+					poi.major_role = mother_poi.major_role
+					break
+				
+	
 		
 	if poi.major_role == None:
+		#print('Null Major Role give to {}'.format(poi.id_poi))
 		poi.major_role = role_null_major_role
 	if poi.minor_role == None:
+		#print('Null Minor Role give to {}'.format(poi.str_name))
 		poi.minor_role = role_null_minor_role
 	
 	if poi.coord != None:
@@ -16679,8 +16608,7 @@ transport_lines = [
 			poi_id_wt_subway_station : [20, poi_id_rr_subway_station],
 			poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
 			poi_id_dt_subway_station : [20, poi_id_ck_subway_station],
-			poi_id_ck_subway_station : [20, poi_id_gd_subway_station],
-			poi_id_gd_subway_station : [20, poi_id_ah_subway_station],
+			poi_id_ck_subway_station : [20, poi_id_ah_subway_station],
 			poi_id_ah_subway_station : [20, poi_id_tt_subway_station]
 			}
 

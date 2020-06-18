@@ -1838,15 +1838,26 @@ async def print_map_data(cmd):
 		
 		neighbor_count = 0
 		
-		print('\n\nNeighbors for {}\n====================='.format(poi.str_name))
+		#print('\n\nNeighbors for {}\n====================='.format(poi.str_name))
 		for neighbor_poi in ewcfg.poi_list:
+			
+			if neighbor_poi.id_poi in poi.neighbors.keys() and poi.id_poi not in neighbor_poi.neighbors.keys():
+				print('\n========================\nsevered connection for POIs {} and {}'.format(poi.str_name, neighbor_poi.str_name))
+			elif poi.id_poi in neighbor_poi.neighbors.keys() and neighbor_poi.id_poi not in poi.neighbors.keys():
+				print('\n========================\nsevered connection for POIs {} and {}'.format(poi.str_name, neighbor_poi.str_name))
+				
+		if poi.is_subzone:
+			for neighbor in poi.neighbors.keys():
+				if neighbor not in poi.mother_districts:
+					print('subzone {} has invalid mother district(s)'.format(poi.str_name))
+			
 			#if neighbor_poi.id_poi in poi.neighbors.keys():
-			if poi.id_poi in neighbor_poi.neighbors.keys():
-				neighbor_count += 1
+			#if poi.id_poi in neighbor_poi.neighbors.keys():
+				#neighbor_count += 1
 				#print(neighbor_poi.str_name)
 		
-		if poi.is_outskirts:
-			print('found {} neighbors for {}'.format(neighbor_count, poi.id_poi))
+		#if poi.is_outskirts:
+			#print('found {} neighbors for {}'.format(neighbor_count, poi.id_poi))
 			
 	# client = ewutils.get_client()
 	# server = client.get_server(cmd.message.server.id)
