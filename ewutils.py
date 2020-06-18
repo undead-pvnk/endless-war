@@ -146,20 +146,22 @@ class EwResponseContainer:
 				current_channel = get_channel(server = server, channel_name = ch)
 			else:
 				current_channel = channel
-			try:
-				response = ""
-				while len(self.channel_responses[ch]) > 0:
-					if len(response) == 0 or len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
-						response += "\n" + self.channel_responses[ch].pop(0)
-					else:
-						message = await send_message(self.client, current_channel, response)
-						messages.append(message)
-						response = ""
-				message = await send_message(self.client, current_channel, response)
-				messages.append(message)
-			except:
-				logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
-				print("Unhandled exception in ewutils:", sys.exc_info()[0])
+			#try:
+			print('DEBUG: CURRENT CHANNEL IS {}'.format(current_channel))
+			
+			response = ""
+			while len(self.channel_responses[ch]) > 0:
+				if len(response) == 0 or len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
+					response += "\n" + self.channel_responses[ch].pop(0)
+				else:
+					message = await send_message(self.client, current_channel, response)
+					messages.append(message)
+					response = ""
+			message = await send_message(self.client, current_channel, response)
+			messages.append(message)
+			# except:
+			# 	logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
+			# 	print("Unhandled exception in ewutils:", sys.exc_info()[0])
 
 		for ch in self.channel_topics:
 			channel = get_channel(server = server, channel_name = ch)
@@ -1320,14 +1322,16 @@ def get_client():
 	Proxy to discord.py Client.send_message with exception handling.
 """
 async def send_message(client, channel, text):
-	try:
-		return await client.send_message(channel, text)
-	except discord.errors.Forbidden:
-		logMsg('Could not message user: {}\n{}'.format(channel, text))
-		raise
-	except:
-		logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
-		print("Unhandled exception in ewutils:", sys.exc_info()[0])
+	#try:
+	print('DEBUG: CURRENT CHANNEL IS {}'.format(channel))
+	return await client.send_message(channel, text)
+		
+	# except discord.errors.Forbidden:
+	# 	logMsg('Could not message user: {}\n{}'.format(channel, text))
+	# 	raise
+	# except:
+	# 	logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
+	# 	print("Unhandled exception in ewutils:", sys.exc_info()[0])
 
 """
 	Proxy to discord.py Client.edit_message with exception handling.
