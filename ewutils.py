@@ -146,22 +146,20 @@ class EwResponseContainer:
 				current_channel = get_channel(server = server, channel_name = ch)
 			else:
 				current_channel = channel
-			#try:
-			#print('DEBUG: CURRENT CHANNEL IS {}'.format(current_channel))
-			
-			response = ""
-			while len(self.channel_responses[ch]) > 0:
-				if len(response) == 0 or len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
-					response += "\n" + self.channel_responses[ch].pop(0)
-				else:
-					message = await send_message(self.client, current_channel, response)
-					messages.append(message)
-					response = ""
-			message = await send_message(self.client, current_channel, response)
-			messages.append(message)
-			# except:
-			# 	logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
-			# 	print("Unhandled exception in ewutils:", sys.exc_info()[0])
+			try:
+				response = ""
+				while len(self.channel_responses[ch]) > 0:
+					if len(response) == 0 or len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
+						response += "\n" + self.channel_responses[ch].pop(0)
+					else:
+						message = await send_message(self.client, current_channel, response)
+						messages.append(message)
+						response = ""
+				message = await send_message(self.client, current_channel, response)
+				messages.append(message)
+			except:
+				logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
+				
 
 		for ch in self.channel_topics:
 			channel = get_channel(server = server, channel_name = ch)
@@ -459,18 +457,18 @@ def databaseClose(conn_info):
 
 """ format responses with the username: """
 def formatMessage(user_target, message):
-    # If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
-    try:
-        if user_target.life_state == ewcfg.enemy_lifestate_alive:
-            # Send messages for normal enemies, and mentioning with @
-            return "*{}:* {}".format(user_target.display_name, message)
+	# If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
+	try:
+		if user_target.life_state == ewcfg.enemy_lifestate_alive:
+			# Send messages for normal enemies, and mentioning with @
+			return "*{}:* {}".format(user_target.display_name, message)
 
-        elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
-            return "{}".format(message)
+		elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
+			return "{}".format(message)
 
-    # If user_target isn't an enemy, catch the exception.
-    except:
-        return "*{}:* {}".format(user_target.display_name, message).replace("@", "{at}")
+	# If user_target isn't an enemy, catch the exception.
+	except:
+		return "*{}:* {}".format(user_target.display_name, message).replace("@", "{at}")
 
 """ Decay slime totals for all users, with the exception of Kingpins"""
 def decaySlimes(id_server = None):
@@ -1264,7 +1262,7 @@ def hunger_cost_mod(slimelevel):
 """
 def food_carry_capacity_bylevel(slimelevel):
 	return math.ceil(slimelevel / ewcfg.max_food_in_inv_mod)
-        
+		
 """
 	Calculate how many weapons the player can carry
 """
@@ -1322,16 +1320,13 @@ def get_client():
 	Proxy to discord.py Client.send_message with exception handling.
 """
 async def send_message(client, channel, text):
-	#try:
-	#print('DEBUG: CURRENT CHANNEL IS {}'.format(channel))
-	return await client.send_message(channel, text)
-		
-	# except discord.errors.Forbidden:
-	# 	logMsg('Could not message user: {}\n{}'.format(channel, text))
-	# 	raise
-	# except:
-	# 	logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
-	# 	print("Unhandled exception in ewutils:", sys.exc_info()[0])
+	try:
+		return await client.send_message(channel, text)
+	except discord.errors.Forbidden:
+		logMsg('Could not message user: {}\n{}'.format(channel, text))
+		raise
+	except:
+		logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
 
 """
 	Proxy to discord.py Client.edit_message with exception handling.
