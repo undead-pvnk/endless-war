@@ -1163,7 +1163,7 @@ async def item_look(cmd):
 
 					current_durability = int(item.item_props['durability'])
 					
-					print('DEBUG -- DURABILITY COMPARISON\nCURRENT DURABILITY: {}, ORIGINAL DURABILITY: {}'.format(current_durability, original_durability))
+					#print('DEBUG -- DURABILITY COMPARISON\nCURRENT DURABILITY: {}, ORIGINAL DURABILITY: {}'.format(current_durability, original_durability))
 
 					if current_durability == original_durability:
 						response += "It looks brand new.\n"
