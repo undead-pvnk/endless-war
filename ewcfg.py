@@ -16988,7 +16988,7 @@ for slimexodia in item_list:
 prank_items_heinous = [] # common
 prank_items_scandalous = [] # uncommon
 prank_items_forbidden = [] # rare
-#swilldermuk_food = []
+swilldermuk_food = []
 
 # Gather all prank items
 for p in item_list:
