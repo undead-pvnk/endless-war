@@ -2173,10 +2173,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 				if not miss:
 					# Damage players/enemies in district
-					resp = weapon_explosion(user_data=user_data, shootee_data=enemy_data,
-												district_data=district_data, market_data = market_data, life_states=life_states,
-												factions=factions, slimes_damage=bystander_damage, backfire=backfire,
-												time_now=time_now, target_enemy=True)
+					resp = weapon_explosion(user_data=user_data, shootee_data=enemy_data, district_data=district_data, market_data = market_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=True)
 					resp_cont.add_response_container(resp)
 
 			user_data = EwUser(member=cmd.message.author)

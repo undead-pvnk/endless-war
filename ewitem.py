@@ -748,7 +748,7 @@ def inventory(
 					item_type = ewcfg.it_cosmetic
 					item_data.item_type = item_type
 					if 'fashion_style' not in item_data.item_props.keys():
-						if item_data.item_props['id_cosmetic'] == 'soul':
+						if item_data.item_props.get('id_cosmetic') == 'soul':
 							item_data.item_props = {
 								'id_cosmetic': item_data.item_props['id_cosmetic'],
 								'cosmetic_name': item_data.item_props['cosmetic_name'],
@@ -768,7 +768,7 @@ def inventory(
 								'adorned': 'false',
 								'user_id': item_data.item_props['user_id']
 							}
-						elif item_data.item_props['id_cosmetic'] == 'scalp':
+						elif item_data.item_props.get('id_cosmetic') == 'scalp':
 							item_data.item_props = {
 								'id_cosmetic': item_data.item_props['id_cosmetic'],
 								'cosmetic_name': item_data.item_props['cosmetic_name'],
@@ -788,7 +788,7 @@ def inventory(
 								'adorned': 'false',
 							}
 						else:
-							item = ewcfg.cosmetic_map.get(item_data.item_props['id_cosmetic'])
+							item = ewcfg.cosmetic_map.get(item_data.item_props.get('id_cosmetic'))
 							item_data.item_props = {
 								'id_cosmetic': item.id_cosmetic,
 								'cosmetic_name': item.str_name,
