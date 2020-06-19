@@ -791,16 +791,23 @@ def inventory(
 						elif item_data.item_props.get('rarity') == ewcfg.rarity_princeps:
 							
 							# TODO: Make princeps have custom stats, etc. etc.
-							print('Updated Princep {} for user with ID {}'.format(item_data.item_props.get('cosmetic_name'), id_user))
+							current_name = item_data.item_props.get('cosmetic_name')
+							current_desc = item_data.item_props.get('cosmetic_desc')
+							
+							print("Updated Princep '{}' for user with ID {}".format(current_name, id_user))
 							
 							item_data.item_props = {
 								'id_cosmetic': 'princep',
+								'cosmetic_name': current_name,
+								'cosmetic_desc': current_desc,
 								'str_onadorn': ewcfg.str_generic_onadorn,
 								'str_unadorn': ewcfg.str_generic_unadorn,
 								'str_onbreak': ewcfg.str_generic_onbreak,
+								'rarity': ewcfg.rarity_princeps,
 								'attack': 3,
 								'defense': 3,
 								'speed': 3,
+								'ability': None,
 								'durability': ewcfg.base_durability * 100,
 								'size': 1,
 								'fashion_style': ewcfg.style_cool,
