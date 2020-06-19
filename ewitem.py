@@ -789,14 +789,28 @@ def inventory(
 								'adorned': 'false',
 							}
 						elif item_data.item_props.get('rarity') == ewcfg.rarity_princeps:
-
-							# TODO: Make princeps work with fashion, somehow...
-							# Don't attempt to update princeps
-							print('PRINCEP SKIPPED')
+							
+							# TODO: Make princeps have custom stats, etc. etc.
+							print('Updated Princep {} for user with ID {}'.format(item_data.item_props.get('cosmetic_name'), id_user))
+							
+							item_data.item_props = {
+								'id_cosmetic': 'princep',
+								'str_onadorn': ewcfg.str_generic_onadorn,
+								'str_unadorn': ewcfg.str_generic_unadorn,
+								'str_onbreak': ewcfg.str_generic_onbreak,
+								'attack': 3,
+								'defense': 3,
+								'speed': 3,
+								'durability': ewcfg.base_durability * 100,
+								'size': 1,
+								'fashion_style': ewcfg.style_cool,
+								'freshness': 100,
+								'adorned': 'false',
+							}
 							
 							pass
 						else:
-							print('ITEM PROPS: {}'.format(item_data.item_props))
+							#print('ITEM PROPS: {}'.format(item_data.item_props))
 							
 							item = ewcfg.cosmetic_map.get(item_data.item_props.get('id_cosmetic'))
 							item_data.item_props = {
