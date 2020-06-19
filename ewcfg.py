@@ -4039,11 +4039,11 @@ weapon_class_heavy = "heavy"
 weapon_class_paint = "paint"
 
 weapon_type_convert = {
-weapon_id_watercolors:wef_garrote,
+weapon_id_watercolors:wef_watercolors,
 weapon_id_spraycan:wef_revolver,
-weapon_id_paintroller:wef_scythe,
+weapon_id_paintroller:wef_paintroller,
 weapon_id_thinnerbomb:wef_molotov,
-weapon_id_paintgun:wef_revolver,
+weapon_id_paintgun:wef_paintgun,
 weapon_id_paintbrush:wef_knives
 }
 

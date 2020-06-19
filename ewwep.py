@@ -2830,6 +2830,9 @@ async def spray(cmd):
 	#Get user data, then flag for PVP
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
 
+	market_data = EwMarket(id_server=cmd.message.server.id)
+	time_current = market_data.clock
+
 	time_now_float = time.time()
 	time_now = int(time_now_float)
 
@@ -2996,9 +2999,12 @@ async def spray(cmd):
 			if len(gangsters_in_district) == 1 and ewcfg.mutation_id_lonewolf in user_mutations:
 				slimes_damage *= 1.25
 
-			if (user_data.faction != district_data.controlling_faction and (user_data.faction is None or user_data.faction == '')) and district_data.capture_points > ewcfg.limit_influence[district_data.property_class]:
-				slimes_damage = round(slimes_damage / 5)
-				pass
+			if time_current >= 17:
+				slimes_damage *= (4/3)
+
+			#if (user_data.faction != district_data.controlling_faction and (user_data.faction is None or user_data.faction == '')) and district_data.capture_points > ewcfg.limit_influence[district_data.property_class]:
+			#	slimes_damage = round(slimes_damage / 5)
+			#	pass
 			if weapon != None:
 				if miss:
 					response = weapon.tool_props[0].get('miss_spray')

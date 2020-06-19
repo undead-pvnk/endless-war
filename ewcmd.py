@@ -623,6 +623,10 @@ def weather_txt(id_server):
 async def weather(cmd):
 	response = weather_txt(cmd.message.server.id)
 
+	market_data = EwMarket(id_server=cmd.message.server.id)
+	time_current = market_data.clock
+	if time_current >= 17:
+		response += "\n\nPeople are out and about. It's a good time for painting the town!"
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
