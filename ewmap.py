@@ -738,7 +738,7 @@ async def move(cmd = None, isApt = False):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Where to?"))
 
 	player_data = EwPlayer(id_user=cmd.message.author.id)
-	user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server)
+	user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server, data_level = 1)
 	poi_current = ewcfg.id_to_poi.get(user_data.poi)
 	poi = ewcfg.id_to_poi.get(target_name)
 	if poi_current.is_apartment == True:
@@ -748,6 +748,11 @@ async def move(cmd = None, isApt = False):
 	member_object = server_data.get_member(player_data.id_user)
 
 	movement_method = ""
+
+	if user_data.get_inhabitee():
+    # prevent ghosts currently inhabiting other players from moving on their own
+		response = "You might want to **{}** of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
 		response = "You can't do that right now."
@@ -983,6 +988,9 @@ async def move(cmd = None, isApt = False):
 					# SWILLDERMUK
 					await ewutils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
 
+					# also move any ghosts inhabitting the player
+					await user_data.move_inhabitants(id_poi = poi_current.id_poi)
+
 					if poi_current.has_ads:
 						ads = ewads.get_ads(id_server = user_data.id_server)
 						if len(ads) > 0:
@@ -1008,7 +1016,8 @@ async def move(cmd = None, isApt = False):
 				if val > 0:
 					val_actual = val - boost
 					boost = 0
-
+					
+					user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server, data_level = 1)
 					val_actual = int(val_actual / user_data.move_speed)
 					if val_actual > 0:
 						await asyncio.sleep(val_actual)
@@ -1135,7 +1144,7 @@ async def teleport(cmd):
 			user_data.persist()
 
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-				
+			await user_data.move_inhabitants(id_poi = poi.id_poi)
 			resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
 			await resp_cont.post()
 

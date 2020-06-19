@@ -2601,6 +2601,8 @@ class EwHue:
 	str_name= ""
 	str_desc = ""
 	effectiveness = {}
+	palette = []
+	is_neutral = False
 	def __init__(
 		self,
 		id_hue = "",
@@ -2609,6 +2611,8 @@ class EwHue:
 		str_name= "",
 		str_desc = "",
 		effectiveness = {},
+		palette = [],
+		is_neutral = False
 	):
 		self.id_hue = id_hue
 		self.alias = alias
@@ -2616,6 +2620,8 @@ class EwHue:
 		self.str_name= str_name
 		self.str_desc = str_desc
 		self.effectiveness = effectiveness
+		self.style_palette = palette
+		self.is_neutral = is_neutral
 
 async def saturateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -3280,12 +3286,14 @@ async def dress_slimeoid(cmd):
 					# Remove hat from player if adorned
 					if item_sought.item_props.get('adorned') == 'true':
 						item_sought.item_props['adorned'] = 'false'
+
 						response = "You take off your {} and give it to {}.".format(item_sought.item_props.get('cosmetic_name'), slimeoid.name)
 					else:
 						response = "You give {} a {}.".format(slimeoid.name, item_sought.item_props.get('cosmetic_name'))
 					
 					item_sought.item_props['slimeoid'] = 'true'
 					item_sought.persist()
+					user_data.persist()
 				else:
 					response = 'Your slimeoid is too small to wear any more clothes.'
 			elif already_adorned:

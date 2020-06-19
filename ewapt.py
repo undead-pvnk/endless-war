@@ -435,6 +435,7 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 			user_data.persist()
 
 			ewutils.end_trade(user_data.id_user)
+			await user_data.move_inhabitants(id_poi = poi_dest.id_poi)	
 
 			await ewrolemgr.updateRoles(client=client, member=member_object)
 
@@ -2421,6 +2422,8 @@ async def aptCommands(cmd):
 		return await ewcmd.weather(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_add_quadrant:
 		return await ewquadrants.add_quadrant(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_clear_quadrant:
+		return await ewquadrants.clear_quadrant(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_apartment:
 		return await apartment(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_booru:

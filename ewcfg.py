@@ -24,14 +24,18 @@ from ewworldevent import EwEventDef
 from ewdungeons import EwDungeonScene
 from ewtrauma import EwTrauma, EwHitzone
 from ewprank import EwPrankItem
+from ewmarket import EwMarket
+
 import ewdebug
 
 # Global configuration options.
 
-version = "v3.3i2"
+version = "v3.24a"
 
 
 dir_msgqueue = 'msgqueue'
+
+database = "rfck"
 
 discord_message_length_limit = 2000
 
@@ -43,6 +47,7 @@ update_market = 900 #15 min
 
 # Time saved moving through friendly territory (or lost in hostile territory).
 territory_time_gain = 10
+
 
 # Market delta
 max_iw_swing = 30
@@ -61,6 +66,17 @@ life_state_lucky = 7
 life_state_grandfoe = 8
 life_state_kingpin = 10
 life_state_observer = 20
+
+# Player stats. What, you ever play an RPG before, kid?
+stat_attack = 'attack'
+stat_defense = 'defense'
+stat_speed = 'speed'
+
+playerstats_list = [
+	stat_attack,
+	stat_defense,
+	stat_speed,
+]
 
 slimeoid_tick_length = 5 * 60 #5 minutes
 
@@ -119,7 +135,7 @@ poi_id_slimesea = "slimesea"
 poi_id_slimesendcliffs = "slimesendcliffs"
 poi_id_greencakecafe = "greencakecafe"
 poi_id_sodafountain = "sodafountain"
-
+poi_id_bodega = "bodega"
 
 
 # transports
@@ -516,6 +532,7 @@ channel_apt_crookline ="crookline-apartments"
 channel_apt_dreadford ="dreadford-apartments"
 
 channel_slimesendcliffs = "slimes-end-cliffs"
+channel_bodega = "bodega"
 
 channel_prankfeed = "prank-feed"
 
@@ -562,6 +579,10 @@ cmd_suicide_alt1 = cmd_prefix + 'seppuku'
 cmd_suicide_alt2 = cmd_prefix + 'sudoku'
 cmd_haunt = cmd_prefix + 'haunt'
 cmd_manifest = cmd_prefix + 'manifest'
+cmd_inhabit = cmd_prefix + 'inhabit'
+cmd_letgo = cmd_prefix + 'letgo'
+cmd_possess_weapon = cmd_prefix + 'possessweapon'
+cmd_crystalize_negapoudrin = cmd_prefix + 'crystalizenegapoudrin'
 cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
@@ -708,6 +729,7 @@ cmd_create = cmd_prefix + 'create'
 cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
 cmd_createitem = cmd_prefix + 'createitem'
 cmd_manualsoulbind = cmd_prefix + 'soulbind'
+cmd_setslime = cmd_prefix + 'setslime'
 cmd_exalt = cmd_prefix + 'exalt'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
@@ -824,7 +846,10 @@ cmd_addkey = cmd_prefix + 'addkey'
 cmd_changelocks = cmd_prefix + 'changelocks'
 cmd_setalarm = cmd_prefix + 'setalarm'
 cmd_jam = cmd_prefix + 'jam'
-
+cmd_sew = cmd_prefix + 'sew'
+cmd_retrofit = cmd_prefix + 'retrofit'
+cmd_sip = cmd_prefix + 'sip'
+cmd_fashion = cmd_prefix + 'fashion'
 
 cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
 cmd_beginmanuscript_alt_1 = cmd_prefix + 'createmanuscript'
@@ -875,6 +900,7 @@ cmd_promote = cmd_prefix + 'promote'
 
 cmd_arrest = cmd_prefix + 'arrest'
 cmd_release = cmd_prefix + 'release'
+cmd_balance_cosmetics = cmd_prefix + 'balancecosmetic'
 cmd_release_alt1 = cmd_prefix + 'unarrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
@@ -928,6 +954,7 @@ cmd_undress_slimeoid = cmd_prefix + 'undressslimeoid'
 cmd_undress_slimeoid_alt1 = cmd_prefix + 'undecorateslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
+cmd_clear_quadrant = cmd_prefix + "clearquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"
 cmd_get_flushed = cmd_prefix + "flushed"
 cmd_get_flushed_alt1 = cmd_prefix + "matesprit"
@@ -943,6 +970,20 @@ cmd_offer = cmd_prefix + 'offer'
 cmd_remove_offer = cmd_prefix + 'removeoffer'
 cmd_completetrade = cmd_prefix + 'completetrade'
 cmd_canceltrade = cmd_prefix + 'canceltrade'
+
+# race
+cmd_set_race = cmd_prefix + 'setrace'
+cmd_set_race_alt1 = cmd_prefix + 'identifyas'
+cmd_reset_race = cmd_prefix + 'resetrace'
+cmd_exist = cmd_prefix + 'exist'
+cmd_ree = cmd_prefix + 'ree'
+cmd_autocannibalize = cmd_prefix + 'autocannibalize'
+cmd_rattle = cmd_prefix + 'rattle'
+cmd_beep = cmd_prefix + 'beep'
+cmd_yiff = cmd_prefix + 'yiff'
+cmd_hiss = cmd_prefix + 'hiss'
+cmd_jiggle = cmd_prefix + 'jiggle'
+cmd_confuse = cmd_prefix + 'confuse'
 
 #SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
@@ -980,6 +1021,8 @@ slimes_permill = 50000
 slimes_invein = 4000
 slimes_pertile = 50
 slimes_tomanifest = -100000
+slimes_to_possess_weapon = -100000
+slimes_to_crystalize_negapoudrin = -1000000
 slimes_cliffdrop = 200000
 slimes_item_drop = 10000
 slimes_shambler = 1000000
@@ -1013,7 +1056,7 @@ inebriation_pertick = 2
 
 # max item amounts
 max_food_in_inv_mod = 8  # modifier for how much food you can carry. the player's slime level is divided by this number to calculate the number of carriable food items
-max_adorn_mod = 2
+max_adornspace_mod = 8
 max_weapon_mod = 16
 
 # item acquisition methods
@@ -1281,6 +1324,10 @@ cd_scavenge = 0
 soft_cd_scavenge = 15 # Soft cooldown on scavenging
 cd_enlist = 60
 
+cd_autocannibalize = 60 * 60 # can only eat yourself once per hour
+cd_drop_bone = 5 * 60
+cd_change_race = 24 * 60 * 60 # can only change your race once per day
+
 # PvP timer pushouts
 time_pvp_kill = 30 * 60
 time_pvp_attack = 10 * 60
@@ -1498,6 +1545,12 @@ str_weapon_wielding = "They are wielding"
 str_weapon_married_self = "You are married to"
 str_weapon_married = "They are married to"
 str_eat_raw_material = "You chomp into the raw {}. It isn't terrible, but you feel like there is a more constructive use for it."
+str_generic_onadorn = "You successfully adorn your {}."
+str_generic_unadorn = "You successfully dedorn your {}."
+str_generic_onbreak = "Their {} broke!!"
+str_soul_onadorn = "{} has begun swirling around you."
+str_soul_unadorn = "{} has stopped swirling around you and you place it back into your hammerspace."
+str_soul_onbreak = "{} has ***SHATTERED.*** Uh oh."
 
 generic_role_name = 'NLACakaNM'
 
@@ -1603,6 +1656,12 @@ col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
 col_sidearm = 'sidearm'
+
+col_race = 'race'
+col_time_racialability = 'time_racialability'
+col_attack = 'attack'
+col_speed = 'speed'
+col_freshness = 'freshness'
 
 #SLIMERNALIA
 col_festivity = 'festivity'
@@ -1769,6 +1828,21 @@ col_contents = "contents"
 # Database columns for book sales
 col_bought = "bought"
 
+# Database columns for inhabitation
+col_id_ghost = "id_ghost"
+col_id_fleshling = "id_fleshling"
+col_empowered = "empowered"
+
+# Database columns for hues
+col_id_hue = "id_hue"
+col_is_neutral = "is_neutral"
+col_hue_analogous_1 = "hue_analogous_1"
+col_hue_analogous_2 = "hue_analogous_2"
+col_hue_splitcomp_1 = "hue_splitcomp_1"
+col_hue_splitcomp_2 = "hue_splitcomp_2"
+col_hue_fullcomp_1 = "hue_fullcomp_1"
+col_hue_fullcomp_2 = "hue_fullcomp_2"
+
 # Item type names
 it_item = "item"
 it_medal = "medal"
@@ -1794,6 +1868,7 @@ leaderboard_bounty = "MOST WANTED"
 leaderboard_kingpins = "KINGPINS' COFFERS"
 leaderboard_districts = "DISTRICTS CONTROLLED"
 leaderboard_donated = "LOYALEST CONSUMERS"
+leaderboard_fashion = "NLACakaNM'S TOP MODELS"
 #SLIMERNALIA
 leaderboard_slimernalia = "MOST FESTIVE"
 #INTERMISSION2
@@ -1924,6 +1999,7 @@ stat_paintroller_kills = 'paintroller_kills'
 stat_paintbrush_kills = 'paintbrush_kills'
 stat_watercolor_kills = 'watercolor_kills'
 stat_thinnerbomb_kills = 'thinnerbomb_kills'
+stat_staff_kills = 'staff_kills'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -1945,6 +2021,7 @@ source_weather = 15
 source_crush = 16
 source_casino = 17
 source_slimeoid_betting = 18
+source_ghost_contract = 19
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0
@@ -2010,8 +2087,11 @@ vendor_college = "College" #You can buy game guides from either of the colleges
 vendor_glocksburycomics = "Glocksbury Comics" #Repels and trading cards are sold here
 vendor_slimypersuits = "Slimy Persuits" #You can buy candy from here
 vendor_greencakecafe = "Green Cake Cafe" #Brunch foods
+vendor_bodega = "Bodega" # Clothing store in Krak Bay
+vendor_secretbodega = "Secret Bodega" # The secret clothing store in Krak Bay
 
 item_id_slimepoudrin = 'slimepoudrin'
+item_id_negapoudrin = 'negapoudrin'
 item_id_monstersoup = 'monstersoup'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
 item_id_quadruplestuffedcrust = 'quadruplestuffedcrust'
@@ -2044,6 +2124,11 @@ item_id_benwrappingpaper = "benwrappingpaper"
 item_id_gellphone = "gellphone"
 item_id_royaltypoudrin = "royaltypoudrin"
 item_id_prankcapsule = "prankcapsule"
+item_id_cool_material = "coolbeans"
+item_id_tough_material = "toughnails"
+item_id_smart_material = "smartcookies"
+item_id_beautiful_material = "beautyspots"
+item_id_cute_material = "cutebuttons"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -2120,7 +2205,7 @@ item_id_paradoxchocs = "paradoxchocs"
 item_id_licoricelobsters = "licoricelobsters"
 item_id_chocolateslimecorpbadges = "chocolateslimecorpbadges"
 item_id_munchies = "munchies"
-item_id_snipercannon = "snipercannon"
+item_id_sni = "sni"
 item_id_twixten = "twixten"
 item_id_slimybears = "slimybears"
 item_id_marsbar = "marsbar"
@@ -2190,12 +2275,16 @@ weapon_id_bass = 'bass'
 weapon_id_umbrella = 'umbrella'
 weapon_id_bow = 'bow'
 weapon_id_dclaw = 'dclaw'
+weapon_id_staff = 'staff'
+
 weapon_id_spraycan = 'spraycan'
 weapon_id_paintgun = 'paintgun'
 weapon_id_paintroller = 'paintroller'
 weapon_id_paintbrush = 'paintbrush'
 weapon_id_watercolors = 'watercolors'
 weapon_id_thinnerbomb = 'thinnerbomb'
+
+
 
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
@@ -2369,6 +2458,24 @@ item_list = [
 		ingredients = item_id_direapples,
 	),
 	EwGeneralItem(
+		id_item = "browndye",
+		context = "dye",
+		str_name = "Brown Dye",
+		str_desc = "A small vial of brown dye.",
+		acquisition = acquisition_smelting,
+	),
+	EwGeneralItem(
+		id_item = "bone",
+		str_name = "Bone",
+		str_desc = "A small nondescript bone. Traces of fresh slime in it indicate it must've belonged to one of the city's recidents.",
+		context = 'player_bone',
+	),
+	EwGeneralItem(
+		id_item = item_id_negapoudrin,
+		str_name = "negapoudrin",
+		str_desc = "A dense, crystalized slab of unholy negaslime.",
+	),
+	EwGeneralItem(
 		id_item = item_id_tradingcardpack,
 		alias = [
 			"tcp", # DUDE LOL JUST LIKE THE PROCRASTINATORS HOLY FUCKING SHIT I'M PISSING MYSELF RN
@@ -2530,8 +2637,8 @@ item_list = [
 			"gameguide",
 			"gamergate",
 		],
-		str_name = "The official unofficial ENDLESS WAR Game Guide",
-		str_desc = "A guide on all the game mechanics found in ENDLESS WAR. Use the !help command to crack it open.",
+		str_name = "The official unofficial ENDLESS WAR Game Guide, Version II",
+		str_desc = "A guide on all the game mechanics found in ENDLESS WAR, accurate as of 5/20/2020. Use the !help command to crack it open.",
 		vendors = [vendor_college],
 		price = 10000,
 	),
@@ -2595,7 +2702,6 @@ item_list = [
 		alias = [
 			"costumekit",
 			"ck",
-			"fursuit",
 			"kit",
 			"costume",
 		],
@@ -3302,6 +3408,12 @@ item_list = [
 		gambit=20,
 	),
 	EwGeneralItem(
+		id_item=item_id_swordofseething,
+		str_name="SWORD OF SEETHING",
+		str_desc="An ancient blade of legend. It's said to contain the foul malevolence of the Oozoth, sealed away long ago. The forces resting inside the sword are practically begging you to !use it, before its power fades away into nothingness, so you might as well get it over with.",
+		context="swordofseething",
+	),
+	EwGeneralItem(
 		id_item="brokensword",
 		str_name="Broken Sword",
 		str_desc="The lower half of a broken sword. A useless trinket now, but perhaps one day it can be turned into something useful.",
@@ -3318,7 +3430,43 @@ item_list = [
 		price = 20000,
 		vendors = [vendor_vendingmachine],
 		context = "prankcapsule"
-	)
+	),
+	EwGeneralItem(
+		id_item = item_id_cool_material,
+		str_name = "Cool Beans",
+		str_desc = "A couple of cool beans! Far out, man. Well, they aren’t really beans per se, more like little condensed nuggets of your crop. Whatever they are, they’re undeniably cool.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_direapples, item_id_brightshade, item_id_razornuts],
+	),
+	EwGeneralItem(
+		id_item = item_id_tough_material,
+		str_name = "Tough Nails",
+		str_desc = "A handful of rusty nails caked in dried blood that were presumably waiting for you if you had eaten your crops instead of milling them. Damn, what a missed opportunity!",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_sourpotatoes, item_id_bloodcabbages, item_id_pulpgourds],
+	),
+
+	EwGeneralItem(
+		id_item = item_id_smart_material,
+		str_name = "Smart Cookies",
+		str_desc = "A farmer’s dozen of smart cookies. Well, they aren’t really cookies per se, more like little bland condensed patties of your crop. Whatever they are, they’re undeniably smart.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_phosphorpoppies, item_id_pawpaw, item_id_sludgeberries],
+	),
+	EwGeneralItem(
+		id_item = item_id_beautiful_material,
+		str_name = "Beauty Spots",
+		str_desc = "A small collection of severed beauty spots, mostly freckles and moles, that were presumably waiting for you if you had eaten your crops instead of milling them. Damn, what a missed opportunity!",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_poketubers, item_id_dankwheat, item_id_blacklimes],
+	),
+	EwGeneralItem(
+		id_item = item_id_cute_material,
+		str_name = "Cute Buttons",
+		str_desc = "A wardrobe of cute buttons. You know you should probably be concerned that these lil’ guys were hiding in your crops, but honestly you’re overcome with emotion and feel utterly blessed. Lookit ‘em! They’re adorable! D’awww...",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_pinkrowddishes, item_id_joybeans, item_id_purplekilliflower],
+	),
 ]
 #item_list += ewdebug.debugitem_set
 
@@ -3933,7 +4081,7 @@ def wef_bow(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
 
-	ctn.slimes_damage = int(ctn.slimes_damage * 3)
+	#ctn.slimes_damage = int(ctn.slimes_damage * 3)
 
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -3944,7 +4092,7 @@ def wef_bow(ctn = None):
 
 	elif aim >= (9 - int(16 * ctn.crit_mod)):
 		ctn.crit = True
-		ctn.slimes_damage = int(dmg * 6)
+		ctn.slimes_damage = int(dmg * 3)
 
 # weapon effect function for "Dragon Claw"
 
@@ -3975,6 +4123,46 @@ def wef_dclaw(ctn = None):
 	elif aim >= (9 - int(13 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = int(dmg * 4)
+
+# weapon effect function for "Eldritch Staff"
+
+def wef_staff(ctn = None):
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+
+	consecutive_hits = int(ctn.weapon_item.item_props["consecutive_hits"])
+	if time_lastattack < 5 and consecutive_hits == 0:
+		# consecutive_hits used counterintuitively to track whether the user has "charged up"
+		market_data = EwMarket(id_server = ctn.user_data.id_server)
+		conditions_met = 0
+		conditions = {
+			lambda _: 3 <= market_data.clock < 4, # witching hour
+			lambda _: weather_map.get(market_data.weather) == weather_foggy,
+			lambda _: (market_data.day % 31 == 15 and market_data.clock >= 20) or (market_data.day % 31 == 16 and market_data.clock <= 6), # moonless night
+			lambda ctn: not ctn.user_data.has_soul,
+			lambda ctn: ctn.user_data.get_weapon_possession(),
+			lambda ctn: ctn.shootee_data.slimes > ctn.user_data.slimes,
+			lambda ctn: (ctn.user_data.swear_jar >= 500) or (ctn.shootee_data.swear_jar == 0),
+			lambda ctn: (ctn.user_data.poi_death == ctn.user_data.poi) or (ctn.shootee_data.poi_death == ctn.shootee_data.poi),
+			lambda ctn: (ctn.user_data.id_killer == ctn.shootee_data.id_user) or (ctn.user_data.id_user == ctn.shootee_data.id_killer),
+			lambda ctn: (ctn.shootee_data.life_state == life_state_juvenile) or (ctn.shootee_data.life_state == life_state_enlisted and ctn.shootee_data.faction == ctn.user_data.faction),
+		}
+		for condition in conditions:
+			try:
+				if condition(ctn):
+					conditions_met += 1
+			except:
+				pass
+
+		ctn.slimes_spent = int(ctn.slimes_spent * 3)
+		ctn.slimes_damage = int(ctn.slimes_damage * (3 + conditions_met * 0.5)) # 0.5 per condition met
+		ctn.sap_ignored = 15 + (5 * conditions_met) # 5 per condition met
+		if conditions_met >= random.randrange(1, 41): # 2.5% per condition met
+			ctn.crit = True
+			ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
+
+		ctn.weapon_item.item_props["consecutive_hits"] = 1 # reset this so misses and hits are intermittent
+	else:
+		ctn.miss = True
 
 
 def wef_paintgun(ctn = None):
@@ -4731,7 +4919,7 @@ weapon_list = [
 		sap_cost = 2,
 		captcha_length = 2
 	),
-		EwWeapon(  # 23
+	EwWeapon(  # 23
 		id_weapon = weapon_id_dclaw,
 		alias = [
 			"dragon claw",
@@ -4757,6 +4945,7 @@ weapon_list = [
 		classes = [weapon_class_burning],
 		sap_cost = 5,
 		captcha_length = 2),
+
 	EwWeapon(  # 24
 		id_weapon=weapon_id_spraycan,
 		alias=[
@@ -4985,6 +5174,35 @@ EwWeapon(  # 28
 		'equip_spray' : "You get your glass thinner bombs out you you can throw them in a moment's notice."
 }),
 
+EwWeapon( # 24
+	id_weapon = weapon_id_staff,
+	alias = [
+		"eldritchstaff",
+		"spookystaff",
+		"reprehensiblerod",
+		"wickedwand",
+		"frighteningfaggot"
+	],
+	str_miss = "You burn away a portion of your strength as you begin your incantations.",
+	str_damage = "{name_player} concludes their incantations. A minor horror forms around {name_target}'s {hitzone} and bites into it.",
+	str_crit = "An incomprehensible shriek pierces {name_target}'s ears as a true abomination appears before them. It strikes {name_target}'s {hitzone} with a terrible foce, but the real damage is psychological. **Critical hit!!**",
+	str_kill = "{name_player} goes limp for an instant as pitch black tendrils emerge from below {name_target}, gabbing on to their body and violently pulling them through the ground and into the sewers.",
+	str_equip = "You equip the eldritch staff.",
+	str_name = "eldritch staff",
+	str_weapon = "an eldritch staff",
+	str_weaponmaster_self = "You are a rank {rank} conduit of the ones below.",
+	str_weaponmaster = "They are a rank {rank} conduit of the ones below.",
+	str_killdescriptor = "cast down",
+	str_duel = "{name_player} and {name_target} look each other in the eye, showing a sorrowful sympathy for one another. Are they about to cry?.",
+	str_description = "It's an intricate wooden staff with an strange cloudy crystal on its handle. It has an attractive quality to it, but it also gives you the creeps.",
+	str_scalp = " It's covered in a strange black substance.",
+	fn_effect = wef_staff,
+	acquisition = acquisition_smelting,
+	classes= [weapon_class_captcha],
+	stat = stat_staff_kills,
+	sap_cost = 4,
+	captcha_length = 10
+),
 ]
 
 
@@ -7034,24 +7252,24 @@ food_list = [
 			"twix",
 		],
 		recover_hunger = 150,
-	price = 100,
+		price = 100,
 		str_name = 'Twixten',
 		str_eat = "You sink your teeth into the Twixten, working your way down the blade, and finally giving a huge bite into the hilt. *CRUNCH*",
 		str_desc = "A chocolate bar. It's shaped like a katana.",
 		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
-		id_food = item_id_snipercannon,
-		alias = [
-			"sniper",
-			"cannon",
+		id_food=item_id_sni,
+		alias=[
+			"blatantracism",
 		],
-		recover_hunger = 100,
-		price = 100,
-		str_name = 'Sniper Cannon',
-		str_eat = "You take a bite out of your Sniper Cannon bar.",
-		str_desc = "A chocolate bar with wafers on the inside. It's shaped like a bulky, rectangular version of the cannon found on the arm of the Unnerving Fighting Operator. On the back of the wrapper, there's some text that reads: 'We at Slimy Persuits had only the best intentions in our initial run of the [REDACTED] bar. We hope this rebranding will allow you to continue to enjoy our products without having to fear of blatant racism.'",
+		recover_hunger=100,
+		price=100,
+		str_name='SNI-',
+		str_eat="You take a bite out of your s... sn... ... ... SNI- *CHOMP*.",
+		str_desc="A chocolate bar with wafers on the inside. You can't bring yourself to say the name out loud, though.",
 		vendors = [vendor_slimypersuits]
+		#acquisition=acquisition_trickortreating
 	),
 	EwFood(
 		id_food = item_id_slimybears,
@@ -7441,6 +7659,16 @@ food_list = [
 		str_eat = "You chomp your way through the sub-par confectionary. Food is hard to come by in these trying times, so you don't mind the taste.",
 		str_desc = "A cream pie not even worth throwing at someone.",
 		acquisition = "swilldermuk"
+	),
+	EwFood(
+		id_food = "desiccantpacket",
+		recover_hunger = 1750,
+		str_name = "Desiccant Packet",
+		str_eat = "You rip open the packet and pour it’s forbidden fruit into your mouth, taking great delight in chewing up and then sloshing around the silica gel in your mouth before swallowing. Your stomach growls angrily, but… nothing else really happens. Huh, really? Usually these things go on forever. I guess you’ve eaten so much other indigestible garbage before that your stomach’s just sort of used to it.",
+		str_desc = "It’s a tiny pocket full of highly-toxic, moisture-absorbing, gel beads. You know you shouldn’t eat this, but… just an ounce couldn’t hurt, right?",
+		vendors = [
+			vendor_secretbodega
+		]
 	)
 ]
 
@@ -12156,14 +12384,32 @@ poi_list = [
 			"cliff"
 		],
 		str_name = "Slime's End Cliffs",
-		str_desc = "You stand in the Slime's End Cliffs. Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a leisurely cig. Someone's got their eyes on you. Exits into Slime's End.",
+		str_desc = "Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a leisurely cig. Someone's got their eyes on you. Exits into Slime's End.",
 		channel = channel_slimesendcliffs,
 		role = "Slime's End Cliffs",
 		mother_district = poi_id_slimesend,
 		pvp = True,
 		is_subzone = True,
 	),
+	EwPoi(  # Clothing store in Krak Bay
+		id_poi = poi_id_bodega,
+		alias = [
+			"clothingstore",
+		],
+		str_in = "just behind the Snapple machine at",
+		str_name = "Bodega",
+		str_desc = "Located behind a secret door in a seemingly innocuous corner store, Bodega is a high end clothing store for the freshest kids in the city.\n\nFrom the outside, Bodega appears to be simply another of the interchangeable convenience stores found on nearly every block of every major city. The windows are completely packed by dusty non-perishables, and the interior is not much better with every  inch of space selling snacks or household basics in a visually deafening assault of brand names. However, those in the know simply stroll past all this noise and head for the old Snapple machine in the back of the shop. The machine is not that at all but a door that slides open to reveal a whole other store on the other side, this is the real Bodega. Neatly appointed, lacquered shelves hold the latest in street and skate fashion from shoes to shirts to jackets. The whole space is clean and orderly in a far cry from the cramped store front.\n\n(This description was literally just stolen and lightly edited from Atlas Obsurca. This is a real place in Boston, look it up. Pretty sick, huh?)\n\nThe well-trimmed, over-cologned four-eyed hipster behind the counter looks upon you with what can only be described as the freakish offspring of utter disdain and mindlessly sycophantic puppy-dog eyes that hope to lure you into an ill-advised purchase of high end socks that forces you to take out a second mortgage on your house. *SHARP INHALE*. He’ll !sew the dirty, unwashed rags you dare call clothing back together if it gets shredded in combat, for a price. You can also get your old outfits !retrofit'd with added combat functionalities here, also for a price.\n\nExits into Krak Bay.",
+		channel = channel_bodega,
+		role = "Bodega",
+		mother_district = poi_id_krakbay,
+		pvp = False,
+		vendors = [
+			vendor_bodega,
+			vendor_secretbodega,
 
+		],
+		is_subzone = True,
+	),
 	EwPoi(  # Outskirts - 1
 		id_poi=poi_id_south_outskirts,
 		alias=[
@@ -12898,7 +13144,23 @@ for line in transport_lines:
 		if (poi in line.schedule.keys()) or (poi == line.last_stop):
 			poi_data.transport_lines.add(line.id_line)
 
+
+# Fashion styles for cosmetics
+style_cool = "cool"
+style_tough = "tough"
+style_smart = "smart"
+style_beautiful = "beautiful"
+style_cute = "cute"
+
+# Base durability for cosmetic items (These are for if/when we need easy sweeping balance changes)
+base_durability = 250000 # 1 mega
+
+generic_scalp_durability = 25000 # 25k
+soul_durability = 100000000 # 100 mega
+
 cosmetic_id_raincoat = "raincoat"
+
+cosmeticAbility_id_lucky = "lucky"
 
 cosmetic_items_list = [
 	EwCosmeticItem(
@@ -12906,6 +13168,13 @@ cosmetic_items_list = [
 		str_name = "propeller hat",
 		str_desc = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile’s youth.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_speed : 1,
+		},
+		durability = base_durability,
+		size = 1,
+		style = style_cute,
+		freshness = 3,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12916,6 +13185,14 @@ cosmetic_items_list = [
 		str_name = "mining helmet",
 		str_desc = "A typical construction hard hat with a head lamp strapped onto it.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense : 2,
+		},
+		ability = cosmeticAbility_id_lucky,
+		durability = base_durability * 2,
+		size = 2,
+		style = style_tough,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12926,9 +13203,16 @@ cosmetic_items_list = [
 		str_name = "pickelhaube",
 		str_desc = "A traditional Prussian spiked helmet from the nineteenth century.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1,
+		},
+		durability = base_durability * 1.5,
+		style = style_tough,
+		freshness = 8,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -12936,9 +13220,15 @@ cosmetic_items_list = [
 		str_name = "fedora",
 		str_desc = "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of it’s time.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: -2,
+		},
+		durability = base_durability * 0.5,
+		style = style_smart,
+		freshness = 9,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -12946,6 +13236,12 @@ cosmetic_items_list = [
 		str_name = "baseball cap",
 		str_desc = "A classic baseball cap. A staple of American culture and subsequently freedom from tyranny. If you don’t own at least one of these hats you might as well have hopped the fence from Tijuana last night. Yeah, I’m racist, that going to be a problem for you??",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1
+		},
+		durability = base_durability,
+		style = style_cool,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12956,6 +13252,13 @@ cosmetic_items_list = [
 		str_name = "backwards baseball cap",
 		str_desc = "A classic baseball cap… with an urban twist! Heh, 'sup dawg? Nothing much, man. You know me, just mining some goddamn slime. Word 'n shit. Hell yeah.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_speed: 1,
+		},
+		durability = base_durability,
+		style = style_cool,
+		freshness = 7,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12966,6 +13269,12 @@ cosmetic_items_list = [
 		str_name = "pirate hat",
 		str_desc = "A swashbuckling buccaneer’s tricorne, stylized with a jolly roger on the front.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		durability = base_durability,
+		style = style_cool,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12976,6 +13285,11 @@ cosmetic_items_list = [
 		str_name = "eyepatch",
 		str_desc = "A black eyepatch. A striking accessory for the particularly swashbuckling, chauvinistic, or generally hardboiled of you. Genuine lack of two eyes optional and not recommended.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+		},
+		style = style_cool,
+		freshness = 7,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12985,6 +13299,12 @@ cosmetic_items_list = [
 		str_name = "cigarette",
 		str_desc = "A single cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 3,
+			stat_defense: -1
+		},
+		style = style_cool,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12994,6 +13314,11 @@ cosmetic_items_list = [
 		str_name = "headband",
 		str_desc = "A headband wrapped tightly around your forehead with long, flowing ends.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_speed: 1,
+		},
+		style = style_tough,
+		freshness = 8,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13004,6 +13329,10 @@ cosmetic_items_list = [
 		str_name = "handkerchief",
 		str_desc = "A bandanna tied on your head, creating a simple cap.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13013,6 +13342,10 @@ cosmetic_items_list = [
 		str_name = "bandanna",
 		str_desc = "A handkerchief tied around your neck and covering your lower face.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13022,24 +13355,39 @@ cosmetic_items_list = [
 		str_name = "pair of sunglasses",
 		str_desc = "An iconic pair of black sunglasses. Widely recognized as the coolest thing you can wear.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+		},
+		style = style_cool,
+		freshness = 9,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofglasses",
 		str_name = "pair of glasses",
 		str_desc = "A simple pair of eyeglasses. You have perfectly serviceable eyesight, but you are a sucker for the bookworm aesthetic. People with actual issues with sight hate you.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		freshness = 9,
+		style = style_smart,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "birthdayhat",
 		str_name = "birthday hat",
 		str_desc = "A striped, multi-color birthday hat. ",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_cute,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13050,6 +13398,13 @@ cosmetic_items_list = [
 		str_name = "scarf",
 		str_desc = "A very thick striped wool scarf, in case 110° degrees is too nippy for you.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: -1,
+			stat_defense: 2,
+			stat_speed: 2,
+		},
+		style = style_smart,
+		freshness = 8,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13059,6 +13414,11 @@ cosmetic_items_list = [
 		id_cosmetic = "witchhat",
 		str_desc = "A pointy, cone-shaped hat with a wide brim. It exudes a spooky essence.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+		},
+		style = style_smart,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13069,6 +13429,13 @@ cosmetic_items_list = [
 		str_name = "bomber hat",
 		str_desc = "A thick fur and leather aviator’s hat.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_speed: 1,
+		},
+		freshness = 7,
+		durability = base_durability * 1.5,
+		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13079,15 +13446,26 @@ cosmetic_items_list = [
 		str_name = "tuxedo",
 		str_desc = "A classy, semi-formal suit for dashing rogues you can’t help but love. Instant charisma granted upon each !adorn.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_defense: -1,
+			stat_speed: 3
+		},
+		freshness = 10,
+		style = style_beautiful,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "beanie",
 		str_name = "beanie",
 		str_desc = "A simple beanie with a pointed top and a slip stitch brim.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_cool,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13098,6 +13476,12 @@ cosmetic_items_list = [
 		str_name = "jester's hat",
 		str_desc = "A ridiculous, multi-colored hat with four bells dangling from protruding sleeves.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_speed: 1
+		},
+		freshness = 8,
+		style = style_cool,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13108,6 +13492,11 @@ cosmetic_items_list = [
 		str_name = "pair of 3D glasses",
 		str_desc = "A pair of totally tubular, ridiculously radical 3D glasses. Straight up stereoscopic, dude!",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_speed: 3,
+		},
+		freshness = 9,
+		style = style_cool,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13117,6 +13506,11 @@ cosmetic_items_list = [
 		str_name = "necktie",
 		str_desc = "A vintage necktie, reeking of coffee, college, and shaving cream.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_beautiful,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13126,6 +13520,12 @@ cosmetic_items_list = [
 		str_name = "viking helmet",
 		str_desc = "A pointy bronze helmet with two sharp horns jutting out of the base.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_defense: 1
+		},
+		style = style_tough,
+		freshness = 8,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13136,6 +13536,12 @@ cosmetic_items_list = [
 		str_name = "pair of flip flops",
 		str_desc = "A pair of loud, obnoxious flip flops. The price of your comfort is higher than you could ever know.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_speed: -1,
+		},
+		style = style_smart,
+		freshness = 3,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13145,9 +13551,15 @@ cosmetic_items_list = [
 		str_name = "fez",
 		str_desc = "A short fez with a tassel attached to the top. Fezzes are cool. Or, are bowties cool? You forget, and frankly you’re embarrassed you remember either one of them.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 2,
+		},
+		style = style_smart,
+		freshness = 9,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -13155,6 +13567,11 @@ cosmetic_items_list = [
 		str_name = "bowtie",
 		str_desc = "A quite dapper, neatly tied butterfly bowtie. Bowties are cool. Or, are fezzes cool? You forget, and frankly you’re embarrassed you remember either one of them.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_smart,
+		freshness = 8,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13164,6 +13581,13 @@ cosmetic_items_list = [
 		str_name = "cowboy hat",
 		str_desc = "An essential piece of Wild West memorabilia, a bonafide ten gallon Stetson. Befitting the individualistic individuals that made them famous. Yeehaw, and all that stuff.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 3,
+			stat_defense: -2,
+			stat_speed: 2
+		},
+		style = style_cool,
+		freshness = 7,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13174,6 +13598,10 @@ cosmetic_items_list = [
 		str_name = "kepi",
 		str_desc = "A short kepi with a sunken top and an insignia on the front.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13183,6 +13611,11 @@ cosmetic_items_list = [
 		str_name = "tam o' shanter",
 		str_desc = "A traditional Scottish wool bonnet with a plaid pattern.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+			stat_speed: 1,
+		},
+		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13193,6 +13626,15 @@ cosmetic_items_list = [
 		str_name = "ushanka",
 		str_desc = "A traditional Russian fur cap with thick wool ear flaps.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 3,
+			stat_speed: -2
+		},
+		size = 2,
+		style = style_tough,
+		freshness = 7,
+		durability = base_durability * 2,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13203,6 +13645,13 @@ cosmetic_items_list = [
 		str_name = "karategi",
 		str_desc = "A traditional Japanese karateka’s outfiit, complete with a belt with extended ends that easily flow in the wind for dramatic effect.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1,
+			stat_speed: 1,
+		},
+		style = style_tough,
+		freshness = 7,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13212,6 +13661,11 @@ cosmetic_items_list = [
 		str_name = "turban",
 		str_desc = "A traditional Arabian headdress, lavishly decorated with a single large jewel and protruding peacock feather.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_speed: 2,
+		},
+		style = style_beautiful,
+		freshness = 9,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13222,6 +13676,11 @@ cosmetic_items_list = [
 		str_name = "nemes",
 		str_desc = "The traditional ancient Egyptian pharaoh's striped head cloth.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_beautiful,
+		freshness = 9,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13232,15 +13691,26 @@ cosmetic_items_list = [
 		str_name = "varsity jacket",
 		str_desc = "An American baseball jacket, with a large insignia on the left side of the chest.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_speed: 1
+		},
+		style = style_cool,
+		freshness = 9,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "sombrero",
 		str_name = "sombrero",
 		str_desc = "A traditional Mexican sombrero, with an extra-wide brim to protect you from the blistering Arizonian sun.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+		},
+		style = style_cool,
+		freshness = 7,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13251,6 +13721,11 @@ cosmetic_items_list = [
 		str_name = "hawaiian shirt",
 		str_desc = "A brightly colored Hawaiian shirt with a floral pattern. It reeks of slima colada and the complementary shampoo from the resort in Assault Flats Beach.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_smart,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13260,27 +13735,49 @@ cosmetic_items_list = [
 		str_name = "fursuit",
 		str_desc = "A fursuit. Custom-made and complete with high quality faux fur, padded digitigrade legs, follow-me eyes, adjustable facial expressions, and a fan in the head. It is modeled off your original character, also known as your fursona. Some would call its character design “ugly” or “embarrassing,” but you think it's perfect.",
 		rarity = rarity_patrician,
+		stats = {
+			stat_attack: 4,
+			stat_defense: 6,
+			stat_speed: -4
+		},
+		size = 2,
+		style = style_cute,
+		freshness = 11,
+		durability = base_durability * 4,
 		acquisition = acquisition_smelting,
 		price = 1000000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_secretbodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "diadem",
 		str_name = "diadem",
 		str_desc = "The traditional Greco-Roman laurel wreath symbolizing sovereignty and power. Be careful about wearing this around in public, you might just wake up with 23 stab wounds.",
 		rarity = rarity_patrician,
+		stats = {
+			stat_attack: 4,
+		},
+		style = style_beautiful,
+		freshness = 10,
+		durability = base_durability * 4,
 		acquisition = acquisition_smelting,
 		price = 1000000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_secretbodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "billshat",
 		str_name = "Bill's Hat",
 		str_desc = "A military beret with a shield insignia on the front.",
 		rarity = rarity_patrician,
+		stats = {
+			stat_attack: 3,
+			stat_defense: 1
+		},
+		freshness = 9,
+		style = style_beautiful,
+		durability = base_durability * 4,
 		acquisition = acquisition_smelting,
 		price = 1000000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -13288,24 +13785,43 @@ cosmetic_items_list = [
 		str_name = "wedding ring",
 		str_desc = "A silver ring with a decently large diamond on top. For the person you love most in the entire world. <3",
 		rarity = rarity_patrician,
+		stats = {
+			stat_attack: 2,
+			stat_defense: 2,
+			stat_speed: 2
+		},
+		style = style_beautiful,
+		freshness = 10,
+		durability = base_durability * 4,
 		acquisition = acquisition_smelting,
 		price = 1000000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_secretbodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "earbuds",
 		str_name = "earbuds",
 		str_desc = "A pair of white standard iPod earbuds. Who knows what sort of tasty jams you must be listening to while walking down the street?",
 		rarity = rarity_patrician,
+		stats = {
+			stat_speed: 4,
+		},
+		freshness = 10,
+		style = style_smart,
+		durability = base_durability * 4,
 		acquisition = acquisition_smelting,
 		price = 1000000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "nursesoutfit",
 		str_name = "nurse's outfit",
 		str_desc = "A disturbingly revealing nurse’s outfit that shows off your lumpy, fleshy visage. No one likes that you wear this. Theming bonus for responding to people’s crackpot ideas in the nurse’s office, though.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_beautiful,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13315,14 +13831,52 @@ cosmetic_items_list = [
 		str_name = "heart boxers",
 		str_desc = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren’t hilariously ripped or unadorned while you’re wearing these, how embarrassing! Hahaha! We like to have fun here.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_speed: 1
+		},
+		style = style_cute,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
+		id_cosmetic="kilt",
+		str_name="Kilt",
+		str_desc="A traditional scottish garmet that's plaid, and it's not a fuckin' skirt, aight?",
+		rarity=rarity_plebeian,
+		stats = {
+			stat_speed: 1,
+		},
+		style = style_tough,
+		acquisition=acquisition_smelting,
+		price=50000,
+		vendors=[vendor_bazaar],
+	),
+	EwCosmeticItem(
+		id_cosmetic="cigar",
+		str_name="Cigar",
+		str_desc="Much more manly then a puny cigarette. This cigar has been freshly imported from cuba and is thick enough to last for hours.",
+		rarity=rarity_plebeian,
+		stats = {
+			stat_attack: 6,
+			stat_defense: -2,
+			stat_speed: -1
+		},
+		style = style_tough,
+		freshness = 8,
+		acquisition=acquisition_smelting,
+		price=50000,
+		vendors=[vendor_bazaar],
+	),
+	EwCosmeticItem(
 		id_cosmetic = "captainshat",
 		str_name = "Captain's Hat",
 		str_desc = "The perfect hat for sailing across the Slime Sea, commanding a navy fleet, or prematurely ending your lucrative My Little Pony review series in favor of starting a shitty Pokemon Nuzlocke series. For shame.",
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_cool,
 		acquisition = acquisition_milling,
 		ingredients = item_id_poketubers,
 		is_hat=True,
@@ -13331,6 +13885,10 @@ cosmetic_items_list = [
 		id_cosmetic = "juveolantern",
 		str_name = "Juve-O'-Lantern",
 		str_desc = "Hand-carved with a hole just barely big enough to fit your head in, this Juve O' Lantern severely hinders your combat ability. But, you look fucking sick while wearing it, so who cares.",
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_cute,
 		acquisition = acquisition_milling,
 		ingredients = item_id_pulpgourds,
 		is_hat=True,
@@ -13339,6 +13897,11 @@ cosmetic_items_list = [
 		id_cosmetic = "bowlerhat",
 		str_name = "Bowler Hat",
 		str_desc = "A simply traditional billyock. You’re gonna be the talk of the toy box with this dashing felt cosmetic! Now you just have to work on the moustache.",
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_smart,
+		freshness = 6,
 		acquisition = acquisition_milling,
 		ingredients = item_id_sourpotatoes,
 		is_hat=True,
@@ -13347,6 +13910,10 @@ cosmetic_items_list = [
 		id_cosmetic = "cabbagetreehat",
 		str_name = "Cabbage Tree Hat",
 		str_desc = "An unmistakably Australian hat, with a wide brim and a high crown.",
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_bloodcabbages,
 		is_hat=True,
@@ -13355,6 +13922,13 @@ cosmetic_items_list = [
 		id_cosmetic = "braces",
 		str_name = "Braces",
 		str_desc = "An old fashioned orthodontic headgear. Elaborate metal wires and braces hold your nearly eroded, crooked teeth together in what can genously be called a mouth. You are in agony, and so is everyone that looks at you.",
+		stats = {
+			stat_defense: 2,
+			stat_speed: -1
+		},
+		style = style_smart,
+		freshness = 1,
+		durability = base_durability * 1.5,
 		acquisition = acquisition_milling,
 		ingredients = item_id_joybeans,
 	),
@@ -13362,12 +13936,22 @@ cosmetic_items_list = [
 		id_cosmetic = "hoodie",
 		str_name = "Hoodie",
 		str_desc = "Perfect for keeping warm in the middle of the blisteringly hot Arizonian desert! Heatstroke or bust!",
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_cool,
 		acquisition = acquisition_milling,
 		ingredients = item_id_purplekilliflower,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "copbadge",
 		str_name = "Cop Badge",
+		stats = {
+			stat_attack: 3,
+			stat_defense: -3,
+		},
+		style = style_smart,
+		freshness = 2,
 		str_desc = "What the fuck are you doing with this thing? Are you TRYING to make the sewers your permanent residence? Acquaint yourself with the !drop command and FAST, before you don’t have a body to wear the badge on.",
 		acquisition = acquisition_milling,
 		ingredients = item_id_razornuts,
@@ -13376,6 +13960,10 @@ cosmetic_items_list = [
 		id_cosmetic = "strawhat",
 		str_name = "Straw Hat",
 		str_desc = "A wide-brimmed straw hat, the perfect hat for farming.",
+		stats = {
+			stat_speed: 1,
+		},
+		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_pawpaw,
 		is_hat=True,
@@ -13384,6 +13972,11 @@ cosmetic_items_list = [
 		id_cosmetic = "cosplayhorns",
 		str_name = "Cosplay Horns",
 		str_desc = "You’re not entirely sure what these things are, but they sort of look like brightly painted, candy corn colored, paper mache horns that are hot glued onto a black headband. Their purpose is mysterious, but for some reason you are inclined to adorn them… perhaps you understood their importance in a past life.",
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_cute,
+		freshness = 6,
 		acquisition = acquisition_milling,
 		ingredients = item_id_sludgeberries,
 	),
@@ -13391,6 +13984,13 @@ cosmetic_items_list = [
 		id_cosmetic = "youfavoritehat",
 		str_name = "***Your Favorite Hat***",
 		str_desc = "***It fits perfectly, and it’s just your style! You love wearing this cosmetic far more than any other, it’s simply the best.***",
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1,
+			stat_speed: 1
+		},
+		style = style_cute,
+		freshness = 10,
 		acquisition = acquisition_milling,
 		ingredients = item_id_suganmanuts,
 		is_hat=True,
@@ -13399,6 +13999,12 @@ cosmetic_items_list = [
 		id_cosmetic = "pajamaonesie",
 		str_name = "Pajama Onesie",
 		str_desc = "A soft jumpsuit with an audacious, repeating design printed over the entire cosmetic. You feel like getting a little bit fucking rowdy wearing this outrageous onesie. ",
+		stats = {
+			stat_attack: 1,
+			stat_defense: 2
+		},
+		style = style_cute,
+		freshness = 6,
 		acquisition = acquisition_milling,
 		ingredients = item_id_pinkrowddishes,
 	),
@@ -13406,12 +14012,23 @@ cosmetic_items_list = [
 		id_cosmetic = "pairofcircularsunglasses",
 		str_name = "Pair of Circular Sunglasses",
 		str_desc = "Sunglasses, but in a circle! Genius! You can't wait to show the world your hot takes on television shows for girls.",
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1,
+			stat_speed: -1
+		},
+		style = style_cool,
 		acquisition = acquisition_milling,
 		ingredients = item_id_dankwheat,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "flowercrown",
 		str_name = "Flower Crown",
+		stats = {
+			stat_speed: 2,
+		},
+		style = style_cute,
+		freshness = 7,
 		str_desc = "A lovingly handcrafted crown of flowers, connected by a string. You’re gonna be famous on Pinterest with a look like this!",
 		acquisition = acquisition_milling,
 		ingredients = item_id_brightshade,
@@ -13420,12 +14037,25 @@ cosmetic_items_list = [
 		id_cosmetic = "spikedbracelets",
 		str_name = "Spiked Bracelets",
 		str_desc = "Hilariously unrealistic spiked bracelets, ala Bowser, King of the Koopas. You’re hyper aware of these fashion disasters whenever you’re walking, making sure to swing them as far away from your body as possible.",
+		stats = {
+			stat_attack: 1,
+			stat_defense: 2
+		},
+		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_blacklimes,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "slimecorppin",
 		str_name = "SlimeCorp Pin",
+		stats = {
+			stat_attack: 6,
+			stat_defense: 6,
+			stat_speed: 6
+		},
+		style = style_smart,
+		freshness = 10,
+		durability = base_durability * 4,
 		str_desc = "An enamel pin of the SlimeCorp logo, a badge of loyalty to your favorite charismatic megacorporation. Dude, like, *”Follow He Who Turns The Wheels”*, bro!!",
 		acquisition = acquisition_milling,
 		ingredients = item_id_phosphorpoppies,
@@ -13434,6 +14064,10 @@ cosmetic_items_list = [
 		id_cosmetic = "overalls",
 		str_name = "Overalls",
 		str_desc = "Simple, humble denim overalls, for a simple, humble farmer such as yourself.",
+		stats = {
+			stat_defense: 2,
+		},
+		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_direapples,
 	),
@@ -13441,6 +14075,10 @@ cosmetic_items_list = [
 		id_cosmetic = cosmetic_id_raincoat,
 		str_name = "Raincoat",
 		str_desc = "A specially engineered piece of personal armor, that protects you from the deadly threat from above.",
+		stats = {
+			stat_defense: 2,
+		},
+		style = style_smart,
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -13451,6 +14089,7 @@ cosmetic_items_list = [
 		str_name = "Double Halloween Medallion",
 		str_desc = "A glistening crystal medallion, carved in the shape of a pumpkin. It is strewn together with black pearls. Awarded only to the bravest of souls who managed to best the Double Headless Double Horseman in combat.",
 		rarity = "Double Halloween",
+		style = style_cool,
 		acquisition = "DH-bossfight",
 		ingredients = "HorsemanSoul" # used here as a substitute for the 'context' attribute found on general items.
 	),
@@ -13459,6 +14098,7 @@ cosmetic_items_list = [
 		str_name = "Pileus",
 		str_desc = "A symbol of freedom and liberty. In ancient times, these felt caps were given to slaves who had been emancipated.",
 		rarity = rarity_plebeian,
+		style = style_cool,
 	#	vendors = [vendor_bazaar, vendor_college],
 		price = 100,
 	),
@@ -13466,14 +14106,23 @@ cosmetic_items_list = [
 		id_cosmetic = "seacowcostume",
 		str_name = "Attractive Gray Sea Cow Mascot Costume for Adult",
 		str_desc = "Attractive. That's really all there is to say on the matter.",
-		rarity = rarity_promotional,
-		vendors = [vendor_bazaar],
+		rarity = rarity_patrician,
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_beautiful,
+		freshness = 2,
+		vendors = [vendor_bazaar, vendor_secretbodega],
 		price = 100000000,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "wrappingpaperhat",
 		str_name = "Wrapping Paper Hat",
 		str_desc = "A hat made out of wrapping paper, fashioned in a way rather similar to a newspaper hat. How festive!",
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_cute,
 		rarity = rarity_plebeian,
 		vendors = [vendor_glocksburycomics],
 		price = 1000,
@@ -13483,6 +14132,12 @@ cosmetic_items_list = [
 		str_name = "Steel knight armor",
 		str_desc = "A shining set of steel armor.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 2,
+			stat_speed: -1
+		},
+		style = style_tough,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13491,7 +14146,26 @@ cosmetic_items_list = [
 		str_name = "Velcro Shoes",
 		str_desc = "Juveniles in the city always had a hard time tying their laces, so these stylish kicks are perfect for them.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_speed: 1
+		},
+		style = style_cute,
 		vendors = [vendor_bazaar],
+		price = 1000,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "crocs",
+		str_name = "Crocs",
+		str_desc = "The perfect pair of footwear for when you want spotted dots of sunburn on your feet, unless you're wearing socks that is. If that's the case ignore that earlier statement.",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1
+		},
+		style = style_cute,
+		freshness = 6,
+		vendors = [vendor_bazaar, vendor_secretbodega],
 		price = 1000,
 	),
 	EwCosmeticItem(
@@ -13499,8 +14173,263 @@ cosmetic_items_list = [
 		str_name = "Janus Mask",
 		str_desc = "A simple, yet elegant mask, awarded to those deemed worthy by Janus himself at the end of every Swilldermuk. It's enigmatic powers allow you to procure prank items from thin air.",
 		rarity = "Swilldermuk",
+		style = style_cool,
 		acquisition = "SwilldermukEnd",
 		ingredients = "SwilldermukFinalGambit" # used here as a substitute for the 'context' attribute found on general items.
+	),
+	EwCosmeticItem(
+		id_cosmetic = "leatherjacket",
+		str_name = "Leather Jacket",
+		str_desc = "A black leather jacket. Gangs of Killers stalking the streets are often found wearing these.",
+		rarity = rarity_patrician,
+		stats = {
+			stat_attack: 3,
+		},
+		style = style_cool,
+		vendors = [vendor_bazaar, vendor_bodega],
+		price = 50000,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "afrowig",
+		str_name = "Afro Wig",
+		str_desc = "The perfect hair-do for a 70's party or a pool party just be sure to keep a can of hairspray and comb at hand.",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+		},
+		style = style_cool,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "pompadourwig",
+		str_name = "Pompadour Wig",
+		str_desc = "A must have for any wannabe greaser or school delinquent in general. Make sure to wear it like a true king.",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_speed: 2
+		},
+		style = style_cool,
+		freshness = 7,
+		vendors = [vendor_bodega],
+		price = 50000,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "powderedwig",
+		str_name = "Powdered Wig",
+		str_desc = "If it was good enough for the british and founding fathers, it's good enough for us, right? Just make sure you don't share this wig without cleaning it.",
+		stats = {
+			stat_defense: 2,
+		},
+		style = style_smart,
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "rainbowafrowig",
+		str_name = "Rainbow Afro Wig",
+		str_desc = "A colorful wig worthy of a real chuckle.",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1,
+			stat_speed: 1
+		},
+		style = style_cool,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "ghostlygibus",
+		str_name = "Ghostly Gibus",
+		str_desc = "A crooked old top hat with a spooky toy ghost popping out of the top.",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_smart,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "gasmask",
+		str_name = "Gas Mask",
+		str_desc = "A dysfunctional cold war era gas mask that fully encapsulates the head.",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 2
+		},
+		style = style_tough,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "firefightershelmet",
+		str_name = "Firefighter's Helmet",
+		str_desc = "A old NLACakaNM wide brimmed red firefighter's helmet. No one knows what happened to the firefighters of Endless War.",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 2,
+		},
+		style = style_tough,
+		durability = base_durability * 1.5,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "pairofpoindexterglasses",
+		str_name = "Pair Of Poindexter Glasses",
+		str_desc = "A pair of thick rim glasses taped together at the middle. Worthy of any true nerd or nerdette.",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 2,
+		},
+		style = style_smart,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "duncecap",
+		str_name = "Dunce Cap",
+		str_desc = "It’s a pointy cap that says dunce on it, duh! You’re a real smartie aren't you?",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: -1,
+			stat_defense: -1,
+			stat_speed: -1
+		},
+		style = style_cute,
+		freshness = 2,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "vrheadset",
+		str_name = "VR Headset",
+		str_desc = "Endless War -- now in stunning VR!",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_speed: 2,
+		},
+		style = style_cool,
+		freshness = 8,
+		vendors = [vendor_bodega],
+		price = 50000,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "blindfold",
+		str_name = "Blindfold",
+		str_desc = "Ok now you’re just bragging. Walking around with a blindfold of all things? How ridiculous!",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_defense: -2,
+			stat_speed: 1
+		},
+		style = style_tough,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "chickenmask",
+		str_name = "Chicken Mask",
+		str_desc = "The rubber chicken mask gives you a strange vibe, it stinks of sweat and dried blood.",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+		},
+		style = style_cool,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "mountiehat",
+		str_name = "Mountie Hat",
+		str_desc = "A hat that's mostly used by canada's royal mounted police, but how did it get here? Did it float down the slime river?",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: -1,
+			stat_defense: 2
+		},
+		style = style_smart,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "bearskinhat",
+		str_name = "Bearskin Hat",
+		str_desc = "A towering fuzzy hat that’s commonly worn by guards of the british royal guard.",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_smart,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "aviatorshat",
+		str_name = "Aviator's Hat",
+		str_desc = "A leather hat with a neat pair of goggles on it. Perfect for an unfortunate circumnavigation of the world.",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_tough,
+		freshness = 6,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "militaryberet",
+		str_name = "Military Beret",
+		str_desc = "A good soldier needs good headwear,and that’s where this beret comes in.",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_beautiful,
+		freshness = 7,
+		vendors = [vendor_bodega],
+		price = 50000,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "felinehat", # fuck you.
+		str_name = "Feline Hat", # fuck you.
+		stats = {
+			stat_attack: -10, # fuck you.
+		},
+		durability = 100,
+		style = style_cute,
+		freshness = 1,
+		str_desc = "A hat striped with red and white is quite right for a fanciful fight! It’s a funny hat at that, and it looks like it’s been worn by a cat!", # fuck you.
+		rarity = rarity_plebeian, # fuck you.
+		vendors = [vendor_secretbodega],
+		price = 100,
+		acquisition = acquisition_smelting, # fuck you.
+		is_hat = True, # fuck you.
+	),
+    EwCosmeticItem(
+		id_cosmetic = "tikihead",
+		str_name = "Tiki Head",
+		str_desc = "A wearable tiki head worthy of any luau or tropical island themed party.",
+		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_cool,
+		acquisition = acquisition_smelting,
+		is_hat = True,
 	),
 ]
 
@@ -13508,18 +14437,75 @@ cosmetic_items_list = [
 # A map of id_cosmetic to EwCosmeticItem objects.
 cosmetic_map = {}
 
+
 # A list of cosmetic names.
 cosmetic_names = []
 
 smelting_recipe_list = [
 	EwSmeltingRecipe(
-		id_recipe = "cosmetic",
-		str_name = "a cosmetic",
+		id_recipe = "coolcosmetic",
+		str_name = "a cool cosmetic",
 		alias = [
-			"hat",
+			"cool",
+			"coolhat",
 		],
 		ingredients = {
-			item_id_slimepoudrin : 2
+			item_id_slimepoudrin : 4,
+			item_id_cool_material: 1
+
+		},
+		products = cosmetic_names
+	),
+	EwSmeltingRecipe(
+		id_recipe = "toughcosmetic",
+		str_name = "a tough cosmetic",
+		alias = [
+			"tough",
+			"toughhat",
+		],
+		ingredients = {
+			item_id_slimepoudrin : 4,
+			item_id_tough_material: 1
+
+		},
+		products = cosmetic_names
+	),
+	EwSmeltingRecipe(
+		id_recipe = "smartcosmetic",
+		str_name = "a smart cosmetic",
+		alias = [
+			"smart",
+			"smarthat",
+		],
+		ingredients = {
+			item_id_slimepoudrin : 4,
+			item_id_smart_material: 1
+		},
+		products = cosmetic_names
+	),
+	EwSmeltingRecipe(
+		id_recipe = "beautifulcosmetic",
+		str_name = "a beautiful cosmetic",
+		alias = [
+			"beautiful",
+			"beautifulhat",
+		],
+		ingredients = {
+			item_id_slimepoudrin : 4,
+			item_id_beautiful_material: 1
+		},
+		products = cosmetic_names
+	),
+	EwSmeltingRecipe(
+		id_recipe = "cutecosmetic",
+		str_name = "a cute cosmetic",
+		alias = [
+			"cute",
+			"cutehat",
+		],
+		ingredients = {
+			item_id_slimepoudrin : 4,
+			item_id_cute_material: 1
 		},
 		products = cosmetic_names
 	),
@@ -13810,6 +14796,22 @@ smelting_recipe_list = [
 		},
 		products = ['dclaw']
     ),
+	EwSmeltingRecipe(
+		id_recipe = weapon_id_staff,
+		str_name = "an eldritch staff",
+		alias = [
+			"eldritchstaff",
+			"spookystaff",
+			"reprehensiblerod",
+			"wickedwand",
+			"frighteningfaggot"
+		],
+		ingredients = {
+			item_id_doublefaggot : 1,
+			item_id_negapoudrin : 1,
+		},
+		products = ['staff']
+    ),
 
 	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
@@ -13902,7 +14904,7 @@ smelting_recipe_list = [
 		},
 		products = ['slimepoudrin']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "humancorpse",
 		str_name = "a corpse",
 		alias = [
@@ -13918,7 +14920,7 @@ EwSmeltingRecipe(
 		},
 		products = ['humancorpse']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "popeonarope",
 		str_name = "pope on a rope",
 		alias = [
@@ -13935,7 +14937,7 @@ EwSmeltingRecipe(
 		},
 		products = ['popeonarope']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "reanimatedcorpse",
 		str_name = "reanimated corpse",
 		alias = [
@@ -13949,7 +14951,7 @@ EwSmeltingRecipe(
 		},
 		products = ['reanimatedcorpse']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "soul",
 		str_name = "soul",
 		alias = [
@@ -13962,7 +14964,7 @@ EwSmeltingRecipe(
 		},
 		products = ['soul']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "handmadechair",
 		str_name = "handmade chair",
 		alias = [
@@ -13977,7 +14979,7 @@ EwSmeltingRecipe(
 		},
 		products = ['ornatechair', 'shittychair']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "handmadebench",
 		str_name = "handmade bench",
 		alias = [
@@ -13992,7 +14994,7 @@ EwSmeltingRecipe(
 		},
 		products = ['ornatebench', 'shittybench']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "handmadebed",
 		str_name = "handmade bed",
 		alias = [
@@ -14007,7 +15009,7 @@ EwSmeltingRecipe(
 		},
 		products = ['ornatebed', 'shittybed']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "handmadedesk",
 		str_name = "handmade desk",
 		alias = [
@@ -14022,7 +15024,7 @@ EwSmeltingRecipe(
 		},
 		products = ['ornatedesk', 'shittydesk']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "clarinet",
 		str_name = "clarinet",
 		alias = [
@@ -14041,7 +15043,7 @@ EwSmeltingRecipe(
 		},
 		products = ['craftsmansclarinet', 'woodenvuvuzela']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "guitar",
 		str_name = "solid poudrin guitar",
 		alias = [
@@ -14072,7 +15074,7 @@ EwSmeltingRecipe(
 		},
 		products = ['beastskindrums']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "xylophone",
 		str_name = "fish bone xylophone",
 		alias = [
@@ -14089,7 +15091,7 @@ EwSmeltingRecipe(
 		},
 		products = ['fishbonexylophone']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "maracas",
 		str_name = "gourd maracas",
 		alias = [
@@ -14107,6 +15109,18 @@ EwSmeltingRecipe(
 		},
 		products = ['gourdmaracas']
 	),
+	EwSmeltingRecipe(
+		id_recipe = "browndye",
+		str_name = "Brown Dye",
+		alias = [
+			'brown',
+		],
+		ingredients = {
+			'reddye' : 1,
+			'blackdye': 1,
+		},
+		products = ['browndye']
+	)
 ]
 #smelting_recipe_list += ewdebug.debugrecipes
 
@@ -15382,7 +16396,7 @@ hue_id_rainbow = "rainbow"
 hue_id_white = "white"
 hue_id_grey = "grey"
 hue_id_black = "black"
-
+hue_id_brown = "brown"
 
 
 # All color attributes in the game.
@@ -15395,7 +16409,8 @@ hue_list = [
 		],
 		str_saturate = "It begins to glow a ghostly white!",
 		str_name = "white",
-		str_desc = "Its pale white body and slight luminescence give it a supernatural vibe."
+		str_desc = "Its pale white body and slight luminescence give it a supernatural vibe.",
+		is_neutral = True,
 	),
 	EwHue(
 		id_hue = hue_id_yellow,
@@ -15411,8 +16426,10 @@ hue_list = [
 			hue_id_lime: hue_analogous,
 			hue_id_purple: hue_atk_complementary,
 			hue_id_cobalt: hue_special_complementary,
+			hue_id_blue: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
+		},
+
 	),
 	EwHue(
 		id_hue = hue_id_orange,
@@ -15428,8 +16445,9 @@ hue_list = [
 			hue_id_yellow: hue_analogous,
 			hue_id_blue: hue_atk_complementary,
 			hue_id_cyan: hue_special_complementary,
+			hue_id_cobalt: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
+		},
 	),
 	EwHue(
 		id_hue = hue_id_red,
@@ -15446,8 +16464,10 @@ hue_list = [
 			hue_id_orange: hue_analogous,
 			hue_id_cobalt: hue_atk_complementary,
 			hue_id_teal: hue_special_complementary,
+			hue_id_cyan: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
+		},
+
 	),
 	EwHue(
 		id_hue = hue_id_magenta,
@@ -15463,8 +16483,9 @@ hue_list = [
 			hue_id_purple: hue_analogous,
 			hue_id_teal: hue_atk_complementary,
 			hue_id_lime: hue_special_complementary,
+			hue_id_green: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
+		},
 	),
 	EwHue(
 		id_hue = hue_id_purple,
@@ -15481,8 +16502,9 @@ hue_list = [
 			hue_id_magenta: hue_analogous,
 			hue_id_green: hue_atk_complementary,
 			hue_id_yellow: hue_special_complementary,
+			hue_id_lime: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
+		},
 	),
 	EwHue(
 		id_hue = hue_id_blue,
@@ -15498,8 +16520,9 @@ hue_list = [
 			hue_id_purple: hue_analogous,
 			hue_id_lime: hue_atk_complementary,
 			hue_id_orange: hue_special_complementary,
+			hue_id_yellow: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
+		},
 	),
 	EwHue(
 		id_hue = hue_id_green,
@@ -15516,9 +16539,9 @@ hue_list = [
 			hue_id_teal: hue_analogous,
 			hue_id_pink: hue_atk_complementary,
 			hue_id_purple: hue_special_complementary,
+			hue_id_magenta: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
-
+		},
 	),
 	EwHue(
 		id_hue = hue_id_teal,
@@ -15534,9 +16557,9 @@ hue_list = [
 			hue_id_cyan: hue_analogous,
 			hue_id_red: hue_atk_complementary,
 			hue_id_magenta: hue_special_complementary,
+			hue_id_pink: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
-
+		},
 	),
 	EwHue(
 		id_hue = hue_id_rainbow,
@@ -15546,7 +16569,7 @@ hue_list = [
 		],
 		str_saturate = "It turns a fantastic shade of... well, everything!!",
 		str_name = "***Rainbow***",
-		str_desc = "Its ***Rainbow*** hue dazzles and amazes you. It comprises the whole color spectrum in an crude, Photoshop-tier gradient. It’s so obnoxious… and yet, decadent!"
+		str_desc = "Its ***Rainbow*** hue dazzles and amazes you. It comprises the whole color spectrum in an crude, Photoshop-tier gradient. It’s so obnoxious… and yet, decadent!",
 	),
 	EwHue(
 		id_hue = hue_id_pink,
@@ -15562,9 +16585,9 @@ hue_list = [
 			hue_id_red: hue_analogous,
 			hue_id_cyan: hue_atk_complementary,
 			hue_id_green: hue_special_complementary,
+			hue_id_teal: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
-
+		},
 	),
 	EwHue(
 		id_hue = hue_id_grey,
@@ -15574,7 +16597,8 @@ hue_list = [
 		],
 		str_saturate = "It turns a dull, somber grey.",
 		str_name = "grey",
-		str_desc = "Its dull grey hue depresses you, lulling you into inaction and complacency. "
+		str_desc = "Its dull grey hue depresses you, lulling you into inaction and complacency. ",
+		is_neutral = True,
 	),
 	EwHue(
 		id_hue = hue_id_cobalt,
@@ -15590,9 +16614,9 @@ hue_list = [
 			hue_id_blue: hue_analogous,
 			hue_id_yellow: hue_atk_complementary,
 			hue_id_red: hue_special_complementary,
+			hue_id_orange: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
-
+		},
 	),
 	EwHue(
 		id_hue = hue_id_black,
@@ -15602,7 +16626,8 @@ hue_list = [
 		],
 		str_saturate = "It turns pitch black!",
 		str_name = "black",
-		str_desc = "Its pitch black, nearly vantablack hue absorbs all the light around it, making this Slimeoid appear as though a hole was ripped right out of reality."
+		str_desc = "Its pitch black, nearly vantablack hue absorbs all the light around it, making this Slimeoid appear as though a hole was ripped right out of reality.",
+		is_neutral = True,
 	),
 	EwHue(
 		id_hue = hue_id_lime,
@@ -15618,9 +16643,9 @@ hue_list = [
 			hue_id_green: hue_analogous,
 			hue_id_magenta: hue_atk_complementary,
 			hue_id_blue: hue_special_complementary,
+			hue_id_purple: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
-
+		},
 	),
 	EwHue(
 		id_hue = hue_id_cyan,
@@ -15636,9 +16661,19 @@ hue_list = [
 			hue_id_cobalt: hue_analogous,
 			hue_id_orange: hue_atk_complementary,
 			hue_id_pink: hue_special_complementary,
+			hue_id_red: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
-
+		},
+	),
+	EwHue(
+		id_hue = hue_id_brown,
+		alias = [
+			"browndye",
+		],
+		str_saturate = "It turned an earthly brown!",
+		str_name = "brown",
+		str_desc = "Its earthly brown hue imbues it with a humble, down-to-earth personality.",
+		is_neutral = True,
 	),
 ]
 
@@ -15824,7 +16859,7 @@ mutations = [
 		id_mutation = mutation_id_quantumlegs,
 		str_describe_self = "You’ve got nothing of note below the belt due to **Quantum Legs**.",
 		str_describe_other = "They’ve got nothing of note below the belt due to **Quantum Legs**.",
-		str_acquire = "Before you can even register it’s happening, your legs simply evaporate into a light mist that dissolves into the atmosphere. You ungracefully fall to the ground in pure shock, horror, and unrivaled agony. You are now literally half the person you used to be. What the hell are you supposed to do now? You scramble to try and find someone that can help you, moving to a nearby phone booth. Wait… how did you just do that? You have developed the mutation **Quantum Legs**. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you instantly, with a cooldown of 3 hours.",
+		str_acquire = "Before you can even register it’s happening, your legs simply evaporate into a light mist that dissolves into the atmosphere. You ungracefully fall to the ground in pure shock, horror, and unrivaled agony. You are now literally half the person you used to be. What the hell are you supposed to do now? You scramble to try and find someone that can help you, moving to a nearby phone booth. Wait… how did you just do that? You have developed the mutation **Quantum Legs**. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you after an uninterrupted 30 second running start, with a cooldown of 3 hours.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_chameleonskin,
@@ -16104,7 +17139,7 @@ for cosmetic in cosmetic_items_list:
 	cosmetic_map[cosmetic.id_cosmetic] = cosmetic
 	cosmetic_names.append(cosmetic.id_cosmetic)
 
-	# Add food to its vendors' lists.
+	# Add cosmetics to its vendors' lists.
 	for vendor in cosmetic.vendors:
 		vendor_list = vendor_inv.get(vendor)
 
@@ -16708,6 +17743,12 @@ trauma_list = [
 		str_trauma = "Three smoldering claw marks are burned into their flesh, the flames won't seem to extinguish.",
 		trauma_class = trauma_class_sapregeneration,
 	),
+	EwTrauma(  # 24
+		id_trauma = weapon_id_staff,
+		str_trauma_self = "Parts of your skin look necrotic, and you look like you haven't slept in days.",
+		str_trauma = "Parts of their skin look necrotic, and they look like they haven't slept in days.",
+		trauma_class = trauma_class_hunger,
+	),
 	EwTrauma( # 1
 		id_trauma = "fangs",
 		str_trauma_self = "You have bite marks littered throughout your body.",
@@ -16822,14 +17863,14 @@ help_responses = {
 	"dojo":"**The Dojo** is where you acquire weapons to fight and kill other players with. To purchase a weapon, use **'!order [weapon]'**. There are many weapons you can choose from (you can view all of them with !menu), and they all perform differently from one another. Once you've purchased a weapon, you can use **'!equip [weapon]'** to equip it, provided that you're enlisted in a gang beforehand. You can also name your weapon by spending a poudrin on it with **'!annoint [name]'**. Furthermore, annointing will increase your mastery over that weapon, but it's much more efficient to do so through **sparring**. To learn more about the sparring system and weapon ranks, use '!help sparring'.",
 	"subzones":"**Subzones** are areas locations within the districts of the city where gang violence off-limits, with the only exception being the subway stations, the trains, and the base of ENDLESS WAR. If you don't type anything in a sub-zone for 60 minutes, you'll get kicked out for loitering, so be sure to check up often if you don't wanna get booted out into the streets.",
 	"scouting": "Scouting is a way for you to check how many **players** might be in a district that's close by. You can do just **'!scout'** to check the district you're already in, or **'!scout [district]'** to scout out that specific district. For example, if you were in Vagrant's Corner, you could use '!scout gld' to see how many players might be in Green Light District. Scouting will show both **friendly and enemy** gang members, as well as juveniles and even enemies. Scouting will list all players/enemies above your own level, as well as players/enemies below your level, but at a certain **cutoff point**. If you can't scout someone, it's safe to assume they have around **1/10th** the amount of slime that you do, or less. It should be noted that scouting currently only gives an estimate, sending off different messages depending on how many players are in that district.",
-	"otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
 	"wanted":"If you find that you have a role with 'Wanted' in the name, be alarmed. This means that you are able to be attacked by gangsters! Always be on the look out and remember to check your corners.",
+	"combat": "Once you have enlisted in a gang, you can engage in gang violence. To do so you will need a weapon, which you can find at the Dojo and a target. To attack an enemy, you have to **!equip** a weapon and **!kill [player]**. Attacking costs slime and sap. The default cost for attacking is ((your slime level)^4 / 60), and the default damage it does to your opponent is ((your slimelevel)^4 / 6). Every weapon has an attack cost mod and a damage mod that may change these default values. When you reduce a player's slime count below 0 with your attacks, they die. Most weapons will ask you to input a security code with every attack. This security code, also referred to as a captcha, is displayed after a previous !kill or when you !inspect your weapon. Heavy weapons increase crit chance by 5% and decrease miss chance by 10% against you, when you carry them.",
 	# Ways to gain slime
 	"mining": "Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by about 0.5%. The more slime you mine for, the higher your level gets. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively. If you are enlisted, you can make use of the **pickaxe**, which increases the amount of slime you gain from mining. Currently mining is event-based. Similarly to clicker games your base action is **!mine**, but various events may dynamically change the way mining works, from simple slimeboosts to full-on minigames. Basic instructions for these events come, when the event starts.",
-	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging, however, raises your hunger by about 1% per use of the '!scavenge' command, so it's often more efficient to do a '!scavenge' command **every 15 seconds** or so, resulting in the highest potential collection of slime at the lowest cost of hunger. You can still spam it, just as you would with '!mine', but you'll gain less and less slime if you don't wait for the 15 second cool-down. To check how much slime you can scavenge, use **'!look'** while in a district channel. You can also scavenge for items by doing '!scavenge [item name]'.",
+	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging raises your hunger by 1% with every command entered. If you type **!scavenge** by itself, you will be given a captca to type. The more captchas you type correctly, the more slime you will gain. To check how much slime you can scavenge, use **'!look'** while in a district channel. You can also scavenge for items by doing '!scavenge [item name]'.",
 	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. It is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 200,000 slime, with a 1/30 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days, or 12 hours in real life), it will **die out**. In addition to slime, farming also provides you with various **crops** which can be used for **milling**. Crops can be eaten by themselves, but it's much more useful if you use **'!mill'** on them while at a farm, granting you **dyes**, as well as food items and cosmetics associated with that crop, all at the cost of 50,000 slime per '!mill'. Dyes can be used on slimeoids with **'!saturateslimeoid'**. Crops can also be sown themselves with '!sow [crop name]', and upon reaping you be rewarded with a bushel of that crop, as well as 100,000 slime. You can, however, increase the slime gained from sowing crops by using **'!checkfarm'**, and performing **'!irrigate'**, **'!fertilize'**, **'!pesticide'** or **'!weed'** if neccessary. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
-	"fishing": "**Fishing** can be done by performing the **'!cast'** command at one of the six piers, including **Crookline Pier**, **Jaywalker Plain Pier**, **Toxington Pier**, **Assault Flats Beach Pier**, **Slime's End Pier**, **Vagrant's Corner Pier**, as well as **The Ferry**. To reel in a fish, use **'!reel'** when the game tells you that you have a bite. If you don't reel in quick enough, the fish will get away. If you are enlisted and have the **fishing rod** equiped, you will have increased chances of reeling in a fish. For more information about fishing, refer to this helpful guide (credits to Miller#2705).\nhttps://www.youtube.com/watch?v=tHDeSukIqME\nAs an addendum to that video, note that fish can be taken to the labs in Brawlden, where they can be made more valuble in bartering by increasing their size with **'!embiggen [fish]'**.",
-	"hunting": "**Hunting** is another way to gain slime in ENDLESS WAR. To hunt, you can visit **The Outskirts**, which are districts located next to the edge of the map (Wreckington -> Wreckington Outskirts, Toxington -> Toxington Outskirts, etc). In the outskirts, you will find enemies that you can !kill. Rather than doing '!kill @' like with players, with enemies you can either type their display name ('!kill Dinoslime'), their shorthand name ('!kill dino'), or their identifying letter ('!kill A'), which can be accessed with !look (WARNING: Raid bosses moving around the city do not have identifying letters. You must use the other targeting methods to attack them). To see how much slime an enemy has, you can do '!data [enemy name]', or just !data with any of the previous types of methods listed. Enemies will drop items and slime upon death, and some enemies are more powerful and threatening than others. In fact, there are enemies powerful enough to hold their own against the gangsters in the city, called **Raid Bosses**, and will enter into the city as a result, rather than just staying in the outskirts like regular enemies. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a raid boss has entered into. Enemies despawn after **3 hours in real life**.",
+	"fishing": "**Fishing** can be done by performing the **'!cast'** command at one of the six piers, including **Crookline Pier**, **Jaywalker Plain Pier**, **Toxington Pier**, **Assault Flats Beach Pier**, **Slime's End Pier**, **Vagrant's Corner Pier**, as well as **The Ferry**. To reel in a fish, use **'!reel'** when the game tells you that you have a bite. If you don't reel in quick enough, the fish will get away. If you are enlisted and have the **fishing rod** equiped, you will have increased chances of reeling in a fish. For more information about fishing, refer to this helpful guide (credits to Miller#2705).\n<https://www.youtube.com/watch?v=tHDeSukIqME>\nAs an addendum to that video, note that fish can be taken to the labs in Brawlden, where they can be made more valuble in bartering by increasing their size with **'!embiggen [fish]'**.",
+	"hunting": "**Hunting** is another way to gain slime in ENDLESS WAR. To hunt, you can visit **The Outskirts**, which are districts located next to the edge of the map (Wreckington -> Southern Outskirts, Toxington -> Northwest Outskirts, etc). In the outskirts, you will find enemies that you can !kill. Rather than doing '!kill @' like with players, with enemies you can either type their display name ('!kill Dinoslime'), their shorthand name ('!kill dino'), or their identifying letter ('!kill A'), which can be accessed with !look or !survey (WARNING: Raid bosses moving around the city do not have identifying letters. You must use the other targeting methods to attack them). To see how much slime an enemy has, you can do '!data [enemy name]', or just !data with any of the previous types of methods listed. Enemies will drop items and slime upon death, and some enemies are more powerful and threatening than others. In fact, there are enemies powerful enough to hold their own against the gangsters in the city, called **Raid Bosses**, and will enter into the city as a result, rather than just staying in the outskirts like regular enemies. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a raid boss has entered into. Enemies despawn after **3 hours in real life**.",
 	# Additional gameplay mechanics, part 1
 	"mutations": "**Mutations** are helpful bonuses you acquire every five levels. When you acquire a mutation, a short text response will indicate what it can do. To reroll your most recent mutation, you can visit the labs and type **'!rerollmutation'**. To get rid of all your current mutations, you can also do **'!sterilizemutations'**.",
 	"mymutations":"You read some research notes about your current mutations...", # will print out a list of mutations with their specific mechanics
@@ -16837,7 +17878,7 @@ help_responses = {
 	"sparring": "**Sparring** can be done between two players using **'!spar [player]'**. Sparring, provided that both players spar with the same weapon type and are not at full hunger, will increase both of your mastery **LEVEL**, which is a hidden value, by one. The publicly displayed value, mastery **RANK** (which is just your mastery level minus 4), is more important. It should be noted that the damage you deal with your weapon is increased even if you haven't reached rank 1 yet. However, once you do reach at least mastery rank 2 (Again, this would be level 6), when you next revive, you will now **permanently** be at level 6 for that weapon type until you annoint or spar again. Essentially, this means you will always start back at rank 2. Once you reach **rank 6**, you can no longer annoint your weapon rank any higher, and must instead kill other players/enemies (that are higher in slime level than you) to do so. Reaching rank 6 also stops you from increasing your own rank through sparring, unless you are sparring with someone who has a higher weapon rank than you. You can only spar up to someone else's mastery rank, minus 1 (example: Sparring with a rank 15 master of the katana would, at most, allow you to get to rank 14). Sparring has a one minute cooldown and raises your hunger by about 5%. Once you reach rank 8, you may also **'!marry'** your weapon, resulting in a matrimonial ceremony that increases your rank by two.",
 	"ghosts": "Ghosts can perform an action known as **haunting**. Every use of **'!haunt'** takes up the total amount of slime from the haunted player, divided by 400, at a max of 20,000 per !haunt. You may also add a customized message by doing '!haunt [@player] [message]'. It can be done face-to-face like with !kill, or done remotely at the sewers. As a ghost, you can only move within a small radius around the area at which you died, and can only leave the sewers after gaining at least 100,000 negative slime with **'!manifest'**. Furthermore, if a player has consumed **coleslaw**, they can **'!bust'** ghosts, which sends them back to the sewers. **Negative Slime** is gained through haunting, and allows ghosts to summon **negaslimoids** in the city, with the use of **'!summon [name]'**. Negaslimeoids haunt all players within a district, and also decay capture progress. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a Negaslimeoid has entered into.",
 	# Additional gameplay mechanics, part 2
-	"slimeoids":"**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park. Slimeoids can also be used to fight off **negaslimeoids** that have been summoned by ghosts, though be warned, as this is a fight to the death! If your slimeoid dies, it's **HEART** is dropped, which can be sown in the ground like a poudrin, or taken to the labs to revive your slimeoid with **'!restoreslimeoid'**. In regards to your slimeoid's stats, a slimeoid's **'Moxie'** represents its physical attack, **'Chutzpah'** its special attack, and **'Grit'** its defense. Additionally, the color you dye your slimeoid with **'!saturateslimeoid'** also plays into combat. Your slimeoid gets attack bonuses against slimeoids that have its split complementary hue and resist slimeoids with its analgous hues. For more information, see the diagrams linked below (credits to Connor#3355). There are also various commands you can perform on your slimeoid, such as **'!observeslimeoid'**, **'!petslimeoid'**, **'!walkslimeoid'**, and **'!playfetch'**. To humanely and ethically euthanize your slimeoid, use **'!dissolveslimeoid'** at the laboratory. To store and release your slimeoid in a bottle (Warning: This bottle is dropped upon death!!), use **'!bottleslimeoid'** and **'!unbottleslimeoid [slimeoid]'**, respectively.\nhttps://cdn.discordapp.com/attachments/492088204053184533/586310921274523648/SLIMEOID-HUE.png\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662087653064706/SLIMEOID-HUE.gif\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662095848996894/SLIMEOID_HUE_NOTE.png",
+	"slimeoids":"**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park. Slimeoids can also be used to fight off **negaslimeoids** that have been summoned by ghosts, though be warned, as this is a fight to the death! If your slimeoid dies, it's **HEART** is dropped, which can be sown in the ground like a poudrin, or taken to the labs to revive your slimeoid with **'!restoreslimeoid'**. In regards to your slimeoid's stats, a slimeoid's **'Moxie'** represents its physical attack, **'Chutzpah'** its special attack, and **'Grit'** its defense. Additionally, the color you dye your slimeoid with **'!saturateslimeoid'** also plays into combat. Your slimeoid gets attack bonuses against slimeoids that have its split complementary hue and resist slimeoids with its analgous hues. For more information, see the diagrams linked below (credits to Connor#3355). There are also various commands you can perform on your slimeoid, such as **'!observeslimeoid'**, **'!petslimeoid'**, **'!walkslimeoid'**, and **'!playfetch'**. To humanely and ethically euthanize your slimeoid, use **'!dissolveslimeoid'** at the laboratory. To store and release your slimeoid in a bottle (Warning: This bottle is dropped upon death!!), use **'!bottleslimeoid'** and **'!unbottleslimeoid [slimeoid]'**, respectively.\n<https://cdn.discordapp.com/attachments/492088204053184533/586310921274523648/SLIMEOID-HUE.png>\n<https://cdn.discordapp.com/attachments/177891183173959680/586662087653064706/SLIMEOID-HUE.gif>\n<https://cdn.discordapp.com/attachments/177891183173959680/586662095848996894/SLIMEOID_HUE_NOTE.png>",
 	"cosmetics":"**Cosmetics** are items that the player may wear. To equip or un-equip a cosmetic, use **'!adorn [cosmetic]'**. If you have two slime poudrins, you can use **'!smelt cosmetic'** to create a new one from scratch. Cosmetics can also be obtained from milling vegetables at farms. Cosmetics can either be of 'plebian' or 'patrician' quality, indicating their rarity. If you win an art contest held for the community, you can also ask a Kingpin to make a **Princep** cosmetic for you, which is custom tailored to your desires, and will not leave your inventory upon death. Cosmetics can be dyed with **!dyecosmetic**. To check which cosmetics you have adorned, you can use !data.",
 	"realestate":"The **Slimecorp Real Estate Agency** is, well, the agency where you buy real estate. First, check out the property you want with **'!consult [district]'**. The real estate agent will tell you a bit about the area. \nOnce you've made your decision, you can **'!signlease [district]'** to seal the deal. There's a down payment, and you will be charged rent every 2 IRL days. Fair warning, though, if you already have an apartment and you rent a second one, you will be moved out of the first.\n\nFinally, if you own an apartment already, you can **'!aptupgrade'** it, improving its storage capabilities, but you'll be charged a huge down payment and your rent will double. The biggest upgrade stores 40 closet items, 20 food items, and 25 pieces of furniture. And if you're ready to cut and run, use **'!breaklease'** to end your contract. It'll cost another down payment, though.\n\nYou can !addkey to acquire a housekey. Giving this item to some lucky fellow gives them access to your apartment, including all your prized posessions. Getting burglarized? Use !changelocks to eliminate all housekeys you created. Both cost a premium, though.",
 	"apartments":"Once you've gotten yourself an apartment, there are a variety of things you can do inside it. To enter your apartment, do **'!retire'** in the district your apartment is located in. There are certain commands related to your apartment that you must do in a direct message to ENDLESS WAR. To change the name and description of your apartment, do **'!aptname [name]'** and **'!aptdesc [description]'**, respectively. To place and remove furniture (purchasable in The Bazaar), do **'!decorate [furniture]'** and **'!undecorate [furniture]'**, respectively. You can store and remove items with **'!stow'** and **'!snag'**, respectively. To store in and remove items from the fridge, do **'!fridge [item]'** and **'!unfridge [item]'**. To store in and remove items from the closet, do **'!closet [item]'** and **'!uncloset [item]'**, respectively. To store and remove your slimeoid, do **'!freeze'** and **'!unfreeze'**, respectively. To store and remove fish, do **'!aquarium [fish]'** and **'!releasefish [fish]'**, respectively. To store and remove items such as weapons and cosmetics, do **'!propstand [item]'** and **'!unstand [item]'**, respectively. To put away zines, do **!shelve [item]** and **!unshelve [item]**. To place crops into flower pots, do **pot [item]** and **unpot [item]** To enter someone else's apartment, you can do **'!knock [player]'**, which will prompt them to let you in. This list of commands can also be accessed by using !help in a direct message to ENDLESS WAR.",
@@ -16845,17 +17886,17 @@ help_responses = {
 	# Additional gameplay mechanics, part 3
 	"trading": "Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Use **!removeoffer [item]** to remove an item from your offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**.",
 	"weather": "The weather of NLACakaNM can have certain outcomes on gameplay, most notably in regards to mutations like White Nationalist or Light As A Feather. Right now, however, you should be most concerned with **Bicarbonate Rain Storms**, which rapidly destroy slime both on the ground and within your very being. It's advised that you pick up a rain coat at The Bazaar to avoid further harm. To check the weather, use **'!weather'**.",
-	"casino": "**The Casino** is a sub-zone in Green Light District where players may bet their slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, **'!slimebaccarat'**, and **!slimeskat**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where most of the loser's slime is transferred to the winner. A recent takeover by SlimeCorp has introduced a policy requiring 20% of all winnings to be sent directly to them.",
+	"casino": "**The Casino** is a sub-zone in Green Light District where players may bet their slime and slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, **'!slimebaccarat'**, and **!slimeskat**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where most of the loser's slime is transferred to the winner. A recent takeover by SlimeCorp has introduced a policy requiring 20% of all winnings to be sent directly to them. To bet with slime, simply add 'slime' to the name of the game you wish to play. Example: **!slimeslots 500 slime**.",
 	"bleeding": "When you get hit by someone using a '!kill' command, certain things happen to your slime. Let's say you take 20,000 points of damage. **50%** of that slime, in this case 10,000, immediately becomes scavengeable. However, the other 50%, provided that you didn't die instantly, will undergo the **bleeding** process. 25% of that slime, in this case 5,000, is immediately added to a 'bleed pool', causing it to slowly trickle out of your body and onto the ground for it to be scavenged. The remaining 25% of that slime will **slowly** be added to the 'bleed pool', where it will then bleed, just as previously stated. Upon dying, your 'bleed pool' is immediately dumped onto the ground, ready to be scavenged. Think of it like the 'rolling HP' system from the game *EarthBound*. When you get hit, you don't take all your damage upfront, it instead slowly trickles down.",
-	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline.",
+	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline. The exception to this, of course, is if you have the **Chameleon Skin** mutation, which lets you type a handful of commands even while offline, including **!goto**, **!look**, **!scout**, **!survey**, **!embark**, and **!disembark**.",
 	# Additional gameplay mechanics, part 4
 	"profile": "This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
 	"manuscripts": "First of all, to start a manuscript, you're gonna need to head down to the Cafe, either University, or the Comic Shop.\n\nYou can **!beginmanuscript [title]** at the cost of 20k slime.\n\nIf you happen to regret your choice of title, you can just **!settitle [new title]**.\n\nThe author name is already set to your nickname, but if you want to change it, you change your nickname and then **!setpenname**.\n\nYou're required to specify a genre for your future zine by using **!setgenre [genre name]** (Genre list includes: narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper, and experimental).\n\nIf at any time you would like to look at the title, author name, and length of your manuscript, then use **!manuscript**.\n\n*NOW*, if you actually want to start getting stuff done, you're gonna need to **!editpage [page number] [content]**. Every zine has 10 pages (kinda) that you can work with, but you can **!setpages [pages]** to customize it (maximum is 20, minimum is 5). Each holds a maximum of 1500 characters of content. You can fill it with information, image links, smut, whatever floats your freakish boat. If you try to edit a page that already has writing, it will ask you to confirm the change before overwriting it.\n\nYou can also set a cover, which is optional. You do this with **!editpage cover [image link]**.\n\nTo check any of your pages, simply **!viewpage [number]** to see how it looks.\n\nKeep in mind that manuscripts ARE NOT items and can't be lost on death. They're accessible from any authoring location (Cafe, NLACU, NMS, Comics). A player can only have 1 manuscript out at a time.\n\nOnce you are completely finished, you can **!publish** your manuscript (it will ask you to confirm that you are completely done with it), which will enable the citizens of the town to purchase it from any zine place. From there, it will be bought and rated by the people and you may even earn some royalty poudrins for it.",
 	"zines": "Zines are the hot new trend in Neo-Milwaukee and give slimebois of all shapes and sizes access to the free-market of information and culture.\n\nTo obtain a zine, you must head down to any of these locations: Green Cake Cafe, NLAC University, Neo-Milwaukee State, or Glockbury Comics.\n\nFrom there, you can **!browse** for zines. They are ordered by *Zine ID*, but you have many options for sorting them, including: **title, author, datepublished,** any of the genres (including **narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper,** and **experimental**.), **length, sales,** and **rating** (use **!browse [criteria]**). You can also add **reverse** on to any of these in order to make it display in reverse order. Example: **!browse bestsellers reverse** (essentially looks for worse-selling zines). Browsing in the Comic Shop will automatically browse for comic zines and browsing at the Colleges will look for historical zines (keep in mind that any zines can be bought from these places).\n\nYou can also **!browse [Zine ID]** in order to get info about that specific zine, including sales, length, genre, and rating.\n\nOnce you've found a zine that's caught your eye, simply **!orderzine [Zine ID]** to buy it for 10k slime.\n\nAfter absorbing the zine's content, it is your moral obligation as a reader to **!review [Zine Name] [Score]**. The potential scores range from between 1 and 5 *fucks* (whole numbers only). If you hate a zine, then give it one fuck. If you absolutely loved it, give it five fucks. Simple. By the way, if a zine's average rating is less than 2.0 by the time it gets to 10 ratings (or less than 1.5 by 5 ratings), it will be excluded from the default browse. The only way to purchase it will be to use the **worstrated** or **all** sorting methods.\n\nYou can **!shelve [zine name]** in your apartment after you've finished.",
+	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
+	"sap": "**Sap** is a resource your body produces to control your slime. It's integral to being able to act in combat. You can have a maximum amount of sap equal to 1.6 * ( your slime level ^ 0.75 ). When you spend it, it will regenerate at a rate of 1 sap every 5 seconds. You can spend your sap in a variety of ways: **!harden [number]** allows you to dedicate a variable amount of sap to your defense. Hardened sap reduces incoming damage by a factor of 10 / (10 + hardened sap). Your hardened sap counts against your maximum sap pool, so the more you dedicate to defense, the less you will have to attack. You can **!liquefy [number]** hardened sap back into your sap pool. Every attack requires at least 1 sap to complete. Different weapons have different sap costs. Some weapons have the ability to destroy an amount of hardened sap from your target, or ignore a portion of their hardened sap armor. This is referred to as **sap crushing** and **sap piercing** respectively. There are also other actions you can take in combat, that cost sap, such as: **!aim [player]** will slightly increase your hit chance and crit chance against that player for 10 seconds. It costs 2 sap. **!dodge [player]** will decrease that players hit chance against you for 10 seconds. It costs 3 sap. **!taunt [player]** will decrease that player's hit chance against targets other than you for 10 seconds. It costs 5 sap.",
 
-	# Combat
-	"combat": "Once you have enlisted in a gang, you can engage in gang violence. To do so you will need a weapon, which you can find at the Dojo and a target. To attack an enemy, you have to **!equip** a weapon and **!kill [player]**. Attacking costs slime and sap. The default cost for attacking is (your slimelevel)^4 / 60 and the default damage it does to your opponent is (your slimelevel)^4 / 6. Every weapon has an attack cost mod and a damage mod that may change these default values. When you reduce a player's slime count below 0 with your attacks, they die. Most weapons will ask you to input a security code with every attack. This security code, also referred to as a captcha, is displayed after a previous !kill or when you !inspect your weapon. Heavy weapons increase crit chance by 5% and decrease miss chance by 10% against you, when you carry them.",
-	"sap": "**Sap** is a resource your body produces to control your slime. It's integral to being able to act in combat. You can have a maximum amount of sap equal to your slime level. When you spend it, it will regenerate at a rate of 1 sap every 5 seconds. You can spend your sap in a variety of ways: **!harden [number]** allows you to dedicate a variable amount of sap to your defense. Hardened sap reduces incoming damage by a factor of 10 / (10 + hardened sap). Your hardened sap counts against your maximum sap pool, so the more you dedicate to defense, the less you will have to attack. You can **!liquefy [number]** hardened sap back into your sap pool. Every attack requires at least 1 sap to complete. Different weapons have different sap costs. Some weapons have the ability to destroy an amount of hardened sap from your target, or ignore a portion of their hardened sap armor. This is referred to as **sap crushing** and **sap piercing** respectively. There are also other actions you can take in combat, that cost sap, such as: **!aim [player]** will slightly increase your hit chance and crit chance against that player for 10 seconds. It costs 2 sap. **!dodge [player]** will decrease that players hit chance against you for 10 seconds. It costs 3 sap. **!taunt [player]** will decrease that player's hit chance against targets other than you for 10 seconds. It costs 5 sap.",
+	# Weapons
 	weapon_id_revolver: "**The revolver** is a weapon for sale at the Dojo. Attacking with the revolver costs 1 sap. It has a damage mod of 0.8 and an attack cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The revolver has sap crushing 2. After every 6 shots you will need to **!reload** it.",
 	weapon_id_dualpistols: "**The dual pistols** are a weapon for sale at the Dojo. Attacking with the dual pistols costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2, a miss chance of 40% and a 20% chance for a crit, which does 2x damage. The dual pistols have sap crushing 2. After every 12 shots you will need to **!reload** them.",
 	weapon_id_shotgun: "**The shotgun** is a weapon for sale at the Dojo. Attacking with the shotgun costs 5 sap. It has a damage mod of 1.65 and an attack cost mod of 1.5. It has a captcha length of 6, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The shotgun has sap crushing 5. After every 2 shots you will need to **!reload** it.",
@@ -16865,7 +17906,7 @@ help_responses = {
 	weapon_id_bat: "**The nailbat** is a weapon for sale at the Dojo. Attacking with the bat costs 2 sap. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a captcha length of 2, a miss chance of 1/13, a 1/13 chance for a crit, which increases the damage mod to 4, and a 1/13 chance to backfire and damage the wielder instead. The bat has sap crushing 2. If you takes less than 3 seconds between attacks, your miss chance will increase.",
 	weapon_id_brassknuckles: "**The brass knuckles** are a weapon for sale at the Dojo. Attacking with the brass knuckles costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 2 punches. Every punch has a 20% miss chance. If you land 3 successful attacks (not punches) in succession with perfect timing, the third attack will throw an extra punch, which deals 3x damage and has 5 sap crushing. If you takes less than 2 seconds between attacks, your damage will decrease. For perfect timing you need to take 2 seconds between attacks exactly.",
 	weapon_id_katana: "**The katana** is a weapon for sale at the Dojo. Attacking with the katana costs 3 sap. It has a damage mod of 1.3 and an attack cost mod of 1.3. It has a captcha length of 8. The katana never misses. If the katana is the only weapon in your inventory, it crits for 2x damage on every hit. If you takes less than 5 seconds between attacks, your damage will decrease. If you take exactly 5 seconds between attacks, the katana gains sap piercing 10 (sap piercing 15 on a crit).",
-	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. Attacking with the broadsword costs 4 sap. It has a damage mod of 3 and an attack cost mod of 5. It has a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire and damage the wielder instead. The broadsword has sap crushing 5 and sap piercing 20. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 1.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
+	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. Attacking with the broadsword costs 12 sap. It has a damage mod of 3 and an attack cost mod of 5. It has a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire and damage the wielder instead. The broadsword has sap crushing 5 and sap piercing 20. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 1.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
 	weapon_id_nunchucks: "**The nunchucks** are a weapon for sale at the Dojo. Attacking with the nunchucks costs 4 sap. They have a damage mod of 0.5 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 4 blows. Every blow has a 25% miss chance and 1 sap crushing. If all 4 blows hit, you deal an additional blow that does 4x damage. If all shots miss, the nunchucks will backfire for 2x damage. If you takes less than 3 seconds between attacks, your miss chance will increase.",
 	weapon_id_scythe: "**The scythe** is a weapon for sale at the Dojo. Attacking with the scythe costs 6 sap. It has a damage mod of 0.5 and an attack cost mod of 3. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 3x damage. The scythe has sap piercing 3 for every kill your opponent got this life, up to sap piercing 30. The scythe's damage mod also increases by 0.5 for every kill your opponent got this life, up to a maximum damage mod of 5. If you take less than 3 seconds between attacks, your damage will decrease.",
 	weapon_id_yoyo: "**The yo-yo** is a weapon for sale at the Dojo. Attacking with the yo-yo costs 1 sap. It has a damage mod of 0.5 and an attack cost mod of 0.75. It has a captcha length of 2, a miss chance of 18.75% and a 10% chance for a crit, which does 2x damage. The yo-yo's damage mod increases by 0.25 for every successful consecutive hit, without getting hit yourself.",
@@ -16875,8 +17916,11 @@ help_responses = {
 	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. Attacking with the molotovs costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. They have sap piercing 10. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
 	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 2. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
-	weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 4 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase.",
+	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 3. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you take less than 10 seconds between attacks, your miss chance will increase.",
+	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. Attacking with the dragon claw costs 5 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. It has a captcha length of 2. It has sap crushing 5 and sap piercing 10. It you take less than 5 seconds between attacks, your miss chance will increase. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
+	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 4 sap. It has a captcha length of 10. Dealing damage with the staff requires attacking twice in a 5-second window, with the first !kill command only being preparetion for the second. The attack cost multiplier is 1 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 3, sap piercing 15, and a 0% chance to crit, which deals 1.5x damage. A number of conditions may be met to increase the damage multiplier by 0.5, sap piercing by 5, and crit chance by 2.5%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
 	
+
 	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
 
 	weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase.",
@@ -16888,22 +17932,24 @@ help_responses = {
 	weapon_id_watercolors: "**Watercolors** are a paint tool for sale at Glocksbury Comics. It does a set 4000 influence. It has a captcha length of 2, a miss chance of [] and a [] chance for a crit, which zeros out the whole district.",
 	weapon_id_thinnerbomb: "**Thinner bombs** are a paint tool for sale at Glocksbury Comics. It has a capping modifier of 0.15 and a spray cost mod of 2. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence. They are finite and throwable. When decapping, damage is multiplied by 10.",
 
+
+	# "otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
+
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
 help_responses_ordered_keys = [
 	"gangs", "food", "capturing", "transportation", "death",
-	"dojo", "subzones", "scouting", "otp", "wanted",
+	"dojo", "subzones", "scouting", "wanted", "combat",
 	"mining", "scavenging", "farming", "fishing", "hunting",
 	"mutations", "mymutations", "smelting", "sparring", "ghosts",
 	"slimeoids", "cosmetics", "realestate", "apartments", "stocks",
 	"trading", "weather", "casino", "bleeding", "offline",
-	"profile", "manuscripts", "zines", "shambleball",
-	"combat", "sap", weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun,
-	weapon_id_rifle, weapon_id_smg, weapon_id_bat, weapon_id_brassknuckles, weapon_id_katana,
-	weapon_id_broadsword, weapon_id_nunchucks, weapon_id_scythe, weapon_id_yoyo, weapon_id_umbrella,
-	weapon_id_knives, weapon_id_molotov, weapon_id_grenades, weapon_id_garrote, weapon_id_minigun,
-
+	"profile", "manuscripts", "zines", "shambleball", "sap",
+	weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun, weapon_id_rifle, weapon_id_smg, 
+	weapon_id_bat, weapon_id_brassknuckles, weapon_id_katana, weapon_id_broadsword, weapon_id_nunchucks, 
+	weapon_id_scythe, weapon_id_yoyo, weapon_id_umbrella, weapon_id_knives, weapon_id_molotov, 
+	weapon_id_grenades, weapon_id_garrote, weapon_id_minigun, weapon_id_bow, weapon_id_dclaw,
 ]
 
 mutation_descriptions = {
@@ -16923,7 +17969,7 @@ mutation_descriptions = {
 	mutation_id_fastmetabolism: "Movement speed is increased by 33% when below 40% hunger.",
 	mutation_id_bingeeater: "Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds.",
 	mutation_id_lonewolf: "20% capture discount and 50% more damage when in a district without any friendly gangsters. Stacks with the Patriot mutation.",
-	mutation_id_quantumlegs: "You can now use the !tp command, allowing you to teleport to a district up to two locations away from you instantly, with a cooldown of 3 hours.",
+	mutation_id_quantumlegs: "You can now use the !tp command, allowing you to teleport to a district up to two locations away from you after an uninterrupted 30 second running start, with a cooldown of 3 hours.",
 	mutation_id_chameleonskin: "While offline, you can move to and scout other districts and cannot be scouted.",
 	mutation_id_patriot: "20% capture discount. Stacks with the Lone Wolf mutation.",
 	mutation_id_socialanimal: "Your damage increases by 10% for every ally in your district.",
@@ -17060,18 +18106,18 @@ enemy_spawn_groups = {
 # Enemy drop tables. Values are sorted by the chance to the drop an item, and then the minimum and maximum amount of times to drop that item.
 enemy_drop_tables = {
 	enemy_type_sandbag: [{"poudrin": [100, 1, 1]}],
-	enemy_type_juvie: [{"poudrin": [50, 1, 2]}, {"pleb": [10, 1, 1]}, {"crop": [30, 1, 1]}, {"card": [20, 1, 1]}],
-	enemy_type_dinoslime: [{"poudrin": [100, 2, 4]}, {"pleb": [40, 1, 2]},  {"meat": [33, 1, 2]}, {"monsterbones": [100, 3, 5]}],
-	enemy_type_slimeadactyl: [{"poudrin": [100, 3, 5]}, {"pleb": [40, 1, 2]}, {"monsterbones": [100, 3, 5]}],
+	enemy_type_juvie: [{"poudrin": [50, 1, 2]}, {"pleb": [5, 1, 1]}, {"crop": [30, 1, 1]}, {"card": [20, 1, 1]}],
+	enemy_type_dinoslime: [{"poudrin": [100, 2, 4]}, {"pleb": [10, 1, 1]},  {"meat": [33, 1, 2]}, {"monsterbones": [100, 3, 5]}],
+	enemy_type_slimeadactyl: [{"poudrin": [100, 3, 5]}, {"pleb": [10, 1, 1]}, {"monsterbones": [100, 3, 5]}],
 	enemy_type_microslime: [{"patrician": [100, 1, 1]}],
 	enemy_type_slimeofgreed: [{"poudrin": [100, 2, 2]}],
-	enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}, {"monsterbones": [100, 3, 5]}],
-	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [60, 1, 2]}, {"monsterbones": [100, 1, 3]}],
+	enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [50, 1, 1]},  {"crop": [50, 3, 6]}, {"monsterbones": [100, 3, 5]}],
+	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [20, 1, 1]}, {"monsterbones": [100, 1, 3]}],
 	enemy_type_doubleheadlessdoublehorseman: [{"poudrin": [100, 22, 22]}, {"pleb": [100, 22, 22]}, {"patrician": [100, 22, 22]}, {"crop": [100, 22, 22]}, {"meat": [100, 22, 22]}, {"card": [100, 22, 22]}],
 	enemy_type_doublehorse: [{"poudrin": [100, 22, 22]}],
-	enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
-	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}, {"monsterbones": [100, 3, 5]}],
-	enemy_type_greeneyesslimedragon: [{"dragonsoul": [100, 1, 1]},{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}, {"monsterbones": [100, 5, 10]}],
+	enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [80, 1, 2]}, {"patrician": [30, 1, 1]}],
+	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [50, 1, 2]}, {"patrician": [20, 1, 2]},  {"meat": [100, 3, 4]}, {"monsterbones": [100, 3, 5]}],
+	enemy_type_greeneyesslimedragon: [{"dragonsoul": [100, 1, 1]},{"poudrin": [100, 15, 20]}, {"patrician": [100, 1, 1]}, {"monsterbones": [100, 5, 10]}],
 	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
 }
 
@@ -17173,7 +18219,7 @@ world_events = [
 	),
 	EwEventDef(
 		event_type = event_type_minecollapse,
-		str_event_start = "The mineshaft starts collapsing around you. Get out of there quickly! ({cmd} {captcha})",
+		str_event_start = "The mineshaft starts collapsing around you.\nGet out of there quickly! ({cmd} {captcha})",
 	),
 	EwEventDef(
 		event_type = event_type_minesweeper,
@@ -17655,7 +18701,7 @@ captcha_dict = [
 	'KFC', 'GAY', 'LOL', 'GUN', 'MUK',
 	'POW', 'WOW', 'POP', 'OWO', 'HIP',
 	'END', 'HAT', 'CUP', '911', '711',
-	'SIX', 'SMG', 'BOW', 'AWO',
+	'SIX', 'SMG', 'BOW',
 	#4
 	'GOON', 'DOOR', 'CORP', 'SPAM', 'BLAM',
 	'FISH', 'MINE', 'LOCK', 'OURS', 'ROCK',
@@ -17670,39 +18716,50 @@ captcha_dict = [
 	'SLOSH', 'PARTY', 'JUVIE', 'BASED', 'TULPA',
 	'SLURP', 'MONTH', 'SEVEN', 'BRASS', 'MINES',
 	'GREEN', 'LIGHT', 'FURRY', 'PIZZA', 'ARENA',
-	'LUCKY', 'RIFLE', '56709', 'AWOOO',
+	'LUCKY', 'RIFLE', '56709',
 	#6
 	'SLUDGE', 'KILLER', 'MUNCHY', 'BLAAAP', 'BARTER',
 	'ARTIST', 'FUCKER', 'MINING', 'SURVEY', 'THRASH',
 	'BEWARE', 'STOCKS', 'COWARD', 'CRINGE', 'INVEST', 
 	'BUSTAH', 'KILLAH', 'KATANA', 'GHOSTS', 'BASSED', 
-	'REVIVE', 'BATTLE', 'PAWPAW', 'AWOOOO',
+	'REVIVE', 'BATTLE', 'PAWPAW',
 	#7
 	'KINGPIN', 'ENDLESS', 'ATTACKS', 'FUCKERS', 'FISHING',
 	'VIOLENT', 'SQUEEZE', 'LOBSTER', 'WESTERN', 'EASTERN', 
 	'REGIONS', 'DISCORD', 'KNUCKLE', 'MOLOTOV', 'SHAMBLE',
 	'WARFARE', 'BIGIRON', 'POUDRIN', 'PATRIOT', 'MINIGUN',
-	'AWOOOOO',
 	#8
 	'GAMEPLAY', 'SHAMBLER', 'CONFLICT', 'EXCHANGE', 'FEEDBACK',
 	'VIOLENCE', 'TACOBELL', 'PIZZAHUT', 'OUTSKIRT', 'WHATEVER',
 	'WITHDRAW', 'SOUTHERN', 'NORTHERN', 'ASTATINE', 'SLIMEOID',
 	'SHAMBLIN', 'STAYDEAD', 'JUVENILE', 'DOWNTOWN', 'DISTRICT',
 	'BIGBONES', 'LONEWOLF', 'KEENSMELL', 'RAZORNUTS', 'REVOLVER',
-	'BASEBALL', 'GRENADES', 'AWOOOOOO',
+	'BASEBALL', 'GRENADES',
 	#9
 	'APARTMENT', 'SURVIVORS', 'NEGASLIME', 'COMMUNITY', 'GIGASLIME',
 	'DETENTION', 'CATHEDRAL', 'TOXINGTON', 'SLIMEGIRL', 'INVESTING',
 	'SLIMECOIN', 'RATELIMIT', 'NARRATIVE', 'COMMANDO', 'SHAMBLERS',
 	'NUNCHUCKS', 'SLIMECORP', 'ARSONBROOK','SMOGSBURG', 'SLIMEFEST', 
-	'COMMANDER', 'FATCHANCE', 'DANKWHEAT', 'AWOOOOOOO',
+	'COMMANDER', 'FATCHANCE', 'DANKWHEAT',
 	#10
 	'SLUDGECORE', 'LOREMASTER', 'ROUGHHOUSE', 'GLOCKSBURY', 'CALCULATED',
 	'PLAYGROUND', 'NEWYONKERS', 'OLDYONKERS', 'VANDALPARK', 'SLIMERMAID',
 	'SLIMEXODIA', 'WEBBEDFEET', 'NOSEFERATU', 'BINGEEATER', 'TRASHMOUTH',
 	'DIREAPPLES', 'BLACKLIMES', 'POKETUBERS', 'PULPGOURDS', 'ROWDDISHES',
-	'DRAGONCLAW', 'AWOOOOOOOO',
+	'DRAGONCLAW',
 ]
+
+races = {
+	'humanoid': 'humanoid',
+	'amphibian': 'amphibian',
+	'food': 'food',
+	'skeleton': 'skeleton',
+	'robot': 'robot',
+	'furry': 'furry',
+	'scalie': 'scalie',
+	'slime-derived': 'slime-derived',
+	'other': 'other'
+}
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
