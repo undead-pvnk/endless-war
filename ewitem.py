@@ -795,6 +795,8 @@ def inventory(
 							
 							pass
 						else:
+							print('ITEM PROPS: {}'.format(item_data.item_props))
+							
 							item = ewcfg.cosmetic_map.get(item_data.item_props.get('id_cosmetic'))
 							item_data.item_props = {
 								'id_cosmetic': item.id_cosmetic,
