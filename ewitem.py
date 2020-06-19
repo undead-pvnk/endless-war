@@ -1189,8 +1189,12 @@ async def item_look(cmd):
 						else:
 							original_durability = ewcfg.generic_scalp_durability
 					else:
-						original_item = ewcfg.cosmetic_map.get(item.item_props['id_cosmetic'])
-						original_durability = int(original_item.durability)
+						if item.item_props.get('rarity') == ewcfg.rarity_princeps:
+							original_durability = ewcfg.base_durability * 100
+							original_item = None  # Princeps do not have existing templates
+						else:
+							original_item = ewcfg.cosmetic_map.get(item.item_props['id_cosmetic'])
+							original_durability = original_item.durability
 
 					current_durability = int(item.item_props['durability'])
 					

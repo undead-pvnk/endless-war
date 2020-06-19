@@ -477,8 +477,12 @@ async def sew(cmd):
 							original_durability = int(float(item_sought.item_props['original_durability'])) # If it's a scalp created after
 
 					else: # Find the mold of the item in ewcfg.cosmetic_items_list
-						original_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
-						original_durability = original_item.durability
+						if item_sought.item_props.get('rarity') == ewcfg.rarity_princeps:
+							original_durability = ewcfg.base_durability * 100
+							original_item = None # Princeps do not have existing templates
+						else:
+							original_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
+							original_durability = original_item.durability
 
 					current_durability = int(item_sought.item_props['durability'])
 
