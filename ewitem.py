@@ -747,6 +747,7 @@ def inventory(
 					item_data = EwItem(id_item = id_item)
 					item_type = ewcfg.it_cosmetic
 					item_data.item_type = item_type
+					
 					if 'fashion_style' not in item_data.item_props.keys():
 						if item_data.item_props.get('id_cosmetic') == 'soul':
 							item_data.item_props = {
@@ -787,6 +788,12 @@ def inventory(
 								'freshness': 0,
 								'adorned': 'false',
 							}
+						elif item_data.item_props.get('rarity') == ewcfg.rarity_princeps:
+
+							# TODO: Make princeps work with fashion, somehow...
+							# Don't attempt to update princeps
+							
+							pass
 						else:
 							item = ewcfg.cosmetic_map.get(item_data.item_props.get('id_cosmetic'))
 							item_data.item_props = {
