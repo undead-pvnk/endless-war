@@ -1818,7 +1818,7 @@ it_book = 'book'
 rarity_plebeian = "Plebeian"
 rarity_patrician = "Patrician"
 rarity_promotional = "Promotional" # Cosmetics that should not be awarded through smelting/hunting
-rarity_princeps = "Princeps"
+rarity_princeps = "princeps"
 
 # Leaderboard score categories
 leaderboard_slimes = "SLIMIEST"
