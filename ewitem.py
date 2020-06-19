@@ -792,6 +792,7 @@ def inventory(
 
 							# TODO: Make princeps work with fashion, somehow...
 							# Don't attempt to update princeps
+							print('PRINCEP SKIPPED')
 							
 							pass
 						else:
