@@ -1254,7 +1254,8 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				target_weapon = None
 				if target_data.weapon >= 0:
 					target_weapon_item = EwItem(id_item = target_data.weapon)
-					target_weapon = target_weapon_item.item_props.get("weapon_type")
+					target_weapon = ewcfg.weapon_map.get(target_weapon_item.item_props.get("weapon_type"))
+
 
 
 				# apply defensive mods
