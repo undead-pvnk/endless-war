@@ -721,7 +721,10 @@ async def attack(cmd):
 
 			if was_shot:
 				# Flag the user for PvP
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+
+				user_poi = ewcfg.id_to_poi.get(user_data.poi)
+				if user_poi.is_district:
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 				resp_cont.add_member_to_update(cmd.message.author)
 
@@ -1098,7 +1101,10 @@ async def attack(cmd):
 				resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
 
 				# Flag the user for PvP
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, True)
+
+				user_poi = ewcfg.id_to_poi.get(user_data.poi)
+				if user_poi.is_district:
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, True)
 
 				user_data.persist()
 				resp_cont.add_member_to_update(cmd.message.author)
@@ -1563,11 +1569,11 @@ async def spar(cmd):
 					weaker_player.time_lastspar = time_now
 
 					# Flag the user for PvP
-					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_spar, True)
+					# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_spar, True)
 
 					user_data.persist()
 					sparred_data.persist()
-					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+					# await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 
 					# player was sparred with
@@ -2451,7 +2457,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# Persist user data.
 	# Flag the user for PvP
 	if not sandbag_mode:
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+
+		user_poi = ewcfg.id_to_poi.get(user_data.poi)
+		if user_poi.is_district:
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 	resp_cont.add_member_to_update(cmd.message.author)
 	user_data.persist()
@@ -2604,7 +2613,9 @@ async def dodge(cmd):
 
 	user_data.sap -= sap_cost
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+	if user_poi.is_district:
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 	user_data.persist()
 
@@ -2666,7 +2677,9 @@ async def taunt(cmd):
 
 	user_data.sap -= sap_cost
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+	if user_poi.is_district:
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You spend {} sap to taunt {} into attacking you.".format(sap_cost, target.display_name)
@@ -2723,7 +2736,9 @@ async def aim(cmd):
 
 	user_data.sap -= sap_cost
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+	if user_poi.is_district:
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You spend {} sap to aim at {}'s weak spot.".format(sap_cost, target.display_name)

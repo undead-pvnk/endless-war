@@ -1552,6 +1552,15 @@ async def duel(cmd):
 	if challenger.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif challengee.life_state == ewcfg.life_state_shambler:
+		response = "They lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	challenger_poi = ewcfg.id_to_poi.get(challenger.poi)
+	challengee_poi = ewcfg.id_to_poi.get(challengee.poi)
+	if not challenger_poi.is_district or not challengee_poi.is_district:
+		response = "Both participants need to be in a district zone."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	# Players have been challenged
 	if ewutils.active_target_map.get(challenger.id_user) != None and ewutils.active_target_map.get(challenger.id_user) != "":

@@ -418,11 +418,11 @@ async def mine(cmd):
 			was_pvp = user_data.time_expirpvp > time_now
 			# Flag the user for PvP
 			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, enlisted)
-
+			# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, enlisted)
+			# 
 			user_data.persist()
-			if not was_pvp:
-				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+			# if not was_pvp:
+			# 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 			if printgrid:
 				await print_grid(cmd)
@@ -755,7 +755,10 @@ async def scavenge(cmd):
 
 			# Flag the user for PvP
 			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_scavenge, enlisted)
+			
+			user_poi = ewcfg.id_to_poi.get(user_data.poi)
+			if user_poi.is_district:
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_scavenge, enlisted)
 
 			user_data.persist()
 			if not was_pvp:

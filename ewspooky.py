@@ -193,7 +193,10 @@ async def haunt(cmd):
 				user_data.time_lasthaunt = time_now
 				user_data.busted = False
 
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack)
+				user_poi = ewcfg.id_to_poi.get(user_data.poi)
+				if user_poi.is_district:
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack)
+				
 				resp_cont.add_member_to_update(cmd.message.author)
 				# Persist changes to the database.
 				user_data.persist()

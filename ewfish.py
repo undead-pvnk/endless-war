@@ -747,10 +747,10 @@ async def reel(cmd):
 
 				# Flag the user for PvP
 				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_fish, enlisted)
-
+				# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_fish, enlisted)
+				# 
 				user_data.persist()
-				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+				# await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				
 	else:
 		response = "You cast your fishing rod unto a sidewalk. That is to say, you've accomplished nothing. Go to a pier if you want to fish."

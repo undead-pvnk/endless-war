@@ -564,7 +564,7 @@ async def flag_outskirts(id_server = None):
 				user_data = EwUser(id_user = user[0], id_server = id_server)
 				# Flag the user for PvP
 				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, enlisted)
+				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
 				user_data.persist()
 				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
 
@@ -601,7 +601,7 @@ async def flag_vulnerable_districts(id_server = None):
 				
 				# Flag the user for PvP
 				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, enlisted)
+				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
 				user_data.persist()
 				await ewrolemgr.updateRoles(client = client, member = member)
 

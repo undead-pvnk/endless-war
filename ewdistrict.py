@@ -562,7 +562,9 @@ async def capture_progress(cmd):
 	else:
 		response += "Nobody has staked a claim to this district yet. ".format(district_data.controlling_faction.capitalize())
 
-	response += "Current capture progress: {:.3g}%".format(100 * district_data.capture_points / district_data.max_capture_points)
+	# Avoid division by zero.
+	if district_data.max_capture_points > 0:
+		response += "Current capture progress: {:.3g}%".format(100 * district_data.capture_points / district_data.max_capture_points)
 
 	if district_data.time_unlock > 0:
 
@@ -691,7 +693,7 @@ async def annex(cmd):
 	user_data.change_slimes(n = -slimes_cap * capture_discount, source = ewcfg.source_spending)
 
 	# Flag the user for PvP
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, True)
+	# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, True)
 
 	user_data.persist()
 	district_data.persist()
