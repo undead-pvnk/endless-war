@@ -64,7 +64,6 @@ CREATE TABLE users (
 	id_inhabit_target varchar(128) NOT NULL DEFAULT '',
 	race varchar(32) NOT NULL DEFAULT '',
 	time_racialability int NOT NULL DEFAULT '0',
-
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
 
@@ -251,6 +250,7 @@ CREATE TABLE districts (
 	slimes bigint NOT NULL DEFAULT '0',
 	time_unlock int NOT NULL DEFAULT '0',
 	degradation bigint NOT NULL DEFAULT '0',
+	cap_side varchar(32) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_server, district)
 );

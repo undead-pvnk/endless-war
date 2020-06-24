@@ -475,7 +475,7 @@ def canCap(cmd):
 	elif sidearm != None and sidearm.cooldown + (float(sidearm_item.item_props.get("time_lastattack")) if sidearm_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
 		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name=sidearm.id_weapon)
 	elif sidearm != None and ewcfg.weapon_class_captcha in sidearm.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
-		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(captcha)
+		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 	elif user_data.life_state != ewcfg.life_state_enlisted:
 		response = "Juveniles are too cowardly and/or centrist to be vandalizing anything."
 	elif sidearm != None and ewcfg.weapon_class_ammo in sidearm.classes and int(sidearm_item.item_props.get('ammo')) <= 0:
@@ -2983,7 +2983,7 @@ async def spray(cmd):
 
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 300)
 		slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
-		slimes_spent *= .3
+		slimes_spent *= .06
 		statuses = user_data.getStatusEffects()
 
 		backfire_damage = int(ewutils.slime_bylevel(user_data.slimelevel) / 20)
@@ -3076,7 +3076,7 @@ async def spray(cmd):
 				if user_data.faction == district_data.controlling_faction:
 					slimes_damage = round(slimes_damage * .2)
 				else:
-					slimes_damage *= 2
+					slimes_damage *= 3
 
 			if ewcfg.mutation_id_patriot in user_mutations:
 				slimes_damage *= 1.25
@@ -3116,7 +3116,7 @@ async def spray(cmd):
 
 
 					if (user_data.faction != district_data.cap_side and district_data.cap_side != "") and (user_data.faction is not None or user_data.faction != ''):
-						slimes_damage = -slimes_damage
+						slimes_damage *= -.5
 					#district_data.change_capture_points()
 
 
@@ -3163,19 +3163,18 @@ async def spray(cmd):
 
 				if ewcfg.weapon_class_captcha in weapon.classes or jammed:
 					if weapon.id_weapon != ewcfg.weapon_id_paintgun:
-						loc_array = ewcaptcha.streetcaptcha[poi.id_poi]
-						new_loc = str(random.choice(loc_array))
-						new_captcha = new_loc.replace('the ', '')
-						new_captcha_low = new_captcha.split(' ', 1)[0]
-						new_captcha = "**"+new_captcha_low.upper()+"**"
-						new_loc = new_loc.replace(new_captcha_low, new_captcha)
-						response += "\nNext stop is {}.".format(new_loc)
+						new_captcha_low = ewutils.generate_captcha(length = weapon.captcha_length)
+						new_captcha = ewutils.text_to_regional_indicator(new_captcha_low)
+						#new_loc = new_loc.replace(new_captcha_low, new_captcha)
+						response += "\nNew captcha is {}.".format(new_captcha)
 						weapon_item.item_props['captcha'] = new_captcha_low
+						#new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
 					else:
 						riflearray = ewcaptcha.riflecap
 						direction = str(random.choice(riflearray))
 						weapon_item.item_props['captcha'] = direction
-						response += "\nNext target is {}.".format("**"+direction+"**")
+						new_captcha_gun = ewutils.text_to_regional_indicator(direction)
+						response += "\nNext target is {}.".format(new_captcha_gun)
 					weapon_item.persist()
 
 				if district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.limit_influence[district_data.property_class]:
@@ -3272,14 +3271,14 @@ async def switch_weapon(cmd):
 	if user_data.weapon == -1 and user_data.sidearm == -1:
 		response = "You switch your nothing for nothing. What a notable exchange."
 	elif user_data.weapon == -1 and user_data.sidearm:
-		response = "You put your sidearm away."
+		response = "You put your weapon away."
 	elif user_data.weapon >= 0:
 		weapon_item = EwItem(id_item=user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-		response = "**FWIP-CLICK!** You whip out your {}.".format(weapon.str_name)
+		response = "**FWIP-CLICK!** You whip out your {}.".format(weapon_item.item_props.get("weapon_name"))
 		if ewcfg.weapon_class_captcha in weapon.classes:
-			response += " New captcha is **{}**.".format(weapon_item.item_props.get('captcha'))
-
+			newcaptcha = ewutils.text_to_regional_indicator(weapon_item.item_props.get('captcha'))
+			response += " New captcha is {}.".format(newcaptcha)
 	else:
 		response = ""
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

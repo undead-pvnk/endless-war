@@ -264,16 +264,15 @@ class EwDistrict:
 
 			if nega_present:
 				decay *= 1.5
-			if self.capture_points + (decay * 2) > ewcfg.limit_influence[self.property_class]:
-				decay *= 2
+			if self.capture_points + (decay * 3) > ewcfg.limit_influence[self.property_class]:
+				decay *= 3
 
-			#If at minimum influence, or if the decay takes a district below minimum influence, have it settle on the minimum
-			if self.controlling_faction == "" or not self.all_neighbors_friendly() or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
+			if self.controlling_faction == "" or (not self.all_neighbors_friendly() and self.capture_points > ewcfg.limit_influence[self.property_class]) or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
-				if (self.capture_points + int(decay) < ewcfg.min_influence[self.property_class] and self.capture_points >= ewcfg.min_influence[self.property_class]) and not nega_present and self.controlling_faction != "":
-					responses = self.change_capture_points(self.capture_points - ewcfg.min_influence[self.property_class], ewcfg.actor_decay)
-				else:
-					responses = self.change_capture_points(int(decay), ewcfg.actor_decay)
+				#if (self.capture_points + int(decay) < ewcfg.min_influence[self.property_class] and self.capture_points >= ewcfg.min_influence[self.property_class]) and not nega_present and self.controlling_faction != "":
+				#	responses = self.change_capture_points(self.capture_points - ewcfg.min_influence[self.property_class], ewcfg.actor_decay)
+				#else:
+				responses = self.change_capture_points(int(decay), ewcfg.actor_decay)
 				resp_cont_decay.add_response_container(responses)
 
 		#if self.capture_points < 0:
@@ -605,7 +604,7 @@ async def capture_progress(cmd):
 	else:
 		response += "Nobody has staked a claim to this district yet. ".format(district_data.controlling_faction.capitalize())
 
-	response += "Current influence: {:,}/{:,}.".format(abs(district_data.capture_points), ewcfg.limit_influence[district_data.property_class])
+	response += "\n\n**Current influence: {:,}**\nMinimum influence: {:,}\nMaximum influence: {:,}\nPercentage to maximum influence: {:,}%".format(abs(district_data.capture_points), ewcfg.min_influence[district_data.property_class], ewcfg.limit_influence[district_data.property_class], round((abs(district_data.capture_points) * 100/ewcfg.limit_influence[district_data.property_class]), 1))
 
 	if district_data.time_unlock > 0:
 

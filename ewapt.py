@@ -19,6 +19,7 @@ import ewslimeoid
 import ewhunting
 import ewwep
 import ewquadrants
+import ewdistrict
 
 from ewitem import EwItem
 from ewdistrict import EwDistrict
@@ -2484,6 +2485,14 @@ async def aptCommands(cmd):
 		return await apt_help(cmd)
 	elif cmd_text == ewcfg.cmd_accept or cmd_text == ewcfg.cmd_refuse:
 		pass
+	elif cmd_text == ewcfg.cmd_switch or cmd_text == ewcfg.cmd_switch_alt_1:
+		return await ewwep.switch_weapon(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_changespray:
+		return await ewdistrict.change_spray(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_tag:
+		return await ewdistrict.tag(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_sidearm:
+		return await ewwep.sidearm(cmd=cmd)
 	#elif cmd_text == ewcfg.cmd_trick or cmd_text == ewcfg.cmd_treat:
 	#	pass
 	elif cmd_text[0]==ewcfg.cmd_prefix: #faliure text
