@@ -457,18 +457,18 @@ def databaseClose(conn_info):
 
 """ format responses with the username: """
 def formatMessage(user_target, message):
-    # If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
-    try:
-        if user_target.life_state == ewcfg.enemy_lifestate_alive:
-            # Send messages for normal enemies, and mentioning with @
-            return "*{}:* {}".format(user_target.display_name, message)
+	# If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
+	try:
+		if user_target.life_state == ewcfg.enemy_lifestate_alive:
+			# Send messages for normal enemies, and mentioning with @
+			return "*{}:* {}".format(user_target.display_name, message)
 
-        elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
-            return "{}".format(message)
+		elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
+			return "{}".format(message)
 
-    # If user_target isn't an enemy, catch the exception.
-    except:
-        return "*{}:* {}".format(user_target.display_name, message).replace("@", "{at}")
+	# If user_target isn't an enemy, catch the exception.
+	except:
+		return "*{}:* {}".format(user_target.display_name, message).replace("@", "{at}")
 
 """ Decay slime totals for all users, with the exception of Kingpins"""
 def decaySlimes(id_server = None):
@@ -1339,7 +1339,7 @@ def hunger_cost_mod(slimelevel):
 """
 def food_carry_capacity_bylevel(slimelevel):
 	return math.ceil(slimelevel / ewcfg.max_food_in_inv_mod)
-        
+		
 """
 	Calculate how many weapons the player can carry
 """
@@ -1667,6 +1667,10 @@ def check_trick_or_treat(string):
 	if string.content.lower() == ewcfg.cmd_treat or string.content.lower() == ewcfg.cmd_trick:
 		return True
 	
+def check_is_command(string):
+	if string.content.startswith(ewcfg.cmd_prefix):
+		return True
+	
 def end_trade(id_user):
 	# Cancel an ongoing trade
 	if active_trades.get(id_user) != None and len(active_trades.get(id_user)) > 0:
@@ -1681,7 +1685,8 @@ def end_trade(id_user):
 def text_to_regional_indicator(text):
 	# note that inside the quotes below is a zero-width space, 
 	# used to prevent the regional indicators from turning into flags
-	return "‎".join([chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
+	# also note that this only works for digits and english letters
+	return "‎".join([c + '\ufe0f\u20e3' if c.isdigit() else chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
 
 def generate_captcha_random(length = 4):
 	return "".join([random.choice(ewcfg.alphabet) for _ in range(length)]).upper()

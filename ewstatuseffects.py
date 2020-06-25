@@ -265,7 +265,7 @@ class EwEnemyStatusEffect:
 			cursor = conn.cursor()
 
 			# Save the object.
-			cursor.execute("REPLACE INTO status_effects({}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO enemy_status_effects({}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_server,
 				ewcfg.col_id_enemy,
 				ewcfg.col_id_status,

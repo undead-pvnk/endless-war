@@ -332,7 +332,7 @@ def canAttack(cmd):
 
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
-		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
+		user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 		user_isshambler = user_data.life_state == ewcfg.life_state_shambler
 
 		if (time_now - user_data.time_lastkill) < ewcfg.cd_kill:
@@ -361,7 +361,7 @@ def canAttack(cmd):
 
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
-		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
+		user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 		user_isshambler = user_data.life_state == ewcfg.life_state_shambler
   
 		weapon_possession_data = user_data.get_weapon_possession()
@@ -1257,7 +1257,6 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					target_weapon = ewcfg.weapon_map.get(target_weapon_item.item_props.get("weapon_type"))
 
 
-
 				# apply defensive mods
 				slimes_damage_target = slimes_damage * damage_mod_defend(
 					shootee_data = target_data,
@@ -1491,6 +1490,7 @@ async def spar(cmd):
 
 			user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 			user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
+			user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 			user_isdead = user_data.life_state == ewcfg.life_state_corpse
 
 			if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
@@ -2179,10 +2179,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 				if not miss:
 					# Damage players/enemies in district
-					resp = weapon_explosion(user_data=user_data, shootee_data=enemy_data,
-												district_data=district_data, market_data = market_data, life_states=life_states,
-												factions=factions, slimes_damage=bystander_damage, backfire=backfire,
-												time_now=time_now, target_enemy=True)
+					resp = weapon_explosion(user_data=user_data, shootee_data=enemy_data, district_data=district_data, market_data = market_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=True)
 					resp_cont.add_response_container(resp)
 
 			user_data = EwUser(member=cmd.message.author)

@@ -2048,7 +2048,7 @@ it_book = 'book'
 rarity_plebeian = "Plebeian"
 rarity_patrician = "Patrician"
 rarity_promotional = "Promotional" # Cosmetics that should not be awarded through smelting/hunting
-rarity_princeps = "Princeps"
+rarity_princeps = "princeps"
 
 # Leaderboard score categories
 leaderboard_slimes = "SLIMIEST"
@@ -7431,7 +7431,7 @@ food_list = [
 		],
 		recover_hunger = 0,
 		str_name = 'Seaweed Joint',
-		str_eat = "You light up your Seaweed and begin to smoke it. Congratulations! You're now high. You catch fish twice as often, but food is half as effective. This lasts for 10 minutes.",
+		str_eat = "You light up your Seaweed and begin to smoke it. Congratulations! You're now high. You catch fish twice as often, but food is half as effective. This lasts for 30 minutes.",
 		str_desc = "A joint made up of dankwheat and seaweed bartered with Captain Albert Alexander. Wait a minute, does that make the good Captain your drug dealer? Hell yeah.",
 		acquisition = acquisition_smelting
 	),
@@ -16847,7 +16847,7 @@ freshnesslevel_3 = 2000
 freshnesslevel_4 = 3000
 
 # Base durability for cosmetic items (These are for if/when we need easy sweeping balance changes)
-base_durability = 250000 # 1 mega
+base_durability = 2500000 # 2.5 mega
 
 generic_scalp_durability = 25000 # 25k
 soul_durability = 100000000 # 100 mega
@@ -16982,6 +16982,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 7,
 		acquisition = acquisition_smelting,
@@ -16997,6 +16998,7 @@ cosmetic_items_list = [
 			stat_attack: 3,
 			stat_defense: -1
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -17011,6 +17013,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		freshness = 8,
 		acquisition = acquisition_smelting,
@@ -17026,6 +17029,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -17039,6 +17043,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -17052,6 +17057,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -17066,6 +17072,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		freshness = 9,
 		style = style_smart,
 		acquisition = acquisition_smelting,
@@ -17080,6 +17087,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -17097,6 +17105,7 @@ cosmetic_items_list = [
 			stat_defense: 2,
 			stat_speed: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 8,
 		acquisition = acquisition_smelting,
@@ -17111,6 +17120,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -17145,6 +17155,7 @@ cosmetic_items_list = [
 			stat_defense: -1,
 			stat_speed: 3
 		},
+		durability = base_durability,
 		freshness = 10,
 		style = style_beautiful,
 		acquisition = acquisition_smelting,
@@ -17159,6 +17170,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -17174,6 +17186,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		freshness = 8,
 		style = style_cool,
 		acquisition = acquisition_smelting,
@@ -17189,6 +17202,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 3,
 		},
+		durability = base_durability,
 		freshness = 9,
 		style = style_cool,
 		acquisition = acquisition_smelting,
@@ -17203,6 +17217,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -17218,6 +17233,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_defense: 1
 		},
+		durability = base_durability,
 		style = style_tough,
 		freshness = 8,
 		acquisition = acquisition_smelting,
@@ -17234,6 +17250,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_speed: -1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 3,
 		acquisition = acquisition_smelting,
@@ -17249,6 +17266,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -17264,6 +17282,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 8,
 		acquisition = acquisition_smelting,
@@ -17280,6 +17299,7 @@ cosmetic_items_list = [
 			stat_defense: -2,
 			stat_speed: 2
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 7,
 		acquisition = acquisition_smelting,
@@ -17295,6 +17315,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -17309,6 +17330,7 @@ cosmetic_items_list = [
 			stat_defense: 1,
 			stat_speed: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -17358,6 +17380,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 2,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -17373,6 +17396,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -17389,6 +17413,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -17403,6 +17428,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 7,
 		acquisition = acquisition_smelting,
@@ -17418,6 +17444,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -17514,6 +17541,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -17529,6 +17557,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cute,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -17542,6 +17571,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition=acquisition_smelting,
 		price=50000,
@@ -17557,6 +17587,7 @@ cosmetic_items_list = [
 			stat_defense: -2,
 			stat_speed: -1
 		},
+		durability = base_durability,
 		style = style_tough,
 		freshness = 8,
 		acquisition=acquisition_smelting,
@@ -17570,6 +17601,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_milling,
 		ingredients = item_id_poketubers,
@@ -17582,6 +17614,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_cute,
 		acquisition = acquisition_milling,
 		ingredients = item_id_pulpgourds,
@@ -17594,6 +17627,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 6,
 		acquisition = acquisition_milling,
@@ -17607,6 +17641,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_bloodcabbages,
@@ -17633,6 +17668,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_milling,
 		ingredients = item_id_purplekilliflower,
@@ -17644,6 +17680,7 @@ cosmetic_items_list = [
 			stat_attack: 3,
 			stat_defense: -3,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 2,
 		str_desc = "What the fuck are you doing with this thing? Are you TRYING to make the sewers your permanent residence? Acquaint yourself with the !drop command and FAST, before you don’t have a body to wear the badge on.",
@@ -17657,6 +17694,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_pawpaw,
@@ -17669,6 +17707,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
 		acquisition = acquisition_milling,
@@ -17683,6 +17722,7 @@ cosmetic_items_list = [
 			stat_defense: 1,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 10,
 		acquisition = acquisition_milling,
@@ -17697,6 +17737,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 2
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
 		acquisition = acquisition_milling,
@@ -17711,6 +17752,7 @@ cosmetic_items_list = [
 			stat_defense: 1,
 			stat_speed: -1
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_milling,
 		ingredients = item_id_dankwheat,
@@ -17721,6 +17763,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 2,
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 7,
 		str_desc = "A lovingly handcrafted crown of flowers, connected by a string. You’re gonna be famous on Pinterest with a look like this!",
@@ -17735,6 +17778,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 2
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_blacklimes,
@@ -17749,7 +17793,7 @@ cosmetic_items_list = [
 		},
 		style = style_smart,
 		freshness = 10,
-		durability = base_durability * 4,
+		durability = base_durability,
 		str_desc = "An enamel pin of the SlimeCorp logo, a badge of loyalty to your favorite charismatic megacorporation. Dude, like, *”Follow He Who Turns The Wheels”*, bro!!",
 		acquisition = acquisition_milling,
 		ingredients = item_id_phosphorpoppies,
@@ -17761,6 +17805,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_direapples,
@@ -17772,6 +17817,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
@@ -17792,8 +17838,12 @@ cosmetic_items_list = [
 		str_name = "Pileus",
 		str_desc = "A symbol of freedom and liberty. In ancient times, these felt caps were given to slaves who had been emancipated.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		durability = base_durability,
 		style = style_cool,
-	#	vendors = [vendor_bazaar, vendor_college],
+	 	#vendors = [vendor_bazaar, vendor_college],
 		price = 100,
 	),
 	EwCosmeticItem(
@@ -17804,6 +17854,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 2,
 		vendors = [vendor_bazaar, vendor_secretbodega],
@@ -17816,6 +17867,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cute,
 		rarity = rarity_plebeian,
 		vendors = [vendor_glocksburycomics],
@@ -17831,6 +17883,7 @@ cosmetic_items_list = [
 			stat_defense: 2,
 			stat_speed: -1
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -17844,6 +17897,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cute,
 		vendors = [vendor_bazaar],
 		price = 1000,
@@ -17857,6 +17911,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 1
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
 		vendors = [vendor_bazaar, vendor_secretbodega],
@@ -17867,6 +17922,12 @@ cosmetic_items_list = [
 		str_name = "Janus Mask",
 		str_desc = "A simple, yet elegant mask, awarded to those deemed worthy by Janus himself at the end of every Swilldermuk. It's enigmatic powers allow you to procure prank items from thin air.",
 		rarity = "Swilldermuk",
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1,
+			stat_speed: 1
+		},
+		durability = base_durability * 4,
 		style = style_cool,
 		acquisition = "SwilldermukEnd",
 		ingredients = "SwilldermukFinalGambit" # used here as a substitute for the 'context' attribute found on general items.
@@ -17879,6 +17940,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 3,
 		},
+		durability = base_durability,
 		style = style_cool,
 		vendors = [vendor_bazaar, vendor_bodega],
 		price = 50000,
@@ -17891,6 +17953,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -17904,6 +17967,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_speed: 2
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 7,
 		vendors = [vendor_bodega],
@@ -17918,6 +17982,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
@@ -17933,6 +17998,7 @@ cosmetic_items_list = [
 			stat_defense: 1,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -17945,6 +18011,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -17958,6 +18025,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 2
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -17983,6 +18051,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -17997,6 +18066,7 @@ cosmetic_items_list = [
 			stat_defense: -1,
 			stat_speed: -1
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 2,
 		acquisition = acquisition_smelting,
@@ -18011,6 +18081,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_speed: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 8,
 		vendors = [vendor_bodega],
@@ -18028,6 +18099,7 @@ cosmetic_items_list = [
 			stat_defense: -2,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -18040,6 +18112,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -18053,6 +18126,7 @@ cosmetic_items_list = [
 			stat_attack: -1,
 			stat_defense: 2
 		},
+		durability = base_durability,
 		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -18065,6 +18139,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -18077,6 +18152,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -18090,6 +18166,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 7,
 		vendors = [vendor_bodega],
@@ -18121,6 +18198,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -21023,7 +21101,7 @@ for slimexodia in item_list:
 prank_items_heinous = [] # common
 prank_items_scandalous = [] # uncommon
 prank_items_forbidden = [] # rare
-#swilldermuk_food = []
+swilldermuk_food = []
 
 # Gather all prank items
 for p in item_list:
