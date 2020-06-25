@@ -2992,7 +2992,7 @@ async def spray(cmd):
 
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 300)
 		slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
-		slimes_spent *= .06
+		slimes_spent *= .15
 		statuses = user_data.getStatusEffects()
 
 		backfire_damage = int(ewutils.slime_bylevel(user_data.slimelevel) / 20)
