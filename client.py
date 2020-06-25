@@ -569,6 +569,7 @@ cmd_map = {
 
 	# Enemies
 	ewcfg.cmd_summonenemy: ewhunting.summonenemy,
+	ewcfg.cmd_deleteallenemies: ewhunting.delete_all_enemies,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -913,7 +914,7 @@ async def on_ready():
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
 		
 		if not debug:
-			asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
+			# asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
 			await ewtransport.init_transports(id_server = server.id)
 			asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))

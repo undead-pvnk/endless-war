@@ -191,6 +191,7 @@ class EwDistrict:
 			min_slimes = -math.inf,
 			max_slimes = math.inf,
 			scout_used = False,
+			classes = None,
 		):
 
 		client = ewutils.get_client()
@@ -199,11 +200,12 @@ class EwDistrict:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
 
-		enemies = ewutils.execute_sql_query("SELECT {id_enemy}, {slimes}, {level}, {enemytype} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1".format(
+		enemies = ewutils.execute_sql_query("SELECT {id_enemy}, {slimes}, {level}, {enemytype}, {enemyclass} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1".format(
 			id_enemy = ewcfg.col_id_enemy,
 			slimes = ewcfg.col_enemy_slimes,
 			level = ewcfg.col_enemy_level,
 			enemytype = ewcfg.col_enemy_type,
+			enemyclass = ewcfg.col_enemy_class,
 			poi = ewcfg.col_enemy_poi,
 			life_state = ewcfg.col_enemy_life_state
 		),(
@@ -218,11 +220,16 @@ class EwDistrict:
 			fetched_slimes = enemy_data_column[1] # data from slimes column in enemies table
 			fetched_level = enemy_data_column[2] # data from level column in enemies table
 			fetched_type = enemy_data_column[3] # data from enemytype column in enemies table
+			fetched_class = enemy_data_column[4] # data from enemyclass column in enemies table
 
 			# Append the enemy to the list if it meets the requirements
 			if max_level >= fetched_level >= min_level \
 			and max_slimes >= fetched_slimes >= min_slimes:
-				filtered_enemies.append(fetched_id_enemy)
+				if classes != None:
+					if fetched_class in classes:
+						filtered_enemies.append(fetched_id_enemy)
+				else:
+					filtered_enemies.append(fetched_id_enemy)
 				
 			# Don't show sandbags on !scout
 			if scout_used and fetched_type == ewcfg.enemy_type_sandbag:
@@ -531,10 +538,32 @@ class EwDistrict:
 
 	""" wether the district is still functional """
 	def is_degraded(self):
-		poi = ewcfg.id_to_poi.get(self.name)
-
-		if poi is None:
+		checked_poi = ewcfg.id_to_poi.get(self.name)
+		if checked_poi is None:
 			return True
+		
+		poi = None
+		
+		# In the Gankers Vs. Shamblers event, importance is placed on districts
+		# As a result, if a district is degraded, then all of its subzones/streets are also now degraded
+		if checked_poi.is_district:
+			poi = checked_poi
+		elif checked_poi.is_street:
+			poi = ewcfg.id_to_poi.get(poi.father_district)
+		elif checked_poi.is_subzone:
+			# Subzones are a more complicated affair to check for degradation.
+			# Look to see if its mother district is a district or a street, then check for degradation of the appropriate district.
+			for mother_poi_id in checked_poi.mother_districts:
+				mother_poi = ewcfg.id_to_poi.get(mother_poi_id)
+				
+				if mother_poi.is_district:
+					# First mother POI found is a district. Break here and check for its degradation.
+					poi = mother_poi
+					break
+				elif mother_poi.is_street:
+					# First mother POI found is a street. Break here and check for its father district's degradation.
+					poi = ewcfg.id_to_poi.get(mother_poi.father_district)
+					break
 		
 		return self.degradation >= poi.max_degradation
 
@@ -713,14 +742,19 @@ async def shamble(cmd):
 
 	if poi is None:
 		return
+	elif not poi.is_district:
+		response = "This doesn't seem like an importance place to be shambling. Try a district zone instead."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	
 
 	if district_data.degradation < poi.max_degradation:
 		district_data.degradation += 1
 		user_data.degradation += 1
 		district_data.persist()
 		user_data.persist()
+
 		if district_data.degradation == poi.max_degradation:
 			response = ewcfg.str_zone_degraded.format(poi = poi.str_name)
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
@@ -735,6 +769,9 @@ async def shamble(cmd):
 					await cmd.client.edit_channel(channel = cmd.message.channel, topic = new_topic)
 				except:
 					ewutils.logMsg('Failed to set channel topic for {} to {}'.format(cmd.message.channel.name, new_topic))
+
+		response = "You shamble {}.".format(poi.str_name)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			
 """
 	Updates/Increments the capture_points values of all districts every time it's called

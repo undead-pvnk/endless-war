@@ -237,6 +237,8 @@ CREATE TABLE enemies (
 	rare_status int NOT NULL DEFAULT '0',
 	hardened_sap int NOT NULL DEFAULT '0',
 	weathertype varchar(32) NOT NULL DEFAULT '',
+	faction varchar(32) NOT NULL DEFAULT '',
+	enemyclass varchar(32) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_enemy)
 );

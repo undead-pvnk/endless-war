@@ -82,8 +82,14 @@ class EwEnemy:
 	# What kind of weather the enemy is suited to
 	weathertype = 0
 
-	# sap armor
+	# Sap armor
 	hardened_sap = 0
+	
+	# What faction the enemy belongs to
+	faction = ""
+	
+	# What class the enemy belongs to
+	enemyclass = ""
 
 	""" Load the enemy data from the database. """
 
@@ -109,7 +115,7 @@ class EwEnemy:
 
 				# Retrieve object
 				cursor.execute(
-					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
 						ewcfg.col_id_enemy,
 						ewcfg.col_id_server,
 						ewcfg.col_enemy_slimes,
@@ -131,6 +137,8 @@ class EwEnemy:
 						ewcfg.col_enemy_rare_status,
 						ewcfg.col_enemy_hardened_sap,
 						ewcfg.col_enemy_weathertype,
+						ewcfg.col_faction,
+						ewcfg.col_enemy_class,
 						query_suffix
 					))
 				result = cursor.fetchone();
@@ -158,6 +166,8 @@ class EwEnemy:
 					self.rare_status = result[18]
 					self.hardened_sap = result[19]
 					self.weathertype = result[20]
+					self.faction = result[21]
+					self.enemyclass = result[22]
 
 			finally:
 				# Clean up the database handles.
@@ -174,7 +184,7 @@ class EwEnemy:
 
 			# Save the object.
 			cursor.execute(
-				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 					ewcfg.col_id_enemy,
 					ewcfg.col_id_server,
 					ewcfg.col_enemy_slimes,
@@ -196,6 +206,8 @@ class EwEnemy:
 					ewcfg.col_enemy_rare_status,
 					ewcfg.col_enemy_hardened_sap,
 					ewcfg.col_enemy_weathertype,
+					ewcfg.col_faction,
+					ewcfg.col_enemy_class
 				), (
 					self.id_enemy,
 					self.id_server,
@@ -218,6 +230,8 @@ class EwEnemy:
 					self.rare_status,
 					self.hardened_sap,
 					self.weathertype,
+					self.faction,
+					self.enemyclass,
 				))
 
 			conn.commit()
@@ -738,6 +752,19 @@ class EwEnemy:
 			# Raid bosses can move into other parts of the outskirts as well as the city, including district zones.
 			destinations = ewcfg.poi_neighbors.get(self.poi)
 			
+			if self.enemytype in ewcfg.gvs_enemies:
+				path = [ewcfg.poi_id_assaultflatsbeach, ewcfg.poi_id_vagrantscorner, ewcfg.poi_id_greenlightdistrict, ewcfg.poi_id_downtown]
+				
+				if self.poi == path[0]:
+					destinations = [path[1]]
+				elif self.poi == path[1]:
+					destinations = [path[2]]
+				elif self.poi == path[2]:
+					destinations = [path[3]]
+				elif self.poi == path[3]:
+					# Raid boss has finished its path
+					return
+			
 			# Filter subzones and gang bases out.
 			# Nudge raidbosses into the city.
 			for destination in destinations:
@@ -1128,6 +1155,21 @@ async def summonenemy(cmd, is_bot_spawn = False):
 	if not is_bot_spawn:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+
+async def delete_all_enemies(cmd):
+	author = cmd.message.author
+
+	if not author.server_permissions.administrator:
+		return
+	
+	id_server = cmd.message.server.id
+	
+	ewutils.execute_sql_query("DELETE FROM enemies WHERE id_server = {id_server}".format(
+		id_server=id_server
+	))
+	
+	ewutils.logMsg("Deleted all enemies from database connected to server {}".format(id_server))
+
 # Gathers all enemies from the database (that are either raid bosses or have users in the same district as them) and has them perform an action
 async def enemy_perform_action(id_server):
 	#time_start = time.time()
@@ -1172,7 +1214,7 @@ async def enemy_perform_action(id_server):
 					if resp_cont != None:
 						await resp_cont.post()
 
-			# If an enemy is alive and not a sandbag, make it peform the kill function.
+			# If an enemy is alive and not a sandbag, make it perform the kill function.
 			if enemy.enemytype != ewcfg.enemy_type_sandbag:
 				
 				ch_name = ewcfg.id_to_poi.get(enemy.poi).channel 
@@ -1221,6 +1263,115 @@ async def enemy_perform_action(id_server):
 
 	#time_end = time.time()
 	#ewutils.logMsg("time spent on performing enemy actions: {}".format(time_end - time_start))
+
+async def enemy_perform_action_gvs(id_server):
+
+	client = ewcfg.get_client()
+
+	despawn_timenow = int(time.time()) - ewcfg.time_despawn
+
+	condition_gaia_sees_shambler_player = "enemies.poi IN (SELECT users.poi FROM users WHERE (users.life_state = '{}'))".format(ewcfg.life_state_shambler)
+	condition_gaia_sees_shampler_enemy = "enemies.poi IN (SELECT enemies.poi FROM enemies WHERE (enemies.enemyclass = '{}'))".format(ewcfg.enemy_class_shambler)
+	condition_shambler_sees_alive_player = "enemies.poi IN (SELECT users.poi FROM users WHERE (users.life_state IN {}))".format(tuple([ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]))
+	condition_shambler_sees_gaia_enemy = "enemies.poi IN (SELECT enemies.poi FROM enemies WHERE (enemies.enemyclass = '{}'))".format(ewcfg.enemy_class_gaiaslimeoid)
+
+	#print(despawn_timenow)
+	
+	enemydata = ewutils.execute_sql_query(
+		"SELECT {id_enemy} FROM enemies WHERE (enemies.enemytype IN %s) AND (({condition_1}) OR ({condition_2}) OR ({condition_3}) OR ({condition_4}) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.lifetime < %s) OR (enemies.id_target != '')) AND enemies.id_server = {id_server}".format(
+			id_enemy=ewcfg.col_id_enemy,
+			id_server=id_server,
+			condition_1 = condition_gaia_sees_shambler_player,
+			condition_2 = condition_gaia_sees_shampler_enemy,
+			condition_3 = condition_shambler_sees_alive_player,
+			condition_4 = condition_shambler_sees_gaia_enemy
+		), (
+			ewcfg.gvs_enemies,
+			ewcfg.raid_bosses,
+			ewcfg.enemy_lifestate_dead,
+			despawn_timenow
+		))
+	# enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
+	#	id_enemy = ewcfg.col_id_enemy
+	# ),(
+	#	id_server,
+	# ))
+
+	# Remove duplicates from SQL query
+	# enemydata = set(enemydata)
+
+	for row in enemydata:
+		
+		enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
+		resp_cont = ewutils.EwResponseContainer(id_server=id_server)
+
+		# If an enemy is marked for death or has been alive too long, delete it
+		if enemy.life_state == ewcfg.enemy_lifestate_dead or (enemy.lifetime < despawn_timenow):
+			delete_enemy(enemy)
+		else:
+			# The GvS raidboss has pre-determined pathfinding
+			if enemy.enemytype in ewcfg.raid_bosses and enemy.life_state == ewcfg.enemy_lifestate_alive and check_raidboss_movecooldown(enemy):
+				resp_cont = enemy.move()
+				if resp_cont != None:
+					await resp_cont.post()
+
+			# If an enemy is alive, make it perform the kill (or cannibalize) function.
+			ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
+
+			# Check if the enemy can do anything right now
+			if check_raidboss_countdown(enemy) and enemy.life_state == ewcfg.enemy_lifestate_unactivated:
+				# Raid boss has activated!
+				response = "*The dreaded creature of Dr. Downpour claws its way into {}.*" \
+						   "\n{} **{} has arrived! It's level {} and has {} slime. Good luck.** {}\n".format(
+					enemy.poi,
+					ewcfg.emote_megaslime,
+					enemy.display_name,
+					enemy.level,
+					enemy.slimes,
+					ewcfg.emote_megaslime
+				)
+				resp_cont.add_channel_response(ch_name, response)
+
+				enemy.life_state = ewcfg.enemy_lifestate_alive
+				enemy.time_lastenter = int(time.time())
+				enemy.persist()
+
+			# If a raid boss is currently counting down, delete the previous countdown message to reduce visual clutter.
+			elif check_raidboss_countdown(enemy) == False:
+				timer = (enemy.raidtimer - (int(time.time())) + ewcfg.time_raidcountdown)
+
+				if timer < ewcfg.enemy_attack_tick_length and timer != 0:
+					timer = ewcfg.enemy_attack_tick_length
+
+				countdown_response = "A sinister presence is lurking. Time remaining: {} seconds...".format(timer)
+				resp_cont.add_channel_response(ch_name, countdown_response)
+
+				# TODO: Edit the countdown message instead of deleting and reposting
+				last_messages = await resp_cont.post()
+				asyncio.ensure_future(
+					ewutils.delete_last_message(client, last_messages, ewcfg.enemy_attack_tick_length))
+				resp_cont = None
+			else:
+				district_data = EwDistrict(district = enemy.poi, id_server = enemy.id_server)
+				
+				# Look for enemies of the opposing 'class'. If none are found, look for players instead.
+				if enemy.enemytype in ewcfg.gvs_enemies_gaiaslimeoids:
+					if len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_shambler])) > 0:
+						await enemy.cannibalize()
+					elif len(district_data.get_players_in_district(life_states = [ewcfg.life_state_shambler])) > 0:
+						await enemy.kill()
+				elif enemy.enemytype in ewcfg.gvs_enemies_shamblers:
+					life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
+					
+					if len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_gaiaslimeoid])) > 0:
+						await enemy.cannibalize()
+					elif len(district_data.get_players_in_district(life_states = life_states, pvp_only = True)) > 0:
+						await enemy.kill()
+				else:
+					return
+				
+			if resp_cont != None:
+				await resp_cont.post()
 
 # Spawns an enemy in a randomized outskirt district. If a district is full, it will try again, up to 5 times.
 def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weather = None):
@@ -1445,6 +1596,7 @@ def delete_enemy(enemy_data):
 	), (
 		enemy_data.id_enemy,
 	))
+	
 
 # Drops items into the district when an enemy dies.
 def drop_enemy_loot(enemy_data, district_data):
@@ -2009,13 +2161,22 @@ def check_raidboss_countdown(enemy_data):
 
 def check_raidboss_movecooldown(enemy_data):
 	time_now = int(time.time())
-
-	if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter <= time_now - ewcfg.time_raidboss_movecooldown:
-		# Raid boss can move
-		return True
-	elif enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter > time_now - ewcfg.time_raidboss_movecooldown:
-		# Raid boss can't move yet
-		return False
+	
+	if enemy_data.enemytype in ewcfg.raid_bosses:
+		if enemy_data.enemytype in ewcfg.gvs_enemies:
+			if enemy_data.time_lastenter <= time_now - 600:
+				# Raid boss can move
+				return True
+			elif enemy_data.time_lastenter > time_now - 600:
+				# Raid boss can't move yet
+				return False
+		else:
+			if enemy_data.time_lastenter <= time_now - ewcfg.time_raidboss_movecooldown:
+				# Raid boss can move
+				return True
+			elif enemy_data.time_lastenter > time_now - ewcfg.time_raidboss_movecooldown:
+				# Raid boss can't move yet
+				return False
 
 # Gives enemy an identifier so it's easier to pick out in a crowd of enemies
 def set_identifier(poi, id_server):

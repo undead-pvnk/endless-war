@@ -1475,7 +1475,10 @@ async def enemy_action_tick_loop(id_server):
 	while not TERMINATE:
 		await asyncio.sleep(interval)
 		# resp_cont = EwResponseContainer(id_server=id_server)
-		await ewhunting.enemy_perform_action(id_server)
+		if ewcfg.gvs_active:
+			await ewhunting.enemy_perform_action_gvs(id_server)
+		else:
+			await ewhunting.enemy_perform_action(id_server)
 
 
 # Clears out id_target in enemies with defender ai. Primarily used for when players die or leave districts the defender is in.

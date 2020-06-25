@@ -51,6 +51,8 @@ permissions_tries = 1
 # Time saved moving through friendly territory (or lost in hostile territory).
 territory_time_gain = 10
 
+# A variable which is used to determine how certain functions of enemies are to perform
+gvs_active = True
 
 # Market delta
 max_iw_swing = 30
@@ -799,6 +801,7 @@ cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
 cmd_summonenemy = cmd_prefix + 'summonenemy'
+cmd_deleteallenemies = cmd_prefix + 'deleteallenemies'
 cmd_negaslimeoid = cmd_prefix + 'negaslimeoid'
 cmd_battlenegaslimeoid = cmd_prefix + 'battlenegaslimeoid'
 cmd_battlenegaslimeoid_alt1 = cmd_prefix + 'negaslimeoidbattle'
@@ -1555,7 +1558,7 @@ time_raidbossaggro = 3
 time_raidcountdown = 60
 
 # time for a raid boss to stay in a district before it can move again
-time_raidboss_movecooldown = 150
+time_raidboss_movecooldown = 2.5 * 60
 
 # maximum amount of enemies a district can hold before it stops spawning them
 max_enemies = 5
@@ -1911,6 +1914,7 @@ col_enemy_raidtimer = 'raidtimer'
 col_enemy_rare_status = 'rare_status'
 col_enemy_hardened_sap = 'hardened_sap'
 col_enemy_weathertype = 'weathertype'
+col_enemy_class = 'enemyclass'
 
 # Database column for the status of districts with locks on them
 col_locked_status = 'locked_status'
@@ -21817,6 +21821,14 @@ enemy_type_megaslime = 'megaslime'
 enemy_type_slimeasaurusrex = 'slimeasaurusrex'
 enemy_type_greeneyesslimedragon = 'greeneyesslimedragon'
 enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
+# Gankers Vs. Shamblers enemies
+enemy_type_basic_gaiaslimeoid = 'basicgaiaslimeoid'
+enemy_type_basic_shambler = 'basicshambler'
+
+# Enemy classes. For now this is only used for Gankers Vs. Shamblers
+enemy_class_normal = 'normal'
+enemy_class_gaiaslimeoid = 'gaiaslimeoid'
+enemy_class_shambler = 'shambler'
 
 # Sandbag (Only spawns in the dojo, doesn't attack)
 enemy_type_sandbag = 'sandbag'
@@ -21831,6 +21843,8 @@ enemy_ai_coward = 'Coward'
 enemy_ai_attacker_a = 'Attacker-A'
 enemy_ai_attacker_b = 'Attacker-B'
 enemy_ai_defender = 'Defender'
+enemy_ai_gaiaslimeoid = 'Gaiaslimeoid'
+enemy_ai_shambler = 'Shambler'
 
 # List of enemies sorted by their spawn rarity.
 common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime]
@@ -21840,6 +21854,11 @@ raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_gree
 
 # List of enemies that spawn in the Nuclear Beach
 pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
+
+# List of enemies used in the Gankers Vs. Shamblers event
+gvs_enemies = [enemy_type_basic_gaiaslimeoid, enemy_type_basic_shambler]
+gvs_enemies_gaiaslimeoids = [enemy_type_basic_gaiaslimeoid]
+gvs_enemies_shamblers = [enemy_type_basic_shambler]
 
 # List of raid bosses sorted by their spawn rarity.
 raid_boss_tiers = {
