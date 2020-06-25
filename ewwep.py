@@ -2867,6 +2867,15 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 		if user_data.freshness >= 100:
 			damage_mod *= 4
 
+	if ewcfg.mutation_id_2ndamendment in user_mutations:
+		if user_data.weapon != -1 and user_data.sidearm != -1:
+			weapon_item = EwItem(id_item=user_data.weapon)
+			weapon_c = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			sidearm_item = EwItem(id_item=user_data.sidearm)
+			sidearm_c = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+			if weapon_c.is_tool == 0 and sidearm_c.is_tool == 0:
+				damage_mod *= 1.25
+
 	return damage_mod
 
 def damage_mod_defend(shootee_data, shootee_mutations, market_data, shootee_weapon):
@@ -3083,7 +3092,7 @@ async def spray(cmd):
 			if len(gangsters_in_district) == 1 and ewcfg.mutation_id_lonewolf in user_mutations:
 				slimes_damage *= 1.25
 
-			if time_current >= 17:
+			if 15 <= time_current <= 22:
 				slimes_damage *= (4/3)
 
 			#if (user_data.faction != district_data.controlling_faction and (user_data.faction is None or user_data.faction == '')) and district_data.capture_points > ewcfg.limit_influence[district_data.property_class]:

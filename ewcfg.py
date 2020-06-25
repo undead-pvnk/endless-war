@@ -1092,15 +1092,15 @@ max_capture_points_a = 300000  # 300k
 max_capture_points_b = 200000  # 200k
 max_capture_points_c = 100000   # 100k
 
-limit_influence_s = 250000000
-limit_influence_a = 125000000
-limit_influence_b = 75000000
-limit_influence_c = 35000000
+limit_influence_s = 100000000
+limit_influence_a = 50000000
+limit_influence_b = 30000000
+limit_influence_c = 14000000
 
-min_influence_s = 450000000
-min_influence_a = 75000000
-min_influence_b = 35000000
-min_influence_c = 15000000
+min_influence_s = 180000000
+min_influence_a = 30000000
+min_influence_b = 14000000
+min_influence_c = 6000000
 
 min_garotte = 2000
 
