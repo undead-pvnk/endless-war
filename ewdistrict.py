@@ -987,6 +987,11 @@ async def change_spray(cmd):
 
 async def tag(cmd):
 	user_data = EwUser(member=cmd.message.author)
-	response = user_data.spray
+
+	if user_data.life_state in(ewcfg.life_state_enlisted, ewcfg.life_state_kingpin):
+		response = user_data.spray
+	else:
+		response = "Save the spraying for the gangsters. You're either too gay or dead to participate in this sort of thing."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
