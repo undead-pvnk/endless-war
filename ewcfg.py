@@ -7327,7 +7327,7 @@ food_list = [
 		recover_hunger = 100,
 		price = 100,
 		str_name = "Gummy Worms",
-		str_eat = "You eat the gummy worms.\n*You eat the gummy worms.*\n**You eat the gummy worms.**\n***You eat the gummy worms.***\n***Y O U  E A T  T H E  G U M M Y  W O R M S .***\n                                                                                                                        ...yummy!",
+		str_eat = "\nYou eat the gummy worms.\n*You eat the gummy worms.*\n**You eat the gummy worms.**\n***You eat the gummy worms.***\n***Y O U  E A T  T H E  G U M M Y  W O R M S .***\n                                                                                                                        ...yummy!",
 		str_desc = "After months of toil and hundreds of U.S. dollars spent, the Cop Killer finally found what he was searching for all along. Hopefully it will have been worth the wait.",
 		vendors = [vendor_slimypersuits]
 	)
