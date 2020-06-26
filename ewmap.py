@@ -847,6 +847,9 @@ async def move(cmd = None, isApt = False):
 
 	# Take control of the move for this player.
 	move_current = ewutils.moves_active[cmd.message.author.id] = move_counter
+	
+	# Hard lock path costs to not be lower than 5 seconds.
+	path.cost = max(path.cost, 5)
 
 	minutes = int(path.cost / 60)
 	seconds = path.cost % 60
