@@ -21822,8 +21822,8 @@ enemy_type_slimeasaurusrex = 'slimeasaurusrex'
 enemy_type_greeneyesslimedragon = 'greeneyesslimedragon'
 enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 # Gankers Vs. Shamblers enemies
-enemy_type_basic_gaiaslimeoid = 'basicgaiaslimeoid'
-enemy_type_basic_shambler = 'basicshambler'
+enemy_type_basic_gaiaslimeoid = 'gaiaslimeoid'
+enemy_type_basic_shambler = 'shambler'
 
 # Enemy classes. For now this is only used for Gankers Vs. Shamblers
 enemy_class_normal = 'normal'
@@ -21895,7 +21895,9 @@ enemy_drop_tables = {
 	enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [80, 1, 2]}, {"patrician": [30, 1, 1]}],
 	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [50, 1, 2]}, {"patrician": [20, 1, 2]},  {"meat": [100, 3, 4]}, {"monsterbones": [100, 3, 5]}],
 	enemy_type_greeneyesslimedragon: [{"dragonsoul": [100, 1, 1]},{"poudrin": [100, 15, 20]}, {"patrician": [100, 1, 1]}, {"monsterbones": [100, 5, 10]}],
-	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
+	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}],
+	enemy_type_basic_gaiaslimeoid: [{"crop": [100, 1, 1]}],
+	enemy_type_basic_shambler: [{"poudrin": [100, 1, 1]}],
 }
 
 # Template. Use this when making a new enemy, as they need all these values filled out.
@@ -21917,6 +21919,8 @@ enemy_data_table = {
 	enemy_type_slimeasaurusrex: {"slimerange": [1750000, 3000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_fangs, "displayname": "Slimeasaurus Rex", "raredisplayname": "Sex Rex", "aliases": ["rex","trex","slimeasaurusrex","slimeasaurus"]},
 	enemy_type_greeneyesslimedragon: {"slimerange": [3500000, 5000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_molotovbreath, "displayname": "Green Eyes Slime Dragon", "raredisplayname": "Green Eyes JPEG Dragon", "aliases": ["dragon","greeneyes","greeneyesslimedragon","green"]},
 	enemy_type_unnervingfightingoperator: {"slimerange": [1000000, 3000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_armcannon, "displayname": "Unnerving Fighting Operator", "raredisplayname": "Unyielding Fierce Operator", "aliases": ["ufo", "alien","unnervingfightingoperator","unnvering"]},
+	enemy_type_basic_gaiaslimeoid: {"slimerange": [100000, 200000], "ai": enemy_ai_gaiaslimeoid, "attacktype": enemy_attacktype_gunkshot, "displayname": "Gaiaslimeoid", "raredisplayname":"Rare Gaiaslimeoid", "aliases": ["gaia", "plant"], "class": enemy_class_gaiaslimeoid},
+	enemy_type_basic_shambler: {"slimerange": [100000, 200000], "ai": enemy_ai_shambler, "attacktype": enemy_attacktype_fangs, "displayname": "Shambler", "raredisplayname": "Rare Shambler", "aliases": ["shambler", "zombie"], "class": enemy_class_shambler},
 }
 
 # Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
