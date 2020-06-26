@@ -1650,7 +1650,7 @@ def get_enemies_look_resp(user_data, district_data):
 		else:
 			identifier_text = ""
 			
-		if found_enemy_data.ai == ewcfg.enemy_ai_coward or found_enemy_data.ai == ewcfg.enemy_ai_sandbag or (found_enemy_data.ai == ewcfg.enemy_ai_defender and found_enemy_data.id_target != user_data.id_user):
+		if found_enemy_data.ai == ewcfg.enemy_ai_coward or found_enemy_data.ai == ewcfg.enemy_ai_sandbag or (found_enemy_data.ai == ewcfg.enemy_ai_defender and found_enemy_data.id_target != user_data.id_user) or (found_enemy_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler) or (found_enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state != ewcfg.life_state_shambler):
 			threat_emote = ewcfg.emote_slimeheart
 		else:
 			threat_emote = ewcfg.emote_slimeskull

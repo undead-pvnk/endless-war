@@ -934,8 +934,6 @@ class EwEnemy:
 					if was_killed:
 						# Enemy was killed.
 						delete_enemy(target_enemy)
-						loot_cont = drop_enemy_loot(target_enemy, district_data)
-						resp_cont.add_response_container(loot_cont)
 						
 						# release bleed storage
 						slimes_todistrict = target_enemy.slimes
@@ -975,6 +973,8 @@ class EwEnemy:
 						district_data.persist()
 
 						resp_cont.add_channel_response(ch_name, response)
+						loot_cont = drop_enemy_loot(target_enemy, district_data)
+						resp_cont.add_response_container(loot_cont)
 
 						# don't recreate enemy data if enemy was killed in explosion
 						if check_death(enemy_data) == False:
