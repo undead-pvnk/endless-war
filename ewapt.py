@@ -374,7 +374,7 @@ async def retire(cmd):
 
 	if cmd.mentions_count > 0:
 		return await usekey(cmd)
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
 		response = "You can't do that right now."
@@ -431,10 +431,11 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 			user_data.poi = poi_dest.id_poi
 			user_data.visiting = ewcfg.location_id_empty
 			user_data.time_lastenter = int(time.time())
-			user_data.rr_challenger = ""
+			ewutils.active_target_map[user_data.id_user] = ""
 			user_data.persist()
 
 			ewutils.end_trade(user_data.id_user)
+			await user_data.move_inhabitants(id_poi = poi_dest.id_poi)	
 
 			await ewrolemgr.updateRoles(client=client, member=member_object)
 
@@ -444,7 +445,12 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 			else:
 				response = "Here we are. The outside world."
 
-			return await ewutils.send_message(cmd.client, ewutils.get_channel(server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
+			await ewutils.send_message(cmd.client, ewutils.get_channel(server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
+
+			# SWILLDERMUK
+			await ewutils.activate_trap_items(poi_dest.id_poi, user_data.id_server, user_data.id_user)
+			
+			return
 
 
 def getPriceBase(cmd):
@@ -993,7 +999,7 @@ async def watch(cmd):
 		response = ""
 
 	user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
-	user_model.rr_challenger = ""
+	ewutils.active_target_map[user_model.id_user] = ""
 	user_model.persist()
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1089,7 +1095,7 @@ async def usekey(cmd):
 			if item_key_check.item_props.get("houseID") == owner_user.id_user:
 				key = item_key_check
 
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must enter an apartment in a zone's channel.".format(cmd.tokens[0])))
 	elif key == None:
 		response = "You don't have a key for their apartment."
@@ -1398,7 +1404,8 @@ async def knock(cmd = None):
 							user_data = EwUser(member=cmd.message.author)
 							
 							# Flag the person knocking to discourage spam
-							user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_knock))
+							enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+							user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_knock, enlisted)
 							user_data.persist()
 							await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 							await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "They don't want your company, and have tipped off the authorities."))
@@ -1442,7 +1449,7 @@ async def bootall(cmd):
 async def trickortreat(cmd = None):
 	user_data = EwUser(member=cmd.message.author)
 
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "There will be neither trick nor treat found in these parts."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2379,6 +2386,8 @@ async def aptCommands(cmd):
 		return await propstand(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_howl or cmd_text == ewcfg.cmd_howl_alt1:
 		return await ewcmd.cmd_howl(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_moan:
+		return await ewcmd.cmd_moan(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_data:
 		return await ewcmd.data(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_hunger:
@@ -2413,6 +2422,8 @@ async def aptCommands(cmd):
 		return await ewcmd.weather(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_add_quadrant:
 		return await ewquadrants.add_quadrant(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_clear_quadrant:
+		return await ewquadrants.clear_quadrant(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_apartment:
 		return await apartment(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_booru:

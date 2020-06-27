@@ -226,7 +226,7 @@ def get_transports_at_stop(id_server, stop):
 """ Enter a transport vehicle from a transport stop """
 async def embark(cmd):
 	# can only use movement commands in location channels
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
@@ -241,6 +241,11 @@ async def embark(cmd):
 
 	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
 		response = "You can't do that right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.get_inhabitee():
+		# prevent ghosts currently inhabiting other players from moving on their own
+		response = "You might want to **{}** of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
@@ -305,6 +310,7 @@ async def embark(cmd):
 
 						response = "You enter the {}.".format(transport_data.transport_type)
 						await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+						await user_data.move_inhabitants(id_poi = transport_data.poi)
 						return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, transport_poi.channel), ewutils.formatMessage(cmd.message.author, response))
 					else:
 						response = "The {} starts moving just as you try to get on.".format(transport_data.transport_type)
@@ -322,14 +328,19 @@ async def embark(cmd):
 """ Exit a transport vehicle into its current stop """
 async def disembark(cmd):
 	# can only use movement commands in location channels
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
 	resp_cont = ewutils.EwResponseContainer(client = cmd.client, id_server = user_data.id_server)
 
+	# prevent ghosts currently inhabiting other players from moving on their own
+	if user_data.get_inhabitee():
+		response = "You might want to **{}** of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	# can only disembark when you're on a transport vehicle
-	if user_data.poi in ewcfg.transports:
+	elif user_data.poi in ewcfg.transports:
 		transport_data = EwTransport(id_server = user_data.id_server, poi = user_data.poi)
 		response = "{}ing.".format(cmd.tokens[0][1:].lower()).capitalize()
 
@@ -399,6 +410,7 @@ async def disembark(cmd):
 				resp_cont.add_channel_response(channel = stop_poi.channel, response = response)
 				user_data.poi = stop_poi.id_poi
 				user_data.persist()
+				await user_data.move_inhabitants(id_poi = stop_poi.id_poi)
 				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				return await resp_cont.post()
 			district_data = EwDistrict(id_server = user_data.id_server, district = stop_poi.id_poi)
@@ -424,16 +436,22 @@ async def disembark(cmd):
 
 			user_data.poi = stop_poi.id_poi
 			user_data.persist()
+			await user_data.move_inhabitants(id_poi = stop_poi.id_poi)
 			response = "You enter {}".format(stop_poi.str_name)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-			return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, stop_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, stop_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+
+			# SWILLDERMUK
+			await ewutils.activate_trap_items(stop_poi.id_poi, user_data.id_server, user_data.id_user)
+			
+			return
 		return await resp_cont.post()
 	else:
 		response = "You are not currently riding any transport."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def check_schedule(cmd):
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	user_data = EwUser(member = cmd.message.author)
 	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)

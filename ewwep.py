@@ -288,17 +288,20 @@ def canAttack(cmd):
 		captcha = weapon_item.item_props.get('captcha')
 
 	statuses = user_data.getStatusEffects()
-
+	channel_poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 	#if user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse:
 	#	if user_data.life_state == ewcfg.life_state_enlisted:
 	#		response = "Not so fast, you scrooge! Only Juveniles can attack during Slimernalia."
 	#	else:
 	#		response = "You lack the moral fiber necessary for violence."
 
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You can't commit violence from here."
 	elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
 		response = "You must go elsewhere to commit gang violence."
+	elif channel_poi.id_poi != user_data.poi and channel_poi.mother_district != user_data.poi:
+		#Only way to do this right now is by using the gellphone
+		response = "Alas, you still can't shoot people through your phone."
 	elif cmd.mentions_count > 1:
 		response = "One shot at a time!"
 	elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
@@ -312,9 +315,9 @@ def canAttack(cmd):
 	elif weapon != None and weapon.cooldown + (float(weapon_item.item_props.get("time_lastattack")) if weapon_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
 		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name = weapon.id_weapon)
 	elif weapon != None and weapon_item.item_props.get("jammed") == "True":
-		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again.\nSecurity Code: **{captcha}**".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam, captcha = captcha)
+		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again.\nSecurity Code: **{captcha}**".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam, captcha = ewutils.text_to_regional_indicator(captcha))
 	elif weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
-		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(captcha)
+		response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 
 	elif user_data.weapon == -1 and user_data.life_state != ewcfg.life_state_shambler:
 		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
@@ -360,6 +363,8 @@ def canAttack(cmd):
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
 		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
 		user_isshambler = user_data.life_state == ewcfg.life_state_shambler
+  
+		weapon_possession_data = user_data.get_weapon_possession()
 
 		if shootee_data.life_state == ewcfg.life_state_kingpin:
 			# Disallow killing generals.
@@ -394,8 +399,12 @@ def canAttack(cmd):
 			# Target is a ghost but user is not able to bust 
 			response = "You don't know how to fight a ghost."
 
-		elif time_now > shootee_data.time_expirpvp and shootee_data.life_state != ewcfg.life_state_shambler:
-			# Target is not flagged for PvP.
+		elif weapon_possession_data and (shootee_data.id_user == weapon_possession_data[0]):
+			# Target is possessing user's weapon
+			response = "{}'s contract forbids you from harming them. You should've read the fine print.".format(member.display_name)
+
+		elif time_now > shootee_data.time_expirpvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user):
+			# Target is neither flagged for PvP, nor a shambler, nor a ghost inhabitting the player
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
 		# Identify if the shooter and the shootee are on the same team.
@@ -418,7 +427,7 @@ async def attack(cmd):
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 	market_data = EwMarket(id_server = cmd.message.server.id)
 
-	user_data = EwUser(member = cmd.message.author)
+	user_data = EwUser(member = cmd.message.author, data_level = 1)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	weapon = None
 	weapon_item = None
@@ -441,7 +450,7 @@ async def attack(cmd):
 			resp_cont.add_channel_response(cmd.message.channel.name, response)
 			return await resp_cont.post()
 		else:
-			shootee_data = EwUser(member = member)
+			shootee_data = EwUser(member = member, data_level = 1)
 		shootee_slimeoid = EwSlimeoid(member = member)
 		shootee_name = member.display_name
 
@@ -486,7 +495,7 @@ async def attack(cmd):
 				crit_mod += 0.05
 
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-		slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
+		slimes_damage = int((slimes_spent * (10 + user_data.attack)) * (100 + (user_data.weaponskill * 5)) / 100.0)
 
 		if user_data.weaponskill < 5:
 			miss_mod += (5 - user_data.weaponskill) / 10
@@ -605,8 +614,8 @@ async def attack(cmd):
 					await resp_cont.post()
 					msg = await cmd.client.wait_for_message(timeout = 5, author = member)
 
-					user_data = EwUser(member = cmd.message.author)
-					shootee_data = EwUser(member = member)
+					user_data = EwUser(member = cmd.message.author, data_level = 1)
+					shootee_data = EwUser(member = member, data_level = 1)
 
 					# One of the players died in the meantime
 					if user_data.life_state == ewcfg.life_state_corpse or shootee_data.life_state == ewcfg.life_state_corpse:
@@ -712,7 +721,7 @@ async def attack(cmd):
 
 			if was_shot:
 				# Flag the user for PvP
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 				resp_cont.add_member_to_update(cmd.message.author)
 
@@ -742,6 +751,45 @@ async def attack(cmd):
 
 				slimes_directdamage = slimes_damage - slimes_tobleed
 				slimes_splatter = slimes_damage - slimes_toboss - slimes_tobleed - slimes_drained
+
+				# Damage victim's wardrobe (heh, WARdrobe... get it??)
+				victim_cosmetics = ewitem.inventory(
+					id_user = member.id,
+					id_server = cmd.message.server.id,
+					item_type_filter = ewcfg.it_cosmetic
+				)
+
+				onbreak_responses = []
+
+				for cosmetic in victim_cosmetics:
+						c = EwItem(cosmetic.get('id_item'))
+
+						# Damage it if the cosmetic is adorned and it has a durability limit
+						if c.item_props.get("adorned") == 'true' and c.item_props['durability'] is not None:
+
+							#print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
+
+							durability_afterhit = int(c.item_props['durability']) - slimes_damage
+
+							#print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
+
+							if durability_afterhit <= 0: # If it breaks
+								c.item_props['durability'] = durability_afterhit
+								c.persist()
+
+
+								shootee_data.persist()
+
+								onbreak_responses.append(str(c.item_props['str_onbreak']).format(c.item_props['cosmetic_name']))
+
+								ewitem.item_delete(id_item = c.id_item)
+
+							else:
+								c.item_props['durability'] = durability_afterhit
+								c.persist()
+
+						else:
+							pass
 
 				market_data.splattered_slimes += slimes_damage
 				market_data.persist()
@@ -804,10 +852,22 @@ async def attack(cmd):
 								'id_cosmetic': 'scalp',
 								'cosmetic_name': "{}'s scalp".format(shootee_name),
 								'cosmetic_desc': "A scalp.{}".format(scalp_text),
+								'str_onadorn': ewcfg.str_generic_onadorn,
+								'str_unadorn': ewcfg.str_generic_unadorn,
+								'str_onbreak': ewcfg.str_generic_onbreak,
+								'rarity': ewcfg.rarity_patrician,
+								'attack': 1,
+								'defense': 0,
+								'speed': 0,
+								'ability': None,
+								'durability': int(ewutils.slime_bylevel(shootee_data.slimelevel) / 4),
+								'original_durability': int(ewutils.slime_bylevel(shootee_data.slimelevel) / 4),
+								'size': 1,
+								'fashion_style': ewcfg.style_cool,
+								'freshness': 10,
 								'adorned': 'false'
 							}
 						)
-
 					
 					explode_damage = ewutils.slime_bylevel(shootee_data.slimelevel) / 5
 
@@ -833,7 +893,7 @@ async def attack(cmd):
 					die_resp = shootee_data.die(cause = ewcfg.cause_killing)
 					#shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 
-					user_data = EwUser(member = cmd.message.author)
+					user_data = EwUser(member = cmd.message.author, data_level = 1)
 					district_data = EwDistrict(district = district_data.name, id_server = district_data.id_server)
 
 					kill_descriptor = "beaten to death"
@@ -852,6 +912,12 @@ async def attack(cmd):
 								hitzone = randombodypart,
 							))
 
+						response = ""
+
+						if len(onbreak_responses) != 0:
+							for onbreak_response in onbreak_responses:
+								response += "\n\n" + onbreak_response
+
 						response += "\n\n{}".format(weapon.str_kill.format(
 							name_player = cmd.message.author.display_name,
 							name_target = member.display_name,
@@ -862,15 +928,21 @@ async def attack(cmd):
 							response += "\n" + weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
 						if ewcfg.weapon_class_captcha in weapon.classes:
-							new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
-							response += "\nNew security code: **{}**".format(new_captcha)
+							new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+							response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 							weapon_item.item_props['captcha'] = new_captcha
 							weapon_item.persist()
 
 						shootee_data.trauma = weapon.id_weapon
 
 					else:
-						response = "{name_target} is hit!!\n\n{name_target} has died.".format(name_target = member.display_name)
+						response = ""
+
+						if len(onbreak_responses) != 0:
+							for onbreak_response in onbreak_responses:
+								response = onbreak_response + "\n\n"
+
+						response += "{name_target} is hit!!\n\n{name_target} has died.".format(name_target = member.display_name)
 
 						shootee_data.trauma = ewcfg.trauma_id_environment
 
@@ -887,6 +959,10 @@ async def attack(cmd):
 					
 					if coinbounty > 0:
 						response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, cmd.message.author.display_name)
+      
+					weapon_possession = user_data.get_weapon_possession()
+					if weapon_possession:
+						response += fulfill_ghost_weapon_contract(weapon_possession, market_data, user_data, cmd.message.author.display_name)
 
 					shootee_data.persist()
 					resp_cont.add_response_container(die_resp)
@@ -917,7 +993,7 @@ async def attack(cmd):
 								user_data.trauma = ewcfg.trauma_id_environment
 								die_resp = user_data.die(cause = ewcfg.cause_backfire)
 								district_data = EwDistrict(district = district_data.name, id_server = district_data.id_server)
-								shootee_data = EwUser(member = member)
+								shootee_data = EwUser(member = member, data_level = 1)
 								resp_cont.add_member_to_update(cmd.message.author)
 								resp_cont.add_response_container(die_resp)
 							else:
@@ -953,13 +1029,17 @@ async def attack(cmd):
 								damage = damage,
 								sap_response = sap_response
 							)
+
+							if len(onbreak_responses) != 0:
+								for onbreak_response in onbreak_responses:
+									response += "\n\n" + onbreak_response
 						
 						if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
-							response += "\n"+weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
+							response += "\nn"+weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
 						if ewcfg.weapon_class_captcha in weapon.classes or jammed:
-							new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
-							response += "\nNew security code: **{}**".format(new_captcha)
+							new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+							response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 							weapon_item.item_props['captcha'] = new_captcha
 							weapon_item.persist()
 					else:
@@ -970,6 +1050,10 @@ async def attack(cmd):
 								target_name = member.display_name,
 								damage = damage
 							)
+
+							if len(onbreak_responses) != 0:
+								for onbreak_response in onbreak_responses:
+									response += "\n\n" + onbreak_response
 
 					resp_cont.add_channel_response(cmd.message.channel.name, response)
 			else:
@@ -1014,7 +1098,7 @@ async def attack(cmd):
 				resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
 
 				# Flag the user for PvP
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_kill))
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, True)
 
 				user_data.persist()
 				resp_cont.add_member_to_update(cmd.message.author)
@@ -1047,7 +1131,7 @@ async def suicide(cmd):
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 
 	# Only allowed in the combat zone.
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You must go into the city to commit {}.".format(cmd.tokens[0][1:])
 	else:
 		# Get the user data.
@@ -1091,6 +1175,7 @@ async def suicide(cmd):
 			# Set the id_killer to the player himself, remove his slime and slime poudrins.
 			user_data.id_killer = cmd.message.author.id
 			user_data.trauma = ewcfg.trauma_id_suicide
+			user_data.visiting = ewcfg.location_id_empty
 			die_resp = user_data.die(cause = ewcfg.cause_suicide)
 			resp_cont.add_response_container(die_resp)
 			user_data.persist()
@@ -1149,7 +1234,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 			if bystander != user_data.id_user and bystander != checked_id:
 				response = ""
 
-				target_data = EwUser(id_user=bystander, id_server=user_data.id_server)
+				target_data = EwUser(id_user=bystander, id_server=user_data.id_server, data_level = 1)
 				target_player = EwPlayer(id_user=bystander, id_server=user_data.id_server)
 
 				target_iskillers = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_killers
@@ -1478,7 +1563,7 @@ async def spar(cmd):
 					weaker_player.time_lastspar = time_now
 
 					# Flag the user for PvP
-					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_spar))
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_spar, True)
 
 					user_data.persist()
 					sparred_data.persist()
@@ -1804,7 +1889,7 @@ async def unjam(cmd):
 					weapon_item.persist()
 					response = weapon.str_unjam.format(name_player = cmd.message.author.display_name)
 				else:
-					response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(captcha.upper())
+					response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 			else:
 				response = "Let’s not get ahead of ourselves, there’s nothing clogging with your {weapon} (yet)!!".format(weapon = weapon.id_weapon)
 		else:
@@ -1932,7 +2017,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = enemy_data, hitzone = hitzone) + apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-	slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
+	slimes_damage = int((slimes_spent * (10 + user_data.attack)) * (100 + (user_data.weaponskill * 5)) / 100.0)
 	
 	if user_data.weaponskill < 5:
 		miss_mod += (5 - user_data.weaponskill) / 10
@@ -2242,13 +2327,17 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					name_player=cmd.message.author.display_name)
 
 			if ewcfg.weapon_class_captcha in weapon.classes:
-				new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
-				response += "\nNew security code: **{}**".format(new_captcha)
+				new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+				response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 				weapon_item.item_props['captcha'] = new_captcha
 				weapon_item.persist()
 		else:
 			response = "{name_target} is hit!!\n\n{name_target} has died.".format(
 				name_target=enemy_data.display_name)
+
+		weapon_possession = user_data.get_weapon_possession()
+		if weapon_possession:
+			response += fulfill_ghost_weapon_contract(weapon_possession, market_data, user_data, cmd.message.author.display_name)
 
 		# When a raid boss dies, use this response instead so its drops aren't shown in the killfeed
 		old_response = response
@@ -2330,8 +2419,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					name_player=cmd.message.author.display_name)
 	
 			if ewcfg.weapon_class_captcha in weapon.classes or jammed:
-				new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
-				response += "\nNew security code: **{}**".format(new_captcha)
+				new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+				response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 				weapon_item.item_props['captcha'] = new_captcha
 				weapon_item.persist()
 		else:
@@ -2362,7 +2451,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# Persist user data.
 	# Flag the user for PvP
 	if not sandbag_mode:
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 	resp_cont.add_member_to_update(cmd.message.author)
 	user_data.persist()
@@ -2371,7 +2460,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	district_data.persist()
 
-	# If an enemy is a raidboss or sandbag, announce that kill in the killfeed
+	# If an enemy is a raidboss, announce that kill in the killfeed
 	if was_killed and (enemy_data.enemytype in ewcfg.raid_bosses):
 		# announce raid boss kill in kill feed channel
 
@@ -2515,7 +2604,7 @@ async def dodge(cmd):
 
 	user_data.sap -= sap_cost
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 	user_data.persist()
 
@@ -2577,7 +2666,7 @@ async def taunt(cmd):
 
 	user_data.sap -= sap_cost
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You spend {} sap to taunt {} into attacking you.".format(sap_cost, target.display_name)
@@ -2634,7 +2723,7 @@ async def aim(cmd):
 
 	user_data.sap -= sap_cost
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You spend {} sap to aim at {}'s weak spot.".format(sap_cost, target.display_name)
@@ -2643,6 +2732,11 @@ async def aim(cmd):
 
 def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 	damage_mod = 1
+
+	# Weapon possession
+	if user_data.get_weapon_possession():
+		damage_mod *= 1.2
+
 	# Lone wolf
 	if ewcfg.mutation_id_lonewolf in user_mutations:
 		allies_in_district = district_data.get_players_in_district(
@@ -2676,20 +2770,8 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 				
 	# Dressed to kill
 	if ewcfg.mutation_id_dressedtokill in user_mutations:
-		items = ewitem.inventory(
-			id_user = user_data.id_user,
-			id_server = user_data.id_server,
-			item_type_filter = ewcfg.it_cosmetic
-		)
-
-		adorned_items = 0
-		for it in items:
-			i = EwItem(it.get('id_item'))
-			if i.item_props['adorned'] == 'true':
-				adorned_items += 1
-
-		if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
-			damage_mod *= 1.5
+		if user_data.freshness >= 100:
+			damage_mod *= 4
 
 	return damage_mod
 
@@ -2715,7 +2797,10 @@ def damage_mod_defend(shootee_data, shootee_mutations, market_data, shootee_weap
 
 def get_sap_armor(shootee_data, sap_ignored):
 	# apply hardened sap armor
-	effective_hardened_sap = max(0, shootee_data.hardened_sap - sap_ignored)
+	try:
+		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored + shootee_data.defense
+	except: # If shootee_data doesn't have defense, aka it's a monster
+		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored
 	level = 0
 
 	if hasattr(shootee_data, "slimelevel"):
@@ -2723,7 +2808,10 @@ def get_sap_armor(shootee_data, sap_ignored):
 	elif hasattr(shootee_data, "level"):
 		level = shootee_data.level
 
-	sap_armor = 10 / (10+effective_hardened_sap)
+	if effective_hardened_sap >= 0:
+		sap_armor = 10 / (10 + effective_hardened_sap)
+	else:
+		sap_armor = (10 + abs(effective_hardened_sap)) / 10
 	return sap_armor
 
 def get_hitzone(injury_map = None):
@@ -2739,7 +2827,8 @@ def get_hitzone(injury_map = None):
 def get_injury_severity(shootee_data, slimes_damage, crit):
 
 	severity = 0
-	severity += slimes_damage / shootee_data.slimes
+	if shootee_data.slimes > 0:
+		severity += slimes_damage / shootee_data.slimes
 	severity *= 10
 
 	if crit:
@@ -2749,3 +2838,33 @@ def get_injury_severity(shootee_data, slimes_damage, crit):
 	severity = max(0, round(severity))
 
 	return severity
+
+def fulfill_ghost_weapon_contract(possession_data, market_data, user_data, user_name):
+	ghost_id = possession_data[0]
+	ghost_data = EwUser(id_user = ghost_id, id_server = user_data.id_server)
+	
+	# shooter loses half their slime, which ghost gains as negative slime up to a cap of 500k
+	slime_sacrificed = int(user_data.slimes * 0.5)
+	user_data.change_slimes(n = -slime_sacrificed, source = ewcfg.source_ghost_contract)
+	negaslime_gained = min(200000, slime_sacrificed)
+	ghost_data.change_slimes(n = -negaslime_gained, source = ewcfg.source_ghost_contract)
+	ghost_data.persist()
+	market_data.negaslime -= -negaslime_gained
+	market_data.persist()
+
+	# cancel possession
+	ewutils.execute_sql_query(
+		"UPDATE inhabitations SET {empowered} = %s WHERE {id_fleshling} = %s AND {id_server} = %s".format(
+			empowered = ewcfg.col_empowered,
+			id_fleshling = ewcfg.col_id_fleshling,
+			id_server = ewcfg.col_id_server,
+		),(
+			False,
+			user_data.id_user,
+			user_data.id_server,
+		)
+	)
+
+	server = ewutils.get_client().get_server(user_data.id_server)
+	ghost_name = server.get_member(ghost_id).display_name
+	return "\n\n {} winces in pain as half their slime is corrupted into negaslime. {}'s contract has been fulfilled.".format(user_name, ghost_name)

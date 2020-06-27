@@ -462,7 +462,7 @@ class EwEnemy:
 						sap_damage += 1
 
 					enemy_data.persist()
-					target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server)
+					target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server, data_level = 1)
 
 					# apply defensive mods
 					slimes_damage *= ewwep.damage_mod_defend(
@@ -507,6 +507,46 @@ class EwEnemy:
 					slimes_directdamage = slimes_damage - slimes_tobleed
 					slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
 
+					# Damage victim's wardrobe (heh, WARdrobe... get it??)
+					victim_cosmetics = ewitem.inventory(
+						id_user = target_data.id_user,
+						id_server = target_data.id_server,
+						item_type_filter = ewcfg.it_cosmetic
+					)
+
+					onbreak_responses = []
+
+					for cosmetic in victim_cosmetics:
+						c = EwItem(cosmetic.get('id_item'))
+
+						# Damage it if the cosmetic is adorned and it has a durability limit
+						if c.item_props.get("adorned") == 'true' and c.item_props['durability'] is not None:
+
+							#print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
+
+							durability_afterhit = int(c.item_props['durability']) - slimes_damage
+
+							#print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
+
+							if durability_afterhit <= 0:  # If it breaks
+								c.item_props['durability'] = durability_afterhit
+								c.persist()
+
+
+								target_data.persist()
+
+								onbreak_responses.append(
+									str(c.item_props['str_onbreak']).format(c.item_props['cosmetic_name']))
+
+								ewitem.item_delete(id_item = c.id_item)
+
+							else:
+								c.item_props['durability'] = durability_afterhit
+								c.persist()
+
+						else:
+							pass
+
 					market_data.splattered_slimes += slimes_damage
 					market_data.persist()
 					district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
@@ -544,7 +584,7 @@ class EwEnemy:
 						if used_attacktype != ewcfg.enemy_attacktype_unarmed:
 							response = used_attacktype.str_damage.format(
 								name_enemy=enemy_data.display_name,
-								name_target=target_player.display_name,
+								name_target=("<@!{}>".format(target_data.id_user)),
 								hitzone=randombodypart,
 								strikes=strikes
 							)
@@ -555,14 +595,24 @@ class EwEnemy:
 									name_target=target_player.display_name
 								))
 
+							if len(onbreak_responses) != 0:
+								for onbreak_response in onbreak_responses:
+									response += "\n\n" + onbreak_response
+
 							response += "\n\n{}".format(used_attacktype.str_kill.format(
 								name_enemy=enemy_data.display_name,
-								name_target=target_player.display_name,
+								name_target=("<@!{}>".format(target_data.id_user)),
 								emote_skull=ewcfg.emote_slimeskull
 							))
 							target_data.trauma = used_attacktype.id_type
 
 						else:
+							response = ""
+
+							if len(onbreak_responses) != 0:
+								for onbreak_response in onbreak_responses:
+									response = onbreak_response + "\n\n"
+
 							response = "{name_target} is hit!!\n\n{name_target} has died.".format(
 								name_target=target_player.display_name)
 
@@ -585,7 +635,7 @@ class EwEnemy:
 						if check_death(enemy_data) == False:
 							enemy_data = EwEnemy(id_enemy=self.id_enemy)
 
-						target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server)
+						target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server, data_level = 1)
 					else:
 						# A non-lethal blow!
 						# apply injury
@@ -614,7 +664,7 @@ class EwEnemy:
 							else:
 								response = used_attacktype.str_damage.format(
 									name_enemy=enemy_data.display_name,
-									name_target=target_player.display_name,
+									name_target=("<@!{}>".format(target_data.id_user)),
 									hitzone=randombodypart,
 									strikes=strikes
 								)
@@ -631,6 +681,9 @@ class EwEnemy:
 									damage=damage,
 									sap_response=sap_response
 								)
+								if len(onbreak_responses) != 0:
+									for onbreak_response in onbreak_responses:
+										response += "\n\n" + onbreak_response
 						else:
 							if miss:
 								response = "{target_name} dodges the {enemy_name}'s strike.".format(
@@ -640,6 +693,10 @@ class EwEnemy:
 									target_name=target_player.display_name,
 									damage=damage
 								)
+							if len(onbreak_responses) != 0:
+								for onbreak_response in onbreak_responses:
+									response += "\n" + onbreak_response
+
 						resp_cont.add_channel_response(ch_name, response)
 				else:
 					response = '{} is unable to attack {}.'.format(enemy_data.display_name, target_player.display_name)
@@ -1285,6 +1342,7 @@ def find_enemy(enemy_search=None, user_data=None):
 	if enemy_search != None:
 
 		enemy_search_tokens = enemy_search.split(' ')
+		enemy_search_tokens_upper = enemy_search.upper().split(' ')
 
 		for enemy_type in ewcfg.enemy_data_table:
 			aliases = ewcfg.enemy_data_table[enemy_type]["aliases"]
@@ -1295,10 +1353,22 @@ def find_enemy(enemy_search=None, user_data=None):
 				enemy_search_alias = enemy_type
 				break
 
-		tokens_set_upper = set(enemy_search.upper().split(' '))
+		# Check if the identifier letter inputted was a user's captcha. If so, ignore it.
+		if user_data.weapon >= 0:
+			weapon_item = EwItem(id_item=user_data.weapon)
+			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			captcha = weapon_item.item_props.get('captcha')
+
+			if weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha in enemy_search_tokens_upper:
+				enemy_search_tokens_upper.remove(captcha)
+
+		tokens_set_upper = set(enemy_search_tokens_upper)
+		
 		identifiers_found = tokens_set_upper.intersection(set(ewcfg.identifier_letters))
+		
 
 		if len(identifiers_found) > 0:
+
 			# user passed in an identifier for a district specific enemy
 
 			searched_identifier = identifiers_found.pop()
@@ -1598,18 +1668,15 @@ def drop_enemy_loot(enemy_data, district_data):
 
 			item = items[random.randint(0, len(items) - 1)]
 
+			item_props = ewitem.gen_item_props(item)
+
 			ewitem.item_create(
-				item_type=ewcfg.it_cosmetic,
-				id_user=district_data.name,
-				id_server=district_data.id_server,
-				item_props={
-					'id_cosmetic': item.id_cosmetic,
-					'cosmetic_name': item.str_name,
-					'cosmetic_desc': item.str_desc,
-					'rarity': item.rarity,
-					'adorned': 'false'
-				}
+				item_type = ewcfg.it_cosmetic,
+				id_user = district_data.name,
+				id_server = district_data.id_server,
+				item_props = item_props
 			)
+
 			response = "They dropped a {item_name}!".format(item_name=item.str_name)
 			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 
@@ -1627,18 +1694,15 @@ def drop_enemy_loot(enemy_data, district_data):
 
 			item = items[random.randint(0, len(items) - 1)]
 
+			item_props = ewitem.gen_item_props(item)
+
 			ewitem.item_create(
-				item_type=ewcfg.it_cosmetic,
-				id_user=district_data.name,
-				id_server=district_data.id_server,
-				item_props={
-					'id_cosmetic': item.id_cosmetic,
-					'cosmetic_name': item.str_name,
-					'cosmetic_desc': item.str_desc,
-					'rarity': item.rarity,
-					'adorned': 'false'
-				}
+				item_type = ewcfg.it_cosmetic,
+				id_user = district_data.name,
+				id_server = district_data.id_server,
+				item_props = item_props
 			)
+
 			response = "They dropped a {item_name}!".format(item_name=item.str_name)
 			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 
@@ -1856,7 +1920,7 @@ def get_target_by_ai(enemy_data):
 
 	if enemy_data.ai == ewcfg.enemy_ai_defender:
 		if enemy_data.id_target != "":
-			target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
+			target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server, data_level = 1)
 
 	elif enemy_data.ai == ewcfg.enemy_ai_attacker_a:
 		users = ewutils.execute_sql_query(
@@ -1878,7 +1942,7 @@ def get_target_by_ai(enemy_data):
 				enemy_data.id_server
 			))
 		if len(users) > 0:
-			target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server)
+			target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level = 1)
 
 	elif enemy_data.ai == ewcfg.enemy_ai_attacker_b:
 		users = ewutils.execute_sql_query(
@@ -1901,7 +1965,7 @@ def get_target_by_ai(enemy_data):
 				enemy_data.id_server
 			))
 		if len(users) > 0:
-			target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server)
+			target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level = 1)
 			
 	# If an enemy is a raidboss, don't let it attack until some time has passed when entering a new district.
 	if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter > raidbossaggrotimer:

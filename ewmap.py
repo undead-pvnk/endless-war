@@ -22,6 +22,7 @@ from ewmutation import EwMutation
 from ewslimeoid import EwSlimeoid
 from ewplayer import EwPlayer
 from ewads import EwAd
+from ewitem import EwItem
 
 from ewhunting import EwEnemy, spawn_enemy
 
@@ -39,14 +40,7 @@ def poi_is_pvp(poi_name = None):
 	
 	return False
 
-"""
-	Returns true if the specified name is used by any POI.
-"""
-def channel_name_is_poi(channel_name):
-	if channel_name != None:
-		return channel_name in ewcfg.chname_to_poi
 
-	return False
 
 """
 	Returns data for POI if it isn't on the map.
@@ -736,7 +730,7 @@ async def descend(cmd):
 	Player command to move themselves from one place to another.
 """
 async def move(cmd = None, isApt = False):
-	if channel_name_is_poi(cmd.message.channel.name) == False and isApt == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False and isApt == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -744,7 +738,7 @@ async def move(cmd = None, isApt = False):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Where to?"))
 
 	player_data = EwPlayer(id_user=cmd.message.author.id)
-	user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server)
+	user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server, data_level = 1)
 	poi_current = ewcfg.id_to_poi.get(user_data.poi)
 	poi = ewcfg.id_to_poi.get(target_name)
 	if poi_current.is_apartment == True:
@@ -754,6 +748,11 @@ async def move(cmd = None, isApt = False):
 	member_object = server_data.get_member(player_data.id_user)
 
 	movement_method = ""
+
+	if user_data.get_inhabitee():
+    # prevent ghosts currently inhabiting other players from moving on their own
+		response = "You might want to **{}** of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
 		response = "You can't do that right now."
@@ -892,6 +891,7 @@ async def move(cmd = None, isApt = False):
 				"You {} {}.".format(poi.str_enter, poi.str_name)
 			)
 		)
+		
 		try:
 			await cmd.client.delete_message(msg_walk_start)
 			await asyncio.sleep(30)
@@ -985,6 +985,12 @@ async def move(cmd = None, isApt = False):
 						)
 					)
 
+					# SWILLDERMUK
+					await ewutils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
+
+					# also move any ghosts inhabitting the player
+					await user_data.move_inhabitants(id_poi = poi_current.id_poi)
+
 					if poi_current.has_ads:
 						ads = ewads.get_ads(id_server = user_data.id_server)
 						if len(ads) > 0:
@@ -1010,7 +1016,8 @@ async def move(cmd = None, isApt = False):
 				if val > 0:
 					val_actual = val - boost
 					boost = 0
-
+					
+					user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server, data_level = 1)
 					val_actual = int(val_actual / user_data.move_speed)
 					if val_actual > 0:
 						await asyncio.sleep(val_actual)
@@ -1035,15 +1042,8 @@ async def teleport(cmd):
 	if cmd.tokens[0] == (ewcfg.cmd_prefix + 'blj'):
 		blj_used = True
 	
-	if channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
-
-	if cmd.tokens_count < 2 and not blj_used:
-		response = "Teleport where?"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	elif cmd.tokens_count < 2 and blj_used:
-		response = "Backwards Long Jump where?"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	time_now = int(time.time())
 	user_data = EwUser(member = cmd.message.author)
@@ -1057,17 +1057,6 @@ async def teleport(cmd):
 		response = "You can't do that right now."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(target_name)
-
-	if poi is None:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Never heard of it."))
-
-	if poi.id_poi == user_data.poi:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're already there, bitch."))
-
-	if inaccessible(user_data = user_data, poi = poi):
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
-
 	if ewcfg.mutation_id_quantumlegs in mutations:
 		mutation_data = EwMutation(id_user = user_data.id_user, id_server = user_data.id_server, id_mutation = ewcfg.mutation_id_quantumlegs)
 		if len(mutation_data.data) > 0:
@@ -1078,6 +1067,24 @@ async def teleport(cmd):
 		if time_lastuse + 180*60 > time_now:
 			response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 180*60 - time_now)/60))
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		if cmd.tokens_count < 2 and not blj_used:
+			response = "Teleport where?"
+			return await ewutils.send_message(cmd.client, cmd.message.channel,ewutils.formatMessage(cmd.message.author, response))
+		elif cmd.tokens_count < 2 and blj_used:
+			response = "Backwards Long Jump where?"
+			return await ewutils.send_message(cmd.client, cmd.message.channel,ewutils.formatMessage(cmd.message.author, response))
+
+		poi = ewcfg.id_to_poi.get(target_name)
+
+		if poi is None:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Never heard of it."))
+
+		if poi.id_poi == user_data.poi:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're already there, bitch."))
+
+		if inaccessible(user_data=user_data, poi=poi):
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
 			
 		valid_destinations = set()
 		neighbors = ewcfg.poi_neighbors.get(user_data.poi)
@@ -1137,9 +1144,14 @@ async def teleport(cmd):
 			user_data.persist()
 
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-				
+			await user_data.move_inhabitants(id_poi = poi.id_poi)
 			resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
-			return await resp_cont.post()
+			await resp_cont.post()
+
+			# SWILLDERMUK
+			await ewutils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
+			
+			return
 		else:
 			mutation_data = EwMutation(id_user=user_data.id_user, id_server=user_data.id_server, id_mutation=ewcfg.mutation_id_quantumlegs)
 
@@ -1187,6 +1199,9 @@ async def teleport_player(cmd):
 		target_user.persist()
 		
 		response = "{} has been teleported to {}".format(target_player.display_name, new_poi.id_poi)
+		
+		await ewrolemgr.updateRoles(client = cmd.client, member = target)
+		
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
@@ -1196,7 +1211,7 @@ async def teleport_player(cmd):
 async def look(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
-	if channel_name_is_poi(cmd.message.channel.name):
+	if ewutils.channel_name_is_poi(cmd.message.channel.name):
 		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 	else:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -1276,7 +1291,7 @@ async def look(cmd):
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else ""),
 				ad_formatting
-			)
+			) #+ get_random_prank_item(user_data, district_data) # SWILLDERMUK
 		))
 		if len(ad_resp) > 0:
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
@@ -1315,8 +1330,10 @@ async def survey(cmd):
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else "")
-			)
+			) #+ get_random_prank_item(user_data, district_data) # SWILLDERMUK
 		))
+		
+		
 	
 """
 	Get information about an adjacent zone.
@@ -1325,7 +1342,7 @@ async def scout(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
 	
-	if channel_name_is_poi(cmd.message.channel.name) is False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) is False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	market_data = EwMarket(id_server = cmd.message.server.id)
@@ -1699,4 +1716,43 @@ async def boot(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+# SWILLDERMUK
+def get_random_prank_item(user_data, district_data):
+	response = ""
+
+	items_in_poi = ewutils.execute_sql_query(
+		"SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
+			id_item=ewcfg.col_id_item,
+			id_owner=ewcfg.col_id_user,
+			id_server=ewcfg.col_id_server
+		), (
+			user_data.poi,
+			district_data.id_server
+		))
+
+	prank_items = []
+	
+	for item in items_in_poi:
+		id_item = item[0]
+		possible_prank_item = EwItem(id_item=id_item)
+		
+		context = possible_prank_item.item_props.get('context')
+		food_item_id = possible_prank_item.item_props.get('id_food')
+		
+		if (context == ewcfg.context_prankitem or food_item_id == "defectivecreampie"):
+			prank_items.append(id_item)
+
+	if len(prank_items) > 0:
+		id_item = random.choice(prank_items)
+		
+		prank_item = EwItem(id_item=id_item)
+		
+		item_name = prank_item.item_props.get('item_name')
+		if item_name == None:
+			item_name = prank_item.item_props.get('food_name')
+		
+		response = "\n\nYou think you can spot a {} lying on the ground somewhere...".format(item_name)
+	
+	return response
 

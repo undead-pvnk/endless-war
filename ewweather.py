@@ -201,3 +201,4 @@ async def weather_tick(id_server = None):
 
 		except:
 			ewutils.logMsg("Error occurred in weather tick for server {}".format(id_server))
+
