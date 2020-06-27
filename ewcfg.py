@@ -548,7 +548,7 @@ role_copkillers_active = "killerotp"
 role_corpse = "corpse"
 role_corpse_pvp = "corpsewanted"
 role_corpse_active = "corpseotp"
-role_shambler = "shambler"
+role_shambler = "shamblers"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
 role_slimecorp = "slimecorp"
@@ -966,6 +966,7 @@ cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
 cmd_print_map_data = cmd_prefix + 'printmapdata'
+cmd_ping_me = cmd_prefix + 'pingme'
 cmd_boot = cmd_prefix + 'boot'
 cmd_bootall = cmd_prefix + 'bootall'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
@@ -2318,6 +2319,8 @@ item_id_tough_material = "toughnails"
 item_id_smart_material = "smartcookies"
 item_id_beautiful_material = "beautyspots"
 item_id_cute_material = "cutebuttons"
+item_id_dragonsoul = "dragonsoul"
+item_id_monsterbones = "monsterbones"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -2775,13 +2778,13 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "dragonsoul",
+		id_item = item_id_dragonsoul,
 		str_name = "Dragon Soul",
 		str_desc = "A fearsome dragon soul, pried from the corpse of a Green Eyes Slime Dragon. It's just like Dark Souls! Wait... *just like* Dark Souls??? Maybe you can use this for something.",
 		context = 'dragon soul',
 	),
 	EwGeneralItem(
-		id_item = "monsterbones",
+		id_item = item_id_monsterbones,
 		str_name = "Monster Bones",
 		str_desc = "A large set of bones, taken from the monsters that roam the outskirts. Tastes meaty.",
 		context = 'monster bone',
@@ -21882,58 +21885,232 @@ enemy_spawn_groups = {
 
 # Enemy drop tables. Values are sorted by the chance to the drop an item, and then the minimum and maximum amount of times to drop that item.
 enemy_drop_tables = {
-	enemy_type_sandbag: [{"poudrin": [100, 1, 1]}],
-	enemy_type_juvie: [{"poudrin": [50, 1, 2]}, {"pleb": [5, 1, 1]}, {"crop": [30, 1, 1]}, {"card": [20, 1, 1]}],
-	enemy_type_dinoslime: [{"poudrin": [100, 2, 4]}, {"pleb": [10, 1, 1]},  {"meat": [33, 1, 2]}, {"monsterbones": [100, 3, 5]}],
-	enemy_type_slimeadactyl: [{"poudrin": [100, 3, 5]}, {"pleb": [10, 1, 1]}, {"monsterbones": [100, 3, 5]}],
-	enemy_type_microslime: [{"patrician": [100, 1, 1]}],
-	enemy_type_slimeofgreed: [{"poudrin": [100, 2, 2]}],
-	enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [50, 1, 1]},  {"crop": [50, 3, 6]}, {"monsterbones": [100, 3, 5]}],
-	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [20, 1, 1]}, {"monsterbones": [100, 1, 3]}],
-	enemy_type_doubleheadlessdoublehorseman: [{"poudrin": [100, 22, 22]}, {"pleb": [100, 22, 22]}, {"patrician": [100, 22, 22]}, {"crop": [100, 22, 22]}, {"meat": [100, 22, 22]}, {"card": [100, 22, 22]}],
-	enemy_type_doublehorse: [{"poudrin": [100, 22, 22]}],
-	enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [80, 1, 2]}, {"patrician": [30, 1, 1]}],
-	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [50, 1, 2]}, {"patrician": [20, 1, 2]},  {"meat": [100, 3, 4]}, {"monsterbones": [100, 3, 5]}],
-	enemy_type_greeneyesslimedragon: [{"dragonsoul": [100, 1, 1]},{"poudrin": [100, 15, 20]}, {"patrician": [100, 1, 1]}, {"monsterbones": [100, 5, 10]}],
-	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}],
-	enemy_type_basic_gaiaslimeoid: [{"crop": [100, 1, 1]}],
-	enemy_type_basic_shambler: [{"poudrin": [100, 1, 1]}],
+	enemy_type_sandbag: [
+		{item_id_slimepoudrin: [100, 1, 1]}
+	],
+	enemy_type_juvie: [
+		{item_id_slimepoudrin: [50, 1, 2]}, 
+		{rarity_plebeian: [5, 1, 1]}, 
+		{"crop": [30, 1, 1]}, 
+		{item_id_tradingcardpack: [20, 1, 1]}
+	],
+	enemy_type_dinoslime: [
+		{item_id_slimepoudrin: [100, 2, 4]}, 
+		{rarity_plebeian: [10, 1, 1]},  
+		{item_id_dinoslimemeat: [33, 1, 2]}, 
+		{item_id_monsterbones: [100, 3, 5]}
+	],
+	enemy_type_slimeadactyl: [
+		{item_id_slimepoudrin: [100, 3, 5]}, 
+		{rarity_plebeian: [10, 1, 1]}, 
+		{item_id_monsterbones: [100, 3, 5]}
+	],
+	enemy_type_microslime: [
+		{rarity_patrician: [100, 1, 1]}
+	],
+	enemy_type_slimeofgreed: [
+		{item_id_slimepoudrin: [100, 2, 2]}
+	],
+	enemy_type_desertraider: [
+		{item_id_slimepoudrin: [100, 1, 2]}, 
+		{rarity_plebeian: [50, 1, 1]},  
+		{"crop": [50, 3, 6]}, 
+		{item_id_monsterbones: [100, 3, 5]}
+	],
+	enemy_type_mammoslime: [
+		{item_id_slimepoudrin: [75, 5, 6]},  
+		{rarity_patrician: [20, 1, 1]},
+		{item_id_monsterbones: [100, 1, 3]}
+	],
+	enemy_type_doubleheadlessdoublehorseman: [
+		{item_id_slimepoudrin: [100, 22, 22]}, 
+		{rarity_plebeian: [100, 22, 22]}, 
+		{rarity_patrician: [100, 22, 22]}, 
+		{"crop": [100, 22, 22]}, 
+		{item_id_dinoslimemeat: [100, 22, 22]}, 
+		{item_id_tradingcardpack: [100, 22, 22]}
+	],
+	enemy_type_doublehorse: [
+		{item_id_slimepoudrin: [100, 22, 22]}
+	],
+	enemy_type_megaslime: [
+		{item_id_slimepoudrin: [100, 4, 8]}, 
+		{rarity_plebeian: [80, 1, 2]}, 
+		{rarity_patrician: [30, 1, 1]}
+	],
+	enemy_type_slimeasaurusrex: [
+		{item_id_slimepoudrin: [100, 8, 15]}, 
+		{rarity_plebeian: [50, 1, 2]}, 
+		{rarity_patrician: [20, 1, 2]},  
+		{item_id_dinoslimemeat: [100, 3, 4]}, 
+		{item_id_monsterbones: [100, 3, 5]}
+	],
+	enemy_type_greeneyesslimedragon: [
+		{item_id_dragonsoul: [100, 1, 1]},
+		{item_id_slimepoudrin: [100, 15, 20]}, 
+		{rarity_patrician: [100, 1, 1]}, 
+		{item_id_monsterbones: [100, 5, 10]}
+	],
+	enemy_type_unnervingfightingoperator: [
+		{item_id_slimepoudrin: [100, 1, 1]}, 
+		{"crop": [100, 1, 1]}, 
+		{item_id_dinoslimemeat: [100, 1, 1]}, 
+		{item_id_tradingcardpack: [100, 1, 1]}
+	],
+	enemy_type_basic_gaiaslimeoid: [
+		{"crop": [70, 1, 3]}
+	],
+	enemy_type_basic_shambler: [
+		{item_id_slimepoudrin: [50, 1, 1]}
+	],
 }
 
-# Template. Use this when making a new enemy, as they need all these values filled out.
-# {"slimerange": , "ai": , "attacktype": , "displayname": , "raredisplayname": , "aliases": },
-
+# When making a new enemy, make sure to fill out slimerange, ai, attacktype, displayname, raredisplayname, and aliases.
 # Enemy data tables. Slime is stored as a range from min to max possible slime upon spawning.
 enemy_data_table = {
-	enemy_type_sandbag: {"slimerange": [1000000000, 1000000000], "ai": enemy_ai_sandbag, "attacktype": enemy_attacktype_unarmed, "displayname": "Sand Bag", "raredisplayname": "Durable Sand Bag", "aliases": ["sandbag", "bag o sand", "bag of sand"]},
-	enemy_type_juvie: {"slimerange": [10000, 50000], "ai": enemy_ai_coward, "attacktype": enemy_attacktype_unarmed, "displayname": "Lost Juvie", "raredisplayname": "Shellshocked Juvie", "aliases": ["juvie","greenman","lostjuvie", "lost"]},
-	enemy_type_dinoslime: {"slimerange": [250000, 500000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_fangs, "displayname": "Dinoslime", "raredisplayname": "Voracious Dinoslime", "aliases": ["dino","slimeasaur"]},
-	enemy_type_slimeadactyl: {"slimerange": [500000, 750000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_talons, "displayname": "Slimeadactyl", "raredisplayname": "Predatory Slimeadactyl", "aliases": ["bird","dactyl"]},
-	enemy_type_desertraider: {"slimerange": [250000, 750000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_raiderscythe, "displayname": "Desert Raider", "raredisplayname": "Desert Warlord", "aliases": ["raider","scytheboy","desertraider", "desert"]},
-	enemy_type_mammoslime: {"slimerange": [650000, 950000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_tusks, "displayname": "Mammoslime", "raredisplayname": "Territorial Mammoslime", "aliases": ["mammoth","brunswick"]},
-	enemy_type_microslime: {"slimerange": [10000, 50000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_unarmed, "displayname": "Microslime", "raredisplayname": "Irridescent Microslime", "aliases": ["micro","pinky"]},
-	enemy_type_slimeofgreed: {"slimerange": [20000, 100000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_unarmed, "displayname": "Slime Of Greed", "raredisplayname": "Slime Of Avarice", "aliases": ["slime","slimeofgreed","pot","potofgreed","draw2cards"]},
-	enemy_type_doubleheadlessdoublehorseman: {"slimerange": [100000000, 150000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_axe, "displayname": "Double Headless Double Horseman", "raredisplayname": "Quadruple Headless Quadruple Horseman", "aliases": ["doubleheadlessdoublehorseman", "headlesshorseman", "demoknight", "horseman"]},
-	enemy_type_doublehorse: {"slimerange": [50000000, 75000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_hooves, "displayname": "Double Headless Double Horseman's Horse", "raredisplayname": "Quadruple Headless Quadruple Horseman's Horse", "aliases": ["doublehorse", "horse", "pony", "lilbit"]},
-	enemy_type_megaslime: {"slimerange": [1000000, 1000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_gunkshot, "displayname": "Megaslime", "raredisplayname": "Rampaging Megaslime", "aliases": ["mega","smooze","muk"]},
-	enemy_type_slimeasaurusrex: {"slimerange": [1750000, 3000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_fangs, "displayname": "Slimeasaurus Rex", "raredisplayname": "Sex Rex", "aliases": ["rex","trex","slimeasaurusrex","slimeasaurus"]},
-	enemy_type_greeneyesslimedragon: {"slimerange": [3500000, 5000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_molotovbreath, "displayname": "Green Eyes Slime Dragon", "raredisplayname": "Green Eyes JPEG Dragon", "aliases": ["dragon","greeneyes","greeneyesslimedragon","green"]},
-	enemy_type_unnervingfightingoperator: {"slimerange": [1000000, 3000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_armcannon, "displayname": "Unnerving Fighting Operator", "raredisplayname": "Unyielding Fierce Operator", "aliases": ["ufo", "alien","unnervingfightingoperator","unnvering"]},
-	enemy_type_basic_gaiaslimeoid: {"slimerange": [100000, 200000], "ai": enemy_ai_gaiaslimeoid, "attacktype": enemy_attacktype_gunkshot, "displayname": "Gaiaslimeoid", "raredisplayname":"Rare Gaiaslimeoid", "aliases": ["gaia", "plant"], "class": enemy_class_gaiaslimeoid},
-	enemy_type_basic_shambler: {"slimerange": [100000, 200000], "ai": enemy_ai_shambler, "attacktype": enemy_attacktype_fangs, "displayname": "Shambler", "raredisplayname": "Rare Shambler", "aliases": ["shambler", "zombie"], "class": enemy_class_shambler},
+	enemy_type_sandbag: {
+		"slimerange": [1000000000, 1000000000], 
+		"ai": enemy_ai_sandbag, 
+		"attacktype": enemy_attacktype_unarmed, 
+		"displayname": "Sand Bag", 
+		"raredisplayname": "Durable Sand Bag", 
+		"aliases": ["sandbag", "bag o sand", "bag of sand"]
+	},
+	enemy_type_juvie: {
+		"slimerange": [10000, 50000],
+		"ai": enemy_ai_coward, "attacktype": enemy_attacktype_unarmed, 
+		"displayname": "Lost Juvie", 
+		"raredisplayname": "Shellshocked Juvie", 
+		"aliases": ["juvie","greenman","lostjuvie", "lost"]
+	},
+	enemy_type_dinoslime: {
+		"slimerange": [250000, 500000], 
+		"ai": enemy_ai_attacker_a, 
+		"attacktype": enemy_attacktype_fangs, 
+		"displayname": "Dinoslime", 
+		"raredisplayname": "Voracious Dinoslime", 
+		"aliases": ["dino","slimeasaur"]
+	},
+	enemy_type_slimeadactyl: {
+		"slimerange": [500000, 750000], 
+		"ai": enemy_ai_attacker_b, 
+		"attacktype": enemy_attacktype_talons, 
+		"displayname": "Slimeadactyl", 
+		"raredisplayname": "Predatory Slimeadactyl", 
+		"aliases": ["bird","dactyl"]
+	},
+	enemy_type_desertraider: {
+		"slimerange": [250000, 750000], 
+		"ai": enemy_ai_attacker_b, 
+		"attacktype": enemy_attacktype_raiderscythe, 
+		"displayname": "Desert Raider", 
+		"raredisplayname": "Desert Warlord", 
+		"aliases": ["raider","scytheboy","desertraider", "desert"]
+	},
+	enemy_type_mammoslime: {
+		"slimerange": [650000, 950000],
+		"ai": enemy_ai_defender, 
+		"attacktype": enemy_attacktype_tusks, 
+		"displayname": "Mammoslime", 
+		"raredisplayname": "Territorial Mammoslime", 
+		"aliases": ["mammoth","brunswick"]
+	},
+	enemy_type_microslime: {
+		"slimerange": [10000, 50000], 
+		"ai": enemy_ai_defender, 
+		"attacktype": enemy_attacktype_unarmed, 
+		"displayname": "Microslime", 
+		"raredisplayname": "Irridescent Microslime", 
+		"aliases": ["micro","pinky"]
+	},
+	enemy_type_slimeofgreed: {
+		"slimerange": [20000, 100000], 
+		"ai": enemy_ai_defender, 
+		"attacktype": enemy_attacktype_unarmed, 
+		"displayname": "Slime Of Greed", 
+		"raredisplayname": "Slime Of Avarice", 
+		"aliases": ["slime","slimeofgreed","pot","potofgreed","draw2cards"]
+	},
+	enemy_type_doubleheadlessdoublehorseman: {
+		"slimerange": [100000000, 150000000], 
+		"ai": enemy_ai_attacker_b, 
+		"attacktype": enemy_attacktype_axe, 
+		"displayname": "Double Headless Double Horseman", 
+		"raredisplayname": "Quadruple Headless Quadruple Horseman", 
+		"aliases": ["doubleheadlessdoublehorseman", "headlesshorseman", "demoknight", "horseman"]
+	},
+	enemy_type_doublehorse: {
+		"slimerange": [50000000, 75000000], 
+		"ai": enemy_ai_attacker_a, 
+		"attacktype": enemy_attacktype_hooves, 
+		"displayname": "Double Headless Double Horseman's Horse", 
+		"raredisplayname": "Quadruple Headless Quadruple Horseman's Horse", 
+		"aliases": ["doublehorse", "horse", "pony", "lilbit"]
+	},
+	enemy_type_megaslime: {
+		"slimerange": [1000000, 1000000], 
+		"ai": enemy_ai_attacker_a, 
+		"attacktype": enemy_attacktype_gunkshot, 
+		"displayname": "Megaslime", 
+		"raredisplayname": "Rampaging Megaslime", 
+		"aliases": ["mega","smooze","muk"]
+	},
+	enemy_type_slimeasaurusrex: {
+		"slimerange": [1750000, 3000000], 
+		"ai": enemy_ai_attacker_b, 
+		"attacktype": enemy_attacktype_fangs, 
+		"displayname": "Slimeasaurus Rex", 
+		"raredisplayname": "Sex Rex", 
+		"aliases": ["rex","trex","slimeasaurusrex","slimeasaurus"]
+	},
+	enemy_type_greeneyesslimedragon: {
+		"slimerange": [3500000, 5000000], 
+		"ai": enemy_ai_attacker_a, 
+		"attacktype": enemy_attacktype_molotovbreath, 
+		"displayname": "Green Eyes Slime Dragon", 
+		"raredisplayname": "Green Eyes JPEG Dragon", 
+		"aliases": ["dragon","greeneyes","greeneyesslimedragon","green"]
+	},
+	enemy_type_unnervingfightingoperator: {
+		"slimerange": [1000000, 3000000], 
+		"ai": enemy_ai_attacker_b, 
+		"attacktype": enemy_attacktype_armcannon, 
+		"displayname": "Unnerving Fighting Operator", 
+		"raredisplayname": "Unyielding Fierce Operator", 
+		"aliases": ["ufo", "alien","unnervingfightingoperator","unnvering"]
+	},
+	enemy_type_basic_gaiaslimeoid: {
+		"slimerange": [100000, 200000], 
+		"ai": enemy_ai_gaiaslimeoid, 
+		"attacktype": enemy_attacktype_gunkshot, 
+		"displayname": "Gaiaslimeoid", 
+		"raredisplayname":"Rare Gaiaslimeoid", 
+		"aliases": ["gaia", "plant"], 
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'testprop':1
+		}
+	},
+	enemy_type_basic_shambler: {
+		"slimerange": [100000, 200000], 
+		"ai": enemy_ai_shambler, 
+		"attacktype": enemy_attacktype_fangs, 
+		"displayname": "Shambler", 
+		"raredisplayname": "Rare Shambler", 
+		"aliases": ["shambler", "zombie"], 
+		"class": enemy_class_shambler,
+		"props": {
+			'newprop':'square'
+		}
+	},
 }
 
 # Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
-raid_boss_names = [
-	enemy_data_table[enemy_type_megaslime]["displayname"],
-	enemy_data_table[enemy_type_megaslime]["raredisplayname"],
-	enemy_data_table[enemy_type_slimeasaurusrex]["displayname"],
-	enemy_data_table[enemy_type_slimeasaurusrex]["raredisplayname"],
-	enemy_data_table[enemy_type_greeneyesslimedragon]["displayname"],
-	enemy_data_table[enemy_type_greeneyesslimedragon]["raredisplayname"],
-	enemy_data_table[enemy_type_unnervingfightingoperator]["displayname"],
-	enemy_data_table[enemy_type_unnervingfightingoperator]["raredisplayname"],
-]
+raid_boss_names = []
+for enemy in enemy_data_table.keys():
+	if enemy in raid_bosses:
+		raid_boss_names.append(enemy_data_table[enemy]["displayname"])
+		raid_boss_names.append(enemy_data_table[enemy]["raredisplayname"])
 
 # Responses given by cowardly enemies when a non-ghost user is in their district.
 coward_responses = [

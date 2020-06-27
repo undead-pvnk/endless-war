@@ -1916,361 +1916,484 @@ def drop_enemy_loot(enemy_data, district_data):
 	item_counter = 0
 	loot_multiplier = 1
 
-	poudrin_dropped = False
-	poudrin_amount = 0
-	
-	dragonsoul_dropped = False
-	dragonsoul_amount = 0
-
-	pleb_dropped = False
-	pleb_amount = 0
-
-	patrician_dropped = False
-	patrician_amount = 0
-
-	crop_dropped = False
-	crop_amount = 0
-
-	meat_dropped = False
-	meat_amount = 0
-
-	card_dropped = False
-	card_amount = 0
+	# poudrin_dropped = False
+	# poudrin_amount = 0
+	# 
+	# dragonsoul_dropped = False
+	# dragonsoul_amount = 0
+	# 
+	# pleb_dropped = False
+	# pleb_amount = 0
+	# 
+	# patrician_dropped = False
+	# patrician_amount = 0
+	# 
+	# crop_dropped = False
+	# crop_amount = 0
+	# 
+	# meat_dropped = False
+	# meat_amount = 0
+	# 
+	# card_dropped = False
+	# card_amount = 0
 	
 	drop_chance = None
 	drop_min = None
 	drop_max = None
 	drop_range = None
 	
-	poudrin_values = None
-	dragonsoul_values = None
-	pleb_values = None
-	patrician_values = None
-	crop_values = None
-	meat_values = None
-	card_values = None
+	# poudrin_values = None
+	# dragonsoul_values = None
+	# pleb_values = None
+	# patrician_values = None
+	# crop_values = None
+	# meat_values = None
+	# card_values = None
 	
+	has_dropped_item = False
 	drop_table = ewcfg.enemy_drop_tables[enemy_data.enemytype]
+
+	for drop_data_set in drop_table:
+		value = None
+		for key in drop_data_set.keys():
+			value = key
+			break
+		
+		drop_chance = drop_data_set[value][0]
+		drop_min = drop_data_set[value][1]
+		drop_max = drop_data_set[value][2]
+		
+		item = ewcfg.item_map.get(value)
+
+		item_type = ewcfg.it_item
+		if item != None:
+			item_id = item.id_item
+			name = item.str_name
+	
+		# Finds the item if it's an EwFood item.
+		if item == None:
+			item = ewcfg.food_map.get(value)
+			item_type = ewcfg.it_food
+			if item != None:
+				item_id = item.id_food
+				name = item.str_name
+	
+		# Finds the item if it's an EwCosmeticItem.
+		if item == None:
+			item = ewcfg.cosmetic_map.get(value)
+			item_type = ewcfg.it_cosmetic
+			if item != None:
+				item_id = item.id_cosmetic
+				name = item.str_name
+	
+		if item == None:
+			item = ewcfg.furniture_map.get(value)
+			item_type = ewcfg.it_furniture
+			if item != None:
+				item_id = item.id_furniture
+				name = item.str_name
+				if item_id in ewcfg.furniture_pony:
+					item.vendors = [ewcfg.vendor_bazaar]
+	
+		if item == None:
+			item = ewcfg.weapon_map.get(value)
+			item_type = ewcfg.it_weapon
+			if item != None:
+				item_id = item.id_weapon
+				name = item.str_weapon
+		
+		# Some entries in the drop table aren't item IDs, they're general values for random drops like cosmetics/crops	
+		if item == None:
+			
+			if value == "crop":
+				item = random.choice(ewcfg.vegetable_list)
+				item_type = ewcfg.it_food
+			
+			elif value in [ewcfg.rarity_plebeian, ewcfg.rarity_patrician]:
+				item_type = ewcfg.it_cosmetic
+
+				cosmetics_list = []
+				for result in ewcfg.cosmetic_items_list:
+					if result.ingredients == "":
+						cosmetics_list.append(result)
+					else:
+						pass
+				
+				if value == ewcfg.rarity_plebeian:
+					items = []
+	
+					for cosmetic in cosmetics_list:
+						if cosmetic.rarity == ewcfg.rarity_plebeian:
+							items.append(cosmetic)
+	
+					item = items[random.randint(0, len(items) - 1)]
+				elif value == ewcfg.rarity_patrician:
+					items = []
+	
+					for cosmetic in cosmetics_list:
+						if cosmetic.rarity == ewcfg.rarity_plebeian:
+							items.append(cosmetic)
+	
+					item = items[random.randint(0, len(items) - 1)]
+
+		if item != None:
+
+			item_dropped = random.randrange(100) <= (drop_chance - 1)
+			if item_dropped:
+				has_dropped_item = True
+				
+				drop_range = list(range(drop_min, drop_max + 1))
+				item_amount = random.choice(drop_range)
+
+				if enemy_data.rare_status == 1:
+					loot_multiplier *= 1.5
+
+				if enemy_data.enemytype == ewcfg.enemy_type_unnervingfightingoperator:
+					loot_multiplier *= math.ceil(enemy_data.slimes / 1000000)
+					
+				item_amount = math.ceil(item_amount * loot_multiplier)
+			else:
+				item_amount = 0
+				
+			for i in range(item_amount):
+
+				item_props = ewitem.gen_item_props(item)
+	
+				generated_item_id = ewitem.item_create(
+					item_type=item_type,
+					id_user=enemy_data.poi,
+					id_server=enemy_data.id_server,
+					stack_max=20 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else -1,
+					stack_size=1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
+					item_props=item_props
+				)
+
+				response = "They dropped {item_name}!".format(item_name=item.str_name)
+				loot_resp_cont.add_channel_response(loot_poi.channel, response)
+
+		else:
+			ewutils.logMsg("ERROR: COULD NOT DROP ITEM WITH VALUE '{}'".format(value))
+			
 	
 	# Go through all the possible drops in the drop table and catch exceptions when necessary
-	for item in drop_table:
-		try:
-			if item["poudrin"]:
-				poudrin_values = item["poudrin"]
-		except:
-			pass
-		try:
-			if item["pleb"]:
-				pleb_values = item["pleb"]
-		except:
-			pass
-		try:
-			if item["patrician"]:
-				patrician_values = item["patrician"]
-		except:
-			pass
-		try:
-			if item["crop"]:
-				crop_values = item["crop"]
-		except:
-			pass
-		try:
-			if item["meat"]:
-				meat_values = item["meat"]
-		except:
-			pass
-		try:
-			if item["card"]:
-				card_values = item["card"]
-		except:
-			pass
-		try:
-			if item['dragonsoul']:
-				dragonsoul_values = item['dragonsoul']
-		except:
-			pass
-
-	if poudrin_values != None:
-		drop_chance = poudrin_values[0]
-		drop_min = poudrin_values[1]
-		drop_max = poudrin_values[2]
-		
-		poudrin_dropped = random.randrange(100) <= (drop_chance - 1)
-		
-		if poudrin_dropped:
-			drop_range = list(range(drop_min, drop_max+1))
-			poudrin_amount = random.choice(drop_range)
-	if dragonsoul_values != None:
-		drop_chance = dragonsoul_values[0]
-		drop_min = dragonsoul_values[1]
-		drop_max = dragonsoul_values[2]
-		
-		dragonsoul_dropped = random.randrange(100) <= (drop_chance - 1)
-		
-		if dragonsoul_dropped:
-			drop_range = list(range(drop_min, drop_max+1))
-			dragonsoul_amount = random.choice(drop_range)
-			
-	if pleb_values != None:
-		drop_chance = pleb_values[0]
-		drop_min = pleb_values[1]
-		drop_max = pleb_values[2]
-		
-		pleb_dropped = random.randrange(101) < drop_chance
-		
-		if pleb_dropped:
-			drop_range = list(range(drop_min, drop_max + 1))
-			pleb_amount = random.choice(drop_range)
-
-	if patrician_values != None:
-		drop_chance = patrician_values[0]
-		drop_min = patrician_values[1]
-		drop_max = patrician_values[2]
-
-		patrician_dropped = random.randrange(101) < drop_chance
-
-		if patrician_dropped:
-			drop_range = list(range(drop_min, drop_max + 1))
-			patrician_amount = random.choice(drop_range)
-
-	if crop_values != None:
-		drop_chance = crop_values[0]
-		drop_min = crop_values[1]
-		drop_max = crop_values[2]
-
-		crop_dropped = random.randrange(101) < drop_chance
-
-		if crop_dropped:
-			drop_range = list(range(drop_min, drop_max + 1))
-			crop_amount = random.choice(drop_range)
-
-	if meat_values != None:
-		drop_chance = meat_values[0]
-		drop_min = meat_values[1]
-		drop_max = meat_values[2]
-
-		meat_dropped = random.randrange(101) < drop_chance
-
-		if meat_dropped:
-			drop_range = list(range(drop_min, drop_max + 1))
-			meat_amount = random.choice(drop_range)
-
-	if card_values != None:
-		drop_chance = card_values[0]
-		drop_min = card_values[1]
-		drop_max = card_values[2]
-
-		card_dropped = random.randrange(101) < drop_chance
-
-		if card_dropped:
-			drop_range = list(range(drop_min, drop_max + 1))
-			card_amount = random.choice(drop_range)
-
-	if pleb_dropped or patrician_dropped:
-		cosmetics_list = []
-
-		for result in ewcfg.cosmetic_items_list:
-			if result.ingredients == "":
-				cosmetics_list.append(result)
-			else:
-				pass
-			
-	# Multiply the amount of loot if an enemy is its rare variant
-	# Loot is also multiplied for the UFO raid boss, since it's a special case with the increased variety of slime it can have.
-	if enemy_data.rare_status == 1:
-		loot_multiplier *= 1.5
-		
-	if enemy_data.enemytype == ewcfg.enemy_type_unnervingfightingoperator:
-		loot_multiplier *= math.ceil(enemy_data.slimes / 1000000)
-		
-	poudrin_amount = math.ceil(poudrin_amount * loot_multiplier)
-	pleb_amount = math.ceil(pleb_amount * loot_multiplier)
-	patrician_amount = math.ceil(patrician_amount * loot_multiplier)
-	crop_amount = math.ceil(crop_amount * loot_multiplier)
-	meat_amount = math.ceil(meat_amount * loot_multiplier)
-	card_amount = math.ceil(card_amount * loot_multiplier)
-	# Drops items one-by-one
-	if poudrin_dropped:
-		item_counter = 0
-
-		while item_counter < poudrin_amount:
-			for item in ewcfg.item_list:
-				if item.context == "poudrin":
-					ewitem.item_create(
-						item_type=ewcfg.it_item,
-						id_user=district_data.name,
-						id_server=district_data.id_server,
-						item_props={
-							'id_item': item.id_item,
-							'context': item.context,
-							'item_name': item.str_name,
-							'item_desc': item.str_desc,
-						}
-					),
-					item = EwItem(id_item=item.id_item)
-					item.persist()
-			response = "They dropped a slime poudrin!"
-			loot_resp_cont.add_channel_response(loot_poi.channel, response)
-
-			item_counter += 1
-
-			
-	if dragonsoul_dropped:
-		item_counter = 0
-
-		while item_counter < dragonsoul_amount:
-			for item in ewcfg.item_list:
-				if item.context == "dragon soul":
-					ewitem.item_create(
-						item_type=ewcfg.it_item,
-						id_user=district_data.name,
-						id_server=district_data.id_server,
-						item_props={
-							'id_item': item.id_item,
-							'context': item.context,
-							'item_name': item.str_name,
-							'item_desc': item.str_desc,
-						}
-					),
-					item = EwItem(id_item=item.id_item)
-					item.persist()
-			response = "They dropped their **SOUL!!**"
-			loot_resp_cont.add_channel_response(loot_poi.channel, response)
-
-			item_counter += 1
-
-	if pleb_dropped:
-		item_counter = 0
-
-		while item_counter < pleb_amount:
-			items = []
-
-			for cosmetic in cosmetics_list:
-				if cosmetic.rarity == ewcfg.rarity_plebeian:
-					items.append(cosmetic)
-
-			item = items[random.randint(0, len(items) - 1)]
-
-			item_props = ewitem.gen_item_props(item)
-
-			ewitem.item_create(
-				item_type = ewcfg.it_cosmetic,
-				id_user = district_data.name,
-				id_server = district_data.id_server,
-				item_props = item_props
-			)
-
-			response = "They dropped a {item_name}!".format(item_name=item.str_name)
-			loot_resp_cont.add_channel_response(loot_poi.channel, response)
-
-			item_counter += 1
-
-	if patrician_dropped:
-		item_counter = 0
-
-		while item_counter < patrician_amount:
-			items = []
-
-			for cosmetic in cosmetics_list:
-				if cosmetic.rarity == ewcfg.rarity_patrician:
-					items.append(cosmetic)
-
-			item = items[random.randint(0, len(items) - 1)]
-
-			item_props = ewitem.gen_item_props(item)
-
-			ewitem.item_create(
-				item_type = ewcfg.it_cosmetic,
-				id_user = district_data.name,
-				id_server = district_data.id_server,
-				item_props = item_props
-			)
-
-			response = "They dropped a {item_name}!".format(item_name=item.str_name)
-			loot_resp_cont.add_channel_response(loot_poi.channel, response)
-
-			item_counter += 1
-
-	if crop_dropped:
-		item_counter = 0
-
-		while item_counter < crop_amount:
-
-			vegetable = random.choice(ewcfg.vegetable_list)
-
-			ewitem.item_create(
-				id_user=district_data.name,
-				id_server=district_data.id_server,
-				item_type=ewcfg.it_food,
-				item_props={
-					'id_food': vegetable.id_food,
-					'food_name': vegetable.str_name,
-					'food_desc': vegetable.str_desc,
-					'recover_hunger': vegetable.recover_hunger,
-					'str_eat': vegetable.str_eat,
-					'time_expir': time.time() + ewcfg.farm_food_expir
-				}
-			)
-			response = "They dropped a bushel of {vegetable_name}!".format(vegetable_name=vegetable.str_name)
-			loot_resp_cont.add_channel_response(loot_poi.channel, response)
-
-			item_counter += 1
-
-	# Drop dinoslime meat
-	if meat_dropped:
-		meat = None
-		item_counter = 0
-
-		for food in ewcfg.food_list:
-			if food.id_food == ewcfg.item_id_dinoslimemeat:
-				meat = food
-				
-		while item_counter < meat_amount:  
-			ewitem.item_create(
-				id_user=district_data.name,
-				id_server=district_data.id_server,
-				item_type=ewcfg.it_food,
-				item_props={
-					'id_food': meat.id_food,
-					'food_name': meat.str_name,
-					'food_desc': meat.str_desc,
-					'recover_hunger': meat.recover_hunger,
-					'str_eat': meat.str_eat,
-					'time_expir': time.time() + ewcfg.std_food_expir
-				}
-			)
-			response = "They dropped a piece of meat!"
-			loot_resp_cont.add_channel_response(loot_poi.channel, response)
-			
-			item_counter += 1
-	
-	# Drop trading cards
-	if card_dropped:
-		cards = None
-		item_counter = 0
-		
-		for item in ewcfg.item_list:
-			if item.id_item == ewcfg.item_id_tradingcardpack:
-				cards = item
-
-		while item_counter < card_amount:
-			ewitem.item_create(
-				id_user=district_data.name,
-				id_server=district_data.id_server,
-				item_type=ewcfg.it_item,
-				item_props={
-					'id_item': cards.id_item,
-					'context': cards.context,
-					'item_name': cards.str_name,
-					'item_desc': cards.str_desc,
-				}
-			)
-			response = "They dropped a pack of trading cards!"
-			loot_resp_cont.add_channel_response(loot_poi.channel, response)
-			
-			item_counter += 1
-
-	if not poudrin_dropped and not pleb_dropped and not patrician_dropped and not crop_dropped and not meat_dropped and not card_dropped:
+	# for item in drop_table:
+	# 	try:
+	# 		if item["poudrin"]:
+	# 			poudrin_values = item["poudrin"]
+	# 	except:
+	# 		pass
+	# 	try:
+	# 		if item["pleb"]:
+	# 			pleb_values = item["pleb"]
+	# 	except:
+	# 		pass
+	# 	try:
+	# 		if item["patrician"]:
+	# 			patrician_values = item["patrician"]
+	# 	except:
+	# 		pass
+	# 	try:
+	# 		if item["crop"]:
+	# 			crop_values = item["crop"]
+	# 	except:
+	# 		pass
+	# 	try:
+	# 		if item["meat"]:
+	# 			meat_values = item["meat"]
+	# 	except:
+	# 		pass
+	# 	try:
+	# 		if item["card"]:
+	# 			card_values = item["card"]
+	# 	except:
+	# 		pass
+	# 	try:
+	# 		if item['dragonsoul']:
+	# 			dragonsoul_values = item['dragonsoul']
+	# 	except:
+	# 		pass
+	# 
+	# if poudrin_values != None:
+	# 	drop_chance = poudrin_values[0]
+	# 	drop_min = poudrin_values[1]
+	# 	drop_max = poudrin_values[2]
+	# 	
+	# 	poudrin_dropped = random.randrange(100) <= (drop_chance - 1)
+	# 	
+	# 	if poudrin_dropped:
+	# 		drop_range = list(range(drop_min, drop_max+1))
+	# 		poudrin_amount = random.choice(drop_range)
+	# if dragonsoul_values != None:
+	# 	drop_chance = dragonsoul_values[0]
+	# 	drop_min = dragonsoul_values[1]
+	# 	drop_max = dragonsoul_values[2]
+	# 	
+	# 	dragonsoul_dropped = random.randrange(100) <= (drop_chance - 1)
+	# 	
+	# 	if dragonsoul_dropped:
+	# 		drop_range = list(range(drop_min, drop_max+1))
+	# 		dragonsoul_amount = random.choice(drop_range)
+	# 		
+	# if pleb_values != None:
+	# 	drop_chance = pleb_values[0]
+	# 	drop_min = pleb_values[1]
+	# 	drop_max = pleb_values[2]
+	# 	
+	# 	pleb_dropped = random.randrange(101) < drop_chance
+	# 	
+	# 	if pleb_dropped:
+	# 		drop_range = list(range(drop_min, drop_max + 1))
+	# 		pleb_amount = random.choice(drop_range)
+	# 
+	# if patrician_values != None:
+	# 	drop_chance = patrician_values[0]
+	# 	drop_min = patrician_values[1]
+	# 	drop_max = patrician_values[2]
+	# 
+	# 	patrician_dropped = random.randrange(101) < drop_chance
+	# 
+	# 	if patrician_dropped:
+	# 		drop_range = list(range(drop_min, drop_max + 1))
+	# 		patrician_amount = random.choice(drop_range)
+	# 
+	# if crop_values != None:
+	# 	drop_chance = crop_values[0]
+	# 	drop_min = crop_values[1]
+	# 	drop_max = crop_values[2]
+	# 
+	# 	crop_dropped = random.randrange(101) < drop_chance
+	# 
+	# 	if crop_dropped:
+	# 		drop_range = list(range(drop_min, drop_max + 1))
+	# 		crop_amount = random.choice(drop_range)
+	# 
+	# if meat_values != None:
+	# 	drop_chance = meat_values[0]
+	# 	drop_min = meat_values[1]
+	# 	drop_max = meat_values[2]
+	# 
+	# 	meat_dropped = random.randrange(101) < drop_chance
+	# 
+	# 	if meat_dropped:
+	# 		drop_range = list(range(drop_min, drop_max + 1))
+	# 		meat_amount = random.choice(drop_range)
+	# 
+	# if card_values != None:
+	# 	drop_chance = card_values[0]
+	# 	drop_min = card_values[1]
+	# 	drop_max = card_values[2]
+	# 
+	# 	card_dropped = random.randrange(101) < drop_chance
+	# 
+	# 	if card_dropped:
+	# 		drop_range = list(range(drop_min, drop_max + 1))
+	# 		card_amount = random.choice(drop_range)
+	# 
+	# if pleb_dropped or patrician_dropped:
+	# 	cosmetics_list = []
+	# 
+	# 	for result in ewcfg.cosmetic_items_list:
+	# 		if result.ingredients == "":
+	# 			cosmetics_list.append(result)
+	# 		else:
+	# 			pass
+	# 		
+	# # Multiply the amount of loot if an enemy is its rare variant
+	# # Loot is also multiplied for the UFO raid boss, since it's a special case with the increased variety of slime it can have.
+	# if enemy_data.rare_status == 1:
+	# 	loot_multiplier *= 1.5
+	# 	
+	# if enemy_data.enemytype == ewcfg.enemy_type_unnervingfightingoperator:
+	# 	loot_multiplier *= math.ceil(enemy_data.slimes / 1000000)
+	# 	
+	# poudrin_amount = math.ceil(poudrin_amount * loot_multiplier)
+	# pleb_amount = math.ceil(pleb_amount * loot_multiplier)
+	# patrician_amount = math.ceil(patrician_amount * loot_multiplier)
+	# crop_amount = math.ceil(crop_amount * loot_multiplier)
+	# meat_amount = math.ceil(meat_amount * loot_multiplier)
+	# card_amount = math.ceil(card_amount * loot_multiplier)
+	# # Drops items one-by-one
+	# if poudrin_dropped:
+	# 	item_counter = 0
+	# 
+	# 	while item_counter < poudrin_amount:
+	# 		for item in ewcfg.item_list:
+	# 			if item.context == "poudrin":
+	# 				ewitem.item_create(
+	# 					item_type=ewcfg.it_item,
+	# 					id_user=district_data.name,
+	# 					id_server=district_data.id_server,
+	# 					item_props={
+	# 						'id_item': item.id_item,
+	# 						'context': item.context,
+	# 						'item_name': item.str_name,
+	# 						'item_desc': item.str_desc,
+	# 					}
+	# 				),
+	# 				item = EwItem(id_item=item.id_item)
+	# 				item.persist()
+	# 		response = "They dropped a slime poudrin!"
+	# 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
+	# 
+	# 		item_counter += 1
+	# 
+	# 		
+	# if dragonsoul_dropped:
+	# 	item_counter = 0
+	# 
+	# 	while item_counter < dragonsoul_amount:
+	# 		for item in ewcfg.item_list:
+	# 			if item.context == "dragon soul":
+	# 				ewitem.item_create(
+	# 					item_type=ewcfg.it_item,
+	# 					id_user=district_data.name,
+	# 					id_server=district_data.id_server,
+	# 					item_props={
+	# 						'id_item': item.id_item,
+	# 						'context': item.context,
+	# 						'item_name': item.str_name,
+	# 						'item_desc': item.str_desc,
+	# 					}
+	# 				),
+	# 				item = EwItem(id_item=item.id_item)
+	# 				item.persist()
+	# 		response = "They dropped their **SOUL!!**"
+	# 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
+	# 
+	# 		item_counter += 1
+	# 
+	# if pleb_dropped:
+	# 	item_counter = 0
+	# 
+	# 	while item_counter < pleb_amount:
+	# 		items = []
+	# 
+	# 		for cosmetic in cosmetics_list:
+	# 			if cosmetic.rarity == ewcfg.rarity_plebeian:
+	# 				items.append(cosmetic)
+	# 
+	# 		item = items[random.randint(0, len(items) - 1)]
+	# 
+	# 		item_props = ewitem.gen_item_props(item)
+	# 
+	# 		ewitem.item_create(
+	# 			item_type = ewcfg.it_cosmetic,
+	# 			id_user = district_data.name,
+	# 			id_server = district_data.id_server,
+	# 			item_props = item_props
+	# 		)
+	# 
+	# 		response = "They dropped a {item_name}!".format(item_name=item.str_name)
+	# 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
+	# 
+	# 		item_counter += 1
+	# 
+	# if patrician_dropped:
+	# 	item_counter = 0
+	# 
+	# 	while item_counter < patrician_amount:
+	# 		items = []
+	# 
+	# 		for cosmetic in cosmetics_list:
+	# 			if cosmetic.rarity == ewcfg.rarity_patrician:
+	# 				items.append(cosmetic)
+	# 
+	# 		item = items[random.randint(0, len(items) - 1)]
+	# 
+	# 		item_props = ewitem.gen_item_props(item)
+	# 
+	# 		ewitem.item_create(
+	# 			item_type = ewcfg.it_cosmetic,
+	# 			id_user = district_data.name,
+	# 			id_server = district_data.id_server,
+	# 			item_props = item_props
+	# 		)
+	# 
+	# 		response = "They dropped a {item_name}!".format(item_name=item.str_name)
+	# 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
+	# 
+	# 		item_counter += 1
+	# 
+	# if crop_dropped:
+	# 	item_counter = 0
+	# 
+	# 	while item_counter < crop_amount:
+	# 
+	# 		vegetable = random.choice(ewcfg.vegetable_list)
+	# 
+	# 		ewitem.item_create(
+	# 			id_user=district_data.name,
+	# 			id_server=district_data.id_server,
+	# 			item_type=ewcfg.it_food,
+	# 			item_props={
+	# 				'id_food': vegetable.id_food,
+	# 				'food_name': vegetable.str_name,
+	# 				'food_desc': vegetable.str_desc,
+	# 				'recover_hunger': vegetable.recover_hunger,
+	# 				'str_eat': vegetable.str_eat,
+	# 				'time_expir': time.time() + ewcfg.farm_food_expir
+	# 			}
+	# 		)
+	# 		response = "They dropped a bushel of {vegetable_name}!".format(vegetable_name=vegetable.str_name)
+	# 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
+	# 
+	# 		item_counter += 1
+	# 
+	# # Drop dinoslime meat
+	# if meat_dropped:
+	# 	meat = None
+	# 	item_counter = 0
+	# 
+	# 	for food in ewcfg.food_list:
+	# 		if food.id_food == ewcfg.item_id_dinoslimemeat:
+	# 			meat = food
+	# 			
+	# 	while item_counter < meat_amount:  
+	# 		ewitem.item_create(
+	# 			id_user=district_data.name,
+	# 			id_server=district_data.id_server,
+	# 			item_type=ewcfg.it_food,
+	# 			item_props={
+	# 				'id_food': meat.id_food,
+	# 				'food_name': meat.str_name,
+	# 				'food_desc': meat.str_desc,
+	# 				'recover_hunger': meat.recover_hunger,
+	# 				'str_eat': meat.str_eat,
+	# 				'time_expir': time.time() + ewcfg.std_food_expir
+	# 			}
+	# 		)
+	# 		response = "They dropped a piece of meat!"
+	# 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
+	# 		
+	# 		item_counter += 1
+	# 
+	# # Drop trading cards
+	# if card_dropped:
+	# 	cards = None
+	# 	item_counter = 0
+	# 	
+	# 	for item in ewcfg.item_list:
+	# 		if item.id_item == ewcfg.item_id_tradingcardpack:
+	# 			cards = item
+	# 
+	# 	while item_counter < card_amount:
+	# 		ewitem.item_create(
+	# 			id_user=district_data.name,
+	# 			id_server=district_data.id_server,
+	# 			item_type=ewcfg.it_item,
+	# 			item_props={
+	# 				'id_item': cards.id_item,
+	# 				'context': cards.context,
+	# 				'item_name': cards.str_name,
+	# 				'item_desc': cards.str_desc,
+	# 			}
+	# 		)
+	# 		response = "They dropped a pack of trading cards!"
+	# 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
+	# 		
+	# 		item_counter += 1
+	# 
+	if not has_dropped_item:
 		response = "They didn't drop anything...\n"
 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
 

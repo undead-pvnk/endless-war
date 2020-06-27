@@ -544,6 +544,8 @@ class EwDistrict:
 		
 		poi = None
 		
+		
+		
 		# In the Gankers Vs. Shamblers event, importance is placed on districts
 		# As a result, if a district is degraded, then all of its subzones/streets are also now degraded
 		if checked_poi.is_district:
@@ -564,8 +566,10 @@ class EwDistrict:
 					# First mother POI found is a street. Break here and check for its father district's degradation.
 					poi = ewcfg.id_to_poi.get(mother_poi.father_district)
 					break
-		
-		return self.degradation >= poi.max_degradation
+
+		# print('poi checked was {}. looking for {} degradation.'.format(self.name, poi.id_poi))
+		poi_district_data = EwDistrict(district = poi.id_poi, id_server = self.id_server)
+		return poi_district_data.degradation >= poi.max_degradation
 
 """
 	Informs the player about their current zone's capture progress
@@ -743,7 +747,7 @@ async def shamble(cmd):
 	if poi is None:
 		return
 	elif not poi.is_district:
-		response = "This doesn't seem like an importance place to be shambling. Try a district zone instead."
+		response = "This doesn't seem like an important place to be shambling. Try a district zone instead."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
@@ -754,24 +758,24 @@ async def shamble(cmd):
 		user_data.degradation += 1
 		district_data.persist()
 		user_data.persist()
+		
+		response = "You shamble {}.".format(poi.str_name)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if district_data.degradation == poi.max_degradation:
 			response = ewcfg.str_zone_degraded.format(poi = poi.str_name)
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
-			new_topic = None
-			if not cmd.message.channel.topic:
-				new_topic = ewcfg.channel_topic_degraded
-			elif not (ewcfg.channel_topic_degraded in cmd.message.channel.topic):
-				new_topic = cmd.message.channel.topic + " " + ewcfg.channel_topic_degraded
-			
-			if new_topic:
-				try:
-					await cmd.client.edit_channel(channel = cmd.message.channel, topic = new_topic)
-				except:
-					ewutils.logMsg('Failed to set channel topic for {} to {}'.format(cmd.message.channel.name, new_topic))
-
-		response = "You shamble {}.".format(poi.str_name)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			# new_topic = None
+			# if not cmd.message.channel.topic:
+			# 	new_topic = ewcfg.channel_topic_degraded
+			# elif not (ewcfg.channel_topic_degraded in cmd.message.channel.topic):
+			# 	new_topic = cmd.message.channel.topic + " " + ewcfg.channel_topic_degraded
+			# 
+			# if new_topic:
+			# 	try:
+			# 		await cmd.client.edit_channel(channel = cmd.message.channel, topic = new_topic)
+			# 	except:
+			# 		ewutils.logMsg('Failed to set channel topic for {} to {}'.format(cmd.message.channel.name, new_topic))
 			
 """
 	Updates/Increments the capture_points values of all districts every time it's called
