@@ -9,6 +9,7 @@ import ewrolemgr
 import ewstats
 import ewmap
 import ewcasino
+import ewquadrants
 
 from ew import EwUser
 from ewmarket import EwMarket
@@ -985,9 +986,42 @@ async def petslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	time_now = int(time.time())
+	target = None
+	target_data = None
+	list_ids = None
+
+	#mentions[0]
+	if cmd.mentions_count > 0:
+		target = cmd.mentions[0]
+		target_data = EwUser(member=target)
+
+		list_ids = []
+
+		for quadrant in ewcfg.quadrant_ids:
+			quadrant_data = ewquadrants.EwQuadrant(id_server=cmd.message.server.id, id_user=cmd.message.author.id, quadrant=quadrant)
+			if quadrant_data.id_target != "" and quadrant_data.check_if_onesided() is False:
+				list_ids.append(quadrant_data.id_target)
+			if quadrant_data.id_target2 != "" and quadrant_data.check_if_onesided() is False:
+				list_ids.append(quadrant_data.id_target2)
+
+
+		if target_data.poi != user_data.poi:
+			response = "You can't pet them because they aren't here."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		elif target_data.id_user not in list_ids:
+			response = "You try to pet {}'s slimeoid, but you're not close enough for them to trust you. Better whip out those quadrants...".format(target.display_name)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		elif target_data.life_state == ewcfg.life_state_corpse:
+			response = "Slimeoids don't fuck with ghosts.".format(target.display_name)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		else:
+			slimeoid = EwSlimeoid(member=target)
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 			response = "Slimeoids don't fuck with ghosts."
+
+	elif cmd.mentions_count > 1:
+		response = "Getting a bit too touchy-feely with these slimeoids, eh? You can only pet one at a time."
 
 	elif user_data.has_soul == 0:
 		response = "The idea doesn't even occur to you because your soul is missing."
@@ -1002,6 +1036,7 @@ async def petslimeoid(cmd):
 			response = "{} whimpers. It's still recovering from being beaten up.".format(slimeoid.name)
 
 	else:
+
 		armor = ewcfg.defense_map.get(slimeoid.armor)
 		response = armor.str_pet.format(
 			slimeoid_name = slimeoid.name

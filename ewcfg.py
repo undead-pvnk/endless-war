@@ -11936,6 +11936,7 @@ cosmetic_items_list = [
 		price = 50000,
 		vendors = [vendor_bazaar],
 		is_hat = True,
+		str_onbreak = "Your hat takes a hit, detatching the propeller and sending it twirling into the stratosphere. Looks like you'll never see it again."
 	),
 	EwCosmeticItem(
 		id_cosmetic = "mininghelmet",
@@ -11986,6 +11987,7 @@ cosmetic_items_list = [
 		price = 50000,
 		vendors = [vendor_bazaar],
 		is_hat=True,
+		str_onadorn="You whip out your baseball cap and apply it...backwards. Fuck, now we're getting serious."
 	),
 	EwCosmeticItem(
 		id_cosmetic = "piratehat",
@@ -11996,6 +11998,8 @@ cosmetic_items_list = [
 		price = 50000,
 		vendors = [vendor_bazaar],
 		is_hat=True,
+		str_onadorn = "Y'ARRRRRRR! You adorn ye' tricorne and spit at a nearby pedestrian.",
+		str_onbreak = "You hat is torn to shreds. Welp, no more shivering timbers."
 	),
 	EwCosmeticItem(
 		id_cosmetic = "eyepatch",
@@ -12005,6 +12009,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		str_unadorn = "You remove your eyepatch to reveal the grisly wound benea- wait. Your eye is just fine! What kind of pathetic pirate LARPer did you turn out to be?"
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cigarette",
@@ -12014,6 +12019,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		str_onadorn = "You stick the cigarette in your mouth, swave as a baby's bottom. You wonder how many of these could fit in your mouth."
 	),
 	EwCosmeticItem(
 		id_cosmetic = "headband",
