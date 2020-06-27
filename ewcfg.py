@@ -932,6 +932,7 @@ cmd_challenge = cmd_prefix + 'challenge'
 cmd_instructions = cmd_prefix + 'instructions'
 cmd_playfetch = cmd_prefix + 'playfetch'
 cmd_petslimeoid = cmd_prefix + 'petslimeoid'
+cmd_abuseslimeoid = cmd_prefix + 'abuseslimeoid'
 cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
@@ -15294,6 +15295,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You carefully run your hand over {slimeoid_name}'s hide, making sure to go with the grain so as not to slice your fingers open on its sharp scales.",
+		str_abuse = "You pick up {slimeoid_name} by the hind legs, swinging them over your head and repeatedly slamming them to the ground.",
 		str_create = "You press a button on the armor console labelled 'A'. Through the observation port, you see the proto-Slimeoid's skin begin to glint as it sprouts roughly-edged scales.",
 		str_armor = "It is covered in scales.",
 		id_resistance = slimeoid_weapon_electricity,
@@ -15315,6 +15317,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat one of the hard, bony plates covering {slimeoid_name}'s skin.",
+		str_abuse = "You take a stick and hit {slimeoid_name}'s face with it.",
 		str_create = "You press a button on the armor console labelled 'B'. Through the observation port, you see hard bony plates begin to congeal on the proto-Slimeoid's surface.",
 		str_armor = "It is covered in bony plates.",
 		id_resistance = slimeoid_weapon_blades,
@@ -15333,6 +15336,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, and your hand tingles as it passes through the quantum field that surrounds its body.",
+		str_abuse = "You grab hold of {slimeoid_name} and shake them aggressively, until their quantum static is splayed out and they look nauseous.",
 		str_create = "You press a button on the armor console labelled 'C'. Through the observation port, start to notice the proto-Slimeoid begin to flicker, and you hear a strange humming sound.",
 		str_armor = "It is enveloped in a field of quantum uncertainty.",
 		id_resistance = slimeoid_weapon_slam,
@@ -15351,6 +15355,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, its fluid, shapeless body squishing and deforming in response to even slight pressure.",
+		str_abuse = "You stick your fist into {slimeoid_name}'s squishy body and jostle its vital organs.",
 		str_create = "You press a button on the armor console labelled 'D'. Through the observation port, you see the proto-Slimeoid suddenly begin to twist itself, stretching and contracting as its shape rapidly shifts.",
 		str_armor = "It is malleable and can absorb blows with ease.",
 		id_resistance = slimeoid_weapon_bludgeon,
@@ -15368,6 +15373,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}. Its skin is hot, and you can feel it pulsing rhythmically.",
+		str_abuse = "You take a blowtorch to {slimeoid_name}'s pulsating skin and watch as it wears itself out trying to regenerate the rapidly burning tissue.",
 		str_create = "You press a button on the armor console labelled 'E'. Through the observation port, you see the proto-Slimeoid begin to pulse, almost like a beating heart.",
 		str_armor = "It can regenerate damage to its body rapidly.",
 		id_resistance = slimeoid_weapon_spikes,
@@ -15385,6 +15391,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, taking care not to inhale through your nose, as one whiff of its odor has been known to make people lose their lunch.",
+		str_abuse = "You try to humiliate {slimeoid_name} by plugging your nose and kicking it around.",
 		str_create = "You press a button on the armor console labelled 'F'. Through the observation port, you see the proto-Slimeoid give off bubbles of foul-colored gas.",
 		str_armor = "It exudes a horrible stench.",
 		id_resistance = slimeoid_weapon_teeth,
@@ -15401,6 +15408,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}'s slick wet skin, and your hand comes away coated in a viscous, slippery oil.",
+		str_abuse = "You turn {slimeoid_name} upside down and push their oily body, sending them slipping down the sidewalk.",
 		str_create = "You press a button on the armor console labelled 'G'. Through the observation port, you see the surface of the proto-Slimeoid become shiny with some kind of oily fluid.",
 		str_armor = "It is covered in a coating of slippery oil.",
 		id_resistance = slimeoid_weapon_grip,
@@ -15868,6 +15876,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} shakes itself off to get rid of some excess gestation fluid, then starts to hiss at you. Seems like a real firecracker, this one.",
 		str_dissolve = "{slimeoid_name} hisses and spits with fury as you hold it over the SlimeCorp Dissolution Vats. Come on, get in there...\n{slimeoid_name} claws at you, clutching at the edge of the vat, screeching with rage even as you hold its head under the surface and wait for the chemical soup to do its work. At last, it stops fighting.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_a,
+		str_abuse= "{slimeoid_name} lashes out, trying to fight back."
 
 	),
 	EwBrain( # brain 2
@@ -15893,6 +15902,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} gets up off the ground slowly at first, but then it notices you and leaps into your arms. It sure seems glad to see you!",
 		str_dissolve = "You order {slimeoid_name} into the Dissolution Vats. It's initially confused, but realization of what you're asking slowly crawks across its features.\nIt doesn't want to go, but after enough stern commanding, it finally pitches itself into the toxic sludge, seemingly too heartbroken to fear death.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_b,
+		str_abuse = "{slimeoid_name} yelps in pain. It's beside itself and doesn't know what to do..."
 	),
 	EwBrain( # brain 3
 		id_brain = "c",
@@ -15917,6 +15927,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} regards you silently from the floor. You can't tell if it likes you or not, but it starts to follow you regardless.",
 		str_dissolve = "You pick up {slimeoid_name} and hurl it into the SlimeCorp Dissolution Vats before it starts to suspect anything. It slowly sinks into the chemical soup, kind of like Arnold at the end of Terminator 2, only instead of giving you a thumbs-up, it stares at you with an unreadable expression. Betrayal? Confusion? Hatred? Yeah, probably.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_c,
+		str_abuse = "You can feel {slimeoid_name} trembling, but it just takes your abuse."
 	),
 	EwBrain( # brain 4
 		id_brain = "d",
@@ -15941,6 +15952,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} flops over on the floor and stares up at you. Its gaze wanders around the room for a while before it finally picks itself up to follow you.",
 		str_dissolve = "You lead {slimeoid_name} up to the edge of the Dissolution Vats and give a quick 'Hey, look, a distraction!'. {slimeoid_name} is immediately distracted and you shove it over the edge. Landing in the vat with a sickening *gloop* sound, it sinks quickly under the fluid surface, flailing madly in confusion and desperation.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_d,
+		str_abuse = "You have a hard time with it, {slimeoid_name} is panicked and keeps trying to run."
 	),
 	EwBrain( # brain 5
 		id_brain = "e",
@@ -15965,6 +15977,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name}'s eyes dart frantically around the room. Seeing you, it darts behind you, as if for cover from an unknown threat.",
 		str_dissolve = "{slimeoid_name} is looking around the lab nervously, obviously unnerved by the Slimeoid technology. Its preoccupation makes it all too easy to lead it to the Dissolution Vats and kick its legs out from under it, knocking it in. As it falls and hits the solvent chemicals, it wails and screeches in shock and terror, but the noise eventually quiets as it dissolves into a soft lump, then disintegrates altogether.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_e,
+		str_abuse = "{slimeoid_name} is squealing in horror. It will remember this..."
 	),
 	EwBrain( # brain 6
 		id_brain = "f",
@@ -15989,6 +16002,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} picks itself up off the floor and regards you coolly. It seems as if it's gauging your usefulness.",
 		str_dissolve = "{slimeoid_name} eyes you suspiciously as you approach the Dissolution Vats. It's on to you. Before it has a chance to bolt, you grab it, hoist it up over your head, and hurl it into the chemical soup. {slimeoid_name} screeches in protest, sputtering and hissing as it thrashes around in the vat, but the chemicals work quickly and it soon dissolves into nothing.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_f,
+		str_abuse = "{slimeoid_names}'s fear grows as it desperately looks for an escape."
 	),
 	EwBrain( # brain 7
 		id_brain = "g",
@@ -16013,6 +16027,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} starts to pick itself up off the floor, then changes its mind and lies back down. Then it gets up again. Lies down again. Up. Down. Up. Ok, this time it stays up.",
 		str_dissolve = "{slimeoid_name} is perplexed by the laboratory machinery. Taking advantage of its confusion, you point it towards the Dissolution Vats, and it gormlessly meanders up the ramp and over the edge. You hear a gloopy SPLOOSH sound, then nothing. You approach the vats and peer over the edge, but see no trace of your former companion.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_g,
+		str_abuse = "{slimeoid_name} still hasn't caught up to all this chaos, and is lost and confused."
 	)
 ]
 

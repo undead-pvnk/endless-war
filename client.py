@@ -542,6 +542,7 @@ cmd_map = {
 	ewcfg.cmd_instructions: ewslimeoid.instructions,
 	ewcfg.cmd_playfetch: ewslimeoid.playfetch,
 	ewcfg.cmd_petslimeoid: ewslimeoid.petslimeoid,
+	ewcfg.cmd_abuseslimeoid: ewslimeoid.abuseslimeoid,
 	ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
 	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
