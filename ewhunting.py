@@ -90,11 +90,15 @@ class EwEnemy:
 	
 	# What class the enemy belongs to
 	enemyclass = ""
+	
+	# Various properties different enemies might have
+	enemy_props = ""
 
 	""" Load the enemy data from the database. """
 
 	def __init__(self, id_enemy=None, id_server=None, enemytype=None):
 		self.combatant_type = ewcfg.combatant_type_enemy
+		self.enemy_props = {}
 
 		query_suffix = ""
 
@@ -169,6 +173,21 @@ class EwEnemy:
 					self.faction = result[21]
 					self.enemyclass = result[22]
 
+					# Retrieve additional properties
+					cursor.execute("SELECT {}, {} FROM enemies_prop WHERE id_enemy = %s".format(
+						ewcfg.col_name,
+						ewcfg.col_value
+					), (
+						self.id_enemy,
+					))
+
+					for row in cursor:
+						# this try catch is only necessary as long as extraneous props exist in the table
+						try:
+							self.enemy_props[row[0]] = row[1]
+						except:
+							ewutils.logMsg("extraneous enemies_prop row detected.")
+
 			finally:
 				# Clean up the database handles.
 				cursor.close()
@@ -232,6 +251,32 @@ class EwEnemy:
 					self.weathertype,
 					self.faction,
 					self.enemyclass,
+				))
+			
+			# If the enemy doesn't have an ID assigned yet, have the cursor give us the proper ID.
+			if self.id_enemy == 0:
+				used_enemy_id = cursor.lastrowid
+				#print('used new enemy id')
+			else:
+				used_enemy_id = self.id_enemy
+				#print('used existing enemy id')
+		
+			# Remove all existing property rows.
+			cursor.execute("DELETE FROM enemies_prop WHERE {} = %s".format(
+				ewcfg.col_id_enemy
+			), (
+				used_enemy_id,
+			))
+			
+			for name in self.enemy_props:
+				cursor.execute("INSERT INTO enemies_prop({}, {}, {}) VALUES(%s, %s, %s)".format(
+					ewcfg.col_id_enemy,
+					ewcfg.col_name,
+					ewcfg.col_value
+				), (
+					used_enemy_id,
+					name,
+					self.enemy_props[name]
 				))
 
 			conn.commit()
@@ -1039,8 +1084,9 @@ class EwEnemy:
 					response = '{} is unable to attack {}.'.format(enemy_data.display_name, target_enemy.display_name)
 					resp_cont.add_channel_response(ch_name, response)
 
-				# Persist user and enemy data.
+				# Persist enemy data.
 				if enemy_data.life_state == ewcfg.enemy_lifestate_alive or enemy_data.life_state == ewcfg.enemy_lifestate_unactivated:
+					enemy_data.enemy_props['new_prop'] = 3
 					enemy_data.persist()
 
 				district_data.persist()
@@ -1338,6 +1384,8 @@ class EwEnemy:
 			resp_cont.add_channel_response(ch_name, response)
 		
 		return resp_cont
+	
+	
 
 # Reskinned version of effect container from ewwep.
 class EwEnemyEffectContainer:
@@ -1448,6 +1496,14 @@ async def summonenemy(cmd, is_bot_spawn = False):
 			enemy.slimes = enemy_slimes
 			enemy.display_name = enemy_displayname
 			enemy.level = enemy_level
+
+		props = None
+		try:
+			props = ewcfg.enemy_data_table[enemytype]["props"]
+		except:
+			pass
+		
+		enemy.enemy_props = props
 
 		enemy.persist()
 
@@ -1801,7 +1857,16 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weathe
 				enemy.display_name = "Bicarbonate {}".format(enemy.display_name)
 				enemy.slimes *= 2
 
+		props = None
+		try:
+			props = ewcfg.enemy_data_table[enemytype]["props"]
+		except:
+			pass
+
+		enemy.enemy_props = props
+
 		enemy.persist()
+		enemy = EwEnemy(id_enemy=enemy.id_enemy)
 
 		if enemytype not in ewcfg.raid_bosses:
 			response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level, enemy.display_name, enemy.slimes)
@@ -2068,7 +2133,7 @@ def drop_enemy_loot(enemy_data, district_data):
 					item_props=item_props
 				)
 
-				response = "They dropped {item_name}!".format(item_name=item.str_name)
+				response = "They dropped a {item_name}!".format(item_name=item.str_name)
 				loot_resp_cont.add_channel_response(loot_poi.channel, response)
 
 		else:

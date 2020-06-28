@@ -63,6 +63,8 @@ CREATE TABLE users (
 	id_inhabit_target varchar(128) NOT NULL DEFAULT '',
 	race varchar(32) NOT NULL DEFAULT '',
 	time_racialability int NOT NULL DEFAULT '0',
+	time_lastpremiumpurchase int NOT NULL DEFAULT '0',
+	gvs_currency int NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
@@ -90,6 +92,7 @@ CREATE TABLE markets (
 	caught_fish int NOT NULL DEFAULT '0',
 	splattered_slimes bigint NOT NULL DEFAULT '0',
 	global_swear_jar bigint NOT NULL DEFAULT '0',
+	horde_cooldown int NOT NULL DEFAULT '0'
 
 	PRIMARY KEY (id_server)
 );
@@ -239,9 +242,10 @@ CREATE TABLE enemies (
 	weathertype varchar(32) NOT NULL DEFAULT '',
 	faction varchar(32) NOT NULL DEFAULT '',
 	enemyclass varchar(32) NOT NULL DEFAULT '',
+	gvs_coord varchar(16) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_enemy)
-);
+) ENGINE = INNODB;
 
 CREATE TABLE enemies_prop (
     id_enemy int NOT NULL,
@@ -249,10 +253,10 @@ CREATE TABLE enemies_prop (
 	name varchar(64) NOT NULL,
 	value varchar(2048),
 
-	FOREIGN KEY (id_enemy)
-		REFERENCES items(id_enemy)
-		ON DELETE CASCADE
-);
+    CONSTRAINT `fk_id_enemy`
+    	FOREIGN KEY (id_enemy) REFERENCES enemies(id_enemy)
+    	ON DELETE CASCADE
+) ENGINE = INNODB;
 
 CREATE TABLE districts (
 	id_server varchar(128) NOT NULL,
@@ -491,6 +495,12 @@ CREATE TABLE hues (
 	hue_fullcomp_2 varchar(32) NOT NULL DEFAULT '',
 
 	PRIMARY KEY(id_hue)
+);
+
+CREATE TABLE gvs_cooldowns (
+    id_user varchar(128) NOT NULL,
+    id_gaiatype varchar(32) NOT NULL,
+    time_last_plant int NOT NULL DEFAULT '0'
 );
 
 CREATE OR REPLACE VIEW cosmetics_count AS SELECT

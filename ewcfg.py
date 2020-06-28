@@ -2321,12 +2321,13 @@ item_id_beautiful_material = "beautyspots"
 item_id_cute_material = "cutebuttons"
 item_id_dragonsoul = "dragonsoul"
 item_id_monsterbones = "monsterbones"
-
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
-
 item_id_dinoslimemeat = "dinoslimemeat"
 item_id_dinoslimesteak = "dinoslimesteak"
+item_id_dyesolution = "dyesolution"
+item_id_textiles = "textiles"
+item_id_foodbase = "foodbase"
 
 #SLIMERNALIA
 item_id_sigillaria = "sigillaria"
@@ -2443,6 +2444,32 @@ item_id_brightshade = "brightshade"
 item_id_blacklimes = "blacklimes"
 item_id_phosphorpoppies = "phosphorpoppies"
 item_id_direapples = "direapples"
+item_id_rustealeaves = "rustealeaves"
+item_id_metallicaps = "metallicaps"
+item_id_steelbeans = "steelbeans"
+item_id_aushucks = "aushucks"
+
+#vegetable materials
+item_id_poketubereyes = "poketubereyes"
+item_id_pulpgourdpulp = "pulpgourdpulp"
+item_id_sourpotatoskins = "sourpotatoskins"
+item_id_bloodcabbageleaves = "bloodcabbageleaves"
+item_id_joybeanvines = "joybeanvines"
+item_id_purplekilliflowerflorrets = "purplekilliflowerflorets"
+item_id_razornutshells = "razornutshells"
+item_id_pawpawseeds = "pawpawseeds"
+item_id_sludgeberrysludge = "sludgeberrysludge"
+item_id_suganmanutfruit = "suganmanutfruit"
+item_id_pinkrowddishroot = "pinkrowddishroot"
+item_id_dankwheatchaff = "dankwheatchaff"
+item_id_brightshadeberries = "brightshadeberries"
+item_id_blacklimeade = "blacklimeade"
+item_id_phosphorpoppypetals = "phosphorpoppypetals"
+item_id_direapplestems = "direapplestems"
+item_id_rustealeafblades = "rustealeafblades"
+item_id_metallicapheads = "metallicapheads"
+item_id_steelbeanpods = "steelbeanpods"
+item_id_aushuckstalks = "aushuckstalks"
 
 #weapon ids
 weapon_id_revolver = 'revolver'
