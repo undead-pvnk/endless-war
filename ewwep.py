@@ -473,7 +473,7 @@ def canCap(cmd):
 	elif sidearm != None and ewcfg.weapon_class_thrown in sidearm.classes and sidearm_item.stack_size == 0:
 		response = "You're out of {}! Go buy more at the {}".format(sidearm.str_weapon, ewutils.formatNiceList(names=sidearm.vendors,  conjunction="or"))
 	elif sidearm != None and sidearm.cooldown + (float(sidearm_item.item_props.get("time_lastattack")) if sidearm_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
-		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name=sidearm.id_weapon)
+		response = "Your {weapon_name} isn't ready for another spray yet!".format(weapon_name=sidearm.id_weapon)
 	elif sidearm != None and ewcfg.weapon_class_captcha in sidearm.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
 		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 	elif user_data.life_state != ewcfg.life_state_enlisted:
@@ -3086,6 +3086,7 @@ async def spray(cmd):
 					slimes_damage = round(slimes_damage * .2)
 				else:
 					slimes_damage *= 3
+					backfire_damage *= 3
 
 			if ewcfg.mutation_id_patriot in user_mutations:
 				slimes_damage *= 1.25
