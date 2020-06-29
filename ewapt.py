@@ -2409,6 +2409,8 @@ async def aptCommands(cmd):
 		return await ewwep.annoint(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_petslimeoid:
 		return await ewslimeoid.petslimeoid(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_abuseslimeoid:
+		return await ewslimeoid.abuseslimeoid(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_playfetch:
 		return await ewslimeoid.playfetch(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_observeslimeoid:
