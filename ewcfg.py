@@ -7647,7 +7647,7 @@ food_list = [
 			"frickenergy",
 		],
 		recover_hunger=10,
-		price=1,
+		price=10,
 		str_name = "Dire Apple FRICK Energy",
 		str_eat = "*siiiiiip*, Ahhh, that's the stuff. You drink through the entire juice box in one go.",
 		str_desc = "A small rectangular box of apple juice. Suitable for children, and perhaps small slimeoids.",
