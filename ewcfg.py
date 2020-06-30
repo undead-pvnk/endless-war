@@ -1102,7 +1102,7 @@ limit_influence_a = 50000000
 limit_influence_b = 30000000
 limit_influence_c = 14000000
 
-min_influence_s = 180000000
+min_influence_s = 60000000
 min_influence_a = 30000000
 min_influence_b = 14000000
 min_influence_c = 6000000
