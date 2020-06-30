@@ -215,6 +215,7 @@ async def clear_quadrant(cmd):
 	
 	if quadrant_data.id_target != "":
 		target_member_data = cmd.message.server.get_member(quadrant_data.id_target)
+		target_member_data_2 = None
 		
 		if quadrant_data.id_target2 != "":
 			target_member_data_2 = cmd.message.server.get_member(quadrant_data.id_target)

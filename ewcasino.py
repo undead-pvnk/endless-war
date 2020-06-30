@@ -1579,9 +1579,9 @@ async def duel(cmd):
 		elif challengee.life_state == ewcfg.life_state_kingpin:
 			response = "They think about accepting for a moment, but then back away, remembering all the hard work their gangsters have put forth. Bummer..."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
-		else:
-			response = "Juveniles are too cowardly to throw their lives away in a duel."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		# else:
+		# 	response = "Juveniles are too cowardly to throw their lives away in a duel."
+		# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	# Assign a challenger so players can't be challenged
 	ewutils.active_target_map[challenger.id_user] = challengee.id_user

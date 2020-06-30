@@ -774,8 +774,9 @@ async def store_item(cmd, dest):
 			hatrack = ewitem.find_item(id_server=playermodel.id_server, id_user=playermodel.id_user+"decorate", item_search="hatstand")
 			if destination == "closet" and item_sought.get('item_type') == ewcfg.it_cosmetic:
 				map_obj = ewcfg.cosmetic_map.get(item.item_props.get('id_cosmetic'))
-				if map_obj.is_hat == True and hatrack:
-					response = "You hang the {} on the rack.".format(name_string)
+				if map_obj != None:
+					if map_obj.is_hat == True and hatrack:
+						response = "You hang the {} on the rack.".format(name_string)
 
 	else:
 		response = "Are you sure you have that item?"
@@ -868,8 +869,9 @@ async def remove_item(cmd, dest):
 		hatrack = ewitem.find_item(id_server=playermodel.id_server, id_user=playermodel.id_user + "decorate", item_search="hatstand")
 		if destination == "closet" and item_sought.get('item_type') == ewcfg.it_cosmetic:
 			map_obj = ewcfg.cosmetic_map.get(item.item_props.get('id_cosmetic'))
-			if map_obj.is_hat == True and hatrack:
-				response = "You take the {} off the rack.".format(name_string)
+			if map_obj != None:
+				if map_obj.is_hat == True and hatrack:
+					response = "You take the {} off the rack.".format(name_string)
 
 
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
