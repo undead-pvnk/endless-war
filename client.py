@@ -100,6 +100,7 @@ cmd_map = {
 	ewcfg.cmd_equip: ewwep.equip,
 	ewcfg.cmd_arm: ewwep.equip,
 	ewcfg.cmd_arsenalize: ewwep.equip,
+	ewcfg.cmd_sidearm: ewwep.sidearm,
 	
 	# Kill yourself
 	ewcfg.cmd_suicide: ewwep.suicide,
@@ -432,8 +433,13 @@ cmd_map = {
 	ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
 
 	# Change your current POI capture progress
-	ewcfg.cmd_annex: ewdistrict.annex,
-	ewcfg.cmd_annex_alt1: ewdistrict.annex,
+
+	#ewcfg.cmd_annex: ewdistrict.annex,
+	ewcfg.cmd_spray: ewwep.spray,
+	#ewcfg.cmd_annex_alt1: ewdistrict.annex,
+	ewcfg.cmd_spray_alt1: ewwep.spray,
+	ewcfg.cmd_changespray:ewdistrict.change_spray,
+	ewcfg.cmd_tag:ewdistrict.tag,
 
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
@@ -677,7 +683,10 @@ cmd_map = {
 
 	# flush items and slime from subzones into their mother district
 	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones,
-	
+
+	#swap weapons
+	ewcfg.cmd_switch: ewwep.switch_weapon,
+	ewcfg.cmd_switch_alt_1: ewwep.switch_weapon,
 	# Slimernalia
 	# Check your current festivity
 	#ewcfg.cmd_festivity: ewcmd.festivity,
