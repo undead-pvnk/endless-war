@@ -747,8 +747,9 @@ def inventory(
 					item_data = EwItem(id_item = id_item)
 					item_type = ewcfg.it_cosmetic
 					item_data.item_type = item_type
+					
 					if 'fashion_style' not in item_data.item_props.keys():
-						if item_data.item_props['id_cosmetic'] == 'soul':
+						if item_data.item_props.get('id_cosmetic') == 'soul':
 							item_data.item_props = {
 								'id_cosmetic': item_data.item_props['id_cosmetic'],
 								'cosmetic_name': item_data.item_props['cosmetic_name'],
@@ -768,7 +769,7 @@ def inventory(
 								'adorned': 'false',
 								'user_id': item_data.item_props['user_id']
 							}
-						elif item_data.item_props['id_cosmetic'] == 'scalp':
+						elif item_data.item_props.get('id_cosmetic') == 'scalp':
 							item_data.item_props = {
 								'id_cosmetic': item_data.item_props['id_cosmetic'],
 								'cosmetic_name': item_data.item_props['cosmetic_name'],
@@ -787,8 +788,38 @@ def inventory(
 								'freshness': 0,
 								'adorned': 'false',
 							}
+						elif item_data.item_props.get('rarity') == ewcfg.rarity_princeps:
+							
+							# TODO: Make princeps have custom stats, etc. etc.
+							current_name = item_data.item_props.get('cosmetic_name')
+							current_desc = item_data.item_props.get('cosmetic_desc')
+							
+							print("Updated Princep '{}' for user with ID {}".format(current_name, id_user))
+							
+							item_data.item_props = {
+								'id_cosmetic': 'princep',
+								'cosmetic_name': current_name,
+								'cosmetic_desc': current_desc,
+								'str_onadorn': ewcfg.str_generic_onadorn,
+								'str_unadorn': ewcfg.str_generic_unadorn,
+								'str_onbreak': ewcfg.str_generic_onbreak,
+								'rarity': ewcfg.rarity_princeps,
+								'attack': 3,
+								'defense': 3,
+								'speed': 3,
+								'ability': None,
+								'durability': ewcfg.base_durability * 100,
+								'size': 1,
+								'fashion_style': ewcfg.style_cool,
+								'freshness': 100,
+								'adorned': 'false',
+							}
+							
+							pass
 						else:
-							item = ewcfg.cosmetic_map.get(item_data.item_props['id_cosmetic'])
+							#print('ITEM PROPS: {}'.format(item_data.item_props))
+							
+							item = ewcfg.cosmetic_map.get(item_data.item_props.get('id_cosmetic'))
 							item_data.item_props = {
 								'id_cosmetic': item.id_cosmetic,
 								'cosmetic_name': item.str_name,
@@ -1158,10 +1189,16 @@ async def item_look(cmd):
 						else:
 							original_durability = ewcfg.generic_scalp_durability
 					else:
-						original_item = ewcfg.cosmetic_map.get(item.item_props['id_cosmetic'])
-						original_durability = int(original_item.durability)
+						if item.item_props.get('rarity') == ewcfg.rarity_princeps:
+							original_durability = ewcfg.base_durability * 100
+							original_item = None  # Princeps do not have existing templates
+						else:
+							original_item = ewcfg.cosmetic_map.get(item.item_props['id_cosmetic'])
+							original_durability = original_item.durability
 
 					current_durability = int(item.item_props['durability'])
+					
+					#print('DEBUG -- DURABILITY COMPARISON\nCURRENT DURABILITY: {}, ORIGINAL DURABILITY: {}'.format(current_durability, original_durability))
 
 					if current_durability == original_durability:
 						response += "It looks brand new.\n"
@@ -1179,7 +1216,7 @@ async def item_look(cmd):
 							response += "It's going to break soon!\n"
 
 					else:
-						response += "You have no idea how much longer this'll last."
+						response += "You have no idea how much longer this'll last. "
 
 				if item.item_props['size'] == 0:
 					response += "It doesn't take up any space at all.\n"

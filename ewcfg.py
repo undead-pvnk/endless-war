@@ -721,6 +721,7 @@ cmd_barter = cmd_prefix + 'barter'
 cmd_embiggen = cmd_prefix + 'embiggen'
 cmd_adorn = cmd_prefix + 'adorn'
 cmd_dedorn = cmd_prefix + 'dedorn'
+cmd_dedorn_alt1 = cmd_prefix + 'unadorn'
 cmd_dyecosmetic = cmd_prefix + 'dyecosmetic'
 cmd_dyecosmetic_alt1 = cmd_prefix + 'dyehat'
 cmd_dyecosmetic_alt2 = cmd_prefix + 'saturatecosmetic'
@@ -730,6 +731,7 @@ cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
 cmd_createitem = cmd_prefix + 'createitem'
 cmd_manualsoulbind = cmd_prefix + 'soulbind'
 cmd_setslime = cmd_prefix + 'setslime'
+cmd_checkstats = cmd_prefix + 'checkstats'
 cmd_exalt = cmd_prefix + 'exalt'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
@@ -974,7 +976,6 @@ cmd_canceltrade = cmd_prefix + 'canceltrade'
 # race
 cmd_set_race = cmd_prefix + 'setrace'
 cmd_set_race_alt1 = cmd_prefix + 'identifyas'
-cmd_reset_race = cmd_prefix + 'resetrace'
 cmd_exist = cmd_prefix + 'exist'
 cmd_ree = cmd_prefix + 'ree'
 cmd_autocannibalize = cmd_prefix + 'autocannibalize'
@@ -983,6 +984,9 @@ cmd_beep = cmd_prefix + 'beep'
 cmd_yiff = cmd_prefix + 'yiff'
 cmd_hiss = cmd_prefix + 'hiss'
 cmd_jiggle = cmd_prefix + 'jiggle'
+cmd_request_petting = cmd_prefix + 'requestpetting'
+cmd_rampage = cmd_prefix + 'rampage'
+cmd_flutter = cmd_prefix + 'flutter'
 cmd_confuse = cmd_prefix + 'confuse'
 
 #SLIMERNALIA
@@ -1857,7 +1861,7 @@ it_book = 'book'
 rarity_plebeian = "Plebeian"
 rarity_patrician = "Patrician"
 rarity_promotional = "Promotional" # Cosmetics that should not be awarded through smelting/hunting
-rarity_princeps = "Princeps"
+rarity_princeps = "princeps"
 
 # Leaderboard score categories
 leaderboard_slimes = "SLIMIEST"
@@ -4130,7 +4134,7 @@ def wef_staff(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 
 	consecutive_hits = int(ctn.weapon_item.item_props["consecutive_hits"])
-	if time_lastattack < 5 and consecutive_hits == 0:
+	if time_lastattack < 15 and consecutive_hits == 0:
 		# consecutive_hits used counterintuitively to track whether the user has "charged up"
 		market_data = EwMarket(id_server = ctn.user_data.id_server)
 		conditions_met = 0
@@ -4154,9 +4158,9 @@ def wef_staff(ctn = None):
 				pass
 
 		ctn.slimes_spent = int(ctn.slimes_spent * 3)
-		ctn.slimes_damage = int(ctn.slimes_damage * (3 + conditions_met * 0.5)) # 0.5 per condition met
-		ctn.sap_ignored = 15 + (5 * conditions_met) # 5 per condition met
-		if conditions_met >= random.randrange(1, 41): # 2.5% per condition met
+		ctn.slimes_damage = int(ctn.slimes_damage * (0.6 + conditions_met * 2.4))
+		ctn.sap_ignored = 6 * conditions_met
+		if conditions_met >= (random.randrange(15) + 1): # 6.66% per condition met
 			ctn.crit = True
 			ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
 
@@ -7547,7 +7551,7 @@ food_list = [
 		],
 		recover_hunger = 0,
 		str_name = 'Seaweed Joint',
-		str_eat = "You light up your Seaweed and begin to smoke it. Congratulations! You're now high. You catch fish twice as often, but food is half as effective. This lasts for 10 minutes.",
+		str_eat = "You light up your Seaweed and begin to smoke it. Congratulations! You're now high. You catch fish twice as often, but food is half as effective. This lasts for 30 minutes.",
 		str_desc = "A joint made up of dankwheat and seaweed bartered with Captain Albert Alexander. Wait a minute, does that make the good Captain your drug dealer? Hell yeah.",
 		acquisition = acquisition_smelting
 	),
@@ -7666,9 +7670,16 @@ food_list = [
 		str_name = "Desiccant Packet",
 		str_eat = "You rip open the packet and pour it’s forbidden fruit into your mouth, taking great delight in chewing up and then sloshing around the silica gel in your mouth before swallowing. Your stomach growls angrily, but… nothing else really happens. Huh, really? Usually these things go on forever. I guess you’ve eaten so much other indigestible garbage before that your stomach’s just sort of used to it.",
 		str_desc = "It’s a tiny pocket full of highly-toxic, moisture-absorbing, gel beads. You know you shouldn’t eat this, but… just an ounce couldn’t hurt, right?",
-		vendors = [
-			vendor_secretbodega
-		]
+		vendors = [vendor_secretbodega]
+	),
+	EwFood(
+		id_food = "gummyworms",
+		recover_hunger = 100,
+		price = 100,
+		str_name = "Gummy Worms",
+		str_eat = "\n*You eat the gummy worms.*\n***You eat the gummy worms.***\n***Y O U  E A T  T H E  G U M M Y  W O R M S .***\n                                                                                                                        ...yummy!",
+		str_desc = "After months of toil and hundreds of U.S. dollars spent, the Cop Killer finally found what he was searching for all along. Hopefully it will have been worth the wait.",
+		vendors = [vendor_slimypersuits]
 	)
 ]
 
@@ -13152,8 +13163,13 @@ style_smart = "smart"
 style_beautiful = "beautiful"
 style_cute = "cute"
 
+freshnesslevel_1 = 500
+freshnesslevel_2 = 100
+freshnesslevel_3 = 2000
+freshnesslevel_4 = 3000
+
 # Base durability for cosmetic items (These are for if/when we need easy sweeping balance changes)
-base_durability = 250000 # 1 mega
+base_durability = 2500000 # 2.5 mega
 
 generic_scalp_durability = 25000 # 25k
 soul_durability = 100000000 # 100 mega
@@ -13288,6 +13304,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 7,
 		acquisition = acquisition_smelting,
@@ -13303,6 +13320,7 @@ cosmetic_items_list = [
 			stat_attack: 3,
 			stat_defense: -1
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -13317,6 +13335,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		freshness = 8,
 		acquisition = acquisition_smelting,
@@ -13332,6 +13351,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -13345,6 +13365,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -13358,6 +13379,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -13372,6 +13394,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		freshness = 9,
 		style = style_smart,
 		acquisition = acquisition_smelting,
@@ -13386,6 +13409,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -13403,6 +13427,7 @@ cosmetic_items_list = [
 			stat_defense: 2,
 			stat_speed: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 8,
 		acquisition = acquisition_smelting,
@@ -13417,6 +13442,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -13451,6 +13477,7 @@ cosmetic_items_list = [
 			stat_defense: -1,
 			stat_speed: 3
 		},
+		durability = base_durability,
 		freshness = 10,
 		style = style_beautiful,
 		acquisition = acquisition_smelting,
@@ -13465,6 +13492,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -13480,6 +13508,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		freshness = 8,
 		style = style_cool,
 		acquisition = acquisition_smelting,
@@ -13495,6 +13524,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 3,
 		},
+		durability = base_durability,
 		freshness = 9,
 		style = style_cool,
 		acquisition = acquisition_smelting,
@@ -13509,6 +13539,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -13524,6 +13555,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_defense: 1
 		},
+		durability = base_durability,
 		style = style_tough,
 		freshness = 8,
 		acquisition = acquisition_smelting,
@@ -13540,6 +13572,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_speed: -1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 3,
 		acquisition = acquisition_smelting,
@@ -13555,6 +13588,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -13570,6 +13604,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 8,
 		acquisition = acquisition_smelting,
@@ -13586,6 +13621,7 @@ cosmetic_items_list = [
 			stat_defense: -2,
 			stat_speed: 2
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 7,
 		acquisition = acquisition_smelting,
@@ -13601,6 +13637,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -13615,6 +13652,7 @@ cosmetic_items_list = [
 			stat_defense: 1,
 			stat_speed: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -13664,6 +13702,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 2,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -13679,6 +13718,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -13695,6 +13735,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -13709,6 +13750,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 7,
 		acquisition = acquisition_smelting,
@@ -13724,6 +13766,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -13820,6 +13863,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -13835,6 +13879,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cute,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -13848,6 +13893,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition=acquisition_smelting,
 		price=50000,
@@ -13863,6 +13909,7 @@ cosmetic_items_list = [
 			stat_defense: -2,
 			stat_speed: -1
 		},
+		durability = base_durability,
 		style = style_tough,
 		freshness = 8,
 		acquisition=acquisition_smelting,
@@ -13876,6 +13923,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_milling,
 		ingredients = item_id_poketubers,
@@ -13888,6 +13936,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_cute,
 		acquisition = acquisition_milling,
 		ingredients = item_id_pulpgourds,
@@ -13900,6 +13949,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 6,
 		acquisition = acquisition_milling,
@@ -13913,6 +13963,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_bloodcabbages,
@@ -13939,6 +13990,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_milling,
 		ingredients = item_id_purplekilliflower,
@@ -13950,6 +14002,7 @@ cosmetic_items_list = [
 			stat_attack: 3,
 			stat_defense: -3,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 2,
 		str_desc = "What the fuck are you doing with this thing? Are you TRYING to make the sewers your permanent residence? Acquaint yourself with the !drop command and FAST, before you don’t have a body to wear the badge on.",
@@ -13963,6 +14016,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_pawpaw,
@@ -13975,6 +14029,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
 		acquisition = acquisition_milling,
@@ -13989,6 +14044,7 @@ cosmetic_items_list = [
 			stat_defense: 1,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 10,
 		acquisition = acquisition_milling,
@@ -14003,6 +14059,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 2
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
 		acquisition = acquisition_milling,
@@ -14017,6 +14074,7 @@ cosmetic_items_list = [
 			stat_defense: 1,
 			stat_speed: -1
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_milling,
 		ingredients = item_id_dankwheat,
@@ -14027,6 +14085,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 2,
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 7,
 		str_desc = "A lovingly handcrafted crown of flowers, connected by a string. You’re gonna be famous on Pinterest with a look like this!",
@@ -14041,6 +14100,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 2
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_blacklimes,
@@ -14055,7 +14115,7 @@ cosmetic_items_list = [
 		},
 		style = style_smart,
 		freshness = 10,
-		durability = base_durability * 4,
+		durability = base_durability,
 		str_desc = "An enamel pin of the SlimeCorp logo, a badge of loyalty to your favorite charismatic megacorporation. Dude, like, *”Follow He Who Turns The Wheels”*, bro!!",
 		acquisition = acquisition_milling,
 		ingredients = item_id_phosphorpoppies,
@@ -14067,6 +14127,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_direapples,
@@ -14078,6 +14139,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
@@ -14098,8 +14160,12 @@ cosmetic_items_list = [
 		str_name = "Pileus",
 		str_desc = "A symbol of freedom and liberty. In ancient times, these felt caps were given to slaves who had been emancipated.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		durability = base_durability,
 		style = style_cool,
-	#	vendors = [vendor_bazaar, vendor_college],
+	 	#vendors = [vendor_bazaar, vendor_college],
 		price = 100,
 	),
 	EwCosmeticItem(
@@ -14110,6 +14176,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 2,
 		vendors = [vendor_bazaar, vendor_secretbodega],
@@ -14122,6 +14189,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cute,
 		rarity = rarity_plebeian,
 		vendors = [vendor_glocksburycomics],
@@ -14137,6 +14205,7 @@ cosmetic_items_list = [
 			stat_defense: 2,
 			stat_speed: -1
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -14150,6 +14219,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cute,
 		vendors = [vendor_bazaar],
 		price = 1000,
@@ -14163,6 +14233,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 1
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
 		vendors = [vendor_bazaar, vendor_secretbodega],
@@ -14173,6 +14244,12 @@ cosmetic_items_list = [
 		str_name = "Janus Mask",
 		str_desc = "A simple, yet elegant mask, awarded to those deemed worthy by Janus himself at the end of every Swilldermuk. It's enigmatic powers allow you to procure prank items from thin air.",
 		rarity = "Swilldermuk",
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1,
+			stat_speed: 1
+		},
+		durability = base_durability * 4,
 		style = style_cool,
 		acquisition = "SwilldermukEnd",
 		ingredients = "SwilldermukFinalGambit" # used here as a substitute for the 'context' attribute found on general items.
@@ -14185,6 +14262,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 3,
 		},
+		durability = base_durability,
 		style = style_cool,
 		vendors = [vendor_bazaar, vendor_bodega],
 		price = 50000,
@@ -14197,6 +14275,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -14210,6 +14289,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_speed: 2
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 7,
 		vendors = [vendor_bodega],
@@ -14224,6 +14304,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
@@ -14239,6 +14320,7 @@ cosmetic_items_list = [
 			stat_defense: 1,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -14251,6 +14333,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -14264,6 +14347,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 2
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -14289,6 +14373,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -14303,6 +14388,7 @@ cosmetic_items_list = [
 			stat_defense: -1,
 			stat_speed: -1
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 2,
 		acquisition = acquisition_smelting,
@@ -14317,6 +14403,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_speed: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 8,
 		vendors = [vendor_bodega],
@@ -14334,6 +14421,7 @@ cosmetic_items_list = [
 			stat_defense: -2,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -14346,6 +14434,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -14359,6 +14448,7 @@ cosmetic_items_list = [
 			stat_attack: -1,
 			stat_defense: 2
 		},
+		durability = base_durability,
 		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -14371,6 +14461,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -14383,6 +14474,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -14396,6 +14488,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 7,
 		vendors = [vendor_bodega],
@@ -14427,6 +14520,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -17329,7 +17423,7 @@ for slimexodia in item_list:
 prank_items_heinous = [] # common
 prank_items_scandalous = [] # uncommon
 prank_items_forbidden = [] # rare
-#swilldermuk_food = []
+swilldermuk_food = []
 
 # Gather all prank items
 for p in item_list:
@@ -17917,7 +18011,7 @@ help_responses = {
 	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 2. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
 	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. Attacking with the dragon claw costs 5 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. It has a captcha length of 2. It has sap crushing 5 and sap piercing 10. It you take less than 5 seconds between attacks, your miss chance will increase. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
-	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 4 sap. It has a captcha length of 10. Dealing damage with the staff requires attacking twice in a 5-second window, with the first !kill command only being preparetion for the second. The attack cost multiplier is 1 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 3, sap piercing 15, and a 0% chance to crit, which deals 1.5x damage. A number of conditions may be met to increase the damage multiplier by 0.5, sap piercing by 5, and crit chance by 2.5%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
+	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 4 sap. It has a captcha length of 10. Dealing damage with the staff requires attacking twice in a 15-second window, with the first !kill command only being preparetion for the second. The attack cost multiplier is 1 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 0.6, sap piercing 0, and a 0% chance to crit, which deals 1.5x damage. A number of conditions may be met to increase the damage multiplier by 2.4, sap piercing by 6, and crit chance by 6.66%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
 	
 
 	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
@@ -18759,7 +18853,24 @@ races = {
 	'furry': 'furry',
 	'scalie': 'scalie',
 	'slime-derived': 'slime-derived',
-	'other': 'other'
+	'monster': 'monster',
+	'critter': 'critter',
+	'avian': 'avian',
+	'other': 'other',
+}
+
+racial_slurs = {
+	'normie': 'humanoid',
+	'croaker': 'amphibian',
+	'snacc': 'food',
+	'boner': 'skeleton', 
+	'toaster': 'robot',
+	'furfag': 'furry', 
+	'peeler': 'scalie', 
+	'booger': 'slime-derived',
+	'creeper': 'monster',
+	'fleabag': 'critter', 
+	'nuggie': 'avian'
 }
 
 # lists of all the discord server objects served by bot, identified by the server id

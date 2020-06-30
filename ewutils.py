@@ -457,18 +457,18 @@ def databaseClose(conn_info):
 
 """ format responses with the username: """
 def formatMessage(user_target, message):
-    # If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
-    try:
-        if user_target.life_state == ewcfg.enemy_lifestate_alive:
-            # Send messages for normal enemies, and mentioning with @
-            return "*{}:* {}".format(user_target.display_name, message)
+	# If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
+	try:
+		if user_target.life_state == ewcfg.enemy_lifestate_alive:
+			# Send messages for normal enemies, and mentioning with @
+			return "*{}:* {}".format(user_target.display_name, message)
 
-        elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
-            return "{}".format(message)
+		elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
+			return "{}".format(message)
 
-    # If user_target isn't an enemy, catch the exception.
-    except:
-        return "*{}:* {}".format(user_target.display_name, message).replace("@", "{at}")
+	# If user_target isn't an enemy, catch the exception.
+	except:
+		return "*{}:* {}".format(user_target.display_name, message).replace("@", "{at}")
 
 """ Decay slime totals for all users, with the exception of Kingpins"""
 def decaySlimes(id_server = None):
@@ -1262,7 +1262,7 @@ def hunger_cost_mod(slimelevel):
 """
 def food_carry_capacity_bylevel(slimelevel):
 	return math.ceil(slimelevel / ewcfg.max_food_in_inv_mod)
-        
+		
 """
 	Calculate how many weapons the player can carry
 """
@@ -1588,6 +1588,10 @@ def check_trick_or_treat(string):
 	if string.content.lower() == ewcfg.cmd_treat or string.content.lower() == ewcfg.cmd_trick:
 		return True
 	
+def check_is_command(string):
+	if string.content.startswith(ewcfg.cmd_prefix):
+		return True
+	
 def end_trade(id_user):
 	# Cancel an ongoing trade
 	if active_trades.get(id_user) != None and len(active_trades.get(id_user)) > 0:
@@ -1602,7 +1606,9 @@ def end_trade(id_user):
 def text_to_regional_indicator(text):
 	# note that inside the quotes below is a zero-width space, 
 	# used to prevent the regional indicators from turning into flags
-	#return "‎".join([chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
+	# also note that this only works for digits and english letters
+  
+	###return "‎".join([chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
 	return "‎".join([c + '\ufe0f\u20e3' if c.isdigit() else chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
 
 def generate_captcha_random(length = 4):
@@ -2181,44 +2187,16 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 			adorned_ids.append(c.item_props['id_cosmetic'])
 			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
-	# if len(adorned_cosmetics) != 0:
-	# 	# Assess if there's a cohesive style
-	# 	if len(adorned_styles) != 0:
-	# 		counted_styles = collections.Counter(adorned_styles)
-	# 		dominant_style = max(counted_styles, key = counted_styles.get)
-	#
-	# 		relative_style_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
-	# 		# If the outfit has a dominant style
-	# 		if relative_style_amount >= 60:
-	# 			total_freshness *= (relative_style_amount ** 2) / 1000 # If the entire outfit has a cohesive style, multiply by 10
-	#
-	# 	#Assess if there's a cohesive color palette, meaning if there's only three hues or less for the entire outfit (entire outfit must be dyed)
-	# 	if len(adorned_hues) != 0:
-	# 		counted_hues = collections.Counter(adorned_hues)
-	# 		dominant_hue = max(counted_hues, key = counted_hues.get)
-	#
-	# 		relative_hue_amount = round(int(counted_hues.get(dominant_hue) / len(adorned_hues) * 100))
-	#
-	# 		# If the outfit has a dominant hue
-	# 		if dominant_hue != '' and relative_hue_amount >= 60:
-	# 			color_design = False
-	#
-	# 			neutrals = [ewcfg.hue_id_white, ewcfg.hue_id_grey, ewcfg.hue_id_black, ewcfg.hue_id_brown]
-	# 			complementaries = []
-	#
-	# 			for hue in ewcfg.hue_list:
-	# 				if hue.id_hue == dominant_hue:
-	# 					complementaries = list(hue.effectiveness.keys()) # Add that hue's complimentary, analogus complementaries, and analogus hues to it's complementaries list
-	#
-	# 			for hue in adorned_hues:
-	# 				if hue == dominant_hue or hue in complementaries or hue in neutrals:
-	# 					color_design = True
-	# 				else:
-	# 					color_design = False
-	# 					break
-	#
-	# 			if color_design:
-	# 				total_freshness *= 5
+	if len(adorned_cosmetics) != 0:
+		# Assess if there's a cohesive style
+		if len(adorned_styles) != 0:
+			counted_styles = collections.Counter(adorned_styles)
+			dominant_style = max(counted_styles, key = counted_styles.get)
+
+			relative_style_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
+			# If the outfit has a dominant style
+			if relative_style_amount >= 60:
+				total_freshness *= int(relative_style_amount / 10) # If relative amount is 60 --> multiply by 6. 70 --> 7, 80 --> 8, etc. Rounds down, so 69 --> 6.
 
 	if wanted_info is not None and wanted_info == "dominant_style" and dominant_style is not None:
 		return dominant_style
@@ -2235,43 +2213,43 @@ def get_style_freshness_rating(user_data, dominant_style = None):
 	if dominant_style == None:
 		dominant_style = "fresh"
 
-	if user_data.freshness < 1000:
+	if user_data.freshness < ewcfg.freshnesslevel_1:
 		response = "Your outfit is starting to look pretty fresh, but you’ve got a long way to go if you wanna be NLACakaNM’s next top model."
 	else:
-		if user_data.freshness < 3000:
+		if user_data.freshness < ewcfg.freshnesslevel_2:
 			response = "Your outfit is low-key on point, not gonna lie. You’re goin’ places, kid."
-		elif user_data.freshness < 4000:
+		elif user_data.freshness < ewcfg.freshnesslevel_3:
 			response = "Your outfit is lookin’ fresh as hell, goddamn! You shop so much you can probably speak Italian."
-		elif user_data.freshness < 5000:
-			response = "Your outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Your Grimstagram has attracted a small following."
+		elif user_data.freshness < ewcfg.freshnesslevel_4:
+			response = "Your outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Your Instragrime has attracted a small following."
 		else:
-			response = "Holy shit! Your outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** You’ve blown up on Grimstagram, and you’ve got modeling gigs with fashion labels all across the city."
+			response = "Holy shit! Your outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** You’ve blown up on Instragrime, and you’ve got modeling gigs with fashion labels all across the city."
 
 		if dominant_style == ewcfg.style_cool:
-			if user_data.freshness < 5000:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
 				response += " You’re lookin’ wicked cool, dude. Like, straight up radical, man. For real, like, ta-haaa, seriously? Damn, bro. Sick."
 			else:
 				response += " Hey, kids, the world just got cooler. You’re the swingingest thing from coast-to-coast, and that ain’t no boast. You’re every slimegirl’s dream, you know what I mean? You’re where it’s at, and a far-out-happenin’ cat to boot. Man, it must hurt to be this hip."
 		elif dominant_style == ewcfg.style_tough:
-			if user_data.freshness < 5000:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
 				response += " You’re lookin’ tough as hell. Juveniles of all affiliations are starting to act nervous around you."
 			else:
 				response += " You’re just about the toughest-lookin' juveniledelinquent in the whole detention center. Ain’t nobody gonna pick a fight with you anymore, goddamn."
 		elif dominant_style == ewcfg.style_smart:
-			if user_data.freshness < 5000:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
 				response += " You’re starting to look like a real hipster, wearing all these smartypants garments. You love it, the people around you hate it."
 			else:
 				response += " You know extensive facts about bands that are so underground they’ve released their albums through long-since-expired Vocaroo links. You’re a leading hashtag warrior on various internet forums, and your opinions are well known by everyone who has spoken to you for more than five minutes. Everyone wants to knock your lights out, but… you’re just too fresh. "
 		elif dominant_style == ewcfg.style_beautiful:
-			if user_data.freshness < 5000:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
 				response += " You’re looking extremely handsome in all of those beautiful garments. If only this refined, elegant reflected in your manners when cracking into a Arizonian Kingpin Crab."
 			else:
 				response += " You’re the belle of the ball at every ball you attend, which has never happened. But, if you *were* to ever attend one, your beautiful outfit would surely distinguish you from the crowd. Who knows, you might even find TRUE LOVE because of it and get MARRIED. That is, if you weren’t already married to slime."
 		elif dominant_style == ewcfg.style_cute:
-			if user_data.freshness < 5000:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
 				response += " Awwwhhh, look at you! You’re sooo cute~, oh my gosh. I could just eat you up, and then vomit you back up after I read back the previous line I’ve just written."
 			else:
-				response += " It is almost kowai how kawaii you are right now. Your legions of fans slobber all over each new post on Grimstagram and leave very strange comments. You’re stopped for autographs in public now, and there hasn’t been a selfie taken with you that hasn’t featured a hover hand."
+				response += " It is almost kowai how kawaii you are right now. Your legions of fans slobber all over each new post on Instragrime and leave very strange comments. You’re stopped for autographs in public now, and there hasn’t been a selfie taken with you that hasn’t featured a hover hand."
 
 	return response
 
