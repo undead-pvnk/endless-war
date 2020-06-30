@@ -2273,7 +2273,7 @@ async def jam(cmd):
 	if item_sought:
 		item = EwItem(id_item=item_sought.get('id_item'))
 		if item.item_props.get("id_furniture") in ewcfg.furniture_instrument:
-			cycle = random.randrange(20)
+			cycle = random.randrange(4, 20)
 			response = ""
 			for x in range(1, cycle):
 				response += random.choice([":musical_note:", ":notes:"])

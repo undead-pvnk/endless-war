@@ -93,6 +93,9 @@ class EwEnemy:
 	
 	# Various properties different enemies might have
 	enemy_props = ""
+	
+	# Coordinate used for enemies in Gankers Vs. Shamblers
+	gvs_coord = ""
 
 	""" Load the enemy data from the database. """
 
@@ -119,7 +122,7 @@ class EwEnemy:
 
 				# Retrieve object
 				cursor.execute(
-					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
 						ewcfg.col_id_enemy,
 						ewcfg.col_id_server,
 						ewcfg.col_enemy_slimes,
@@ -143,6 +146,7 @@ class EwEnemy:
 						ewcfg.col_enemy_weathertype,
 						ewcfg.col_faction,
 						ewcfg.col_enemy_class,
+						ewcfg.col_enemy_gvs_coord,
 						query_suffix
 					))
 				result = cursor.fetchone();
@@ -172,6 +176,7 @@ class EwEnemy:
 					self.weathertype = result[20]
 					self.faction = result[21]
 					self.enemyclass = result[22]
+					self.gvs_coord = result[23]
 
 					# Retrieve additional properties
 					cursor.execute("SELECT {}, {} FROM enemies_prop WHERE id_enemy = %s".format(
@@ -203,7 +208,7 @@ class EwEnemy:
 
 			# Save the object.
 			cursor.execute(
-				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 					ewcfg.col_id_enemy,
 					ewcfg.col_id_server,
 					ewcfg.col_enemy_slimes,
@@ -226,7 +231,8 @@ class EwEnemy:
 					ewcfg.col_enemy_hardened_sap,
 					ewcfg.col_enemy_weathertype,
 					ewcfg.col_faction,
-					ewcfg.col_enemy_class
+					ewcfg.col_enemy_class,
+					ewcfg.col_enemy_gvs_coord
 				), (
 					self.id_enemy,
 					self.id_server,
@@ -251,6 +257,7 @@ class EwEnemy:
 					self.weathertype,
 					self.faction,
 					self.enemyclass,
+					self.gvs_coord,
 				))
 			
 			# If the enemy doesn't have an ID assigned yet, have the cursor give us the proper ID.
@@ -2800,4 +2807,164 @@ def set_identifier(poi, id_server):
 
 	return new_identifier
 
+async def sh_move(enemy_data):
+	current_coord = enemy_data.gvs_coord
+	has_moved = False
 
+	if current_coord in ewcfg.gvs_coord_start and enemy_data.enemytype == ewcfg.enemy_type_juvieshambler:
+		#Delete juvie shambler
+		pass
+	
+	if current_coord not in ewcfg.gvs_coords_end:
+		for row in ewcfg.gvs_valid_coords_shambler:
+			new_coord = 'NULL'
+
+			if current_coord in row:
+				index = row.index(current_coord)
+				new_coord = row[index - 1]
+				break
+				
+			enemy_data.gvs_coord = new_coord
+			enemy_data.persist()
+
+			print('shambler moved from {} to {} in {}.'.format(current_coord, new_coord, enemy_data.poi))
+
+	return has_moved
+
+async def sh_check_coord_for_gaia(enemy_data, range = 1, direction='left'):
+	current_coord = enemy_data.gvs_coord
+	gaias_in_coord = []
+
+	if current_coord not in ewcfg.gvs_coords_end:
+		
+		for sh_row in ewcfg.gvs_valid_coords_shambler:
+
+			if current_coord in sh_row:
+				index = sh_row.index(current_coord)
+				checked_coord = gvs_grid_gather_coords(enemy_data.enemyclass, range, direction)[0]
+
+				for gaia_row in ewcfg.gvs_valid_coords_gaia:
+					if checked_coord in gaia_row:
+						# Check coordinate for gaiaslimeoids in front of the shambler.
+						gaia_data = ewutils.execute_sql_query(
+							"SELECT {id_enemy}, {enemytype} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} = %s AND {poi} = %s AND {id_server} = %s".format(
+								id_enemy=ewcfg.col_id_enemy,
+								enemyclass=ewcfg.col_enemy_class,
+								enemytype=ewcfg.col_enemy_type,
+								gvs_coord=ewcfg.col_enemy_gvs_coord,
+								poi=ewcfg.col_poi,
+								id_server=ewcfg.col_id_server,
+							), (
+								ewcfg.enemy_class_gaiaslimeoid,
+								checked_coord,
+								enemy_data.poi,
+								enemy_data.id_server
+							))
+						
+						print(len(gaia_data))
+						if len(gaia_data) > 0:
+							
+							for gaia in gaia_data:
+								# Prioritize gaiaslimeoids that are upgrades, I.E. Metallicaps, Steel Beans, Aushucks.
+								if gaia[1] in [ewcfg.enemy_type_gaia_metallicaps, ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_aushucks]:
+									gaias_in_coord.append(gaia[0])
+							for gaia in gaia_data:
+								if gaia[1] not in [ewcfg.enemy_type_gaia_metallicaps, ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_aushucks]:
+									gaias_in_coord.append(gaia[0])
+
+									if gaia[1] == ewcfg.enemy_type_gaia_rustealeaves and enemy_data.enemytype not in [ewcfg.enemy_type_gigashambler, ewcfg.enemy_type_shamboni, ewcfg.enemy_type_ufoshambler]:
+										gaias_in_coord.remove(gaia[0])
+									
+
+							print('shambler in coord {} found gaia in coord {} in {}.'.format(current_coord, checked_coord, enemy_data.poi))
+	
+	
+	return gaias_in_coord
+
+async def ga_check_coord_for_shambler(enemy_data, range=1, direction='right', piercing=False):
+	current_coord = enemy_data.gvs_coord
+	shamblers_in_coord = []
+	
+	if enemy_data.enemytype in [ewcfg.enemy_type_gaia_pinkrowddishes]:
+		range = 1
+	if enemy_data.enemytype in [ewcfg.enemy_type_gaia_pinkrowddishes]:
+		direction = 'frontandback'
+	if enemy_data.enemytype in [ewcfg.enemy_type_gaia_pinkrowddishes]:
+		piercing = True
+	
+	for sh_row in ewcfg.gvs_valid_coords_shambler:
+
+		if current_coord in sh_row:
+			index = sh_row.index(current_coord)
+			checked_coords = gvs_grid_gather_coords(enemy_data.enemyclass, range, direction, sh_row, index)
+
+			for gaia_row in ewcfg.gvs_valid_coords_gaia:
+				if checked_coords in gaia_row:
+					# Check coordinate for shamblers in range of gaiaslimeoid.
+					shambler_data = ewutils.execute_sql_query(
+						"SELECT {id_enemy}, {enemytype} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} IN %s AND {poi} = %s AND {id_server} = %s".format(
+							id_enemy=ewcfg.col_id_enemy,
+							enemyclass=ewcfg.col_enemy_class,
+							enemytype=ewcfg.col_enemy_type,
+							gvs_coord=ewcfg.col_enemy_gvs_coord,
+							poi=ewcfg.col_poi,
+							id_server=ewcfg.col_id_server,
+						), (
+							ewcfg.enemy_class_gaiaslimeoid,
+							checked_coords,
+							enemy_data.poi,
+							enemy_data.id_server
+						))
+
+					print(len(shambler_data))
+					if len(shambler_data) > 0:
+
+						for shambler in shambler_data:
+							shamblers_in_coord.append(shambler[0])
+
+							current_shambler_data = EwEnemy(id_enemy=shambler[0], id_server=enemy_data.id_server)
+
+							if enemy_data not in [ewcfg.enemy_type_gaia_sourpotatoes] and shambler[1] in [ewcfg.enemy_type_juvie] and current_shambler_data.enemy_props.get('underground') == 'True':
+								shamblers_in_coord.remove(shambler[0])
+
+						if not piercing:
+							#TODO: Go through each coordinate closest to gaiaslimeoid to find first_shamlbler properly
+							first_shambler = shamblers_in_coord[0]
+							shamblers_in_coord = [first_shambler]
+
+						print('gaia in coord {} found shambler in coords {} in {}.'.format(current_coord, checked_coords, enemy_data.poi))
+
+	return shamblers_in_coord
+
+def gvs_grid_gather_coords(enemyclass, range, direction, row, index):
+	checked_coords = []
+	
+	if enemyclass == 'shambler':
+		index_change = -2
+		if direction == 'right':
+			index_change *= -1
+		try:
+			checked_coords.append(row[index + index_change])
+		except:
+			pass
+		
+	else:
+		index_changes = [-1, -2]
+		if direction == 'right':
+			index_changes[0] *= -1
+			index_changes[1] *= -1
+		elif direction == 'frontandback':
+			index_changes.append(1)
+			index_changes.append(2)
+			
+		try:
+			for index_change in index_changes:
+				checked_coords.append(row[index + index_change])
+		except:
+			pass
+		
+	return checked_coords
+
+def gvs_find_nearest_shambler():
+	
+	pass

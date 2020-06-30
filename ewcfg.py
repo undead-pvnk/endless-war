@@ -1916,6 +1916,7 @@ col_enemy_rare_status = 'rare_status'
 col_enemy_hardened_sap = 'hardened_sap'
 col_enemy_weathertype = 'weathertype'
 col_enemy_class = 'enemyclass'
+col_enemy_gvs_coord = 'gvscoord'
 
 # Database column for the status of districts with locks on them
 col_locked_status = 'locked_status'
@@ -2328,6 +2329,26 @@ item_id_dinoslimesteak = "dinoslimesteak"
 item_id_dyesolution = "dyesolution"
 item_id_textiles = "textiles"
 item_id_foodbase = "foodbase"
+item_id_gaiaseedpack_poketubers = "poketubersseedpacket"
+item_id_gaiaseedpack_pulpgourds = "pulpgourdsseedpacket"
+item_id_gaiaseedpack_sourpotatoes = "sourpotatoesseedpacket"
+item_id_gaiaseedpack_bloodcabbages = "bloodcabbagesseedpacket"
+item_id_gaiaseedpack_joybeans = "joybeansseedpacket"
+item_id_gaiaseedpack_purplekilliflower = "purplekilliflowerseedpacket"
+item_id_gaiaseedpack_razornuts = "razornutsseedpacket"
+item_id_gaiaseedpack_pawpaw = "pawpawseedpacket"
+item_id_gaiaseedpack_sludgeberries = "sludgeberriesseedpacket"
+item_id_gaiaseedpack_suganmanuts = "suganmanutsseedpacket"
+item_id_gaiaseedpack_pinkrowddishes = "pinkrowddishesseedpacket"
+item_id_gaiaseedpack_dankwheat = "dankwheatseedpacket"
+item_id_gaiaseedpack_brightshade = "brightshadeseedpacket"
+item_id_gaiaseedpack_blacklimes = "blacklimesseedpacket"
+item_id_gaiaseedpack_phosphorpoppies = "phosphorpoppiesseedpacket"
+item_id_gaiaseedpack_direapples = "direapplesseedpacket"
+item_id_gaiaseedpack_rustealeaves = "rustealeavesseedpacket"
+item_id_gaiaseedpack_metallicaps = "metallicapsseedpacket"
+item_id_gaiaseedpack_steelbeans = "steelbeansseedpacket"
+item_id_gaiaseedpack_aushucks = "aushucksseedpacket"
 
 #SLIMERNALIA
 item_id_sigillaria = "sigillaria"
@@ -2495,6 +2516,11 @@ weapon_id_umbrella = 'umbrella'
 weapon_id_bow = 'bow'
 weapon_id_dclaw = 'dclaw'
 weapon_id_staff = 'staff'
+weapon_id_hoe = 'hoe'
+weapon_id_pitchfork = 'pitchfork'
+weapon_id_shovel = 'shovel'
+weapon_id_slimeringcan = 'slimeringcan'
+
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
 	"destructive capabilities that is beyond any human’s true understanding. And for its power, " \
@@ -21854,11 +21880,45 @@ enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 # Gankers Vs. Shamblers enemies
 enemy_type_basic_gaiaslimeoid = 'gaiaslimeoid'
 enemy_type_basic_shambler = 'shambler'
+enemy_type_gaia_poketubers = "poketubers"
+enemy_type_gaia_pulpgourds = "pulpgourds"
+enemy_type_gaia_sourpotatoes = "sourpotatoes"
+enemy_type_gaia_bloodcabbages = "bloodcabbages"
+enemy_type_gaia_joybeans = "joybeans"
+enemy_type_gaia_purplekilliflower = "purplekilliflower"
+enemy_type_gaia_razornuts = "razornuts"
+enemy_type_gaia_pawpaw = "pawpaw"
+enemy_type_gaia_sludgeberries = "sludgeberries"
+enemy_type_gaia_suganmanuts = "suganmanuts"
+enemy_type_gaia_pinkrowddishes = "pinkrowddishes"
+enemy_type_gaia_dankwheat = "dankwheat"
+enemy_type_gaia_brightshade = "brightshade"
+enemy_type_gaia_blacklimes = "blacklimes"
+enemy_type_gaia_phosphorpoppies = "phosphorpoppies"
+enemy_type_gaia_direapples = "direapples"
+enemy_type_gaia_rustealeaves = "rustealeaves"
+enemy_type_gaia_metallicaps = "metallicaps"
+enemy_type_gaia_steelbeans = "steelbeans"
+enemy_type_gaia_aushucks = "aushucks"
 
-# Enemy classes. For now this is only used for Gankers Vs. Shamblers
-enemy_class_normal = 'normal'
-enemy_class_gaiaslimeoid = 'gaiaslimeoid'
-enemy_class_shambler = 'shambler'
+enemy_type_defaultshambler = "defaultshambler"
+enemy_type_bucketshambler = "bucketshambler"
+enemy_type_juveolanternshambler = "juveolanternshambler"
+enemy_type_flagshambler = "flagshambler"
+enemy_type_shamboni = "shamboni"
+enemy_type_mammoshambler = "mammoshambler"
+enemy_type_gigashambler = "gigashambler"
+enemy_type_microshambler = "microshambler"
+enemy_type_shamblersaurusrex = "shamblesaurusrex"
+enemy_type_shamblerdactyl = "shamblerdactyl"
+enemy_type_dinoshambler = "dinoshambler"
+enemy_type_ufoshambler = "ufoshambler"
+enemy_type_brawldenboomer = "brawldenboomer"
+enemy_type_juvieshambler = "juvieshambler"
+enemy_type_shambleballplayer = "shambleballplayer"
+enemy_type_shamblerwarlord = "shamblerwarlord"
+enemy_type_shamblerraider = "shamblerraider"
+enemy_type_blueeyesshamblerdragon = "blueeyesshamblerdragon"
 
 # Sandbag (Only spawns in the dojo, doesn't attack)
 enemy_type_sandbag = 'sandbag'
@@ -21875,6 +21935,11 @@ enemy_ai_attacker_b = 'Attacker-B'
 enemy_ai_defender = 'Defender'
 enemy_ai_gaiaslimeoid = 'Gaiaslimeoid'
 enemy_ai_shambler = 'Shambler'
+
+# Enemy classes. For now this is only used for Gankers Vs. Shamblers
+enemy_class_normal = 'normal'
+enemy_class_gaiaslimeoid = 'gaiaslimeoid'
+enemy_class_shambler = 'shambler'
 
 # List of enemies sorted by their spawn rarity.
 common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime]
@@ -21990,6 +22055,12 @@ enemy_drop_tables = {
 	enemy_type_basic_shambler: [
 		{item_id_slimepoudrin: [50, 1, 1]}
 	],
+	enemy_type_gaia_pinkrowddishes: [
+		{item_id_pinkrowddishes: [30, 1, 1]}	
+	],
+	enemy_type_defaultshambler: [
+		{item_id_slimepoudrin: [1, 1, 1]}
+	]
 }
 
 # When making a new enemy, make sure to fill out slimerange, ai, attacktype, displayname, raredisplayname, and aliases.
@@ -22130,6 +22201,34 @@ enemy_data_table = {
 			'newprop':'square'
 		}
 	},
+	enemy_type_gaia_pinkrowddishes: {
+		"slimerange": [100000, 100000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_gunkshot,
+		"displayname": "Pink Rowddish",
+		"raredisplayname": "Joybean Pink Rowddish",
+		"aliases": ['rowddish'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'range': 1,
+			'direction': 'frontandback',
+			'piercing': 'True'
+		}
+	},
+	enemy_type_defaultshambler: {
+		"slimerange": [100000, 100000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_fangs,
+		"displayname": "Shambler",
+		"raredisplayname": "NULL",
+		"aliases": ['shambler'],
+		"class": enemy_class_shambler,
+		"props": {
+			'range': 1,
+			'direction': 'left',
+			'piercing': 'False'
+		}
+	}
 }
 
 # Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
@@ -22163,6 +22262,26 @@ identifier_letters = [
 	'P', 'Q', 'R', 'S', 'T',
 	'U', 'V', 'W', 'X', 'Y', 'Z'
 ]
+
+gvs_valid_coords_gaia = [
+	['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9'],
+	['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9'],
+	['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9'],
+	['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9'],
+	['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9']
+]
+
+gvs_valid_coords_shambler = [
+	['A0', 'A0.5', 'A1', 'A1.5', 'A2', 'A2.5', 'A3', 'A3.5', 'A4', 'A4.5', 'A5', 'A5.5', 'A6', 'A6.5', 'A7', 'A7.5', 'A8', 'A8.5', 'A9', 'A9.5', 'A-S'],
+	['B0', 'B0.5', 'B1', 'B1.5', 'B2', 'B2.5', 'B3', 'B3.5', 'B4', 'B4.5', 'B5', 'B5.5', 'B6', 'B6.5', 'B7', 'B7.5', 'B8', 'B8.5', 'B9', 'B9.5', 'B-S'],
+	['C0', 'C0.5', 'C1', 'C1.5', 'C2', 'C2.5', 'C3', 'C3.5', 'C4', 'C4.5', 'C5', 'C5.5', 'C6', 'C6.5', 'C7', 'C7.5', 'C8', 'C8.5', 'C9', 'C9.5', 'C-S'],
+	['D0', 'D0.5', 'D1', 'D1.5', 'D2', 'D2.5', 'D3', 'D3.5', 'D4', 'D4.5', 'D5', 'D5.5', 'D6', 'D6.5', 'D7', 'D7.5', 'D8', 'D8.5', 'D9', 'D9.5', 'D-S'],
+	['E0', 'E0.5', 'E1', 'E1.5', 'E2', 'E2.5', 'E3', 'E3.5', 'E4', 'E4.5', 'E5', 'E5.5', 'E6', 'E6.5', 'E7', 'E7.5', 'E8', 'E8.5', 'E9', 'E9.5', 'E-S']
+]
+
+gvs_coords_end = ['A0', 'B0', 'C0', 'D0', 'E0']
+
+gvs_coord_start = ['A-S', 'B-S', 'C-S', 'D-S', 'E-S']
 
 rain_protection = [
 	cosmetic_id_raincoat,
