@@ -2988,8 +2988,8 @@ async def spray(cmd):
 		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_self, shootee_data=None), 2)
 
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 300)
-		slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
-		slimes_spent *= .15
+		slimes_damage = int((50000 + slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
+		slimes_spent = round(slimes_spent * .1125)
 		statuses = user_data.getStatusEffects()
 
 		backfire_damage = int(ewutils.slime_bylevel(user_data.slimelevel) / 20)
@@ -3039,6 +3039,9 @@ async def spray(cmd):
 
 			if district_data.all_neighbors_friendly() and user_data.faction != district_data.controlling_faction:
 				backfire = True
+
+			if miss is True and random.randint(0, 1) == 0:
+				miss = False
 
 			if (slimes_spent > user_data.slimes):
 				# Not enough slime to shoot.
@@ -3119,11 +3122,11 @@ async def spray(cmd):
 				else:
 
 					response = weapon.tool_props[0].get('reg_spray').format(gang = user_data.faction[:-1].capitalize(), curse = random.choice(list(ewcfg.curse_words.keys())))
-					response += " You got {:,} influence for the {}!".format(abs(slimes_damage), user_data.faction.capitalize())
+					response += " You got {:,} influence for the {}!".format(int(abs(slimes_damage)), user_data.faction.capitalize())
 
 
 					if (user_data.faction != district_data.cap_side and district_data.cap_side != "") and (user_data.faction is not None or user_data.faction != ''):
-						slimes_damage *= -.5
+						slimes_damage = round(slimes_damage * -.8)
 					#district_data.change_capture_points()
 
 
@@ -3282,7 +3285,7 @@ async def switch_weapon(cmd):
 	elif user_data.weapon >= 0:
 		weapon_item = EwItem(id_item=user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-		response = "**FWIP-CLICK!** You whip out your {}.".format(weapon_item.item_props.get("weapon_name"))
+		response = "**FWIP-CLICK!** You whip out your {}.".format(weapon_item.item_props.get("weapon_name") if weapon_item.item_props.get("weapon_name") != "" else weapon.str_name)
 		if ewcfg.weapon_class_captcha in weapon.classes:
 			newcaptcha = ewutils.text_to_regional_indicator(weapon_item.item_props.get('captcha'))
 			response += " New captcha is {}.".format(newcaptcha)
