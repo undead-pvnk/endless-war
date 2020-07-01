@@ -943,7 +943,7 @@ class EwUser:
 					id_user,
 					id_server
 				))
-				result = cursor.fetchone();
+				result = cursor.fetchone()
 
 				if result != None:
 					# Record found: apply the data to this object.
@@ -1052,18 +1052,19 @@ class EwUser:
 						self.attack = result[0]
 						self.defense = result[1]
 						self.speed = result[2]
-	
-					cursor.execute("SELECT {} FROM freshness WHERE id_user = %s AND id_server = %s".format(
-						ewcfg.col_freshness,
-					),(
-						id_user,
-						id_server
-					))
+					
+					if data_level > 1:
+						cursor.execute("SELECT {} FROM freshness WHERE id_user = %s AND id_server = %s".format(
+							ewcfg.col_freshness,
+						),(
+							id_user,
+							id_server
+						))
 
-					result = cursor.fetchone()
+						result = cursor.fetchone()
 
-					if result != None:
-						self.freshness = result[0]
+						if result != None:
+							self.freshness = result[0]
 
 					self.move_speed = ewutils.get_move_speed(self)
 
@@ -1080,9 +1081,9 @@ class EwUser:
 			# Get database handles if they weren't passed.
 			conn_info = ewutils.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
-			self.limit_fix();
+			self.limit_fix()
 
 			# Save the object.
 

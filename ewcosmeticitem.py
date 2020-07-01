@@ -256,17 +256,17 @@ async def dedorn(cmd):
 
 
 async def dye(cmd):
-	first_id = ewutils.flattenTokenListToString(cmd.tokens[1:2])
-	second_id = ewutils.flattenTokenListToString(cmd.tokens[2:])
+	hat_id = ewutils.flattenTokenListToString(cmd.tokens[1:2])
+	dye_id = ewutils.flattenTokenListToString(cmd.tokens[2:])
 
 	try:
-		first_id_int = int(first_id)
-		second_id_int = int(second_id)
+		hat_id_int = int(hat_id)
+		dye_id_int = int(dye_id)
 	except:
-		first_id_int = None
-		second_id_int = None
+		hat_id_int = None
+		dye_id_int = None
 
-	if first_id != None and len(first_id) > 0 and second_id != None and len(second_id) > 0:
+	if hat_id != None and len(hat_id) > 0 and dye_id != None and len(dye_id) > 0:
 		response = "You don't have one."
 
 		items = ewitem.inventory(
@@ -277,20 +277,19 @@ async def dye(cmd):
 		cosmetic = None
 		dye = None
 		for item in items:
-			if item.get('id_item') in [first_id_int, second_id_int] or first_id in ewutils.flattenTokenListToString(item.get('name')) or second_id in ewutils.flattenTokenListToString(item.get('name')):
+			if item.get('id_item') == hat_id_int or hat_id in ewutils.flattenTokenListToString(item.get('name')):
 				if item.get('item_type') == ewcfg.it_cosmetic and cosmetic is None:
 					cosmetic = item
 
+			if item.get('id_item') == dye_id_int or dye_id in ewutils.flattenTokenListToString(item.get('name')):
 				if item.get('item_type') == ewcfg.it_item and item.get('name') in ewcfg.dye_map and dye is None:
 					dye = item	
 
-				if cosmetic != None and dye != None:
-					break
+			if cosmetic != None and dye != None:
+				break
 
 		if cosmetic != None:
 			if dye != None:
-				user_data = EwUser(member = cmd.message.author)
-
 				cosmetic_item = EwItem(id_item=cosmetic.get("id_item"))
 				dye_item = EwItem(id_item=dye.get("id_item"))
 
