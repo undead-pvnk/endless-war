@@ -2881,16 +2881,9 @@ async def sh_check_coord_for_gaia(enemy_data, range = 1, direction='left'):
 	
 	return gaias_in_coord
 
-async def ga_check_coord_for_shambler(enemy_data, range=1, direction='right', piercing=False):
+async def ga_check_coord_for_shambler(enemy_data, range=1, direction='right', piercing=False, splash=False):
 	current_coord = enemy_data.gvs_coord
-	shamblers_in_coord = []
-	
-	if enemy_data.enemytype in [ewcfg.enemy_type_gaia_pinkrowddishes]:
-		range = 1
-	if enemy_data.enemytype in [ewcfg.enemy_type_gaia_pinkrowddishes]:
-		direction = 'frontandback'
-	if enemy_data.enemytype in [ewcfg.enemy_type_gaia_pinkrowddishes]:
-		piercing = True
+	detected_shamblers = {}
 	
 	for sh_row in ewcfg.gvs_valid_coords_shambler:
 
@@ -2920,21 +2913,31 @@ async def ga_check_coord_for_shambler(enemy_data, range=1, direction='right', pi
 					if len(shambler_data) > 0:
 
 						for shambler in shambler_data:
-							shamblers_in_coord.append(shambler[0])
 
 							current_shambler_data = EwEnemy(id_enemy=shambler[0], id_server=enemy_data.id_server)
+							detected_shamblers[current_shambler_data.id_enemy] = current_shambler_data.gvs_coord
 
 							if enemy_data not in [ewcfg.enemy_type_gaia_sourpotatoes] and shambler[1] in [ewcfg.enemy_type_juvie] and current_shambler_data.enemy_props.get('underground') == 'True':
-								shamblers_in_coord.remove(shambler[0])
+								del detected_shamblers[current_shambler_data.id_enemy]
 
 						if not piercing:
-							#TODO: Go through each coordinate closest to gaiaslimeoid to find first_shamlbler properly
-							first_shambler = shamblers_in_coord[0]
-							shamblers_in_coord = [first_shambler]
-
+							detected_shamblers = gvs_find_nearest_shambler(checked_coords, detected_shamblers)
+						
 						print('gaia in coord {} found shambler in coords {} in {}.'.format(current_coord, checked_coords, enemy_data.poi))
 
-	return shamblers_in_coord
+					if splash:
+						
+						if detected_shamblers == {}:
+							checked_splash_coords = checked_coords
+						else:
+							checked_splash_coords = []
+							for shambler in detected_shamblers.keys():
+								checked_splash_coords.append(detected_shamblers[shambler])
+						
+						splash_coords = gvs_get_splash_coords(checked_splash_coords)
+
+
+	return detected_shamblers
 
 def gvs_grid_gather_coords(enemyclass, range, direction, row, index):
 	checked_coords = []
@@ -2949,22 +2952,88 @@ def gvs_grid_gather_coords(enemyclass, range, direction, row, index):
 			pass
 		
 	else:
-		index_changes = [-1, -2]
-		if direction == 'right':
-			index_changes[0] *= -1
-			index_changes[1] *= -1
-		elif direction == 'frontandback':
-			index_changes.append(1)
-			index_changes.append(2)
+		
+		index_changes = []
+		
+		# Default if range is 1, only reaches 0.5 and 1 full tile ahead
+		for i in range(range*2):
+			index_changes.append(i + 1)
 			
-		try:
-			for index_change in index_changes:
+		# If it reaches backwards with a range of 1, reflect current index changes
+		if direction == 'right':
+			new_index_changes = []
+			
+			for change in index_changes:
+				change *= -1
+				new_index_changes.append(change)
+				
+			index_changes = new_index_changes
+			
+		# If it reaches both directions with a range of 1, add in opposite tiles.
+		elif direction == 'frontandback':
+			new_index_changes = []
+			
+			for change in index_changes:
+				change *= -1
+				new_index_changes.append(change)
+
+			index_changes += new_index_changes
+			
+		# If it attacks in a ring formation around itself, there are no coord changes.
+		# The proper coordinates will be fetched later as 'splash' damage.
+		elif direction == 'ring':
+			index_changes = [0]
+			
+		# Catch exceptions when necessary
+		for index_change in index_changes:
+			try:
 				checked_coords.append(row[index + index_change])
-		except:
-			pass
+			except:
+				pass
 		
 	return checked_coords
 
-def gvs_find_nearest_shambler():
+def gvs_find_nearest_shambler(checked_coords, detected_shamblers):
+	for coord in checked_coords:
+		for shambler in detected_shamblers.keys():
+			if detected_shamblers[shambler] == coord:
+				return {shambler: coord}
+			
+def gvs_get_splash_coords(checked_splash_coords):
+	# Grab any random coordinate from the supplied splash coordinates, then get the row that it's in.
+	plucked_coord = checked_splash_coords[0]
+	plucked_row = plucked_coord[0]
+	top_row = None
+	bottom_row = None
+	current_index = 0
 	
-	pass
+	all_splash_coords = []
+	if plucked_row == 'A':
+		bottom_row = 1
+	elif plucked_row == 'B':
+		top_row = 0
+		bottom_row = 2
+	elif plucked_row == 'C':
+		top_row = 1
+		bottom_row = 3
+	elif plucked_row == 'D':
+		top_row = 2
+		bottom_row = 4
+	elif plucked_row == 'E':
+		top_row = 3
+	
+	for coord in checked_splash_coords:
+		for sh_row in ewcfg.gvs_valid_coords_shambler:
+			if coord in sh_row:
+				current_index = sh_row.index(coord)
+				break
+		
+		if top_row != None:
+			#todo: add exception catchers
+			all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[top_row][current_index-2])
+			all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[top_row][current_index-1])
+			all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[top_row][current_index])
+			all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[top_row][current_index+1])
+			all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[top_row][current_index+2])
+		if bottom_row != None:
+			all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[bottom_row][current_index])
