@@ -3123,7 +3123,7 @@ async def spray(cmd):
 
 
 					if (user_data.faction != district_data.cap_side and district_data.cap_side != "") and (user_data.faction is not None or user_data.faction != ''):
-						slimes_damage *= -.5
+						slimes_damage *= -.8
 					#district_data.change_capture_points()
 
 
@@ -3282,7 +3282,7 @@ async def switch_weapon(cmd):
 	elif user_data.weapon >= 0:
 		weapon_item = EwItem(id_item=user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-		response = "**FWIP-CLICK!** You whip out your {}.".format(weapon_item.item_props.get("weapon_name"))
+		response = "**FWIP-CLICK!** You whip out your {}.".format(weapon_item.item_props.get("weapon_name") if weapon_item.item_props.get("weapon_name") != "" else weapon.str_name)
 		if ewcfg.weapon_class_captcha in weapon.classes:
 			newcaptcha = ewutils.text_to_regional_indicator(weapon_item.item_props.get('captcha'))
 			response += " New captcha is {}.".format(newcaptcha)
