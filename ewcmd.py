@@ -162,7 +162,7 @@ def gen_data_text(
 	user_data = EwUser(
 		id_user=id_user,
 		id_server=id_server,
-		data_level = 1
+		data_level = 2
 	)
 	slimeoid = EwSlimeoid(id_user=id_user, id_server=id_server)
 
@@ -638,7 +638,7 @@ async def hunger(cmd):
 """ Check your outfit. """
 async def fashion(cmd):
 	if cmd.mentions_count == 0:
-		user_data = EwUser(member=cmd.message.author, data_level = 1)
+		user_data = EwUser(member=cmd.message.author, data_level = 2)
 
 		cosmetic_items = ewitem.inventory(
 			id_user = cmd.message.author.id,
@@ -730,7 +730,7 @@ async def fashion(cmd):
 
 	else:
 		member = cmd.mentions[0]
-		user_data = EwUser(member = member, data_level = 1)
+		user_data = EwUser(member = member, data_level = 2)
 
 		cosmetic_items = ewitem.inventory(
 			id_user = member.id,
@@ -2396,7 +2396,7 @@ async def check_stats(cmd):
 	else:
 		target = cmd.mentions[0]
 
-	target_user_data = EwUser(id_user = target.id, id_server = cmd.message.server.id, data_level = 1)
+	target_user_data = EwUser(id_user = target.id, id_server = cmd.message.server.id, data_level = 2)
 
 	if target_user_data != None:
 		response = "They have {} attack, {}  defense, and {} speed.".format(target_user_data.attack, target_user_data.defense, target_user_data.speed)
