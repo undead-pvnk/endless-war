@@ -2903,7 +2903,7 @@ async def ga_check_coord_for_shambler(enemy_data, range=1, direction='right', pi
 							poi=ewcfg.col_poi,
 							id_server=ewcfg.col_id_server,
 						), (
-							ewcfg.enemy_class_gaiaslimeoid,
+							ewcfg.enemy_class_shambler,
 							checked_coords,
 							enemy_data.poi,
 							enemy_data.id_server
@@ -2936,6 +2936,23 @@ async def ga_check_coord_for_shambler(enemy_data, range=1, direction='right', pi
 						
 						splash_coords = gvs_get_splash_coords(checked_splash_coords)
 
+						splash_shambler_data = ewutils.execute_sql_query(
+							"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} IN %s AND {poi} = %s AND {id_server} = %s".format(
+								id_enemy=ewcfg.col_id_enemy,
+								enemyclass=ewcfg.col_enemy_class,
+								enemytype=ewcfg.col_enemy_type,
+								gvs_coord=ewcfg.col_enemy_gvs_coord,
+								poi=ewcfg.col_poi,
+								id_server=ewcfg.col_id_server,
+							), (
+								ewcfg.enemy_class_shambler,
+								splash_coords,
+								enemy_data.poi,
+								enemy_data.id_server
+							))
+						
+						for splashed_shambler in splash_shambler_data:
+							detected_shamblers[splashed_shambler[0]] = splashed_shambler[2]
 
 	return detected_shamblers
 
@@ -3004,23 +3021,29 @@ def gvs_get_splash_coords(checked_splash_coords):
 	plucked_coord = checked_splash_coords[0]
 	plucked_row = plucked_coord[0]
 	top_row = None
+	middle_row = None
 	bottom_row = None
 	current_index = 0
 	
 	all_splash_coords = []
 	if plucked_row == 'A':
+		middle_row = 0
 		bottom_row = 1
 	elif plucked_row == 'B':
 		top_row = 0
+		middle_row = 1
 		bottom_row = 2
 	elif plucked_row == 'C':
 		top_row = 1
+		middle_row = 2
 		bottom_row = 3
 	elif plucked_row == 'D':
 		top_row = 2
+		middle_row = 3
 		bottom_row = 4
 	elif plucked_row == 'E':
 		top_row = 3
+		middle_row = 4
 	
 	for coord in checked_splash_coords:
 		for sh_row in ewcfg.gvs_valid_coords_shambler:
@@ -3029,11 +3052,22 @@ def gvs_get_splash_coords(checked_splash_coords):
 				break
 		
 		if top_row != None:
-			#todo: add exception catchers
-			all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[top_row][current_index-2])
-			all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[top_row][current_index-1])
-			all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[top_row][current_index])
-			all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[top_row][current_index+1])
-			all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[top_row][current_index+2])
+			for i in range(5):
+				try:
+					all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[top_row][current_index - 2 + i])
+				except:
+					pass
 		if bottom_row != None:
-			all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[bottom_row][current_index])
+			for i in range(5):
+				try:
+					all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[bottom_row][current_index - 2 + i])
+				except:
+					pass
+				
+		for i in range(5):
+			try:
+				all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[middle_row][current_index - 2 + i])
+			except:
+				pass
+			
+	return all_splash_coords
