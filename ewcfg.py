@@ -15716,7 +15716,7 @@ smelting_recipe_list = [
 	),
 	EwSmeltingRecipe(
 		id_recipe="browndye",
-		str_name="",
+		str_name="a vial of Brown dye",
 		alias=[
 			'brown',
 		],
