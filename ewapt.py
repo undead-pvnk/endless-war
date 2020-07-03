@@ -19,6 +19,7 @@ import ewslimeoid
 import ewhunting
 import ewwep
 import ewquadrants
+import ewdistrict
 
 from ewitem import EwItem
 from ewdistrict import EwDistrict
@@ -1515,7 +1516,7 @@ async def trickortreat(cmd = None):
 				treat = False
 				if ewutils.active_target_map.get(user_data.id_user) == target_data.apt_zone:
 					# For Double Halloween spam knocking isn't really an issue. Just clear up their slot in the active target map for now.
-					print('DEBUG: Spam knock in trickortreat command.')
+					#print('DEBUG: Spam knock in trickortreat command.')
 					ewutils.active_target_map[user_data.id_user] = ""
 					return #returns if the user is spam knocking. However, the person in the apt still gets each of the DMs above.
 				else:
@@ -2411,6 +2412,8 @@ async def aptCommands(cmd):
 		return await ewwep.annoint(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_petslimeoid:
 		return await ewslimeoid.petslimeoid(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_abuseslimeoid:
+		return await ewslimeoid.abuseslimeoid(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_playfetch:
 		return await ewslimeoid.playfetch(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_observeslimeoid:
@@ -2487,6 +2490,14 @@ async def aptCommands(cmd):
 		return await apt_help(cmd)
 	elif cmd_text == ewcfg.cmd_accept or cmd_text == ewcfg.cmd_refuse:
 		pass
+	elif cmd_text == ewcfg.cmd_switch or cmd_text == ewcfg.cmd_switch_alt_1:
+		return await ewwep.switch_weapon(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_changespray:
+		return await ewdistrict.change_spray(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_tag:
+		return await ewdistrict.tag(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_sidearm:
+		return await ewwep.sidearm(cmd=cmd)
 	#elif cmd_text == ewcfg.cmd_trick or cmd_text == ewcfg.cmd_treat:
 	#	pass
 	elif cmd_text[0]==ewcfg.cmd_prefix: #faliure text

@@ -372,6 +372,12 @@ async def cast(cmd):
 				if weapon.id_weapon == "fishingrod":
 					has_fishingrod = True
 
+			#if user_data.sidearm >= 0:
+			#	sidearm_item = EwItem(id_item=user_data.sidearm)
+			#	sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+			#	if sidearm.id_weapon == "fishingrod":
+			#		has_fishingrod = True
+
 			if ewcfg.status_high_id in statuses:
 				fisher.high = True
 			fisher.fishing = True
@@ -606,6 +612,12 @@ async def reel(cmd):
 					weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 					if weapon.id_weapon == "fishingrod":
 						has_fishingrod = True
+
+				#if user_data.sidearm >= 0:
+				#	sidearm_item = EwItem(id_item=user_data.sidearm)
+				#	sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+				#	if sidearm.id_weapon == "fishingrod":
+				#		has_fishingrod = True
 
 				value = 0
 

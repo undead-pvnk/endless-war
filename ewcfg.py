@@ -847,6 +847,7 @@ cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_endlesswar = cmd_prefix + 'endlesswar'
 cmd_swear_jar = cmd_prefix + 'swearjar'
 cmd_equip = cmd_prefix + 'equip'
+cmd_sidearm = cmd_prefix + 'sidearm'
 cmd_data = cmd_prefix + 'data'
 cmd_mutations = cmd_prefix + 'mutations'
 cmd_mutations_alt_1 = cmd_prefix + 'stds'
@@ -961,9 +962,11 @@ cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_scavenge_alt1 = cmd_prefix + 'lookbetweenthecushions'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
-cmd_annex = cmd_prefix + 'annex'
-cmd_annex_alt1 = cmd_prefix + 'spray'
+cmd_spray = cmd_prefix + 'annex'
+cmd_spray_alt1 = cmd_prefix + 'spray'
 cmd_capture_progress = cmd_prefix + 'progress'
+cmd_changespray = cmd_prefix + 'changespray'
+cmd_tag = cmd_prefix + 'tag'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
@@ -995,6 +998,10 @@ cmd_wrap = cmd_prefix + 'wrap'
 cmd_unwrap = cmd_prefix + 'unwrap'
 cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
 cmd_shamble = cmd_prefix + 'shamble'
+
+cmd_switch = cmd_prefix + 'switch'
+cmd_switch_alt_1 = cmd_prefix + 's'
+
 cmd_shambleball = cmd_prefix + 'shambleball'
 cmd_shamblego = cmd_prefix + 'shamblego'
 cmd_shamblestop = cmd_prefix + 'shamblestop'
@@ -1006,6 +1013,7 @@ cmd_reset_prank_stats = cmd_prefix + 'resetprankstats'
 cmd_set_gambit = cmd_prefix + 'setgambit'
 cmd_pointandlaugh = cmd_prefix + 'pointandlaugh'
 cmd_prank = cmd_prefix + 'prank'
+
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -1158,6 +1166,7 @@ cmd_challenge = cmd_prefix + 'challenge'
 cmd_instructions = cmd_prefix + 'instructions'
 cmd_playfetch = cmd_prefix + 'playfetch'
 cmd_petslimeoid = cmd_prefix + 'petslimeoid'
+cmd_abuseslimeoid = cmd_prefix + 'abuseslimeoid'
 cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
@@ -1319,12 +1328,43 @@ max_capture_points_a = 300000  # 300k
 max_capture_points_b = 200000  # 200k
 max_capture_points_c = 100000   # 100k
 
+limit_influence_s = 66600000
+limit_influence_a = 33300000
+limit_influence_b = 20000000
+limit_influence_c = 9500000
+
+min_influence_s = 33300000
+min_influence_a = 17000000
+min_influence_b = 10000000
+min_influence_c = 4500000
+
+min_garotte = 2000
+
+
+
+
+
+
 # district capture rates assigned to property classes
 max_capture_points = {
 	property_class_s: max_capture_points_s,
 	property_class_a: max_capture_points_a,
 	property_class_b: max_capture_points_b,
 	property_class_c: max_capture_points_c
+}
+
+limit_influence = {
+	property_class_s: limit_influence_s,
+	property_class_a: limit_influence_a,
+	property_class_b: limit_influence_b,
+	property_class_c: limit_influence_c
+}
+
+min_influence = {
+	property_class_s: min_influence_s,
+	property_class_a: min_influence_a,
+	property_class_b: min_influence_b,
+	property_class_c: min_influence_c
 }
 
 # how long districts stay locked after capture
@@ -1374,7 +1414,7 @@ capture_gradient = 1
 decapture_speed_multiplier = 1  # how much faster de-capturing is than capturing
 
 # district control decay
-decay_modifier = 1  # more means slower
+decay_modifier = 4  # more means slower
 
 # time values
 seconds_per_ingame_day = 21600
@@ -1854,9 +1894,12 @@ col_has_soul = 'has_soul'
 col_sap = 'sap'
 col_hardened_sap = 'hardened_sap'
 col_manuscript = "manuscript"
+col_spray = "spray"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
+col_sidearm = 'sidearm'
+
 col_race = 'race'
 col_time_racialability = 'time_racialability'
 col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
@@ -1972,6 +2015,7 @@ col_capturing_faction = 'capturing_faction'
 col_capture_points = 'capture_points'
 col_district_slimes = 'slimes'
 col_time_unlock = 'time_unlock'
+col_cap_side = 'cap_side'
 
 # Database columns for mutations
 col_id_mutation = 'mutation'
@@ -2197,6 +2241,12 @@ stat_bass_kills = 'bass_kills'
 stat_bow_kills = 'bow_kills'
 stat_umbrella_kills = 'umbrella_kills'
 stat_dclaw_kills = 'dclaw_kills'
+stat_spraycan_kills = 'spraycan_kills'
+stat_paintgun_kills = 'paintgun_kills'
+stat_paintroller_kills = 'paintroller_kills'
+stat_paintbrush_kills = 'paintbrush_kills'
+stat_watercolor_kills = 'watercolor_kills'
+stat_thinnerbomb_kills = 'thinnerbomb_kills'
 stat_staff_kills = 'staff_kills'
 
 # Categories of events that change your slime total, for statistics tracking
@@ -2555,6 +2605,12 @@ weapon_id_umbrella = 'umbrella'
 weapon_id_bow = 'bow'
 weapon_id_dclaw = 'dclaw'
 weapon_id_staff = 'staff'
+weapon_id_spraycan = 'spraycan'
+weapon_id_paintgun = 'paintgun'
+weapon_id_paintroller = 'paintroller'
+weapon_id_paintbrush = 'paintbrush'
+weapon_id_watercolors = 'watercolors'
+weapon_id_thinnerbomb = 'thinnerbomb'
 weapon_id_hoe = 'hoe'
 weapon_id_pitchfork = 'pitchfork'
 weapon_id_shovel = 'shovel'
@@ -3750,7 +3806,7 @@ item_list = [
 	EwGeneralItem(
 		id_item = item_id_textiles,
 		str_name = "Textiles",
-		str_desc = "A set of frabrics. You can smelt this together with crop materials to make exclusive cosmetics.",
+		str_desc = "A set of fabrics. You can smelt this together with crop materials to make exclusive cosmetics.",
 		price = 1000,
 		vendors = [vendor_basedhardware]
 	),
@@ -4600,6 +4656,55 @@ def wef_staff(ctn = None):
 		ctn.miss = True
 
 
+def wef_paintgun(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * .6)
+	ctn.slimes_spent = int(ctn.slimes_spent * .75)
+	aim = (random.randrange(10) + 1)
+	ctn.sap_ignored = 10
+	ctn.sap_damage = 2
+
+	if aim >= (9 - int(10 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
+def wef_paintroller(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * 1.75)
+	ctn.slimes_spent = int(ctn.slimes_spent * 4)
+
+	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
+
+	if aim <= (1 + int(10 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim >= (10 - int(10 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+		ctn.sap_damage *= 2
+
+def wef_watercolors(ctn = None):
+	ctn.slimes_damage = 4000
+	aim = (random.randrange(1000) + 1)
+	user_mutations = ctn.user_data.get_mutations()
+	ctn.sap_damage = 0
+
+	if aim <= (1 + int(1000 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim == 1000:
+		ctn.crit = True
+		ctn.slimes_damage *= 1
+
+
+
 vendor_dojo = "Dojo"
 
 weapon_class_ammo = "ammo"
@@ -4610,6 +4715,18 @@ weapon_class_jammable = "jammable"
 weapon_class_captcha = "captcha"
 weapon_class_defensive = "defensive"
 weapon_class_heavy = "heavy"
+weapon_class_paint = "paint"
+
+weapon_type_convert = {
+weapon_id_watercolors:wef_watercolors,
+weapon_id_spraycan:wef_revolver,
+weapon_id_paintroller:wef_paintroller,
+weapon_id_thinnerbomb:wef_molotov,
+weapon_id_paintgun:wef_paintgun,
+weapon_id_paintbrush:wef_knives
+}
+
+
 
 # All weapons in the game.
 weapon_list = [
@@ -5103,7 +5220,7 @@ weapon_list = [
 		str_miss = "**You missed!!** {name_player}’s poor aim sends their grenade into a nearby alleyway, it’s explosion eliciting a Wilhelm scream and the assumed death of an innocent passerby. LOL!!",
 		str_equip = "You equip the grenades.",
 		str_name = "grenades",
-		str_weapon = "a stack of grenades",
+		str_weapon = "grenades",
 		str_weaponmaster_self = "You are a rank {rank} master of the grenades.",
 		str_weaponmaster = "They are a rank {rank} master of the grenades.",
 		#str_trauma_self = "Blast scars and burned skin are spread unevenly across your body.",
@@ -5176,7 +5293,8 @@ weapon_list = [
 		acquisition = acquisition_smelting,
 		stat = stat_pickaxe_kills,
 		sap_cost = 2,
-		captcha_length = 2
+		captcha_length = 2,
+		is_tool = 1
 	),
 	EwWeapon(  # 19
 		id_weapon = weapon_id_fishingrod,
@@ -5207,7 +5325,8 @@ weapon_list = [
 		acquisition = acquisition_smelting,
 		stat = stat_fishingrod_kills,
 		sap_cost = 2,
-		captcha_length = 2
+		captcha_length = 2,
+		is_tool = 1
 	),
 	EwWeapon(  # 20
 		id_weapon = weapon_id_bass,
@@ -5223,7 +5342,7 @@ weapon_list = [
 		str_weaponmaster = "They are a rank {rank} master of the bass guitar.",
 		#str_trauma_self = "There is a large concave dome in the side of your head.",
 		#str_trauma = "There is a large concave dome in the side of their head.",
-		str_kill = "*CRASSHHH.* {name_player} brings down the bass with righteous fury. Discordant notes play harshly as the bass trys its hardest to keep itself together. {emote_skull}",
+		str_kill = "*CRASSHHH.* {name_player} brings down the bass on {name_target} with righteous fury. Discordant notes play harshly as the bass trys its hardest to keep itself together. {emote_skull}",
 		str_killdescriptor = "smashed to pieces",
 		str_damage = "{name_target} is whacked across the {hitzone}!!",
 		str_duel = "**SMASHHH.** {name_player} and {name_target} smash their bass together before admiring eachothers skillful basslines.",
@@ -5279,7 +5398,7 @@ weapon_list = [
 		str_weaponmaster = "They are a rank {rank} minecraft bowmaster.",
 		#str_trauma_self = "There is a pixelated arrow in the side of your head.",
 		#str_trauma = "There is a pixelated arrow in the side of their head.",
-		str_kill = "*Pew Pew Pew.* {name_player} spams the bow as their foes life fades, riddling their body with arrows. {emote_skull}",
+		str_kill = "*Pew Pew Pew.* {name_player} spams the bow as {name_target}'s life fades, riddling their body with arrows. {emote_skull}",
 		str_killdescriptor = "shot to death",
 		str_damage = "{name_target} is shot in the {hitzone}!!",
 		str_duel = "{name_player} and {name_target} shoot distant targets, {name_player} is clearly the superior bowman.",
@@ -5316,9 +5435,237 @@ weapon_list = [
 		stat = stat_dclaw_kills,
 		classes = [weapon_class_burning],
 		sap_cost = 5,
-		captcha_length = 2
+		captcha_length = 2),
+
+	EwWeapon(  # 24
+		id_weapon=weapon_id_spraycan,
+		alias=[
+			"spray can",
+			"spray"
+		],
+		str_crit="**Critical hit!!** {name_player} flicks the nozzle off their spray can and lights it like a fuse! {name_target} gets nasty burns and a fresh coat of paint! **WHOOSH!!!**",
+		str_miss="**MISS!!** {name_player} attempts a spray attack, but the wind blows it back in their face!",
+		str_equip="You hold the spray can tightly, hoping to god somebody confuses it for a gun.",
+		str_name="spray can",
+		str_weapon="a spray can",
+		str_weaponmaster_self="You are a rank {rank} vandal of the spray can.",
+		str_weaponmaster="They are a rank {rank} vandal of the spray can.",
+		# str_trauma_self = "You're having trouble breathing, and the inside of your mouth is off-color.",
+		# str_trauma = "They're weirdly short of breath, and their mouth and tongue are off-color.",
+		str_kill="***PPPPPPSSSSSSSSSHHHHHhhhhhfff.*** {name_player} forcibly opens {name_target}'s mouth and sprays everything they have into their lungs. Their eyes roll back into their head and, trembling, they slowly asphyxiate in your arms. {emote_skull}",
+		str_killdescriptor="suffocated",
+		str_damage=random.choice(["{name_target} is whacked across the {hitzone}!!",
+								  "{name_player} sprays {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} humiliates {name_target} by bringing a spray can to a gunfight, mentally damaging them in the {hitzone}!!"]),
+		str_duel="**PSSS PSSS PSSSSSHH!** {name_player} and {name_target} spray the dojo walls until they get dizzy from the smell.",
+		str_scalp="The scalp is a nice shade of mauve.",
+		fn_effect=wef_tool,
+		str_description="It's a Based Hardware brand spray can, in your gang's color. The blurb on the backside preaches about the merits of street art and murals, but you're pretty sure that's just to cover their ass.",
+		vendors = [vendor_basedhardware],
+		stat=stat_spraycan_kills,
+		classes=[weapon_class_paint, weapon_class_captcha],
+		sap_cost=2,
+		captcha_length=3,
+		is_tool = 1,
+		str_backfire = "As {name_player} shakes the can to fire another shot, the thing suddenly explodes on them!",
+		tool_props = {
+		'reg_spray' : "You run down the streets, tagging buildings, street signs and old ladies with spray paint in the image of the {gang}!",
+		'miss_spray' : "**Miss!** Your can seems to be low on spray. You fill it up and give it a good shake. Good as new!",
+		'crit_spray' : "**Critical hit!** You dual wield spray cans, painting an urban masterpiece in one hand and shooting toxic chemicals into a cop's mouth with the other!",
+		'equip_spray' : "You get your trusty spray paint at the ready."}
+		),
+	EwWeapon(  # 25
+		id_weapon=weapon_id_paintgun,
+		alias=[
+			"paint gun",
+			"splatoon"
+		],
+		str_crit="**Critical hit!!** {name_player} aims down the sights with the precision of a video game real life sniper, shooting {name_target} in the eyes from 30 yards! **SPLAAAAAT!!!**",
+		str_miss="**MISS!!** {name_player} fires off a volley of paint, but {name_target} jumps behind cover!",
+		str_equip="Now listen here. You just equipped a paint gun. Keep in mind this is the weapon that boomer families shoot each other with to have fun. Enjoy trying to kill with it.",
+		str_name="paint gun",
+		str_weapon="a paint gun",
+		str_weaponmaster_self="You are a rank {rank} vandal of the paint gun.",
+		str_weaponmaster="They are a rank {rank} vandal of the paint gun.",
+		# str_trauma_self = "You have a splitting headache.",
+		# str_trauma = "They look hungover, almost like their entire body exploded.",
+		str_kill="***SPLAAAAART!!!!*** {name_player} fatally strikes {name_target}, and they explode from the inside out! There's a lot more gore than when you see it happen in Splatoon, though.{emote_skull}",
+		str_killdescriptor="imploded",
+		str_damage=random.choice(["{name_target} is splatted in the {hitzone}!!",
+								  "{name_player} shoots {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} attacks {name_target} with harmless paint!!"]),
+		str_duel="**SPLAT TAT TAT!!** {name_player} and {name_target} harass everyone in the dojo with their paint guns.",
+		str_scalp="The scalp is colorful, from both blood and paint.",
+		fn_effect=wef_tool,
+		str_description="It's an industrial strength two handed paint gun with a sniper scope attached. What do they use this for in industry, anyway?",
+		vendors=[vendor_basedhardware],
+		stat=stat_paintgun_kills,
+		classes=[weapon_class_paint, weapon_class_ammo, weapon_class_captcha],
+		clip_size = 15,
+		price = 5000,
+		sap_cost=2,
+		captcha_length=4,
+		is_tool = 1,
+		str_reload = "*Click.* You grab a paint cylinder from god knows where and load it into your gun, chucking the leftover one behind an alleyway.",
+		str_backfire = "Whoops, looks like somebody didn't fasten the paint cylinder hard enough! {name_player} gets a thorough spray to the face!",
+		tool_props = {
+			'reg_spray':  "You find a patch of wall several yards away that hasn't been vandalized yet. Time to take aim and...BAM! Nice shot!",
+			'miss_spray': "**Miss!** Your aim was as sharp as ever, but a fucking pigeon took the hit! Christ, what are the odds?",
+			'crit_spray': "**Critical hit!** The paint bullet skids a wall, spreading your paint across the whole thing!",
+			'equip_spray': "You load a clip of paint into the gun and throw it onto your back, kinda like Rambo if he were an art major."
+		}
 	),
-	EwWeapon( # 24
+	EwWeapon(  # 26
+		id_weapon=weapon_id_paintroller,
+		alias=[
+			"paint roller",
+			"roller"
+		],
+		str_crit="**Critical hit!!** {name_player}  knocks {name_target} to the ground and does a golf swing to their vulnerable little head, sending them spinning. **FWAP!!!**",
+		str_miss="**MISS!!** {name_player} does cringey bo staff jujitsu moves with the roller and forgets to actually attack {name_target}!",
+		str_equip="You hold the paint roller in your hand. The light plastic broom handle and spongy brush are sure to deal at least 10 damage.",
+		str_name="paint roller",
+		str_weapon="a paint roller",
+		str_weaponmaster_self="You are a rank {rank} vandal of the paint roller.",
+		str_weaponmaster="They are a rank {rank} vandal of the paint roller.",
+		# str_trauma_self = "There's a gaudy colored dent in your skull.",
+		# str_trauma = "There is a gaudy colored dent in their skull.",
+		str_kill="***CA-CRACK!*** {name_player} opens {name_target}'s skull like an egg using the dull metal edge of the roller. It appears to be hollow, after all, {name_target} was stupid enough to get killed with a fucking paint roller.{emote_skull}",
+		str_killdescriptor="cracked open",
+		str_damage=random.choice(["{name_target} is swatted in the {hitzone}!!",
+								  "{name_player} slaps {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} rolls paint all over {name_target}'s {hitzone}!!"]),
+		str_duel="{name_player} and {name_target} quietly pass the time rolling paint over the windows of nearby houses You both have learned tranquility.",
+		str_scalp="The scalp is split in half, with a big hole right in the middle.",
+		fn_effect=wef_tool,
+		price = 4500,
+		str_description="It's a long, broom-like plastic paint roller with a spongy brush and metal axle. The modern man's bo staff.",
+		vendors=[vendor_basedhardware],
+		stat=stat_paintroller_kills,
+		classes=[weapon_class_paint, weapon_class_captcha],
+		sap_cost=2,
+		captcha_length=4,
+		is_tool=1,
+		str_backfire = "{name_player} waves the paint roller around like it's a plastic toy, spreading paint nowhere but giving themselves a thorough welt in the head from the 2 square inches of it that could actually do any damage. How'd they manage that?",
+		tool_props = {
+			'reg_spray' : "You roll paint over as much surface area as your puny little Juvie legs can take you to.",
+			'miss_spray' : "**Miss!** The sponge on your roller snaps off and it takes too long for you to notice. What a waste!",
+			'crit_spray' : "**Critical hit!** Your mind goes blank in a painting-induced rage. When you wake up, all your surroundings are {color} You should do that more often!",
+			'equip_spray' : "You grab your paint roller and strap it on your back."}
+		),
+	EwWeapon(  # 27
+		id_weapon=weapon_id_paintbrush,
+		alias=[
+			"paint brushes",
+			"brush"
+		],
+		str_crit="**Critical hit!!** {name_player}  stabs {name_target} with one brush and paints over their eyes with another!  **HOT DOG!!!**",
+		str_miss="**MISS!!** {name_player} throws the brushes at {name_target}, but they get hit with the soft bristles instead of the pointy bit!",
+		str_equip="If only you had a whittling knife that could sharpen paintbrush handles. That way you could equip the knife as a weapon instead of this.",
+		str_name="paintbrushes",
+		str_weapon="paintbrushes",
+		str_weaponmaster_self="You are a rank {rank} vandal of the paintbrush.",
+		str_weaponmaster="They are a rank {rank} vandal of the paintbrush.",
+		# str_trauma_self = "You have bruises all over your body and you can't get the paint out of your clothes.",
+		# str_trauma = "They have bruises all over their body, and they can't get the paint out of their clothes.",
+		str_kill="***MASTERPIECE!*** {name_target} takes a mortal brush to the forehead, courtesy of {name_player}'s talent as a painter. {emote_skull}",
+		str_killdescriptor="paintbrushed to death",
+		str_damage=random.choice(["{name_target} is handlestabbed in the {hitzone}!!",
+								  "{name_player} flecks {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} grazes {name_target}'s {hitzone} with coarse bristles!!"]),
+		str_duel="{name_player} and {name_target} paint random text commands on the walls outside the Dojo. {name_target} paints some furry art when nobody's looking.",
+		str_scalp="The scalp has a bunch of welts, and has a faint smell of lead.",
+		fn_effect=wef_tool,
+		str_description="A stack of large, coarse-bristled paintbrushes, linked together on a burlap string.",
+		vendors=[vendor_basedhardware],
+		stat=stat_paintbrush_kills,
+		classes=[weapon_class_paint, weapon_class_thrown, weapon_class_captcha],
+		sap_cost=2,
+		price = 100,
+		captcha_length=3,
+		is_tool=1,
+		str_backfire = "In an attempt to paint faster, {name_player} sticks one of the handles in their mouth and try to use it to cover more ground. Instead, they broke your teeth and scraped their cheek on a hard brick surface. Better not try that again...",
+		tool_props = {
+			'reg_spray' : "You paint vulgar {gang} symbols on as many buildings as you can.",
+			'miss_spray' : "**Miss!** You finish with a paint can and have to switch! You waste too much time getting the can open.",
+			'crit_spray' : "**Critical hit!**  You hold the paint can in your mouth and start crab walking, throwing paint along the wall as you do it! Somehow, this is more efficient!",
+			'equip_spray' : "You get your brushes at the ready."}
+	),
+	EwWeapon(  # 28
+		id_weapon=weapon_id_watercolors,
+		alias=[
+			"paint brushes",
+			"brush"
+		],
+		str_crit="```css\n\"oooOOOOOOOH LA LA! {name_target} is exposed to {name_player}'s watercolor pornography! They won't be able to recover from that!\"\n```",
+		str_miss="```css\n[{name_player} paints a picture for {name_target}. It does no damage, as expected.]\n```",
+		str_equip="```ini\n[You get a nice mug to dip your little paintbrush in, and open your 12 set of watercolors. Look out world, here comes you!]\n```",
+		str_name="watercolors",
+		str_weapon="a set of watercolors",
+		str_weaponmaster_self="You are a rank {rank} flaming homosexual of watercolors.",
+		str_weaponmaster="They are a rank {rank} flaming homosexual of watercolors.",
+		# str_trauma_self = "You are eternally humiliated after being murdered by a gangster wielding watercolor paints.",
+		# str_trauma = "They are eternally humiliated after being murdered by a gangster wielding watercolor paints.",
+		str_kill="```bash\n\"HUUUUUUH?? {name_target} goes and kills themselves after having an existential crisis! {name_player} seems to have done this with only their own retardation!\"\n```",
+		str_killdescriptor="driven to suicide",
+		str_damage="```ini\n[{name_player} paints a picture of {name_target}. Their self esteem takes a hit!]\n```",
+		str_duel="```json\n\"{name_player} and {name_target} practice art using Dojo-owned easels and canvases. Eventually, the training session breaks down and, you just throw paint water at each other and giggle like schoolgirls.\"\n```",
+		str_scalp="The scalp is perfectly intact.",
+		fn_effect=wef_tool,
+		str_description="A 12 pack of watercolors, the kind you used when you were a 5 years old boy.",
+		vendors=[vendor_basedhardware],
+		stat=stat_watercolor_kills,
+		classes=[weapon_class_paint, weapon_class_captcha],
+		sap_cost=2,
+		price = 1300,
+		captcha_length=3,
+		is_tool=1,
+		str_backfire = "{name_player} has the idea of trying to paint their parents fucking, thinking it will be really funny and everyone will love them. Pretty soon we're going to have to ban watercolors because people like you are using them to molest yourself.",
+		tool_props = {
+			'reg_spray' : "Nice drawing, {curse}! ",
+			'miss_spray' : "**Miss!** Your painting sucks. God, you're stupid. ",
+			'crit_spray' : "After the thousandth failed watercolor gesamtkunstwerk you decide enough is enough. Fuck this. Fuck the gangs, fuck the violence, fuck the perpetually rotting lets player that compels you to rigor mortis yourself more frequently than you eat breakfast. The spite is so concentrated that it compels you to turn your life around. You get a fake ID, join the PTA, and rope them into cleaning every last inch of this district until the homeless population smell like citrus and give out free, non-tainted lollipops. However, your newfound peaceful life is interrupted by the night terrors ENDLESS WAR now gives you on a daily basis, and you decide to go back to being a gangster. You suppose some things never change.",
+			'equip_spray' : "You get out your 12 pack of watercolors. Can't believe you have to use one of these."
+			}),
+	EwWeapon(  # 29
+		id_weapon=weapon_id_thinnerbomb,
+		alias=[
+			"thinner",
+			"thinnerbombs"
+		],
+		str_crit="**Critical hit!!** {name_player} slams {name_target} with a bottle of paint thinner, showering their face with broken glass and getting some of the thinner down their gullet. They fall back, dazed and bleeding.",
+		str_miss="**MISS!!** {name_player} is too dazed by their own chemicals to make a move! They drop the bottle on accident, throwing vapors all over the place.",
+		str_equip="You pull out the thinner bombs and hold their bottlenecks between your fingers. Never has a not-weapon ever felt so cool.",
+		str_name="thinner bombs",
+		str_weapon="thinner bombs",
+		str_weaponmaster_self="You are a rank {rank} vandal of the thinner bomb.",
+		str_weaponmaster="They are a rank {rank} vandal of the thinner bomb.",
+		# str_trauma_self = "You have the hangover from hell.",
+		# str_trauma = "They have the hangover from hell.",
+		str_kill="***WHAT A SIZZLER!*** {name_target}, dazed from the concentrated toxic chemicals in the air, falls to the ground, giving {name_player} the chance to stab them through the neck with the broken bottle. Inhalants. Not even once. {emote_skull}",
+		str_killdescriptor="drugged",
+		str_damage=random.choice(["{name_target} gets a thinnerbomb to the {hitzone}!!",
+								  "{name_player} slashes {name_target} with a broken thinnerbomb! Ooh, right in the {hitzone}!!"]),
+		str_duel="{name_player} and {name_target} build a resistance to the noxious chemicals they're using by drinking paint thinner together. Cheers.",
+		str_scalp="The scalp smells awful, you can hardly hold it.",
+		fn_effect=wef_tool,
+		str_description="A pack of brittle glass bottles filled with paint thinner. This stuff vaporizes like nobody's business, and could strip the osmotic membrane off a slimeoid.",
+		vendors=[vendor_basedhardware],
+		stat=stat_thinnerbomb_kills,
+		classes=[weapon_class_paint, weapon_class_thrown, weapon_class_captcha],
+		sap_cost=2,
+		price = 150,
+		captcha_length=4,
+		is_tool = 1,
+		str_backfire = "You haven't had a good buzz in awhile, so you take a whiff of one of your thinner bombs. Great trip and all, but you rough yourself up convulsing on the ground while it happens.",
+		tool_props = {
+		'reg_spray' : "You find a vandalized wall and toss a thinner bomb on it! You hear a faint sizzling as paint begins to strip off the walls. Sick!",
+		'miss_spray' : "**Miss!** You make a mistake on the throw's distance and it bursts uselessly on the ground. You got to do some littering, so at least there's that.",
+		'crit_spray' : "**Critical hit!** You take out a paint bomb and throw it at a particularly fragile looking building. The chemicals you used were so caustic that they burned a hole through the whole wall, preventing anyone from painting it for all of time!",
+		'equip_spray' : "You get your glass thinner bombs out you you can throw them in a moment's notice."
+	}),
+	
+	EwWeapon( # 30
 		id_weapon = weapon_id_staff,
 		alias = [
 			"eldritchstaff",
@@ -6959,7 +7306,7 @@ food_list = [
 		recover_hunger = 60,
 		price = 100000,
 		str_name = 'Aushucks',
-		vendors = [vendor_farm, vendor_bazaar, vendor_basedhardware],
+		vendors = [vendor_farm, vendor_bazaar],
 		str_eat = "You chomp into the raw Aushucks. It isn't terrible, but you feel like there is a more constructive use for it.",
 		str_desc = "The king and queen of all crops, renowned for it's glistening, golden exterior.",
 		time_expir = farm_food_expir,
@@ -7826,7 +8173,7 @@ food_list = [
 			"frickenergy",
 		],
 		recover_hunger=10,
-		price=1,
+		price=10,
 		str_name = "Dire Apple FRICK Energy",
 		str_eat = "*siiiiiip*, Ahhh, that's the stuff. You drink through the entire juice box in one go.",
 		str_desc = "A small rectangular box of apple juice. Suitable for children, and perhaps small slimeoids.",
@@ -7850,9 +8197,16 @@ food_list = [
 		str_name = "Desiccant Packet",
 		str_eat = "You rip open the packet and pour it’s forbidden fruit into your mouth, taking great delight in chewing up and then sloshing around the silica gel in your mouth before swallowing. Your stomach growls angrily, but… nothing else really happens. Huh, really? Usually these things go on forever. I guess you’ve eaten so much other indigestible garbage before that your stomach’s just sort of used to it.",
 		str_desc = "It’s a tiny pocket full of highly-toxic, moisture-absorbing, gel beads. You know you shouldn’t eat this, but… just an ounce couldn’t hurt, right?",
-		vendors = [
-			vendor_secretbodega
-		]
+		vendors = [vendor_secretbodega]
+	),
+	EwFood(
+		id_food = "gummyworms",
+		recover_hunger = 100,
+		price = 100,
+		str_name = "Gummy Worms",
+		str_eat = "\n*You eat the gummy worms.*\n***You eat the gummy worms.***\n***Y O U  E A T  T H E  G U M M Y  W O R M S .***\n                                                                                                                        ...yummy!",
+		str_desc = "After months of toil and hundreds of U.S. dollars spent, the Cop Killer finally found what he was searching for all along. Hopefully it will have been worth the wait.",
+		vendors = [vendor_slimypersuits]
 	)
 ]
 
@@ -9385,8 +9739,6 @@ furniture_list = [
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "An old record player sits on the floor.",
 		furniture_place_desc = "You place the ol' boy on the floor."
-	
-	
 	),
 	EwFurniture(
 		id_furniture = "keg",
@@ -9790,7 +10142,6 @@ furniture_list = [
 		vendors = [],
 		furniture_look_desc = "There's a shitty vuvuzela here. Fuck.",
 		furniture_place_desc = "You set your vuvuzela on the shelf. Carnegie Hall, see you never.",
-	
 	),
 	EwFurniture(
 		id_furniture = "ornatechair",
@@ -15463,7 +15814,7 @@ poi_list = [
 		alias=[
 
 		],
-		str_name="a Assault Flats Beach apartment",
+		str_name="an Assault Flats Beach apartment",
 		str_desc="",
 		channel=channel_apt_assaultflatsbeach,
 		role="Assault Flats Beach Apartments",
@@ -17210,6 +17561,7 @@ cosmetic_items_list = [
 		price = 50000,
 		vendors = [vendor_bazaar],
 		is_hat = True,
+		str_onbreak = "Your hat takes a hit, detatching the propeller and sending it twirling into the stratosphere. Looks like you'll never see it again."
 	),
 	EwCosmeticItem(
 		id_cosmetic = "mininghelmet",
@@ -17294,6 +17646,7 @@ cosmetic_items_list = [
 		price = 50000,
 		vendors = [vendor_bazaar],
 		is_hat=True,
+		str_onadorn="You whip out your baseball cap and apply it...backwards. Fuck, now we're getting serious."
 	),
 	EwCosmeticItem(
 		id_cosmetic = "piratehat",
@@ -17310,6 +17663,8 @@ cosmetic_items_list = [
 		price = 50000,
 		vendors = [vendor_bazaar],
 		is_hat=True,
+		str_onadorn = "Y'ARRRRRRR! You adorn ye' tricorne and spit at a nearby pedestrian.",
+		str_onbreak = "You hat is torn to shreds. Welp, no more shivering timbers."
 	),
 	EwCosmeticItem(
 		id_cosmetic = "eyepatch",
@@ -17325,6 +17680,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		str_unadorn = "You remove your eyepatch to reveal the grisly wound benea- wait. Your eye is just fine! What kind of pathetic pirate LARPer did you turn out to be?"
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cigarette",
@@ -17341,6 +17697,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		str_onadorn = "You stick the cigarette in your mouth, swave as a baby's bottom. You wonder how many of these could fit in your mouth."
 	),
 	EwCosmeticItem(
 		id_cosmetic = "headband",
@@ -19440,7 +19797,7 @@ smelting_recipe_list = [
 	),
 	EwSmeltingRecipe(
 		id_recipe="browndye",
-		str_name="",
+		str_name="a vial of Brown dye",
 		alias=[
 			'brown',
 		],
@@ -20522,6 +20879,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You carefully run your hand over {slimeoid_name}'s hide, making sure to go with the grain so as not to slice your fingers open on its sharp scales.",
+		str_abuse = "You pick up {slimeoid_name} by the hind legs, swinging them over your head and repeatedly slamming them to the ground.",
 		str_create = "You press a button on the armor console labelled 'A'. Through the observation port, you see the proto-Slimeoid's skin begin to glint as it sprouts roughly-edged scales.",
 		str_armor = "It is covered in scales.",
 		id_resistance = slimeoid_weapon_electricity,
@@ -20543,6 +20901,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat one of the hard, bony plates covering {slimeoid_name}'s skin.",
+		str_abuse = "You take a stick and hit {slimeoid_name}'s face with it.",
 		str_create = "You press a button on the armor console labelled 'B'. Through the observation port, you see hard bony plates begin to congeal on the proto-Slimeoid's surface.",
 		str_armor = "It is covered in bony plates.",
 		id_resistance = slimeoid_weapon_blades,
@@ -20561,6 +20920,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, and your hand tingles as it passes through the quantum field that surrounds its body.",
+		str_abuse = "You grab hold of {slimeoid_name} and shake them aggressively, until their quantum static is splayed out and they look nauseous.",
 		str_create = "You press a button on the armor console labelled 'C'. Through the observation port, start to notice the proto-Slimeoid begin to flicker, and you hear a strange humming sound.",
 		str_armor = "It is enveloped in a field of quantum uncertainty.",
 		id_resistance = slimeoid_weapon_slam,
@@ -20579,6 +20939,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, its fluid, shapeless body squishing and deforming in response to even slight pressure.",
+		str_abuse = "You stick your fist into {slimeoid_name}'s squishy body and jostle its vital organs.",
 		str_create = "You press a button on the armor console labelled 'D'. Through the observation port, you see the proto-Slimeoid suddenly begin to twist itself, stretching and contracting as its shape rapidly shifts.",
 		str_armor = "It is malleable and can absorb blows with ease.",
 		id_resistance = slimeoid_weapon_bludgeon,
@@ -20596,6 +20957,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}. Its skin is hot, and you can feel it pulsing rhythmically.",
+		str_abuse = "You take a blowtorch to {slimeoid_name}'s pulsating skin and watch as it wears itself out trying to regenerate the rapidly burning tissue.",
 		str_create = "You press a button on the armor console labelled 'E'. Through the observation port, you see the proto-Slimeoid begin to pulse, almost like a beating heart.",
 		str_armor = "It can regenerate damage to its body rapidly.",
 		id_resistance = slimeoid_weapon_spikes,
@@ -20613,6 +20975,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, taking care not to inhale through your nose, as one whiff of its odor has been known to make people lose their lunch.",
+		str_abuse = "You try to humiliate {slimeoid_name} by plugging your nose and kicking it around.",
 		str_create = "You press a button on the armor console labelled 'F'. Through the observation port, you see the proto-Slimeoid give off bubbles of foul-colored gas.",
 		str_armor = "It exudes a horrible stench.",
 		id_resistance = slimeoid_weapon_teeth,
@@ -20629,6 +20992,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}'s slick wet skin, and your hand comes away coated in a viscous, slippery oil.",
+		str_abuse = "You turn {slimeoid_name} upside down and push their oily body, sending them slipping down the sidewalk.",
 		str_create = "You press a button on the armor console labelled 'G'. Through the observation port, you see the surface of the proto-Slimeoid become shiny with some kind of oily fluid.",
 		str_armor = "It is covered in a coating of slippery oil.",
 		id_resistance = slimeoid_weapon_grip,
@@ -21096,6 +21460,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} shakes itself off to get rid of some excess gestation fluid, then starts to hiss at you. Seems like a real firecracker, this one.",
 		str_dissolve = "{slimeoid_name} hisses and spits with fury as you hold it over the SlimeCorp Dissolution Vats. Come on, get in there...\n{slimeoid_name} claws at you, clutching at the edge of the vat, screeching with rage even as you hold its head under the surface and wait for the chemical soup to do its work. At last, it stops fighting.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_a,
+		str_abuse= "{slimeoid_name} lashes out, trying to fight back."
 
 	),
 	EwBrain( # brain 2
@@ -21121,6 +21486,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} gets up off the ground slowly at first, but then it notices you and leaps into your arms. It sure seems glad to see you!",
 		str_dissolve = "You order {slimeoid_name} into the Dissolution Vats. It's initially confused, but realization of what you're asking slowly crawks across its features.\nIt doesn't want to go, but after enough stern commanding, it finally pitches itself into the toxic sludge, seemingly too heartbroken to fear death.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_b,
+		str_abuse = "{slimeoid_name} yelps in pain. It's beside itself and doesn't know what to do..."
 	),
 	EwBrain( # brain 3
 		id_brain = "c",
@@ -21145,6 +21511,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} regards you silently from the floor. You can't tell if it likes you or not, but it starts to follow you regardless.",
 		str_dissolve = "You pick up {slimeoid_name} and hurl it into the SlimeCorp Dissolution Vats before it starts to suspect anything. It slowly sinks into the chemical soup, kind of like Arnold at the end of Terminator 2, only instead of giving you a thumbs-up, it stares at you with an unreadable expression. Betrayal? Confusion? Hatred? Yeah, probably.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_c,
+		str_abuse = "You can feel {slimeoid_name} trembling, but it just takes your abuse."
 	),
 	EwBrain( # brain 4
 		id_brain = "d",
@@ -21169,6 +21536,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} flops over on the floor and stares up at you. Its gaze wanders around the room for a while before it finally picks itself up to follow you.",
 		str_dissolve = "You lead {slimeoid_name} up to the edge of the Dissolution Vats and give a quick 'Hey, look, a distraction!'. {slimeoid_name} is immediately distracted and you shove it over the edge. Landing in the vat with a sickening *gloop* sound, it sinks quickly under the fluid surface, flailing madly in confusion and desperation.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_d,
+		str_abuse = "You have a hard time with it, {slimeoid_name} is panicked and keeps trying to run."
 	),
 	EwBrain( # brain 5
 		id_brain = "e",
@@ -21193,6 +21561,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name}'s eyes dart frantically around the room. Seeing you, it darts behind you, as if for cover from an unknown threat.",
 		str_dissolve = "{slimeoid_name} is looking around the lab nervously, obviously unnerved by the Slimeoid technology. Its preoccupation makes it all too easy to lead it to the Dissolution Vats and kick its legs out from under it, knocking it in. As it falls and hits the solvent chemicals, it wails and screeches in shock and terror, but the noise eventually quiets as it dissolves into a soft lump, then disintegrates altogether.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_e,
+		str_abuse = "{slimeoid_name} is squealing in horror. It will remember this..."
 	),
 	EwBrain( # brain 6
 		id_brain = "f",
@@ -21217,6 +21586,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} picks itself up off the floor and regards you coolly. It seems as if it's gauging your usefulness.",
 		str_dissolve = "{slimeoid_name} eyes you suspiciously as you approach the Dissolution Vats. It's on to you. Before it has a chance to bolt, you grab it, hoist it up over your head, and hurl it into the chemical soup. {slimeoid_name} screeches in protest, sputtering and hissing as it thrashes around in the vat, but the chemicals work quickly and it soon dissolves into nothing.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_f,
+		str_abuse = "{slimeoid_names}'s fear grows as it desperately looks for an escape."
 	),
 	EwBrain( # brain 7
 		id_brain = "g",
@@ -21241,6 +21611,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} starts to pick itself up off the floor, then changes its mind and lies back down. Then it gets up again. Lies down again. Up. Down. Up. Ok, this time it stays up.",
 		str_dissolve = "{slimeoid_name} is perplexed by the laboratory machinery. Taking advantage of its confusion, you point it towards the Dissolution Vats, and it gormlessly meanders up the ramp and over the edge. You hear a gloopy SPLOOSH sound, then nothing. You approach the vats and peer over the edge, but see no trace of your former companion.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_g,
+		str_abuse = "{slimeoid_name} still hasn't caught up to all this chaos, and is lost and confused."
 	)
 ]
 
@@ -22773,7 +23144,7 @@ help_responses = {
 	# Introductions, part 1
 	"gangs":"**Gang Violence** is the center focus of **Rowdy Fuckers Cop Killers' ENDLESS WAR**. Enlisting in a gang allows you to attack other gang members, juveniles, ghosts, and slime beasts with the **'!kill'** command. To enlist in a gang, use **'!enlist'**, provided you also have at least 50,000 slime on hand. However, a member of that gang must use **'!vouch'** for you beforehand. Enlisting will permanently affiliate you with that gang, unless you are !pardon'd by the **ROWDY FUCKER** (Munchy), or the **COP KILLER** (Ben Saint). You may use **'!renounce'** to return to the life of a juvenile, but you will lose half of your current slime, and you will still be affiliated with that gang, thus disallowing you from entering the enemy's gang base. Additionally, a Kingpin, should they feel the need to, can inflict the '!banned' status upon you, preventing you from enlisting in their gang.",
 	"food":"Food lowers your hunger by a set amount, and can be ordered from various **restaurants** within the city. Generally speaking, the more expensive food is, the more hunger it sates. You can **'!order'** food to place it in your inventory, and **'!use [food name]'** to use it. You can only carry a certain amount of food depending on your level. Regular food items expire after 2 in-game days, or 12 hours in real life, while crops expire after 8 in-game days (48 hours), and food items gained from milling expire after a whole 2 weeks in real life. Three popular restauraunts close by various gang bases include **THE SPEAKEASY** (juveniles), **THE SMOKER'S COUGH** (rowdys), and **RED MOBSTER SEAFOOD** (killers), though there are other places to order food as well, such as the **Food Court**.",
-	"capturing":"Capturing districts is the primary objective of **ENDLESS WAR**. Once you get at least 50,000 slime, you are able to capture districts and generate slime for your team's **Kingpin**. The rate at which you capture a district is determined by various factors. If more **people** are capturing a district, that district will take **less** time to capture. The **property class** (which can range from S at the highest to C at the lowest) of that district will also increase capture time, with S class districts taking more time to capture than C class districts. Districts will take **less** time to capture if they are nearby **friendly** districts, and **more** time to capture if they are nearby **enemy** districts. Districts will have their capture progress **decay** over time, but if a captured district is **fully surrounded** by friendly districts (example: Assault Flats Beach is surrounded by Vagrant's Corner and New New Yonkers), then it will **not** decay. Inversely, districts will decay **faster** if they are next to **enemy** districts. **DECAPTURING** (lowering an enemy's capture progress on districts they control) and **RENEWING** (increasing capture progress on districts your team currently controls) can also be done, but only if that district is **not** fully surrounded. Once a district has been fully captured, it will stay locked at 100% for a duration depending on its property class and the number of people involved in capturing it. **JUVIE'S ROW**, **ROWDY ROUGHHOUSE**, and **COP KILLTOWN** are gang bases, and thus cannot be captured, nor do they decay. To check the capture progress of a district, use **'!progress'**. To view the status of the map itself and check what property class each district has, use **'!map'**.",
+	"capturing":"Capping is a battle for influence over the 31 districts of NLACakaNM, and one of your main goals as a gangster. Capped territories award your kingpin slime, and give your teammates benefits while visiting. Start by visiting Glocksbury Comics and equipping one of the paint tools sold there. Once you have that, you can **!spray <captcha>** while in a capturable district to gain influence for your gang. Spraying graffiti in districts will increase influence for you, or decrease it for the enemy if they have influence there. Think of dealing influence to a district like dealing damage to a Juvie's soft squishy body, with critical hits, misses, and backfires included. As you go, you can check your **!progress** to see how much influence you still need. It can be more or less depending on the territory class, running from rank C to S. \n\nA few more things to note:\n>**!progress** will tell you the minimum and limit for territory capture. However, you can capture above that limit, as high as you want. The catch is that anything captured over this limit will decay faster.\n>Decapping takes twice as long, and costs twice the slime to do.\n>Don't attack enemy territory when it is surrounded by enemy territory/outskirts. Small little bitches like yourself are prone to fucking up severely under that much pressure.\n>The nightlife starts in the evening. More people see your handiwork, so if you cap during that time you will gain a 33% capping bonus.\n>You can't kill for shit with paint tools equipped. Luckily, you can **!sidearm** a weapon or tool and quickly switch between your two equip slots using **switch** or **!s**.",
 	"transportation":"There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board redtocv'. **'!disembark'** can be used to exit a train. **The Ferry** (which moves between Vagrant's Corner and Wreckington) and **The Blimp** (which moves between Dreadford and Assault Flats Beach) can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do. Refer to the diagram below (credits to Connor#3355) on understanding which districts have subway stations on them, though take note that the white subway line is currently non-operational.\nhttps://cdn.discordapp.com/attachments/431238867459375145/570392908780404746/t_system_final_stop_telling_me_its_wrong_magicks.png",
 	"death": "Death is an integral mechanic to Endless War. Even the most experienced players will face the sewers every now and again. If you find yourself in such a situation, use **'!revive'** in the sewers channel, and you will return to the land of the living as a juvenile at the base of ENDLESS WAR. Dying will drop some of your unadorned cosmetics and food, and all of your unequiped weapons, but your currently adorned cosmetics and equiped weapon will remain in your inventory (Gangsters will lose half of their food/unadorned cosmetics, while Juveniles lose only a quarter). Try not to die too often however, as using !revive collects a 'death tax', which is 1/10th of your current slimecoin. Alternatively, you can hold off on reviving and remain a **ghost**, which has its own gameplay mechanics associated with it. To learn more, use '!help ghosts' at one of the colleges or with a game guide.",
 	# Introductions, part 2
@@ -22810,8 +23181,8 @@ help_responses = {
 	"profile": "This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
 	"manuscripts": "First of all, to start a manuscript, you're gonna need to head down to the Cafe, either University, or the Comic Shop.\n\nYou can **!beginmanuscript [title]** at the cost of 20k slime.\n\nIf you happen to regret your choice of title, you can just **!settitle [new title]**.\n\nThe author name is already set to your nickname, but if you want to change it, you change your nickname and then **!setpenname**.\n\nYou're required to specify a genre for your future zine by using **!setgenre [genre name]** (Genre list includes: narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper, and experimental).\n\nIf at any time you would like to look at the title, author name, and length of your manuscript, then use **!manuscript**.\n\n*NOW*, if you actually want to start getting stuff done, you're gonna need to **!editpage [page number] [content]**. Every zine has 10 pages (kinda) that you can work with, but you can **!setpages [pages]** to customize it (maximum is 20, minimum is 5). Each holds a maximum of 1500 characters of content. You can fill it with information, image links, smut, whatever floats your freakish boat. If you try to edit a page that already has writing, it will ask you to confirm the change before overwriting it.\n\nYou can also set a cover, which is optional. You do this with **!editpage cover [image link]**.\n\nTo check any of your pages, simply **!viewpage [number]** to see how it looks.\n\nKeep in mind that manuscripts ARE NOT items and can't be lost on death. They're accessible from any authoring location (Cafe, NLACU, NMS, Comics). A player can only have 1 manuscript out at a time.\n\nOnce you are completely finished, you can **!publish** your manuscript (it will ask you to confirm that you are completely done with it), which will enable the citizens of the town to purchase it from any zine place. From there, it will be bought and rated by the people and you may even earn some royalty poudrins for it.",
 	"zines": "Zines are the hot new trend in Neo-Milwaukee and give slimebois of all shapes and sizes access to the free-market of information and culture.\n\nTo obtain a zine, you must head down to any of these locations: Green Cake Cafe, NLAC University, Neo-Milwaukee State, or Glockbury Comics.\n\nFrom there, you can **!browse** for zines. They are ordered by *Zine ID*, but you have many options for sorting them, including: **title, author, datepublished,** any of the genres (including **narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper,** and **experimental**.), **length, sales,** and **rating** (use **!browse [criteria]**). You can also add **reverse** on to any of these in order to make it display in reverse order. Example: **!browse bestsellers reverse** (essentially looks for worse-selling zines). Browsing in the Comic Shop will automatically browse for comic zines and browsing at the Colleges will look for historical zines (keep in mind that any zines can be bought from these places).\n\nYou can also **!browse [Zine ID]** in order to get info about that specific zine, including sales, length, genre, and rating.\n\nOnce you've found a zine that's caught your eye, simply **!orderzine [Zine ID]** to buy it for 10k slime.\n\nAfter absorbing the zine's content, it is your moral obligation as a reader to **!review [Zine Name] [Score]**. The potential scores range from between 1 and 5 *fucks* (whole numbers only). If you hate a zine, then give it one fuck. If you absolutely loved it, give it five fucks. Simple. By the way, if a zine's average rating is less than 2.0 by the time it gets to 10 ratings (or less than 1.5 by 5 ratings), it will be excluded from the default browse. The only way to purchase it will be to use the **worstrated** or **all** sorting methods.\n\nYou can **!shelve [zine name]** in your apartment after you've finished.",
-	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
 	"sap": "**Sap** is a resource your body produces to control your slime. It's integral to being able to act in combat. You can have a maximum amount of sap equal to 1.6 * ( your slime level ^ 0.75 ). When you spend it, it will regenerate at a rate of 1 sap every 5 seconds. You can spend your sap in a variety of ways: **!harden [number]** allows you to dedicate a variable amount of sap to your defense. Hardened sap reduces incoming damage by a factor of 10 / (10 + hardened sap). Your hardened sap counts against your maximum sap pool, so the more you dedicate to defense, the less you will have to attack. You can **!liquefy [number]** hardened sap back into your sap pool. Every attack requires at least 1 sap to complete. Different weapons have different sap costs. Some weapons have the ability to destroy an amount of hardened sap from your target, or ignore a portion of their hardened sap armor. This is referred to as **sap crushing** and **sap piercing** respectively. There are also other actions you can take in combat, that cost sap, such as: **!aim [player]** will slightly increase your hit chance and crit chance against that player for 10 seconds. It costs 2 sap. **!dodge [player]** will decrease that players hit chance against you for 10 seconds. It costs 3 sap. **!taunt [player]** will decrease that player's hit chance against targets other than you for 10 seconds. It costs 5 sap.",
+	"sprays":"**Sprays** are your signature piece of graffiti as a gangster. You can **!changespray <image link>** in order to set your own custom image. This image appears when you get a critical hit while capping, and you can also **!tag** to spray it anywhere.",
 
 	# Weapons
 	weapon_id_revolver: "**The revolver** is a weapon for sale at the Dojo. Attacking with the revolver costs 1 sap. It has a damage mod of 0.8 and an attack cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The revolver has sap crushing 2. After every 6 shots you will need to **!reload** it.",
@@ -22833,11 +23204,24 @@ help_responses = {
 	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. Attacking with the molotovs costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. They have sap piercing 10. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
 	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 2. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
-	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 3. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you take less than 10 seconds between attacks, your miss chance will increase.",
 	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. Attacking with the dragon claw costs 5 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. It has a captcha length of 2. It has sap crushing 5 and sap piercing 10. It you take less than 5 seconds between attacks, your miss chance will increase. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
 	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 4 sap. It has a captcha length of 10. Dealing damage with the staff requires attacking twice in a 15-second window, with the first !kill command only being preparetion for the second. The attack cost multiplier is 1 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 0.6, sap piercing 0, and a 0% chance to crit, which deals 1.5x damage. A number of conditions may be met to increase the damage multiplier by 2.4, sap piercing by 6, and crit chance by 6.66%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
 	
+
+	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
+
+	weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase.",
+
+	weapon_id_spraycan: "**The spray can** is a paint tool for sale at Glocksbury Comics. It has a capping modifier of 0.8 and a spray cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
+	weapon_id_paintgun: "**The paint gun** is a paint tool for sale at Glocksbury Comics. It has a capping modifier of 0.6 and a spray cost mod of 0.75. It has a captcha length of 6, a miss chance of O% and a 20% chance for a crit, which does 2x influence.",
+	weapon_id_paintroller: "**The paint roller** is a paint tool for sale at Glocksbury Comics. It has a capping modifier of 1.75 and a spray cost mod of 4. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
+	weapon_id_paintbrush: "**The paint brush** is a paint tool for sale at Glocksbury Comics. It has a capping modifier of 0.5 and a spray cost mod of .25. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 1.5x influence. When you cap with a paintbrush, it is used up, and you have to buy more.",
+	weapon_id_watercolors: "**Watercolors** are a paint tool for sale at Glocksbury Comics. It does a set 4000 influence per shot. It has a captcha length of 3, a miss chance of 10% and a .1% chance for a crit, which zeros out the whole district regardless of owner.",
+	weapon_id_thinnerbomb: "**Thinner bombs** are a paint tool for sale at Glocksbury Comics. It has a capping modifier of 0.15 and a spray cost mod of 2. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence. When you cap with a thinner bomb, it is used up, and you have to buy more. When decapping, damage is multiplied by 15.",
+
+
 	# "otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
+
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
@@ -22848,11 +23232,13 @@ help_responses_ordered_keys = [
 	"mutations", "mymutations", "smelting", "sparring", "ghosts",
 	"slimeoids", "cosmetics", "realestate", "apartments", "stocks",
 	"trading", "weather", "casino", "bleeding", "offline",
-	"profile", "manuscripts", "zines", "shambleball", "sap",
+	"profile", "manuscripts", "zines", "shambleball", "sap", "sprays",
 	weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun, weapon_id_rifle, weapon_id_smg, 
 	weapon_id_bat, weapon_id_brassknuckles, weapon_id_katana, weapon_id_broadsword, weapon_id_nunchucks, 
 	weapon_id_scythe, weapon_id_yoyo, weapon_id_umbrella, weapon_id_knives, weapon_id_molotov, 
 	weapon_id_grenades, weapon_id_garrote, weapon_id_minigun, weapon_id_bow, weapon_id_dclaw,
+	weapon_id_staff, weapon_id_spraycan, weapon_id_paintgun, weapon_id_paintroller, weapon_id_paintbrush,
+	weapon_id_watercolors, weapon_id_thinnerbomb
 ]
 
 mutation_descriptions = {
@@ -22860,7 +23246,7 @@ mutation_descriptions = {
 	mutation_id_thickerthanblood: "On a fatal blow, immediately receive the opponent’s remaining slime, causing none of it to bleed onto the ground or go your kingpin. Its effects are diminished on hunted enemies, however.",
 	mutation_id_fungalfeaster: "On a fatal blow, restore all of your hunger.",
 	mutation_id_sharptoother: "The chance to miss with a weapon is reduced by 50%. Specifically, a normal miss will now have a 50% to either go through as a miss or a hit.",
-	mutation_id_2ndamendment: "One extra equippable weapon slot in your inventory.",
+	mutation_id_2ndamendment: "One extra equippable weapon slot in your inventory. You receive a 25% damage buff if two non-tool weapons are in both your weapon slots.",
 	mutation_id_bleedingheart: "Upon being hit, none of your slime is splattered onto the street. It is all stored as bleed damage instead. This does not counteract the Nosferatu mutation.",
 	mutation_id_nosferatu: "At night (8PM-6AM), upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage. This overrides the Bleeding Heart mutation.",
 	mutation_id_organicfursuit: "Double damage, double movement speed, and 10x damage reduction every 31st night. Use **'!fursuit'** to check if it's active.",
