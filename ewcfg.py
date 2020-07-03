@@ -141,7 +141,7 @@ poi_id_slimesendcliffs = "slimesendcliffs"
 poi_id_greencakecafe = "greencakecafe"
 poi_id_sodafountain = "sodafountain"
 poi_id_bodega = "bodega"
-
+poi_id_basedhardware = "basedhardware"
 
 # transports
 poi_id_ferry = "ferry"
@@ -746,6 +746,7 @@ channel_apt_maimrdige ="maimridge-apartments"
 
 channel_slimesendcliffs = "slimes-end-cliffs"
 channel_bodega = "bodega"
+channel_basedhardware = "based-hardware"
 
 channel_prankfeed = "prank-feed"
 
@@ -921,6 +922,7 @@ cmd_refuse = cmd_prefix + 'refuse'
 cmd_sign = cmd_prefix + 'sign'
 cmd_rip = cmd_prefix + 'rip'
 cmd_reap = cmd_prefix + 'reap'
+cmd_reap_alt = cmd_prefix + 'forcereap'
 cmd_sow = cmd_prefix + 'sow'
 cmd_check_farm = cmd_prefix + 'checkfarm'
 cmd_irrigate = cmd_prefix + 'irrigate'
@@ -1517,6 +1519,8 @@ cd_slimeoiddefeated = 300
 cd_scavenge = 0
 soft_cd_scavenge = 15 # Soft cooldown on scavenging
 cd_enlist = 60
+cd_premium_purchase = 2 * 24 * 60 * 60 # 48 Hours, 2 days
+cd_new_player = 3 * 24 * 60 * 60 # 72 Hours, 3 days
 
 cd_autocannibalize = 60 * 60 # can only eat yourself once per hour
 cd_drop_bone = 5 * 60
@@ -1855,6 +1859,8 @@ col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
 col_race = 'race'
 col_time_racialability = 'time_racialability'
+col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
+col_gvs_currency = 'gvs_currency'
 col_attack = 'attack'
 col_speed = 'speed'
 col_freshness = 'freshness'
@@ -1893,6 +1899,7 @@ col_level = 'level'
 col_time_defeated = 'time_defeated'
 col_clout = 'clout'
 col_hue = 'hue'
+col_coating = 'coating'
 
 #Database columns for enemies
 col_id_enemy = 'id_enemy'
@@ -2280,6 +2287,7 @@ vendor_slimypersuits = "Slimy Persuits" #You can buy candy from here
 vendor_greencakecafe = "Green Cake Cafe" #Brunch foods
 vendor_bodega = "Bodega" # Clothing store in Krak Bay
 vendor_secretbodega = "Secret Bodega" # The secret clothing store in Krak Bay
+vendor_basedhardware = "Based Hardware" # Hardware store in West Glocksbury
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -2324,6 +2332,14 @@ item_id_dragonsoul = "dragonsoul"
 item_id_monsterbones = "monsterbones"
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
+item_id_seaweed = "seaweed"
+item_id_string = "string"
+item_id_tincan = "tincan"
+item_id_oldboot = "oldboot"
+item_id_leather = "leather"
+item_id_ironingot = "ironingot"
+item_id_bloodstone = "bloodstone"
+item_id_tanningknife = "tanningknife"
 item_id_dinoslimemeat = "dinoslimemeat"
 item_id_dinoslimesteak = "dinoslimesteak"
 item_id_dyesolution = "dyesolution"
@@ -2476,9 +2492,9 @@ item_id_pulpgourdpulp = "pulpgourdpulp"
 item_id_sourpotatoskins = "sourpotatoskins"
 item_id_bloodcabbageleaves = "bloodcabbageleaves"
 item_id_joybeanvines = "joybeanvines"
-item_id_purplekilliflowerflorrets = "purplekilliflowerflorets"
+item_id_purplekilliflowerflorets = "purplekilliflowerflorets"
 item_id_razornutshells = "razornutshells"
-item_id_pawpawseeds = "pawpawseeds"
+item_id_pawpawflesh = "pawpawflesh"
 item_id_sludgeberrysludge = "sludgeberrysludge"
 item_id_suganmanutfruit = "suganmanutfruit"
 item_id_pinkrowddishroot = "pinkrowddishroot"
@@ -2491,6 +2507,28 @@ item_id_rustealeafblades = "rustealeafblades"
 item_id_metallicapheads = "metallicapheads"
 item_id_steelbeanpods = "steelbeanpods"
 item_id_aushuckstalks = "aushuckstalks"
+
+# dye ids
+item_id_dye_black = "blackdye"
+item_id_dye_pink = "pinkdye"
+item_id_dye_green = "greendye"
+item_id_dye_brown = "browndye"
+item_id_dye_grey = "greydye"
+item_id_dye_purple = "purpledye"
+item_id_dye_teal = "tealdye"
+item_id_dye_orange = "orangedye"
+item_id_dye_cyan = "cyandye"
+item_id_dye_red = "reddye"
+item_id_dye_lime = "limedye"
+item_id_dye_yellow = "yellowdye"
+item_id_dye_blue = "bluedye"
+item_id_dye_magenta = "magentadye"
+item_id_dye_cobalt = "cobaltdye"
+item_id_dye_white = "whitedye"
+item_id_dye_rainbow = "rainbowdye"
+item_id_paint_copper = "copperpaint"
+item_id_paint_chrome = "chromepaint"
+item_id_paint_gold = "goldpaint"
 
 #weapon ids
 weapon_id_revolver = 'revolver'
@@ -2511,6 +2549,7 @@ weapon_id_molotov = 'molotov'
 weapon_id_grenades = 'grenades'
 weapon_id_garrote = 'garrote'
 weapon_id_pickaxe = 'pickaxe'
+weapon_id_fishingrod = 'fishingrod'
 weapon_id_bass = 'bass'
 weapon_id_umbrella = 'umbrella'
 weapon_id_bow = 'bow'
@@ -2551,6 +2590,9 @@ forbiddenstuffedcrust_desc = "What are you waiting for? You’ve come this far, 
 	"It’s ready to die. Slather it in some low-quality marinara, toss it up into the air like in the old movies, and " \
 	"shove it into the oven, to teach it the true meaning of heat death. Eat a slice of that motherfucking pizza."
 
+# Items that should have a cooldown on how often they can be purchased
+premium_items = [item_id_metallicaps, item_id_steelbeans, item_id_aushucks]
+
 # List of normal items.
 item_list = [
 	EwGeneralItem(
@@ -2564,140 +2606,148 @@ item_list = [
 		acquisition = acquisition_mining,
 	),
 	EwGeneralItem(
-		id_item = "whitedye",
+		id_item = item_id_dye_white,
 		context = "dye",
 		str_name = "White Dye",
 		str_desc = "A small vial of white dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_poketubers,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "yellowdye",
+		id_item = item_id_dye_yellow,
 		context = "dye",
 		str_name = "Yellow Dye",
 		str_desc = "A small vial of yellow dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_pulpgourds,
+		acquisition = acquisition_smelting,
 	),
 
 	EwGeneralItem(
-		id_item = "orangedye",
+		id_item = item_id_dye_orange,
 		context = "dye",
 		str_name = "Orange Dye",
 		str_desc = "A small vial of orange dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_sourpotatoes,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "reddye",
+		id_item = item_id_dye_red,
 		context = "dye",
 		str_name = "Red Dye",
 		str_desc = "A small vial of red dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_bloodcabbages,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "magentadye",
+		id_item = item_id_dye_magenta,
 		context = "dye",
 		str_name = "Magenta Dye",
 		str_desc = "A small vial of magenta dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_joybeans,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "purpledye",
+		id_item = item_id_dye_purple,
 		context = "dye",
 		str_name = "Purple Dye",
 		str_desc = "A small vial of purple dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_purplekilliflower,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "bluedye",
+		id_item = item_id_dye_blue,
 		context = "dye",
 		str_name = "Blue Dye",
 		str_desc = "A small vial of blue dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_razornuts,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "greendye",
+		id_item = item_id_dye_green,
 		context = "dye",
 		str_name = "Green Dye",
 		str_desc = "A small vial of green dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_pawpaw,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "tealdye",
+		id_item = item_id_dye_teal,
 		context = "dye",
 		str_name = "Teal Dye",
 		str_desc = "A small vial of teal dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_sludgeberries,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "rainbowdye",
+		id_item = item_id_dye_rainbow,
 		context = "dye",
 		str_name = "***Rainbow Dye!!***",
 		str_desc = "***A small vial of Rainbow dye!!***",
-		acquisition = acquisition_milling,
-		ingredients = item_id_suganmanuts,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "pinkdye",
+		id_item = item_id_dye_pink,
 		context = "dye",
 		str_name = "Pink Dye",
 		str_desc = "A small vial of pink dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_pinkrowddishes,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "greydye",
+		id_item = item_id_dye_grey,
 		context = "dye",
 		str_name = "Grey Dye",
 		str_desc = "A small vial of grey dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_dankwheat,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "cobaltdye",
+		id_item = item_id_dye_cobalt,
 		context = "dye",
 		str_name = "Cobalt Dye",
 		str_desc = "A small vial of cobalt dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_brightshade,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "blackdye",
+		id_item = item_id_dye_black,
 		context = "dye",
 		str_name = "Black Dye",
 		str_desc = "A small vial of black dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_blacklimes,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "limedye",
+		id_item = item_id_dye_lime,
 		context = "dye",
 		str_name = "Lime Dye",
 		str_desc = "A small vial of lime dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_phosphorpoppies,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "cyandye",
+		id_item = item_id_dye_cyan,
 		context = "dye",
 		str_name = "Cyan Dye",
 		str_desc = "A small vial of cyan dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_direapples,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "browndye",
+		id_item = item_id_dye_brown,
 		context = "dye",
 		str_name = "Brown Dye",
 		str_desc = "A small vial of brown dye.",
 		acquisition = acquisition_smelting,
+	),
+	EwGeneralItem(
+		id_item = item_id_paint_copper,
+		context = "dye",
+		str_name = "Copper Paint",
+		str_desc = "A small bucket of Copper Paint.",
+		acquisition = acquisition_smelting,
+		durability = 3
+	),
+	EwGeneralItem(
+		id_item = item_id_paint_chrome,
+		context = "dye",
+		str_name = "Chrome Paint",
+		str_desc = "A small bucket of Chrome Paint.",
+		acquisition = acquisition_smelting,
+		durability = 3
+	),
+	EwGeneralItem(
+		id_item = item_id_paint_gold,
+		context = "dye",
+		str_name = "Gold Paint",
+		str_desc = "A small bucket of Gold Paint.",
+		acquisition = acquisition_smelting,
+		durability = 3
 	),
 	EwGeneralItem(
 		id_item = "bone",
@@ -2775,8 +2825,7 @@ item_list = [
 		id_item = item_id_stick,
 		str_name = "stick",
 		str_desc = "It’s just some useless, dumb stick.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_direapples,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
 		id_item = item_id_faggot,
@@ -2791,7 +2840,7 @@ item_list = [
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
-		id_item = "seaweed",
+		id_item = item_id_seaweed,
 		str_name = "Seaweed",
 		str_desc = "OH GOD IT'S A FUCKING SEAWEED!",
 		acquisition = acquisition_bartering,
@@ -2799,7 +2848,7 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "oldboot",
+		id_item = item_id_oldboot,
 		str_name = "Old Boot",
 		str_desc = "OH GOD IT'S A FUCKING OLD BOOT!",
 		acquisition = acquisition_bartering,
@@ -2807,7 +2856,7 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "tincan",
+		id_item = item_id_tincan,
 		str_name = "Tin Can",
 		str_desc = "OH GOD IT'S A FUCKING TIN CAN!",
 		acquisition = acquisition_bartering,
@@ -2815,7 +2864,7 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "leather",
+		id_item = item_id_leather,
 		str_name = "Leather",
 		str_desc = "A strip of leather.",
 		acquisition = acquisition_smelting,
@@ -2823,7 +2872,7 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "ironingot",
+		id_item = item_id_ironingot,
 		str_name = "Iron Ingot",
 		str_desc = "A bar of iron",
 		acquisition = acquisition_smelting,
@@ -2843,14 +2892,14 @@ item_list = [
 		context = 'monster bone',
 	),
 	EwGeneralItem(
-		id_item = "bloodstone",
+		id_item = item_id_bloodstone,
 		str_name = "blood stone",
 		str_desc = "Formed from the cracking of monster bones, it glistens in your palm with the screams of those whos bones comprise it. Perhaps it will be of use one day.",
 		context = 'blood stone',
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
-		id_item = "tanningknife",
+		id_item = item_id_tanningknife,
 		context = "tool",
 		str_name = "Tanning Knife",
 		str_desc = "A tanning knife",
@@ -2858,7 +2907,7 @@ item_list = [
 	),
 
 	EwGeneralItem(
-		id_item = "string",
+		id_item = item_id_string,
 		str_name = "string",
 		str_desc = "It’s just some string.",
 		acquisition = acquisition_bartering,
@@ -3670,37 +3719,187 @@ item_list = [
 		id_item = item_id_cool_material,
 		str_name = "Cool Beans",
 		str_desc = "A couple of cool beans! Far out, man. Well, they aren’t really beans per se, more like little condensed nuggets of your crop. Whatever they are, they’re undeniably cool.",
-		acquisition = acquisition_milling,
-		ingredients = [item_id_direapples, item_id_brightshade, item_id_razornuts],
 	),
 	EwGeneralItem(
 		id_item = item_id_tough_material,
 		str_name = "Tough Nails",
 		str_desc = "A handful of rusty nails caked in dried blood that were presumably waiting for you if you had eaten your crops instead of milling them. Damn, what a missed opportunity!",
-		acquisition = acquisition_milling,
-		ingredients = [item_id_sourpotatoes, item_id_bloodcabbages, item_id_pulpgourds],
 	),
-
 	EwGeneralItem(
 		id_item = item_id_smart_material,
 		str_name = "Smart Cookies",
 		str_desc = "A farmer’s dozen of smart cookies. Well, they aren’t really cookies per se, more like little bland condensed patties of your crop. Whatever they are, they’re undeniably smart.",
-		acquisition = acquisition_milling,
-		ingredients = [item_id_phosphorpoppies, item_id_pawpaw, item_id_sludgeberries],
 	),
 	EwGeneralItem(
 		id_item = item_id_beautiful_material,
 		str_name = "Beauty Spots",
 		str_desc = "A small collection of severed beauty spots, mostly freckles and moles, that were presumably waiting for you if you had eaten your crops instead of milling them. Damn, what a missed opportunity!",
-		acquisition = acquisition_milling,
-		ingredients = [item_id_poketubers, item_id_dankwheat, item_id_blacklimes],
 	),
 	EwGeneralItem(
 		id_item = item_id_cute_material,
 		str_name = "Cute Buttons",
 		str_desc = "A wardrobe of cute buttons. You know you should probably be concerned that these lil’ guys were hiding in your crops, but honestly you’re overcome with emotion and feel utterly blessed. Lookit ‘em! They’re adorable! D’awww...",
+	),
+	EwGeneralItem(
+		id_item = item_id_dyesolution,
+		str_name = "Dye Solution",
+		str_desc = "A small vial of salt, water, and vinegar. You can smelt this together with crop materials to make dyes.",
+		price = 1000,
+		vendors = [vendor_basedhardware]
+	),
+	EwGeneralItem(
+		id_item = item_id_textiles,
+		str_name = "Textiles",
+		str_desc = "A set of frabrics. You can smelt this together with crop materials to make exclusive cosmetics.",
+		price = 1000,
+		vendors = [vendor_basedhardware]
+	),
+	EwGeneralItem(
+		id_item = item_id_foodbase,
+		str_name = "Food Base",
+		str_desc = "A set of powders and chemicals. You can smelt this together with crop materials to make exclusive food items which take longer to expire.",
+		price = 1000,
+		vendors = [vendor_basedhardware]
+	),
+	EwGeneralItem(
+		id_item = item_id_poketubereyes,
+		str_name = "Poketuber Eyes",
+		str_desc = "The small stem buds of a Poketuber.",
 		acquisition = acquisition_milling,
-		ingredients = [item_id_pinkrowddishes, item_id_joybeans, item_id_purplekilliflower],
+		ingredients = [item_id_poketubers],
+	),
+	EwGeneralItem(
+		id_item = item_id_pulpgourdpulp,
+		str_name = "Pulp Gourd Pulp",
+		str_desc = "The pulp of a Pulp Gourd.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_pulpgourds],
+	),
+	EwGeneralItem(
+		id_item = item_id_sourpotatoskins,
+		str_name = "Sour Potato Skins",
+		str_desc = "The skins of a Sour Potato.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_sourpotatoes],
+	),
+	EwGeneralItem(
+		id_item = item_id_bloodcabbageleaves,
+		str_name = "Blood Cabbage Leaves",
+		str_desc = "The soft leaves of a Blood Cabbage.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_bloodcabbages],
+	),
+	EwGeneralItem(
+		id_item = item_id_joybeanvines,
+		str_name = "Joybean Vines",
+		str_desc = "The severed vines on which Joybeans grow.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_joybeans],
+	),
+	EwGeneralItem(
+		id_item = item_id_purplekilliflowerflorets,
+		str_name = "Killiflower Florets",
+		str_desc = "The bush-like appendages of a Killiflower plant.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_purplekilliflower],
+	),
+	EwGeneralItem(
+		id_item = item_id_razornutshells,
+		str_name = "Razornut Shells",
+		str_desc = "The sharp and pointy shells of a Razornut.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_razornuts],
+	),
+	EwGeneralItem(
+		id_item = item_id_pawpawflesh,
+		str_name = "Pawpaw Flesh",
+		str_desc = "The ground flesh of a Pawpaw.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_pawpaw],
+	),
+	EwGeneralItem(
+		id_item = item_id_sludgeberrysludge,
+		str_name = "Sludgeberry Sludge",
+		str_desc = "The thick syrup of a Sludgeberry.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_sludgeberries],
+	),
+	EwGeneralItem(
+		id_item = item_id_suganmanutfruit,
+		str_name = "Suganmanut Fruit",
+		str_desc = "The bright, multi-colored fruit off which Suganmanuts grow.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_suganmanuts],
+	),
+	EwGeneralItem(
+		id_item = item_id_pinkrowddishroot,
+		str_name = "Pink Rowddish Root",
+		str_desc = "The thin, light-colored root of a Pink Rowddish.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_pinkrowddishes],
+	),
+	EwGeneralItem(
+		id_item = item_id_dankwheatchaff,
+		str_name = "Dankwheat Chaff",
+		str_desc = "The scaly, protective casing on Dankwheat plants.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_dankwheat],
+	),
+	EwGeneralItem(
+		id_item = item_id_brightshadeberries,
+		str_name = "Brightshade Berries",
+		str_desc = "The small blue berries that grow on Brightshade plants.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_brightshade],
+	),
+	EwGeneralItem(
+		id_item = item_id_blacklimeade,
+		str_name = "Black Limeade",
+		str_desc = "The sweet and sour juice of a Black Lime.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_blacklimes],
+	),
+	EwGeneralItem(
+		id_item = item_id_phosphorpoppypetals,
+		str_name = "Phosphorpoppy Petals",
+		str_desc = "The yellow-green petals of a Phosphorpoppy.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_phosphorpoppies],
+	),
+	EwGeneralItem(
+		id_item = item_id_direapplestems,
+		str_name = "Dire Apple Stems",
+		str_desc = "The orange stems of a Dire Apple.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_direapples],
+	),
+	EwGeneralItem(
+		id_item = item_id_rustealeafblades,
+		str_name = "Rustea Leaf Blades",
+		str_desc = "The razor-sharp blades attatched to the stems of Rustea Leaves.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_rustealeaves],
+	),
+	EwGeneralItem(
+		id_item = item_id_metallicapheads,
+		str_name = "Metallicap Heads",
+		str_desc = "The bulbous head on the top of a Metallicap.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_metallicaps],
+	),
+	EwGeneralItem(
+		id_item = item_id_steelbeanpods,
+		str_name = "Steel Bean Pods",
+		str_desc = "The long and hard pods that house Steel Beans.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_steelbeans],
+	),
+	EwGeneralItem(
+		id_item = item_id_aushuckstalks,
+		str_name = "Aushuck Stalks",
+		str_desc = "The lengthy stalks of an Aushuck plant.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_aushucks],
 	),
 ]
 #item_list += ewdebug.debugitem_set
@@ -3718,6 +3917,7 @@ dye_list = []
 dye_map = {}
 # seperate the dyes from the other normal items
 for c in item_list:
+
 	if c.context != "dye":
 		pass
 	else:
@@ -4711,7 +4911,7 @@ weapon_list = [
 			"arawheapofiron",
 			"eyelander"
 		],
-  		str_crit = "Critical hit!! {name_player} screams at the top of their lungs and unleashes a devastating overhead swing that maims {name_target}.",
+		str_crit = "Critical hit!! {name_player} screams at the top of their lungs and unleashes a devastating overhead swing that maims {name_target}.",
 		str_miss = "You missed! You grunt as your failed overhead swing sends ripples through the air.",
 		str_backfire = "You feel the bones in your wrists snap as you botch your swing with the heavy blade!! Fucking ouch dawg!",
 		str_equip = "You equip the broadsword.",
@@ -4979,7 +5179,7 @@ weapon_list = [
 		captcha_length = 2
 	),
 	EwWeapon(  # 19
-		id_weapon = "fishingrod",
+		id_weapon = weapon_id_fishingrod,
 		alias = [
 			"fish",
 			"fishing",
@@ -5482,24 +5682,6 @@ stock_tacobell = "tacobell"
 # default stock rates
 default_stock_market_rate = 1000
 default_stock_exchange_rate = 1000000
-
-# dye ids
-dye_black = "blackdye"
-dye_maroon = "maroondye"
-dye_green = "greendye"
-dye_brown = "browndye"
-dye_tan = "tandye"
-dye_purple = "purpledye"
-dye_teal = "tealdye"
-dye_orange = "orangedye"
-dye_gray = "graydye"
-dye_red = "reddye"
-dye_lime = "limedye"
-dye_yellow = "yellowdye"
-dye_blue = "bluedye"
-dye_fuchsia = "fuchsiadye"
-dye_aqua = "aquadye"
-dye_white = "whitedye"
 
 
 # A map of name to EwWeather objects.
@@ -6592,7 +6774,6 @@ food_list = [
 		],
 		recover_hunger = 500,
 		price = 2500,
-
 		inebriation = 0,
 		str_name = 'box of chocolates',
 		#vendors = [vendor_tacobell, vendor_pizzahut, vendor_kfc, vendor_bar, vendor_diner, vendor_seafood],
@@ -6745,11 +6926,49 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
+		id_food = item_id_rustealeaves,
+		recover_hunger = 60,
+		str_name = 'Rustea Leaves',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Rustea Leaves. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "In ancient times, scholars from distant lands made tea with these leaves, believing it to offer them some kind of divination.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = item_id_metallicaps,
+		recover_hunger = 60,
+		price = 100000,
+		str_name = 'Metallicaps',
+		vendors = [vendor_farm, vendor_bazaar],
+		str_eat = "You chomp into the raw Metallicaps. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "It's hallucinogenic properties aren't yet awakened. DUDE SHROOMS LOL!!!",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = item_id_steelbeans,
+		recover_hunger = 60,
+		price = 100000,
+		str_name = 'Steel Beans',
+		vendors = [vendor_farm, vendor_bazaar],
+		str_eat = "You chomp into the raw Steel Beans. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "*That's me in the cockpit. That's me in the nosedive, doing 9/11.*",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = item_id_aushucks,
+		recover_hunger = 60,
+		price = 100000,
+		str_name = 'Aushucks',
+		vendors = [vendor_farm, vendor_bazaar, vendor_basedhardware],
+		str_eat = "You chomp into the raw Aushucks. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The king and queen of all crops, renowned for it's glistening, golden exterior.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
 		id_food = "pinkrowdatouille",
 		recover_hunger = 1200,
 		str_name = 'Pink Rowdatouille',
-		acquisition = acquisition_milling,
-		ingredients = item_id_pinkrowddishes,
+		acquisition = acquisition_smelting,
 		str_eat = "You gingerly nibble on the fancy vegetables. It’s nostalgic taste sends you right back to your childhood, and your first encounter with the law. You had to get sent to the New Los Angeles City aka Neo Milwaukee Juvenile Detention Center somehow, after all. It feels like it happened so long ago, and yet, you can remember it like it was yesterday.",
 		str_desc = "Thinly sliced rounds of Pink Rowddish and other colorful vegetables are slow roasted and drizzled with special sauce. It seems simple enough, it can’t taste THAT good, can it?",
 		time_expir = milled_food_expir,
@@ -6758,8 +6977,7 @@ food_list = [
 		id_food = "sludgeberrypancakes",
 		recover_hunger = 800,
 		str_name = 'Sludgeberry Pancakes',
-		acquisition = acquisition_milling,
-		ingredients = item_id_sludgeberries,
+		acquisition = acquisition_smelting,
 		str_eat = "You pick up the stack of pancakes with your hands, holding and biting into them as if they were a hamburger. Thick syrup coats your hands and mouth, ready to be licked off after the main meal has concluded.",
 		str_desc = "Fluffy flapjacks filled with assorted Sludgeberries and topped with a heaping helping of viscous syrup. You’ve died and washed up in the sewers. But, like, a nice part of the sewers. This express doesn’t really translate well into the setting.",
 		time_expir = milled_food_expir,
@@ -6768,8 +6986,7 @@ food_list = [
 		id_food = "pulpgourdpie",
 		recover_hunger = 800,
 		str_name = 'Pulp Gourd Pie',
-		acquisition = acquisition_milling,
-		ingredients = item_id_pulpgourds,
+		acquisition = acquisition_smelting,
 		str_eat = "You pick up a piece like it's a goddamn slice of pizza, demolishing it in a few barbaric bites. Eventually you get your fill of the crust and just start scraping out the delicious Pulp Gourd filling goop and slathering it all over your mouth and tongue like you're a fucking mindless pig at his trough.",
 		str_desc = "A warm, freshly baked pie. It's still molten, still solidifying Pulp Gourd filling beckons you like a siren lures a sailor. So many holidays have been ruined because of your addiction to this cinnamon imbued delicacy, and so many more will be in the future.",
 		time_expir = milled_food_expir,
@@ -6778,8 +6995,7 @@ food_list = [
 		id_food = "joybeanpastemochi",
 		recover_hunger = 800,
 		str_name = 'Joybean Paste Mochi',
-		acquisition = acquisition_milling,
-		ingredients = item_id_joybeans,
+		acquisition = acquisition_smelting,
 		str_eat = "You pop the delicate confectionary into your mouth and start ravenously shredding it into barely digestible chewy chunks. Sweet paste is slathered across your mouth. Your teeth enamel is decimated, execution style.",
 		str_desc = "A sickeningly sweet  Joy Bean paste filling encased in a small, round mochi covered in powdered sugar. It’s *proper* name is “Daifucku.”",
 		time_expir = milled_food_expir,
@@ -6788,8 +7004,7 @@ food_list = [
 		id_food = "brightshadeseeds",
 		recover_hunger = 800,
 		str_name = 'Brightshade Seeds',
-		acquisition = acquisition_milling,
-		ingredients = item_id_brightshade,
+		acquisition = acquisition_smelting,
 		str_eat = "You pop a few seeds into your mouth at a time, grinding them into dust with your molars and digesting their sweet, sweet single digit calories.",
 		str_desc = "A bag of Brightshade seeds, unsalted and ready for ill-advised consumption.",
 		time_expir = milled_food_expir,
@@ -6798,8 +7013,7 @@ food_list = [
 		id_food = "direapplejuice",
 		recover_hunger = 800,
 		str_name = 'Dire Apple Juice',
-		acquisition = acquisition_milling,
-		ingredients = item_id_direapples,
+		acquisition = acquisition_smelting,
 		str_eat = "You slurp down the delicious sugary juice! Hell yeah!",
 		str_desc = "A 99% juice-like substance that tastes vaguely like Dire Apples! It’s so ubiquitous that you guarantee that if you rummaged through every school kid’s lunch in the city, you’d be sent to jail.",
 		time_expir = milled_food_expir,
@@ -6808,8 +7022,7 @@ food_list = [
 		id_food = "purplekilliflowercrustpizza",
 		recover_hunger = 1200,
 		str_name = 'Purple Killiflower Crust Pizza',
-		acquisition = acquisition_milling,
-		ingredients = item_id_purplekilliflower,
+		acquisition = acquisition_smelting,
 		str_eat = "You take a hesitant nibble of the famously keto pizza slice before coming to the reality that sometimes healthy things CAN taste good! You shove the rest of the slice in your mouth, nearly choking. Deep inside of your body, you can feel your kidney begin to churn and convulse. That’s probably fine.",
 		str_desc = "A deliciously dietary-accordant slice of Killiflower crusted pizza. Made by milling down Killiflower into fine crumbs, combining with various irradiated cheeses, and baking until even notorious ENDLSS WAR critic Arlo is impressed. Now THIS is how you lose weight!",
 		time_expir = milled_food_expir,
@@ -6818,8 +7031,7 @@ food_list = [
 		id_food = "razornutbutter",
 		recover_hunger = 800,
 		str_name = 'Razornut Butter',
-		acquisition = acquisition_milling,
-		ingredients = item_id_razornuts,
+		acquisition = acquisition_smelting,
 		str_eat = "You take a hefty spoonful of the thick mucilage, coating your mouth completely. It’ll take weeks to swallow the last of it.",
 		str_desc = "A tub of chunky, creamy Razonut Butter. Co-star of countless childhood classics. You know it was invented by a Juvie, right?",
 		time_expir = milled_food_expir,
@@ -6828,8 +7040,7 @@ food_list = [
 		id_food = "jellyfilleddoughnut",
 		recover_hunger = 800,
 		str_name = 'Jelly-Filled Doughnut',
-		acquisition = acquisition_milling,
-		ingredients = item_id_poketubers,
+		acquisition = acquisition_smelting,
 		str_eat = "You chomp into the delicious jelly-filled doughnuOH GOD WHY THE FUCK DOES IT TASTE LIKE A TRADITIONAL JAPANESE ONIGIRI WITH A PICKLE PLUM FILLING WHO COULD HAVE PREDICTED THIS?!?!",
 		str_desc = "These jelly-filled doughnuts seem appetizing enough, but you're no expert. You never really cared much for jelly-filled doughnuts. In fact, in most scenarios you'd pass them up in favor of another pastry or sugary snack.",
 		time_expir = milled_food_expir,
@@ -6838,8 +7049,7 @@ food_list = [
 		id_food = "yourfavoritefood",
 		recover_hunger = 800,
 		str_name = '***Your Favorite Food***',
-		acquisition = acquisition_milling,
-		ingredients = item_id_suganmanuts,
+		acquisition = acquisition_smelting,
 		str_eat = "***You bite into your favorite meal!! It’s taste is literally indescribable!! You feel like you’re going retarded, your mind is clearly breaking!! Uwahhh!!***",
 		str_desc = "***Your favorite meal!! You could go on for hours about how great this food is!! But, you won’t, because no one appreciates it as much as you do.***",
 		time_expir = milled_food_expir,
@@ -6848,8 +7058,7 @@ food_list = [
 		id_food = "dankwheattoast",
 		recover_hunger = 800,
 		str_name = 'Dankwheat Toast',
-		acquisition = acquisition_milling,
-		ingredients = item_id_dankwheat,
+		acquisition = acquisition_smelting,
 		str_eat = "You take a bite out of the Dank Wheat Toast, and immediately you begin to start staggering around, clearly lost in some sort of unearned pleasure.",
 		str_desc = "A burnt, slightly soggy slice of Dank Wheat Toast. What more do you want out of me?",
 		time_expir = milled_food_expir,
@@ -6858,8 +7067,7 @@ food_list = [
 		id_food = "blacklimesour",
 		recover_hunger = 800,
 		str_name = 'Black Lime Sour',
-		acquisition = acquisition_milling,
-		ingredients = item_id_blacklimes,
+		acquisition = acquisition_smelting,
 		str_eat = "You take a swig of the obscure southern delicacy. Its overwhelming acidity tricks your mouth into generating quarts of saliva, refreshing your mouth and destroying your taste buds. Nifty!",
 		str_desc = "A small paper cup with nothing but crushed ice, the juice of a Black Lime, a little salt, and about a pound of cocaine.",
 		time_expir = milled_food_expir,
@@ -6868,8 +7076,7 @@ food_list = [
 		id_food = "phosphorpoppiesmuffin",
 		recover_hunger = 800,
 		str_name = 'Phosphorpoppies Muffin',
-		acquisition = acquisition_milling,
-		ingredients = item_id_phosphorpoppies,
+		acquisition = acquisition_smelting,
 		str_eat = "You remove the muffin head from the stump, before devouring the former and throwing the later as far away from you as humanly possible. Good riddance.",
 		str_desc = "Oooh, muffins! Remember that? Gimme a thumbs up with you get this joke.",
 		time_expir = milled_food_expir,
@@ -6878,8 +7085,7 @@ food_list = [
 		id_food = "sourpotatofrenchfries",
 		recover_hunger = 800,
 		str_name = 'Sour Potato French Fries',
-		acquisition = acquisition_milling,
-		ingredients = item_id_sourpotatoes,
+		acquisition = acquisition_smelting,
 		str_eat = "You bite into the fluffy, acidic french fries, occasionally dipping in into a selection of various dipping sauces such as hot slime and sweet slime. You divorce the actual flavor of the crispy exterior from it’s sour innards with a technique not unlike the one used to get the last drop of toothpaste out of it’s tube. Your face convulses in pain.",
 		str_desc = "Some gloriously thick cut Sour Potato french fries accompanied by an embarrassment of tasty slime-based dipping sauces. What else could a juvenile asked for?? Maybe some sugar and baking soda, this shit is unbelievably acidic.",
 		time_expir = milled_food_expir,
@@ -6888,8 +7094,7 @@ food_list = [
 		id_food = "bloodcabbagecoleslaw",
 		recover_hunger = 800,
 		str_name = 'Blood Cabbage Coleslaw',
-		acquisition = acquisition_milling,
-		ingredients = item_id_bloodcabbages,
+		acquisition = acquisition_smelting,
 		str_eat = "You drop the semi-solidified puck of red coleslaw into your eager maw, upon which the faux gelletain instantly loses it’s form and start to crumble into drop down your face. You manage to digest a cabbage shred.",
 		str_desc = "A congealed dark crimson slab of myoglobin encasing sparse strands of Blood Cabbage. It jiggles when you shake the cup it’s stored in. Why the fuck would you mill this?",
 		time_expir = milled_food_expir,
@@ -6898,10 +7103,45 @@ food_list = [
 		id_food = "pawpawfood",
 		recover_hunger = 800,
 		str_name = 'Pawpaw Food',
-		acquisition = acquisition_milling,
-		ingredients = item_id_pawpaw,
+		acquisition = acquisition_smelting,
 		str_eat = "You slowly drink the bitter, flavorless mush. Its… uh… food?",
 		str_desc = "An unappetizing pile of Pawpaw Gruel. It’s just Pawpaw milled into something halfway between puke and diarrhea. The staple of a traditional Juvenile diet. ",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "earlbrowntea",
+		recover_hunger = 800,
+		str_name = 'Earl Brown Tea',
+		acquisition = acquisition_smelting,
+		str_eat = "You dunk your teabag into the cup of Earl Brown Tea to enrich the flavor, and take a long sip afterwards. Dunking the teabag, heh, it totally reminds you of the last time you pwn'd some n00bz... wait, what the fuck are you talking about???",
+		str_desc = "A cup of brown tea. It's easily mistaken for coffee.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "badshroomz",
+		recover_hunger = 800,
+		str_name = 'Bad Shroomz',
+		acquisition = acquisition_smelting,
+		str_eat = "You gobble up the Bad Shroomz and start totally tripping the fuck out. 'Dude, what if Endless War, had like, Slime Goombas and Slime Koopa Troopas, and you could !stomp on them and get SlimeCoin from question mark blocks...', you think to yourself, ingeniously.",
+		str_desc = "A handful of mushrooms, with a copper coating that endows them with psychadelic properties. It's best to take them in a cold, dark room, handcuffed to your bed, with no human contact in miles, in order to optimize your experience with them.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "chromaccino",
+		recover_hunger = 800,
+		str_name = 'Chromaccino',
+		acquisition = acquisition_smelting,
+		str_eat = "You slurp on your Chromaccino. The scalding beverage that leaves a hint of jet fuel within its pallete gives you scars on your mouth that will never heal. Truly, a flavor that you can Never Forget:tm:.",
+		str_desc = "A cup of molten metal, with shavings of metal floating at the top. It strikes you as a bad idea to drink it.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "moltenpopcorn",
+		recover_hunger = 800,
+		str_name = 'Molten Popcorn',
+		acquisition = acquisition_smelting,
+		str_eat = "You chew through the Molten Popcorn. The melt-in-your-mouth flavor is to die for! Literally! You are fucking dying as you continue to ingest this terrible, terrible food item. What the fuck were you thinking?",
+		str_desc = "A piping-hot bag of popcorn. A melting gold ingot is propped up where the butter normally goes, dripping down into the rest of the popcorn puffs.",
 		time_expir = milled_food_expir,
 	),
 	EwFood(
@@ -7625,12 +7865,28 @@ food_names = []
 # list of crops you're able to !reap
 vegetable_list = []
 
+# map of vegetables to their associated cosmetic material
+vegetable_to_cosmetic_material = {}
+
 # seperate the crops from the normal foods
 for v in food_list:
-	if v.vendors != [vendor_farm]:
+
+	if vendor_farm not in v.vendors:
 		pass
 	else:
+		if v.id_food in [item_id_direapples, item_id_brightshade, item_id_razornuts, item_id_steelbeans]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_cool_material
+		elif v.id_food in [item_id_pinkrowddishes, item_id_joybeans, item_id_purplekilliflower, item_id_suganmanuts]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_cute_material
+		elif v.id_food in [item_id_poketubers, item_id_dankwheat, item_id_blacklimes, item_id_aushucks]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_beautiful_material
+		elif v.id_food in [item_id_phosphorpoppies, item_id_pawpaw, item_id_sludgeberries, item_id_rustealeaves]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_smart_material
+		elif v.id_food in [item_id_sourpotatoes, item_id_bloodcabbages, item_id_pulpgourds, item_id_metallicaps]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_tough_material
+
 		vegetable_list.append(v)
+		
 
 vendor_stock_map = {
 	vendor_kfc : stock_kfc,
@@ -10648,6 +10904,7 @@ poi_list = [
 			poi_id_westglocksbury_street_b : travel_time_district,
 			poi_id_westglocksbury_street_c : travel_time_district,
 			poi_id_westglocksbury_street_d : travel_time_district,
+			poi_id_basedhardware : travel_time_subzone,
 		},
 	),
 	EwPoi(  # 30
@@ -15375,12 +15632,31 @@ poi_list = [
 		vendors = [
 			vendor_bodega,
 			vendor_secretbodega,
-
 		],
 		is_subzone = True,
 		neighbors = {
 			poi_id_krakbay : travel_time_subzone,
 		},
+	),
+	EwPoi(
+		id_poi = poi_id_basedhardware,
+		alias = [
+			"hardware",
+			"hardwarestore",
+			"bhw",
+			"bh"
+		],
+		str_name = "Based Hardware",
+		str_desc = "A hardware store right beside a gas station. This place is a fucking mess, even by your standards. Cluttered stacks of washing machines and other various household necessities tower over you, turning the place into a goddamn corn maze made out of worn out appliances. Your only saving grace in terms of navigation is the piss-yellow incandescent lighting fixed to the ceiling. On the radio, you can hear a Sludgefest rendition of 'Hardware Store' by Weird-Al Yankovic quietly echoing throughout the makeshift corridors on loop. You think it'd be best to find what your looking for and make a dash to the checkout section, before some psychopath pulls you aside and bashes your skull in.",
+		channel = channel_basedhardware,
+		role = "Based Hardware",
+		mother_districts = [poi_id_westglocksbury],
+		pvp = False,
+		vendors = [vendor_basedhardware],
+		is_subzone = True,
+		neighbors = {
+			poi_id_westglocksbury : travel_time_subzone,
+		}
 	),
 	EwPoi(  # Tutorial - 1
 		id_poi = poi_id_tutorial_classroom,
@@ -16469,6 +16745,7 @@ for poi in poi_list:
 
 	# Districts need their major roles for their specific LAN (voice/text) channels.
 	if poi.is_district:
+		#print('\n{}\n{}\n'.format(poi.str_name, poi.str_desc))
 		poi.major_role = '{}_major'.format(poi.id_poi)
 	
 	# Subzones and streets need the same major roles as their mother/father districts.
@@ -17663,8 +17940,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_cool,
-		acquisition = acquisition_milling,
-		ingredients = item_id_poketubers,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -17676,8 +17952,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_cute,
-		acquisition = acquisition_milling,
-		ingredients = item_id_pulpgourds,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -17690,8 +17965,7 @@ cosmetic_items_list = [
 		durability = base_durability,
 		style = style_smart,
 		freshness = 6,
-		acquisition = acquisition_milling,
-		ingredients = item_id_sourpotatoes,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -17703,8 +17977,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_tough,
-		acquisition = acquisition_milling,
-		ingredients = item_id_bloodcabbages,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -17718,8 +17991,7 @@ cosmetic_items_list = [
 		style = style_smart,
 		freshness = 1,
 		durability = base_durability * 1.5,
-		acquisition = acquisition_milling,
-		ingredients = item_id_joybeans,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "hoodie",
@@ -17730,8 +18002,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_cool,
-		acquisition = acquisition_milling,
-		ingredients = item_id_purplekilliflower,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "copbadge",
@@ -17744,8 +18015,7 @@ cosmetic_items_list = [
 		style = style_smart,
 		freshness = 2,
 		str_desc = "What the fuck are you doing with this thing? Are you TRYING to make the sewers your permanent residence? Acquaint yourself with the !drop command and FAST, before you don’t have a body to wear the badge on.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_razornuts,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "strawhat",
@@ -17756,8 +18026,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_tough,
-		acquisition = acquisition_milling,
-		ingredients = item_id_pawpaw,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -17770,11 +18039,10 @@ cosmetic_items_list = [
 		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
-		acquisition = acquisition_milling,
-		ingredients = item_id_sludgeberries,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
-		id_cosmetic = "youfavoritehat",
+		id_cosmetic = "yourfavoritehat",
 		str_name = "***Your Favorite Hat***",
 		str_desc = "***It fits perfectly, and it’s just your style! You love wearing this cosmetic far more than any other, it’s simply the best.***",
 		stats = {
@@ -17785,8 +18053,7 @@ cosmetic_items_list = [
 		durability = base_durability,
 		style = style_cute,
 		freshness = 10,
-		acquisition = acquisition_milling,
-		ingredients = item_id_suganmanuts,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -17800,8 +18067,7 @@ cosmetic_items_list = [
 		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
-		acquisition = acquisition_milling,
-		ingredients = item_id_pinkrowddishes,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofcircularsunglasses",
@@ -17814,8 +18080,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_cool,
-		acquisition = acquisition_milling,
-		ingredients = item_id_dankwheat,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "flowercrown",
@@ -17827,8 +18092,7 @@ cosmetic_items_list = [
 		style = style_cute,
 		freshness = 7,
 		str_desc = "A lovingly handcrafted crown of flowers, connected by a string. You’re gonna be famous on Pinterest with a look like this!",
-		acquisition = acquisition_milling,
-		ingredients = item_id_brightshade,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "spikedbracelets",
@@ -17840,8 +18104,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_tough,
-		acquisition = acquisition_milling,
-		ingredients = item_id_blacklimes,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "slimecorppin",
@@ -17855,8 +18118,7 @@ cosmetic_items_list = [
 		freshness = 10,
 		durability = base_durability,
 		str_desc = "An enamel pin of the SlimeCorp logo, a badge of loyalty to your favorite charismatic megacorporation. Dude, like, *”Follow He Who Turns The Wheels”*, bro!!",
-		acquisition = acquisition_milling,
-		ingredients = item_id_phosphorpoppies,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "overalls",
@@ -17867,8 +18129,54 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_tough,
-		acquisition = acquisition_milling,
-		ingredients = item_id_direapples,
+		acquisition = acquisition_smelting,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "rustynail",
+		str_name = "Rusty Nail",
+		str_desc = "A large, rusty nail, planted right between the sides of your head, like some kind of frankenstein costume piece. This one's the real deal though... oh god the pain...",
+		stats = {
+			stat_defense: 1
+		},
+		durability = base_durability,
+		style = style_tough,
+		acquisition = acquisition_smelting
+	),
+	EwCosmeticItem(
+		id_cosmetic = "fullmetaljacket",
+		str_name = "Full Metal Jacket",
+		str_desc = "A black leather jacket affixed with more spikes than you can count on your fingers and toes. Be careful not to bump into anyone with this thng on.",
+		stats = {
+			stat_attack: 3
+		},
+		durability = base_durability * 2,
+		style = style_tough,
+		acquisition = acquisition_smelting
+	),
+	EwCosmeticItem(
+		id_cosmetic = "tinfoilhat",
+		str_name = "Tinfoil Hat",
+		str_desc = "A hat that protects you from SlimeCorps patent-pending 5G binaural brain waves, or so the folks on the internet have told you.",
+		stats = {
+			stat_defense: 1,
+			stat_speed: 2,
+		},
+		durability = base_durability * 2,
+		style = style_smart,
+		acquisition = acquisition_smelting
+	),
+	EwCosmeticItem(
+		id_cosmetic = "resplendentcoronet",
+		str_name = "Resplendent Coronet",
+		str_desc = "A crown worn by only the most elegant and regal of nobles. When you put it on, you really feel like you fuckin' own the place.",
+		stats = {
+			stat_defense: 1,
+			stat_speed: 1,
+			stat_attack: 1
+		},
+		durability = base_durability * 2,
+		style = style_beautiful,
+		acquisition = acquisition_smelting
 	),
 	EwCosmeticItem(
 		id_cosmetic = cosmetic_id_raincoat,
@@ -17903,7 +18211,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_cool,
-	 	#vendors = [vendor_bazaar, vendor_college],
+		#vendors = [vendor_bazaar, vendor_college],
 		price = 100,
 	),
 	EwCosmeticItem(
@@ -17933,7 +18241,7 @@ cosmetic_items_list = [
 		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "knightarmor",
 		str_name = "Steel knight armor",
 		str_desc = "A shining set of steel armor.",
@@ -17962,7 +18270,7 @@ cosmetic_items_list = [
 		vendors = [vendor_bazaar],
 		price = 1000,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "crocs",
 		str_name = "Crocs",
 		str_desc = "The perfect pair of footwear for when you want spotted dots of sunburn on your feet, unless you're wearing socks that is. If that's the case ignore that earlier statement.",
@@ -18018,7 +18326,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "pompadourwig",
 		str_name = "Pompadour Wig",
 		str_desc = "A must have for any wannabe greaser or school delinquent in general. Make sure to wear it like a true king.",
@@ -18035,7 +18343,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "powderedwig",
 		str_name = "Powdered Wig",
 		str_desc = "If it was good enough for the british and founding fathers, it's good enough for us, right? Just make sure you don't share this wig without cleaning it.",
@@ -18048,7 +18356,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "rainbowafrowig",
 		str_name = "Rainbow Afro Wig",
 		str_desc = "A colorful wig worthy of a real chuckle.",
@@ -18063,7 +18371,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "ghostlygibus",
 		str_name = "Ghostly Gibus",
 		str_desc = "A crooked old top hat with a spooky toy ghost popping out of the top.",
@@ -18076,7 +18384,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "gasmask",
 		str_name = "Gas Mask",
 		str_desc = "A dysfunctional cold war era gas mask that fully encapsulates the head.",
@@ -18090,7 +18398,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "firefightershelmet",
 		str_name = "Firefighter's Helmet",
 		str_desc = "A old NLACakaNM wide brimmed red firefighter's helmet. No one knows what happened to the firefighters of Endless War.",
@@ -18103,7 +18411,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "pairofpoindexterglasses",
 		str_name = "Pair Of Poindexter Glasses",
 		str_desc = "A pair of thick rim glasses taped together at the middle. Worthy of any true nerd or nerdette.",
@@ -18116,7 +18424,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "duncecap",
 		str_name = "Dunce Cap",
 		str_desc = "It’s a pointy cap that says dunce on it, duh! You’re a real smartie aren't you?",
@@ -18132,7 +18440,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "vrheadset",
 		str_name = "VR Headset",
 		str_desc = "Endless War -- now in stunning VR!",
@@ -18149,7 +18457,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "blindfold",
 		str_name = "Blindfold",
 		str_desc = "Ok now you’re just bragging. Walking around with a blindfold of all things? How ridiculous!",
@@ -18164,7 +18472,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "chickenmask",
 		str_name = "Chicken Mask",
 		str_desc = "The rubber chicken mask gives you a strange vibe, it stinks of sweat and dried blood.",
@@ -18177,7 +18485,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "mountiehat",
 		str_name = "Mountie Hat",
 		str_desc = "A hat that's mostly used by canada's royal mounted police, but how did it get here? Did it float down the slime river?",
@@ -18191,7 +18499,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "bearskinhat",
 		str_name = "Bearskin Hat",
 		str_desc = "A towering fuzzy hat that’s commonly worn by guards of the british royal guard.",
@@ -18204,7 +18512,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "aviatorshat",
 		str_name = "Aviator's Hat",
 		str_desc = "A leather hat with a neat pair of goggles on it. Perfect for an unfortunate circumnavigation of the world.",
@@ -18218,7 +18526,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "militaryberet",
 		str_name = "Military Beret",
 		str_desc = "A good soldier needs good headwear,and that’s where this beret comes in.",
@@ -18234,7 +18542,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "felinehat", # fuck you.
 		str_name = "Feline Hat", # fuck you.
 		stats = {
@@ -18250,7 +18558,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting, # fuck you.
 		is_hat = True, # fuck you.
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "tikihead",
 		str_name = "Tiki Head",
 		str_desc = "A wearable tiki head worthy of any luau or tropical island themed party.",
@@ -18284,7 +18592,6 @@ smelting_recipe_list = [
 		ingredients = {
 			item_id_slimepoudrin : 4,
 			item_id_cool_material: 1
-
 		},
 		products = cosmetic_names
 	),
@@ -18298,7 +18605,6 @@ smelting_recipe_list = [
 		ingredients = {
 			item_id_slimepoudrin : 4,
 			item_id_tough_material: 1
-
 		},
 		products = cosmetic_names
 	),
@@ -18342,26 +18648,13 @@ smelting_recipe_list = [
 		products = cosmetic_names
 	),
 	EwSmeltingRecipe(
-		id_recipe = item_id_quadruplestuffedcrust,
-		str_name = "a Quadruple Stuffed Crust",
-		alias = [
-			"qsc",
-			"quadruple",
-			"quadruplestuffed",
-		],
-		ingredients = {
-			item_id_doublestuffedcrust : 2
-		},
-		products = [item_id_quadruplestuffedcrust],
-	),
-        EwSmeltingRecipe(
 		id_recipe = "knightarmor",
-		str_name = "Knight Armor",
-                alias = [
+		str_name = "a set of Knight Armor",
+				alias = [
 			"armor",
 		],
 		ingredients = {
-			"ironingot" : 2
+			item_id_ironingot : 2
 		},
 		products = ["knightarmor"]
 	),
@@ -18377,10 +18670,23 @@ smelting_recipe_list = [
 			"monster soup"
 		],
 		ingredients = {
-			"monsterbones" : 5,
+			item_id_monsterbones : 5,
 			item_id_dinoslimemeat : 1
 		},
 		products = [item_id_monstersoup],
+	),
+	EwSmeltingRecipe(
+		id_recipe=item_id_quadruplestuffedcrust,
+		str_name="a Quadruple Stuffed Crust",
+		alias=[
+			"qsc",
+			"quadruple",
+			"quadruplestuffed",
+		],
+		ingredients={
+			item_id_doublestuffedcrust: 2
+		},
+		products=[item_id_quadruplestuffedcrust],
 	),
 	EwSmeltingRecipe(
 		id_recipe = item_id_octuplestuffedcrust,
@@ -18459,7 +18765,8 @@ smelting_recipe_list = [
 			"forbidden111",
 			":111:",
 		],
-		ingredients = {'leftleg' : 1,
+		ingredients = {
+			'leftleg' : 1,
 			'rightleg' : 1,
 			'slimexodia' : 1,
 			'rightarm' : 1,
@@ -18480,7 +18787,7 @@ smelting_recipe_list = [
 			item_id_slimepoudrin : 3,
 			item_id_stick : 2
 		},
-		products = ['pickaxe']
+		products = [weapon_id_pickaxe]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "faggot",
@@ -18491,9 +18798,8 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			item_id_stick : 3
-
 		},
-		products = ['faggot']
+		products = [item_id_faggot]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "doublefaggot",
@@ -18505,7 +18811,7 @@ smelting_recipe_list = [
 		ingredients = {
 			item_id_faggot : 2
 		},
-		products = ['doublefaggot']
+		products = [item_id_doublefaggot]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "dinoslimesteak",
@@ -18518,7 +18824,7 @@ smelting_recipe_list = [
 			item_id_faggot : 1,
 			item_id_dinoslimemeat : 1
 		},
-		products = ['dinoslimesteak']
+		products = [item_id_dinoslimesteak]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "fishingrod",
@@ -18530,12 +18836,12 @@ smelting_recipe_list = [
 			"fr"
 		],
 		ingredients = {
-			'string': 2,
-			'stick': 3
+			item_id_string: 2,
+			item_id_stick: 3
 		},
-		products = ['fishingrod']
+		products = [weapon_id_fishingrod]
 	),
-    EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "bass",
 		str_name = "a Bass Guitar",
 		alias = [
@@ -18543,23 +18849,23 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			'thebassedgod' : 1,
-			'string':4
+			item_id_string : 4
 		},
-		products = ['bass']
-    ),
-    EwSmeltingRecipe(
+		products = [weapon_id_bass]
+	),
+	EwSmeltingRecipe(
 		id_recipe = "bow",
 		str_name = "a Minecraft Bow",
 		alias = [
 			"minecraft bow"
 		],
 		ingredients = {
-			'stick' : 3,
-			'string':3
+			item_id_stick: 3,
+			item_id_string: 3
 		},
-		products = ['bow']
-    ),
-	    EwSmeltingRecipe(
+		products = [weapon_id_bow]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "ironingot",
 		str_name = "an Iron Ingot",
 		alias = [
@@ -18569,12 +18875,12 @@ smelting_recipe_list = [
 			"iron ingot"
 		],
 		ingredients = {
-			'tincan':10,
-			'faggot':1
+			item_id_tincan:10,
+			item_id_faggot:1
 		},
-		products = ['ironingot']
-    ),
-	    EwSmeltingRecipe(
+		products = [item_id_ironingot]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "tanningknife",
 		str_name = "a small tanning knife",
 		alias = [
@@ -18583,23 +18889,23 @@ smelting_recipe_list = [
 			"tanning"
 		],
 		ingredients = {
-			'ironingot':1
+			item_id_ironingot:1
 		},
-		products = ['tanningknife']
-    ),
-	    EwSmeltingRecipe(
+		products = [item_id_ironingot]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "leather",
 		str_name = "a piece of leather",
 		alias = [
 			"leather"
 		],
 		ingredients = {
-			'oldboot':10,
-			'tanningknife':1
+			item_id_oldboot:10,
+			item_id_tanningknife:1
 		},
-		products = ['leather']
-    ),
-	    EwSmeltingRecipe(
+		products = [item_id_leather]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "bloodstone",
 		str_name = "a chunk of bloodstone",
 		alias = [
@@ -18607,12 +18913,12 @@ smelting_recipe_list = [
 			"bstone"
 		],
 		ingredients = {
-			'monsterbones':100,
-			'faggot':1
+			item_id_monsterbones:100,
+			item_id_faggot:1
 		},
-		products = ['bloodstone']
-    ),
-	    EwSmeltingRecipe(
+		products = [item_id_bloodstone]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "dclaw",
 		str_name = "a Dragon Claw",
 		alias = [
@@ -18621,13 +18927,13 @@ smelting_recipe_list = [
 			"dclaw"
 		],
 		ingredients = {
-			'dragonsoul' : 1,
-			item_id_slimepoudrin : 5,
-			'ironingot':1,
-			'leather':1
+			item_id_dragonsoul: 1,
+			item_id_slimepoudrin: 5,
+			item_id_ironingot: 1,
+			item_id_leather: 1
 		},
-		products = ['dclaw']
-    ),
+		products = [weapon_id_dclaw]
+	),
 	EwSmeltingRecipe(
 		id_recipe = weapon_id_staff,
 		str_name = "an eldritch staff",
@@ -18642,8 +18948,8 @@ smelting_recipe_list = [
 			item_id_doublefaggot : 1,
 			item_id_negapoudrin : 1,
 		},
-		products = ['staff']
-    ),
+		products = [weapon_id_staff]
+	),
 
 	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
@@ -18716,11 +19022,11 @@ smelting_recipe_list = [
 			"blunt"
 		],
 		ingredients = {
-			'seaweed' : 3,
-			'dankwheat': 1,
+			item_id_seaweed: 3,
+			item_id_dankwheat: 1,
 			item_id_slimepoudrin : 1,
 		},
-		products = ['seaweedjoint']
+		products = [item_id_seaweedjoint]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "slimepoudrin",
@@ -18732,9 +19038,9 @@ smelting_recipe_list = [
 			"poodrin",
 		],
 		ingredients = {
-			'royaltypoudrin': 2
+			item_id_royaltypoudrin: 2
 		},
-		products = ['slimepoudrin']
+		products = [item_id_slimepoudrin]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "humancorpse",
@@ -18747,14 +19053,14 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			'scalp': 20,
-			'dinoslimemeat':2,
-			'string':2
+			item_id_dinoslimemeat: 2,
+			item_id_string :2
 		},
 		products = ['humancorpse']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "popeonarope",
-		str_name = "pope on a rope",
+		str_name = "a pope on a rope",
 		alias = [
 			"pope",
 			"francis",
@@ -18771,7 +19077,7 @@ smelting_recipe_list = [
 	),
 	EwSmeltingRecipe(
 		id_recipe = "reanimatedcorpse",
-		str_name = "reanimated corpse",
+		str_name = "a reanimated corpse",
 		alias = [
 			"frankenstein",
 			"reanimate",
@@ -18785,7 +19091,7 @@ smelting_recipe_list = [
 	),
 	EwSmeltingRecipe(
 		id_recipe = "soul",
-		str_name = "soul",
+		str_name = "a soul",
 		alias = [
 			"spirit",
 			"essence",
@@ -18798,7 +19104,7 @@ smelting_recipe_list = [
 	),
 	EwSmeltingRecipe(
 		id_recipe = "handmadechair",
-		str_name = "handmade chair",
+		str_name = "a handmade chair",
 		alias = [
 			"woodchair",
 			"carvedchair",
@@ -18806,14 +19112,14 @@ smelting_recipe_list = [
 			"ornatechair",
 		],
 		ingredients = {
-			'stick': 5,
-			'bat':2,
+			item_id_stick: 5,
+			weapon_id_bat:2,
 		},
 		products = ['ornatechair', 'shittychair']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "handmadebench",
-		str_name = "handmade bench",
+		str_name = "a handmade bench",
 		alias = [
 			"woodbench",
 			"carvedbench",
@@ -18821,14 +19127,14 @@ smelting_recipe_list = [
 			"ornatebench",
 		],
 		ingredients = {
-			'stick': 10,
-			'bat':4,
+			item_id_stick: 10,
+			weapon_id_bat: 4,
 		},
 		products = ['ornatebench', 'shittybench']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "handmadebed",
-		str_name = "handmade bed",
+		str_name = "a handmade bed",
 		alias = [
 			"woodbed",
 			"carvedbed",
@@ -18836,14 +19142,14 @@ smelting_recipe_list = [
 			"ornatebed",
 		],
 		ingredients = {
-			'stick': 12,
-			'bat':3,
+			item_id_stick: 12,
+			weapon_id_bat :3,
 		},
 		products = ['ornatebed', 'shittybed']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "handmadedesk",
-		str_name = "handmade desk",
+		str_name = "a handmade desk",
 		alias = [
 			"wooddesk",
 			"carveddesk",
@@ -18851,14 +19157,14 @@ smelting_recipe_list = [
 			"ornatedesk",
 		],
 		ingredients = {
-			'stick': 4,
-			'bat':1,
+			item_id_stick: 4,
+			weapon_id_bat: 1,
 		},
 		products = ['ornatedesk', 'shittydesk']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "clarinet",
-		str_name = "clarinet",
+		str_name = "a clarinet",
 		alias = [
 			"flute",
 			"bennygoodmanthing",
@@ -18871,27 +19177,26 @@ smelting_recipe_list = [
 			'blacklimes':1,
 			'direappleciderfuckenergy':1,
 			'sweetfish':1,
-
 		},
 		products = ['craftsmansclarinet', 'woodenvuvuzela']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "guitar",
-		str_name = "solid poudrin guitar",
+		str_name = "a solid poudrin guitar",
 		alias = [
 			"poudringuitar",
 			"electricguitar",
 			"solidpoudringuitar",
 		],
 		ingredients = {
-			'slimepoudrin': 150,
-			'string':6,
+			item_id_slimepoudrin: 150,
+			item_id_string: 6,
 		},
 		products = ['solidpoudringuitar']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "drums",
-		str_name = "beast skin drums",
+		str_name = "a beast skin drums",
 		alias = [
 			"beastskindrums",
 			"drumset",
@@ -18908,7 +19213,7 @@ EwSmeltingRecipe(
 	),
 	EwSmeltingRecipe(
 		id_recipe = "xylophone",
-		str_name = "fish bone xylophone",
+		str_name = "a fish bone xylophone",
 		alias = [
 			"xylo",
 			"metallophone",
@@ -18925,15 +19230,15 @@ EwSmeltingRecipe(
 	),
 	EwSmeltingRecipe(
 		id_recipe = "maracas",
-		str_name = "gourd maracas",
+		str_name = "a gourd maracas",
 		alias = [
 			"gourdmaracas",
 			"shakers",
 			"rattle",
 		],
 		ingredients = {
-			'pulpgourds' : 1,
-			'suganmanuts' : 1,
+			'pulpgourds': 1,
+			'suganmanuts': 1,
 			'sludgeberries':1,
 			'razornuts':1,
 			'joybeans':1,
@@ -18942,17 +19247,758 @@ EwSmeltingRecipe(
 		products = ['gourdmaracas']
 	),
 	EwSmeltingRecipe(
-		id_recipe = "browndye",
-		str_name = "Brown Dye",
-		alias = [
+		id_recipe="whitedye",
+		str_name="a vial of White Dye",
+		alias=[
+			'white',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_poketubereyes: 1,
+		},
+		products=[item_id_dye_white]
+	),
+	EwSmeltingRecipe(
+		id_recipe="yellowdye",
+		str_name="a vial of Yellow Dye",
+		alias=[
+			'yellow',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_pulpgourdpulp: 1,
+		},
+		products=[item_id_dye_yellow]
+	),
+	EwSmeltingRecipe(
+		id_recipe="orangedye",
+		str_name="a vial of Orange Dye",
+		alias=[
+			'orange',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_sourpotatoskins: 1,
+		},
+		products=[item_id_dye_orange]
+	),
+	EwSmeltingRecipe(
+		id_recipe="reddye",
+		str_name="a vial of Red Dye",
+		alias=[
+			'red',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_bloodcabbageleaves: 1,
+		},
+		products=[item_id_dye_red]
+	),
+	EwSmeltingRecipe(
+		id_recipe="magentadye",
+		str_name="a vial of Magenta Dye",
+		alias=[
+			'magenta',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_joybeanvines: 1,
+		},
+		products=[item_id_dye_magenta]
+	),
+	EwSmeltingRecipe(
+		id_recipe="purpledye",
+		str_name="a vial of Purple Dye",
+		alias=[
+			'purple',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_purplekilliflowerflorets: 1,
+		},
+		products=[item_id_dye_purple]
+	),
+	EwSmeltingRecipe(
+		id_recipe="bluedye",
+		str_name="a vial of Blue Dye",
+		alias=[
+			'blue',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_razornutshells: 1,
+		},
+		products=[item_id_dye_blue]
+	),
+	EwSmeltingRecipe(
+		id_recipe="greendye",
+		str_name="a vial of Green Dye",
+		alias=[
+			'green',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_pawpawflesh: 1,
+		},
+		products=[item_id_dye_green]
+	),
+	EwSmeltingRecipe(
+		id_recipe="tealdye",
+		str_name="a vial of Teal Dye",
+		alias=[
+			'teal',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_sludgeberrysludge: 1,
+		},
+		products=[item_id_dye_teal]
+	),
+	EwSmeltingRecipe(
+		id_recipe="rainbowdye",
+		str_name="a vial of ***Rainbow Dye***",
+		alias=[
+			'rainbow',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_suganmanutfruit: 1,
+		},
+		products=[item_id_dye_rainbow]
+	),
+	EwSmeltingRecipe(
+		id_recipe="pinkdye",
+		str_name="a vial of Pink Dye",
+		alias=[
+			'pink',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_pinkrowddishroot: 1,
+		},
+		products=[item_id_dye_pink]
+	),
+	EwSmeltingRecipe(
+		id_recipe="greydye",
+		str_name="a vial of Grey Dye",
+		alias=[
+			'grey',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_dankwheatchaff: 1,
+		},
+		products=[item_id_dye_grey]
+	),
+	EwSmeltingRecipe(
+		id_recipe="cobaltdye",
+		str_name="a vial of Cobalt Dye",
+		alias=[
+			'cobalt',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_brightshadeberries: 1,
+		},
+		products=[item_id_dye_cobalt]
+	),
+	EwSmeltingRecipe(
+		id_recipe="blackdye",
+		str_name="a vial of Black Dye",
+		alias=[
+			'black',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_blacklimeade: 1,
+		},
+		products=[item_id_dye_black]
+	),
+	EwSmeltingRecipe(
+		id_recipe="limedye",
+		str_name="a vial of Lime Dye",
+		alias=[
+			'lime',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_phosphorpoppypetals: 1,
+		},
+		products=[item_id_dye_lime]
+	),
+	EwSmeltingRecipe(
+		id_recipe="cyandye",
+		str_name="a vial of Cyan Dye",
+		alias=[
+			'cyan',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_direapplestems: 1,
+		},
+		products=[item_id_dye_cyan]
+	),
+	EwSmeltingRecipe(
+		id_recipe="browndye",
+		str_name="",
+		alias=[
 			'brown',
 		],
-		ingredients = {
-			'reddye' : 1,
-			'blackdye': 1,
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_rustealeafblades: 1,
 		},
-		products = ['browndye']
-	)
+		products=[item_id_dye_brown]
+	),
+	EwSmeltingRecipe(
+		id_recipe="copperpaint",
+		str_name="a bucket of Copper Paint",
+		alias=[
+			'copper',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_metallicapheads: 1,
+		},
+		products=[item_id_paint_copper]
+	),
+	EwSmeltingRecipe(
+		id_recipe="chromepaint",
+		str_name="a bucket of Chrome Paint",
+		alias=[
+			'chrome',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_steelbeanpods: 1,
+		},
+		products=[item_id_paint_chrome]
+	),
+	EwSmeltingRecipe(
+		id_recipe="goldpaint",
+		str_name="a bucket of Gold Paint",
+		alias=[
+			'gold',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_aushuckstalks: 1,
+		},
+		products=[item_id_paint_gold]
+	),
+	EwSmeltingRecipe(
+		id_recipe="jellyfilleddoughnut",
+		str_name="a Jelly Filled Donut",
+		alias=[
+			'donut',
+			'doughnut',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_poketubereyes: 1,
+		},
+		products=["jellyfilleddoughnut"]
+	),
+	EwSmeltingRecipe(
+		id_recipe="pulpgourdpie",
+		str_name="a plate of Pulp Gourd Pie",
+		alias=[
+			'pie',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_pulpgourdpulp: 1,
+		},
+		products=['pulpgourdpie']
+	),
+	EwSmeltingRecipe(
+		id_recipe="sourpotatofrenchfries",
+		str_name="a plate of Sour Potato French Fries",
+		alias=[
+			'fries',
+			'frenchfries'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_sourpotatoskins: 1,
+		},
+		products=['sourpotatofrenchfries']
+	),
+	EwSmeltingRecipe(
+		id_recipe="bloodcabbagecoleslaw",
+		str_name="a tub of Blood Cabbage Coleslaw",
+		alias=[
+			'coleslaw',
+			'redcoleslaw',
+			'blood'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_bloodcabbageleaves: 1,
+		},
+		products=['bloodcabbagecoleslaw']
+	),
+	EwSmeltingRecipe(
+		id_recipe="joybeanpastemochi",
+		str_name="a pile of Joybean Paste Mochi",
+		alias=[
+			'mochi',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_joybeanvines: 1,
+		},
+		products=['joybeanpastemochi']
+	),
+	EwSmeltingRecipe(
+		id_recipe="purplekilliflowercrustpizza",
+		str_name="a plate of Purple Killiflower Crust Pizza",
+		alias=[
+			'pizza',
+			'cauliflowercrustpizza'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_purplekilliflowerflorets: 1,
+		},
+		products=['purplekilliflowercrustpizza']
+	),
+	EwSmeltingRecipe(
+		id_recipe="razornutbutter",
+		str_name="a tub of Razornut Butter",
+		alias=[
+			'butter',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_razornutshells: 1,
+		},
+		products=['razornutbutter']
+	),
+	EwSmeltingRecipe(
+		id_recipe="pawpawfood",
+		str_name="a plate of Pawpaw Food",
+		alias=[
+			'food',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_pawpawflesh: 1,
+		},
+		products=['pawpawfood']
+	),
+	EwSmeltingRecipe(
+		id_recipe="sludgeberrypancakes",
+		str_name="a plate of Sludgeberry Pancakes",
+		alias=[
+			'pancakes',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_sludgeberrysludge: 1,
+		},
+		products=['sludgeberrypancakes']
+	),
+	EwSmeltingRecipe(
+		id_recipe="yourfavoritefood",
+		str_name="a plate of ***Your Favorite Food***",
+		alias=[
+			'favoritefood',
+			'favefood'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_suganmanutfruit: 1,
+		},
+		products=['yourfavoritefood']
+	),
+	EwSmeltingRecipe(
+		id_recipe="pinkrowdatouille",
+		str_name="a plate of Pink Rowdatouille",
+		alias=[
+			'rowdatouille',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_pinkrowddishroot: 1,
+		},
+		products=['pinkrowdatouille']
+	),
+	EwSmeltingRecipe(
+		id_recipe="dankwheattoast",
+		str_name="a plate of Dankwheat Toast",
+		alias=[
+			'toast',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_dankwheatchaff: 1,
+		},
+		products=['dankwheattoast']
+	),
+	EwSmeltingRecipe(
+		id_recipe="brightshadeseeds",
+		str_name="some Brightshade Seeds",
+		alias=[
+			'seeds',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_brightshadeberries: 1,
+		},
+		products=['brightshadeseeds']
+	),
+	EwSmeltingRecipe(
+		id_recipe="blacklimesour",
+		str_name="some Black Lime Sours",
+		alias=[
+			'sours',
+			'sour'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_blacklimeade: 1,
+		},
+		products=['blacklimesour']
+	),
+	EwSmeltingRecipe(
+		id_recipe="phosphorpoppiesmuffin",
+		str_name="a Phosphorpoppies Muffin",
+		alias=[
+			'muffin',
+			'muffins'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_phosphorpoppypetals: 1,
+		},
+		products=['phosphorpoppiesmuffin']
+	),
+	EwSmeltingRecipe(
+		id_recipe="direapplejuice",
+		str_name="a bottle of Dire Apple Juice",
+		alias=[
+			'juice',
+			'applejuice',
+			'appyjuice'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_direapplestems: 1,
+		},
+		products=['direapplejuice']
+	),
+	EwSmeltingRecipe(
+		id_recipe="earlbrowntea",
+		str_name="a cup of Earl Brown Tea",
+		alias=[
+			'tea',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_rustealeafblades: 1,
+		},
+		products=['earlbrowntea']
+	),
+	EwSmeltingRecipe(
+		id_recipe="badshroomz",
+		str_name="some Bad Shroomz",
+		alias=[
+			'shrooms',
+			'mushrooms',
+			'shroomz'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_metallicapheads: 1,
+		},
+		products=['badshroomz']
+	),
+	EwSmeltingRecipe(
+		id_recipe="chromaccino",
+		str_name="a Chromaccino",
+		alias=[
+			'cappuccino',
+			'chroma'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_steelbeanpods: 1,
+		},
+		products=['chromaccino']
+	),
+	EwSmeltingRecipe(
+		id_recipe="moltenpopcorn",
+		str_name="a bag of Molten Popcorn",
+		alias=[
+			'popcorn',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_aushuckstalks: 1
+		},
+		products=['moltenpopcorn']
+	),
+	EwSmeltingRecipe(
+		id_recipe="captainshat",
+		str_name="a Captain's Hat",
+		alias=[
+			'captain',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_poketubereyes: 1,
+		},
+		products=['captainshat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="juveolantern",
+		str_name="a Juve-O' Lantern",
+		alias=[
+			'juve',
+			'jackolantern'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_pulpgourdpulp: 1,
+		},
+		products=['juveolantern']
+	),
+	EwSmeltingRecipe(
+		id_recipe="bowlerhat",
+		str_name="a Bowler Hat",
+		alias=[
+			'bowler',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_sourpotatoskins: 1,
+		},
+		products=['bowlerhat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="cabbagetreehat",
+		str_name="a Cabbage Tree Hat",
+		alias=[
+			'cabbagehat',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_bloodcabbageleaves: 1,
+		},
+		products=['cabbagetreehat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="braces",
+		str_name="some Braces",
+		alias=[
+			'headgear',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_joybeanvines: 1,
+		},
+		products=['braces']
+	),
+	EwSmeltingRecipe(
+		id_recipe="hoodie",
+		str_name="a Hoodie",
+		alias=[
+			'hood',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_purplekilliflowerflorets: 1,
+		},
+		products=['hoodie']
+	),
+	EwSmeltingRecipe(
+		id_recipe="copbadge",
+		str_name="a Cop Badge",
+		alias=[
+			'badge',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_razornutshells: 1,
+		},
+		products=['copbadge']
+	),
+	EwSmeltingRecipe(
+		id_recipe="strawhat",
+		str_name="a Straw Hat",
+		alias=[
+			'straw',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_pawpawflesh: 1,
+		},
+		products=['strawhat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="cosplayhorns",
+		str_name="a pair of Cosplay Horns",
+		alias=[
+			'horns',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_sludgeberrysludge: 1,
+		},
+		products=['cosplayhorns']
+	),
+	EwSmeltingRecipe(
+		id_recipe="yourfavoritehat",
+		str_name="***Your Favorite Hat***",
+		alias=[
+			'favoritehat',
+			'favehat'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_suganmanutfruit: 1,
+		},
+		products=['yourfavoritehat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="pajamaonesie",
+		str_name="a Pajama Onesie",
+		alias=[
+			'pajamas',
+			'onesie'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_pinkrowddishroot: 1,
+		},
+		products=['pajamaonesie']
+	),
+	EwSmeltingRecipe(
+		id_recipe="pairofcircularsunglasses",
+		str_name="a Pair Of Circular Sunglasses",
+		alias=[
+			'digibroglasses',
+			'circleglasses',
+			'circularglasses'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_dankwheatchaff: 1,
+		},
+		products=['pairofcircularsunglasses']
+	),
+	EwSmeltingRecipe(
+		id_recipe="flowercrown",
+		str_name="a Flower Crown",
+		alias=[
+			'flower',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_brightshadeberries: 1,
+		},
+		products=['flowercrown']
+	),
+	EwSmeltingRecipe(
+		id_recipe="spikedbracelets",
+		str_name="a pair of Spiked Bracelets",
+		alias=[
+			'spiked',
+			'bracelets'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_blacklimeade: 1,
+		},
+		products=['spikedbracelets']
+	),
+	EwSmeltingRecipe(
+		id_recipe="slimecorppin",
+		str_name="a SlimeCorp Pin",
+		alias=[
+			'pin',
+			'shillpin',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_phosphorpoppypetals: 1,
+		},
+		products=['slimecorppin']
+	),
+	EwSmeltingRecipe(
+		id_recipe="overalls",
+		str_name="a pair of Overalls",
+		alias=[
+			'trousers',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_direapplestems: 1,
+		},
+		products=['overalls']
+	),
+	EwSmeltingRecipe(
+		id_recipe="rustynail",
+		str_name="a Rusty Nail",
+		alias=[
+			'nail',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_rustealeafblades: 1,
+		},
+		products=['rustynail']
+	),
+	EwSmeltingRecipe(
+		id_recipe="fullmetaljacket",
+		str_name="a Full Metal Jacket",
+		alias=[
+			'jacket',
+			'metaljacket'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_metallicapheads: 1,
+		},
+		products=['fullmetaljacket']
+	),
+	EwSmeltingRecipe(
+		id_recipe="tinfoilhat",
+		str_name="a Tinfoil Hat",
+		alias=[
+			'tinfoil',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_steelbeanpods: 1,
+		},
+		products=['tinfoilhat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="resplendentcoronet",
+		str_name="a Resplendent Coronet",
+		alias=[
+			'crown',
+			'goldcrown'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_aushuckstalks: 1,
+		},
+		products=['resplendentcoronet']
+	),
+	EwSmeltingRecipe(
+		id_recipe="stick",
+		str_name="a stick",
+		alias=[
+			'wood',
+		],
+		ingredients={
+			item_id_direapplestems: 3
+		},
+		products=[item_id_stick]
+	),
 ]
 #smelting_recipe_list += ewdebug.debugrecipes
 
@@ -18964,6 +20010,12 @@ recipe_names = []
 
 # Populate recipe map, including all aliases.
 for recipe in smelting_recipe_list:
+
+	# print("==============================\n\n{}\n――――――――――――――――――――――――――――――\nTo craft {}, you'll need...\n".format(recipe.str_name, recipe.str_name))
+	# for ingredient in recipe.ingredients.keys():
+	# 	print('{} {}'.format(recipe.ingredients[ingredient], ingredient))
+	# print('')
+	
 	smelting_recipe_map[recipe.id_recipe] = recipe
 	recipe_names.append(recipe.id_recipe)
 
@@ -20229,6 +21281,9 @@ hue_id_white = "white"
 hue_id_grey = "grey"
 hue_id_black = "black"
 hue_id_brown = "brown"
+hue_id_copper = "copper"
+hue_id_chrome = "chrome"
+hue_id_gold = "gold"
 
 
 # All color attributes in the game.
@@ -20505,6 +21560,36 @@ hue_list = [
 		str_saturate = "It turned an earthly brown!",
 		str_name = "brown",
 		str_desc = "Its earthly brown hue imbues it with a humble, down-to-earth personality.",
+		is_neutral = True,
+	),
+	EwHue(
+		id_hue = hue_id_copper,
+		alias = [
+			"copperpaint",
+		],
+		str_saturate = "It was given a coating of bright copper!",
+		str_name = "copper",
+		str_desc = "It seems to feel good about its copper coating.",
+		is_neutral = True,
+	),
+	EwHue(
+		id_hue = hue_id_chrome,
+		alias = [
+			"chromepaint",
+		],
+		str_saturate = "It was given a coating of silvery chrome!",
+		str_name = "chrome",
+		str_desc = "It's content with its chrome coating.",
+		is_neutral = True,
+	),
+	EwHue(
+		id_hue = hue_id_gold,
+		alias = [
+			"goldpaint",
+		],
+		str_saturate = "It was given a coating of dazzling gold!",
+		str_name = "gold",
+		str_desc = "It prides itself on its shiny golden coating.",
 		is_neutral = True,
 	),
 ]
@@ -21649,36 +22734,36 @@ for bait in food_list:
 # If a fish doesn't bite, send one of these.
 nobite_text = [
 	"You patiently wait...",
-    	"This is so fucking boring...",
-    	"You watch your hook bob...",
-    	"You grow impatient and kick the rotted wooden guard rails...",
-    	"AUUUUUGH JUST BITE THE FUCKING HOOK ALREADY...",
-    	"You begin to zone-out a bit...",
-    	"Shouldn't you be doing something productive?",
-   	"You sit patiently, eagerly awaiting a fish to bite. Thanks to your concentration, this descriptive contradiction does not occur to you.",
-    	"You begin to daydream about fish sex... Gross...",
-    	"You begin to daydream about fish sex... Hot...",
-    	"You see a fish about to bite your hook, but you shout in elation, scaring it away...",
-    	"You make direct eye contact with a fish, only to quickly look away...",
-    	"♪ Fishing for Fishies! ♪",
-    	"♪ That Captain Albert Alexander! ♪",
-    	"You get the urge to jump in and try to grab a fish, before remembering that you can't swim...",
-    	"You hum some sea shanties...",
-    	"You start to slip into an existential crisis...",
-    	"You jitter as other seamen catch fish before you. Fuck fishing...",
-    	"You feel the oncoming downward spiral...",
-    	"You shake your head as a young seaman baits a perfectly good slice of pizza on his hook... What a cretin...",
-    	"You wonder if the Space Navy has been formed yet...",
-    	"Man... Why were you excited for this shit?",
-    	"Still better than Minesweeper...",
-    	"Maybe one day your wife will pardon you...",
-    	"Fuck fish...",
-    	"You let out a deep sigh, scaring away a fish...",
-    	"Wouldn't it be funny if you just reached into the sea and grabbed one? Haha, yeah, that'd be funny...",
-    	"You see a bird carry off a Plebefish in the distance... Good riddance...",
-    	"You spot a stray bullet in the distance...",
-    	"You see a dead body float up to the surface of the Slime...",
-    	"Fish..."
+		"This is so fucking boring...",
+		"You watch your hook bob...",
+		"You grow impatient and kick the rotted wooden guard rails...",
+		"AUUUUUGH JUST BITE THE FUCKING HOOK ALREADY...",
+		"You begin to zone-out a bit...",
+		"Shouldn't you be doing something productive?",
+	"You sit patiently, eagerly awaiting a fish to bite. Thanks to your concentration, this descriptive contradiction does not occur to you.",
+		"You begin to daydream about fish sex... Gross...",
+		"You begin to daydream about fish sex... Hot...",
+		"You see a fish about to bite your hook, but you shout in elation, scaring it away...",
+		"You make direct eye contact with a fish, only to quickly look away...",
+		"♪ Fishing for Fishies! ♪",
+		"♪ That Captain Albert Alexander! ♪",
+		"You get the urge to jump in and try to grab a fish, before remembering that you can't swim...",
+		"You hum some sea shanties...",
+		"You start to slip into an existential crisis...",
+		"You jitter as other seamen catch fish before you. Fuck fishing...",
+		"You feel the oncoming downward spiral...",
+		"You shake your head as a young seaman baits a perfectly good slice of pizza on his hook... What a cretin...",
+		"You wonder if the Space Navy has been formed yet...",
+		"Man... Why were you excited for this shit?",
+		"Still better than Minesweeper...",
+		"Maybe one day your wife will pardon you...",
+		"Fuck fish...",
+		"You let out a deep sigh, scaring away a fish...",
+		"Wouldn't it be funny if you just reached into the sea and grabbed one? Haha, yeah, that'd be funny...",
+		"You see a bird carry off a Plebefish in the distance... Good riddance...",
+		"You spot a stray bullet in the distance...",
+		"You see a dead body float up to the surface of the Slime...",
+		"Fish..."
 ]
 
 generic_help_response = "Check out the guide for help: https://ew.krakissi.net/guide/\nThe guide won't cover everything though, and may even be a bit outdated in some places, so you can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work by using the !help command there. Portable game guides can also be bought there for 10,000 slime."
@@ -22761,7 +23846,7 @@ curse_words = { # words that the player should be punished for saying via swear 
 	"towelhead":50,
 	"wetback":50,
 	"zipperhead":50,
-	"spick":50,
+	"spic":50,
 	"dyke":50,
 	"tranny":80,
 	"dickhead":20,

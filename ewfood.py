@@ -316,6 +316,17 @@ async def order(cmd):
 				response = ""
 
 				value = item.price
+				premium_purchase = True if item_id in ewcfg.premium_items else False
+				if premium_purchase:
+					togo = True # Just in case they order a premium food item, don't make them eat it right then and there.
+					
+					if ewcfg.cd_premium_purchase > (int(time.time()) - user_data.time_lastpremiumpurchase):
+						response = "That item is in very limited stock! The vendor asks that you refrain from purchasing it for a day or two."
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+					elif ewcfg.cd_new_player > (int(time.time()) - user_data.time_joined):
+						response = "You've only been in the city for a few days. The vendor doesn't trust you with that item very much..."
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				stock_data = None
 				company_data = None
@@ -500,6 +511,9 @@ async def order(cmd):
 							response += "\n\n*{}*: ".format(user_player_data.display_name) + user_data.eat(item_data)
 							user_data.persist()
 							asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
+							
+					if premium_purchase:
+						user_data.time_lastpremiumpurchase = int(time.time())
 
 					user_data.persist()
 

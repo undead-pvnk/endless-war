@@ -442,6 +442,7 @@ cmd_map = {
 	#farming
 	ewcfg.cmd_sow: ewfarm.sow,
 	ewcfg.cmd_reap: ewfarm.reap,
+	ewcfg.cmd_reap_alt: ewfarm.reap,
 	ewcfg.cmd_check_farm: ewfarm.check_farm,
 	ewcfg.cmd_irrigate: ewfarm.cultivate,
 	ewcfg.cmd_weed: ewfarm.cultivate,
