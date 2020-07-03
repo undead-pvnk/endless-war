@@ -3547,7 +3547,7 @@ item_list = [
 	EwGeneralItem(
 		id_item = item_id_textiles,
 		str_name = "Textiles",
-		str_desc = "A set of frabrics. You can smelt this together with crop materials to make exclusive cosmetics.",
+		str_desc = "A set of fabrics. You can smelt this together with crop materials to make exclusive cosmetics.",
 		price = 1000,
 		vendors = [vendor_basedhardware]
 	),

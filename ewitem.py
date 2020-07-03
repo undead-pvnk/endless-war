@@ -1249,11 +1249,12 @@ async def item_look(cmd):
 					response += " It's been dyed in {} paint.".format(hue.str_name)
 
 			durability = item.item_props.get('durability')
-			if durability != None and item.item_type != ewcfg.it_cosmetic:
-				if durability == 1:
-					response += " It can only be used one more time."
-				else:
-					response += " It has about {} uses left.".format(durability)
+			if durability != None and item.item_type == ewcfg.it_item:
+				if item.item_props.get('id_item') in [ewcfg.item_id_paint_copper, ewcfg.item_id_paint_chrome, ewcfg.item_id_paint_gold]:
+					if durability == 1:
+						response += " It can only be used one more time."
+					else:
+						response += " It has about {} uses left.".format(durability)
 
 			response = name + (" x{:,}".format(item.stack_size) if (item.stack_size >= 1) else "") + "\n\n" + response
 
