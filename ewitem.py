@@ -209,6 +209,7 @@ class EwGeneralItem:
 	ingredients = ""
 	acquisition = ""
 	price = 0
+	durability = 0
 	vendors = []
 
 	def __init__(
@@ -221,6 +222,7 @@ class EwGeneralItem:
 		ingredients = "",
 		acquisition = "",
 		price = 0,
+		durability = 0,
 		vendors = [],
 	):
 		self.item_type = ewcfg.it_item
@@ -232,6 +234,7 @@ class EwGeneralItem:
 		self.ingredients = ingredients
 		self.acquisition = acquisition
 		self.price = price
+		self.durability = durability
 		self.vendors = vendors
 
 
@@ -1245,6 +1248,13 @@ async def item_look(cmd):
 				if hue != None:
 					response += " It's been dyed in {} paint.".format(hue.str_name)
 
+			durability = item.item_props.get('durability')
+			if durability != None and item.item_type != ewcfg.it_cosmetic:
+				if durability == 1:
+					response += " It can only be used one more time."
+				else:
+					response += " It has about {} uses left.".format(durability)
+
 			response = name + (" x{:,}".format(item.stack_size) if (item.stack_size >= 1) else "") + "\n\n" + response
 
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1637,6 +1647,7 @@ def gen_item_props(item):
 			'item_desc': item.str_desc,
 			'ingredients': item.ingredients if type(item.ingredients) == str else item.ingredients[0],
 			'acquisition': item.acquisition,
+			'durability': item.durability,
 		}
 		if item.context == ewcfg.context_slimeoidfood:
 			item_props["increase"] = item.increase
@@ -2037,5 +2048,12 @@ async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
 			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, cmd.message.channel), ewutils.formatMessage(target_member, direct_message))
 
 	return response
+
+async def lower_durability(general_item):
+	general_item_data = EwItem(id_item=general_item.get('id_item'))
+	
+	current_durability = general_item_data.item_props.get('durability')
+	general_item_data.item_props['durability'] = (int(current_durability) - 1)
+	general_item_data.persist()
 
 
