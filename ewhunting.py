@@ -342,7 +342,7 @@ class EwEnemy:
 		if enemy_data.ai == ewcfg.enemy_ai_sandbag:
 			target_data = None
 		else:
-			target_data = get_target_by_ai(enemy_data)
+			target_data, group_attack = get_target_by_ai(enemy_data)
 
 		if check_raidboss_countdown(enemy_data) and enemy_data.life_state == ewcfg.enemy_lifestate_unactivated:
 			# Raid boss has activated!
@@ -449,7 +449,7 @@ class EwEnemy:
 
 			slimes_damage += int(slimes_damage * dmg_mod)
 
-			slimes_dropped = target_data.totaldamage + target_data.slimes
+			#slimes_dropped = target_data.totaldamage + target_data.slimes
 
 			target_iskillers = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_killers
 			target_isrowdys = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_rowdys
@@ -793,7 +793,7 @@ class EwEnemy:
 		if should_post_resp_cont:
 			await resp_cont.post()
 			
-	# Function that enemies used to attack each other.
+	# Function that enemies used to attack each other in Gankers Vs. Shamblers.
 	async def cannibalize(self):
 		client = ewutils.get_client()
 
@@ -807,18 +807,27 @@ class EwEnemy:
 		district_data = EwDistrict(district=enemy_data.poi, id_server=enemy_data.id_server)
 		market_data = EwMarket(id_server=enemy_data.id_server)
 		ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel
-
-		target_enemy = None
-
-		used_attacktype = None
-
-		if enemy_data.attacktype != ewcfg.enemy_attacktype_unarmed:
-			used_attacktype = ewcfg.attack_type_map.get(enemy_data.attacktype)
-		else:
-			used_attacktype = ewcfg.enemy_attacktype_unarmed
+		
+		used_attacktype = ewcfg.attack_type_map.get(enemy_data.attacktype)
 
 		# Get target's info based on its AI.
-		target_enemy = get_target_by_ai(enemy_data, cannibalize = True)
+		target_enemy, group_attack = get_target_by_ai(enemy_data, cannibalize = True)
+		
+		if enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid:
+			# target_enemy is a dict, enemy IDs are mapped to their coords
+			if len(target_enemy) == 1 and not group_attack:
+				#print('gaia found target')
+				used_id = None
+				for key in target_enemy.keys():
+					used_id = key
+				target_enemy = EwEnemy(id_enemy=used_id, id_server=enemy_data.id_server)
+				print('gaia changed target_enemy into enemy from dict')
+			elif len(target_enemy) == 0:
+				target_enemy = None
+		
+		if enemy_data.enemyclass == ewcfg.enemy_class_shambler:
+			if target_enemy == None:
+				await sh_move(enemy_data)
 
 		if check_raidboss_countdown(enemy_data) and enemy_data.life_state == ewcfg.enemy_lifestate_unactivated:
 			# Raid boss has activated!
@@ -862,48 +871,23 @@ class EwEnemy:
 			# Don't post resp_cont a second time while the countdown is going on.
 			should_post_resp_cont = False
 
-		if target_enemy != None:
-
-			server = client.get_server(target_enemy.id_server)
-
-			miss = False
-			crit = False
+		if target_enemy != None and not group_attack:
+			
 			backfire = False
-			backfire_damage = 0
-			strikes = 0
-			sap_damage = 0
-			sap_ignored = 0
-			miss_mod = 0
-			crit_mod = 0
-			dmg_mod = 0
 
 			# Weaponized flavor text.
-			# randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
-			hitzone = ewwep.get_hitzone()
-			randombodypart = hitzone.name
-			if random.random() < 0.5:
-				randombodypart = random.choice(hitzone.aliases)
+			# hitzone = ewwep.get_hitzone()
+			# randombodypart = hitzone.name
+			# if random.random() < 0.5:
+			# 	randombodypart = random.choice(hitzone.aliases)
+			randombodypart = 'brainz' if enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid else 'stem'
+			
+			slimes_damage = 0
+			set_damage = int(enemy_data.enemy_props.get('setdamage'))
+			if set_damage != None:
+				slimes_damage = set_damage
 
-			miss_mod += round(ewwep.apply_combat_mods(user_data=enemy_data, desired_type=ewcfg.status_effect_type_miss, target=ewcfg.status_effect_target_self, shootee_data=target_enemy, hitzone=hitzone) + ewwep.apply_combat_mods(user_data=target_enemy, desired_type=ewcfg.status_effect_type_miss, target=ewcfg.status_effect_target_other, shooter_data=enemy_data, hitzone=hitzone), 2)
-			crit_mod += round(ewwep.apply_combat_mods(user_data=enemy_data, desired_type=ewcfg.status_effect_type_crit, target=ewcfg.status_effect_target_self, shootee_data=target_enemy, hitzone=hitzone) + ewwep.apply_combat_mods(user_data=target_enemy, desired_type=ewcfg.status_effect_type_crit, target=ewcfg.status_effect_target_other, shooter_data=enemy_data,  hitzone=hitzone), 2)
-			dmg_mod += round(ewwep.apply_combat_mods(user_data=enemy_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_self, shootee_data=target_enemy, hitzone=hitzone) + ewwep.apply_combat_mods(user_data=target_enemy, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_other, shooter_data=enemy_data, hitzone=hitzone), 2)
-
-			# since enemies dont use up slime or hunger, this is only used for damage calculation
-			slimes_spent = int(ewutils.slime_bylevel(enemy_data.level) / 40 * ewcfg.enemy_attack_tick_length / 2)
-
-			slimes_damage = int(slimes_spent * 4)
-
-			if used_attacktype == ewcfg.enemy_attacktype_unarmed:
-				slimes_damage /= 2  # specific to juvies
-			if enemy_data.enemytype == ewcfg.enemy_type_microslime:
-				slimes_damage *= 20  # specific to microslime
-
-			if enemy_data.weathertype == ewcfg.enemy_weathertype_rainresist:
-				slimes_damage *= 1.5
-
-			slimes_damage += int(slimes_damage * dmg_mod)
-
-			slimes_dropped = target_enemy.totaldamage + target_enemy.slimes
+			backfire_damage = slimes_damage
 
 			# Enemies don't select for these types of lifestates in their AI, this serves as a backup just in case.
 			if target_enemy.life_state != ewcfg.enemy_lifestate_unactivated and target_enemy.life_state != ewcfg.enemy_lifestate_dead:
@@ -913,51 +897,12 @@ class EwEnemy:
 				if was_hurt:
 					# Attacking-type-specific adjustments
 					if used_attacktype != ewcfg.enemy_attacktype_unarmed and used_attacktype.fn_effect != None:
-						# Build effect container
-						ctn = EwEnemyEffectContainer(
-							miss=miss,
-							backfire=backfire,
-							crit=crit,
-							slimes_damage=slimes_damage,
-							enemy_data=enemy_data,
-							target_data=target_enemy,
-							sap_damage=sap_damage,
-							sap_ignored=sap_ignored,
-							backfire_damage=backfire_damage,
-							miss_mod=miss_mod,
-							crit_mod=crit_mod
-						)
-
-						# Make adjustments
-						used_attacktype.fn_effect(ctn)
 
 						# Apply effects for non-reference values
-						miss = ctn.miss
-						backfire = ctn.backfire
-						crit = ctn.crit
-						slimes_damage = ctn.slimes_damage
-						strikes = ctn.strikes
-						sap_damage = ctn.sap_damage
-						sap_ignored = ctn.sap_ignored
-						backfire_damage = ctn.backfire_damage
-
-					if miss:
-						slimes_damage = 0
-						sap_damage = 0
-						crit = False
-
-					if crit:
-						sap_damage += 1
+						backfire = False # Make sure to account for UFO shamblers and rowddishes throwing back grenades
 
 					enemy_data.persist()
 					target_enemy = EwEnemy(id_enemy = target_enemy.id_enemy, id_server = target_enemy.id_server)
-
-					# apply hardened sap armor
-					sap_armor = ewwep.get_sap_armor(shootee_data=target_enemy, sap_ignored=sap_ignored)
-					slimes_damage *= sap_armor
-					slimes_damage = int(max(slimes_damage, 0))
-
-					sap_damage = min(sap_damage, target_enemy.hardened_sap)
 
 					if slimes_damage >= target_enemy.slimes - target_enemy.bleed_storage:
 						was_killed = True
@@ -974,13 +919,11 @@ class EwEnemy:
 					slimes_directdamage = slimes_damage - slimes_tobleed
 					slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
 
-
 					market_data.splattered_slimes += slimes_damage
 					market_data.persist()
 					district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
 					target_enemy.bleed_storage += slimes_tobleed
 					target_enemy.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
-					target_enemy.hardened_sap -= sap_damage
 					sewer_data.change_slimes(n=slimes_drained)
 
 					if was_killed:
@@ -993,21 +936,12 @@ class EwEnemy:
 						district_data.change_slimes(n=slimes_todistrict, source=ewcfg.source_killing)
 
 						# target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
-
-						kill_descriptor = "beaten to death"
 						if used_attacktype != ewcfg.enemy_attacktype_unarmed:
 							response = used_attacktype.str_damage.format(
 								name_enemy=enemy_data.display_name,
 								name_target=target_enemy.display_name,
 								hitzone=randombodypart,
-								strikes=strikes
 							)
-							kill_descriptor = used_attacktype.str_killdescriptor
-							if crit:
-								response += " {}".format(used_attacktype.str_crit.format(
-									name_enemy=enemy_data.display_name,
-									name_target=target_enemy.display_name
-								))
 
 							response += "\n\n{}".format(used_attacktype.str_kill.format(
 								name_enemy=enemy_data.display_name,
@@ -1016,10 +950,7 @@ class EwEnemy:
 							))
 							
 						else:
-							response = ""
-
 							response = "{name_target} is hit!!\n\n{name_target} has died.".format(name_target=target_enemy.display_name)
-
 
 						enemy_data.persist()
 						district_data.persist()
@@ -1034,14 +965,8 @@ class EwEnemy:
 
 					else:
 						# A non-lethal blow!
-
 						if used_attacktype != ewcfg.enemy_attacktype_unarmed:
-							if miss:
-								response = "{}".format(used_attacktype.str_miss.format(
-									name_enemy=enemy_data.display_name,
-									name_target=target_enemy.display_name
-								))
-							elif backfire:
+							if backfire:
 								response = "{}".format(used_attacktype.str_backfire.format(
 									name_enemy=enemy_data.display_name,
 									name_target=target_enemy.display_name
@@ -1052,38 +977,24 @@ class EwEnemy:
 									enemy_data.life_state = ewcfg.enemy_lifestate_dead
 									delete_enemy(enemy_data)
 								else:
-									enemy_data.change_slimes(n=-backfire_damage / 2)
+									enemy_data.change_slimes(n=-int(backfire_damage / 2))
 									enemy_data.bleed_storage += int(backfire_damage / 2)
 							else:
 								response = used_attacktype.str_damage.format(
 									name_enemy=enemy_data.display_name,
 									name_target=target_enemy.display_name,
 									hitzone=randombodypart,
-									strikes=strikes
 								)
-								if crit:
-									response += " {}".format(used_attacktype.str_crit.format(
-										name_enemy=enemy_data.display_name,
-										name_target=target_enemy.display_name
-									))
-								sap_response = ""
-								if sap_damage > 0:
-									sap_response = " and {sap_damage} hardened sap".format(sap_damage=sap_damage)
-								response += " {target_name} loses {damage:,} slime{sap_response}!".format(
+								response += " {target_name} loses {damage:,} slime!".format(
 									target_name=target_enemy.display_name,
 									damage=damage,
-									sap_response=sap_response
 								)
 
 						else:
-							if miss:
-								response = "{target_name} dodges the {enemy_name}'s strike.".format(
-									target_name=target_enemy.display_name, enemy_name=enemy_data.display_name)
-							else:
-								response = "{target_name} is hit!! {target_name} loses {damage:,} slime!".format(
-									target_name=target_enemy.display_name,
-									damage=damage
-								)
+							response = "{target_name} is hit!! {target_name} loses {damage:,} slime!".format(
+								target_name=target_enemy.display_name,
+								damage=damage
+							)
 
 						target_enemy.persist()
 						resp_cont.add_channel_response(ch_name, response)
@@ -1093,10 +1004,12 @@ class EwEnemy:
 
 				# Persist enemy data.
 				if enemy_data.life_state == ewcfg.enemy_lifestate_alive or enemy_data.life_state == ewcfg.enemy_lifestate_unactivated:
-					enemy_data.enemy_props['new_prop'] = 3
 					enemy_data.persist()
 
 				district_data.persist()
+				
+		elif target_enemy != None and group_attack:
+			pass
 
 		# Send the response to the player.
 		resp_cont.format_channel_response(ch_name, enemy_data)
@@ -1306,7 +1219,7 @@ class EwEnemy:
 			if enemy_data.id_target != "":
 				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
 		else:
-			target_data = get_target_by_ai(enemy_data)
+			target_data, group_attack = get_target_by_ai(enemy_data)
 
 		if target_data != None:
 			target = EwPlayer(id_user = target_data.id_user, id_server = enemy_data.id_server)
@@ -1338,7 +1251,7 @@ class EwEnemy:
 			if enemy_data.id_target != "":
 				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
 		else:
-			target_data = get_target_by_ai(enemy_data)
+			target_data, group_attack = get_target_by_ai(enemy_data)
 
 		if target_data != None:
 			target = EwPlayer(id_user = target_data.id_user, id_server = enemy_data.id_server)
@@ -1373,7 +1286,7 @@ class EwEnemy:
 			if enemy_data.id_target != "":
 				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
 		else:
-			target_data = get_target_by_ai(enemy_data)
+			target_data, group_attack = get_target_by_ai(enemy_data)
 
 		if target_data != None:
 			target = EwPlayer(id_user = target_data.id_user, id_server = enemy_data.id_server)
@@ -1466,6 +1379,7 @@ async def summonenemy(cmd, is_bot_spawn = False):
 
 	enemytype = None
 	enemy_location = None
+	enemy_coord = None
 	poi = None
 	enemy_slimes = None
 	enemy_displayname = None
@@ -1474,12 +1388,13 @@ async def summonenemy(cmd, is_bot_spawn = False):
 	if len(cmd.tokens) >= 3:
 
 		enemytype = cmd.tokens[1]
-
 		enemy_location = cmd.tokens[2]
+		
 		if len(cmd.tokens) >= 6:
 			enemy_slimes = cmd.tokens[3]
 			enemy_level = cmd.tokens[4]
-			enemy_displayname = " ".join(cmd.tokens[5:])
+			enemy_coord = cmd.tokens[5]
+			enemy_displayname = " ".join(cmd.tokens[6:])
 	
 		poi = ewcfg.id_to_poi.get(enemy_location)
 
@@ -1498,11 +1413,12 @@ async def summonenemy(cmd, is_bot_spawn = False):
 		# Re-assign rare_status to 0 so custom names don't confuse the dict in ewcfg
 		enemy.rare_status = 0
 		
-		if enemy_slimes != None and enemy_displayname != None and enemy_level != None:
+		if enemy_slimes != None and enemy_displayname != None and enemy_level != None and enemy_coord != None:
 			enemy.initialslimes = enemy_slimes
 			enemy.slimes = enemy_slimes
 			enemy.display_name = enemy_displayname
 			enemy.level = enemy_level
+			enemy.gvs_coord = enemy_coord
 
 		props = None
 		try:
@@ -1523,7 +1439,7 @@ async def summonenemy(cmd, is_bot_spawn = False):
 		)
 		
 	else:
-		response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING / LOCATION. ADDITIONAL OPTIONS ARE SLIME / LEVEL / DISPLAYNAME"
+		response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING / LOCATION. ADDITIONAL OPTIONS ARE SLIME / LEVEL / COORD / DISPLAYNAME"
 	if not is_bot_spawn:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1737,8 +1653,11 @@ async def enemy_perform_action_gvs(id_server):
 					
 					if len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_gaiaslimeoid])) > 0:
 						await enemy.cannibalize()
-					elif len(district_data.get_players_in_district(life_states = life_states, pvp_only = True)) > 0:
-						await enemy.kill()
+					elif len(district_data.get_players_in_district(life_states = life_states)) > 0:
+						if enemy.gvs_coord in ewcfg.gvs_coords_end:
+							await enemy.kill()
+						else:
+							await sh_move(enemy)
 				else:
 					return
 				
@@ -1987,40 +1906,11 @@ def drop_enemy_loot(enemy_data, district_data):
 
 	item_counter = 0
 	loot_multiplier = 1
-
-	# poudrin_dropped = False
-	# poudrin_amount = 0
-	# 
-	# dragonsoul_dropped = False
-	# dragonsoul_amount = 0
-	# 
-	# pleb_dropped = False
-	# pleb_amount = 0
-	# 
-	# patrician_dropped = False
-	# patrician_amount = 0
-	# 
-	# crop_dropped = False
-	# crop_amount = 0
-	# 
-	# meat_dropped = False
-	# meat_amount = 0
-	# 
-	# card_dropped = False
-	# card_amount = 0
 	
 	drop_chance = None
 	drop_min = None
 	drop_max = None
 	drop_range = None
-	
-	# poudrin_values = None
-	# dragonsoul_values = None
-	# pleb_values = None
-	# patrician_values = None
-	# crop_values = None
-	# meat_values = None
-	# card_values = None
 	
 	has_dropped_item = False
 	drop_table = ewcfg.enemy_drop_tables[enemy_data.enemytype]
@@ -2145,326 +2035,6 @@ def drop_enemy_loot(enemy_data, district_data):
 
 		else:
 			ewutils.logMsg("ERROR: COULD NOT DROP ITEM WITH VALUE '{}'".format(value))
-			
-	
-	# Go through all the possible drops in the drop table and catch exceptions when necessary
-	# for item in drop_table:
-	# 	try:
-	# 		if item["poudrin"]:
-	# 			poudrin_values = item["poudrin"]
-	# 	except:
-	# 		pass
-	# 	try:
-	# 		if item["pleb"]:
-	# 			pleb_values = item["pleb"]
-	# 	except:
-	# 		pass
-	# 	try:
-	# 		if item["patrician"]:
-	# 			patrician_values = item["patrician"]
-	# 	except:
-	# 		pass
-	# 	try:
-	# 		if item["crop"]:
-	# 			crop_values = item["crop"]
-	# 	except:
-	# 		pass
-	# 	try:
-	# 		if item["meat"]:
-	# 			meat_values = item["meat"]
-	# 	except:
-	# 		pass
-	# 	try:
-	# 		if item["card"]:
-	# 			card_values = item["card"]
-	# 	except:
-	# 		pass
-	# 	try:
-	# 		if item['dragonsoul']:
-	# 			dragonsoul_values = item['dragonsoul']
-	# 	except:
-	# 		pass
-	# 
-	# if poudrin_values != None:
-	# 	drop_chance = poudrin_values[0]
-	# 	drop_min = poudrin_values[1]
-	# 	drop_max = poudrin_values[2]
-	# 	
-	# 	poudrin_dropped = random.randrange(100) <= (drop_chance - 1)
-	# 	
-	# 	if poudrin_dropped:
-	# 		drop_range = list(range(drop_min, drop_max+1))
-	# 		poudrin_amount = random.choice(drop_range)
-	# if dragonsoul_values != None:
-	# 	drop_chance = dragonsoul_values[0]
-	# 	drop_min = dragonsoul_values[1]
-	# 	drop_max = dragonsoul_values[2]
-	# 	
-	# 	dragonsoul_dropped = random.randrange(100) <= (drop_chance - 1)
-	# 	
-	# 	if dragonsoul_dropped:
-	# 		drop_range = list(range(drop_min, drop_max+1))
-	# 		dragonsoul_amount = random.choice(drop_range)
-	# 		
-	# if pleb_values != None:
-	# 	drop_chance = pleb_values[0]
-	# 	drop_min = pleb_values[1]
-	# 	drop_max = pleb_values[2]
-	# 	
-	# 	pleb_dropped = random.randrange(101) < drop_chance
-	# 	
-	# 	if pleb_dropped:
-	# 		drop_range = list(range(drop_min, drop_max + 1))
-	# 		pleb_amount = random.choice(drop_range)
-	# 
-	# if patrician_values != None:
-	# 	drop_chance = patrician_values[0]
-	# 	drop_min = patrician_values[1]
-	# 	drop_max = patrician_values[2]
-	# 
-	# 	patrician_dropped = random.randrange(101) < drop_chance
-	# 
-	# 	if patrician_dropped:
-	# 		drop_range = list(range(drop_min, drop_max + 1))
-	# 		patrician_amount = random.choice(drop_range)
-	# 
-	# if crop_values != None:
-	# 	drop_chance = crop_values[0]
-	# 	drop_min = crop_values[1]
-	# 	drop_max = crop_values[2]
-	# 
-	# 	crop_dropped = random.randrange(101) < drop_chance
-	# 
-	# 	if crop_dropped:
-	# 		drop_range = list(range(drop_min, drop_max + 1))
-	# 		crop_amount = random.choice(drop_range)
-	# 
-	# if meat_values != None:
-	# 	drop_chance = meat_values[0]
-	# 	drop_min = meat_values[1]
-	# 	drop_max = meat_values[2]
-	# 
-	# 	meat_dropped = random.randrange(101) < drop_chance
-	# 
-	# 	if meat_dropped:
-	# 		drop_range = list(range(drop_min, drop_max + 1))
-	# 		meat_amount = random.choice(drop_range)
-	# 
-	# if card_values != None:
-	# 	drop_chance = card_values[0]
-	# 	drop_min = card_values[1]
-	# 	drop_max = card_values[2]
-	# 
-	# 	card_dropped = random.randrange(101) < drop_chance
-	# 
-	# 	if card_dropped:
-	# 		drop_range = list(range(drop_min, drop_max + 1))
-	# 		card_amount = random.choice(drop_range)
-	# 
-	# if pleb_dropped or patrician_dropped:
-	# 	cosmetics_list = []
-	# 
-	# 	for result in ewcfg.cosmetic_items_list:
-	# 		if result.ingredients == "":
-	# 			cosmetics_list.append(result)
-	# 		else:
-	# 			pass
-	# 		
-	# # Multiply the amount of loot if an enemy is its rare variant
-	# # Loot is also multiplied for the UFO raid boss, since it's a special case with the increased variety of slime it can have.
-	# if enemy_data.rare_status == 1:
-	# 	loot_multiplier *= 1.5
-	# 	
-	# if enemy_data.enemytype == ewcfg.enemy_type_unnervingfightingoperator:
-	# 	loot_multiplier *= math.ceil(enemy_data.slimes / 1000000)
-	# 	
-	# poudrin_amount = math.ceil(poudrin_amount * loot_multiplier)
-	# pleb_amount = math.ceil(pleb_amount * loot_multiplier)
-	# patrician_amount = math.ceil(patrician_amount * loot_multiplier)
-	# crop_amount = math.ceil(crop_amount * loot_multiplier)
-	# meat_amount = math.ceil(meat_amount * loot_multiplier)
-	# card_amount = math.ceil(card_amount * loot_multiplier)
-	# # Drops items one-by-one
-	# if poudrin_dropped:
-	# 	item_counter = 0
-	# 
-	# 	while item_counter < poudrin_amount:
-	# 		for item in ewcfg.item_list:
-	# 			if item.context == "poudrin":
-	# 				ewitem.item_create(
-	# 					item_type=ewcfg.it_item,
-	# 					id_user=district_data.name,
-	# 					id_server=district_data.id_server,
-	# 					item_props={
-	# 						'id_item': item.id_item,
-	# 						'context': item.context,
-	# 						'item_name': item.str_name,
-	# 						'item_desc': item.str_desc,
-	# 					}
-	# 				),
-	# 				item = EwItem(id_item=item.id_item)
-	# 				item.persist()
-	# 		response = "They dropped a slime poudrin!"
-	# 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
-	# 
-	# 		item_counter += 1
-	# 
-	# 		
-	# if dragonsoul_dropped:
-	# 	item_counter = 0
-	# 
-	# 	while item_counter < dragonsoul_amount:
-	# 		for item in ewcfg.item_list:
-	# 			if item.context == "dragon soul":
-	# 				ewitem.item_create(
-	# 					item_type=ewcfg.it_item,
-	# 					id_user=district_data.name,
-	# 					id_server=district_data.id_server,
-	# 					item_props={
-	# 						'id_item': item.id_item,
-	# 						'context': item.context,
-	# 						'item_name': item.str_name,
-	# 						'item_desc': item.str_desc,
-	# 					}
-	# 				),
-	# 				item = EwItem(id_item=item.id_item)
-	# 				item.persist()
-	# 		response = "They dropped their **SOUL!!**"
-	# 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
-	# 
-	# 		item_counter += 1
-	# 
-	# if pleb_dropped:
-	# 	item_counter = 0
-	# 
-	# 	while item_counter < pleb_amount:
-	# 		items = []
-	# 
-	# 		for cosmetic in cosmetics_list:
-	# 			if cosmetic.rarity == ewcfg.rarity_plebeian:
-	# 				items.append(cosmetic)
-	# 
-	# 		item = items[random.randint(0, len(items) - 1)]
-	# 
-	# 		item_props = ewitem.gen_item_props(item)
-	# 
-	# 		ewitem.item_create(
-	# 			item_type = ewcfg.it_cosmetic,
-	# 			id_user = district_data.name,
-	# 			id_server = district_data.id_server,
-	# 			item_props = item_props
-	# 		)
-	# 
-	# 		response = "They dropped a {item_name}!".format(item_name=item.str_name)
-	# 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
-	# 
-	# 		item_counter += 1
-	# 
-	# if patrician_dropped:
-	# 	item_counter = 0
-	# 
-	# 	while item_counter < patrician_amount:
-	# 		items = []
-	# 
-	# 		for cosmetic in cosmetics_list:
-	# 			if cosmetic.rarity == ewcfg.rarity_patrician:
-	# 				items.append(cosmetic)
-	# 
-	# 		item = items[random.randint(0, len(items) - 1)]
-	# 
-	# 		item_props = ewitem.gen_item_props(item)
-	# 
-	# 		ewitem.item_create(
-	# 			item_type = ewcfg.it_cosmetic,
-	# 			id_user = district_data.name,
-	# 			id_server = district_data.id_server,
-	# 			item_props = item_props
-	# 		)
-	# 
-	# 		response = "They dropped a {item_name}!".format(item_name=item.str_name)
-	# 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
-	# 
-	# 		item_counter += 1
-	# 
-	# if crop_dropped:
-	# 	item_counter = 0
-	# 
-	# 	while item_counter < crop_amount:
-	# 
-	# 		vegetable = random.choice(ewcfg.vegetable_list)
-	# 
-	# 		ewitem.item_create(
-	# 			id_user=district_data.name,
-	# 			id_server=district_data.id_server,
-	# 			item_type=ewcfg.it_food,
-	# 			item_props={
-	# 				'id_food': vegetable.id_food,
-	# 				'food_name': vegetable.str_name,
-	# 				'food_desc': vegetable.str_desc,
-	# 				'recover_hunger': vegetable.recover_hunger,
-	# 				'str_eat': vegetable.str_eat,
-	# 				'time_expir': time.time() + ewcfg.farm_food_expir
-	# 			}
-	# 		)
-	# 		response = "They dropped a bushel of {vegetable_name}!".format(vegetable_name=vegetable.str_name)
-	# 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
-	# 
-	# 		item_counter += 1
-	# 
-	# # Drop dinoslime meat
-	# if meat_dropped:
-	# 	meat = None
-	# 	item_counter = 0
-	# 
-	# 	for food in ewcfg.food_list:
-	# 		if food.id_food == ewcfg.item_id_dinoslimemeat:
-	# 			meat = food
-	# 			
-	# 	while item_counter < meat_amount:  
-	# 		ewitem.item_create(
-	# 			id_user=district_data.name,
-	# 			id_server=district_data.id_server,
-	# 			item_type=ewcfg.it_food,
-	# 			item_props={
-	# 				'id_food': meat.id_food,
-	# 				'food_name': meat.str_name,
-	# 				'food_desc': meat.str_desc,
-	# 				'recover_hunger': meat.recover_hunger,
-	# 				'str_eat': meat.str_eat,
-	# 				'time_expir': time.time() + ewcfg.std_food_expir
-	# 			}
-	# 		)
-	# 		response = "They dropped a piece of meat!"
-	# 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
-	# 		
-	# 		item_counter += 1
-	# 
-	# # Drop trading cards
-	# if card_dropped:
-	# 	cards = None
-	# 	item_counter = 0
-	# 	
-	# 	for item in ewcfg.item_list:
-	# 		if item.id_item == ewcfg.item_id_tradingcardpack:
-	# 			cards = item
-	# 
-	# 	while item_counter < card_amount:
-	# 		ewitem.item_create(
-	# 			id_user=district_data.name,
-	# 			id_server=district_data.id_server,
-	# 			item_type=ewcfg.it_item,
-	# 			item_props={
-	# 				'id_item': cards.id_item,
-	# 				'context': cards.context,
-	# 				'item_name': cards.str_name,
-	# 				'item_desc': cards.str_desc,
-	# 			}
-	# 		)
-	# 		response = "They dropped a pack of trading cards!"
-	# 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
-	# 		
-	# 		item_counter += 1
-	# 
 	if not has_dropped_item:
 		response = "They didn't drop anything...\n"
 		loot_resp_cont.add_channel_response(loot_poi.channel, response)
@@ -2594,6 +2164,7 @@ def get_enemy_data(enemy_type):
 def get_target_by_ai(enemy_data, cannibalize = False):
 
 	target_data = None
+	group_attack = False
 
 	time_now = int(time.time())
 
@@ -2685,7 +2256,6 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 					life_state_shambler=ewcfg.life_state_shambler,
 					life_state_corpse=ewcfg.life_state_corpse,
 					life_state_kingpin=ewcfg.life_state_kingpin,
-					time_now=time_now,
 				), (
 					enemy_data.poi,
 					enemy_data.id_server
@@ -2699,53 +2269,32 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 			
 	elif cannibalize:
 		if enemy_data.ai == ewcfg.enemy_ai_gaiaslimeoid:
-			enemies = ewutils.execute_sql_query(
-				"SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {id_server} = %s AND ({time_lastenter} < {targettimer}) AND NOT ({life_state} = {life_state_dead} OR {life_state} = {life_state_unactivated}) AND ({enemyclass} = %s) ORDER BY {time_lastenter} ASC".format(
-					id_enemy=ewcfg.col_id_enemy,
-					life_state=ewcfg.col_life_state,
-					time_lastenter=ewcfg.col_time_lastenter,
-					poi=ewcfg.col_poi,
-					id_server=ewcfg.col_id_server,
-					targettimer=targettimer,
-					life_state_dead=ewcfg.enemy_lifestate_dead,
-					life_state_unactivated=ewcfg.enemy_lifestate_unactivated,
-					enemyclass=ewcfg.col_enemy_class,
-					time_expirpvp=ewcfg.col_time_expirpvp,
-					time_now=time_now,
-				), (
-					enemy_data.poi,
-					enemy_data.id_server,
-					ewcfg.enemy_class_shambler
-				))
-			if len(enemies) > 0:
-				target_data = EwEnemy(id_enemy=enemies[0][0], id_server=enemy_data.id_server)
+			
+			range = int(enemy_data.enemy_props.get('range'))
+			direction = enemy_data.enemy_props.get('direction')
+			piercing = enemy_data.enemy_props.get('piercing')
+			splash = enemy_data.enemy_props.get('splash')
+			
+			enemies = ga_check_coord_for_shambler(enemy_data, range, direction, piercing, splash)
+			if len(enemies) > 1:
+				group_attack = True
+				
+			target_data = enemies
+				
 		elif enemy_data.ai == ewcfg.enemy_ai_shambler:
-			enemies = ewutils.execute_sql_query(
-				"SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {id_server} = %s AND ({time_lastenter} < {targettimer}) AND NOT ({life_state} = {life_state_dead} OR {life_state} = {life_state_unactivated}) AND ({enemyclass} = %s) ORDER BY {time_lastenter} ASC".format(
-					id_enemy=ewcfg.col_id_enemy,
-					life_state=ewcfg.col_life_state,
-					time_lastenter=ewcfg.col_time_lastenter,
-					poi=ewcfg.col_poi,
-					id_server=ewcfg.col_id_server,
-					targettimer=targettimer,
-					life_state_dead=ewcfg.enemy_lifestate_dead,
-					life_state_unactivated=ewcfg.enemy_lifestate_unactivated,
-					enemyclass=ewcfg.col_enemy_class,
-					time_expirpvp=ewcfg.col_time_expirpvp,
-					time_now=time_now,
-				), (
-					enemy_data.poi,
-					enemy_data.id_server,
-					ewcfg.enemy_class_gaiaslimeoid
-				))
+			
+			range = int(enemy_data.enemy_props.get('range'))
+			direction = enemy_data.enemy_props.get('direction')
+			
+			enemies = sh_check_coord_for_gaia(enemy_data, range, direction)
 			if len(enemies) > 0:
-				target_data = EwEnemy(id_enemy=enemies[0][0], id_server=enemy_data.id_server)
+				target_data = EwEnemy(id_enemy=enemies[0], id_server=enemy_data.id_server)
 		
 		# If an enemy is a raidboss, don't let it attack until some time has passed when entering a new district.
 		if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter > raidbossaggrotimer:
 			target_data = None
 
-	return target_data
+	return target_data, group_attack
 
 # Check if raidboss is ready to attack / be attacked
 def check_raidboss_countdown(enemy_data):
@@ -2822,18 +2371,23 @@ async def sh_move(enemy_data):
 			if current_coord in row:
 				index = row.index(current_coord)
 				new_coord = row[index - 1]
-				break
 				
 			enemy_data.gvs_coord = new_coord
 			enemy_data.persist()
 
 			print('shambler moved from {} to {} in {}.'.format(current_coord, new_coord, enemy_data.poi))
+			break
 
 	return has_moved
 
-async def sh_check_coord_for_gaia(enemy_data, range = 1, direction='left'):
+def sh_check_coord_for_gaia(enemy_data, sh_range, direction):
 	current_coord = enemy_data.gvs_coord
 	gaias_in_coord = []
+	
+	if sh_range == None:
+		sh_range = 1
+	if direction == None:
+		direction = 'left'
 
 	if current_coord not in ewcfg.gvs_coords_end:
 		
@@ -2841,19 +2395,21 @@ async def sh_check_coord_for_gaia(enemy_data, range = 1, direction='left'):
 
 			if current_coord in sh_row:
 				index = sh_row.index(current_coord)
-				checked_coord = gvs_grid_gather_coords(enemy_data.enemyclass, range, direction)[0]
+				checked_coord = gvs_grid_gather_coords(enemy_data.enemyclass, sh_range, direction, sh_row, index)[0]
 
 				for gaia_row in ewcfg.gvs_valid_coords_gaia:
 					if checked_coord in gaia_row:
 						# Check coordinate for gaiaslimeoids in front of the shambler.
 						gaia_data = ewutils.execute_sql_query(
-							"SELECT {id_enemy}, {enemytype} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} = %s AND {poi} = %s AND {id_server} = %s".format(
+							"SELECT {id_enemy}, {enemytype} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} = %s AND {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_dead})".format(
 								id_enemy=ewcfg.col_id_enemy,
 								enemyclass=ewcfg.col_enemy_class,
 								enemytype=ewcfg.col_enemy_type,
 								gvs_coord=ewcfg.col_enemy_gvs_coord,
 								poi=ewcfg.col_poi,
 								id_server=ewcfg.col_id_server,
+								life_state=ewcfg.col_life_state,
+								life_state_dead=ewcfg.enemy_lifestate_dead,
 							), (
 								ewcfg.enemy_class_gaiaslimeoid,
 								checked_coord,
@@ -2861,7 +2417,7 @@ async def sh_check_coord_for_gaia(enemy_data, range = 1, direction='left'):
 								enemy_data.id_server
 							))
 						
-						print(len(gaia_data))
+						#print(len(gaia_data))
 						if len(gaia_data) > 0:
 							
 							for gaia in gaia_data:
@@ -2878,85 +2434,98 @@ async def sh_check_coord_for_gaia(enemy_data, range = 1, direction='left'):
 
 							print('shambler in coord {} found gaia in coord {} in {}.'.format(current_coord, checked_coord, enemy_data.poi))
 	
-	
 	return gaias_in_coord
 
-async def ga_check_coord_for_shambler(enemy_data, range=1, direction='right', piercing=False, splash=False):
+def ga_check_coord_for_shambler(enemy_data, ga_range, direction, piercing, splash):
 	current_coord = enemy_data.gvs_coord
 	detected_shamblers = {}
+	
+	if ga_range == None:
+		ga_range = 1
+	if direction == None:
+		direction = 'right'
+	if piercing == None:
+		piercing = 'false'
+	if splash == None:
+		splash = 'none'
 	
 	for sh_row in ewcfg.gvs_valid_coords_shambler:
 
 		if current_coord in sh_row:
 			index = sh_row.index(current_coord)
-			checked_coords = gvs_grid_gather_coords(enemy_data.enemyclass, range, direction, sh_row, index)
+			checked_coords = gvs_grid_gather_coords(enemy_data.enemyclass, ga_range, direction, sh_row, index)
+			
+			print('GAIA -- CHECKED COORDS FOR {} WITH ID {}: {}'.format(enemy_data.enemytype, enemy_data.id_enemy, checked_coords))
 
-			for gaia_row in ewcfg.gvs_valid_coords_gaia:
-				if checked_coords in gaia_row:
-					# Check coordinate for shamblers in range of gaiaslimeoid.
-					shambler_data = ewutils.execute_sql_query(
-						"SELECT {id_enemy}, {enemytype} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} IN %s AND {poi} = %s AND {id_server} = %s".format(
-							id_enemy=ewcfg.col_id_enemy,
-							enemyclass=ewcfg.col_enemy_class,
-							enemytype=ewcfg.col_enemy_type,
-							gvs_coord=ewcfg.col_enemy_gvs_coord,
-							poi=ewcfg.col_poi,
-							id_server=ewcfg.col_id_server,
-						), (
-							ewcfg.enemy_class_shambler,
-							checked_coords,
-							enemy_data.poi,
-							enemy_data.id_server
-						))
+			
+			# Check coordinate for shamblers in range of gaiaslimeoid.
+			shambler_data = ewutils.execute_sql_query(
+				"SELECT {id_enemy}, {enemytype} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} IN %s AND {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_dead} OR {life_state} = {life_state_unactivated})".format(
+					id_enemy=ewcfg.col_id_enemy,
+					enemyclass=ewcfg.col_enemy_class,
+					enemytype=ewcfg.col_enemy_type,
+					gvs_coord=ewcfg.col_enemy_gvs_coord,
+					poi=ewcfg.col_poi,
+					id_server=ewcfg.col_id_server,
+					life_state=ewcfg.col_life_state,
+					life_state_dead=ewcfg.enemy_lifestate_dead,
+					life_state_unactivated=ewcfg.enemy_lifestate_unactivated,
+				), (
+					ewcfg.enemy_class_shambler,
+					tuple(checked_coords),
+					enemy_data.poi,
+					enemy_data.id_server
+				))
 
-					print(len(shambler_data))
-					if len(shambler_data) > 0:
+			#print(len(shambler_data))
+			if len(shambler_data) > 0:
 
-						for shambler in shambler_data:
+				for shambler in shambler_data:
 
-							current_shambler_data = EwEnemy(id_enemy=shambler[0], id_server=enemy_data.id_server)
-							detected_shamblers[current_shambler_data.id_enemy] = current_shambler_data.gvs_coord
+					current_shambler_data = EwEnemy(id_enemy=shambler[0], id_server=enemy_data.id_server)
+					detected_shamblers[current_shambler_data.id_enemy] = current_shambler_data.gvs_coord
 
-							if enemy_data not in [ewcfg.enemy_type_gaia_sourpotatoes] and shambler[1] in [ewcfg.enemy_type_juvie] and current_shambler_data.enemy_props.get('underground') == 'True':
-								del detected_shamblers[current_shambler_data.id_enemy]
+					if enemy_data not in [ewcfg.enemy_type_gaia_sourpotatoes] and shambler[1] in [ewcfg.enemy_type_juvie] and current_shambler_data.enemy_props.get('underground') == 'True':
+						del detected_shamblers[current_shambler_data.id_enemy]
 
-						if not piercing:
-							detected_shamblers = gvs_find_nearest_shambler(checked_coords, detected_shamblers)
-						
-						print('gaia in coord {} found shambler in coords {} in {}.'.format(current_coord, checked_coords, enemy_data.poi))
+				if piercing == None:
+					detected_shamblers = gvs_find_nearest_shambler(checked_coords, detected_shamblers)
+				
+				print('gaia in coord {} found shambler in coords {} in {}.'.format(current_coord, checked_coords, enemy_data.poi))
 
-					if splash:
-						
-						if detected_shamblers == {}:
-							checked_splash_coords = checked_coords
-						else:
-							checked_splash_coords = []
-							for shambler in detected_shamblers.keys():
-								checked_splash_coords.append(detected_shamblers[shambler])
-						
-						splash_coords = gvs_get_splash_coords(checked_splash_coords)
+			if splash != None:
+				
+				if detected_shamblers == {}:
+					checked_splash_coords = checked_coords
+				else:
+					checked_splash_coords = []
+					for shambler in detected_shamblers.keys():
+						checked_splash_coords.append(detected_shamblers[shambler])
+				
+				splash_coords = gvs_get_splash_coords(checked_splash_coords)
 
-						splash_shambler_data = ewutils.execute_sql_query(
-							"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} IN %s AND {poi} = %s AND {id_server} = %s".format(
-								id_enemy=ewcfg.col_id_enemy,
-								enemyclass=ewcfg.col_enemy_class,
-								enemytype=ewcfg.col_enemy_type,
-								gvs_coord=ewcfg.col_enemy_gvs_coord,
-								poi=ewcfg.col_poi,
-								id_server=ewcfg.col_id_server,
-							), (
-								ewcfg.enemy_class_shambler,
-								splash_coords,
-								enemy_data.poi,
-								enemy_data.id_server
-							))
-						
-						for splashed_shambler in splash_shambler_data:
-							detected_shamblers[splashed_shambler[0]] = splashed_shambler[2]
+				splash_shambler_data = ewutils.execute_sql_query(
+					"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} IN %s AND {poi} = %s AND {id_server} = %s".format(
+						id_enemy=ewcfg.col_id_enemy,
+						enemyclass=ewcfg.col_enemy_class,
+						enemytype=ewcfg.col_enemy_type,
+						gvs_coord=ewcfg.col_enemy_gvs_coord,
+						poi=ewcfg.col_poi,
+						id_server=ewcfg.col_id_server,
+					), (
+						ewcfg.enemy_class_shambler,
+						tuple(splash_coords),
+						enemy_data.poi,
+						enemy_data.id_server
+					))
+				
+				for splashed_shambler in splash_shambler_data:
+					detected_shamblers[splashed_shambler[0]] = splashed_shambler[2]			
+			break
 
 	return detected_shamblers
 
-def gvs_grid_gather_coords(enemyclass, range, direction, row, index):
+def gvs_grid_gather_coords(enemyclass, gr_range, direction, row, index):
 	checked_coords = []
 	
 	if enemyclass == 'shambler':
@@ -2973,7 +2542,7 @@ def gvs_grid_gather_coords(enemyclass, range, direction, row, index):
 		index_changes = []
 		
 		# Default if range is 1, only reaches 0.5 and 1 full tile ahead
-		for i in range(range*2):
+		for i in range(gr_range*2):
 			index_changes.append(i + 1)
 			
 		# If it reaches backwards with a range of 1, reflect current index changes

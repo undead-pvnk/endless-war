@@ -2420,5 +2420,7 @@ async def gvs_create_gaia_grid_mapping(user_data):
 		if is_filled:
 			if gaia_in_coord in low_priority and gaia[1] in high_priority:
 				grid_map[gaia[2]] = gaia[1]
+		else:
+			grid_map[gaia[2]] = gaia[1]
 		
 	return grid_map

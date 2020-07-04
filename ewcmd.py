@@ -2536,6 +2536,7 @@ async def gvs_print_grid(cmd):
 		lime_lawn = ewcfg.emote_limelawn
 		
 	emote_set = []
+	#print(grid_map)
 
 	green_or_lime = lime_lawn
 	for row in ewcfg.gvs_valid_coords_gaia:

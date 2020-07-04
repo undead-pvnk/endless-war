@@ -23587,17 +23587,11 @@ enemy_drop_tables = {
 		{item_id_dinoslimemeat: [100, 1, 1]}, 
 		{item_id_tradingcardpack: [100, 1, 1]}
 	],
-	enemy_type_basic_gaiaslimeoid: [
-		{"crop": [70, 1, 3]}
-	],
-	enemy_type_basic_shambler: [
-		{item_id_slimepoudrin: [50, 1, 1]}
-	],
 	enemy_type_gaia_pinkrowddishes: [
-		{item_id_pinkrowddishes: [30, 1, 1]}	
+		{item_id_pinkrowddishes: [100, 1, 1]}	
 	],
 	enemy_type_defaultshambler: [
-		{item_id_slimepoudrin: [1, 1, 1]}
+		{item_id_slimepoudrin: [100, 1, 1]}
 	]
 }
 
@@ -23715,32 +23709,8 @@ enemy_data_table = {
 		"raredisplayname": "Unyielding Fierce Operator", 
 		"aliases": ["ufo", "alien","unnervingfightingoperator","unnvering"]
 	},
-	enemy_type_basic_gaiaslimeoid: {
-		"slimerange": [100000, 200000], 
-		"ai": enemy_ai_gaiaslimeoid, 
-		"attacktype": enemy_attacktype_gunkshot, 
-		"displayname": "Gaiaslimeoid", 
-		"raredisplayname":"Rare Gaiaslimeoid", 
-		"aliases": ["gaia", "plant"], 
-		"class": enemy_class_gaiaslimeoid,
-		"props": {
-			'testprop':1
-		}
-	},
-	enemy_type_basic_shambler: {
-		"slimerange": [100000, 200000], 
-		"ai": enemy_ai_shambler, 
-		"attacktype": enemy_attacktype_fangs, 
-		"displayname": "Shambler", 
-		"raredisplayname": "Rare Shambler", 
-		"aliases": ["shambler", "zombie"], 
-		"class": enemy_class_shambler,
-		"props": {
-			'newprop':'square'
-		}
-	},
 	enemy_type_gaia_pinkrowddishes: {
-		"slimerange": [100000, 100000],
+		"slimerange": [10000, 10000],
 		"ai": enemy_ai_gaiaslimeoid,
 		"attacktype": enemy_attacktype_gunkshot,
 		"displayname": "Pink Rowddish",
@@ -23750,11 +23720,12 @@ enemy_data_table = {
 		"props": {
 			'range': 1,
 			'direction': 'frontandback',
-			'piercing': 'True'
+			'piercing': 'True',
+			'setdamage': 3000
 		}
 	},
 	enemy_type_defaultshambler: {
-		"slimerange": [100000, 100000],
+		"slimerange": [10000, 10000],
 		"ai": enemy_ai_shambler,
 		"attacktype": enemy_attacktype_fangs,
 		"displayname": "Shambler",
@@ -23764,7 +23735,7 @@ enemy_data_table = {
 		"props": {
 			'range': 1,
 			'direction': 'left',
-			'piercing': 'False'
+			'setdamage': 2000
 		}
 	}
 }
