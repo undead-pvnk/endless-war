@@ -735,11 +735,33 @@ class EwEnemy:
 		gang_base_response = ""
 
 		try:
-			# Raid bosses can only move into the city (capturable districts), never back into the outskirts.
-			destinations = ewcfg.poi_neighbors.get(self.poi).intersection(set(ewcfg.capturable_districts))
+			# Raid bosses can move into other parts of the outskirts as well as the city, including district zones.
+			destinations = ewcfg.poi_neighbors.get(self.poi)
+			
+			# Filter subzones and gang bases out.
+			# Nudge raidbosses into the city.
+			for destination in destinations:
+
+				destination_poi_data = ewcfg.id_to_poi.get(destination)
+				if destination_poi_data.is_subzone or destination_poi_data.is_gangbase:
+					destinations.remove(destination)
+				
+				if self.poi in ewcfg.outskirts_depths:
+					if destination in ewcfg.outskirts_depths:
+						destinations.remove(destination)
+				elif self.poi in ewcfg.outskirts:
+					if (destination in ewcfg.outskirts) or (destination in ewcfg.outskirts_depths):
+						destinations.remove(destination)
+				elif self.poi in ewcfg.outskirts_edges: 
+					if (destination in ewcfg.outskirts_edges) or (destination in ewcfg.outskirts):
+						destinations.remove(destination)
+					
+
 			if len(destinations) > 0:
+				
 				old_poi = self.poi
 				new_poi = random.choice(list(destinations))
+					
 				self.poi = new_poi
 				self.time_lastenter = int(time.time())
 				self.id_target = ""
@@ -1249,11 +1271,11 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weathe
 
 	while enemies_count >= ewcfg.max_enemies and try_count < 5:
 
-		# Sand bags only spawn in the dojo (aka South Sleezeborough)
+		# Sand bags only spawn in the dojo
 		if enemytype == ewcfg.enemy_type_sandbag:
-			potential_chosen_poi = ewcfg.poi_id_southsleezeborough
+			potential_chosen_poi = ewcfg.poi_id_dojo
 		else:
-			potential_chosen_poi = random.choice(ewcfg.outskirts_districts)
+			potential_chosen_poi = random.choice(ewcfg.outskirts)
 			
 		if pre_chosen_poi is not None:
 			potential_chosen_poi = pre_chosen_poi

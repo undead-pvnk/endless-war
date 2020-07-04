@@ -100,23 +100,22 @@ async def menu(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	market_data = EwMarket(id_server = cmd.message.server.id)
-	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if poi is None or len(poi.vendors) == 0:
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		if poi.is_subzone:
-			district_data = EwDistrict(district = poi.mother_district, id_server = cmd.message.server.id)
-		else:
-			district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
-
+		
+		controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
+		
 		response = "{} Menu:\n\n".format(poi.str_name)
 
 		vendors_list = poi.vendors
@@ -216,13 +215,14 @@ async def order(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	market_data = EwMarket(id_server = cmd.message.server.id)
-	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 	if poi is None or len(poi.vendors) == 0:
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -340,15 +340,11 @@ async def order(cmd):
 				if stock_data is not None:
 					value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
 
-				if poi.is_subzone:
-					district_data = EwDistrict(district = poi.mother_district, id_server = cmd.message.server.id)
-				else:
-					district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+				controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
-
-				if district_data.controlling_faction != "":
+				if controlling_faction != "":
 					# prices are halved for the controlling gang
-					if district_data.controlling_faction == user_data.faction:
+					if controlling_faction == user_data.faction:
 						value /= 2
 
 					# and 4 times as much for enemy gangsters

@@ -98,6 +98,15 @@ class EwPoi:
 
 	# Discord role associated with this zone (control channel visibility).
 	role = None
+	
+	# Role that controls LAN voice/text channel visibility for any street/subzone/district - 6/6/20
+	major_role = None
+	
+	# Role that controls subzone visibility for streets/districts - 6/6/20
+	minor_role = None
+	
+	# Discord permissions associated with this zone (control channel visibility) - 5/28/20
+	permissions = None
 
 	# Zone allows PvP combat and interactions.
 	pvp = True
@@ -119,6 +128,12 @@ class EwPoi:
 
 	# The value of the district
 	property_class = ""
+	
+	# If the zone is a district
+	is_district = False
+	
+	# If the zone is a gang base (Juvie's Row included)
+	is_gangbase = False
 
 	# If true, the zone is a district that can be controlled/captured
 	is_capturable = False
@@ -128,9 +143,15 @@ class EwPoi:
 
 	#If it's an apartment
 	is_apartment = False
+	
+	# if this zone is a street within a district
+	is_street = False
 
-	# What District each subzone is in
-	mother_district = ""
+	# What District/street each subzone is in. Subzones could potentially have multiple mother districts if they are between streets/districts.
+	mother_districts = []
+	
+	# What District each street is attatched to
+	father_district = ""
 
 	# If it's a mobile zone
 	is_transport = False
@@ -174,6 +195,9 @@ class EwPoi:
 	# maximum degradation - zone ceases functioning when this value is reached
 	max_degradation = 0
 
+	# dict EwPoi -> int, that defines travel times into adjacent pois
+	neighbors = None
+
 	def __init__(
 		self,
 		id_poi = "unknown", 
@@ -186,6 +210,9 @@ class EwPoi:
 		coord_alias = [],
 		channel = "",
 		role = None,
+		major_role = None,
+		minor_role = None,
+		permissions = None,
 		pvp = True,
 		factions = [],
 		life_states = [],
@@ -193,10 +220,14 @@ class EwPoi:
 		str_closed = None,
 		vendors = [],
 		property_class = "",
+		is_district = False,
+		is_gangbase = False,
 		is_capturable = False,
 		is_subzone = False,
 		is_apartment = False,
-		mother_district = "",
+		is_street = False,
+		mother_districts = [],
+		father_district = "",
 		is_transport = False,
 		transport_type = "",
 		default_line = "",
@@ -211,6 +242,7 @@ class EwPoi:
 		has_ads = False,
 		write_manuscript = False,
 		max_degradation = 1000,
+		neighbors = None
 	):
 		self.id_poi = id_poi
 		self.alias = alias
@@ -222,6 +254,9 @@ class EwPoi:
 		self.coord_alias = coord_alias
 		self.channel = channel
 		self.role = role
+		self.major_role = major_role
+		self.minor_role = minor_role
+		self.permissions = permissions
 		self.pvp = pvp
 		self.factions = factions
 		self.life_states = life_states
@@ -229,10 +264,14 @@ class EwPoi:
 		self.str_closed = str_closed
 		self.vendors = vendors
 		self.property_class = property_class
+		self.is_district = is_district
+		self.is_gangbase = is_gangbase
 		self.is_capturable = is_capturable
 		self.is_subzone = is_subzone
 		self.is_apartment = is_apartment
-		self.mother_district = mother_district
+		self.is_street = is_street
+		self.mother_districts = mother_districts
+		self.father_district = father_district
 		self.is_transport = is_transport
 		self.transport_type = transport_type
 		self.default_line = default_line
@@ -247,6 +286,9 @@ class EwPoi:
 		self.has_ads = has_ads
 		self.write_manuscript = write_manuscript
 		self.max_degradation = max_degradation
+		self.neighbors = neighbors
+		if self.neighbors == None:
+			self.neighbors = {}
 
 	#  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54
 map_world = [
@@ -359,48 +401,31 @@ class EwPath:
 """
 	Add coord_next to the path.
 """
-def path_step(path, coord_next, user_data, coord_end, landmark_mode = False):
-	visited_set_y = path.visited.get(coord_next[0])
-	if visited_set_y == None:
-		path.visited[coord_next[0]] = { coord_next[1]: True }
-	elif visited_set_y.get(coord_next[1]) == True:
-		# Already visited
-		return False
-	else:
-		path.visited[coord_next[0]][coord_next[1]] = True
+def path_step(path, poi_next, cost_next,  user_data, poi_end, landmark_mode = False):
 
-	cost_next = map_world[coord_next[1]][coord_next[0]]
 
-	if cost_next == sem_city or cost_next == sem_city_alias:
-		next_poi = ewcfg.coord_to_poi.get(coord_next)
+	next_poi = poi_next
 
-		if inaccessible(user_data = user_data, poi = next_poi):
+	if inaccessible(user_data = user_data, poi = next_poi):
 			return False
-		else:
-			cost_next = 0
-			
-			# check if we already got the movement bonus/malus for this district
-			if not next_poi.id_poi in path.pois_visited:
-				path.pois_visited.add(next_poi.id_poi)
-				if len(user_data.faction) > 0 and next_poi.coord != coord_end and next_poi.coord != path.steps[0]:
-					district = EwDistrict(
-						id_server = user_data.id_server,
-						district = next_poi.id_poi
-					)
+	else:
+		# check if we already got the movement bonus/malus for this district
+		if not poi_next.id_poi in path.pois_visited:
+			path.pois_visited.add(next_poi.id_poi)
+			if len(user_data.faction) > 0 and next_poi.id_poi != poi_end.id_poi and next_poi.id_poi != path.steps[0].id_poi:
+				district = EwDistrict(
+					id_server = user_data.id_server,
+					district = next_poi.id_poi
+				)
 
-					if district != None and len(district.controlling_faction) > 0:
-						if user_data.faction == district.controlling_faction:
-							cost_next = -ewcfg.territory_time_gain
-						else:
-							cost_next = ewcfg.territory_time_gain
+				if district != None and len(district.controlling_faction) > 0:
+					if user_data.faction == district.controlling_faction:
+						cost_next -= ewcfg.territory_time_gain
 					else:
-						cost_next = 0
-				else:
-					cost_next = 0
+						cost_next += ewcfg.territory_time_gain
 
-	path.steps.append(coord_next)
+	path.steps.append(poi_next)
 
-	cost_next = int(cost_next / user_data.move_speed)
 
 	if landmark_mode and cost_next > ewcfg.territory_time_gain:
 		cost_next -= ewcfg.territory_time_gain
@@ -412,40 +437,36 @@ def path_step(path, coord_next, user_data, coord_end, landmark_mode = False):
 """
 	Returns a new path including all of path_base, with the next step coord_next.
 """
-def path_branch(path_base, coord_next, user_data, coord_end, landmark_mode = False):
+def path_branch(path_base, poi_next, cost_next, user_data, poi_end, landmark_mode = False):
 	path_next = EwPath(path_from = path_base)
 
-	if path_step(path_next, coord_next, user_data, coord_end, landmark_mode) == False:
+	if path_step(path_next, poi_next, cost_next, user_data, poi_end, landmark_mode) == False:
 		return None
 	
 	return path_next
 
 def score_map_from(
-	coord_start = None,
-	coord_end = None,
 	poi_start = None,
 	user_data = None,
 	landmark_mode = False
 ):
-	score_map = []
-	for row in map_world:
-		score_map.append(list(map(replace_with_inf, row)))
+	score_golf = math.inf
+	score_map = {}
+	for poi in ewcfg.poi_list:
+		score_map[poi.id_poi] = score_golf
 
 	paths_finished = []
 	paths_walking = []
 
-	pois_adjacent = []
+	poi_start = ewcfg.id_to_poi.get(poi_start)
+	poi_end = None
+	poi_end = None
 
-	if poi_start != None:
-		poi = ewcfg.id_to_poi.get(poi_start)
-
-		if poi != None:
-			coord_start = poi.coord
 
 	path_base = EwPath(
-		steps = [ coord_start ],
+		steps = [ poi_start ],
 		cost = 0,
-		visited = { coord_start[0]: { coord_start[1]: True } }
+		pois_visited = set([poi_start.id_poi]),
 	)
 
 
@@ -459,31 +480,37 @@ def score_map_from(
 
 		for path in paths_walking:
 			step_last = path.steps[-1]
-			score_current = score_map[step_last[1]][step_last[0]]
+			score_current = score_map.get(step_last.id_poi)
 			if path.cost >= score_current:
 				continue
 
-			score_map[step_last[1]][step_last[0]] = path.cost
+			score_map[step_last.id_poi] = path.cost
 
 			step_penult = path.steps[-2] if len(path.steps) >= 2 else None
 
 
 			path_base = path
-			neighs = neighbors(step_last)
-			if step_penult in neighs:
-				neighs.remove(step_penult)
+			neighs = list(step_last.neighbors.keys())
+
+			if step_penult != None and step_penult.id_poi in neighs:
+				neighs.remove(step_penult.id_poi)
 
 			num_neighbors = len(neighs)
 			for i in range(num_neighbors):
 
-				neigh = neighs[i]
+				neigh = ewcfg.id_to_poi.get(neighs[i])
+				neigh_cost = step_last.neighbors.get(neigh.id_poi)
+
+				if neigh_cost == None:
+					continue
+
 				if i < num_neighbors - 1:
-					branch = path_branch(path_base, neigh, user_data, coord_end, landmark_mode)
+					branch = path_branch(path_base, neigh, neigh_cost, user_data, poi_end, landmark_mode)
 					if branch != None:
 						paths_walking_new.append(branch)
 
 				else:
-					if path_step(path_base, neigh, user_data, coord_end, landmark_mode):
+					if path_step(path_base, neigh, neigh_cost, user_data, poi_end, landmark_mode):
 						paths_walking_new.append(path_base)
 
 
@@ -492,44 +519,34 @@ def score_map_from(
 	return score_map
 
 def path_to(
-	coord_start = None,
-	coord_end = None,
 	poi_start = None,
 	poi_end = None,
 	user_data = None
 ):
 	#ewutils.logMsg("beginning pathfinding")
 	score_golf = math.inf
-	score_map = []
-	for row in map_world:
-		score_map.append(list(map(replace_with_inf, row)))
+	score_map = {}
+	for poi in ewcfg.poi_list:
+		score_map[poi.id_poi] = math.inf
 
 	paths_finished = []
 	paths_walking = []
 
 	pois_adjacent = []
 
-	if poi_start != None:
-		poi = ewcfg.id_to_poi.get(poi_start)
+	poi_start = ewcfg.id_to_poi.get(poi_start)
+	poi_end = ewcfg.id_to_poi.get(poi_end)
 
-		if poi != None:
-			coord_start = poi.coord
-
-	if poi_end != None:
-		poi = ewcfg.id_to_poi.get(poi_end)
-
-		if poi != None:
-			coord_end = poi.coord
 
 	path_base = EwPath(
-		steps = [ coord_start ],
+		steps = [ poi_start ],
 		cost = 0,
-		visited = { coord_start[0]: { coord_start[1]: True } }
+		pois_visited = set([poi_start.id_poi]),
 	)
 
 
 	path_id = 0
-	heapq.heappush(paths_walking, (path_base.cost + landmark_heuristic(path_base, coord_end) / user_data.move_speed, 0, path_base))
+	heapq.heappush(paths_walking, (path_base.cost + landmark_heuristic(path_base, poi_end), path_id, path_base))
 	path_id += 1
 
 	count_iter = 0
@@ -542,19 +559,19 @@ def path_to(
 
 		if path is not None:
 			step_last = path.steps[-1]
-			score_current = score_map[step_last[1]][step_last[0]]
+			score_current = score_map.get(step_last.id_poi)
 			if path.cost >= score_current:
 				continue
 
-			score_map[step_last[1]][step_last[0]] = path.cost
+			score_map[step_last.id_poi] = path.cost
 			#ewutils.logMsg("visiting " + str(step_last))
 
 			step_penult = path.steps[-2] if len(path.steps) >= 2 else None
 
 
-			if coord_end != None:
+			if poi_end != None:
 				# Arrived at the actual destination?
-				if step_last == coord_end:
+				if step_last.id_poi == poi_end.id_poi:
 					path_final = path
 					if path_final.cost < score_golf:
 						score_golf = path_final.cost
@@ -565,44 +582,43 @@ def path_to(
 
 			else:
 				# Looking for adjacent points of interest.
-				sem_current = map_world[step_last[1]][step_last[0]]
-				poi_adjacent_coord = step_last
-				if sem_current == sem_city_alias:
-					poi_adjacent_coord = ewcfg.alias_to_coord.get(step_last)
+				poi_adjacent = step_last
 
-					if poi_adjacent_coord != None:
-						sem_current = sem_city
+				if poi_adjacent.id_poi != poi_start.id_poi:
 
-				if sem_current == sem_city and poi_adjacent_coord != coord_start:
-					poi_adjacent = ewcfg.coord_to_poi.get(poi_adjacent_coord)
-
-					if poi_adjacent != None:
-						pois_adjacent.append(poi_adjacent)
-						continue
+					pois_adjacent.append(poi_adjacent)
+					continue
 
 			path_base = path
-			neighs = neighbors(step_last)
-			if step_penult in neighs:
-				neighs.remove(step_penult)
+			neighs = list(step_last.neighbors.keys())
+
+			if step_penult != None and step_penult.id_poi in neighs:
+				neighs.remove(step_penult.id_poi)
 
 			num_neighbors = len(neighs)
+			i = 0
 			for i in range(num_neighbors):
-				neigh = neighs[i]
+
+				neigh = ewcfg.id_to_poi.get(neighs[i])
+				neigh_cost = step_last.neighbors.get(neigh.id_poi)
+					
+				if neigh_cost == None:
+					continue
 
 				if i < num_neighbors - 1:
-					branch = path_branch(path_base, neigh, user_data, coord_end)
+					branch = path_branch(path_base, neigh, neigh_cost, user_data, poi_end)
 					if branch != None:
-						heapq.heappush(paths_walking, (branch.cost + landmark_heuristic(branch, coord_end) / user_data.move_speed, path_id, branch))
+						heapq.heappush(paths_walking, (branch.cost + landmark_heuristic(branch, poi_end), path_id, branch))
 						path_id += 1
 				else:
-					if path_step(path_base, neigh, user_data, coord_end):
-						heapq.heappush(paths_walking, (path_base.cost + landmark_heuristic(path_base, coord_end) / user_data.move_speed, path_id, path_base))
+					if path_step(path_base, neigh, neigh_cost, user_data, poi_end):
+						heapq.heappush(paths_walking, (path_base.cost + landmark_heuristic(path_base, poi_end), path_id, path_base))
 						path_id += 1
 						
 
 	#ewutils.logMsg("finished pathfinding")
 
-	if coord_end != None:
+	if poi_end != None:
 		path_true = None
 		if len(paths_finished) > 0:
 			path_true = paths_finished[0]
@@ -613,16 +629,16 @@ def path_to(
 	else:
 		return pois_adjacent
 
-def landmark_heuristic(path, coord_end):
-	if len(landmarks) < 1 or coord_end is None:
+def landmark_heuristic(path, poi_end):
+	if len(landmarks) == 0 or poi_end is None:
 		return 0
 	else:
 		last_step = path.steps[-1]
 		scores = []
 		for lm in landmarks:
 			score_map = landmarks.get(lm)
-			score_path = score_map[last_step[1]][last_step[0]]
-			score_goal = score_map[coord_end[1]][coord_end[0]]
+			score_path = score_map.get(last_step.id_poi)
+			score_goal = score_map.get(poi_end.id_poi)
 			scores.append(abs(score_path - score_goal))
 
 		return max(scores)
@@ -654,6 +670,10 @@ def map_draw(path = None, coord = None):
 				col = "[]"
 			elif col == 20:
 				col = "••"
+			elif col == 60:
+				col = "<>"
+			elif col == 120:
+				col = "=="
 
 			if path != None:
 				visited_set_y = path.visited.get(x)
@@ -730,6 +750,9 @@ async def descend(cmd):
 	Player command to move themselves from one place to another.
 """
 async def move(cmd = None, isApt = False):
+	
+	time_move_start = int(time.time())
+	
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False and isApt == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
@@ -776,12 +799,12 @@ async def move(cmd = None, isApt = False):
 	elif user_data.poi != ewcfg.debugroom and cmd.tokens[0] == (ewcfg.cmd_descend):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can't move downwards on a solid surface, bitch."))
 
-	if fetch_poi_if_coordless(poi.channel) is not None: # Triggers if your destination is a sub-zone.
-		poi = fetch_poi_if_coordless(poi.channel)
-		mother_poi = ewcfg.id_to_poi.get(poi.mother_district)
-		if mother_poi is not None: # Reroute you to the sub-zone's mother district if possible.
-			target_name = poi.mother_district
-			poi = mother_poi
+	# if fetch_poi_if_coordless(poi.channel) is not None: # Triggers if your destination is a sub-zone.
+	# 	poi = fetch_poi_if_coordless(poi.channel)
+	# 	mother_poi = ewcfg.id_to_poi.get(poi.mother_district)
+	# 	if mother_poi is not None: # Reroute you to the sub-zone's mother district if possible.
+	# 		target_name = poi.mother_district
+	# 		poi = mother_poi
 
 	if poi.id_poi == user_data.poi:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're already there, bitch."))
@@ -796,7 +819,8 @@ async def move(cmd = None, isApt = False):
 	if isApt:
 		poi_current = ewcfg.id_to_poi.get(user_data.poi[3:])
 
-	if poi.coord == None or poi_current == None or poi_current.coord == None:
+	#if poi.coord == None or poi_current == None or poi_current.coord == None:
+	if len(poi.neighbors.keys()) == 0 or poi_current == None or len(poi_current.neighbors.keys()) == 0:
 		if user_data.life_state == ewcfg.life_state_corpse and poi.id_poi == ewcfg.poi_id_thesewers:
 			path = EwPath(cost = 60)
 		else:
@@ -807,6 +831,9 @@ async def move(cmd = None, isApt = False):
 			poi_end = target_name,
 			user_data = user_data
 		)
+
+		if path != None:
+			path.cost = int(path.cost / user_data.move_speed)
 
 	if path == None:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't know how to get there."))
@@ -820,6 +847,9 @@ async def move(cmd = None, isApt = False):
 
 	# Take control of the move for this player.
 	move_current = ewutils.moves_active[cmd.message.author.id] = move_counter
+	
+	# Hard lock path costs to not be lower than 5 seconds.
+	path.cost = max(path.cost, 5)
 
 	minutes = int(path.cost / 60)
 	seconds = path.cost % 60
@@ -839,17 +869,22 @@ async def move(cmd = None, isApt = False):
 				minutes,
 				("s" if minutes != 1 else ""),
 				(" and {} seconds".format(seconds) if seconds > 4 else "")
-			) if minutes > 0 else (" It's {} seconds away.".format(seconds) if seconds > 30 else ""))
+			) if minutes > 0 else (" It's {} seconds away.".format(seconds) if seconds > 4 else ""))
 		)))
 		if isApt:
 			await ewapt.depart(cmd=cmd, isGoto=True, movecurrent = move_current)
+
+	time_move_end = int(time.time())
+
+	print('pathfinding in move function took {} seconds'.format(time_move_end - time_move_start))
 
 
 	life_state = user_data.life_state
 	faction = user_data.faction
 
 	# Moving to or from a place not on the map (e.g. the sewers)
-	if poi.coord == None or poi_current == None or poi_current.coord == None:
+	#if poi.coord == None or poi_current == None or poi_current.coord == None:
+	if len(poi.neighbors.keys()) == 0 or poi_current == None or len(poi_current.neighbors.keys()) == 0:
 		if path.cost > 0:
 			await asyncio.sleep(path.cost)
 
@@ -903,25 +938,39 @@ async def move(cmd = None, isApt = False):
 		boost = 0
 
 		# Perform move.
-		for step in path.steps[1:]:
-			# Check to see if we have been interrupted and need to not move any farther.
-			if ewutils.moves_active[cmd.message.author.id] != move_current:
-				break
+		for i in range(1, len(path.steps)):
 
-			val = map_world[step[1]][step[0]]
-			poi_current = None
+			step = path.steps[i]
 
-			# Standing on the actual city node.
-			if val == sem_city:
-				poi_current = ewcfg.coord_to_poi.get(step)
+			val = poi_current.neighbors.get(step.id_poi)
 
-			# Standing on a node which is aliased (a part of the city).
-			elif val == sem_city_alias:
-				poi_current = ewcfg.coord_to_poi.get(ewcfg.alias_to_coord.get(step))
+			poi_current = step
 
-			user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server)
+			user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server, data_level = 1)
 			#mutations = user_data.get_mutations()
 			if poi_current != None:
+
+
+				if len(user_data.faction) > 0 and user_data.poi in ewcfg.capturable_districts:
+					district = EwDistrict(
+						id_server = user_data.id_server,
+						district = user_data.poi
+					)
+
+					if district != None and len(district.controlling_faction) > 0 and i < (len(path.steps) - 1):
+						if user_data.faction == district.controlling_faction:
+							val -= ewcfg.territory_time_gain
+						else:
+							val += ewcfg.territory_time_gain
+
+				val = int(val / user_data.move_speed)
+				await asyncio.sleep(val)
+
+				# Check to see if we have been interrupted and need to not move any farther.
+				if ewutils.moves_active[cmd.message.author.id] != move_current:
+					break
+
+				user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server)
 
 				# If the player dies or enlists or whatever while moving, cancel the move.
 				if user_data.life_state != life_state or faction != user_data.faction:
@@ -964,6 +1013,10 @@ async def move(cmd = None, isApt = False):
 						break
 
 				if user_data.poi != poi_current.id_poi:
+					
+					poi_previous = user_data.poi
+					print('previous poi: {}'.format(poi_previous))
+					
 					user_data.poi = poi_current.id_poi
 					user_data.time_lastenter = int(time.time())
 					user_data.persist()
@@ -971,6 +1024,9 @@ async def move(cmd = None, isApt = False):
 					ewutils.end_trade(user_data.id_user)
 
 					await ewrolemgr.updateRoles(client = client, member = member_object)
+
+					# also move any ghosts inhabitting the player
+					await user_data.move_inhabitants(id_poi = poi_current.id_poi)
 
 					try:
 						await cmd.client.delete_message(msg_walk_start)
@@ -988,9 +1044,6 @@ async def move(cmd = None, isApt = False):
 					# SWILLDERMUK
 					await ewutils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
 
-					# also move any ghosts inhabitting the player
-					await user_data.move_inhabitants(id_poi = poi_current.id_poi)
-
 					if poi_current.has_ads:
 						ads = ewads.get_ads(id_server = user_data.id_server)
 						if len(ads) > 0:
@@ -999,28 +1052,6 @@ async def move(cmd = None, isApt = False):
 							ad_response = ewads.format_ad_response(ad_data)
 							await ewutils.send_message(cmd.client, channel, ewutils.formatMessage(cmd.message.author, ad_response))
 
-					if len(user_data.faction) > 0 and user_data.poi in ewcfg.capturable_districts:
-						district = EwDistrict(
-							id_server = user_data.id_server,
-							district = user_data.poi
-						)
-
-						if district != None and len(district.controlling_faction) > 0:
-							if user_data.faction == district.controlling_faction:
-								boost = ewcfg.territory_time_gain
-							else:
-								territory_slowdown = ewcfg.territory_time_gain
-								territory_slowdown = int(territory_slowdown / user_data.move_speed)
-								await asyncio.sleep(territory_slowdown)
-			else:
-				if val > 0:
-					val_actual = val - boost
-					boost = 0
-					
-					user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server, data_level = 1)
-					val_actual = int(val_actual / user_data.move_speed)
-					if val_actual > 0:
-						await asyncio.sleep(val_actual)
 
 		await asyncio.sleep(30)
 		try:
@@ -1192,7 +1223,9 @@ async def teleport_player(cmd):
 	if target != None and new_poi != None:
 		target_user = EwUser(member=target)
 		target_player = EwPlayer(id_user=target_user.id_user)
-		
+
+		ewutils.moves_active[target_user.id_user] = 0
+
 		target_user.poi = new_poi.id_poi
 		target_user.persist()
 		
@@ -1203,16 +1236,14 @@ async def teleport_player(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
+
 """
 	Dump out the visual description of the area you're in.
 """
 async def look(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
-	if ewutils.channel_name_is_poi(cmd.message.channel.name):
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
@@ -1224,7 +1255,7 @@ async def look(cmd):
 	if poi.is_apartment:
 		return await ewapt.apt_look(cmd=cmd)
 
-	if poi.coord is None: # Triggers if you input the command in a sub-zone.
+	if poi.is_subzone: # Triggers if you input the command in a sub-zone.
 
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
 			"You stand {} {}.\n\n{}\n\n{}".format(
@@ -1379,11 +1410,11 @@ async def scout(cmd):
 		#is_subzone = poi.is_subzone and poi.mother_district == user_poi.id_poi
 		#is_mother_district = user_poi.is_subzone and user_poi.mother_district == poi.id_poi
 
-		if (not is_neighbor) and (not is_current_transport_station) and (not is_transport_at_station) and (not poi.id_poi == user_poi.id_poi) and (not poi.mother_district == user_poi.id_poi) and (not user_poi.mother_district == poi.id_poi):
+		if (not is_neighbor) and (not is_current_transport_station) and (not is_transport_at_station) and (not poi.id_poi == user_poi.id_poi) and (not user_data.poi in poi.mother_districts) and (not poi.id_poi in user_poi.mother_districts):
 			response = "You can't scout that far."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		if user_poi.id_poi == poi.mother_district:
+		if user_poi.id_poi in poi.mother_districts:
 			response = "Why scout? Just pop your head in!"
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1525,19 +1556,32 @@ async def kick(id_server):
 			user_data = EwUser(id_user = id_user, id_server = id_server)
 
 			# checks if the player should be kicked from the subzone and kicks them if they should.
-			if poi.is_subzone and not inaccessible(user_data = user_data, poi = ewcfg.id_to_poi.get(poi.mother_district)):
-				if user_data.life_state not in [ewcfg.life_state_kingpin, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
-					server = ewcfg.server_list[id_server]
-					member_object = server.get_member(id_user)
-
-					user_data.poi = poi.mother_district
-					user_data.time_lastenter = int(time.time())
-					user_data.persist()
-					await ewrolemgr.updateRoles(client = client, member = member_object)
-
-					mother_district_channel = ewutils.get_channel(server, ewcfg.id_to_poi[poi.mother_district].channel)
-					response = "You have been kicked out for loitering! You can only stay in a sub-zone and twiddle your thumbs for 1 hour at a time."
-					await ewutils.send_message(client, mother_district_channel, ewutils.formatMessage(member_object, response))
+			if poi.is_subzone:
+				
+				# Some subzones could potentially have multiple mother districts.
+				# Make sure to get one that's accessible before attempting a proper kickout.
+				mother_district_chosen = random.choice(poi.mother_districts)
+				
+				if inaccessible(user_data=user_data, poi=ewcfg.id_to_poi.get(mother_district_chosen)):
+					# If the randomly chosen mother district is inaccessible, make one more attempt.
+					mother_district_chosen = random.choice(poi.mother_districts)
+				else:
+					pass
+				
+				if not inaccessible(user_data=user_data, poi=ewcfg.id_to_poi.get(mother_district_chosen)):
+				
+					if user_data.life_state not in [ewcfg.life_state_kingpin, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
+						server = ewcfg.server_list[id_server]
+						member_object = server.get_member(id_user)
+	
+						user_data.poi = mother_district_chosen
+						user_data.time_lastenter = int(time.time())
+						user_data.persist()
+						await ewrolemgr.updateRoles(client = client, member = member_object)
+	
+						mother_district_channel = ewutils.get_channel(server, ewcfg.id_to_poi[mother_district_chosen].channel)
+						response = "You have been kicked out for loitering! You can only stay in a sub-zone and twiddle your thumbs for 1 hour at a time."
+						await ewutils.send_message(client, mother_district_channel, ewutils.formatMessage(member_object, response))
 		except:
 			ewutils.logMsg('failed to move inactive player out of subzone: {}'.format(id_user))
 
@@ -1707,6 +1751,8 @@ async def boot(cmd):
 				moved_user_data = EwUser(id_user = user, id_server = user_data.id_server)
 				moved_user_data.poi = new_poi.id_poi
 				moved_user_data.persist()
+				
+				
 		response = "@everyone has been moved to {}".format(new_poi.id_poi)
 
 	else:
@@ -1754,3 +1800,77 @@ def get_random_prank_item(user_data, district_data):
 	
 	return response
 
+"""
+	Get information about all the pois in the poi list
+"""
+async def print_map_data(cmd):
+	
+	if not cmd.message.author.server_permissions.administrator:
+		return
+	
+	districts_count = 0
+	subzones_count = 0
+	apartments_count = 0
+	outskirts_count = 0
+	streets_count = 0
+	transports_count = 0
+	
+	for poi in ewcfg.poi_list:
+		
+		if poi.is_district:
+			districts_count += 1
+			
+			#print(poi.major_role)
+			#print(poi.minor_role)
+			
+		if poi.is_subzone:
+			subzones_count += 1
+		if poi.is_apartment:
+			apartments_count += 1
+		if poi.is_outskirts:
+			outskirts_count += 1
+		if poi.is_street:
+			streets_count += 1
+			
+			#print(poi.minor_role)
+			
+		if poi.is_transport:
+			transports_count += 1
+		
+		neighbor_count = 0
+		
+		#print('\n\nNeighbors for {}\n====================='.format(poi.str_name))
+		for neighbor_poi in ewcfg.poi_list:
+			
+			if neighbor_poi.id_poi in poi.neighbors.keys() and poi.id_poi not in neighbor_poi.neighbors.keys():
+				print('\n========================\nsevered connection for POIs {} and {}'.format(poi.str_name, neighbor_poi.str_name))
+			elif poi.id_poi in neighbor_poi.neighbors.keys() and neighbor_poi.id_poi not in poi.neighbors.keys():
+				print('\n========================\nsevered connection for POIs {} and {}'.format(poi.str_name, neighbor_poi.str_name))
+				
+		if poi.is_subzone:
+			for neighbor in poi.neighbors.keys():
+				if neighbor not in poi.mother_districts:
+					print('subzone {} has invalid mother district(s)'.format(poi.str_name))
+			
+			#if neighbor_poi.id_poi in poi.neighbors.keys():
+			#if poi.id_poi in neighbor_poi.neighbors.keys():
+				#neighbor_count += 1
+				#print(neighbor_poi.str_name)
+		
+		#if poi.is_outskirts:
+			#print('found {} neighbors for {}'.format(neighbor_count, poi.id_poi))
+			
+	# client = ewutils.get_client()
+	# server = client.get_server(cmd.message.server.id)
+	# 		
+	# rolenames = []
+	# for role in server.roles:
+	# 	rolenames.append(role.name)
+	# 	
+	# rolenames.sort()
+	# for name in rolenames:
+	# 	print(name)
+	
+	print("\n\nPOI LIST STATISTICS:\n{} districts\n{} subzones\n{} apartments\n{} outskirts\n{} streets\n{} transports\n\n".format(districts_count, subzones_count, apartments_count, outskirts_count, streets_count, transports_count))
+	
+	

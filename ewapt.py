@@ -201,11 +201,11 @@ async def consult(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if cmd.message.channel.name != ewcfg.channel_realestateagency:
+	if user_data.poi != ewcfg.poi_id_realestate:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !consult at Slimecorp Real Estate in Old New Yonkers."))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -261,11 +261,11 @@ async def signlease(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if cmd.message.channel.name != ewcfg.channel_realestateagency:
+	if user_data.poi != ewcfg.poi_id_realestate:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !signlease at Slimecorp Real Estate in Old New Yonkers."))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -407,7 +407,7 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 	player = EwPlayer(id_user = cmd.message.author.id)
 	user_data = EwUser(id_user = player.id_user, id_server = player.id_server)
 	poi_source = ewcfg.id_to_poi.get(user_data.poi)
-	poi_dest = ewcfg.id_to_poi.get(poi_source.mother_district)
+	poi_dest = ewcfg.id_to_poi.get(poi_source.mother_districts[0])
 
 	#isgoto checks if this is part of a goto command.
 
@@ -893,7 +893,7 @@ async def upgrade(cmd):
 		response = "You don't have an apartment."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	elif cmd.message.channel.name != ewcfg.channel_realestateagency:
+	elif usermodel.poi != ewcfg.poi_id_realestate:
 		response = "Upgrade your home at the apartment agency."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -906,8 +906,8 @@ async def upgrade(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(usermodel.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = usermodel.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -994,7 +994,7 @@ async def watch(cmd):
 
 
 		poi = ewcfg.id_to_poi.get(user_model.poi)
-		token_array = ["!summonenemy" ,"megaslime", poi.mother_district, ewcfg.tv_set_slime, ewcfg.tv_set_level, "The", "Slime"]
+		token_array = ["!summonenemy" ,"megaslime", poi.mother_districts[0], ewcfg.tv_set_slime, ewcfg.tv_set_level, "The", "Slime"]
 
 		cmd.tokens = token_array
 
@@ -1014,7 +1014,7 @@ async def add_key(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
-	if cmd.message.channel.name != ewcfg.channel_realestateagency:
+	if user_data.poi != ewcfg.poi_id_realestate:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to request a housekey at the Real Estate Agency."))
 	elif user_data.apt_zone == ewcfg.location_id_empty:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't have an apartment."))
@@ -1027,8 +1027,8 @@ async def add_key(cmd):
 	elif user_data.slimecoin < apartment_data.rent:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to pay base rent in order to receive a new housekey. It sadly appears as though you can't even afford a new friend."))
 	else:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1135,7 +1135,7 @@ async def manual_changelocks(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
-	if cmd.message.channel.name != ewcfg.channel_realestateagency:
+	if user_data.poi != ewcfg.poi_id_realestate:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to request a housekey at the Real Estate Agency."))
 	elif user_data.apt_zone == ewcfg.location_id_empty:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't have an apartment."))
@@ -1144,8 +1144,8 @@ async def manual_changelocks(cmd):
 	elif user_data.slimecoin < apartment_data.rent * 0.5:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to pay half of base rent in order to change the locks around. Whatever scourge you set loose on your property, you'll just have to live with them."))
 	else:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1717,15 +1717,15 @@ async def cancel(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if cmd.message.channel.name != ewcfg.channel_realestateagency:
+	if usermodel.poi != ewcfg.poi_id_realestate:
 		response = "You can only null your lease at the Real Estate Agency."
 	elif usermodel.apt_zone == ewcfg.location_id_empty:
 		response = "You don't have an apartment."
 	elif aptmodel.rent * 4 > usermodel.slimecoin:
 		response = "You can't afford the lease separation. Time to take your eviction like a champ."
 	else:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1997,12 +1997,12 @@ async def releasefish(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-	if cmd.message.channel.name != ewcfg.channel_bazaar:
+	if user_data.poi != ewcfg.poi_id_bazaar:
 		response = "You need to see a specialist at The Bazaar to do that."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -2029,14 +2029,14 @@ async def releasefish(cmd):
 
 async def releaseprop(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
-	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-	if cmd.message.channel.name != ewcfg.channel_bazaar:
+	if user_data.poi != ewcfg.poi_id_bazaar:
 		response = "You need to see a specialist at The Bazaar to do that."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])

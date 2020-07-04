@@ -606,6 +606,7 @@ async def capture_progress(cmd):
 
 	response += "\n\n**Current influence: {:,}**\nMinimum influence: {:,}\nMaximum influence: {:,}\nPercentage to maximum influence: {:,}%".format(abs(district_data.capture_points), ewcfg.min_influence[district_data.property_class], ewcfg.limit_influence[district_data.property_class], round((abs(district_data.capture_points) * 100/ewcfg.limit_influence[district_data.property_class]), 1))
 
+
 	if district_data.time_unlock > 0:
 
 
@@ -733,7 +734,7 @@ async def capture_progress(cmd):
 	user_data.change_slimes(n = -slimes_cap * capture_discount, source = ewcfg.source_spending)
 
 	# Flag the user for PvP
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, True)
+	# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, True)
 
 	user_data.persist()
 	district_data.persist()
@@ -749,7 +750,7 @@ async def shamble(cmd):
 		response = "You have too many higher brain functions left to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if poi is None:
 		return

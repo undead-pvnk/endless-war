@@ -115,11 +115,11 @@ class EwTransport:
 				stop_data = ewcfg.id_to_poi.get(self.current_stop)
 
 				# announce new stop inside the transport
-				if stop_data.is_subzone:
-					stop_mother = ewcfg.id_to_poi.get(stop_data.mother_district)
-					response = "We have reached {}.".format(stop_mother.str_name)
-				else:
-					response = "We have reached {}.".format(stop_data.str_name)
+				# if stop_data.is_subzone:
+				# 	stop_mother = ewcfg.id_to_poi.get(stop_data.mother_district)
+				# 	response = "We have reached {}.".format(stop_mother.str_name)
+				# else:
+				response = "We have reached {}.".format(stop_data.str_name)
 
 				next_line = transport_line
 
@@ -132,11 +132,11 @@ class EwTransport:
 				else:
 					next_stop = ewcfg.id_to_poi.get(transport_line.schedule.get(stop_data.id_poi)[1])
 					if next_stop.is_transport_stop:
-						if next_stop.is_subzone:
-							stop_mother = ewcfg.id_to_poi.get(next_stop.mother_district)
-							response += " The next stop is {}.".format(stop_mother.str_name)
-						else:
-							response += " The next stop is {}.".format(next_stop.str_name)
+						# if next_stop.is_subzone:
+						# 	stop_mother = ewcfg.id_to_poi.get(next_stop.mother_district)
+						# 	response += " The next stop is {}.".format(stop_mother.str_name)
+						# else:
+						response += " The next stop is {}.".format(next_stop.str_name)
 				resp_cont.add_channel_response(poi_data.channel, response)
 
 				# announce transport has arrived at the stop
@@ -229,14 +229,14 @@ async def embark(cmd):
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	user_data = EwUser(member = cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	user_data = EwUser(member = cmd.message.author)
 	response = ""
 
 	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
@@ -248,7 +248,7 @@ async def embark(cmd):
 		response = "You might want to **{}** of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 
 	# must be at a transport stop to enter a transport
 	if poi != None and poi.id_poi in ewcfg.transport_stops:
@@ -345,8 +345,8 @@ async def disembark(cmd):
 		response = "{}ing.".format(cmd.tokens[0][1:].lower()).capitalize()
 
 		stop_poi = ewcfg.id_to_poi.get(transport_data.current_stop)
-		if stop_poi.is_subzone:
-			stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
+		# if stop_poi.is_subzone:
+		# 	stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
 
 		if ewmap.inaccessible(user_data = user_data, poi = stop_poi):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
@@ -427,9 +427,8 @@ async def disembark(cmd):
 
 		# update user location, if move successful
 		else:
-			if stop_poi.is_subzone:
-				stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
-
+			# if stop_poi.is_subzone:
+			# 	stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
 
 			if ewmap.inaccessible(user_data = user_data, poi = stop_poi):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
@@ -454,7 +453,7 @@ async def check_schedule(cmd):
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 	response = ""
 
 

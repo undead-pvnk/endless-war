@@ -310,7 +310,7 @@ def canAttack(cmd):
 		response = "You can't commit violence from here."
 	elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
 		response = "You must go elsewhere to commit gang violence."
-	elif channel_poi.id_poi != user_data.poi and channel_poi.mother_district != user_data.poi:
+	elif channel_poi.id_poi != user_data.poi and user_data.poi not in channel_poi.mother_districts:
 		#Only way to do this right now is by using the gellphone
 		response = "Alas, you still can't shoot people through your phone."
 	elif cmd.mentions_count > 1:
@@ -794,7 +794,10 @@ async def attack(cmd):
 
 			if was_shot:
 				# Flag the user for PvP
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+
+				user_poi = ewcfg.id_to_poi.get(user_data.poi)
+				if user_poi.is_district:
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 				resp_cont.add_member_to_update(cmd.message.author)
 
@@ -1171,7 +1174,10 @@ async def attack(cmd):
 				resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
 
 				# Flag the user for PvP
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, True)
+
+				user_poi = ewcfg.id_to_poi.get(user_data.poi)
+				if user_poi.is_district:
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, True)
 
 				user_data.persist()
 				resp_cont.add_member_to_update(cmd.message.author)
@@ -1323,6 +1329,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				if target_data.weapon >= 0:
 					target_weapon_item = EwItem(id_item = target_data.weapon)
 					target_weapon = ewcfg.weapon_map.get(target_weapon_item.item_props.get("weapon_type"))
+
 
 				# apply defensive mods
 				slimes_damage_target = slimes_damage * damage_mod_defend(
@@ -1562,7 +1569,7 @@ async def spar(cmd):
 
 			if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 				response = "You are too exhausted to train right now. Go get some grub!"
-			elif cmd.message.channel.name != ewcfg.channel_dojo or sparred_data.poi != ewcfg.poi_id_southsleezeborough:
+			elif user_data.poi != ewcfg.poi_id_dojo or sparred_data.poi != ewcfg.poi_id_dojo:
 				response = "Both players need to be in the dojo to spar."
 			elif sparred_data.hunger >= ewutils.hunger_max_bylevel(sparred_data.slimelevel):
 				response = "{} is too exhausted to train right now. They need a snack!".format(member.display_name)
@@ -1637,11 +1644,11 @@ async def spar(cmd):
 					weaker_player.time_lastspar = time_now
 
 					# Flag the user for PvP
-					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_spar, True)
+					# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_spar, True)
 
 					user_data.persist()
 					sparred_data.persist()
-					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+					# await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 
 					# player was sparred with
@@ -1783,7 +1790,7 @@ async def marry(cmd):
 		weapon_name = weapon_item.item_props.get("weapon_name") if len(weapon_item.item_props.get("weapon_name")) > 0 else weapon.str_weapon
 
 	#Checks to make sure you're in the dojo.
-	if cmd.message.channel.name != ewcfg.channel_dojo:
+	if user_data.poi != ewcfg.poi_id_dojo:
 		response = "Do you really expect to just get married on the side of the street in this war torn concrete jungle? No way, you need to see a specialist for this type of thing, someone who can empathize with a man’s love for his arsenal. Maybe someone in the Dojo can help, *hint hint*."
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Informs you that you cannot be a fucking faggot.
@@ -1803,8 +1810,8 @@ async def marry(cmd):
 		response = "Ah, to recapture the magic of the first nights together… Sadly, those days are far behind you now. You’ve already had your special day, now it’s time to have the same boring days forever. Aren’t you glad you got married??"
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1894,11 +1901,11 @@ async def divorce(cmd):
 	if user_data.weaponmarried == False:
 		response = "I appreciate your forward thinking attitude, but how do you expect to get a divorce when you haven’t even gotten married yet? Throw your life away first, then we can talk."
 	# Checks to make sure you're in the dojo.
-	elif cmd.message.channel.name != ewcfg.channel_dojo:
+	elif user_data.poi != ewcfg.poi_id_dojo:
 		response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
 	else:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -2542,7 +2549,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# Persist user data.
 	# Flag the user for PvP
 	if not sandbag_mode:
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+
+		user_poi = ewcfg.id_to_poi.get(user_data.poi)
+		if user_poi.is_district:
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 	resp_cont.add_member_to_update(cmd.message.author)
 	user_data.persist()
@@ -2695,7 +2705,9 @@ async def dodge(cmd):
 
 	user_data.sap -= sap_cost
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+	if user_poi.is_district:
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 	user_data.persist()
 
@@ -2757,7 +2769,9 @@ async def taunt(cmd):
 
 	user_data.sap -= sap_cost
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+	if user_poi.is_district:
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You spend {} sap to taunt {} into attacking you.".format(sap_cost, target.display_name)
@@ -2814,7 +2828,9 @@ async def aim(cmd):
 
 	user_data.sap -= sap_cost
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+	if user_poi.is_district:
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You spend {} sap to aim at {}'s weak spot.".format(sap_cost, target.display_name)

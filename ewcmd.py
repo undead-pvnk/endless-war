@@ -1046,7 +1046,7 @@ async def help(cmd):
 	# checks if user is in a college or if they have a game guide
 	gameguide = ewitem.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
 
-	if cmd.message.channel.name == ewcfg.channel_neomilwaukeestate or cmd.message.channel.name == ewcfg.channel_nlacu or gameguide:
+	if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu or gameguide:
 		if not len(cmd.tokens) > 1:
 			topic_counter = 0
 			topic_total = 0
@@ -1080,7 +1080,9 @@ async def help(cmd):
 		# user not in college, check what help message would apply to the subzone they are in
 
 		# poi variable assignment used for checking if player is in a vendor subzone or not
-		poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+		# poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+		
+		poi = ewcfg.id_to_poi.get(user_data.poi)
 
 		dojo_topics = ["dojo", "sparring", "combat", "sap", ewcfg.weapon_id_revolver, ewcfg.weapon_id_dualpistols, ewcfg.weapon_id_shotgun, ewcfg.weapon_id_rifle, ewcfg.weapon_id_smg, ewcfg.weapon_id_minigun, ewcfg.weapon_id_bat, ewcfg.weapon_id_brassknuckles, ewcfg.weapon_id_katana, ewcfg.weapon_id_broadsword, ewcfg.weapon_id_nunchucks, ewcfg.weapon_id_scythe, ewcfg.weapon_id_yoyo, ewcfg.weapon_id_bass, ewcfg.weapon_id_umbrella, ewcfg.weapon_id_knives, ewcfg.weapon_id_molotov, ewcfg.weapon_id_grenades, ewcfg.weapon_id_garrote]
 
@@ -1150,7 +1152,7 @@ async def help(cmd):
 		]:
 			# fishing help
 			response = ewcfg.help_responses['fishing']
-		elif user_data.poi in ewcfg.outskirts_districts:
+		elif user_data.poi in ewcfg.outskirts:
 			# hunting help
 			response = ewcfg.help_responses['hunting']
 		else:
@@ -1201,9 +1203,9 @@ async def accept(cmd):
 			ewutils.active_target_map[challenger.id_user] = user.id_user
 			slimeoid_data = EwSlimeoid(member = cmd.message.author)
 			response = ""
-			if cmd.message.channel.name == ewcfg.channel_arena and ewslimeoid.active_slimeoidbattles.get(slimeoid_data.id_slimeoid):
+			if user.poi == ewcfg.poi_id_arena and ewslimeoid.active_slimeoidbattles.get(slimeoid_data.id_slimeoid):
 				response = "You accept the challenge! Both of your Slimeoids ready themselves for combat!"
-			elif cmd.message.channel.name == ewcfg.channel_casino and ewutils.active_restrictions[challenger.id_user] == 1:
+			elif user.poi == ewcfg.poi_id_thecasino and ewutils.active_restrictions[challenger.id_user] == 1:
 				response = "You accept the challenge! Both of you head out back behind the casino and load a bullet into the gun."
 
 			if len(response) > 0:
@@ -1433,7 +1435,10 @@ async def piss(cmd):
 					user_data.sap -= ewcfg.sap_spend_piss
 					user_data.limit_fix()
 					enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, enlisted)
+					
+					user_poi = ewcfg.id_to_poi.get(user_data.poi)
+					if user_poi.is_district:
+						user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, enlisted)
 					user_data.persist()
 					
 					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1483,8 +1488,8 @@ async def pray(cmd):
 		response = "You must be in the presence of your lord if you wish to pray to him."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1617,12 +1622,12 @@ async def recycle(cmd):
 
 	response = ""
 
-	if cmd.message.channel.name != ewcfg.channel_recyclingplant:
+	if user_data.poi != ewcfg.poi_id_recyclingplant:
 		response = "You can only {} your trash at the SlimeCorp Recycling Plant in Smogsburg.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1847,7 +1852,10 @@ async def push(cmd):
 
 		# Flag the user for PvP
 		enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, enlisted)
+		
+		user_poi = ewcfg.id_to_poi.get(user_data.poi)
+		if user_poi.is_district:
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, enlisted)
 		user_data.persist()
 
 		await ewrolemgr.updateRoles(client = cmd.client, member = target)
@@ -2004,9 +2012,9 @@ async def purify(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	
-	if cmd.message.channel.name == ewcfg.channel_sodafountain:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	if user_data.poi == ewcfg.poi_id_sodafountain:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -2042,27 +2050,29 @@ async def flush_subzones(cmd):
 	if not member.server_permissions.administrator:
 		return
 	
-	subzone_to_mother_district = {}
+	subzone_to_mother_districts = {}
 
 	for poi in ewcfg.poi_list:
 		if poi.is_subzone:
-			subzone_to_mother_district[poi.id_poi] = poi.mother_district
+			subzone_to_mother_districts[poi.id_poi] = poi.mother_districts
 
 
-	for subzone in subzone_to_mother_district:
-		mother_district = subzone_to_mother_district.get(subzone)
+	for subzone in subzone_to_mother_districts:
+		mother_districts = subzone_to_mother_districts.get(subzone)
+		
+		used_mother_district = mother_districts[0]
 		
 		ewutils.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
 			id_owner = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server
 		), (
-			mother_district,
+			used_mother_district,
 			subzone,
 			cmd.message.server.id
 		))
 
 		subzone_data = EwDistrict(district = subzone, id_server = cmd.message.server.id)
-		district_data = EwDistrict(district = mother_district, id_server = cmd.message.server.id)
+		district_data = EwDistrict(district = used_mother_district, id_server = cmd.message.server.id)
 
 		district_data.change_slimes(n = subzone_data.slimes)
 		subzone_data.change_slimes(n = -subzone_data.slimes)
@@ -2358,6 +2368,7 @@ async def set_slime(cmd):
 		return
 	
 	response = ""
+	target = None
 	
 	if cmd.mentions_count != 1:
 		response = "Invalid use of command. Example: !setslime @player 100"
@@ -2388,7 +2399,7 @@ async def set_slime(cmd):
 			response += " {}".format(levelup_response)
 		target_user_data.persist()
 		
-		response = "Set {}'s slime to {}.".format(cmd.message.author, target_user_data.slimes)
+		response = "Set {}'s slime to {}.".format(target.display_name, target_user_data.slimes)
 	else:
 		return
 

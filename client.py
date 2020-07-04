@@ -598,6 +598,7 @@ cmd_map = {
 	ewcfg.cmd_teleport: ewmap.teleport,
 	ewcfg.cmd_teleport_alt1: ewmap.teleport,
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
+	ewcfg.cmd_print_map_data: ewmap.print_map_data,
 	ewcfg.cmd_boot: ewmap.boot,
 	ewcfg.cmd_bootall:ewapt.lobbywarning,
 
@@ -644,6 +645,21 @@ cmd_map = {
 
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
+	
+	# hides all poi role names, only usable by admins
+	ewcfg.cmd_hiderolenames: ewrolemgr.hideRoleNames,
+	
+	# recreates all hidden poi roles in the server in case restoreRoleNames doesnt work, only usable by admins
+	ewcfg.cmd_recreateroles: ewrolemgr.recreateRoles,
+	
+	# deletes all roles in the server of a particular type
+	ewcfg.cmd_deleteroles: ewrolemgr.deleteRoles,
+	
+	# sets permissions for all poi channels in the server
+	ewcfg.cmd_changepermissions: ewrolemgr.change_perms,
+	
+	# removes all user overwrites in the server's poi channels
+	ewcfg.cmd_removeuseroverwrites: ewrolemgr.remove_user_overwrites,
 
 	# debug commands
 	# ewcfg.cmd_debug1: ewdebug.debug1,
@@ -791,15 +807,21 @@ async def on_ready():
 	for poi in ewcfg.poi_list:
 		if poi.role != None:
 			poi.role = ewutils.mapRoleName(poi.role)
+		if poi.major_role != None:
+			poi.major_role = ewutils.mapRoleName(poi.major_role)
+		if poi.minor_role != None:
+			poi.minor_role = ewutils.mapRoleName(poi.minor_role)
 
 		neighbors = []
 		neighbor_ids = []
-		if poi.coord != None:
-			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_observer)
+		#if poi.coord != None:
+		if len(poi.neighbors.keys()) > 0:
+			neighbors = ewmap.path_to(poi_start = poi.id_poi, user_data = fake_observer)
 		#elif poi.id_poi == ewcfg.poi_id_thesewers:
 		#	neighbors = ewcfg.poi_list
 
 		if neighbors != None:
+			
 			for neighbor in neighbors:
 				neighbor_ids.append(neighbor.id_poi)
 
@@ -809,9 +831,8 @@ async def on_ready():
 
 	for id_poi in ewcfg.landmark_pois:
 		ewutils.logMsg("beginning landmark precomputation for " + id_poi)
-		poi = ewcfg.id_to_poi.get(id_poi)
 		ewmap.landmarks[id_poi] = ewmap.score_map_from(
-			coord_start = poi.coord,
+			poi_start = id_poi,
 			user_data = fake_observer,
 			landmark_mode = True
 		)
@@ -855,9 +876,9 @@ async def on_ready():
 
 		# find roles and add them to the database
 		ewrolemgr.setupRoles(client = client, id_server = server.id)
-
-		# hides the names of poi roles
-		await ewrolemgr.hideRoleNames(client = client, id_server = server.id)
+		
+		# Refresh the permissions of all users
+		await ewrolemgr.refresh_user_perms(client = client, id_server = server.id, startup = True)
 
 		# Grep around for channels
 		ewutils.logMsg("connected to server: {}".format(server.name))
@@ -894,7 +915,6 @@ async def on_ready():
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.enemy_action_tick_loop(id_server=server.id))
-		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
@@ -904,6 +924,7 @@ async def on_ready():
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
 		
 		if not debug:
+			asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
 			await ewtransport.init_transports(id_server = server.id)
 			asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
@@ -989,7 +1010,7 @@ async def on_ready():
 				traceback.print_exc(file = sys.stdout)
 
 		# Flag all users in the Outskirts for PvP
-		await ewutils.flag_outskirts(id_server = server.id)
+		await ewutils.flag_vulnerable_districts(id_server = server.id)
 
 		# Clear PvP roles from players who are no longer flagged.
 		if (time_now - time_last_pvp) >= ewcfg.update_pvp:
@@ -1227,7 +1248,7 @@ async def on_ready():
 
 @client.event
 async def on_member_join(member):
-	ewutils.logMsg("New member \"{}\" joined. Configuring default roles now.".format(member.display_name))
+	ewutils.logMsg("New member \"{}\" joined. Configuring default roles / permissions now.".format(member.display_name))
 	await ewrolemgr.updateRoles(client = client, member = member)
 	ewplayer.player_update(
 		member = member,
@@ -1312,7 +1333,7 @@ async def on_message(message):
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
 				direct message (server == None)
-				user is new/has no roles (len(roles) < 2)
+				user is new/has no roles (len(roles) < 4)
 				user is swearing
 		"""
 
@@ -1448,8 +1469,8 @@ async def on_message(message):
 			# Nothing else to do in a DM.
 			return
 
-		# assign the appropriate roles to a user with less than @everyone, faction, location
-		if len(message.author.roles) < 3:
+		# assign the appropriate roles to a user with less than @everyone, faction, both location roles
+		if len(message.author.roles) < 4:
 			await ewrolemgr.updateRoles(client = client, member = message.author)
 
 		user_data = EwUser(member = message.author)

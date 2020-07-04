@@ -554,7 +554,7 @@ async def flag_outskirts(id_server = None):
 			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND poi IN %s".format(
 			), (
 				id_server,
-				tuple(ewcfg.outskirts_districts)
+				tuple(ewcfg.outskirts)
 
 			))
 
@@ -564,9 +564,59 @@ async def flag_outskirts(id_server = None):
 				user_data = EwUser(id_user = user[0], id_server = id_server)
 				# Flag the user for PvP
 				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, enlisted)
+				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
 				user_data.persist()
 				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+
+"""
+	Flag all users in vulnerable territory, defined as capturable territory (streets) and outskirts.
+"""
+async def flag_vulnerable_districts(id_server = None):
+	if id_server != None:
+		try:
+			client = get_client()
+			server = client.get_server(id_server)
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor();
+
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND poi IN %s".format(
+			), (
+				id_server,
+				tuple(ewcfg.vulnerable_districts)
+
+			))
+
+			users = cursor.fetchall()
+
+			for user in users:
+				user_data = EwUser(id_user = user[0], id_server = id_server)
+				member = server.get_member(user_data.id_user)
+				
+				# Flag the user for PvP
+				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
+				user_data.persist()
+				await ewrolemgr.updateRoles(client = client, member = member)
+
+				# Make sure to kill players who may have left while the bot was offline.
+				if member not in server.members:
+					try:
+						user_data = EwUser(id_user = user_data.id_user, id_server = user_data.id_server)
+	
+						user_data.trauma = ewcfg.trauma_id_suicide
+						user_data.die(cause=ewcfg.cause_leftserver)
+						user_data.persist()
+	
+						logMsg('Player killed for leaving the server.')
+					except:
+						logMsg('Failed to kill member who left the server.')
 
 			conn.commit()
 		finally:
@@ -609,6 +659,8 @@ async def bleedSlimes(id_server = None):
 			resp_cont = EwResponseContainer(id_server = id_server)
 			for user in users:
 				user_data = EwUser(id_user = user[0], id_server = id_server)
+				member = server.get_member(user_data.id_user)
+				
 				slimes_to_bleed = user_data.bleed_storage * (1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
 				slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
 				slimes_dropped = user_data.totaldamage + user_data.slimes
@@ -647,7 +699,19 @@ async def bleedSlimes(id_server = None):
 
 					total_bled += real_bleed
 
-				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+				await ewrolemgr.updateRoles(client = client, member = member)
+				
+				# Make sure to kill players who may have left while the bot was offline.
+				if member not in server.members:
+					try:
+						user_data = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
+						user_data.trauma = ewcfg.trauma_id_suicide
+						user_data.die(cause=ewcfg.cause_leftserver)
+						user_data.persist()
+
+						logMsg('Player killed for leaving the server.')
+					except:
+						logMsg('Failed to kill member who left the server.')
 
 			await resp_cont.post()
 
@@ -790,6 +854,7 @@ async def burnSlimes(id_server = None):
 		resp_cont = EwResponseContainer(id_server = id_server)
 		for result in data:
 			user_data = EwUser(id_user = result[0], id_server = id_server)
+			member = server.get_member(user_data.id_user)
 
 			slimes_dropped = user_data.totaldamage + user_data.slimes
 
@@ -838,10 +903,22 @@ async def burnSlimes(id_server = None):
 				user_data.trauma = weapon.id_weapon
 
 				user_data.persist()
-				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+				await ewrolemgr.updateRoles(client = client, member = member)
 			else:
 				user_data.change_slimes(n = -slimes_to_burn, source = ewcfg.source_damage)
 				user_data.persist()
+
+			# Make sure to kill players who may have left while the bot was offline.
+			if member not in server.members:
+				try:
+					user_data = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
+					user_data.trauma = ewcfg.trauma_id_suicide
+					user_data.die(cause=ewcfg.cause_leftserver)
+					user_data.persist()
+
+					logMsg('Player killed for leaving the server.')
+				except:
+					logMsg('Failed to kill member who left the server.')
 				
 
 		await resp_cont.post()	
@@ -1443,6 +1520,8 @@ def get_move_speed(user_data):
 		move_speed *= 2
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
+		
+	#move_speed *= 2
 
 	move_speed = max(0.1, move_speed)
 
@@ -2107,7 +2186,8 @@ def return_server_role(server, role_name):
 """ Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
 def calculatePvpTimer(current_time_expirpvp, timer, enlisted = False):
 	if enlisted:
-		timer *= 4
+		timer *= 1
+		#timer *= 4
 
 	desired_time_expirpvp = int(time.time()) + timer
 
@@ -2253,3 +2333,37 @@ def get_style_freshness_rating(user_data, dominant_style = None):
 
 	return response
 
+
+def get_subzone_controlling_faction(subzone_id, id_server):
+	
+	subzone = ewcfg.id_to_poi.get(subzone_id)
+	
+	if subzone == None:
+		return
+	else:
+		if not subzone.is_subzone:
+			return
+	
+	mother_pois = subzone.mother_districts
+
+	# Get all the mother pois of a subzone in order to find the father poi, which is either one of the mother pois or the father poi of the mother poi
+	# Subzones such as the food court will have both a district poi and a street poi as one of their mother pois
+	district_data = None
+
+	for mother_poi in mother_pois:
+		
+		mother_poi_data = ewcfg.id_to_poi.get(mother_poi)
+		
+		if mother_poi_data.is_district:
+			# One of the mother pois was a district, get its controlling faction
+			district_data = EwDistrict(district=mother_poi, id_server=id_server)
+			break
+		else:
+			# One of the mother pois was a street, get the father district of that street and its controlling faction
+			father_poi = mother_poi_data.father_district
+			district_data = EwDistrict(district=father_poi, id_server=id_server)
+			break
+
+	if district_data != None:
+		faction = district_data.controlling_faction
+		return faction

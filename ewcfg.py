@@ -45,6 +45,9 @@ update_twitch = 60
 update_pvp = 60
 update_market = 900 #15 min
 
+# Number of times the bot should try a permissions-related API call. This is done purely for safety measures.
+permissions_tries = 1
+
 # Time saved moving through friendly territory (or lost in hostile territory).
 territory_time_gain = 10
 
@@ -216,6 +219,7 @@ poi_id_westglocksbury = "westglocksbury"
 poi_id_jaywalkerplain = "jaywalkerplain"
 poi_id_crookline = "crookline"
 poi_id_dreadford = "dreadford"
+poi_id_maimridge = "maimridge"
 
 poi_id_toxington_pier = "toxingtonpier"
 poi_id_jaywalkerplain_pier = "jaywalkerplainpier"
@@ -258,6 +262,165 @@ poi_id_apt_westglocksbury = "aptwestglocksbury"
 poi_id_apt_jaywalkerplain = "aptjaywalkerplain"
 poi_id_apt_crookline = "aptcrookline"
 poi_id_apt_dreadford = "aptdreadford"
+poi_id_apt_maimridge = "aptdreadford"
+
+# The streets -- There are 126 of them, to be exact
+poi_id_copkilltown_street_a = "copkilltownstreeta"
+poi_id_rowdyroughhouse_street_a = "rowdyroughhousestreeta"
+poi_id_juviesrow_street_a = "juviesrowstreeta"
+
+poi_id_downtown_street_a = "downtownstreeta"
+poi_id_downtown_street_b = "downtownstreetb"
+poi_id_downtown_street_c = "downtownstreetc"
+poi_id_downtown_street_d = "downtownstreetd"
+poi_id_downtown_street_e = "downtownstreete"
+poi_id_downtown_street_f = "downtownstreetf"
+
+poi_id_krakbay_street_a = "krakbaystreeta"
+poi_id_krakbay_street_b = "krakbaystreetb"
+poi_id_krakbay_street_c = "krakbaystreetc"
+poi_id_krakbay_street_d = "krakbaystreetd"
+poi_id_krakbay_street_e = "krakbaystreete"
+poi_id_krakbay_street_f = "krakbaystreetf"
+
+poi_id_poudrinalley_street_a = "poudrinalleystreeta" 
+poi_id_poudrinalley_street_b = "poudrinalleystreetb"
+poi_id_poudrinalley_street_c = "poudrinalleystreetc"
+poi_id_poudrinalley_street_d = "poudrinalleystreetd"
+poi_id_poudrinalley_street_e = "poudrinalleystreete"
+
+poi_id_cratersville_street_a = "cratersvillestreeta"
+poi_id_cratersville_street_b = "cratersvillestreetb"
+poi_id_cratersville_street_c = "cratersvillestreetc"
+
+poi_id_wreckington_street_a = "wreckingtonstreeta"
+poi_id_wreckington_street_b = "wreckingtonstreetb"
+
+poi_id_oozegardens_street_a = "oozegardensstreeta"
+poi_id_oozegardens_street_b = "oozegardensstreetb"
+poi_id_oozegardens_street_c = "oozegardensstreetc"
+poi_id_oozegardens_street_d = "oozegardensstreetd"
+
+poi_id_southsleezeborough_street_a = "southsleezeboroughstreeta" 
+poi_id_southsleezeborough_street_b = "southsleezeboroughstreetb"
+poi_id_southsleezeborough_street_c = "southsleezeboroughstreetc"
+poi_id_southsleezeborough_street_d = "southsleezeboroughstreetd"
+
+poi_id_northsleezeborough_street_a = "northsleezeboroughstreeta"
+poi_id_northsleezeborough_street_b = "northsleezeboroughstreetb"
+poi_id_northsleezeborough_street_c = "northsleezeboroughstreetc"
+poi_id_northsleezeborough_street_d = "northsleezeboroughstreetd"
+poi_id_northsleezeborough_street_e = "northsleezeboroughstreete"
+
+poi_id_glocksbury_street_a = "glocksburystreeta"
+poi_id_glocksbury_street_b = "glocksburystreetb"
+poi_id_glocksbury_street_c = "glocksburystreetc"
+poi_id_glocksbury_street_d = "glocksburystreetd"
+poi_id_glocksbury_street_e = "glocksburystreete"
+
+poi_id_westglocksbury_street_a = "westglocksburystreeta" 
+poi_id_westglocksbury_street_b = "westglocksburystreetb"
+poi_id_westglocksbury_street_c = "westglocksburystreetc"
+poi_id_westglocksbury_street_d = "westglocksburystreetd"
+
+poi_id_jaywalkerplain_street_a = "jaywalkerplainstreeta"
+poi_id_jaywalkerplain_street_b = "jaywalkerplainstreetb"
+poi_id_jaywalkerplain_street_c = "jaywalkerplainstreetc"
+poi_id_jaywalkerplain_street_d = "jaywalkerplainstreetd"
+poi_id_jaywalkerplain_street_e = "jaywalkerplainstreete"
+
+poi_id_crookline_street_a = "crooklinestreeta" 
+poi_id_crookline_street_b = "crooklinestreetb"
+poi_id_crookline_street_c = "crooklinestreetc"
+poi_id_crookline_street_d = "crooklinestreetd"
+
+poi_id_dreadford_street_a = "dreadfordstreeta"
+poi_id_dreadford_street_b = "dreadfordstreetb"
+
+poi_id_vandalpark_street_a = "vandalparkstreeta"
+poi_id_vandalpark_street_b = "vandalparkstreetb"
+poi_id_vandalpark_street_c = "vandalparkstreetc"
+poi_id_vandalpark_street_d = "vandalparkstreetd"
+
+poi_id_poloniumhill_street_a = "poloniumhillstreeta"
+poi_id_poloniumhill_street_b = "poloniumhillstreetb"
+poi_id_poloniumhill_street_c = "poloniumhillstreetc"
+poi_id_poloniumhill_street_d = "poloniumhillstreetd"
+poi_id_poloniumhill_street_e = "poloniumhillstreete"
+
+poi_id_charcoalpark_street_a = "charcoalparkstreeta" 
+poi_id_charcoalpark_street_b = "charcoalparkstreetb"
+
+poi_id_toxington_street_a = "toxingtonstreeta"
+poi_id_toxington_street_b = "toxingtonstreetb"
+poi_id_toxington_street_c = "toxingtonstreetc"
+poi_id_toxington_street_d = "toxingtonstreetd"
+poi_id_toxington_street_e = "toxingtonstreete"
+
+poi_id_gatlingsdale_street_a = "gatlingsdalestreeta" 
+poi_id_gatlingsdale_street_b = "gatlingsdalestreetb"
+poi_id_gatlingsdale_street_c = "gatlingsdalestreetc"
+poi_id_gatlingsdale_street_d = "gatlingsdalestreetd"
+poi_id_gatlingsdale_street_e = "gatlingsdalestreete"
+
+poi_id_astatineheights_street_a = "astatineheightsstreeta"
+poi_id_astatineheights_street_b = "astatineheightsstreetb"
+poi_id_astatineheights_street_c = "astatineheightsstreetc"
+poi_id_astatineheights_street_d = "astatineheightsstreetd"
+poi_id_astatineheights_street_e = "astatineheightsstreete"
+poi_id_astatineheights_street_f = "astatineheightsstreetf"
+
+poi_id_smogsburg_street_a = "smogsburgstreeta" 
+poi_id_smogsburg_street_b = "smogsburgstreetb"
+poi_id_smogsburg_street_c = "smogsburgstreetc"
+poi_id_smogsburg_street_d = "smogsburgstreetd"
+poi_id_smogsburg_street_e = "smogsburgstreete"
+
+poi_id_arsonbrook_street_a = "arsonbrookstreeta"
+poi_id_arsonbrook_street_b = "arsonbrookstreetb"
+poi_id_arsonbrook_street_c = "arsonbrookstreetc"
+poi_id_arsonbrook_street_d = "arsonbrookstreetd"
+poi_id_arsonbrook_street_e = "arsonbrookstreete"
+
+poi_id_maimridge_street_a = "maimridgestreeta"
+poi_id_maimridge_street_b = "maimridgestreetb"
+poi_id_maimridge_street_c = "maimridgestreetc"
+
+poi_id_brawlden_street_a = "brawldenstreeta" 
+poi_id_brawlden_street_b = "brawldenstreetb"
+poi_id_brawlden_street_c = "brawldenstreetc"
+poi_id_brawlden_street_d = "brawldenstreetd"
+
+poi_id_littlechernobyl_street_a = "littlechernobylstreeta"
+poi_id_littlechernobyl_street_b = "littlechernobylstreetb"
+poi_id_littlechernobyl_street_c = "littlechernobylstreetc"
+
+poi_id_oldnewyonkers_street_a = "oldnewyonkersstreeta"
+poi_id_oldnewyonkers_street_b = "oldnewyonkersstreetb"
+poi_id_oldnewyonkers_street_c = "oldnewyonkersstreetc"
+poi_id_oldnewyonkers_street_d = "oldnewyonkersstreetd"
+poi_id_oldnewyonkers_street_e = "oldnewyonkersstreete"
+
+poi_id_newnewyonkers_street_a = "newnewyonkersstreeta"
+poi_id_newnewyonkers_street_b = "newnewyonkersstreetb"
+poi_id_newnewyonkers_street_c = "newnewyonkersstreetc"
+poi_id_newnewyonkers_street_d = "newnewyonkersstreetd"
+
+poi_id_assaultflatsbeach_street_a = "assaultflatsbeachstreeta"
+poi_id_assaultflatsbeach_street_b = "assaultflatsbeachstreetb"
+
+poi_id_vagrantscorner_street_a = "vagrantscornerstreeta" 
+poi_id_vagrantscorner_street_b = "vagrantscornerstreetb"
+poi_id_vagrantscorner_street_c = "vagrantscornerstreetc"
+poi_id_vagrantscorner_street_d = "vagrantscornerstreetd"
+poi_id_vagrantscorner_street_e = "vagrantscornerstreete"
+poi_id_vagrantscorner_street_f = "vagrantscornerstreetf"
+
+poi_id_greenlightdistrict_street_a = "greenlightdistrictstreeta"
+poi_id_greenlightdistrict_street_b = "greenlightdistrictstreetb"
+poi_id_greenlightdistrict_street_c = "greenlightdistrictstreetc"
+
+poi_id_slimesend_street_a = "slimesendstreeta"
 
 # Tutorial zones
 poi_id_tutorial_classroom = "classroom"
@@ -271,6 +434,24 @@ compartment_id_bookshelf = "bookshelf"
 location_id_empty = "empty"
 
 # Outskirts
+# Layer 1
+poi_id_wreckington_outskirts_edge = "wreckingtonoutskirtsedge"
+poi_id_cratersville_outskirts_edge = "cratersvilleoutskirtsedge"
+poi_id_oozegardens_outskirts_edge = "oozegardensoutskirtsedge"
+poi_id_southsleezeborough_outskirts_edge = "southsleezeboroughoutskirtsedge"
+poi_id_crookline_outskirts_edge = "crooklineoutskirtsedge"
+poi_id_dreadford_outskirts_edge = "dreadfordoutskirtsedge"
+poi_id_jaywalkerplain_outskirts_edge = "jaywalkerplainoutskirtsedge"
+poi_id_westglocksbury_outskirts_edge = "westglocksburyoutskirtsedge"
+poi_id_poloniumhill_outskirts_edge = "poloniumhilloutskirtsedge"
+poi_id_charcoalpark_outskirts_edge = "charcoalparkoutskirtsedge"
+poi_id_toxington_outskirts_edge = "toxingtonoutskirtsedge"
+poi_id_maimridge_outskirts_edge = "maimridgeoutskirtsedge"
+poi_id_arsonbrook_outskirts_edge = "arsonbrookoutskirtsedge"
+poi_id_brawlden_outskirts_edge = "brawldenoutskirtsedge"
+poi_id_newnewyonkers_outskirts_edge = "newnewyonkersoutskirtsedge"
+poi_id_assaultflatsbeach_outskirts_edge = "assaultflatsbeachoutskirtsedge"
+# Layer 2
 poi_id_wreckington_outskirts = "wreckingtonoutskirts"
 poi_id_cratersville_outskirts = "cratersvilleoutskirts"
 poi_id_oozegardens_outskirts = "oozegardensoutskirts"
@@ -282,11 +463,32 @@ poi_id_westglocksbury_outskirts = "westglocksburyoutskirts"
 poi_id_poloniumhill_outskirts = "poloniumhilloutskirts"
 poi_id_charcoalpark_outskirts = "charcoalparkoutskirts"
 poi_id_toxington_outskirts = "toxingtonoutskirts"
-poi_id_astatineheights_outskirts = "astatineheightsoutskirts"
+poi_id_maimridge_outskirts = "maimridgeoutskirts"
 poi_id_arsonbrook_outskirts = "arsonbrookoutskirts"
 poi_id_brawlden_outskirts = "brawldenoutskirts"
 poi_id_newnewyonkers_outskirts = "newnewyonkersoutskirts"
 poi_id_assaultflatsbeach_outskirts = "assaultflatsbeachoutskirts"
+
+# Layer 3
+poi_id_wreckington_outskirts_depths = "wreckingtonoutskirtsdepths"
+poi_id_cratersville_outskirts_depths = "cratersvilleoutskirtsdepths"
+poi_id_oozegardens_outskirts_depths = "oozegardensoutskirtsdepths"
+poi_id_southsleezeborough_outskirts_depths = "southsleezeboroughoutskirtsdepths"
+poi_id_crookline_outskirts_depths = "crooklineoutskirtsdepths"
+poi_id_dreadford_outskirts_depths = "dreadfordoutskirtsdepths"
+poi_id_jaywalkerplain_outskirts_depths = "jaywalkerplainoutskirtsdepths"
+poi_id_westglocksbury_outskirts_depths = "westglocksburyoutskirtsdepths"
+poi_id_poloniumhill_outskirts_depths = "poloniumhilloutskirtsdepths"
+poi_id_charcoalpark_outskirts_depths = "charcoalparkoutskirtsdepths"
+poi_id_toxington_outskirts_depths = "toxingtonoutskirtsdepths"
+poi_id_maimridge_outskirts_depths = "maimridgeoutskirtsdepths"
+poi_id_arsonbrook_outskirts_depths = "arsonbrookoutskirtsdepths"
+poi_id_brawlden_outskirts_depths = "brawldenoutskirtsdepths"
+poi_id_newnewyonkers_outskirts_depths = "newnewyonkersoutskirtsdepths"
+poi_id_assaultflatsbeach_outskirts_depths = "assaultflatsbeachoutskirtsdepths"
+
+
+
 poi_id_south_outskirts = "southoutskirts"
 poi_id_southwest_outskirts = "southwestoutskirts"
 poi_id_west_outskirts = "westoutskirts"
@@ -354,6 +556,16 @@ role_donor = "terezigang"
 role_tutorial = "newintown"
 role_slimernalia = "kingpinofslimernalia"
 role_gellphone = "gellphone"
+role_null_major_role = "nullmajorrole"
+role_null_minor_role = "nullminorrole"
+
+permission_read_messages = "read"
+permission_send_messages = "send"
+#permission_see_history = "history"
+#permission_upload_files = "upload" -- everything else including this should be true by default. 
+# Read, Send, and History should be false by default but set to true.
+
+permissions_general = [permission_read_messages, permission_send_messages]
 
 faction_roles = [
 	role_juvenile,
@@ -529,6 +741,7 @@ channel_apt_westglocksbury ="west-glocksbury-apartments"
 channel_apt_jaywalkerplain ="jaywalker-plain-apartments"
 channel_apt_crookline ="crookline-apartments"
 channel_apt_dreadford ="dreadford-apartments"
+channel_apt_maimrdige ="maimridge-apartments"
 
 channel_slimesendcliffs = "slimes-end-cliffs"
 channel_bodega = "bodega"
@@ -541,6 +754,7 @@ hideout_by_faction = {
 	faction_rowdys: channel_rowdyroughhouse,
 	faction_killers: channel_copkilltown
 }
+
 
 # Commands
 cmd_prefix = '!'
@@ -754,6 +968,7 @@ cmd_tag = cmd_prefix + 'tag'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
+cmd_print_map_data = cmd_prefix + 'printmapdata'
 cmd_boot = cmd_prefix + 'boot'
 cmd_bootall = cmd_prefix + 'bootall'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
@@ -906,6 +1121,11 @@ cmd_release = cmd_prefix + 'release'
 cmd_balance_cosmetics = cmd_prefix + 'balancecosmetic'
 cmd_release_alt1 = cmd_prefix + 'unarrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
+cmd_hiderolenames = cmd_prefix + 'hiderolenames'
+cmd_recreateroles = cmd_prefix + 'recreateroles'
+cmd_deleteroles = cmd_prefix + 'deleteroles'
+cmd_changepermissions = cmd_prefix + 'changeperms'
+cmd_removeuseroverwrites = cmd_prefix + 'removeuseroverwrites'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
@@ -1044,6 +1264,13 @@ hunger_perfish = 15
 hunger_perscavenge = 2
 hunger_pertick = 3
 hunger_pertrickortreat = 6
+
+# Time it takes to move between various parts of the map
+travel_time_subzone = 20
+travel_time_district = 60
+travel_time_street = 30
+travel_time_outskirt = 60
+travel_time_infinite = 900
 
 # ads
 slimecoin_toadvertise = 1000000
@@ -1349,6 +1576,7 @@ time_pvp_enlist = 5 * 60
 time_pvp_knock = 1 * 60 #temp fix. will probably add spam prevention or something funny like restraining orders later
 time_pvp_duel = 3 * 60
 time_pvp_pride = 1 * 60
+time_pvp_vulnerable_districts = 1 * 60
 
 # time to get kicked out of subzone. 
 time_kickout = 60 * 60  # 1 hour
@@ -1577,8 +1805,12 @@ str_yellow_subway_description = "If there's one word to describe the Yellow Line
 str_yellow_subway_station_description = "It's absolutely fucking disgusting. By far the worst subway line, the Yellow Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Yellow Line so bad? The world may never know."
 str_subway_connecting_sentence = "Below it, on a lower level of the station, is a {} line terminal."
 
-# TODO: Add descriptions for each outskirts district.
+# TODO: Add descriptions for each outskirt/street.
+str_generic_outskirts_description_edge = "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble."
 str_generic_outskirts_description = "It's a wasteland, devoid of all life except for slime beasts."
+str_generic_outskirts_description_depths = "The lion's den of the biggest and baddest Secreatures. Stay around too long, and you'll wind up in the jaws of god knows what lurks around here."
+
+str_generic_streets_description = "It's a street. Not much more to be said."
 
 # Common database columns
 col_id_server = 'id_server'
@@ -9480,6 +9712,7 @@ furniture_list = [
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "An old record player sits on the floor.",
 		furniture_place_desc = "You place the ol' boy on the floor."
+
 	),
 	EwFurniture(
 		id_furniture = "keg",
@@ -10194,7 +10427,25 @@ poi_list = [
 		channel = "downtown",
 		role = "Downtown",
 		property_class = property_class_s,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_krakbay: travel_time_district,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_rowdyroughhouse : travel_time_district,
+			poi_id_copkilltown : travel_time_district,
+			poi_id_greenlightdistrict : travel_time_district,
+			poi_id_downtown_street_a : travel_time_street,
+			poi_id_downtown_street_b : travel_time_street,
+			poi_id_downtown_street_c : travel_time_street,
+			poi_id_downtown_street_d : travel_time_street,
+			poi_id_downtown_street_e : travel_time_street,
+			poi_id_downtown_street_f : travel_time_street,
+			poi_id_stockexchange : travel_time_subzone,
+			poi_id_endlesswar : travel_time_subzone,
+			poi_id_slimecorphq : travel_time_subzone,
+		}
 	),
 	EwPoi( # 2
 		id_poi = poi_id_smogsburg,
@@ -10209,7 +10460,22 @@ poi_list = [
 		channel = "smogsburg",
 		role = "Smogsburg",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_downtown : travel_time_district,
+			poi_id_copkilltown : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_smogsburg_street_a : travel_time_street,
+			poi_id_smogsburg_street_b : travel_time_street,
+			poi_id_smogsburg_street_c : travel_time_street,
+			poi_id_smogsburg_street_d : travel_time_street,
+			poi_id_smogsburg_street_e : travel_time_street,
+			poi_id_bazaar : travel_time_subzone,
+			poi_id_recyclingplant : travel_time_subzone,
+		}
 	),
 	EwPoi( # 3
 		id_poi = poi_id_copkilltown,
@@ -10235,7 +10501,16 @@ poi_list = [
 		],
 		pvp = False,
 		property_class = property_class_a,
-		community_chest = chest_id_copkilltown
+		is_district = True,
+		community_chest = chest_id_copkilltown,
+		is_gangbase = True,
+		neighbors = {
+			poi_id_downtown : travel_time_district,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_copkilltown_street_a : travel_time_street,
+		},
 	),
 	EwPoi( # 4
 		id_poi = poi_id_krakbay,
@@ -10249,7 +10524,25 @@ poi_list = [
 		channel = "krak-bay",
 		role = "Krak Bay",
 		property_class = property_class_a,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors={
+			poi_id_downtown : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_oozegardens : travel_time_district,
+			poi_id_southsleezeborough : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_glocksbury : travel_time_district,
+			poi_id_krakbay_street_a : travel_time_street,
+			poi_id_krakbay_street_b : travel_time_street,
+			poi_id_krakbay_street_c : travel_time_street,
+			poi_id_krakbay_street_d : travel_time_street,
+			poi_id_krakbay_street_e : travel_time_street,
+			poi_id_krakbay_street_f : travel_time_street,
+			poi_id_bodega : travel_time_subzone,
+			poi_id_foodcourt : travel_time_subzone,
+			poi_id_sodafountain : travel_time_subzone,
+		}
 	),
 	EwPoi( # 5
 		id_poi = poi_id_poudrinalley,
@@ -10263,7 +10556,21 @@ poi_list = [
 		channel = "poudrin-alley",
 		role = "Poudrin Alley",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_downtown : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_oozegardens : travel_time_district,
+			poi_id_cratersville : travel_time_district,
+			poi_id_rowdyroughhouse : travel_time_district,
+			poi_id_poudrinalley_street_a : travel_time_street,
+			poi_id_poudrinalley_street_b : travel_time_street,
+			poi_id_poudrinalley_street_c : travel_time_street,
+			poi_id_poudrinalley_street_d : travel_time_street,
+			poi_id_poudrinalley_street_e : travel_time_street,
+			poi_id_711 : travel_time_subzone,
+		},
 	),
 	EwPoi( # 6
 		id_poi = poi_id_rowdyroughhouse,
@@ -10286,7 +10593,15 @@ poi_list = [
 		],
 		pvp = False,
 		property_class = property_class_c,
-		community_chest = chest_id_rowdyroughhouse
+		is_district = True,
+		community_chest = chest_id_rowdyroughhouse,
+		is_gangbase = True,
+		neighbors = {
+			poi_id_downtown : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_wreckington : travel_time_district,
+			poi_id_rowdyroughhouse_street_a : travel_time_street,
+		},
 	),
 	EwPoi( # 7
 		id_poi = poi_id_greenlightdistrict,
@@ -10300,8 +10615,18 @@ poi_list = [
 		channel = "green-light-district",
 		role = "Green Light District",
 		property_class = property_class_a,
+		is_district = True,
 		is_capturable = True,
-		has_ads = True
+		has_ads = True,
+		neighbors = {
+			poi_id_downtown : travel_time_district,
+			poi_id_juviesrow : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_greenlightdistrict_street_a : travel_time_street,
+			poi_id_greenlightdistrict_street_b : travel_time_street,
+			poi_id_greenlightdistrict_street_c : travel_time_street,
+			poi_id_thecasino : travel_time_subzone,
+		},
 	),
 	EwPoi( # 8
 		id_poi = poi_id_oldnewyonkers,
@@ -10314,7 +10639,21 @@ poi_list = [
 		channel = "old-new-yonkers",
 		role = "Old New Yonkers",
 		property_class = property_class_a,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_brawlden : travel_time_district,
+			poi_id_newnewyonkers : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_littlechernobyl : travel_time_district,
+			poi_id_oldnewyonkers_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_b : travel_time_street,
+			poi_id_oldnewyonkers_street_c : travel_time_street,
+			poi_id_oldnewyonkers_street_d : travel_time_street,
+			poi_id_oldnewyonkers_street_e : travel_time_street,
+			poi_id_realestate : travel_time_subzone,
+		},
 	),
 	EwPoi( # 9
 		id_poi = poi_id_littlechernobyl,
@@ -10330,7 +10669,17 @@ poi_list = [
 		channel = "little-chernobyl",
 		role = "Little Chernobyl",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_brawlden : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_littlechernobyl_street_a : travel_time_street,
+			poi_id_littlechernobyl_street_b : travel_time_street,
+			poi_id_littlechernobyl_street_c : travel_time_street,
+			poi_id_greencakecafe : travel_time_subzone,
+		},
 	),
 	EwPoi( # 10
 		id_poi = poi_id_arsonbrook,
@@ -10344,7 +10693,20 @@ poi_list = [
 		channel = "arsonbrook",
 		role = "Arsonbrook",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_maimridge : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_littlechernobyl : travel_time_district,
+			poi_id_brawlden : travel_time_district,
+			poi_id_arsonbrook_street_a : travel_time_street,
+			poi_id_arsonbrook_street_b : travel_time_street,
+			poi_id_arsonbrook_street_c : travel_time_street,
+			poi_id_arsonbrook_street_d : travel_time_street,
+			poi_id_arsonbrook_street_e : travel_time_street,
+		},
 	),
 	EwPoi( # 11
 		id_poi = poi_id_astatineheights,
@@ -10359,7 +10721,23 @@ poi_list = [
 		channel = "astatine-heights",
 		role = "Astatine Heights",
 		property_class = property_class_a,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_copkilltown : travel_time_district,
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_toxington : travel_time_district,
+			poi_id_maimridge : travel_time_district,
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_astatineheights_street_a : travel_time_street,
+			poi_id_astatineheights_street_b : travel_time_street,
+			poi_id_astatineheights_street_c : travel_time_street,
+			poi_id_astatineheights_street_d : travel_time_street,
+			poi_id_astatineheights_street_e : travel_time_street,
+			poi_id_astatineheights_street_f : travel_time_street,
+			poi_id_cinema : travel_time_subzone,
+		},
 	),
 	EwPoi( # 12
 		id_poi = poi_id_gatlingsdale,
@@ -10374,7 +10752,21 @@ poi_list = [
 		channel = "gatlingsdale",
 		role = "Gatlingsdale",
 		property_class = property_class_a,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_toxington : travel_time_district,
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_vandalpark : travel_time_district,
+			poi_id_copkilltown : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_gatlingsdale_street_a : travel_time_street,
+			poi_id_gatlingsdale_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_c : travel_time_street,
+			poi_id_gatlingsdale_street_d : travel_time_street,
+			poi_id_gatlingsdale_street_e : travel_time_street,
+			poi_id_nlacu : travel_time_subzone,
+		},
 	),
 	EwPoi( # 13
 		id_poi = poi_id_vandalpark,
@@ -10389,7 +10781,19 @@ poi_list = [
 		channel = "vandal-park",
 		role = "Vandal Park",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_westglocksbury : travel_time_district,
+			poi_id_glocksbury : travel_time_district,
+			poi_id_vandalpark_street_a : travel_time_street,
+			poi_id_vandalpark_street_b : travel_time_street,
+			poi_id_vandalpark_street_c : travel_time_street,
+			poi_id_vandalpark_street_d : travel_time_street,
+			poi_id_arena : travel_time_subzone,
+		},
 	),
 	EwPoi( # 14
 		id_poi = poi_id_glocksbury,
@@ -10404,7 +10808,21 @@ poi_list = [
 		channel = "glocksbury",
 		role = "Glocksbury",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_vandalpark : travel_time_district,
+			poi_id_westglocksbury : travel_time_district,
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_glocksbury_street_a : travel_time_street,
+			poi_id_glocksbury_street_b : travel_time_street,
+			poi_id_glocksbury_street_c : travel_time_street,
+			poi_id_glocksbury_street_d : travel_time_street,
+			poi_id_glocksbury_street_e : travel_time_street,
+			poi_id_glocksburycomics : travel_time_subzone,
+		},
 	),
 	EwPoi( # 15
 		id_poi = poi_id_northsleezeborough,
@@ -10423,7 +10841,21 @@ poi_list = [
 		channel = "north-sleezeborough",
 		role = "North Sleezeborough",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_glocksbury : travel_time_district,
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_crookline : travel_time_district,
+			poi_id_southsleezeborough : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_northsleezeborough_street_a : travel_time_street,
+			poi_id_northsleezeborough_street_b : travel_time_street,
+			poi_id_northsleezeborough_street_c : travel_time_street,
+			poi_id_northsleezeborough_street_d : travel_time_street,
+			poi_id_northsleezeborough_street_e : travel_time_street,
+			poi_id_neomilwaukeestate : travel_time_subzone,
+		},
 	),
 	EwPoi( # 16
 		id_poi = poi_id_southsleezeborough,
@@ -10442,7 +10874,18 @@ poi_list = [
 		channel = "south-sleezeborough",
 		role = "South Sleezeborough",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_crookline : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_oozegardens : travel_time_district,
+			poi_id_southsleezeborough_street_a : travel_time_street,
+			poi_id_southsleezeborough_street_b : travel_time_street,
+			poi_id_southsleezeborough_street_c : travel_time_street,
+			poi_id_southsleezeborough_street_d : travel_time_street,
+		},
 	),
 	EwPoi( # 17
 		id_poi = poi_id_oozegardens,
@@ -10457,7 +10900,18 @@ poi_list = [
 		channel = "ooze-gardens",
 		role = "Ooze Gardens",
 		property_class = property_class_a,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_southsleezeborough : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_cratersville : travel_time_district,
+			poi_id_oozegardens_street_a : travel_time_street,
+			poi_id_oozegardens_street_b : travel_time_street,
+			poi_id_oozegardens_street_c : travel_time_street,
+			poi_id_oozegardens_street_d : travel_time_street,
+		},
 	),
 	EwPoi( # 18
 		id_poi = poi_id_cratersville,
@@ -10472,7 +10926,16 @@ poi_list = [
 		channel = "cratersville",
 		role = "Cratersville",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_oozegardens : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_wreckington : travel_time_district,
+			poi_id_cratersville_street_a : travel_time_street,
+			poi_id_cratersville_street_b: travel_time_street,
+			poi_id_cratersville_street_c: travel_time_street,
+		},
 	),
 	EwPoi( # 19
 		id_poi = poi_id_wreckington,
@@ -10488,7 +10951,14 @@ poi_list = [
 		channel = "wreckington",
 		role = "Wreckington",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_cratersville : travel_time_district,
+			poi_id_rowdyroughhouse : travel_time_district,
+			poi_id_wreckington_street_a : travel_time_street,
+			poi_id_wreckington_street_b : travel_time_street,
+		},
 	),
 	EwPoi( # 20
 		id_poi = poi_id_juviesrow,
@@ -10504,7 +10974,17 @@ poi_list = [
 		role = "Juvie's Row",
 		pvp = False,
 		property_class = property_class_b,
-		community_chest = chest_id_juviesrow
+		is_district = True,
+		community_chest = chest_id_juviesrow,
+		is_gangbase = True,
+		neighbors = {
+			poi_id_greenlightdistrict : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_juviesrow_street_a : travel_time_district,
+			poi_id_mine : travel_time_subzone,
+			poi_id_jr_farms : travel_time_subzone,
+			poi_id_juviesrow_pier : travel_time_subzone,
+		},
 	),
 	EwPoi( # 21
 		id_poi = poi_id_slimesend,
@@ -10520,7 +11000,13 @@ poi_list = [
 		channel = "slimes-end",
 		role = "Slime's End",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_slimesend_street_a : travel_time_street,
+			poi_id_slimesendcliffs : travel_time_subzone,
+		},
 	),
 	EwPoi( # 22
 		id_poi = poi_id_vagrantscorner,
@@ -10535,7 +11021,23 @@ poi_list = [
 		channel = "vagrants-corner",
 		role = "Vagrant's Corner",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_greenlightdistrict : travel_time_district,
+			poi_id_juviesrow : travel_time_district,
+			poi_id_slimesend : travel_time_district,
+			poi_id_assaultflatsbeach : travel_time_district,
+			poi_id_newnewyonkers : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_vagrantscorner_street_a : travel_time_street,
+			poi_id_vagrantscorner_street_b : travel_time_street,
+			poi_id_vagrantscorner_street_c : travel_time_street,
+			poi_id_vagrantscorner_street_d : travel_time_street,
+			poi_id_vagrantscorner_street_e : travel_time_street,
+			poi_id_vagrantscorner_street_f : travel_time_street,
+			poi_id_speakeasy : travel_time_subzone,
+		},
 	),
 	EwPoi( # 23
 		id_poi = poi_id_assaultflatsbeach,
@@ -10553,7 +11055,15 @@ poi_list = [
 		channel = "assault-flats-beach",
 		role = "Assault Flats Beach",
 		property_class = property_class_s,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_newnewyonkers : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_assaultflatsbeach_street_a : travel_time_street,
+			poi_id_assaultflatsbeach_street_b: travel_time_street,
+			poi_id_beachresort : travel_time_subzone,
+		},
 	),
 	EwPoi( # 24
 		id_poi = poi_id_newnewyonkers,
@@ -10568,7 +11078,19 @@ poi_list = [
 		channel = "new-new-yonkers",
 		role = "New New Yonkers",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_brawlden : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_assaultflatsbeach : travel_time_district,
+			poi_id_newnewyonkers_street_a : travel_time_street,
+			poi_id_newnewyonkers_street_b : travel_time_street,
+			poi_id_newnewyonkers_street_c : travel_time_street,
+			poi_id_newnewyonkers_street_d : travel_time_street,
+			poi_id_slimypersuits : travel_time_subzone,
+		},
 	),
 	EwPoi( # 25
 		id_poi = poi_id_brawlden,
@@ -10582,7 +11104,19 @@ poi_list = [
 		channel = "brawlden",
 		role = "Brawlden",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_littlechernobyl : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_newnewyonkers : travel_time_district,
+			poi_id_brawlden_street_a : travel_time_street,
+			poi_id_brawlden_street_b : travel_time_street,
+			poi_id_brawlden_street_c : travel_time_street,
+			poi_id_brawlden_street_d : travel_time_street,
+			poi_id_slimeoidlab : travel_time_subzone,
+		},
 	),
 	EwPoi( # 26
 		id_poi = poi_id_toxington,
@@ -10599,7 +11133,20 @@ poi_list = [
 		channel = "toxington",
 		role = "Toxington",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_charcoalpark : travel_time_district,
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_maimridge : travel_time_district,
+			poi_id_toxington_street_a : travel_time_street,
+			poi_id_toxington_street_b : travel_time_street,
+			poi_id_toxington_street_c : travel_time_street,
+			poi_id_toxington_street_d : travel_time_street,
+			poi_id_toxington_street_e : travel_time_street,
+		},
 	),
 	EwPoi( # 27
 		id_poi = poi_id_charcoalpark,
@@ -10617,7 +11164,14 @@ poi_list = [
 		channel = "charcoal-park",
 		role = "Charcoal Park",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_toxington : travel_time_district,
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_charcoalpark_street_a : travel_time_street,
+			poi_id_charcoalpark_street_b : travel_time_street,
+		},
 	),
 	EwPoi( # 28
 		id_poi = poi_id_poloniumhill,
@@ -10633,7 +11187,20 @@ poi_list = [
 		channel = "polonium-hill",
 		role = "Polonium Hill",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_charcoalpark : travel_time_district,
+			poi_id_toxington : travel_time_district,
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_vandalpark : travel_time_district,
+			poi_id_westglocksbury : travel_time_district,
+			poi_id_poloniumhill_street_a : travel_time_street,
+			poi_id_poloniumhill_street_b : travel_time_street,
+			poi_id_poloniumhill_street_c : travel_time_street,
+			poi_id_poloniumhill_street_d : travel_time_street,
+			poi_id_poloniumhill_street_e : travel_time_street,
+		},
 	),
 	EwPoi( # 29
 		id_poi = poi_id_westglocksbury,
@@ -10651,7 +11218,18 @@ poi_list = [
 		channel = "west-glocksbury",
 		role = "West Glocksbury",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_vandalpark : travel_time_district,
+			poi_id_glocksbury : travel_time_district,
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_westglocksbury_street_a : travel_time_district,
+			poi_id_westglocksbury_street_b : travel_time_district,
+			poi_id_westglocksbury_street_c : travel_time_district,
+			poi_id_westglocksbury_street_d : travel_time_district,
+		},
 	),
 	EwPoi(  # 30
 		id_poi = poi_id_jaywalkerplain,
@@ -10668,7 +11246,20 @@ poi_list = [
 		channel = "jaywalker-plain",
 		role = "Jaywalker Plain",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_westglocksbury : travel_time_district,
+			poi_id_glocksbury : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_crookline : travel_time_district,
+			poi_id_dreadford : travel_time_district,
+			poi_id_jaywalkerplain_street_a : travel_time_street,
+			poi_id_jaywalkerplain_street_b : travel_time_street,
+			poi_id_jaywalkerplain_street_c : travel_time_street,
+			poi_id_jaywalkerplain_street_d : travel_time_street,
+			poi_id_jaywalkerplain_street_e : travel_time_street,
+		},
 	),
 	EwPoi(  # 31
 		id_poi = poi_id_crookline,
@@ -10683,7 +11274,18 @@ poi_list = [
 		channel = "crookline",
 		role = "Crookline",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_dreadford : travel_time_district,
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_southsleezeborough : travel_time_district,
+			poi_id_crookline_street_a : travel_time_street,
+			poi_id_crookline_street_b : travel_time_street,
+			poi_id_crookline_street_c : travel_time_street,
+			poi_id_crookline_street_d : travel_time_street,
+		},
 	),
 	EwPoi(  # 32
 		id_poi = poi_id_dreadford,
@@ -10698,7 +11300,38 @@ poi_list = [
 		channel = "dreadford",
 		role = "Dreadford",
 		property_class = property_class_s,
-		is_capturable = True
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_crookline : travel_time_district,
+			poi_id_dreadford_street_a : travel_time_street,
+			poi_id_dreadford_street_b : travel_time_street,
+			poi_id_countryclub : travel_time_subzone,
+		},
+	),
+	EwPoi( # 33
+		id_poi = poi_id_maimridge,
+		alias = [
+			"maim",
+			"ridge",
+			"mr",
+			"mario"
+		],
+		str_name = "Maimridge",
+		str_desc = "Up until just recently, Maimridge wasn't even considered to be within the borders of NLACakaNM, but it was quickly annexed after the discovery of several wannabe explorers taking up residence in what are usually either abodes fashioned out of the ruins lining Mt. Srxek, or comfy log cabins. The mountain in question is the apple of the collective eyes of all who call Maimridge their home, that is to say, dumbass tourists who put their lives on the line trying to scale such a behemoth, only to end up wiping out and retiring far below the summit. But who can blame them? The national park housing the enormous monument is the best tourist trap our fair city could ask for.",
+		channel = "maimridge",
+		property_class = property_class_b,
+		is_district = True,
+		is_capturable = True,
+		neighbors = {
+			poi_id_toxington : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_maimridge_street_a : travel_time_street,
+			poi_id_maimridge_street_b : travel_time_street,
+			poi_id_maimridge_street_c : travel_time_street,
+		},
 	),
 	EwPoi( # the-sewers
 		id_poi = poi_id_thesewers,
@@ -10719,8 +11352,2466 @@ poi_list = [
 			life_state_corpse
 		],
 		role = "Sewers",
-		community_chest = chest_id_thesewers
+		community_chest = chest_id_thesewers,
+		is_gangbase = True
 	),
+	# Streets start here
+	EwPoi(
+		id_poi = poi_id_rowdyroughhouse_street_a,
+		alias = [
+			"rrsa",
+			"rrstreeta"
+		],
+		str_name = "Rowdy Roughhouse Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'rowdy-roughhouse-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_rowdyroughhouse,
+		neighbors = {
+			poi_id_rowdyroughhouse : travel_time_street,
+			poi_id_downtown_street_c : travel_time_street,
+			poi_id_poudrinalley_street_a : travel_time_street,
+			poi_id_wreckington_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_copkilltown_street_a,
+		alias = [
+			"cksa",
+			"ckstreeta"
+		],
+		str_name = "Cop Killtown Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'cop-killtown-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_copkilltown,
+		neighbors = {
+			poi_id_copkilltown : travel_time_street,
+			poi_id_gatlingsdale_street_a : travel_time_street,
+			poi_id_astatineheights_street_f : travel_time_street,
+			poi_id_smogsburg_street_c : travel_time_street,
+			poi_id_downtown_street_f : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_juviesrow_street_a,
+		alias = [
+			"jrsa",
+			"jrstreeta"
+		],
+		str_name = "Juvie's Row Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'juvies-row-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_juviesrow,
+		neighbors = {
+			poi_id_juviesrow : travel_time_street,
+			poi_id_greenlightdistrict_street_b : travel_time_street,
+			poi_id_vagrantscorner_street_c : travel_time_street,
+			poi_id_mine: travel_time_subzone,
+			poi_id_jr_farms : travel_time_subzone,
+			poi_id_juviesrow_pier : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_downtown_street_a,
+		alias = [
+			"dtsa",
+			"dtstreeta"
+		],
+		str_name = "Downtown Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'downtown-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_f : travel_time_street,
+			poi_id_downtown_street_b : travel_time_street,
+			poi_id_smogsburg_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_downtown_street_b,
+		alias = [
+			"dtsb",
+			"dtstreetb"
+		],
+		str_name = "Downtown Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'downtown-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_a : travel_time_street,
+			poi_id_downtown_street_c : travel_time_street,
+			poi_id_greenlightdistrict_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_downtown_street_c,
+		alias = [
+			"dtsc",
+			"dtstreetc"
+		],
+		str_name = "Downtown Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'downtown-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_d : travel_time_street,
+			poi_id_downtown_street_b : travel_time_street,
+			poi_id_rowdyroughhouse_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_downtown_street_d,
+		alias = [
+			"dtsd",
+			"dtstreetd"
+		],
+		str_name = "Downtown Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'downtown-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_c : travel_time_street,
+			poi_id_downtown_street_e : travel_time_street,
+			poi_id_poudrinalley_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_downtown_street_e,
+		alias = [
+			"dtse",
+			"dtstreete"
+		],
+		str_name = "Downtown Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'downtown-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_d : travel_time_street,
+			poi_id_downtown_street_f : travel_time_street,
+			poi_id_krakbay_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi=poi_id_downtown_street_f,
+		alias=[
+			"dtsf",
+			"dtstreetf"
+		],
+		str_name="Downtown Street F",
+		str_desc=str_generic_streets_description,
+		channel='downtown-street-f',
+		is_street=True,
+		is_capturable=True,
+		father_district=poi_id_downtown,
+		neighbors={
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_e : travel_time_street,
+			poi_id_downtown_street_a : travel_time_street,
+			poi_id_copkilltown_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_a,
+		alias = [
+			"kbsa",
+			"kbstreeta"
+		],
+		str_name = "Krak Bay Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'krak-bay-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_f : travel_time_street,
+			poi_id_krakbay_street_b : travel_time_street,
+			poi_id_downtown_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_b,
+		alias = [
+			"kbsb",
+			"kbstreetb"
+		],
+		str_name = "Krak Bay Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'krak-bay-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_a : travel_time_street,
+			poi_id_krakbay_street_c : travel_time_street,
+			poi_id_poudrinalley_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_c,
+		alias = [
+			"kbsc",
+			"kbstreetc"
+		],
+		str_name = "Krak Bay Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'krak-bay-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_b : travel_time_street,
+			poi_id_krakbay_street_d : travel_time_street,
+			poi_id_oozegardens_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_d,
+		alias = [
+			"kbsd",
+			"kbstreetd"
+		],
+		str_name = "Krak Bay Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'krak-bay-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_c : travel_time_street,
+			poi_id_krakbay_street_e : travel_time_street,
+			poi_id_southsleezeborough_street_c : travel_time_street,
+			poi_id_foodcourt : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_e,
+		alias = [
+			"kbse",
+			"kbstreete"
+		],
+		str_name = "Krak Bay Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'krak-bay-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_d : travel_time_street,
+			poi_id_krakbay_street_f : travel_time_street,
+			poi_id_northsleezeborough_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_f,
+		alias = [
+			"kbsf",
+			"kbstreetf"
+		],
+		str_name = "Krak Bay Street F",
+		str_desc = str_generic_streets_description,
+		channel = 'krak-bay-street-f',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_e : travel_time_street,
+			poi_id_krakbay_street_a : travel_time_street,
+			poi_id_glocksbury_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_a,
+		alias = [
+			"pasa",
+			"pastreeta"
+		],
+		str_name = "Poudrin Alley Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'poudrin-alley-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_e : travel_time_street,
+			poi_id_poudrinalley_street_b : travel_time_street,
+			poi_id_rowdyroughhouse_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_b,
+		alias = [
+			"pasb",
+			"pastreetb"
+		],
+		str_name = "Poudrin Alley Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'poudrin-alley-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_a : travel_time_street,
+			poi_id_poudrinalley_street_c : travel_time_street,
+			poi_id_downtown_street_d : travel_time_street,
+			poi_id_711 : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_c,
+		alias = [
+			"pasc",
+			"pastreetc"
+		],
+		str_name = "Poudrin Alley Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'poudrin-alley-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_b : travel_time_street,
+			poi_id_poudrinalley_street_d : travel_time_street,
+			poi_id_krakbay_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_d,
+		alias = [
+			"pasd",
+			"pastreetd"
+		],
+		str_name = "Poudrin Alley Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'poudrin-alley-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_c : travel_time_street,
+			poi_id_poudrinalley_street_e : travel_time_street,
+			poi_id_oozegardens_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_e,
+		alias = [
+			"pase",
+			"pastreete"
+		],
+		str_name = "Poudrin Alley Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'poudrin-alley-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_d : travel_time_street,
+			poi_id_poudrinalley_street_a : travel_time_street,
+			poi_id_cratersville_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_cratersville_street_a,
+		alias = [
+			"cvsa",
+			"cvstreeta"
+		],
+		str_name = "Cratersville Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'cratersville-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_cratersville,
+		neighbors = {
+			poi_id_cratersville : travel_time_street,
+			poi_id_cratersville_street_b : travel_time_street,
+			poi_id_cratersville_street_c : travel_time_street,
+			poi_id_wreckington_street_a : travel_time_street,
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_cratersville_street_b,
+		alias = [
+			"cvsb",
+			"cvstreetb"
+		],
+		str_name = "Cratersville Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'cratersville-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_cratersville,
+		neighbors = {
+			poi_id_cratersville : travel_time_street,
+			poi_id_cratersville_street_a : travel_time_street,
+			poi_id_cratersville_street_c : travel_time_street,
+			poi_id_poudrinalley_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_cratersville_street_c,
+		alias = [
+			"cvsc",
+			"cvstreetc"
+		],
+		str_name = "Cratersville Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'cratersville-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_cratersville,
+		neighbors = {
+			poi_id_cratersville : travel_time_street,
+			poi_id_cratersville_street_a : travel_time_street,
+			poi_id_cratersville_street_b : travel_time_street,
+			poi_id_oozegardens_street_d : travel_time_street,
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_cv_mines : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_wreckington_street_a,
+		alias = [
+			"wtsa",
+			"wtstreeta"
+		],
+		str_name = "Wreckington Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'wreckington-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_wreckington,
+		neighbors = {
+			poi_id_wreckington : travel_time_street,
+			poi_id_wreckington_street_b : travel_time_street,
+			poi_id_cratersville_street_a : travel_time_street,
+			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_wreckington_street_b,
+		alias = [
+			"wtsb",
+			"wtstreetb"
+		],
+		str_name = "Wreckington Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'wreckington-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_wreckington,
+		neighbors = {
+			poi_id_wreckington : travel_time_street,
+			poi_id_wreckington_street_a : travel_time_street,
+			poi_id_rowdyroughhouse_street_a : travel_time_street,
+			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_diner : travel_time_subzone,
+			poi_id_wt_port : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oozegardens_street_a,
+		alias = [
+			"ogsa",
+			"ogstreeta"
+		],
+		str_name = "Ooze Gardens Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'ooze-gardens-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oozegardens,
+		neighbors = {
+			poi_id_oozegardens : travel_time_street,
+			poi_id_oozegardens_street_d : travel_time_street,
+			poi_id_oozegardens_street_b : travel_time_street,
+			poi_id_southsleezeborough_street_d : travel_time_street,
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oozegardens_street_b,
+		alias = [
+			"ogsb",
+			"ogstreetb"
+		],
+		str_name = "Ooze Gardens Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'ooze-gardens-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oozegardens,
+		neighbors = {
+			poi_id_oozegardens : travel_time_street,
+			poi_id_oozegardens_street_a : travel_time_street,
+			poi_id_oozegardens_street_c : travel_time_street,
+			poi_id_krakbay_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oozegardens_street_c,
+		alias = [
+			"ogsc",
+			"ogstreetc"
+		],
+		str_name = "Ooze Gardens Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'ooze-gardens-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oozegardens,
+		neighbors = {
+			poi_id_oozegardens : travel_time_street,
+			poi_id_oozegardens_street_b : travel_time_street,
+			poi_id_oozegardens_street_d : travel_time_street,
+			poi_id_poudrinalley_street_d : travel_time_street,
+			poi_id_og_farms : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oozegardens_street_d,
+		alias = [
+			"ogsd",
+			"ogstreetd"
+		],
+		str_name = "Ooze Gardens Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'ooze-gardens-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oozegardens,
+		neighbors = {
+			poi_id_oozegardens : travel_time_street,
+			poi_id_oozegardens_street_c : travel_time_street,
+			poi_id_oozegardens_street_a : travel_time_street,
+			poi_id_cratersville_street_c : travel_time_street,
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_og_farms : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_southsleezeborough_street_a,
+		alias = [
+			"ssbsa",
+			"ssbstreeta"
+		],
+		str_name = "South Sleezeborough Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'south-sleezeborough-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_southsleezeborough,
+		neighbors = {
+			poi_id_southsleezeborough : travel_time_street,
+			poi_id_southsleezeborough_street_d : travel_time_street,
+			poi_id_southsleezeborough_street_b : travel_time_street,
+			poi_id_crookline_street_b : travel_time_street,
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_southsleezeborough_street_b,
+		alias = [
+			"ssbsb",
+			"ssbstreetb"
+		],
+		str_name = "South Sleezeborough Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'south-sleezeborough-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_southsleezeborough,
+		neighbors = {
+			poi_id_southsleezeborough : travel_time_street,
+			poi_id_southsleezeborough_street_a : travel_time_street,
+			poi_id_southsleezeborough_street_c : travel_time_street,
+			poi_id_northsleezeborough_street_b : travel_time_street,
+			poi_id_dojo : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_southsleezeborough_street_c,
+		alias = [
+			"ssbsc",
+			"ssbstreetc"
+		],
+		str_name = "South Sleezeborough Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'south-sleezeborough-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_southsleezeborough,
+		neighbors = {
+			poi_id_southsleezeborough : travel_time_street,
+			poi_id_southsleezeborough_street_b : travel_time_street,
+			poi_id_southsleezeborough_street_d : travel_time_street,
+			poi_id_krakbay_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_southsleezeborough_street_d,
+		alias = [
+			"ssbsd",
+			"ssbstreetd"
+		],
+		str_name = "South Sleezeborough Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'south-sleezeborough-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_southsleezeborough,
+		neighbors = {
+			poi_id_southsleezeborough : travel_time_street,
+			poi_id_southsleezeborough_street_c : travel_time_street,
+			poi_id_southsleezeborough_street_a : travel_time_street,
+			poi_id_oozegardens_street_a : travel_time_street,
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_a,
+		alias = [
+			"nsbsa",
+			"nsbstreeta"
+		],
+		str_name = "North Sleezeborough Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'north-sleezeborough-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_e : travel_time_street,
+			poi_id_northsleezeborough_street_b : travel_time_street,
+			poi_id_krakbay_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_b,
+		alias = [
+			"nsbsb",
+			"nsbstreetb"
+		],
+		str_name = "North Sleezeborough Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'north-sleezeborough-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_a : travel_time_street,
+			poi_id_northsleezeborough_street_c : travel_time_street,
+			poi_id_southsleezeborough_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_c,
+		alias = [
+			"nsbsc",
+			"nsbstreetc"
+		],
+		str_name = "North Sleezeborough Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'north-sleezeborough-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_b : travel_time_street,
+			poi_id_northsleezeborough_street_d : travel_time_street,
+			poi_id_crookline_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_d,
+		alias = [
+			"nsbsd",
+			"nsbstreetd"
+		],
+		str_name = "North Sleezeborough Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'north-sleezeborough-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_c : travel_time_street,
+			poi_id_northsleezeborough_street_e : travel_time_street,
+			poi_id_jaywalkerplain_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_e,
+		alias = [
+			"nsbse",
+			"nsbstreete"
+		],
+		str_name = "North Sleezeborough Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'north-sleezeborough-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_d : travel_time_street,
+			poi_id_northsleezeborough_street_a : travel_time_street,
+			poi_id_glocksbury_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_a,
+		alias = [
+			"gbsa",
+			"gbstreeta"
+		],
+		str_name = "Glocksbury Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'glocksbury-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_e : travel_time_street,
+			poi_id_glocksbury_street_b : travel_time_street,
+			poi_id_krakbay_street_f : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_b,
+		alias = [
+			"gbsb",
+			"gbstreetb"
+		],
+		str_name = "Glocksbury Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'glocksbury-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_a : travel_time_street,
+			poi_id_glocksbury_street_c : travel_time_street,
+			poi_id_vandalpark_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_c,
+		alias = [
+			"gbsc",
+			"gbstreetc"
+		],
+		str_name = "Glocksbury Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'glocksbury-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_b : travel_time_street,
+			poi_id_glocksbury_street_d : travel_time_street,
+			poi_id_westglocksbury_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_d,
+		alias = [
+			"gbsd",
+			"gbstreetd"
+		],
+		str_name = "Glocksbury Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'glocksbury-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_c : travel_time_street,
+			poi_id_glocksbury_street_e : travel_time_street,
+			poi_id_jaywalkerplain_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_e,
+		alias = [
+			"gbse",
+			"gbstreete"
+		],
+		str_name = "Glocksbury Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'glocksbury-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_d : travel_time_street,
+			poi_id_glocksbury_street_a : travel_time_street,
+			poi_id_northsleezeborough_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_westglocksbury_street_a,
+		alias = [
+			"wgbsa",
+			"wgbstreeta"
+		],
+		str_name = "West Glocksbury Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'west-glocksbury-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_westglocksbury,
+		neighbors = {
+			poi_id_westglocksbury : travel_time_street,
+			poi_id_westglocksbury_street_d : travel_time_street,
+			poi_id_westglocksbury_street_b : travel_time_street,
+			poi_id_glocksbury_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_westglocksbury_street_b,
+		alias = [
+			"wgbsb",
+			"wgbstreetb"
+		],
+		str_name = "West Glocksbury Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'west-glocksbury-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_westglocksbury,
+		neighbors = {
+			poi_id_westglocksbury : travel_time_street,
+			poi_id_westglocksbury_street_a : travel_time_street,
+			poi_id_westglocksbury_street_c : travel_time_street,
+			poi_id_vandalpark_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_westglocksbury_street_c,
+		alias = [
+			"wgbsc",
+			"wgbstreetc"
+		],
+		str_name = "West Glocksbury Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'west-glocksbury-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_westglocksbury,
+		neighbors = {
+			poi_id_westglocksbury : travel_time_street,
+			poi_id_westglocksbury_street_b : travel_time_street,
+			poi_id_westglocksbury_street_d : travel_time_street,
+			poi_id_poloniumhill_street_d : travel_time_street,
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_westglocksbury_street_d,
+		alias = [
+			"wgbsd",
+			"wgbstreetd"
+		],
+		str_name = "West Glocksbury Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'west-glocksbury-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_westglocksbury,
+		neighbors = {
+			poi_id_westglocksbury : travel_time_street,
+			poi_id_westglocksbury_street_c : travel_time_street,
+			poi_id_westglocksbury_street_a : travel_time_street,
+			poi_id_jaywalkerplain_street_d : travel_time_street,
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_a,
+		alias = [
+			"jpsa",
+			"jpstreeta"
+		],
+		str_name = "Jaywalker Plain Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'jaywalker-plain-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_e : travel_time_street,
+			poi_id_jaywalkerplain_street_b : travel_time_street,
+			poi_id_northsleezeborough_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_b,
+		alias = [
+			"jpsb",
+			"jpstreetb"
+		],
+		str_name = "Jaywalker Plain Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'jaywalker-plain-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_a : travel_time_street,
+			poi_id_jaywalkerplain_street_c : travel_time_street,
+			poi_id_crookline_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_c,
+		alias = [
+			"jpsc",
+			"jpstreetc"
+		],
+		str_name = "Jaywalker Plain Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'jaywalker-plain-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_b : travel_time_street,
+			poi_id_jaywalkerplain_street_d : travel_time_street,
+			poi_id_dreadford_street_a : travel_time_street,
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_pier : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_d,
+		alias = [
+			"jpsd",
+			"jpstreetd"
+		],
+		str_name = "",
+		str_desc = str_generic_streets_description,
+		channel = 'jaywalker-plain-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_c : travel_time_street,
+			poi_id_jaywalkerplain_street_e : travel_time_street,
+			poi_id_westglocksbury_street_d : travel_time_street,
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_pier : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_e,
+		alias = [
+			"jpse",
+			"jpstreetd"
+		],
+		str_name = "Jaywalker Plain Street ",
+		str_desc = str_generic_streets_description,
+		channel = 'jaywalker-plain-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_d : travel_time_street,
+			poi_id_jaywalkerplain_street_a : travel_time_street,
+			poi_id_glocksbury_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_crookline_street_a,
+		alias = [
+			"clsa",
+			"clstreeta"
+		],
+		str_name = "Crookline Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'crookline-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_crookline,
+		neighbors = {
+			poi_id_crookline : travel_time_street,
+			poi_id_crookline_street_d : travel_time_street,
+			poi_id_crookline_street_b : travel_time_street,
+			poi_id_dreadford_street_b : travel_time_street,
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_pier : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_crookline_street_b,
+		alias = [
+			"clsb",
+			"clstreetb"
+		],
+		str_name = "Crookline Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'crookline-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_crookline,
+		neighbors = {
+			poi_id_crookline : travel_time_street,
+			poi_id_crookline_street_a : travel_time_street,
+			poi_id_crookline_street_c : travel_time_street,
+			poi_id_southsleezeborough_street_a : travel_time_street,
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_pier : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_crookline_street_c,
+		alias = [
+			"clsc",
+			"clstreetc"
+		],
+		str_name = "Crookline Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'crookline-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_crookline,
+		neighbors = {
+			poi_id_crookline : travel_time_street,
+			poi_id_crookline_street_b : travel_time_street,
+			poi_id_crookline_street_d : travel_time_street,
+			poi_id_northsleezeborough_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_crookline_street_d,
+		alias = [
+			"clsd",
+			"clstreetd"
+		],
+		str_name = "Crookline Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'crookline-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_crookline,
+		neighbors = {
+			poi_id_crookline : travel_time_street,
+			poi_id_crookline_street_c : travel_time_street,
+			poi_id_crookline_street_a : travel_time_street,
+			poi_id_jaywalkerplain_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_dreadford_street_a,
+		alias = [
+			"dfsa",
+			"dfstreeta"
+		],
+		str_name = "Dreadford Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'dreadford-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_dreadford,
+		neighbors = {
+			poi_id_dreadford : travel_time_street,
+			poi_id_dreadford_street_b : travel_time_street,
+			poi_id_jaywalkerplain_street_c : travel_time_street,
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_dreadford_street_b,
+		alias = [
+			"dfsb",
+			"dfstreetb"
+		],
+		str_name = "Dreadford Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'dreadford-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_dreadford,
+		neighbors = {
+			poi_id_dreadford : travel_time_street,
+			poi_id_dreadford_street_a : travel_time_street,
+			poi_id_crookline_street_a : travel_time_street,
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_df_blimp_tower : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vandalpark_street_a,
+		alias = [
+			"vpsa",
+			"vpstreeta"
+		],
+		str_name = "Vandal Park Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'vandal-park-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vandalpark,
+		neighbors = {
+			poi_id_vandalpark : travel_time_street,
+			poi_id_vandalpark_street_d : travel_time_street,
+			poi_id_vandalpark_street_b : travel_time_street,
+			poi_id_westglocksbury_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vandalpark_street_b,
+		alias = [
+			"vpsb",
+			"vpstreetb"
+		],
+		str_name = "Vandal Park Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'vandal-park-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vandalpark,
+		neighbors = {
+			poi_id_vandalpark : travel_time_street,
+			poi_id_vandalpark_street_a : travel_time_street,
+			poi_id_vandalpark_street_c : travel_time_street,
+			poi_id_glocksbury_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vandalpark_street_c,
+		alias = [
+			"vpsc",
+			"vpstreetc"
+		],
+		str_name = "Vandal Park Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'vandal-park-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vandalpark,
+		neighbors = {
+			poi_id_vandalpark : travel_time_street,
+			poi_id_vandalpark_street_b : travel_time_street,
+			poi_id_vandalpark_street_d : travel_time_street,
+			poi_id_gatlingsdale_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vandalpark_street_d,
+		alias = [
+			"vpsd",
+			"vpstreetd"
+		],
+		str_name = "Vandal Park Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'vandal-park-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vandalpark,
+		neighbors = {
+			poi_id_vandalpark : travel_time_street,
+			poi_id_vandalpark_street_c : travel_time_street,
+			poi_id_vandalpark_street_a : travel_time_street,
+			poi_id_poloniumhill_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_a,
+		alias = [
+			"phsa",
+			"phstreeta"
+		],
+		str_name = "Polonium Hill Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'polonium-hill-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_e : travel_time_street,
+			poi_id_poloniumhill_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_b,
+		alias = [
+			"phsb",
+			"phstreetb"
+		],
+		str_name = "Polonium Hill Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'polonium-hill-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_a : travel_time_street,
+			poi_id_poloniumhill_street_c : travel_time_street,
+			poi_id_toxington_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_c,
+		alias = [
+			"phsc",
+			"phstreetc"
+		],
+		str_name = "Polonium Hill Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'polonium-hill-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_b : travel_time_street,
+			poi_id_poloniumhill_street_d : travel_time_street,
+			poi_id_charcoalpark_street_b : travel_time_street,
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_d,
+		alias = [
+			"phsd",
+			"phstreetd"
+		],
+		str_name = "Polonium Hill Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'polonium-hill-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_c : travel_time_street,
+			poi_id_poloniumhill_street_e : travel_time_street,
+			poi_id_westglocksbury_street_c : travel_time_street,
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_e,
+		alias = [
+			"phse",
+			"phstreete"
+		],
+		str_name = "Polonium Hill Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'polonium-hill-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_d : travel_time_street,
+			poi_id_poloniumhill_street_a : travel_time_street,
+			poi_id_vandalpark_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_charcoalpark_street_a,
+		alias = [
+			"cpsa",
+			"cpstreeta"
+		],
+		str_name = "Charcoal Park Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'charcoal-park-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_charcoalpark,
+		neighbors = {
+			poi_id_charcoalpark : travel_time_street,
+			poi_id_charcoalpark_street_b : travel_time_street,
+			poi_id_toxington_street_c : travel_time_street,
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_charcoalpark_street_b,
+		alias = [
+			"cpsb",
+			"cpstreetb"
+		],
+		str_name = "Charcoal Park Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'charcoal-park-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_charcoalpark,
+		neighbors = {
+			poi_id_charcoalpark : travel_time_street,
+			poi_id_charcoalpark_street_a : travel_time_street,
+			poi_id_poloniumhill_street_c : travel_time_street,
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_a,
+		alias = [
+			"ttsa",
+			"ttstreeta"
+		],
+		str_name = "Toxington Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'toxington-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_e : travel_time_street,
+			poi_id_toxington_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_d : travel_time_street,
+			poi_id_tt_mines : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_b,
+		alias = [
+			"ttsb",
+			"ttstreetb"
+		],
+		str_name = "The Ferry",
+		str_desc = "A modest two-story passenger ferry, built probably 80 years ago. Its faded paint is starting to crack and its creaky wood benches aren’t exactly comfortable. Though it’s not much to look at, you still love riding it. Out here, all you have to think about is the cool wind in your hair, the bright green glow of the Slime Sea searing your eyes, and the New Los Angeles City aka Neo Milwaukee skyline in the distance. You plug in earbuds to drown out the sea captain’s embarrassing Jungle Cruise-tier commentary over the microphone. Good times.",
+		channel = channel_ferry,
+		role = "Ferry",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_ferry,
+		default_line = transport_line_ferry_wt_to_vc,
+		default_stop = poi_id_wt_port,
+		is_pier = True,
+		pier_type = fish_slime_saltwater
+		str_name = "Toxington Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'toxington-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_a : travel_time_street,
+			poi_id_toxington_street_c : travel_time_street,
+			poi_id_poloniumhill_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_c,
+		alias = [
+			"ttsc",
+			"ttstreetc"
+		],
+		str_name = "Toxington Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'toxington-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_b : travel_time_street,
+			poi_id_toxington_street_d : travel_time_street,
+			poi_id_charcoalpark_street_a : travel_time_street,
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_d,
+		alias = [
+			"ttsd",
+			"ttstreetd"
+		],
+		str_name = "Toxington Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'toxington-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_c : travel_time_street,
+			poi_id_toxington_street_e : travel_time_street,
+			poi_id_maimridge_street_c : travel_time_street,
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_toxington_pier : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_e,
+		alias = [
+			"ttse",
+			"ttstreete"
+		],
+		str_name = "Toxington Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'toxington-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_d : travel_time_street,
+			poi_id_toxington_street_a : travel_time_street,
+			poi_id_astatineheights_street_b : travel_time_street,
+			poi_id_toxington_pier : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_a,
+		alias = [
+			"gdsa",
+			"gdstreeta"
+		],
+		str_name = "Gatlingsdale Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'gatlingsdale-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_e : travel_time_street,
+			poi_id_gatlingsdale_street_b : travel_time_street,
+			poi_id_copkilltown_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_b,
+		alias = [
+			"gdsb",
+			"gdstreetb"
+		],
+		str_name = "Gatlinsdale Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'gatlingsdale-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_a : travel_time_street,
+			poi_id_gatlingsdale_street_c : travel_time_street,
+			poi_id_vandalpark_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_c,
+		alias = [
+			"gdsc",
+			"gdstreetc"
+		],
+		str_name = "Gatlingsdale Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'gatlingsdale-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_d : travel_time_street,
+			poi_id_poloniumhill_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_d,
+		alias = [
+			"gdsd",
+			"gdstreetd"
+		],
+		str_name = "Gatlingsdale Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'gatlingsdale-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_c : travel_time_street,
+			poi_id_gatlingsdale_street_e : travel_time_street,
+			poi_id_toxington_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_e,
+		alias = [
+			"gdse",
+			"gdstreete"
+		],
+		str_name = "Gatlingsdale Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'gatlingsdale-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_d : travel_time_street,
+			poi_id_gatlingsdale_street_a : travel_time_street,
+			poi_id_astatineheights_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_a,
+		alias = [
+			"ahsa",
+			"ahstreeta"
+		],
+		str_name = "Astatine Heights Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'astatine-heights-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_f : travel_time_street,
+			poi_id_astatineheights_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_b,
+		alias = [
+			"ahsb",
+			"ahstreetb"
+		],
+		str_name = "Astatine Heights Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'astatine-heights-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_a : travel_time_street,
+			poi_id_astatineheights_street_c : travel_time_street,
+			poi_id_toxington_street_e : travel_time_street,
+			poi_id_seafood : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_c,
+		alias = [
+			"ahsc",
+			"ahstreetc"
+		],
+		str_name = "Astatine Heights Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'astatine-heights-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_b : travel_time_street,
+			poi_id_astatineheights_street_d : travel_time_street,
+			poi_id_maimridge_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_d,
+		alias = [
+			"ahsd",
+			"ahstreetd"
+		],
+		str_name = "Astatine Heights Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'astatine-heights-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_c : travel_time_street,
+			poi_id_astatineheights_street_e : travel_time_street,
+			poi_id_arsonbrook_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_e,
+		alias = [
+			"ahse",
+			"ahstreete"
+		],
+		str_name = "Astatine Heights Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'astatine-heights-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_d : travel_time_street,
+			poi_id_astatineheights_street_f : travel_time_street,
+			poi_id_smogsburg_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_f,
+		alias = [
+			"ahsf",
+			"ahstreetf"
+		],
+		str_name = "Astatine Heights Street F",
+		str_desc = str_generic_streets_description,
+		channel = 'astatine-heights-street-f',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_e : travel_time_street,
+			poi_id_astatineheights_street_a : travel_time_street,
+			poi_id_copkilltown_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_a,
+		alias = [
+			"sbsa",
+			"sbstreeta"
+		],
+		str_name = "Smogsburg Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'smogsburg-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_e : travel_time_street,
+			poi_id_smogsburg_street_b : travel_time_street,
+			poi_id_arsonbrook_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_b,
+		alias = [
+			"sbsb",
+			"sbstreetb"
+		],
+		str_name = "Smogsburg Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'smogsburg-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_a : travel_time_street,
+			poi_id_smogsburg_street_c : travel_time_street,
+			poi_id_astatineheights_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_c,
+		alias = [
+			"sbsc",
+			"sbstreetc"
+		],
+		str_name = "Smogsburg Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'smogsburg-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_b : travel_time_street,
+			poi_id_smogsburg_street_d : travel_time_street,
+			poi_id_copkilltown_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_d,
+		alias = [
+			"sbsd",
+			"sbstreetd"
+		],
+		str_name = "Smogsburg Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'smogsburg-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_c : travel_time_street,
+			poi_id_smogsburg_street_e : travel_time_street,
+			poi_id_downtown_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_e,
+		alias = [
+			"sbse",
+			"sbstreete"
+		],
+		str_name = "Smogsburg Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'smogsburg-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_d : travel_time_street,
+			poi_id_smogsburg_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_a,
+		alias = [
+			"absa",
+			"abstreeta"
+		],
+		str_name = "Arsonbrook Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'arsonbrook-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_e : travel_time_street,
+			poi_id_arsonbrook_street_b : travel_time_street,
+			poi_id_smogsburg_street_a : travel_time_street,
+			poi_id_ab_farms : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_b,
+		alias = [
+			"absb",
+			"abstreetb"
+		],
+		str_name = "Arsonbrook Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'arsonbrook-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_a : travel_time_street,
+			poi_id_arsonbrook_street_c : travel_time_street,
+			poi_id_astatineheights_street_d : travel_time_street,
+			poi_id_ab_farms : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_c,
+		alias = [
+			"absc",
+			"abstreetc"
+		],
+		str_name = "Arsonbrook Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'arsonbrook-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_b : travel_time_street,
+			poi_id_arsonbrook_street_d : travel_time_street,
+			poi_id_maimridge_street_b : travel_time_street,
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_d,
+		alias = [
+			"absd",
+			"abstreetd"
+		],
+		str_name = "Arsonbrook Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'arsonbrook-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_c : travel_time_street,
+			poi_id_arsonbrook_street_e : travel_time_street,
+			poi_id_brawlden_street_a : travel_time_street,
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_e,
+		alias = [
+			"abse",
+			"abstreete"
+		],
+		str_name = "Arsonbrook Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'arsonbrook-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_d : travel_time_street,
+			poi_id_arsonbrook_street_a : travel_time_street,
+			poi_id_littlechernobyl_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_maimridge_street_a,
+		alias = [
+			"mrsa",
+			"mrstreeta"
+		],
+		str_name = "Maimridge Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'maimridge-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_maimridge,
+		neighbors = {
+			poi_id_maimridge : travel_time_street,
+			poi_id_maimridge_street_c : travel_time_street,
+			poi_id_maimridge_street_b : travel_time_street,
+			poi_id_astatineheights_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_maimridge_street_b,
+		alias = [
+			"mrsb",
+			"mrstreetb"
+		],
+		str_name = "Maimridge Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'maimridge-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_maimridge,
+		neighbors = {
+			poi_id_maimridge : travel_time_street,
+			poi_id_maimridge_street_a : travel_time_street,
+			poi_id_maimridge_street_c : travel_time_street,
+			poi_id_arsonbrook_street_c : travel_time_street,
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_maimridge_street_c,
+		alias = [
+			"mrsc",
+			"mrstreetc"
+		],
+		str_name = "Maimridge Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'maimridge-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_maimridge,
+		neighbors = {
+			poi_id_maimridge : travel_time_street,
+			poi_id_maimridge_street_b : travel_time_street,
+			poi_id_maimridge_street_a : travel_time_street,
+			poi_id_toxington_street_d : travel_time_street,
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_brawlden_street_a,
+		alias = [
+			"bdsa",
+			"bdstreeta"
+		],
+		str_name = "Brawlden Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'brawlden-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_brawlden,
+		neighbors = {
+			poi_id_brawlden : travel_time_street,
+			poi_id_brawlden_street_d : travel_time_street,
+			poi_id_brawlden_street_b : travel_time_street,
+			poi_id_arsonbrook_street_d : travel_time_street,
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_brawlden_street_b,
+		alias = [
+			"bdsb",
+			"bdstreetb"
+		],
+		str_name = "Brawlden Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'brawlden-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_brawlden,
+		neighbors = {
+			poi_id_brawlden : travel_time_street,
+			poi_id_brawlden_street_a : travel_time_street,
+			poi_id_brawlden_street_c : travel_time_street,
+			poi_id_newnewyonkers_street_a : travel_time_street,
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_brawlden_street_c,
+		alias = [
+			"bdsc",
+			"bdstreetc"
+		],
+		str_name = "Brawlden Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'brawlden-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_brawlden,
+		neighbors = {
+			poi_id_brawlden : travel_time_street,
+			poi_id_brawlden_street_b : travel_time_street,
+			poi_id_brawlden_street_d : travel_time_street,
+			poi_id_oldnewyonkers_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_brawlden_street_d,
+		alias = [
+			"bdsd",
+			"bdstreetd"
+		],
+		str_name = "Brawlden Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'brawlden-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_brawlden,
+		neighbors = {
+			poi_id_brawlden : travel_time_street,
+			poi_id_brawlden_street_c : travel_time_street,
+			poi_id_brawlden_street_a : travel_time_street,
+			poi_id_littlechernobyl_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_littlechernobyl_street_a,
+		alias = [
+			"lcsa",
+			"lcstreeta"
+		],
+		str_name = "Little Chernobyl Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'little-chernobyl-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_littlechernobyl,
+		neighbors = {
+			poi_id_littlechernobyl : travel_time_street,
+			poi_id_littlechernobyl_street_c : travel_time_street,
+			poi_id_littlechernobyl_street_b : travel_time_street,
+			poi_id_arsonbrook_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_littlechernobyl_street_b,
+		alias = [
+			"lcsb",
+			"lcstreetb"
+		],
+		str_name = "Little Chernobyl Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'little-chernobyl-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_littlechernobyl,
+		neighbors = {
+			poi_id_littlechernobyl : travel_time_street,
+			poi_id_littlechernobyl_street_a : travel_time_street,
+			poi_id_littlechernobyl_street_c : travel_time_street,
+			poi_id_brawlden_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_littlechernobyl_street_c,
+		alias = [
+			"lcsc",
+			"lcstreetc"
+		],
+		str_name = "Little Chernobyl Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'little-chernobyl-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_littlechernobyl,
+		neighbors = {
+			poi_id_littlechernobyl : travel_time_street,
+			poi_id_littlechernobyl_street_b : travel_time_street,
+			poi_id_littlechernobyl_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_a,
+		alias = [
+			"onysa",
+			"onystreeta"
+		],
+		str_name = "Old New Yonkers Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'old-new-yonkers-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_e : travel_time_street,
+			poi_id_oldnewyonkers_street_b : travel_time_street,
+			poi_id_smogsburg_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_b,
+		alias = [
+			"onysb",
+			"onystreetb"
+		],
+		str_name = "Old New Yonkers Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'old-new-yonkers-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_c : travel_time_street,
+			poi_id_littlechernobyl_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_c,
+		alias = [
+			"onysc",
+			"onystreetc"
+		],
+		str_name = "Old New Yonkers Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'old-new-yonkers-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_b : travel_time_street,
+			poi_id_oldnewyonkers_street_d : travel_time_street,
+			poi_id_brawlden_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_d,
+		alias = [
+			"onysd",
+			"onystreetd"
+		],
+		str_name = "Old New Yonkers Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'old-new-yonkers-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_c : travel_time_street,
+			poi_id_oldnewyonkers_street_e : travel_time_street,
+			poi_id_newnewyonkers_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_e,
+		alias = [
+			"onyse",
+			"onystreete"
+		],
+		str_name = "Old New Yonkers Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'old-new-yonkers-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_d : travel_time_street,
+			poi_id_oldnewyonkers_street_a : travel_time_street,
+			poi_id_vagrantscorner_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_newnewyonkers_street_a,
+		alias = [
+			"nnysa",
+			"nnystreeta"
+		],
+		str_name = "New New Yonkers Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'new-new-yonkers-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_newnewyonkers,
+		neighbors = {
+			poi_id_newnewyonkers : travel_time_street,
+			poi_id_newnewyonkers_street_d : travel_time_street,
+			poi_id_newnewyonkers_street_b : travel_time_street,
+			poi_id_brawlden_street_b : travel_time_street,
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_newnewyonkers_street_b,
+		alias = [
+			"nnysb",
+			"nnystreetb"
+		],
+		str_name = "New New Yonkers Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'new-new-yonkers-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_newnewyonkers,
+		neighbors = {
+			poi_id_newnewyonkers : travel_time_street,
+			poi_id_newnewyonkers_street_a : travel_time_street,
+			poi_id_newnewyonkers_street_c : travel_time_street,
+			poi_id_assaultflatsbeach_street_a : travel_time_street,
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_newnewyonkers_street_c,
+		alias = [
+			"nnysc",
+			"nnystreetc"
+		],
+		str_name = "New New Yonkers Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'new-new-yonkers-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_newnewyonkers,
+		neighbors = {
+			poi_id_newnewyonkers : travel_time_street,
+			poi_id_newnewyonkers_street_b : travel_time_street,
+			poi_id_newnewyonkers_street_d : travel_time_street,
+			poi_id_vagrantscorner_street_f : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_newnewyonkers_street_d,
+		alias = [
+			"nnysd",
+			"nnystreetd"
+		],
+		str_name = "New New Yonkers Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'new-new-yonkers-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_newnewyonkers,
+		neighbors = {
+			poi_id_newnewyonkers : travel_time_street,
+			poi_id_newnewyonkers_street_c : travel_time_street,
+			poi_id_newnewyonkers_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_assaultflatsbeach_street_a,
+		alias = [
+			"afbsa",
+			"afbstreeta"
+		],
+		str_name = "Assault Flats Beach Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'assault-flats-beach-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_assaultflatsbeach,
+		neighbors = {
+			poi_id_assaultflatsbeach : travel_time_street,
+			poi_id_assaultflatsbeach_street_b : travel_time_street,
+			poi_id_newnewyonkers_street_b : travel_time_street,
+			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_assaultflatsbeach_pier : travel_time_subzone,
+			poi_id_afb_blimp_tower : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_assaultflatsbeach_street_b,
+		alias = [
+			"afbsb",
+			"afbstreetb"
+		],
+		str_name = "Assault Flats Beach Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'assault-flats-beach-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_assaultflatsbeach,
+		neighbors = {
+			poi_id_assaultflatsbeach : travel_time_street,
+			poi_id_assaultflatsbeach_street_a : travel_time_street,
+			poi_id_vagrantscorner_street_a : travel_time_street,
+			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_assaultflatsbeach_pier : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_a,
+		alias = [
+			"vcsa",
+			"vcstreeta"
+		],
+		str_name = "Vagrant's Corner Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'vagrants-corner-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_f : travel_time_street,
+			poi_id_vagrantscorner_street_b : travel_time_street,
+			poi_id_assaultflatsbeach_street_b : travel_time_street,
+			poi_id_vc_port : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_b,
+		alias = [
+			"vcsb",
+			"vcstreetb"
+		],
+		str_name = "Vagrant's Corner Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'vagrants-corner-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_a : travel_time_street,
+			poi_id_vagrantscorner_street_c : travel_time_street,
+			poi_id_slimesend_street_a : travel_time_street,
+			poi_id_vc_port : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_c,
+		alias = [
+			"vcsc",
+			"vcstreetc"
+		],
+		str_name = "Vagrant's Corner Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'vagrants-corner-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_b : travel_time_street,
+			poi_id_vagrantscorner_street_d : travel_time_street,
+			poi_id_juviesrow_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_d,
+		alias = [
+			"vcsd",
+			"vcstreetd"
+		],
+		str_name = "Vagrant's Corner Street D",
+		str_desc = str_generic_streets_description,
+		channel = 'vagrants-corner-street-d',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_c : travel_time_street,
+			poi_id_vagrantscorner_street_e : travel_time_street,
+			poi_id_greenlightdistrict_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_e,
+		alias = [
+			"vcse",
+			"vcstreete"
+		],
+		str_name = "Vagrant's Corner Street E",
+		str_desc = str_generic_streets_description,
+		channel = 'vagrants-corner-street-e',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_d : travel_time_street,
+			poi_id_vagrantscorner_street_f : travel_time_street,
+			poi_id_oldnewyonkers_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_f,
+		alias = [
+			"vcsf",
+			"vcstreetf"
+		],
+		str_name = "Vagrant's Corner Street F",
+		str_desc = str_generic_streets_description,
+		channel = 'vagrants-corner-street-f',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_e : travel_time_street,
+			poi_id_vagrantscorner_street_a : travel_time_street,
+			poi_id_newnewyonkers_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_greenlightdistrict_street_a,
+		alias = [
+			"gldsa",
+			"gldstreeta"
+		],
+		str_name = "Green Light District Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'green-light-district-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_greenlightdistrict,
+		neighbors = {
+			poi_id_greenlightdistrict : travel_time_street,
+			poi_id_greenlightdistrict_street_c : travel_time_street,
+			poi_id_greenlightdistrict_street_b : travel_time_street,
+			poi_id_vagrantscorner_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_greenlightdistrict_street_b,
+		alias = [
+			"gldsb",
+			"gldstreetb"
+		],
+		str_name = "Green Light District Street B",
+		str_desc = str_generic_streets_description,
+		channel = 'green-light-district-street-b',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_greenlightdistrict,
+		neighbors = {
+			poi_id_greenlightdistrict : travel_time_street,
+			poi_id_greenlightdistrict_street_a : travel_time_street,
+			poi_id_greenlightdistrict_street_c : travel_time_street,
+			poi_id_juviesrow_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_greenlightdistrict_street_c,
+		alias = [
+			"gldsc",
+			"gldstreetc"
+		],
+		str_name = "Green Light District Street C",
+		str_desc = str_generic_streets_description,
+		channel = 'green-light-district-street-c',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_greenlightdistrict,
+		neighbors = {
+			poi_id_greenlightdistrict : travel_time_street,
+			poi_id_greenlightdistrict_street_b : travel_time_street,
+			poi_id_greenlightdistrict_street_a : travel_time_street,
+			poi_id_downtown_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_slimesend_street_a,
+		alias = [
+			"slsa",
+			"slstreeta"
+		],
+		str_name = "Slime's End Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'slimes-end-street-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_slimesend,
+		neighbors = {
+			poi_id_slimesend : travel_time_street,
+			poi_id_vagrantscorner_street_b : travel_time_street,
+			poi_id_slimesend_pier : travel_time_subzone,
+		}
+	),
+	# Subzones start here
 	EwPoi(  # ENDLESS WAR
 		id_poi = poi_id_endlesswar,
 		alias = [
@@ -10735,8 +13826,11 @@ poi_list = [
 		channel = channel_endlesswar,
 		role = "Endless War",
 		is_subzone = True,
-		mother_district = poi_id_downtown,
+		mother_districts = [poi_id_downtown],
 		max_degradation = 10000000,
+		neighbors = {
+			poi_id_downtown : travel_time_subzone,
+		},
 	),
 	EwPoi(  # slimecorp HQ
 		id_poi = poi_id_slimecorphq,
@@ -10752,7 +13846,10 @@ poi_list = [
 		role = "SlimeCorp HQ",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_downtown
+		mother_districts = [poi_id_downtown],
+		neighbors = {
+			poi_id_downtown : travel_time_subzone,
+		},
 	),
 	EwPoi( # stock-exchange
 		id_poi = poi_id_stockexchange,
@@ -10775,7 +13872,10 @@ poi_list = [
 		role = "Stock Exchange",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_downtown
+		mother_districts = [poi_id_downtown],
+		neighbors = {
+			poi_id_downtown : travel_time_subzone,
+		}
 	),
 	EwPoi( # the-bazaar
 		id_poi = poi_id_bazaar,
@@ -10794,7 +13894,10 @@ poi_list = [
 			vendor_bazaar
 		],
 		is_subzone = True,
-		mother_district = poi_id_smogsburg
+		mother_districts = [poi_id_smogsburg],
+		neighbors = {
+			poi_id_smogsburg : travel_time_subzone,
+		},
 	),
 	EwPoi( # the-cinema
 		id_poi = poi_id_cinema,
@@ -10813,7 +13916,10 @@ poi_list = [
 		role = "Cinema",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_astatineheights
+		mother_districts = [poi_id_astatineheights],
+		neighbors = {
+			poi_id_astatineheights : travel_time_subzone,
+		},
 	),
 	EwPoi( # food-court
 		id_poi = poi_id_foodcourt,
@@ -10846,7 +13952,11 @@ poi_list = [
 			vendor_mtndew,
 		],
 		is_subzone = True,
-		mother_district = poi_id_krakbay
+		mother_districts = [poi_id_krakbay, poi_id_krakbay_street_d],
+		neighbors = {
+			poi_id_krakbay : travel_time_subzone,
+			poi_id_krakbay_street_d : travel_time_subzone,
+		},
 	),
 	EwPoi( # nlac-u
 		id_poi = poi_id_nlacu,
@@ -10868,8 +13978,11 @@ poi_list = [
 			vendor_college
 		],
 		is_subzone = True,
-		mother_district = poi_id_gatlingsdale,
+		mother_districts = [poi_id_gatlingsdale],
 		write_manuscript = True,
+		neighbors = {
+			poi_id_gatlingsdale : travel_time_subzone,
+		},
 	),
 	EwPoi( # battle-arena
 		id_poi = poi_id_arena,
@@ -10886,7 +13999,10 @@ poi_list = [
 		role = "Arena",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_vandalpark
+		mother_districts = [poi_id_vandalpark],
+		neighbors = {
+			poi_id_vandalpark : travel_time_subzone,
+		},
 	),
 	EwPoi( # the-dojo
 		id_poi = poi_id_dojo,
@@ -10904,10 +14020,13 @@ poi_list = [
 		role = "Dojo",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_southsleezeborough,
+		mother_districts = [poi_id_southsleezeborough_street_b],
 		vendors = [
 			vendor_dojo
-		]
+		],
+		neighbors = {
+			poi_id_southsleezeborough_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi( # speakeasy
 		id_poi = poi_id_speakeasy,
@@ -10932,7 +14051,10 @@ poi_list = [
 			vendor_bar
 		],
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner
+		mother_districts = [poi_id_vagrantscorner],
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_subzone,
+		},
 	),
 	EwPoi( # 7-11
 		id_poi = poi_id_711,
@@ -10954,7 +14076,11 @@ poi_list = [
 			vendor_vendingmachine
 		],
 		is_subzone = True,
-		mother_district = poi_id_poudrinalley
+		mother_districts = [poi_id_poudrinalley, poi_id_poudrinalley_street_b],
+		neighbors = {
+			poi_id_poudrinalley : travel_time_subzone,
+			poi_id_poudrinalley_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi( # the-labs
 		id_poi = poi_id_slimeoidlab,
@@ -10979,7 +14105,10 @@ poi_list = [
 		role = "Slimeoid Lab",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_brawlden
+		mother_districts = [poi_id_brawlden],
+		neighbors = {
+			poi_id_brawlden : travel_time_subzone,
+		},
 	),
 	EwPoi( # the-mines
 		id_poi = poi_id_mine,
@@ -10996,7 +14125,11 @@ poi_list = [
 		role = "Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_juviesrow
+		mother_districts = [poi_id_juviesrow, poi_id_juviesrow_street_a],
+		neighbors = {
+			poi_id_juviesrow : travel_time_subzone,
+			poi_id_juviesrow_street_a : travel_time_subzone,
+		},
 	),
 	EwPoi( # the-casino
 		id_poi = poi_id_thecasino,
@@ -11015,7 +14148,10 @@ poi_list = [
 		role = "Casino",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_greenlightdistrict
+		mother_districts = [poi_id_greenlightdistrict],
+		neighbors = {
+			poi_id_greenlightdistrict : travel_time_subzone,
+		},
 	),
 	EwPoi(  # cratersville mines
 		id_poi = poi_id_cv_mines,
@@ -11034,7 +14170,10 @@ poi_list = [
 		role = "Cratersville Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_cratersville
+		mother_districts = [poi_id_cratersville_street_c],
+		neighbors = {
+			poi_id_cratersville_street_c : travel_time_subzone,
+		},
 	),
 	EwPoi(  # toxington mines
 		id_poi = poi_id_tt_mines,
@@ -11052,7 +14191,10 @@ poi_list = [
 		role = "Toxington Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_toxington
+		mother_districts = [poi_id_toxington_street_a],
+		neighbors = {
+			poi_id_toxington_street_a : travel_time_subzone,
+		},
 	),
 	EwPoi( # smokers-cough
 		id_poi = poi_id_diner,
@@ -11075,7 +14217,10 @@ poi_list = [
 			vendor_diner
 		],
 		is_subzone = True,
-		mother_district = poi_id_wreckington
+		mother_districts = [poi_id_wreckington_street_b],
+		neighbors = {
+			poi_id_wreckington_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi( # Red Mobster
 		id_poi = poi_id_seafood,
@@ -11097,7 +14242,10 @@ poi_list = [
 			vendor_seafood
 		],
 		is_subzone = True,
-		mother_district = poi_id_astatineheights
+		mother_districts = [poi_id_astatineheights_street_b],
+		neighbors = {
+			poi_id_astatineheights_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi( # JR Farm
 		id_poi = poi_id_jr_farms,
@@ -11117,7 +14265,11 @@ poi_list = [
 		role = "Juvie's Row Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_juviesrow
+		mother_districts = [poi_id_juviesrow, poi_id_juviesrow_street_a],
+		neighbors = {
+			poi_id_juviesrow : travel_time_subzone,
+			poi_id_juviesrow_street_a : travel_time_subzone,
+		},
 	),
 	EwPoi( # OG Farm
 		id_poi = poi_id_og_farms,
@@ -11139,7 +14291,11 @@ poi_list = [
 		role = "Ooze Gardens Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_oozegardens
+		mother_districts = [poi_id_oozegardens_street_c, poi_id_oozegardens_street_d],
+		neighbors = {
+			poi_id_oozegardens_street_c : travel_time_subzone,
+			poi_id_oozegardens_street_d : travel_time_subzone,
+		},
 	),
 	EwPoi( # AB Farm
 		id_poi = poi_id_ab_farms,
@@ -11159,7 +14315,11 @@ poi_list = [
 		role = "Arsonbrook Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_arsonbrook
+		mother_districts = [poi_id_arsonbrook_street_a, poi_id_arsonbrook_street_b],
+		neighbors = {
+			poi_id_arsonbrook_street_a : travel_time_subzone,
+			poi_id_arsonbrook_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Neo Milwaukee State
 		id_poi = poi_id_neomilwaukeestate,
@@ -11178,8 +14338,11 @@ poi_list = [
 			vendor_college
 		],
 		is_subzone = True,
-		mother_district = poi_id_northsleezeborough,
+		mother_districts = [poi_id_northsleezeborough],
 		write_manuscript = True,
+		neighbors = {
+			poi_id_northsleezeborough : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Assault Flats Beach Resort
 		id_poi = poi_id_beachresort,
@@ -11197,7 +14360,10 @@ poi_list = [
 			vendor_beachresort
 		],
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach
+		mother_districts = [poi_id_assaultflatsbeach],
+		neighbors = {
+			poi_id_assaultflatsbeach : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Dreadford Country Club
 		id_poi = poi_id_countryclub,
@@ -11215,7 +14381,10 @@ poi_list = [
 			vendor_countryclub
 		],
 		is_subzone = True,
-		mother_district = poi_id_dreadford
+		mother_districts = [poi_id_dreadford],
+		neighbors = {
+			poi_id_dreadford : travel_time_subzone,
+		},
 	),
 	EwPoi(  # SlimeCorp Recycling Plant
 		id_poi = poi_id_recyclingplant,
@@ -11234,7 +14403,10 @@ poi_list = [
 		role = "Recycling Plant",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_smogsburg
+		mother_districts = [poi_id_smogsburg],
+		neighbors = {
+			poi_id_smogsburg : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Toxington Pier
 		id_poi = poi_id_toxington_pier,
@@ -11249,9 +14421,13 @@ poi_list = [
 		role = "Toxington Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_toxington,
+		mother_districts = [poi_id_toxington_street_d, poi_id_toxington_street_e],
 		is_pier = True,
-		pier_type = fish_slime_freshwater
+		pier_type = fish_slime_freshwater,
+		neighbors = {
+			poi_id_toxington_street_d : travel_time_subzone,
+			poi_id_toxington_street_e : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Jaywalker Plain Pier
 		id_poi = poi_id_jaywalkerplain_pier,
@@ -11266,9 +14442,13 @@ poi_list = [
 		role = "Jaywalker Plain Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_jaywalkerplain,
+		mother_districts = [poi_id_jaywalkerplain_street_c, poi_id_jaywalkerplain_street_d],
 		is_pier = True,
-		pier_type = fish_slime_freshwater
+		pier_type = fish_slime_freshwater,
+		neighbors = {
+			poi_id_jaywalkerplain_street_c : travel_time_subzone,
+			poi_id_jaywalkerplain_street_d : travel_time_subzone,
+		},
 
 	),
 	EwPoi(  # Crookline Pier
@@ -11284,10 +14464,13 @@ poi_list = [
 		role = "Crookline Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_crookline,
+		mother_districts = [poi_id_crookline_street_a, poi_id_crookline_street_b],
 		is_pier = True,
-		pier_type = fish_slime_freshwater
-
+		pier_type = fish_slime_freshwater,
+		neighbors = {
+			poi_id_crookline_street_a : travel_time_subzone,
+			poi_id_crookline_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Assault Flats Beach Pier
 		id_poi = poi_id_assaultflatsbeach_pier,
@@ -11302,10 +14485,13 @@ poi_list = [
 		role = "Assault Flats Beach Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach,
+		mother_districts = [poi_id_assaultflatsbeach_street_a, poi_id_assaultflatsbeach_street_b],
 		is_pier = True,
-		pier_type = fish_slime_saltwater
-
+		pier_type = fish_slime_saltwater,
+		neighbors = {
+			poi_id_assaultflatsbeach_street_a : travel_time_subzone,
+			poi_id_assaultflatsbeach_street_b : travel_time_subzone,
+		},
 	),
 	# EwPoi(  # Vagrant's Corner Pier
 	# 	id_poi = poi_id_vagrantscorner_pier,
@@ -11338,10 +14524,13 @@ poi_list = [
 		role = "Juvie's Row Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_juviesrow,
+		mother_districts = [poi_id_juviesrow, poi_id_juviesrow_street_a],
 		is_pier = True,
-		pier_type = fish_slime_saltwater
-
+		pier_type = fish_slime_saltwater,
+		neighbors = {
+			poi_id_juviesrow : travel_time_subzone,
+			poi_id_juviesrow_street_a : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Slime's End Pier
 		id_poi = poi_id_slimesend_pier,
@@ -11356,10 +14545,12 @@ poi_list = [
 		role = "Slime's End Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_slimesend,
+		mother_districts = [poi_id_slimesend_street_a],
 		is_pier = True,
-		pier_type = fish_slime_saltwater
-
+		pier_type = fish_slime_saltwater,
+		neighbors = {
+			poi_id_slimesend_street_a : travel_time_subzone,
+		},
 	),
 	EwPoi( # Slime Sea
 		id_poi = poi_id_slimesea,
@@ -11386,9 +14577,12 @@ poi_list = [
 		role = "Wreckington Port",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_wreckington,
+		mother_districts = [poi_id_wreckington_street_b],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_wreckington_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Vagrant's Corner Ferry Port
 		id_poi = poi_id_vc_port,
@@ -11408,9 +14602,13 @@ poi_list = [
 		role = "Vagrant's Corner Port",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner,
+		mother_districts = [poi_id_vagrantscorner_street_a, poi_id_vagrantscorner_street_b],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_vagrantscorner_street_a : travel_time_subzone,
+			poi_id_vagrantscorner_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Toxington Subway Station
 		id_poi = poi_id_tt_subway_station,
@@ -11430,14 +14628,17 @@ poi_list = [
 			"tts"
 		],
 		str_name = "The Toxington Subway Station",
-				str_desc = str_red_subway_station_description + "\n\nExits into Toxington.",
+		str_desc = str_red_subway_station_description + "\n\nExits into Toxington.",
 		channel = channel_tt_subway_station,
 		role = "Toxington Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_toxington,
+		mother_districts = [poi_id_toxington],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Astatine Heights Subway Station
 		id_poi = poi_id_ah_subway_station,
@@ -11462,9 +14663,12 @@ poi_list = [
 		role = "Astatine Heights Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_astatineheights,
+		mother_districts = [poi_id_astatineheights],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Gatlingsdale Subway Station
 		id_poi = poi_id_gd_subway_station,
@@ -11489,9 +14693,12 @@ poi_list = [
 		role = "Gatlingsdale Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_gatlingsdale,
+		mother_districts = [poi_id_gatlingsdale],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+
+		},
 	),
 	EwPoi(  # Arsonbrook Subway Station
 		id_poi = poi_id_ab_subway_station,
@@ -11516,9 +14723,12 @@ poi_list = [
 		role = "Arsonbrook Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_arsonbrook,
+		mother_districts = [poi_id_arsonbrook],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Cop Killtown Subway Station
 		id_poi = poi_id_ck_subway_station,
@@ -11544,9 +14754,12 @@ poi_list = [
 		role = "Cop Killtown Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_copkilltown,
+		mother_districts = [poi_id_copkilltown],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Smogsburg Subway Station
 		id_poi = poi_id_sb_subway_station,
@@ -11574,9 +14787,12 @@ poi_list = [
 		role = "Smogsburg Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_smogsburg,
+		mother_districts = [poi_id_smogsburg],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Downtown Subway Station
 		id_poi = poi_id_dt_subway_station,
@@ -11596,9 +14812,12 @@ poi_list = [
 		role = "Downtown Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_downtown,
+		mother_districts = [poi_id_downtown],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Krak Bay Subway Station
 		id_poi = poi_id_kb_subway_station,
@@ -11626,9 +14845,12 @@ poi_list = [
 		role = "Krak Bay Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_krakbay,
+		mother_districts = [poi_id_krakbay],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Glocksbury Subway Station
 		id_poi = poi_id_gb_subway_station,
@@ -11653,9 +14875,12 @@ poi_list = [
 		role = "Glocksbury Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_glocksbury,
+		mother_districts = [poi_id_glocksbury],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # West Glocksbury Subway Station
 		id_poi = poi_id_wgb_subway_station,
@@ -11680,9 +14905,12 @@ poi_list = [
 		role = "West Glocksbury Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_westglocksbury,
+		mother_districts = [poi_id_westglocksbury],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Jaywalker Plain Subway Station
 		id_poi = poi_id_jp_subway_station,
@@ -11707,9 +14935,12 @@ poi_list = [
 		role = "Jaywalker Plain Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_jaywalkerplain,
+		mother_districts = [poi_id_jaywalkerplain],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # North Sleezeborough Subway Station
 		id_poi = poi_id_nsb_subway_station,
@@ -11735,9 +14966,12 @@ poi_list = [
 		role = "North Sleezeborough Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_northsleezeborough,
+		mother_districts = [poi_id_northsleezeborough],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # South Sleezeborough Subway Station
 		id_poi = poi_id_ssb_subway_station,
@@ -11763,9 +14997,12 @@ poi_list = [
 		role = "South Sleezeborough Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_southsleezeborough,
+		mother_districts = [poi_id_southsleezeborough],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Cratersville Subway Station
 		id_poi = poi_id_cv_subway_station,
@@ -11790,9 +15027,12 @@ poi_list = [
 		role = "Cratersville Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_cratersville,
+		mother_districts = [poi_id_cratersville],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Wreckington Subway Station
 		id_poi = poi_id_wt_subway_station,
@@ -11817,9 +15057,12 @@ poi_list = [
 		role = "Wreckington Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_wreckington,
+		mother_districts = [poi_id_wreckington],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Rowdy Roughhouse Subway Station
 		id_poi = poi_id_rr_subway_station,
@@ -11843,9 +15086,12 @@ poi_list = [
 		role = "Rowdy Roughhouse Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_rowdyroughhouse,
+		mother_districts = [poi_id_rowdyroughhouse],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Green Light District Subway Station
 		id_poi = poi_id_gld_subway_station,
@@ -11871,9 +15117,12 @@ poi_list = [
 		role = "Green Light District Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_greenlightdistrict,
+		mother_districts = [poi_id_greenlightdistrict],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Juvie's Row Subway Station
 		id_poi = poi_id_jr_subway_station,
@@ -11898,9 +15147,12 @@ poi_list = [
 		role = "Juvie's Row Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_juviesrow,
+		mother_districts = [poi_id_juviesrow],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Vagrant's Corner Subway Station
 		id_poi = poi_id_vc_subway_station,
@@ -11925,9 +15177,12 @@ poi_list = [
 		role = "Vagrant's Corner Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner,
+		mother_districts = [poi_id_vagrantscorner],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Assault Flats Beach Subway Station
 		id_poi = poi_id_afb_subway_station,
@@ -11957,9 +15212,12 @@ poi_list = [
 		role = "Assault Flats Beach Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach,
+		mother_districts = [poi_id_assaultflatsbeach],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			
+		},
 	),
 	EwPoi(  # Dreadford Blimp Tower
 		id_poi = poi_id_df_blimp_tower,
@@ -11980,9 +15238,12 @@ poi_list = [
 		role = "Dreadford Blimp Tower",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_dreadford,
+		mother_districts = [poi_id_dreadford_street_b],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_dreadford_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Assault Flats Beach Blimp Tower
 		id_poi = poi_id_afb_blimp_tower,
@@ -12006,9 +15267,12 @@ poi_list = [
 		role = "Assault Flats Beach Blimp Tower",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach,
+		mother_districts = [poi_id_assaultflatsbeach_street_a],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_assaultflatsbeach_street_a : travel_time_subzone,
+		},
 	),
 	EwPoi( # realestate
 		id_poi = poi_id_realestate,
@@ -12026,8 +15290,11 @@ poi_list = [
 		pvp = False,
 		channel = channel_realestateagency,
 		role = "Real Estate Agency",
-		mother_district = poi_id_oldnewyonkers,
-		is_subzone = True
+		mother_districts = [poi_id_oldnewyonkers],
+		is_subzone = True,
+		neighbors = {
+			poi_id_oldnewyonkers : travel_time_subzone,
+		},
 	),
 	EwPoi( # Glocksbury Comics
 		id_poi = poi_id_glocksburycomics,
@@ -12046,9 +15313,12 @@ poi_list = [
 		vendors = [vendor_glocksburycomics],
 		channel = "glocksbury-comics",
 		role = "Glocksbury Comics",
-		mother_district = poi_id_glocksbury,
+		mother_districts = [poi_id_glocksbury],
 		is_subzone = True,
 		write_manuscript = True,
+		neighbors = {
+			poi_id_glocksbury : travel_time_subzone,
+		},
 	),
 	EwPoi( # Slimy Persuits
 		id_poi=poi_id_slimypersuits,
@@ -12067,8 +15337,11 @@ poi_list = [
 		vendors=[vendor_slimypersuits],
 		channel="slimy-persuits",
 		role="Slimy Persuits",
-		mother_district=poi_id_newnewyonkers,
-		is_subzone=True
+		mother_districts  = [poi_id_newnewyonkers],
+		is_subzone=True,
+		neighbors = {
+			poi_id_newnewyonkers : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Green Cake Cafe
 		id_poi=poi_id_greencakecafe,
@@ -12085,9 +15358,12 @@ poi_list = [
 		vendors=[vendor_greencakecafe],
 		channel="green-cake-cafe",
 		role="Green Cake Cafe",
-		mother_district=poi_id_littlechernobyl,
+		mother_districts = [poi_id_littlechernobyl],
 		is_subzone=True,
 		write_manuscript=True,
+		neighbors = {
+			poi_id_littlechernobyl : travel_time_subzone,
+		},
 	),
 	EwPoi(
 		id_poi=poi_id_sodafountain,
@@ -12103,8 +15379,11 @@ poi_list = [
 		pvp=False,
 		channel=channel_sodafountain,
 		role="The Bicarbonate Soda Fountain",
-		mother_district=poi_id_krakbay,
-		is_subzone=True
+		mother_districts  = [poi_id_krakbay],
+		is_subzone=True,
+		neighbors = {
+			poi_id_krakbay : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
@@ -12258,7 +15537,7 @@ poi_list = [
 		channel = channel_apt_downtown,
 		role = "Downtown Apartments",
 		is_apartment = True,
-		mother_district = poi_id_downtown,
+		mother_districts = [poi_id_downtown],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12272,7 +15551,7 @@ poi_list = [
 		channel = channel_apt_smogsburg,
 		role = "Smogsburg Apartments",
 		is_apartment = True,
-		mother_district = poi_id_smogsburg,
+		mother_districts = [poi_id_smogsburg],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12286,7 +15565,7 @@ poi_list = [
 		channel = channel_apt_krakbay,
 		role = "Krak Bay Apartments",
 		is_apartment = True,
-		mother_district = poi_id_krakbay,
+		mother_districts = [poi_id_krakbay],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12300,7 +15579,7 @@ poi_list = [
 		channel = channel_apt_poudrinalley,
 		role = "Poudrin Alley Apartments",
 		is_apartment = True,
-		mother_district = poi_id_poudrinalley,
+		mother_districts = [poi_id_poudrinalley],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12314,7 +15593,7 @@ poi_list = [
 		channel = channel_apt_greenlightdistrict,
 		role = "Green Light District Apartments",
 		is_apartment = True,
-		mother_district = poi_id_greenlightdistrict,
+		mother_districts = [poi_id_greenlightdistrict],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12328,7 +15607,7 @@ poi_list = [
 		channel = channel_apt_oldnewyonkers,
 		role = "Old New Yonkers Apartments",
 		is_apartment = True,
-		mother_district = poi_id_oldnewyonkers,
+		mother_districts = [poi_id_oldnewyonkers],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12342,7 +15621,7 @@ poi_list = [
 		channel = channel_apt_littlechernobyl,
 		role = "Little Chernobyl Apartments",
 		is_apartment = True,
-		mother_district = poi_id_littlechernobyl,
+		mother_districts = [poi_id_littlechernobyl],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12356,7 +15635,7 @@ poi_list = [
 		channel = channel_apt_arsonbrook,
 		role = "Arsonbrook Apartments",
 		is_apartment = True,
-		mother_district = poi_id_arsonbrook,
+		mother_districts = [poi_id_arsonbrook],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12370,7 +15649,7 @@ poi_list = [
 		channel = channel_apt_astatineheights,
 		role = "Astatine Heights Apartments",
 		is_apartment = True,
-		mother_district = poi_id_astatineheights,
+		mother_districts = [poi_id_astatineheights],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12384,7 +15663,7 @@ poi_list = [
 		channel = channel_apt_gatlingsdale,
 		role = "Gatlingsdale Apartments",
 		is_apartment = True,
-		mother_district = poi_id_gatlingsdale,
+		mother_districts = [poi_id_gatlingsdale],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12398,7 +15677,7 @@ poi_list = [
 		channel = channel_apt_vandalpark,
 		role = "Vandal Park Apartments",
 		is_apartment = True,
-		mother_district = poi_id_vandalpark,
+		mother_districts = [poi_id_vandalpark],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12412,7 +15691,7 @@ poi_list = [
 		channel=channel_apt_glocksbury,
 		role="Glocksbury Apartments",
 		is_apartment = True,
-		mother_district = poi_id_glocksbury,
+		mother_districts = [poi_id_glocksbury],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -12426,7 +15705,7 @@ poi_list = [
 		channel=channel_apt_northsleezeborough,
 		role="North Sleezeborough Apartments",
 		is_apartment=True,
-		mother_district = poi_id_northsleezeborough,
+		mother_districts = [poi_id_northsleezeborough],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -12440,7 +15719,7 @@ poi_list = [
 		channel = channel_apt_southsleezeborough,
 		role = "South Sleezeborough Apartments",
 		is_apartment=True,
-		mother_district = poi_id_southsleezeborough,
+		mother_districts = [poi_id_southsleezeborough],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12454,7 +15733,7 @@ poi_list = [
 		channel = channel_apt_oozegardens,
 		role = "Ooze Gardens Apartments",
 		is_apartment=True,
-		mother_district = poi_id_oozegardens,
+		mother_districts = [poi_id_oozegardens],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12468,7 +15747,7 @@ poi_list = [
 		channel = channel_apt_cratersville,
 		role = "Cratersville Apartments",
 		is_apartment=True,
-		mother_district = poi_id_cratersville,
+		mother_districts = [poi_id_cratersville],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12482,7 +15761,7 @@ poi_list = [
 		channel=channel_apt_wreckington,
 		role="Wreckington Apartments",
 		is_apartment=True,
-		mother_district = poi_id_wreckington,
+		mother_districts = [poi_id_wreckington],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -12496,7 +15775,7 @@ poi_list = [
 		channel = channel_apt_slimesend,
 		role = "Slime's End Apartments",
 		is_apartment=True,
-		mother_district = poi_id_slimesend,
+		mother_districts = [poi_id_slimesend],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12510,7 +15789,7 @@ poi_list = [
 		channel = channel_apt_vagrantscorner,
 		role = "Vagrant's Corner Apartments",
 		is_apartment=True,
-		mother_district = poi_id_vagrantscorner,
+		mother_districts = [poi_id_vagrantscorner],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12519,12 +15798,12 @@ poi_list = [
 		alias=[
 
 		],
-		str_name="an Assault Flats Beach apartment",
+		str_name="a Assault Flats Beach apartment",
 		str_desc="",
 		channel=channel_apt_assaultflatsbeach,
 		role="Assault Flats Beach Apartments",
 		is_apartment=True,
-		mother_district = poi_id_assaultflatsbeach,
+		mother_districts = [poi_id_assaultflatsbeach],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -12538,7 +15817,7 @@ poi_list = [
 		channel=channel_apt_newnewyonkers,
 		role="New New Yonkers Apartments",
 		is_apartment=True,
-		mother_district = poi_id_newnewyonkers,
+		mother_districts = [poi_id_newnewyonkers],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -12552,7 +15831,7 @@ poi_list = [
 		channel = channel_apt_brawlden,
 		role = "Brawlden Apartments",
 		is_apartment=True,
-		mother_district = poi_id_brawlden,
+		mother_districts = [poi_id_brawlden],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12566,7 +15845,7 @@ poi_list = [
 		channel = channel_apt_toxington,
 		role = "Toxington Apartments",
 		is_apartment=True,
-		mother_district = poi_id_toxington,
+		mother_districts = [poi_id_toxington],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12580,7 +15859,7 @@ poi_list = [
 		channel = channel_apt_charcoalpark,
 		role = "Charcoal Park Apartments",
 		is_apartment=True,
-		mother_district = poi_id_charcoalpark,
+		mother_districts = [poi_id_charcoalpark],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12594,7 +15873,7 @@ poi_list = [
 		channel = channel_apt_poloniumhill,
 		role = "Polonium Hill Apartments",
 		is_apartment=True,
-		mother_district = poi_id_poloniumhill,
+		mother_districts = [poi_id_poloniumhill],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12608,7 +15887,7 @@ poi_list = [
 		channel = channel_apt_westglocksbury,
 		role = "West Glocksbury Apartments",
 		is_apartment=True,
-		mother_district = poi_id_westglocksbury,
+		mother_districts = [poi_id_westglocksbury],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12622,7 +15901,7 @@ poi_list = [
 		channel = channel_apt_jaywalkerplain,
 		role = "Jaywalker Plain Apartments",
 		is_apartment=True,
-		mother_district = poi_id_jaywalkerplain,
+		mother_districts = [poi_id_jaywalkerplain],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12636,7 +15915,7 @@ poi_list = [
 		channel = channel_apt_crookline,
 		role = "Crookline Apartments",
 		is_apartment=True,
-		mother_district = poi_id_crookline,
+		mother_districts = [poi_id_crookline],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12650,7 +15929,7 @@ poi_list = [
 		channel = channel_apt_dreadford,
 		role = "Dreadford Apartments",
 		is_apartment=True,
-		mother_district = poi_id_dreadford,
+		mother_districts = [poi_id_dreadford],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12666,9 +15945,821 @@ poi_list = [
 		str_desc = "Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a leisurely cig. Someone's got their eyes on you. Exits into Slime's End.",
 		channel = channel_slimesendcliffs,
 		role = "Slime's End Cliffs",
-		mother_district = poi_id_slimesend,
+		mother_districts = [poi_id_slimesend],
 		pvp = True,
 		is_subzone = True,
+		neighbors = {
+			poi_id_slimesend : travel_time_subzone,
+		},
+	),
+	EwPoi(  # Clothing store in Krak Bay
+		id_poi = poi_id_bodega,
+		alias = [
+			"clothingstore",
+		],
+		str_in = "just behind the Snapple machine at",
+		str_name = "Bodega",
+		str_desc = "Located behind a secret door in a seemingly innocuous corner store, Bodega is a high end clothing store for the freshest kids in the city.\n\nFrom the outside, Bodega appears to be simply another of the interchangeable convenience stores found on nearly every block of every major city. The windows are completely packed by dusty non-perishables, and the interior is not much better with every  inch of space selling snacks or household basics in a visually deafening assault of brand names. However, those in the know simply stroll past all this noise and head for the old Snapple machine in the back of the shop. The machine is not that at all but a door that slides open to reveal a whole other store on the other side, this is the real Bodega. Neatly appointed, lacquered shelves hold the latest in street and skate fashion from shoes to shirts to jackets. The whole space is clean and orderly in a far cry from the cramped store front.\n\n(This description was literally just stolen and lightly edited from Atlas Obsurca. This is a real place in Boston, look it up. Pretty sick, huh?)\n\nThe well-trimmed, over-cologned four-eyed hipster behind the counter looks upon you with what can only be described as the freakish offspring of utter disdain and mindlessly sycophantic puppy-dog eyes that hope to lure you into an ill-advised purchase of high end socks that forces you to take out a second mortgage on your house. *SHARP INHALE*. He’ll !sew the dirty, unwashed rags you dare call clothing back together if it gets shredded in combat, for a price. You can also get your old outfits !retrofit'd with added combat functionalities here, also for a price.\n\nExits into Krak Bay.",
+		channel = channel_bodega,
+		role = "Bodega",
+		mother_districts = [poi_id_krakbay],
+		pvp = False,
+		vendors = [
+			vendor_bodega,
+			vendor_secretbodega,
+
+		],
+		is_subzone = True,
+		neighbors = {
+			poi_id_krakbay : travel_time_subzone,
+		},
+	),
+	EwPoi(  # Tutorial - 1
+		id_poi = poi_id_tutorial_classroom,
+		channel="classroom",
+		role="Classroom",
+		is_tutorial = True,
+	),
+	EwPoi(  # Tutorial - 2
+		id_poi = poi_id_tutorial_hallway,
+		channel="hallway",
+		role="Hallway",
+		is_tutorial = True,
+	),
+	EwPoi(  # Tutorial - 3
+		id_poi = poi_id_tutorial_ghostcontainment,
+		channel="ghost-containment",
+		role="Ghost Containment",
+		is_tutorial = True,
+	),
+	EwPoi(  # For containing people while server-wide renovations are transpiring.
+		id_poi = poi_id_thesphere,
+		str_name = "The Sphere",
+		str_desc = "A nebulous defined space for containing hazardous waste. You can't tell what's happening on the outside, but it's probably not good.",
+		coord = (54, 39),
+		channel = "the-sphere",
+		role = "The Sphere",
+		is_subzone = True
+	),
+	# Outskirts start here
+	EwPoi(  # Outskirts - 1
+		id_poi=poi_id_wreckington_outskirts_edge,
+		alias=[
+			"wreckingtonoutskirtsedge",
+			"wtoutskirtsedge",
+			"wtoedge",
+			"wtoe",
+		],
+		str_name="Wreckington Outskirts Edge",
+		str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="wreckington-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_wreckington_street_a : travel_time_outskirt,
+			poi_id_wreckington_street_b : travel_time_outskirt,
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_wreckington_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 2
+		id_poi=poi_id_cratersville_outskirts_edge,
+		alias=[
+			"cratersvilleoutskirtsedge",
+			"cvoutskirtsedge",
+			"cvoedge",
+			"cvoe",
+		],
+		str_name="Cratersville Outskirts Edge",
+		str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description_edge),
+		channel="cratersville-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_cratersville_street_a : travel_time_outskirt,
+			poi_id_cratersville_street_c : travel_time_outskirt,
+			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_cratersville_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 3
+		id_poi=poi_id_oozegardens_outskirts_edge,
+		alias=[
+			"oozegardensoutskirtsedge",
+			"ogoutskirtsedge",
+			"ogoedge"
+			"ogoe",
+		],
+		str_name="Ooze Gardens Outskirts Edge",
+		str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="ooze-gardens-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_oozegardens_street_a : travel_time_outskirt,
+			poi_id_oozegardens_street_d : travel_time_outskirt,
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_oozegardens_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 4
+		id_poi=poi_id_southsleezeborough_outskirts_edge,
+		alias=[
+			"southsleezeboroughoutskirtsedge",
+			"ssboutskirtsedge",
+			"ssboedge",
+			"ssboe",
+		],
+		str_name="South Sleezeborough Outskirts Edge",
+		str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="south-sleezeborough-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_southsleezeborough_street_a : travel_time_outskirt,
+			poi_id_southsleezeborough_street_d : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 5
+		id_poi=poi_id_crookline_outskirts_edge,
+		alias=[
+			"crooklineoutskirtsedge",
+			"cloutskirtsedge",
+			"cloedge",
+			"cloe",
+		],
+		str_name="Crookline Outskirts Edge",
+		str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="crookline-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_crookline_street_a : travel_time_outskirt,
+			poi_id_crookline_street_b : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 6
+		id_poi=poi_id_dreadford_outskirts_edge,
+		alias=[
+			"dreadfordoutskirtsedge",
+			"dfoutskirtsedge",
+			"dfoedge"
+			"dfoe",
+		],
+		str_name="Dreadford Outskirts Edge",
+		str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="dreadford-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_dreadford_street_a : travel_time_outskirt,
+			poi_id_dreadford_street_b : travel_time_outskirt,
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_dreadford_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 7
+		id_poi=poi_id_jaywalkerplain_outskirts_edge,
+		alias=[
+			"jaywalkerplainoutskirtsedge",
+			"jpoutskirtsedge",
+			"jpoedge",
+			"jpoe",
+		],
+		str_name="Jaywalker Plain Outskirts Edge",
+		str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="jaywalker-plain-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_jaywalkerplain_street_c : travel_time_outskirt,
+			poi_id_jaywalkerplain_street_d : travel_time_outskirt,
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 8
+		id_poi=poi_id_westglocksbury_outskirts_edge,
+		alias=[
+			"westglocksburyoutskirtsedge",
+			"wgboutskirtsedge",
+			"wgboedge",
+			"wgboe"
+		],
+		str_name="West Glocksbury Outskirts Edge",
+		str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="west-glocksbury-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_westglocksbury_street_c : travel_time_outskirt,
+			poi_id_westglocksbury_street_d : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 9
+		id_poi=poi_id_poloniumhill_outskirts_edge,
+		alias=[
+			"poloniumhilloutskirtsedge",
+			"phoutskirtsedge",
+			"phoedge",
+			"phoe",
+		],
+		str_name="Polonium Hill Outskirts Edge",
+		str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="polonium-hill-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_poloniumhill_street_c : travel_time_outskirt,
+			poi_id_poloniumhill_street_d : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 10
+		id_poi=poi_id_charcoalpark_outskirts_edge,
+		alias=[
+			"charcoalparkoutskirtsedge",
+			"cpoutskirtsedge",
+			"cpoedge",
+			"cpoe",
+		],
+		str_name="Charcoal Park Outskirts Edge",
+		str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="charcoal-park-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_charcoalpark_street_a : travel_time_outskirt,
+			poi_id_charcoalpark_street_b : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 11
+		id_poi=poi_id_toxington_outskirts_edge,
+		alias=[
+			"toxingtonoutskirtsedge",
+			"ttoutskirtsedge",
+			"ttoedge",
+			"ttoe",
+		],
+		str_name="Toxington Outskirts Edge",
+		str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="toxington-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_toxington_street_c : travel_time_outskirt,
+			poi_id_toxington_street_d : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+			poi_id_toxington_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 12
+		id_poi=poi_id_maimridge_outskirts_edge,
+		alias=[
+			"maimridgeoutskirtsedge",
+			"mroutskirtsedge",
+			"mroedge",
+			"mroe",
+		],
+		str_name="Maimridge Outskirts Edge",
+		str_desc="{} To the South is Maimridge. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="maimridge-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_maimridge_street_b : travel_time_outskirt,
+			poi_id_maimridge_street_c : travel_time_outskirt,
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+			poi_id_maimridge_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 13
+		id_poi=poi_id_arsonbrook_outskirts_edge,
+		alias=[
+			"arsonbrookoutskirtsedge",
+			"aboutskirtsedge",
+			"aboedge",
+			"aboe",
+		],
+		str_name="Arsonbrook Outskirts Edge",
+		str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="arsonbrook-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_arsonbrook_street_c : travel_time_outskirt,
+			poi_id_arsonbrook_street_d : travel_time_outskirt,
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 14
+		id_poi=poi_id_brawlden_outskirts_edge,
+		alias=[
+			"brawldenoutskirtsedge",
+			"bdoutskirtsedge",
+			"bdoedge",
+			"bdoe",
+		],
+		str_name="Brawlden Outskirts Edge",
+		str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="brawlden-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_brawlden_street_a : travel_time_outskirt,
+			poi_id_brawlden_street_b : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_brawlden_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 15
+		id_poi=poi_id_newnewyonkers_outskirts_edge,
+		alias=[
+			"newnewyonkersoutskirtsedge",
+			"nnyoutskirtsedge",
+			"nnyoedge",
+			"nnyoe",
+		],
+		str_name="New New Yonkers Outskirts Edge",
+		str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="new-new-yonkers-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_newnewyonkers_street_a : travel_time_outskirt,
+			poi_id_newnewyonkers_street_b : travel_time_outskirt,
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 16
+		id_poi=poi_id_assaultflatsbeach_outskirts_edge,
+		alias=[
+			"assaultflatsbeachoutskirtsedge",
+			"afboutskirtsedge",
+			"afboedge",
+			"afboe",
+		],
+		str_name="Assault Flats Beach Outskirts Edge",
+		str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="assault-flats-beach-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_assaultflatsbeach_street_a : travel_time_outskirt,
+			poi_id_assaultflatsbeach_street_b : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 17
+		id_poi=poi_id_wreckington_outskirts,
+		alias=[
+			"wreckingtonoutskirts",
+			"wtoutskirts",
+			"wto",
+		],
+		str_name="Wreckington Outskirts",
+		str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description),
+		coord=(59, 70),
+		channel="wreckington-outskirts",
+		role="Wreckington Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_cratersville_outskirts : travel_time_outskirt,
+			poi_id_wreckington_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 18
+		id_poi=poi_id_cratersville_outskirts,
+		alias=[
+			"cratersvilleoutskirts",
+			"cvoutskirts",
+			"cvo",
+		],
+		str_name="Cratersville Outskirts",
+		str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description),
+		coord=(44, 70),
+		channel="cratersville-outskirts",
+		role="Cratersville Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_wreckington_outskirts: travel_time_outskirt,
+			poi_id_oozegardens_outskirts : travel_time_outskirt,
+			poi_id_cratersville_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 19
+		id_poi=poi_id_oozegardens_outskirts,
+		alias=[
+			"oozegardensoutskirts",
+			"ogoutskirts",
+			"ogo",
+		],
+		str_name="Ooze Gardens Outskirts",
+		str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description),
+		coord=(35, 70),
+		channel="ooze-gardens-outskirts",
+		role="Ooze Gardens Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_cratersville_outskirts : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 20
+		id_poi=poi_id_southsleezeborough_outskirts,
+		alias=[
+			"southsleezeboroughoutskirts",
+			"ssboutskirts",
+			"ssbo",
+		],
+		str_name="South Sleezeborough Outskirts",
+		str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description),
+		coord=(27, 65),
+		channel="south-sleezeborough-outskirts",
+		role="South Sleezeborough Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_oozegardens_outskirts : travel_time_outskirt,
+			poi_id_crookline_outskirts : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 21
+		id_poi=poi_id_crookline_outskirts,
+		alias=[
+			"crooklineoutskirts",
+			"cloutskirts",
+			"clo",
+		],
+		str_name="Crookline Outskirts",
+		str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description),
+		coord=(18, 66),
+		channel="crookline-outskirts",
+		role="Crookline Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
+			poi_id_dreadford_outskirts : travel_time_outskirt,
+			poi_id_crookline_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 22
+		id_poi=poi_id_dreadford_outskirts,
+		alias=[
+			"dreadfordoutskirts",
+			"dfoutskirts",
+			"dfo",
+		],
+		str_name="Dreadford Outskirts",
+		str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description),
+		coord=(2, 51),
+		channel="dreadford-outskirts",
+		role="Dreadford Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_outskirts : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
+			poi_id_dreadford_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 23
+		id_poi=poi_id_jaywalkerplain_outskirts,
+		alias=[
+			"jaywalkerplainoutskirts",
+			"jpoutskirts",
+			"jpo",
+		],
+		str_name="Jaywalker Plain Outskirts",
+		str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description),
+		coord=(5, 44),
+		channel="jaywalker-plain-outskirts",
+		role="Jaywalker Plain Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_dreadford_outskirts : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 24
+		id_poi=poi_id_westglocksbury_outskirts,
+		alias=[
+			"westglocksburyoutskirts",
+			"wgboutskirts",
+			"wgbo"
+		],
+		str_name="West Glocksbury Outskirts",
+		str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description),
+		coord=(6, 32),
+		channel="west-glocksbury-outskirts",
+		role="West Glocksbury Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 25
+		id_poi=poi_id_poloniumhill_outskirts,
+		alias=[
+			"poloniumhilloutskirts",
+			"phoutskirts",
+			"pho",
+		],
+		str_name="Polonium Hill Outskirts",
+		str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description),
+		coord=(7, 18),
+		channel="polonium-hill-outskirts",
+		role="Polonium Hill Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 26
+		id_poi=poi_id_charcoalpark_outskirts,
+		alias=[
+			"charcoalparkoutskirts",
+			"cpoutskirts",
+			"cpo",
+		],
+		str_name="Charcoal Park Outskirts",
+		str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description),
+		coord=(15, 4),
+		channel="charcoal-park-outskirts",
+		role="Charcoal Park Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts : travel_time_outskirt,
+			poi_id_toxington_outskirts : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 27
+		id_poi=poi_id_toxington_outskirts,
+		alias=[
+			"toxingtonoutskirts",
+			"ttoutskirts",
+			"tto",
+		],
+		str_name="Toxington Outskirts",
+		str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description),
+		coord=(27, 4),
+		channel="toxington-outskirts",
+		role="Toxington Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+			poi_id_maimridge_outskirts : travel_time_outskirt,
+			poi_id_toxington_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 28
+		id_poi=poi_id_maimridge_outskirts,
+		alias=[
+			"maimridgeoutskirts",
+			"mroutskirts",
+			"mro",
+		],
+		str_name="Maimridge Outskirts",
+		str_desc="{} To the South is Maimridge. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description),
+		coord=(46, 10),
+		channel="maimridge-outskirts",
+		role="Maimridge Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+			poi_id_toxington_outskirts : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts : travel_time_outskirt,
+			poi_id_maimridge_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 29
+		id_poi=poi_id_arsonbrook_outskirts,
+		alias=[
+			"arsonbrookoutskirts",
+			"aboutskirts",
+			"abo",
+		],
+		str_name="Arsonbrook Outskirts",
+		str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description),
+		coord=(54, 2),
+		channel="arsonbrook-outskirts",
+		role="Arsonbrook Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+			poi_id_maimridge_outskirts : travel_time_outskirt,
+			poi_id_brawlden_outskirts : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 30
+		id_poi=poi_id_brawlden_outskirts,
+		alias=[
+			"brawldenoutskirts",
+			"bdoutskirts",
+			"bdo",
+		],
+		str_name="Brawlden Outskirts",
+		str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
+		coord=(71, 2),
+		channel="brawlden-outskirts",
+		role="Brawlden Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
+			poi_id_brawlden_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 31
+		id_poi=poi_id_newnewyonkers_outskirts,
+		alias=[
+			"newnewyonkersoutskirts",
+			"nnyoutskirts",
+			"nnyo",
+		],
+		str_name="New New Yonkers Outskirts",
+		str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description),
+		coord=(89, 6),
+		channel="new-new-yonkers-outskirts",
+		role="New New Yonkers Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_brawlden_outskirts : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 32
+		id_poi=poi_id_assaultflatsbeach_outskirts,
+		alias=[
+			"assaultflatsbeachoutskirts",
+			"afboutskirts",
+			"afbo",
+		],
+		str_name="Assault Flats Beach Outskirts",
+		str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
+		coord=(99, 8),
+		channel="assault-flats-beach-outskirts",
+		role="Assault Flats Beach Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 33
+		id_poi=poi_id_wreckington_outskirts_depths,
+		alias=[
+			"wreckingtonoutskirtsdepths",
+			"wtoutskirtsdepths",
+			"wtodepths",
+			"wtod",
+		],
+		str_name="Wreckington Outskirts Depths",
+		str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="wreckington-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_wreckington_outskirts : travel_time_outskirt,
+			poi_id_cratersville_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 34
+		id_poi=poi_id_cratersville_outskirts_depths,
+		alias=[
+			"cratersvilleoutskirtsdepths",
+			"cvoutskirtsdepths",
+			"cvodepths",
+			"cvod",
+		],
+		str_name="Cratersville Outskirts Depths",
+		str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description_depths),
+		channel="cratersville-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_cratersville_outskirts : travel_time_outskirt,
+			poi_id_wreckington_outskirts_depths : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 35
+		id_poi=poi_id_oozegardens_outskirts_depths,
+		alias=[
+			"oozegardensoutskirtsdepths",
+			"ogoutskirtsdepths",
+			"ogodepths",
+			"ogod",
+		],
+		str_name="Ooze Gardens Outskirts Depths",
+		str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="ooze-gardens-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_oozegardens_outskirts : travel_time_outskirt,
+			poi_id_cratersville_outskirts_depths : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_depths : travel_time_outskirt,
+		},
 	),
 	EwPoi(  # Clothing store in Krak Bay
 		id_poi = poi_id_bodega,
@@ -12705,341 +16796,267 @@ poi_list = [
 		vendors = [vendor_basedhardware],
 		is_subzone = True,
 	),
-	# Outskirts start here
-	EwPoi(  # Outskirts - 1
-		id_poi=poi_id_south_outskirts,
+	EwPoi(  # Outskirts - 36
+		id_poi=poi_id_southsleezeborough_outskirts_depths,
 		alias=[
-			"southoutskirts",
-			"soutskirts",
-			"so",
+			"southsleezeboroughoutskirtsdepths",
+			"ssboutskirtsdepths",
+			"ssbodepths",
+			"ssbod",
 		],
-		str_name="Southern Outskirts",
-		str_desc="{} These outskirts lay just beyond the boundaries of Wreckington, Cratersville, and Ooze Gardens. If you kept wandering, you could probably wind up in the Southwestern Outskirts too.".format(str_generic_outskirts_description),
-		coord = (19, 37),
-		coord_alias = [
-			(20, 37),
-			(21, 37)
-		],
-		channel="south-outskirts",
-		role="Southern Outskirts",
+		str_name="South Sleezeborough Outskirts Depths",
+		str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="south-sleezeborough-outskirts-depths",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts=True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_depths : travel_time_outskirt,
+			poi_id_crookline_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 2
-		id_poi=poi_id_southwest_outskirts,
+	EwPoi(  # Outskirts - 37
+		id_poi=poi_id_crookline_outskirts_depths,
 		alias=[
-			"southwesternoutskirts",
-			"swoutskirts",
-			"swo",
+			"crooklineoutskirtsdepths",
+			"cloutskirtsdepths",
+			"clodepths",
+			"clod",
 		],
-		str_name="Southwestern Outskirts",
-		str_desc="{} These outskirts lay just beyond the boundaries of South Sleezeborough, Crookline, and Dreadford. If you kept wandering, you could probably wind up in the Western or Southern Outskirts too.".format(str_generic_outskirts_description),
-		coord = (6, 37),
-		coord_alias = [
-			(7, 37),
-			(8, 37),
-			(9, 37),
-			(10, 37)
-		],
-		channel="southwest-outskirts",
-		role="Southwestern Outskirts",
+		str_name="Crookline Outskirts Depths",
+		str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="crookline-outskirts-depths",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts=True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_crookline_outskirts : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_depths : travel_time_outskirt,
+			poi_id_dreadford_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 3
-		id_poi=poi_id_west_outskirts,
+	EwPoi(  # Outskirts - 38
+		id_poi=poi_id_dreadford_outskirts_depths,
 		alias=[
-			"westernoutskirts",
-			"woutskirts",
-			"wo",
+			"dreadfordoutskirtsdepths",
+			"dfoutskirtsdepths",
+			"dfodepths",
+			"dfod",
 		],
-		str_name="Western Outskirts",
-		str_desc="{} These outskirts lay just beyond the boundaries of Jaywalker Plain, West Glocksbury, and Polonium Hill. If you kept wandering, you could probably wind up in the Southwestern or Northwestern Outskirts too.".format(str_generic_outskirts_description),
-		coord = (3, 10),
-		coord_alias = [
-			(3, 11),
-			(3, 12),
-			(3, 13),
-			(3, 14),
-		],
-		channel="west-outskirts",
-		role="Western Outskirts",
+		str_name="Dreadford Outskirts Depths",
+		str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="dreadford-outskirts-depths",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts=True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_dreadford_outskirts : travel_time_outskirt,
+			poi_id_crookline_outskirts_depths : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 4
-		id_poi=poi_id_northwest_outskirts,
+	EwPoi(  # Outskirts - 39
+		id_poi=poi_id_jaywalkerplain_outskirts_depths,
 		alias=[
-			"northwesternoutskirts",
-			"nwoutskirts",
-			"nwo",
+			"jaywalkerplainoutskirtsdepths",
+			"jpoutskirtsdepths",
+			"jpodepths",
+			"jpod",
 		],
-		str_name="Northwestern Outskirts",
-		str_desc="{} These outskirts lay just beyond the boundaries of Charcoal Park, Toxington, and Astatine Heights. If you kept wandering, you could probably wind up in the Western or Northern Outskirts too.".format(str_generic_outskirts_description),
-		coord = (22, 2),
-		coord_alias = [
-			(21, 2),
-			(20, 2),
-			(19, 2),
-			(18, 2),
-		],
-		channel="northwest-outskirts",
-		role="Northwestern Outskirts",
+		str_name="Jaywalker Plain Outskirts Depths",
+		str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="jaywalker-plain-outskirts-depths",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts=True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
+			poi_id_dreadford_outskirts_depths : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Outskirts - 5
-		id_poi=poi_id_north_outskirts,
+	EwPoi(  # Outskirts - 40
+		id_poi=poi_id_westglocksbury_outskirts_depths,
 		alias=[
-			"northernoutskirts",
-			"noutskirts",
-			"no",
+			"westglocksburyoutskirtsdepths",
+			"wgboutskirtsdepths",
+			"wgbodepths"
+			"wgbod",
 		],
-		str_name="North Outskirts",
-		str_desc="{}  These outskirts lay just beyond the boundaries of Arsonbrook, Brawlden, and New New Yonkers. If you kept wandering, you could probably wind up in the Northwestern Outskirts or the Nuclear Beach too.".format(str_generic_outskirts_description),
-		coord = (37, 2),
-		coord_alias = [
-			(36, 2),
-			(35, 2),
-			(34, 2),
-			(33, 2)
-		],
-		channel="north-outskirts",
-		role="Northern Outskirts",
+		str_name="West Glocksbury Outskirts Depths",
+		str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="west-glocksbury-outskirts-depths",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts=True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_westglocksbury_outskirts : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_depths : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi( # Outskirts - 6
-		id_poi=poi_id_nuclear_beach,
+	EwPoi(  # Outskirts - 41
+		id_poi=poi_id_poloniumhill_outskirts_depths,
 		alias=[
-			"nuclearbeach",
-			"nuclearbeachoutskirts",
-			"nb",
-			"nbeach",
-			"afbo",
-			"afboutskirts",
+			"poloniumhilloutskirtsdepths",
+			"phoutskirtsdepths",
+			"phodepths",
+			"phod",
 		],
-		str_name="Nuclear Beach",
-		str_desc="{}  A place only the fiercest secreatures call home, right next to Assault Flats Beach. Stay around too long, and you'll wind up in the jaws of god knows what lurks around here.".format(str_generic_outskirts_description),
-		coord = (47, 6),
-		coord_alias = [
-			(47, 7)
-		],
-		channel="nuclear-beach",
-		role="Nuclear Beach",
+		str_name="Polonium Hill Outskirts Depths",
+		str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="polonium-hill-outskirts-depths",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts=True
+		is_outskirts = True,
+		neighbors = {
+			poi_id_poloniumhill_outskirts : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_depths : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	# EwPoi(  # Outskirts - 6
-	# 	id_poi=poi_id_dreadford_outskirts,
-	# 	alias=[
-	# 		"dreadfordoutskirts",
-	# 		"dfoutskirts",
-	# 		"dfo",
-	# 	],
-	# 	str_name="Dreadford Outskirts",
-	# 	str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(2, 51),
-	# 	channel="dreadford-outskirts",
-	# 	role="Dreadford Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 7
-	# 	id_poi=poi_id_jaywalkerplain_outskirts,
-	# 	alias=[
-	# 		"jaywalkerplainoutskirts",
-	# 		"jpoutskirts",
-	# 		"jpo",
-	# 	],
-	# 	str_name="Jaywalker Plain Outskirts",
-	# 	str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(5, 44),
-	# 	channel="jaywalker-plain-outskirts",
-	# 	role="Jaywalker Plain Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 8
-	# 	id_poi=poi_id_westglocksbury_outskirts,
-	# 	alias=[
-	# 		"westglocksburyoutskirts",
-	# 		"wgboutskirts",
-	# 		"wgbo"
-	# 	],
-	# 	str_name="West Glocksbury Outskirts",
-	# 	str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(6, 32),
-	# 	channel="west-glocksbury-outskirts",
-	# 	role="West Glocksbury Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 9
-	# 	id_poi=poi_id_poloniumhill_outskirts,
-	# 	alias=[
-	# 		"poloniumhilloutskirts",
-	# 		"phoutskirts",
-	# 		"pho",
-	# 	],
-	# 	str_name="Polonium Hill Outskirts",
-	# 	str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(7, 18),
-	# 	channel="polonium-hill-outskirts",
-	# 	role="Polonium Hill Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 10
-	# 	id_poi=poi_id_charcoalpark_outskirts,
-	# 	alias=[
-	# 		"charcoalparkoutskirts",
-	# 		"cpoutskirts",
-	# 		"cpo",
-	# 	],
-	# 	str_name="Charcoal Park Outskirts",
-	# 	str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(15, 4),
-	# 	channel="charcoal-park-outskirts",
-	# 	role="Charcoal Park Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 11
-	# 	id_poi=poi_id_toxington_outskirts,
-	# 	alias=[
-	# 		"toxingtonoutskirts",
-	# 		"ttoutskirts",
-	# 		"tto",
-	# 	],
-	# 	str_name="Toxington Outskirts",
-	# 	str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(27, 4),
-	# 	channel="toxington-outskirts",
-	# 	role="Toxington Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 12
-	# 	id_poi=poi_id_astatineheights_outskirts,
-	# 	alias=[
-	# 		"astatineheightsoutskirts",
-	# 		"ahoutskirts",
-	# 		"aho",
-	# 	],
-	# 	str_name="Astatine Heights Outskirts",
-	# 	str_desc="{} To the South is Astatine Heights. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(46, 10),
-	# 	channel="astatine-heights-outskirts",
-	# 	role="Astatine Heights Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 13
-	# 	id_poi=poi_id_arsonbrook_outskirts,
-	# 	alias=[
-	# 		"arsonbrookoutskirts",
-	# 		"aboutskirts",
-	# 		"abo",
-	# 	],
-	# 	str_name="Arsonbrook Outskirts",
-	# 	str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(54, 2),
-	# 	channel="arsonbrook-outskirts",
-	# 	role="Arsonbrook Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 14
-	# 	id_poi=poi_id_brawlden_outskirts,
-	# 	alias=[
-	# 		"brawldenoutskirts",
-	# 		"bdoutskirts",
-	# 		"bdo",
-	# 	],
-	# 	str_name="Brawlden Outskirts",
-	# 	str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(71, 2),
-	# 	channel="brawlden-outskirts",
-	# 	role="Brawlden Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 15
-	# 	id_poi=poi_id_newnewyonkers_outskirts,
-	# 	alias=[
-	# 		"newnewyonkersoutskirts",
-	# 		"nnyoutskirts",
-	# 		"nnyo",
-	# 	],
-	# 	str_name="New New Yonkers Outskirts",
-	# 	str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(89, 6),
-	# 	channel="new-new-yonkers-outskirts",
-	# 	role="New New Yonkers Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 16
-	# 	id_poi=poi_id_assaultflatsbeach_outskirts,
-	# 	alias=[
-	# 		"assaultflatsbeachoutskirts",
-	# 		"afboutskirts",
-	# 		"afbo",
-	# 	],
-	# 	str_name="Assault Flats Beach Outskirts",
-	# 	str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(99, 8),
-	# 	channel="assault-flats-beach-outskirts",
-	# 	role="Assault Flats Beach Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	EwPoi(  # Tutorial - 1
-		id_poi = poi_id_tutorial_classroom,
-		channel="classroom",
-		role="Classroom",
-		is_tutorial = True,
+	EwPoi(  # Outskirts - 42
+		id_poi=poi_id_charcoalpark_outskirts_depths,
+		alias=[
+			"charcoalparkoutskirtsdepths",
+			"cpoutskirtsdepths",
+			"cpodepths",
+			"cpod",
+		],
+		str_name="Charcoal Park Outskirts Depths",
+		str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="charcoal-park-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_depths : travel_time_outskirt,
+			poi_id_toxington_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Tutorial - 2
-		id_poi = poi_id_tutorial_hallway,
-		channel="hallway",
-		role="Hallway",
-		is_tutorial = True,
+	EwPoi(  # Outskirts - 43
+		id_poi=poi_id_toxington_outskirts_depths,
+		alias=[
+			"toxingtonoutskirtsdepths",
+			"ttoutskirtsdepths",
+			"ttodepths",
+			"ttod",
+		],
+		str_name="Toxington Outskirts Depths",
+		str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="toxington-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_toxington_outskirts : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_depths : travel_time_outskirt,
+			poi_id_maimridge_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # Tutorial - 3
-		id_poi = poi_id_tutorial_ghostcontainment,
-		channel="ghost-containment",
-		role="Ghost Containment",
-		is_tutorial = True,
+	EwPoi(  # Outskirts - 44
+		id_poi=poi_id_maimridge_outskirts_depths,
+		alias=[
+			"maimridgeoutskirtsdepths",
+			"mroutskirtsdepths",
+			"mrodepths",
+			"mrod",
+		],
+		str_name="Maimridge Outskirts Depths",
+		str_desc="{} To the South is Maimridge. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="maimridge-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_maimridge_outskirts : travel_time_outskirt,
+			poi_id_toxington_outskirts_depths : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_depths : travel_time_outskirt,
+		},
 	),
-	EwPoi(  # For containing people while server-wide renovations are transpiring.
-		id_poi = poi_id_thesphere,
-		str_name = "The Sphere",
-		str_desc = "A nebulous defined space for containing hazardous waste. You can't tell what's happening on the outside, but it's probably not good.",
-		coord = (54, 39),
-		channel = "the-sphere",
-		role = "The Sphere",
-		is_subzone = True
+	EwPoi(  # Outskirts - 45
+		id_poi=poi_id_arsonbrook_outskirts_depths,
+		alias=[
+			"arsonbrookoutskirtsdepths",
+			"aboutskirtsdepths",
+			"abodepths",
+			"abod",
+		],
+		str_name="Arsonbrook Outskirts Depths",
+		str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="arsonbrook-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_arsonbrook_outskirts : travel_time_outskirt,
+			poi_id_maimridge_outskirts_depths : travel_time_outskirt,
+			poi_id_brawlden_outskirts_depths : travel_time_outskirt,
+		},
 	),
+	EwPoi(  # Outskirts - 46
+		id_poi=poi_id_brawlden_outskirts_depths,
+		alias=[
+			"brawldenoutskirtsdepths",
+			"bdoutskirtsdepths",
+			"bdodepths",
+			"bdod",
+		],
+		str_name="Brawlden Outskirts Depths",
+		str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="brawlden-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_brawlden_outskirts : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_depths : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 47
+		id_poi=poi_id_newnewyonkers_outskirts_depths,
+		alias=[
+			"newnewyonkersoutskirtsdepths",
+			"nnyoutskirtsdepths",
+			"nnyodepths",
+			"nnyod",
+		],
+		str_name="New New Yonkers Outskirts Depths",
+		str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="new-new-yonkers-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
+			poi_id_brawlden_outskirts_depths : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 48
+		id_poi=poi_id_assaultflatsbeach_outskirts_depths,
+		alias=[
+			"assaultflatsbeachoutskirtsdepths",
+			"afboutskirtsdepths",
+			"afbodepths",
+			"afbod",
+		],
+		str_name="Assault Flats Beach Outskirts Depths",
+		str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="assault-flats-beach-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_assaultflatsbeach_outskirts : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_depths : travel_time_outskirt,
+		},
+	)
 ]
+	
 
 debugroom = ewdebug.debugroom
 debugroom_short = ewdebug.debugroom_short
@@ -13052,18 +17069,65 @@ coord_to_poi = {}
 chname_to_poi = {}
 alias_to_coord = {}
 capturable_districts = []
+outskirts_districts = []
 transports = []
 transport_stops = []
 transport_stops_ch = []
 piers = []
 outskirts = []
+outskirts_edges = []
+outskirts_middle = []
+outskirts_depths = []
+streets = []
 tutorial_pois = []
 zine_mother_districts = []
 
 for poi in poi_list:
+
+	# Assign permissions for all locations in the poi list.
+	if poi.permissions == None:
+		poi.permissions = {('{}'.format(poi.id_poi)): permissions_general}
+
+	# Assign all the correct major and minor roles.
+	
+	# Districts and streets need their minor roles to see (read-only) all of their subzones.
+	if poi.is_district or poi.is_street:
+		poi.minor_role = '{}_minor'.format(poi.id_poi)
+
+	# Districts need their major roles for their specific LAN (voice/text) channels.
+	if poi.is_district:
+		poi.major_role = '{}_major'.format(poi.id_poi)
+	
+	# Subzones and streets need the same major roles as their mother/father districts.
+	if poi.is_street:
+		for father_poi in poi_list:
+			if father_poi.id_poi == poi.father_district:
+				poi.major_role = father_poi.major_role
+				break
+	
+	if poi.is_subzone:
+		for mother_poi in poi_list:
+			if mother_poi.id_poi in poi.mother_districts:
+				if mother_poi.major_role != None:
+					poi.major_role = mother_poi.major_role
+					break
+				
+	
+		
+	if poi.major_role == None:
+		#print('Null Major Role give to {}'.format(poi.id_poi))
+		poi.major_role = role_null_major_role
+	if poi.minor_role == None:
+		#print('Null Minor Role give to {}'.format(poi.str_name))
+		poi.minor_role = role_null_minor_role
+	
 	if poi.coord != None:
 		# Populate the map of coordinates to their point of interest, for looking up from the map.
 		coord_to_poi[poi.coord] = poi
+		
+		# for poi_2 in poi_list:
+		# 	if (poi.coord == poi_2.coord) and (poi.id_poi != poi_2.id_poi):
+		# 		print('{} has same coords as {}, please fix this.'.format(poi.id_poi, poi_2.id_poi))
 
 		# Populate the map of coordinate aliases to the main coordinate.
 		for coord_alias in poi.coord_alias:
@@ -13091,14 +17155,28 @@ for poi in poi_list:
 
 	if poi.is_outskirts:
 		outskirts.append(poi.id_poi)
+		# For spawning purposes. Rarer enemies will spawn more often in the father layers of the 48 outskirts.
+		
+		# It's a bit of a simplistic solution, but this way we don't have to add an attribute to EwPoi
+		if 'edge' in poi.str_name.lower():
+			outskirts_edges.append(poi.id_poi)
+		elif 'depths' in poi.str_name.lower():
+			outskirts_depths.append(poi.id_poi)
+		else:
+			outskirts_middle.append(poi.id_poi)
+		
+	if poi.is_street:
+		streets.append(poi.id_poi)
 
 	if poi.is_tutorial:
 		tutorial_pois.append(poi.id_poi)
 
 	if poi.write_manuscript:
-		zine_mother_districts.append(id_to_poi.get(poi.mother_district))
+		for mother_poi in poi.mother_districts:
+			zine_mother_districts.append(id_to_poi.get(mother_poi))
 
 	chname_to_poi[poi.channel] = poi
+
 
 landmark_pois = [
 	poi_id_dreadford,
@@ -13107,6 +17185,9 @@ landmark_pois = [
 	poi_id_assaultflatsbeach,
 	poi_id_wreckington,
 ]
+
+# Places on the map that should result in a user being flagged for PVP
+vulnerable_districts = outskirts + streets
 
 # maps districts to their immediate neighbors
 poi_neighbors = {}
@@ -13215,8 +17296,7 @@ transport_lines = [
 			poi_id_wt_subway_station : [20, poi_id_rr_subway_station],
 			poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
 			poi_id_dt_subway_station : [20, poi_id_ck_subway_station],
-			poi_id_ck_subway_station : [20, poi_id_gd_subway_station],
-			poi_id_gd_subway_station : [20, poi_id_ah_subway_station],
+			poi_id_ck_subway_station : [20, poi_id_ah_subway_station],
 			poi_id_ah_subway_station : [20, poi_id_tt_subway_station]
 			}
 
@@ -19376,16 +23456,6 @@ coward_responses_hurt = [
 	"\nThe {} cries out in pain!: *Just wait until the Juvenile Enrichment Center hears about this!!*",
 	"\nThe {} cries out in pain!: *You MONSTER!*",
 	"\nThe {} cries out in pain!: *What the H-E-double-hockey-sticks is your problem?*",
-]
-
-# List of outskirt districts for spawning purposes
-outskirts_districts = [
-	poi_id_south_outskirts,
-	poi_id_southwest_outskirts,
-	poi_id_west_outskirts,
-	poi_id_northwest_outskirts,
-	poi_id_north_outskirts,
-	poi_id_nuclear_beach
 ]
 
 # Letters that an enemy can identify themselves with
