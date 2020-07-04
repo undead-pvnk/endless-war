@@ -894,8 +894,8 @@ async def weather(cmd):
 
 	market_data = EwMarket(id_server=cmd.message.server.id)
 	time_current = market_data.clock
-	if 15 <= time_current <= 22:
-		response += "\n\nPeople are out and about. It's a good time for painting the town!"
+	if 3 <= time_current <= 10:
+		response += "\n\nThe police are probably all asleep, the lazy fucks. It's a good time for painting the town!"
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1651,7 +1651,16 @@ async def recycle(cmd):
 
 			pay = int(random.random() * 10 ** random.randrange(2,6))
 			response = "You put your {} into the designated opening. **CRUSH! Splat!** *hiss...* and it's gone. \"Thanks for keeping the city clean.\" a robotic voice informs you.".format(item_sought.get("name"))
-			if pay == 0:
+			if item.item_props.get('id_furniture') == 'sord':
+				response = "You jam the jpeg artifact into the recycling bin. It churns and sputters, desperately trying to turn it into anything of value. Needless to say, it fails. \"get a load of this hornses ass.\" a robotic voice informs you"
+
+				if user_data.slimecoin >= 1:
+					response += ", nabbing 1 SlimeCoin from you out of spite."
+					user_data.change_slimecoin(n=-1, coinsource = ewcfg.coinsource_recycle)
+					user_data.persist()
+				else:
+					response += "."
+			elif pay == 0:
 				item_reward = random.choice(ewcfg.mine_results)
 
 				item_props = ewitem.gen_item_props(item_reward)
@@ -1965,7 +1974,10 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 	districtmodel = EwDistrict(id_server=id_server, district=ewcfg.poi_id_slimesendcliffs)
 	slimetotal = 0
 
-	if random.randrange(500) < 125 or item_obj.item_type == ewcfg.it_questitem or item_obj.item_type == ewcfg.it_medal or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand":
+	if item_obj.item_props.get('id_furniture') == 'sord':
+		response = "You toss the sord off the cliff, but for whatever reason, the damn thing won't go down. It just keeps going up and up, as though gravity itself blocked this piece of shit jpeg artifact on Twitter. It eventually goes out of sight, where you assume it flies into the sun."
+		ewitem.item_delete(id_item=id_item)
+	elif random.randrange(500) < 125 or item_obj.item_type == ewcfg.it_questitem or item_obj.item_type == ewcfg.it_medal or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand":
 		response = "You toss the {} off the cliff. It sinks into the ooze disappointingly.".format(item_name)
 		ewitem.give_item(id_item=id_item, id_server=id_server, id_user=ewcfg.poi_id_slimesea)
 
