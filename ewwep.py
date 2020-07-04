@@ -3037,6 +3037,9 @@ async def spray(cmd):
 			sap_damage = ctn.sap_damage
 			backfire_damage = ctn.backfire_damage
 
+			if backfire is True and random.randint(0, 1) == 0:
+				miss = False
+
 			if district_data.all_neighbors_friendly() and user_data.faction != district_data.controlling_faction:
 				backfire = True
 
@@ -3093,7 +3096,7 @@ async def spray(cmd):
 			if len(gangsters_in_district) == 1 and ewcfg.mutation_id_lonewolf in user_mutations:
 				slimes_damage *= 1.25
 
-			if 15 <= time_current <= 22:
+			if 3 <= time_current <= 10:
 				slimes_damage *= (4/3)
 
 			#if (user_data.faction != district_data.controlling_faction and (user_data.faction is None or user_data.faction == '')) and district_data.capture_points > ewcfg.limit_influence[district_data.property_class]:
