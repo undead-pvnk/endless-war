@@ -2518,5 +2518,127 @@ async def ping_me(cmd):
 		response = user_data.get_mention()
 		return await ewutils.send_message(cmd.client, channel, response)
 
+async def gvs_print_grid(cmd):
+	author = cmd.message.author
+	user_data = EwUser(member=author)
+	
+	grid_map = await ewutils.gvs_create_gaia_grid_mapping(user_data)
+	
+	#TODO: Use proper emotes when update launches
+	debug = True
+	if debug:
+		blue_blank = ':blue_heart:'
+		green_lawn = ':green_heart:'
+		lime_lawn = ':yellow_heart:'
+	else:
+		blue_blank = ewcfg.emote_blankregional
+		green_lawn = ewcfg.emote_greenlawn
+		lime_lawn = ewcfg.emote_limelawn
+		
+	emote_set = []
+
+	green_or_lime = lime_lawn
+	for row in ewcfg.gvs_valid_coords_gaia:
+		for coord in row:
+			
+			if green_or_lime == lime_lawn:
+				green_or_lime = green_lawn
+			else:
+				green_or_lime = lime_lawn
+			
+			if coord in grid_map.keys():
+				emote = ewcfg.gvs_enemy_emote_map[grid_map[coord]]
+				
+				if debug:
+					emote = ewcfg.gvs_enemy_emote_map_debug[grid_map[coord]]
+				
+				emote_set.append(emote)
+			else:
+				emote_set.append(green_or_lime)
+	
+	printed_grid_row_0 = "\n{}{}{}{}{}{}{}{}{}{}".format(
+		blue_blank,
+		':one:',
+		':two:',
+		':three:',
+		':four:',
+		':five:',
+		':six:',
+		':seven:',
+		':eight:',
+		':nine:'
+	)
+	
+	printed_grid_row_1 = "\n{}{}{}{}{}{}{}{}{}{}".format(
+		':regional_indicator_a:',
+		emote_set[0],
+		emote_set[1],
+		emote_set[2],
+		emote_set[3],
+		emote_set[4],
+		emote_set[5],
+		emote_set[6],
+		emote_set[7],
+		emote_set[8],
+	)
+	
+	printed_grid_row_2 = "\n{}{}{}{}{}{}{}{}{}{}".format(
+		':regional_indicator_b:',
+		emote_set[9],
+		emote_set[10],
+		emote_set[11],
+		emote_set[12],
+		emote_set[13],
+		emote_set[14],
+		emote_set[15],
+		emote_set[16],
+		emote_set[17],
+	)
+	
+	printed_grid_row_3 = "\n{}{}{}{}{}{}{}{}{}{}".format(
+		':regional_indicator_c:',
+		emote_set[18],
+		emote_set[19],
+		emote_set[20],
+		emote_set[21],
+		emote_set[22],
+		emote_set[23],
+		emote_set[24],
+		emote_set[25],
+		emote_set[26],
+	)
+	
+	printed_grid_row_4 = "\n{}{}{}{}{}{}{}{}{}{}".format(
+		':regional_indicator_d:',
+		emote_set[27],
+		emote_set[28],
+		emote_set[29],
+		emote_set[30],
+		emote_set[31],
+		emote_set[32],
+		emote_set[33],
+		emote_set[34],
+		emote_set[35],
+	)
+	
+	printed_grid_row_5 = "\n{}{}{}{}{}{}{}{}{}{}".format(
+		':regional_indicator_e:',
+		emote_set[36],
+		emote_set[37],
+		emote_set[38],
+		emote_set[39],
+		emote_set[40],
+		emote_set[41],
+		emote_set[42],
+		emote_set[43],
+		emote_set[44],
+	)
+	
+	full_grid_response = printed_grid_row_0 + printed_grid_row_1 + printed_grid_row_2 + printed_grid_row_3 + printed_grid_row_4 + printed_grid_row_5
+	print('Grid response length: {}'.format(len(full_grid_response)))
+	
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, full_grid_response))
+				
+	
 	
 	

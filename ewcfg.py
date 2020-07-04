@@ -1013,6 +1013,8 @@ cmd_reset_prank_stats = cmd_prefix + 'resetprankstats'
 cmd_set_gambit = cmd_prefix + 'setgambit'
 cmd_pointandlaugh = cmd_prefix + 'pointandlaugh'
 cmd_prank = cmd_prefix + 'prank'
+cmd_gvs_printgrid = cmd_prefix + 'grid'
+cmd_gvs_printgrid_alt1 = cmd_prefix + 'lawn'
 
 
 cmd_retire = cmd_prefix + 'retire'
@@ -1655,6 +1657,31 @@ emote_staydead = "<:sd:506840095714836480>"
 emote_janus1 = "<:janus1:694404178956779592>"
 emote_janus2 = "<:janus2:694404179342655518>"
 emote_masterpoudrin = "<:masterpoudrin:694788959418712114>"
+emote_poketubers = "<:c_poketubers:???>"
+emote_pulpgourds = "<:c_pulpgourds:???>"
+emote_sourpotatoes = "<:c_sourpotatoes:???>"
+emote_bloodcabbages = "<:c_bloodcabbages:???>"
+emote_joybeans = "<:c_joybeans:???>"
+emote_purplekilliflower = "<:c_purplekilliflower:???>"
+emote_razornuts = "<:c_razornuts:???>"
+emote_pawpaw = "<:c_pawpaw:???>"
+emote_sludgeberries = "<:c_sludgeberries:???>"
+emote_suganmanuts = "<:c_suganmanuts:???>"
+emote_pinkrowddishes = "<:c_pinkrowddishes:???>"
+emote_dankwheat = "<:c_dankwheat:???>"
+emote_brightshade = "<:c_brightshade:???>"
+emote_blacklimes = "<:c_blacklimes:???>"
+emote_phosphorpoppies = "<:c_phosphorpoppies:???>"
+emote_direapples = "<:c_direapples:???>"
+emote_rustealeaves = "<:c_rustealeaves:???>"
+emote_metallicaps = "<:c_metallicaps:???>"
+emote_steelbeans = "<:c_steelbeans:???>"
+emote_aushucks = "<:c_aushucks:???>"
+emote_blankregional = "bt:???>"
+emote_greenlawn = "<:gt:???>"
+emote_limelawn = "<:lt:???>"
+emote_frozentile = "<:ft:???>"
+emote_sludgetile = "<:st:???>"
 
 # Emotes for the negaslime writhe animation
 emote_vt = "<:vt:492067858160025600>"
@@ -15998,7 +16025,7 @@ poi_list = [
 			"bh"
 		],
 		str_name = "Based Hardware",
-		str_desc = "A hardware store right beside a gas station. This place is a fucking mess, even by your standards. Cluttered stacks of washing machines and other various household necessities tower over you, turning the place into a goddamn corn maze made out of worn out appliances. Your only saving grace in terms of navigation is the piss-yellow incandescent lighting fixed to the ceiling. On the radio, you can hear a Sludgefest rendition of 'Hardware Store' by Weird-Al Yankovic quietly echoing throughout the makeshift corridors on loop. You think it'd be best to find what your looking for and make a dash to the checkout section, before some psychopath pulls you aside and bashes your skull in.",
+		str_desc = "A hardware store right beside a gas station. This place is a fucking mess, even by your standards. Cluttered stacks of washing machines and other various household necessities tower over you, turning the place into a goddamn corn maze made out of worn out appliances. Your only saving grace in terms of navigation is the piss-yellow incandescent lighting fixed to the ceiling. On the radio, you can hear a Sludgefest rendition of 'Hardware Store' by Weird-Al Yankovic quietly echoing throughout the makeshift corridors on loop. You think it'd be best to find what you're looking for and make a dash to the checkout section, before some psychopath pulls you aside and bashes your skull in.",
 		channel = channel_basedhardware,
 		role = "Based Hardware",
 		mother_districts = [poi_id_westglocksbury],
@@ -18467,9 +18494,9 @@ cosmetic_items_list = [
 		id_cosmetic = "slimecorppin",
 		str_name = "SlimeCorp Pin",
 		stats = {
-			stat_attack: 6,
-			stat_defense: 6,
-			stat_speed: 6
+			stat_attack: 3,
+			stat_defense: 3,
+			stat_speed: 3
 		},
 		style = style_smart,
 		freshness = 10,
@@ -18513,7 +18540,7 @@ cosmetic_items_list = [
 	EwCosmeticItem(
 		id_cosmetic = "tinfoilhat",
 		str_name = "Tinfoil Hat",
-		str_desc = "A hat that protects you from SlimeCorps patent-pending 5G binaural brain waves, or so the folks on the internet have told you.",
+		str_desc = "A hat that protects you from SlimeCorp's patent-pending 5G binaural brain waves, or so the folks on the internet have told you.",
 		stats = {
 			stat_defense: 1,
 			stat_speed: 2,
@@ -23422,9 +23449,49 @@ raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_gree
 pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
 
 # List of enemies used in the Gankers Vs. Shamblers event
-gvs_enemies = [enemy_type_basic_gaiaslimeoid, enemy_type_basic_shambler]
-gvs_enemies_gaiaslimeoids = [enemy_type_basic_gaiaslimeoid]
-gvs_enemies_shamblers = [enemy_type_basic_shambler]
+gvs_enemies_gaiaslimeoids = [
+	enemy_type_gaia_poketubers,
+	enemy_type_gaia_pulpgourds,
+	enemy_type_gaia_sourpotatoes,
+	enemy_type_gaia_bloodcabbages,
+	enemy_type_gaia_joybeans,
+	enemy_type_gaia_purplekilliflower,
+	enemy_type_gaia_razornuts,
+	enemy_type_gaia_pawpaw,
+	enemy_type_gaia_sludgeberries,
+	enemy_type_gaia_suganmanuts,
+	enemy_type_gaia_pinkrowddishes,
+	enemy_type_gaia_dankwheat,
+	enemy_type_gaia_brightshade,
+	enemy_type_gaia_blacklimes,
+	enemy_type_gaia_phosphorpoppies,
+	enemy_type_gaia_direapples,
+	enemy_type_gaia_rustealeaves,
+	enemy_type_gaia_metallicaps,
+	enemy_type_gaia_steelbeans,
+	enemy_type_gaia_aushucks
+]
+gvs_enemies_shamblers = [
+	enemy_type_defaultshambler,
+	enemy_type_bucketshambler,
+	enemy_type_juveolanternshambler,
+	enemy_type_flagshambler,
+	enemy_type_shamboni,
+	enemy_type_mammoshambler,
+	enemy_type_gigashambler,
+	enemy_type_microshambler,
+	enemy_type_shamblersaurusrex,
+	enemy_type_shamblerdactyl,
+	enemy_type_dinoshambler,
+	enemy_type_ufoshambler,
+	enemy_type_brawldenboomer,
+	enemy_type_juvieshambler,
+	enemy_type_shambleballplayer,
+	enemy_type_shamblerwarlord,
+	enemy_type_shamblerraider,
+	enemy_type_blueeyesshamblerdragon
+]
+gvs_enemies = gvs_enemies_gaiaslimeoids + gvs_enemies_shamblers
 
 # List of raid bosses sorted by their spawn rarity.
 raid_boss_tiers = {
@@ -23753,6 +23820,56 @@ gvs_valid_coords_shambler = [
 gvs_coords_end = ['A0', 'B0', 'C0', 'D0', 'E0']
 
 gvs_coord_start = ['A-S', 'B-S', 'C-S', 'D-S', 'E-S']
+
+gvs_enemy_emote_map = {
+	enemy_type_gaia_poketubers: emote_poketubers,
+	enemy_type_gaia_pulpgourds: emote_pulpgourds,
+	enemy_type_gaia_sourpotatoes: emote_sourpotatoes,
+	enemy_type_gaia_bloodcabbages: emote_bloodcabbages,
+	enemy_type_gaia_joybeans: emote_joybeans,
+	enemy_type_gaia_purplekilliflower: emote_purplekilliflower,
+	enemy_type_gaia_razornuts: emote_razornuts,
+	enemy_type_gaia_pawpaw: emote_pawpaw,
+	enemy_type_gaia_sludgeberries: emote_sludgeberries,
+	enemy_type_gaia_suganmanuts: emote_suganmanuts,
+	enemy_type_gaia_pinkrowddishes: emote_pinkrowddishes,
+	enemy_type_gaia_dankwheat: emote_dankwheat,
+	enemy_type_gaia_brightshade: emote_brightshade,
+	enemy_type_gaia_blacklimes: emote_blacklimes,
+	enemy_type_gaia_phosphorpoppies: emote_phosphorpoppies,
+	enemy_type_gaia_direapples: emote_direapples,
+	enemy_type_gaia_rustealeaves: emote_rustealeaves,
+	enemy_type_gaia_metallicaps: emote_metallicaps,
+	enemy_type_gaia_steelbeans: emote_steelbeans,
+	enemy_type_gaia_aushucks: emote_aushucks,
+	'frozen': emote_frozentile,
+	'sludge': emote_sludgetile
+}
+
+gvs_enemy_emote_map_debug = {
+	enemy_type_gaia_poketubers: ':potato:',
+	enemy_type_gaia_pulpgourds: ':lemon:',
+	enemy_type_gaia_sourpotatoes: ':sweet_potato:',
+	enemy_type_gaia_bloodcabbages: ':tomato:',
+	enemy_type_gaia_joybeans: ':rainbow:',
+	enemy_type_gaia_purplekilliflower: ':broccoli:',
+	enemy_type_gaia_razornuts: ':chestnut:',
+	enemy_type_gaia_pawpaw: ':pear:',
+	enemy_type_gaia_sludgeberries: ':grapes:',
+	enemy_type_gaia_suganmanuts: ':peanuts:',
+	enemy_type_gaia_pinkrowddishes: ':strawberry:',
+	enemy_type_gaia_dankwheat: ':herb:',
+	enemy_type_gaia_brightshade: ':hibiscus:',
+	enemy_type_gaia_blacklimes: ':garlic:',
+	enemy_type_gaia_phosphorpoppies: ':blossom:',
+	enemy_type_gaia_direapples: ':apple:',
+	enemy_type_gaia_rustealeaves: ':fallen_leaf:',
+	enemy_type_gaia_metallicaps: ':mushroom:',
+	enemy_type_gaia_steelbeans: ':shield:',
+	enemy_type_gaia_aushucks: ':corn:',
+	'frozen': ':snowflake:',
+	'sludge': ':new_moon:'
+}
 
 rain_protection = [
 	cosmetic_id_raincoat,

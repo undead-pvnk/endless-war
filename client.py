@@ -725,6 +725,10 @@ cmd_map = {
 	# ewcfg.cmd_set_gambit: ewcmd.set_gambit, #debug
 	# ewcfg.cmd_pointandlaugh: ewcmd.point_and_laugh,
 	ewcfg.cmd_prank: ewcmd.prank,
+	
+	# Gankers Vs. Shamblers
+	ewcfg.cmd_gvs_printgrid: ewcmd.gvs_print_grid,
+	ewcfg.cmd_gvs_printgrid_alt1: ewcmd.gvs_print_grid,
 
 	# race
 	ewcfg.cmd_set_race: ewrace.set_race,

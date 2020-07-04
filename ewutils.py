@@ -1228,6 +1228,9 @@ def get_channel(server = None, channel_name = ""):
 	for chan in server.channels:
 		if chan.name == channel_name:
 			channel = chan
+	
+	if channel == None:
+		logMsg('Error: In get_channel(), could not find channel using channel_name "{}"'.format(channel_name))
 
 	return channel
 
@@ -2370,3 +2373,52 @@ def get_subzone_controlling_faction(subzone_id, id_server):
 	if district_data != None:
 		faction = district_data.controlling_faction
 		return faction
+
+async def gvs_create_gaia_grid_mapping(user_data):
+	grid_map = {}
+
+	low_priority = [ewcfg.enemy_type_gaia_rustealeaves, ewcfg.enemy_type_gaia_metallicaps,
+					ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_aushucks]
+	high_priority = []
+	for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+		if enemy_id not in low_priority:
+			high_priority.append(enemy_id)
+
+	gaias = execute_sql_query(
+		"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1 AND {enemyclass} = %s".format(
+			id_enemy=ewcfg.col_id_enemy,
+			enemytype=ewcfg.col_enemy_type,
+			poi=ewcfg.col_enemy_poi,
+			life_state=ewcfg.col_enemy_life_state,
+			gvs_coord=ewcfg.col_enemy_gvs_coord,
+			enemyclass=ewcfg.col_enemy_class,
+		), (
+			user_data.id_server,
+			user_data.poi,
+			ewcfg.enemy_class_gaiaslimeoid
+		))
+	
+	grid_conditions = execute_sql_query(
+		"SELECT coord, grid_condition FROM gvs_grid_conditions WHERE district = %s".format(
+		), (
+			user_data.poi,
+		))
+	
+	for condition in grid_conditions:
+		grid_map[condition[0]] = condition[1]
+	
+	for gaia in gaias:
+		try:
+			gaia_in_coord = grid_map[gaia[2]]
+			# No key error: Gaia is in coord already, check for priority
+			is_filled = True
+		except KeyError:
+			gaia_in_coord = ''
+			# Key error: Gaia was not in coord
+			is_filled = False
+			
+		if is_filled:
+			if gaia_in_coord in low_priority and gaia[1] in high_priority:
+				grid_map[gaia[2]] = gaia[1]
+		
+	return grid_map

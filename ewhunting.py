@@ -3023,6 +3023,12 @@ def gvs_get_splash_coords(checked_splash_coords):
 	top_row = None
 	middle_row = None
 	bottom_row = None
+	
+	extra_top_row = None # Joybean Pawpaw
+	extra_bottom_row = None # Joybean Pawpaw
+	row_range = 5 # Joybean Dankwheat = 9
+	row_backpedal = 2 # Joybean Dankwheat = 4
+	
 	current_index = 0
 	
 	all_splash_coords = []
@@ -3052,21 +3058,21 @@ def gvs_get_splash_coords(checked_splash_coords):
 				break
 		
 		if top_row != None:
-			for i in range(5):
+			for i in range(row_range):
 				try:
-					all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[top_row][current_index - 2 + i])
+					all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[top_row][current_index - row_backpedal + i])
 				except:
 					pass
 		if bottom_row != None:
-			for i in range(5):
+			for i in range(row_range):
 				try:
-					all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[bottom_row][current_index - 2 + i])
+					all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[bottom_row][current_index - row_backpedal + i])
 				except:
 					pass
 				
-		for i in range(5):
+		for i in range(row_range):
 			try:
-				all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[middle_row][current_index - 2 + i])
+				all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[middle_row][current_index - row_backpedal + i])
 			except:
 				pass
 			
