@@ -448,6 +448,7 @@ cmd_map = {
 	#farming
 	ewcfg.cmd_sow: ewfarm.sow,
 	ewcfg.cmd_reap: ewfarm.reap,
+	ewcfg.cmd_reap_alt: ewfarm.reap,
 	ewcfg.cmd_check_farm: ewfarm.check_farm,
 	ewcfg.cmd_irrigate: ewfarm.cultivate,
 	ewcfg.cmd_weed: ewfarm.cultivate,
@@ -551,6 +552,7 @@ cmd_map = {
 	ewcfg.cmd_instructions: ewslimeoid.instructions,
 	ewcfg.cmd_playfetch: ewslimeoid.playfetch,
 	ewcfg.cmd_petslimeoid: ewslimeoid.petslimeoid,
+	ewcfg.cmd_abuseslimeoid: ewslimeoid.abuseslimeoid,
 	ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
 	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
@@ -1240,7 +1242,7 @@ async def on_member_join(member):
 async def on_message_delete(message):
 	if message != None and message.server != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
 		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
-		await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
+		await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'))
 
 @client.event
 async def on_message(message):

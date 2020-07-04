@@ -79,6 +79,7 @@ class EwUser:
 	time_lastenlist = 0
 	time_lastdeath = 0
 	time_racialability = 0
+	time_lastpremiumpurchase = 0
 
 	apt_zone = "empty"
 	visiting = "empty"
@@ -885,7 +886,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -939,11 +940,12 @@ class EwUser:
 					ewcfg.col_credence_used,
 					ewcfg.col_race,
 					ewcfg.col_time_racialability,
+					ewcfg.col_time_lastpremiumpurchase,
 				), (
 					id_user,
 					id_server
 				))
-				result = cursor.fetchone();
+				result = cursor.fetchone()
 
 				if result != None:
 					# Record found: apply the data to this object.
@@ -1000,6 +1002,7 @@ class EwUser:
 					self.credence_used = result[50]
 					self.race = result[51]
 					self.time_racialability = result[52]
+					self.time_lastpremiumpurchase = result[53]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -1052,18 +1055,19 @@ class EwUser:
 						self.attack = result[0]
 						self.defense = result[1]
 						self.speed = result[2]
-	
-					cursor.execute("SELECT {} FROM freshness WHERE id_user = %s AND id_server = %s".format(
-						ewcfg.col_freshness,
-					),(
-						id_user,
-						id_server
-					))
+					
+					if data_level > 1:
+						cursor.execute("SELECT {} FROM freshness WHERE id_user = %s AND id_server = %s".format(
+							ewcfg.col_freshness,
+						),(
+							id_user,
+							id_server
+						))
 
-					result = cursor.fetchone()
+						result = cursor.fetchone()
 
-					if result != None:
-						self.freshness = result[0]
+						if result != None:
+							self.freshness = result[0]
 
 					self.move_speed = ewutils.get_move_speed(self)
 
@@ -1080,13 +1084,13 @@ class EwUser:
 			# Get database handles if they weren't passed.
 			conn_info = ewutils.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
-			self.limit_fix();
+			self.limit_fix()
 
 			# Save the object.
 
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -1142,7 +1146,8 @@ class EwUser:
 				ewcfg.col_credence,
 				ewcfg.col_credence_used,
 				ewcfg.col_race,
-				ewcfg.col_time_racialability
+				ewcfg.col_time_racialability,
+				ewcfg.col_time_lastpremiumpurchase,
 			), (
 				self.id_user,
 				self.id_server,
@@ -1199,7 +1204,8 @@ class EwUser:
 				self.credence,
 				self.credence_used,
 				self.race,
-				self.time_racialability
+				self.time_racialability,
+				self.time_lastpremiumpurchase,
 			))
 
 			conn.commit()
