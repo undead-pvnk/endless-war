@@ -251,18 +251,34 @@ async def reap(cmd):
 
 					#  Create and give a bushel of whatever crop was grown, unless it's a metal crop.
 					if item_props.get('id_food') in [ewcfg.item_id_metallicaps, ewcfg.item_id_steelbeans, ewcfg.item_id_aushucks]:
+						metallic_crop_ammount = 1
 						if random.randrange(10) == 0:
-							for vcreate in range(6):
-								ewitem.item_create(
-									id_user=cmd.message.author.id,
-									id_server=cmd.message.server.id,
-									item_type=vegetable.item_type,
-									item_props=item_props
-								)
+							metallic_crop_ammount = 5 if random.randrange(2) == 0 else 6
+						
+						for vcreate in range(metallic_crop_ammount):
+							ewitem.item_create(
+								id_user=cmd.message.author.id,
+								id_server=cmd.message.server.id,
+								item_type=vegetable.item_type,
+								item_props=item_props
+							)
 							
-							response += "and a bushel of {}!".format(vegetable.str_name)
+						if metallic_crop_ammount == 1:
+							response += "and a single {}!".format(vegetable.str_name)
 						else:
-							response += "and a bushel of... hey, what the hell! You didn't reap anything! Must've been some odd seeds..."
+							response += "and a bushel or two of {}!".format(vegetable.str_name)
+						# if random.randrange(10) == 0:
+						# 	for vcreate in range(6):
+						# 		ewitem.item_create(
+						# 			id_user=cmd.message.author.id,
+						# 			id_server=cmd.message.server.id,
+						# 			item_type=vegetable.item_type,
+						# 			item_props=item_props
+						# 		)
+						# 	
+						# 	response += "and a bushel of {}!".format(vegetable.str_name)
+						# else:
+						# 	response += "and a bushel of... hey, what the hell! You didn't reap anything! Must've been some odd seeds..."
 					else:
 						for vcreate in range(3):
 							ewitem.item_create(
