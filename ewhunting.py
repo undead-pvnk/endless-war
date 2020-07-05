@@ -900,6 +900,10 @@ class EwEnemy:
 
 						# Apply effects for non-reference values
 						backfire = False # Make sure to account for UFO shamblers and rowddishes throwing back grenades
+						miss = False # Make sure to account for phosphorpoppies statuses
+						
+					if miss:
+						slimes_damage = 0
 
 					enemy_data.persist()
 					target_enemy = EwEnemy(id_enemy = target_enemy.id_enemy, id_server = target_enemy.id_server)
@@ -966,7 +970,12 @@ class EwEnemy:
 					else:
 						# A non-lethal blow!
 						if used_attacktype != ewcfg.enemy_attacktype_unarmed:
-							if backfire:
+							if miss:
+								response = "{}".format(used_attacktype.str_miss.format(
+									name_enemy=enemy_data.display_name,
+									name_target=target_enemy.display_name
+								))
+							elif backfire:
 								response = "{}".format(used_attacktype.str_backfire.format(
 									name_enemy=enemy_data.display_name,
 									name_target=target_enemy.display_name

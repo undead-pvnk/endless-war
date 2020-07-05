@@ -789,13 +789,22 @@ async def shamble(cmd):
 	elif not poi.is_district:
 		response = "This doesn't seem like an important place to be shambling. Try a district zone instead."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif poi.id_poi == ewcfg.poi_id_oozegardens:
+		response = "The entire district is covered in Brightshades! You have no business shambling this part of town!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if not ewutils.gvs_check_if_in_operation(user_data):
+		response = "You aren't allowed to !shamble this district, per Dr. Downpour's orders.\nCheck what area your horde is operating in with !horde."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	
 	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
 	
 
 	if district_data.degradation < poi.max_degradation:
 		district_data.degradation += 1
-		user_data.degradation += 1
+		# user_data.degradation += 1
+		user_data.time_lasthaunt = int(time.time())
 		district_data.persist()
 		user_data.persist()
 		

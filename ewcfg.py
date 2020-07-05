@@ -142,6 +142,8 @@ poi_id_greencakecafe = "greencakecafe"
 poi_id_sodafountain = "sodafountain"
 poi_id_bodega = "bodega"
 poi_id_basedhardware = "basedhardware"
+poi_id_atomicforest = "atomicforest"
+poi_id_downpourlaboratory = "downpourlaboratory"
 
 # transports
 poi_id_ferry = "ferry"
@@ -1681,7 +1683,6 @@ emote_blankregional = "bt:???>"
 emote_greenlawn = "<:gt:???>"
 emote_limelawn = "<:lt:???>"
 emote_frozentile = "<:ft:???>"
-emote_sludgetile = "<:st:???>"
 
 # Emotes for the negaslime writhe animation
 emote_vt = "<:vt:492067858160025600>"
@@ -2365,6 +2366,8 @@ vendor_greencakecafe = "Green Cake Cafe" #Brunch foods
 vendor_bodega = "Bodega" # Clothing store in Krak Bay
 vendor_secretbodega = "Secret Bodega" # The secret clothing store in Krak Bay
 vendor_basedhardware = "Based Hardware" # Hardware store in West Glocksbury
+vendor_atomicforest = "Atomic Forest Stockpile" # Storage of atomic forest
+vendor_downpourlaboratory = "Downpour Armaments" # Store for shamblers to get stuff
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -16036,6 +16039,44 @@ poi_list = [
 			poi_id_westglocksbury : travel_time_subzone,
 		}
 	),
+	EwPoi(
+		id_poi = poi_id_atomicforest,
+		alias = [
+			"atomicgarden",
+			"forest",
+			"aforest",
+			"af"
+		],
+		str_name = "Atomic Forest",
+		str_desc = "A safe haven ",
+		mother_districts = [poi_id_oozegardens],
+		pvp = False,
+		vendors = [vendor_atomicforest],
+		is_subzone = True,
+		neighbors = {
+			poi_id_oozegardens : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_downpourlaboratory,
+		alias = [
+			"shamblerlab",
+			"downpour",
+			"dlabs",
+			"dlab",
+			"dl",
+			"dpl"
+		],
+		str_name = "Dr. Downpour's Laboratory",
+		str_desc = "A safe haven ",
+		mother_districts = [poi_id_assaultflatsbeach],
+		pvp = False,
+		vendors = [vendor_downpourlaboratory],
+		is_subzone = True,
+		neighbors = {
+			poi_id_assaultflatsbeach : travel_time_subzone,
+		}
+	),
 	EwPoi(  # Tutorial - 1
 		id_poi = poi_id_tutorial_classroom,
 		channel="classroom",
@@ -22678,6 +22719,12 @@ status_effect_target_self = "status_effect_target_self"
 status_effect_target_other = "status_effect_target_other"
 
 status_burning_id = "burning"
+status_acid_id = "acid"
+status_spored_id = "spored"
+status_badtrip_id = "badtrip"
+status_stoned_id = "stoned"
+status_baked_id = "baked"
+status_sludged_id = "sludged"
 status_strangled_id = "strangled"
 status_drunk_id = "drunk"
 status_ghostbust_id = "ghostbust"
@@ -23132,36 +23179,36 @@ for bait in food_list:
 # If a fish doesn't bite, send one of these.
 nobite_text = [
 	"You patiently wait...",
-		"This is so fucking boring...",
-		"You watch your hook bob...",
-		"You grow impatient and kick the rotted wooden guard rails...",
-		"AUUUUUGH JUST BITE THE FUCKING HOOK ALREADY...",
-		"You begin to zone-out a bit...",
-		"Shouldn't you be doing something productive?",
+	"This is so fucking boring...",
+	"You watch your hook bob...",
+	"You grow impatient and kick the rotted wooden guard rails...",
+	"AUUUUUGH JUST BITE THE FUCKING HOOK ALREADY...",
+	"You begin to zone-out a bit...",
+	"Shouldn't you be doing something productive?",
 	"You sit patiently, eagerly awaiting a fish to bite. Thanks to your concentration, this descriptive contradiction does not occur to you.",
-		"You begin to daydream about fish sex... Gross...",
-		"You begin to daydream about fish sex... Hot...",
-		"You see a fish about to bite your hook, but you shout in elation, scaring it away...",
-		"You make direct eye contact with a fish, only to quickly look away...",
-		"♪ Fishing for Fishies! ♪",
-		"♪ That Captain Albert Alexander! ♪",
-		"You get the urge to jump in and try to grab a fish, before remembering that you can't swim...",
-		"You hum some sea shanties...",
-		"You start to slip into an existential crisis...",
-		"You jitter as other seamen catch fish before you. Fuck fishing...",
-		"You feel the oncoming downward spiral...",
-		"You shake your head as a young seaman baits a perfectly good slice of pizza on his hook... What a cretin...",
-		"You wonder if the Space Navy has been formed yet...",
-		"Man... Why were you excited for this shit?",
-		"Still better than Minesweeper...",
-		"Maybe one day your wife will pardon you...",
-		"Fuck fish...",
-		"You let out a deep sigh, scaring away a fish...",
-		"Wouldn't it be funny if you just reached into the sea and grabbed one? Haha, yeah, that'd be funny...",
-		"You see a bird carry off a Plebefish in the distance... Good riddance...",
-		"You spot a stray bullet in the distance...",
-		"You see a dead body float up to the surface of the Slime...",
-		"Fish..."
+	"You begin to daydream about fish sex... Gross...",
+	"You begin to daydream about fish sex... Hot...",
+	"You see a fish about to bite your hook, but you shout in elation, scaring it away...",
+	"You make direct eye contact with a fish, only to quickly look away...",
+	"♪ Fishing for Fishies! ♪",
+	"♪ That Captain Albert Alexander! ♪",
+	"You get the urge to jump in and try to grab a fish, before remembering that you can't swim...",
+	"You hum some sea shanties...",
+	"You start to slip into an existential crisis...",
+	"You jitter as other seamen catch fish before you. Fuck fishing...",
+	"You feel the oncoming downward spiral...",
+	"You shake your head as a young seaman baits a perfectly good slice of pizza on his hook... What a cretin...",
+	"You wonder if the Space Navy has been formed yet...",
+	"Man... Why were you excited for this shit?",
+	"Still better than Minesweeper...",
+	"Maybe one day your wife will pardon you...",
+	"Fuck fish...",
+	"You let out a deep sigh, scaring away a fish...",
+	"Wouldn't it be funny if you just reached into the sea and grabbed one? Haha, yeah, that'd be funny...",
+	"You see a bird carry off a Plebefish in the distance... Good riddance...",
+	"You spot a stray bullet in the distance...",
+	"You see a dead body float up to the surface of the Slime...",
+	"Fish..."
 ]
 
 generic_help_response = "Check out the guide for help: https://ew.krakissi.net/guide/\nThe guide won't cover everything though, and may even be a bit outdated in some places, so you can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work by using the !help command there. Portable game guides can also be bought there for 10,000 slime."
@@ -23350,10 +23397,24 @@ enemy_attacktype_talons = 'talons'
 enemy_attacktype_tusks = 'tusks'
 enemy_attacktype_raiderscythe = 'scythe'
 enemy_attacktype_gunkshot = 'gunk shot'
-enemy_attacktype_molotovbreath = 'molotov breath'
-enemy_attacktype_armcannon = 'arm cannon'
+enemy_attacktype_molotovbreath = 'molotovbreath'
+enemy_attacktype_armcannon = 'armcannon'
 enemy_attacktype_axe = 'axe'
 enemy_attacktype_hooves = 'hooves'
+
+
+enemy_attacktype_gvs_g_seeds = 'seeds'
+
+
+enemy_attacktype_gvs_s_teeth = 'teeth'
+enemy_attacktype_gvs_s_claws = 's_claws'
+enemy_attacktype_gvs_s_tusks = 's_tusks'
+enemy_attacktype_gvs_s_fangs = 's_fangs'
+enemy_attacktype_gvs_s_talons = 's_talons'
+enemy_attacktype_gvs_s_molotovbreath = 's_molotovbreath'
+enemy_attacktype_gvs_s_raiderscythe = 's_scythe'
+enemy_attacktype_gvs_s_cudgel = 'cudgel'
+enemy_attacktype_gvs_s_grenadecannon = 'grenadecannon'
 
 # Enemy weather types. In the future enemies will make use of this in tandem with the current weather, but for now they can just resist the rain.
 enemy_weathertype_normal = 'normal'
@@ -23814,7 +23875,6 @@ gvs_enemy_emote_map = {
 	enemy_type_gaia_steelbeans: emote_steelbeans,
 	enemy_type_gaia_aushucks: emote_aushucks,
 	'frozen': emote_frozentile,
-	'sludge': emote_sludgetile
 }
 
 gvs_enemy_emote_map_debug = {

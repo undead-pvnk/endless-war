@@ -520,13 +520,14 @@ CREATE TABLE gvs_grid_conditions (
 );
 
 CREATE TABLE gvs_ops_choices (
+    id_queue_entry int NOT NULL AUTO_INCREMENT,
     id_user varchar(128) NOT NULL,
     id_server varchar(64) NOT NULL,
     district varchar(64) NOT NULL,
     enemytype varchar(32) NOT NULL,
     faction varchar(16) NOT NULL,
     
-    PRIMARY KEY (id_user)
+    PRIMARY KEY (id_queue_entry)
 );
 
 CREATE OR REPLACE VIEW cosmetics AS SELECT

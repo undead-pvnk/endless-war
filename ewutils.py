@@ -1451,18 +1451,22 @@ async def decrease_food_multiplier(id_user):
 		food_multiplier[id_user] = max(0, food_multiplier.get(id_user) - 1)
 
 async def spawn_enemies(id_server = None):
-	if random.randrange(3) == 0:
-		weathertype = ewcfg.enemy_weathertype_normal
-
-		market_data = EwMarket(id_server=id_server)
-		# If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
-		if market_data.weather == ewcfg.weather_bicarbonaterain:
-			if random.randrange(3) < 2:
-				weathertype = ewcfg.enemy_weathertype_rainresist
-		
-		resp_cont = ewhunting.spawn_enemy(id_server=id_server, weather=weathertype)
-
-		await resp_cont.post()
+	if not ewcfg.gvs_active:
+		if random.randrange(3) == 0:
+			weathertype = ewcfg.enemy_weathertype_normal
+	
+			market_data = EwMarket(id_server=id_server)
+			# If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
+			if market_data.weather == ewcfg.weather_bicarbonaterain:
+				if random.randrange(3) < 2:
+					weathertype = ewcfg.enemy_weathertype_rainresist
+			
+			resp_cont = ewhunting.spawn_enemy(id_server=id_server, weather=weathertype)
+	
+			await resp_cont.post()
+	else:
+		# TODO: add in gvs_spawn_enemy
+		pass
 
 async def spawn_enemies_tick_loop(id_server):
 	interval = ewcfg.enemy_spawn_tick_length
@@ -2424,3 +2428,28 @@ async def gvs_create_gaia_grid_mapping(user_data):
 			grid_map[gaia[2]] = gaia[1]
 		
 	return grid_map
+
+async def gvs_check_if_in_operation(user_data):
+	
+	faction = ''
+	if user_data.life_state in ewcfg.life_state_juvenile:
+		faction = 'ganker'
+	elif user_data.life_state == ewcfg.life_state_shambler:
+		faction = 'shambler'
+	
+	operation_players = execute_sql_query(
+		"SELECT {id_user}, {district} FROM gvs_ops_choices WHERE id_server = %s AND faction = %s".format(
+			id_user = ewcfg.col_id_user,
+			district = ewcfg.col_district,
+		), (
+			user_data.id_server,
+			faction
+		))
+
+	in_operation = False
+	for op_player in operation_players:
+		if op_player[0] == user_data.id_user:
+			if op_player[1] == user_data.poi:
+				in_operation = True
+	
+	return in_operation
