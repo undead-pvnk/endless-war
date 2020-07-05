@@ -483,7 +483,7 @@ async def sew(cmd):
 							original_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
 							original_durability = original_item.durability
 
-					current_durability = int(item_sought.item_props['durability'])
+					current_durability = int(float(item_sought.item_props['durability']))
 
 					# If the cosmetic is actually damaged at all
 					if current_durability < original_durability:
