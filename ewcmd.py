@@ -801,9 +801,9 @@ async def fashion(cmd):
 					if abs(int(stats_breakdown[stat])) > 0:
 
 						if int(stats_breakdown[stat]) > 0:
-							stat_response = "increases your "
+							stat_response = "increases their "
 						else:
-							stat_response = "decreases your "
+							stat_response = "decreases their "
 
 						stat_response += "{stat} by {amount}".format(stat = stat, amount = int(stats_breakdown[stat]))
 
