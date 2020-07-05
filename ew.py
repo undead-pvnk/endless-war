@@ -914,8 +914,7 @@ class EwUser:
 			dominant_hue = max(hue_count, key=lambda key: hue_count[key])
 
 			for hue in hue_count:
-
-				if hue.id_hue == dominant_hue.id_hue or dominant_hue.effectiveness.get(hue) or hue.is_neutral:
+				if hue.id_hue == dominant_hue.id_hue or hue.id_hue in dominant_hue.effectiveness or hue.is_neutral:
 					complimentary_hue_count += hue_count[hue]
 
 			if hue_count[dominant_hue] / adorned_cosmetics >= 0.6 and complimentary_hue_count == adorned_cosmetics:
