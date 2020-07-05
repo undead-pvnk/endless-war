@@ -838,6 +838,98 @@ class EwUser:
 			# otherwise return None
 			return None
 
+	def get_fashion_stats(self):
+
+		cosmetics = ewitem.inventory(
+			id_user=self.id_user,
+			id_server=self.id_server,
+			item_type_filter=ewcfg.it_cosmetic
+		)
+		
+		result = [0] * 3
+
+		cosmetic_items = []
+		for cosmetic in cosmetics:
+			cosmetic_items.append(ewitem.EwItem(id_item=cosmetic.get('id_item')))
+
+		for cos in cosmetic_items:
+			if cos.item_props['adorned'] == 'true':
+				
+				cosmetic_count = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['cosmetic_name'] == cos.item_props['cosmetic_name'] 
+								and cosmetic.item_props['adorned'] == 'true')
+								
+				result[0] += int( int(cos.item_props['attack']) / cosmetic_count )
+				result[1] += int( int(cos.item_props['defense']) / cosmetic_count )
+				result[2] += int( int(cos.item_props['speed']) / cosmetic_count )
+		
+		return result
+
+	def get_freshness(self):
+		cosmetics = ewitem.inventory(
+			id_user=self.id_user,
+			id_server=self.id_server,
+			item_type_filter=ewcfg.it_cosmetic
+		)
+
+		cosmetic_items = []
+		for cosmetic in cosmetics:
+			cosmetic_items.append(ewitem.EwItem(id_item=cosmetic.get('id_item')))
+
+		adorned_cosmetics = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['adorned'] == 'true')
+
+		if len(cosmetic_items) == 0 or adorned_cosmetics < 2:
+			return 0
+
+		base_freshness = 0
+		hue_count = {}
+		style_count = {}
+
+		#get base freshness, hue and style counts
+		for cos in cosmetic_items:
+			if cos.item_props['adorned'] == 'true':
+				
+				cosmetic_count = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['cosmetic_name'] == cos.item_props['cosmetic_name'] 
+								and cosmetic.item_props['adorned'] == 'true')
+
+				base_freshness += int(cos.item_props['freshness']) / cosmetic_count
+
+				hue = ewcfg.hue_map.get(cos.item_props['hue'])
+				if hue is not None:
+					if hue_count.get(hue):
+						hue_count[hue] += 1
+					else:
+						hue_count[hue] = 1
+
+				style = cos.item_props['fashion_style']
+				if style_count.get(style):
+					style_count[style] += 1
+				else:
+					style_count[style] = 1
+
+		#calc hue modifier
+		hue_mod = 1
+		if len(hue_count) > 0:
+
+			complimentary_hue_count = 0
+			dominant_hue = max(hue_count, key=lambda key: hue_count[key])
+
+			for hue in hue_count:
+
+				if hue.id_hue == dominant_hue.id_hue or dominant_hue.effectiveness.get(hue) or hue.is_neutral:
+					complimentary_hue_count += hue_count[hue]
+
+			if hue_count[dominant_hue] / adorned_cosmetics >= 0.6 and complimentary_hue_count == adorned_cosmetics:
+				hue_mod = 5
+
+		#calc style modifier
+		style_mod = 1
+		dominant_style = max(style_count, key=lambda key: style_count[key])
+
+		if style_count[dominant_style] / adorned_cosmetics >= 0.6:
+			style_mod = style_count[dominant_style] / adorned_cosmetics * 10
+
+		return int(base_freshness * hue_mod * style_mod)
+
 	def get_festivity(self):
 		data = ewutils.execute_sql_query(
 		"SELECT FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) FROM users "\
@@ -1040,7 +1132,7 @@ class EwUser:
 					self.weaponskill = 0
 
 				if data_level > 0:
-					cursor.execute("SELECT {}, {}, {} FROM fashion_stats WHERE id_user = %s AND id_server = %s".format(
+					"""cursor.execute("SELECT {}, {}, {} FROM fashion_stats WHERE id_user = %s AND id_server = %s".format(
 						ewcfg.col_attack,
 						ewcfg.col_defense,
 						ewcfg.col_speed,
@@ -1054,10 +1146,15 @@ class EwUser:
 					if result != None:
 						self.attack = result[0]
 						self.defense = result[1]
-						self.speed = result[2]
+						self.speed = result[2]"""
+
+					result = self.get_fashion_stats()
+					self.attack = result[0]
+					self.defense = result[1]
+					self.speed = result[2]
 					
 					if data_level > 1:
-						cursor.execute("SELECT {} FROM freshness WHERE id_user = %s AND id_server = %s".format(
+						"""cursor.execute("SELECT {} FROM freshness WHERE id_user = %s AND id_server = %s".format(
 							ewcfg.col_freshness,
 						),(
 							id_user,
@@ -1067,7 +1164,8 @@ class EwUser:
 						result = cursor.fetchone()
 
 						if result != None:
-							self.freshness = result[0]
+							self.freshness = result[0]"""
+						self.freshness = self.get_freshness()
 
 					self.move_speed = ewutils.get_move_speed(self)
 
