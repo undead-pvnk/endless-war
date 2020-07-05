@@ -209,6 +209,7 @@ class EwGeneralItem:
 	ingredients = ""
 	acquisition = ""
 	price = 0
+	durability = 0
 	vendors = []
 
 	def __init__(
@@ -221,6 +222,7 @@ class EwGeneralItem:
 		ingredients = "",
 		acquisition = "",
 		price = 0,
+		durability = 0,
 		vendors = [],
 	):
 		self.item_type = ewcfg.it_item
@@ -232,6 +234,7 @@ class EwGeneralItem:
 		self.ingredients = ingredients
 		self.acquisition = acquisition
 		self.price = price
+		self.durability = durability
 		self.vendors = vendors
 
 
@@ -747,8 +750,9 @@ def inventory(
 					item_data = EwItem(id_item = id_item)
 					item_type = ewcfg.it_cosmetic
 					item_data.item_type = item_type
+					
 					if 'fashion_style' not in item_data.item_props.keys():
-						if item_data.item_props['id_cosmetic'] == 'soul':
+						if item_data.item_props.get('id_cosmetic') == 'soul':
 							item_data.item_props = {
 								'id_cosmetic': item_data.item_props['id_cosmetic'],
 								'cosmetic_name': item_data.item_props['cosmetic_name'],
@@ -768,7 +772,7 @@ def inventory(
 								'adorned': 'false',
 								'user_id': item_data.item_props['user_id']
 							}
-						elif item_data.item_props['id_cosmetic'] == 'scalp':
+						elif item_data.item_props.get('id_cosmetic') == 'scalp':
 							item_data.item_props = {
 								'id_cosmetic': item_data.item_props['id_cosmetic'],
 								'cosmetic_name': item_data.item_props['cosmetic_name'],
@@ -787,8 +791,38 @@ def inventory(
 								'freshness': 0,
 								'adorned': 'false',
 							}
+						elif item_data.item_props.get('rarity') == ewcfg.rarity_princeps:
+							
+							# TODO: Make princeps have custom stats, etc. etc.
+							current_name = item_data.item_props.get('cosmetic_name')
+							current_desc = item_data.item_props.get('cosmetic_desc')
+							
+							print("Updated Princep '{}' for user with ID {}".format(current_name, id_user))
+							
+							item_data.item_props = {
+								'id_cosmetic': 'princep',
+								'cosmetic_name': current_name,
+								'cosmetic_desc': current_desc,
+								'str_onadorn': ewcfg.str_generic_onadorn,
+								'str_unadorn': ewcfg.str_generic_unadorn,
+								'str_onbreak': ewcfg.str_generic_onbreak,
+								'rarity': ewcfg.rarity_princeps,
+								'attack': 3,
+								'defense': 3,
+								'speed': 3,
+								'ability': None,
+								'durability': ewcfg.base_durability * 100,
+								'size': 1,
+								'fashion_style': ewcfg.style_cool,
+								'freshness': 100,
+								'adorned': 'false',
+							}
+							
+							pass
 						else:
-							item = ewcfg.cosmetic_map.get(item_data.item_props['id_cosmetic'])
+							#print('ITEM PROPS: {}'.format(item_data.item_props))
+							
+							item = ewcfg.cosmetic_map.get(item_data.item_props.get('id_cosmetic'))
 							item_data.item_props = {
 								'id_cosmetic': item.id_cosmetic,
 								'cosmetic_name': item.str_name,
@@ -1158,10 +1192,16 @@ async def item_look(cmd):
 						else:
 							original_durability = ewcfg.generic_scalp_durability
 					else:
-						original_item = ewcfg.cosmetic_map.get(item.item_props['id_cosmetic'])
-						original_durability = int(original_item.durability)
+						if item.item_props.get('rarity') == ewcfg.rarity_princeps:
+							original_durability = ewcfg.base_durability * 100
+							original_item = None  # Princeps do not have existing templates
+						else:
+							original_item = ewcfg.cosmetic_map.get(item.item_props['id_cosmetic'])
+							original_durability = original_item.durability
 
 					current_durability = int(item.item_props['durability'])
+					
+					#print('DEBUG -- DURABILITY COMPARISON\nCURRENT DURABILITY: {}, ORIGINAL DURABILITY: {}'.format(current_durability, original_durability))
 
 					if current_durability == original_durability:
 						response += "It looks brand new.\n"
@@ -1179,7 +1219,7 @@ async def item_look(cmd):
 							response += "It's going to break soon!\n"
 
 					else:
-						response += "You have no idea how much longer this'll last."
+						response += "You have no idea how much longer this'll last. "
 
 				if item.item_props['size'] == 0:
 					response += "It doesn't take up any space at all.\n"
@@ -1207,6 +1247,14 @@ async def item_look(cmd):
 				hue = ewcfg.hue_map.get(item.item_props.get('hue'))
 				if hue != None:
 					response += " It's been dyed in {} paint.".format(hue.str_name)
+
+			durability = item.item_props.get('durability')
+			if durability != None and item.item_type == ewcfg.it_item:
+				if item.item_props.get('id_item') in [ewcfg.item_id_paint_copper, ewcfg.item_id_paint_chrome, ewcfg.item_id_paint_gold]:
+					if durability == 1:
+						response += " It can only be used one more time."
+					else:
+						response += " It has about {} uses left.".format(durability)
 
 			response = name + (" x{:,}".format(item.stack_size) if (item.stack_size >= 1) else "") + "\n\n" + response
 
@@ -1600,6 +1648,7 @@ def gen_item_props(item):
 			'item_desc': item.str_desc,
 			'ingredients': item.ingredients if type(item.ingredients) == str else item.ingredients[0],
 			'acquisition': item.acquisition,
+			'durability': item.durability,
 		}
 		if item.context == ewcfg.context_slimeoidfood:
 			item_props["increase"] = item.increase
@@ -2000,5 +2049,12 @@ async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
 			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, cmd.message.channel), ewutils.formatMessage(target_member, direct_message))
 
 	return response
+
+async def lower_durability(general_item):
+	general_item_data = EwItem(id_item=general_item.get('id_item'))
+	
+	current_durability = general_item_data.item_props.get('durability')
+	general_item_data.item_props['durability'] = (int(current_durability) - 1)
+	general_item_data.persist()
 
 

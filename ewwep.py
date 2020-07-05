@@ -343,7 +343,7 @@ def canAttack(cmd):
 
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
-		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
+		user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 		user_isshambler = user_data.life_state == ewcfg.life_state_shambler
 
 		if (time_now - user_data.time_lastkill) < ewcfg.cd_kill:
@@ -372,7 +372,7 @@ def canAttack(cmd):
 
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
-		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
+		user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 		user_isshambler = user_data.life_state == ewcfg.life_state_shambler
   
 		weapon_possession_data = user_data.get_weapon_possession()
@@ -677,9 +677,9 @@ async def attack(cmd):
 
 				user_data.sap -= weapon.sap_cost
 				user_data.limit_fix()
+				user_data.persist()
 
 				if weapon.id_weapon == ewcfg.weapon_id_garrote:
-					user_data.persist()
 					shootee_data.persist()
 					response = "You wrap your wire around {}'s neck...".format(member.display_name)
 					resp_cont.add_channel_response(cmd.message.channel.name, response)
@@ -1322,8 +1322,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				target_weapon = None
 				if target_data.weapon >= 0:
 					target_weapon_item = EwItem(id_item = target_data.weapon)
-					target_weapon = target_weapon_item.item_props.get("weapon_type")
-
+					target_weapon = ewcfg.weapon_map.get(target_weapon_item.item_props.get("weapon_type"))
 
 				# apply defensive mods
 				slimes_damage_target = slimes_damage * damage_mod_defend(
@@ -1558,6 +1557,7 @@ async def spar(cmd):
 
 			user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 			user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
+			user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 			user_isdead = user_data.life_state == ewcfg.life_state_corpse
 
 			if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
@@ -2214,9 +2214,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		# Spend sap
 		user_data.sap -= weapon.sap_cost
 		user_data.limit_fix()
+		user_data.persist()
 
 		if weapon.id_weapon == ewcfg.weapon_id_garrote:
-			user_data.persist()
 			enemy_data.persist()
 			response = "You wrap your wire around {}'s neck...\n**...to no avail! {} breaks free with ease!**".format(
 				enemy_data.display_name, enemy_data.display_name)
@@ -2266,10 +2266,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 				if not miss:
 					# Damage players/enemies in district
-					resp = weapon_explosion(user_data=user_data, shootee_data=enemy_data,
-												district_data=district_data, market_data = market_data, life_states=life_states,
-												factions=factions, slimes_damage=bystander_damage, backfire=backfire,
-												time_now=time_now, target_enemy=True)
+					resp = weapon_explosion(user_data=user_data, shootee_data=enemy_data, district_data=district_data, market_data = market_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=True)
 					resp_cont.add_response_container(resp)
 
 			user_data = EwUser(member=cmd.message.author)
@@ -2991,8 +2988,8 @@ async def spray(cmd):
 		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_self, shootee_data=None), 2)
 
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 300)
-		slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
-		slimes_spent *= .15
+		slimes_damage = int((50000 + slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
+		slimes_spent = round(slimes_spent * .1125)
 		statuses = user_data.getStatusEffects()
 
 		backfire_damage = int(ewutils.slime_bylevel(user_data.slimelevel) / 20)
@@ -3040,8 +3037,14 @@ async def spray(cmd):
 			sap_damage = ctn.sap_damage
 			backfire_damage = ctn.backfire_damage
 
+			if backfire is True and random.randint(0, 1) == 0:
+				miss = False
+
 			if district_data.all_neighbors_friendly() and user_data.faction != district_data.controlling_faction:
 				backfire = True
+
+			if miss is True and random.randint(0, 1) == 0:
+				miss = False
 
 			if (slimes_spent > user_data.slimes):
 				# Not enough slime to shoot.
@@ -3093,7 +3096,7 @@ async def spray(cmd):
 			if len(gangsters_in_district) == 1 and ewcfg.mutation_id_lonewolf in user_mutations:
 				slimes_damage *= 1.25
 
-			if 15 <= time_current <= 22:
+			if 3 <= time_current <= 10:
 				slimes_damage *= (4/3)
 
 			#if (user_data.faction != district_data.controlling_faction and (user_data.faction is None or user_data.faction == '')) and district_data.capture_points > ewcfg.limit_influence[district_data.property_class]:
@@ -3122,11 +3125,11 @@ async def spray(cmd):
 				else:
 
 					response = weapon.tool_props[0].get('reg_spray').format(gang = user_data.faction[:-1].capitalize(), curse = random.choice(list(ewcfg.curse_words.keys())))
-					response += " You got {:,} influence for the {}!".format(abs(slimes_damage), user_data.faction.capitalize())
+					response += " You got {:,} influence for the {}!".format(int(abs(slimes_damage)), user_data.faction.capitalize())
 
 
 					if (user_data.faction != district_data.cap_side and district_data.cap_side != "") and (user_data.faction is not None or user_data.faction != ''):
-						slimes_damage *= -.5
+						slimes_damage = round(slimes_damage * -.8)
 					#district_data.change_capture_points()
 
 
@@ -3285,7 +3288,7 @@ async def switch_weapon(cmd):
 	elif user_data.weapon >= 0:
 		weapon_item = EwItem(id_item=user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-		response = "**FWIP-CLICK!** You whip out your {}.".format(weapon_item.item_props.get("weapon_name"))
+		response = "**FWIP-CLICK!** You whip out your {}.".format(weapon_item.item_props.get("weapon_name") if weapon_item.item_props.get("weapon_name") != "" else weapon.str_name)
 		if ewcfg.weapon_class_captcha in weapon.classes:
 			newcaptcha = ewutils.text_to_regional_indicator(weapon_item.item_props.get('captcha'))
 			response += " New captcha is {}.".format(newcaptcha)

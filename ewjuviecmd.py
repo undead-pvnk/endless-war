@@ -838,7 +838,35 @@ async def crush(cmd):
 
 			if len(levelup_response) > 0:
 				response += "\n\n" + levelup_response
+				
+		elif item_data.item_props.get("id_food") in ewcfg.vegetable_to_cosmetic_material.keys():
+			ewitem.item_delete(id_item=sought_id)
+			
+			crop_name = item_data.item_props.get('food_name')
+			# Turn the crop into its proper cosmetic material item.
+			cosmetic_material_id = ewcfg.vegetable_to_cosmetic_material[item_data.item_props.get("id_food")]
+			new_item = ewcfg.item_map.get(cosmetic_material_id)
 
+			new_item_type = ewcfg.it_item
+			if new_item != None:
+				new_name = new_item.str_name
+				new_item_props = ewitem.gen_item_props(new_item)
+			else:
+				ewutils.logMsg("ERROR: !crunch failed to retrieve proper cosmetic material for crop {}.".format(item_data.item_props.get("id_food")))
+				new_name = None
+				new_item_props = None
+
+			generated_item_id = ewitem.item_create(
+				item_type=new_item_type,
+				id_user=cmd.message.author.id,
+				id_server=cmd.message.server.id,
+				item_props=new_item_props
+			)
+
+			if crunch_used:
+				response = "You crunch your {} in your mouth and spit it out to create some {}!!".format(crop_name, new_name)
+			else:
+				response = "You crush your {} in your hands and mold it into some {}!!".format(crop_name, new_name)
 	else:
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found
 			response = "You don't have one."
