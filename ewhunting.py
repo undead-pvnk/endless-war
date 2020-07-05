@@ -314,11 +314,6 @@ class EwEnemy:
 
 		used_attacktype = None
 
-		if enemy_data.attacktype != ewcfg.enemy_attacktype_unarmed:
-			used_attacktype = ewcfg.attack_type_map.get(enemy_data.attacktype)
-		else:
-			used_attacktype = ewcfg.enemy_attacktype_unarmed
-
 		# Get target's info based on its AI.
 
 		if enemy_data.ai == ewcfg.enemy_ai_coward:
@@ -335,10 +330,14 @@ class EwEnemy:
 					enemy_data.id_server
 				))
 			if len(users) > 0:
-				if random.randrange(100) > 92:
+				if random.randrange(100) > 95:
 					response = random.choice(ewcfg.coward_responses)
 					response = response.format(enemy_data.display_name, enemy_data.display_name)
 					resp_cont.add_channel_response(ch_name, response)
+					resp_cont.format_channel_response(ch_name, enemy_data)
+					return await resp_cont.post()
+					
+					
 		if enemy_data.ai == ewcfg.enemy_ai_sandbag:
 			target_data = None
 		else:
@@ -385,6 +384,11 @@ class EwEnemy:
 			
 			# Don't post resp_cont a second time while the countdown is going on.
 			should_post_resp_cont = False
+
+		if enemy_data.attacktype != ewcfg.enemy_attacktype_unarmed:
+			used_attacktype = ewcfg.attack_type_map.get(enemy_data.attacktype)
+		else:
+			return
 
 		if target_data != None:
 
@@ -439,7 +443,7 @@ class EwEnemy:
 
 			slimes_damage = int(slimes_spent * 4)
 
-			if used_attacktype == ewcfg.enemy_attacktype_unarmed:
+			if used_attacktype == ewcfg.enemy_attacktype_body:
 				slimes_damage /= 2  # specific to juvies
 			if enemy_data.enemytype == ewcfg.enemy_type_microslime:
 				slimes_damage *= 20  # specific to microslime
@@ -809,6 +813,9 @@ class EwEnemy:
 		ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel
 		
 		used_attacktype = ewcfg.attack_type_map.get(enemy_data.attacktype)
+		if used_attacktype == ewcfg.enemy_attacktype_unarmed:
+			
+			return
 
 		# Get target's info based on its AI.
 		target_enemy, group_attack = get_target_by_ai(enemy_data, cannibalize = True)
@@ -825,7 +832,7 @@ class EwEnemy:
 			elif len(target_enemy) == 0:
 				target_enemy = None
 		
-		if enemy_data.enemyclass == ewcfg.enemy_class_shambler:
+		elif enemy_data.enemyclass == ewcfg.enemy_class_shambler:
 			if target_enemy == None:
 				await sh_move(enemy_data)
 
@@ -894,121 +901,112 @@ class EwEnemy:
 				was_killed = False
 				was_hurt = True
 
-				if was_hurt:
-					# Attacking-type-specific adjustments
-					if used_attacktype != ewcfg.enemy_attacktype_unarmed and used_attacktype.fn_effect != None:
+				
+				# Attacking-type-specific adjustments
+				if used_attacktype != ewcfg.enemy_attacktype_unarmed and used_attacktype.fn_effect != None:
 
-						# Apply effects for non-reference values
-						backfire = False # Make sure to account for UFO shamblers and rowddishes throwing back grenades
-						miss = False # Make sure to account for phosphorpoppies statuses
+					# Apply effects for non-reference values
+					backfire = False # Make sure to account for UFO shamblers and rowddishes throwing back grenades
+					miss = False # Make sure to account for phosphorpoppies statuses
+					
+				if miss:
+					slimes_damage = 0
+
+				enemy_data.persist()
+				target_enemy = EwEnemy(id_enemy = target_enemy.id_enemy, id_server = target_enemy.id_server)
+
+				if slimes_damage >= target_enemy.slimes - target_enemy.bleed_storage:
+					was_killed = True
+					slimes_damage = max(target_enemy.slimes - target_enemy.bleed_storage, 0)
+
+				sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=enemy_data.id_server)
+
+				slimes_drained = int(3 * slimes_damage / 4)  # 3/4
+
+				damage = slimes_damage
+
+				slimes_tobleed = int((slimes_damage - slimes_drained) / 2)
+
+				slimes_directdamage = slimes_damage - slimes_tobleed
+				slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
+
+				market_data.splattered_slimes += slimes_damage
+				market_data.persist()
+				district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
+				target_enemy.bleed_storage += slimes_tobleed
+				target_enemy.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
+				sewer_data.change_slimes(n=slimes_drained)
+
+				if was_killed:
+					# Enemy was killed.
+					delete_enemy(target_enemy)
+					
+					# release bleed storage
+					slimes_todistrict = target_enemy.slimes
+
+					district_data.change_slimes(n=slimes_todistrict, source=ewcfg.source_killing)
+
+					# target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
+					if used_attacktype != ewcfg.enemy_attacktype_unarmed:
+						response = used_attacktype.str_damage.format(
+							name_enemy=enemy_data.display_name,
+							name_target=target_enemy.display_name,
+							hitzone=randombodypart,
+						)
+
+						response += "\n\n{}".format(used_attacktype.str_kill.format(
+							name_enemy=enemy_data.display_name,
+							name_target=target_enemy.display_name,
+							emote_skull=ewcfg.emote_slimeskull
+						))
 						
-					if miss:
-						slimes_damage = 0
+					else:
+						response = "{name_target} is hit!!\n\n{name_target} has died.".format(name_target=target_enemy.display_name)
 
 					enemy_data.persist()
-					target_enemy = EwEnemy(id_enemy = target_enemy.id_enemy, id_server = target_enemy.id_server)
+					district_data.persist()
 
-					if slimes_damage >= target_enemy.slimes - target_enemy.bleed_storage:
-						was_killed = True
-						slimes_damage = max(target_enemy.slimes - target_enemy.bleed_storage, 0)
+					resp_cont.add_channel_response(ch_name, response)
+					loot_cont = drop_enemy_loot(target_enemy, district_data)
+					resp_cont.add_response_container(loot_cont)
 
-					sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=enemy_data.id_server)
+					# don't recreate enemy data if enemy was killed in explosion
+					if check_death(enemy_data) == False:
+						enemy_data = EwEnemy(id_enemy=self.id_enemy)
 
-					slimes_drained = int(3 * slimes_damage / 4)  # 3/4
-
-					damage = slimes_damage
-
-					slimes_tobleed = int((slimes_damage - slimes_drained) / 2)
-
-					slimes_directdamage = slimes_damage - slimes_tobleed
-					slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
-
-					market_data.splattered_slimes += slimes_damage
-					market_data.persist()
-					district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
-					target_enemy.bleed_storage += slimes_tobleed
-					target_enemy.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
-					sewer_data.change_slimes(n=slimes_drained)
-
-					if was_killed:
-						# Enemy was killed.
-						delete_enemy(target_enemy)
-						
-						# release bleed storage
-						slimes_todistrict = target_enemy.slimes
-
-						district_data.change_slimes(n=slimes_todistrict, source=ewcfg.source_killing)
-
-						# target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
-						if used_attacktype != ewcfg.enemy_attacktype_unarmed:
+				else:
+					# A non-lethal blow!
+					if used_attacktype != ewcfg.enemy_attacktype_unarmed:
+						if miss:
+							response = "{}".format(used_attacktype.str_miss.format(
+								name_enemy=enemy_data.display_name,
+								name_target=target_enemy.display_name
+							))
+						elif backfire:
+							response = "{}".format(used_attacktype.str_backfire.format(
+								name_enemy=enemy_data.display_name,
+								name_target=target_enemy.display_name
+							))
+							if enemy_data.slimes - enemy_data.bleed_storage <= backfire_damage:
+								loot_cont = drop_enemy_loot(enemy_data, district_data)
+								resp_cont.add_response_container(loot_cont)
+								enemy_data.life_state = ewcfg.enemy_lifestate_dead
+								delete_enemy(enemy_data)
+							else:
+								enemy_data.change_slimes(n=-int(backfire_damage / 2))
+								enemy_data.bleed_storage += int(backfire_damage / 2)
+						else:
 							response = used_attacktype.str_damage.format(
 								name_enemy=enemy_data.display_name,
 								name_target=target_enemy.display_name,
 								hitzone=randombodypart,
 							)
-
-							response += "\n\n{}".format(used_attacktype.str_kill.format(
-								name_enemy=enemy_data.display_name,
-								name_target=target_enemy.display_name,
-								emote_skull=ewcfg.emote_slimeskull
-							))
-							
-						else:
-							response = "{name_target} is hit!!\n\n{name_target} has died.".format(name_target=target_enemy.display_name)
-
-						enemy_data.persist()
-						district_data.persist()
-
-						resp_cont.add_channel_response(ch_name, response)
-						loot_cont = drop_enemy_loot(target_enemy, district_data)
-						resp_cont.add_response_container(loot_cont)
-
-						# don't recreate enemy data if enemy was killed in explosion
-						if check_death(enemy_data) == False:
-							enemy_data = EwEnemy(id_enemy=self.id_enemy)
-
-					else:
-						# A non-lethal blow!
-						if used_attacktype != ewcfg.enemy_attacktype_unarmed:
-							if miss:
-								response = "{}".format(used_attacktype.str_miss.format(
-									name_enemy=enemy_data.display_name,
-									name_target=target_enemy.display_name
-								))
-							elif backfire:
-								response = "{}".format(used_attacktype.str_backfire.format(
-									name_enemy=enemy_data.display_name,
-									name_target=target_enemy.display_name
-								))
-								if enemy_data.slimes - enemy_data.bleed_storage <= backfire_damage:
-									loot_cont = drop_enemy_loot(enemy_data, district_data)
-									resp_cont.add_response_container(loot_cont)
-									enemy_data.life_state = ewcfg.enemy_lifestate_dead
-									delete_enemy(enemy_data)
-								else:
-									enemy_data.change_slimes(n=-int(backfire_damage / 2))
-									enemy_data.bleed_storage += int(backfire_damage / 2)
-							else:
-								response = used_attacktype.str_damage.format(
-									name_enemy=enemy_data.display_name,
-									name_target=target_enemy.display_name,
-									hitzone=randombodypart,
-								)
-								response += " {target_name} loses {damage:,} slime!".format(
-									target_name=target_enemy.display_name,
-									damage=damage,
-								)
-
-						else:
-							response = "{target_name} is hit!! {target_name} loses {damage:,} slime!".format(
+							response += " {target_name} loses {damage:,} slime!".format(
 								target_name=target_enemy.display_name,
-								damage=damage
+								damage=damage,
 							)
-
-						target_enemy.persist()
-						resp_cont.add_channel_response(ch_name, response)
-				else:
-					response = '{} is unable to attack {}.'.format(enemy_data.display_name, target_enemy.display_name)
+							
+					target_enemy.persist()
 					resp_cont.add_channel_response(ch_name, response)
 
 				# Persist enemy data.
@@ -2086,6 +2084,9 @@ class EwAttackType:
 
 	# Displayed when a weapon effect causes a miss.
 	str_miss = ""
+	
+	# Displayed when a weapon effect targets a group.
+	str_groupattack = ""
 
 	def __init__(
 			self,
@@ -2099,6 +2100,7 @@ class EwAttackType:
 			str_crit="",
 			str_miss="",
 			str_backfire = "",
+			str_groupattack = "",
 	):
 		self.id_type = id_type
 		self.str_kill = str_kill
@@ -2110,6 +2112,7 @@ class EwAttackType:
 		self.fn_effect = fn_effect
 		self.str_crit = str_crit
 		self.str_miss = str_miss
+		self.str_groupattack = str_groupattack
 		
 
 # Check if an enemy is dead. Implemented to prevent enemy data from being recreated when not necessary.

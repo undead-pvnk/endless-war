@@ -749,6 +749,8 @@ channel_apt_maimrdige ="maimridge-apartments"
 channel_slimesendcliffs = "slimes-end-cliffs"
 channel_bodega = "bodega"
 channel_basedhardware = "based-hardware"
+channel_atomicforest = "atomic-forest"
+channel_downpourlaboratory = "downpour-laboratory"
 
 channel_prankfeed = "prank-feed"
 
@@ -2367,7 +2369,7 @@ vendor_bodega = "Bodega" # Clothing store in Krak Bay
 vendor_secretbodega = "Secret Bodega" # The secret clothing store in Krak Bay
 vendor_basedhardware = "Based Hardware" # Hardware store in West Glocksbury
 vendor_atomicforest = "Atomic Forest Stockpile" # Storage of atomic forest
-vendor_downpourlaboratory = "Downpour Armaments" # Store for shamblers to get stuff
+vendor_downpourlaboratory = "Downpour Armament Vending Machines" # Store for shamblers to get stuff
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -10967,6 +10969,7 @@ poi_list = [
 			poi_id_oozegardens_street_b : travel_time_street,
 			poi_id_oozegardens_street_c : travel_time_street,
 			poi_id_oozegardens_street_d : travel_time_street,
+			poi_id_atomicforest : travel_time_subzone,
 		},
 	),
 	EwPoi( # 18
@@ -11119,6 +11122,7 @@ poi_list = [
 			poi_id_assaultflatsbeach_street_a : travel_time_street,
 			poi_id_assaultflatsbeach_street_b: travel_time_street,
 			poi_id_beachresort : travel_time_subzone,
+			poi_id_downpourlaboratory : travel_time_subzone,
 		},
 	),
 	EwPoi( # 24
@@ -16048,10 +16052,12 @@ poi_list = [
 			"af"
 		],
 		str_name = "Atomic Forest",
-		str_desc = "A safe haven ",
+		str_desc = "A safe haven for Garden Gankers all over the city. Lush patches of Brightshades light your way through what would normally be an almost pitch-black forest, given the size of the trees within that manage to blot out any light source. Here, you'll find the base of operations for the Garden Gankers, and all the tools they're willing to provide you with to help you in gardening. Exits into Ooze Gardens.",
+		channel = channel_atomicforest,
 		mother_districts = [poi_id_oozegardens],
 		pvp = False,
 		vendors = [vendor_atomicforest],
+		life_states = [life_state_juvenile, life_state_enlisted, life_state_corpse],
 		is_subzone = True,
 		neighbors = {
 			poi_id_oozegardens : travel_time_subzone,
@@ -16068,10 +16074,12 @@ poi_list = [
 			"dpl"
 		],
 		str_name = "Dr. Downpour's Laboratory",
-		str_desc = "A safe haven ",
+		str_desc = "A cold and metallic research facility stationed near what used to be Nuclear Beach, decorated to the nines with all sorts of experimental vats and chemicals. A corridor not too far from the entrance connects to a dock leading right into the Slime Sea, along with various sets of diving gear. Throughout the research facility, there are also vending machines which seem to dispense... cosmetics? Might be worth checking out, Shamblers aren't known to have the best defenses, even in numbers.",
+		channel = channel_downpourlaboratory,
 		mother_districts = [poi_id_assaultflatsbeach],
 		pvp = False,
 		vendors = [vendor_downpourlaboratory],
+		life_states = [life_state_shambler],
 		is_subzone = True,
 		neighbors = {
 			poi_id_assaultflatsbeach : travel_time_subzone,
@@ -18995,6 +19003,34 @@ cosmetic_items_list = [
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "reinforcedkfcbucket",
+		str_name = "Reinforced KFC Bucket",
+		str_desc = "A stronger, more durable version of the average KFC bucket. Intended to be worn by shamblers in Dr. Downpour's legion of the undead.",
+		rarity = rarity_patrician,
+		price = 1000,
+		stats = {
+			stat_defense: 10
+		},
+		durability = base_durability * 2,
+		style = style_smart,
+		is_hat = True,
+		vendors = [vendor_downpourlaboratory]
+	),
+	EwCosmeticItem(
+		id_cosmetic = "reinforcedjuveolantern",
+		str_name = "Reinforced Juve-O'-Lantern",
+		str_desc = "A stronger, more durable version of the average Juve-O'-Lantern. Intended to be worn by shamblers in Dr. Downpour's legion of the undead.",
+		rarity = rarity_patrician,
+		price = 2000,
+		stats = {
+			stat_defense: 15
+		},
+		durability = base_durability * 2,
+		style = style_cute,
+		is_hat = True,
+		vendors = [vendor_downpourlaboratory]
 	),
 ]
 
@@ -22725,6 +22761,7 @@ status_badtrip_id = "badtrip"
 status_stoned_id = "stoned"
 status_baked_id = "baked"
 status_sludged_id = "sludged"
+
 status_strangled_id = "strangled"
 status_drunk_id = "drunk"
 status_ghostbust_id = "ghostbust"
@@ -22756,6 +22793,41 @@ status_effect_list = [
 		str_acquire = '{name_player}\'s body is engulfed in flames.',
 		str_describe = 'They are burning.',
 		str_describe_self = 'You are burning.'
+	),
+	EwStatusEffectDef(
+		id_status = status_acid_id,
+		time_expire = time_expire_burn,
+		str_acquire = '{name_player}\'s body is drenched in acid.',
+		str_describe = 'Their body is being melted down by acid.',
+		str_describe_self = 'Your body is being melted down by acid.'
+	),
+	EwStatusEffectDef(
+		id_status = status_spored_id,
+		time_expire = time_expire_burn,
+		str_acquire = '{name_player}\'s body is riddled with spores.',
+		str_describe = 'Their body is being consumed by spores.',
+		str_describe_self = 'Your body is being consumed by spores.'
+	),
+	EwStatusEffectDef(
+		id_status = status_badtrip_id,
+		time_expire = 30,
+		str_acquire = '{name_player} begins to suffer from a bad trip.',
+		str_describe = 'They are suffering from the effects of a bad trip.',
+		str_describe_self = 'You are suffering from a bad trip.'
+	),
+	EwStatusEffectDef(
+		id_status = status_stoned_id,
+		time_expire = 30,
+		str_acquire = '{name_player} starts to get stoned as fuck, brooooo.',
+		str_describe = 'Their movements are sluggish and weak due to being stoned.',
+		str_describe_self = 'Your movements are sluggish and weak due to being stoned.'
+	),
+	EwStatusEffectDef(
+		id_status = status_baked_id,
+		time_expire = 30,
+		str_acquire = '{name_player} has become absolutely *baked!*',
+		str_describe = 'They can barely move a muscle due to how fucking baked they are.',
+		str_describe_self = 'You can barely move a muscle due to how fucking baked you are.'
 	),
 	EwStatusEffectDef(
 		id_status = status_ghostbust_id,
@@ -22858,10 +22930,22 @@ status_effects_def_map = {}
 for status in status_effect_list:
 	status_effects_def_map[status.id_status] = status
 
+# If a user already has one of these status effects, extend the timer for that status effect if applied once more.
 stackable_status_effects = [
 	status_burning_id,
+	status_acid_id,
+	status_spored_id,
+	status_badtrip_id,
+	status_stoned_id,
+	status_baked_id,
 	status_repelled_id,
 	status_repelaftereffects_id,
+]
+# Status effects that cause users/enemies to take damage.
+harmful_status_effects = [
+	status_burning_id,
+	status_acid_id,
+	status_spored_id
 ]
 
 injury_weights = {
@@ -23401,20 +23485,27 @@ enemy_attacktype_molotovbreath = 'molotovbreath'
 enemy_attacktype_armcannon = 'armcannon'
 enemy_attacktype_axe = 'axe'
 enemy_attacktype_hooves = 'hooves'
-
+enemy_attacktype_body = 'body'
 
 enemy_attacktype_gvs_g_seeds = 'seeds'
+enemy_attacktype_gvs_g_bloodshot = 'bloodshot'
+enemy_attacktype_gvs_g_nuts = 'nuts'
+enemy_attacktype_gvs_g_jaws = 'chompers'
+enemy_attacktype_gvs_g_fists = 'fists'
+enemy_attacktype_gvs_g_brainwaves = 'brainwaves'
+enemy_attacktype_gvs_g_vapecloud = 'vapecloud'
+enemy_attacktype_gvs_g_hotbox = 'hotbox'
+enemy_attacktype_gvs_g_blades = 'blades'
 
-
-enemy_attacktype_gvs_s_teeth = 'teeth'
+enemy_attacktype_gvs_s_teeth = 's_teeth'
 enemy_attacktype_gvs_s_claws = 's_claws'
 enemy_attacktype_gvs_s_tusks = 's_tusks'
 enemy_attacktype_gvs_s_fangs = 's_fangs'
 enemy_attacktype_gvs_s_talons = 's_talons'
 enemy_attacktype_gvs_s_molotovbreath = 's_molotovbreath'
 enemy_attacktype_gvs_s_raiderscythe = 's_scythe'
-enemy_attacktype_gvs_s_cudgel = 'cudgel'
-enemy_attacktype_gvs_s_grenadecannon = 'grenadecannon'
+enemy_attacktype_gvs_s_cudgel = 's_cudgel'
+enemy_attacktype_gvs_s_grenadecannon = 's_grenadecannon'
 
 # Enemy weather types. In the future enemies will make use of this in tandem with the current weather, but for now they can just resist the rain.
 enemy_weathertype_normal = 'normal'
@@ -23437,8 +23528,6 @@ enemy_type_slimeasaurusrex = 'slimeasaurusrex'
 enemy_type_greeneyesslimedragon = 'greeneyesslimedragon'
 enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 # Gankers Vs. Shamblers enemies
-enemy_type_basic_gaiaslimeoid = 'gaiaslimeoid'
-enemy_type_basic_shambler = 'shambler'
 enemy_type_gaia_poketubers = "poketubers"
 enemy_type_gaia_pulpgourds = "pulpgourds"
 enemy_type_gaia_sourpotatoes = "sourpotatoes"
@@ -23709,7 +23798,7 @@ enemy_data_table = {
 	enemy_type_microslime: {
 		"slimerange": [10000, 50000], 
 		"ai": enemy_ai_defender, 
-		"attacktype": enemy_attacktype_unarmed, 
+		"attacktype": enemy_attacktype_body, 
 		"displayname": "Microslime", 
 		"raredisplayname": "Irridescent Microslime", 
 		"aliases": ["micro","pinky"]
@@ -23717,7 +23806,7 @@ enemy_data_table = {
 	enemy_type_slimeofgreed: {
 		"slimerange": [20000, 100000], 
 		"ai": enemy_ai_defender, 
-		"attacktype": enemy_attacktype_unarmed, 
+		"attacktype": enemy_attacktype_body, 
 		"displayname": "Slime Of Greed", 
 		"raredisplayname": "Slime Of Avarice", 
 		"aliases": ["slime","slimeofgreed","pot","potofgreed","draw2cards"]

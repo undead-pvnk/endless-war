@@ -836,18 +836,19 @@ async def burnSlimes(id_server = None):
 		time_now = int(time.time())
 		client = get_client()
 		server = client.get_server(id_server)
+		status_origin = 'user'
 
 		results = {}
 
-		# Get users with burning effect
-		data = execute_sql_query("SELECT {id_user}, {value}, {source} from status_effects WHERE {id_status} = %s and {id_server} = %s".format(
+		# Get users with harmful status effects
+		data = execute_sql_query("SELECT {id_user}, {value}, {source}, {id_status} from status_effects WHERE {id_status} IN %s and {id_server} = %s".format(
 			id_user = ewcfg.col_id_user,
 			value = ewcfg.col_value,
 			id_status = ewcfg.col_id_status,
 			id_server = ewcfg.col_id_server,
 			source = ewcfg.col_source
 		), (
-			ewcfg.status_burning_id,
+			tuple(ewcfg.harmful_status_effects),
 			id_server
 		))
 
@@ -857,47 +858,68 @@ async def burnSlimes(id_server = None):
 			member = server.get_member(user_data.id_user)
 
 			slimes_dropped = user_data.totaldamage + user_data.slimes
+			used_status_id = result[3]
 
 			# Deal 10% of total slime to burn every second
 			slimes_to_burn = math.ceil(int(float(result[1])) * ewcfg.burn_tick_length / ewcfg.time_expire_burn)
 
-			killer_data = EwUser(id_server = id_server, id_user=result[2])
-
-			# Damage stats
-			ewstats.change_stat(user = killer_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_to_burn)
+			# Check if a status effect originated from an enemy or a user.
+			killer_data = EwUser(id_server=id_server, id_user=result[2])
+			if killer_data == None:
+				killer_data = EwEnemy(id_server=id_server, id_enemy=result[2])
+				if killer_data != None:
+					status_origin = 'enemy'
+				else:
+					# For now, skip over any status that did not originate from a user or an enemy. This might be changed in the future.
+					continue
+					
+			if status_origin == 'user':
+				# Damage stats
+				ewstats.change_stat(user=killer_data, metric=ewcfg.stat_lifetime_damagedealt, n=slimes_to_burn)
 
 			# Player died
 			if user_data.slimes - slimes_to_burn < 0:	
 				weapon = ewcfg.weapon_map.get(ewcfg.weapon_id_molotov)
 
 				player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
-				killer = EwPlayer(id_server = id_server, id_user=killer_data.id_user)
 				poi = ewcfg.id_to_poi.get(user_data.poi)
 
 				# Kill stats
-				ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_kills)
-				ewstats.track_maximum(user = killer_data, metric = ewcfg.stat_biggest_kill, value = int(slimes_dropped))
+				if status_origin == 'user':
+					ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_kills)
+					ewstats.track_maximum(user = killer_data, metric = ewcfg.stat_biggest_kill, value = int(slimes_dropped))
+	
+					if killer_data.slimelevel > user_data.slimelevel:
+						ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_lifetime_ganks)
+					elif killer_data.slimelevel < user_data.slimelevel:
+						ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_lifetime_takedowns)
 
-				if killer_data.slimelevel > user_data.slimelevel:
-					ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_lifetime_ganks)
-				elif killer_data.slimelevel < user_data.slimelevel:
-					ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_lifetime_takedowns)
-
-				# Collect bounty
-				coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
-				
-				if user_data.slimes >= 0:
-					killer_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
+					# Collect bounty
+					coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
+					
+					if user_data.slimes >= 0:
+						killer_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
 				# Kill player
-				user_data.id_killer = killer_data.id_user
+				if status_origin == 'user':
+					user_data.id_killer = killer_data.id_user
+				elif status_origin == 'enemy':
+					user_data.id_killer = killer_data.id_enemy
+					
 				user_data.trauma = ewcfg.trauma_id_environment
 				die_resp = user_data.die(cause = ewcfg.cause_burning)
 				#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 
 				resp_cont.add_response_container(die_resp)
-				
-				deathreport = "{} has burned to death.".format(player_data.display_name)
+
+				if used_status_id == ewcfg.status_burning_id:
+					deathreport = "{} has burned to death.".format(player_data.display_name)
+				elif used_status_id == ewcfg.status_acid_id:
+					deathreport = "{} has been melted to death by acid.".format(player_data.display_name)
+				elif used_status_id == ewcfg.status_spored_id:
+					deathreport = "{} has been overrun by spores.".format(player_data.display_name)
+				else:
+					deathreport = ""
 				resp_cont.add_channel_response(poi.channel, deathreport)
 
 				user_data.trauma = weapon.id_weapon
@@ -927,19 +949,20 @@ async def enemyBurnSlimes(id_server):
 	if id_server != None:
 		time_now = int(time.time())
 		client = get_client()
-		server = client.get_server(id_server)
+		#server = client.get_server(id_server)
+		status_origin = 'user'
 
 		results = {}
 
-		# Get enemies with burning effect
-		data = execute_sql_query("SELECT {id_enemy}, {value}, {source} from enemy_status_effects WHERE {id_status} = %s and {id_server} = %s".format(
+		# Get enemies with harmful status effects
+		data = execute_sql_query("SELECT {id_enemy}, {value}, {source}, {id_status} from enemy_status_effects WHERE {id_status} IN %s and {id_server} = %s".format(
 			id_enemy = ewcfg.col_id_enemy,
 			value = ewcfg.col_value,
 			id_status = ewcfg.col_id_status,
 			id_server = ewcfg.col_id_server,
 			source = ewcfg.col_source
 		), (
-			ewcfg.status_burning_id,
+			ewcfg.harmful_status_effects,
 			id_server
 		))
 
@@ -948,19 +971,35 @@ async def enemyBurnSlimes(id_server):
 			enemy_data = EwEnemy(id_enemy = result[0], id_server = id_server)
 			
 			slimes_dropped = enemy_data.totaldamage + enemy_data.slimes
+			used_status_id = result[3]
 
 			# Deal 10% of total slime to burn every second
 			slimes_to_burn = math.ceil(int(float(result[1])) * ewcfg.burn_tick_length / ewcfg.time_expire_burn)
 
-			killer_data = EwUser(id_server = id_server, id_user=result[2])
-
-			# Damage stats
-			ewstats.change_stat(user = killer_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_to_burn)
+			# Check if a status effect originated from an enemy or a user.
+			killer_data = EwUser(id_server=id_server, id_user=result[2])
+			if killer_data == None:
+				killer_data = EwEnemy(id_server=id_server, id_enemy=result[2])
+				if killer_data != None:
+					status_origin = 'enemy'
+				else:
+					# For now, skip over any status that did not originate from a user or an enemy. This might be changed in the future.
+					continue
+			
+			if status_origin == 'user':
+				ewstats.change_stat(user = killer_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_to_burn)
 
 			if enemy_data.slimes - slimes_to_burn <= 0:
 				ewhunting.delete_enemy(enemy_data)
 
-				response = "{} has burned to death.".format(enemy_data.display_name)
+				if used_status_id == ewcfg.status_burning_id:
+					response = "{} has burned to death.".format(enemy_data.display_name)
+				elif used_status_id == ewcfg.status_acid_id:
+					response = "{} has been melted to death by acid.".format(enemy_data.display_name)
+				elif used_status_id == ewcfg.status_spored_id:
+					response = "{} has been overrun by spores.".format(enemy_data.display_name)
+				else:
+					response = ""
 				resp_cont.add_channel_response(ewcfg.id_to_poi.get(enemy_data.poi).channel, response)
 				
 				district_data = EwDistrict(id_server = id_server, district = enemy_data.poi)
@@ -1454,7 +1493,6 @@ async def spawn_enemies(id_server = None):
 	if not ewcfg.gvs_active:
 		if random.randrange(3) == 0:
 			weathertype = ewcfg.enemy_weathertype_normal
-	
 			market_data = EwMarket(id_server=id_server)
 			# If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
 			if market_data.weather == ewcfg.weather_bicarbonaterain:
