@@ -62,13 +62,17 @@ async def store(cmd):
 		item = EwItem(id_item = item_sought.get("id_item"))
 
 		if not item.soulbound:
-			if item.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item.id_item == user_data.weapon:
-				if user_data.weaponmarried:
-					weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
-					response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('name'))
-					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				else:
-					user_data.weapon = -1
+			if item.item_type == ewcfg.it_weapon:
+				if user_data.weapon >= 0 and item.id_item == user_data.weapon:
+					if user_data.weaponmarried:
+						weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+						response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('name'))
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					else:
+						user_data.weapon = -1
+						user_data.persist()
+				elif item.id_item == user_data.sidearm:
+					user_data.sidearm = -1
 					user_data.persist()
 
 			if item.item_type == ewcfg.it_cosmetic:
