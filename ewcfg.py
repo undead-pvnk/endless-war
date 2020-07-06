@@ -1555,6 +1555,7 @@ fish_offer_timeout = 1440 # in minutes; 24 hours
 cd_kill = 5
 cd_spar = 60
 cd_haunt = 600
+cd_shamble = 30
 cd_squeeze = 1200
 cd_invest = 1200
 cd_boombust = 22
@@ -2993,7 +2994,6 @@ item_list = [
 		str_desc = "A tanning knife",
 		acquisition = acquisition_smelting,
 	),
-
 	EwGeneralItem(
 		id_item = item_id_string,
 		str_name = "string",
@@ -5869,6 +5869,9 @@ def atf_hooves(ctn=None):
 	if aim > (25 - int(30 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+        
+def atf_gvs_basic(ctn=None):
+    pass
 
 # All enemy attacking types in the game.
 enemy_attack_type_list = [
@@ -19352,7 +19355,7 @@ smelting_recipe_list = [
 		ingredients = {
 			item_id_ironingot:1
 		},
-		products = [item_id_ironingot]
+		products = [item_id_tanningknife]
 	),
 		EwSmeltingRecipe(
 		id_recipe = "leather",
@@ -22810,7 +22813,7 @@ status_effect_list = [
 	),
 	EwStatusEffectDef(
 		id_status = status_badtrip_id,
-		time_expire = 30,
+		time_expire = 5,
 		str_acquire = '{name_player} begins to suffer from a bad trip.',
 		str_describe = 'They are suffering from the effects of a bad trip.',
 		str_describe_self = 'You are suffering from a bad trip.'
@@ -23487,18 +23490,19 @@ enemy_attacktype_axe = 'axe'
 enemy_attacktype_hooves = 'hooves'
 enemy_attacktype_body = 'body'
 
-enemy_attacktype_gvs_g_seeds = 'seeds'
-enemy_attacktype_gvs_g_bloodshot = 'bloodshot'
-enemy_attacktype_gvs_g_nuts = 'nuts'
-enemy_attacktype_gvs_g_jaws = 'chompers'
-enemy_attacktype_gvs_g_fists = 'fists'
-enemy_attacktype_gvs_g_brainwaves = 'brainwaves'
-enemy_attacktype_gvs_g_vapecloud = 'vapecloud'
-enemy_attacktype_gvs_g_hotbox = 'hotbox'
-enemy_attacktype_gvs_g_blades = 'blades'
+enemy_attacktype_gvs_g_seeds = 'g_seeds'
+enemy_attacktype_gvs_g_bloodshot = 'g_bloodshot'
+enemy_attacktype_gvs_g_nuts = 'g_nuts'
+enemy_attacktype_gvs_g_chompers = 'g_chompers'
+enemy_attacktype_gvs_g_fists = 'g_fists'
+enemy_attacktype_gvs_g_brainwaves = 'g_brainwaves'
+enemy_attacktype_gvs_g_vapecloud = 'g_vapecloud'
+enemy_attacktype_gvs_g_hotbox = 'g_hotbox'
+enemy_attacktype_gvs_g_blades = 'g_blades'
+enemy_attacktype_gvs_g_explosion = 'g_explosion'
 
+enemy_attacktype_gvs_s_shamboni = 's_shamboni'
 enemy_attacktype_gvs_s_teeth = 's_teeth'
-enemy_attacktype_gvs_s_claws = 's_claws'
 enemy_attacktype_gvs_s_tusks = 's_tusks'
 enemy_attacktype_gvs_s_fangs = 's_fangs'
 enemy_attacktype_gvs_s_talons = 's_talons'
@@ -23859,35 +23863,481 @@ enemy_data_table = {
 		"raredisplayname": "Unyielding Fierce Operator", 
 		"aliases": ["ufo", "alien","unnervingfightingoperator","unnvering"]
 	},
-	enemy_type_gaia_pinkrowddishes: {
-		"slimerange": [10000, 10000],
+	enemy_type_gaia_poketubers: {
+		"slimerange": [100, 100],
 		"ai": enemy_ai_gaiaslimeoid,
-		"attacktype": enemy_attacktype_gunkshot,
-		"displayname": "Pink Rowddish",
-		"raredisplayname": "Joybean Pink Rowddish",
-		"aliases": ['rowddish'],
+		"attacktype": enemy_attacktype_unarmed,
+		"displayname": "Poketuber",
+		"raredisplayname": "Joybean Poketuber",
+		"aliases": ['tuber'],
 		"class": enemy_class_gaiaslimeoid,
 		"props": {
-			'range': 1,
-			'direction': 'frontandback',
-			'piercing': 'True',
-			'setdamage': 3000
+			'primed': 'False',
+			'primecountdown': 3,
+			'setdamage': 500000
 		}
 	},
+	enemy_type_gaia_pulpgourds: {
+		"slimerange": [50000, 50000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_unarmed,
+		"displayname": "Pulp Gourd",
+		"raredisplayname": "Joybean Pulp Gourd",
+		"aliases": ['gourd', 'pulp'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'gourdstorage': 0
+		}
+	},
+	enemy_type_gaia_sourpotatoes: {
+		"slimerange": [100000, 100000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_gvs_g_chompers,
+		"displayname": "Sour Potato",
+		"raredisplayname": "Joybean Sour Potato",
+		"aliases": ['potato', 'sour'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'chewingcountdown': 0,
+			'setdamage': 500000,
+			'range': 2
+		}
+	},
+	enemy_type_gaia_bloodcabbages: {
+		"slimerange": [100000, 100000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_gvs_g_bloodshot,
+		"displayname": "Blood Cabbage",
+		"raredisplayname": "Joybean Blood Cabbage",
+		"aliases": ['blood', 'cabbage'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'setdamage': 20000,
+			'range': 20,
+            'piercing': 'True',
+            'pierceamount': 3
+		}
+	},
+	enemy_type_gaia_joybeans: {
+		"slimerange": [50000, 50000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_unarmed,
+		"displayname": "Joybean",
+		"raredisplayname": "Joybean Fusion!!",
+		"aliases": ['bean','uhoh','youfriccinmoron'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'noprop': 'noprop'
+		}
+	},
+	enemy_type_gaia_purplekilliflower: {
+		"slimerange": [100000,100000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_gvs_g_vapecloud,
+		"displayname": "Purple Killiflower",
+		"raredisplayname": "Joybean Purple Killiflower",
+		"aliases": ['purple','killiflower','cauliflower'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'range': 10,
+			'piercing': 'True',
+			'setdamage': '15000',
+		}
+	},
+	enemy_type_gaia_razornuts: {
+		"slimerange": [200000, 200000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_unarmed,
+		"displayname": "Razornut",
+		"raredisplayname": "Joybean Razornut",
+		"aliases": ['razor', 'nut'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'setdamage': 20000
+		}
+	},
+	enemy_type_gaia_pawpaw: {
+		"slimerange": [200000, 200000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_gvs_g_explosion,
+		"displayname": "Pawpaw",
+		"raredisplayname": "Joybean Pawpaw",
+		"aliases": ['paw'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+            'setdamage': 500000,
+		}
+	},
+    enemy_type_gaia_sludgeberries: {
+        "slimerange": [100, 100],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Sludgeberries",
+        "raredisplayname": "Joybean Sludgeberries",
+        "aliases": ['berries','sludge'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'noprop': 'noprop'
+        }
+    },
+    enemy_type_gaia_suganmanuts: {
+        "slimerange": [400000, 400000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed, # changes to gvs_g_nuts upon the use of a joybean
+        "displayname": "Suganmanut",
+        "raredisplayname": "Joybean Suganmanut",
+        "aliases": ['cashew', 'nuts'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'setdamage': 20000
+        }
+    },
+	enemy_type_gaia_pinkrowddishes: {
+		"slimerange": [100000, 100000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_gvs_g_fists,
+		"displayname": "Pink Rowddish",
+		"raredisplayname": "Joybean Pink Rowddish",
+		"aliases": ['rowddish', 'raddish'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'range': 2,
+			'direction': 'frontandback',
+			'piercing': 'True',
+			'setdamage': 50000
+		}
+	},
+    enemy_type_gaia_dankwheat: {
+        "slimerange": [50000, 50000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_gvs_g_hotbox,
+        "displayname": "Dankwheat",
+        "raredisplayname": "Joybean Dankwheat",
+        "aliases": ['weed','digiweed','digibro','wheat'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'setdamage': 10000,
+            'direction': 'ring',
+            'piercing': 'True',
+        }
+    },
+    enemy_type_gaia_brightshade: {
+        "slimerange": [50000, 50000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Brightshade",
+        "raredisplayname": "Double Brightshade",
+        "aliases": ['bright','shade'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'gaiaslimecountdown': 4
+        }
+    },
+    enemy_type_gaia_blacklimes: {
+        "slimerange": [200000, 200000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Black Lime",
+        "raredisplayname": "Joybean Black Lime",
+        "aliases": ['lime','black'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'noprop': 'noprop'
+        }
+    },
+    enemy_type_gaia_phosphorpoppies: {
+        "slimerange": [100000, 100000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_gvs_g_brainwaves,
+        "displayname": "Phosphorpoppy",
+        "raredisplayname": "Joybean Phosphorpoppy",
+        "aliases": ['phosphor', 'poppy'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'setdamage': 10000,
+            'piercing': 'True',
+            'pierceamount': 3
+        }
+    },
+    enemy_type_gaia_direapples: {
+        "slimerange": [100000, 100000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_gvs_g_seeds,
+        "displayname": "Dire Apple",
+        "raredisplayname": "Joybean Dire Apple",
+        "aliases": ['apple','dire'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'setdamage': 35000,
+            # 'singletilepierce': 'True', JOYBEAN 
+            # 'pierceamount': 3
+        }
+    },
+    enemy_type_gaia_rustealeaves: {
+        "slimerange": [200000, 200000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_gvs_g_blades,
+        "displayname": "Rustea Leaves",
+        "raredisplayname": "Joybean Rustea Leaves",
+        "aliases": ['leaves','tea'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'range': 0,
+            'setdamage': 30000
+        }
+    },
+    enemy_type_gaia_metallicaps: {
+        "slimerange": [80000, 80000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Metallicaps",
+        "raredisplayname": "NULL",
+        "aliases": ['mushrooms','shrooms','shroomz','mushroom'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'setdamage': 30000
+        }
+    },
+    enemy_type_gaia_steelbeans: {
+        "slimerange": [200000, 200000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Steel Beans",
+        "raredisplayname": "NULL",
+        "aliases": ['911','steel','beans'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'noprop': 'noprop'
+        }
+    },
+    enemy_type_gaia_aushucks: {
+        "slimerange": [50000, 50000],
+        "ai": enemy_ai_gaiaslimeoid,
+        "attacktype": enemy_attacktype_unarmed,
+        "displayname": "Aushucks",
+        "raredisplayname": "NULL",
+        "aliases": ['gold','shucks','corn'],
+        "class": enemy_class_gaiaslimeoid,
+        "props": {
+            'gaiaslimecountdown': 4
+        }
+    },
 	enemy_type_defaultshambler: {
-		"slimerange": [10000, 10000],
+		"slimerange": [125000, 125000],
 		"ai": enemy_ai_shambler,
-		"attacktype": enemy_attacktype_fangs,
+		"attacktype": enemy_attacktype_gvs_s_teeth,
 		"displayname": "Shambler",
 		"raredisplayname": "NULL",
-		"aliases": ['shambler'],
+		"aliases": ['zombie'],
 		"class": enemy_class_shambler,
 		"props": {
-			'range': 1,
-			'direction': 'left',
-			'setdamage': 2000
+			'setdamage': 30000
 		}
-	}
+	},
+    enemy_type_bucketshambler: {
+        "slimerange": [175000, 175000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_teeth,
+        "displayname": "KFC Bucket Shambler",
+        "raredisplayname": "NULL",
+        "aliases": ['kfc','bucket'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 30000
+        }
+    },
+    enemy_type_juveolanternshambler: {
+        "slimerange": [250000, 250000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_teeth,
+        "displayname": "Juve-O'-Lantern Shambler",
+        "raredisplayname": "NULL",
+        "aliases": ['juveolantern','jackolantern'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 30000
+        }
+    },
+    enemy_type_flagshambler: {
+		"slimerange": [125000, 125000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_teeth,
+		"displayname": "Flag Shambler",
+		"raredisplayname": "NULL",
+		"aliases": ['flag'],
+		"class": enemy_class_shambler,
+		"props": {
+            'setdamage': 30000
+		}
+	},
+    enemy_type_shamboni: {
+		"slimerange": [175000, 175000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_shamboni,
+		"displayname": "Shamboni",
+		"raredisplayname": "NULL",
+		"aliases": ['zomboni', 'driver', 'zamboni'],
+		"class": enemy_class_shambler,
+		"props": {
+            'setdamage': 250000
+		}
+	},
+    enemy_type_mammoshambler: {
+		"slimerange": [250000, 250000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_tusks,
+		"displayname": "Mammoshambler",
+		"raredisplayname": "NULL",
+		"aliases": ['mammoth','brunswick'],
+		"class": enemy_class_shambler,
+		"props": {
+            'setdamage': 100000,
+            'turncountdown': 2
+		}
+	},
+    enemy_type_gigashambler: {
+        "slimerange": [500000, 500000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_cudgel,
+        "displayname": "Gigashambler",
+        "raredisplayname": "NULL",
+        "aliases": ['giga','gigachad'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 200000,
+            'turncountdown': 2,
+            'microspawned': 'False'
+        }
+    },
+    enemy_type_microshambler: {
+        "slimerange": [60000, 60000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_teeth,
+        "displayname": "Microshambler",
+        "raredisplayname": "NULL",
+        "aliases": ['micro'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 30000
+        }
+    },
+    enemy_type_shamblersaurusrex: {
+        "slimerange": [250000, 250000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_fangs,
+        "displayname": "Shamblersaurus Rex",
+        "raredisplayname": "NULL",
+        "aliases": ['rex','trex','t-rex','shamblersaurus'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 75000,
+            'roarused': False,
+        }
+    },
+    enemy_type_dinoshambler: {
+        "slimerange": [150000, 150000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_fangs,
+        "displayname": "Dinoshambler",
+        "raredisplayname": "NULL",
+        "aliases": ['dinosaur','dino'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 35000
+        }
+    },
+    enemy_type_ufoshambler: {
+        "slimerange": [150000, 150000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_grenadecannon,
+        "displayname": "Unnerving Fighting Shambler",
+        "raredisplayname": "NULL",
+        "aliases": ['ufo'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 40000,
+            'turncountdown': 2,
+            'range': 18
+        }
+    },
+    enemy_type_brawldenboomer: {
+        "slimerange": [200000, 200000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_teeth,
+        "displayname": "The Brawlden Boomer",
+        "raredisplayname": "Enraged Brawlden Boomer",
+        "aliases": ['boomer','boombox'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 30000,
+            'turncountdown': 2,
+            'boomboxcountdown': 12,
+            'boomboxbroken': 'False'
+        }
+    },
+    enemy_type_juvieshambler: {
+        "slimerange": [150000, 150000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_teeth,
+        "displayname": "Juvie Shambler",
+        "raredisplayname": "NULL",
+        "aliases": ['juvie','miner'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 40000,
+            'underground': 'True'
+        }
+    },
+    enemy_type_shambleballplayer: {
+        "slimerange": [250000, 250000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_teeth,
+        "displayname": "Shambleball Player",
+        "raredisplayname": "NULL",
+        "aliases": ['soccerguy','football','sports'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 40000
+        }
+    },
+    enemy_type_shamblerwarlord: {
+        "slimerange": [300000, 300000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_scythe,
+        "displayname": "Shambler Warlord",
+        "raredisplayname": "NULL",
+        "aliases": ['warlord'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 60000,
+            'summoncountdown': 3 # When it reaches 0, it is dialed back to 6
+        }
+    },
+    enemy_type_shamblerraider: {
+        "slimerange": [100000, 100000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_scythe,
+        "displayname": "Shambler Raider",
+        "raredisplayname": "NULL",
+        "aliases": ['raider'],
+        "class": enemy_class_shambler,
+        "props": {
+            'setdamage': 30000
+        }
+    },
+    enemy_type_blueeyesshamblerdragon: {
+        "slimerange": [5000000, 5000000],
+        "ai": enemy_ai_shambler,
+        "attacktype": enemy_attacktype_gvs_s_molotovbreath,
+        "displayname": "Blue Eyes Shambler Dragon",
+        "raredisplayname": "NULL",
+        "aliases": ['blue','blueeyes','blueeyeswhitedragon','dragon','shamblerdragon'],
+        "class": enemy_class_shambler,
+        "props": {
+            'onground': 'True',
+            'setdamage': 100000
+        }
+    },
 }
 
 # Raid boss names used to avoid raid boss reveals in ewutils.formatMessage

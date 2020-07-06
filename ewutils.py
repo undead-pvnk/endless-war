@@ -2419,12 +2419,13 @@ def get_subzone_controlling_faction(subzone_id, id_server):
 async def gvs_create_gaia_grid_mapping(user_data):
 	grid_map = {}
 
-	low_priority = [ewcfg.enemy_type_gaia_rustealeaves, ewcfg.enemy_type_gaia_metallicaps,
-					ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_aushucks]
-	high_priority = []
+	# Grid print mapping and shambler targeting use different priority lists. Don't get these mixed up
+	printgrid_low_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+	printgrid_mid_priority = [ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_metallicaps, ewcfg.enemy_type_gaia_aushucks]
+	printgrid_high_priority = []
 	for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
-		if enemy_id not in low_priority:
-			high_priority.append(enemy_id)
+		if enemy_id not in printgrid_low_priority and enemy_id not in printgrid_mid_priority:
+			printgrid_high_priority.append(enemy_id)
 
 	gaias = execute_sql_query(
 		"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1 AND {enemyclass} = %s".format(
@@ -2460,7 +2461,9 @@ async def gvs_create_gaia_grid_mapping(user_data):
 			is_filled = False
 			
 		if is_filled:
-			if gaia_in_coord in low_priority and gaia[1] in high_priority:
+			if gaia_in_coord in printgrid_low_priority and (gaia[1] in printgrid_mid_priority or gaia[1] in printgrid_high_priority):
+				grid_map[gaia[2]] = gaia[1]
+			if gaia_in_coord in printgrid_mid_priority and gaia[1] in printgrid_high_priority:
 				grid_map[gaia[2]] = gaia[1]
 		else:
 			grid_map[gaia[2]] = gaia[1]

@@ -2089,6 +2089,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	sandbag_mode = False
 	if enemy_data.enemytype == ewcfg.enemy_type_sandbag:
 		sandbag_mode = True
+	
+	if (enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (enemy_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
+		response = "Hey ASSHOLE! They're on your side!!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	user_mutations = user_data.get_mutations()
 

@@ -2286,8 +2286,10 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 			direction = enemy_data.enemy_props.get('direction')
 			piercing = enemy_data.enemy_props.get('piercing')
 			splash = enemy_data.enemy_props.get('splash')
+			pierceamount = enemy_data.enemy_props.get('pierceamount')
+			singletilepierce = enemy_data.enemy_props.get('singletilepierce')
 			
-			enemies = ga_check_coord_for_shambler(enemy_data, range, direction, piercing, splash)
+			enemies = ga_check_coord_for_shambler(enemy_data, range, direction, piercing, splash, pierceamount, singletilepierce)
 			if len(enemies) > 1:
 				group_attack = True
 				
@@ -2432,40 +2434,59 @@ def sh_check_coord_for_gaia(enemy_data, sh_range, direction):
 						#print(len(gaia_data))
 						if len(gaia_data) > 0:
 							
+							low_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+							high_priority = [ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_metallicaps, ewcfg.enemy_type_gaia_aushucks]
+							mid_priority = []
+							for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+								if enemy_id not in low_priority and enemy_id not in high_priority:
+									mid_priority.append(enemy_id)
+							
+							gaia_types = {}
 							for gaia in gaia_data:
-								# Prioritize gaiaslimeoids that are upgrades, I.E. Metallicaps, Steel Beans, Aushucks.
-								if gaia[1] in [ewcfg.enemy_type_gaia_metallicaps, ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_aushucks]:
-									gaias_in_coord.append(gaia[0])
-							for gaia in gaia_data:
-								if gaia[1] not in [ewcfg.enemy_type_gaia_metallicaps, ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_aushucks]:
-									gaias_in_coord.append(gaia[0])
+								gaia_types[gaia[1]] = gaia[0]
+							
+							# Rustea Leaves only have a few opposing shamblers that can damage them
+							if ewcfg.enemy_type_gaia_rustealeaves in gaia_types.keys() and enemy_data.enemytype not in [ewcfg.enemy_type_gigashambler, ewcfg.enemy_type_shamboni, ewcfg.enemy_type_ufoshambler]:
+								del gaia_types[ewcfg.enemy_type_gaia_rustealeaves]
 
-									if gaia[1] == ewcfg.enemy_type_gaia_rustealeaves and enemy_data.enemytype not in [ewcfg.enemy_type_gigashambler, ewcfg.enemy_type_shamboni, ewcfg.enemy_type_ufoshambler]:
-										gaias_in_coord.remove(gaia[0])
+							for target in high_priority:
+								if target in gaia_types.keys():
+									gaias_in_coord.append(gaia_types[target])
 									
+							for target in mid_priority:
+								if target in gaia_types.keys():
+									gaias_in_coord.append(gaia_types[target])
+									
+							for target in low_priority:
+								if target in gaia_types.keys():
+									gaias_in_coord.append(gaia_types[target])
 
 							print('shambler in coord {} found gaia in coord {} in {}.'.format(current_coord, checked_coord, enemy_data.poi))
 	
 	return gaias_in_coord
 
-def ga_check_coord_for_shambler(enemy_data, ga_range, direction, piercing, splash):
+def ga_check_coord_for_shambler(enemy_data, ga_range, direction, piercing, splash, pierceamount, singletilepierce):
 	current_coord = enemy_data.gvs_coord
 	detected_shamblers = {}
 	
 	if ga_range == None:
-		ga_range = 1
+		ga_range = 2
 	if direction == None:
 		direction = 'right'
 	if piercing == None:
-		piercing = 'false'
+		piercing = 'False'
 	if splash == None:
 		splash = 'none'
+	if pierceamount == None:
+		pierceamount = 0
+	if singletilepierce == None:
+		singletilepierce = 'False'
 	
 	for sh_row in ewcfg.gvs_valid_coords_shambler:
 
 		if current_coord in sh_row:
 			index = sh_row.index(current_coord)
-			checked_coords = gvs_grid_gather_coords(enemy_data.enemyclass, ga_range, direction, sh_row, index)
+			checked_coords = gvs_grid_gather_coords(enemy_data.enemyclass, int(ga_range), direction, sh_row, index)
 			
 			print('GAIA -- CHECKED COORDS FOR {} WITH ID {}: {}'.format(enemy_data.enemytype, enemy_data.id_enemy, checked_coords))
 
@@ -2500,8 +2521,10 @@ def ga_check_coord_for_shambler(enemy_data, ga_range, direction, piercing, splas
 					if enemy_data not in [ewcfg.enemy_type_gaia_sourpotatoes] and shambler[1] in [ewcfg.enemy_type_juvie] and current_shambler_data.enemy_props.get('underground') == 'True':
 						del detected_shamblers[current_shambler_data.id_enemy]
 
-				if piercing == None:
+				if piercing == 'False':
 					detected_shamblers = gvs_find_nearest_shambler(checked_coords, detected_shamblers)
+				elif int(pierceamount) > 0:
+					detected_shamblers = gvs_find_nearest_shambler(checked_coords, detected_shamblers, pierceamount, singletilepierce)
 				
 				print('gaia in coord {} found shambler in coords {} in {}.'.format(current_coord, checked_coords, enemy_data.poi))
 
@@ -2554,7 +2577,7 @@ def gvs_grid_gather_coords(enemyclass, gr_range, direction, row, index):
 		index_changes = []
 		
 		# Default if range is 1, only reaches 0.5 and 1 full tile ahead
-		for i in range(gr_range*2):
+		for i in range(gr_range):
 			index_changes.append(i + 1)
 			
 		# If it reaches backwards with a range of 1, reflect current index changes
@@ -2591,11 +2614,28 @@ def gvs_grid_gather_coords(enemyclass, gr_range, direction, row, index):
 		
 	return checked_coords
 
-def gvs_find_nearest_shambler(checked_coords, detected_shamblers):
+def gvs_find_nearest_shambler(checked_coords, detected_shamblers, pierceamount = 1, singletilepierce = 'False'):
+	pierceattempts = 0
+	current_dict = {}
+	chosen_coord = ''
+	
 	for coord in checked_coords:
 		for shambler in detected_shamblers.keys():
 			if detected_shamblers[shambler] == coord:
-				return {shambler: coord}
+				current_dict[shambler] = coord
+				
+				if singletilepierce == 'True':
+					chosen_coord = coord
+					for shambler in detected_shamblers.keys():
+						if detected_shamblers[shambler] == chosen_coord:
+							current_dict[shambler] = chosen_coord
+						pierceattempts += 1
+						if pierceattempts == pierceamount:
+							return current_dict
+					
+			pierceattempts += 1
+			if pierceattempts == pierceamount:
+				return current_dict
 			
 def gvs_get_splash_coords(checked_splash_coords):
 	# Grab any random coordinate from the supplied splash coordinates, then get the row that it's in.

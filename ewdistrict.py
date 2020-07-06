@@ -783,6 +783,7 @@ async def shamble(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 	poi = ewcfg.id_to_poi.get(user_data.poi)
+	time_now = int(time.time())
 
 	if poi is None:
 		return
@@ -797,6 +798,10 @@ async def shamble(cmd):
 		response = "You aren't allowed to !shamble this district, per Dr. Downpour's orders.\nCheck what area your horde is operating in with !horde."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
+	if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shamble:
+		response = "You know, you really just don't have the energy to shamble this place right now. Try again in {} seconds.".format(int(ewcfg.cd_shamble-(time_now-user_data.time_lasthaunt)))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	
 	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
 	
@@ -804,7 +809,7 @@ async def shamble(cmd):
 	if district_data.degradation < poi.max_degradation:
 		district_data.degradation += 1
 		# user_data.degradation += 1
-		user_data.time_lasthaunt = int(time.time())
+		user_data.time_lasthaunt = time_now
 		district_data.persist()
 		user_data.persist()
 		
