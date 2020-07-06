@@ -134,6 +134,12 @@ async def adorn(cmd):
 		already_adorned = False
 		space_adorned = 0
 
+		for item in cosmetic_items:
+			i = EwItem(item.get('id_item'))
+			# Get space used adorned cosmetics
+			if i.item_props['adorned'] == 'true':
+				space_adorned += int(i.item_props['size'])
+
 		# Check all cosmetics found
 		for item in cosmetic_items:
 			i = EwItem(item.get('id_item'))
@@ -155,10 +161,6 @@ async def adorn(cmd):
 				else:
 					item_sought = i
 					break
-
-			# Get space used adorned cosmetics
-			if i.item_props['adorned'] == 'true':
-				space_adorned += int(i.item_props['size'])
 
 		if item_sought == None:
 			item_sought = item_from_slimeoid

@@ -1790,6 +1790,9 @@ async def push(cmd):
 			
 		response = response.format_map(formatMap)
 
+	elif targetmodel.id_user == user_data.id_user:
+		response = "You can't push yourself you FUCKING IDIOT!"
+
 	elif user_data.life_state == ewcfg.life_state_corpse:
 		response = "You attempt to push {} off the cliff, but your hand passes through them. If you're going to push someone, make sure you're corporeal.".format(target.display_name)
 
