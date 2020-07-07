@@ -21998,6 +21998,7 @@ event_type_minecollapse = "minecollapse"
 event_type_minesweeper = "minesweeper"
 event_type_pokemine = "pokemine"
 event_type_bubblebreaker = "bubblebreaker"
+event_type_voidhole = "voidhole"
 
 world_events = [
 	EwEventDef(
@@ -22031,6 +22032,11 @@ world_events = [
 	EwEventDef(
 		event_type = event_type_bubblebreaker,
 		str_event_start = "You notice the wall bulging slightly and you can dig into it.({} column number)".format(cmd_mine),
+		str_event_end = "The wall collapses.",
+	),
+	EwEventDef(
+		event_type = event_type_voidhole,
+		str_event_start = "You hit a sudden gap in the stone, with a scary looking drop. You see what looks like a trampoline on a building's roof at the bottom. Do you **{}** in?".format(cmd_jump),
 		str_event_end = "The wall collapses.",
 	),
 
