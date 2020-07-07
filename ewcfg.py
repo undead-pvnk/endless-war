@@ -139,6 +139,7 @@ poi_id_slimesendcliffs = "slimesendcliffs"
 poi_id_greencakecafe = "greencakecafe"
 poi_id_sodafountain = "sodafountain"
 poi_id_bodega = "bodega"
+poi_id_wafflehouse = "wafflehouse"
 
 
 # transports
@@ -221,6 +222,7 @@ poi_id_jaywalkerplain = "jaywalkerplain"
 poi_id_crookline = "crookline"
 poi_id_dreadford = "dreadford"
 poi_id_maimridge = "maimridge"
+poi_id_thevoid = "thevoid"
 
 poi_id_toxington_pier = "toxingtonpier"
 poi_id_jaywalkerplain_pier = "jaywalkerplainpier"
@@ -744,6 +746,7 @@ channel_apt_maimrdige ="maimridge-apartments"
 
 channel_slimesendcliffs = "slimes-end-cliffs"
 channel_bodega = "bodega"
+channel_wafflehouse = "wafflehouse"
 
 channel_prankfeed = "prank-feed"
 
@@ -2274,6 +2277,7 @@ vendor_slimypersuits = "Slimy Persuits" #You can buy candy from here
 vendor_greencakecafe = "Green Cake Cafe" #Brunch foods
 vendor_bodega = "Bodega" # Clothing store in Krak Bay
 vendor_secretbodega = "Secret Bodega" # The secret clothing store in Krak Bay
+vendor_wafflehouse = "Waffle House" # waffle house in the void, sells non-perishable foods
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -10699,6 +10703,24 @@ poi_list = [
 			poi_id_maimridge_street_c : travel_time_street,
 		},
 	),
+	EwPoi( # the-void
+		id_poi = poi_id_thevoid,
+		alias = [
+			"void",
+			"the-void",
+			"abyss"
+			"tv",
+			"v",
+		],
+		str_name = "the Void",
+		str_desc = "A large open space, pitch black aside from the many old-style street lights illuminating several paths, whose intersection is marked by street sign, standing tall next to a memorial metal bench. At the end of each path is a well lit staircase leading underground, though one of them seems to be barred to prevent passage. One shorter path from the sign leads to the Waffle House, on the back of which is a ladder leading to its roof. The total silence of this place makes you hyperaware of the sounds your own body makes as you walk around, and the overbright lamps strain your vision even as total darkness envelops you.\n\nThis area contains the Waffle House.",
+		channel = "the-void",
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_wafflehouse : travel_time_subzone,
+		},
+	),
 	EwPoi( # the-sewers
 		id_poi = poi_id_thesewers,
 		alias = [
@@ -15327,6 +15349,26 @@ poi_list = [
 		is_subzone = True,
 		neighbors = {
 			poi_id_krakbay : travel_time_subzone,
+		},
+	),
+	EwPoi(  # the waffle house in the void
+		id_poi = poi_id_wafflehouse,
+		alias = [
+			"wh",
+			"waffle",
+		],
+		str_name = "the Waffle House",
+		str_desc = "As nondescript as its façade, the Waffle House has a very simplistic interior, going for a slightly modernized mid-century look. The warm lighting of the incandescent lightbulbs combines with the crispy fresh air coming from outside and the old timey music to give the place an extraordinarily comforting ambience. The entrance directly faces a short counter manned by old man Leopold, a pleasant guy in his 70s with a thick European accent who seems to run the entire joint. A few tables are laid by the windows, with a view that makes you wonder if you've gone blind. \n\nExits back into the Void.",
+		channel = channel_wafflehouse,
+		role = "Waffle House",
+		mother_districts = [poi_id_thevoid],
+		pvp = False,
+		vendors = [
+			vendor_wafflehouse,
+		],
+		is_subzone = True,
+		neighbors = {
+			poi_id_thevoid : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Tutorial - 1
