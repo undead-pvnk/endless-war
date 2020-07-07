@@ -365,6 +365,12 @@ async def cast(cmd):
 				if weapon.id_weapon == "fishingrod":
 					has_fishingrod = True
 
+			#if user_data.sidearm >= 0:
+			#	sidearm_item = EwItem(id_item=user_data.sidearm)
+			#	sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+			#	if sidearm.id_weapon == "fishingrod":
+			#		has_fishingrod = True
+
 			if ewcfg.status_high_id in statuses:
 				fisher.high = True
 			fisher.fishing = True
@@ -597,6 +603,12 @@ async def reel(cmd):
 					if weapon.id_weapon == "fishingrod":
 						has_fishingrod = True
 
+				#if user_data.sidearm >= 0:
+				#	sidearm_item = EwItem(id_item=user_data.sidearm)
+				#	sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+				#	if sidearm.id_weapon == "fishingrod":
+				#		has_fishingrod = True
+
 				value = 0
 
 				if fisher.current_size == ewcfg.fish_size_miniscule:
@@ -708,37 +720,38 @@ async def reel(cmd):
 					response += levelup_response
 
 				market_data = EwMarket(id_server=user_data.id_server)
-				if market_data.caught_fish == ewcfg.debugfish_goal and fisher.pier.id_poi in ewcfg.debugpiers:
-					
-					item = ewcfg.debugitem
-					
-					ewitem.item_create(
-						item_type=ewcfg.it_item,
-						id_user=user_data.id_user,
-						id_server=user_data.id_server,
-						item_props={
-							'id_item': item.id_item,
-							'context': item.context,
-							'item_name': item.str_name,
-							'item_desc': item.str_desc,
-						}
-					),
-					ewutils.logMsg('Created item: {}'.format(item.id_item))
-					item = EwItem(id_item=item.id_item)
-					item.persist()
-					
-					response += ewcfg.debugfish_response
-					market_data.caught_fish += 1
-					market_data.persist()
-		
-				elif market_data.caught_fish < ewcfg.debugfish_goal and fisher.pier.id_poi in ewcfg.debugpiers:
-					market_data.caught_fish += 1
-					market_data.persist()
+				# if market_data.caught_fish == ewcfg.debugfish_goal and fisher.pier.id_poi in ewcfg.debugpiers:
+				# 	
+				# 	item = ewcfg.debugitem
+				# 	
+				# 	ewitem.item_create(
+				# 		item_type=ewcfg.it_item,
+				# 		id_user=user_data.id_user,
+				# 		id_server=user_data.id_server,
+				# 		item_props={
+				# 			'id_item': item.id_item,
+				# 			'context': item.context,
+				# 			'item_name': item.str_name,
+				# 			'item_desc': item.str_desc,
+				# 		}
+				# 	),
+				# 	ewutils.logMsg('Created item: {}'.format(item.id_item))
+				# 	item = EwItem(id_item=item.id_item)
+				# 	item.persist()
+				# 	
+				# 	response += ewcfg.debugfish_response
+				# 	market_data.caught_fish += 1
+				# 	market_data.persist()
+				# 
+				# elif market_data.caught_fish < ewcfg.debugfish_goal and fisher.pier.id_poi in ewcfg.debugpiers:
+				# 	market_data.caught_fish += 1
+				# 	market_data.persist()
 
 				fisher.stop()
 
 				# Flag the user for PvP
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_fish))
+				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_fish, enlisted)
 
 				user_data.persist()
 				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)

@@ -19,6 +19,7 @@ import ewslimeoid
 import ewhunting
 import ewwep
 import ewquadrants
+import ewdistrict
 
 from ewitem import EwItem
 from ewdistrict import EwDistrict
@@ -374,7 +375,7 @@ async def retire(cmd):
 
 	if cmd.mentions_count > 0:
 		return await usekey(cmd)
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
 		response = "You can't do that right now."
@@ -431,10 +432,11 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 			user_data.poi = poi_dest.id_poi
 			user_data.visiting = ewcfg.location_id_empty
 			user_data.time_lastenter = int(time.time())
-			user_data.rr_challenger = ""
+			ewutils.active_target_map[user_data.id_user] = ""
 			user_data.persist()
 
 			ewutils.end_trade(user_data.id_user)
+			await user_data.move_inhabitants(id_poi = poi_dest.id_poi)	
 
 			await ewrolemgr.updateRoles(client=client, member=member_object)
 
@@ -444,7 +446,12 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 			else:
 				response = "Here we are. The outside world."
 
-			return await ewutils.send_message(cmd.client, ewutils.get_channel(server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
+			await ewutils.send_message(cmd.client, ewutils.get_channel(server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
+
+			# SWILLDERMUK
+			await ewutils.activate_trap_items(poi_dest.id_poi, user_data.id_server, user_data.id_user)
+			
+			return
 
 
 def getPriceBase(cmd):
@@ -745,12 +752,16 @@ async def store_item(cmd, dest):
 			item.item_props["time_fridged"] = time.time()
 			item.persist()
 
-		elif item.item_type == ewcfg.it_weapon and usermodel.weapon == item.id_item:
-			if usermodel.weaponmarried:
-				response = "If only it were that easy. But you can't just shove your lover in a {}.".format(destination)
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			usermodel.weapon = -1
-			usermodel.persist()
+		elif item.item_type == ewcfg.it_weapon:
+			if usermodel.weapon == item.id_item:
+				if usermodel.weaponmarried:
+					response = "If only it were that easy. But you can't just shove your lover in a {}.".format(destination)
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				usermodel.weapon = -1
+				usermodel.persist()
+			elif usermodel.sidearm == item.id_item:
+				usermodel.sidearm = -1
+				usermodel.persist()
 
 		elif item.item_type == ewcfg.it_cosmetic:
 			item.item_props["adorned"] = 'false'
@@ -767,8 +778,9 @@ async def store_item(cmd, dest):
 			hatrack = ewitem.find_item(id_server=playermodel.id_server, id_user=playermodel.id_user+"decorate", item_search="hatstand")
 			if destination == "closet" and item_sought.get('item_type') == ewcfg.it_cosmetic:
 				map_obj = ewcfg.cosmetic_map.get(item.item_props.get('id_cosmetic'))
-				if map_obj.is_hat == True and hatrack:
-					response = "You hang the {} on the rack.".format(name_string)
+				if map_obj != None:
+					if map_obj.is_hat == True and hatrack:
+						response = "You hang the {} on the rack.".format(name_string)
 
 	else:
 		response = "Are you sure you have that item?"
@@ -861,8 +873,9 @@ async def remove_item(cmd, dest):
 		hatrack = ewitem.find_item(id_server=playermodel.id_server, id_user=playermodel.id_user + "decorate", item_search="hatstand")
 		if destination == "closet" and item_sought.get('item_type') == ewcfg.it_cosmetic:
 			map_obj = ewcfg.cosmetic_map.get(item.item_props.get('id_cosmetic'))
-			if map_obj.is_hat == True and hatrack:
-				response = "You take the {} off the rack.".format(name_string)
+			if map_obj != None:
+				if map_obj.is_hat == True and hatrack:
+					response = "You take the {} off the rack.".format(name_string)
 
 
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -993,7 +1006,7 @@ async def watch(cmd):
 		response = ""
 
 	user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
-	user_model.rr_challenger = ""
+	ewutils.active_target_map[user_model.id_user] = ""
 	user_model.persist()
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1089,7 +1102,7 @@ async def usekey(cmd):
 			if item_key_check.item_props.get("houseID") == owner_user.id_user:
 				key = item_key_check
 
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must enter an apartment in a zone's channel.".format(cmd.tokens[0])))
 	elif key == None:
 		response = "You don't have a key for their apartment."
@@ -1398,7 +1411,8 @@ async def knock(cmd = None):
 							user_data = EwUser(member=cmd.message.author)
 							
 							# Flag the person knocking to discourage spam
-							user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_knock))
+							enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+							user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_knock, enlisted)
 							user_data.persist()
 							await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 							await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "They don't want your company, and have tipped off the authorities."))
@@ -1442,7 +1456,7 @@ async def bootall(cmd):
 async def trickortreat(cmd = None):
 	user_data = EwUser(member=cmd.message.author)
 
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "There will be neither trick nor treat found in these parts."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1506,7 +1520,7 @@ async def trickortreat(cmd = None):
 				treat = False
 				if ewutils.active_target_map.get(user_data.id_user) == target_data.apt_zone:
 					# For Double Halloween spam knocking isn't really an issue. Just clear up their slot in the active target map for now.
-					print('DEBUG: Spam knock in trickortreat command.')
+					#print('DEBUG: Spam knock in trickortreat command.')
 					ewutils.active_target_map[user_data.id_user] = ""
 					return #returns if the user is spam knocking. However, the person in the apt still gets each of the DMs above.
 				else:
@@ -2097,11 +2111,12 @@ async def wash(cmd):
 			else:
 				response = "Don't put a {} in the washing machine. You'll break it. Christ, you spent like 1.6 mega on that fucking thing.".format(item_sought.get('name'))
 		elif slimeoid_search and slimeoid.life_state == ewcfg.slimeoid_state_active:
-			if slimeoid.hue == "" or slimeoid.hue is None:
+			if (slimeoid.hue == "" or slimeoid.hue is None) and (slimeoid.coating == "" or slimeoid.coating is None):
 				response = "You tell {} that there's a poudrin for it in the washer. D'aww. It's so trusting. The moment it enters, you close the lid and crank the spin cycle. You laugh for awhile, but quickly realize you don't know how to pause it and let {} out. Guess you'll have to wait the full 20 minutes. Time passes, and your slimeoid stumbles out, nearly unconscious. Sorry, little buddy.".format(slimeoid.name, slimeoid.name)
 			else:
 				response = "You toss your colored slimeoid in the washing machine and press start. Not only is {} now tumbling around and getting constantly scalded by the water, it's also suddenly insecure about how you wanted to rid it of its racial identity. After about 20 minutes {} steps out, demoralized, exhausted, and green as an ogre. Nice. Nice.".format(slimeoid.name, slimeoid.name)
 				slimeoid.hue = ""
+				slimeoid.coating = ""
 				slimeoid.persist()
 		elif item_search == "":
 			response = "There's nothing to wash. You start the machine anyway, riding it like a fucking bucking bronco. This thing really was a great investment."
@@ -2263,7 +2278,7 @@ async def jam(cmd):
 
 	if item_sought:
 		item = EwItem(id_item=item_sought.get('id_item'))
-		if item.item_props.get("id_furniture") in ewcfg.furniture_instrument:
+		if item.item_props.get("id_furniture") in ewcfg.furniture_instrument or item.item_props.get("weapon_type") == ewcfg.weapon_id_bass:
 			cycle = random.randrange(20)
 			response = ""
 			for x in range(1, cycle):
@@ -2379,6 +2394,8 @@ async def aptCommands(cmd):
 		return await propstand(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_howl or cmd_text == ewcfg.cmd_howl_alt1:
 		return await ewcmd.cmd_howl(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_moan:
+		return await ewcmd.cmd_moan(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_data:
 		return await ewcmd.data(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_hunger:
@@ -2399,6 +2416,8 @@ async def aptCommands(cmd):
 		return await ewwep.annoint(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_petslimeoid:
 		return await ewslimeoid.petslimeoid(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_abuseslimeoid:
+		return await ewslimeoid.abuseslimeoid(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_playfetch:
 		return await ewslimeoid.playfetch(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_observeslimeoid:
@@ -2413,6 +2432,8 @@ async def aptCommands(cmd):
 		return await ewcmd.weather(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_add_quadrant:
 		return await ewquadrants.add_quadrant(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_clear_quadrant:
+		return await ewquadrants.clear_quadrant(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_apartment:
 		return await apartment(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_booru:
@@ -2473,6 +2494,14 @@ async def aptCommands(cmd):
 		return await apt_help(cmd)
 	elif cmd_text == ewcfg.cmd_accept or cmd_text == ewcfg.cmd_refuse:
 		pass
+	elif cmd_text == ewcfg.cmd_switch or cmd_text == ewcfg.cmd_switch_alt_1:
+		return await ewwep.switch_weapon(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_changespray:
+		return await ewdistrict.change_spray(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_tag:
+		return await ewdistrict.tag(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_sidearm:
+		return await ewwep.sidearm(cmd=cmd)
 	#elif cmd_text == ewcfg.cmd_trick or cmd_text == ewcfg.cmd_treat:
 	#	pass
 	elif cmd_text[0]==ewcfg.cmd_prefix: #faliure text

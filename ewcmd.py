@@ -1,6 +1,8 @@
 import random
 import asyncio
 import time
+import builtins
+import collections
 
 import ewcfg
 import ewutils
@@ -12,6 +14,8 @@ import ewmap
 import ewslimeoid
 import ewfaction
 import ewapt
+import ewprank
+import ewcmd
 
 from ew import EwUser
 from ewmarket import EwMarket
@@ -70,6 +74,21 @@ async def cmd_howl(cmd):
 		response += "\n{} howls along with you! {}".format(str(slimeoid.name), ewcfg.howls[random.randrange(len(ewcfg.howls))])
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def cmd_moan(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	slimeoid = EwSlimeoid(member = cmd.message.author)
+	response = ewcfg.moans[random.randrange(len(ewcfg.moans))]
+
+	if user_data.life_state != ewcfg.life_state_shambler:
+		response = "You're not really feeling it... Maybe if you lacked cognitive function, you'd be more inclined to moan, about brains, perhaps."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if (slimeoid.life_state == ewcfg.slimeoid_state_active):
+		response += "\n{} moans along with you! {}".format(str(slimeoid.name), ewcfg.moans[random.randrange(len(ewcfg.moans))])
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 """ returns true if it's night time and the casino is open, else false. """
 def is_casino_open(t):
@@ -142,7 +161,8 @@ def gen_data_text(
 ):
 	user_data = EwUser(
 		id_user=id_user,
-		id_server=id_server
+		id_server=id_server,
+		data_level = 2
 	)
 	slimeoid = EwSlimeoid(id_user=id_user, id_server=id_server)
 
@@ -200,6 +220,14 @@ def gen_data_text(
 			if user_data.weaponskill >= 5:
 				response += " {}".format(weapon.str_weaponmaster.format(rank=(user_data.weaponskill - 4)))
 
+		sidearm_item = EwItem(id_item=user_data.sidearm)
+		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+
+		if sidearm != None:
+			response += " They have sidearmed {}{}.".format((
+					"" if len(sidearm_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
+						sidearm_item.item_props.get("weapon_name"))), sidearm.str_weapon)
+
 		trauma = ewcfg.trauma_map.get(user_data.trauma)
 
 		if trauma != None:
@@ -213,7 +241,7 @@ def gen_data_text(
 
 		if user_kills > 0 and enemy_kills > 0:
 			response_block += "They have {:,} confirmed kills, and {:,} confirmed hunts. ".format(user_kills,
-																								  enemy_kills)
+																									enemy_kills)
 		elif user_kills > 0:
 			response_block += "They have {:,} confirmed kills. ".format(user_kills)
 		elif enemy_kills > 0:
@@ -224,6 +252,17 @@ def gen_data_text(
 
 		if len(adorned_cosmetics) > 0:
 			response_block += "They have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
+
+			if user_data.freshness < ewcfg.freshnesslevel_1:
+				response_block += "Their outfit is starting to look pretty fresh, but They’ve got a long way to go if they wanna be NLACakaNM’s next top model. "
+			elif user_data.freshness < ewcfg.freshnesslevel_2:
+				response_block += "Their outfit is low-key on point, not gonna lie. They’re goin’ places, kid. "
+			elif user_data.freshness < ewcfg.freshnesslevel_3:
+				response_block += "Their outfit is lookin’ fresh as hell, goddamn! They shop so much they can probably speak Italian. "
+			elif user_data.freshness < ewcfg.freshnesslevel_4:
+				response_block += "Their outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Their Instragrime has attracted a small following. "
+			else:
+				response_block += "Holy shit! Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** They’ve blown up on Instragrime, and they’ve got modeling gigs with fashion labels all across the city. "
 
 		statuses = user_data.getStatusEffects()
 
@@ -263,7 +302,7 @@ def gen_data_text(
 		elif user_data.swear_jar >= 10:
 			response_block += "They've said some naughty things in the past."
 		elif user_data.swear_jar >= 5:
-			response_block += "They've cussed a handfull of times here and there."
+			response_block += "They've cussed a handful of times here and there."
 		elif user_data.swear_jar > 0:
 			response_block += "They've sworn only a few times."
 		else:
@@ -289,11 +328,9 @@ async def data(cmd):
 		enemy = find_enemy(soughtenemy, user_data)
 		if enemy != None:
 			if enemy.attacktype != ewcfg.enemy_attacktype_unarmed:
-				response = "{} is a level {} enemy. They have {:,} slime, and attack with their {}. ".format(
-					enemy.display_name, enemy.level, enemy.slimes, enemy.attacktype)
+				response = "{} is a level {} enemy. They have {:,} slime, {:,} hardened sap, and attack with their {}. ".format(enemy.display_name, enemy.level, enemy.slimes, enemy.hardened_sap, enemy.attacktype)
 			else:
-				response = "{} is a level {} enemy. They have {:,} slime. ".format(enemy.display_name, enemy.level,
-																				enemy.slimes)
+				response = "{} is a level {} enemy. They have {:,} slime, and {:,} hardened sap. ".format(enemy.display_name, enemy.level, enemy.slimes, enemy.hardened_sap)
 		
 			statuses = enemy.getStatusEffects()
 
@@ -336,23 +373,56 @@ async def data(cmd):
 			item_type_filter=ewcfg.it_cosmetic
 		)
 		adorned_cosmetics = []
+
 		for cosmetic in cosmetics:
 			cos = EwItem(id_item=cosmetic.get('id_item'))
 			if cos.item_props['adorned'] == 'true':
 				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
 				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
+
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		if poi != None:
 			response = "You find yourself {} {}. ".format(poi.str_in, poi.str_name)
 
 		# return my data
+		race_suffix = race_prefix = ""
+		if user_data.race == ewcfg.races["humanoid"]:
+			race_prefix = "lame-ass "
+			race_suffix = "basic bitch "
+		elif user_data.race == ewcfg.races["amphibian"]:
+			race_prefix = "slippery "
+			race_suffix = "amphibious "
+		elif user_data.race == ewcfg.races["food"]:
+			race_suffix= "edible "
+		elif user_data.race == ewcfg.races["skeleton"]:
+			race_suffix = "skele"
+		elif user_data.race == ewcfg.races["robot"]:
+			race_prefix = "silicon-based "
+			race_suffix = "robo"
+		elif user_data.race == ewcfg.races["furry"]:
+			race_prefix = "furry "
+		elif user_data.race == ewcfg.races["scalie"]:
+			race_prefix = "scaly "
+		elif user_data.race == ewcfg.races["slime-derived"]:
+			race_prefix = "goopy "
+		elif user_data.race == ewcfg.races["critter"]:
+			race_prefix = "small "
+		elif user_data.race == ewcfg.races["monster"]:
+			race_prefix = "monstrous "
+		elif user_data.race == ewcfg.races["avian"]:
+			race_prefix = "feathery "
+		elif user_data.race == ewcfg.races["other"]:
+			race_prefix = "peculiar "
+		elif user_data.race != "":
+			race_prefix = "mentally disabled "
+
 		if user_data.life_state == ewcfg.life_state_corpse:
-			response += "You are a level {} deadboi.".format(user_data.slimelevel)
+			response += "You are a {}level {} {}deadboi.".format(race_prefix, user_data.slimelevel, race_suffix)
 		elif user_data.life_state == ewcfg.life_state_shambler:
-			response += "You are a level {} shambler.".format(user_data.slimelevel)
+			response += "You are a {}level {} {}shambler.".format(race_prefix, user_data.slimelevel, race_suffix)
 		else:
-			response += "You are a level {} slimeboi.".format(user_data.slimelevel)
+			response += "You are a {}level {} {}slimeboi.".format(race_prefix, user_data.slimelevel, race_suffix)
 			if user_data.degradation < 20:
 				pass
 			elif user_data.degradation < 40:
@@ -384,6 +454,14 @@ async def data(cmd):
 
 		trauma = ewcfg.trauma_map.get(user_data.trauma)
 
+		sidearm_item = EwItem(id_item=user_data.sidearm)
+		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+
+		if sidearm != None:
+			response += " You have sidearmed {}{}.".format((
+					"" if len(sidearm_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
+						sidearm_item.item_props.get("weapon_name"))), sidearm.str_weapon)
+
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma_self)
 
@@ -405,6 +483,12 @@ async def data(cmd):
 
 		if len(adorned_cosmetics) > 0:
 			response_block += "You have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
+
+			outfit_map = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+			user_data.persist()
+
+			if outfit_map is not None:
+				response_block += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style']) + " "
 
 		if user_data.hunger > 0:
 			response_block += "You are {}% hungry. ".format(
@@ -443,6 +527,34 @@ async def data(cmd):
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
 		
+		server = ewutils.get_client().get_server(user_data.id_server)
+		if user_data.life_state == ewcfg.life_state_corpse:
+			inhabitee_id = user_data.get_inhabitee()
+			if inhabitee_id:
+				inhabitee_name = server.get_member(inhabitee_id).display_name
+				if user_data.get_weapon_possession():
+					response_block += "You are currently possessing {}'s weapon. ".format(inhabitee_name)
+				else:
+					response_block += "You are currently inhabiting the body of {}. ".format(inhabitee_name)
+		else:
+			inhabitant_ids = user_data.get_inhabitants()
+			if inhabitant_ids:
+				inhabitant_names = []
+				for inhabitant_id in inhabitant_ids:
+					inhabitant_names.append(server.get_member(inhabitant_id).display_name)
+					ghost_in_weapon = user_data.get_weapon_possession()
+				if len(inhabitant_names) == 1:
+					response_block += "You are inhabited by the ghost of {}{}. ".format(inhabitant_names[0], ', who is possessing your weapon' if ghost_in_weapon else '')
+				else:
+					response_block += "You are inhabited by the ghosts of {}{} and {}. ".format(
+						", ".join(inhabitant_names[:-1]), 
+						"" if len(inhabitant_names) == 2 else ",", 
+						inhabitant_names[-1]
+					)
+					if ghost_in_weapon:
+							response_block += "{} is also possessing your weapon. ".format(server.get_member(ghost_in_weapon[0]).display_name)
+
+	
 		if user_data.swear_jar >= 500:
 			response_block += "You're going to The Underworld for the things you've said."
 		elif user_data.swear_jar >= 100:
@@ -452,7 +564,7 @@ async def data(cmd):
 		elif user_data.swear_jar >= 10:
 			response_block += "You've said some naughty things in the past."
 		elif user_data.swear_jar >= 5:
-			response_block += "You've cussed a handfull of times here and there."
+			response_block += "You've cussed a handful of times here and there."
 		elif user_data.swear_jar > 0:
 			response_block += "You've sworn only a few times."
 		else:
@@ -483,8 +595,6 @@ async def data(cmd):
 
 
 """ Finally, separates mutations from !data """
-
-
 async def mutations(cmd):
 	response = ""
 	if cmd.mentions_count == 0:
@@ -522,6 +632,197 @@ async def hunger(cmd):
 		)
 	else:
 		response = "You aren't hungry at all."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+""" Check your outfit. """
+async def fashion(cmd):
+	if cmd.mentions_count == 0:
+		user_data = EwUser(member=cmd.message.author, data_level = 2)
+
+		cosmetic_items = ewitem.inventory(
+			id_user = cmd.message.author.id,
+			id_server = cmd.message.server.id,
+			item_type_filter = ewcfg.it_cosmetic
+		)
+
+		adorned_cosmetics = []
+		adorned_ids = []
+
+		adorned_styles = []
+
+		stats_breakdown = {}
+
+		space_adorned = 0
+
+		for cosmetic in cosmetic_items:
+			c = EwItem(id_item = cosmetic.get('id_item'))
+
+			if c.item_props['adorned'] == 'true':
+
+				hue = ewcfg.hue_map.get(c.item_props.get('hue'))
+
+				adorned_styles.append(c.item_props.get('fashion_style'))
+
+				if c.item_props['id_cosmetic'] not in adorned_ids:
+					if any(stat in c.item_props.keys() for stat in ewcfg.playerstats_list):
+						for stat in ewcfg.playerstats_list:
+							if abs(int(c.item_props[stat])) > 0:
+								stats_breakdown[stat] = stats_breakdown.get(stat, 0) + int(c.item_props[stat])
+
+				space_adorned += int(c.item_props['size'])
+
+				adorned_ids.append(c.item_props['id_cosmetic'])
+				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
+
+		# show all the cosmetics that you have adorned.
+		if len(adorned_cosmetics) > 0:
+			response = "You whip out your smartphone and reverse your camera around to thoroughly analyze yourself.\n\n"
+			response += "You have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
+
+			# fashion outfit, freshness rating.
+			if len(adorned_cosmetics) >= 2:
+				response += "\n\n"
+
+				outfit_map = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				user_data.persist()
+
+				if outfit_map is not None:
+					response += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'])
+
+			response += " Your total freshness rating is {}.\n\n".format(user_data.freshness)
+
+
+			#gameplay relvant stuff, inspect order
+
+			response += "All told, your outfit "
+
+			stat_responses = []
+
+			for stat in ewcfg.playerstats_list:
+
+				if stat in stats_breakdown.keys():
+					if abs(int(stats_breakdown[stat])) > 0:
+
+						if int(stats_breakdown[stat]) > 0:
+							stat_response = "increases your "
+						else:
+							stat_response = "decreases your "
+
+						stat_response += "{stat} by {amount}".format(stat = stat, amount = int(stats_breakdown[stat]))
+
+						stat_responses.append(stat_response)
+
+			if len(stat_responses) == 0:
+				response += "doesn't affect your stats at all."
+			else:
+				response += ewutils.formatNiceList(names = stat_responses, conjunction = "and") + ". \n\n"
+
+			space_remaining = ewutils.max_adornspace_bylevel(user_data.slimelevel) - space_adorned
+
+			if space_remaining == 0:
+				response += "You don't have cosmetic space left."
+			else:
+				response += "You have about {amount} adornable space.\n".format(amount = space_remaining)
+
+		else:
+			response = "You aren't wearing anything!"
+
+	else:
+		member = cmd.mentions[0]
+		user_data = EwUser(member = member, data_level = 2)
+
+		cosmetic_items = ewitem.inventory(
+			id_user = member.id,
+			id_server = cmd.message.server.id,
+			item_type_filter = ewcfg.it_cosmetic
+		)
+
+		adorned_cosmetics = []
+		adorned_ids = []
+
+		adorned_styles = []
+
+		stats_breakdown = {}
+
+		space_adorned = 0
+
+		for cosmetic in cosmetic_items:
+			c = EwItem(id_item = cosmetic.get('id_item'))
+
+			if c.item_props['adorned'] == 'true':
+
+				hue = ewcfg.hue_map.get(c.item_props.get('hue'))
+
+				adorned_styles.append(c.item_props.get('fashion_style'))
+
+				if c.item_props['id_cosmetic'] not in adorned_ids:
+					if any(stat in c.item_props.keys() for stat in ewcfg.playerstats_list):
+						for stat in ewcfg.playerstats_list:
+							if abs(int(c.item_props[stat])) > 0:
+								stats_breakdown[stat] = stats_breakdown.get(stat, 0) + int(c.item_props[stat])
+
+				space_adorned += int(c.item_props['size'])
+
+				adorned_ids.append(c.item_props['id_cosmetic'])
+				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
+
+		# show all the cosmetics that you have adorned.
+		if len(adorned_cosmetics) > 0:
+			response = "You take out your smartphone and tab back over to {}'s Instagrime account to obsessively analyze their latest outfit with a mixture of unearned superiority and unbridled jealousy.\n\n".format(member.display_name)
+			response += "They have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
+
+			# fashion outfit, freshness rating.
+			if len(adorned_cosmetics) >= 2:
+				response += "\n\n"
+
+				if user_data.freshness < ewcfg.freshnesslevel_1:
+					response += "Their outfit is starting to look pretty fresh, but They’ve got a long way to go if they wanna be NLACakaNM’s next top model."
+				elif user_data.freshness < ewcfg.freshnesslevel_2:
+					response += "Their outfit is low-key on point, not gonna lie. They’re goin’ places, kid."
+				elif user_data.freshness < ewcfg.freshnesslevel_3:
+					response += "Their outfit is lookin’ fresh as hell, goddamn! They shop so much they can probably speak Italian."
+				elif user_data.freshness < ewcfg.freshnesslevel_4:
+					response += "Their outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Their Instragrime has attracted a small following."
+				else:
+					response += "Holy shit! Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** They’ve blown up on Instragrime, and they’ve got modeling gigs with fashion labels all across the city."
+
+			response += " Their total freshness rating is {}.\n\n".format(user_data.freshness)
+
+			# gameplay relvant stuff, inspect order
+
+			response += "All told, their outfit "
+
+			stat_responses = []
+
+			for stat in ewcfg.playerstats_list:
+
+				if stat in stats_breakdown.keys():
+					if abs(int(stats_breakdown[stat])) > 0:
+
+						if int(stats_breakdown[stat]) > 0:
+							stat_response = "increases their "
+						else:
+							stat_response = "decreases their "
+
+						stat_response += "{stat} by {amount}".format(stat = stat, amount = int(stats_breakdown[stat]))
+
+						stat_responses.append(stat_response)
+
+			if len(stat_responses) == 0:
+				response += "doesn't affect their stats at all."
+			else:
+				response += ewutils.formatNiceList(names = stat_responses, conjunction = "and") + ". \n\n"
+
+			space_remaining = ewutils.max_adornspace_bylevel(user_data.slimelevel) - space_adorned
+
+			if space_remaining == 0:
+				response += "They don't have cosmetic space left."
+			else:
+				response += "They have about {amount} adornable space.\n".format(amount = space_remaining)
+
+		else:
+			response = "...But they aren't wearing anything!"
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -591,6 +892,10 @@ def weather_txt(id_server):
 async def weather(cmd):
 	response = weather_txt(cmd.message.server.id)
 
+	market_data = EwMarket(id_server=cmd.message.server.id)
+	time_current = market_data.clock
+	if 3 <= time_current <= 10:
+		response += "\n\nThe police are probably all asleep, the lazy fucks. It's a good time for painting the town!"
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -628,6 +933,16 @@ async def thrash(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
 	if (user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_kingpin) and user_data.faction == ewcfg.faction_rowdys:
+		
+		time_now = time.time()
+		was_pvp = user_data.time_expirpvp > time_now
+
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_pride)
+		user_data.persist()
+
+		if not was_pvp:
+			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+		
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_rowdyfucker + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rowdyfucker + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf))
 
 """
@@ -637,6 +952,16 @@ async def dab(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
 	if (user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_kingpin) and user_data.faction == ewcfg.faction_killers:
+		
+		time_now = time.time()
+		was_pvp = user_data.time_expirpvp > time_now
+
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_pride)
+		user_data.persist()
+
+		if not was_pvp:
+			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+		
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '\n'  + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + '\n' + ewcfg.emote_copkiller  + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_copkiller + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck))
 
 """
@@ -962,6 +1287,111 @@ async def promote(cmd):
 
 		await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
+
+"""
+	Load new values into these and reboot to balance cosmetics.
+"""
+async def balance_cosmetics(cmd):
+	author = cmd.message.author
+
+	if not author.server_permissions.administrator:
+		return
+
+	if cmd.tokens_count == 2:
+		id_cosmetic = cmd.tokens[1]
+
+		try:
+			data = ewutils.execute_sql_query(
+				"SELECT {id_item}, {item_type}, {col_soulbound}, {col_stack_max}, {col_stack_size} FROM items WHERE {id_server} = {server_id} AND {item_type} = '{type_item}'".format(
+					id_item = ewcfg.col_id_item,
+					item_type = ewcfg.col_item_type,
+					col_soulbound = ewcfg.col_soulbound,
+					col_stack_max = ewcfg.col_stack_max,
+					col_stack_size = ewcfg.col_stack_size,
+					id_server = ewcfg.col_id_server,
+
+					server_id = cmd.message.server.id,
+					type_item = ewcfg.it_cosmetic
+				))
+
+			if data != None:
+				for row in data:
+					id_item = row[0]
+
+					item_data = EwItem(id_item = id_item)
+					item_type = ewcfg.it_cosmetic
+					item_data.item_type = item_type
+					if id_cosmetic == "soul":
+						if item_data.item_props['id_cosmetic'] == 'soul':
+							item_data.item_props = {
+								'id_cosmetic': item_data.item_props['id_cosmetic'],
+								'cosmetic_name': item_data.item_props['cosmetic_name'],
+								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+								'str_onadorn': ewcfg.str_soul_onadorn,
+								'str_unadorn': ewcfg.str_soul_unadorn,
+								'str_onbreak': ewcfg.str_soul_onbreak,
+								'rarity': ewcfg.rarity_patrician,
+								'attack': 6,
+								'defense': 6,
+								'speed': 6,
+								'ability': None,
+								'durability': ewcfg.soul_durability,
+								'size': 1,
+								'fashion_style': ewcfg.style_cool,
+								'freshness': 10,
+								'adorned': 'false',
+								'user_id': item_data.item_props['user_id']
+							}
+					elif id_cosmetic == "scalp":
+						if item_data.item_props['id_cosmetic'] == 'scalp':
+							item_data.item_props = {
+								'id_cosmetic': item_data.item_props['id_cosmetic'],
+								'cosmetic_name': item_data.item_props['cosmetic_name'],
+								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+								'str_onadorn': ewcfg.str_generic_onadorn,
+								'str_unadorn': ewcfg.str_generic_unadorn,
+								'str_onbreak': ewcfg.str_generic_onbreak,
+								'rarity': ewcfg.rarity_plebeian,
+								'attack': 0,
+								'defense': 0,
+								'speed': 0,
+								'ability': None,
+								'durability': ewcfg.generic_scalp_durability,
+								'size': 16,
+								'fashion_style': ewcfg.style_cool,
+								'freshness': 0,
+								'adorned': 'false',
+							}
+					else:
+						if item_data.item_props['id_cosmetic'] == id_cosmetic:
+							item = ewcfg.cosmetic_map.get(item_data.item_props['id_cosmetic'])
+							item_data.item_props = {
+								'id_cosmetic': item.id_cosmetic,
+								'cosmetic_name': item.str_name,
+								'cosmetic_desc': item.str_desc,
+								'str_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
+								'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
+								'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
+								'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
+								'attack': item.stats[ewcfg.stat_attack] if ewcfg.stat_attack in item.stats.keys() else 0,
+								'defense': item.stats[ewcfg.stat_defense] if ewcfg.stat_defense in item.stats.keys() else 0,
+								'speed': item.stats[ewcfg.stat_speed] if ewcfg.stat_speed in item.stats.keys() else 0,
+								'ability': item.ability if item.ability else None,
+								'durability': item.durability if item.durability else ewcfg.base_durability,
+								'size': item.size if item.size else 1,
+								'fashion_style': item.style if item.style else ewcfg.style_cool,
+								'freshness': item.freshness if item.freshness else 0,
+								'adorned': 'false',
+							}
+
+					item_data.persist()
+
+					ewutils.logMsg('Balanced cosmetic: {}'.format(id_item))
+		except:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Failure."))
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Success!"))
+
 """ !piss """
 async def piss(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -1002,7 +1432,8 @@ async def piss(cmd):
 					
 					user_data.sap -= ewcfg.sap_spend_piss
 					user_data.limit_fix()
-					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+					enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, enlisted)
 					user_data.persist()
 					
 					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1134,7 +1565,7 @@ async def pray(cmd):
 		market_data = EwMarket(id_server=cmd.message.server.id)
 		market_data.global_swear_jar = max(0, market_data.global_swear_jar - 3)
 		market_data.persist()
-		user_data.swear_jar = max(0, user_data.swear_jar - 3)
+		user_data.swear_jar = 0
 		user_data.persist()
 
 		if diceroll < probabilityofpoudrin: # Player gets a poudrin.
@@ -1212,12 +1643,24 @@ async def recycle(cmd):
 				else:
 					user_data.weapon = -1
 					user_data.persist()
-			
+			elif item.item_type == ewcfg.it_weapon and user_data.sidearm >= 0 and item.id_item == user_data.sidearm:
+				user_data.sidearm = -1
+				user_data.persist()
+
 			ewitem.item_delete(id_item = item.id_item)
 
 			pay = int(random.random() * 10 ** random.randrange(2,6))
 			response = "You put your {} into the designated opening. **CRUSH! Splat!** *hiss...* and it's gone. \"Thanks for keeping the city clean.\" a robotic voice informs you.".format(item_sought.get("name"))
-			if pay == 0:
+			if item.item_props.get('id_furniture') == 'sord':
+				response = "You jam the jpeg artifact into the recycling bin. It churns and sputters, desperately trying to turn it into anything of value. Needless to say, it fails. \"get a load of this hornses ass.\" a robotic voice informs you"
+
+				if user_data.slimecoin >= 1:
+					response += ", nabbing 1 SlimeCoin from you out of spite."
+					user_data.change_slimecoin(n=-1, coinsource = ewcfg.coinsource_recycle)
+					user_data.persist()
+				else:
+					response += "."
+			elif pay == 0:
 				item_reward = random.choice(ewcfg.mine_results)
 
 				item_props = ewitem.gen_item_props(item_reward)
@@ -1347,6 +1790,9 @@ async def push(cmd):
 			
 		response = response.format_map(formatMap)
 
+	elif targetmodel.id_user == user_data.id_user:
+		response = "You can't push yourself you FUCKING IDIOT!"
+
 	elif user_data.life_state == ewcfg.life_state_corpse:
 		response = "You attempt to push {} off the cliff, but your hand passes through them. If you're going to push someone, make sure you're corporeal.".format(target.display_name)
 
@@ -1403,7 +1849,8 @@ async def push(cmd):
 		targetmodel.persist()
 
 		# Flag the user for PvP
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_kill))
+		enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, enlisted)
 		user_data.persist()
 
 		await ewrolemgr.updateRoles(client = cmd.client, member = target)
@@ -1432,7 +1879,7 @@ async def jump(cmd):
 				pass
 
 			elif item_object.item_type == ewcfg.it_weapon:
-				if item.get('id_item') == user_data.weapon:
+				if item.get('id_item') == user_data.weapon or item.get('id_item') == user_data.sidearm:
 					ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.message.server.id)
 
 				else:
@@ -1445,7 +1892,7 @@ async def jump(cmd):
 			else:
 				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
 
-		targetmodel.trauma = ewcfg.trauma_id_environment
+		user_data.trauma = ewcfg.trauma_id_environment
 		die_resp = user_data.die(cause = ewcfg.cause_cliff)
 		user_data.persist()
 		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
@@ -1461,7 +1908,7 @@ async def toss_off_cliff(cmd):
 
 	if cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
 		if item_sought:
-			if item_sought.get('name')=="brick" and cmd.mentions_count > 0:
+			if item_sought.get('name') == "brick" and cmd.mentions_count > 0:
 				item = EwItem(id_item=item_sought.get('id_item'))
 				target = EwUser(member = cmd.mentions[0])
 				if target.apt_zone == user_data.poi:
@@ -1469,10 +1916,33 @@ async def toss_off_cliff(cmd):
 					item.persist()
 					response = "You throw a brick through {}'s window. Oh shit! Quick, scatter before they see you!".format(cmd.mentions[0].display_name)
 					if ewcfg.id_to_poi.get(target.poi).is_apartment	and target.visiting == ewcfg.location_id_empty:
-						await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], "SMAAASH! A brick flies through your window!"))
-
+						try:
+							await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], "SMAAASH! A brick flies through your window!"))
+						except:
+							ewutils.logMsg("failed to send brick message to user {}".format(target.id_user))
+				elif target.poi == user_data.poi:
+					if target.life_state == ewcfg.life_state_corpse:
+						response = "You reel back and chuck the brick at a ghost. As much as we both would like to teach the dirty staydead a lesson, the brick passes right through."
+						item.id_owner = target.poi
+						item.persist()
+					elif target.life_state == ewcfg.life_state_shambler:
+						response = "The brick is buried into the shambler's soft, malleable head, but the decayed fellow doesn't seem to notice. It looks like it phased into its inventory."
+						item.id_owner = target.id_user
+						item.persist()
+					elif target.life_state == ewcfg.life_state_kingpin:
+						response = "The brick is hurtling toward the kingpin's head, but they've long since gotten used to bricks to the head. It bounces off like nothing."
+						item.id_owner = target.poi
+						item.persist()
+					else:
+						response = ":bricks::boom: BONK! The brick slams against {}'s head!".format(cmd.mentions[0].display_name)
+						item.id_owner = target.poi
+						item.persist()
+						try:
+							await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], random.choice(["!!!!!!", "BRICK!", "FUCK", "SHIT", "?!?!?!?!?", "BONK!", "F'TAAAAANG!", "SPLAT!", "SPLAPP!", "WHACK"])))
+						except:
+							ewutils.logMsg("failed to send brick message to user {}".format(target.id_user))
 				else:
-					response = "There's no apartment here."
+					response = "There's nobody here."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			else:
 				return await ewitem.discard(cmd=cmd)
@@ -1507,7 +1977,10 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 	districtmodel = EwDistrict(id_server=id_server, district=ewcfg.poi_id_slimesendcliffs)
 	slimetotal = 0
 
-	if random.randrange(500) < 125 or item_obj.item_type == ewcfg.it_questitem or item_obj.item_type == ewcfg.it_medal or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand":
+	if item_obj.item_props.get('id_furniture') == 'sord':
+		response = "You toss the sord off the cliff, but for whatever reason, the damn thing won't go down. It just keeps going up and up, as though gravity itself blocked this piece of shit jpeg artifact on Twitter. It eventually goes out of sight, where you assume it flies into the sun."
+		ewitem.item_delete(id_item=id_item)
+	elif random.randrange(500) < 125 or item_obj.item_type == ewcfg.it_questitem or item_obj.item_type == ewcfg.it_medal or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand":
 		response = "You toss the {} off the cliff. It sinks into the ooze disappointingly.".format(item_name)
 		ewitem.give_item(id_item=id_item, id_server=id_server, id_user=ewcfg.poi_id_slimesea)
 
@@ -1748,3 +2221,285 @@ async def festivity(cmd):
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def forge_master_poudrin(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+
+	if cmd.mentions_count == 1:
+		member = cmd.mentions[0]
+		user_data = EwUser(member=member)
+	else:
+		return
+
+	item_props = {
+		"cosmetic_name": (ewcfg.emote_masterpoudrin + " Master Poudrin " + ewcfg.emote_masterpoudrin),
+		"cosmetic_desc": "One poudrin to rule them all... or something like that. It's wrapped in twine, fit to wear as a necklace. There's a fuck ton of slime on the inside, but you're not nearly powerful enough on your own to !crush it.",
+		"adorned": "false",
+		"rarity": "princeps",
+		"context": user_data.slimes,
+		"id_cosmetic": "masterpoudrin",
+	}
+
+	new_item_id = ewitem.item_create(
+		id_server=cmd.message.server.id,
+		id_user=user_data.id_user,
+		item_type=ewcfg.it_cosmetic,
+		item_props=item_props
+	)
+
+	ewutils.logMsg("Master poudrin created. Slime stored: {}, Cosmetic ID = {}".format(user_data.slimes, new_item_id))
+
+	ewitem.soulbind(new_item_id)
+
+	user_data.slimes = 0
+	user_data.persist()
+
+	response = "A pillar of light envelops {}! All of their slime is condensed into one, all-powerful Master Poudrin!\nDon't !crush it all in one place, kiddo.".format(
+		member.display_name)
+	await ewutils.send_message(cmd.client, cmd.message.channel, response)
+
+# Debug
+async def create_item(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+
+	if len(cmd.tokens) > 1:
+		value = cmd.tokens[1]
+	else:
+		return
+	
+	item = None
+	
+	# for item in ewcfg.item_list:
+	# 	if item.id_item == searched_item_id:
+	# 		found_item = item
+	# 		break
+
+	item = ewcfg.item_map.get(value)
+
+	item_type = ewcfg.it_item
+	if item != None:
+		item_id = item.id_item
+		name = item.str_name
+
+	# Finds the item if it's an EwFood item.
+	if item == None:
+		item = ewcfg.food_map.get(value)
+		item_type = ewcfg.it_food
+		if item != None:
+			item_id = item.id_food
+			name = item.str_name
+
+	# Finds the item if it's an EwCosmeticItem.
+	if item == None:
+		item = ewcfg.cosmetic_map.get(value)
+		item_type = ewcfg.it_cosmetic
+		if item != None:
+			item_id = item.id_cosmetic
+			name = item.str_name
+
+	if item == None:
+		item = ewcfg.furniture_map.get(value)
+		item_type = ewcfg.it_furniture
+		if item != None:
+			item_id = item.id_furniture
+			name = item.str_name
+			if item_id in ewcfg.furniture_pony:
+				item.vendors = [ewcfg.vendor_bazaar]
+
+	if item == None:
+		item = ewcfg.weapon_map.get(value)
+		item_type = ewcfg.it_weapon
+		if item != None:
+			item_id = item.id_weapon
+			name = item.str_weapon
+			
+	if item != None:
+		
+		item_props = ewitem.gen_item_props(item)
+
+		generated_item_id = ewitem.item_create(
+			item_type=item_type,
+			id_user=cmd.message.author.id,
+			id_server=cmd.message.server.id,
+			stack_max=20 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else -1,
+			stack_size=1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
+			item_props=item_props
+		)
+		
+		response = "Created item **{}** with id **{}** for **{}**".format(name, generated_item_id, cmd.message.author.display_name)
+	else:
+		response = "Could not find item."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	
+#Debug
+async def manual_soulbind(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+
+	if len(cmd.tokens) > 1:
+		id_item = cmd.tokens[1]
+	else:
+		return
+
+	item = EwItem(id_item=id_item)
+	
+	if item != None:
+		item.soulbound = True
+		item.persist()
+		
+		response = "Soulbound item **{}**.".format(id_item)
+		await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	else:
+		return
+	
+#Debug
+async def set_slime(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+	
+	response = ""
+	
+	if cmd.mentions_count != 1:
+		response = "Invalid use of command. Example: !setslime @player 100"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		target = cmd.mentions[0]
+
+	target_user_data = EwUser(id_user=target.id, id_server=cmd.message.server.id)
+
+	if len(cmd.tokens) > 2:
+		new_slime = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
+		if new_slime == None:
+			response = "Invalid number entered."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+		new_slime -= target_user_data.slimes
+	else:
+		return
+	
+	if target_user_data != None:
+
+		user_initial_level = target_user_data.slimelevel
+		levelup_response = target_user_data.change_slimes(n=new_slime)
+
+		was_levelup = True if user_initial_level < target_user_data.slimelevel else False
+
+		if was_levelup:
+			response += " {}".format(levelup_response)
+		target_user_data.persist()
+		
+		response = "Set {}'s slime to {}.".format(cmd.message.author, target_user_data.slimes)
+	else:
+		return
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+# Debug
+async def check_stats(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+
+	response = ""
+
+	if cmd.mentions_count != 1:
+		response = "Invalid use of command. Example: !checkstats @player "
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		target = cmd.mentions[0]
+
+	target_user_data = EwUser(id_user = target.id, id_server = cmd.message.server.id, data_level = 2)
+
+	if target_user_data != None:
+		response = "They have {} attack, {}  defense, and {} speed.".format(target_user_data.attack, target_user_data.defense, target_user_data.speed)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def prank(cmd):
+	# User must have the Janus Mask adorned, and must use the command in a capturable district's channel
+	user_data = EwUser(member=cmd.message.author)
+
+	if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False): #or (user_data.poi not in ewcfg.capturable_districts):
+		response = "The powers of the mask don't really resonate with you here."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	mentions_user = False
+	use_mention_displayname = False
+	if cmd.mentions_count > 0:
+		mentions_user = True
+		
+	cosmetics = ewitem.inventory(
+		id_user=user_data.id_user,
+		id_server=user_data.id_server,
+		item_type_filter=ewcfg.it_cosmetic
+	)
+	adorned_cosmetics = []
+	
+	response = "You aren't funny enough to do that. Please be funnier." # If it's not overwritten
+
+	for cosmetic in cosmetics:
+		cos = EwItem(id_item=cosmetic.get('id_item'))
+		if cos.item_props['adorned'] == 'true':
+			if cos.item_props['rarity'] == 'Swilldermuk':
+				#print('success')
+				
+				item_action = ""
+				use_mention_displayname = False
+				reroll = True
+				item = None
+				
+				while reroll:
+					rarity_roll = random.randrange(10)
+	
+					if rarity_roll > 3:
+						prank_item = random.choice(ewcfg.prank_items_heinous)
+					elif rarity_roll > 0:
+						prank_item = random.choice(ewcfg.prank_items_scandalous)
+					else:
+						prank_item = random.choice(ewcfg.prank_items_forbidden)
+	
+					item_props = ewitem.gen_item_props(prank_item)
+	
+					# Set the user ID to 0 so it can't be given, looted, etc, before it gets deleted.
+					prank_item_id = ewitem.item_create(
+						item_type=prank_item.item_type,
+						id_user=0,
+						id_server=user_data.id_server,
+						item_props=item_props
+					)
+	
+					item = EwItem(id_item=prank_item_id)
+
+					if (item.item_props['prank_type'] != ewcfg.prank_type_trap and mentions_user) or (item.item_props['prank_type'] == ewcfg.prank_type_trap and not mentions_user):
+						# Don't reroll the item choice.
+						reroll = False
+						
+				response = "With the power of the Janus Mask, {} plucks a prank item from the ether!\n".format(cmd.message.author.display_name)
+
+				if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
+					item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_instantuse(cmd, item)
+					if side_effect != "":
+						response += await ewitem.perform_prank_item_side_effect(side_effect, cmd=cmd)
+
+				elif item.item_props['prank_type'] == ewcfg.prank_type_response:
+					item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_response(cmd, item)
+					if side_effect != "":
+						response += await ewitem.perform_prank_item_side_effect(side_effect, cmd=cmd)
+
+				elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
+					item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_trap(cmd, item)
+
+				if item_action == "delete":
+					ewitem.item_delete(item.id_item)
+					#prank_feed_channel = ewutils.get_channel(cmd.message.server, ewcfg.channel_prankfeed)
+					#await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response + "\n`-------------------------`")))
+
+				elif item_action == "drop":
+					ewitem.give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)
+
+				break
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))

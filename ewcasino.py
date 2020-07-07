@@ -774,14 +774,15 @@ async def baccarat(cmd):
 
 			else:
 				user_data.persist()
-				ewitem.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
-				resp_d = await ewcmd.start(cmd = cmd)
-				resp_f = await ewcmd.start(cmd = cmd)
+				
 				response = "You bet {} {} on {}. The dealer shuffles the deck, then begins to deal.".format(str(value), currency_used, str(bet))
 				if currency_used == ewcfg.currency_soul:
+					ewitem.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
 					response = "You bet your soul on {}. The dealer shuffles the deck, then begins to deal.".format(str(bet))
 
-
+				resp_d = await ewcmd.start(cmd = cmd)
+				resp_f = await ewcmd.start(cmd = cmd)
+				
 				await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(1)
 
@@ -1578,9 +1579,9 @@ async def duel(cmd):
 		elif challengee.life_state == ewcfg.life_state_kingpin:
 			response = "They think about accepting for a moment, but then back away, remembering all the hard work their gangsters have put forth. Bummer..."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
-		else:
-			response = "Juveniles are too cowardly to throw their lives away in a duel."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		# else:
+		# 	response = "Juveniles are too cowardly to throw their lives away in a duel."
+		# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	# Assign a challenger so players can't be challenged
 	ewutils.active_target_map[challenger.id_user] = challengee.id_user
@@ -1656,8 +1657,8 @@ async def duel(cmd):
 		challengee = EwUser(member=member)
 		
 		# start the duel
-		challenger.time_expirpvp = ewutils.calculatePvpTimer(challenger.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_duel))
-		challengee.time_expirpvp = ewutils.calculatePvpTimer(challengee.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_duel))
+		challenger.time_expirpvp = ewutils.calculatePvpTimer(challenger.time_expirpvp, ewcfg.time_pvp_duel)
+		challengee.time_expirpvp = ewutils.calculatePvpTimer(challengee.time_expirpvp, ewcfg.time_pvp_duel)
 
 		challenger.persist()
 		challengee.persist()

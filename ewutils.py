@@ -1,11 +1,13 @@
 import sys
 import traceback
+import collections
 
 import MySQLdb
 import datetime
 import time
 import re
 import random
+import string
 import asyncio
 import math
 
@@ -26,6 +28,7 @@ from ewmarket import EwMarket
 from ewstatuseffects import EwStatusEffect
 from ewstatuseffects import EwEnemyStatusEffect
 from ewitem import EwItem
+#from ewprank import calculate_gambit_exchange
 
 TERMINATE = False
 DEBUG = False
@@ -43,10 +46,11 @@ active_trades = {}
 # Contains the items being offered by players
 trading_offers = {}
 
-# Map of users to their target. This includes apartments, potential Russian Roulette players, potential Slimeoid Battle players, etc. 
+# Map of users to their target. This includes apartments, potential Russian Roulette players, potential Slimeoid Battle players, etc.
 active_target_map = {}
 # Map of users to their restriction level, typically in a mini-game. This prevents people from moving, teleporting, boarding, retiring, or suiciding in Russian Roulette/Duels
 active_restrictions = {}
+
 
 class Message:
 	# Send the message to this exact channel by name.
@@ -166,6 +170,53 @@ class EwResponseContainer:
 
 		return messages
 
+class EwVector2D:
+	vector = [0, 0]
+
+	def __init__(self, vector):
+		self.vector = vector
+
+	def scalar_product(self, other_vector):
+		result = 0
+
+		for i in range(2):
+			result += self.vector[i] * other_vector.vector[i]
+
+		return result
+
+	def add(self, other_vector):
+		result = []
+
+		for i in range(2):
+			result.append( self.vector[i] + other_vector.vector[i] )
+
+		return EwVector2D(result)
+
+	def subtract(self, other_vector):
+		result = []
+
+		for i in range(2):
+			result.append( self.vector[i] - other_vector.vector[i] )
+
+		return EwVector2D(result)
+
+	def norm (self):
+		result = self.scalar_product(self)
+		result = result ** 0.5
+		return result
+
+	def normalize(self):
+		result = []
+
+		norm = self.norm()
+
+		if norm == 0:
+			return EwVector2D([0, 0])
+
+		for i in range(2):
+			result.append(round(self.vector[i] / norm, 3))
+
+		return EwVector2D(result)
 
 def readMessage(fname):
 	msg = Message()
@@ -385,7 +436,7 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = "rfck", charset = "utf8"),
+		'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = ewcfg.database, charset = "utf8"),
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -408,16 +459,18 @@ def databaseClose(conn_info):
 def formatMessage(user_target, message):
 	# If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
 	try:
-		if user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
-			return "{}".format(message)
-		else:
-			# Send messages normally if the raid boss is activated or if user_target is a player
-			return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
-	# If the user has the name of a raid boss, catch the exception and format the message correctly
-	except:
-		return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
+		if user_target.life_state == ewcfg.enemy_lifestate_alive:
+			# Send messages for normal enemies, and mentioning with @
+			return "*{}:* {}".format(user_target.display_name, message)
 
-""" Decay slime totals for all users """
+		elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
+			return "{}".format(message)
+
+	# If user_target isn't an enemy, catch the exception.
+	except:
+		return "*{}:* {}".format(user_target.display_name, message).replace("@", "{at}")
+
+""" Decay slime totals for all users, with the exception of Kingpins"""
 def decaySlimes(id_server = None):
 	if id_server != None:
 		try:
@@ -425,8 +478,10 @@ def decaySlimes(id_server = None):
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
-			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND {slimes} > 1".format(
-				slimes = ewcfg.col_slimes
+			cursor.execute("SELECT id_user, life_state FROM users WHERE id_server = %s AND {slimes} > 1 AND NOT {life_state} = {life_state_kingpin}".format(
+				slimes = ewcfg.col_slimes,
+				life_state = ewcfg.col_life_state,
+				life_state_kingpin = ewcfg.life_state_kingpin
 			), (
 				id_server,
 			))
@@ -508,7 +563,8 @@ async def flag_outskirts(id_server = None):
 			for user in users:
 				user_data = EwUser(id_user = user[0], id_server = id_server)
 				# Flag the user for PvP
-				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp,(int(time.time()) + ewcfg.time_pvp_mine))
+				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, enlisted)
 				user_data.persist()
 				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
 
@@ -1181,6 +1237,12 @@ def level_byslime(slime):
 
 
 """
+	Calculate the maximum sap amount a player can have at their given slime level
+"""
+def sap_max_bylevel(slimelevel):
+	return int(1.6 * slimelevel ** 0.75)
+
+"""
 	Calculate the maximum hunger level at the player's slimelevel
 """
 def hunger_max_bylevel(slimelevel):
@@ -1200,15 +1262,21 @@ def hunger_cost_mod(slimelevel):
 """
 def food_carry_capacity_bylevel(slimelevel):
 	return math.ceil(slimelevel / ewcfg.max_food_in_inv_mod)
-        
+		
 """
 	Calculate how many weapons the player can carry
 """
 def weapon_carry_capacity_bylevel(slimelevel):
 	return math.floor(slimelevel / ewcfg.max_weapon_mod) + 1
 
-def max_adorn_bylevel(slimelevel):
-        return math.ceil(slimelevel / ewcfg.max_adorn_mod)
+def max_adornspace_bylevel(slimelevel):
+	if slimelevel < 4:
+		adorn_space = 0
+	else:
+		adorn_space = math.floor(math.sqrt(slimelevel- 2) - 0.40)
+
+	return adorn_space
+
 """
 	Returns an EwUser object of the selected kingpin
 """
@@ -1351,7 +1419,7 @@ def get_move_speed(user_data):
 	statuses = user_data.getStatusEffects()
 	market_data = EwMarket(id_server = user_data.id_server)
 	trauma = ewcfg.trauma_map.get(user_data.trauma)
-	move_speed = 1
+	move_speed = 1.05 ** user_data.speed
 
 	if user_data.life_state == ewcfg.life_state_shambler:
 		if market_data.weather == ewcfg.weather_bicarbonaterain:
@@ -1380,6 +1448,7 @@ def get_move_speed(user_data):
 
 	return move_speed
 
+
 """ Damage all players in a district """
 def explode(damage = 0, district_data = None, market_data = None):
 	id_server = district_data.id_server
@@ -1402,7 +1471,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 
 	# damage players
 	for user in users:
-		user_data = EwUser(id_user = user, id_server = id_server)
+		user_data = EwUser(id_user = user, id_server = id_server, data_level = 1)
 		mutations = user_data.get_mutations()
 
 		user_weapon = None
@@ -1519,6 +1588,10 @@ def check_trick_or_treat(string):
 	if string.content.lower() == ewcfg.cmd_treat or string.content.lower() == ewcfg.cmd_trick:
 		return True
 	
+def check_is_command(string):
+	if string.content.startswith(ewcfg.cmd_prefix):
+		return True
+	
 def end_trade(id_user):
 	# Cancel an ongoing trade
 	if active_trades.get(id_user) != None and len(active_trades.get(id_user)) > 0:
@@ -1530,11 +1603,22 @@ def end_trade(id_user):
 		trading_offers[trader] = []
 		trading_offers[id_user] = []
 
-def generate_captcha(n = 4):
-	captcha = ""
-	for i in range(n):
-		captcha += random.choice(ewcfg.alphabet)
-	return captcha.upper()
+def text_to_regional_indicator(text):
+	# note that inside the quotes below is a zero-width space, 
+	# used to prevent the regional indicators from turning into flags
+	# also note that this only works for digits and english letters
+  
+	###return "‎".join([chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
+	return "‎".join([c + '\ufe0f\u20e3' if c.isdigit() else chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
+
+def generate_captcha_random(length = 4):
+	return "".join([random.choice(ewcfg.alphabet) for _ in range(length)]).upper()
+
+def generate_captcha(length = 4):
+	try:
+		return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == length])
+	except:
+		return generate_captcha_random(length)
 
 async def sap_tick_loop(id_server):
 	interval = ewcfg.sap_tick_length
@@ -1586,6 +1670,291 @@ def sap_tick(id_server):
 				enemy_data.persist()
 	except:
 		logMsg("An error occured in sap tick for server {}".format(id_server))
+		
+async def spawn_prank_items_tick_loop(id_server):
+	#DEBUG
+	# interval = 10
+	
+	# If there are more active people, items spawn more frequently, and less frequently if there are less active people.
+	interval = 180
+	new_interval = 0
+	while not TERMINATE:
+		if new_interval > 0:
+			interval = new_interval
+			
+		#print("newinterval:{}".format(new_interval))
+		
+		await asyncio.sleep(interval)
+		new_interval = await spawn_prank_items(id_server = id_server)
+
+async def spawn_prank_items(id_server):
+	new_interval = 0
+	base_interval = 60
+	
+	try:
+		active_users_count = 0
+
+		if id_server != None:
+			try:
+				conn_info = databaseConnect()
+				conn = conn_info.get('conn')
+				cursor = conn.cursor();
+
+				cursor.execute(
+					"SELECT id_user FROM users WHERE id_server = %s AND {poi} in %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) AND {time_last_action} > %s".format(
+						life_state=ewcfg.col_life_state,
+						poi=ewcfg.col_poi,
+						life_state_corpse=ewcfg.life_state_corpse,
+						life_state_kingpin=ewcfg.life_state_kingpin,
+						time_last_action=ewcfg.col_time_last_action,
+					), (
+						id_server,
+						ewcfg.capturable_districts,
+						(int(time.time()) - ewcfg.time_kickout),
+					))
+
+				users = cursor.fetchall()
+
+				active_users_count = len(users)
+
+				conn.commit()
+			finally:
+				# Clean up the database handles.
+				cursor.close()
+				databaseClose(conn_info)
+		
+		# Avoid division by 0
+		if active_users_count == 0:
+			active_users_count = 1
+		else:
+			#print(active_users_count)
+			pass
+		
+		new_interval = (math.ceil(base_interval/active_users_count) * 5) # 5 active users = 1 minute timer, 10 = 30 second timer, and so on.
+		
+		district_id = random.choice(ewcfg.capturable_districts)
+		
+		#Debug
+		#district_id = 'wreckington'
+		
+		district_channel_name = ewcfg.id_to_poi.get(district_id).channel
+		
+		client = get_client()
+		
+		server = client.get_server(id_server)
+	
+		district_channel = get_channel(server=server, channel_name=district_channel_name)
+		
+		pie_or_prank = random.randrange(3)
+		
+		if pie_or_prank == 0:
+			swilldermuk_food_item = random.choice(ewcfg.swilldermuk_food)
+
+			item_props = ewitem.gen_item_props(swilldermuk_food_item)
+
+			swilldermuk_food_item_id = ewitem.item_create(
+				item_type=swilldermuk_food_item.item_type,
+				id_user=district_id,
+				id_server=id_server,
+				item_props=item_props
+			)
+
+			#print('{} with id {} spawned in {}!'.format(swilldermuk_food_item.str_name, swilldermuk_food_item_id, district_id))
+
+			response = "That smell... it's unmistakeable!! Someone's left a fresh {} on the ground!".format(swilldermuk_food_item.str_name)
+			await send_message(client, district_channel, response)
+		else:
+			rarity_roll = random.randrange(10)
+			
+			if rarity_roll > 3:
+				prank_item = random.choice(ewcfg.prank_items_heinous)
+			elif rarity_roll > 0:
+				prank_item = random.choice(ewcfg.prank_items_scandalous)
+			else:
+				prank_item = random.choice(ewcfg.prank_items_forbidden)
+				
+			#Debug
+			#prank_item = ewcfg.prank_items_heinous[1] # Chinese Finger Trap
+		
+			item_props = ewitem.gen_item_props(prank_item)
+		
+			prank_item_id = ewitem.item_create(
+				item_type=prank_item.item_type,
+				id_user=district_id,
+				id_server=id_server,
+				item_props=item_props
+			)
+		
+			# print('{} with id {} spawned in {}!'.format(prank_item.str_name, prank_item_id, district_id))
+	
+			response = "An ominous wind blows through the streets. You think you hear someone drop a {} on the ground nearby...".format(prank_item.str_name)
+			await send_message(client, district_channel, response)
+
+	except:
+		logMsg("An error occured in spawn prank items tick for server {}".format(id_server))
+		
+	return new_interval
+		
+async def generate_credence_tick_loop(id_server):
+	# DEBUG
+	# interval = 10
+	
+	while not TERMINATE:
+		interval = (random.randrange(121) + 120)  # anywhere from 2-4 minutes
+		await asyncio.sleep(interval)
+		await generate_credence(id_server)
+		
+async def generate_credence(id_server):
+	#print("CREDENCE GENERATED")
+	
+	if id_server != None:
+		try:
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor();
+	
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND {poi} in %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) AND {time_last_action} > %s".format(
+				life_state = ewcfg.col_life_state,
+				poi = ewcfg.col_poi,
+				life_state_corpse = ewcfg.life_state_corpse,
+				life_state_kingpin = ewcfg.life_state_kingpin,
+				time_last_action = ewcfg.col_time_last_action,
+			), (
+				id_server,
+				ewcfg.capturable_districts,
+				(int(time.time()) - ewcfg.time_afk_swilldermuk),
+			))
+	
+			users = cursor.fetchall()
+	
+			for user in users:
+				user_data = EwUser(id_user = user[0], id_server = id_server)
+				added_credence = 0
+				lowered_credence_used = 0
+				
+				if user_data.credence >= 1000:
+					added_credence = 1 + random.randrange(5)
+				elif user_data.credence >= 500:
+					added_credence = 10 + random.randrange(41)
+				elif user_data.credence >= 100:
+					added_credence = 25 + random.randrange(76)
+				else:
+					added_credence = 50 + random.randrange(151)
+					
+				if user_data.credence_used > 0:
+					lowered_credence_used = int(user_data.credence_used/10)
+					
+					if lowered_credence_used == 1:
+						lowered_credence_used = 0
+						
+					user_data.credence_used = lowered_credence_used
+					
+				added_credence = max(0, added_credence - lowered_credence_used)
+				user_data.credence += added_credence
+					
+				user_data.persist()
+				
+	
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+			
+async def activate_trap_items(district, id_server, id_user):
+	# Return if --> User has 0 credence, there are no traps, or if the trap setter is the one who entered the district.
+	#print("TRAP FUNCTION")
+	trap_was_dud = False
+	
+	user_data = EwUser(id_user=id_user, id_server=id_server)
+	# if user_data.credence == 0:
+	# 	#print('no credence')
+	# 	return
+	
+	if user_data.life_state == ewcfg.life_state_corpse:
+		#print('get out ghosts reeeee!')
+		return
+	
+	try:
+		conn_info = databaseConnect()
+		conn = conn_info.get('conn')
+		cursor = conn.cursor();
+
+		district_channel_name = ewcfg.id_to_poi.get(district).channel
+
+		client = get_client()
+
+		server = client.get_server(id_server)
+		
+		member = server.get_member(id_user)
+
+		district_channel = get_channel(server=server, channel_name=district_channel_name)
+		
+		searched_id = district + '_trap'
+		
+		cursor.execute("SELECT id_item, id_user FROM items WHERE id_user = %s AND id_server = %s".format(
+			id_item = ewcfg.col_id_item,
+			id_user = ewcfg.col_id_user
+		), (
+			searched_id,
+			id_server,
+		))
+
+		traps = cursor.fetchall()
+		
+		if len(traps) == 0:
+			#print('no traps')
+			return
+		
+		trap_used = traps[0]
+		
+		trap_id_item = trap_used[0]
+		#trap_id_user = trap_used[1]
+		
+		trap_item_data = EwItem(id_item=trap_id_item)
+		
+		trap_chance = int(trap_item_data.item_props.get('trap_chance'))
+		trap_user_id = trap_item_data.item_props.get('trap_user_id')
+		
+		if trap_user_id == user_data.id_user:
+			#print('trap same user id')
+			return
+		
+		if random.randrange(101) < trap_chance:
+			# Trap was triggered!
+			pranker_data = EwUser(id_user=trap_user_id, id_server=id_server)
+			pranked_data = user_data
+
+			response = trap_item_data.item_props.get('prank_desc')
+
+			side_effect = trap_item_data.item_props.get('side_effect')
+
+			if side_effect != None:
+				response += await ewitem.perform_prank_item_side_effect(side_effect, member=member)
+			
+			#calculate_gambit_exchange(pranker_data, pranked_data, trap_item_data, trap_used=True)
+		else:
+			# Trap was a dud.
+			trap_was_dud = True
+			response = "Close call! You were just about to eat shit and fall right into someone's {}, but luckily, it was a dud.".format(trap_item_data.item_props.get('item_name'))
+		
+		ewitem.item_delete(trap_id_item)
+		
+	finally:
+		# Clean up the database handles.
+		cursor.close()
+		databaseClose(conn_info)
+	await send_message(client, district_channel, formatMessage(member, response))
+	
+	# if not trap_was_dud:
+	# 	client = get_client()
+	# 	server = client.get_server(id_server)
+	# 
+	# 	prank_feed_channel = get_channel(server, 'prank-feed')
+	# 
+	# 	response += "\n`-------------------------`"
+	# 	await send_message(client, prank_feed_channel, formatMessage(member, response))
+
 
 def check_fursuit_active(id_server):
 	market_data = EwMarket(id_server=id_server)
@@ -1736,7 +2105,12 @@ def return_server_role(server, role_name):
 	return discord.utils.get(server.roles, name=role_name)
 
 """ Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
-def calculatePvpTimer(current_time_expirpvp, desired_time_expirpvp):
+def calculatePvpTimer(current_time_expirpvp, timer, enlisted = False):
+	if enlisted:
+		timer *= 4
+
+	desired_time_expirpvp = int(time.time()) + timer
+
 	if desired_time_expirpvp > current_time_expirpvp:
 		return desired_time_expirpvp
 
@@ -1753,3 +2127,129 @@ async def add_pvp_role(cmd = None):
 		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
 	elif ewcfg.role_juvenile in roles_map_user and ewcfg.role_juvenile_pvp not in roles_map_user:
 		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_juvenile_pvp])
+		
+"""
+	Returns true if the specified name is used by any POI.
+"""
+def channel_name_is_poi(channel_name):
+	if channel_name != None:
+		return channel_name in ewcfg.chname_to_poi
+
+	return False
+
+def get_cosmetic_abilities(id_user, id_server):
+	active_abilities = []
+
+	cosmetic_items = ewitem.inventory(
+		id_user = id_user,
+		id_server = id_server,
+		item_type_filter = ewcfg.it_cosmetic
+	)
+
+	for item in cosmetic_items:
+		i = EwItem(item.get('id_item'))
+		if i.item_props['adorned'] == "true" and i.item_props['ability'] is not None:
+			active_abilities.append(i.item_props['ability'])
+		else:
+			pass
+
+	return active_abilities
+
+def get_outfit_info(id_user, id_server, wanted_info = None):
+	cosmetic_items = ewitem.inventory(
+		id_user = id_user,
+		id_server = id_server,
+		item_type_filter = ewcfg.it_cosmetic
+	)
+
+	adorned_cosmetics = []
+	adorned_ids = []
+
+	adorned_styles = []
+	dominant_style = None
+
+	adorned_hues = []
+
+	total_freshness = 0
+
+	for cosmetic in cosmetic_items:
+		c = EwItem(id_item = cosmetic.get('id_item'))
+
+		if c.item_props['adorned'] == 'true':
+			adorned_styles.append(c.item_props.get('fashion_style'))
+
+			hue = ewcfg.hue_map.get(c.item_props.get('hue'))
+			adorned_hues.append(c.item_props.get('hue'))
+
+			if c.item_props['id_cosmetic'] not in adorned_ids:
+				total_freshness += int(c.item_props.get('freshness'))
+
+			adorned_ids.append(c.item_props['id_cosmetic'])
+			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
+
+	if len(adorned_cosmetics) != 0:
+		# Assess if there's a cohesive style
+		if len(adorned_styles) != 0:
+			counted_styles = collections.Counter(adorned_styles)
+			dominant_style = max(counted_styles, key = counted_styles.get)
+
+			relative_style_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
+			# If the outfit has a dominant style
+			if relative_style_amount >= 60:
+				total_freshness *= int(relative_style_amount / 10) # If relative amount is 60 --> multiply by 6. 70 --> 7, 80 --> 8, etc. Rounds down, so 69 --> 6.
+
+	if wanted_info is not None and wanted_info == "dominant_style" and dominant_style is not None:
+		return dominant_style
+	elif wanted_info is not None and wanted_info == "total_freshness":
+		return total_freshness
+	else:
+		outfit_map = {
+			'dominant_style': dominant_style,
+			'total_freshness': total_freshness
+		}
+		return outfit_map
+
+def get_style_freshness_rating(user_data, dominant_style = None):
+	if dominant_style == None:
+		dominant_style = "fresh"
+
+	if user_data.freshness < ewcfg.freshnesslevel_1:
+		response = "Your outfit is starting to look pretty fresh, but you’ve got a long way to go if you wanna be NLACakaNM’s next top model."
+	else:
+		if user_data.freshness < ewcfg.freshnesslevel_2:
+			response = "Your outfit is low-key on point, not gonna lie. You’re goin’ places, kid."
+		elif user_data.freshness < ewcfg.freshnesslevel_3:
+			response = "Your outfit is lookin’ fresh as hell, goddamn! You shop so much you can probably speak Italian."
+		elif user_data.freshness < ewcfg.freshnesslevel_4:
+			response = "Your outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Your Instragrime has attracted a small following."
+		else:
+			response = "Holy shit! Your outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** You’ve blown up on Instragrime, and you’ve got modeling gigs with fashion labels all across the city."
+
+		if dominant_style == ewcfg.style_cool:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
+				response += " You’re lookin’ wicked cool, dude. Like, straight up radical, man. For real, like, ta-haaa, seriously? Damn, bro. Sick."
+			else:
+				response += " Hey, kids, the world just got cooler. You’re the swingingest thing from coast-to-coast, and that ain’t no boast. You’re every slimegirl’s dream, you know what I mean? You’re where it’s at, and a far-out-happenin’ cat to boot. Man, it must hurt to be this hip."
+		elif dominant_style == ewcfg.style_tough:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
+				response += " You’re lookin’ tough as hell. Juveniles of all affiliations are starting to act nervous around you."
+			else:
+				response += " You’re just about the toughest-lookin' juveniledelinquent in the whole detention center. Ain’t nobody gonna pick a fight with you anymore, goddamn."
+		elif dominant_style == ewcfg.style_smart:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
+				response += " You’re starting to look like a real hipster, wearing all these smartypants garments. You love it, the people around you hate it."
+			else:
+				response += " You know extensive facts about bands that are so underground they’ve released their albums through long-since-expired Vocaroo links. You’re a leading hashtag warrior on various internet forums, and your opinions are well known by everyone who has spoken to you for more than five minutes. Everyone wants to knock your lights out, but… you’re just too fresh. "
+		elif dominant_style == ewcfg.style_beautiful:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
+				response += " You’re looking extremely handsome in all of those beautiful garments. If only this refined, elegant reflected in your manners when cracking into a Arizonian Kingpin Crab."
+			else:
+				response += " You’re the belle of the ball at every ball you attend, which has never happened. But, if you *were* to ever attend one, your beautiful outfit would surely distinguish you from the crowd. Who knows, you might even find TRUE LOVE because of it and get MARRIED. That is, if you weren’t already married to slime."
+		elif dominant_style == ewcfg.style_cute:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
+				response += " Awwwhhh, look at you! You’re sooo cute~, oh my gosh. I could just eat you up, and then vomit you back up after I read back the previous line I’ve just written."
+			else:
+				response += " It is almost kowai how kawaii you are right now. Your legions of fans slobber all over each new post on Instragrime and leave very strange comments. You’re stopped for autographs in public now, and there hasn’t been a selfie taken with you that hasn’t featured a hover hand."
+
+	return response
+
