@@ -460,8 +460,15 @@ def formatMessage(user_target, message):
 	# If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
 	try:
 		if user_target.life_state == ewcfg.enemy_lifestate_alive:
-			# Send messages for normal enemies, and mentioning with @
-			return "*{}:* {}".format(user_target.display_name, message)
+			
+			if user_target.enemyclass == ewcfg.enemy_class_gaiaslimeoid:
+				return "*{} {}:* {}".format(user_target.display_name, user_target.gvs_coord, message)
+			else:
+				# Send messages for normal enemies, and allow mentioning with @
+				if user_target.identifier != '':
+					return "*{} {}:* {}".format(user_target.display_name, user_target.identifier, message)
+				else:
+					return "*{}:* {}".format(user_target.display_name, message)
 
 		elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
 			return "{}".format(message)
@@ -2494,3 +2501,6 @@ async def gvs_check_if_in_operation(user_data):
 				in_operation = True
 	
 	return in_operation
+
+def gvs_check_gaia_protected(enemy_data):
+	pass

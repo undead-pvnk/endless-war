@@ -798,8 +798,8 @@ async def shamble(cmd):
 		response = "You aren't allowed to !shamble this district, per Dr. Downpour's orders.\nCheck what area your horde is operating in with !horde."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
-	if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shamble:
-		response = "You know, you really just don't have the energy to shamble this place right now. Try again in {} seconds.".format(int(ewcfg.cd_shamble-(time_now-user_data.time_lasthaunt)))
+	if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shambler_shamble:
+		response = "You know, you really just don't have the energy to shamble this place right now. Try again in {} seconds.".format(int(ewcfg.cd_shambler_shamble-(time_now-user_data.time_lasthaunt)))
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	

@@ -921,19 +921,20 @@ class EwEnemy:
 
 				sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=enemy_data.id_server)
 
-				slimes_drained = int(3 * slimes_damage / 4)  # 3/4
+				# slimes_drained = int(3 * slimes_damage / 4)  # 3/4
+				slimes_drained = int(7 * slimes_damage / 8) # 7/8
 
 				damage = slimes_damage
 
-				slimes_tobleed = int((slimes_damage - slimes_drained) / 2)
+				#slimes_tobleed = int((slimes_damage - slimes_drained) / 2)
 
-				slimes_directdamage = slimes_damage - slimes_tobleed
-				slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
+				slimes_directdamage = slimes_damage # - slimes_tobleed
+				slimes_splatter = slimes_damage - slimes_drained # - slimes_tobleed 
 
 				market_data.splattered_slimes += slimes_damage
 				market_data.persist()
 				district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
-				target_enemy.bleed_storage += slimes_tobleed
+				#target_enemy.bleed_storage += slimes_tobleed
 				target_enemy.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
 				sewer_data.change_slimes(n=slimes_drained)
 
@@ -2446,7 +2447,7 @@ def sh_check_coord_for_gaia(enemy_data, sh_range, direction):
 								gaia_types[gaia[1]] = gaia[0]
 							
 							# Rustea Leaves only have a few opposing shamblers that can damage them
-							if ewcfg.enemy_type_gaia_rustealeaves in gaia_types.keys() and enemy_data.enemytype not in [ewcfg.enemy_type_gigashambler, ewcfg.enemy_type_shamboni, ewcfg.enemy_type_ufoshambler]:
+							if ewcfg.enemy_type_gaia_rustealeaves in gaia_types.keys() and enemy_data.enemytype not in [ewcfg.enemy_type_gigashambler, ewcfg.enemy_type_shambonidriver, ewcfg.enemy_type_ufoshambler]:
 								del gaia_types[ewcfg.enemy_type_gaia_rustealeaves]
 
 							for target in high_priority:
@@ -2476,7 +2477,7 @@ def ga_check_coord_for_shambler(enemy_data, ga_range, direction, piercing, splas
 	if piercing == None:
 		piercing = 'False'
 	if splash == None:
-		splash = 'none'
+		splash = 'False'
 	if pierceamount == None:
 		pierceamount = 0
 	if singletilepierce == None:
@@ -2518,7 +2519,7 @@ def ga_check_coord_for_shambler(enemy_data, ga_range, direction, piercing, splas
 					current_shambler_data = EwEnemy(id_enemy=shambler[0], id_server=enemy_data.id_server)
 					detected_shamblers[current_shambler_data.id_enemy] = current_shambler_data.gvs_coord
 
-					if enemy_data not in [ewcfg.enemy_type_gaia_sourpotatoes] and shambler[1] in [ewcfg.enemy_type_juvie] and current_shambler_data.enemy_props.get('underground') == 'True':
+					if shambler[1] in [ewcfg.enemy_type_juvieshambler] and current_shambler_data.enemy_props.get('underground') == 'True':
 						del detected_shamblers[current_shambler_data.id_enemy]
 
 				if piercing == 'False':
@@ -2528,7 +2529,7 @@ def ga_check_coord_for_shambler(enemy_data, ga_range, direction, piercing, splas
 				
 				print('gaia in coord {} found shambler in coords {} in {}.'.format(current_coord, checked_coords, enemy_data.poi))
 
-			if splash != None:
+			if splash == 'True':
 				
 				if detected_shamblers == {}:
 					checked_splash_coords = checked_coords

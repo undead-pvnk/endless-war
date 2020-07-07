@@ -2093,6 +2093,22 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if (enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (enemy_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
 		response = "Hey ASSHOLE! They're on your side!!"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif (enemy_data.enemyclass == ewcfg.enemy_class_shambler and enemy_data.gvs_coord not in ewcfg.gvs_coords_end):
+		response = "It's no use, they're too far away!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif (enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and ewutils.gvs_check_gaia_protected(enemy_data)):
+		response = "It's no use, there's another gaiaslimeoid in front that's protecting them!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	if user_data.life_state == ewcfg.life_state_shambler:
+		if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shambler_attack:
+			response = "Your shitty zombie jaw is too tired to chew on that {}. Try again in {} seconds.".format(enemy_data.display_name, int(ewcfg.cd_shambler_shamble-(time_now-user_data.time_lasthaunt)))
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		else:
+			user_data.time_lasthaunt = time_now
+			user_data.persist()
+			
+
 
 	user_mutations = user_data.get_mutations()
 
@@ -2696,6 +2712,16 @@ async def dodge(cmd):
 	if target_data == None:
 		response = "ENDLESS WAR didn't understand that name.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		try:
+			if (target_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (target_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
+				response = "Hey ASSHOLE! They're on your side!!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			elif (target_data.enemyclass == ewcfg.enemy_class_shambler and target_data.gvs_coord not in ewcfg.gvs_coords_end):
+				response = "It's no use, they're too far away!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		except:
+			pass
 
 	if target_data.poi != user_data.poi:
 		response = "You can't {} someone, who's not even here.".format(cmd.tokens[0])
@@ -2756,6 +2782,16 @@ async def taunt(cmd):
 	if target_data == None:
 		response = "ENDLESS WAR didn't understand that name.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		try:
+			if (target_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (target_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
+				response = "Hey ASSHOLE! They're on your side!!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			elif (target_data.enemyclass == ewcfg.enemy_class_shambler and target_data.gvs_coord not in ewcfg.gvs_coords_end):
+				response = "It's no use, they're too far away!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		except:
+			pass
 
 	if target_data.poi != user_data.poi:
 		response = "You can't {} someone, who's not even here.".format(cmd.tokens[0])
@@ -2819,6 +2855,16 @@ async def aim(cmd):
 	if target_data == None:
 		response = "ENDLESS WAR didn't understand that name.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		try:
+			if (target_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (target_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
+				response = "Hey ASSHOLE! They're on your side!!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			elif (target_data.enemyclass == ewcfg.enemy_class_shambler and target_data.gvs_coord not in ewcfg.gvs_coords_end):
+				response = "It's no use, they're too far away!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		except:
+			pass
 
 	if target_data.poi != user_data.poi:
 		response = "You can't {} at someone, who's not even here.".format(cmd.tokens[0])
