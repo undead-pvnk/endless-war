@@ -25,6 +25,7 @@ from ewdungeons import EwDungeonScene
 from ewtrauma import EwTrauma, EwHitzone
 from ewprank import EwPrankItem
 from ewmarket import EwMarket
+from ewhunting import EwSeedPacket
 
 import ewdebug
 
@@ -1455,6 +1456,9 @@ enemy_spawn_tick_length = 60 * 3 # Three minutes
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 5
 
+# how often to check game states in Gankers Vs. Shamblers
+gvs_gamestate_tick_length = 5
+
 # how often to burn
 burn_tick_length = 4
 
@@ -2349,6 +2353,7 @@ context_slimeoidbottle = 'slimeoidbottle'
 context_slimeoidfood = 'slimeoidfood'
 context_wrappingpaper = 'wrappingpaper'
 context_prankitem = 'prankitem'
+context_seedpacket = 'seedpacket'
 
 # Item vendor names.
 vendor_bar = 'bar'	#rate of non-mtn dew drinks are 100 slime to 9 hunger
@@ -2680,8 +2685,34 @@ forbiddenstuffedcrust_desc = "What are you waiting for? You’ve come this far, 
 	"It’s ready to die. Slather it in some low-quality marinara, toss it up into the air like in the old movies, and " \
 	"shove it into the oven, to teach it the true meaning of heat death. Eat a slice of that motherfucking pizza."
 
-# Items that should have a cooldown on how often they can be purchased
+# General items that should have a cooldown on how often they can be purchased
 premium_items = [item_id_metallicaps, item_id_steelbeans, item_id_aushucks]
+# General items that should show their current durability on !inspect
+durability_items = [
+    item_id_paint_copper,
+    item_id_paint_chrome,
+    item_id_paint_gold,
+    item_id_gaiaseedpack_poketubers,
+    item_id_gaiaseedpack_pulpgourds,
+    item_id_gaiaseedpack_sourpotatoes,
+    item_id_gaiaseedpack_bloodcabbages,
+    item_id_gaiaseedpack_joybeans,
+    item_id_gaiaseedpack_purplekilliflower,
+    item_id_gaiaseedpack_razornuts,
+    item_id_gaiaseedpack_pawpaw,
+    item_id_gaiaseedpack_sludgeberries,
+    item_id_gaiaseedpack_suganmanuts,
+    item_id_gaiaseedpack_pinkrowddishes,
+    item_id_gaiaseedpack_dankwheat,
+    item_id_gaiaseedpack_brightshade,
+    item_id_gaiaseedpack_blacklimes,
+    item_id_gaiaseedpack_phosphorpoppies,
+    item_id_gaiaseedpack_direapples,
+    item_id_gaiaseedpack_rustealeaves,
+    item_id_gaiaseedpack_metallicaps,
+    item_id_gaiaseedpack_steelbeans,
+    item_id_gaiaseedpack_aushucks
+]
 
 # List of normal items.
 item_list = [
@@ -3990,6 +4021,166 @@ item_list = [
 		acquisition = acquisition_milling,
 		ingredients = [item_id_aushucks],
 	),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_poketubers,
+		cooldown=30,
+		cost=50,
+		str_name="Poketuber Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Poketuber Gaiaslimeoid. It costs 50 gaiaslime to !plant one, and has a 30 second cooldown.",
+		ingredients=[item_id_poketubereyes],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_pulpgourds,
+		cooldown=45,
+		cost=100,
+		str_name="Pulp Gourds Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Pulp Gourds Gaiaslimeoid. It costs 100 gaiaslime to !plant one, and has a 45 second cooldown.",
+		ingredients=[item_id_pulpgourdpulp],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_sourpotatoes,
+		cooldown=10,
+		cost=150,
+		str_name="Sour Potatoes Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Sour Potatoes Gaiaslimeoid. It costs 150 gaiaslime to !plant one, and has a 10 second cooldown.",
+		ingredients=[item_id_sourpotatoskins],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_bloodcabbages,
+		cooldown=10,
+		cost=125,
+		str_name="Blood Cabbages Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Blood Cabbages Gaiaslimeoid. It costs 125 gaiaslime to !plant one, and has a 10 second cooldown.",
+		ingredients=[item_id_bloodcabbageleaves],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_joybeans,
+		cooldown=120,
+		cost=100,
+		str_name="Joybeans Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Joybean Gaiaslimeoid. It costs 100 gaiaslime to !plant one, and has a 120 second cooldown.",
+		ingredients=[item_id_joybeanvines],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_purplekilliflower,
+		cooldown=10,
+		cost=100,
+		str_name="Purple Killiflower Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Purple Killiflower Gaiaslimeoid. It costs 100 gaiaslime to !plant one, and has a 10 second cooldown.",
+		ingredients=[item_id_purplekilliflowerflorets],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_razornuts,
+		cooldown=45,
+		cost=50,
+		str_name="Razornuts Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Razornuts Gaiaslimeoid. It costs 50 gaiaslime to !plant one, and has a 45 second cooldown.",
+		ingredients=[item_id_razornutshells],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_pawpaw,
+		cooldown=45,
+		cost=150,
+		str_name="Pawpaw Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Pawpaw Gaiaslimeoid. It costs 150 gaiaslime to !plant one, and has a 45 second cooldown.",
+		ingredients=[item_id_pawpawflesh],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_sludgeberries,
+		cooldown=15,
+		cost=75,
+		str_name="Sludgeberries Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Sludgeberries Gaiaslimeoid. It costs 75 gaiaslime to !plant one, and has a 15 second cooldown.",
+		ingredients=[item_id_sludgeberrysludge],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_suganmanuts,
+		cooldown=60,
+		cost=125,
+		str_name="Suganmanuts Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Suganmanuts Gaiaslimeoid. It costs 125 gaiaslime to !plant one, and has a 60 second cooldown.",
+		ingredients=[item_id_suganmanutfruit],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_pinkrowddishes,
+		cooldown=20,
+		cost=150,
+		str_name="Pink Rowddishes Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Pink Rowddishes Gaiaslimeoid. It costs 150 gaiaslime to !plant one, and has a 20 second cooldown.",
+		ingredients=[item_id_pinkrowddishroot],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_dankwheat,
+		cooldown=30,
+		cost=200,
+		str_name="Dankwheat Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Dankwheat Gaiaslimeoid. It costs 200 gaiaslime to !plant one, and has a 30 second cooldown.",
+		ingredients=[item_id_dankwheatchaff],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_brightshade,
+		cooldown=0,
+		cost=0,
+		str_name="Brightshade Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Brightshade Gaiaslimeoid. It costs 50 gaiaslime to !plant one, and has a 10 second cooldown.",
+		ingredients=[item_id_brightshadeberries],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_blacklimes,
+		cooldown=0,
+		cost=0,
+		str_name="Black Limes Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Black Limes Gaiaslimeoid. It costs 75 gaiaslime to !plant one, and has a 10 second cooldown.",
+		ingredients=[item_id_blacklimeade],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_phosphorpoppies,
+		cooldown=10,
+		cost=75,
+		str_name="Phosphorpoppies Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Phosphorpoppies Gaiaslimeoid. It costs 75 gaiaslime to !plant one, and has a 10 second cooldown.",
+		ingredients=[item_id_phosphorpoppypetals],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_direapples,
+		cooldown=10,
+		cost=225,
+		str_name="Dire Apples Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Dire Apples Gaiaslimeoid. It costs 250 gaiaslime to !plant one, and has a 10 second cooldown.",
+		ingredients=[item_id_direapplestems],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_rustealeaves,
+		cooldown=10,
+		cost=100,
+		str_name="Rustea Leaves Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Rustea Leaves Gaiaslimeoid. It costs 100 gaiaslime to !plant one, and has a 10 second cooldown.",
+		ingredients=[item_id_rustealeafblades],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_metallicaps,
+		cooldown=30,
+		cost=225,
+		str_name="Metallicaps Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Metallicaps Gaiaslimeoid. It costs 225 gaiaslime to !plant one, and has a 30 second cooldown.",
+		ingredients=[item_id_metallicapheads],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_steelbeans,
+		cooldown=90,
+		cost=150,
+		str_name="Steelbeans Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for a Steelbeans Gaiaslimeoid. It costs 150 gaiaslime to !plant one, and has a 90 second cooldown.",
+		ingredients=[item_id_steelbeanpods],
+    ),
+    EwSeedPacket(
+        id_item=item_id_gaiaseedpack_aushucks,
+		cooldown=120,
+		cost=175,
+		str_name="Aushucks Gaiaslimeoid Seed Packet",
+		str_desc="A seed packet for an Aushucks Gaiaslimeoid. It costs 175 gaiaslime to !plant one, and has a 120 second cooldown.",
+		ingredients=[item_id_aushuckstalks],
+    ),
 ]
 #item_list += ewdebug.debugitem_set
 
@@ -5870,20 +6061,20 @@ def atf_hooves(ctn=None):
 	if aim > (25 - int(30 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
-        
+		
 def atf_body(ctn=None):
-    ctn.slimes_damage *= 0.5
-    aim = (random.randrange(10) + 1)
+	ctn.slimes_damage *= 0.5
+	aim = (random.randrange(10) + 1)
 
-    if aim <= 2:
-        ctn.miss = True
+	if aim <= 2:
+		ctn.miss = True
 
-    if aim == 10:
-        ctn.crit = True
-        ctn.slimes_damage *= 2
-        
+	if aim == 10:
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+		
 def atf_gvs_basic(ctn=None):
-    pass
+	pass
 
 # All enemy attacking types in the game.
 enemy_attack_type_list = [
@@ -5987,258 +6178,258 @@ enemy_attack_type_list = [
 		str_damage = "{name_target} is stomped all over their {hitzone}!!",
 		fn_effect = atf_hooves
 	),
-    EwAttackType( # 10
-        id_type = "body",
-        str_crit = "**OOF!!** {name_enemy} lands a critical strike onto {name_target}'s torso with the sheer impact of their body weight!",
-        str_miss = "**MISS!** {name_enemy} flails their body around to try and attack {name_target}, but nothing happens...",
-        #str_trauma_self = "Your have deep bruising on your torso.",
-        #str_trauma = "They have deep bruising on their torso.",
-        str_kill = "{name_enemy} throws every once of force they can at you with your body. The impact is so strong that you're slammed into the ground, shattering your skull. {emote_skull}",
-        str_killdescriptor = "pushed around",
-        str_damage = "{name_target} gets bumped around a bit on their {hitzone}!",
-        fn_effect = atf_body
-    ),
-    # If str_trauma and str_trauma_self make a return, consider filling GvS attacktypes out in these attributes.
-    EwAttackType( # GvS - 1
-        id_type = "g_seeds",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_enemy}'s seeds completely miss {name_target}!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "{name_enemy}'s seeds land right inside {name_target}'s skull, killing them instantly. {emote_skull}",
-        str_killdescriptor = "seeded",
-        str_damage = "{name_target} is pummeled with seeds on their {hitzone}!",
-        str_groupattack = "{name_target} pummels a whole group of shamblers with their seeds!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 1.5
-            id_type = "g_appleacid",
-            str_crit = "NULL",
-            str_miss = "**MISS!** {name_enemy}'s acid completely misses {name_target}!",
-            #str_trauma_self = "NULL", 
-            #str_trauma = "NULL,
-            str_kill = "{name_enemy} hurls a glob of acid straight onto {name_target}'s chest, melting down their insides. {emote_skull}",
-            str_killdescriptor = "melted down to the bone",
-            str_damage = "{name_target} is drenched with acid on their {hitzone}!",
-            str_groupattack = "{name_target} drenches a group of shamblers with their acid!",
-            fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 2
-        id_type = "g_bloodshot",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_enemy}'s bloodshot dissipates in mid-air as it fails to seek out {name_target}!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "{name_enemy} turns {name_target} into a shriveled up husk! {emote_skull}",
-        str_killdescriptor = "drained",
-        str_damage = "{name_target} has their life essence drained away by {name_enemy}!",
-        str_groupattack = "{name_enemy} sucks the life force out of a group of shamblers!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 3
-        id_type = "g_nuts",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_enemy}'s nuts don't even come close to hitting {name_target}!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "{name_enemy}'s nuts knock {name_target}'s head clean off! {emote_skull}",
-        str_killdescriptor = "conked on the head",
-        str_damage = "{name_enemy}'s nuts bonk {name_target} on their {hitzone}!",
-        str_groupattack = "{name_enemy}'s nuts richochet off of a group of shamblers!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 4
-        id_type = "g_chompers",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_enemy}'s gaping maw snaps shut!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "**CHOMP!** {name_enemy} devours {name_target}, killing them instantly. {emote_skull}",
-        str_killdescriptor = "chomped",
-        str_damage = "{name_enemy}'s chompers take a bite out of {name_target}!",
-        str_groupattack = "{name_enemy} is running wild!! Their chompers lay waste to a group of shamblers!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 5
-        id_type = "g_fists",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_enemy} thrashes about, but fails to hit {name_target}.",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "{name_enemy} deals a devastating strike to {name_target}! The impact causes their heart to stop. {emote_skull}",
-        str_killdescriptor = "punched to death",
-        str_damage = "{name_enemy}'s fists deal savage blows to {name_target}!",
-        str_groupattack = "{name_enemy} rushes down a group of shamblers with their fists!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 6
-        id_type = "g_brainwaves",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_enemy}'s Binaural Brainwaves completely miss {name_target}!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "{name_enemy} hypnotizes {name_target} into walking off of the Slime's End cliffs. {emote_skull}",
-        str_killdescriptor = "mind broken",
-        str_damage = "{name_enemy}'s Binaural Brainwaves give {name_target} a massive headache!",
-        str_groupattack = "{name_enemy} is firing on all cylinders! Their Binaural Brainwaves impact multiple shamblers!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 7
-        id_type = "g_vapecloud",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_target} completely avoids {name_enemy}'s vape cloud!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "{name_target} has inhaled too much of {name_enemy}'s toxic vape cloud! {emote_skull}",
-        str_killdescriptor = "vaped to death",
-        str_damage = "{name_enemy} completely covers {name_enemy} in a toxic vape cloud!",
-        str_groupattack = "{name_enemy} spreads its toxic vape cloud to a group of shamblers!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 8
-        id_type = "g_hotbox",
-        str_crit = "NULL",
-        str_miss = "**MISS!** ",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = " {emote_skull}",
-        str_killdescriptor = "forced to smoke too much weed",
-        str_damage = "",
-        str_groupattack = "",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 9
-        id_type = "g_blades",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_target} manages to avoid getting cut on {name_enemy}'s blades!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "**SHINK!!** {name_enemy}'s blades sink deep into {name_target}! {emote_skull}",
-        str_killdescriptor = "cut and stabbed",
-        str_damage = "{name_enemy} cuts {name_target} with their sharpened blades!",
-        str_groupattack = "{name_enemy} slices and dices a group of shamblers with their blades!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 10
-        id_type = "g_explosion",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_enemy}'s explosion doesn't even come close to hitting {name_target}!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "**KABOOM!!** {name_enemy} sacrifices itself to blow {name_target} apart! {emote_skull}",
-        str_killdescriptor = "blown to smithereens",
-        str_damage = "*BOOM!* {name_enemy}'s explosion puts a dent into {name_target}!",
-        str_groupattack = "{name_enemy} takes down a group of shamblers with it!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 11
-        id_type = "s_shamboni",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_enemy} drives right past {name_target}!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "{name_enemy}'s wheels completely flatten {name_target}! {emote_skull}",
-        str_killdescriptor = "run over",
-        str_damage = "{name_enemy}'s wheels run over {name_target}!",
-        str_groupattack = "{name_enemy} runs over a group of gaiaslimeoids!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 12
-        id_type = "s_teeth",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_enemy}'s bite doesn't even graze {name_target}!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "**CRUNCH!** {name_enemy} devours {name_target} with their teeth! {emote_skull}",
-        str_killdescriptor = "bitten all over",
-        str_damage = "{name_enemy} bites {name_target} on their {hitzone}!",
-        str_groupattack = "{name_enemy}'s appetite knows no bounds! They bite into several gaiaslimeoids!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 13
-        id_type = "s_tusks",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_targets}'s tusks fail to hit {name_target}, and give a loud *THUD* as they strike the ground!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "**SLAM!** {name_target} is flattened by {name_enemy}'s tusks. {emote_skull}",
-        str_killdescriptor = "slammed into the ground",
-        str_damage = "{name_enemy} bashes {name_target}'s {hitzone} with their tusks!",
-        str_groupattack = "{name_enemy} slams its tusks into several gaiaslimeoids!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 14
-        id_type = "s_fangs",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_enemy}'s jaws snap shut! It failed to eat {name_target}!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "**GULP!** {name_enemy} swallows {name_target} whole! {emote_skull}",
-        str_killdescriptor = "vored to death",
-        str_damage = "",
-        str_groupattack = "NULL",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 15
-        id_type = "s_talons",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_enemy} couldn't get a grip on {name_target}!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "**YOINK!** {name_enemy} picks up {name_target} and carries them off into the sunset... {emote_skull}",
-        str_killdescriptor = "spirited away",
-        str_damage = "**SLASH!** {name_enemy} couldn't carry {name_target} away, but scratched them up nonetheless!",
-        str_groupattack = "{name_enemy} attacks a group of gaiaslimeoids with their talons!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 16
-        id_type = "s_molotovbreath",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_target} managed to avoid {name_enemy}'s hellfire!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "**FWOOOOOOOSHHHHH!!** {name_enemy} burns {name_target} to a crisp! {emote_skull}",
-        str_killdescriptor = "burnt to ash",
-        str_damage = "{name_enemy} spits a ball of fire at {name_target} and burns their {hitzone}!",
-        str_groupattack = "{name_enemy} absolutely incinerates a group of gaiaslimeoids with their molotov breath!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 17
-        id_type = "s_cudgel",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_enemy}'s cudgel misses {name_target} and goes down with a *THUD*.",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "**OOF!!** {name_enemy}'s cudgel whacks {name_target} so hard, it buries them far beneath the ground. {emote_skull}",
-        str_killdescriptor = "flattened",
-        str_damage = "**BAM!** {name_enemy} strikes {name_target}'s {hitzone} with their cudgel!",
-        str_groupattack = "NULL",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 18
-        id_type = "s_scythe",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_enemy}'s scythe breezes past {name_target}!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "{name_enemy} cleaves {name_target} in two. {emote_skull}",
-        str_killdescriptor = "cut in twain",
-        str_damage = "{name_enemy} slices {name_target} with its scythe!",
-        str_groupattack = "{name_enemy} slashes a group of gaiaslimeoids with its scythe!",
-        fn_effect = atf_gvs_basic
-    ),
-    EwAttackType( # GvS - 19
-        id_type = "s_grenadecannon",
-        str_crit = "NULL",
-        str_miss = "**MISS!** {name_enemy} couldn't land a hit on {name_target} with its grenade cannon!",
-        #str_trauma_self = "NULL", 
-        #str_trauma = "NULL,
-        str_kill = "**KABAM!!** {name_enemy}'s grenade cannon lands a direct hit on {name_target}! {emote_skull}",
-        str_killdescriptor = "blown apart",
-        str_damage = "{name_target} is caught in the blast zone of {name_enemy}'s grenades!",
-        str_groupattack = "{name_enemy} blows up a group of gaiaslimeoids with its grenades!",
-        fn_effect = atf_gvs_basic
-    ),
+	EwAttackType( # 10
+		id_type = "body",
+		str_crit = "**OOF!!** {name_enemy} lands a critical strike onto {name_target}'s torso with the sheer impact of their body weight!",
+		str_miss = "**MISS!** {name_enemy} flails their body around to try and attack {name_target}, but nothing happens...",
+		#str_trauma_self = "Your have deep bruising on your torso.",
+		#str_trauma = "They have deep bruising on their torso.",
+		str_kill = "{name_enemy} throws every once of force they can at you with your body. The impact is so strong that you're slammed into the ground, shattering your skull. {emote_skull}",
+		str_killdescriptor = "pushed around",
+		str_damage = "{name_target} gets bumped around a bit on their {hitzone}!",
+		fn_effect = atf_body
+	),
+	# If str_trauma and str_trauma_self make a return, consider filling GvS attacktypes out in these attributes.
+	EwAttackType( # GvS - 1
+		id_type = "g_seeds",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_enemy}'s seeds completely miss {name_target}!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "{name_enemy}'s seeds land right inside {name_target}'s skull, killing them instantly. {emote_skull}",
+		str_killdescriptor = "seeded",
+		str_damage = "{name_target} is pummeled with seeds on their {hitzone}!",
+		str_groupattack = "{name_target} pummels a whole group of shamblers with their seeds!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 1.5
+			id_type = "g_appleacid",
+			str_crit = "NULL",
+			str_miss = "**MISS!** {name_enemy}'s acid completely misses {name_target}!",
+			#str_trauma_self = "NULL", 
+			#str_trauma = "NULL,
+			str_kill = "{name_enemy} hurls a glob of acid straight onto {name_target}'s chest, melting down their insides. {emote_skull}",
+			str_killdescriptor = "melted down to the bone",
+			str_damage = "{name_target} is drenched with acid on their {hitzone}!",
+			str_groupattack = "{name_target} drenches a group of shamblers with their acid!",
+			fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 2
+		id_type = "g_bloodshot",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_enemy}'s bloodshot dissipates in mid-air as it fails to seek out {name_target}!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "{name_enemy} turns {name_target} into a shriveled up husk! {emote_skull}",
+		str_killdescriptor = "drained",
+		str_damage = "{name_target} has their life essence drained away by {name_enemy}!",
+		str_groupattack = "{name_enemy} sucks the life force out of a group of shamblers!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 3
+		id_type = "g_nuts",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_enemy}'s nuts don't even come close to hitting {name_target}!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "{name_enemy}'s nuts knock {name_target}'s head clean off! {emote_skull}",
+		str_killdescriptor = "conked on the head",
+		str_damage = "{name_enemy}'s nuts bonk {name_target} on their {hitzone}!",
+		str_groupattack = "{name_enemy}'s nuts richochet off of a group of shamblers!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 4
+		id_type = "g_chompers",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_enemy}'s gaping maw snaps shut!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "**CHOMP!** {name_enemy} devours {name_target}, killing them instantly. {emote_skull}",
+		str_killdescriptor = "chomped",
+		str_damage = "{name_enemy}'s chompers take a bite out of {name_target}!",
+		str_groupattack = "{name_enemy} is running wild!! Their chompers lay waste to a group of shamblers!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 5
+		id_type = "g_fists",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_enemy} thrashes about, but fails to hit {name_target}.",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "{name_enemy} deals a devastating strike to {name_target}! The impact causes their heart to stop. {emote_skull}",
+		str_killdescriptor = "punched to death",
+		str_damage = "{name_enemy}'s fists deal savage blows to {name_target}!",
+		str_groupattack = "{name_enemy} rushes down a group of shamblers with their fists!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 6
+		id_type = "g_brainwaves",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_enemy}'s Binaural Brainwaves completely miss {name_target}!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "{name_enemy} hypnotizes {name_target} into walking off of the Slime's End cliffs. {emote_skull}",
+		str_killdescriptor = "mind broken",
+		str_damage = "{name_enemy}'s Binaural Brainwaves give {name_target} a massive headache!",
+		str_groupattack = "{name_enemy} is firing on all cylinders! Their Binaural Brainwaves impact multiple shamblers!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 7
+		id_type = "g_vapecloud",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_target} completely avoids {name_enemy}'s vape cloud!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "{name_target} has inhaled too much of {name_enemy}'s toxic vape cloud! {emote_skull}",
+		str_killdescriptor = "vaped to death",
+		str_damage = "{name_enemy} completely covers {name_enemy} in a toxic vape cloud!",
+		str_groupattack = "{name_enemy} spreads its toxic vape cloud to a group of shamblers!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 8
+		id_type = "g_hotbox",
+		str_crit = "NULL",
+		str_miss = "**MISS!** ",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = " {emote_skull}",
+		str_killdescriptor = "forced to smoke too much weed",
+		str_damage = "",
+		str_groupattack = "",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 9
+		id_type = "g_blades",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_target} manages to avoid getting cut on {name_enemy}'s blades!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "**SHINK!!** {name_enemy}'s blades sink deep into {name_target}! {emote_skull}",
+		str_killdescriptor = "cut and stabbed",
+		str_damage = "{name_enemy} cuts {name_target} with their sharpened blades!",
+		str_groupattack = "{name_enemy} slices and dices a group of shamblers with their blades!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 10
+		id_type = "g_explosion",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_enemy}'s explosion doesn't even come close to hitting {name_target}!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "**KABOOM!!** {name_enemy} sacrifices itself to blow {name_target} apart! {emote_skull}",
+		str_killdescriptor = "blown to smithereens",
+		str_damage = "*BOOM!* {name_enemy}'s explosion puts a dent into {name_target}!",
+		str_groupattack = "{name_enemy} takes down a group of shamblers with it!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 11
+		id_type = "s_shamboni",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_enemy} drives right past {name_target}!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "{name_enemy}'s wheels completely flatten {name_target}! {emote_skull}",
+		str_killdescriptor = "run over",
+		str_damage = "{name_enemy}'s wheels run over {name_target}!",
+		str_groupattack = "{name_enemy} runs over a group of gaiaslimeoids!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 12
+		id_type = "s_teeth",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_enemy}'s bite doesn't even graze {name_target}!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "**CRUNCH!** {name_enemy} devours {name_target} with their teeth! {emote_skull}",
+		str_killdescriptor = "bitten all over",
+		str_damage = "{name_enemy} bites {name_target} on their {hitzone}!",
+		str_groupattack = "{name_enemy}'s appetite knows no bounds! They bite into several gaiaslimeoids!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 13
+		id_type = "s_tusks",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_targets}'s tusks fail to hit {name_target}, and give a loud *THUD* as they strike the ground!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "**SLAM!** {name_target} is flattened by {name_enemy}'s tusks. {emote_skull}",
+		str_killdescriptor = "slammed into the ground",
+		str_damage = "{name_enemy} bashes {name_target}'s {hitzone} with their tusks!",
+		str_groupattack = "{name_enemy} slams its tusks into several gaiaslimeoids!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 14
+		id_type = "s_fangs",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_enemy}'s jaws snap shut! It failed to eat {name_target}!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "**GULP!** {name_enemy} swallows {name_target} whole! {emote_skull}",
+		str_killdescriptor = "vored to death",
+		str_damage = "",
+		str_groupattack = "NULL",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 15
+		id_type = "s_talons",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_enemy} couldn't get a grip on {name_target}!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "**YOINK!** {name_enemy} picks up {name_target} and carries them off into the sunset... {emote_skull}",
+		str_killdescriptor = "spirited away",
+		str_damage = "**SLASH!** {name_enemy} couldn't carry {name_target} away, but scratched them up nonetheless!",
+		str_groupattack = "{name_enemy} attacks a group of gaiaslimeoids with their talons!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 16
+		id_type = "s_molotovbreath",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_target} managed to avoid {name_enemy}'s hellfire!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "**FWOOOOOOOSHHHHH!!** {name_enemy} burns {name_target} to a crisp! {emote_skull}",
+		str_killdescriptor = "burnt to ash",
+		str_damage = "{name_enemy} spits a ball of fire at {name_target} and burns their {hitzone}!",
+		str_groupattack = "{name_enemy} absolutely incinerates a group of gaiaslimeoids with their molotov breath!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 17
+		id_type = "s_cudgel",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_enemy}'s cudgel misses {name_target} and goes down with a *THUD*.",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "**OOF!!** {name_enemy}'s cudgel whacks {name_target} so hard, it buries them far beneath the ground. {emote_skull}",
+		str_killdescriptor = "flattened",
+		str_damage = "**BAM!** {name_enemy} strikes {name_target}'s {hitzone} with their cudgel!",
+		str_groupattack = "NULL",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 18
+		id_type = "s_raiderscythe",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_enemy}'s scythe breezes past {name_target}!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "{name_enemy} cleaves {name_target} in two. {emote_skull}",
+		str_killdescriptor = "cut in twain",
+		str_damage = "{name_enemy} slices {name_target} with its scythe!",
+		str_groupattack = "{name_enemy} slashes a group of gaiaslimeoids with its scythe!",
+		fn_effect = atf_gvs_basic
+	),
+	EwAttackType( # GvS - 19
+		id_type = "s_grenadecannon",
+		str_crit = "NULL",
+		str_miss = "**MISS!** {name_enemy} couldn't land a hit on {name_target} with its grenade cannon!",
+		#str_trauma_self = "NULL", 
+		#str_trauma = "NULL,
+		str_kill = "**KABAM!!** {name_enemy}'s grenade cannon lands a direct hit on {name_target}! {emote_skull}",
+		str_killdescriptor = "blown apart",
+		str_damage = "{name_target} is caught in the blast zone of {name_enemy}'s grenades!",
+		str_groupattack = "{name_enemy} blows up a group of gaiaslimeoids with its grenades!",
+		fn_effect = atf_gvs_basic
+	),
 ]
 
 # A map of id_type to EwAttackType objects.
@@ -24178,8 +24369,8 @@ enemy_data_table = {
 		"props": {
 			'setdamage': 20000,
 			'range': 20,
-            'piercing': 'True',
-            'pierceamount': 3
+			'piercing': 'True',
+			'pierceamount': 3
 		}
 	},
 	enemy_type_gaia_joybeans: {
@@ -24229,35 +24420,35 @@ enemy_data_table = {
 		"aliases": ['paw'],
 		"class": enemy_class_gaiaslimeoid,
 		"props": {
-            'setdamage': 500000,
-            'direction': 'ring',
-            'splash': 'True'
+			'setdamage': 500000,
+			'direction': 'ring',
+			'splash': 'True'
 		}
 	},
-    enemy_type_gaia_sludgeberries: {
-        "slimerange": [100, 100],
-        "ai": enemy_ai_gaiaslimeoid,
-        "attacktype": enemy_attacktype_unarmed,
-        "displayname": "Sludgeberries",
-        "raredisplayname": "Joybean Sludgeberries",
-        "aliases": ['berries','sludge'],
-        "class": enemy_class_gaiaslimeoid,
-        "props": {
-            'noprop': 'noprop'
-        }
-    },
-    enemy_type_gaia_suganmanuts: {
-        "slimerange": [400000, 400000],
-        "ai": enemy_ai_gaiaslimeoid,
-        "attacktype": enemy_attacktype_unarmed, # changes to gvs_g_nuts upon the use of a joybean
-        "displayname": "Suganmanut",
-        "raredisplayname": "Joybean Suganmanut",
-        "aliases": ['cashew', 'nuts'],
-        "class": enemy_class_gaiaslimeoid,
-        "props": {
-            'setdamage': 20000
-        }
-    },
+	enemy_type_gaia_sludgeberries: {
+		"slimerange": [100, 100],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_unarmed,
+		"displayname": "Sludgeberries",
+		"raredisplayname": "Joybean Sludgeberries",
+		"aliases": ['berries','sludge'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'noprop': 'noprop'
+		}
+	},
+	enemy_type_gaia_suganmanuts: {
+		"slimerange": [400000, 400000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_unarmed, # changes to gvs_g_nuts upon the use of a joybean
+		"displayname": "Suganmanut",
+		"raredisplayname": "Joybean Suganmanut",
+		"aliases": ['cashew', 'nuts'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'setdamage': 20000
+		}
+	},
 	enemy_type_gaia_pinkrowddishes: {
 		"slimerange": [100000, 100000],
 		"ai": enemy_ai_gaiaslimeoid,
@@ -24273,123 +24464,123 @@ enemy_data_table = {
 			'setdamage': 50000
 		}
 	},
-    enemy_type_gaia_dankwheat: {
-        "slimerange": [50000, 50000],
-        "ai": enemy_ai_gaiaslimeoid,
-        "attacktype": enemy_attacktype_gvs_g_hotbox,
-        "displayname": "Dankwheat",
-        "raredisplayname": "Joybean Dankwheat",
-        "aliases": ['weed','digiweed','digibro','wheat'],
-        "class": enemy_class_gaiaslimeoid,
-        "props": {
-            'setdamage': 10000,
-            'direction': 'ring',
-            'piercing': 'True',
-        }
-    },
-    enemy_type_gaia_brightshade: {
-        "slimerange": [50000, 50000],
-        "ai": enemy_ai_gaiaslimeoid,
-        "attacktype": enemy_attacktype_unarmed,
-        "displayname": "Brightshade",
-        "raredisplayname": "Double Brightshade",
-        "aliases": ['bright','shade'],
-        "class": enemy_class_gaiaslimeoid,
-        "props": {
-            'gaiaslimecountdown': 4
-        }
-    },
-    enemy_type_gaia_blacklimes: {
-        "slimerange": [200000, 200000],
-        "ai": enemy_ai_gaiaslimeoid,
-        "attacktype": enemy_attacktype_unarmed,
-        "displayname": "Black Lime",
-        "raredisplayname": "Joybean Black Lime",
-        "aliases": ['lime','black'],
-        "class": enemy_class_gaiaslimeoid,
-        "props": {
-            'noprop': 'noprop'
-        }
-    },
-    enemy_type_gaia_phosphorpoppies: {
-        "slimerange": [100000, 100000],
-        "ai": enemy_ai_gaiaslimeoid,
-        "attacktype": enemy_attacktype_gvs_g_brainwaves,
-        "displayname": "Phosphorpoppy",
-        "raredisplayname": "Joybean Phosphorpoppy",
-        "aliases": ['phosphor', 'poppy'],
-        "class": enemy_class_gaiaslimeoid,
-        "props": {
-            'setdamage': 10000,
-            'piercing': 'True',
-            'pierceamount': 3
-        }
-    },
-    enemy_type_gaia_direapples: {
-        "slimerange": [100000, 100000],
-        "ai": enemy_ai_gaiaslimeoid,
-        "attacktype": enemy_attacktype_gvs_g_seeds,
-        "displayname": "Dire Apple",
-        "raredisplayname": "Joybean Dire Apple",
-        "aliases": ['apple','dire'],
-        "class": enemy_class_gaiaslimeoid,
-        "props": {
-            'setdamage': 35000,
-            'splash': 'False'
-            # 'singletilepierce': 'True', JOYBEAN 
-            # 'pierceamount': 3
-        }
-    },
-    enemy_type_gaia_rustealeaves: {
-        "slimerange": [200000, 200000],
-        "ai": enemy_ai_gaiaslimeoid,
-        "attacktype": enemy_attacktype_gvs_g_blades,
-        "displayname": "Rustea Leaves",
-        "raredisplayname": "Joybean Rustea Leaves",
-        "aliases": ['leaves','tea'],
-        "class": enemy_class_gaiaslimeoid,
-        "props": {
+	enemy_type_gaia_dankwheat: {
+		"slimerange": [50000, 50000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_gvs_g_hotbox,
+		"displayname": "Dankwheat",
+		"raredisplayname": "Joybean Dankwheat",
+		"aliases": ['weed','digiweed','digibro','wheat'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'setdamage': 10000,
+			'direction': 'ring',
+			'piercing': 'True',
+		}
+	},
+	enemy_type_gaia_brightshade: {
+		"slimerange": [50000, 50000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_unarmed,
+		"displayname": "Brightshade",
+		"raredisplayname": "Double Brightshade",
+		"aliases": ['bright','shade'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'gaiaslimecountdown': 4
+		}
+	},
+	enemy_type_gaia_blacklimes: {
+		"slimerange": [200000, 200000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_unarmed,
+		"displayname": "Black Lime",
+		"raredisplayname": "Joybean Black Lime",
+		"aliases": ['lime','black'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'noprop': 'noprop'
+		}
+	},
+	enemy_type_gaia_phosphorpoppies: {
+		"slimerange": [100000, 100000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_gvs_g_brainwaves,
+		"displayname": "Phosphorpoppy",
+		"raredisplayname": "Joybean Phosphorpoppy",
+		"aliases": ['phosphor', 'poppy'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'setdamage': 10000,
+			'piercing': 'True',
+			'pierceamount': 3
+		}
+	},
+	enemy_type_gaia_direapples: {
+		"slimerange": [100000, 100000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_gvs_g_seeds,
+		"displayname": "Dire Apple",
+		"raredisplayname": "Joybean Dire Apple",
+		"aliases": ['apple','dire'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'setdamage': 35000,
+			'splash': 'False'
+			# 'singletilepierce': 'True', JOYBEAN 
+			# 'pierceamount': 3
+		}
+	},
+	enemy_type_gaia_rustealeaves: {
+		"slimerange": [200000, 200000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_gvs_g_blades,
+		"displayname": "Rustea Leaves",
+		"raredisplayname": "Joybean Rustea Leaves",
+		"aliases": ['leaves','tea'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
 			'range': 1,
 			'direction': 'frontandback',
-            'setdamage': 30000
-        }
-    },
-    enemy_type_gaia_metallicaps: {
-        "slimerange": [80000, 80000],
-        "ai": enemy_ai_gaiaslimeoid,
-        "attacktype": enemy_attacktype_unarmed,
-        "displayname": "Metallicaps",
-        "raredisplayname": "NULL",
-        "aliases": ['mushrooms','shrooms','shroomz','mushroom'],
-        "class": enemy_class_gaiaslimeoid,
-        "props": {
-            'setdamage': 30000
-        }
-    },
-    enemy_type_gaia_steelbeans: {
-        "slimerange": [200000, 200000],
-        "ai": enemy_ai_gaiaslimeoid,
-        "attacktype": enemy_attacktype_unarmed,
-        "displayname": "Steel Beans",
-        "raredisplayname": "NULL",
-        "aliases": ['911','steel','beans'],
-        "class": enemy_class_gaiaslimeoid,
-        "props": {
-            'noprop': 'noprop'
-        }
-    },
-    enemy_type_gaia_aushucks: {
-        "slimerange": [50000, 50000],
-        "ai": enemy_ai_gaiaslimeoid,
-        "attacktype": enemy_attacktype_unarmed,
-        "displayname": "Aushucks",
-        "raredisplayname": "NULL",
-        "aliases": ['gold','shucks','corn'],
-        "class": enemy_class_gaiaslimeoid,
-        "props": {
-            'gaiaslimecountdown': 4
-        }
-    },
+			'setdamage': 30000
+		}
+	},
+	enemy_type_gaia_metallicaps: {
+		"slimerange": [80000, 80000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_unarmed,
+		"displayname": "Metallicaps",
+		"raredisplayname": "NULL",
+		"aliases": ['mushrooms','shrooms','shroomz','mushroom'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'setdamage': 30000
+		}
+	},
+	enemy_type_gaia_steelbeans: {
+		"slimerange": [200000, 200000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_unarmed,
+		"displayname": "Steel Beans",
+		"raredisplayname": "NULL",
+		"aliases": ['911','steel','beans'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'noprop': 'noprop'
+		}
+	},
+	enemy_type_gaia_aushucks: {
+		"slimerange": [50000, 50000],
+		"ai": enemy_ai_gaiaslimeoid,
+		"attacktype": enemy_attacktype_unarmed,
+		"displayname": "Aushucks",
+		"raredisplayname": "NULL",
+		"aliases": ['gold','shucks','corn'],
+		"class": enemy_class_gaiaslimeoid,
+		"props": {
+			'gaiaslimecountdown': 4
+		}
+	},
 	enemy_type_defaultshambler: {
 		"slimerange": [125000, 125000],
 		"ai": enemy_ai_shambler,
@@ -24402,31 +24593,31 @@ enemy_data_table = {
 			'setdamage': 30000
 		}
 	},
-    enemy_type_bucketshambler: {
-        "slimerange": [175000, 175000],
-        "ai": enemy_ai_shambler,
-        "attacktype": enemy_attacktype_gvs_s_teeth,
-        "displayname": "KFC Bucket Shambler",
-        "raredisplayname": "NULL",
-        "aliases": ['kfc','bucket'],
-        "class": enemy_class_shambler,
-        "props": {
-            'setdamage': 30000
-        }
-    },
-    enemy_type_juveolanternshambler: {
-        "slimerange": [250000, 250000],
-        "ai": enemy_ai_shambler,
-        "attacktype": enemy_attacktype_gvs_s_teeth,
-        "displayname": "Juve-O'-Lantern Shambler",
-        "raredisplayname": "NULL",
-        "aliases": ['juveolantern','jackolantern'],
-        "class": enemy_class_shambler,
-        "props": {
-            'setdamage': 30000
-        }
-    },
-    enemy_type_flagshambler: {
+	enemy_type_bucketshambler: {
+		"slimerange": [175000, 175000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_teeth,
+		"displayname": "KFC Bucket Shambler",
+		"raredisplayname": "NULL",
+		"aliases": ['kfc','bucket'],
+		"class": enemy_class_shambler,
+		"props": {
+			'setdamage': 30000
+		}
+	},
+	enemy_type_juveolanternshambler: {
+		"slimerange": [250000, 250000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_teeth,
+		"displayname": "Juve-O'-Lantern Shambler",
+		"raredisplayname": "NULL",
+		"aliases": ['juveolantern','jackolantern'],
+		"class": enemy_class_shambler,
+		"props": {
+			'setdamage': 30000
+		}
+	},
+	enemy_type_flagshambler: {
 		"slimerange": [125000, 125000],
 		"ai": enemy_ai_shambler,
 		"attacktype": enemy_attacktype_gvs_s_teeth,
@@ -24435,10 +24626,10 @@ enemy_data_table = {
 		"aliases": ['flag'],
 		"class": enemy_class_shambler,
 		"props": {
-            'setdamage': 30000
+			'setdamage': 30000
 		}
 	},
-    enemy_type_shambonidriver: {
+	enemy_type_shambonidriver: {
 		"slimerange": [175000, 175000],
 		"ai": enemy_ai_shambler,
 		"attacktype": enemy_attacktype_gvs_s_shamboni,
@@ -24447,10 +24638,10 @@ enemy_data_table = {
 		"aliases": ['zomboni', 'driver', 'zamboni'],
 		"class": enemy_class_shambler,
 		"props": {
-            'setdamage': 250000
+			'setdamage': 250000
 		}
 	},
-    enemy_type_mammoshambler: {
+	enemy_type_mammoshambler: {
 		"slimerange": [250000, 250000],
 		"ai": enemy_ai_shambler,
 		"attacktype": enemy_attacktype_gvs_s_tusks,
@@ -24459,166 +24650,166 @@ enemy_data_table = {
 		"aliases": ['mammoth','brunswick'],
 		"class": enemy_class_shambler,
 		"props": {
-            'setdamage': 100000,
-            'turncountdown': 2
+			'setdamage': 100000,
+			'turncountdown': 2
 		}
 	},
-    enemy_type_gigashambler: {
-        "slimerange": [500000, 500000],
-        "ai": enemy_ai_shambler,
-        "attacktype": enemy_attacktype_gvs_s_cudgel,
-        "displayname": "Gigashambler",
-        "raredisplayname": "NULL",
-        "aliases": ['giga','gigachad'],
-        "class": enemy_class_shambler,
-        "props": {
-            'setdamage': 200000,
-            'turncountdown': 2,
-            'microspawned': 'False'
-        }
-    },
-    enemy_type_microshambler: {
-        "slimerange": [60000, 60000],
-        "ai": enemy_ai_shambler,
-        "attacktype": enemy_attacktype_gvs_s_teeth,
-        "displayname": "Microshambler",
-        "raredisplayname": "NULL",
-        "aliases": ['micro'],
-        "class": enemy_class_shambler,
-        "props": {
-            'setdamage': 30000
-        }
-    },
-    enemy_type_shamblersaurusrex: {
-        "slimerange": [250000, 250000],
-        "ai": enemy_ai_shambler,
-        "attacktype": enemy_attacktype_gvs_s_fangs,
-        "displayname": "Shamblersaurus Rex",
-        "raredisplayname": "NULL",
-        "aliases": ['rex','trex','t-rex','shamblersaurus'],
-        "class": enemy_class_shambler,
-        "props": {
-            'setdamage': 75000,
-            'roarused': False,
-        }
-    },
-    enemy_type_shambledactyl: {
-        "slimerange": [100000, 100000],
-        "ai": enemy_ai_shambler,
-        "attacktype": enemy_attacktype_gvs_s_talons,
-        "displayname": "Shambledactyl",
-        "raredisplayname": "NULL",
-        "aliases": ['bird','dactyl'],
-        "class": enemy_class_shambler,
-        "props": {
-            'setdamage': 2000000,
-            'grabcountdown': 3
-        }
-    },
-    enemy_type_dinoshambler: {
-        "slimerange": [150000, 150000],
-        "ai": enemy_ai_shambler,
-        "attacktype": enemy_attacktype_gvs_s_fangs,
-        "displayname": "Dinoshambler",
-        "raredisplayname": "NULL",
-        "aliases": ['dinosaur','dino'],
-        "class": enemy_class_shambler,
-        "props": {
-            'setdamage': 35000
-        }
-    },
-    enemy_type_ufoshambler: {
-        "slimerange": [150000, 150000],
-        "ai": enemy_ai_shambler,
-        "attacktype": enemy_attacktype_gvs_s_grenadecannon,
-        "displayname": "Unnerving Fighting Shambler",
-        "raredisplayname": "NULL",
-        "aliases": ['ufo'],
-        "class": enemy_class_shambler,
-        "props": {
-            'setdamage': 40000,
-            'turncountdown': 2,
-            'range': 18
-        }
-    },
-    enemy_type_brawldenboomer: {
-        "slimerange": [200000, 200000],
-        "ai": enemy_ai_shambler,
-        "attacktype": enemy_attacktype_gvs_s_teeth,
-        "displayname": "The Brawlden Boomer",
-        "raredisplayname": "Enraged Brawlden Boomer",
-        "aliases": ['boomer','boombox'],
-        "class": enemy_class_shambler,
-        "props": {
-            'setdamage': 30000,
-            'turncountdown': 2,
-            'boomboxcountdown': 12,
-            'boomboxbroken': 'False'
-        }
-    },
-    enemy_type_juvieshambler: {
-        "slimerange": [150000, 150000],
-        "ai": enemy_ai_shambler,
-        "attacktype": enemy_attacktype_gvs_s_teeth,
-        "displayname": "Juvie Shambler",
-        "raredisplayname": "NULL",
-        "aliases": ['juvie','miner'],
-        "class": enemy_class_shambler,
-        "props": {
-            'setdamage': 40000,
-            'underground': 'True'
-        }
-    },
-    enemy_type_shambleballplayer: {
-        "slimerange": [250000, 250000],
-        "ai": enemy_ai_shambler,
-        "attacktype": enemy_attacktype_gvs_s_teeth,
-        "displayname": "Shambleball Player",
-        "raredisplayname": "NULL",
-        "aliases": ['soccerguy','football','sports'],
-        "class": enemy_class_shambler,
-        "props": {
-            'setdamage': 40000
-        }
-    },
-    enemy_type_shamblerwarlord: {
-        "slimerange": [300000, 300000],
-        "ai": enemy_ai_shambler,
-        "attacktype": enemy_attacktype_gvs_s_scythe,
-        "displayname": "Shambler Warlord",
-        "raredisplayname": "NULL",
-        "aliases": ['warlord'],
-        "class": enemy_class_shambler,
-        "props": {
-            'setdamage': 60000,
-            'summoncountdown': 3 # When it reaches 0, it is dialed back to 6
-        }
-    },
-    enemy_type_shamblerraider: {
-        "slimerange": [100000, 100000],
-        "ai": enemy_ai_shambler,
-        "attacktype": enemy_attacktype_gvs_s_scythe,
-        "displayname": "Shambler Raider",
-        "raredisplayname": "NULL",
-        "aliases": ['raider'],
-        "class": enemy_class_shambler,
-        "props": {
-            'setdamage': 30000
-        }
-    },
-    enemy_type_blueeyesshamblerdragon: {
-        "slimerange": [5000000, 5000000],
-        "ai": enemy_ai_shambler,
-        "attacktype": enemy_attacktype_gvs_s_molotovbreath,
-        "displayname": "Blue Eyes Shambler Dragon",
-        "raredisplayname": "NULL",
-        "aliases": ['blue','blueeyes','blueeyeswhitedragon','dragon','shamblerdragon'],
-        "class": enemy_class_shambler,
-        "props": {
-            'onground': 'True',
-            'setdamage': 100000
-        }
-    },
+	enemy_type_gigashambler: {
+		"slimerange": [500000, 500000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_cudgel,
+		"displayname": "Gigashambler",
+		"raredisplayname": "NULL",
+		"aliases": ['giga','gigachad'],
+		"class": enemy_class_shambler,
+		"props": {
+			'setdamage': 200000,
+			'turncountdown': 2,
+			'microspawned': 'False'
+		}
+	},
+	enemy_type_microshambler: {
+		"slimerange": [60000, 60000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_teeth,
+		"displayname": "Microshambler",
+		"raredisplayname": "NULL",
+		"aliases": ['micro'],
+		"class": enemy_class_shambler,
+		"props": {
+			'setdamage': 30000
+		}
+	},
+	enemy_type_shamblersaurusrex: {
+		"slimerange": [250000, 250000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_fangs,
+		"displayname": "Shamblersaurus Rex",
+		"raredisplayname": "NULL",
+		"aliases": ['rex','trex','t-rex','shamblersaurus'],
+		"class": enemy_class_shambler,
+		"props": {
+			'setdamage': 75000,
+			'roarused': False,
+		}
+	},
+	enemy_type_shamblerdactyl: {
+		"slimerange": [100000, 100000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_talons,
+		"displayname": "Shamblerdactyl",
+		"raredisplayname": "NULL",
+		"aliases": ['bird','dactyl'],
+		"class": enemy_class_shambler,
+		"props": {
+			'setdamage': 2000000,
+			'grabcountdown': 3
+		}
+	},
+	enemy_type_dinoshambler: {
+		"slimerange": [150000, 150000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_fangs,
+		"displayname": "Dinoshambler",
+		"raredisplayname": "NULL",
+		"aliases": ['dinosaur','dino'],
+		"class": enemy_class_shambler,
+		"props": {
+			'setdamage': 35000
+		}
+	},
+	enemy_type_ufoshambler: {
+		"slimerange": [150000, 150000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_grenadecannon,
+		"displayname": "Unnerving Fighting Shambler",
+		"raredisplayname": "NULL",
+		"aliases": ['ufo'],
+		"class": enemy_class_shambler,
+		"props": {
+			'setdamage': 40000,
+			'turncountdown': 2,
+			'range': 18
+		}
+	},
+	enemy_type_brawldenboomer: {
+		"slimerange": [200000, 200000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_teeth,
+		"displayname": "The Brawlden Boomer",
+		"raredisplayname": "Enraged Brawlden Boomer",
+		"aliases": ['boomer','boombox'],
+		"class": enemy_class_shambler,
+		"props": {
+			'setdamage': 30000,
+			'turncountdown': 2,
+			'boomboxcountdown': 12,
+			'boomboxbroken': 'False'
+		}
+	},
+	enemy_type_juvieshambler: {
+		"slimerange": [150000, 150000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_teeth,
+		"displayname": "Juvie Shambler",
+		"raredisplayname": "NULL",
+		"aliases": ['juvie','miner'],
+		"class": enemy_class_shambler,
+		"props": {
+			'setdamage': 40000,
+			'underground': 'True'
+		}
+	},
+	enemy_type_shambleballplayer: {
+		"slimerange": [250000, 250000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_teeth,
+		"displayname": "Shambleball Player",
+		"raredisplayname": "NULL",
+		"aliases": ['soccerguy','football','sports'],
+		"class": enemy_class_shambler,
+		"props": {
+			'setdamage': 40000
+		}
+	},
+	enemy_type_shamblerwarlord: {
+		"slimerange": [300000, 300000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_raiderscythe,
+		"displayname": "Shambler Warlord",
+		"raredisplayname": "NULL",
+		"aliases": ['warlord'],
+		"class": enemy_class_shambler,
+		"props": {
+			'setdamage': 60000,
+			'summoncountdown': 3 # When it reaches 0, it is dialed back to 6
+		}
+	},
+	enemy_type_shamblerraider: {
+		"slimerange": [100000, 100000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_raiderscythe,
+		"displayname": "Shambler Raider",
+		"raredisplayname": "NULL",
+		"aliases": ['raider'],
+		"class": enemy_class_shambler,
+		"props": {
+			'setdamage': 30000
+		}
+	},
+	enemy_type_blueeyesshamblerdragon: {
+		"slimerange": [5000000, 5000000],
+		"ai": enemy_ai_shambler,
+		"attacktype": enemy_attacktype_gvs_s_molotovbreath,
+		"displayname": "Blue Eyes Shambler Dragon",
+		"raredisplayname": "NULL",
+		"aliases": ['blue','blueeyes','blueeyeswhitedragon','dragon','shamblerdragon'],
+		"class": enemy_class_shambler,
+		"props": {
+			'onground': 'True',
+			'setdamage': 100000
+		}
+	},
 }
 
 # Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
@@ -24719,7 +24910,46 @@ gvs_enemy_emote_map_debug = {
 	enemy_type_gaia_steelbeans: ':shield:',
 	enemy_type_gaia_aushucks: ':corn:',
 	'frozen': ':snowflake:',
-	'sludge': ':new_moon:'
+}
+
+gvs_almanac = {
+    enemy_type_gaia_poketubers: "",
+	enemy_type_gaia_pulpgourds: "",
+	enemy_type_gaia_sourpotatoes: "",
+	enemy_type_gaia_bloodcabbages: "",
+	enemy_type_gaia_joybeans: "",
+	enemy_type_gaia_purplekilliflower: "",
+	enemy_type_gaia_razornuts: "",
+	enemy_type_gaia_pawpaw: "",
+	enemy_type_gaia_sludgeberries: "",
+	enemy_type_gaia_suganmanuts: "",
+	enemy_type_gaia_pinkrowddishes: "",
+	enemy_type_gaia_dankwheat: "",
+	enemy_type_gaia_brightshade: "",
+	enemy_type_gaia_blacklimes: "",
+	enemy_type_gaia_phosphorpoppies: "",
+	enemy_type_gaia_direapples: "",
+	enemy_type_gaia_rustealeaves: "",
+	enemy_type_gaia_metallicaps: "",
+	enemy_type_gaia_steelbeans: "",
+	enemy_type_gaia_aushucks: "",
+    enemy_type_defaultshambler: "",
+    enemy_type_bucketshambler: "",
+    enemy_type_juveolanternshambler: "",
+    enemy_type_flagshambler: "",
+    enemy_type_shambonidriver: "",
+    enemy_type_mammoshambler: "",
+    enemy_type_gigashambler: "",
+    enemy_type_microshambler: "",
+    enemy_type_shamblersaurusrex: "",
+    enemy_type_shamblerdactyl: "",
+    enemy_type_dinoshambler: "",
+    enemy_type_ufoshambler: "",
+    enemy_type_brawldenboomer: "",
+    enemy_type_juvieshambler: "",
+    enemy_type_shambleballplayer: "",
+    enemy_type_shamblerwarlord: "",
+    enemy_type_shamblerraider: "",
 }
 
 rain_protection = [

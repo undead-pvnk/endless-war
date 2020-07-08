@@ -2639,7 +2639,72 @@ async def gvs_print_grid(cmd):
 	print('Grid response length: {}'.format(len(full_grid_response)))
 	
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, full_grid_response))
-				
+
+async def gvs_incubate_gaiaslimeoid(cmd):
+	user_data = EwUser(member=cmd.message.author)
 	
+	if user_data.poi != ewcfg.poi_id_atomicforest:
+		response = "You lack the proper equipment to create a Gaiaslimeoid. Head to Atomic Forest!"
+	else:
+		if cmd.tokens_count < 2:
+			enemy_counter = 0
+			enemy_total = 0
+			response = "Please specify the Gaiaslimeoid you would like to make. Options are...\n"
+			for enemy in ewcfg.gvs_enemies_gaiaslimeoids:
+				enemy_counter += 1
+				enemy_total += 1
+				response += "**{}**".format(enemy)
+				if enemy_total != len(ewcfg.gvs_enemies_gaiaslimeoids):
+					response += ", "
+
+				if enemy_counter == 5:
+					enemy_counter = 0
+					response += "\n"
+		else:
+			enemytype = ewutils.flattenTokenListToString(cmd.tokens[1:])
+			if enemytype not in ewcfg.gvs_enemies_gaiaslimeoids:
+				response = "That's not a valid Gaiaslimeoid that you can produce."
+			else:
+				for item in ewcfg.item_list:
+					pass
+					# crop_sought = ewitem.find_item(item_search=enemytype, id_user=cmd.message.author.id,  id_server=cmd.message.server.id if cmd.message.server is not None else None)
+					# 
+					# if item.acquisition == enemytype:
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def almanac(cmd):
+	if not cmd.tokens_count > 1:
+		enemy_counter = 0
+		enemy_total = 0
+		# list off help topics to player at college
+		response = "(Use !almanac [enemy] to learn about a shambler/gaiaslimeoid. Example: '!almanac defaultshambler')\n\nWhat would you like to learn about? Topics include: \n"
+
+		# display the list of topics in order
+		enemies = ewcfg.gvs_enemies
+		for enemy in enemies:
+			enemy_counter += 1
+			enemy_total += 1
+			response += "**{}**".format(enemy)
+			if enemy_total != len(enemies):
+				response += ", "
+
+			if enemy_counter == 5:
+				enemy_counter = 0
+				response += "\n"
+
+	else:
+		enemytype = ewutils.flattenTokenListToString(cmd.tokens[1:])
+		if enemytype in ewcfg.gvs_almanac:
+			response = ewcfg.gvs_almanac[enemytype]
+		else:
+			response = 'ENDLESS WAR questions your belief in the existence of such a shambler or gaiaslimeoid. Try referring to the ones in the list again by using just !almanac.'
+
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 	
+
 	

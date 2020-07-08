@@ -1531,6 +1531,13 @@ async def enemy_action_tick_loop(id_server):
 			await ewhunting.enemy_perform_action_gvs(id_server)
 		else:
 			await ewhunting.enemy_perform_action(id_server)
+			
+async def gvs_gamestate_tick_loop(id_server):
+	interval = ewcfg.gvs_gamestate_tick_length
+	# Causes various events to occur during a Garden or Graveyard ops in Gankers Vs. Shamblers
+	while not TERMINATE:
+		await asyncio.sleep(interval)
+		await ewhunting.gvs_update_gamestate(id_server)
 
 
 # Clears out id_target in enemies with defender ai. Primarily used for when players die or leave districts the defender is in.

@@ -2102,7 +2102,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	
 	if user_data.life_state == ewcfg.life_state_shambler:
 		if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shambler_attack:
-			response = "Your shitty zombie jaw is too tired to chew on that {}. Try again in {} seconds.".format(enemy_data.display_name, int(ewcfg.cd_shambler_shamble-(time_now-user_data.time_lasthaunt)))
+			response = "Your shitty zombie jaw is too tired to chew on that {}. Try again in {} seconds.".format(enemy_data.display_name, int(ewcfg.cd_shambler_attack-(time_now-user_data.time_lasthaunt)))
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
 			user_data.time_lasthaunt = time_now
@@ -2255,7 +2255,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 			# TODO - Make enemies able to be strangled
 			# One of the players/enemies died in the meantime
-			if user_data.life_state == ewcfg.life_state_corpse or enemy_data.life_state == ewcfg.life_state_corpse:
+			if user_data.life_state == ewcfg.life_state_corpse or enemy_data.life_state == ewcfg.enemy_lifestate_dead:
 				return
 			else:
 				return
@@ -2329,6 +2329,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# Bicarbonate enemies take more damage
 	if enemy_data.weathertype == ewcfg.enemy_weathertype_rainresist:
 		slimes_damage *= 1.5
+		
+	# Shamblers deal less damage to gaiaslimeoids
+	if enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state == ewcfg.life_state_shambler:
+		slimes_damage *= 0.25
 
 	if not sandbag_mode:
 		# apply hardened sap armor

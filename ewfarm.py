@@ -402,8 +402,8 @@ async def mill(cmd):
 	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Alas, there doesn’t seem to be an official SlimeCorp milling station anywhere around here. Probably because you’re in the middle of the fucking city. Try looking where you reaped your vegetable in the first place, dumbass."
 
-	elif user_data.slimes < ewcfg.slimes_permill:
-		response = "It costs {} to !mill, and you only have {}.".format(ewcfg.slimes_permill, user_data.slimes)
+	# elif user_data.slimes < ewcfg.slimes_permill:
+	# 	response = "It costs {} to !mill, and you only have {}.".format(ewcfg.slimes_permill, user_data.slimes)
 
 	elif item_sought:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -441,14 +441,14 @@ async def mill(cmd):
 				item_props = item_props
 			)
 
-			response = "You walk up to the official SlimeCorp Milling Station and shove your irradiated produce into the hand-crank. You painfully grip the needle-covered crank handle, dripping {} slime into a small compartment on the device’s side which supposedly fuels it. You begin slowly churning them into a glorious, pastry goo. As the goo tosses and turns inside the machine, it solidifies, and after a few moments a {} pops out!".format(ewcfg.slimes_permill, item.str_name)
+			response = "You walk up to the official ~~SlimeCorp~~ Garden Gankers Milling Station and shove your irradiated produce into the hand-crank. You begin slowly churning them into a glorious, pastry goo. As the goo tosses and turns inside the machine, it solidifies, and after a few moments a {} pops out!".format(item.str_name)
 
-			market_data.donated_slimes += ewcfg.slimes_permill
+			#market_data.donated_slimes += ewcfg.slimes_permill
 			market_data.persist()
 
 			ewitem.item_delete(id_item = item_sought.get('id_item'))
-			user_data.change_slimes(n = -ewcfg.slimes_permill, source = ewcfg.source_spending)
-			user_data.slime_donations += ewcfg.slimes_permill
+			#user_data.change_slimes(n = -ewcfg.slimes_permill, source = ewcfg.source_spending)
+			#user_data.slime_donations += ewcfg.slimes_permill
 			user_data.persist()
 		else:
 			response = "You can only mill fresh vegetables! SlimeCorp obviously wants you to support local farmers."

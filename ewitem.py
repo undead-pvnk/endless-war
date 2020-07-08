@@ -1250,7 +1250,7 @@ async def item_look(cmd):
 
 			durability = item.item_props.get('durability')
 			if durability != None and item.item_type == ewcfg.it_item:
-				if item.item_props.get('id_item') in [ewcfg.item_id_paint_copper, ewcfg.item_id_paint_chrome, ewcfg.item_id_paint_gold]:
+				if item.item_props.get('id_item') in ewcfg.durability_items:
 					if durability == 1:
 						response += " It can only be used one more time."
 					else:
@@ -1670,6 +1670,10 @@ def gen_item_props(item):
 			item_props["trap_user_id"] = item.trap_user_id
 			# Some prank items have nifty side effects
 			item_props["side_effect"] = item.side_effect
+		if item.context == ewcfg.context_seedpacket:
+			item_props["cooldown"] = item.cooldown
+			item_props["cost"] = item.cost
+			item_props["time_nextuse"] = item.time_nextuse
 			
 
 	elif item.item_type == ewcfg.it_weapon:

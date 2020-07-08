@@ -1371,7 +1371,56 @@ class EwEnemyEffectContainer:
 		self.backfire_damage = backfire_damage
 		self.miss_mod = miss_mod
 		self.crit_mod = crit_mod
+		
+class EwSeedPacket:
+	item_type = "item"
+	id_item = " "
 
+	alias = []
+
+	context = ""
+	str_name = ""
+	str_desc = ""
+
+	cooldown = ""  # How long before they can plant another gaiaslimeoid
+	cost = 0 # How much gaiaslime it costs to use
+	time_nextuse # When they can next !plant it in a district
+	durability = 0 # How many times it can be used in a raid before it runs out
+
+	ingredients = ""
+	acquisition = ""
+	vendors = []
+
+	def __init__(
+		self,
+		id_item=" ",
+		alias=[],
+		context="",
+		str_name="",
+		str_desc="",
+		cooldown=0,
+		cost=0,
+		time_nextuse=0,
+		durability=0,
+		ingredients="",
+		acquisition="",
+		vendors=[],
+	):
+		self.item_type = "item"
+		self.id_item = id_item
+		self.alias = alias
+		self.context = "seedpacket"
+		self.str_name = str_name
+		self.str_desc = str_desc
+		self.cooldown = cooldown
+		self.cost = cost
+		self.time_nextuse = time_nextuse
+		self.durability = 3
+		self.ingredients = ingredients
+		self.acquisition = acquisition
+		self.vendors = vendors
+		
+		
 # Debug command. Could be used for events, perhaps?
 
 async def summonenemy(cmd, is_bot_spawn = False):
@@ -2699,3 +2748,6 @@ def gvs_get_splash_coords(checked_splash_coords):
 				pass
 			
 	return all_splash_coords
+
+async def gvs_update_gamestate(id_server):
+	pass
