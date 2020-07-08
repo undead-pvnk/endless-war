@@ -1857,8 +1857,8 @@ async def jump(cmd):
 						user_data.persist()
 						await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
-						void_poi = next(i for i in ewcfg.poi_list if i.id_poi == ewcfg.poi_id_thevoid)
-						wafflehouse_poi = next(i for i in ewcfg.poi_list if i.id_poi == ewcfg.poi_id_wafflehouse)
+						void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+						wafflehouse_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
 						response = "You do a backflip on the way down, bounce on the trampoline a few times to reduce your momentum, and climb down a ladder from the roof, down to the ground. You find yourself standing next to {}, in {}.".format(wafflehouse_poi.str_name, void_poi.str_name)
 						msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
 						await asyncio.sleep(20)

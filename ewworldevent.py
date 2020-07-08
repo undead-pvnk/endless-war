@@ -213,15 +213,15 @@ def delete_world_event(id_event):
 
 async def event_tick_loop(id_server):
 	# initialise void connections
-	void_connection_count = ewutils.execute_sql_query("SELECT count(*) FROM world_events WHERE {event_type} = %s AND {id_server} = %s".format(
-		event_type = ewcfg.col_event_type,
-		id_server = ewcfg.col_id_server,
-	),(
-		ewcfg.event_type_voidconnection,
-		id_server,
-	))[0][0]
-	for _ in range(3 - void_connection_count):
+	void_connections = get_void_connection_pois(id_server)
+	void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+	for connection_poi in void_connections:
+		# add the existing connections as neighbors for the void
+		void_poi.neighbors[connection_poi] = ewcfg.travel_time_district
+	for _ in range(3 - len(void_connections)):
+		# create any missing connections
 		create_void_connection(id_server)
+	ewutils.logMsg("initialised void connections, current links are: {}".format(tuple(void_poi.neighbors.keys())))
 
 	interval = ewcfg.event_tick_length
 	while not ewutils.TERMINATE:
@@ -256,6 +256,8 @@ async def event_tick(id_server):
 
 			# check if any void connections have expired, if so pop it and create a new one
 			elif event_data.event_type == ewcfg.event_type_voidconnection:
+				void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+				void_poi.neighbors.pop(event_data.event_props.get('poi'), "")
 				create_void_connection(id_server)
 				
 			if len(response) > 0:
@@ -279,10 +281,33 @@ async def event_tick(id_server):
 	except:
 		ewutils.logMsg("Error in event tick for server {}".format(id_server))
 
-
 def create_void_connection(id_server): 
+	existing_connections = get_void_connection_pois(id_server)
+	new_connection_poi = random.choice([poi.id_poi for poi in ewcfg.poi_list 
+		if poi.is_district 
+		and not poi.is_gangbase 	
+		and poi.id_poi != ewcfg.poi_id_thevoid
+		and poi.id_poi not in existing_connections
+	])
+
+	# add the new connection's POI as a neighbor for the void
+	void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+	void_poi.neighbors[new_connection_poi] = ewcfg.travel_time_district
+	ewutils.logMsg("updated void connections, current links are: {}".format(tuple(void_poi.neighbors.keys())))
+
 	time_now = int(time.time())
-	existing_connections = ewutils.execute_sql_query("SELECT {value} FROM world_events_prop WHERE {name} = 'poi' AND {id_event} IN (SELECT {id_event} FROM world_events WHERE {event_type} = %s AND {id_server} = %s)".format(
+	event_props = { "poi": new_connection_poi }
+	create_world_event(
+		id_server = id_server,
+		event_type = ewcfg.event_type_voidconnection,
+		time_activate = time_now,
+		time_expir = time_now + (60 * random.randrange(20, 60)), # 20 to 60 minutes
+		event_props = event_props
+	)
+
+def get_void_connection_pois(id_server):
+	# in hindsight, doing this in python using get_world_events would've been easier and more future-proof
+	return sum(ewutils.execute_sql_query("SELECT {value} FROM world_events_prop WHERE {name} = 'poi' AND {id_event} IN (SELECT {id_event} FROM world_events WHERE {event_type} = %s AND {id_server} = %s)".format(
 			value = ewcfg.col_value,
 			name = ewcfg.col_name,
 			id_event = ewcfg.col_id_event,
@@ -291,18 +316,4 @@ def create_void_connection(id_server):
 		),(
 			ewcfg.event_type_voidconnection,
 			id_server,
-		))
-	event_props = { "poi": random.choice([poi.id_poi for poi in ewcfg.poi_list 
-		if poi.is_district 
-		and not poi.is_gangbase 	
-		and poi.id_poi != ewcfg.poi_id_thevoid
-		and poi.id_poi not in sum(existing_connections, ())
-	])}
-
-	return create_world_event(
-		id_server = id_server,
-		event_type = ewcfg.event_type_voidconnection,
-		time_activate = time_now,
-		time_expir = time_now + (60 * random.randrange(20, 60)), # 20 to 60 minutes
-		event_props = event_props
-	)
+		)), ())

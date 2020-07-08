@@ -25,6 +25,7 @@ from ewads import EwAd
 from ewitem import EwItem
 
 from ewhunting import EwEnemy, spawn_enemy
+from ewworldevent import get_void_connection_pois
 
 move_counter = 0
 
@@ -744,7 +745,53 @@ def retrieve_locked_districts(id_server):
 	Go down the rabbit hole
 """
 async def descend(cmd):
-	return await move(cmd)
+	user_data = EwUser(member = cmd.message.author, data_level = 1)
+	void_connections = get_void_connection_pois(cmd.message.server.id)
+
+	# enter the void
+	if user_data.poi in void_connections:
+		travel_duration = int(ewcfg.travel_time_district / user_data.move_speed)
+		response = "You descend down the flight of stairs and begin walking down a lengthy tunnel towards an identical set of ascending stairs. You will arrive on the other side in {} seconds.".format(travel_duration)
+		descent_message = await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		global move_counter
+		move_current = ewutils.moves_active.get(cmd.message.author.id)
+		move_counter += 1
+		move_current = ewutils.moves_active[cmd.message.author.id] = move_counter
+
+		life_state = user_data.life_state
+		faction = user_data.faction
+		await asyncio.sleep(travel_duration)
+
+		if user_data.life_state != life_state or faction != user_data.faction:
+			try:
+				await cmd.client.delete_message(descent_message)
+			except:
+				pass
+			return
+
+		user_data.poi = ewcfg.poi_id_thevoid
+		user_data.time_lastenter = int(time.time())
+		user_data.persist()
+		ewutils.end_trade(user_data.id_user)
+		await ewrolemgr.updateRoles(client = ewutils.get_client(), member = cmd.message.author)
+		await user_data.move_inhabitants(id_poi = ewcfg.poi_id_thevoid)
+		try:
+			await cmd.client.delete_message(descent_message)
+		except:
+			pass
+
+		void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+		response = "You go up the flight of stairs and find yourself in {}.".format(void_poi.str_name)
+		msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+		await asyncio.sleep(20)
+		try:
+			await cmd.client.delete_message(msg)
+		except:
+			pass
+		return
+	else:
+		return await move(cmd)
 	
 """
 	Player command to move themselves from one place to another.
@@ -1250,18 +1297,19 @@ async def look(cmd):
 	degrade_resp = ""
 	if district_data.degradation >= poi.max_degradation:
 		degrade_resp = ewcfg.str_zone_degraded.format(poi = poi.str_name) + "\n\n"
-
+	void_resp = get_void_connections_resp(poi.id_poi, user_data.id_server)
 
 	if poi.is_apartment:
 		return await ewapt.apt_look(cmd=cmd)
 
-	if poi.is_subzone: # Triggers if you input the command in a sub-zone.
+	if poi.is_subzone or poi.id_poi == ewcfg.poi_id_thevoid: # Triggers if you input the command in the void or a sub-zone.
 
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-			"You stand {} {}.\n\n{}\n\n{}".format(
+			"You stand {} {}.\n\n{}{}\n\n{}".format(
 				poi.str_in,
 				poi.str_name,
 				poi.str_desc,
+				void_resp,
 				degrade_resp,
 			)
 		))
@@ -1297,10 +1345,11 @@ async def look(cmd):
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You stand {} {}.\n\n{}\n\n{}...".format(
+			"You stand {} {}.\n\n{}{}\n\n{}...".format(
 				poi.str_in,
 				poi.str_name,
 				poi.str_desc,
+				void_resp,
 				degrade_resp,
 			)
 		))
@@ -1874,3 +1923,12 @@ async def print_map_data(cmd):
 	print("\n\nPOI LIST STATISTICS:\n{} districts\n{} subzones\n{} apartments\n{} outskirts\n{} streets\n{} transports\n\n".format(districts_count, subzones_count, apartments_count, outskirts_count, streets_count, transports_count))
 	
 	
+def get_void_connections_resp(poi, id_server):
+	response = ""
+	void_connections = get_void_connection_pois(id_server)
+	if poi == ewcfg.poi_id_thevoid:
+		connected_poi_names = [ewcfg.id_to_poi.get(poi_id).str_name for poi_id in void_connections]
+		response = "\nThe street sign in the intersection points to {}, and {}".format(", ".join(connected_poi_names), ewcfg.id_to_poi.get(ewcfg.poi_id_thesewers).str_name)
+	elif poi in void_connections:
+		response = " There's also a well lit staircase leading underground, but it looks too clean to be an entrance to the subway."
+	return response
