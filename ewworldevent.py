@@ -1,5 +1,6 @@
 import asyncio
 import time
+import random
 
 import ewcfg
 import ewutils
@@ -211,6 +212,17 @@ def delete_world_event(id_event):
 		ewutils.logMsg("Error while deleting world event {}".format(id_event))
 
 async def event_tick_loop(id_server):
+	# initialise void connections
+	void_connection_count = ewutils.execute_sql_query("SELECT count(*) FROM world_events WHERE {event_type} = %s AND {id_server} = %s".format(
+		event_type = ewcfg.col_event_type,
+		id_server = ewcfg.col_id_server,
+	),(
+		ewcfg.event_type_voidconnection,
+		id_server,
+	))[0][0]
+	for _ in range(3 - void_connection_count):
+		create_void_connection(id_server)
+
 	interval = ewcfg.event_tick_length
 	while not ewutils.TERMINATE:
 		await asyncio.sleep(interval)
@@ -219,7 +231,7 @@ async def event_tick_loop(id_server):
 async def event_tick(id_server):
 	time_now = int(time.time())
 	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
-	if True:
+	try:
 		data = ewutils.execute_sql_query("SELECT {id_event} FROM world_events WHERE {time_expir} <= %s AND {time_expir} > 0 AND id_server = %s".format(
 			id_event = ewcfg.col_id_event,
 			time_expir = ewcfg.col_time_expir,
@@ -230,10 +242,9 @@ async def event_tick(id_server):
 
 		for row in data:
 			event_data = EwWorldEvent(id_event = row[0])
-
 			event_def = ewcfg.event_type_to_def.get(event_data.event_type)
 
-			response = event_def.str_event_end
+			response = event_def.str_event_end if event_def else ""
 			if event_data.event_type == ewcfg.event_type_minecollapse:
 				user_data = EwUser(id_user = event_data.event_props.get('id_user'), id_server = id_server)
 				if user_data.poi == event_data.event_props.get('poi'):
@@ -242,7 +253,11 @@ async def event_tick(id_server):
 
 					player_data = EwPlayer(id_user = user_data.id_user)
 					response = "*{}*: You have lost an arm and a leg in a mining accident. Tis but a scratch.".format(player_data.display_name)
-					
+
+			# check if any void connections have expired, if so pop it and create a new one
+			elif event_data.event_type == ewcfg.event_type_voidconnection:
+				create_void_connection(id_server)
+				
 			if len(response) > 0:
 				poi = event_data.event_props.get('poi')
 				channel = event_data.event_props.get('channel')
@@ -260,6 +275,34 @@ async def event_tick(id_server):
 			delete_world_event(event_data.id_event)
 
 		await resp_cont.post()
-				
-	else:
+					
+	except:
 		ewutils.logMsg("Error in event tick for server {}".format(id_server))
+
+
+def create_void_connection(id_server): 
+	time_now = int(time.time())
+	existing_connections = ewutils.execute_sql_query("SELECT {value} FROM world_events_prop WHERE {name} = 'poi' AND {id_event} IN (SELECT {id_event} FROM world_events WHERE {event_type} = %s AND {id_server} = %s)".format(
+			value = ewcfg.col_value,
+			name = ewcfg.col_name,
+			id_event = ewcfg.col_id_event,
+			event_type = ewcfg.col_event_type,
+			id_server = ewcfg.col_id_server,
+		),(
+			ewcfg.event_type_voidconnection,
+			id_server,
+		))
+	event_props = { "poi": random.choice([poi.id_poi for poi in ewcfg.poi_list 
+		if poi.is_district 
+		and not poi.is_gangbase 	
+		and poi.id_poi != ewcfg.poi_id_thevoid
+		and poi.id_poi not in sum(existing_connections, ())
+	])}
+
+	return create_world_event(
+		id_server = id_server,
+		event_type = ewcfg.event_type_voidconnection,
+		time_activate = time_now,
+		time_expir = time_now + (60 * random.randrange(20, 60)), # 20 to 60 minutes
+		event_props = event_props
+	)

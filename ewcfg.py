@@ -21999,6 +21999,7 @@ event_type_minesweeper = "minesweeper"
 event_type_pokemine = "pokemine"
 event_type_bubblebreaker = "bubblebreaker"
 event_type_voidhole = "voidhole"
+event_type_voidconnection = "voidconnection"
 
 world_events = [
 	EwEventDef(
