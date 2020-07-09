@@ -35,7 +35,7 @@ version = "v3.24a"
 
 dir_msgqueue = 'msgqueue'
 
-database = "rfckevent"
+database = "rfck"
 
 discord_message_length_limit = 2000
 
@@ -10428,7 +10428,7 @@ poi_list = [
 		role = "Downtown",
 		property_class = property_class_s,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_krakbay: travel_time_district,
 			poi_id_smogsburg : travel_time_district,
@@ -10445,7 +10445,7 @@ poi_list = [
 			poi_id_stockexchange : travel_time_subzone,
 			poi_id_endlesswar : travel_time_subzone,
 			poi_id_slimecorphq : travel_time_subzone,
-		}
+		},
 	),
 	EwPoi( # 2
 		id_poi = poi_id_smogsburg,
@@ -10461,7 +10461,7 @@ poi_list = [
 		role = "Smogsburg",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_downtown : travel_time_district,
 			poi_id_copkilltown : travel_time_district,
@@ -10475,7 +10475,7 @@ poi_list = [
 			poi_id_smogsburg_street_e : travel_time_street,
 			poi_id_bazaar : travel_time_subzone,
 			poi_id_recyclingplant : travel_time_subzone,
-		}
+		},
 	),
 	EwPoi( # 3
 		id_poi = poi_id_copkilltown,
@@ -10510,7 +10510,7 @@ poi_list = [
 			poi_id_astatineheights : travel_time_district,
 			poi_id_gatlingsdale : travel_time_district,
 			poi_id_copkilltown_street_a : travel_time_street,
-		},
+		}
 	),
 	EwPoi( # 4
 		id_poi = poi_id_krakbay,
@@ -10525,7 +10525,7 @@ poi_list = [
 		role = "Krak Bay",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors={
 			poi_id_downtown : travel_time_district,
 			poi_id_poudrinalley : travel_time_district,
@@ -10542,7 +10542,7 @@ poi_list = [
 			poi_id_bodega : travel_time_subzone,
 			poi_id_foodcourt : travel_time_subzone,
 			poi_id_sodafountain : travel_time_subzone,
-		}
+		},
 	),
 	EwPoi( # 5
 		id_poi = poi_id_poudrinalley,
@@ -10557,7 +10557,7 @@ poi_list = [
 		role = "Poudrin Alley",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_downtown : travel_time_district,
 			poi_id_krakbay : travel_time_district,
@@ -10616,7 +10616,7 @@ poi_list = [
 		role = "Green Light District",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		has_ads = True,
 		neighbors = {
 			poi_id_downtown : travel_time_district,
@@ -10627,7 +10627,7 @@ poi_list = [
 			poi_id_greenlightdistrict_street_c : travel_time_street,
 			poi_id_thecasino : travel_time_subzone,
 		},
-	),
+		),
 	EwPoi( # 8
 		id_poi = poi_id_oldnewyonkers,
 		alias = [
@@ -10640,7 +10640,7 @@ poi_list = [
 		role = "Old New Yonkers",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_brawlden : travel_time_district,
 			poi_id_newnewyonkers : travel_time_district,
@@ -10654,7 +10654,7 @@ poi_list = [
 			poi_id_oldnewyonkers_street_e : travel_time_street,
 			poi_id_realestate : travel_time_subzone,
 		},
-	),
+		),
 	EwPoi( # 9
 		id_poi = poi_id_littlechernobyl,
 		alias = [
@@ -10670,7 +10670,7 @@ poi_list = [
 		role = "Little Chernobyl",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_arsonbrook : travel_time_district,
 			poi_id_brawlden : travel_time_district,
@@ -10694,7 +10694,7 @@ poi_list = [
 		role = "Arsonbrook",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_maimridge : travel_time_district,
 			poi_id_astatineheights : travel_time_district,
@@ -10722,7 +10722,7 @@ poi_list = [
 		role = "Astatine Heights",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_copkilltown : travel_time_district,
 			poi_id_gatlingsdale : travel_time_district,
@@ -10753,7 +10753,7 @@ poi_list = [
 		role = "Gatlingsdale",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_toxington : travel_time_district,
 			poi_id_poloniumhill : travel_time_district,
@@ -10782,7 +10782,7 @@ poi_list = [
 		role = "Vandal Park",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_gatlingsdale : travel_time_district,
 			poi_id_poloniumhill : travel_time_district,
@@ -10809,7 +10809,7 @@ poi_list = [
 		role = "Glocksbury",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_vandalpark : travel_time_district,
 			poi_id_westglocksbury : travel_time_district,
@@ -10842,7 +10842,7 @@ poi_list = [
 		role = "North Sleezeborough",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_glocksbury : travel_time_district,
 			poi_id_jaywalkerplain : travel_time_district,
@@ -10875,7 +10875,7 @@ poi_list = [
 		role = "South Sleezeborough",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_crookline : travel_time_district,
 			poi_id_northsleezeborough : travel_time_district,
@@ -10901,7 +10901,7 @@ poi_list = [
 		role = "Ooze Gardens",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_southsleezeborough : travel_time_district,
 			poi_id_krakbay : travel_time_district,
@@ -10927,7 +10927,7 @@ poi_list = [
 		role = "Cratersville",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_oozegardens : travel_time_district,
 			poi_id_poudrinalley : travel_time_district,
@@ -10952,7 +10952,7 @@ poi_list = [
 		role = "Wreckington",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_cratersville : travel_time_district,
 			poi_id_rowdyroughhouse : travel_time_district,
@@ -11001,7 +11001,7 @@ poi_list = [
 		role = "Slime's End",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_vagrantscorner : travel_time_district,
 			poi_id_slimesend_street_a : travel_time_street,
@@ -11022,7 +11022,7 @@ poi_list = [
 		role = "Vagrant's Corner",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_greenlightdistrict : travel_time_district,
 			poi_id_juviesrow : travel_time_district,
@@ -11056,7 +11056,7 @@ poi_list = [
 		role = "Assault Flats Beach",
 		property_class = property_class_s,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_newnewyonkers : travel_time_district,
 			poi_id_vagrantscorner : travel_time_district,
@@ -11079,7 +11079,7 @@ poi_list = [
 		role = "New New Yonkers",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_brawlden : travel_time_district,
 			poi_id_oldnewyonkers : travel_time_district,
@@ -11105,7 +11105,7 @@ poi_list = [
 		role = "Brawlden",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_arsonbrook : travel_time_district,
 			poi_id_littlechernobyl : travel_time_district,
@@ -11134,7 +11134,7 @@ poi_list = [
 		role = "Toxington",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_charcoalpark : travel_time_district,
 			poi_id_poloniumhill : travel_time_district,
@@ -11165,7 +11165,7 @@ poi_list = [
 		role = "Charcoal Park",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_toxington : travel_time_district,
 			poi_id_poloniumhill : travel_time_district,
@@ -11188,7 +11188,7 @@ poi_list = [
 		role = "Polonium Hill",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_charcoalpark : travel_time_district,
 			poi_id_toxington : travel_time_district,
@@ -11219,7 +11219,7 @@ poi_list = [
 		role = "West Glocksbury",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_poloniumhill : travel_time_district,
 			poi_id_vandalpark : travel_time_district,
@@ -11247,7 +11247,7 @@ poi_list = [
 		role = "Jaywalker Plain",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_westglocksbury : travel_time_district,
 			poi_id_glocksbury : travel_time_district,
@@ -11275,7 +11275,7 @@ poi_list = [
 		role = "Crookline",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_dreadford : travel_time_district,
 			poi_id_jaywalkerplain : travel_time_district,
@@ -11301,7 +11301,7 @@ poi_list = [
 		role = "Dreadford",
 		property_class = property_class_s,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_jaywalkerplain : travel_time_district,
 			poi_id_crookline : travel_time_district,
@@ -11323,7 +11323,7 @@ poi_list = [
 		channel = "maimridge",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_toxington : travel_time_district,
 			poi_id_astatineheights : travel_time_district,
@@ -12371,11 +12371,14 @@ poi_list = [
 		id_poi = poi_id_crookline_street_a,
 		alias = [
 			"clsa",
-			"clstreeta"
+			"clstreeta",
+			"doxyavenue",
+			"clda",
+			"doxy"
 		],
-		str_name = "Crookline Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'crookline-street-a',
+		str_name = "Doxy Avenue",
+		str_desc = "Jazz clubs and diners decked out in flashy neon lights liven up this already crowded hotspot. Traffic is always jammed down here, and the locals have taken to the habit of just walking between the stopped cars to get across. The 24/7 nightlife here is really something else, and the pickpockets hiding in the bustle will make sure you pay full price for it. Exits into Crookline, XXXXXX, and Perdido Valley.",
+		channel = 'doxy-avenue',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_crookline,
@@ -12413,11 +12416,14 @@ poi_list = [
 		id_poi = poi_id_crookline_street_c,
 		alias = [
 			"clsc",
-			"clstreetc"
+			"clstreetc",
+			"manteca",
+			"clms",
+			"mantecastreet"
 		],
-		str_name = "Crookline Street C",
-		str_desc = str_generic_streets_description,
-		channel = 'crookline-street-c',
+		str_name = "Manteca Street",
+		str_desc = 'It\'s cold, dark, and quiet. The old brick offices and boarding houses all look closed for the day no matter what time you\'re here. If you didn\'t know any better this might be a nice, moody place for a walk, but it\'s obvious the alleys are hiding something. Don\'t get caught under a streetlight. Exits into Crookline, Perdido Valley and XXXXXX.',
+		channel = 'manteca-street',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_crookline,
@@ -12432,11 +12438,14 @@ poi_list = [
 		id_poi = poi_id_crookline_street_d,
 		alias = [
 			"clsd",
-			"clstreetd"
+			"clstreetd",
+			"perdidovalley",
+			"clpv",
+			"perdido"
 		],
-		str_name = "Crookline Street D",
-		str_desc = str_generic_streets_description,
-		channel = 'crookline-street-d',
+		str_name = "Perdido Valley",
+		str_desc = "You didn't think it was possible to get any lower, but you've found yourself descended into the under-underworld of Crookline. The high-society crimelords and psychotics of the city frequent the upper-floor style black markets here, indulging in strange, illegal fetishes and experimental substance abuse. You'd love to see those guys get a knife or two to the face, but you doubt the bouncers standing outside would let you in. Exits into Crookline, Manteca Street, and Doxy Avenue.",
+		channel = 'perdido-valley',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_crookline,
@@ -12723,17 +12732,6 @@ poi_list = [
 			"ttsb",
 			"ttstreetb"
 		],
-		str_name = "The Ferry",
-		str_desc = "A modest two-story passenger ferry, built probably 80 years ago. Its faded paint is starting to crack and its creaky wood benches aren’t exactly comfortable. Though it’s not much to look at, you still love riding it. Out here, all you have to think about is the cool wind in your hair, the bright green glow of the Slime Sea searing your eyes, and the New Los Angeles City aka Neo Milwaukee skyline in the distance. You plug in earbuds to drown out the sea captain’s embarrassing Jungle Cruise-tier commentary over the microphone. Good times.",
-		channel = channel_ferry,
-		role = "Ferry",
-		pvp = True,
-		is_transport = True,
-		transport_type = transport_type_ferry,
-		default_line = transport_line_ferry_wt_to_vc,
-		default_stop = poi_id_wt_port,
-		is_pier = True,
-		pier_type = fish_slime_saltwater
 		str_name = "Toxington Street B",
 		str_desc = str_generic_streets_description,
 		channel = 'toxington-street-b',
@@ -16771,7 +16769,7 @@ poi_list = [
 		str_desc = "Located behind a secret door in a seemingly innocuous corner store, Bodega is a high end clothing store for the freshest kids in the city.\n\nFrom the outside, Bodega appears to be simply another of the interchangeable convenience stores found on nearly every block of every major city. The windows are completely packed by dusty non-perishables, and the interior is not much better with every  inch of space selling snacks or household basics in a visually deafening assault of brand names. However, those in the know simply stroll past all this noise and head for the old Snapple machine in the back of the shop. The machine is not that at all but a door that slides open to reveal a whole other store on the other side, this is the real Bodega. Neatly appointed, lacquered shelves hold the latest in street and skate fashion from shoes to shirts to jackets. The whole space is clean and orderly in a far cry from the cramped store front.\n\n(This description was literally just stolen and lightly edited from Atlas Obsurca. This is a real place in Boston, look it up. Pretty sick, huh?)\n\nThe well-trimmed, over-cologned four-eyed hipster behind the counter looks upon you with what can only be described as the freakish offspring of utter disdain and mindlessly sycophantic puppy-dog eyes that hope to lure you into an ill-advised purchase of high end socks that forces you to take out a second mortgage on your house. *SHARP INHALE*. He’ll !sew the dirty, unwashed rags you dare call clothing back together if it gets shredded in combat, for a price. You can also get your old outfits !retrofit'd with added combat functionalities here, also for a price.\n\nExits into Krak Bay.",
 		channel = channel_bodega,
 		role = "Bodega",
-		mother_district = poi_id_krakbay,
+		mother_districts = [poi_id_krakbay],
 		pvp = False,
 		vendors = [
 			vendor_bodega,
@@ -16791,7 +16789,7 @@ poi_list = [
 		str_desc = "A hardware store right beside a gas station. This place is a fucking mess, even by your standards. Cluttered stacks of washing machines and other various household necessities tower over you, turning the place into a goddamn corn maze made out of worn out appliances. Your only saving grace in terms of navigation is the piss-yellow incandescent lighting fixed to the ceiling. On the radio, you can hear a Sludgefest rendition of 'Hardware Store' by Weird-Al Yankovic quietly echoing throughout the makeshift corridors on loop. You think it'd be best to find what your looking for and make a dash to the checkout section, before some psychopath pulls you aside and bashes your skull in.",
 		channel = channel_basedhardware,
 		role = "Based Hardware",
-		mother_district = poi_id_westglocksbury,
+		mother_districts = [poi_id_westglocksbury],
 		pvp = False,
 		vendors = [vendor_basedhardware],
 		is_subzone = True,

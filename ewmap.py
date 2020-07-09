@@ -242,7 +242,7 @@ class EwPoi:
 		has_ads = False,
 		write_manuscript = False,
 		max_degradation = 1000,
-		neighbors = None
+		neighbors = None,
 	):
 		self.id_poi = id_poi
 		self.alias = alias

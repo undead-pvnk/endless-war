@@ -108,7 +108,14 @@ async def menu(cmd):
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
+		destination_poi = ""
+		for dist in poi.mother_districts:
+			dist_poi = ewcfg.id_to_poi.get(dist)
+			if dist_poi.is_district:
+				destination_poi = dist
+
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+		mother_district_data = EwDistrict(district = destination_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -164,9 +171,9 @@ async def menu(cmd):
 					value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
 
 
-				if district_data.controlling_faction != "":
+				if mother_district_data.all_streets_taken() != "":
 					# prices are halved for the controlling gang
-					if district_data.controlling_faction == user_data.faction:
+					if mother_district_data.all_streets_taken() == user_data.faction:
 						value /= 2
 
 					# and 4 times as much for enemy gangsters

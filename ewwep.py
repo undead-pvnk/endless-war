@@ -470,6 +470,8 @@ def canCap(cmd):
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 	elif not user_data.poi in ewcfg.capturable_districts:
 		response = "This zone cannot be captured."
+		if poi.is_district == True:
+			response += " To take this district, you need to enter into the streets."
 	elif sidearm != None and ewcfg.weapon_class_thrown in sidearm.classes and sidearm_item.stack_size == 0:
 		response = "You're out of {}! Go buy more at the {}".format(sidearm.str_weapon, ewutils.formatNiceList(names=sidearm.vendors,  conjunction="or"))
 	elif sidearm != None and sidearm.cooldown + (float(sidearm_item.item_props.get("time_lastattack")) if sidearm_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
@@ -3205,19 +3207,20 @@ async def spray(cmd):
 						new_captcha_gun = ewutils.text_to_regional_indicator(direction)
 						response += "\nNext target is {}.".format(new_captcha_gun)
 					weapon_item.persist()
-
-				if district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.limit_influence[district_data.property_class]:
+				father_district_poi = ewcfg.id_to_poi.get(poi.father_district)
+				number_streets = len(ewutils.get_street_list(father_district_poi.id_poi))
+				if district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.limit_influence[father_district_poi.property_class]/number_streets:
 					if user_data.faction == ewcfg.faction_rowdys:
 						color = "pink"
 					elif user_data.faction == "slimecorp":
 						color = "Slimecorp propaganda"
 					else:
 						color = "purple"
-					response += "\nYour district is awash in a sea of {}. It's hard to imagine where else you could spray down.".format(color)
-				elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > (ewcfg.min_influence[district_data.property_class] + ewcfg.limit_influence[district_data.property_class])/2:
+					response += "\nThe street is awash in a sea of {}. It's hard to imagine where else you could spray down.".format(color)
+				elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > (ewcfg.min_influence[father_district_poi.property_class] + ewcfg.limit_influence[father_district_poi.property_class])/(2 * number_streets):
 					pass
 					response += "\nThe {} have developed a decent grip on this district.".format(user_data.faction)
-				elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.min_influence[district_data.property_class]:
+				elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.min_influence[father_district_poi.property_class]/number_streets:
 					pass
 					response += "\nThe {} have developed a loose grip on this district.".format(user_data.faction)
 
