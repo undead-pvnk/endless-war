@@ -1686,6 +1686,8 @@ def text_to_regional_indicator(text):
 	# note that inside the quotes below is a zero-width space, 
 	# used to prevent the regional indicators from turning into flags
 	# also note that this only works for digits and english letters
+  
+	###return "‎".join([chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
 	return "‎".join([c + '\ufe0f\u20e3' if c.isdigit() else chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
 
 def generate_captcha_random(length = 4):

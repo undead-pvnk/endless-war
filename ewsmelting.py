@@ -90,7 +90,7 @@ async def smelt(cmd):
 
 			# If you don't have all the necessary ingredients.
 			if len(missing_ingredients) > 0:
-				response = "You’ve never done this before, have you? To smelt {}, you’ll need to combine *{}*.".format(found_recipe.str_name, ewutils.formatNiceList(names = necessary_ingredients_list, conjunction = "and"))
+				response = "You've never done this before, have you? To smelt {}, you’ll need to combine *{}*.".format(found_recipe.str_name, ewutils.formatNiceList(names = necessary_ingredients_list, conjunction = "and"))
 
 				response += " You are missing *{}*.".format(ewutils.formatNiceList(names = missing_ingredients, conjunction = "and"))
 
@@ -101,7 +101,7 @@ async def smelt(cmd):
 					patrician_smelted = random.randint(1, patrician_rarity)
 					patrician = False
 
-					if patrician_smelted == 1:
+					if patrician_smelted <= 5:
 						patrician = True
 
 					cosmetics_list = []
