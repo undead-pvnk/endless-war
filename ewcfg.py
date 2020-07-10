@@ -9903,6 +9903,7 @@ poi_list = [
 			poi_id_astatineheights : travel_time_district,
 			poi_id_gatlingsdale : travel_time_district,
 			poi_id_copkilltown_street_a : travel_time_street,
+			poi_id_ck_subway_station: travel_time_subzone,
 		},
 	),
 	EwPoi( # 4
@@ -9994,6 +9995,7 @@ poi_list = [
 			poi_id_poudrinalley : travel_time_district,
 			poi_id_wreckington : travel_time_district,
 			poi_id_rowdyroughhouse_street_a : travel_time_street,
+			poi_id_rr_subway_station: travel_time_subzone,
 		},
 	),
 	EwPoi( # 7
@@ -10377,6 +10379,7 @@ poi_list = [
 			poi_id_mine : travel_time_subzone,
 			poi_id_jr_farms : travel_time_subzone,
 			poi_id_juviesrow_pier : travel_time_subzone,
+			poi_id_jr_subway_station: travel_time_subzone,
 		},
 	),
 	EwPoi( # 21
@@ -10766,6 +10769,7 @@ poi_list = [
 			poi_id_downtown_street_c : travel_time_street,
 			poi_id_poudrinalley_street_a : travel_time_street,
 			poi_id_wreckington_street_b : travel_time_street,
+			poi_id_rr_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -10786,6 +10790,7 @@ poi_list = [
 			poi_id_astatineheights_street_f : travel_time_street,
 			poi_id_smogsburg_street_c : travel_time_street,
 			poi_id_downtown_street_f : travel_time_street,
+			poi_id_ck_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -10807,6 +10812,7 @@ poi_list = [
 			poi_id_mine: travel_time_subzone,
 			poi_id_jr_farms : travel_time_subzone,
 			poi_id_juviesrow_pier : travel_time_subzone,
+			poi_id_jr_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -10883,6 +10889,7 @@ poi_list = [
 			poi_id_downtown_street_c : travel_time_street,
 			poi_id_downtown_street_e : travel_time_street,
 			poi_id_poudrinalley_street_b : travel_time_street,
+			poi_id_dt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -10902,6 +10909,7 @@ poi_list = [
 			poi_id_downtown_street_d : travel_time_street,
 			poi_id_downtown_street_f : travel_time_street,
 			poi_id_krakbay_street_a : travel_time_street,
+			poi_id_dt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -10940,6 +10948,7 @@ poi_list = [
 			poi_id_krakbay_street_f : travel_time_street,
 			poi_id_krakbay_street_b : travel_time_street,
 			poi_id_downtown_street_e : travel_time_street,
+			poi_id_kb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11055,6 +11064,7 @@ poi_list = [
 			poi_id_poudrinalley_street_e : travel_time_street,
 			poi_id_poudrinalley_street_b : travel_time_street,
 			poi_id_rowdyroughhouse_street_a : travel_time_street,
+			poi_id_pa_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11171,6 +11181,7 @@ poi_list = [
 			poi_id_cratersville_street_a : travel_time_street,
 			poi_id_cratersville_street_c : travel_time_street,
 			poi_id_poudrinalley_street_e : travel_time_street,
+			poi_id_cv_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11192,6 +11203,7 @@ poi_list = [
 			poi_id_oozegardens_street_d : travel_time_street,
 			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
 			poi_id_cv_mines : travel_time_subzone,
+			poi_id_cv_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11211,6 +11223,7 @@ poi_list = [
 			poi_id_wreckington_street_b : travel_time_street,
 			poi_id_cratersville_street_a : travel_time_street,
 			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_wt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11232,6 +11245,7 @@ poi_list = [
 			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
 			poi_id_diner : travel_time_subzone,
 			poi_id_wt_port : travel_time_subzone,
+			poi_id_wt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11291,6 +11305,7 @@ poi_list = [
 			poi_id_oozegardens_street_d : travel_time_street,
 			poi_id_poudrinalley_street_d : travel_time_street,
 			poi_id_og_farms : travel_time_subzone,
+			poi_id_og_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11332,6 +11347,7 @@ poi_list = [
 			poi_id_southsleezeborough_street_b : travel_time_street,
 			poi_id_crookline_street_b : travel_time_street,
 			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_ssb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11543,6 +11559,7 @@ poi_list = [
 			poi_id_glocksbury_street_b : travel_time_street,
 			poi_id_glocksbury_street_d : travel_time_street,
 			poi_id_westglocksbury_street_a : travel_time_street,
+			poi_id_gb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11639,6 +11656,7 @@ poi_list = [
 			poi_id_westglocksbury_street_d : travel_time_street,
 			poi_id_poloniumhill_street_d : travel_time_street,
 			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_wgb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11678,6 +11696,7 @@ poi_list = [
 			poi_id_jaywalkerplain_street_e : travel_time_street,
 			poi_id_jaywalkerplain_street_b : travel_time_street,
 			poi_id_northsleezeborough_street_d : travel_time_street,
+			poi_id_jp_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11697,6 +11716,7 @@ poi_list = [
 			poi_id_jaywalkerplain_street_a : travel_time_street,
 			poi_id_jaywalkerplain_street_c : travel_time_street,
 			poi_id_crookline_street_d : travel_time_street,
+			poi_id_jp_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11779,6 +11799,7 @@ poi_list = [
 			poi_id_dreadford_street_b : travel_time_street,
 			poi_id_crookline_outskirts_edge : travel_time_outskirt,
 			poi_id_crookline_pier : travel_time_subzone,
+			poi_id_cl_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11800,6 +11821,7 @@ poi_list = [
 			poi_id_southsleezeborough_street_a : travel_time_street,
 			poi_id_crookline_outskirts_edge : travel_time_outskirt,
 			poi_id_crookline_pier : travel_time_subzone,
+			poi_id_cl_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12108,6 +12130,7 @@ poi_list = [
 			poi_id_toxington_street_b : travel_time_street,
 			poi_id_gatlingsdale_street_d : travel_time_street,
 			poi_id_tt_mines : travel_time_subzone,
+			poi_id_tt_subway_station : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12188,6 +12211,7 @@ poi_list = [
 			poi_id_toxington_street_a : travel_time_street,
 			poi_id_astatineheights_street_b : travel_time_street,
 			poi_id_toxington_pier : travel_time_subzone,
+			poi_id_tt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12207,6 +12231,7 @@ poi_list = [
 			poi_id_gatlingsdale_street_e : travel_time_street,
 			poi_id_gatlingsdale_street_b : travel_time_street,
 			poi_id_copkilltown_street_a : travel_time_street,
+			poi_id_gd_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12302,6 +12327,7 @@ poi_list = [
 			poi_id_astatineheights_street_f : travel_time_street,
 			poi_id_astatineheights_street_b : travel_time_street,
 			poi_id_gatlingsdale_street_e : travel_time_street,
+			poi_id_ah_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12322,6 +12348,7 @@ poi_list = [
 			poi_id_astatineheights_street_c : travel_time_street,
 			poi_id_toxington_street_e : travel_time_street,
 			poi_id_seafood : travel_time_subzone,
+			poi_id_ah_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12455,6 +12482,7 @@ poi_list = [
 			poi_id_smogsburg_street_b : travel_time_street,
 			poi_id_smogsburg_street_d : travel_time_street,
 			poi_id_copkilltown_street_a : travel_time_street,
+			poi_id_sb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12513,6 +12541,7 @@ poi_list = [
 			poi_id_arsonbrook_street_b : travel_time_street,
 			poi_id_smogsburg_street_a : travel_time_street,
 			poi_id_ab_farms : travel_time_subzone,
+			poi_id_ab_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12670,6 +12699,7 @@ poi_list = [
 			poi_id_brawlden_street_b : travel_time_street,
 			poi_id_arsonbrook_street_d : travel_time_street,
 			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_bd_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12747,6 +12777,7 @@ poi_list = [
 			poi_id_littlechernobyl_street_c : travel_time_street,
 			poi_id_littlechernobyl_street_b : travel_time_street,
 			poi_id_arsonbrook_street_e : travel_time_street,
+			poi_id_lc_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12900,6 +12931,7 @@ poi_list = [
 			poi_id_newnewyonkers_street_b : travel_time_street,
 			poi_id_brawlden_street_b : travel_time_street,
 			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_nny_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -13019,6 +13051,7 @@ poi_list = [
 			poi_id_vagrantscorner_street_b : travel_time_street,
 			poi_id_assaultflatsbeach_street_b : travel_time_street,
 			poi_id_vc_port : travel_time_subzone,
+			poi_id_vc_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -13172,6 +13205,7 @@ poi_list = [
 			poi_id_greenlightdistrict_street_b : travel_time_street,
 			poi_id_greenlightdistrict_street_a : travel_time_street,
 			poi_id_downtown_street_b : travel_time_street,
+			poi_id_gld_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -14354,6 +14388,7 @@ poi_list = [
 		transport_lines = set(),
 		neighbors = {
 			poi_id_northsleezeborough_street_a : travel_time_subzone,
+			poi_id_nsb_subway_station: travel_time_subzone,
 		},
 	),
 	EwPoi(  # South Sleezeborough Subway Station
@@ -14600,6 +14635,7 @@ poi_list = [
 		transport_lines = set(),
 		neighbors = {
 			poi_id_vandalpark_street_a : travel_time_subzone,
+			poi_id_vp_subway_station: travel_time_subzone,
 		},
 	),
 	EwPoi(  # Crookline Subway Station

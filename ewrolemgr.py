@@ -715,7 +715,6 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 			if current_member not in member_list:
 				# Member has no overwrite -- fix this:
 				user_data = EwUser(member=current_member)
-				print(user_data.poi)
 				correct_poi = ewcfg.id_to_poi.get(user_data.poi)
 
 				if correct_poi != None:
@@ -734,8 +733,6 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 				overwrite.connect = True
 
 				for i in range(ewcfg.permissions_tries):
-					print(correct_channel)
-					print(current_member)
 					await client.edit_channel_permissions(correct_channel, current_member, overwrite)
 					#await client.edit_channel_permissions(correct_lan_channel, current_member, overwrite)
 
