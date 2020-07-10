@@ -25,7 +25,7 @@ from ewdungeons import EwDungeonScene
 from ewtrauma import EwTrauma, EwHitzone
 from ewprank import EwPrankItem
 from ewmarket import EwMarket
-from ewhunting import EwSeedPacket
+from ewhunting import EwSeedPacket, EwTombstone
 
 import ewdebug
 
@@ -625,6 +625,8 @@ faction_rowdys = "rowdys"
 gangbase_rowdys = "Rowdy Roughhouse"
 faction_banned = "banned"
 factions = [faction_killers, faction_rowdys]
+psuedo_faction_gankers = 'gankers' # not attatched to a user's data
+psuedo_faction_shamblers = 'shamblers' # same as above
 
 # Channel names
 channel_mines = "the-mines"
@@ -807,6 +809,7 @@ cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
 cmd_summonenemy = cmd_prefix + 'summonenemy'
+cmd_summongvsenemy = cmd_prefix + 'summonenemy'
 cmd_deleteallenemies = cmd_prefix + 'deleteallenemies'
 cmd_negaslimeoid = cmd_prefix + 'negaslimeoid'
 cmd_battlenegaslimeoid = cmd_prefix + 'battlenegaslimeoid'
@@ -1020,6 +1023,7 @@ cmd_pointandlaugh = cmd_prefix + 'pointandlaugh'
 cmd_prank = cmd_prefix + 'prank'
 cmd_gvs_printgrid = cmd_prefix + 'grid'
 cmd_gvs_printgrid_alt1 = cmd_prefix + 'lawn'
+cmd_gvs_printlane = cmd_prefix + 'lane'
 
 
 cmd_retire = cmd_prefix + 'retire'
@@ -1939,7 +1943,6 @@ col_sidearm = 'sidearm'
 col_race = 'race'
 col_time_racialability = 'time_racialability'
 col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
-col_gvs_currency = 'gvs_currency'
 col_attack = 'attack'
 col_speed = 'speed'
 col_freshness = 'freshness'
@@ -1954,6 +1957,11 @@ col_slimernalia_kingpin = 'slimernalia_kingpin'
 col_gambit = 'gambit'
 col_credence = 'credence'
 col_credence_used = 'credence_used'
+
+# GANKERS VS SHAMBLERS
+col_gvs_currency = 'gvs_currency'
+col_horde_cooldown = 'horde_cooldown'
+col_gaiaslime = 'gaiaslime'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'
@@ -2354,6 +2362,7 @@ context_slimeoidfood = 'slimeoidfood'
 context_wrappingpaper = 'wrappingpaper'
 context_prankitem = 'prankitem'
 context_seedpacket = 'seedpacket'
+context_tombstone = 'tombstone'
 
 # Item vendor names.
 vendor_bar = 'bar'	#rate of non-mtn dew drinks are 100 slime to 9 hunger
@@ -2454,6 +2463,24 @@ item_id_gaiaseedpack_rustealeaves = "rustealeavesseedpacket"
 item_id_gaiaseedpack_metallicaps = "metallicapsseedpacket"
 item_id_gaiaseedpack_steelbeans = "steelbeansseedpacket"
 item_id_gaiaseedpack_aushucks = "aushucksseedpacket"
+item_id_tombstone_defaultshambler = "defaultshamblertombstone"
+item_id_tombstone_bucketshambler = "bucketshamblertombstone"
+item_id_tombstone_juveolanternshambler = "juveolanternshamblertombstone"
+item_id_tombstone_flagshambler = "flagshamblertombstone"
+item_id_tombstone_shambonidriver = "shambonidrivertombstone"
+item_id_tombstone_mammoshambler = "mammoshamblertombstone"
+item_id_tombstone_gigashambler = "gigashamblertombstone"
+item_id_tombstone_microshambler = "microshamblertombstone"
+item_id_tombstone_shamblersaurusrex = "shamblesaurusrextombstone"
+item_id_tombstone_shamblerdactyl = "shamblerdactyltombstone"
+item_id_tombstone_dinoshambler = "dinoshamblertombstone"
+item_id_tombstone_ufoshambler = "ufoshamblertombstone"
+item_id_tombstone_brawldenboomer = "brawldenboomertombstone"
+item_id_tombstone_juvieshambler = "juvieshamblertombstone"
+item_id_tombstone_shambleballplayer = "shambleballplayertombstone"
+item_id_tombstone_shamblerwarlord = "shamblerwarlordtombstone"
+item_id_tombstone_shamblerraider = "shamblerraidertombstone"
+
 
 #SLIMERNALIA
 item_id_sigillaria = "sigillaria"
@@ -2689,29 +2716,29 @@ forbiddenstuffedcrust_desc = "What are you waiting for? You’ve come this far, 
 premium_items = [item_id_metallicaps, item_id_steelbeans, item_id_aushucks]
 # General items that should show their current durability on !inspect
 durability_items = [
-    item_id_paint_copper,
-    item_id_paint_chrome,
-    item_id_paint_gold,
-    item_id_gaiaseedpack_poketubers,
-    item_id_gaiaseedpack_pulpgourds,
-    item_id_gaiaseedpack_sourpotatoes,
-    item_id_gaiaseedpack_bloodcabbages,
-    item_id_gaiaseedpack_joybeans,
-    item_id_gaiaseedpack_purplekilliflower,
-    item_id_gaiaseedpack_razornuts,
-    item_id_gaiaseedpack_pawpaw,
-    item_id_gaiaseedpack_sludgeberries,
-    item_id_gaiaseedpack_suganmanuts,
-    item_id_gaiaseedpack_pinkrowddishes,
-    item_id_gaiaseedpack_dankwheat,
-    item_id_gaiaseedpack_brightshade,
-    item_id_gaiaseedpack_blacklimes,
-    item_id_gaiaseedpack_phosphorpoppies,
-    item_id_gaiaseedpack_direapples,
-    item_id_gaiaseedpack_rustealeaves,
-    item_id_gaiaseedpack_metallicaps,
-    item_id_gaiaseedpack_steelbeans,
-    item_id_gaiaseedpack_aushucks
+	item_id_paint_copper,
+	item_id_paint_chrome,
+	item_id_paint_gold,
+	item_id_gaiaseedpack_poketubers,
+	item_id_gaiaseedpack_pulpgourds,
+	item_id_gaiaseedpack_sourpotatoes,
+	item_id_gaiaseedpack_bloodcabbages,
+	item_id_gaiaseedpack_joybeans,
+	item_id_gaiaseedpack_purplekilliflower,
+	item_id_gaiaseedpack_razornuts,
+	item_id_gaiaseedpack_pawpaw,
+	item_id_gaiaseedpack_sludgeberries,
+	item_id_gaiaseedpack_suganmanuts,
+	item_id_gaiaseedpack_pinkrowddishes,
+	item_id_gaiaseedpack_dankwheat,
+	item_id_gaiaseedpack_brightshade,
+	item_id_gaiaseedpack_blacklimes,
+	item_id_gaiaseedpack_phosphorpoppies,
+	item_id_gaiaseedpack_direapples,
+	item_id_gaiaseedpack_rustealeaves,
+	item_id_gaiaseedpack_metallicaps,
+	item_id_gaiaseedpack_steelbeans,
+	item_id_gaiaseedpack_aushucks
 ]
 
 # List of normal items.
@@ -4021,165 +4048,338 @@ item_list = [
 		acquisition = acquisition_milling,
 		ingredients = [item_id_aushucks],
 	),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_poketubers,
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_poketubers,
 		cooldown=30,
 		cost=50,
 		str_name="Poketuber Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Poketuber Gaiaslimeoid. It costs 50 gaiaslime to !plant one, and has a 30 second cooldown.",
 		ingredients=[item_id_poketubereyes],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_pulpgourds,
+        enemytype="poketubers"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_pulpgourds,
 		cooldown=45,
 		cost=100,
 		str_name="Pulp Gourds Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Pulp Gourds Gaiaslimeoid. It costs 100 gaiaslime to !plant one, and has a 45 second cooldown.",
 		ingredients=[item_id_pulpgourdpulp],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_sourpotatoes,
+        enemytype="pulpgourds"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_sourpotatoes,
 		cooldown=10,
 		cost=150,
 		str_name="Sour Potatoes Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Sour Potatoes Gaiaslimeoid. It costs 150 gaiaslime to !plant one, and has a 10 second cooldown.",
 		ingredients=[item_id_sourpotatoskins],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_bloodcabbages,
+        enemytype="sourpotatoes"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_bloodcabbages,
 		cooldown=10,
 		cost=125,
 		str_name="Blood Cabbages Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Blood Cabbages Gaiaslimeoid. It costs 125 gaiaslime to !plant one, and has a 10 second cooldown.",
 		ingredients=[item_id_bloodcabbageleaves],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_joybeans,
+        enemytype="bloodcabbages"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_joybeans,
 		cooldown=120,
 		cost=100,
 		str_name="Joybeans Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Joybean Gaiaslimeoid. It costs 100 gaiaslime to !plant one, and has a 120 second cooldown.",
 		ingredients=[item_id_joybeanvines],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_purplekilliflower,
+        enemytype="joybeans"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_purplekilliflower,
 		cooldown=10,
 		cost=100,
 		str_name="Purple Killiflower Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Purple Killiflower Gaiaslimeoid. It costs 100 gaiaslime to !plant one, and has a 10 second cooldown.",
 		ingredients=[item_id_purplekilliflowerflorets],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_razornuts,
+        enemytype="purplekilliflower"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_razornuts,
 		cooldown=45,
 		cost=50,
 		str_name="Razornuts Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Razornuts Gaiaslimeoid. It costs 50 gaiaslime to !plant one, and has a 45 second cooldown.",
 		ingredients=[item_id_razornutshells],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_pawpaw,
+        enemytype="razornuts"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_pawpaw,
 		cooldown=45,
 		cost=150,
 		str_name="Pawpaw Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Pawpaw Gaiaslimeoid. It costs 150 gaiaslime to !plant one, and has a 45 second cooldown.",
 		ingredients=[item_id_pawpawflesh],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_sludgeberries,
+        enemytype="pawpaw"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_sludgeberries,
 		cooldown=15,
 		cost=75,
 		str_name="Sludgeberries Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Sludgeberries Gaiaslimeoid. It costs 75 gaiaslime to !plant one, and has a 15 second cooldown.",
 		ingredients=[item_id_sludgeberrysludge],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_suganmanuts,
+        enemytype="sludgeberries"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_suganmanuts,
 		cooldown=60,
 		cost=125,
 		str_name="Suganmanuts Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Suganmanuts Gaiaslimeoid. It costs 125 gaiaslime to !plant one, and has a 60 second cooldown.",
 		ingredients=[item_id_suganmanutfruit],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_pinkrowddishes,
+        enemytype="suganmanuts"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_pinkrowddishes,
 		cooldown=20,
 		cost=150,
 		str_name="Pink Rowddishes Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Pink Rowddishes Gaiaslimeoid. It costs 150 gaiaslime to !plant one, and has a 20 second cooldown.",
 		ingredients=[item_id_pinkrowddishroot],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_dankwheat,
+        enemytype="pinkrowddishes"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_dankwheat,
 		cooldown=30,
 		cost=200,
 		str_name="Dankwheat Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Dankwheat Gaiaslimeoid. It costs 200 gaiaslime to !plant one, and has a 30 second cooldown.",
 		ingredients=[item_id_dankwheatchaff],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_brightshade,
+        enemytype="dankwheat"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_brightshade,
 		cooldown=0,
 		cost=0,
 		str_name="Brightshade Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Brightshade Gaiaslimeoid. It costs 50 gaiaslime to !plant one, and has a 10 second cooldown.",
 		ingredients=[item_id_brightshadeberries],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_blacklimes,
+        enemytype="brightshade"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_blacklimes,
 		cooldown=0,
 		cost=0,
 		str_name="Black Limes Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Black Limes Gaiaslimeoid. It costs 75 gaiaslime to !plant one, and has a 10 second cooldown.",
 		ingredients=[item_id_blacklimeade],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_phosphorpoppies,
+        enemytype="blacklimes"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_phosphorpoppies,
 		cooldown=10,
 		cost=75,
 		str_name="Phosphorpoppies Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Phosphorpoppies Gaiaslimeoid. It costs 75 gaiaslime to !plant one, and has a 10 second cooldown.",
 		ingredients=[item_id_phosphorpoppypetals],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_direapples,
+        enemytype="phosphorpoppies"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_direapples,
 		cooldown=10,
 		cost=225,
 		str_name="Dire Apples Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Dire Apples Gaiaslimeoid. It costs 250 gaiaslime to !plant one, and has a 10 second cooldown.",
 		ingredients=[item_id_direapplestems],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_rustealeaves,
+        enemytype="direapples"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_rustealeaves,
 		cooldown=10,
 		cost=100,
 		str_name="Rustea Leaves Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Rustea Leaves Gaiaslimeoid. It costs 100 gaiaslime to !plant one, and has a 10 second cooldown.",
 		ingredients=[item_id_rustealeafblades],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_metallicaps,
+        enemytype="rustealeaves"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_metallicaps,
 		cooldown=30,
 		cost=225,
 		str_name="Metallicaps Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Metallicaps Gaiaslimeoid. It costs 225 gaiaslime to !plant one, and has a 30 second cooldown.",
 		ingredients=[item_id_metallicapheads],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_steelbeans,
+        enemytype="metallicaps"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_steelbeans,
 		cooldown=90,
 		cost=150,
 		str_name="Steelbeans Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Steelbeans Gaiaslimeoid. It costs 150 gaiaslime to !plant one, and has a 90 second cooldown.",
 		ingredients=[item_id_steelbeanpods],
-    ),
-    EwSeedPacket(
-        id_item=item_id_gaiaseedpack_aushucks,
+        enemytype="steelbeans"
+	),
+	EwSeedPacket(
+		id_item=item_id_gaiaseedpack_aushucks,
 		cooldown=120,
 		cost=175,
 		str_name="Aushucks Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for an Aushucks Gaiaslimeoid. It costs 175 gaiaslime to !plant one, and has a 120 second cooldown.",
 		ingredients=[item_id_aushuckstalks],
+        enemytype="auschucks"
+	),
+    EwTombstone(
+        id_item=item_id_tombstone_defaultshambler,
+        cost=300,
+        brainpower=30,
+        stock=20,
+        str_name="Default Shambler Tombstone",
+        str_desc="A tombstone for a Default Shambler. If you use it in a graveyard op, it'll add a cooldown of 30 seconds.",
+        enemytype="defaultshambler",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_bucketshambler,
+        cost=500,
+        brainpower=45,
+        stock=20,
+        str_name="Bucket Shambler Tombstone",
+        str_desc="A tombstone for a Bucket Shambler. If you use it in a graveyard op, it'll add a cooldown of 45 seconds.",
+        enemytype="bucketshambler",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_juveolanternshambler,
+        cost=700,
+        brainpower=60,
+        stock=20,
+        str_name="Juve-O'-Lantern Shambler Tombstone",
+        str_desc="A tombstone for a Juve-O'-Lantern Shambler. If you use it in a graveyard op, it'll add a cooldown of 60 seconds.",
+        enemytype="juveolanternshambler",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_flagshambler,
+        cost=200,
+        brainpower=60,
+        stock=10,
+        str_name="Flag Shambler Tombstone",
+        str_desc="A tombstone for a Flag Shambler. If you use it in a graveyard op, it'll add a cooldown of 60 seconds.",
+        enemytype="flagshambler",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_shambonidriver,
+        cost=300,
+        brainpower=90,
+        stock=5,
+        str_name="Shamboni Driver Tombstone",
+        str_desc="A tombstone for a Shamboni. If you use it in a graveyard op, it'll add a cooldown of 90 seconds.",
+        enemytype="shambonidriver",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_mammoshambler,
+        cost=500,
+        brainpower=90,
+        stock=1,
+        str_name="Mammoshambler Tombstone",
+        str_desc="A tombstone for a Mammoshambler. Acts as an upgrade to the Shamboni Driver tombstone. If you use it in a graveyard op, it'll add a cooldown of 90 seconds.",
+        enemytype="mammoshambler",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_gigashambler,
+        cost=500,
+        brainpower=180,
+        stock=3,
+        str_name="Gigashambler Tombstone",
+        str_desc="A tombstone for a Gigashambler. If you use it in a graveyard op, it'll add a cooldown of 180 seconds.",
+        enemytype="gigashambler",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_microshambler,
+        cost=300,
+        brainpower=60,
+        stock=1,
+        str_name="Microshambler Tombstone",
+        str_desc="A tombstone for a Microshambler. Acts as an upgrade to the Gigashambler tombstone. If you use it in a graveyard op, it'll add a cooldown of 60 seconds.",
+        enemytype="microshambler",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_shamblersaurusrex,
+        cost=800,
+        brainpower=180,
+        stock=1,
+        str_name="Shamblesaurus Rex Tombstone",
+        str_desc="A tombstone for a Shamblesaurus. If you use it in a graveyard op, it'll add a cooldown of 180 seconds.",
+        enemytype="shamblesaurusrex",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_shamblerdactyl,
+        cost=100,
+        brainpower=90,
+        stock=5,
+        str_name="Shamblerdactyl Tombstone",
+        str_desc="A tombstone for a Shamblerdactyl. If you use it in a graveyard op, it'll add a cooldown of 90 seconds.",
+        enemytype="shamblerdactyl",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_dinoshambler,
+        cost=150,
+        brainpower=60,
+        stock=5,
+        str_name="Dinoshambler Tombstone",
+        str_desc="A tombstone for a Dinoshambler. If you use it in a graveyard op, it'll add a cooldown of 60 seconds.",
+        enemytype="dinoshambler",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_ufoshambler,
+        cost=200,
+        brainpower=120,
+        stock=5,
+        str_name="UFO Shambler Tombstone",
+        str_desc="A tombstone for a UFO Shambler. If you use it in a graveyard op, it'll add a cooldown of 120 seconds.",
+        enemytype="ufoshambler",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_brawldenboomer,
+        cost=150,
+        brainpower=60,
+        stock=10,
+        str_name="Brawlden Boomer Tombstone",
+        str_desc="A tombstone for a Brawlden Boomer. If you use it in a graveyard op, it'll add a cooldown of 60 seconds.",
+        enemytype="brawldenboomer",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_juvieshambler,
+        cost=250,
+        brainpower=60,
+        stock=15,
+        str_name="Juvie Shambler Tombstone",
+        str_desc="A tombstone for a Juvie Shambler. If you use it in a graveyard op, it'll add a cooldown of 60 seconds.",
+        enemytype="juvieshambler",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_shambleballplayer,
+        cost=400,
+        brainpower=60,
+        stock=20,
+        str_name="Shambleball Player Tombstone",
+        str_desc="A tombstone for a Shambleball Player. If you use it in a graveyard op, it'll add a cooldown of 60 seconds.",
+        enemytype="shambleballplayer",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_shamblerwarlord,
+        cost=400,
+        brainpower=180,
+        stock=5,
+        str_name="Shambler Warlord Tombstone",
+        str_desc="A tombstone for a Shambler Warlord. If you use it in a graveyard op, it'll add a cooldown of 180 seconds.",
+        enemytype="shamblerwarlord",
+    ),
+    EwTombstone(
+        id_item=item_id_tombstone_shamblerraider,
+        cost=500,
+        brainpower=120,
+        stock=1,
+        str_name="Shambler Raider Tombstone",
+        str_desc="A tombstone for a Shambler Raider. Acts as an upgrade to the Shambler Warlord tombstone. If you use it in a graveyard op, it'll add a cooldown of 120 seconds.",
+        enemytype="shamblerraider",
     ),
 ]
 #item_list += ewdebug.debugitem_set
@@ -4203,7 +4403,24 @@ for c in item_list:
 	else:
 		dye_list.append(c)
 		dye_map[c.str_name] = c.id_item
+		
+seedpacket_ingredient_list = []
+seedpacket_material_map = {}
+seedpacket_enemytype_map = {}
+seedpacket_ids = []
+for sp in item_list:
+	if sp.context == context_seedpacket:
+		seedpacket_ingredient_list.append(sp.ingredients[0])
+		seedpacket_material_map[sp.ingredients[0]] = sp.id_item
+		seedpacket_enemytype_map[sp.id_item] = sp.enemytype
+        seedpacket_ids.append(sp.id_item)
 
+tombstone_enemytype_map = {}
+tombstone_ids = []
+for ts in item_list:
+	if ts.context == context_tombstone:
+		tombstone_enemytype_map[ts.id_item] = ts.enemytype
+        tombstone_ids.append(ts.id_item)
 
 # A Weapon Effect Function for "revolver". Takes an EwEffectContainer as ctn.
 def wef_revolver(ctn = None):
@@ -24098,7 +24315,7 @@ gvs_enemies_shamblers = [
 	enemy_type_shambleballplayer,
 	enemy_type_shamblerwarlord,
 	enemy_type_shamblerraider,
-	enemy_type_blueeyesshamblerdragon
+	#enemy_type_blueeyesshamblerdragon
 ]
 gvs_enemies = gvs_enemies_gaiaslimeoids + gvs_enemies_shamblers
 
@@ -24913,7 +25130,7 @@ gvs_enemy_emote_map_debug = {
 }
 
 gvs_almanac = {
-    enemy_type_gaia_poketubers: "",
+	enemy_type_gaia_poketubers: "",
 	enemy_type_gaia_pulpgourds: "",
 	enemy_type_gaia_sourpotatoes: "",
 	enemy_type_gaia_bloodcabbages: "",
@@ -24933,23 +25150,23 @@ gvs_almanac = {
 	enemy_type_gaia_metallicaps: "",
 	enemy_type_gaia_steelbeans: "",
 	enemy_type_gaia_aushucks: "",
-    enemy_type_defaultshambler: "",
-    enemy_type_bucketshambler: "",
-    enemy_type_juveolanternshambler: "",
-    enemy_type_flagshambler: "",
-    enemy_type_shambonidriver: "",
-    enemy_type_mammoshambler: "",
-    enemy_type_gigashambler: "",
-    enemy_type_microshambler: "",
-    enemy_type_shamblersaurusrex: "",
-    enemy_type_shamblerdactyl: "",
-    enemy_type_dinoshambler: "",
-    enemy_type_ufoshambler: "",
-    enemy_type_brawldenboomer: "",
-    enemy_type_juvieshambler: "",
-    enemy_type_shambleballplayer: "",
-    enemy_type_shamblerwarlord: "",
-    enemy_type_shamblerraider: "",
+	enemy_type_defaultshambler: "",
+	enemy_type_bucketshambler: "",
+	enemy_type_juveolanternshambler: "",
+	enemy_type_flagshambler: "",
+	enemy_type_shambonidriver: "",
+	enemy_type_mammoshambler: "",
+	enemy_type_gigashambler: "",
+	enemy_type_microshambler: "",
+	enemy_type_shamblersaurusrex: "",
+	enemy_type_shamblerdactyl: "",
+	enemy_type_dinoshambler: "",
+	enemy_type_ufoshambler: "",
+	enemy_type_brawldenboomer: "",
+	enemy_type_juvieshambler: "",
+	enemy_type_shambleballplayer: "",
+	enemy_type_shamblerwarlord: "",
+	enemy_type_shamblerraider: "",
 }
 
 rain_protection = [

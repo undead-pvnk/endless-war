@@ -94,7 +94,6 @@ CREATE TABLE markets (
 	caught_fish int NOT NULL DEFAULT '0',
 	splattered_slimes bigint NOT NULL DEFAULT '0',
 	global_swear_jar bigint NOT NULL DEFAULT '0',
-	horde_cooldown int NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_server)
 );
@@ -271,6 +270,8 @@ CREATE TABLE districts (
 	time_unlock int NOT NULL DEFAULT '0',
 	degradation bigint NOT NULL DEFAULT '0',
 	cap_side varchar(32) NOT NULL DEFAULT '',
+	horde_cooldown int NOT NULL DEFAULT '0',
+	gaiaslime int NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_server, district)
 );
@@ -501,33 +502,22 @@ CREATE TABLE hues (
 	PRIMARY KEY(id_hue)
 );
 
-CREATE TABLE gvs_cooldowns (
-    id_user varchar(128) NOT NULL,
-    id_server varchar(64) NOT NULL,
-    id_gaiatype varchar(32) NOT NULL,
-    time_last_plant int NOT NULL DEFAULT '0',
-    
-    PRIMARY KEY (id_user)
-);
-
 CREATE TABLE gvs_grid_conditions (
-    id_condition int NOT NULL AUTO_INCREMENT,
     district varchar(64) NOT NULL,
     coord varchar(32) NOT NULL,
     grid_condition varchar(32) NOT NULL,
     
-    PRIMARY KEY (id_condition)
+    PRIMARY KEY (district, coord, grid_condition)
 );
 
 CREATE TABLE gvs_ops_choices (
-    id_queue_entry int NOT NULL AUTO_INCREMENT,
     id_user varchar(128) NOT NULL,
-    id_server varchar(64) NOT NULL,
     district varchar(64) NOT NULL,
     enemytype varchar(32) NOT NULL,
     faction varchar(16) NOT NULL,
+    id_item int NOT NULL,
     
-    PRIMARY KEY (id_queue_entry)
+    PRIMARY KEY (id_user, enemytype, district)
 );
 
 CREATE OR REPLACE VIEW cosmetics AS SELECT

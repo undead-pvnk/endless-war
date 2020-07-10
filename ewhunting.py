@@ -551,7 +551,7 @@ class EwEnemy:
 					sap_armor = ewwep.get_sap_armor(shootee_data = target_data, sap_ignored = sap_ignored)
 					slimes_damage *= sap_armor
 					slimes_damage = int(max(slimes_damage, 0))
-    
+	
 					sap_damage = min(sap_damage, target_data.hardened_sap)
 
 					injury_severity = ewwep.get_injury_severity(target_data, slimes_damage, crit)
@@ -1384,12 +1384,13 @@ class EwSeedPacket:
 
 	cooldown = ""  # How long before they can plant another gaiaslimeoid
 	cost = 0 # How much gaiaslime it costs to use
-	time_nextuse # When they can next !plant it in a district
+	time_nextuse = 0 # When they can next !plant it in a district
 	durability = 0 # How many times it can be used in a raid before it runs out
 
 	ingredients = ""
-	acquisition = ""
+	enemytype = ""
 	vendors = []
+	acquisition = ""
 
 	def __init__(
 		self,
@@ -1403,8 +1404,9 @@ class EwSeedPacket:
 		time_nextuse=0,
 		durability=0,
 		ingredients="",
-		acquisition="",
+		enemytype="",
 		vendors=[],
+		acquisition = ""
 	):
 		self.item_type = "item"
 		self.id_item = id_item
@@ -1417,12 +1419,168 @@ class EwSeedPacket:
 		self.time_nextuse = time_nextuse
 		self.durability = 3
 		self.ingredients = ingredients
-		self.acquisition = acquisition
+		self.enemytype = enemytype
 		self.vendors = vendors
+		self.acquisition = acquisition
+
+class EwTombstone:
+	item_type = "item"
+	id_item = " "
+
+	alias = []
+
+	context = ""
+	str_name = ""
+	str_desc = ""
+	
+	cost = 0 # How much gaiaslime it costs to use
+	brainpower = 0 # Used for adding cooldowns to tombstone additions in graveyard ops
+	stock = 0 # How many shamblers of that type it spawns
+	durability = 0 # How many times it can be used in a raid before it runs out
+
+	ingredients = ""
+	enemytype = ""
+	vendors = []
+	acquisition = ""
+
+	def __init__(
+		self,
+		id_item=" ",
+		alias=[],
+		context="",
+		str_name="",
+		str_desc="",
+		cost=0,
+		brainpower=0,
+		stock=0,
+		durability=0,
+		ingredients="",
+		enemytype="",
+		vendors=[],
+		acquisition = "",
+	):
+		self.item_type = "item"
+		self.id_item = id_item
+		self.alias = alias
+		self.context = "tombstone"
+		self.str_name = str_name
+		self.str_desc = str_desc
+		self.cost = cost
+		self.brainpower = brainpower
+		self.stock = stock
+		self.durability = 3
+		self.ingredients = ingredients
+		self.enemytype = enemytype
+		self.vendors = vendors
+		self.acquisition = acquisition
 		
+class EwOperationData:
+	
+	# The ID of the user who chose a seedpacket/tombstone for that operation
+	id_user = ""
+	
+	# The district that the operation takes place in
+	district = ""
+	
+	# The enemytype associated with that seedpacket/tombstone.
+	# A single Garden Ganker can not choose two of the same enemytype. No duplicate tombstones are allowed at all.
+	enemytype = ""
+	
+	# The 'faction' of whoever chose that enemytype. This is either set to 'gankers' or 'shamblers'.
+	faction = ""
+	
+	# The ID of the item used in the operation
+	id_item = ""
+
+	def __init__(
+		self,
+		id_user = "",
+		district = "",
+		enemytype = "",
+		faction = "",
+		id_item = ""
+	):
+		self.id_user = id_user
+		self.district = district
+		self.enemytype = enemytype
+		self.faction = faction
+		self.id_item = id_item
+		
+		if(id_user != None):
+
+			try:
+				conn_info = ewutils.databaseConnect()
+				conn = conn_info.get('conn')
+				cursor = conn.cursor()
+	
+				# Retrieve object
+				cursor.execute("SELECT {}, {} FROM gvs_ops_choices WHERE {} = %s AND {} = %s AND {} = %s".format(
+					ewcfg.col_faction,
+					ewcfg.col_id_item,
+					
+					ewcfg.col_id_user,
+					ewcfg.col_district,
+					ewcfg.col_enemy_type
+				), (
+					self.id_user,
+					self.district,
+					self.enemytype,
+				))
+				result = cursor.fetchone()
+	
+				if result != None:
+					# Record found: apply the data to this object.
+					self.faction = result[0]
+					self.id_item = result[1]
+				else:
+					# Create a new database entry if the object is missing.
+					cursor.execute("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s)".format(
+						ewcfg.col_id_user,
+						ewcfg.col_district,
+						ewcfg.col_enemy_type,
+						ewcfg.col_faction,
+						ewcfg.col_id_item
+					), (
+						self.id_user,
+						self.district,
+						self.enemytype,
+						self.faction,
+						self.id_item
+					))
+	
+					conn.commit()
+
+			finally:
+				# Clean up the database handles.
+				cursor.close()
+				ewutils.databaseClose(conn_info)
+
+	def persist(self):
+		try:
+			conn_info = ewutils.databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			# Save the object.
+			cursor.execute("REPLACE INTO gvs_ops_choices({}, {}, {}, {}) VALUES(%s, %s, %s, %s)".format(
+				ewcfg.col_id_user,
+				ewcfg.col_district,
+				ewcfg.col_enemy_type,
+				ewcfg.col_faction,
+			), (
+				self.id_user,
+				self.district,
+				self.enemytype,
+				self.faction
+			))
+
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			ewutils.databaseClose(conn_info)
 		
 # Debug command. Could be used for events, perhaps?
-
 async def summonenemy(cmd, is_bot_spawn = False):
 
 	author = cmd.message.author
@@ -1499,6 +1657,75 @@ async def summonenemy(cmd, is_bot_spawn = False):
 		response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING / LOCATION. ADDITIONAL OPTIONS ARE SLIME / LEVEL / COORD / DISPLAYNAME"
 	if not is_bot_spawn:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def summongvsenemy(cmd):
+	author = cmd.message.author
+
+	if not author.server_permissions.administrator:
+		return
+
+	time_now = int(time.time())
+	response = ""
+	user_data = EwUser(member=cmd.message.author)
+
+	poi = None
+	enemytype = None
+	coord = None
+	joybean_status = None
+
+	if cmd.tokens_count == 4:
+		enemytype = cmd.tokens[1]
+		coord = cmd.tokens[2]
+		joybean_status = cmd.tokens[3]
+		poi = user_data.poi
+	else:
+		response = "Correct usage: !summongvsenemy [type] [coord] [joybean status ('yes', otherwise false)]"
+
+	if enemytype != None and poi != None and joybean_status != None and coord != None:
+
+		enemy = get_enemy_data(enemytype)
+
+		# Assign enemy attributes that weren't assigned in get_enemy_data
+		enemy.id_server = user_data.id_server
+		enemy.poi = poi.id_poi
+		enemy.level = level_byslime(enemy.slimes)
+		enemy.lifetime = time_now
+		enemy.identifier = set_identifier(poi.id_poi, user_data.id_server)
+		enemy.weathertype = ewcfg.enemy_weathertype_normal
+
+		# Re-assign rare_status to 0 so custom names don't confuse the dict in ewcfg
+		enemy.rare_status = 0
+		
+		enemy.gvs_coord = coord
+
+		props = None
+		try:
+			props = ewcfg.enemy_data_table[enemytype]["props"]
+
+			if joybean_status.lower() == 'yes':
+				props['joybean'] = 'True'
+			
+		except:
+			pass
+
+		enemy.enemy_props = props
+
+		enemy.persist()
+
+		response = "**DEBUG**: You have summoned **{}**, a level {} enemy of type **{}**. It has {} slime. It spawned in {}, coordinate {}.".format(
+			enemy.display_name,
+			enemy.level,
+			enemy.enemytype,
+			enemy.slimes,
+			enemy.poi,
+			enemy.gvs_coord,
+		)
+		
+		if enemy.enemy_props.get('joybean') == 'True':
+			response += " It has a joybean."
+	
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 async def delete_all_enemies(cmd):
@@ -1862,6 +2089,9 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weathe
 		resp_cont.add_channel_response(ch_name, response)
 
 	return resp_cont
+
+# Spawns shamblers in districts that Garden Ops are taking place in.
+async def gvs_spawn_enemy(id_server):
 
 # Finds an enemy based on its regular/shorthand name, or its ID.
 def find_enemy(enemy_search=None, user_data=None):
@@ -2484,12 +2714,12 @@ def sh_check_coord_for_gaia(enemy_data, sh_range, direction):
 						#print(len(gaia_data))
 						if len(gaia_data) > 0:
 							
-							low_priority = [ewcfg.enemy_type_gaia_rustealeaves]
-							high_priority = [ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_metallicaps, ewcfg.enemy_type_gaia_aushucks]
-							mid_priority = []
+							low_attack_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+							high_attack_priority = [ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_metallicaps, ewcfg.enemy_type_gaia_aushucks]
+							mid_attack_priority = []
 							for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
-								if enemy_id not in low_priority and enemy_id not in high_priority:
-									mid_priority.append(enemy_id)
+								if enemy_id not in low_attack_priority and enemy_id not in high_attack_priority:
+									mid_attack_priority.append(enemy_id)
 							
 							gaia_types = {}
 							for gaia in gaia_data:
@@ -2499,15 +2729,15 @@ def sh_check_coord_for_gaia(enemy_data, sh_range, direction):
 							if ewcfg.enemy_type_gaia_rustealeaves in gaia_types.keys() and enemy_data.enemytype not in [ewcfg.enemy_type_gigashambler, ewcfg.enemy_type_shambonidriver, ewcfg.enemy_type_ufoshambler]:
 								del gaia_types[ewcfg.enemy_type_gaia_rustealeaves]
 
-							for target in high_priority:
+							for target in high_attack_priority:
 								if target in gaia_types.keys():
 									gaias_in_coord.append(gaia_types[target])
 									
-							for target in mid_priority:
+							for target in mid_attack_priority:
 								if target in gaia_types.keys():
 									gaias_in_coord.append(gaia_types[target])
 									
-							for target in low_priority:
+							for target in low_attack_priority:
 								if target in gaia_types.keys():
 									gaias_in_coord.append(gaia_types[target])
 
@@ -2749,5 +2979,6 @@ def gvs_get_splash_coords(checked_splash_coords):
 			
 	return all_splash_coords
 
+
+
 async def gvs_update_gamestate(id_server):
-	pass

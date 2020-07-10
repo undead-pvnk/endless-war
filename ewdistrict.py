@@ -50,7 +50,12 @@ class EwDistrict:
 
 	# determines if the zone is functional
 	degradation = 0
-
+	
+	# a timestamp for when a shambler can next plant a tombstone
+	horde_cooldown = 0
+	
+	# the amount of gaiaslime the garden gankers have at their disposal
+	gaiaslime = 0
 
 	def __init__(self, id_server = None, district = None):
 		if id_server is not None and district is not None:
@@ -68,7 +73,7 @@ class EwDistrict:
 				self.max_capture_points = 0
 
 
-			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes}, {time_unlock}, {cap_side}, {degradation} FROM districts WHERE id_server = %s AND {district} = %s".format(
+			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes}, {time_unlock}, {cap_side}, {degradation}, {horde_cooldown}, {gaiaslime} FROM districts WHERE id_server = %s AND {district} = %s".format(
 
 				controlling_faction = ewcfg.col_controlling_faction,
 				capturing_faction = ewcfg.col_capturing_faction,
@@ -78,6 +83,8 @@ class EwDistrict:
 				time_unlock = ewcfg.col_time_unlock,
 				cap_side = ewcfg.col_cap_side,
 				degradation = ewcfg.col_degradation,
+				horde_cooldown = ewcfg.col_horde_cooldown,
+				gaiaslime = ewcfg.col_gaiaslime,
 			), (
 				id_server,
 				district
@@ -104,7 +111,7 @@ class EwDistrict:
 				))
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}, {time_unlock}, {cap_side}, {degradation}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}, {time_unlock}, {cap_side}, {degradation}, {horde_cooldown}, {gaiaslime}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 			district = ewcfg.col_district,
 			controlling_faction = ewcfg.col_controlling_faction,
 			capturing_faction = ewcfg.col_capturing_faction,
@@ -113,6 +120,8 @@ class EwDistrict:
 			time_unlock = ewcfg.col_time_unlock,
 			cap_side = ewcfg.col_cap_side,
 			degradation = ewcfg.col_degradation,
+			horde_cooldown = ewcfg.col_horde_cooldown,
+			gaiaslime = ewcfg.col_gaiaslime,
 		), (
 			self.id_server,
 			self.name,
@@ -123,6 +132,8 @@ class EwDistrict:
 			self.time_unlock,
 			self.cap_side,
 			self.degradation,
+			self.horde_cooldown,
+			self.gaiaslime
 		))
 	
 	def get_number_of_friendly_neighbors(self):
@@ -794,8 +805,8 @@ async def shamble(cmd):
 		response = "The entire district is covered in Brightshades! You have no business shambling this part of town!"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if not ewutils.gvs_check_if_in_operation(user_data):
-		response = "You aren't allowed to !shamble this district, per Dr. Downpour's orders.\nCheck what area your horde is operating in with !horde."
+	if not ewutils.gvs_check_if_in_operation_poi(user_data):
+		response = "You aren't allowed to !shamble this district, per Dr. Downpour's orders.\n(**!goto {}**)"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
 	if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shambler_shamble:

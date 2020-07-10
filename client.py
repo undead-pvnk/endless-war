@@ -578,6 +578,7 @@ cmd_map = {
 	# Enemies
 	ewcfg.cmd_summonenemy: ewhunting.summonenemy,
 	ewcfg.cmd_deleteallenemies: ewhunting.delete_all_enemies,
+	ewcfg.cmd_summongvsenemy: ewhunting.summongvsenemy,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -729,6 +730,7 @@ cmd_map = {
 	# Gankers Vs. Shamblers
 	ewcfg.cmd_gvs_printgrid: ewcmd.gvs_print_grid,
 	ewcfg.cmd_gvs_printgrid_alt1: ewcmd.gvs_print_grid,
+	ewcfg.cmd_gvs_printlane: ewcmd.gvs_print_lane,
 
 	# race
 	ewcfg.cmd_set_race: ewrace.set_race,

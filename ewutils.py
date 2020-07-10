@@ -23,7 +23,7 @@ import ewwep
 from ew import EwUser
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
-from ewhunting import EwEnemy
+from ewhunting import EwEnemy, EwOperationData
 from ewmarket import EwMarket
 from ewstatuseffects import EwStatusEffect
 from ewstatuseffects import EwEnemyStatusEffect
@@ -1511,7 +1511,9 @@ async def spawn_enemies(id_server = None):
 			await resp_cont.post()
 	else:
 		# TODO: add in gvs_spawn_enemy
-		pass
+		resp_cont = ewhunting.gvs_spawn_enemy(id_server=id_server)
+		
+		await resp_cont.post()
 
 async def spawn_enemies_tick_loop(id_server):
 	interval = ewcfg.enemy_spawn_tick_length
@@ -2430,7 +2432,7 @@ def get_subzone_controlling_faction(subzone_id, id_server):
 		faction = district_data.controlling_faction
 		return faction
 
-async def gvs_create_gaia_grid_mapping(user_data):
+def gvs_create_gaia_grid_mapping(user_data):
 	grid_map = {}
 
 	# Grid print mapping and shambler targeting use different priority lists. Don't get these mixed up
@@ -2484,30 +2486,239 @@ async def gvs_create_gaia_grid_mapping(user_data):
 		
 	return grid_map
 
-async def gvs_check_if_in_operation(user_data):
-	
-	faction = ''
-	if user_data.life_state in ewcfg.life_state_juvenile:
-		faction = 'ganker'
-	elif user_data.life_state == ewcfg.life_state_shambler:
-		faction = 'shambler'
-	
-	operation_players = execute_sql_query(
-		"SELECT {id_user}, {district} FROM gvs_ops_choices WHERE id_server = %s AND faction = %s".format(
-			id_user = ewcfg.col_id_user,
-			district = ewcfg.col_district,
+
+def gvs_create_gaia_lane_mapping(user_data, row_used):
+
+	# Grid print mapping and shambler targeting use different priority lists. Don't get these mixed up
+	printlane_low_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+	printlane_mid_priority = []
+	printlane_high_priority = [ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_metallicaps, ewcfg.enemy_type_gaia_aushucks]
+	for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+		if enemy_id not in printlane_low_priority and enemy_id not in printlane_high_priority:
+			printlane_mid_priority.append(enemy_id)
+
+	gaias = execute_sql_query(
+		"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} IN %s".format(
+			id_enemy=ewcfg.col_id_enemy,
+			enemytype=ewcfg.col_enemy_type,
+			poi=ewcfg.col_enemy_poi,
+			life_state=ewcfg.col_enemy_life_state,
+			gvs_coord=ewcfg.col_enemy_gvs_coord,
+			enemyclass=ewcfg.col_enemy_class,
 		), (
 			user_data.id_server,
-			faction
+			user_data.poi,
+			ewcfg.enemy_class_gaiaslimeoid,
+			tuple(row_used)
 		))
 
-	in_operation = False
-	for op_player in operation_players:
-		if op_player[0] == user_data.id_user:
-			if op_player[1] == user_data.poi:
-				in_operation = True
+	grid_conditions = execute_sql_query(
+		"SELECT coord, grid_condition FROM gvs_grid_conditions WHERE district = %s AND coord IN %s".format(
+		), (
+			user_data.poi,
+			tuple(row_used)
+		))
 	
-	return in_operation
+	coord_sets = []
+
+	for coord in row_used:
+		current_coord_set = [] 
+		for enemy in printlane_low_priority:
+			for gaia in gaias:
+				if gaia[1] == enemy and gaia[2] == coord:
+					current_coord_set.append(gaia[0])
+					
+		for enemy in printlane_mid_priority:
+			for gaia in gaias:
+				if gaia[1] == enemy and gaia[2] == coord:
+					current_coord_set.append(gaia[0])
+					
+		for enemy in printlane_high_priority:
+			for gaia in gaias:
+				if gaia[1] == enemy and gaia[2] == coord:
+					current_coord_set.append(gaia[0])
+					
+		for condition in grid_conditions:
+			if condition[0] == coord:
+				if condition[1] == 'frozen':
+					current_coord_set.append('frozen')
+					
+		coord_sets.append(current_coord_set)
+	
+
+	return coord_sets
+
+
+# async def gvs_check_if_in_operation_poi(user_data):
+# 	
+# 	op_data = gvs_get_user_op_data
+# 	
+# 	for 
+# 	if op_data.district == user_data.poi:
+# 		in_operation = True
+# 	
+# 	return in_operation
 
 def gvs_check_gaia_protected(enemy_data):
-	pass
+	is_protected = False
+	
+	low_attack_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+	high_attack_priority = [ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_metallicaps, ewcfg.enemy_type_gaia_aushucks]
+	mid_attack_priority = []
+	for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+		if enemy_id not in low_attack_priority and enemy_id not in high_attack_priority:
+			mid_attack_priority.append(enemy_id)
+	
+	checked_coords = []
+	enemy_coord = enemy_data.gvs_coord
+	for row in ewcfg.gvs_valid_coords_gaia:
+		if enemy_coord in row:
+			index = row.index(enemy_coord)
+			row_length = len(ewcfg.gvs_valid_coords_gaia)
+			for i in range(index+1, row_length):
+				checked_coords.append(ewcfg.gvs_valid_coords_gaia[i])
+				
+	gaias_in_front_coords = execute_sql_query(
+		"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} IN %s".format(
+			id_enemy=ewcfg.col_id_enemy,
+			enemytype=ewcfg.col_enemy_type,
+			life_state=ewcfg.col_enemy_life_state,
+			gvs_coord=ewcfg.col_enemy_gvs_coord,
+			enemyclass=ewcfg.col_enemy_class,
+		), (
+			ewcfg.enemy_class_gaiaslimeoid,
+			tuple(checked_coords)
+		))
+	
+	if len(gaias_in_front_coords) > 0:
+		is_protected = True
+	else:
+		gaias_in_same_coord = execute_sql_query(
+			"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} = %s".format(
+				id_enemy=ewcfg.col_id_enemy,
+				enemytype=ewcfg.col_enemy_type,
+				life_state=ewcfg.col_enemy_life_state,
+				gvs_coord=ewcfg.col_enemy_gvs_coord,
+				enemyclass=ewcfg.col_enemy_class,
+			), (
+				ewcfg.enemy_class_gaiaslimeoid,
+				enemy_coord
+			))
+		if len(gaias_in_same_coord) > 1:
+			same_coord_gaias_types = []
+			for gaia in gaias_in_same_coord:
+				same_coord_gaias_types.append(gaia[1])
+				
+			for type in same_coord_gaias_types:
+				if enemy_data.enemy_type in high_attack_priority:
+					is_protected = False
+					break
+				elif enemy_data.enemy_type in mid_attack_priority and type in high_attack_priority:
+					is_protected = True
+					break
+				elif enemy_data.enemy_type in low_attack_priority and (type in mid_attack_priority or type in high_attack_priority):
+					is_protected = True
+					break
+	
+		else:
+			is_protected = False
+	
+	return is_protected
+
+def gvs_check_operation_duplicate(id_user, district, enemytype, faction):
+	entry = None
+	
+	if faction == ewcfg.psuedo_faction_gankers:
+		entry = execute_sql_query(
+			"SELECT * FROM gvs_ops_choices WHERE id_user = %s AND district = %s AND enemytype = %s AND faction = %s".format(
+			), (
+				id_user, 
+				district, 
+				enemytype, 
+				faction
+			))
+	elif faction == ewcfg.psuedo_faction_shamblers:
+		entry = execute_sql_query(
+			"SELECT * FROM gvs_ops_choices WHERE district = %s AND enemytype = %s AND faction = %s".format(
+			), (
+				district,
+				enemytype,
+				faction
+			))
+
+	if entry != None:
+		return True
+	else:
+		return False
+	
+def gvs_check_operation_limit(id_user, district, enemytype, faction):
+	
+	limit_hit = False
+	tombstone_limit = 0
+	
+	if faction == ewcfg.psuedo_faction_gankers:
+		data = execute_sql_query(
+			"SELECT id_user FROM gvs_ops_choices WHERE id_user = %s AND district = %s AND faction = %s".format(
+			), (
+				id_user, 
+				district,
+				faction
+			))
+		
+		if len(data) >= 6:
+			limit_hit = True
+		else:
+			limit_hit = False
+		
+	elif faction == ewcfg.psuedo_faction_shamblers:
+		sh_data = execute_sql_query(
+			"SELECT enemytype FROM gvs_ops_choices WHERE district = %s AND faction = %s".format(
+			), (
+				district,
+				faction
+			))
+		
+		gg_data = execute_sql_query(
+			"SELECT id_user FROM gvs_ops_choices WHERE district = %s AND faction = %s".format(
+			), (
+				district,
+				enemytype,
+			))
+		
+		gg_id_list = []
+		for gg in gg_data:
+			gg_id_list.append(gg[0])
+			
+		gg_id_set = set(gg_id_list) # Remove duplicate user IDs
+		
+		if len(gg_id_set) == 0:
+			tombstone_limit = 3
+		elif len(gg_id_set) <= 3:
+			tombstone_limit = 6
+		elif len(gg_id_set) <= 6:
+			tombstone_limit = 10
+		else:
+			tombstone_limit = 12
+		
+		if len(sh_data) >= tombstone_limit:
+			limit_hit = True
+		else:
+			limit_hit = False
+			
+	return limit_hit, tombstone_limit
+
+def gvs_check_if_in_operation(user_data):
+	
+	
+	op_data = execute_sql_query(
+		"SELECT id_user, district FROM gvs_ops_choices WHERE id_user = %s".format(
+		), (
+			user_data.id_user,
+		))
+
+	if len(op_data) > 0:
+		return True, op_data[1]
+	else:
+		return False, None
+	
+	

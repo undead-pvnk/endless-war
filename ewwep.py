@@ -285,6 +285,7 @@ def canAttack(cmd):
 	time_now_float = time.time()
 	time_now = int(time_now_float)
 	user_data = EwUser(member = cmd.message.author)
+	district_data = EwDistrict(id_server=user_data.id_server, district=user_data.poi)
 	weapon_item = None
 	weapon = None
 	captcha = None
@@ -390,6 +391,12 @@ def canAttack(cmd):
 
 		elif ewmap.poi_is_pvp(shootee_data.poi) == False:
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
+			
+		elif user_isshambler == True and len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_gaiaslimeoid])) > 0:
+			response = "You can't attack them, they're protected by Gaiaslimeoids!"
+			
+		elif shootee_data.life_state == ewcfg.life_state_shambler and (user_iskillers == True or user_isrowdys == True or user_isslimecorp == True) and len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_shambler])) > 0:
+			response = "You can't attack them, they're protected by a horde of enemy Shamblers!"
 
 		elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False and user_isshambler == False:
 			# Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
