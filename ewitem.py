@@ -209,6 +209,7 @@ class EwGeneralItem:
 	ingredients = ""
 	acquisition = ""
 	price = 0
+	durability = 0
 	vendors = []
 
 	def __init__(
@@ -221,6 +222,7 @@ class EwGeneralItem:
 		ingredients = "",
 		acquisition = "",
 		price = 0,
+		durability = 0,
 		vendors = [],
 	):
 		self.item_type = ewcfg.it_item
@@ -232,6 +234,7 @@ class EwGeneralItem:
 		self.ingredients = ingredients
 		self.acquisition = acquisition
 		self.price = price
+		self.durability = durability
 		self.vendors = vendors
 
 
@@ -396,7 +399,7 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 
 	if item_type_filter == ewcfg.it_weapon:
 		for item in drop_candidates:
-			if item.get('id_item') != user_data.weapon:
+			if item.get('id_item') != user_data.weapon and item.get('id_item') != user_data.sidearm:
 				filtered_items.append(item)
 			else:
 				pass
@@ -1245,6 +1248,14 @@ async def item_look(cmd):
 				if hue != None:
 					response += " It's been dyed in {} paint.".format(hue.str_name)
 
+			durability = item.item_props.get('durability')
+			if durability != None and item.item_type == ewcfg.it_item:
+				if item.item_props.get('id_item') in [ewcfg.item_id_paint_copper, ewcfg.item_id_paint_chrome, ewcfg.item_id_paint_gold]:
+					if durability == 1:
+						response += " It can only be used one more time."
+					else:
+						response += " It has about {} uses left.".format(durability)
+
 			response = name + (" x{:,}".format(item.stack_size) if (item.stack_size >= 1) else "") + "\n\n" + response
 
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1558,6 +1569,9 @@ async def give(cmd):
 			if item_sought.get('id_item') == user_data.weapon:
 				user_data.weapon = -1
 				user_data.persist()
+			elif item_sought.get('id_item') == user_data.sidearm:
+				user_data.sidearm = -1
+				user_data.persist()
 
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -1634,6 +1648,7 @@ def gen_item_props(item):
 			'item_desc': item.str_desc,
 			'ingredients': item.ingredients if type(item.ingredients) == str else item.ingredients[0],
 			'acquisition': item.acquisition,
+			'durability': item.durability,
 		}
 		if item.context == ewcfg.context_slimeoidfood:
 			item_props["increase"] = item.increase
@@ -1668,7 +1683,8 @@ def gen_item_props(item):
 			"weapon_desc": item.str_description,
 			"married": "",
 			"ammo": item.clip_size,
-			"captcha": captcha
+			"captcha": captcha,
+			"is_tool" : item.is_tool
 		}
 
 	elif item.item_type == ewcfg.it_cosmetic:
@@ -2033,5 +2049,12 @@ async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
 			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, cmd.message.channel), ewutils.formatMessage(target_member, direct_message))
 
 	return response
+
+async def lower_durability(general_item):
+	general_item_data = EwItem(id_item=general_item.get('id_item'))
+	
+	current_durability = general_item_data.item_props.get('durability')
+	general_item_data.item_props['durability'] = (int(current_durability) - 1)
+	general_item_data.persist()
 
 

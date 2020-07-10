@@ -57,13 +57,14 @@ CREATE TABLE users (
 	swear_jar bigint NOT NULL DEFAULT '0',
 	degradation bigint NOT NULL DEFAULT '0',
 	time_lastdeath int NOT NULL DEFAULT '0',
+	sidearm int NOT NULL DEFAULT '-1',
 	gambit int NOT NULL DEFAULT '0',
 	credence int NOT NULL DEFAULT '0',
 	credence_used int NOT NULL DEFAULT '0',
 	id_inhabit_target varchar(128) NOT NULL DEFAULT '',
 	race varchar(32) NOT NULL DEFAULT '',
 	time_racialability int NOT NULL DEFAULT '0',
-
+	spray varchar(400) NOT NULL DEFAULT 'https://img.booru.org/rfck//images/3/a69d72cf29cb750882de93b4640a175a88cdfd70.png',
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
 
@@ -162,7 +163,7 @@ CREATE TABLE items (
 	soulbound int NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_item)
-);
+) ENGINE = INNODB;
 
 CREATE TABLE items_prop (
 	id_item int NOT NULL,
@@ -173,7 +174,7 @@ CREATE TABLE items_prop (
 	FOREIGN KEY (id_item)
 		REFERENCES items(id_item)
 		ON DELETE CASCADE
-);
+) ENGINE = INNODB;
 
 CREATE TABLE farms (
 	id_server varchar(128) NOT NULL,
@@ -210,6 +211,7 @@ CREATE TABLE slimeoids (
 	time_defeated int NOT NULL DEFAULT '0',
 	clout int NOT NULL DEFAULT '0',
 	hue varchar(32) NOT NULL DEFAULT '',
+	coating varchar(32) NOT NULL DEFAULT '',
 	poi varchar(64) NOT NULL DEFAULT '',
 	
 	PRIMARY KEY (id_slimeoid)
@@ -239,7 +241,7 @@ CREATE TABLE enemies (
 	weathertype varchar(32) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_enemy)
-);
+) ENGINE = INNODB;
 
 CREATE TABLE districts (
 	id_server varchar(128) NOT NULL,
@@ -250,6 +252,7 @@ CREATE TABLE districts (
 	slimes bigint NOT NULL DEFAULT '0',
 	time_unlock int NOT NULL DEFAULT '0',
 	degradation bigint NOT NULL DEFAULT '0',
+	cap_side varchar(32) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_server, district)
 );
@@ -387,7 +390,7 @@ CREATE TABLE world_events (
 	time_expir int NOT NULL DEFAULT '-1',
 
 	PRIMARY KEY (id_event)
-);
+) ENGINE = INNODB;
 
 CREATE TABLE world_events_prop (
 	id_event int NOT NULL,
@@ -398,7 +401,7 @@ CREATE TABLE world_events_prop (
 	FOREIGN KEY (id_event)
 		REFERENCES world_events(id_event)
 		ON DELETE CASCADE
-);
+) ENGINE = INNODB;
 
 CREATE TABLE ads (
 	id_ad int NOT NULL AUTO_INCREMENT,
@@ -426,7 +429,7 @@ CREATE TABLE books (
 	pages int NOT NULL DEFAULT '10',
 
 	PRIMARY KEY (id_book, id_server, id_user)
-);
+) ENGINE = INNODB;
 
 CREATE TABLE book_pages (
     id_book int NOT NULL,
@@ -437,7 +440,7 @@ CREATE TABLE book_pages (
 	FOREIGN KEY (id_book)
 		REFERENCES books(id_book)
 		ON DELETE CASCADE
-);
+) ENGINE = INNODB;
 
 CREATE TABLE book_sales (
     id_book int NOT NULL,
