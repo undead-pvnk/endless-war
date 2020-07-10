@@ -1229,6 +1229,9 @@ def get_channel(server = None, channel_name = ""):
 		if chan.name == channel_name:
 			channel = chan
 
+	if channel == None:
+		logMsg('Error: In get_channel(), could not find channel using channel_name "{}"'.format(channel_name))
+
 	return channel
 
 """

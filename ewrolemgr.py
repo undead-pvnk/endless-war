@@ -553,7 +553,6 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	#subzone_member_list = []
 	
 	for poi in ewcfg.poi_list:
-	
 		channel = ewutils.get_channel(server, poi.channel)
 		if channel == None:
 			# Second try

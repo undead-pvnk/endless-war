@@ -142,15 +142,16 @@ poi_id_basedhardware = "basedhardware"
 
 # transports
 poi_id_ferry = "ferry"
-poi_id_subway_red01 = "subwayred01"
-poi_id_subway_red02 = "subwayred02"
-poi_id_subway_yellow01 = "subwayyellow01"
-poi_id_subway_yellow02 = "subwayyellow02"
+poi_id_subway_pink01 = "subwaypink01"
+poi_id_subway_pink02 = "subwaypink02"
+poi_id_subway_gold01 = "subwaygold01"
+poi_id_subway_gold02 = "subwaygold02"
 poi_id_subway_green01 = "subwaygreen01"
 poi_id_subway_green02 = "subwaygreen02"
-poi_id_subway_white01 = "subwaywhite01"
-poi_id_subway_blue01 = "subwayblue01"
-poi_id_subway_blue02 = "subwayblue02"
+poi_id_subway_black01 = "subwayblack01"
+poi_id_subway_black02 = "subwayblack01"
+poi_id_subway_purple01 = "subwaypurple01"
+poi_id_subway_purple02 = "subwaypurple02"
 poi_id_blimp = "blimp"
 poi_id_apt = "apt"
 
@@ -172,6 +173,7 @@ poi_id_wgb_subway_station = "westglocksburysubwaystation"
 poi_id_jp_subway_station = "jaywalkerplainsubwaystation"
 poi_id_nsb_subway_station = "northsleezesubwaystation"
 poi_id_ssb_subway_station = "southsleezesubwaystation"
+poi_id_bd_subway_station = "brawldensubwaystation"
 poi_id_cv_subway_station = "cratersvillesubwaystation"
 poi_id_wt_subway_station = "wreckingtonsubwaystation"
 poi_id_rr_subway_station = "rowdyroughhousesubwaystation"
@@ -179,6 +181,14 @@ poi_id_gld_subway_station = "greenlightsubwaystation"
 poi_id_jr_subway_station = "juviesrowsubwaystation"
 poi_id_vc_subway_station = "vagrantscornersubwaystation"
 poi_id_afb_subway_station = "assaultflatssubwaystation"
+poi_id_vp_subway_station = "vandalparksubwaystation"
+poi_id_pa_subway_station = "poudrinalleysubwaystation"
+poi_id_og_subway_station = "oozegardenssubwaystation"
+poi_id_cl_subway_station = "crooklinesubwaystation"
+poi_id_lc_subway_station = "littlechernobylsubwaystation"
+poi_id_bd_subway_station = "brawldensubwaystation"
+poi_id_nny_subway_station = "newnewyonkerssubwaystation"
+
 
 poi_id_underworld_subway_station = "underworldsubwaystation"
 
@@ -516,16 +526,23 @@ transport_line_ferry_wt_to_vc = "ferrywttovc"
 transport_line_ferry_vc_to_wt = "ferryvctowt"
 
 # Subway lines
-transport_line_subway_yellow_northbound = "subwayyellownorth"
-transport_line_subway_yellow_southbound = "subwayyellowsouth"
-transport_line_subway_red_northbound = "subwayrednorth"
-transport_line_subway_red_southbound = "subwayredsouth"
-transport_line_subway_blue_eastbound = "subwayblueeast"
-transport_line_subway_blue_westbound = "subwaybluewest"
-transport_line_subway_white_eastbound = "subwaywhiteeast"
-transport_line_subway_white_westbound = "subwaywhitewest"
+transport_line_subway_purple_northbound = "subwaypurplenorth"
+transport_line_subway_purple_southbound = "subwaypurplesouth"
+
+transport_line_subway_pink_northbound = "subwaypinknorth"
+transport_line_subway_pink_southbound = "subwaypinksouth"
+
+transport_line_subway_gold_eastbound = "subwaygoldeast"
+transport_line_subway_gold_westbound = "subwaygoldwest"
+
+transport_line_subway_black_eastbound = "subwayblackeast"
+transport_line_subway_black_westbound = "subwayblackwest"
+
 transport_line_subway_green_eastbound = "subwaygreeneast"
 transport_line_subway_green_westbound = "subwaygreenwest"
+
+transport_line_subway_gold_eastbound = "subwaygoldeast"
+transport_line_subway_gold_westbound = "subwaygoldwest"
 
 # Blimp lines
 transport_line_blimp_df_to_afb = "blimpdftoafb"
@@ -692,19 +709,27 @@ channel_gld_subway_station = "green-light-subway-station"
 channel_jr_subway_station = "juvies-row-subway-station"
 channel_vc_subway_station = "vagrants-corner-subway-station"
 channel_afb_subway_station = "assault-flats-subway-station"
+channel_vp_subway_station = "vandal-park-subway-station"
+channel_pa_subway_station = "poudrin-alley-subway-station"
+channel_og_subway_station = "ooze-gardens-subway-station"
+channel_cl_subway_station = "crookline-subway-station"
+channel_lc_subway_station = "little-chernobyl-subway-station"
+channel_bd_subway_station = "brawlden-subway-station"
+channel_nny_subway_station = "new-new-yonkers-subway-station"
 channel_df_blimp_tower = "dreadford-blimp-tower"
 channel_afb_blimp_tower = "assault-flats-blimp-tower"
 
 channel_ferry = "ferry"
-channel_subway_red01 = "subway-train-r-01"
-channel_subway_red02 = "subway-train-r-02"
-channel_subway_yellow01 = "subway-train-y-01"
-channel_subway_yellow02 = "subway-train-y-02"
-channel_subway_green01 = "subway-train-g-01"
-channel_subway_green02 = "subway-train-g-02"
-channel_subway_white01 = "subway-train-w-01"
-channel_subway_blue01 = "subway-train-b-01"
-channel_subway_blue02 = "subway-train-b-02"
+channel_subway_pink01 = "subway-train-pink-01"
+channel_subway_pink02 = "subway-train-pink-02"
+channel_subway_gold01 = "subway-train-gold-01"
+channel_subway_gold02 = "subway-train-gold-02"
+channel_subway_green01 = "subway-train-green-01"
+channel_subway_green02 = "subway-train-green-02"
+channel_subway_black01 = "subway-train-black-01"
+channel_subway_black02 = "subway-train-black-02"
+channel_subway_purple01 = "subway-train-purple-01"
+channel_subway_purple02 = "subway-train-purple-02"
 channel_blimp = "blimp"
 
 channel_killfeed = "kill-feed"
@@ -1795,14 +1820,16 @@ str_generic_subway_station_description = "A grimy subway station."
 str_blimp_description = "This luxury zeppelin contains all the most exquisite amenities a robber baron in transit could ask for. A dining room, a lounge, a pool table, you know, rich people stuff. Being a huge, highly flammable balloon filled with hydrogen, it is the safest way to travel in the city only because it's out of the price range of most juveniles' budget. It's used by the rich elite to travel from their summer homes in Assault Flats Beach to their winter homes in Dreadford, and vice versa, without having to step foot in the more unsavory parts of the city. It does it's job well and only occasionally bursts into flames."
 str_blimp_tower_description = "This mooring mast is mostly used for amassing millionaire mooks into the marvelous Neo Milwaukee multi-story zeppelin, m'lady. Basically, you can board a blimp here. All you have to do is walk up an extremely narrow spiral staircase without an adequate handrail for about 40 feet straight up and then you can embark onto the highest airship this side of the River of Slime! It'll be great! Don't mind the spontaneously combusting zeppelins crashing into the earth in the distance. That's normal."
 str_downtown_station_description = "This large, imposing structure is the central hub for the entire city's rapid transit system. A public transportation powerhouse, it contains connections to every subway line in the city, and for dirt cheap. Inside of it's main terminal, a humongous split-flap display is constantly updating with the times of subway arrivals and departures. Hordes of commuters from all across the city sprint to their connecting trains, or simply spill out into the Downtown streets, ready to have their guts do the same.\n\nExits into Downtown NLACakaNM."
-str_red_subway_description = "Red Line trains are strictly uniform, with dull, minimalistic furnishings producing a borderline depressing experience. Almost completely grey aside from it's style guide mandated red accents, everything is purely practical. It provides just enough for its commuting salarymen to get to work in the morning and home at night."
-str_red_subway_station_description = "This sparsely decorated terminal replicates the feeling of riding on a Red Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Red Line train be late. Still doesn't make you like being on one though."
+str_black_subway_description = "Black Line trains are strictly uniform, with dull, minimalistic furnishings producing a borderline depressing experience. Almost completely grey aside from it's style guide mandated black accents, everything is purely practical. It provides just enough for its commuting salarymen to get to work in the morning and home at night."
+str_black_subway_station_description = "This sparsely decorated terminal replicates the feeling of riding on a Black Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Black Line train be late. Still doesn't make you like being on one though."
 str_green_subway_description = "Easily the oldest subway line in the city, with the interior design and general cleanliness to prove it. Once cutting edge, it's art deco stylings have begun to deteriorate due to overuse and underfunding. That goes double for the actual trains themselves, with a merely bumpy ride on the Green Line being the height of luxury compared to the far worse potential risks."
 str_green_subway_station_description = "Much like its trains, Green Line terminals have fallen into disrepair. It's vintage aesthetic only exasperating it's crumbling infrastructure, making the whole line seem like a old, dilapidated mess. But, you'll give it one thing, it's pretty cool looking from the perspective of urban exploration. You've dreamed of exploring it's vast, abandoned subway networks ever since you first rode on it. They could lead to anywhere. So close, and yet so mysterious."
-str_blue_subway_description = "Probably the nicest subway line in the city, the Blue Line isn't defined by its poor hygiene or mechanical condition. Instead, it's defined by its relative normality. More-or-less clean floors, brightly lit interiors, upholstery on the seats. These stunning, almost sci-fi levels of perfection are a sight to behold. Wow!"
-str_blue_subway_station_description = "It is clean and well-kempt, just like the Blue Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible."
-str_yellow_subway_description = "If there's one word to describe the Yellow Line, it's \"confusing\". It's by far the filthiest subway line in the city, which is exponentially worsened by it's bizarre, unexplainable faux wood paneling that lines every train. You can only imagine that this design decision was made to make the subway feel less sterile and more homely, but the constant stench of piss and homeless people puking sort of ruins that idea. Riding the Yellow Line makes you feel like you're at your grandma's house every single time you ride it, if your grandma's house was in Jaywalker Plain."
-str_yellow_subway_station_description = "It's absolutely fucking disgusting. By far the worst subway line, the Yellow Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Yellow Line so bad? The world may never know."
+str_purple_subway_description = "Probably the nicest subway line in the city, the Purple Line isn't defined by its poor hygiene or mechanical condition. Instead, it's defined by its relative normality. More-or-less clean floors, brightly lit interiors, upholstery on the seats. These stunning, almost sci-fi levels of perfection are a sight to behold. Wow!"
+str_purple_subway_station_description = "It is clean and well-kempt, just like the Purple Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible."
+str_pink_subway_description = "If there's one word to describe the Pink Line, it's \"confusing\". It's by far the filthiest subway line in the city, which is exponentially worsened by it's bizarre, unexplainable faux wood paneling that lines every train. You can only imagine that this design decision was made to make the subway feel less sterile and more homely, but the constant stench of piss and homeless people puking sort of ruins that idea. Riding the Pink Line makes you feel like you're at your grandma's house every single time you ride it, if your grandma's house was in Jaywalker Plain."
+str_pink_subway_station_description = "It's absolutely fucking disgusting. By far the worst subway line, the Pink Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Pink Line so bad? The world may never know."
+str_gold_subway_description = "Construction started on the Gold Line in the 90’s, and it shows. It’s just so fucking gaudy. Opulent, even. It’s vaporwave gone wrong. Geometric patterns with clashing color combinations and art styles are plastered over every square inch of the walls, and the seats are made of that awful upholstery from old Taco Bell™ booths."
+str_gold_subway_station_description = "The walls of the Gold Line are covered in terrible murals. Covered. Imagine your loaded in the level geometry of the station into Unity and then Googled “terrible street art murals” and skipped to page nine and then loaded each image as textures unto the geometry, not even accounting for when one object ended and another surface began. No one knows why it’s like this."
 str_subway_connecting_sentence = "Below it, on a lower level of the station, is a {} line terminal."
 
 # TODO: Add descriptions for each outskirt/street.
@@ -10510,6 +10537,7 @@ poi_list = [
 			poi_id_astatineheights : travel_time_district,
 			poi_id_gatlingsdale : travel_time_district,
 			poi_id_copkilltown_street_a : travel_time_street,
+			poi_id_ck_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi( # 4
@@ -10601,6 +10629,7 @@ poi_list = [
 			poi_id_poudrinalley : travel_time_district,
 			poi_id_wreckington : travel_time_district,
 			poi_id_rowdyroughhouse_street_a : travel_time_street,
+			poi_id_rr_subway_station: travel_time_subzone,
 		},
 	),
 	EwPoi( # 7
@@ -10984,6 +11013,7 @@ poi_list = [
 			poi_id_mine : travel_time_subzone,
 			poi_id_jr_farms : travel_time_subzone,
 			poi_id_juviesrow_pier : travel_time_subzone,
+			poi_id_jr_subway_station: travel_time_subzone,
 		},
 	),
 	EwPoi( # 21
@@ -11373,6 +11403,7 @@ poi_list = [
 			poi_id_downtown_street_c : travel_time_street,
 			poi_id_poudrinalley_street_a : travel_time_street,
 			poi_id_wreckington_street_b : travel_time_street,
+			poi_id_rr_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11393,6 +11424,7 @@ poi_list = [
 			poi_id_astatineheights_street_f : travel_time_street,
 			poi_id_smogsburg_street_c : travel_time_street,
 			poi_id_downtown_street_f : travel_time_street,
+			poi_id_ck_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11414,6 +11446,7 @@ poi_list = [
 			poi_id_mine: travel_time_subzone,
 			poi_id_jr_farms : travel_time_subzone,
 			poi_id_juviesrow_pier : travel_time_subzone,
+			poi_id_jr_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11490,6 +11523,7 @@ poi_list = [
 			poi_id_downtown_street_c : travel_time_street,
 			poi_id_downtown_street_e : travel_time_street,
 			poi_id_poudrinalley_street_b : travel_time_street,
+			poi_id_dt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11509,6 +11543,7 @@ poi_list = [
 			poi_id_downtown_street_d : travel_time_street,
 			poi_id_downtown_street_f : travel_time_street,
 			poi_id_krakbay_street_a : travel_time_street,
+			poi_id_dt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11547,6 +11582,7 @@ poi_list = [
 			poi_id_krakbay_street_f : travel_time_street,
 			poi_id_krakbay_street_b : travel_time_street,
 			poi_id_downtown_street_e : travel_time_street,
+			poi_id_kb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11662,6 +11698,7 @@ poi_list = [
 			poi_id_poudrinalley_street_e : travel_time_street,
 			poi_id_poudrinalley_street_b : travel_time_street,
 			poi_id_rowdyroughhouse_street_a : travel_time_street,
+			poi_id_pa_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11778,6 +11815,7 @@ poi_list = [
 			poi_id_cratersville_street_a : travel_time_street,
 			poi_id_cratersville_street_c : travel_time_street,
 			poi_id_poudrinalley_street_e : travel_time_street,
+			poi_id_cv_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11799,6 +11837,7 @@ poi_list = [
 			poi_id_oozegardens_street_d : travel_time_street,
 			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
 			poi_id_cv_mines : travel_time_subzone,
+			poi_id_cv_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11818,6 +11857,7 @@ poi_list = [
 			poi_id_wreckington_street_b : travel_time_street,
 			poi_id_cratersville_street_a : travel_time_street,
 			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_wt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11839,6 +11879,7 @@ poi_list = [
 			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
 			poi_id_diner : travel_time_subzone,
 			poi_id_wt_port : travel_time_subzone,
+			poi_id_wt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11898,6 +11939,7 @@ poi_list = [
 			poi_id_oozegardens_street_d : travel_time_street,
 			poi_id_poudrinalley_street_d : travel_time_street,
 			poi_id_og_farms : travel_time_subzone,
+			poi_id_og_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11939,6 +11981,7 @@ poi_list = [
 			poi_id_southsleezeborough_street_b : travel_time_street,
 			poi_id_crookline_street_b : travel_time_street,
 			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_ssb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12150,6 +12193,7 @@ poi_list = [
 			poi_id_glocksbury_street_b : travel_time_street,
 			poi_id_glocksbury_street_d : travel_time_street,
 			poi_id_westglocksbury_street_a : travel_time_street,
+			poi_id_gb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12246,6 +12290,7 @@ poi_list = [
 			poi_id_westglocksbury_street_d : travel_time_street,
 			poi_id_poloniumhill_street_d : travel_time_street,
 			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_wgb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12285,6 +12330,7 @@ poi_list = [
 			poi_id_jaywalkerplain_street_e : travel_time_street,
 			poi_id_jaywalkerplain_street_b : travel_time_street,
 			poi_id_northsleezeborough_street_d : travel_time_street,
+			poi_id_jp_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12304,6 +12350,7 @@ poi_list = [
 			poi_id_jaywalkerplain_street_a : travel_time_street,
 			poi_id_jaywalkerplain_street_c : travel_time_street,
 			poi_id_crookline_street_d : travel_time_street,
+			poi_id_jp_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12389,6 +12436,7 @@ poi_list = [
 			poi_id_dreadford_street_b : travel_time_street,
 			poi_id_crookline_outskirts_edge : travel_time_outskirt,
 			poi_id_crookline_pier : travel_time_subzone,
+			poi_id_cl_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12410,6 +12458,7 @@ poi_list = [
 			poi_id_southsleezeborough_street_a : travel_time_street,
 			poi_id_crookline_outskirts_edge : travel_time_outskirt,
 			poi_id_crookline_pier : travel_time_subzone,
+			poi_id_cl_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12724,6 +12773,7 @@ poi_list = [
 			poi_id_toxington_street_b : travel_time_street,
 			poi_id_gatlingsdale_street_d : travel_time_street,
 			poi_id_tt_mines : travel_time_subzone,
+			poi_id_tt_subway_station : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12804,6 +12854,7 @@ poi_list = [
 			poi_id_toxington_street_a : travel_time_street,
 			poi_id_astatineheights_street_b : travel_time_street,
 			poi_id_toxington_pier : travel_time_subzone,
+			poi_id_tt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12823,6 +12874,7 @@ poi_list = [
 			poi_id_gatlingsdale_street_e : travel_time_street,
 			poi_id_gatlingsdale_street_b : travel_time_street,
 			poi_id_copkilltown_street_a : travel_time_street,
+			poi_id_gd_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12918,6 +12970,7 @@ poi_list = [
 			poi_id_astatineheights_street_f : travel_time_street,
 			poi_id_astatineheights_street_b : travel_time_street,
 			poi_id_gatlingsdale_street_e : travel_time_street,
+			poi_id_ah_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12938,6 +12991,7 @@ poi_list = [
 			poi_id_astatineheights_street_c : travel_time_street,
 			poi_id_toxington_street_e : travel_time_street,
 			poi_id_seafood : travel_time_subzone,
+			poi_id_ah_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -13071,6 +13125,7 @@ poi_list = [
 			poi_id_smogsburg_street_b : travel_time_street,
 			poi_id_smogsburg_street_d : travel_time_street,
 			poi_id_copkilltown_street_a : travel_time_street,
+			poi_id_sb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -13129,6 +13184,7 @@ poi_list = [
 			poi_id_arsonbrook_street_b : travel_time_street,
 			poi_id_smogsburg_street_a : travel_time_street,
 			poi_id_ab_farms : travel_time_subzone,
+			poi_id_ab_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -13280,13 +13336,13 @@ poi_list = [
 		channel = 'brawlden-street-a',
 		is_street = True,
 		is_capturable = True,
-		father_district = poi_id_brawlden,
 		neighbors = {
 			poi_id_brawlden : travel_time_street,
 			poi_id_brawlden_street_d : travel_time_street,
 			poi_id_brawlden_street_b : travel_time_street,
 			poi_id_arsonbrook_street_d : travel_time_street,
 			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_bd_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -13364,6 +13420,7 @@ poi_list = [
 			poi_id_littlechernobyl_street_c : travel_time_street,
 			poi_id_littlechernobyl_street_b : travel_time_street,
 			poi_id_arsonbrook_street_e : travel_time_street,
+			poi_id_lc_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -13517,6 +13574,7 @@ poi_list = [
 			poi_id_newnewyonkers_street_b : travel_time_street,
 			poi_id_brawlden_street_b : travel_time_street,
 			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_nny_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -13636,6 +13694,7 @@ poi_list = [
 			poi_id_vagrantscorner_street_b : travel_time_street,
 			poi_id_assaultflatsbeach_street_b : travel_time_street,
 			poi_id_vc_port : travel_time_subzone,
+			poi_id_vc_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -13789,6 +13848,7 @@ poi_list = [
 			poi_id_greenlightdistrict_street_b : travel_time_street,
 			poi_id_greenlightdistrict_street_a : travel_time_street,
 			poi_id_downtown_street_b : travel_time_street,
+			poi_id_gld_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -14440,7 +14500,7 @@ poi_list = [
 		role = "Jaywalker Plain Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_jaywalkerplain_street_c, poi_id_jaywalkerplain_street_d],
+		mother_districts = [poi_id_jaywalkerplain_street_a, poi_id_jaywalkerplain_street_b],
 		is_pier = True,
 		pier_type = fish_slime_freshwater,
 		neighbors = {
@@ -14626,16 +14686,17 @@ poi_list = [
 			"tts"
 		],
 		str_name = "The Toxington Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Toxington.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Toxington.",
 		channel = channel_tt_subway_station,
 		role = "Toxington Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_toxington],
+		mother_districts = [poi_id_toxington_street_a, poi_id_toxington_street_e],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_toxington_street_a : travel_time_subzone,
+			poi_id_toxington_street_e : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Astatine Heights Subway Station
@@ -14656,16 +14717,17 @@ poi_list = [
 			"ahs"
 		],
 		str_name = "The Astatine Heights Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Astatine Heights.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Astatine Heights.",
 		channel = channel_ah_subway_station,
 		role = "Astatine Heights Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_astatineheights],
+		mother_districts = [poi_id_astatineheights_street_a, poi_id_astatineheights_street_b],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_astatineheights_street_a : travel_time_subzone,
+			poi_id_astatineheights_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Gatlingsdale Subway Station
@@ -14686,16 +14748,16 @@ poi_list = [
 			"gds"
 		],
 		str_name = "The Gatlingsdale Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Gatlingsdale.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Gatlingsdale.",
 		channel = channel_gd_subway_station,
 		role = "Gatlingsdale Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_gatlingsdale],
+		mother_districts = [poi_id_gatlingsdale_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-
+			poi_id_gatlingsdale_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Arsonbrook Subway Station
@@ -14716,16 +14778,16 @@ poi_list = [
 			"abs"
 		],
 		str_name = "The Arsonbrook Subway Station",
-		str_desc = str_yellow_subway_station_description + "\n\nExits into Arsonbrook.",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Arsonbrook.",
 		channel = channel_ab_subway_station,
 		role = "Arsonbrook Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_arsonbrook],
+		mother_districts = [poi_id_arsonbrook_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_arsonbrook_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Cop Killtown Subway Station
@@ -14747,16 +14809,17 @@ poi_list = [
 			"cs"
 		],
 		str_name = "The Cop Killtown Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Cop Killtown.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Cop Killtown.",
 		channel = channel_ck_subway_station,
 		role = "Cop Killtown Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_copkilltown],
+		mother_districts = [poi_id_copkilltown, poi_id_copkilltown_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_copkilltown : travel_time_subzone,
+			poi_id_copkilltown_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Smogsburg Subway Station
@@ -14777,19 +14840,16 @@ poi_list = [
 			"sbs"
 		],
 		str_name = "The Smogsburg Subway Station",
-		str_desc = str_green_subway_station_description + \
-						"\n\n" + str_subway_connecting_sentence.format("yellow") + \
-						"\n\n" + str_yellow_subway_station_description \
-			+ "\n\nExits into Smogsburg.",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Smogsburg.",
 		channel = channel_sb_subway_station,
 		role = "Smogsburg Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_smogsburg],
+		mother_districts = [poi_id_smogsburg_street_c],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_smogsburg_street_c : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Downtown Subway Station
@@ -14810,11 +14870,12 @@ poi_list = [
 		role = "Downtown Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_downtown],
+		mother_districts = [poi_id_downtown_street_d, poi_id_downtown_street_e],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_downtown_street_d : travel_time_subzone,
+			poi_id_downtown_street_e : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Krak Bay Subway Station
@@ -14835,19 +14896,19 @@ poi_list = [
 			"kbs"
 		],
 		str_name = "The Krak Bay Subway Station",
-		str_desc = str_green_subway_station_description + \
-						"\n\n" + str_subway_connecting_sentence.format("yellow") + \
-						"\n\n" + str_yellow_subway_station_description + \
+		str_desc = str_black_subway_station_description + \
+						"\n\n" + str_subway_connecting_sentence.format("gold") + \
+						"\n\n" + str_gold_subway_station_description + \
 			"\n\nExits into Krak Bay.",
 		channel = channel_kb_subway_station,
 		role = "Krak Bay Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_krakbay],
+		mother_districts = [poi_id_krakbay_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_krakbay_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Glocksbury Subway Station
@@ -14868,16 +14929,16 @@ poi_list = [
 			"gbs"
 		],
 		str_name = "The Glocksbury Subway Station",
-		str_desc = str_green_subway_station_description + "\n\nExits into Glocksbury.",
+		str_desc = str_black_subway_station_description + "\n\nExits into Glocksbury.",
 		channel = channel_gb_subway_station,
 		role = "Glocksbury Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_glocksbury],
+		mother_districts = [poi_id_glocksbury_street_c],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_glocksbury_street_c : travel_time_subzone,
 		},
 	),
 	EwPoi(  # West Glocksbury Subway Station
@@ -14898,16 +14959,16 @@ poi_list = [
 			"wgbs"
 		],
 		str_name = "The West Glocksbury Subway Station",
-		str_desc = str_green_subway_station_description + "\n\nExits into West Glocksbury.",
+		str_desc = str_black_subway_station_description + "\n\nExits into West Glocksbury.",
 		channel = channel_wgb_subway_station,
 		role = "West Glocksbury Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_westglocksbury],
+		mother_districts = [poi_id_westglocksbury_street_c],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_westglocksbury_street_c : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Jaywalker Plain Subway Station
@@ -14928,16 +14989,17 @@ poi_list = [
 			"jps"
 		],
 		str_name = "The Jaywalker Plain Subway Station",
-		str_desc = str_green_subway_station_description + "\n\nExits into Jaywalker Plain.",
+		str_desc = str_gold_subway_station_description + "\n\nExits into Jaywalker Plain.",
 		channel = channel_jp_subway_station,
 		role = "Jaywalker Plain Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_jaywalkerplain],
+		mother_districts = [poi_id_jaywalkerplain_street_a, poi_id_jaywalkerplain_street_b],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_jaywalkerplain_street_a : travel_time_subzone,
+			poi_id_jaywalkerplain_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi(  # North Sleezeborough Subway Station
@@ -14959,16 +15021,17 @@ poi_list = [
 			"nsbs"
 		],
 		str_name = "The North Sleezeborough Subway Station",
-		str_desc = str_green_subway_station_description + "\n\nExits into North Sleezeborough.",
+		str_desc = str_gold_subway_station_description + "\n\nExits into North Sleezeborough.",
 		channel = channel_nsb_subway_station,
 		role = "North Sleezeborough Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_northsleezeborough],
+		mother_districts = [poi_id_northsleezeborough_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_northsleezeborough_street_a : travel_time_subzone,
+			poi_id_nsb_subway_station: travel_time_subzone,
 		},
 	),
 	EwPoi(  # South Sleezeborough Subway Station
@@ -14990,16 +15053,17 @@ poi_list = [
 			"ssbs"
 		],
 		str_name = "The South Sleezeborough Subway Station",
-		str_desc = str_yellow_subway_station_description + "\n\nExits into South Sleezeborough.",
+		str_desc = str_purple_subway_station_description + "\n\nExits into South Sleezeborough.",
 		channel = channel_ssb_subway_station,
 		role = "South Sleezeborough Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_southsleezeborough],
+		mother_districts = [poi_id_southsleezeborough_street_a, poi_id_southsleezeborough_street_b],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_southsleezeborough_street_a : travel_time_subzone,
+			poi_id_southsleezeborough_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Cratersville Subway Station
@@ -15020,16 +15084,17 @@ poi_list = [
 			"cvs"
 		],
 		str_name = "The Cratersville Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Cratersville.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Cratersville.",
 		channel = channel_cv_subway_station,
 		role = "Cratersville Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_cratersville],
+		mother_districts = [poi_id_cratersville_street_b, poi_id_cratersville_street_c],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_cratersville_street_b : travel_time_subzone,
+			poi_id_cratersville_street_c : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Wreckington Subway Station
@@ -15050,16 +15115,17 @@ poi_list = [
 			"wts"
 		],
 		str_name = "The Wreckington Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Wreckington.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Wreckington.",
 		channel = channel_wt_subway_station,
 		role = "Wreckington Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_wreckington],
+		mother_districts = [poi_id_wreckington_street_a, poi_id_wreckington_street_b],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_wreckington_street_a : travel_time_subzone,
+			poi_id_wreckington_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Rowdy Roughhouse Subway Station
@@ -15079,16 +15145,17 @@ poi_list = [
 			"rrs"
 		],
 		str_name = "The Rowdy Roughhouse Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Rowdy Roughhouse.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Rowdy Roughhouse.",
 		channel = channel_rr_subway_station,
 		role = "Rowdy Roughhouse Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_rowdyroughhouse],
+		mother_districts = [poi_id_rowdyroughhouse, poi_id_rowdyroughhouse_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_rowdyroughhouse : travel_time_subzone,
+			poi_id_rowdyroughhouse_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Green Light District Subway Station
@@ -15110,16 +15177,16 @@ poi_list = [
 			"glds"
 		],
 		str_name = "The Green Light District Subway Station",
-		str_desc = str_blue_subway_station_description + "\n\nExits into Green Light District.",
+		str_desc = str_green_subway_station_description + "\n\nExits into Green Light District.",
 		channel = channel_gld_subway_station,
 		role = "Green Light District Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_greenlightdistrict],
+		mother_districts = [poi_id_greenlightdistrict_street_c],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_greenlightdistrict_street_c : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Juvie's Row Subway Station
@@ -15140,16 +15207,17 @@ poi_list = [
 			"jrs"
 		],
 		str_name = "The Juvie's Row Subway Station",
-		str_desc = str_blue_subway_station_description + "\n\nExits into Juvie's Row.",
+		str_desc = str_green_subway_station_description + "\n\nExits into Juvie's Row.",
 		channel = channel_jr_subway_station,
 		role = "Juvie's Row Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_juviesrow],
+		mother_districts = [poi_id_juviesrow, poi_id_juviesrow_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_juviesrow : travel_time_subzone,
+			poi_id_juviesrow_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Vagrant's Corner Subway Station
@@ -15170,53 +15238,264 @@ poi_list = [
 			"vcs"
 		],
 		str_name = "The Vagrant's Corner Subway Station",
-		str_desc = str_blue_subway_station_description + "\n\nExits into Vagrant's Corner.",
+		str_desc = str_green_subway_station_description + "\n\nExits into Vagrant's Corner.",
 		channel = channel_vc_subway_station,
 		role = "Vagrant's Corner Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_vagrantscorner],
+		mother_districts = [poi_id_vagrantscorner_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_vagrantscorner_street_a : travel_time_subzone,
 		},
 	),
-	EwPoi(  # Assault Flats Beach Subway Station
-		id_poi = poi_id_afb_subway_station,
+	EwPoi( # Vandal Park Subway Station
+		id_poi = poi_id_vp_subway_station,
 		alias = [
-			"assaultflatsbeachsubwaystation",
-			"assaultflatsbeachsubway",
-			"assaultflatsbeachsub",
-			"assaultflatsbeachstation",
-			"assaultflatssubwaystation",
-			"assaultflatssubway",
-			"assaultflatssub",
-			"assaultflatsstation",
-			"beachsubwaystation",
-			"beachsubway",
-			"beachsub",
-			"beachstation",
-			"afbsubwaystation",
-			"afbsubway",
-			"afbsub",
-			"afbstation",
-			"assaultflatss",
-			"afbs"
+			"vandalparksubway",
+			"vandalparksub",
+			"vandalparkstation",
+			"vandalsubwaystation",
+			"vandalsubway",
+			"vandalsub",
+			"vandalstation",
+			"vpsubwaystation",
+			"vpsubway",
+			"vpsub",
+			"vpstation",
+			"vandals",
+			"vps"
 		],
-		str_name = "The Assault Flats Beach Subway Station",
-		str_desc = str_blue_subway_station_description + "\n\nExits into Assault Flats Beach.",
-		channel = channel_afb_subway_station,
-		role = "Assault Flats Beach Subway Station",
+		str_name = "The Vandal Park Subway Station",
+		str_desc = str_black_subway_station_description + "\n\nExits into Vandal Park.",
+		channel = channel_vp_subway_station,
+		role = "Vandal Park Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_assaultflatsbeach],
+		mother_districts = [poi_id_vandalpark_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_vandalpark_street_a : travel_time_subzone,
+			poi_id_vp_subway_station: travel_time_subzone,
 		},
 	),
+	EwPoi(  # Crookline Subway Station
+		id_poi = poi_id_cl_subway_station,
+		alias = [
+			"crooklinesubway",
+			"crooklinesub",
+			"crooklinestation",
+			"crooksubwaystation",
+			"crooksubway",
+			"crooksub",
+			"crookstation",
+			"clsubwaystation",
+			"clsubway",
+			"clsub",
+			"clstation",
+			"crooks",
+			"cls"
+		],
+		str_name = "The Crookline Subway Station",
+		str_desc = str_gold_subway_station_description + "\n\nExits into Crookline.",
+		channel = channel_cl_subway_station,
+		role = "Crookline Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_crookline_street_a, poi_id_crookline_street_b],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_crookline_street_a : travel_time_subzone,
+			poi_id_crookline_street_b : travel_time_subzone,
+		},
+	),
+	EwPoi(  # Ooze Gardens Subway Station
+		id_poi = poi_id_og_subway_station,
+		alias = [
+			"oozegardenssubway",
+			"oozegardenssub",
+			"oozegardensstation",
+			"oozesubwaystation",
+			"oozesubway",
+			"oozesub",
+			"oozestation",
+			"ogsubwaystation",
+			"ogsubway",
+			"ogsub",
+			"ogstation",
+			"oozes",
+			"ogs"
+		],
+		str_name = "The Ooze Gardens Subway Station",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Ooze Gardens.",
+		channel = channel_og_subway_station,
+		role = "Crookline Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_oozegardens_street_c],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_oozegardens_street_c : travel_time_subzone,
+		},
+	),
+	EwPoi(  # Poudrin Alley Subway Station
+		id_poi = poi_id_pa_subway_station,
+		alias = [
+			"poudrinalleysubway",
+			"poudrinalleysub",
+			"poudrinalleystation",
+			"poudrinalleystation",
+			"poudrinsubway",
+			"poudrinsub",
+			"poudrinstation",
+			"pasubwaystation",
+			"pasubway",
+			"pasub",
+			"pastation",
+			"poudrins",
+			"pas"
+		],
+		str_name = "The Poudrin Alley Subway Station",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Poudrin Alley.",
+		channel = channel_pa_subway_station,
+		role = "Poudrin Alley Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_poudrinalley_street_a],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_poudrinalley_street_a : travel_time_subzone,
+		},
+	),
+	EwPoi(  # Brawlden Subway Station
+		id_poi = poi_id_bd_subway_station,
+		alias = [
+			"brawldensubway",
+			"brawldensub",
+			"brawldenstation",
+			"brawlsubwaystation",
+			"brawlsubway",
+			"brawlsub",
+			"brawlstation",
+			"bdsubwaystation",
+			"bdsubway",
+			"bdsub",
+			"bdstation",
+			"brawls",
+			"bds"
+		],
+		str_name = "The Brawlden Subway Station",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Brawlden.",
+		channel = channel_bd_subway_station,
+		role = "Brawlden Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_brawlden_street_a],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_brawlden_street_a : travel_time_subzone,
+		},
+	),
+	EwPoi(  # New New Yonkers Subway Station
+		id_poi = poi_id_nny_subway_station,
+		alias = [
+			"newnewyonkerssubway",
+			"newnewyonkerssub",
+			"newnewyonkersstation",
+			"yonkerssubwaystation",
+			"yonkerssubway",
+			"yonkerssub",
+			"yonkersstation",
+			"nnysubwaystation",
+			"nnysubway",
+			"nnysub",
+			"nnystation",
+			"yonkerss",
+			"nnys"
+		],
+		str_name = "The New New Yonkers Subway Station",
+		str_desc = str_green_subway_station_description + "\n\nExits into Brawlden.",
+		channel = channel_nny_subway_station,
+		role = "New New Yonkers Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_newnewyonkers_street_a],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_newnewyonkers_street_a : travel_time_subzone,
+		},
+	),
+	EwPoi(  # Little Chernobyl Subway Station
+		id_poi = poi_id_lc_subway_station,
+		alias = [
+			"littlechernobylsubway",
+			"littlechernobylsub",
+			"littlechernobylstation",
+			"littlesubwaystation",
+			"littlesubway",
+			"littlesub",
+			"littlestation",
+			"lcsubwaystation",
+			"lcsubway",
+			"lcsub",
+			"lcstation",
+			"littles",
+			"lcs"
+		],
+		str_name = "The Little Chernobyl Subway Station",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Little Chernobyl.",
+		channel = channel_lc_subway_station,
+		role = "Little Chernobyl Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_littlechernobyl_street_a],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_littlechernobyl_street_a: travel_time_subzone,
+		},
+	),
+	# EwPoi(  # Assault Flats Beach Subway Station
+	# 	id_poi = poi_id_afb_subway_station,
+	# 	alias = [
+	# 		"assaultflatsbeachsubwaystation",
+	# 		"assaultflatsbeachsubway",
+	# 		"assaultflatsbeachsub",
+	# 		"assaultflatsbeachstation",
+	# 		"assaultflatssubwaystation",
+	# 		"assaultflatssubway",
+	# 		"assaultflatssub",
+	# 		"assaultflatsstation",
+	# 		"beachsubwaystation",
+	# 		"beachsubway",
+	# 		"beachsub",
+	# 		"beachstation",
+	# 		"afbsubwaystation",
+	# 		"afbsubway",
+	# 		"afbsub",
+	# 		"afbstation",
+	# 		"assaultflatss",
+	# 		"afbs"
+	# 	],
+	# 	str_name = "The Assault Flats Beach Subway Station",
+	# 	str_desc = str_blue_subway_station_description + "\n\nExits into Assault Flats Beach.",
+	# 	channel = channel_afb_subway_station,
+	# 	role = "Assault Flats Beach Subway Station",
+	# 	pvp = True,
+	# 	is_subzone = True,
+	# 	mother_districts = [poi_id_assaultflatsbeach],
+	# 	is_transport_stop = True,
+	# 	transport_lines = set(),
+	# 	neighbors = {
+	#
+	# 	},
 	EwPoi(  # Dreadford Blimp Tower
 		id_poi = poi_id_df_blimp_tower,
 		alias = [
@@ -15401,101 +15680,125 @@ poi_list = [
 		is_pier = True,
 		pier_type = fish_slime_saltwater
 	),
-	EwPoi(  # Subway train on the red line
-		id_poi = poi_id_subway_red01,
-		str_name = "A Red Line Subway Train",
-		str_desc = str_red_subway_description,
-		channel = channel_subway_red01,
-		role = "Subway Train R-01",
+	EwPoi(  # Subway train on the pink line
+		id_poi = poi_id_subway_pink01,
+		str_name = "A Pink Line Subway Train",
+		str_desc = str_pink_subway_description,
+		channel = channel_subway_pink01,
+		role = "Subway Train PINK-01",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_red_northbound,
-		default_stop = poi_id_cv_subway_station
+		default_line = transport_line_subway_pink_northbound,
+		default_stop = poi_id_dt_subway_station
 	),
-	EwPoi(  # Subway train on the red line
-		id_poi = poi_id_subway_red02,
-		str_name = "A Red Line Subway Train",
-		str_desc = str_red_subway_description,
-		channel = channel_subway_red02,
-		role = "Subway Train R-02",
+	EwPoi(  # Subway train on the pink line
+		id_poi = poi_id_subway_pink02,
+		str_name = "A Pink Line Subway Train",
+		str_desc = str_pink_subway_description,
+		channel = channel_subway_pink02,
+		role = "Subway Train PINK-02",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_red_southbound,
-		default_stop = poi_id_tt_subway_station
+		default_line = transport_line_subway_pink_southbound,
+		default_stop = poi_id_dt_subway_station
 	),
-	EwPoi(  # Subway train on the yellow line
-		id_poi = poi_id_subway_yellow01,
-		str_name = "A Yellow Line Subway Train",
-		str_desc = str_yellow_subway_description,
-		channel = channel_subway_yellow01,
-		role = "Subway Train Y-01",
+	EwPoi(  # Subway train on the gold line
+		id_poi = poi_id_subway_gold01,
+		str_name = "A Gold Line Subway Train",
+		str_desc = str_gold_subway_description,
+		channel = channel_subway_gold01,
+		role = "Subway Train GOLD-01",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_yellow_northbound,
-		default_stop = poi_id_ssb_subway_station
+		default_line = transport_line_subway_gold_eastbound,
+		default_stop = poi_id_dt_subway_station
 	),
-	EwPoi(  # Subway train on the yellow line
-		id_poi = poi_id_subway_yellow02,
-		str_name = "A Yellow Line Subway Train",
-		str_desc = str_yellow_subway_description,
-		channel = channel_subway_yellow02,
-		role = "Subway Train Y-02",
+	EwPoi(  # Subway train on the gold line
+		id_poi = poi_id_subway_gold02,
+		str_name = "A Gold Line Subway Train",
+		str_desc = str_gold_subway_description,
+		channel = channel_subway_gold02,
+		role = "Subway Train GOLD-02",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_yellow_southbound,
-		default_stop = poi_id_ab_subway_station
+		default_line = transport_line_subway_gold_westbound,
+		default_stop = poi_id_dt_subway_station
 	),
 	EwPoi(  # Subway train on the green line
 		id_poi = poi_id_subway_green01,
 		str_name = "A Green Line Subway Train",
 		str_desc = str_green_subway_description,
 		channel = channel_subway_green01,
-		role = "Subway Train G-01",
+		role = "Subway Train GREEN-01",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
 		default_line = transport_line_subway_green_eastbound,
-		default_stop = poi_id_wgb_subway_station
+		default_stop = poi_id_dt_subway_station
 	),
 	EwPoi(  # Subway train on the green line
 		id_poi = poi_id_subway_green02,
 		str_name = "A Green Line Subway Train",
 		str_desc = str_green_subway_description,
 		channel = channel_subway_green02,
-		role = "Subway Train G-02",
+		role = "Subway Train GREEN-02",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
 		default_line = transport_line_subway_green_westbound,
-		default_stop = poi_id_sb_subway_station
-	),
-	EwPoi(  # Subway train on the blue line
-		id_poi = poi_id_subway_blue01,
-		str_name = "A Blue Line Subway Train",
-		str_desc = str_blue_subway_description,
-		channel = channel_subway_blue01,
-		role = "Subway Train B-01",
-		pvp = True,
-		is_transport = True,
-		transport_type = transport_type_subway,
-		default_line = transport_line_subway_blue_eastbound,
 		default_stop = poi_id_dt_subway_station
 	),
-	EwPoi(  # Subway train on the blue line
-		id_poi = poi_id_subway_blue02,
-		str_name = "A Blue Line Subway Train",
-		str_desc = str_blue_subway_description,
-		channel = channel_subway_blue02,
-		role = "Subway Train B-02",
+	EwPoi(  # Subway train on the black line
+		id_poi = poi_id_subway_black01,
+		str_name = "A Black Line Subway Train",
+		str_desc = str_purple_subway_description,
+		channel = channel_subway_black01,
+		role = "Subway Train BLACK-01",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_blue_westbound,
-		default_stop = poi_id_afb_subway_station
+		default_line = transport_line_subway_black_eastbound,
+		default_stop = poi_id_dt_subway_station
+	),
+	EwPoi(  # Subway train on the black line
+		id_poi = poi_id_subway_black02,
+		str_name = "A Black Line Subway Train",
+		str_desc = str_purple_subway_description,
+		channel = channel_subway_black02,
+		role = "Subway Train BLACK-02",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_black_westbound,
+		default_stop = poi_id_dt_subway_station
+	),
+	EwPoi(  # Subway train on the purple line
+		id_poi = poi_id_subway_purple01,
+		str_name = "A Purple Line Subway Train",
+		str_desc = str_purple_subway_description,
+		channel = channel_subway_purple01,
+		role = "Subway Train PURPLE-01",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_purple_northbound,
+		default_stop = poi_id_dt_subway_station
+	),
+	EwPoi(  # Subway train on the purple line
+		id_poi = poi_id_subway_purple02,
+		str_name = "A Purple Line Subway Train",
+		str_desc = str_purple_subway_description,
+		channel = channel_subway_purple02,
+		role = "Subway Train PURPLE-02",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_purple_southbound,
+		default_stop = poi_id_dt_subway_station
 	),
 	# EwPoi(  # Subway train on the white line
 	# 	id_poi = poi_id_subway_white01,
@@ -17231,88 +17534,95 @@ transport_lines = [
 			}
 
 		),
-	EwTransportLine( # yellow subway line from south sleezeborough to arsonbrook
-		id_line = transport_line_subway_yellow_northbound,
+	EwTransportLine( # purple subway line from south sleezeborough to brawlden
+		id_line = transport_line_subway_purple_northbound,
 		alias = [
-			"northyellowline",
-			"northyellow",
-			"yellownorth",
-			"yellowtoarsonbrook",
-			"yellowtoarson",
-			"yellowtoab"
+			"northpurpleline",
+			"northpurple",
+			"purplenorth",
+			"purpletobrawlden",
+			"purpletobrawl",
+			"purpletobd"
 			],
 		first_stop = poi_id_ssb_subway_station,
-		last_stop = poi_id_ab_subway_station,
-		next_line = transport_line_subway_yellow_southbound,
-		str_name = "The yellow subway line towards Arsonbrook",
+		last_stop = poi_id_bd_subway_station,
+		next_line = transport_line_subway_purple_southbound,
+		str_name = "The purple subway line towards Brawlden",
 		schedule = {
-			poi_id_ssb_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_ssb_subway_station : [20, poi_id_og_subway_station],
+			poi_id_og_subway_station : [20, poi_id_pa_subway_station],
+			poi_id_pa_subway_station : [20, poi_id_dt_subway_station],
 			poi_id_dt_subway_station : [20, poi_id_sb_subway_station],
-			poi_id_sb_subway_station : [20, poi_id_ab_subway_station]
+			poi_id_sb_subway_station: [20, poi_id_ab_subway_station],
+			poi_id_ab_subway_station: [20, poi_id_lc_subway_station],
+			poi_id_lc_subway_station: [20, poi_id_bd_subway_station],
 			}
 
 		),
-	EwTransportLine( # yellow subway line from arsonbrook to south sleezeborough
-		id_line = transport_line_subway_yellow_southbound,
+	EwTransportLine( # purple subway line from brawlden to south sleezeborough
+		id_line = transport_line_subway_purple_southbound,
 		alias = [
-			"southyellowline",
-			"southyellow",
-			"yellowsouth",
-			"yellowtosouthsleezeborough",
-			"yellowtosouthsleeze",
-			"yellowtossb"
+			"southpurpleline",
+			"southpurple",
+			"purplesouth",
+			"purpletosouthsleezeborough",
+			"purpletosouthsleeze",
+			"purpletossb"
 			],
-		first_stop = poi_id_ab_subway_station,
+		first_stop = poi_id_bd_subway_station,
 		last_stop = poi_id_ssb_subway_station,
-		next_line = transport_line_subway_yellow_northbound,
-		str_name = "The yellow subway line towards South Sleezeborough",
+		next_line = transport_line_subway_purple_northbound,
+		str_name = "The purple subway line towards South Sleezeborough",
 		schedule = {
+			poi_id_bd_subway_station: [20, poi_id_lc_subway_station],
+			poi_id_lc_subway_station: [20, poi_id_ab_subway_station],
 			poi_id_ab_subway_station : [20, poi_id_sb_subway_station],
 			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_ssb_subway_station]
+			poi_id_dt_subway_station : [20, poi_id_pa_subway_station],
+			poi_id_pa_subway_station : [20, poi_id_og_subway_station],
+			poi_id_og_subway_station: [20, poi_id_ssb_subway_station],
 			}
 
 		),
-	EwTransportLine( # red subway line from cratersville to toxington
-		id_line = transport_line_subway_red_northbound,
+	EwTransportLine( # pink subway line from cratersville to toxington
+		id_line = transport_line_subway_pink_northbound,
 		alias = [
-			"northredline",
-			"northred",
-			"rednorth",
-			"redtotoxington",
-			"redtotox",
-			"redtott"
+			"northpinkline",
+			"northpink",
+			"pinknorth",
+			"pinktotoxington",
+			"pinktotox",
+			"pinktott"
 			],
 		first_stop = poi_id_cv_subway_station,
 		last_stop = poi_id_tt_subway_station,
-		next_line = transport_line_subway_red_southbound,
-		str_name = "The red subway line towards Toxington",
+		next_line = transport_line_subway_pink_southbound,
+		str_name = "The pink subway line towards Toxington",
 		schedule = {
 			poi_id_cv_subway_station : [20, poi_id_wt_subway_station],
 			poi_id_wt_subway_station : [20, poi_id_rr_subway_station],
 			poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
 			poi_id_dt_subway_station : [20, poi_id_ck_subway_station],
-			poi_id_ck_subway_station : [20, poi_id_ah_subway_station],
-			poi_id_ah_subway_station : [20, poi_id_tt_subway_station]
+			poi_id_ck_subway_station : [20, poi_id_gd_subway_station],
+			poi_id_gd_subway_station : [20, poi_id_ah_subway_station],
+			poi_id_ah_subway_station: [20, poi_id_tt_subway_station],
 			}
 
 		),
-	EwTransportLine( # red subway line from toxington to cratersville
-		id_line = transport_line_subway_red_southbound,
+	EwTransportLine( # pink subway line from toxington to cratersville
+		id_line = transport_line_subway_pink_southbound,
 		alias = [
-			"southredline",
-			"southred",
-			"redsouth",
-			"redtocratersville",
-			"redtocraters",
-			"redtocv"
+			"southpinkline",
+			"southpink",
+			"pinksouth",
+			"pinktocratersville",
+			"pinktocraters",
+			"pinktocv"
 			],
 		first_stop = poi_id_tt_subway_station,
 		last_stop = poi_id_cv_subway_station,
-		next_line = transport_line_subway_red_northbound,
-		str_name = "The red subway line towards Cratersville",
+		next_line = transport_line_subway_pink_northbound,
+		str_name = "The pink subway line towards Cratersville",
 		schedule = {
 			poi_id_tt_subway_station : [20, poi_id_ah_subway_station],
 			poi_id_ah_subway_station : [20, poi_id_gd_subway_station],
@@ -17324,95 +17634,134 @@ transport_lines = [
 			}
 
 		),
-	EwTransportLine( # green subway line from smogsburg to west glocksbury
+	EwTransportLine( # gold subway line from crookline to downtown
+		id_line = transport_line_subway_gold_eastbound,
+		alias = [
+			"goldeastline",
+			"goldeast",
+			"goldgreen",
+			"goldtodowntown",
+			"goldtodt"
+			],
+		first_stop = poi_id_cl_subway_station,
+		last_stop = poi_id_dt_subway_station,
+		next_line = transport_line_subway_gold_westbound,
+		str_name = "The gold subway line towards Downtown",
+		schedule = {
+			poi_id_cl_subway_station : [20, poi_id_jp_subway_station],
+			poi_id_jp_subway_station : [20, poi_id_nsb_subway_station],
+			poi_id_nsb_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
+			}
+
+		),
+	EwTransportLine( # gold subway line from downtown to crookline
+		id_line = transport_line_subway_gold_westbound,
+		alias = [
+			"goldwestline",
+			"goldwest",
+			"westgold",
+			"goldtocrookline",
+			"goldtocrook",
+			"goldtocl"
+			],
+		first_stop = poi_id_dt_subway_station,
+		last_stop = poi_id_cl_subway_station,
+		next_line = transport_line_subway_gold_eastbound,
+		str_name = "The gold subway line towards Crookline",
+		schedule = {
+			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_nsb_subway_station],
+			poi_id_nsb_subway_station : [20, poi_id_jp_subway_station],
+			poi_id_jp_subway_station: [20, poi_id_cl_subway_station],
+			}
+
+		),
+	EwTransportLine( # green subway line from downtown to new new yonkers
 		id_line = transport_line_subway_green_eastbound,
 		alias = [
 			"greeneastline",
 			"greeneast",
 			"eastgreen",
-			"greentosmogsburg",
-			"greentosmogs",
-			"greentosb"
+			"greentonewnewyonkers",
+			"greentonewnew",
+			"greentonew",
+			"greentonny"
 			],
-		first_stop = poi_id_wgb_subway_station,
-		last_stop = poi_id_sb_subway_station,
+		first_stop = poi_id_dt_subway_station,
+		last_stop = poi_id_nny_subway_station,
 		next_line = transport_line_subway_green_westbound,
-		str_name = "The green subway line towards Smogsburg",
+		str_name = "The green subway line towards New New Yonkers",
 		schedule = {
-			poi_id_wgb_subway_station : [20, poi_id_jp_subway_station],
-			poi_id_jp_subway_station : [20, poi_id_nsb_subway_station],
-			poi_id_nsb_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_sb_subway_station]
+			poi_id_dt_subway_station : [20, poi_id_gld_subway_station],
+			poi_id_gld_subway_station : [20, poi_id_jr_subway_station],
+			poi_id_jr_subway_station : [20, poi_id_vc_subway_station],
+			poi_id_vc_subway_station : [20, poi_id_nny_subway_station]
 			}
 
 		),
-	EwTransportLine( # green subway line from west glocksbury to smogsburg
+	EwTransportLine( # green subway line from new new yonkers to downtown
 		id_line = transport_line_subway_green_westbound,
 		alias = [
 			"greenwestline",
 			"greenwest",
 			"westgreen",
-			"greentowestglocksbury",
-			"greentowestglocks",
-			"greentowgb"
-			],
-		first_stop = poi_id_sb_subway_station,
-		last_stop = poi_id_wgb_subway_station,
-		next_line = transport_line_subway_green_eastbound,
-		str_name = "The green subway line towards West Glocksbury",
-		schedule = {
-			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_gb_subway_station],
-			poi_id_gb_subway_station : [20, poi_id_wgb_subway_station]
-			}
-
-		),
-	EwTransportLine( # blue subway line from downtown to assault flats beach
-		id_line = transport_line_subway_blue_eastbound,
-		alias = [
-			"blueeastline",
-			"blueeast",
-			"eastblue",
-			"bluetoassaultflatsbeach",
-			"bluetoassaultflats",
-			"bluetobeach",
-			"bluetoafb"
-			],
-		first_stop = poi_id_dt_subway_station,
-		last_stop = poi_id_afb_subway_station,
-		next_line = transport_line_subway_blue_westbound,
-		str_name = "The blue subway line towards Assault Flats Beach",
-		schedule = {
-			poi_id_dt_subway_station : [20, poi_id_gld_subway_station],
-			poi_id_gld_subway_station : [20, poi_id_jr_subway_station],
-			poi_id_jr_subway_station : [20, poi_id_vc_subway_station],
-			poi_id_vc_subway_station : [20, poi_id_afb_subway_station]
-			}
-
-		),
-	EwTransportLine( # blue subway line from assault flats beach to downtown
-		id_line = transport_line_subway_blue_westbound,
-		alias = [
-			"bluewestline",
-			"bluewest",
-			"westblue",
-			"bluetodowntown",
-			"bluetodt"
+			"greentodowntown",
+			"greentodt"
 			],
 		first_stop = poi_id_afb_subway_station,
 		last_stop = poi_id_dt_subway_station,
-		next_line = transport_line_subway_blue_eastbound,
-		str_name = "The blue subway line towards Downtown NLACakaNM",
+		next_line = transport_line_subway_green_eastbound,
+		str_name = "The green subway line towards Downtown",
 		schedule = {
-			poi_id_afb_subway_station : [20, poi_id_vc_subway_station],
+			poi_id_nny_subway_station : [20, poi_id_vc_subway_station],
 			poi_id_vc_subway_station : [20, poi_id_jr_subway_station],
 			poi_id_jr_subway_station : [20, poi_id_gld_subway_station],
 			poi_id_gld_subway_station : [20, poi_id_dt_subway_station]
 			}
 
 		),
+	EwTransportLine(  # black subway line from downtown to west glocksbury
+		id_line = transport_line_subway_black_eastbound,
+		alias = [
+			"blackeastline",
+			"blackeast",
+			"eastblack",
+			"blacktowestglocksbury",
+			"blacktowestglocks",
+			"blacktowgb"
+		],
+		first_stop = poi_id_dt_subway_station,
+		last_stop = poi_id_wgb_subway_station,
+		next_line = transport_line_subway_black_westbound,
+		str_name = "The black subway line towards West Glocksbury",
+		schedule = {
+			poi_id_dt_subway_station: [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station: [20, poi_id_gb_subway_station],
+			poi_id_gb_subway_station: [20, poi_id_vp_subway_station],
+			poi_id_vp_subway_station: [20, poi_id_wgb_subway_station],
+		}
+	),
+	EwTransportLine(  # black subway line from west glocksbury to downtown
+		id_line = transport_line_subway_black_westbound,
+		alias = [
+			"blackwestline",
+			"blackwest",
+			"westblack",
+			"blacktodowntown",
+			"blacktodt"
+		],
+		first_stop = poi_id_wgb_subway_station,
+		last_stop = poi_id_dt_subway_station,
+		next_line = transport_line_subway_black_eastbound,
+		str_name = "The black subway line towards Downtown",
+		schedule = {
+			poi_id_wgb_subway_station: [20, poi_id_vp_subway_station],
+			poi_id_vp_subway_station: [20, poi_id_gb_subway_station],
+			poi_id_gb_subway_station: [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station: [20, poi_id_dt_subway_station],
+		}
+	),
 	# EwTransportLine( # white subway line from downtown to juvies row
 	# 	id_line = transport_line_subway_white_eastbound,
 	# 	alias = [
@@ -17503,7 +17852,7 @@ transport_lines = [
 			poi_id_jaywalkerplain : [40, poi_id_df_blimp_tower]
 			}
 
-		)
+		),
 ]
 
 id_to_transport_line = {}
