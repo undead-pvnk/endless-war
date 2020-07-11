@@ -2521,8 +2521,12 @@ async def ping_me(cmd):
 		pass
 	else:
 		return
-
-	requested_channel = cmd.tokens[1]
+	
+	try:
+		requested_channel = cmd.tokens[1]
+	except:
+		return
+	
 	pinged_poi = ewcfg.id_to_poi.get(requested_channel)
 	channel = ewutils.get_channel(cmd.message.server, pinged_poi.channel)
 
