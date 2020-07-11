@@ -3324,10 +3324,10 @@ def fulfill_ghost_weapon_contract(possession_data, market_data, user_data, user_
 	ghost_id = possession_data[0]
 	ghost_data = EwUser(id_user = ghost_id, id_server = user_data.id_server)
 	
-	# shooter loses half their slime, which ghost gains as negative slime up to a cap of 500k
-	slime_sacrificed = int(user_data.slimes * 0.5)
+	# shooter 20%, which ghost gains as negative slime up to a cap of 300k
+	slime_sacrificed = int(user_data.slimes * 0.2)
 	user_data.change_slimes(n = -slime_sacrificed, source = ewcfg.source_ghost_contract)
-	negaslime_gained = min(200000, slime_sacrificed)
+	negaslime_gained = min(300000, slime_sacrificed)
 	ghost_data.change_slimes(n = -negaslime_gained, source = ewcfg.source_ghost_contract)
 	ghost_data.persist()
 	market_data.negaslime -= -negaslime_gained
