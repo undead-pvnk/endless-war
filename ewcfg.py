@@ -8364,7 +8364,8 @@ food_list = [
 		price = 2000,
 		str_name = "Awful Waffle",
 		str_eat = "You put this tough and floppy piece of cooked garbage in your mouth. You give up eat it with a knife and fork and relegate yourself to just holding it and taking bites off. It tastes like shit, makes you feel like shit, and will give you the shits when you're done. Why would you do this to yourself?",
-		str_desc = "You can feel the regret of the person who made it emanating from this piece of shit waffle. The watered down batter was not properly mixed or cooked for as long as it should've, leading to a lumpy, doughy mess that can barely be called a waffle.",
+		str_desc = "You can feel the regret of the person who made this piece of shit waffle emanating from it. The watered down batter was not properly mixed or cooked for as long as it should've, leading to a lumpy, doughy mess that can barely be called a waffle.",
+		perishable = False,
 		vendors = [vendor_wafflehouse],
 	),
 	EwFood(
@@ -8377,6 +8378,7 @@ food_list = [
 		str_name = "Wet Waffle",
 		str_eat = "You try sucking on the straw, but the density of the batter is too much for your puny suction to pull it all the way from the bag into your mouth. You try squishing the plastic bag as you suck, which actually gets some of the batter in your mouth, but it's not enough. You give up, slam the bag, pop a hole on the bottom, and suck directly from it. All this effort was not worth it, it just tastes like waffle batter, and it's gonna give you salmonella.",
 		str_desc = "A waffle-shaped plastic bag full of waffle batter, with a long straw-like opening at the top for you to suck on like an idiot. Kinda looks like a fucked up transparent baloon.",
+		perishable = False,
 		vendors = [vendor_wafflehouse],
 	),
 	EwFood(
@@ -8391,6 +8393,7 @@ food_list = [
 		str_name = "I Can't Believe It's Not Waffle!",
 		str_eat = "It really does taste just like a fucking waffle. You gobble it up, in disbelief that the thing you're eating is not actually a waffle. You contract kuru.",
 		str_desc = "This looks like a waffle. The name of the dish does indicate this is in fact not a waffle, but it just looks, smells, and feels like a waffle.",
+		perishable = False,
 		vendors = [vendor_wafflehouse],
 	),
 	EwFood(
@@ -8405,6 +8408,7 @@ food_list = [
 		str_name = "Entire Kids' Meal Waffle",
 		str_eat = "You slowly start to unhinge your jaw, ingesting this thick mega meal like an anaconda swallowing a whole writhing alligator. As soon as your saliva makes contact with the item, it starts to unfold and disintegrate. The congealed mass starts to expand, it takes your entire being to force this down.\nYou now resemble a cartoon rat upon engulfing an entire cheese wheel, except real...and a waffle.",
 		str_desc = "The hydraulic waffle press required to create this smorgasbord of breakfast food has seared this grotesque checkerboard slab of pancakes, omelettes, bacon strips, apple juice cartons, and entire bottles of syrup into a gutbusting object so dense that it breaks any plate it is placed upon. One bite will satisfy even the pickiest of children, if they survive.",
+		perishable = False,
 		vendors = [vendor_wafflehouse],
 	),
 	EwFood(
@@ -8419,6 +8423,7 @@ food_list = [
 		price = 50000,
 		str_eat = "You raise the vibrating greasy mass to your lips, hesitantly you open your mouth, only for the mass of waffle burger to shift through your hands, this 4 dimensional snack phases through you, swiping through your head and even clipping past your brain, the interdimensional grease sears not only your current self, but you soon realize why you received random grease burns across your body throughout your childhood. As it shifts into your stomach, you wonder if you have really consumed this waffle burger, of if the waffle burger has consumed you. You are simply too simple a lifeform to understand this eldritch breakfast.",
 		str_desc = "This immaculate 4d chess board of a meal is constantly drooling a greasy snail trail as you hold it aloft. This Calabi–Yau manifold of a burger is created from interlocked waffles, a fresh poppy seed bun waffle, a crispy lettuce waffle, a sizzling bacon strip waffle, a moist tomato waffle, a sharp cheese waffle, a grilled angus patty waffle, a sweet dill pickle waffle, a savory grilled onion waffle, and yet another fresh poppy seed bun waffle.",
+		perishable = False,
 		vendors = [vendor_wafflehouse],
 	),
 	EwFood(
@@ -8432,6 +8437,7 @@ food_list = [
 		str_name = "Brussels Waffle",
 		str_eat = "The sublime experience of eating this waffle cannot be accurately conveyed through words. The delicate crust gives way to a soft and malleable interior, as its mild sweetness spreads throughout your mouth. As you consume the waffle bite by bite, visions of times gone by pass through your mind: a priviliged youth, the death of an early lover, ascension to power, cynic machinations for the greater good, a timely death, and eternal wandering for evermore. Once done, you remain motionless for a moment, your eyes shut, holding back solemn tears as you're overwhelmed by the ephimerality of it all.",
 		str_desc = "Something stirs within you as soon as your lay your eyes on this waffle. It's unassuming: just a fine rectangular waffle covered in powdered sugar, underwhelming when compared to the bombastic waffles you've had before. But even your philistine eyes can tell the delicate care that's been put into this dish is well beyond the pathetic standards you've gotten used to.",
+		perishable = False,
 		vendors = [vendor_wafflehouse],
 	),
 ]

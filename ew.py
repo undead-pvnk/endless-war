@@ -383,7 +383,7 @@ class EwUser:
 		statuses = self.getStatusEffects()
 
 		user_has_spoiled_appetite = ewcfg.mutation_id_spoiledappetite in mutations
-		item_is_non_perishable = ewcfg.vendor_wafflehouse in getattr(food_item, "vendors", [])
+		item_is_non_perishable = getattr(food_item, "perishable", False)
 		item_has_expired = float(getattr(food_item, "time_expir", 0)) < time.time()
 		if item_has_expired and not (user_has_spoiled_appetite or item_is_non_perishable):
 			response = "You realize that the food you were trying to eat is already spoiled. In disgust, you throw it away."
