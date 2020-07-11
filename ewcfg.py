@@ -17752,10 +17752,9 @@ landmark_pois = [
 
 # Places on the map that should result in a user being flagged for PVP
 vulnerable_districts = outskirts + streets
-for subzone in poi_list:
-	if subzone.is_subzone:
-		if subzone.pvp == True:
-			vulnerable_districts.append(subzone.id_poi)
+for poi in poi_list:
+	if (poi.is_subzone or poi.is_district) and poi.pvp:
+		vulnerable_districts.append(poi.id_poi)
 
 # maps districts to their immediate neighbors
 poi_neighbors = {}
