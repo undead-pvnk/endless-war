@@ -892,7 +892,7 @@ class EwUser:
 
 				base_freshness += int(cos.item_props['freshness']) / cosmetic_count
 
-				hue = ewcfg.hue_map.get(cos.item_props['hue'])
+				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
 				if hue is not None:
 					if hue_count.get(hue):
 						hue_count[hue] += 1

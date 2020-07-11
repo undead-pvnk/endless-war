@@ -1705,6 +1705,7 @@ def gen_item_props(item):
 			'fashion_style': item.style if item.style else ewcfg.style_cool,
 			'freshness': item.freshness if item.freshness else 5,
 			'adorned': 'false',
+			'hue': ""
 		}
 	elif item.item_type == ewcfg.it_furniture:
 		item_props = {
