@@ -483,7 +483,7 @@ def canCap(cmd):
 	elif sidearm != None and ewcfg.weapon_class_ammo in sidearm.classes and int(sidearm_item.item_props.get('ammo')) <= 0:
 		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
 	elif sidearm_viable == 0:
-		response = "With what, your piss? Get some paint from Glocksbury Comics and stop fucking around."
+		response = "With what, your piss? Get some paint from Based Hardware and stop fucking around."
 
 	return response
 
@@ -2944,13 +2944,13 @@ async def spray(cmd):
 	time_now_float = time.time()
 	time_now = int(time_now_float)
 
-	was_pvp = user_data.time_expirpvp > time_now
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, enlisted=True)
+	#was_pvp = user_data.time_expirpvp > time_now
+	#user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, enlisted=True)
 
 	user_data.persist()
-	if not was_pvp:
-		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-		user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	# if not was_pvp:
+	# 	await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+	# 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
 
 	# Get shooting player's info
 

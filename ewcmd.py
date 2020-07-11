@@ -2511,3 +2511,21 @@ async def prank(cmd):
 				break
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
+
+async def ping_me(cmd):
+
+	author = cmd.message.author
+	user_data = EwUser(member=author)
+
+	if ewutils.DEBUG or author.server_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
+		pass
+	else:
+		return
+
+	requested_channel = cmd.tokens[1]
+	pinged_poi = ewcfg.id_to_poi.get(requested_channel)
+	channel = ewutils.get_channel(cmd.message.server, pinged_poi.channel)
+
+	if pinged_poi != None:
+		response = user_data.get_mention()
+		return await ewutils.send_message(cmd.client, channel, response)

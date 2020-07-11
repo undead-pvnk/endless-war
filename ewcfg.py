@@ -30,7 +30,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.24a"
+version = "v3.33 - You Are (Not) Safe In The Streets"
 
 
 dir_msgqueue = 'msgqueue'
@@ -578,11 +578,12 @@ role_null_minor_role = "nullminorrole"
 
 permission_read_messages = "read"
 permission_send_messages = "send"
+permission_connect_to_voice = "connect"
 #permission_see_history = "history"
 #permission_upload_files = "upload" -- everything else including this should be true by default. 
 # Read, Send, and History should be false by default but set to true.
 
-permissions_general = [permission_read_messages, permission_send_messages]
+permissions_general = [permission_read_messages, permission_send_messages, permission_connect_to_voice]
 
 faction_roles = [
 	role_juvenile,
@@ -773,6 +774,134 @@ channel_bodega = "bodega"
 channel_basedhardware = "based-hardware"
 
 channel_prankfeed = "prank-feed"
+
+# Placeholders
+channel_copkilltown_street_a = "cop-killtown-street-a"
+channel_rowdyroughhouse_street_a = "rowdy-roughhouse-street-a"
+channel_juviesrow_street_a = "juvies-row-street-a"
+channel_downtown_street_a = "downtown-street-a"
+channel_downtown_street_b = "downtown-street-b"
+channel_downtown_street_c = "downtown-street-c"
+channel_downtown_street_d = "downtown-street-d"
+channel_downtown_street_e = "downtown-street-e"
+channel_downtown_street_f = "downtown-street-f"
+channel_krakbay_street_a = "krak-bay-street-a"
+channel_krakbay_street_b = "krak-bay-street-b"
+channel_krakbay_street_c = "krak-bay-street-c"
+channel_krakbay_street_d = "krak-bay-street-d"
+channel_krakbay_street_e = "krak-bay-street-e"
+channel_krakbay_street_f = "krak-bay-street-f"
+channel_poudrinalley_street_a = "poudrin-alley-street-a" 
+channel_poudrinalley_street_b = "poudrin-alley-street-b"
+channel_poudrinalley_street_c = "poudrin-alley-street-c"
+channel_poudrinalley_street_d = "poudrin-alley-street-d"
+channel_poudrinalley_street_e = "poudrin-alley-street-e"
+channel_cratersville_street_a = "cratersville-street-a"
+channel_cratersville_street_b = "cratersville-street-b"
+channel_cratersville_street_c = "cratersville-street-c"
+channel_wreckington_street_a = "wreckington-street-a"
+channel_wreckington_street_b = "wreckington-street-b"
+channel_oozegardens_street_a = "ooze-gardens-street-a"
+channel_oozegardens_street_b = "ooze-gardens-street-b"
+channel_oozegardens_street_c = "ooze-gardens-street-c"
+channel_oozegardens_street_d = "ooze-gardens-street-d"
+channel_southsleezeborough_street_a = "south-sleezeborough-street-a" 
+channel_southsleezeborough_street_b = "south-sleezeborough-street-b"
+channel_southsleezeborough_street_c = "south-sleezeborough-street-c"
+channel_southsleezeborough_street_d = "south-sleezeborough-street-d"
+channel_northsleezeborough_street_a = "north-sleezeborough-street-a"
+channel_northsleezeborough_street_b = "north-sleezeborough-street-b"
+channel_northsleezeborough_street_c = "north-sleezeborough-street-c"
+channel_northsleezeborough_street_d = "north-sleezeborough-street-d"
+channel_northsleezeborough_street_e = "north-sleezeborough-street-e"
+channel_glocksbury_street_a = "glocksbury-street-a"
+channel_glocksbury_street_b = "glocksbury-street-b"
+channel_glocksbury_street_c = "glocksbury-street-c"
+channel_glocksbury_street_d = "glocksbury-street-d"
+channel_glocksbury_street_e = "glocksbury-street-e"
+channel_westglocksbury_street_a = "west-glocksbury-street-a" 
+channel_westglocksbury_street_b = "west-glocksbury-street-b"
+channel_westglocksbury_street_c = "west-glocksbury-street-c"
+channel_westglocksbury_street_d = "west-glocksbury-street-d"
+channel_jaywalkerplain_street_a = "jaywalker-plain-street-a"
+channel_jaywalkerplain_street_b = "jaywalker-plain-street-b"
+channel_jaywalkerplain_street_c = "jaywalker-plain-street-c"
+channel_jaywalkerplain_street_d = "jaywalker-plain-street-d"
+channel_jaywalkerplain_street_e = "jaywalker-plain-street-e"
+channel_crookline_street_a = "crookline-street-a" 
+channel_crookline_street_b = "crookline-street-b"
+channel_crookline_street_c = "crookline-street-c"
+channel_crookline_street_d = "crookline-street-d"
+channel_dreadford_street_a = "dreadford-street-a"
+channel_dreadford_street_b = "dreadford-street-b"
+channel_vandalpark_street_a = "vandal-park-street-a"
+channel_vandalpark_street_b = "vandal-park-street-b"
+channel_vandalpark_street_c = "vandal-park-street-c"
+channel_vandalpark_street_d = "vandal-park-street-d"
+channel_poloniumhill_street_a = "polonium-hill-street-a"
+channel_poloniumhill_street_b = "polonium-hill-street-b"
+channel_poloniumhill_street_c = "polonium-hill-street-c"
+channel_poloniumhill_street_d = "polonium-hill-street-d"
+channel_poloniumhill_street_e = "polonium-hill-street-e"
+channel_charcoalpark_street_a = "charcoal-park-street-a" 
+channel_charcoalpark_street_b = "charcoal-park-street-b"
+channel_toxington_street_a = "toxington-street-a"
+channel_toxington_street_b = "toxington-street-b"
+channel_toxington_street_c = "toxington-street-c"
+channel_toxington_street_d = "toxington-street-d"
+channel_toxington_street_e = "toxington-street-e"
+channel_gatlingsdale_street_a = "gatlingsdale-street-a" 
+channel_gatlingsdale_street_b = "gatlingsdale-street-b"
+channel_gatlingsdale_street_c = "gatlingsdale-street-c"
+channel_gatlingsdale_street_d = "gatlingsdale-street-d"
+channel_gatlingsdale_street_e = "gatlingsdale-street-e"
+channel_astatineheights_street_a = "astatine-heights-street-a"
+channel_astatineheights_street_b = "astatine-heights-street-b"
+channel_astatineheights_street_c = "astatine-heights-street-c"
+channel_astatineheights_street_d = "astatine-heights-street-d"
+channel_astatineheights_street_e = "astatine-heights-street-e"
+channel_astatineheights_street_f = "astatine-heights-street-f"
+channel_smogsburg_street_a = "smogsburg-street-a" 
+channel_smogsburg_street_b = "smogsburg-street-b"
+channel_smogsburg_street_c = "smogsburg-street-c"
+channel_smogsburg_street_d = "smogsburg-street-d"
+channel_smogsburg_street_e = "smogsburg-street-e"
+channel_arsonbrook_street_a = "arsonbrook-street-a"
+channel_arsonbrook_street_b = "arsonbrook-street-b"
+channel_arsonbrook_street_c = "arsonbrook-street-c"
+channel_arsonbrook_street_d = "arsonbrook-street-d"
+channel_arsonbrook_street_e = "arsonbrook-street-e"
+channel_maimridge_street_a = "maimridge-street-a"
+channel_maimridge_street_b = "maimridge-street-b"
+channel_maimridge_street_c = "maimridge-street-c"
+channel_brawlden_street_a = "brawlden-street-a" 
+channel_brawlden_street_b = "brawlden-street-b"
+channel_brawlden_street_c = "brawlden-street-c"
+channel_brawlden_street_d = "brawlden-street-d"
+channel_littlechernobyl_street_a = "little-chernobyl-street-a"
+channel_littlechernobyl_street_b = "little-chernobyl-street-b"
+channel_littlechernobyl_street_c = "little-chernobyl-street-c"
+channel_oldnewyonkers_street_a = "old-new-yonkers-street-a"
+channel_oldnewyonkers_street_b = "old-new-yonkers-street-b"
+channel_oldnewyonkers_street_c = "old-new-yonkers-street-c"
+channel_oldnewyonkers_street_d = "old-new-yonkers-street-d"
+channel_oldnewyonkers_street_e = "old-new-yonkers-street-e"
+channel_newnewyonkers_street_a = "new-new-yonkers-street-a"
+channel_newnewyonkers_street_b = "new-new-yonkers-street-b"
+channel_newnewyonkers_street_c = "new-new-yonkers-street-c"
+channel_newnewyonkers_street_d = "new-new-yonkers-street-d"
+channel_assaultflatsbeach_street_a = "assault-flats-beach-street-a"
+channel_assaultflatsbeach_street_b = "assault-flats-beach-street-b"
+channel_vagrantscorner_street_a = "vagrants-corner-street-a" 
+channel_vagrantscorner_street_b = "vagrants-corner-street-b"
+channel_vagrantscorner_street_c = "vagrants-corner-street-c"
+channel_vagrantscorner_street_d = "vagrants-corner-street-d"
+channel_vagrantscorner_street_e = "vagrants-corner-street-e"
+channel_vagrantscorner_street_f = "vagrants-corner-street-f"
+channel_greenlightdistrict_street_a = "green-light-district-street-a"
+channel_greenlightdistrict_street_b = "green-light-district-street-b"
+channel_greenlightdistrict_street_c = "green-light-district-street-c"
+channel_slimesend_street_a = "slimes-end-street-a"
 
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
 hideout_by_faction = {
@@ -994,6 +1123,7 @@ cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
 cmd_print_map_data = cmd_prefix + 'printmapdata'
+cmd_ping_me = cmd_prefix + 'pingme'
 cmd_boot = cmd_prefix + 'boot'
 cmd_bootall = cmd_prefix + 'bootall'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
@@ -11255,10 +11385,11 @@ poi_list = [
 			poi_id_vandalpark : travel_time_district,
 			poi_id_glocksbury : travel_time_district,
 			poi_id_jaywalkerplain : travel_time_district,
-			poi_id_westglocksbury_street_a : travel_time_district,
-			poi_id_westglocksbury_street_b : travel_time_district,
-			poi_id_westglocksbury_street_c : travel_time_district,
-			poi_id_westglocksbury_street_d : travel_time_district,
+			poi_id_westglocksbury_street_a : travel_time_street,
+			poi_id_westglocksbury_street_b : travel_time_street,
+			poi_id_westglocksbury_street_c : travel_time_street,
+			poi_id_westglocksbury_street_d : travel_time_street,
+			poi_id_basedhardware : travel_time_subzone,
 		},
 	),
 	EwPoi(  # 30
@@ -11404,7 +11535,8 @@ poi_list = [
 			poi_id_poudrinalley_street_a : travel_time_street,
 			poi_id_wreckington_street_b : travel_time_street,
 			poi_id_rr_subway_station: travel_time_subzone,
-		}
+		},
+        factions = [faction_rowdys]
 	),
 	EwPoi(
 		id_poi = poi_id_copkilltown_street_a,
@@ -11425,7 +11557,8 @@ poi_list = [
 			poi_id_smogsburg_street_c : travel_time_street,
 			poi_id_downtown_street_f : travel_time_street,
 			poi_id_ck_subway_station: travel_time_subzone,
-		}
+		},
+        factions = [faction_killers]
 	),
 	EwPoi(
 		id_poi = poi_id_juviesrow_street_a,
@@ -12380,7 +12513,7 @@ poi_list = [
 			"jpsd",
 			"jpstreetd"
 		],
-		str_name = "",
+		str_name = "Jaywalker Plain Street D",
 		str_desc = str_generic_streets_description,
 		channel = 'jaywalker-plain-street-d',
 		is_street = True,
@@ -12425,7 +12558,8 @@ poi_list = [
 		],
 		str_name = "Doxy Avenue",
 		str_desc = "Jazz clubs and diners decked out in flashy neon lights liven up this already crowded hotspot. Traffic is always jammed down here, and the locals have taken to the habit of just walking between the stopped cars to get across. The 24/7 nightlife here is really something else, and the pickpockets hiding in the bustle will make sure you pay full price for it. Exits into Crookline, XXXXXX, and Perdido Valley.",
-		channel = 'doxy-avenue',
+		#channel = 'doxy-avenue',
+		channel = channel_crookline_street_a,
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_crookline,
@@ -12472,7 +12606,8 @@ poi_list = [
 		],
 		str_name = "Manteca Street",
 		str_desc = 'It\'s cold, dark, and quiet. The old brick offices and boarding houses all look closed for the day no matter what time you\'re here. If you didn\'t know any better this might be a nice, moody place for a walk, but it\'s obvious the alleys are hiding something. Don\'t get caught under a streetlight. Exits into Crookline, Perdido Valley and XXXXXX.',
-		channel = 'manteca-street',
+		#channel = 'manteca-street',
+		channel = channel_crookline_street_c,
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_crookline,
@@ -12494,7 +12629,8 @@ poi_list = [
 		],
 		str_name = "Perdido Valley",
 		str_desc = "You didn't think it was possible to get any lower, but you've found yourself descended into the under-underworld of Crookline. The high-society crimelords and psychotics of the city frequent the upper-floor style black markets here, indulging in strange, illegal fetishes and experimental substance abuse. You'd love to see those guys get a knife or two to the face, but you doubt the bouncers standing outside would let you in. Exits into Crookline, Manteca Street, and Doxy Avenue.",
-		channel = 'perdido-valley',
+		#channel = 'perdido-valley',
+		channel = channel_crookline_street_d,
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_crookline,
@@ -16275,6 +16411,26 @@ poi_list = [
 			poi_id_krakbay : travel_time_subzone,
 		},
 	),
+	EwPoi(
+		id_poi = poi_id_basedhardware,
+		alias = [
+			"hardware",
+			"hardwarestore",
+			"bhw",
+			"bh"
+		],
+		str_name = "Based Hardware",
+		str_desc = "A hardware store right beside a gas station. This place is a fucking mess, even by your standards. Cluttered stacks of washing machines and other various household necessities tower over you, turning the place into a goddamn corn maze made out of worn out appliances. Your only saving grace in terms of navigation is the piss-yellow incandescent lighting fixed to the ceiling. On the radio, you can hear a Sludgefest rendition of 'Hardware Store' by Weird-Al Yankovic quietly echoing throughout the makeshift corridors on loop. You think it'd be best to find what your looking for and make a dash to the checkout section, before some psychopath pulls you aside and bashes your skull in.",
+		channel = channel_basedhardware,
+		role = "Based Hardware",
+		mother_districts = [poi_id_westglocksbury],
+		pvp = False,
+		vendors = [vendor_basedhardware],
+		is_subzone = True,
+		neighbors = {
+			poi_id_westglocksbury : travel_time_subzone,
+		}
+	),
 	EwPoi(  # Tutorial - 1
 		id_poi = poi_id_tutorial_classroom,
 		channel="classroom",
@@ -17062,41 +17218,6 @@ poi_list = [
 			poi_id_southsleezeborough_outskirts_depths : travel_time_outskirt,
 		},
 	),
-	EwPoi(  # Clothing store in Krak Bay
-		id_poi = poi_id_bodega,
-		alias = [
-			"clothingstore",
-		],
-		str_in = "just behind the Snapple machine at",
-		str_name = "Bodega",
-		str_desc = "Located behind a secret door in a seemingly innocuous corner store, Bodega is a high end clothing store for the freshest kids in the city.\n\nFrom the outside, Bodega appears to be simply another of the interchangeable convenience stores found on nearly every block of every major city. The windows are completely packed by dusty non-perishables, and the interior is not much better with every  inch of space selling snacks or household basics in a visually deafening assault of brand names. However, those in the know simply stroll past all this noise and head for the old Snapple machine in the back of the shop. The machine is not that at all but a door that slides open to reveal a whole other store on the other side, this is the real Bodega. Neatly appointed, lacquered shelves hold the latest in street and skate fashion from shoes to shirts to jackets. The whole space is clean and orderly in a far cry from the cramped store front.\n\n(This description was literally just stolen and lightly edited from Atlas Obsurca. This is a real place in Boston, look it up. Pretty sick, huh?)\n\nThe well-trimmed, over-cologned four-eyed hipster behind the counter looks upon you with what can only be described as the freakish offspring of utter disdain and mindlessly sycophantic puppy-dog eyes that hope to lure you into an ill-advised purchase of high end socks that forces you to take out a second mortgage on your house. *SHARP INHALE*. He’ll !sew the dirty, unwashed rags you dare call clothing back together if it gets shredded in combat, for a price. You can also get your old outfits !retrofit'd with added combat functionalities here, also for a price.\n\nExits into Krak Bay.",
-		channel = channel_bodega,
-		role = "Bodega",
-		mother_districts = [poi_id_krakbay],
-		pvp = False,
-		vendors = [
-			vendor_bodega,
-			vendor_secretbodega,
-		],
-		is_subzone = True,
-	),
-	EwPoi(
-		id_poi = poi_id_basedhardware,
-		alias = [
-			"hardware",
-			"hardwarestore",
-			"bhw",
-			"bh"
-		],
-		str_name = "Based Hardware",
-		str_desc = "A hardware store right beside a gas station. This place is a fucking mess, even by your standards. Cluttered stacks of washing machines and other various household necessities tower over you, turning the place into a goddamn corn maze made out of worn out appliances. Your only saving grace in terms of navigation is the piss-yellow incandescent lighting fixed to the ceiling. On the radio, you can hear a Sludgefest rendition of 'Hardware Store' by Weird-Al Yankovic quietly echoing throughout the makeshift corridors on loop. You think it'd be best to find what your looking for and make a dash to the checkout section, before some psychopath pulls you aside and bashes your skull in.",
-		channel = channel_basedhardware,
-		role = "Based Hardware",
-		mother_districts = [poi_id_westglocksbury],
-		pvp = False,
-		vendors = [vendor_basedhardware],
-		is_subzone = True,
-	),
 	EwPoi(  # Outskirts - 36
 		id_poi=poi_id_southsleezeborough_outskirts_depths,
 		alias=[
@@ -17182,7 +17303,7 @@ poi_list = [
 		alias=[
 			"westglocksburyoutskirtsdepths",
 			"wgboutskirtsdepths",
-			"wgbodepths"
+			"wgbodepths",
 			"wgbod",
 		],
 		str_name="West Glocksbury Outskirts Depths",
@@ -17489,6 +17610,10 @@ landmark_pois = [
 
 # Places on the map that should result in a user being flagged for PVP
 vulnerable_districts = outskirts + streets
+for subzone in poi_list:
+	if subzone.is_subzone:
+		if subzone.pvp == True:
+			vulnerable_districts.append(subzone.id_poi)
 
 # maps districts to their immediate neighbors
 poi_neighbors = {}
@@ -23490,7 +23615,7 @@ help_responses = {
 	# Introductions, part 1
 	"gangs":"**Gang Violence** is the center focus of **Rowdy Fuckers Cop Killers' ENDLESS WAR**. Enlisting in a gang allows you to attack other gang members, juveniles, ghosts, and slime beasts with the **'!kill'** command. To enlist in a gang, use **'!enlist'**, provided you also have at least 50,000 slime on hand. However, a member of that gang must use **'!vouch'** for you beforehand. Enlisting will permanently affiliate you with that gang, unless you are !pardon'd by the **ROWDY FUCKER** (Munchy), or the **COP KILLER** (Ben Saint). You may use **'!renounce'** to return to the life of a juvenile, but you will lose half of your current slime, and you will still be affiliated with that gang, thus disallowing you from entering the enemy's gang base. Additionally, a Kingpin, should they feel the need to, can inflict the '!banned' status upon you, preventing you from enlisting in their gang.",
 	"food":"Food lowers your hunger by a set amount, and can be ordered from various **restaurants** within the city. Generally speaking, the more expensive food is, the more hunger it sates. You can **'!order'** food to place it in your inventory, and **'!use [food name]'** to use it. You can only carry a certain amount of food depending on your level. Regular food items expire after 2 in-game days, or 12 hours in real life, while crops expire after 8 in-game days (48 hours), and food items gained from milling expire after a whole 2 weeks in real life. Three popular restauraunts close by various gang bases include **THE SPEAKEASY** (juveniles), **THE SMOKER'S COUGH** (rowdys), and **RED MOBSTER SEAFOOD** (killers), though there are other places to order food as well, such as the **Food Court**.",
-	"capturing":"Capping is a battle for influence over the 31 districts of NLACakaNM, and one of your main goals as a gangster. Capped territories award your kingpin slime, and give your teammates benefits while visiting. Start by visiting Glocksbury Comics and equipping one of the paint tools sold there. Once you have that, you can **!spray <captcha>** while in a capturable district to gain influence for your gang. Spraying graffiti in districts will increase influence for you, or decrease it for the enemy if they have influence there. Think of dealing influence to a district like dealing damage to a Juvie's soft squishy body, with critical hits, misses, and backfires included. As you go, you can check your **!progress** to see how much influence you still need. It can be more or less depending on the territory class, running from rank C to S. \n\nA few more things to note:\n>**!progress** will tell you the minimum and limit for territory capture. However, you can capture above that limit, as high as you want. The catch is that anything captured over this limit will decay faster.\n>Decapping does 0.8x the influence of capping, even though the cost remains the same.\n>Don't attack enemy territory when it is surrounded by enemy territory/outskirts. Small little bitches like yourself are prone to fucking up severely under that much pressure.\n>The nightlife starts in the late night. Fewer cops are around to erase your handiwork, so if you cap then you will gain a 33% capping bonus.\n>You can't kill for shit with paint tools equipped. Luckily, you can **!sidearm** a weapon or tool and quickly switch between your two equip slots using **switch** or **!s**.",
+	"capturing":"Capping is a battle for influence over the 31 districts of NLACakaNM, and one of your main goals as a gangster. Capped territories award your kingpin slime, and give your teammates benefits while visiting. Start by visiting Based Hardware and equipping one of the paint tools sold there. Once you have that, you can **!spray <captcha>** while in a capturable district to gain influence for your gang. Spraying graffiti in districts will increase influence for you, or decrease it for the enemy if they have influence there. Think of dealing influence to a district like dealing damage to a Juvie's soft squishy body, with critical hits, misses, and backfires included. As you go, you can check your **!progress** to see how much influence you still need. It can be more or less depending on the territory class, running from rank C to S. \n\nA few more things to note:\n>**!progress** will tell you the minimum and limit for territory capture. However, you can capture above that limit, as high as you want. The catch is that anything captured over this limit will decay faster.\n>Decapping does 0.8x the influence of capping, even though the cost remains the same.\n>Don't attack enemy territory when it is surrounded by enemy territory/outskirts. Small little bitches like yourself are prone to fucking up severely under that much pressure.\n>The nightlife starts in the late night. Fewer cops are around to erase your handiwork, so if you cap then you will gain a 33% capping bonus.\n>You can't kill for shit with paint tools equipped. Luckily, you can **!sidearm** a weapon or tool and quickly switch between your two equip slots using **switch** or **!s**.",
 	"transportation":"There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board redtocv'. **'!disembark'** can be used to exit a train. **The Ferry** (which moves between Vagrant's Corner and Wreckington) and **The Blimp** (which moves between Dreadford and Assault Flats Beach) can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do. Refer to the diagram below (credits to Connor#3355) on understanding which districts have subway stations on them, though take note that the white subway line is currently non-operational.\nhttps://cdn.discordapp.com/attachments/431238867459375145/570392908780404746/t_system_final_stop_telling_me_its_wrong_magicks.png",
 	"death": "Death is an integral mechanic to Endless War. Even the most experienced players will face the sewers every now and again. If you find yourself in such a situation, use **'!revive'** in the sewers channel, and you will return to the land of the living as a juvenile at the base of ENDLESS WAR. Dying will drop some of your unadorned cosmetics and food, and all of your unequiped weapons, but your currently adorned cosmetics and equiped weapon will remain in your inventory (Gangsters will lose half of their food/unadorned cosmetics, while Juveniles lose only a quarter). Try not to die too often however, as using !revive collects a 'death tax', which is 1/10th of your current slimecoin. Alternatively, you can hold off on reviving and remain a **ghost**, which has its own gameplay mechanics associated with it. To learn more, use '!help ghosts' at one of the colleges or with a game guide.",
 	# Introductions, part 2
@@ -23558,12 +23683,12 @@ help_responses = {
 
 	weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase.",
 
-	weapon_id_spraycan: "**The spray can** is a paint tool for sale at Glocksbury Comics. It has a capping modifier of 0.8 and a spray cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
-	weapon_id_paintgun: "**The paint gun** is a paint tool for sale at Glocksbury Comics. It has a capping modifier of 0.7 and a spray cost mod of 0.75. It has a captcha length of 6, a miss chance of O% and a 20% chance for a crit, which does 2x influence.",
-	weapon_id_paintroller: "**The paint roller** is a paint tool for sale at Glocksbury Comics. It has a capping modifier of 1.75 and a spray cost mod of 4. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
-	weapon_id_paintbrush: "**The paint brush** is a paint tool for sale at Glocksbury Comics. It has a capping modifier of 0.5 and a spray cost mod of .25. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 1.5x influence.",
-	weapon_id_watercolors: "**Watercolors** are a paint tool for sale at Glocksbury Comics. It does a set 4000 influence per shot. It has a captcha length of 3, a miss chance of 10% and a .1% chance for a crit, which zeros out the whole district regardless of owner.",
-	weapon_id_thinnerbomb: "**Thinner bombs** are a paint tool for sale at Glocksbury Comics. It has a capping modifier of 0.15 and a spray cost mod of 2. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence. When you cap with a thinner bomb, it is used up, and you have to buy more. When decapping, damage is multiplied by 15. This tool has a 10% chance of backfiring.",
+	weapon_id_spraycan: "**The spray can** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.8 and a spray cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
+	weapon_id_paintgun: "**The paint gun** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.7 and a spray cost mod of 0.75. It has a captcha length of 6, a miss chance of O% and a 20% chance for a crit, which does 2x influence.",
+	weapon_id_paintroller: "**The paint roller** is a paint tool for sale at Based Hardware. It has a capping modifier of 1.75 and a spray cost mod of 4. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
+	weapon_id_paintbrush: "**The paint brush** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.5 and a spray cost mod of .25. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 1.5x influence.",
+	weapon_id_watercolors: "**Watercolors** are a paint tool for sale at Based Hardware. It does a set 4000 influence per shot. It has a captcha length of 3, a miss chance of 10% and a .1% chance for a crit, which zeros out the whole district regardless of owner.",
+	weapon_id_thinnerbomb: "**Thinner bombs** are a paint tool for sale at Based Hardware. It has a capping modifier of 0.15 and a spray cost mod of 2. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence. When you cap with a thinner bomb, it is used up, and you have to buy more. When decapping, damage is multiplied by 15. This tool has a 10% chance of backfiring.",
 
 
 	# "otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",

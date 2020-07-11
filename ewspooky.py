@@ -67,7 +67,7 @@ async def revive(cmd):
 				player_data.trauma = ""
 				poi_death = ewcfg.id_to_poi.get(player_data.poi_death)
 				if ewmap.inaccessible(poi = poi_death, user_data = player_data):
-					player_data.poi = ewcfg.poi_id_downtown
+					player_data.poi = ewcfg.poi_id_endlesswar
 				else:
 					player_data.poi = poi_death.id_poi
 			else:
@@ -76,7 +76,7 @@ async def revive(cmd):
 				# Give player some initial slimes.
 				player_data.change_slimes(n = ewcfg.slimes_onrevive)
 				# Get the player out of the sewers.
-				player_data.poi = ewcfg.poi_id_downtown
+				player_data.poi = ewcfg.poi_id_endlesswar
 
 
 

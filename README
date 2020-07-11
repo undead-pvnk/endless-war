@@ -65,6 +65,7 @@ CREATE TABLE users (
 	race varchar(32) NOT NULL DEFAULT '',
 	time_racialability int NOT NULL DEFAULT '0',
 	spray varchar(400) NOT NULL DEFAULT 'https://img.booru.org/rfck//images/3/a69d72cf29cb750882de93b4640a175a88cdfd70.png',
+	time_lastpremiumpurchase int NOT NULL DEFAULT '0',
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
 
@@ -510,6 +511,16 @@ CREATE OR REPLACE VIEW cosmetics AS SELECT
 	WHERE i.item_type = 'cosmetic'
 ;
 
+CREATE OR REPLACE VIEW cosmetics_count AS SELECT
+	c.id_user AS id_user,
+	c.id_server AS id_server,
+	c.id_cosmetic AS id_cosmetic,
+	COUNT(*) AS cosmetics_count
+	FROM cosmetics c
+	WHERE c.adorned = 'true'
+	GROUP BY c.id_user, c.id_server, c.id_cosmetic
+;
+
 CREATE OR REPLACE VIEW fashion_stats AS SELECT
 	c.id_user AS id_user,
 	c.id_server AS id_server,
@@ -520,16 +531,6 @@ CREATE OR REPLACE VIEW fashion_stats AS SELECT
 	LEFT JOIN cosmetics_count cc ON c.id_user = cc.id_user AND c.id_server = cc.id_server AND c.id_cosmetic = cc.id_cosmetic
 	WHERE c.adorned = 'true'
 	GROUP BY c.id_user, c.id_server
-;
-
-CREATE OR REPLACE VIEW cosmetics_count AS SELECT
-	c.id_user AS id_user,
-	c.id_server AS id_server,
-	c.id_cosmetic AS id_cosmetic,
-	COUNT(*) AS cosmetics_count
-	FROM cosmetics c
-	WHERE c.adorned = 'true'
-	GROUP BY c.id_user, c.id_server, c.id_cosmetic
 ;
 
 CREATE OR REPLACE VIEW freshness_base AS SELECT

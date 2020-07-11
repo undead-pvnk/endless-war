@@ -599,6 +599,7 @@ cmd_map = {
 	ewcfg.cmd_teleport_alt1: ewmap.teleport,
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
 	ewcfg.cmd_print_map_data: ewmap.print_map_data,
+	ewcfg.cmd_ping_me: ewcmd.ping_me,
 	ewcfg.cmd_boot: ewmap.boot,
 	ewcfg.cmd_bootall:ewapt.lobbywarning,
 
@@ -923,10 +924,10 @@ async def on_ready():
 		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
 		
-		if not debug:
-			asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
-			await ewtransport.init_transports(id_server = server.id)
-			asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
+		#if not debug:
+		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
+		await ewtransport.init_transports(id_server = server.id)
+		asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewsports.shambleball_tick_loop(id_server = server.id))

@@ -161,12 +161,12 @@ class EwResponseContainer:
 				logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
 				
 
-		for ch in self.channel_topics:
-			channel = get_channel(server = server, channel_name = ch)
-			try:
-				await self.client.edit_channel(channel = channel, topic = self.channel_topics[ch])
-			except:
-				logMsg('Failed to set channel topic for {} to {}'.format(ch, self.channel_topics[ch]))
+		# for ch in self.channel_topics:
+		# 	channel = get_channel(server = server, channel_name = ch)
+		# 	try:
+		# 		await self.client.edit_channel(channel = channel, topic = self.channel_topics[ch])
+		# 	except:
+		# 		logMsg('Failed to set channel topic for {} to {}'.format(ch, self.channel_topics[ch]))
 
 		return messages
 
@@ -2370,3 +2370,16 @@ def get_subzone_controlling_faction(subzone_id, id_server):
 	if district_data != None:
 		faction = district_data.controlling_faction
 		return faction
+
+def get_street_list(str_poi):
+	poi = ewcfg.id_to_poi.get(str_poi)
+	neighbor_list = poi.neighbors
+	poi_list = []
+	if poi.is_district == False:
+		return poi_list
+	else:
+		for neighbor in neighbor_list.keys():
+			neighbor_poi = ewcfg.id_to_poi.get(neighbor)
+			if neighbor_poi.is_street == True:
+				poi_list.append(neighbor)
+		return poi_list

@@ -413,7 +413,7 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 
 	client = ewutils.get_client()
 	server = ewcfg.server_list[user_data.id_server]
-	member_object = server.get_member(player.id_user)
+	member_object = server.get_member(user_data.id_user)
 
 	if not poi_source.is_apartment:
 		response = "You're not in an apartment."
@@ -2317,7 +2317,7 @@ async def aptCommands(cmd):
 	player = EwPlayer(id_user=cmd.message.author.id)
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
 	server = ewcfg.server_list[user_data.id_server]
-	member_object = server.get_member(player.id_user)
+	member_object = server.get_member(user_data.id_user)
 
 	if cmd_text == ewcfg.cmd_depart or cmd_text == ewcfg.cmd_retire:
 		return await depart(cmd)
