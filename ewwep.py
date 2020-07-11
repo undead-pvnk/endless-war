@@ -298,7 +298,6 @@ def canAttack(cmd):
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		captcha = weapon_item.item_props.get('captcha')
 
-	statuses = user_data.getStatusEffects()
 	channel_poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 	#if user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse:
 	#	if user_data.life_state == ewcfg.life_state_enlisted:
@@ -406,7 +405,7 @@ def canAttack(cmd):
 			# Target is already dead and not a ghost.
 			response = "{} is already dead.".format(member.display_name)
 		
-		elif shootee_data.life_state == ewcfg.life_state_corpse and ewcfg.status_ghostbust_id not in statuses:
+		elif shootee_data.life_state == ewcfg.life_state_corpse and ewcfg.status_ghostbust_id not in user_data.getStatusEffects():
 			# Target is a ghost but user is not able to bust 
 			response = "You don't know how to fight a ghost."
 
@@ -419,11 +418,11 @@ def canAttack(cmd):
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
 		# Identify if the shooter and the shootee are on the same team.
-		same_faction = False
-		if user_iskillers and shootee_data.faction == ewcfg.faction_killers:
-			same_faction = True
-		if user_isrowdys and shootee_data.faction == ewcfg.faction_rowdys:
-			same_faction = True
+		#same_faction = False
+		#if user_iskillers and shootee_data.faction == ewcfg.faction_killers:
+		#	same_faction = True
+		#if user_isrowdys and shootee_data.faction == ewcfg.faction_rowdys:
+		#	same_faction = True
 
 	return response
 
@@ -557,10 +556,13 @@ async def attack(cmd):
 		randombodypart = hitzone.name
 		if random.random() < 0.5:
 			randombodypart = random.choice(hitzone.aliases)
+		
+		shooter_status_mods = get_shooter_status_mods(user_data, shootee_data, hitzone)
+		shootee_status_mods = get_shootee_status_mods(shootee_data, user_data, hitzone)
 
-		miss_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self, shootee_data = shootee_data, hitzone = hitzone) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
-		crit_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self, shootee_data = shootee_data, hitzone = hitzone) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
-		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = shootee_data, hitzone = hitzone) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
+		miss_mod += round(shooter_status_mods['miss'] + shootee_status_mods['miss'], 2)
+		crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
+		dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 
 		if shootee_weapon != None:
 			if ewcfg.weapon_class_heavy in shootee_weapon.classes:
@@ -580,8 +582,6 @@ async def attack(cmd):
 		slimes_damage += int(slimes_damage * dmg_mod)
 
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
-		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
-		user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 
 		if shootee_data.life_state == ewcfg.life_state_corpse:
 			# Attack a ghostly target
@@ -941,8 +941,6 @@ async def attack(cmd):
 								'adorned': 'false'
 							}
 						)
-					
-					explode_damage = ewutils.slime_bylevel(shootee_data.slimelevel) / 5
 
 					# release bleed storage
 					if ewcfg.mutation_id_thickerthanblood in user_mutations:
@@ -1197,9 +1195,7 @@ async def attack(cmd):
 
 """ player kills themself """
 async def suicide(cmd):
-	time_now = int(time.time())
 	response = ""
-	deathreport = ""
 
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 
@@ -1994,80 +1990,101 @@ async def unjam(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 # Returns the total modifier of all statuses of a certain type and target of a given player
-def apply_combat_mods(user_data = None, desired_type = None, target = None, shooter_data = None, shootee_data = None, hitzone = None):
+def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = None):
 
-	modifier = 0
-	if user_data != None and desired_type != None and target != None:
+	mods = {
+		'dmg': 0,
+		'crit': 0,
+		'miss': 0
+	}
 
-		# Get the user's status effects
-		user_statuses = user_data.getStatusEffects()
-		for status in user_statuses:
-			status_flavor = ewcfg.status_effects_def_map.get(status)
+	user_statuses = user_data.getStatusEffects()
+	for status in user_statuses:
+		status_flavor = ewcfg.status_effects_def_map.get(status)
 
-			# check target for targeted status effects
-			if status in [ewcfg.status_taunted_id, ewcfg.status_aiming_id, ewcfg.status_evasive_id]:
-				if user_data.combatant_type == "player":
-					status_data = EwStatusEffect(id_status = status, user_data = user_data)
-				else:
-					status_data = EwEnemyStatusEffect(id_status = status, enemy_data = user_data)
-
-				if status_data.id_target != "":
-					if status == ewcfg.status_taunted_id:
-						if shootee_data == None  or shootee_data.id_user == status_data.id_target:
-							continue
-					elif status == ewcfg.status_evasive_id:
-						if shooter_data == None  or shooter_data.id_user != status_data.id_target:
-							continue
-					elif status == ewcfg.status_aiming_id:
-						if shootee_data == None  or shootee_data.id_user != status_data.id_target:
-							continue
-
-			if status_flavor is not None:
-				if target == ewcfg.status_effect_target_self:
-					if desired_type == ewcfg.status_effect_type_miss:
-						modifier += status_flavor.miss_mod_self
-					elif desired_type == ewcfg.status_effect_type_crit:
-						modifier += status_flavor.crit_mod_self
-					elif desired_type == ewcfg.status_effect_type_damage:
-						modifier += status_flavor.dmg_mod_self
-					
-				elif target == ewcfg.status_effect_target_other:
-					if desired_type == ewcfg.status_effect_type_miss:
-						modifier += status_flavor.miss_mod
-					elif desired_type == ewcfg.status_effect_type_crit:
-						modifier += status_flavor.crit_mod
-					elif desired_type == ewcfg.status_effect_type_damage:
-						modifier += status_flavor.dmg_mod
-
-			# apply hitzone damage and crit mod
-			if hitzone != None and status == hitzone.id_injury and target == ewcfg.status_effect_target_self:
+		# check target for targeted status effects
+		if status in [ewcfg.status_taunted_id, ewcfg.status_aiming_id, ewcfg.status_evasive_id]:
+			if user_data.combatant_type == "player":
 				status_data = EwStatusEffect(id_status = status, user_data = user_data)
-				try:
-					value_int = int(status_data.value)
-					
-					if desired_type == ewcfg.status_effect_type_crit:
-						modifier += 0.5 * value_int / 10
-					elif desired_type == ewcfg.status_effect_type_damage:
-						modifier += 1 * value_int / 10
-				except:
-					ewutils.logMsg("error with int conversion")
+			else:
+				status_data = EwEnemyStatusEffect(id_status = status, enemy_data = user_data)
 
-		if user_data.combatant_type == 'player':
-			trauma = ewcfg.trauma_map.get(user_data.trauma)
+			if status_data.id_target != "":
+				if status == ewcfg.status_taunted_id:
+					if shootee_data.id_user == status_data.id_target:
+						continue
+				elif status == ewcfg.status_aiming_id:
+					if shootee_data.id_user != status_data.id_target:
+						continue
 
-			if trauma != None:
-				if target == ewcfg.status_effect_target_self:
-					if desired_type == ewcfg.status_effect_type_miss and trauma.trauma_class == ewcfg.trauma_class_movespeed:
-						modifier += 0.3 * user_data.degradation / 100
-					elif desired_type == ewcfg.status_effect_type_damage and trauma.trauma_class == ewcfg.trauma_class_damage:
-						modifier -= 0.9 * user_data.degradation / 100
+		if status_flavor is not None:
+			mods['miss'] += status_flavor.miss_mod_self
+			mods['crit'] += status_flavor.crit_mod_self
+			mods['dmg'] += status_flavor.dmg_mod_self
 
-				elif target == ewcfg.status_effect_target_other:
-					if desired_type == ewcfg.status_effect_type_miss and trauma.trauma_class == ewcfg.trauma_class_accuracy:
-						modifier -= 0.2 * user_data.degradation / 100
+		# apply hitzone damage and crit mod
+		if hitzone != None and status == hitzone.id_injury:
+			status_data = EwStatusEffect(id_status = status, user_data = user_data)
+			try:
+				value_int = int(status_data.value)
+				
+				mods['crit'] += 0.5 * value_int / 10
+				mods['dmg'] += 1 * value_int / 10
 
-	return modifier
-	
+			except:
+				ewutils.logMsg("error with int conversion")
+
+	#apply trauma mods
+	if user_data.combatant_type == 'player':
+		trauma = ewcfg.trauma_map.get(user_data.trauma)
+
+		if trauma != None:
+			if trauma.trauma_class == ewcfg.trauma_class_movespeed:
+				mods['miss'] += 0.3 * user_data.degradation / 100
+			elif trauma.trauma_class == ewcfg.trauma_class_damage:
+				mods['dmg'] -= 0.9 * user_data.degradation / 100
+
+
+	return mods
+
+# Returns the total modifier of all statuses of a certain type and target of a given player
+def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = None):
+
+	mods = {
+		'dmg': 0,
+		'crit': 0,
+		'miss': 0
+	}
+
+	user_statuses = user_data.getStatusEffects()
+	for status in user_statuses:
+		status_flavor = ewcfg.status_effects_def_map.get(status)
+
+		# check target for targeted status effects
+		if status in [ewcfg.status_evasive_id]:
+			if user_data.combatant_type == "player":
+				status_data = EwStatusEffect(id_status = status, user_data = user_data)
+			else:
+				status_data = EwEnemyStatusEffect(id_status = status, enemy_data = user_data)
+
+			if status_data.id_target != "":
+				if shooter_data.id_user != status_data.id_target:
+					continue
+
+		if status_flavor is not None:
+			mods['miss'] += status_flavor.miss_mod
+			mods['crit'] += status_flavor.crit_mod
+			mods['dmg'] += status_flavor.dmg_mod
+
+	#apply trauma mods
+	if user_data.combatant_type == 'player':
+		trauma = ewcfg.trauma_map.get(user_data.trauma)
+
+		if trauma != None and trauma.trauma_class == ewcfg.trauma_class_accuracy:
+			mods['miss'] -= 0.2 * user_data.degradation / 100
+
+	return mods
+
 async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, market_data, time_now_float):
 	time_now = int(time_now_float)
 	# Get shooting player's info
@@ -2106,9 +2123,12 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if random.random() < 0.5:
 		randombodypart = random.choice(hitzone.aliases)
 
-	miss_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self, shootee_data = enemy_data, hitzone = hitzone) + apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
-	crit_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self, shootee_data = enemy_data, hitzone = hitzone) + apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
-	dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = enemy_data, hitzone = hitzone) + apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
+	shooter_status_mods = get_shooter_status_mods(user_data, enemy_data, hitzone)
+	shootee_status_mods = get_shootee_status_mods(enemy_data, user_data, hitzone)
+
+	miss_mod += round(shooter_status_mods['miss'] + shootee_status_mods['miss'], 2)
+	crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
+	dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
 	slimes_damage = int((slimes_spent * (10 + user_data.attack)) * (100 + (user_data.weaponskill * 5)) / 100.0)
