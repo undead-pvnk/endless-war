@@ -243,7 +243,7 @@ class EwPoi:
 		has_ads = False,
 		write_manuscript = False,
 		max_degradation = 1000,
-		neighbors = None
+		neighbors = None,
 	):
 		self.id_poi = id_poi
 		self.alias = alias
@@ -815,7 +815,7 @@ async def move(cmd = None, isApt = False):
 		isApt = True
 	server_data = ewcfg.server_list[user_data.id_server]
 	client = ewutils.get_client()
-	member_object = server_data.get_member(player_data.id_user)
+	member_object = server_data.get_member(user_data.id_user)
 
 	movement_method = ""
 
@@ -983,6 +983,11 @@ async def move(cmd = None, isApt = False):
 
 	else:
 		boost = 0
+		
+		step_list = []
+		for step in path.steps:
+			step_list.append(step.str_name)
+		print('path steps: {}'.format(step_list))
 
 		# Perform move.
 		for i in range(1, len(path.steps)):
@@ -1263,7 +1268,7 @@ async def teleport_player(cmd):
 	else:
 		return
 	
-	destination = cmd.tokens[2]
+	destination = cmd.tokens[2].lower()
 	
 	new_poi = ewcfg.id_to_poi.get(destination)
 	

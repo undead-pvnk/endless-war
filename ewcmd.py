@@ -165,7 +165,7 @@ def gen_data_text(
 	user_data = EwUser(
 		id_user=id_user,
 		id_server=id_server,
-		data_level = 1
+		data_level = 2
 	)
 	slimeoid = EwSlimeoid(id_user=id_user, id_server=id_server)
 
@@ -222,6 +222,14 @@ def gen_data_text(
 						weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
 			if user_data.weaponskill >= 5:
 				response += " {}".format(weapon.str_weaponmaster.format(rank=(user_data.weaponskill - 4)))
+
+		sidearm_item = EwItem(id_item=user_data.sidearm)
+		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+
+		if sidearm != None:
+			response += " They have sidearmed {}{}.".format((
+					"" if len(sidearm_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
+						sidearm_item.item_props.get("weapon_name"))), sidearm.str_weapon)
 
 		trauma = ewcfg.trauma_map.get(user_data.trauma)
 
@@ -297,7 +305,7 @@ def gen_data_text(
 		elif user_data.swear_jar >= 10:
 			response_block += "They've said some naughty things in the past."
 		elif user_data.swear_jar >= 5:
-			response_block += "They've cussed a handfull of times here and there."
+			response_block += "They've cussed a handful of times here and there."
 		elif user_data.swear_jar > 0:
 			response_block += "They've sworn only a few times."
 		else:
@@ -449,6 +457,14 @@ async def data(cmd):
 
 		trauma = ewcfg.trauma_map.get(user_data.trauma)
 
+		sidearm_item = EwItem(id_item=user_data.sidearm)
+		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+
+		if sidearm != None:
+			response += " You have sidearmed {}{}.".format((
+					"" if len(sidearm_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
+						sidearm_item.item_props.get("weapon_name"))), sidearm.str_weapon)
+
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma_self)
 
@@ -551,7 +567,7 @@ async def data(cmd):
 		elif user_data.swear_jar >= 10:
 			response_block += "You've said some naughty things in the past."
 		elif user_data.swear_jar >= 5:
-			response_block += "You've cussed a handfull of times here and there."
+			response_block += "You've cussed a handful of times here and there."
 		elif user_data.swear_jar > 0:
 			response_block += "You've sworn only a few times."
 		else:
@@ -625,7 +641,7 @@ async def hunger(cmd):
 """ Check your outfit. """
 async def fashion(cmd):
 	if cmd.mentions_count == 0:
-		user_data = EwUser(member=cmd.message.author, data_level = 1)
+		user_data = EwUser(member=cmd.message.author, data_level = 2)
 
 		cosmetic_items = ewitem.inventory(
 			id_user = cmd.message.author.id,
@@ -717,7 +733,7 @@ async def fashion(cmd):
 
 	else:
 		member = cmd.mentions[0]
-		user_data = EwUser(member = member, data_level = 1)
+		user_data = EwUser(member = member, data_level = 2)
 
 		cosmetic_items = ewitem.inventory(
 			id_user = member.id,
@@ -879,6 +895,10 @@ def weather_txt(id_server):
 async def weather(cmd):
 	response = weather_txt(cmd.message.server.id)
 
+	market_data = EwMarket(id_server=cmd.message.server.id)
+	time_current = market_data.clock
+	if 3 <= time_current <= 10:
+		response += "\n\nThe police are probably all asleep, the lazy fucks. It's a good time for painting the town!"
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1631,12 +1651,24 @@ async def recycle(cmd):
 				else:
 					user_data.weapon = -1
 					user_data.persist()
-			
+			elif item.item_type == ewcfg.it_weapon and user_data.sidearm >= 0 and item.id_item == user_data.sidearm:
+				user_data.sidearm = -1
+				user_data.persist()
+
 			ewitem.item_delete(id_item = item.id_item)
 
 			pay = int(random.random() * 10 ** random.randrange(2,6))
 			response = "You put your {} into the designated opening. **CRUSH! Splat!** *hiss...* and it's gone. \"Thanks for keeping the city clean.\" a robotic voice informs you.".format(item_sought.get("name"))
-			if pay == 0:
+			if item.item_props.get('id_furniture') == 'sord':
+				response = "You jam the jpeg artifact into the recycling bin. It churns and sputters, desperately trying to turn it into anything of value. Needless to say, it fails. \"get a load of this hornses ass.\" a robotic voice informs you"
+
+				if user_data.slimecoin >= 1:
+					response += ", nabbing 1 SlimeCoin from you out of spite."
+					user_data.change_slimecoin(n=-1, coinsource = ewcfg.coinsource_recycle)
+					user_data.persist()
+				else:
+					response += "."
+			elif pay == 0:
 				item_reward = random.choice(ewcfg.mine_results)
 
 				item_props = ewitem.gen_item_props(item_reward)
@@ -1884,7 +1916,7 @@ async def jump(cmd):
 				pass
 
 			elif item_object.item_type == ewcfg.it_weapon:
-				if item.get('id_item') == user_data.weapon:
+				if item.get('id_item') == user_data.weapon or item.get('id_item') == user_data.sidearm:
 					ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.message.server.id)
 
 				else:
@@ -1982,7 +2014,10 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 	districtmodel = EwDistrict(id_server=id_server, district=ewcfg.poi_id_slimesendcliffs)
 	slimetotal = 0
 
-	if random.randrange(500) < 125 or item_obj.item_type == ewcfg.it_questitem or item_obj.item_type == ewcfg.it_medal or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand":
+	if item_obj.item_props.get('id_furniture') == 'sord':
+		response = "You toss the sord off the cliff, but for whatever reason, the damn thing won't go down. It just keeps going up and up, as though gravity itself blocked this piece of shit jpeg artifact on Twitter. It eventually goes out of sight, where you assume it flies into the sun."
+		ewitem.item_delete(id_item=id_item)
+	elif random.randrange(500) < 125 or item_obj.item_type == ewcfg.it_questitem or item_obj.item_type == ewcfg.it_medal or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand":
 		response = "You toss the {} off the cliff. It sinks into the ooze disappointingly.".format(item_name)
 		ewitem.give_item(id_item=id_item, id_server=id_server, id_user=ewcfg.poi_id_slimesea)
 
@@ -2416,7 +2451,7 @@ async def check_stats(cmd):
 	else:
 		target = cmd.mentions[0]
 
-	target_user_data = EwUser(id_user = target.id, id_server = cmd.message.server.id, data_level = 1)
+	target_user_data = EwUser(id_user = target.id, id_server = cmd.message.server.id, data_level = 2)
 
 	if target_user_data != None:
 		response = "They have {} attack, {}  defense, and {} speed.".format(target_user_data.attack, target_user_data.defense, target_user_data.speed)
@@ -2508,3 +2543,25 @@ async def prank(cmd):
 				break
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
+
+async def ping_me(cmd):
+
+	author = cmd.message.author
+	user_data = EwUser(member=author)
+
+	if ewutils.DEBUG or author.server_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
+		pass
+	else:
+		return
+	
+	try:
+		requested_channel = cmd.tokens[1]
+	except:
+		return
+	
+	pinged_poi = ewcfg.id_to_poi.get(requested_channel)
+	channel = ewutils.get_channel(cmd.message.server, pinged_poi.channel)
+
+	if pinged_poi != None:
+		response = user_data.get_mention()
+		return await ewutils.send_message(cmd.client, channel, response)

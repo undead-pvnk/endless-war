@@ -161,12 +161,12 @@ class EwResponseContainer:
 				logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
 				
 
-		for ch in self.channel_topics:
-			channel = get_channel(server = server, channel_name = ch)
-			try:
-				await self.client.edit_channel(channel = channel, topic = self.channel_topics[ch])
-			except:
-				logMsg('Failed to set channel topic for {} to {}'.format(ch, self.channel_topics[ch]))
+		# for ch in self.channel_topics:
+		# 	channel = get_channel(server = server, channel_name = ch)
+		# 	try:
+		# 		await self.client.edit_channel(channel = channel, topic = self.channel_topics[ch])
+		# 	except:
+		# 		logMsg('Failed to set channel topic for {} to {}'.format(ch, self.channel_topics[ch]))
 
 		return messages
 
@@ -1229,6 +1229,9 @@ def get_channel(server = None, channel_name = ""):
 		if chan.name == channel_name:
 			channel = chan
 
+	if channel == None:
+		logMsg('Error: In get_channel(), could not find channel using channel_name "{}"'.format(channel_name))
+
 	return channel
 
 """
@@ -1686,6 +1689,8 @@ def text_to_regional_indicator(text):
 	# note that inside the quotes below is a zero-width space, 
 	# used to prevent the regional indicators from turning into flags
 	# also note that this only works for digits and english letters
+  
+	###return "‎".join([chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
 	return "‎".join([c + '\ufe0f\u20e3' if c.isdigit() else chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
 
 def generate_captcha_random(length = 4):
@@ -2363,5 +2368,18 @@ def get_subzone_controlling_faction(subzone_id, id_server):
 			break
 
 	if district_data != None:
-		faction = district_data.controlling_faction
+		faction = district_data.all_streets_taken()
 		return faction
+
+def get_street_list(str_poi):
+	poi = ewcfg.id_to_poi.get(str_poi)
+	neighbor_list = poi.neighbors
+	poi_list = []
+	if poi.is_district == False:
+		return poi_list
+	else:
+		for neighbor in neighbor_list.keys():
+			neighbor_poi = ewcfg.id_to_poi.get(neighbor)
+			if neighbor_poi.is_street == True:
+				poi_list.append(neighbor)
+		return poi_list

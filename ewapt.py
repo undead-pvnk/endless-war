@@ -19,6 +19,7 @@ import ewslimeoid
 import ewhunting
 import ewwep
 import ewquadrants
+import ewdistrict
 
 from ewitem import EwItem
 from ewdistrict import EwDistrict
@@ -412,7 +413,7 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 
 	client = ewutils.get_client()
 	server = ewcfg.server_list[user_data.id_server]
-	member_object = server.get_member(player.id_user)
+	member_object = server.get_member(user_data.id_user)
 
 	if not poi_source.is_apartment:
 		response = "You're not in an apartment."
@@ -1515,7 +1516,7 @@ async def trickortreat(cmd = None):
 				treat = False
 				if ewutils.active_target_map.get(user_data.id_user) == target_data.apt_zone:
 					# For Double Halloween spam knocking isn't really an issue. Just clear up their slot in the active target map for now.
-					print('DEBUG: Spam knock in trickortreat command.')
+					#print('DEBUG: Spam knock in trickortreat command.')
 					ewutils.active_target_map[user_data.id_user] = ""
 					return #returns if the user is spam knocking. However, the person in the apt still gets each of the DMs above.
 				else:
@@ -2106,11 +2107,12 @@ async def wash(cmd):
 			else:
 				response = "Don't put a {} in the washing machine. You'll break it. Christ, you spent like 1.6 mega on that fucking thing.".format(item_sought.get('name'))
 		elif slimeoid_search and slimeoid.life_state == ewcfg.slimeoid_state_active:
-			if slimeoid.hue == "" or slimeoid.hue is None:
+			if (slimeoid.hue == "" or slimeoid.hue is None) and (slimeoid.coating == "" or slimeoid.coating is None):
 				response = "You tell {} that there's a poudrin for it in the washer. D'aww. It's so trusting. The moment it enters, you close the lid and crank the spin cycle. You laugh for awhile, but quickly realize you don't know how to pause it and let {} out. Guess you'll have to wait the full 20 minutes. Time passes, and your slimeoid stumbles out, nearly unconscious. Sorry, little buddy.".format(slimeoid.name, slimeoid.name)
 			else:
 				response = "You toss your colored slimeoid in the washing machine and press start. Not only is {} now tumbling around and getting constantly scalded by the water, it's also suddenly insecure about how you wanted to rid it of its racial identity. After about 20 minutes {} steps out, demoralized, exhausted, and green as an ogre. Nice. Nice.".format(slimeoid.name, slimeoid.name)
 				slimeoid.hue = ""
+				slimeoid.coating = ""
 				slimeoid.persist()
 		elif item_search == "":
 			response = "There's nothing to wash. You start the machine anyway, riding it like a fucking bucking bronco. This thing really was a great investment."
@@ -2272,7 +2274,7 @@ async def jam(cmd):
 
 	if item_sought:
 		item = EwItem(id_item=item_sought.get('id_item'))
-		if item.item_props.get("id_furniture") in ewcfg.furniture_instrument:
+		if item.item_props.get("id_furniture") in ewcfg.furniture_instrument or item.item_props.get("weapon_type") == ewcfg.weapon_id_bass:
 			cycle = random.randrange(20)
 			response = ""
 			for x in range(1, cycle):
@@ -2315,7 +2317,7 @@ async def aptCommands(cmd):
 	player = EwPlayer(id_user=cmd.message.author.id)
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
 	server = ewcfg.server_list[user_data.id_server]
-	member_object = server.get_member(player.id_user)
+	member_object = server.get_member(user_data.id_user)
 
 	if cmd_text == ewcfg.cmd_depart or cmd_text == ewcfg.cmd_retire:
 		return await depart(cmd)
@@ -2410,6 +2412,8 @@ async def aptCommands(cmd):
 		return await ewwep.annoint(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_petslimeoid:
 		return await ewslimeoid.petslimeoid(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_abuseslimeoid:
+		return await ewslimeoid.abuseslimeoid(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_playfetch:
 		return await ewslimeoid.playfetch(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_observeslimeoid:
@@ -2486,6 +2490,14 @@ async def aptCommands(cmd):
 		return await apt_help(cmd)
 	elif cmd_text == ewcfg.cmd_accept or cmd_text == ewcfg.cmd_refuse:
 		pass
+	elif cmd_text == ewcfg.cmd_switch or cmd_text == ewcfg.cmd_switch_alt_1:
+		return await ewwep.switch_weapon(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_changespray:
+		return await ewdistrict.change_spray(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_tag:
+		return await ewdistrict.tag(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_sidearm:
+		return await ewwep.sidearm(cmd=cmd)
 	#elif cmd_text == ewcfg.cmd_trick or cmd_text == ewcfg.cmd_treat:
 	#	pass
 	elif cmd_text[0]==ewcfg.cmd_prefix: #faliure text

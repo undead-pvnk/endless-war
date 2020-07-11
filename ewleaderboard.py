@@ -3,6 +3,7 @@ import datetime
 import ewcfg
 import ewutils
 from ewmarket import EwMarket
+from ewdistrict import EwDistrict
 
 
 async def post_leaderboards(client = None, server = None):
@@ -268,21 +269,20 @@ def make_kingpin_board(server = None, title = ""):
 
 def make_district_control_board(id_server, title):
 	entries = []
-	districts = ewutils.execute_sql_query(
-		"SELECT {district}, {controlling_faction} FROM districts WHERE id_server = %s".format(
-			district = ewcfg.col_district,
-			controlling_faction = ewcfg.col_controlling_faction
-		), (
-			id_server,
-		)
-	)
+	
+	districts = []
+	for poi in ewcfg.poi_list:
+		if poi.is_district:
+			districts.append(poi.id_poi)
+			
 	rowdy_districts = 0
 	killer_districts = 0
 
 	for district in districts:
-		if district[1] == ewcfg.faction_rowdys:
+		district_data = EwDistrict(district = district, id_server = id_server)
+		if district_data.all_streets_taken() == ewcfg.faction_rowdys:
 			rowdy_districts += 1
-		elif district[1] == ewcfg.faction_killers:
+		elif district_data.all_streets_taken() == ewcfg.faction_killers:
 			killer_districts += 1
 
 	rowdy_entry = [ewcfg.faction_rowdys.capitalize(), rowdy_districts]

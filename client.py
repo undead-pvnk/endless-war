@@ -100,6 +100,7 @@ cmd_map = {
 	ewcfg.cmd_equip: ewwep.equip,
 	ewcfg.cmd_arm: ewwep.equip,
 	ewcfg.cmd_arsenalize: ewwep.equip,
+	ewcfg.cmd_sidearm: ewwep.sidearm,
 	
 	# Kill yourself
 	ewcfg.cmd_suicide: ewwep.suicide,
@@ -432,8 +433,13 @@ cmd_map = {
 	ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
 
 	# Change your current POI capture progress
-	ewcfg.cmd_annex: ewdistrict.annex,
-	ewcfg.cmd_annex_alt1: ewdistrict.annex,
+
+	#ewcfg.cmd_annex: ewdistrict.annex,
+	ewcfg.cmd_spray: ewwep.spray,
+	#ewcfg.cmd_annex_alt1: ewdistrict.annex,
+	ewcfg.cmd_spray_alt1: ewwep.spray,
+	ewcfg.cmd_changespray:ewdistrict.change_spray,
+	ewcfg.cmd_tag:ewdistrict.tag,
 
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
@@ -442,6 +448,7 @@ cmd_map = {
 	#farming
 	ewcfg.cmd_sow: ewfarm.sow,
 	ewcfg.cmd_reap: ewfarm.reap,
+	ewcfg.cmd_reap_alt: ewfarm.reap,
 	ewcfg.cmd_check_farm: ewfarm.check_farm,
 	ewcfg.cmd_irrigate: ewfarm.cultivate,
 	ewcfg.cmd_weed: ewfarm.cultivate,
@@ -545,6 +552,7 @@ cmd_map = {
 	ewcfg.cmd_instructions: ewslimeoid.instructions,
 	ewcfg.cmd_playfetch: ewslimeoid.playfetch,
 	ewcfg.cmd_petslimeoid: ewslimeoid.petslimeoid,
+	ewcfg.cmd_abuseslimeoid: ewslimeoid.abuseslimeoid,
 	ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
 	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
@@ -591,6 +599,7 @@ cmd_map = {
 	ewcfg.cmd_teleport_alt1: ewmap.teleport,
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
 	ewcfg.cmd_print_map_data: ewmap.print_map_data,
+	ewcfg.cmd_ping_me: ewcmd.ping_me,
 	ewcfg.cmd_boot: ewmap.boot,
 	ewcfg.cmd_bootall:ewapt.lobbywarning,
 
@@ -693,7 +702,10 @@ cmd_map = {
 
 	# flush items and slime from subzones into their mother district
 	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones,
-	
+
+	#swap weapons
+	ewcfg.cmd_switch: ewwep.switch_weapon,
+	ewcfg.cmd_switch_alt_1: ewwep.switch_weapon,
 	# Slimernalia
 	# Check your current festivity
 	#ewcfg.cmd_festivity: ewcmd.festivity,
@@ -912,10 +924,10 @@ async def on_ready():
 		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
 		
-		if not debug:
-			asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
-			await ewtransport.init_transports(id_server = server.id)
-			asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
+		#if not debug:
+		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
+		await ewtransport.init_transports(id_server = server.id)
+		asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewsports.shambleball_tick_loop(id_server = server.id))
@@ -1252,7 +1264,7 @@ async def on_member_join(member):
 async def on_message_delete(message):
 	if message != None and message.server != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
 		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
-		await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
+		await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'))
 
 @client.event
 async def on_message(message):

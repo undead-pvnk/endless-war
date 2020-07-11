@@ -1426,7 +1426,7 @@ async def zine_dm_commands(cmd):
 	player = EwPlayer(id_user=cmd.message.author.id)
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
 	server = ewcfg.server_list[user_data.id_server]
-	member_object = server.get_member(player.id_user)
+	member_object = server.get_member(user_data.id_user)
 	cmd.message.author = member_object
 	cmd.message.server = server
 	dm = True

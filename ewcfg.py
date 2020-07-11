@@ -30,7 +30,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.24a"
+version = "v3.33 - You Are (Not) Safe In The Streets"
 
 
 dir_msgqueue = 'msgqueue'
@@ -50,7 +50,6 @@ permissions_tries = 1
 
 # Time saved moving through friendly territory (or lost in hostile territory).
 territory_time_gain = 10
-
 
 # Market delta
 max_iw_swing = 30
@@ -140,19 +139,20 @@ poi_id_greencakecafe = "greencakecafe"
 poi_id_sodafountain = "sodafountain"
 poi_id_bodega = "bodega"
 poi_id_wafflehouse = "wafflehouse"
-
+poi_id_basedhardware = "basedhardware"
 
 # transports
 poi_id_ferry = "ferry"
-poi_id_subway_red01 = "subwayred01"
-poi_id_subway_red02 = "subwayred02"
-poi_id_subway_yellow01 = "subwayyellow01"
-poi_id_subway_yellow02 = "subwayyellow02"
+poi_id_subway_pink01 = "subwaypink01"
+poi_id_subway_pink02 = "subwaypink02"
+poi_id_subway_gold01 = "subwaygold01"
+poi_id_subway_gold02 = "subwaygold02"
 poi_id_subway_green01 = "subwaygreen01"
 poi_id_subway_green02 = "subwaygreen02"
-poi_id_subway_white01 = "subwaywhite01"
-poi_id_subway_blue01 = "subwayblue01"
-poi_id_subway_blue02 = "subwayblue02"
+poi_id_subway_black01 = "subwayblack01"
+poi_id_subway_black02 = "subwayblack01"
+poi_id_subway_purple01 = "subwaypurple01"
+poi_id_subway_purple02 = "subwaypurple02"
 poi_id_blimp = "blimp"
 poi_id_apt = "apt"
 
@@ -174,6 +174,7 @@ poi_id_wgb_subway_station = "westglocksburysubwaystation"
 poi_id_jp_subway_station = "jaywalkerplainsubwaystation"
 poi_id_nsb_subway_station = "northsleezesubwaystation"
 poi_id_ssb_subway_station = "southsleezesubwaystation"
+poi_id_bd_subway_station = "brawldensubwaystation"
 poi_id_cv_subway_station = "cratersvillesubwaystation"
 poi_id_wt_subway_station = "wreckingtonsubwaystation"
 poi_id_rr_subway_station = "rowdyroughhousesubwaystation"
@@ -181,6 +182,14 @@ poi_id_gld_subway_station = "greenlightsubwaystation"
 poi_id_jr_subway_station = "juviesrowsubwaystation"
 poi_id_vc_subway_station = "vagrantscornersubwaystation"
 poi_id_afb_subway_station = "assaultflatssubwaystation"
+poi_id_vp_subway_station = "vandalparksubwaystation"
+poi_id_pa_subway_station = "poudrinalleysubwaystation"
+poi_id_og_subway_station = "oozegardenssubwaystation"
+poi_id_cl_subway_station = "crooklinesubwaystation"
+poi_id_lc_subway_station = "littlechernobylsubwaystation"
+poi_id_bd_subway_station = "brawldensubwaystation"
+poi_id_nny_subway_station = "newnewyonkerssubwaystation"
+
 
 poi_id_underworld_subway_station = "underworldsubwaystation"
 
@@ -471,6 +480,7 @@ poi_id_arsonbrook_outskirts = "arsonbrookoutskirts"
 poi_id_brawlden_outskirts = "brawldenoutskirts"
 poi_id_newnewyonkers_outskirts = "newnewyonkersoutskirts"
 poi_id_assaultflatsbeach_outskirts = "assaultflatsbeachoutskirts"
+
 # Layer 3
 poi_id_wreckington_outskirts_depths = "wreckingtonoutskirtsdepths"
 poi_id_cratersville_outskirts_depths = "cratersvilleoutskirtsdepths"
@@ -488,6 +498,7 @@ poi_id_arsonbrook_outskirts_depths = "arsonbrookoutskirtsdepths"
 poi_id_brawlden_outskirts_depths = "brawldenoutskirtsdepths"
 poi_id_newnewyonkers_outskirts_depths = "newnewyonkersoutskirtsdepths"
 poi_id_assaultflatsbeach_outskirts_depths = "assaultflatsbeachoutskirtsdepths"
+
 
 
 poi_id_south_outskirts = "southoutskirts"
@@ -517,16 +528,23 @@ transport_line_ferry_wt_to_vc = "ferrywttovc"
 transport_line_ferry_vc_to_wt = "ferryvctowt"
 
 # Subway lines
-transport_line_subway_yellow_northbound = "subwayyellownorth"
-transport_line_subway_yellow_southbound = "subwayyellowsouth"
-transport_line_subway_red_northbound = "subwayrednorth"
-transport_line_subway_red_southbound = "subwayredsouth"
-transport_line_subway_blue_eastbound = "subwayblueeast"
-transport_line_subway_blue_westbound = "subwaybluewest"
-transport_line_subway_white_eastbound = "subwaywhiteeast"
-transport_line_subway_white_westbound = "subwaywhitewest"
+transport_line_subway_purple_northbound = "subwaypurplenorth"
+transport_line_subway_purple_southbound = "subwaypurplesouth"
+
+transport_line_subway_pink_northbound = "subwaypinknorth"
+transport_line_subway_pink_southbound = "subwaypinksouth"
+
+transport_line_subway_gold_eastbound = "subwaygoldeast"
+transport_line_subway_gold_westbound = "subwaygoldwest"
+
+transport_line_subway_black_eastbound = "subwayblackeast"
+transport_line_subway_black_westbound = "subwayblackwest"
+
 transport_line_subway_green_eastbound = "subwaygreeneast"
 transport_line_subway_green_westbound = "subwaygreenwest"
+
+transport_line_subway_gold_eastbound = "subwaygoldeast"
+transport_line_subway_gold_westbound = "subwaygoldwest"
 
 # Blimp lines
 transport_line_blimp_df_to_afb = "blimpdftoafb"
@@ -548,7 +566,7 @@ role_copkillers_active = "killerotp"
 role_corpse = "corpse"
 role_corpse_pvp = "corpsewanted"
 role_corpse_active = "corpseotp"
-role_shambler = "shambler"
+role_shambler = "shamblers"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
 role_slimecorp = "slimecorp"
@@ -562,11 +580,12 @@ role_null_minor_role = "nullminorrole"
 
 permission_read_messages = "read"
 permission_send_messages = "send"
+permission_connect_to_voice = "connect"
 #permission_see_history = "history"
 #permission_upload_files = "upload" -- everything else including this should be true by default. 
 # Read, Send, and History should be false by default but set to true.
 
-permissions_general = [permission_read_messages, permission_send_messages]
+permissions_general = [permission_read_messages, permission_send_messages, permission_connect_to_voice]
 
 faction_roles = [
 	role_juvenile,
@@ -693,19 +712,27 @@ channel_gld_subway_station = "green-light-subway-station"
 channel_jr_subway_station = "juvies-row-subway-station"
 channel_vc_subway_station = "vagrants-corner-subway-station"
 channel_afb_subway_station = "assault-flats-subway-station"
+channel_vp_subway_station = "vandal-park-subway-station"
+channel_pa_subway_station = "poudrin-alley-subway-station"
+channel_og_subway_station = "ooze-gardens-subway-station"
+channel_cl_subway_station = "crookline-subway-station"
+channel_lc_subway_station = "little-chernobyl-subway-station"
+channel_bd_subway_station = "brawlden-subway-station"
+channel_nny_subway_station = "new-new-yonkers-subway-station"
 channel_df_blimp_tower = "dreadford-blimp-tower"
 channel_afb_blimp_tower = "assault-flats-blimp-tower"
 
 channel_ferry = "ferry"
-channel_subway_red01 = "subway-train-r-01"
-channel_subway_red02 = "subway-train-r-02"
-channel_subway_yellow01 = "subway-train-y-01"
-channel_subway_yellow02 = "subway-train-y-02"
-channel_subway_green01 = "subway-train-g-01"
-channel_subway_green02 = "subway-train-g-02"
-channel_subway_white01 = "subway-train-w-01"
-channel_subway_blue01 = "subway-train-b-01"
-channel_subway_blue02 = "subway-train-b-02"
+channel_subway_pink01 = "subway-train-pink-01"
+channel_subway_pink02 = "subway-train-pink-02"
+channel_subway_gold01 = "subway-train-gold-01"
+channel_subway_gold02 = "subway-train-gold-02"
+channel_subway_green01 = "subway-train-green-01"
+channel_subway_green02 = "subway-train-green-02"
+channel_subway_black01 = "subway-train-black-01"
+channel_subway_black02 = "subway-train-black-02"
+channel_subway_purple01 = "subway-train-purple-01"
+channel_subway_purple02 = "subway-train-purple-02"
 channel_blimp = "blimp"
 
 channel_killfeed = "kill-feed"
@@ -747,8 +774,137 @@ channel_apt_maimrdige ="maimridge-apartments"
 channel_slimesendcliffs = "slimes-end-cliffs"
 channel_bodega = "bodega"
 channel_wafflehouse = "wafflehouse"
+channel_basedhardware = "based-hardware"
 
 channel_prankfeed = "prank-feed"
+
+# Placeholders
+channel_copkilltown_street_a = "cop-killtown-street-a"
+channel_rowdyroughhouse_street_a = "rowdy-roughhouse-street-a"
+channel_juviesrow_street_a = "juvies-row-street-a"
+channel_downtown_street_a = "downtown-street-a"
+channel_downtown_street_b = "downtown-street-b"
+channel_downtown_street_c = "downtown-street-c"
+channel_downtown_street_d = "downtown-street-d"
+channel_downtown_street_e = "downtown-street-e"
+channel_downtown_street_f = "downtown-street-f"
+channel_krakbay_street_a = "krak-bay-street-a"
+channel_krakbay_street_b = "krak-bay-street-b"
+channel_krakbay_street_c = "krak-bay-street-c"
+channel_krakbay_street_d = "krak-bay-street-d"
+channel_krakbay_street_e = "krak-bay-street-e"
+channel_krakbay_street_f = "krak-bay-street-f"
+channel_poudrinalley_street_a = "poudrin-alley-street-a" 
+channel_poudrinalley_street_b = "poudrin-alley-street-b"
+channel_poudrinalley_street_c = "poudrin-alley-street-c"
+channel_poudrinalley_street_d = "poudrin-alley-street-d"
+channel_poudrinalley_street_e = "poudrin-alley-street-e"
+channel_cratersville_street_a = "cratersville-street-a"
+channel_cratersville_street_b = "cratersville-street-b"
+channel_cratersville_street_c = "cratersville-street-c"
+channel_wreckington_street_a = "wreckington-street-a"
+channel_wreckington_street_b = "wreckington-street-b"
+channel_oozegardens_street_a = "ooze-gardens-street-a"
+channel_oozegardens_street_b = "ooze-gardens-street-b"
+channel_oozegardens_street_c = "ooze-gardens-street-c"
+channel_oozegardens_street_d = "ooze-gardens-street-d"
+channel_southsleezeborough_street_a = "south-sleezeborough-street-a" 
+channel_southsleezeborough_street_b = "south-sleezeborough-street-b"
+channel_southsleezeborough_street_c = "south-sleezeborough-street-c"
+channel_southsleezeborough_street_d = "south-sleezeborough-street-d"
+channel_northsleezeborough_street_a = "north-sleezeborough-street-a"
+channel_northsleezeborough_street_b = "north-sleezeborough-street-b"
+channel_northsleezeborough_street_c = "north-sleezeborough-street-c"
+channel_northsleezeborough_street_d = "north-sleezeborough-street-d"
+channel_northsleezeborough_street_e = "north-sleezeborough-street-e"
+channel_glocksbury_street_a = "glocksbury-street-a"
+channel_glocksbury_street_b = "glocksbury-street-b"
+channel_glocksbury_street_c = "glocksbury-street-c"
+channel_glocksbury_street_d = "glocksbury-street-d"
+channel_glocksbury_street_e = "glocksbury-street-e"
+channel_westglocksbury_street_a = "west-glocksbury-street-a" 
+channel_westglocksbury_street_b = "west-glocksbury-street-b"
+channel_westglocksbury_street_c = "west-glocksbury-street-c"
+channel_westglocksbury_street_d = "west-glocksbury-street-d"
+channel_jaywalkerplain_street_a = "jaywalker-plain-street-a"
+channel_jaywalkerplain_street_b = "jaywalker-plain-street-b"
+channel_jaywalkerplain_street_c = "jaywalker-plain-street-c"
+channel_jaywalkerplain_street_d = "jaywalker-plain-street-d"
+channel_jaywalkerplain_street_e = "jaywalker-plain-street-e"
+channel_crookline_street_a = "crookline-street-a" 
+channel_crookline_street_b = "crookline-street-b"
+channel_crookline_street_c = "crookline-street-c"
+channel_crookline_street_d = "crookline-street-d"
+channel_dreadford_street_a = "dreadford-street-a"
+channel_dreadford_street_b = "dreadford-street-b"
+channel_vandalpark_street_a = "vandal-park-street-a"
+channel_vandalpark_street_b = "vandal-park-street-b"
+channel_vandalpark_street_c = "vandal-park-street-c"
+channel_vandalpark_street_d = "vandal-park-street-d"
+channel_poloniumhill_street_a = "polonium-hill-street-a"
+channel_poloniumhill_street_b = "polonium-hill-street-b"
+channel_poloniumhill_street_c = "polonium-hill-street-c"
+channel_poloniumhill_street_d = "polonium-hill-street-d"
+channel_poloniumhill_street_e = "polonium-hill-street-e"
+channel_charcoalpark_street_a = "charcoal-park-street-a" 
+channel_charcoalpark_street_b = "charcoal-park-street-b"
+channel_toxington_street_a = "toxington-street-a"
+channel_toxington_street_b = "toxington-street-b"
+channel_toxington_street_c = "toxington-street-c"
+channel_toxington_street_d = "toxington-street-d"
+channel_toxington_street_e = "toxington-street-e"
+channel_gatlingsdale_street_a = "gatlingsdale-street-a" 
+channel_gatlingsdale_street_b = "gatlingsdale-street-b"
+channel_gatlingsdale_street_c = "gatlingsdale-street-c"
+channel_gatlingsdale_street_d = "gatlingsdale-street-d"
+channel_gatlingsdale_street_e = "gatlingsdale-street-e"
+channel_astatineheights_street_a = "astatine-heights-street-a"
+channel_astatineheights_street_b = "astatine-heights-street-b"
+channel_astatineheights_street_c = "astatine-heights-street-c"
+channel_astatineheights_street_d = "astatine-heights-street-d"
+channel_astatineheights_street_e = "astatine-heights-street-e"
+channel_astatineheights_street_f = "astatine-heights-street-f"
+channel_smogsburg_street_a = "smogsburg-street-a" 
+channel_smogsburg_street_b = "smogsburg-street-b"
+channel_smogsburg_street_c = "smogsburg-street-c"
+channel_smogsburg_street_d = "smogsburg-street-d"
+channel_smogsburg_street_e = "smogsburg-street-e"
+channel_arsonbrook_street_a = "arsonbrook-street-a"
+channel_arsonbrook_street_b = "arsonbrook-street-b"
+channel_arsonbrook_street_c = "arsonbrook-street-c"
+channel_arsonbrook_street_d = "arsonbrook-street-d"
+channel_arsonbrook_street_e = "arsonbrook-street-e"
+channel_maimridge_street_a = "maimridge-street-a"
+channel_maimridge_street_b = "maimridge-street-b"
+channel_maimridge_street_c = "maimridge-street-c"
+channel_brawlden_street_a = "brawlden-street-a" 
+channel_brawlden_street_b = "brawlden-street-b"
+channel_brawlden_street_c = "brawlden-street-c"
+channel_brawlden_street_d = "brawlden-street-d"
+channel_littlechernobyl_street_a = "little-chernobyl-street-a"
+channel_littlechernobyl_street_b = "little-chernobyl-street-b"
+channel_littlechernobyl_street_c = "little-chernobyl-street-c"
+channel_oldnewyonkers_street_a = "old-new-yonkers-street-a"
+channel_oldnewyonkers_street_b = "old-new-yonkers-street-b"
+channel_oldnewyonkers_street_c = "old-new-yonkers-street-c"
+channel_oldnewyonkers_street_d = "old-new-yonkers-street-d"
+channel_oldnewyonkers_street_e = "old-new-yonkers-street-e"
+channel_newnewyonkers_street_a = "new-new-yonkers-street-a"
+channel_newnewyonkers_street_b = "new-new-yonkers-street-b"
+channel_newnewyonkers_street_c = "new-new-yonkers-street-c"
+channel_newnewyonkers_street_d = "new-new-yonkers-street-d"
+channel_assaultflatsbeach_street_a = "assault-flats-beach-street-a"
+channel_assaultflatsbeach_street_b = "assault-flats-beach-street-b"
+channel_vagrantscorner_street_a = "vagrants-corner-street-a" 
+channel_vagrantscorner_street_b = "vagrants-corner-street-b"
+channel_vagrantscorner_street_c = "vagrants-corner-street-c"
+channel_vagrantscorner_street_d = "vagrants-corner-street-d"
+channel_vagrantscorner_street_e = "vagrants-corner-street-e"
+channel_vagrantscorner_street_f = "vagrants-corner-street-f"
+channel_greenlightdistrict_street_a = "green-light-district-street-a"
+channel_greenlightdistrict_street_b = "green-light-district-street-b"
+channel_greenlightdistrict_street_c = "green-light-district-street-c"
+channel_slimesend_street_a = "slimes-end-street-a"
 
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
 hideout_by_faction = {
@@ -846,6 +1002,7 @@ cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_endlesswar = cmd_prefix + 'endlesswar'
 cmd_swear_jar = cmd_prefix + 'swearjar'
 cmd_equip = cmd_prefix + 'equip'
+cmd_sidearm = cmd_prefix + 'sidearm'
 cmd_data = cmd_prefix + 'data'
 cmd_mutations = cmd_prefix + 'mutations'
 cmd_mutations_alt_1 = cmd_prefix + 'stds'
@@ -921,6 +1078,7 @@ cmd_refuse = cmd_prefix + 'refuse'
 cmd_sign = cmd_prefix + 'sign'
 cmd_rip = cmd_prefix + 'rip'
 cmd_reap = cmd_prefix + 'reap'
+cmd_reap_alt = cmd_prefix + 'forcereap'
 cmd_sow = cmd_prefix + 'sow'
 cmd_check_farm = cmd_prefix + 'checkfarm'
 cmd_irrigate = cmd_prefix + 'irrigate'
@@ -959,13 +1117,16 @@ cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_scavenge_alt1 = cmd_prefix + 'lookbetweenthecushions'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
-cmd_annex = cmd_prefix + 'annex'
-cmd_annex_alt1 = cmd_prefix + 'spray'
+cmd_spray = cmd_prefix + 'annex'
+cmd_spray_alt1 = cmd_prefix + 'spray'
 cmd_capture_progress = cmd_prefix + 'progress'
+cmd_changespray = cmd_prefix + 'changespray'
+cmd_tag = cmd_prefix + 'tag'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
 cmd_print_map_data = cmd_prefix + 'printmapdata'
+cmd_ping_me = cmd_prefix + 'pingme'
 cmd_boot = cmd_prefix + 'boot'
 cmd_bootall = cmd_prefix + 'bootall'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
@@ -992,6 +1153,10 @@ cmd_wrap = cmd_prefix + 'wrap'
 cmd_unwrap = cmd_prefix + 'unwrap'
 cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
 cmd_shamble = cmd_prefix + 'shamble'
+
+cmd_switch = cmd_prefix + 'switch'
+cmd_switch_alt_1 = cmd_prefix + 's'
+
 cmd_shambleball = cmd_prefix + 'shambleball'
 cmd_shamblego = cmd_prefix + 'shamblego'
 cmd_shamblestop = cmd_prefix + 'shamblestop'
@@ -1003,6 +1168,7 @@ cmd_reset_prank_stats = cmd_prefix + 'resetprankstats'
 cmd_set_gambit = cmd_prefix + 'setgambit'
 cmd_pointandlaugh = cmd_prefix + 'pointandlaugh'
 cmd_prank = cmd_prefix + 'prank'
+
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -1155,6 +1321,7 @@ cmd_challenge = cmd_prefix + 'challenge'
 cmd_instructions = cmd_prefix + 'instructions'
 cmd_playfetch = cmd_prefix + 'playfetch'
 cmd_petslimeoid = cmd_prefix + 'petslimeoid'
+cmd_abuseslimeoid = cmd_prefix + 'abuseslimeoid'
 cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
@@ -1316,12 +1483,43 @@ max_capture_points_a = 300000  # 300k
 max_capture_points_b = 200000  # 200k
 max_capture_points_c = 100000   # 100k
 
+limit_influence_s = 66600000
+limit_influence_a = 33300000
+limit_influence_b = 20000000
+limit_influence_c = 9500000
+
+min_influence_s = 33300000
+min_influence_a = 17000000
+min_influence_b = 10000000
+min_influence_c = 4500000
+
+min_garotte = 2000
+
+
+
+
+
+
 # district capture rates assigned to property classes
 max_capture_points = {
 	property_class_s: max_capture_points_s,
 	property_class_a: max_capture_points_a,
 	property_class_b: max_capture_points_b,
 	property_class_c: max_capture_points_c
+}
+
+limit_influence = {
+	property_class_s: limit_influence_s,
+	property_class_a: limit_influence_a,
+	property_class_b: limit_influence_b,
+	property_class_c: limit_influence_c
+}
+
+min_influence = {
+	property_class_s: min_influence_s,
+	property_class_a: min_influence_a,
+	property_class_b: min_influence_b,
+	property_class_c: min_influence_c
 }
 
 # how long districts stay locked after capture
@@ -1371,7 +1569,7 @@ capture_gradient = 1
 decapture_speed_multiplier = 1  # how much faster de-capturing is than capturing
 
 # district control decay
-decay_modifier = 1  # more means slower
+decay_modifier = 4  # more means slower
 
 # time values
 seconds_per_ingame_day = 21600
@@ -1516,6 +1714,8 @@ cd_slimeoiddefeated = 300
 cd_scavenge = 0
 soft_cd_scavenge = 15 # Soft cooldown on scavenging
 cd_enlist = 60
+cd_premium_purchase = 2 * 24 * 60 * 60 # 48 Hours, 2 days
+cd_new_player = 3 * 24 * 60 * 60 # 72 Hours, 3 days
 
 cd_autocannibalize = 60 * 60 # can only eat yourself once per hour
 cd_drop_bone = 5 * 60
@@ -1753,14 +1953,16 @@ str_generic_subway_station_description = "A grimy subway station."
 str_blimp_description = "This luxury zeppelin contains all the most exquisite amenities a robber baron in transit could ask for. A dining room, a lounge, a pool table, you know, rich people stuff. Being a huge, highly flammable balloon filled with hydrogen, it is the safest way to travel in the city only because it's out of the price range of most juveniles' budget. It's used by the rich elite to travel from their summer homes in Assault Flats Beach to their winter homes in Dreadford, and vice versa, without having to step foot in the more unsavory parts of the city. It does it's job well and only occasionally bursts into flames."
 str_blimp_tower_description = "This mooring mast is mostly used for amassing millionaire mooks into the marvelous Neo Milwaukee multi-story zeppelin, m'lady. Basically, you can board a blimp here. All you have to do is walk up an extremely narrow spiral staircase without an adequate handrail for about 40 feet straight up and then you can embark onto the highest airship this side of the River of Slime! It'll be great! Don't mind the spontaneously combusting zeppelins crashing into the earth in the distance. That's normal."
 str_downtown_station_description = "This large, imposing structure is the central hub for the entire city's rapid transit system. A public transportation powerhouse, it contains connections to every subway line in the city, and for dirt cheap. Inside of it's main terminal, a humongous split-flap display is constantly updating with the times of subway arrivals and departures. Hordes of commuters from all across the city sprint to their connecting trains, or simply spill out into the Downtown streets, ready to have their guts do the same.\n\nExits into Downtown NLACakaNM."
-str_red_subway_description = "Red Line trains are strictly uniform, with dull, minimalistic furnishings producing a borderline depressing experience. Almost completely grey aside from it's style guide mandated red accents, everything is purely practical. It provides just enough for its commuting salarymen to get to work in the morning and home at night."
-str_red_subway_station_description = "This sparsely decorated terminal replicates the feeling of riding on a Red Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Red Line train be late. Still doesn't make you like being on one though."
+str_black_subway_description = "Black Line trains are strictly uniform, with dull, minimalistic furnishings producing a borderline depressing experience. Almost completely grey aside from it's style guide mandated black accents, everything is purely practical. It provides just enough for its commuting salarymen to get to work in the morning and home at night."
+str_black_subway_station_description = "This sparsely decorated terminal replicates the feeling of riding on a Black Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Black Line train be late. Still doesn't make you like being on one though."
 str_green_subway_description = "Easily the oldest subway line in the city, with the interior design and general cleanliness to prove it. Once cutting edge, it's art deco stylings have begun to deteriorate due to overuse and underfunding. That goes double for the actual trains themselves, with a merely bumpy ride on the Green Line being the height of luxury compared to the far worse potential risks."
 str_green_subway_station_description = "Much like its trains, Green Line terminals have fallen into disrepair. It's vintage aesthetic only exasperating it's crumbling infrastructure, making the whole line seem like a old, dilapidated mess. But, you'll give it one thing, it's pretty cool looking from the perspective of urban exploration. You've dreamed of exploring it's vast, abandoned subway networks ever since you first rode on it. They could lead to anywhere. So close, and yet so mysterious."
-str_blue_subway_description = "Probably the nicest subway line in the city, the Blue Line isn't defined by its poor hygiene or mechanical condition. Instead, it's defined by its relative normality. More-or-less clean floors, brightly lit interiors, upholstery on the seats. These stunning, almost sci-fi levels of perfection are a sight to behold. Wow!"
-str_blue_subway_station_description = "It is clean and well-kempt, just like the Blue Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible."
-str_yellow_subway_description = "If there's one word to describe the Yellow Line, it's \"confusing\". It's by far the filthiest subway line in the city, which is exponentially worsened by it's bizarre, unexplainable faux wood paneling that lines every train. You can only imagine that this design decision was made to make the subway feel less sterile and more homely, but the constant stench of piss and homeless people puking sort of ruins that idea. Riding the Yellow Line makes you feel like you're at your grandma's house every single time you ride it, if your grandma's house was in Jaywalker Plain."
-str_yellow_subway_station_description = "It's absolutely fucking disgusting. By far the worst subway line, the Yellow Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Yellow Line so bad? The world may never know."
+str_purple_subway_description = "Probably the nicest subway line in the city, the Purple Line isn't defined by its poor hygiene or mechanical condition. Instead, it's defined by its relative normality. More-or-less clean floors, brightly lit interiors, upholstery on the seats. These stunning, almost sci-fi levels of perfection are a sight to behold. Wow!"
+str_purple_subway_station_description = "It is clean and well-kempt, just like the Purple Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible."
+str_pink_subway_description = "If there's one word to describe the Pink Line, it's \"confusing\". It's by far the filthiest subway line in the city, which is exponentially worsened by it's bizarre, unexplainable faux wood paneling that lines every train. You can only imagine that this design decision was made to make the subway feel less sterile and more homely, but the constant stench of piss and homeless people puking sort of ruins that idea. Riding the Pink Line makes you feel like you're at your grandma's house every single time you ride it, if your grandma's house was in Jaywalker Plain."
+str_pink_subway_station_description = "It's absolutely fucking disgusting. By far the worst subway line, the Pink Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Pink Line so bad? The world may never know."
+str_gold_subway_description = "Construction started on the Gold Line in the 90’s, and it shows. It’s just so fucking gaudy. Opulent, even. It’s vaporwave gone wrong. Geometric patterns with clashing color combinations and art styles are plastered over every square inch of the walls, and the seats are made of that awful upholstery from old Taco Bell™ booths."
+str_gold_subway_station_description = "The walls of the Gold Line are covered in terrible murals. Covered. Imagine your loaded in the level geometry of the station into Unity and then Googled “terrible street art murals” and skipped to page nine and then loaded each image as textures unto the geometry, not even accounting for when one object ended and another surface began. No one knows why it’s like this."
 str_subway_connecting_sentence = "Below it, on a lower level of the station, is a {} line terminal."
 
 # TODO: Add descriptions for each outskirt/street.
@@ -1849,11 +2051,15 @@ col_has_soul = 'has_soul'
 col_sap = 'sap'
 col_hardened_sap = 'hardened_sap'
 col_manuscript = "manuscript"
+col_spray = "spray"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
+col_sidearm = 'sidearm'
+
 col_race = 'race'
 col_time_racialability = 'time_racialability'
+col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
 col_attack = 'attack'
 col_speed = 'speed'
 col_freshness = 'freshness'
@@ -1892,6 +2098,7 @@ col_level = 'level'
 col_time_defeated = 'time_defeated'
 col_clout = 'clout'
 col_hue = 'hue'
+col_coating = 'coating'
 
 #Database columns for enemies
 col_id_enemy = 'id_enemy'
@@ -1962,6 +2169,7 @@ col_capturing_faction = 'capturing_faction'
 col_capture_points = 'capture_points'
 col_district_slimes = 'slimes'
 col_time_unlock = 'time_unlock'
+col_cap_side = 'cap_side'
 
 # Database columns for mutations
 col_id_mutation = 'mutation'
@@ -2187,6 +2395,12 @@ stat_bass_kills = 'bass_kills'
 stat_bow_kills = 'bow_kills'
 stat_umbrella_kills = 'umbrella_kills'
 stat_dclaw_kills = 'dclaw_kills'
+stat_spraycan_kills = 'spraycan_kills'
+stat_paintgun_kills = 'paintgun_kills'
+stat_paintroller_kills = 'paintroller_kills'
+stat_paintbrush_kills = 'paintbrush_kills'
+stat_watercolor_kills = 'watercolor_kills'
+stat_thinnerbomb_kills = 'thinnerbomb_kills'
 stat_staff_kills = 'staff_kills'
 
 # Categories of events that change your slime total, for statistics tracking
@@ -2278,6 +2492,7 @@ vendor_greencakecafe = "Green Cake Cafe" #Brunch foods
 vendor_bodega = "Bodega" # Clothing store in Krak Bay
 vendor_secretbodega = "Secret Bodega" # The secret clothing store in Krak Bay
 vendor_wafflehouse = "Waffle House" # waffle house in the void, sells non-perishable foods, 100 slime to 1 hunger
+vendor_basedhardware = "Based Hardware" # Hardware store in West Glocksbury
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -2318,12 +2533,23 @@ item_id_tough_material = "toughnails"
 item_id_smart_material = "smartcookies"
 item_id_beautiful_material = "beautyspots"
 item_id_cute_material = "cutebuttons"
-
+item_id_dragonsoul = "dragonsoul"
+item_id_monsterbones = "monsterbones"
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
-
+item_id_seaweed = "seaweed"
+item_id_string = "string"
+item_id_tincan = "tincan"
+item_id_oldboot = "oldboot"
+item_id_leather = "leather"
+item_id_ironingot = "ironingot"
+item_id_bloodstone = "bloodstone"
+item_id_tanningknife = "tanningknife"
 item_id_dinoslimemeat = "dinoslimemeat"
 item_id_dinoslimesteak = "dinoslimesteak"
+item_id_dyesolution = "dyesolution"
+item_id_textiles = "textiles"
+item_id_foodbase = "foodbase"
 
 #SLIMERNALIA
 item_id_sigillaria = "sigillaria"
@@ -2440,6 +2666,54 @@ item_id_brightshade = "brightshade"
 item_id_blacklimes = "blacklimes"
 item_id_phosphorpoppies = "phosphorpoppies"
 item_id_direapples = "direapples"
+item_id_rustealeaves = "rustealeaves"
+item_id_metallicaps = "metallicaps"
+item_id_steelbeans = "steelbeans"
+item_id_aushucks = "aushucks"
+
+#vegetable materials
+item_id_poketubereyes = "poketubereyes"
+item_id_pulpgourdpulp = "pulpgourdpulp"
+item_id_sourpotatoskins = "sourpotatoskins"
+item_id_bloodcabbageleaves = "bloodcabbageleaves"
+item_id_joybeanvines = "joybeanvines"
+item_id_purplekilliflowerflorets = "purplekilliflowerflorets"
+item_id_razornutshells = "razornutshells"
+item_id_pawpawflesh = "pawpawflesh"
+item_id_sludgeberrysludge = "sludgeberrysludge"
+item_id_suganmanutfruit = "suganmanutfruit"
+item_id_pinkrowddishroot = "pinkrowddishroot"
+item_id_dankwheatchaff = "dankwheatchaff"
+item_id_brightshadeberries = "brightshadeberries"
+item_id_blacklimeade = "blacklimeade"
+item_id_phosphorpoppypetals = "phosphorpoppypetals"
+item_id_direapplestems = "direapplestems"
+item_id_rustealeafblades = "rustealeafblades"
+item_id_metallicapheads = "metallicapheads"
+item_id_steelbeanpods = "steelbeanpods"
+item_id_aushuckstalks = "aushuckstalks"
+
+# dye ids
+item_id_dye_black = "blackdye"
+item_id_dye_pink = "pinkdye"
+item_id_dye_green = "greendye"
+item_id_dye_brown = "browndye"
+item_id_dye_grey = "greydye"
+item_id_dye_purple = "purpledye"
+item_id_dye_teal = "tealdye"
+item_id_dye_orange = "orangedye"
+item_id_dye_cyan = "cyandye"
+item_id_dye_red = "reddye"
+item_id_dye_lime = "limedye"
+item_id_dye_yellow = "yellowdye"
+item_id_dye_blue = "bluedye"
+item_id_dye_magenta = "magentadye"
+item_id_dye_cobalt = "cobaltdye"
+item_id_dye_white = "whitedye"
+item_id_dye_rainbow = "rainbowdye"
+item_id_paint_copper = "copperpaint"
+item_id_paint_chrome = "chromepaint"
+item_id_paint_gold = "goldpaint"
 
 #weapon ids
 weapon_id_revolver = 'revolver'
@@ -2460,11 +2734,22 @@ weapon_id_molotov = 'molotov'
 weapon_id_grenades = 'grenades'
 weapon_id_garrote = 'garrote'
 weapon_id_pickaxe = 'pickaxe'
+weapon_id_fishingrod = 'fishingrod'
 weapon_id_bass = 'bass'
 weapon_id_umbrella = 'umbrella'
 weapon_id_bow = 'bow'
 weapon_id_dclaw = 'dclaw'
 weapon_id_staff = 'staff'
+
+weapon_id_spraycan = 'spraycan'
+weapon_id_paintgun = 'paintgun'
+weapon_id_paintroller = 'paintroller'
+weapon_id_paintbrush = 'paintbrush'
+weapon_id_watercolors = 'watercolors'
+weapon_id_thinnerbomb = 'thinnerbomb'
+
+
+
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
 	"destructive capabilities that is beyond any human’s true understanding. And for its power, " \
@@ -2495,6 +2780,9 @@ forbiddenstuffedcrust_desc = "What are you waiting for? You’ve come this far, 
 	"It’s ready to die. Slather it in some low-quality marinara, toss it up into the air like in the old movies, and " \
 	"shove it into the oven, to teach it the true meaning of heat death. Eat a slice of that motherfucking pizza."
 
+# Items that should have a cooldown on how often they can be purchased
+premium_items = [item_id_metallicaps, item_id_steelbeans, item_id_aushucks]
+
 # List of normal items.
 item_list = [
 	EwGeneralItem(
@@ -2508,140 +2796,148 @@ item_list = [
 		acquisition = acquisition_mining,
 	),
 	EwGeneralItem(
-		id_item = "whitedye",
+		id_item = item_id_dye_white,
 		context = "dye",
 		str_name = "White Dye",
 		str_desc = "A small vial of white dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_poketubers,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "yellowdye",
+		id_item = item_id_dye_yellow,
 		context = "dye",
 		str_name = "Yellow Dye",
 		str_desc = "A small vial of yellow dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_pulpgourds,
+		acquisition = acquisition_smelting,
 	),
 
 	EwGeneralItem(
-		id_item = "orangedye",
+		id_item = item_id_dye_orange,
 		context = "dye",
 		str_name = "Orange Dye",
 		str_desc = "A small vial of orange dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_sourpotatoes,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "reddye",
+		id_item = item_id_dye_red,
 		context = "dye",
 		str_name = "Red Dye",
 		str_desc = "A small vial of red dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_bloodcabbages,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "magentadye",
+		id_item = item_id_dye_magenta,
 		context = "dye",
 		str_name = "Magenta Dye",
 		str_desc = "A small vial of magenta dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_joybeans,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "purpledye",
+		id_item = item_id_dye_purple,
 		context = "dye",
 		str_name = "Purple Dye",
 		str_desc = "A small vial of purple dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_purplekilliflower,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "bluedye",
+		id_item = item_id_dye_blue,
 		context = "dye",
 		str_name = "Blue Dye",
 		str_desc = "A small vial of blue dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_razornuts,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "greendye",
+		id_item = item_id_dye_green,
 		context = "dye",
 		str_name = "Green Dye",
 		str_desc = "A small vial of green dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_pawpaw,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "tealdye",
+		id_item = item_id_dye_teal,
 		context = "dye",
 		str_name = "Teal Dye",
 		str_desc = "A small vial of teal dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_sludgeberries,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "rainbowdye",
+		id_item = item_id_dye_rainbow,
 		context = "dye",
 		str_name = "***Rainbow Dye!!***",
 		str_desc = "***A small vial of Rainbow dye!!***",
-		acquisition = acquisition_milling,
-		ingredients = item_id_suganmanuts,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "pinkdye",
+		id_item = item_id_dye_pink,
 		context = "dye",
 		str_name = "Pink Dye",
 		str_desc = "A small vial of pink dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_pinkrowddishes,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "greydye",
+		id_item = item_id_dye_grey,
 		context = "dye",
 		str_name = "Grey Dye",
 		str_desc = "A small vial of grey dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_dankwheat,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "cobaltdye",
+		id_item = item_id_dye_cobalt,
 		context = "dye",
 		str_name = "Cobalt Dye",
 		str_desc = "A small vial of cobalt dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_brightshade,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "blackdye",
+		id_item = item_id_dye_black,
 		context = "dye",
 		str_name = "Black Dye",
 		str_desc = "A small vial of black dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_blacklimes,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "limedye",
+		id_item = item_id_dye_lime,
 		context = "dye",
 		str_name = "Lime Dye",
 		str_desc = "A small vial of lime dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_phosphorpoppies,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "cyandye",
+		id_item = item_id_dye_cyan,
 		context = "dye",
 		str_name = "Cyan Dye",
 		str_desc = "A small vial of cyan dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_direapples,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "browndye",
+		id_item = item_id_dye_brown,
 		context = "dye",
 		str_name = "Brown Dye",
 		str_desc = "A small vial of brown dye.",
 		acquisition = acquisition_smelting,
+	),
+	EwGeneralItem(
+		id_item = item_id_paint_copper,
+		context = "dye",
+		str_name = "Copper Paint",
+		str_desc = "A small bucket of Copper Paint.",
+		acquisition = acquisition_smelting,
+		durability = 3
+	),
+	EwGeneralItem(
+		id_item = item_id_paint_chrome,
+		context = "dye",
+		str_name = "Chrome Paint",
+		str_desc = "A small bucket of Chrome Paint.",
+		acquisition = acquisition_smelting,
+		durability = 3
+	),
+	EwGeneralItem(
+		id_item = item_id_paint_gold,
+		context = "dye",
+		str_name = "Gold Paint",
+		str_desc = "A small bucket of Gold Paint.",
+		acquisition = acquisition_smelting,
+		durability = 3
 	),
 	EwGeneralItem(
 		id_item = "bone",
@@ -2719,8 +3015,7 @@ item_list = [
 		id_item = item_id_stick,
 		str_name = "stick",
 		str_desc = "It’s just some useless, dumb stick.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_direapples,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
 		id_item = item_id_faggot,
@@ -2735,7 +3030,7 @@ item_list = [
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
-		id_item = "seaweed",
+		id_item = item_id_seaweed,
 		str_name = "Seaweed",
 		str_desc = "OH GOD IT'S A FUCKING SEAWEED!",
 		acquisition = acquisition_bartering,
@@ -2743,7 +3038,7 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "oldboot",
+		id_item = item_id_oldboot,
 		str_name = "Old Boot",
 		str_desc = "OH GOD IT'S A FUCKING OLD BOOT!",
 		acquisition = acquisition_bartering,
@@ -2751,7 +3046,7 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "tincan",
+		id_item = item_id_tincan,
 		str_name = "Tin Can",
 		str_desc = "OH GOD IT'S A FUCKING TIN CAN!",
 		acquisition = acquisition_bartering,
@@ -2759,7 +3054,7 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "leather",
+		id_item = item_id_leather,
 		str_name = "Leather",
 		str_desc = "A strip of leather.",
 		acquisition = acquisition_smelting,
@@ -2767,7 +3062,7 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "ironingot",
+		id_item = item_id_ironingot,
 		str_name = "Iron Ingot",
 		str_desc = "A bar of iron",
 		acquisition = acquisition_smelting,
@@ -2775,26 +3070,26 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "dragonsoul",
+		id_item = item_id_dragonsoul,
 		str_name = "Dragon Soul",
 		str_desc = "A fearsome dragon soul, pried from the corpse of a Green Eyes Slime Dragon. It's just like Dark Souls! Wait... *just like* Dark Souls??? Maybe you can use this for something.",
 		context = 'dragon soul',
 	),
 	EwGeneralItem(
-		id_item = "monsterbones",
+		id_item = item_id_monsterbones,
 		str_name = "Monster Bones",
 		str_desc = "A large set of bones, taken from the monsters that roam the outskirts. Tastes meaty.",
 		context = 'monster bone',
 	),
 	EwGeneralItem(
-		id_item = "bloodstone",
+		id_item = item_id_bloodstone,
 		str_name = "blood stone",
 		str_desc = "Formed from the cracking of monster bones, it glistens in your palm with the screams of those whos bones comprise it. Perhaps it will be of use one day.",
 		context = 'blood stone',
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
-		id_item = "tanningknife",
+		id_item = item_id_tanningknife,
 		context = "tool",
 		str_name = "Tanning Knife",
 		str_desc = "A tanning knife",
@@ -2802,7 +3097,7 @@ item_list = [
 	),
 
 	EwGeneralItem(
-		id_item = "string",
+		id_item = item_id_string,
 		str_name = "string",
 		str_desc = "It’s just some string.",
 		acquisition = acquisition_bartering,
@@ -3614,37 +3909,187 @@ item_list = [
 		id_item = item_id_cool_material,
 		str_name = "Cool Beans",
 		str_desc = "A couple of cool beans! Far out, man. Well, they aren’t really beans per se, more like little condensed nuggets of your crop. Whatever they are, they’re undeniably cool.",
-		acquisition = acquisition_milling,
-		ingredients = [item_id_direapples, item_id_brightshade, item_id_razornuts],
 	),
 	EwGeneralItem(
 		id_item = item_id_tough_material,
 		str_name = "Tough Nails",
 		str_desc = "A handful of rusty nails caked in dried blood that were presumably waiting for you if you had eaten your crops instead of milling them. Damn, what a missed opportunity!",
-		acquisition = acquisition_milling,
-		ingredients = [item_id_sourpotatoes, item_id_bloodcabbages, item_id_pulpgourds],
 	),
-
 	EwGeneralItem(
 		id_item = item_id_smart_material,
 		str_name = "Smart Cookies",
 		str_desc = "A farmer’s dozen of smart cookies. Well, they aren’t really cookies per se, more like little bland condensed patties of your crop. Whatever they are, they’re undeniably smart.",
-		acquisition = acquisition_milling,
-		ingredients = [item_id_phosphorpoppies, item_id_pawpaw, item_id_sludgeberries],
 	),
 	EwGeneralItem(
 		id_item = item_id_beautiful_material,
 		str_name = "Beauty Spots",
 		str_desc = "A small collection of severed beauty spots, mostly freckles and moles, that were presumably waiting for you if you had eaten your crops instead of milling them. Damn, what a missed opportunity!",
-		acquisition = acquisition_milling,
-		ingredients = [item_id_poketubers, item_id_dankwheat, item_id_blacklimes],
 	),
 	EwGeneralItem(
 		id_item = item_id_cute_material,
 		str_name = "Cute Buttons",
 		str_desc = "A wardrobe of cute buttons. You know you should probably be concerned that these lil’ guys were hiding in your crops, but honestly you’re overcome with emotion and feel utterly blessed. Lookit ‘em! They’re adorable! D’awww...",
+	),
+	EwGeneralItem(
+		id_item = item_id_dyesolution,
+		str_name = "Dye Solution",
+		str_desc = "A small vial of salt, water, and vinegar. You can smelt this together with crop materials to make dyes.",
+		price = 1000,
+		vendors = [vendor_basedhardware]
+	),
+	EwGeneralItem(
+		id_item = item_id_textiles,
+		str_name = "Textiles",
+		str_desc = "A set of fabrics. You can smelt this together with crop materials to make exclusive cosmetics.",
+		price = 1000,
+		vendors = [vendor_basedhardware]
+	),
+	EwGeneralItem(
+		id_item = item_id_foodbase,
+		str_name = "Food Base",
+		str_desc = "A set of powders and chemicals. You can smelt this together with crop materials to make exclusive food items which take longer to expire.",
+		price = 1000,
+		vendors = [vendor_basedhardware]
+	),
+	EwGeneralItem(
+		id_item = item_id_poketubereyes,
+		str_name = "Poketuber Eyes",
+		str_desc = "The small stem buds of a Poketuber.",
 		acquisition = acquisition_milling,
-		ingredients = [item_id_pinkrowddishes, item_id_joybeans, item_id_purplekilliflower],
+		ingredients = [item_id_poketubers],
+	),
+	EwGeneralItem(
+		id_item = item_id_pulpgourdpulp,
+		str_name = "Pulp Gourd Pulp",
+		str_desc = "The pulp of a Pulp Gourd.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_pulpgourds],
+	),
+	EwGeneralItem(
+		id_item = item_id_sourpotatoskins,
+		str_name = "Sour Potato Skins",
+		str_desc = "The skins of a Sour Potato.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_sourpotatoes],
+	),
+	EwGeneralItem(
+		id_item = item_id_bloodcabbageleaves,
+		str_name = "Blood Cabbage Leaves",
+		str_desc = "The soft leaves of a Blood Cabbage.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_bloodcabbages],
+	),
+	EwGeneralItem(
+		id_item = item_id_joybeanvines,
+		str_name = "Joybean Vines",
+		str_desc = "The severed vines on which Joybeans grow.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_joybeans],
+	),
+	EwGeneralItem(
+		id_item = item_id_purplekilliflowerflorets,
+		str_name = "Killiflower Florets",
+		str_desc = "The bush-like appendages of a Killiflower plant.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_purplekilliflower],
+	),
+	EwGeneralItem(
+		id_item = item_id_razornutshells,
+		str_name = "Razornut Shells",
+		str_desc = "The sharp and pointy shells of a Razornut.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_razornuts],
+	),
+	EwGeneralItem(
+		id_item = item_id_pawpawflesh,
+		str_name = "Pawpaw Flesh",
+		str_desc = "The ground flesh of a Pawpaw.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_pawpaw],
+	),
+	EwGeneralItem(
+		id_item = item_id_sludgeberrysludge,
+		str_name = "Sludgeberry Sludge",
+		str_desc = "The thick syrup of a Sludgeberry.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_sludgeberries],
+	),
+	EwGeneralItem(
+		id_item = item_id_suganmanutfruit,
+		str_name = "Suganmanut Fruit",
+		str_desc = "The bright, multi-colored fruit off which Suganmanuts grow.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_suganmanuts],
+	),
+	EwGeneralItem(
+		id_item = item_id_pinkrowddishroot,
+		str_name = "Pink Rowddish Root",
+		str_desc = "The thin, light-colored root of a Pink Rowddish.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_pinkrowddishes],
+	),
+	EwGeneralItem(
+		id_item = item_id_dankwheatchaff,
+		str_name = "Dankwheat Chaff",
+		str_desc = "The scaly, protective casing on Dankwheat plants.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_dankwheat],
+	),
+	EwGeneralItem(
+		id_item = item_id_brightshadeberries,
+		str_name = "Brightshade Berries",
+		str_desc = "The small blue berries that grow on Brightshade plants.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_brightshade],
+	),
+	EwGeneralItem(
+		id_item = item_id_blacklimeade,
+		str_name = "Black Limeade",
+		str_desc = "The sweet and sour juice of a Black Lime.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_blacklimes],
+	),
+	EwGeneralItem(
+		id_item = item_id_phosphorpoppypetals,
+		str_name = "Phosphorpoppy Petals",
+		str_desc = "The yellow-green petals of a Phosphorpoppy.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_phosphorpoppies],
+	),
+	EwGeneralItem(
+		id_item = item_id_direapplestems,
+		str_name = "Dire Apple Stems",
+		str_desc = "The orange stems of a Dire Apple.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_direapples],
+	),
+	EwGeneralItem(
+		id_item = item_id_rustealeafblades,
+		str_name = "Rustea Leaf Blades",
+		str_desc = "The razor-sharp blades attatched to the stems of Rustea Leaves.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_rustealeaves],
+	),
+	EwGeneralItem(
+		id_item = item_id_metallicapheads,
+		str_name = "Metallicap Heads",
+		str_desc = "The bulbous head on the top of a Metallicap.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_metallicaps],
+	),
+	EwGeneralItem(
+		id_item = item_id_steelbeanpods,
+		str_name = "Steel Bean Pods",
+		str_desc = "The long and hard pods that house Steel Beans.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_steelbeans],
+	),
+	EwGeneralItem(
+		id_item = item_id_aushuckstalks,
+		str_name = "Aushuck Stalks",
+		str_desc = "The lengthy stalks of an Aushuck plant.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_aushucks],
 	),
 ]
 #item_list += ewdebug.debugitem_set
@@ -3662,6 +4107,7 @@ dye_list = []
 dye_map = {}
 # seperate the dyes from the other normal items
 for c in item_list:
+
 	if c.context != "dye":
 		pass
 	else:
@@ -4344,6 +4790,55 @@ def wef_staff(ctn = None):
 		ctn.miss = True
 
 
+def wef_paintgun(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * .7)
+	ctn.slimes_spent = int(ctn.slimes_spent * .75)
+	aim = (random.randrange(10) + 1)
+	ctn.sap_ignored = 10
+	ctn.sap_damage = 2
+
+	if aim >= (9 - int(10 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
+def wef_paintroller(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * 1.75)
+	ctn.slimes_spent = int(ctn.slimes_spent * 4)
+
+	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
+
+	if aim <= (1 + int(10 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim >= (10 - int(10 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+		ctn.sap_damage *= 2
+
+def wef_watercolors(ctn = None):
+	ctn.slimes_damage = 4000
+	aim = (random.randrange(1000) + 1)
+	user_mutations = ctn.user_data.get_mutations()
+	ctn.sap_damage = 0
+
+	if aim <= (1 + int(1000 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim == 1000:
+		ctn.crit = True
+		ctn.slimes_damage *= 1
+
+
+
 vendor_dojo = "Dojo"
 
 weapon_class_ammo = "ammo"
@@ -4354,6 +4849,18 @@ weapon_class_jammable = "jammable"
 weapon_class_captcha = "captcha"
 weapon_class_defensive = "defensive"
 weapon_class_heavy = "heavy"
+weapon_class_paint = "paint"
+
+weapon_type_convert = {
+weapon_id_watercolors:wef_watercolors,
+weapon_id_spraycan:wef_revolver,
+weapon_id_paintroller:wef_paintroller,
+weapon_id_thinnerbomb:wef_molotov,
+weapon_id_paintgun:wef_paintgun,
+weapon_id_paintbrush:wef_knives
+}
+
+
 
 # All weapons in the game.
 weapon_list = [
@@ -4655,7 +5162,7 @@ weapon_list = [
 			"arawheapofiron",
 			"eyelander"
 		],
-  		str_crit = "Critical hit!! {name_player} screams at the top of their lungs and unleashes a devastating overhead swing that maims {name_target}.",
+		str_crit = "Critical hit!! {name_player} screams at the top of their lungs and unleashes a devastating overhead swing that maims {name_target}.",
 		str_miss = "You missed! You grunt as your failed overhead swing sends ripples through the air.",
 		str_backfire = "You feel the bones in your wrists snap as you botch your swing with the heavy blade!! Fucking ouch dawg!",
 		str_equip = "You equip the broadsword.",
@@ -4847,7 +5354,7 @@ weapon_list = [
 		str_miss = "**You missed!!** {name_player}’s poor aim sends their grenade into a nearby alleyway, it’s explosion eliciting a Wilhelm scream and the assumed death of an innocent passerby. LOL!!",
 		str_equip = "You equip the grenades.",
 		str_name = "grenades",
-		str_weapon = "a stack of grenades",
+		str_weapon = "grenades",
 		str_weaponmaster_self = "You are a rank {rank} master of the grenades.",
 		str_weaponmaster = "They are a rank {rank} master of the grenades.",
 		#str_trauma_self = "Blast scars and burned skin are spread unevenly across your body.",
@@ -4920,10 +5427,11 @@ weapon_list = [
 		acquisition = acquisition_smelting,
 		stat = stat_pickaxe_kills,
 		sap_cost = 2,
-		captcha_length = 2
+		captcha_length = 2,
+		is_tool = 1
 	),
 	EwWeapon(  # 19
-		id_weapon = "fishingrod",
+		id_weapon = weapon_id_fishingrod,
 		alias = [
 			"fish",
 			"fishing",
@@ -4951,7 +5459,8 @@ weapon_list = [
 		acquisition = acquisition_smelting,
 		stat = stat_fishingrod_kills,
 		sap_cost = 2,
-		captcha_length = 2
+		captcha_length = 2,
+		is_tool = 1
 	),
 	EwWeapon(  # 20
 		id_weapon = weapon_id_bass,
@@ -4967,7 +5476,7 @@ weapon_list = [
 		str_weaponmaster = "They are a rank {rank} master of the bass guitar.",
 		#str_trauma_self = "There is a large concave dome in the side of your head.",
 		#str_trauma = "There is a large concave dome in the side of their head.",
-		str_kill = "*CRASSHHH.* {name_player} brings down the bass with righteous fury. Discordant notes play harshly as the bass trys its hardest to keep itself together. {emote_skull}",
+		str_kill = "*CRASSHHH.* {name_player} brings down the bass on {name_target} with righteous fury. Discordant notes play harshly as the bass trys its hardest to keep itself together. {emote_skull}",
 		str_killdescriptor = "smashed to pieces",
 		str_damage = "{name_target} is whacked across the {hitzone}!!",
 		str_duel = "**SMASHHH.** {name_player} and {name_target} smash their bass together before admiring eachothers skillful basslines.",
@@ -5023,7 +5532,7 @@ weapon_list = [
 		str_weaponmaster = "They are a rank {rank} minecraft bowmaster.",
 		#str_trauma_self = "There is a pixelated arrow in the side of your head.",
 		#str_trauma = "There is a pixelated arrow in the side of their head.",
-		str_kill = "*Pew Pew Pew.* {name_player} spams the bow as their foes life fades, riddling their body with arrows. {emote_skull}",
+		str_kill = "*Pew Pew Pew.* {name_player} spams the bow as {name_target}'s life fades, riddling their body with arrows. {emote_skull}",
 		str_killdescriptor = "shot to death",
 		str_damage = "{name_target} is shot in the {hitzone}!!",
 		str_duel = "{name_player} and {name_target} shoot distant targets, {name_player} is clearly the superior bowman.",
@@ -5060,9 +5569,237 @@ weapon_list = [
 		stat = stat_dclaw_kills,
 		classes = [weapon_class_burning],
 		sap_cost = 5,
-		captcha_length = 2
+		captcha_length = 2),
+
+	EwWeapon(  # 24
+		id_weapon=weapon_id_spraycan,
+		alias=[
+			"spray can",
+			"spray"
+		],
+		str_crit="**Critical hit!!** {name_player} flicks the nozzle off their spray can and lights it like a fuse! {name_target} gets nasty burns and a fresh coat of paint! **WHOOSH!!!**",
+		str_miss="**MISS!!** {name_player} attempts a spray attack, but the wind blows it back in their face!",
+		str_equip="You hold the spray can tightly, hoping to god somebody confuses it for a gun.",
+		str_name="spray can",
+		str_weapon="a spray can",
+		str_weaponmaster_self="You are a rank {rank} vandal of the spray can.",
+		str_weaponmaster="They are a rank {rank} vandal of the spray can.",
+		# str_trauma_self = "You're having trouble breathing, and the inside of your mouth is off-color.",
+		# str_trauma = "They're weirdly short of breath, and their mouth and tongue are off-color.",
+		str_kill="***PPPPPPSSSSSSSSSHHHHHhhhhhfff.*** {name_player} forcibly opens {name_target}'s mouth and sprays everything they have into their lungs. Their eyes roll back into their head and, trembling, they slowly asphyxiate in your arms. {emote_skull}",
+		str_killdescriptor="suffocated",
+		str_damage=random.choice(["{name_target} is whacked across the {hitzone}!!",
+								  "{name_player} sprays {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} humiliates {name_target} by bringing a spray can to a gunfight, mentally damaging them in the {hitzone}!!"]),
+		str_duel="**PSSS PSSS PSSSSSHH!** {name_player} and {name_target} spray the dojo walls until they get dizzy from the smell.",
+		str_scalp="The scalp is a nice shade of mauve.",
+		fn_effect=wef_tool,
+		str_description="It's a Based Hardware brand spray can, in your gang's color. The blurb on the backside preaches about the merits of street art and murals, but you're pretty sure that's just to cover their ass.",
+		vendors = [vendor_basedhardware],
+		stat=stat_spraycan_kills,
+		classes=[weapon_class_paint, weapon_class_captcha],
+		sap_cost=2,
+		captcha_length=3,
+		is_tool = 1,
+		str_backfire = "As {name_player} shakes the can to fire another shot, the thing suddenly explodes on them!",
+		tool_props = {
+		'reg_spray' : "You run down the streets, tagging buildings, street signs and old ladies with spray paint in the image of the {gang}!",
+		'miss_spray' : "**Miss!** Your can seems to be low on spray. You fill it up and give it a good shake. Good as new!",
+		'crit_spray' : "**Critical hit!** You dual wield spray cans, painting an urban masterpiece in one hand and shooting toxic chemicals into a cop's mouth with the other!",
+		'equip_spray' : "You get your trusty spray paint at the ready."}
+		),
+	EwWeapon(  # 25
+		id_weapon=weapon_id_paintgun,
+		alias=[
+			"paint gun",
+			"splatoon"
+		],
+		str_crit="**Critical hit!!** {name_player} aims down the sights with the precision of a video game real life sniper, shooting {name_target} in the eyes from 30 yards! **SPLAAAAAT!!!**",
+		str_miss="**MISS!!** {name_player} fires off a volley of paint, but {name_target} jumps behind cover!",
+		str_equip="Now listen here. You just equipped a paint gun. Keep in mind this is the weapon that boomer families shoot each other with to have fun. Enjoy trying to kill with it.",
+		str_name="paint gun",
+		str_weapon="a paint gun",
+		str_weaponmaster_self="You are a rank {rank} vandal of the paint gun.",
+		str_weaponmaster="They are a rank {rank} vandal of the paint gun.",
+		# str_trauma_self = "You have a splitting headache.",
+		# str_trauma = "They look hungover, almost like their entire body exploded.",
+		str_kill="***SPLAAAAART!!!!*** {name_player} fatally strikes {name_target}, and they explode from the inside out! There's a lot more gore than when you see it happen in Splatoon, though.{emote_skull}",
+		str_killdescriptor="imploded",
+		str_damage=random.choice(["{name_target} is splatted in the {hitzone}!!",
+								  "{name_player} shoots {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} attacks {name_target} with harmless paint!!"]),
+		str_duel="**SPLAT TAT TAT!!** {name_player} and {name_target} harass everyone in the dojo with their paint guns.",
+		str_scalp="The scalp is colorful, from both blood and paint.",
+		fn_effect=wef_tool,
+		str_description="It's an industrial strength two handed paint gun with a sniper scope attached. What do they use this for in industry, anyway?",
+		vendors=[vendor_basedhardware],
+		stat=stat_paintgun_kills,
+		classes=[weapon_class_paint, weapon_class_ammo, weapon_class_captcha],
+		clip_size = 15,
+		price = 5000,
+		sap_cost=2,
+		captcha_length=4,
+		is_tool = 1,
+		str_reload = "*Click.* You grab a paint cylinder from god knows where and load it into your gun, chucking the leftover one behind an alleyway.",
+		str_backfire = "Whoops, looks like somebody didn't fasten the paint cylinder hard enough! {name_player} gets a thorough spray to the face!",
+		tool_props = {
+			'reg_spray':  "You find a patch of wall several yards away that hasn't been vandalized yet. Time to take aim and...BAM! Nice shot!",
+			'miss_spray': "**Miss!** Your aim was as sharp as ever, but a fucking pigeon took the hit! Christ, what are the odds?",
+			'crit_spray': "**Critical hit!** The paint bullet skids a wall, spreading your paint across the whole thing!",
+			'equip_spray': "You load a clip of paint into the gun and throw it onto your back, kinda like Rambo if he were an art major."
+		}
 	),
-	EwWeapon( # 24
+	EwWeapon(  # 26
+		id_weapon=weapon_id_paintroller,
+		alias=[
+			"paint roller",
+			"roller"
+		],
+		str_crit="**Critical hit!!** {name_player}  knocks {name_target} to the ground and does a golf swing to their vulnerable little head, sending them spinning. **FWAP!!!**",
+		str_miss="**MISS!!** {name_player} does cringey bo staff jujitsu moves with the roller and forgets to actually attack {name_target}!",
+		str_equip="You hold the paint roller in your hand. The light plastic broom handle and spongy brush are sure to deal at least 10 damage.",
+		str_name="paint roller",
+		str_weapon="a paint roller",
+		str_weaponmaster_self="You are a rank {rank} vandal of the paint roller.",
+		str_weaponmaster="They are a rank {rank} vandal of the paint roller.",
+		# str_trauma_self = "There's a gaudy colored dent in your skull.",
+		# str_trauma = "There is a gaudy colored dent in their skull.",
+		str_kill="***CA-CRACK!*** {name_player} opens {name_target}'s skull like an egg using the dull metal edge of the roller. It appears to be hollow, after all, {name_target} was stupid enough to get killed with a fucking paint roller.{emote_skull}",
+		str_killdescriptor="cracked open",
+		str_damage=random.choice(["{name_target} is swatted in the {hitzone}!!",
+								  "{name_player} slaps {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} rolls paint all over {name_target}'s {hitzone}!!"]),
+		str_duel="{name_player} and {name_target} quietly pass the time rolling paint over the windows of nearby houses You both have learned tranquility.",
+		str_scalp="The scalp is split in half, with a big hole right in the middle.",
+		fn_effect=wef_tool,
+		price = 4500,
+		str_description="It's a long, broom-like plastic paint roller with a spongy brush and metal axle. The modern man's bo staff.",
+		vendors=[vendor_basedhardware],
+		stat=stat_paintroller_kills,
+		classes=[weapon_class_paint, weapon_class_captcha],
+		sap_cost=2,
+		captcha_length=4,
+		is_tool=1,
+		str_backfire = "{name_player} waves the paint roller around like it's a plastic toy, spreading paint nowhere but giving themselves a thorough welt in the head from the 2 square inches of it that could actually do any damage. How'd they manage that?",
+		tool_props = {
+			'reg_spray' : "You roll paint over as much surface area as your puny little Juvie legs can take you to.",
+			'miss_spray' : "**Miss!** The sponge on your roller snaps off and it takes too long for you to notice. What a waste!",
+			'crit_spray' : "**Critical hit!** Your mind goes blank in a painting-induced rage. When you wake up, all your surroundings are {color} You should do that more often!",
+			'equip_spray' : "You grab your paint roller and strap it on your back."}
+		),
+	EwWeapon(  # 27
+		id_weapon=weapon_id_paintbrush,
+		alias=[
+			"paint brushes",
+			"brush"
+		],
+		str_crit="**Critical hit!!** {name_player}  stabs {name_target} with one brush and paints over their eyes with another!  **HOT DOG!!!**",
+		str_miss="**MISS!!** {name_player} throws the brushes at {name_target}, but they get hit with the soft bristles instead of the pointy bit!",
+		str_equip="If only you had a whittling knife that could sharpen paintbrush handles. That way you could equip the knife as a weapon instead of this.",
+		str_name="paintbrushes",
+		str_weapon="paintbrushes",
+		str_weaponmaster_self="You are a rank {rank} vandal of the paintbrush.",
+		str_weaponmaster="They are a rank {rank} vandal of the paintbrush.",
+		# str_trauma_self = "You have bruises all over your body and you can't get the paint out of your clothes.",
+		# str_trauma = "They have bruises all over their body, and they can't get the paint out of their clothes.",
+		str_kill="***MASTERPIECE!*** {name_target} takes a mortal brush to the forehead, courtesy of {name_player}'s talent as a painter. {emote_skull}",
+		str_killdescriptor="paintbrushed to death",
+		str_damage=random.choice(["{name_target} is handlestabbed in the {hitzone}!!",
+								  "{name_player} flecks {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} grazes {name_target}'s {hitzone} with coarse bristles!!"]),
+		str_duel="{name_player} and {name_target} paint random text commands on the walls outside the Dojo. {name_target} paints some furry art when nobody's looking.",
+		str_scalp="The scalp has a bunch of welts, and has a faint smell of lead.",
+		fn_effect=wef_tool,
+		str_description="A stack of large, coarse-bristled paintbrushes, linked together on a burlap string.",
+		vendors=[vendor_basedhardware],
+		stat=stat_paintbrush_kills,
+		classes=[weapon_class_paint, weapon_class_captcha],
+		sap_cost=2,
+		price = 100,
+		captcha_length=3,
+		is_tool=1,
+		str_backfire = "In an attempt to paint faster, {name_player} sticks one of the handles in their mouth and try to use it to cover more ground. Instead, they broke your teeth and scraped their cheek on a hard brick surface. Better not try that again...",
+		tool_props = {
+			'reg_spray' : "You paint vulgar {gang} symbols on as many buildings as you can.",
+			'miss_spray' : "**Miss!** You finish with a paint can and have to switch! You waste too much time getting the can open.",
+			'crit_spray' : "**Critical hit!**  You hold the paint can in your mouth and start crab walking, throwing paint along the wall as you do it! Somehow, this is more efficient!",
+			'equip_spray' : "You get your brushes at the ready."}
+	),
+	EwWeapon(  # 28
+		id_weapon=weapon_id_watercolors,
+		alias=[
+			"paint brushes",
+			"brush"
+		],
+		str_crit="```css\n\"oooOOOOOOOH LA LA! {name_target} is exposed to {name_player}'s watercolor pornography! They won't be able to recover from that!\"\n```",
+		str_miss="```css\n[{name_player} paints a picture for {name_target}. It does no damage, as expected.]\n```",
+		str_equip="```ini\n[You get a nice mug to dip your little paintbrush in, and open your 12 set of watercolors. Look out world, here comes you!]\n```",
+		str_name="watercolors",
+		str_weapon="a set of watercolors",
+		str_weaponmaster_self="You are a rank {rank} flaming homosexual of watercolors.",
+		str_weaponmaster="They are a rank {rank} flaming homosexual of watercolors.",
+		# str_trauma_self = "You are eternally humiliated after being murdered by a gangster wielding watercolor paints.",
+		# str_trauma = "They are eternally humiliated after being murdered by a gangster wielding watercolor paints.",
+		str_kill="```bash\n\"HUUUUUUH?? {name_target} goes and kills themselves after having an existential crisis! {name_player} seems to have done this with only their own retardation!\"\n```",
+		str_killdescriptor="driven to suicide",
+		str_damage="```ini\n[{name_player} paints a picture of {name_target}. Their self esteem takes a hit!]\n```",
+		str_duel="```json\n\"{name_player} and {name_target} practice art using Dojo-owned easels and canvases. Eventually, the training session breaks down and, you just throw paint water at each other and giggle like schoolgirls.\"\n```",
+		str_scalp="The scalp is perfectly intact.",
+		fn_effect=wef_tool,
+		str_description="A 12 pack of watercolors, the kind you used when you were a 5 years old boy.",
+		vendors=[vendor_basedhardware],
+		stat=stat_watercolor_kills,
+		classes=[weapon_class_paint, weapon_class_captcha],
+		sap_cost=2,
+		price = 1300,
+		captcha_length=3,
+		is_tool=1,
+		str_backfire = "{name_player} has the idea of trying to paint their parents fucking, thinking it will be really funny and everyone will love them. Pretty soon we're going to have to ban watercolors because people like you are using them to molest yourself.",
+		tool_props = {
+			'reg_spray' : "Nice drawing, {curse}! ",
+			'miss_spray' : "**Miss!** Your painting sucks. God, you're stupid. ",
+			'crit_spray' : "After the thousandth failed watercolor gesamtkunstwerk you decide enough is enough. Fuck this. Fuck the gangs, fuck the violence, fuck the perpetually rotting lets player that compels you to rigor mortis yourself more frequently than you eat breakfast. The spite is so concentrated that it compels you to turn your life around. You get a fake ID, join the PTA, and rope them into cleaning every last inch of this district until the homeless population smell like citrus and give out free, non-tainted lollipops. However, your newfound peaceful life is interrupted by the night terrors ENDLESS WAR now gives you on a daily basis, and you decide to go back to being a gangster. You suppose some things never change.",
+			'equip_spray' : "You get out your 12 pack of watercolors. Can't believe you have to use one of these."
+			}),
+	EwWeapon(  # 29
+		id_weapon=weapon_id_thinnerbomb,
+		alias=[
+			"thinner",
+			"thinnerbombs"
+		],
+		str_crit="**Critical hit!!** {name_player} slams {name_target} with a bottle of paint thinner, showering their face with broken glass and getting some of the thinner down their gullet. They fall back, dazed and bleeding.",
+		str_miss="**MISS!!** {name_player} is too dazed by their own chemicals to make a move! They drop the bottle on accident, throwing vapors all over the place.",
+		str_equip="You pull out the thinner bombs and hold their bottlenecks between your fingers. Never has a not-weapon ever felt so cool.",
+		str_name="thinner bombs",
+		str_weapon="thinner bombs",
+		str_weaponmaster_self="You are a rank {rank} vandal of the thinner bomb.",
+		str_weaponmaster="They are a rank {rank} vandal of the thinner bomb.",
+		# str_trauma_self = "You have the hangover from hell.",
+		# str_trauma = "They have the hangover from hell.",
+		str_kill="***WHAT A SIZZLER!*** {name_target}, dazed from the concentrated toxic chemicals in the air, falls to the ground, giving {name_player} the chance to stab them through the neck with the broken bottle. Inhalants. Not even once. {emote_skull}",
+		str_killdescriptor="drugged",
+		str_damage=random.choice(["{name_target} gets a thinnerbomb to the {hitzone}!!",
+								  "{name_player} slashes {name_target} with a broken thinnerbomb! Ooh, right in the {hitzone}!!"]),
+		str_duel="{name_player} and {name_target} build a resistance to the noxious chemicals they're using by drinking paint thinner together. Cheers.",
+		str_scalp="The scalp smells awful, you can hardly hold it.",
+		fn_effect=wef_tool,
+		str_description="A pack of brittle glass bottles filled with paint thinner. This stuff vaporizes like nobody's business, and could strip the osmotic membrane off a slimeoid.",
+		vendors=[vendor_basedhardware],
+		stat=stat_thinnerbomb_kills,
+		classes=[weapon_class_paint, weapon_class_thrown, weapon_class_captcha],
+		sap_cost=2,
+		price = 150,
+		captcha_length=4,
+		is_tool = 1,
+		str_backfire = "You haven't had a good buzz in awhile, so you take a whiff of one of your thinner bombs. Great trip and all, but you rough yourself up convulsing on the ground while it happens.",
+		tool_props = {
+		'reg_spray' : "You find a vandalized wall and toss a thinner bomb on it! You hear a faint sizzling as paint begins to strip off the walls. Sick!",
+		'miss_spray' : "**Miss!** You make a mistake on the throw's distance and it bursts uselessly on the ground. You got to do some littering, so at least there's that.",
+		'crit_spray' : "**Critical hit!** You take out a paint bomb and throw it at a particularly fragile looking building. The chemicals you used were so caustic that they burned a hole through the whole wall, preventing anyone from painting it for all of time!",
+		'equip_spray' : "You get your glass thinner bombs out you you can throw them in a moment's notice."
+	}),
+	
+	EwWeapon( # 30
 		id_weapon = weapon_id_staff,
 		alias = [
 			"eldritchstaff",
@@ -5426,24 +6163,6 @@ stock_tacobell = "tacobell"
 # default stock rates
 default_stock_market_rate = 1000
 default_stock_exchange_rate = 1000000
-
-# dye ids
-dye_black = "blackdye"
-dye_maroon = "maroondye"
-dye_green = "greendye"
-dye_brown = "browndye"
-dye_tan = "tandye"
-dye_purple = "purpledye"
-dye_teal = "tealdye"
-dye_orange = "orangedye"
-dye_gray = "graydye"
-dye_red = "reddye"
-dye_lime = "limedye"
-dye_yellow = "yellowdye"
-dye_blue = "bluedye"
-dye_fuchsia = "fuchsiadye"
-dye_aqua = "aquadye"
-dye_white = "whitedye"
 
 
 # A map of name to EwWeather objects.
@@ -6536,7 +7255,6 @@ food_list = [
 		],
 		recover_hunger = 500,
 		price = 2500,
-
 		inebriation = 0,
 		str_name = 'box of chocolates',
 		#vendors = [vendor_tacobell, vendor_pizzahut, vendor_kfc, vendor_bar, vendor_diner, vendor_seafood],
@@ -6689,11 +7407,49 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
+		id_food = item_id_rustealeaves,
+		recover_hunger = 60,
+		str_name = 'Rustea Leaves',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Rustea Leaves. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "In ancient times, scholars from distant lands made tea with these leaves, believing it to offer them some kind of divination.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = item_id_metallicaps,
+		recover_hunger = 60,
+		price = 100000,
+		str_name = 'Metallicaps',
+		vendors = [vendor_farm, vendor_bazaar],
+		str_eat = "You chomp into the raw Metallicaps. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "It's hallucinogenic properties aren't yet awakened. DUDE SHROOMS LOL!!!",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = item_id_steelbeans,
+		recover_hunger = 60,
+		price = 100000,
+		str_name = 'Steel Beans',
+		vendors = [vendor_farm, vendor_bazaar],
+		str_eat = "You chomp into the raw Steel Beans. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "*That's me in the cockpit. That's me in the nosedive, doing 9/11.*",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = item_id_aushucks,
+		recover_hunger = 60,
+		price = 100000,
+		str_name = 'Aushucks',
+		vendors = [vendor_farm, vendor_bazaar],
+		str_eat = "You chomp into the raw Aushucks. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The king and queen of all crops, renowned for it's glistening, golden exterior.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
 		id_food = "pinkrowdatouille",
 		recover_hunger = 1200,
 		str_name = 'Pink Rowdatouille',
-		acquisition = acquisition_milling,
-		ingredients = item_id_pinkrowddishes,
+		acquisition = acquisition_smelting,
 		str_eat = "You gingerly nibble on the fancy vegetables. It’s nostalgic taste sends you right back to your childhood, and your first encounter with the law. You had to get sent to the New Los Angeles City aka Neo Milwaukee Juvenile Detention Center somehow, after all. It feels like it happened so long ago, and yet, you can remember it like it was yesterday.",
 		str_desc = "Thinly sliced rounds of Pink Rowddish and other colorful vegetables are slow roasted and drizzled with special sauce. It seems simple enough, it can’t taste THAT good, can it?",
 		time_expir = milled_food_expir,
@@ -6702,8 +7458,7 @@ food_list = [
 		id_food = "sludgeberrypancakes",
 		recover_hunger = 800,
 		str_name = 'Sludgeberry Pancakes',
-		acquisition = acquisition_milling,
-		ingredients = item_id_sludgeberries,
+		acquisition = acquisition_smelting,
 		str_eat = "You pick up the stack of pancakes with your hands, holding and biting into them as if they were a hamburger. Thick syrup coats your hands and mouth, ready to be licked off after the main meal has concluded.",
 		str_desc = "Fluffy flapjacks filled with assorted Sludgeberries and topped with a heaping helping of viscous syrup. You’ve died and washed up in the sewers. But, like, a nice part of the sewers. This express doesn’t really translate well into the setting.",
 		time_expir = milled_food_expir,
@@ -6712,8 +7467,7 @@ food_list = [
 		id_food = "pulpgourdpie",
 		recover_hunger = 800,
 		str_name = 'Pulp Gourd Pie',
-		acquisition = acquisition_milling,
-		ingredients = item_id_pulpgourds,
+		acquisition = acquisition_smelting,
 		str_eat = "You pick up a piece like it's a goddamn slice of pizza, demolishing it in a few barbaric bites. Eventually you get your fill of the crust and just start scraping out the delicious Pulp Gourd filling goop and slathering it all over your mouth and tongue like you're a fucking mindless pig at his trough.",
 		str_desc = "A warm, freshly baked pie. It's still molten, still solidifying Pulp Gourd filling beckons you like a siren lures a sailor. So many holidays have been ruined because of your addiction to this cinnamon imbued delicacy, and so many more will be in the future.",
 		time_expir = milled_food_expir,
@@ -6722,8 +7476,7 @@ food_list = [
 		id_food = "joybeanpastemochi",
 		recover_hunger = 800,
 		str_name = 'Joybean Paste Mochi',
-		acquisition = acquisition_milling,
-		ingredients = item_id_joybeans,
+		acquisition = acquisition_smelting,
 		str_eat = "You pop the delicate confectionary into your mouth and start ravenously shredding it into barely digestible chewy chunks. Sweet paste is slathered across your mouth. Your teeth enamel is decimated, execution style.",
 		str_desc = "A sickeningly sweet  Joy Bean paste filling encased in a small, round mochi covered in powdered sugar. It’s *proper* name is “Daifucku.”",
 		time_expir = milled_food_expir,
@@ -6732,8 +7485,7 @@ food_list = [
 		id_food = "brightshadeseeds",
 		recover_hunger = 800,
 		str_name = 'Brightshade Seeds',
-		acquisition = acquisition_milling,
-		ingredients = item_id_brightshade,
+		acquisition = acquisition_smelting,
 		str_eat = "You pop a few seeds into your mouth at a time, grinding them into dust with your molars and digesting their sweet, sweet single digit calories.",
 		str_desc = "A bag of Brightshade seeds, unsalted and ready for ill-advised consumption.",
 		time_expir = milled_food_expir,
@@ -6742,8 +7494,7 @@ food_list = [
 		id_food = "direapplejuice",
 		recover_hunger = 800,
 		str_name = 'Dire Apple Juice',
-		acquisition = acquisition_milling,
-		ingredients = item_id_direapples,
+		acquisition = acquisition_smelting,
 		str_eat = "You slurp down the delicious sugary juice! Hell yeah!",
 		str_desc = "A 99% juice-like substance that tastes vaguely like Dire Apples! It’s so ubiquitous that you guarantee that if you rummaged through every school kid’s lunch in the city, you’d be sent to jail.",
 		time_expir = milled_food_expir,
@@ -6752,8 +7503,7 @@ food_list = [
 		id_food = "purplekilliflowercrustpizza",
 		recover_hunger = 1200,
 		str_name = 'Purple Killiflower Crust Pizza',
-		acquisition = acquisition_milling,
-		ingredients = item_id_purplekilliflower,
+		acquisition = acquisition_smelting,
 		str_eat = "You take a hesitant nibble of the famously keto pizza slice before coming to the reality that sometimes healthy things CAN taste good! You shove the rest of the slice in your mouth, nearly choking. Deep inside of your body, you can feel your kidney begin to churn and convulse. That’s probably fine.",
 		str_desc = "A deliciously dietary-accordant slice of Killiflower crusted pizza. Made by milling down Killiflower into fine crumbs, combining with various irradiated cheeses, and baking until even notorious ENDLSS WAR critic Arlo is impressed. Now THIS is how you lose weight!",
 		time_expir = milled_food_expir,
@@ -6762,8 +7512,7 @@ food_list = [
 		id_food = "razornutbutter",
 		recover_hunger = 800,
 		str_name = 'Razornut Butter',
-		acquisition = acquisition_milling,
-		ingredients = item_id_razornuts,
+		acquisition = acquisition_smelting,
 		str_eat = "You take a hefty spoonful of the thick mucilage, coating your mouth completely. It’ll take weeks to swallow the last of it.",
 		str_desc = "A tub of chunky, creamy Razonut Butter. Co-star of countless childhood classics. You know it was invented by a Juvie, right?",
 		time_expir = milled_food_expir,
@@ -6772,8 +7521,7 @@ food_list = [
 		id_food = "jellyfilleddoughnut",
 		recover_hunger = 800,
 		str_name = 'Jelly-Filled Doughnut',
-		acquisition = acquisition_milling,
-		ingredients = item_id_poketubers,
+		acquisition = acquisition_smelting,
 		str_eat = "You chomp into the delicious jelly-filled doughnuOH GOD WHY THE FUCK DOES IT TASTE LIKE A TRADITIONAL JAPANESE ONIGIRI WITH A PICKLE PLUM FILLING WHO COULD HAVE PREDICTED THIS?!?!",
 		str_desc = "These jelly-filled doughnuts seem appetizing enough, but you're no expert. You never really cared much for jelly-filled doughnuts. In fact, in most scenarios you'd pass them up in favor of another pastry or sugary snack.",
 		time_expir = milled_food_expir,
@@ -6782,8 +7530,7 @@ food_list = [
 		id_food = "yourfavoritefood",
 		recover_hunger = 800,
 		str_name = '***Your Favorite Food***',
-		acquisition = acquisition_milling,
-		ingredients = item_id_suganmanuts,
+		acquisition = acquisition_smelting,
 		str_eat = "***You bite into your favorite meal!! It’s taste is literally indescribable!! You feel like you’re going retarded, your mind is clearly breaking!! Uwahhh!!***",
 		str_desc = "***Your favorite meal!! You could go on for hours about how great this food is!! But, you won’t, because no one appreciates it as much as you do.***",
 		time_expir = milled_food_expir,
@@ -6792,8 +7539,7 @@ food_list = [
 		id_food = "dankwheattoast",
 		recover_hunger = 800,
 		str_name = 'Dankwheat Toast',
-		acquisition = acquisition_milling,
-		ingredients = item_id_dankwheat,
+		acquisition = acquisition_smelting,
 		str_eat = "You take a bite out of the Dank Wheat Toast, and immediately you begin to start staggering around, clearly lost in some sort of unearned pleasure.",
 		str_desc = "A burnt, slightly soggy slice of Dank Wheat Toast. What more do you want out of me?",
 		time_expir = milled_food_expir,
@@ -6802,8 +7548,7 @@ food_list = [
 		id_food = "blacklimesour",
 		recover_hunger = 800,
 		str_name = 'Black Lime Sour',
-		acquisition = acquisition_milling,
-		ingredients = item_id_blacklimes,
+		acquisition = acquisition_smelting,
 		str_eat = "You take a swig of the obscure southern delicacy. Its overwhelming acidity tricks your mouth into generating quarts of saliva, refreshing your mouth and destroying your taste buds. Nifty!",
 		str_desc = "A small paper cup with nothing but crushed ice, the juice of a Black Lime, a little salt, and about a pound of cocaine.",
 		time_expir = milled_food_expir,
@@ -6812,8 +7557,7 @@ food_list = [
 		id_food = "phosphorpoppiesmuffin",
 		recover_hunger = 800,
 		str_name = 'Phosphorpoppies Muffin',
-		acquisition = acquisition_milling,
-		ingredients = item_id_phosphorpoppies,
+		acquisition = acquisition_smelting,
 		str_eat = "You remove the muffin head from the stump, before devouring the former and throwing the later as far away from you as humanly possible. Good riddance.",
 		str_desc = "Oooh, muffins! Remember that? Gimme a thumbs up with you get this joke.",
 		time_expir = milled_food_expir,
@@ -6822,8 +7566,7 @@ food_list = [
 		id_food = "sourpotatofrenchfries",
 		recover_hunger = 800,
 		str_name = 'Sour Potato French Fries',
-		acquisition = acquisition_milling,
-		ingredients = item_id_sourpotatoes,
+		acquisition = acquisition_smelting,
 		str_eat = "You bite into the fluffy, acidic french fries, occasionally dipping in into a selection of various dipping sauces such as hot slime and sweet slime. You divorce the actual flavor of the crispy exterior from it’s sour innards with a technique not unlike the one used to get the last drop of toothpaste out of it’s tube. Your face convulses in pain.",
 		str_desc = "Some gloriously thick cut Sour Potato french fries accompanied by an embarrassment of tasty slime-based dipping sauces. What else could a juvenile asked for?? Maybe some sugar and baking soda, this shit is unbelievably acidic.",
 		time_expir = milled_food_expir,
@@ -6832,8 +7575,7 @@ food_list = [
 		id_food = "bloodcabbagecoleslaw",
 		recover_hunger = 800,
 		str_name = 'Blood Cabbage Coleslaw',
-		acquisition = acquisition_milling,
-		ingredients = item_id_bloodcabbages,
+		acquisition = acquisition_smelting,
 		str_eat = "You drop the semi-solidified puck of red coleslaw into your eager maw, upon which the faux gelletain instantly loses it’s form and start to crumble into drop down your face. You manage to digest a cabbage shred.",
 		str_desc = "A congealed dark crimson slab of myoglobin encasing sparse strands of Blood Cabbage. It jiggles when you shake the cup it’s stored in. Why the fuck would you mill this?",
 		time_expir = milled_food_expir,
@@ -6842,10 +7584,45 @@ food_list = [
 		id_food = "pawpawfood",
 		recover_hunger = 800,
 		str_name = 'Pawpaw Food',
-		acquisition = acquisition_milling,
-		ingredients = item_id_pawpaw,
+		acquisition = acquisition_smelting,
 		str_eat = "You slowly drink the bitter, flavorless mush. Its… uh… food?",
 		str_desc = "An unappetizing pile of Pawpaw Gruel. It’s just Pawpaw milled into something halfway between puke and diarrhea. The staple of a traditional Juvenile diet. ",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "earlbrowntea",
+		recover_hunger = 800,
+		str_name = 'Earl Brown Tea',
+		acquisition = acquisition_smelting,
+		str_eat = "You dunk your teabag into the cup of Earl Brown Tea to enrich the flavor, and take a long sip afterwards. Dunking the teabag, heh, it totally reminds you of the last time you pwn'd some n00bz... wait, what the fuck are you talking about???",
+		str_desc = "A cup of brown tea. It's easily mistaken for coffee.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "badshroomz",
+		recover_hunger = 800,
+		str_name = 'Bad Shroomz',
+		acquisition = acquisition_smelting,
+		str_eat = "You gobble up the Bad Shroomz and start totally tripping the fuck out. 'Dude, what if Endless War, had like, Slime Goombas and Slime Koopa Troopas, and you could !stomp on them and get SlimeCoin from question mark blocks...', you think to yourself, ingeniously.",
+		str_desc = "A handful of mushrooms, with a copper coating that endows them with psychadelic properties. It's best to take them in a cold, dark room, handcuffed to your bed, with no human contact in miles, in order to optimize your experience with them.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "chromaccino",
+		recover_hunger = 800,
+		str_name = 'Chromaccino',
+		acquisition = acquisition_smelting,
+		str_eat = "You slurp on your Chromaccino. The scalding beverage that leaves a hint of jet fuel within its pallete gives you scars on your mouth that will never heal. Truly, a flavor that you can Never Forget:tm:.",
+		str_desc = "A cup of molten metal, with shavings of metal floating at the top. It strikes you as a bad idea to drink it.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "moltenpopcorn",
+		recover_hunger = 800,
+		str_name = 'Molten Popcorn',
+		acquisition = acquisition_smelting,
+		str_eat = "You chew through the Molten Popcorn. The melt-in-your-mouth flavor is to die for! Literally! You are fucking dying as you continue to ingest this terrible, terrible food item. What the fuck were you thinking?",
+		str_desc = "A piping-hot bag of popcorn. A melting gold ingot is propped up where the butter normally goes, dripping down into the rest of the popcorn puffs.",
 		time_expir = milled_food_expir,
 	),
 	EwFood(
@@ -7543,7 +8320,7 @@ food_list = [
 			"frickenergy",
 		],
 		recover_hunger=10,
-		price=1,
+		price=10,
 		str_name = "Dire Apple FRICK Energy",
 		str_eat = "*siiiiiip*, Ahhh, that's the stuff. You drink through the entire juice box in one go.",
 		str_desc = "A small rectangular box of apple juice. Suitable for children, and perhaps small slimeoids.",
@@ -7668,12 +8445,28 @@ food_names = []
 # list of crops you're able to !reap
 vegetable_list = []
 
+# map of vegetables to their associated cosmetic material
+vegetable_to_cosmetic_material = {}
+
 # seperate the crops from the normal foods
 for v in food_list:
-	if v.vendors != [vendor_farm]:
+
+	if vendor_farm not in v.vendors:
 		pass
 	else:
+		if v.id_food in [item_id_direapples, item_id_brightshade, item_id_razornuts, item_id_steelbeans]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_cool_material
+		elif v.id_food in [item_id_pinkrowddishes, item_id_joybeans, item_id_purplekilliflower, item_id_suganmanuts]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_cute_material
+		elif v.id_food in [item_id_poketubers, item_id_dankwheat, item_id_blacklimes, item_id_aushucks]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_beautiful_material
+		elif v.id_food in [item_id_phosphorpoppies, item_id_pawpaw, item_id_sludgeberries, item_id_rustealeaves]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_smart_material
+		elif v.id_food in [item_id_sourpotatoes, item_id_bloodcabbages, item_id_pulpgourds, item_id_metallicaps]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_tough_material
+
 		vegetable_list.append(v)
+		
 
 vendor_stock_map = {
 	vendor_kfc : stock_kfc,
@@ -9172,8 +9965,7 @@ furniture_list = [
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "An old record player sits on the floor.",
 		furniture_place_desc = "You place the ol' boy on the floor."
-	
-	
+
 	),
 	EwFurniture(
 		id_furniture = "keg",
@@ -9577,7 +10369,6 @@ furniture_list = [
 		vendors = [],
 		furniture_look_desc = "There's a shitty vuvuzela here. Fuck.",
 		furniture_place_desc = "You set your vuvuzela on the shelf. Carnegie Hall, see you never.",
-	
 	),
 	EwFurniture(
 		id_furniture = "ornatechair",
@@ -9890,7 +10681,7 @@ poi_list = [
 		role = "Downtown",
 		property_class = property_class_s,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_krakbay: travel_time_district,
 			poi_id_smogsburg : travel_time_district,
@@ -9907,7 +10698,7 @@ poi_list = [
 			poi_id_stockexchange : travel_time_subzone,
 			poi_id_endlesswar : travel_time_subzone,
 			poi_id_slimecorphq : travel_time_subzone,
-		}
+		},
 	),
 	EwPoi( # 2
 		id_poi = poi_id_smogsburg,
@@ -9923,7 +10714,7 @@ poi_list = [
 		role = "Smogsburg",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_downtown : travel_time_district,
 			poi_id_copkilltown : travel_time_district,
@@ -9937,7 +10728,7 @@ poi_list = [
 			poi_id_smogsburg_street_e : travel_time_street,
 			poi_id_bazaar : travel_time_subzone,
 			poi_id_recyclingplant : travel_time_subzone,
-		}
+		},
 	),
 	EwPoi( # 3
 		id_poi = poi_id_copkilltown,
@@ -9972,7 +10763,8 @@ poi_list = [
 			poi_id_astatineheights : travel_time_district,
 			poi_id_gatlingsdale : travel_time_district,
 			poi_id_copkilltown_street_a : travel_time_street,
-		},
+			poi_id_ck_subway_station: travel_time_subzone,
+		}
 	),
 	EwPoi( # 4
 		id_poi = poi_id_krakbay,
@@ -9987,7 +10779,7 @@ poi_list = [
 		role = "Krak Bay",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors={
 			poi_id_downtown : travel_time_district,
 			poi_id_poudrinalley : travel_time_district,
@@ -10004,7 +10796,7 @@ poi_list = [
 			poi_id_bodega : travel_time_subzone,
 			poi_id_foodcourt : travel_time_subzone,
 			poi_id_sodafountain : travel_time_subzone,
-		}
+		},
 	),
 	EwPoi( # 5
 		id_poi = poi_id_poudrinalley,
@@ -10019,7 +10811,7 @@ poi_list = [
 		role = "Poudrin Alley",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_downtown : travel_time_district,
 			poi_id_krakbay : travel_time_district,
@@ -10063,6 +10855,7 @@ poi_list = [
 			poi_id_poudrinalley : travel_time_district,
 			poi_id_wreckington : travel_time_district,
 			poi_id_rowdyroughhouse_street_a : travel_time_street,
+			poi_id_rr_subway_station: travel_time_subzone,
 		},
 	),
 	EwPoi( # 7
@@ -10078,7 +10871,7 @@ poi_list = [
 		role = "Green Light District",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		has_ads = True,
 		neighbors = {
 			poi_id_downtown : travel_time_district,
@@ -10089,7 +10882,7 @@ poi_list = [
 			poi_id_greenlightdistrict_street_c : travel_time_street,
 			poi_id_thecasino : travel_time_subzone,
 		},
-	),
+		),
 	EwPoi( # 8
 		id_poi = poi_id_oldnewyonkers,
 		alias = [
@@ -10102,7 +10895,7 @@ poi_list = [
 		role = "Old New Yonkers",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_brawlden : travel_time_district,
 			poi_id_newnewyonkers : travel_time_district,
@@ -10116,7 +10909,7 @@ poi_list = [
 			poi_id_oldnewyonkers_street_e : travel_time_street,
 			poi_id_realestate : travel_time_subzone,
 		},
-	),
+		),
 	EwPoi( # 9
 		id_poi = poi_id_littlechernobyl,
 		alias = [
@@ -10132,7 +10925,7 @@ poi_list = [
 		role = "Little Chernobyl",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_arsonbrook : travel_time_district,
 			poi_id_brawlden : travel_time_district,
@@ -10156,7 +10949,7 @@ poi_list = [
 		role = "Arsonbrook",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_maimridge : travel_time_district,
 			poi_id_astatineheights : travel_time_district,
@@ -10184,7 +10977,7 @@ poi_list = [
 		role = "Astatine Heights",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_copkilltown : travel_time_district,
 			poi_id_gatlingsdale : travel_time_district,
@@ -10215,7 +11008,7 @@ poi_list = [
 		role = "Gatlingsdale",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_toxington : travel_time_district,
 			poi_id_poloniumhill : travel_time_district,
@@ -10244,7 +11037,7 @@ poi_list = [
 		role = "Vandal Park",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_gatlingsdale : travel_time_district,
 			poi_id_poloniumhill : travel_time_district,
@@ -10271,7 +11064,7 @@ poi_list = [
 		role = "Glocksbury",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_vandalpark : travel_time_district,
 			poi_id_westglocksbury : travel_time_district,
@@ -10304,7 +11097,7 @@ poi_list = [
 		role = "North Sleezeborough",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_glocksbury : travel_time_district,
 			poi_id_jaywalkerplain : travel_time_district,
@@ -10337,7 +11130,7 @@ poi_list = [
 		role = "South Sleezeborough",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_crookline : travel_time_district,
 			poi_id_northsleezeborough : travel_time_district,
@@ -10363,7 +11156,7 @@ poi_list = [
 		role = "Ooze Gardens",
 		property_class = property_class_a,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_southsleezeborough : travel_time_district,
 			poi_id_krakbay : travel_time_district,
@@ -10389,7 +11182,7 @@ poi_list = [
 		role = "Cratersville",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_oozegardens : travel_time_district,
 			poi_id_poudrinalley : travel_time_district,
@@ -10414,7 +11207,7 @@ poi_list = [
 		role = "Wreckington",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_cratersville : travel_time_district,
 			poi_id_rowdyroughhouse : travel_time_district,
@@ -10446,6 +11239,7 @@ poi_list = [
 			poi_id_mine : travel_time_subzone,
 			poi_id_jr_farms : travel_time_subzone,
 			poi_id_juviesrow_pier : travel_time_subzone,
+			poi_id_jr_subway_station: travel_time_subzone,
 		},
 	),
 	EwPoi( # 21
@@ -10463,7 +11257,7 @@ poi_list = [
 		role = "Slime's End",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_vagrantscorner : travel_time_district,
 			poi_id_slimesend_street_a : travel_time_street,
@@ -10484,7 +11278,7 @@ poi_list = [
 		role = "Vagrant's Corner",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_greenlightdistrict : travel_time_district,
 			poi_id_juviesrow : travel_time_district,
@@ -10518,7 +11312,7 @@ poi_list = [
 		role = "Assault Flats Beach",
 		property_class = property_class_s,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_newnewyonkers : travel_time_district,
 			poi_id_vagrantscorner : travel_time_district,
@@ -10541,7 +11335,7 @@ poi_list = [
 		role = "New New Yonkers",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_brawlden : travel_time_district,
 			poi_id_oldnewyonkers : travel_time_district,
@@ -10567,7 +11361,7 @@ poi_list = [
 		role = "Brawlden",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_arsonbrook : travel_time_district,
 			poi_id_littlechernobyl : travel_time_district,
@@ -10596,7 +11390,7 @@ poi_list = [
 		role = "Toxington",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_charcoalpark : travel_time_district,
 			poi_id_poloniumhill : travel_time_district,
@@ -10627,7 +11421,7 @@ poi_list = [
 		role = "Charcoal Park",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_toxington : travel_time_district,
 			poi_id_poloniumhill : travel_time_district,
@@ -10650,7 +11444,7 @@ poi_list = [
 		role = "Polonium Hill",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_charcoalpark : travel_time_district,
 			poi_id_toxington : travel_time_district,
@@ -10681,16 +11475,17 @@ poi_list = [
 		role = "West Glocksbury",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_poloniumhill : travel_time_district,
 			poi_id_vandalpark : travel_time_district,
 			poi_id_glocksbury : travel_time_district,
 			poi_id_jaywalkerplain : travel_time_district,
-			poi_id_westglocksbury_street_a : travel_time_district,
-			poi_id_westglocksbury_street_b : travel_time_district,
-			poi_id_westglocksbury_street_c : travel_time_district,
-			poi_id_westglocksbury_street_d : travel_time_district,
+			poi_id_westglocksbury_street_a : travel_time_street,
+			poi_id_westglocksbury_street_b : travel_time_street,
+			poi_id_westglocksbury_street_c : travel_time_street,
+			poi_id_westglocksbury_street_d : travel_time_street,
+			poi_id_basedhardware : travel_time_subzone,
 		},
 	),
 	EwPoi(  # 30
@@ -10709,7 +11504,7 @@ poi_list = [
 		role = "Jaywalker Plain",
 		property_class = property_class_c,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_westglocksbury : travel_time_district,
 			poi_id_glocksbury : travel_time_district,
@@ -10737,7 +11532,7 @@ poi_list = [
 		role = "Crookline",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_dreadford : travel_time_district,
 			poi_id_jaywalkerplain : travel_time_district,
@@ -10763,7 +11558,7 @@ poi_list = [
 		role = "Dreadford",
 		property_class = property_class_s,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_jaywalkerplain : travel_time_district,
 			poi_id_crookline : travel_time_district,
@@ -10785,7 +11580,7 @@ poi_list = [
 		channel = "maimridge",
 		property_class = property_class_b,
 		is_district = True,
-		is_capturable = True,
+		is_capturable = False,
 		neighbors = {
 			poi_id_toxington : travel_time_district,
 			poi_id_astatineheights : travel_time_district,
@@ -10853,7 +11648,9 @@ poi_list = [
 			poi_id_downtown_street_c : travel_time_street,
 			poi_id_poudrinalley_street_a : travel_time_street,
 			poi_id_wreckington_street_b : travel_time_street,
-		}
+			poi_id_rr_subway_station: travel_time_subzone,
+		},
+        factions = [faction_rowdys]
 	),
 	EwPoi(
 		id_poi = poi_id_copkilltown_street_a,
@@ -10873,7 +11670,9 @@ poi_list = [
 			poi_id_astatineheights_street_f : travel_time_street,
 			poi_id_smogsburg_street_c : travel_time_street,
 			poi_id_downtown_street_f : travel_time_street,
-		}
+			poi_id_ck_subway_station: travel_time_subzone,
+		},
+        factions = [faction_killers]
 	),
 	EwPoi(
 		id_poi = poi_id_juviesrow_street_a,
@@ -10894,6 +11693,7 @@ poi_list = [
 			poi_id_mine: travel_time_subzone,
 			poi_id_jr_farms : travel_time_subzone,
 			poi_id_juviesrow_pier : travel_time_subzone,
+			poi_id_jr_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -10970,6 +11770,7 @@ poi_list = [
 			poi_id_downtown_street_c : travel_time_street,
 			poi_id_downtown_street_e : travel_time_street,
 			poi_id_poudrinalley_street_b : travel_time_street,
+			poi_id_dt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -10989,6 +11790,7 @@ poi_list = [
 			poi_id_downtown_street_d : travel_time_street,
 			poi_id_downtown_street_f : travel_time_street,
 			poi_id_krakbay_street_a : travel_time_street,
+			poi_id_dt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11027,6 +11829,7 @@ poi_list = [
 			poi_id_krakbay_street_f : travel_time_street,
 			poi_id_krakbay_street_b : travel_time_street,
 			poi_id_downtown_street_e : travel_time_street,
+			poi_id_kb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11142,6 +11945,7 @@ poi_list = [
 			poi_id_poudrinalley_street_e : travel_time_street,
 			poi_id_poudrinalley_street_b : travel_time_street,
 			poi_id_rowdyroughhouse_street_a : travel_time_street,
+			poi_id_pa_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11258,6 +12062,7 @@ poi_list = [
 			poi_id_cratersville_street_a : travel_time_street,
 			poi_id_cratersville_street_c : travel_time_street,
 			poi_id_poudrinalley_street_e : travel_time_street,
+			poi_id_cv_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11279,6 +12084,7 @@ poi_list = [
 			poi_id_oozegardens_street_d : travel_time_street,
 			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
 			poi_id_cv_mines : travel_time_subzone,
+			poi_id_cv_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11298,6 +12104,7 @@ poi_list = [
 			poi_id_wreckington_street_b : travel_time_street,
 			poi_id_cratersville_street_a : travel_time_street,
 			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_wt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11319,6 +12126,7 @@ poi_list = [
 			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
 			poi_id_diner : travel_time_subzone,
 			poi_id_wt_port : travel_time_subzone,
+			poi_id_wt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11378,6 +12186,7 @@ poi_list = [
 			poi_id_oozegardens_street_d : travel_time_street,
 			poi_id_poudrinalley_street_d : travel_time_street,
 			poi_id_og_farms : travel_time_subzone,
+			poi_id_og_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11419,6 +12228,7 @@ poi_list = [
 			poi_id_southsleezeborough_street_b : travel_time_street,
 			poi_id_crookline_street_b : travel_time_street,
 			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_ssb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11630,6 +12440,7 @@ poi_list = [
 			poi_id_glocksbury_street_b : travel_time_street,
 			poi_id_glocksbury_street_d : travel_time_street,
 			poi_id_westglocksbury_street_a : travel_time_street,
+			poi_id_gb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11726,6 +12537,7 @@ poi_list = [
 			poi_id_westglocksbury_street_d : travel_time_street,
 			poi_id_poloniumhill_street_d : travel_time_street,
 			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_wgb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11765,6 +12577,7 @@ poi_list = [
 			poi_id_jaywalkerplain_street_e : travel_time_street,
 			poi_id_jaywalkerplain_street_b : travel_time_street,
 			poi_id_northsleezeborough_street_d : travel_time_street,
+			poi_id_jp_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11784,6 +12597,7 @@ poi_list = [
 			poi_id_jaywalkerplain_street_a : travel_time_street,
 			poi_id_jaywalkerplain_street_c : travel_time_street,
 			poi_id_crookline_street_d : travel_time_street,
+			poi_id_jp_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11813,7 +12627,7 @@ poi_list = [
 			"jpsd",
 			"jpstreetd"
 		],
-		str_name = "",
+		str_name = "Jaywalker Plain Street D",
 		str_desc = str_generic_streets_description,
 		channel = 'jaywalker-plain-street-d',
 		is_street = True,
@@ -11851,11 +12665,15 @@ poi_list = [
 		id_poi = poi_id_crookline_street_a,
 		alias = [
 			"clsa",
-			"clstreeta"
+			"clstreeta",
+			"doxyavenue",
+			"clda",
+			"doxy"
 		],
-		str_name = "Crookline Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'crookline-street-a',
+		str_name = "Doxy Avenue",
+		str_desc = "Jazz clubs and diners decked out in flashy neon lights liven up this already crowded hotspot. Traffic is always jammed down here, and the locals have taken to the habit of just walking between the stopped cars to get across. The 24/7 nightlife here is really something else, and the pickpockets hiding in the bustle will make sure you pay full price for it. Exits into Crookline, XXXXXX, and Perdido Valley.",
+		#channel = 'doxy-avenue',
+		channel = channel_crookline_street_a,
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_crookline,
@@ -11866,6 +12684,7 @@ poi_list = [
 			poi_id_dreadford_street_b : travel_time_street,
 			poi_id_crookline_outskirts_edge : travel_time_outskirt,
 			poi_id_crookline_pier : travel_time_subzone,
+			poi_id_cl_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -11887,17 +12706,22 @@ poi_list = [
 			poi_id_southsleezeborough_street_a : travel_time_street,
 			poi_id_crookline_outskirts_edge : travel_time_outskirt,
 			poi_id_crookline_pier : travel_time_subzone,
+			poi_id_cl_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
 		id_poi = poi_id_crookline_street_c,
 		alias = [
 			"clsc",
-			"clstreetc"
+			"clstreetc",
+			"manteca",
+			"clms",
+			"mantecastreet"
 		],
-		str_name = "Crookline Street C",
-		str_desc = str_generic_streets_description,
-		channel = 'crookline-street-c',
+		str_name = "Manteca Street",
+		str_desc = 'It\'s cold, dark, and quiet. The old brick offices and boarding houses all look closed for the day no matter what time you\'re here. If you didn\'t know any better this might be a nice, moody place for a walk, but it\'s obvious the alleys are hiding something. Don\'t get caught under a streetlight. Exits into Crookline, Perdido Valley and XXXXXX.',
+		#channel = 'manteca-street',
+		channel = channel_crookline_street_c,
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_crookline,
@@ -11912,11 +12736,15 @@ poi_list = [
 		id_poi = poi_id_crookline_street_d,
 		alias = [
 			"clsd",
-			"clstreetd"
+			"clstreetd",
+			"perdidovalley",
+			"clpv",
+			"perdido"
 		],
-		str_name = "Crookline Street D",
-		str_desc = str_generic_streets_description,
-		channel = 'crookline-street-d',
+		str_name = "Perdido Valley",
+		str_desc = "You didn't think it was possible to get any lower, but you've found yourself descended into the under-underworld of Crookline. The high-society crimelords and psychotics of the city frequent the upper-floor style black markets here, indulging in strange, illegal fetishes and experimental substance abuse. You'd love to see those guys get a knife or two to the face, but you doubt the bouncers standing outside would let you in. Exits into Crookline, Manteca Street, and Doxy Avenue.",
+		#channel = 'perdido-valley',
+		channel = channel_crookline_street_d,
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_crookline,
@@ -12195,6 +13023,7 @@ poi_list = [
 			poi_id_toxington_street_b : travel_time_street,
 			poi_id_gatlingsdale_street_d : travel_time_street,
 			poi_id_tt_mines : travel_time_subzone,
+			poi_id_tt_subway_station : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12275,6 +13104,7 @@ poi_list = [
 			poi_id_toxington_street_a : travel_time_street,
 			poi_id_astatineheights_street_b : travel_time_street,
 			poi_id_toxington_pier : travel_time_subzone,
+			poi_id_tt_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12294,6 +13124,7 @@ poi_list = [
 			poi_id_gatlingsdale_street_e : travel_time_street,
 			poi_id_gatlingsdale_street_b : travel_time_street,
 			poi_id_copkilltown_street_a : travel_time_street,
+			poi_id_gd_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12389,6 +13220,7 @@ poi_list = [
 			poi_id_astatineheights_street_f : travel_time_street,
 			poi_id_astatineheights_street_b : travel_time_street,
 			poi_id_gatlingsdale_street_e : travel_time_street,
+			poi_id_ah_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12409,6 +13241,7 @@ poi_list = [
 			poi_id_astatineheights_street_c : travel_time_street,
 			poi_id_toxington_street_e : travel_time_street,
 			poi_id_seafood : travel_time_subzone,
+			poi_id_ah_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12542,6 +13375,7 @@ poi_list = [
 			poi_id_smogsburg_street_b : travel_time_street,
 			poi_id_smogsburg_street_d : travel_time_street,
 			poi_id_copkilltown_street_a : travel_time_street,
+			poi_id_sb_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12600,6 +13434,7 @@ poi_list = [
 			poi_id_arsonbrook_street_b : travel_time_street,
 			poi_id_smogsburg_street_a : travel_time_street,
 			poi_id_ab_farms : travel_time_subzone,
+			poi_id_ab_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12751,13 +13586,13 @@ poi_list = [
 		channel = 'brawlden-street-a',
 		is_street = True,
 		is_capturable = True,
-		father_district = poi_id_brawlden,
 		neighbors = {
 			poi_id_brawlden : travel_time_street,
 			poi_id_brawlden_street_d : travel_time_street,
 			poi_id_brawlden_street_b : travel_time_street,
 			poi_id_arsonbrook_street_d : travel_time_street,
 			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_bd_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12835,6 +13670,7 @@ poi_list = [
 			poi_id_littlechernobyl_street_c : travel_time_street,
 			poi_id_littlechernobyl_street_b : travel_time_street,
 			poi_id_arsonbrook_street_e : travel_time_street,
+			poi_id_lc_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12988,6 +13824,7 @@ poi_list = [
 			poi_id_newnewyonkers_street_b : travel_time_street,
 			poi_id_brawlden_street_b : travel_time_street,
 			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_nny_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -13107,6 +13944,7 @@ poi_list = [
 			poi_id_vagrantscorner_street_b : travel_time_street,
 			poi_id_assaultflatsbeach_street_b : travel_time_street,
 			poi_id_vc_port : travel_time_subzone,
+			poi_id_vc_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -13260,6 +14098,7 @@ poi_list = [
 			poi_id_greenlightdistrict_street_b : travel_time_street,
 			poi_id_greenlightdistrict_street_a : travel_time_street,
 			poi_id_downtown_street_b : travel_time_street,
+			poi_id_gld_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -13911,7 +14750,7 @@ poi_list = [
 		role = "Jaywalker Plain Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_jaywalkerplain_street_c, poi_id_jaywalkerplain_street_d],
+		mother_districts = [poi_id_jaywalkerplain_street_a, poi_id_jaywalkerplain_street_b],
 		is_pier = True,
 		pier_type = fish_slime_freshwater,
 		neighbors = {
@@ -14097,16 +14936,17 @@ poi_list = [
 			"tts"
 		],
 		str_name = "The Toxington Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Toxington.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Toxington.",
 		channel = channel_tt_subway_station,
 		role = "Toxington Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_toxington],
+		mother_districts = [poi_id_toxington_street_a, poi_id_toxington_street_e],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_toxington_street_a : travel_time_subzone,
+			poi_id_toxington_street_e : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Astatine Heights Subway Station
@@ -14127,16 +14967,17 @@ poi_list = [
 			"ahs"
 		],
 		str_name = "The Astatine Heights Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Astatine Heights.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Astatine Heights.",
 		channel = channel_ah_subway_station,
 		role = "Astatine Heights Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_astatineheights],
+		mother_districts = [poi_id_astatineheights_street_a, poi_id_astatineheights_street_b],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_astatineheights_street_a : travel_time_subzone,
+			poi_id_astatineheights_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Gatlingsdale Subway Station
@@ -14157,16 +14998,16 @@ poi_list = [
 			"gds"
 		],
 		str_name = "The Gatlingsdale Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Gatlingsdale.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Gatlingsdale.",
 		channel = channel_gd_subway_station,
 		role = "Gatlingsdale Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_gatlingsdale],
+		mother_districts = [poi_id_gatlingsdale_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-
+			poi_id_gatlingsdale_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Arsonbrook Subway Station
@@ -14187,16 +15028,16 @@ poi_list = [
 			"abs"
 		],
 		str_name = "The Arsonbrook Subway Station",
-		str_desc = str_yellow_subway_station_description + "\n\nExits into Arsonbrook.",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Arsonbrook.",
 		channel = channel_ab_subway_station,
 		role = "Arsonbrook Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_arsonbrook],
+		mother_districts = [poi_id_arsonbrook_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_arsonbrook_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Cop Killtown Subway Station
@@ -14218,16 +15059,17 @@ poi_list = [
 			"cs"
 		],
 		str_name = "The Cop Killtown Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Cop Killtown.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Cop Killtown.",
 		channel = channel_ck_subway_station,
 		role = "Cop Killtown Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_copkilltown],
+		mother_districts = [poi_id_copkilltown, poi_id_copkilltown_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_copkilltown : travel_time_subzone,
+			poi_id_copkilltown_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Smogsburg Subway Station
@@ -14248,19 +15090,16 @@ poi_list = [
 			"sbs"
 		],
 		str_name = "The Smogsburg Subway Station",
-		str_desc = str_green_subway_station_description + \
-						"\n\n" + str_subway_connecting_sentence.format("yellow") + \
-						"\n\n" + str_yellow_subway_station_description \
-			+ "\n\nExits into Smogsburg.",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Smogsburg.",
 		channel = channel_sb_subway_station,
 		role = "Smogsburg Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_smogsburg],
+		mother_districts = [poi_id_smogsburg_street_c],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_smogsburg_street_c : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Downtown Subway Station
@@ -14281,11 +15120,12 @@ poi_list = [
 		role = "Downtown Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_downtown],
+		mother_districts = [poi_id_downtown_street_d, poi_id_downtown_street_e],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_downtown_street_d : travel_time_subzone,
+			poi_id_downtown_street_e : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Krak Bay Subway Station
@@ -14306,19 +15146,19 @@ poi_list = [
 			"kbs"
 		],
 		str_name = "The Krak Bay Subway Station",
-		str_desc = str_green_subway_station_description + \
-						"\n\n" + str_subway_connecting_sentence.format("yellow") + \
-						"\n\n" + str_yellow_subway_station_description + \
+		str_desc = str_black_subway_station_description + \
+						"\n\n" + str_subway_connecting_sentence.format("gold") + \
+						"\n\n" + str_gold_subway_station_description + \
 			"\n\nExits into Krak Bay.",
 		channel = channel_kb_subway_station,
 		role = "Krak Bay Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_krakbay],
+		mother_districts = [poi_id_krakbay_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_krakbay_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Glocksbury Subway Station
@@ -14339,16 +15179,16 @@ poi_list = [
 			"gbs"
 		],
 		str_name = "The Glocksbury Subway Station",
-		str_desc = str_green_subway_station_description + "\n\nExits into Glocksbury.",
+		str_desc = str_black_subway_station_description + "\n\nExits into Glocksbury.",
 		channel = channel_gb_subway_station,
 		role = "Glocksbury Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_glocksbury],
+		mother_districts = [poi_id_glocksbury_street_c],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_glocksbury_street_c : travel_time_subzone,
 		},
 	),
 	EwPoi(  # West Glocksbury Subway Station
@@ -14369,16 +15209,16 @@ poi_list = [
 			"wgbs"
 		],
 		str_name = "The West Glocksbury Subway Station",
-		str_desc = str_green_subway_station_description + "\n\nExits into West Glocksbury.",
+		str_desc = str_black_subway_station_description + "\n\nExits into West Glocksbury.",
 		channel = channel_wgb_subway_station,
 		role = "West Glocksbury Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_westglocksbury],
+		mother_districts = [poi_id_westglocksbury_street_c],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_westglocksbury_street_c : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Jaywalker Plain Subway Station
@@ -14399,16 +15239,17 @@ poi_list = [
 			"jps"
 		],
 		str_name = "The Jaywalker Plain Subway Station",
-		str_desc = str_green_subway_station_description + "\n\nExits into Jaywalker Plain.",
+		str_desc = str_gold_subway_station_description + "\n\nExits into Jaywalker Plain.",
 		channel = channel_jp_subway_station,
 		role = "Jaywalker Plain Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_jaywalkerplain],
+		mother_districts = [poi_id_jaywalkerplain_street_a, poi_id_jaywalkerplain_street_b],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_jaywalkerplain_street_a : travel_time_subzone,
+			poi_id_jaywalkerplain_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi(  # North Sleezeborough Subway Station
@@ -14430,16 +15271,17 @@ poi_list = [
 			"nsbs"
 		],
 		str_name = "The North Sleezeborough Subway Station",
-		str_desc = str_green_subway_station_description + "\n\nExits into North Sleezeborough.",
+		str_desc = str_gold_subway_station_description + "\n\nExits into North Sleezeborough.",
 		channel = channel_nsb_subway_station,
 		role = "North Sleezeborough Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_northsleezeborough],
+		mother_districts = [poi_id_northsleezeborough_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_northsleezeborough_street_a : travel_time_subzone,
+			poi_id_nsb_subway_station: travel_time_subzone,
 		},
 	),
 	EwPoi(  # South Sleezeborough Subway Station
@@ -14461,16 +15303,17 @@ poi_list = [
 			"ssbs"
 		],
 		str_name = "The South Sleezeborough Subway Station",
-		str_desc = str_yellow_subway_station_description + "\n\nExits into South Sleezeborough.",
+		str_desc = str_purple_subway_station_description + "\n\nExits into South Sleezeborough.",
 		channel = channel_ssb_subway_station,
 		role = "South Sleezeborough Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_southsleezeborough],
+		mother_districts = [poi_id_southsleezeborough_street_a, poi_id_southsleezeborough_street_b],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_southsleezeborough_street_a : travel_time_subzone,
+			poi_id_southsleezeborough_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Cratersville Subway Station
@@ -14491,16 +15334,17 @@ poi_list = [
 			"cvs"
 		],
 		str_name = "The Cratersville Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Cratersville.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Cratersville.",
 		channel = channel_cv_subway_station,
 		role = "Cratersville Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_cratersville],
+		mother_districts = [poi_id_cratersville_street_b, poi_id_cratersville_street_c],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_cratersville_street_b : travel_time_subzone,
+			poi_id_cratersville_street_c : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Wreckington Subway Station
@@ -14521,16 +15365,17 @@ poi_list = [
 			"wts"
 		],
 		str_name = "The Wreckington Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Wreckington.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Wreckington.",
 		channel = channel_wt_subway_station,
 		role = "Wreckington Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_wreckington],
+		mother_districts = [poi_id_wreckington_street_a, poi_id_wreckington_street_b],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_wreckington_street_a : travel_time_subzone,
+			poi_id_wreckington_street_b : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Rowdy Roughhouse Subway Station
@@ -14550,16 +15395,17 @@ poi_list = [
 			"rrs"
 		],
 		str_name = "The Rowdy Roughhouse Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Rowdy Roughhouse.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Rowdy Roughhouse.",
 		channel = channel_rr_subway_station,
 		role = "Rowdy Roughhouse Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_rowdyroughhouse],
+		mother_districts = [poi_id_rowdyroughhouse, poi_id_rowdyroughhouse_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_rowdyroughhouse : travel_time_subzone,
+			poi_id_rowdyroughhouse_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Green Light District Subway Station
@@ -14581,16 +15427,16 @@ poi_list = [
 			"glds"
 		],
 		str_name = "The Green Light District Subway Station",
-		str_desc = str_blue_subway_station_description + "\n\nExits into Green Light District.",
+		str_desc = str_green_subway_station_description + "\n\nExits into Green Light District.",
 		channel = channel_gld_subway_station,
 		role = "Green Light District Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_greenlightdistrict],
+		mother_districts = [poi_id_greenlightdistrict_street_c],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_greenlightdistrict_street_c : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Juvie's Row Subway Station
@@ -14611,16 +15457,17 @@ poi_list = [
 			"jrs"
 		],
 		str_name = "The Juvie's Row Subway Station",
-		str_desc = str_blue_subway_station_description + "\n\nExits into Juvie's Row.",
+		str_desc = str_green_subway_station_description + "\n\nExits into Juvie's Row.",
 		channel = channel_jr_subway_station,
 		role = "Juvie's Row Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_juviesrow],
+		mother_districts = [poi_id_juviesrow, poi_id_juviesrow_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_juviesrow : travel_time_subzone,
+			poi_id_juviesrow_street_a : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Vagrant's Corner Subway Station
@@ -14641,53 +15488,264 @@ poi_list = [
 			"vcs"
 		],
 		str_name = "The Vagrant's Corner Subway Station",
-		str_desc = str_blue_subway_station_description + "\n\nExits into Vagrant's Corner.",
+		str_desc = str_green_subway_station_description + "\n\nExits into Vagrant's Corner.",
 		channel = channel_vc_subway_station,
 		role = "Vagrant's Corner Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_vagrantscorner],
+		mother_districts = [poi_id_vagrantscorner_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_vagrantscorner_street_a : travel_time_subzone,
 		},
 	),
-	EwPoi(  # Assault Flats Beach Subway Station
-		id_poi = poi_id_afb_subway_station,
+	EwPoi( # Vandal Park Subway Station
+		id_poi = poi_id_vp_subway_station,
 		alias = [
-			"assaultflatsbeachsubwaystation",
-			"assaultflatsbeachsubway",
-			"assaultflatsbeachsub",
-			"assaultflatsbeachstation",
-			"assaultflatssubwaystation",
-			"assaultflatssubway",
-			"assaultflatssub",
-			"assaultflatsstation",
-			"beachsubwaystation",
-			"beachsubway",
-			"beachsub",
-			"beachstation",
-			"afbsubwaystation",
-			"afbsubway",
-			"afbsub",
-			"afbstation",
-			"assaultflatss",
-			"afbs"
+			"vandalparksubway",
+			"vandalparksub",
+			"vandalparkstation",
+			"vandalsubwaystation",
+			"vandalsubway",
+			"vandalsub",
+			"vandalstation",
+			"vpsubwaystation",
+			"vpsubway",
+			"vpsub",
+			"vpstation",
+			"vandals",
+			"vps"
 		],
-		str_name = "The Assault Flats Beach Subway Station",
-		str_desc = str_blue_subway_station_description + "\n\nExits into Assault Flats Beach.",
-		channel = channel_afb_subway_station,
-		role = "Assault Flats Beach Subway Station",
+		str_name = "The Vandal Park Subway Station",
+		str_desc = str_black_subway_station_description + "\n\nExits into Vandal Park.",
+		channel = channel_vp_subway_station,
+		role = "Vandal Park Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_districts = [poi_id_assaultflatsbeach],
+		mother_districts = [poi_id_vandalpark_street_a],
 		is_transport_stop = True,
 		transport_lines = set(),
 		neighbors = {
-			
+			poi_id_vandalpark_street_a : travel_time_subzone,
+			poi_id_vp_subway_station: travel_time_subzone,
 		},
 	),
+	EwPoi(  # Crookline Subway Station
+		id_poi = poi_id_cl_subway_station,
+		alias = [
+			"crooklinesubway",
+			"crooklinesub",
+			"crooklinestation",
+			"crooksubwaystation",
+			"crooksubway",
+			"crooksub",
+			"crookstation",
+			"clsubwaystation",
+			"clsubway",
+			"clsub",
+			"clstation",
+			"crooks",
+			"cls"
+		],
+		str_name = "The Crookline Subway Station",
+		str_desc = str_gold_subway_station_description + "\n\nExits into Crookline.",
+		channel = channel_cl_subway_station,
+		role = "Crookline Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_crookline_street_a, poi_id_crookline_street_b],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_crookline_street_a : travel_time_subzone,
+			poi_id_crookline_street_b : travel_time_subzone,
+		},
+	),
+	EwPoi(  # Ooze Gardens Subway Station
+		id_poi = poi_id_og_subway_station,
+		alias = [
+			"oozegardenssubway",
+			"oozegardenssub",
+			"oozegardensstation",
+			"oozesubwaystation",
+			"oozesubway",
+			"oozesub",
+			"oozestation",
+			"ogsubwaystation",
+			"ogsubway",
+			"ogsub",
+			"ogstation",
+			"oozes",
+			"ogs"
+		],
+		str_name = "The Ooze Gardens Subway Station",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Ooze Gardens.",
+		channel = channel_og_subway_station,
+		role = "Crookline Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_oozegardens_street_c],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_oozegardens_street_c : travel_time_subzone,
+		},
+	),
+	EwPoi(  # Poudrin Alley Subway Station
+		id_poi = poi_id_pa_subway_station,
+		alias = [
+			"poudrinalleysubway",
+			"poudrinalleysub",
+			"poudrinalleystation",
+			"poudrinalleystation",
+			"poudrinsubway",
+			"poudrinsub",
+			"poudrinstation",
+			"pasubwaystation",
+			"pasubway",
+			"pasub",
+			"pastation",
+			"poudrins",
+			"pas"
+		],
+		str_name = "The Poudrin Alley Subway Station",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Poudrin Alley.",
+		channel = channel_pa_subway_station,
+		role = "Poudrin Alley Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_poudrinalley_street_a],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_poudrinalley_street_a : travel_time_subzone,
+		},
+	),
+	EwPoi(  # Brawlden Subway Station
+		id_poi = poi_id_bd_subway_station,
+		alias = [
+			"brawldensubway",
+			"brawldensub",
+			"brawldenstation",
+			"brawlsubwaystation",
+			"brawlsubway",
+			"brawlsub",
+			"brawlstation",
+			"bdsubwaystation",
+			"bdsubway",
+			"bdsub",
+			"bdstation",
+			"brawls",
+			"bds"
+		],
+		str_name = "The Brawlden Subway Station",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Brawlden.",
+		channel = channel_bd_subway_station,
+		role = "Brawlden Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_brawlden_street_a],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_brawlden_street_a : travel_time_subzone,
+		},
+	),
+	EwPoi(  # New New Yonkers Subway Station
+		id_poi = poi_id_nny_subway_station,
+		alias = [
+			"newnewyonkerssubway",
+			"newnewyonkerssub",
+			"newnewyonkersstation",
+			"yonkerssubwaystation",
+			"yonkerssubway",
+			"yonkerssub",
+			"yonkersstation",
+			"nnysubwaystation",
+			"nnysubway",
+			"nnysub",
+			"nnystation",
+			"yonkerss",
+			"nnys"
+		],
+		str_name = "The New New Yonkers Subway Station",
+		str_desc = str_green_subway_station_description + "\n\nExits into Brawlden.",
+		channel = channel_nny_subway_station,
+		role = "New New Yonkers Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_newnewyonkers_street_a],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_newnewyonkers_street_a : travel_time_subzone,
+		},
+	),
+	EwPoi(  # Little Chernobyl Subway Station
+		id_poi = poi_id_lc_subway_station,
+		alias = [
+			"littlechernobylsubway",
+			"littlechernobylsub",
+			"littlechernobylstation",
+			"littlesubwaystation",
+			"littlesubway",
+			"littlesub",
+			"littlestation",
+			"lcsubwaystation",
+			"lcsubway",
+			"lcsub",
+			"lcstation",
+			"littles",
+			"lcs"
+		],
+		str_name = "The Little Chernobyl Subway Station",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Little Chernobyl.",
+		channel = channel_lc_subway_station,
+		role = "Little Chernobyl Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_littlechernobyl_street_a],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_littlechernobyl_street_a: travel_time_subzone,
+		},
+	),
+	# EwPoi(  # Assault Flats Beach Subway Station
+	# 	id_poi = poi_id_afb_subway_station,
+	# 	alias = [
+	# 		"assaultflatsbeachsubwaystation",
+	# 		"assaultflatsbeachsubway",
+	# 		"assaultflatsbeachsub",
+	# 		"assaultflatsbeachstation",
+	# 		"assaultflatssubwaystation",
+	# 		"assaultflatssubway",
+	# 		"assaultflatssub",
+	# 		"assaultflatsstation",
+	# 		"beachsubwaystation",
+	# 		"beachsubway",
+	# 		"beachsub",
+	# 		"beachstation",
+	# 		"afbsubwaystation",
+	# 		"afbsubway",
+	# 		"afbsub",
+	# 		"afbstation",
+	# 		"assaultflatss",
+	# 		"afbs"
+	# 	],
+	# 	str_name = "The Assault Flats Beach Subway Station",
+	# 	str_desc = str_blue_subway_station_description + "\n\nExits into Assault Flats Beach.",
+	# 	channel = channel_afb_subway_station,
+	# 	role = "Assault Flats Beach Subway Station",
+	# 	pvp = True,
+	# 	is_subzone = True,
+	# 	mother_districts = [poi_id_assaultflatsbeach],
+	# 	is_transport_stop = True,
+	# 	transport_lines = set(),
+	# 	neighbors = {
+	#
+	# 	},
 	EwPoi(  # Dreadford Blimp Tower
 		id_poi = poi_id_df_blimp_tower,
 		alias = [
@@ -14872,101 +15930,125 @@ poi_list = [
 		is_pier = True,
 		pier_type = fish_slime_saltwater
 	),
-	EwPoi(  # Subway train on the red line
-		id_poi = poi_id_subway_red01,
-		str_name = "A Red Line Subway Train",
-		str_desc = str_red_subway_description,
-		channel = channel_subway_red01,
-		role = "Subway Train R-01",
+	EwPoi(  # Subway train on the pink line
+		id_poi = poi_id_subway_pink01,
+		str_name = "A Pink Line Subway Train",
+		str_desc = str_pink_subway_description,
+		channel = channel_subway_pink01,
+		role = "Subway Train PINK-01",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_red_northbound,
-		default_stop = poi_id_cv_subway_station
+		default_line = transport_line_subway_pink_northbound,
+		default_stop = poi_id_dt_subway_station
 	),
-	EwPoi(  # Subway train on the red line
-		id_poi = poi_id_subway_red02,
-		str_name = "A Red Line Subway Train",
-		str_desc = str_red_subway_description,
-		channel = channel_subway_red02,
-		role = "Subway Train R-02",
+	EwPoi(  # Subway train on the pink line
+		id_poi = poi_id_subway_pink02,
+		str_name = "A Pink Line Subway Train",
+		str_desc = str_pink_subway_description,
+		channel = channel_subway_pink02,
+		role = "Subway Train PINK-02",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_red_southbound,
-		default_stop = poi_id_tt_subway_station
+		default_line = transport_line_subway_pink_southbound,
+		default_stop = poi_id_dt_subway_station
 	),
-	EwPoi(  # Subway train on the yellow line
-		id_poi = poi_id_subway_yellow01,
-		str_name = "A Yellow Line Subway Train",
-		str_desc = str_yellow_subway_description,
-		channel = channel_subway_yellow01,
-		role = "Subway Train Y-01",
+	EwPoi(  # Subway train on the gold line
+		id_poi = poi_id_subway_gold01,
+		str_name = "A Gold Line Subway Train",
+		str_desc = str_gold_subway_description,
+		channel = channel_subway_gold01,
+		role = "Subway Train GOLD-01",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_yellow_northbound,
-		default_stop = poi_id_ssb_subway_station
+		default_line = transport_line_subway_gold_eastbound,
+		default_stop = poi_id_dt_subway_station
 	),
-	EwPoi(  # Subway train on the yellow line
-		id_poi = poi_id_subway_yellow02,
-		str_name = "A Yellow Line Subway Train",
-		str_desc = str_yellow_subway_description,
-		channel = channel_subway_yellow02,
-		role = "Subway Train Y-02",
+	EwPoi(  # Subway train on the gold line
+		id_poi = poi_id_subway_gold02,
+		str_name = "A Gold Line Subway Train",
+		str_desc = str_gold_subway_description,
+		channel = channel_subway_gold02,
+		role = "Subway Train GOLD-02",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_yellow_southbound,
-		default_stop = poi_id_ab_subway_station
+		default_line = transport_line_subway_gold_westbound,
+		default_stop = poi_id_dt_subway_station
 	),
 	EwPoi(  # Subway train on the green line
 		id_poi = poi_id_subway_green01,
 		str_name = "A Green Line Subway Train",
 		str_desc = str_green_subway_description,
 		channel = channel_subway_green01,
-		role = "Subway Train G-01",
+		role = "Subway Train GREEN-01",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
 		default_line = transport_line_subway_green_eastbound,
-		default_stop = poi_id_wgb_subway_station
+		default_stop = poi_id_dt_subway_station
 	),
 	EwPoi(  # Subway train on the green line
 		id_poi = poi_id_subway_green02,
 		str_name = "A Green Line Subway Train",
 		str_desc = str_green_subway_description,
 		channel = channel_subway_green02,
-		role = "Subway Train G-02",
+		role = "Subway Train GREEN-02",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
 		default_line = transport_line_subway_green_westbound,
-		default_stop = poi_id_sb_subway_station
-	),
-	EwPoi(  # Subway train on the blue line
-		id_poi = poi_id_subway_blue01,
-		str_name = "A Blue Line Subway Train",
-		str_desc = str_blue_subway_description,
-		channel = channel_subway_blue01,
-		role = "Subway Train B-01",
-		pvp = True,
-		is_transport = True,
-		transport_type = transport_type_subway,
-		default_line = transport_line_subway_blue_eastbound,
 		default_stop = poi_id_dt_subway_station
 	),
-	EwPoi(  # Subway train on the blue line
-		id_poi = poi_id_subway_blue02,
-		str_name = "A Blue Line Subway Train",
-		str_desc = str_blue_subway_description,
-		channel = channel_subway_blue02,
-		role = "Subway Train B-02",
+	EwPoi(  # Subway train on the black line
+		id_poi = poi_id_subway_black01,
+		str_name = "A Black Line Subway Train",
+		str_desc = str_purple_subway_description,
+		channel = channel_subway_black01,
+		role = "Subway Train BLACK-01",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_blue_westbound,
-		default_stop = poi_id_afb_subway_station
+		default_line = transport_line_subway_black_eastbound,
+		default_stop = poi_id_dt_subway_station
+	),
+	EwPoi(  # Subway train on the black line
+		id_poi = poi_id_subway_black02,
+		str_name = "A Black Line Subway Train",
+		str_desc = str_purple_subway_description,
+		channel = channel_subway_black02,
+		role = "Subway Train BLACK-02",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_black_westbound,
+		default_stop = poi_id_dt_subway_station
+	),
+	EwPoi(  # Subway train on the purple line
+		id_poi = poi_id_subway_purple01,
+		str_name = "A Purple Line Subway Train",
+		str_desc = str_purple_subway_description,
+		channel = channel_subway_purple01,
+		role = "Subway Train PURPLE-01",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_purple_northbound,
+		default_stop = poi_id_dt_subway_station
+	),
+	EwPoi(  # Subway train on the purple line
+		id_poi = poi_id_subway_purple02,
+		str_name = "A Purple Line Subway Train",
+		str_desc = str_purple_subway_description,
+		channel = channel_subway_purple02,
+		role = "Subway Train PURPLE-02",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_purple_southbound,
+		default_stop = poi_id_dt_subway_station
 	),
 	# EwPoi(  # Subway train on the white line
 	# 	id_poi = poi_id_subway_white01,
@@ -15462,6 +16544,26 @@ poi_list = [
 		neighbors = {
 			poi_id_thevoid : travel_time_subzone,
 		},
+	),
+	EwPoi(
+		id_poi = poi_id_basedhardware,
+		alias = [
+			"hardware",
+			"hardwarestore",
+			"bhw",
+			"bh"
+		],
+		str_name = "Based Hardware",
+		str_desc = "A hardware store right beside a gas station. This place is a fucking mess, even by your standards. Cluttered stacks of washing machines and other various household necessities tower over you, turning the place into a goddamn corn maze made out of worn out appliances. Your only saving grace in terms of navigation is the piss-yellow incandescent lighting fixed to the ceiling. On the radio, you can hear a Sludgefest rendition of 'Hardware Store' by Weird-Al Yankovic quietly echoing throughout the makeshift corridors on loop. You think it'd be best to find what your looking for and make a dash to the checkout section, before some psychopath pulls you aside and bashes your skull in.",
+		channel = channel_basedhardware,
+		role = "Based Hardware",
+		mother_districts = [poi_id_westglocksbury],
+		pvp = False,
+		vendors = [vendor_basedhardware],
+		is_subzone = True,
+		neighbors = {
+			poi_id_westglocksbury : travel_time_subzone,
+		}
 	),
 	EwPoi(  # Tutorial - 1
 		id_poi = poi_id_tutorial_classroom,
@@ -16335,7 +17437,7 @@ poi_list = [
 		alias=[
 			"westglocksburyoutskirtsdepths",
 			"wgboutskirtsdepths",
-			"wgbodepths"
+			"wgbodepths",
 			"wgbod",
 		],
 		str_name="West Glocksbury Outskirts Depths",
@@ -16643,6 +17745,10 @@ landmark_pois = [
 
 # Places on the map that should result in a user being flagged for PVP
 vulnerable_districts = outskirts + streets
+for subzone in poi_list:
+	if subzone.is_subzone:
+		if subzone.pvp == True:
+			vulnerable_districts.append(subzone.id_poi)
 
 # maps districts to their immediate neighbors
 poi_neighbors = {}
@@ -16688,88 +17794,95 @@ transport_lines = [
 			}
 
 		),
-	EwTransportLine( # yellow subway line from south sleezeborough to arsonbrook
-		id_line = transport_line_subway_yellow_northbound,
+	EwTransportLine( # purple subway line from south sleezeborough to brawlden
+		id_line = transport_line_subway_purple_northbound,
 		alias = [
-			"northyellowline",
-			"northyellow",
-			"yellownorth",
-			"yellowtoarsonbrook",
-			"yellowtoarson",
-			"yellowtoab"
+			"northpurpleline",
+			"northpurple",
+			"purplenorth",
+			"purpletobrawlden",
+			"purpletobrawl",
+			"purpletobd"
 			],
 		first_stop = poi_id_ssb_subway_station,
-		last_stop = poi_id_ab_subway_station,
-		next_line = transport_line_subway_yellow_southbound,
-		str_name = "The yellow subway line towards Arsonbrook",
+		last_stop = poi_id_bd_subway_station,
+		next_line = transport_line_subway_purple_southbound,
+		str_name = "The purple subway line towards Brawlden",
 		schedule = {
-			poi_id_ssb_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_ssb_subway_station : [20, poi_id_og_subway_station],
+			poi_id_og_subway_station : [20, poi_id_pa_subway_station],
+			poi_id_pa_subway_station : [20, poi_id_dt_subway_station],
 			poi_id_dt_subway_station : [20, poi_id_sb_subway_station],
-			poi_id_sb_subway_station : [20, poi_id_ab_subway_station]
+			poi_id_sb_subway_station: [20, poi_id_ab_subway_station],
+			poi_id_ab_subway_station: [20, poi_id_lc_subway_station],
+			poi_id_lc_subway_station: [20, poi_id_bd_subway_station],
 			}
 
 		),
-	EwTransportLine( # yellow subway line from arsonbrook to south sleezeborough
-		id_line = transport_line_subway_yellow_southbound,
+	EwTransportLine( # purple subway line from brawlden to south sleezeborough
+		id_line = transport_line_subway_purple_southbound,
 		alias = [
-			"southyellowline",
-			"southyellow",
-			"yellowsouth",
-			"yellowtosouthsleezeborough",
-			"yellowtosouthsleeze",
-			"yellowtossb"
+			"southpurpleline",
+			"southpurple",
+			"purplesouth",
+			"purpletosouthsleezeborough",
+			"purpletosouthsleeze",
+			"purpletossb"
 			],
-		first_stop = poi_id_ab_subway_station,
+		first_stop = poi_id_bd_subway_station,
 		last_stop = poi_id_ssb_subway_station,
-		next_line = transport_line_subway_yellow_northbound,
-		str_name = "The yellow subway line towards South Sleezeborough",
+		next_line = transport_line_subway_purple_northbound,
+		str_name = "The purple subway line towards South Sleezeborough",
 		schedule = {
+			poi_id_bd_subway_station: [20, poi_id_lc_subway_station],
+			poi_id_lc_subway_station: [20, poi_id_ab_subway_station],
 			poi_id_ab_subway_station : [20, poi_id_sb_subway_station],
 			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_ssb_subway_station]
+			poi_id_dt_subway_station : [20, poi_id_pa_subway_station],
+			poi_id_pa_subway_station : [20, poi_id_og_subway_station],
+			poi_id_og_subway_station: [20, poi_id_ssb_subway_station],
 			}
 
 		),
-	EwTransportLine( # red subway line from cratersville to toxington
-		id_line = transport_line_subway_red_northbound,
+	EwTransportLine( # pink subway line from cratersville to toxington
+		id_line = transport_line_subway_pink_northbound,
 		alias = [
-			"northredline",
-			"northred",
-			"rednorth",
-			"redtotoxington",
-			"redtotox",
-			"redtott"
+			"northpinkline",
+			"northpink",
+			"pinknorth",
+			"pinktotoxington",
+			"pinktotox",
+			"pinktott"
 			],
 		first_stop = poi_id_cv_subway_station,
 		last_stop = poi_id_tt_subway_station,
-		next_line = transport_line_subway_red_southbound,
-		str_name = "The red subway line towards Toxington",
+		next_line = transport_line_subway_pink_southbound,
+		str_name = "The pink subway line towards Toxington",
 		schedule = {
 			poi_id_cv_subway_station : [20, poi_id_wt_subway_station],
 			poi_id_wt_subway_station : [20, poi_id_rr_subway_station],
 			poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
 			poi_id_dt_subway_station : [20, poi_id_ck_subway_station],
-			poi_id_ck_subway_station : [20, poi_id_ah_subway_station],
-			poi_id_ah_subway_station : [20, poi_id_tt_subway_station]
+			poi_id_ck_subway_station : [20, poi_id_gd_subway_station],
+			poi_id_gd_subway_station : [20, poi_id_ah_subway_station],
+			poi_id_ah_subway_station: [20, poi_id_tt_subway_station],
 			}
 
 		),
-	EwTransportLine( # red subway line from toxington to cratersville
-		id_line = transport_line_subway_red_southbound,
+	EwTransportLine( # pink subway line from toxington to cratersville
+		id_line = transport_line_subway_pink_southbound,
 		alias = [
-			"southredline",
-			"southred",
-			"redsouth",
-			"redtocratersville",
-			"redtocraters",
-			"redtocv"
+			"southpinkline",
+			"southpink",
+			"pinksouth",
+			"pinktocratersville",
+			"pinktocraters",
+			"pinktocv"
 			],
 		first_stop = poi_id_tt_subway_station,
 		last_stop = poi_id_cv_subway_station,
-		next_line = transport_line_subway_red_northbound,
-		str_name = "The red subway line towards Cratersville",
+		next_line = transport_line_subway_pink_northbound,
+		str_name = "The pink subway line towards Cratersville",
 		schedule = {
 			poi_id_tt_subway_station : [20, poi_id_ah_subway_station],
 			poi_id_ah_subway_station : [20, poi_id_gd_subway_station],
@@ -16781,95 +17894,134 @@ transport_lines = [
 			}
 
 		),
-	EwTransportLine( # green subway line from smogsburg to west glocksbury
+	EwTransportLine( # gold subway line from crookline to downtown
+		id_line = transport_line_subway_gold_eastbound,
+		alias = [
+			"goldeastline",
+			"goldeast",
+			"goldgreen",
+			"goldtodowntown",
+			"goldtodt"
+			],
+		first_stop = poi_id_cl_subway_station,
+		last_stop = poi_id_dt_subway_station,
+		next_line = transport_line_subway_gold_westbound,
+		str_name = "The gold subway line towards Downtown",
+		schedule = {
+			poi_id_cl_subway_station : [20, poi_id_jp_subway_station],
+			poi_id_jp_subway_station : [20, poi_id_nsb_subway_station],
+			poi_id_nsb_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
+			}
+
+		),
+	EwTransportLine( # gold subway line from downtown to crookline
+		id_line = transport_line_subway_gold_westbound,
+		alias = [
+			"goldwestline",
+			"goldwest",
+			"westgold",
+			"goldtocrookline",
+			"goldtocrook",
+			"goldtocl"
+			],
+		first_stop = poi_id_dt_subway_station,
+		last_stop = poi_id_cl_subway_station,
+		next_line = transport_line_subway_gold_eastbound,
+		str_name = "The gold subway line towards Crookline",
+		schedule = {
+			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_nsb_subway_station],
+			poi_id_nsb_subway_station : [20, poi_id_jp_subway_station],
+			poi_id_jp_subway_station: [20, poi_id_cl_subway_station],
+			}
+
+		),
+	EwTransportLine( # green subway line from downtown to new new yonkers
 		id_line = transport_line_subway_green_eastbound,
 		alias = [
 			"greeneastline",
 			"greeneast",
 			"eastgreen",
-			"greentosmogsburg",
-			"greentosmogs",
-			"greentosb"
+			"greentonewnewyonkers",
+			"greentonewnew",
+			"greentonew",
+			"greentonny"
 			],
-		first_stop = poi_id_wgb_subway_station,
-		last_stop = poi_id_sb_subway_station,
+		first_stop = poi_id_dt_subway_station,
+		last_stop = poi_id_nny_subway_station,
 		next_line = transport_line_subway_green_westbound,
-		str_name = "The green subway line towards Smogsburg",
+		str_name = "The green subway line towards New New Yonkers",
 		schedule = {
-			poi_id_wgb_subway_station : [20, poi_id_jp_subway_station],
-			poi_id_jp_subway_station : [20, poi_id_nsb_subway_station],
-			poi_id_nsb_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_sb_subway_station]
+			poi_id_dt_subway_station : [20, poi_id_gld_subway_station],
+			poi_id_gld_subway_station : [20, poi_id_jr_subway_station],
+			poi_id_jr_subway_station : [20, poi_id_vc_subway_station],
+			poi_id_vc_subway_station : [20, poi_id_nny_subway_station]
 			}
 
 		),
-	EwTransportLine( # green subway line from west glocksbury to smogsburg
+	EwTransportLine( # green subway line from new new yonkers to downtown
 		id_line = transport_line_subway_green_westbound,
 		alias = [
 			"greenwestline",
 			"greenwest",
 			"westgreen",
-			"greentowestglocksbury",
-			"greentowestglocks",
-			"greentowgb"
-			],
-		first_stop = poi_id_sb_subway_station,
-		last_stop = poi_id_wgb_subway_station,
-		next_line = transport_line_subway_green_eastbound,
-		str_name = "The green subway line towards West Glocksbury",
-		schedule = {
-			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_gb_subway_station],
-			poi_id_gb_subway_station : [20, poi_id_wgb_subway_station]
-			}
-
-		),
-	EwTransportLine( # blue subway line from downtown to assault flats beach
-		id_line = transport_line_subway_blue_eastbound,
-		alias = [
-			"blueeastline",
-			"blueeast",
-			"eastblue",
-			"bluetoassaultflatsbeach",
-			"bluetoassaultflats",
-			"bluetobeach",
-			"bluetoafb"
-			],
-		first_stop = poi_id_dt_subway_station,
-		last_stop = poi_id_afb_subway_station,
-		next_line = transport_line_subway_blue_westbound,
-		str_name = "The blue subway line towards Assault Flats Beach",
-		schedule = {
-			poi_id_dt_subway_station : [20, poi_id_gld_subway_station],
-			poi_id_gld_subway_station : [20, poi_id_jr_subway_station],
-			poi_id_jr_subway_station : [20, poi_id_vc_subway_station],
-			poi_id_vc_subway_station : [20, poi_id_afb_subway_station]
-			}
-
-		),
-	EwTransportLine( # blue subway line from assault flats beach to downtown
-		id_line = transport_line_subway_blue_westbound,
-		alias = [
-			"bluewestline",
-			"bluewest",
-			"westblue",
-			"bluetodowntown",
-			"bluetodt"
+			"greentodowntown",
+			"greentodt"
 			],
 		first_stop = poi_id_afb_subway_station,
 		last_stop = poi_id_dt_subway_station,
-		next_line = transport_line_subway_blue_eastbound,
-		str_name = "The blue subway line towards Downtown NLACakaNM",
+		next_line = transport_line_subway_green_eastbound,
+		str_name = "The green subway line towards Downtown",
 		schedule = {
-			poi_id_afb_subway_station : [20, poi_id_vc_subway_station],
+			poi_id_nny_subway_station : [20, poi_id_vc_subway_station],
 			poi_id_vc_subway_station : [20, poi_id_jr_subway_station],
 			poi_id_jr_subway_station : [20, poi_id_gld_subway_station],
 			poi_id_gld_subway_station : [20, poi_id_dt_subway_station]
 			}
 
 		),
+	EwTransportLine(  # black subway line from downtown to west glocksbury
+		id_line = transport_line_subway_black_eastbound,
+		alias = [
+			"blackeastline",
+			"blackeast",
+			"eastblack",
+			"blacktowestglocksbury",
+			"blacktowestglocks",
+			"blacktowgb"
+		],
+		first_stop = poi_id_dt_subway_station,
+		last_stop = poi_id_wgb_subway_station,
+		next_line = transport_line_subway_black_westbound,
+		str_name = "The black subway line towards West Glocksbury",
+		schedule = {
+			poi_id_dt_subway_station: [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station: [20, poi_id_gb_subway_station],
+			poi_id_gb_subway_station: [20, poi_id_vp_subway_station],
+			poi_id_vp_subway_station: [20, poi_id_wgb_subway_station],
+		}
+	),
+	EwTransportLine(  # black subway line from west glocksbury to downtown
+		id_line = transport_line_subway_black_westbound,
+		alias = [
+			"blackwestline",
+			"blackwest",
+			"westblack",
+			"blacktodowntown",
+			"blacktodt"
+		],
+		first_stop = poi_id_wgb_subway_station,
+		last_stop = poi_id_dt_subway_station,
+		next_line = transport_line_subway_black_eastbound,
+		str_name = "The black subway line towards Downtown",
+		schedule = {
+			poi_id_wgb_subway_station: [20, poi_id_vp_subway_station],
+			poi_id_vp_subway_station: [20, poi_id_gb_subway_station],
+			poi_id_gb_subway_station: [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station: [20, poi_id_dt_subway_station],
+		}
+	),
 	# EwTransportLine( # white subway line from downtown to juvies row
 	# 	id_line = transport_line_subway_white_eastbound,
 	# 	alias = [
@@ -16960,7 +18112,7 @@ transport_lines = [
 			poi_id_jaywalkerplain : [40, poi_id_df_blimp_tower]
 			}
 
-		)
+		),
 ]
 
 id_to_transport_line = {}
@@ -17015,6 +18167,7 @@ cosmetic_items_list = [
 		price = 50000,
 		vendors = [vendor_bazaar],
 		is_hat = True,
+		str_onbreak = "Your hat takes a hit, detatching the propeller and sending it twirling into the stratosphere. Looks like you'll never see it again."
 	),
 	EwCosmeticItem(
 		id_cosmetic = "mininghelmet",
@@ -17099,6 +18252,7 @@ cosmetic_items_list = [
 		price = 50000,
 		vendors = [vendor_bazaar],
 		is_hat=True,
+		str_onadorn="You whip out your baseball cap and apply it...backwards. Fuck, now we're getting serious."
 	),
 	EwCosmeticItem(
 		id_cosmetic = "piratehat",
@@ -17115,6 +18269,8 @@ cosmetic_items_list = [
 		price = 50000,
 		vendors = [vendor_bazaar],
 		is_hat=True,
+		str_onadorn = "Y'ARRRRRRR! You adorn ye' tricorne and spit at a nearby pedestrian.",
+		str_onbreak = "You hat is torn to shreds. Welp, no more shivering timbers."
 	),
 	EwCosmeticItem(
 		id_cosmetic = "eyepatch",
@@ -17130,6 +18286,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		str_unadorn = "You remove your eyepatch to reveal the grisly wound benea- wait. Your eye is just fine! What kind of pathetic pirate LARPer did you turn out to be?"
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cigarette",
@@ -17146,6 +18303,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		str_onadorn = "You stick the cigarette in your mouth, swave as a baby's bottom. You wonder how many of these could fit in your mouth."
 	),
 	EwCosmeticItem(
 		id_cosmetic = "headband",
@@ -17745,8 +18903,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_cool,
-		acquisition = acquisition_milling,
-		ingredients = item_id_poketubers,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -17758,8 +18915,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_cute,
-		acquisition = acquisition_milling,
-		ingredients = item_id_pulpgourds,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -17772,8 +18928,7 @@ cosmetic_items_list = [
 		durability = base_durability,
 		style = style_smart,
 		freshness = 6,
-		acquisition = acquisition_milling,
-		ingredients = item_id_sourpotatoes,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -17785,8 +18940,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_tough,
-		acquisition = acquisition_milling,
-		ingredients = item_id_bloodcabbages,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -17800,8 +18954,7 @@ cosmetic_items_list = [
 		style = style_smart,
 		freshness = 1,
 		durability = base_durability * 1.5,
-		acquisition = acquisition_milling,
-		ingredients = item_id_joybeans,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "hoodie",
@@ -17812,8 +18965,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_cool,
-		acquisition = acquisition_milling,
-		ingredients = item_id_purplekilliflower,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "copbadge",
@@ -17826,8 +18978,7 @@ cosmetic_items_list = [
 		style = style_smart,
 		freshness = 2,
 		str_desc = "What the fuck are you doing with this thing? Are you TRYING to make the sewers your permanent residence? Acquaint yourself with the !drop command and FAST, before you don’t have a body to wear the badge on.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_razornuts,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "strawhat",
@@ -17838,8 +18989,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_tough,
-		acquisition = acquisition_milling,
-		ingredients = item_id_pawpaw,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -17852,11 +19002,10 @@ cosmetic_items_list = [
 		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
-		acquisition = acquisition_milling,
-		ingredients = item_id_sludgeberries,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
-		id_cosmetic = "youfavoritehat",
+		id_cosmetic = "yourfavoritehat",
 		str_name = "***Your Favorite Hat***",
 		str_desc = "***It fits perfectly, and it’s just your style! You love wearing this cosmetic far more than any other, it’s simply the best.***",
 		stats = {
@@ -17867,8 +19016,7 @@ cosmetic_items_list = [
 		durability = base_durability,
 		style = style_cute,
 		freshness = 10,
-		acquisition = acquisition_milling,
-		ingredients = item_id_suganmanuts,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -17882,8 +19030,7 @@ cosmetic_items_list = [
 		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
-		acquisition = acquisition_milling,
-		ingredients = item_id_pinkrowddishes,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofcircularsunglasses",
@@ -17896,8 +19043,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_cool,
-		acquisition = acquisition_milling,
-		ingredients = item_id_dankwheat,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "flowercrown",
@@ -17909,8 +19055,7 @@ cosmetic_items_list = [
 		style = style_cute,
 		freshness = 7,
 		str_desc = "A lovingly handcrafted crown of flowers, connected by a string. You’re gonna be famous on Pinterest with a look like this!",
-		acquisition = acquisition_milling,
-		ingredients = item_id_brightshade,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "spikedbracelets",
@@ -17922,8 +19067,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_tough,
-		acquisition = acquisition_milling,
-		ingredients = item_id_blacklimes,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "slimecorppin",
@@ -17937,8 +19081,7 @@ cosmetic_items_list = [
 		freshness = 10,
 		durability = base_durability,
 		str_desc = "An enamel pin of the SlimeCorp logo, a badge of loyalty to your favorite charismatic megacorporation. Dude, like, *”Follow He Who Turns The Wheels”*, bro!!",
-		acquisition = acquisition_milling,
-		ingredients = item_id_phosphorpoppies,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "overalls",
@@ -17949,8 +19092,54 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_tough,
-		acquisition = acquisition_milling,
-		ingredients = item_id_direapples,
+		acquisition = acquisition_smelting,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "rustynail",
+		str_name = "Rusty Nail",
+		str_desc = "A large, rusty nail, planted right between the sides of your head, like some kind of frankenstein costume piece. This one's the real deal though... oh god the pain...",
+		stats = {
+			stat_defense: 1
+		},
+		durability = base_durability,
+		style = style_tough,
+		acquisition = acquisition_smelting
+	),
+	EwCosmeticItem(
+		id_cosmetic = "fullmetaljacket",
+		str_name = "Full Metal Jacket",
+		str_desc = "A black leather jacket affixed with more spikes than you can count on your fingers and toes. Be careful not to bump into anyone with this thng on.",
+		stats = {
+			stat_attack: 3
+		},
+		durability = base_durability * 2,
+		style = style_tough,
+		acquisition = acquisition_smelting
+	),
+	EwCosmeticItem(
+		id_cosmetic = "tinfoilhat",
+		str_name = "Tinfoil Hat",
+		str_desc = "A hat that protects you from SlimeCorps patent-pending 5G binaural brain waves, or so the folks on the internet have told you.",
+		stats = {
+			stat_defense: 1,
+			stat_speed: 2,
+		},
+		durability = base_durability * 2,
+		style = style_smart,
+		acquisition = acquisition_smelting
+	),
+	EwCosmeticItem(
+		id_cosmetic = "resplendentcoronet",
+		str_name = "Resplendent Coronet",
+		str_desc = "A crown worn by only the most elegant and regal of nobles. When you put it on, you really feel like you fuckin' own the place.",
+		stats = {
+			stat_defense: 1,
+			stat_speed: 1,
+			stat_attack: 1
+		},
+		durability = base_durability * 2,
+		style = style_beautiful,
+		acquisition = acquisition_smelting
 	),
 	EwCosmeticItem(
 		id_cosmetic = cosmetic_id_raincoat,
@@ -17985,7 +19174,7 @@ cosmetic_items_list = [
 		},
 		durability = base_durability,
 		style = style_cool,
-	 	#vendors = [vendor_bazaar, vendor_college],
+		#vendors = [vendor_bazaar, vendor_college],
 		price = 100,
 	),
 	EwCosmeticItem(
@@ -18015,7 +19204,7 @@ cosmetic_items_list = [
 		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "knightarmor",
 		str_name = "Steel knight armor",
 		str_desc = "A shining set of steel armor.",
@@ -18044,7 +19233,7 @@ cosmetic_items_list = [
 		vendors = [vendor_bazaar],
 		price = 1000,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "crocs",
 		str_name = "Crocs",
 		str_desc = "The perfect pair of footwear for when you want spotted dots of sunburn on your feet, unless you're wearing socks that is. If that's the case ignore that earlier statement.",
@@ -18100,7 +19289,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "pompadourwig",
 		str_name = "Pompadour Wig",
 		str_desc = "A must have for any wannabe greaser or school delinquent in general. Make sure to wear it like a true king.",
@@ -18117,7 +19306,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "powderedwig",
 		str_name = "Powdered Wig",
 		str_desc = "If it was good enough for the british and founding fathers, it's good enough for us, right? Just make sure you don't share this wig without cleaning it.",
@@ -18130,7 +19319,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "rainbowafrowig",
 		str_name = "Rainbow Afro Wig",
 		str_desc = "A colorful wig worthy of a real chuckle.",
@@ -18145,7 +19334,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "ghostlygibus",
 		str_name = "Ghostly Gibus",
 		str_desc = "A crooked old top hat with a spooky toy ghost popping out of the top.",
@@ -18158,7 +19347,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "gasmask",
 		str_name = "Gas Mask",
 		str_desc = "A dysfunctional cold war era gas mask that fully encapsulates the head.",
@@ -18172,7 +19361,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "firefightershelmet",
 		str_name = "Firefighter's Helmet",
 		str_desc = "A old NLACakaNM wide brimmed red firefighter's helmet. No one knows what happened to the firefighters of Endless War.",
@@ -18185,7 +19374,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "pairofpoindexterglasses",
 		str_name = "Pair Of Poindexter Glasses",
 		str_desc = "A pair of thick rim glasses taped together at the middle. Worthy of any true nerd or nerdette.",
@@ -18198,7 +19387,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "duncecap",
 		str_name = "Dunce Cap",
 		str_desc = "It’s a pointy cap that says dunce on it, duh! You’re a real smartie aren't you?",
@@ -18214,7 +19403,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "vrheadset",
 		str_name = "VR Headset",
 		str_desc = "Endless War -- now in stunning VR!",
@@ -18231,7 +19420,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "blindfold",
 		str_name = "Blindfold",
 		str_desc = "Ok now you’re just bragging. Walking around with a blindfold of all things? How ridiculous!",
@@ -18246,7 +19435,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "chickenmask",
 		str_name = "Chicken Mask",
 		str_desc = "The rubber chicken mask gives you a strange vibe, it stinks of sweat and dried blood.",
@@ -18259,7 +19448,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "mountiehat",
 		str_name = "Mountie Hat",
 		str_desc = "A hat that's mostly used by canada's royal mounted police, but how did it get here? Did it float down the slime river?",
@@ -18273,7 +19462,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "bearskinhat",
 		str_name = "Bearskin Hat",
 		str_desc = "A towering fuzzy hat that’s commonly worn by guards of the british royal guard.",
@@ -18286,7 +19475,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "aviatorshat",
 		str_name = "Aviator's Hat",
 		str_desc = "A leather hat with a neat pair of goggles on it. Perfect for an unfortunate circumnavigation of the world.",
@@ -18300,7 +19489,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "militaryberet",
 		str_name = "Military Beret",
 		str_desc = "A good soldier needs good headwear,and that’s where this beret comes in.",
@@ -18316,7 +19505,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "felinehat", # fuck you.
 		str_name = "Feline Hat", # fuck you.
 		stats = {
@@ -18332,7 +19521,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting, # fuck you.
 		is_hat = True, # fuck you.
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "tikihead",
 		str_name = "Tiki Head",
 		str_desc = "A wearable tiki head worthy of any luau or tropical island themed party.",
@@ -18366,7 +19555,6 @@ smelting_recipe_list = [
 		ingredients = {
 			item_id_slimepoudrin : 4,
 			item_id_cool_material: 1
-
 		},
 		products = cosmetic_names
 	),
@@ -18380,7 +19568,6 @@ smelting_recipe_list = [
 		ingredients = {
 			item_id_slimepoudrin : 4,
 			item_id_tough_material: 1
-
 		},
 		products = cosmetic_names
 	),
@@ -18424,26 +19611,13 @@ smelting_recipe_list = [
 		products = cosmetic_names
 	),
 	EwSmeltingRecipe(
-		id_recipe = item_id_quadruplestuffedcrust,
-		str_name = "a Quadruple Stuffed Crust",
-		alias = [
-			"qsc",
-			"quadruple",
-			"quadruplestuffed",
-		],
-		ingredients = {
-			item_id_doublestuffedcrust : 2
-		},
-		products = [item_id_quadruplestuffedcrust],
-	),
-        EwSmeltingRecipe(
 		id_recipe = "knightarmor",
-		str_name = "Knight Armor",
-                alias = [
+		str_name = "a set of Knight Armor",
+				alias = [
 			"armor",
 		],
 		ingredients = {
-			"ironingot" : 2
+			item_id_ironingot : 2
 		},
 		products = ["knightarmor"]
 	),
@@ -18459,10 +19633,23 @@ smelting_recipe_list = [
 			"monster soup"
 		],
 		ingredients = {
-			"monsterbones" : 5,
+			item_id_monsterbones : 5,
 			item_id_dinoslimemeat : 1
 		},
 		products = [item_id_monstersoup],
+	),
+	EwSmeltingRecipe(
+		id_recipe=item_id_quadruplestuffedcrust,
+		str_name="a Quadruple Stuffed Crust",
+		alias=[
+			"qsc",
+			"quadruple",
+			"quadruplestuffed",
+		],
+		ingredients={
+			item_id_doublestuffedcrust: 2
+		},
+		products=[item_id_quadruplestuffedcrust],
 	),
 	EwSmeltingRecipe(
 		id_recipe = item_id_octuplestuffedcrust,
@@ -18541,7 +19728,8 @@ smelting_recipe_list = [
 			"forbidden111",
 			":111:",
 		],
-		ingredients = {'leftleg' : 1,
+		ingredients = {
+			'leftleg' : 1,
 			'rightleg' : 1,
 			'slimexodia' : 1,
 			'rightarm' : 1,
@@ -18562,7 +19750,7 @@ smelting_recipe_list = [
 			item_id_slimepoudrin : 3,
 			item_id_stick : 2
 		},
-		products = ['pickaxe']
+		products = [weapon_id_pickaxe]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "faggot",
@@ -18573,9 +19761,8 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			item_id_stick : 3
-
 		},
-		products = ['faggot']
+		products = [item_id_faggot]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "doublefaggot",
@@ -18587,7 +19774,7 @@ smelting_recipe_list = [
 		ingredients = {
 			item_id_faggot : 2
 		},
-		products = ['doublefaggot']
+		products = [item_id_doublefaggot]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "dinoslimesteak",
@@ -18600,7 +19787,7 @@ smelting_recipe_list = [
 			item_id_faggot : 1,
 			item_id_dinoslimemeat : 1
 		},
-		products = ['dinoslimesteak']
+		products = [item_id_dinoslimesteak]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "fishingrod",
@@ -18612,12 +19799,12 @@ smelting_recipe_list = [
 			"fr"
 		],
 		ingredients = {
-			'string': 2,
-			'stick': 3
+			item_id_string: 2,
+			item_id_stick: 3
 		},
-		products = ['fishingrod']
+		products = [weapon_id_fishingrod]
 	),
-    EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "bass",
 		str_name = "a Bass Guitar",
 		alias = [
@@ -18625,23 +19812,23 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			'thebassedgod' : 1,
-			'string':4
+			item_id_string : 4
 		},
-		products = ['bass']
-    ),
-    EwSmeltingRecipe(
+		products = [weapon_id_bass]
+	),
+	EwSmeltingRecipe(
 		id_recipe = "bow",
 		str_name = "a Minecraft Bow",
 		alias = [
 			"minecraft bow"
 		],
 		ingredients = {
-			'stick' : 3,
-			'string':3
+			item_id_stick: 3,
+			item_id_string: 3
 		},
-		products = ['bow']
-    ),
-	    EwSmeltingRecipe(
+		products = [weapon_id_bow]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "ironingot",
 		str_name = "an Iron Ingot",
 		alias = [
@@ -18651,12 +19838,12 @@ smelting_recipe_list = [
 			"iron ingot"
 		],
 		ingredients = {
-			'tincan':10,
-			'faggot':1
+			item_id_tincan:10,
+			item_id_faggot:1
 		},
-		products = ['ironingot']
-    ),
-	    EwSmeltingRecipe(
+		products = [item_id_ironingot]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "tanningknife",
 		str_name = "a small tanning knife",
 		alias = [
@@ -18665,23 +19852,23 @@ smelting_recipe_list = [
 			"tanning"
 		],
 		ingredients = {
-			'ironingot':1
+			item_id_ironingot:1
 		},
-		products = ['tanningknife']
-    ),
-	    EwSmeltingRecipe(
+		products = [item_id_ironingot]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "leather",
 		str_name = "a piece of leather",
 		alias = [
 			"leather"
 		],
 		ingredients = {
-			'oldboot':10,
-			'tanningknife':1
+			item_id_oldboot:10,
+			item_id_tanningknife:1
 		},
-		products = ['leather']
-    ),
-	    EwSmeltingRecipe(
+		products = [item_id_leather]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "bloodstone",
 		str_name = "a chunk of bloodstone",
 		alias = [
@@ -18689,12 +19876,12 @@ smelting_recipe_list = [
 			"bstone"
 		],
 		ingredients = {
-			'monsterbones':100,
-			'faggot':1
+			item_id_monsterbones:100,
+			item_id_faggot:1
 		},
-		products = ['bloodstone']
-    ),
-	    EwSmeltingRecipe(
+		products = [item_id_bloodstone]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "dclaw",
 		str_name = "a Dragon Claw",
 		alias = [
@@ -18703,13 +19890,13 @@ smelting_recipe_list = [
 			"dclaw"
 		],
 		ingredients = {
-			'dragonsoul' : 1,
-			item_id_slimepoudrin : 5,
-			'ironingot':1,
-			'leather':1
+			item_id_dragonsoul: 1,
+			item_id_slimepoudrin: 5,
+			item_id_ironingot: 1,
+			item_id_leather: 1
 		},
-		products = ['dclaw']
-    ),
+		products = [weapon_id_dclaw]
+	),
 	EwSmeltingRecipe(
 		id_recipe = weapon_id_staff,
 		str_name = "an eldritch staff",
@@ -18724,8 +19911,8 @@ smelting_recipe_list = [
 			item_id_doublefaggot : 1,
 			item_id_negapoudrin : 1,
 		},
-		products = ['staff']
-    ),
+		products = [weapon_id_staff]
+	),
 
 	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
@@ -18798,11 +19985,11 @@ smelting_recipe_list = [
 			"blunt"
 		],
 		ingredients = {
-			'seaweed' : 3,
-			'dankwheat': 1,
+			item_id_seaweed: 3,
+			item_id_dankwheat: 1,
 			item_id_slimepoudrin : 1,
 		},
-		products = ['seaweedjoint']
+		products = [item_id_seaweedjoint]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "slimepoudrin",
@@ -18814,9 +20001,9 @@ smelting_recipe_list = [
 			"poodrin",
 		],
 		ingredients = {
-			'royaltypoudrin': 2
+			item_id_royaltypoudrin: 2
 		},
-		products = ['slimepoudrin']
+		products = [item_id_slimepoudrin]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "humancorpse",
@@ -18829,14 +20016,14 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			'scalp': 20,
-			'dinoslimemeat':2,
-			'string':2
+			item_id_dinoslimemeat: 2,
+			item_id_string :2
 		},
 		products = ['humancorpse']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "popeonarope",
-		str_name = "pope on a rope",
+		str_name = "a pope on a rope",
 		alias = [
 			"pope",
 			"francis",
@@ -18853,7 +20040,7 @@ smelting_recipe_list = [
 	),
 	EwSmeltingRecipe(
 		id_recipe = "reanimatedcorpse",
-		str_name = "reanimated corpse",
+		str_name = "a reanimated corpse",
 		alias = [
 			"frankenstein",
 			"reanimate",
@@ -18867,7 +20054,7 @@ smelting_recipe_list = [
 	),
 	EwSmeltingRecipe(
 		id_recipe = "soul",
-		str_name = "soul",
+		str_name = "a soul",
 		alias = [
 			"spirit",
 			"essence",
@@ -18880,7 +20067,7 @@ smelting_recipe_list = [
 	),
 	EwSmeltingRecipe(
 		id_recipe = "handmadechair",
-		str_name = "handmade chair",
+		str_name = "a handmade chair",
 		alias = [
 			"woodchair",
 			"carvedchair",
@@ -18888,14 +20075,14 @@ smelting_recipe_list = [
 			"ornatechair",
 		],
 		ingredients = {
-			'stick': 5,
-			'bat':2,
+			item_id_stick: 5,
+			weapon_id_bat:2,
 		},
 		products = ['ornatechair', 'shittychair']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "handmadebench",
-		str_name = "handmade bench",
+		str_name = "a handmade bench",
 		alias = [
 			"woodbench",
 			"carvedbench",
@@ -18903,14 +20090,14 @@ smelting_recipe_list = [
 			"ornatebench",
 		],
 		ingredients = {
-			'stick': 10,
-			'bat':4,
+			item_id_stick: 10,
+			weapon_id_bat: 4,
 		},
 		products = ['ornatebench', 'shittybench']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "handmadebed",
-		str_name = "handmade bed",
+		str_name = "a handmade bed",
 		alias = [
 			"woodbed",
 			"carvedbed",
@@ -18918,14 +20105,14 @@ smelting_recipe_list = [
 			"ornatebed",
 		],
 		ingredients = {
-			'stick': 12,
-			'bat':3,
+			item_id_stick: 12,
+			weapon_id_bat :3,
 		},
 		products = ['ornatebed', 'shittybed']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "handmadedesk",
-		str_name = "handmade desk",
+		str_name = "a handmade desk",
 		alias = [
 			"wooddesk",
 			"carveddesk",
@@ -18933,14 +20120,14 @@ smelting_recipe_list = [
 			"ornatedesk",
 		],
 		ingredients = {
-			'stick': 4,
-			'bat':1,
+			item_id_stick: 4,
+			weapon_id_bat: 1,
 		},
 		products = ['ornatedesk', 'shittydesk']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "clarinet",
-		str_name = "clarinet",
+		str_name = "a clarinet",
 		alias = [
 			"flute",
 			"bennygoodmanthing",
@@ -18953,27 +20140,26 @@ smelting_recipe_list = [
 			'blacklimes':1,
 			'direappleciderfuckenergy':1,
 			'sweetfish':1,
-
 		},
 		products = ['craftsmansclarinet', 'woodenvuvuzela']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "guitar",
-		str_name = "solid poudrin guitar",
+		str_name = "a solid poudrin guitar",
 		alias = [
 			"poudringuitar",
 			"electricguitar",
 			"solidpoudringuitar",
 		],
 		ingredients = {
-			'slimepoudrin': 150,
-			'string':6,
+			item_id_slimepoudrin: 150,
+			item_id_string: 6,
 		},
 		products = ['solidpoudringuitar']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "drums",
-		str_name = "beast skin drums",
+		str_name = "a beast skin drums",
 		alias = [
 			"beastskindrums",
 			"drumset",
@@ -18990,7 +20176,7 @@ EwSmeltingRecipe(
 	),
 	EwSmeltingRecipe(
 		id_recipe = "xylophone",
-		str_name = "fish bone xylophone",
+		str_name = "a fish bone xylophone",
 		alias = [
 			"xylo",
 			"metallophone",
@@ -19007,15 +20193,15 @@ EwSmeltingRecipe(
 	),
 	EwSmeltingRecipe(
 		id_recipe = "maracas",
-		str_name = "gourd maracas",
+		str_name = "a gourd maracas",
 		alias = [
 			"gourdmaracas",
 			"shakers",
 			"rattle",
 		],
 		ingredients = {
-			'pulpgourds' : 1,
-			'suganmanuts' : 1,
+			'pulpgourds': 1,
+			'suganmanuts': 1,
 			'sludgeberries':1,
 			'razornuts':1,
 			'joybeans':1,
@@ -19024,17 +20210,758 @@ EwSmeltingRecipe(
 		products = ['gourdmaracas']
 	),
 	EwSmeltingRecipe(
-		id_recipe = "browndye",
-		str_name = "Brown Dye",
-		alias = [
+		id_recipe="whitedye",
+		str_name="a vial of White Dye",
+		alias=[
+			'white',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_poketubereyes: 1,
+		},
+		products=[item_id_dye_white]
+	),
+	EwSmeltingRecipe(
+		id_recipe="yellowdye",
+		str_name="a vial of Yellow Dye",
+		alias=[
+			'yellow',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_pulpgourdpulp: 1,
+		},
+		products=[item_id_dye_yellow]
+	),
+	EwSmeltingRecipe(
+		id_recipe="orangedye",
+		str_name="a vial of Orange Dye",
+		alias=[
+			'orange',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_sourpotatoskins: 1,
+		},
+		products=[item_id_dye_orange]
+	),
+	EwSmeltingRecipe(
+		id_recipe="reddye",
+		str_name="a vial of Red Dye",
+		alias=[
+			'red',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_bloodcabbageleaves: 1,
+		},
+		products=[item_id_dye_red]
+	),
+	EwSmeltingRecipe(
+		id_recipe="magentadye",
+		str_name="a vial of Magenta Dye",
+		alias=[
+			'magenta',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_joybeanvines: 1,
+		},
+		products=[item_id_dye_magenta]
+	),
+	EwSmeltingRecipe(
+		id_recipe="purpledye",
+		str_name="a vial of Purple Dye",
+		alias=[
+			'purple',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_purplekilliflowerflorets: 1,
+		},
+		products=[item_id_dye_purple]
+	),
+	EwSmeltingRecipe(
+		id_recipe="bluedye",
+		str_name="a vial of Blue Dye",
+		alias=[
+			'blue',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_razornutshells: 1,
+		},
+		products=[item_id_dye_blue]
+	),
+	EwSmeltingRecipe(
+		id_recipe="greendye",
+		str_name="a vial of Green Dye",
+		alias=[
+			'green',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_pawpawflesh: 1,
+		},
+		products=[item_id_dye_green]
+	),
+	EwSmeltingRecipe(
+		id_recipe="tealdye",
+		str_name="a vial of Teal Dye",
+		alias=[
+			'teal',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_sludgeberrysludge: 1,
+		},
+		products=[item_id_dye_teal]
+	),
+	EwSmeltingRecipe(
+		id_recipe="rainbowdye",
+		str_name="a vial of ***Rainbow Dye***",
+		alias=[
+			'rainbow',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_suganmanutfruit: 1,
+		},
+		products=[item_id_dye_rainbow]
+	),
+	EwSmeltingRecipe(
+		id_recipe="pinkdye",
+		str_name="a vial of Pink Dye",
+		alias=[
+			'pink',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_pinkrowddishroot: 1,
+		},
+		products=[item_id_dye_pink]
+	),
+	EwSmeltingRecipe(
+		id_recipe="greydye",
+		str_name="a vial of Grey Dye",
+		alias=[
+			'grey',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_dankwheatchaff: 1,
+		},
+		products=[item_id_dye_grey]
+	),
+	EwSmeltingRecipe(
+		id_recipe="cobaltdye",
+		str_name="a vial of Cobalt Dye",
+		alias=[
+			'cobalt',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_brightshadeberries: 1,
+		},
+		products=[item_id_dye_cobalt]
+	),
+	EwSmeltingRecipe(
+		id_recipe="blackdye",
+		str_name="a vial of Black Dye",
+		alias=[
+			'black',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_blacklimeade: 1,
+		},
+		products=[item_id_dye_black]
+	),
+	EwSmeltingRecipe(
+		id_recipe="limedye",
+		str_name="a vial of Lime Dye",
+		alias=[
+			'lime',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_phosphorpoppypetals: 1,
+		},
+		products=[item_id_dye_lime]
+	),
+	EwSmeltingRecipe(
+		id_recipe="cyandye",
+		str_name="a vial of Cyan Dye",
+		alias=[
+			'cyan',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_direapplestems: 1,
+		},
+		products=[item_id_dye_cyan]
+	),
+	EwSmeltingRecipe(
+		id_recipe="browndye",
+		str_name="a vial of Brown dye",
+		alias=[
 			'brown',
 		],
-		ingredients = {
-			'reddye' : 1,
-			'blackdye': 1,
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_rustealeafblades: 1,
 		},
-		products = ['browndye']
-	)
+		products=[item_id_dye_brown]
+	),
+	EwSmeltingRecipe(
+		id_recipe="copperpaint",
+		str_name="a bucket of Copper Paint",
+		alias=[
+			'copper',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_metallicapheads: 1,
+		},
+		products=[item_id_paint_copper]
+	),
+	EwSmeltingRecipe(
+		id_recipe="chromepaint",
+		str_name="a bucket of Chrome Paint",
+		alias=[
+			'chrome',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_steelbeanpods: 1,
+		},
+		products=[item_id_paint_chrome]
+	),
+	EwSmeltingRecipe(
+		id_recipe="goldpaint",
+		str_name="a bucket of Gold Paint",
+		alias=[
+			'gold',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_aushuckstalks: 1,
+		},
+		products=[item_id_paint_gold]
+	),
+	EwSmeltingRecipe(
+		id_recipe="jellyfilleddoughnut",
+		str_name="a Jelly Filled Donut",
+		alias=[
+			'donut',
+			'doughnut',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_poketubereyes: 1,
+		},
+		products=["jellyfilleddoughnut"]
+	),
+	EwSmeltingRecipe(
+		id_recipe="pulpgourdpie",
+		str_name="a plate of Pulp Gourd Pie",
+		alias=[
+			'pie',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_pulpgourdpulp: 1,
+		},
+		products=['pulpgourdpie']
+	),
+	EwSmeltingRecipe(
+		id_recipe="sourpotatofrenchfries",
+		str_name="a plate of Sour Potato French Fries",
+		alias=[
+			'fries',
+			'frenchfries'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_sourpotatoskins: 1,
+		},
+		products=['sourpotatofrenchfries']
+	),
+	EwSmeltingRecipe(
+		id_recipe="bloodcabbagecoleslaw",
+		str_name="a tub of Blood Cabbage Coleslaw",
+		alias=[
+			'coleslaw',
+			'redcoleslaw',
+			'blood'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_bloodcabbageleaves: 1,
+		},
+		products=['bloodcabbagecoleslaw']
+	),
+	EwSmeltingRecipe(
+		id_recipe="joybeanpastemochi",
+		str_name="a pile of Joybean Paste Mochi",
+		alias=[
+			'mochi',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_joybeanvines: 1,
+		},
+		products=['joybeanpastemochi']
+	),
+	EwSmeltingRecipe(
+		id_recipe="purplekilliflowercrustpizza",
+		str_name="a plate of Purple Killiflower Crust Pizza",
+		alias=[
+			'pizza',
+			'cauliflowercrustpizza'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_purplekilliflowerflorets: 1,
+		},
+		products=['purplekilliflowercrustpizza']
+	),
+	EwSmeltingRecipe(
+		id_recipe="razornutbutter",
+		str_name="a tub of Razornut Butter",
+		alias=[
+			'butter',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_razornutshells: 1,
+		},
+		products=['razornutbutter']
+	),
+	EwSmeltingRecipe(
+		id_recipe="pawpawfood",
+		str_name="a plate of Pawpaw Food",
+		alias=[
+			'food',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_pawpawflesh: 1,
+		},
+		products=['pawpawfood']
+	),
+	EwSmeltingRecipe(
+		id_recipe="sludgeberrypancakes",
+		str_name="a plate of Sludgeberry Pancakes",
+		alias=[
+			'pancakes',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_sludgeberrysludge: 1,
+		},
+		products=['sludgeberrypancakes']
+	),
+	EwSmeltingRecipe(
+		id_recipe="yourfavoritefood",
+		str_name="a plate of ***Your Favorite Food***",
+		alias=[
+			'favoritefood',
+			'favefood'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_suganmanutfruit: 1,
+		},
+		products=['yourfavoritefood']
+	),
+	EwSmeltingRecipe(
+		id_recipe="pinkrowdatouille",
+		str_name="a plate of Pink Rowdatouille",
+		alias=[
+			'rowdatouille',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_pinkrowddishroot: 1,
+		},
+		products=['pinkrowdatouille']
+	),
+	EwSmeltingRecipe(
+		id_recipe="dankwheattoast",
+		str_name="a plate of Dankwheat Toast",
+		alias=[
+			'toast',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_dankwheatchaff: 1,
+		},
+		products=['dankwheattoast']
+	),
+	EwSmeltingRecipe(
+		id_recipe="brightshadeseeds",
+		str_name="some Brightshade Seeds",
+		alias=[
+			'seeds',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_brightshadeberries: 1,
+		},
+		products=['brightshadeseeds']
+	),
+	EwSmeltingRecipe(
+		id_recipe="blacklimesour",
+		str_name="some Black Lime Sours",
+		alias=[
+			'sours',
+			'sour'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_blacklimeade: 1,
+		},
+		products=['blacklimesour']
+	),
+	EwSmeltingRecipe(
+		id_recipe="phosphorpoppiesmuffin",
+		str_name="a Phosphorpoppies Muffin",
+		alias=[
+			'muffin',
+			'muffins'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_phosphorpoppypetals: 1,
+		},
+		products=['phosphorpoppiesmuffin']
+	),
+	EwSmeltingRecipe(
+		id_recipe="direapplejuice",
+		str_name="a bottle of Dire Apple Juice",
+		alias=[
+			'juice',
+			'applejuice',
+			'appyjuice'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_direapplestems: 1,
+		},
+		products=['direapplejuice']
+	),
+	EwSmeltingRecipe(
+		id_recipe="earlbrowntea",
+		str_name="a cup of Earl Brown Tea",
+		alias=[
+			'tea',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_rustealeafblades: 1,
+		},
+		products=['earlbrowntea']
+	),
+	EwSmeltingRecipe(
+		id_recipe="badshroomz",
+		str_name="some Bad Shroomz",
+		alias=[
+			'shrooms',
+			'mushrooms',
+			'shroomz'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_metallicapheads: 1,
+		},
+		products=['badshroomz']
+	),
+	EwSmeltingRecipe(
+		id_recipe="chromaccino",
+		str_name="a Chromaccino",
+		alias=[
+			'cappuccino',
+			'chroma'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_steelbeanpods: 1,
+		},
+		products=['chromaccino']
+	),
+	EwSmeltingRecipe(
+		id_recipe="moltenpopcorn",
+		str_name="a bag of Molten Popcorn",
+		alias=[
+			'popcorn',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_aushuckstalks: 1
+		},
+		products=['moltenpopcorn']
+	),
+	EwSmeltingRecipe(
+		id_recipe="captainshat",
+		str_name="a Captain's Hat",
+		alias=[
+			'captain',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_poketubereyes: 1,
+		},
+		products=['captainshat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="juveolantern",
+		str_name="a Juve-O' Lantern",
+		alias=[
+			'juve',
+			'jackolantern'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_pulpgourdpulp: 1,
+		},
+		products=['juveolantern']
+	),
+	EwSmeltingRecipe(
+		id_recipe="bowlerhat",
+		str_name="a Bowler Hat",
+		alias=[
+			'bowler',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_sourpotatoskins: 1,
+		},
+		products=['bowlerhat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="cabbagetreehat",
+		str_name="a Cabbage Tree Hat",
+		alias=[
+			'cabbagehat',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_bloodcabbageleaves: 1,
+		},
+		products=['cabbagetreehat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="braces",
+		str_name="some Braces",
+		alias=[
+			'headgear',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_joybeanvines: 1,
+		},
+		products=['braces']
+	),
+	EwSmeltingRecipe(
+		id_recipe="hoodie",
+		str_name="a Hoodie",
+		alias=[
+			'hood',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_purplekilliflowerflorets: 1,
+		},
+		products=['hoodie']
+	),
+	EwSmeltingRecipe(
+		id_recipe="copbadge",
+		str_name="a Cop Badge",
+		alias=[
+			'badge',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_razornutshells: 1,
+		},
+		products=['copbadge']
+	),
+	EwSmeltingRecipe(
+		id_recipe="strawhat",
+		str_name="a Straw Hat",
+		alias=[
+			'straw',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_pawpawflesh: 1,
+		},
+		products=['strawhat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="cosplayhorns",
+		str_name="a pair of Cosplay Horns",
+		alias=[
+			'horns',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_sludgeberrysludge: 1,
+		},
+		products=['cosplayhorns']
+	),
+	EwSmeltingRecipe(
+		id_recipe="yourfavoritehat",
+		str_name="***Your Favorite Hat***",
+		alias=[
+			'favoritehat',
+			'favehat'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_suganmanutfruit: 1,
+		},
+		products=['yourfavoritehat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="pajamaonesie",
+		str_name="a Pajama Onesie",
+		alias=[
+			'pajamas',
+			'onesie'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_pinkrowddishroot: 1,
+		},
+		products=['pajamaonesie']
+	),
+	EwSmeltingRecipe(
+		id_recipe="pairofcircularsunglasses",
+		str_name="a Pair Of Circular Sunglasses",
+		alias=[
+			'digibroglasses',
+			'circleglasses',
+			'circularglasses'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_dankwheatchaff: 1,
+		},
+		products=['pairofcircularsunglasses']
+	),
+	EwSmeltingRecipe(
+		id_recipe="flowercrown",
+		str_name="a Flower Crown",
+		alias=[
+			'flower',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_brightshadeberries: 1,
+		},
+		products=['flowercrown']
+	),
+	EwSmeltingRecipe(
+		id_recipe="spikedbracelets",
+		str_name="a pair of Spiked Bracelets",
+		alias=[
+			'spiked',
+			'bracelets'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_blacklimeade: 1,
+		},
+		products=['spikedbracelets']
+	),
+	EwSmeltingRecipe(
+		id_recipe="slimecorppin",
+		str_name="a SlimeCorp Pin",
+		alias=[
+			'pin',
+			'shillpin',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_phosphorpoppypetals: 1,
+		},
+		products=['slimecorppin']
+	),
+	EwSmeltingRecipe(
+		id_recipe="overalls",
+		str_name="a pair of Overalls",
+		alias=[
+			'trousers',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_direapplestems: 1,
+		},
+		products=['overalls']
+	),
+	EwSmeltingRecipe(
+		id_recipe="rustynail",
+		str_name="a Rusty Nail",
+		alias=[
+			'nail',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_rustealeafblades: 1,
+		},
+		products=['rustynail']
+	),
+	EwSmeltingRecipe(
+		id_recipe="fullmetaljacket",
+		str_name="a Full Metal Jacket",
+		alias=[
+			'jacket',
+			'metaljacket'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_metallicapheads: 1,
+		},
+		products=['fullmetaljacket']
+	),
+	EwSmeltingRecipe(
+		id_recipe="tinfoilhat",
+		str_name="a Tinfoil Hat",
+		alias=[
+			'tinfoil',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_steelbeanpods: 1,
+		},
+		products=['tinfoilhat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="resplendentcoronet",
+		str_name="a Resplendent Coronet",
+		alias=[
+			'crown',
+			'goldcrown'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_aushuckstalks: 1,
+		},
+		products=['resplendentcoronet']
+	),
+	EwSmeltingRecipe(
+		id_recipe="stick",
+		str_name="a stick",
+		alias=[
+			'wood',
+		],
+		ingredients={
+			item_id_direapplestems: 3
+		},
+		products=[item_id_stick]
+	),
 ]
 #smelting_recipe_list += ewdebug.debugrecipes
 
@@ -19046,6 +20973,12 @@ recipe_names = []
 
 # Populate recipe map, including all aliases.
 for recipe in smelting_recipe_list:
+
+	# print("==============================\n\n{}\n――――――――――――――――――――――――――――――\nTo craft {}, you'll need...\n".format(recipe.str_name, recipe.str_name))
+	# for ingredient in recipe.ingredients.keys():
+	# 	print('{} {}'.format(recipe.ingredients[ingredient], ingredient))
+	# print('')
+	
 	smelting_recipe_map[recipe.id_recipe] = recipe
 	recipe_names.append(recipe.id_recipe)
 
@@ -19552,6 +21485,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You carefully run your hand over {slimeoid_name}'s hide, making sure to go with the grain so as not to slice your fingers open on its sharp scales.",
+		str_abuse = "You pick up {slimeoid_name} by the hind legs, swinging them over your head and repeatedly slamming them to the ground.",
 		str_create = "You press a button on the armor console labelled 'A'. Through the observation port, you see the proto-Slimeoid's skin begin to glint as it sprouts roughly-edged scales.",
 		str_armor = "It is covered in scales.",
 		id_resistance = slimeoid_weapon_electricity,
@@ -19573,6 +21507,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat one of the hard, bony plates covering {slimeoid_name}'s skin.",
+		str_abuse = "You take a stick and hit {slimeoid_name}'s face with it.",
 		str_create = "You press a button on the armor console labelled 'B'. Through the observation port, you see hard bony plates begin to congeal on the proto-Slimeoid's surface.",
 		str_armor = "It is covered in bony plates.",
 		id_resistance = slimeoid_weapon_blades,
@@ -19591,6 +21526,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, and your hand tingles as it passes through the quantum field that surrounds its body.",
+		str_abuse = "You grab hold of {slimeoid_name} and shake them aggressively, until their quantum static is splayed out and they look nauseous.",
 		str_create = "You press a button on the armor console labelled 'C'. Through the observation port, start to notice the proto-Slimeoid begin to flicker, and you hear a strange humming sound.",
 		str_armor = "It is enveloped in a field of quantum uncertainty.",
 		id_resistance = slimeoid_weapon_slam,
@@ -19609,6 +21545,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, its fluid, shapeless body squishing and deforming in response to even slight pressure.",
+		str_abuse = "You stick your fist into {slimeoid_name}'s squishy body and jostle its vital organs.",
 		str_create = "You press a button on the armor console labelled 'D'. Through the observation port, you see the proto-Slimeoid suddenly begin to twist itself, stretching and contracting as its shape rapidly shifts.",
 		str_armor = "It is malleable and can absorb blows with ease.",
 		id_resistance = slimeoid_weapon_bludgeon,
@@ -19626,6 +21563,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}. Its skin is hot, and you can feel it pulsing rhythmically.",
+		str_abuse = "You take a blowtorch to {slimeoid_name}'s pulsating skin and watch as it wears itself out trying to regenerate the rapidly burning tissue.",
 		str_create = "You press a button on the armor console labelled 'E'. Through the observation port, you see the proto-Slimeoid begin to pulse, almost like a beating heart.",
 		str_armor = "It can regenerate damage to its body rapidly.",
 		id_resistance = slimeoid_weapon_spikes,
@@ -19643,6 +21581,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, taking care not to inhale through your nose, as one whiff of its odor has been known to make people lose their lunch.",
+		str_abuse = "You try to humiliate {slimeoid_name} by plugging your nose and kicking it around.",
 		str_create = "You press a button on the armor console labelled 'F'. Through the observation port, you see the proto-Slimeoid give off bubbles of foul-colored gas.",
 		str_armor = "It exudes a horrible stench.",
 		id_resistance = slimeoid_weapon_teeth,
@@ -19659,6 +21598,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}'s slick wet skin, and your hand comes away coated in a viscous, slippery oil.",
+		str_abuse = "You turn {slimeoid_name} upside down and push their oily body, sending them slipping down the sidewalk.",
 		str_create = "You press a button on the armor console labelled 'G'. Through the observation port, you see the surface of the proto-Slimeoid become shiny with some kind of oily fluid.",
 		str_armor = "It is covered in a coating of slippery oil.",
 		id_resistance = slimeoid_weapon_grip,
@@ -20126,6 +22066,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} shakes itself off to get rid of some excess gestation fluid, then starts to hiss at you. Seems like a real firecracker, this one.",
 		str_dissolve = "{slimeoid_name} hisses and spits with fury as you hold it over the SlimeCorp Dissolution Vats. Come on, get in there...\n{slimeoid_name} claws at you, clutching at the edge of the vat, screeching with rage even as you hold its head under the surface and wait for the chemical soup to do its work. At last, it stops fighting.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_a,
+		str_abuse= "{slimeoid_name} lashes out, trying to fight back."
 
 	),
 	EwBrain( # brain 2
@@ -20151,6 +22092,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} gets up off the ground slowly at first, but then it notices you and leaps into your arms. It sure seems glad to see you!",
 		str_dissolve = "You order {slimeoid_name} into the Dissolution Vats. It's initially confused, but realization of what you're asking slowly crawks across its features.\nIt doesn't want to go, but after enough stern commanding, it finally pitches itself into the toxic sludge, seemingly too heartbroken to fear death.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_b,
+		str_abuse = "{slimeoid_name} yelps in pain. It's beside itself and doesn't know what to do..."
 	),
 	EwBrain( # brain 3
 		id_brain = "c",
@@ -20175,6 +22117,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} regards you silently from the floor. You can't tell if it likes you or not, but it starts to follow you regardless.",
 		str_dissolve = "You pick up {slimeoid_name} and hurl it into the SlimeCorp Dissolution Vats before it starts to suspect anything. It slowly sinks into the chemical soup, kind of like Arnold at the end of Terminator 2, only instead of giving you a thumbs-up, it stares at you with an unreadable expression. Betrayal? Confusion? Hatred? Yeah, probably.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_c,
+		str_abuse = "You can feel {slimeoid_name} trembling, but it just takes your abuse."
 	),
 	EwBrain( # brain 4
 		id_brain = "d",
@@ -20199,6 +22142,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} flops over on the floor and stares up at you. Its gaze wanders around the room for a while before it finally picks itself up to follow you.",
 		str_dissolve = "You lead {slimeoid_name} up to the edge of the Dissolution Vats and give a quick 'Hey, look, a distraction!'. {slimeoid_name} is immediately distracted and you shove it over the edge. Landing in the vat with a sickening *gloop* sound, it sinks quickly under the fluid surface, flailing madly in confusion and desperation.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_d,
+		str_abuse = "You have a hard time with it, {slimeoid_name} is panicked and keeps trying to run."
 	),
 	EwBrain( # brain 5
 		id_brain = "e",
@@ -20223,6 +22167,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name}'s eyes dart frantically around the room. Seeing you, it darts behind you, as if for cover from an unknown threat.",
 		str_dissolve = "{slimeoid_name} is looking around the lab nervously, obviously unnerved by the Slimeoid technology. Its preoccupation makes it all too easy to lead it to the Dissolution Vats and kick its legs out from under it, knocking it in. As it falls and hits the solvent chemicals, it wails and screeches in shock and terror, but the noise eventually quiets as it dissolves into a soft lump, then disintegrates altogether.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_e,
+		str_abuse = "{slimeoid_name} is squealing in horror. It will remember this..."
 	),
 	EwBrain( # brain 6
 		id_brain = "f",
@@ -20247,6 +22192,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} picks itself up off the floor and regards you coolly. It seems as if it's gauging your usefulness.",
 		str_dissolve = "{slimeoid_name} eyes you suspiciously as you approach the Dissolution Vats. It's on to you. Before it has a chance to bolt, you grab it, hoist it up over your head, and hurl it into the chemical soup. {slimeoid_name} screeches in protest, sputtering and hissing as it thrashes around in the vat, but the chemicals work quickly and it soon dissolves into nothing.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_f,
+		str_abuse = "{slimeoid_names}'s fear grows as it desperately looks for an escape."
 	),
 	EwBrain( # brain 7
 		id_brain = "g",
@@ -20271,6 +22217,7 @@ brain_list = [
 		str_spawn = "{slimeoid_name} starts to pick itself up off the floor, then changes its mind and lies back down. Then it gets up again. Lies down again. Up. Down. Up. Ok, this time it stays up.",
 		str_dissolve = "{slimeoid_name} is perplexed by the laboratory machinery. Taking advantage of its confusion, you point it towards the Dissolution Vats, and it gormlessly meanders up the ramp and over the edge. You hear a gloopy SPLOOSH sound, then nothing. You approach the vats and peer over the edge, but see no trace of your former companion.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_g,
+		str_abuse = "{slimeoid_name} still hasn't caught up to all this chaos, and is lost and confused."
 	)
 ]
 
@@ -20311,6 +22258,9 @@ hue_id_white = "white"
 hue_id_grey = "grey"
 hue_id_black = "black"
 hue_id_brown = "brown"
+hue_id_copper = "copper"
+hue_id_chrome = "chrome"
+hue_id_gold = "gold"
 
 
 # All color attributes in the game.
@@ -20587,6 +22537,36 @@ hue_list = [
 		str_saturate = "It turned an earthly brown!",
 		str_name = "brown",
 		str_desc = "Its earthly brown hue imbues it with a humble, down-to-earth personality.",
+		is_neutral = True,
+	),
+	EwHue(
+		id_hue = hue_id_copper,
+		alias = [
+			"copperpaint",
+		],
+		str_saturate = "It was given a coating of bright copper!",
+		str_name = "copper",
+		str_desc = "It seems to feel good about its copper coating.",
+		is_neutral = True,
+	),
+	EwHue(
+		id_hue = hue_id_chrome,
+		alias = [
+			"chromepaint",
+		],
+		str_saturate = "It was given a coating of silvery chrome!",
+		str_name = "chrome",
+		str_desc = "It's content with its chrome coating.",
+		is_neutral = True,
+	),
+	EwHue(
+		id_hue = hue_id_gold,
+		alias = [
+			"goldpaint",
+		],
+		str_saturate = "It was given a coating of dazzling gold!",
+		str_name = "gold",
+		str_desc = "It prides itself on its shiny golden coating.",
 		is_neutral = True,
 	),
 ]
@@ -21731,36 +23711,36 @@ for bait in food_list:
 # If a fish doesn't bite, send one of these.
 nobite_text = [
 	"You patiently wait...",
-    	"This is so fucking boring...",
-    	"You watch your hook bob...",
-    	"You grow impatient and kick the rotted wooden guard rails...",
-    	"AUUUUUGH JUST BITE THE FUCKING HOOK ALREADY...",
-    	"You begin to zone-out a bit...",
-    	"Shouldn't you be doing something productive?",
-   	"You sit patiently, eagerly awaiting a fish to bite. Thanks to your concentration, this descriptive contradiction does not occur to you.",
-    	"You begin to daydream about fish sex... Gross...",
-    	"You begin to daydream about fish sex... Hot...",
-    	"You see a fish about to bite your hook, but you shout in elation, scaring it away...",
-    	"You make direct eye contact with a fish, only to quickly look away...",
-    	"♪ Fishing for Fishies! ♪",
-    	"♪ That Captain Albert Alexander! ♪",
-    	"You get the urge to jump in and try to grab a fish, before remembering that you can't swim...",
-    	"You hum some sea shanties...",
-    	"You start to slip into an existential crisis...",
-    	"You jitter as other seamen catch fish before you. Fuck fishing...",
-    	"You feel the oncoming downward spiral...",
-    	"You shake your head as a young seaman baits a perfectly good slice of pizza on his hook... What a cretin...",
-    	"You wonder if the Space Navy has been formed yet...",
-    	"Man... Why were you excited for this shit?",
-    	"Still better than Minesweeper...",
-    	"Maybe one day your wife will pardon you...",
-    	"Fuck fish...",
-    	"You let out a deep sigh, scaring away a fish...",
-    	"Wouldn't it be funny if you just reached into the sea and grabbed one? Haha, yeah, that'd be funny...",
-    	"You see a bird carry off a Plebefish in the distance... Good riddance...",
-    	"You spot a stray bullet in the distance...",
-    	"You see a dead body float up to the surface of the Slime...",
-    	"Fish..."
+		"This is so fucking boring...",
+		"You watch your hook bob...",
+		"You grow impatient and kick the rotted wooden guard rails...",
+		"AUUUUUGH JUST BITE THE FUCKING HOOK ALREADY...",
+		"You begin to zone-out a bit...",
+		"Shouldn't you be doing something productive?",
+	"You sit patiently, eagerly awaiting a fish to bite. Thanks to your concentration, this descriptive contradiction does not occur to you.",
+		"You begin to daydream about fish sex... Gross...",
+		"You begin to daydream about fish sex... Hot...",
+		"You see a fish about to bite your hook, but you shout in elation, scaring it away...",
+		"You make direct eye contact with a fish, only to quickly look away...",
+		"♪ Fishing for Fishies! ♪",
+		"♪ That Captain Albert Alexander! ♪",
+		"You get the urge to jump in and try to grab a fish, before remembering that you can't swim...",
+		"You hum some sea shanties...",
+		"You start to slip into an existential crisis...",
+		"You jitter as other seamen catch fish before you. Fuck fishing...",
+		"You feel the oncoming downward spiral...",
+		"You shake your head as a young seaman baits a perfectly good slice of pizza on his hook... What a cretin...",
+		"You wonder if the Space Navy has been formed yet...",
+		"Man... Why were you excited for this shit?",
+		"Still better than Minesweeper...",
+		"Maybe one day your wife will pardon you...",
+		"Fuck fish...",
+		"You let out a deep sigh, scaring away a fish...",
+		"Wouldn't it be funny if you just reached into the sea and grabbed one? Haha, yeah, that'd be funny...",
+		"You see a bird carry off a Plebefish in the distance... Good riddance...",
+		"You spot a stray bullet in the distance...",
+		"You see a dead body float up to the surface of the Slime...",
+		"Fish..."
 ]
 
 generic_help_response = "Check out the guide for help: https://ew.krakissi.net/guide/\nThe guide won't cover everything though, and may even be a bit outdated in some places, so you can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work by using the !help command there. Portable game guides can also be bought there for 10,000 slime."
@@ -21770,7 +23750,7 @@ help_responses = {
 	# Introductions, part 1
 	"gangs":"**Gang Violence** is the center focus of **Rowdy Fuckers Cop Killers' ENDLESS WAR**. Enlisting in a gang allows you to attack other gang members, juveniles, ghosts, and slime beasts with the **'!kill'** command. To enlist in a gang, use **'!enlist'**, provided you also have at least 50,000 slime on hand. However, a member of that gang must use **'!vouch'** for you beforehand. Enlisting will permanently affiliate you with that gang, unless you are !pardon'd by the **ROWDY FUCKER** (Munchy), or the **COP KILLER** (Ben Saint). You may use **'!renounce'** to return to the life of a juvenile, but you will lose half of your current slime, and you will still be affiliated with that gang, thus disallowing you from entering the enemy's gang base. Additionally, a Kingpin, should they feel the need to, can inflict the '!banned' status upon you, preventing you from enlisting in their gang.",
 	"food":"Food lowers your hunger by a set amount, and can be ordered from various **restaurants** within the city. Generally speaking, the more expensive food is, the more hunger it sates. You can **'!order'** food to place it in your inventory, and **'!use [food name]'** to use it. You can only carry a certain amount of food depending on your level. Regular food items expire after 2 in-game days, or 12 hours in real life, while crops expire after 8 in-game days (48 hours), and food items gained from milling expire after a whole 2 weeks in real life. Three popular restauraunts close by various gang bases include **THE SPEAKEASY** (juveniles), **THE SMOKER'S COUGH** (rowdys), and **RED MOBSTER SEAFOOD** (killers), though there are other places to order food as well, such as the **Food Court**.",
-	"capturing":"Capturing districts is the primary objective of **ENDLESS WAR**. Once you get at least 50,000 slime, you are able to capture districts and generate slime for your team's **Kingpin**. The rate at which you capture a district is determined by various factors. If more **people** are capturing a district, that district will take **less** time to capture. The **property class** (which can range from S at the highest to C at the lowest) of that district will also increase capture time, with S class districts taking more time to capture than C class districts. Districts will take **less** time to capture if they are nearby **friendly** districts, and **more** time to capture if they are nearby **enemy** districts. Districts will have their capture progress **decay** over time, but if a captured district is **fully surrounded** by friendly districts (example: Assault Flats Beach is surrounded by Vagrant's Corner and New New Yonkers), then it will **not** decay. Inversely, districts will decay **faster** if they are next to **enemy** districts. **DECAPTURING** (lowering an enemy's capture progress on districts they control) and **RENEWING** (increasing capture progress on districts your team currently controls) can also be done, but only if that district is **not** fully surrounded. Once a district has been fully captured, it will stay locked at 100% for a duration depending on its property class and the number of people involved in capturing it. **JUVIE'S ROW**, **ROWDY ROUGHHOUSE**, and **COP KILLTOWN** are gang bases, and thus cannot be captured, nor do they decay. To check the capture progress of a district, use **'!progress'**. To view the status of the map itself and check what property class each district has, use **'!map'**.",
+	"capturing":"Capping is a battle for influence over the 31 districts of NLACakaNM, and one of your main goals as a gangster. Capped territories award your kingpin slime, and give your teammates benefits while visiting. Start by visiting Based Hardware and equipping one of the paint tools sold there. Once you have that, you can **!spray <captcha>** while in a capturable district to gain influence for your gang. Spraying graffiti in districts will increase influence for you, or decrease it for the enemy if they have influence there. Think of dealing influence to a district like dealing damage to a Juvie's soft squishy body, with critical hits, misses, and backfires included. As you go, you can check your **!progress** to see how much influence you still need. It can be more or less depending on the territory class, running from rank C to S. \n\nA few more things to note:\n>**!progress** will tell you the minimum and limit for territory capture. However, you can capture above that limit, as high as you want. The catch is that anything captured over this limit will decay faster.\n>Decapping does 0.8x the influence of capping, even though the cost remains the same.\n>Don't attack enemy territory when it is surrounded by enemy territory/outskirts. Small little bitches like yourself are prone to fucking up severely under that much pressure.\n>The nightlife starts in the late night. Fewer cops are around to erase your handiwork, so if you cap then you will gain a 33% capping bonus.\n>You can't kill for shit with paint tools equipped. Luckily, you can **!sidearm** a weapon or tool and quickly switch between your two equip slots using **switch** or **!s**.",
 	"transportation":"There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board redtocv'. **'!disembark'** can be used to exit a train. **The Ferry** (which moves between Vagrant's Corner and Wreckington) and **The Blimp** (which moves between Dreadford and Assault Flats Beach) can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do. Refer to the diagram below (credits to Connor#3355) on understanding which districts have subway stations on them, though take note that the white subway line is currently non-operational.\nhttps://cdn.discordapp.com/attachments/431238867459375145/570392908780404746/t_system_final_stop_telling_me_its_wrong_magicks.png",
 	"death": "Death is an integral mechanic to Endless War. Even the most experienced players will face the sewers every now and again. If you find yourself in such a situation, use **'!revive'** in the sewers channel, and you will return to the land of the living as a juvenile at the base of ENDLESS WAR. Dying will drop some of your unadorned cosmetics and food, and all of your unequiped weapons, but your currently adorned cosmetics and equiped weapon will remain in your inventory (Gangsters will lose half of their food/unadorned cosmetics, while Juveniles lose only a quarter). Try not to die too often however, as using !revive collects a 'death tax', which is 1/10th of your current slimecoin. Alternatively, you can hold off on reviving and remain a **ghost**, which has its own gameplay mechanics associated with it. To learn more, use '!help ghosts' at one of the colleges or with a game guide.",
 	# Introductions, part 2
@@ -21807,8 +23787,8 @@ help_responses = {
 	"profile": "This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
 	"manuscripts": "First of all, to start a manuscript, you're gonna need to head down to the Cafe, either University, or the Comic Shop.\n\nYou can **!beginmanuscript [title]** at the cost of 20k slime.\n\nIf you happen to regret your choice of title, you can just **!settitle [new title]**.\n\nThe author name is already set to your nickname, but if you want to change it, you change your nickname and then **!setpenname**.\n\nYou're required to specify a genre for your future zine by using **!setgenre [genre name]** (Genre list includes: narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper, and experimental).\n\nIf at any time you would like to look at the title, author name, and length of your manuscript, then use **!manuscript**.\n\n*NOW*, if you actually want to start getting stuff done, you're gonna need to **!editpage [page number] [content]**. Every zine has 10 pages (kinda) that you can work with, but you can **!setpages [pages]** to customize it (maximum is 20, minimum is 5). Each holds a maximum of 1500 characters of content. You can fill it with information, image links, smut, whatever floats your freakish boat. If you try to edit a page that already has writing, it will ask you to confirm the change before overwriting it.\n\nYou can also set a cover, which is optional. You do this with **!editpage cover [image link]**.\n\nTo check any of your pages, simply **!viewpage [number]** to see how it looks.\n\nKeep in mind that manuscripts ARE NOT items and can't be lost on death. They're accessible from any authoring location (Cafe, NLACU, NMS, Comics). A player can only have 1 manuscript out at a time.\n\nOnce you are completely finished, you can **!publish** your manuscript (it will ask you to confirm that you are completely done with it), which will enable the citizens of the town to purchase it from any zine place. From there, it will be bought and rated by the people and you may even earn some royalty poudrins for it.",
 	"zines": "Zines are the hot new trend in Neo-Milwaukee and give slimebois of all shapes and sizes access to the free-market of information and culture.\n\nTo obtain a zine, you must head down to any of these locations: Green Cake Cafe, NLAC University, Neo-Milwaukee State, or Glockbury Comics.\n\nFrom there, you can **!browse** for zines. They are ordered by *Zine ID*, but you have many options for sorting them, including: **title, author, datepublished,** any of the genres (including **narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper,** and **experimental**.), **length, sales,** and **rating** (use **!browse [criteria]**). You can also add **reverse** on to any of these in order to make it display in reverse order. Example: **!browse bestsellers reverse** (essentially looks for worse-selling zines). Browsing in the Comic Shop will automatically browse for comic zines and browsing at the Colleges will look for historical zines (keep in mind that any zines can be bought from these places).\n\nYou can also **!browse [Zine ID]** in order to get info about that specific zine, including sales, length, genre, and rating.\n\nOnce you've found a zine that's caught your eye, simply **!orderzine [Zine ID]** to buy it for 10k slime.\n\nAfter absorbing the zine's content, it is your moral obligation as a reader to **!review [Zine Name] [Score]**. The potential scores range from between 1 and 5 *fucks* (whole numbers only). If you hate a zine, then give it one fuck. If you absolutely loved it, give it five fucks. Simple. By the way, if a zine's average rating is less than 2.0 by the time it gets to 10 ratings (or less than 1.5 by 5 ratings), it will be excluded from the default browse. The only way to purchase it will be to use the **worstrated** or **all** sorting methods.\n\nYou can **!shelve [zine name]** in your apartment after you've finished.",
-	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
 	"sap": "**Sap** is a resource your body produces to control your slime. It's integral to being able to act in combat. You can have a maximum amount of sap equal to 1.6 * ( your slime level ^ 0.75 ). When you spend it, it will regenerate at a rate of 1 sap every 5 seconds. You can spend your sap in a variety of ways: **!harden [number]** allows you to dedicate a variable amount of sap to your defense. Hardened sap reduces incoming damage by a factor of 10 / (10 + hardened sap). Your hardened sap counts against your maximum sap pool, so the more you dedicate to defense, the less you will have to attack. You can **!liquefy [number]** hardened sap back into your sap pool. Every attack requires at least 1 sap to complete. Different weapons have different sap costs. Some weapons have the ability to destroy an amount of hardened sap from your target, or ignore a portion of their hardened sap armor. This is referred to as **sap crushing** and **sap piercing** respectively. There are also other actions you can take in combat, that cost sap, such as: **!aim [player]** will slightly increase your hit chance and crit chance against that player for 10 seconds. It costs 2 sap. **!dodge [player]** will decrease that players hit chance against you for 10 seconds. It costs 3 sap. **!taunt [player]** will decrease that player's hit chance against targets other than you for 10 seconds. It costs 5 sap.",
+	"sprays":"**Sprays** are your signature piece of graffiti as a gangster. You can **!changespray <image link>** in order to set your own custom image. This image appears when you get a critical hit while capping, and you can also **!tag** to spray it anywhere.",
 
 	# Weapons
 	weapon_id_revolver: "**The revolver** is a weapon for sale at the Dojo. Attacking with the revolver costs 1 sap. It has a damage mod of 0.8 and an attack cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The revolver has sap crushing 2. After every 6 shots you will need to **!reload** it.",
@@ -21830,11 +23810,24 @@ help_responses = {
 	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. Attacking with the molotovs costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. They have sap piercing 10. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
 	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 2. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
-	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 3. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you take less than 10 seconds between attacks, your miss chance will increase.",
 	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. Attacking with the dragon claw costs 5 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. It has a captcha length of 2. It has sap crushing 5 and sap piercing 10. It you take less than 5 seconds between attacks, your miss chance will increase. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
 	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 4 sap. It has a captcha length of 10. Dealing damage with the staff requires attacking twice in a 15-second window, with the first !kill command only being preparetion for the second. The attack cost multiplier is 1 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 0.6, sap piercing 0, and a 0% chance to crit, which deals 1.5x damage. A number of conditions may be met to increase the damage multiplier by 2.4, sap piercing by 6, and crit chance by 6.66%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
 	
+
+	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
+
+	weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase.",
+
+	weapon_id_spraycan: "**The spray can** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.8 and a spray cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
+	weapon_id_paintgun: "**The paint gun** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.7 and a spray cost mod of 0.75. It has a captcha length of 6, a miss chance of O% and a 20% chance for a crit, which does 2x influence.",
+	weapon_id_paintroller: "**The paint roller** is a paint tool for sale at Based Hardware. It has a capping modifier of 1.75 and a spray cost mod of 4. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
+	weapon_id_paintbrush: "**The paint brush** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.5 and a spray cost mod of .25. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 1.5x influence.",
+	weapon_id_watercolors: "**Watercolors** are a paint tool for sale at Based Hardware. It does a set 4000 influence per shot. It has a captcha length of 3, a miss chance of 10% and a .1% chance for a crit, which zeros out the whole district regardless of owner.",
+	weapon_id_thinnerbomb: "**Thinner bombs** are a paint tool for sale at Based Hardware. It has a capping modifier of 0.15 and a spray cost mod of 2. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence. When you cap with a thinner bomb, it is used up, and you have to buy more. When decapping, damage is multiplied by 15. This tool has a 10% chance of backfiring.",
+
+
 	# "otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
+
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
@@ -21845,11 +23838,13 @@ help_responses_ordered_keys = [
 	"mutations", "mymutations", "smelting", "sparring", "ghosts",
 	"slimeoids", "cosmetics", "realestate", "apartments", "stocks",
 	"trading", "weather", "casino", "bleeding", "offline",
-	"profile", "manuscripts", "zines", "shambleball", "sap",
+	"profile", "manuscripts", "zines", "shambleball", "sap", "sprays",
 	weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun, weapon_id_rifle, weapon_id_smg, 
 	weapon_id_bat, weapon_id_brassknuckles, weapon_id_katana, weapon_id_broadsword, weapon_id_nunchucks, 
 	weapon_id_scythe, weapon_id_yoyo, weapon_id_umbrella, weapon_id_knives, weapon_id_molotov, 
 	weapon_id_grenades, weapon_id_garrote, weapon_id_minigun, weapon_id_bow, weapon_id_dclaw,
+	weapon_id_staff, weapon_id_spraycan, weapon_id_paintgun, weapon_id_paintroller, weapon_id_paintbrush,
+	weapon_id_watercolors, weapon_id_thinnerbomb
 ]
 
 mutation_descriptions = {
@@ -21857,7 +23852,7 @@ mutation_descriptions = {
 	mutation_id_thickerthanblood: "On a fatal blow, immediately receive the opponent’s remaining slime, causing none of it to bleed onto the ground or go your kingpin. Its effects are diminished on hunted enemies, however.",
 	mutation_id_fungalfeaster: "On a fatal blow, restore all of your hunger.",
 	mutation_id_sharptoother: "The chance to miss with a weapon is reduced by 50%. Specifically, a normal miss will now have a 50% to either go through as a miss or a hit.",
-	mutation_id_2ndamendment: "One extra equippable weapon slot in your inventory.",
+	mutation_id_2ndamendment: "One extra equippable weapon slot in your inventory. You receive a 25% damage buff if two non-tool weapons are in both your weapon slots.",
 	mutation_id_bleedingheart: "Upon being hit, none of your slime is splattered onto the street. It is all stored as bleed damage instead. This does not counteract the Nosferatu mutation.",
 	mutation_id_nosferatu: "At night (8PM-6AM), upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage. This overrides the Bleeding Heart mutation.",
 	mutation_id_organicfursuit: "Double damage, double movement speed, and 10x damage reduction every 31st night. Use **'!fursuit'** to check if it's active.",
@@ -22564,7 +24559,7 @@ curse_words = { # words that the player should be punished for saying via swear 
 	"towelhead":50,
 	"wetback":50,
 	"zipperhead":50,
-	"spick":50,
+	"spic":50,
 	"dyke":50,
 	"tranny":80,
 	"dickhead":20,
