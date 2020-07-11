@@ -15168,7 +15168,7 @@ smelting_recipe_list = [
 		ingredients = {
 			item_id_ironingot:1
 		},
-		products = [item_id_ironingot]
+		products = [item_id_tanningknife]
 	),
 		EwSmeltingRecipe(
 		id_recipe = "leather",
