@@ -11604,6 +11604,7 @@ poi_list = [
 		channel = "the-void",
 		is_district = True,
 		is_capturable = False,
+		pvp = True,
 		neighbors = {
 			poi_id_wafflehouse : travel_time_subzone,
 		},
