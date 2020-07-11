@@ -11601,7 +11601,7 @@ poi_list = [
 		alias = [
 			"void",
 			"the-void",
-			"abyss"
+			"abyss",
 			"tv",
 			"v",
 		],
