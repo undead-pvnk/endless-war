@@ -410,6 +410,10 @@ def canAttack(cmd):
 			# Target is a ghost but user is not able to bust 
 			response = "You don't know how to fight a ghost."
 
+		elif shootee_data.life_state == ewcfg.life_state_corpse and shootee_data.poi == ewcfg.poi_id_thevoid:
+			# Can't bust ghosts in their realm
+			response = "{} is empowered by the void, and deflects your attacks without breaking a sweat.".format(member.display_name)
+
 		elif weapon_possession_data and (shootee_data.id_user == weapon_possession_data[0]):
 			# Target is possessing user's weapon
 			response = "{}'s contract forbids you from harming them. You should've read the fine print.".format(member.display_name)
