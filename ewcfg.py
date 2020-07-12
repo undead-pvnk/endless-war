@@ -138,6 +138,7 @@ poi_id_slimesendcliffs = "slimesendcliffs"
 poi_id_greencakecafe = "greencakecafe"
 poi_id_sodafountain = "sodafountain"
 poi_id_bodega = "bodega"
+poi_id_wafflehouse = "wafflehouse"
 poi_id_basedhardware = "basedhardware"
 
 # transports
@@ -230,6 +231,7 @@ poi_id_jaywalkerplain = "jaywalkerplain"
 poi_id_crookline = "crookline"
 poi_id_dreadford = "dreadford"
 poi_id_maimridge = "maimridge"
+poi_id_thevoid = "thevoid"
 
 poi_id_toxington_pier = "toxingtonpier"
 poi_id_jaywalkerplain_pier = "jaywalkerplainpier"
@@ -771,6 +773,7 @@ channel_apt_maimrdige ="maimridge-apartments"
 
 channel_slimesendcliffs = "slimes-end-cliffs"
 channel_bodega = "bodega"
+channel_wafflehouse = "wafflehouse"
 channel_basedhardware = "based-hardware"
 
 channel_prankfeed = "prank-feed"
@@ -2488,6 +2491,7 @@ vendor_slimypersuits = "Slimy Persuits" #You can buy candy from here
 vendor_greencakecafe = "Green Cake Cafe" #Brunch foods
 vendor_bodega = "Bodega" # Clothing store in Krak Bay
 vendor_secretbodega = "Secret Bodega" # The secret clothing store in Krak Bay
+vendor_wafflehouse = "Waffle House" # waffle house in the void, sells non-perishable foods, 100 slime to 1 hunger
 vendor_basedhardware = "Based Hardware" # Hardware store in West Glocksbury
 
 item_id_slimepoudrin = 'slimepoudrin'
@@ -7683,8 +7687,21 @@ food_list = [
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
 		str_name = 'Super Water FUCK ENERGY Drink',
-		str_eat = "You crack open a cold, refreshing can of Super Water flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its extremely potent artificial water flavorings overwhelm your senses, temporarily shutting off your brain from the sheer amount of information being sent to it from your overloaded taste buds. You probably are literally retarded now. Nigh instanously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+		str_eat = "You crack open a cold, refreshing can of Super Water flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its extremely potent artificial water flavorings overwhelm your senses, temporarily shutting off your brain from the sheer amount of information being sent to it from your overloaded taste buds. You probably are literally retarded now. Nigh instantaneously the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
 		str_desc = "A cold, refreshing can of Super Water flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
+	),
+	EwFood(
+		id_food = "justcumfuckenergy",
+		alias = [
+			"jcfu"
+		],
+		recover_hunger = 1200,
+		price = 12000,
+		inebriation = 1000,
+		vendors = [vendor_mtndew, vendor_vendingmachine],
+		str_name = 'Just Cum FUCK ENERGY Drink',
+		str_eat = "You crack open a cold, refreshing can of Just Cum flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. The sticky, grimy consistency of the actual can of cum you just chugged tingles your mouth and throat as it slowly descends down your esophagus, reminding you of your uncle. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+		str_desc = "A cold, refreshing can of Just Cum flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
 	EwFood(
 		id_food = item_id_quadruplestuffedcrust,
@@ -8337,7 +8354,92 @@ food_list = [
 		str_eat = "\n*You eat the gummy worms.*\n***You eat the gummy worms.***\n***Y O U  E A T  T H E  G U M M Y  W O R M S .***\n                                                                                                                        ...yummy!",
 		str_desc = "After months of toil and hundreds of U.S. dollars spent, the Cop Killer finally found what he was searching for all along. Hopefully it will have been worth the wait.",
 		vendors = [vendor_slimypersuits]
-	)
+	),
+	EwFood(
+		id_food = "awfulwaffle",
+		alias=[
+			"awful",
+		],
+		recover_hunger = 20,
+		price = 2000,
+		str_name = "Awful Waffle",
+		str_eat = "You put this tough and floppy piece of cooked garbage in your mouth. You give up eat it with a knife and fork and relegate yourself to just holding it and taking bites off. It tastes like shit, makes you feel like shit, and will give you the shits when you're done. Why would you do this to yourself?",
+		str_desc = "You can feel the regret of the person who made this piece of shit waffle emanating from it. The watered down batter was not properly mixed or cooked for as long as it should've, leading to a lumpy, doughy mess that can barely be called a waffle.",
+		perishable = False,
+		vendors = [vendor_wafflehouse],
+	),
+	EwFood(
+		id_food = "wetwaffle",
+		alias=[
+			"wet",
+		],
+		recover_hunger = 50,
+		price = 5000,
+		str_name = "Wet Waffle",
+		str_eat = "You try sucking on the straw, but the density of the batter is too much for your puny suction to pull it all the way from the bag into your mouth. You try squishing the plastic bag as you suck, which actually gets some of the batter in your mouth, but it's not enough. You give up, slam the bag, pop a hole on the bottom, and suck directly from it. All this effort was not worth it, it just tastes like waffle batter, and it's gonna give you salmonella.",
+		str_desc = "A waffle-shaped plastic bag full of waffle batter, with a long straw-like opening at the top for you to suck on like an idiot. Kinda looks like a fucked up transparent baloon.",
+		perishable = False,
+		vendors = [vendor_wafflehouse],
+	),
+	EwFood(
+		id_food = "icantbelieveitsnotwaffle",
+		alias=[
+			"icbinw",
+			"notwaffle",
+			"prionwaffle",
+		],
+		recover_hunger = 100,
+		price = 10000,
+		str_name = "I Can't Believe It's Not Waffle!",
+		str_eat = "It really does taste just like a fucking waffle. You gobble it up, in disbelief that the thing you're eating is not actually a waffle. You contract kuru.",
+		str_desc = "This looks like a waffle. The name of the dish does indicate this is in fact not a waffle, but it just looks, smells, and feels like a waffle.",
+		perishable = False,
+		vendors = [vendor_wafflehouse],
+	),
+	EwFood(
+		id_food = "entirekidsmealwaffle",
+		alias=[
+			"kidsmeal",
+			"entirekidsmeal",
+			"ekmw",
+		],
+		recover_hunger = 300,
+		price = 30000,
+		str_name = "Entire Kids' Meal Waffle",
+		str_eat = "You slowly start to unhinge your jaw, ingesting this thick mega meal like an anaconda swallowing a whole writhing alligator. As soon as your saliva makes contact with the item, it starts to unfold and disintegrate. The congealed mass starts to expand, it takes your entire being to force this down.\nYou now resemble a cartoon rat upon engulfing an entire cheese wheel, except real...and a waffle.",
+		str_desc = "The hydraulic waffle press required to create this smorgasbord of breakfast food has seared this grotesque checkerboard slab of pancakes, omelettes, bacon strips, apple juice cartons, and entire bottles of syrup into a gutbusting object so dense that it breaks any plate it is placed upon. One bite will satisfy even the pickiest of children, if they survive.",
+		perishable = False,
+		vendors = [vendor_wafflehouse],
+	),
+	EwFood(
+		id_food = "baconanguscheeseburgerdeluxewaffle",
+		alias=[
+			"bacdw",
+			"baconwaffle",
+			"cheeseburgerwaffle",
+		],
+		recover_hunger = 500,
+		str_name = "Bacon Angus Cheeseburger Deluxe Waffle",
+		price = 50000,
+		str_eat = "You raise the vibrating greasy mass to your lips, hesitantly you open your mouth, only for the mass of waffle burger to shift through your hands, this 4 dimensional snack phases through you, swiping through your head and even clipping past your brain, the interdimensional grease sears not only your current self, but you soon realize why you received random grease burns across your body throughout your childhood. As it shifts into your stomach, you wonder if you have really consumed this waffle burger, of if the waffle burger has consumed you. You are simply too simple a lifeform to understand this eldritch breakfast.",
+		str_desc = "This immaculate 4d chess board of a meal is constantly drooling a greasy snail trail as you hold it aloft. This Calabi–Yau manifold of a burger is created from interlocked waffles, a fresh poppy seed bun waffle, a crispy lettuce waffle, a sizzling bacon strip waffle, a moist tomato waffle, a sharp cheese waffle, a grilled angus patty waffle, a sweet dill pickle waffle, a savory grilled onion waffle, and yet another fresh poppy seed bun waffle.",
+		perishable = False,
+		vendors = [vendor_wafflehouse],
+	),
+	EwFood(
+		id_food = "brusselswaffle",
+		alias=[
+			"brussels",
+			"brussel",
+		],
+		recover_hunger = 1000,
+		price = 100000,
+		str_name = "Brussels Waffle",
+		str_eat = "The sublime experience of eating this waffle cannot be accurately conveyed through words. The delicate crust gives way to a soft and malleable interior, as its mild sweetness spreads throughout your mouth. As you consume the waffle bite by bite, visions of times gone by pass through your mind: a priviliged youth, the death of an early lover, ascension to power, cynic machinations for the greater good, a timely death, and eternal wandering for evermore. Once done, you remain motionless for a moment, your eyes shut, holding back solemn tears as you're overwhelmed by the ephimerality of it all.",
+		str_desc = "Something stirs within you as soon as your lay your eyes on this waffle. It's unassuming: just a fine rectangular waffle covered in powdered sugar, underwhelming when compared to the bombastic waffles you've had before. But even your philistine eyes can tell the delicate care that's been put into this dish is well beyond the pathetic standards you've gotten used to.",
+		perishable = False,
+		vendors = [vendor_wafflehouse],
+	),
 ]
 
 # A map of id_food to EwFood objects.
@@ -11492,6 +11594,25 @@ poi_list = [
 			poi_id_maimridge_street_a : travel_time_street,
 			poi_id_maimridge_street_b : travel_time_street,
 			poi_id_maimridge_street_c : travel_time_street,
+		},
+	),
+	EwPoi( # the-void
+		id_poi = poi_id_thevoid,
+		alias = [
+			"void",
+			"the-void",
+			"abyss",
+			"tv",
+			"v",
+		],
+		str_name = "the Void",
+		str_desc = "A large open space, pitch black aside from the many old-style street lights illuminating several paths, whose intersection is marked by street sign, standing tall next to a memorial metal bench. At the end of each path is a well lit staircase leading underground, though one of them seems to be barred to prevent passage. One shorter path from the sign leads to the Waffle House, on the back of which is a ladder leading to its roof. The total silence of this place makes you very aware of the sounds your own body makes as you walk around, and the overbright lamps strain your vision even as total darkness envelops you.\n\nThis area contains the Waffle House.",
+		channel = "the-void",
+		is_district = True,
+		is_capturable = False,
+		pvp = True,
+		neighbors = {
+			poi_id_wafflehouse : travel_time_subzone,
 		},
 	),
 	EwPoi( # the-sewers
@@ -16411,6 +16532,26 @@ poi_list = [
 			poi_id_krakbay : travel_time_subzone,
 		},
 	),
+	EwPoi(  # the waffle house in the void
+		id_poi = poi_id_wafflehouse,
+		alias = [
+			"wh",
+			"waffle",
+		],
+		str_name = "the Waffle House",
+		str_desc = "As nondescript as its façade, the Waffle House has a very simplistic interior, going for a slightly modernized mid-century look. The warm lighting of the incandescent lightbulbs combines with the crispy fresh air coming from outside and the old timey music to give the place an extraordinarily comforting ambience. The entrance directly faces a short counter manned by old man Leopold, a pleasant guy in his 70s with a thick European accent who seems to run the entire joint. A few tables are laid by the windows, with a view that makes you wonder if you've gone blind. \n\nExits back into the Void.",
+		channel = channel_wafflehouse,
+		role = "Waffle House",
+		mother_districts = [poi_id_thevoid],
+		pvp = False,
+		vendors = [
+			vendor_wafflehouse,
+		],
+		is_subzone = True,
+		neighbors = {
+			poi_id_thevoid : travel_time_subzone,
+		},
+	),
 	EwPoi(
 		id_poi = poi_id_basedhardware,
 		alias = [
@@ -17486,6 +17627,7 @@ debugpiers = ewdebug.debugpiers
 debugfish_response = ewdebug.debugfish_response
 debugfish_goal = ewdebug.debugfish_goal
 
+# if you're looking for poi_map, here it is
 id_to_poi = {}
 coord_to_poi = {}
 chname_to_poi = {}
@@ -17610,10 +17752,9 @@ landmark_pois = [
 
 # Places on the map that should result in a user being flagged for PVP
 vulnerable_districts = outskirts + streets
-for subzone in poi_list:
-	if subzone.is_subzone:
-		if subzone.pvp == True:
-			vulnerable_districts.append(subzone.id_poi)
+for poi in poi_list:
+	if (poi.is_subzone or poi.is_district) and poi.pvp:
+		vulnerable_districts.append(poi.id_poi)
 
 # maps districts to their immediate neighbors
 poi_neighbors = {}
@@ -23951,6 +24092,8 @@ event_type_minecollapse = "minecollapse"
 event_type_minesweeper = "minesweeper"
 event_type_pokemine = "pokemine"
 event_type_bubblebreaker = "bubblebreaker"
+event_type_voidhole = "voidhole"
+event_type_voidconnection = "voidconnection"
 
 world_events = [
 	EwEventDef(
@@ -23984,6 +24127,11 @@ world_events = [
 	EwEventDef(
 		event_type = event_type_bubblebreaker,
 		str_event_start = "You notice the wall bulging slightly and you can dig into it.({} column number)".format(cmd_mine),
+		str_event_end = "The wall collapses.",
+	),
+	EwEventDef(
+		event_type = event_type_voidhole,
+		str_event_start = "You hit a sudden gap in the stone, with a scary looking drop. You see what looks like a trampoline on a building's roof at the bottom. Do you **{}** in?".format(cmd_jump),
 		str_event_end = "The wall collapses.",
 	),
 

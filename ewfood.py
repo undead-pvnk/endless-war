@@ -74,6 +74,7 @@ class EwFood:
 		time_fridged =0,
 		ingredients = "",
 		acquisition = "",
+		perishable = True
 	):
 		self.item_type = ewcfg.it_food
 
@@ -90,6 +91,7 @@ class EwFood:
 		self.time_fridged = time_fridged
 		self.ingredients = ingredients
 		self.acquisition = acquisition
+		self.perishable = perishable
 
 
 """ show all available food items """

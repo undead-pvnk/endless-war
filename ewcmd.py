@@ -16,6 +16,7 @@ import ewfaction
 import ewapt
 import ewprank
 import ewcmd
+import ewworldevent
 
 from ew import EwUser
 from ewmarket import EwMarket
@@ -25,6 +26,8 @@ from ewhunting import find_enemy
 from ewstatuseffects import EwStatusEffect
 from ewstatuseffects import EwEnemyStatusEffect
 from ewdistrict import EwDistrict
+from ewworldevent import EwWorldEvent
+
 
 """ class to send general data about an interaction to a command """
 class EwCmd:
@@ -1868,7 +1871,36 @@ async def push(cmd):
 async def jump(cmd):
 	user_data = EwUser(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
+	if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+		response = "You bonk your head on the shaft's ceiling."
+		# if voidhole world event is valid, move the guy to the void and post a message
+		# else, post something about them bonking their heads
+		world_events = ewworldevent.get_world_events(id_server = cmd.message.server.id)
+		for id_event in world_events:
+			if world_events.get(id_event) == ewcfg.event_type_voidhole:
+					event_data = EwWorldEvent(id_event = id_event)
+					if event_data.event_props.get('id_user') == user_data.id_user and event_data.event_props.get('poi') == user_data.poi:
+						response = "You jump in!"
+						await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						await asyncio.sleep(1)
+
+						user_data.poi = ewcfg.poi_id_thevoid
+						user_data.time_lastenter = int(time.time())
+						user_data.persist()
+						await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+
+						void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+						wafflehouse_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+						response = "You do a backflip on the way down, bounce on the trampoline a few times to reduce your momentum, and climb down a ladder from the roof, down to the ground. You find yourself standing next to {}, in {}.".format(wafflehouse_poi.str_name, void_poi.str_name)
+						msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+						await asyncio.sleep(20)
+						try:
+							await cmd.client.delete_message(msg)
+						except:
+							pass
+						return
+
+	elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
 		response = "You jump. Nope. Still not good at parkour."
 	elif user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're already dead. You'd just ghost hover above the cliff."
