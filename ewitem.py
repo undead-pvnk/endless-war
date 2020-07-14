@@ -1648,7 +1648,6 @@ def gen_item_props(item):
 			'item_desc': item.str_desc,
 			'ingredients': item.ingredients if type(item.ingredients) == str else item.ingredients[0],
 			'acquisition': item.acquisition,
-			'durability': item.durability,
 		}
 		if item.context == ewcfg.context_slimeoidfood:
 			item_props["increase"] = item.increase
@@ -1670,6 +1669,11 @@ def gen_item_props(item):
 			item_props["trap_user_id"] = item.trap_user_id
 			# Some prank items have nifty side effects
 			item_props["side_effect"] = item.side_effect
+
+		try:
+			item_props["durability"] = item.durability
+		except:
+			pass
 			
 
 	elif item.item_type == ewcfg.it_weapon:
