@@ -2010,6 +2010,7 @@ col_enemy_rare_status = 'rare_status'
 col_enemy_hardened_sap = 'hardened_sap'
 col_enemy_weathertype = 'weathertype'
 col_enemy_class = 'enemyclass'
+col_enemy_owner = 'owner'
 col_enemy_gvs_coord = 'gvs_coord'
 
 # Database column for the status of districts with locks on them

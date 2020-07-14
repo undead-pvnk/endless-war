@@ -91,6 +91,9 @@ class EwEnemy:
 	# What class the enemy belongs to
 	enemyclass = ""
 	
+	# Tracks which user is associated with the enemy
+	owner = ""
+	
 	# Various properties different enemies might have
 	enemy_props = ""
 	
@@ -122,7 +125,7 @@ class EwEnemy:
 
 				# Retrieve object
 				cursor.execute(
-					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
 						ewcfg.col_id_enemy,
 						ewcfg.col_id_server,
 						ewcfg.col_enemy_slimes,
@@ -146,6 +149,7 @@ class EwEnemy:
 						ewcfg.col_enemy_weathertype,
 						ewcfg.col_faction,
 						ewcfg.col_enemy_class,
+						ewcfg.col_enemy_owner,
 						ewcfg.col_enemy_gvs_coord,
 						query_suffix
 					))
@@ -176,7 +180,8 @@ class EwEnemy:
 					self.weathertype = result[20]
 					self.faction = result[21]
 					self.enemyclass = result[22]
-					self.gvs_coord = result[23]
+					self.owner = result[23]
+					self.gvs_coord = result[24]
 
 					# Retrieve additional properties
 					cursor.execute("SELECT {}, {} FROM enemies_prop WHERE id_enemy = %s".format(
@@ -208,7 +213,7 @@ class EwEnemy:
 
 			# Save the object.
 			cursor.execute(
-				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 					ewcfg.col_id_enemy,
 					ewcfg.col_id_server,
 					ewcfg.col_enemy_slimes,
@@ -232,6 +237,7 @@ class EwEnemy:
 					ewcfg.col_enemy_weathertype,
 					ewcfg.col_faction,
 					ewcfg.col_enemy_class,
+					ewcfg.col_enemy_owner,
 					ewcfg.col_enemy_gvs_coord
 				), (
 					self.id_enemy,
@@ -257,6 +263,7 @@ class EwEnemy:
 					self.weathertype,
 					self.faction,
 					self.enemyclass,
+					self.owner,
 					self.gvs_coord,
 				))
 			
@@ -1728,19 +1735,31 @@ async def summongvsenemy(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-async def delete_all_enemies(cmd):
-	author = cmd.message.author
+async def delete_all_enemies(cmd=None, query_suffix="", id_server_sent=""):
+	
+	if cmd != None:
+		author = cmd.message.author
+	
+		if not author.server_permissions.administrator:
+			return
+		
+		id_server = cmd.message.server.id
+		
+		ewutils.execute_sql_query("DELETE FROM enemies WHERE id_server = {id_server}".format(
+			id_server=id_server
+		))
+		
+		ewutils.logMsg("Deleted all enemies from database connected to server {}".format(id_server))
+		
+	else:
+		id_server = id_server_sent
 
-	if not author.server_permissions.administrator:
-		return
-	
-	id_server = cmd.message.server.id
-	
-	ewutils.execute_sql_query("DELETE FROM enemies WHERE id_server = {id_server}".format(
-		id_server=id_server
-	))
-	
-	ewutils.logMsg("Deleted all enemies from database connected to server {}".format(id_server))
+		ewutils.execute_sql_query("DELETE FROM enemies WHERE id_server = {} {}".format(
+			id_server,
+			query_suffix
+		))
+
+		ewutils.logMsg("Deleted all enemies from database connected to server {}. Query suffix was '{}'".format(id_server, query_suffix))
 
 # Gathers all enemies from the database (that are either raid bosses or have users in the same district as them) and has them perform an action
 async def enemy_perform_action(id_server):

@@ -2549,26 +2549,6 @@ def gvs_create_gaia_lane_mapping(user_data, row_used):
 	return coord_sets
 
 
-async def gvs_check_if_in_operation_poi(user_data):
-
-	op_data = execute_sql_query(
-		"SELECT {district} FROM gvs_ops_choices WHERE {id_user} = %s".format(
-			id_user=ewcfg.col_id_user,
-			district=ewcfg.col_district
-		), (
-			user_data.id_user
-		))
-
-	in_operation = False
-	for op in op_data:
-		if op[0] == user_data.poi:
-			in_operation = True
-		else:
-			in_operation = False
-			break
-
-	return in_operation
-
 def gvs_check_gaia_protected(enemy_data):
 	is_protected = False
 	
@@ -2719,7 +2699,6 @@ def gvs_check_operation_limit(id_user, district, enemytype, faction):
 
 def gvs_check_if_in_operation(user_data):
 	
-	
 	op_data = execute_sql_query(
 		"SELECT id_user, district FROM gvs_ops_choices WHERE id_user = %s".format(
 		), (
@@ -2730,5 +2709,25 @@ def gvs_check_if_in_operation(user_data):
 		return True, op_data[1]
 	else:
 		return False, None
-	
+
+
+# async def gvs_check_if_in_operation_poi(user_data):
+# 
+# 	op_data = execute_sql_query(
+# 		"SELECT {district} FROM gvs_ops_choices WHERE {id_user} = %s".format(
+# 			id_user=ewcfg.col_id_user,
+# 			district=ewcfg.col_district
+# 		), (
+# 			user_data.id_user
+# 		))
+# 
+# 	in_operation = False
+# 	for op in op_data:
+# 		if op[0] == user_data.poi:
+# 			in_operation = True
+# 		else:
+# 			in_operation = False
+# 			break
+# 
+# 	return in_operation
 	

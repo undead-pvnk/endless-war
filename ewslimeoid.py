@@ -2802,7 +2802,7 @@ async def saturateslimeoid(cmd):
 				slimeoid.persist()
 				
 				paint_bucket_item = EwItem(id_item=item_sought.get('id_item'))
-				if int(paint_bucket_item.item_props.get('durability')) == 1:
+				if int(paint_bucket_item.item_props.get('durability')) <= 1:
 					ewitem.item_delete(id_item=item_sought.get('id_item'))
 					response += "\nThe paint bucket is consumed in the process."
 				else:

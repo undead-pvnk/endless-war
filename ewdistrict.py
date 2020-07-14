@@ -805,8 +805,13 @@ async def shamble(cmd):
 		response = "The entire district is covered in Brightshades! You have no business shambling this part of town!"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if not ewutils.gvs_check_if_in_operation_poi(user_data):
-		response = "You aren't allowed to !shamble this district, per Dr. Downpour's orders.\n(**!goto {}**)"
+	in_operation, op_poi = ewutils.gvs_check_if_in_operation(user_data)
+	if in_operation:
+		if op_poi != user_data.poi:
+			response = "You aren't allowed to !shamble this district, per Dr. Downpour's orders.\n(**!goto {}**)".format(op_poi)
+			return await ewutils.send_message(cmd.client, cmd.message.channel,  ewutils.formatMessage(cmd.message.author, response))
+	else:
+		response = "You aren't even in a Graveyard Op yet!\n(**!joinops [tombstone]**)"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
 	if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shambler_shamble:
