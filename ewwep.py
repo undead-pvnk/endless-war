@@ -3002,11 +3002,12 @@ async def spray(cmd):
 
 		weapon.fn_effect = ewcfg.weapon_type_convert.get(weapon.id_weapon)
 
+		shooter_status_mods = get_shooter_status_mods(user_data, None, None)
 
-		miss_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_miss, target=ewcfg.status_effect_target_self, shootee_data=None), 2)
-		crit_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_crit, target=ewcfg.status_effect_target_self, shootee_data=None), 2)
-		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_self, shootee_data=None), 2)
-
+		miss_mod += round(shooter_status_mods['miss'], 2)
+		crit_mod += round(shooter_status_mods['crit'], 2)
+		dmg_mod += round(shooter_status_mods['dmg'], 2)
+		
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 300)
 		slimes_damage = int((50000 + slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
 		slimes_spent = round(slimes_spent * .1125)
