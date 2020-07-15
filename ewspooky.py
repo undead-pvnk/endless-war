@@ -142,9 +142,9 @@ async def haunt(cmd):
 		haunted_data = None
 		member = None
 		if cmd.mentions_count == 0 and cmd.tokens_count > 1:
-			haunted_data = EwUser(id_user = cmd.tokens[1], id_server = cmd.message.server.id)
 			server = ewutils.get_client().get_server(cmd.message.server.id)
 			member = server.get_member(cmd.tokens[1])
+			haunted_data = EwUser(member = member)
 		elif cmd.mentions_count == 1:
 			member = cmd.mentions[0]
 			haunted_data = EwUser(member = member)
