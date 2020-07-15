@@ -24662,20 +24662,6 @@ races = {
 	'other': 'other',
 }
 
-racial_slurs = {
-	'normie': 'humanoid',
-	'croaker': 'amphibian',
-	'snacc': 'food',
-	'boner': 'skeleton', 
-	'toaster': 'robot',
-	'furfag': 'furry', 
-	'peeler': 'scalie', 
-	'booger': 'slime-derived',
-	'creeper': 'monster',
-	'fleabag': 'critter', 
-	'nuggie': 'avian'
-}
-
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
 
