@@ -2942,7 +2942,7 @@ item_list = [
 	EwGeneralItem(
 		id_item = "bone",
 		str_name = "Bone",
-		str_desc = "A small nondescript bone. Traces of fresh slime in it indicate it must've belonged to one of the city's recidents.",
+		str_desc = "A small nondescript bone. Traces of fresh slime in it indicate it must've belonged to one of the city's residents.",
 		context = 'player_bone',
 	),
 	EwGeneralItem(
@@ -9992,7 +9992,7 @@ furniture_list = [
 		acquisition = acquisition_bartering,
 		price = 90000,
 		vendors = [vendor_bazaar],
-		furniture_look_desc = "The NLACakaNM flag hangs proudly on the wall",
+		furniture_look_desc = "The NLACakaNM flag hangs proudly on the wall.",
 		furniture_place_desc = "You hang the flag on your wall and sing the anthem aloud to yourself."
 	),
 	EwFurniture(
