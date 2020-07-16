@@ -1374,9 +1374,16 @@ async def knock(cmd = None):
 	user_data = EwUser(member=cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if cmd.mentions_count == 1:
+	target_data = None
+	if cmd.mentions_count == 0 and cmd.tokens_count > 1:
+		server = ewcfg.server_list[user_data.id_server]
+		target = server.get_member(cmd.tokens[1])
+		target_data = EwUser(member = target)
+	elif cmd.mentions_count == 1:
 		target = cmd.mentions[0]
-		target_data = EwUser(member=target)
+		target_data = EwUser(member = cmd.mentions[0])
+
+	if target_data:
 		target_poi = ewcfg.id_to_poi.get(target_data.poi)
 		if poi.is_apartment:
 			response = "You're already in an apartment."
