@@ -373,8 +373,17 @@ async def retire(cmd):
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	poi_dest = ewcfg.id_to_poi.get(ewcfg.poi_id_apt + user_data.apt_zone) #there isn't an easy way to change this, apologies for being a little hacky
 
-	if cmd.mentions_count > 0:
-		return await usekey(cmd)
+
+	owner_user = None
+	if cmd.mentions_count == 0 and cmd.tokens_count > 1:
+		server = ewcfg.server_list[user_data.id_server]
+		member_object = server.get_member(cmd.tokens[1])
+		owner_user = EwUser(member = member_object)
+	elif cmd.mentions_count == 1:
+		owner_user = EwUser(member = cmd.mentions[0])
+
+	if owner_user:
+		return await usekey(cmd, owner_user)
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
@@ -1085,10 +1094,9 @@ async def add_key(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The realtor examines your profile for a bit before opening his filing cabinet and pulling out a key from the massive pile. 'You two lovebirds enjoy yourselves', he sleepily remarks before tossing it onto the desk. Sweet, new key!"))
 
 
-async def usekey(cmd):
+async def usekey(cmd, owner_user):
 	user_data = EwUser(member=cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
-	owner_user = EwUser(member=cmd.mentions[0])
 	poi_dest = ewcfg.id_to_poi.get(ewcfg.poi_id_apt + owner_user.apt_zone)  # there isn't an easy way to change this, apologies for being a little hacky
 	inv = ewitem.inventory(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
 	key = None
@@ -1366,9 +1374,16 @@ async def knock(cmd = None):
 	user_data = EwUser(member=cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if cmd.mentions_count == 1:
+	target_data = None
+	if cmd.mentions_count == 0 and cmd.tokens_count > 1:
+		server = ewcfg.server_list[user_data.id_server]
+		target = server.get_member(cmd.tokens[1])
+		target_data = EwUser(member = target)
+	elif cmd.mentions_count == 1:
 		target = cmd.mentions[0]
-		target_data = EwUser(member=target)
+		target_data = EwUser(member = cmd.mentions[0])
+
+	if target_data:
 		target_poi = ewcfg.id_to_poi.get(target_data.poi)
 		if poi.is_apartment:
 			response = "You're already in an apartment."

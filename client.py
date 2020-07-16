@@ -1329,7 +1329,7 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in content_tolower for swear in {**ewcfg.curse_words, **ewcfg.racial_slurs}.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
@@ -1368,7 +1368,7 @@ async def on_message(message):
 		"""
 			Punish the user for swearing.
 		"""
-		if (any(swear in content_tolower for swear in {**ewcfg.curse_words, **ewcfg.racial_slurs}.keys())):
+		if (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
 			swear_multiplier = 0
 			
 			#print(content_tolower_string)
@@ -1409,15 +1409,6 @@ async def on_message(message):
 						market_data.global_swear_jar += 1
 
 						usermodel.swear_jar += 1
-
-				# and all the racial slurs
-				for slur in ewcfg.racial_slurs.keys():
-					if usermodel.race != ewcfg.racial_slurs[slur]:
-						slur_count = content_tolower.count(slur)
-
-						swear_multiplier += 50 * slur_count # just enough for the message to show
-						market_data.global_swear_jar += slur_count
-						usermodel.swear_jar += slur_count
 
 				# don't fine the user or send out the message if there weren't enough curse words
 				if swear_multiplier > 50:

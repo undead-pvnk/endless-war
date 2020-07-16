@@ -2942,7 +2942,7 @@ item_list = [
 	EwGeneralItem(
 		id_item = "bone",
 		str_name = "Bone",
-		str_desc = "A small nondescript bone. Traces of fresh slime in it indicate it must've belonged to one of the city's recidents.",
+		str_desc = "A small nondescript bone. Traces of fresh slime in it indicate it must've belonged to one of the city's residents.",
 		context = 'player_bone',
 	),
 	EwGeneralItem(
@@ -4661,15 +4661,15 @@ def wef_bass(ctn = None):
 	ctn.sap_damage = 1
 	ctn.sap_ignored = 5
 
-	# Increased miss chance if attacking within less than two seconds after last attack
+	# Increased miss chance if attacking within less than three seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
 
-	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
+	ctn.slimes_damage = int(ctn.slimes_damage * (0.5 + random.randrange(200) / 100))
 
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
+			if random.random() < 0.25:
 				ctn.miss = True
 		else:
 			ctn.miss = True
@@ -4706,11 +4706,9 @@ def wef_bow(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
 
-	#ctn.slimes_damage = int(ctn.slimes_damage * 3)
-
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
+			if random.random() < 0.25:
 				ctn.miss = True
 		else:
 			ctn.miss = True
@@ -4726,22 +4724,20 @@ def wef_dclaw(ctn = None):
 	user_mutations = ctn.user_data.get_mutations()
 	dmg = ctn.slimes_damage
 	if mutation_id_fastmetabolism in user_mutations or mutation_id_lightasafeather in user_mutations:
-		ctn.slimes_damage = int(ctn.slimes_damage * 1.2)
+		ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
 		ctn.slimes_spent *= 0.5
 	else:
-		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
 		ctn.slimes_spent *= 1
 
 	ctn.bystander_damage = int(dmg * 0.5)
 
-	#less slime cost and less damage = attacking faster I guess?
 	ctn.sap_damage = 5
 	ctn.sap_ignored = 10
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((5 - min(time_lastattack, 5)) / 5) ** 2) / 13 * 5
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.3:
+			if random.random() < 0.25:
 				ctn.miss = True
 		else:
 			ctn.miss = True
@@ -4754,9 +4750,11 @@ def wef_dclaw(ctn = None):
 def wef_staff(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 
-	consecutive_hits = int(ctn.weapon_item.item_props["consecutive_hits"])
-	if time_lastattack < 15 and consecutive_hits == 0:
-		# consecutive_hits used counterintuitively to track whether the user has "charged up"
+	if time_lastattack > 15 or not ctn.weapon_item.item_props["preparation_attack_count"]:
+		ctn.weapon_item.item_props["preparation_attack_count"] = 0
+	
+	# requires four attack commands to deal damage
+	if int(ctn.weapon_item.item_props["preparation_attack_count"]) == 4:
 		market_data = EwMarket(id_server = ctn.user_data.id_server)
 		conditions_met = 0
 		conditions = {
@@ -4765,6 +4763,7 @@ def wef_staff(ctn = None):
 			lambda _: (market_data.day % 31 == 15 and market_data.clock >= 20) or (market_data.day % 31 == 16 and market_data.clock <= 6), # moonless night
 			lambda ctn: not ctn.user_data.has_soul,
 			lambda ctn: ctn.user_data.get_weapon_possession(),
+			lambda ctn: ctn.user_data.poi == ewcfg.poi_id_thevoid,
 			lambda ctn: ctn.shootee_data.slimes > ctn.user_data.slimes,
 			lambda ctn: (ctn.user_data.swear_jar >= 500) or (ctn.shootee_data.swear_jar == 0),
 			lambda ctn: (ctn.user_data.poi_death == ctn.user_data.poi) or (ctn.shootee_data.poi_death == ctn.shootee_data.poi),
@@ -4777,16 +4776,18 @@ def wef_staff(ctn = None):
 					conditions_met += 1
 			except:
 				pass
-
+		
 		ctn.slimes_spent = int(ctn.slimes_spent * 3)
-		ctn.slimes_damage = int(ctn.slimes_damage * (0.6 + conditions_met * 2.4))
+		ctn.slimes_damage = int(ctn.slimes_damage * (0.6 + conditions_met * 1.2))
 		ctn.sap_ignored = 6 * conditions_met
 		if conditions_met >= (random.randrange(15) + 1): # 6.66% per condition met
 			ctn.crit = True
-			ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
+			ctn.slimes_damage = int(ctn.slimes_damage * 1.8)
 
-		ctn.weapon_item.item_props["consecutive_hits"] = 1 # reset this so misses and hits are intermittent
+		ctn.weapon_item.item_props["preparation_attack_count"] = 0
 	else:
+		ctn.weapon_item.item_props["preparation_attack_count"] = int(ctn.weapon_item.item_props["preparation_attack_count"]) + 1
+		ctn.slimes_spent = int(ctn.slimes_spent * 0.5)
 		ctn.miss = True
 
 
@@ -5452,7 +5453,7 @@ weapon_list = [
 		str_kill = "*whsssh* {name_player} summons what little courage they possess to reel in {name_target} and wring all the slime out of them. How embarrassing! {emote_skull}",
 		str_killdescriptor = "!reeled",
 		str_damage = "{name_target} is lightly pierced on the {hitzone}!!",
-		str_duel = "**whsssh, whsssh** {name_player} and {name_target} spend some quality time together,discussing fishing strategy and preferred types of bait.",
+		str_duel = "**whsssh, whsssh** {name_player} and {name_target} spend some quality time together, discussing fishing strategy and preferred types of bait.",
 		str_scalp = " It has a fishing hook stuck in it. How embarrassing!",
 		fn_effect = wef_tool,
 		str_description = "It's a super fishing rod.",
@@ -5808,25 +5809,30 @@ weapon_list = [
 			"wickedwand",
 			"frighteningfaggot"
 		],
-		str_miss = "You burn away a portion of your strength as you begin your incantations.",
-		str_damage = "{name_player} concludes their incantations. A minor horror forms around {name_target}'s {hitzone} and bites into it.",
-		str_crit = "An incomprehensible shriek pierces {name_target}'s ears as a true abomination appears before them. It strikes {name_target}'s {hitzone} with a terrible foce, but the real damage is psychological. **Critical hit!!**",
-		str_kill = "{name_player} goes limp for an instant as pitch black tendrils emerge from below {name_target}, gabbing on to their body and violently pulling them through the ground and into the sewers.",
+		str_miss = "Your mind goes blank as you feel slime disappear from your body in preparation for a deadly attack.",
+		str_damage = "{name_player} finalizes their invocation. " + random.choice([
+			"Gravity violently increases in the space around {name_target}, slamming them into the ground.", 
+			"A blinding white light shines from {name_target}'s {hitzone} as it burns hotter than the surface of the sun.", 
+			"Spectral hands caress {name_target}'s body, leaving gaping wounds in their path.", 
+			"An unseen force suddenly yoinks {name_target} by their {hitzone}, sending them flying into the air.",
+			"A pitch black horror forms around {name_target}'s {hitzone} and tears into it."
+		]),
+		str_crit = "{name_player} notices {name_target} still recoiling from the damage, and takes the chance to bonk the everliving shit out of them with their staff. **Critical hit!!**",
+		str_kill = "A mass of tiny hands erupts from the ground below {name_target}, grabbing on to their body. Their screams echo across the streets as they're dragged through the ground and into the sewers.",
 		str_equip = "You equip the eldritch staff.",
 		str_name = "eldritch staff",
 		str_weapon = "an eldritch staff",
 		str_weaponmaster_self = "You are a rank {rank} conduit of the ones below.",
 		str_weaponmaster = "They are a rank {rank} conduit of the ones below.",
 		str_killdescriptor = "cast down",
-		str_duel = "{name_player} and {name_target} look each other in the eye, showing a sorrowful sympathy for one another. Are they about to cry?.",
-		str_description = "It's an intricate wooden staff with an strange cloudy crystal on its handle. It has an attractive quality to it, but it also gives you the creeps.",
-		str_scalp = " It's covered in a strange black substance.",
+		str_duel = "{name_player} and {name_target} compare notes on their understanding of the eldritch fuckery they've each experienced.",
+		str_description = "An intricate wooden staff with a cloudy crystal on its handle. It looks fucking class, but it also gives you the creeps.",
+		str_scalp = "It's covered in symbols written with a strange black substance.",
 		fn_effect = wef_staff,
 		acquisition = acquisition_smelting,
-		classes= [weapon_class_captcha],
 		stat = stat_staff_kills,
-		sap_cost = 4,
-		captcha_length = 10
+		sap_cost = 2,
+		captcha_length = 10,
 	),
 ]
 
@@ -9992,7 +9998,7 @@ furniture_list = [
 		acquisition = acquisition_bartering,
 		price = 90000,
 		vendors = [vendor_bazaar],
-		furniture_look_desc = "The NLACakaNM flag hangs proudly on the wall",
+		furniture_look_desc = "The NLACakaNM flag hangs proudly on the wall.",
 		furniture_place_desc = "You hang the flag on your wall and sing the anthem aloud to yourself."
 	),
 	EwFurniture(
@@ -23816,13 +23822,13 @@ help_responses = {
 	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. Attacking with the molotovs costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. They have sap piercing 10. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
 	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 2. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
-	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. Attacking with the dragon claw costs 5 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. It has a captcha length of 2. It has sap crushing 5 and sap piercing 10. It you take less than 5 seconds between attacks, your miss chance will increase. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
-	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 4 sap. It has a captcha length of 10. Dealing damage with the staff requires attacking twice in a 15-second window, with the first !kill command only being preparetion for the second. The attack cost multiplier is 1 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 0.6, sap piercing 0, and a 0% chance to crit, which deals 1.5x damage. A number of conditions may be met to increase the damage multiplier by 2.4, sap piercing by 6, and crit chance by 6.66%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
+	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. Attacking with the dragon claw costs 5 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. It has sap crushing 5 and sap piercing 10. It you take less than 5 seconds between attacks, your miss chance will increase. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
+	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase.",
+	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 2 sap. Dealing damage with the staff requires attacking five times in a 15-second window, with the first four !kill command only being preparetion for the fifth. The attack cost multiplier is 0.5 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 0.6, sap piercing 0, and a 0% chance to crit, which deals 1.8x damage. A number of conditions may be met to increase the damage multiplier by 1.2, sap piercing by 6, and crit chance by 6.66%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
 	
 
 	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
 
-	weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase.",
 
 	weapon_id_spraycan: "**The spray can** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.8 and a spray cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
 	weapon_id_paintgun: "**The paint gun** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.7 and a spray cost mod of 0.75. It has a captcha length of 6, a miss chance of O% and a 20% chance for a crit, which does 2x influence.",
@@ -24660,20 +24666,6 @@ races = {
 	'critter': 'critter',
 	'avian': 'avian',
 	'other': 'other',
-}
-
-racial_slurs = {
-	'normie': 'humanoid',
-	'croaker': 'amphibian',
-	'snacc': 'food',
-	'boner': 'skeleton', 
-	'toaster': 'robot',
-	'furfag': 'furry', 
-	'peeler': 'scalie', 
-	'booger': 'slime-derived',
-	'creeper': 'monster',
-	'fleabag': 'critter', 
-	'nuggie': 'avian'
 }
 
 # lists of all the discord server objects served by bot, identified by the server id
