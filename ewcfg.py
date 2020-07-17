@@ -276,10 +276,10 @@ poi_id_apt_crookline = "aptcrookline"
 poi_id_apt_dreadford = "aptdreadford"
 poi_id_apt_maimridge = "aptdreadford"
 
-# The streets -- There are 126 of them, to be exact
-poi_id_copkilltown_street_a = "copkilltownstreeta"
-poi_id_rowdyroughhouse_street_a = "rowdyroughhousestreeta"
-poi_id_juviesrow_street_a = "juviesrowstreeta"
+# The streets -- There are 123 of them, to be exact
+poi_id_copkilltown_street_a = "copkilltownstreeta" # NOT USED
+poi_id_rowdyroughhouse_street_a = "rowdyroughhousestreeta" # NOT USED
+poi_id_juviesrow_street_a = "juviesrowstreeta" # NOT USED
 
 poi_id_downtown_street_a = "downtownstreeta"
 poi_id_downtown_street_b = "downtownstreetb"
@@ -12135,7 +12135,7 @@ poi_list = [
 		],
 		str_name = "Dynamite Lane",
 		str_desc = "This street, if you can even still call it that, looks like the surface of the goddamn moon. Hundreds, possibly even thousands of small to medium sized craters have been punched into the landscape. Presumably the vast majority of these holes revealed no slime, but the fact that there are so many means that people believed that they could strike it rich with even shallow, surface level mining. So, presumably some people did find large veins of slime just under the sidewalk. Kind of makes you want to whip out your pick and start mining, doesn’t it?",
-		channel = 'cratersville-street-c',
+		channel = 'dynamite-lane',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_cratersville,
@@ -12284,7 +12284,7 @@ poi_list = [
 		],
 		str_name = "Chinatown",
 		str_desc = "Here, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs. For as far as the eye can see, there are embarrassingly inauthentic approximations of oriental architectural styles. But, you knew all that. So, here’s something you may not have known: This whole corner of the district is run by the Triad. Yeah, all of those law firms? Have you ever been inside of one? Of course you haven’t, no one has. They’re just money laundering fronts and sometimes meeting spots for members to plan out their campaigns against whoever’s been tardy with their tribute and who to extort from next. Of course, they provide a level of vigilante justice to the neighborhood too, punishing random acts of lawlessness in favor of their totally reasonable brand of lawlessness. These gangsters are a part of a long, complex history in South Sleezeborough between local weeaboos, immigrant westaboos, and their struggle for supremacy. This thorny issue has even threatened the integrity of the Triad itself, as some members wish to cling unto their traditional way of life and show solidarity with the asianophile weeaboos, while others have grown accustomed to their new cultures and support the westaboos. This question remains unsettled to this day.",
-		channel = 'south-sleezeborough-street-a',
+		channel = 'chinatown',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_southsleezeborough,
@@ -12562,7 +12562,7 @@ poi_list = [
 		],
 		str_name = "Oilscum Avenue",
 		str_desc = "This place looks and smells like fresh grease. Gas stations, convenience stores, and fast food chains define Oilscum as the main truck stop of the city. This is West Glocksbury, though, so 65% of said gas stations have already been burned to the ground or siphoned out for other arson-based activities.",
-		channel = 'west-glocksbury-street-a',
+		channel = 'oilscum-avenue',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_westglocksbury,
@@ -13548,7 +13548,6 @@ poi_list = [
 			poi_id_arsonbrook_street_a : travel_time_street,
 			poi_id_arsonbrook_street_c : travel_time_street,
 			poi_id_astatineheights_street_d : travel_time_street,
-			poi_id_ab_farms : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -13608,6 +13607,7 @@ poi_list = [
 			poi_id_arsonbrook_street_d : travel_time_street,
 			poi_id_arsonbrook_street_a : travel_time_street,
 			poi_id_littlechernobyl_street_a : travel_time_street,
+			poi_id_ab_farms : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -14240,7 +14240,7 @@ poi_list = [
 		channel = channel_endlesswar,
 		role = "Endless War",
 		is_subzone = True,
-        pvp = False,
+		pvp = False,
 		mother_districts = [poi_id_downtown],
 		max_degradation = 10000000,
 		neighbors = {
@@ -14739,7 +14739,7 @@ poi_list = [
 		mother_districts = [poi_id_arsonbrook_street_a, poi_id_arsonbrook_street_b],
 		neighbors = {
 			poi_id_arsonbrook_street_a : travel_time_subzone,
-			poi_id_arsonbrook_street_b : travel_time_subzone,
+			poi_id_arsonbrook_street_e : travel_time_subzone,
 		},
 	),
 	EwPoi(  # Neo Milwaukee State
@@ -16700,7 +16700,7 @@ poi_list = [
 		channel = "the-sphere",
 		role = "The Sphere",
 		is_subzone = True,
-        pvp = False,
+		pvp = False,
 	),
 	# Outskirts start here
 	EwPoi(  # Outskirts - 1
@@ -17764,6 +17764,29 @@ for poi in poi_list:
 	# Districts need their major roles for their specific LAN (voice/text) channels.
 	if poi.is_district:
 		poi.major_role = '{}_major'.format(poi.id_poi)
+		streets_resp = ''
+		
+		district_streets_list = []
+		for street_poi in poi_list:
+			if street_poi.father_district == poi.id_poi:
+				district_streets_list.append(street_poi.str_name)
+			
+		if len(district_streets_list) > 0:
+			poi.str_desc += " This area is connected to "
+			for i in range(len(district_streets_list)):
+	
+				if i == (len(district_streets_list) - 1):
+					poi.str_desc += 'and {}.'.format(district_streets_list[i])
+				else:
+					poi.str_desc += '{}, '.format(district_streets_list[i])
+					
+	if poi.is_transport:
+		if 'subway' in poi.id_poi:
+			poi.major_role = 'subway_major'
+		elif 'blimp' in poi.id_poi:
+			poi.major_role = 'blimp_major'
+		elif 'ferry' in poi.id_poi:
+			poi.major_role = 'ferry_major'
 	
 	placeholder_channel_names_used = True
 		
@@ -17792,7 +17815,9 @@ for poi in poi_list:
 		else:
 			print('Error: No father POI found for {}'.format(poi.id_poi))
 	
+	mother_roles_dict = {}
 	if poi.is_subzone:
+		
 		for mother_poi in poi_list:
 			if mother_poi.id_poi in poi.mother_districts:
 				if mother_poi.major_role != None:
@@ -17849,13 +17874,16 @@ for poi in poi_list:
 		# It's a bit of a simplistic solution, but this way we don't have to add an attribute to EwPoi
 		if 'edge' in poi.str_name.lower():
 			outskirts_edges.append(poi.id_poi)
+			#print(poi.channel)
 		elif 'depths' in poi.str_name.lower():
 			outskirts_depths.append(poi.id_poi)
+			#print(poi.channel)
 		else:
 			outskirts_middle.append(poi.id_poi)
 		
 	if poi.is_street:
 		streets.append(poi.id_poi)
+		#print(poi.minor_role)
 
 	if poi.is_tutorial:
 		tutorial_pois.append(poi.id_poi)
@@ -17876,7 +17904,7 @@ landmark_pois = [
 ]
 
 non_district_non_subzone_pvp_areas = [
-    poi_id_thevoid
+	poi_id_thevoid
 ]
 
 # Places on the map that should result in a user being flagged for PVP

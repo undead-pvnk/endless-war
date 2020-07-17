@@ -2426,4 +2426,3 @@ async def sync_topics(cmd):
 			logMsg('Changed channel top for {} to {}'.format(channel, poi.topic))
 		except:
 			logMsg('Failed to set channel topic for {} to {}'.format(channel, poi.topic))
-		

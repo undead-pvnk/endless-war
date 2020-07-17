@@ -938,6 +938,8 @@ async def on_ready():
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewsports.shambleball_tick_loop(id_server = server.id))
+		
+		print('\nNUMBER OF CHANNELS IN SERVER: {}\n'.format(len(server.channels)))
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')

@@ -937,7 +937,7 @@ async def move(cmd = None, isApt = False):
 
 	time_move_end = int(time.time())
 
-	print('pathfinding in move function took {} seconds'.format(time_move_end - time_move_start))
+	#print('pathfinding in move function took {} seconds'.format(time_move_end - time_move_start))
 
 
 	life_state = user_data.life_state
@@ -1001,7 +1001,7 @@ async def move(cmd = None, isApt = False):
 		step_list = []
 		for step in path.steps:
 			step_list.append(step.str_name)
-		print('path steps: {}'.format(step_list))
+		#print('path steps: {}'.format(step_list))
 
 		# Perform move.
 		for i in range(1, len(path.steps)):
@@ -1081,7 +1081,7 @@ async def move(cmd = None, isApt = False):
 				if user_data.poi != poi_current.id_poi:
 					
 					poi_previous = user_data.poi
-					print('previous poi: {}'.format(poi_previous))
+					#print('previous poi: {}'.format(poi_previous))
 					
 					user_data.poi = poi_current.id_poi
 					user_data.time_lastenter = int(time.time())
