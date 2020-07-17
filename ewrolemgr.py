@@ -799,7 +799,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 				#print('took {} seconds to add channel permissions'.format(time_now_end - time_now_start))
 
 				# print('corrected overwrite in {} for {}'.format(correct_channel, member))
-				#print('\nadded permissions for {} in {}\n'.format(current_member, user_data.poi))
+				print('added permissions for {} in {}'.format(current_member, user_data.poi))
 
 	#except:
 		#ewutils.logMsg('caught exception while refreshing permissions')
