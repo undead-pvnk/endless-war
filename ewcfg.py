@@ -925,6 +925,7 @@ cmd_shoot_alt2 = cmd_prefix + 'pat'
 cmd_shoot_alt3 = cmd_prefix + 'ban'
 cmd_shoot_alt4 = cmd_prefix + 'pullthetrigger'
 cmd_shoot_alt5 = cmd_prefix + 'curbstomp'
+cmd_shoot_alt6 = cmd_prefix + 'hug'
 cmd_attack = cmd_prefix + 'attack'
 cmd_reload = cmd_prefix + 'reload'
 cmd_reload_alt1 = cmd_prefix + 'loadthegun'
@@ -19990,7 +19991,7 @@ smelting_recipe_list = [
 		ingredients = {
 			item_id_ironingot:1
 		},
-		products = [item_id_ironingot]
+		products = [item_id_tanningknife]
 	),
 		EwSmeltingRecipe(
 		id_recipe = "leather",

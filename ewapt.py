@@ -761,12 +761,16 @@ async def store_item(cmd, dest):
 			item.item_props["time_fridged"] = time.time()
 			item.persist()
 
-		elif item.item_type == ewcfg.it_weapon and usermodel.weapon == item.id_item:
-			if usermodel.weaponmarried:
-				response = "If only it were that easy. But you can't just shove your lover in a {}.".format(destination)
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			usermodel.weapon = -1
-			usermodel.persist()
+		elif item.item_type == ewcfg.it_weapon:
+			if usermodel.weapon == item.id_item:
+				if usermodel.weaponmarried:
+					response = "If only it were that easy. But you can't just shove your lover in a {}.".format(destination)
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				usermodel.weapon = -1
+				usermodel.persist()
+			elif usermodel.sidearm == item.id_item:
+				usermodel.sidearm = -1
+				usermodel.persist()
 
 		elif item.item_type == ewcfg.it_cosmetic:
 			item.item_props["adorned"] = 'false'

@@ -833,9 +833,9 @@ async def fashion(cmd):
 					if abs(int(stats_breakdown[stat])) > 0:
 
 						if int(stats_breakdown[stat]) > 0:
-							stat_response = "increases your "
+							stat_response = "increases their "
 						else:
-							stat_response = "decreases your "
+							stat_response = "decreases their "
 
 						stat_response += "{stat} by {amount}".format(stat = stat, amount = int(stats_breakdown[stat]))
 
@@ -1826,6 +1826,9 @@ async def push(cmd):
 				response = "You push {target_name} into a puddle of sludge, laughing at how hopelessly dirty they are."
 			
 		response = response.format_map(formatMap)
+
+	elif targetmodel.id_user == user_data.id_user:
+		response = "You can't push yourself you FUCKING IDIOT!"
 
 	elif user_data.life_state == ewcfg.life_state_corpse:
 		response = "You attempt to push {} off the cliff, but your hand passes through them. If you're going to push someone, make sure you're corporeal.".format(target.display_name)
