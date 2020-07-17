@@ -817,6 +817,9 @@ async def move(cmd = None, isApt = False):
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	if target_name == None or len(target_name) == 0:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Where to?"))
+	
+	if target_name in ewcfg.streets:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "https://www.goodreads.com/quotes/106313-the-beginning-of-wisdom-is-to-call-things-by-their ...bitch"))
 
 	player_data = EwPlayer(id_user=cmd.message.author.id)
 	user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server, data_level = 1)
