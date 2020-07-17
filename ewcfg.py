@@ -11776,12 +11776,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_downtown_street_b,
 		alias = [
+            "thewaterfront",
 			"waterfront",
 			"water"
 		],
-		str_name = "Waterfront",
+		str_name = "The Waterfront",
 		str_desc = "This stretch of coast is home to the city’s original wharf. It’s long since fallen out of use as an actual dockyard in favor of Vagrant’s Corner, but still lives on as a tourist trap full of easily pickpocketed out-of-towners who want to stare out at the Slime Sea through a tower viewer.",
-		channel = 'waterfront',
+		channel = 'the-waterfront',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_downtown,
@@ -11892,12 +11893,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_krakbay_street_b,
 		alias = [
-			"copleysquare",
-			"copley"
+			"minotaursquare",
+			"minotaur"
 		],
-		str_name = "Copley Square",
-		str_desc = "It’s a small park in the center of the district, home to a weekly farmer’s market and a handful of seasonal events. Most of the time, though, it’s just a place to take a quick breather before heading back to do more shopping.",
-		channel = 'copley-square',
+		str_name = "Minotaur Square",
+		str_desc = "It’s a small park in the center of the district, home to a weekly farmer’s market and a handful of seasonal events. Most of the time, though, it’s just a place to take a quick breather before heading back to do more shopping. In the center is a statue of friendly mythological half-beast, and inscribed in a plaque next to it is inscribed the words 'dedicated to https://twitter.com/krakissi'",
+		channel = 'minotaur-square',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_krakbay,
@@ -11911,12 +11912,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_krakbay_street_c,
 		alias = [
-			"newburystreet",
-			"newbury"
+			"gooburystreet",
+			"goobury"
 		],
-		str_name = "Newbury Street",
+		str_name = "Goobury Street",
 		str_desc = "This street runs through the majority of the district, and is home to countless restaurants and stores. You’ll find actually affordable stuff over by the border with Glocksbury, with bourgeois luxuries popping up more frequently the farther east you go.",
-		channel = 'newbury-street',
+		channel = 'goobury-street',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_krakbay,
@@ -12087,12 +12088,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_cratersville_street_a,
 		alias = [
-			"cvsa",
-			"cvstreeta"
+			"theendlines",
+			"endlines",
+            "endline"
 		],
-		str_name = "Cratersville Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'cratersville-street-a',
+		str_name = "The End Lines",
+		str_desc = "This street seems remarkably more put together than its neighboring thoroughfares. During the original boom of bright eyed miners flocking to the streets in search of slime it was quickly found to be lacking in the slime and as such was quickly abandoned. This has allowed the locals to keep a sliver of their buildings standing, for the time being at least.",
+		channel = 'the-end-lines',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_cratersville,
@@ -12107,12 +12109,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_cratersville_street_b,
 		alias = [
-			"cvsb",
-			"cvstreetb"
+			"thecaldera",
+			"caldera"
 		],
-		str_name = "Cratersville Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'cratersville-street-b',
+		str_name = "The Caldera",
+		str_desc = "This is Cratersviller’s first crater, and widely recognized as its biggest one too. A shipment of TNT got intercepted by gangs and accidentally blew a gigantic hole into the ground. It revealed amazing slime deposits, and so people quickly mined it dry and began tearing up the rest of the district.",
+		channel = 'the-caldera',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_cratersville,
@@ -12127,11 +12129,11 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_cratersville_street_c,
 		alias = [
-			"cvsc",
-			"cvstreetc"
+			"dynamitelane",
+			"dynamite"
 		],
-		str_name = "Cratersville Street C",
-		str_desc = str_generic_streets_description,
+		str_name = "Dynamite Lane",
+		str_desc = "This street, if you can even still call it that, looks like the surface of the goddamn moon. Hundreds, possibly even thousands of small to medium sized craters have been punched into the landscape. Presumably the vast majority of these holes revealed no slime, but the fact that there are so many means that people believed that they could strike it rich with even shallow, surface level mining. So, presumably some people did find large veins of slime just under the sidewalk. Kind of makes you want to whip out your pick and start mining, doesn’t it?",
 		channel = 'cratersville-street-c',
 		is_street = True,
 		is_capturable = True,
@@ -12149,12 +12151,14 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_wreckington_street_a,
 		alias = [
-			"wtsa",
-			"wtstreeta"
+			"permanentconstructionzone",
+			"permanentconstruction",
+            "constructionzone",
+            "construction"
 		],
-		str_name = "Wreckington Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'wreckington-street-a',
+		str_name = "Permanent Construction Zone",
+		str_desc = "This section of the district is in a permanent state of being haphazardly demolished and rebuilt. A brand new building will be knocked down due to minor plumbing issues and then progress on the remodel will stall for years, and old buildings that don’t live up to medieval safety standards have remained standing for a generation. The workers here have gotten so frustrated and bored toiling away here that they invented the ingenious sport of crane jousting to pass the time.",
+		channel = 'permanent-construction-zone',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_wreckington,
@@ -12169,12 +12173,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_wreckington_street_b,
 		alias = [
-			"wtsb",
-			"wtstreetb"
+			"thescrapyard",
+			"scrapyard"
 		],
-		str_name = "Wreckington Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'wreckington-street-b',
+		str_name = "The Scrapyard",
+		str_desc = "This huge fucking pile of useless junk is the city’s dump. After the residents of the surrounding districts realized that Wreckington wasn’t going to clean up after its own frequent demolitions, they figured those sites would be the perfect place to throw their trash. Over time it grew and grew, to the point where you can see the borders of multiple neighboring districts from the summit.",
+		channel = 'the-scrapyard',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_wreckington,
@@ -12191,12 +12195,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_oozegardens_street_a,
 		alias = [
-			"ogsa",
-			"ogstreeta"
+			"festivalgrounds",
+			"festivalground",
+            "festival"
 		],
-		str_name = "Ooze Gardens Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'ooze-gardens-street-a',
+		str_name = "Festival Grounds",
+		str_desc = "This large section of park is reserved for musician concerts, theater plays, cult meetings and the odd stand-up act. Performances happen almost daily, with the locals attending every one. These audiences are usually anything but, as they can get pretty active in the performances themselves. After getting thoroughly wasted, high, or the legendary combination of the two (colloquially known as “twisted”), audience members are known to lose all self control and climb on stage, strip naked, start drunken brawls, hug each other, or otherwise descend into debauchery. It’s in these moments you remember that the residents of Ooze Gardens may be belt-weighing pussies, but they’re still slimebois, damnit.",
+		channel = 'festival-grounds',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_oozegardens,
@@ -12211,12 +12216,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_oozegardens_street_b,
 		alias = [
-			"ogsb",
-			"ogstreetb"
+			"winegardens",
+			"wine"
 		],
-		str_name = "Ooze Gardens Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'ooze-gardens-street-b',
+		str_name = "Wine Gardens",
+		str_desc = "This expansive garden is split into various sections by hedgerows, with each section featuring unique patterns of exotic flora and intricate fountains. However, it’s not all peaceful contemplation of nature here. Some sections of the garden have tables and booths that charge extortion rates of terrible alcohol that nevertheless widely circulates. So, while you’re reading some plaque explaining whatever dumbfuck genus of flower you’re supposed to be looking at, if you look closely, your entire immediate surroundings may in fact be covered in throw up.",
+		channel = 'wine-gardens',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_oozegardens,
@@ -12230,12 +12235,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_oozegardens_street_c,
 		alias = [
-			"ogsc",
-			"ogstreetc"
+			"museumrow",
+			"museum"
 		],
-		str_name = "Ooze Gardens Street C",
-		str_desc = str_generic_streets_description,
-		channel = 'ooze-gardens-street-c',
+		str_name = "Museum Row",
+		str_desc = "This row of museums sits on the edge of Ooze Garden’s largest public park. You’ll find museums dedicated to all manner of humanities and sciences, as well as art galleries and, of course, souvenir shops. You think knowledge is actually lowkey kinda gay, so you’re not going to be stepping inside one anytime soon. You’re just looking forward to blasting someone’s greymatter across all these beautiful facades.",
+		channel = 'museum-row',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_oozegardens,
@@ -12251,12 +12256,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_oozegardens_street_d,
 		alias = [
-			"ogsd",
-			"ogstreetd"
+			"nlacakanmzoo",
+			"zoo"
 		],
-		str_name = "Ooze Gardens Street D",
-		str_desc = str_generic_streets_description,
-		channel = 'ooze-gardens-street-d',
+		str_name = "NLACakaNM Zoo",
+		str_desc = "This  menagerie is home to dozens of rare species of beasts, both organic and slime-based, displayed in mock-ups of their natural habitat for maximum theming bonuses. Of course, some of the crazy shit that gets displayed here, especially the stuff from the outskirts, are all horrifying monstrosities that don’t really have natural habitats or even really any proper rules on how to care for them. As such, the zoo’s pretty nasty and brutish towards the animals, as they are sometimes held in inadequate conditions and kept in line with force. Whatever, though. Not your problem. Haha, look at those orangutans! They’re so silly.",
+		channel = 'nlacakanm-zoo',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_oozegardens,
@@ -12272,11 +12277,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_southsleezeborough_street_a,
 		alias = [
-			"ssbsa",
-			"ssbstreeta"
+			"chinatown",
+			"china",
+            "triad"
 		],
-		str_name = "South Sleezeborough Street A",
-		str_desc = str_generic_streets_description,
+		str_name = "Chinatown",
+		str_desc = "Here, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs. For as far as the eye can see, there are embarrassingly inauthentic approximations of oriental architectural styles. But, you knew all that. So, here’s something you may not have known: This whole corner of the district is run by the Triad. Yeah, all of those law firms? Have you ever been inside of one? Of course you haven’t, no one has. They’re just money laundering fronts and sometimes meeting spots for members to plan out their campaigns against whoever’s been tardy with their tribute and who to extort from next. Of course, they provide a level of vigilante justice to the neighborhood too, punishing random acts of lawlessness in favor of their totally reasonable brand of lawlessness. These gangsters are a part of a long, complex history in South Sleezeborough between local weeaboos, immigrant westaboos, and their struggle for supremacy. This thorny issue has even threatened the integrity of the Triad itself, as some members wish to cling unto their traditional way of life and show solidarity with the asianophile weeaboos, while others have grown accustomed to their new cultures and support the westaboos. This question remains unsettled to this day.",
 		channel = 'south-sleezeborough-street-a',
 		is_street = True,
 		is_capturable = True,
@@ -12293,12 +12299,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_southsleezeborough_street_b,
 		alias = [
-			"ssbsb",
-			"ssbstreetb"
+			"littleitaly",
+			"italy",
+            "mafia"
 		],
-		str_name = "South Sleezeborough Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'south-sleezeborough-street-b',
+		str_name = "Little Italy",
+		str_desc = "Whoa, hold the phone. Cool your jets. This may look like a normal neighborhood with densely packed red brick apartments and an anti-human grid plan, but it ain’t. Cut it out with that whole free spirit punk attitude thing you’ve got going on and back the fuck up and start respecting the shit outta the people who grease the wheels around here. Don’t you know that this place is run by the mob? Like, the mafia? Like, the famous Italian-American criminal organization with branches in several large metropolitan areas? Yes, that mafia! And you can bet your bottom dollar they’re up to all their old tricks. Their whole byzantine family structure and “battling for supremacy with rival clans” aesthetic got ported over full-sale. There’s like a billion families here all battling over where each other can sell their illegal slime-based liquor that are totally legal but everyone wants to believe they aren’t for old times’ sake, who they’re allowed to offer their “protection” to, and what politicians they have the privilege of whacking. Lots of pizza places ‘round here.",
+		channel = 'little-italy',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_southsleezeborough,
@@ -12313,12 +12320,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_southsleezeborough_street_c,
 		alias = [
-			"ssbsc",
-			"ssbstreetc"
+			"littletokyo",
+			"littletokyo"
 		],
-		str_name = "South Sleezeborough Street C",
-		str_desc = str_generic_streets_description,
-		channel = 'south-sleezeborough-street-c',
+		str_name = "Little Tokyo",
+		str_desc = "Ohayo gozaimasu, motherfucker. Here in South Sleezeborough's Little Tokyo, which is just an outdoor shopping center with six parking spaces and even fewer stores located on the corner of a busy intersection, is a branch of the infamous Yazuka. These chivalrous knights of bushido hail from glorious Nippon, and seek to literally prevent culture death. Like, that's genuinely their whole deal. No joke. They're fucking ripped, wear suits and ties that are totally on fleek, are inked head-to-toe in intracate and geneally fucking crazy tattoos, and can kick your ass using psychic powers. I don't even really know what crimes they commit, all I see them do is get drunk in the ramen bars in their shopping center, beat the shit out of each other and passerbys, and go on romantic adventures to kill westerners and other degenerate races. What’s not to like? This gang is not to be confused with the Yellow Yakuza, which has way more members.",
+		channel = 'little-tokyo',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_southsleezeborough,
@@ -12332,12 +12339,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_southsleezeborough_street_d,
 		alias = [
-			"ssbsd",
-			"ssbstreetd"
+			"cartelturf",
+			"cartel"
 		],
-		str_name = "South Sleezeborough Street D",
-		str_desc = str_generic_streets_description,
-		channel = 'south-sleezeborough-street-d',
+		str_name = "Cartel Turf",
+		str_desc = "Watch your step pendejo, you are entering what it might look just like a simple shanty town, a modest assortment of short square houses of all kinds of warm colors ripped right out of the bowels of south america, but take a second look, cuz its Los Amontonados' turf, a conglomerate of all the latin drug cartels that ever existed, now reformed into a group of good willed hard workers that fight by fist and gun for the right of the average citizen to snort all the meth their money can buy. The area was built with the thought of reminding their people of the home they left behind in order to fight for what is right and high, but it's also a complex distribution network like no other. Do not fuck with these guys' abuelitas, because they can smuggle cocaine and bullet lead into your soup in seconds, conchatumadre.",
+		channel = 'cartel-turf',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_southsleezeborough,
@@ -12352,12 +12359,17 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_northsleezeborough_street_a,
 		alias = [
-			"nsbsa",
-			"nsbstreeta"
+			"drive-bydrive-thrus",
+			"drivebydrivethrus",
+            "driveby",
+            "drive-by",
+            "drivethrus",
+            "drive-thrus"
+            "drive"
 		],
-		str_name = "North Sleezeborough Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'north-sleezeborough-street-a',
+		str_name = "Drive-By Drive-Thrus",
+		str_desc = "This intersection is packed with every fast food chain you can name. You can’t honestly expect the locals of North Sleezeborough to have the mental/physical capabilities of caring about anything enough to get out of their car to do it, so the front doors of these establishments are rusted over and boarded up, while the line for the drive-thru extends down the block. Of course, some of these cars aren’t patiently waiting to acquire their extra large value meals, they’re just itching to get to the window and rob the place blind, lest they get medieval on the teller’s ass with their cruel and unusual instruments. Good times, good times.",
+		channel = 'drive-by-drive-thrus',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_northsleezeborough,
@@ -12371,12 +12383,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_northsleezeborough_street_b,
 		alias = [
-			"nsbsb",
-			"nsbstreetb"
+			"wwwring",
+			"www",
+            "ring"
 		],
-		str_name = "North Sleezeborough Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'north-sleezeborough-street-b',
+		str_name = "WWW Ring",
+		str_desc = "It’s a big amphitheater with a Fighting Ring for a stage: The place where the Wowie Wowza Wrestling Circuit takes place. Founded on the very land the great West-East Gaijin War happened, it was once a great promotion for all the up and coming superstars of the city, like Stoned Cold Beer Monger and Musk Logan, but it became reduced to a bunch of retards in spandex slapping each other while completely drunk. It’s not all bad for the dwindling crowds, as once in a green moon they get to see an extreme fit of rage or an aneurysm happen mid-show, which is extremely fucking funny.",
+		channel = 'www-ring',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_northsleezeborough,
@@ -12390,12 +12403,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_northsleezeborough_street_c,
 		alias = [
-			"nsbsc",
-			"nsbstreetc"
+			"carbohydratecontainmentboulevard",
+			"carbohydratecontainment",
+            "carbohydrate"
 		],
-		str_name = "North Sleezeborough Street C",
-		str_desc = str_generic_streets_description,
-		channel = 'north-sleezeborough-street-c',
+		str_name = "Carbohydrate Containment Boulevard",
+		str_desc = "As far as you can see the street is lined with pizza places of all shapes and sizes. Even more dwarfing than the amount of pie shops is the sweet smell of some piping hot slices that are ready to be devoured. Even just walking down this street is enough to punch you out of ketosis. The never-ending supply of grease and dough being funneled into the local's mouths keeps them fat and complacent.",
+		channel = 'carbohydrate-containment-boulevard',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_northsleezeborough,
@@ -12409,12 +12423,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_northsleezeborough_street_d,
 		alias = [
-			"nsbsd",
-			"nsbstreetd"
+			"pondscumroad",
+			"pondscum"
 		],
-		str_name = "North Sleezeborough Street D",
-		str_desc = str_generic_streets_description,
-		channel = 'north-sleezeborough-street-d',
+		str_name = "Pond Scum Road",
+		str_desc = "The street takes you next to a pond which looks as if it has seen better days. The surrounding grass is littered with trash long forgotten. The water seems to be much the same filled with half eaten pieces of bread, algae, and some other substances you can’t quite identify. It looks like this place is often deserted even from the ducks.",
+        channel = 'pond-scum-road',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_northsleezeborough,
@@ -12428,12 +12442,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_northsleezeborough_street_e,
 		alias = [
-			"nsbse",
-			"nsbstreete"
+			"slobplaza",
+			"slob"
 		],
-		str_name = "North Sleezeborough Street E",
-		str_desc = str_generic_streets_description,
-		channel = 'north-sleezeborough-street-e',
+		str_name = "Slob Plaza",
+		str_desc = "It's the most bland square of land to ever be called a plaza, adorned by a couple of short trees, four pairs of benches each looking towards a different cardinal point, and a small, ugly dry fountain in the middle. Multiple magazines and renowned papers have called this spot number 1 in many "The best places to nap or fall dead" rankings, having mediocre ratings across the board since its inception. Here you can always find lazy citizens laying around, wishing their sorry lives could be magically solved… or, even better, that someone puts a bullet between those sleepy eyes.",
+        channel = 'slob-plaza',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_northsleezeborough,
@@ -12508,7 +12522,7 @@ poi_list = [
 			"mugshotroad",
 			"mugshot"
 		],
-		str_name = "Mugshot",
+		str_name = "Mugshot Road",
 		str_desc = "This is an affordable housing community. Most of the inhabitants here are some Jaywalker Plain, who have tried to kick whatever addictions were holding them back in their old life and start again here. Because of the vulnerable nature of the residents here, the police have carte balance to do whatever the fuck they want with them, and they do! Random entries into people’s homes without warrants, excessive uses of force for literally no reason, frisking before they even have the decency to stop-and- you first, asking you to hold something for them before placing incriminating evidence into your hands without waiting for your response and then pulling out their gun and murdering you, piledrivings, and more. Basically, real life.",
 		channel = 'mugshot-road',
 		is_street = True,
@@ -12556,6 +12570,7 @@ poi_list = [
 			poi_id_westglocksbury_street_d : travel_time_street,
 			poi_id_westglocksbury_street_b : travel_time_street,
 			poi_id_glocksbury_street_c : travel_time_street,
+            poi_id_basedhardware : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -12622,12 +12637,14 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_jaywalkerplain_street_a,
 		alias = [
-			"jpsa",
-			"jpstreeta"
+			"outsidetheplannedparenthood",
+			"outsidetheplanned",
+            "plannedparenthood",
+            "planned"
 		],
-		str_name = "Jaywalker Plain Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'jaywalker-plain-street-a',
+		str_name = "Outside the Planned Parenthood",
+		str_desc = "Abandon hope, all ye who enter here. The NLACakaNM Planned Parenthood is different from the standard haunted house in that the unspeakable abominations living there are well-documented and deadly to even the most seasoned gangster. I would just stay away from the ruined old building and spray down the supermarket across the street.",
+		channel = 'outside-the-planned-parenthood',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_jaywalkerplain,
@@ -12642,12 +12659,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_jaywalkerplain_street_b,
 		alias = [
-			"jpsb",
-			"jpstreetb"
+			"blackalleyways",
+			"blackalley"
 		],
-		str_name = "Jaywalker Plain Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'jaywalker-plain-street-b',
+		str_name = "Black Alleyways",
+		str_desc = "All those drugged out hobos you see around the city had to get their stash from somewhere, right? Welcome to the Black Alleys, the dark-alley Wal-Mart of getting chemically skullfucked. Once you get past the anti-narc security, you’ll find a place that’s completely different from the wide-open park spaces in the rest of Jaywalker Plain. It’s crowded, damp, and it smells like a slimegirl’s unwashed snatch. So pick up the pace. Buy some crack, maybe paint a couple walls, then get the hell out of here.",
+		channel = 'black-alleyways',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_jaywalkerplain,
@@ -12662,12 +12679,14 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_jaywalkerplain_street_c,
 		alias = [
-			"jpsc",
-			"jpstreetc"
+			"theemeraldnoose",
+			"theemerald",
+            "emeralnoose",
+            "emerald"
 		],
-		str_name = "Jaywalker Plain Street C",
-		str_desc = str_generic_streets_description,
-		channel = 'jaywalker-plain-street-c',
+		str_name = "The Emerald Noose",
+		str_desc = "This collection of green spaces comprise the majority of the land in Jaywalker Plain, hence the ‘plain’ part. Originally, Jaywalker Plain was intended to be an upper class district, and so these spaces would provide some leisure space for the oligarchs of the city to unwind, away from the hustle and bustle of slimegain. Needless to say, that, uh, didn’t work out. These spaces are beautiful, but the real reason to come here is to point and laugh at all the crazy freaks, drug addicts, and homeless people picking fights with one another and passing out from overdoses at 2 PM in the afternoon next to austere marble busts and exotic trees.",
+		channel = 'the-emerald-noose',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_jaywalkerplain,
@@ -12683,12 +12702,14 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_jaywalkerplain_street_d,
 		alias = [
-			"jpsd",
-			"jpstreetd"
+			"qouteunqouteartgalleries",
+			"qouteunqouteart",
+            "qouteunqoute",
+            "qoute",
 		],
-		str_name = "Jaywalker Plain Street D",
-		str_desc = str_generic_streets_description,
-		channel = 'jaywalker-plain-street-d',
+		str_name = "Qoute Unqoute Art Galleries",
+		str_desc = "This open outdoor market is the perfect place for the creative locals of Jaywalker Plain to show off their aesthetic genius and display their culturally enrichment gesamtkunstwerks for the world to see. Of course, this is Jaywalker Plain we’re talking bout, so you’re less likely to see portraits and still lifes as you are to see impressionistic depictions of drug-induced hallucinations and modern art commentating on how badly the artist wants to fuck dogs.",
+		channel = 'qoute-unqoute-art-galleries',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_jaywalkerplain,
@@ -12704,12 +12725,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_jaywalkerplain_street_e,
 		alias = [
-			"jpse",
-			"jpstreete"
+			"tentycity",
+			"tent"
 		],
-		str_name = "Jaywalker Plain Street ",
-		str_desc = str_generic_streets_description,
-		channel = 'jaywalker-plain-street-e',
+		str_name = "Tent City",
+		str_desc = "This street used to be a congested road, but now the only traffic on it are hobos really putting the “home” in “homeless”. Tents and cardboard boxes are set up up and down this street, providing totally sufficient protection against the elements for their swathes of downtrodden inhabitants. Generations of people impoverished from birth have grown up here, never knowing anything but the tents. Drug abuse and sexual assault are rampant. Many have lost their minds and ramble on about insane conspiracy theorists and incoherent beliefs. It would be funny if it weren’t so sad. Actually, that last part is still funny. Who ever heard of a “round earth”?",
+		channel = 'tent-city',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_jaywalkerplain,
@@ -12723,16 +12744,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_crookline_street_a,
 		alias = [
-			"clsa",
-			"clstreeta",
 			"doxyavenue",
-			"clda",
 			"doxy"
 		],
 		str_name = "Doxy Avenue",
 		str_desc = "Jazz clubs and diners decked out in flashy neon lights liven up this already crowded hotspot. Traffic is always jammed down here, and the locals have taken to the habit of just walking between the stopped cars to get across. The 24/7 nightlife here is really something else, and the pickpockets hiding in the bustle will make sure you pay full price for it. Exits into Crookline, XXXXXX, and Perdido Valley.",
-		#channel = 'doxy-avenue',
-		channel = channel_crookline_street_a,
+		channel = 'doxy-avenue',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_crookline,
@@ -12749,12 +12766,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_crookline_street_b,
 		alias = [
-			"clsb",
-			"clstreetb"
+			"lakemacguffin",
+			"macguffin"
 		],
-		str_name = "Crookline Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'crookline-street-b',
+		str_name = "Lake Macguffin",
+		str_desc = "This lake is a quick drive away from the urban sprawl of Crookline proper. It’s up a hill that’s not crazy big but still overlooks not just this district but also neighboring Dreadford, Jaywalker Plain, and the Sleezeboroughs. Locals come here to dump off their dead bodies, silos of manure, maltese falcons, and any other highly sought after artifacts that need hiding. Our heroes will then venture out to this point in the third act before the flashback ends and the real perpetrators are locked up.",
+		channel = 'lake-macguffin',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_crookline,
@@ -12771,16 +12788,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_crookline_street_c,
 		alias = [
-			"clsc",
-			"clstreetc",
 			"manteca",
-			"clms",
 			"mantecastreet"
 		],
 		str_name = "Manteca Street",
 		str_desc = 'It\'s cold, dark, and quiet. The old brick offices and boarding houses all look closed for the day no matter what time you\'re here. If you didn\'t know any better this might be a nice, moody place for a walk, but it\'s obvious the alleys are hiding something. Don\'t get caught under a streetlight. Exits into Crookline, Perdido Valley and XXXXXX.',
-		#channel = 'manteca-street',
-		channel = channel_crookline_street_c,
+		channel = 'manteca-street',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_crookline,
@@ -12794,16 +12807,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_crookline_street_d,
 		alias = [
-			"clsd",
-			"clstreetd",
 			"perdidovalley",
-			"clpv",
 			"perdido"
 		],
 		str_name = "Perdido Valley",
 		str_desc = "You didn't think it was possible to get any lower, but you've found yourself descended into the under-underworld of Crookline. The high-society crimelords and psychotics of the city frequent the upper-floor style black markets here, indulging in strange, illegal fetishes and experimental substance abuse. You'd love to see those guys get a knife or two to the face, but you doubt the bouncers standing outside would let you in. Exits into Crookline, Manteca Street, and Doxy Avenue.",
-		#channel = 'perdido-valley',
-		channel = channel_crookline_street_d,
+		channel = "perdido-valley",
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_crookline,
@@ -12817,12 +12826,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_dreadford_street_a,
 		alias = [
-			"dfsa",
-			"dfstreeta"
+			"scaffoldforest",
+			"scaffold"
 		],
-		str_name = "Dreadford Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'dreadford-street-a',
+		str_name = "Scaffold Forest",
+		str_desc = "This spooky forest has been the site of countless lynchings in the district’s past (and present). Nooses hang from nearly every tree, and a thick fog makes those shadows in the distance all the more unnerving.",
+		channel = 'scaffold-forest',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_dreadford,
@@ -12836,12 +12845,17 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_dreadford_street_b,
 		alias = [
-			"dfsb",
-			"dfstreetb"
+			"hangemsquare",
+			"hangem",
+            "hang",
+            "hang-'emsquare",
+            "hand-emsquare",
+            "hang-'em",
+            "hang-em"
 		],
-		str_name = "Dreadford Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'dreadford-street-b',
+		str_name = "Hang-'Em Square",
+		str_desc = "This is the old town square of Dreadford, home to what few businesses operate in the district. It is also home to a well-worn guillotine which is proudly displayed in the center of the square. The early settlers of this district absolutely loved accusing and sentencing each other on frivolous charges and then proceeding to chop each other’s heads off. It’s practically all they did.",
+		channel = 'hang-em-square',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_dreadford,
@@ -12913,12 +12927,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_vandalpark_street_d,
 		alias = [
+            "theplayground"
 			"playground",
 			"play"
 		],
-		str_name = "Playground",
-		str_desc = "It’s a totally gay playground made for pissy baby fucker fappers, for babies who poop their pants. Just the sight of the primary colored jungle gym makes you visceral upset, even if you do want to hang from the bars upside down pretty bad. And, maybe while you’re at it you can swing on the swings for a little bit. Actually, no, being a kindergartener is pretty based, you change your mind.",
-		channel = 'play-ground',
+		str_name = "The Playground",
+		str_desc = "It’s a totally gay playground made for pissy baby fucker fappers, for babies who poop their pants. Just the sight of the primary colored jungle gym makes you visceral upset, even if you do want to hang from the bars upside down pretty bad. And, maybe while you’re at it you can swing on the swings for a little bit. Actually, no, being a kindergartener is pretty based, you change your mind. Not to be confused for #playground, obviously.",
+		channel = 'the-playground',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_vandalpark,
@@ -12932,12 +12947,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_poloniumhill_street_a,
 		alias = [
-			"phsa",
-			"phstreeta"
+			"wholesalewarehouse",
+			"wholesale"
 		],
-		str_name = "Polonium Hill Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'polonium-hill-street-a',
+		str_name = "Wholesale Warehouse",
+		str_desc = "This huge warehouse is packed to the brim with wide varieties of products, including groceries, liquor, pharmaceuticals, appliances, furniture, and more, all sold in bulk and laid out in a no-frills kinda way. It’s so fucking big, you don’t even know. It’s basically mandatory to have a subscription membership to this place if you’re a Polonium Hill local, even though it’s pretty easy to sneak in. You guess the sort of people that live in Polonium Hill would instantly die upon being caught doing anything against the rules, ever, so it makes sense. Moms and their screaming, snot-nosed children dash around you with shopping carts full of extremely unhealthy yet delicious breakfast cereals and red meats. This place is sort of like hell.",
+		channel = 'wholesale-warehouse',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_poloniumhill,
@@ -12951,12 +12966,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_poloniumhill_street_b,
 		alias = [
-			"phsb",
-			"phstreetb"
+			"curiehighschool",
+			"curie"
 		],
-		str_name = "Polonium Hill Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'polonium-hill-street-b',
+		str_name = "Curie Highschool",
+		str_desc = "You’re standing in the dried-out parking lot of a limp-wristed, bog standard high school. Curie High really tries its best to seem habitable, but that actually pretty low standard leaves the students here tired, disenfranchised, and ready to waterslide right down the school-to-prison pipeline. How about we whip out our spray cans and rifles and show these up and comers how it’s done?",
+		channel = 'curie-highschool',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_poloniumhill,
@@ -12970,12 +12985,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_poloniumhill_street_c,
 		alias = [
-			"phsc",
-			"phstreetc"
+			"gellerpoint",
+			"geller"
 		],
-		str_name = "Polonium Hill Street C",
-		str_desc = str_generic_streets_description,
-		channel = 'polonium-hill-street-c',
+		str_name = "Geller Point",
+		str_desc = "You stand at the top of a grassy, starry hill that overlooks the endless desert to the west. Geller Point is a nice place to relax, but as usual, you can expect the locals of Polonium Hill to ruin everything. They all insist to death that aliens and paranormal activity flock here to observe their boring community and probe their depressing little middle-class buttholes. You’ve never seen any yourself, but their words always put you a little on edge. If you squint your eyes just right, you think you can see Area 51 in the distance. Nah, that can’t be right.",
+		channel = 'geller-point',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_poloniumhill,
@@ -12990,12 +13005,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_poloniumhill_street_d,
 		alias = [
-			"phsd",
-			"phstreetd"
+			"sawdustlumberyard",
+			"sawdust"
 		],
-		str_name = "Polonium Hill Street D",
-		str_desc = str_generic_streets_description,
-		channel = 'polonium-hill-street-d',
+		str_name = "Sawdust Lumberyard",
+		str_desc = "This isn’t a particularly big forest, but it’s big enough to have attracted young, upstart entrenupers looking to make some money destroying the environment. And so, this humble lumberyard was founded. This is where most of the log cabins being built in Maimridge, and some of the gaudy lookalikes in this district, get their wood. Extra flammable planks are sent to Arsonbrook in large droves throughout the year, but they don’t know they’re extra flammable. The privatterring vessels being built in the Vagrant’s Corner shipyard also make use of materials from here. It’s a pretty big deal, alright?",
+		channel = 'sawdust-lumberyard',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_poloniumhill,
@@ -13010,12 +13025,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_poloniumhill_street_e,
 		alias = [
-			"phse",
-			"phstreete"
+			"sortofmansions",
+			"sortof"
 		],
-		str_name = "Polonium Hill Street E",
-		str_desc = str_generic_streets_description,
-		channel = 'polonium-hill-street-e',
+		str_name = "Sort Of Mansions",
+		str_desc = "This somewhat small community is full of sparsely laid out homes, covered from the lawn to the roof in decorations that look more tacky than opulent. They aren’t really mansions, they’re just kinda big. The inhabitants will swear up and down, however, that they are mansions and that they are in fact very wealthy and then beg you to tell them they’re successful and that if their father were still alive, god rest his soul, he would forgive them. They’ll also come out and beg for you to not spray paint their house and/or rob them blind, so they have a habit of issuing unreasonable demands. What a bunch of losers, amirght?",
+		channel = 'sort-of-mansions',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_poloniumhill,
@@ -13029,12 +13044,21 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_charcoalpark_street_a,
 		alias = [
-			"cpsa",
-			"cpstreeta"
+			"thechurchoftheholyslimefoot",
+			"thechurchoftheholy",
+            "thechurchofthe",
+            "thechurchof",
+            "thechurch",
+            "churchoftheholyslimefoot",
+            "churchoftheholy",
+            "churchofthe",
+            "churchof",
+            "church",
+            "slimefoot"
 		],
-		str_name = "Charcoal Park Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'charcoal-park-street-a',
+		str_name = "The Church of the Holy Slimefoot",
+		str_desc = "It’s a small neighborhood in the south of Charcoal Park built and entirely owned by a very religious community of Cryptid believers who declare it’s a truly paranormal site. It’s one of the most orderly places in the city, thanks to the constant work of their community members who  keep the streets as clean as possible to maximize the chances of catching a sneaky cryptid running around during the night. At the south-most point you can find Cryptid Kirk, the town’s chapel, which was built on what is said to be the holy place where the one and only Slimesquatch was born. None of these claims were ever backed up and the place isn't more than a bunch of conspiracy theorists gathering in this place, everyone knows cryptids are not real… *r-right?*",
+		channel = 'church-of-the-holy-slimefoot',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_charcoalpark,
@@ -13048,12 +13072,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_charcoalpark_street_b,
 		alias = [
-			"cpsb",
-			"cpstreetb"
+			"veteranscenter",
+			"veterans",
+            "veteran"
 		],
-		str_name = "Charcoal Park Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'charcoal-park-street-b',
+		str_name = "Veterans Center",
+		str_desc = "The grass in this worn-down, red-brick veteran center has been completely dried out and trampled over. That makes sense, the residents here have used it as a base for their local militia for awhile now. Slimecorp managed to protect most districts from secreature invasions, but like usual, Charcoal Park was completely forgotten. That’s why they now command their bravest, most senile senior citizens to do the protecting instead.",
+		channel = 'veterans-center',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_charcoalpark,
@@ -13067,12 +13092,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_toxington_street_a,
 		alias = [
-			"ttsa",
-			"ttstreeta"
+			"gravelmounds",
+			"gravel",
+            "cp_gravelpit"
 		],
-		str_name = "Toxington Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'toxington-street-a',
+		str_name = "Gravel Mounds",
+		str_desc = "It may not look like much, but for miles below the ground here there are huge slime reserves, just begging to be mined. And so, people have dug extensive underground networks of mineshafts to haul as much slime out as possible. There’s only one problem: This is Toxington. The underground of this district is filled with toxic gas that’s lethal given prolonged exposure. Of course, that hasn’t stopped slime-crazed lunatics from mining as much as they can. The mineshaft network is extensives, but all of the lines are narrow, so you’re sure to step over a few cadavers on your way down to the exposed veins. Don’t feel too bad for them, chances are they’ve just been spit out of ENDLESS WAR and are on their way back right now.",
+		channel = 'gravel-mounds',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_toxington,
@@ -13088,12 +13114,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_toxington_street_b,
 		alias = [
-			"ttsb",
-			"ttstreetb"
+			"cyanideswamp",
+			"cyanide"
 		],
-		str_name = "Toxington Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'toxington-street-b',
+		str_name = "Cyanide Swamp",
+		str_desc = "This hot, wet marsh used to be the coolest, newest spot to mine slime in Toxington. The area was particularly well known for its abundance of poudrins. However, after most of the miners began turning up empty handed after mining for weeks on end, there was a shift from trying to extract as many poudrins as possible to trying to get as much slime as possible from the poudrins you got. See, crushing poudrins ain’t a science, it’s an art. When just crushing it with your bare hands, inevitably some of the poudrin doesn’t get converted into slime and is therefore wasted. Some clever miners found out that you could combine cyanide with a water mixture and when you submerged a poudrin into it, you’d be able to strain it all and wind up with a particularly well concentrated distillation of pure slime-- perfect for crushing. Well, this was so popular that the leftover sludge mixture began to pile up and up until its containment unit broke and flooded all the shafts in the region with its goopy innards. All of the bogs you see around you were once profitable mineshafts.",
+		channel = 'cyanide-swamp',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_toxington,
@@ -13107,12 +13133,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_toxington_street_c,
 		alias = [
-			"ttsc",
-			"ttstreetc"
+			"quarantinedzones",
+			"quarantined"
 		],
-		str_name = "Toxington Street C",
-		str_desc = str_generic_streets_description,
-		channel = 'toxington-street-c',
+		str_name = "Quarantined Zones",
+		str_desc = "Here’s some food for thought. What would a residential zone look like in a place filled entirely with toxic gases? Well good news, you’re standing in one! Being closest to Toxington’s deadly gas deposits, the homes here have long since been abandoned, still full of the rotting food and corroded appliances their original owners had. You may think to yourself, staring into the dark green hazy sky and breathing in more cyanide, that you could live in one of these places. Well, you could, if you had more than 6 seconds to live.",
+		channel = 'quarantined-zones',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_toxington,
@@ -13127,12 +13153,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_toxington_street_d,
 		alias = [
-			"ttsd",
-			"ttstreetd"
+			"carcinogenicquarry",
+			"carcinogenic",
+            "carcinogen",
 		],
-		str_name = "Toxington Street D",
-		str_desc = str_generic_streets_description,
-		channel = 'toxington-street-d',
+		str_name = "Carcinogenic Quarry",
+		str_desc = "This old mining complex isn’t used that often anymore, despite large deposits of slime still lurking in the shafts below. After an initial burst of attention in the area, it was quickly discovered that the entire area is perhaps the single most irradiated area in the city, besides of course the site of the old reactor in Little Chernobyl. That isn’t to say a little fear of death stopped anyone from mining slime, but the sheer concentration of radiation here made it hard to even get to the slime veins in the first place before croaking. Plus, with the gravel mounds just a hop, skip, and a jump away, who needs to waste time making razor thin profit margins here when they can throw their lives away in shafts where they’ll actually make some real slime.",
+		channel = 'carcinogenic-quarry',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_toxington,
@@ -13148,12 +13175,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_toxington_street_e,
 		alias = [
-			"ttse",
-			"ttstreete"
+			"geysersprings",
+			"geyser"
 		],
-		str_name = "Toxington Street E",
-		str_desc = str_generic_streets_description,
-		channel = 'toxington-street-e',
+		str_name = "Geyser Springs",
+		str_desc = "It’s hard to miss the plumes of molten, toxic sludge spewing into the air every fifteen seconds, but still, watch your step. If you fall into one of these things, you’re toast. If you’re not instantly cooked through, then you’ll be eaten alive by some of the terrifying creatures that have evolved to withstand the inhospitable conditions. A few morons have built piers over the calmer springs in an attempt to wrangle some of those aforementioned beasts, and it usually goes as well as you would expect.",
+		channel = 'geyser-springs',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_toxington,
@@ -13227,10 +13254,10 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_gatlingsdale_street_d,
 		alias = [
-			"nlacuinstituteoftechnology",
+			"nlacuinstituteofslimeology",
 			"nlacuinstitute"
 		],
-		str_name = "N.L.A.C.U. Institute of Technology",
+		str_name = "N.L.A.C.U. Institute of Slimeology",
 		str_desc = "NLACakaNM’s demand for cool and new innovations in slime-based technology pressured N.L.A.C.U. to open up a second campus and expand the curriculum to really prepare the next generation to tackle the big questions of the 21st century, such as: “How we make slimify slavery and therefore make it good?”, “Do I need a robot’s consent before slimeing them?”, and “Can we make a substance that acts as a psychedelic narcotic AND makes us invincible?”",
 		channel = 'nlacu-institute',
 		is_street = True,
@@ -13265,12 +13292,15 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_astatineheights_street_a,
 		alias = [
-			"mainstreet",
-			"main"
+			"eightyfifthstreet",
+			"eightyfifth",
+            "85thstreet"
+            "85th",
+            "85"
 		],
-		str_name = "Main Street",
+		str_name = "85th Street",
 		str_desc = "This street is full of upscale bars and fancy restaurants. It’s one of the few places to actually have a night out on the town in Astatine Heights, so you’ll see a lot of upper class snobs in their fancy dresses celebrating some dumb shit that just makes you want to shoot them, like cinco de mayo or kwanzaa.",
-		channel = 'main-street',
+		channel = 'eighty-fifth-street',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_astatineheights,
@@ -13402,11 +13432,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_smogsburg_street_b,
 		alias = [
-			"bazaarlocation",
+			"thewestquarter",
+            "westquarter",
+            "quarter"
 		],
-		str_name = "Bazaar Location",
-		str_desc = "This bustling corner of Smogsburg is really the only commercial zone in the district. Spread out throughout the marketplace are food stands, apparel stores, and places selling conspicuously useless junk. None of the places are particularly big. In the center of this is the district’s bazaar, which is where most of the traffic through this part of town is heading.",
-		channel = 'bazaar-location',
+		str_name = "The West Quarter",
+		str_desc = "This bustling corner of Smogsburg is really the only commercial zone in the district. Spread out throughout the marketplace are densely packed food stands, apparel stores, and places selling conspicuously useless junk. None of the places are particularly big. In the center of this is the district’s bazaar, which is where most of the traffic through this part of town is heading.",
+		channel = 'west-quarter',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_smogsburg,
@@ -13425,7 +13457,7 @@ poi_list = [
 			"company"
 		],
 		str_name = "Company Town Square",
-		str_desc = "This square is owned and maintained by a consortium of the leading companies in the city. It’s a small park, surrounded by cheap takeout places and convenience stores. It was only created after a general strike demanding some form of recreational space in the district, to which the consortium reluctantly accepted. In the center of the square are monuments and statues dedicated to industry.",
+		str_desc = "This square is owned and maintained by a consortium of the leading companies in the city. It’s a small park, surrounded by cheap takeout places and convenience stores. It was only created after a general strike demanding some form of recreational space in the district, to which the consortium reluctantly accepted. In the center of the square are monuments and statues dedicated to industry. Use of made-up company currency is encouraged in exchange here.",
 		channel = 'company-town-square',
 		is_street = True,
 		is_capturable = True,
@@ -13479,12 +13511,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_arsonbrook_street_a,
 		alias = [
-			"oldtown",
-			"old"
+			"stillwatertown",
+			"stillwater"
 		],
-		str_name = "Old Town",
+		str_name = "Stillwater town",
 		str_desc = "This small community looks like it was plucked right out of the pacfic northwest, or one of the results of a Google Images search for “Roslyn, Washington”. Nestled cozily on the southern half of the district, this is where most of Arsonbrook’s economic activity occurs.",
-		channel = 'old-town',
+		channel = 'stillwater-town',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_arsonbrook,
@@ -13502,11 +13534,11 @@ poi_list = [
 		alias = [
 			"cinderstateforest",
 			"cinderstate",
-			"cinder"
+            "cinder"
 		],
 		str_name = "Cinder State Forest",
 		str_desc = "This spruce forest is locked in a pertupal cycle of holocaust and rebirth. It seems like no matter how many times local arsonists set the forest ablaze, nor how many times a wayward cigarette butt level swathes of the territory, the western hemlock population bounces back, stronger than ever. This place is Smokey Bear’s wet dream. Good thing I have literally no clue who Smokey Bear is because his name is Smokey the Bear, and good thing I have literally no clue who Smokey the Bear is because we probably have a slimifed version that’s called something supremely retarded like Slimey the Bear, and good thing this whole diversion was ventured upon in error because it wouldn’t be Smokey the Bear’s wet dream because he doesn’t even like forest fries, his whole thing is that he doesn’t like them so I don’t even know why I started talking about this in the first place. Wait, his name actually *is* Smokey Bear? Holy shit.",
-		channel = 'cinder-state-forest',
+		channel = 'cinder-state-forest"',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_arsonbrook,
@@ -13521,12 +13553,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_arsonbrook_street_c,
 		alias = [
-			"tillyroad",
+			"hill",
 			"tilly"
 		],
-		str_name = "Tilly Road",
+		str_name = "tilly hill",
 		str_desc = "It's a steep road leading uphill to a big scenic area overlooking Cinder State Forest. Tricksters like to toss trash cans and other large garbage over the hill to hit cars driving up.",
-		channel = 'tilly-road',
+		channel = 'tilly-hill',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_arsonbrook,
@@ -13541,12 +13573,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_arsonbrook_street_d,
 		alias = [
-			"crassusavenue",
+			"crassussquare",
 			"crassus"
 		],
-		str_name = "Crassus Avenue",
+		str_name = "Crassus Square",
 		str_desc = "This row of homes are victim to frequent acts of arson from fellow locals. No one knows why, exactly. The houses in question are usually quite flamboyantly luxurious, and so the attacks could be as a protest of gentrification or simply as revenge enacted on those who have by those who have not. Regardless, if you buy property here, expect to be rebuilding it every few years.",
-		channel = 'crassus-avenue',
+		channel = 'crassus-square',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_arsonbrook,
@@ -13580,12 +13612,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_maimridge_street_a,
 		alias = [
-			"mrsa",
-			"mrstreeta"
+			"thesummit",
+			"summit"
 		],
-		str_name = "Maimridge Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'maimridge-street-a',
+		str_name = "The Summit",
+		str_desc = "This is the highest peak in the county. You can see the entire city from here, large swathes of the outskirts, and of course the eye-searing slime sea. You think you can even make out the light pollution from other settlements on the sea in the distance, but they’re too far away to tell for sure. Intriguing, huh? You should ask a merchant in Vagrant’s Corner just who it is they’re trading with all the time and what their cities are like. Do they have rampant gang violence too? Who am I kidding, of course they do.",
+		channel = 'the-summit',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_maimridge,
@@ -13599,12 +13631,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_maimridge_street_b,
 		alias = [
-			"mrsb",
-			"mrstreetb"
+			"skilodges",
+			"ski"
 		],
-		str_name = "Maimridge Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'maimridge-street-b',
+		str_name = "Ski Lodges",
+		str_desc = "This cozy community of ski lodges and other warm buildings is the perfect respite from the cold, rugged mountainside. Of course, you can’t let your enemies take advantage of this hospitality, so you gotta stand guard outside and bash their skull in before they can take their shoes off inside. In other words, you’re rejuvenating them first.",
+		channel = 'ski-lodges',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_maimridge,
@@ -13619,12 +13651,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_maimridge_street_c,
 		alias = [
-			"mrsc",
-			"mrstreetc"
+			"colloidsprings",
+			"colloid"
 		],
-		str_name = "Maimridge Street C",
-		str_desc = str_generic_streets_description,
-		channel = 'maimridge-street-c',
+		str_name = "Colloid Springs",
+		str_desc = "These natural hot springs can be found throughout Maimridge, both inside and outside a set of cave systems that they occupy halfway up the mountain. You don’t have to be an archaeologist to know that these things were a major attraction, even in the past, judging by the staggering amount of ancient ruins that surround them. It’s not surprising that they’ve ended up as another one of Maimridge’s tourist traps, but there are rumors of patrons taking a dip and not coming back up. Perhaps something sinister lurks within them…",
+		channel = 'colloid-springs',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_maimridge,
@@ -13639,12 +13671,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_brawlden_street_a,
 		alias = [
-			"bdsa",
-			"bdstreeta"
+			"abandonedwarehouse",
+			"abandoned",
+            "fightclub"
 		],
-		str_name = "Brawlden Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'brawlden-street-a',
+		str_name = "Abandoned Warehouse",
+		str_desc = "This place used to be a combination slaughterhouse and packaging facility, but the company that operated it went bankrupt a few years ago. Now, it’s the site of the district’s fight club. Locals show up every Friday to beat the shit out of each other. Bets are usually taken on who will be the last man standing by those too cowardly to fight themselves. If you’re a local of Brawlden and you haven’t fought in one of these fight clubs before, well, you’re not a real local.",
+		channel = 'abandoned-warehouse',
 		is_street = True,
 		is_capturable = True,
 		neighbors = {
@@ -13659,12 +13692,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_brawlden_street_b,
 		alias = [
-			"bdsb",
-			"bdstreetb"
+			"brownstonerow",
+			"brownstone"
 		],
-		str_name = "Brawlden Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'brawlden-street-b',
+		str_name = "Brownstone Row",
+		str_desc = "This row of brownstone three-decker townhouses isn’t particularly special or noteworthy in any regards.",
+		channel = 'brownstone-row',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_brawlden,
@@ -13679,12 +13712,14 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_brawlden_street_c,
 		alias = [
-			"bdsc",
-			"bdstreetc"
+			"brawldenprivateschooldistrict",
+			"privateschooldistrict",
+            "privateschool",
+            "private"
 		],
-		str_name = "Brawlden Street C",
-		str_desc = str_generic_streets_description,
-		channel = 'brawlden-street-c',
+		str_name = "Brawlden Private School District",
+		str_desc = "The buff dads in Brawlden don't always get the manliest sons. For those who got twinks, they get sent to Brawlden Prep School for the Physically Unfit to get jacked and follow in their father's footsteps. And as you can imagine, once the slime came, the school’s already impossible standards of discipline grew into something psychopathic. The motto carved above the stone building’s entrance used to read “Anything that doesn’t kill you makes you stronger.” Now, it’s “The Zenkai boost is real and we’re going to kill you until you can bench 450.” ",
+		channel = 'brawlden-private-school-district',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_brawlden,
@@ -13698,12 +13733,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_brawlden_street_d,
 		alias = [
-			"bdsd",
-			"bdstreetd"
+			"usedcardealership",
+			"usedcar",
+            "used"
 		],
-		str_name = "Brawlden Street D",
-		str_desc = str_generic_streets_description,
-		channel = 'brawlden-street-d',
+		str_name = "Used Car Dealership",
+		str_desc = "This place is fucking huge. There’s terrible, barely functioning used cars for as far as the eye can see. Salesmen know better than to annoy a gangster with their prattle, but they do still sneak up on you every once and try to weasel their way into a sale. Just blast one of their limbs off and they’ll leave you along again.",
+		channel = 'used-car-dealership',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_brawlden,
@@ -13719,10 +13755,9 @@ poi_list = [
 		alias = [
 			"halfliferoad",
 			"halflife",
-			"half"
 		],
-		str_name = "Half Life Road",
-		str_desc = "This road has such high densities of concerted radiation that technically speaking you instantly die as soon as you step on it. Thankfully, the slime works in mysterious ways and your god-defying pseudo-corpse continues to be propped up by your “”consciousness”” for the remainder of your short, sad life. You’re neither alive nor dead. You’re in a sort of… Wait for it… Team Fortress 2. ",
+		str_name = "Half-Life Road",
+		str_desc = "This road has such high densities of concerted radiation that technically speaking you instantly die as soon as you step on it. Thankfully, the slime works in mysterious ways and your god-defying pseudo-corpse continues to be propped up by your “”consciousness”” for the remainder of your short, sad life. You’re neither alive nor dead. You’re in a sort of… Wait for it… Team Fortress 2. Haha, G-Man!!",
 		channel = 'half-life-road',
 		is_street = True,
 		is_capturable = True,
@@ -13740,7 +13775,7 @@ poi_list = [
 		alias = [
 			"reactorgroundzero",
 			"reactorground",
-			"reactor"
+            "reactor"
 		],
 		str_name = "Reactor Ground Zero",
 		str_desc = "This abandoned nuclear power plant is the site of the famous meltdown that flooded the Grand Canyon with slime and ushered in our modern era of gang violence and territory control. It got totally fucked up in the explosion, so navigating the furthest depths is ill-advised. Stick to the upper levels and grounds around the cooling tower unless you want to wind up with an extra set of Mutations. Wait… that sounds awesome! All sorts of cryptids are born by accidentally venturing too far down, and then spread out through the district, spooking tourists and inspiring countless creepypastas.",
@@ -13758,13 +13793,15 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_littlechernobyl_street_c,
 		alias = [
-			"bombedoutapartments",
+			"bombedoutbuildings",
 			"bombedout",
-			"bombed"
+            "bombed",
+            "bombed-outbuildings",
+            "bombed-out"
 		],
-		str_name = "Bombed Out Apartments",
+		str_name = "Bombed-Out Buildings",
 		str_desc = "These old, barely standing apartment buildings used to be prime real estate before everything went to shit. Well, more like before anything went to slime, aka got infinitely better and way cooler. They've still got a nice location overlooking the River of Slime, but everything looks super gross so no one wants to move back in and no one really gives enough of a shit to demolish what's left and rebuild from scratch.",
-		channel = 'bombed-out-apartments',
+		channel = 'bombed-out-buildings',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_littlechernobyl,
@@ -13953,12 +13990,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_assaultflatsbeach_street_a,
 		alias = [
-			"afbsa",
-			"afbstreeta"
+			"paradiseslums",
+			"paradise"
 		],
-		str_name = "Assault Flats Beach Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'assault-flats-beach-street-a',
+		str_name = "Paradise Slums",
+		str_desc = "It’s an adorable beachtown which has long ago slid into decay. The further you get from the coast, the more homelessness and vandalism run rampant. The only thing left to remind you that you’re on vacation are the palm trees.",
+		channel = 'paradise-slums',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_assaultflatsbeach,
@@ -13974,12 +14011,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_assaultflatsbeach_street_b,
 		alias = [
-			"afbsb",
-			"afbstreetb"
+			"beachfrontproperties",
+			"beachfront"
 		],
-		str_name = "Assault Flats Beach Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'assault-flats-beach-street-b',
+		str_name = "Beachfront Properties",
+		str_desc = "This stretch of beach is probably the only part of the city you could actually consider kind of pretty. It’s almost entirely privately owned by the resort, which has gobbled up most of the valuable coastline to either develop or charge access to, but some luxury condominiums have been built here and there. These condominiums are subject to frequent raiding by S.W.A.T. teams to make sure the peace is kept.",
+		channel = 'beachfront-properties',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_assaultflatsbeach,
@@ -13994,12 +14031,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_vagrantscorner_street_a,
 		alias = [
-			"vcsa",
-			"vcstreeta"
+			"longwharf",
+			"long",
+            "wharf"
 		],
-		str_name = "Vagrant's Corner Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'vagrants-corner-street-a',
+		str_name = "Long Wharf",
+		str_desc = "This harbor is one of the keys to the city’s success. Several wharves extend out into the sea with various merchant vessels and privateers docked on them, unloading their booty and letting their crew rest before the next voyage. The goods are being carried off to be sold all across the city, though a lot will stay in the district and be sold at the marketplace. It’s because of these cargo ships, with trade routes that extend across the entire slime sea, that NLACakaNM is the maritime power and prosperous city upon a hill that it is today.",
+		channel = 'long-wharf',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_vagrantscorner,
@@ -14015,12 +14053,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_vagrantscorner_street_b,
 		alias = [
-			"vcsb",
-			"vcstreetb"
+			"thedockyard",
+			"dockyard"
 		],
-		str_name = "Vagrant's Corner Street B",
-		str_desc = str_generic_streets_description,
-		channel = 'vagrants-corner-street-b',
+		str_name = "The Dockyard",
+		str_desc = "This is where the city’s fleet is built, upgraded, and replaced year in, year out. Without privateers sailing the slime sea, protecting our cargo ships and boarding those of our rivals, the city wouldn’t be able to project nearly as much power as it does today. This shipyard is a true engineering marvel, as it’s able to turn out new ships at breakneck speeds. Which is good, because dumbasses keep wrecking them. Guess that’s what happens when you slime under the influence (of slime).",
+		channel = 'the-dockyard',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_vagrantscorner,
@@ -14035,12 +14073,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_vagrantscorner_street_c,
 		alias = [
-			"vcsc",
-			"vcstreetc"
+			"pubcrawlroad",
+			"pubcrawl"
 		],
-		str_name = "Vagrant's Corner Street C",
-		str_desc = str_generic_streets_description,
-		channel = 'vagrants-corner-street-c',
+		str_name = "Pubcrawl Road",
+		str_desc = "This cobblestone road is almost entirely made up of pubs, it’s pubs as far as the eye can see. Any sailor who’s been a sailor for long enough will more likely than not spend the majority of their nights here, hopping from tavern to tavern to enjoy the warm embrace of their cheap beer and even worse food. If you stay out late enough, you’ll see dunkards passed out on the side of the road, or stumbling home. Alcoholism is pretty good, actually. It’s aesthetic.",
+		channel = 'pubcrawl-road',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_vagrantscorner,
@@ -14054,12 +14092,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_vagrantscorner_street_d,
 		alias = [
-			"vcsd",
-			"vcstreetd"
+			"seasidemarket",
+			"seaside"
 		],
-		str_name = "Vagrant's Corner Street D",
-		str_desc = str_generic_streets_description,
-		channel = 'vagrants-corner-street-d',
+		str_name = "Seaside Market",
+		str_desc = "This is where a good chunk of the goods captured or traded for from the across the slime sea end up. There’s exotic vegetables and fish from far off cities, strange weapons and writings, as well as tacky souvenirs and merchandise from a semi-mythical land the natives refer to as “the State of Arizonia”. Crazy stuff, huh? If you want to buy something, you’ll probably have to haggle for it for a while to get a reasonable price. Make sure to speak up when you’re doing it, too; this place can get pretty loud.",
+		channel = 'seaside-market',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_vagrantscorner,
@@ -14073,12 +14111,13 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_vagrantscorner_street_e,
 		alias = [
-			"vcse",
-			"vcstreete"
+			"Trimountaine",
+			"trimountain",
+            "tri"
 		],
-		str_name = "Vagrant's Corner Street E",
-		str_desc = str_generic_streets_description,
-		channel = 'vagrants-corner-street-e',
+		str_name = "Trimountaine",
+		str_desc = "This corner of the district hasn’t been subject to the same heavy development as waterfront, as such there’s not a lot to see. The original three hills that gave the region its name still stand, unlike the rest of Vagrant’s Corner which has been flattened over the years to accommodate rapid landfill projects. The only structure of importance here is the old lighthouse. It used to guide ships to the harbor before it was quickly outgrown. A newer, taller one was built in Slime’s End.",
+		channel = 'trimountaine',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_vagrantscorner,
@@ -14092,12 +14131,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_vagrantscorner_street_f,
 		alias = [
-			"vcsf",
-			"vcstreetf"
+			"cockfightbackstreet",
+			"cockfight"
 		],
-		str_name = "Vagrant's Corner Street F",
-		str_desc = str_generic_streets_description,
-		channel = 'vagrants-corner-street-f',
+		str_name = "Cockfight Backstreet",
+		str_desc = "There’s no better way to unwind after being stuck on a boat for months on end like watching animals kill each other. Sailors looking for a night on the town, before or after taking a detour in the Green Light District, will often wind up here where organic and slime-based animals alike go toe-to-toe in gruesome bloodsports. Keep in mind, this ain’t your grandma’s slimeoid battle. Most of the contestants here are wild beasts, caught from the outskirts or were brought into the city from far, far away. The duels here are chaotic and end in copious amounts of glore getting splattered unto the audience and all over the walls. Fun is had by all.",
+		channel = 'cockfight-backstreet',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_vagrantscorner,
@@ -14168,12 +14207,12 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_slimesend_street_a,
 		alias = [
-			"slsa",
-			"slstreeta"
+			"sandyneck",
+			"sandy"
 		],
-		str_name = "Slime's End Street A",
-		str_desc = str_generic_streets_description,
-		channel = 'slimes-end-street-a',
+		str_name = "Sandy Neck",
+		str_desc = "This rough coastline is home to most of the settlements in the district, despite the fact that it is boring as shit and also that all manner of eldritch sea monsters (including but not limited to krakens) are constantly washing ashore and fucking shit up. Yup, life’s pretty boring here in Slime’s End. Just tag some of the sparse homes here and head back into the city. Home to the city’s lighthouse, which guides ships towards Vagrant’s Corner all day and all night.",
+		channel = 'sandy-neck',
 		is_street = True,
 		is_capturable = True,
 		father_district = poi_id_slimesend,
@@ -16148,7 +16187,7 @@ poi_list = [
 	EwPoi( # apt-downtown
 		id_poi = poi_id_apt_downtown,
 		alias = [
-			
+
 		],
 		str_name = "a Downtown apartment",
 		str_desc = "",
@@ -16162,7 +16201,7 @@ poi_list = [
 	EwPoi( # apt-smogsburg
 		id_poi = poi_id_apt_smogsburg,
 		alias = [
-			
+
 		],
 		str_name = "a Smogsburg apartment",
 		str_desc = "",
@@ -16176,7 +16215,7 @@ poi_list = [
 	EwPoi( # apt-krakbay
 		id_poi = poi_id_apt_krakbay,
 		alias = [
-			
+
 		],
 		str_name = "a Krak Bay apartment",
 		str_desc = "",
@@ -16190,7 +16229,7 @@ poi_list = [
 	EwPoi( # apt-poudrinalley
 		id_poi = poi_id_apt_poudrinalley,
 		alias = [
-			
+
 		],
 		str_name = "a Poudrin Alley apartment",
 		str_desc = "",
@@ -16866,7 +16905,7 @@ poi_list = [
 			"cpoe",
 		],
 		str_name="Charcoal Park Outskirts Edge",
-		str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description_edge),
+		str_desc="You’ve never seen ruins this... recent. This area used to be a part of Charcoal Park, but now it’s a complete ghost town. You might even mistake it for a bonafide part of the city were it not for all the desert raiders and bubbling acid pools everywhere. It really makes you think about what could’ve been, you know? Maybe if the Veteran center wasn’t shielding Charcoal Park from this mess, we could’ve gotten rid of that stupid-ass district ages ago. {} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description_edge),
 		channel="charcoal-park-outskirts-edge",
 		pvp=True,
 		is_capturable=False,
@@ -17762,7 +17801,7 @@ for poi in poi_list:
 		for poi_2 in poi_list:
 			if alias in poi_2.alias and poi.id_poi != poi_2.id_poi:
 				print('alias {} is already being used by {}'.format(alias, poi_2.id_poi))
-		
+
 		id_to_poi[alias] = poi
 
 	# if it's a district and not RR, CK, or JR, add it to a list of capturable districts
