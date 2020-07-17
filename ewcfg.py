@@ -17796,6 +17796,7 @@ for poi in poi_list:
 			for father_poi in poi_list:
 				if father_poi.id_poi == poi.father_district:
 					poi.major_role = father_poi.major_role
+					poi.property_class = father_poi.property_class
 					
 					if placeholder_channel_names_used:
 						if 'streeta' in poi.id_poi:
