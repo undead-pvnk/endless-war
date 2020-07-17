@@ -198,6 +198,12 @@ class EwPoi:
 
 	# dict EwPoi -> int, that defines travel times into adjacent pois
 	neighbors = None
+	
+	# The topic associated with that poi's channel
+	topic = ""
+	
+	# The wiki page associated with that poi
+	wikipage = ""
 
 	def __init__(
 		self,
@@ -244,6 +250,8 @@ class EwPoi:
 		write_manuscript = False,
 		max_degradation = 1000,
 		neighbors = None,
+		topic = "",
+		wikipage = "",
 	):
 		self.id_poi = id_poi
 		self.alias = alias
@@ -287,6 +295,9 @@ class EwPoi:
 		self.has_ads = has_ads
 		self.write_manuscript = write_manuscript
 		self.max_degradation = max_degradation
+		self.topic = topic
+		self.wikipage = wikipage
+		
 		self.neighbors = neighbors
 		if self.neighbors == None:
 			self.neighbors = {}
@@ -1310,10 +1321,11 @@ async def look(cmd):
 	if poi.is_subzone or poi.id_poi == ewcfg.poi_id_thevoid: # Triggers if you input the command in the void or a sub-zone.
 
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-			"You stand {} {}.\n\n{}{}\n\n{}".format(
+			"You stand {} {}.\n\n{}\n{}{}\n\n{}".format(
 				poi.str_in,
 				poi.str_name,
 				poi.str_desc,
+				poi.wikipage,
 				void_resp,
 				degrade_resp,
 			)
@@ -1350,10 +1362,11 @@ async def look(cmd):
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You stand {} {}.\n\n{}{}\n\n{}...".format(
+			"You stand {} {}.\n\n{}\n{}{}\n\n{}...".format(
 				poi.str_in,
 				poi.str_name,
 				poi.str_desc,
+				poi.wikipage,
 				void_resp,
 				degrade_resp,
 			)

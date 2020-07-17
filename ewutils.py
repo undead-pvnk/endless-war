@@ -2383,3 +2383,47 @@ def get_street_list(str_poi):
 			if neighbor_poi.is_street == True:
 				poi_list.append(neighbor)
 		return poi_list
+	
+async def collect_topics(cmd):
+	
+	if not cmd.message.author.server_permissions.administrator:
+		return
+	
+	client = get_client()
+	server = client.get_server(cmd.message.server.id)
+	
+	for channel in server.channels:
+		
+		if channel.type != discord.ChannelType.text:
+			continue
+		elif channel.topic == None:
+			continue
+		elif channel.topic == '(Closed indefinitely) Currently controlled by no one.':
+			continue
+		
+		print('=================\n{}\n{}'.format(channel.name, channel.topic))
+	
+	
+async def sync_topics(cmd):
+	
+	if not cmd.message.author.server_permissions.administrator:
+		return
+	
+	for poi in ewcfg.poi_list:
+		await asyncio.sleep(2)
+		
+		channel = get_channel(cmd.message.server, poi.channel)
+		
+		if channel == None:
+			logMsg('Failed to get channel for {}'.format(poi.id_poi))
+			continue
+		
+		if channel.topic == poi.topic:
+			continue
+			
+		try:
+			await cmd.client.edit_channel(channel = channel, topic = poi.topic)
+			logMsg('Changed channel top for {} to {}'.format(channel, poi.topic))
+		except:
+			logMsg('Failed to set channel topic for {} to {}'.format(channel, poi.topic))
+		

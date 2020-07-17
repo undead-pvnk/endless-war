@@ -2594,3 +2594,4 @@ async def ping_me(cmd):
 	if pinged_poi != None:
 		response = user_data.get_mention()
 		return await ewutils.send_message(cmd.client, channel, response)
+

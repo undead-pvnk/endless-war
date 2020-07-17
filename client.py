@@ -661,6 +661,12 @@ cmd_map = {
 	
 	# removes all user overwrites in the server's poi channels
 	ewcfg.cmd_removeuseroverwrites: ewrolemgr.remove_user_overwrites,
+	
+	# Collects all channel topics.
+	ewcfg.cmd_collectopics: ewutils.collect_topics,
+	
+	# Changes those channel topics according to what's in their EwPoi definition
+	ewcfg.cmd_synctopics: ewutils.sync_topics,
 
 	# debug commands
 	# ewcfg.cmd_debug1: ewdebug.debug1,
