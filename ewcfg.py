@@ -17788,7 +17788,7 @@ for poi in poi_list:
 		elif 'ferry' in poi.id_poi:
 			poi.major_role = 'ferry_major'
 	
-	placeholder_channel_names_used = True
+	placeholder_channel_names_used = False
 		
 	# Subzones and streets need the same major roles as their mother/father districts.
 	if poi.is_street:
