@@ -1137,7 +1137,7 @@ async def on_ready():
 						market_data.bazaar_wares['furniture3'] = bw_furniture3
 
 
-						if random.random() < 0.01:
+						if random.random() < 0.05: # 1 / 20
 							market_data.bazaar_wares['minigun'] = ewcfg.weapon_id_minigun
 
 

@@ -2396,7 +2396,7 @@ async def collect_topics(cmd):
 		
 		if channel.type != discord.ChannelType.text:
 			continue
-		elif channel.topic == None:
+		elif channel.topic == None or channel.topic == '':
 			continue
 		elif channel.topic == '(Closed indefinitely) Currently controlled by no one.':
 			continue
