@@ -12069,7 +12069,7 @@ poi_list = [
 		id_poi = poi_id_poudrinalley_street_e,
 		alias = [
 			"draintrench",
-			"drain"
+			"trench"
 		],
 		str_name = "Drain Trench",
 		str_desc = "This long, skinny sewer grate runs the length of one of Poudrin Alley’s longest alleyways. It’s supposed to act as the central node of the district’s drainage system, but it’s really fucking bad at it so this whole area smells terrible. Hope you like firefights down narrow hallways. Maybe if you can’t find your way out of Poudrin Alley, you can take a shortcut and just flush yourself down to the Sewers here.",
@@ -12705,7 +12705,7 @@ poi_list = [
 		id_poi = poi_id_jaywalkerplain_street_e,
 		alias = [
 			"jpse",
-			"jpstreetd"
+			"jpstreete"
 		],
 		str_name = "Jaywalker Plain Street ",
 		str_desc = str_generic_streets_description,
@@ -16148,7 +16148,7 @@ poi_list = [
 	EwPoi( # apt-downtown
 		id_poi = poi_id_apt_downtown,
 		alias = [
-			"apt",
+			
 		],
 		str_name = "a Downtown apartment",
 		str_desc = "",
@@ -16162,7 +16162,7 @@ poi_list = [
 	EwPoi( # apt-smogsburg
 		id_poi = poi_id_apt_smogsburg,
 		alias = [
-			"apt",
+			
 		],
 		str_name = "a Smogsburg apartment",
 		str_desc = "",
@@ -16176,7 +16176,7 @@ poi_list = [
 	EwPoi( # apt-krakbay
 		id_poi = poi_id_apt_krakbay,
 		alias = [
-			"apt",
+			
 		],
 		str_name = "a Krak Bay apartment",
 		str_desc = "",
@@ -16190,7 +16190,7 @@ poi_list = [
 	EwPoi( # apt-poudrinalley
 		id_poi = poi_id_apt_poudrinalley,
 		alias = [
-			"apt",
+			
 		],
 		str_name = "a Poudrin Alley apartment",
 		str_desc = "",
@@ -17759,9 +17759,9 @@ for poi in poi_list:
 	# Populate the map of point of interest names/aliases to the POI.
 	id_to_poi[poi.id_poi] = poi
 	for alias in poi.alias:
-        for poi_2 in poi_list:
-            if alias in poi_2.alias and poi.id_poi != poi_2.id_poi:
-                print('alias {} is already being used by {}'.format(alias, poi_2.id_poi))
+		for poi_2 in poi_list:
+			if alias in poi_2.alias and poi.id_poi != poi_2.id_poi:
+				print('alias {} is already being used by {}'.format(alias, poi_2.id_poi))
 		
 		id_to_poi[alias] = poi
 
