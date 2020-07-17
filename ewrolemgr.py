@@ -609,7 +609,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 					wall_overwrite = None
 					if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
 						wall_overwrite = discord.PermissionOverwrite()
-						wall_channel = correct_channel + '-wall'
+						wall_channel = ewutils.get_channel(server, correct_channel.name + '-wall')
 						overwrite.read_messages = True
 					
 					#print(permissions_dict[user_data.poi])
@@ -657,7 +657,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 			wall_overwrite = None
 			if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
 				wall_overwrite = discord.PermissionOverwrite()
-				wall_channel = correct_channel + '-wall'
+				wall_channel = ewutils.get_channel(server, correct_channel.name + '-wall')
 				overwrite.read_messages = True
 		
 			time_now_start = int(time.time())
@@ -783,7 +783,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 				wall_overwrite = None
 				if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
 					wall_overwrite = discord.PermissionOverwrite()
-					wall_channel = correct_channel + '-wall'
+					wall_channel = ewutils.get_channel(server, correct_channel.name + '-wall')
 					overwrite.read_messages = True
 				
 				time_now_start = int(time.time())
