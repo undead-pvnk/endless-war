@@ -1951,5 +1951,5 @@ def get_void_connections_resp(poi, id_server):
 		connected_poi_names = [ewcfg.id_to_poi.get(poi_id).str_name for poi_id in void_connections]
 		response = "\nThe street sign in the intersection points to {}, and {}".format(", ".join(connected_poi_names), ewcfg.id_to_poi.get(ewcfg.poi_id_thesewers).str_name)
 	elif poi in void_connections:
-		response = " There's also a well lit staircase leading underground, but it looks too clean to be an entrance to the subway."
+		response = "There's also a well lit staircase leading underground, but it looks too clean to be an entrance to the subway."
 	return response
