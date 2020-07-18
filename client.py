@@ -886,7 +886,7 @@ async def on_ready():
 		ewrolemgr.setupRoles(client = client, id_server = server.id)
 		
 		# Refresh the permissions of all users
-		await ewrolemgr.refresh_user_perms(client = client, id_server = server.id, startup = True)
+		# await ewrolemgr.refresh_user_perms(client = client, id_server = server.id, startup = True)
 
 		# Grep around for channels
 		ewutils.logMsg("connected to server: {}".format(server.name))
