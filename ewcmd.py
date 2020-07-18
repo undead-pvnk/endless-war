@@ -2549,20 +2549,27 @@ async def prank(cmd):
 						# Don't reroll the item choice.
 						reroll = False
 						
-				response = "With the power of the Janus Mask, {} plucks a prank item from the ether!\n".format(cmd.message.author.display_name)
+				response = ''
+				pluck_response = "With the power of the Janus Mask, {} plucks a prank item from the ether!\n".format(cmd.message.author.display_name)
 
 				if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
 					item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_instantuse(cmd, item)
 					if side_effect != "":
 						response += await ewitem.perform_prank_item_side_effect(side_effect, cmd=cmd)
+						
+					response = pluck_response + response
 
 				elif item.item_props['prank_type'] == ewcfg.prank_type_response:
 					item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_response(cmd, item)
 					if side_effect != "":
 						response += await ewitem.perform_prank_item_side_effect(side_effect, cmd=cmd)
 
+					response = pluck_response + response
+
 				elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
 					item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_trap(cmd, item)
+
+					response = pluck_response + response
 
 				if item_action == "delete":
 					ewitem.item_delete(item.id_item)
