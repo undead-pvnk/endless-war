@@ -17911,7 +17911,7 @@ non_district_non_subzone_pvp_areas = [
 # Places on the map that should result in a user being flagged for PVP
 vulnerable_districts = outskirts + streets
 for poi in poi_list:
-	if (poi.is_subzone or poi in non_district_non_subzone_pvp_areas) and poi.pvp:
+	if (poi.is_subzone or poi.id_poi in non_district_non_subzone_pvp_areas) and poi.pvp:
 		vulnerable_districts.append(poi.id_poi)
 # for vul in vulnerable_districts:
 #     print('vulnerable area: {}'.format(vul))

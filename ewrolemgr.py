@@ -627,7 +627,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	
 						#print('took {} seconds to update channel permissions'.format(time_now_end - time_now_start))
 	
-						print('updated permissions for {} in {}'.format(member, user_data.poi))
+						#print('updated permissions for {} in {}'.format(member, user_data.poi))
 						
 						
 						

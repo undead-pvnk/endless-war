@@ -265,7 +265,7 @@ def gen_fish(x, fisher, has_fishingrod):
 	
 	# Get fucked
 	if fisher.pier.id_poi == ewcfg.poi_id_juviesrow_pier:
-		fish = ewcfg.fish_map["plebefish"]
+		fish = 'plebefish'
 
 	return fish
 
@@ -1055,7 +1055,7 @@ async def barter(cmd):
 					accepted = False
 
 				# cancel deal if the user has left Vagrant's Corner
-				if user_data.poi != ewcfg.poi_id_vagrantscorner:
+				if user_data.poi != ewcfg.poi_id_speakeasy:
 					accepted = False
 
 				# cancel deal if the offer has been deleted
