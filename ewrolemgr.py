@@ -143,9 +143,9 @@ async def hideRoleNames(cmd):
 			continue
 		
 		# Slow down just a bit every 20 Role change attempts
-		if role_counter == 20:
+		if role_counter >= 20:
 			role_counter = 0
-			await asyncio.sleep(2)
+			await asyncio.sleep(5)
 		
 		try:
 			if poi.role in roles_map:
@@ -196,9 +196,9 @@ async def restoreRoleNames(cmd):
 	for poi in ewcfg.poi_list:
 
 		# Slow down just a bit every 20 Role change attempts
-		if role_counter == 20:
+		if role_counter >= 20:
 			role_counter = 0
-			await asyncio.sleep(2)
+			await asyncio.sleep(5)
 		
 		try:
 			role_data = EwRole(id_server = server.id, name = poi.role)
