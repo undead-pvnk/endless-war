@@ -150,7 +150,7 @@ async def hideRoleNames(cmd):
 				major_role = roles_map[poi.major_role]
 				if major_role.name != ewcfg.generic_role_name:
 					role_counter += 1
-					await client.edit_role(server=server, role=role, name=ewcfg.generic_role_name)
+					await client.edit_role(server=server, role=major_role, name=ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.major_role))
 			
@@ -159,7 +159,7 @@ async def hideRoleNames(cmd):
 				minor_role = roles_map[poi.minor_role]
 				if minor_role.name != ewcfg.generic_role_name:
 					role_counter += 1
-					await client.edit_role(server=server, role=role, name=ewcfg.generic_role_name)
+					await client.edit_role(server=server, role=minor_role, name=ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.minor_role))
 
