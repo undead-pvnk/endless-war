@@ -571,6 +571,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 				
 				# If we dont have the right member supplied in the function call, don't modify its permissions
 				if member != used_member:
+					print('SKIPPED MEMBER')
 					continue
 				
 				user_data = EwUser(member=member)

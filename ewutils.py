@@ -606,7 +606,8 @@ async def flag_vulnerable_districts(id_server = None):
 				await ewrolemgr.updateRoles(client = client, member = member)
 
 				# Make sure to kill players who may have left while the bot was offline.
-				if member not in server.members:
+				all_current_members = server.members
+				if member not in all_current_members:
 					try:
 						user_data = EwUser(id_user = user_data.id_user, id_server = user_data.id_server)
 	
@@ -702,7 +703,8 @@ async def bleedSlimes(id_server = None):
 				await ewrolemgr.updateRoles(client = client, member = member)
 				
 				# Make sure to kill players who may have left while the bot was offline.
-				if member not in server.members:
+				all_current_members = server.members
+				if member not in all_current_members:
 					try:
 						user_data = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
 						user_data.trauma = ewcfg.trauma_id_suicide
@@ -909,7 +911,8 @@ async def burnSlimes(id_server = None):
 				user_data.persist()
 
 			# Make sure to kill players who may have left while the bot was offline.
-			if member not in server.members:
+			all_current_members = server.members
+			if member not in all_current_members:
 				try:
 					user_data = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
 					user_data.trauma = ewcfg.trauma_id_suicide

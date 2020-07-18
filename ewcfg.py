@@ -1915,9 +1915,9 @@ number_emote_map = {
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 mines_wall_map = {
-	channel_mines : channel_jrmineswall,
-	channel_tt_mines : channel_ttmineswall,
-	channel_cv_mines : channel_cvmineswall
+	poi_id_mine : channel_jrmineswall,
+	poi_id_tt_mines : channel_ttmineswall,
+	poi_id_cv_mines : channel_cvmineswall
 }
 
 # trading

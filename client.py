@@ -1032,9 +1032,11 @@ async def on_ready():
 					for pvp_role in ewcfg.role_to_pvp_role.values():
 						role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
 						role_ids.append(role.id_role)
+						
+					all_current_members = server.members
 
 					# Monitor all user roles and update if a user is no longer flagged for PvP.
-					for member in server.members:
+					for member in all_current_members:
 						for role in member.roles:
 							if role.id in role_ids:
 								await ewrolemgr.updateRoles(client = client, member = member)
