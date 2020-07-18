@@ -2511,7 +2511,7 @@ async def aptCommands(cmd):
 		pass
 	elif cmd_text == ewcfg.cmd_switch or cmd_text == ewcfg.cmd_switch_alt_1:
 		return await ewwep.switch_weapon(cmd=cmd)
-	elif cmd_text == ewcfg.cmd_changespray:
+	elif cmd_text == ewcfg.cmd_changespray or cmd_text == ewcfg.cmd_changespray_alt1:
 		return await ewdistrict.change_spray(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_tag:
 		return await ewdistrict.tag(cmd=cmd)

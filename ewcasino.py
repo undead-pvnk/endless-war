@@ -35,6 +35,8 @@ async def pachinko(cmd):
 	resp = await ewcmd.start(cmd = cmd)
 	time_now = int(time.time())
 
+	user_data = EwUser(member=cmd.message.author)
+
 	global last_pachinkoed_times
 	last_used = last_pachinkoed_times.get(cmd.message.author.id)
 
@@ -153,6 +155,8 @@ async def pachinko(cmd):
 
 async def craps(cmd):
 	time_now = int(time.time())
+	
+	user_data = EwUser(member=cmd.message.author)
 
 	global last_crapsed_times
 	last_used = last_crapsed_times.get(cmd.message.author.id)
@@ -285,6 +289,8 @@ async def slots(cmd):
 
 	global last_slotsed_times
 	last_used = last_slotsed_times.get(cmd.message.author.id)
+
+	user_data = EwUser(member=cmd.message.author)
 
 	if last_used == None:
 		last_used = 0
@@ -466,6 +472,8 @@ async def roulette(cmd):
 	time_now = int(time.time())
 	bet = ""
 	soul_id = None
+
+	user_data = EwUser(member=cmd.message.author)
 
 	returned_item_id = None
 	all_bets = ["0", "00", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
@@ -680,6 +688,8 @@ async def baccarat(cmd):
 
 	if last_used == None:
 		last_used = 0
+
+	user_data = EwUser(member=cmd.message.author)
 
 	currency_used = ewcfg.currency_slimecoin
 
@@ -2658,9 +2668,9 @@ async def skat_choose(cmd):
 		return
 
 async def betsoul(cmd):
-	usermodel = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
 	user_inv = ewitem.inventory(id_user=cmd.message.author.id, id_server=cmd.message.server.id, item_type_filter=ewcfg.it_cosmetic)
-	if usermodel.life_state == ewcfg.life_state_shambler:
+	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2695,14 +2705,14 @@ async def betsoul(cmd):
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		ewitem.give_item(id_user="casinosouls", id_server=cmd.message.server.id, id_item=item_select.id_item)
-		usermodel.change_slimecoin(coinsource=ewcfg.coinsource_spending, n=ewcfg.soulprice) #current price for souls is 500 mil slimecoin
-		usermodel.persist()
+		user_data.change_slimecoin(coinsource=ewcfg.coinsource_spending, n=ewcfg.soulprice) #current price for souls is 500 mil slimecoin
+		user_data.persist()
 		response = "You hand over {} for {:,} slimecoin.".format(item_select.item_props.get('cosmetic_name'), ewcfg.soulprice)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def buysoul(cmd):
-	usermodel = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
-	if usermodel.life_state == ewcfg.life_state_shambler:
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2730,18 +2740,18 @@ async def buysoul(cmd):
 		response = "That soul isn't available. Go torment someone else."
 	elif selected_item == None:
 		response = "Sorry, no souls on the market today."
-	elif usermodel.slimecoin < ewcfg.soulprice:
+	elif user_data.slimecoin < ewcfg.soulprice:
 		response = "Tough luck. You can't afford a soul. Poor you."
 	else:
-		poi = ewcfg.id_to_poi.get(usermodel.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = usermodel.id_server)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		ewitem.give_item(id_user=cmd.message.author.id, id_server=cmd.message.server.id, id_item=selected_item.id_item)
-		usermodel.change_slimecoin(coinsource=ewcfg.coinsource_spending, n= -ewcfg.soulprice)  # current price for souls is 500 mil slimecoin
-		usermodel.persist()
+		user_data.change_slimecoin(coinsource=ewcfg.coinsource_spending, n= -ewcfg.soulprice)  # current price for souls is 500 mil slimecoin
+		user_data.persist()
 		response = "You buy {} off the casino. This will be fun.".format(selected_item.item_props.get('cosmetic_name'))
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

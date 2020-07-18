@@ -440,6 +440,7 @@ cmd_map = {
 	#ewcfg.cmd_annex_alt1: ewdistrict.annex,
 	ewcfg.cmd_spray_alt1: ewwep.spray,
 	ewcfg.cmd_changespray:ewdistrict.change_spray,
+	ewcfg.cmd_changespray:ewdistrict.change_spray,
 	ewcfg.cmd_tag:ewdistrict.tag,
 
 	# link to the world map
