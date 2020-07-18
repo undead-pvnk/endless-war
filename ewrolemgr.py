@@ -125,36 +125,41 @@ async def hideRoleNames(cmd):
 	server = client.get_server(id_server)
 	roles_map = ewutils.getRoleMap(server.roles)
 
-	poi_counter = 0
+	role_counter = 0
 	for poi in ewcfg.poi_list:
 		
-		if (not poi.is_subzone) and (not poi.is_district):
+		if (not poi.is_street) and (not poi.is_district) and (not poi.id_poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]):
 			continue
 		
-		# Slow down just a bit every 20 POIs
-		poi_counter += 1
-		if poi_counter == 20:
-			poi_counter = 0
+		# Slow down just a bit every 20 Role change attempts
+		if role_counter == 20:
+			role_counter = 0
 			await asyncio.sleep(2)
 		
 		try:
 			if poi.role in roles_map:
 				role = roles_map[poi.role]
-				await client.edit_role(server = server, role = role, name = ewcfg.generic_role_name)
+				if role.name != ewcfg.generic_role_name:
+					role_counter += 1
+					await client.edit_role(server = server, role = role, name = ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.role))
 			
 		try:
 			if poi.major_role in roles_map:
 				major_role = roles_map[poi.major_role]
-				await client.edit_role(server = server, role = major_role, name = ewcfg.generic_role_name)
+				if major_role.name != ewcfg.generic_role_name:
+					role_counter += 1
+					await client.edit_role(server=server, role=role, name=ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.major_role))
 			
 		try:
 			if poi.minor_role in roles_map:
 				minor_role = roles_map[poi.minor_role]
-				await client.edit_role(server = server, role = minor_role, name = ewcfg.generic_role_name)
+				if minor_role.name != ewcfg.generic_role_name:
+					role_counter += 1
+					await client.edit_role(server=server, role=role, name=ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.minor_role))
 
