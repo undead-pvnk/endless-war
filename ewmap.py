@@ -1626,7 +1626,7 @@ async def kick(id_server):
 			user_data = EwUser(id_user = id_user, id_server = id_server)
 
 			# checks if the player should be kicked from the subzone and kicks them if they should.
-			if poi.is_subzone:
+			if poi.is_subzone and poi.id_poi != ewcfg.poi_id_thesphere:
 				
 				# Some subzones could potentially have multiple mother districts.
 				# Make sure to get one that's accessible before attempting a proper kickout.
