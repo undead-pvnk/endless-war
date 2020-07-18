@@ -179,16 +179,24 @@ async def haunt(cmd):
 			elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile or haunted_data.life_state == ewcfg.life_state_shambler:
 				# Target can be haunted by the player.
 				haunt_power_multiplier = 1
+				haunting_boosted = False
 				if user_data.poi == haunted_data.poi:
 					if user_data.poi == ewcfg.poi_id_thevoid:
 						# haunting is empowered by the void
 						haunt_power_multiplier *= 5
+						haunting_boosted = True
 					else: 
 						# when haunting someone face to face, you get double the amount
 						haunt_power_multiplier *= 2
-				haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio) * haunt_power_multiplier
+						haunting_boosted = True
 
-				haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
+				haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio) * haunt_power_multiplier
+				
+				if haunting_boosted:
+					haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
+				else:
+					haunted_data.change_slimes(n = -max(haunted_slimes, ewcfg.slimes_hauntmax), source = ewcfg.source_haunted)
+
 				user_data.change_slimes(n = -max(haunted_slimes, ewcfg.slimes_hauntmax), source = ewcfg.source_haunter)
 				market_data.negaslime -= haunted_slimes
 				user_data.time_lasthaunt = time_now
