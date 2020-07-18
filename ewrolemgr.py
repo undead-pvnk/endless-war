@@ -127,8 +127,16 @@ async def hideRoleNames(cmd):
 
 	role_counter = 0
 	for poi in ewcfg.poi_list:
-		
-		if (not poi.is_street) and (not poi.is_district) and (not poi.id_poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines, ewcfg.poi]) and (not poi.id_poi in ewcfg.transports):
+			
+		if poi.is_street:
+			pass
+		elif poi.is_district:
+			pass
+		elif poi.id_poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+			pass
+		elif poi.id_poi in ewcfg.transports:
+			pass
+		else:
 			continue
 		
 		# Slow down just a bit every 20 Role change attempts
