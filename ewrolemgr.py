@@ -128,7 +128,7 @@ async def hideRoleNames(cmd):
 	role_counter = 0
 	for poi in ewcfg.poi_list:
 		
-		if (not poi.is_street) and (not poi.is_district) and (not poi.id_poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]):
+		if (not poi.is_street) and (not poi.is_district) and (not poi.id_poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines, ewcfg.poi]) and (not poi.id_poi in ewcfg.transports):
 			continue
 		
 		# Slow down just a bit every 20 Role change attempts
@@ -175,11 +175,20 @@ async def restoreRoleNames(cmd):
 	
 	client = cmd.client
 	server = member.server
+	
+	role_counter = 0
 	for poi in ewcfg.poi_list:
+
+		# Slow down just a bit every 20 Role change attempts
+		if role_counter == 20:
+			role_counter = 0
+			await asyncio.sleep(2)
+		
 		try:
 			role_data = EwRole(id_server = server.id, name = poi.role)
 			for role in server.roles:
 				if role.id == role_data.id_role:
+					role_counter += 1
 					await client.edit_role(server = server, role = role, name = role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.role))
@@ -188,6 +197,7 @@ async def restoreRoleNames(cmd):
 			major_role_data = EwRole(id_server = server.id, name = poi.major_role)
 			for role in server.roles:
 				if role.id == major_role_data.id_role:
+					role_counter += 1
 					await client.edit_role(server = server, role = role, name = major_role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.major_role))
@@ -196,6 +206,7 @@ async def restoreRoleNames(cmd):
 			minor_role_data = EwRole(id_server = server.id, name = poi.minor_role)
 			for role in server.roles:
 				if role.id == minor_role_data.id_role:
+					role_counter += 1
 					await client.edit_role(server = server, role = role, name = minor_role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.minor_role))
