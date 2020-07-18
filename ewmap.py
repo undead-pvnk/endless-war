@@ -1653,7 +1653,7 @@ async def kick(id_server):
 						response = "You have been kicked out for loitering! You can only stay in a sub-zone and twiddle your thumbs for 1 hour at a time."
 						await ewutils.send_message(client, mother_district_channel, ewutils.formatMessage(member_object, response))
 		except:
-			ewutils.logMsg('failed to move inactive player out of subzone: {}'.format(id_user))
+			ewutils.logMsg('failed to move inactive player out of subzone with poi {}: {}'.format(player[0], player[1]))
 
 def get_slimes_resp(district_data):
 	# get information about slime levels in the district
