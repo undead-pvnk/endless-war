@@ -124,7 +124,19 @@ async def hideRoleNames(cmd):
 	
 	server = client.get_server(id_server)
 	roles_map = ewutils.getRoleMap(server.roles)
+
+	poi_counter = 0
 	for poi in ewcfg.poi_list:
+		
+		if (not poi.is_subzone) and (not poi.is_district):
+			continue
+		
+		# Slow down just a bit every 20 POIs
+		poi_counter += 1
+		if poi_counter == 20:
+			poi_counter = 0
+			await asyncio.sleep(2)
+		
 		try:
 			if poi.role in roles_map:
 				role = roles_map[poi.role]

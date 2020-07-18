@@ -17759,7 +17759,7 @@ for poi in poi_list:
 	# Assign all the correct major and minor roles.
 	
 	# Districts and streets need their minor roles to see (read-only) all of their subzones.
-	if poi.is_district or poi.is_street:
+	if poi.is_district or poi.is_street or poi.id_poi in [poi_id_mine, poi_id_cv_mines, poi_id_tt_mines]:
 		poi.minor_role = '{}_minor'.format(poi.id_poi)
 
 	# Districts need their major roles for their specific LAN (voice/text) channels.
@@ -17774,12 +17774,15 @@ for poi in poi_list:
 			
 		if len(district_streets_list) > 0:
 			poi.str_desc += " This area is connected to "
-			for i in range(len(district_streets_list)):
-	
-				if i == (len(district_streets_list) - 1):
-					poi.str_desc += 'and {}.'.format(district_streets_list[i])
-				else:
-					poi.str_desc += '{}, '.format(district_streets_list[i])
+			if len(district_streets_list) == 1:
+				poi.str_desc += district_streets_list[0]
+			else:
+				for i in range(len(district_streets_list)):
+		
+					if i == (len(district_streets_list) - 1):
+						poi.str_desc += 'and {}.'.format(district_streets_list[i])
+					else:
+						poi.str_desc += '{}, '.format(district_streets_list[i])
 					
 	if poi.is_transport:
 		if 'subway' in poi.id_poi:
@@ -17814,6 +17817,45 @@ for poi in poi_list:
 							poi.channel = father_poi.channel + '-street-f'
 							
 					break
+			
+			father_district = ''
+			connected_streets_and_districts = []
+			connected_subzones = []
+			for neighbor_poi in poi_list:
+				if neighbor_poi.id_poi in poi.neighbors:
+					if neighbor_poi.id_poi == poi.father_district:
+						father_district = neighbor_poi.str_name
+					elif neighbor_poi.is_street or (neighbor_poi.is_district and neighbor_poi.id_poi != poi.father_district):
+						connected_streets_and_districts.append(neighbor_poi.str_name)
+					elif neighbor_poi.is_subzone:
+						connected_subzones.append(neighbor_poi.str_name)
+			
+			if father_district != '':
+				poi.str_desc += " This street connects back into {}.".format(father_district)
+			
+				if len(connected_streets_and_districts) >= 1:
+					poi.str_desc += " This street is connected to "
+					if len(connected_streets_and_districts) == 1:
+						poi.str_desc += connected_streets_and_districts[0]
+					else:
+						for i in range(len(connected_streets_and_districts)):
+					
+							if i == (len(connected_streets_and_districts) - 1):
+								poi.str_desc += 'and {}.'.format(connected_streets_and_districts[i])
+							else:
+								poi.str_desc += '{}, '.format(connected_streets_and_districts[i])
+
+				if len(connected_subzones) >= 1:
+					poi.str_desc += " This street also exits into "
+					if len(connected_subzones) == 1:
+						poi.str_desc += connected_subzones[0]
+					else:
+						for i in range(len(connected_subzones)):
+		
+							if i == (len(connected_subzones) - 1):
+								poi.str_desc += 'and {}.'.format(connected_subzones[i])
+							else:
+								poi.str_desc += '{}, '.format(connected_subzones[i])
 		else:
 			print('Error: No father POI found for {}'.format(poi.id_poi))
 	
