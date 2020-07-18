@@ -790,10 +790,11 @@ class EwEnemy:
 				old_poi_def = ewcfg.id_to_poi.get(old_poi)
 				old_ch_name = old_poi_def.channel
 				resp_cont.add_channel_response(old_ch_name, old_district_response)
-
-				gang_base_response = "There are reports of a powerful enemy roaming around {}.".format(new_poi_def.str_name)
-				resp_cont.add_channel_response(ewcfg.channel_rowdyroughhouse, gang_base_response)
-				resp_cont.add_channel_response(ewcfg.channel_copkilltown, gang_base_response)
+				
+				if new_poi not in ewcfg.outskirts:
+					gang_base_response = "There are reports of a powerful enemy roaming around {}.".format(new_poi_def.str_name)
+					resp_cont.add_channel_response(ewcfg.channel_rowdyroughhouse, gang_base_response)
+					resp_cont.add_channel_response(ewcfg.channel_copkilltown, gang_base_response)
 		finally:
 			self.persist()
 			return resp_cont
