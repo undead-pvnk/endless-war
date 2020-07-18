@@ -163,6 +163,8 @@ async def hideRoleNames(cmd):
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.minor_role))
 
+	print('Finished hiding roles!')
+
 """
 	Restore poi roles to their original names
 """
@@ -210,6 +212,8 @@ async def restoreRoleNames(cmd):
 					await client.edit_role(server = server, role = role, name = minor_role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.minor_role))
+			
+	print('Finished restoring roles!')
 			
 """
 	Creates all POI roles from scratch. Ideally, this is only used in test servers.
