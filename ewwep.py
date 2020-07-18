@@ -1280,6 +1280,8 @@ async def suicide(cmd):
 
 """ Damage all players in a district; Exploding weapon's effect """
 def weapon_explosion(user_data = None, shootee_data = None, district_data = None, market_data = None, life_states = None, factions = None, slimes_damage = 0, backfire = None, time_now = 0, target_enemy = None, sap_damage = 0, sap_ignored = 0):
+	
+	enemy_data = None
 	if user_data != None and shootee_data != None and district_data != None:
 		user_player = EwPlayer(id_user=user_data.id_user, id_server=user_data.id_server)
 		if target_enemy == False:
@@ -1442,9 +1444,15 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 		for bystander in bystander_enemies:
 			# Don't damage the shooter or the enemy a second time
 			
-			if bystander != user_data.id_user and bystander != enemy_data.id_enemy:
+			if enemy_data != None:
+				id_enemy_used = enemy_data.id_enemy
+			else:
+				id_enemy_used = None
+			
+			if bystander != user_data.id_user and bystander != id_enemy_used:
 				response = ""
 
+				slimes_damage_target = slimes_damage
 				target_enemy_data = EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
 
 				# apply sap armor
