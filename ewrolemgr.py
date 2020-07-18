@@ -126,6 +126,9 @@ async def hideRoleNames(cmd):
 	roles_map = ewutils.getRoleMap(server.roles)
 
 	role_counter = 0
+	
+	print('Attempting to hide all role names...')
+	
 	for poi in ewcfg.poi_list:
 			
 		if poi.is_street:
@@ -187,6 +190,9 @@ async def restoreRoleNames(cmd):
 	server = member.server
 	
 	role_counter = 0
+
+	print('Attempting to restore all role names...')
+	
 	for poi in ewcfg.poi_list:
 
 		# Slow down just a bit every 20 Role change attempts
@@ -604,7 +610,6 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 					continue
 					
 			#print('{} overwrites: {}'.format(poi.id_poi, channel.overwrites))
-			member_count = 0
 			for tuple in channel.overwrites:
 				#print('tuplevar: {}'.format(tuple[0]) + '\n\n')
 				if tuple[0] not in server.roles:
@@ -618,12 +623,6 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 					user_data = EwUser(member=member)
 					
 					if user_data.poi != poi.id_poi:
-	
-						# Every 20 members, slow down a  bit
-						member_count += 1
-						if member_count == 20:
-							member_count = 0
-							await asyncio.sleep(2)
 						
 						# Incorrect overwrite found for user
 						time_now_start = int(time.time())
