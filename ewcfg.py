@@ -237,14 +237,11 @@ poi_id_toxington_pier = "toxingtonpier"
 poi_id_jaywalkerplain_pier = "jaywalkerplainpier"
 poi_id_crookline_pier = "crooklinepier"
 poi_id_assaultflatsbeach_pier = "assaultflatsbeachpier"
-poi_id_vagrantscorner_pier = "vagrantscornerpier"
+poi_id_vagrantscorner_pier = "vagrantscornerpier" # NOT USED
 poi_id_slimesend_pier = "slimesendpier"
 poi_id_juviesrow_pier = "juviesrowpier"
 
-
 #Apartment subzones
-
-
 poi_id_apt_downtown ="aptdowntown"
 poi_id_apt_smogsburg ="aptsmogsburg"
 poi_id_apt_krakbay = "aptkrakbay"
