@@ -189,7 +189,7 @@ async def haunt(cmd):
 				haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio) * haunt_power_multiplier
 
 				haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
-				user_data.change_slimes(n = -max(haunted_slimes, ewcfg.slimes_hauntmax), source = ewcfg.source_haunter)
+				user_data.change_slimes(n = -min(haunted_slimes, ewcfg.slimes_hauntmax), source = ewcfg.source_haunter)
 				market_data.negaslime -= haunted_slimes
 				user_data.time_lasthaunt = time_now
 				user_data.busted = False
