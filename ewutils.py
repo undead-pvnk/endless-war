@@ -2413,6 +2413,10 @@ async def sync_topics(cmd):
 		return
 	
 	for poi in ewcfg.poi_list:
+		
+		if poi.topic == None or poi.topic == '':
+			continue
+		
 		await asyncio.sleep(2)
 		
 		channel = get_channel(cmd.message.server, poi.channel)
@@ -2423,7 +2427,6 @@ async def sync_topics(cmd):
 		
 		if channel.topic == poi.topic:
 			continue
-			
 		try:
 			await cmd.client.edit_channel(channel = channel, topic = poi.topic)
 			logMsg('Changed channel top for {} to {}'.format(channel, poi.topic))
