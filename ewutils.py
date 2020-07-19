@@ -2394,6 +2394,7 @@ async def collect_topics(cmd):
 	
 	client = get_client()
 	server = client.get_server(cmd.message.server.id)
+	topic_count = 0
 	
 	for channel in server.channels:
 		
@@ -2403,8 +2404,18 @@ async def collect_topics(cmd):
 			continue
 		elif channel.topic == '(Closed indefinitely) Currently controlled by no one.':
 			continue
-		
-		print('=================\n{}\n{}'.format(channel.name, channel.topic))
+			
+		found_poi = False
+		for poi in ewcfg.poi_list:
+			if channel.name == poi.channel:
+				found_poi = True
+				break
+				
+		if found_poi:
+			topic_count += 1
+			print('\n{}\n=================\n{}'.format(channel.name, channel.topic))
+			
+	print('POI topics found: {}'.format(topic_count))
 	
 	
 async def sync_topics(cmd):

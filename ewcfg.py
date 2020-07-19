@@ -4765,7 +4765,7 @@ def wef_staff(ctn = None):
 			lambda _: (market_data.day % 31 == 15 and market_data.clock >= 20) or (market_data.day % 31 == 16 and market_data.clock <= 6), # moonless night
 			lambda ctn: not ctn.user_data.has_soul,
 			lambda ctn: ctn.user_data.get_weapon_possession(),
-			lambda ctn: ctn.user_data.poi == ewcfg.poi_id_thevoid,
+			lambda ctn: ctn.user_data.poi == poi_id_thevoid,
 			lambda ctn: ctn.shootee_data.slimes > ctn.user_data.slimes,
 			lambda ctn: (ctn.user_data.swear_jar >= 500) or (ctn.shootee_data.swear_jar == 0),
 			lambda ctn: (ctn.user_data.poi_death == ctn.user_data.poi) or (ctn.shootee_data.poi_death == ctn.shootee_data.poi),
@@ -14391,7 +14391,6 @@ poi_list = [
 		str_enter = "arrive at",
 		str_name = "ENDLESS WAR",
 		str_desc = "Its bright, neon green color nearly blinds you when observed from this close. You are overwhelmed by an acute, menacing aura as you crane your neck to observe the obelisk in its entirety. You almost thought you saw it looking back down at you, but it was probably just your imagination. You shouldn’t stay here any longer than you have to, you always get a weird feeling in the pit of your stomach when you stick around for too long.",
-		topic = "",
 		channel = channel_endlesswar,
         wikipage = wiki_baseurl + "Downtown_NLACakaNM#ENDLESS_WAR",
 		role = "Endless War",
