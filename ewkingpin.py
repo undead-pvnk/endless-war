@@ -109,6 +109,7 @@ async def deadmega(cmd):
 	Command that creates a princeps cosmetic item
 """
 async def create(cmd):
+	#if not cmd.message.author.server_permissions.administrator:
 	if EwUser(member = cmd.message.author).life_state != ewcfg.life_state_kingpin:
 		response = 'Lowly Non-Kingpins cannot hope to create items with their bare hands.'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

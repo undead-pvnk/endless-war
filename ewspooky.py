@@ -67,7 +67,7 @@ async def revive(cmd):
 				player_data.trauma = ""
 				poi_death = ewcfg.id_to_poi.get(player_data.poi_death)
 				if ewmap.inaccessible(poi = poi_death, user_data = player_data):
-					player_data.poi = ewcfg.poi_id_downtown
+					player_data.poi = ewcfg.poi_id_endlesswar
 				else:
 					player_data.poi = poi_death.id_poi
 			else:
@@ -76,7 +76,7 @@ async def revive(cmd):
 				# Give player some initial slimes.
 				player_data.change_slimes(n = ewcfg.slimes_onrevive)
 				# Get the player out of the sewers.
-				player_data.poi = ewcfg.poi_id_downtown
+				player_data.poi = ewcfg.poi_id_endlesswar
 
 
 
@@ -141,10 +141,10 @@ async def haunt(cmd):
 	else: 
 		haunted_data = None
 		member = None
-		if cmd.mentions_count == 0:
-			haunted_data = EwUser(id_user = cmd.tokens[1], id_server = cmd.message.server.id)
+		if cmd.mentions_count == 0 and cmd.tokens_count > 1:
 			server = ewutils.get_client().get_server(cmd.message.server.id)
 			member = server.get_member(cmd.tokens[1])
+			haunted_data = EwUser(member = member)
 		elif cmd.mentions_count == 1:
 			member = cmd.mentions[0]
 			haunted_data = EwUser(member = member)
@@ -178,22 +178,26 @@ async def haunt(cmd):
 				response = "{} is invulnerable to ghosts.".format(member.display_name)
 			elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile or haunted_data.life_state == ewcfg.life_state_shambler:
 				# Target can be haunted by the player.
-				haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio)
-				# if user_data.poi == haunted_data.poi:  # when haunting someone face to face, there is no cap and you get double the amount
-				# 	haunted_slimes *= 2
-				if haunted_slimes > ewcfg.slimes_hauntmax:
-					haunted_slimes = ewcfg.slimes_hauntmax
-
-				#if -user_data.slimes < haunted_slimes:  # cap on for how much you can haunt
-				#	haunted_slimes = -user_data.slimes
+				haunt_power_multiplier = 1
+				if user_data.poi == haunted_data.poi:
+					if user_data.poi == ewcfg.poi_id_thevoid:
+						# haunting is empowered by the void
+						haunt_power_multiplier *= 5
+					else: 
+						# when haunting someone face to face, you get double the amount
+						haunt_power_multiplier *= 2
+				haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio) * haunt_power_multiplier
 
 				haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
-				user_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunter)
+				user_data.change_slimes(n = -max(haunted_slimes, ewcfg.slimes_hauntmax), source = ewcfg.source_haunter)
 				market_data.negaslime -= haunted_slimes
 				user_data.time_lasthaunt = time_now
 				user_data.busted = False
 
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack)
+				user_poi = ewcfg.id_to_poi.get(user_data.poi)
+				if user_poi.is_district:
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack)
+				
 				resp_cont.add_member_to_update(cmd.message.author)
 				# Persist changes to the database.
 				user_data.persist()
@@ -361,7 +365,7 @@ async def manifest(cmd):
 		response = "You are too weak to manifest. You need to gather more negative slime."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi_death)
+	poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid) # manifest ghosts directly into the void
 
 	response = "{}ing in {}.".format(cmd.tokens[0][1:].capitalize(), poi.str_name)
 
@@ -495,7 +499,7 @@ async def possess_weapon(cmd):
 				if msg != None:
 					if msg.content.lower() == ewcfg.cmd_accept:
 						accepted = True
-					elif message.content.lower() == ewcfg.cmd_refuse:
+					elif msg.content.lower() == ewcfg.cmd_refuse:
 						accepted = False
 			except:
 				accepted = False

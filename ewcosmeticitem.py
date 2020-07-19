@@ -134,6 +134,12 @@ async def adorn(cmd):
 		already_adorned = False
 		space_adorned = 0
 
+		for item in cosmetic_items:
+			i = EwItem(item.get('id_item'))
+			# Get space used adorned cosmetics
+			if i.item_props['adorned'] == 'true':
+				space_adorned += int(i.item_props['size'])
+
 		# Check all cosmetics found
 		for item in cosmetic_items:
 			i = EwItem(item.get('id_item'))
@@ -155,10 +161,6 @@ async def adorn(cmd):
 				else:
 					item_sought = i
 					break
-
-			# Get space used adorned cosmetics
-			if i.item_props['adorned'] == 'true':
-				space_adorned += int(i.item_props['size'])
 
 		if item_sought == None:
 			item_sought = item_from_slimeoid
@@ -256,17 +258,17 @@ async def dedorn(cmd):
 
 
 async def dye(cmd):
-	first_id = ewutils.flattenTokenListToString(cmd.tokens[1:2])
-	second_id = ewutils.flattenTokenListToString(cmd.tokens[2:])
+	hat_id = ewutils.flattenTokenListToString(cmd.tokens[1:2])
+	dye_id = ewutils.flattenTokenListToString(cmd.tokens[2:])
 
 	try:
-		first_id_int = int(first_id)
-		second_id_int = int(second_id)
+		hat_id_int = int(hat_id)
+		dye_id_int = int(dye_id)
 	except:
-		first_id_int = None
-		second_id_int = None
+		hat_id_int = None
+		dye_id_int = None
 
-	if first_id != None and len(first_id) > 0 and second_id != None and len(second_id) > 0:
+	if hat_id != None and len(hat_id) > 0 and dye_id != None and len(dye_id) > 0:
 		response = "You don't have one."
 
 		items = ewitem.inventory(
@@ -277,20 +279,19 @@ async def dye(cmd):
 		cosmetic = None
 		dye = None
 		for item in items:
-			if item.get('id_item') in [first_id_int, second_id_int] or first_id in ewutils.flattenTokenListToString(item.get('name')) or second_id in ewutils.flattenTokenListToString(item.get('name')):
+			if item.get('id_item') == hat_id_int or hat_id in ewutils.flattenTokenListToString(item.get('name')):
 				if item.get('item_type') == ewcfg.it_cosmetic and cosmetic is None:
 					cosmetic = item
 
+			if item.get('id_item') == dye_id_int or dye_id in ewutils.flattenTokenListToString(item.get('name')):
 				if item.get('item_type') == ewcfg.it_item and item.get('name') in ewcfg.dye_map and dye is None:
 					dye = item	
 
-				if cosmetic != None and dye != None:
-					break
+			if cosmetic != None and dye != None:
+				break
 
 		if cosmetic != None:
 			if dye != None:
-				user_data = EwUser(member = cmd.message.author)
-
 				cosmetic_item = EwItem(id_item=cosmetic.get("id_item"))
 				dye_item = EwItem(id_item=dye.get("id_item"))
 
@@ -425,7 +426,7 @@ async def sew(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
 	# Player must be at the Bodega
-	if cmd.message.channel.name == ewcfg.channel_bodega:
+	if user_data.poi == ewcfg.poi_id_bodega:
 		item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 		try:
@@ -477,10 +478,14 @@ async def sew(cmd):
 							original_durability = int(float(item_sought.item_props['original_durability'])) # If it's a scalp created after
 
 					else: # Find the mold of the item in ewcfg.cosmetic_items_list
-						original_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
-						original_durability = original_item.durability
+						if item_sought.item_props.get('rarity') == ewcfg.rarity_princeps:
+							original_durability = ewcfg.base_durability * 100
+							original_item = None # Princeps do not have existing templates
+						else:
+							original_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
+							original_durability = original_item.durability
 
-					current_durability = int(item_sought.item_props['durability'])
+					current_durability = int(float(item_sought.item_props['durability']))
 
 					# If the cosmetic is actually damaged at all
 					if current_durability < original_durability:
@@ -546,7 +551,7 @@ async def retrofit(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
 	# Player must be at the Bodega
-	if cmd.message.channel.name == ewcfg.channel_bodega:
+	if user_data.poi == ewcfg.poi_id_bodega:
 		item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 		try:

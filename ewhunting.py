@@ -361,9 +361,12 @@ class EwEnemy:
 			if random.random() < 0.5:
 				randombodypart = random.choice(hitzone.aliases)
 
-			miss_mod += round(ewwep.apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self, shootee_data = target_data, hitzone = hitzone) + ewwep.apply_combat_mods(user_data=target_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other, shooter_data = enemy_data, hitzone = hitzone), 2)
-			crit_mod += round(ewwep.apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self, shootee_data = target_data, hitzone = hitzone) + ewwep.apply_combat_mods(user_data=target_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other, shooter_data = enemy_data, hitzone = hitzone), 2)
-			dmg_mod += round(ewwep.apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = target_data, hitzone = hitzone) + ewwep.apply_combat_mods(user_data=target_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = enemy_data, hitzone = hitzone), 2)
+			shooter_status_mods = ewwep.get_shooter_status_mods(enemy_data, target_data, hitzone)
+			shootee_status_mods = ewwep.get_shootee_status_mods(target_data, enemy_data, hitzone)
+
+			miss_mod += round(shooter_status_mods['miss'] + shootee_status_mods['miss'], 2)
+			crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
+			dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 			
 			# maybe enemies COULD have weapon skills? could punishes players who die to the same enemy without mining up beforehand
 			# slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
@@ -735,11 +738,33 @@ class EwEnemy:
 		gang_base_response = ""
 
 		try:
-			# Raid bosses can only move into the city (capturable districts), never back into the outskirts.
-			destinations = ewcfg.poi_neighbors.get(self.poi).intersection(set(ewcfg.capturable_districts))
+			# Raid bosses can move into other parts of the outskirts as well as the city, including district zones.
+			destinations = ewcfg.poi_neighbors.get(self.poi)
+			
+			# Filter subzones and gang bases out.
+			# Nudge raidbosses into the city.
+			for destination in destinations:
+
+				destination_poi_data = ewcfg.id_to_poi.get(destination)
+				if destination_poi_data.is_subzone or destination_poi_data.is_gangbase:
+					destinations.remove(destination)
+				
+				if self.poi in ewcfg.outskirts_depths:
+					if destination in ewcfg.outskirts_depths:
+						destinations.remove(destination)
+				elif self.poi in ewcfg.outskirts:
+					if (destination in ewcfg.outskirts) or (destination in ewcfg.outskirts_depths):
+						destinations.remove(destination)
+				elif self.poi in ewcfg.outskirts_edges: 
+					if (destination in ewcfg.outskirts_edges) or (destination in ewcfg.outskirts):
+						destinations.remove(destination)
+					
+
 			if len(destinations) > 0:
+				
 				old_poi = self.poi
 				new_poi = random.choice(list(destinations))
+					
 				self.poi = new_poi
 				self.time_lastenter = int(time.time())
 				self.id_target = ""
@@ -765,10 +790,11 @@ class EwEnemy:
 				old_poi_def = ewcfg.id_to_poi.get(old_poi)
 				old_ch_name = old_poi_def.channel
 				resp_cont.add_channel_response(old_ch_name, old_district_response)
-
-				gang_base_response = "There are reports of a powerful enemy roaming around {}.".format(new_poi_def.str_name)
-				resp_cont.add_channel_response(ewcfg.channel_rowdyroughhouse, gang_base_response)
-				resp_cont.add_channel_response(ewcfg.channel_copkilltown, gang_base_response)
+				
+				if new_poi not in ewcfg.outskirts:
+					gang_base_response = "There are reports of a powerful enemy roaming around {}.".format(new_poi_def.str_name)
+					resp_cont.add_channel_response(ewcfg.channel_rowdyroughhouse, gang_base_response)
+					resp_cont.add_channel_response(ewcfg.channel_copkilltown, gang_base_response)
 		finally:
 			self.persist()
 			return resp_cont
@@ -1249,11 +1275,11 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weathe
 
 	while enemies_count >= ewcfg.max_enemies and try_count < 5:
 
-		# Sand bags only spawn in the dojo (aka South Sleezeborough)
+		# Sand bags only spawn in the dojo
 		if enemytype == ewcfg.enemy_type_sandbag:
-			potential_chosen_poi = ewcfg.poi_id_southsleezeborough
+			potential_chosen_poi = ewcfg.poi_id_dojo
 		else:
-			potential_chosen_poi = random.choice(ewcfg.outskirts_districts)
+			potential_chosen_poi = random.choice(ewcfg.outskirts)
 			
 		if pre_chosen_poi is not None:
 			potential_chosen_poi = pre_chosen_poi

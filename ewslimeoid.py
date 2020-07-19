@@ -42,6 +42,7 @@ class EwSlimeoid:
 	time_defeated = 0
 	clout = 0
 	hue = ""
+	coating = ""
 	poi = ""
 
 	#slimeoid = EwSlimeoid(member = cmd.message.author, )
@@ -82,7 +83,7 @@ class EwSlimeoid:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM slimeoids{}".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM slimeoids{}".format(
 					ewcfg.col_id_slimeoid,
 					ewcfg.col_id_user,
 					ewcfg.col_id_server,
@@ -103,6 +104,7 @@ class EwSlimeoid:
 					ewcfg.col_time_defeated,
 					ewcfg.col_clout,
 					ewcfg.col_hue,
+					ewcfg.col_coating,
 					ewcfg.col_poi,
 					query_suffix
 				))
@@ -130,7 +132,8 @@ class EwSlimeoid:
 					self.time_defeated = result[17]
 					self.clout = result[18]
 					self.hue = result[19]
-					self.poi = result[20]
+					self.coating = result[20]
+					self.poi = result[21]
 
 			finally:
 				# Clean up the database handles.
@@ -146,7 +149,7 @@ class EwSlimeoid:
 			cursor = conn.cursor();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO slimeoids({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO slimeoids({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_slimeoid,
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
@@ -167,6 +170,7 @@ class EwSlimeoid:
 				ewcfg.col_time_defeated,
 				ewcfg.col_clout,
 				ewcfg.col_hue,
+				ewcfg.col_coating,
 				ewcfg.col_poi
 			), (
 				self.id_slimeoid,
@@ -189,6 +193,7 @@ class EwSlimeoid:
 				self.time_defeated,
 				self.clout,
 				self.hue,
+				self.coating,
 				self.poi
 			))
 
@@ -595,6 +600,9 @@ class EwSlimeoidCombatData:
 
 	# slimeoid hue object
 	hue = None
+	
+	# slimeoid coating object
+	coating = None
 
 	# slimeoid physical attack stat
 	moxie = 0
@@ -652,6 +660,7 @@ class EwSlimeoidCombatData:
 		legs = None,
 		brain = None,
 		hue = None,
+		coating = None,
 		moxie = 0,
 		grit = 0,
 		chutzpah = 0,
@@ -669,6 +678,7 @@ class EwSlimeoidCombatData:
 		self.legs = legs
 		self.brain = brain
 		self.hue = hue
+		self.coating = coating
 		self.moxie = moxie
 		self.grit = grit
 		self.chutzpah = chutzpah
@@ -725,6 +735,14 @@ class EwSlimeoidCombatData:
 				self.chutzpah += 2
 				enemy_combat_data.splitcomplementary_physical = "It's Super Effective against {}!".format(enemy_combat_data.name)
 				enemy_combat_data.splitcomplementary_special = "It's Super Effective against {}!".format(enemy_combat_data.name)
+			
+		# print(self.coating)
+		if self.coating == ewcfg.hue_id_copper:
+			self.moxie += 2
+		elif self.coating == ewcfg.hue_id_chrome:
+			self.grit += 2
+		elif self.coating == ewcfg.hue_id_gold:
+			self.chutzpah += 2
 
 	# roll the dice on whether an action succeeds and by how many degrees of success
 	def attempt_action(self, strat, sap_spend, in_range):
@@ -1209,8 +1227,8 @@ async def incubateslimeoid(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1280,8 +1298,8 @@ async def dissolveslimeoid(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1357,8 +1375,8 @@ async def growbody(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1408,8 +1426,8 @@ async def growhead(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1458,8 +1476,8 @@ async def growlegs(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1508,8 +1526,8 @@ async def growweapon(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1558,8 +1576,8 @@ async def growarmor(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1608,8 +1626,8 @@ async def growspecial(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1658,8 +1676,8 @@ async def growbrain(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1709,8 +1727,8 @@ async def nameslimeoid(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1759,8 +1777,8 @@ async def raisemoxie(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1812,8 +1830,8 @@ async def lowermoxie(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1865,8 +1883,8 @@ async def raisegrit(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1918,8 +1936,8 @@ async def lowergrit(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1971,8 +1989,8 @@ async def raisechutzpah(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -2024,8 +2042,8 @@ async def lowerchutzpah(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -2076,8 +2094,8 @@ async def spawnslimeoid(cmd):
 
 	else:
 
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -2205,6 +2223,10 @@ def slimeoid_describe(slimeoid):
 	hue = ewcfg.hue_map.get(slimeoid.hue)
 	if hue != None:
 		response += " {}".format(hue.str_desc)
+		
+	# coating = ewcfg.hue_map.get(slimeoid.coating)
+	# if coating != None:
+	# 	response += " {}".format(coating.str_desc)
 
 	stat_desc = []
 
@@ -2413,7 +2435,7 @@ async def slimeoidbattle(cmd):
 	challengee_slimeoid = EwSlimeoid(member = member)
 
 	bet = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
-	if bet == None or cmd.message.channel.name != ewcfg.channel_arena:
+	if bet == None or challenger.poi != ewcfg.poi_id_arena:
 		bet = 0
 	elif bet == -1:
 		bet = challenger.slimes
@@ -2527,6 +2549,16 @@ async def slimeoidbattle(cmd):
 		result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, channel = cmd.message.channel, battle_type = ewcfg.battle_type_arena)
 		if result == -1:
 			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:{}".format(challenger_slimeoid.name, challenger_slimeoid.name, author.display_name, "" if bet == 0 else "\nThey recieve {:,} slime! The remaining {:,} slime goes to SlimeCorp.".format(winnings, slimecorp_fee))
+			
+			if challengee_slimeoid.coating != '':
+				response += "\n{} coating has been tarnished by battle.".format(challengee_slimeoid.name, challengee_slimeoid.coating)
+				challengee_slimeoid.coating = ''
+				challengee_slimeoid.persist()
+			if challenger_slimeoid.coating != '':
+				response += "\n{} coating has been tarnished by battle.".format(challenger_slimeoid.name, challenger_slimeoid.coating)
+				challenger_slimeoid.coating = ''
+				challenger_slimeoid.persist()
+			
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			challenger = EwUser(member = author)
 			if challenger.life_state != ewcfg.life_state_corpse:
@@ -2534,6 +2566,16 @@ async def slimeoidbattle(cmd):
 				challenger.persist()
 		elif result == 1:
 			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:{}".format(challengee_slimeoid.name, challengee_slimeoid.name, member.display_name, "" if bet == 0 else "\nThey recieve {:,} slime! The remaining {:,} slime goes to SlimeCorp.".format(winnings, slimecorp_fee))
+			
+			if challengee_slimeoid.coating != '':
+				challengee_slimeoid.coating = ''
+				response += "\n{} sheds its {} coating.".format(challengee_slimeoid.name, challengee_slimeoid.coating)
+				challengee_slimeoid.persist()
+			if challenger_slimeoid.coating != '':
+				challenger_slimeoid.coating = ''
+				response += "\n{} sheds its {} coating.".format(challenger_slimeoid.name, challenger_slimeoid.coating)
+				challenger_slimeoid.persist()
+			
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			challengee = EwUser(member = member)
 			if challengee.life_state != ewcfg.life_state_corpse:
@@ -2750,21 +2792,37 @@ async def saturateslimeoid(cmd):
 	elif item_sought:
 		value = item_search
 		hue = ewcfg.hue_map.get(value)
+		
+		
 
 		if hue != None:
-			response = "You saturate your {} with the {} dye! {}".format(slimeoid.name, hue.str_name, hue.str_saturate)
-			slimeoid.hue = hue.id_hue
-			slimeoid.persist()
-
-			ewitem.item_delete(id_item = item_sought.get('id_item'))
-			user_data.persist()
+			if hue.id_hue in [ewcfg.hue_id_copper, ewcfg.hue_id_chrome, ewcfg.hue_id_gold]:
+				response = "You saturate your {} with the {} paint! {}".format(slimeoid.name, hue.str_name, hue.str_saturate)
+				slimeoid.hue = hue.id_hue
+				slimeoid.coating = hue.id_hue
+				slimeoid.persist()
+				
+				paint_bucket_item = EwItem(id_item=item_sought.get('id_item'))
+				if int(paint_bucket_item.item_props.get('durability')) == 1:
+					ewitem.item_delete(id_item=item_sought.get('id_item'))
+					response += "\nThe paint bucket is consumed in the process."
+				else:
+					await ewitem.lower_durability(item_sought)
+				user_data.persist()
+			else:
+				response = "You saturate your {} with the {} dye! {}".format(slimeoid.name, hue.str_name, hue.str_saturate)
+				slimeoid.hue = hue.id_hue
+				slimeoid.persist()
+	
+				ewitem.item_delete(id_item = item_sought.get('id_item'))
+				user_data.persist()
 
 		else:
-			response = "You can only saturate your slimeoid with dyes."
+			response = "You can only saturate your slimeoid with dyes and paints."
 
 	else:
 		if item_search:  # if they didn't forget to specify an item and it just wasn't found
-			response = "You can only saturate your slimeoid with dyes."
+			response = "You can only saturate your slimeoid with dyes and paints."
 		else:
 			response = "Saturate your slimeoid with what, exactly? (check **!inventory**)"
 
@@ -2785,8 +2843,8 @@ async def restoreslimeoid(cmd):
 		response = "You must go to the SlimeCorp Laboratories in Brawlden to restore a Slimeoid."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -2865,6 +2923,7 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 		legs = ewcfg.mobility_map.get(challengee_slimeoid.legs),
 		brain = ewcfg.brain_map.get(challengee_slimeoid.ai),
 		hue = ewcfg.hue_map.get(challengee_slimeoid.hue),
+		coating = challengee_slimeoid.coating,
 		moxie = challengee_slimeoid.atk + 1,
 		grit = challengee_slimeoid.defense + 1,
 		chutzpah = challengee_slimeoid.intel + 1,
@@ -2885,6 +2944,7 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 		legs = ewcfg.mobility_map.get(challenger_slimeoid.legs),
 		brain = ewcfg.brain_map.get(challenger_slimeoid.ai),
 		hue = ewcfg.hue_map.get(challenger_slimeoid.hue),
+		coating = challenger_slimeoid.coating,
 		moxie = challenger_slimeoid.atk + 1,
 		grit = challenger_slimeoid.defense + 1,
 		chutzpah = challenger_slimeoid.intel + 1,
@@ -2901,9 +2961,6 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 
 	s1_combat_data.apply_hue_matchup(s2_combat_data)
 	s2_combat_data.apply_hue_matchup(s1_combat_data)
-
-
-			
 
 	# decide which slimeoid gets to move first
 	s1_active = False

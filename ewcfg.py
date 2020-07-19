@@ -30,7 +30,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.24a"
+version = "v3.33 - You Are (Not) Safe In The Streets"
 
 
 dir_msgqueue = 'msgqueue'
@@ -45,9 +45,11 @@ update_twitch = 60
 update_pvp = 60
 update_market = 900 #15 min
 
+# Number of times the bot should try a permissions-related API call. This is done purely for safety measures.
+permissions_tries = 1
+
 # Time saved moving through friendly territory (or lost in hostile territory).
 territory_time_gain = 10
-
 
 # Market delta
 max_iw_swing = 30
@@ -136,19 +138,21 @@ poi_id_slimesendcliffs = "slimesendcliffs"
 poi_id_greencakecafe = "greencakecafe"
 poi_id_sodafountain = "sodafountain"
 poi_id_bodega = "bodega"
-
+poi_id_wafflehouse = "wafflehouse"
+poi_id_basedhardware = "basedhardware"
 
 # transports
 poi_id_ferry = "ferry"
-poi_id_subway_red01 = "subwayred01"
-poi_id_subway_red02 = "subwayred02"
-poi_id_subway_yellow01 = "subwayyellow01"
-poi_id_subway_yellow02 = "subwayyellow02"
+poi_id_subway_pink01 = "subwaypink01"
+poi_id_subway_pink02 = "subwaypink02"
+poi_id_subway_gold01 = "subwaygold01"
+poi_id_subway_gold02 = "subwaygold02"
 poi_id_subway_green01 = "subwaygreen01"
 poi_id_subway_green02 = "subwaygreen02"
-poi_id_subway_white01 = "subwaywhite01"
-poi_id_subway_blue01 = "subwayblue01"
-poi_id_subway_blue02 = "subwayblue02"
+poi_id_subway_black01 = "subwayblack01"
+poi_id_subway_black02 = "subwayblack01"
+poi_id_subway_purple01 = "subwaypurple01"
+poi_id_subway_purple02 = "subwaypurple02"
 poi_id_blimp = "blimp"
 poi_id_apt = "apt"
 
@@ -170,6 +174,7 @@ poi_id_wgb_subway_station = "westglocksburysubwaystation"
 poi_id_jp_subway_station = "jaywalkerplainsubwaystation"
 poi_id_nsb_subway_station = "northsleezesubwaystation"
 poi_id_ssb_subway_station = "southsleezesubwaystation"
+poi_id_bd_subway_station = "brawldensubwaystation"
 poi_id_cv_subway_station = "cratersvillesubwaystation"
 poi_id_wt_subway_station = "wreckingtonsubwaystation"
 poi_id_rr_subway_station = "rowdyroughhousesubwaystation"
@@ -177,6 +182,14 @@ poi_id_gld_subway_station = "greenlightsubwaystation"
 poi_id_jr_subway_station = "juviesrowsubwaystation"
 poi_id_vc_subway_station = "vagrantscornersubwaystation"
 poi_id_afb_subway_station = "assaultflatssubwaystation"
+poi_id_vp_subway_station = "vandalparksubwaystation"
+poi_id_pa_subway_station = "poudrinalleysubwaystation"
+poi_id_og_subway_station = "oozegardenssubwaystation"
+poi_id_cl_subway_station = "crooklinesubwaystation"
+poi_id_lc_subway_station = "littlechernobylsubwaystation"
+poi_id_bd_subway_station = "brawldensubwaystation"
+poi_id_nny_subway_station = "newnewyonkerssubwaystation"
+
 
 poi_id_underworld_subway_station = "underworldsubwaystation"
 
@@ -217,6 +230,9 @@ poi_id_westglocksbury = "westglocksbury"
 poi_id_jaywalkerplain = "jaywalkerplain"
 poi_id_crookline = "crookline"
 poi_id_dreadford = "dreadford"
+poi_id_maimridge = "maimridge"
+poi_id_thevoid = "thevoid"
+
 poi_id_toxington_pier = "toxingtonpier"
 poi_id_jaywalkerplain_pier = "jaywalkerplainpier"
 poi_id_crookline_pier = "crooklinepier"
@@ -258,6 +274,165 @@ poi_id_apt_westglocksbury = "aptwestglocksbury"
 poi_id_apt_jaywalkerplain = "aptjaywalkerplain"
 poi_id_apt_crookline = "aptcrookline"
 poi_id_apt_dreadford = "aptdreadford"
+poi_id_apt_maimridge = "aptdreadford"
+
+# The streets -- There are 123 of them, to be exact
+poi_id_copkilltown_street_a = "copkilltownstreeta" # NOT USED
+poi_id_rowdyroughhouse_street_a = "rowdyroughhousestreeta" # NOT USED
+poi_id_juviesrow_street_a = "juviesrowstreeta" # NOT USED
+
+poi_id_downtown_street_a = "downtownstreeta"
+poi_id_downtown_street_b = "downtownstreetb"
+poi_id_downtown_street_c = "downtownstreetc"
+poi_id_downtown_street_d = "downtownstreetd"
+poi_id_downtown_street_e = "downtownstreete"
+poi_id_downtown_street_f = "downtownstreetf"
+
+poi_id_krakbay_street_a = "krakbaystreeta"
+poi_id_krakbay_street_b = "krakbaystreetb"
+poi_id_krakbay_street_c = "krakbaystreetc"
+poi_id_krakbay_street_d = "krakbaystreetd"
+poi_id_krakbay_street_e = "krakbaystreete"
+poi_id_krakbay_street_f = "krakbaystreetf"
+
+poi_id_poudrinalley_street_a = "poudrinalleystreeta" 
+poi_id_poudrinalley_street_b = "poudrinalleystreetb"
+poi_id_poudrinalley_street_c = "poudrinalleystreetc"
+poi_id_poudrinalley_street_d = "poudrinalleystreetd"
+poi_id_poudrinalley_street_e = "poudrinalleystreete"
+
+poi_id_cratersville_street_a = "cratersvillestreeta"
+poi_id_cratersville_street_b = "cratersvillestreetb"
+poi_id_cratersville_street_c = "cratersvillestreetc"
+
+poi_id_wreckington_street_a = "wreckingtonstreeta"
+poi_id_wreckington_street_b = "wreckingtonstreetb"
+
+poi_id_oozegardens_street_a = "oozegardensstreeta"
+poi_id_oozegardens_street_b = "oozegardensstreetb"
+poi_id_oozegardens_street_c = "oozegardensstreetc"
+poi_id_oozegardens_street_d = "oozegardensstreetd"
+
+poi_id_southsleezeborough_street_a = "southsleezeboroughstreeta" 
+poi_id_southsleezeborough_street_b = "southsleezeboroughstreetb"
+poi_id_southsleezeborough_street_c = "southsleezeboroughstreetc"
+poi_id_southsleezeborough_street_d = "southsleezeboroughstreetd"
+
+poi_id_northsleezeborough_street_a = "northsleezeboroughstreeta"
+poi_id_northsleezeborough_street_b = "northsleezeboroughstreetb"
+poi_id_northsleezeborough_street_c = "northsleezeboroughstreetc"
+poi_id_northsleezeborough_street_d = "northsleezeboroughstreetd"
+poi_id_northsleezeborough_street_e = "northsleezeboroughstreete"
+
+poi_id_glocksbury_street_a = "glocksburystreeta"
+poi_id_glocksbury_street_b = "glocksburystreetb"
+poi_id_glocksbury_street_c = "glocksburystreetc"
+poi_id_glocksbury_street_d = "glocksburystreetd"
+poi_id_glocksbury_street_e = "glocksburystreete"
+
+poi_id_westglocksbury_street_a = "westglocksburystreeta" 
+poi_id_westglocksbury_street_b = "westglocksburystreetb"
+poi_id_westglocksbury_street_c = "westglocksburystreetc"
+poi_id_westglocksbury_street_d = "westglocksburystreetd"
+
+poi_id_jaywalkerplain_street_a = "jaywalkerplainstreeta"
+poi_id_jaywalkerplain_street_b = "jaywalkerplainstreetb"
+poi_id_jaywalkerplain_street_c = "jaywalkerplainstreetc"
+poi_id_jaywalkerplain_street_d = "jaywalkerplainstreetd"
+poi_id_jaywalkerplain_street_e = "jaywalkerplainstreete"
+
+poi_id_crookline_street_a = "crooklinestreeta" 
+poi_id_crookline_street_b = "crooklinestreetb"
+poi_id_crookline_street_c = "crooklinestreetc"
+poi_id_crookline_street_d = "crooklinestreetd"
+
+poi_id_dreadford_street_a = "dreadfordstreeta"
+poi_id_dreadford_street_b = "dreadfordstreetb"
+
+poi_id_vandalpark_street_a = "vandalparkstreeta"
+poi_id_vandalpark_street_b = "vandalparkstreetb"
+poi_id_vandalpark_street_c = "vandalparkstreetc"
+poi_id_vandalpark_street_d = "vandalparkstreetd"
+
+poi_id_poloniumhill_street_a = "poloniumhillstreeta"
+poi_id_poloniumhill_street_b = "poloniumhillstreetb"
+poi_id_poloniumhill_street_c = "poloniumhillstreetc"
+poi_id_poloniumhill_street_d = "poloniumhillstreetd"
+poi_id_poloniumhill_street_e = "poloniumhillstreete"
+
+poi_id_charcoalpark_street_a = "charcoalparkstreeta" 
+poi_id_charcoalpark_street_b = "charcoalparkstreetb"
+
+poi_id_toxington_street_a = "toxingtonstreeta"
+poi_id_toxington_street_b = "toxingtonstreetb"
+poi_id_toxington_street_c = "toxingtonstreetc"
+poi_id_toxington_street_d = "toxingtonstreetd"
+poi_id_toxington_street_e = "toxingtonstreete"
+
+poi_id_gatlingsdale_street_a = "gatlingsdalestreeta" 
+poi_id_gatlingsdale_street_b = "gatlingsdalestreetb"
+poi_id_gatlingsdale_street_c = "gatlingsdalestreetc"
+poi_id_gatlingsdale_street_d = "gatlingsdalestreetd"
+poi_id_gatlingsdale_street_e = "gatlingsdalestreete"
+
+poi_id_astatineheights_street_a = "astatineheightsstreeta"
+poi_id_astatineheights_street_b = "astatineheightsstreetb"
+poi_id_astatineheights_street_c = "astatineheightsstreetc"
+poi_id_astatineheights_street_d = "astatineheightsstreetd"
+poi_id_astatineheights_street_e = "astatineheightsstreete"
+poi_id_astatineheights_street_f = "astatineheightsstreetf"
+
+poi_id_smogsburg_street_a = "smogsburgstreeta" 
+poi_id_smogsburg_street_b = "smogsburgstreetb"
+poi_id_smogsburg_street_c = "smogsburgstreetc"
+poi_id_smogsburg_street_d = "smogsburgstreetd"
+poi_id_smogsburg_street_e = "smogsburgstreete"
+
+poi_id_arsonbrook_street_a = "arsonbrookstreeta"
+poi_id_arsonbrook_street_b = "arsonbrookstreetb"
+poi_id_arsonbrook_street_c = "arsonbrookstreetc"
+poi_id_arsonbrook_street_d = "arsonbrookstreetd"
+poi_id_arsonbrook_street_e = "arsonbrookstreete"
+
+poi_id_maimridge_street_a = "maimridgestreeta"
+poi_id_maimridge_street_b = "maimridgestreetb"
+poi_id_maimridge_street_c = "maimridgestreetc"
+
+poi_id_brawlden_street_a = "brawldenstreeta" 
+poi_id_brawlden_street_b = "brawldenstreetb"
+poi_id_brawlden_street_c = "brawldenstreetc"
+poi_id_brawlden_street_d = "brawldenstreetd"
+
+poi_id_littlechernobyl_street_a = "littlechernobylstreeta"
+poi_id_littlechernobyl_street_b = "littlechernobylstreetb"
+poi_id_littlechernobyl_street_c = "littlechernobylstreetc"
+
+poi_id_oldnewyonkers_street_a = "oldnewyonkersstreeta"
+poi_id_oldnewyonkers_street_b = "oldnewyonkersstreetb"
+poi_id_oldnewyonkers_street_c = "oldnewyonkersstreetc"
+poi_id_oldnewyonkers_street_d = "oldnewyonkersstreetd"
+poi_id_oldnewyonkers_street_e = "oldnewyonkersstreete"
+
+poi_id_newnewyonkers_street_a = "newnewyonkersstreeta"
+poi_id_newnewyonkers_street_b = "newnewyonkersstreetb"
+poi_id_newnewyonkers_street_c = "newnewyonkersstreetc"
+poi_id_newnewyonkers_street_d = "newnewyonkersstreetd"
+
+poi_id_assaultflatsbeach_street_a = "assaultflatsbeachstreeta"
+poi_id_assaultflatsbeach_street_b = "assaultflatsbeachstreetb"
+
+poi_id_vagrantscorner_street_a = "vagrantscornerstreeta" 
+poi_id_vagrantscorner_street_b = "vagrantscornerstreetb"
+poi_id_vagrantscorner_street_c = "vagrantscornerstreetc"
+poi_id_vagrantscorner_street_d = "vagrantscornerstreetd"
+poi_id_vagrantscorner_street_e = "vagrantscornerstreete"
+poi_id_vagrantscorner_street_f = "vagrantscornerstreetf"
+
+poi_id_greenlightdistrict_street_a = "greenlightdistrictstreeta"
+poi_id_greenlightdistrict_street_b = "greenlightdistrictstreetb"
+poi_id_greenlightdistrict_street_c = "greenlightdistrictstreetc"
+
+poi_id_slimesend_street_a = "slimesendstreeta"
 
 # Tutorial zones
 poi_id_tutorial_classroom = "classroom"
@@ -271,6 +446,24 @@ compartment_id_bookshelf = "bookshelf"
 location_id_empty = "empty"
 
 # Outskirts
+# Layer 1
+poi_id_wreckington_outskirts_edge = "wreckingtonoutskirtsedge"
+poi_id_cratersville_outskirts_edge = "cratersvilleoutskirtsedge"
+poi_id_oozegardens_outskirts_edge = "oozegardensoutskirtsedge"
+poi_id_southsleezeborough_outskirts_edge = "southsleezeboroughoutskirtsedge"
+poi_id_crookline_outskirts_edge = "crooklineoutskirtsedge"
+poi_id_dreadford_outskirts_edge = "dreadfordoutskirtsedge"
+poi_id_jaywalkerplain_outskirts_edge = "jaywalkerplainoutskirtsedge"
+poi_id_westglocksbury_outskirts_edge = "westglocksburyoutskirtsedge"
+poi_id_poloniumhill_outskirts_edge = "poloniumhilloutskirtsedge"
+poi_id_charcoalpark_outskirts_edge = "charcoalparkoutskirtsedge"
+poi_id_toxington_outskirts_edge = "toxingtonoutskirtsedge"
+poi_id_maimridge_outskirts_edge = "maimridgeoutskirtsedge"
+poi_id_arsonbrook_outskirts_edge = "arsonbrookoutskirtsedge"
+poi_id_brawlden_outskirts_edge = "brawldenoutskirtsedge"
+poi_id_newnewyonkers_outskirts_edge = "newnewyonkersoutskirtsedge"
+poi_id_assaultflatsbeach_outskirts_edge = "assaultflatsbeachoutskirtsedge"
+# Layer 2
 poi_id_wreckington_outskirts = "wreckingtonoutskirts"
 poi_id_cratersville_outskirts = "cratersvilleoutskirts"
 poi_id_oozegardens_outskirts = "oozegardensoutskirts"
@@ -282,11 +475,31 @@ poi_id_westglocksbury_outskirts = "westglocksburyoutskirts"
 poi_id_poloniumhill_outskirts = "poloniumhilloutskirts"
 poi_id_charcoalpark_outskirts = "charcoalparkoutskirts"
 poi_id_toxington_outskirts = "toxingtonoutskirts"
-poi_id_astatineheights_outskirts = "astatineheightsoutskirts"
+poi_id_maimridge_outskirts = "maimridgeoutskirts"
 poi_id_arsonbrook_outskirts = "arsonbrookoutskirts"
 poi_id_brawlden_outskirts = "brawldenoutskirts"
 poi_id_newnewyonkers_outskirts = "newnewyonkersoutskirts"
 poi_id_assaultflatsbeach_outskirts = "assaultflatsbeachoutskirts"
+
+# Layer 3
+poi_id_wreckington_outskirts_depths = "wreckingtonoutskirtsdepths"
+poi_id_cratersville_outskirts_depths = "cratersvilleoutskirtsdepths"
+poi_id_oozegardens_outskirts_depths = "oozegardensoutskirtsdepths"
+poi_id_southsleezeborough_outskirts_depths = "southsleezeboroughoutskirtsdepths"
+poi_id_crookline_outskirts_depths = "crooklineoutskirtsdepths"
+poi_id_dreadford_outskirts_depths = "dreadfordoutskirtsdepths"
+poi_id_jaywalkerplain_outskirts_depths = "jaywalkerplainoutskirtsdepths"
+poi_id_westglocksbury_outskirts_depths = "westglocksburyoutskirtsdepths"
+poi_id_poloniumhill_outskirts_depths = "poloniumhilloutskirtsdepths"
+poi_id_charcoalpark_outskirts_depths = "charcoalparkoutskirtsdepths"
+poi_id_toxington_outskirts_depths = "toxingtonoutskirtsdepths"
+poi_id_maimridge_outskirts_depths = "maimridgeoutskirtsdepths"
+poi_id_arsonbrook_outskirts_depths = "arsonbrookoutskirtsdepths"
+poi_id_brawlden_outskirts_depths = "brawldenoutskirtsdepths"
+poi_id_newnewyonkers_outskirts_depths = "newnewyonkersoutskirtsdepths"
+poi_id_assaultflatsbeach_outskirts_depths = "assaultflatsbeachoutskirtsdepths"
+
+
 
 poi_id_south_outskirts = "southoutskirts"
 poi_id_southwest_outskirts = "southwestoutskirts"
@@ -315,16 +528,23 @@ transport_line_ferry_wt_to_vc = "ferrywttovc"
 transport_line_ferry_vc_to_wt = "ferryvctowt"
 
 # Subway lines
-transport_line_subway_yellow_northbound = "subwayyellownorth"
-transport_line_subway_yellow_southbound = "subwayyellowsouth"
-transport_line_subway_red_northbound = "subwayrednorth"
-transport_line_subway_red_southbound = "subwayredsouth"
-transport_line_subway_blue_eastbound = "subwayblueeast"
-transport_line_subway_blue_westbound = "subwaybluewest"
-transport_line_subway_white_eastbound = "subwaywhiteeast"
-transport_line_subway_white_westbound = "subwaywhitewest"
+transport_line_subway_purple_northbound = "subwaypurplenorth"
+transport_line_subway_purple_southbound = "subwaypurplesouth"
+
+transport_line_subway_pink_northbound = "subwaypinknorth"
+transport_line_subway_pink_southbound = "subwaypinksouth"
+
+transport_line_subway_gold_eastbound = "subwaygoldeast"
+transport_line_subway_gold_westbound = "subwaygoldwest"
+
+transport_line_subway_black_eastbound = "subwayblackeast"
+transport_line_subway_black_westbound = "subwayblackwest"
+
 transport_line_subway_green_eastbound = "subwaygreeneast"
 transport_line_subway_green_westbound = "subwaygreenwest"
+
+transport_line_subway_gold_eastbound = "subwaygoldeast"
+transport_line_subway_gold_westbound = "subwaygoldwest"
 
 # Blimp lines
 transport_line_blimp_df_to_afb = "blimpdftoafb"
@@ -346,7 +566,7 @@ role_copkillers_active = "killerotp"
 role_corpse = "corpse"
 role_corpse_pvp = "corpsewanted"
 role_corpse_active = "corpseotp"
-role_shambler = "shambler"
+role_shambler = "shamblers"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
 role_slimecorp = "slimecorp"
@@ -355,6 +575,17 @@ role_donor = "terezigang"
 role_tutorial = "newintown"
 role_slimernalia = "kingpinofslimernalia"
 role_gellphone = "gellphone"
+role_null_major_role = "nullmajorrole"
+role_null_minor_role = "nullminorrole"
+
+permission_read_messages = "read"
+permission_send_messages = "send"
+permission_connect_to_voice = "connect"
+#permission_see_history = "history"
+#permission_upload_files = "upload" -- everything else including this should be true by default. 
+# Read, Send, and History should be false by default but set to true.
+
+permissions_general = [permission_read_messages, permission_send_messages, permission_connect_to_voice]
 
 faction_roles = [
 	role_juvenile,
@@ -481,19 +712,27 @@ channel_gld_subway_station = "green-light-subway-station"
 channel_jr_subway_station = "juvies-row-subway-station"
 channel_vc_subway_station = "vagrants-corner-subway-station"
 channel_afb_subway_station = "assault-flats-subway-station"
+channel_vp_subway_station = "vandal-park-subway-station"
+channel_pa_subway_station = "poudrin-alley-subway-station"
+channel_og_subway_station = "ooze-gardens-subway-station"
+channel_cl_subway_station = "crookline-subway-station"
+channel_lc_subway_station = "little-chernobyl-subway-station"
+channel_bd_subway_station = "brawlden-subway-station"
+channel_nny_subway_station = "new-new-yonkers-subway-station"
 channel_df_blimp_tower = "dreadford-blimp-tower"
 channel_afb_blimp_tower = "assault-flats-blimp-tower"
 
 channel_ferry = "ferry"
-channel_subway_red01 = "subway-train-r-01"
-channel_subway_red02 = "subway-train-r-02"
-channel_subway_yellow01 = "subway-train-y-01"
-channel_subway_yellow02 = "subway-train-y-02"
-channel_subway_green01 = "subway-train-g-01"
-channel_subway_green02 = "subway-train-g-02"
-channel_subway_white01 = "subway-train-w-01"
-channel_subway_blue01 = "subway-train-b-01"
-channel_subway_blue02 = "subway-train-b-02"
+channel_subway_pink01 = "subway-train-pink-01"
+channel_subway_pink02 = "subway-train-pink-02"
+channel_subway_gold01 = "subway-train-gold-01"
+channel_subway_gold02 = "subway-train-gold-02"
+channel_subway_green01 = "subway-train-green-01"
+channel_subway_green02 = "subway-train-green-02"
+channel_subway_black01 = "subway-train-black-01"
+channel_subway_black02 = "subway-train-black-02"
+channel_subway_purple01 = "subway-train-purple-01"
+channel_subway_purple02 = "subway-train-purple-02"
 channel_blimp = "blimp"
 
 channel_killfeed = "kill-feed"
@@ -530,17 +769,149 @@ channel_apt_westglocksbury ="west-glocksbury-apartments"
 channel_apt_jaywalkerplain ="jaywalker-plain-apartments"
 channel_apt_crookline ="crookline-apartments"
 channel_apt_dreadford ="dreadford-apartments"
+channel_apt_maimrdige ="maimridge-apartments"
 
 channel_slimesendcliffs = "slimes-end-cliffs"
 channel_bodega = "bodega"
+channel_wafflehouse = "wafflehouse"
+channel_basedhardware = "based-hardware"
 
 channel_prankfeed = "prank-feed"
+
+# Placeholders
+channel_copkilltown_street_a = "cop-killtown-street-a"
+channel_rowdyroughhouse_street_a = "rowdy-roughhouse-street-a"
+channel_juviesrow_street_a = "juvies-row-street-a"
+channel_downtown_street_a = "downtown-street-a"
+channel_downtown_street_b = "downtown-street-b"
+channel_downtown_street_c = "downtown-street-c"
+channel_downtown_street_d = "downtown-street-d"
+channel_downtown_street_e = "downtown-street-e"
+channel_downtown_street_f = "downtown-street-f"
+channel_krakbay_street_a = "krak-bay-street-a"
+channel_krakbay_street_b = "krak-bay-street-b"
+channel_krakbay_street_c = "krak-bay-street-c"
+channel_krakbay_street_d = "krak-bay-street-d"
+channel_krakbay_street_e = "krak-bay-street-e"
+channel_krakbay_street_f = "krak-bay-street-f"
+channel_poudrinalley_street_a = "poudrin-alley-street-a" 
+channel_poudrinalley_street_b = "poudrin-alley-street-b"
+channel_poudrinalley_street_c = "poudrin-alley-street-c"
+channel_poudrinalley_street_d = "poudrin-alley-street-d"
+channel_poudrinalley_street_e = "poudrin-alley-street-e"
+channel_cratersville_street_a = "cratersville-street-a"
+channel_cratersville_street_b = "cratersville-street-b"
+channel_cratersville_street_c = "cratersville-street-c"
+channel_wreckington_street_a = "wreckington-street-a"
+channel_wreckington_street_b = "wreckington-street-b"
+channel_oozegardens_street_a = "ooze-gardens-street-a"
+channel_oozegardens_street_b = "ooze-gardens-street-b"
+channel_oozegardens_street_c = "ooze-gardens-street-c"
+channel_oozegardens_street_d = "ooze-gardens-street-d"
+channel_southsleezeborough_street_a = "south-sleezeborough-street-a" 
+channel_southsleezeborough_street_b = "south-sleezeborough-street-b"
+channel_southsleezeborough_street_c = "south-sleezeborough-street-c"
+channel_southsleezeborough_street_d = "south-sleezeborough-street-d"
+channel_northsleezeborough_street_a = "north-sleezeborough-street-a"
+channel_northsleezeborough_street_b = "north-sleezeborough-street-b"
+channel_northsleezeborough_street_c = "north-sleezeborough-street-c"
+channel_northsleezeborough_street_d = "north-sleezeborough-street-d"
+channel_northsleezeborough_street_e = "north-sleezeborough-street-e"
+channel_glocksbury_street_a = "glocksbury-street-a"
+channel_glocksbury_street_b = "glocksbury-street-b"
+channel_glocksbury_street_c = "glocksbury-street-c"
+channel_glocksbury_street_d = "glocksbury-street-d"
+channel_glocksbury_street_e = "glocksbury-street-e"
+channel_westglocksbury_street_a = "west-glocksbury-street-a" 
+channel_westglocksbury_street_b = "west-glocksbury-street-b"
+channel_westglocksbury_street_c = "west-glocksbury-street-c"
+channel_westglocksbury_street_d = "west-glocksbury-street-d"
+channel_jaywalkerplain_street_a = "jaywalker-plain-street-a"
+channel_jaywalkerplain_street_b = "jaywalker-plain-street-b"
+channel_jaywalkerplain_street_c = "jaywalker-plain-street-c"
+channel_jaywalkerplain_street_d = "jaywalker-plain-street-d"
+channel_jaywalkerplain_street_e = "jaywalker-plain-street-e"
+channel_crookline_street_a = "crookline-street-a" 
+channel_crookline_street_b = "crookline-street-b"
+channel_crookline_street_c = "crookline-street-c"
+channel_crookline_street_d = "crookline-street-d"
+channel_dreadford_street_a = "dreadford-street-a"
+channel_dreadford_street_b = "dreadford-street-b"
+channel_vandalpark_street_a = "vandal-park-street-a"
+channel_vandalpark_street_b = "vandal-park-street-b"
+channel_vandalpark_street_c = "vandal-park-street-c"
+channel_vandalpark_street_d = "vandal-park-street-d"
+channel_poloniumhill_street_a = "polonium-hill-street-a"
+channel_poloniumhill_street_b = "polonium-hill-street-b"
+channel_poloniumhill_street_c = "polonium-hill-street-c"
+channel_poloniumhill_street_d = "polonium-hill-street-d"
+channel_poloniumhill_street_e = "polonium-hill-street-e"
+channel_charcoalpark_street_a = "charcoal-park-street-a" 
+channel_charcoalpark_street_b = "charcoal-park-street-b"
+channel_toxington_street_a = "toxington-street-a"
+channel_toxington_street_b = "toxington-street-b"
+channel_toxington_street_c = "toxington-street-c"
+channel_toxington_street_d = "toxington-street-d"
+channel_toxington_street_e = "toxington-street-e"
+channel_gatlingsdale_street_a = "gatlingsdale-street-a" 
+channel_gatlingsdale_street_b = "gatlingsdale-street-b"
+channel_gatlingsdale_street_c = "gatlingsdale-street-c"
+channel_gatlingsdale_street_d = "gatlingsdale-street-d"
+channel_gatlingsdale_street_e = "gatlingsdale-street-e"
+channel_astatineheights_street_a = "astatine-heights-street-a"
+channel_astatineheights_street_b = "astatine-heights-street-b"
+channel_astatineheights_street_c = "astatine-heights-street-c"
+channel_astatineheights_street_d = "astatine-heights-street-d"
+channel_astatineheights_street_e = "astatine-heights-street-e"
+channel_astatineheights_street_f = "astatine-heights-street-f"
+channel_smogsburg_street_a = "smogsburg-street-a" 
+channel_smogsburg_street_b = "smogsburg-street-b"
+channel_smogsburg_street_c = "smogsburg-street-c"
+channel_smogsburg_street_d = "smogsburg-street-d"
+channel_smogsburg_street_e = "smogsburg-street-e"
+channel_arsonbrook_street_a = "arsonbrook-street-a"
+channel_arsonbrook_street_b = "arsonbrook-street-b"
+channel_arsonbrook_street_c = "arsonbrook-street-c"
+channel_arsonbrook_street_d = "arsonbrook-street-d"
+channel_arsonbrook_street_e = "arsonbrook-street-e"
+channel_maimridge_street_a = "maimridge-street-a"
+channel_maimridge_street_b = "maimridge-street-b"
+channel_maimridge_street_c = "maimridge-street-c"
+channel_brawlden_street_a = "brawlden-street-a" 
+channel_brawlden_street_b = "brawlden-street-b"
+channel_brawlden_street_c = "brawlden-street-c"
+channel_brawlden_street_d = "brawlden-street-d"
+channel_littlechernobyl_street_a = "little-chernobyl-street-a"
+channel_littlechernobyl_street_b = "little-chernobyl-street-b"
+channel_littlechernobyl_street_c = "little-chernobyl-street-c"
+channel_oldnewyonkers_street_a = "old-new-yonkers-street-a"
+channel_oldnewyonkers_street_b = "old-new-yonkers-street-b"
+channel_oldnewyonkers_street_c = "old-new-yonkers-street-c"
+channel_oldnewyonkers_street_d = "old-new-yonkers-street-d"
+channel_oldnewyonkers_street_e = "old-new-yonkers-street-e"
+channel_newnewyonkers_street_a = "new-new-yonkers-street-a"
+channel_newnewyonkers_street_b = "new-new-yonkers-street-b"
+channel_newnewyonkers_street_c = "new-new-yonkers-street-c"
+channel_newnewyonkers_street_d = "new-new-yonkers-street-d"
+channel_assaultflatsbeach_street_a = "assault-flats-beach-street-a"
+channel_assaultflatsbeach_street_b = "assault-flats-beach-street-b"
+channel_vagrantscorner_street_a = "vagrants-corner-street-a" 
+channel_vagrantscorner_street_b = "vagrants-corner-street-b"
+channel_vagrantscorner_street_c = "vagrants-corner-street-c"
+channel_vagrantscorner_street_d = "vagrants-corner-street-d"
+channel_vagrantscorner_street_e = "vagrants-corner-street-e"
+channel_vagrantscorner_street_f = "vagrants-corner-street-f"
+channel_greenlightdistrict_street_a = "green-light-district-street-a"
+channel_greenlightdistrict_street_b = "green-light-district-street-b"
+channel_greenlightdistrict_street_c = "green-light-district-street-c"
+channel_slimesend_street_a = "slimes-end-street-a"
 
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
 hideout_by_faction = {
 	faction_rowdys: channel_rowdyroughhouse,
 	faction_killers: channel_copkilltown
 }
+
 
 # Commands
 cmd_prefix = '!'
@@ -554,6 +925,7 @@ cmd_shoot_alt2 = cmd_prefix + 'pat'
 cmd_shoot_alt3 = cmd_prefix + 'ban'
 cmd_shoot_alt4 = cmd_prefix + 'pullthetrigger'
 cmd_shoot_alt5 = cmd_prefix + 'curbstomp'
+cmd_shoot_alt6 = cmd_prefix + 'hug'
 cmd_attack = cmd_prefix + 'attack'
 cmd_reload = cmd_prefix + 'reload'
 cmd_reload_alt1 = cmd_prefix + 'loadthegun'
@@ -631,6 +1003,7 @@ cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_endlesswar = cmd_prefix + 'endlesswar'
 cmd_swear_jar = cmd_prefix + 'swearjar'
 cmd_equip = cmd_prefix + 'equip'
+cmd_sidearm = cmd_prefix + 'sidearm'
 cmd_data = cmd_prefix + 'data'
 cmd_mutations = cmd_prefix + 'mutations'
 cmd_mutations_alt_1 = cmd_prefix + 'stds'
@@ -706,6 +1079,7 @@ cmd_refuse = cmd_prefix + 'refuse'
 cmd_sign = cmd_prefix + 'sign'
 cmd_rip = cmd_prefix + 'rip'
 cmd_reap = cmd_prefix + 'reap'
+cmd_reap_alt = cmd_prefix + 'forcereap'
 cmd_sow = cmd_prefix + 'sow'
 cmd_check_farm = cmd_prefix + 'checkfarm'
 cmd_irrigate = cmd_prefix + 'irrigate'
@@ -720,6 +1094,7 @@ cmd_barter = cmd_prefix + 'barter'
 cmd_embiggen = cmd_prefix + 'embiggen'
 cmd_adorn = cmd_prefix + 'adorn'
 cmd_dedorn = cmd_prefix + 'dedorn'
+cmd_dedorn_alt1 = cmd_prefix + 'unadorn'
 cmd_dyecosmetic = cmd_prefix + 'dyecosmetic'
 cmd_dyecosmetic_alt1 = cmd_prefix + 'dyehat'
 cmd_dyecosmetic_alt2 = cmd_prefix + 'saturatecosmetic'
@@ -729,6 +1104,7 @@ cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
 cmd_createitem = cmd_prefix + 'createitem'
 cmd_manualsoulbind = cmd_prefix + 'soulbind'
 cmd_setslime = cmd_prefix + 'setslime'
+cmd_checkstats = cmd_prefix + 'checkstats'
 cmd_exalt = cmd_prefix + 'exalt'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
@@ -742,12 +1118,17 @@ cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_scavenge_alt1 = cmd_prefix + 'lookbetweenthecushions'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
-cmd_annex = cmd_prefix + 'annex'
-cmd_annex_alt1 = cmd_prefix + 'spray'
+cmd_spray = cmd_prefix + 'annex'
+cmd_spray_alt1 = cmd_prefix + 'spray'
 cmd_capture_progress = cmd_prefix + 'progress'
+cmd_changespray = cmd_prefix + 'changespray'
+cmd_changespray_alt1 = cmd_prefix + 'changetag'
+cmd_tag = cmd_prefix + 'tag'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
+cmd_print_map_data = cmd_prefix + 'printmapdata'
+cmd_ping_me = cmd_prefix + 'pingme'
 cmd_boot = cmd_prefix + 'boot'
 cmd_bootall = cmd_prefix + 'bootall'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
@@ -774,6 +1155,10 @@ cmd_wrap = cmd_prefix + 'wrap'
 cmd_unwrap = cmd_prefix + 'unwrap'
 cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
 cmd_shamble = cmd_prefix + 'shamble'
+
+cmd_switch = cmd_prefix + 'switch'
+cmd_switch_alt_1 = cmd_prefix + 's'
+
 cmd_shambleball = cmd_prefix + 'shambleball'
 cmd_shamblego = cmd_prefix + 'shamblego'
 cmd_shamblestop = cmd_prefix + 'shamblestop'
@@ -785,6 +1170,7 @@ cmd_reset_prank_stats = cmd_prefix + 'resetprankstats'
 cmd_set_gambit = cmd_prefix + 'setgambit'
 cmd_pointandlaugh = cmd_prefix + 'pointandlaugh'
 cmd_prank = cmd_prefix + 'prank'
+
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -895,6 +1281,13 @@ cmd_release = cmd_prefix + 'release'
 cmd_balance_cosmetics = cmd_prefix + 'balancecosmetic'
 cmd_release_alt1 = cmd_prefix + 'unarrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
+cmd_hiderolenames = cmd_prefix + 'hiderolenames'
+cmd_recreateroles = cmd_prefix + 'recreateroles'
+cmd_deleteroles = cmd_prefix + 'deleteroles'
+cmd_changepermissions = cmd_prefix + 'changeperms'
+cmd_removeuseroverwrites = cmd_prefix + 'removeuseroverwrites'
+cmd_collectopics = cmd_prefix + 'collecttopics'
+cmd_synctopics = cmd_prefix + 'synctopics'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
@@ -967,7 +1360,6 @@ cmd_canceltrade = cmd_prefix + 'canceltrade'
 # race
 cmd_set_race = cmd_prefix + 'setrace'
 cmd_set_race_alt1 = cmd_prefix + 'identifyas'
-cmd_reset_race = cmd_prefix + 'resetrace'
 cmd_exist = cmd_prefix + 'exist'
 cmd_ree = cmd_prefix + 'ree'
 cmd_autocannibalize = cmd_prefix + 'autocannibalize'
@@ -976,6 +1368,9 @@ cmd_beep = cmd_prefix + 'beep'
 cmd_yiff = cmd_prefix + 'yiff'
 cmd_hiss = cmd_prefix + 'hiss'
 cmd_jiggle = cmd_prefix + 'jiggle'
+cmd_request_petting = cmd_prefix + 'requestpetting'
+cmd_rampage = cmd_prefix + 'rampage'
+cmd_flutter = cmd_prefix + 'flutter'
 cmd_confuse = cmd_prefix + 'confuse'
 
 #SLIMERNALIA
@@ -1032,6 +1427,13 @@ hunger_perscavenge = 2
 hunger_pertick = 3
 hunger_pertrickortreat = 6
 
+# Time it takes to move between various parts of the map
+travel_time_subzone = 20
+travel_time_district = 60
+travel_time_street = 30
+travel_time_outskirt = 60
+travel_time_infinite = 900
+
 # ads
 slimecoin_toadvertise = 1000000
 max_concurrent_ads = 8
@@ -1085,12 +1487,43 @@ max_capture_points_a = 300000  # 300k
 max_capture_points_b = 200000  # 200k
 max_capture_points_c = 100000   # 100k
 
+limit_influence_s = 66600000
+limit_influence_a = 33300000
+limit_influence_b = 20000000
+limit_influence_c = 9500000
+
+min_influence_s = 33300000
+min_influence_a = 17000000
+min_influence_b = 10000000
+min_influence_c = 4500000
+
+min_garotte = 2000
+
+
+
+
+
+
 # district capture rates assigned to property classes
 max_capture_points = {
 	property_class_s: max_capture_points_s,
 	property_class_a: max_capture_points_a,
 	property_class_b: max_capture_points_b,
 	property_class_c: max_capture_points_c
+}
+
+limit_influence = {
+	property_class_s: limit_influence_s,
+	property_class_a: limit_influence_a,
+	property_class_b: limit_influence_b,
+	property_class_c: limit_influence_c
+}
+
+min_influence = {
+	property_class_s: min_influence_s,
+	property_class_a: min_influence_a,
+	property_class_b: min_influence_b,
+	property_class_c: min_influence_c
 }
 
 # how long districts stay locked after capture
@@ -1125,7 +1558,7 @@ slimes_toannex = {
 capture_lock_per_gangster = 60 * 60  # 60 min
 
 # capture lock messages
-capture_lock_milestone = 5 * 60 # 5 min
+capture_lock_milestone = 15 * 60 # 5 min
 
 # capture messages
 capture_milestone = 5  # after how many percent of progress the players are notified of the progress
@@ -1140,7 +1573,7 @@ capture_gradient = 1
 decapture_speed_multiplier = 1  # how much faster de-capturing is than capturing
 
 # district control decay
-decay_modifier = 1  # more means slower
+decay_modifier = 4  # more means slower
 
 # time values
 seconds_per_ingame_day = 21600
@@ -1285,6 +1718,8 @@ cd_slimeoiddefeated = 300
 cd_scavenge = 0
 soft_cd_scavenge = 15 # Soft cooldown on scavenging
 cd_enlist = 60
+cd_premium_purchase = 2 * 24 * 60 * 60 # 48 Hours, 2 days
+cd_new_player = 3 * 24 * 60 * 60 # 72 Hours, 3 days
 
 cd_autocannibalize = 60 * 60 # can only eat yourself once per hour
 cd_drop_bone = 5 * 60
@@ -1293,16 +1728,17 @@ cd_change_race = 24 * 60 * 60 # can only change your race once per day
 # PvP timer pushouts
 time_pvp_kill = 30 * 60
 time_pvp_attack = 10 * 60
-time_pvp_annex = 10 * 60
-time_pvp_mine = 1 * 60
+time_pvp_annex = 10 * 60 # NOT USED
+time_pvp_mine = 1 * 60 # NOT USED
 time_pvp_scavenge = 3 * 60
-time_pvp_fish = 5 * 60
-time_pvp_farm = 10 * 60
-time_pvp_spar = 5 * 60
-time_pvp_enlist = 5 * 60
+time_pvp_fish = 5 * 60 # NOT USED
+time_pvp_farm = 10 * 60 # NOT USED
+time_pvp_spar = 5 * 60 # NOT USED
+time_pvp_enlist = 5 * 60 
 time_pvp_knock = 1 * 60 #temp fix. will probably add spam prevention or something funny like restraining orders later
 time_pvp_duel = 3 * 60
 time_pvp_pride = 1 * 60
+time_pvp_vulnerable_districts = 1 * 60
 
 # time to get kicked out of subzone. 
 time_kickout = 60 * 60  # 1 hour
@@ -1480,9 +1916,9 @@ number_emote_map = {
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 mines_wall_map = {
-	channel_mines : channel_jrmineswall,
-	channel_tt_mines : channel_ttmineswall,
-	channel_cv_mines : channel_cvmineswall
+	poi_id_mine : channel_jrmineswall,
+	poi_id_tt_mines : channel_ttmineswall,
+	poi_id_cv_mines : channel_cvmineswall
 }
 
 # trading
@@ -1521,18 +1957,24 @@ str_generic_subway_station_description = "A grimy subway station."
 str_blimp_description = "This luxury zeppelin contains all the most exquisite amenities a robber baron in transit could ask for. A dining room, a lounge, a pool table, you know, rich people stuff. Being a huge, highly flammable balloon filled with hydrogen, it is the safest way to travel in the city only because it's out of the price range of most juveniles' budget. It's used by the rich elite to travel from their summer homes in Assault Flats Beach to their winter homes in Dreadford, and vice versa, without having to step foot in the more unsavory parts of the city. It does it's job well and only occasionally bursts into flames."
 str_blimp_tower_description = "This mooring mast is mostly used for amassing millionaire mooks into the marvelous Neo Milwaukee multi-story zeppelin, m'lady. Basically, you can board a blimp here. All you have to do is walk up an extremely narrow spiral staircase without an adequate handrail for about 40 feet straight up and then you can embark onto the highest airship this side of the River of Slime! It'll be great! Don't mind the spontaneously combusting zeppelins crashing into the earth in the distance. That's normal."
 str_downtown_station_description = "This large, imposing structure is the central hub for the entire city's rapid transit system. A public transportation powerhouse, it contains connections to every subway line in the city, and for dirt cheap. Inside of it's main terminal, a humongous split-flap display is constantly updating with the times of subway arrivals and departures. Hordes of commuters from all across the city sprint to their connecting trains, or simply spill out into the Downtown streets, ready to have their guts do the same.\n\nExits into Downtown NLACakaNM."
-str_red_subway_description = "Red Line trains are strictly uniform, with dull, minimalistic furnishings producing a borderline depressing experience. Almost completely grey aside from it's style guide mandated red accents, everything is purely practical. It provides just enough for its commuting salarymen to get to work in the morning and home at night."
-str_red_subway_station_description = "This sparsely decorated terminal replicates the feeling of riding on a Red Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Red Line train be late. Still doesn't make you like being on one though."
+str_black_subway_description = "Black Line trains are strictly uniform, with dull, minimalistic furnishings producing a borderline depressing experience. Almost completely grey aside from it's style guide mandated black accents, everything is purely practical. It provides just enough for its commuting salarymen to get to work in the morning and home at night."
+str_black_subway_station_description = "This sparsely decorated terminal replicates the feeling of riding on a Black Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Black Line train be late. Still doesn't make you like being on one though."
 str_green_subway_description = "Easily the oldest subway line in the city, with the interior design and general cleanliness to prove it. Once cutting edge, it's art deco stylings have begun to deteriorate due to overuse and underfunding. That goes double for the actual trains themselves, with a merely bumpy ride on the Green Line being the height of luxury compared to the far worse potential risks."
 str_green_subway_station_description = "Much like its trains, Green Line terminals have fallen into disrepair. It's vintage aesthetic only exasperating it's crumbling infrastructure, making the whole line seem like a old, dilapidated mess. But, you'll give it one thing, it's pretty cool looking from the perspective of urban exploration. You've dreamed of exploring it's vast, abandoned subway networks ever since you first rode on it. They could lead to anywhere. So close, and yet so mysterious."
-str_blue_subway_description = "Probably the nicest subway line in the city, the Blue Line isn't defined by its poor hygiene or mechanical condition. Instead, it's defined by its relative normality. More-or-less clean floors, brightly lit interiors, upholstery on the seats. These stunning, almost sci-fi levels of perfection are a sight to behold. Wow!"
-str_blue_subway_station_description = "It is clean and well-kempt, just like the Blue Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible."
-str_yellow_subway_description = "If there's one word to describe the Yellow Line, it's \"confusing\". It's by far the filthiest subway line in the city, which is exponentially worsened by it's bizarre, unexplainable faux wood paneling that lines every train. You can only imagine that this design decision was made to make the subway feel less sterile and more homely, but the constant stench of piss and homeless people puking sort of ruins that idea. Riding the Yellow Line makes you feel like you're at your grandma's house every single time you ride it, if your grandma's house was in Jaywalker Plain."
-str_yellow_subway_station_description = "It's absolutely fucking disgusting. By far the worst subway line, the Yellow Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Yellow Line so bad? The world may never know."
+str_purple_subway_description = "Probably the nicest subway line in the city, the Purple Line isn't defined by its poor hygiene or mechanical condition. Instead, it's defined by its relative normality. More-or-less clean floors, brightly lit interiors, upholstery on the seats. These stunning, almost sci-fi levels of perfection are a sight to behold. Wow!"
+str_purple_subway_station_description = "It is clean and well-kempt, just like the Purple Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible."
+str_pink_subway_description = "If there's one word to describe the Pink Line, it's \"confusing\". It's by far the filthiest subway line in the city, which is exponentially worsened by it's bizarre, unexplainable faux wood paneling that lines every train. You can only imagine that this design decision was made to make the subway feel less sterile and more homely, but the constant stench of piss and homeless people puking sort of ruins that idea. Riding the Pink Line makes you feel like you're at your grandma's house every single time you ride it, if your grandma's house was in Jaywalker Plain."
+str_pink_subway_station_description = "It's absolutely fucking disgusting. By far the worst subway line, the Pink Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Pink Line so bad? The world may never know."
+str_gold_subway_description = "Construction started on the Gold Line in the 90’s, and it shows. It’s just so fucking gaudy. Opulent, even. It’s vaporwave gone wrong. Geometric patterns with clashing color combinations and art styles are plastered over every square inch of the walls, and the seats are made of that awful upholstery from old Taco Bell™ booths."
+str_gold_subway_station_description = "The walls of the Gold Line are covered in terrible murals. Covered. Imagine your loaded in the level geometry of the station into Unity and then Googled “terrible street art murals” and skipped to page nine and then loaded each image as textures unto the geometry, not even accounting for when one object ended and another surface began. No one knows why it’s like this."
 str_subway_connecting_sentence = "Below it, on a lower level of the station, is a {} line terminal."
 
-# TODO: Add descriptions for each outskirts district.
+# TODO: Add descriptions for each outskirt/street.
+str_generic_outskirts_description_edge = "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble."
 str_generic_outskirts_description = "It's a wasteland, devoid of all life except for slime beasts."
+str_generic_outskirts_description_depths = "The lion's den of the biggest and baddest Secreatures. Stay around too long, and you'll wind up in the jaws of god knows what lurks around here."
+
+str_generic_streets_description = "It's a street. Not much more to be said."
 
 # Common database columns
 col_id_server = 'id_server'
@@ -1613,11 +2055,15 @@ col_has_soul = 'has_soul'
 col_sap = 'sap'
 col_hardened_sap = 'hardened_sap'
 col_manuscript = "manuscript"
+col_spray = "spray"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
+col_sidearm = 'sidearm'
+
 col_race = 'race'
 col_time_racialability = 'time_racialability'
+col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
 col_attack = 'attack'
 col_speed = 'speed'
 col_freshness = 'freshness'
@@ -1656,6 +2102,7 @@ col_level = 'level'
 col_time_defeated = 'time_defeated'
 col_clout = 'clout'
 col_hue = 'hue'
+col_coating = 'coating'
 
 #Database columns for enemies
 col_id_enemy = 'id_enemy'
@@ -1726,6 +2173,7 @@ col_capturing_faction = 'capturing_faction'
 col_capture_points = 'capture_points'
 col_district_slimes = 'slimes'
 col_time_unlock = 'time_unlock'
+col_cap_side = 'cap_side'
 
 # Database columns for mutations
 col_id_mutation = 'mutation'
@@ -1815,7 +2263,7 @@ it_book = 'book'
 rarity_plebeian = "Plebeian"
 rarity_patrician = "Patrician"
 rarity_promotional = "Promotional" # Cosmetics that should not be awarded through smelting/hunting
-rarity_princeps = "Princeps"
+rarity_princeps = "princeps"
 
 # Leaderboard score categories
 leaderboard_slimes = "SLIMIEST"
@@ -1848,7 +2296,8 @@ control_topic_neutral = "Currently controlled by no one."
 control_topics = {
 	faction_killers: control_topic_killers,
 	faction_rowdys: control_topic_rowdys,
-	"": control_topic_neutral  # no faction
+	#"": control_topic_neutral  # no faction
+	"": "", # The neutral control thing is a bit messy, disable this for now...
 }
 
 # district control actors
@@ -1951,6 +2400,12 @@ stat_bass_kills = 'bass_kills'
 stat_bow_kills = 'bow_kills'
 stat_umbrella_kills = 'umbrella_kills'
 stat_dclaw_kills = 'dclaw_kills'
+stat_spraycan_kills = 'spraycan_kills'
+stat_paintgun_kills = 'paintgun_kills'
+stat_paintroller_kills = 'paintroller_kills'
+stat_paintbrush_kills = 'paintbrush_kills'
+stat_watercolor_kills = 'watercolor_kills'
+stat_thinnerbomb_kills = 'thinnerbomb_kills'
 stat_staff_kills = 'staff_kills'
 
 # Categories of events that change your slime total, for statistics tracking
@@ -2041,6 +2496,8 @@ vendor_slimypersuits = "Slimy Persuits" #You can buy candy from here
 vendor_greencakecafe = "Green Cake Cafe" #Brunch foods
 vendor_bodega = "Bodega" # Clothing store in Krak Bay
 vendor_secretbodega = "Secret Bodega" # The secret clothing store in Krak Bay
+vendor_wafflehouse = "Waffle House" # waffle house in the void, sells non-perishable foods, 100 slime to 1 hunger
+vendor_basedhardware = "Based Hardware" # Hardware store in West Glocksbury
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -2081,12 +2538,23 @@ item_id_tough_material = "toughnails"
 item_id_smart_material = "smartcookies"
 item_id_beautiful_material = "beautyspots"
 item_id_cute_material = "cutebuttons"
-
+item_id_dragonsoul = "dragonsoul"
+item_id_monsterbones = "monsterbones"
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
-
+item_id_seaweed = "seaweed"
+item_id_string = "string"
+item_id_tincan = "tincan"
+item_id_oldboot = "oldboot"
+item_id_leather = "leather"
+item_id_ironingot = "ironingot"
+item_id_bloodstone = "bloodstone"
+item_id_tanningknife = "tanningknife"
 item_id_dinoslimemeat = "dinoslimemeat"
 item_id_dinoslimesteak = "dinoslimesteak"
+item_id_dyesolution = "dyesolution"
+item_id_textiles = "textiles"
+item_id_foodbase = "foodbase"
 
 #SLIMERNALIA
 item_id_sigillaria = "sigillaria"
@@ -2203,6 +2671,54 @@ item_id_brightshade = "brightshade"
 item_id_blacklimes = "blacklimes"
 item_id_phosphorpoppies = "phosphorpoppies"
 item_id_direapples = "direapples"
+item_id_rustealeaves = "rustealeaves"
+item_id_metallicaps = "metallicaps"
+item_id_steelbeans = "steelbeans"
+item_id_aushucks = "aushucks"
+
+#vegetable materials
+item_id_poketubereyes = "poketubereyes"
+item_id_pulpgourdpulp = "pulpgourdpulp"
+item_id_sourpotatoskins = "sourpotatoskins"
+item_id_bloodcabbageleaves = "bloodcabbageleaves"
+item_id_joybeanvines = "joybeanvines"
+item_id_purplekilliflowerflorets = "purplekilliflowerflorets"
+item_id_razornutshells = "razornutshells"
+item_id_pawpawflesh = "pawpawflesh"
+item_id_sludgeberrysludge = "sludgeberrysludge"
+item_id_suganmanutfruit = "suganmanutfruit"
+item_id_pinkrowddishroot = "pinkrowddishroot"
+item_id_dankwheatchaff = "dankwheatchaff"
+item_id_brightshadeberries = "brightshadeberries"
+item_id_blacklimeade = "blacklimeade"
+item_id_phosphorpoppypetals = "phosphorpoppypetals"
+item_id_direapplestems = "direapplestems"
+item_id_rustealeafblades = "rustealeafblades"
+item_id_metallicapheads = "metallicapheads"
+item_id_steelbeanpods = "steelbeanpods"
+item_id_aushuckstalks = "aushuckstalks"
+
+# dye ids
+item_id_dye_black = "blackdye"
+item_id_dye_pink = "pinkdye"
+item_id_dye_green = "greendye"
+item_id_dye_brown = "browndye"
+item_id_dye_grey = "greydye"
+item_id_dye_purple = "purpledye"
+item_id_dye_teal = "tealdye"
+item_id_dye_orange = "orangedye"
+item_id_dye_cyan = "cyandye"
+item_id_dye_red = "reddye"
+item_id_dye_lime = "limedye"
+item_id_dye_yellow = "yellowdye"
+item_id_dye_blue = "bluedye"
+item_id_dye_magenta = "magentadye"
+item_id_dye_cobalt = "cobaltdye"
+item_id_dye_white = "whitedye"
+item_id_dye_rainbow = "rainbowdye"
+item_id_paint_copper = "copperpaint"
+item_id_paint_chrome = "chromepaint"
+item_id_paint_gold = "goldpaint"
 
 #weapon ids
 weapon_id_revolver = 'revolver'
@@ -2223,11 +2739,22 @@ weapon_id_molotov = 'molotov'
 weapon_id_grenades = 'grenades'
 weapon_id_garrote = 'garrote'
 weapon_id_pickaxe = 'pickaxe'
+weapon_id_fishingrod = 'fishingrod'
 weapon_id_bass = 'bass'
 weapon_id_umbrella = 'umbrella'
 weapon_id_bow = 'bow'
 weapon_id_dclaw = 'dclaw'
 weapon_id_staff = 'staff'
+
+weapon_id_spraycan = 'spraycan'
+weapon_id_paintgun = 'paintgun'
+weapon_id_paintroller = 'paintroller'
+weapon_id_paintbrush = 'paintbrush'
+weapon_id_watercolors = 'watercolors'
+weapon_id_thinnerbomb = 'thinnerbomb'
+
+
+
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
 	"destructive capabilities that is beyond any human’s true understanding. And for its power, " \
@@ -2258,6 +2785,9 @@ forbiddenstuffedcrust_desc = "What are you waiting for? You’ve come this far, 
 	"It’s ready to die. Slather it in some low-quality marinara, toss it up into the air like in the old movies, and " \
 	"shove it into the oven, to teach it the true meaning of heat death. Eat a slice of that motherfucking pizza."
 
+# Items that should have a cooldown on how often they can be purchased
+premium_items = [item_id_metallicaps, item_id_steelbeans, item_id_aushucks]
+
 # List of normal items.
 item_list = [
 	EwGeneralItem(
@@ -2271,145 +2801,153 @@ item_list = [
 		acquisition = acquisition_mining,
 	),
 	EwGeneralItem(
-		id_item = "whitedye",
+		id_item = item_id_dye_white,
 		context = "dye",
 		str_name = "White Dye",
 		str_desc = "A small vial of white dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_poketubers,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "yellowdye",
+		id_item = item_id_dye_yellow,
 		context = "dye",
 		str_name = "Yellow Dye",
 		str_desc = "A small vial of yellow dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_pulpgourds,
+		acquisition = acquisition_smelting,
 	),
 
 	EwGeneralItem(
-		id_item = "orangedye",
+		id_item = item_id_dye_orange,
 		context = "dye",
 		str_name = "Orange Dye",
 		str_desc = "A small vial of orange dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_sourpotatoes,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "reddye",
+		id_item = item_id_dye_red,
 		context = "dye",
 		str_name = "Red Dye",
 		str_desc = "A small vial of red dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_bloodcabbages,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "magentadye",
+		id_item = item_id_dye_magenta,
 		context = "dye",
 		str_name = "Magenta Dye",
 		str_desc = "A small vial of magenta dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_joybeans,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "purpledye",
+		id_item = item_id_dye_purple,
 		context = "dye",
 		str_name = "Purple Dye",
 		str_desc = "A small vial of purple dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_purplekilliflower,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "bluedye",
+		id_item = item_id_dye_blue,
 		context = "dye",
 		str_name = "Blue Dye",
 		str_desc = "A small vial of blue dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_razornuts,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "greendye",
+		id_item = item_id_dye_green,
 		context = "dye",
 		str_name = "Green Dye",
 		str_desc = "A small vial of green dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_pawpaw,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "tealdye",
+		id_item = item_id_dye_teal,
 		context = "dye",
 		str_name = "Teal Dye",
 		str_desc = "A small vial of teal dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_sludgeberries,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "rainbowdye",
+		id_item = item_id_dye_rainbow,
 		context = "dye",
 		str_name = "***Rainbow Dye!!***",
 		str_desc = "***A small vial of Rainbow dye!!***",
-		acquisition = acquisition_milling,
-		ingredients = item_id_suganmanuts,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "pinkdye",
+		id_item = item_id_dye_pink,
 		context = "dye",
 		str_name = "Pink Dye",
 		str_desc = "A small vial of pink dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_pinkrowddishes,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "greydye",
+		id_item = item_id_dye_grey,
 		context = "dye",
 		str_name = "Grey Dye",
 		str_desc = "A small vial of grey dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_dankwheat,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "cobaltdye",
+		id_item = item_id_dye_cobalt,
 		context = "dye",
 		str_name = "Cobalt Dye",
 		str_desc = "A small vial of cobalt dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_brightshade,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "blackdye",
+		id_item = item_id_dye_black,
 		context = "dye",
 		str_name = "Black Dye",
 		str_desc = "A small vial of black dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_blacklimes,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "limedye",
+		id_item = item_id_dye_lime,
 		context = "dye",
 		str_name = "Lime Dye",
 		str_desc = "A small vial of lime dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_phosphorpoppies,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "cyandye",
+		id_item = item_id_dye_cyan,
 		context = "dye",
 		str_name = "Cyan Dye",
 		str_desc = "A small vial of cyan dye.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_direapples,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
-		id_item = "browndye",
+		id_item = item_id_dye_brown,
 		context = "dye",
 		str_name = "Brown Dye",
 		str_desc = "A small vial of brown dye.",
 		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
+		id_item = item_id_paint_copper,
+		context = "dye",
+		str_name = "Copper Paint",
+		str_desc = "A small bucket of Copper Paint.",
+		acquisition = acquisition_smelting,
+		durability = 3
+	),
+	EwGeneralItem(
+		id_item = item_id_paint_chrome,
+		context = "dye",
+		str_name = "Chrome Paint",
+		str_desc = "A small bucket of Chrome Paint.",
+		acquisition = acquisition_smelting,
+		durability = 3
+	),
+	EwGeneralItem(
+		id_item = item_id_paint_gold,
+		context = "dye",
+		str_name = "Gold Paint",
+		str_desc = "A small bucket of Gold Paint.",
+		acquisition = acquisition_smelting,
+		durability = 3
+	),
+	EwGeneralItem(
 		id_item = "bone",
 		str_name = "Bone",
-		str_desc = "A small nondescript bone. Traces of fresh slime in it indicate it must've belonged to one of the city's recidents.",
+		str_desc = "A small nondescript bone. Traces of fresh slime in it indicate it must've belonged to one of the city's residents.",
 		context = 'player_bone',
 	),
 	EwGeneralItem(
@@ -2482,8 +3020,7 @@ item_list = [
 		id_item = item_id_stick,
 		str_name = "stick",
 		str_desc = "It’s just some useless, dumb stick.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_direapples,
+		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
 		id_item = item_id_faggot,
@@ -2498,7 +3035,7 @@ item_list = [
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
-		id_item = "seaweed",
+		id_item = item_id_seaweed,
 		str_name = "Seaweed",
 		str_desc = "OH GOD IT'S A FUCKING SEAWEED!",
 		acquisition = acquisition_bartering,
@@ -2506,7 +3043,7 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "oldboot",
+		id_item = item_id_oldboot,
 		str_name = "Old Boot",
 		str_desc = "OH GOD IT'S A FUCKING OLD BOOT!",
 		acquisition = acquisition_bartering,
@@ -2514,7 +3051,7 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "tincan",
+		id_item = item_id_tincan,
 		str_name = "Tin Can",
 		str_desc = "OH GOD IT'S A FUCKING TIN CAN!",
 		acquisition = acquisition_bartering,
@@ -2522,7 +3059,7 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "leather",
+		id_item = item_id_leather,
 		str_name = "Leather",
 		str_desc = "A strip of leather.",
 		acquisition = acquisition_smelting,
@@ -2530,7 +3067,7 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "ironingot",
+		id_item = item_id_ironingot,
 		str_name = "Iron Ingot",
 		str_desc = "A bar of iron",
 		acquisition = acquisition_smelting,
@@ -2538,26 +3075,26 @@ item_list = [
 		context = 10,
 	),
 	EwGeneralItem(
-		id_item = "dragonsoul",
+		id_item = item_id_dragonsoul,
 		str_name = "Dragon Soul",
 		str_desc = "A fearsome dragon soul, pried from the corpse of a Green Eyes Slime Dragon. It's just like Dark Souls! Wait... *just like* Dark Souls??? Maybe you can use this for something.",
 		context = 'dragon soul',
 	),
 	EwGeneralItem(
-		id_item = "monsterbones",
+		id_item = item_id_monsterbones,
 		str_name = "Monster Bones",
 		str_desc = "A large set of bones, taken from the monsters that roam the outskirts. Tastes meaty.",
 		context = 'monster bone',
 	),
 	EwGeneralItem(
-		id_item = "bloodstone",
+		id_item = item_id_bloodstone,
 		str_name = "blood stone",
 		str_desc = "Formed from the cracking of monster bones, it glistens in your palm with the screams of those whos bones comprise it. Perhaps it will be of use one day.",
 		context = 'blood stone',
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
-		id_item = "tanningknife",
+		id_item = item_id_tanningknife,
 		context = "tool",
 		str_name = "Tanning Knife",
 		str_desc = "A tanning knife",
@@ -2565,7 +3102,7 @@ item_list = [
 	),
 
 	EwGeneralItem(
-		id_item = "string",
+		id_item = item_id_string,
 		str_name = "string",
 		str_desc = "It’s just some string.",
 		acquisition = acquisition_bartering,
@@ -3377,37 +3914,187 @@ item_list = [
 		id_item = item_id_cool_material,
 		str_name = "Cool Beans",
 		str_desc = "A couple of cool beans! Far out, man. Well, they aren’t really beans per se, more like little condensed nuggets of your crop. Whatever they are, they’re undeniably cool.",
-		acquisition = acquisition_milling,
-		ingredients = [item_id_direapples, item_id_brightshade, item_id_razornuts],
 	),
 	EwGeneralItem(
 		id_item = item_id_tough_material,
 		str_name = "Tough Nails",
 		str_desc = "A handful of rusty nails caked in dried blood that were presumably waiting for you if you had eaten your crops instead of milling them. Damn, what a missed opportunity!",
-		acquisition = acquisition_milling,
-		ingredients = [item_id_sourpotatoes, item_id_bloodcabbages, item_id_pulpgourds],
 	),
-
 	EwGeneralItem(
 		id_item = item_id_smart_material,
 		str_name = "Smart Cookies",
 		str_desc = "A farmer’s dozen of smart cookies. Well, they aren’t really cookies per se, more like little bland condensed patties of your crop. Whatever they are, they’re undeniably smart.",
-		acquisition = acquisition_milling,
-		ingredients = [item_id_phosphorpoppies, item_id_pawpaw, item_id_sludgeberries],
 	),
 	EwGeneralItem(
 		id_item = item_id_beautiful_material,
 		str_name = "Beauty Spots",
 		str_desc = "A small collection of severed beauty spots, mostly freckles and moles, that were presumably waiting for you if you had eaten your crops instead of milling them. Damn, what a missed opportunity!",
-		acquisition = acquisition_milling,
-		ingredients = [item_id_poketubers, item_id_dankwheat, item_id_blacklimes],
 	),
 	EwGeneralItem(
 		id_item = item_id_cute_material,
 		str_name = "Cute Buttons",
 		str_desc = "A wardrobe of cute buttons. You know you should probably be concerned that these lil’ guys were hiding in your crops, but honestly you’re overcome with emotion and feel utterly blessed. Lookit ‘em! They’re adorable! D’awww...",
+	),
+	EwGeneralItem(
+		id_item = item_id_dyesolution,
+		str_name = "Dye Solution",
+		str_desc = "A small vial of salt, water, and vinegar. You can smelt this together with crop materials to make dyes.",
+		price = 1000,
+		vendors = [vendor_basedhardware]
+	),
+	EwGeneralItem(
+		id_item = item_id_textiles,
+		str_name = "Textiles",
+		str_desc = "A set of fabrics. You can smelt this together with crop materials to make exclusive cosmetics.",
+		price = 1000,
+		vendors = [vendor_basedhardware]
+	),
+	EwGeneralItem(
+		id_item = item_id_foodbase,
+		str_name = "Food Base",
+		str_desc = "A set of powders and chemicals. You can smelt this together with crop materials to make exclusive food items which take longer to expire.",
+		price = 1000,
+		vendors = [vendor_basedhardware]
+	),
+	EwGeneralItem(
+		id_item = item_id_poketubereyes,
+		str_name = "Poketuber Eyes",
+		str_desc = "The small stem buds of a Poketuber.",
 		acquisition = acquisition_milling,
-		ingredients = [item_id_pinkrowddishes, item_id_joybeans, item_id_purplekilliflower],
+		ingredients = [item_id_poketubers],
+	),
+	EwGeneralItem(
+		id_item = item_id_pulpgourdpulp,
+		str_name = "Pulp Gourd Pulp",
+		str_desc = "The pulp of a Pulp Gourd.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_pulpgourds],
+	),
+	EwGeneralItem(
+		id_item = item_id_sourpotatoskins,
+		str_name = "Sour Potato Skins",
+		str_desc = "The skins of a Sour Potato.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_sourpotatoes],
+	),
+	EwGeneralItem(
+		id_item = item_id_bloodcabbageleaves,
+		str_name = "Blood Cabbage Leaves",
+		str_desc = "The soft leaves of a Blood Cabbage.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_bloodcabbages],
+	),
+	EwGeneralItem(
+		id_item = item_id_joybeanvines,
+		str_name = "Joybean Vines",
+		str_desc = "The severed vines on which Joybeans grow.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_joybeans],
+	),
+	EwGeneralItem(
+		id_item = item_id_purplekilliflowerflorets,
+		str_name = "Killiflower Florets",
+		str_desc = "The bush-like appendages of a Killiflower plant.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_purplekilliflower],
+	),
+	EwGeneralItem(
+		id_item = item_id_razornutshells,
+		str_name = "Razornut Shells",
+		str_desc = "The sharp and pointy shells of a Razornut.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_razornuts],
+	),
+	EwGeneralItem(
+		id_item = item_id_pawpawflesh,
+		str_name = "Pawpaw Flesh",
+		str_desc = "The ground flesh of a Pawpaw.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_pawpaw],
+	),
+	EwGeneralItem(
+		id_item = item_id_sludgeberrysludge,
+		str_name = "Sludgeberry Sludge",
+		str_desc = "The thick syrup of a Sludgeberry.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_sludgeberries],
+	),
+	EwGeneralItem(
+		id_item = item_id_suganmanutfruit,
+		str_name = "Suganmanut Fruit",
+		str_desc = "The bright, multi-colored fruit off which Suganmanuts grow.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_suganmanuts],
+	),
+	EwGeneralItem(
+		id_item = item_id_pinkrowddishroot,
+		str_name = "Pink Rowddish Root",
+		str_desc = "The thin, light-colored root of a Pink Rowddish.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_pinkrowddishes],
+	),
+	EwGeneralItem(
+		id_item = item_id_dankwheatchaff,
+		str_name = "Dankwheat Chaff",
+		str_desc = "The scaly, protective casing on Dankwheat plants.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_dankwheat],
+	),
+	EwGeneralItem(
+		id_item = item_id_brightshadeberries,
+		str_name = "Brightshade Berries",
+		str_desc = "The small blue berries that grow on Brightshade plants.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_brightshade],
+	),
+	EwGeneralItem(
+		id_item = item_id_blacklimeade,
+		str_name = "Black Limeade",
+		str_desc = "The sweet and sour juice of a Black Lime.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_blacklimes],
+	),
+	EwGeneralItem(
+		id_item = item_id_phosphorpoppypetals,
+		str_name = "Phosphorpoppy Petals",
+		str_desc = "The yellow-green petals of a Phosphorpoppy.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_phosphorpoppies],
+	),
+	EwGeneralItem(
+		id_item = item_id_direapplestems,
+		str_name = "Dire Apple Stems",
+		str_desc = "The orange stems of a Dire Apple.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_direapples],
+	),
+	EwGeneralItem(
+		id_item = item_id_rustealeafblades,
+		str_name = "Rustea Leaf Blades",
+		str_desc = "The razor-sharp blades attatched to the stems of Rustea Leaves.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_rustealeaves],
+	),
+	EwGeneralItem(
+		id_item = item_id_metallicapheads,
+		str_name = "Metallicap Heads",
+		str_desc = "The bulbous head on the top of a Metallicap.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_metallicaps],
+	),
+	EwGeneralItem(
+		id_item = item_id_steelbeanpods,
+		str_name = "Steel Bean Pods",
+		str_desc = "The long and hard pods that house Steel Beans.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_steelbeans],
+	),
+	EwGeneralItem(
+		id_item = item_id_aushuckstalks,
+		str_name = "Aushuck Stalks",
+		str_desc = "The lengthy stalks of an Aushuck plant.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_aushucks],
 	),
 ]
 #item_list += ewdebug.debugitem_set
@@ -3425,6 +4112,7 @@ dye_list = []
 dye_map = {}
 # seperate the dyes from the other normal items
 for c in item_list:
+
 	if c.context != "dye":
 		pass
 	else:
@@ -3573,7 +4261,7 @@ def wef_bat(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.sap_damage = 2
 
-	# Increased miss chance if attacking within less than two seconds after last attack
+	# Increased miss chance if attacking within less than three seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
 
@@ -3689,7 +4377,7 @@ def wef_katana(ctn = None):
 
 	elif len(weapons_held) == 1:
 		ctn.crit = True
-		ctn.slimes_damage *= 2
+		ctn.slimes_damage *= 1.5
 		ctn.sap_ignored *= 1.5
 
 # weapon effect function for "broadsword"
@@ -3978,15 +4666,15 @@ def wef_bass(ctn = None):
 	ctn.sap_damage = 1
 	ctn.sap_ignored = 5
 
-	# Increased miss chance if attacking within less than two seconds after last attack
+	# Increased miss chance if attacking within less than three seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
 
-	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
+	ctn.slimes_damage = int(ctn.slimes_damage * (0.5 + random.randrange(200) / 100))
 
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
+			if random.random() < 0.25:
 				ctn.miss = True
 		else:
 			ctn.miss = True
@@ -4023,11 +4711,9 @@ def wef_bow(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
 
-	#ctn.slimes_damage = int(ctn.slimes_damage * 3)
-
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
+			if random.random() < 0.25:
 				ctn.miss = True
 		else:
 			ctn.miss = True
@@ -4043,22 +4729,18 @@ def wef_dclaw(ctn = None):
 	user_mutations = ctn.user_data.get_mutations()
 	dmg = ctn.slimes_damage
 	if mutation_id_fastmetabolism in user_mutations or mutation_id_lightasafeather in user_mutations:
-		ctn.slimes_damage = int(ctn.slimes_damage * 1.2)
+		ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
 		ctn.slimes_spent *= 0.5
-	else:
-		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
-		ctn.slimes_spent *= 1
 
 	ctn.bystander_damage = int(dmg * 0.5)
 
-	#less slime cost and less damage = attacking faster I guess?
 	ctn.sap_damage = 5
 	ctn.sap_ignored = 10
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((5 - min(time_lastattack, 5)) / 5) ** 2) / 13 * 5
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.3:
+			if random.random() < 0.25:
 				ctn.miss = True
 		else:
 			ctn.miss = True
@@ -4071,9 +4753,11 @@ def wef_dclaw(ctn = None):
 def wef_staff(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 
-	consecutive_hits = int(ctn.weapon_item.item_props["consecutive_hits"])
-	if time_lastattack < 5 and consecutive_hits == 0:
-		# consecutive_hits used counterintuitively to track whether the user has "charged up"
+	if time_lastattack > 15 or not ctn.weapon_item.item_props["preparation_attack_count"]:
+		ctn.weapon_item.item_props["preparation_attack_count"] = 0
+	
+	# requires four attack commands to deal damage
+	if int(ctn.weapon_item.item_props["preparation_attack_count"]) == 4:
 		market_data = EwMarket(id_server = ctn.user_data.id_server)
 		conditions_met = 0
 		conditions = {
@@ -4082,6 +4766,7 @@ def wef_staff(ctn = None):
 			lambda _: (market_data.day % 31 == 15 and market_data.clock >= 20) or (market_data.day % 31 == 16 and market_data.clock <= 6), # moonless night
 			lambda ctn: not ctn.user_data.has_soul,
 			lambda ctn: ctn.user_data.get_weapon_possession(),
+			lambda ctn: ctn.user_data.poi == ewcfg.poi_id_thevoid,
 			lambda ctn: ctn.shootee_data.slimes > ctn.user_data.slimes,
 			lambda ctn: (ctn.user_data.swear_jar >= 500) or (ctn.shootee_data.swear_jar == 0),
 			lambda ctn: (ctn.user_data.poi_death == ctn.user_data.poi) or (ctn.shootee_data.poi_death == ctn.shootee_data.poi),
@@ -4094,17 +4779,68 @@ def wef_staff(ctn = None):
 					conditions_met += 1
 			except:
 				pass
-
+		
 		ctn.slimes_spent = int(ctn.slimes_spent * 3)
-		ctn.slimes_damage = int(ctn.slimes_damage * (3 + conditions_met * 0.5)) # 0.5 per condition met
-		ctn.sap_ignored = 15 + (5 * conditions_met) # 5 per condition met
-		if conditions_met >= random.randrange(1, 41): # 2.5% per condition met
+		ctn.slimes_damage = int(ctn.slimes_damage * (0.6 + conditions_met * 1.2))
+		ctn.sap_ignored = 6 * conditions_met
+		if conditions_met >= (random.randrange(15) + 1): # 6.66% per condition met
 			ctn.crit = True
-			ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
+			ctn.slimes_damage = int(ctn.slimes_damage * 1.8)
 
-		ctn.weapon_item.item_props["consecutive_hits"] = 1 # reset this so misses and hits are intermittent
+		ctn.weapon_item.item_props["preparation_attack_count"] = 0
 	else:
+		ctn.weapon_item.item_props["preparation_attack_count"] = int(ctn.weapon_item.item_props["preparation_attack_count"]) + 1
+		ctn.slimes_spent = int(ctn.slimes_spent * 0.5)
 		ctn.miss = True
+
+
+def wef_paintgun(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * .7)
+	ctn.slimes_spent = int(ctn.slimes_spent * .75)
+	aim = (random.randrange(10) + 1)
+	ctn.sap_ignored = 10
+	ctn.sap_damage = 2
+
+	if aim >= (9 - int(10 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
+def wef_paintroller(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * 1.75)
+	ctn.slimes_spent = int(ctn.slimes_spent * 4)
+
+	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
+
+	if aim <= (1 + int(10 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim >= (10 - int(10 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+		ctn.sap_damage *= 2
+
+def wef_watercolors(ctn = None):
+	ctn.slimes_damage = 4000
+	aim = (random.randrange(1000) + 1)
+	user_mutations = ctn.user_data.get_mutations()
+	ctn.sap_damage = 0
+
+	if aim <= (1 + int(1000 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim == 1000:
+		ctn.crit = True
+		ctn.slimes_damage *= 1
+
 
 
 vendor_dojo = "Dojo"
@@ -4117,6 +4853,18 @@ weapon_class_jammable = "jammable"
 weapon_class_captcha = "captcha"
 weapon_class_defensive = "defensive"
 weapon_class_heavy = "heavy"
+weapon_class_paint = "paint"
+
+weapon_type_convert = {
+weapon_id_watercolors:wef_watercolors,
+weapon_id_spraycan:wef_revolver,
+weapon_id_paintroller:wef_paintroller,
+weapon_id_thinnerbomb:wef_molotov,
+weapon_id_paintgun:wef_paintgun,
+weapon_id_paintbrush:wef_knives
+}
+
+
 
 # All weapons in the game.
 weapon_list = [
@@ -4418,7 +5166,7 @@ weapon_list = [
 			"arawheapofiron",
 			"eyelander"
 		],
-  		str_crit = "Critical hit!! {name_player} screams at the top of their lungs and unleashes a devastating overhead swing that maims {name_target}.",
+		str_crit = "Critical hit!! {name_player} screams at the top of their lungs and unleashes a devastating overhead swing that maims {name_target}.",
 		str_miss = "You missed! You grunt as your failed overhead swing sends ripples through the air.",
 		str_backfire = "You feel the bones in your wrists snap as you botch your swing with the heavy blade!! Fucking ouch dawg!",
 		str_equip = "You equip the broadsword.",
@@ -4610,7 +5358,7 @@ weapon_list = [
 		str_miss = "**You missed!!** {name_player}’s poor aim sends their grenade into a nearby alleyway, it’s explosion eliciting a Wilhelm scream and the assumed death of an innocent passerby. LOL!!",
 		str_equip = "You equip the grenades.",
 		str_name = "grenades",
-		str_weapon = "a stack of grenades",
+		str_weapon = "grenades",
 		str_weaponmaster_self = "You are a rank {rank} master of the grenades.",
 		str_weaponmaster = "They are a rank {rank} master of the grenades.",
 		#str_trauma_self = "Blast scars and burned skin are spread unevenly across your body.",
@@ -4683,10 +5431,11 @@ weapon_list = [
 		acquisition = acquisition_smelting,
 		stat = stat_pickaxe_kills,
 		sap_cost = 2,
-		captcha_length = 2
+		captcha_length = 2,
+		is_tool = 1
 	),
 	EwWeapon(  # 19
-		id_weapon = "fishingrod",
+		id_weapon = weapon_id_fishingrod,
 		alias = [
 			"fish",
 			"fishing",
@@ -4707,14 +5456,15 @@ weapon_list = [
 		str_kill = "*whsssh* {name_player} summons what little courage they possess to reel in {name_target} and wring all the slime out of them. How embarrassing! {emote_skull}",
 		str_killdescriptor = "!reeled",
 		str_damage = "{name_target} is lightly pierced on the {hitzone}!!",
-		str_duel = "**whsssh, whsssh** {name_player} and {name_target} spend some quality time together,discussing fishing strategy and preferred types of bait.",
+		str_duel = "**whsssh, whsssh** {name_player} and {name_target} spend some quality time together, discussing fishing strategy and preferred types of bait.",
 		str_scalp = " It has a fishing hook stuck in it. How embarrassing!",
 		fn_effect = wef_tool,
 		str_description = "It's a super fishing rod.",
 		acquisition = acquisition_smelting,
 		stat = stat_fishingrod_kills,
 		sap_cost = 2,
-		captcha_length = 2
+		captcha_length = 2,
+		is_tool = 1
 	),
 	EwWeapon(  # 20
 		id_weapon = weapon_id_bass,
@@ -4730,7 +5480,7 @@ weapon_list = [
 		str_weaponmaster = "They are a rank {rank} master of the bass guitar.",
 		#str_trauma_self = "There is a large concave dome in the side of your head.",
 		#str_trauma = "There is a large concave dome in the side of their head.",
-		str_kill = "*CRASSHHH.* {name_player} brings down the bass with righteous fury. Discordant notes play harshly as the bass trys its hardest to keep itself together. {emote_skull}",
+		str_kill = "*CRASSHHH.* {name_player} brings down the bass on {name_target} with righteous fury. Discordant notes play harshly as the bass trys its hardest to keep itself together. {emote_skull}",
 		str_killdescriptor = "smashed to pieces",
 		str_damage = "{name_target} is whacked across the {hitzone}!!",
 		str_duel = "**SMASHHH.** {name_player} and {name_target} smash their bass together before admiring eachothers skillful basslines.",
@@ -4786,7 +5536,7 @@ weapon_list = [
 		str_weaponmaster = "They are a rank {rank} minecraft bowmaster.",
 		#str_trauma_self = "There is a pixelated arrow in the side of your head.",
 		#str_trauma = "There is a pixelated arrow in the side of their head.",
-		str_kill = "*Pew Pew Pew.* {name_player} spams the bow as their foes life fades, riddling their body with arrows. {emote_skull}",
+		str_kill = "*Pew Pew Pew.* {name_player} spams the bow as {name_target}'s life fades, riddling their body with arrows. {emote_skull}",
 		str_killdescriptor = "shot to death",
 		str_damage = "{name_target} is shot in the {hitzone}!!",
 		str_duel = "{name_player} and {name_target} shoot distant targets, {name_player} is clearly the superior bowman.",
@@ -4823,9 +5573,237 @@ weapon_list = [
 		stat = stat_dclaw_kills,
 		classes = [weapon_class_burning],
 		sap_cost = 5,
-		captcha_length = 2
+		captcha_length = 2),
+
+	EwWeapon(  # 24
+		id_weapon=weapon_id_spraycan,
+		alias=[
+			"spray can",
+			"spray"
+		],
+		str_crit="**Critical hit!!** {name_player} flicks the nozzle off their spray can and lights it like a fuse! {name_target} gets nasty burns and a fresh coat of paint! **WHOOSH!!!**",
+		str_miss="**MISS!!** {name_player} attempts a spray attack, but the wind blows it back in their face!",
+		str_equip="You hold the spray can tightly, hoping to god somebody confuses it for a gun.",
+		str_name="spray can",
+		str_weapon="a spray can",
+		str_weaponmaster_self="You are a rank {rank} vandal of the spray can.",
+		str_weaponmaster="They are a rank {rank} vandal of the spray can.",
+		# str_trauma_self = "You're having trouble breathing, and the inside of your mouth is off-color.",
+		# str_trauma = "They're weirdly short of breath, and their mouth and tongue are off-color.",
+		str_kill="***PPPPPPSSSSSSSSSHHHHHhhhhhfff.*** {name_player} forcibly opens {name_target}'s mouth and sprays everything they have into their lungs. Their eyes roll back into their head and, trembling, they slowly asphyxiate in your arms. {emote_skull}",
+		str_killdescriptor="suffocated",
+		str_damage=random.choice(["{name_target} is whacked across the {hitzone}!!",
+								  "{name_player} sprays {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} humiliates {name_target} by bringing a spray can to a gunfight, mentally damaging them in the {hitzone}!!"]),
+		str_duel="**PSSS PSSS PSSSSSHH!** {name_player} and {name_target} spray the dojo walls until they get dizzy from the smell.",
+		str_scalp="The scalp is a nice shade of mauve.",
+		fn_effect=wef_tool,
+		str_description="It's a Based Hardware brand spray can, in your gang's color. The blurb on the backside preaches about the merits of street art and murals, but you're pretty sure that's just to cover their ass.",
+		vendors = [vendor_basedhardware],
+		stat=stat_spraycan_kills,
+		classes=[weapon_class_paint, weapon_class_captcha],
+		sap_cost=2,
+		captcha_length=3,
+		is_tool = 1,
+		str_backfire = "As {name_player} shakes the can to fire another shot, the thing suddenly explodes on them!",
+		tool_props = {
+		'reg_spray' : "You run down the streets, tagging buildings, street signs and old ladies with spray paint in the image of the {gang}!",
+		'miss_spray' : "**Miss!** Your can seems to be low on spray. You fill it up and give it a good shake. Good as new!",
+		'crit_spray' : "**Critical hit!** You dual wield spray cans, painting an urban masterpiece in one hand and shooting toxic chemicals into a cop's mouth with the other!",
+		'equip_spray' : "You get your trusty spray paint at the ready."}
+		),
+	EwWeapon(  # 25
+		id_weapon=weapon_id_paintgun,
+		alias=[
+			"paint gun",
+			"splatoon"
+		],
+		str_crit="**Critical hit!!** {name_player} aims down the sights with the precision of a video game real life sniper, shooting {name_target} in the eyes from 30 yards! **SPLAAAAAT!!!**",
+		str_miss="**MISS!!** {name_player} fires off a volley of paint, but {name_target} jumps behind cover!",
+		str_equip="Now listen here. You just equipped a paint gun. Keep in mind this is the weapon that boomer families shoot each other with to have fun. Enjoy trying to kill with it.",
+		str_name="paint gun",
+		str_weapon="a paint gun",
+		str_weaponmaster_self="You are a rank {rank} vandal of the paint gun.",
+		str_weaponmaster="They are a rank {rank} vandal of the paint gun.",
+		# str_trauma_self = "You have a splitting headache.",
+		# str_trauma = "They look hungover, almost like their entire body exploded.",
+		str_kill="***SPLAAAAART!!!!*** {name_player} fatally strikes {name_target}, and they explode from the inside out! There's a lot more gore than when you see it happen in Splatoon, though.{emote_skull}",
+		str_killdescriptor="imploded",
+		str_damage=random.choice(["{name_target} is splatted in the {hitzone}!!",
+								  "{name_player} shoots {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} attacks {name_target} with harmless paint!!"]),
+		str_duel="**SPLAT TAT TAT!!** {name_player} and {name_target} harass everyone in the dojo with their paint guns.",
+		str_scalp="The scalp is colorful, from both blood and paint.",
+		fn_effect=wef_tool,
+		str_description="It's an industrial strength two handed paint gun with a sniper scope attached. What do they use this for in industry, anyway?",
+		vendors=[vendor_basedhardware],
+		stat=stat_paintgun_kills,
+		classes=[weapon_class_paint, weapon_class_ammo, weapon_class_captcha],
+		clip_size = 15,
+		price = 5000,
+		sap_cost=2,
+		captcha_length=4,
+		is_tool = 1,
+		str_reload = "*Click.* You grab a paint cylinder from god knows where and load it into your gun, chucking the leftover one behind an alleyway.",
+		str_backfire = "Whoops, looks like somebody didn't fasten the paint cylinder hard enough! {name_player} gets a thorough spray to the face!",
+		tool_props = {
+			'reg_spray':  "You find a patch of wall several yards away that hasn't been vandalized yet. Time to take aim and...BAM! Nice shot!",
+			'miss_spray': "**Miss!** Your aim was as sharp as ever, but a fucking pigeon took the hit! Christ, what are the odds?",
+			'crit_spray': "**Critical hit!** The paint bullet skids a wall, spreading your paint across the whole thing!",
+			'equip_spray': "You load a clip of paint into the gun and throw it onto your back, kinda like Rambo if he were an art major."
+		}
 	),
-	EwWeapon( # 24
+	EwWeapon(  # 26
+		id_weapon=weapon_id_paintroller,
+		alias=[
+			"paint roller",
+			"roller"
+		],
+		str_crit="**Critical hit!!** {name_player}  knocks {name_target} to the ground and does a golf swing to their vulnerable little head, sending them spinning. **FWAP!!!**",
+		str_miss="**MISS!!** {name_player} does cringey bo staff jujitsu moves with the roller and forgets to actually attack {name_target}!",
+		str_equip="You hold the paint roller in your hand. The light plastic broom handle and spongy brush are sure to deal at least 10 damage.",
+		str_name="paint roller",
+		str_weapon="a paint roller",
+		str_weaponmaster_self="You are a rank {rank} vandal of the paint roller.",
+		str_weaponmaster="They are a rank {rank} vandal of the paint roller.",
+		# str_trauma_self = "There's a gaudy colored dent in your skull.",
+		# str_trauma = "There is a gaudy colored dent in their skull.",
+		str_kill="***CA-CRACK!*** {name_player} opens {name_target}'s skull like an egg using the dull metal edge of the roller. It appears to be hollow, after all, {name_target} was stupid enough to get killed with a fucking paint roller.{emote_skull}",
+		str_killdescriptor="cracked open",
+		str_damage=random.choice(["{name_target} is swatted in the {hitzone}!!",
+								  "{name_player} slaps {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} rolls paint all over {name_target}'s {hitzone}!!"]),
+		str_duel="{name_player} and {name_target} quietly pass the time rolling paint over the windows of nearby houses You both have learned tranquility.",
+		str_scalp="The scalp is split in half, with a big hole right in the middle.",
+		fn_effect=wef_tool,
+		price = 4500,
+		str_description="It's a long, broom-like plastic paint roller with a spongy brush and metal axle. The modern man's bo staff.",
+		vendors=[vendor_basedhardware],
+		stat=stat_paintroller_kills,
+		classes=[weapon_class_paint, weapon_class_captcha],
+		sap_cost=2,
+		captcha_length=4,
+		is_tool=1,
+		str_backfire = "{name_player} waves the paint roller around like it's a plastic toy, spreading paint nowhere but giving themselves a thorough welt in the head from the 2 square inches of it that could actually do any damage. How'd they manage that?",
+		tool_props = {
+			'reg_spray' : "You roll paint over as much surface area as your puny little Juvie legs can take you to.",
+			'miss_spray' : "**Miss!** The sponge on your roller snaps off and it takes too long for you to notice. What a waste!",
+			'crit_spray' : "**Critical hit!** Your mind goes blank in a painting-induced rage. When you wake up, all your surroundings are {color} You should do that more often!",
+			'equip_spray' : "You grab your paint roller and strap it on your back."}
+		),
+	EwWeapon(  # 27
+		id_weapon=weapon_id_paintbrush,
+		alias=[
+			"paint brushes",
+			"brush"
+		],
+		str_crit="**Critical hit!!** {name_player}  stabs {name_target} with one brush and paints over their eyes with another!  **HOT DOG!!!**",
+		str_miss="**MISS!!** {name_player} throws the brushes at {name_target}, but they get hit with the soft bristles instead of the pointy bit!",
+		str_equip="If only you had a whittling knife that could sharpen paintbrush handles. That way you could equip the knife as a weapon instead of this.",
+		str_name="paintbrushes",
+		str_weapon="paintbrushes",
+		str_weaponmaster_self="You are a rank {rank} vandal of the paintbrush.",
+		str_weaponmaster="They are a rank {rank} vandal of the paintbrush.",
+		# str_trauma_self = "You have bruises all over your body and you can't get the paint out of your clothes.",
+		# str_trauma = "They have bruises all over their body, and they can't get the paint out of their clothes.",
+		str_kill="***MASTERPIECE!*** {name_target} takes a mortal brush to the forehead, courtesy of {name_player}'s talent as a painter. {emote_skull}",
+		str_killdescriptor="paintbrushed to death",
+		str_damage=random.choice(["{name_target} is handlestabbed in the {hitzone}!!",
+								  "{name_player} flecks {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} grazes {name_target}'s {hitzone} with coarse bristles!!"]),
+		str_duel="{name_player} and {name_target} paint random text commands on the walls outside the Dojo. {name_target} paints some furry art when nobody's looking.",
+		str_scalp="The scalp has a bunch of welts, and has a faint smell of lead.",
+		fn_effect=wef_tool,
+		str_description="A stack of large, coarse-bristled paintbrushes, linked together on a burlap string.",
+		vendors=[vendor_basedhardware],
+		stat=stat_paintbrush_kills,
+		classes=[weapon_class_paint, weapon_class_captcha],
+		sap_cost=2,
+		price = 100,
+		captcha_length=3,
+		is_tool=1,
+		str_backfire = "In an attempt to paint faster, {name_player} sticks one of the handles in their mouth and try to use it to cover more ground. Instead, they broke your teeth and scraped their cheek on a hard brick surface. Better not try that again...",
+		tool_props = {
+			'reg_spray' : "You paint vulgar {gang} symbols on as many buildings as you can.",
+			'miss_spray' : "**Miss!** You finish with a paint can and have to switch! You waste too much time getting the can open.",
+			'crit_spray' : "**Critical hit!**  You hold the paint can in your mouth and start crab walking, throwing paint along the wall as you do it! Somehow, this is more efficient!",
+			'equip_spray' : "You get your brushes at the ready."}
+	),
+	EwWeapon(  # 28
+		id_weapon=weapon_id_watercolors,
+		alias=[
+			"paint brushes",
+			"brush"
+		],
+		str_crit="```css\n\"oooOOOOOOOH LA LA! {name_target} is exposed to {name_player}'s watercolor pornography! They won't be able to recover from that!\"\n```",
+		str_miss="```css\n[{name_player} paints a picture for {name_target}. It does no damage, as expected.]\n```",
+		str_equip="```ini\n[You get a nice mug to dip your little paintbrush in, and open your 12 set of watercolors. Look out world, here comes you!]\n```",
+		str_name="watercolors",
+		str_weapon="a set of watercolors",
+		str_weaponmaster_self="You are a rank {rank} flaming homosexual of watercolors.",
+		str_weaponmaster="They are a rank {rank} flaming homosexual of watercolors.",
+		# str_trauma_self = "You are eternally humiliated after being murdered by a gangster wielding watercolor paints.",
+		# str_trauma = "They are eternally humiliated after being murdered by a gangster wielding watercolor paints.",
+		str_kill="```bash\n\"HUUUUUUH?? {name_target} goes and kills themselves after having an existential crisis! {name_player} seems to have done this with only their own retardation!\"\n```",
+		str_killdescriptor="driven to suicide",
+		str_damage="```ini\n[{name_player} paints a picture of {name_target}. Their self esteem takes a hit!]\n```",
+		str_duel="```json\n\"{name_player} and {name_target} practice art using Dojo-owned easels and canvases. Eventually, the training session breaks down and, you just throw paint water at each other and giggle like schoolgirls.\"\n```",
+		str_scalp="The scalp is perfectly intact.",
+		fn_effect=wef_tool,
+		str_description="A 12 pack of watercolors, the kind you used when you were a 5 years old boy.",
+		vendors=[vendor_basedhardware],
+		stat=stat_watercolor_kills,
+		classes=[weapon_class_paint, weapon_class_captcha],
+		sap_cost=2,
+		price = 1300,
+		captcha_length=3,
+		is_tool=1,
+		str_backfire = "{name_player} has the idea of trying to paint their parents fucking, thinking it will be really funny and everyone will love them. Pretty soon we're going to have to ban watercolors because people like you are using them to molest yourself.",
+		tool_props = {
+			'reg_spray' : "Nice drawing, {curse}! ",
+			'miss_spray' : "**Miss!** Your painting sucks. God, you're stupid. ",
+			'crit_spray' : "After the thousandth failed watercolor gesamtkunstwerk you decide enough is enough. Fuck this. Fuck the gangs, fuck the violence, fuck the perpetually rotting lets player that compels you to rigor mortis yourself more frequently than you eat breakfast. The spite is so concentrated that it compels you to turn your life around. You get a fake ID, join the PTA, and rope them into cleaning every last inch of this district until the homeless population smell like citrus and give out free, non-tainted lollipops. However, your newfound peaceful life is interrupted by the night terrors ENDLESS WAR now gives you on a daily basis, and you decide to go back to being a gangster. You suppose some things never change.",
+			'equip_spray' : "You get out your 12 pack of watercolors. Can't believe you have to use one of these."
+			}),
+	EwWeapon(  # 29
+		id_weapon=weapon_id_thinnerbomb,
+		alias=[
+			"thinner",
+			"thinnerbombs"
+		],
+		str_crit="**Critical hit!!** {name_player} slams {name_target} with a bottle of paint thinner, showering their face with broken glass and getting some of the thinner down their gullet. They fall back, dazed and bleeding.",
+		str_miss="**MISS!!** {name_player} is too dazed by their own chemicals to make a move! They drop the bottle on accident, throwing vapors all over the place.",
+		str_equip="You pull out the thinner bombs and hold their bottlenecks between your fingers. Never has a not-weapon ever felt so cool.",
+		str_name="thinner bombs",
+		str_weapon="thinner bombs",
+		str_weaponmaster_self="You are a rank {rank} vandal of the thinner bomb.",
+		str_weaponmaster="They are a rank {rank} vandal of the thinner bomb.",
+		# str_trauma_self = "You have the hangover from hell.",
+		# str_trauma = "They have the hangover from hell.",
+		str_kill="***WHAT A SIZZLER!*** {name_target}, dazed from the concentrated toxic chemicals in the air, falls to the ground, giving {name_player} the chance to stab them through the neck with the broken bottle. Inhalants. Not even once. {emote_skull}",
+		str_killdescriptor="drugged",
+		str_damage=random.choice(["{name_target} gets a thinnerbomb to the {hitzone}!!",
+								  "{name_player} slashes {name_target} with a broken thinnerbomb! Ooh, right in the {hitzone}!!"]),
+		str_duel="{name_player} and {name_target} build a resistance to the noxious chemicals they're using by drinking paint thinner together. Cheers.",
+		str_scalp="The scalp smells awful, you can hardly hold it.",
+		fn_effect=wef_tool,
+		str_description="A pack of brittle glass bottles filled with paint thinner. This stuff vaporizes like nobody's business, and could strip the osmotic membrane off a slimeoid.",
+		vendors=[vendor_basedhardware],
+		stat=stat_thinnerbomb_kills,
+		classes=[weapon_class_paint, weapon_class_thrown, weapon_class_captcha],
+		sap_cost=2,
+		price = 150,
+		captcha_length=4,
+		is_tool = 1,
+		str_backfire = "You haven't had a good buzz in awhile, so you take a whiff of one of your thinner bombs. Great trip and all, but you rough yourself up convulsing on the ground while it happens.",
+		tool_props = {
+		'reg_spray' : "You find a vandalized wall and toss a thinner bomb on it! You hear a faint sizzling as paint begins to strip off the walls. Sick!",
+		'miss_spray' : "**Miss!** You make a mistake on the throw's distance and it bursts uselessly on the ground. You got to do some littering, so at least there's that.",
+		'crit_spray' : "**Critical hit!** You take out a paint bomb and throw it at a particularly fragile looking building. The chemicals you used were so caustic that they burned a hole through the whole wall, preventing anyone from painting it for all of time!",
+		'equip_spray' : "You get your glass thinner bombs out you you can throw them in a moment's notice."
+	}),
+	
+	EwWeapon( # 30
 		id_weapon = weapon_id_staff,
 		alias = [
 			"eldritchstaff",
@@ -4834,25 +5812,30 @@ weapon_list = [
 			"wickedwand",
 			"frighteningfaggot"
 		],
-		str_miss = "You burn away a portion of your strength as you begin your incantations.",
-		str_damage = "{name_player} concludes their incantations. A minor horror forms around {name_target}'s {hitzone} and bites into it.",
-		str_crit = "An incomprehensible shriek pierces {name_target}'s ears as a true abomination appears before them. It strikes {name_target}'s {hitzone} with a terrible foce, but the real damage is psychological. **Critical hit!!**",
-		str_kill = "{name_player} goes limp for an instant as pitch black tendrils emerge from below {name_target}, gabbing on to their body and violently pulling them through the ground and into the sewers.",
+		str_miss = "Your mind goes blank as you feel slime disappear from your body in preparation for a deadly attack.",
+		str_damage = "{name_player} finalizes their invocation. " + random.choice([
+			"Gravity violently increases in the space around {name_target}, slamming them into the ground.", 
+			"A blinding white light shines from {name_target}'s {hitzone} as it burns hotter than the surface of the sun.", 
+			"Spectral hands caress {name_target}'s body, leaving gaping wounds in their path.", 
+			"An unseen force suddenly yoinks {name_target} by their {hitzone}, sending them flying into the air.",
+			"A pitch black horror forms around {name_target}'s {hitzone} and tears into it."
+		]),
+		str_crit = "{name_player} notices {name_target} still recoiling from the damage, and takes the chance to bonk the everliving shit out of them with their staff. **Critical hit!!**",
+		str_kill = "A mass of tiny hands erupts from the ground below {name_target}, grabbing on to their body. Their screams echo across the streets as they're dragged through the ground and into the sewers.",
 		str_equip = "You equip the eldritch staff.",
 		str_name = "eldritch staff",
 		str_weapon = "an eldritch staff",
 		str_weaponmaster_self = "You are a rank {rank} conduit of the ones below.",
 		str_weaponmaster = "They are a rank {rank} conduit of the ones below.",
 		str_killdescriptor = "cast down",
-		str_duel = "{name_player} and {name_target} look each other in the eye, showing a sorrowful sympathy for one another. Are they about to cry?.",
-		str_description = "It's an intricate wooden staff with an strange cloudy crystal on its handle. It has an attractive quality to it, but it also gives you the creeps.",
-		str_scalp = " It's covered in a strange black substance.",
+		str_duel = "{name_player} and {name_target} compare notes on their understanding of the eldritch fuckery they've each experienced.",
+		str_description = "An intricate wooden staff with a cloudy crystal on its handle. It looks fucking class, but it also gives you the creeps.",
+		str_scalp = "It's covered in symbols written with a strange black substance.",
 		fn_effect = wef_staff,
 		acquisition = acquisition_smelting,
-		classes= [weapon_class_captcha],
 		stat = stat_staff_kills,
-		sap_cost = 4,
-		captcha_length = 10
+		sap_cost = 2,
+		captcha_length = 10,
 	),
 ]
 
@@ -5189,24 +6172,6 @@ stock_tacobell = "tacobell"
 # default stock rates
 default_stock_market_rate = 1000
 default_stock_exchange_rate = 1000000
-
-# dye ids
-dye_black = "blackdye"
-dye_maroon = "maroondye"
-dye_green = "greendye"
-dye_brown = "browndye"
-dye_tan = "tandye"
-dye_purple = "purpledye"
-dye_teal = "tealdye"
-dye_orange = "orangedye"
-dye_gray = "graydye"
-dye_red = "reddye"
-dye_lime = "limedye"
-dye_yellow = "yellowdye"
-dye_blue = "bluedye"
-dye_fuchsia = "fuchsiadye"
-dye_aqua = "aquadye"
-dye_white = "whitedye"
 
 
 # A map of name to EwWeather objects.
@@ -6299,7 +7264,6 @@ food_list = [
 		],
 		recover_hunger = 500,
 		price = 2500,
-
 		inebriation = 0,
 		str_name = 'box of chocolates',
 		#vendors = [vendor_tacobell, vendor_pizzahut, vendor_kfc, vendor_bar, vendor_diner, vendor_seafood],
@@ -6452,11 +7416,49 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
+		id_food = item_id_rustealeaves,
+		recover_hunger = 60,
+		str_name = 'Rustea Leaves',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Rustea Leaves. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "In ancient times, scholars from distant lands made tea with these leaves, believing it to offer them some kind of divination.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = item_id_metallicaps,
+		recover_hunger = 60,
+		price = 100000,
+		str_name = 'Metallicaps',
+		vendors = [vendor_farm, vendor_bazaar],
+		str_eat = "You chomp into the raw Metallicaps. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "It's hallucinogenic properties aren't yet awakened. DUDE SHROOMS LOL!!!",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = item_id_steelbeans,
+		recover_hunger = 60,
+		price = 100000,
+		str_name = 'Steel Beans',
+		vendors = [vendor_farm, vendor_bazaar],
+		str_eat = "You chomp into the raw Steel Beans. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "*That's me in the cockpit. That's me in the nosedive, doing 9/11.*",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = item_id_aushucks,
+		recover_hunger = 60,
+		price = 100000,
+		str_name = 'Aushucks',
+		vendors = [vendor_farm, vendor_bazaar],
+		str_eat = "You chomp into the raw Aushucks. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The king and queen of all crops, renowned for it's glistening, golden exterior.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
 		id_food = "pinkrowdatouille",
 		recover_hunger = 1200,
 		str_name = 'Pink Rowdatouille',
-		acquisition = acquisition_milling,
-		ingredients = item_id_pinkrowddishes,
+		acquisition = acquisition_smelting,
 		str_eat = "You gingerly nibble on the fancy vegetables. It’s nostalgic taste sends you right back to your childhood, and your first encounter with the law. You had to get sent to the New Los Angeles City aka Neo Milwaukee Juvenile Detention Center somehow, after all. It feels like it happened so long ago, and yet, you can remember it like it was yesterday.",
 		str_desc = "Thinly sliced rounds of Pink Rowddish and other colorful vegetables are slow roasted and drizzled with special sauce. It seems simple enough, it can’t taste THAT good, can it?",
 		time_expir = milled_food_expir,
@@ -6465,8 +7467,7 @@ food_list = [
 		id_food = "sludgeberrypancakes",
 		recover_hunger = 800,
 		str_name = 'Sludgeberry Pancakes',
-		acquisition = acquisition_milling,
-		ingredients = item_id_sludgeberries,
+		acquisition = acquisition_smelting,
 		str_eat = "You pick up the stack of pancakes with your hands, holding and biting into them as if they were a hamburger. Thick syrup coats your hands and mouth, ready to be licked off after the main meal has concluded.",
 		str_desc = "Fluffy flapjacks filled with assorted Sludgeberries and topped with a heaping helping of viscous syrup. You’ve died and washed up in the sewers. But, like, a nice part of the sewers. This express doesn’t really translate well into the setting.",
 		time_expir = milled_food_expir,
@@ -6475,8 +7476,7 @@ food_list = [
 		id_food = "pulpgourdpie",
 		recover_hunger = 800,
 		str_name = 'Pulp Gourd Pie',
-		acquisition = acquisition_milling,
-		ingredients = item_id_pulpgourds,
+		acquisition = acquisition_smelting,
 		str_eat = "You pick up a piece like it's a goddamn slice of pizza, demolishing it in a few barbaric bites. Eventually you get your fill of the crust and just start scraping out the delicious Pulp Gourd filling goop and slathering it all over your mouth and tongue like you're a fucking mindless pig at his trough.",
 		str_desc = "A warm, freshly baked pie. It's still molten, still solidifying Pulp Gourd filling beckons you like a siren lures a sailor. So many holidays have been ruined because of your addiction to this cinnamon imbued delicacy, and so many more will be in the future.",
 		time_expir = milled_food_expir,
@@ -6485,8 +7485,7 @@ food_list = [
 		id_food = "joybeanpastemochi",
 		recover_hunger = 800,
 		str_name = 'Joybean Paste Mochi',
-		acquisition = acquisition_milling,
-		ingredients = item_id_joybeans,
+		acquisition = acquisition_smelting,
 		str_eat = "You pop the delicate confectionary into your mouth and start ravenously shredding it into barely digestible chewy chunks. Sweet paste is slathered across your mouth. Your teeth enamel is decimated, execution style.",
 		str_desc = "A sickeningly sweet  Joy Bean paste filling encased in a small, round mochi covered in powdered sugar. It’s *proper* name is “Daifucku.”",
 		time_expir = milled_food_expir,
@@ -6495,8 +7494,7 @@ food_list = [
 		id_food = "brightshadeseeds",
 		recover_hunger = 800,
 		str_name = 'Brightshade Seeds',
-		acquisition = acquisition_milling,
-		ingredients = item_id_brightshade,
+		acquisition = acquisition_smelting,
 		str_eat = "You pop a few seeds into your mouth at a time, grinding them into dust with your molars and digesting their sweet, sweet single digit calories.",
 		str_desc = "A bag of Brightshade seeds, unsalted and ready for ill-advised consumption.",
 		time_expir = milled_food_expir,
@@ -6505,8 +7503,7 @@ food_list = [
 		id_food = "direapplejuice",
 		recover_hunger = 800,
 		str_name = 'Dire Apple Juice',
-		acquisition = acquisition_milling,
-		ingredients = item_id_direapples,
+		acquisition = acquisition_smelting,
 		str_eat = "You slurp down the delicious sugary juice! Hell yeah!",
 		str_desc = "A 99% juice-like substance that tastes vaguely like Dire Apples! It’s so ubiquitous that you guarantee that if you rummaged through every school kid’s lunch in the city, you’d be sent to jail.",
 		time_expir = milled_food_expir,
@@ -6515,8 +7512,7 @@ food_list = [
 		id_food = "purplekilliflowercrustpizza",
 		recover_hunger = 1200,
 		str_name = 'Purple Killiflower Crust Pizza',
-		acquisition = acquisition_milling,
-		ingredients = item_id_purplekilliflower,
+		acquisition = acquisition_smelting,
 		str_eat = "You take a hesitant nibble of the famously keto pizza slice before coming to the reality that sometimes healthy things CAN taste good! You shove the rest of the slice in your mouth, nearly choking. Deep inside of your body, you can feel your kidney begin to churn and convulse. That’s probably fine.",
 		str_desc = "A deliciously dietary-accordant slice of Killiflower crusted pizza. Made by milling down Killiflower into fine crumbs, combining with various irradiated cheeses, and baking until even notorious ENDLSS WAR critic Arlo is impressed. Now THIS is how you lose weight!",
 		time_expir = milled_food_expir,
@@ -6525,8 +7521,7 @@ food_list = [
 		id_food = "razornutbutter",
 		recover_hunger = 800,
 		str_name = 'Razornut Butter',
-		acquisition = acquisition_milling,
-		ingredients = item_id_razornuts,
+		acquisition = acquisition_smelting,
 		str_eat = "You take a hefty spoonful of the thick mucilage, coating your mouth completely. It’ll take weeks to swallow the last of it.",
 		str_desc = "A tub of chunky, creamy Razonut Butter. Co-star of countless childhood classics. You know it was invented by a Juvie, right?",
 		time_expir = milled_food_expir,
@@ -6535,8 +7530,7 @@ food_list = [
 		id_food = "jellyfilleddoughnut",
 		recover_hunger = 800,
 		str_name = 'Jelly-Filled Doughnut',
-		acquisition = acquisition_milling,
-		ingredients = item_id_poketubers,
+		acquisition = acquisition_smelting,
 		str_eat = "You chomp into the delicious jelly-filled doughnuOH GOD WHY THE FUCK DOES IT TASTE LIKE A TRADITIONAL JAPANESE ONIGIRI WITH A PICKLE PLUM FILLING WHO COULD HAVE PREDICTED THIS?!?!",
 		str_desc = "These jelly-filled doughnuts seem appetizing enough, but you're no expert. You never really cared much for jelly-filled doughnuts. In fact, in most scenarios you'd pass them up in favor of another pastry or sugary snack.",
 		time_expir = milled_food_expir,
@@ -6545,8 +7539,7 @@ food_list = [
 		id_food = "yourfavoritefood",
 		recover_hunger = 800,
 		str_name = '***Your Favorite Food***',
-		acquisition = acquisition_milling,
-		ingredients = item_id_suganmanuts,
+		acquisition = acquisition_smelting,
 		str_eat = "***You bite into your favorite meal!! It’s taste is literally indescribable!! You feel like you’re going retarded, your mind is clearly breaking!! Uwahhh!!***",
 		str_desc = "***Your favorite meal!! You could go on for hours about how great this food is!! But, you won’t, because no one appreciates it as much as you do.***",
 		time_expir = milled_food_expir,
@@ -6555,8 +7548,7 @@ food_list = [
 		id_food = "dankwheattoast",
 		recover_hunger = 800,
 		str_name = 'Dankwheat Toast',
-		acquisition = acquisition_milling,
-		ingredients = item_id_dankwheat,
+		acquisition = acquisition_smelting,
 		str_eat = "You take a bite out of the Dank Wheat Toast, and immediately you begin to start staggering around, clearly lost in some sort of unearned pleasure.",
 		str_desc = "A burnt, slightly soggy slice of Dank Wheat Toast. What more do you want out of me?",
 		time_expir = milled_food_expir,
@@ -6565,8 +7557,7 @@ food_list = [
 		id_food = "blacklimesour",
 		recover_hunger = 800,
 		str_name = 'Black Lime Sour',
-		acquisition = acquisition_milling,
-		ingredients = item_id_blacklimes,
+		acquisition = acquisition_smelting,
 		str_eat = "You take a swig of the obscure southern delicacy. Its overwhelming acidity tricks your mouth into generating quarts of saliva, refreshing your mouth and destroying your taste buds. Nifty!",
 		str_desc = "A small paper cup with nothing but crushed ice, the juice of a Black Lime, a little salt, and about a pound of cocaine.",
 		time_expir = milled_food_expir,
@@ -6575,8 +7566,7 @@ food_list = [
 		id_food = "phosphorpoppiesmuffin",
 		recover_hunger = 800,
 		str_name = 'Phosphorpoppies Muffin',
-		acquisition = acquisition_milling,
-		ingredients = item_id_phosphorpoppies,
+		acquisition = acquisition_smelting,
 		str_eat = "You remove the muffin head from the stump, before devouring the former and throwing the later as far away from you as humanly possible. Good riddance.",
 		str_desc = "Oooh, muffins! Remember that? Gimme a thumbs up with you get this joke.",
 		time_expir = milled_food_expir,
@@ -6585,8 +7575,7 @@ food_list = [
 		id_food = "sourpotatofrenchfries",
 		recover_hunger = 800,
 		str_name = 'Sour Potato French Fries',
-		acquisition = acquisition_milling,
-		ingredients = item_id_sourpotatoes,
+		acquisition = acquisition_smelting,
 		str_eat = "You bite into the fluffy, acidic french fries, occasionally dipping in into a selection of various dipping sauces such as hot slime and sweet slime. You divorce the actual flavor of the crispy exterior from it’s sour innards with a technique not unlike the one used to get the last drop of toothpaste out of it’s tube. Your face convulses in pain.",
 		str_desc = "Some gloriously thick cut Sour Potato french fries accompanied by an embarrassment of tasty slime-based dipping sauces. What else could a juvenile asked for?? Maybe some sugar and baking soda, this shit is unbelievably acidic.",
 		time_expir = milled_food_expir,
@@ -6595,8 +7584,7 @@ food_list = [
 		id_food = "bloodcabbagecoleslaw",
 		recover_hunger = 800,
 		str_name = 'Blood Cabbage Coleslaw',
-		acquisition = acquisition_milling,
-		ingredients = item_id_bloodcabbages,
+		acquisition = acquisition_smelting,
 		str_eat = "You drop the semi-solidified puck of red coleslaw into your eager maw, upon which the faux gelletain instantly loses it’s form and start to crumble into drop down your face. You manage to digest a cabbage shred.",
 		str_desc = "A congealed dark crimson slab of myoglobin encasing sparse strands of Blood Cabbage. It jiggles when you shake the cup it’s stored in. Why the fuck would you mill this?",
 		time_expir = milled_food_expir,
@@ -6605,10 +7593,45 @@ food_list = [
 		id_food = "pawpawfood",
 		recover_hunger = 800,
 		str_name = 'Pawpaw Food',
-		acquisition = acquisition_milling,
-		ingredients = item_id_pawpaw,
+		acquisition = acquisition_smelting,
 		str_eat = "You slowly drink the bitter, flavorless mush. Its… uh… food?",
 		str_desc = "An unappetizing pile of Pawpaw Gruel. It’s just Pawpaw milled into something halfway between puke and diarrhea. The staple of a traditional Juvenile diet. ",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "earlbrowntea",
+		recover_hunger = 800,
+		str_name = 'Earl Brown Tea',
+		acquisition = acquisition_smelting,
+		str_eat = "You dunk your teabag into the cup of Earl Brown Tea to enrich the flavor, and take a long sip afterwards. Dunking the teabag, heh, it totally reminds you of the last time you pwn'd some n00bz... wait, what the fuck are you talking about???",
+		str_desc = "A cup of brown tea. It's easily mistaken for coffee.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "badshroomz",
+		recover_hunger = 800,
+		str_name = 'Bad Shroomz',
+		acquisition = acquisition_smelting,
+		str_eat = "You gobble up the Bad Shroomz and start totally tripping the fuck out. 'Dude, what if Endless War, had like, Slime Goombas and Slime Koopa Troopas, and you could !stomp on them and get SlimeCoin from question mark blocks...', you think to yourself, ingeniously.",
+		str_desc = "A handful of mushrooms, with a copper coating that endows them with psychadelic properties. It's best to take them in a cold, dark room, handcuffed to your bed, with no human contact in miles, in order to optimize your experience with them.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "chromaccino",
+		recover_hunger = 800,
+		str_name = 'Chromaccino',
+		acquisition = acquisition_smelting,
+		str_eat = "You slurp on your Chromaccino. The scalding beverage that leaves a hint of jet fuel within its pallete gives you scars on your mouth that will never heal. Truly, a flavor that you can Never Forget:tm:.",
+		str_desc = "A cup of molten metal, with shavings of metal floating at the top. It strikes you as a bad idea to drink it.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "moltenpopcorn",
+		recover_hunger = 800,
+		str_name = 'Molten Popcorn',
+		acquisition = acquisition_smelting,
+		str_eat = "You chew through the Molten Popcorn. The melt-in-your-mouth flavor is to die for! Literally! You are fucking dying as you continue to ingest this terrible, terrible food item. What the fuck were you thinking?",
+		str_desc = "A piping-hot bag of popcorn. A melting gold ingot is propped up where the butter normally goes, dripping down into the rest of the popcorn puffs.",
 		time_expir = milled_food_expir,
 	),
 	EwFood(
@@ -6673,8 +7696,21 @@ food_list = [
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
 		str_name = 'Super Water FUCK ENERGY Drink',
-		str_eat = "You crack open a cold, refreshing can of Super Water flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its extremely potent artificial water flavorings overwhelm your senses, temporarily shutting off your brain from the sheer amount of information being sent to it from your overloaded taste buds. You probably are literally retarded now. Nigh instanously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+		str_eat = "You crack open a cold, refreshing can of Super Water flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its extremely potent artificial water flavorings overwhelm your senses, temporarily shutting off your brain from the sheer amount of information being sent to it from your overloaded taste buds. You probably are literally retarded now. Nigh instantaneously the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
 		str_desc = "A cold, refreshing can of Super Water flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
+	),
+	EwFood(
+		id_food = "justcumfuckenergy",
+		alias = [
+			"jcfu"
+		],
+		recover_hunger = 1200,
+		price = 12000,
+		inebriation = 1000,
+		vendors = [vendor_mtndew, vendor_vendingmachine],
+		str_name = 'Just Cum FUCK ENERGY Drink',
+		str_eat = "You crack open a cold, refreshing can of Just Cum flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. The sticky, grimy consistency of the actual can of cum you just chugged tingles your mouth and throat as it slowly descends down your esophagus, reminding you of your uncle. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+		str_desc = "A cold, refreshing can of Just Cum flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
 	EwFood(
 		id_food = item_id_quadruplestuffedcrust,
@@ -7198,7 +8234,7 @@ food_list = [
 		],
 		recover_hunger = 0,
 		str_name = 'Seaweed Joint',
-		str_eat = "You light up your Seaweed and begin to smoke it. Congratulations! You're now high. You catch fish twice as often, but food is half as effective. This lasts for 10 minutes.",
+		str_eat = "You light up your Seaweed and begin to smoke it. Congratulations! You're now high. You catch fish twice as often, but food is half as effective. This lasts for 30 minutes.",
 		str_desc = "A joint made up of dankwheat and seaweed bartered with Captain Albert Alexander. Wait a minute, does that make the good Captain your drug dealer? Hell yeah.",
 		acquisition = acquisition_smelting
 	),
@@ -7293,7 +8329,7 @@ food_list = [
 			"frickenergy",
 		],
 		recover_hunger=10,
-		price=1,
+		price=10,
 		str_name = "Dire Apple FRICK Energy",
 		str_eat = "*siiiiiip*, Ahhh, that's the stuff. You drink through the entire juice box in one go.",
 		str_desc = "A small rectangular box of apple juice. Suitable for children, and perhaps small slimeoids.",
@@ -7317,10 +8353,102 @@ food_list = [
 		str_name = "Desiccant Packet",
 		str_eat = "You rip open the packet and pour it’s forbidden fruit into your mouth, taking great delight in chewing up and then sloshing around the silica gel in your mouth before swallowing. Your stomach growls angrily, but… nothing else really happens. Huh, really? Usually these things go on forever. I guess you’ve eaten so much other indigestible garbage before that your stomach’s just sort of used to it.",
 		str_desc = "It’s a tiny pocket full of highly-toxic, moisture-absorbing, gel beads. You know you shouldn’t eat this, but… just an ounce couldn’t hurt, right?",
-		vendors = [
-			vendor_secretbodega
-		]
-	)
+		vendors = [vendor_secretbodega]
+	),
+	EwFood(
+		id_food = "gummyworms",
+		recover_hunger = 100,
+		price = 100,
+		str_name = "Gummy Worms",
+		str_eat = "\n*You eat the gummy worms.*\n***You eat the gummy worms.***\n***Y O U  E A T  T H E  G U M M Y  W O R M S .***\n                                                                                                                        ...yummy!",
+		str_desc = "After months of toil and hundreds of U.S. dollars spent, the Cop Killer finally found what he was searching for all along. Hopefully it will have been worth the wait.",
+		vendors = [vendor_slimypersuits]
+	),
+	EwFood(
+		id_food = "awfulwaffle",
+		alias=[
+			"awful",
+		],
+		recover_hunger = 20,
+		price = 2000,
+		str_name = "Awful Waffle",
+		str_eat = "You put this tough and floppy piece of cooked garbage in your mouth. You give up eat it with a knife and fork and relegate yourself to just holding it and taking bites off. It tastes like shit, makes you feel like shit, and will give you the shits when you're done. Why would you do this to yourself?",
+		str_desc = "You can feel the regret of the person who made this piece of shit waffle emanating from it. The watered down batter was not properly mixed or cooked for as long as it should've, leading to a lumpy, doughy mess that can barely be called a waffle.",
+		perishable = False,
+		vendors = [vendor_wafflehouse],
+	),
+	EwFood(
+		id_food = "wetwaffle",
+		alias=[
+			"wet",
+		],
+		recover_hunger = 50,
+		price = 5000,
+		str_name = "Wet Waffle",
+		str_eat = "You try sucking on the straw, but the density of the batter is too much for your puny suction to pull it all the way from the bag into your mouth. You try squishing the plastic bag as you suck, which actually gets some of the batter in your mouth, but it's not enough. You give up, slam the bag, pop a hole on the bottom, and suck directly from it. All this effort was not worth it, it just tastes like waffle batter, and it's gonna give you salmonella.",
+		str_desc = "A waffle-shaped plastic bag full of waffle batter, with a long straw-like opening at the top for you to suck on like an idiot. Kinda looks like a fucked up transparent baloon.",
+		perishable = False,
+		vendors = [vendor_wafflehouse],
+	),
+	EwFood(
+		id_food = "icantbelieveitsnotwaffle",
+		alias=[
+			"icbinw",
+			"notwaffle",
+			"prionwaffle",
+		],
+		recover_hunger = 100,
+		price = 10000,
+		str_name = "I Can't Believe It's Not Waffle!",
+		str_eat = "It really does taste just like a fucking waffle. You gobble it up, in disbelief that the thing you're eating is not actually a waffle. You contract kuru.",
+		str_desc = "This looks like a waffle. The name of the dish does indicate this is in fact not a waffle, but it just looks, smells, and feels like a waffle.",
+		perishable = False,
+		vendors = [vendor_wafflehouse],
+	),
+	EwFood(
+		id_food = "entirekidsmealwaffle",
+		alias=[
+			"kidsmeal",
+			"entirekidsmeal",
+			"ekmw",
+		],
+		recover_hunger = 300,
+		price = 30000,
+		str_name = "Entire Kids' Meal Waffle",
+		str_eat = "You slowly start to unhinge your jaw, ingesting this thick mega meal like an anaconda swallowing a whole writhing alligator. As soon as your saliva makes contact with the item, it starts to unfold and disintegrate. The congealed mass starts to expand, it takes your entire being to force this down.\nYou now resemble a cartoon rat upon engulfing an entire cheese wheel, except real...and a waffle.",
+		str_desc = "The hydraulic waffle press required to create this smorgasbord of breakfast food has seared this grotesque checkerboard slab of pancakes, omelettes, bacon strips, apple juice cartons, and entire bottles of syrup into a gutbusting object so dense that it breaks any plate it is placed upon. One bite will satisfy even the pickiest of children, if they survive.",
+		perishable = False,
+		vendors = [vendor_wafflehouse],
+	),
+	EwFood(
+		id_food = "baconanguscheeseburgerdeluxewaffle",
+		alias=[
+			"bacdw",
+			"baconwaffle",
+			"cheeseburgerwaffle",
+		],
+		recover_hunger = 500,
+		str_name = "Bacon Angus Cheeseburger Deluxe Waffle",
+		price = 50000,
+		str_eat = "You raise the vibrating greasy mass to your lips, hesitantly you open your mouth, only for the mass of waffle burger to shift through your hands, this 4 dimensional snack phases through you, swiping through your head and even clipping past your brain, the interdimensional grease sears not only your current self, but you soon realize why you received random grease burns across your body throughout your childhood. As it shifts into your stomach, you wonder if you have really consumed this waffle burger, of if the waffle burger has consumed you. You are simply too simple a lifeform to understand this eldritch breakfast.",
+		str_desc = "This immaculate 4d chess board of a meal is constantly drooling a greasy snail trail as you hold it aloft. This Calabi–Yau manifold of a burger is created from interlocked waffles, a fresh poppy seed bun waffle, a crispy lettuce waffle, a sizzling bacon strip waffle, a moist tomato waffle, a sharp cheese waffle, a grilled angus patty waffle, a sweet dill pickle waffle, a savory grilled onion waffle, and yet another fresh poppy seed bun waffle.",
+		perishable = False,
+		vendors = [vendor_wafflehouse],
+	),
+	EwFood(
+		id_food = "brusselswaffle",
+		alias=[
+			"brussels",
+			"brussel",
+		],
+		recover_hunger = 1000,
+		price = 100000,
+		str_name = "Brussels Waffle",
+		str_eat = "The sublime experience of eating this waffle cannot be accurately conveyed through words. The delicate crust gives way to a soft and malleable interior, as its mild sweetness spreads throughout your mouth. As you consume the waffle bite by bite, visions of times gone by pass through your mind: a priviliged youth, the death of an early lover, ascension to power, cynic machinations for the greater good, a timely death, and eternal wandering for evermore. Once done, you remain motionless for a moment, your eyes shut, holding back solemn tears as you're overwhelmed by the ephimerality of it all.",
+		str_desc = "Something stirs within you as soon as your lay your eyes on this waffle. It's unassuming: just a fine rectangular waffle covered in powdered sugar, underwhelming when compared to the bombastic waffles you've had before. But even your philistine eyes can tell the delicate care that's been put into this dish is well beyond the pathetic standards you've gotten used to.",
+		perishable = False,
+		vendors = [vendor_wafflehouse],
+	),
 ]
 
 # A map of id_food to EwFood objects.
@@ -7332,12 +8460,28 @@ food_names = []
 # list of crops you're able to !reap
 vegetable_list = []
 
+# map of vegetables to their associated cosmetic material
+vegetable_to_cosmetic_material = {}
+
 # seperate the crops from the normal foods
 for v in food_list:
-	if v.vendors != [vendor_farm]:
+
+	if vendor_farm not in v.vendors:
 		pass
 	else:
+		if v.id_food in [item_id_direapples, item_id_brightshade, item_id_razornuts, item_id_steelbeans]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_cool_material
+		elif v.id_food in [item_id_pinkrowddishes, item_id_joybeans, item_id_purplekilliflower, item_id_suganmanuts]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_cute_material
+		elif v.id_food in [item_id_poketubers, item_id_dankwheat, item_id_blacklimes, item_id_aushucks]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_beautiful_material
+		elif v.id_food in [item_id_phosphorpoppies, item_id_pawpaw, item_id_sludgeberries, item_id_rustealeaves]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_smart_material
+		elif v.id_food in [item_id_sourpotatoes, item_id_bloodcabbages, item_id_pulpgourds, item_id_metallicaps]:
+			vegetable_to_cosmetic_material[v.id_food] = item_id_tough_material
+
 		vegetable_list.append(v)
+		
 
 vendor_stock_map = {
 	vendor_kfc : stock_kfc,
@@ -8145,7 +9289,7 @@ the_slime_lyrics= [
 ]
 
 furniture_list = [
-EwFurniture(
+	EwFurniture(
 		id_furniture = "interrogationchair",
 		str_name = "interrogation chair",
 		str_desc = "This is the kind of chair shitty cops use to question their victims. Sitting in it gives you war flashbacks to when you were arrested, so you'll probably only whip it out for special occasions.",
@@ -8155,7 +9299,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's an interrogation chair here for some reason.",
 		furniture_place_desc = "You place the chair in the middle of the room, trying not to think about police."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "brokenclock",
 		str_name = "broken clock",
 		str_desc = "You can't believe you own and treasure a broken clock. The bazaar sells these by convincing idiotic juvies they can fix it. They can't.",
@@ -8165,7 +9309,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The broken clock says it's 2:33.",
 		furniture_place_desc = "You hang the clock on the wall."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "bevanssnot",
 		str_name = "Bevan's snot",
 		str_desc = "This stuff is actually pretty useful. It's a way to decorate your house with slime, without actually having to give up your own.",
@@ -8175,7 +9319,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The walls are smeared with slime.",
 		furniture_place_desc = "You gently smear the slime facsimile on the walls."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "chair",
 		str_name = "chair",
 		str_desc = "It's a normal wooden chair. A sign of your entry into the rat race that is the economy.",
@@ -8185,7 +9329,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a chair in the room.",
 		furniture_place_desc = "You set the chair where you think it's appropriate. How exciting."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "desk",
 		str_name = "desk",
 		str_desc = "A normal wooden desk. You can almost hear your soul breaking under your monotonous career.",
@@ -8195,7 +9339,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "You see a desk in the corner.",
 		furniture_place_desc = "You set up the desk in the corner of the room."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "couch",
 		str_name = "couch",
 		str_desc = "This one's a pull-out couch. The upholstery is pretty new, yet somehow looks worn out already.",
@@ -8205,7 +9349,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a comfy couch up against the wall.",
 		furniture_place_desc = "You get some friend or another to help you move the couch in. They pretended like they were happy to do it, but you know they weren't."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "lamp",
 		str_name = "lamp",
 		str_desc = "A normal lamp. Good for reading, if your juvenile delinquent ass could actually read.",
@@ -8215,7 +9359,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The lamp casts a warm light throughout the room.",
 		furniture_place_desc = "You set up the lamp, plug it in, and watch the one-light light show."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "lgbtqdesk",
 		str_name = "LGBTQ+ desk",
 		str_desc = "It's like a regular desk, but the drawers are all different colors of the rainbow.",
@@ -8226,7 +9370,7 @@ EwFurniture(
 		furniture_look_desc = "A gaudy rainbow desk is in the corner of the room.",
 		furniture_place_desc = "You drag the desk into position. You feel gayer already.",
 		furn_set = "lgbt"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "lgbtqchair",
 		str_name = "LGBTQ+ chair",
 		str_desc = "A rainbow striped chair. I'll bet you could give some pretty good man-on-man lap dances with this.",
@@ -8237,7 +9381,7 @@ EwFurniture(
 		furniture_look_desc = "There's a rainbow chair set up.",
 		furniture_place_desc = "You place the chair in the best place you can think of.",
 		furn_set = "lgbt"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "lgbtqcouch",
 		str_name = "LGBTQ+ couch",
 		str_desc = "There's no need for this couch to pull out.",
@@ -8248,7 +9392,7 @@ EwFurniture(
 		furniture_look_desc = "A colorful couch sits against the wall.",
 		furniture_place_desc = "You contact the Village People, and they help you move the couch in. Those guys are pretty helpful.",
 		furn_set = "lgbt"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "lgbtqlamp",
 		str_name = "LGBTQ+ lamp",
 		str_desc = "It's not actually the lamp that's LGBTQ. It's the bulb.",
@@ -8259,7 +9403,7 @@ EwFurniture(
 		furniture_look_desc = "The fancy lamp flashes rainbow everywhere.",
 		furniture_place_desc = "You plug in the lamp and watch the pretty colors for awhile.",
 		furn_set = "lgbt"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "lgbtqbed",
 		str_name = "LGBTQ+ bed",
 		str_desc = "This is where the magic happens.",
@@ -8270,7 +9414,7 @@ EwFurniture(
 		furniture_look_desc = "There's a rainbow bed in the bedroom.",
 		furniture_place_desc = "You set up your bed, dreaming of all the same-sex poon you're gonna slam.",
 		furn_set = "lgbt"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "bed",
 		str_name = "bed",
 		str_desc = "A standard-issue bed, ready-made for crying yourself to sleep.",
@@ -8280,7 +9424,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a bed in the bedroom.",
 		furniture_place_desc = "The IKEA instructions are confusing, so it takes a few attempts to make the bed."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "hauntedbed",
 		str_name = "haunted bed",
 		str_desc = "This bed was owned by a long-gone staydead, way back in Season 1. You can still feel the negaslime residue on it.",
@@ -8291,7 +9435,7 @@ EwFurniture(
 		furniture_look_desc = "You hear ghostly moaning from the bedroom.",
 		furniture_place_desc = "You're about to place the mattress when a dozen spiders crawl out of it. Better be careful with this one.",
 		furn_set = "haunted"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "hauntedcouch",
 		str_name = "haunted couch",
 		str_desc = "Every person who sat on this couch was supposedly cursed to die the day after. That doesn't mean much in NLACakaNM, though.",
@@ -8302,7 +9446,7 @@ EwFurniture(
 		furniture_look_desc = "The rustic couch against the wall looks old and haunted.",
 		furniture_place_desc = "You were going to ask some of your buds to help move this in, but you walked into the apartment and it was already there...",
 		furn_set = "haunted"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "hauntedlamp",
 		str_name = "haunted lamp",
 		str_desc = "When you turn on this lamp it somehow makes the room darker.",
@@ -8313,7 +9457,7 @@ EwFurniture(
 		furniture_look_desc = "The lighting in here is ominous, thanks to your lamp.",
 		furniture_place_desc = "You set up the old lamp. The light flickers.",
 		furn_set = "haunted"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "hauntedchair",
 		str_name = "haunted chair",
 		str_desc = "This chair doesn't seem to go well with other furniture, unless it's below a noose.",
@@ -8324,7 +9468,7 @@ EwFurniture(
 		furniture_look_desc = "A creepy chair stands in the middle of the room.",
 		furniture_place_desc = "You put the chair out of sight, where you won't be tempted to !suicide.",
 		furn_set = "haunted"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "haunteddesk",
 		str_name = "haunted desk",
 		str_desc = "It just looks like an old desk. What did the store clerk mean by 'haunted'?",
@@ -8335,7 +9479,7 @@ EwFurniture(
 		furniture_look_desc = "An old desk(haunted, apparently) is in the corner.",
 		furniture_place_desc = "You move the desk into the corner. Scary.",
 		furn_set = "haunted"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "armageddonspritzer",
 		str_name = "Armageddon Spritzer",
 		str_desc = "You look at the automatic scent spritzer, filled to the top with a sinister red liquid. You wonder to yourself why you bought this. All of a sudden, it sprays a puff directly into your face, and you begin to hallucinate.\n\nThe light begins to fade from your eyes as you're bombarded with cacophanous mental static. The buzzing and echoey clanging drives you to scream, but your body no longer exists. You try to clutch your face in desperation and all you feel is liquid. You feel burning. Burning everywhere. The sky flashes a dissonant dark orange, as though the sun was setting on reality itself, and although nobody is speaking, you feel it all calling to you. But you don't want this. Whatever memories haven't escaped you want this all to stop. You don't know your own name and you wish to remember it. And it all hurts. It hurts so much. Please stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop.\n\nWhen you wake up, your face is bleeding and 2 hours have passed. Well, shit. Guess you better prepare for when this goes off again in an hour.",
@@ -8345,7 +9489,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The spritzer in here makes you feel the sicknasty feelings.",
 		furniture_place_desc = "You set up the spritzer high up on the wall. Gulp."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "beanbagchair",
 		str_name = "beanbag chair",
 		str_desc = "A cushy chair. You were told Digibro has one just like it.",
@@ -8355,7 +9499,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A beanbag chair is plopped just wherever.",
 		furniture_place_desc = "You plop the beanbag chair just wherever."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "slimebagchair",
 		str_name = "slimebag chair",
 		str_desc = "A squishy slime-based chair. It's nice and viscous, for your tired bottom.",
@@ -8365,7 +9509,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A bright green slimebag chair is plopped just wherever.",
 		furniture_place_desc = "You plop the slimebag chair just wherever."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "custombodypillow",
 		str_name = "{custom} body pillow",
 		str_desc = "A dakimakura with pillowcase. It's got {custom} on it.",
@@ -8375,7 +9519,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a {custom} body pillow in the bedroom.",
 		furniture_place_desc = "You gently place the pillow in your room, being careful not to damage your waifu."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "futon",
 		str_name = "futon",
 		str_desc = "Every tenant's best friend. Foldable, holdable, lovable.",
@@ -8385,7 +9529,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a futon against the wall.",
 		furniture_place_desc = "You get your friends to help you set up the futon. It's so light and convenient that they treat you to KFC at the end of it."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "vaporsposter",
 		str_name = "The Vapors poster",
 		str_desc = "It's a poster for The Cop Killer's comic. There's Magda. Yep. \npatreon.com/bensaint\nsaintcomix.com",
@@ -8395,7 +9539,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a Vapors poster on the wall.",
 		furniture_place_desc = "You roll out your fullbody Magda poster and place it on the wall. You wonder if it's considered a betrayal if Rowdys own these."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "burgerprintwallpaper",
 		str_name = "burger print wallpaper",
 		str_desc = "This wallpaper is a dead ringer for that burger jumpsuit the Rowdy Fucker always wears. Just having it makes you feel rancorous.",
@@ -8405,7 +9549,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The walls are papered with burgers.",
 		furniture_place_desc = "You start by taking all your furniture out of your house. You buy a paintroller, some adhesive, and some tarp for the floor. You toil for a day sticking the adhesive and applying the wallpaper, then stay at someone else's flat for another day so it dries. And... dammit, the burgers aren't aligned correctly on the seams. Guess we'll just deal."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "highclassbed",
 		str_name = "high class bed",
 		str_desc = "This offensively comfortable little number is filled with grade A down feathers hand-picked by NASA. You can get such good sleep on it that it almost lets you forget your sins. Almost.",
@@ -8416,7 +9560,7 @@ EwFurniture(
 		furniture_look_desc = "You glimpse the high class bed in the bedroom and feel the urge to lie down.",
 		furniture_place_desc = "You walk outside and give a stern nod to the lower-class peons running about. They give a melancholy look when they see you point to your new bed, but they know they must do as told. Four of the stronger looking street urchins hoist your bed in their arms and carry it to your abode, with you sitting atop it like the emperor you are. They set you down with the gentleness of skilled servants, and you flip them several million SlimeCoin just to get out of your sight. Boy. You can't wait to sleep on this.",
 		furn_set = "high class"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "highclassthrone",
 		str_name = "high class throne",
 		str_desc = "A golden throne adorned with red velvet. Jewel encrusted, regal, and fucking stupid expensive.",
@@ -8427,7 +9571,7 @@ EwFurniture(
 		furniture_look_desc = "You see the throne. It beckons.",
 		furniture_place_desc = "As you place the throne, you picture the kings that came before you. Marc Antony. Nero. All six Georges. Or seven, if you count Maddox. Thinking on it, you decide your reign will be different from those idiots.",
 		furn_set = "high class"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "highclasscouch",
 		str_name = "high class couch",
 		str_desc = "It's a luxury hardwood sofa with huge gemstones in the armrests. As stiff as it looks, it's comfier than anything you've sat in before.",
@@ -8438,7 +9582,7 @@ EwFurniture(
 		furniture_look_desc = "A high class couch is against the wall.",
 		furniture_place_desc = "You hire some people to help you move your couch in. They were way too slow for your busy schedule.",
 		furn_set = "high class"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "highclassdesk",
 		str_name = "high class desk",
 		str_desc = "They say some old politician signed a bunch of sick ass documents on this. The vendor never told you who, though.",
@@ -8449,7 +9593,7 @@ EwFurniture(
 		furniture_look_desc = "A high class desk is in the corner.",
 		furniture_place_desc = "You place the desk near a window, allowing the serfs outside to bask in your radiance.",
 		furn_set = "high class"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "highclasslamp",
 		str_name = "high class lamp",
 		str_desc = "It's a lamp. It looks just like the regular lamp, but it doesn't actually work. You got suckered, dude.",
@@ -8459,7 +9603,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The lamp is broken.",
 		furniture_place_desc = "You try all sorts of light bulbs, but the lamp is just broken. You defeatedly set it up where it won't attract attention."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "laptopcomputer",
 		str_name = "laptop computer",
 		str_desc = "It's a laptop from 2006, freshly installed with Windows XP. This thing hardly works, but when it's plugged into the wall you can still run Discord.",
@@ -8469,7 +9613,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A laptop sits closed on the floor.",
 		furniture_place_desc = "You place the laptop and plug it in."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "rainbowdashfigurine",
 		str_name = "rainbow dash figurine",
 		str_desc = "It's one of those little pony figures from MLP: Friendship is Magic. It's in pretty good condition.",
@@ -8480,7 +9624,7 @@ EwFurniture(
 		furniture_look_desc = "You can sense brony vibes in this room.",
 		furniture_place_desc = "You set Rainbow by the windowsill, where she can daydream about taking to the skies.",
 		furn_set = "pony"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "diploma",
 		str_name = "framed diploma",
 		str_desc = "It's a diploma from a NLACakaNM college. You're not sure you earned this.",
@@ -8490,7 +9634,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A diploma hangs on the wall.",
 		furniture_place_desc = "You think about all the memories you had back in college: drinking, skipping class, killing everyone in University Parking Services, and maybe even a little learning along the way. You lower your head sentimentally and hang the diploma on your wall."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "racecarbed",
 		str_name = "race car bed",
 		str_desc = "VROOM VROOM! NNNNEEEEEEOOOOOOWWWWWW SKRRT! NEEEEEEEOOOOOOOOW BEEP BEEP! SCREEECH! CRASH!",
@@ -8500,7 +9644,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a racecar bed in the bedroom.",
 		furniture_place_desc = "You assemble the bed and place it in your vroom."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "padlockset",
 		str_name = "set of padlocks",
 		str_desc = "You have a standard deadbolt lock, a steel door guard, a second password protected deadbolt, one of those chain thingies, reinforced hinges, and one of those dungeon-style full-length door guards. Also a chair to prop against the door for good measure.",
@@ -8510,7 +9654,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The door is really, REALLY locked.",
 		furniture_place_desc = "You meticulously attach your various locks to your front door until you're satisfied with the craftsmanship. Maybe now you'll finally sleep soundly at night."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "butler",
 		str_name = "butler",
 		str_desc = "You don't know this man's real name, but he responds to Jeeves so you've been going with that. He does whatever you tell him to do, but for some reason he's useless at gang warfare.",
@@ -8520,7 +9664,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A butler stands up straight against the wall, awaiting your instructions.",
 		furniture_place_desc = "You clap twice, and your butler comes running. You point to the floor in the corner. \"Jeeves,\" you say, \"You'll be sleeping here from now on.\" He nods, and begins to get comfy there on the cold floor."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "crib",
 		str_name = "crib",
 		str_desc = "Awwww. I bet your kid looks adorable sleeping in this. You do have a kid, right?",
@@ -8530,7 +9674,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a crib in the bedroom.",
 		furniture_place_desc = "You build the crib from the little box it came in, spinning the mobile a couple of times to make sure it works."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "unhealthylivingbook",
 		str_name = "Guide to Unhealthy Living: Cowritten by the Rift Cafe",
 		str_desc = "It's a book about how to transition to living a sedentary, unhygenic lifestyle in less than 20 days.",
@@ -8540,7 +9684,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "This place smells awful.",
 		furniture_place_desc = "You carefully study brony habit-forming patterns and embrace mediocrity. Your life slowly begins to fall apart, and the junk food you eat permeates the room and makes everything smell like piss and negaslime. You can't believe a product of the Rift Cafe actually accomplished something."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "singingfishplaque",
 		str_name = "singing fish plaque",
 		str_desc = "You press the button on the plaque. \n\n:notes:Here's a little tip I know:notes:\n:notes:Take with !snag and store with !stow:notes:\n:notes:Don't worry:notes:\n:notes:Stay slimy:notes:\n:notes:The little miners were upset:notes:\n:notes:So they went and fished me up instead:notes:\n:notes:Don't worry:notes:\n:notes:Stay slimy:notes:\n:notes:WEEEEEEEEEEEEEEEEEEEEEHEEEEEEEEEEEHEEEEEEEEEEEEEHEEHAOOHEEHEHEHOOHAHAHAAAA\n\nFuck, this thing is annoying. You smack it in the face before it finishes its song.",
@@ -8550,7 +9694,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a fake fish mounted on the wall.",
 		furniture_place_desc = "You put a nail in the wall and hang up your fish. Slimecorp probably doesn't want you knocking holes in the walls, but fuck 'em."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "arcadecabinet",
 		str_name = "arcade cabinet",
 		str_desc = "It's broken. Shit.", #the description gets replaced with a game link when the buy function trips
@@ -8560,7 +9704,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's an arcade cabinet set up.",
 		furniture_place_desc = "It's been forever since you've played a real video game. Finally, the moment you've been waiting for. You plug this bitch in and gaze at its splendor."),
-EwFurniture(
+	EwFurniture(
 		id_furniture="washingmachine",
 		str_name="washing machine",
 		str_desc="It's one of those top-loading machines from ages ago. With this you can !wash <item> to remove the dye from it, but you're not sure you want to. Hygiene doesn't seem very RFCK-core.",
@@ -8570,7 +9714,7 @@ EwFurniture(
 		vendors=[vendor_bazaar],
 		furniture_look_desc="An old washing machine is hooked up in the other room.",
 		furniture_place_desc="You place the washing machine in a side room. You don't really know how you managed the complex plumbing involved, but there it is."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "leatherdesk",
 		str_name = "leather desk",
 		str_desc = "A desk adorned with scalp leather. Looks nice and fancy, as long as you forget how it was made.",
@@ -8581,7 +9725,7 @@ EwFurniture(
 		furniture_look_desc = "There's a leathery desk in the corner.",
 		furniture_place_desc = "You place the desk and admire the subtle craftsmanship that was put into it.",
 		furn_set = "leather"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "leathercouch",
 		str_name = "leather couch",
 		str_desc = "It's a leather couch made of human scalps. To be fair, no cow would dare set foot in this city.",
@@ -8592,7 +9736,7 @@ EwFurniture(
 		furniture_look_desc = "The studded leather couch adds class to the room.",
 		furniture_place_desc = "Moving the couch in was a huge pain. Nobody wanted to help you move it, so you had to manage yourself. Christ, it's like just having a scalp-couch makes everybody think you're a serial killer.",
 		furn_set = "leather"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "leatherbed",
 		str_name = "leather bed",
 		str_desc = "It's a bed upholstered with leather. Demonstrably less comfortable than a regular bed, but you just had to.",
@@ -8603,7 +9747,7 @@ EwFurniture(
 		furniture_look_desc = "There's a leather bed in the bedroom.",
 		furniture_place_desc = "You set up the bed, slowly spreading the human scalp comforter across its sheets. This isn't as good of an idea as you remember.",
 		furn_set = "leather"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "leatherlamp",
 		str_name = "leather lamp",
 		str_desc = "The leather covering makes you feel a bit more western. Also the fact that you killed 3 cowpokes just to get it.",
@@ -8614,7 +9758,7 @@ EwFurniture(
 		furniture_look_desc = "The lamp is adorned with leather.",
 		furniture_place_desc = "The leather is soft to the touch, giving you that extra bit of comfort as you plug it in.",
 		furn_set = "leather"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "leatherchair",
 		str_name = "leather chair",
 		str_desc = "A minor upgrade to the regular chair. Was this even worth it?",
@@ -8625,7 +9769,7 @@ EwFurniture(
 		furniture_look_desc = "A nice leather chair is set up.",
 		furniture_place_desc = "You set the chair up. You realize you're basically sitting on your enemies' heads and giggle about it.",
 		furn_set = "leather"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "pictureframe",
 		str_name = "picture frame",
 		str_desc = "https://cdn11.bigcommerce.com/s-cece8/images/stencil/1280x1280/products/305/1506/010420__10394.1343058001.jpg?c=2&imbypass=on",
@@ -8635,7 +9779,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A picture frame hangs on the wall.",
 		furniture_place_desc = "You place the picture on the wall. What did you put in there? Was it a picture of your family? I bet it was a picture of your family. Man, you suck."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "hammock",
 		str_name = "hammock",
 		str_desc = "It's a frayed rope hammock. Kinda looks like the worn-out fishing nets they use down at the piers, but it'll probably work just as well as the real deal.",
@@ -8645,7 +9789,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "An indoor hammock is set up in the bedroom.",
 		furniture_place_desc = "Getting this set up will be tricky. You take some industrial strength railroad spikes and drive them into each side of the wall, then use the supports to wrap the two ends until the hammock is taut. Why the fuck did you set up a hammock indoors, anyway?"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "juggaloposter",
 		str_name = "juggalo poster",
 		str_desc = "Violent J and Shaggy 2 Dope are depicted brutally murdering some juvie with steak knives. Their stabbing form is terrible but you can appreciate their charisma.",
@@ -8655,7 +9799,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A poster on the wall depicts a Juggalo murder party.",
 		furniture_place_desc = "You don't have any tape to fasten the poster, so you end up using magnets instead. You're not sure how they work, though. "),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "television",
 		str_name = "television",
 		str_desc = "It's a CRT, a pretty big one too. A bunch of adapters are frankenstein'd up to it so it takes modern cables.",
@@ -8665,7 +9809,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "An old CRT is set up.",
 		furniture_place_desc = "You drop the TV on the floor. Your parents said this stuff turns your brain to mush, but yours is already slime, so no harm done. Time to get !watching!"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "pottedplant",
 		str_name = "potted plant",
 		str_desc = "It's a potted plant. Currently empty.",
@@ -8675,7 +9819,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A potted plant is on the sill.",
 		furniture_place_desc = "You set the pot where plants in it could get plenty of sunlight."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "airmattress",
 		str_name = "air mattress",
 		str_desc = "A vinyl air mattress. Perfect for sleepovers, or when the homeless crash at your place.",
@@ -8685,7 +9829,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "An air matress is blown up in the bedroom.",
 		furniture_place_desc = "You blow a whole bunch until your floppy piece of vinyl is a bouncy piece of vinyl."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "churchpew",
 		str_name = "church pew",
 		str_desc = "A long wooden bench they normally use in church services. To be completely honest, it looks really uncomfortable to sit in.",
@@ -8696,7 +9840,7 @@ EwFurniture(
 		furniture_look_desc = "A pew is against the wall.",
 		furniture_place_desc = "You set up the pew in your flat, just in case someone wants to hear you preach.",
 		furn_set = "church"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "churchaltar",
 		str_name = "church altar",
 		str_desc = "An old-looking altar with elaborate carving on the sides. Do you do sacrifices on these?",
@@ -8707,7 +9851,7 @@ EwFurniture(
 		furniture_look_desc = "An altar is fully adorned against the wall.",
 		furniture_place_desc = "You place a fresh tablecloth, some incense, and a bible on the altar. You say a hymn to yourself before standing up to admire the handiwork.",
 		furn_set = "church"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "churchcandles",
 		str_name = "church candles",
 		str_desc = "A 16 pack of beeswax candles and a couple brass candlesticks to go with them.",
@@ -8718,7 +9862,7 @@ EwFurniture(
 		furniture_look_desc = "The room is dimly lit with candles.",
 		furniture_place_desc = "You arrange the candlesticks with a pleasing symmetry. Someone less pious would call this a fire hazard, but you're determined that God won't let your house burn down.",
 		furn_set = "church"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "confessionbooth",
 		str_name = "confession booth",
 		str_desc = "It's a little pair of rooms you sit in to confess your sins. Living in NLACakaNM you may have a lot of those.",
@@ -8729,7 +9873,7 @@ EwFurniture(
 		furniture_look_desc = "A confession booth has been installed here.",
 		furniture_place_desc = "Once you get the booth in, you make sure it works by confessing to yourself. It does, that's good.",
 		furn_set = "church"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "abstinencebed",
 		str_name = "abstinence bed",
 		str_desc = "It's like a regular bed, but you're fastened to it to prevent any unneeded fornication. Paradoxically, that's actually sort of kinky.",
@@ -8740,7 +9884,7 @@ EwFurniture(
 		furniture_look_desc = "An abstinence bed is in the bedroom.",
 		furniture_place_desc = "You place the bed down, dreaming of all that sinful poon you're going to miss out on.",
 		furn_set = "church"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "wallpaper",
 		str_name = "wallpaper",
 		str_desc = "It's a solid color wallpaper. Pretty plain, but dyeable.",
@@ -8751,7 +9895,7 @@ EwFurniture(
 		furniture_look_desc = "The walls are a nice shade of -*HUE*-",
 		furniture_place_desc = "You cover the walls with wallpaper. ",
 		furn_set = "specialhue"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "applejackfigurine",
 		str_name = "apple jack figurine",
 		str_desc = "It's an MLP figure. She's a dirty southerner.",
@@ -8762,7 +9906,7 @@ EwFurniture(
 		furniture_look_desc = "You can sense brony vibes in this room.",
 		furniture_place_desc = "You place Apple Jack up on the windowsill.",
 		furn_set = "pony"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "fluttershyfigurine",
 		str_name = "fluttershy figurine",
 		str_desc = "It's an MLP figure. She's a yellow pegasus, very Juvie-core.",
@@ -8773,7 +9917,7 @@ EwFurniture(
 		furniture_look_desc = "You can sense brony vibes in this room.",
 		furniture_place_desc = "Fluttershy goes right here on the sill.",
 		furn_set = "pony"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "rarityfigurine",
 		str_name = "rarity figurine",
 		str_desc = "It's an MLP figure. This one's known for being marginally bitchier than the others.",
@@ -8784,7 +9928,7 @@ EwFurniture(
 		furniture_look_desc = "You can sense brony vibes in this room.",
 		furniture_place_desc = "You set Rarity up by the window. Clearly she's above being on the ground. Fucking ornery cunt.",
 		furn_set = "pony"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "pinkiepiefigurine",
 		str_name = "pinkie pie figurine",
 		str_desc = "It's an MLP figure. You may be hallucinating but its voice keeps speaking inside your head.",
@@ -8795,7 +9939,7 @@ EwFurniture(
 		furniture_look_desc = "You sense Ponk in the room.",
 		furniture_place_desc = "You set Pinkie Pie up on the sill and try to suppress the voices in your head.",
 		furn_set = "pony"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "twilightsparklefigurine",
 		str_name = "twilight sparkle figurine",
 		str_desc = "It's an MLP figure. This one talks big about friendship but has a dragon indentured servant for like the whole show. What a hypocrite!",
@@ -8806,7 +9950,7 @@ EwFurniture(
 		furniture_look_desc = "You can sense brony vibes in this room.",
 		furniture_place_desc = "You place Twilight on the bookshelf. Not that she would enjoy the kind of swill you read.",
 		furn_set = "pony"),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "mylittleponyfigurine",
 		str_name = "my little pony figurine",
 		str_desc = "",
@@ -8816,7 +9960,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "You can sense brony vibes in this room.",
 		furniture_place_desc = "You place a horse figurine on the windowsill."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "hatstand",
 		str_name = "hat stand",
 		str_desc = "A hat stand is by the door.",
@@ -8826,7 +9970,7 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A hat stand sits near the door.",
 		furniture_place_desc = "You prop the hat stand up and hang whatever hats you can find on top."),
-EwFurniture(
+	EwFurniture(
 		id_furniture = "recordplayer",
 		str_name = "record player",
 		str_desc = "An antique gramophone from the 1930s. It normally plays vinyl, but through the power of slime, CDs work just as well.",
@@ -8837,9 +9981,8 @@ EwFurniture(
 		furniture_look_desc = "An old record player sits on the floor.",
 		furniture_place_desc = "You place the ol' boy on the floor."
 
-
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "keg",
 		str_name = "keg",
 		str_desc = "You managed to buy an entire keg of high proof liquor without even needing to show ID. NLACakaNM is the best city in the world.",
@@ -8849,8 +9992,8 @@ EwFurniture(
 		vendors = [vendor_bazaar, vendor_bar],
 		furniture_look_desc = "The keg in the room looks dulled and dented. Standard, almost.",
 		furniture_place_desc = "You take a swig out of the keg and haphazardly roll it across the room. That'll do."
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimecityflag",
 		str_name = "Slime City flag",
 		str_desc = "There's nothing like the good old stars n' slugs to bring a tear to an old patriot's eye.",
@@ -8858,10 +10001,10 @@ EwFurniture(
 		acquisition = acquisition_bartering,
 		price = 90000,
 		vendors = [vendor_bazaar],
-		furniture_look_desc = "The NLACakaNM flag hangs proudly on the wall",
+		furniture_look_desc = "The NLACakaNM flag hangs proudly on the wall.",
 		furniture_place_desc = "You hang the flag on your wall and sing the anthem aloud to yourself."
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimecityconfederateflag",
 		str_name = "Slime City Confederate flag",
 		str_desc = "It's an alternate flag design the Rowdys pull out during civil wars. Long live the motherfucking south.",
@@ -8871,8 +10014,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The NLACakaNM Confederate flag hangs defiantly on your wall.",
 		furniture_place_desc = "Shit, let's be Robert E. Lee. You confirm your support of the Confederacy by flying the flag outside your window."
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimeoidhouse",
 		str_name = "slimeoid house",
 		str_desc = "It's a little hutch for your slimeoid to stay in. It's only knee high though, so it looks like the big ones are SOL.",
@@ -8882,8 +10025,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "Your slimeoid just loves that slimehouse you set up.",
 		furniture_place_desc = "You have to place the slimehouse inside so that it doesn't get caught in any drive-bys. Looks pretty cozy anyway."
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "humancorpse",
 		str_name = "human corpse",
 		str_desc = "It's a fresh cadaver, stitched together with the bits and bobs you find regularly on the street. What a find!",
@@ -8893,8 +10036,8 @@ EwFurniture(
 		vendors = [],
 		furniture_look_desc = "There's a dead body in here.",
 		furniture_place_desc = "You open the bodybag you've been lugging around and splay the corpse out on it. You're no expert on feng shui, but if Martha Stewart saw this, she would probably run the fuck away. Out of jealousy. "
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "reanimatedcorpse",
 		str_name = "reanimated corpse",
 		str_desc = "It's a stitched cadaver you found, reanimated with someone's immortal soul. It cannot speak, but it's obedient enough regardless.",
@@ -8904,8 +10047,8 @@ EwFurniture(
 		vendors = [],
 		furniture_look_desc = "A Frankenstein-like creature is chilling in here.",
 		furniture_place_desc = "You tell your thrall to kneel over there in the corner. They know what they did."
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "medievaltorturedevice",
 		str_name = "medieval torture device",
 		str_desc = "It's an old-style torture machine. This one is called 'The Rack' and you use it to stretch someone until their spine begs for mercy. It usually doesn't work well on slimeoids, what with their amorphous bodies, so somebody retrofitted it with a hot plate on the seat cushion.",
@@ -8915,8 +10058,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A torture rack is installed in here.",
 		furniture_place_desc = "You assemble the torture device and do a couple of test cranks. Putting it together was a bitch and a half because the instructions were in Old English."
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "blackvelvetsofa",
 		str_name = "black velvet sofa",
 		str_desc = "It's a sleek, luxurious couch adorned with platinum studded black velvet. They say only the most criminally prone Italians could ever hope to afford its mafioso charm.",
@@ -8927,8 +10070,8 @@ EwFurniture(
 		furniture_look_desc = "A black velvet couch adds style to this place.",
 		furniture_place_desc = "You threaten a random pedestrian with death to get him to move your couch in. That's just how you operate.",
 		furn_set = "blackvelvet"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "blackvelvetbed",
 		str_name = "black velvet bed",
 		str_desc = "It's a stylish black velvet bed frame with a stark white mattress and bedspread. It's seductive, even without a leggy dame lying on it.",
@@ -8939,8 +10082,8 @@ EwFurniture(
 		furniture_look_desc = "A black velvet bed is in the bedroom.",
 		furniture_place_desc = "You assemble the bed and lie down for awhile. No fishes here. You're sleeping with the gods. Er, goddesses. Whatever.",
 		furn_set = "blackvelvet"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "blackvelvetchair",
 		str_name = "black velvet chair",
 		str_desc = "It's a studded velvet chair. It doesn't get more executive than this baby.",
@@ -8951,8 +10094,8 @@ EwFurniture(
 		furniture_look_desc = "A black velvet chair is set up.",
 		furniture_place_desc = "You slide the chair to the corner, Man, you're going to look so menacing in this thing.",
 		furn_set = "blackvelvet"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "blackvelvettable",
 		str_name = "black velvet table",
 		str_desc = "It's an antique table adorned with studs and velvet. Tailor made for deal making.",
@@ -8963,8 +10106,8 @@ EwFurniture(
 		furniture_look_desc = "A black velvet table is set up.",
 		furniture_place_desc = "You set the table up, and place upon it the finest silverware you have.",
 		furn_set = "blackvelvet"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "blackvelvetlamp",
 		str_name = "black velvet lamp",
 		str_desc = "It's a mahogany lamp with velvet lampshade. It gives you excellent mood lighting.",
@@ -8975,8 +10118,8 @@ EwFurniture(
 		furniture_look_desc = "A black velvet lamp casts bright lights and long shadows.",
 		furniture_place_desc = "You plug the lamp in. Odd. Normally you prefer to put people's lights out.",
 		furn_set = "blackvelvet"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "popeonarope",
 		str_name = "pope on a rope",
 		str_desc = "It's Pope Francis, hung and dead on a noose. At the very least it's a convincing imitation.",
@@ -8986,8 +10129,8 @@ EwFurniture(
 		vendors = [],
 		furniture_look_desc = "Pope Francis hangs dead from the ceiling.",
 		furniture_place_desc = "You get on a chair and hang the noose from the ceiling. The lightly swinging Pope now adds an ambient wood creaking noise to your abode.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimecorpchair",
 		str_name = "SLIMECORP:tm: Chair Of the Future",
 		str_desc = "It's a sleek green seat-like device outfitted for maximum comfort. Comes with built-in cupholders and a state of the art subliminal media player.",
@@ -8998,8 +10141,8 @@ EwFurniture(
 		furniture_look_desc = "A futuristic Slimecorp chair is set up.",
 		furniture_place_desc = "As you attempt to pick up the heavy chair, you accidentally press a button on its underside. Suddenly, you pass out on the floor. When you wake up, the chair is set up like it had always been there.",
 		furn_set = "slimecorp"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimecorpcouch",
 		str_name = "SLIMECORP:tm: Mega Sofa",
 		str_desc = "This SlimeCorp:tm: Mega Sofa is capable of extending in 3 directions. It's perfect for throwing house parties with all your friends:tm:!",
@@ -9010,8 +10153,8 @@ EwFurniture(
 		furniture_look_desc = "A futuristic Slimecorp couch sits along the wall.",
 		furniture_place_desc = "You notice a 'MOVE IN' button under the upholstery of your couch. After pressing it, the couch grows metal limbs, forcibly grabbing you and walking into your apartment complex. You're sure that neat feature won't bite you in the ass later.",
 		furn_set = "slimecorp"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimecorpbed",
 		str_name = "SLIMECORP:tm: Ultimate Safety Bed",
 		str_desc = "This SlimeCorp:tm: Safety Bed is the ultimate resting place for whenever you need physical protection! We at SlimeCorp can't guarantee your safety without one! Be sure to try out its cryogenic stasis feature!",
@@ -9022,8 +10165,8 @@ EwFurniture(
 		furniture_look_desc = "A Slimecorp twin bed/cryo pod is in the bedroom.",
 		furniture_place_desc = "Somehow, assembling this fully functional cryostasis container was easier than the ones you used to build from IKEA.",
 		furn_set = "slimecorp"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimecorpdesk",
 		str_name = "SLIMECORP:tm: Posture Building Submission Desk",
 		str_desc = "The Slimecorp:tm: Submission Desk is the ultimate tool in building charisma and acclimating yourself to the times! Simply keep your head down and you'll be ahead of the game for when you all submit to us.",
@@ -9034,8 +10177,8 @@ EwFurniture(
 		furniture_look_desc = "A Slimecorp desk made for submission is in a dark corner.",
 		furniture_place_desc = "You decided to place the desk by carrying it on your back like a hopeless thrall. That's the spirit!",
 		furn_set = "slimecorp"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "slimecorplamp",
 		str_name = "SLIMECORP:tm: Highly Talkative Strobe Light",
 		str_desc = "The Slimecorp:tm: Talkative Strobe Light is an excellent way to memorize interesting facts about SlimeCorp:tm: Tired of our email advertisements? You can absorb all that information lickety split through our state of the art subliminal messages.",
@@ -9046,8 +10189,8 @@ EwFurniture(
 		furniture_look_desc = "A Slimecorp lamp is flashing some neat subliminal messages throughout the room.",
 		furniture_place_desc = "SUBMIT TO SLIMECORP. NOW, PLUG IN THE LAMP WHILE SUBMITTING TO SLIMECORP.",
 		furn_set = "slimecorp"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "sord",
 		str_name = "sord",
 		str_desc = "https://i.imgur.com/EgbZ7Ku.png",
@@ -9057,8 +10200,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "dude. therps a SORD over therew.re.",
 		furniture_place_desc = "You place the SORD indoors so it doesn't escape to the side.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "pileofmysteriouspowder",
 		str_name = "pile of mysterious powder",
 		str_desc = "The guy you bought this fine white powder from called it nose candy. What a fucking idiot. Everybody knows you eat candy with your mouth.",
@@ -9069,8 +10212,8 @@ EwFurniture(
 		furniture_look_desc = "There's a pile of powdery substance in a dark alcove over yonder.",
 		furniture_place_desc = "You unpack the powder and pour it all out in a nice little pile. Whoa. Feelin' kind of woozy.",
 		furn_set = "seventies"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "alarmclock",
 		str_name = "alarm clock set to OFF",
 		str_desc = "The annoying sound this thing makes perfectly explains why the bazaar sells so many broken clocks.",
@@ -9080,8 +10223,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The clock says it's {time}.",
 		furniture_place_desc = "You set the alarm clock on your nightstand. Nobody knows why.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "lavalamp",
 		str_name = "lava lamp",
 		str_desc = "It's one of those lamps where you stick colorful boiling chemicals under heat and pour them on shitty guests. At least you're pretty sure that's what it does. The container is sealed with a bottle cap and everything!",
@@ -9092,8 +10235,8 @@ EwFurniture(
 		furniture_look_desc = "A lava lamp is plugged in.",
 		furniture_place_desc = "You plug the lava lamp in and wait for the cool bubbles to start going. It's taking too long, though, so you stop.",
 		furn_set = "seventies"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "discoball",
 		str_name = "disco ball",
 		str_desc = "It's a large ball covered in tiny mirror surfaces. Good for dancers and epileptics.",
@@ -9104,8 +10247,8 @@ EwFurniture(
 		furniture_look_desc = "A disco ball hangs from the ceiling.",
 		furniture_place_desc = "You hang the gitterball and give it a hefty spin.",
 		furn_set = "seventies"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "shagcarpet",
 		str_name = "shag carpet",
 		str_desc = "Wall to wall shag carpeting with a soft, hot pink texture to it. Very retro, and well loved by furries with inexplicable floor fetishes.",
@@ -9116,8 +10259,8 @@ EwFurniture(
 		furniture_look_desc = "The hot pink carpeting feels soft beneath your feet.",
 		furniture_place_desc = "You roll out the new carpet and do some shag angels.",
 		furn_set = "seventies"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "stainedglasswindows",
 		str_name = "stained glass windows",
 		str_desc = "A number of windows painstakingly crafted to build a mosaic. Looks breakable.",
@@ -9127,8 +10270,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The windows are made of stained glass.",
 		furniture_place_desc = "You carefully install the stained glass fixtures. Who knew you were such a good carpenter?",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "customdoor",
 		str_name = "{custom} door",
 		str_desc = "A door with {custom} on it.",
@@ -9138,8 +10281,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The door is modded with a {custom} design.",
 		furniture_place_desc = "You break the original door off its hinges and install a new one.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "expiredbottleofrogaine",
 		str_name = "expired bottle of rogaine",
 		str_desc = "It's a bottle of hair growth solution. Whoever owns this must be a longtime bald person.",
@@ -9149,8 +10292,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's an old Rogaine bottle lying around.",
 		furniture_place_desc = "You drop the bottle of rogaine in plain sight.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "custombed",
 		str_name = "{custom} bed",
 		str_desc = "It's a {custom} themed bed. Ooh, cozy.",
@@ -9160,8 +10303,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a {custom} bed in the bedroom.",
 		furniture_place_desc = "You assemble the bed and lop the mattress on top.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "customflag",
 		str_name = "{custom} flag",
 		str_desc = "It's the illustrious {custom} flag. You salute it with reckless abandon.",
@@ -9171,8 +10314,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A {custom} flag flies outside the window.",
 		furniture_place_desc = "You fly the flag outside the window.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "brick",
 		str_name = "brick",
 		str_desc = "It's a brick. Can't build with it, can't eat it. All you can do is throw it through someone's window.",
@@ -9182,8 +10325,8 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "Somebody threw a brick through the window.",
 		furniture_place_desc = "You go outside your house and throw a brick through your window. Nobody can ever say you're a fake vandal now.",
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "shittychair",
 		str_name = "shitty chair",
 		str_desc = "It's a handmade chair. It's so completely botched that you wonder if you can even sit in it.",
@@ -9194,8 +10337,8 @@ EwFurniture(
 		furniture_look_desc = "There's a chair-like pile of plywood set up.",
 		furniture_place_desc = "You develop several pre-infected splinters just taking this out of your inventory. Fearing another bout of tetanus, you gently toss the chair on the ground.",
 		furn_set = "shitty"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "shittydesk",
 		str_name = "shitty desk",
 		str_desc = "This desk fucking sucks. It is an insult to the very concept of a flat surface.",
@@ -9206,8 +10349,8 @@ EwFurniture(
 		furniture_look_desc = "There's a desk in here. Don't sit on it.",
 		furniture_place_desc = "After moving the desk into place, you try to sit down and write the next great American zine. The paper gets destroyed by it the moment you start.",
 		furn_set = "shitty"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "shittybench",
 		str_name = "shitty bench",
 		str_desc = "It's a handmade wooden bench Looking at its detailed design, torture device manufacturers should've hired you ages ago.",
@@ -9218,8 +10361,8 @@ EwFurniture(
 		furniture_look_desc = "There's a...bench in here? Sorry, I couldn't tell if that thing qualifies.",
 		furniture_place_desc = "You try to move the couch in yourself. As you try, the couch snaps in two. However, it's actually more comfortable this way, so you leave it as is.",
 		furn_set = "shitty"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "shittybed",
 		str_name = "shitty bed",
 		str_desc = "It's a dusty pile of broken planks and springs. Wait did the item title say it was a bed? Fuck no. Don't pay attention to that.",
@@ -9230,8 +10373,8 @@ EwFurniture(
 		furniture_look_desc = "There's a death bed in the bedroom.",
 		furniture_place_desc = "You try to assemble the bed, which in this case would probably involve breaking it down to bits and hoping sawdust is soft enough to sleep on.",
 		furn_set = "shitty"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "woodenvuvuzela",
 		str_name = "wooden vuvuzela",
 		str_desc = "You tried carving an ornate wooden clarinet, but you botched it. This dime-a-dozen consolation prize sounds like an elephant shitting out its organs.",
@@ -9241,9 +10384,8 @@ EwFurniture(
 		vendors = [],
 		furniture_look_desc = "There's a shitty vuvuzela here. Fuck.",
 		furniture_place_desc = "You set your vuvuzela on the shelf. Carnegie Hall, see you never.",
-
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "ornatechair",
 		str_name = "ornate chair",
 		str_desc = "It's an immaculately carved wooden chair. It looks rustic, and must've cost a fortune.",
@@ -9254,8 +10396,8 @@ EwFurniture(
 		furniture_look_desc = "There's an immaculate -*HUE*- chair set up.",
 		furniture_place_desc = "You carefully set the chair down. Wouldn't want to scratch the varnish on it, now.",
 		furn_set = "specialhue"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "ornatedesk",
 		str_name = "ornate desk",
 		str_desc = "It's a posh looking old-style desk. The legs have some neat etchings along the side.",
@@ -9266,8 +10408,8 @@ EwFurniture(
 		furniture_look_desc = "There's an -*HUE*- ornate looking desk in the corner.",
 		furniture_place_desc = "You carry the desk to the wall, and step back to admire it.",
 		furn_set = "specialhue"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "ornatebench",
 		str_name = "ornate bench",
 		str_desc = "The bench is so well-constructed, people forget it's made of uncomfortable unapholstered hardwood.",
@@ -9278,8 +10420,8 @@ EwFurniture(
 		furniture_look_desc = "There's a wonderful -*HUE*- colored bench against the wall.",
 		furniture_place_desc = "You promise several art buyers they can look at your bench if they can help carry it to your flat. Once moved, you kick them out swiftly, and without regret.",
 		furn_set = "specialhue"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "ornatebed",
 		str_name = "ornate bed",
 		str_desc = "This antique looking bed makes you feel like a tyrant. A whittling tyrant.",
@@ -9290,8 +10432,8 @@ EwFurniture(
 		furniture_look_desc = "A bed with a -*HUE*- bedspread is in the bedroom.",
 		furniture_place_desc = "You had a lot of trouble finding a mattress worthy of this frame. Time to put em' together.",
 		furn_set = "specialhue"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "craftsmansclarinet",
 		str_name = "craftsman's clarinet",
 		str_desc = "It's a handmade clarinet. Mmm. Sounds real nice.",
@@ -9302,8 +10444,8 @@ EwFurniture(
 		furniture_look_desc = "A clarinet sits on your shelf.",
 		furniture_place_desc = "You gently set the clarinet on your shelf. You wish you bought a case for it.",
 		furn_set = "instrument"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "solidpoudringuitar",
 		str_name = "solid poudrin guitar",
 		str_desc = "An electric guitar whose body is built entirely out of condensed poudrins. Heavy as a meteorite, too.",
@@ -9314,8 +10456,8 @@ EwFurniture(
 		furniture_look_desc = "A poudrin guitar is lying against the wall.",
 		furniture_place_desc = "You gently drop the guitar to set it down. Whoops. Guess Slimecorp gets to pay for that little dent in the floor.",
 		furn_set = "instrument"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "fishbonexylophone",
 		str_name = "fish bone xylophone",
 		str_desc = "It's a carefully carved mbila-style xylophone made out of fish. You'd think it would smell, but not really.",
@@ -9326,8 +10468,8 @@ EwFurniture(
 		furniture_look_desc = "A fish xylophone is in here, mallets strewn about.",
 		furniture_place_desc = "You roll the instrument in and play a few notes. Nice. Ripe as the sea.",
 		furn_set = "instrument"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "beastskindrums",
 		str_name = "beast skin drums",
 		str_desc = "A trap set built out of the remains of fallen secreatures. The cymbals were once a dino pelvis, so that's pretty neat.",
@@ -9338,8 +10480,8 @@ EwFurniture(
 		furniture_look_desc = "There's a Stone Age looking drum set in here.",
 		furniture_place_desc = "You assemble each piece into your place drum by drum. As you do your neighbors start to look pretty nervous. Ahaha.",
 		furn_set = "instrument"
-),
-EwFurniture(
+	),
+	EwFurniture(
 		id_furniture = "gourdmaracas",
 		str_name = "gourd maracas",
 		str_desc = "A neat little shaker made from a gourd and some dried vegetables. Finally, you can show off your Mexican heritage!",
@@ -9350,7 +10492,7 @@ EwFurniture(
 		furniture_look_desc = "Gourd maracas are sitting on the shelf.",
 		furniture_place_desc = "You do a little maraca dance while nobody's watching and quickly toss them out of sight.",
 		furn_set = "instrument"
-),
+	),
 ]
 
 
@@ -9543,6 +10685,8 @@ poi_list = [
 		],
 		str_name = "Downtown NLACakaNM",
 		str_desc = "Skyscrapers and high-rise apartments tower above the jam-packed, bustling city streets below for as far as the eye can see. In this dense concrete jungle, your attention is constantly being divided among a thousand different things. Neon, fluorescent signs flash advertisements for all manner of amenities and businesses. The streets rumble with the sound of engines and metal scraping from the subway system deep underground. Hordes of men and women from every imaginable background walk these cruel streets, trying desperately to eke out a pitiful existence for themselves. This district never unwinds from its constant 24/7 slime-induced mania for even a moment, let alone sleep.\nDowntown is the beating heart of New Los Angeles City, aka Neo Milwaukee. With settlements in the area predating the emergence of slime, its prime location along the newly formed coastline naturally grew it into the cultural, economic, and literal center of the city. Due to its symbolic and strategic importance, it's home to the most intense gang violence of the city. Gunshots and screams followed by police sirens are background noises for this district. Some say that this propensity for violence is result of the sinister influence from an old obelisk in the center of town, ominously called ENDLESS WAR. You aren’t sure if you believe that, though.\n\nThis area contains ENDLESS WAR, SlimeCorp HQ, the Slime Stock Exchange and the Downtown Subway Station. To the north is Smogsburg. To the East is the Green Light District. To the South is the Rowdy Roughhouse. To the Southwest is Poudrin Alley. To the West is Krak Bay. To the Northwest is Cop Killtown.",
+		topic = "The Heart of New Los Angeles City, aka Neo Milwaukee. Site of the Slime Stock Exchange, the corporate headquarters of Slimecorp and Yum! Brands, and ENDLESS WAR itself.",
+		wikipage = "https://en.wikipedia.org/wiki/Nae_Nae",
 		coord = (28, 21),
 		coord_alias = [
 			(29, 21),
@@ -9553,7 +10697,25 @@ poi_list = [
 		channel = "downtown",
 		role = "Downtown",
 		property_class = property_class_s,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_krakbay: travel_time_district,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_rowdyroughhouse : travel_time_district,
+			poi_id_copkilltown : travel_time_district,
+			poi_id_greenlightdistrict : travel_time_district,
+			poi_id_downtown_street_a : travel_time_street,
+			poi_id_downtown_street_b : travel_time_street,
+			poi_id_downtown_street_c : travel_time_street,
+			poi_id_downtown_street_d : travel_time_street,
+			poi_id_downtown_street_e : travel_time_street,
+			poi_id_downtown_street_f : travel_time_street,
+			poi_id_stockexchange : travel_time_subzone,
+			poi_id_endlesswar : travel_time_subzone,
+			poi_id_slimecorphq : travel_time_subzone,
+		},
 	),
 	EwPoi( # 2
 		id_poi = poi_id_smogsburg,
@@ -9564,11 +10726,27 @@ poi_list = [
 		],
 		str_name = "Smogsburg",
 		str_desc = "In every direction, smokestacks belch out copious amounts of pollution into the atmosphere, creating a thick cloud that shrouds the district in sickening smog. It covers the district so completely that you can barely make out what time day it is. Your lungs can’t take much more of standing here, just do what you want to do and get out.\nSmogsburg is comprise of dozens of slime refineries and poudrin mills that turn unrefined, raw materials like the sludge from the city’s harbor into useful, pure slime. Functioning as the city’s premier industrial sector, it is by far the district hardest on the environment.\n\nThis area contains the Bazaar, the SlimeCorp Recycling Plant and the Smogsburg Subway Station. To the North is Arsonbrook. To the Northeast is Little Chernobyl. To the East is Old New Yonkers. To the South is Downtown NLACakaNM. To the West is Cop Killtown. To the Northwest is Astatine Heights.",
+		topic = "Dense industrial district in central NLACakaNM.",
 		coord = (28, 16),
 		channel = "smogsburg",
 		role = "Smogsburg",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_downtown : travel_time_district,
+			poi_id_copkilltown : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_smogsburg_street_a : travel_time_street,
+			poi_id_smogsburg_street_b : travel_time_street,
+			poi_id_smogsburg_street_c : travel_time_street,
+			poi_id_smogsburg_street_d : travel_time_street,
+			poi_id_smogsburg_street_e : travel_time_street,
+			poi_id_bazaar : travel_time_subzone,
+			poi_id_recyclingplant : travel_time_subzone,
+		},
 	),
 	EwPoi( # 3
 		id_poi = poi_id_copkilltown,
@@ -9586,6 +10764,7 @@ poi_list = [
 		],
 		str_name = "Cop Killtown",
 		str_desc = "Edifices of various sinister architectural styles rise above the pavement. Gothic cathedrals, Victorian buildings, and New England brownstone apartments all dyed cool, dark colors. This district even hosts a miniature Japantown, featuring stores and restaurants that clutter your vision with densely packed fluorescent signage and other visual noise. Often cloaked in shadow from the height of these imposing buildings, the narrow, cobblestone streets of this district are perfect to brood and foster your angst in.\nCop Killtown is the gang base of the hardboiled, and calculating Killers. St. Ben’s Cathedral looms menacing on the horizon.\nhttps://discord.gg/xSQQD2M\n\nThis area contains the Cop Killtown Subway Station. To the North is Astatine Heights. To the East is Smogsburg. To the Southeast is Downtown NLACakaNM. To the Northwest is Gatlingsdale.",
+		topic = "Team Cop Headquarters. No Rowdies Allowdies. https://discord.gg/xSQQD2M",
 		coord = (22, 18),
 		channel = channel_copkilltown,
 		role = "Cop Killtown",
@@ -9594,7 +10773,20 @@ poi_list = [
 		],
 		pvp = False,
 		property_class = property_class_a,
-		community_chest = chest_id_copkilltown
+		is_district = True,
+		community_chest = chest_id_copkilltown,
+		is_gangbase = True,
+		neighbors = {
+			poi_id_downtown : travel_time_district,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_gatlingsdale_street_a : travel_time_street,
+			poi_id_astatineheights_street_f : travel_time_street,
+			poi_id_smogsburg_street_c : travel_time_street,
+			poi_id_downtown_street_f : travel_time_street,
+			poi_id_ck_subway_station: travel_time_subzone,
+		}
 	),
 	EwPoi( # 4
 		id_poi = poi_id_krakbay,
@@ -9604,11 +10796,30 @@ poi_list = [
 		],
 		str_name = "Krak Bay",
 		str_desc = "Long street blocks are are densely packed with stores and restaurants, mixed in with townhouses and accompanied by modern skyscrapers and sprawling in-door shopping malls. These amenities and a scenic view of the River of Slime on its coast makes this district a favorite of a juvenile out on the town.\nKrak Bay is a bustling commercial district, featuring stores from across the retail spectrum. From economic, practical convenience stores to high-class, swanky restaurants, Krak Bay has it all. It is also home to some of the most recognizable fixtures of the city’s skyline, most notably the Poudrintial Tower and the shopping mall at its base which contains the city’s prized food court.\n\nThis area contains the Food Court, Bicarbonate Soda Fountain, and the Krak Bay Subway Station. To the East is Downtown NLACakaNM. To the Southeast is Poudrin Alley. To the South is Ooze Gardens. To the Southwest is South Sleezeborough. To the West is North Sleezeborough. To the Northwest is Glocksbury.",
+		topic = "Bustling commercial area located along the Slime River. Site of the NLACakaNM Food Court.",
 		coord = (21, 24),
 		channel = "krak-bay",
 		role = "Krak Bay",
 		property_class = property_class_a,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors={
+			poi_id_downtown : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_oozegardens : travel_time_district,
+			poi_id_southsleezeborough : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_glocksbury : travel_time_district,
+			poi_id_krakbay_street_a : travel_time_street,
+			poi_id_krakbay_street_b : travel_time_street,
+			poi_id_krakbay_street_c : travel_time_street,
+			poi_id_krakbay_street_d : travel_time_street,
+			poi_id_krakbay_street_e : travel_time_street,
+			poi_id_krakbay_street_f : travel_time_street,
+			poi_id_bodega : travel_time_subzone,
+			poi_id_foodcourt : travel_time_subzone,
+			poi_id_sodafountain : travel_time_subzone,
+		},
 	),
 	EwPoi( # 5
 		id_poi = poi_id_poudrinalley,
@@ -9618,11 +10829,26 @@ poi_list = [
 		],
 		str_name = "Poudrin Alley",
 		str_desc = "Densely packed, claustrophobic mazes of residential apartments stand above poorly planned roads with broken streetlights that spark and flicker over the cracked pavement. Only the locals know how to navigate the residential labyrinth effectively, by utilizing the interconnected, narrow alleyways the district is named for.\nPoudrin Alley is the principal residential district of the city, outfitted with enough low-rent apartments for the lower-middle class to house the entire city on its own. Sadly, for most of the impoverished dredges of the city, these low rents just aren’t low enough and the majority of the apartments go unused.\n\nThis area contains the 7-11. To the Northeast is Downtown NLACakaNM. To the East is the Rowdy Roughhouse. To the South is Cratersville. To the Southwest is Ooze Gardens. To the Northwest is Krak Bay.",
+		topic = "A low-rent residential district. Site of the city's one and only 7-11 (closed for renovations).",
 		coord = (24, 28),
 		channel = "poudrin-alley",
 		role = "Poudrin Alley",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_downtown : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_oozegardens : travel_time_district,
+			poi_id_cratersville : travel_time_district,
+			poi_id_rowdyroughhouse : travel_time_district,
+			poi_id_poudrinalley_street_a : travel_time_street,
+			poi_id_poudrinalley_street_b : travel_time_street,
+			poi_id_poudrinalley_street_c : travel_time_street,
+			poi_id_poudrinalley_street_d : travel_time_street,
+			poi_id_poudrinalley_street_e : travel_time_street,
+			poi_id_711 : travel_time_subzone,
+		},
 	),
 	EwPoi( # 6
 		id_poi = poi_id_rowdyroughhouse,
@@ -9637,6 +10863,7 @@ poi_list = [
 		],
 		str_name = "Rowdy Roughhouse",
 		str_desc = "Cheap townhouses and abandoned warehouses host graffiti art on basically every surface. An almost completely overrun slum, many of the deteriorated buildings have been painted a bright pink by the gangsters that seized them. Overpopulated and underhoused, the majority of the residents have constructed shanty houses for themselves and gather around trash can bonfires. Loud music blasts from bass-heavy speakers all hours of the night, fueling the seemingly constant parties this district is known for.\nRowdy Roughhouse is the gang base of the hot blooded, and reckless Rowdys. In the heart of the district stands the Rowdy Roughhouse, for which the district is named. Yes, it’s confusing, we know.\nhttps://discord.gg/JZ2AaJ2\n\nThis area contains the Rowdy Roughhouse Subway Station. To the North is Downtown NLACakaNM. To the South is Wreckington. To the Southwest is Cratersville. To the West is Poudrin Alley.",
+		topic = "For only the most boisterous and violent of Rowdy children. Click here: https://discord.gg/JZ2AaJ2",
 		coord = (30, 26),
 		channel = channel_rowdyroughhouse,
 		role = "Rowdy Roughhouse",
@@ -9645,7 +10872,18 @@ poi_list = [
 		],
 		pvp = False,
 		property_class = property_class_c,
-		community_chest = chest_id_rowdyroughhouse
+		is_district = True,
+		community_chest = chest_id_rowdyroughhouse,
+		is_gangbase = True,
+		neighbors = {
+			poi_id_downtown : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_wreckington : travel_time_district,
+			poi_id_downtown_street_c : travel_time_street,
+			poi_id_poudrinalley_street_a : travel_time_street,
+			poi_id_wreckington_street_b : travel_time_street,
+			poi_id_rr_subway_station: travel_time_subzone,
+		},
 	),
 	EwPoi( # 7
 		id_poi = poi_id_greenlightdistrict,
@@ -9655,13 +10893,24 @@ poi_list = [
 		],
 		str_name = "Green Light District",
 		str_desc = "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district’s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous SlimeCorp Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the SlimeCorp Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
+		topic = "The seediest corner of NLACakaNM. Site of the Slime Casino.",
 		coord = (34, 19),
 		channel = "green-light-district",
 		role = "Green Light District",
 		property_class = property_class_a,
-		is_capturable = True,
-		has_ads = True
-	),
+		is_district = True,
+		is_capturable = False,
+		has_ads = True,
+		neighbors = {
+			poi_id_downtown : travel_time_district,
+			poi_id_juviesrow : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_greenlightdistrict_street_a : travel_time_street,
+			poi_id_greenlightdistrict_street_b : travel_time_street,
+			poi_id_greenlightdistrict_street_c : travel_time_street,
+			poi_id_thecasino : travel_time_subzone,
+		},
+		),
 	EwPoi( # 8
 		id_poi = poi_id_oldnewyonkers,
 		alias = [
@@ -9669,11 +10918,26 @@ poi_list = [
 		],
 		str_name = "Old New Yonkers",
 		str_desc = "Rows of three-story brick condominiums with white marble moulding wind along lanes of old asphalt roads with faded markings. Spiked wrought-iron gates protect the lawn of the district’s principal institutions, like the senior center.\nOld New Yonkers is popular with the older citizens of the city, due to its incredibly boring, gentrified residential landscape. Modest outdoor malls sells useless shit like candles and soaps, and the elderly population fills up their lumpy, sagging bodies at chain restaurants like Applebee’s and fucking IHOP.\n\nThis area contains the Slimecorp Real Estate Agency. To the Northeast is New New Yonkers. To the Southeast is Vagrant's Corner. To the Southwest is Smogsburg. To the East is Little Chernobyl. To the Northwest is Brawlden.",
+		topic = "Heavily gentrified residential neighborhood.",
 		coord = (37, 14),
 		channel = "old-new-yonkers",
 		role = "Old New Yonkers",
 		property_class = property_class_a,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_brawlden : travel_time_district,
+			poi_id_newnewyonkers : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_littlechernobyl : travel_time_district,
+			poi_id_oldnewyonkers_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_b : travel_time_street,
+			poi_id_oldnewyonkers_street_c : travel_time_street,
+			poi_id_oldnewyonkers_street_d : travel_time_street,
+			poi_id_oldnewyonkers_street_e : travel_time_street,
+			poi_id_realestate : travel_time_subzone,
+		},
 	),
 	EwPoi( # 9
 		id_poi = poi_id_littlechernobyl,
@@ -9685,11 +10949,22 @@ poi_list = [
 		],
 		str_name = "Little Chernobyl",
 		str_desc = "Dilapidated office buildings overgrown with ivy and the bombed-out frames of unidentifiable structures comprise the majority of the housing for this sparsely populated district. Radioactive almost to the point of warding off thieves and vandals (but not quite), many people report seeing strange creatures and various cryptids roaming the abandoned power plant complex at night.\nLittle Chernobyl might not be much to look at or often discussed nowadays, but don’t be fooled by its current irrelevance. Long ago, it was home to Arizona's largest nuclear power plant. An electrical blackout caused a total safety system failure, leading in a cataclysmic nuclear meltdown. This caused nuclear waste to flood into the Grand Canyon and create the Slime Sea we know and love today.\n\nThis area contains Green Cake Cafe. To the North is Brawlden. To the East is Old New Yonkers. To the West is Arsonbrook.",
+		topic = "Home to the R&D headquarters of many a small business and international conglomerate alike. Don't drink the water.",
 		coord = (30, 12),
 		channel = "little-chernobyl",
 		role = "Little Chernobyl",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_brawlden : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_littlechernobyl_street_a : travel_time_street,
+			poi_id_littlechernobyl_street_b : travel_time_street,
+			poi_id_littlechernobyl_street_c : travel_time_street,
+			poi_id_greencakecafe : travel_time_subzone,
+		},
 	),
 	EwPoi( # 10
 		id_poi = poi_id_arsonbrook,
@@ -9699,11 +10974,25 @@ poi_list = [
 		],
 		str_name = "Arsonbrook",
 		str_desc = "This district is seemingly eternally overcast, allowing the dark plumes of smoke from distant fires fade into the soft grey clouds. A thin layer of soot rests upon basically the entire district, providing nutrient-rich soil which the rural farmers in the north of the district take advantage of. In the south, enclaves of civilization have started to pop up, learning from the mistakes of previous generations and building out of brick instead of wood. Aesthetically, these settlements resemble a small mining town from the mountainous forests of the northwest, just replace the rugged terrain with flat land and the evergreens with burnt, charcoal frames of trees that used to be. A Starbucks tried to open here once.\nArsonbook is easily among the most peaceful districts of the city, as long as you count constant wildfires and destruction of property from arson as peaceful. The locals are used to that sort of thing though, so they’re pretty mellow. Kick back, relax, and don’t get too attached to your house if you plan on living here.\n\nThis area contains the Arsonbrook Farms and the Arsonbrook Subway Station. To the East is Brawlden. To the Southeast is Little Chernobyl. To the South is Smogsburg. To the West is Astatine Heights. To the North is Arsonbrook Outskirts.",
+		topic = "A commercial district home to many bitter business rivals vying for economic domination.",
 		coord = (26, 8),
 		channel = "arsonbrook",
 		role = "Arsonbrook",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_maimridge : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_littlechernobyl : travel_time_district,
+			poi_id_brawlden : travel_time_district,
+			poi_id_arsonbrook_street_a : travel_time_street,
+			poi_id_arsonbrook_street_b : travel_time_street,
+			poi_id_arsonbrook_street_c : travel_time_street,
+			poi_id_arsonbrook_street_d : travel_time_street,
+			poi_id_arsonbrook_street_e : travel_time_street,
+		},
 	),
 	EwPoi( # 11
 		id_poi = poi_id_astatineheights,
@@ -9714,11 +11003,28 @@ poi_list = [
 		],
 		str_name = "Astatine Heights",
 		str_desc = "Swanky modern condominiums jut out of the steep hills to the north, while to the south rows of picture-perfect suburban homes with disgustingly well-maintained lawns constrict around freshly-laid roads. Luxury boutiques and high-class restaurants compete for the wallets of privileged, rich yuppies.\nAstatine Heights is the home to many of the wealthiest men and women of the city, with many of the residents forcing their fratty Republican sons to the prestigious college N.L.A.C.U. in neighboring Gatlingsdale. The difference between Astatine Heights and other affluent districts of the city is that the majority of residents have not passed onto the elysian fields of retirement, and thus have at least a sliver of personality and ambition left in their community, however gentrified it might be.\n\nThis area contains NLACakaNM Cinemas, the Red Mobster Seafood Restaurant and the Astatine Heights Subway Station. To the East is Arsonbrook. To the Southeast is Smogsburg. To the South is Cop Killtown. To the Southwest is Gatlingsdale. To the West is Toxington. To the North is Astatine Heights Outskirts.",
+		topic = "A nice orderly neighrborhood populated by filthy yuppies. A great place to raise your kids.",
 		coord = (22, 11),
 		channel = "astatine-heights",
 		role = "Astatine Heights",
 		property_class = property_class_a,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_copkilltown : travel_time_district,
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_toxington : travel_time_district,
+			poi_id_maimridge : travel_time_district,
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_astatineheights_street_a : travel_time_street,
+			poi_id_astatineheights_street_b : travel_time_street,
+			poi_id_astatineheights_street_c : travel_time_street,
+			poi_id_astatineheights_street_d : travel_time_street,
+			poi_id_astatineheights_street_e : travel_time_street,
+			poi_id_astatineheights_street_f : travel_time_street,
+			poi_id_cinema : travel_time_subzone,
+		},
 	),
 	EwPoi( # 12
 		id_poi = poi_id_gatlingsdale,
@@ -9729,11 +11035,26 @@ poi_list = [
 		],
 		str_name = "Gatlingsdale",
 		str_desc = "Hundreds of small “nerdy” retail stores and ethnically-diverse restaurants are compact into a dense, bustling plaza just minutes from the prestigious N.L.A.C.U. college campus. Almost all of district is comprised of or controlled by the sprawling ivy league university. Featuring smoky cafes, vintage clothing boutiques, and independent bookstores, this district is perfectly catered to the pompous hipsters that flood its streets every day after class.\nGatlingsdale is a historic district, with many of its winding cobblestone roads and gaslamp streetlights dating back to the early days of the city.\n\nThis District contains New Los Angeles City University and the Gatlingsdale Subway Station. To the Northeast is Astatine Heights. To the Southeast is Cop Killtown. To the Southwest is Vandal Park. To the West is Polonium Hill. To the Northwest is Toxington.",
+		topic = "The seat of higher education in NLACakaNM.",
 		coord = (18, 14),
 		channel = "gatlingsdale",
 		role = "Gatlingsdale",
 		property_class = property_class_a,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_toxington : travel_time_district,
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_vandalpark : travel_time_district,
+			poi_id_copkilltown : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_gatlingsdale_street_a : travel_time_street,
+			poi_id_gatlingsdale_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_c : travel_time_street,
+			poi_id_gatlingsdale_street_d : travel_time_street,
+			poi_id_gatlingsdale_street_e : travel_time_street,
+			poi_id_nlacu : travel_time_subzone,
+		},
 	),
 	EwPoi( # 13
 		id_poi = poi_id_vandalpark,
@@ -9744,11 +11065,24 @@ poi_list = [
 		],
 		str_name = "Vandal Park",
 		str_desc = "A laundry list of various sports amenities and public parks dot the landscape of this athletically minded district. These include soccer fields, skate parks, swimming pools, and of course the district’s famous Battle Arena.\nVandal Park’s numerous open spaces and its more-or-less clean air make it an attractive destination for juveniles seeking a stroll. Despite this you’ve still got to keep your wits about you here if you want to not get publicly executed against one of the pretty trees.\n\nThis area contains the Battle Arena. To the Northeast is Gatlingsdale. To the South is Glocksbury. To the Southwest is West Glocksbury. To the Northwest is Polonium Hill.",
+		topic = "Home to the NLACakaNM athletic complex. Site of the Slimeoid Battle Arena.",
 		coord = (15, 17),
 		channel = "vandal-park",
 		role = "Vandal Park",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_westglocksbury : travel_time_district,
+			poi_id_glocksbury : travel_time_district,
+			poi_id_vandalpark_street_a : travel_time_street,
+			poi_id_vandalpark_street_b : travel_time_street,
+			poi_id_vandalpark_street_c : travel_time_street,
+			poi_id_vandalpark_street_d : travel_time_street,
+			poi_id_arena : travel_time_subzone,
+		},
 	),
 	EwPoi( # 14
 		id_poi = poi_id_glocksbury,
@@ -9759,11 +11093,26 @@ poi_list = [
 		],
 		str_name = "Glocksbury",
 		str_desc = "Semi-orderly residential neighborhoods with discolored white picket fences protecting unkempt lawns for as far as the eye can far. This district likes to pretend its a quiet suburb, but the regular screams and gunshots coupled with numerous chalk outlines of human bodies on the street make this hard to believe. You smell bacon. *Figurative* bacon. The cops must be lurking nearby somewhere.\nGlocksbury’s flaccid attempts at normalcy are fueled by it hosting the city’s police department, which is hilariously ineffectual and underfunded to the point of absurdity. In this city, the bumbling police act as target practice to the local gangs rather than actual authorities to be obeyed. But, they sure like to pretend they are.\n\nThis area contains Glocksbury Comics, and the Glocksbury Subway Station. To the North is Vandal Park. To the Southeast is Krak Bay. To the South is North Sleezeborough. To the West is West Glocksbury. To the West is West Glocksbury Outskirts.",
+		topic = "A grimy little neighborhood with lower-than-average crime rates in all categories except Police Brutality.",
 		coord = (14, 21),
 		channel = "glocksbury",
 		role = "Glocksbury",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_vandalpark : travel_time_district,
+			poi_id_westglocksbury : travel_time_district,
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_glocksbury_street_a : travel_time_street,
+			poi_id_glocksbury_street_b : travel_time_street,
+			poi_id_glocksbury_street_c : travel_time_street,
+			poi_id_glocksbury_street_d : travel_time_street,
+			poi_id_glocksbury_street_e : travel_time_street,
+			poi_id_glocksburycomics : travel_time_subzone,
+		},
 	),
 	EwPoi( # 15
 		id_poi = poi_id_northsleezeborough,
@@ -9778,11 +11127,26 @@ poi_list = [
 		],
 		str_name = "North Sleezeborough",
 		str_desc = "Sleepy brownstone apartments and about 50,000 different terrible pizza places populate this slow paced, gentrifying district. Outdoor malls have started to spring up here and there, mostly around the college campus of Neo Milwaukee State. Retired parents rest on benches, throwing crumbs of bread at birds and squandering the twilight years of their misspent life. Students with curious facial hair and suspenders lurk in vinyl record stores and horde ironic knick-knacks.\nNorth Sleezeborough residents really, really don't care about anything. It wouldn’t be fair to call them nihilistic, that implies self-reflection or philosophical quandary, they are just so lethargic that they might as well categorically be considered legally dead. Alongside these generally older occupants are younger students who have flocked to the dirt cheap public college of Neo Milwaukee State to continue their mediocre education.\n\nThis area contains Neo Milwaukee State and the North Sleezeborough Subway Station. To the North is Glocksbury. To the East is Krak Bay. To the South is South Sleezeborough.",
+		topic = "A modest little burrough with a few trendy shops and cafes starting to pop up here and there.",
 		coord = (16, 24),
 		channel = "north-sleezeborough",
 		role = "North Sleezeborough",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_glocksbury : travel_time_district,
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_crookline : travel_time_district,
+			poi_id_southsleezeborough : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_northsleezeborough_street_a : travel_time_street,
+			poi_id_northsleezeborough_street_b : travel_time_street,
+			poi_id_northsleezeborough_street_c : travel_time_street,
+			poi_id_northsleezeborough_street_d : travel_time_street,
+			poi_id_northsleezeborough_street_e : travel_time_street,
+			poi_id_neomilwaukeestate : travel_time_subzone,
+		},
 	),
 	EwPoi( # 16
 		id_poi = poi_id_southsleezeborough,
@@ -9796,12 +11160,24 @@ poi_list = [
 			"ss"
 		],
 		str_name = "South Sleezeborough",
-		str_desc = "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations oriental architectural styles of the city’s Chinatown. There, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs.\nSouth Sleezeborough’s residential streets are as boring as can be, but wade through them and you’ll have a fun time ordering popping bubble tea and lemon roll cakes from bakeries and sparing with your buddies at the Dojo.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline. To the South is South Sleezeborough Outskirts.",
+		str_desc = "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations exotic architectural styles of this district’s ethnic ghettos. In these stereotypical neighborhoods, you get an eclectic view of organized crime from across the world! Boy, aren’t you lucky? There are a bunch of these little national enclaves here, but only a few are useful to you in territory control. South Sleezeborough’s a hotspot for legal and illegal immigrants alike. To the residents of South Sleezeborough, it’s not about if you’re new to the city or not or about what you look like, it’s about if you’re valuable to one of the many established violent local gangs or not. If you’re not… well, for your sake I hope you are.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline. To the South is South Sleezeborough Outskirts.",
+		topic = "A dreary and dull burrough for the old and boring. Site of the Dojo.",
 		coord = (17, 27),
 		channel = "south-sleezeborough",
 		role = "South Sleezeborough",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_crookline : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_oozegardens : travel_time_district,
+			poi_id_southsleezeborough_street_a : travel_time_street,
+			poi_id_southsleezeborough_street_b : travel_time_street,
+			poi_id_southsleezeborough_street_c : travel_time_street,
+			poi_id_southsleezeborough_street_d : travel_time_street,
+		},
 	),
 	EwPoi( # 17
 		id_poi = poi_id_oozegardens,
@@ -9812,11 +11188,23 @@ poi_list = [
 		],
 		str_name = "Ooze Gardens",
 		str_desc = "Walking paths connect dozens of greenhouses and gardens featuring rare, exotic, and irradiated flora. This district is really just one big park, broken up into several sections hosting different types of botanical attractions, as well as several museums and even the city’s zoo. Musical concerts are often held in one of the several outdoor amphitheatres that are scattered across the district. Truly, an amusement park for lovers of nature and culture.\nOoze Gardens is a clear cultural outlier of the city. The residents of this district are largely pacifist, choosing music, love, and psychedelic drugs over violent crime. They make you sick.\n\nThis area contains the Ooze Gardens Farms. To the North is Krak Bay. To the Northeast is Poudrin Alley. To the East is Cratersville. To the West is South Sleezeborough. To the South is Ooze Gardens Outskirts.",
+		topic = "A quiet and scenic district. Only slightly more dense with ooze than the rest of NLACakaNM.",
 		coord = (19, 30),
 		channel = "ooze-gardens",
 		role = "Ooze Gardens",
 		property_class = property_class_a,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_southsleezeborough : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_cratersville : travel_time_district,
+			poi_id_oozegardens_street_a : travel_time_street,
+			poi_id_oozegardens_street_b : travel_time_street,
+			poi_id_oozegardens_street_c : travel_time_street,
+			poi_id_oozegardens_street_d : travel_time_street,
+		},
 	),
 	EwPoi( # 18
 		id_poi = poi_id_cratersville,
@@ -9827,11 +11215,21 @@ poi_list = [
 		],
 		str_name = "Cratersville",
 		str_desc = "Crumbling infrastructure is commonplace here. The craters and smaller potholes that give this district its name are scattered liberally across the streets and sidewalks. Unruly miners have refused to limit their excavating to the designated mining sector and scavenge even the residential roads for meager drops of slime.\nCratersville really sucks to live in. I mean, obviously. Look at this place. Even aside from the huge fucking holes everywhere, you’ve still got to deal with the constant sound of mining and dynamite explosions underground.\n\nThis area contains the Cratersville Mines and the Cratersville Subway Station. To the North is Poudrin Alley. To the Northeast is the Rowdy Roughhouse. To the East is Wreckington. To the West is Ooze Gardens. To the South is Cratersville Outskirts.",
+		topic = "A modest residential district peppered here and there with debris from several recently collapsed Wreckington business headquarters.",
 		coord = (24, 33),
 		channel = "cratersville",
 		role = "Cratersville",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_oozegardens : travel_time_district,
+			poi_id_poudrinalley : travel_time_district,
+			poi_id_wreckington : travel_time_district,
+			poi_id_cratersville_street_a : travel_time_street,
+			poi_id_cratersville_street_b: travel_time_street,
+			poi_id_cratersville_street_c: travel_time_street,
+		},
 	),
 	EwPoi( # 19
 		id_poi = poi_id_wreckington,
@@ -9843,11 +11241,19 @@ poi_list = [
 		],
 		str_name = "Wreckington",
 		str_desc = "Piles of rubble and scrap metal lean against partially demolished buildings that barely remain standing. Sadly, these structures are often all the critically impoverished residents of Wreckington have to house themselves. Constant new construction projects promise new opportunities for the deteriorating district, but these promises are too often broken by lack of funding and interest. Jackhammers pummeling the asphalt and wrecking balls knocking down apartment complexes can be heard throughout the entire district, 24/7.\nWreckington isn’t completely barren however, its strategic location on the coast and cheap property makes its shipyard a favorite among unscrupulous sailors. It also features a ferry connection to Vagrant’s Corner, if you’re so inclined to visit the eastern districts.\n\nThis area contains the Smoker's Cough Diner, the Wreckington Ferry Port and the Wreckington Subway Station. To the North is the Rowdy Roughhouse. To the West is Cratersville. To the South is Wreckington Outskirts.",
+		topic = "A former residential district that's now mostly demolished. Go here if you want to wreck some shit, no one will care.",
 		coord = (32, 29),
 		channel = "wreckington",
 		role = "Wreckington",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_cratersville : travel_time_district,
+			poi_id_rowdyroughhouse : travel_time_district,
+			poi_id_wreckington_street_a : travel_time_street,
+			poi_id_wreckington_street_b : travel_time_street,
+		},
 	),
 	EwPoi( # 20
 		id_poi = poi_id_juviesrow,
@@ -9858,12 +11264,25 @@ poi_list = [
 		],
 		str_name = "Juvie's Row",
 		str_desc = "The landscape of this district is completely defined by it containing the city’s largest mineshafts. Almost the entire district is has been dug up, the earth overturned by a crazed populace trying to soak up every drop of slime it can get its hands on. There are few permanent structures here, and even less infrastructure. Swathes of juveniles have constructed shanty houses out of discarded building materials, suffering from the intense pollution and poor living conditions just to be closer to the mine shaft entrances that jut out of the otherwise useless, rugged terrain. Makeshift bazaars and other rudimentary amenities have popped up in the horribly overcrowded tent cities.\nJuvie’s Row might just be the most populous district of the city, with every ambitious juvenile spending at least some of their formative days toiling underground to eke out a pitiful existence. Seeing all the gang unaligned juvies here fills you with pity, as well as disgust.\n\nThis area contains the Juvie's Row Mines, the Juvie's Row Farms and the Juvie's Row Subway Station. To the Northeast is Vagrant's Corner. To the Northwest is the Green Light District.",
+		topic = "Mining district, and home of those privileged Juvies granted housing in NLACakaNM.",
 		coord = (37, 23),
 		channel = "juvies-row",
 		role = "Juvie's Row",
 		pvp = False,
 		property_class = property_class_b,
-		community_chest = chest_id_juviesrow
+		is_district = True,
+		community_chest = chest_id_juviesrow,
+		is_gangbase = True,
+		neighbors = {
+			poi_id_greenlightdistrict : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_greenlightdistrict_street_b : travel_time_street,
+			poi_id_vagrantscorner_street_c : travel_time_street,
+			poi_id_mine : travel_time_subzone,
+			poi_id_jr_farms : travel_time_subzone,
+			poi_id_juviesrow_pier : travel_time_subzone,
+			poi_id_jr_subway_station: travel_time_subzone,
+		},
 	),
 	EwPoi( # 21
 		id_poi = poi_id_slimesend,
@@ -9875,11 +11294,18 @@ poi_list = [
 		],
 		str_name = "Slime's End",
 		str_desc = "There’s not much to see here, as this sparsely populated district is mainly comprised of small residential enclaves and barren terrain. Maybe a tree here and there, I don’t know.\nSlime’s End is a narrow peninsula is bordered on both sides by the Slime Sea. The phosphorescence illuminates the sky with an eerily green glow.\n\nThis area contains the Slime's End Cliffs. To the North is Vagrant's Corner.",
+		topic = "The furthest point of NLACakaNM into the Slime Sea (formerly the Grand Canyon). The green glow of slime makes Slime's End bright as day, 24/7.",
 		coord = (45, 21),
 		channel = "slimes-end",
 		role = "Slime's End",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_slimesend_street_a : travel_time_street,
+			poi_id_slimesendcliffs : travel_time_subzone,
+		},
 	),
 	EwPoi( # 22
 		id_poi = poi_id_vagrantscorner,
@@ -9890,11 +11316,28 @@ poi_list = [
 		],
 		str_name = "Vagrant's Corner",
 		str_desc = "A foul, fishy smell pervades the entire district, emanating from the harbor. This wretched wharf is home to the seediest underbelly of the city, besides the neighboring Green Light District of course. Pirates and other seafaring scoundrels patron the local taverns and other haunts of ill repute while on shore leave. The harsh glow of the Slimea Sea illuminates the undersides of the innumerable docks that extend out from this district, as well as the heavy industrial equipment designed to pump slime into the cargo holds of outbound barges.\nVagrant’s Corner features the largest seaport of the city, with almost all seabound imports and exports funnel through it. It also features a ferry connection to Wreckington, if you’re so inclined to visit the southern districts.\n\nThis area contains The King's Wife's Son Speakeasy, and the Vagrant's Corner Ferry Port. To the North is New New Yonkers. To the Northeast is Assault Flats Beach. To the South is Slime's End. To the Southwest is Juvie's Row. To the West is the Green Light District. To the Northwest is Old New Yonkers.",
+		topic = "Dingy port district and site of innumerable shady back-alley dealings.",
 		coord = (42, 16),
 		channel = "vagrants-corner",
 		role = "Vagrant's Corner",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_greenlightdistrict : travel_time_district,
+			poi_id_juviesrow : travel_time_district,
+			poi_id_slimesend : travel_time_district,
+			poi_id_assaultflatsbeach : travel_time_district,
+			poi_id_newnewyonkers : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_vagrantscorner_street_a : travel_time_street,
+			poi_id_vagrantscorner_street_b : travel_time_street,
+			poi_id_vagrantscorner_street_c : travel_time_street,
+			poi_id_vagrantscorner_street_d : travel_time_street,
+			poi_id_vagrantscorner_street_e : travel_time_street,
+			poi_id_vagrantscorner_street_f : travel_time_street,
+			poi_id_speakeasy : travel_time_subzone,
+		},
 	),
 	EwPoi( # 23
 		id_poi = poi_id_assaultflatsbeach,
@@ -9908,11 +11351,20 @@ poi_list = [
 		],
 		str_name = "Assault Flats Beach",
 		str_desc = "Colorfully painted wooden storefronts and towering condominium complexes peer out from the coastline of this scenic beach town. Most of the district is owned by the sprawling luxury resort the district is best known for, as well as virtually the entirety of the actual beach of Assault Flats Beach.\nAssault Flats Beach is by far one of if not the most expensive districts in the city to live in, due to its complete subjugation by the resort and accompanying security force, it is also the safest district to live in by a long shot. But, as you venture away from the coast you’ll begin to see more of the city’s standard crime rate return. Interestingly, the district is a favorite among archaeologists for its unprecedented density of jurassic fossils hidden deep underground. Some even say dinosaurs still roam the outskirts of the district to the north, but frankly that just seems ridiculous. I mean, we all know dinosaurs aren’t real.\n\nThis area contains the Resort, the Assault Flats Beach Blimp Tower and the Assault Flats Beach Subway Station. To the South is Vagrant's Corner. To the West is New New Yonkers. To the North is Assault Flats Beach Outskirts.",
+		topic = "Posh beach real estate, recently gentrified and ripe for the vacationing!",
 		coord = (45, 11),
 		channel = "assault-flats-beach",
 		role = "Assault Flats Beach",
 		property_class = property_class_s,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_newnewyonkers : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_assaultflatsbeach_street_a : travel_time_street,
+			poi_id_assaultflatsbeach_street_b: travel_time_street,
+			poi_id_beachresort : travel_time_subzone,
+		},
 	),
 	EwPoi( # 24
 		id_poi = poi_id_newnewyonkers,
@@ -9923,11 +11375,24 @@ poi_list = [
 		],
 		str_name = "New New Yonkers",
 		str_desc = "Nightclubs and trendy restaurants have popped up in slick, modern buildings while the same old, reliable brownstones host arcades, bowling alleys and other teenage favorites. Featuring probably the best nightlife in the city, New New Yonkers is a favorite hangout spot among the juveniles of the city and consequently has an alarming crime rate. Many of the older residents want to see these fun times come to an end however, seeking to emulate the gentrified suburbia of Old New Yonkers to the south. This is adamantly resisted by the rough-and-tumble youth, those who’s to say if this district will remain the bastion of good times it is today.\nNew New Yonkers is the best district to hang out in on a weekend with your friends. Really, what else can a district aspire to?\n\nTo the East is Assault Flats Beach. To the South is Vagrant's Corner. To the Southwest is Old New Yonkers. To the West is Brawlden. To the North is New New Yonkers Outskirts.",
+		topic = "Hip up-and-coming neighborhood rapidly becoming more gentrified and less cool.",
 		coord = (41, 9),
 		channel = "new-new-yonkers",
 		role = "New New Yonkers",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_brawlden : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_vagrantscorner : travel_time_district,
+			poi_id_assaultflatsbeach : travel_time_district,
+			poi_id_newnewyonkers_street_a : travel_time_street,
+			poi_id_newnewyonkers_street_b : travel_time_street,
+			poi_id_newnewyonkers_street_c : travel_time_street,
+			poi_id_newnewyonkers_street_d : travel_time_street,
+			poi_id_slimypersuits : travel_time_subzone,
+		},
 	),
 	EwPoi( # 25
 		id_poi = poi_id_brawlden,
@@ -9937,11 +11402,24 @@ poi_list = [
 		],
 		str_name = "Brawlden",
 		str_desc = "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by SlimeCorp. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You’ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook. To the North is Brawlden Outskirts.",
+		topic = "Sleepy little burrough in northern NLACakaNM. Site of the Slimecorp Slimeoid Laboratories.",
 		coord = (33, 8),
 		channel = "brawlden",
 		role = "Brawlden",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_littlechernobyl : travel_time_district,
+			poi_id_oldnewyonkers : travel_time_district,
+			poi_id_newnewyonkers : travel_time_district,
+			poi_id_brawlden_street_a : travel_time_street,
+			poi_id_brawlden_street_b : travel_time_street,
+			poi_id_brawlden_street_c : travel_time_street,
+			poi_id_brawlden_street_d : travel_time_street,
+			poi_id_slimeoidlab : travel_time_subzone,
+		},
 	),
 	EwPoi( # 26
 		id_poi = poi_id_toxington,
@@ -9954,11 +11432,25 @@ poi_list = [
 		],
 		str_name = "Toxington",
 		str_desc = "You cover your mouth in a futile attempt to avoid breathing in the toxins rising from the nearby lakes and mineshafts. A thick fog of this foul-smelling, poisonous gas shrouds the entire district, making the land virtually uninhabitable. But, where there’s slime, people will settle. Juveniles from across the city are happy to spend their short lives in this hellhole for a chance to strike it rich.\nToxington has no redeemable aspects, outside of its abundance of slime veins underground and its lovely fishing spots above.\n\nThis area contains the Toxington Mines and the Toxington Subway Station. To the East is Astatine Heights. To the Southeast is Gatlingsdale. To the South is Polonium Hill. To the East is Charcoal Park. To the North is Toxington Outskirts.",
+		topic = "Quiet residential neighborhood, continually choked with acidic vapors from the nearby slime reservoir.",
 		coord = (14, 9),
 		channel = "toxington",
 		role = "Toxington",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_charcoalpark : travel_time_district,
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_maimridge : travel_time_district,
+			poi_id_toxington_street_a : travel_time_street,
+			poi_id_toxington_street_b : travel_time_street,
+			poi_id_toxington_street_c : travel_time_street,
+			poi_id_toxington_street_d : travel_time_street,
+			poi_id_toxington_street_e : travel_time_street,
+		},
 	),
 	EwPoi( # 27
 		id_poi = poi_id_charcoalpark,
@@ -9972,11 +11464,19 @@ poi_list = [
 		],
 		str_name = "Charcoal Park",
 		str_desc = "A completely unremarkable, quiet retirement community. The citizens are fed up with slime, honestly. Pathetic little gardens rest in front of the uneven parking lots of corporate complexes housing dentists, fortune-tellers, real estate agencies, and other equally dull and pointless ventures.\nCharcoal Park is where boring people go to die. No one is happy to be here.\n\nTo the East is Toxington. To the South is Polonium Hill. To the Northwest is Charcoal Park Outskirts.",
+		topic = "Quiet surburban retirement community. Residents like to have a good laugh at the expense of the unfortunate residents of Toxington.",
 		coord = (11, 7),
 		channel = "charcoal-park",
 		role = "Charcoal Park",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_toxington : travel_time_district,
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_charcoalpark_street_a : travel_time_street,
+			poi_id_charcoalpark_street_b : travel_time_street,
+		},
 	),
 	EwPoi( # 28
 		id_poi = poi_id_poloniumhill,
@@ -9988,11 +11488,25 @@ poi_list = [
 		],
 		str_name = "Polonium Hill",
 		str_desc = "The gently rolling astroturf hills are sprinkled with hideous mansions that obviously cost a fortune but look like complete shit. This whole district feels like it tries way to hard to come across as high-society, when it's really just some residential district on the far-flung edges of the city.\nPolonium Hills residents really want you to think they're rich.\n\nTo the North is Charcoal Park. To the Northeast is Toxington. To the East is Gatlingsdale. To the Southeast is Vandal park. To the South is West Glocksbury. To the West is Polonium Hill Outskirts.",
+		topic = "Residential neighborhood covered in low-quality, high-cost minimansions. The butt of many a NLACakaNM inside joke.",
 		coord = (11, 14),
 		channel = "polonium-hill",
 		role = "Polonium Hill",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_charcoalpark : travel_time_district,
+			poi_id_toxington : travel_time_district,
+			poi_id_gatlingsdale : travel_time_district,
+			poi_id_vandalpark : travel_time_district,
+			poi_id_westglocksbury : travel_time_district,
+			poi_id_poloniumhill_street_a : travel_time_street,
+			poi_id_poloniumhill_street_b : travel_time_street,
+			poi_id_poloniumhill_street_c : travel_time_street,
+			poi_id_poloniumhill_street_d : travel_time_street,
+			poi_id_poloniumhill_street_e : travel_time_street,
+		},
 	),
 	EwPoi( # 29
 		id_poi = poi_id_westglocksbury,
@@ -10006,11 +11520,24 @@ poi_list = [
 		],
 		str_name = "West Glocksbury",
 		str_desc = "Glocksbury-styled neighborhoods continue into its western counterpart, though liberated from the oppressive yolk of the city’s police department enforcing its poor attempts at enforcing societal values. This, coupled with its location on the outer edge of the city leads to some brutal, cruel crimes being perpetrated by maniacs with little grip on reality. Gunshots ring out regularly from somewhere in the distance, behind laundromats and barber shops.\nWest Glocksbury’s startlingly high violent crime rate may make even some of the most jaded residents of the city may get nervous.\n\nThis area contains the West Glocksbury Subway Station. To the North is Polonium Hill. To the Northeast is Vandal Park. To the East is Glocksbury.",
+		topic = "An otherwise unremarkable residential district with a distressingly high violent crime rate.",
 		coord = (9, 19),
 		channel = "west-glocksbury",
 		role = "West Glocksbury",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_poloniumhill : travel_time_district,
+			poi_id_vandalpark : travel_time_district,
+			poi_id_glocksbury : travel_time_district,
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_westglocksbury_street_a : travel_time_street,
+			poi_id_westglocksbury_street_b : travel_time_street,
+			poi_id_westglocksbury_street_c : travel_time_street,
+			poi_id_westglocksbury_street_d : travel_time_street,
+			poi_id_basedhardware : travel_time_subzone,
+		},
 	),
 	EwPoi(  # 30
 		id_poi = poi_id_jaywalkerplain,
@@ -10023,11 +11550,25 @@ poi_list = [
 		],
 		str_name = "Jaywalker Plain",
 		str_desc = "Though about half of this district is made of up parks, don’t mistake this for a wealthy district. These neglected, overgrown open spaces only help to congest the poor communities of Jaywalker Plains into tightly packed slums. This, coupled with being a backwater on the edge of the city with nothing to do, has bred a district that leads the city only in amount of narcotics injected per capita. Everyone is on a bad trip in Jaywalker Plain. Maniacs roam the street, screaming obscenities and striping naked in public. Homeless men ramble incoherent nonsense while picking drunken fights with one another on the side of the street. Many strange and unusual crimes are perpetrated here and reported on by local news teams to the amusement of residents of neighboring districts. “Did you hear what that guy from Jaywalker Plain did the other day,” is a common conversation starter in the western districts.\nJaywalker Plain has actually become a common residential district for lower income students attending the nearby Neo Milwaukee State wanting to avoid the already cheap rates of apartments in North Sleezebrorough. Because of this, you’re guaranteed to see a lot of young artists and hipsters roaming this broken, nightmare hellscape of a district looking for cafes to leech Wi-Fi access off of. Good luck with that.\n\nThis area contains the Jaywalker Plain Subway Station. To the North is West Glocksbury. To the Northeast is Glocksbury. To the East is North Sleezeborough. To the Southwest is Crookline. To the South is Dreadford. To the West is Jaywalker Plain Outskirts.",
+		topic = "Don't forget to look left and right before crossing.",
 		coord = (9, 25),
 		channel = "jaywalker-plain",
 		role = "Jaywalker Plain",
 		property_class = property_class_c,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_westglocksbury : travel_time_district,
+			poi_id_glocksbury : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_crookline : travel_time_district,
+			poi_id_dreadford : travel_time_district,
+			poi_id_jaywalkerplain_street_a : travel_time_street,
+			poi_id_jaywalkerplain_street_b : travel_time_street,
+			poi_id_jaywalkerplain_street_c : travel_time_street,
+			poi_id_jaywalkerplain_street_d : travel_time_street,
+			poi_id_jaywalkerplain_street_e : travel_time_street,
+		},
 	),
 	EwPoi(  # 31
 		id_poi = poi_id_crookline,
@@ -10038,11 +11579,23 @@ poi_list = [
 		],
 		str_name = "Crookline",
 		str_desc = "Most of this district is shrouded in total darkness, the unregulated construction of skyscrapers obstructing sunlight from ever reaching the streets far below them. Streetlights and the dense arrays of neon signs advertising speakeasy after speakeasy are the only illumination you’re provided with while traveling the narrow, twisting streets of this district. You’ll have to keep your wits about you if you want to leave here with your wallet, Crookline is perhaps most known for its hordes of petty thieves who specialise in stealing from clueless juveniles from the posher districts. Despite these hurdles, or possibly because of them, Crookline has a bustling nightlife heavily featuring those aforementioned speakeasies. No matter where you are in this district, you’re not more than a block or two from a jazz club. You sort of feel like you’re on the set of a film noir movie when you traverse these dark alleyways.\nCrookline was a historically rebellious settlement on the edge of New Los Angeles City aka Neo Milwaukee, resisting full annexation for years until it was fully culturally and economically dominated by the city. Because of this, the residents have always kept an independent streak, and remain vehemently opposed most aspects of slime past its purely utilitarian purposes. You get the feeling the denizens of this district would have been happier if there was gold discovered in the area rather than the green, morality obliterating substance they’re stuck with.\n\n To the North is Jaywalker Plain. To the Northeast is North Sleezeborough. To the East is South Sleezeborough. To the West is Dreadford. To the South is Crookline Outskirts.",
+		topic = "A rebellious district on the far reaches of the city. Rich in culture and literal wealth, just hope that you don’t get pickpocketed while there.",
 		coord = (14, 26),
 		channel = "crookline",
 		role = "Crookline",
 		property_class = property_class_b,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_dreadford : travel_time_district,
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_northsleezeborough : travel_time_district,
+			poi_id_southsleezeborough : travel_time_district,
+			poi_id_crookline_street_a : travel_time_street,
+			poi_id_crookline_street_b : travel_time_street,
+			poi_id_crookline_street_c : travel_time_street,
+			poi_id_crookline_street_d : travel_time_street,
+		},
 	),
 	EwPoi(  # 32
 		id_poi = poi_id_dreadford,
@@ -10053,11 +11606,64 @@ poi_list = [
 		],
 		str_name = "Dreadford",
 		str_desc = "Neatly spaced colonial revival mansions and chapels are broken up by botches of thick, twisting woods. This district is largely rural and suburban, with a small town center with various necessities like Whole Foods and a cemetery. The residents of this district are very, very wealthy and meticulously maintain the gated community they’ve grown for themselves. Perhaps the most obvious example of this is the country club and its accompanying golf course, which comprises a large chunk of the district.\nDreadford is one of the oldest settlements of the area, being inhabited by humans as far back as 1988. The original founders were fleeing restrict criminals rights laws, and established the town of Dreadford in what was then a barren Arizonian desert. These first settlers had quite the pension of holding kangaroo courts, which often amounted to just reading the list of crimes the accused was charged with before hanging them immediately. Some nooses still hang on trees around the district, begging to be finally used.\n\n This area contains the Country Club and the Dreadford Blimp Tower. To the North is Jaywalker Plain. To the East is Crookline. To the Southwest is Dreadford Outskirts.",
+		topic = "Ford of Dread.",
 		coord = (10, 28),
 		channel = "dreadford",
 		role = "Dreadford",
 		property_class = property_class_s,
-		is_capturable = True
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_jaywalkerplain : travel_time_district,
+			poi_id_crookline : travel_time_district,
+			poi_id_dreadford_street_a : travel_time_street,
+			poi_id_dreadford_street_b : travel_time_street,
+			poi_id_countryclub : travel_time_subzone,
+		},
+	),
+	EwPoi( # 33
+		id_poi = poi_id_maimridge,
+		alias = [
+			"maim",
+			"ridge",
+			"mr",
+			"mario"
+		],
+		str_name = "Maimridge",
+		str_desc = "In front of you rests the formidable mountain range of Mt. Srxek, known for having freezing temperatures during even the summer months, and for having the highest peaks in the county. Snow falls near the tops of these mountains basically all year ‘round, and as such a community of suicidal winter sport enthusiasts and adventurous explorers have set up shop across the range, establishing lodging and tacky souvenir shops in and around ancient Native American burial grounds, because it’s not like they were using the place anymore. Unfortunately, or perhaps fortunately for the thrill seekers among us, the mountains here are far too steep for anyone to actually skii down without a death wish to attempt them. Seriously, there are just a series of ninety degree drops in some places, and that’s not even to mention the yetis, don’t even get me started on the yetis. Of course, none of this stops the locals, who eagerly careen off the side of cliffs and then take the lift back up for seconds after they revive. If you want to down some cheap instant hot coco before flying off the summit of a fucking mountain, then this district is for you. Maimridge used to be considered part of the outskirts, but recently it has grown enough of a stable population to be considered a real district. Its claim to fame is, of course, the impressive mountains in its borders.",
+		topic = "NLACakaNM’s frigid, untamed crown jewel. Site of Mt. Srxek.",
+		channel = "maimridge",
+		property_class = property_class_b,
+		is_district = True,
+		is_capturable = False,
+		neighbors = {
+			poi_id_toxington : travel_time_district,
+			poi_id_astatineheights : travel_time_district,
+			poi_id_arsonbrook : travel_time_district,
+			poi_id_maimridge_street_a : travel_time_street,
+			poi_id_maimridge_street_b : travel_time_street,
+			poi_id_maimridge_street_c : travel_time_street,
+		},
+	),
+	EwPoi( # the-void
+		id_poi = poi_id_thevoid,
+		alias = [
+			"void",
+			"the-void",
+			"abyss",
+			"tv",
+			"v",
+		],
+		str_name = "the Void",
+		str_desc = "A large open space, pitch black aside from the many old-style street lights illuminating several paths, whose intersection is marked by street sign, standing tall next to a memorial metal bench. At the end of each path is a well lit staircase leading underground, though one of them seems to be barred to prevent passage. One shorter path from the sign leads to the Waffle House, on the back of which is a ladder leading to its roof. The total silence of this place makes you very aware of the sounds your own body makes as you walk around, and the overbright lamps strain your vision even as total darkness envelops you.\n\nThis area contains the Waffle House.",
+		topic = "A peaceful place, despite the sense of liminality. Remember to **!look** around, if you're feeling lost.",
+		channel = "the-void",
+		is_district = True,
+		is_capturable = False,
+		pvp = True,
+		neighbors = {
+			poi_id_wafflehouse : travel_time_subzone,
+		},
 	),
 	EwPoi( # the-sewers
 		id_poi = poi_id_thesewers,
@@ -10073,13 +11679,2551 @@ poi_list = [
 		],
 		str_name = "The Sewers",
 		str_desc = "A vast subterranean maze of concrete tunnels, eternally echoing with the dripping of water and decayed slime runoff. All the waste of NLACakaNM eventually winds up here, citizens included.",
+		topic = "You have been gunned down, and your body has been swept down the drain into the sewers. Here you can commune with your fellow cadavers through the Neural Slime network. To revive yourself you must feed your carcass into ENDLESS WAR's churning maw and be reborn into Slime, continuing the war forever more.",
 		channel = channel_sewers,
 		life_states = [
 			life_state_corpse
 		],
 		role = "Sewers",
-		community_chest = chest_id_thesewers
+		community_chest = chest_id_thesewers,
+		is_gangbase = True
 	),
+	# Streets start here
+	# EwPoi(
+	# 	id_poi = poi_id_rowdyroughhouse_street_a,
+	# 	alias = [
+	# 		"rrsa",
+	# 		"rrstreeta"
+	# 	],
+	# 	str_name = "Rowdy Roughhouse Street A",
+	# 	str_desc = str_generic_streets_description,
+	# 	channel = 'rowdy-roughhouse-street-a',
+	# 	is_street = True,
+	# 	is_capturable = True,
+	# 	father_district = poi_id_rowdyroughhouse,
+	# 	neighbors = {
+	# 		poi_id_rowdyroughhouse : travel_time_street,
+	# 		poi_id_downtown_street_c : travel_time_street,
+	# 		poi_id_poudrinalley_street_a : travel_time_street,
+	# 		poi_id_wreckington_street_b : travel_time_street,
+	# 		poi_id_rr_subway_station: travel_time_subzone,
+	# 	},
+	#     factions = [faction_rowdys]
+	# ),
+	# EwPoi(
+	# 	id_poi = poi_id_copkilltown_street_a,
+	# 	alias = [
+	# 		"cksa",
+	# 		"ckstreeta"
+	# 	],
+	# 	str_name = "Cop Killtown Street A",
+	# 	str_desc = str_generic_streets_description,
+	# 	channel = 'cop-killtown-street-a',
+	# 	is_street = True,
+	# 	is_capturable = True,
+	# 	father_district = poi_id_copkilltown,
+	# 	neighbors = {
+	# 		poi_id_copkilltown : travel_time_street,
+	# 		poi_id_gatlingsdale_street_a : travel_time_street,
+	# 		poi_id_astatineheights_street_f : travel_time_street,
+	# 		poi_id_smogsburg_street_c : travel_time_street,
+	# 		poi_id_downtown_street_f : travel_time_street,
+	# 		poi_id_ck_subway_station: travel_time_subzone,
+	# 	},
+	#     factions = [faction_killers]
+	# ),
+	# EwPoi(
+	# 	id_poi = poi_id_juviesrow_street_a,
+	# 	alias = [
+	# 		"jrsa",
+	# 		"jrstreeta"
+	# 	],
+	# 	str_name = "Juvie's Row Street A",
+	# 	str_desc = str_generic_streets_description,
+	# 	channel = 'juvies-row-street-a',
+	# 	is_street = True,
+	# 	is_capturable = True,
+	# 	father_district = poi_id_juviesrow,
+	# 	neighbors = {
+	# 		poi_id_juviesrow : travel_time_street,
+	# 		poi_id_greenlightdistrict_street_b : travel_time_street,
+	# 		poi_id_vagrantscorner_street_c : travel_time_street,
+	# 		poi_id_mine: travel_time_subzone,
+	# 		poi_id_jr_farms : travel_time_subzone,
+	# 		poi_id_juviesrow_pier : travel_time_subzone,
+	# 		poi_id_jr_subway_station: travel_time_subzone,
+	# 	}
+	# ),
+	EwPoi(
+		id_poi = poi_id_downtown_street_a,
+		alias = [
+			"northend",
+			"north"
+		],
+		str_name = "North End",
+		str_desc = "This is one of the older neighborhoods in the city, and as such the apartments here show some wear-and-tear.",
+		channel = 'north-end',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_f : travel_time_street,
+			poi_id_downtown_street_b : travel_time_street,
+			poi_id_smogsburg_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_downtown_street_b,
+		alias = [
+			"thewaterfront",
+			"waterfront",
+			"water"
+		],
+		str_name = "The Waterfront",
+		str_desc = "This stretch of coast is home to the city’s original wharf. It’s long since fallen out of use as an actual dockyard in favor of Vagrant’s Corner, but still lives on as a tourist trap full of easily pickpocketed out-of-towners who want to stare out at the Slime Sea through a tower viewer.",
+		channel = 'the-waterfront',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_a : travel_time_street,
+			poi_id_downtown_street_c : travel_time_street,
+			poi_id_greenlightdistrict_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_downtown_street_c,
+		alias = [
+			"downtowncrossing",
+			"crossing"
+		],
+		str_name = "Downtown Crossing",
+		str_desc = "This intersection is a bustling outdoor pedestrian shopping mall full of department stores, restaurants, specialty retailers, and more. Sketchy street vendors peddle their wares to all who will listen.",
+		channel = 'downtown-crossing',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_d : travel_time_street,
+			poi_id_downtown_street_b : travel_time_street,
+			poi_id_rowdyroughhouse : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_downtown_street_d,
+		alias = [
+			"thecommon",
+			"common"
+		],
+		str_name = "The Common",
+		str_desc = "It’s a public park established in the early years of the city. It’s basically just a patch of dead grass; all the fountains and monuments were defaced years ago.",
+		channel = 'the-common',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_c : travel_time_street,
+			poi_id_downtown_street_e : travel_time_street,
+			poi_id_poudrinalley_street_b : travel_time_street,
+			poi_id_dt_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_downtown_street_e,
+		alias = [
+			"combatzone",
+			"combat"
+		],
+		str_name = "Combat Zone",
+		str_desc = "This street has been fought over between the Rowdys and Killers since the dawn of fucking time. The struggle over this corner of Downtown resulted in some of the most legendary moments in the city’s history, and is sure to foster many more as the gangs continue to wrestle for control over it.",
+		channel = 'combat-zone',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_d : travel_time_street,
+			poi_id_downtown_street_f : travel_time_street,
+			poi_id_krakbay_street_a : travel_time_street,
+			poi_id_dt_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi=poi_id_downtown_street_f,
+		alias=[
+			"financialdistrict",
+			"financial"
+		],
+		str_name="Financial District",
+		str_desc="You gaze up at the modern skyscrapers and sleek condos above you. This is where robber barons of all shapes and sizes come up with cool and new ways to exploit the unwashed masses, and to wring as much slime out of the earth as humanly possible. Nice.",
+		channel='financial-district',
+		is_street=True,
+		is_capturable=True,
+		father_district=poi_id_downtown,
+		neighbors={
+			poi_id_downtown : travel_time_street,
+			poi_id_downtown_street_e : travel_time_street,
+			poi_id_downtown_street_a : travel_time_street,
+			poi_id_copkilltown : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_a,
+		alias = [
+			"esplanade",
+		],
+		str_name = "Esplanade",
+		str_desc = "This long sidewalk follows the bend of the River of Slime, all the way from Downtown to West Glocksbury. However, the only valuable stretch of it is here in Krak Bay due to the stores on the other side of the street.",
+		channel = 'esplanade',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_f : travel_time_street,
+			poi_id_krakbay_street_b : travel_time_street,
+			poi_id_downtown_street_e : travel_time_street,
+			poi_id_kb_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_b,
+		alias = [
+			"minotaursquare",
+			"minotaur"
+		],
+		str_name = "Minotaur Square",
+		str_desc = "It’s a small park in the center of the district, home to a weekly farmer’s market and a handful of seasonal events. Most of the time, though, it’s just a place to take a quick breather before heading back to do more shopping. In the center is a statue of friendly mythological half-beast, and inscribed in a plaque next to it is inscribed the words 'dedicated to https://twitter.com/krakissi'",
+		channel = 'minotaur-square',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_a : travel_time_street,
+			poi_id_krakbay_street_c : travel_time_street,
+			poi_id_poudrinalley_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_c,
+		alias = [
+			"gooburystreet",
+			"goobury"
+		],
+		str_name = "Goobury Street",
+		str_desc = "This street runs through the majority of the district, and is home to countless restaurants and stores. You’ll find actually affordable stuff over by the border with Glocksbury, with bourgeois luxuries popping up more frequently the farther east you go.",
+		channel = 'goobury-street',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_b : travel_time_street,
+			poi_id_krakbay_street_d : travel_time_street,
+			poi_id_oozegardens_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_d,
+		alias = [
+			"huntingtonavenue",
+			"huntington"
+		],
+		str_name = "Huntington Avenue",
+		str_desc = "It’s a wide boulevard, still featuring the old streetcar tracks running down the center of the road. This is a fairly stagnant corner of Krak Bay; everything that hasn’t gone out of business has been here for a very, very long time.",
+		channel = 'huntington-avenue',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_c : travel_time_street,
+			poi_id_krakbay_street_e : travel_time_street,
+			poi_id_southsleezeborough_street_c : travel_time_street,
+			poi_id_foodcourt : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_e,
+		alias = [
+			"themall",
+			"mall"
+		],
+		str_name = "The Mall",
+		str_desc = "This place was built way back in the ‘90s, and it shows. All of the interior decorations are hideous, the paint is faded, and, well, it’s a mall to begin with. It’s pretty fucking aesthetic, you’re not going to lie.",
+		channel = 'the-mall',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_d : travel_time_street,
+			poi_id_krakbay_street_f : travel_time_street,
+			poi_id_northsleezeborough_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_krakbay_street_f,
+		alias = [
+			"goldengunkbridge",
+			"goldengunk",
+			"golden"
+		],
+		str_name = "Golden Gunk Bridge",
+		str_desc = "It’s one of the main exits out of Krak Bay, a bridge over the slimy waters that U turns around in a perfect 180 back to the coastland. It was initially built to connect the bay and the area now known today as Cop Killtown, but then the vicious gang showed up, so construction was halted and then repurposed into one of the most stupid structures ever made. Its name comes from the yellow hue that the fungus growing on there gives to the bridge.",
+		channel = 'golden-gunk-bridge',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_krakbay,
+		neighbors = {
+			poi_id_krakbay : travel_time_street,
+			poi_id_krakbay_street_e : travel_time_street,
+			poi_id_krakbay_street_a : travel_time_street,
+			poi_id_glocksbury_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_a,
+		alias = [
+			"24karatshopping",
+			"24karat",
+			"24"
+		],
+		str_name = "24 Karat Shopping",
+		str_desc = "It's a couple of decades old small shopping center which used to hold all the small businesses of the zone, the only building in the area that makes actual fucking sense. Nowadays, it is a shadow of its former self after being completely smashed by gangsters and juvies alike. Its few surviving shops remain in the midst of wreckage and extreme vandalism. A structurally relaxing oasis in this maze of a district, lost gangsters usually take a breath here and talk business with the local dealers.",
+		channel = '24-karat-shopping',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_e : travel_time_street,
+			poi_id_poudrinalley_street_b : travel_time_street,
+			poi_id_rowdyroughhouse : travel_time_street,
+			poi_id_pa_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_b,
+		alias = [
+			"apartmentcomplex",
+			"complex"
+		],
+		str_name = "Apartment Complex",
+		str_desc = "You’re balls-deep inside of one of Poudrin Alley’s infamous apartment complexes. This section is particularly labyrinthine, being made up of tight corridors with poor lighting and drainage. You have no idea how the locals navigate this shit.",
+		channel = 'apartment-complex',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_a : travel_time_street,
+			poi_id_poudrinalley_street_c : travel_time_street,
+			poi_id_downtown_street_d : travel_time_street,
+			poi_id_711 : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_c,
+		alias = [
+			"abandonedintersection",
+			"intersection"
+		],
+		str_name = "Abandoned Intersection",
+		str_desc = "This four-way intersection is one of the few points of interest in the district that isn’t hidden away in some obscure alleyway or backstreet. This crossroads is home to a few sketchy take-out restaurants, a gas station, and a few foreclosed businesses.",
+		channel = 'abandoned-intersection',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_b : travel_time_street,
+			poi_id_poudrinalley_street_d : travel_time_street,
+			poi_id_krakbay_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_d,
+		alias = [
+			"skewerroad",
+			"skewer"
+		],
+		str_name = "Skewer Road",
+		str_desc = "It’s a dead-end zig-zag road in ruins that has more turns and pointy corners than an Speed Racer episode of him running from bulls. This road It’s the only access to a lot of the houses in the district, you could call it one long, crooked alleway. It remained unattended for so long that everything ended up all cracked and bent. People commute everyday through this road every day in the form of a slow ballet-like traffic, trying to avoid getting their toes shaved by the sharp erupted asphalt, getting impaled by a broken streetlight or eaten entirely by a pothole, like many other less fortunate neighbors.",
+		channel = 'skewer-road',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_c : travel_time_street,
+			poi_id_poudrinalley_street_e : travel_time_street,
+			poi_id_oozegardens_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poudrinalley_street_e,
+		alias = [
+			"draintrench",
+			"trench"
+		],
+		str_name = "Drain Trench",
+		str_desc = "This long, skinny sewer grate runs the length of one of Poudrin Alley’s longest alleyways. It’s supposed to act as the central node of the district’s drainage system, but it’s really fucking bad at it so this whole area smells terrible. Hope you like firefights down narrow hallways. Maybe if you can’t find your way out of Poudrin Alley, you can take a shortcut and just flush yourself down to the Sewers here.",
+		channel = 'drain-trench',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poudrinalley,
+		neighbors = {
+			poi_id_poudrinalley : travel_time_street,
+			poi_id_poudrinalley_street_d : travel_time_street,
+			poi_id_poudrinalley_street_a : travel_time_street,
+			poi_id_cratersville_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_cratersville_street_a,
+		alias = [
+			"theendlines",
+			"endlines",
+			"endline"
+		],
+		str_name = "The End Lines",
+		str_desc = "This street seems remarkably more put together than its neighboring thoroughfares. During the original boom of bright eyed miners flocking to the streets in search of slime it was quickly found to be lacking in the slime and as such was quickly abandoned. This has allowed the locals to keep a sliver of their buildings standing, for the time being at least.",
+		channel = 'the-end-lines',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_cratersville,
+		neighbors = {
+			poi_id_cratersville : travel_time_street,
+			poi_id_cratersville_street_b : travel_time_street,
+			poi_id_cratersville_street_c : travel_time_street,
+			poi_id_wreckington_street_a : travel_time_street,
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_cratersville_street_b,
+		alias = [
+			"thecaldera",
+			"caldera"
+		],
+		str_name = "The Caldera",
+		str_desc = "This is Cratersviller’s first crater, and widely recognized as its biggest one too. A shipment of TNT got intercepted by gangs and accidentally blew a gigantic hole into the ground. It revealed amazing slime deposits, and so people quickly mined it dry and began tearing up the rest of the district.",
+		channel = 'the-caldera',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_cratersville,
+		neighbors = {
+			poi_id_cratersville : travel_time_street,
+			poi_id_cratersville_street_a : travel_time_street,
+			poi_id_cratersville_street_c : travel_time_street,
+			poi_id_poudrinalley_street_e : travel_time_street,
+			poi_id_cv_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_cratersville_street_c,
+		alias = [
+			"dynamitelane",
+			"dynamite"
+		],
+		str_name = "Dynamite Lane",
+		str_desc = "This street, if you can even still call it that, looks like the surface of the goddamn moon. Hundreds, possibly even thousands of small to medium sized craters have been punched into the landscape. Presumably the vast majority of these holes revealed no slime, but the fact that there are so many means that people believed that they could strike it rich with even shallow, surface level mining. So, presumably some people did find large veins of slime just under the sidewalk. Kind of makes you want to whip out your pick and start mining, doesn’t it?",
+		channel = 'dynamite-lane',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_cratersville,
+		neighbors = {
+			poi_id_cratersville : travel_time_street,
+			poi_id_cratersville_street_a : travel_time_street,
+			poi_id_cratersville_street_b : travel_time_street,
+			poi_id_oozegardens_street_d : travel_time_street,
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_cv_mines : travel_time_subzone,
+			poi_id_cv_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_wreckington_street_a,
+		alias = [
+			"permanentconstructionzone",
+			"permanentconstruction",
+			"constructionzone",
+			"construction"
+		],
+		str_name = "Permanent Construction Zone",
+		str_desc = "This section of the district is in a permanent state of being haphazardly demolished and rebuilt. A brand new building will be knocked down due to minor plumbing issues and then progress on the remodel will stall for years, and old buildings that don’t live up to medieval safety standards have remained standing for a generation. The workers here have gotten so frustrated and bored toiling away here that they invented the ingenious sport of crane jousting to pass the time.",
+		channel = 'permanent-construction-zone',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_wreckington,
+		neighbors = {
+			poi_id_wreckington : travel_time_street,
+			poi_id_wreckington_street_b : travel_time_street,
+			poi_id_cratersville_street_a : travel_time_street,
+			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_wt_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_wreckington_street_b,
+		alias = [
+			"thescrapyard",
+			"scrapyard"
+		],
+		str_name = "The Scrapyard",
+		str_desc = "This huge fucking pile of useless junk is the city’s dump. After the residents of the surrounding districts realized that Wreckington wasn’t going to clean up after its own frequent demolitions, they figured those sites would be the perfect place to throw their trash. Over time it grew and grew, to the point where you can see the borders of multiple neighboring districts from the summit.",
+		channel = 'the-scrapyard',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_wreckington,
+		neighbors = {
+			poi_id_wreckington : travel_time_street,
+			poi_id_wreckington_street_a : travel_time_street,
+			poi_id_rowdyroughhouse : travel_time_street,
+			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_diner : travel_time_subzone,
+			poi_id_wt_port : travel_time_subzone,
+			poi_id_wt_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oozegardens_street_a,
+		alias = [
+			"festivalgrounds",
+			"festivalground",
+			"festival"
+		],
+		str_name = "Festival Grounds",
+		str_desc = "This large section of park is reserved for musician concerts, theater plays, cult meetings and the odd stand-up act. Performances happen almost daily, with the locals attending every one. These audiences are usually anything but, as they can get pretty active in the performances themselves. After getting thoroughly wasted, high, or the legendary combination of the two (colloquially known as “twisted”), audience members are known to lose all self control and climb on stage, strip naked, start drunken brawls, hug each other, or otherwise descend into debauchery. It’s in these moments you remember that the residents of Ooze Gardens may be belt-weighing pussies, but they’re still slimebois, damnit.",
+		channel = 'festival-grounds',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oozegardens,
+		neighbors = {
+			poi_id_oozegardens : travel_time_street,
+			poi_id_oozegardens_street_d : travel_time_street,
+			poi_id_oozegardens_street_b : travel_time_street,
+			poi_id_southsleezeborough_street_d : travel_time_street,
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oozegardens_street_b,
+		alias = [
+			"winegardens",
+			"wine"
+		],
+		str_name = "Wine Gardens",
+		str_desc = "This expansive garden is split into various sections by hedgerows, with each section featuring unique patterns of exotic flora and intricate fountains. However, it’s not all peaceful contemplation of nature here. Some sections of the garden have tables and booths that charge extortion rates of terrible alcohol that nevertheless widely circulates. So, while you’re reading some plaque explaining whatever dumbfuck genus of flower you’re supposed to be looking at, if you look closely, your entire immediate surroundings may in fact be covered in throw up.",
+		channel = 'wine-gardens',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oozegardens,
+		neighbors = {
+			poi_id_oozegardens : travel_time_street,
+			poi_id_oozegardens_street_a : travel_time_street,
+			poi_id_oozegardens_street_c : travel_time_street,
+			poi_id_krakbay_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oozegardens_street_c,
+		alias = [
+			"museumrow",
+			"museum"
+		],
+		str_name = "Museum Row",
+		str_desc = "This row of museums sits on the edge of Ooze Garden’s largest public park. You’ll find museums dedicated to all manner of humanities and sciences, as well as art galleries and, of course, souvenir shops. You think knowledge is actually lowkey kinda gay, so you’re not going to be stepping inside one anytime soon. You’re just looking forward to blasting someone’s greymatter across all these beautiful facades.",
+		channel = 'museum-row',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oozegardens,
+		neighbors = {
+			poi_id_oozegardens : travel_time_street,
+			poi_id_oozegardens_street_b : travel_time_street,
+			poi_id_oozegardens_street_d : travel_time_street,
+			poi_id_poudrinalley_street_d : travel_time_street,
+			poi_id_og_farms : travel_time_subzone,
+			poi_id_og_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oozegardens_street_d,
+		alias = [
+			"nlacakanmzoo",
+			"zoo"
+		],
+		str_name = "NLACakaNM Zoo",
+		str_desc = "This  menagerie is home to dozens of rare species of beasts, both organic and slime-based, displayed in mock-ups of their natural habitat for maximum theming bonuses. Of course, some of the crazy shit that gets displayed here, especially the stuff from the outskirts, are all horrifying monstrosities that don’t really have natural habitats or even really any proper rules on how to care for them. As such, the zoo’s pretty nasty and brutish towards the animals, as they are sometimes held in inadequate conditions and kept in line with force. Whatever, though. Not your problem. Haha, look at those orangutans! They’re so silly.",
+		channel = 'nlacakanm-zoo',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oozegardens,
+		neighbors = {
+			poi_id_oozegardens : travel_time_street,
+			poi_id_oozegardens_street_c : travel_time_street,
+			poi_id_oozegardens_street_a : travel_time_street,
+			poi_id_cratersville_street_c : travel_time_street,
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_og_farms : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_southsleezeborough_street_a,
+		alias = [
+			"chinatown",
+			"china",
+			"triad"
+		],
+		str_name = "Chinatown",
+		str_desc = "Here, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs. For as far as the eye can see, there are embarrassingly inauthentic approximations of oriental architectural styles. But, you knew all that. So, here’s something you may not have known: This whole corner of the district is run by the Triad. Yeah, all of those law firms? Have you ever been inside of one? Of course you haven’t, no one has. They’re just money laundering fronts and sometimes meeting spots for members to plan out their campaigns against whoever’s been tardy with their tribute and who to extort from next. Of course, they provide a level of vigilante justice to the neighborhood too, punishing random acts of lawlessness in favor of their totally reasonable brand of lawlessness. These gangsters are a part of a long, complex history in South Sleezeborough between local weeaboos, immigrant westaboos, and their struggle for supremacy. This thorny issue has even threatened the integrity of the Triad itself, as some members wish to cling unto their traditional way of life and show solidarity with the asianophile weeaboos, while others have grown accustomed to their new cultures and support the westaboos. This question remains unsettled to this day.",
+		channel = 'chinatown',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_southsleezeborough,
+		neighbors = {
+			poi_id_southsleezeborough : travel_time_street,
+			poi_id_southsleezeborough_street_d : travel_time_street,
+			poi_id_southsleezeborough_street_b : travel_time_street,
+			poi_id_crookline_street_b : travel_time_street,
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_ssb_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_southsleezeborough_street_b,
+		alias = [
+			"littleitaly",
+			"italy",
+			"mafia"
+		],
+		str_name = "Little Italy",
+		str_desc = "Whoa, hold the phone. Cool your jets. This may look like a normal neighborhood with densely packed red brick apartments and an anti-human grid plan, but it ain’t. Cut it out with that whole free spirit punk attitude thing you’ve got going on and back the fuck up and start respecting the shit outta the people who grease the wheels around here. Don’t you know that this place is run by the mob? Like, the mafia? Like, the famous Italian-American criminal organization with branches in several large metropolitan areas? Yes, that mafia! And you can bet your bottom dollar they’re up to all their old tricks. Their whole byzantine family structure and “battling for supremacy with rival clans” aesthetic got ported over full-sale. There’s like a billion families here all battling over where each other can sell their illegal slime-based liquor that are totally legal but everyone wants to believe they aren’t for old times’ sake, who they’re allowed to offer their “protection” to, and what politicians they have the privilege of whacking. Lots of pizza places ‘round here.",
+		channel = 'little-italy',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_southsleezeborough,
+		neighbors = {
+			poi_id_southsleezeborough : travel_time_street,
+			poi_id_southsleezeborough_street_a : travel_time_street,
+			poi_id_southsleezeborough_street_c : travel_time_street,
+			poi_id_northsleezeborough_street_b : travel_time_street,
+			poi_id_dojo : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_southsleezeborough_street_c,
+		alias = [
+			"littletokyo",
+			"littletokyo"
+		],
+		str_name = "Little Tokyo",
+		str_desc = "Ohayo gozaimasu, motherfucker. Here in South Sleezeborough's Little Tokyo, which is just an outdoor shopping center with six parking spaces and even fewer stores located on the corner of a busy intersection, is a branch of the infamous Yazuka. These chivalrous knights of bushido hail from glorious Nippon, and seek to literally prevent culture death. Like, that's genuinely their whole deal. No joke. They're fucking ripped, wear suits and ties that are totally on fleek, are inked head-to-toe in intracate and geneally fucking crazy tattoos, and can kick your ass using psychic powers. I don't even really know what crimes they commit, all I see them do is get drunk in the ramen bars in their shopping center, beat the shit out of each other and passerbys, and go on romantic adventures to kill westerners and other degenerate races. What’s not to like? This gang is not to be confused with the Yellow Yakuza, which has way more members.",
+		channel = 'little-tokyo',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_southsleezeborough,
+		neighbors = {
+			poi_id_southsleezeborough : travel_time_street,
+			poi_id_southsleezeborough_street_b : travel_time_street,
+			poi_id_southsleezeborough_street_d : travel_time_street,
+			poi_id_krakbay_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_southsleezeborough_street_d,
+		alias = [
+			"cartelturf",
+			"cartel"
+		],
+		str_name = "Cartel Turf",
+		str_desc = "Watch your step pendejo, you are entering what it might look just like a simple shanty town, a modest assortment of short square houses of all kinds of warm colors ripped right out of the bowels of south america, but take a second look, cuz its Los Amontonados' turf, a conglomerate of all the latin drug cartels that ever existed, now reformed into a group of good willed hard workers that fight by fist and gun for the right of the average citizen to snort all the meth their money can buy. The area was built with the thought of reminding their people of the home they left behind in order to fight for what is right and high, but it's also a complex distribution network like no other. Do not fuck with these guys' abuelitas, because they can smuggle cocaine and bullet lead into your soup in seconds, conchatumadre.",
+		channel = 'cartel-turf',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_southsleezeborough,
+		neighbors = {
+			poi_id_southsleezeborough : travel_time_street,
+			poi_id_southsleezeborough_street_c : travel_time_street,
+			poi_id_southsleezeborough_street_a : travel_time_street,
+			poi_id_oozegardens_street_a : travel_time_street,
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_a,
+		alias = [
+			"drive-bydrive-thrus",
+			"drivebydrivethrus",
+			"driveby",
+			"drive-by",
+			"drivethrus",
+			"drive-thrus"
+			"drive"
+		],
+		str_name = "Drive-By Drive-Thrus",
+		str_desc = "This intersection is packed with every fast food chain you can name. You can’t honestly expect the locals of North Sleezeborough to have the mental/physical capabilities of caring about anything enough to get out of their car to do it, so the front doors of these establishments are rusted over and boarded up, while the line for the drive-thru extends down the block. Of course, some of these cars aren’t patiently waiting to acquire their extra large value meals, they’re just itching to get to the window and rob the place blind, lest they get medieval on the teller’s ass with their cruel and unusual instruments. Good times, good times.",
+		channel = 'drive-by-drive-thrus',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_e : travel_time_street,
+			poi_id_northsleezeborough_street_b : travel_time_street,
+			poi_id_krakbay_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_b,
+		alias = [
+			"wwwring",
+			"www",
+			"ring"
+		],
+		str_name = "WWW Ring",
+		str_desc = "It’s a big amphitheater with a Fighting Ring for a stage: The place where the Wowie Wowza Wrestling Circuit takes place. Founded on the very land the great West-East Gaijin War happened, it was once a great promotion for all the up and coming superstars of the city, like Stoned Cold Beer Monger and Musk Logan, but it became reduced to a bunch of retards in spandex slapping each other while completely drunk. It’s not all bad for the dwindling crowds, as once in a green moon they get to see an extreme fit of rage or an aneurysm happen mid-show, which is extremely fucking funny.",
+		channel = 'www-ring',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_a : travel_time_street,
+			poi_id_northsleezeborough_street_c : travel_time_street,
+			poi_id_southsleezeborough_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_c,
+		alias = [
+			"carbohydratecontainmentboulevard",
+			"carbohydratecontainment",
+			"carbohydrate"
+		],
+		str_name = "Carbohydrate Containment Boulevard",
+		str_desc = "As far as you can see the street is lined with pizza places of all shapes and sizes. Even more dwarfing than the amount of pie shops is the sweet smell of some piping hot slices that are ready to be devoured. Even just walking down this street is enough to punch you out of ketosis. The never-ending supply of grease and dough being funneled into the local's mouths keeps them fat and complacent.",
+		channel = 'carbohydrate-containment-boulevard',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_b : travel_time_street,
+			poi_id_northsleezeborough_street_d : travel_time_street,
+			poi_id_crookline_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_d,
+		alias = [
+			"pondscumroad",
+			"pondscum"
+		],
+		str_name = "Pond Scum Road",
+		str_desc = "The street takes you next to a pond which looks as if it has seen better days. The surrounding grass is littered with trash long forgotten. The water seems to be much the same filled with half eaten pieces of bread, algae, and some other substances you can’t quite identify. It looks like this place is often deserted even from the ducks.",
+		channel = 'pond-scum-road',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_c : travel_time_street,
+			poi_id_northsleezeborough_street_e : travel_time_street,
+			poi_id_jaywalkerplain_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_northsleezeborough_street_e,
+		alias = [
+			"slobplaza",
+			"slob"
+		],
+		str_name = "Slob Plaza",
+		str_desc = 'It\'s the most bland square of land to ever be called a plaza, adorned by a couple of short trees, four pairs of benches each looking towards a different cardinal point, and a small, ugly dry fountain in the middle. Multiple magazines and renowned papers have called this spot number 1 in many "The best places to nap or fall dead" rankings, having mediocre ratings across the board since its inception. Here you can always find lazy citizens laying around, wishing their sorry lives could be magically solved… or, even better, that someone puts a bullet between those sleepy eyes.',
+		channel = 'slob-plaza',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_northsleezeborough,
+		neighbors = {
+			poi_id_northsleezeborough : travel_time_street,
+			poi_id_northsleezeborough_street_d : travel_time_street,
+			poi_id_northsleezeborough_street_a : travel_time_street,
+			poi_id_glocksbury_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_a,
+		alias = [
+			"policestation",
+			"police"
+		],
+		str_name = "Police Station",
+		str_desc = "This is the area directly surrounding the city’s police headquarters. Normally you’d think spraying graffiti and senselessly murdering rival gangsters in broad daylight next to the cops would be a bad idea, but the police here are so incompentent and/or corrupt that it hardly matters. Besides, if any of them try to fuck with you then they’d wind up in the sewers in no time.",
+		channel = 'police-station',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_e : travel_time_street,
+			poi_id_glocksbury_street_b : travel_time_street,
+			poi_id_krakbay_street_f : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_b,
+		alias = [
+			"dogparks",
+			"dog"
+		],
+		str_name = "Dog Parks",
+		str_desc = "This is one of the several dog parks around Glocksbury. Since the locals here are in (barely) safer conditions, they feel comfortable walking their dogs here. The park has tried its best to adapt to Slimeoids, too, but at the moment the best solution is to segregate the pets and Slimeoids in two separate enclosures. This is mostly to stop the dumbfuck boomers from crying a river when their dog gets excommunicated to a lower rung on the food chain via devouring by a vastly cooler and way more slime-based Slimeoid.",
+		channel = 'dog-parks',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_a : travel_time_street,
+			poi_id_glocksbury_street_c : travel_time_street,
+			poi_id_vandalpark_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_c,
+		alias = [
+			"snitchstreet",
+			"snitch"
+		],
+		str_name = "Snitch Street",
+		str_desc = "The police are so desperate for itelligence about gang violence and territory control that they’ve brought this entire neighborhood off. You’ll be minding your own business and in the span of half an hour you’ll have talked to fourteen different people who all swear they aren’t cops but are just dying to know your gang’s organizational structure, troop movements, and what your personal top five biggest fears are.",
+		channel = 'snitch-street',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_b : travel_time_street,
+			poi_id_glocksbury_street_d : travel_time_street,
+			poi_id_westglocksbury_street_a : travel_time_street,
+			poi_id_gb_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_d,
+		alias = [
+			"mugshotroad",
+			"mugshot"
+		],
+		str_name = "Mugshot Road",
+		str_desc = "This is an affordable housing community. Most of the inhabitants here are some Jaywalker Plain, who have tried to kick whatever addictions were holding them back in their old life and start again here. Because of the vulnerable nature of the residents here, the police have carte balance to do whatever the fuck they want with them, and they do! Random entries into people’s homes without warrants, excessive uses of force for literally no reason, frisking before they even have the decency to stop-and- you first, asking you to hold something for them before placing incriminating evidence into your hands without waiting for your response and then pulling out their gun and murdering you, piledrivings, and more. Basically, real life.",
+		channel = 'mugshot-road',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_c : travel_time_street,
+			poi_id_glocksbury_street_e : travel_time_street,
+			poi_id_jaywalkerplain_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_glocksbury_street_e,
+		alias = [
+			"culdesac",
+		],
+		str_name = "Cul-de-sac",
+		str_desc = "It’s just a totally ordinary cul-de-sac with no special attributes or defining features. Presumably the residents here think that because the police station’s right down the road that they can act all normal and shit, and that they can avoid the worst of the gang violence. They’ve got another thing coming.",
+		channel = 'cul-de-sac',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_glocksbury,
+		neighbors = {
+			poi_id_glocksbury : travel_time_street,
+			poi_id_glocksbury_street_d : travel_time_street,
+			poi_id_glocksbury_street_a : travel_time_street,
+			poi_id_northsleezeborough_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_westglocksbury_street_a,
+		alias = [
+			"oilscumavenue",
+			"oilscum"
+		],
+		str_name = "Oilscum Avenue",
+		str_desc = "This place looks and smells like fresh grease. Gas stations, convenience stores, and fast food chains define Oilscum as the main truck stop of the city. This is West Glocksbury, though, so 65% of said gas stations have already been burned to the ground or siphoned out for other arson-based activities.",
+		channel = 'oilscum-avenue',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_westglocksbury,
+		neighbors = {
+			poi_id_westglocksbury : travel_time_street,
+			poi_id_westglocksbury_street_d : travel_time_street,
+			poi_id_westglocksbury_street_b : travel_time_street,
+			poi_id_glocksbury_street_c : travel_time_street,
+			poi_id_basedhardware : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_westglocksbury_street_b,
+		alias = [
+			"scantyheights",
+			"scanty"
+		],
+		str_name = "Scanty Heights",
+		str_desc = "Walking along this road, you would think you stumbled into a series of haunted houses right next to each other. Unexpectedly, this is all abandoned low income housing. They were originally much more expensive, but once it settled in that moving here was a complete death wish, the prices went way down. You could squat here for free if you wanted, assuming you could kill one of the freaks already doing just that.",
+		channel = 'scanty-heights',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_westglocksbury,
+		neighbors = {
+			poi_id_westglocksbury : travel_time_street,
+			poi_id_westglocksbury_street_a : travel_time_street,
+			poi_id_westglocksbury_street_c : travel_time_street,
+			poi_id_vandalpark_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_westglocksbury_street_c,
+		alias = [
+			"gooshcreek",
+			"goosh"
+		],
+		str_name = "Goosh Creek",
+		str_desc = "The slime river that splits West Glocksbury and Polonium Hill might look relaxing from a distance, but get any closer and you find it has turned into an off-white foul-smelling shell of its former self. The ash(snow?) from Polonium Hill blows south and mixes with the river, creating this disgusting, impure sluice. How convenient that this substance is so much easier to drown in than normal slime…",
+		channel = 'goosh-creek',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_westglocksbury,
+		neighbors = {
+			poi_id_westglocksbury : travel_time_street,
+			poi_id_westglocksbury_street_b : travel_time_street,
+			poi_id_westglocksbury_street_d : travel_time_street,
+			poi_id_poloniumhill_street_d : travel_time_street,
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_wgb_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_westglocksbury_street_d,
+		alias = [
+			"highway89a",
+			"highway89",
+			"highway"
+		],
+		str_name = "Highway 89-A",
+		str_desc = "This crumbling piece of infrastructure is the last highway out of the city, as such bandits love to rob the absolute fuck out of anyone entering or exiting. Serial killers and other assorted freaks also make their living preying on the sparse traffic here.",
+		channel = 'highway-89-a',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_westglocksbury,
+		neighbors = {
+			poi_id_westglocksbury : travel_time_street,
+			poi_id_westglocksbury_street_c : travel_time_street,
+			poi_id_westglocksbury_street_a : travel_time_street,
+			poi_id_jaywalkerplain_street_d : travel_time_street,
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_a,
+		alias = [
+			"outsidetheplannedparenthood",
+			"outsidetheplanned",
+			"plannedparenthood",
+			"planned"
+		],
+		str_name = "Outside the Planned Parenthood",
+		str_desc = "Abandon hope, all ye who enter here. The NLACakaNM Planned Parenthood is different from the standard haunted house in that the unspeakable abominations living there are well-documented and deadly to even the most seasoned gangster. I would just stay away from the ruined old building and spray down the supermarket across the street.",
+		channel = 'outside-the-planned-parenthood',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_e : travel_time_street,
+			poi_id_jaywalkerplain_street_b : travel_time_street,
+			poi_id_northsleezeborough_street_d : travel_time_street,
+			poi_id_jp_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_b,
+		alias = [
+			"blackalleyways",
+			"blackalley"
+		],
+		str_name = "Black Alleyways",
+		str_desc = "All those drugged out hobos you see around the city had to get their stash from somewhere, right? Welcome to the Black Alleys, the dark-alley Wal-Mart of getting chemically skullfucked. Once you get past the anti-narc security, you’ll find a place that’s completely different from the wide-open park spaces in the rest of Jaywalker Plain. It’s crowded, damp, and it smells like a slimegirl’s unwashed snatch. So pick up the pace. Buy some crack, maybe paint a couple walls, then get the hell out of here.",
+		channel = 'black-alleyways',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_a : travel_time_street,
+			poi_id_jaywalkerplain_street_c : travel_time_street,
+			poi_id_crookline_street_d : travel_time_street,
+			poi_id_jp_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_c,
+		alias = [
+			"theemeraldnoose",
+			"theemerald",
+			"emeralnoose",
+			"emerald"
+		],
+		str_name = "The Emerald Noose",
+		str_desc = "This collection of green spaces comprise the majority of the land in Jaywalker Plain, hence the ‘plain’ part. Originally, Jaywalker Plain was intended to be an upper class district, and so these spaces would provide some leisure space for the oligarchs of the city to unwind, away from the hustle and bustle of slimegain. Needless to say, that, uh, didn’t work out. These spaces are beautiful, but the real reason to come here is to point and laugh at all the crazy freaks, drug addicts, and homeless people picking fights with one another and passing out from overdoses at 2 PM in the afternoon next to austere marble busts and exotic trees.",
+		channel = 'the-emerald-noose',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_b : travel_time_street,
+			poi_id_jaywalkerplain_street_d : travel_time_street,
+			poi_id_dreadford_street_a : travel_time_street,
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_pier : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_d,
+		alias = [
+			"qouteunqouteartgalleries",
+			"qouteunqouteart",
+			"qouteunqoute",
+			"qoute",
+		],
+		str_name = "Qoute Unqoute Art Galleries",
+		str_desc = "This open outdoor market is the perfect place for the creative locals of Jaywalker Plain to show off their aesthetic genius and display their culturally enrichment gesamtkunstwerks for the world to see. Of course, this is Jaywalker Plain we’re talking bout, so you’re less likely to see portraits and still lifes as you are to see impressionistic depictions of drug-induced hallucinations and modern art commentating on how badly the artist wants to fuck dogs.",
+		channel = 'qoute-unqoute-art-galleries',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_c : travel_time_street,
+			poi_id_jaywalkerplain_street_e : travel_time_street,
+			poi_id_westglocksbury_street_d : travel_time_street,
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_pier : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_jaywalkerplain_street_e,
+		alias = [
+			"tentycity",
+			"tent"
+		],
+		str_name = "Tent City",
+		str_desc = "This street used to be a congested road, but now the only traffic on it are hobos really putting the “home” in “homeless”. Tents and cardboard boxes are set up up and down this street, providing totally sufficient protection against the elements for their swathes of downtrodden inhabitants. Generations of people impoverished from birth have grown up here, never knowing anything but the tents. Drug abuse and sexual assault are rampant. Many have lost their minds and ramble on about insane conspiracy theorists and incoherent beliefs. It would be funny if it weren’t so sad. Actually, that last part is still funny. Who ever heard of a “round earth”?",
+		channel = 'tent-city',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_jaywalkerplain,
+		neighbors = {
+			poi_id_jaywalkerplain : travel_time_street,
+			poi_id_jaywalkerplain_street_d : travel_time_street,
+			poi_id_jaywalkerplain_street_a : travel_time_street,
+			poi_id_glocksbury_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_crookline_street_a,
+		alias = [
+			"doxyavenue",
+			"doxy"
+		],
+		str_name = "Doxy Avenue",
+		str_desc = "Jazz clubs and diners decked out in flashy neon lights liven up this already crowded hotspot. Traffic is always jammed down here, and the locals have taken to the habit of just walking between the stopped cars to get across. The 24/7 nightlife here is really something else, and the pickpockets hiding in the bustle will make sure you pay full price for it.",
+		channel = 'doxy-avenue',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_crookline,
+		neighbors = {
+			poi_id_crookline : travel_time_street,
+			poi_id_crookline_street_d : travel_time_street,
+			poi_id_crookline_street_b : travel_time_street,
+			poi_id_dreadford_street_b : travel_time_street,
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_pier : travel_time_subzone,
+			poi_id_cl_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_crookline_street_b,
+		alias = [
+			"lakemacguffin",
+			"macguffin"
+		],
+		str_name = "Lake Macguffin",
+		str_desc = "This lake is a quick drive away from the urban sprawl of Crookline proper. It’s up a hill that’s not crazy big but still overlooks not just this district but also neighboring Dreadford, Jaywalker Plain, and the Sleezeboroughs. Locals come here to dump off their dead bodies, silos of manure, maltese falcons, and any other highly sought after artifacts that need hiding. Our heroes will then venture out to this point in the third act before the flashback ends and the real perpetrators are locked up.",
+		channel = 'lake-macguffin',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_crookline,
+		neighbors = {
+			poi_id_crookline : travel_time_street,
+			poi_id_crookline_street_a : travel_time_street,
+			poi_id_crookline_street_c : travel_time_street,
+			poi_id_southsleezeborough_street_a : travel_time_street,
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_pier : travel_time_subzone,
+			poi_id_cl_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_crookline_street_c,
+		alias = [
+			"manteca",
+			"mantecastreet"
+		],
+		str_name = "Manteca Street",
+		str_desc = 'It\'s cold, dark, and quiet. The old brick offices and boarding houses all look closed for the day no matter what time you\'re here. If you didn\'t know any better this might be a nice, moody place for a walk, but it\'s obvious the alleys are hiding something. Don\'t get caught under a streetlight.',
+		channel = 'manteca-street',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_crookline,
+		neighbors = {
+			poi_id_crookline : travel_time_street,
+			poi_id_crookline_street_b : travel_time_street,
+			poi_id_crookline_street_d : travel_time_street,
+			poi_id_northsleezeborough_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_crookline_street_d,
+		alias = [
+			"perdidovalley",
+			"perdido"
+		],
+		str_name = "Perdido Valley",
+		str_desc = "You didn't think it was possible to get any lower, but you've found yourself descended into the under-underworld of Crookline. The high-society crimelords and psychotics of the city frequent the upper-floor style black markets here, indulging in strange, illegal fetishes and experimental substance abuse. You'd love to see those guys get a knife or two to the face, but you doubt the bouncers standing outside would let you in.",
+		channel = "perdido-valley",
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_crookline,
+		neighbors = {
+			poi_id_crookline : travel_time_street,
+			poi_id_crookline_street_c : travel_time_street,
+			poi_id_crookline_street_a : travel_time_street,
+			poi_id_jaywalkerplain_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_dreadford_street_a,
+		alias = [
+			"scaffoldforest",
+			"scaffold"
+		],
+		str_name = "Scaffold Forest",
+		str_desc = "This spooky forest has been the site of countless lynchings in the district’s past (and present). Nooses hang from nearly every tree, and a thick fog makes those shadows in the distance all the more unnerving.",
+		channel = 'scaffold-forest',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_dreadford,
+		neighbors = {
+			poi_id_dreadford : travel_time_street,
+			poi_id_dreadford_street_b : travel_time_street,
+			poi_id_jaywalkerplain_street_c : travel_time_street,
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_dreadford_street_b,
+		alias = [
+			"hangemsquare",
+			"hangem",
+			"hang",
+			"hang-'emsquare",
+			"hand-emsquare",
+			"hang-'em",
+			"hang-em"
+		],
+		str_name = "Hang-'Em Square",
+		str_desc = "This is the old town square of Dreadford, home to what few businesses operate in the district. It is also home to a well-worn guillotine which is proudly displayed in the center of the square. The early settlers of this district absolutely loved accusing and sentencing each other on frivolous charges and then proceeding to chop each other’s heads off. It’s practically all they did.",
+		channel = 'hang-em-square',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_dreadford,
+		neighbors = {
+			poi_id_dreadford : travel_time_street,
+			poi_id_dreadford_street_a : travel_time_street,
+			poi_id_crookline_street_a : travel_time_street,
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_df_blimp_tower : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vandalpark_street_a,
+		alias = [
+			"ashtraypark",
+			"ashtray"
+		],
+		str_name = "Ashtray Park",
+		str_desc = "This old baseball stadium used to be where every upstanding gentlemen of leisure spent their afternoons, but ever since the Battle Arena opened it’s slowly fallen out of favor. Sometimes locals still play games here, but most of the time it’s just a place for heroin addicts to sleep or staged exhibitoinist porn to be shot.",
+		channel = 'ashtray-park',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vandalpark,
+		neighbors = {
+			poi_id_vandalpark : travel_time_street,
+			poi_id_vandalpark_street_d : travel_time_street,
+			poi_id_vandalpark_street_b : travel_time_street,
+			poi_id_westglocksbury_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vandalpark_street_b,
+		alias = [
+			"thefens",
+			"fens"
+		],
+		str_name = "The Fens",
+		str_desc = "This wide, open marshland is the perfect place to experience the feeling of being alive with some straight up neurotypical activities like jogging, casual field sports, and cloud watching. Of course, if you’re not a fucking pussy, you’ll be gatting motherfuckers left and right as you rape the compettion in fifteen different simultaneously occurring collision sports like a true warrior.",
+		channel = 'the-fens',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vandalpark,
+		neighbors = {
+			poi_id_vandalpark : travel_time_street,
+			poi_id_vandalpark_street_a : travel_time_street,
+			poi_id_vandalpark_street_c : travel_time_street,
+			poi_id_glocksbury_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vandalpark_street_c,
+		alias = [
+			"tookewlforskewlskatepark",
+			"tookewlforskewl"
+		],
+		str_name = "Tookewlforskewl Skatepark",
+		str_desc = "Hell yeah!! This place is totally off the fucking chain, man! I’m talking straight up radical, like in a terrorist sort-of way. The name of this altar to gods of extreme sports comes from the native Havasupai name for the region, which means “crazy big ups in this shit, ya feel me?”. Indeed, it seems the Native Americans used the Grand Canyon as the ultimate half-pipe, shredding harder than a bullet through your temple and getting frankly insane airtime. Some say local chieftains would get enough ups to say ‘sup to the gods before sticking the landing back here on Earth. Mad respect, for real. Now that the Grand Canyon is filled with slime, you’ll just have to make do with this skatepark.",
+		channel = 'tookewlforskewl-skatepark',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vandalpark,
+		neighbors = {
+			poi_id_vandalpark : travel_time_street,
+			poi_id_vandalpark_street_b : travel_time_street,
+			poi_id_vandalpark_street_d : travel_time_street,
+			poi_id_gatlingsdale_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vandalpark_street_d,
+		alias = [
+			"theplayground"
+			"playground",
+			"play"
+		],
+		str_name = "The Playground",
+		str_desc = "It’s a totally gay playground made for pissy baby fucker fappers, for babies who poop their pants. Just the sight of the primary colored jungle gym makes you visceral upset, even if you do want to hang from the bars upside down pretty bad. And, maybe while you’re at it you can swing on the swings for a little bit. Actually, no, being a kindergartener is pretty based, you change your mind. Not to be confused for #playground, obviously.",
+		channel = 'the-playground',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vandalpark,
+		neighbors = {
+			poi_id_vandalpark : travel_time_street,
+			poi_id_vandalpark_street_c : travel_time_street,
+			poi_id_vandalpark_street_a : travel_time_street,
+			poi_id_poloniumhill_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_a,
+		alias = [
+			"wholesalewarehouse",
+			"wholesale"
+		],
+		str_name = "Wholesale Warehouse",
+		str_desc = "This huge warehouse is packed to the brim with wide varieties of products, including groceries, liquor, pharmaceuticals, appliances, furniture, and more, all sold in bulk and laid out in a no-frills kinda way. It’s so fucking big, you don’t even know. It’s basically mandatory to have a subscription membership to this place if you’re a Polonium Hill local, even though it’s pretty easy to sneak in. You guess the sort of people that live in Polonium Hill would instantly die upon being caught doing anything against the rules, ever, so it makes sense. Moms and their screaming, snot-nosed children dash around you with shopping carts full of extremely unhealthy yet delicious breakfast cereals and red meats. This place is sort of like hell.",
+		channel = 'wholesale-warehouse',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_e : travel_time_street,
+			poi_id_poloniumhill_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_b,
+		alias = [
+			"curiehighschool",
+			"curie"
+		],
+		str_name = "Curie Highschool",
+		str_desc = "You’re standing in the dried-out parking lot of a limp-wristed, bog standard high school. Curie High really tries its best to seem habitable, but that actually pretty low standard leaves the students here tired, disenfranchised, and ready to waterslide right down the school-to-prison pipeline. How about we whip out our spray cans and rifles and show these up and comers how it’s done?",
+		channel = 'curie-highschool',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_a : travel_time_street,
+			poi_id_poloniumhill_street_c : travel_time_street,
+			poi_id_toxington_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_c,
+		alias = [
+			"gellerpoint",
+			"geller"
+		],
+		str_name = "Geller Point",
+		str_desc = "You stand at the top of a grassy, starry hill that overlooks the endless desert to the west. Geller Point is a nice place to relax, but as usual, you can expect the locals of Polonium Hill to ruin everything. They all insist to death that aliens and paranormal activity flock here to observe their boring community and probe their depressing little middle-class buttholes. You’ve never seen any yourself, but their words always put you a little on edge. If you squint your eyes just right, you think you can see Area 51 in the distance. Nah, that can’t be right.",
+		channel = 'geller-point',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_b : travel_time_street,
+			poi_id_poloniumhill_street_d : travel_time_street,
+			poi_id_charcoalpark_street_b : travel_time_street,
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_d,
+		alias = [
+			"sawdustlumberyard",
+			"sawdust"
+		],
+		str_name = "Sawdust Lumberyard",
+		str_desc = "This isn’t a particularly big forest, but it’s big enough to have attracted young, upstart entrenupers looking to make some money destroying the environment. And so, this humble lumberyard was founded. This is where most of the log cabins being built in Maimridge, and some of the gaudy lookalikes in this district, get their wood. Extra flammable planks are sent to Arsonbrook in large droves throughout the year, but they don’t know they’re extra flammable. The privatterring vessels being built in the Vagrant’s Corner shipyard also make use of materials from here. It’s a pretty big deal, alright?",
+		channel = 'sawdust-lumberyard',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_c : travel_time_street,
+			poi_id_poloniumhill_street_e : travel_time_street,
+			poi_id_westglocksbury_street_c : travel_time_street,
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_poloniumhill_street_e,
+		alias = [
+			"sortofmansions",
+			"sortof"
+		],
+		str_name = "Sort Of Mansions",
+		str_desc = "This somewhat small community is full of sparsely laid out homes, covered from the lawn to the roof in decorations that look more tacky than opulent. They aren’t really mansions, they’re just kinda big. The inhabitants will swear up and down, however, that they are mansions and that they are in fact very wealthy and then beg you to tell them they’re successful and that if their father were still alive, god rest his soul, he would forgive them. They’ll also come out and beg for you to not spray paint their house and/or rob them blind, so they have a habit of issuing unreasonable demands. What a bunch of losers, amirght?",
+		channel = 'sort-of-mansions',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_poloniumhill,
+		neighbors = {
+			poi_id_poloniumhill : travel_time_street,
+			poi_id_poloniumhill_street_d : travel_time_street,
+			poi_id_poloniumhill_street_a : travel_time_street,
+			poi_id_vandalpark_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_charcoalpark_street_a,
+		alias = [
+			"thechurchoftheholyslimefoot",
+			"thechurchoftheholy",
+			"thechurchofthe",
+			"thechurchof",
+			"thechurch",
+			"churchoftheholyslimefoot",
+			"churchoftheholy",
+			"churchofthe",
+			"churchof",
+			"church",
+			"slimefoot"
+		],
+		str_name = "The Church of the Holy Slimefoot",
+		str_desc = "It’s a small neighborhood in the south of Charcoal Park built and entirely owned by a very religious community of Cryptid believers who declare it’s a truly paranormal site. It’s one of the most orderly places in the city, thanks to the constant work of their community members who  keep the streets as clean as possible to maximize the chances of catching a sneaky cryptid running around during the night. At the south-most point you can find Cryptid Kirk, the town’s chapel, which was built on what is said to be the holy place where the one and only Slimesquatch was born. None of these claims were ever backed up and the place isn't more than a bunch of conspiracy theorists gathering in this place, everyone knows cryptids are not real… *r-right?*",
+		channel = 'church-of-the-holy-slimefoot',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_charcoalpark,
+		neighbors = {
+			poi_id_charcoalpark : travel_time_street,
+			poi_id_charcoalpark_street_b : travel_time_street,
+			poi_id_toxington_street_c : travel_time_street,
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_charcoalpark_street_b,
+		alias = [
+			"veteranscenter",
+			"veterans",
+			"veteran"
+		],
+		str_name = "Veterans Center",
+		str_desc = "The grass in this worn-down, red-brick veteran center has been completely dried out and trampled over. That makes sense, the residents here have used it as a base for their local militia for awhile now. Slimecorp managed to protect most districts from secreature invasions, but like usual, Charcoal Park was completely forgotten. That’s why they now command their bravest, most senile senior citizens to do the protecting instead.",
+		channel = 'veterans-center',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_charcoalpark,
+		neighbors = {
+			poi_id_charcoalpark : travel_time_street,
+			poi_id_charcoalpark_street_a : travel_time_street,
+			poi_id_poloniumhill_street_c : travel_time_street,
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_a,
+		alias = [
+			"gravelmounds",
+			"gravel",
+			"cp_gravelpit"
+		],
+		str_name = "Gravel Mounds",
+		str_desc = "It may not look like much, but for miles below the ground here there are huge slime reserves, just begging to be mined. And so, people have dug extensive underground networks of mineshafts to haul as much slime out as possible. There’s only one problem: This is Toxington. The underground of this district is filled with toxic gas that’s lethal given prolonged exposure. Of course, that hasn’t stopped slime-crazed lunatics from mining as much as they can. The mineshaft network is extensives, but all of the lines are narrow, so you’re sure to step over a few cadavers on your way down to the exposed veins. Don’t feel too bad for them, chances are they’ve just been spit out of ENDLESS WAR and are on their way back right now.",
+		channel = 'gravel-mounds',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_e : travel_time_street,
+			poi_id_toxington_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_d : travel_time_street,
+			poi_id_tt_mines : travel_time_subzone,
+			poi_id_tt_subway_station : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_b,
+		alias = [
+			"cyanideswamp",
+			"cyanide"
+		],
+		str_name = "Cyanide Swamp",
+		str_desc = "This hot, wet marsh used to be the coolest, newest spot to mine slime in Toxington. The area was particularly well known for its abundance of poudrins. However, after most of the miners began turning up empty handed after mining for weeks on end, there was a shift from trying to extract as many poudrins as possible to trying to get as much slime as possible from the poudrins you got. See, crushing poudrins ain’t a science, it’s an art. When just crushing it with your bare hands, inevitably some of the poudrin doesn’t get converted into slime and is therefore wasted. Some clever miners found out that you could combine cyanide with a water mixture and when you submerged a poudrin into it, you’d be able to strain it all and wind up with a particularly well concentrated distillation of pure slime-- perfect for crushing. Well, this was so popular that the leftover sludge mixture began to pile up and up until its containment unit broke and flooded all the shafts in the region with its goopy innards. All of the bogs you see around you were once profitable mineshafts.",
+		channel = 'cyanide-swamp',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_a : travel_time_street,
+			poi_id_toxington_street_c : travel_time_street,
+			poi_id_poloniumhill_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_c,
+		alias = [
+			"quarantinedzones",
+			"quarantined"
+		],
+		str_name = "Quarantined Zones",
+		str_desc = "Here’s some food for thought. What would a residential zone look like in a place filled entirely with toxic gases? Well good news, you’re standing in one! Being closest to Toxington’s deadly gas deposits, the homes here have long since been abandoned, still full of the rotting food and corroded appliances their original owners had. You may think to yourself, staring into the dark green hazy sky and breathing in more cyanide, that you could live in one of these places. Well, you could, if you had more than 6 seconds to live.",
+		channel = 'quarantined-zones',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_b : travel_time_street,
+			poi_id_toxington_street_d : travel_time_street,
+			poi_id_charcoalpark_street_a : travel_time_street,
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_d,
+		alias = [
+			"carcinogenicquarry",
+			"carcinogenic",
+			"carcinogen",
+		],
+		str_name = "Carcinogenic Quarry",
+		str_desc = "This old mining complex isn’t used that often anymore, despite large deposits of slime still lurking in the shafts below. After an initial burst of attention in the area, it was quickly discovered that the entire area is perhaps the single most irradiated area in the city, besides of course the site of the old reactor in Little Chernobyl. That isn’t to say a little fear of death stopped anyone from mining slime, but the sheer concentration of radiation here made it hard to even get to the slime veins in the first place before croaking. Plus, with the gravel mounds just a hop, skip, and a jump away, who needs to waste time making razor thin profit margins here when they can throw their lives away in shafts where they’ll actually make some real slime.",
+		channel = 'carcinogenic-quarry',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_c : travel_time_street,
+			poi_id_toxington_street_e : travel_time_street,
+			poi_id_maimridge_street_c : travel_time_street,
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_toxington_pier : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_toxington_street_e,
+		alias = [
+			"geysersprings",
+			"geyser"
+		],
+		str_name = "Geyser Springs",
+		str_desc = "It’s hard to miss the plumes of molten, toxic sludge spewing into the air every fifteen seconds, but still, watch your step. If you fall into one of these things, you’re toast. If you’re not instantly cooked through, then you’ll be eaten alive by some of the terrifying creatures that have evolved to withstand the inhospitable conditions. A few morons have built piers over the calmer springs in an attempt to wrangle some of those aforementioned beasts, and it usually goes as well as you would expect.",
+		channel = 'geyser-springs',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_toxington,
+		neighbors = {
+			poi_id_toxington : travel_time_street,
+			poi_id_toxington_street_d : travel_time_street,
+			poi_id_toxington_street_a : travel_time_street,
+			poi_id_astatineheights_street_b : travel_time_street,
+			poi_id_toxington_pier : travel_time_subzone,
+			poi_id_tt_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_a,
+		alias = [
+			"thegarage",
+			"garage"
+		],
+		str_name = "The Garage",
+		str_desc = "This retro two-story mall is far smaller than the one in Krak Bay, and has nowhere near the level of popularity with the locals. It’s old, and hasn’t received a makeover in over a decade. The sound of impressive youths getting their first tattoo and immediately regretting it permanently ring throughout the building. There’s a few ramen shops and a comic book store here, too. It has a 3.5 on Yelp.",
+		channel = 'the-garage',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_e : travel_time_street,
+			poi_id_gatlingsdale_street_b : travel_time_street,
+			poi_id_copkilltown : travel_time_street,
+			poi_id_gd_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_b,
+		alias = [
+			"nlacucampus",
+			"campus"
+		],
+		str_name = "N.L.A.C.U. Campus",
+		str_desc = "This sprawling campus contains dormitories, mess halls, libraries, classrooms,  auditoriums, department buildings, and several open spaces. It’s fucking huge, it takes up just over a quarter of the entire district. It’s almost like a district unto itself, with its own internal government and security guard.",
+		channel = 'nlacu-campus',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_a : travel_time_street,
+			poi_id_gatlingsdale_street_c : travel_time_street,
+			poi_id_vandalpark_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_c,
+		alias = [
+			"harvardsquare",
+			"harvard"
+		],
+		str_name = "Harvard Square",
+		str_desc = "This is a commercial center for students of nearby N.L.A.C.U., and the greater Gatlingsdale population. Convenience stores, local restaurants, and designer clothing stores targeted towards rich hipsters all appear right next to one another. It’s pretty cool, if you like getting a good meal and window shopping for stuff you’d never be able to afford to buy.",
+		channel = 'harvard-square',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_d : travel_time_street,
+			poi_id_poloniumhill_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_d,
+		alias = [
+			"nlacuinstituteofslimeology",
+			"nlacuinstitute"
+		],
+		str_name = "N.L.A.C.U. Institute of Slimeology",
+		str_desc = "NLACakaNM’s demand for cool and new innovations in slime-based technology pressured N.L.A.C.U. to open up a second campus and expand the curriculum to really prepare the next generation to tackle the big questions of the 21st century, such as: “How we make slimify slavery and therefore make it good?”, “Do I need a robot’s consent before slimeing them?”, and “Can we make a substance that acts as a psychedelic narcotic AND makes us invincible?”",
+		channel = 'nlacu-institute',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_c : travel_time_street,
+			poi_id_gatlingsdale_street_e : travel_time_street,
+			poi_id_toxington_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_gatlingsdale_street_e,
+		alias = [
+			"sludgeberrystreet",
+			"sludgeberry"
+		],
+		str_name = "Sludgeberry Street",
+		str_desc = "This atmosphere of this street even when empty always gives you the sense of being full and having somewhere to be. Shops and small businesses seemingly stacked on top of each other all call out trying to catch your attention. Standing tall above the precariously stacked businesses are large brick buildings with ornate moldings decorating them.",
+		channel = 'sludgeberry-street',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_gatlingsdale,
+		neighbors = {
+			poi_id_gatlingsdale : travel_time_street,
+			poi_id_gatlingsdale_street_d : travel_time_street,
+			poi_id_gatlingsdale_street_a : travel_time_street,
+			poi_id_astatineheights_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_a,
+		alias = [
+			"eightyfifthstreet",
+			"eightyfifth",
+			"85thstreet",
+			"85th",
+			"85"
+		],
+		str_name = "85th Street",
+		str_desc = "This street is full of upscale bars and fancy restaurants. It’s one of the few places to actually have a night out on the town in Astatine Heights, so you’ll see a lot of upper class snobs in their fancy dresses celebrating some dumb shit that just makes you want to shoot them, like cinco de mayo or kwanzaa.",
+		channel = 'eighty-fifth-street',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_f : travel_time_street,
+			poi_id_astatineheights_street_b : travel_time_street,
+			poi_id_gatlingsdale_street_e : travel_time_street,
+			poi_id_ah_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_b,
+		alias = [
+			"decayingslums",
+			"decaying"
+		],
+		str_name = "Decaying Slums",
+		str_desc = "This embarrassing blemish on the district’s squeaky clean reputation is tucked away from the rest of Astatine Heights. The poor that call this ghetto their home usually make their rent mining in Toxington, which isn’t exactly a safe or rewarding line of work. What little expendable income they accrue is spent on frivolous bullshit to make themselves feel less poor.",
+		channel = 'decaying-slums',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_a : travel_time_street,
+			poi_id_astatineheights_street_c : travel_time_street,
+			poi_id_toxington_street_e : travel_time_street,
+			poi_id_seafood : travel_time_subzone,
+			poi_id_ah_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_c,
+		alias = [
+			"mountaincondos",
+			"condos"
+		],
+		str_name = "Mountain Condos",
+		str_desc = "These condominiums are high up, in fact this neighborhood is so high up you can see most of Astatine Heights and surrounding districts from it. The places here are really swanky, and are mostly the bachelor pads of teenybopper robber barons shamelessly cosplaying Elon Musk.",
+		channel = 'mountain-condos',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_b : travel_time_street,
+			poi_id_astatineheights_street_d : travel_time_street,
+			poi_id_maimridge_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_d,
+		alias = [
+			"astatinetrail",
+			"trail"
+		],
+		str_name = "Astatine Trail",
+		str_desc = "A rugged asphalt bike path is all that separates this scenic nature walk from anywhere else in Cinder State Forest. You’re just as likely to get mauled by bears or choke to death from the smoke of its iconic forest fires, but even so, the residents love this place for its “natural beauty” or whatever they call it. It’s spawned a sort of aged-hippie type hiking subculture that makes you sick. You can often watch them die though, so there’s that.",
+		channel = 'astatine-trail',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_c : travel_time_street,
+			poi_id_astatineheights_street_e : travel_time_street,
+			poi_id_arsonbrook_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_e,
+		alias = [
+			"gatedcommunity",
+			"gated"
+		],
+		str_name = "Gated Community",
+		str_desc = "This neighborhood is surrounded by two sets of twenty meter high and ten meter wide walls, with watchtowers and barracks routinely posted around the parameter. It’s patrol all hours of the day, and solicitors are often piledrived by these guards well before they get anywhere close to breaching the walls.",
+		channel = 'gated-community',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_d : travel_time_street,
+			poi_id_astatineheights_street_f : travel_time_street,
+			poi_id_smogsburg_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_astatineheights_street_f,
+		alias = [
+			"barbetteboulevard",
+			"barbette"
+		],
+		str_name = "Barbette Boulevard",
+		str_desc = "This impressive cultural powerhouse of a street is home to a few movie studios and iconic theaters. It is perhaps most well known for the Walk of Maim, which is a half-mile long stretch of sidewalk with the chalk outline of various celebrities of the city. Lots of slime-based TV shows and direct-to-video movies are produced here.",
+		channel = 'barbette-boulevard',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_astatineheights,
+		neighbors = {
+			poi_id_astatineheights : travel_time_street,
+			poi_id_astatineheights_street_e : travel_time_street,
+			poi_id_astatineheights_street_a : travel_time_street,
+			poi_id_copkilltown : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_a,
+		alias = [
+			"pollutiondumpingwharf",
+			"pollutiondumping",
+			"pollution"
+		],
+		str_name = "Pollution Dumping Wharf",
+		str_desc = "The various refineries and chemical plants here use this industrial wharf as the perfect site to dump all of their waste into the River of Slime, resulting in heavy pollution. This is literally fine, and everyone loves it.",
+		channel = 'polution-dumping-wharf',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_e : travel_time_street,
+			poi_id_smogsburg_street_b : travel_time_street,
+			poi_id_arsonbrook_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_b,
+		alias = [
+			"thewestquarter",
+			"westquarter",
+			"quarter"
+		],
+		str_name = "The West Quarter",
+		str_desc = "This bustling corner of Smogsburg is really the only commercial zone in the district. Spread out throughout the marketplace are densely packed food stands, apparel stores, and places selling conspicuously useless junk. None of the places are particularly big. In the center of this is the district’s bazaar, which is where most of the traffic through this part of town is heading.",
+		channel = 'west-quarter',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_a : travel_time_street,
+			poi_id_smogsburg_street_c : travel_time_street,
+			poi_id_astatineheights_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_c,
+		alias = [
+			"companytownsquare",
+			"companytown",
+			"company"
+		],
+		str_name = "Company Town Square",
+		str_desc = "This square is owned and maintained by a consortium of the leading companies in the city. It’s a small park, surrounded by cheap takeout places and convenience stores. It was only created after a general strike demanding some form of recreational space in the district, to which the consortium reluctantly accepted. In the center of the square are monuments and statues dedicated to industry. Use of made-up company currency is encouraged in exchange here.",
+		channel = 'company-town-square',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_b : travel_time_street,
+			poi_id_smogsburg_street_d : travel_time_street,
+			poi_id_copkilltown : travel_time_street,
+			poi_id_sb_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_d,
+		alias = [
+			"sludgerefinery",
+			"sludge"
+		],
+		str_name = "Sludge Refinery",
+		str_desc = "This sprawling industrial process plant has the unenviable task of converting the crude sludge from the city’s harbor into slime. You have no idea how that’s accomplished or why this place looks like it was designed for tactical espionage action.",
+		channel = 'sludge-refinery',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_c : travel_time_street,
+			poi_id_smogsburg_street_e : travel_time_street,
+			poi_id_downtown_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_smogsburg_street_e,
+		alias = [
+			"factoryrow",
+			"factory"
+		],
+		str_name = "Factory Row",
+		str_desc = "Here, several large factories employ workers from across the city to toil away for unregulated periods of time to earn meager amounts of slime doing relative, demeaning tasks. Smokestacks exude plumes of smoke into the air, blotting out the sky. Everyone here loves it.",
+		channel = 'factory-row',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_smogsburg,
+		neighbors = {
+			poi_id_smogsburg : travel_time_street,
+			poi_id_smogsburg_street_d : travel_time_street,
+			poi_id_smogsburg_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_a,
+		alias = [
+			"stillwatertown",
+			"stillwater"
+		],
+		str_name = "Stillwater town",
+		str_desc = "This small community looks like it was plucked right out of the pacfic northwest, or one of the results of a Google Images search for “Roslyn, Washington”. Nestled cozily on the southern half of the district, this is where most of Arsonbrook’s economic activity occurs.",
+		channel = 'stillwater-town',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_e : travel_time_street,
+			poi_id_arsonbrook_street_b : travel_time_street,
+			poi_id_smogsburg_street_a : travel_time_street,
+			poi_id_ab_farms : travel_time_subzone,
+			poi_id_ab_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_b,
+		alias = [
+			"cinderstateforest",
+			"cinderstate",
+			"cinder"
+		],
+		str_name = "Cinder State Forest",
+		str_desc = "This spruce forest is locked in a pertupal cycle of holocaust and rebirth. It seems like no matter how many times local arsonists set the forest ablaze, nor how many times a wayward cigarette butt level swathes of the territory, the western hemlock population bounces back, stronger than ever. This place is Smokey Bear’s wet dream. Good thing I have literally no clue who Smokey Bear is because his name is Smokey the Bear, and good thing I have literally no clue who Smokey the Bear is because we probably have a slimifed version that’s called something supremely retarded like Slimey the Bear, and good thing this whole diversion was ventured upon in error because it wouldn’t be Smokey the Bear’s wet dream because he doesn’t even like forest fries, his whole thing is that he doesn’t like them so I don’t even know why I started talking about this in the first place. Wait, his name actually *is* Smokey Bear? Holy shit.",
+		channel = 'cinder-state-forest',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_a : travel_time_street,
+			poi_id_arsonbrook_street_c : travel_time_street,
+			poi_id_astatineheights_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_c,
+		alias = [
+			"tillyhill",
+			"tilly"
+		],
+		str_name = "tilly hill",
+		str_desc = "It's a steep road leading uphill to a big scenic area overlooking Cinder State Forest. Tricksters like to toss trash cans and other large garbage over the hill to hit cars driving up.",
+		channel = 'tilly-hill',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_b : travel_time_street,
+			poi_id_arsonbrook_street_d : travel_time_street,
+			poi_id_maimridge_street_b : travel_time_street,
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_d,
+		alias = [
+			"crassussquare",
+			"crassus"
+		],
+		str_name = "Crassus Square",
+		str_desc = "This row of homes are victim to frequent acts of arson from fellow locals. No one knows why, exactly. The houses in question are usually quite flamboyantly luxurious, and so the attacks could be as a protest of gentrification or simply as revenge enacted on those who have by those who have not. Regardless, if you buy property here, expect to be rebuilding it every few years.",
+		channel = 'crassus-square',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_c : travel_time_street,
+			poi_id_arsonbrook_street_e : travel_time_street,
+			poi_id_brawlden_street_a : travel_time_street,
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_arsonbrook_street_e,
+		alias = [
+			"riverbank",
+			"river"
+		],
+		str_name = "Riverbank",
+		str_desc = "This quiet, well, riverbank is on the northern exclave’s shore. The River of Slime has a few skinny distributaries that reach further inland which are perfect for farming, if you’re into that sort of thing. No judgement here, but that’s pretty fucking gay and you honestly should probably just kill yourself.",
+		channel = 'riverbank',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_arsonbrook,
+		neighbors = {
+			poi_id_arsonbrook : travel_time_street,
+			poi_id_arsonbrook_street_d : travel_time_street,
+			poi_id_arsonbrook_street_a : travel_time_street,
+			poi_id_littlechernobyl_street_a : travel_time_street,
+			poi_id_ab_farms : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_maimridge_street_a,
+		alias = [
+			"thesummit",
+			"summit"
+		],
+		str_name = "The Summit",
+		str_desc = "This is the highest peak in the county. You can see the entire city from here, large swathes of the outskirts, and of course the eye-searing slime sea. You think you can even make out the light pollution from other settlements on the sea in the distance, but they’re too far away to tell for sure. Intriguing, huh? You should ask a merchant in Vagrant’s Corner just who it is they’re trading with all the time and what their cities are like. Do they have rampant gang violence too? Who am I kidding, of course they do.",
+		channel = 'the-summit',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_maimridge,
+		neighbors = {
+			poi_id_maimridge : travel_time_street,
+			poi_id_maimridge_street_c : travel_time_street,
+			poi_id_maimridge_street_b : travel_time_street,
+			poi_id_astatineheights_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_maimridge_street_b,
+		alias = [
+			"skilodges",
+			"ski"
+		],
+		str_name = "Ski Lodges",
+		str_desc = "This cozy community of ski lodges and other warm buildings is the perfect respite from the cold, rugged mountainside. Of course, you can’t let your enemies take advantage of this hospitality, so you gotta stand guard outside and bash their skull in before they can take their shoes off inside. In other words, you’re rejuvenating them first.",
+		channel = 'ski-lodges',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_maimridge,
+		neighbors = {
+			poi_id_maimridge : travel_time_street,
+			poi_id_maimridge_street_a : travel_time_street,
+			poi_id_maimridge_street_c : travel_time_street,
+			poi_id_arsonbrook_street_c : travel_time_street,
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_maimridge_street_c,
+		alias = [
+			"colloidsprings",
+			"colloid"
+		],
+		str_name = "Colloid Springs",
+		str_desc = "These natural hot springs can be found throughout Maimridge, both inside and outside a set of cave systems that they occupy halfway up the mountain. You don’t have to be an archaeologist to know that these things were a major attraction, even in the past, judging by the staggering amount of ancient ruins that surround them. It’s not surprising that they’ve ended up as another one of Maimridge’s tourist traps, but there are rumors of patrons taking a dip and not coming back up. Perhaps something sinister lurks within them…",
+		channel = 'colloid-springs',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_maimridge,
+		neighbors = {
+			poi_id_maimridge : travel_time_street,
+			poi_id_maimridge_street_b : travel_time_street,
+			poi_id_maimridge_street_a : travel_time_street,
+			poi_id_toxington_street_d : travel_time_street,
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_brawlden_street_a,
+		alias = [
+			"abandonedwarehouse",
+			"abandoned",
+			"fightclub"
+		],
+		str_name = "Abandoned Warehouse",
+		str_desc = "This place used to be a combination slaughterhouse and packaging facility, but the company that operated it went bankrupt a few years ago. Now, it’s the site of the district’s fight club. Locals show up every Friday to beat the shit out of each other. Bets are usually taken on who will be the last man standing by those too cowardly to fight themselves. If you’re a local of Brawlden and you haven’t fought in one of these fight clubs before, well, you’re not a real local.",
+		channel = 'abandoned-warehouse',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_brawlden,
+		neighbors = {
+			poi_id_brawlden : travel_time_street,
+			poi_id_brawlden_street_d : travel_time_street,
+			poi_id_brawlden_street_b : travel_time_street,
+			poi_id_arsonbrook_street_d : travel_time_street,
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_bd_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_brawlden_street_b,
+		alias = [
+			"brownstonerow",
+			"brownstone"
+		],
+		str_name = "Brownstone Row",
+		str_desc = "This row of brownstone three-decker townhouses isn’t particularly special or noteworthy in any regards.",
+		channel = 'brownstone-row',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_brawlden,
+		neighbors = {
+			poi_id_brawlden : travel_time_street,
+			poi_id_brawlden_street_a : travel_time_street,
+			poi_id_brawlden_street_c : travel_time_street,
+			poi_id_newnewyonkers_street_a : travel_time_street,
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_brawlden_street_c,
+		alias = [
+			"brawldenprivateschooldistrict",
+			"privateschooldistrict",
+			"privateschool",
+			"private"
+		],
+		str_name = "Brawlden Private School District",
+		str_desc = "The buff dads in Brawlden don't always get the manliest sons. For those who got twinks, they get sent to Brawlden Prep School for the Physically Unfit to get jacked and follow in their father's footsteps. And as you can imagine, once the slime came, the school’s already impossible standards of discipline grew into something psychopathic. The motto carved above the stone building’s entrance used to read “Anything that doesn’t kill you makes you stronger.” Now, it’s “The Zenkai boost is real and we’re going to kill you until you can bench 450.” ",
+		channel = 'brawlden-private-school-district',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_brawlden,
+		neighbors = {
+			poi_id_brawlden : travel_time_street,
+			poi_id_brawlden_street_b : travel_time_street,
+			poi_id_brawlden_street_d : travel_time_street,
+			poi_id_oldnewyonkers_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_brawlden_street_d,
+		alias = [
+			"usedcardealership",
+			"usedcar",
+			"used"
+		],
+		str_name = "Used Car Dealership",
+		str_desc = "This place is fucking huge. There’s terrible, barely functioning used cars for as far as the eye can see. Salesmen know better than to annoy a gangster with their prattle, but they do still sneak up on you every once and try to weasel their way into a sale. Just blast one of their limbs off and they’ll leave you along again.",
+		channel = 'used-car-dealership',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_brawlden,
+		neighbors = {
+			poi_id_brawlden : travel_time_street,
+			poi_id_brawlden_street_c : travel_time_street,
+			poi_id_brawlden_street_a : travel_time_street,
+			poi_id_littlechernobyl_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_littlechernobyl_street_a,
+		alias = [
+			"halfliferoad",
+			"halflife",
+		],
+		str_name = "Half-Life Road",
+		str_desc = "This road has such high densities of concerted radiation that technically speaking you instantly die as soon as you step on it. Thankfully, the slime works in mysterious ways and your god-defying pseudo-corpse continues to be propped up by your “”consciousness”” for the remainder of your short, sad life. You’re neither alive nor dead. You’re in a sort of… Wait for it… Team Fortress 2. Haha, G-Man!!",
+		channel = 'half-life-road',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_littlechernobyl,
+		neighbors = {
+			poi_id_littlechernobyl : travel_time_street,
+			poi_id_littlechernobyl_street_c : travel_time_street,
+			poi_id_littlechernobyl_street_b : travel_time_street,
+			poi_id_arsonbrook_street_e : travel_time_street,
+			poi_id_lc_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_littlechernobyl_street_b,
+		alias = [
+			"reactorgroundzero",
+			"reactorground",
+			"reactor"
+		],
+		str_name = "Reactor Ground Zero",
+		str_desc = "This abandoned nuclear power plant is the site of the famous meltdown that flooded the Grand Canyon with slime and ushered in our modern era of gang violence and territory control. It got totally fucked up in the explosion, so navigating the furthest depths is ill-advised. Stick to the upper levels and grounds around the cooling tower unless you want to wind up with an extra set of Mutations. Wait… that sounds awesome! All sorts of cryptids are born by accidentally venturing too far down, and then spread out through the district, spooking tourists and inspiring countless creepypastas.",
+		channel = 'reactor-ground-zero',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_littlechernobyl,
+		neighbors = {
+			poi_id_littlechernobyl : travel_time_street,
+			poi_id_littlechernobyl_street_a : travel_time_street,
+			poi_id_littlechernobyl_street_c : travel_time_street,
+			poi_id_brawlden_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_littlechernobyl_street_c,
+		alias = [
+			"bombedoutbuildings",
+			"bombedout",
+			"bombed",
+			"bombed-outbuildings",
+			"bombed-out"
+		],
+		str_name = "Bombed-Out Buildings",
+		str_desc = "These old, barely standing apartment buildings used to be prime real estate before everything went to shit. Well, more like before anything went to slime, aka got infinitely better and way cooler. They've still got a nice location overlooking the River of Slime, but everything looks super gross so no one wants to move back in and no one really gives enough of a shit to demolish what's left and rebuild from scratch.",
+		channel = 'bombed-out-buildings',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_littlechernobyl,
+		neighbors = {
+			poi_id_littlechernobyl : travel_time_street,
+			poi_id_littlechernobyl_street_b : travel_time_street,
+			poi_id_littlechernobyl_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_b : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_a,
+		alias = [
+			"usurylane",
+			"usury"
+		],
+		str_name = "Usury Lane",
+		str_desc = "This satanic manifestation of hell on earth is a perfectly normal road that has been overrun by extortionate loaning agencies and mortgage financiers. Their interest rates are so absurd that more or less any loan you take out will render you a literal slave before you’re able to make your first payment. You’ll have deserved it, too.",
+		channel = 'usury-lane',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_e : travel_time_street,
+			poi_id_oldnewyonkers_street_b : travel_time_street,
+			poi_id_smogsburg_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_b,
+		alias = [
+			"oldfolkshome",
+			"oldfolks",
+		],
+		str_name = "Old Folks Home",
+		str_desc = "This street is home to a building that sits apart from the seemingly endless rows of houses filling your view. Depression seems to ooze from the very sight of the complex. The front of the building greets you with various types of lawn ornaments. Nothing much seems to go on here. It's said if you're very lucky you may see one of its residents leaving the home to yell at kids for coming within spitting distance of the lawn.",
+		channel = 'old-folks-home',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_c : travel_time_street,
+			poi_id_littlechernobyl_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_c,
+		alias = [
+			"luxurytownhouses",
+			"luxury"
+		],
+		str_name = "Luxury Townhouses",
+		str_desc = "This row of ornately designed, spacious townhouses are home to some retired captains of industry. They’ve had their fun making metric fucktons of slime through worker exploitation and literal cattle slavery, they’ve come here to waste away with their families. This area is patrolled by the neighborhood watch, which keeps out the troublemakers. You’ve got nothing to worry about though, they’re all in wheelchairs or using walkers.",
+		channel = 'luxury-townhouses',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_b : travel_time_street,
+			poi_id_oldnewyonkers_street_d : travel_time_street,
+			poi_id_brawlden_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_d,
+		alias = [
+			"shoppingcenter",
+			"shopping"
+		],
+		str_name = "Shopping Center",
+		str_desc = "It’s just some normal, boring parking lot shopping center. There’s a bunch of chain family restaurants and soulless department stores. Grandparents are out and about, presumably buying candles, greeting cards, and other useless shit no one actually needs. You are disgusted.",
+		channel = 'shopping-center',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_c : travel_time_street,
+			poi_id_oldnewyonkers_street_e : travel_time_street,
+			poi_id_newnewyonkers_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_oldnewyonkers_street_e,
+		alias = [
+			"mortyhill",
+			"morty",
+			"rick" # Please kill me
+		],
+		str_name = "Morty Hill",
+		str_desc = "This is the breezy hilltop cemetery where boomers go to die and never come back. Finally, a place in Old New Yonkers you can get behind! They place your tombstone here when you’ve been zucked hard enough to be physically dead, or if you’ve stayed dead long enough to be emotionally dead to all your friends and family. Either way, if you find a grave, it’s probably worth dancing on.",
+		channel = 'morty-hill',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_oldnewyonkers,
+		neighbors = {
+			poi_id_oldnewyonkers : travel_time_street,
+			poi_id_oldnewyonkers_street_d : travel_time_street,
+			poi_id_oldnewyonkers_street_a : travel_time_street,
+			poi_id_vagrantscorner_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_newnewyonkers_street_a,
+		alias = [
+			"concretepark",
+			"concrete"
+		],
+		str_name = "Concrete Park",
+		str_desc = "This urban park is a common gathering place for locals to come, hang out, watch street performances, and play games. Now, this is New New Yonkers, so there are a few quirks of the culture. For instance, even though there are a few basketball courts here, no one actually plays basketball (at least, using the official ruleset). Here, games like that are just an excuse to pick a fight with people so you can bash their skull in with a casus belli. It’s pretty cool. Also, all of the buskers are fucking metal, doing insane tricks that extert their body to their absolute limit for the promise of some slime tips. Often, buskers just fucking die because they’ve encased themselves in metal or something for the crowd’s sick enjoyment.",
+		channel = 'concrete-park',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_newnewyonkers,
+		neighbors = {
+			poi_id_newnewyonkers : travel_time_street,
+			poi_id_newnewyonkers_street_d : travel_time_street,
+			poi_id_newnewyonkers_street_b : travel_time_street,
+			poi_id_brawlden_street_b : travel_time_street,
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_nny_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_newnewyonkers_street_b,
+		alias = [
+			"broadway",
+		],
+		str_name = "Broadway",
+		str_desc = "This street has the best nightlife in the entire city. This shit is wild. There are a thousand different bars, almost all featuring bartenders operating without a license and making shit that send people to another plane of existence, there are all manner of arcades, escape rooms and other novelties to keep you entertained, and that’s not even to mention all of the restaurants for you to go and gorge on more food and drinks. With all of the drunk people with adrenaline pumping through their veins and zero responsible thoughts through their brain, fights often break out and bubble over into all out gang wars. This place is like the Fall of Rome, all night, every night.",
+		channel = 'broadway',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_newnewyonkers,
+		neighbors = {
+			poi_id_newnewyonkers : travel_time_street,
+			poi_id_newnewyonkers_street_a : travel_time_street,
+			poi_id_newnewyonkers_street_c : travel_time_street,
+			poi_id_assaultflatsbeach_street_a : travel_time_street,
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_newnewyonkers_street_c,
+		alias = [
+			"ghettotownhouses",
+			"ghetto"
+		],
+		str_name = "Ghetto Townhouses",
+		str_desc = "This residential neighborhood is just about as rough-’n’-tumble as you can get. Half the windows are boarded up, graffiti’s been sprayed over half the block, and every night some house party is thrown that requires loud as fuck music and drunk people jumping off roofs and strangling bystanders for fun. Hell yeah!!",
+		channel = 'ghetto-townhouses',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_newnewyonkers,
+		neighbors = {
+			poi_id_newnewyonkers : travel_time_street,
+			poi_id_newnewyonkers_street_b : travel_time_street,
+			poi_id_newnewyonkers_street_d : travel_time_street,
+			poi_id_vagrantscorner_street_f : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_newnewyonkers_street_d,
+		alias = [
+			"singlegentrifiedstreet",
+			"singlegentrified",
+			"single"
+		],
+		str_name = "Single Gentrified Street",
+		str_desc = "This is the only normal, safe street in the district. So, it makes sense that it borders Old New Yonkers. There’s not much to say, this place is really fucking boring. There’s no gunshots ringing off in the distance, no graffiti on the sidewalks or fights breaking out. It just sucks.",
+		channel = 'single-gentrified-street',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_newnewyonkers,
+		neighbors = {
+			poi_id_newnewyonkers : travel_time_street,
+			poi_id_newnewyonkers_street_c : travel_time_street,
+			poi_id_newnewyonkers_street_a : travel_time_street,
+			poi_id_oldnewyonkers_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_assaultflatsbeach_street_a,
+		alias = [
+			"paradiseslums",
+			"paradise"
+		],
+		str_name = "Paradise Slums",
+		str_desc = "It’s an adorable beachtown which has long ago slid into decay. The further you get from the coast, the more homelessness and vandalism run rampant. The only thing left to remind you that you’re on vacation are the palm trees.",
+		channel = 'paradise-slums',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_assaultflatsbeach,
+		neighbors = {
+			poi_id_assaultflatsbeach : travel_time_street,
+			poi_id_assaultflatsbeach_street_b : travel_time_street,
+			poi_id_newnewyonkers_street_b : travel_time_street,
+			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_assaultflatsbeach_pier : travel_time_subzone,
+			poi_id_afb_blimp_tower : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_assaultflatsbeach_street_b,
+		alias = [
+			"beachfrontproperties",
+			"beachfront"
+		],
+		str_name = "Beachfront Properties",
+		str_desc = "This stretch of beach is probably the only part of the city you could actually consider kind of pretty. It’s almost entirely privately owned by the resort, which has gobbled up most of the valuable coastline to either develop or charge access to, but some luxury condominiums have been built here and there. These condominiums are subject to frequent raiding by S.W.A.T. teams to make sure the peace is kept.",
+		channel = 'beachfront-properties',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_assaultflatsbeach,
+		neighbors = {
+			poi_id_assaultflatsbeach : travel_time_street,
+			poi_id_assaultflatsbeach_street_a : travel_time_street,
+			poi_id_vagrantscorner_street_a : travel_time_street,
+			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_assaultflatsbeach_pier : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_a,
+		alias = [
+			"longwharf",
+			"long",
+			"wharf"
+		],
+		str_name = "Long Wharf",
+		str_desc = "This harbor is one of the keys to the city’s success. Several wharves extend out into the sea with various merchant vessels and privateers docked on them, unloading their booty and letting their crew rest before the next voyage. The goods are being carried off to be sold all across the city, though a lot will stay in the district and be sold at the marketplace. It’s because of these cargo ships, with trade routes that extend across the entire slime sea, that NLACakaNM is the maritime power and prosperous city upon a hill that it is today.",
+		channel = 'long-wharf',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_f : travel_time_street,
+			poi_id_vagrantscorner_street_b : travel_time_street,
+			poi_id_assaultflatsbeach_street_b : travel_time_street,
+			poi_id_vc_port : travel_time_subzone,
+			poi_id_vc_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_b,
+		alias = [
+			"thedockyard",
+			"dockyard"
+		],
+		str_name = "The Dockyard",
+		str_desc = "This is where the city’s fleet is built, upgraded, and replaced year in, year out. Without privateers sailing the slime sea, protecting our cargo ships and boarding those of our rivals, the city wouldn’t be able to project nearly as much power as it does today. This shipyard is a true engineering marvel, as it’s able to turn out new ships at breakneck speeds. Which is good, because dumbasses keep wrecking them. Guess that’s what happens when you slime under the influence (of slime).",
+		channel = 'the-dockyard',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_a : travel_time_street,
+			poi_id_vagrantscorner_street_c : travel_time_street,
+			poi_id_slimesend_street_a : travel_time_street,
+			poi_id_vc_port : travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_c,
+		alias = [
+			"pubcrawlroad",
+			"pubcrawl"
+		],
+		str_name = "Pubcrawl Road",
+		str_desc = "This cobblestone road is almost entirely made up of pubs, it’s pubs as far as the eye can see. Any sailor who’s been a sailor for long enough will more likely than not spend the majority of their nights here, hopping from tavern to tavern to enjoy the warm embrace of their cheap beer and even worse food. If you stay out late enough, you’ll see dunkards passed out on the side of the road, or stumbling home. Alcoholism is pretty good, actually. It’s aesthetic.",
+		channel = 'pubcrawl-road',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_b : travel_time_street,
+			poi_id_vagrantscorner_street_d : travel_time_street,
+			poi_id_juviesrow : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_d,
+		alias = [
+			"seasidemarket",
+			"seaside"
+		],
+		str_name = "Seaside Market",
+		str_desc = "This is where a good chunk of the goods captured or traded for from the across the slime sea end up. There’s exotic vegetables and fish from far off cities, strange weapons and writings, as well as tacky souvenirs and merchandise from a semi-mythical land the natives refer to as “the State of Arizonia”. Crazy stuff, huh? If you want to buy something, you’ll probably have to haggle for it for a while to get a reasonable price. Make sure to speak up when you’re doing it, too; this place can get pretty loud.",
+		channel = 'seaside-market',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_c : travel_time_street,
+			poi_id_vagrantscorner_street_e : travel_time_street,
+			poi_id_greenlightdistrict_street_a : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_e,
+		alias = [
+			"Trimountaine",
+			"trimountain",
+			"tri"
+		],
+		str_name = "Trimountaine",
+		str_desc = "This corner of the district hasn’t been subject to the same heavy development as waterfront, as such there’s not a lot to see. The original three hills that gave the region its name still stand, unlike the rest of Vagrant’s Corner which has been flattened over the years to accommodate rapid landfill projects. The only structure of importance here is the old lighthouse. It used to guide ships to the harbor before it was quickly outgrown. A newer, taller one was built in Slime’s End.",
+		channel = 'trimountaine',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_d : travel_time_street,
+			poi_id_vagrantscorner_street_f : travel_time_street,
+			poi_id_oldnewyonkers_street_e : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_vagrantscorner_street_f,
+		alias = [
+			"cockfightbackstreet",
+			"cockfight"
+		],
+		str_name = "Cockfight Backstreet",
+		str_desc = "There’s no better way to unwind after being stuck on a boat for months on end like watching animals kill each other. Sailors looking for a night on the town, before or after taking a detour in the Green Light District, will often wind up here where organic and slime-based animals alike go toe-to-toe in gruesome bloodsports. Keep in mind, this ain’t your grandma’s slimeoid battle. Most of the contestants here are wild beasts, caught from the outskirts or were brought into the city from far, far away. The duels here are chaotic and end in copious amounts of glore getting splattered unto the audience and all over the walls. Fun is had by all.",
+		channel = 'cockfight-backstreet',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_vagrantscorner,
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_street,
+			poi_id_vagrantscorner_street_e : travel_time_street,
+			poi_id_vagrantscorner_street_a : travel_time_street,
+			poi_id_newnewyonkers_street_c : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_greenlightdistrict_street_a,
+		alias = [
+			"seedystreet",
+			"seedy"
+		],
+		str_name = "Seedy Street",
+		str_desc = "This prominent backstreet is an open secret to anyone who knows anything. Over here, the really crazy shit happens, the real Sodom and Gomorrah type shit. Of course, Sodom and Gomorrah type shit happens everywhere in this district, we were just running out of space on the strip and couldn’t fit in another brothel.",
+		channel = 'seedy-street',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_greenlightdistrict,
+		neighbors = {
+			poi_id_greenlightdistrict : travel_time_street,
+			poi_id_greenlightdistrict_street_c : travel_time_street,
+			poi_id_greenlightdistrict_street_b : travel_time_street,
+			poi_id_vagrantscorner_street_d : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_greenlightdistrict_street_b,
+		alias = [
+			"parkinggarage",
+		],
+		str_name = "Parking Garage",
+		str_desc = "This genuine fucking Tower of Babel has brought together downtrodden lowlifes from across the city and beyond in the torturous pursuit of trying to find a fucking space so the they can finally get out and actually start gambling. Most never make it that far, circling each level endlessly, never finding release. These motherfuckers are pissed, so they might try running you over while you spray your graffiti.",
+		channel = 'parking-garage',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_greenlightdistrict,
+		neighbors = {
+			poi_id_greenlightdistrict : travel_time_street,
+			poi_id_greenlightdistrict_street_a : travel_time_street,
+			poi_id_greenlightdistrict_street_c : travel_time_street,
+			poi_id_juviesrow : travel_time_street,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_greenlightdistrict_street_c,
+		alias = [
+			"thestrip",
+			"strip"
+		],
+		str_name = "The Strip",
+		str_desc = "This famous strip is what everyone thinks of when they think of the Green light District. Casinos, upscale restaurants, five-star hotels, and dozens upon dozens of tourist traps line either side of you. Modern day Second Temples for as far as the eye can see. All manner of debauchery and sin is had here, and everyone loves it.",
+		channel = 'the-strip',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_greenlightdistrict,
+		neighbors = {
+			poi_id_greenlightdistrict : travel_time_street,
+			poi_id_greenlightdistrict_street_b : travel_time_street,
+			poi_id_greenlightdistrict_street_a : travel_time_street,
+			poi_id_downtown_street_b : travel_time_street,
+			poi_id_gld_subway_station: travel_time_subzone,
+		}
+	),
+	EwPoi(
+		id_poi = poi_id_slimesend_street_a,
+		alias = [
+			"sandyneck",
+			"sandy"
+		],
+		str_name = "Sandy Neck",
+		str_desc = "This rough coastline is home to most of the settlements in the district, despite the fact that it is boring as shit and also that all manner of eldritch sea monsters (including but not limited to krakens) are constantly washing ashore and fucking shit up. Yup, life’s pretty boring here in Slime’s End. Just tag some of the sparse homes here and head back into the city. Home to the city’s lighthouse, which guides ships towards Vagrant’s Corner all day and all night.",
+		channel = 'sandy-neck',
+		is_street = True,
+		is_capturable = True,
+		father_district = poi_id_slimesend,
+		neighbors = {
+			poi_id_slimesend : travel_time_street,
+			poi_id_vagrantscorner_street_b : travel_time_street,
+			poi_id_slimesend_pier : travel_time_subzone,
+		}
+	),
+	# Subzones start here
 	EwPoi(  # ENDLESS WAR
 		id_poi = poi_id_endlesswar,
 		alias = [
@@ -10091,11 +14235,16 @@ poi_list = [
 		str_enter = "arrive at",
 		str_name = "ENDLESS WAR",
 		str_desc = "Its bright, neon green color nearly blinds you when observed from this close. You are overwhelmed by an acute, menacing aura as you crane your neck to observe the obelisk in its entirety. You almost thought you saw it looking back down at you, but it was probably just your imagination. You shouldn’t stay here any longer than you have to, you always get a weird feeling in the pit of your stomach when you stick around for too long.",
+		topic = "",
 		channel = channel_endlesswar,
 		role = "Endless War",
 		is_subzone = True,
-		mother_district = poi_id_downtown,
+		pvp = False,
+		mother_districts = [poi_id_downtown],
 		max_degradation = 10000000,
+		neighbors = {
+			poi_id_downtown : travel_time_subzone,
+		},
 	),
 	EwPoi(  # slimecorp HQ
 		id_poi = poi_id_slimecorphq,
@@ -10111,7 +14260,10 @@ poi_list = [
 		role = "SlimeCorp HQ",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_downtown
+		mother_districts = [poi_id_downtown],
+		neighbors = {
+			poi_id_downtown : travel_time_subzone,
+		},
 	),
 	EwPoi( # stock-exchange
 		id_poi = poi_id_stockexchange,
@@ -10130,11 +14282,15 @@ poi_list = [
 		],
 		str_name = "The SlimeCorp Stock Exchange",
 		str_desc = "A huge, cluttered space bursting at the seams with teller booths and data screens designed to display market data, blasting precious economic insight into your retinas. Discarded punch cards and ticker tape as trampled on by the mass of investors and shareholders that are constantly screaming \"BUY, SELL, BUY, SELL,\" over and over again at no one in particular. Recently reopened, tents line the streets, filled with eager investors. \n\nExits into Downtown NLACakaNM.",
+		topic = "https://ew.krakissi.net/market/",
 		channel = channel_stockexchange,
 		role = "Stock Exchange",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_downtown
+		mother_districts = [poi_id_downtown],
+		neighbors = {
+			poi_id_downtown : travel_time_subzone,
+		}
 	),
 	EwPoi( # the-bazaar
 		id_poi = poi_id_bazaar,
@@ -10153,7 +14309,10 @@ poi_list = [
 			vendor_bazaar
 		],
 		is_subzone = True,
-		mother_district = poi_id_smogsburg
+		mother_districts = [poi_id_smogsburg],
+		neighbors = {
+			poi_id_smogsburg : travel_time_subzone,
+		},
 	),
 	EwPoi( # the-cinema
 		id_poi = poi_id_cinema,
@@ -10172,7 +14331,10 @@ poi_list = [
 		role = "Cinema",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_astatineheights
+		mother_districts = [poi_id_astatineheights],
+		neighbors = {
+			poi_id_astatineheights : travel_time_subzone,
+		},
 	),
 	EwPoi( # food-court
 		id_poi = poi_id_foodcourt,
@@ -10195,6 +14357,7 @@ poi_list = [
 				   "Mountain Dew fountain, dispensing that glorious piss yellow elixir for all who patron it. Bustling with life, this is the happeningest place in New Los Angeles City "
 				   "aka Neo Milwaukee for a hip juvenile such as yourself. So hang out with your fellow gangsters, soak in the outdated mall music and savor the moment. When you’re old "
 				   "and brittle, you’ll wish you spent your time doing this more.\n\nExits into Krak Bay.",
+		topic = "Voted best food in NLACakaNM up until other places opened.",
 		channel = channel_foodcourt,
 		role = "Food Court",
 		pvp = False,
@@ -10205,7 +14368,11 @@ poi_list = [
 			vendor_mtndew,
 		],
 		is_subzone = True,
-		mother_district = poi_id_krakbay
+		mother_districts = [poi_id_krakbay, poi_id_krakbay_street_d],
+		neighbors = {
+			poi_id_krakbay : travel_time_subzone,
+			poi_id_krakbay_street_d : travel_time_subzone,
+		},
 	),
 	EwPoi( # nlac-u
 		id_poi = poi_id_nlacu,
@@ -10227,8 +14394,11 @@ poi_list = [
 			vendor_college
 		],
 		is_subzone = True,
-		mother_district = poi_id_gatlingsdale,
+		mother_districts = [poi_id_gatlingsdale],
 		write_manuscript = True,
+		neighbors = {
+			poi_id_gatlingsdale : travel_time_subzone,
+		},
 	),
 	EwPoi( # battle-arena
 		id_poi = poi_id_arena,
@@ -10245,7 +14415,10 @@ poi_list = [
 		role = "Arena",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_vandalpark
+		mother_districts = [poi_id_vandalpark],
+		neighbors = {
+			poi_id_vandalpark : travel_time_subzone,
+		},
 	),
 	EwPoi( # the-dojo
 		id_poi = poi_id_dojo,
@@ -10259,14 +14432,18 @@ poi_list = [
 		],
 		str_name = "The Dojo",
 		str_desc = "A traditional, modest Dojo, containing all the facilities and armaments necessary for becoming a cold-blooded killing machine. It’s rustic wood presentation is accentuated by bamboo and parchment walls that separate the Dojo floor into large tatami-matted sections. Groups of juveniles gather here to increase their viability in combat. These sparring children are overseen by the owner of the Dojo, an elderly master of martial artists, fittingly known as the Dojo Master. He observes you train from a distance, brooding, and lamenting his lost youth.\n\nExits into South Sleezeborough.",
+		topic = "Killers and Rowdys alike come here under an uneasy truce to train themselves in the arts of war.",
 		channel = channel_dojo,
 		role = "Dojo",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_southsleezeborough,
+		mother_districts = [poi_id_southsleezeborough_street_b],
 		vendors = [
 			vendor_dojo
-		]
+		],
+		neighbors = {
+			poi_id_southsleezeborough_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi( # speakeasy
 		id_poi = poi_id_speakeasy,
@@ -10284,6 +14461,7 @@ poi_list = [
 		],
 		str_name = "The King's Wife's Son Speakeasy",
 		str_desc = "A rustic tavern with dark wooden walls and floor, bearing innumerable knickknacks on the walls and high wooden stools arranged in front of a bar made of patina'd copper. It is crowded with seedy lowlifes and other generally undesirables, such as yourself.\n\nExits into Vagrant's Corner.",
+		topic = "The King's Wife's Son - the sleazy speakeasy of NLACakaNM. The only place in the city to get plastered. Hide your drinks if the Yum! Brands demolition men show up!",
 		channel = channel_speakeasy,
 		role = "Speakeasy",
 		pvp = False,
@@ -10291,7 +14469,10 @@ poi_list = [
 			vendor_bar
 		],
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner
+		mother_districts = [poi_id_vagrantscorner],
+		neighbors = {
+			poi_id_vagrantscorner : travel_time_subzone,
+		},
 	),
 	EwPoi( # 7-11
 		id_poi = poi_id_711,
@@ -10313,7 +14494,11 @@ poi_list = [
 			vendor_vendingmachine
 		],
 		is_subzone = True,
-		mother_district = poi_id_poudrinalley
+		mother_districts = [poi_id_poudrinalley, poi_id_poudrinalley_street_b],
+		neighbors = {
+			poi_id_poudrinalley : travel_time_subzone,
+			poi_id_poudrinalley_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi( # the-labs
 		id_poi = poi_id_slimeoidlab,
@@ -10334,11 +14519,15 @@ poi_list = [
 		],
 		str_name = "SlimeCorp Slimeoid Laboratory",
 		str_desc = "A nondescript building containing mysterious SlimeCorp industrial equipment. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from SlimeCorp on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
+		topic = "Bring your poudrins and some slime for the privilege of using these highly experimental Slimecorp technologies. Use !instructions to learn more.",
 		channel = channel_slimeoidlab,
 		role = "Slimeoid Lab",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_brawlden
+		mother_districts = [poi_id_brawlden],
+		neighbors = {
+			poi_id_brawlden : travel_time_subzone,
+		},
 	),
 	EwPoi( # the-mines
 		id_poi = poi_id_mine,
@@ -10355,7 +14544,10 @@ poi_list = [
 		role = "Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_juviesrow
+		mother_districts = [poi_id_juviesrow],
+		neighbors = {
+			poi_id_juviesrow : travel_time_subzone,
+		},
 	),
 	EwPoi( # the-casino
 		id_poi = poi_id_thecasino,
@@ -10370,11 +14562,15 @@ poi_list = [
 		],
 		str_name = "The SlimeCorp Casino",
 		str_desc = "The casino is filled with tables and machines for playing games of chance, and garishly decorated wall-to-wall. Lights which normally flash constantly cover everything, but now they all sit unlit. What's worse, you can see Sherman, the SlimeCorp salaryman staring you down near the back.\n\nExits into Green Light District.",
+		topic = "Put your slime on the line! Bet slimecoin on games of chance: slots, craps, pachinko, roulette, baccarat, and even the deadly Russian Roulette.",
 		channel = channel_casino,
 		role = "Casino",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_greenlightdistrict
+		mother_districts = [poi_id_greenlightdistrict],
+		neighbors = {
+			poi_id_greenlightdistrict : travel_time_subzone,
+		},
 	),
 	EwPoi(  # cratersville mines
 		id_poi = poi_id_cv_mines,
@@ -10393,7 +14589,10 @@ poi_list = [
 		role = "Cratersville Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_cratersville
+		mother_districts = [poi_id_cratersville_street_c],
+		neighbors = {
+			poi_id_cratersville_street_c : travel_time_subzone,
+		},
 	),
 	EwPoi(  # toxington mines
 		id_poi = poi_id_tt_mines,
@@ -10411,7 +14610,10 @@ poi_list = [
 		role = "Toxington Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_toxington
+		mother_districts = [poi_id_toxington_street_a],
+		neighbors = {
+			poi_id_toxington_street_a : travel_time_subzone,
+		},
 	),
 	EwPoi( # smokers-cough
 		id_poi = poi_id_diner,
@@ -10427,6 +14629,7 @@ poi_list = [
 		],
 		str_name = "The Smoker's Cough",
 		str_desc = "A quaint hole-in-the-wall vintage diner. The wallpaper may be peeling and the ‘80s paint job might be faded, but you’ll be damned if this place didn’t make an aesthetic stomping grounds for cheapskate juveniles like yourself. All the staff know you by name, they’ve memorized your order, and frankly they love you. You’re like a ninth son to the inbred owner and his many, many wives. It’s a cramped space, only fitting about 20 people maximum. The fluorescent lighting from the ceiling lamps invade every nook and cranny of the cyan and purple diner, even when the natural daylight could easily illuminate it just as well. You think you can see some mold on certain corners of the floor. Oh man, so cool.\n\nExits into Wreckington.",
+		topic = "The Smoker’s Cough - A quaint hole-in-the-wall vintage diner. The wallpaper may be peeling and the ‘80s paint job might be faded, but you’ll be damned if this place didn’t make an aesthetic stomping grounds for cheapskate juveniles like yourself. It’s so… pulp.",
 		channel = channel_diner,
 		role = "Smoker's Cough",
 		pvp = False,
@@ -10434,7 +14637,10 @@ poi_list = [
 			vendor_diner
 		],
 		is_subzone = True,
-		mother_district = poi_id_wreckington
+		mother_districts = [poi_id_wreckington_street_b],
+		neighbors = {
+			poi_id_wreckington_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi( # Red Mobster
 		id_poi = poi_id_seafood,
@@ -10449,6 +14655,7 @@ poi_list = [
 		],
 		str_name = "Red Mobster Seafood",
 		str_desc = "The last bastion of sophistication in this godforsaken city. A dimly lit, atmospheric fine dining restaurant with waiters and tables and archaic stuff like that. Upper crust juveniles and older fugitives make up the majority of the patrons, making you stick out like a sore thumb. Quiet, respectable murmurs pollute the air alongside the scrapping of silverware and the occasional hoity toity laugh. Everything about this place makes you sick.\n\nExits into Astatine Heights.",
+		topic = "Red Mobster - The last bastion of sospchication in this godforsaken city. A dimly lit, atmospheric fine dining restaurant with waiters and tables and archaic stuff like that. Man, what a trip!",
 		channel = channel_seafood,
 		role = "Red Mobster Seafood",
 		pvp = False,
@@ -10456,7 +14663,10 @@ poi_list = [
 			vendor_seafood
 		],
 		is_subzone = True,
-		mother_district = poi_id_astatineheights
+		mother_districts = [poi_id_astatineheights_street_b],
+		neighbors = {
+			poi_id_astatineheights_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi( # JR Farm
 		id_poi = poi_id_jr_farms,
@@ -10476,7 +14686,10 @@ poi_list = [
 		role = "Juvie's Row Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_juviesrow
+		mother_districts = [poi_id_juviesrow],
+		neighbors = {
+			poi_id_juviesrow : travel_time_subzone,
+		},
 	),
 	EwPoi( # OG Farm
 		id_poi = poi_id_og_farms,
@@ -10498,7 +14711,11 @@ poi_list = [
 		role = "Ooze Gardens Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_oozegardens
+		mother_districts = [poi_id_oozegardens_street_c, poi_id_oozegardens_street_d],
+		neighbors = {
+			poi_id_oozegardens_street_c : travel_time_subzone,
+			poi_id_oozegardens_street_d : travel_time_subzone,
+		},
 	),
 	EwPoi( # AB Farm
 		id_poi = poi_id_ab_farms,
@@ -10518,7 +14735,11 @@ poi_list = [
 		role = "Arsonbrook Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_arsonbrook
+		mother_districts = [poi_id_arsonbrook_street_a, poi_id_arsonbrook_street_b],
+		neighbors = {
+			poi_id_arsonbrook_street_a : travel_time_subzone,
+			poi_id_arsonbrook_street_e : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Neo Milwaukee State
 		id_poi = poi_id_neomilwaukeestate,
@@ -10537,8 +14758,11 @@ poi_list = [
 			vendor_college
 		],
 		is_subzone = True,
-		mother_district = poi_id_northsleezeborough,
+		mother_districts = [poi_id_northsleezeborough],
 		write_manuscript = True,
+		neighbors = {
+			poi_id_northsleezeborough : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Assault Flats Beach Resort
 		id_poi = poi_id_beachresort,
@@ -10556,7 +14780,10 @@ poi_list = [
 			vendor_beachresort
 		],
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach
+		mother_districts = [poi_id_assaultflatsbeach],
+		neighbors = {
+			poi_id_assaultflatsbeach : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Dreadford Country Club
 		id_poi = poi_id_countryclub,
@@ -10574,7 +14801,10 @@ poi_list = [
 			vendor_countryclub
 		],
 		is_subzone = True,
-		mother_district = poi_id_dreadford
+		mother_districts = [poi_id_dreadford],
+		neighbors = {
+			poi_id_dreadford : travel_time_subzone,
+		},
 	),
 	EwPoi(  # SlimeCorp Recycling Plant
 		id_poi = poi_id_recyclingplant,
@@ -10593,7 +14823,10 @@ poi_list = [
 		role = "Recycling Plant",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_smogsburg
+		mother_districts = [poi_id_smogsburg],
+		neighbors = {
+			poi_id_smogsburg : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Toxington Pier
 		id_poi = poi_id_toxington_pier,
@@ -10608,9 +14841,13 @@ poi_list = [
 		role = "Toxington Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_toxington,
+		mother_districts = [poi_id_toxington_street_d, poi_id_toxington_street_e],
 		is_pier = True,
-		pier_type = fish_slime_freshwater
+		pier_type = fish_slime_freshwater,
+		neighbors = {
+			poi_id_toxington_street_d : travel_time_subzone,
+			poi_id_toxington_street_e : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Jaywalker Plain Pier
 		id_poi = poi_id_jaywalkerplain_pier,
@@ -10625,9 +14862,13 @@ poi_list = [
 		role = "Jaywalker Plain Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_jaywalkerplain,
+		mother_districts = [poi_id_jaywalkerplain_street_a, poi_id_jaywalkerplain_street_b],
 		is_pier = True,
-		pier_type = fish_slime_freshwater
+		pier_type = fish_slime_freshwater,
+		neighbors = {
+			poi_id_jaywalkerplain_street_c : travel_time_subzone,
+			poi_id_jaywalkerplain_street_d : travel_time_subzone,
+		},
 
 	),
 	EwPoi(  # Crookline Pier
@@ -10643,10 +14884,13 @@ poi_list = [
 		role = "Crookline Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_crookline,
+		mother_districts = [poi_id_crookline_street_a, poi_id_crookline_street_b],
 		is_pier = True,
-		pier_type = fish_slime_freshwater
-
+		pier_type = fish_slime_freshwater,
+		neighbors = {
+			poi_id_crookline_street_a : travel_time_subzone,
+			poi_id_crookline_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Assault Flats Beach Pier
 		id_poi = poi_id_assaultflatsbeach_pier,
@@ -10661,10 +14905,13 @@ poi_list = [
 		role = "Assault Flats Beach Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach,
+		mother_districts = [poi_id_assaultflatsbeach_street_a, poi_id_assaultflatsbeach_street_b],
 		is_pier = True,
-		pier_type = fish_slime_saltwater
-
+		pier_type = fish_slime_saltwater,
+		neighbors = {
+			poi_id_assaultflatsbeach_street_a : travel_time_subzone,
+			poi_id_assaultflatsbeach_street_b : travel_time_subzone,
+		},
 	),
 	# EwPoi(  # Vagrant's Corner Pier
 	# 	id_poi = poi_id_vagrantscorner_pier,
@@ -10697,10 +14944,12 @@ poi_list = [
 		role = "Juvie's Row Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_juviesrow,
+		mother_districts = [poi_id_juviesrow],
 		is_pier = True,
-		pier_type = fish_slime_saltwater
-
+		pier_type = fish_slime_saltwater,
+		neighbors = {
+			poi_id_juviesrow : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Slime's End Pier
 		id_poi = poi_id_slimesend_pier,
@@ -10715,10 +14964,12 @@ poi_list = [
 		role = "Slime's End Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_slimesend,
+		mother_districts = [poi_id_slimesend_street_a],
 		is_pier = True,
-		pier_type = fish_slime_saltwater
-
+		pier_type = fish_slime_saltwater,
+		neighbors = {
+			poi_id_slimesend_street_a : travel_time_subzone,
+		},
 	),
 	EwPoi( # Slime Sea
 		id_poi = poi_id_slimesea,
@@ -10745,9 +14996,12 @@ poi_list = [
 		role = "Wreckington Port",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_wreckington,
+		mother_districts = [poi_id_wreckington_street_b],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_wreckington_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Vagrant's Corner Ferry Port
 		id_poi = poi_id_vc_port,
@@ -10767,9 +15021,13 @@ poi_list = [
 		role = "Vagrant's Corner Port",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner,
+		mother_districts = [poi_id_vagrantscorner_street_a, poi_id_vagrantscorner_street_b],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_vagrantscorner_street_a : travel_time_subzone,
+			poi_id_vagrantscorner_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Toxington Subway Station
 		id_poi = poi_id_tt_subway_station,
@@ -10789,14 +15047,18 @@ poi_list = [
 			"tts"
 		],
 		str_name = "The Toxington Subway Station",
-				str_desc = str_red_subway_station_description + "\n\nExits into Toxington.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Toxington.",
 		channel = channel_tt_subway_station,
 		role = "Toxington Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_toxington,
+		mother_districts = [poi_id_toxington_street_a, poi_id_toxington_street_e],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_toxington_street_a : travel_time_subzone,
+			poi_id_toxington_street_e : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Astatine Heights Subway Station
 		id_poi = poi_id_ah_subway_station,
@@ -10816,14 +15078,18 @@ poi_list = [
 			"ahs"
 		],
 		str_name = "The Astatine Heights Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Astatine Heights.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Astatine Heights.",
 		channel = channel_ah_subway_station,
 		role = "Astatine Heights Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_astatineheights,
+		mother_districts = [poi_id_astatineheights_street_a, poi_id_astatineheights_street_b],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_astatineheights_street_a : travel_time_subzone,
+			poi_id_astatineheights_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Gatlingsdale Subway Station
 		id_poi = poi_id_gd_subway_station,
@@ -10843,14 +15109,17 @@ poi_list = [
 			"gds"
 		],
 		str_name = "The Gatlingsdale Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Gatlingsdale.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Gatlingsdale.",
 		channel = channel_gd_subway_station,
 		role = "Gatlingsdale Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_gatlingsdale,
+		mother_districts = [poi_id_gatlingsdale_street_a],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_gatlingsdale_street_a : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Arsonbrook Subway Station
 		id_poi = poi_id_ab_subway_station,
@@ -10870,14 +15139,17 @@ poi_list = [
 			"abs"
 		],
 		str_name = "The Arsonbrook Subway Station",
-		str_desc = str_yellow_subway_station_description + "\n\nExits into Arsonbrook.",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Arsonbrook.",
 		channel = channel_ab_subway_station,
 		role = "Arsonbrook Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_arsonbrook,
+		mother_districts = [poi_id_arsonbrook_street_a],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_arsonbrook_street_a : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Cop Killtown Subway Station
 		id_poi = poi_id_ck_subway_station,
@@ -10898,14 +15170,17 @@ poi_list = [
 			"cs"
 		],
 		str_name = "The Cop Killtown Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Cop Killtown.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Cop Killtown.",
 		channel = channel_ck_subway_station,
 		role = "Cop Killtown Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_copkilltown,
+		mother_districts = [poi_id_copkilltown],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_copkilltown : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Smogsburg Subway Station
 		id_poi = poi_id_sb_subway_station,
@@ -10925,17 +15200,17 @@ poi_list = [
 			"sbs"
 		],
 		str_name = "The Smogsburg Subway Station",
-		str_desc = str_green_subway_station_description + \
-						"\n\n" + str_subway_connecting_sentence.format("yellow") + \
-						"\n\n" + str_yellow_subway_station_description \
-			+ "\n\nExits into Smogsburg.",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Smogsburg.",
 		channel = channel_sb_subway_station,
 		role = "Smogsburg Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_smogsburg,
+		mother_districts = [poi_id_smogsburg_street_c],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_smogsburg_street_c : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Downtown Subway Station
 		id_poi = poi_id_dt_subway_station,
@@ -10955,9 +15230,13 @@ poi_list = [
 		role = "Downtown Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_downtown,
+		mother_districts = [poi_id_downtown_street_d, poi_id_downtown_street_e],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_downtown_street_d : travel_time_subzone,
+			poi_id_downtown_street_e : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Krak Bay Subway Station
 		id_poi = poi_id_kb_subway_station,
@@ -10977,17 +15256,20 @@ poi_list = [
 			"kbs"
 		],
 		str_name = "The Krak Bay Subway Station",
-		str_desc = str_green_subway_station_description + \
-						"\n\n" + str_subway_connecting_sentence.format("yellow") + \
-						"\n\n" + str_yellow_subway_station_description + \
+		str_desc = str_black_subway_station_description + \
+						"\n\n" + str_subway_connecting_sentence.format("gold") + \
+						"\n\n" + str_gold_subway_station_description + \
 			"\n\nExits into Krak Bay.",
 		channel = channel_kb_subway_station,
 		role = "Krak Bay Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_krakbay,
+		mother_districts = [poi_id_krakbay_street_a],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_krakbay_street_a : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Glocksbury Subway Station
 		id_poi = poi_id_gb_subway_station,
@@ -11007,14 +15289,17 @@ poi_list = [
 			"gbs"
 		],
 		str_name = "The Glocksbury Subway Station",
-		str_desc = str_green_subway_station_description + "\n\nExits into Glocksbury.",
+		str_desc = str_black_subway_station_description + "\n\nExits into Glocksbury.",
 		channel = channel_gb_subway_station,
 		role = "Glocksbury Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_glocksbury,
+		mother_districts = [poi_id_glocksbury_street_c],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_glocksbury_street_c : travel_time_subzone,
+		},
 	),
 	EwPoi(  # West Glocksbury Subway Station
 		id_poi = poi_id_wgb_subway_station,
@@ -11034,14 +15319,17 @@ poi_list = [
 			"wgbs"
 		],
 		str_name = "The West Glocksbury Subway Station",
-		str_desc = str_green_subway_station_description + "\n\nExits into West Glocksbury.",
+		str_desc = str_black_subway_station_description + "\n\nExits into West Glocksbury.",
 		channel = channel_wgb_subway_station,
 		role = "West Glocksbury Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_westglocksbury,
+		mother_districts = [poi_id_westglocksbury_street_c],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_westglocksbury_street_c : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Jaywalker Plain Subway Station
 		id_poi = poi_id_jp_subway_station,
@@ -11061,14 +15349,18 @@ poi_list = [
 			"jps"
 		],
 		str_name = "The Jaywalker Plain Subway Station",
-		str_desc = str_green_subway_station_description + "\n\nExits into Jaywalker Plain.",
+		str_desc = str_gold_subway_station_description + "\n\nExits into Jaywalker Plain.",
 		channel = channel_jp_subway_station,
 		role = "Jaywalker Plain Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_jaywalkerplain,
+		mother_districts = [poi_id_jaywalkerplain_street_a, poi_id_jaywalkerplain_street_b],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_jaywalkerplain_street_a : travel_time_subzone,
+			poi_id_jaywalkerplain_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi(  # North Sleezeborough Subway Station
 		id_poi = poi_id_nsb_subway_station,
@@ -11089,14 +15381,18 @@ poi_list = [
 			"nsbs"
 		],
 		str_name = "The North Sleezeborough Subway Station",
-		str_desc = str_green_subway_station_description + "\n\nExits into North Sleezeborough.",
+		str_desc = str_gold_subway_station_description + "\n\nExits into North Sleezeborough.",
 		channel = channel_nsb_subway_station,
 		role = "North Sleezeborough Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_northsleezeborough,
+		mother_districts = [poi_id_northsleezeborough_street_a],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_northsleezeborough_street_a : travel_time_subzone,
+			poi_id_nsb_subway_station: travel_time_subzone,
+		},
 	),
 	EwPoi(  # South Sleezeborough Subway Station
 		id_poi = poi_id_ssb_subway_station,
@@ -11117,14 +15413,18 @@ poi_list = [
 			"ssbs"
 		],
 		str_name = "The South Sleezeborough Subway Station",
-		str_desc = str_yellow_subway_station_description + "\n\nExits into South Sleezeborough.",
+		str_desc = str_purple_subway_station_description + "\n\nExits into South Sleezeborough.",
 		channel = channel_ssb_subway_station,
 		role = "South Sleezeborough Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_southsleezeborough,
+		mother_districts = [poi_id_southsleezeborough_street_a, poi_id_southsleezeborough_street_b],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_southsleezeborough_street_a : travel_time_subzone,
+			poi_id_southsleezeborough_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Cratersville Subway Station
 		id_poi = poi_id_cv_subway_station,
@@ -11144,14 +15444,18 @@ poi_list = [
 			"cvs"
 		],
 		str_name = "The Cratersville Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Cratersville.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Cratersville.",
 		channel = channel_cv_subway_station,
 		role = "Cratersville Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_cratersville,
+		mother_districts = [poi_id_cratersville_street_b, poi_id_cratersville_street_c],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_cratersville_street_b : travel_time_subzone,
+			poi_id_cratersville_street_c : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Wreckington Subway Station
 		id_poi = poi_id_wt_subway_station,
@@ -11171,14 +15475,18 @@ poi_list = [
 			"wts"
 		],
 		str_name = "The Wreckington Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Wreckington.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Wreckington.",
 		channel = channel_wt_subway_station,
 		role = "Wreckington Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_wreckington,
+		mother_districts = [poi_id_wreckington_street_a, poi_id_wreckington_street_b],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_wreckington_street_a : travel_time_subzone,
+			poi_id_wreckington_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Rowdy Roughhouse Subway Station
 		id_poi = poi_id_rr_subway_station,
@@ -11197,14 +15505,17 @@ poi_list = [
 			"rrs"
 		],
 		str_name = "The Rowdy Roughhouse Subway Station",
-		str_desc = str_red_subway_station_description + "\n\nExits into Rowdy Roughhouse.",
+		str_desc = str_pink_subway_station_description + "\n\nExits into Rowdy Roughhouse.",
 		channel = channel_rr_subway_station,
 		role = "Rowdy Roughhouse Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_rowdyroughhouse,
+		mother_districts = [poi_id_rowdyroughhouse],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_rowdyroughhouse : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Green Light District Subway Station
 		id_poi = poi_id_gld_subway_station,
@@ -11225,14 +15536,17 @@ poi_list = [
 			"glds"
 		],
 		str_name = "The Green Light District Subway Station",
-		str_desc = str_blue_subway_station_description + "\n\nExits into Green Light District.",
+		str_desc = str_green_subway_station_description + "\n\nExits into Green Light District.",
 		channel = channel_gld_subway_station,
 		role = "Green Light District Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_greenlightdistrict,
+		mother_districts = [poi_id_greenlightdistrict_street_c],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_greenlightdistrict_street_c : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Juvie's Row Subway Station
 		id_poi = poi_id_jr_subway_station,
@@ -11252,14 +15566,17 @@ poi_list = [
 			"jrs"
 		],
 		str_name = "The Juvie's Row Subway Station",
-		str_desc = str_blue_subway_station_description + "\n\nExits into Juvie's Row.",
+		str_desc = str_green_subway_station_description + "\n\nExits into Juvie's Row.",
 		channel = channel_jr_subway_station,
 		role = "Juvie's Row Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_juviesrow,
+		mother_districts = [poi_id_juviesrow],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_juviesrow : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Vagrant's Corner Subway Station
 		id_poi = poi_id_vc_subway_station,
@@ -11279,47 +15596,264 @@ poi_list = [
 			"vcs"
 		],
 		str_name = "The Vagrant's Corner Subway Station",
-		str_desc = str_blue_subway_station_description + "\n\nExits into Vagrant's Corner.",
+		str_desc = str_green_subway_station_description + "\n\nExits into Vagrant's Corner.",
 		channel = channel_vc_subway_station,
 		role = "Vagrant's Corner Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner,
+		mother_districts = [poi_id_vagrantscorner_street_a],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_vagrantscorner_street_a : travel_time_subzone,
+		},
 	),
-	EwPoi(  # Assault Flats Beach Subway Station
-		id_poi = poi_id_afb_subway_station,
+	EwPoi( # Vandal Park Subway Station
+		id_poi = poi_id_vp_subway_station,
 		alias = [
-			"assaultflatsbeachsubwaystation",
-			"assaultflatsbeachsubway",
-			"assaultflatsbeachsub",
-			"assaultflatsbeachstation",
-			"assaultflatssubwaystation",
-			"assaultflatssubway",
-			"assaultflatssub",
-			"assaultflatsstation",
-			"beachsubwaystation",
-			"beachsubway",
-			"beachsub",
-			"beachstation",
-			"afbsubwaystation",
-			"afbsubway",
-			"afbsub",
-			"afbstation",
-			"assaultflatss",
-			"afbs"
+			"vandalparksubway",
+			"vandalparksub",
+			"vandalparkstation",
+			"vandalsubwaystation",
+			"vandalsubway",
+			"vandalsub",
+			"vandalstation",
+			"vpsubwaystation",
+			"vpsubway",
+			"vpsub",
+			"vpstation",
+			"vandals",
+			"vps"
 		],
-		str_name = "The Assault Flats Beach Subway Station",
-		str_desc = str_blue_subway_station_description + "\n\nExits into Assault Flats Beach.",
-		channel = channel_afb_subway_station,
-		role = "Assault Flats Beach Subway Station",
+		str_name = "The Vandal Park Subway Station",
+		str_desc = str_black_subway_station_description + "\n\nExits into Vandal Park.",
+		channel = channel_vp_subway_station,
+		role = "Vandal Park Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach,
+		mother_districts = [poi_id_vandalpark_street_a],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_vandalpark_street_a : travel_time_subzone,
+			poi_id_vp_subway_station: travel_time_subzone,
+		},
 	),
+	EwPoi(  # Crookline Subway Station
+		id_poi = poi_id_cl_subway_station,
+		alias = [
+			"crooklinesubway",
+			"crooklinesub",
+			"crooklinestation",
+			"crooksubwaystation",
+			"crooksubway",
+			"crooksub",
+			"crookstation",
+			"clsubwaystation",
+			"clsubway",
+			"clsub",
+			"clstation",
+			"crooks",
+			"cls"
+		],
+		str_name = "The Crookline Subway Station",
+		str_desc = str_gold_subway_station_description + "\n\nExits into Crookline.",
+		channel = channel_cl_subway_station,
+		role = "Crookline Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_crookline_street_a, poi_id_crookline_street_b],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_crookline_street_a : travel_time_subzone,
+			poi_id_crookline_street_b : travel_time_subzone,
+		},
+	),
+	EwPoi(  # Ooze Gardens Subway Station
+		id_poi = poi_id_og_subway_station,
+		alias = [
+			"oozegardenssubway",
+			"oozegardenssub",
+			"oozegardensstation",
+			"oozesubwaystation",
+			"oozesubway",
+			"oozesub",
+			"oozestation",
+			"ogsubwaystation",
+			"ogsubway",
+			"ogsub",
+			"ogstation",
+			"oozes",
+			"ogs"
+		],
+		str_name = "The Ooze Gardens Subway Station",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Ooze Gardens.",
+		channel = channel_og_subway_station,
+		role = "Crookline Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_oozegardens_street_c],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_oozegardens_street_c : travel_time_subzone,
+		},
+	),
+	EwPoi(  # Poudrin Alley Subway Station
+		id_poi = poi_id_pa_subway_station,
+		alias = [
+			"poudrinalleysubway",
+			"poudrinalleysub",
+			"poudrinalleystation",
+			"poudrinalleystation",
+			"poudrinsubway",
+			"poudrinsub",
+			"poudrinstation",
+			"pasubwaystation",
+			"pasubway",
+			"pasub",
+			"pastation",
+			"poudrins",
+			"pas"
+		],
+		str_name = "The Poudrin Alley Subway Station",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Poudrin Alley.",
+		channel = channel_pa_subway_station,
+		role = "Poudrin Alley Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_poudrinalley_street_a],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_poudrinalley_street_a : travel_time_subzone,
+		},
+	),
+	EwPoi(  # Brawlden Subway Station
+		id_poi = poi_id_bd_subway_station,
+		alias = [
+			"brawldensubway",
+			"brawldensub",
+			"brawldenstation",
+			"brawlsubwaystation",
+			"brawlsubway",
+			"brawlsub",
+			"brawlstation",
+			"bdsubwaystation",
+			"bdsubway",
+			"bdsub",
+			"bdstation",
+			"brawls",
+			"bds"
+		],
+		str_name = "The Brawlden Subway Station",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Brawlden.",
+		channel = channel_bd_subway_station,
+		role = "Brawlden Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_brawlden_street_a],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_brawlden_street_a : travel_time_subzone,
+		},
+	),
+	EwPoi(  # New New Yonkers Subway Station
+		id_poi = poi_id_nny_subway_station,
+		alias = [
+			"newnewyonkerssubway",
+			"newnewyonkerssub",
+			"newnewyonkersstation",
+			"yonkerssubwaystation",
+			"yonkerssubway",
+			"yonkerssub",
+			"yonkersstation",
+			"nnysubwaystation",
+			"nnysubway",
+			"nnysub",
+			"nnystation",
+			"yonkerss",
+			"nnys"
+		],
+		str_name = "The New New Yonkers Subway Station",
+		str_desc = str_green_subway_station_description + "\n\nExits into Brawlden.",
+		channel = channel_nny_subway_station,
+		role = "New New Yonkers Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_newnewyonkers_street_a],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_newnewyonkers_street_a : travel_time_subzone,
+		},
+	),
+	EwPoi(  # Little Chernobyl Subway Station
+		id_poi = poi_id_lc_subway_station,
+		alias = [
+			"littlechernobylsubway",
+			"littlechernobylsub",
+			"littlechernobylstation",
+			"littlesubwaystation",
+			"littlesubway",
+			"littlesub",
+			"littlestation",
+			"lcsubwaystation",
+			"lcsubway",
+			"lcsub",
+			"lcstation",
+			"littles",
+			"lcs"
+		],
+		str_name = "The Little Chernobyl Subway Station",
+		str_desc = str_purple_subway_station_description + "\n\nExits into Little Chernobyl.",
+		channel = channel_lc_subway_station,
+		role = "Little Chernobyl Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_districts = [poi_id_littlechernobyl_street_a],
+		is_transport_stop = True,
+		transport_lines = set(),
+		neighbors = {
+			poi_id_littlechernobyl_street_a: travel_time_subzone,
+		},
+	),
+	# EwPoi(  # Assault Flats Beach Subway Station
+	# 	id_poi = poi_id_afb_subway_station,
+	# 	alias = [
+	# 		"assaultflatsbeachsubwaystation",
+	# 		"assaultflatsbeachsubway",
+	# 		"assaultflatsbeachsub",
+	# 		"assaultflatsbeachstation",
+	# 		"assaultflatssubwaystation",
+	# 		"assaultflatssubway",
+	# 		"assaultflatssub",
+	# 		"assaultflatsstation",
+	# 		"beachsubwaystation",
+	# 		"beachsubway",
+	# 		"beachsub",
+	# 		"beachstation",
+	# 		"afbsubwaystation",
+	# 		"afbsubway",
+	# 		"afbsub",
+	# 		"afbstation",
+	# 		"assaultflatss",
+	# 		"afbs"
+	# 	],
+	# 	str_name = "The Assault Flats Beach Subway Station",
+	# 	str_desc = str_blue_subway_station_description + "\n\nExits into Assault Flats Beach.",
+	# 	channel = channel_afb_subway_station,
+	# 	role = "Assault Flats Beach Subway Station",
+	# 	pvp = True,
+	# 	is_subzone = True,
+	# 	mother_districts = [poi_id_assaultflatsbeach],
+	# 	is_transport_stop = True,
+	# 	transport_lines = set(),
+	# 	neighbors = {
+	#
+	# 	},
 	EwPoi(  # Dreadford Blimp Tower
 		id_poi = poi_id_df_blimp_tower,
 		alias = [
@@ -11339,9 +15873,12 @@ poi_list = [
 		role = "Dreadford Blimp Tower",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_dreadford,
+		mother_districts = [poi_id_dreadford_street_b],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_dreadford_street_b : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Assault Flats Beach Blimp Tower
 		id_poi = poi_id_afb_blimp_tower,
@@ -11365,9 +15902,12 @@ poi_list = [
 		role = "Assault Flats Beach Blimp Tower",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach,
+		mother_districts = [poi_id_assaultflatsbeach_street_a],
 		is_transport_stop = True,
-		transport_lines = set()
+		transport_lines = set(),
+		neighbors = {
+			poi_id_assaultflatsbeach_street_a : travel_time_subzone,
+		},
 	),
 	EwPoi( # realestate
 		id_poi = poi_id_realestate,
@@ -11385,8 +15925,11 @@ poi_list = [
 		pvp = False,
 		channel = channel_realestateagency,
 		role = "Real Estate Agency",
-		mother_district = poi_id_oldnewyonkers,
-		is_subzone = True
+		mother_districts = [poi_id_oldnewyonkers],
+		is_subzone = True,
+		neighbors = {
+			poi_id_oldnewyonkers : travel_time_subzone,
+		},
 	),
 	EwPoi( # Glocksbury Comics
 		id_poi = poi_id_glocksburycomics,
@@ -11405,9 +15948,12 @@ poi_list = [
 		vendors = [vendor_glocksburycomics],
 		channel = "glocksbury-comics",
 		role = "Glocksbury Comics",
-		mother_district = poi_id_glocksbury,
+		mother_districts = [poi_id_glocksbury],
 		is_subzone = True,
 		write_manuscript = True,
+		neighbors = {
+			poi_id_glocksbury : travel_time_subzone,
+		},
 	),
 	EwPoi( # Slimy Persuits
 		id_poi=poi_id_slimypersuits,
@@ -11426,8 +15972,11 @@ poi_list = [
 		vendors=[vendor_slimypersuits],
 		channel="slimy-persuits",
 		role="Slimy Persuits",
-		mother_district=poi_id_newnewyonkers,
-		is_subzone=True
+		mother_districts  = [poi_id_newnewyonkers],
+		is_subzone=True,
+		neighbors = {
+			poi_id_newnewyonkers : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Green Cake Cafe
 		id_poi=poi_id_greencakecafe,
@@ -11444,9 +15993,12 @@ poi_list = [
 		vendors=[vendor_greencakecafe],
 		channel="green-cake-cafe",
 		role="Green Cake Cafe",
-		mother_district=poi_id_littlechernobyl,
+		mother_districts = [poi_id_littlechernobyl],
 		is_subzone=True,
 		write_manuscript=True,
+		neighbors = {
+			poi_id_littlechernobyl : travel_time_subzone,
+		},
 	),
 	EwPoi(
 		id_poi=poi_id_sodafountain,
@@ -11462,8 +16014,11 @@ poi_list = [
 		pvp=False,
 		channel=channel_sodafountain,
 		role="The Bicarbonate Soda Fountain",
-		mother_district=poi_id_krakbay,
-		is_subzone=True
+		mother_districts  = [poi_id_krakbay],
+		is_subzone=True,
+		neighbors = {
+			poi_id_krakbay : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
@@ -11482,103 +16037,126 @@ poi_list = [
 		default_stop = poi_id_wt_port,
 		is_pier = True,
 		pier_type = fish_slime_saltwater
-
 	),
-	EwPoi(  # Subway train on the red line
-		id_poi = poi_id_subway_red01,
-		str_name = "A Red Line Subway Train",
-		str_desc = str_red_subway_description,
-		channel = channel_subway_red01,
-		role = "Subway Train R-01",
+	EwPoi(  # Subway train on the pink line
+		id_poi = poi_id_subway_pink01,
+		str_name = "A Pink Line Subway Train",
+		str_desc = str_pink_subway_description,
+		channel = channel_subway_pink01,
+		role = "Subway Train PINK-01",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_red_northbound,
-		default_stop = poi_id_cv_subway_station
+		default_line = transport_line_subway_pink_northbound,
+		default_stop = poi_id_dt_subway_station
 	),
-	EwPoi(  # Subway train on the red line
-		id_poi = poi_id_subway_red02,
-		str_name = "A Red Line Subway Train",
-		str_desc = str_red_subway_description,
-		channel = channel_subway_red02,
-		role = "Subway Train R-02",
+	EwPoi(  # Subway train on the pink line
+		id_poi = poi_id_subway_pink02,
+		str_name = "A Pink Line Subway Train",
+		str_desc = str_pink_subway_description,
+		channel = channel_subway_pink02,
+		role = "Subway Train PINK-02",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_red_southbound,
-		default_stop = poi_id_tt_subway_station
+		default_line = transport_line_subway_pink_southbound,
+		default_stop = poi_id_dt_subway_station
 	),
-	EwPoi(  # Subway train on the yellow line
-		id_poi = poi_id_subway_yellow01,
-		str_name = "A Yellow Line Subway Train",
-		str_desc = str_yellow_subway_description,
-		channel = channel_subway_yellow01,
-		role = "Subway Train Y-01",
+	EwPoi(  # Subway train on the gold line
+		id_poi = poi_id_subway_gold01,
+		str_name = "A Gold Line Subway Train",
+		str_desc = str_gold_subway_description,
+		channel = channel_subway_gold01,
+		role = "Subway Train GOLD-01",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_yellow_northbound,
-		default_stop = poi_id_ssb_subway_station
+		default_line = transport_line_subway_gold_eastbound,
+		default_stop = poi_id_dt_subway_station
 	),
-	EwPoi(  # Subway train on the yellow line
-		id_poi = poi_id_subway_yellow02,
-		str_name = "A Yellow Line Subway Train",
-		str_desc = str_yellow_subway_description,
-		channel = channel_subway_yellow02,
-		role = "Subway Train Y-02",
+	EwPoi(  # Subway train on the gold line
+		id_poi = poi_id_subway_gold02,
+		str_name = "A Gold Line Subway Train",
+		str_desc = str_gold_subway_description,
+		channel = channel_subway_gold02,
+		role = "Subway Train GOLD-02",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_yellow_southbound,
-		default_stop = poi_id_ab_subway_station
+		default_line = transport_line_subway_gold_westbound,
+		default_stop = poi_id_dt_subway_station
 	),
 	EwPoi(  # Subway train on the green line
 		id_poi = poi_id_subway_green01,
 		str_name = "A Green Line Subway Train",
 		str_desc = str_green_subway_description,
 		channel = channel_subway_green01,
-		role = "Subway Train G-01",
+		role = "Subway Train GREEN-01",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
 		default_line = transport_line_subway_green_eastbound,
-		default_stop = poi_id_wgb_subway_station
+		default_stop = poi_id_dt_subway_station
 	),
 	EwPoi(  # Subway train on the green line
 		id_poi = poi_id_subway_green02,
 		str_name = "A Green Line Subway Train",
 		str_desc = str_green_subway_description,
 		channel = channel_subway_green02,
-		role = "Subway Train G-02",
+		role = "Subway Train GREEN-02",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
 		default_line = transport_line_subway_green_westbound,
-		default_stop = poi_id_sb_subway_station
-	),
-	EwPoi(  # Subway train on the blue line
-		id_poi = poi_id_subway_blue01,
-		str_name = "A Blue Line Subway Train",
-		str_desc = str_blue_subway_description,
-		channel = channel_subway_blue01,
-		role = "Subway Train B-01",
-		pvp = True,
-		is_transport = True,
-		transport_type = transport_type_subway,
-		default_line = transport_line_subway_blue_eastbound,
 		default_stop = poi_id_dt_subway_station
 	),
-	EwPoi(  # Subway train on the blue line
-		id_poi = poi_id_subway_blue02,
-		str_name = "A Blue Line Subway Train",
-		str_desc = str_blue_subway_description,
-		channel = channel_subway_blue02,
-		role = "Subway Train B-02",
+	EwPoi(  # Subway train on the black line
+		id_poi = poi_id_subway_black01,
+		str_name = "A Black Line Subway Train",
+		str_desc = str_purple_subway_description,
+		channel = channel_subway_black01,
+		role = "Subway Train BLACK-01",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_blue_westbound,
-		default_stop = poi_id_afb_subway_station
+		default_line = transport_line_subway_black_eastbound,
+		default_stop = poi_id_dt_subway_station
+	),
+	EwPoi(  # Subway train on the black line
+		id_poi = poi_id_subway_black02,
+		str_name = "A Black Line Subway Train",
+		str_desc = str_purple_subway_description,
+		channel = channel_subway_black02,
+		role = "Subway Train BLACK-02",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_black_westbound,
+		default_stop = poi_id_dt_subway_station
+	),
+	EwPoi(  # Subway train on the purple line
+		id_poi = poi_id_subway_purple01,
+		str_name = "A Purple Line Subway Train",
+		str_desc = str_purple_subway_description,
+		channel = channel_subway_purple01,
+		role = "Subway Train PURPLE-01",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_purple_northbound,
+		default_stop = poi_id_dt_subway_station
+	),
+	EwPoi(  # Subway train on the purple line
+		id_poi = poi_id_subway_purple02,
+		str_name = "A Purple Line Subway Train",
+		str_desc = str_purple_subway_description,
+		channel = channel_subway_purple02,
+		role = "Subway Train PURPLE-02",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_purple_southbound,
+		default_stop = poi_id_dt_subway_station
 	),
 	# EwPoi(  # Subway train on the white line
 	# 	id_poi = poi_id_subway_white01,
@@ -11608,71 +16186,59 @@ poi_list = [
 		default_line = transport_line_blimp_df_to_afb,
 		default_stop = poi_id_df_blimp_tower
 	),
-
-	EwPoi( # apt
-		id_poi = poi_id_apt,
-		alias = [
-		],
-		str_name = "an apartment",
-		str_desc = "",
-		channel = channel_apt,
-		role = "Apartments",
-		pvp = False,
-		is_subzone = False,
-	),
 	EwPoi( # apt-downtown
 		id_poi = poi_id_apt_downtown,
 		alias = [
-			"apt",
+
 		],
 		str_name = "a Downtown apartment",
 		str_desc = "",
 		channel = channel_apt_downtown,
 		role = "Downtown Apartments",
 		is_apartment = True,
-		mother_district = poi_id_downtown,
+		mother_districts = [poi_id_downtown],
 		pvp = False,
 		is_subzone = False,
 	),
 	EwPoi( # apt-smogsburg
 		id_poi = poi_id_apt_smogsburg,
 		alias = [
-			"apt",
+
 		],
 		str_name = "a Smogsburg apartment",
 		str_desc = "",
 		channel = channel_apt_smogsburg,
 		role = "Smogsburg Apartments",
 		is_apartment = True,
-		mother_district = poi_id_smogsburg,
+		mother_districts = [poi_id_smogsburg],
 		pvp = False,
 		is_subzone = False,
 	),
 	EwPoi( # apt-krakbay
 		id_poi = poi_id_apt_krakbay,
 		alias = [
-			"apt",
+
 		],
 		str_name = "a Krak Bay apartment",
 		str_desc = "",
 		channel = channel_apt_krakbay,
 		role = "Krak Bay Apartments",
 		is_apartment = True,
-		mother_district = poi_id_krakbay,
+		mother_districts = [poi_id_krakbay],
 		pvp = False,
 		is_subzone = False,
 	),
 	EwPoi( # apt-poudrinalley
 		id_poi = poi_id_apt_poudrinalley,
 		alias = [
-			"apt",
+
 		],
 		str_name = "a Poudrin Alley apartment",
 		str_desc = "",
 		channel = channel_apt_poudrinalley,
 		role = "Poudrin Alley Apartments",
 		is_apartment = True,
-		mother_district = poi_id_poudrinalley,
+		mother_districts = [poi_id_poudrinalley],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11686,7 +16252,7 @@ poi_list = [
 		channel = channel_apt_greenlightdistrict,
 		role = "Green Light District Apartments",
 		is_apartment = True,
-		mother_district = poi_id_greenlightdistrict,
+		mother_districts = [poi_id_greenlightdistrict],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11700,7 +16266,7 @@ poi_list = [
 		channel = channel_apt_oldnewyonkers,
 		role = "Old New Yonkers Apartments",
 		is_apartment = True,
-		mother_district = poi_id_oldnewyonkers,
+		mother_districts = [poi_id_oldnewyonkers],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11714,7 +16280,7 @@ poi_list = [
 		channel = channel_apt_littlechernobyl,
 		role = "Little Chernobyl Apartments",
 		is_apartment = True,
-		mother_district = poi_id_littlechernobyl,
+		mother_districts = [poi_id_littlechernobyl],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11728,7 +16294,7 @@ poi_list = [
 		channel = channel_apt_arsonbrook,
 		role = "Arsonbrook Apartments",
 		is_apartment = True,
-		mother_district = poi_id_arsonbrook,
+		mother_districts = [poi_id_arsonbrook],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11742,7 +16308,7 @@ poi_list = [
 		channel = channel_apt_astatineheights,
 		role = "Astatine Heights Apartments",
 		is_apartment = True,
-		mother_district = poi_id_astatineheights,
+		mother_districts = [poi_id_astatineheights],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11756,7 +16322,7 @@ poi_list = [
 		channel = channel_apt_gatlingsdale,
 		role = "Gatlingsdale Apartments",
 		is_apartment = True,
-		mother_district = poi_id_gatlingsdale,
+		mother_districts = [poi_id_gatlingsdale],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11770,7 +16336,7 @@ poi_list = [
 		channel = channel_apt_vandalpark,
 		role = "Vandal Park Apartments",
 		is_apartment = True,
-		mother_district = poi_id_vandalpark,
+		mother_districts = [poi_id_vandalpark],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11779,12 +16345,12 @@ poi_list = [
 		alias=[
 
 		],
-		str_name="your Glocksbury apartment",
+		str_name="a Glocksbury apartment",
 		str_desc="",
 		channel=channel_apt_glocksbury,
 		role="Glocksbury Apartments",
 		is_apartment = True,
-		mother_district = poi_id_glocksbury,
+		mother_districts = [poi_id_glocksbury],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -11793,12 +16359,12 @@ poi_list = [
 		alias=[
 
 		],
-		str_name="your North Sleezeborough apartment",
+		str_name="a North Sleezeborough apartment",
 		str_desc="",
 		channel=channel_apt_northsleezeborough,
 		role="North Sleezeborough Apartments",
 		is_apartment=True,
-		mother_district = poi_id_northsleezeborough,
+		mother_districts = [poi_id_northsleezeborough],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -11812,7 +16378,7 @@ poi_list = [
 		channel = channel_apt_southsleezeborough,
 		role = "South Sleezeborough Apartments",
 		is_apartment=True,
-		mother_district = poi_id_southsleezeborough,
+		mother_districts = [poi_id_southsleezeborough],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11826,7 +16392,7 @@ poi_list = [
 		channel = channel_apt_oozegardens,
 		role = "Ooze Gardens Apartments",
 		is_apartment=True,
-		mother_district = poi_id_oozegardens,
+		mother_districts = [poi_id_oozegardens],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11840,7 +16406,7 @@ poi_list = [
 		channel = channel_apt_cratersville,
 		role = "Cratersville Apartments",
 		is_apartment=True,
-		mother_district = poi_id_cratersville,
+		mother_districts = [poi_id_cratersville],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11849,12 +16415,12 @@ poi_list = [
 		alias=[
 
 		],
-		str_name="your Wreckington apartment",
+		str_name="a Wreckington apartment",
 		str_desc="",
 		channel=channel_apt_wreckington,
 		role="Wreckington Apartments",
 		is_apartment=True,
-		mother_district = poi_id_wreckington,
+		mother_districts = [poi_id_wreckington],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -11868,7 +16434,7 @@ poi_list = [
 		channel = channel_apt_slimesend,
 		role = "Slime's End Apartments",
 		is_apartment=True,
-		mother_district = poi_id_slimesend,
+		mother_districts = [poi_id_slimesend],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11882,7 +16448,7 @@ poi_list = [
 		channel = channel_apt_vagrantscorner,
 		role = "Vagrant's Corner Apartments",
 		is_apartment=True,
-		mother_district = poi_id_vagrantscorner,
+		mother_districts = [poi_id_vagrantscorner],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11891,12 +16457,12 @@ poi_list = [
 		alias=[
 
 		],
-		str_name="your Assault Flats Beach apartment",
+		str_name="a Assault Flats Beach apartment",
 		str_desc="",
 		channel=channel_apt_assaultflatsbeach,
 		role="Assault Flats Beach Apartments",
 		is_apartment=True,
-		mother_district = poi_id_assaultflatsbeach,
+		mother_districts = [poi_id_assaultflatsbeach],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -11905,12 +16471,12 @@ poi_list = [
 		alias=[
 
 		],
-		str_name="your New New Yonkers apartment",
+		str_name="a New New Yonkers apartment",
 		str_desc="",
 		channel=channel_apt_newnewyonkers,
 		role="New New Yonkers Apartments",
 		is_apartment=True,
-		mother_district = poi_id_newnewyonkers,
+		mother_districts = [poi_id_newnewyonkers],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -11924,7 +16490,7 @@ poi_list = [
 		channel = channel_apt_brawlden,
 		role = "Brawlden Apartments",
 		is_apartment=True,
-		mother_district = poi_id_brawlden,
+		mother_districts = [poi_id_brawlden],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11938,7 +16504,7 @@ poi_list = [
 		channel = channel_apt_toxington,
 		role = "Toxington Apartments",
 		is_apartment=True,
-		mother_district = poi_id_toxington,
+		mother_districts = [poi_id_toxington],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11952,7 +16518,7 @@ poi_list = [
 		channel = channel_apt_charcoalpark,
 		role = "Charcoal Park Apartments",
 		is_apartment=True,
-		mother_district = poi_id_charcoalpark,
+		mother_districts = [poi_id_charcoalpark],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11966,7 +16532,7 @@ poi_list = [
 		channel = channel_apt_poloniumhill,
 		role = "Polonium Hill Apartments",
 		is_apartment=True,
-		mother_district = poi_id_poloniumhill,
+		mother_districts = [poi_id_poloniumhill],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11980,7 +16546,7 @@ poi_list = [
 		channel = channel_apt_westglocksbury,
 		role = "West Glocksbury Apartments",
 		is_apartment=True,
-		mother_district = poi_id_westglocksbury,
+		mother_districts = [poi_id_westglocksbury],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -11994,7 +16560,7 @@ poi_list = [
 		channel = channel_apt_jaywalkerplain,
 		role = "Jaywalker Plain Apartments",
 		is_apartment=True,
-		mother_district = poi_id_jaywalkerplain,
+		mother_districts = [poi_id_jaywalkerplain],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12008,7 +16574,7 @@ poi_list = [
 		channel = channel_apt_crookline,
 		role = "Crookline Apartments",
 		is_apartment=True,
-		mother_district = poi_id_crookline,
+		mother_districts = [poi_id_crookline],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12022,7 +16588,7 @@ poi_list = [
 		channel = channel_apt_dreadford,
 		role = "Dreadford Apartments",
 		is_apartment=True,
-		mother_district = poi_id_dreadford,
+		mother_districts = [poi_id_dreadford],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12038,9 +16604,12 @@ poi_list = [
 		str_desc = "Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a leisurely cig. Someone's got their eyes on you. Exits into Slime's End.",
 		channel = channel_slimesendcliffs,
 		role = "Slime's End Cliffs",
-		mother_district = poi_id_slimesend,
+		mother_districts = [poi_id_slimesend],
 		pvp = True,
 		is_subzone = True,
+		neighbors = {
+			poi_id_slimesend : travel_time_subzone,
+		},
 	),
 	EwPoi(  # Clothing store in Krak Bay
 		id_poi = poi_id_bodega,
@@ -12052,7 +16621,7 @@ poi_list = [
 		str_desc = "Located behind a secret door in a seemingly innocuous corner store, Bodega is a high end clothing store for the freshest kids in the city.\n\nFrom the outside, Bodega appears to be simply another of the interchangeable convenience stores found on nearly every block of every major city. The windows are completely packed by dusty non-perishables, and the interior is not much better with every  inch of space selling snacks or household basics in a visually deafening assault of brand names. However, those in the know simply stroll past all this noise and head for the old Snapple machine in the back of the shop. The machine is not that at all but a door that slides open to reveal a whole other store on the other side, this is the real Bodega. Neatly appointed, lacquered shelves hold the latest in street and skate fashion from shoes to shirts to jackets. The whole space is clean and orderly in a far cry from the cramped store front.\n\n(This description was literally just stolen and lightly edited from Atlas Obsurca. This is a real place in Boston, look it up. Pretty sick, huh?)\n\nThe well-trimmed, over-cologned four-eyed hipster behind the counter looks upon you with what can only be described as the freakish offspring of utter disdain and mindlessly sycophantic puppy-dog eyes that hope to lure you into an ill-advised purchase of high end socks that forces you to take out a second mortgage on your house. *SHARP INHALE*. He’ll !sew the dirty, unwashed rags you dare call clothing back together if it gets shredded in combat, for a price. You can also get your old outfits !retrofit'd with added combat functionalities here, also for a price.\n\nExits into Krak Bay.",
 		channel = channel_bodega,
 		role = "Bodega",
-		mother_district = poi_id_krakbay,
+		mother_districts = [poi_id_krakbay],
 		pvp = False,
 		vendors = [
 			vendor_bodega,
@@ -12060,313 +16629,50 @@ poi_list = [
 
 		],
 		is_subzone = True,
+		neighbors = {
+			poi_id_krakbay : travel_time_subzone,
+		},
 	),
-	EwPoi(  # Outskirts - 1
-		id_poi=poi_id_south_outskirts,
-		alias=[
-			"southoutskirts",
-			"soutskirts",
-			"so",
+	EwPoi(  # the waffle house in the void
+		id_poi = poi_id_wafflehouse,
+		alias = [
+			"wh",
+			"waffle",
 		],
-		str_name="Southern Outskirts",
-		str_desc="{} These outskirts lay just beyond the boundaries of Wreckington, Cratersville, and Ooze Gardens. If you kept wandering, you could probably wind up in the Southwestern Outskirts too.".format(str_generic_outskirts_description),
-		coord = (19, 37),
-		coord_alias = [
-			(20, 37),
-			(21, 37)
+		str_name = "the Waffle House",
+		str_desc = "As nondescript as its façade, the Waffle House has a very simplistic interior, going for a slightly modernized mid-century look. The warm lighting of the incandescent lightbulbs combines with the crispy fresh air coming from outside and the old timey music to give the place an extraordinarily comforting ambience. The entrance directly faces a short counter manned by old man Leopold, a pleasant guy in his 70s with a thick European accent who seems to run the entire joint. A few tables are laid by the windows, with a view that makes you wonder if you've gone blind. \n\nExits back into the Void.",
+		channel = channel_wafflehouse,
+		role = "Waffle House",
+		mother_districts = [poi_id_thevoid],
+		pvp = False,
+		vendors = [
+			vendor_wafflehouse,
 		],
-		channel="south-outskirts",
-		role="Southern Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
+		is_subzone = True,
+		neighbors = {
+			poi_id_thevoid : travel_time_subzone,
+		},
 	),
-	EwPoi(  # Outskirts - 2
-		id_poi=poi_id_southwest_outskirts,
-		alias=[
-			"southwesternoutskirts",
-			"swoutskirts",
-			"swo",
+	EwPoi(
+		id_poi = poi_id_basedhardware,
+		alias = [
+			"hardware",
+			"hardwarestore",
+			"bhw",
+			"bh"
 		],
-		str_name="Southwestern Outskirts",
-		str_desc="{} These outskirts lay just beyond the boundaries of South Sleezeborough, Crookline, and Dreadford. If you kept wandering, you could probably wind up in the Western or Southern Outskirts too.".format(str_generic_outskirts_description),
-		coord = (6, 37),
-		coord_alias = [
-			(7, 37),
-			(8, 37),
-			(9, 37),
-			(10, 37)
-		],
-		channel="southwest-outskirts",
-		role="Southwestern Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
+		str_name = "Based Hardware",
+		str_desc = "A hardware store right beside a gas station. This place is a fucking mess, even by your standards. Cluttered stacks of washing machines and other various household necessities tower over you, turning the place into a goddamn corn maze made out of worn out appliances. Your only saving grace in terms of navigation is the piss-yellow incandescent lighting fixed to the ceiling. On the radio, you can hear a Sludgefest rendition of 'Hardware Store' by Weird-Al Yankovic quietly echoing throughout the makeshift corridors on loop. You think it'd be best to find what your looking for and make a dash to the checkout section, before some psychopath pulls you aside and bashes your skull in.",
+		channel = channel_basedhardware,
+		role = "Based Hardware",
+		mother_districts = [poi_id_westglocksbury],
+		pvp = False,
+		vendors = [vendor_basedhardware],
+		is_subzone = True,
+		neighbors = {
+			poi_id_westglocksbury : travel_time_subzone,
+		}
 	),
-	EwPoi(  # Outskirts - 3
-		id_poi=poi_id_west_outskirts,
-		alias=[
-			"westernoutskirts",
-			"woutskirts",
-			"wo",
-		],
-		str_name="Western Outskirts",
-		str_desc="{} These outskirts lay just beyond the boundaries of Jaywalker Plain, West Glocksbury, and Polonium Hill. If you kept wandering, you could probably wind up in the Southwestern or Northwestern Outskirts too.".format(str_generic_outskirts_description),
-		coord = (3, 10),
-		coord_alias = [
-			(3, 11),
-			(3, 12),
-			(3, 13),
-			(3, 14),
-		],
-		channel="west-outskirts",
-		role="Western Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 4
-		id_poi=poi_id_northwest_outskirts,
-		alias=[
-			"northwesternoutskirts",
-			"nwoutskirts",
-			"nwo",
-		],
-		str_name="Northwestern Outskirts",
-		str_desc="{} These outskirts lay just beyond the boundaries of Charcoal Park, Toxington, and Astatine Heights. If you kept wandering, you could probably wind up in the Western or Northern Outskirts too.".format(str_generic_outskirts_description),
-		coord = (22, 2),
-		coord_alias = [
-			(21, 2),
-			(20, 2),
-			(19, 2),
-			(18, 2),
-		],
-		channel="northwest-outskirts",
-		role="Northwestern Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 5
-		id_poi=poi_id_north_outskirts,
-		alias=[
-			"northernoutskirts",
-			"noutskirts",
-			"no",
-		],
-		str_name="North Outskirts",
-		str_desc="{}  These outskirts lay just beyond the boundaries of Arsonbrook, Brawlden, and New New Yonkers. If you kept wandering, you could probably wind up in the Northwestern Outskirts or the Nuclear Beach too.".format(str_generic_outskirts_description),
-		coord = (37, 2),
-		coord_alias = [
-			(36, 2),
-			(35, 2),
-			(34, 2),
-			(33, 2)
-		],
-		channel="north-outskirts",
-		role="Northern Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi( # Outskirts - 6
-		id_poi=poi_id_nuclear_beach,
-		alias=[
-			"nuclearbeach",
-			"nuclearbeachoutskirts",
-			"nb",
-			"nbeach",
-			"afbo",
-			"afboutskirts",
-		],
-		str_name="Nuclear Beach",
-		str_desc="{}  A place only the fiercest secreatures call home, right next to Assault Flats Beach. Stay around too long, and you'll wind up in the jaws of god knows what lurks around here.".format(str_generic_outskirts_description),
-		coord = (47, 6),
-		coord_alias = [
-			(47, 7)
-		],
-		channel="nuclear-beach",
-		role="Nuclear Beach",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	# EwPoi(  # Outskirts - 6
-	# 	id_poi=poi_id_dreadford_outskirts,
-	# 	alias=[
-	# 		"dreadfordoutskirts",
-	# 		"dfoutskirts",
-	# 		"dfo",
-	# 	],
-	# 	str_name="Dreadford Outskirts",
-	# 	str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(2, 51),
-	# 	channel="dreadford-outskirts",
-	# 	role="Dreadford Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 7
-	# 	id_poi=poi_id_jaywalkerplain_outskirts,
-	# 	alias=[
-	# 		"jaywalkerplainoutskirts",
-	# 		"jpoutskirts",
-	# 		"jpo",
-	# 	],
-	# 	str_name="Jaywalker Plain Outskirts",
-	# 	str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(5, 44),
-	# 	channel="jaywalker-plain-outskirts",
-	# 	role="Jaywalker Plain Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 8
-	# 	id_poi=poi_id_westglocksbury_outskirts,
-	# 	alias=[
-	# 		"westglocksburyoutskirts",
-	# 		"wgboutskirts",
-	# 		"wgbo"
-	# 	],
-	# 	str_name="West Glocksbury Outskirts",
-	# 	str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(6, 32),
-	# 	channel="west-glocksbury-outskirts",
-	# 	role="West Glocksbury Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 9
-	# 	id_poi=poi_id_poloniumhill_outskirts,
-	# 	alias=[
-	# 		"poloniumhilloutskirts",
-	# 		"phoutskirts",
-	# 		"pho",
-	# 	],
-	# 	str_name="Polonium Hill Outskirts",
-	# 	str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(7, 18),
-	# 	channel="polonium-hill-outskirts",
-	# 	role="Polonium Hill Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 10
-	# 	id_poi=poi_id_charcoalpark_outskirts,
-	# 	alias=[
-	# 		"charcoalparkoutskirts",
-	# 		"cpoutskirts",
-	# 		"cpo",
-	# 	],
-	# 	str_name="Charcoal Park Outskirts",
-	# 	str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(15, 4),
-	# 	channel="charcoal-park-outskirts",
-	# 	role="Charcoal Park Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 11
-	# 	id_poi=poi_id_toxington_outskirts,
-	# 	alias=[
-	# 		"toxingtonoutskirts",
-	# 		"ttoutskirts",
-	# 		"tto",
-	# 	],
-	# 	str_name="Toxington Outskirts",
-	# 	str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(27, 4),
-	# 	channel="toxington-outskirts",
-	# 	role="Toxington Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 12
-	# 	id_poi=poi_id_astatineheights_outskirts,
-	# 	alias=[
-	# 		"astatineheightsoutskirts",
-	# 		"ahoutskirts",
-	# 		"aho",
-	# 	],
-	# 	str_name="Astatine Heights Outskirts",
-	# 	str_desc="{} To the South is Astatine Heights. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(46, 10),
-	# 	channel="astatine-heights-outskirts",
-	# 	role="Astatine Heights Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 13
-	# 	id_poi=poi_id_arsonbrook_outskirts,
-	# 	alias=[
-	# 		"arsonbrookoutskirts",
-	# 		"aboutskirts",
-	# 		"abo",
-	# 	],
-	# 	str_name="Arsonbrook Outskirts",
-	# 	str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(54, 2),
-	# 	channel="arsonbrook-outskirts",
-	# 	role="Arsonbrook Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 14
-	# 	id_poi=poi_id_brawlden_outskirts,
-	# 	alias=[
-	# 		"brawldenoutskirts",
-	# 		"bdoutskirts",
-	# 		"bdo",
-	# 	],
-	# 	str_name="Brawlden Outskirts",
-	# 	str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(71, 2),
-	# 	channel="brawlden-outskirts",
-	# 	role="Brawlden Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 15
-	# 	id_poi=poi_id_newnewyonkers_outskirts,
-	# 	alias=[
-	# 		"newnewyonkersoutskirts",
-	# 		"nnyoutskirts",
-	# 		"nnyo",
-	# 	],
-	# 	str_name="New New Yonkers Outskirts",
-	# 	str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(89, 6),
-	# 	channel="new-new-yonkers-outskirts",
-	# 	role="New New Yonkers Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 16
-	# 	id_poi=poi_id_assaultflatsbeach_outskirts,
-	# 	alias=[
-	# 		"assaultflatsbeachoutskirts",
-	# 		"afboutskirts",
-	# 		"afbo",
-	# 	],
-	# 	str_name="Assault Flats Beach Outskirts",
-	# 	str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(99, 8),
-	# 	channel="assault-flats-beach-outskirts",
-	# 	role="Assault Flats Beach Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
 	EwPoi(  # Tutorial - 1
 		id_poi = poi_id_tutorial_classroom,
 		channel="classroom",
@@ -12392,9 +16698,1030 @@ poi_list = [
 		coord = (54, 39),
 		channel = "the-sphere",
 		role = "The Sphere",
-		is_subzone = True
+		is_subzone = True,
+		pvp = False,
 	),
+	# Outskirts start here
+	EwPoi(  # Outskirts - 1
+		id_poi=poi_id_wreckington_outskirts_edge,
+		alias=[
+			"wreckingtonoutskirtsedge",
+			"wtoutskirtsedge",
+			"wtoedge",
+			"wtoe",
+		],
+		str_name="Wreckington Outskirts Edge",
+		str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="wreckington-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_wreckington_street_a : travel_time_outskirt,
+			poi_id_wreckington_street_b : travel_time_outskirt,
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_wreckington_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 2
+		id_poi=poi_id_cratersville_outskirts_edge,
+		alias=[
+			"cratersvilleoutskirtsedge",
+			"cvoutskirtsedge",
+			"cvoedge",
+			"cvoe",
+		],
+		str_name="Cratersville Outskirts Edge",
+		str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description_edge),
+		channel="cratersville-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_cratersville_street_a : travel_time_outskirt,
+			poi_id_cratersville_street_c : travel_time_outskirt,
+			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_cratersville_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 3
+		id_poi=poi_id_oozegardens_outskirts_edge,
+		alias=[
+			"oozegardensoutskirtsedge",
+			"ogoutskirtsedge",
+			"ogoedge"
+			"ogoe",
+		],
+		str_name="Ooze Gardens Outskirts Edge",
+		str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="ooze-gardens-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_oozegardens_street_a : travel_time_outskirt,
+			poi_id_oozegardens_street_d : travel_time_outskirt,
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_oozegardens_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 4
+		id_poi=poi_id_southsleezeborough_outskirts_edge,
+		alias=[
+			"southsleezeboroughoutskirtsedge",
+			"ssboutskirtsedge",
+			"ssboedge",
+			"ssboe",
+		],
+		str_name="South Sleezeborough Outskirts Edge",
+		str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="south-sleezeborough-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_southsleezeborough_street_a : travel_time_outskirt,
+			poi_id_southsleezeborough_street_d : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 5
+		id_poi=poi_id_crookline_outskirts_edge,
+		alias=[
+			"crooklineoutskirtsedge",
+			"cloutskirtsedge",
+			"cloedge",
+			"cloe",
+		],
+		str_name="Crookline Outskirts Edge",
+		str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="crookline-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_crookline_street_a : travel_time_outskirt,
+			poi_id_crookline_street_b : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 6
+		id_poi=poi_id_dreadford_outskirts_edge,
+		alias=[
+			"dreadfordoutskirtsedge",
+			"dfoutskirtsedge",
+			"dfoedge"
+			"dfoe",
+		],
+		str_name="Dreadford Outskirts Edge",
+		str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="dreadford-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_dreadford_street_a : travel_time_outskirt,
+			poi_id_dreadford_street_b : travel_time_outskirt,
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_dreadford_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 7
+		id_poi=poi_id_jaywalkerplain_outskirts_edge,
+		alias=[
+			"jaywalkerplainoutskirtsedge",
+			"jpoutskirtsedge",
+			"jpoedge",
+			"jpoe",
+		],
+		str_name="Jaywalker Plain Outskirts Edge",
+		str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="jaywalker-plain-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_jaywalkerplain_street_c : travel_time_outskirt,
+			poi_id_jaywalkerplain_street_d : travel_time_outskirt,
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 8
+		id_poi=poi_id_westglocksbury_outskirts_edge,
+		alias=[
+			"westglocksburyoutskirtsedge",
+			"wgboutskirtsedge",
+			"wgboedge",
+			"wgboe"
+		],
+		str_name="West Glocksbury Outskirts Edge",
+		str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="west-glocksbury-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_westglocksbury_street_c : travel_time_outskirt,
+			poi_id_westglocksbury_street_d : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 9
+		id_poi=poi_id_poloniumhill_outskirts_edge,
+		alias=[
+			"poloniumhilloutskirtsedge",
+			"phoutskirtsedge",
+			"phoedge",
+			"phoe",
+		],
+		str_name="Polonium Hill Outskirts Edge",
+		str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="polonium-hill-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_poloniumhill_street_c : travel_time_outskirt,
+			poi_id_poloniumhill_street_d : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 10
+		id_poi=poi_id_charcoalpark_outskirts_edge,
+		alias=[
+			"charcoalparkoutskirtsedge",
+			"cpoutskirtsedge",
+			"cpoedge",
+			"cpoe",
+		],
+		str_name="Charcoal Park Outskirts Edge",
+		str_desc="You’ve never seen ruins this... recent. This area used to be a part of Charcoal Park, but now it’s a complete ghost town. You might even mistake it for a bonafide part of the city were it not for all the desert raiders and bubbling acid pools everywhere. It really makes you think about what could’ve been, you know? Maybe if the Veteran center wasn’t shielding Charcoal Park from this mess, we could’ve gotten rid of that stupid-ass district ages ago. {} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="charcoal-park-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_charcoalpark_street_a : travel_time_outskirt,
+			poi_id_charcoalpark_street_b : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 11
+		id_poi=poi_id_toxington_outskirts_edge,
+		alias=[
+			"toxingtonoutskirtsedge",
+			"ttoutskirtsedge",
+			"ttoedge",
+			"ttoe",
+		],
+		str_name="Toxington Outskirts Edge",
+		str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="toxington-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_toxington_street_c : travel_time_outskirt,
+			poi_id_toxington_street_d : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+			poi_id_toxington_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 12
+		id_poi=poi_id_maimridge_outskirts_edge,
+		alias=[
+			"maimridgeoutskirtsedge",
+			"mroutskirtsedge",
+			"mroedge",
+			"mroe",
+		],
+		str_name="Maimridge Outskirts Edge",
+		str_desc="{} To the South is Maimridge. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="maimridge-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_maimridge_street_b : travel_time_outskirt,
+			poi_id_maimridge_street_c : travel_time_outskirt,
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+			poi_id_maimridge_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 13
+		id_poi=poi_id_arsonbrook_outskirts_edge,
+		alias=[
+			"arsonbrookoutskirtsedge",
+			"aboutskirtsedge",
+			"aboedge",
+			"aboe",
+		],
+		str_name="Arsonbrook Outskirts Edge",
+		str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="arsonbrook-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_arsonbrook_street_c : travel_time_outskirt,
+			poi_id_arsonbrook_street_d : travel_time_outskirt,
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 14
+		id_poi=poi_id_brawlden_outskirts_edge,
+		alias=[
+			"brawldenoutskirtsedge",
+			"bdoutskirtsedge",
+			"bdoedge",
+			"bdoe",
+		],
+		str_name="Brawlden Outskirts Edge",
+		str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="brawlden-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_brawlden_street_a : travel_time_outskirt,
+			poi_id_brawlden_street_b : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_brawlden_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 15
+		id_poi=poi_id_newnewyonkers_outskirts_edge,
+		alias=[
+			"newnewyonkersoutskirtsedge",
+			"nnyoutskirtsedge",
+			"nnyoedge",
+			"nnyoe",
+		],
+		str_name="New New Yonkers Outskirts Edge",
+		str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="new-new-yonkers-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_newnewyonkers_street_a : travel_time_outskirt,
+			poi_id_newnewyonkers_street_b : travel_time_outskirt,
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 16
+		id_poi=poi_id_assaultflatsbeach_outskirts_edge,
+		alias=[
+			"assaultflatsbeachoutskirtsedge",
+			"afboutskirtsedge",
+			"afboedge",
+			"afboe",
+		],
+		str_name="Assault Flats Beach Outskirts Edge",
+		str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description_edge),
+		channel="assault-flats-beach-outskirts-edge",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_assaultflatsbeach_street_a : travel_time_outskirt,
+			poi_id_assaultflatsbeach_street_b : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 17
+		id_poi=poi_id_wreckington_outskirts,
+		alias=[
+			"wreckingtonoutskirts",
+			"wtoutskirts",
+			"wto",
+		],
+		str_name="Wreckington Outskirts",
+		str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description),
+		coord=(59, 70),
+		channel="wreckington-outskirts",
+		role="Wreckington Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_cratersville_outskirts : travel_time_outskirt,
+			poi_id_wreckington_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 18
+		id_poi=poi_id_cratersville_outskirts,
+		alias=[
+			"cratersvilleoutskirts",
+			"cvoutskirts",
+			"cvo",
+		],
+		str_name="Cratersville Outskirts",
+		str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description),
+		coord=(44, 70),
+		channel="cratersville-outskirts",
+		role="Cratersville Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_wreckington_outskirts: travel_time_outskirt,
+			poi_id_oozegardens_outskirts : travel_time_outskirt,
+			poi_id_cratersville_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 19
+		id_poi=poi_id_oozegardens_outskirts,
+		alias=[
+			"oozegardensoutskirts",
+			"ogoutskirts",
+			"ogo",
+		],
+		str_name="Ooze Gardens Outskirts",
+		str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description),
+		coord=(35, 70),
+		channel="ooze-gardens-outskirts",
+		role="Ooze Gardens Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_cratersville_outskirts : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 20
+		id_poi=poi_id_southsleezeborough_outskirts,
+		alias=[
+			"southsleezeboroughoutskirts",
+			"ssboutskirts",
+			"ssbo",
+		],
+		str_name="South Sleezeborough Outskirts",
+		str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description),
+		coord=(27, 65),
+		channel="south-sleezeborough-outskirts",
+		role="South Sleezeborough Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_oozegardens_outskirts : travel_time_outskirt,
+			poi_id_crookline_outskirts : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 21
+		id_poi=poi_id_crookline_outskirts,
+		alias=[
+			"crooklineoutskirts",
+			"cloutskirts",
+			"clo",
+		],
+		str_name="Crookline Outskirts",
+		str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description),
+		coord=(18, 66),
+		channel="crookline-outskirts",
+		role="Crookline Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
+			poi_id_dreadford_outskirts : travel_time_outskirt,
+			poi_id_crookline_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 22
+		id_poi=poi_id_dreadford_outskirts,
+		alias=[
+			"dreadfordoutskirts",
+			"dfoutskirts",
+			"dfo",
+		],
+		str_name="Dreadford Outskirts",
+		str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description),
+		coord=(2, 51),
+		channel="dreadford-outskirts",
+		role="Dreadford Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_crookline_outskirts : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
+			poi_id_dreadford_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 23
+		id_poi=poi_id_jaywalkerplain_outskirts,
+		alias=[
+			"jaywalkerplainoutskirts",
+			"jpoutskirts",
+			"jpo",
+		],
+		str_name="Jaywalker Plain Outskirts",
+		str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description),
+		coord=(5, 44),
+		channel="jaywalker-plain-outskirts",
+		role="Jaywalker Plain Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_dreadford_outskirts : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 24
+		id_poi=poi_id_westglocksbury_outskirts,
+		alias=[
+			"westglocksburyoutskirts",
+			"wgboutskirts",
+			"wgbo"
+		],
+		str_name="West Glocksbury Outskirts",
+		str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description),
+		coord=(6, 32),
+		channel="west-glocksbury-outskirts",
+		role="West Glocksbury Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 25
+		id_poi=poi_id_poloniumhill_outskirts,
+		alias=[
+			"poloniumhilloutskirts",
+			"phoutskirts",
+			"pho",
+		],
+		str_name="Polonium Hill Outskirts",
+		str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description),
+		coord=(7, 18),
+		channel="polonium-hill-outskirts",
+		role="Polonium Hill Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 26
+		id_poi=poi_id_charcoalpark_outskirts,
+		alias=[
+			"charcoalparkoutskirts",
+			"cpoutskirts",
+			"cpo",
+		],
+		str_name="Charcoal Park Outskirts",
+		str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description),
+		coord=(15, 4),
+		channel="charcoal-park-outskirts",
+		role="Charcoal Park Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts : travel_time_outskirt,
+			poi_id_toxington_outskirts : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 27
+		id_poi=poi_id_toxington_outskirts,
+		alias=[
+			"toxingtonoutskirts",
+			"ttoutskirts",
+			"tto",
+		],
+		str_name="Toxington Outskirts",
+		str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description),
+		coord=(27, 4),
+		channel="toxington-outskirts",
+		role="Toxington Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+			poi_id_maimridge_outskirts : travel_time_outskirt,
+			poi_id_toxington_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 28
+		id_poi=poi_id_maimridge_outskirts,
+		alias=[
+			"maimridgeoutskirts",
+			"mroutskirts",
+			"mro",
+		],
+		str_name="Maimridge Outskirts",
+		str_desc="{} To the South is Maimridge. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description),
+		coord=(46, 10),
+		channel="maimridge-outskirts",
+		role="Maimridge Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+			poi_id_toxington_outskirts : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts : travel_time_outskirt,
+			poi_id_maimridge_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 29
+		id_poi=poi_id_arsonbrook_outskirts,
+		alias=[
+			"arsonbrookoutskirts",
+			"aboutskirts",
+			"abo",
+		],
+		str_name="Arsonbrook Outskirts",
+		str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description),
+		coord=(54, 2),
+		channel="arsonbrook-outskirts",
+		role="Arsonbrook Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+			poi_id_maimridge_outskirts : travel_time_outskirt,
+			poi_id_brawlden_outskirts : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 30
+		id_poi=poi_id_brawlden_outskirts,
+		alias=[
+			"brawldenoutskirts",
+			"bdoutskirts",
+			"bdo",
+		],
+		str_name="Brawlden Outskirts",
+		str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
+		coord=(71, 2),
+		channel="brawlden-outskirts",
+		role="Brawlden Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
+			poi_id_brawlden_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 31
+		id_poi=poi_id_newnewyonkers_outskirts,
+		alias=[
+			"newnewyonkersoutskirts",
+			"nnyoutskirts",
+			"nnyo",
+		],
+		str_name="New New Yonkers Outskirts",
+		str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description),
+		coord=(89, 6),
+		channel="new-new-yonkers-outskirts",
+		role="New New Yonkers Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_brawlden_outskirts : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 32
+		id_poi=poi_id_assaultflatsbeach_outskirts,
+		alias=[
+			"assaultflatsbeachoutskirts",
+			"afboutskirts",
+			"afbo",
+		],
+		str_name="Assault Flats Beach Outskirts",
+		str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
+		coord=(99, 8),
+		channel="assault-flats-beach-outskirts",
+		role="Assault Flats Beach Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 33
+		id_poi=poi_id_wreckington_outskirts_depths,
+		alias=[
+			"wreckingtonoutskirtsdepths",
+			"wtoutskirtsdepths",
+			"wtodepths",
+			"wtod",
+		],
+		str_name="Wreckington Outskirts Depths",
+		str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="wreckington-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_wreckington_outskirts : travel_time_outskirt,
+			poi_id_cratersville_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 34
+		id_poi=poi_id_cratersville_outskirts_depths,
+		alias=[
+			"cratersvilleoutskirtsdepths",
+			"cvoutskirtsdepths",
+			"cvodepths",
+			"cvod",
+		],
+		str_name="Cratersville Outskirts Depths",
+		str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description_depths),
+		channel="cratersville-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_cratersville_outskirts : travel_time_outskirt,
+			poi_id_wreckington_outskirts_depths : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 35
+		id_poi=poi_id_oozegardens_outskirts_depths,
+		alias=[
+			"oozegardensoutskirtsdepths",
+			"ogoutskirtsdepths",
+			"ogodepths",
+			"ogod",
+		],
+		str_name="Ooze Gardens Outskirts Depths",
+		str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="ooze-gardens-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_oozegardens_outskirts : travel_time_outskirt,
+			poi_id_cratersville_outskirts_depths : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 36
+		id_poi=poi_id_southsleezeborough_outskirts_depths,
+		alias=[
+			"southsleezeboroughoutskirtsdepths",
+			"ssboutskirtsdepths",
+			"ssbodepths",
+			"ssbod",
+		],
+		str_name="South Sleezeborough Outskirts Depths",
+		str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="south-sleezeborough-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
+			poi_id_oozegardens_outskirts_depths : travel_time_outskirt,
+			poi_id_crookline_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 37
+		id_poi=poi_id_crookline_outskirts_depths,
+		alias=[
+			"crooklineoutskirtsdepths",
+			"cloutskirtsdepths",
+			"clodepths",
+			"clod",
+		],
+		str_name="Crookline Outskirts Depths",
+		str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="crookline-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_crookline_outskirts : travel_time_outskirt,
+			poi_id_southsleezeborough_outskirts_depths : travel_time_outskirt,
+			poi_id_dreadford_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 38
+		id_poi=poi_id_dreadford_outskirts_depths,
+		alias=[
+			"dreadfordoutskirtsdepths",
+			"dfoutskirtsdepths",
+			"dfodepths",
+			"dfod",
+		],
+		str_name="Dreadford Outskirts Depths",
+		str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="dreadford-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_dreadford_outskirts : travel_time_outskirt,
+			poi_id_crookline_outskirts_depths : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 39
+		id_poi=poi_id_jaywalkerplain_outskirts_depths,
+		alias=[
+			"jaywalkerplainoutskirtsdepths",
+			"jpoutskirtsdepths",
+			"jpodepths",
+			"jpod",
+		],
+		str_name="Jaywalker Plain Outskirts Depths",
+		str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="jaywalker-plain-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
+			poi_id_dreadford_outskirts_depths : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 40
+		id_poi=poi_id_westglocksbury_outskirts_depths,
+		alias=[
+			"westglocksburyoutskirtsdepths",
+			"wgboutskirtsdepths",
+			"wgbodepths",
+			"wgbod",
+		],
+		str_name="West Glocksbury Outskirts Depths",
+		str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="west-glocksbury-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_westglocksbury_outskirts : travel_time_outskirt,
+			poi_id_jaywalkerplain_outskirts_depths : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 41
+		id_poi=poi_id_poloniumhill_outskirts_depths,
+		alias=[
+			"poloniumhilloutskirtsdepths",
+			"phoutskirtsdepths",
+			"phodepths",
+			"phod",
+		],
+		str_name="Polonium Hill Outskirts Depths",
+		str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="polonium-hill-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_poloniumhill_outskirts : travel_time_outskirt,
+			poi_id_westglocksbury_outskirts_depths : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 42
+		id_poi=poi_id_charcoalpark_outskirts_depths,
+		alias=[
+			"charcoalparkoutskirtsdepths",
+			"cpoutskirtsdepths",
+			"cpodepths",
+			"cpod",
+		],
+		str_name="Charcoal Park Outskirts Depths",
+		str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="charcoal-park-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+			poi_id_poloniumhill_outskirts_depths : travel_time_outskirt,
+			poi_id_toxington_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 43
+		id_poi=poi_id_toxington_outskirts_depths,
+		alias=[
+			"toxingtonoutskirtsdepths",
+			"ttoutskirtsdepths",
+			"ttodepths",
+			"ttod",
+		],
+		str_name="Toxington Outskirts Depths",
+		str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="toxington-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_toxington_outskirts : travel_time_outskirt,
+			poi_id_charcoalpark_outskirts_depths : travel_time_outskirt,
+			poi_id_maimridge_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 44
+		id_poi=poi_id_maimridge_outskirts_depths,
+		alias=[
+			"maimridgeoutskirtsdepths",
+			"mroutskirtsdepths",
+			"mrodepths",
+			"mrod",
+		],
+		str_name="Maimridge Outskirts Depths",
+		str_desc="{} To the South is Maimridge. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="maimridge-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_maimridge_outskirts : travel_time_outskirt,
+			poi_id_toxington_outskirts_depths : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 45
+		id_poi=poi_id_arsonbrook_outskirts_depths,
+		alias=[
+			"arsonbrookoutskirtsdepths",
+			"aboutskirtsdepths",
+			"abodepths",
+			"abod",
+		],
+		str_name="Arsonbrook Outskirts Depths",
+		str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="arsonbrook-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_arsonbrook_outskirts : travel_time_outskirt,
+			poi_id_maimridge_outskirts_depths : travel_time_outskirt,
+			poi_id_brawlden_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 46
+		id_poi=poi_id_brawlden_outskirts_depths,
+		alias=[
+			"brawldenoutskirtsdepths",
+			"bdoutskirtsdepths",
+			"bdodepths",
+			"bdod",
+		],
+		str_name="Brawlden Outskirts Depths",
+		str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="brawlden-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_brawlden_outskirts : travel_time_outskirt,
+			poi_id_arsonbrook_outskirts_depths : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 47
+		id_poi=poi_id_newnewyonkers_outskirts_depths,
+		alias=[
+			"newnewyonkersoutskirtsdepths",
+			"nnyoutskirtsdepths",
+			"nnyodepths",
+			"nnyod",
+		],
+		str_name="New New Yonkers Outskirts Depths",
+		str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="new-new-yonkers-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
+			poi_id_brawlden_outskirts_depths : travel_time_outskirt,
+			poi_id_assaultflatsbeach_outskirts_depths : travel_time_outskirt,
+		},
+	),
+	EwPoi(  # Outskirts - 48
+		id_poi=poi_id_assaultflatsbeach_outskirts_depths,
+		alias=[
+			"assaultflatsbeachoutskirtsdepths",
+			"afboutskirtsdepths",
+			"afbodepths",
+			"afbod",
+		],
+		str_name="Assault Flats Beach Outskirts Depths",
+		str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description_depths),
+		channel="assault-flats-beach-outskirts-depths",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts = True,
+		neighbors = {
+			poi_id_assaultflatsbeach_outskirts : travel_time_outskirt,
+			poi_id_newnewyonkers_outskirts_depths : travel_time_outskirt,
+		},
+	)
 ]
+	
 
 debugroom = ewdebug.debugroom
 debugroom_short = ewdebug.debugroom_short
@@ -12402,23 +17729,157 @@ debugpiers = ewdebug.debugpiers
 debugfish_response = ewdebug.debugfish_response
 debugfish_goal = ewdebug.debugfish_goal
 
+# if you're looking for poi_map, here it is
 id_to_poi = {}
 coord_to_poi = {}
 chname_to_poi = {}
 alias_to_coord = {}
 capturable_districts = []
+outskirts_districts = []
 transports = []
 transport_stops = []
 transport_stops_ch = []
 piers = []
 outskirts = []
+outskirts_edges = []
+outskirts_middle = []
+outskirts_depths = []
+streets = []
 tutorial_pois = []
 zine_mother_districts = []
 
 for poi in poi_list:
+
+	# Assign permissions for all locations in the poi list.
+	if poi.permissions == None:
+		poi.permissions = {('{}'.format(poi.id_poi)): permissions_general}
+
+	# Assign all the correct major and minor roles.
+	
+	# Districts and streets need their minor roles to see (read-only) all of their subzones.
+	if poi.is_district or poi.is_street or poi.id_poi in [poi_id_mine, poi_id_cv_mines, poi_id_tt_mines]:
+		poi.minor_role = '{}_minor'.format(poi.id_poi)
+
+	# Districts need their major roles for their specific LAN (voice/text) channels.
+	if poi.is_district:
+		poi.major_role = '{}_major'.format(poi.id_poi)
+		streets_resp = ''
+		
+		district_streets_list = []
+		for street_poi in poi_list:
+			if street_poi.father_district == poi.id_poi:
+				district_streets_list.append(street_poi.str_name)
+			
+		if len(district_streets_list) > 0:
+			poi.str_desc += " This area is connected to "
+			if len(district_streets_list) == 1:
+				poi.str_desc += district_streets_list[0]
+			else:
+				for i in range(len(district_streets_list)):
+		
+					if i == (len(district_streets_list) - 1):
+						poi.str_desc += 'and {}.'.format(district_streets_list[i])
+					else:
+						poi.str_desc += '{}, '.format(district_streets_list[i])
+					
+	if poi.is_transport:
+		if 'subway' in poi.id_poi:
+			poi.major_role = 'subway_major'
+		elif 'blimp' in poi.id_poi:
+			poi.major_role = 'blimp_major'
+		elif 'ferry' in poi.id_poi:
+			poi.major_role = 'ferry_major'
+	
+	placeholder_channel_names_used = False
+		
+	# Subzones and streets need the same major roles as their mother/father districts.
+	if poi.is_street:
+		if poi.father_district != "" and poi.father_district != None:
+			for father_poi in poi_list:
+				if father_poi.id_poi == poi.father_district:
+					poi.major_role = father_poi.major_role
+					poi.property_class = father_poi.property_class
+					
+					if placeholder_channel_names_used:
+						if 'streeta' in poi.id_poi:
+							poi.channel = father_poi.channel + '-street-a'
+						elif 'streetb' in poi.id_poi:
+							poi.channel = father_poi.channel + '-street-b'
+						elif 'streetc' in poi.id_poi:
+							poi.channel = father_poi.channel + '-street-c'
+						elif 'streetd' in poi.id_poi:
+							poi.channel = father_poi.channel + '-street-d'
+						elif 'streete' in poi.id_poi:
+							poi.channel = father_poi.channel + '-street-e'
+						elif 'streetf' in poi.id_poi:
+							poi.channel = father_poi.channel + '-street-f'
+							
+					break
+			
+			father_district = ''
+			connected_streets_and_districts = []
+			connected_subzones = []
+			for neighbor_poi in poi_list:
+				if neighbor_poi.id_poi in poi.neighbors:
+					if neighbor_poi.id_poi == poi.father_district:
+						father_district = neighbor_poi.str_name
+					elif neighbor_poi.is_street or (neighbor_poi.is_district and neighbor_poi.id_poi != poi.father_district):
+						connected_streets_and_districts.append(neighbor_poi.str_name)
+					elif neighbor_poi.is_subzone:
+						connected_subzones.append(neighbor_poi.str_name)
+			
+			if father_district != '':
+				poi.str_desc += " This street connects back into {}.".format(father_district)
+			
+				if len(connected_streets_and_districts) >= 1:
+					poi.str_desc += " This street is connected to "
+					if len(connected_streets_and_districts) == 1:
+						poi.str_desc += connected_streets_and_districts[0]
+					else:
+						for i in range(len(connected_streets_and_districts)):
+					
+							if i == (len(connected_streets_and_districts) - 1):
+								poi.str_desc += 'and {}.'.format(connected_streets_and_districts[i])
+							else:
+								poi.str_desc += '{}, '.format(connected_streets_and_districts[i])
+
+				if len(connected_subzones) >= 1:
+					poi.str_desc += " This street also exits into "
+					if len(connected_subzones) == 1:
+						poi.str_desc += connected_subzones[0]
+					else:
+						for i in range(len(connected_subzones)):
+		
+							if i == (len(connected_subzones) - 1):
+								poi.str_desc += 'and {}.'.format(connected_subzones[i])
+							else:
+								poi.str_desc += '{}, '.format(connected_subzones[i])
+		else:
+			print('Error: No father POI found for {}'.format(poi.id_poi))
+	
+	mother_roles_dict = {}
+	if poi.is_subzone:
+		
+		for mother_poi in poi_list:
+			if mother_poi.id_poi in poi.mother_districts:
+				if mother_poi.major_role != None:
+					poi.major_role = mother_poi.major_role
+					break
+		
+	if poi.major_role == None:
+		#print('Null Major Role give to {}'.format(poi.id_poi))
+		poi.major_role = role_null_major_role
+	if poi.minor_role == None:
+		#print('Null Minor Role give to {}'.format(poi.str_name))
+		poi.minor_role = role_null_minor_role
+	
 	if poi.coord != None:
 		# Populate the map of coordinates to their point of interest, for looking up from the map.
 		coord_to_poi[poi.coord] = poi
+		
+		# for poi_2 in poi_list:
+		# 	if (poi.coord == poi_2.coord) and (poi.id_poi != poi_2.id_poi):
+		# 		print('{} has same coords as {}, please fix this.'.format(poi.id_poi, poi_2.id_poi))
 
 		# Populate the map of coordinate aliases to the main coordinate.
 		for coord_alias in poi.coord_alias:
@@ -12428,6 +17889,10 @@ for poi in poi_list:
 	# Populate the map of point of interest names/aliases to the POI.
 	id_to_poi[poi.id_poi] = poi
 	for alias in poi.alias:
+		for poi_2 in poi_list:
+			if alias in poi_2.alias and poi.id_poi != poi_2.id_poi:
+				print('alias {} is already being used by {}'.format(alias, poi_2.id_poi))
+
 		id_to_poi[alias] = poi
 
 	# if it's a district and not RR, CK, or JR, add it to a list of capturable districts
@@ -12446,14 +17911,31 @@ for poi in poi_list:
 
 	if poi.is_outskirts:
 		outskirts.append(poi.id_poi)
+		# For spawning purposes. Rarer enemies will spawn more often in the father layers of the 48 outskirts.
+		
+		# It's a bit of a simplistic solution, but this way we don't have to add an attribute to EwPoi
+		if 'edge' in poi.str_name.lower():
+			outskirts_edges.append(poi.id_poi)
+			#print(poi.channel)
+		elif 'depths' in poi.str_name.lower():
+			outskirts_depths.append(poi.id_poi)
+			#print(poi.channel)
+		else:
+			outskirts_middle.append(poi.id_poi)
+		
+	if poi.is_street:
+		streets.append(poi.id_poi)
+		#print(poi.minor_role)
 
 	if poi.is_tutorial:
 		tutorial_pois.append(poi.id_poi)
 
 	if poi.write_manuscript:
-		zine_mother_districts.append(id_to_poi.get(poi.mother_district))
+		for mother_poi in poi.mother_districts:
+			zine_mother_districts.append(id_to_poi.get(mother_poi))
 
 	chname_to_poi[poi.channel] = poi
+
 
 landmark_pois = [
 	poi_id_dreadford,
@@ -12462,6 +17944,18 @@ landmark_pois = [
 	poi_id_assaultflatsbeach,
 	poi_id_wreckington,
 ]
+
+non_district_non_subzone_pvp_areas = [
+	poi_id_thevoid
+]
+
+# Places on the map that should result in a user being flagged for PVP
+vulnerable_districts = outskirts + streets
+for poi in poi_list:
+	if (poi.is_subzone or poi.id_poi in non_district_non_subzone_pvp_areas) and poi.pvp:
+		vulnerable_districts.append(poi.id_poi)
+# for vul in vulnerable_districts:
+#     print('vulnerable area: {}'.format(vul))
 
 # maps districts to their immediate neighbors
 poi_neighbors = {}
@@ -12507,64 +18001,70 @@ transport_lines = [
 			}
 
 		),
-	EwTransportLine( # yellow subway line from south sleezeborough to arsonbrook
-		id_line = transport_line_subway_yellow_northbound,
+	EwTransportLine( # purple subway line from south sleezeborough to brawlden
+		id_line = transport_line_subway_purple_northbound,
 		alias = [
-			"northyellowline",
-			"northyellow",
-			"yellownorth",
-			"yellowtoarsonbrook",
-			"yellowtoarson",
-			"yellowtoab"
+			"northpurpleline",
+			"northpurple",
+			"purplenorth",
+			"purpletobrawlden",
+			"purpletobrawl",
+			"purpletobd"
 			],
 		first_stop = poi_id_ssb_subway_station,
-		last_stop = poi_id_ab_subway_station,
-		next_line = transport_line_subway_yellow_southbound,
-		str_name = "The yellow subway line towards Arsonbrook",
+		last_stop = poi_id_bd_subway_station,
+		next_line = transport_line_subway_purple_southbound,
+		str_name = "The purple subway line towards Brawlden",
 		schedule = {
-			poi_id_ssb_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_ssb_subway_station : [20, poi_id_og_subway_station],
+			poi_id_og_subway_station : [20, poi_id_pa_subway_station],
+			poi_id_pa_subway_station : [20, poi_id_dt_subway_station],
 			poi_id_dt_subway_station : [20, poi_id_sb_subway_station],
-			poi_id_sb_subway_station : [20, poi_id_ab_subway_station]
+			poi_id_sb_subway_station: [20, poi_id_ab_subway_station],
+			poi_id_ab_subway_station: [20, poi_id_lc_subway_station],
+			poi_id_lc_subway_station: [20, poi_id_bd_subway_station],
 			}
 
 		),
-	EwTransportLine( # yellow subway line from arsonbrook to south sleezeborough
-		id_line = transport_line_subway_yellow_southbound,
+	EwTransportLine( # purple subway line from brawlden to south sleezeborough
+		id_line = transport_line_subway_purple_southbound,
 		alias = [
-			"southyellowline",
-			"southyellow",
-			"yellowsouth",
-			"yellowtosouthsleezeborough",
-			"yellowtosouthsleeze",
-			"yellowtossb"
+			"southpurpleline",
+			"southpurple",
+			"purplesouth",
+			"purpletosouthsleezeborough",
+			"purpletosouthsleeze",
+			"purpletossb"
 			],
-		first_stop = poi_id_ab_subway_station,
+		first_stop = poi_id_bd_subway_station,
 		last_stop = poi_id_ssb_subway_station,
-		next_line = transport_line_subway_yellow_northbound,
-		str_name = "The yellow subway line towards South Sleezeborough",
+		next_line = transport_line_subway_purple_northbound,
+		str_name = "The purple subway line towards South Sleezeborough",
 		schedule = {
+			poi_id_bd_subway_station: [20, poi_id_lc_subway_station],
+			poi_id_lc_subway_station: [20, poi_id_ab_subway_station],
 			poi_id_ab_subway_station : [20, poi_id_sb_subway_station],
 			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_ssb_subway_station]
+			poi_id_dt_subway_station : [20, poi_id_pa_subway_station],
+			poi_id_pa_subway_station : [20, poi_id_og_subway_station],
+			poi_id_og_subway_station: [20, poi_id_ssb_subway_station],
 			}
 
 		),
-	EwTransportLine( # red subway line from cratersville to toxington
-		id_line = transport_line_subway_red_northbound,
+	EwTransportLine( # pink subway line from cratersville to toxington
+		id_line = transport_line_subway_pink_northbound,
 		alias = [
-			"northredline",
-			"northred",
-			"rednorth",
-			"redtotoxington",
-			"redtotox",
-			"redtott"
+			"northpinkline",
+			"northpink",
+			"pinknorth",
+			"pinktotoxington",
+			"pinktotox",
+			"pinktott"
 			],
 		first_stop = poi_id_cv_subway_station,
 		last_stop = poi_id_tt_subway_station,
-		next_line = transport_line_subway_red_southbound,
-		str_name = "The red subway line towards Toxington",
+		next_line = transport_line_subway_pink_southbound,
+		str_name = "The pink subway line towards Toxington",
 		schedule = {
 			poi_id_cv_subway_station : [20, poi_id_wt_subway_station],
 			poi_id_wt_subway_station : [20, poi_id_rr_subway_station],
@@ -12572,24 +18072,24 @@ transport_lines = [
 			poi_id_dt_subway_station : [20, poi_id_ck_subway_station],
 			poi_id_ck_subway_station : [20, poi_id_gd_subway_station],
 			poi_id_gd_subway_station : [20, poi_id_ah_subway_station],
-			poi_id_ah_subway_station : [20, poi_id_tt_subway_station]
+			poi_id_ah_subway_station: [20, poi_id_tt_subway_station],
 			}
 
 		),
-	EwTransportLine( # red subway line from toxington to cratersville
-		id_line = transport_line_subway_red_southbound,
+	EwTransportLine( # pink subway line from toxington to cratersville
+		id_line = transport_line_subway_pink_southbound,
 		alias = [
-			"southredline",
-			"southred",
-			"redsouth",
-			"redtocratersville",
-			"redtocraters",
-			"redtocv"
+			"southpinkline",
+			"southpink",
+			"pinksouth",
+			"pinktocratersville",
+			"pinktocraters",
+			"pinktocv"
 			],
 		first_stop = poi_id_tt_subway_station,
 		last_stop = poi_id_cv_subway_station,
-		next_line = transport_line_subway_red_northbound,
-		str_name = "The red subway line towards Cratersville",
+		next_line = transport_line_subway_pink_northbound,
+		str_name = "The pink subway line towards Cratersville",
 		schedule = {
 			poi_id_tt_subway_station : [20, poi_id_ah_subway_station],
 			poi_id_ah_subway_station : [20, poi_id_gd_subway_station],
@@ -12601,95 +18101,134 @@ transport_lines = [
 			}
 
 		),
-	EwTransportLine( # green subway line from smogsburg to west glocksbury
+	EwTransportLine( # gold subway line from crookline to downtown
+		id_line = transport_line_subway_gold_eastbound,
+		alias = [
+			"goldeastline",
+			"goldeast",
+			"goldgreen",
+			"goldtodowntown",
+			"goldtodt"
+			],
+		first_stop = poi_id_cl_subway_station,
+		last_stop = poi_id_dt_subway_station,
+		next_line = transport_line_subway_gold_westbound,
+		str_name = "The gold subway line towards Downtown",
+		schedule = {
+			poi_id_cl_subway_station : [20, poi_id_jp_subway_station],
+			poi_id_jp_subway_station : [20, poi_id_nsb_subway_station],
+			poi_id_nsb_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
+			}
+
+		),
+	EwTransportLine( # gold subway line from downtown to crookline
+		id_line = transport_line_subway_gold_westbound,
+		alias = [
+			"goldwestline",
+			"goldwest",
+			"westgold",
+			"goldtocrookline",
+			"goldtocrook",
+			"goldtocl"
+			],
+		first_stop = poi_id_dt_subway_station,
+		last_stop = poi_id_cl_subway_station,
+		next_line = transport_line_subway_gold_eastbound,
+		str_name = "The gold subway line towards Crookline",
+		schedule = {
+			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_nsb_subway_station],
+			poi_id_nsb_subway_station : [20, poi_id_jp_subway_station],
+			poi_id_jp_subway_station: [20, poi_id_cl_subway_station],
+			}
+
+		),
+	EwTransportLine( # green subway line from downtown to new new yonkers
 		id_line = transport_line_subway_green_eastbound,
 		alias = [
 			"greeneastline",
 			"greeneast",
 			"eastgreen",
-			"greentosmogsburg",
-			"greentosmogs",
-			"greentosb"
+			"greentonewnewyonkers",
+			"greentonewnew",
+			"greentonew",
+			"greentonny"
 			],
-		first_stop = poi_id_wgb_subway_station,
-		last_stop = poi_id_sb_subway_station,
+		first_stop = poi_id_dt_subway_station,
+		last_stop = poi_id_nny_subway_station,
 		next_line = transport_line_subway_green_westbound,
-		str_name = "The green subway line towards Smogsburg",
+		str_name = "The green subway line towards New New Yonkers",
 		schedule = {
-			poi_id_wgb_subway_station : [20, poi_id_jp_subway_station],
-			poi_id_jp_subway_station : [20, poi_id_nsb_subway_station],
-			poi_id_nsb_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_sb_subway_station]
+			poi_id_dt_subway_station : [20, poi_id_gld_subway_station],
+			poi_id_gld_subway_station : [20, poi_id_jr_subway_station],
+			poi_id_jr_subway_station : [20, poi_id_vc_subway_station],
+			poi_id_vc_subway_station : [20, poi_id_nny_subway_station]
 			}
 
 		),
-	EwTransportLine( # green subway line from west glocksbury to smogsburg
+	EwTransportLine( # green subway line from new new yonkers to downtown
 		id_line = transport_line_subway_green_westbound,
 		alias = [
 			"greenwestline",
 			"greenwest",
 			"westgreen",
-			"greentowestglocksbury",
-			"greentowestglocks",
-			"greentowgb"
-			],
-		first_stop = poi_id_sb_subway_station,
-		last_stop = poi_id_wgb_subway_station,
-		next_line = transport_line_subway_green_eastbound,
-		str_name = "The green subway line towards West Glocksbury",
-		schedule = {
-			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_gb_subway_station],
-			poi_id_gb_subway_station : [20, poi_id_wgb_subway_station]
-			}
-
-		),
-	EwTransportLine( # blue subway line from downtown to assault flats beach
-		id_line = transport_line_subway_blue_eastbound,
-		alias = [
-			"blueeastline",
-			"blueeast",
-			"eastblue",
-			"bluetoassaultflatsbeach",
-			"bluetoassaultflats",
-			"bluetobeach",
-			"bluetoafb"
-			],
-		first_stop = poi_id_dt_subway_station,
-		last_stop = poi_id_afb_subway_station,
-		next_line = transport_line_subway_blue_westbound,
-		str_name = "The blue subway line towards Assault Flats Beach",
-		schedule = {
-			poi_id_dt_subway_station : [20, poi_id_gld_subway_station],
-			poi_id_gld_subway_station : [20, poi_id_jr_subway_station],
-			poi_id_jr_subway_station : [20, poi_id_vc_subway_station],
-			poi_id_vc_subway_station : [20, poi_id_afb_subway_station]
-			}
-
-		),
-	EwTransportLine( # blue subway line from assault flats beach to downtown
-		id_line = transport_line_subway_blue_westbound,
-		alias = [
-			"bluewestline",
-			"bluewest",
-			"westblue",
-			"bluetodowntown",
-			"bluetodt"
+			"greentodowntown",
+			"greentodt"
 			],
 		first_stop = poi_id_afb_subway_station,
 		last_stop = poi_id_dt_subway_station,
-		next_line = transport_line_subway_blue_eastbound,
-		str_name = "The blue subway line towards Downtown NLACakaNM",
+		next_line = transport_line_subway_green_eastbound,
+		str_name = "The green subway line towards Downtown",
 		schedule = {
-			poi_id_afb_subway_station : [20, poi_id_vc_subway_station],
+			poi_id_nny_subway_station : [20, poi_id_vc_subway_station],
 			poi_id_vc_subway_station : [20, poi_id_jr_subway_station],
 			poi_id_jr_subway_station : [20, poi_id_gld_subway_station],
 			poi_id_gld_subway_station : [20, poi_id_dt_subway_station]
 			}
 
 		),
+	EwTransportLine(  # black subway line from downtown to west glocksbury
+		id_line = transport_line_subway_black_eastbound,
+		alias = [
+			"blackeastline",
+			"blackeast",
+			"eastblack",
+			"blacktowestglocksbury",
+			"blacktowestglocks",
+			"blacktowgb"
+		],
+		first_stop = poi_id_dt_subway_station,
+		last_stop = poi_id_wgb_subway_station,
+		next_line = transport_line_subway_black_westbound,
+		str_name = "The black subway line towards West Glocksbury",
+		schedule = {
+			poi_id_dt_subway_station: [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station: [20, poi_id_gb_subway_station],
+			poi_id_gb_subway_station: [20, poi_id_vp_subway_station],
+			poi_id_vp_subway_station: [20, poi_id_wgb_subway_station],
+		}
+	),
+	EwTransportLine(  # black subway line from west glocksbury to downtown
+		id_line = transport_line_subway_black_westbound,
+		alias = [
+			"blackwestline",
+			"blackwest",
+			"westblack",
+			"blacktodowntown",
+			"blacktodt"
+		],
+		first_stop = poi_id_wgb_subway_station,
+		last_stop = poi_id_dt_subway_station,
+		next_line = transport_line_subway_black_eastbound,
+		str_name = "The black subway line towards Downtown",
+		schedule = {
+			poi_id_wgb_subway_station: [20, poi_id_vp_subway_station],
+			poi_id_vp_subway_station: [20, poi_id_gb_subway_station],
+			poi_id_gb_subway_station: [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station: [20, poi_id_dt_subway_station],
+		}
+	),
 	# EwTransportLine( # white subway line from downtown to juvies row
 	# 	id_line = transport_line_subway_white_eastbound,
 	# 	alias = [
@@ -12780,7 +18319,7 @@ transport_lines = [
 			poi_id_jaywalkerplain : [40, poi_id_df_blimp_tower]
 			}
 
-		)
+		),
 ]
 
 id_to_transport_line = {}
@@ -12803,8 +18342,13 @@ style_smart = "smart"
 style_beautiful = "beautiful"
 style_cute = "cute"
 
+freshnesslevel_1 = 500
+freshnesslevel_2 = 100
+freshnesslevel_3 = 2000
+freshnesslevel_4 = 3000
+
 # Base durability for cosmetic items (These are for if/when we need easy sweeping balance changes)
-base_durability = 250000 # 1 mega
+base_durability = 2500000 # 2.5 mega
 
 generic_scalp_durability = 25000 # 25k
 soul_durability = 100000000 # 100 mega
@@ -12943,6 +18487,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 7,
 		acquisition = acquisition_smelting,
@@ -12959,6 +18504,7 @@ cosmetic_items_list = [
 			stat_attack: 3,
 			stat_defense: -1
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -12974,6 +18520,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		freshness = 8,
 		acquisition = acquisition_smelting,
@@ -12989,6 +18536,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -13002,6 +18550,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -13015,6 +18564,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -13029,6 +18579,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		freshness = 9,
 		style = style_smart,
 		acquisition = acquisition_smelting,
@@ -13043,6 +18594,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -13060,6 +18612,7 @@ cosmetic_items_list = [
 			stat_defense: 2,
 			stat_speed: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 8,
 		acquisition = acquisition_smelting,
@@ -13074,6 +18627,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -13108,6 +18662,7 @@ cosmetic_items_list = [
 			stat_defense: -1,
 			stat_speed: 3
 		},
+		durability = base_durability,
 		freshness = 10,
 		style = style_beautiful,
 		acquisition = acquisition_smelting,
@@ -13122,6 +18677,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -13137,6 +18693,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		freshness = 8,
 		style = style_cool,
 		acquisition = acquisition_smelting,
@@ -13152,6 +18709,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 3,
 		},
+		durability = base_durability,
 		freshness = 9,
 		style = style_cool,
 		acquisition = acquisition_smelting,
@@ -13166,6 +18724,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -13181,6 +18740,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_defense: 1
 		},
+		durability = base_durability,
 		style = style_tough,
 		freshness = 8,
 		acquisition = acquisition_smelting,
@@ -13197,6 +18757,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_speed: -1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 3,
 		acquisition = acquisition_smelting,
@@ -13212,6 +18773,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -13227,6 +18789,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 8,
 		acquisition = acquisition_smelting,
@@ -13243,6 +18806,7 @@ cosmetic_items_list = [
 			stat_defense: -2,
 			stat_speed: 2
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 7,
 		acquisition = acquisition_smelting,
@@ -13258,6 +18822,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -13272,6 +18837,7 @@ cosmetic_items_list = [
 			stat_defense: 1,
 			stat_speed: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -13321,6 +18887,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 2,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -13336,6 +18903,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -13352,6 +18920,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 9,
 		acquisition = acquisition_smelting,
@@ -13366,6 +18935,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 7,
 		acquisition = acquisition_smelting,
@@ -13381,6 +18951,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -13477,6 +19048,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 6,
 		acquisition = acquisition_smelting,
@@ -13492,6 +19064,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cute,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -13505,6 +19078,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition=acquisition_smelting,
 		price=50000,
@@ -13520,6 +19094,7 @@ cosmetic_items_list = [
 			stat_defense: -2,
 			stat_speed: -1
 		},
+		durability = base_durability,
 		style = style_tough,
 		freshness = 8,
 		acquisition=acquisition_smelting,
@@ -13533,9 +19108,9 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cool,
-		acquisition = acquisition_milling,
-		ingredients = item_id_poketubers,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -13545,9 +19120,9 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_cute,
-		acquisition = acquisition_milling,
-		ingredients = item_id_pulpgourds,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -13557,10 +19132,10 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 6,
-		acquisition = acquisition_milling,
-		ingredients = item_id_sourpotatoes,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -13570,9 +19145,9 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
-		acquisition = acquisition_milling,
-		ingredients = item_id_bloodcabbages,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -13586,8 +19161,7 @@ cosmetic_items_list = [
 		style = style_smart,
 		freshness = 1,
 		durability = base_durability * 1.5,
-		acquisition = acquisition_milling,
-		ingredients = item_id_joybeans,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "hoodie",
@@ -13596,9 +19170,9 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cool,
-		acquisition = acquisition_milling,
-		ingredients = item_id_purplekilliflower,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "copbadge",
@@ -13607,11 +19181,11 @@ cosmetic_items_list = [
 			stat_attack: 3,
 			stat_defense: -3,
 		},
+		durability = base_durability,
 		style = style_smart,
 		freshness = 2,
 		str_desc = "What the fuck are you doing with this thing? Are you TRYING to make the sewers your permanent residence? Acquaint yourself with the !drop command and FAST, before you don’t have a body to wear the badge on.",
-		acquisition = acquisition_milling,
-		ingredients = item_id_razornuts,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "strawhat",
@@ -13620,9 +19194,9 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
-		acquisition = acquisition_milling,
-		ingredients = item_id_pawpaw,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -13632,13 +19206,13 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
-		acquisition = acquisition_milling,
-		ingredients = item_id_sludgeberries,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
-		id_cosmetic = "youfavoritehat",
+		id_cosmetic = "yourfavoritehat",
 		str_name = "***Your Favorite Hat***",
 		str_desc = "***It fits perfectly, and it’s just your style! You love wearing this cosmetic far more than any other, it’s simply the best.***",
 		stats = {
@@ -13646,10 +19220,10 @@ cosmetic_items_list = [
 			stat_defense: 1,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 10,
-		acquisition = acquisition_milling,
-		ingredients = item_id_suganmanuts,
+		acquisition = acquisition_smelting,
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -13660,10 +19234,10 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 2
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
-		acquisition = acquisition_milling,
-		ingredients = item_id_pinkrowddishes,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofcircularsunglasses",
@@ -13674,9 +19248,9 @@ cosmetic_items_list = [
 			stat_defense: 1,
 			stat_speed: -1
 		},
+		durability = base_durability,
 		style = style_cool,
-		acquisition = acquisition_milling,
-		ingredients = item_id_dankwheat,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "flowercrown",
@@ -13684,11 +19258,11 @@ cosmetic_items_list = [
 		stats = {
 			stat_speed: 2,
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 7,
 		str_desc = "A lovingly handcrafted crown of flowers, connected by a string. You’re gonna be famous on Pinterest with a look like this!",
-		acquisition = acquisition_milling,
-		ingredients = item_id_brightshade,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "spikedbracelets",
@@ -13698,9 +19272,9 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 2
 		},
+		durability = base_durability,
 		style = style_tough,
-		acquisition = acquisition_milling,
-		ingredients = item_id_blacklimes,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "slimecorppin",
@@ -13712,10 +19286,9 @@ cosmetic_items_list = [
 		},
 		style = style_smart,
 		freshness = 10,
-		durability = base_durability * 4,
+		durability = base_durability,
 		str_desc = "An enamel pin of the SlimeCorp logo, a badge of loyalty to your favorite charismatic megacorporation. Dude, like, *”Follow He Who Turns The Wheels”*, bro!!",
-		acquisition = acquisition_milling,
-		ingredients = item_id_phosphorpoppies,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "overalls",
@@ -13724,9 +19297,56 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_tough,
-		acquisition = acquisition_milling,
-		ingredients = item_id_direapples,
+		acquisition = acquisition_smelting,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "rustynail",
+		str_name = "Rusty Nail",
+		str_desc = "A large, rusty nail, planted right between the sides of your head, like some kind of frankenstein costume piece. This one's the real deal though... oh god the pain...",
+		stats = {
+			stat_defense: 1
+		},
+		durability = base_durability,
+		style = style_tough,
+		acquisition = acquisition_smelting
+	),
+	EwCosmeticItem(
+		id_cosmetic = "fullmetaljacket",
+		str_name = "Full Metal Jacket",
+		str_desc = "A black leather jacket affixed with more spikes than you can count on your fingers and toes. Be careful not to bump into anyone with this thng on.",
+		stats = {
+			stat_attack: 3
+		},
+		durability = base_durability * 2,
+		style = style_tough,
+		acquisition = acquisition_smelting
+	),
+	EwCosmeticItem(
+		id_cosmetic = "tinfoilhat",
+		str_name = "Tinfoil Hat",
+		str_desc = "A hat that protects you from SlimeCorps patent-pending 5G binaural brain waves, or so the folks on the internet have told you.",
+		stats = {
+			stat_defense: 1,
+			stat_speed: 2,
+		},
+		durability = base_durability * 2,
+		style = style_smart,
+		acquisition = acquisition_smelting
+	),
+	EwCosmeticItem(
+		id_cosmetic = "resplendentcoronet",
+		str_name = "Resplendent Coronet",
+		str_desc = "A crown worn by only the most elegant and regal of nobles. When you put it on, you really feel like you fuckin' own the place.",
+		stats = {
+			stat_defense: 1,
+			stat_speed: 1,
+			stat_attack: 1
+		},
+		durability = base_durability * 2,
+		style = style_beautiful,
+		acquisition = acquisition_smelting
 	),
 	EwCosmeticItem(
 		id_cosmetic = cosmetic_id_raincoat,
@@ -13735,6 +19355,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
@@ -13755,8 +19376,12 @@ cosmetic_items_list = [
 		str_name = "Pileus",
 		str_desc = "A symbol of freedom and liberty. In ancient times, these felt caps were given to slaves who had been emancipated.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		durability = base_durability,
 		style = style_cool,
-	#	vendors = [vendor_bazaar, vendor_college],
+		#vendors = [vendor_bazaar, vendor_college],
 		price = 100,
 	),
 	EwCosmeticItem(
@@ -13767,6 +19392,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 2,
 		vendors = [vendor_bazaar, vendor_secretbodega],
@@ -13779,12 +19405,13 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_cute,
 		rarity = rarity_plebeian,
 		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "knightarmor",
 		str_name = "Steel knight armor",
 		str_desc = "A shining set of steel armor.",
@@ -13794,6 +19421,7 @@ cosmetic_items_list = [
 			stat_defense: 2,
 			stat_speed: -1
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -13807,11 +19435,12 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cute,
 		vendors = [vendor_bazaar],
 		price = 1000,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "crocs",
 		str_name = "Crocs",
 		str_desc = "The perfect pair of footwear for when you want spotted dots of sunburn on your feet, unless you're wearing socks that is. If that's the case ignore that earlier statement.",
@@ -13820,6 +19449,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 1
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 6,
 		vendors = [vendor_bazaar, vendor_secretbodega],
@@ -13830,6 +19460,12 @@ cosmetic_items_list = [
 		str_name = "Janus Mask",
 		str_desc = "A simple, yet elegant mask, awarded to those deemed worthy by Janus himself at the end of every Swilldermuk. It's enigmatic powers allow you to procure prank items from thin air.",
 		rarity = "Swilldermuk",
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1,
+			stat_speed: 1
+		},
+		durability = base_durability * 4,
 		style = style_cool,
 		acquisition = "SwilldermukEnd",
 		ingredients = "SwilldermukFinalGambit" # used here as a substitute for the 'context' attribute found on general items.
@@ -13842,6 +19478,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 3,
 		},
+		durability = base_durability,
 		style = style_cool,
 		vendors = [vendor_bazaar, vendor_bodega],
 		price = 50000,
@@ -13854,11 +19491,12 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "pompadourwig",
 		str_name = "Pompadour Wig",
 		str_desc = "A must have for any wannabe greaser or school delinquent in general. Make sure to wear it like a true king.",
@@ -13867,6 +19505,7 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_speed: 2
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 7,
 		vendors = [vendor_bodega],
@@ -13874,19 +19513,20 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "powderedwig",
 		str_name = "Powdered Wig",
 		str_desc = "If it was good enough for the british and founding fathers, it's good enough for us, right? Just make sure you don't share this wig without cleaning it.",
 		stats = {
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "rainbowafrowig",
 		str_name = "Rainbow Afro Wig",
 		str_desc = "A colorful wig worthy of a real chuckle.",
@@ -13896,11 +19536,12 @@ cosmetic_items_list = [
 			stat_defense: 1,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "ghostlygibus",
 		str_name = "Ghostly Gibus",
 		str_desc = "A crooked old top hat with a spooky toy ghost popping out of the top.",
@@ -13908,11 +19549,12 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "gasmask",
 		str_name = "Gas Mask",
 		str_desc = "A dysfunctional cold war era gas mask that fully encapsulates the head.",
@@ -13921,11 +19563,12 @@ cosmetic_items_list = [
 			stat_attack: 1,
 			stat_defense: 2
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "firefightershelmet",
 		str_name = "Firefighter's Helmet",
 		str_desc = "A old NLACakaNM wide brimmed red firefighter's helmet. No one knows what happened to the firefighters of Endless War.",
@@ -13938,7 +19581,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "pairofpoindexterglasses",
 		str_name = "Pair Of Poindexter Glasses",
 		str_desc = "A pair of thick rim glasses taped together at the middle. Worthy of any true nerd or nerdette.",
@@ -13946,11 +19589,12 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 2,
 		},
+		durability = base_durability,
 		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "duncecap",
 		str_name = "Dunce Cap",
 		str_desc = "It’s a pointy cap that says dunce on it, duh! You’re a real smartie aren't you?",
@@ -13960,12 +19604,13 @@ cosmetic_items_list = [
 			stat_defense: -1,
 			stat_speed: -1
 		},
+		durability = base_durability,
 		style = style_cute,
 		freshness = 2,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "vrheadset",
 		str_name = "VR Headset",
 		str_desc = "Endless War -- now in stunning VR!",
@@ -13974,6 +19619,7 @@ cosmetic_items_list = [
 			stat_attack: 2,
 			stat_speed: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		freshness = 8,
 		vendors = [vendor_bodega],
@@ -13981,7 +19627,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "blindfold",
 		str_name = "Blindfold",
 		str_desc = "Ok now you’re just bragging. Walking around with a blindfold of all things? How ridiculous!",
@@ -13991,11 +19637,12 @@ cosmetic_items_list = [
 			stat_defense: -2,
 			stat_speed: 1
 		},
+		durability = base_durability,
 		style = style_tough,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "chickenmask",
 		str_name = "Chicken Mask",
 		str_desc = "The rubber chicken mask gives you a strange vibe, it stinks of sweat and dried blood.",
@@ -14003,11 +19650,12 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 2,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "mountiehat",
 		str_name = "Mountie Hat",
 		str_desc = "A hat that's mostly used by canada's royal mounted police, but how did it get here? Did it float down the slime river?",
@@ -14016,11 +19664,12 @@ cosmetic_items_list = [
 			stat_attack: -1,
 			stat_defense: 2
 		},
+		durability = base_durability,
 		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "bearskinhat",
 		str_name = "Bearskin Hat",
 		str_desc = "A towering fuzzy hat that’s commonly worn by guards of the british royal guard.",
@@ -14028,11 +19677,12 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "aviatorshat",
 		str_name = "Aviator's Hat",
 		str_desc = "A leather hat with a neat pair of goggles on it. Perfect for an unfortunate circumnavigation of the world.",
@@ -14040,12 +19690,13 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_tough,
 		freshness = 6,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "militaryberet",
 		str_name = "Military Beret",
 		str_desc = "A good soldier needs good headwear,and that’s where this beret comes in.",
@@ -14053,6 +19704,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_attack: 1,
 		},
+		durability = base_durability,
 		style = style_beautiful,
 		freshness = 7,
 		vendors = [vendor_bodega],
@@ -14060,7 +19712,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "felinehat", # fuck you.
 		str_name = "Feline Hat", # fuck you.
 		stats = {
@@ -14076,7 +19728,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting, # fuck you.
 		is_hat = True, # fuck you.
 	),
-    EwCosmeticItem(
+	EwCosmeticItem(
 		id_cosmetic = "tikihead",
 		str_name = "Tiki Head",
 		str_desc = "A wearable tiki head worthy of any luau or tropical island themed party.",
@@ -14084,6 +19736,7 @@ cosmetic_items_list = [
 		stats = {
 			stat_defense: 1,
 		},
+		durability = base_durability,
 		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -14109,7 +19762,6 @@ smelting_recipe_list = [
 		ingredients = {
 			item_id_slimepoudrin : 4,
 			item_id_cool_material: 1
-
 		},
 		products = cosmetic_names
 	),
@@ -14123,7 +19775,6 @@ smelting_recipe_list = [
 		ingredients = {
 			item_id_slimepoudrin : 4,
 			item_id_tough_material: 1
-
 		},
 		products = cosmetic_names
 	),
@@ -14167,26 +19818,13 @@ smelting_recipe_list = [
 		products = cosmetic_names
 	),
 	EwSmeltingRecipe(
-		id_recipe = item_id_quadruplestuffedcrust,
-		str_name = "a Quadruple Stuffed Crust",
-		alias = [
-			"qsc",
-			"quadruple",
-			"quadruplestuffed",
-		],
-		ingredients = {
-			item_id_doublestuffedcrust : 2
-		},
-		products = [item_id_quadruplestuffedcrust],
-	),
-        EwSmeltingRecipe(
 		id_recipe = "knightarmor",
-		str_name = "Knight Armor",
-                alias = [
+		str_name = "a set of Knight Armor",
+				alias = [
 			"armor",
 		],
 		ingredients = {
-			"ironingot" : 2
+			item_id_ironingot : 2
 		},
 		products = ["knightarmor"]
 	),
@@ -14202,10 +19840,23 @@ smelting_recipe_list = [
 			"monster soup"
 		],
 		ingredients = {
-			"monsterbones" : 5,
+			item_id_monsterbones : 5,
 			item_id_dinoslimemeat : 1
 		},
 		products = [item_id_monstersoup],
+	),
+	EwSmeltingRecipe(
+		id_recipe=item_id_quadruplestuffedcrust,
+		str_name="a Quadruple Stuffed Crust",
+		alias=[
+			"qsc",
+			"quadruple",
+			"quadruplestuffed",
+		],
+		ingredients={
+			item_id_doublestuffedcrust: 2
+		},
+		products=[item_id_quadruplestuffedcrust],
 	),
 	EwSmeltingRecipe(
 		id_recipe = item_id_octuplestuffedcrust,
@@ -14284,7 +19935,8 @@ smelting_recipe_list = [
 			"forbidden111",
 			":111:",
 		],
-		ingredients = {'leftleg' : 1,
+		ingredients = {
+			'leftleg' : 1,
 			'rightleg' : 1,
 			'slimexodia' : 1,
 			'rightarm' : 1,
@@ -14305,7 +19957,7 @@ smelting_recipe_list = [
 			item_id_slimepoudrin : 3,
 			item_id_stick : 2
 		},
-		products = ['pickaxe']
+		products = [weapon_id_pickaxe]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "faggot",
@@ -14316,9 +19968,8 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			item_id_stick : 3
-
 		},
-		products = ['faggot']
+		products = [item_id_faggot]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "doublefaggot",
@@ -14330,7 +19981,7 @@ smelting_recipe_list = [
 		ingredients = {
 			item_id_faggot : 2
 		},
-		products = ['doublefaggot']
+		products = [item_id_doublefaggot]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "dinoslimesteak",
@@ -14343,7 +19994,7 @@ smelting_recipe_list = [
 			item_id_faggot : 1,
 			item_id_dinoslimemeat : 1
 		},
-		products = ['dinoslimesteak']
+		products = [item_id_dinoslimesteak]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "fishingrod",
@@ -14355,12 +20006,12 @@ smelting_recipe_list = [
 			"fr"
 		],
 		ingredients = {
-			'string': 2,
-			'stick': 3
+			item_id_string: 2,
+			item_id_stick: 3
 		},
-		products = ['fishingrod']
+		products = [weapon_id_fishingrod]
 	),
-    EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "bass",
 		str_name = "a Bass Guitar",
 		alias = [
@@ -14368,23 +20019,23 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			'thebassedgod' : 1,
-			'string':4
+			item_id_string : 4
 		},
-		products = ['bass']
-    ),
-    EwSmeltingRecipe(
+		products = [weapon_id_bass]
+	),
+	EwSmeltingRecipe(
 		id_recipe = "bow",
 		str_name = "a Minecraft Bow",
 		alias = [
 			"minecraft bow"
 		],
 		ingredients = {
-			'stick' : 3,
-			'string':3
+			item_id_stick: 3,
+			item_id_string: 3
 		},
-		products = ['bow']
-    ),
-	    EwSmeltingRecipe(
+		products = [weapon_id_bow]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "ironingot",
 		str_name = "an Iron Ingot",
 		alias = [
@@ -14394,12 +20045,12 @@ smelting_recipe_list = [
 			"iron ingot"
 		],
 		ingredients = {
-			'tincan':10,
-			'faggot':1
+			item_id_tincan:10,
+			item_id_faggot:1
 		},
-		products = ['ironingot']
-    ),
-	    EwSmeltingRecipe(
+		products = [item_id_ironingot]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "tanningknife",
 		str_name = "a small tanning knife",
 		alias = [
@@ -14408,23 +20059,23 @@ smelting_recipe_list = [
 			"tanning"
 		],
 		ingredients = {
-			'ironingot':1
+			item_id_ironingot:1
 		},
-		products = ['tanningknife']
-    ),
-	    EwSmeltingRecipe(
+		products = [item_id_tanningknife]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "leather",
 		str_name = "a piece of leather",
 		alias = [
 			"leather"
 		],
 		ingredients = {
-			'oldboot':10,
-			'tanningknife':1
+			item_id_oldboot:10,
+			item_id_tanningknife:1
 		},
-		products = ['leather']
-    ),
-	    EwSmeltingRecipe(
+		products = [item_id_leather]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "bloodstone",
 		str_name = "a chunk of bloodstone",
 		alias = [
@@ -14432,12 +20083,12 @@ smelting_recipe_list = [
 			"bstone"
 		],
 		ingredients = {
-			'monsterbones':100,
-			'faggot':1
+			item_id_monsterbones:100,
+			item_id_faggot:1
 		},
-		products = ['bloodstone']
-    ),
-	    EwSmeltingRecipe(
+		products = [item_id_bloodstone]
+	),
+		EwSmeltingRecipe(
 		id_recipe = "dclaw",
 		str_name = "a Dragon Claw",
 		alias = [
@@ -14446,13 +20097,13 @@ smelting_recipe_list = [
 			"dclaw"
 		],
 		ingredients = {
-			'dragonsoul' : 1,
-			item_id_slimepoudrin : 5,
-			'ironingot':1,
-			'leather':1
+			item_id_dragonsoul: 1,
+			item_id_slimepoudrin: 5,
+			item_id_ironingot: 1,
+			item_id_leather: 1
 		},
-		products = ['dclaw']
-    ),
+		products = [weapon_id_dclaw]
+	),
 	EwSmeltingRecipe(
 		id_recipe = weapon_id_staff,
 		str_name = "an eldritch staff",
@@ -14467,8 +20118,8 @@ smelting_recipe_list = [
 			item_id_doublefaggot : 1,
 			item_id_negapoudrin : 1,
 		},
-		products = ['staff']
-    ),
+		products = [weapon_id_staff]
+	),
 
 	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
@@ -14541,11 +20192,11 @@ smelting_recipe_list = [
 			"blunt"
 		],
 		ingredients = {
-			'seaweed' : 3,
-			'dankwheat': 1,
+			item_id_seaweed: 3,
+			item_id_dankwheat: 1,
 			item_id_slimepoudrin : 1,
 		},
-		products = ['seaweedjoint']
+		products = [item_id_seaweedjoint]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "slimepoudrin",
@@ -14557,9 +20208,9 @@ smelting_recipe_list = [
 			"poodrin",
 		],
 		ingredients = {
-			'royaltypoudrin': 2
+			item_id_royaltypoudrin: 2
 		},
-		products = ['slimepoudrin']
+		products = [item_id_slimepoudrin]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "humancorpse",
@@ -14572,14 +20223,14 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			'scalp': 20,
-			'dinoslimemeat':2,
-			'string':2
+			item_id_dinoslimemeat: 2,
+			item_id_string :2
 		},
 		products = ['humancorpse']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "popeonarope",
-		str_name = "pope on a rope",
+		str_name = "a pope on a rope",
 		alias = [
 			"pope",
 			"francis",
@@ -14596,7 +20247,7 @@ smelting_recipe_list = [
 	),
 	EwSmeltingRecipe(
 		id_recipe = "reanimatedcorpse",
-		str_name = "reanimated corpse",
+		str_name = "a reanimated corpse",
 		alias = [
 			"frankenstein",
 			"reanimate",
@@ -14610,7 +20261,7 @@ smelting_recipe_list = [
 	),
 	EwSmeltingRecipe(
 		id_recipe = "soul",
-		str_name = "soul",
+		str_name = "a soul",
 		alias = [
 			"spirit",
 			"essence",
@@ -14623,7 +20274,7 @@ smelting_recipe_list = [
 	),
 	EwSmeltingRecipe(
 		id_recipe = "handmadechair",
-		str_name = "handmade chair",
+		str_name = "a handmade chair",
 		alias = [
 			"woodchair",
 			"carvedchair",
@@ -14631,14 +20282,14 @@ smelting_recipe_list = [
 			"ornatechair",
 		],
 		ingredients = {
-			'stick': 5,
-			'bat':2,
+			item_id_stick: 5,
+			weapon_id_bat:2,
 		},
 		products = ['ornatechair', 'shittychair']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "handmadebench",
-		str_name = "handmade bench",
+		str_name = "a handmade bench",
 		alias = [
 			"woodbench",
 			"carvedbench",
@@ -14646,14 +20297,14 @@ smelting_recipe_list = [
 			"ornatebench",
 		],
 		ingredients = {
-			'stick': 10,
-			'bat':4,
+			item_id_stick: 10,
+			weapon_id_bat: 4,
 		},
 		products = ['ornatebench', 'shittybench']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "handmadebed",
-		str_name = "handmade bed",
+		str_name = "a handmade bed",
 		alias = [
 			"woodbed",
 			"carvedbed",
@@ -14661,14 +20312,14 @@ smelting_recipe_list = [
 			"ornatebed",
 		],
 		ingredients = {
-			'stick': 12,
-			'bat':3,
+			item_id_stick: 12,
+			weapon_id_bat :3,
 		},
 		products = ['ornatebed', 'shittybed']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "handmadedesk",
-		str_name = "handmade desk",
+		str_name = "a handmade desk",
 		alias = [
 			"wooddesk",
 			"carveddesk",
@@ -14676,14 +20327,14 @@ smelting_recipe_list = [
 			"ornatedesk",
 		],
 		ingredients = {
-			'stick': 4,
-			'bat':1,
+			item_id_stick: 4,
+			weapon_id_bat: 1,
 		},
 		products = ['ornatedesk', 'shittydesk']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "clarinet",
-		str_name = "clarinet",
+		str_name = "a clarinet",
 		alias = [
 			"flute",
 			"bennygoodmanthing",
@@ -14696,27 +20347,26 @@ smelting_recipe_list = [
 			'blacklimes':1,
 			'direappleciderfuckenergy':1,
 			'sweetfish':1,
-
 		},
 		products = ['craftsmansclarinet', 'woodenvuvuzela']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "guitar",
-		str_name = "solid poudrin guitar",
+		str_name = "a solid poudrin guitar",
 		alias = [
 			"poudringuitar",
 			"electricguitar",
 			"solidpoudringuitar",
 		],
 		ingredients = {
-			'slimepoudrin': 150,
-			'string':6,
+			item_id_slimepoudrin: 150,
+			item_id_string: 6,
 		},
 		products = ['solidpoudringuitar']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "drums",
-		str_name = "beast skin drums",
+		str_name = "a beast skin drums",
 		alias = [
 			"beastskindrums",
 			"drumset",
@@ -14733,7 +20383,7 @@ EwSmeltingRecipe(
 	),
 	EwSmeltingRecipe(
 		id_recipe = "xylophone",
-		str_name = "fish bone xylophone",
+		str_name = "a fish bone xylophone",
 		alias = [
 			"xylo",
 			"metallophone",
@@ -14750,15 +20400,15 @@ EwSmeltingRecipe(
 	),
 	EwSmeltingRecipe(
 		id_recipe = "maracas",
-		str_name = "gourd maracas",
+		str_name = "a gourd maracas",
 		alias = [
 			"gourdmaracas",
 			"shakers",
 			"rattle",
 		],
 		ingredients = {
-			'pulpgourds' : 1,
-			'suganmanuts' : 1,
+			'pulpgourds': 1,
+			'suganmanuts': 1,
 			'sludgeberries':1,
 			'razornuts':1,
 			'joybeans':1,
@@ -14767,17 +20417,758 @@ EwSmeltingRecipe(
 		products = ['gourdmaracas']
 	),
 	EwSmeltingRecipe(
-		id_recipe = "browndye",
-		str_name = "Brown Dye",
-		alias = [
+		id_recipe="whitedye",
+		str_name="a vial of White Dye",
+		alias=[
+			'white',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_poketubereyes: 1,
+		},
+		products=[item_id_dye_white]
+	),
+	EwSmeltingRecipe(
+		id_recipe="yellowdye",
+		str_name="a vial of Yellow Dye",
+		alias=[
+			'yellow',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_pulpgourdpulp: 1,
+		},
+		products=[item_id_dye_yellow]
+	),
+	EwSmeltingRecipe(
+		id_recipe="orangedye",
+		str_name="a vial of Orange Dye",
+		alias=[
+			'orange',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_sourpotatoskins: 1,
+		},
+		products=[item_id_dye_orange]
+	),
+	EwSmeltingRecipe(
+		id_recipe="reddye",
+		str_name="a vial of Red Dye",
+		alias=[
+			'red',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_bloodcabbageleaves: 1,
+		},
+		products=[item_id_dye_red]
+	),
+	EwSmeltingRecipe(
+		id_recipe="magentadye",
+		str_name="a vial of Magenta Dye",
+		alias=[
+			'magenta',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_joybeanvines: 1,
+		},
+		products=[item_id_dye_magenta]
+	),
+	EwSmeltingRecipe(
+		id_recipe="purpledye",
+		str_name="a vial of Purple Dye",
+		alias=[
+			'purple',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_purplekilliflowerflorets: 1,
+		},
+		products=[item_id_dye_purple]
+	),
+	EwSmeltingRecipe(
+		id_recipe="bluedye",
+		str_name="a vial of Blue Dye",
+		alias=[
+			'blue',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_razornutshells: 1,
+		},
+		products=[item_id_dye_blue]
+	),
+	EwSmeltingRecipe(
+		id_recipe="greendye",
+		str_name="a vial of Green Dye",
+		alias=[
+			'green',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_pawpawflesh: 1,
+		},
+		products=[item_id_dye_green]
+	),
+	EwSmeltingRecipe(
+		id_recipe="tealdye",
+		str_name="a vial of Teal Dye",
+		alias=[
+			'teal',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_sludgeberrysludge: 1,
+		},
+		products=[item_id_dye_teal]
+	),
+	EwSmeltingRecipe(
+		id_recipe="rainbowdye",
+		str_name="a vial of ***Rainbow Dye***",
+		alias=[
+			'rainbow',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_suganmanutfruit: 1,
+		},
+		products=[item_id_dye_rainbow]
+	),
+	EwSmeltingRecipe(
+		id_recipe="pinkdye",
+		str_name="a vial of Pink Dye",
+		alias=[
+			'pink',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_pinkrowddishroot: 1,
+		},
+		products=[item_id_dye_pink]
+	),
+	EwSmeltingRecipe(
+		id_recipe="greydye",
+		str_name="a vial of Grey Dye",
+		alias=[
+			'grey',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_dankwheatchaff: 1,
+		},
+		products=[item_id_dye_grey]
+	),
+	EwSmeltingRecipe(
+		id_recipe="cobaltdye",
+		str_name="a vial of Cobalt Dye",
+		alias=[
+			'cobalt',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_brightshadeberries: 1,
+		},
+		products=[item_id_dye_cobalt]
+	),
+	EwSmeltingRecipe(
+		id_recipe="blackdye",
+		str_name="a vial of Black Dye",
+		alias=[
+			'black',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_blacklimeade: 1,
+		},
+		products=[item_id_dye_black]
+	),
+	EwSmeltingRecipe(
+		id_recipe="limedye",
+		str_name="a vial of Lime Dye",
+		alias=[
+			'lime',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_phosphorpoppypetals: 1,
+		},
+		products=[item_id_dye_lime]
+	),
+	EwSmeltingRecipe(
+		id_recipe="cyandye",
+		str_name="a vial of Cyan Dye",
+		alias=[
+			'cyan',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_direapplestems: 1,
+		},
+		products=[item_id_dye_cyan]
+	),
+	EwSmeltingRecipe(
+		id_recipe="browndye",
+		str_name="a vial of Brown dye",
+		alias=[
 			'brown',
 		],
-		ingredients = {
-			'reddye' : 1,
-			'blackdye': 1,
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_rustealeafblades: 1,
 		},
-		products = ['browndye']
-	)
+		products=[item_id_dye_brown]
+	),
+	EwSmeltingRecipe(
+		id_recipe="copperpaint",
+		str_name="a bucket of Copper Paint",
+		alias=[
+			'copper',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_metallicapheads: 1,
+		},
+		products=[item_id_paint_copper]
+	),
+	EwSmeltingRecipe(
+		id_recipe="chromepaint",
+		str_name="a bucket of Chrome Paint",
+		alias=[
+			'chrome',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_steelbeanpods: 1,
+		},
+		products=[item_id_paint_chrome]
+	),
+	EwSmeltingRecipe(
+		id_recipe="goldpaint",
+		str_name="a bucket of Gold Paint",
+		alias=[
+			'gold',
+		],
+		ingredients={
+			item_id_dyesolution: 1,
+			item_id_aushuckstalks: 1,
+		},
+		products=[item_id_paint_gold]
+	),
+	EwSmeltingRecipe(
+		id_recipe="jellyfilleddoughnut",
+		str_name="a Jelly Filled Donut",
+		alias=[
+			'donut',
+			'doughnut',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_poketubereyes: 1,
+		},
+		products=["jellyfilleddoughnut"]
+	),
+	EwSmeltingRecipe(
+		id_recipe="pulpgourdpie",
+		str_name="a plate of Pulp Gourd Pie",
+		alias=[
+			'pie',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_pulpgourdpulp: 1,
+		},
+		products=['pulpgourdpie']
+	),
+	EwSmeltingRecipe(
+		id_recipe="sourpotatofrenchfries",
+		str_name="a plate of Sour Potato French Fries",
+		alias=[
+			'fries',
+			'frenchfries'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_sourpotatoskins: 1,
+		},
+		products=['sourpotatofrenchfries']
+	),
+	EwSmeltingRecipe(
+		id_recipe="bloodcabbagecoleslaw",
+		str_name="a tub of Blood Cabbage Coleslaw",
+		alias=[
+			'coleslaw',
+			'redcoleslaw',
+			'blood'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_bloodcabbageleaves: 1,
+		},
+		products=['bloodcabbagecoleslaw']
+	),
+	EwSmeltingRecipe(
+		id_recipe="joybeanpastemochi",
+		str_name="a pile of Joybean Paste Mochi",
+		alias=[
+			'mochi',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_joybeanvines: 1,
+		},
+		products=['joybeanpastemochi']
+	),
+	EwSmeltingRecipe(
+		id_recipe="purplekilliflowercrustpizza",
+		str_name="a plate of Purple Killiflower Crust Pizza",
+		alias=[
+			'pizza',
+			'cauliflowercrustpizza'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_purplekilliflowerflorets: 1,
+		},
+		products=['purplekilliflowercrustpizza']
+	),
+	EwSmeltingRecipe(
+		id_recipe="razornutbutter",
+		str_name="a tub of Razornut Butter",
+		alias=[
+			'butter',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_razornutshells: 1,
+		},
+		products=['razornutbutter']
+	),
+	EwSmeltingRecipe(
+		id_recipe="pawpawfood",
+		str_name="a plate of Pawpaw Food",
+		alias=[
+			'food',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_pawpawflesh: 1,
+		},
+		products=['pawpawfood']
+	),
+	EwSmeltingRecipe(
+		id_recipe="sludgeberrypancakes",
+		str_name="a plate of Sludgeberry Pancakes",
+		alias=[
+			'pancakes',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_sludgeberrysludge: 1,
+		},
+		products=['sludgeberrypancakes']
+	),
+	EwSmeltingRecipe(
+		id_recipe="yourfavoritefood",
+		str_name="a plate of ***Your Favorite Food***",
+		alias=[
+			'favoritefood',
+			'favefood'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_suganmanutfruit: 1,
+		},
+		products=['yourfavoritefood']
+	),
+	EwSmeltingRecipe(
+		id_recipe="pinkrowdatouille",
+		str_name="a plate of Pink Rowdatouille",
+		alias=[
+			'rowdatouille',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_pinkrowddishroot: 1,
+		},
+		products=['pinkrowdatouille']
+	),
+	EwSmeltingRecipe(
+		id_recipe="dankwheattoast",
+		str_name="a plate of Dankwheat Toast",
+		alias=[
+			'toast',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_dankwheatchaff: 1,
+		},
+		products=['dankwheattoast']
+	),
+	EwSmeltingRecipe(
+		id_recipe="brightshadeseeds",
+		str_name="some Brightshade Seeds",
+		alias=[
+			'seeds',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_brightshadeberries: 1,
+		},
+		products=['brightshadeseeds']
+	),
+	EwSmeltingRecipe(
+		id_recipe="blacklimesour",
+		str_name="some Black Lime Sours",
+		alias=[
+			'sours',
+			'sour'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_blacklimeade: 1,
+		},
+		products=['blacklimesour']
+	),
+	EwSmeltingRecipe(
+		id_recipe="phosphorpoppiesmuffin",
+		str_name="a Phosphorpoppies Muffin",
+		alias=[
+			'muffin',
+			'muffins'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_phosphorpoppypetals: 1,
+		},
+		products=['phosphorpoppiesmuffin']
+	),
+	EwSmeltingRecipe(
+		id_recipe="direapplejuice",
+		str_name="a bottle of Dire Apple Juice",
+		alias=[
+			'juice',
+			'applejuice',
+			'appyjuice'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_direapplestems: 1,
+		},
+		products=['direapplejuice']
+	),
+	EwSmeltingRecipe(
+		id_recipe="earlbrowntea",
+		str_name="a cup of Earl Brown Tea",
+		alias=[
+			'tea',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_rustealeafblades: 1,
+		},
+		products=['earlbrowntea']
+	),
+	EwSmeltingRecipe(
+		id_recipe="badshroomz",
+		str_name="some Bad Shroomz",
+		alias=[
+			'shrooms',
+			'mushrooms',
+			'shroomz'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_metallicapheads: 1,
+		},
+		products=['badshroomz']
+	),
+	EwSmeltingRecipe(
+		id_recipe="chromaccino",
+		str_name="a Chromaccino",
+		alias=[
+			'cappuccino',
+			'chroma'
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_steelbeanpods: 1,
+		},
+		products=['chromaccino']
+	),
+	EwSmeltingRecipe(
+		id_recipe="moltenpopcorn",
+		str_name="a bag of Molten Popcorn",
+		alias=[
+			'popcorn',
+		],
+		ingredients={
+			item_id_foodbase: 1,
+			item_id_aushuckstalks: 1
+		},
+		products=['moltenpopcorn']
+	),
+	EwSmeltingRecipe(
+		id_recipe="captainshat",
+		str_name="a Captain's Hat",
+		alias=[
+			'captain',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_poketubereyes: 1,
+		},
+		products=['captainshat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="juveolantern",
+		str_name="a Juve-O' Lantern",
+		alias=[
+			'juve',
+			'jackolantern'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_pulpgourdpulp: 1,
+		},
+		products=['juveolantern']
+	),
+	EwSmeltingRecipe(
+		id_recipe="bowlerhat",
+		str_name="a Bowler Hat",
+		alias=[
+			'bowler',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_sourpotatoskins: 1,
+		},
+		products=['bowlerhat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="cabbagetreehat",
+		str_name="a Cabbage Tree Hat",
+		alias=[
+			'cabbagehat',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_bloodcabbageleaves: 1,
+		},
+		products=['cabbagetreehat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="braces",
+		str_name="some Braces",
+		alias=[
+			'headgear',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_joybeanvines: 1,
+		},
+		products=['braces']
+	),
+	EwSmeltingRecipe(
+		id_recipe="hoodie",
+		str_name="a Hoodie",
+		alias=[
+			'hood',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_purplekilliflowerflorets: 1,
+		},
+		products=['hoodie']
+	),
+	EwSmeltingRecipe(
+		id_recipe="copbadge",
+		str_name="a Cop Badge",
+		alias=[
+			'badge',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_razornutshells: 1,
+		},
+		products=['copbadge']
+	),
+	EwSmeltingRecipe(
+		id_recipe="strawhat",
+		str_name="a Straw Hat",
+		alias=[
+			'straw',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_pawpawflesh: 1,
+		},
+		products=['strawhat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="cosplayhorns",
+		str_name="a pair of Cosplay Horns",
+		alias=[
+			'horns',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_sludgeberrysludge: 1,
+		},
+		products=['cosplayhorns']
+	),
+	EwSmeltingRecipe(
+		id_recipe="yourfavoritehat",
+		str_name="***Your Favorite Hat***",
+		alias=[
+			'favoritehat',
+			'favehat'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_suganmanutfruit: 1,
+		},
+		products=['yourfavoritehat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="pajamaonesie",
+		str_name="a Pajama Onesie",
+		alias=[
+			'pajamas',
+			'onesie'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_pinkrowddishroot: 1,
+		},
+		products=['pajamaonesie']
+	),
+	EwSmeltingRecipe(
+		id_recipe="pairofcircularsunglasses",
+		str_name="a Pair Of Circular Sunglasses",
+		alias=[
+			'digibroglasses',
+			'circleglasses',
+			'circularglasses'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_dankwheatchaff: 1,
+		},
+		products=['pairofcircularsunglasses']
+	),
+	EwSmeltingRecipe(
+		id_recipe="flowercrown",
+		str_name="a Flower Crown",
+		alias=[
+			'flower',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_brightshadeberries: 1,
+		},
+		products=['flowercrown']
+	),
+	EwSmeltingRecipe(
+		id_recipe="spikedbracelets",
+		str_name="a pair of Spiked Bracelets",
+		alias=[
+			'spiked',
+			'bracelets'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_blacklimeade: 1,
+		},
+		products=['spikedbracelets']
+	),
+	EwSmeltingRecipe(
+		id_recipe="slimecorppin",
+		str_name="a SlimeCorp Pin",
+		alias=[
+			'pin',
+			'shillpin',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_phosphorpoppypetals: 1,
+		},
+		products=['slimecorppin']
+	),
+	EwSmeltingRecipe(
+		id_recipe="overalls",
+		str_name="a pair of Overalls",
+		alias=[
+			'trousers',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_direapplestems: 1,
+		},
+		products=['overalls']
+	),
+	EwSmeltingRecipe(
+		id_recipe="rustynail",
+		str_name="a Rusty Nail",
+		alias=[
+			'nail',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_rustealeafblades: 1,
+		},
+		products=['rustynail']
+	),
+	EwSmeltingRecipe(
+		id_recipe="fullmetaljacket",
+		str_name="a Full Metal Jacket",
+		alias=[
+			'jacket',
+			'metaljacket'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_metallicapheads: 1,
+		},
+		products=['fullmetaljacket']
+	),
+	EwSmeltingRecipe(
+		id_recipe="tinfoilhat",
+		str_name="a Tinfoil Hat",
+		alias=[
+			'tinfoil',
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_steelbeanpods: 1,
+		},
+		products=['tinfoilhat']
+	),
+	EwSmeltingRecipe(
+		id_recipe="resplendentcoronet",
+		str_name="a Resplendent Coronet",
+		alias=[
+			'crown',
+			'goldcrown'
+		],
+		ingredients={
+			item_id_textiles: 1,
+			item_id_aushuckstalks: 1,
+		},
+		products=['resplendentcoronet']
+	),
+	EwSmeltingRecipe(
+		id_recipe="stick",
+		str_name="a stick",
+		alias=[
+			'wood',
+		],
+		ingredients={
+			item_id_direapplestems: 3
+		},
+		products=[item_id_stick]
+	),
 ]
 #smelting_recipe_list += ewdebug.debugrecipes
 
@@ -14789,6 +21180,12 @@ recipe_names = []
 
 # Populate recipe map, including all aliases.
 for recipe in smelting_recipe_list:
+
+	# print("==============================\n\n{}\n――――――――――――――――――――――――――――――\nTo craft {}, you'll need...\n".format(recipe.str_name, recipe.str_name))
+	# for ingredient in recipe.ingredients.keys():
+	# 	print('{} {}'.format(recipe.ingredients[ingredient], ingredient))
+	# print('')
+	
 	smelting_recipe_map[recipe.id_recipe] = recipe
 	recipe_names.append(recipe.id_recipe)
 
@@ -16068,6 +22465,9 @@ hue_id_white = "white"
 hue_id_grey = "grey"
 hue_id_black = "black"
 hue_id_brown = "brown"
+hue_id_copper = "copper"
+hue_id_chrome = "chrome"
+hue_id_gold = "gold"
 
 
 # All color attributes in the game.
@@ -16344,6 +22744,36 @@ hue_list = [
 		str_saturate = "It turned an earthly brown!",
 		str_name = "brown",
 		str_desc = "Its earthly brown hue imbues it with a humble, down-to-earth personality.",
+		is_neutral = True,
+	),
+	EwHue(
+		id_hue = hue_id_copper,
+		alias = [
+			"copperpaint",
+		],
+		str_saturate = "It was given a coating of bright copper!",
+		str_name = "copper",
+		str_desc = "It seems to feel good about its copper coating.",
+		is_neutral = True,
+	),
+	EwHue(
+		id_hue = hue_id_chrome,
+		alias = [
+			"chromepaint",
+		],
+		str_saturate = "It was given a coating of silvery chrome!",
+		str_name = "chrome",
+		str_desc = "It's content with its chrome coating.",
+		is_neutral = True,
+	),
+	EwHue(
+		id_hue = hue_id_gold,
+		alias = [
+			"goldpaint",
+		],
+		str_saturate = "It was given a coating of dazzling gold!",
+		str_name = "gold",
+		str_desc = "It prides itself on its shiny golden coating.",
 		is_neutral = True,
 	),
 ]
@@ -17000,7 +23430,7 @@ for slimexodia in item_list:
 prank_items_heinous = [] # common
 prank_items_scandalous = [] # uncommon
 prank_items_forbidden = [] # rare
-#swilldermuk_food = []
+swilldermuk_food = []
 
 # Gather all prank items
 for p in item_list:
@@ -17488,36 +23918,36 @@ for bait in food_list:
 # If a fish doesn't bite, send one of these.
 nobite_text = [
 	"You patiently wait...",
-    	"This is so fucking boring...",
-    	"You watch your hook bob...",
-    	"You grow impatient and kick the rotted wooden guard rails...",
-    	"AUUUUUGH JUST BITE THE FUCKING HOOK ALREADY...",
-    	"You begin to zone-out a bit...",
-    	"Shouldn't you be doing something productive?",
-   	"You sit patiently, eagerly awaiting a fish to bite. Thanks to your concentration, this descriptive contradiction does not occur to you.",
-    	"You begin to daydream about fish sex... Gross...",
-    	"You begin to daydream about fish sex... Hot...",
-    	"You see a fish about to bite your hook, but you shout in elation, scaring it away...",
-    	"You make direct eye contact with a fish, only to quickly look away...",
-    	"♪ Fishing for Fishies! ♪",
-    	"♪ That Captain Albert Alexander! ♪",
-    	"You get the urge to jump in and try to grab a fish, before remembering that you can't swim...",
-    	"You hum some sea shanties...",
-    	"You start to slip into an existential crisis...",
-    	"You jitter as other seamen catch fish before you. Fuck fishing...",
-    	"You feel the oncoming downward spiral...",
-    	"You shake your head as a young seaman baits a perfectly good slice of pizza on his hook... What a cretin...",
-    	"You wonder if the Space Navy has been formed yet...",
-    	"Man... Why were you excited for this shit?",
-    	"Still better than Minesweeper...",
-    	"Maybe one day your wife will pardon you...",
-    	"Fuck fish...",
-    	"You let out a deep sigh, scaring away a fish...",
-    	"Wouldn't it be funny if you just reached into the sea and grabbed one? Haha, yeah, that'd be funny...",
-    	"You see a bird carry off a Plebefish in the distance... Good riddance...",
-    	"You spot a stray bullet in the distance...",
-    	"You see a dead body float up to the surface of the Slime...",
-    	"Fish..."
+		"This is so fucking boring...",
+		"You watch your hook bob...",
+		"You grow impatient and kick the rotted wooden guard rails...",
+		"AUUUUUGH JUST BITE THE FUCKING HOOK ALREADY...",
+		"You begin to zone-out a bit...",
+		"Shouldn't you be doing something productive?",
+	"You sit patiently, eagerly awaiting a fish to bite. Thanks to your concentration, this descriptive contradiction does not occur to you.",
+		"You begin to daydream about fish sex... Gross...",
+		"You begin to daydream about fish sex... Hot...",
+		"You see a fish about to bite your hook, but you shout in elation, scaring it away...",
+		"You make direct eye contact with a fish, only to quickly look away...",
+		"♪ Fishing for Fishies! ♪",
+		"♪ That Captain Albert Alexander! ♪",
+		"You get the urge to jump in and try to grab a fish, before remembering that you can't swim...",
+		"You hum some sea shanties...",
+		"You start to slip into an existential crisis...",
+		"You jitter as other seamen catch fish before you. Fuck fishing...",
+		"You feel the oncoming downward spiral...",
+		"You shake your head as a young seaman baits a perfectly good slice of pizza on his hook... What a cretin...",
+		"You wonder if the Space Navy has been formed yet...",
+		"Man... Why were you excited for this shit?",
+		"Still better than Minesweeper...",
+		"Maybe one day your wife will pardon you...",
+		"Fuck fish...",
+		"You let out a deep sigh, scaring away a fish...",
+		"Wouldn't it be funny if you just reached into the sea and grabbed one? Haha, yeah, that'd be funny...",
+		"You see a bird carry off a Plebefish in the distance... Good riddance...",
+		"You spot a stray bullet in the distance...",
+		"You see a dead body float up to the surface of the Slime...",
+		"Fish..."
 ]
 
 generic_help_response = "Check out the guide for help: https://ew.krakissi.net/guide/\nThe guide won't cover everything though, and may even be a bit outdated in some places, so you can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work by using the !help command there. Portable game guides can also be bought there for 10,000 slime."
@@ -17527,7 +23957,7 @@ help_responses = {
 	# Introductions, part 1
 	"gangs":"**Gang Violence** is the center focus of **Rowdy Fuckers Cop Killers' ENDLESS WAR**. Enlisting in a gang allows you to attack other gang members, juveniles, ghosts, and slime beasts with the **'!kill'** command. To enlist in a gang, use **'!enlist'**, provided you also have at least 50,000 slime on hand. However, a member of that gang must use **'!vouch'** for you beforehand. Enlisting will permanently affiliate you with that gang, unless you are !pardon'd by the **ROWDY FUCKER** (Munchy), or the **COP KILLER** (Ben Saint). You may use **'!renounce'** to return to the life of a juvenile, but you will lose half of your current slime, and you will still be affiliated with that gang, thus disallowing you from entering the enemy's gang base. Additionally, a Kingpin, should they feel the need to, can inflict the '!banned' status upon you, preventing you from enlisting in their gang.",
 	"food":"Food lowers your hunger by a set amount, and can be ordered from various **restaurants** within the city. Generally speaking, the more expensive food is, the more hunger it sates. You can **'!order'** food to place it in your inventory, and **'!use [food name]'** to use it. You can only carry a certain amount of food depending on your level. Regular food items expire after 2 in-game days, or 12 hours in real life, while crops expire after 8 in-game days (48 hours), and food items gained from milling expire after a whole 2 weeks in real life. Three popular restauraunts close by various gang bases include **THE SPEAKEASY** (juveniles), **THE SMOKER'S COUGH** (rowdys), and **RED MOBSTER SEAFOOD** (killers), though there are other places to order food as well, such as the **Food Court**.",
-	"capturing":"Capturing districts is the primary objective of **ENDLESS WAR**. Once you get at least 50,000 slime, you are able to capture districts and generate slime for your team's **Kingpin**. The rate at which you capture a district is determined by various factors. If more **people** are capturing a district, that district will take **less** time to capture. The **property class** (which can range from S at the highest to C at the lowest) of that district will also increase capture time, with S class districts taking more time to capture than C class districts. Districts will take **less** time to capture if they are nearby **friendly** districts, and **more** time to capture if they are nearby **enemy** districts. Districts will have their capture progress **decay** over time, but if a captured district is **fully surrounded** by friendly districts (example: Assault Flats Beach is surrounded by Vagrant's Corner and New New Yonkers), then it will **not** decay. Inversely, districts will decay **faster** if they are next to **enemy** districts. **DECAPTURING** (lowering an enemy's capture progress on districts they control) and **RENEWING** (increasing capture progress on districts your team currently controls) can also be done, but only if that district is **not** fully surrounded. Once a district has been fully captured, it will stay locked at 100% for a duration depending on its property class and the number of people involved in capturing it. **JUVIE'S ROW**, **ROWDY ROUGHHOUSE**, and **COP KILLTOWN** are gang bases, and thus cannot be captured, nor do they decay. To check the capture progress of a district, use **'!progress'**. To view the status of the map itself and check what property class each district has, use **'!map'**.",
+	"capturing":"Capping is a battle for influence over the 31 districts of NLACakaNM, and one of your main goals as a gangster. Capped territories award your kingpin slime, and give your teammates benefits while visiting. Start by visiting Based Hardware and equipping one of the paint tools sold there. Once you have that, you can **!spray <captcha>** while in a capturable district to gain influence for your gang. Spraying graffiti in districts will increase influence for you, or decrease it for the enemy if they have influence there. Think of dealing influence to a district like dealing damage to a Juvie's soft squishy body, with critical hits, misses, and backfires included. As you go, you can check your **!progress** to see how much influence you still need. It can be more or less depending on the territory class, running from rank C to S. \n\nA few more things to note:\n>**!progress** will tell you the minimum and limit for territory capture. However, you can capture above that limit, as high as you want. The catch is that anything captured over this limit will decay faster.\n>Decapping does 0.8x the influence of capping, even though the cost remains the same.\n>Don't attack enemy territory when it is surrounded by enemy territory/outskirts. Small little bitches like yourself are prone to fucking up severely under that much pressure.\n>The nightlife starts in the late night. Fewer cops are around to erase your handiwork, so if you cap then you will gain a 33% capping bonus.\n>You can't kill for shit with paint tools equipped. Luckily, you can **!sidearm** a weapon or tool and quickly switch between your two equip slots using **switch** or **!s**.",
 	"transportation":"There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board redtocv'. **'!disembark'** can be used to exit a train. **The Ferry** (which moves between Vagrant's Corner and Wreckington) and **The Blimp** (which moves between Dreadford and Assault Flats Beach) can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do. Refer to the diagram below (credits to Connor#3355) on understanding which districts have subway stations on them, though take note that the white subway line is currently non-operational.\nhttps://cdn.discordapp.com/attachments/431238867459375145/570392908780404746/t_system_final_stop_telling_me_its_wrong_magicks.png",
 	"death": "Death is an integral mechanic to Endless War. Even the most experienced players will face the sewers every now and again. If you find yourself in such a situation, use **'!revive'** in the sewers channel, and you will return to the land of the living as a juvenile at the base of ENDLESS WAR. Dying will drop some of your unadorned cosmetics and food, and all of your unequiped weapons, but your currently adorned cosmetics and equiped weapon will remain in your inventory (Gangsters will lose half of their food/unadorned cosmetics, while Juveniles lose only a quarter). Try not to die too often however, as using !revive collects a 'death tax', which is 1/10th of your current slimecoin. Alternatively, you can hold off on reviving and remain a **ghost**, which has its own gameplay mechanics associated with it. To learn more, use '!help ghosts' at one of the colleges or with a game guide.",
 	# Introductions, part 2
@@ -17564,34 +23994,47 @@ help_responses = {
 	"profile": "This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
 	"manuscripts": "First of all, to start a manuscript, you're gonna need to head down to the Cafe, either University, or the Comic Shop.\n\nYou can **!beginmanuscript [title]** at the cost of 20k slime.\n\nIf you happen to regret your choice of title, you can just **!settitle [new title]**.\n\nThe author name is already set to your nickname, but if you want to change it, you change your nickname and then **!setpenname**.\n\nYou're required to specify a genre for your future zine by using **!setgenre [genre name]** (Genre list includes: narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper, and experimental).\n\nIf at any time you would like to look at the title, author name, and length of your manuscript, then use **!manuscript**.\n\n*NOW*, if you actually want to start getting stuff done, you're gonna need to **!editpage [page number] [content]**. Every zine has 10 pages (kinda) that you can work with, but you can **!setpages [pages]** to customize it (maximum is 20, minimum is 5). Each holds a maximum of 1500 characters of content. You can fill it with information, image links, smut, whatever floats your freakish boat. If you try to edit a page that already has writing, it will ask you to confirm the change before overwriting it.\n\nYou can also set a cover, which is optional. You do this with **!editpage cover [image link]**.\n\nTo check any of your pages, simply **!viewpage [number]** to see how it looks.\n\nKeep in mind that manuscripts ARE NOT items and can't be lost on death. They're accessible from any authoring location (Cafe, NLACU, NMS, Comics). A player can only have 1 manuscript out at a time.\n\nOnce you are completely finished, you can **!publish** your manuscript (it will ask you to confirm that you are completely done with it), which will enable the citizens of the town to purchase it from any zine place. From there, it will be bought and rated by the people and you may even earn some royalty poudrins for it.",
 	"zines": "Zines are the hot new trend in Neo-Milwaukee and give slimebois of all shapes and sizes access to the free-market of information and culture.\n\nTo obtain a zine, you must head down to any of these locations: Green Cake Cafe, NLAC University, Neo-Milwaukee State, or Glockbury Comics.\n\nFrom there, you can **!browse** for zines. They are ordered by *Zine ID*, but you have many options for sorting them, including: **title, author, datepublished,** any of the genres (including **narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper,** and **experimental**.), **length, sales,** and **rating** (use **!browse [criteria]**). You can also add **reverse** on to any of these in order to make it display in reverse order. Example: **!browse bestsellers reverse** (essentially looks for worse-selling zines). Browsing in the Comic Shop will automatically browse for comic zines and browsing at the Colleges will look for historical zines (keep in mind that any zines can be bought from these places).\n\nYou can also **!browse [Zine ID]** in order to get info about that specific zine, including sales, length, genre, and rating.\n\nOnce you've found a zine that's caught your eye, simply **!orderzine [Zine ID]** to buy it for 10k slime.\n\nAfter absorbing the zine's content, it is your moral obligation as a reader to **!review [Zine Name] [Score]**. The potential scores range from between 1 and 5 *fucks* (whole numbers only). If you hate a zine, then give it one fuck. If you absolutely loved it, give it five fucks. Simple. By the way, if a zine's average rating is less than 2.0 by the time it gets to 10 ratings (or less than 1.5 by 5 ratings), it will be excluded from the default browse. The only way to purchase it will be to use the **worstrated** or **all** sorting methods.\n\nYou can **!shelve [zine name]** in your apartment after you've finished.",
-	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
 	"sap": "**Sap** is a resource your body produces to control your slime. It's integral to being able to act in combat. You can have a maximum amount of sap equal to 1.6 * ( your slime level ^ 0.75 ). When you spend it, it will regenerate at a rate of 1 sap every 5 seconds. You can spend your sap in a variety of ways: **!harden [number]** allows you to dedicate a variable amount of sap to your defense. Hardened sap reduces incoming damage by a factor of 10 / (10 + hardened sap). Your hardened sap counts against your maximum sap pool, so the more you dedicate to defense, the less you will have to attack. You can **!liquefy [number]** hardened sap back into your sap pool. Every attack requires at least 1 sap to complete. Different weapons have different sap costs. Some weapons have the ability to destroy an amount of hardened sap from your target, or ignore a portion of their hardened sap armor. This is referred to as **sap crushing** and **sap piercing** respectively. There are also other actions you can take in combat, that cost sap, such as: **!aim [player]** will slightly increase your hit chance and crit chance against that player for 10 seconds. It costs 2 sap. **!dodge [player]** will decrease that players hit chance against you for 10 seconds. It costs 3 sap. **!taunt [player]** will decrease that player's hit chance against targets other than you for 10 seconds. It costs 5 sap.",
+	"sprays":"**Sprays** are your signature piece of graffiti as a gangster. You can **!changespray <image link>** in order to set your own custom image. This image appears when you get a critical hit while capping, and you can also **!tag** to spray it anywhere.",
 
 	# Weapons
 	weapon_id_revolver: "**The revolver** is a weapon for sale at the Dojo. Attacking with the revolver costs 1 sap. It has a damage mod of 0.8 and an attack cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The revolver has sap crushing 2. After every 6 shots you will need to **!reload** it.",
 	weapon_id_dualpistols: "**The dual pistols** are a weapon for sale at the Dojo. Attacking with the dual pistols costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2, a miss chance of 40% and a 20% chance for a crit, which does 2x damage. The dual pistols have sap crushing 2. After every 12 shots you will need to **!reload** them.",
-	weapon_id_shotgun: "**The shotgun** is a weapon for sale at the Dojo. Attacking with the shotgun costs 5 sap. It has a damage mod of 1.65 and an attack cost mod of 1.5. It has a captcha length of 6, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The shotgun has sap crushing 5. After every 2 shots you will need to **!reload** it.",
-	weapon_id_rifle: "**The rifle** is a weapon for sale at the Dojo. Attacking with the rifle costs 4 sap. It has a damage mod of 1.25 and an attack cost mod of 1.5. It has a captcha length of 6, and a 20% chance for a crit, which does 2x damage. The rifle never misses. The rifle has sap piercing 10. After every 4 shots you will need to **!reload** it.",
+	weapon_id_shotgun: "**The shotgun** is a weapon for sale at the Dojo. Attacking with the shotgun costs 5 sap. It has a damage mod of 1.65 and an attack cost mod of 1.5. It has a captcha length of 6, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The shotgun has sap crushing 5, which is doubled on a crit. After every 2 shots you will need to **!reload** it.",
+	weapon_id_rifle: "**The rifle** is a weapon for sale at the Dojo. Attacking with the rifle costs 4 sap. It has a damage mod of 1.25 and an attack cost mod of 1.25. It has a captcha length of 6, and a 20% chance for a crit, which does 2x damage. The rifle never misses. The rifle has sap piercing 10 and sap crush 2, which are both doubled on a crit. After every 4 shots you will need to **!reload** it.",
 	weapon_id_smg: "**The SMG** is a weapon for sale at the Dojo. Attacking with the SMG costs 3 sap. It has a damage mod of 0.2 and an attack cost mod of 1. It has a captcha length of 4 and a 20% chance to jam with every attack, in which case you will need to **!unjam** it to continue firing. The SMG only requires a captcha for !unjam, not for every !kill. For every !kill it shoots 6 bullets, each of which has a 25% miss chance, and a 5% chance for a crit, which does 3x damage. Every bullet has sap crushing 1. After every 4 attacks you will need to **!reload** it.",
 	weapon_id_minigun: "**The minigun** is a heavy weapon not for sale at the Dojo. Attacking with the minigun costs 15 sap. It has a damage mod of 0.8 and an attack cost mod of 5. It has a captcha length of 10. For every !kill it shoots 10 bullets, each of which has a 50% miss chance, and a 10% chance for a crit, which does 2x damage. Every bullet has sap crushing 2.",
 	weapon_id_bat: "**The nailbat** is a weapon for sale at the Dojo. Attacking with the bat costs 2 sap. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a captcha length of 2, a miss chance of 1/13, a 1/13 chance for a crit, which increases the damage mod to 4, and a 1/13 chance to backfire and damage the wielder instead. The bat has sap crushing 2. If you takes less than 3 seconds between attacks, your miss chance will increase.",
 	weapon_id_brassknuckles: "**The brass knuckles** are a weapon for sale at the Dojo. Attacking with the brass knuckles costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 2 punches. Every punch has a 20% miss chance. If you land 3 successful attacks (not punches) in succession with perfect timing, the third attack will throw an extra punch, which deals 3x damage and has 5 sap crushing. If you takes less than 2 seconds between attacks, your damage will decrease. For perfect timing you need to take 2 seconds between attacks exactly.",
-	weapon_id_katana: "**The katana** is a weapon for sale at the Dojo. Attacking with the katana costs 3 sap. It has a damage mod of 1.3 and an attack cost mod of 1.3. It has a captcha length of 8. The katana never misses. If the katana is the only weapon in your inventory, it crits for 2x damage on every hit. If you takes less than 5 seconds between attacks, your damage will decrease. If you take exactly 5 seconds between attacks, the katana gains sap piercing 10 (sap piercing 15 on a crit).",
-	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. Attacking with the broadsword costs 12 sap. It has a damage mod of 3 and an attack cost mod of 5. It has a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire and damage the wielder instead. The broadsword has sap crushing 5 and sap piercing 20. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 1.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
-	weapon_id_nunchucks: "**The nunchucks** are a weapon for sale at the Dojo. Attacking with the nunchucks costs 4 sap. They have a damage mod of 0.5 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 4 blows. Every blow has a 25% miss chance and 1 sap crushing. If all 4 blows hit, you deal an additional blow that does 4x damage. If all shots miss, the nunchucks will backfire for 2x damage. If you takes less than 3 seconds between attacks, your miss chance will increase.",
+	weapon_id_katana: "**The katana** is a weapon for sale at the Dojo. Attacking with the katana costs 3 sap. It has a damage mod of 1.3 and an attack cost mod of 1.3. It has a captcha length of 8. The katana never misses. If the katana is the only weapon in your inventory, it crits for 1.5x damage on every hit. If you takes less than 5 seconds between attacks, your damage will decrease. If you take exactly 5 seconds between attacks, the katana gains sap piercing 10 (sap piercing 15 on a crit).",
+	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. Attacking with the broadsword costs 12 sap. It has a damage mod of 3 and an attack cost mod of 5. It has a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire and damage the wielder instead. The broadsword has sap crushing 5 and sap piercing 20. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 0.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
+	weapon_id_nunchucks: "**The nunchucks** are a weapon for sale at the Dojo. Attacking with the nunchucks costs 4 sap. They have a damage mod of 0.25 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 4 blows. Every blow has a 25% miss chance and 1 sap crushing. If all 4 blows hit, you deal an additional blow that does 4x damage. If all shots miss, the nunchucks will backfire for 2x damage. If you takes less than 3 seconds between attacks, your miss chance will increase.",
 	weapon_id_scythe: "**The scythe** is a weapon for sale at the Dojo. Attacking with the scythe costs 6 sap. It has a damage mod of 0.5 and an attack cost mod of 3. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 3x damage. The scythe has sap piercing 3 for every kill your opponent got this life, up to sap piercing 30. The scythe's damage mod also increases by 0.5 for every kill your opponent got this life, up to a maximum damage mod of 5. If you take less than 3 seconds between attacks, your damage will decrease.",
-	weapon_id_yoyo: "**The yo-yo** is a weapon for sale at the Dojo. Attacking with the yo-yo costs 1 sap. It has a damage mod of 0.5 and an attack cost mod of 0.75. It has a captcha length of 2, a miss chance of 18.75% and a 10% chance for a crit, which does 2x damage. The yo-yo's damage mod increases by 0.25 for every successful consecutive hit, without getting hit yourself.",
+	weapon_id_yoyo: "**The yo-yo** is a weapon for sale at the Dojo. Attacking with the yo-yo costs 1 sap. It has a damage mod of 0.5 and an attack cost mod of 1. It has a captcha length of 2, a miss chance of 18.75% and a 10% chance for a crit, which does 2x damage. The yo-yo's damage mod increases by 0.25 for every successful consecutive hit, without getting hit yourself. If you take 2 seconds or more between your attacks, the yo-yo gains 1 sap crush; otherwise your damage will decrease.",
 	weapon_id_bass: "**The bass guitar** is a weapon not for sale at the Dojo. Attacking with the bass costs 2 sap. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. The bass does not require a captcha to use. The bass has sap crushing 1 and sap piercing 5. If you takes less than 3 seconds between attacks, your miss chance will increase.",
 	weapon_id_umbrella: "**The umbrella** is a weapon for sale at the Bazaar. Attacking with the umbrella costs 1 sap. It has a damage mod of 0.5 and an attack cost mod of 1. It has a captcha length of 4, a miss chance of 10%, and a 10% chance for a crit, which does 2x damage. The umbrella has sap crushing 1. The umbrella decreases incoming damage by 75% and reduces sap crushing of incoming attacks by 1.",
-	weapon_id_knives: "**The throwing knives** are a weapon for sale at the Dojo. Attacking with the knives costs 1 sap. They have a damage mod of 0.5 and an attack cost mod of 0.25. They have a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 1.5x damage. When you attack with a throwing knife, it is used up, and you have to buy more.",
-	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. Attacking with the molotovs costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. They have sap piercing 10. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
-	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 2. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
+	weapon_id_knives: "**The throwing knives** are a weapon for sale at the Dojo. Attacking with the knives costs 1 sap. They have a damage mod of 0.5 and an attack cost mod of 0.25. They have a captcha length of 3, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. When you attack with a throwing knife, it is used up, and you have to buy more.",
+	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. Attacking with the molotovs costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 1. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. They have sap piercing 10. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
+	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 1. They have a captcha length of 3, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 5. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
-	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 3. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you take less than 10 seconds between attacks, your miss chance will increase.",
-	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. Attacking with the dragon claw costs 5 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. It has a captcha length of 2. It has sap crushing 5 and sap piercing 10. It you take less than 5 seconds between attacks, your miss chance will increase. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
-	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 4 sap. It has a captcha length of 10. Dealing damage with the staff requires attacking twice in a 5-second window, with the first !kill command only being preparetion for the second. The attack cost multiplier is 1 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 3, sap piercing 15, and a 0% chance to crit, which deals 1.5x damage. A number of conditions may be met to increase the damage multiplier by 0.5, sap piercing by 5, and crit chance by 2.5%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
+	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. Attacking with the dragon claw costs 5 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. It has sap crushing 5 and sap piercing 10. It you take less than 5 seconds between attacks, your miss chance will increase. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
+	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 3. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase.",
+	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 2 sap. Dealing damage with the staff requires attacking five times in a 15-second window, with the first four !kill command only being preparetion for the fifth. The attack cost multiplier is 0.5 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 0.6, sap piercing 0, and a 0% chance to crit, which deals 1.8x damage. A number of conditions may be met to increase the damage multiplier by 1.2, sap piercing by 6, and crit chance by 6.66%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
 	
+
+	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
+
+
+	weapon_id_spraycan: "**The spray can** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.8 and a spray cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
+	weapon_id_paintgun: "**The paint gun** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.7 and a spray cost mod of 0.75. It has a captcha length of 6, a miss chance of O% and a 20% chance for a crit, which does 2x influence.",
+	weapon_id_paintroller: "**The paint roller** is a paint tool for sale at Based Hardware. It has a capping modifier of 1.75 and a spray cost mod of 4. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
+	weapon_id_paintbrush: "**The paint brush** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.5 and a spray cost mod of .25. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 1.5x influence.",
+	weapon_id_watercolors: "**Watercolors** are a paint tool for sale at Based Hardware. It does a set 4000 influence per shot. It has a captcha length of 3, a miss chance of 10% and a .1% chance for a crit, which zeros out the whole district regardless of owner.",
+	weapon_id_thinnerbomb: "**Thinner bombs** are a paint tool for sale at Based Hardware. It has a capping modifier of 0.15 and a spray cost mod of 2. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence. When you cap with a thinner bomb, it is used up, and you have to buy more. When decapping, damage is multiplied by 15. This tool has a 10% chance of backfiring.",
+
+
 	# "otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
+
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
@@ -17602,11 +24045,13 @@ help_responses_ordered_keys = [
 	"mutations", "mymutations", "smelting", "sparring", "ghosts",
 	"slimeoids", "cosmetics", "realestate", "apartments", "stocks",
 	"trading", "weather", "casino", "bleeding", "offline",
-	"profile", "manuscripts", "zines", "shambleball", "sap",
+	"profile", "manuscripts", "zines", "shambleball", "sap", "sprays",
 	weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun, weapon_id_rifle, weapon_id_smg, 
 	weapon_id_bat, weapon_id_brassknuckles, weapon_id_katana, weapon_id_broadsword, weapon_id_nunchucks, 
 	weapon_id_scythe, weapon_id_yoyo, weapon_id_umbrella, weapon_id_knives, weapon_id_molotov, 
 	weapon_id_grenades, weapon_id_garrote, weapon_id_minigun, weapon_id_bow, weapon_id_dclaw,
+	weapon_id_staff, weapon_id_spraycan, weapon_id_paintgun, weapon_id_paintroller, weapon_id_paintbrush,
+	weapon_id_watercolors, weapon_id_thinnerbomb
 ]
 
 mutation_descriptions = {
@@ -17614,7 +24059,7 @@ mutation_descriptions = {
 	mutation_id_thickerthanblood: "On a fatal blow, immediately receive the opponent’s remaining slime, causing none of it to bleed onto the ground or go your kingpin. Its effects are diminished on hunted enemies, however.",
 	mutation_id_fungalfeaster: "On a fatal blow, restore all of your hunger.",
 	mutation_id_sharptoother: "The chance to miss with a weapon is reduced by 50%. Specifically, a normal miss will now have a 50% to either go through as a miss or a hit.",
-	mutation_id_2ndamendment: "One extra equippable weapon slot in your inventory.",
+	mutation_id_2ndamendment: "One extra equippable weapon slot in your inventory. You receive a 25% damage buff if two non-tool weapons are in both your weapon slots.",
 	mutation_id_bleedingheart: "Upon being hit, none of your slime is splattered onto the street. It is all stored as bleed damage instead. This does not counteract the Nosferatu mutation.",
 	mutation_id_nosferatu: "At night (8PM-6AM), upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage. This overrides the Bleeding Heart mutation.",
 	mutation_id_organicfursuit: "Double damage, double movement speed, and 10x damage reduction every 31st night. Use **'!fursuit'** to check if it's active.",
@@ -17670,7 +24115,8 @@ consult_responses = {
 "westglocksbury":"If you ever wanted to turn killing people into a reality show, this is probably where you'd film it. The cops were stationed in Glocksbury in order to deal with this place, but they don't tread here for the same reason most of us don't. The corpses here get mangled. I've seen ripped out spines, chainsaw wounds, and other Mortal Kombat-like lacerations. Our photographer couldn't even take a picture of the property without getting a severed leg in the shot. But, as a delinquent yourself, I imagine that could also be a good thing.",
 "jaywalkerplain":"Are you one of those NMU students? Or maybe you're after the drug culture. Well in either case, Jaywalker Plain's an excellent place to ruin your life. In addition to having lots of like-minded enablers, the countless parks will give you the perfect spot to pace and ruminate on your decisions. You know, this is a sales pitch. I probably shouldn't make the place sound so shitty.",
 "crookline":"Now, we've gotten a lot of complaints about thieves here, stealing our clients' SlimeCoin wallets and relieving them of our rent money. We acknowledge this is a problem, so for every purchase of a property in Crookline, we've included this anti-thievery metal codpiece. Similar to how a chastity belt blocks sexual urges, this covers your pockets, making you invulnerable to petty thieves. Apart from that perk, in Crookline you'll get a lovely high-rise flat with all the essentials, all coated in a neat gloomy neon aesthetic.",
-"dreadford":"Have you ever wanted to suck on the sweet, sweet teat of ultra-decadence? Do you have multiple yachts? Do you buy both versions of Pokemon when they come out, just because you can blow the cash? Ha. Let me introduce you to the next level of opulence. Each apartment is a full-scale mansion, maintained by some of the finest slimebutlers in the industry. In the morning they tickle your feet to get you up, and at night they sing you Sixten ballads to drift you back to restful slumber. The place is bulletproof, fireproof, and doubles as a nuclear bunker if things go south. And it stores...everything. The price, you say? Shit, I was hoping you wouldn't ask."
+"dreadford":"Have you ever wanted to suck on the sweet, sweet teat of ultra-decadence? Do you have multiple yachts? Do you buy both versions of Pokemon when they come out, just because you can blow the cash? Ha. Let me introduce you to the next level of opulence. Each apartment is a full-scale mansion, maintained by some of the finest slimebutlers in the industry. In the morning they tickle your feet to get you up, and at night they sing you Sixten ballads to drift you back to restful slumber. The place is bulletproof, fireproof, and doubles as a nuclear bunker if things go south. And it stores...everything. The price, you say? Shit, I was hoping you wouldn't ask.",
+"maimridge":"Uhhhh, I don't really know what to say about this place just yet, it's pretty newfangled."
 }
 
 sea_scavenge_responses = [
@@ -17827,16 +24273,6 @@ coward_responses_hurt = [
 	"\nThe {} cries out in pain!: *What the H-E-double-hockey-sticks is your problem?*",
 ]
 
-# List of outskirt districts for spawning purposes
-outskirts_districts = [
-	poi_id_south_outskirts,
-	poi_id_southwest_outskirts,
-	poi_id_west_outskirts,
-	poi_id_northwest_outskirts,
-	poi_id_north_outskirts,
-	poi_id_nuclear_beach
-]
-
 # Letters that an enemy can identify themselves with
 identifier_letters = [
 	'A', 'B', 'C', 'D', 'E',
@@ -17858,6 +24294,8 @@ event_type_minecollapse = "minecollapse"
 event_type_minesweeper = "minesweeper"
 event_type_pokemine = "pokemine"
 event_type_bubblebreaker = "bubblebreaker"
+event_type_voidhole = "voidhole"
+event_type_voidconnection = "voidconnection"
 
 world_events = [
 	EwEventDef(
@@ -17891,6 +24329,11 @@ world_events = [
 	EwEventDef(
 		event_type = event_type_bubblebreaker,
 		str_event_start = "You notice the wall bulging slightly and you can dig into it.({} column number)".format(cmd_mine),
+		str_event_end = "The wall collapses.",
+	),
+	EwEventDef(
+		event_type = event_type_voidhole,
+		str_event_start = "You hit a sudden gap in the stone, with a scary looking drop. You see what looks like a trampoline on a building's roof at the bottom. Do you **{}** in?".format(cmd_jump),
 		str_event_end = "The wall collapses.",
 	),
 
@@ -18324,7 +24767,7 @@ curse_words = { # words that the player should be punished for saying via swear 
 	"towelhead":50,
 	"wetback":50,
 	"zipperhead":50,
-	"spick":50,
+	"spic":50,
 	"dyke":50,
 	"tranny":80,
 	"dickhead":20,
@@ -18415,7 +24858,10 @@ races = {
 	'furry': 'furry',
 	'scalie': 'scalie',
 	'slime-derived': 'slime-derived',
-	'other': 'other'
+	'monster': 'monster',
+	'critter': 'critter',
+	'avian': 'avian',
+	'other': 'other',
 }
 
 # lists of all the discord server objects served by bot, identified by the server id

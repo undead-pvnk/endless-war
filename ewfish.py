@@ -262,6 +262,10 @@ def gen_fish(x, fisher, has_fishingrod):
 				fish_pool.remove(fish)
 
 	fish = random.choice(fish_pool)
+	
+	# Get fucked
+	if fisher.pier.id_poi == ewcfg.poi_id_juviesrow_pier:
+		fish = 'plebefish'
 
 	return fish
 
@@ -329,6 +333,9 @@ async def cast(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+	
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	statuses = user_data.getStatusEffects()
 
@@ -346,9 +353,9 @@ async def cast(cmd):
 		response = "You've already cast a line."
 
 	# Only fish at The Pier
-	elif cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	elif user_data.poi in ewcfg.piers:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -365,11 +372,17 @@ async def cast(cmd):
 				if weapon.id_weapon == "fishingrod":
 					has_fishingrod = True
 
+			#if user_data.sidearm >= 0:
+			#	sidearm_item = EwItem(id_item=user_data.sidearm)
+			#	sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+			#	if sidearm.id_weapon == "fishingrod":
+			#		has_fishingrod = True
+
 			if ewcfg.status_high_id in statuses:
 				fisher.high = True
 			fisher.fishing = True
 			fisher.bait = False
-			fisher.pier = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+			fisher.pier = ewcfg.id_to_poi.get(user_data.poi)
 			fisher.current_fish = gen_fish(market_data, fisher, has_fishingrod)
 
 			global fishing_counter
@@ -479,7 +492,7 @@ async def cast(cmd):
 
 				user_data = EwUser(member=cmd.message.author)
 
-				if fisher.pier == "" or user_data.poi != (fisher.pier.mother_district if fisher.pier.is_subzone else fisher.pier.id_poi):
+				if fisher.pier == "" or user_data.poi != fisher.pier.id_poi:
 					fisher.stop()
 					return
 				if user_data.life_state == ewcfg.life_state_corpse:
@@ -525,6 +538,9 @@ async def reel(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
 	if cmd.message.author.id not in fishers.keys():
 		fishers[cmd.message.author.id] = EwFisher()
 	fisher = fishers[cmd.message.author.id]
@@ -534,9 +550,9 @@ async def reel(cmd):
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You can't fish while you're dead. Try {}.".format(ewcfg.cmd_revive)
 
-	elif cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	elif user_data.poi in ewcfg.piers:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -597,6 +613,12 @@ async def reel(cmd):
 					if weapon.id_weapon == "fishingrod":
 						has_fishingrod = True
 
+				#if user_data.sidearm >= 0:
+				#	sidearm_item = EwItem(id_item=user_data.sidearm)
+				#	sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+				#	if sidearm.id_weapon == "fishingrod":
+				#		has_fishingrod = True
+
 				value = 0
 
 				if fisher.current_size == ewcfg.fish_size_miniscule:
@@ -653,16 +675,14 @@ async def reel(cmd):
 				if fisher.current_fish == "plebefish":
 					slime_gain = ewcfg.fish_gain * .5
 					value = 10
-				if poi.is_subzone:
-					district_data = EwDistrict(district = poi.mother_district, id_server = cmd.message.server.id)
-				else:
-					district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+					
+				controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
-				if district_data.controlling_faction != "" and district_data.controlling_faction == user_data.faction:
+				if controlling_faction != "" and controlling_faction == user_data.faction:
 					slime_gain *= 2
 
 
-				if cmd.message.channel.name == ewcfg.channel_jr_pier:
+				if user_data.poi == ewcfg.poi_id_juviesrow_pier:
 					slime_gain = int(slime_gain / 4)
 
 				trauma = ewcfg.trauma_map.get(user_data.trauma)
@@ -739,10 +759,10 @@ async def reel(cmd):
 
 				# Flag the user for PvP
 				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_fish, enlisted)
-
+				# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_fish, enlisted)
+				# 
 				user_data.persist()
-				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+				# await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				
 	else:
 		response = "You cast your fishing rod unto a sidewalk. That is to say, you've accomplished nothing. Go to a pier if you want to fish."
@@ -755,6 +775,9 @@ async def appraise(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
@@ -765,14 +788,14 @@ async def appraise(cmd):
 	#	response = "You ask the bartender if he knows someone who would want to trade you something for your recently caught fish. Apparently, at night, an old commodore by the name of Captain Albert Alexander comes to drown his sorrows at this very tavern. You guess you’ll just have to sit here and wait for him, then."
 
 	if cmd.message.channel.name != ewcfg.channel_speakeasy:
-		if cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+		if user_data.poi in ewcfg.piers:
 			response = 'You ask a nearby fisherman if he could appraise this fish you just caught. He tells you to fuck off, but also helpfully informs you that there’s an old sea captain that frequents the Speakeasy that might be able to help you. What an inexplicably helpful/grouchy fisherman!'
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
 
 	elif item_sought:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -871,6 +894,9 @@ async def barter(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
@@ -880,14 +906,14 @@ async def barter(cmd):
 	#	response = "You ask the bartender if he knows someone who would want to trade you something for your recently caught fish. Apparently, at night, an old commodore by the name of Captain Albert Alexander comes to drown his sorrows at this very tavern. You guess you’ll just have to sit here and wait for him, then."
 
 	if cmd.message.channel.name != ewcfg.channel_speakeasy:
-		if cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+		if user_data.poi in ewcfg.piers:
 			response = 'You ask a nearby fisherman if he wants to trade you anything for this fish you just caught. He tells you to fuck off, but also helpfully informs you that there’s an old sea captain that frequents the Speakeasy that might be able to help you. What an inexplicably helpful/grouchy fisherman!'
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
 
 	elif item_sought:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -1029,7 +1055,7 @@ async def barter(cmd):
 					accepted = False
 
 				# cancel deal if the user has left Vagrant's Corner
-				if user_data.poi != ewcfg.poi_id_vagrantscorner:
+				if user_data.poi != ewcfg.poi_id_speakeasy:
 					accepted = False
 
 				# cancel deal if the offer has been deleted
@@ -1110,8 +1136,8 @@ async def embiggen(cmd):
 		response = "How are you going to embiggen your fish on the side of the street? You’ve got to see a professional for this, man. Head to the SlimeCorp Laboratory, they’ve got dozens of modern day magic potions ‘n shit over there."
 
 	elif item_sought:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
