@@ -14545,7 +14545,6 @@ poi_list = [
 		id_poi = poi_id_nlacu,
 		alias = [
 			"nlacu",
-			"university",
 			"nlacuniversity",
 			"uni",
 			"nu",
