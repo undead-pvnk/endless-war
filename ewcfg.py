@@ -4377,7 +4377,7 @@ def wef_katana(ctn = None):
 
 	elif len(weapons_held) == 1:
 		ctn.crit = True
-		ctn.slimes_damage *= 2
+		ctn.slimes_damage *= 1.5
 		ctn.sap_ignored *= 1.5
 
 # weapon effect function for "broadsword"
@@ -12748,7 +12748,7 @@ poi_list = [
 			"doxy"
 		],
 		str_name = "Doxy Avenue",
-		str_desc = "Jazz clubs and diners decked out in flashy neon lights liven up this already crowded hotspot. Traffic is always jammed down here, and the locals have taken to the habit of just walking between the stopped cars to get across. The 24/7 nightlife here is really something else, and the pickpockets hiding in the bustle will make sure you pay full price for it. Exits into Crookline, XXXXXX, and Perdido Valley.",
+		str_desc = "Jazz clubs and diners decked out in flashy neon lights liven up this already crowded hotspot. Traffic is always jammed down here, and the locals have taken to the habit of just walking between the stopped cars to get across. The 24/7 nightlife here is really something else, and the pickpockets hiding in the bustle will make sure you pay full price for it.",
 		channel = 'doxy-avenue',
 		is_street = True,
 		is_capturable = True,
@@ -12792,7 +12792,7 @@ poi_list = [
 			"mantecastreet"
 		],
 		str_name = "Manteca Street",
-		str_desc = 'It\'s cold, dark, and quiet. The old brick offices and boarding houses all look closed for the day no matter what time you\'re here. If you didn\'t know any better this might be a nice, moody place for a walk, but it\'s obvious the alleys are hiding something. Don\'t get caught under a streetlight. Exits into Crookline, Perdido Valley and XXXXXX.',
+		str_desc = 'It\'s cold, dark, and quiet. The old brick offices and boarding houses all look closed for the day no matter what time you\'re here. If you didn\'t know any better this might be a nice, moody place for a walk, but it\'s obvious the alleys are hiding something. Don\'t get caught under a streetlight.',
 		channel = 'manteca-street',
 		is_street = True,
 		is_capturable = True,
@@ -12811,7 +12811,7 @@ poi_list = [
 			"perdido"
 		],
 		str_name = "Perdido Valley",
-		str_desc = "You didn't think it was possible to get any lower, but you've found yourself descended into the under-underworld of Crookline. The high-society crimelords and psychotics of the city frequent the upper-floor style black markets here, indulging in strange, illegal fetishes and experimental substance abuse. You'd love to see those guys get a knife or two to the face, but you doubt the bouncers standing outside would let you in. Exits into Crookline, Manteca Street, and Doxy Avenue.",
+		str_desc = "You didn't think it was possible to get any lower, but you've found yourself descended into the under-underworld of Crookline. The high-society crimelords and psychotics of the city frequent the upper-floor style black markets here, indulging in strange, illegal fetishes and experimental substance abuse. You'd love to see those guys get a knife or two to the face, but you doubt the bouncers standing outside would let you in.",
 		channel = "perdido-valley",
 		is_street = True,
 		is_capturable = True,
@@ -17757,7 +17757,7 @@ for poi in poi_list:
 	# Assign all the correct major and minor roles.
 	
 	# Districts and streets need their minor roles to see (read-only) all of their subzones.
-	if poi.is_district or poi.is_street:
+	if poi.is_district or poi.is_street or poi.id_poi in [poi_id_mine, poi_id_cv_mines, poi_id_tt_mines]:
 		poi.minor_role = '{}_minor'.format(poi.id_poi)
 
 	# Districts need their major roles for their specific LAN (voice/text) channels.
@@ -17772,12 +17772,15 @@ for poi in poi_list:
 			
 		if len(district_streets_list) > 0:
 			poi.str_desc += " This area is connected to "
-			for i in range(len(district_streets_list)):
-	
-				if i == (len(district_streets_list) - 1):
-					poi.str_desc += 'and {}.'.format(district_streets_list[i])
-				else:
-					poi.str_desc += '{}, '.format(district_streets_list[i])
+			if len(district_streets_list) == 1:
+				poi.str_desc += district_streets_list[0]
+			else:
+				for i in range(len(district_streets_list)):
+		
+					if i == (len(district_streets_list) - 1):
+						poi.str_desc += 'and {}.'.format(district_streets_list[i])
+					else:
+						poi.str_desc += '{}, '.format(district_streets_list[i])
 					
 	if poi.is_transport:
 		if 'subway' in poi.id_poi:
@@ -17812,6 +17815,45 @@ for poi in poi_list:
 							poi.channel = father_poi.channel + '-street-f'
 							
 					break
+			
+			father_district = ''
+			connected_streets_and_districts = []
+			connected_subzones = []
+			for neighbor_poi in poi_list:
+				if neighbor_poi.id_poi in poi.neighbors:
+					if neighbor_poi.id_poi == poi.father_district:
+						father_district = neighbor_poi.str_name
+					elif neighbor_poi.is_street or (neighbor_poi.is_district and neighbor_poi.id_poi != poi.father_district):
+						connected_streets_and_districts.append(neighbor_poi.str_name)
+					elif neighbor_poi.is_subzone:
+						connected_subzones.append(neighbor_poi.str_name)
+			
+			if father_district != '':
+				poi.str_desc += " This street connects back into {}.".format(father_district)
+			
+				if len(connected_streets_and_districts) >= 1:
+					poi.str_desc += " This street is connected to "
+					if len(connected_streets_and_districts) == 1:
+						poi.str_desc += connected_streets_and_districts[0]
+					else:
+						for i in range(len(connected_streets_and_districts)):
+					
+							if i == (len(connected_streets_and_districts) - 1):
+								poi.str_desc += 'and {}.'.format(connected_streets_and_districts[i])
+							else:
+								poi.str_desc += '{}, '.format(connected_streets_and_districts[i])
+
+				if len(connected_subzones) >= 1:
+					poi.str_desc += " This street also exits into "
+					if len(connected_subzones) == 1:
+						poi.str_desc += connected_subzones[0]
+					else:
+						for i in range(len(connected_subzones)):
+		
+							if i == (len(connected_subzones) - 1):
+								poi.str_desc += 'and {}.'.format(connected_subzones[i])
+							else:
+								poi.str_desc += '{}, '.format(connected_subzones[i])
 		else:
 			print('Error: No father POI found for {}'.format(poi.id_poi))
 	
@@ -23964,7 +24006,7 @@ help_responses = {
 	weapon_id_minigun: "**The minigun** is a heavy weapon not for sale at the Dojo. Attacking with the minigun costs 15 sap. It has a damage mod of 0.8 and an attack cost mod of 5. It has a captcha length of 10. For every !kill it shoots 10 bullets, each of which has a 50% miss chance, and a 10% chance for a crit, which does 2x damage. Every bullet has sap crushing 2.",
 	weapon_id_bat: "**The nailbat** is a weapon for sale at the Dojo. Attacking with the bat costs 2 sap. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a captcha length of 2, a miss chance of 1/13, a 1/13 chance for a crit, which increases the damage mod to 4, and a 1/13 chance to backfire and damage the wielder instead. The bat has sap crushing 2. If you takes less than 3 seconds between attacks, your miss chance will increase.",
 	weapon_id_brassknuckles: "**The brass knuckles** are a weapon for sale at the Dojo. Attacking with the brass knuckles costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 2 punches. Every punch has a 20% miss chance. If you land 3 successful attacks (not punches) in succession with perfect timing, the third attack will throw an extra punch, which deals 3x damage and has 5 sap crushing. If you takes less than 2 seconds between attacks, your damage will decrease. For perfect timing you need to take 2 seconds between attacks exactly.",
-	weapon_id_katana: "**The katana** is a weapon for sale at the Dojo. Attacking with the katana costs 3 sap. It has a damage mod of 1.3 and an attack cost mod of 1.3. It has a captcha length of 8. The katana never misses. If the katana is the only weapon in your inventory, it crits for 2x damage on every hit. If you takes less than 5 seconds between attacks, your damage will decrease. If you take exactly 5 seconds between attacks, the katana gains sap piercing 10 (sap piercing 15 on a crit).",
+	weapon_id_katana: "**The katana** is a weapon for sale at the Dojo. Attacking with the katana costs 3 sap. It has a damage mod of 1.3 and an attack cost mod of 1.3. It has a captcha length of 8. The katana never misses. If the katana is the only weapon in your inventory, it crits for 1.5x damage on every hit. If you takes less than 5 seconds between attacks, your damage will decrease. If you take exactly 5 seconds between attacks, the katana gains sap piercing 10 (sap piercing 15 on a crit).",
 	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. Attacking with the broadsword costs 12 sap. It has a damage mod of 3 and an attack cost mod of 5. It has a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire and damage the wielder instead. The broadsword has sap crushing 5 and sap piercing 20. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 0.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
 	weapon_id_nunchucks: "**The nunchucks** are a weapon for sale at the Dojo. Attacking with the nunchucks costs 4 sap. They have a damage mod of 0.25 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 4 blows. Every blow has a 25% miss chance and 1 sap crushing. If all 4 blows hit, you deal an additional blow that does 4x damage. If all shots miss, the nunchucks will backfire for 2x damage. If you takes less than 3 seconds between attacks, your miss chance will increase.",
 	weapon_id_scythe: "**The scythe** is a weapon for sale at the Dojo. Attacking with the scythe costs 6 sap. It has a damage mod of 0.5 and an attack cost mod of 3. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 3x damage. The scythe has sap piercing 3 for every kill your opponent got this life, up to sap piercing 30. The scythe's damage mod also increases by 0.5 for every kill your opponent got this life, up to a maximum damage mod of 5. If you take less than 3 seconds between attacks, your damage will decrease.",

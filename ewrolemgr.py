@@ -124,27 +124,57 @@ async def hideRoleNames(cmd):
 	
 	server = client.get_server(id_server)
 	roles_map = ewutils.getRoleMap(server.roles)
+
+	role_counter = 0
+	
+	ewutils.logMsg('Attempting to hide all role names...')
+	
 	for poi in ewcfg.poi_list:
+			
+		if poi.is_street:
+			pass
+		elif poi.is_district:
+			pass
+		elif poi.id_poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+			pass
+		elif poi.id_poi in ewcfg.transports:
+			pass
+		else:
+			continue
+		
+		# Slow down just a bit every 20 Role change attempts
+		if role_counter >= 20:
+			role_counter = 0
+			await asyncio.sleep(5)
+		
 		try:
 			if poi.role in roles_map:
 				role = roles_map[poi.role]
-				await client.edit_role(server = server, role = role, name = ewcfg.generic_role_name)
+				if role.name != ewcfg.generic_role_name:
+					role_counter += 1
+					await client.edit_role(server = server, role = role, name = ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.role))
 			
 		try:
 			if poi.major_role in roles_map:
 				major_role = roles_map[poi.major_role]
-				await client.edit_role(server = server, role = major_role, name = ewcfg.generic_role_name)
+				if major_role.name != ewcfg.generic_role_name:
+					role_counter += 1
+					await client.edit_role(server=server, role=major_role, name=ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.major_role))
 			
 		try:
 			if poi.minor_role in roles_map:
 				minor_role = roles_map[poi.minor_role]
-				await client.edit_role(server = server, role = minor_role, name = ewcfg.generic_role_name)
+				if minor_role.name != ewcfg.generic_role_name:
+					role_counter += 1
+					await client.edit_role(server=server, role=minor_role, name=ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.minor_role))
+
+	ewutils.logMsg('Finished hiding roles!')
 
 """
 	Restore poi roles to their original names
@@ -158,11 +188,23 @@ async def restoreRoleNames(cmd):
 	
 	client = cmd.client
 	server = member.server
+	
+	role_counter = 0
+
+	ewutils.logMsg('Attempting to restore all role names...')
+	
 	for poi in ewcfg.poi_list:
+
+		# Slow down just a bit every 20 Role change attempts
+		if role_counter >= 20:
+			role_counter = 0
+			await asyncio.sleep(5)
+		
 		try:
 			role_data = EwRole(id_server = server.id, name = poi.role)
 			for role in server.roles:
 				if role.id == role_data.id_role:
+					role_counter += 1
 					await client.edit_role(server = server, role = role, name = role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.role))
@@ -171,6 +213,7 @@ async def restoreRoleNames(cmd):
 			major_role_data = EwRole(id_server = server.id, name = poi.major_role)
 			for role in server.roles:
 				if role.id == major_role_data.id_role:
+					role_counter += 1
 					await client.edit_role(server = server, role = role, name = major_role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.major_role))
@@ -179,9 +222,12 @@ async def restoreRoleNames(cmd):
 			minor_role_data = EwRole(id_server = server.id, name = poi.minor_role)
 			for role in server.roles:
 				if role.id == minor_role_data.id_role:
+					role_counter += 1
 					await client.edit_role(server = server, role = role, name = minor_role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.minor_role))
+			
+	ewutils.logMsg('Finished restoring roles!')
 			
 """
 	Creates all POI roles from scratch. Ideally, this is only used in test servers.
@@ -564,7 +610,6 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 					continue
 					
 			#print('{} overwrites: {}'.format(poi.id_poi, channel.overwrites))
-			member_count = 0
 			for tuple in channel.overwrites:
 				#print('tuplevar: {}'.format(tuple[0]) + '\n\n')
 				if tuple[0] not in server.roles:
@@ -578,12 +623,6 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 					user_data = EwUser(member=member)
 					
 					if user_data.poi != poi.id_poi:
-	
-						# Every 20 members, slow down a  bit
-						member_count += 1
-						if member_count == 20:
-							member_count = 0
-							await asyncio.sleep(2)
 						
 						# Incorrect overwrite found for user
 						time_now_start = int(time.time())
