@@ -2423,10 +2423,12 @@ async def sync_topics(cmd):
 	if not cmd.message.author.server_permissions.administrator:
 		return
 	
+	
 	for poi in ewcfg.poi_list:
-		
+
+		poi_has_blank_topic = False
 		if poi.topic == None or poi.topic == '':
-			continue
+			poi_has_blank_topic = True
 		
 		await asyncio.sleep(2)
 		
@@ -2438,8 +2440,19 @@ async def sync_topics(cmd):
 		
 		if channel.topic == poi.topic:
 			continue
+			
+		if (poi_has_blank_topic and channel.topic == None) or (poi_has_blank_topic and channel.topic == ''):
+			continue
+
+		if poi_has_blank_topic:
+			new_topic = ''
+			debug_info = 'be a blank topic.'
+		else:
+			new_topic = poi.topic
+			debug_info = poi.topic
+			
 		try:
-			await cmd.client.edit_channel(channel = channel, topic = poi.topic)
-			logMsg('Changed channel top for {} to {}'.format(channel, poi.topic))
+			await cmd.client.edit_channel(channel = channel, topic = new_topic)
+			logMsg('Changed channel topic for {} to {}'.format(channel, debug_info))
 		except:
-			logMsg('Failed to set channel topic for {} to {}'.format(channel, poi.topic))
+			logMsg('Failed to set channel topic for {} to {}'.format(channel, debug_info))
