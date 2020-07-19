@@ -1942,7 +1942,7 @@ async def jump(cmd):
 						user_data.poi = ewcfg.poi_id_thevoid
 						user_data.time_lastenter = int(time.time())
 						user_data.persist()
-						user_data.move_inhabitants(id_poi = ewcfg.poi_id_thevoid)
+						await user_data.move_inhabitants(id_poi = ewcfg.poi_id_thevoid)
 						await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 						void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
