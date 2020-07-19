@@ -2430,8 +2430,6 @@ async def sync_topics(cmd):
 		if poi.topic == None or poi.topic == '':
 			poi_has_blank_topic = True
 		
-		await asyncio.sleep(2)
-		
 		channel = get_channel(cmd.message.server, poi.channel)
 		
 		if channel == None:
@@ -2452,7 +2450,10 @@ async def sync_topics(cmd):
 			debug_info = poi.topic
 			
 		try:
+			await asyncio.sleep(2)
 			await cmd.client.edit_channel(channel = channel, topic = new_topic)
 			logMsg('Changed channel topic for {} to {}'.format(channel, debug_info))
 		except:
 			logMsg('Failed to set channel topic for {} to {}'.format(channel, debug_info))
+			
+	logMsg('Finished syncing topics.')
