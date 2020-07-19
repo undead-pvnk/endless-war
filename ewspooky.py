@@ -487,7 +487,7 @@ async def possess_weapon(cmd):
 			response = "{}'s weapon is already being possessed.".format(inhabitee_name)
 		else:
 			proposal_response = "You propose a trade to {}. " \
-				"You will possess their weapon to empower it, and in return they'll sacrifice half their slime to your name upon their next kill. " \
+				"You will possess their weapon to empower it, and in return they'll sacrifice a fifth of their slime to your name upon their next kill. " \
 				"Will they **{}** this exchange, or **{}** it?".format(inhabitee_name, ewcfg.cmd_accept, ewcfg.cmd_refuse)
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, proposal_response))
     
