@@ -159,6 +159,11 @@ class EwDistrict:
 
 	def all_streets_taken(self):
 		street_name_list = ewutils.get_street_list(self.name)
+		
+		if self.name == ewcfg.poi_id_rowdyroughhouse:
+			return ewcfg.faction_rowdys
+		elif self.name == ewcfg.poi_id_copkilltown:
+			return ewcfg.faction_killers
 
 		faction_list = []
 		for name in street_name_list:

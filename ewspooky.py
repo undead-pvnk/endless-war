@@ -254,8 +254,6 @@ async def summon_negaslimeoid(cmd):
 		response = "You can't conduct the ritual here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-
-
 	name = None
 	if cmd.tokens_count > 1:
 		#value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True, negate = True)
