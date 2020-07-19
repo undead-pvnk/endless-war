@@ -263,9 +263,12 @@ async def dye(cmd):
 
 	try:
 		hat_id_int = int(hat_id)
-		dye_id_int = int(dye_id)
 	except:
 		hat_id_int = None
+		
+	try:
+		dye_id_int = int(dye_id)
+	except:
 		dye_id_int = None
 
 	if hat_id != None and len(hat_id) > 0 and dye_id != None and len(dye_id) > 0:
@@ -279,6 +282,7 @@ async def dye(cmd):
 		cosmetic = None
 		dye = None
 		for item in items:
+			
 			if int(item.get('id_item')) == hat_id_int or hat_id in ewutils.flattenTokenListToString(item.get('name')):
 				if item.get('item_type') == ewcfg.it_cosmetic and cosmetic is None:
 					cosmetic = item
