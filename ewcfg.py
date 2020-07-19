@@ -12643,7 +12643,6 @@ poi_list = [
 			poi_id_westglocksbury_street_d : travel_time_street,
 			poi_id_westglocksbury_street_b : travel_time_street,
 			poi_id_glocksbury_street_c : travel_time_street,
-			poi_id_basedhardware : travel_time_subzone,
 		}
 	),
 	EwPoi(
