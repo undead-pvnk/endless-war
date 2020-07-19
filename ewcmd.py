@@ -1082,6 +1082,9 @@ async def help(cmd):
 		if not len(cmd.tokens) > 1:
 			topic_counter = 0
 			topic_total = 0
+			weapon_topic_counter = 0
+			weapon_topic_total = 0
+			
 			# list off help topics to player at college
 			response = "(Use !help [topic] to learn about a topic. Example: '!help gangs')\n\nWhat would you like to learn about? Topics include: \n"
 			
@@ -1097,6 +1100,20 @@ async def help(cmd):
 				if topic_counter == 5:
 					topic_counter = 0
 					response += "\n"
+			
+			response += '\n\n'
+					
+			weapon_topics = ewcfg.weapon_help_responses_ordered_keys
+			for weapon_topic in weapon_topics:
+				weapon_topic_counter += 1
+				weapon_topic_total += 1
+				response += "**{}**".format(weapon_topic)
+				if weapon_topic_total != len(weapon_topics):
+					response += ", "
+
+				if weapon_topic_counter == 5:
+					weapon_topic_counter = 0
+					response += "\n"
 				
 		else:
 			topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -1104,8 +1121,11 @@ async def help(cmd):
 				response = ewcfg.help_responses[topic]
 				if topic == 'mymutations':
 					mutations = user_data.get_mutations()
-					for mutation in mutations:
-						response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
+					if len(mutations) == 0:
+						response += "\nWait... you don't have any!"
+					else:
+						for mutation in mutations:
+							response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
 			else:
 				response = 'ENDLESS WAR questions your belief in the existence of such a topic. Try referring to the topics list again by using just !help.'
 	else:
@@ -1153,8 +1173,11 @@ async def help(cmd):
 			elif topic == 'mymutations':
 				response = ewcfg.help_responses['mymutations']
 				mutations = user_data.get_mutations()
-				for mutation in mutations:
-					response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
+				if len(mutations) == 0:
+					response += "\nWait... you don't have any!"
+				else:
+					for mutation in mutations:
+						response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
 			else:
 				response = 'ENDLESS WAR questions your belief in the existence of such information regarding the laboratory. Try referring to the topics list again by using just !help.'
 		elif cmd.message.channel.name in ewcfg.transport_stops_ch:
