@@ -446,9 +446,9 @@ async def set_length(cmd = None, dm = False):
 						message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
 
 						if message != None:
-							if message.content.lower() == "!accept":
+							if message.content.lower() == ewcfg.cmd_prefix + "accept":
 								accepted = True
-							if message.content.lower() == "!refuse":
+							if message.content.lower() == ewcfg.cmd_prefix + "refuse":
 								accepted = False
 
 					except:
@@ -571,9 +571,9 @@ async def edit_page(cmd = None, dm = False):
 						message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
 
 						if message != None:
-							if message.content.lower() == "!accept":
+							if message.content.lower() == ewcfg.cmd_prefix + "accept":
 								accepted = True
-							if message.content.lower() == "!refuse":
+							if message.content.lower() == ewcfg.cmd_prefix + "refuse":
 								accepted = False
 					except:
 						accepted = False
@@ -704,9 +704,9 @@ async def publish_manuscript(cmd = None, dm = False):
 				message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
 
 				if message != None:
-					if message.content.lower() == "!accept":
+					if message.content.lower() == ewcfg.cmd_prefix + "accept":
 						accepted = True
-					if message.content.lower() == "!refuse":
+					if message.content.lower() == ewcfg.cmd_prefix + "refuse":
 						accepted = False
 			except:
 				accepted = False
@@ -797,9 +797,9 @@ async def read_book(cmd = None, dm = False):
 					message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
 
 					if message != None:
-						if message.content.lower() == "!accept":
+						if message.content.lower() == ewcfg.cmd_prefix + "accept":
 							accepted = True
-						if message.content.lower() == "!refuse":
+						if message.content.lower() == ewcfg.cmd_prefix + "refuse":
 							accepted = False
 				except:
 					accepted = False
@@ -1186,9 +1186,9 @@ async def order_zine(cmd):
 						message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
 
 						if message != None:
-							if message.content.lower() == "!accept":
+							if message.content.lower() == ewcfg.cmd_prefix + "accept":
 								accepted = True
-							if message.content.lower() == "!refuse":
+							if message.content.lower() == ewcfg.cmd_prefix + "refuse":
 								accepted = False
 					except:
 						accepted = False

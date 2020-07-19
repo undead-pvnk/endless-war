@@ -512,9 +512,9 @@ async def sew(cmd):
 								message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
 
 								if message != None:
-									if message.content.lower() == "!accept":
+									if message.content.lower() == ewcfg.cmd_prefix + "accept":
 										accepted = True
-									if message.content.lower() == "!refuse":
+									if message.content.lower() == ewcfg.cmd_prefix + "refuse":
 										accepted = False
 							except:
 								accepted = False
@@ -640,9 +640,9 @@ async def retrofit(cmd):
 								message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
 
 								if message != None:
-									if message.content.lower() == "!accept":
+									if message.content.lower() == ewcfg.cmd_prefix + "accept":
 										accepted = True
-									if message.content.lower() == "!refuse":
+									if message.content.lower() == ewcfg.cmd_prefix + "refuse":
 										accepted = False
 							except:
 								accepted = False
