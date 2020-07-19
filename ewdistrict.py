@@ -138,14 +138,22 @@ class EwDistrict:
 		return friendly_neighbors
 
 	def all_neighbors_friendly(self):
+		rival_gang_poi = "none"
 		if self.controlling_faction == "":
 			return False
-		
+		elif self.controlling_faction == ewcfg.faction_killers:
+			rival_gang_poi = ewcfg.poi_id_rowdyroughhouse
+		elif self.controlling_faction == ewcfg.faction_rowdys:
+			rival_gang_poi = ewcfg.poi_id_copkilltown
+
+
 		neighbors = ewcfg.poi_neighbors[self.name]
 		for neighbor_id in neighbors:
 			neighbor_poi = ewcfg.id_to_poi.get(neighbor_id)
 			neighbor_data = EwDistrict(id_server = self.id_server, district = neighbor_id)
 			if neighbor_data.controlling_faction != self.controlling_faction and not neighbor_poi.is_subzone and not neighbor_poi.is_outskirts and not neighbor_poi.is_district:
+				return False
+			elif neighbor_poi.id_poi == rival_gang_poi:
 				return False
 		return True
 
