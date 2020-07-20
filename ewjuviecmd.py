@@ -272,7 +272,7 @@ async def mine(cmd):
 				response = mining_yield
 				if len(response) > 0:
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
+				return # await print_grid(cmd)
 					
 
 
@@ -377,7 +377,7 @@ async def mine(cmd):
 
 				ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = unearthed_item_amount)
 
-				ewutils.logMsg('{} has found {} {}(s)!'.format(cmd.message.author.display_name, item.str_name, unearthed_item_amount))
+				# ewutils.logMsg('{} has found {} {}(s)!'.format(cmd.message.author.display_name, item.str_name, unearthed_item_amount))
 
 			user_initial_level = user_data.slimelevel
 
@@ -519,7 +519,7 @@ async def flag(cmd):
 			row = -1
 			col = -1
 			if cmd.tokens_count < 2:
-				response = "Please specify which vein to mine."
+				response = "Please specify which Minesweeper vein to mine."
 				return response
 
 			for token in cmd.tokens[1:]:
@@ -542,7 +542,7 @@ async def flag(cmd):
 			row -= 1
 			
 			if row not in range(len(grid)) or col not in range(len(grid[row])):
-				response = "Invalid vein."
+				response = "Invalid Minesweeper vein."
 
 
 			elif grid[row][col] == ewcfg.cell_empty_marked:
@@ -1269,7 +1269,7 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 	row = -1
 	col = -1
 	if cmd.tokens_count < 2:
-		response = "Please specify which vein to mine."
+		response = "Please specify which Minesweeper vein to mine."
 		return response
 
 	for token in cmd.tokens[1:]:
@@ -1298,7 +1298,7 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 	row -= 1
 			
 	if row not in range(len(grid)) or col not in range(len(grid[row])):
-		response = "Invalid vein."
+		response = "Invalid Minesweeper vein."
 		return response
 
 
@@ -1355,7 +1355,7 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 	col = -1
 	bubble_add = None
 	if cmd.tokens_count < 2:
-		response = "Please specify which vein to mine."
+		response = "Please specify which Bubble Breaker vein to mine."
 		return response
 
 	for token in cmd.tokens[1:]:
@@ -1376,11 +1376,11 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 	row -= 1
 			
 	if col not in range(len(grid[0])):
-		response = "Invalid vein."
+		response = "Invalid Bubble Breaker vein."
 		return response
 
 	if bubble_add == None:
-		response = "Invalid bubble."
+		response = "Invalid Bubble Breaker bubble."
 		return response
 
 	mining_yield = 0
@@ -1433,9 +1433,39 @@ def create_mining_event(cmd):
 	randomn = random.random()
 	time_now = int(time.time())
 	user_data = EwUser(member = cmd.message.author)
+	mine_district_data = EwDistrict(district = user_data.poi, id_server = user_data.id_server)
+
+	life_states = [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile]
+	num_miners = len(mine_district_data.get_players_in_district(life_states = life_states, ignore_offline = True))
+	
+	common_event_chance = 0.6 # 6/10
+	uncommon_event_chance = 0.3 # 3/10
+	rare_event_chance = 0.1 / num_miners # 1/10 for 1 miner, 1/20 for 2 miners, etc.
+	
+	common_event_triggered = True
+	uncommon_event_triggered = True
+	rare_event_triggered = True
+	
+	# This might seem a bit confusing, so let's run through an example. 
+	# The random number is 0.91, and the number of valid miners is 2.
+	
+	# It passes through the first condition, and the second condition.
+	# In the else statement, it must meet two more conditions.
+	# Our rare event chance is 0.05 (0.1 / 2), so it compares 0.91 to (1 - 0.05)
+	# 0.91 is less than 0.95, so it will use an uncommon event rather than a rare event.
+	
+	if randomn < common_event_chance: # 0.6
+		common_event_triggered = True
+	elif randomn < common_event_chance + uncommon_event_chance: # 0.9
+		uncommon_event_triggered = True
+	else:
+		if randomn < (1 - rare_event_chance):
+			uncommon_event_triggered = True
+		else:
+			rare_event_triggered = True
 
 	# common event
-	if randomn < 0.6:
+	if common_event_triggered:
 		randomn = random.random()
 		
 		# 4x glob of slime
@@ -1465,7 +1495,7 @@ def create_mining_event(cmd):
 			)
 			
 	# uncommon event
-	elif randomn < 0.9:
+	elif uncommon_event_triggered:
 		randomn = random.random()
 
 		# gap into the void
@@ -1510,7 +1540,7 @@ def create_mining_event(cmd):
 			)
 			
 	# rare event
-	else:
+	elif rare_event_triggered:
 		randomn = random.random()
 
 		# minesweeper

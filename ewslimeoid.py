@@ -1342,6 +1342,7 @@ async def dissolveslimeoid(cmd):
 		slimeoid.level = 0
 		slimeoid.clout = 0
 		slimeoid.hue = ""
+		slimeoid.coating = ""
 
 		user_data.persist()
 		slimeoid.persist()
