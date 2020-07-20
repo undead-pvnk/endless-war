@@ -3377,5 +3377,5 @@ def fulfill_ghost_weapon_contract(possession_data, market_data, user_data, user_
 
 	server = ewutils.get_client().get_server(user_data.id_server)
 	ghost_name = server.get_member(ghost_id).display_name
-	return "\n\n {} winces in pain as half their slime is corrupted into negaslime. {}'s contract has been fulfilled.".format(user_name, ghost_name)
+	return "\n\n {} winces in pain as their slime is corrupted into negaslime. {}'s contract has been fulfilled.".format(user_name, ghost_name)
 
