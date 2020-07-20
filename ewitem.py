@@ -890,7 +890,7 @@ def inventory(
 				#if a weapon has no name show its type instead
 				if name == "" and item_inst.item_type == ewcfg.it_weapon:
 					name = item_inst.item_props.get("weapon_type")
-
+					
 				item['name'] = name
 	finally:
 		# Clean up the database handles.

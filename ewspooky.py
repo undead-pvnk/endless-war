@@ -189,7 +189,7 @@ async def haunt(cmd):
 				haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio) * haunt_power_multiplier
 
 				haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
-				user_data.change_slimes(n = -max(haunted_slimes, ewcfg.slimes_hauntmax), source = ewcfg.source_haunter)
+				user_data.change_slimes(n = -min(haunted_slimes, ewcfg.slimes_hauntmax), source = ewcfg.source_haunter)
 				market_data.negaslime -= haunted_slimes
 				user_data.time_lasthaunt = time_now
 				user_data.busted = False
@@ -253,8 +253,6 @@ async def summon_negaslimeoid(cmd):
 	if user_data.poi not in ewcfg.capturable_districts:
 		response = "You can't conduct the ritual here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-
 
 	name = None
 	if cmd.tokens_count > 1:
@@ -489,7 +487,7 @@ async def possess_weapon(cmd):
 			response = "{}'s weapon is already being possessed.".format(inhabitee_name)
 		else:
 			proposal_response = "You propose a trade to {}. " \
-				"You will possess their weapon to empower it, and in return they'll sacrifice half their slime to your name upon their next kill. " \
+				"You will possess their weapon to empower it, and in return they'll sacrifice a fifth of their slime to your name upon their next kill. " \
 				"Will they **{}** this exchange, or **{}** it?".format(inhabitee_name, ewcfg.cmd_accept, ewcfg.cmd_refuse)
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, proposal_response))
     

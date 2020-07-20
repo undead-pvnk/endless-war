@@ -2394,6 +2394,7 @@ async def collect_topics(cmd):
 	
 	client = get_client()
 	server = client.get_server(cmd.message.server.id)
+	topic_count = 0
 	
 	for channel in server.channels:
 		
@@ -2403,8 +2404,18 @@ async def collect_topics(cmd):
 			continue
 		elif channel.topic == '(Closed indefinitely) Currently controlled by no one.':
 			continue
-		
-		print('=================\n{}\n{}'.format(channel.name, channel.topic))
+			
+		found_poi = False
+		for poi in ewcfg.poi_list:
+			if channel.name == poi.channel:
+				found_poi = True
+				break
+				
+		if found_poi:
+			topic_count += 1
+			print('\n{}\n=================\n{}'.format(channel.name, channel.topic))
+			
+	print('POI topics found: {}'.format(topic_count))
 	
 	
 async def sync_topics(cmd):
@@ -2412,8 +2423,12 @@ async def sync_topics(cmd):
 	if not cmd.message.author.server_permissions.administrator:
 		return
 	
+	
 	for poi in ewcfg.poi_list:
-		await asyncio.sleep(2)
+
+		poi_has_blank_topic = False
+		if poi.topic == None or poi.topic == '':
+			poi_has_blank_topic = True
 		
 		channel = get_channel(cmd.message.server, poi.channel)
 		
@@ -2424,8 +2439,21 @@ async def sync_topics(cmd):
 		if channel.topic == poi.topic:
 			continue
 			
+		if (poi_has_blank_topic and channel.topic == None) or (poi_has_blank_topic and channel.topic == ''):
+			continue
+
+		if poi_has_blank_topic:
+			new_topic = ''
+			debug_info = 'be a blank topic.'
+		else:
+			new_topic = poi.topic
+			debug_info = poi.topic
+			
 		try:
-			await cmd.client.edit_channel(channel = channel, topic = poi.topic)
-			logMsg('Changed channel top for {} to {}'.format(channel, poi.topic))
+			await asyncio.sleep(2)
+			await cmd.client.edit_channel(channel = channel, topic = new_topic)
+			logMsg('Changed channel topic for {} to {}'.format(channel, debug_info))
 		except:
-			logMsg('Failed to set channel topic for {} to {}'.format(channel, poi.topic))
+			logMsg('Failed to set channel topic for {} to {}'.format(channel, debug_info))
+			
+	logMsg('Finished syncing topics.')

@@ -263,9 +263,12 @@ async def dye(cmd):
 
 	try:
 		hat_id_int = int(hat_id)
-		dye_id_int = int(dye_id)
 	except:
 		hat_id_int = None
+		
+	try:
+		dye_id_int = int(dye_id)
+	except:
 		dye_id_int = None
 
 	if hat_id != None and len(hat_id) > 0 and dye_id != None and len(dye_id) > 0:
@@ -279,11 +282,12 @@ async def dye(cmd):
 		cosmetic = None
 		dye = None
 		for item in items:
-			if item.get('id_item') == hat_id_int or hat_id in ewutils.flattenTokenListToString(item.get('name')):
+			
+			if int(item.get('id_item')) == hat_id_int or hat_id in ewutils.flattenTokenListToString(item.get('name')):
 				if item.get('item_type') == ewcfg.it_cosmetic and cosmetic is None:
 					cosmetic = item
 
-			if item.get('id_item') == dye_id_int or dye_id in ewutils.flattenTokenListToString(item.get('name')):
+			if int(item.get('id_item')) == dye_id_int or dye_id in ewutils.flattenTokenListToString(item.get('name')):
 				if item.get('item_type') == ewcfg.it_item and item.get('name') in ewcfg.dye_map and dye is None:
 					dye = item	
 
@@ -508,9 +512,9 @@ async def sew(cmd):
 								message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
 
 								if message != None:
-									if message.content.lower() == "!accept":
+									if message.content.lower() == ewcfg.cmd_prefix + "accept":
 										accepted = True
-									if message.content.lower() == "!refuse":
+									if message.content.lower() == ewcfg.cmd_prefix + "refuse":
 										accepted = False
 							except:
 								accepted = False
@@ -636,9 +640,9 @@ async def retrofit(cmd):
 								message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
 
 								if message != None:
-									if message.content.lower() == "!accept":
+									if message.content.lower() == ewcfg.cmd_prefix + "accept":
 										accepted = True
-									if message.content.lower() == "!refuse":
+									if message.content.lower() == ewcfg.cmd_prefix + "refuse":
 										accepted = False
 							except:
 								accepted = False

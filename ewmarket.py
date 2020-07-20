@@ -655,9 +655,24 @@ async def xfer(cmd):
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
 	if cmd.message.author.id == member.id:
+
+		slimes_total = user_data.slimes
+		slimes_drained = int(slimes_total * 0.1)
+		slimes_todistrict = slimes_total - slimes_drained
+
+		sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=user_data.id_server)
+		sewer_data.change_slimes(n=slimes_drained)
+		sewer_data.persist()
+
+		district_data = EwDistrict(district=user_data.poi, id_server=cmd.message.server.id)
+		district_data.change_slimes(n=slimes_todistrict, source=ewcfg.source_killing)
+		district_data.persist()
+
+		# Set the id_killer to the player himself, remove his slime and slime poudrins.
 		user_data.id_killer = cmd.message.author.id
-		
+		user_data.visiting = ewcfg.location_id_empty
 		user_data.trauma = ewcfg.trauma_id_environment
+		
 		user_data.die(cause = ewcfg.cause_suicide)
 		user_data.persist()
 
