@@ -1442,9 +1442,9 @@ def create_mining_event(cmd):
 	uncommon_event_chance = 0.3 # 3/10
 	rare_event_chance = 0.1 / num_miners # 1/10 for 1 miner, 1/20 for 2 miners, etc.
 	
-	common_event_triggered = True
-	uncommon_event_triggered = True
-	rare_event_triggered = True
+	common_event_triggered = False
+	uncommon_event_triggered = False
+	rare_event_triggered = False
 	
 	# This might seem a bit confusing, so let's run through an example. 
 	# The random number is 0.91, and the number of valid miners is 2.
