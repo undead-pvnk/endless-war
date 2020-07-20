@@ -12927,7 +12927,7 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_vandalpark_street_d,
 		alias = [
-			"theplayground"
+			"theplayground",
 			"playground",
 			"play"
 		],
