@@ -1429,7 +1429,7 @@ async def russian_roulette(cmd):
 		msg = await cmd.client.wait_for_message(timeout = 30, author = member, check = ewutils.check_accept_or_refuse)
 
 		if msg != None:
-			if msg.content == "!accept":
+			if msg.content == ewcfg.cmd_prefix + "accept":
 				accepted = 1
 	except:
 		accepted = 0
@@ -1627,7 +1627,7 @@ async def duel(cmd):
 		msg = await cmd.client.wait_for_message(timeout=30, author=member, check=ewutils.check_accept_or_refuse)
 
 		if msg != None:
-			if msg.content == "!accept":
+			if msg.content == ewcfg.cmd_prefix + "accept":
 				accepted = 1
 	except:
 		accepted = 0

@@ -1324,7 +1324,7 @@ async def look(cmd):
 	if poi.is_subzone or poi.id_poi == ewcfg.poi_id_thevoid: # Triggers if you input the command in the void or a sub-zone.
 
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-			"You stand {} {}.\n\n{}\n{}{}\n\n{}".format(
+			"You stand {} {}.\n\n{}\n\n<{}>\n{}\n\n{}".format(
 				poi.str_in,
 				poi.str_name,
 				poi.str_desc,
@@ -1365,7 +1365,7 @@ async def look(cmd):
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You stand {} {}.\n\n{}\n{}{}\n\n{}...".format(
+			"You stand {} {}.\n\n{}\n\n<{}>{}\n\n{}...".format(
 				poi.str_in,
 				poi.str_name,
 				poi.str_desc,

@@ -1463,12 +1463,17 @@ async def on_message(message):
 			elif poi.is_apartment:
 				return await ewapt.aptCommands(cmd=cmd_obj)
 			else:
-				time_last = last_helped_times.get(message.author.id, 0)
-
-				# Only send the help doc once every thirty seconds. There's no need to spam it.
-				if (time_now - time_last) > 30:
-					last_helped_times[message.author.id] = time_now
-					await ewutils.send_message(client, message.channel, ewcfg.generic_help_response)
+				
+				# Only send the help response once every thirty seconds. There's no need to spam it.
+				# Also, don't send out response if the user doesn't actually type a command.
+				if message.content.startswith(ewcfg.cmd_prefix):
+					time_last = last_helped_times.get(message.author.id, 0)
+					if (time_now - time_last) > 30:
+						last_helped_times[message.author.id] = time_now
+						direct_help_response = "ENDLESS WAR doesn't allow you to do that command in DMs.\nIf you're confused about what you're doing, you might want to get some **!help** over at the server."
+						await ewutils.send_message(client, message.channel, direct_help_response)
+				else:
+					return
 
 			# Nothing else to do in a DM.
 			return
