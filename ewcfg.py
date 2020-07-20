@@ -18065,15 +18065,7 @@ for poi in poi_list:
 						poi.str_desc += 'and {}.'.format(district_streets_list[i])
 					else:
 						poi.str_desc += '{}, '.format(district_streets_list[i])
-					
-	if poi.is_transport:
-		if 'subway' in poi.id_poi:
-			poi.major_role = 'subway_major'
-		elif 'blimp' in poi.id_poi:
-			poi.major_role = 'blimp_major'
-		elif 'ferry' in poi.id_poi:
-			poi.major_role = 'ferry_major'
-	
+                        
 	placeholder_channel_names_used = False
 		
 	# Subzones and streets need the same major roles as their mother/father districts.
