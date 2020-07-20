@@ -35,6 +35,8 @@ async def pachinko(cmd):
 	resp = await ewcmd.start(cmd = cmd)
 	time_now = int(time.time())
 
+	user_data = EwUser(member=cmd.message.author)
+
 	global last_pachinkoed_times
 	last_used = last_pachinkoed_times.get(cmd.message.author.id)
 
@@ -153,6 +155,8 @@ async def pachinko(cmd):
 
 async def craps(cmd):
 	time_now = int(time.time())
+	
+	user_data = EwUser(member=cmd.message.author)
 
 	global last_crapsed_times
 	last_used = last_crapsed_times.get(cmd.message.author.id)
@@ -285,6 +289,8 @@ async def slots(cmd):
 
 	global last_slotsed_times
 	last_used = last_slotsed_times.get(cmd.message.author.id)
+
+	user_data = EwUser(member=cmd.message.author)
 
 	if last_used == None:
 		last_used = 0
@@ -467,6 +473,8 @@ async def roulette(cmd):
 	bet = ""
 	soul_id = None
 
+	user_data = EwUser(member=cmd.message.author)
+
 	returned_item_id = None
 	all_bets = ["0", "00", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
 				"16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31",
@@ -528,28 +536,7 @@ async def roulette(cmd):
 				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
 
 			elif currency_used == ewcfg.currency_soul:
-
-				if cmd.mentions_count > 0:
-					correct_soul = 0
-					user_inv = ewitem.inventory(id_server=user_data.id_server, id_user=user_data.id_user)
-					for item_sought in user_inv:
-						if "soul" in item_sought.get("name"):
-							item = ewitem.EwItem(id_item = item_sought.get('id_item'))
-							if str(cmd.mentions[0].id) == item.item_props.get("user_id"):
-								correct_soul = item.id_item
-					if correct_soul == 0:
-						response = "You don't have that soul."
-						return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
-					else:
-						ewitem.give_item(id_item=correct_soul, id_user="casinosouls_wait", id_server=user_data.id_server)
-						soul_id = correct_soul
-				elif user_data.has_soul == 0:
-					response = "You don't have a soul to bet."
-					return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
-				else:
-					soul_id = ewitem.surrendersoul(receiver=user_data.id_user, giver=user_data.id_user, id_server=user_data.id_server)
-					ewitem.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
-					user_data = EwUser(member = cmd.message.author)
+				pass
 			else:
 				if user_data.life_state == ewcfg.life_state_corpse:
 					return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
@@ -569,6 +556,30 @@ async def roulette(cmd):
 			elif bet not in all_bets:
 				response = "The dealer didn't understand your wager. Options are: {}\n{}board.png".format(ewutils.formatNiceList(names = all_bets), img_base)
 			else:
+				if currency_used == ewcfg.currency_soul:
+					if cmd.mentions_count > 0:
+						correct_soul = 0
+						user_inv = ewitem.inventory(id_server=user_data.id_server, id_user=user_data.id_user)
+						for item_sought in user_inv:
+							if "soul" in item_sought.get("name"):
+								item = ewitem.EwItem(id_item = item_sought.get('id_item'))
+								if str(cmd.mentions[0].id) == item.item_props.get("user_id"):
+									correct_soul = item.id_item
+						if correct_soul == 0:
+							response = "You don't have that soul."
+							return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+						else:
+							ewitem.give_item(id_item=correct_soul, id_user="casinosouls_wait", id_server=user_data.id_server)
+							soul_id = correct_soul
+					elif user_data.has_soul == 0:
+						response = "You don't have a soul to bet."
+						return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+					else:
+						soul_id = ewitem.surrendersoul(receiver=user_data.id_user, giver=user_data.id_user, id_server=user_data.id_server)
+						ewitem.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
+						user_data = EwUser(member = cmd.message.author)
+
+
 				user_data.persist()
 
 				await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(
@@ -681,6 +692,8 @@ async def baccarat(cmd):
 	if last_used == None:
 		last_used = 0
 
+	user_data = EwUser(member=cmd.message.author)
+
 	currency_used = ewcfg.currency_slimecoin
 
 	if ewcfg.currency_slime in cmd.tokens[3:]:
@@ -729,25 +742,7 @@ async def baccarat(cmd):
 				#subtract costs
 				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
 			elif currency_used == ewcfg.currency_soul:
-				if cmd.mentions_count > 0:
-					correct_soul = 0
-					user_inv = ewitem.inventory(id_server=user_data.id_server, id_user=user_data.id_user)
-					for item_sought in user_inv:
-						if "soul" in item_sought.get("name"):
-							item = ewitem.EwItem(id_item = item_sought.get('id_item'))
-							if str(cmd.mentions[0].id) == item.item_props.get("user_id"):
-								correct_soul = item.id_item
-					if correct_soul == 0:
-						response = "You don't have that soul."
-						return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
-					else:
-						soul_id = correct_soul
-				elif user_data.has_soul == 0:
-					response = "You don't have a soul to bet."
-					return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
-				else:
-					soul_id = ewitem.surrendersoul(receiver=user_data.id_user, giver=user_data.id_user, id_server=user_data.id_server)
-					user_data = EwUser(member = cmd.message.author)
+				pass
 			else:
 				if user_data.life_state == ewcfg.life_state_corpse:
 					return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
@@ -773,6 +768,27 @@ async def baccarat(cmd):
 				await asyncio.sleep(1)
 
 			else:
+				if currency_used == ewcfg.currency_soul:
+					if cmd.mentions_count > 0:
+						correct_soul = 0
+						user_inv = ewitem.inventory(id_server=user_data.id_server, id_user=user_data.id_user)
+						for item_sought in user_inv:
+							if "soul" in item_sought.get("name"):
+								item = ewitem.EwItem(id_item = item_sought.get('id_item'))
+								if str(cmd.mentions[0].id) == item.item_props.get("user_id"):
+									correct_soul = item.id_item
+						if correct_soul == 0:
+							response = "You don't have that soul."
+							return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+						else:
+							soul_id = correct_soul
+					elif user_data.has_soul == 0:
+						response = "You don't have a soul to bet."
+						return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+					else:
+						soul_id = ewitem.surrendersoul(receiver=user_data.id_user, giver=user_data.id_user, id_server=user_data.id_server)
+						user_data = EwUser(member = cmd.message.author)
+
 				user_data.persist()
 				
 				response = "You bet {} {} on {}. The dealer shuffles the deck, then begins to deal.".format(str(value), currency_used, str(bet))
@@ -1413,7 +1429,7 @@ async def russian_roulette(cmd):
 		msg = await cmd.client.wait_for_message(timeout = 30, author = member, check = ewutils.check_accept_or_refuse)
 
 		if msg != None:
-			if msg.content == "!accept":
+			if msg.content == ewcfg.cmd_prefix + "accept":
 				accepted = 1
 	except:
 		accepted = 0
@@ -1611,7 +1627,7 @@ async def duel(cmd):
 		msg = await cmd.client.wait_for_message(timeout=30, author=member, check=ewutils.check_accept_or_refuse)
 
 		if msg != None:
-			if msg.content == "!accept":
+			if msg.content == ewcfg.cmd_prefix + "accept":
 				accepted = 1
 	except:
 		accepted = 0
@@ -2658,9 +2674,9 @@ async def skat_choose(cmd):
 		return
 
 async def betsoul(cmd):
-	usermodel = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
 	user_inv = ewitem.inventory(id_user=cmd.message.author.id, id_server=cmd.message.server.id, item_type_filter=ewcfg.it_cosmetic)
-	if usermodel.life_state == ewcfg.life_state_shambler:
+	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2695,14 +2711,14 @@ async def betsoul(cmd):
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		ewitem.give_item(id_user="casinosouls", id_server=cmd.message.server.id, id_item=item_select.id_item)
-		usermodel.change_slimecoin(coinsource=ewcfg.coinsource_spending, n=ewcfg.soulprice) #current price for souls is 500 mil slimecoin
-		usermodel.persist()
+		user_data.change_slimecoin(coinsource=ewcfg.coinsource_spending, n=ewcfg.soulprice) #current price for souls is 500 mil slimecoin
+		user_data.persist()
 		response = "You hand over {} for {:,} slimecoin.".format(item_select.item_props.get('cosmetic_name'), ewcfg.soulprice)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def buysoul(cmd):
-	usermodel = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
-	if usermodel.life_state == ewcfg.life_state_shambler:
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2730,18 +2746,18 @@ async def buysoul(cmd):
 		response = "That soul isn't available. Go torment someone else."
 	elif selected_item == None:
 		response = "Sorry, no souls on the market today."
-	elif usermodel.slimecoin < ewcfg.soulprice:
+	elif user_data.slimecoin < ewcfg.soulprice:
 		response = "Tough luck. You can't afford a soul. Poor you."
 	else:
-		poi = ewcfg.id_to_poi.get(usermodel.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = usermodel.id_server)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		ewitem.give_item(id_user=cmd.message.author.id, id_server=cmd.message.server.id, id_item=selected_item.id_item)
-		usermodel.change_slimecoin(coinsource=ewcfg.coinsource_spending, n= -ewcfg.soulprice)  # current price for souls is 500 mil slimecoin
-		usermodel.persist()
+		user_data.change_slimecoin(coinsource=ewcfg.coinsource_spending, n= -ewcfg.soulprice)  # current price for souls is 500 mil slimecoin
+		user_data.persist()
 		response = "You buy {} off the casino. This will be fun.".format(selected_item.item_props.get('cosmetic_name'))
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

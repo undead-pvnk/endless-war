@@ -2224,9 +2224,9 @@ def slimeoid_describe(slimeoid):
 	if hue != None:
 		response += " {}".format(hue.str_desc)
 		
-	coating = ewcfg.hue_map.get(slimeoid.coating)
-	if coating != None:
-		response += " {}".format(coating.str_desc)
+	# coating = ewcfg.hue_map.get(slimeoid.coating)
+	# if coating != None:
+	# 	response += " {}".format(coating.str_desc)
 
 	stat_desc = []
 
@@ -2509,7 +2509,7 @@ async def slimeoidbattle(cmd):
 		msg = await cmd.client.wait_for_message(timeout = 30, author = member, check = ewutils.check_accept_or_refuse)
 
 		if msg != None:
-			if msg.content == "!accept":
+			if msg.content == ewcfg.cmd_prefix + "accept":
 				accepted = 1
 	except:
 		accepted = 0
@@ -2551,11 +2551,11 @@ async def slimeoidbattle(cmd):
 			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:{}".format(challenger_slimeoid.name, challenger_slimeoid.name, author.display_name, "" if bet == 0 else "\nThey recieve {:,} slime! The remaining {:,} slime goes to SlimeCorp.".format(winnings, slimecorp_fee))
 			
 			if challengee_slimeoid.coating != '':
-				response += "\n{} sheds its {} coating.".format(challengee_slimeoid.name, challengee_slimeoid.coating)
+				response += "\n{} coating has been tarnished by battle.".format(challengee_slimeoid.name, challengee_slimeoid.coating)
 				challengee_slimeoid.coating = ''
 				challengee_slimeoid.persist()
 			if challenger_slimeoid.coating != '':
-				response += "\n{} sheds its {} coating.".format(challenger_slimeoid.name, challenger_slimeoid.coating)
+				response += "\n{} coating has been tarnished by battle.".format(challenger_slimeoid.name, challenger_slimeoid.coating)
 				challenger_slimeoid.coating = ''
 				challenger_slimeoid.persist()
 			
@@ -2798,6 +2798,7 @@ async def saturateslimeoid(cmd):
 		if hue != None:
 			if hue.id_hue in [ewcfg.hue_id_copper, ewcfg.hue_id_chrome, ewcfg.hue_id_gold]:
 				response = "You saturate your {} with the {} paint! {}".format(slimeoid.name, hue.str_name, hue.str_saturate)
+				slimeoid.hue = hue.id_hue
 				slimeoid.coating = hue.id_hue
 				slimeoid.persist()
 				

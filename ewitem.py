@@ -890,7 +890,7 @@ def inventory(
 				#if a weapon has no name show its type instead
 				if name == "" and item_inst.item_type == ewcfg.it_weapon:
 					name = item_inst.item_props.get("weapon_type")
-
+					
 				item['name'] = name
 	finally:
 		# Clean up the database handles.
@@ -1639,6 +1639,7 @@ def gen_item_props(item):
 			'str_eat': item.str_eat,
 			'time_expir': int(time.time()) + item.time_expir,
 			'time_fridged': item.time_fridged,
+			'perishable': 'true',
 		}
 	elif item.item_type == ewcfg.it_item:
 		item_props = {
@@ -1648,7 +1649,6 @@ def gen_item_props(item):
 			'item_desc': item.str_desc,
 			'ingredients': item.ingredients if type(item.ingredients) == str else item.ingredients[0],
 			'acquisition': item.acquisition,
-			'durability': item.durability,
 		}
 		if item.context == ewcfg.context_slimeoidfood:
 			item_props["increase"] = item.increase
@@ -1674,6 +1674,11 @@ def gen_item_props(item):
 			item_props["cooldown"] = item.cooldown
 			item_props["cost"] = item.cost
 			item_props["time_nextuse"] = item.time_nextuse
+
+		try:
+			item_props["durability"] = item.durability
+		except:
+			pass
 			
 
 	elif item.item_type == ewcfg.it_weapon:
@@ -1709,6 +1714,7 @@ def gen_item_props(item):
 			'fashion_style': item.style if item.style else ewcfg.style_cool,
 			'freshness': item.freshness if item.freshness else 5,
 			'adorned': 'false',
+			'hue': ""
 		}
 	elif item.item_type == ewcfg.it_furniture:
 		item_props = {

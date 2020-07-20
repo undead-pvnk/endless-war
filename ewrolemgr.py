@@ -124,27 +124,57 @@ async def hideRoleNames(cmd):
 	
 	server = client.get_server(id_server)
 	roles_map = ewutils.getRoleMap(server.roles)
+
+	role_counter = 0
+	
+	ewutils.logMsg('Attempting to hide all role names...')
+	
 	for poi in ewcfg.poi_list:
+			
+		if poi.is_street:
+			pass
+		elif poi.is_district:
+			pass
+		elif poi.id_poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+			pass
+		elif poi.id_poi in ewcfg.transports:
+			pass
+		else:
+			continue
+		
+		# Slow down just a bit every 20 Role change attempts
+		if role_counter >= 20:
+			role_counter = 0
+			await asyncio.sleep(5)
+		
 		try:
 			if poi.role in roles_map:
 				role = roles_map[poi.role]
-				await client.edit_role(server = server, role = role, name = ewcfg.generic_role_name)
+				if role.name != ewcfg.generic_role_name:
+					role_counter += 1
+					await client.edit_role(server = server, role = role, name = ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.role))
 			
 		try:
 			if poi.major_role in roles_map:
 				major_role = roles_map[poi.major_role]
-				await client.edit_role(server = server, role = major_role, name = ewcfg.generic_role_name)
+				if major_role.name != ewcfg.generic_role_name:
+					role_counter += 1
+					await client.edit_role(server=server, role=major_role, name=ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.major_role))
 			
 		try:
 			if poi.minor_role in roles_map:
 				minor_role = roles_map[poi.minor_role]
-				await client.edit_role(server = server, role = minor_role, name = ewcfg.generic_role_name)
+				if minor_role.name != ewcfg.generic_role_name:
+					role_counter += 1
+					await client.edit_role(server=server, role=minor_role, name=ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.minor_role))
+
+	ewutils.logMsg('Finished hiding roles!')
 
 """
 	Restore poi roles to their original names
@@ -158,11 +188,23 @@ async def restoreRoleNames(cmd):
 	
 	client = cmd.client
 	server = member.server
+	
+	role_counter = 0
+
+	ewutils.logMsg('Attempting to restore all role names...')
+	
 	for poi in ewcfg.poi_list:
+
+		# Slow down just a bit every 20 Role change attempts
+		if role_counter >= 20:
+			role_counter = 0
+			await asyncio.sleep(5)
+		
 		try:
 			role_data = EwRole(id_server = server.id, name = poi.role)
 			for role in server.roles:
 				if role.id == role_data.id_role:
+					role_counter += 1
 					await client.edit_role(server = server, role = role, name = role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.role))
@@ -171,6 +213,7 @@ async def restoreRoleNames(cmd):
 			major_role_data = EwRole(id_server = server.id, name = poi.major_role)
 			for role in server.roles:
 				if role.id == major_role_data.id_role:
+					role_counter += 1
 					await client.edit_role(server = server, role = role, name = major_role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.major_role))
@@ -179,9 +222,12 @@ async def restoreRoleNames(cmd):
 			minor_role_data = EwRole(id_server = server.id, name = poi.minor_role)
 			for role in server.roles:
 				if role.id == minor_role_data.id_role:
+					role_counter += 1
 					await client.edit_role(server = server, role = role, name = minor_role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.minor_role))
+			
+	ewutils.logMsg('Finished restoring roles!')
 			
 """
 	Creates all POI roles from scratch. Ideally, this is only used in test servers.
@@ -545,69 +591,89 @@ async def updateRoles(
 	#except:
 	#	ewutils.logMsg('error: failed to replace roles for {}'.format(member.display_name))
 
+# Removes and updates user permissions. It's got a fair amount of debuggers, sorry about the mess!
 async def refresh_user_perms(client, id_server, used_member = None, startup = False):
 	#try:
 	server = client.get_server(id_server)
 	
 	member_list = []
 	#subzone_member_list = []
-	
-	for poi in ewcfg.poi_list:
-	
-		channel = ewutils.get_channel(server, poi.channel)
-		if channel == None:
-			# Second try
+
+	if not startup:
+		for poi in ewcfg.poi_list:
 			channel = ewutils.get_channel(server, poi.channel)
 			if channel == None:
-				continue
-				
-		#print('{} overwrites: {}'.format(poi.id_poi, channel.overwrites))
-		for tuple in channel.overwrites:
-			#print('tuplevar: {}'.format(tuple[0]) + '\n\n')
-			if tuple[0] not in server.roles:
-				member = tuple[0]
-				member_list.append(tuple[0])
-				
-				# If we dont have the right member supplied in the function call, don't modify its permissions
-				if member != used_member:
+				ewutils.logMsg('Error: In refresh_user_perms, could not get channel for {}'.format(poi.channel))
+				# Second try
+				channel = ewutils.get_channel(server, poi.channel)
+				if channel == None:
 					continue
-				
-				user_data = EwUser(member=member)
-				
-				if user_data.poi != poi.id_poi:
 					
-					# Incorrect overwrite found for user
-
-					for i in range(ewcfg.permissions_tries):
-						await client.delete_channel_permissions(channel, member)
+			#print('{} overwrites: {}'.format(poi.id_poi, channel.overwrites))
+			for tuple in channel.overwrites:
+				#print('tuplevar: {}'.format(tuple[0]) + '\n\n')
+				if tuple[0] not in server.roles:
+					member = tuple[0]
+					member_list.append(tuple[0])
+					
+					# If we dont have the right member supplied in the function call, don't modify its permissions
+					if member != used_member:
+						continue
+					
+					user_data = EwUser(member=member)
+					
+					if user_data.poi != poi.id_poi:
 						
-					print('\ndeleted overwrite in {} for {}\n'.format(channel, member))
-				
-				#elif user_data.poi == poi.id_poi:
-					correct_poi = ewcfg.id_to_poi.get(user_data.poi)
+						# Incorrect overwrite found for user
+						time_now_start = int(time.time())
+	
+						for i in range(ewcfg.permissions_tries):
+							await client.delete_channel_permissions(channel, member)
+	
+						time_now_end = int(time.time())
+	
+						#print('took {} seconds to delete channel permissions'.format(time_now_end - time_now_start))
+							
+						#print('\ndeleted overwrite in {} for {}\n'.format(channel, member))
 					
-					correct_channel = ewutils.get_channel(server, correct_poi.channel)
-					#correct_lan_channel = "{}-LAN-connection".format(correct_channel)
-					
-					permissions_dict = correct_poi.permissions
-					overwrite = discord.PermissionOverwrite()
-					overwrite.read_messages = True if ewcfg.permission_read_messages in permissions_dict[user_data.poi] else False
-					overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict[user_data.poi] else False
-					
-					#print(permissions_dict[user_data.poi])
-
-					for i in range(ewcfg.permissions_tries):
-						await client.edit_channel_permissions(correct_channel, member, overwrite)
-						#await client.edit_channel_permissions(correct_lan_channel, member, overwrite)
-
-					#print('corrected overwrite in {} for {}'.format(correct_channel, member))
-					print('\nupdated permissions for {} in {}\n'.format(member, user_data.poi))
-					
-				else:
-					pass
-					# print(member)
-					# print(poi.str_name)
-	if not startup:
+					#elif user_data.poi == poi.id_poi:
+						correct_poi = ewcfg.id_to_poi.get(user_data.poi)
+						
+						correct_channel = ewutils.get_channel(server, correct_poi.channel)
+						#correct_lan_channel = "{}-LAN-connection".format(correct_channel)
+						
+						permissions_dict = correct_poi.permissions
+						overwrite = discord.PermissionOverwrite()
+						overwrite.read_messages = True if ewcfg.permission_read_messages in permissions_dict[user_data.poi] else False
+						overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict[user_data.poi] else False
+						
+						# wall_overwrite = None
+						# if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+						# 	wall_overwrite = discord.PermissionOverwrite()
+						# 	wall_channel = ewutils.get_channel(server, correct_channel.name + '-wall')
+						# 	overwrite.read_messages = True
+						
+						#print(permissions_dict[user_data.poi])
+						time_now_start = int(time.time())
+	
+						for i in range(ewcfg.permissions_tries):
+							await client.edit_channel_permissions(correct_channel, member, overwrite)
+							# if wall_overwrite != None:
+							# 	await client.edit_channel_permissions(wall_channel, member, wall_overwrite)
+							#await client.edit_channel_permissions(correct_lan_channel, member, overwrite)
+	
+						time_now_end = int(time.time())
+	
+						#print('took {} seconds to update channel permissions'.format(time_now_end - time_now_start))
+	
+						#print('updated permissions for {} in {}'.format(member, user_data.poi))
+						
+						
+						
+					else:
+						pass
+						# print(member)
+						# print(poi.str_name)
 				
 		if used_member not in member_list:
 		# Member has no overwrites -- fix this:
@@ -622,123 +688,158 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 			#print(user_data.poi)
 			
 			correct_channel = ewutils.get_channel(server, correct_poi.channel)
-			#correct_lan_channel = "{}-LAN-connection".format(correct_channel)
 	
 			permissions_dict = correct_poi.permissions
 			overwrite = discord.PermissionOverwrite()
 			overwrite.read_messages = True if ewcfg.permission_read_messages in permissions_dict[user_data.poi] else False
 			overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict[user_data.poi] else False
+
+			# wall_overwrite = None
+			# if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+			# 	wall_overwrite = discord.PermissionOverwrite()
+			# 	wall_channel = ewutils.get_channel(server, correct_channel.name + '-wall')
+			# 	overwrite.read_messages = True
+		
+			time_now_start = int(time.time())
 	
 			for i in range(ewcfg.permissions_tries):
 				await client.edit_channel_permissions(correct_channel, used_member, overwrite)
+				# if wall_overwrite != None:
+				# 	await client.edit_channel_permissions(wall_channel, used_member, wall_overwrite)
 				#await client.edit_channel_permissions(correct_lan_channel, used_member, overwrite)
 
+			time_now_end = int(time.time())
+	
+			#print('took {} seconds to generate channel permissions'.format(time_now_end - time_now_start))
+
 			# print('corrected overwrite in {} for {}'.format(correct_channel, member))
-			print('\ngenerated permissions for {} in {}\n'.format(used_member, user_data.poi))
+			#print('\ngenerated permissions for {} in {}\n'.format(used_member, user_data.poi))
 					
 	# if used_member != None:
 	# 	
 	# 	
 
-	if startup:
-		# On startup, give out permissions where necessary. This should only need to be done once, when the update goes live.
-		
-		conn_info = ewutils.databaseConnect()
-		conn = conn_info.get('conn')
-		cursor = conn.cursor();
-
-		cursor.execute(
-			"SELECT id_user, poi FROM users WHERE id_server = %s".format(
-				slimes=ewcfg.col_slimes,
-				life_state=ewcfg.col_life_state,
-				life_state_kingpin=ewcfg.life_state_kingpin
-			), (
-				id_server,
-			))
-		
-		
-
-		users = cursor.fetchall()
-
-		for user in users:
-
-			current_member = server.get_member(user[0])
-			
-			#print(member)
-			#print('member list: {}'.format(member_list))
-			
-			user_poi = ewcfg.id_to_poi.get(user[1])
-
-			if current_member == None:
-				# Second try.
-				current_member = server.get_member(user[0])
-				if current_member == None:
-					continue
-					
-			if current_member in member_list:
-				# Member might have the wrong overwrite if the bot shut down/crashed right after persisting user data
-				#user_data = EwUser(member=current_member)
-
-				for poi in ewcfg.poi_list:
-
-					channel = ewutils.get_channel(server, poi.channel)
-					if channel == None:
-						# Second try
-						channel = ewutils.get_channel(server, poi.channel)
-						if channel == None:
-							continue
-
-					# print('{} overwrites: {}'.format(poi.id_poi, channel.overwrites))
-					for tuple in channel.overwrites:
-						# print('tuplevar: {}'.format(tuple[0]) + '\n\n')
-						if tuple[0] not in server.roles:
-							member = tuple[0]
-
-							# If we dont have the right member in the member list, skip it.
-							if member != current_member:
-								continue
-
-							user_data = EwUser(member=member)
-
-							if user_data.poi != poi.id_poi:
-
-								# Incorrect overwrite found for user
-
-								for i in range(ewcfg.permissions_tries):
-									await client.delete_channel_permissions(channel, current_member)
-
-								print('\ndeleted overwrite in {} for {}\n'.format(channel, current_member))
-								
-								# Only remove the current member once before moving on to the next code block.
-								if current_member in member_list:
-									member_list.remove(current_member)
-				
-			if current_member not in member_list:
-				# Member has no overwrite -- fix this:
-				user_data = EwUser(member=current_member)
-				correct_poi = ewcfg.id_to_poi.get(user_data.poi)
-
-				if correct_poi != None:
-					permissions_dict = user_poi.permissions
-				else:
-					continue
-				
-				correct_channel = ewutils.get_channel(server, correct_poi.channel)
-				#correct_lan_channel = "{}-LAN-connection".format(correct_channel)
-
-				#print(user_data.poi)
-				
-				overwrite = discord.PermissionOverwrite()
-				overwrite.read_messages = True if ewcfg.permission_read_messages in permissions_dict[user_data.poi] else False
-				overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict[user_data.poi] else False
-				overwrite.connect = True
-
-				for i in range(ewcfg.permissions_tries):
-					await client.edit_channel_permissions(correct_channel, current_member, overwrite)
-					#await client.edit_channel_permissions(correct_lan_channel, current_member, overwrite)
-
-				# print('corrected overwrite in {} for {}'.format(correct_channel, member))
-				print('\nadded permissions for {} in {}\n'.format(current_member, user_data.poi))
+	# if startup:
+	# 	# On startup, give out permissions where necessary. This should only need to be done once, when the update goes live.
+	# 	
+	# 	conn_info = ewutils.databaseConnect()
+	# 	conn = conn_info.get('conn')
+	# 	cursor = conn.cursor();
+	# 
+	# 	cursor.execute(
+	# 		"SELECT id_user, poi FROM users WHERE id_server = %s".format(
+	# 		), (
+	# 			id_server,
+	# 		))
+	# 
+	# 	users = cursor.fetchall()
+	# 
+	# 	user_count = 0
+	# 	for user in users:
+	# 		
+	# 
+	# 		current_member = server.get_member(user[0])
+	# 		
+	# 		#print(member)
+	# 		#print('member list: {}'.format(member_list))
+	# 		
+	# 		user_poi = ewcfg.id_to_poi.get(user[1])
+	# 
+	# 		if current_member == None:
+	# 			# Second try.
+	# 			current_member = server.get_member(user[0])
+	# 			if current_member == None:
+	# 				continue
+	# 				
+	# 		# Every 20 users, slow down a bit
+	# 		user_count += 1
+	# 		if user_count == 20:
+	# 			user_count = 0
+	# 			await asyncio.sleep(2)
+	# 				
+	# 		if current_member in member_list:
+	# 			# Member might have the wrong overwrite if the bot shut down/crashed right after persisting user data
+	# 			user_data = EwUser(member=current_member)
+	# 
+	# 			for poi in ewcfg.poi_list:
+	# 
+	# 				channel = ewutils.get_channel(server, poi.channel)
+	# 				if channel == None:
+	# 					# Second try
+	# 					channel = ewutils.get_channel(server, poi.channel)
+	# 					if channel == None:
+	# 						continue
+	# 
+	# 				# print('{} overwrites: {}'.format(poi.id_poi, channel.overwrites))
+	# 				for tuple in channel.overwrites:
+	# 					# print('tuplevar: {}'.format(tuple[0]) + '\n\n')
+	# 					if tuple[0] not in server.roles:
+	# 						member = tuple[0]
+	# 
+	# 						# If we dont have the right member in the member list, skip it.
+	# 						if member != current_member:
+	# 							continue
+	# 
+	# 						user_data = EwUser(member=member)
+	# 
+	# 						if user_data.poi != poi.id_poi:
+	# 
+	# 							# Incorrect overwrite found for user
+	# 							time_now_start = int(time.time())
+	# 
+	# 							for i in range(ewcfg.permissions_tries):
+	# 								await client.delete_channel_permissions(channel, current_member)
+	# 
+	# 							time_now_end = int(time.time())
+	# 
+	# 							#print('took {} seconds to delete channel permissions'.format(time_now_end - time_now_start))
+	# 
+	# 							#print('\ndeleted overwrite in {} for {}\n'.format(channel, current_member))
+	# 							
+	# 							# Only remove the current member once before moving on to the next code block.
+	# 							if current_member in member_list:
+	# 								member_list.remove(current_member)
+	# 			
+	# 		if current_member not in member_list:
+	# 			# Member has no overwrite -- fix this:
+	# 			user_data = EwUser(member=current_member)
+	# 			correct_poi = ewcfg.id_to_poi.get(user_data.poi)
+	# 
+	# 			if correct_poi != None:
+	# 				permissions_dict = user_poi.permissions
+	# 			else:
+	# 				continue
+	# 			
+	# 			correct_channel = ewutils.get_channel(server, correct_poi.channel)
+	# 			#correct_lan_channel = "{}-LAN-connection".format(correct_channel)
+	# 
+	# 			#print(user_data.poi)
+	# 			
+	# 			overwrite = discord.PermissionOverwrite()
+	# 			overwrite.read_messages = True if ewcfg.permission_read_messages in permissions_dict[user_data.poi] else False
+	# 			overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict[user_data.poi] else False
+	# 			#overwrite.connect = True if ewcfg.permission_connect_to_voice in permissions_dict[user_data.poi] else False
+	# 
+	# 			wall_overwrite = None
+	# 			if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+	# 				wall_overwrite = discord.PermissionOverwrite()
+	# 				wall_channel = ewutils.get_channel(server, correct_channel.name + '-wall')
+	# 				overwrite.read_messages = True
+	# 			
+	# 			time_now_start = int(time.time())
+	# 
+	# 			for i in range(ewcfg.permissions_tries):
+	# 				await client.edit_channel_permissions(correct_channel, current_member, overwrite)
+	# 				if wall_overwrite != None:
+	# 					await client.edit_channel_permissions(wall_channel, current_member, wall_overwrite)
+	# 				#await client.edit_channel_permissions(correct_lan_channel, current_member, overwrite)
+	# 			
+	# 			time_now_end = int(time.time())
+	# 			
+	# 			#print('took {} seconds to add channel permissions'.format(time_now_end - time_now_start))
+	# 
+	# 			# print('corrected overwrite in {} for {}'.format(correct_channel, member))
+	# 			print('added permissions for {} in {}'.format(current_member, user_data.poi))
 
 	#except:
 		#ewutils.logMsg('caught exception while refreshing permissions')

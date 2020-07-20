@@ -65,7 +65,7 @@ async def revive(cmd):
 				player_data.trauma = ""
 				poi_death = ewcfg.id_to_poi.get(player_data.poi_death)
 				if ewmap.inaccessible(poi = poi_death, user_data = player_data):
-					player_data.poi = ewcfg.poi_id_downtown
+					player_data.poi = ewcfg.poi_id_endlesswar
 				else:
 					player_data.poi = poi_death.id_poi
 			else:
@@ -74,7 +74,7 @@ async def revive(cmd):
 				# Give player some initial slimes.
 				player_data.change_slimes(n = ewcfg.slimes_onrevive)
 				# Get the player out of the sewers.
-				player_data.poi = ewcfg.poi_id_downtown
+				player_data.poi = ewcfg.poi_id_endlesswar
 
 
 
@@ -140,9 +140,9 @@ async def haunt(cmd):
 		haunted_data = None
 		member = None
 		if cmd.mentions_count == 0 and cmd.tokens_count > 1:
-			haunted_data = EwUser(id_user = cmd.tokens[1], id_server = cmd.message.server.id)
 			server = ewutils.get_client().get_server(cmd.message.server.id)
 			member = server.get_member(cmd.tokens[1])
+			haunted_data = EwUser(member = member)
 		elif cmd.mentions_count == 1:
 			member = cmd.mentions[0]
 			haunted_data = EwUser(member = member)
@@ -176,17 +176,18 @@ async def haunt(cmd):
 				response = "{} is invulnerable to ghosts.".format(member.display_name)
 			elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile or haunted_data.life_state == ewcfg.life_state_shambler:
 				# Target can be haunted by the player.
-				haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio)
-				# if user_data.poi == haunted_data.poi:  # when haunting someone face to face, there is no cap and you get double the amount
-				# 	haunted_slimes *= 2
-				if haunted_slimes > ewcfg.slimes_hauntmax:
-					haunted_slimes = ewcfg.slimes_hauntmax
-
-				#if -user_data.slimes < haunted_slimes:  # cap on for how much you can haunt
-				#	haunted_slimes = -user_data.slimes
+				haunt_power_multiplier = 1
+				if user_data.poi == haunted_data.poi:
+					if user_data.poi == ewcfg.poi_id_thevoid:
+						# haunting is empowered by the void
+						haunt_power_multiplier *= 5
+					else: 
+						# when haunting someone face to face, you get double the amount
+						haunt_power_multiplier *= 2
+				haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio) * haunt_power_multiplier
 
 				haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
-				user_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunter)
+				user_data.change_slimes(n = -min(haunted_slimes, ewcfg.slimes_hauntmax), source = ewcfg.source_haunter)
 				market_data.negaslime -= haunted_slimes
 				user_data.time_lasthaunt = time_now
 				user_data.busted = False
@@ -250,8 +251,6 @@ async def summon_negaslimeoid(cmd):
 	if user_data.poi not in ewcfg.capturable_districts:
 		response = "You can't conduct the ritual here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-
 
 	name = None
 	if cmd.tokens_count > 1:
@@ -362,7 +361,7 @@ async def manifest(cmd):
 		response = "You are too weak to manifest. You need to gather more negative slime."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi_death)
+	poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid) # manifest ghosts directly into the void
 
 	response = "{}ing in {}.".format(cmd.tokens[0][1:].capitalize(), poi.str_name)
 
@@ -486,7 +485,7 @@ async def possess_weapon(cmd):
 			response = "{}'s weapon is already being possessed.".format(inhabitee_name)
 		else:
 			proposal_response = "You propose a trade to {}. " \
-				"You will possess their weapon to empower it, and in return they'll sacrifice half their slime to your name upon their next kill. " \
+				"You will possess their weapon to empower it, and in return they'll sacrifice a fifth of their slime to your name upon their next kill. " \
 				"Will they **{}** this exchange, or **{}** it?".format(inhabitee_name, ewcfg.cmd_accept, ewcfg.cmd_refuse)
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, proposal_response))
     

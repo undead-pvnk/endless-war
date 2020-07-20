@@ -1468,8 +1468,21 @@ def create_mining_event(cmd):
 	elif randomn < 0.9:
 		randomn = random.random()
 
+		# gap into the void
+		if randomn < 0.1:
+			event_props = {}
+			event_props['id_user'] = cmd.message.author.id
+			event_props['poi'] = user_data.poi
+			event_props['channel'] = cmd.message.channel.name
+			return ewworldevent.create_world_event(
+				id_server = cmd.message.server.id,
+				event_type = ewcfg.event_type_voidhole,
+				time_activate = time_now,
+				time_expir = time_now + 10,
+				event_props = event_props
+			)
 		# mine shaft collapse
-		if randomn < 0.5:
+		elif randomn < 0.5:
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi

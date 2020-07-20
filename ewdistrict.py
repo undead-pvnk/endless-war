@@ -149,16 +149,42 @@ class EwDistrict:
 		return friendly_neighbors
 
 	def all_neighbors_friendly(self):
+		rival_gang_poi = "none"
 		if self.controlling_faction == "":
 			return False
-		
+		elif self.controlling_faction == ewcfg.faction_killers:
+			rival_gang_poi = ewcfg.poi_id_rowdyroughhouse
+		elif self.controlling_faction == ewcfg.faction_rowdys:
+			rival_gang_poi = ewcfg.poi_id_copkilltown
+
+
 		neighbors = ewcfg.poi_neighbors[self.name]
 		for neighbor_id in neighbors:
 			neighbor_poi = ewcfg.id_to_poi.get(neighbor_id)
 			neighbor_data = EwDistrict(id_server = self.id_server, district = neighbor_id)
-			if neighbor_data.controlling_faction != self.controlling_faction and not neighbor_poi.is_subzone and not neighbor_poi.is_outskirts:
+			if neighbor_data.controlling_faction != self.controlling_faction and not neighbor_poi.is_subzone and not neighbor_poi.is_outskirts and not neighbor_poi.is_district:
+				return False
+			elif neighbor_poi.id_poi == rival_gang_poi:
 				return False
 		return True
+
+	def all_streets_taken(self):
+		street_name_list = ewutils.get_street_list(self.name)
+		
+		if self.name == ewcfg.poi_id_rowdyroughhouse:
+			return ewcfg.faction_rowdys
+		elif self.name == ewcfg.poi_id_copkilltown:
+			return ewcfg.faction_killers
+
+		faction_list = []
+		for name in street_name_list:
+			district_data = EwDistrict(id_server=self.id_server, district=name)
+			faction_list.append(district_data.controlling_faction)
+	
+		if len(faction_list) > 0 and all(faction == faction_list[0] for faction in faction_list):
+			return faction_list[0]
+		else:
+			return ""
 
 	def get_players_in_district(self,
 			min_level = 0,
@@ -279,13 +305,16 @@ class EwDistrict:
 			
 			nega_present = len(slimeoids) > 0
 
+			poi = ewcfg.id_to_poi.get(self.name)
+			father_poi = ewcfg.id_to_poi.get(poi.father_district)
+			num_districts = len(ewutils.get_street_list(poi.father_district))
 
 			if nega_present:
 				decay *= 1.5
-			if self.capture_points + (decay * 3) > ewcfg.limit_influence[self.property_class]:
+			if self.capture_points + (decay * 3) > (ewcfg.limit_influence[father_poi.property_class])/num_districts:
 				decay *= 3
 
-			if self.controlling_faction == "" or (not self.all_neighbors_friendly() and self.capture_points > ewcfg.limit_influence[self.property_class]) or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
+			if self.controlling_faction == "" or (not self.all_neighbors_friendly() and self.capture_points > ewcfg.limit_influence[father_poi.property_class]/num_districts) or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
 				#if (self.capture_points + int(decay) < ewcfg.min_influence[self.property_class] and self.capture_points >= ewcfg.min_influence[self.property_class]) and not nega_present and self.controlling_faction != "":
 				#	responses = self.change_capture_points(self.capture_points - ewcfg.min_influence[self.property_class], ewcfg.actor_decay)
@@ -363,7 +392,11 @@ class EwDistrict:
 		return resp_cont
 
 	def change_capture_points(self, progress, actor, num_lock = 0):  # actor can either be a faction or "decay"
-		max_capture = ewcfg.limit_influence[self.property_class]
+		street_poi = ewcfg.id_to_poi.get(self.name)
+		district_poi = ewcfg.id_to_poi.get(street_poi.father_district)
+		num_districts = len(ewutils.get_street_list(street_poi.father_district))
+
+		max_capture = ewcfg.limit_influence[district_poi.property_class]/num_districts
 		progress_percent_before = int(self.capture_points / max_capture * 100)
 
 		self.capture_points += progress
@@ -403,7 +436,9 @@ class EwDistrict:
 		if actor != ewcfg.actor_decay:
 			self.capturing_faction = actor
 
-		if self.controlling_faction == "" and progress > 0 and self.cap_side == actor and self.capture_points + progress > ewcfg.min_influence[self.property_class]:
+
+
+		if self.controlling_faction == "" and progress > 0 and self.cap_side == actor and self.capture_points + progress > (ewcfg.min_influence[district_poi.property_class]/num_districts):
 			self.controlling_faction = actor
 
 
@@ -595,8 +630,6 @@ class EwDistrict:
 		
 		poi = None
 		
-		
-		
 		# In the Gankers Vs. Shamblers event, importance is placed on districts
 		# As a result, if a district is degraded, then all of its subzones/streets are also now degraded
 		if checked_poi.is_district:
@@ -632,28 +665,43 @@ async def capture_progress(cmd):
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	response += "**{}**: ".format(poi.str_name)
 
+
+
 	if not user_data.poi in ewcfg.capturable_districts:
 		response += "This zone cannot be captured."
+		if poi.is_district == True:
+			response += " To take this district, you need to enter into the streets."
+			district_data = EwDistrict(district=user_data.poi, id_server=user_data.id_server)
+			if district_data.all_streets_taken() != "":
+				response += " {} have a stranglehold over this entire district.".format(district_data.all_streets_taken().capitalize())
+
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	district_data = EwDistrict(id_server = user_data.id_server, district = user_data.poi)
+	district_data = EwDistrict(id_server=user_data.id_server, district=poi.father_district)
+	street_data = EwDistrict(id_server=user_data.id_server, district=user_data.poi)
 
 
-	if district_data.controlling_faction != "":
-		response += "{} control this district. ".format(district_data.controlling_faction.capitalize())
-	elif district_data.capturing_faction != "" and district_data.cap_side != district_data.capturing_faction:
-		response += "{} are de-capturing this district. ".format(district_data.capturing_faction.capitalize())
-	elif district_data.capturing_faction != "":
-		response += "{} are capturing this district. ".format(district_data.capturing_faction.capitalize())
+	if street_data.controlling_faction != "":
+		response += "{} control this street. ".format(street_data.controlling_faction.capitalize())
+	elif street_data.capturing_faction != "" and street_data.cap_side != street_data.capturing_faction:
+		response += "{} are de-capturing this street. ".format(street_data.capturing_faction.capitalize())
+	elif street_data.capturing_faction != "":
+		response += "{} are capturing this street. ".format(street_data.capturing_faction.capitalize())
 	else:
-		response += "Nobody has staked a claim to this district yet. ".format(district_data.controlling_faction.capitalize())
-
-	response += "\n\n**Current influence: {:,}**\nMinimum influence: {:,}\nMaximum influence: {:,}\nPercentage to maximum influence: {:,}%".format(abs(district_data.capture_points), ewcfg.min_influence[district_data.property_class], ewcfg.limit_influence[district_data.property_class], round((abs(district_data.capture_points) * 100/ewcfg.limit_influence[district_data.property_class]), 1))
-
-	if district_data.time_unlock > 0:
+		response += "Nobody has staked a claim to this street yet. ".format(street_data.controlling_faction.capitalize())
 
 
-		response += "\nThis district cannot be captured currently. It will unlock in {}.".format(ewutils.formatNiceTime(seconds = district_data.time_unlock, round_to_minutes = True))
+	num_streets = len(ewutils.get_street_list(poi.father_district))
+	response += "\n\n**Current influence: {:,}**\nMinimum influence: {:,}\nMaximum influence: {:,}\nPercentage to maximum influence: {:,}%".format(abs(street_data.capture_points), int(ewcfg.min_influence[district_data.property_class]/num_streets), int(ewcfg.limit_influence[district_data.property_class]/num_streets), round((abs(street_data.capture_points) * 100/(ewcfg.limit_influence[district_data.property_class]/num_streets)), 1))
+
+	if district_data.all_streets_taken() != "":
+		response += "\n{} have a stranglehold over this entire district.".format(
+			district_data.all_streets_taken().capitalize())
+
+	#if district_data.time_unlock > 0:
+
+
+		#response += "\nThis district cannot be captured currently. It will unlock in {}.".format(ewutils.formatNiceTime(seconds = district_data.time_unlock, round_to_minutes = True))
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
@@ -1015,7 +1063,12 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 
 				# if the kingpin is controlling this district give the kingpin slime based on the district's property class
 				if district.controlling_faction == (ewcfg.faction_killers if kingpin.faction == ewcfg.faction_killers else ewcfg.faction_rowdys):
-					slimegain = ewcfg.district_control_slime_yields[district.property_class]
+					poi = ewcfg.id_to_poi.get(id_district)
+					num_streets = len(ewutils.get_street_list(poi.father_district))
+					father_district = EwDistrict(district=poi.father_district)
+
+					slimegain = ewcfg.district_control_slime_yields[district.property_class]/num_streets
+
 					# increase slimeyields by 10 percent per friendly neighbor
 					friendly_mod = 1 + 0.1 * district.get_number_of_friendly_neighbors()
 					total_slimegain += slimegain * friendly_mod

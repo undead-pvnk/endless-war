@@ -25,6 +25,7 @@ from ewads import EwAd
 from ewitem import EwItem
 
 from ewhunting import EwEnemy, spawn_enemy
+from ewworldevent import get_void_connection_pois
 
 move_counter = 0
 
@@ -197,6 +198,12 @@ class EwPoi:
 
 	# dict EwPoi -> int, that defines travel times into adjacent pois
 	neighbors = None
+	
+	# The topic associated with that poi's channel
+	topic = ""
+	
+	# The wiki page associated with that poi
+	wikipage = ""
 
 	def __init__(
 		self,
@@ -242,7 +249,9 @@ class EwPoi:
 		has_ads = False,
 		write_manuscript = False,
 		max_degradation = 1000,
-		neighbors = None
+		neighbors = None,
+		topic = "",
+		wikipage = "",
 	):
 		self.id_poi = id_poi
 		self.alias = alias
@@ -286,6 +295,9 @@ class EwPoi:
 		self.has_ads = has_ads
 		self.write_manuscript = write_manuscript
 		self.max_degradation = max_degradation
+		self.topic = topic
+		self.wikipage = wikipage
+		
 		self.neighbors = neighbors
 		if self.neighbors == None:
 			self.neighbors = {}
@@ -744,7 +756,53 @@ def retrieve_locked_districts(id_server):
 	Go down the rabbit hole
 """
 async def descend(cmd):
-	return await move(cmd)
+	user_data = EwUser(member = cmd.message.author, data_level = 1)
+	void_connections = get_void_connection_pois(cmd.message.server.id)
+
+	# enter the void
+	if user_data.poi in void_connections:
+		travel_duration = int(ewcfg.travel_time_district / user_data.move_speed)
+		response = "You descend down the flight of stairs and begin walking down a lengthy tunnel towards an identical set of ascending stairs. You will arrive on the other side in {} seconds.".format(travel_duration)
+		descent_message = await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		global move_counter
+		move_current = ewutils.moves_active.get(cmd.message.author.id)
+		move_counter += 1
+		move_current = ewutils.moves_active[cmd.message.author.id] = move_counter
+
+		life_state = user_data.life_state
+		faction = user_data.faction
+		await asyncio.sleep(travel_duration)
+
+		if user_data.life_state != life_state or faction != user_data.faction:
+			try:
+				await cmd.client.delete_message(descent_message)
+			except:
+				pass
+			return
+
+		user_data.poi = ewcfg.poi_id_thevoid
+		user_data.time_lastenter = int(time.time())
+		user_data.persist()
+		ewutils.end_trade(user_data.id_user)
+		await ewrolemgr.updateRoles(client = ewutils.get_client(), member = cmd.message.author)
+		await user_data.move_inhabitants(id_poi = ewcfg.poi_id_thevoid)
+		try:
+			await cmd.client.delete_message(descent_message)
+		except:
+			pass
+
+		void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+		response = "You go up the flight of stairs and find yourself in {}.".format(void_poi.str_name)
+		msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+		await asyncio.sleep(20)
+		try:
+			await cmd.client.delete_message(msg)
+		except:
+			pass
+		return
+	else:
+		return await move(cmd)
 	
 """
 	Player command to move themselves from one place to another.
@@ -759,6 +817,9 @@ async def move(cmd = None, isApt = False):
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	if target_name == None or len(target_name) == 0:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Where to?"))
+	
+	if target_name in ewcfg.streets:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "https://www.goodreads.com/quotes/106313-the-beginning-of-wisdom-is-to-call-things-by-their ...bitch"))
 
 	player_data = EwPlayer(id_user=cmd.message.author.id)
 	user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server, data_level = 1)
@@ -768,7 +829,7 @@ async def move(cmd = None, isApt = False):
 		isApt = True
 	server_data = ewcfg.server_list[user_data.id_server]
 	client = ewutils.get_client()
-	member_object = server_data.get_member(player_data.id_user)
+	member_object = server_data.get_member(user_data.id_user)
 
 	movement_method = ""
 
@@ -847,6 +908,9 @@ async def move(cmd = None, isApt = False):
 
 	# Take control of the move for this player.
 	move_current = ewutils.moves_active[cmd.message.author.id] = move_counter
+	
+	# Hard lock path costs to not be lower than 5 seconds.
+	path.cost = max(path.cost, 5)
 
 	minutes = int(path.cost / 60)
 	seconds = path.cost % 60
@@ -873,7 +937,7 @@ async def move(cmd = None, isApt = False):
 
 	time_move_end = int(time.time())
 
-	print('pathfinding in move function took {} seconds'.format(time_move_end - time_move_start))
+	#print('pathfinding in move function took {} seconds'.format(time_move_end - time_move_start))
 
 
 	life_state = user_data.life_state
@@ -933,6 +997,11 @@ async def move(cmd = None, isApt = False):
 
 	else:
 		boost = 0
+		
+		step_list = []
+		for step in path.steps:
+			step_list.append(step.str_name)
+		#print('path steps: {}'.format(step_list))
 
 		# Perform move.
 		for i in range(1, len(path.steps)):
@@ -1012,7 +1081,7 @@ async def move(cmd = None, isApt = False):
 				if user_data.poi != poi_current.id_poi:
 					
 					poi_previous = user_data.poi
-					print('previous poi: {}'.format(poi_previous))
+					#print('previous poi: {}'.format(poi_previous))
 					
 					user_data.poi = poi_current.id_poi
 					user_data.time_lastenter = int(time.time())
@@ -1213,7 +1282,7 @@ async def teleport_player(cmd):
 	else:
 		return
 	
-	destination = cmd.tokens[2]
+	destination = cmd.tokens[2].lower()
 	
 	new_poi = ewcfg.id_to_poi.get(destination)
 	
@@ -1247,18 +1316,20 @@ async def look(cmd):
 	degrade_resp = ""
 	if district_data.degradation >= poi.max_degradation:
 		degrade_resp = ewcfg.str_zone_degraded.format(poi = poi.str_name) + "\n\n"
-
+	void_resp = get_void_connections_resp(poi.id_poi, user_data.id_server)
 
 	if poi.is_apartment:
 		return await ewapt.apt_look(cmd=cmd)
 
-	if poi.is_subzone: # Triggers if you input the command in a sub-zone.
+	if poi.is_subzone or poi.id_poi == ewcfg.poi_id_thevoid: # Triggers if you input the command in the void or a sub-zone.
 
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-			"You stand {} {}.\n\n{}\n\n{}".format(
+			"You stand {} {}.\n\n{}\n\n<{}>\n{}\n\n{}".format(
 				poi.str_in,
 				poi.str_name,
 				poi.str_desc,
+				poi.wikipage,
+				void_resp,
 				degrade_resp,
 			)
 		))
@@ -1294,10 +1365,12 @@ async def look(cmd):
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You stand {} {}.\n\n{}\n\n{}...".format(
+			"You stand {} {}.\n\n{}\n\n<{}>{}\n\n{}...".format(
 				poi.str_in,
 				poi.str_name,
 				poi.str_desc,
+				poi.wikipage,
+				void_resp,
 				degrade_resp,
 			)
 		))
@@ -1553,7 +1626,7 @@ async def kick(id_server):
 			user_data = EwUser(id_user = id_user, id_server = id_server)
 
 			# checks if the player should be kicked from the subzone and kicks them if they should.
-			if poi.is_subzone:
+			if poi.is_subzone and poi.id_poi != ewcfg.poi_id_thesphere:
 				
 				# Some subzones could potentially have multiple mother districts.
 				# Make sure to get one that's accessible before attempting a proper kickout.
@@ -1580,7 +1653,7 @@ async def kick(id_server):
 						response = "You have been kicked out for loitering! You can only stay in a sub-zone and twiddle your thumbs for 1 hour at a time."
 						await ewutils.send_message(client, mother_district_channel, ewutils.formatMessage(member_object, response))
 		except:
-			ewutils.logMsg('failed to move inactive player out of subzone: {}'.format(id_user))
+			ewutils.logMsg('failed to move inactive player out of subzone with poi {}: {}'.format(player[0], player[1]))
 
 def get_slimes_resp(district_data):
 	# get information about slime levels in the district
@@ -1869,3 +1942,12 @@ async def print_map_data(cmd):
 	print("\n\nPOI LIST STATISTICS:\n{} districts\n{} subzones\n{} apartments\n{} outskirts\n{} streets\n{} transports\n\n".format(districts_count, subzones_count, apartments_count, outskirts_count, streets_count, transports_count))
 	
 	
+def get_void_connections_resp(poi, id_server):
+	response = ""
+	void_connections = get_void_connection_pois(id_server)
+	if poi == ewcfg.poi_id_thevoid:
+		connected_poi_names = [ewcfg.id_to_poi.get(poi_id).str_name for poi_id in void_connections]
+		response = "\nThe street sign in the intersection points to {}, and {}".format(", ".join(connected_poi_names), ewcfg.id_to_poi.get(ewcfg.poi_id_thesewers).str_name)
+	elif poi in void_connections:
+		response = "There's also a well lit staircase leading underground, but it looks too clean to be an entrance to the subway."
+	return response

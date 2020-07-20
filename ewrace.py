@@ -24,6 +24,7 @@ async def set_race(cmd):
 		'white',
 		'black',
 		'aryan',
+		'epic', # this one is for you, meaty
 	]
 
 	if time_now > user_data.time_racialability:
@@ -67,7 +68,7 @@ async def set_race(cmd):
 		else:
 			response = "Please select a race from the following: {}.".format(", ".join(["**{}**".format(race) for race in ewcfg.races.values()]))
 	else:
-		response = "You have either changed your race recently, or just used your racial ability. Take a chill pill and try again in a while."
+		response = "You have either changed your race recently, or just used your racial ability. Try again later, race traitor."
 	
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -182,7 +183,8 @@ async def beep(cmd):
 				"`ERROR: 418 I'm a teapot`",
 				"`ERROR: list index out of range`",
 				"`ERROR: 'response' is undefined`",
-				"https://youtu.be/7nQ2oiVqKHw"
+				"https://youtu.be/7nQ2oiVqKHw",
+				"https://youtu.be/Gb2jGy76v0Y"
 			]
 		else:
 			resp = await ewcmd.start(cmd = cmd)

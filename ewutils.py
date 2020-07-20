@@ -161,12 +161,12 @@ class EwResponseContainer:
 				logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
 				
 
-		for ch in self.channel_topics:
-			channel = get_channel(server = server, channel_name = ch)
-			try:
-				await self.client.edit_channel(channel = channel, topic = self.channel_topics[ch])
-			except:
-				logMsg('Failed to set channel topic for {} to {}'.format(ch, self.channel_topics[ch]))
+		# for ch in self.channel_topics:
+		# 	channel = get_channel(server = server, channel_name = ch)
+		# 	try:
+		# 		await self.client.edit_channel(channel = channel, topic = self.channel_topics[ch])
+		# 	except:
+		# 		logMsg('Failed to set channel topic for {} to {}'.format(ch, self.channel_topics[ch]))
 
 		return messages
 
@@ -613,7 +613,8 @@ async def flag_vulnerable_districts(id_server = None):
 				await ewrolemgr.updateRoles(client = client, member = member)
 
 				# Make sure to kill players who may have left while the bot was offline.
-				if member not in server.members:
+				all_current_members = list(server.members)
+				if member not in all_current_members:
 					try:
 						user_data = EwUser(id_user = user_data.id_user, id_server = user_data.id_server)
 	
@@ -709,7 +710,8 @@ async def bleedSlimes(id_server = None):
 				await ewrolemgr.updateRoles(client = client, member = member)
 				
 				# Make sure to kill players who may have left while the bot was offline.
-				if member not in server.members:
+				all_current_members = list(server.members)
+				if member not in all_current_members:
 					try:
 						user_data = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
 						user_data.trauma = ewcfg.trauma_id_suicide
@@ -938,7 +940,8 @@ async def burnSlimes(id_server = None):
 				user_data.persist()
 
 			# Make sure to kill players who may have left while the bot was offline.
-			if member not in server.members:
+			all_current_members = list(server.members)
+			if member not in all_current_members:
 				try:
 					user_data = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
 					user_data.trauma = ewcfg.trauma_id_suicide
@@ -2429,8 +2432,92 @@ def get_subzone_controlling_faction(subzone_id, id_server):
 			break
 
 	if district_data != None:
-		faction = district_data.controlling_faction
+		faction = district_data.all_streets_taken()
 		return faction
+
+def get_street_list(str_poi):
+	poi = ewcfg.id_to_poi.get(str_poi)
+	neighbor_list = poi.neighbors
+	poi_list = []
+	if poi.is_district == False:
+		return poi_list
+	else:
+		for neighbor in neighbor_list.keys():
+			neighbor_poi = ewcfg.id_to_poi.get(neighbor)
+			if neighbor_poi.is_street == True:
+				poi_list.append(neighbor)
+		return poi_list
+	
+async def collect_topics(cmd):
+	
+	if not cmd.message.author.server_permissions.administrator:
+		return
+	
+	client = get_client()
+	server = client.get_server(cmd.message.server.id)
+	topic_count = 0
+	
+	for channel in server.channels:
+		
+		if channel.type != discord.ChannelType.text:
+			continue
+		elif channel.topic == None or channel.topic == '':
+			continue
+		elif channel.topic == '(Closed indefinitely) Currently controlled by no one.':
+			continue
+			
+		found_poi = False
+		for poi in ewcfg.poi_list:
+			if channel.name == poi.channel:
+				found_poi = True
+				break
+				
+		if found_poi:
+			topic_count += 1
+			print('\n{}\n=================\n{}'.format(channel.name, channel.topic))
+			
+	print('POI topics found: {}'.format(topic_count))
+	
+	
+async def sync_topics(cmd):
+	
+	if not cmd.message.author.server_permissions.administrator:
+		return
+	
+	
+	for poi in ewcfg.poi_list:
+
+		poi_has_blank_topic = False
+		if poi.topic == None or poi.topic == '':
+			poi_has_blank_topic = True
+		
+		channel = get_channel(cmd.message.server, poi.channel)
+		
+		if channel == None:
+			logMsg('Failed to get channel for {}'.format(poi.id_poi))
+			continue
+		
+		if channel.topic == poi.topic:
+			continue
+			
+		if (poi_has_blank_topic and channel.topic == None) or (poi_has_blank_topic and channel.topic == ''):
+			continue
+
+		if poi_has_blank_topic:
+			new_topic = ''
+			debug_info = 'be a blank topic.'
+		else:
+			new_topic = poi.topic
+			debug_info = poi.topic
+			
+		try:
+			await asyncio.sleep(2)
+			await cmd.client.edit_channel(channel = channel, topic = new_topic)
+			logMsg('Changed channel topic for {} to {}'.format(channel, debug_info))
+		except:
+			logMsg('Failed to set channel topic for {} to {}'.format(channel, debug_info))
+			
+	logMsg('Finished syncing topics.')
 
 def gvs_create_gaia_grid_mapping(user_data):
 	grid_map = {}

@@ -64,6 +64,7 @@ CREATE TABLE users (
 	id_inhabit_target varchar(128) NOT NULL DEFAULT '',
 	race varchar(32) NOT NULL DEFAULT '',
 	time_racialability int NOT NULL DEFAULT '0',
+	time_lastpremiumpurchase int NOT NULL DEFAULT '0',
 	spray varchar(400) NOT NULL DEFAULT 'https://img.booru.org/rfck//images/3/a69d72cf29cb750882de93b4640a175a88cdfd70.png',
 	time_lastpremiumpurchase int NOT NULL DEFAULT '0',
 	gvs_currency int NOT NULL DEFAULT '0',

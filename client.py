@@ -87,6 +87,7 @@ cmd_map = {
 	ewcfg.cmd_shoot_alt3: ewwep.attack,
 	ewcfg.cmd_shoot_alt4: ewwep.attack,
 	ewcfg.cmd_shoot_alt5: ewwep.attack,
+	ewcfg.cmd_shoot_alt6: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	# Reload
@@ -439,6 +440,7 @@ cmd_map = {
 	#ewcfg.cmd_annex_alt1: ewdistrict.annex,
 	ewcfg.cmd_spray_alt1: ewwep.spray,
 	ewcfg.cmd_changespray:ewdistrict.change_spray,
+	ewcfg.cmd_changespray:ewdistrict.change_spray,
 	ewcfg.cmd_tag:ewdistrict.tag,
 
 	# link to the world map
@@ -663,6 +665,12 @@ cmd_map = {
 	
 	# removes all user overwrites in the server's poi channels
 	ewcfg.cmd_removeuseroverwrites: ewrolemgr.remove_user_overwrites,
+	
+	# Collects all channel topics.
+	ewcfg.cmd_collectopics: ewutils.collect_topics,
+	
+	# Changes those channel topics according to what's in their EwPoi definition
+	ewcfg.cmd_synctopics: ewutils.sync_topics,
 
 	# debug commands
 	# ewcfg.cmd_debug1: ewdebug.debug1,
@@ -886,7 +894,7 @@ async def on_ready():
 		ewrolemgr.setupRoles(client = client, id_server = server.id)
 		
 		# Refresh the permissions of all users
-		await ewrolemgr.refresh_user_perms(client = client, id_server = server.id, startup = True)
+		# await ewrolemgr.refresh_user_perms(client = client, id_server = server.id, startup = True)
 
 		# Grep around for channels
 		ewutils.logMsg("connected to server: {}".format(server.name))
@@ -940,6 +948,8 @@ async def on_ready():
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewsports.shambleball_tick_loop(id_server = server.id))
+		
+		print('\nNUMBER OF CHANNELS IN SERVER: {}\n'.format(len(server.channels)))
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')
@@ -1032,9 +1042,11 @@ async def on_ready():
 					for pvp_role in ewcfg.role_to_pvp_role.values():
 						role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
 						role_ids.append(role.id_role)
+						
+					all_current_members = list(server.members)
 
 					# Monitor all user roles and update if a user is no longer flagged for PvP.
-					for member in server.members:
+					for member in all_current_members:
 						for role in member.roles:
 							if role.id in role_ids:
 								await ewrolemgr.updateRoles(client = client, member = member)
@@ -1139,7 +1151,7 @@ async def on_ready():
 						market_data.bazaar_wares['furniture3'] = bw_furniture3
 
 
-						if random.random() < 0.01:
+						if random.random() < 0.05: # 1 / 20
 							market_data.bazaar_wares['minigun'] = ewcfg.weapon_id_minigun
 
 
@@ -1338,7 +1350,7 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in content_tolower for swear in {**ewcfg.curse_words, **ewcfg.racial_slurs}.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
@@ -1377,7 +1389,7 @@ async def on_message(message):
 		"""
 			Punish the user for swearing.
 		"""
-		if (any(swear in content_tolower for swear in {**ewcfg.curse_words, **ewcfg.racial_slurs}.keys())):
+		if (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
 			swear_multiplier = 0
 			
 			#print(content_tolower_string)
@@ -1418,15 +1430,6 @@ async def on_message(message):
 						market_data.global_swear_jar += 1
 
 						usermodel.swear_jar += 1
-
-				# and all the racial slurs
-				for slur in ewcfg.racial_slurs.keys():
-					if usermodel.race != ewcfg.racial_slurs[slur]:
-						slur_count = content_tolower.count(slur)
-
-						swear_multiplier += 50 * slur_count # just enough for the message to show
-						market_data.global_swear_jar += slur_count
-						usermodel.swear_jar += slur_count
 
 				# don't fine the user or send out the message if there weren't enough curse words
 				if swear_multiplier > 50:
@@ -1469,12 +1472,17 @@ async def on_message(message):
 			elif poi.is_apartment:
 				return await ewapt.aptCommands(cmd=cmd_obj)
 			else:
-				time_last = last_helped_times.get(message.author.id, 0)
-
-				# Only send the help doc once every thirty seconds. There's no need to spam it.
-				if (time_now - time_last) > 30:
-					last_helped_times[message.author.id] = time_now
-					await ewutils.send_message(client, message.channel, ewcfg.generic_help_response)
+				
+				# Only send the help response once every thirty seconds. There's no need to spam it.
+				# Also, don't send out response if the user doesn't actually type a command.
+				if message.content.startswith(ewcfg.cmd_prefix):
+					time_last = last_helped_times.get(message.author.id, 0)
+					if (time_now - time_last) > 30:
+						last_helped_times[message.author.id] = time_now
+						direct_help_response = "ENDLESS WAR doesn't allow you to do that command in DMs.\nIf you're confused about what you're doing, you might want to get some **!help** over at the server."
+						await ewutils.send_message(client, message.channel, direct_help_response)
+				else:
+					return
 
 			# Nothing else to do in a DM.
 			return

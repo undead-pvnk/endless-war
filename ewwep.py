@@ -299,7 +299,6 @@ def canAttack(cmd):
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		captcha = weapon_item.item_props.get('captcha')
 
-	statuses = user_data.getStatusEffects()
 	channel_poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 	#if user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse:
 	#	if user_data.life_state == ewcfg.life_state_enlisted:
@@ -413,9 +412,13 @@ def canAttack(cmd):
 			# Target is already dead and not a ghost.
 			response = "{} is already dead.".format(member.display_name)
 		
-		elif shootee_data.life_state == ewcfg.life_state_corpse and ewcfg.status_ghostbust_id not in statuses:
+		elif shootee_data.life_state == ewcfg.life_state_corpse and ewcfg.status_ghostbust_id not in user_data.getStatusEffects():
 			# Target is a ghost but user is not able to bust 
 			response = "You don't know how to fight a ghost."
+
+		elif shootee_data.life_state == ewcfg.life_state_corpse and shootee_data.poi == ewcfg.poi_id_thevoid:
+			# Can't bust ghosts in their realm
+			response = "{} is empowered by the void, and deflects your attacks without breaking a sweat.".format(member.display_name)
 
 		elif weapon_possession_data and (shootee_data.id_user == weapon_possession_data[0]):
 			# Target is possessing user's weapon
@@ -426,11 +429,11 @@ def canAttack(cmd):
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
 		# Identify if the shooter and the shootee are on the same team.
-		same_faction = False
-		if user_iskillers and shootee_data.faction == ewcfg.faction_killers:
-			same_faction = True
-		if user_isrowdys and shootee_data.faction == ewcfg.faction_rowdys:
-			same_faction = True
+		#same_faction = False
+		#if user_iskillers and shootee_data.faction == ewcfg.faction_killers:
+		#	same_faction = True
+		#if user_isrowdys and shootee_data.faction == ewcfg.faction_rowdys:
+		#	same_faction = True
 
 	return response
 
@@ -477,6 +480,8 @@ def canCap(cmd):
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 	elif not user_data.poi in ewcfg.capturable_districts:
 		response = "This zone cannot be captured."
+		if poi.is_district == True:
+			response += " To take this district, you need to enter into the streets."
 	elif sidearm != None and ewcfg.weapon_class_thrown in sidearm.classes and sidearm_item.stack_size == 0:
 		response = "You're out of {}! Go buy more at the {}".format(sidearm.str_weapon, ewutils.formatNiceList(names=sidearm.vendors,  conjunction="or"))
 	elif sidearm != None and sidearm.cooldown + (float(sidearm_item.item_props.get("time_lastattack")) if sidearm_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
@@ -488,7 +493,7 @@ def canCap(cmd):
 	elif sidearm != None and ewcfg.weapon_class_ammo in sidearm.classes and int(sidearm_item.item_props.get('ammo')) <= 0:
 		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
 	elif sidearm_viable == 0:
-		response = "With what, your piss? Get some paint from Glocksbury Comics and stop fucking around."
+		response = "With what, your piss? Get some paint from Based Hardware and stop fucking around."
 
 	return response
 
@@ -564,10 +569,13 @@ async def attack(cmd):
 		randombodypart = hitzone.name
 		if random.random() < 0.5:
 			randombodypart = random.choice(hitzone.aliases)
+		
+		shooter_status_mods = get_shooter_status_mods(user_data, shootee_data, hitzone)
+		shootee_status_mods = get_shootee_status_mods(shootee_data, user_data, hitzone)
 
-		miss_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self, shootee_data = shootee_data, hitzone = hitzone) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
-		crit_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self, shootee_data = shootee_data, hitzone = hitzone) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
-		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = shootee_data, hitzone = hitzone) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
+		miss_mod += round(shooter_status_mods['miss'] + shootee_status_mods['miss'], 2)
+		crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
+		dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 
 		if shootee_weapon != None:
 			if ewcfg.weapon_class_heavy in shootee_weapon.classes:
@@ -587,8 +595,6 @@ async def attack(cmd):
 		slimes_damage += int(slimes_damage * dmg_mod)
 
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
-		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
-		user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 
 		if shootee_data.life_state == ewcfg.life_state_corpse:
 			# Attack a ghostly target
@@ -951,8 +957,6 @@ async def attack(cmd):
 								'adorned': 'false'
 							}
 						)
-					
-					explode_damage = ewutils.slime_bylevel(shootee_data.slimelevel) / 5
 
 					# release bleed storage
 					if ewcfg.mutation_id_thickerthanblood in user_mutations:
@@ -1210,9 +1214,7 @@ async def attack(cmd):
 
 """ player kills themself """
 async def suicide(cmd):
-	time_now = int(time.time())
 	response = ""
-	deathreport = ""
 
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 
@@ -1285,6 +1287,8 @@ async def suicide(cmd):
 
 """ Damage all players in a district; Exploding weapon's effect """
 def weapon_explosion(user_data = None, shootee_data = None, district_data = None, market_data = None, life_states = None, factions = None, slimes_damage = 0, backfire = None, time_now = 0, target_enemy = None, sap_damage = 0, sap_ignored = 0):
+	
+	enemy_data = None
 	if user_data != None and shootee_data != None and district_data != None:
 		user_player = EwPlayer(id_user=user_data.id_user, id_server=user_data.id_server)
 		if target_enemy == False:
@@ -1447,9 +1451,15 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 		for bystander in bystander_enemies:
 			# Don't damage the shooter or the enemy a second time
 			
-			if bystander != user_data.id_user and bystander != enemy_data.id_enemy:
+			if enemy_data != None:
+				id_enemy_used = enemy_data.id_enemy
+			else:
+				id_enemy_used = None
+			
+			if bystander != user_data.id_user and bystander != id_enemy_used:
 				response = ""
 
+				slimes_damage_target = slimes_damage
 				target_enemy_data = EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
 
 				# apply sap armor
@@ -2008,80 +2018,101 @@ async def unjam(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 # Returns the total modifier of all statuses of a certain type and target of a given player
-def apply_combat_mods(user_data = None, desired_type = None, target = None, shooter_data = None, shootee_data = None, hitzone = None):
+def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = None):
 
-	modifier = 0
-	if user_data != None and desired_type != None and target != None:
+	mods = {
+		'dmg': 0,
+		'crit': 0,
+		'miss': 0
+	}
 
-		# Get the user's status effects
-		user_statuses = user_data.getStatusEffects()
-		for status in user_statuses:
-			status_flavor = ewcfg.status_effects_def_map.get(status)
+	user_statuses = user_data.getStatusEffects()
+	for status in user_statuses:
+		status_flavor = ewcfg.status_effects_def_map.get(status)
 
-			# check target for targeted status effects
-			if status in [ewcfg.status_taunted_id, ewcfg.status_aiming_id, ewcfg.status_evasive_id]:
-				if user_data.combatant_type == "player":
-					status_data = EwStatusEffect(id_status = status, user_data = user_data)
-				else:
-					status_data = EwEnemyStatusEffect(id_status = status, enemy_data = user_data)
-
-				if status_data.id_target != "":
-					if status == ewcfg.status_taunted_id:
-						if shootee_data == None  or shootee_data.id_user == status_data.id_target:
-							continue
-					elif status == ewcfg.status_evasive_id:
-						if shooter_data == None  or shooter_data.id_user != status_data.id_target:
-							continue
-					elif status == ewcfg.status_aiming_id:
-						if shootee_data == None  or shootee_data.id_user != status_data.id_target:
-							continue
-
-			if status_flavor is not None:
-				if target == ewcfg.status_effect_target_self:
-					if desired_type == ewcfg.status_effect_type_miss:
-						modifier += status_flavor.miss_mod_self
-					elif desired_type == ewcfg.status_effect_type_crit:
-						modifier += status_flavor.crit_mod_self
-					elif desired_type == ewcfg.status_effect_type_damage:
-						modifier += status_flavor.dmg_mod_self
-					
-				elif target == ewcfg.status_effect_target_other:
-					if desired_type == ewcfg.status_effect_type_miss:
-						modifier += status_flavor.miss_mod
-					elif desired_type == ewcfg.status_effect_type_crit:
-						modifier += status_flavor.crit_mod
-					elif desired_type == ewcfg.status_effect_type_damage:
-						modifier += status_flavor.dmg_mod
-
-			# apply hitzone damage and crit mod
-			if hitzone != None and status == hitzone.id_injury and target == ewcfg.status_effect_target_self:
+		# check target for targeted status effects
+		if status in [ewcfg.status_taunted_id, ewcfg.status_aiming_id, ewcfg.status_evasive_id]:
+			if user_data.combatant_type == "player":
 				status_data = EwStatusEffect(id_status = status, user_data = user_data)
-				try:
-					value_int = int(status_data.value)
-					
-					if desired_type == ewcfg.status_effect_type_crit:
-						modifier += 0.5 * value_int / 10
-					elif desired_type == ewcfg.status_effect_type_damage:
-						modifier += 1 * value_int / 10
-				except:
-					ewutils.logMsg("error with int conversion")
+			else:
+				status_data = EwEnemyStatusEffect(id_status = status, enemy_data = user_data)
 
-		if user_data.combatant_type == 'player':
-			trauma = ewcfg.trauma_map.get(user_data.trauma)
+			if status_data.id_target != "":
+				if status == ewcfg.status_taunted_id:
+					if shootee_data.id_user == status_data.id_target:
+						continue
+				elif status == ewcfg.status_aiming_id:
+					if shootee_data.id_user != status_data.id_target:
+						continue
 
-			if trauma != None:
-				if target == ewcfg.status_effect_target_self:
-					if desired_type == ewcfg.status_effect_type_miss and trauma.trauma_class == ewcfg.trauma_class_movespeed:
-						modifier += 0.3 * user_data.degradation / 100
-					elif desired_type == ewcfg.status_effect_type_damage and trauma.trauma_class == ewcfg.trauma_class_damage:
-						modifier -= 0.9 * user_data.degradation / 100
+		if status_flavor is not None:
+			mods['miss'] += status_flavor.miss_mod_self
+			mods['crit'] += status_flavor.crit_mod_self
+			mods['dmg'] += status_flavor.dmg_mod_self
 
-				elif target == ewcfg.status_effect_target_other:
-					if desired_type == ewcfg.status_effect_type_miss and trauma.trauma_class == ewcfg.trauma_class_accuracy:
-						modifier -= 0.2 * user_data.degradation / 100
+		# apply hitzone damage and crit mod
+		if hitzone != None and status == hitzone.id_injury:
+			status_data = EwStatusEffect(id_status = status, user_data = user_data)
+			try:
+				value_int = int(status_data.value)
+				
+				mods['crit'] += 0.5 * value_int / 10
+				mods['dmg'] += 1 * value_int / 10
 
-	return modifier
-	
+			except:
+				ewutils.logMsg("error with int conversion")
+
+	#apply trauma mods
+	if user_data.combatant_type == 'player':
+		trauma = ewcfg.trauma_map.get(user_data.trauma)
+
+		if trauma != None:
+			if trauma.trauma_class == ewcfg.trauma_class_movespeed:
+				mods['miss'] += 0.3 * user_data.degradation / 100
+			elif trauma.trauma_class == ewcfg.trauma_class_damage:
+				mods['dmg'] -= 0.9 * user_data.degradation / 100
+
+
+	return mods
+
+# Returns the total modifier of all statuses of a certain type and target of a given player
+def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = None):
+
+	mods = {
+		'dmg': 0,
+		'crit': 0,
+		'miss': 0
+	}
+
+	user_statuses = user_data.getStatusEffects()
+	for status in user_statuses:
+		status_flavor = ewcfg.status_effects_def_map.get(status)
+
+		# check target for targeted status effects
+		if status in [ewcfg.status_evasive_id]:
+			if user_data.combatant_type == "player":
+				status_data = EwStatusEffect(id_status = status, user_data = user_data)
+			else:
+				status_data = EwEnemyStatusEffect(id_status = status, enemy_data = user_data)
+
+			if status_data.id_target != "":
+				if shooter_data.id_user != status_data.id_target:
+					continue
+
+		if status_flavor is not None:
+			mods['miss'] += status_flavor.miss_mod
+			mods['crit'] += status_flavor.crit_mod
+			mods['dmg'] += status_flavor.dmg_mod
+
+	#apply trauma mods
+	if user_data.combatant_type == 'player':
+		trauma = ewcfg.trauma_map.get(user_data.trauma)
+
+		if trauma != None and trauma.trauma_class == ewcfg.trauma_class_accuracy:
+			mods['miss'] -= 0.2 * user_data.degradation / 100
+
+	return mods
+
 async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, market_data, time_now_float):
 	time_now = int(time_now_float)
 	# Get shooting player's info
@@ -2140,9 +2171,12 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if random.random() < 0.5:
 		randombodypart = random.choice(hitzone.aliases)
 
-	miss_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self, shootee_data = enemy_data, hitzone = hitzone) + apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
-	crit_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self, shootee_data = enemy_data, hitzone = hitzone) + apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
-	dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = enemy_data, hitzone = hitzone) + apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
+	shooter_status_mods = get_shooter_status_mods(user_data, enemy_data, hitzone)
+	shootee_status_mods = get_shootee_status_mods(enemy_data, user_data, hitzone)
+
+	miss_mod += round(shooter_status_mods['miss'] + shootee_status_mods['miss'], 2)
+	crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
+	dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
 	slimes_damage = int((slimes_spent * (10 + user_data.attack)) * (100 + (user_data.weaponskill * 5)) / 100.0)
@@ -2938,8 +2972,8 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 				
 	# Dressed to kill
 	if ewcfg.mutation_id_dressedtokill in user_mutations:
-		if user_data.freshness >= 100:
-			damage_mod *= 4
+		if user_data.freshness >= 1000:
+			damage_mod *= 1.5
 
 	if ewcfg.mutation_id_2ndamendment in user_mutations:
 		if user_data.weapon != -1 and user_data.sidearm != -1:
@@ -3003,13 +3037,13 @@ async def spray(cmd):
 	time_now_float = time.time()
 	time_now = int(time_now_float)
 
-	was_pvp = user_data.time_expirpvp > time_now
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, enlisted=True)
+	#was_pvp = user_data.time_expirpvp > time_now
+	#user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, enlisted=True)
 
 	user_data.persist()
-	if not was_pvp:
-		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-		user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	# if not was_pvp:
+	# 	await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+	# 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
 
 	# Get shooting player's info
 
@@ -3059,11 +3093,12 @@ async def spray(cmd):
 
 		weapon.fn_effect = ewcfg.weapon_type_convert.get(weapon.id_weapon)
 
+		shooter_status_mods = get_shooter_status_mods(user_data, None, None)
 
-		miss_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_miss, target=ewcfg.status_effect_target_self, shootee_data=None), 2)
-		crit_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_crit, target=ewcfg.status_effect_target_self, shootee_data=None), 2)
-		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_self, shootee_data=None), 2)
-
+		miss_mod += round(shooter_status_mods['miss'], 2)
+		crit_mod += round(shooter_status_mods['crit'], 2)
+		dmg_mod += round(shooter_status_mods['dmg'], 2)
+		
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 300)
 		slimes_damage = int((50000 + slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
 		slimes_spent = round(slimes_spent * .1125)
@@ -3113,6 +3148,9 @@ async def spray(cmd):
 			slimes_spent = ctn.slimes_spent
 			sap_damage = ctn.sap_damage
 			backfire_damage = ctn.backfire_damage
+
+			if backfire is True and random.randint(0, 1) == 0:
+				miss = False
 
 			if district_data.all_neighbors_friendly() and user_data.faction != district_data.controlling_faction:
 				backfire = True
@@ -3170,7 +3208,7 @@ async def spray(cmd):
 			if len(gangsters_in_district) == 1 and ewcfg.mutation_id_lonewolf in user_mutations:
 				slimes_damage *= 1.25
 
-			if 15 <= time_current <= 22:
+			if 3 <= time_current <= 10:
 				slimes_damage *= (4/3)
 
 			#if (user_data.faction != district_data.controlling_faction and (user_data.faction is None or user_data.faction == '')) and district_data.capture_points > ewcfg.limit_influence[district_data.property_class]:
@@ -3263,19 +3301,20 @@ async def spray(cmd):
 						new_captcha_gun = ewutils.text_to_regional_indicator(direction)
 						response += "\nNext target is {}.".format(new_captcha_gun)
 					weapon_item.persist()
-
-				if district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.limit_influence[district_data.property_class]:
+				father_district_poi = ewcfg.id_to_poi.get(poi.father_district)
+				number_streets = len(ewutils.get_street_list(father_district_poi.id_poi))
+				if district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.limit_influence[father_district_poi.property_class]/number_streets:
 					if user_data.faction == ewcfg.faction_rowdys:
 						color = "pink"
 					elif user_data.faction == "slimecorp":
 						color = "Slimecorp propaganda"
 					else:
 						color = "purple"
-					response += "\nYour district is awash in a sea of {}. It's hard to imagine where else you could spray down.".format(color)
-				elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > (ewcfg.min_influence[district_data.property_class] + ewcfg.limit_influence[district_data.property_class])/2:
+					response += "\nThe street is awash in a sea of {}. It's hard to imagine where else you could spray down.".format(color)
+				elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > (ewcfg.min_influence[father_district_poi.property_class] + ewcfg.limit_influence[father_district_poi.property_class])/(2 * number_streets):
 					pass
 					response += "\nThe {} have developed a decent grip on this district.".format(user_data.faction)
-				elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.min_influence[district_data.property_class]:
+				elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.min_influence[father_district_poi.property_class]/number_streets:
 					pass
 					response += "\nThe {} have developed a loose grip on this district.".format(user_data.faction)
 
@@ -3375,10 +3414,10 @@ def fulfill_ghost_weapon_contract(possession_data, market_data, user_data, user_
 	ghost_id = possession_data[0]
 	ghost_data = EwUser(id_user = ghost_id, id_server = user_data.id_server)
 	
-	# shooter loses half their slime, which ghost gains as negative slime up to a cap of 500k
-	slime_sacrificed = int(user_data.slimes * 0.5)
+	# shooter 20%, which ghost gains as negative slime up to a cap of 300k
+	slime_sacrificed = int(user_data.slimes * 0.2)
 	user_data.change_slimes(n = -slime_sacrificed, source = ewcfg.source_ghost_contract)
-	negaslime_gained = min(200000, slime_sacrificed)
+	negaslime_gained = min(300000, slime_sacrificed)
 	ghost_data.change_slimes(n = -negaslime_gained, source = ewcfg.source_ghost_contract)
 	ghost_data.persist()
 	market_data.negaslime -= -negaslime_gained
@@ -3399,5 +3438,5 @@ def fulfill_ghost_weapon_contract(possession_data, market_data, user_data, user_
 
 	server = ewutils.get_client().get_server(user_data.id_server)
 	ghost_name = server.get_member(ghost_id).display_name
-	return "\n\n {} winces in pain as half their slime is corrupted into negaslime. {}'s contract has been fulfilled.".format(user_name, ghost_name)
+	return "\n\n {} winces in pain as their slime is corrupted into negaslime. {}'s contract has been fulfilled.".format(user_name, ghost_name)
 

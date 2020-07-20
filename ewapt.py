@@ -373,8 +373,17 @@ async def retire(cmd):
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	poi_dest = ewcfg.id_to_poi.get(ewcfg.poi_id_apt + user_data.apt_zone) #there isn't an easy way to change this, apologies for being a little hacky
 
-	if cmd.mentions_count > 0:
-		return await usekey(cmd)
+
+	owner_user = None
+	if cmd.mentions_count == 0 and cmd.tokens_count > 1:
+		server = ewcfg.server_list[user_data.id_server]
+		member_object = server.get_member(cmd.tokens[1])
+		owner_user = EwUser(member = member_object)
+	elif cmd.mentions_count == 1:
+		owner_user = EwUser(member = cmd.mentions[0])
+
+	if owner_user:
+		return await usekey(cmd, owner_user)
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
@@ -413,7 +422,7 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 
 	client = ewutils.get_client()
 	server = ewcfg.server_list[user_data.id_server]
-	member_object = server.get_member(player.id_user)
+	member_object = server.get_member(user_data.id_user)
 
 	if not poi_source.is_apartment:
 		response = "You're not in an apartment."
@@ -752,12 +761,16 @@ async def store_item(cmd, dest):
 			item.item_props["time_fridged"] = time.time()
 			item.persist()
 
-		elif item.item_type == ewcfg.it_weapon and usermodel.weapon == item.id_item:
-			if usermodel.weaponmarried:
-				response = "If only it were that easy. But you can't just shove your lover in a {}.".format(destination)
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			usermodel.weapon = -1
-			usermodel.persist()
+		elif item.item_type == ewcfg.it_weapon:
+			if usermodel.weapon == item.id_item:
+				if usermodel.weaponmarried:
+					response = "If only it were that easy. But you can't just shove your lover in a {}.".format(destination)
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				usermodel.weapon = -1
+				usermodel.persist()
+			elif usermodel.sidearm == item.id_item:
+				usermodel.sidearm = -1
+				usermodel.persist()
 
 		elif item.item_type == ewcfg.it_cosmetic:
 			item.item_props["adorned"] = 'false'
@@ -1085,10 +1098,9 @@ async def add_key(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The realtor examines your profile for a bit before opening his filing cabinet and pulling out a key from the massive pile. 'You two lovebirds enjoy yourselves', he sleepily remarks before tossing it onto the desk. Sweet, new key!"))
 
 
-async def usekey(cmd):
+async def usekey(cmd, owner_user):
 	user_data = EwUser(member=cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
-	owner_user = EwUser(member=cmd.mentions[0])
 	poi_dest = ewcfg.id_to_poi.get(ewcfg.poi_id_apt + owner_user.apt_zone)  # there isn't an easy way to change this, apologies for being a little hacky
 	inv = ewitem.inventory(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
 	key = None
@@ -1366,9 +1378,16 @@ async def knock(cmd = None):
 	user_data = EwUser(member=cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if cmd.mentions_count == 1:
+	target_data = None
+	if cmd.mentions_count == 0 and cmd.tokens_count > 1:
+		server = ewcfg.server_list[user_data.id_server]
+		target = server.get_member(cmd.tokens[1])
+		target_data = EwUser(member = target)
+	elif cmd.mentions_count == 1:
 		target = cmd.mentions[0]
-		target_data = EwUser(member=target)
+		target_data = EwUser(member = cmd.mentions[0])
+
+	if target_data:
 		target_poi = ewcfg.id_to_poi.get(target_data.poi)
 		if poi.is_apartment:
 			response = "You're already in an apartment."
@@ -2274,8 +2293,8 @@ async def jam(cmd):
 
 	if item_sought:
 		item = EwItem(id_item=item_sought.get('id_item'))
-		if item.item_props.get("id_furniture") in ewcfg.furniture_instrument:
-			cycle = random.randrange(4, 20)
+		if item.item_props.get("id_furniture") in ewcfg.furniture_instrument or item.item_props.get("weapon_type") == ewcfg.weapon_id_bass:
+			cycle = random.randrange(20)
 			response = ""
 			for x in range(1, cycle):
 				response += random.choice([":musical_note:", ":notes:"])
@@ -2317,7 +2336,7 @@ async def aptCommands(cmd):
 	player = EwPlayer(id_user=cmd.message.author.id)
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
 	server = ewcfg.server_list[user_data.id_server]
-	member_object = server.get_member(player.id_user)
+	member_object = server.get_member(user_data.id_user)
 
 	if cmd_text == ewcfg.cmd_depart or cmd_text == ewcfg.cmd_retire:
 		return await depart(cmd)
@@ -2492,7 +2511,7 @@ async def aptCommands(cmd):
 		pass
 	elif cmd_text == ewcfg.cmd_switch or cmd_text == ewcfg.cmd_switch_alt_1:
 		return await ewwep.switch_weapon(cmd=cmd)
-	elif cmd_text == ewcfg.cmd_changespray:
+	elif cmd_text == ewcfg.cmd_changespray or cmd_text == ewcfg.cmd_changespray_alt1:
 		return await ewdistrict.change_spray(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_tag:
 		return await ewdistrict.tag(cmd=cmd)
