@@ -52,7 +52,10 @@ async def store(cmd):
 	if poi.community_chest == None:
 		response = "There is no community chest here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
+	else:
+		if len(poi.factions) > 0 and user_data.faction not in poi.factions:
+			response = "Get real, asshole. You haven't even enlisted into this gang yet, so it's not like they'd trust you with a key to their valubles."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
@@ -106,7 +109,11 @@ async def take(cmd):
 	if poi.community_chest == None:
 		response = "There is no community chest here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
+	else:
+		if len(poi.factions) > 0 and user_data.faction not in poi.factions:
+			response = "Get real, asshole. You haven't even enlisted into this gang yet, so it's not like they'd trust you with a key to their valubles."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
