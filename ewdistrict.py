@@ -164,7 +164,7 @@ class EwDistrict:
 		for name in street_name_list:
 			district_data = EwDistrict(id_server=self.id_server, district=name)
 			faction_list.append(district_data.controlling_faction)
-		if all(faction_list) and len(faction_list) > 0:
+		if len(faction_list) > 0 and all(faction_list == faction_list[0]) :
 			return faction_list[0]
 		else:
 			return ""
