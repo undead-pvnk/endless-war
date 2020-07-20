@@ -716,7 +716,6 @@ def inaccessible(user_data = None, poi = None):
 
 	if(
 		len(poi.factions) > 0 and
-		(set(vouchers).isdisjoint(set(poi.factions)) or user_data.faction != "") and
 		user_data.faction not in poi.factions
 	) or (
 		len(poi.life_states) > 0 and

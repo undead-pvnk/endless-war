@@ -16988,7 +16988,7 @@ poi_list = [
 		alias=[
 			"oozegardensoutskirtsedge",
 			"ogoutskirtsedge",
-			"ogoedge"
+			"ogoedge",
 			"ogoe",
 		],
 		str_name="Ooze Gardens Outskirts Edge",
