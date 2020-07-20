@@ -1449,20 +1449,15 @@ def create_mining_event(cmd):
 	# This might seem a bit confusing, so let's run through an example. 
 	# The random number is 0.91, and the number of valid miners is 2.
 	
-	# It passes through the first condition, and the second condition.
-	# In the else statement, it must meet two more conditions.
-	# Our rare event chance is 0.05 (0.1 / 2), so it compares 0.91 to (1 - 0.05)
-	# 0.91 is less than 0.95, so it will use an uncommon event rather than a rare event.
+	# 0.91 < (0.6 + 0.05), condition not met
+	# 0.91 < (0.9 + 0.05), condition met, uncommon event used
 	
-	if randomn < common_event_chance: # 0.6
+	if randomn < (common_event_chance + (0.1 - rare_event_chance)):
 		common_event_triggered = True
-	elif randomn < common_event_chance + uncommon_event_chance: # 0.9
+	elif randomn < (common_event_chance + uncommon_event_chance + (0.1 - rare_event_chance)):
 		uncommon_event_triggered = True
 	else:
-		if randomn < (1 - rare_event_chance):
-			uncommon_event_triggered = True
-		else:
-			rare_event_triggered = True
+		rare_event_triggered = True
 
 	# common event
 	if common_event_triggered:
