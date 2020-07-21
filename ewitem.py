@@ -843,10 +843,14 @@ def inventory(
 						else:
 							#print('ITEM PROPS: {}'.format(item_data.item_props))
 							
-							if item_data.item_props.get('id_cosmetic') == '' or item_data.item_props.get('id_cosmetic') == None:
-								print('Bad cosmetic tried to update. Item props are: {}'.format(item_data.item_props))
+							
+								
 							
 							item = ewcfg.cosmetic_map.get(item_data.item_props.get('id_cosmetic'))
+							
+							if item == None:
+								print('Failed to update cosmetic. Item props were: {}'.format(item_data.item_props))
+							
 							item_data.item_props = {
 								'id_cosmetic': item.id_cosmetic,
 								'cosmetic_name': item.str_name,
