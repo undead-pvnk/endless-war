@@ -752,7 +752,7 @@ def inventory(
 					item_data.item_type = item_type
 					
 					if 'fashion_style' not in item_data.item_props.keys():
-						print(item_data.item_props.get('id_cosmetic'))
+						print(id_item)
 						if item_data.item_props.get('id_cosmetic') == 'soul':
 							item_data.item_props = {
 								'id_cosmetic': item_data.item_props['id_cosmetic'],
