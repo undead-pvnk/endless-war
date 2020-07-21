@@ -639,6 +639,9 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 					#elif user_data.poi == poi.id_poi:
 						correct_poi = ewcfg.id_to_poi.get(user_data.poi)
 						
+						if correct_poi == None:
+							print('User {} has invalid POI of {}'.format(user_data.id_user, user_data.poi))
+						
 						correct_channel = ewutils.get_channel(server, correct_poi.channel)
 						#correct_lan_channel = "{}-LAN-connection".format(correct_channel)
 						
