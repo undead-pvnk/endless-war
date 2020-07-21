@@ -528,7 +528,7 @@ async def sew(cmd):
 								accepted = False
 
 							# Cancel deal if the user has left Krak Bay
-							if user_data.poi != ewcfg.poi_id_krakbay:
+							if user_data.poi != ewcfg.poi_id_bodega:
 								accepted = False
 
 							# Candel deal if the user doesn't have enough slime anymore
@@ -661,7 +661,7 @@ async def retrofit(cmd):
 								accepted = False
 
 							# Cancel deal if the user has left Krak Bay
-							if user_data.poi != ewcfg.poi_id_krakbay:
+							if user_data.poi != ewcfg.poi_id_bodega:
 								accepted = False
 
 							# Candel deal if the user doesn't have enough slime anymore
