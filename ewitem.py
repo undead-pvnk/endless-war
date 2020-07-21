@@ -751,7 +751,7 @@ def inventory(
 					item_type = ewcfg.it_cosmetic
 					item_data.item_type = item_type
 					
-					if 'fashion_style' not in item_data.item_props.keys() and 'id_cosmetic' in item_data.item_props.keys():
+					if 'fashion_style' not in item_data.item_props.keys():
 						if item_data.item_props.get('id_cosmetic') == 'soul':
 							item_data.item_props = {
 								'id_cosmetic': item_data.item_props['id_cosmetic'],
@@ -865,7 +865,11 @@ def inventory(
 							item = ewcfg.cosmetic_map.get(item_data.item_props.get('id_cosmetic'))
 							
 							if item == None:
-								print('Failed to update cosmetic. Item props were: {}'.format(item_data.item_props))
+								if item_data.item_props.get('id_cosmetic') == None:
+									print('Failed to update cosmetic. Item props were: {}'.format(item_data.item_props))
+								else:
+									print('Item {} lacks an id_cosmetic attribute.'.format(id_item))
+								continue
 							
 							item_data.item_props = {
 								'id_cosmetic': item.id_cosmetic,
