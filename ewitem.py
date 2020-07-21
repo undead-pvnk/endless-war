@@ -866,29 +866,51 @@ def inventory(
 							
 							if item == None:
 								if item_data.item_props.get('id_cosmetic') == None:
-									print('Failed to update cosmetic. Item props were: {}'.format(item_data.item_props))
+									print('Item {} lacks an id_cosmetic attribute. Formatting now...'.format(id_item))
+									placeholder_id = 'oldcosmetic'
 								else:
-									print('Item {} lacks an id_cosmetic attribute.'.format(id_item))
-								continue
+									print('Item {} has an invlaid id_cosmetic of {}. Formatting now...'.format(item_data.item_props, item_data.item_props.get('id_cosmetic')))
+									placeholder_id = item_data.item_props.get('id_cosmetic')
+
+								item_data.item_props = {
+									'id_cosmetic': placeholder_id,
+									'cosmetic_name': item_data.item_props.get('str_name'),
+									'cosmetic_desc': item_data.item_props.get('str_desc'),
+									'str_onadorn': ewcfg.str_generic_onadorn,
+									'str_unadorn': ewcfg.str_generic_unadorn,
+									'str_onbreak': ewcfg.str_generic_onbreak,
+									'rarity': ewcfg.rarity_plebeian,
+									'attack': 1,
+									'defense': 1,
+									'speed': 1,
+									'ability': None,
+									'durability': ewcfg.base_durability,
+									'size': 1,
+									'fashion_style': ewcfg.style_cool,
+									'freshness':  0,
+									'adorned': 'false',
+								}
 							
-							item_data.item_props = {
-								'id_cosmetic': item.id_cosmetic,
-								'cosmetic_name': item.str_name,
-								'cosmetic_desc': item.str_desc,
-								'str_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
-								'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
-								'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
-								'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
-								'attack': 0,
-								'defense': 0,
-								'speed': 0,
-								'ability': item.ability if item.ability else None,
-								'durability': item.durability if item.durability else ewcfg.base_durability,
-								'size': item.size if item.size else 1,
-								'fashion_style': item.style if item.style else ewcfg.style_cool,
-								'freshness': item.freshness if item.freshness else 0,
-								'adorned': 'false',
-							}
+							else:
+							
+								item_data.item_props = {
+									'id_cosmetic': item.id_cosmetic,
+									'cosmetic_name': item.str_name,
+									'cosmetic_desc': item.str_desc,
+									'str_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
+									'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
+									'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
+									'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
+									'attack': 0,
+									'defense': 0,
+									'speed': 0,
+									'ability': item.ability if item.ability else None,
+									'durability': item.durability if item.durability else ewcfg.base_durability,
+									'size': item.size if item.size else 1,
+									'fashion_style': item.style if item.style else ewcfg.style_cool,
+									'freshness': item.freshness if item.freshness else 0,
+									'adorned': 'false',
+								}
 
 						item_data.persist()
 						ewutils.logMsg('Updated cosmetic to new format: {}'.format(id_item))
