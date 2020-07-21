@@ -137,8 +137,6 @@ async def hideRoleNames(cmd):
 			pass
 		elif poi.id_poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
 			pass
-		elif poi.id_poi in ewcfg.transports:
-			pass
 		else:
 			continue
 		

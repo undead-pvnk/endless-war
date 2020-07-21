@@ -498,7 +498,8 @@ async def sew(cmd):
 					if current_durability < original_durability:
 						difference = abs(current_durability - original_durability)
 
-						cost_ofrepair = difference * 4 # NO ONE SAID IT WOULD BE EASY
+						# cost_ofrepair = difference * 4 # NO ONE SAID IT WOULD BE EASY
+						cost_ofrepair = 100 # I did...
 
 						if cost_ofrepair > user_data.slimes:
 							response = 'The hipster behind the counter narrows his gaze, his thick-rimmed glasses magnify his hatred of your ignoble ancestry.\n"Sir… it would cost {:,} to sew this garment back together. That’s more slime than you or your clan could ever accrue. Good day, sir. I SAID GOOD DAY. Come back when you’re a little, mmmmhh, *richer*."'.format(cost_ofrepair)
@@ -631,7 +632,7 @@ async def retrofit(cmd):
 							cost_ofretrofit = desired_item.price * 4
 
 						else:
-							cost_ofretrofit = 1000000 # This is a completely random number that I arbitrarily pulled out of my ass
+							cost_ofretrofit = 100 # This is a completely random number that I arbitrarily pulled out of my ass
 
 						if cost_ofretrofit > user_data.slimes:
 							response = 'The hipster behind the counter narrows his gaze, his thick-rimmed glasses magnify his hatred of your ignoble ancestry.\n"Sir… it would cost {:,} to retrofit this garment with updated combat abilities. That’s more slime than you or your clan could ever accrue. Good day, sir. I SAID GOOD DAY. Come back when you’re a little, mmmmhh, *richer*."'.format(cost_ofretrofit)
