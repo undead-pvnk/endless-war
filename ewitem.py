@@ -751,7 +751,7 @@ def inventory(
 					item_type = ewcfg.it_cosmetic
 					item_data.item_type = item_type
 					
-					if 'fashion_style' not in item_data.item_props.keys():
+					if 'fashion_style' not in item_data.item_props.keys() and 'id_cosmetic' in item_data.item_props.keys():
 						if item_data.item_props.get('id_cosmetic') == 'soul':
 							item_data.item_props = {
 								'id_cosmetic': item_data.item_props['id_cosmetic'],

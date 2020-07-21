@@ -35,7 +35,7 @@ version = "v3.33 - You Are (Not) Safe In The Streets"
 
 dir_msgqueue = 'msgqueue'
 
-database = "rfckevent"
+database = "rfck"
 
 discord_message_length_limit = 2000
 
