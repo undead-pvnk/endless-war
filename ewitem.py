@@ -874,8 +874,8 @@ def inventory(
 
 								item_data.item_props = {
 									'id_cosmetic': placeholder_id,
-									'cosmetic_name': item_data.item_props.get('str_name'),
-									'cosmetic_desc': item_data.item_props.get('str_desc'),
+									'cosmetic_name': item_data.item_props.get('cosmetic_name'),
+									'cosmetic_desc': item_data.item_props.get('cosmetic_desc'),
 									'str_onadorn': ewcfg.str_generic_onadorn,
 									'str_unadorn': ewcfg.str_generic_unadorn,
 									'str_onbreak': ewcfg.str_generic_onbreak,
