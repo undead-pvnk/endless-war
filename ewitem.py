@@ -839,12 +839,28 @@ def inventory(
 								'freshness': 0,
 								'adorned': 'false',
 							}
+						elif item_data.item_props.get('id_cosmetic') == 'cigarettebutt':
+							item_data.item_props = {
+								'id_cosmetic': 'cigarettebutt',
+								'cosmetic_name': item_data.item_props['cosmetic_name'],
+								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+								'str_onadorn': ewcfg.str_generic_onadorn,
+								'str_unadorn': ewcfg.str_generic_unadorn,
+								'str_onbreak': ewcfg.str_generic_onbreak,
+								'rarity': ewcfg.rarity_plebeian,
+								'attack': 2,
+								'defense': 0,
+								'speed': 0,
+								'ability': None,
+								'durability': ewcfg.base_durability / 2,
+								'size': 1,
+								'fashion_style': ewcfg.style_cool,
+								'freshness': 5,
+								'adorned': 'false',
+							}
 							
 						else:
 							#print('ITEM PROPS: {}'.format(item_data.item_props))
-							
-							
-								
 							
 							item = ewcfg.cosmetic_map.get(item_data.item_props.get('id_cosmetic'))
 							
