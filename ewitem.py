@@ -1266,8 +1266,11 @@ async def item_look(cmd):
 							original_durability = ewcfg.base_durability * 100
 							original_item = None  # Princeps do not have existing templates
 						else:
-							original_item = ewcfg.cosmetic_map.get(item.item_props['id_cosmetic'])
-							original_durability = original_item.durability
+							try:
+								original_item = ewcfg.cosmetic_map.get(item.item_props['id_cosmetic'])
+								original_durability = original_item.durability
+							except:
+								original_durability = ewcfg.base_durability
 
 					current_durability = int(item.item_props['durability'])
 					

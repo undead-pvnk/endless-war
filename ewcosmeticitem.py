@@ -486,8 +486,11 @@ async def sew(cmd):
 							original_durability = ewcfg.base_durability * 100
 							original_item = None # Princeps do not have existing templates
 						else:
-							original_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
-							original_durability = original_item.durability
+							try:
+								original_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
+								original_durability = original_item.durability
+							except:
+								original_durability = ewcfg.base_durability
 
 					current_durability = int(float(item_sought.item_props['durability']))
 
@@ -607,6 +610,11 @@ async def retrofit(cmd):
 
 					# Get the stats retrofitting would give you from the item model in ewcfg.cosmetic_items_list
 					desired_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
+					
+					if desired_item == None:
+						response = "The hipster behind the counter doesn't really know what to do with that cosmetic, it's simply too outdated and worn out. He thinks you should just take it home and stuff it inside a box as a souvenir."
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 					desired_item_stats = {}
 
 					for stat in ewcfg.playerstats_list:
