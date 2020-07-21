@@ -859,6 +859,9 @@ class EwUser:
 				
 				cosmetic_count = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['cosmetic_name'] == cos.item_props['cosmetic_name'] 
 								and cosmetic.item_props['adorned'] == 'true')
+				
+				if cos.item_props.get('attack') == None:
+					print('Failed to get attack stat for cosmetic with props: {}'.format(cos.item_props))
 								
 				result[0] += int( int(cos.item_props['attack']) / cosmetic_count )
 				result[1] += int( int(cos.item_props['defense']) / cosmetic_count )
