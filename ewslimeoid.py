@@ -1326,26 +1326,18 @@ async def dissolveslimeoid(cmd):
 					cos.item_props['slimeoid'] = 'false'
 					cos.persist()
 
-		slimeoid.life_state = ewcfg.slimeoid_state_none
-		slimeoid.body = ""
-		slimeoid.head = ""
-		slimeoid.legs = ""
-		slimeoid.armor = ""
-		slimeoid.weapon = ""
-		slimeoid.special = ""
-		slimeoid.ai = ""
-		slimeoid.type = ""
-		slimeoid.name = ""
-		slimeoid.atk = 0
-		slimeoid.defense = 0
-		slimeoid.intel = 0
-		slimeoid.level = 0
-		slimeoid.clout = 0
-		slimeoid.hue = ""
-		slimeoid.coating = ""
-
+			ewutils.execute_sql_query(
+				"DELETE FROM slimeoids WHERE {id_user} = %s AND {id_server} = %s".format(
+					id_user=ewcfg.col_id_user,
+					id_server=ewcfg.col_id_server,
+				), (
+					slimeoid.id_user,
+					slimeoid.id_server,
+				))
+		
+		user_data.active_slimeoid = -1
 		user_data.persist()
-		slimeoid.persist()
+		
 
 	# Send the response to the player.
 
