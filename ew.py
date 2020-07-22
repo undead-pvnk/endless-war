@@ -195,7 +195,7 @@ class EwUser:
 		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
 
 		client = ewcfg.get_client()
-		server = client.get_server(self.id_server)
+		server = client.get_guild(self.id_server)
 
 		deathreport = ''
 		
@@ -797,7 +797,7 @@ class EwUser:
 		client = ewutils.get_client()
 		inhabitants = self.get_inhabitants()
 		if inhabitants:
-			server = client.get_server(self.id_server)
+			server = client.get_guild(self.id_server)
 			for ghost in inhabitants:
 				ghost_data = EwUser(id_user = ghost, id_server = self.id_server)
 				ghost_data.poi = id_poi
@@ -966,7 +966,7 @@ class EwUser:
 
 		if(id_user == None) and (id_server == None):
 			if(member != None):
-				id_server = member.server.id
+				id_server = member.guild.id
 				id_user = member.id
 
 		# Retrieve the object from the database if the user is provided.

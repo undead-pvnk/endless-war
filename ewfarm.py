@@ -143,7 +143,7 @@ async def reap(cmd):
 	response = ""
 	levelup_response = ""
 	mutations = user_data.get_mutations()
-	cosmetic_abilites = ewutils.get_cosmetic_abilities(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+	cosmetic_abilites = ewutils.get_cosmetic_abilities(id_user = cmd.message.author.id, id_server = cmd.message.guild.id)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	# Checking availability of reap action
@@ -166,7 +166,7 @@ async def reap(cmd):
 			farm_id = ewcfg.poi_id_ab_farms
 
 		farm = EwFarm(
-			id_server = cmd.message.server.id,
+			id_server = cmd.message.guild.id,
 			id_user = cmd.message.author.id,
 			farm = farm_id
 		)
@@ -230,7 +230,7 @@ async def reap(cmd):
 								ewitem.item_create(
 									item_type = item.item_type,
 									id_user = cmd.message.author.id,
-									id_server = cmd.message.server.id,
+									id_server = cmd.message.guild.id,
 									item_props = item_props
 								)
 
@@ -255,7 +255,7 @@ async def reap(cmd):
 						for vcreate in range(metallic_crop_ammount):
 							ewitem.item_create(
 								id_user=cmd.message.author.id,
-								id_server=cmd.message.server.id,
+								id_server=cmd.message.guild.id,
 								item_type=vegetable.item_type,
 								item_props=item_props
 							)
@@ -268,7 +268,7 @@ async def reap(cmd):
 						# 	for vcreate in range(6):
 						# 		ewitem.item_create(
 						# 			id_user=cmd.message.author.id,
-						# 			id_server=cmd.message.server.id,
+						# 			id_server=cmd.message.guild.id,
 						# 			item_type=vegetable.item_type,
 						# 			item_props=item_props
 						# 		)
@@ -280,7 +280,7 @@ async def reap(cmd):
 						for vcreate in range(3):
 							ewitem.item_create(
 								id_user = cmd.message.author.id,
-								id_server = cmd.message.server.id,
+								id_server = cmd.message.guild.id,
 								item_type = vegetable.item_type,
 								item_props = item_props
 							)
@@ -342,7 +342,7 @@ async def sow(cmd):
 			farm_id = ewcfg.poi_id_ab_farms
 
 		farm = EwFarm(
-			id_server = cmd.message.server.id,
+			id_server = cmd.message.guild.id,
 			id_user = cmd.message.author.id,
 			farm = farm_id
 		)
@@ -355,7 +355,7 @@ async def sow(cmd):
 			else:
 				item_search = "slimepoudrin"
 
-			item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+			item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
 
 			if item_sought == None:
 				response = "You don't have anything to plant! Try collecting a poudrin."
@@ -410,7 +410,7 @@ async def mill(cmd):
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
 
 	# Checking availability of milling
 	if user_data.life_state != ewcfg.life_state_juvenile:
@@ -453,7 +453,7 @@ async def mill(cmd):
 			ewitem.item_create(
 				item_type = item.item_type,
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
+				id_server = cmd.message.guild.id,
 				item_props = item_props
 			)
 
@@ -508,7 +508,7 @@ async def check_farm(cmd):
 
 
 		farm = EwFarm(
-			id_server = cmd.message.server.id,
+			id_server = cmd.message.guild.id,
 			id_user = cmd.message.author.id,
 			farm = farm_id
 		)
@@ -569,7 +569,7 @@ async def cultivate(cmd):
 
 
 		farm = EwFarm(
-			id_server = cmd.message.server.id,
+			id_server = cmd.message.guild.id,
 			id_user = cmd.message.author.id,
 			farm = farm_id
 		)

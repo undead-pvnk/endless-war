@@ -52,7 +52,7 @@ async def writhe(cmd):
 			elapsed = time.time() - cur_time
 			await asyncio.sleep(2.0 - elapsed)
 
-		id_server = cmd.message.server.id
+		id_server = cmd.message.guild.id
 		targets = []
 
 		# search for players in the negaslime's location in database and put them in a list
@@ -71,7 +71,7 @@ async def writhe(cmd):
 				# convert pulled IDs into member objects
 				target_ids = cursor.fetchall()
 				for target_id in target_ids:
-					target = cmd.message.server.get_member(target_id[0])
+					target = cmd.message.guild.get_member(target_id[0])
 					targets.append(target)
 
 				conn.commit()
@@ -91,7 +91,7 @@ async def writhe(cmd):
 				user_data_target.die(cause = ewcfg.cause_grandfoe)
 				user_data_target.persist()
 				await ewrolemgr.updateRoles(client = cmd.client, member = target)
-				sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
+				sewerchannel = ewutils.get_channel(cmd.message.guild, ewcfg.channel_sewers)
 				await ewutils.send_message(cmd.client, sewerchannel, "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(target, "You have been crushed by tendrils. {}".format(ewcfg.emote_slimeskull)))
 
 				victim_list.append(target)

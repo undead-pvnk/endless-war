@@ -135,7 +135,7 @@ async def advertise(cmd):
 		response = "Your don't have enough slimecoin to advertise. ({:,}/{:,})".format(user_data.slimecoin, cost)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	ads = get_ads(cmd.message.server.id)
+	ads = get_ads(cmd.message.guild.id)
 
 	if len(ads) >= ewcfg.max_concurrent_ads:
 		first_ad = EwAd(id_ad = ads[0])
@@ -184,7 +184,7 @@ async def advertise(cmd):
 
 	accepted = False
 	try:
-		msg = await cmd.client.wait_for_message(timeout = 30, author = cmd.message.author, check = ewutils.check_confirm_or_cancel)
+		msg = await cmd.client.wait_for(timeout = 30, author = cmd.message.author, check = ewutils.check_confirm_or_cancel)
 
 		if msg != None:
 			if msg.content.lower() == ewcfg.cmd_confirm:
@@ -194,7 +194,7 @@ async def advertise(cmd):
 
 	if accepted:
 		create_ad(
-			id_server = cmd.message.server.id,
+			id_server = cmd.message.guild.id,
 			id_sponsor = cmd.message.author.id,
 			content = content,
 			time_expir = time_now + ewcfg.uptime_ads,
@@ -217,7 +217,7 @@ async def ads_look(cmd):
 
 	response = "You look around for ads. God, you love being advertised to...\n"
 
-	ads = get_ads(id_server = cmd.message.server.id)
+	ads = get_ads(id_server = cmd.message.guild.id)
 
 
 	if poi.has_ads and len(ads) > 0:

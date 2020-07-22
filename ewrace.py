@@ -132,7 +132,7 @@ async def rattle(cmd):
 			ewitem.item_create(
 				item_type = ewcfg.it_item,
 				id_user = user_data.poi,
-				id_server = cmd.message.server.id,
+				id_server = cmd.message.guild.id,
 				item_props={
 					'id_item': bone_item.id_item,
 					'context': bone_item.context,
@@ -296,7 +296,7 @@ async def request_petting(cmd):
     
 			accepted = False
 			try:
-				msg = await cmd.client.wait_for_message(timeout = 30, author = target_member, check = ewutils.check_accept_or_refuse)
+				msg = await cmd.client.wait_for(timeout = 30, author = target_member, check = ewutils.check_accept_or_refuse)
 				if msg != None:
 					if msg.content.lower() == ewcfg.cmd_accept:
 						accepted = True
@@ -342,8 +342,8 @@ async def rampage(cmd):
 async def flutter(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.race == ewcfg.races["avian"]:
-		district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
-		market_data = EwMarket(id_server=cmd.message.server.id)
+		district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.guild.id)
+		market_data = EwMarket(id_server=cmd.message.guild.id)
 		response = "You flap your wings in an attempt to fly, but "
 		excuses = []
 

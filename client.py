@@ -657,10 +657,7 @@ cmd_map = {
 	
 	# deletes all roles in the server of a particular type
 	ewcfg.cmd_deleteroles: ewrolemgr.deleteRoles,
-	
-	# sets permissions for all poi channels in the server
-	ewcfg.cmd_changepermissions: ewrolemgr.change_perms,
-	
+		
 	# removes all user overwrites in the server's poi channels
 	ewcfg.cmd_removeuseroverwrites: ewrolemgr.remove_user_overwrites,
 	
@@ -851,7 +848,7 @@ async def on_ready():
 	ewutils.logMsg("finished landmark precomputation")
 
 	try:
-		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version))
+		await client.change_presence(activity = discord.Game(name = "EW " + ewcfg.version))
 	except:
 		ewutils.logMsg("Failed to change_presence!")
 
@@ -876,7 +873,7 @@ async def on_ready():
 	# Channels in the connected discord servers to send stock market updates to. Map of server ID to channel.
 	channels_stockmarket = {}
 
-	for server in client.servers:
+	for server in client.guilds:
 		# Update server data in the database
 		ewserver.server_update(server = server)
 
@@ -1028,11 +1025,11 @@ async def on_ready():
 			time_last_pvp = time_now
 
 			try:
-				for server in client.servers:
+				for server in client.guilds:
 					role_ids = []
 					for pvp_role in ewcfg.role_to_pvp_role.values():
 						role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
-						role_ids.append(role.id_role)
+						role_ids.append(int(role.id_role))
 						
 					all_current_members = list(server.members)
 
@@ -1049,7 +1046,7 @@ async def on_ready():
 
 		# Adjust the exchange rate of slime for the market.
 		try:
-			for server in client.servers:
+			for server in client.guilds:
 
 				# Load market data from the database.
 				market_data = EwMarket(id_server = server.id)
@@ -1246,7 +1243,7 @@ async def on_ready():
 					ewutils.logMsg('in file {} message for channel {} (reverb {})\n{}'.format(msg_file, msg.channel, msg.reverb, msg.message))
 				else:
 					# Send messages to every connected server.
-					for server in client.servers:
+					for server in client.guilds:
 						for channel in server.channels:
 							if channel.name in msg_channel_names:
 								await ewutils.send_message(client, channel, "**{}**".format(msg.message))
@@ -1265,7 +1262,7 @@ async def on_member_join(member):
 	await ewrolemgr.updateRoles(client = client, member = member)
 	ewplayer.player_update(
 		member = member,
-		server = member.server
+		server = member.guild
 	)
 	user_data = EwUser(member = member)
 
@@ -1274,7 +1271,7 @@ async def on_member_join(member):
 
 @client.event
 async def on_message_delete(message):
-	if message != None and message.server != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
+	if message != None and message.guild != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
 		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
 		await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'))
 
@@ -1287,18 +1284,18 @@ async def on_message(message):
 	if message.author.id == client.user.id or message.author.bot == True:
 		return
 
-	if message.server != None:
+	if message.guild != None:
 		# Note that the user posted a message.
-		active_map = active_users_map.get(message.server.id)
+		active_map = active_users_map.get(message.guild.id)
 		if active_map == None:
 			active_map = {}
-			active_users_map[message.server.id] = active_map
+			active_users_map[message.guild.id] = active_map
 		active_map[message.author.id] = True
 
 		# Update player information.
 		ewplayer.player_update(
 			member = message.author,
-			server = message.server
+			server = message.guild
 		)
 
 	content_tolower = message.content.lower()
@@ -1307,7 +1304,7 @@ async def on_message(message):
 	re_moan = re.compile('.*![b]+[r]+[a]+[i]+[n]+[z]+.*')
 
 	# update the player's time_last_action which is used for kicking AFK players out of subzones
-	if message.server != None:
+	if message.guild != None:
 
 		try:
 			ewutils.execute_sql_query("UPDATE users SET {time_last_action} = %s WHERE id_user = %s AND id_server = %s".format(
@@ -1315,10 +1312,10 @@ async def on_message(message):
 			), (
 				int(time.time()),
 				message.author.id,
-				message.server.id
+				message.guild.id
 			))
 		except:
-			ewutils.logMsg('server {}: failed to update time_last_action for {}'.format(message.server.id, message.author.id))
+			ewutils.logMsg('server {}: failed to update time_last_action for {}'.format(message.guild.id, message.author.id))
 		
 		user_data = EwUser(member = message.author)
 		
@@ -1326,7 +1323,7 @@ async def on_message(message):
 
 		if ewcfg.status_strangled_id in statuses:
 			strangle_effect = EwStatusEffect(id_status=ewcfg.status_strangled_id, user_data=user_data)
-			source = EwPlayer(id_user=strangle_effect.source, id_server=message.server.id)
+			source = EwPlayer(id_user=strangle_effect.source, id_server=message.guild.id)
 			response = "You manage to break {}'s garrote wire!".format(source.display_name)
 			user_data.clear_status(ewcfg.status_strangled_id)			
 			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
@@ -1341,7 +1338,7 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or len(message.author.roles) < 4 or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
@@ -1449,7 +1446,7 @@ async def on_message(message):
 		"""
 			Handle direct messages.
 		"""
-		if message.server == None:
+		if message.guild == None:
 			playermodel = ewplayer.EwPlayer(id_user = message.author.id)
 			usermodel = EwUser(id_user=message.author.id, id_server= playermodel.id_server)
 			poi = ewcfg.id_to_poi.get(usermodel.poi)
@@ -1526,7 +1523,7 @@ async def on_message(message):
 			item_id = ewitem.item_create(
 				item_type = 'medal',
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_props = {
 					'medal_name': 'Test Award',
 					'medal_desc': '**{medal_name}**: *Awarded to Krak by Krak for testing shit.*'
@@ -1549,7 +1546,7 @@ async def on_message(message):
 					ewitem.item_create(
 						item_type = ewcfg.it_item,
 						id_user = message.author.id,
-						id_server = message.server.id,
+						id_server = message.guild.id,
 						item_props = {
 							'id_item': item.id_item,
 							'context': item.context,
@@ -1600,7 +1597,7 @@ async def on_message(message):
 		# Deletes all items in your inventory.
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'clearinv'):
 			user_data = EwUser(member = message.author)
-			ewitem.item_destroyall(id_server = message.server.id, id_user = message.author.id)
+			ewitem.item_destroyall(id_server = message.guild.id, id_user = message.author.id)
 			response = "You destroy every single item in your inventory."
 			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
@@ -1608,7 +1605,7 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createapple'):
 			item_id = ewitem.item_create(
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_type = ewcfg.it_food,
 				item_props = {
 					'id_food': "direapples",
@@ -1629,7 +1626,7 @@ async def on_message(message):
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'weathertick'):
 
-			await ewapt.setOffAlarms(id_server=message.server.id)
+			await ewapt.setOffAlarms(id_server=message.guild.id)
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createhat'):
 			patrician_rarity = 20
@@ -1654,7 +1651,7 @@ async def on_message(message):
 			item_id = ewitem.item_create(
 				item_type = item.item_type,
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_props = item_props
 			)
 
@@ -1671,7 +1668,7 @@ async def on_message(message):
 			item_id = ewitem.item_create(
 				item_type = ewcfg.it_food,
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_props = {
 					'id_food': item.id_food,
 					'food_name': item.str_name,
@@ -1697,7 +1694,7 @@ async def on_message(message):
 			ewitem.item_create(
 				item_type = item.item_type,
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_props = item_props
 			)
 
@@ -1732,7 +1729,7 @@ async def on_message(message):
 			ewitem.item_create(
 				item_type = ewcfg.it_cosmetic,
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_props = {
 					'id_cosmetic': item.id_cosmetic,
 					'cosmetic_name': item.str_name,
@@ -1749,7 +1746,7 @@ async def on_message(message):
 			ewitem.item_create(
 				item_type = ewcfg.it_cosmetic,
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_props = {
 					'id_cosmetic': 'scalp',
 					'cosmetic_name': "My scalp",
@@ -1763,7 +1760,7 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createoldsoul'):
 			ewitem.item_create(
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_type = ewcfg.it_cosmetic,
 				item_props = {
 					'id_cosmetic': "soul",
@@ -1785,7 +1782,7 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'delete'):
 			items = ewitem.inventory(
 				id_user = message.author.id,
-				id_server = message.server.id
+				id_server = message.guild.id
 			)
 
 			for item in items:
@@ -1809,14 +1806,14 @@ async def on_message(message):
 			if mentions_count == 0:
 				response = 'Set who\'s role?'
 			else:
-				roles_map = ewutils.getRoleMap(message.server.roles)
+				roles_map = ewutils.getRoleMap(message.guild.roles)
 				role_target = tokens[1]
 				role = roles_map.get(role_target)
 
 				if role != None:
 					for user in mentions:
 						try:
-							await client.replace_roles(user, role)
+							await user.edit(roles=role)
 						except:
 							ewutils.logMsg('Failed to replace_roles for user {} with {}.'.format(user.display_name, role.name))
 
@@ -1853,7 +1850,7 @@ async def on_message(message):
 			
 		# Toggles rain on and off
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'toggledownfall'):
-			market_data = EwMarket(id_server=message.server.id)
+			market_data = EwMarket(id_server=message.guild.id)
 			
 			if market_data.weather == ewcfg.weather_bicarbonaterain:
 				newweather = ewcfg.weather_sunny
@@ -1868,7 +1865,7 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'dayforward'):
-			market_data = EwMarket(id_server=message.server.id)
+			market_data = EwMarket(id_server=message.guild.id)
 
 			market_data.day += 1
 			market_data.persist()
@@ -1881,7 +1878,7 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 			
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'hourforward'):
-			market_data = EwMarket(id_server=message.server.id)
+			market_data = EwMarket(id_server=message.guild.id)
 			
 			market_data.clock += 1
 			response = "Time has progressed 1 hour forward manually."
@@ -1899,7 +1896,7 @@ async def on_message(message):
 			
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'postleaderboard'):
 			try:
-				for server in client.servers:
+				for server in client.guilds:
 					await ewleaderboard.post_leaderboards(client=client, server=server)
 			except:
 				pass
@@ -1919,7 +1916,7 @@ async def on_message(message):
 			msg = await ewutils.send_message(client, cmd_obj.message.channel, msg_mistake)
 			await asyncio.sleep(2)
 			try:
-				await client.delete_message(msg)
+				await msg.delete()
 			except:
 				pass
 

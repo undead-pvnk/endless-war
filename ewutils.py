@@ -133,7 +133,7 @@ class EwResponseContainer:
 			logMsg("Couldn't find client")
 			return messages
 			
-		server = self.client.get_server(self.id_server)
+		server = self.client.get_guild(self.id_server)
 		if server == None:
 			logMsg("Couldn't find server with id {}".format(self.id_server))
 			return messages
@@ -152,7 +152,7 @@ class EwResponseContainer:
 					if len(response) == 0 or len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
 						response += "\n" + self.channel_responses[ch].pop(0)
 					else:
-						message = await send_message(self.client, current_channel, response)
+						message = await current_channel.send_message(self.client, current_channel, response)
 						messages.append(message)
 						response = ""
 				message = await send_message(self.client, current_channel, response)
@@ -403,6 +403,8 @@ def getRoleIdMap(roles):
 
 """ canonical lowercase no space name for a role """
 def mapRoleName(roleName):
+	if type(roleName) == int:
+		return roleName
 	return roleName.replace(" ", "").lower()
 
 """ connect to the database """
@@ -546,7 +548,7 @@ async def flag_outskirts(id_server = None):
 	if id_server != None:
 		try:
 			client = get_client()
-			server = client.get_server(id_server)
+			server = client.get_guild(id_server)
 			conn_info = databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
@@ -581,7 +583,7 @@ async def flag_vulnerable_districts(id_server = None):
 	if id_server != None:
 		try:
 			client = get_client()
-			server = client.get_server(id_server)
+			server = client.get_guild(id_server)
 			conn_info = databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
@@ -643,7 +645,7 @@ async def bleedSlimes(id_server = None):
 	if id_server != None:
 		try:
 			client = get_client()
-			server = client.get_server(id_server)
+			server = client.get_guild(id_server)
 			conn_info = databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
@@ -837,7 +839,7 @@ async def burnSlimes(id_server = None):
 	if id_server != None:
 		time_now = int(time.time())
 		client = get_client()
-		server = client.get_server(id_server)
+		server = client.get_guild(id_server)
 
 		results = {}
 
@@ -930,7 +932,7 @@ async def enemyBurnSlimes(id_server):
 	if id_server != None:
 		time_now = int(time.time())
 		client = get_client()
-		server = client.get_server(id_server)
+		server = client.get_guild(id_server)
 
 		results = {}
 
@@ -1072,7 +1074,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 	weaponskills = {}
 
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None:
@@ -1107,7 +1109,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 """ Set an individual weapon skill value for a player. """
 def weaponskills_set(id_server = None, id_user = None, member = None, weapon = None, weaponskill = 0):
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None and weapon != None:
@@ -1137,7 +1139,7 @@ def weaponskills_set(id_server = None, id_user = None, member = None, weapon = N
 """ Clear all weapon skills for a player (probably called on death). """
 def weaponskills_clear(id_server = None, id_user = None, member = None, weaponskill = None):
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None:
@@ -1210,7 +1212,7 @@ def execute_sql_query(sql_query = None, sql_replacements = None):
 """
 async def post_in_channels(id_server, message, channels = None):
 	client = get_client()
-	server = client.get_server(id = id_server)
+	server = client.get_guild(id = id_server)
 
 	if channels is None and server is not None:
 		channels = server.channels
@@ -1219,7 +1221,7 @@ async def post_in_channels(id_server, message, channels = None):
 		if type(channel) is str:  # if the channels are passed as strings instead of discord channel objects
 			channel = get_channel(server, channel)
 		if channel is not None and channel.type == discord.ChannelType.text:
-			await send_message(client, channel, message)
+			await channel.send(message)
 	return
 
 """
@@ -1400,11 +1402,11 @@ def get_client():
 
 
 """
-	Proxy to discord.py Client.send_message with exception handling.
+	Proxy to discord.py channel.send with exception handling.
 """
 async def send_message(client, channel, text):
 	try:
-		return await client.send_message(channel, text)
+		return await channel.send(text)
 	except discord.errors.Forbidden:
 		logMsg('Could not message user: {}\n{}'.format(channel, text))
 		raise
@@ -1543,7 +1545,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 		market_data = EwMarket(id_server = district_data.id_server)
 
 	client = get_client()
-	server = client.get_server(id_server)
+	server = client.get_guild(id_server)
 
 	resp_cont = EwResponseContainer(id_server = id_server)
 	response = ""
@@ -1657,7 +1659,8 @@ async def delete_last_message(client, last_messages, tick_length):
 		return
 	await asyncio.sleep(tick_length)
 	try:
-		await client.delete_message(last_messages[-1])
+		msg = last_messages[-1]
+		await msg.delete()
 	except:
 		logMsg("failed to delete last message")
 
@@ -1826,7 +1829,7 @@ async def spawn_prank_items(id_server):
 		
 		client = get_client()
 		
-		server = client.get_server(id_server)
+		server = client.get_guild(id_server)
 	
 		district_channel = get_channel(server=server, channel_name=district_channel_name)
 		
@@ -1969,7 +1972,7 @@ async def activate_trap_items(district, id_server, id_user):
 
 		client = get_client()
 
-		server = client.get_server(id_server)
+		server = client.get_guild(id_server)
 		
 		member = server.get_member(id_user)
 
@@ -2052,7 +2055,7 @@ def check_fursuit_active(id_server):
 def create_death_report(cause = None, user_data = None):
 	
 	client = ewcfg.get_client()
-	server = client.get_server(user_data.id_server)
+	server = client.get_guild(user_data.id_server)
 
 	# User display name is used repeatedly later, grab now
 	user_member = server.get_member(user_data.id_user)
@@ -2208,11 +2211,11 @@ async def add_pvp_role(cmd = None):
 	roles_map_user = getRoleMap(member.roles)
 
 	if ewcfg.role_copkillers in roles_map_user and ewcfg.role_copkillers_pvp not in roles_map_user:
-		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_copkillers_pvp])
+		await member.add_roles(cmd.roles_map[ewcfg.role_copkillers_pvp])
 	elif ewcfg.role_rowdyfuckers in roles_map_user and ewcfg.role_rowdyfuckers_pvp not in roles_map_user:
-		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
+		await member.add_roles(cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
 	elif ewcfg.role_juvenile in roles_map_user and ewcfg.role_juvenile_pvp not in roles_map_user:
-		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_juvenile_pvp])
+		await member.add_roles(cmd.roles_map[ewcfg.role_juvenile_pvp])
 		
 """
 	Returns true if the specified name is used by any POI.
@@ -2393,7 +2396,7 @@ async def collect_topics(cmd):
 		return
 	
 	client = get_client()
-	server = client.get_server(cmd.message.server.id)
+	server = client.get_guild(cmd.message.guild.id)
 	topic_count = 0
 	
 	for channel in server.channels:
@@ -2430,7 +2433,7 @@ async def sync_topics(cmd):
 		if poi.topic == None or poi.topic == '':
 			poi_has_blank_topic = True
 		
-		channel = get_channel(cmd.message.server, poi.channel)
+		channel = get_channel(cmd.message.guild, poi.channel)
 		
 		if channel == None:
 			logMsg('Failed to get channel for {}'.format(poi.id_poi))

@@ -116,7 +116,8 @@ def player_update(member = None, server = None):
 		ewutils.databaseClose(conn_info)
 
 	# Log server changes
-	if(server.id != id_server_old):
+	if(server.id != int(id_server_old)):
+		
 		ewutils.logMsg('active server for {} changed from "{}" to "{}"'.format(
 			member.display_name,
 			id_server_old,

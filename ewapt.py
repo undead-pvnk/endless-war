@@ -312,7 +312,7 @@ async def signlease(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	try:
-		message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=check)
+		message = await cmd.client.wait_for(timeout=30, author=cmd.message.author, check=check)
 
 		if message != None:
 			if message.content.lower() == ewcfg.cmd_sign:
@@ -408,7 +408,7 @@ async def retire(cmd):
 			try:
 				await ewutils.send_message(cmd.client, cmd.message.author, response)
 			except:
-				await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
+				await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.guild, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
 
 
 
@@ -931,7 +931,7 @@ async def upgrade(cmd):
 		accepted = False
 
 		try:
-			message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
+			message = await cmd.client.wait_for(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
 
 			if message != None:
 				if message.content.lower() == ewcfg.cmd_prefix + "accept":
@@ -968,7 +968,7 @@ async def watch(cmd):
 		user_id = user_model.visiting
 	else:
 		user_id = cmd.message.author.id
-	apartment_model = EwApartment(id_server=cmd.message.server.id, id_user=user_id)
+	apartment_model = EwApartment(id_server=cmd.message.guild.id, id_user=user_id)
 	apartment_model.persist()
 
 	poi_object = ewcfg.id_to_poi.get(poi)
@@ -1051,7 +1051,7 @@ async def add_key(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		try:
 			accepted = False
-			message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author,
+			message = await cmd.client.wait_for(timeout=30, author=cmd.message.author,
 														check=ewutils.check_accept_or_refuse)
 
 			if message != None:
@@ -1073,7 +1073,7 @@ async def add_key(cmd):
 
 			new_item_id = ewitem.item_create(
 				id_user=cmd.message.author.id,
-				id_server=cmd.message.server.id,
+				id_server=cmd.message.guild.id,
 				item_type=ewcfg.it_item,
 				item_props={
 					'item_name': "key to {}'s house".format(playermodel.display_name),
@@ -1102,7 +1102,7 @@ async def usekey(cmd, owner_user):
 	user_data = EwUser(member=cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	poi_dest = ewcfg.id_to_poi.get(ewcfg.poi_id_apt + owner_user.apt_zone)  # there isn't an easy way to change this, apologies for being a little hacky
-	inv = ewitem.inventory(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	inv = ewitem.inventory(id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
 	key = None
 	for item_inv in inv:
 		if "key to" in item_inv.get('name'):
@@ -1137,7 +1137,7 @@ async def usekey(cmd, owner_user):
 			try:
 				await ewutils.send_message(cmd.client, cmd.message.author, response)
 			except:
-				await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
+				await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.guild, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
 
 async def manual_changelocks(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
@@ -1167,7 +1167,7 @@ async def manual_changelocks(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		try:
 			accepted = False
-			message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
+			message = await cmd.client.wait_for(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
 
 			if message != None:
 				if message.content.lower() == ewcfg.cmd_prefix + "accept":
@@ -1415,7 +1415,7 @@ async def knock(cmd = None):
 				else:
 					user_data = EwUser(member=cmd.message.author)
 					ewutils.active_target_map[user_data.id_user] = target_data.apt_zone
-					message = await cmd.client.wait_for_message(timeout=20, author=target, check=ewutils.check_accept_or_refuse)
+					message = await cmd.client.wait_for(timeout=20, author=target, check=ewutils.check_accept_or_refuse)
 
 					if message != None:
 						if message.content.lower() == ewcfg.cmd_accept:
@@ -1488,7 +1488,7 @@ async def trickortreat(cmd = None):
 
 	items = ewitem.inventory(
 		id_user=cmd.message.author.id,
-		id_server=cmd.message.server.id,
+		id_server=cmd.message.guild.id,
 		item_type_filter=ewcfg.it_cosmetic
 	)
 
@@ -1541,7 +1541,7 @@ async def trickortreat(cmd = None):
 				else:
 					user_data = EwUser(member=cmd.message.author)
 					ewutils.active_target_map[user_data.id_user] = target_data.apt_zone
-					message = await cmd.client.wait_for_message(timeout=20, author=target, check=ewutils.check_trick_or_treat)
+					message = await cmd.client.wait_for(timeout=20, author=target, check=ewutils.check_trick_or_treat)
 
 					if message != None:
 						if message.content.lower() == ewcfg.cmd_treat:
@@ -1576,7 +1576,7 @@ async def trickortreat(cmd = None):
 					ewitem.item_create(
 						item_type=item.item_type,
 						id_user=cmd.message.author.id,
-						id_server=cmd.message.server.id,
+						id_server=cmd.message.guild.id,
 						item_props=item_props
 					)
 				item_name = item_props.get('food_name')
@@ -1602,7 +1602,7 @@ async def trickortreat(cmd = None):
 				user_data.change_slimes(n = -slime_loss, source=ewcfg.source_damage)
 				if user_data.slimes <= 0:
 					client = ewutils.get_client()
-					server = client.get_server(user_data.id_server)
+					server = client.get_guild(user_data.id_server)
 					user_poi = ewcfg.id_to_poi.get(user_data.poi)
 
 					resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
@@ -1677,7 +1677,7 @@ async def trickortreat(cmd = None):
 					ewitem.item_create(
 						item_type=item.item_type,
 						id_user=cmd.message.author.id,
-						id_server=cmd.message.server.id,
+						id_server=cmd.message.guild.id,
 						item_props=item_props
 					)
 				item_name = item_props.get('food_name')
@@ -1698,7 +1698,7 @@ async def trickortreat(cmd = None):
 				user_data.change_slimes(n=-slime_loss, source=ewcfg.source_damage)
 				if user_data.slimes <= 0:
 					client = ewutils.get_client()
-					server = client.get_server(user_data.id_server)
+					server = client.get_guild(user_data.id_server)
 					user_poi = ewcfg.id_to_poi.get(user_data.poi)
 
 					resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
@@ -1755,7 +1755,7 @@ async def cancel(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		try:
 			accepted = False
-			message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
+			message = await cmd.client.wait_for(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
 
 			if message != None:
 				if message.content.lower() == ewcfg.cmd_prefix + "accept":
@@ -1787,7 +1787,7 @@ async def cancel(cmd):
 			usermodel.persist()
 			aptmodel.persist()
 
-			await toss_squatters(cmd.message.author.id, cmd.message.server.id)
+			await toss_squatters(cmd.message.author.id, cmd.message.guild.id)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
@@ -1861,7 +1861,7 @@ async def aquarium(cmd):
 			placedesc = "You carefully place the aquarium on your shelf. The {} inside silently heckles you each time your clumsy ass nearly drops it.".format(item.item_props.get('food_name'))
 			ewitem.item_create(
 				id_user=cmd.message.author.id,
-				id_server=cmd.message.server.id,
+				id_server=cmd.message.guild.id,
 				item_type=ewcfg.it_furniture,
 				item_props={
 					'furniture_name': fname,
@@ -1874,7 +1874,7 @@ async def aquarium(cmd):
 				}
 			)
 
-			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "aqu", id_server=cmd.message.server.id)
+			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "aqu", id_server=cmd.message.guild.id)
 			#ewitem.item_delete(id_item=item_sought.get('id_item'))
 
 		else:
@@ -1929,7 +1929,7 @@ async def propstand(cmd):
 
 			ewitem.item_create(
 				id_user=cmd.message.author.id,
-				id_server=cmd.message.server.id,
+				id_server=cmd.message.guild.id,
 				item_type=ewcfg.it_furniture,
 				item_props={
 					'furniture_name': fname,
@@ -1941,7 +1941,7 @@ async def propstand(cmd):
 					'furniture_look_desc': lookdesc
 				}
 			)
-			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "stand", id_server=cmd.message.server.id)
+			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "stand", id_server=cmd.message.guild.id)
 			#ewitem.item_delete(id_item=item_sought.get('id_item'))
 
 	else:
@@ -1972,7 +1972,7 @@ async def flowerpot(cmd):
 			placedesc = "You take your flowerpot full of {} and place it on the windowsill.".format(item.item_props.get('food_name'))
 			ewitem.item_create(
 				id_user=cmd.message.author.id,
-				id_server=cmd.message.server.id,
+				id_server=cmd.message.guild.id,
 				item_type=ewcfg.it_furniture,
 				item_props={
 					'furniture_name': fname,
@@ -1985,7 +1985,7 @@ async def flowerpot(cmd):
 				}
 			)
 
-			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "flo", id_server=cmd.message.server.id)
+			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "flo", id_server=cmd.message.guild.id)
 			#ewitem.item_delete(id_item=item_sought.get('id_item'))
 
 		else:
@@ -2033,7 +2033,7 @@ async def releasefish(cmd):
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "aquarium" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
-				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.guild.id)
 				response = "The mysterious individual running the fish luring stall helps you coax the fish out of its tank."
 				ewitem.item_delete(id_item=item_sought.get('id_item'))
 			elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
@@ -2067,7 +2067,7 @@ async def releaseprop(cmd):
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "propstand" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
-				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.guild.id)
 				response = "After a bit of tugging, you and the mysterious individual running the prop release stall pry the item of its stand."
 				ewitem.item_delete(id_item=item_sought.get('id_item'))
 			elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
@@ -2089,7 +2089,7 @@ async def unpot(cmd):
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "flowerpot" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
-				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.guild.id)
 				response = "You yank the foliage out of the pot."
 				ewitem.item_delete(id_item=item_sought.get('id_item'))
 			else:
@@ -2187,7 +2187,7 @@ async def dyefurniture(cmd):
 
 		items = ewitem.inventory(
 			id_user=cmd.message.author.id,
-			id_server=cmd.message.server.id,
+			id_server=cmd.message.guild.id,
 		)
 
 		furniture = None
@@ -2253,7 +2253,7 @@ async def set_alarm(cmd):
 async def setOffAlarms(id_server = None):
 	if id_server != None:
 		client = ewutils.get_client()
-		server = client.get_server(id_server)
+		server = client.get_guild(id_server)
 		time_current = ewmarket.EwMarket(id_server=id_server).clock
 		if time_current <= 12:
 			displaytime = str(time_current)
@@ -2289,7 +2289,7 @@ async def setOffAlarms(id_server = None):
 async def jam(cmd):
 	#def leppard and pearl jam? meet def jam. this is what the refrance, fuck yeah.
 	item_found = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search=item_found, id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	item_sought = ewitem.find_item(item_search=item_found, id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
 
 	if item_sought:
 		item = EwItem(id_item=item_sought.get('id_item'))
@@ -2386,7 +2386,7 @@ async def aptCommands(cmd):
 		return await browse(cmd=cmd)
 	# from here, all commands are prebuilt and just set to work in DMs
 	cmd.message.author = member_object
-	cmd.message.server = server
+	cmd.message.guild = server
 	if cmd_text == ewcfg.cmd_use:
 		return await ewitem.item_use(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_pot:

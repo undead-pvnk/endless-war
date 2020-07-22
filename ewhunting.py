@@ -331,14 +331,14 @@ class EwEnemy:
 				target_weapon_item = EwItem(id_item = target_data.weapon)
 				target_weapon = ewcfg.weapon_map.get(target_weapon_item.item_props.get("weapon_type"))
 			
-			server = client.get_server(target_data.id_server)
-			# server = discord.Server(id=target_data.id_server)
+			server = client.get_guild(target_data.id_server)
+			# server = discord.guild(id=target_data.id_server)
 			# print(target_data.id_server)
 			# channel = discord.utils.get(server.channels, name=ch_name)
 
 			# print(server)
 
-			# member = discord.utils.get(channel.server.members, name=target_player.display_name)
+			# member = discord.utils.get(channel.guild.members, name=target_player.display_name)
 			# print(member)
 
 			target_mutations = target_data.get_mutations()

@@ -399,7 +399,7 @@ async def shambleball(cmd):
 		response = "This place is too cramped for playing Shambleball. Go outside!"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	district_data = EwDistrict(district = poi_data.id_poi, id_server = cmd.message.server.id)
+	district_data = EwDistrict(district = poi_data.id_poi, id_server = cmd.message.guild.id)
 
 	if not district_data.is_degraded:
 		response = "This place is too functional and full of people to play Shambleball. You'll have to {} it first.".format(ewcfg.cmd_shamble)
@@ -421,7 +421,7 @@ async def shambleball(cmd):
 	if game_data == None:
 		global sb_idserver_to_gamemap
 		
-		gamemap = sb_idserver_to_gamemap.get(cmd.message.server.id)
+		gamemap = sb_idserver_to_gamemap.get(cmd.message.guild.id)
 		if gamemap != None:
 			game_data = gamemap.get(poi_data.id_poi)
 
@@ -431,12 +431,12 @@ async def shambleball(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if game_data == None:
-			game_data = EwShambleBallGame(poi_data.id_poi, cmd.message.server.id)
+			game_data = EwShambleBallGame(poi_data.id_poi, cmd.message.guild.id)
 			response = "You put your severed head on the floor and start a new game of Shambleball as a {team} team player."
 		else:
 			response = "You join the Shambleball game on the {team} team."
 
-		shamble_player = EwShambleBallPlayer(cmd.message.author.id, cmd.message.server.id, game_data.id_game, team)
+		shamble_player = EwShambleBallPlayer(cmd.message.author.id, cmd.message.guild.id, game_data.id_game, team)
 	else:
 		response = "You are playing Shambleball on the {team} team. You are currently at {player_coords} going in direction {player_vel}. The ball is currently at {ball_coords} going in direction {ball_vel}. The score is purple {score_purple} : {score_pink} pink."
 

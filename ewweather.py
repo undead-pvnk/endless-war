@@ -63,7 +63,7 @@ async def weather_tick(id_server = None):
 			exposed_pois = tuple(exposed_pois)
 
 			client = ewutils.get_client()
-			server = client.get_server(id_server)
+			server = client.get_guild(id_server)
 
 			
 

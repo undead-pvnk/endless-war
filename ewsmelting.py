@@ -138,7 +138,7 @@ async def smelt(cmd):
 					ewitem.item_create(
 						item_type = item.item_type,
 						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
+						id_server = cmd.message.guild.id,
 						item_props = item_props
 					)
 
@@ -181,7 +181,7 @@ async def smelt(cmd):
 					newitem_id = ewitem.item_create(
 						item_type = item.item_type,
 						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
+						id_server = cmd.message.guild.id,
 						item_props = item_props
 					)
 
@@ -194,7 +194,7 @@ async def smelt(cmd):
 						newitem = ewitem.EwItem(id_item=newitem_id)
 						newitem.item_props['target'] = id_item
 						newitem.persist()
-						ewitem.give_item(id_item=id_item, id_user='soulcraft', id_server=cmd.message.server.id)
+						ewitem.give_item(id_item=id_item, id_user='soulcraft', id_server=cmd.message.guild.id)
 
 				name = ""
 				if hasattr(item, 'str_name'):
@@ -216,14 +216,14 @@ async def smelt(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def smeltsoul(cmd):
-	item = ewitem.find_item(item_search="reanimatedcorpse", id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	item = ewitem.find_item(item_search="reanimatedcorpse", id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
 	if not item:
 		response = "You can't rip a soul out of a nonexistent object."
 	else:
 		item_obj = ewitem.EwItem(id_item=item.get('id_item'))
 		if item_obj.item_props.get('target') != None and item_obj.item_props.get('target') != "":
 			targetid = item_obj.item_props.get('target')
-			ewitem.give_item(id_user=cmd.message.author.id, id_item=targetid, id_server=cmd.message.server.id)
+			ewitem.give_item(id_user=cmd.message.author.id, id_item=targetid, id_server=cmd.message.guild.id)
 			response = "You ripped the soul out of the reanimated corpse. It's in mangled bits now."
 			ewitem.item_delete(id_item=item.get('id_item'))
 		else:

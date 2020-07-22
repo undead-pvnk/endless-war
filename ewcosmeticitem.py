@@ -125,7 +125,7 @@ async def adorn(cmd):
 
 		cosmetic_items = ewitem.inventory(
 			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
+			id_server = cmd.message.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
 		)
 
@@ -215,7 +215,7 @@ async def dedorn(cmd):
 
 		cosmetic_items = ewitem.inventory(
 			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
+			id_server = cmd.message.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
 		)
 
@@ -276,7 +276,7 @@ async def dye(cmd):
 
 		items = ewitem.inventory(
 			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
+			id_server = cmd.message.guild.id,
 		)
 
 		cosmetic = None
@@ -444,7 +444,7 @@ async def sew(cmd):
 
 			cosmetic_items = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
+				id_server = cmd.message.guild.id,
 				item_type_filter = ewcfg.it_cosmetic
 			)
 
@@ -513,7 +513,7 @@ async def sew(cmd):
 							accepted = False
 
 							try:
-								message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
+								message = await cmd.client.wait_for(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
 
 								if message != None:
 									if message.content.lower() == ewcfg.cmd_prefix + "accept":
@@ -573,7 +573,7 @@ async def retrofit(cmd):
 
 			cosmetic_items = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
+				id_server = cmd.message.guild.id,
 				item_type_filter = ewcfg.it_cosmetic
 			)
 
@@ -646,7 +646,7 @@ async def retrofit(cmd):
 							accepted = False
 
 							try:
-								message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
+								message = await cmd.client.wait_for(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
 
 								if message != None:
 									if message.content.lower() == ewcfg.cmd_prefix + "accept":
