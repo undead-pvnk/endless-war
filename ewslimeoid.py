@@ -1022,7 +1022,7 @@ async def petslimeoid(cmd):
 		list_ids = []
 
 		for quadrant in ewcfg.quadrant_ids:
-			quadrant_data = ewquadrants.EwQuadrant(id_server=cmd.message.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
+			quadrant_data = ewquadrants.EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
 			if quadrant_data.id_target != "" and quadrant_data.check_if_onesided() is False:
 				list_ids.append(quadrant_data.id_target)
 			if quadrant_data.id_target2 != "" and quadrant_data.check_if_onesided() is False:
@@ -1090,7 +1090,7 @@ async def abuseslimeoid(cmd):
 		list_ids = []
 
 		for quadrant in ewcfg.quadrant_ids:
-			quadrant_data = ewquadrants.EwQuadrant(id_server=cmd.message.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
+			quadrant_data = ewquadrants.EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
 			if quadrant_data.id_target != "" and quadrant_data.check_if_onesided() is False:
 				list_ids.append(quadrant_data.id_target)
 			if quadrant_data.id_target2 != "" and quadrant_data.check_if_onesided() is False:
@@ -1210,8 +1210,8 @@ async def incubateslimeoid(cmd):
 
 	#roles_map_user = ewutils.getRoleMap(message.author.roles)
 
-	poudrin = ewitem.find_item(item_search = ewcfg.item_id_slimepoudrin, id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None, item_type_filter = ewcfg.it_item)
-	slimeoid_count = get_slimeoid_count(user_id=cmd.message.author.id, server_id=cmd.message.guild.id)
+	poudrin = ewitem.find_item(item_search = ewcfg.item_id_slimepoudrin, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
+	slimeoid_count = get_slimeoid_count(user_id=cmd.message.author.id, server_id=cmd.guild.id)
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
@@ -1315,7 +1315,7 @@ async def dissolveslimeoid(cmd):
 
 			cosmetics = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_cosmetic
 			)
 
@@ -2347,7 +2347,7 @@ async def slimeoid(cmd):
 
 		cosmetics = ewitem.inventory(
 			id_user = user_data.id_user,
-			id_server = cmd.message.guild.id,
+			id_server = cmd.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
 		)
 
@@ -2382,7 +2382,7 @@ async def negaslimeoid(cmd):
 	slimeoid_search = cmd.message.content[len(cmd.tokens[0]):].lower().strip()
 
 
-	potential_slimeoids = ewutils.get_slimeoids_in_poi(id_server = cmd.message.guild.id, sltype = ewcfg.sltype_nega)
+	potential_slimeoids = ewutils.get_slimeoids_in_poi(id_server = cmd.guild.id, sltype = ewcfg.sltype_nega)
 
 	negaslimeoid = None
 	for id_slimeoid in potential_slimeoids:
@@ -2499,10 +2499,11 @@ async def slimeoidbattle(cmd):
 	#Wait for an answer
 	accepted = 0
 	try:
-		msg = await cmd.client.wait_for(timeout = 30, author = member, check = ewutils.check_accept_or_refuse)
+		msg = await cmd.client.wait_for('message', timeout = 30, check=lambda message: message.author == member and 
+												message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 		if msg != None:
-			if msg.content == ewcfg.cmd_prefix + "accept":
+			if msg.content == ewcfg.cmd_accept:
 				accepted = 1
 	except:
 		accepted = 0
@@ -2611,7 +2612,7 @@ async def negaslimeoidbattle(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 
-	potential_challengees = ewutils.get_slimeoids_in_poi(id_server = cmd.message.guild.id, poi = challenger.poi, sltype = ewcfg.sltype_nega)
+	potential_challengees = ewutils.get_slimeoids_in_poi(id_server = cmd.guild.id, poi = challenger.poi, sltype = ewcfg.sltype_nega)
 
 	challengee_slimeoid = None
 	for id_slimeoid in potential_challengees:
@@ -2655,7 +2656,7 @@ async def negaslimeoidbattle(cmd):
 		result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, channel = cmd.message.channel, battle_type = ewcfg.battle_type_nega)
 		if result == -1:
 			# Losing in a nega battle means death
-			district_data = EwDistrict(district = challenger.poi, id_server = cmd.message.guild.id)
+			district_data = EwDistrict(district = challenger.poi, id_server = cmd.guild.id)
 			slimes = int(2 * 10 ** (challengee_slimeoid.level - 2))
 			district_data.change_slimes(n = slimes)
 			district_data.persist()
@@ -2666,7 +2667,7 @@ async def negaslimeoidbattle(cmd):
 			# Dedorn all items
 			cosmetics = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_cosmetic
 			)
 			# get the cosmetics worn by the slimeoid
@@ -2684,7 +2685,7 @@ async def negaslimeoidbattle(cmd):
 			}
 			ewitem.item_create(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				item_type = ewcfg.it_item,
 				item_props = item_props
 			)
@@ -2771,7 +2772,7 @@ async def saturateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None, item_type_filter = ewcfg.it_item)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "Slimeoids don't fuck with ghosts."
@@ -2830,7 +2831,7 @@ async def restoreslimeoid(cmd):
 
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "You must go to the SlimeCorp Laboratories in Brawlden to restore a Slimeoid."
@@ -3365,7 +3366,7 @@ async def bottleslimeoid(cmd):
 			}
 			ewitem.item_create(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				item_type = ewcfg.it_item,
 				item_props = item_props
 			)
@@ -3403,7 +3404,7 @@ async def dress_slimeoid(cmd):
 
 			cosmetics = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_cosmetic
 			)
 
@@ -3495,7 +3496,7 @@ async def undress_slimeoid(cmd):
 
 			cosmetics = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_cosmetic
 			)
 
@@ -3577,7 +3578,7 @@ async def unbottleslimeoid(cmd):
 		}
 		ewitem.item_create(
 			id_user = cmd.message.author.id,
-			id_server = cmd.message.guild.id,
+			id_server = cmd.guild.id,
 			item_type = ewcfg.it_item,
 			item_props = item_props
 		)
@@ -3650,7 +3651,7 @@ def get_slimeoid_count(user_id = None, server_id = None):
 	if user_id != None and server_id != None:
 		count = 0
 		slimeoid_data = EwSlimeoid(id_user=user_id, id_server=server_id)
-		secondary_user = user_id + "freeze"
+		secondary_user = str(user_id) + "freeze"
 		name_list = []
 		if slimeoid_data.name != "":
 			count += 1

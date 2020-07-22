@@ -670,7 +670,7 @@ async def capture_progress(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	response = ""
-	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.guild.id)
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.guild.id)
 	time_now = int(time.time())
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -804,7 +804,7 @@ async def shamble(cmd):
 	if poi is None:
 		return
 
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.guild.id)
+	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
 
 	if district_data.degradation < poi.max_degradation:
 		district_data.degradation += 1

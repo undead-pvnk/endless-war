@@ -68,7 +68,7 @@ class EwItemDef:
 """
 class EwItem:
 	id_item = -1
-	id_server = ""
+	id_server = -1
 	id_owner = ""
 	item_type = ""
 	time_expir = -1
@@ -1176,8 +1176,10 @@ async def item_look(cmd):
 				response = response.format_map(item.item_props)
 
 				if response.find('{') >= 0:
-					response = response.format_map(item.item_props)
-
+					try:
+						response = response.format_map(item.item_props)
+					except:
+						pass
 
 			if item.item_type == ewcfg.it_food:
 				if float(item.item_props.get('time_expir') if not None else 0) < time.time() and item.id_owner[-6:] != ewcfg.compartment_id_fridge:
@@ -1192,9 +1194,9 @@ async def item_look(cmd):
 				response += "\n\n"
 
 				if item.item_props.get("married") != "":
-					previous_partner = EwPlayer(id_user = item.item_props.get("married"), id_server = server)
+					previous_partner = EwPlayer(id_user = int(item.item_props.get("married")), id_server = server)
 
-					if item.item_props.get("married") != user_data.id_user or item.id_item != user_data.weapon:
+					if not user_data.weaponmarried or int(item.item_props.get("married")) != user_data.id_user or item.id_item != user_data.weapon:
 						response += "There's a barely legible engraving on the weapon that reads *{} :heart: {}*.\n\n".format(previous_partner.display_name, name)
 					else:
 						response += "Your beloved partner. You can't help but give it a little kiss on the handle.\n"
@@ -1347,7 +1349,7 @@ async def item_use(cmd):
 	
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
-	server = cmd.message.guild
+	server = cmd.guild
 
 	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
@@ -1419,7 +1421,7 @@ async def item_use(cmd):
 						
 					if item_action == "delete":
 						item_delete(item.id_item)
-						#prank_feed_channel = ewutils.get_channel(cmd.message.guild, ewcfg.channel_prankfeed)
+						#prank_feed_channel = ewutils.get_channel(cmd.guild, ewcfg.channel_prankfeed)
 						#await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response+"\n`-------------------------`")))
 						
 					elif item_action == "drop":
@@ -1573,7 +1575,7 @@ def find_poudrin(id_user = None, id_server = None):
 async def give(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
-	server = cmd.message.guild
+	server = cmd.guild
 
 	if cmd.mentions:  # if they're not empty
 		recipient = cmd.mentions[0]
@@ -1667,7 +1669,7 @@ async def discard(cmd):
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
+	item_sought = find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 
 	if item_sought:
 		item = EwItem(id_item = item_sought.get("id_item"))
@@ -1801,11 +1803,11 @@ def gen_item_props(item):
 
 async def soulextract(cmd):
 	usermodel = EwUser(member=cmd.message.author)
-	playermodel = EwPlayer(id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
+	playermodel = EwPlayer(id_user=cmd.message.author.id, id_server=cmd.guild.id)
 	if usermodel.has_soul == 1 and (ewutils.active_target_map.get(usermodel.id_user) == None or ewutils.active_target_map.get(usermodel.id_user) == ""):
 		item_create(
 			id_user=cmd.message.author.id,
-			id_server=cmd.message.guild.id,
+			id_server=cmd.guild.id,
 			item_type=ewcfg.it_cosmetic,
 			item_props = {
 				'id_cosmetic': "soul",
@@ -1839,8 +1841,8 @@ async def soulextract(cmd):
 		
 async def returnsoul(cmd):
 	usermodel = EwUser(member=cmd.message.author)
-	#soul = find_item(item_search="soul", id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
-	user_inv = inventory(id_user=cmd.message.author.id, id_server=cmd.message.guild.id, item_type_filter=ewcfg.it_cosmetic)
+	#soul = find_item(item_search="soul", id_user=cmd.message.author.id, id_server=cmd.guild.id)
+	user_inv = inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
 	soul_item = None
 	soul = None
 	for inv_object in user_inv:
@@ -1854,7 +1856,7 @@ async def returnsoul(cmd):
 	elif soul:
 
 		if soul.get('item_type') == ewcfg.it_cosmetic and soul_item.item_props.get('id_cosmetic') == "soul":
-			if soul_item.item_props.get('user_id') != cmd.message.author.id:
+			if int(soul_item.item_props.get('user_id')) != cmd.message.author.id:
 				response = "That's not your soul. Nice try, though."
 			else:
 				response = "You open the soul jar and hold the opening to your chest. The soul begins to crawl in, and a warmth returns to your body. Not exactly the warmth you had before, but it's too wonderful to pass up. You feel invigorated and ready to take on the world."
@@ -1869,7 +1871,7 @@ async def returnsoul(cmd):
 
 async def squeeze(cmd):
 	usermodel = EwUser(member=cmd.message.author)
-	soul_inv = inventory(id_user=cmd.message.author.id, id_server=cmd.message.guild.id, item_type_filter=ewcfg.it_cosmetic)
+	soul_inv = inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
 	
 	if usermodel.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
@@ -1900,7 +1902,7 @@ async def squeeze(cmd):
 
 		squeezetext = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
 		if len(squeezetext) > 500:
-			haunt_message_content = squeezetext[:-500]
+			squeezetext = squeezetext[:-500]
 
 
 
@@ -1908,7 +1910,7 @@ async def squeeze(cmd):
 		target_item = None
 		for soul in soul_inv:
 			soul_item = EwItem(id_item=soul.get('id_item'))
-			if soul_item.item_props.get('user_id') == targetmodel.id_user:
+			if soul_item.item_props.get('id_cosmetic') == 'soul' and int(soul_item.item_props.get('user_id')) == targetmodel.id_user:
 				target_item = soul
 
 		if targetmodel.has_soul == 1:
@@ -1933,12 +1935,12 @@ async def squeeze(cmd):
 			targetmodel.change_slimes(n=penalty, source=ewcfg.source_haunted)
 			targetmodel.persist()
 
-			district_data = ewdistrict.EwDistrict(district=targetmodel.poi, id_server=cmd.message.guild.id)
+			district_data = ewdistrict.EwDistrict(district=targetmodel.poi, id_server=cmd.guild.id)
 			district_data.change_slimes(n= -penalty, source=ewcfg.source_squeeze)
 			district_data.persist()
 
 			if receivingreport != "":
-				loc_channel = ewutils.get_channel(cmd.message.guild, poi.channel)
+				loc_channel = ewutils.get_channel(cmd.guild, poi.channel)
 				await ewutils.send_message(cmd.client, loc_channel, ewutils.formatMessage(target, receivingreport))
 
 			response = "You tightly squeeze {}'s soul in your hand, jeering into it as you do so. This thing was worth every penny.".format(playermodel.display_name)
@@ -1961,7 +1963,7 @@ def remove_from_trades(id_item):
 
 
 async def makecostume(cmd):
-	costumekit = find_item(item_search="costumekit", id_user=cmd.message.author.id, id_server=cmd.message.guild.id if cmd.message.guild is not None else None, item_type_filter = ewcfg.it_item)
+	costumekit = find_item(item_search="costumekit", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
 
 	user_data = EwUser(member=cmd.message.author)
 	
@@ -2003,7 +2005,7 @@ async def makecostume(cmd):
 async def trash(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
-	server = cmd.message.guild
+	server = cmd.guild
 
 	item_sought = find_item(item_search=item_search, id_user=author.id, id_server=server.id)
 
@@ -2125,7 +2127,7 @@ async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
 		try:
 			await ewutils.send_message(cmd.client, target_member, direct_message)
 		except:
-			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.guild, cmd.message.channel), ewutils.formatMessage(target_member, direct_message))
+			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, cmd.message.channel), ewutils.formatMessage(target_member, direct_message))
 
 	return response
 

@@ -1029,7 +1029,7 @@ async def on_ready():
 					role_ids = []
 					for pvp_role in ewcfg.role_to_pvp_role.values():
 						role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
-						role_ids.append(int(role.id_role))
+						role_ids.append(role.id_role)
 						
 					all_current_members = list(server.members)
 

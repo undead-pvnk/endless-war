@@ -119,7 +119,7 @@ def setupRoles(client = None, id_server = ""):
 	Hide the names of poi roles behind a uniform alias
 """
 async def hideRoleNames(cmd):
-	id_server = cmd.message.guild.id
+	id_server = cmd.guild.id
 	client = ewutils.get_client()
 	
 	server = client.get_guild(id_server)
@@ -237,7 +237,7 @@ async def recreateRoles(cmd):
 		return
 	
 	client = cmd.client
-	server = client.get_guild(cmd.message.guild.id)
+	server = client.get_guild(cmd.guild.id)
 	
 	server_role_names = []
 	
@@ -290,7 +290,7 @@ async def deleteRoles(cmd):
 		return
 
 	client = cmd.client
-	server = client.get_guild(cmd.message.guild.id)
+	server = client.get_guild(cmd.guild.id)
 	
 	delete_target = ""
 	
@@ -825,10 +825,10 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 # Remove all user overwrites in the server's POI channels
 async def remove_user_overwrites(cmd):
 	
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 	
-	server = cmd.message.guild
+	server = cmd.guild
 	client = ewutils.get_client()
 	
 	for poi in ewcfg.poi_list:

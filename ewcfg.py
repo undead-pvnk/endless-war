@@ -17056,7 +17056,7 @@ poi_list = [
 		alias=[
 			"dreadfordoutskirtsedge",
 			"dfoutskirtsedge",
-			"dfoedge"
+			"dfoedge",
 			"dfoe",
 		],
 		str_name="Dreadford Outskirts Edge",

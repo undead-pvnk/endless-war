@@ -2004,7 +2004,7 @@ async def activate_trap_items(district, id_server, id_user):
 		trap_chance = int(trap_item_data.item_props.get('trap_chance'))
 		trap_user_id = trap_item_data.item_props.get('trap_user_id')
 		
-		if trap_user_id == user_data.id_user:
+		if int(trap_user_id) == user_data.id_user:
 			#print('trap same user id')
 			return
 		
@@ -2392,11 +2392,11 @@ def get_street_list(str_poi):
 	
 async def collect_topics(cmd):
 	
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 	
 	client = get_client()
-	server = client.get_guild(cmd.message.guild.id)
+	server = client.get_guild(cmd.guild.id)
 	topic_count = 0
 	
 	for channel in server.channels:
@@ -2423,7 +2423,7 @@ async def collect_topics(cmd):
 	
 async def sync_topics(cmd):
 	
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 	
 	
@@ -2433,7 +2433,7 @@ async def sync_topics(cmd):
 		if poi.topic == None or poi.topic == '':
 			poi_has_blank_topic = True
 		
-		channel = get_channel(cmd.message.guild, poi.channel)
+		channel = get_channel(cmd.guild, poi.channel)
 		
 		if channel == None:
 			logMsg('Failed to get channel for {}'.format(poi.id_poi))

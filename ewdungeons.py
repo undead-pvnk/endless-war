@@ -94,7 +94,7 @@ async def tutorial_cmd(cmd):
 	cmd_content = cmd.message.content[1:].lower()
 	
 	# Administrators can skip the tutorial
-	if cmd_content == "skiptutorial" and cmd.message.author.server_permissions.administrator:
+	if cmd_content == "skiptutorial" and cmd.message.author.guild_permissions.administrator:
 		new_state = 20
 		user_to_tutorial_state[user_data.id_user] = new_state
 
@@ -114,7 +114,7 @@ async def tutorial_cmd(cmd):
 
 		poi_def = ewcfg.id_to_poi.get(user_data.poi)
 		channels = [poi_def.channel]
-		return await ewutils.post_in_channels(cmd.message.guild.id, ewutils.formatMessage(cmd.message.author, response), channels)
+		return await ewutils.post_in_channels(cmd.guild.id, ewutils.formatMessage(cmd.message.author, response), channels)
 
 	if cmd_content in tutorial_scene.options:
 		new_state = tutorial_scene.options.get(cmd_content)
@@ -136,7 +136,7 @@ async def tutorial_cmd(cmd):
 
 		poi_def = ewcfg.id_to_poi.get(user_data.poi)
 		channels = [poi_def.channel]
-		return await ewutils.post_in_channels(cmd.message.guild.id, ewutils.formatMessage(cmd.message.author, response), channels)
+		return await ewutils.post_in_channels(cmd.guild.id, ewutils.formatMessage(cmd.message.author, response), channels)
 
 
 	else:

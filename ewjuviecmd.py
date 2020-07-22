@@ -224,7 +224,7 @@ async def mine(cmd):
 			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
 			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
 
-			world_events = ewworldevent.get_world_events(id_server = cmd.message.guild.id)
+			world_events = ewworldevent.get_world_events(id_server = cmd.guild.id)
 			minigame_event = None
 			for id_event in world_events:
 				if world_events.get(id_event) in ewcfg.grid_type_by_mining_event:
@@ -233,7 +233,7 @@ async def mine(cmd):
 						minigame_event = event_data.event_type
 				if world_events.get(id_event) == ewcfg.event_type_minecollapse:
 					event_data = EwWorldEvent(id_event = id_event)
-					if event_data.event_props.get('id_user') == user_data.id_user and event_data.event_props.get('poi') == user_data.poi:
+					if int(event_data.event_props.get('id_user')) == user_data.id_user and event_data.event_props.get('poi') == user_data.poi:
 						captcha = event_data.event_props.get('captcha').lower()
 						tokens_lower = []
 						for token in cmd.tokens[1:]:
@@ -320,12 +320,12 @@ async def mine(cmd):
 
 				if world_events.get(id_event) == ewcfg.event_type_slimefrenzy:
 					event_data = EwWorldEvent(id_event = id_event)
-					if event_data.event_props.get('poi') == user_data.poi and event_data.event_props.get('id_user') == user_data.id_user:
+					if event_data.event_props.get('poi') == user_data.poi and int(event_data.event_props.get('id_user')) == user_data.id_user:
 						mining_yield *= 2
 
 				if world_events.get(id_event) == ewcfg.event_type_poudrinfrenzy:
 					event_data = EwWorldEvent(id_event = id_event)
-					if event_data.event_props.get('poi') == user_data.poi and event_data.event_props.get('id_user') == user_data.id_user:
+					if event_data.event_props.get('poi') == user_data.poi and int(event_data.event_props.get('id_user')) == user_data.id_user:
 						unearthed_item_chance = 1
 						unearthed_item_amount = 1
 
@@ -366,7 +366,7 @@ async def mine(cmd):
 					ewitem.item_create(
 						item_type = item.item_type,
 						id_user = cmd.message.author.id,
-						id_server = cmd.message.guild.id,
+						id_server = cmd.guild.id,
 						item_props = item_props
 					)
 
@@ -486,7 +486,7 @@ async def flag(cmd):
 			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
 			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
 
-			world_events = ewworldevent.get_world_events(id_server = cmd.message.guild.id)
+			world_events = ewworldevent.get_world_events(id_server = cmd.guild.id)
 			minigame_event = None
 			for id_event in world_events:
 				if world_events.get(id_event) in ewcfg.grid_type_by_mining_event:
@@ -596,13 +596,13 @@ async def mismine(cmd, user_data, cause):
 
 	last_mismined_times[cmd.message.author.id] = mismined
 
-	world_events = ewworldevent.get_world_events(id_server = cmd.message.guild.id)
+	world_events = ewworldevent.get_world_events(id_server = cmd.guild.id)
 	event_data = None
 	captcha = None
 	for id_event in world_events:
 		if world_events.get(id_event) == ewcfg.event_type_minecollapse:
 			event_data = EwWorldEvent(id_event = id_event)
-			if event_data.event_props.get('id_user') == user_data.id_user:
+			if int(event_data.event_props.get('id_user')) == user_data.id_user:
 				mine_collapse = True
 				captcha = event_data.event_props.get('captcha')
 	
@@ -621,7 +621,7 @@ async def mismine(cmd, user_data, cause):
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have lost an arm and a leg in a mining accident. Tis but a scratch."))
 		# await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-		# sewerchannel = ewutils.get_channel(cmd.message.guild, ewcfg.channel_sewers)
+		# sewerchannel = ewutils.get_channel(cmd.guild, ewcfg.channel_sewers)
 		# await ewutils.send_message(cmd.client, sewerchannel, "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, "You have died in a mining accident. {}".format(ewcfg.emote_slimeskull)))
 	else:
 		if cause == "exhaustion":
@@ -859,7 +859,7 @@ async def crush(cmd):
 			generated_item_id = ewitem.item_create(
 				item_type=new_item_type,
 				id_user=cmd.message.author.id,
-				id_server=cmd.message.guild.id,
+				id_server=cmd.guild.id,
 				item_props=new_item_props
 			)
 
@@ -957,7 +957,7 @@ async def print_grid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = user_data.poi
 	channel = cmd.message.channel.name
-	id_server = cmd.message.guild.id
+	id_server = cmd.guild.id
 	if poi in mines_map:
 		grid_map = mines_map.get(poi)
 		if id_server not in grid_map:
@@ -978,7 +978,7 @@ async def print_grid_minesweeper(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = user_data.poi
 	channel = cmd.message.channel.name
-	id_server = cmd.message.guild.id
+	id_server = cmd.guild.id
 	time_now = int(time.time())
 	if poi in mines_map:
 		grid_map = mines_map.get(poi)
@@ -1051,7 +1051,7 @@ async def print_grid_bubblebreaker(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = user_data.poi
 	channel = cmd.message.channel.name
-	id_server = cmd.message.guild.id
+	id_server = cmd.guild.id
 	time_now = int(time.time())
 	use_emotes = False
 	if poi in mines_map:
@@ -1470,7 +1470,7 @@ def create_mining_event(cmd):
 			event_props['poi'] = user_data.poi
 			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				event_type = ewcfg.event_type_slimeglob,
 				time_activate = time_now,
 				event_props = event_props
@@ -1482,7 +1482,7 @@ def create_mining_event(cmd):
 			event_props['poi'] = user_data.poi
 			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				event_type = ewcfg.event_type_slimefrenzy,
 				time_activate = time_now,
 				time_expir = time_now + 30,
@@ -1500,7 +1500,7 @@ def create_mining_event(cmd):
 			event_props['poi'] = user_data.poi
 			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				event_type = ewcfg.event_type_voidhole,
 				time_activate = time_now,
 				time_expir = time_now + 10,
@@ -1514,7 +1514,7 @@ def create_mining_event(cmd):
 			event_props['captcha'] = ewutils.generate_captcha(length = 8)
 			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				event_type = ewcfg.event_type_minecollapse,
 				time_activate = time_now,
 				time_expir = time_now + 60,
@@ -1527,7 +1527,7 @@ def create_mining_event(cmd):
 			event_props['poi'] = user_data.poi
 			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				event_type = ewcfg.event_type_poudrinfrenzy,
 				time_activate = time_now,
 				time_expir = time_now + 5,
@@ -1544,7 +1544,7 @@ def create_mining_event(cmd):
 			event_props['poi'] = user_data.poi
 			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				event_type = ewcfg.event_type_minesweeper,
 				time_activate = time_now,
 				time_expir = time_now + 60*3,
@@ -1557,7 +1557,7 @@ def create_mining_event(cmd):
 			event_props['poi'] = user_data.poi
 			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				event_type = ewcfg.event_type_bubblebreaker,
 				time_activate = time_now,
 				time_expir = time_now + 60*3,
