@@ -468,8 +468,12 @@ async def cast(cmd):
 			fun = 100
 
 			if fisher.bait == True:
-				# Bait attatched, user has a 1/7 chance to get a bite
-				fun = 70
+				# Bait attatched, chance to get a bite increases from 1/10 to 1/7
+				fun -= 30
+			if fisher.pier == ewcfg.poi_id_ferry:
+				# Fisher is on the ferry, chance to get a bite increases from 1/10 to 1/8
+				fun -= 20
+				
 			bun = 0
 
 			while not ewutils.TERMINATE:
