@@ -14843,7 +14843,7 @@ poi_list = [
 		id_poi = poi_id_jr_farms,
 		alias = [
 			"jrf", #juviesrow farms
-			"jrp", #juviesrow plantation
+			# "jrp", #juviesrow plantation
 			"jrfarms",
 			"jrfarm",
 			"jrplantation",
@@ -15118,7 +15118,7 @@ poi_list = [
 		alias = [
 			"juviesrowpier",
 			"jrpier",
-			"jrpr",
+			"jrp",
 		],
 		str_name = "Juvie's Row Pier",
 		str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Juvie's Row wharf. A few fishermen and off-duty sailors from nearby Vagrant's Corner all fish and get drunk around you, singing jaunty tunes and cursing loudly. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Juvie's Row.",
