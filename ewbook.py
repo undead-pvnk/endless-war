@@ -1352,7 +1352,7 @@ async def take_down_zine(cmd):
 		if book.isdigit():
 			book = int(book)
 
-		if not author.server_permissions.administrator:
+		if not author.guild_permissions.administrator:
 			admin = False
 
 		else:
@@ -1390,7 +1390,7 @@ async def untake_down_zine(cmd):
 		if book.isdigit():
 			book = int(book)
 
-		if not author.server_permissions.administrator:
+		if not author.guild_permissions.administrator:
 			admin = False
 
 		else:

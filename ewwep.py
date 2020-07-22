@@ -1508,7 +1508,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					ewhunting.delete_enemy(target_enemy_data)
 
 					response += "{} was killed by an explosion during your fight with {}!".format(target_enemy_data.display_name, shootee_player.display_name)
-					resp_cont.add_response_container(ewhunting.drop_enemy_loot(enemy_data, district_data))
+					resp_cont.add_response_container(ewhunting.drop_enemy_loot(target_enemy_data, district_data))
 					resp_cont.add_channel_response(channel, response)
 
 				# Survived the explosion
@@ -2030,12 +2030,16 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
 			else:
 				status_data = EwEnemyStatusEffect(id_status = status, enemy_data = user_data)
 
-			if status_data.id_target != "":
+			if status_data.id_target != -1:
 				if status == ewcfg.status_taunted_id:
-					if shootee_data.id_user == status_data.id_target:
+					if shootee_data.combatant_type == ewcfg.combatant_type_player and shootee_data.id_user == status_data.id_target:
+						continue
+					elif shootee_data.combatant_type == ewcfg.combatant_type_enemy and shootee_data.id_enemy == status_data.id_target:
 						continue
 				elif status == ewcfg.status_aiming_id:
-					if shootee_data.id_user != status_data.id_target:
+					if shootee_data.combatant_type == ewcfg.combatant_type_player and shootee_data.id_user != status_data.id_target:
+						continue
+					elif shootee_data.combatant_type == ewcfg.combatant_type_enemy and shootee_data.id_enemy != status_data.id_target:
 						continue
 
 		if status_flavor is not None:

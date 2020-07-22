@@ -320,12 +320,12 @@ async def mine(cmd):
 
 				if world_events.get(id_event) == ewcfg.event_type_slimefrenzy:
 					event_data = EwWorldEvent(id_event = id_event)
-					if event_data.event_props.get('poi') == user_data.poi and event_data.event_props.get('id_user') == user_data.id_user:
+					if event_data.event_props.get('poi') == user_data.poi and int(event_data.event_props.get('id_user')) == user_data.id_user:
 						mining_yield *= 2
 
 				if world_events.get(id_event) == ewcfg.event_type_poudrinfrenzy:
 					event_data = EwWorldEvent(id_event = id_event)
-					if event_data.event_props.get('poi') == user_data.poi and event_data.event_props.get('id_user') == user_data.id_user:
+					if event_data.event_props.get('poi') == user_data.poi and int(event_data.event_props.get('id_user')) == user_data.id_user:
 						unearthed_item_chance = 1
 						unearthed_item_amount = 1
 

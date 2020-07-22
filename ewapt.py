@@ -376,8 +376,8 @@ async def retire(cmd):
 
 	owner_user = None
 	if cmd.mentions_count == 0 and cmd.tokens_count > 1:
-		server = ewcfg.server_list[user_data.id_server]
-		member_object = server.get_member(cmd.tokens[1])
+		server = cmd.message.guild
+		member_object = server.get_member(ewutils.getIntToken(cmd.tokens))
 		owner_user = EwUser(member = member_object)
 	elif cmd.mentions_count == 1:
 		owner_user = EwUser(member = cmd.mentions[0])

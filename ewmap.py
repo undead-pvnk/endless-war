@@ -1272,7 +1272,7 @@ async def teleport_player(cmd):
 	author = cmd.message.author
 	user_data = EwUser(member=author)
 	
-	if ewutils.DEBUG or author.server_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
+	if ewutils.DEBUG or author.guild_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
 		pass
 	else:
 		return
@@ -1784,7 +1784,7 @@ async def boot(cmd):
 	author = cmd.message.author
 	user_data = EwUser(member=cmd.message.author)
 
-	if not author.server_permissions.administrator and user_data.life_state != ewcfg.life_state_kingpin:
+	if not author.guild_permissions.administrator and user_data.life_state != ewcfg.life_state_kingpin:
 		response = "You do not have the power to move the masses from one location to another."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1875,7 +1875,7 @@ def get_random_prank_item(user_data, district_data):
 """
 async def print_map_data(cmd):
 	
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 	
 	districts_count = 0

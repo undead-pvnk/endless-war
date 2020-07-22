@@ -15,7 +15,7 @@ from ewstatuseffects import EwStatusEffect
 class EwUser:
 	id_user = ""
 	id_server = ""
-	id_killer = ""
+	id_killer = -1
 
 	combatant_type = "player"
 
@@ -564,7 +564,7 @@ class EwUser:
 		finally:
 			return values
 
-	def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = ""):
+	def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = -1):
 		response = ""
 		if id_status != None:
 			status = None

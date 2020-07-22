@@ -134,7 +134,7 @@ async def reap(cmd):
 	
 	forcereap = False
 	if cmd.tokens[0] == ewcfg.cmd_reap_alt:
-		if cmd.message.author.server_permissions.administrator:
+		if cmd.message.author.guild_permissions.administrator:
 			forcereap = True
 		else:
 			return

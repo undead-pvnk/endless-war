@@ -831,7 +831,7 @@ class EwEnemy:
 		finally:
 			return values
 
-	def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = ""):
+	def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = -1):
 		response = ""
 		if id_status != None:
 			status = None
@@ -1070,7 +1070,7 @@ async def summonenemy(cmd, is_bot_spawn = False):
 
 	author = cmd.message.author
 
-	if not author.server_permissions.administrator and is_bot_spawn == False:
+	if not author.guild_permissions.administrator and is_bot_spawn == False:
 		return
 
 	time_now = int(time.time())

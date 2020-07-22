@@ -1291,7 +1291,7 @@ async def arrest(cmd):
 
 	author = cmd.message.author
 	
-	if not author.server_permissions.administrator:
+	if not author.guild_permissions.administrator:
 		return
 	
 	if cmd.mentions_count == 1:
@@ -1313,7 +1313,7 @@ async def release(cmd):
 
 	author = cmd.message.author
 	
-	if not author.server_permissions.administrator:
+	if not author.guild_permissions.administrator:
 		return
 	
 	if cmd.mentions_count == 1:
@@ -1333,7 +1333,7 @@ async def promote(cmd):
 
 	author = cmd.message.author
 	
-	if not author.server_permissions.administrator:
+	if not author.guild_permissions.administrator:
 		return
 	
 	if cmd.mentions_count == 1:
@@ -1351,7 +1351,7 @@ async def promote(cmd):
 async def balance_cosmetics(cmd):
 	author = cmd.message.author
 
-	if not author.server_permissions.administrator:
+	if not author.guild_permissions.administrator:
 		return
 
 	if cmd.tokens_count == 2:
@@ -2318,7 +2318,7 @@ async def festivity(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def forge_master_poudrin(cmd):
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 
 	if cmd.mentions_count == 1:
@@ -2356,7 +2356,7 @@ async def forge_master_poudrin(cmd):
 
 # Debug
 async def create_item(cmd):
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 
 	if len(cmd.tokens) > 1:
@@ -2431,7 +2431,7 @@ async def create_item(cmd):
 	
 #Debug
 async def manual_soulbind(cmd):
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 
 	if len(cmd.tokens) > 1:
@@ -2452,7 +2452,7 @@ async def manual_soulbind(cmd):
 	
 #Debug
 async def set_slime(cmd):
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 	
 	response = ""
@@ -2496,7 +2496,7 @@ async def set_slime(cmd):
 
 # Debug
 async def check_stats(cmd):
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 
 	response = ""
@@ -2612,7 +2612,7 @@ async def ping_me(cmd):
 	author = cmd.message.author
 	user_data = EwUser(member=author)
 
-	if ewutils.DEBUG or author.server_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
+	if ewutils.DEBUG or author.guild_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
 		pass
 	else:
 		return

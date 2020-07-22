@@ -142,8 +142,8 @@ async def haunt(cmd):
 		haunted_data = None
 		member = None
 		if cmd.mentions_count == 0 and cmd.tokens_count > 1:
-			server = ewutils.get_client().get_guild(cmd.message.guild.id)
-			member = server.get_member(cmd.tokens[1])
+			server = cmd.message.guild
+			member = server.get_member(ewutils.getIntToken(cmd.tokens))
 			haunted_data = EwUser(member = member)
 		elif cmd.mentions_count == 1:
 			member = cmd.mentions[0]
@@ -476,7 +476,7 @@ async def possess_weapon(cmd):
 		# prevent ghosts from using so much antislime they can't manifest afterwards
 		response = "You'll have to become stronger before you can perform occult arts of this level."
 	else:
-		server = ewutils.get_client().get_guild(user_data.id_server)
+		server = cmd.message.guild
 		inhabitee_id = user_data.get_inhabitee()
 		inhabitee_data = EwUser(id_user = inhabitee_id, id_server = user_data.id_server)
 		inhabitee_member = server.get_member(inhabitee_id)

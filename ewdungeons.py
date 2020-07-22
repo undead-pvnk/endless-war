@@ -94,7 +94,7 @@ async def tutorial_cmd(cmd):
 	cmd_content = cmd.message.content[1:].lower()
 	
 	# Administrators can skip the tutorial
-	if cmd_content == "skiptutorial" and cmd.message.author.server_permissions.administrator:
+	if cmd_content == "skiptutorial" and cmd.message.author.guild_permissions.administrator:
 		new_state = 20
 		user_to_tutorial_state[user_data.id_user] = new_state
 

@@ -68,7 +68,7 @@ class EwItemDef:
 """
 class EwItem:
 	id_item = -1
-	id_server = ""
+	id_server = -1
 	id_owner = ""
 	item_type = ""
 	time_expir = -1
@@ -1176,8 +1176,10 @@ async def item_look(cmd):
 				response = response.format_map(item.item_props)
 
 				if response.find('{') >= 0:
-					response = response.format_map(item.item_props)
-
+					try:
+						response = response.format_map(item.item_props)
+					except:
+						pass
 
 			if item.item_type == ewcfg.it_food:
 				if float(item.item_props.get('time_expir') if not None else 0) < time.time() and item.id_owner[-6:] != ewcfg.compartment_id_fridge:
@@ -1192,9 +1194,9 @@ async def item_look(cmd):
 				response += "\n\n"
 
 				if item.item_props.get("married") != "":
-					previous_partner = EwPlayer(id_user = item.item_props.get("married"), id_server = server)
+					previous_partner = EwPlayer(id_user = int(item.item_props.get("married")), id_server = server)
 
-					if item.item_props.get("married") != user_data.id_user or item.id_item != user_data.weapon:
+					if not user_data.weaponmarried or int(item.item_props.get("married")) != user_data.id_user or item.id_item != user_data.weapon:
 						response += "There's a barely legible engraving on the weapon that reads *{} :heart: {}*.\n\n".format(previous_partner.display_name, name)
 					else:
 						response += "Your beloved partner. You can't help but give it a little kiss on the handle.\n"
@@ -1854,7 +1856,7 @@ async def returnsoul(cmd):
 	elif soul:
 
 		if soul.get('item_type') == ewcfg.it_cosmetic and soul_item.item_props.get('id_cosmetic') == "soul":
-			if soul_item.item_props.get('user_id') != cmd.message.author.id:
+			if int(soul_item.item_props.get('user_id')) != cmd.message.author.id:
 				response = "That's not your soul. Nice try, though."
 			else:
 				response = "You open the soul jar and hold the opening to your chest. The soul begins to crawl in, and a warmth returns to your body. Not exactly the warmth you had before, but it's too wonderful to pass up. You feel invigorated and ready to take on the world."
@@ -1900,7 +1902,7 @@ async def squeeze(cmd):
 
 		squeezetext = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
 		if len(squeezetext) > 500:
-			haunt_message_content = squeezetext[:-500]
+			squeezetext = squeezetext[:-500]
 
 
 
@@ -1908,7 +1910,7 @@ async def squeeze(cmd):
 		target_item = None
 		for soul in soul_inv:
 			soul_item = EwItem(id_item=soul.get('id_item'))
-			if soul_item.item_props.get('user_id') == targetmodel.id_user:
+			if soul_item.item_props.get('id_cosmetic') == 'soul' and int(soul_item.item_props.get('user_id')) == targetmodel.id_user:
 				target_item = soul
 
 		if targetmodel.has_soul == 1:

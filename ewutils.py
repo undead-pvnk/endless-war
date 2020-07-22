@@ -2392,7 +2392,7 @@ def get_street_list(str_poi):
 	
 async def collect_topics(cmd):
 	
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 	
 	client = get_client()
@@ -2423,7 +2423,7 @@ async def collect_topics(cmd):
 	
 async def sync_topics(cmd):
 	
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 	
 	

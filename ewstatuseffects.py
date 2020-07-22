@@ -53,7 +53,7 @@ class EwStatusEffect:
 	time_expire = -1
 	value = 0
 	source = ""
-	id_target = ""
+	id_target = -1
 
 	def __init__(
 		self,
@@ -64,7 +64,7 @@ class EwStatusEffect:
 		source = "",
 		id_user = None,
 		id_server = None,
-		id_target = "",
+		id_target = -1,
 	):
 		if user_data != None:
 			id_user = user_data.id_user
@@ -175,7 +175,7 @@ class EwEnemyStatusEffect:
 	time_expire = -1
 	value = 0
 	source = ""
-	id_target = ""
+	id_target = -1
 
 	def __init__(
 		self,
@@ -186,7 +186,7 @@ class EwEnemyStatusEffect:
 		source = "",
 		id_enemy = None,
 		id_server = None,
-		id_target = "",
+		id_target = -1,
 	):
 		if enemy_data != None:
 			id_enemy = enemy_data.id_enemy

@@ -825,7 +825,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 # Remove all user overwrites in the server's POI channels
 async def remove_user_overwrites(cmd):
 	
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 	
 	server = cmd.message.guild
