@@ -1035,12 +1035,13 @@ async def barter(cmd):
 				accepted = False
 
 				try:
-					message = await cmd.client.wait_for(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
+					message = await cmd.client.wait_for('message', timeout = 20, check=lambda message: message.author == cmd.message.author and 
+															message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 					if message != None:
-						if message.content.lower() == ewcfg.cmd_prefix + "accept":
+						if message.content.lower() == ewcfg.cmd_accept:
 							accepted = True
-						if message.content.lower() == ewcfg.cmd_prefix + "refuse":
+						if message.content.lower() == ewcfg.cmd_refuse:
 							accepted = False
 				except:
 					accepted = False

@@ -443,12 +443,13 @@ async def set_length(cmd = None, dm = False):
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					try:
-						message = await cmd.client.wait_for(timeout=20, author=cmd.message.author, check=check)
+						message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
+														message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 						if message != None:
-							if message.content.lower() == ewcfg.cmd_prefix + "accept":
+							if message.content.lower() == ewcfg.cmd_accept:
 								accepted = True
-							if message.content.lower() == ewcfg.cmd_prefix + "refuse":
+							if message.content.lower() == ewcfg.cmd_refuse:
 								accepted = False
 
 					except:
@@ -568,12 +569,13 @@ async def edit_page(cmd = None, dm = False):
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					try:
-						message = await cmd.client.wait_for(timeout=20, author=cmd.message.author, check=check)
+						message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
+														message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 						if message != None:
-							if message.content.lower() == ewcfg.cmd_prefix + "accept":
+							if message.content.lower() == ewcfg.cmd_accept:
 								accepted = True
-							if message.content.lower() == ewcfg.cmd_prefix + "refuse":
+							if message.content.lower() == ewcfg.cmd_refuse:
 								accepted = False
 					except:
 						accepted = False
@@ -701,12 +703,13 @@ async def publish_manuscript(cmd = None, dm = False):
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 			try:
-				message = await cmd.client.wait_for(timeout=20, author=cmd.message.author, check=check)
+				message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
+														message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 				if message != None:
-					if message.content.lower() == ewcfg.cmd_prefix + "accept":
+					if message.content.lower() == ewcfg.cmd_accept:
 						accepted = True
-					if message.content.lower() == ewcfg.cmd_prefix + "refuse":
+					if message.content.lower() == ewcfg.cmd_refuse:
 						accepted = False
 			except:
 				accepted = False
@@ -794,12 +797,13 @@ async def read_book(cmd = None, dm = False):
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				try:
-					message = await cmd.client.wait_for(timeout=20, author=cmd.message.author, check=check)
+					message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
+														message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 					if message != None:
-						if message.content.lower() == ewcfg.cmd_prefix + "accept":
+						if message.content.lower() == ewcfg.cmd_accept:
 							accepted = True
-						if message.content.lower() == ewcfg.cmd_prefix + "refuse":
+						if message.content.lower() == ewcfg.cmd_refuse:
 							accepted = False
 				except:
 					accepted = False
@@ -1183,12 +1187,13 @@ async def order_zine(cmd):
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					try:
-						message = await cmd.client.wait_for(timeout=20, author=cmd.message.author, check=check)
+						message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
+														message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 						if message != None:
-							if message.content.lower() == ewcfg.cmd_prefix + "accept":
+							if message.content.lower() == ewcfg.cmd_accept:
 								accepted = True
-							if message.content.lower() == ewcfg.cmd_prefix + "refuse":
+							if message.content.lower() == ewcfg.cmd_refuse:
 								accepted = False
 					except:
 						accepted = False

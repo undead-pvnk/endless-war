@@ -691,7 +691,7 @@ async def attack(cmd):
 					resp_cont.add_channel_response(cmd.message.channel.name, response)
 					resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
 					await resp_cont.post()
-					msg = await cmd.client.wait_for(timeout = 5, author = member)
+					msg = await cmd.client.wait_for('message', timeout = 5, check = lambda message: message.author == member)
 
 					user_data = EwUser(member = cmd.message.author, data_level = 1)
 					shootee_data = EwUser(member = member, data_level = 1)

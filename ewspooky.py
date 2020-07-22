@@ -493,7 +493,8 @@ async def possess_weapon(cmd):
     
 			accepted = False
 			try:
-				msg = await cmd.client.wait_for(timeout = 30, author = inhabitee_member, check = ewutils.check_accept_or_refuse)
+				msg = await cmd.client.wait_for('message', timeout = 30, check=lambda message: message.author == inhabitee_member and 
+														message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 				if msg != None:
 					if msg.content.lower() == ewcfg.cmd_accept:
 						accepted = True

@@ -2004,7 +2004,7 @@ async def activate_trap_items(district, id_server, id_user):
 		trap_chance = int(trap_item_data.item_props.get('trap_chance'))
 		trap_user_id = trap_item_data.item_props.get('trap_user_id')
 		
-		if trap_user_id == user_data.id_user:
+		if int(trap_user_id) == user_data.id_user:
 			#print('trap same user id')
 			return
 		

@@ -1934,7 +1934,7 @@ async def jump(cmd):
 		for id_event in world_events:
 			if world_events.get(id_event) == ewcfg.event_type_voidhole:
 					event_data = EwWorldEvent(id_event = id_event)
-					if event_data.event_props.get('id_user') == user_data.id_user and event_data.event_props.get('poi') == user_data.poi:
+					if int(event_data.event_props.get('id_user')) == user_data.id_user and event_data.event_props.get('poi') == user_data.poi:
 						response = "You jump in!"
 						await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 						await asyncio.sleep(1)

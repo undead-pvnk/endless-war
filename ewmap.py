@@ -1197,7 +1197,8 @@ async def teleport(cmd):
 		windup_finished = True
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You get a running start to charge up your Quantum Legs..."))
 		try:
-			msg = await cmd.client.wait_for(timeout=30, author=cmd.message.author, check=ewutils.check_is_command)
+			msg = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and 
+														cmd.message.content.startswith(ewcfg.cmd_prefix))
 
 			if msg != None:
 				windup_finished = False

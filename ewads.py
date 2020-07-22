@@ -184,7 +184,8 @@ async def advertise(cmd):
 
 	accepted = False
 	try:
-		msg = await cmd.client.wait_for(timeout = 30, author = cmd.message.author, check = ewutils.check_confirm_or_cancel)
+		msg = await cmd.client.wait_for('message', timeout = 30, check=lambda message: message.author == cmd.message.author and 
+															message.content.lower() in [ewcfg.cmd_confirm, ewcfg.cmd_cancel])
 
 		if msg != None:
 			if msg.content.lower() == ewcfg.cmd_confirm:

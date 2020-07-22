@@ -233,7 +233,7 @@ async def mine(cmd):
 						minigame_event = event_data.event_type
 				if world_events.get(id_event) == ewcfg.event_type_minecollapse:
 					event_data = EwWorldEvent(id_event = id_event)
-					if event_data.event_props.get('id_user') == user_data.id_user and event_data.event_props.get('poi') == user_data.poi:
+					if int(event_data.event_props.get('id_user')) == user_data.id_user and event_data.event_props.get('poi') == user_data.poi:
 						captcha = event_data.event_props.get('captcha').lower()
 						tokens_lower = []
 						for token in cmd.tokens[1:]:
@@ -602,7 +602,7 @@ async def mismine(cmd, user_data, cause):
 	for id_event in world_events:
 		if world_events.get(id_event) == ewcfg.event_type_minecollapse:
 			event_data = EwWorldEvent(id_event = id_event)
-			if event_data.event_props.get('id_user') == user_data.id_user:
+			if int(event_data.event_props.get('id_user')) == user_data.id_user:
 				mine_collapse = True
 				captcha = event_data.event_props.get('captcha')
 	

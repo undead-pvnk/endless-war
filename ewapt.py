@@ -312,7 +312,8 @@ async def signlease(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	try:
-		message = await cmd.client.wait_for(timeout=30, author=cmd.message.author, check=check)
+		message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and 
+														message.content.lower() in [ewcfg.cmd_sign, ewcfg.cmd_rip])
 
 		if message != None:
 			if message.content.lower() == ewcfg.cmd_sign:
@@ -320,7 +321,8 @@ async def signlease(cmd):
 			if message.content.lower() == ewcfg.cmd_rip:
 				accepted = False
 
-	except:
+	except Exception as e:
+		print(e)
 		accepted = False
 
 	if not accepted:
@@ -551,14 +553,14 @@ async def apt_look(cmd):
 	usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
 	apt_model = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 	poi = ewcfg.id_to_poi.get(apt_model.poi)
-	lookObject = cmd.message.author.id
+	lookObject = str(cmd.message.author.id)
 	isVisiting = False
 	resp_cont = ewutils.EwResponseContainer(id_server=playermodel.id_server)
 
 	if usermodel.visiting != ewcfg.location_id_empty:
 		apt_model = EwApartment(id_user=usermodel.visiting, id_server=playermodel.id_server)
 		poi = ewcfg.id_to_poi.get(apt_model.poi)
-		lookObject = usermodel.visiting
+		lookObject = str(usermodel.visiting)
 		isVisiting = True
 
 	response = "You stand in {}, your flat in {}.\n\n{}\n\n".format(apt_model.name, poi.str_name, apt_model.description)
@@ -931,12 +933,13 @@ async def upgrade(cmd):
 		accepted = False
 
 		try:
-			message = await cmd.client.wait_for(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
+			message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and 
+															message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 			if message != None:
-				if message.content.lower() == ewcfg.cmd_prefix + "accept":
+				if message.content.lower() == ewcfg.cmd_accept:
 					accepted = True
-				if message.content.lower() == ewcfg.cmd_prefix + "refuse":
+				if message.content.lower() == ewcfg.cmd_refuse:
 					accepted = False
 		except:
 			accepted = False
@@ -1051,13 +1054,13 @@ async def add_key(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		try:
 			accepted = False
-			message = await cmd.client.wait_for(timeout=30, author=cmd.message.author,
-														check=ewutils.check_accept_or_refuse)
+			message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and 
+															message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 			if message != None:
-				if message.content.lower() == ewcfg.cmd_prefix + "accept":
+				if message.content.lower() == ewcfg.cmd_accept:
 					accepted = True
-				if message.content.lower() == ewcfg.cmd_prefix + "refuse":
+				if message.content.lower() == ewcfg.cmd_refuse:
 					accepted = False
 		except:
 			accepted = False
@@ -1167,12 +1170,13 @@ async def manual_changelocks(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		try:
 			accepted = False
-			message = await cmd.client.wait_for(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
+			message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and 
+															message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 			if message != None:
-				if message.content.lower() == ewcfg.cmd_prefix + "accept":
+				if message.content.lower() == ewcfg.cmd_accept:
 					accepted = True
-				if message.content.lower() == ewcfg.cmd_prefix + "refuse":
+				if message.content.lower() == ewcfg.cmd_refuse:
 					accepted = False
 		except:
 			accepted = False
@@ -1415,7 +1419,8 @@ async def knock(cmd = None):
 				else:
 					user_data = EwUser(member=cmd.message.author)
 					ewutils.active_target_map[user_data.id_user] = target_data.apt_zone
-					message = await cmd.client.wait_for(timeout=20, author=target, check=ewutils.check_accept_or_refuse)
+					message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == target and 
+														message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 					if message != None:
 						if message.content.lower() == ewcfg.cmd_accept:
@@ -1541,7 +1546,8 @@ async def trickortreat(cmd = None):
 				else:
 					user_data = EwUser(member=cmd.message.author)
 					ewutils.active_target_map[user_data.id_user] = target_data.apt_zone
-					message = await cmd.client.wait_for(timeout=20, author=target, check=ewutils.check_trick_or_treat)
+					message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == target and 
+														message.content.lower() in [ewcfg.cmd_trick, ewcfg.cmd_treat])
 
 					if message != None:
 						if message.content.lower() == ewcfg.cmd_treat:
@@ -1755,12 +1761,13 @@ async def cancel(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		try:
 			accepted = False
-			message = await cmd.client.wait_for(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
+			message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and 
+															message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 			if message != None:
-				if message.content.lower() == ewcfg.cmd_prefix + "accept":
+				if message.content.lower() == ewcfg.cmd_accept:
 					accepted = True
-				if message.content.lower() == ewcfg.cmd_prefix + "refuse":
+				if message.content.lower() == ewcfg.cmd_refuse:
 					accepted = False
 		except:
 			accepted = False
@@ -1806,10 +1813,10 @@ async def toss_squatters(user_id = None, server_id = None, keepKeys = False):
 				"SELECT {} FROM users WHERE {} = %s AND {} = %s".format(
 					ewcfg.col_id_user,
 					ewcfg.col_visiting,
-					ewcfg.col_id_server
+					ewcfg.col_id_server,
 				), (
 					player_info.id_user,
-					server_id
+					server_id,
 				))
 
 			squatters = cursor.fetchall()
@@ -2386,7 +2393,7 @@ async def aptCommands(cmd):
 		return await browse(cmd=cmd)
 	# from here, all commands are prebuilt and just set to work in DMs
 	cmd.message.author = member_object
-	cmd.message.guild = server
+	#cmd.message.guild = server
 	if cmd_text == ewcfg.cmd_use:
 		return await ewitem.item_use(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_pot:

@@ -326,7 +326,7 @@ async def prank_item_effect_response(cmd, item):
 	
 				accepted = 0
 				try:
-					msg = await cmd.client.wait_for(timeout=response_timer, author=member)
+					msg = await cmd.client.wait_for('message', timeout=response_timer,check=lambda message: message.author == cmd.message.author)
 	
 					if msg != None:
 						if msg.content == "!" + response_command:

@@ -1272,7 +1272,8 @@ async def trade(cmd):
 
 		try:
 			member = cmd.mentions[0]
-			msg = await cmd.client.wait_for(timeout = 30, author = member, check = ewutils.check_accept_or_refuse)
+			msg = await cmd.client.wait_for('message', timeout = 30, check=lambda message: message.author == member and 
+													message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 			if msg != None and msg.content.lower() == ewcfg.cmd_accept:
 				accepted = True
@@ -1510,9 +1511,10 @@ async def complete_trade(cmd):
 
 async def cancel_trade(cmd):
 	user_trade = ewutils.active_trades.get(cmd.message.author.id)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	#if user_data.life_state == ewcfg.life_state_shambler:
+	#	response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 	if user_trade != None and len(user_trade) > 0 and user_trade.get("state") > ewcfg.trade_state_proposed:
