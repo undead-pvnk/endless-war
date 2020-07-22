@@ -135,7 +135,7 @@ async def create(cmd):
 	}
 
 	new_item_id = ewitem.item_create(
-		id_server = cmd.message.guild.id,
+		id_server = cmd.guild.id,
 		id_user = recipient.id,
 		item_type = ewcfg.it_cosmetic,
 		item_props = item_props
@@ -182,7 +182,7 @@ async def create(cmd):
 # 	medallion_id = ewitem.item_create(
 # 		item_type=medallion.item_type,
 # 		id_user=recipient.id,
-# 		id_server=cmd.message.guild.id,
+# 		id_server=cmd.guild.id,
 # 		item_props=medallion_props
 # 	)
 # 
@@ -210,7 +210,7 @@ async def create(cmd):
 # 		mask_id = ewitem.item_create(
 # 			item_type=mask.item_type,
 # 			id_user=recipient.id,
-# 			id_server=cmd.message.guild.id,
+# 			id_server=cmd.guild.id,
 # 			item_props=mask_props
 # 		)
 # 
@@ -233,7 +233,7 @@ async def create(cmd):
 # 		sword_id = ewitem.item_create(
 # 			item_type=sword.item_type,
 # 			id_user=recipient.id,
-# 			id_server=cmd.message.guild.id,
+# 			id_server=cmd.guild.id,
 # 			item_props=sword_props
 # 		)
 # 

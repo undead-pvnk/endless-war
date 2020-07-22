@@ -214,11 +214,11 @@ async def clear_quadrant(cmd):
 	quadrant_data = EwQuadrant(id_server=author.guild.id, id_user=author.id, quadrant=quadrant.id_quadrant)
 	
 	if quadrant_data.id_target != "":
-		target_member_data = cmd.message.guild.get_member(quadrant_data.id_target)
+		target_member_data = cmd.guild.get_member(quadrant_data.id_target)
 		target_member_data_2 = None
 		
 		if quadrant_data.id_target2 != "":
-			target_member_data_2 = cmd.message.guild.get_member(quadrant_data.id_target)
+			target_member_data_2 = cmd.guild.get_member(quadrant_data.id_target)
 
 		quadrant_data = EwQuadrant(id_server=author.guild.id, id_user=author.id, quadrant=quadrant.id_quadrant, id_target="", id_target2="")
 		quadrant_data.persist()

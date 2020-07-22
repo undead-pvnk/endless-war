@@ -2396,7 +2396,7 @@ async def collect_topics(cmd):
 		return
 	
 	client = get_client()
-	server = client.get_guild(cmd.message.guild.id)
+	server = client.get_guild(cmd.guild.id)
 	topic_count = 0
 	
 	for channel in server.channels:
@@ -2433,7 +2433,7 @@ async def sync_topics(cmd):
 		if poi.topic == None or poi.topic == '':
 			poi_has_blank_topic = True
 		
-		channel = get_channel(cmd.message.guild, poi.channel)
+		channel = get_channel(cmd.guild, poi.channel)
 		
 		if channel == None:
 			logMsg('Failed to get channel for {}'.format(poi.id_poi))

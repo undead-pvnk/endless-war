@@ -132,7 +132,7 @@ async def rattle(cmd):
 			ewitem.item_create(
 				item_type = ewcfg.it_item,
 				id_user = user_data.poi,
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				item_props={
 					'id_item': bone_item.id_item,
 					'context': bone_item.context,
@@ -343,8 +343,8 @@ async def rampage(cmd):
 async def flutter(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.race == ewcfg.races["avian"]:
-		district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.guild.id)
-		market_data = EwMarket(id_server=cmd.message.guild.id)
+		district_data = EwDistrict(district = user_data.poi, id_server = cmd.guild.id)
+		market_data = EwMarket(id_server=cmd.guild.id)
 		response = "You flap your wings in an attempt to fly, but "
 		excuses = []
 

@@ -38,6 +38,7 @@ class EwCmd:
 	client = None
 	mentions = []
 	mentions_count = 0
+	guild = None
 
 	def __init__(
 		self,
@@ -51,6 +52,7 @@ class EwCmd:
 		self.client = client
 		self.mentions = mentions
 		self.mentions_count = len(mentions)
+		self.guild = message.guild
 
 		if len(tokens) >= 1:
 			self.tokens_count = len(tokens)
@@ -136,7 +138,7 @@ async def score(cmd):
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
 
-		poudrin_amount = ewitem.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.message.guild.id)
+		poudrin_amount = ewitem.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.guild.id)
 
 		# return my score
 		response = "You currently have {:,} slime{}.".format(user_data.slimes, (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
@@ -402,7 +404,7 @@ async def data(cmd):
 
 		cosmetics = ewitem.inventory(
 			id_user=cmd.message.author.id,
-			id_server=cmd.message.guild.id,
+			id_server=cmd.guild.id,
 			item_type_filter=ewcfg.it_cosmetic
 		)
 		adorned_cosmetics = []
@@ -516,7 +518,7 @@ async def data(cmd):
 		if len(adorned_cosmetics) > 0:
 			response_block += "You have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
 
-			outfit_map = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.guild.id)
+			outfit_map = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.guild.id)
 			user_data.persist()
 
 			if outfit_map is not None:
@@ -674,7 +676,7 @@ async def fashion(cmd):
 
 		cosmetic_items = ewitem.inventory(
 			id_user = cmd.message.author.id,
-			id_server = cmd.message.guild.id,
+			id_server = cmd.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
 		)
 
@@ -716,7 +718,7 @@ async def fashion(cmd):
 			if len(adorned_cosmetics) >= 2:
 				response += "\n\n"
 
-				outfit_map = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.guild.id)
+				outfit_map = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.guild.id)
 				user_data.persist()
 
 				if outfit_map is not None:
@@ -766,7 +768,7 @@ async def fashion(cmd):
 
 		cosmetic_items = ewitem.inventory(
 			id_user = member.id,
-			id_server = cmd.message.guild.id,
+			id_server = cmd.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
 		)
 
@@ -860,13 +862,13 @@ async def fashion(cmd):
 
 
 async def endlesswar(cmd):
-	total = ewutils.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.message.guild.id))
+	total = ewutils.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
 	totalslimes = total[0][0]
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "ENDLESS WAR has amassed {:,} slime.".format(totalslimes)))
 
 async def swearjar(cmd):
-	market_data = EwMarket(id_server=cmd.message.guild.id)
+	market_data = EwMarket(id_server=cmd.guild.id)
 	total_swears = market_data.global_swear_jar
 	
 	response = "The swear jar has reached: **{}**".format(total_swears)
@@ -922,9 +924,9 @@ def weather_txt(id_server):
 
 """ time and weather information """
 async def weather(cmd):
-	response = weather_txt(cmd.message.guild.id)
+	response = weather_txt(cmd.guild.id)
 
-	market_data = EwMarket(id_server=cmd.message.guild.id)
+	market_data = EwMarket(id_server=cmd.guild.id)
 	time_current = market_data.clock
 	if 3 <= time_current <= 10:
 		response += "\n\nThe police are probably all asleep, the lazy fucks. It's a good time for painting the town!"
@@ -1032,7 +1034,7 @@ async def coinflip(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	response = ""
 	
-	if ewutils.check_user_has_role(cmd.message.guild, cmd.message.author, ewcfg.role_donor_proper):
+	if ewutils.check_user_has_role(cmd.guild, cmd.message.author, ewcfg.role_donor_proper):
 		
 		if user_data.slimecoin <= 1:
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "YOU DON'T H4V3 4NY SL1M3CO1N TO FL1P >:["))
@@ -1076,7 +1078,7 @@ async def help(cmd):
 	# help only checks for districts while in game channels
 
 	# checks if user is in a college or if they have a game guide
-	gameguide = ewitem.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.message.guild.id if cmd.message.guild is not None else None, item_type_filter = ewcfg.it_item)
+	gameguide = ewitem.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
 
 	if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu or gameguide:
 		if not len(cmd.tokens) > 1:
@@ -1367,7 +1369,7 @@ async def balance_cosmetics(cmd):
 					col_stack_size = ewcfg.col_stack_size,
 					id_server = ewcfg.col_id_server,
 
-					server_id = cmd.message.guild.id,
+					server_id = cmd.guild.id,
 					type_item = ewcfg.it_cosmetic
 				))
 
@@ -1514,7 +1516,7 @@ async def piss(cmd):
 async def fursuit(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	mutations = user_data.get_mutations()
-	market_data = EwMarket(id_server=cmd.message.guild.id)
+	market_data = EwMarket(id_server=cmd.guild.id)
 
 	if ewcfg.mutation_id_organicfursuit in mutations:
 		days_until = -market_data.day % 31
@@ -1609,7 +1611,7 @@ async def pray(cmd):
 			"@everyone Yo, Slimernalia! https://imgur.com/16mzAJT"
 		)
 		response = "NOW GO FORTH AND SPLATTER SLIME."
-		market_data = EwMarket(id_server = cmd.message.guild.id)
+		market_data = EwMarket(id_server = cmd.guild.id)
 		market_data.weather = ewcfg.weather_sunny
 		market_data.persist()
 
@@ -1622,7 +1624,7 @@ async def pray(cmd):
 		diceroll = random.randint(1, 100)
 
 		# Redeem the player for their sins.
-		market_data = EwMarket(id_server=cmd.message.guild.id)
+		market_data = EwMarket(id_server=cmd.guild.id)
 		market_data.global_swear_jar = max(0, market_data.global_swear_jar - 3)
 		market_data.persist()
 		user_data.swear_jar = 0
@@ -1636,7 +1638,7 @@ async def pray(cmd):
 			ewitem.item_create(
 				item_type = item.item_type,
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				item_props = item_props
 			)
 
@@ -1689,7 +1691,7 @@ async def recycle(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 	
 	if item_sought:
 		item = EwItem(id_item = item_sought.get("id_item"))
@@ -1728,7 +1730,7 @@ async def recycle(cmd):
 				ewitem.item_create(
 					item_type = item_reward.item_type,
 					id_user = cmd.message.author.id,
-					id_server = cmd.message.guild.id,
+					id_server = cmd.guild.id,
 					item_props = item_props
 				)
 
@@ -1796,7 +1798,7 @@ async def view_sap(cmd):
 async def push(cmd):
 	time_now = int(time.time())
 	user_data = EwUser(member=cmd.message.author)
-	districtmodel = EwDistrict(id_server=cmd.message.guild.id, district=ewcfg.poi_id_slimesendcliffs)
+	districtmodel = EwDistrict(id_server=cmd.guild.id, district=ewcfg.poi_id_slimesendcliffs)
 
 	if cmd.mentions_count == 0:
 		response = "You try to push a nearby building. Nope, still not strong enough to move it."
@@ -1810,7 +1812,7 @@ async def push(cmd):
 	target_mutations = targetmodel.get_mutations()
 	user_mutations = user_data.get_mutations()
 
-	server = cmd.message.guild
+	server = cmd.guild
 
 	if targetmodel.poi != user_data.poi:
 		response = "You can't {} them because they aren't here.".format(cmd.tokens[0])
@@ -1821,7 +1823,7 @@ async def push(cmd):
 		formatMap = {}
 		formatMap["target_name"] = target.display_name
 
-		slimeoid_model = EwSlimeoid(id_server=cmd.message.guild.id, id_user=targetmodel.id_user)
+		slimeoid_model = EwSlimeoid(id_server=cmd.guild.id, id_user=targetmodel.id_user)
 		if slimeoid_model.name != "":
 			slimeoid_model = slimeoid_model.name
 		else:
@@ -1882,7 +1884,7 @@ async def push(cmd):
 		districtmodel.change_slimes(n=slimetotal)
 		districtmodel.persist()
 
-		cliff_inventory = ewitem.inventory(id_server=cmd.message.guild.id, id_user=targetmodel.id_user)
+		cliff_inventory = ewitem.inventory(id_server=cmd.guild.id, id_user=targetmodel.id_user)
 		for item in cliff_inventory:
 			item_object = ewitem.EwItem(id_item=item.get('id_item'))
 			if item.get('soulbound') == True:
@@ -1890,17 +1892,17 @@ async def push(cmd):
 
 			elif item_object.item_type == ewcfg.it_weapon:
 				if item.get('id_item') == targetmodel.weapon:
-					ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.message.guild.id)
+					ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
 
 				else:
-					item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.guild.id)
+					item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.guild.id)
 
 
 			elif item_object.item_props.get('adorned') == 'true':
-				ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.message.guild.id)
+				ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
 
 			else:
-				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.guild.id)
+				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.guild.id)
 
 
 
@@ -1930,7 +1932,7 @@ async def jump(cmd):
 		response = "You bonk your head on the shaft's ceiling."
 		# if voidhole world event is valid, move the guy to the void and post a message
 		# else, post something about them bonking their heads
-		world_events = ewworldevent.get_world_events(id_server = cmd.message.guild.id)
+		world_events = ewworldevent.get_world_events(id_server = cmd.guild.id)
 		for id_event in world_events:
 			if world_events.get(id_event) == ewcfg.event_type_voidhole:
 					event_data = EwWorldEvent(id_event = id_event)
@@ -1948,7 +1950,7 @@ async def jump(cmd):
 						void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
 						wafflehouse_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
 						response = "You do a backflip on the way down, bounce on the trampoline a few times to reduce your momentum, and climb down a ladder from the roof, down to the ground. You find yourself standing next to {}, in {}.".format(wafflehouse_poi.str_name, void_poi.str_name)
-						msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.guild, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+						msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
 						await asyncio.sleep(20)
 						try:
 							await msg.delete()
@@ -1965,7 +1967,7 @@ async def jump(cmd):
 	else:
 		response = "Hmm. The cliff looks safe enough. You imagine, with the proper diving posture, you'll be able to land in the slime unharmed. You steel yourself for the fall, run along the cliff, and swan dive off its steep edge. Of course, you forgot that the Slime Sea is highly corrosive, there are several krakens there, and you can't swim. Welp, time to die."
 
-		cliff_inventory = ewitem.inventory(id_server=cmd.message.guild.id, id_user=user_data.id_user)
+		cliff_inventory = ewitem.inventory(id_server=cmd.guild.id, id_user=user_data.id_user)
 		for item in cliff_inventory:
 			item_object = ewitem.EwItem(id_item=item.get('id_item'))
 			if item.get('soulbound') == True:
@@ -1973,23 +1975,23 @@ async def jump(cmd):
 
 			elif item_object.item_type == ewcfg.it_weapon:
 				if item.get('id_item') == user_data.weapon or item.get('id_item') == user_data.sidearm:
-					ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.message.guild.id)
+					ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
 
 				else:
-					item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.guild.id)
+					item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.guild.id)
 
 
 			elif item_object.item_props.get('adorned') == 'true':
-				ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.message.guild.id)
+				ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
 
 			else:
-				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.guild.id)
+				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.guild.id)
 
 		user_data.trauma = ewcfg.trauma_id_environment
 		die_resp = user_data.die(cause = ewcfg.cause_cliff)
 		user_data.persist()
 		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-		if die_resp != ewutils.EwResponseContainer(id_server = cmd.message.guild.id):
+		if die_resp != ewutils.EwResponseContainer(id_server = cmd.guild.id):
 			await die_resp.post()
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2156,11 +2158,11 @@ async def flush_subzones(cmd):
 		), (
 			used_mother_district,
 			subzone,
-			cmd.message.guild.id
+			cmd.guild.id
 		))
 
-		subzone_data = EwDistrict(district = subzone, id_server = cmd.message.guild.id)
-		district_data = EwDistrict(district = used_mother_district, id_server = cmd.message.guild.id)
+		subzone_data = EwDistrict(district = subzone, id_server = cmd.guild.id)
+		district_data = EwDistrict(district = used_mother_district, id_server = cmd.guild.id)
 
 		district_data.change_slimes(n = subzone_data.slimes)
 		subzone_data.change_slimes(n = -subzone_data.slimes)
@@ -2192,7 +2194,7 @@ async def wrap(cmd):
 		response = "C'mon man, you got friends, don't you? Try and give a gift to someone other than yourself."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	paper_sought = ewitem.find_item(item_search="wrappingpaper", id_user=cmd.message.author.id, id_server=cmd.message.guild.id, item_type_filter = ewcfg.it_item)
+	paper_sought = ewitem.find_item(item_search="wrappingpaper", id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter = ewcfg.it_item)
 	
 	if paper_sought:
 		paper_item = EwItem(id_item=paper_sought.get('id_item'))
@@ -2206,7 +2208,7 @@ async def wrap(cmd):
 	gift_message = cmd.tokens[2]
 	
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[3:])
-	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
+	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
 
 	if item_sought:
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
@@ -2227,7 +2229,7 @@ async def wrap(cmd):
 			
 			ewitem.item_create(
 				id_user=cmd.message.author.id,
-				id_server=cmd.message.guild.id,
+				id_server=cmd.guild.id,
 				item_type=ewcfg.it_item,
 				item_props={
 					'item_name': gift_name,
@@ -2239,7 +2241,7 @@ async def wrap(cmd):
 					'gifted': "false"
 				}
 			)
-			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "gift", id_server=cmd.message.guild.id)
+			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "gift", id_server=cmd.guild.id)
 			ewitem.item_delete(id_item=paper_item.id_item)
 
 			user_data.persist()
@@ -2253,12 +2255,12 @@ async def wrap(cmd):
 
 async def unwrap(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
+	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
 	if item_sought:
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_item:
 			if item.item_props.get('id_item') == "gift":
-				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
+				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user=cmd.message.author.id, id_server=cmd.guild.id)
 				
 				gifted_item = EwItem(id_item=item.item_props.get('acquisition'))
 				
@@ -2337,7 +2339,7 @@ async def forge_master_poudrin(cmd):
 	}
 
 	new_item_id = ewitem.item_create(
-		id_server=cmd.message.guild.id,
+		id_server=cmd.guild.id,
 		id_user=user_data.id_user,
 		item_type=ewcfg.it_cosmetic,
 		item_props=item_props
@@ -2417,7 +2419,7 @@ async def create_item(cmd):
 		generated_item_id = ewitem.item_create(
 			item_type=item_type,
 			id_user=cmd.message.author.id,
-			id_server=cmd.message.guild.id,
+			id_server=cmd.guild.id,
 			stack_max=20 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else -1,
 			stack_size=1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
 			item_props=item_props
@@ -2464,7 +2466,7 @@ async def set_slime(cmd):
 	else:
 		target = cmd.mentions[0]
 
-	target_user_data = EwUser(id_user=target.id, id_server=cmd.message.guild.id)
+	target_user_data = EwUser(id_user=target.id, id_server=cmd.guild.id)
 
 	if len(cmd.tokens) > 2:
 		new_slime = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
@@ -2507,7 +2509,7 @@ async def check_stats(cmd):
 	else:
 		target = cmd.mentions[0]
 
-	target_user_data = EwUser(id_user = target.id, id_server = cmd.message.guild.id, data_level = 2)
+	target_user_data = EwUser(id_user = target.id, id_server = cmd.guild.id, data_level = 2)
 
 	if target_user_data != None:
 		response = "They have {} attack, {}  defense, and {} speed.".format(target_user_data.attack, target_user_data.defense, target_user_data.speed)
@@ -2597,7 +2599,7 @@ async def prank(cmd):
 
 				if item_action == "delete":
 					ewitem.item_delete(item.id_item)
-					#prank_feed_channel = ewutils.get_channel(cmd.message.guild, ewcfg.channel_prankfeed)
+					#prank_feed_channel = ewutils.get_channel(cmd.guild, ewcfg.channel_prankfeed)
 					#await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response + "\n`-------------------------`")))
 
 				elif item_action == "drop":
@@ -2623,7 +2625,7 @@ async def ping_me(cmd):
 		return
 	
 	pinged_poi = ewcfg.id_to_poi.get(requested_channel)
-	channel = ewutils.get_channel(cmd.message.guild, pinged_poi.channel)
+	channel = ewutils.get_channel(cmd.guild, pinged_poi.channel)
 
 	if pinged_poi != None:
 		response = user_data.get_mention()

@@ -125,7 +125,7 @@ async def adorn(cmd):
 
 		cosmetic_items = ewitem.inventory(
 			id_user = cmd.message.author.id,
-			id_server = cmd.message.guild.id,
+			id_server = cmd.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
 		)
 
@@ -215,7 +215,7 @@ async def dedorn(cmd):
 
 		cosmetic_items = ewitem.inventory(
 			id_user = cmd.message.author.id,
-			id_server = cmd.message.guild.id,
+			id_server = cmd.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
 		)
 
@@ -276,7 +276,7 @@ async def dye(cmd):
 
 		items = ewitem.inventory(
 			id_user = cmd.message.author.id,
-			id_server = cmd.message.guild.id,
+			id_server = cmd.guild.id,
 		)
 
 		cosmetic = None
@@ -444,7 +444,7 @@ async def sew(cmd):
 
 			cosmetic_items = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_cosmetic
 			)
 
@@ -574,7 +574,7 @@ async def retrofit(cmd):
 
 			cosmetic_items = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.guild.id,
+				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_cosmetic
 			)
 

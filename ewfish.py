@@ -391,7 +391,7 @@ async def cast(cmd):
 
 			item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			author = cmd.message.author
-			server = cmd.message.guild
+			server = cmd.guild
 
 			item_sought = ewitem.find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
@@ -574,7 +574,7 @@ async def reel(cmd):
 		else:
 			if fisher.current_fish == "item":
 				
-				slimesea_inventory = ewitem.inventory(id_server = cmd.message.guild.id, id_user = ewcfg.poi_id_slimesea)			
+				slimesea_inventory = ewitem.inventory(id_server = cmd.guild.id, id_user = ewcfg.poi_id_slimesea)			
 
 				if fisher.pier.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.5:
 
@@ -588,7 +588,7 @@ async def reel(cmd):
 						ewitem.item_create(
 							item_type = item.item_type,
 							id_user = cmd.message.author.id,
-							id_server = cmd.message.guild.id,
+							id_server = cmd.guild.id,
 							item_props = item_props
 						)
 
@@ -697,7 +697,7 @@ async def reel(cmd):
 
 				ewitem.item_create(
 					id_user = cmd.message.author.id,
-					id_server = cmd.message.guild.id,
+					id_server = cmd.guild.id,
 					item_type = ewcfg.it_food,
 					item_props = {
 						'id_food': ewcfg.fish_map[fisher.current_fish].id_fish,
@@ -784,8 +784,8 @@ async def appraise(cmd):
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
-	payment = ewitem.find_item(item_search = "manhattanproject", id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None, item_type_filter = ewcfg.it_food)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+	payment = ewitem.find_item(item_search = "manhattanproject", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_food)
 
 	# Checking availability of appraisal
 	#if market_data.clock < 8 or market_data.clock > 17:
@@ -903,7 +903,7 @@ async def barter(cmd):
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 
 	# Checking availability of appraisal
 	#if market_data.clock < 8 or market_data.clock > 17:
@@ -954,7 +954,7 @@ async def barter(cmd):
 
 			else:
 				offer = EwOffer(
-					id_server = cmd.message.guild.id,
+					id_server = cmd.guild.id,
 					id_user = cmd.message.author.id,
 					offer_give = id_fish
 				)
@@ -1047,7 +1047,7 @@ async def barter(cmd):
 					accepted = False
 
 				offer = EwOffer(
-					id_server = cmd.message.guild.id,
+					id_server = cmd.guild.id,
 					id_user = cmd.message.author.id,
 					offer_give = id_fish
 				)
@@ -1093,7 +1093,7 @@ async def barter(cmd):
 						ewitem.item_create(
 							item_type = item.item_type,
 							id_user = cmd.message.author.id,
-							id_server = cmd.message.guild.id,
+							id_server = cmd.guild.id,
 							item_props = item_props
 						)
 
@@ -1135,7 +1135,7 @@ async def embiggen(cmd):
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.guild.id if cmd.message.guild is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "How are you going to embiggen your fish on the side of the street? You’ve got to see a professional for this, man. Head to the SlimeCorp Laboratory, they’ve got dozens of modern day magic potions ‘n shit over there."

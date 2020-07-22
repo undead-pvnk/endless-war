@@ -231,7 +231,7 @@ async def embark(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.guild.id)
+	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -311,7 +311,7 @@ async def embark(cmd):
 						response = "You enter the {}.".format(transport_data.transport_type)
 						await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 						await user_data.move_inhabitants(id_poi = transport_data.poi)
-						return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.guild, transport_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+						return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, transport_poi.channel), ewutils.formatMessage(cmd.message.author, response))
 					else:
 						response = "The {} starts moving just as you try to get on.".format(transport_data.transport_type)
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -438,7 +438,7 @@ async def disembark(cmd):
 			await user_data.move_inhabitants(id_poi = stop_poi.id_poi)
 			response = "You enter {}".format(stop_poi.str_name)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.guild, stop_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, stop_poi.channel), ewutils.formatMessage(cmd.message.author, response))
 
 			# SWILLDERMUK
 			await ewutils.activate_trap_items(stop_poi.id_poi, user_data.id_server, user_data.id_user)

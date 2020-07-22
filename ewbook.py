@@ -778,7 +778,7 @@ async def read_book(cmd = None, dm = False):
 			book_title = ewutils.flattenTokenListToString(cmd.tokens[1:len(cmd.tokens) - 1])
 			page_number = ewutils.getIntToken(cmd.tokens)
 
-		book_sought = ewitem.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.message.guild.id if cmd.message.guild is not None else None, item_type_filter = ewcfg.it_book)
+		book_sought = ewitem.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_book)
 
 		if book_sought:
 			book = EwItem(id_item = book_sought.get('id_item'))
@@ -978,7 +978,7 @@ async def browse_zines(cmd):
 	else:
 		if not sort_token.isdigit():
 			book_list = []
-			resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.guild.id)
+			resp_cont = ewutils.EwResponseContainer(id_server=cmd.guild.id)
 			query_suffix = ""
 			query_sort = "id_book"
 			more_selects = ""
@@ -1050,7 +1050,7 @@ async def browse_zines(cmd):
 						"WHERE b.id_server = %s AND b.book_state {} {}".format(quality, query_suffix) +
 						"ORDER BY b.{}".format(query_sort)
 				), (
-					cmd.message.guild.id,
+					cmd.guild.id,
 				))
 
 				data = cursor.fetchall()
@@ -1117,7 +1117,7 @@ async def browse_zines(cmd):
 		else:
 			id_book = int(sort_token)
 
-			if int_is_zine(id_book, cmd.message.guild.id):
+			if int_is_zine(id_book, cmd.guild.id):
 				book = EwBook(id_book=id_book)
 				title = book.title
 				author = book.author
@@ -1177,7 +1177,7 @@ async def order_zine(cmd):
 		if cmd.tokens[1].isdigit():
 			id_book = int(cmd.tokens[1])
 
-			if int_is_zine(id_book, cmd.message.guild.id):
+			if int_is_zine(id_book, cmd.guild.id):
 				book = EwBook(id_book=id_book)
 				accepted = True
 				if book.genre == 3:
@@ -1211,7 +1211,7 @@ async def order_zine(cmd):
 						ewitem.item_create(
 							item_type=ewcfg.it_book,
 							id_user=user_data.id_user,
-							id_server=cmd.message.guild.id,
+							id_server=cmd.guild.id,
 							item_props={
 								"title": book.title,
 								"author": book.author,
@@ -1238,7 +1238,7 @@ async def order_zine(cmd):
 							ewitem.item_create(
 								item_type=ewcfg.it_item,
 								id_user=author.id_user,
-								id_server=cmd.message.guild.id,
+								id_server=cmd.guild.id,
 								item_props={
 									'context': 'poudrin',
 									'item_name': 'Royalty Poudrin',
@@ -1272,7 +1272,7 @@ async def rate_zine(cmd):
 				response = "Easy now, keep your fucks between 1 and 5."
 
 			else:
-				book_sought = ewitem.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.message.guild.id if cmd.message.guild is not None else None)
+				book_sought = ewitem.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
 
 				if book_sought:
 					book_item = EwItem(id_item=book_sought.get('id_item'))
@@ -1298,7 +1298,7 @@ async def rate_zine(cmd):
 										ewcfg.col_rating,
 									)
 							), (
-								cmd.message.guild.id,
+								cmd.guild.id,
 								cmd.message.author.id,
 							))
 
@@ -1363,7 +1363,7 @@ async def take_down_zine(cmd):
 		else:
 			admin = True
 
-		if int_is_zine(book, cmd.message.guild.id):
+		if int_is_zine(book, cmd.guild.id):
 			book = EwBook(id_book = book)
 
 			if (not admin and book.id_user == cmd.message.author.id) and book.book_state > 0:
@@ -1401,7 +1401,7 @@ async def untake_down_zine(cmd):
 		else:
 			admin = True
 
-		if int_is_zine(id_book = book, id_server = cmd.message.guild.id, negative = True):
+		if int_is_zine(id_book = book, id_server = cmd.guild.id, negative = True):
 			book = EwBook(id_book=book)
 
 			if book.book_state >= 0:
@@ -1433,7 +1433,7 @@ async def zine_dm_commands(cmd):
 	server = ewcfg.server_list[user_data.id_server]
 	member_object = server.get_member(user_data.id_user)
 	cmd.message.author = member_object
-	cmd.message.guild = server
+	cmd.guild = server
 	dm = True
 
 	if cmd_text in [ewcfg.cmd_beginmanuscript, ewcfg.cmd_beginmanuscript_alt_1, ewcfg.cmd_beginmanuscript_alt_2]:

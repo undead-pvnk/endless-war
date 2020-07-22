@@ -265,7 +265,7 @@ async def craps(cmd):
 			else:
 				response += "\n\nYou didn't roll 7. You lost your {}.".format(currency_used)
 				if currency_used == ewcfg.currency_soul:
-					ewitem.give_item(id_item=soul_id, id_user="casinosouls", id_server=cmd.message.guild.id)
+					ewitem.give_item(id_item=soul_id, id_user="casinosouls", id_server=cmd.guild.id)
 
 			# add winnings/subtract losses
 			if currency_used == ewcfg.currency_slimecoin:
@@ -2704,8 +2704,8 @@ async def skat_choose(cmd):
 		return
 
 async def betsoul(cmd):
-	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
-	user_inv = ewitem.inventory(id_user=cmd.message.author.id, id_server=cmd.message.guild.id, item_type_filter=ewcfg.it_cosmetic)
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
+	user_inv = ewitem.inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -2740,19 +2740,19 @@ async def betsoul(cmd):
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		ewitem.give_item(id_user="casinosouls", id_server=cmd.message.guild.id, id_item=item_select.id_item)
+		ewitem.give_item(id_user="casinosouls", id_server=cmd.guild.id, id_item=item_select.id_item)
 		user_data.change_slimecoin(coinsource=ewcfg.coinsource_spending, n=ewcfg.soulprice) #current price for souls is 500 mil slimecoin
 		user_data.persist()
 		response = "You hand over {} for {:,} slimecoin.".format(item_select.item_props.get('cosmetic_name'), ewcfg.soulprice)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def buysoul(cmd):
-	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	casino_inv = ewitem.inventory(id_user="casinosouls", id_server=cmd.message.guild.id, item_type_filter=ewcfg.it_cosmetic)
+	casino_inv = ewitem.inventory(id_user="casinosouls", id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
 
 	if cmd.mentions_count == 1:
 		mention_target = cmd.mentions[0]
@@ -2785,7 +2785,7 @@ async def buysoul(cmd):
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		ewitem.give_item(id_user=cmd.message.author.id, id_server=cmd.message.guild.id, id_item=selected_item.id_item)
+		ewitem.give_item(id_user=cmd.message.author.id, id_server=cmd.guild.id, id_item=selected_item.id_item)
 		user_data.change_slimecoin(coinsource=ewcfg.coinsource_spending, n= -ewcfg.soulprice)  # current price for souls is 500 mil slimecoin
 		user_data.persist()
 		response = "You buy {} off the casino. This will be fun.".format(selected_item.item_props.get('cosmetic_name'))

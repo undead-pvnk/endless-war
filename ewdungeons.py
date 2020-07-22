@@ -114,7 +114,7 @@ async def tutorial_cmd(cmd):
 
 		poi_def = ewcfg.id_to_poi.get(user_data.poi)
 		channels = [poi_def.channel]
-		return await ewutils.post_in_channels(cmd.message.guild.id, ewutils.formatMessage(cmd.message.author, response), channels)
+		return await ewutils.post_in_channels(cmd.guild.id, ewutils.formatMessage(cmd.message.author, response), channels)
 
 	if cmd_content in tutorial_scene.options:
 		new_state = tutorial_scene.options.get(cmd_content)
@@ -136,7 +136,7 @@ async def tutorial_cmd(cmd):
 
 		poi_def = ewcfg.id_to_poi.get(user_data.poi)
 		channels = [poi_def.channel]
-		return await ewutils.post_in_channels(cmd.message.guild.id, ewutils.formatMessage(cmd.message.author, response), channels)
+		return await ewutils.post_in_channels(cmd.guild.id, ewutils.formatMessage(cmd.message.author, response), channels)
 
 
 	else:
