@@ -2092,7 +2092,7 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
 			else:
 				status_data = EwEnemyStatusEffect(id_status = status, enemy_data = user_data)
 
-			if status_data.id_target != "":
+			if status_data.id_target != -1:
 				if shooter_data.id_user != status_data.id_target:
 					continue
 

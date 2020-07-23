@@ -918,7 +918,7 @@ class EwEnemy:
 			if len(users) > 0:
 				target_data = EwUser(id_user = random.choice(users)[0], id_server = enemy_data.id_server)
 		elif enemy_data.ai == ewcfg.enemy_ai_defender:
-			if enemy_data.id_target != "":
+			if enemy_data.id_target != -1:
 				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
 		else:
 			target_data = get_target_by_ai(enemy_data)
@@ -950,7 +950,7 @@ class EwEnemy:
 		if enemy_data.ai == ewcfg.enemy_ai_coward:
 			return
 		elif enemy_data.ai == ewcfg.enemy_ai_defender:
-			if enemy_data.id_target != "":
+			if enemy_data.id_target != -1:
 				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
 		else:
 			target_data = get_target_by_ai(enemy_data)
@@ -985,7 +985,7 @@ class EwEnemy:
 		if enemy_data.ai == ewcfg.enemy_ai_coward:
 			return
 		elif enemy_data.ai == ewcfg.enemy_ai_defender:
-			if enemy_data.id_target != "":
+			if enemy_data.id_target != -1:
 				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
 		else:
 			target_data = get_target_by_ai(enemy_data)
@@ -1141,7 +1141,7 @@ async def enemy_perform_action(id_server):
 	despawn_timenow = int(time.time()) - ewcfg.time_despawn
 
 	enemydata = ewutils.execute_sql_query(
-		"SELECT {id_enemy} FROM enemies WHERE ((enemies.poi IN (SELECT users.poi FROM users WHERE NOT (users.life_state = %s OR users.life_state = %s) AND users.id_server = {id_server})) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.lifetime < %s) OR (enemies.id_target != '')) AND enemies.id_server = {id_server}".format(
+		"SELECT {id_enemy} FROM enemies WHERE ((enemies.poi IN (SELECT users.poi FROM users WHERE NOT (users.life_state = %s OR users.life_state = %s) AND users.id_server = {id_server})) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.lifetime < %s) OR (enemies.id_target != -1)) AND enemies.id_server = {id_server}".format(
 		id_enemy=ewcfg.col_id_enemy,
 		id_server=id_server
 	), (
@@ -1945,7 +1945,7 @@ def get_target_by_ai(enemy_data):
 	raidbossaggrotimer = time_now - ewcfg.time_raidbossaggro
 
 	if enemy_data.ai == ewcfg.enemy_ai_defender:
-		if enemy_data.id_target != "":
+		if enemy_data.id_target != -1:
 			target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server, data_level = 1)
 
 	elif enemy_data.ai == ewcfg.enemy_ai_attacker_a:

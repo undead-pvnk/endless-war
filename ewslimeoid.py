@@ -1023,9 +1023,9 @@ async def petslimeoid(cmd):
 
 		for quadrant in ewcfg.quadrant_ids:
 			quadrant_data = ewquadrants.EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
-			if quadrant_data.id_target != "" and quadrant_data.check_if_onesided() is False:
+			if quadrant_data.id_target != -1 and quadrant_data.check_if_onesided() is False:
 				list_ids.append(quadrant_data.id_target)
-			if quadrant_data.id_target2 != "" and quadrant_data.check_if_onesided() is False:
+			if quadrant_data.id_target2 != -1 and quadrant_data.check_if_onesided() is False:
 				list_ids.append(quadrant_data.id_target2)
 
 
@@ -1091,9 +1091,9 @@ async def abuseslimeoid(cmd):
 
 		for quadrant in ewcfg.quadrant_ids:
 			quadrant_data = ewquadrants.EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
-			if quadrant_data.id_target != "" and quadrant_data.check_if_onesided() is False:
+			if quadrant_data.id_target != -1 and quadrant_data.check_if_onesided() is False:
 				list_ids.append(quadrant_data.id_target)
-			if quadrant_data.id_target2 != "" and quadrant_data.check_if_onesided() is False:
+			if quadrant_data.id_target2 != -1 and quadrant_data.check_if_onesided() is False:
 				list_ids.append(quadrant_data.id_target2)
 
 
