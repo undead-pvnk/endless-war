@@ -578,7 +578,7 @@ class EwEnemy:
 						district_data.change_slimes(n=slimes_todistrict, source=ewcfg.source_killing)
 
 						# Player was killed. Remove its id from enemies with defender ai.
-						enemy_data.id_target = ""
+						enemy_data.id_target = -1
 						target_data.id_killer = enemy_data.id_enemy
 
 						#target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
@@ -767,7 +767,7 @@ class EwEnemy:
 					
 				self.poi = new_poi
 				self.time_lastenter = int(time.time())
-				self.id_target = ""
+				self.id_target = -1
 
 				# print("DEBUG - {} MOVED FROM {} TO {}".format(self.display_name, old_poi, new_poi))
 
@@ -1906,7 +1906,7 @@ def get_enemy_data(enemy_type):
 	enemy.bleed_storage = 0
 	enemy.time_lastenter = 0
 	enemy.initialslimes = 0
-	enemy.id_target = ""
+	enemy.id_target = -1
 	enemy.raidtimer = 0
 	enemy.rare_status = rare_status
 	enemy.weathertype = ""

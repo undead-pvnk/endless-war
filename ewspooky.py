@@ -279,7 +279,7 @@ async def summon_negaslimeoid(cmd):
 			slimeoid.sltype = ewcfg.sltype_nega
 			slimeoid.life_state = ewcfg.slimeoid_state_active
 			slimeoid.level = level
-			slimeoid.id_user = user_data.id_user
+			slimeoid.id_user = str(user_data.id_user)
 			slimeoid.id_server = user_data.id_server
 			slimeoid.poi = user_data.poi
 			slimeoid.name = negaslimeoid_name

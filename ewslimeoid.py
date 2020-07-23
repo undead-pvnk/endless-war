@@ -22,7 +22,7 @@ active_slimeoidbattles = {}
 """ Slimeoid data model for database persistence """
 class EwSlimeoid:
 	id_slimeoid = 0
-	id_user = -1
+	id_user = ""
 	id_server = -1
 
 	life_state = 0
@@ -53,8 +53,10 @@ class EwSlimeoid:
 		query_suffix = ""
 		user_data = None
 		if member != None:
-			id_user = member.id
+			id_user = str(member.id)
 			id_server = member.guild.id
+		elif id_user != None:
+			id_user = str(id_user)
 
 		#	user_data = EwUser(member = member)
 
@@ -205,7 +207,7 @@ class EwSlimeoid:
 
 	def die(self):
 		self.life_state = ewcfg.slimeoid_state_dead
-		self.id_user = -1
+		self.id_user = ""
 
 
 	def delete(self):
@@ -1260,7 +1262,7 @@ async def incubateslimeoid(cmd):
 				user_data.change_slimes(n = -value)
 				slimeoid.life_state = ewcfg.slimeoid_state_forming
 				slimeoid.level = level
-				slimeoid.id_user = user_data.id_user
+				slimeoid.id_user = str(user_data.id_user)
 				slimeoid.id_server = user_data.id_server
 
 				user_data.persist()
@@ -2874,7 +2876,7 @@ async def restoreslimeoid(cmd):
 		
 
 	slimeoid.life_state = ewcfg.slimeoid_state_active
-	slimeoid.id_user = user_data.id_user
+	slimeoid.id_user = str(user_data.id_user)
 	slimeoid.persist()
 
 	ewitem.item_delete(id_item = item_data.id_item)
@@ -2895,8 +2897,8 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 	challenger_slimeoid = EwSlimeoid(id_slimeoid = id_s2)
 
 	# fetch player data
-	challengee = EwPlayer(id_user = challengee_slimeoid.id_user)
-	challenger = EwPlayer(id_user = challenger_slimeoid.id_user)
+	challengee = EwPlayer(id_user = int(challengee_slimeoid.id_user))
+	challenger = EwPlayer(id_user = int(challenger_slimeoid.id_user))
 
 	client = ewutils.get_client()
 	
@@ -3351,7 +3353,7 @@ async def bottleslimeoid(cmd):
 
 		else:
 			slimeoid.life_state = ewcfg.slimeoid_state_stored
-			slimeoid.id_user = -1
+			slimeoid.id_user = ""
 
 			user_data.active_slimeoid = -1
 		
@@ -3585,7 +3587,7 @@ async def unbottleslimeoid(cmd):
 		response += "You shove {} into a random bottle. It's a tight squeeze, but in the end you manage to make it fit.\n\n".format(active_slimeoid.name)
 
 	slimeoid.life_state = ewcfg.slimeoid_state_active
-	slimeoid.id_user = user_data.id_user
+	slimeoid.id_user = str(user_data.id_user)
 
 	slimeoid.persist()
 

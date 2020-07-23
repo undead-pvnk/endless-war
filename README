@@ -194,7 +194,7 @@ CREATE TABLE farms (
 CREATE TABLE slimeoids (
 	id_slimeoid int NOT NULL AUTO_INCREMENT,
 	id_server bigint NOT NULL,
-	id_user bigint NOT NULL,
+	id_user varchar(128) NOT NULL,
 	life_state int NOT NULL DEFAULT '0',
 	body varchar(32) NOT NULL DEFAULT '',
 	head varchar(32) NOT NULL DEFAULT '',
