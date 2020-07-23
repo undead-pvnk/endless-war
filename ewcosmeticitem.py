@@ -525,7 +525,7 @@ async def sew(cmd):
 								accepted = False
 
 							# Cancel deal if the hat is no longer in user's inventory
-							if item_sought.id_owner != user_data.id_user:
+							if item_sought.id_owner != str(user_data.id_user):
 								accepted = False
 
 							# Cancel deal if the user has left Krak Bay
@@ -659,7 +659,7 @@ async def retrofit(cmd):
 								accepted = False
 
 							# Cancel deal if the hat is no longer in user's inventory
-							if item_sought.id_owner != user_data.id_user:
+							if item_sought.id_owner != str(user_data.id_user):
 								accepted = False
 
 							# Cancel deal if the user has left Krak Bay

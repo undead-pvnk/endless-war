@@ -1056,7 +1056,7 @@ async def barter(cmd):
 				fish = EwItem(id_item = id_fish)
 
 				# cancel deal if fish is no longer in user's inventory
-				if fish.id_owner != user_data.id_user:
+				if fish.id_owner != str(user_data.id_user):
 					accepted = False
 
 				# cancel deal if the user has left Vagrant's Corner
