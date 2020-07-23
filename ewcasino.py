@@ -1426,7 +1426,7 @@ async def russian_roulette(cmd):
 	#Wait for an answer
 	accepted = False
 	try:
-		msg = await cmd.client.wait_for('message', timeout = 30, check=lambda message: message.author == cmd.message.author and 
+		msg = await cmd.client.wait_for('message', timeout = 30, check=lambda message: message.author == member and 
 													message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 		if msg != None:

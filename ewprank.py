@@ -326,10 +326,10 @@ async def prank_item_effect_response(cmd, item):
 	
 				accepted = 0
 				try:
-					msg = await cmd.client.wait_for('message', timeout=response_timer,check=lambda message: message.author == cmd.message.author)
+					msg = await cmd.client.wait_for('message', timeout=response_timer,check=lambda message: message.author == member)
 	
 					if msg != None:
-						if msg.content == "!" + response_command:
+						if msg.content.lower() == "!" + response_command:
 							accepted = 1
 							
 							if limit != 5:
