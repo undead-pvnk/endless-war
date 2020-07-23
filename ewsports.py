@@ -21,8 +21,8 @@ sb_userid_to_player = {}
 #sports
 class EwShambleBallPlayer:
 
-	id_user = ""
-	id_server = ""
+	id_user = -1
+	id_server = -1
 	id_player = -1
 
 	id_game = -1
@@ -128,7 +128,7 @@ class EwShambleBallPlayer:
 
 class EwShambleBallGame:
 
-	id_server = ""
+	id_server = -1
 	id_game = -1
 
 	players = []

@@ -8,8 +8,8 @@ from ewplayer import EwPlayer
 
 class EwBook:
 	id_book = 0
-	id_server = ""
-	id_user = ""
+	id_server = -1
+	id_user = -1
 
 	# The name of the book
 	title = ""

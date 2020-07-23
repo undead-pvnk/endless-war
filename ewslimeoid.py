@@ -22,8 +22,8 @@ active_slimeoidbattles = {}
 """ Slimeoid data model for database persistence """
 class EwSlimeoid:
 	id_slimeoid = 0
-	id_user = ""
-	id_server = ""
+	id_user = -1
+	id_server = -1
 
 	life_state = 0
 	body = ""
@@ -205,7 +205,7 @@ class EwSlimeoid:
 
 	def die(self):
 		self.life_state = ewcfg.slimeoid_state_dead
-		self.id_user = ''
+		self.id_user = -1
 
 
 	def delete(self):
@@ -3351,7 +3351,7 @@ async def bottleslimeoid(cmd):
 
 		else:
 			slimeoid.life_state = ewcfg.slimeoid_state_stored
-			slimeoid.id_user = ""
+			slimeoid.id_user = -1
 
 			user_data.active_slimeoid = -1
 		

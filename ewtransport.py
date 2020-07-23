@@ -15,7 +15,7 @@ from ewdistrict import EwDistrict
 """
 class EwTransport:
 	# server id
-	id_server = ""
+	id_server = -1
 
 	# id of the EwPoi object for this transport
 	poi = ""
