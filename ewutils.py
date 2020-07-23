@@ -2010,7 +2010,7 @@ async def activate_trap_items(district, id_server, id_user):
 		
 		if random.randrange(101) < trap_chance:
 			# Trap was triggered!
-			pranker_data = EwUser(id_user=trap_user_id, id_server=id_server)
+			pranker_data = EwUser(id_user=int(trap_user_id), id_server=id_server)
 			pranked_data = user_data
 
 			response = trap_item_data.item_props.get('prank_desc')

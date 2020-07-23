@@ -220,7 +220,7 @@ async def clear_quadrant(cmd):
 		if quadrant_data.id_target2 != -1:
 			target_member_data_2 = cmd.guild.get_member(quadrant_data.id_target)
 
-		quadrant_data = EwQuadrant(id_server=author.guild.id, id_user=author.id, quadrant=quadrant.id_quadrant, id_target="", id_target2="")
+		quadrant_data = EwQuadrant(id_server=author.guild.id, id_user=author.id, quadrant=quadrant.id_quadrant, id_target=-1, id_target2=-1)
 		quadrant_data.persist()
 
 		response = "You break up with {}. Maybe it's for the best...".format(target_member_data.display_name)
@@ -290,14 +290,13 @@ def get_quadrant(cmd, id_quadrant):
 	if cmd.mentions_count == 0:
 		quadrant_data = EwQuadrant(id_server = author.guild.id, id_user = author.id, quadrant = quadrant.id_quadrant)
 		if author.guild.get_member(quadrant_data.id_target) is None:
-			quadrant_data.id_target = ""
+			quadrant_data.id_target = -1 
 		if author.guild.get_member(quadrant_data.id_target2) is None:
-			quadrant_data.id_target2 = ""
+			quadrant_data.id_target2 = -1
 
 		quadrant_data.persist()
-		
 
-		if quadrant_data.id_target == "":
+		if quadrant_data.id_target == -1:
 			response = "You have no one in this quadrant."
 		else:
 			onesided = quadrant_data.check_if_onesided()

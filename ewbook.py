@@ -198,8 +198,8 @@ def bought_check(bought):
 # The purpose of this is to make finding the average rating easier and to measure sales based on the amount of different people that buy them.
 class EwBookSale:
 	id_book = 0
-	id_user = ""
-	id_server = ""
+	id_user = -1
+	id_server = -1
 
 	# If a user bought the book. 0 is not bought.
 	bought = 0

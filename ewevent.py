@@ -8,7 +8,7 @@ import ewitem
 	death/resurrection, item discovery, etc.
 """
 class EwEvent:
-	id_server = ""
+	id_server = -1
 
 	event_type = None
 

@@ -93,16 +93,16 @@ col_prank_count = 'prank_count'
 col_id_server = 'id_server'
 		
 class PrankIndex:
-	id_server = ""
-	id_user_pranker = ""
-	id_user_pranked = ""
+	id_server = -1
+	id_user_pranker = -1
+	id_user_pranked = -1
 	prank_count = 0 # How many times has user 1 (pranker) pranked user 2 (pranked)?
 	
 	def __init__(
 		self,
-		id_server = "",
-		id_user_pranker = "",
-		id_user_pranked = "",
+		id_server = -1,
+		id_user_pranker = -1,
+		id_user_pranked = -1,
 		prank_count = 0,
 	):
 		self.id_server = id_server
