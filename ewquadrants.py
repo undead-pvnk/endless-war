@@ -240,7 +240,7 @@ async def get_quadrants(cmd):
 	else:
 		member = author
 	for quadrant in ewcfg.quadrant_ids:
-		quadrant_data = EwQuadrant(id_server = member.guild.id, id_user = member.id, quadrant = quadrant)
+		quadrant_data = EwQuadrant(id_server = cmd.guild.id, id_user = member.id, quadrant = quadrant)
 		if quadrant_data.id_target != "":
 			response += "\n"
 			response += get_quadrant(cmd, quadrant)

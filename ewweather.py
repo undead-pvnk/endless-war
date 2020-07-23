@@ -135,7 +135,7 @@ async def weather_tick(id_server = None):
 							'item_desc': "A poudrin-like crystal. If you listen carefully you can hear something that sounds like a faint heartbeat."
 						}
 						ewitem.item_create(
-							id_user = user_data.id_user,
+							id_user = str(user_data.id_user),
 							id_server = id_server,
 							item_type = ewcfg.it_item,
 							item_props = item_props

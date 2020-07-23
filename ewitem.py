@@ -1460,7 +1460,7 @@ def give_item(
 
 	if id_user is None and id_server is None and member is not None:
 		id_server = member.guild.id
-		id_user = member.id
+		id_user = str(member.id)
 
 	if id_server is not None and id_user is not None and id_item is not None:
 		ewutils.execute_sql_query(

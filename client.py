@@ -1450,6 +1450,7 @@ async def on_message(message):
 			playermodel = ewplayer.EwPlayer(id_user = message.author.id)
 			usermodel = EwUser(id_user=message.author.id, id_server= playermodel.id_server)
 			poi = ewcfg.id_to_poi.get(usermodel.poi)
+			cmd_obj.guild = ewcfg.server_list[playermodel.id_server]
 			# Direct message the player their inventory.
 			if ewitem.cmd_is_inventory(cmd):
 				return await ewitem.inventory_print(cmd_obj)

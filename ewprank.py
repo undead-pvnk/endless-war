@@ -397,7 +397,7 @@ async def prank_item_effect_trap(cmd, item):
 
 		#item.item_props["trap_stored_credence"] = halved_credence
 		item.item_props["trap_stored_credence"] = 0
-		item.item_props["trap_user_id"] = pranker_data.id_user
+		item.item_props["trap_user_id"] = str(pranker_data.id_user)
 		
 		item.persist()
 		pranker_data.persist()

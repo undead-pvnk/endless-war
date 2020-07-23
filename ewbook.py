@@ -1433,7 +1433,6 @@ async def zine_dm_commands(cmd):
 	server = ewcfg.server_list[user_data.id_server]
 	member_object = server.get_member(user_data.id_user)
 	cmd.message.author = member_object
-	cmd.guild = server
 	dm = True
 
 	if cmd_text in [ewcfg.cmd_beginmanuscript, ewcfg.cmd_beginmanuscript_alt_1, ewcfg.cmd_beginmanuscript_alt_2]:

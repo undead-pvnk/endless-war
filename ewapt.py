@@ -814,7 +814,7 @@ async def remove_item(cmd, dest):
 	key_1 = EwItem(id_item=aptmodel.key_1)
 	key_2 = EwItem(id_item=aptmodel.key_2)
 
-	if key_1.id_owner != usermodel.id_user and key_2.id_owner != usermodel.id_user and usermodel.visiting != ewcfg.location_id_empty:
+	if key_1.id_owner != str(usermodel.id_user) and key_2.id_owner != str(usermodel.id_user) and usermodel.visiting != ewcfg.location_id_empty:
 		response = "Burglary takes finesse. You are but a lowly gangster, who takes money the old fashioned way."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2393,7 +2393,6 @@ async def aptCommands(cmd):
 		return await browse(cmd=cmd)
 	# from here, all commands are prebuilt and just set to work in DMs
 	cmd.message.author = member_object
-	cmd.guild = server
 	if cmd_text == ewcfg.cmd_use:
 		return await ewitem.item_use(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_pot:
