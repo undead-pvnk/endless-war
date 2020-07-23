@@ -1154,9 +1154,9 @@ async def item_look(cmd):
 	response = ""
 
 	if poi.is_apartment:
-		item_sought_closet = find_item(item_search=item_search, id_user=user_data.id_user + ewcfg.compartment_id_closet, id_server=server)
-		item_sought_fridge = find_item(item_search=item_search, id_user=user_data.id_user + ewcfg.compartment_id_fridge, id_server=server)
-		item_sought_decorate = find_item(item_search=item_search, id_user=user_data.id_user + ewcfg.compartment_id_decorate, id_server=server)
+		item_sought_closet = find_item(item_search=item_search, id_user=str(user_data.id_user) + ewcfg.compartment_id_closet, id_server=server)
+		item_sought_fridge = find_item(item_search=item_search, id_user=str(user_data.id_user)+ ewcfg.compartment_id_fridge, id_server=server)
+		item_sought_decorate = find_item(item_search=item_search, id_user=str(user_data.id_user) + ewcfg.compartment_id_decorate, id_server=server)
 
 		item_dest.append(item_sought_closet)
 		item_dest.append(item_sought_fridge)
