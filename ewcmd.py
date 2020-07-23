@@ -2356,7 +2356,7 @@ async def forge_master_poudrin(cmd):
 		member.display_name)
 	await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
-# Debug
+# A debug function designed to generate almost any kind of item within the game. Can be used to give items to users.
 async def create_item(cmd):
 	if not cmd.message.author.guild_permissions.administrator:
 		return
@@ -2366,12 +2366,16 @@ async def create_item(cmd):
 	else:
 		return
 	
-	item = None
-	
-	# for item in ewcfg.item_list:
-	# 	if item.id_item == searched_item_id:
-	# 		found_item = item
-	# 		break
+	item_recipient = None
+	if cmd.mentions_count == 1:
+		item_recipient = cmd.mentions[0]
+	else:
+		item_recipient = cmd.message.author
+		
+	# The proper usage is !createitem [item id] [recipient]. The opposite order is invalid.
+	if '<@' in value: # Triggers if the 2nd command token is a mention
+		response = "Proper usage of !createitem: **!createitem [item id] [recipient]**."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
 	item = ewcfg.item_map.get(value)
 
@@ -2418,14 +2422,14 @@ async def create_item(cmd):
 
 		generated_item_id = ewitem.item_create(
 			item_type=item_type,
-			id_user=cmd.message.author.id,
+			id_user=item_recipient.id,
 			id_server=cmd.guild.id,
 			stack_max=20 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else -1,
 			stack_size=1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
 			item_props=item_props
 		)
 		
-		response = "Created item **{}** with id **{}** for **{}**".format(name, generated_item_id, cmd.message.author.display_name)
+		response = "Created item **{}** with id **{}** for **{}**".format(name, generated_item_id, item_recipient)
 	else:
 		response = "Could not find item."
 

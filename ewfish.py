@@ -384,6 +384,8 @@ async def cast(cmd):
 			fisher.bait = False
 			fisher.pier = ewcfg.id_to_poi.get(user_data.poi)
 			fisher.current_fish = gen_fish(market_data, fisher, has_fishingrod)
+			
+			high_value_bait_used = False
 
 			global fishing_counter
 			fishing_counter += 1
@@ -434,6 +436,9 @@ async def cast(cmd):
 					elif id_food == "kingpincrab":
 						if random.randrange(5) == 1:
 							fisher.current_fish = "uncookedkingpincrab"
+							
+					elif id_food == "masterbait":
+						high_value_bait_used = True
 
 					elif float(item.time_expir if item.time_expir is not None else 0) < time.time():
 						if random.randrange(2) == 1:
@@ -473,6 +478,8 @@ async def cast(cmd):
 			if fisher.pier == ewcfg.poi_id_ferry:
 				# Fisher is on the ferry, chance to get a bite increases from 1/10 to 1/8
 				fun -= 20
+			if high_value_bait_used:
+				fun = 5
 				
 			bun = 0
 
@@ -483,10 +490,12 @@ async def cast(cmd):
 				else:
 					damp = random.randrange(fun)
 				
-				if not fisher.high:
-					await asyncio.sleep(60)
-				else:
+				if fisher.high:
 					await asyncio.sleep(30)
+				elif high_value_bait_used:
+					await asyncio.sleep(5)
+				else:
+					await asyncio.sleep(60)
 
 				# Cancel if fishing was interrupted
 				if current_fishing_id != fisher.fishing_id:
