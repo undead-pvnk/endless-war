@@ -46,8 +46,8 @@ class EwStatusEffectDef:
 		self.crit_mod = crit_mod
 
 class EwStatusEffect:
-	id_server = ""
-	id_user = ""
+	id_server = -1
+	id_user = -1
 	id_status = ""
 	
 	time_expire = -1
@@ -168,8 +168,8 @@ class EwStatusEffect:
 			ewutils.databaseClose(conn_info)
 
 class EwEnemyStatusEffect:
-	id_server = ""
-	id_enemy = ""
+	id_server = -1
+	id_enemy = -1
 	id_status = ""
 	
 	time_expire = -1

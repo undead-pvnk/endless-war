@@ -9,8 +9,8 @@ import ewitem
 from ew import EwUser
 
 class EwRole:
-	id_server = ""
-	id_role = ""
+	id_server = -1
+	id_role = -1
 	name = ""
 
 	def __init__(self, id_server = None, name = None, id_role = None):
@@ -69,7 +69,7 @@ class EwRole:
 """
 	Find relevant roles and save them to the database.
 """
-def setupRoles(client = None, id_server = ""):
+def setupRoles(client = None, id_server = -1):
 	
 	roles_map = ewutils.getRoleMap(client.get_guild(id_server).roles)
 	for poi in ewcfg.poi_list:

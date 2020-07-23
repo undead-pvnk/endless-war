@@ -15,8 +15,8 @@ from ewslimeoid import EwSlimeoid
 from ewdistrict import EwDistrict
 
 class EwFarm:
-	id_server = ""
-	id_user = ""
+	id_server = -1
+	id_user = -1
 	name = ""
 	time_lastsow = 0
 	phase = 0

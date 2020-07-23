@@ -13,8 +13,8 @@ from ewstatuseffects import EwStatusEffect
 
 """ User model for database persistence """
 class EwUser:
-	id_user = ""
-	id_server = ""
+	id_user = -1
+	id_server = -1
 	id_killer = -1
 
 	combatant_type = "player"

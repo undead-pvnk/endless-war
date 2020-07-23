@@ -17,7 +17,7 @@ class EwEvent:
 
 	def __init__(
 		self,
-		id_server = "",
+		id_server = -1,
 		event_type = None,
 		id_user = None,
 		id_target = None

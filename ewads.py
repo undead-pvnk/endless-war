@@ -11,7 +11,7 @@ class EwAd:
 
 	id_ad = -1
 
-	id_server = ""
+	id_server = -1
 	id_sponsor = ""
 
 	content = ""

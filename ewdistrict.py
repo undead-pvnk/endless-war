@@ -17,7 +17,7 @@ from ew import EwUser
 	district data model for database persistence
 """
 class EwDistrict:
-	id_server = ""
+	id_server = -1
 
 	# The district's identifying string
 	name = ""

@@ -80,7 +80,7 @@ class Message:
 """
 class EwResponseContainer:
 	client = None
-	id_server = ""
+	id_server = -1
 	channel_responses = {}
 	channel_topics = {}
 	members_to_update = []

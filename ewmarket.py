@@ -14,7 +14,7 @@ from ewplayer import EwPlayer
 from ewdistrict import EwDistrict
 
 class EwMarket:
-	id_server = ""
+	id_server = -1
 
 	clock = 0
 	weather = 'sunny'
@@ -169,7 +169,7 @@ class EwMarket:
 			ewutils.databaseClose(conn_info)
 
 class EwStock:
-	id_server = ""
+	id_server = -1
 
 	# The stock's identifying string
 	id_stock = ""
@@ -272,7 +272,7 @@ class EwStock:
 		))
 
 class EwCompany:
-	id_server = ""
+	id_server = -1
 
 	id_stock = ""
 

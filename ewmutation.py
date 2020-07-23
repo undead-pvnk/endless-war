@@ -51,8 +51,8 @@ class EwMutationFlavor:
 
 
 class EwMutation:
-	id_server = ""
-	id_user = ""
+	id_server = -1
+	id_user = -1
 	id_mutation = ""
 
 	data = ""

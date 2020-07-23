@@ -35,8 +35,8 @@ fishers = {}
 fishing_counter = 0
 
 class EwOffer:
-	id_server = ""
-	id_user = ""
+	id_server = -1
+	id_user = -1
 	offer_give = 0
 	offer_receive = ""
 	time_sinceoffer = 0

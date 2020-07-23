@@ -10,8 +10,8 @@ import ewcfg
 	with. This is the server EW will use for direct message commands.
 """
 class EwPlayer:
-	id_user = ""
-	id_server = ""
+	id_user = -1
+	id_server = -1
 
 	avatar = ""
 	display_name = ""

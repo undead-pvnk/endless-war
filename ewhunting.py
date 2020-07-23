@@ -22,7 +22,7 @@ from ewstatuseffects import EwEnemyStatusEffect
 
 class EwEnemy:
 	id_enemy = 0
-	id_server = ""
+	id_server = -1
 
 	combatant_type = "enemy"
 
@@ -71,7 +71,7 @@ class EwEnemy:
 	lifetime = 0
 
 	# Used by the 'defender' AI to determine who it should retaliate against
-	id_target = ""
+	id_target = -1
 
 	# Used by raid bosses to determine when they should activate
 	raidtimer = 0
@@ -1897,7 +1897,7 @@ def get_enemy_data(enemy_type):
 	if random.randrange(5) == 0 and enemy_type not in ewcfg.overkill_enemies:
 		rare_status = 1
 
-	enemy.id_server = ""
+	enemy.id_server = -1
 	enemy.slimes = 0
 	enemy.totaldamage = 0
 	enemy.level = 0

@@ -46,15 +46,15 @@ class EwQuadrantFlavor:
 
 class EwQuadrant:
 
-	id_server = ""
+	id_server = -1
 
-	id_user = ""
+	id_user = -1
 
 	quadrant = ""
 
-	id_target = ""
+	id_target = -1
 
-	id_target2 = ""
+	id_target2 = -1
 
 
 	def __init__(self, id_server = None, id_user = None, quadrant = None, id_target = None, id_target2 = None):

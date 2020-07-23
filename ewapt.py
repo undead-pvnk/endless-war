@@ -25,8 +25,8 @@ from ewitem import EwItem
 from ewdistrict import EwDistrict
 
 class EwApartment:
-	id_user = ""
-	id_server = ""
+	id_user = -1
+	id_server = -1
 
 	name = "a city apartment."
 	description = "It's drafty in here! You briefly consider moving out, but your SlimeCoin is desperate to leave your pocket."
