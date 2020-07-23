@@ -153,7 +153,7 @@ async def score(cmd):
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+
 	if member != None:
 		await ewrolemgr.updateRoles(client = cmd.client, member = member)
 

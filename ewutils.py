@@ -1418,7 +1418,7 @@ async def send_message(client, channel, text):
 """
 async def edit_message(client, message, text):
 	try:
-		return await message.edit(text)
+		return await message.edit(content=str(text))
 	except:
 		logMsg('Failed to edit message. Updated text would have been:\n{}'.format(text))
 
