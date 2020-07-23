@@ -164,7 +164,7 @@ class EwResponseContainer:
 		# for ch in self.channel_topics:
 		# 	channel = get_channel(server = server, channel_name = ch)
 		# 	try:
-		# 		await self.client.edit_channel(channel = channel, topic = self.channel_topics[ch])
+		# 		await channel.edit(topic = self.channel_topics[ch])
 		# 	except:
 		# 		logMsg('Failed to set channel topic for {} to {}'.format(ch, self.channel_topics[ch]))
 
@@ -1414,11 +1414,11 @@ async def send_message(client, channel, text):
 		logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
 
 """
-	Proxy to discord.py Client.edit_message with exception handling.
+	Proxy to discord.py message.edit() with exception handling.
 """
 async def edit_message(client, message, text):
 	try:
-		return await client.edit_message(message, text)
+		return await message.edit(text)
 	except:
 		logMsg('Failed to edit message. Updated text would have been:\n{}'.format(text))
 
@@ -2454,7 +2454,7 @@ async def sync_topics(cmd):
 			
 		try:
 			await asyncio.sleep(2)
-			await cmd.client.edit_channel(channel = channel, topic = new_topic)
+			await channel.edit(topic = new_topic)
 			logMsg('Changed channel topic for {} to {}'.format(channel, debug_info))
 		except:
 			logMsg('Failed to set channel topic for {} to {}'.format(channel, debug_info))

@@ -150,7 +150,7 @@ async def hideRoleNames(cmd):
 				role = roles_map[poi.role]
 				if role.name != ewcfg.generic_role_name:
 					role_counter += 1
-					await client.edit_role(server = server, role = role, name = ewcfg.generic_role_name)
+					await role.edit(name = ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.role))
 			
@@ -159,7 +159,7 @@ async def hideRoleNames(cmd):
 				major_role = roles_map[poi.major_role]
 				if major_role.name != ewcfg.generic_role_name:
 					role_counter += 1
-					await client.edit_role(server=server, role=major_role, name=ewcfg.generic_role_name)
+					await major_role.edit(name = ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.major_role))
 			
@@ -168,7 +168,7 @@ async def hideRoleNames(cmd):
 				minor_role = roles_map[poi.minor_role]
 				if minor_role.name != ewcfg.generic_role_name:
 					role_counter += 1
-					await client.edit_role(server=server, role=minor_role, name=ewcfg.generic_role_name)
+					await minor_role.edit(name = ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.minor_role))
 
@@ -203,7 +203,7 @@ async def restoreRoleNames(cmd):
 			for role in server.roles:
 				if role.id == int(role_data.id_role):
 					role_counter += 1
-					await client.edit_role(server = server, role = role, name = role_data.name)
+					await role.edit(name = role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.role))
 			
@@ -212,7 +212,7 @@ async def restoreRoleNames(cmd):
 			for role in server.roles:
 				if role.id == int(major_role_data.id_role):
 					role_counter += 1
-					await client.edit_role(server = server, role = role, name = major_role_data.name)
+					await role.edit(name = major_role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.major_role))
 			
@@ -221,7 +221,7 @@ async def restoreRoleNames(cmd):
 			for role in server.roles:
 				if role.id == int(minor_role_data.id_role):
 					role_counter += 1
-					await client.edit_role(server = server, role = role, name = minor_role_data.name)
+					await role.edit(name = minor_role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.minor_role))
 			
@@ -252,7 +252,7 @@ async def recreateRoles(cmd):
 		# if poi.role != None:
 		# 
 		# 	if poi.role not in server_role_names:
-		# 		await client.create_role(server=server, name=poi.role)
+		# 		await server.create_role(name=poi.role)
 		# 		ewutils.logMsg('created role {} for poi {}'.format(poi.role, poi.id_poi))
 		# 
 		# 		roles_created += 1
@@ -263,7 +263,7 @@ async def recreateRoles(cmd):
 				
 				if poi.is_district:
 					#print(poi.major_role)
-					await client.create_role(server=server, name=poi.major_role)
+					await server.create_role(name=poi.major_role)
 					ewutils.logMsg('created major role {} for poi {}'.format(poi.major_role, poi.id_poi))
 	
 					roles_created += 1
@@ -273,7 +273,7 @@ async def recreateRoles(cmd):
 			if poi.minor_role not in server_role_names:
 				
 				if poi.is_district or poi.is_street:
-					await client.create_role(server=server, name=poi.minor_role)
+					await server.create_role(name=poi.minor_role)
 					ewutils.logMsg('created minor role {} for poi {}'.format(poi.minor_role, poi.id_poi))
 	
 					roles_created += 1

@@ -2080,7 +2080,7 @@ async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
 			new_nickname = current_nickname[:20]
 			new_nickname += '... (Bungis)'
 
-		await client.change_nickname(target_member, new_nickname)
+		await target_member.edit(nick=new_nickname)
 		
 		response = "\n\nYou are now known as {}!".format(target_member.display_name)
 
@@ -2116,7 +2116,7 @@ async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
 		
 		new_nickname = 'Ben Saint'
 
-		await client.change_nickname(target_member, new_nickname)
+		await target_member.edit(nick=new_nickname)
 
 		response = "\n\nYou are now Ben Saint.".format(target_member.display_name)
 		
