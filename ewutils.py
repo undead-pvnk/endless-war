@@ -2460,3 +2460,12 @@ async def sync_topics(cmd):
 			logMsg('Failed to set channel topic for {} to {}'.format(channel, debug_info))
 			
 	logMsg('Finished syncing topics.')
+	
+async def shut_down_bot(cmd):
+	
+	if not cmd.message.author.guild_permissions.administrator:
+		return await ewwep.suicide(cmd=cmd)
+	
+	logMsg('Goodbye!')
+	await asyncio.sleep(2)
+	sys.exit()

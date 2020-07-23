@@ -1284,6 +1284,7 @@ cmd_deleteroles = cmd_prefix + 'deleteroles'
 cmd_removeuseroverwrites = cmd_prefix + 'removeuseroverwrites'
 cmd_collectopics = cmd_prefix + 'collecttopics'
 cmd_synctopics = cmd_prefix + 'synctopics'
+cmd_shutdownbot = cmd_prefix + 'shutdownbot'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3

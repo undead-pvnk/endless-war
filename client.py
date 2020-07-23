@@ -666,6 +666,9 @@ cmd_map = {
 	
 	# Changes those channel topics according to what's in their EwPoi definition
 	ewcfg.cmd_synctopics: ewutils.sync_topics,
+	
+	# Shuts down the bot with sys.exit()
+	ewcfg.cmd_shutdownbot: ewutils.shut_down_bot,
 
 	# debug commands
 	# ewcfg.cmd_debug1: ewdebug.debug1,
