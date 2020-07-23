@@ -811,7 +811,7 @@ async def move(cmd = None, isApt = False):
 	
 	time_move_start = int(time.time())
 	
-	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False and isApt == False:
+	if isApt == False and ewutils.channel_name_is_poi(cmd.message.channel.name):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
