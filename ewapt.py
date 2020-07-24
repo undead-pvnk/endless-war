@@ -1110,7 +1110,7 @@ async def usekey(cmd, owner_user):
 	for item_inv in inv:
 		if "key to" in item_inv.get('name'):
 			item_key_check = EwItem(id_item=item_inv.get('id_item'))
-			if item_key_check.item_props.get("houseID") == owner_user.id_user:
+			if item_key_check.item_props.get("houseID") == str(owner_user.id_user):
 				key = item_key_check
 
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
