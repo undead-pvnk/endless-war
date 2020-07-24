@@ -2286,12 +2286,13 @@ async def setOffAlarms(id_server = None):
 					isFurnished = True
 				clock_user = clock_obj.id_owner.replace("decorate", "")
 				clock_member = server.get_member(user_id=clock_user)
-				clock_player = EwUser(id_user=clock_user, id_server=id_server)
-				if (isFurnished == False or ("apt" in clock_player.poi and clock_player.visiting == "empty")) and clock_member:
-					try:
-						await ewutils.send_message(client, clock_member, ewutils.formatMessage(clock_member, "BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP"))
-					except:
-						ewutils.logMsg("failed to send alarm to user {}".format(clock_member.id))
+				if clock_member != None:
+					clock_player = EwUser(member=clock_member)
+					if (isFurnished == False or ("apt" in clock_player.poi and clock_player.visiting == "empty")) and clock_member:
+						try:
+							await ewutils.send_message(client, clock_member, ewutils.formatMessage(clock_member, "BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP"))
+						except:
+							ewutils.logMsg("failed to send alarm to user {}".format(clock_member.id))
 
 async def jam(cmd):
 	#def leppard and pearl jam? meet def jam. this is what the refrance, fuck yeah.
