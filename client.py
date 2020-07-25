@@ -934,7 +934,7 @@ async def on_ready():
 		
 		#if not debug:
 		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
-		await ewtransport.init_transports(id_server = server.id)
+		# await ewtransport.init_transports(id_server = server.id)
 		asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
