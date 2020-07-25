@@ -498,7 +498,7 @@ async def rent_time(id_server = None):
 			landowners = cursor.fetchall()
 
 			for landowner in landowners:
-				owner_id_user = landowner[1]
+				owner_id_user = int(landowner[1])
 				owner_rent_price = landowner[0]
 
 				user_data = EwUser(id_user=owner_id_user, id_server=id_server)
@@ -2258,6 +2258,9 @@ async def set_alarm(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def setOffAlarms(id_server = None):
+	
+	ewutils.logMsg('Setting off alarms...')
+	
 	if id_server != None:
 		client = ewutils.get_client()
 		server = client.get_guild(id_server)

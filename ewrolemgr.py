@@ -577,6 +577,7 @@ async def updateRoles(
 	#ewutils.logMsg('found {} roles to replace'.format(len(replacement_roles)))
 	
 	try:
+		# ewutils.logMsg('replaced roles for {}. replacement roles were {}.'.format(member, replacement_roles))
 		await member.edit(roles=replacement_roles)
 	except:
 		ewutils.logMsg('error: failed to replace roles for {}'.format(member.display_name))
