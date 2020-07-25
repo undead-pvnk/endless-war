@@ -355,6 +355,7 @@ async def updateRoles(
 	server_default = None,
 	#refresh_perms = False,
 	refresh_perms = True,
+	remove_flag = False
 ):
 	time_now = int(time.time())
 
@@ -577,8 +578,15 @@ async def updateRoles(
 	#ewutils.logMsg('found {} roles to replace'.format(len(replacement_roles)))
 	
 	try:
-		# ewutils.logMsg('replaced roles for {}. replacement roles were {}.'.format(member, replacement_roles))
-		await member.edit(roles=replacement_roles)
+		time_now = time.time()
+		was_pvp = user_data.time_expirpvp > time_now
+		
+		if remove_flag:
+			if not was_pvp:
+				await member.edit(roles=replacement_roles)
+		else:
+			await member.edit(roles=replacement_roles)
+			
 	except:
 		ewutils.logMsg('error: failed to replace roles for {}'.format(member.display_name))
 

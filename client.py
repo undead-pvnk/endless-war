@@ -1040,7 +1040,7 @@ async def on_ready():
 					for member in all_current_members:
 						for role in member.roles:
 							if role.id in role_ids:
-								await ewrolemgr.updateRoles(client = client, member = member)
+								await ewrolemgr.updateRoles(client = client, member = member, remove_flag = True)
 								break
 
 			except:
