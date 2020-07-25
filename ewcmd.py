@@ -132,7 +132,7 @@ def gen_score_text(
 
 """ show player's slime score """
 async def score(cmd):
-	time_now_cmd_start = int(time.time())
+	time_now_cmd_start = time.time()
 	user_data = None
 	member = None
 
@@ -152,17 +152,17 @@ async def score(cmd):
 			display_name = member.display_name
 		)
 
-	time_now_msg_start = int(time.time())
+	time_now_msg_start = time.time()
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	time_now_msg_end = int(time.time())
+	time_now_msg_end = time.time()
 	
-	time_now_role_start = int(time.time())
+	time_now_role_start = time.time()
 	if member != None:
 		await ewrolemgr.updateRoles(client = cmd.client, member = member)
-	time_now_role_end = int(time.time())
+	time_now_role_end = time.time()
 	
-	time_now_cmd_end = int(time.time())
+	time_now_cmd_end = time.time()
 	ewutils.logMsg('send_message took {} seconds.'.format(time_now_msg_end - time_now_msg_start))
 	ewutils.logMsg('updateRoles took {} seconds.'.format(time_now_role_end - time_now_role_start))
 	ewutils.logMsg('total command time took {} seconds.'.format(time_now_cmd_end - time_now_cmd_start))
