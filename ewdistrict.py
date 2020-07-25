@@ -963,7 +963,7 @@ async def capture_tick(id_server):
 
 					dist.persist()
 
-	await resp_cont_capture_tick.post()
+	# await resp_cont_capture_tick.post()
 
 """
 	Coroutine that continually calls capture_tick; is called once per server, and not just once globally
@@ -1016,7 +1016,7 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 		responses =  district.decay_capture_points()
 		resp_cont_decay_loop.add_response_container(responses)
 		district.persist()
-	await resp_cont_decay_loop.post()
+	# await resp_cont_decay_loop.post()
 
 async def change_spray(cmd):
 	user_data = EwUser(member=cmd.message.author)
