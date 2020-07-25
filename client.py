@@ -1917,8 +1917,8 @@ async def on_message(message):
 			elif randint == 3:
 				msg_mistake = "ENDLESS WAR pays you no mind."
 
-			msg = await ewutils.send_message(client, cmd_obj.message.channel, msg_mistake)
-			await asyncio.sleep(2)
+			# msg = await ewutils.send_message(client, cmd_obj.message.channel, msg_mistake)
+			# await asyncio.sleep(2)
 			try:
 				# await msg.delete()
 				pass
