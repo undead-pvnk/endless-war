@@ -157,11 +157,14 @@ async def score(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	time_now_msg_end = int(time.time())
 	
+	time_now_role_start = int(time.time())
 	if member != None:
 		await ewrolemgr.updateRoles(client = cmd.client, member = member)
-		
+	time_now_role_end = int(time.time())
+	
 	time_now_cmd_end = int(time.time())
 	ewutils.logMsg('send_message took {} seconds.'.format(time_now_msg_end - time_now_msg_start))
+	ewutils.logMsg('updateRoles took {} seconds.'.format(time_now_role_end - time_now_role_start))
 	ewutils.logMsg('total command time took {} seconds.'.format(time_now_cmd_end - time_now_cmd_start))
 
 
