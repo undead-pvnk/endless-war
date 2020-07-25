@@ -106,7 +106,8 @@ class EwTransport:
 				await asyncio.sleep(schedule[0])
 				for message in last_messages:
 					try:
-						await message.delete()
+						# await message.delete()
+						pass
 					except:
 						ewutils.logMsg("Failed to delete message while moving transport {}.".format(transport_line.str_name))
 				self.current_stop = schedule[1]

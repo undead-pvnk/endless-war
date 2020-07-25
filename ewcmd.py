@@ -1953,7 +1953,8 @@ async def jump(cmd):
 						msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
 						await asyncio.sleep(20)
 						try:
-							await msg.delete()
+							# await msg.delete()
+							pass
 						except:
 							pass
 						return

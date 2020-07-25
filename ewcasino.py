@@ -2530,7 +2530,8 @@ async def skat(cmd):
 					trick.append(hands[idx].pop(play))
 					if idx == front_idx:
 						for tm in trick_msgs:
-							await tm.delete()
+							# await tm.delete()
+							pass
 						trick_msgs = []
 					trick_msgs.append(msg)
 					hand3parts = printhand(hands[idx])

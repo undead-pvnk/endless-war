@@ -1920,7 +1920,8 @@ async def on_message(message):
 			msg = await ewutils.send_message(client, cmd_obj.message.channel, msg_mistake)
 			await asyncio.sleep(2)
 			try:
-				await msg.delete()
+				# await msg.delete()
+				pass
 			except:
 				pass
 

@@ -149,10 +149,11 @@ async def tutorial_cmd(cmd):
 		elif randint == 3:
 			msg_mistake = "ENDLESS WAR pays you no mind."
 
-		msg = await ewutils.send_message(client, cmd.message.channel, msg_mistake)
+		# msg = await ewutils.send_message(client, cmd.message.channel, msg_mistake)
 		await asyncio.sleep(2)
 		try:
-			await msg.delete()
+			# await msg.delete()
+			pass
 		except:
 			pass
 
