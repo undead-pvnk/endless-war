@@ -1667,7 +1667,7 @@ async def duel(cmd):
 				text_mod = "***"
 			
 			if countdown == 10: 
-				countdown_resp = "ENDLESS WAR begins to count down...\n{}{}{}".format(text_mod, countdown, text_mod)
+				countdown_resp = "ENDLESS WAR begins to count down. Don't try anything funny...\n{}{}{}".format(text_mod, countdown, text_mod)
 			else:
 				countdown_resp = "{}{}{}".format(text_mod, countdown, text_mod)
 				

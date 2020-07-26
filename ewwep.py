@@ -2915,7 +2915,7 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 				
 	# Dressed to kill
 	if ewcfg.mutation_id_dressedtokill in user_mutations:
-		if user_data.freshness >= 1000:
+		if user_data.freshness >= 250:
 			damage_mod *= 1.5
 
 	if ewcfg.mutation_id_2ndamendment in user_mutations:

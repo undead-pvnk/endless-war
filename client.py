@@ -1148,6 +1148,8 @@ async def on_ready():
 
 					market_data.persist()
 
+					ewutils.logMsg('The time is now {}.'.format(market_data.clock))
+
 					if not ewutils.check_fursuit_active(market_data.id_server):
 						ewcosmeticitem.dedorn_all_costumes()
 
