@@ -968,7 +968,8 @@ async def hurl(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'https://ew.krakissi.net/img/tfaaap-hurl.gif'))
 
 async def lol(cmd):
-	ewutils.logMsg('received command...')
+	time_now = int(time.time())
+	print('Command Timestamp 2: {}'.format(time_now))
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'You laugh out loud!'))
 
 """

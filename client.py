@@ -1283,6 +1283,7 @@ async def on_message_delete(message):
 @client.event
 async def on_message(message):
 	time_now = int(time.time())
+	print('Command Timestamp 1: {}'.format(time_now))
 	ewcfg.set_client(client)
 
 	""" do not interact with our own messages """
@@ -1323,7 +1324,6 @@ async def on_message(message):
 			ewutils.logMsg('server {}: failed to update time_last_action for {}'.format(message.guild.id, message.author.id))
 		
 		user_data = EwUser(member = message.author)
-		
 		statuses = user_data.getStatusEffects()
 
 		if ewcfg.status_strangled_id in statuses:
@@ -1507,6 +1507,7 @@ async def on_message(message):
 
 				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
+		statuses = user_data.getStatusEffects()
 		# Ignore stunned players
 		if ewcfg.status_stunned_id in statuses:
 			return
