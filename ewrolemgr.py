@@ -353,9 +353,8 @@ async def updateRoles(
 	client = None,
 	member = None,
 	server_default = None,
-	#refresh_perms = False,
 	refresh_perms = True,
-	remove_flag = False
+	remove_or_apply_flag = None
 ):
 	time_now = int(time.time())
 
@@ -578,12 +577,31 @@ async def updateRoles(
 	#ewutils.logMsg('found {} roles to replace'.format(len(replacement_roles)))
 	
 	try:
-		time_now = time.time()
+		time_now = int(time.time())
 		was_pvp = user_data.time_expirpvp > time_now
+		user_is_pvp = False
+
+		role_ids = []
+		for pvp_role in ewcfg.role_to_pvp_role.values():
+			role = EwRole(id_server=member.guild.id, name = pvp_role)
+			role_ids.append(role.id_role)
+
+			for role in member.roles:
+				if role.id in role_ids:
+					user_is_pvp = True
+					break
 		
-		if remove_flag:
-			if not was_pvp:
-				await member.edit(roles=replacement_roles)
+		if remove_or_apply_flag != None:
+			
+			if was_pvp:
+				if remove_or_apply_flag == 'apply':
+					if not user_is_pvp:
+						# ewutils.logMsg('applying flag...')
+						await member.edit(roles=replacement_roles)
+			elif not was_pvp:
+				if remove_or_apply_flag == 'remove':
+					# ewutils.logMsg('removing flag...')
+					await member.edit(roles=replacement_roles)
 		else:
 			await member.edit(roles=replacement_roles)
 			

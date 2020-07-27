@@ -605,7 +605,8 @@ async def flag_vulnerable_districts(id_server = None):
 				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
 				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
 				user_data.persist()
-				await ewrolemgr.updateRoles(client = client, member = member)
+				
+				await ewrolemgr.updateRoles(client = client, member = member, remove_or_apply_flag = 'apply')
 
 				# Make sure to kill players who may have left while the bot was offline.
 				all_current_members = list(server.members)

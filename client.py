@@ -1020,7 +1020,7 @@ async def on_ready():
 				ewutils.logMsg('Twitch handler hit an exception (continuing): {}'.format(json_string))
 				traceback.print_exc(file = sys.stdout)
 
-		# Flag all users in the Outskirts for PvP
+		# Flag all users in dangerous areas for PvP
 		await ewutils.flag_vulnerable_districts(id_server = server.id)
 
 		# Clear PvP roles from players who are no longer flagged.
@@ -1040,7 +1040,7 @@ async def on_ready():
 					for member in all_current_members:
 						for role in member.roles:
 							if role.id in role_ids:
-								await ewrolemgr.updateRoles(client = client, member = member, remove_flag = True)
+								await ewrolemgr.updateRoles(client = client, member = member, remove_or_apply_flag = 'remove')
 								break
 
 			except:
