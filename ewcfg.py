@@ -8458,7 +8458,7 @@ food_list = [
         price = 10000000,
         str_name = "Master Bait",
         str_eat = "You toss the Master Bait into your mouth and chew thoroughly. Wow, what a waste of fucking time!",
-        str_desc = "The ultimate life form... for cathing fish, that is. It's said that attatching this strange, worm-like creature to the end of your hook will allow you reel in fish almost as soon as you cast it off.",
+        str_desc = "The ultimate life form... for cathing fish, that is. It's said that attatching this strange, worm-like creature to the end of your hook will allow you to reel in fish almost as soon as you cast it off.",
         perishable = False
     ),
 ]
