@@ -1476,7 +1476,7 @@ async def scout(cmd):
 		#	return await look(cmd)
 
 		# check if district is in scouting range
-		is_neighbor = user_poi.id_poi in ewcfg.poi_neighbors and poi.id_poi in ewcfg.poi_neighbors[user_poi.id_poi]
+		is_neighbor = user_poi.id_poi in ewcfg.poi_neighbors[poi.id_poi] and poi.id_poi in ewcfg.poi_neighbors[user_poi.id_poi]
 		is_current_transport_station = False
 		if user_poi.is_transport:
 			transport_data = EwTransport(id_server = user_data.id_server, poi = user_poi.id_poi)
