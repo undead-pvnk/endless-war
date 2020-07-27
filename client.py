@@ -1283,12 +1283,13 @@ async def on_message_delete(message):
 @client.event
 async def on_message(message):
 	time_now = int(time.time())
-	print('Command Timestamp 1: {}'.format(time_now))
 	ewcfg.set_client(client)
 
 	""" do not interact with our own messages """
 	if message.author.id == client.user.id or message.author.bot == True:
 		return
+	
+	print('Command Timestamp 1: {}'.format(time_now))
 
 	if message.guild != None:
 		# Note that the user posted a message.
