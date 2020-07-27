@@ -163,9 +163,9 @@ async def score(cmd):
 	time_now_role_end = int(time.time())
 	
 	time_now_cmd_end = int(time.time())
-	ewutils.logMsg('send_message took {} seconds.'.format(time_now_msg_end - time_now_msg_start))
-	ewutils.logMsg('updateRoles took {} seconds.'.format(time_now_role_end - time_now_role_start))
-	ewutils.logMsg('total command time took {} seconds.'.format(time_now_cmd_end - time_now_cmd_start))
+	# ewutils.logMsg('send_message took {} seconds.'.format(time_now_msg_end - time_now_msg_start))
+	# ewutils.logMsg('updateRoles took {} seconds.'.format(time_now_role_end - time_now_role_start))
+	# ewutils.logMsg('total command time took {} seconds.'.format(time_now_cmd_end - time_now_cmd_start))
 
 
 def gen_data_text(

@@ -1222,7 +1222,7 @@ async def post_in_channels(id_server, message, channels = None):
 		if type(channel) is str:  # if the channels are passed as strings instead of discord channel objects
 			channel = get_channel(server, channel)
 		if channel is not None and channel.type == discord.ChannelType.text:
-			await channel.send(message)
+			await channel.send(content=message)
 	return
 
 """
@@ -1407,7 +1407,7 @@ def get_client():
 """
 async def send_message(client, channel, text):
 	try:
-		return await channel.send(text)
+		return await channel.send(content=text)
 	except discord.errors.Forbidden:
 		logMsg('Could not message user: {}\n{}'.format(channel, text))
 		raise
