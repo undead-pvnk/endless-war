@@ -1801,7 +1801,13 @@ async def cancel(cmd):
 async def toss_squatters(user_id = None, server_id = None, keepKeys = False):
 	player_info = EwPlayer(id_user=user_id)
 	apt_info = EwApartment(id_user=user_id, id_server= server_id)
-	if player_info.id_server != None:
+
+	client = ewutils.get_client()
+	server = client.get_guild(server_id)
+	
+	member_data = server.get_member(player_info.id_user)
+	
+	if player_info.id_server != None and member_data != None:
 		try:
 			conn_info = ewutils.databaseConnect()
 			conn = conn_info.get('conn')
@@ -1815,7 +1821,7 @@ async def toss_squatters(user_id = None, server_id = None, keepKeys = False):
 					ewcfg.col_visiting,
 					ewcfg.col_id_server,
 				), (
-					player_info.id_user,
+					member_data.id,
 					server_id,
 				))
 
