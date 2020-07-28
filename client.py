@@ -931,7 +931,7 @@ async def on_ready():
 			pvp_roles[server.id].append(server.get_role(role.id_role))
 
 		# kill people who left the server while the bot was offline
-		ewutils.kill_quitters(server.id)
+		#ewutils.kill_quitters(server.id) #FIXME function get_member doesn't find users reliably
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
@@ -1033,7 +1033,8 @@ async def on_ready():
 				traceback.print_exc(file = sys.stdout)
 
 		# Flag all users in dangerous areas for PvP
-		await ewutils.flag_vulnerable_districts(id_server = server.id)
+		for server in client.guilds:
+			await ewutils.flag_vulnerable_districts(id_server = server.id)
 
 		# Clear PvP roles from players who are no longer flagged.
 		if (time_now - time_last_pvp) >= ewcfg.update_pvp:
