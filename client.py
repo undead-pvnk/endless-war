@@ -876,6 +876,9 @@ async def on_ready():
 	# Channels in the connected discord servers to send stock market updates to. Map of server ID to channel.
 	channels_stockmarket = {}
 
+	# PVP roles in the servers, used to update flags in the main loop
+	pvp_roles = {}
+
 	for server in client.guilds:
 		# Update server data in the database
 		ewserver.server_update(server = server)
@@ -920,6 +923,15 @@ async def on_ready():
 
 			except:
 				ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
+
+		# fetch all pvp roles to use in flag clearing later
+		pvp_roles[server.id] = []
+		for pvp_role in ewcfg.role_to_pvp_role.values():
+			role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
+			pvp_roles[server.id].append(server.get_role(role.id_role))
+
+		# kill people who left the server while the bot was offline
+		ewutils.kill_quitters(server.id)
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
@@ -1029,19 +1041,15 @@ async def on_ready():
 
 			try:
 				for server in client.guilds:
-					role_ids = []
-					for pvp_role in ewcfg.role_to_pvp_role.values():
-						role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
-						role_ids.append(role.id_role)
-						
-					all_current_members = list(server.members)
+
+					members = []
+					for role in pvp_roles[server.id]:
+						if role is not None:
+							members.extend(role.members)
 
 					# Monitor all user roles and update if a user is no longer flagged for PvP.
-					for member in all_current_members:
-						for role in member.roles:
-							if role.id in role_ids:
-								await ewrolemgr.updateRoles(client = client, member = member, remove_or_apply_flag = 'remove')
-								break
+					for member in members:
+						await ewrolemgr.updateRoles(client = client, member = member, remove_or_apply_flag = 'remove')
 
 			except:
 				ewutils.logMsg('An error occurred in the scheduled role update task:')
