@@ -543,6 +543,46 @@ def decaySlimes(id_server = None):
 			cursor.close()
 			databaseClose(conn_info)
 
+"""
+	Kills users who have left the server while the bot was offline
+"""
+def kill_quitters(id_server = None):
+	if id_server != None:
+		try:
+			client = get_client()
+			server = client.get_guild(id_server)
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND ( life_state > 0 OR slimes < 0 )".format(
+			), (
+				id_server,
+			))
+
+			users = cursor.fetchall()
+
+			for user in users:
+				member = server.get_member(user[0])
+
+				# Make sure to kill players who may have left while the bot was offline.
+				if member is None:
+					try:
+						user_data = EwUser(id_user = user[0], id_server = id_server)
+
+						user_data.trauma = ewcfg.trauma_id_suicide
+						user_data.die(cause=ewcfg.cause_leftserver)
+						user_data.persist()
+
+						logMsg('Player killed for leaving the server.')
+					except:
+						logMsg('Failed to kill member who left the server.')
+
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+
 """ Flag all users in the Outskirts for PvP """
 async def flag_outskirts(id_server = None):
 	if id_server != None:
@@ -586,7 +626,7 @@ async def flag_vulnerable_districts(id_server = None):
 			server = client.get_guild(id_server)
 			conn_info = databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
 			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND poi IN %s".format(
 			), (
@@ -601,26 +641,12 @@ async def flag_vulnerable_districts(id_server = None):
 				user_data = EwUser(id_user = user[0], id_server = id_server)
 				member = server.get_member(user_data.id_user)
 
-				# Make sure to kill players who may have left while the bot was offline.
-				all_current_members = list(server.members)
-				if member not in all_current_members:
-					try:
-						user_data = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
-
-						user_data.trauma = ewcfg.trauma_id_suicide
-						user_data.die(cause=ewcfg.cause_leftserver)
-						user_data.persist()
-
-						logMsg('Player killed for leaving the server.')
-					except:
-						logMsg('Failed to kill member who left the server.')
-				else:
-					# Flag the user for PvP
-					enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-					user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
-					user_data.persist()
-					
-					await ewrolemgr.updateRoles(client = client, member = member, remove_or_apply_flag = 'apply')
+				# Flag the user for PvP
+				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
+				user_data.persist()
+				
+				await ewrolemgr.updateRoles(client = client, member = member, remove_or_apply_flag = 'apply')
 
 			conn.commit()
 		finally:
