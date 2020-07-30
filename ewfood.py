@@ -228,9 +228,9 @@ async def menu(cmd):
 				elif vendor == ewcfg.vendor_basedhardware:
 					response += "\n\nNot even waffles could hope to make your emptiness go away."
 				elif vendor == ewcfg.vendor_greencakecafe:
-					response = "\n\nThe barista behind the counter pauses to look at your soulless misery for a second, but decides you're not worth it and gets back to work."
+					response += "\n\nThe barista behind the counter pauses to look at your soulless misery for a second, but decides you're not worth it and gets back to work."
 				elif vendor == ewcfg.vendor_slimypersuits:
-					response = "\n\nYour mere presence in here ruins the cheery atmosphere."
+					response += "\n\nYour mere presence in here ruins the cheery atmosphere."
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
