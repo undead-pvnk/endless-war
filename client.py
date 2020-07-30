@@ -931,7 +931,7 @@ async def on_ready():
 			pvp_roles[server.id].append(server.get_role(role.id_role))
 
 		# kill people who left the server while the bot was offline
-		ewutils.kill_quitters(server.id)
+		#ewutils.kill_quitters(server.id) #FIXME function get_member doesn't find users reliably
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
@@ -946,7 +946,7 @@ async def on_ready():
 		
 		#if not debug:
 		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
-		# await ewtransport.init_transports(id_server = server.id)
+		await ewtransport.init_transports(id_server = server.id)
 		asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
@@ -1033,7 +1033,8 @@ async def on_ready():
 				traceback.print_exc(file = sys.stdout)
 
 		# Flag all users in dangerous areas for PvP
-		await ewutils.flag_vulnerable_districts(id_server = server.id)
+		for server in client.guilds:
+			await ewutils.flag_vulnerable_districts(id_server = server.id)
 
 		# Clear PvP roles from players who are no longer flagged.
 		if (time_now - time_last_pvp) >= ewcfg.update_pvp:
@@ -1927,13 +1928,13 @@ async def on_message(message):
 			elif randint == 3:
 				msg_mistake = "ENDLESS WAR pays you no mind."
 
-			# msg = await ewutils.send_message(client, cmd_obj.message.channel, msg_mistake)
+			await ewutils.send_message(client, cmd_obj.message.channel, msg_mistake, 2)
 			# await asyncio.sleep(2)
-			try:
-				# await msg.delete()
-				pass
-			except:
-				pass
+			#try:
+			#	await msg.delete()
+			#	pass
+			#except:
+			#	pass
 
 	elif content_tolower.find(ewcfg.cmd_howl) >= 0 or content_tolower.find(ewcfg.cmd_howl_alt1) >= 0 or re_awoo.match(content_tolower):
 		""" Howl if !howl is in the message at all. """

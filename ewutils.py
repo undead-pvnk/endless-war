@@ -574,7 +574,7 @@ def kill_quitters(id_server = None):
 						user_data.die(cause=ewcfg.cause_leftserver)
 						user_data.persist()
 
-						logMsg('Player killed for leaving the server.')
+						logMsg('Player with id {} killed for leaving the server.'.format(user[0]))
 					except:
 						logMsg('Failed to kill member who left the server.')
 
@@ -691,59 +691,46 @@ async def bleedSlimes(id_server = None):
 				user_data = EwUser(id_user = user[0], id_server = id_server)
 				member = server.get_member(user_data.id_user)
 				
-				# Make sure to kill players who may have left while the bot was offline.
-				all_current_members = list(server.members)
-				if member not in all_current_members:
-					try:
-						user_data = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
-						user_data.trauma = ewcfg.trauma_id_suicide
-						user_data.die(cause=ewcfg.cause_leftserver)
-						user_data.persist()
+				slimes_to_bleed = user_data.bleed_storage * (
+							1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
+				slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
+				slimes_dropped = user_data.totaldamage + user_data.slimes
 
-						logMsg('Player killed for leaving the server.')
-					except:
-						logMsg('Failed to kill member who left the server.')
-				else:
-					slimes_to_bleed = user_data.bleed_storage * (
-								1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
-					slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
-					slimes_dropped = user_data.totaldamage + user_data.slimes
+				trauma = ewcfg.trauma_map.get(user_data.trauma)
+				bleed_mod = 1
+				if trauma != None and trauma.trauma_class == ewcfg.trauma_class_bleeding:
+					bleed_mod += 0.5 * user_data.degradation / 100
 
-					trauma = ewcfg.trauma_map.get(user_data.trauma)
-					bleed_mod = 1
-					if trauma != None and trauma.trauma_class == ewcfg.trauma_class_bleeding:
-						bleed_mod += 0.5 * user_data.degradation / 100
+				# round up or down, randomly weighted
+				remainder = slimes_to_bleed - int(slimes_to_bleed)
+				if random.random() < remainder:
+					slimes_to_bleed += 1
+				slimes_to_bleed = int(slimes_to_bleed)
 
-					# round up or down, randomly weighted
-					remainder = slimes_to_bleed - int(slimes_to_bleed)
-					if random.random() < remainder:
-						slimes_to_bleed += 1
-					slimes_to_bleed = int(slimes_to_bleed)
+				slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
 
-					slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
+				if slimes_to_bleed >= 1:
 
-					if slimes_to_bleed >= 1:
+					real_bleed = round(slimes_to_bleed * bleed_mod)
 
-						real_bleed = round(slimes_to_bleed * bleed_mod)
+					user_data.bleed_storage -= slimes_to_bleed
+					user_data.change_slimes(n=- real_bleed, source=ewcfg.source_bleeding)
 
-						user_data.bleed_storage -= slimes_to_bleed
-						user_data.change_slimes(n=- real_bleed, source=ewcfg.source_bleeding)
+					district_data = EwDistrict(id_server=id_server, district=user_data.poi)
+					district_data.change_slimes(n=real_bleed, source=ewcfg.source_bleeding)
+					district_data.persist()
 
-						district_data = EwDistrict(id_server=id_server, district=user_data.poi)
-						district_data.change_slimes(n=real_bleed, source=ewcfg.source_bleeding)
-						district_data.persist()
+					if user_data.slimes < 0:
+						user_data.trauma = ewcfg.trauma_id_environment
+						die_resp = user_data.die(cause=ewcfg.cause_bleeding)
+						# user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+						player_data = EwPlayer(id_server=user_data.id_server, id_user=user_data.id_user)
+						resp_cont.add_response_container(die_resp)
+					user_data.persist()
 
-						if user_data.slimes < 0:
-							user_data.trauma = ewcfg.trauma_id_environment
-							die_resp = user_data.die(cause=ewcfg.cause_bleeding)
-							# user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
-							player_data = EwPlayer(id_server=user_data.id_server, id_user=user_data.id_user)
-							resp_cont.add_response_container(die_resp)
-						user_data.persist()
+					total_bled += real_bleed
 
-						total_bled += real_bleed
-
-					await ewrolemgr.updateRoles(client=client, member=member)
+				await ewrolemgr.updateRoles(client=client, member=member)
 
 			await resp_cont.post()
 
@@ -888,70 +875,57 @@ async def burnSlimes(id_server = None):
 			user_data = EwUser(id_user = result[0], id_server = id_server)
 			member = server.get_member(user_data.id_user)
 
-			# Make sure to kill players who may have left while the bot was offline.
-			all_current_members = list(server.members)
-			if member not in all_current_members:
-				try:
-					user_data = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
-					user_data.trauma = ewcfg.trauma_id_suicide
-					user_data.die(cause=ewcfg.cause_leftserver)
-					user_data.persist()
+			slimes_dropped = user_data.totaldamage + user_data.slimes
 
-					logMsg('Player killed for leaving the server.')
-				except:
-					logMsg('Failed to kill member who left the server.')
+			# Deal 10% of total slime to burn every second
+			slimes_to_burn = math.ceil(int(float(result[1])) * ewcfg.burn_tick_length / ewcfg.time_expire_burn)
+
+			killer_data = EwUser(id_server=id_server, id_user=result[2])
+
+			# Damage stats
+			ewstats.change_stat(user=killer_data, metric=ewcfg.stat_lifetime_damagedealt, n=slimes_to_burn)
+
+			# Player died
+			if user_data.slimes - slimes_to_burn < 0:
+				weapon = ewcfg.weapon_map.get(ewcfg.weapon_id_molotov)
+
+				player_data = EwPlayer(id_server=user_data.id_server, id_user=user_data.id_user)
+				killer = EwPlayer(id_server=id_server, id_user=killer_data.id_user)
+				poi = ewcfg.id_to_poi.get(user_data.poi)
+
+				# Kill stats
+				ewstats.increment_stat(user=killer_data, metric=ewcfg.stat_kills)
+				ewstats.track_maximum(user=killer_data, metric=ewcfg.stat_biggest_kill, value=int(slimes_dropped))
+
+				if killer_data.slimelevel > user_data.slimelevel:
+					ewstats.increment_stat(user=killer_data, metric=ewcfg.stat_lifetime_ganks)
+				elif killer_data.slimelevel < user_data.slimelevel:
+					ewstats.increment_stat(user=killer_data, metric=ewcfg.stat_lifetime_takedowns)
+
+				# Collect bounty
+				coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
+
+				if user_data.slimes >= 0:
+					killer_data.change_slimecoin(n=coinbounty, coinsource=ewcfg.coinsource_bounty)
+
+				# Kill player
+				user_data.id_killer = killer_data.id_user
+				user_data.trauma = ewcfg.trauma_id_environment
+				die_resp = user_data.die(cause=ewcfg.cause_burning)
+				# user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+
+				resp_cont.add_response_container(die_resp)
+
+				deathreport = "{} has burned to death.".format(player_data.display_name)
+				resp_cont.add_channel_response(poi.channel, deathreport)
+
+				user_data.trauma = weapon.id_weapon
+
+				user_data.persist()
+				await ewrolemgr.updateRoles(client=client, member=member)
 			else:
-				slimes_dropped = user_data.totaldamage + user_data.slimes
-
-				# Deal 10% of total slime to burn every second
-				slimes_to_burn = math.ceil(int(float(result[1])) * ewcfg.burn_tick_length / ewcfg.time_expire_burn)
-
-				killer_data = EwUser(id_server=id_server, id_user=result[2])
-
-				# Damage stats
-				ewstats.change_stat(user=killer_data, metric=ewcfg.stat_lifetime_damagedealt, n=slimes_to_burn)
-
-				# Player died
-				if user_data.slimes - slimes_to_burn < 0:
-					weapon = ewcfg.weapon_map.get(ewcfg.weapon_id_molotov)
-
-					player_data = EwPlayer(id_server=user_data.id_server, id_user=user_data.id_user)
-					killer = EwPlayer(id_server=id_server, id_user=killer_data.id_user)
-					poi = ewcfg.id_to_poi.get(user_data.poi)
-
-					# Kill stats
-					ewstats.increment_stat(user=killer_data, metric=ewcfg.stat_kills)
-					ewstats.track_maximum(user=killer_data, metric=ewcfg.stat_biggest_kill, value=int(slimes_dropped))
-
-					if killer_data.slimelevel > user_data.slimelevel:
-						ewstats.increment_stat(user=killer_data, metric=ewcfg.stat_lifetime_ganks)
-					elif killer_data.slimelevel < user_data.slimelevel:
-						ewstats.increment_stat(user=killer_data, metric=ewcfg.stat_lifetime_takedowns)
-
-					# Collect bounty
-					coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
-
-					if user_data.slimes >= 0:
-						killer_data.change_slimecoin(n=coinbounty, coinsource=ewcfg.coinsource_bounty)
-
-					# Kill player
-					user_data.id_killer = killer_data.id_user
-					user_data.trauma = ewcfg.trauma_id_environment
-					die_resp = user_data.die(cause=ewcfg.cause_burning)
-					# user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
-
-					resp_cont.add_response_container(die_resp)
-
-					deathreport = "{} has burned to death.".format(player_data.display_name)
-					resp_cont.add_channel_response(poi.channel, deathreport)
-
-					user_data.trauma = weapon.id_weapon
-
-					user_data.persist()
-					await ewrolemgr.updateRoles(client=client, member=member)
-				else:
-					user_data.change_slimes(n=-slimes_to_burn, source=ewcfg.source_damage)
-					user_data.persist()
+				user_data.change_slimes(n=-slimes_to_burn, source=ewcfg.source_damage)
+				user_data.persist()
 				
 
 		await resp_cont.post()	
@@ -1432,9 +1406,9 @@ def get_client():
 """
 	Proxy to discord.py channel.send with exception handling.
 """
-async def send_message(client, channel, text):
+async def send_message(client, channel, text, delete_after=None):
 	try:
-		return await channel.send(content=text)
+		return await channel.send(content=text, delete_after=delete_after)
 	except discord.errors.Forbidden:
 		logMsg('Could not message user: {}\n{}'.format(channel, text))
 		raise
@@ -1688,7 +1662,7 @@ async def delete_last_message(client, last_messages, tick_length):
 	await asyncio.sleep(tick_length)
 	try:
 		msg = last_messages[-1]
-		# await msg.delete()
+		await msg.delete()
 		pass
 	except:
 		logMsg("failed to delete last message")

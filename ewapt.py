@@ -2544,8 +2544,7 @@ async def aptCommands(cmd):
 			msg_mistake = "ENDLESS WAR pays you no mind."
 
 
-		# return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, msg_mistake))
-		return
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, msg_mistake), 2)
 
 async def nothing(cmd):# for an accept, refuse, sign or rip
 	return 0
