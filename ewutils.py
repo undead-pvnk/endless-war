@@ -1406,9 +1406,9 @@ def get_client():
 """
 	Proxy to discord.py channel.send with exception handling.
 """
-async def send_message(client, channel, text):
+async def send_message(client, channel, text, delete_after=None):
 	try:
-		return await channel.send(content=text)
+		return await channel.send(content=text, delete_after=delete_after)
 	except discord.errors.Forbidden:
 		logMsg('Could not message user: {}\n{}'.format(channel, text))
 		raise
@@ -1662,7 +1662,7 @@ async def delete_last_message(client, last_messages, tick_length):
 	await asyncio.sleep(tick_length)
 	try:
 		msg = last_messages[-1]
-		# await msg.delete()
+		await msg.delete()
 		pass
 	except:
 		logMsg("failed to delete last message")

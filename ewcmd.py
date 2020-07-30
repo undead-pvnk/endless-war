@@ -1960,13 +1960,13 @@ async def jump(cmd):
 						void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
 						wafflehouse_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
 						response = "You do a backflip on the way down, bounce on the trampoline a few times to reduce your momentum, and climb down a ladder from the roof, down to the ground. You find yourself standing next to {}, in {}.".format(wafflehouse_poi.str_name, void_poi.str_name)
-						msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
-						await asyncio.sleep(20)
-						try:
+						await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, void_poi.channel), ewutils.formatMessage(cmd.message.author, response), 20)
+						#await asyncio.sleep(20)
+						#try:
 							# await msg.delete()
-							pass
-						except:
-							pass
+							# pass
+						#except:
+							# pass
 						return
 
 	elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:

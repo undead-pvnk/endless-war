@@ -18079,7 +18079,7 @@ for poi in poi_list:
 					else:
 						poi.str_desc += '{}, '.format(district_streets_list[i])
                         
-	placeholder_channel_names_used = False
+	placeholder_channel_names_used = True
 		
 	# Subzones and streets need the same major roles as their mother/father districts.
 	if poi.is_street:

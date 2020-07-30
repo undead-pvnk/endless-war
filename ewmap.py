@@ -776,7 +776,7 @@ async def descend(cmd):
 
 		if user_data.life_state != life_state or faction != user_data.faction:
 			try:
-				# await descent_message.delete()
+				await descent_message.delete()
 				pass
 			except:
 				pass
@@ -789,7 +789,7 @@ async def descend(cmd):
 		await ewrolemgr.updateRoles(client = ewutils.get_client(), member = cmd.message.author)
 		await user_data.move_inhabitants(id_poi = ewcfg.poi_id_thevoid)
 		try:
-			# await descent_message.delete()
+			await descent_message.delete()
 			pass
 		except:
 			pass
@@ -799,7 +799,7 @@ async def descend(cmd):
 		msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
 		await asyncio.sleep(20)
 		try:
-			# await msg.delete()
+			await msg.delete()
 			pass
 		except:
 			pass
@@ -960,7 +960,7 @@ async def move(cmd = None, isApt = False):
 		# If the player dies or enlists or whatever while moving, cancel the move.
 		if user_data.life_state != life_state or faction != user_data.faction:
 			try:
-				# await msg_walk_start.delete()
+				await msg_walk_start.delete()
 				pass
 			except:
 				pass
@@ -993,9 +993,9 @@ async def move(cmd = None, isApt = False):
 		)
 		
 		try:
-			# await msg_walk_start.delete()
-			# await asyncio.sleep(30)
-			# await msg_walk_enter.delete()
+			await msg_walk_start.delete()
+			await asyncio.sleep(30)
+			await msg_walk_enter.delete()
 			pass
 		except:
 			pass
@@ -1046,7 +1046,7 @@ async def move(cmd = None, isApt = False):
 				# If the player dies or enlists or whatever while moving, cancel the move.
 				if user_data.life_state != life_state or faction != user_data.faction:
 					try:
-						# await msg_walk_start.delete()
+						await msg_walk_start.delete()
 						pass
 					except:
 						pass
@@ -1101,7 +1101,7 @@ async def move(cmd = None, isApt = False):
 					await user_data.move_inhabitants(id_poi = poi_current.id_poi)
 
 					try:
-						# await msg_walk_start.delete()
+						await msg_walk_start.delete()
 						pass
 					except:
 						pass
@@ -1128,7 +1128,7 @@ async def move(cmd = None, isApt = False):
 
 		await asyncio.sleep(30)
 		try:
-			# await msg_walk_start.delete()
+			await msg_walk_start.delete()
 			pass
 		except:
 			pass
