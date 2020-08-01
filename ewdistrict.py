@@ -91,7 +91,8 @@ class EwDistrict:
 				self.slimes = data[0][3]
 				self.time_unlock = data[0][4]
 				self.cap_side = data[0][5]
-				self.degradation = data[0][6]
+				# self.degradation = data[0][6]
+				self.degradation = 0
 
 				# ewutils.logMsg("EwDistrict object '" + self.name + "' created.  Controlling faction: " + self.controlling_faction + "; Capture progress: %d" % self.capture_points)
 			else:  # create new entry
@@ -798,8 +799,11 @@ async def shamble(cmd):
 	if user_data.life_state != ewcfg.life_state_shambler:
 		response = "You have too many higher brain functions left to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	else:
+		response = "You try shambling, but you just don't have it in you anymore. You can see the writing on the wall. You might as well conserve your energy and !moan while you still can. It's been a pleasure shambling with you tonight, gentlemen"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
 	if poi is None:
 		return
