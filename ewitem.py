@@ -1848,7 +1848,7 @@ async def returnsoul(cmd):
 	for inv_object in user_inv:
 		soul = inv_object
 		soul_item = EwItem(id_item=soul.get('id_item'))
-		if int(soul_item.item_props.get('user_id')) == cmd.message.author.id:
+		if soul_item.item_props.get('user_id') == str(cmd.message.author.id):
 			break
 
 	if usermodel.has_soul == 1:
@@ -1856,7 +1856,7 @@ async def returnsoul(cmd):
 	elif soul:
 
 		if soul.get('item_type') == ewcfg.it_cosmetic and soul_item.item_props.get('id_cosmetic') == "soul":
-			if int(soul_item.item_props.get('user_id')) != cmd.message.author.id:
+			if soul_item.item_props.get('user_id') != str(cmd.message.author.id):
 				response = "That's not your soul. Nice try, though."
 			else:
 				response = "You open the soul jar and hold the opening to your chest. The soul begins to crawl in, and a warmth returns to your body. Not exactly the warmth you had before, but it's too wonderful to pass up. You feel invigorated and ready to take on the world."
