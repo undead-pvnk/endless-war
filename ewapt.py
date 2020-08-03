@@ -366,7 +366,7 @@ async def signlease(cmd):
 		if had_old_place:
 			response += " The receptionist calls up a moving crew, who quickly move your stuff to your new place. "
 
-		await toss_squatters(user_data.id_user)
+		await toss_squatters(user_data.id_user, user_data.id_server)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
