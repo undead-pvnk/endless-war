@@ -1848,7 +1848,7 @@ async def returnsoul(cmd):
 	for inv_object in user_inv:
 		soul = inv_object
 		soul_item = EwItem(id_item=soul.get('id_item'))
-		if soul_item.item_props.get('user_id') == cmd.message.author.id:
+		if int(soul_item.item_props.get('user_id')) == cmd.message.author.id:
 			break
 
 	if usermodel.has_soul == 1:
