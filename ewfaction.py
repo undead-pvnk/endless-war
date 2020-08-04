@@ -59,7 +59,7 @@ async def store(cmd):
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 	
 	if item_sought:
 		item = EwItem(id_item = item_sought.get("id_item"))
@@ -117,13 +117,13 @@ async def take(cmd):
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search = item_search, id_user = poi.community_chest, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = poi.community_chest, id_server = cmd.guild.id if cmd.guild is not None else None)
 	
 	if item_sought:
 		if item_sought.get('item_type') == ewcfg.it_food:
 			food_items = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
+				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_food
 			)
 
@@ -134,7 +134,7 @@ async def take(cmd):
 		if item_sought.get('item_type') == ewcfg.it_weapon:
 			weapons_held = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
+				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_weapon
 			)
 

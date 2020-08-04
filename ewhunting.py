@@ -22,7 +22,7 @@ from ewstatuseffects import EwEnemyStatusEffect
 
 class EwEnemy:
 	id_enemy = 0
-	id_server = ""
+	id_server = -1
 
 	combatant_type = "enemy"
 
@@ -71,7 +71,7 @@ class EwEnemy:
 	lifetime = 0
 
 	# Used by the 'defender' AI to determine who it should retaliate against
-	id_target = ""
+	id_target = -1
 
 	# Used by raid bosses to determine when they should activate
 	raidtimer = 0
@@ -408,14 +408,14 @@ class EwEnemy:
 				target_weapon_item = EwItem(id_item = target_data.weapon)
 				target_weapon = ewcfg.weapon_map.get(target_weapon_item.item_props.get("weapon_type"))
 			
-			server = client.get_server(target_data.id_server)
-			# server = discord.Server(id=target_data.id_server)
+			server = client.get_guild(target_data.id_server)
+			# server = discord.guild(id=target_data.id_server)
 			# print(target_data.id_server)
 			# channel = discord.utils.get(server.channels, name=ch_name)
 
 			# print(server)
 
-			# member = discord.utils.get(channel.server.members, name=target_player.display_name)
+			# member = discord.utils.get(channel.guild.members, name=target_player.display_name)
 			# print(member)
 
 			target_mutations = target_data.get_mutations()
@@ -655,7 +655,7 @@ class EwEnemy:
 						district_data.change_slimes(n=slimes_todistrict, source=ewcfg.source_killing)
 
 						# Player was killed. Remove its id from enemies with defender ai.
-						enemy_data.id_target = ""
+						enemy_data.id_target = -1
 						target_data.id_killer = enemy_data.id_enemy
 
 						#target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
@@ -1084,7 +1084,7 @@ class EwEnemy:
 					
 				self.poi = new_poi
 				self.time_lastenter = int(time.time())
-				self.id_target = ""
+				self.id_target = -1
 
 				# print("DEBUG - {} MOVED FROM {} TO {}".format(self.display_name, old_poi, new_poi))
 
@@ -1148,7 +1148,7 @@ class EwEnemy:
 		finally:
 			return values
 
-	def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = ""):
+	def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = -1):
 		response = ""
 		if id_status != None:
 			status = None
@@ -1235,7 +1235,7 @@ class EwEnemy:
 			if len(users) > 0:
 				target_data = EwUser(id_user = random.choice(users)[0], id_server = enemy_data.id_server)
 		elif enemy_data.ai == ewcfg.enemy_ai_defender:
-			if enemy_data.id_target != "":
+			if enemy_data.id_target != -1:
 				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
 		else:
 			target_data, group_attack = get_target_by_ai(enemy_data)
@@ -1267,7 +1267,7 @@ class EwEnemy:
 		if enemy_data.ai == ewcfg.enemy_ai_coward:
 			return
 		elif enemy_data.ai == ewcfg.enemy_ai_defender:
-			if enemy_data.id_target != "":
+			if enemy_data.id_target != -1:
 				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
 		else:
 			target_data, group_attack = get_target_by_ai(enemy_data)
@@ -1302,7 +1302,7 @@ class EwEnemy:
 		if enemy_data.ai == ewcfg.enemy_ai_coward:
 			return
 		elif enemy_data.ai == ewcfg.enemy_ai_defender:
-			if enemy_data.id_target != "":
+			if enemy_data.id_target != -1:
 				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
 		else:
 			target_data, group_attack = get_target_by_ai(enemy_data)
@@ -1596,7 +1596,7 @@ async def summonenemy(cmd, is_bot_spawn = False):
 
 	author = cmd.message.author
 
-	if not author.server_permissions.administrator and is_bot_spawn == False:
+	if not author.guild_permissions.administrator and is_bot_spawn == False:
 		return
 
 	time_now = int(time.time())
@@ -1774,7 +1774,7 @@ async def enemy_perform_action(id_server):
 	despawn_timenow = int(time.time()) - ewcfg.time_despawn
 
 	enemydata = ewutils.execute_sql_query(
-		"SELECT {id_enemy} FROM enemies WHERE ((enemies.poi IN (SELECT users.poi FROM users WHERE NOT (users.life_state = %s OR users.life_state = %s) AND users.id_server = {id_server})) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.lifetime < %s) OR (enemies.id_target != '')) AND enemies.id_server = {id_server}".format(
+		"SELECT {id_enemy} FROM enemies WHERE ((enemies.poi IN (SELECT users.poi FROM users WHERE NOT (users.life_state = %s OR users.life_state = %s) AND users.id_server = {id_server})) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.lifetime < %s) OR (enemies.id_target != -1)) AND enemies.id_server = {id_server}".format(
 		id_enemy=ewcfg.col_id_enemy,
 		id_server=id_server
 	), (
@@ -2434,7 +2434,7 @@ def get_enemy_data(enemy_type):
 	if random.randrange(5) == 0 and enemy_type not in ewcfg.overkill_enemies and enemy_type not in ewcfg.gvs_enemies:
 		rare_status = 1
 
-	enemy.id_server = ""
+	enemy.id_server = -1
 	enemy.slimes = 0
 	enemy.totaldamage = 0
 	enemy.level = 0
@@ -2443,7 +2443,7 @@ def get_enemy_data(enemy_type):
 	enemy.bleed_storage = 0
 	enemy.time_lastenter = 0
 	enemy.initialslimes = 0
-	enemy.id_target = ""
+	enemy.id_target = -1
 	enemy.raidtimer = 0
 	enemy.rare_status = rare_status
 	enemy.weathertype = ""

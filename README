@@ -8,12 +8,12 @@ Run client.py (with python 3.5+).
 Creating the database tables:
  
 CREATE TABLE users (
-	id_user varchar(128) NOT NULL,
-	id_server varchar(128) NOT NULL,
+	id_user bigint NOT NULL,
+	id_server bigint NOT NULL,
 	slimes bigint NOT NULL DEFAULT '0',
 	time_lastkill int NOT NULL DEFAULT '0',
 	time_lastrevive int NOT NULL DEFAULT '0',
-	id_killer varchar(128) NOT NULL DEFAULT '',
+	id_killer bigint NOT NULL DEFAULT -1,
 	time_lastspar int NOT NULL DEFAULT '0',
 	time_lasthaunt int NOT NULL DEFAULT '0',
 	slimecoin bigint NOT NULL DEFAULT '0',
@@ -61,7 +61,7 @@ CREATE TABLE users (
 	gambit int NOT NULL DEFAULT '0',
 	credence int NOT NULL DEFAULT '0',
 	credence_used int NOT NULL DEFAULT '0',
-	id_inhabit_target varchar(128) NOT NULL DEFAULT '',
+	id_inhabit_target bigint NOT NULL DEFAULT -1,
 	race varchar(32) NOT NULL DEFAULT '',
 	time_racialability int NOT NULL DEFAULT '0',
 	time_lastpremiumpurchase int NOT NULL DEFAULT '0',
@@ -73,8 +73,8 @@ CREATE TABLE users (
 );
 
 CREATE TABLE stats (
-	id_user varchar(128) NOT NULL,
-	id_server varchar(128) NOT NULL,
+	id_user bigint NOT NULL,
+	id_server bigint NOT NULL,
 	stat_metric varchar(64) NOT NULL,
 	stat_value bigint,
 
@@ -82,7 +82,7 @@ CREATE TABLE stats (
 );
 
 CREATE TABLE markets (
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 	time_lasttick int NOT NULL DEFAULT '0',
 	slimes_revivefee bigint NOT NULL DEFAULT '0',
 	negaslime bigint NOT NULL DEFAULT '0',
@@ -100,7 +100,7 @@ CREATE TABLE markets (
 );
 
 CREATE TABLE companies (
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 	stock varchar(64) NOT NULL,
 	recent_profits bigint NOT NULL DEFAULT '0',
 	total_profits bigint NOT NULL DEFAULT '0',
@@ -109,7 +109,7 @@ CREATE TABLE companies (
 );
 
 CREATE TABLE stocks (
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 	stock varchar(64) NOT NULL,
 	market_rate bigint NOT NULL DEFAULT '1000',
 	exchange_rate bigint NOT NULL DEFAULT '1000000',
@@ -119,8 +119,8 @@ CREATE TABLE stocks (
 );
 
 CREATE TABLE shares (
-	id_server varchar(128) NOT NULL,
-	id_user varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
+	id_user bigint NOT NULL,
 	stock varchar(64) NOT NULL,
 	shares bigint NOT NULL DEFAULT '0',
 
@@ -129,8 +129,8 @@ CREATE TABLE shares (
 );
 
 CREATE TABLE weaponskills (
-	id_user varchar(128) NOT NULL,
-	id_server varchar(128) NOT NULL,
+	id_user bigint NOT NULL,
+	id_server bigint NOT NULL,
 	weapon varchar(64) NOT NULL,
 	weaponskill int NOT NULL DEFAULT '0',
 
@@ -138,8 +138,8 @@ CREATE TABLE weaponskills (
 );
 
 CREATE TABLE players (
-	id_user varchar(128) NOT NULL,
-	id_server varchar(128) NOT NULL,
+	id_user bigint NOT NULL,
+	id_server bigint NOT NULL,
 
 	avatar varchar(1024) NOT NULL DEFAULT '',
 	display_name varchar(256) NOT NULL DEFAULT '',
@@ -148,7 +148,7 @@ CREATE TABLE players (
 );
 
 CREATE TABLE servers (
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 
 	name varchar(256) NOT NULL DEFAULT '',
 	icon varchar(1024) NOT NULL DEFAULT '',
@@ -158,7 +158,7 @@ CREATE TABLE servers (
 
 CREATE TABLE items (
 	id_item int NOT NULL AUTO_INCREMENT,
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 	id_user varchar(128) NOT NULL,
 	item_type varchar(64) NOT NULL,
 	time_expir int,
@@ -181,8 +181,8 @@ CREATE TABLE items_prop (
 ) ENGINE = INNODB;
 
 CREATE TABLE farms (
-	id_server varchar(128) NOT NULL,
-	id_user varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
+	id_user bigint NOT NULL,
 	farm varchar(32) NOT NULL,
 	time_lastsow int NOT NULL DEFAULT '0',
 	phase int NOT NULL DEFAULT '0',
@@ -196,7 +196,7 @@ CREATE TABLE farms (
 
 CREATE TABLE slimeoids (
 	id_slimeoid int NOT NULL AUTO_INCREMENT,
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 	id_user varchar(128) NOT NULL,
 	life_state int NOT NULL DEFAULT '0',
 	body varchar(32) NOT NULL DEFAULT '',
@@ -223,7 +223,7 @@ CREATE TABLE slimeoids (
 
 CREATE TABLE enemies (
 	id_enemy int NOT NULL AUTO_INCREMENT,
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 	slimes bigint NOT NULL DEFAULT '0',
 	totaldamage bigint NOT NULL DEFAULT '0',
 	ai varchar(32) NOT NULL DEFAULT '',
@@ -238,7 +238,7 @@ CREATE TABLE enemies (
 	time_lastenter int NOT NULL DEFAULT '0',
 	initialslimes bigint NOT NULL DEFAULT '0',
 	lifetime bigint NOT NULL DEFAULT '0',
-	id_target varchar(128) NOT NULL DEFAULT '',
+	id_target bigint NOT NULL DEFAULT -1,
 	raidtimer bigint NOT NULL DEFAULT '0',
 	rare_status int NOT NULL DEFAULT '0',
 	hardened_sap int NOT NULL DEFAULT '0',
@@ -262,7 +262,7 @@ CREATE TABLE enemies_prop (
 ) ENGINE = INNODB;
 
 CREATE TABLE districts (
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 	district varchar(64) NOT NULL,
 	controlling_faction varchar(32) NOT NULL DEFAULT '',
 	capturing_faction varchar(32) NOT NULL DEFAULT '',
@@ -278,18 +278,18 @@ CREATE TABLE districts (
 );
 
 CREATE TABLE roles (
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 	name varchar(128) NOT NULL,
 
-	id_role varchar(128) NOT NULL DEFAULT '',
+	id_role bigint NOT NULL DEFAULT -1,
 
 	PRIMARY KEY (id_server, name)
 );
 
 CREATE TABLE mutations (
 	mutation_counter int NOT NULL AUTO_INCREMENT,
-	id_server varchar(128) NOT NULL,
-	id_user varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
+	id_user bigint NOT NULL,
 	mutation varchar(32) NOT NULL,
 	data varchar(64) NOT NULL DEFAULT '',
 
@@ -297,18 +297,18 @@ CREATE TABLE mutations (
 );
 
 CREATE TABLE quadrants (
-	id_server varchar(128) NOT NULL,
-	id_user varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
+	id_user bigint NOT NULL,
 	quadrant varchar(32) NOT NULL,
 
-	id_target varchar(128) NOT NULL DEFAULT '',
-	id_target2 varchar(128) NOT NULL DEFAULT '',
+	id_target bigint NOT NULL DEFAULT -1,
+	id_target2 bigint NOT NULL DEFAULT -1,
 
 	PRIMARY KEY (id_server, id_user, quadrant)
 );
 
 CREATE TABLE transports (
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 	poi varchar(64) NOT NULL,
 
 	transport_type varchar(64) NOT NULL DEFAULT '',
@@ -319,41 +319,41 @@ CREATE TABLE transports (
 );
 
 CREATE TABLE status_effects (
-	id_server varchar(128) NOT NULL,
-	id_user varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
+	id_user bigint NOT NULL,
 	id_status varchar(64) NOT NULL,
 	
 	time_expir int NOT NULL DEFAULT '-1',
 	value varchar(255) NOT NULL DEFAULT 0,
 	source varchar(128) NOT NULL DEFAULT '',
-	id_target varchar(128) NOT NULL DEFAULT '',
+	id_target bigint NOT NULL DEFAULT -1,
 
 	PRIMARY KEY (id_server, id_user, id_status)
 );
 
 CREATE TABLE enemy_status_effects (
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 	id_enemy varchar(128) NOT NULL,
 	id_status varchar(64) NOT NULL,
 	
 	time_expir int NOT NULL DEFAULT '-1',
 	value varchar(255) NOT NULL DEFAULT 0,
 	source varchar(128) NOT NULL DEFAULT '',
-	id_target varchar(128) NOT NULL DEFAULT '',
+	id_target bigint NOT NULL DEFAULT -1,
 
 	PRIMARY KEY (id_server, id_enemy, id_status)
 );
 
 CREATE TABLE bans (
-	id_server varchar(128) NOT NULL,
-	id_user varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
+	id_user bigint NOT NULL,
 	faction varchar(32) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_server, id_user, faction)
 );
 
 CREATE TABLE bazaar_wares (
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 	name varchar(64) NOT NULL,
 	value varchar(128) NOT NULL,
 	
@@ -361,8 +361,8 @@ CREATE TABLE bazaar_wares (
 );
 
 CREATE TABLE offers (
-	id_server varchar(128) NOT NULL,
-	id_user varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
+	id_user bigint NOT NULL,
 	offer_give int NOT NULL,
 	offer_receive varchar(32) NOT NULL DEFAULT '',
 	time_sinceoffer int NOT NULL DEFAULT '0',
@@ -371,8 +371,8 @@ CREATE TABLE offers (
 );
 
 CREATE TABLE vouchers (
-	id_server varchar(128) NOT NULL,
-	id_user varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
+	id_user bigint NOT NULL,
 	faction varchar(32) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_server, id_user, faction)
@@ -384,8 +384,8 @@ CREATE TABLE apartment (
 	apt_description varchar(5000) NOT NULL DEFAULT '',
 	poi varchar(64) NOT NULL DEFAULT 'downtown',
 	rent BIGINT NOT NULL DEFAULT 0,
-	id_user varchar(64) NOT NULL DEFAULT '',
-	id_server varchar(64) NOT NULL DEFAULT '',
+	id_user bigint NOT NULL DEFAULT -1,
+	id_server bigint NOT NULL DEFAULT -1,
 	apt_class char NOT NULL DEFAULT 'c',
 	num_keys int NOT NULL DEFAULT 0,
 	key_1 int NOT NULL DEFAULT 0,
@@ -395,7 +395,7 @@ CREATE TABLE apartment (
 );
 
 CREATE TABLE global_locks (
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 	district varchar(32) NOT NULL,
 	locked_status varchar(32) NOT NULL DEFAULT '',
 
@@ -404,7 +404,7 @@ CREATE TABLE global_locks (
 
 CREATE TABLE world_events (
 	id_event int NOT NULL AUTO_INCREMENT,
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 	event_type varchar(64) NOT NULL,
 	time_activate int NOT NULL DEFAULT '-1',
 	time_expir int NOT NULL DEFAULT '-1',
@@ -425,7 +425,7 @@ CREATE TABLE world_events_prop (
 
 CREATE TABLE ads (
 	id_ad int NOT NULL AUTO_INCREMENT,
-	id_server varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
 	id_sponsor varchar(128) NOT NULL DEFAULT '',
 	content varchar(500) NOT NULL DEFAULT '',
 	time_expir int NOT NULL DEFAULT '0',
@@ -435,8 +435,8 @@ CREATE TABLE ads (
 
 CREATE TABLE books (
     id_book int NOT NULL AUTO_INCREMENT,
-	id_server varchar(128) NOT NULL,
-	id_user varchar(128) NOT NULL,
+	id_server bigint NOT NULL,
+	id_user bigint NOT NULL,
 	title varchar(64) NOT NULL DEFAULT '',
 	author varchar(32) NOT NULL DEFAULT '',
 	book_state int NOT NULL DEFAULT '0',
@@ -464,8 +464,8 @@ CREATE TABLE book_pages (
 
 CREATE TABLE book_sales (
     id_book int NOT NULL,
-    id_server varchar(128) NOT NULL,
-    id_user varchar(128) NOT NULL,
+    id_server bigint NOT NULL,
+    id_user bigint NOT NULL,
     bought int NOT NULL DEFAULT '0',
     rating int NOT NULL DEFAULT '0',
 
@@ -473,18 +473,18 @@ CREATE TABLE book_sales (
 );
 
 CREATE TABLE swilldermuk_prank_index (
-    id_server varchar(128) NOT NULL,
-    id_user_pranker varchar(128) NOT NULL,
-    id_user_pranked varchar(128) NOT NULL,
+    id_server bigint NOT NULL,
+    id_user_pranker bigint NOT NULL,
+    id_user_pranked bigint NOT NULL,
     prank_count int NOT NULL DEFAULT '0',
     
     PRIMARY KEY (id_user_pranker, id_user_pranked)
 );
 
 CREATE TABLE inhabitations (
-    id_ghost varchar(128) NOT NULL,
-    id_fleshling varchar(128) NOT NULL,
-    id_server varchar(64) NOT NULL,
+    id_ghost bigint NOT NULL,
+    id_fleshling bigint NOT NULL,
+    id_server bigint NOT NULL,
     empowered boolean NOT NULL DEFAULT false,
 
 	PRIMARY KEY (id_ghost, id_fleshling, id_server)

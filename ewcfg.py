@@ -36,7 +36,7 @@ version = "v3.33 - You Are (Not) Safe In The Streets"
 
 dir_msgqueue = 'msgqueue'
 
-database = "rfckevent"
+database = "rfck"
 
 discord_message_length_limit = 2000
 
@@ -1296,10 +1296,10 @@ cmd_restoreroles = cmd_prefix + 'restoreroles'
 cmd_hiderolenames = cmd_prefix + 'hiderolenames'
 cmd_recreateroles = cmd_prefix + 'recreateroles'
 cmd_deleteroles = cmd_prefix + 'deleteroles'
-cmd_changepermissions = cmd_prefix + 'changeperms'
 cmd_removeuseroverwrites = cmd_prefix + 'removeuseroverwrites'
 cmd_collectopics = cmd_prefix + 'collecttopics'
 cmd_synctopics = cmd_prefix + 'synctopics'
+cmd_shutdownbot = cmd_prefix + 'shutdownbot'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
@@ -1754,7 +1754,7 @@ time_pvp_spar = 5 * 60 # NOT USED
 time_pvp_enlist = 5 * 60 
 time_pvp_knock = 1 * 60 #temp fix. will probably add spam prevention or something funny like restraining orders later
 time_pvp_duel = 3 * 60
-time_pvp_pride = 1 * 60
+time_pvp_pride = 1 * 60 # NOT USED
 time_pvp_vulnerable_districts = 1 * 60
 
 # time to get kicked out of subzone. 
@@ -9186,6 +9186,19 @@ food_list = [
 		perishable = False,
 		vendors = [vendor_wafflehouse],
 	),
+    EwFood(
+        id_food = "masterbait",
+        alias = [
+            'master',
+            'masterball'
+        ],
+        recover_hunger = 1,
+        price = 10000000,
+        str_name = "Master Bait",
+        str_eat = "You toss the Master Bait into your mouth and chew thoroughly. Wow, what a waste of fucking time!",
+        str_desc = "The ultimate life form... for cathing fish, that is. It's said that attatching this strange, worm-like creature to the end of your hook will allow you to reel in fish almost as soon as you cast it off.",
+        perishable = False
+    ),
 ]
 
 # A map of id_food to EwFood objects.
@@ -13756,7 +13769,7 @@ poi_list = [
 	EwPoi(
 		id_poi = poi_id_vandalpark_street_d,
 		alias = [
-			"theplayground"
+			"theplayground",
 			"playground",
 			"play"
 		],
@@ -15583,7 +15596,7 @@ poi_list = [
 		id_poi = poi_id_jr_farms,
 		alias = [
 			"jrf", #juviesrow farms
-			"jrp", #juviesrow plantation
+			# "jrp", #juviesrow plantation
 			"jrfarms",
 			"jrfarm",
 			"jrplantation",
@@ -15858,7 +15871,7 @@ poi_list = [
 		alias = [
 			"juviesrowpier",
 			"jrpier",
-			"jrpr",
+			"jrp",
 		],
 		str_name = "Juvie's Row Pier",
 		str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Juvie's Row wharf. A few fishermen and off-duty sailors from nearby Vagrant's Corner all fish and get drunk around you, singing jaunty tunes and cursing loudly. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Juvie's Row.",
@@ -17796,7 +17809,7 @@ poi_list = [
 		alias=[
 			"dreadfordoutskirtsedge",
 			"dfoutskirtsedge",
-			"dfoedge"
+			"dfoedge",
 			"dfoe",
 		],
 		str_name="Dreadford Outskirts Edge",
@@ -18804,15 +18817,7 @@ for poi in poi_list:
 						poi.str_desc += 'and {}.'.format(district_streets_list[i])
 					else:
 						poi.str_desc += '{}, '.format(district_streets_list[i])
-					
-	if poi.is_transport:
-		if 'subway' in poi.id_poi:
-			poi.major_role = 'subway_major'
-		elif 'blimp' in poi.id_poi:
-			poi.major_role = 'blimp_major'
-		elif 'ferry' in poi.id_poi:
-			poi.major_role = 'ferry_major'
-	
+                        
 	placeholder_channel_names_used = False
 		
 	# Subzones and streets need the same major roles as their mother/father districts.

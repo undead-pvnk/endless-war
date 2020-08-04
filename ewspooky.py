@@ -39,7 +39,7 @@ async def revive(cmd):
 		slimeoid = EwSlimeoid(member = cmd.message.author)
 
 		if player_data.life_state == ewcfg.life_state_corpse:
-			market_data = EwMarket(id_server = cmd.message.server.id)
+			market_data = EwMarket(id_server = cmd.guild.id)
 
 			# Endless War collects his fee.
 			#fee = (player_data.slimecoin / 10)
@@ -82,13 +82,13 @@ async def revive(cmd):
 			market_data.persist()
 
 			# Shower every district in the city with slime from the sewers.
-			sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.server.id)
+			sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.guild.id)
 			# the amount of slime showered is divided equally amongst the districts
 			districts_amount = len(ewcfg.capturable_districts)
 			geyser_amount = int(0.5 * sewer_data.slimes / districts_amount)
 			# Get a list of all the districts
 			for poi in ewcfg.capturable_districts:
-				district_data = EwDistrict(district = poi, id_server = cmd.message.server.id)
+				district_data = EwDistrict(district = poi, id_server = cmd.guild.id)
 
 				district_data.change_slimes(n = geyser_amount)
 				sewer_data.change_slimes(n = -1 * geyser_amount)
@@ -120,7 +120,7 @@ async def revive(cmd):
 			slimeoid_name = slimeoid.name
 			)
 			new_poi = ewcfg.id_to_poi.get(player_data.poi)
-			revivechannel = ewutils.get_channel(cmd.message.server, new_poi.channel)
+			revivechannel = ewutils.get_channel(cmd.guild, new_poi.channel)
 			reunite = ewutils.formatMessage(cmd.message.author, reunite)
 			await ewutils.send_message(cmd.client, revivechannel, reunite)
 
@@ -132,7 +132,7 @@ async def revive(cmd):
 async def haunt(cmd):
 	time_now = int(time.time())
 	response = ""
-	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.guild.id)
 
 	if cmd.mentions_count > 1:
 		response = "You can only spook one person at a time. Who do you think you are, the Lord of Ghosts?"
@@ -140,8 +140,8 @@ async def haunt(cmd):
 		haunted_data = None
 		member = None
 		if cmd.mentions_count == 0 and cmd.tokens_count > 1:
-			server = ewutils.get_client().get_server(cmd.message.server.id)
-			member = server.get_member(cmd.tokens[1])
+			server = cmd.guild
+			member = server.get_member(ewutils.getIntToken(cmd.tokens))
 			haunted_data = EwUser(member = member)
 		elif cmd.mentions_count == 1:
 			member = cmd.mentions[0]
@@ -150,7 +150,7 @@ async def haunt(cmd):
 		if member:
 			# Get the user and target data from the database.
 			user_data = EwUser(member = cmd.message.author)
-			market_data = EwMarket(id_server = cmd.message.server.id)
+			market_data = EwMarket(id_server = cmd.guild.id)
 			target_is_shambler = haunted_data.life_state == ewcfg.life_state_shambler
 			target_is_inhabitted = haunted_data.id_user == user_data.get_inhabitee()
 
@@ -226,13 +226,13 @@ async def haunt(cmd):
 
 async def negapool(cmd):
 	# Add persisted negative slime.
-	market_data = EwMarket(id_server = cmd.message.server.id)
+	market_data = EwMarket(id_server = cmd.guild.id)
 	negaslime = market_data.negaslime
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The dead have a total of {:,} negative slime at their disposal for summoning.".format(negaslime)))
 
 async def negaslime(cmd):
-	total = ewutils.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes < 0 AND id_server = '{}'".format(cmd.message.server.id))
+	total = ewutils.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes < 0 AND id_server = '{}'".format(cmd.guild.id))
 	total_negaslimes = total[0][0]
 	
 	if total_negaslimes:
@@ -264,7 +264,7 @@ async def summon_negaslimeoid(cmd):
 		if len(negaslimeoid_name) > 32:
 			response = "That name is too long. ({:,}/32)".format(len(negaslimeoid_name))
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		market_data = EwMarket(id_server = cmd.message.author.server.id)
+		market_data = EwMarket(id_server = cmd.message.author.guild.id)
 
 		if market_data.negaslime >= 0:
 			response = "The dead haven't amassed any negaslime yet."
@@ -277,7 +277,7 @@ async def summon_negaslimeoid(cmd):
 			slimeoid.sltype = ewcfg.sltype_nega
 			slimeoid.life_state = ewcfg.slimeoid_state_active
 			slimeoid.level = level
-			slimeoid.id_user = user_data.id_user
+			slimeoid.id_user = str(user_data.id_user)
 			slimeoid.id_server = user_data.id_server
 			slimeoid.poi = user_data.poi
 			slimeoid.name = negaslimeoid_name
@@ -474,7 +474,7 @@ async def possess_weapon(cmd):
 		# prevent ghosts from using so much antislime they can't manifest afterwards
 		response = "You'll have to become stronger before you can perform occult arts of this level."
 	else:
-		server = ewutils.get_client().get_server(user_data.id_server)
+		server = cmd.guild
 		inhabitee_id = user_data.get_inhabitee()
 		inhabitee_data = EwUser(id_user = inhabitee_id, id_server = user_data.id_server)
 		inhabitee_member = server.get_member(inhabitee_id)
@@ -491,7 +491,8 @@ async def possess_weapon(cmd):
     
 			accepted = False
 			try:
-				msg = await cmd.client.wait_for_message(timeout = 30, author = inhabitee_member, check = ewutils.check_accept_or_refuse)
+				msg = await cmd.client.wait_for('message', timeout = 30, check=lambda message: message.author == inhabitee_member and 
+														message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 				if msg != None:
 					if msg.content.lower() == ewcfg.cmd_accept:
 						accepted = True
@@ -534,7 +535,7 @@ async def crystalize_negapoudrin(cmd):
 		ewitem.item_create(
 			item_type = ewcfg.it_item,
 			id_user = user_data.id_user,
-			id_server = cmd.message.server.id,
+			id_server = cmd.guild.id,
 			item_props={
 				'id_item': negapoudrin_data.id_item,
 				'item_name': negapoudrin_data.str_name,

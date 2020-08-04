@@ -27,7 +27,7 @@ class EwEventDef:
 
 class EwWorldEvent:
 	id_event = -1
-	id_server = ""
+	id_server = -1
 	event_type = ""
 	time_activate = -1
 	time_expir = -1

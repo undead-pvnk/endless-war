@@ -9,8 +9,8 @@ import ewitem
 from ew import EwUser
 
 class EwRole:
-	id_server = ""
-	id_role = ""
+	id_server = -1
+	id_role = -1
 	name = ""
 
 	def __init__(self, id_server = None, name = None, id_role = None):
@@ -69,9 +69,9 @@ class EwRole:
 """
 	Find relevant roles and save them to the database.
 """
-def setupRoles(client = None, id_server = ""):
+def setupRoles(client = None, id_server = -1):
 	
-	roles_map = ewutils.getRoleMap(client.get_server(id_server).roles)
+	roles_map = ewutils.getRoleMap(client.get_guild(id_server).roles)
 	for poi in ewcfg.poi_list:
 		if poi.role in roles_map:
 			try:
@@ -119,10 +119,10 @@ def setupRoles(client = None, id_server = ""):
 	Hide the names of poi roles behind a uniform alias
 """
 async def hideRoleNames(cmd):
-	id_server = cmd.message.server.id
+	id_server = cmd.guild.id
 	client = ewutils.get_client()
 	
-	server = client.get_server(id_server)
+	server = client.get_guild(id_server)
 	roles_map = ewutils.getRoleMap(server.roles)
 
 	role_counter = 0
@@ -150,7 +150,7 @@ async def hideRoleNames(cmd):
 				role = roles_map[poi.role]
 				if role.name != ewcfg.generic_role_name:
 					role_counter += 1
-					await client.edit_role(server = server, role = role, name = ewcfg.generic_role_name)
+					await role.edit(name = ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.role))
 			
@@ -159,7 +159,7 @@ async def hideRoleNames(cmd):
 				major_role = roles_map[poi.major_role]
 				if major_role.name != ewcfg.generic_role_name:
 					role_counter += 1
-					await client.edit_role(server=server, role=major_role, name=ewcfg.generic_role_name)
+					await major_role.edit(name = ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.major_role))
 			
@@ -168,7 +168,7 @@ async def hideRoleNames(cmd):
 				minor_role = roles_map[poi.minor_role]
 				if minor_role.name != ewcfg.generic_role_name:
 					role_counter += 1
-					await client.edit_role(server=server, role=minor_role, name=ewcfg.generic_role_name)
+					await minor_role.edit(name = ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.minor_role))
 
@@ -181,11 +181,11 @@ async def restoreRoleNames(cmd):
 
 	member = cmd.message.author
 	
-	if not member.server_permissions.administrator:
+	if not member.guild_permissions.administrator:
 		return
 	
 	client = cmd.client
-	server = member.server
+	server = member.guild
 	
 	role_counter = 0
 
@@ -201,27 +201,27 @@ async def restoreRoleNames(cmd):
 		try:
 			role_data = EwRole(id_server = server.id, name = poi.role)
 			for role in server.roles:
-				if role.id == role_data.id_role:
+				if role.id == int(role_data.id_role):
 					role_counter += 1
-					await client.edit_role(server = server, role = role, name = role_data.name)
+					await role.edit(name = role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.role))
 			
 		try:
 			major_role_data = EwRole(id_server = server.id, name = poi.major_role)
 			for role in server.roles:
-				if role.id == major_role_data.id_role:
+				if role.id == int(major_role_data.id_role):
 					role_counter += 1
-					await client.edit_role(server = server, role = role, name = major_role_data.name)
+					await role.edit(name = major_role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.major_role))
 			
 		try:
 			minor_role_data = EwRole(id_server = server.id, name = poi.minor_role)
 			for role in server.roles:
-				if role.id == minor_role_data.id_role:
+				if role.id == int(minor_role_data.id_role):
 					role_counter += 1
-					await client.edit_role(server = server, role = role, name = minor_role_data.name)
+					await role.edit(name = minor_role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.minor_role))
 			
@@ -233,11 +233,11 @@ async def restoreRoleNames(cmd):
 async def recreateRoles(cmd):
 	member = cmd.message.author
 	
-	if not member.server_permissions.administrator:
+	if not member.guild_permissions.administrator:
 		return
 	
 	client = cmd.client
-	server = client.get_server(cmd.message.server.id)
+	server = client.get_guild(cmd.guild.id)
 	
 	server_role_names = []
 	
@@ -252,7 +252,7 @@ async def recreateRoles(cmd):
 		# if poi.role != None:
 		# 
 		# 	if poi.role not in server_role_names:
-		# 		await client.create_role(server=server, name=poi.role)
+		# 		await server.create_role(name=poi.role)
 		# 		ewutils.logMsg('created role {} for poi {}'.format(poi.role, poi.id_poi))
 		# 
 		# 		roles_created += 1
@@ -263,7 +263,7 @@ async def recreateRoles(cmd):
 				
 				if poi.is_district:
 					#print(poi.major_role)
-					await client.create_role(server=server, name=poi.major_role)
+					await server.create_role(name=poi.major_role)
 					ewutils.logMsg('created major role {} for poi {}'.format(poi.major_role, poi.id_poi))
 	
 					roles_created += 1
@@ -273,7 +273,7 @@ async def recreateRoles(cmd):
 			if poi.minor_role not in server_role_names:
 				
 				if poi.is_district or poi.is_street:
-					await client.create_role(server=server, name=poi.minor_role)
+					await server.create_role(name=poi.minor_role)
 					ewutils.logMsg('created minor role {} for poi {}'.format(poi.minor_role, poi.id_poi))
 	
 					roles_created += 1
@@ -286,11 +286,11 @@ async def recreateRoles(cmd):
 async def deleteRoles(cmd):
 	member = cmd.message.author
 
-	if not member.server_permissions.administrator:
+	if not member.guild_permissions.administrator:
 		return
 
 	client = cmd.client
-	server = client.get_server(cmd.message.server.id)
+	server = client.get_guild(cmd.guild.id)
 	
 	delete_target = ""
 	
@@ -320,27 +320,27 @@ async def deleteRoles(cmd):
 	if delete_target == 'roles':
 		for poi in ewcfg.poi_list:
 			if poi.role in server_role_names:
-				await client.delete_role(server=server, role=roles_map[poi.role])
+				await roles_map[poi.role].delete()
 				roles_deleted += 1
 			
 	elif delete_target == 'majorroles':
 		for poi in ewcfg.poi_list:
 			if poi.is_district:
 				if poi.major_role in server_role_names:
-					await client.delete_role(server=server, role=roles_map[poi.major_role])
+					await roles_map[poi.major_role].delete()
 					roles_deleted += 1
 		
 	elif delete_target == 'minorroles':
 		for poi in ewcfg.poi_list:
 			if poi.is_district or poi.is_street:
 				if poi.minor_role in server_role_names:
-					await client.delete_role(server=server, role=roles_map[poi.minor_role])
+					await roles_map[poi.minor_role].delete()
 					roles_deleted += 1
 				
 	elif delete_target == 'hiddenroles':
 		for generic_role in server.roles:
 			if generic_role.name == ewcfg.generic_role_name:
-				await client.delete_role(server=server, role=generic_role)
+				await generic_role.delete()
 				roles_deleted += 1
 
 	print('{} roles were deleted in deleteRoles.'.format(roles_deleted))
@@ -353,8 +353,8 @@ async def updateRoles(
 	client = None,
 	member = None,
 	server_default = None,
-	#refresh_perms = False,
 	refresh_perms = True,
+	remove_or_apply_flag = None
 ):
 	time_now = int(time.time())
 
@@ -368,7 +368,7 @@ async def updateRoles(
 	if member == None:
 		return ewutils.logMsg("error: member was not supplied for updateRoles")
 
-	#roles_map = ewutils.getRoleMap(member.server.roles)
+	#roles_map = ewutils.getRoleMap(member.guild.roles)
 	roles_map_user = ewutils.getRoleIdMap(member.roles)
 
 	if user_data.life_state != ewcfg.life_state_kingpin and ewcfg.role_kingpin in roles_map_user:
@@ -482,75 +482,75 @@ async def updateRoles(
 		try:
 			role_data = EwRole(id_server = id_server, id_role = role_id)
 			roleName = role_data.name
-			if roleName != None and roleName not in faction_roles_remove and roleName not in misc_roles_remove and roleName not in poi_roles_remove:
-				role_ids.append(role_data.id_role)
+			if roleName != None and roleName not in faction_roles_remove and roleName not in misc_roles_remove and roleName not in poi_roles_remove and role_data.id_role != '':
+				role_ids.append(int(role_data.id_role))
 		except:
 			ewutils.logMsg('error: couldn\'t find role with id {}'.format(role_id))
 
 	
 	try:
 		role_data = EwRole(id_server = id_server, name = faction_role)
-		if not role_data.id_role in role_ids:
-			role_ids.append(role_data.id_role)
+		if not role_data.id_role in role_ids and role_data.id_role != '':
+			role_ids.append(int(role_data.id_role))
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
-		ewutils.logMsg('error: couldn\'t find role {}'.format(faction_role))
+		ewutils.logMsg('error: couldn\'t find faction role {}'.format(faction_role))
 
 	try:
 		role_data = EwRole(id_server = id_server, name = pvp_role)
-		if not role_data.id_role in role_ids:
-			role_ids.append(role_data.id_role)
+		if not role_data.id_role in role_ids and role_data.id_role != '':
+			role_ids.append(int(role_data.id_role))
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
-		ewutils.logMsg('error: couldn\'t find role {}'.format(pvp_role))
+		ewutils.logMsg('error: couldn\'t find pvp role {}'.format(pvp_role))
 
 	try:
 		role_data = EwRole(id_server = id_server, name = active_role)
-		if not role_data.id_role in role_ids:
-			role_ids.append(role_data.id_role)
+		if not role_data.id_role in role_ids and role_data.id_role != '':
+			role_ids.append(int(role_data.id_role))
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
-		ewutils.logMsg('error: couldn\'t find role {}'.format(active_role))
+		ewutils.logMsg('error: couldn\'t find active role {}'.format(active_role))
 
 	try:
 		role_data = EwRole(id_server = id_server, name = tutorial_role)
-		if not role_data.id_role in role_ids:
-			role_ids.append(role_data.id_role)
+		if not role_data.id_role in role_ids and role_data.id_role != '':
+			role_ids.append(int(role_data.id_role))
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
-		ewutils.logMsg('error: couldn\'t find role {}'.format(tutorial_role))
+		ewutils.logMsg('error: couldn\'t find tutorial role {}'.format(tutorial_role))
 		
 	try:
 		major_role_data = EwRole(id_server = id_server, name = poi_major_role)
-		if not major_role_data.id_role in role_ids:
-			role_ids.append(major_role_data.id_role)
+		if not major_role_data.id_role in role_ids and major_role_data.id_role != '':
+			role_ids.append(int(major_role_data.id_role))
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
-		ewutils.logMsg('error: couldn\'t find role {}'.format(poi_major_role))
+		ewutils.logMsg('error: couldn\'t find major role {}'.format(poi_major_role))
 
 	try:
 		minor_role_data = EwRole(id_server = id_server, name = poi_minor_role)
-		if not minor_role_data.id_role in role_ids:
-			role_ids.append(minor_role_data.id_role)
+		if not minor_role_data.id_role in role_ids and minor_role_data.id_role != '':
+			role_ids.append(int(minor_role_data.id_role))
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
-		ewutils.logMsg('error: couldn\'t find role {}'.format(poi_minor_role))
+		ewutils.logMsg('error: couldn\'t find minor role {}'.format(poi_minor_role))
 
 	try:
 		role_data = EwRole(id_server = id_server, name = role_gellphone)
-		if not role_data.id_role in role_ids:
-			role_ids.append(role_data.id_role)
+		if not role_data.id_role in role_ids and role_data.id_role != '':
+			role_ids.append(int(role_data.id_role))
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
-		ewutils.logMsg('error: couldn\'t find role {}'.format(role_gellphone))
+		ewutils.logMsg('error: couldn\'t find gellphone role {}'.format(role_gellphone))
 
 	try:
 		role_data = EwRole(id_server = id_server, name = role_slimernalia)
-		if not role_data.id_role in role_ids:
-			role_ids.append(role_data.id_role)
+		if not role_data.id_role in role_ids and role_data.id_role != '':
+			role_ids.append(int(role_data.id_role))
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
-		ewutils.logMsg('error: couldn\'t find role {}'.format(role_slimernalia))
+		ewutils.logMsg('error: couldn\'t find slimernalia role {}'.format(role_slimernalia))
 
 	# if faction_role not in role_names:
 	# 	role_names.append(faction_role)
@@ -569,15 +569,42 @@ async def updateRoles(
 	#ewutils.logMsg('looking for {} roles to replace'.format(len(role_ids)))
 	replacement_roles = []
 
-	for role in member.server.roles:
+	for role in member.guild.roles:
 		if role.id in role_ids:
-			#ewutils.logMsg('found role {} with id {}'.format(role.name, role.id))
+			# ewutils.logMsg('found role {} with id {}'.format(role.name, role.id))
 			replacement_roles.append(role)
 
 	#ewutils.logMsg('found {} roles to replace'.format(len(replacement_roles)))
 	
 	try:
-		await client.replace_roles(member, *replacement_roles)
+		time_now = int(time.time())
+		was_pvp = user_data.time_expirpvp > time_now
+		user_is_pvp = False
+
+		role_ids = []
+		for pvp_role in ewcfg.role_to_pvp_role.values():
+			role = EwRole(id_server=member.guild.id, name = pvp_role)
+			role_ids.append(role.id_role)
+
+			for role in member.roles:
+				if role.id in role_ids:
+					user_is_pvp = True
+					break
+		
+		if remove_or_apply_flag != None:
+			
+			if was_pvp:
+				if remove_or_apply_flag == 'apply':
+					if not user_is_pvp:
+						# ewutils.logMsg('applying flag...')
+						await member.edit(roles=replacement_roles)
+			elif not was_pvp:
+				if remove_or_apply_flag == 'remove':
+					# ewutils.logMsg('removing flag...')
+					await member.edit(roles=replacement_roles)
+		else:
+			await member.edit(roles=replacement_roles)
+			
 	except:
 		ewutils.logMsg('error: failed to replace roles for {}'.format(member.display_name))
 
@@ -585,17 +612,18 @@ async def updateRoles(
 		await refresh_user_perms(client = client, id_server = id_server, used_member = member)
 
 	#try:
-	#	await client.replace_roles(member, *replacement_roles)
+	#	await member.edit(roles=replacement_roles)
 	#except:
 	#	ewutils.logMsg('error: failed to replace roles for {}'.format(member.display_name))
 
 # Removes and updates user permissions. It's got a fair amount of debuggers, sorry about the mess!
 async def refresh_user_perms(client, id_server, used_member = None, startup = False):
-	#try:
-	server = client.get_server(id_server)
+
+	server = client.get_guild(id_server)
 	
-	member_list = []
-	#subzone_member_list = []
+	has_overrides = False
+
+	user_data = EwUser(member=used_member)
 
 	if not startup:
 		for poi in ewcfg.poi_list:
@@ -608,108 +636,82 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 					continue
 					
 			#print('{} overwrites: {}'.format(poi.id_poi, channel.overwrites))
-			for tuple in channel.overwrites:
-				#print('tuplevar: {}'.format(tuple[0]) + '\n\n')
-				if tuple[0] not in server.roles:
-					member = tuple[0]
-					member_list.append(tuple[0])
-					
-					# If we dont have the right member supplied in the function call, don't modify its permissions
-					if member != used_member:
-						continue
-					
-					user_data = EwUser(member=member)
-					
-					if user_data.poi != poi.id_poi:
-						
-						# Incorrect overwrite found for user
-						time_now_start = int(time.time())
-	
-						for i in range(ewcfg.permissions_tries):
-							await client.delete_channel_permissions(channel, member)
-	
-						time_now_end = int(time.time())
-	
-						#print('took {} seconds to delete channel permissions'.format(time_now_end - time_now_start))
-							
-						#print('\ndeleted overwrite in {} for {}\n'.format(channel, member))
-					
-					#elif user_data.poi == poi.id_poi:
-						correct_poi = ewcfg.id_to_poi.get(user_data.poi)
-						
-						correct_channel = ewutils.get_channel(server, correct_poi.channel)
-						#correct_lan_channel = "{}-LAN-connection".format(correct_channel)
-						
-						permissions_dict = correct_poi.permissions
-						overwrite = discord.PermissionOverwrite()
-						overwrite.read_messages = True if ewcfg.permission_read_messages in permissions_dict[user_data.poi] else False
-						overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict[user_data.poi] else False
-						
-						# wall_overwrite = None
-						# if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
-						# 	wall_overwrite = discord.PermissionOverwrite()
-						# 	wall_channel = ewutils.get_channel(server, correct_channel.name + '-wall')
-						# 	overwrite.read_messages = True
-						
-						#print(permissions_dict[user_data.poi])
-						time_now_start = int(time.time())
-	
-						for i in range(ewcfg.permissions_tries):
-							await client.edit_channel_permissions(correct_channel, member, overwrite)
-							# if wall_overwrite != None:
-							# 	await client.edit_channel_permissions(wall_channel, member, wall_overwrite)
-							#await client.edit_channel_permissions(correct_lan_channel, member, overwrite)
-	
-						time_now_end = int(time.time())
-	
-						#print('took {} seconds to update channel permissions'.format(time_now_end - time_now_start))
-	
-						#print('updated permissions for {} in {}'.format(member, user_data.poi))
-						
-						
-						
-					else:
-						pass
-						# print(member)
-						# print(poi.str_name)
+			if used_member in channel.overwrites and user_data.poi != poi.id_poi:
+				# Incorrect overwrite found for user
+
+				#time_now_start = int(time.time())
+
+				for i in range(ewcfg.permissions_tries):
+					await channel.set_permissions(used_member, overwrite=None)
+
+				#time_now_end = int(time.time())
+				#print('took {} seconds to delete channel permissions'.format(time_now_end - time_now_start))
+				#print('\ndeleted overwrite in {} for {}\n'.format(channel, member))
+			
+			elif used_member not in channel.overwrites and user_data.poi == poi.id_poi:
+
+				correct_poi = ewcfg.id_to_poi.get(user_data.poi)
 				
-		if used_member not in member_list:
+				if correct_poi == None:
+					print('User {} has invalid POI of {}'.format(user_data.id_user, user_data.poi))
+					#correct_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_downtown)
+				
+				correct_channel = ewutils.get_channel(server, correct_poi.channel)
+				#correct_lan_channel = "{}-LAN-connection".format(correct_channel)
+
+				if correct_channel == None:
+					ewutils.logMsg("Channel {} not found".format(correct_poi.channel))
+					return
+				
+				permissions_dict = correct_poi.permissions
+				overwrite = discord.PermissionOverwrite()
+				overwrite.read_messages = True if ewcfg.permission_read_messages in permissions_dict[user_data.poi] else False
+				overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict[user_data.poi] else False
+				
+				#print(permissions_dict[user_data.poi])
+				#time_now_start = int(time.time())
+
+				for i in range(ewcfg.permissions_tries):
+					await correct_channel.set_permissions(used_member, overwrite=overwrite)
+
+				#time_now_end = int(time.time())
+				#print('took {} seconds to update channel permissions'.format(time_now_end - time_now_start))
+				#print('updated permissions for {} in {}'.format(member, user_data.poi))
+
+				has_overrides = True
+				
+		if not has_overrides:
 		# Member has no overwrites -- fix this:
 			user_data = EwUser(member=used_member)
 	
 			# User might not have their poi set to downtown when they join the server.
 			if user_data.poi == None:
-				correct_poi = ewcfg.id_to_poi.get('downtown')
+				correct_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_downtown)
 			else:
 				correct_poi = ewcfg.id_to_poi.get(user_data.poi)
 			
+			if correct_poi == None:
+				print('User {} has invalid POI of {}'.format(user_data.id_user, user_data.poi))
+
 			#print(user_data.poi)
 			
 			correct_channel = ewutils.get_channel(server, correct_poi.channel)
+			if correct_channel == None:
+				ewutils.logMsg("Channel {} not found".format(correct_poi.channel))
+				return
 	
 			permissions_dict = correct_poi.permissions
 			overwrite = discord.PermissionOverwrite()
 			overwrite.read_messages = True if ewcfg.permission_read_messages in permissions_dict[user_data.poi] else False
 			overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict[user_data.poi] else False
-
-			# wall_overwrite = None
-			# if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
-			# 	wall_overwrite = discord.PermissionOverwrite()
-			# 	wall_channel = ewutils.get_channel(server, correct_channel.name + '-wall')
-			# 	overwrite.read_messages = True
 		
-			time_now_start = int(time.time())
+			#time_now_start = int(time.time())
 	
 			for i in range(ewcfg.permissions_tries):
-				await client.edit_channel_permissions(correct_channel, used_member, overwrite)
-				# if wall_overwrite != None:
-				# 	await client.edit_channel_permissions(wall_channel, used_member, wall_overwrite)
-				#await client.edit_channel_permissions(correct_lan_channel, used_member, overwrite)
+				await correct_channel.set_permissions(used_member, overwrite=overwrite)
 
-			time_now_end = int(time.time())
-	
+			#time_now_end = int(time.time())
 			#print('took {} seconds to generate channel permissions'.format(time_now_end - time_now_start))
-
 			# print('corrected overwrite in {} for {}'.format(correct_channel, member))
 			#print('\ngenerated permissions for {} in {}\n'.format(used_member, user_data.poi))
 					
@@ -770,9 +772,9 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	# 
 	# 				# print('{} overwrites: {}'.format(poi.id_poi, channel.overwrites))
 	# 				for tuple in channel.overwrites:
-	# 					# print('tuplevar: {}'.format(tuple[0]) + '\n\n')
-	# 					if tuple[0] not in server.roles:
-	# 						member = tuple[0]
+	# 					# print('tuplevar: {}'.format(tuple) + '\n\n')
+	# 					if tuple not in server.roles:
+	# 						member = tuple
 	# 
 	# 						# If we dont have the right member in the member list, skip it.
 	# 						if member != current_member:
@@ -818,19 +820,11 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	# 			overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict[user_data.poi] else False
 	# 			#overwrite.connect = True if ewcfg.permission_connect_to_voice in permissions_dict[user_data.poi] else False
 	# 
-	# 			wall_overwrite = None
-	# 			if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
-	# 				wall_overwrite = discord.PermissionOverwrite()
-	# 				wall_channel = ewutils.get_channel(server, correct_channel.name + '-wall')
-	# 				overwrite.read_messages = True
 	# 			
 	# 			time_now_start = int(time.time())
 	# 
 	# 			for i in range(ewcfg.permissions_tries):
-	# 				await client.edit_channel_permissions(correct_channel, current_member, overwrite)
-	# 				if wall_overwrite != None:
-	# 					await client.edit_channel_permissions(wall_channel, current_member, wall_overwrite)
-	# 				#await client.edit_channel_permissions(correct_lan_channel, current_member, overwrite)
+	# 				correct_channel.set_permissions(member, overwrite=overwrite)
 	# 			
 	# 			time_now_end = int(time.time())
 	# 			
@@ -842,77 +836,13 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	#except:
 		#ewutils.logMsg('caught exception while refreshing permissions')
 
-# Change all permissions for POI channels
-async def change_perms(cmd):
-	member = cmd.message.author
-	client = ewutils.get_client()
-
-	if not member.server_permissions.administrator:
-		return
-
-	user_data = EwUser(member=member)
-
-	allow_or_deny = None
-	if cmd.tokens_count > 1:
-		allow_or_deny = cmd.tokens[1].lower()
-
-		if allow_or_deny == 'allow':
-			allow_or_deny = True
-			response = "DEBUG: ALLOWED READ AND SEND ACCESS TO ALL POI CHANNELS/CATEGORIES."
-			await ewutils.send_message(client, cmd.message.channel, ewutils.formatMessage(member, response))
-		elif allow_or_deny == 'deny':
-			allow_or_deny = False
-			response = "DEBUG: DENIED READ AND SEND ACCESS TO ALL POI CHANNELS/CATEGORIES."
-			await ewutils.send_message(client, cmd.message.channel, ewutils.formatMessage(member, response))
-		elif allow_or_deny == 'nuetral':
-			allow_or_deny = 'None'
-			response = "DEBUG: SET READ AND SEND ACCESS FOR ALL POI CHANNELS/CATEGORIES TO NEUTRAL."
-			await ewutils.send_message(client, cmd.message.channel, ewutils.formatMessage(member, response))
-		else:
-			response = "ERROR: INVALID ANSWER."
-			return await ewutils.send_message(client, cmd.message.channel, ewutils.formatMessage(member, response))
-
-	server = client.get_server(id=user_data.id_server)
-
-	for poi in ewcfg.poi_list:
-		channel = ewutils.get_channel(server, poi.channel)
-		
-		if channel == None:
-			print(poi.id_poi)
-			continue
-		
-		role = discord.utils.get(server.roles, name='@everyone')
-
-		overwrite = discord.PermissionOverwrite()
-		
-		if allow_or_deny == True:
-			overwrite.read_messages = True
-			overwrite.send_messages = True
-		elif allow_or_deny == False:
-			overwrite.read_messages = False
-			overwrite.send_messages = False
-		elif allow_or_deny == 'None':
-			overwrite.read_messages = None
-			overwrite.send_messages = None
-			
-		overwrite.read_message_history = None
-		
-		if allow_or_deny == True or allow_or_deny == False or allow_or_deny == 'None':
-			
-			for i in range(ewcfg.permissions_tries):
-				await client.edit_channel_permissions(channel, role, overwrite)
-
-			print('set read/send perms in {} to {}'.format(channel, allow_or_deny))
-			
-	print('got through all channels in changeperms')
-
 # Remove all user overwrites in the server's POI channels
 async def remove_user_overwrites(cmd):
 	
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 	
-	server = cmd.message.server
+	server = cmd.guild
 	client = ewutils.get_client()
 	
 	for poi in ewcfg.poi_list:
@@ -929,14 +859,14 @@ async def remove_user_overwrites(cmd):
 				
 		# print('{} overwrites: {}'.format(poi.id_poi, channel.overwrites))
 		for tuple in channel.overwrites:
-			# print('tuplevar: {}'.format(tuple[0]) + '\n\n')
-			if tuple[0] not in server.roles:
-				member = tuple[0]
+			# print('tuplevar: {}'.format(tuple) + '\n\n')
+			if tuple not in server.roles:
+				member = tuple
 				
 				print('removed overwrite in {} for {}'.format(channel, member))
 
 				for i in range(ewcfg.permissions_tries):
-					await client.delete_channel_permissions(channel, member)
+					await channel.set_permissions(member, overwrite=None)
 		
 
 	response = "DEBUG: ALL USER OVERWRITES DELETED."

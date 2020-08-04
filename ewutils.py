@@ -80,7 +80,7 @@ class Message:
 """
 class EwResponseContainer:
 	client = None
-	id_server = ""
+	id_server = -1
 	channel_responses = {}
 	channel_topics = {}
 	members_to_update = []
@@ -133,7 +133,7 @@ class EwResponseContainer:
 			logMsg("Couldn't find client")
 			return messages
 			
-		server = self.client.get_server(self.id_server)
+		server = self.client.get_guild(self.id_server)
 		if server == None:
 			logMsg("Couldn't find server with id {}".format(self.id_server))
 			return messages
@@ -164,7 +164,7 @@ class EwResponseContainer:
 		# for ch in self.channel_topics:
 		# 	channel = get_channel(server = server, channel_name = ch)
 		# 	try:
-		# 		await self.client.edit_channel(channel = channel, topic = self.channel_topics[ch])
+		# 		await channel.edit(topic = self.channel_topics[ch])
 		# 	except:
 		# 		logMsg('Failed to set channel topic for {} to {}'.format(ch, self.channel_topics[ch]))
 
@@ -403,6 +403,8 @@ def getRoleIdMap(roles):
 
 """ canonical lowercase no space name for a role """
 def mapRoleName(roleName):
+	if type(roleName) == int:
+		return roleName
 	return roleName.replace(" ", "").lower()
 
 """ connect to the database """
@@ -548,12 +550,52 @@ def decaySlimes(id_server = None):
 			cursor.close()
 			databaseClose(conn_info)
 
+"""
+	Kills users who have left the server while the bot was offline
+"""
+def kill_quitters(id_server = None):
+	if id_server != None:
+		try:
+			client = get_client()
+			server = client.get_guild(id_server)
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND ( life_state > 0 OR slimes < 0 )".format(
+			), (
+				id_server,
+			))
+
+			users = cursor.fetchall()
+
+			for user in users:
+				member = server.get_member(user[0])
+
+				# Make sure to kill players who may have left while the bot was offline.
+				if member is None:
+					try:
+						user_data = EwUser(id_user = user[0], id_server = id_server)
+
+						user_data.trauma = ewcfg.trauma_id_suicide
+						user_data.die(cause=ewcfg.cause_leftserver)
+						user_data.persist()
+
+						logMsg('Player with id {} killed for leaving the server.'.format(user[0]))
+					except:
+						logMsg('Failed to kill member who left the server.')
+
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+
 """ Flag all users in the Outskirts for PvP """
 async def flag_outskirts(id_server = None):
 	if id_server != None:
 		try:
 			client = get_client()
-			server = client.get_server(id_server)
+			server = client.get_guild(id_server)
 			conn_info = databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
@@ -588,10 +630,10 @@ async def flag_vulnerable_districts(id_server = None):
 	if id_server != None:
 		try:
 			client = get_client()
-			server = client.get_server(id_server)
+			server = client.get_guild(id_server)
 			conn_info = databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
 			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND poi IN %s".format(
 			), (
@@ -605,26 +647,13 @@ async def flag_vulnerable_districts(id_server = None):
 			for user in users:
 				user_data = EwUser(id_user = user[0], id_server = id_server)
 				member = server.get_member(user_data.id_user)
-				
+
 				# Flag the user for PvP
 				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
 				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
 				user_data.persist()
-				await ewrolemgr.updateRoles(client = client, member = member)
-
-				# Make sure to kill players who may have left while the bot was offline.
-				all_current_members = list(server.members)
-				if member not in all_current_members:
-					try:
-						user_data = EwUser(id_user = user_data.id_user, id_server = user_data.id_server)
-	
-						user_data.trauma = ewcfg.trauma_id_suicide
-						user_data.die(cause=ewcfg.cause_leftserver)
-						user_data.persist()
-	
-						logMsg('Player killed for leaving the server.')
-					except:
-						logMsg('Failed to kill member who left the server.')
+				
+				await ewrolemgr.updateRoles(client = client, member = member, remove_or_apply_flag = 'apply')
 
 			conn.commit()
 		finally:
@@ -650,7 +679,7 @@ async def bleedSlimes(id_server = None):
 	if id_server != None:
 		try:
 			client = get_client()
-			server = client.get_server(id_server)
+			server = client.get_guild(id_server)
 			conn_info = databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
@@ -669,7 +698,8 @@ async def bleedSlimes(id_server = None):
 				user_data = EwUser(id_user = user[0], id_server = id_server)
 				member = server.get_member(user_data.id_user)
 				
-				slimes_to_bleed = user_data.bleed_storage * (1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
+				slimes_to_bleed = user_data.bleed_storage * (
+							1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
 				slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
 				slimes_dropped = user_data.totaldamage + user_data.slimes
 
@@ -678,10 +708,10 @@ async def bleedSlimes(id_server = None):
 				if trauma != None and trauma.trauma_class == ewcfg.trauma_class_bleeding:
 					bleed_mod += 0.5 * user_data.degradation / 100
 
-				#round up or down, randomly weighted
+				# round up or down, randomly weighted
 				remainder = slimes_to_bleed - int(slimes_to_bleed)
-				if random.random() < remainder: 
-					slimes_to_bleed += 1 
+				if random.random() < remainder:
+					slimes_to_bleed += 1
 				slimes_to_bleed = int(slimes_to_bleed)
 
 				slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
@@ -691,36 +721,23 @@ async def bleedSlimes(id_server = None):
 					real_bleed = round(slimes_to_bleed * bleed_mod)
 
 					user_data.bleed_storage -= slimes_to_bleed
-					user_data.change_slimes(n = - real_bleed, source = ewcfg.source_bleeding)
+					user_data.change_slimes(n=- real_bleed, source=ewcfg.source_bleeding)
 
-					district_data = EwDistrict(id_server = id_server, district = user_data.poi)
-					district_data.change_slimes(n = real_bleed, source = ewcfg.source_bleeding)
+					district_data = EwDistrict(id_server=id_server, district=user_data.poi)
+					district_data.change_slimes(n=real_bleed, source=ewcfg.source_bleeding)
 					district_data.persist()
 
 					if user_data.slimes < 0:
 						user_data.trauma = ewcfg.trauma_id_environment
-						die_resp = user_data.die(cause = ewcfg.cause_bleeding)
-						#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
-						player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
+						die_resp = user_data.die(cause=ewcfg.cause_bleeding)
+						# user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+						player_data = EwPlayer(id_server=user_data.id_server, id_user=user_data.id_user)
 						resp_cont.add_response_container(die_resp)
 					user_data.persist()
 
 					total_bled += real_bleed
 
-				await ewrolemgr.updateRoles(client = client, member = member)
-				
-				# Make sure to kill players who may have left while the bot was offline.
-				all_current_members = list(server.members)
-				if member not in all_current_members:
-					try:
-						user_data = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
-						user_data.trauma = ewcfg.trauma_id_suicide
-						user_data.die(cause=ewcfg.cause_leftserver)
-						user_data.persist()
-
-						logMsg('Player killed for leaving the server.')
-					except:
-						logMsg('Failed to kill member who left the server.')
+				await ewrolemgr.updateRoles(client=client, member=member)
 
 			await resp_cont.post()
 
@@ -844,7 +861,7 @@ async def burnSlimes(id_server = None):
 	if id_server != None:
 		time_now = int(time.time())
 		client = get_client()
-		server = client.get_server(id_server)
+		server = client.get_guild(id_server)
 		status_origin = 'user'
 
 		results = {}
@@ -887,10 +904,11 @@ async def burnSlimes(id_server = None):
 				ewstats.change_stat(user=killer_data, metric=ewcfg.stat_lifetime_damagedealt, n=slimes_to_burn)
 
 			# Player died
-			if user_data.slimes - slimes_to_burn < 0:	
+			if user_data.slimes - slimes_to_burn < 0:
 				weapon = ewcfg.weapon_map.get(ewcfg.weapon_id_molotov)
 
-				player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
+				player_data = EwPlayer(id_server=user_data.id_server, id_user=user_data.id_user)
+				killer = EwPlayer(id_server=id_server, id_user=killer_data.id_user)
 				poi = ewcfg.id_to_poi.get(user_data.poi)
 
 				# Kill stats
@@ -916,8 +934,8 @@ async def burnSlimes(id_server = None):
 					user_data.id_killer = killer_data.id_enemy
 					
 				user_data.trauma = ewcfg.trauma_id_environment
-				die_resp = user_data.die(cause = ewcfg.cause_burning)
-				#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+				die_resp = user_data.die(cause=ewcfg.cause_burning)
+				# user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 
 				resp_cont.add_response_container(die_resp)
 
@@ -934,23 +952,10 @@ async def burnSlimes(id_server = None):
 				user_data.trauma = weapon.id_weapon
 
 				user_data.persist()
-				await ewrolemgr.updateRoles(client = client, member = member)
+				await ewrolemgr.updateRoles(client=client, member=member)
 			else:
-				user_data.change_slimes(n = -slimes_to_burn, source = ewcfg.source_damage)
+				user_data.change_slimes(n=-slimes_to_burn, source=ewcfg.source_damage)
 				user_data.persist()
-
-			# Make sure to kill players who may have left while the bot was offline.
-			all_current_members = list(server.members)
-			if member not in all_current_members:
-				try:
-					user_data = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
-					user_data.trauma = ewcfg.trauma_id_suicide
-					user_data.die(cause=ewcfg.cause_leftserver)
-					user_data.persist()
-
-					logMsg('Player killed for leaving the server.')
-				except:
-					logMsg('Failed to kill member who left the server.')
 				
 
 		await resp_cont.post()	
@@ -959,7 +964,7 @@ async def enemyBurnSlimes(id_server):
 	if id_server != None:
 		time_now = int(time.time())
 		client = get_client()
-		#server = client.get_server(id_server)
+		server = client.get_guild(id_server)
 		status_origin = 'user'
 
 		results = {}
@@ -1118,7 +1123,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 	weaponskills = {}
 
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None:
@@ -1153,7 +1158,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 """ Set an individual weapon skill value for a player. """
 def weaponskills_set(id_server = None, id_user = None, member = None, weapon = None, weaponskill = 0):
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None and weapon != None:
@@ -1183,7 +1188,7 @@ def weaponskills_set(id_server = None, id_user = None, member = None, weapon = N
 """ Clear all weapon skills for a player (probably called on death). """
 def weaponskills_clear(id_server = None, id_user = None, member = None, weaponskill = None):
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None:
@@ -1256,7 +1261,7 @@ def execute_sql_query(sql_query = None, sql_replacements = None):
 """
 async def post_in_channels(id_server, message, channels = None):
 	client = get_client()
-	server = client.get_server(id = id_server)
+	server = client.get_guild(id = id_server)
 
 	if channels is None and server is not None:
 		channels = server.channels
@@ -1265,7 +1270,7 @@ async def post_in_channels(id_server, message, channels = None):
 		if type(channel) is str:  # if the channels are passed as strings instead of discord channel objects
 			channel = get_channel(server, channel)
 		if channel is not None and channel.type == discord.ChannelType.text:
-			await send_message(client, channel, message)
+			await channel.send(content=message)
 	return
 
 """
@@ -1446,11 +1451,11 @@ def get_client():
 
 
 """
-	Proxy to discord.py Client.send_message with exception handling.
+	Proxy to discord.py channel.send with exception handling.
 """
-async def send_message(client, channel, text):
+async def send_message(client, channel, text, delete_after=None):
 	try:
-		return await client.send_message(channel, text)
+		return await channel.send(content=text, delete_after=delete_after)
 	except discord.errors.Forbidden:
 		logMsg('Could not message user: {}\n{}'.format(channel, text))
 		raise
@@ -1458,11 +1463,11 @@ async def send_message(client, channel, text):
 		logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
 
 """
-	Proxy to discord.py Client.edit_message with exception handling.
+	Proxy to discord.py message.edit() with exception handling.
 """
 async def edit_message(client, message, text):
 	try:
-		return await client.edit_message(message, text)
+		return await message.edit(content=str(text))
 	except:
 		logMsg('Failed to edit message. Updated text would have been:\n{}'.format(text))
 
@@ -1604,7 +1609,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 		market_data = EwMarket(id_server = district_data.id_server)
 
 	client = get_client()
-	server = client.get_server(id_server)
+	server = client.get_guild(id_server)
 
 	resp_cont = EwResponseContainer(id_server = id_server)
 	response = ""
@@ -1718,7 +1723,9 @@ async def delete_last_message(client, last_messages, tick_length):
 		return
 	await asyncio.sleep(tick_length)
 	try:
-		await client.delete_message(last_messages[-1])
+		msg = last_messages[-1]
+		await msg.delete()
+		pass
 	except:
 		logMsg("failed to delete last message")
 
@@ -1887,7 +1894,7 @@ async def spawn_prank_items(id_server):
 		
 		client = get_client()
 		
-		server = client.get_server(id_server)
+		server = client.get_guild(id_server)
 	
 		district_channel = get_channel(server=server, channel_name=district_channel_name)
 		
@@ -2030,7 +2037,7 @@ async def activate_trap_items(district, id_server, id_user):
 
 		client = get_client()
 
-		server = client.get_server(id_server)
+		server = client.get_guild(id_server)
 		
 		member = server.get_member(id_user)
 
@@ -2062,13 +2069,13 @@ async def activate_trap_items(district, id_server, id_user):
 		trap_chance = int(trap_item_data.item_props.get('trap_chance'))
 		trap_user_id = trap_item_data.item_props.get('trap_user_id')
 		
-		if trap_user_id == user_data.id_user:
+		if int(trap_user_id) == user_data.id_user:
 			#print('trap same user id')
 			return
 		
 		if random.randrange(101) < trap_chance:
 			# Trap was triggered!
-			pranker_data = EwUser(id_user=trap_user_id, id_server=id_server)
+			pranker_data = EwUser(id_user=int(trap_user_id), id_server=id_server)
 			pranked_data = user_data
 
 			response = trap_item_data.item_props.get('prank_desc')
@@ -2113,7 +2120,7 @@ def check_fursuit_active(id_server):
 def create_death_report(cause = None, user_data = None):
 	
 	client = ewcfg.get_client()
-	server = client.get_server(user_data.id_server)
+	server = client.get_guild(user_data.id_server)
 
 	# User display name is used repeatedly later, grab now
 	user_member = server.get_member(user_data.id_user)
@@ -2269,11 +2276,11 @@ async def add_pvp_role(cmd = None):
 	roles_map_user = getRoleMap(member.roles)
 
 	if ewcfg.role_copkillers in roles_map_user and ewcfg.role_copkillers_pvp not in roles_map_user:
-		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_copkillers_pvp])
+		await member.add_roles(cmd.roles_map[ewcfg.role_copkillers_pvp])
 	elif ewcfg.role_rowdyfuckers in roles_map_user and ewcfg.role_rowdyfuckers_pvp not in roles_map_user:
-		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
+		await member.add_roles(cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
 	elif ewcfg.role_juvenile in roles_map_user and ewcfg.role_juvenile_pvp not in roles_map_user:
-		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_juvenile_pvp])
+		await member.add_roles(cmd.roles_map[ewcfg.role_juvenile_pvp])
 		
 """
 	Returns true if the specified name is used by any POI.
@@ -2450,11 +2457,11 @@ def get_street_list(str_poi):
 	
 async def collect_topics(cmd):
 	
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 	
 	client = get_client()
-	server = client.get_server(cmd.message.server.id)
+	server = client.get_guild(cmd.guild.id)
 	topic_count = 0
 	
 	for channel in server.channels:
@@ -2481,7 +2488,7 @@ async def collect_topics(cmd):
 	
 async def sync_topics(cmd):
 	
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 	
 	
@@ -2491,7 +2498,7 @@ async def sync_topics(cmd):
 		if poi.topic == None or poi.topic == '':
 			poi_has_blank_topic = True
 		
-		channel = get_channel(cmd.message.server, poi.channel)
+		channel = get_channel(cmd.guild, poi.channel)
 		
 		if channel == None:
 			logMsg('Failed to get channel for {}'.format(poi.id_poi))
@@ -2512,12 +2519,21 @@ async def sync_topics(cmd):
 			
 		try:
 			await asyncio.sleep(2)
-			await cmd.client.edit_channel(channel = channel, topic = new_topic)
+			await channel.edit(topic = new_topic)
 			logMsg('Changed channel topic for {} to {}'.format(channel, debug_info))
 		except:
 			logMsg('Failed to set channel topic for {} to {}'.format(channel, debug_info))
 			
 	logMsg('Finished syncing topics.')
+	
+async def shut_down_bot(cmd):
+	
+	if not cmd.message.author.guild_permissions.administrator:
+		return await ewwep.suicide(cmd=cmd)
+	
+	logMsg('Goodbye!')
+	await asyncio.sleep(2)
+	sys.exit()
 
 def gvs_create_gaia_grid_mapping(user_data):
 	grid_map = {}
