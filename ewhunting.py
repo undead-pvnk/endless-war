@@ -92,7 +92,7 @@ class EwEnemy:
 	enemyclass = ""
 	
 	# Tracks which user is associated with the enemy
-	owner = ""
+	owner = -1
 	
 	# Various properties different enemies might have
 	enemy_props = ""

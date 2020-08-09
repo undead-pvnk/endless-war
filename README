@@ -512,7 +512,7 @@ CREATE TABLE gvs_grid_conditions (
 );
 
 CREATE TABLE gvs_ops_choices (
-    id_user varchar(128) NOT NULL,
+    id_user bigint NOT NULL,
     district varchar(64) NOT NULL,
     enemytype varchar(32) NOT NULL,
     faction varchar(16) NOT NULL,

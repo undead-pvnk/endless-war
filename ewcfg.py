@@ -25333,7 +25333,7 @@ enemy_type_juvieshambler = "juvieshambler"
 enemy_type_shambleballplayer = "shambleballplayer"
 enemy_type_shamblerwarlord = "shamblerwarlord"
 enemy_type_shamblerraider = "shamblerraider"
-enemy_type_blueeyesshamblerdragon = "blueeyesshamblerdragon"
+enemy_type_gvs_boss = "gvs_boss"
 
 # Sandbag (Only spawns in the dojo, doesn't attack)
 enemy_type_sandbag = 'sandbag'
@@ -25406,7 +25406,7 @@ gvs_enemies_shamblers = [
 	enemy_type_shambleballplayer,
 	enemy_type_shamblerwarlord,
 	enemy_type_shamblerraider,
-	#enemy_type_blueeyesshamblerdragon
+	enemy_type_gvs_boss,
 ]
 gvs_enemies = gvs_enemies_gaiaslimeoids + gvs_enemies_shamblers
 
@@ -26106,13 +26106,13 @@ enemy_data_table = {
 			'setdamage': 30000
 		}
 	},
-	enemy_type_blueeyesshamblerdragon: {
+	enemy_type_gvs_boss: {
 		"slimerange": [5000000, 5000000],
 		"ai": enemy_ai_shambler,
 		"attacktype": enemy_attacktype_gvs_s_molotovbreath,
-		"displayname": "Blue Eyes Shambler Dragon",
+		"displayname": "PLACEHOLDER",
 		"raredisplayname": "NULL",
-		"aliases": ['blue','blueeyes','blueeyeswhitedragon','dragon','shamblerdragon'],
+		"aliases": ['placeholder'],
 		"class": enemy_class_shambler,
 		"props": {
 			'onground': 'True',
