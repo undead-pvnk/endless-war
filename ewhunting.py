@@ -2114,7 +2114,7 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weathe
 	return resp_cont
 
 # Spawns shamblers in districts that Garden Ops are taking place in.
-async def gvs_spawn_enemy(id_server):
+#async def gvs_spawn_enemy(id_server):
 
 # Finds an enemy based on its regular/shorthand name, or its ID.
 def find_enemy(enemy_search=None, user_data=None):
@@ -3004,4 +3004,4 @@ def gvs_get_splash_coords(checked_splash_coords):
 
 
 
-async def gvs_update_gamestate(id_server):
+#async def gvs_update_gamestate(id_server):

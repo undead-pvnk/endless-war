@@ -739,6 +739,8 @@ cmd_map = {
 	ewcfg.cmd_gvs_printgrid: ewcmd.gvs_print_grid,
 	ewcfg.cmd_gvs_printgrid_alt1: ewcmd.gvs_print_grid,
 	ewcfg.cmd_gvs_printlane: ewcmd.gvs_print_lane,
+	ewcfg.cmd_gvs_searchforbrainz: ewcmd.gvs_searchforbrainz,
+	ewcfg.cmd_gvs_grabbrainz: ewcmd.gvs_grabbrainz,
 
 	# race
 	ewcfg.cmd_set_race: ewrace.set_race,
@@ -951,8 +953,8 @@ async def on_ready():
 		# SWILLDERMUK
 		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
-		if ewcfg.gvs_active:
-			asyncio.ensure_future(ewutils.gvs_gamestate_tick_loop(id_server=server.id))
+		#if ewcfg.gvs_active:
+		#	asyncio.ensure_future(ewutils.gvs_gamestate_tick_loop(id_server=server.id))
 
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
@@ -1482,6 +1484,8 @@ async def on_message(message):
 				return await ewbook.zine_dm_commands(cmd=cmd_obj)
 			elif poi.is_apartment:
 				return await ewapt.aptCommands(cmd=cmd_obj)
+			elif ewcfg.cmd_gvs_grabbrainz in cmd_obj.message.content.lower():
+				return await ewcmd.gvs_grabbrainz(cmd_obj)
 			else:
 				
 				# Only send the help response once every thirty seconds. There's no need to spam it.

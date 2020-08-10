@@ -83,6 +83,7 @@ class EwUser:
 	
 	#GANKERS VS SHAMBLERS
 	gvs_currency = 0
+	gvs_time_lastshambaquarium = 0
 
 	apt_zone = "empty"
 	visiting = "empty"
@@ -985,7 +986,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -1042,6 +1043,7 @@ class EwUser:
 					ewcfg.col_time_racialability,
 					ewcfg.col_time_lastpremiumpurchase,
 					ewcfg.col_gvs_currency,
+					ewcfg.col_gvs_time_lastshambaquarium,
 				), (
 					id_user,
 					id_server
@@ -1104,7 +1106,8 @@ class EwUser:
 					self.race = result[51]
 					self.time_racialability = result[52]
 					self.time_lastpremiumpurchase = result[53]
-					self.time_gvs_currency = result[54]
+					self.gvs_currency = result[54]
+					self.gvs_time_lastshambaquarium = result[55]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -1197,7 +1200,7 @@ class EwUser:
 			self.limit_fix()
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -1256,6 +1259,7 @@ class EwUser:
 				ewcfg.col_time_racialability,
 				ewcfg.col_time_lastpremiumpurchase,
 				ewcfg.col_gvs_currency,
+				ewcfg.col_gvs_time_lastshambaquarium,
 			), (
 				self.id_user,
 				self.id_server,
@@ -1315,6 +1319,7 @@ class EwUser:
 				self.time_racialability,
 				self.time_lastpremiumpurchase,
 				self.gvs_currency,
+				self.gvs_time_lastshambaquarium,
 			))
 
 			conn.commit()

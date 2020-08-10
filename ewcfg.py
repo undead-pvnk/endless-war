@@ -1182,7 +1182,8 @@ cmd_prank = cmd_prefix + 'prank'
 cmd_gvs_printgrid = cmd_prefix + 'grid'
 cmd_gvs_printgrid_alt1 = cmd_prefix + 'lawn'
 cmd_gvs_printlane = cmd_prefix + 'lane'
-
+cmd_gvs_searchforbrainz = cmd_prefix + 'searchforbrainz'
+cmd_gvs_grabbrainz = cmd_prefix + 'grabbrainz'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -1672,6 +1673,9 @@ farm_action_fertilize = 2
 farm_action_weed = 3
 farm_action_pesticide = 4
 
+# gvs
+brainz_per_grab = 5
+
 farm_actions = [
 	EwFarmAction(
 		id_action = farm_action_water,
@@ -1741,6 +1745,8 @@ cd_new_player = 3 * 24 * 60 * 60 # 72 Hours, 3 days
 cd_autocannibalize = 60 * 60 # can only eat yourself once per hour
 cd_drop_bone = 5 * 60
 cd_change_race = 24 * 60 * 60 # can only change your race once per day
+
+cd_gvs_searchforbrainz = 600
 
 # PvP timer pushouts
 time_pvp_kill = 30 * 60
@@ -2124,6 +2130,7 @@ col_credence_used = 'credence_used'
 
 # GANKERS VS SHAMBLERS
 col_gvs_currency = 'gvs_currency'
+col_gvs_time_lastshambaquarium = 'gvs_time_lastshambaquarium'
 col_horde_cooldown = 'horde_cooldown'
 col_gaiaslime = 'gaiaslime'
 
@@ -11970,7 +11977,7 @@ poi_list = [
 			poi_id_oozegardens_street_b : travel_time_street,
 			poi_id_oozegardens_street_c : travel_time_street,
 			poi_id_oozegardens_street_d : travel_time_street,
-			poi_id_atomicforest : travel_time_subzone,
+			#poi_id_atomicforest : travel_time_subzone,
 		},
 	),
 	EwPoi( # 18
@@ -12137,7 +12144,7 @@ poi_list = [
 			poi_id_assaultflatsbeach_street_a : travel_time_street,
 			poi_id_assaultflatsbeach_street_b: travel_time_street,
 			poi_id_beachresort : travel_time_subzone,
-			poi_id_downpourlaboratory : travel_time_subzone,
+			#poi_id_downpourlaboratory : travel_time_subzone,
 		},
 	),
 	EwPoi( # 24
@@ -26275,6 +26282,7 @@ event_type_pokemine = "pokemine"
 event_type_bubblebreaker = "bubblebreaker"
 event_type_voidhole = "voidhole"
 event_type_voidconnection = "voidconnection"
+event_type_shambaquarium = "shambaquarium"
 
 world_events = [
 	EwEventDef(
@@ -26315,7 +26323,11 @@ world_events = [
 		str_event_start = "You hit a sudden gap in the stone, with a scary looking drop. You see what looks like a trampoline on a building's roof at the bottom. Do you **{}** in?".format(cmd_jump),
 		str_event_end = "The wall collapses.",
 	),
-
+	EwEventDef(
+		event_type = event_type_shambaquarium,
+		str_event_start = "brainz lol! placeholder. Do {}!",
+		str_event_end = "The cringe based brain wall collapses.",
+	),
 ]
 
 event_type_to_def = {}

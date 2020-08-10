@@ -3169,4 +3169,81 @@ async def gvs_leave_operation(cmd):
 		
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+
+""" Lets shamblers start an event in DMs to get brains """
+async def gvs_searchforbrainz(cmd):
 	
+	user_data = EwUser(member=cmd.message.author)
+
+	if user_data.poi != ewcfg.poi_id_slimesea:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to {} in the Slime Sea.".format(ewcfg.cmd_gvs_searchforbrainz)))
+
+	if user_data.life_state != ewcfg.life_state_shambler:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not based enough to do that."))
+
+	time_now = int(time.time())
+
+	if user_data.gvs_time_lastshambaquarium + ewcfg.cd_gvs_searchforbrainz >= time_now :
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You'll have to rest for a while before searching for brainz again."))
+
+	event_props = {}
+	event_props['id_user'] = cmd.message.author.id
+	event_props['brains_grabbed'] = 1
+	event_props['captcha'] = ewutils.generate_captcha(1)
+	event_props['channel'] = cmd.message.author.id
+	ewworldevent.create_world_event(
+		id_server = user_data.id_server,
+		event_type = ewcfg.event_type_shambaquarium,
+		time_activate = time_now,
+		time_expir = time_now + 60, # 1 minute
+		event_props = event_props
+	)
+	
+	user_data.gvs_time_lastshambaquarium = time_now
+	user_data.persist()
+
+	#DM user
+	response = ewcfg.event_type_to_def.get(ewcfg.event_type_shambaquarium).str_event_start.format(ewutils.text_to_regional_indicator(event_props['captcha']))
+	return await ewutils.send_message(cmd.client, cmd.message.author, response)
+
+""" Command for shamblers to get brains in the shambaquarium event """
+async def gvs_grabbrainz(cmd):
+
+	if not isinstance(cmd.message.channel, ewutils.discord.channel.DMChannel):
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to {} in the DMs.".format(ewcfg.cmd_gvs_grabbrainz)))
+
+	user_data = EwUser(id_user = cmd.message.author.id, id_server = cmd.guild.id)
+
+	if user_data.poi != ewcfg.poi_id_slimesea:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to {} in the Slime Sea.".format(ewcfg.cmd_gvs_grabbrainz)))
+
+	# look for a shambaquarium event belonging to this player
+	world_events = ewworldevent.get_world_events(id_server = cmd.guild.id)
+	for id_event in world_events:
+		if world_events.get(id_event) == ewcfg.event_type_shambaquarium:
+			event_data = EwWorldEvent(id_event = id_event)
+			if int(event_data.event_props.get('id_user')) == user_data.id_user:
+
+				captcha = ewutils.flattenTokenListToString(cmd.tokens[1:]).lower()
+
+				if event_data.event_props.get('captcha').lower() == captcha:
+					event_data.event_props['brains_collected'] = int(event_data.event_props['brains_collected']) + 1
+					event_data.event_props['captcha'] = ewutils.generate_captcha(int(event_data.event_props['brains_collected']))
+					event_data.persist()
+
+					user_data.gvs_currency += ewcfg.brainz_per_grab
+					user_data.persist()
+
+					response = "You grabbed {} brainz! Baaaaaased! New captcha: ".format(ewcfg.brainz_per_grab) + ewutils.text_to_regional_indicator(event_data.event_props['captcha'])
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+				else:
+					event_data.event_props['captcha'] = ewutils.generate_captcha(int(event_data.event_props['brains_collected']))
+					event_data.persist()
+					response = "Missed! That was pretty cringe dude... New captcha: " + ewutils.text_to_regional_indicator(event_data.event_props['captcha'])
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				
+				break
+	
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to {} before trying to grab any brainz!".format(ewcfg.cmd_gvs_searchforbrainz)))
+				
