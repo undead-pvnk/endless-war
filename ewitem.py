@@ -571,9 +571,9 @@ def item_destroyall(id_server = None, id_user = None, member = None):
 """
 def item_loot(
 	member = None,
-	id_user_target = ""
+	id_user_target = -1
 ):
-	if member == None or len(id_user_target) == 0:
+	if member == None or id_user_target == -1:
 		return
 
 	try:
