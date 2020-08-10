@@ -1309,7 +1309,7 @@ async def on_message(message):
 		)
 
 	content_tolower = message.content.lower()
-	content_tolower_string = ewutils.flattenTokenListToString(content_tolower.split(" "))
+	content_tolower_list = content_tolower.split(" ")
 	
 	re_awoo = re.compile('.*![a]+[w]+o[o]+.*')
 	re_moan = re.compile('.*![b]+[r]+[a]+[i]+[n]+[z]+.*')
@@ -1348,7 +1348,7 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or len(message.author.roles) < 4 or (any(swear in content_tolower_string for swear in ewcfg.curse_words.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or len(message.author.roles) < 4 or (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
@@ -1387,10 +1387,9 @@ async def on_message(message):
 		"""
 			Punish the user for swearing.
 		"""
-		if (any(swear in content_tolower_string for swear in ewcfg.curse_words.keys())):
+		if (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
+			print(content_tolower_list)
 			swear_multiplier = 0
-			
-			#print(content_tolower_string)
 	
 			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
 			usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
