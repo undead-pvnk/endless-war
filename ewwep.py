@@ -597,7 +597,7 @@ async def attack(cmd):
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_biggest_bust_level, value = shootee_data.slimelevel)
 
 			# Steal items
-			ewitem.item_loot(member = member, id_user_target = cmd.message.author.id)
+			#ewitem.item_loot(member = member, id_user_target = cmd.message.author.id)
 
 			shootee_data.id_killer = user_data.id_user
 			die_resp = shootee_data.die(cause = ewcfg.cause_busted)
