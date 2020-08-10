@@ -876,9 +876,6 @@ async def on_ready():
 	# Channels in the connected discord servers to send stock market updates to. Map of server ID to channel.
 	channels_stockmarket = {}
 
-	# PVP roles in the servers, used to update flags in the main loop
-	pvp_roles = {}
-
 	for server in client.guilds:
 		# Update server data in the database
 		ewserver.server_update(server = server)
@@ -923,12 +920,6 @@ async def on_ready():
 
 			except:
 				ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
-
-		# fetch all pvp roles to use in flag clearing later
-		pvp_roles[server.id] = []
-		for pvp_role in ewcfg.role_to_pvp_role.values():
-			role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
-			pvp_roles[server.id].append(server.get_role(role.id_role))
 
 		# kill people who left the server while the bot was offline
 		#ewutils.kill_quitters(server.id) #FIXME function get_member doesn't find users reliably
@@ -1042,9 +1033,14 @@ async def on_ready():
 
 			try:
 				for server in client.guilds:
+					# fetch all pvp roles
+					pvp_roles = []
+					for pvp_role in ewcfg.role_to_pvp_role.values():
+						role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
+						pvp_roles.append(server.get_role(role.id_role))
 
 					members = []
-					for role in pvp_roles[server.id]:
+					for role in pvp_roles:
 						if role is not None:
 							members.extend(role.members)
 
