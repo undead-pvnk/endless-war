@@ -13714,19 +13714,6 @@ smelting_recipe_list = [
 		},
 		products = ['dclaw']
     ),
-	    EwSmeltingRecipe(
-		id_recipe = "fishskinhat",
-		str_name = "a Fishskin Hat",
-		alias = [
-			"fishskinhat"
-		],
-		ingredients = {
-			'plebefish' : 1,
-			'plebefish': 1,
-			'plebefish': 1,
-		},
-		products = ['dclaw']
-    ),
 	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
 		str_name = "a leather couch",
@@ -16742,7 +16729,10 @@ nobite_text = [
     	"You see a bird carry off a Plebefish in the distance... Good riddance...",
     	"You spot a stray bullet in the distance...",
     	"You see a dead body float up to the surface of the Slime...",
-    	"Fish..."
+    	"Fish...",
+		"The wind is foul on this rotton shore...",
+		"♪I dreamed a dream the other night lowlands! lowlands away me John!♪",
+		"You feel like you'd rather be on a far off beach sipping on a slimetini..."
 ]
 
 generic_help_response = "Check out the guide for help: https://ew.krakissi.net/guide/\nThe guide won't cover everything though, and may even be a bit outdated in some places, so you can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work by using the !help command there. Portable game guides can also be bought there for 10,000 slime."
