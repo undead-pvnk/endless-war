@@ -12865,7 +12865,7 @@ poi_list = [
 			poi_id_cratersville_street_b : travel_time_street,
 			poi_id_cratersville_street_c : travel_time_street,
 			poi_id_wreckington_street_a : travel_time_street,
-			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_south_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -12907,7 +12907,7 @@ poi_list = [
 			poi_id_cratersville_street_a : travel_time_street,
 			poi_id_cratersville_street_b : travel_time_street,
 			poi_id_oozegardens_street_d : travel_time_street,
-			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_south_outskirts_edge : travel_time_outskirt,
 			poi_id_cv_mines : travel_time_subzone,
 			poi_id_cv_subway_station: travel_time_subzone,
 		}
@@ -12931,7 +12931,7 @@ poi_list = [
 			poi_id_wreckington : travel_time_street,
 			poi_id_wreckington_street_b : travel_time_street,
 			poi_id_cratersville_street_a : travel_time_street,
-			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_south_outskirts_edge : travel_time_outskirt,
 			poi_id_wt_subway_station: travel_time_subzone,
 		}
 	),
@@ -12952,7 +12952,7 @@ poi_list = [
 			poi_id_wreckington : travel_time_street,
 			poi_id_wreckington_street_a : travel_time_street,
 			poi_id_rowdyroughhouse : travel_time_street,
-			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_south_outskirts_edge : travel_time_outskirt,
 			poi_id_diner : travel_time_subzone,
 			poi_id_wt_port : travel_time_subzone,
 			poi_id_wt_subway_station: travel_time_subzone,
@@ -12977,7 +12977,7 @@ poi_list = [
 			poi_id_oozegardens_street_d : travel_time_street,
 			poi_id_oozegardens_street_b : travel_time_street,
 			poi_id_southsleezeborough_street_d : travel_time_street,
-			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_south_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13040,7 +13040,7 @@ poi_list = [
 			poi_id_oozegardens_street_c : travel_time_street,
 			poi_id_oozegardens_street_a : travel_time_street,
 			poi_id_cratersville_street_c : travel_time_street,
-			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_south_outskirts_edge : travel_time_outskirt,
 			poi_id_og_farms : travel_time_subzone,
 		}
 	),
@@ -13063,7 +13063,7 @@ poi_list = [
 			poi_id_southsleezeborough_street_d : travel_time_street,
 			poi_id_southsleezeborough_street_b : travel_time_street,
 			poi_id_crookline_street_b : travel_time_street,
-			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
 			poi_id_ssb_subway_station: travel_time_subzone,
 		}
 	),
@@ -13127,7 +13127,7 @@ poi_list = [
 			poi_id_southsleezeborough_street_c : travel_time_street,
 			poi_id_southsleezeborough_street_a : travel_time_street,
 			poi_id_oozegardens_street_a : travel_time_street,
-			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13395,7 +13395,7 @@ poi_list = [
 			poi_id_westglocksbury_street_b : travel_time_street,
 			poi_id_westglocksbury_street_d : travel_time_street,
 			poi_id_poloniumhill_street_d : travel_time_street,
-			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
 			poi_id_wgb_subway_station: travel_time_subzone,
 		}
 	),
@@ -13418,7 +13418,7 @@ poi_list = [
 			poi_id_westglocksbury_street_c : travel_time_street,
 			poi_id_westglocksbury_street_a : travel_time_street,
 			poi_id_jaywalkerplain_street_d : travel_time_street,
-			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13485,7 +13485,7 @@ poi_list = [
 			poi_id_jaywalkerplain_street_b : travel_time_street,
 			poi_id_jaywalkerplain_street_d : travel_time_street,
 			poi_id_dreadford_street_a : travel_time_street,
-			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
 			poi_id_jaywalkerplain_pier : travel_time_subzone,
 		}
 	),
@@ -13509,7 +13509,7 @@ poi_list = [
 			poi_id_jaywalkerplain_street_c : travel_time_street,
 			poi_id_jaywalkerplain_street_e : travel_time_street,
 			poi_id_westglocksbury_street_d : travel_time_street,
-			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
 			poi_id_jaywalkerplain_pier : travel_time_subzone,
 		}
 	),
@@ -13551,7 +13551,7 @@ poi_list = [
 			poi_id_crookline_street_d : travel_time_street,
 			poi_id_crookline_street_b : travel_time_street,
 			poi_id_dreadford_street_b : travel_time_street,
-			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
 			poi_id_crookline_pier : travel_time_subzone,
 			poi_id_cl_subway_station: travel_time_subzone,
 		}
@@ -13574,7 +13574,7 @@ poi_list = [
 			poi_id_crookline_street_a : travel_time_street,
 			poi_id_crookline_street_c : travel_time_street,
 			poi_id_southsleezeborough_street_a : travel_time_street,
-			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
 			poi_id_crookline_pier : travel_time_subzone,
 			poi_id_cl_subway_station: travel_time_subzone,
 		}
@@ -13636,7 +13636,7 @@ poi_list = [
 			poi_id_dreadford : travel_time_street,
 			poi_id_dreadford_street_b : travel_time_street,
 			poi_id_jaywalkerplain_street_c : travel_time_street,
-			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13661,7 +13661,7 @@ poi_list = [
 			poi_id_dreadford : travel_time_street,
 			poi_id_dreadford_street_a : travel_time_street,
 			poi_id_crookline_street_a : travel_time_street,
-			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
 			poi_id_df_blimp_tower : travel_time_subzone,
 		}
 	),
@@ -13804,7 +13804,7 @@ poi_list = [
 			poi_id_poloniumhill_street_b : travel_time_street,
 			poi_id_poloniumhill_street_d : travel_time_street,
 			poi_id_charcoalpark_street_b : travel_time_street,
-			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13825,7 +13825,7 @@ poi_list = [
 			poi_id_poloniumhill_street_c : travel_time_street,
 			poi_id_poloniumhill_street_e : travel_time_street,
 			poi_id_westglocksbury_street_c : travel_time_street,
-			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13874,7 +13874,7 @@ poi_list = [
 			poi_id_charcoalpark : travel_time_street,
 			poi_id_charcoalpark_street_b : travel_time_street,
 			poi_id_toxington_street_c : travel_time_street,
-			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13895,7 +13895,7 @@ poi_list = [
 			poi_id_charcoalpark : travel_time_street,
 			poi_id_charcoalpark_street_a : travel_time_street,
 			poi_id_poloniumhill_street_c : travel_time_street,
-			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13959,7 +13959,7 @@ poi_list = [
 			poi_id_toxington_street_b : travel_time_street,
 			poi_id_toxington_street_d : travel_time_street,
 			poi_id_charcoalpark_street_a : travel_time_street,
-			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13981,7 +13981,7 @@ poi_list = [
 			poi_id_toxington_street_c : travel_time_street,
 			poi_id_toxington_street_e : travel_time_street,
 			poi_id_maimridge_street_c : travel_time_street,
-			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
 			poi_id_toxington_pier : travel_time_subzone,
 		}
 	),
@@ -14400,7 +14400,7 @@ poi_list = [
 			poi_id_arsonbrook_street_b : travel_time_street,
 			poi_id_arsonbrook_street_d : travel_time_street,
 			poi_id_maimridge_street_b : travel_time_street,
-			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+			poi_id_north_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -14421,7 +14421,7 @@ poi_list = [
 			poi_id_arsonbrook_street_c : travel_time_street,
 			poi_id_arsonbrook_street_e : travel_time_street,
 			poi_id_brawlden_street_a : travel_time_street,
-			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+			poi_id_north_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -14483,7 +14483,7 @@ poi_list = [
 			poi_id_maimridge_street_a : travel_time_street,
 			poi_id_maimridge_street_c : travel_time_street,
 			poi_id_arsonbrook_street_c : travel_time_street,
-			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -14504,7 +14504,7 @@ poi_list = [
 			poi_id_maimridge_street_b : travel_time_street,
 			poi_id_maimridge_street_a : travel_time_street,
 			poi_id_toxington_street_d : travel_time_street,
-			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -14526,7 +14526,7 @@ poi_list = [
 			poi_id_brawlden_street_d : travel_time_street,
 			poi_id_brawlden_street_b : travel_time_street,
 			poi_id_arsonbrook_street_d : travel_time_street,
-			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_north_outskirts_edge : travel_time_outskirt,
 			poi_id_bd_subway_station: travel_time_subzone,
 		}
 	),
@@ -14548,7 +14548,7 @@ poi_list = [
 			poi_id_brawlden_street_a : travel_time_street,
 			poi_id_brawlden_street_c : travel_time_street,
 			poi_id_newnewyonkers_street_a : travel_time_street,
-			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_north_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -14778,7 +14778,7 @@ poi_list = [
 			poi_id_newnewyonkers_street_d : travel_time_street,
 			poi_id_newnewyonkers_street_b : travel_time_street,
 			poi_id_brawlden_street_b : travel_time_street,
-			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_north_outskirts_edge : travel_time_outskirt,
 			poi_id_nny_subway_station: travel_time_subzone,
 		}
 	),
@@ -14799,7 +14799,7 @@ poi_list = [
 			poi_id_newnewyonkers_street_a : travel_time_street,
 			poi_id_newnewyonkers_street_c : travel_time_street,
 			poi_id_assaultflatsbeach_street_a : travel_time_street,
-			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_north_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -14860,7 +14860,7 @@ poi_list = [
 			poi_id_assaultflatsbeach : travel_time_street,
 			poi_id_assaultflatsbeach_street_b : travel_time_street,
 			poi_id_newnewyonkers_street_b : travel_time_street,
-			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_nuclear_beach_edge : travel_time_outskirt,
 			poi_id_assaultflatsbeach_pier : travel_time_subzone,
 			poi_id_afb_blimp_tower : travel_time_subzone,
 		}
@@ -14882,7 +14882,7 @@ poi_list = [
 			poi_id_assaultflatsbeach : travel_time_street,
 			poi_id_assaultflatsbeach_street_a : travel_time_street,
 			poi_id_vagrantscorner_street_a : travel_time_street,
-			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_nuclear_beach_edge : travel_time_outskirt,
 			poi_id_assaultflatsbeach_pier : travel_time_subzone,
 		}
 	),
@@ -17657,11 +17657,19 @@ poi_list = [
 		str_name="South Outskirts Edge",
 		str_desc=str_generic_outskirts_description_edge,
 		channel="south-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts",
+        wikipage = wiki_baseurl + "Outskirts#Edge",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_southwest_outskirts_edge : travel_time_outskirt,
+            poi_id_south_outskirts : travel_time_outskirt,
+			poi_id_wreckington_street_a : travel_time_outskirt,
+			poi_id_wreckington_street_b : travel_time_outskirt,
+			poi_id_cratersville_street_a : travel_time_outskirt,
+			poi_id_cratersville_street_c : travel_time_outskirt,
+			poi_id_oozegardens_street_a : travel_time_outskirt,
+			poi_id_oozegardens_street_d : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 2
@@ -17673,11 +17681,20 @@ poi_list = [
 		str_name="Southwest Outskirts Edge",
 		str_desc=str_generic_outskirts_description_edge,
 		channel="southwest-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts",
+        wikipage = wiki_baseurl + "Outskirts#Edge",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_west_outskirts_edge : travel_time_outskirt,
+            poi_id_southwest_outskirts : travel_time_outskirt,
+            poi_id_south_outskirts_edge : travel_time_outskirt,
+			poi_id_southsleezeborough_street_a : travel_time_outskirt,
+			poi_id_southsleezeborough_street_d : travel_time_outskirt,
+			poi_id_crookline_street_a : travel_time_outskirt,
+			poi_id_crookline_street_b : travel_time_outskirt,
+			poi_id_dreadford_street_a : travel_time_outskirt,
+			poi_id_dreadford_street_b : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 3
@@ -17689,11 +17706,20 @@ poi_list = [
 		str_name="West Outskirts Edge",
 		str_desc=str_generic_outskirts_description_edge,
 		channel="west-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts",
+        wikipage = wiki_baseurl + "Outskirts#Edge",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_northwest_outskirts_edge : travel_time_outskirt,
+            poi_id_west_outskirts : travel_time_outskirt,
+            poi_id_southwest_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_street_c : travel_time_outskirt,
+			poi_id_jaywalkerplain_street_d : travel_time_outskirt,
+			poi_id_westglocksbury_street_c : travel_time_outskirt,
+			poi_id_westglocksbury_street_d : travel_time_outskirt,
+			poi_id_poloniumhill_street_c : travel_time_outskirt,
+			poi_id_poloniumhill_street_d : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 4
@@ -17705,11 +17731,20 @@ poi_list = [
 		str_name="Northwest Outskirts Edge",
 		str_desc="You’ve never seen ruins this... recent. This area used to be a part of Charcoal Park, but now it’s a complete ghost town. You might even mistake it for a bonafide part of the city were it not for all the desert raiders and bubbling acid pools everywhere. It really makes you think about what could’ve been, you know? Maybe if the Veteran center wasn’t shielding Charcoal Park from this mess, we could’ve gotten rid of that stupid-ass district ages ago.",
 		channel="northwest-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts",
+        wikipage = wiki_baseurl + "Outskirts#Edge",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_west_outskirts_edge : travel_time_outskirt,
+            poi_id_northwest_outskirts : travel_time_outskirt,
+            poi_id_north_outskirts : travel_time_outskirt,
+			poi_id_charcoalpark_street_a : travel_time_outskirt,
+			poi_id_charcoalpark_street_b : travel_time_outskirt,
+			poi_id_toxington_street_c : travel_time_outskirt,
+			poi_id_toxington_street_d : travel_time_outskirt,
+			poi_id_maimridge_street_b : travel_time_outskirt,
+			poi_id_maimridge_street_c : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 5
@@ -17721,11 +17756,20 @@ poi_list = [
 		str_name="North Outskirts Edge",
 		str_desc=str_generic_outskirts_description_edge,
 		channel="north-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts",
+        wikipage = wiki_baseurl + "Outskirts#Edge",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_northwest_outskirts_edge : travel_time_outskirt,
+            poi_id_northwest_outskirts : travel_time_outskirt,
+            poi_id_nuclear_beach_edge : travel_time_outskirt,
+			poi_id_arsonbrook_street_c : travel_time_outskirt,
+			poi_id_arsonbrook_street_d : travel_time_outskirt,
+			poi_id_brawlden_street_a : travel_time_outskirt,
+			poi_id_brawlden_street_b : travel_time_outskirt,
+			poi_id_newnewyonkers_street_a : travel_time_outskirt,
+			poi_id_newnewyonkers_street_b : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 6
@@ -17737,11 +17781,15 @@ poi_list = [
 		str_name="Nuclear Beach Edge",
 		str_desc=str_generic_outskirts_description_edge,
 		channel="nuclear-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts",
+        wikipage = wiki_baseurl + "Outskirts#Edge",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_north_outskirts_edge : travel_time_outskirt,
+            poi_id_nuclear_beach : travel_time_outskirt,
+			poi_id_assaultflatsbeach_street_a : travel_time_outskirt,
+			poi_id_assaultflatsbeach_street_b : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 7
@@ -17757,7 +17805,10 @@ poi_list = [
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-		},
+            poi_id_southwest_outskirts : travel_time_outskirt,
+            poi_id_south_outskirts_depths : travel_time_outskirt,
+            poi_id_south_outskirts_edge : travel_time_outskirt,
+        },
 	),
     EwPoi(  # Outskirts - 8
 		id_poi=poi_id_southwest_outskirts,
@@ -17772,6 +17823,10 @@ poi_list = [
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_west_outskirts : travel_time_outskirt,
+            poi_id_southwest_outskirts_depths : travel_time_outskirt,
+            poi_id_southwest_outskirts_edge : travel_time_outskirt,
+            poi_id_south_outskirts : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 9
@@ -17787,6 +17842,10 @@ poi_list = [
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_southwest_outskirts : travel_time_outskirt,
+            poi_id_west_outskirts_depths : travel_time_outskirt,
+            poi_id_west_outskirts_edge : travel_time_outskirt,
+            poi_id_northwest_outskirts : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 10
@@ -17802,6 +17861,10 @@ poi_list = [
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_north_outskirts : travel_time_outskirt,
+		    poi_id_northwest_outskirts_depths : travel_time_outskirt,
+            poi_id_northwest_outskirts_edge : travel_time_outskirt,
+            poi_id_west_outskirts : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 11
@@ -17817,10 +17880,14 @@ poi_list = [
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_northwest_outskirts : travel_time_outskirt,
+            poi_id_northwest_outskirts_depths : travel_time_outskirt,
+            poi_id_northwest_outskirts_edge : travel_time_outskirt,
+            poi_id_west_outskirts : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 12
-		id_poi=poi_id_nuclearbeach,
+		id_poi=poi_id_nuclear_beach,
 		alias=[
 			"nb",
 			"nbeach",
@@ -17833,6 +17900,9 @@ poi_list = [
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_north_outskirts : travel_time_outskirt,
+            poi_id_nuclear_beach_depths : travel_time_outskirt,
+            poi_id_nuclear_beach_edge : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 13
@@ -17844,11 +17914,13 @@ poi_list = [
 		str_name="South Outskirts Depths",
 		str_desc=str_generic_outskirts_description_depths,
 		channel="south-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts",
+        wikipage = wiki_baseurl + "Outskirts#Depths",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_southwest_outskirts_depths : travel_time_outskirt,
+            poi_id_south_outskirts : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 14
@@ -17860,11 +17932,14 @@ poi_list = [
 		str_name="Southwest Outskirts Depths",
 		str_desc=str_generic_outskirts_description_depths,
 		channel="southwest-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts",
+        wikipage = wiki_baseurl + "Outskirts#Depths",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_south_outskirts_depths : travel_time_outskirt,
+            poi_id_southwest_outskirts : travel_time_outskirt,
+            poi_id_west_outskirts_depths : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 15
@@ -17876,11 +17951,14 @@ poi_list = [
 		str_name="West Outskirts Depths",
 		str_desc=str_generic_outskirts_description_depths,
 		channel="west-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts",
+        wikipage = wiki_baseurl + "Outskirts#Depths",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_northwest_outskirts_depths : travel_time_outskirt,
+            poi_id_west_outskirts : travel_time_outskirt,
+            poi_id_southwest_outskirts_depths : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 16
@@ -17892,11 +17970,14 @@ poi_list = [
 		str_name="Northwest Outskirts Depths",
 		str_desc=str_generic_outskirts_description_depths,
 		channel="northwest-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts",
+        wikipage = wiki_baseurl + "Outskirts#Depths",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_north_outskirts_depths : travel_time_outskirt,
+            poi_id_northwest_outskirts : travel_time_outskirt,
+            poi_id_west_outskirts_depths : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 17
@@ -17908,11 +17989,14 @@ poi_list = [
 		str_name="North Outskirts Depths",
 		str_desc=str_generic_outskirts_description_depths,
 		channel="north-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts",
+        wikipage = wiki_baseurl + "Outskirts#Depths",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_nuclear_beach_depths : travel_time_outskirt,
+            poi_id_north_outskirts : travel_time_outskirt,
+            poi_id_northwest_outskirts : travel_time_outskirt,
 		},
 	),
     EwPoi(  # Outskirts - 18
@@ -17924,11 +18008,13 @@ poi_list = [
 		str_name="Nuclear Beach Depths",
 		str_desc=str_generic_outskirts_description_depths,
 		channel="nuclear-beach-depths",
-        wikipage = wiki_baseurl + "Outskirts",
+        wikipage = wiki_baseurl + "Outskirts#Depths",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+            poi_id_nuclear_beach : travel_time_outskirt,
+            poi_id_north_outskirts_depths : travel_time_outskirt,
 		},
 	),
 ]
