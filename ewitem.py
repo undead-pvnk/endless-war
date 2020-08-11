@@ -68,7 +68,7 @@ class EwItemDef:
 """
 class EwItem:
 	id_item = -1
-	id_server = ""
+	id_server = -1
 	id_owner = ""
 	item_type = ""
 	time_expir = -1
@@ -540,7 +540,7 @@ def item_lootrandom(id_server = None, id_user = None):
 """
 def item_destroyall(id_server = None, id_user = None, member = None):
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None:
@@ -571,13 +571,13 @@ def item_destroyall(id_server = None, id_user = None, member = None):
 """
 def item_loot(
 	member = None,
-	id_user_target = ""
+	id_user_target = -1
 ):
-	if member == None or len(id_user_target) == 0:
+	if member == None or id_user_target == -1:
 		return
 
 	try:
-		target_data = EwUser(id_user = id_user_target, id_server = member.server.id)
+		target_data = EwUser(id_user = id_user_target, id_server = member.guild.id)
 		source_data = EwUser(member = member)
 
 		# Transfer adorned cosmetics
@@ -589,7 +589,7 @@ def item_loot(
 			")"
 		,(
 			member.id,
-			member.server.id,
+			member.guild.id,
 			ewcfg.it_cosmetic
 		))
 
@@ -751,7 +751,7 @@ def inventory(
 					item_type = ewcfg.it_cosmetic
 					item_data.item_type = item_type
 					
-					if 'fashion_style' not in item_data.item_props.keys() and 'id_cosmetic' in item_data.item_props.keys():
+					if 'fashion_style' not in item_data.item_props.keys():
 						if item_data.item_props.get('id_cosmetic') == 'soul':
 							item_data.item_props = {
 								'id_cosmetic': item_data.item_props['id_cosmetic'],
@@ -819,28 +819,98 @@ def inventory(
 							}
 							
 							pass
+						elif item_data.item_props.get('context') == 'costume':
+							
+							item_data.item_props = {
+								'id_cosmetic': 'dhcostume',
+								'cosmetic_name': item_data.item_props['cosmetic_name'],
+								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+								'str_onadorn': ewcfg.str_generic_onadorn,
+								'str_unadorn': ewcfg.str_generic_unadorn,
+								'str_onbreak': ewcfg.str_generic_onbreak,
+								'rarity': ewcfg.rarity_plebeian,
+								'attack': 1,
+								'defense': 1,
+								'speed': 1,
+								'ability': None,
+								'durability': ewcfg.base_durability * 100,
+								'size': 1,
+								'fashion_style': ewcfg.style_cute,
+								'freshness': 0,
+								'adorned': 'false',
+							}
+						elif item_data.item_props.get('id_cosmetic') == 'cigarettebutt':
+							item_data.item_props = {
+								'id_cosmetic': 'cigarettebutt',
+								'cosmetic_name': item_data.item_props['cosmetic_name'],
+								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+								'str_onadorn': ewcfg.str_generic_onadorn,
+								'str_unadorn': ewcfg.str_generic_unadorn,
+								'str_onbreak': ewcfg.str_generic_onbreak,
+								'rarity': ewcfg.rarity_plebeian,
+								'attack': 2,
+								'defense': 0,
+								'speed': 0,
+								'ability': None,
+								'durability': ewcfg.base_durability / 2,
+								'size': 1,
+								'fashion_style': ewcfg.style_cool,
+								'freshness': 5,
+								'adorned': 'false',
+							}
+							
 						else:
 							#print('ITEM PROPS: {}'.format(item_data.item_props))
 							
 							item = ewcfg.cosmetic_map.get(item_data.item_props.get('id_cosmetic'))
-							item_data.item_props = {
-								'id_cosmetic': item.id_cosmetic,
-								'cosmetic_name': item.str_name,
-								'cosmetic_desc': item.str_desc,
-								'str_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
-								'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
-								'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
-								'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
-								'attack': 0,
-								'defense': 0,
-								'speed': 0,
-								'ability': item.ability if item.ability else None,
-								'durability': item.durability if item.durability else ewcfg.base_durability,
-								'size': item.size if item.size else 1,
-								'fashion_style': item.style if item.style else ewcfg.style_cool,
-								'freshness': item.freshness if item.freshness else 0,
-								'adorned': 'false',
-							}
+							
+							if item == None:
+								if item_data.item_props.get('id_cosmetic') == None:
+									print('Item {} lacks an id_cosmetic attribute. Formatting now...'.format(id_item))
+									placeholder_id = 'oldcosmetic'
+								else:
+									print('Item {} has an invlaid id_cosmetic of {}. Formatting now...'.format(item_data.item_props, item_data.item_props.get('id_cosmetic')))
+									placeholder_id = item_data.item_props.get('id_cosmetic')
+
+								item_data.item_props = {
+									'id_cosmetic': placeholder_id,
+									'cosmetic_name': item_data.item_props.get('cosmetic_name'),
+									'cosmetic_desc': item_data.item_props.get('cosmetic_desc'),
+									'str_onadorn': ewcfg.str_generic_onadorn,
+									'str_unadorn': ewcfg.str_generic_unadorn,
+									'str_onbreak': ewcfg.str_generic_onbreak,
+									'rarity': ewcfg.rarity_plebeian,
+									'attack': 1,
+									'defense': 1,
+									'speed': 1,
+									'ability': None,
+									'durability': ewcfg.base_durability,
+									'size': 1,
+									'fashion_style': ewcfg.style_cool,
+									'freshness':  0,
+									'adorned': 'false',
+								}
+							
+							else:
+							
+								item_data.item_props = {
+									'id_cosmetic': item.id_cosmetic,
+									'cosmetic_name': item.str_name,
+									'cosmetic_desc': item.str_desc,
+									'str_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
+									'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
+									'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
+									'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
+									'attack': 0,
+									'defense': 0,
+									'speed': 0,
+									'ability': item.ability if item.ability else None,
+									'durability': item.durability if item.durability else ewcfg.base_durability,
+									'size': item.size if item.size else 1,
+									'fashion_style': item.style if item.style else ewcfg.style_cool,
+									'freshness': item.freshness if item.freshness else 0,
+									'adorned': 'false',
+								}
 
 						item_data.persist()
 						ewutils.logMsg('Updated cosmetic to new format: {}'.format(id_item))
@@ -890,7 +960,7 @@ def inventory(
 				#if a weapon has no name show its type instead
 				if name == "" and item_inst.item_type == ewcfg.it_weapon:
 					name = item_inst.item_props.get("weapon_type")
-
+					
 				item['name'] = name
 	finally:
 		# Clean up the database handles.
@@ -1084,9 +1154,9 @@ async def item_look(cmd):
 	response = ""
 
 	if poi.is_apartment:
-		item_sought_closet = find_item(item_search=item_search, id_user=user_data.id_user + ewcfg.compartment_id_closet, id_server=server)
-		item_sought_fridge = find_item(item_search=item_search, id_user=user_data.id_user + ewcfg.compartment_id_fridge, id_server=server)
-		item_sought_decorate = find_item(item_search=item_search, id_user=user_data.id_user + ewcfg.compartment_id_decorate, id_server=server)
+		item_sought_closet = find_item(item_search=item_search, id_user=str(user_data.id_user) + ewcfg.compartment_id_closet, id_server=server)
+		item_sought_fridge = find_item(item_search=item_search, id_user=str(user_data.id_user)+ ewcfg.compartment_id_fridge, id_server=server)
+		item_sought_decorate = find_item(item_search=item_search, id_user=str(user_data.id_user) + ewcfg.compartment_id_decorate, id_server=server)
 
 		item_dest.append(item_sought_closet)
 		item_dest.append(item_sought_fridge)
@@ -1106,8 +1176,10 @@ async def item_look(cmd):
 				response = response.format_map(item.item_props)
 
 				if response.find('{') >= 0:
-					response = response.format_map(item.item_props)
-
+					try:
+						response = response.format_map(item.item_props)
+					except:
+						pass
 
 			if item.item_type == ewcfg.it_food:
 				if float(item.item_props.get('time_expir') if not None else 0) < time.time() and item.id_owner[-6:] != ewcfg.compartment_id_fridge:
@@ -1122,9 +1194,9 @@ async def item_look(cmd):
 				response += "\n\n"
 
 				if item.item_props.get("married") != "":
-					previous_partner = EwPlayer(id_user = item.item_props.get("married"), id_server = server)
+					previous_partner = EwPlayer(id_user = int(item.item_props.get("married")), id_server = server)
 
-					if item.item_props.get("married") != user_data.id_user or item.id_item != user_data.weapon:
+					if not user_data.weaponmarried or int(item.item_props.get("married")) != str(user_data.id_user) or item.id_item != user_data.weapon:
 						response += "There's a barely legible engraving on the weapon that reads *{} :heart: {}*.\n\n".format(previous_partner.display_name, name)
 					else:
 						response += "Your beloved partner. You can't help but give it a little kiss on the handle.\n"
@@ -1196,8 +1268,11 @@ async def item_look(cmd):
 							original_durability = ewcfg.base_durability * 100
 							original_item = None  # Princeps do not have existing templates
 						else:
-							original_item = ewcfg.cosmetic_map.get(item.item_props['id_cosmetic'])
-							original_durability = original_item.durability
+							try:
+								original_item = ewcfg.cosmetic_map.get(item.item_props['id_cosmetic'])
+								original_durability = original_item.durability
+							except:
+								original_durability = ewcfg.base_durability
 
 					current_durability = int(item.item_props['durability'])
 					
@@ -1274,7 +1349,7 @@ async def item_use(cmd):
 	
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
-	server = cmd.message.server
+	server = cmd.guild
 
 	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
@@ -1328,7 +1403,7 @@ async def item_use(cmd):
 				item_action = ""
 				side_effect = ""
 
-				if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False) or (user_data.poi not in ewcfg.capturable_districts):
+				if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False): # or (user_data.poi not in ewcfg.capturable_districts):
 					response = "You need to be on the city streets to unleash that prank item's full potential."
 				else:
 					if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
@@ -1346,7 +1421,7 @@ async def item_use(cmd):
 						
 					if item_action == "delete":
 						item_delete(item.id_item)
-						#prank_feed_channel = ewutils.get_channel(cmd.message.server, ewcfg.channel_prankfeed)
+						#prank_feed_channel = ewutils.get_channel(cmd.guild, ewcfg.channel_prankfeed)
 						#await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response+"\n`-------------------------`")))
 						
 					elif item_action == "drop":
@@ -1384,8 +1459,8 @@ def give_item(
 ):
 
 	if id_user is None and id_server is None and member is not None:
-		id_server = member.server.id
-		id_user = member.id
+		id_server = member.guild.id
+		id_user = str(member.id)
 
 	if id_server is not None and id_user is not None and id_item is not None:
 		ewutils.execute_sql_query(
@@ -1500,7 +1575,7 @@ def find_poudrin(id_user = None, id_server = None):
 async def give(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
-	server = cmd.message.server
+	server = cmd.guild
 
 	if cmd.mentions:  # if they're not empty
 		recipient = cmd.mentions[0]
@@ -1594,7 +1669,7 @@ async def discard(cmd):
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 
 	if item_sought:
 		item = EwItem(id_item = item_sought.get("id_item"))
@@ -1728,11 +1803,11 @@ def gen_item_props(item):
 
 async def soulextract(cmd):
 	usermodel = EwUser(member=cmd.message.author)
-	playermodel = EwPlayer(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	playermodel = EwPlayer(id_user=cmd.message.author.id, id_server=cmd.guild.id)
 	if usermodel.has_soul == 1 and (ewutils.active_target_map.get(usermodel.id_user) == None or ewutils.active_target_map.get(usermodel.id_user) == ""):
 		item_create(
 			id_user=cmd.message.author.id,
-			id_server=cmd.message.server.id,
+			id_server=cmd.guild.id,
 			item_type=ewcfg.it_cosmetic,
 			item_props = {
 				'id_cosmetic': "soul",
@@ -1766,14 +1841,14 @@ async def soulextract(cmd):
 		
 async def returnsoul(cmd):
 	usermodel = EwUser(member=cmd.message.author)
-	#soul = find_item(item_search="soul", id_user=cmd.message.author.id, id_server=cmd.message.server.id)
-	user_inv = inventory(id_user=cmd.message.author.id, id_server=cmd.message.server.id, item_type_filter=ewcfg.it_cosmetic)
+	#soul = find_item(item_search="soul", id_user=cmd.message.author.id, id_server=cmd.guild.id)
+	user_inv = inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
 	soul_item = None
 	soul = None
 	for inv_object in user_inv:
 		soul = inv_object
 		soul_item = EwItem(id_item=soul.get('id_item'))
-		if soul_item.item_props.get('user_id') == cmd.message.author.id:
+		if soul_item.item_props.get('user_id') == str(cmd.message.author.id):
 			break
 
 	if usermodel.has_soul == 1:
@@ -1781,7 +1856,7 @@ async def returnsoul(cmd):
 	elif soul:
 
 		if soul.get('item_type') == ewcfg.it_cosmetic and soul_item.item_props.get('id_cosmetic') == "soul":
-			if soul_item.item_props.get('user_id') != cmd.message.author.id:
+			if soul_item.item_props.get('user_id') != str(cmd.message.author.id):
 				response = "That's not your soul. Nice try, though."
 			else:
 				response = "You open the soul jar and hold the opening to your chest. The soul begins to crawl in, and a warmth returns to your body. Not exactly the warmth you had before, but it's too wonderful to pass up. You feel invigorated and ready to take on the world."
@@ -1796,7 +1871,7 @@ async def returnsoul(cmd):
 
 async def squeeze(cmd):
 	usermodel = EwUser(member=cmd.message.author)
-	soul_inv = inventory(id_user=cmd.message.author.id, id_server=cmd.message.server.id, item_type_filter=ewcfg.it_cosmetic)
+	soul_inv = inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
 	
 	if usermodel.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
@@ -1827,7 +1902,7 @@ async def squeeze(cmd):
 
 		squeezetext = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
 		if len(squeezetext) > 500:
-			haunt_message_content = squeezetext[:-500]
+			squeezetext = squeezetext[:-500]
 
 
 
@@ -1835,7 +1910,7 @@ async def squeeze(cmd):
 		target_item = None
 		for soul in soul_inv:
 			soul_item = EwItem(id_item=soul.get('id_item'))
-			if soul_item.item_props.get('user_id') == targetmodel.id_user:
+			if soul_item.item_props.get('id_cosmetic') == 'soul' and int(soul_item.item_props.get('user_id')) == targetmodel.id_user:
 				target_item = soul
 
 		if targetmodel.has_soul == 1:
@@ -1860,12 +1935,12 @@ async def squeeze(cmd):
 			targetmodel.change_slimes(n=penalty, source=ewcfg.source_haunted)
 			targetmodel.persist()
 
-			district_data = ewdistrict.EwDistrict(district=targetmodel.poi, id_server=cmd.message.server.id)
+			district_data = ewdistrict.EwDistrict(district=targetmodel.poi, id_server=cmd.guild.id)
 			district_data.change_slimes(n= -penalty, source=ewcfg.source_squeeze)
 			district_data.persist()
 
 			if receivingreport != "":
-				loc_channel = ewutils.get_channel(cmd.message.server, poi.channel)
+				loc_channel = ewutils.get_channel(cmd.guild, poi.channel)
 				await ewutils.send_message(cmd.client, loc_channel, ewutils.formatMessage(target, receivingreport))
 
 			response = "You tightly squeeze {}'s soul in your hand, jeering into it as you do so. This thing was worth every penny.".format(playermodel.display_name)
@@ -1888,7 +1963,7 @@ def remove_from_trades(id_item):
 
 
 async def makecostume(cmd):
-	costumekit = find_item(item_search="costumekit", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
+	costumekit = find_item(item_search="costumekit", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
 
 	user_data = EwUser(member=cmd.message.author)
 	
@@ -1930,7 +2005,7 @@ async def makecostume(cmd):
 async def trash(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
-	server = cmd.message.server
+	server = cmd.guild
 
 	item_sought = find_item(item_search=item_search, id_user=author.id, id_server=server.id)
 
@@ -2005,7 +2080,7 @@ async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
 			new_nickname = current_nickname[:20]
 			new_nickname += '... (Bungis)'
 
-		await client.change_nickname(target_member, new_nickname)
+		await target_member.edit(nick=new_nickname)
 		
 		response = "\n\nYou are now known as {}!".format(target_member.display_name)
 
@@ -2041,7 +2116,7 @@ async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
 		
 		new_nickname = 'Ben Saint'
 
-		await client.change_nickname(target_member, new_nickname)
+		await target_member.edit(nick=new_nickname)
 
 		response = "\n\nYou are now Ben Saint.".format(target_member.display_name)
 		
@@ -2052,7 +2127,7 @@ async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
 		try:
 			await ewutils.send_message(cmd.client, target_member, direct_message)
 		except:
-			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, cmd.message.channel), ewutils.formatMessage(target_member, direct_message))
+			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, cmd.message.channel), ewutils.formatMessage(target_member, direct_message))
 
 	return response
 

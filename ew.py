@@ -13,9 +13,9 @@ from ewstatuseffects import EwStatusEffect
 
 """ User model for database persistence """
 class EwUser:
-	id_user = ""
-	id_server = ""
-	id_killer = ""
+	id_user = -1
+	id_server = -1
+	id_killer = -1
 
 	combatant_type = "player"
 
@@ -195,7 +195,7 @@ class EwUser:
 		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
 
 		client = ewcfg.get_client()
-		server = client.get_server(self.id_server)
+		server = client.get_guild(self.id_server)
 
 		deathreport = ''
 		
@@ -564,7 +564,7 @@ class EwUser:
 		finally:
 			return values
 
-	def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = ""):
+	def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = -1):
 		response = ""
 		if id_status != None:
 			status = None
@@ -797,7 +797,7 @@ class EwUser:
 		client = ewutils.get_client()
 		inhabitants = self.get_inhabitants()
 		if inhabitants:
-			server = client.get_server(self.id_server)
+			server = client.get_guild(self.id_server)
 			for ghost in inhabitants:
 				ghost_data = EwUser(id_user = ghost, id_server = self.id_server)
 				ghost_data.poi = id_poi
@@ -859,6 +859,9 @@ class EwUser:
 				
 				cosmetic_count = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['cosmetic_name'] == cos.item_props['cosmetic_name'] 
 								and cosmetic.item_props['adorned'] == 'true')
+				
+				if cos.item_props.get('attack') == None:
+					print('Failed to get attack stat for cosmetic with props: {}'.format(cos.item_props))
 								
 				result[0] += int( int(cos.item_props['attack']) / cosmetic_count )
 				result[1] += int( int(cos.item_props['defense']) / cosmetic_count )
@@ -963,7 +966,7 @@ class EwUser:
 
 		if(id_user == None) and (id_server == None):
 			if(member != None):
-				id_server = member.server.id
+				id_server = member.guild.id
 				id_user = member.id
 
 		# Retrieve the object from the database if the user is provided.

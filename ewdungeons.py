@@ -73,7 +73,7 @@ async def begin_tutorial(member):
 	response = format_tutorial_response(scene)
 	poi_def = ewcfg.id_to_poi.get(user_data.poi)
 	channels = [poi_def.channel]
-	return await ewutils.post_in_channels(member.server.id, ewutils.formatMessage(member, response), channels)
+	return await ewutils.post_in_channels(member.guild.id, ewutils.formatMessage(member, response), channels)
 	
 
 
@@ -94,7 +94,7 @@ async def tutorial_cmd(cmd):
 	cmd_content = cmd.message.content[1:].lower()
 	
 	# Administrators can skip the tutorial
-	if cmd_content == "skiptutorial" and cmd.message.author.server_permissions.administrator:
+	if cmd_content == "skiptutorial" and cmd.message.author.guild_permissions.administrator:
 		new_state = 20
 		user_to_tutorial_state[user_data.id_user] = new_state
 
@@ -114,7 +114,7 @@ async def tutorial_cmd(cmd):
 
 		poi_def = ewcfg.id_to_poi.get(user_data.poi)
 		channels = [poi_def.channel]
-		return await ewutils.post_in_channels(cmd.message.server.id, ewutils.formatMessage(cmd.message.author, response), channels)
+		return await ewutils.post_in_channels(cmd.guild.id, ewutils.formatMessage(cmd.message.author, response), channels)
 
 	if cmd_content in tutorial_scene.options:
 		new_state = tutorial_scene.options.get(cmd_content)
@@ -136,7 +136,7 @@ async def tutorial_cmd(cmd):
 
 		poi_def = ewcfg.id_to_poi.get(user_data.poi)
 		channels = [poi_def.channel]
-		return await ewutils.post_in_channels(cmd.message.server.id, ewutils.formatMessage(cmd.message.author, response), channels)
+		return await ewutils.post_in_channels(cmd.guild.id, ewutils.formatMessage(cmd.message.author, response), channels)
 
 
 	else:
@@ -149,12 +149,14 @@ async def tutorial_cmd(cmd):
 		elif randint == 3:
 			msg_mistake = "ENDLESS WAR pays you no mind."
 
-		msg = await ewutils.send_message(client, cmd.message.channel, msg_mistake)
+		# msg = await ewutils.send_message(client, cmd.message.channel, msg_mistake)
 		await asyncio.sleep(2)
 		try:
-			await client.delete_message(msg)
+			# await msg.delete()
+			pass
 		except:
 			pass
 
-		response = format_tutorial_response(tutorial_scene)
-		return await ewutils.send_message(client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		# response = format_tutorial_response(tutorial_scene)
+		# return await ewutils.send_message(client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return

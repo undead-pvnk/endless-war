@@ -8,7 +8,7 @@ import ewitem
 	death/resurrection, item discovery, etc.
 """
 class EwEvent:
-	id_server = ""
+	id_server = -1
 
 	event_type = None
 
@@ -17,7 +17,7 @@ class EwEvent:
 
 	def __init__(
 		self,
-		id_server = "",
+		id_server = -1,
 		event_type = None,
 		id_user = None,
 		id_target = None

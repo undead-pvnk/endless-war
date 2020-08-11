@@ -101,7 +101,7 @@ async def menu(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	market_data = EwMarket(id_server = cmd.message.server.id)
+	market_data = EwMarket(id_server = cmd.guild.id)
 	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
@@ -221,8 +221,16 @@ async def menu(cmd):
 				elif vendor == ewcfg.vendor_bodega:
 					if user_data.freshness < ewcfg.freshnesslevel_1:
 						response += ".. and you probably never will be."
-
-
+				elif vendor == ewcfg.vendor_glocksburycomics:
+					response += "\n\nThe cashier here tries to start up a conversation about life being worth living. You're having none of it."
+				elif vendor == ewcfg.vendor_basedhardware:
+					response += "\n\nSo many industrial metals here... You contemplate which you could use to kill yourself..."
+				elif vendor == ewcfg.vendor_basedhardware:
+					response += "\n\nNot even waffles could hope to make your emptiness go away."
+				elif vendor == ewcfg.vendor_greencakecafe:
+					response += "\n\nThe barista behind the counter pauses to look at your soulless misery for a second, but decides you're not worth it and gets back to work."
+				elif vendor == ewcfg.vendor_slimypersuits:
+					response += "\n\nYour mere presence in here ruins the cheery atmosphere."
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -234,7 +242,7 @@ async def order(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	market_data = EwMarket(id_server = cmd.message.server.id)
+	market_data = EwMarket(id_server = cmd.guild.id)
 	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	if poi is None or len(poi.vendors) == 0:
@@ -393,7 +401,7 @@ async def order(cmd):
 
 						food_items = ewitem.inventory(
 							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
+							id_server = cmd.guild.id,
 							item_type_filter = ewcfg.it_food
 						)
 
@@ -422,7 +430,7 @@ async def order(cmd):
 					elif item_type == ewcfg.it_weapon:
 						weapons_held = ewitem.inventory(
 							id_user = user_data.id_user,
-							id_server = cmd.message.server.id,
+							id_server = cmd.guild.id,
 							item_type_filter = ewcfg.it_weapon
 						)
 
@@ -492,7 +500,7 @@ async def order(cmd):
 					id_item = ewitem.item_create(
 						item_type = item_type,
 						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
+						id_server = cmd.guild.id,
 						stack_max = 20 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else -1,
 						stack_size = 1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
 						item_props = item_props

@@ -757,7 +757,7 @@ def retrieve_locked_districts(id_server):
 """
 async def descend(cmd):
 	user_data = EwUser(member = cmd.message.author, data_level = 1)
-	void_connections = get_void_connection_pois(cmd.message.server.id)
+	void_connections = get_void_connection_pois(cmd.guild.id)
 
 	# enter the void
 	if user_data.poi in void_connections:
@@ -776,7 +776,8 @@ async def descend(cmd):
 
 		if user_data.life_state != life_state or faction != user_data.faction:
 			try:
-				await cmd.client.delete_message(descent_message)
+				await descent_message.delete()
+				pass
 			except:
 				pass
 			return
@@ -788,16 +789,18 @@ async def descend(cmd):
 		await ewrolemgr.updateRoles(client = ewutils.get_client(), member = cmd.message.author)
 		await user_data.move_inhabitants(id_poi = ewcfg.poi_id_thevoid)
 		try:
-			await cmd.client.delete_message(descent_message)
+			await descent_message.delete()
+			pass
 		except:
 			pass
 
 		void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
 		response = "You go up the flight of stairs and find yourself in {}.".format(void_poi.str_name)
-		msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+		msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
 		await asyncio.sleep(20)
 		try:
-			await cmd.client.delete_message(msg)
+			await msg.delete()
+			pass
 		except:
 			pass
 		return
@@ -811,7 +814,7 @@ async def move(cmd = None, isApt = False):
 	
 	time_move_start = int(time.time())
 	
-	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False and isApt == False:
+	if isApt == False and ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -957,7 +960,8 @@ async def move(cmd = None, isApt = False):
 		# If the player dies or enlists or whatever while moving, cancel the move.
 		if user_data.life_state != life_state or faction != user_data.faction:
 			try:
-				await cmd.client.delete_message(msg_walk_start)
+				await msg_walk_start.delete()
+				pass
 			except:
 				pass
 
@@ -989,9 +993,10 @@ async def move(cmd = None, isApt = False):
 		)
 		
 		try:
-			await cmd.client.delete_message(msg_walk_start)
+			await msg_walk_start.delete()
 			await asyncio.sleep(30)
-			await cmd.client.delete_message(msg_walk_enter)
+			await msg_walk_enter.delete()
+			pass
 		except:
 			pass
 
@@ -1041,7 +1046,8 @@ async def move(cmd = None, isApt = False):
 				# If the player dies or enlists or whatever while moving, cancel the move.
 				if user_data.life_state != life_state or faction != user_data.faction:
 					try:
-						await cmd.client.delete_message(msg_walk_start)
+						await msg_walk_start.delete()
+						pass
 					except:
 						pass
 
@@ -1095,7 +1101,8 @@ async def move(cmd = None, isApt = False):
 					await user_data.move_inhabitants(id_poi = poi_current.id_poi)
 
 					try:
-						await cmd.client.delete_message(msg_walk_start)
+						await msg_walk_start.delete()
+						pass
 					except:
 						pass
 
@@ -1121,7 +1128,8 @@ async def move(cmd = None, isApt = False):
 
 		await asyncio.sleep(30)
 		try:
-			await cmd.client.delete_message(msg_walk_start)
+			await msg_walk_start.delete()
+			pass
 		except:
 			pass
 
@@ -1147,7 +1155,7 @@ async def teleport(cmd):
 	poi_now = user_data.poi
 	mutations = user_data.get_mutations()
 	response = ""
-	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.guild.id)
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	
 	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
@@ -1197,7 +1205,8 @@ async def teleport(cmd):
 		windup_finished = True
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You get a running start to charge up your Quantum Legs..."))
 		try:
-			msg = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewutils.check_is_command)
+			msg = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and 
+														cmd.message.content.startswith(ewcfg.cmd_prefix))
 
 			if msg != None:
 				windup_finished = False
@@ -1220,7 +1229,7 @@ async def teleport(cmd):
 				
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			
-			poi_channel = ewutils.get_channel(cmd.message.server, poi.channel)
+			poi_channel = ewutils.get_channel(cmd.guild, poi.channel)
 
 			await ewutils.send_message(cmd.client, poi_channel, "A rift in time and space is pouring open! Something's coming through!!")
 			
@@ -1255,7 +1264,7 @@ async def teleport(cmd):
 			
 			# Get the channel for the poi the user is currently in, just in case they've moved to a different poi before the teleportation went through.
 			current_poi = ewcfg.id_to_poi.get(user_data.poi)
-			current_channel = ewutils.get_channel(cmd.message.server, current_poi.channel)
+			current_channel = ewutils.get_channel(cmd.guild, current_poi.channel)
 			
 			response = "You slow down before the teleportation goes through."
 			return await ewutils.send_message(cmd.client, current_channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1272,7 +1281,7 @@ async def teleport_player(cmd):
 	author = cmd.message.author
 	user_data = EwUser(member=author)
 	
-	if ewutils.DEBUG or author.server_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
+	if ewutils.DEBUG or author.guild_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
 		pass
 	else:
 		return
@@ -1337,7 +1346,7 @@ async def look(cmd):
 	slimes_resp = get_slimes_resp(district_data)
 	players_resp = get_players_look_resp(user_data, district_data)
 	enemies_resp = get_enemies_look_resp(user_data, district_data)
-	slimeoids_resp = get_slimeoids_resp(cmd.message.server.id, poi)
+	slimeoids_resp = get_slimeoids_resp(cmd.guild.id, poi)
 	soul_resp = ""
 
 	if slimeoids_resp != "":
@@ -1387,8 +1396,8 @@ async def look(cmd):
 				enemies_resp,
 				soul_resp,
 				("\n\n{}".format(
-					ewcmd.weather_txt(cmd.message.server.id)
-				) if cmd.message.server != None else ""),
+					ewcmd.weather_txt(cmd.guild.id)
+				) if cmd.guild != None else ""),
 				ad_formatting
 			) #+ get_random_prank_item(user_data, district_data) # SWILLDERMUK
 		))
@@ -1406,7 +1415,7 @@ async def survey(cmd):
 	slimes_resp = get_slimes_resp(district_data)
 	players_resp = get_players_look_resp(user_data, district_data)
 	enemies_resp = get_enemies_look_resp(user_data, district_data)
-	slimeoids_resp = get_slimeoids_resp(cmd.message.server.id, poi)
+	slimeoids_resp = get_slimeoids_resp(cmd.guild.id, poi)
 
 	if slimeoids_resp != "":
 		slimeoids_resp = "\n" + slimeoids_resp
@@ -1427,8 +1436,8 @@ async def survey(cmd):
 				slimeoids_resp,
 				enemies_resp,
 				("\n\n{}".format(
-					ewcmd.weather_txt(cmd.message.server.id)
-				) if cmd.message.server != None else "")
+					ewcmd.weather_txt(cmd.guild.id)
+				) if cmd.guild != None else "")
 			) #+ get_random_prank_item(user_data, district_data) # SWILLDERMUK
 		))
 		
@@ -1441,10 +1450,10 @@ async def scout(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
 	
-	if ewutils.channel_name_is_poi(cmd.message.channel.name) is False:
+	if ewutils.channel_name_is_poi(str(cmd.message.channel)) is False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
-	market_data = EwMarket(id_server = cmd.message.server.id)
+	market_data = EwMarket(id_server = cmd.guild.id)
 	mutations = user_data.get_mutations()
 
 	if user_data.life_state == ewcfg.life_state_corpse:
@@ -1467,7 +1476,7 @@ async def scout(cmd):
 		#	return await look(cmd)
 
 		# check if district is in scouting range
-		is_neighbor = user_poi.id_poi in ewcfg.poi_neighbors and poi.id_poi in ewcfg.poi_neighbors[user_poi.id_poi]
+		is_neighbor = user_poi.id_poi in ewcfg.poi_neighbors[poi.id_poi] and poi.id_poi in ewcfg.poi_neighbors[user_poi.id_poi]
 		is_current_transport_station = False
 		if user_poi.is_transport:
 			transport_data = EwTransport(id_server = user_data.id_server, poi = user_poi.id_poi)
@@ -1514,7 +1523,7 @@ async def scout(cmd):
 				if len(allies_in_district) > 3:
 					continue
 			if ewcfg.mutation_id_chameleonskin in scoutee_mutations:
-				member = cmd.message.server.get_member(scoutee_data.id_user)
+				member = cmd.guild.get_member(scoutee_data.id_user)
 				if member == None or member.status == discord.Status.offline:
 					continue
 
@@ -1784,7 +1793,7 @@ async def boot(cmd):
 	author = cmd.message.author
 	user_data = EwUser(member=cmd.message.author)
 
-	if not author.server_permissions.administrator and user_data.life_state != ewcfg.life_state_kingpin:
+	if not author.guild_permissions.administrator and user_data.life_state != ewcfg.life_state_kingpin:
 		response = "You do not have the power to move the masses from one location to another."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1875,7 +1884,7 @@ def get_random_prank_item(user_data, district_data):
 """
 async def print_map_data(cmd):
 	
-	if not cmd.message.author.server_permissions.administrator:
+	if not cmd.message.author.guild_permissions.administrator:
 		return
 	
 	districts_count = 0
@@ -1931,7 +1940,7 @@ async def print_map_data(cmd):
 			#print('found {} neighbors for {}'.format(neighbor_count, poi.id_poi))
 			
 	# client = ewutils.get_client()
-	# server = client.get_server(cmd.message.server.id)
+	# server = client.get_server(cmd.guild.id)
 	# 		
 	# rolenames = []
 	# for role in server.roles:

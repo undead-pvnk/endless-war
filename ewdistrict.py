@@ -17,7 +17,7 @@ from ew import EwUser
 	district data model for database persistence
 """
 class EwDistrict:
-	id_server = ""
+	id_server = -1
 
 	# The district's identifying string
 	name = ""
@@ -138,25 +138,39 @@ class EwDistrict:
 		return friendly_neighbors
 
 	def all_neighbors_friendly(self):
+		rival_gang_poi = "none"
 		if self.controlling_faction == "":
 			return False
-		
+		elif self.controlling_faction == ewcfg.faction_killers:
+			rival_gang_poi = ewcfg.poi_id_rowdyroughhouse
+		elif self.controlling_faction == ewcfg.faction_rowdys:
+			rival_gang_poi = ewcfg.poi_id_copkilltown
+
+
 		neighbors = ewcfg.poi_neighbors[self.name]
 		for neighbor_id in neighbors:
 			neighbor_poi = ewcfg.id_to_poi.get(neighbor_id)
 			neighbor_data = EwDistrict(id_server = self.id_server, district = neighbor_id)
 			if neighbor_data.controlling_faction != self.controlling_faction and not neighbor_poi.is_subzone and not neighbor_poi.is_outskirts and not neighbor_poi.is_district:
 				return False
+			elif neighbor_poi.id_poi == rival_gang_poi:
+				return False
 		return True
 
 	def all_streets_taken(self):
 		street_name_list = ewutils.get_street_list(self.name)
+		
+		if self.name == ewcfg.poi_id_rowdyroughhouse:
+			return ewcfg.faction_rowdys
+		elif self.name == ewcfg.poi_id_copkilltown:
+			return ewcfg.faction_killers
 
 		faction_list = []
 		for name in street_name_list:
 			district_data = EwDistrict(id_server=self.id_server, district=name)
 			faction_list.append(district_data.controlling_faction)
-		if all(faction_list) and len(faction_list) > 0:
+	
+		if len(faction_list) > 0 and all(faction == faction_list[0] for faction in faction_list):
 			return faction_list[0]
 		else:
 			return ""
@@ -172,7 +186,7 @@ class EwDistrict:
 			pvp_only = False
 		):
 		client = ewutils.get_client()
-		server = client.get_server(self.id_server)
+		server = client.get_guild(self.id_server)
 		if server == None:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
@@ -222,7 +236,7 @@ class EwDistrict:
 		):
 
 		client = ewutils.get_client()
-		server = client.get_server(self.id_server)
+		server = client.get_guild(self.id_server)
 		if server == None:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
@@ -656,7 +670,7 @@ async def capture_progress(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	response = ""
-	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.guild.id)
 	time_now = int(time.time())
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -790,7 +804,7 @@ async def shamble(cmd):
 	if poi is None:
 		return
 
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
 
 	if district_data.degradation < poi.max_degradation:
 		district_data.degradation += 1
@@ -949,7 +963,7 @@ async def capture_tick(id_server):
 
 					dist.persist()
 
-	await resp_cont_capture_tick.post()
+	# await resp_cont_capture_tick.post()
 
 """
 	Coroutine that continually calls capture_tick; is called once per server, and not just once globally
@@ -1002,7 +1016,7 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 		responses =  district.decay_capture_points()
 		resp_cont_decay_loop.add_response_container(responses)
 		district.persist()
-	await resp_cont_decay_loop.post()
+	# await resp_cont_decay_loop.post()
 
 async def change_spray(cmd):
 	user_data = EwUser(member=cmd.message.author)
