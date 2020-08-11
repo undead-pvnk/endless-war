@@ -3,6 +3,7 @@ import datetime
 import ewcfg
 import ewutils
 from ewmarket import EwMarket
+from ewdistrict import EwDistrict
 
 
 async def post_leaderboards(client = None, server = None):
@@ -19,12 +20,16 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, districts)
 	topslimes = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_slimes)
 	await ewutils.send_message(client, leaderboard_channel, topslimes)
-	topcoins = make_userdata_board(server = server, category = ewcfg.col_slimecoin, title = ewcfg.leaderboard_slimecoin)
+	#topcoins = make_userdata_board(server = server, category = ewcfg.col_slimecoin, title = ewcfg.leaderboard_slimecoin)
+	topcoins = make_stocks_top_board(server = server)
 	await ewutils.send_message(client, leaderboard_channel, topcoins)
 	topghosts = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_ghosts, lowscores = True, rows = 3)
 	await ewutils.send_message(client, leaderboard_channel, topghosts)
 	topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty, divide_by = ewcfg.slimecoin_exchangerate)
 	await ewutils.send_message(client, leaderboard_channel, topbounty)
+	#topfashion = make_userdata_board(server = server, category = ewcfg.col_freshness, title = ewcfg.leaderboard_fashion)
+	topfashion = make_freshness_top_board(server = server)
+	await ewutils.send_message(client, leaderboard_channel, topfashion)
 	topdonated = make_userdata_board(server = server, category = ewcfg.col_splattered_slimes, title = ewcfg.leaderboard_donated)
 	await ewutils.send_message(client, leaderboard_channel, topdonated)
 	# topdegraded = make_userdata_board(server = server, category = ewcfg.col_degradation, title = ewcfg.leaderboard_degradation)
@@ -42,6 +47,53 @@ async def post_leaderboards(client = None, server = None):
 	#bottomgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_low)
 	#await ewutils.send_message(client, leaderboard_channel, bottomgambit)
 
+def make_stocks_top_board(server = None):
+	entries = []
+	try:
+		data = ewutils.execute_sql_query((
+			"SELECT pl.display_name, u.life_state, u.faction, nw.total " +
+			"FROM users AS u " +
+			"INNER JOIN players AS pl ON u.id_user = pl.id_user " +
+			"INNER JOIN net_worth AS nw ON u.id_user = nw.id_user AND u.id_server = nw.id_server "
+			"WHERE u.id_server = %(id_server)s " +
+			"ORDER BY nw.total DESC LIMIT 5"
+		), {
+			"id_server" : server.id,
+		})
+
+		if data != None:
+			for row in data:
+				if row != None:
+					entries.append(row)
+	except:
+		ewutils.logMsg("Error occured while fetching stock leaderboard")
+
+	
+	return format_board(entries = entries, title = ewcfg.leaderboard_slimecoin)
+
+def make_freshness_top_board(server = None):
+	entries = []
+	try:
+		data = ewutils.execute_sql_query((
+			"SELECT pl.display_name, u.life_state, u.faction, f.freshness AS fresh " +
+			"FROM users AS u " +
+			"INNER JOIN players AS pl ON u.id_user = pl.id_user " +
+			"INNER JOIN freshness AS f ON u.id_user = f.id_user AND u.id_server = f.id_server " +
+			"WHERE u.id_server = %(id_server)s " +
+			"ORDER BY fresh DESC LIMIT 5"
+		), {
+			"id_server" : server.id,
+		})
+
+		if data != None:
+			for row in data:
+				if row != None:
+					entries.append(row)
+	except:
+		ewutils.logMsg("Error occured while fetching fashion leaderboard")
+	
+	return format_board(entries = entries, title = ewcfg.leaderboard_fashion)
+
 def make_slimeoids_top_board(server = None):
 	board = "{mega} ▓▓▓▓▓ TOP SLIMEOIDS (CLOUT) ▓▓▓▓▓ {mega}\n".format(
 		mega = "<:megaslime:436877747240042508>"
@@ -55,7 +107,7 @@ def make_slimeoids_top_board(server = None):
 		cursor.execute((
 			"SELECT pl.display_name, sl.name, sl.clout " +
 			"FROM slimeoids AS sl " +
-			"LEFT JOIN players AS pl ON sl.id_user = pl.id_user " +
+			"INNER JOIN players AS pl ON sl.id_user = pl.id_user " +
 			"WHERE sl.id_server = %s AND sl.life_state = 2 " +
 			"ORDER BY sl.clout DESC LIMIT 3"
 		), (
@@ -131,7 +183,6 @@ def make_userdata_board(server = None, category = "", title = "", lowscores = Fa
 		), (
 			server.id, 
 		))
-
 		i = 0
 		row = cursor.fetchone()
 		while (row != None) and (i < rows):
@@ -218,21 +269,20 @@ def make_kingpin_board(server = None, title = ""):
 
 def make_district_control_board(id_server, title):
 	entries = []
-	districts = ewutils.execute_sql_query(
-		"SELECT {district}, {controlling_faction} FROM districts WHERE id_server = %s".format(
-			district = ewcfg.col_district,
-			controlling_faction = ewcfg.col_controlling_faction
-		), (
-			id_server,
-		)
-	)
+	
+	districts = []
+	for poi in ewcfg.poi_list:
+		if poi.is_district:
+			districts.append(poi.id_poi)
+			
 	rowdy_districts = 0
 	killer_districts = 0
 
 	for district in districts:
-		if district[1] == ewcfg.faction_rowdys:
+		district_data = EwDistrict(district = district, id_server = id_server)
+		if district_data.all_streets_taken() == ewcfg.faction_rowdys:
 			rowdy_districts += 1
-		elif district[1] == ewcfg.faction_killers:
+		elif district_data.all_streets_taken() == ewcfg.faction_killers:
 			killer_districts += 1
 
 	rowdy_entry = [ewcfg.faction_rowdys.capitalize(), rowdy_districts]
@@ -385,6 +435,10 @@ def board_header(title):
 		emote = ewcfg.emote_janus1
 		emote2 = ewcfg.emote_janus2
 		bar += " "
+
+	elif title == ewcfg.leaderboard_fashion:
+		emote = ewcfg.emote_111
+		bar += " "
 		
 	if emote2 != None:
 		return emote + bar + title + bar + emote2 + "\n"
@@ -398,9 +452,16 @@ def board_entry(entry, entry_type, divide_by):
 		faction = ewutils.get_faction(life_state = entry[1], faction = entry[2])
 		faction_symbol = ewutils.get_faction_symbol(faction, entry[2])
 
+		number = int(entry[3] / divide_by)
+
+		if number > 999999999:
+			num_str = "{:.3e}".format(number)
+		else:
+			num_str = "{:,}".format(number)
+
 		result = "{} `{:_>15} | {}`\n".format(
 			faction_symbol,
-			"{:,}".format(entry[3] if divide_by == 1 else int(entry[3] / divide_by)),
+			num_str,
 			entry[0].replace("`","")
 		)
 

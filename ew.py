@@ -16,7 +16,6 @@ class EwUser:
 	id_user = ""
 	id_server = ""
 	id_killer = ""
-	id_inhabit_target = ""
 
 	combatant_type = "player"
 
@@ -30,6 +29,7 @@ class EwUser:
 	bleed_storage = 0
 	bounty = 0
 	weapon = -1
+	sidearm = -1
 	weaponskill = 0
 	trauma = ""
 	poi_death = ""
@@ -45,6 +45,11 @@ class EwUser:
 	splattered_slimes = 0
 	sap = 0
 	hardened_sap = 0
+	race = ""
+	attack = 0
+	defense = 0
+	speed = 0
+	freshness = 0
 	
 	#SLIMERNALIA
 	festivity = 0
@@ -52,6 +57,7 @@ class EwUser:
 	slimernalia_kingpin = False
 	
 	manuscript = -1
+	spray = "https://img.booru.org/rfck//images/3/a69d72cf29cb750882de93b4640a175a88cdfd70.png"
 	swear_jar = 0
 	degradation = 0
 	
@@ -72,6 +78,8 @@ class EwUser:
 	time_expirpvp = 0
 	time_lastenlist = 0
 	time_lastdeath = 0
+	time_racialability = 0
+	time_lastpremiumpurchase = 0
 
 	apt_zone = "empty"
 	visiting = "empty"
@@ -228,7 +236,6 @@ class EwUser:
 			self.inebriation = 0
 			self.bounty = 0
 			self.time_lastdeath = time_now		
-			self.id_inhabit_target = ""
 	
 			# if self.life_state == ewcfg.life_state_shambler:
 			# 	self.degradation += 1
@@ -265,6 +272,7 @@ class EwUser:
 			self.poi_death = self.poi
 			self.poi = ewcfg.poi_id_thesewers
 			self.weapon = -1
+			self.sidearm = -1
 			self.time_expirpvp = 0
 
 		if cause == ewcfg.cause_killing_enemy:  # If your killer was an Enemy. Duh.
@@ -275,6 +283,10 @@ class EwUser:
 
 		self.sap = 0
 		self.hardened_sap = 0
+		self.attack = 0
+		self.defense = 0
+		self.speed = 0
+
 		ewutils.moves_active[self.id_user] = 0
 		ewutils.active_target_map[self.id_user] = ""
 		ewutils.active_restrictions[self.id_user] = 0
@@ -338,6 +350,10 @@ class EwUser:
 			self.weaponskill += int(n)
 			ewstats.track_maximum(user = self, metric = ewcfg.stat_max_wepskill, value = self.weaponskill)
 
+			weapon = ewcfg.weapon_map.get(weapon_type)
+			if ewcfg.weapon_class_paint in weapon.classes and self.weaponskill > 16:
+				self.weaponskill = 16
+
 			ewutils.weaponskills_set(
 				id_server = self.id_server,
 				id_user = self.id_user,
@@ -365,7 +381,10 @@ class EwUser:
 		mutations = self.get_mutations()
 		statuses = self.getStatusEffects()
 
-		if ewcfg.mutation_id_spoiledappetite not in mutations and float(food_item.time_expir if food_item.time_expir is not None else 0) < time.time():
+		user_has_spoiled_appetite = ewcfg.mutation_id_spoiledappetite in mutations
+		item_is_non_perishable = getattr(food_item, "perishable", False)
+		item_has_expired = float(getattr(food_item, "time_expir", 0)) < time.time()
+		if item_has_expired and not (user_has_spoiled_appetite or item_is_non_perishable):
 			response = "You realize that the food you were trying to eat is already spoiled. In disgust, you throw it away."
 			ewitem.item_drop(food_item.id_item)
 		else:
@@ -477,23 +496,50 @@ class EwUser:
 
 				weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 				if ewcfg.weapon_class_captcha in weapon.classes:
-					captcha = ewutils.generate_captcha(n = weapon.captcha_length)
+					captcha = ewutils.generate_captcha(length = weapon.captcha_length)
 					weapon_item.item_props["captcha"] = captcha
-					response += "\nSecurity code: **{}**".format(captcha)
+					response += "\nSecurity code: **{}**".format(ewutils.text_to_regional_indicator(captcha))
 			else:
 				partner_name = current_weapon.item_props.get("weapon_name")
 				if partner_name in [None, ""]:
 					partner_name = "partner"
 				response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(partner_name)
 		else:
+
 			response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name")) + "."
 			self.weapon = weapon_item.id_item
 
+			if self.sidearm == self.weapon:
+				self.sidearm = -1
+
 			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 			if ewcfg.weapon_class_captcha in weapon.classes:
-				captcha = ewutils.generate_captcha(n = weapon.captcha_length)
+				captcha = ewutils.generate_captcha(length = weapon.captcha_length)
 				weapon_item.item_props["captcha"] = captcha
-				response += "\nSecurity code: **{}**".format(captcha)
+				response += "\nSecurity code: **{}**".format(ewutils.text_to_regional_indicator(captcha))
+
+
+		return response
+
+	def equip_sidearm(self, sidearm_item = None):
+		if self.life_state == ewcfg.life_state_corpse:
+			response = "Ghosts can't equip weapons."
+		elif self.life_state == ewcfg.life_state_juvenile:
+			response = "Juvies can't equip weapons."
+		elif self.weaponmarried == True and sidearm_item.item_props.get("married") == self.id_user:
+			current_weapon = ewitem.EwItem(id_item = self.weapon)
+			partner_name = current_weapon.item_props.get("weapon_name")
+			if partner_name in [None, ""]:
+				partner_name = "partner"
+			response = "Your {} is motionless in your hand, frothing with jealousy. You can't sidearm it like one of your side ho pickaxes.".format(partner_name)
+		else:
+
+
+			response = "You sidearm your " + (sidearm_item.item_props.get("weapon_type") if len(sidearm_item.item_props.get("weapon_name")) == 0 else sidearm_item.item_props.get("weapon_name")) + "."
+			self.sidearm = sidearm_item.id_item
+
+			if self.weapon == self.sidearm:
+				self.weapon = -1
 
 		return response
 
@@ -794,6 +840,97 @@ class EwUser:
 			# otherwise return None
 			return None
 
+	def get_fashion_stats(self):
+
+		cosmetics = ewitem.inventory(
+			id_user=self.id_user,
+			id_server=self.id_server,
+			item_type_filter=ewcfg.it_cosmetic
+		)
+		
+		result = [0] * 3
+
+		cosmetic_items = []
+		for cosmetic in cosmetics:
+			cosmetic_items.append(ewitem.EwItem(id_item=cosmetic.get('id_item')))
+
+		for cos in cosmetic_items:
+			if cos.item_props['adorned'] == 'true':
+				
+				cosmetic_count = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['cosmetic_name'] == cos.item_props['cosmetic_name'] 
+								and cosmetic.item_props['adorned'] == 'true')
+								
+				result[0] += int( int(cos.item_props['attack']) / cosmetic_count )
+				result[1] += int( int(cos.item_props['defense']) / cosmetic_count )
+				result[2] += int( int(cos.item_props['speed']) / cosmetic_count )
+		
+		return result
+
+	def get_freshness(self):
+		cosmetics = ewitem.inventory(
+			id_user=self.id_user,
+			id_server=self.id_server,
+			item_type_filter=ewcfg.it_cosmetic
+		)
+
+		cosmetic_items = []
+		for cosmetic in cosmetics:
+			cosmetic_items.append(ewitem.EwItem(id_item=cosmetic.get('id_item')))
+
+		adorned_cosmetics = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['adorned'] == 'true')
+
+		if len(cosmetic_items) == 0 or adorned_cosmetics < 2:
+			return 0
+
+		base_freshness = 0
+		hue_count = {}
+		style_count = {}
+
+		#get base freshness, hue and style counts
+		for cos in cosmetic_items:
+			if cos.item_props['adorned'] == 'true':
+				
+				cosmetic_count = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['cosmetic_name'] == cos.item_props['cosmetic_name'] 
+								and cosmetic.item_props['adorned'] == 'true')
+
+				base_freshness += int(cos.item_props['freshness']) / cosmetic_count
+
+				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
+				if hue is not None:
+					if hue_count.get(hue):
+						hue_count[hue] += 1
+					else:
+						hue_count[hue] = 1
+
+				style = cos.item_props['fashion_style']
+				if style_count.get(style):
+					style_count[style] += 1
+				else:
+					style_count[style] = 1
+
+		#calc hue modifier
+		hue_mod = 1
+		if len(hue_count) > 0:
+
+			complimentary_hue_count = 0
+			dominant_hue = max(hue_count, key=lambda key: hue_count[key])
+
+			for hue in hue_count:
+				if hue.id_hue == dominant_hue.id_hue or hue.id_hue in dominant_hue.effectiveness or hue.is_neutral:
+					complimentary_hue_count += hue_count[hue]
+
+			if hue_count[dominant_hue] / adorned_cosmetics >= 0.6 and complimentary_hue_count == adorned_cosmetics:
+				hue_mod = 5
+
+		#calc style modifier
+		style_mod = 1
+		dominant_style = max(style_count, key=lambda key: style_count[key])
+
+		if style_count[dominant_style] / adorned_cosmetics >= 0.6:
+			style_mod = style_count[dominant_style] / adorned_cosmetics * 10
+
+		return int(base_freshness * hue_mod * style_mod)
+
 	def get_festivity(self):
 		data = ewutils.execute_sql_query(
 		"SELECT FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) FROM users "\
@@ -820,7 +957,7 @@ class EwUser:
 		return int(res)
 
 	""" Create a new EwUser and optionally retrieve it from the database. """
-	def __init__(self, member = None, id_user = None, id_server = None):
+	def __init__(self, member = None, id_user = None, id_server = None, data_level = 0):
 
 		self.combatant_type = ewcfg.combatant_type_player
 
@@ -842,8 +979,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
-
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -887,18 +1023,22 @@ class EwUser:
 					ewcfg.col_festivity_from_slimecoin,
 					ewcfg.col_slimernalia_kingpin,
 					ewcfg.col_manuscript,
+					ewcfg.col_spray,
 					ewcfg.col_swear_jar,
 					ewcfg.col_degradation,
 					ewcfg.col_time_lastdeath,
+					ewcfg.col_sidearm,
 					ewcfg.col_gambit,
 					ewcfg.col_credence,
 					ewcfg.col_credence_used,
-					ewcfg.col_id_inhabit_target,
+					ewcfg.col_race,
+					ewcfg.col_time_racialability,
+					ewcfg.col_time_lastpremiumpurchase,
 				), (
 					id_user,
 					id_server
 				))
-				result = cursor.fetchone();
+				result = cursor.fetchone()
 
 				if result != None:
 					# Record found: apply the data to this object.
@@ -945,13 +1085,17 @@ class EwUser:
 					self.festivity_from_slimecoin = result[40]
 					self.slimernalia_kingpin = (result[41] == 1)
 					self.manuscript = result[42]
-					self.swear_jar = result[43]
-					self.degradation = result[44]
-					self.time_lastdeath = result[45]
-					self.gambit = result[46]
-					self.credence = result[47]
-					self.credence_used = result[48]
-					self.id_inhabit_target = result[49]
+					self.spray = result[43]
+					self.swear_jar = result[44]
+					self.degradation = result[45]
+					self.time_lastdeath = result[46]
+					self.sidearm = result[47]
+					self.gambit = result[48]
+					self.credence = result[49]
+					self.credence_used = result[50]
+					self.race = result[51]
+					self.time_racialability = result[52]
+					self.time_lastpremiumpurchase = result[53]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -988,8 +1132,45 @@ class EwUser:
 				else:
 					self.weaponskill = 0
 
-				self.move_speed = ewutils.get_move_speed(self)
-				self.limit_fix();
+				if data_level > 0:
+					"""cursor.execute("SELECT {}, {}, {} FROM fashion_stats WHERE id_user = %s AND id_server = %s".format(
+						ewcfg.col_attack,
+						ewcfg.col_defense,
+						ewcfg.col_speed,
+					), (
+
+						id_user,
+						id_server,
+					))
+					result = cursor.fetchone()
+
+					if result != None:
+						self.attack = result[0]
+						self.defense = result[1]
+						self.speed = result[2]"""
+
+					result = self.get_fashion_stats()
+					self.attack = result[0]
+					self.defense = result[1]
+					self.speed = result[2]
+					
+					if data_level > 1:
+						"""cursor.execute("SELECT {} FROM freshness WHERE id_user = %s AND id_server = %s".format(
+							ewcfg.col_freshness,
+						),(
+							id_user,
+							id_server
+						))
+
+						result = cursor.fetchone()
+
+						if result != None:
+							self.freshness = result[0]"""
+						self.freshness = self.get_freshness()
+
+					self.move_speed = ewutils.get_move_speed(self)
+
+				self.limit_fix()
 			finally:
 				# Clean up the database handles.
 				cursor.close()
@@ -1002,12 +1183,13 @@ class EwUser:
 			# Get database handles if they weren't passed.
 			conn_info = ewutils.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
-			self.limit_fix();
+			self.limit_fix()
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -1054,13 +1236,17 @@ class EwUser:
 				ewcfg.col_festivity_from_slimecoin,
 				ewcfg.col_slimernalia_kingpin,
 				ewcfg.col_manuscript,
+				ewcfg.col_spray,
 				ewcfg.col_swear_jar,
 				ewcfg.col_degradation,
 				ewcfg.col_time_lastdeath,
+				ewcfg.col_sidearm,
 				ewcfg.col_gambit,
 				ewcfg.col_credence,
 				ewcfg.col_credence_used,
-				ewcfg.col_id_inhabit_target,
+				ewcfg.col_race,
+				ewcfg.col_time_racialability,
+				ewcfg.col_time_lastpremiumpurchase,
 			), (
 				self.id_user,
 				self.id_server,
@@ -1108,13 +1294,17 @@ class EwUser:
 				self.festivity_from_slimecoin,
 				self.slimernalia_kingpin,
 				self.manuscript,
+				self.spray,
 				self.swear_jar,
 				self.degradation,
 				self.time_lastdeath,
+				self.sidearm,
 				self.gambit,
 				self.credence,
 				self.credence_used,
-				self.id_inhabit_target
+				self.race,
+				self.time_racialability,
+				self.time_lastpremiumpurchase,
 			))
 
 			conn.commit()

@@ -90,24 +90,35 @@ async def smelt(cmd):
 
 			# If you don't have all the necessary ingredients.
 			if len(missing_ingredients) > 0:
-				response = "You’ve never done this before, have you? To smelt {}, you’ll need to combine *{}*.".format(found_recipe.str_name, ewutils.formatNiceList(names = necessary_ingredients_list, conjunction = "and"))
+				response = "You've never done this before, have you? To smelt {}, you’ll need to combine *{}*.".format(found_recipe.str_name, ewutils.formatNiceList(names = necessary_ingredients_list, conjunction = "and"))
 
 				response += " You are missing *{}*.".format(ewutils.formatNiceList(names = missing_ingredients, conjunction = "and"))
 
 			else:
 				# If you try to smelt a random cosmetic, use old smelting code to calculate what your result will be.
-				if found_recipe.id_recipe == "cosmetic":
-					patrician_rarity = 20
+				if found_recipe.id_recipe == "coolcosmetic" or found_recipe.id_recipe == "toughcosmetic" or found_recipe.id_recipe == "smartcosmetic" or found_recipe.id_recipe == "beautifulcosmetic" or found_recipe.id_recipe == "cutecosmetic":
+					patrician_rarity = 100
 					patrician_smelted = random.randint(1, patrician_rarity)
 					patrician = False
 
-					if patrician_smelted == 1:
+					if patrician_smelted <= 5:
 						patrician = True
 
 					cosmetics_list = []
 
+					if found_recipe.id_recipe == "toughcosmetic":
+						style = ewcfg.style_tough
+					elif found_recipe.id_recipe == "smartcosmetic":
+						style = ewcfg.style_smart
+					elif found_recipe.id_recipe == "beautifulcosmetic":
+						style = ewcfg.style_beautiful
+					elif found_recipe.id_recipe == "cutecosmetic":
+						style = ewcfg.style_cute
+					else:
+						style = ewcfg.style_cool
+
 					for result in ewcfg.cosmetic_items_list:
-						if result.acquisition == ewcfg.acquisition_smelting:
+						if result.style == style and result.acquisition == ewcfg.acquisition_smelting:
 							cosmetics_list.append(result)
 						else:
 							pass
@@ -122,17 +133,13 @@ async def smelt(cmd):
 
 					item = items[random.randint(0, len(items) - 1)]
 
+					item_props = ewitem.gen_item_props(item)
+
 					ewitem.item_create(
-						item_type = ewcfg.it_cosmetic,
+						item_type = item.item_type,
 						id_user = cmd.message.author.id,
 						id_server = cmd.message.server.id,
-						item_props = {
-							'id_cosmetic': item.id_cosmetic,
-							'cosmetic_name': item.str_name,
-							'cosmetic_desc': item.str_desc,
-							'rarity': item.rarity,
-							'adorned': 'false'
-						}
+						item_props = item_props
 					)
 
 				# If you're trying to smelt a specific item.

@@ -361,9 +361,12 @@ class EwEnemy:
 			if random.random() < 0.5:
 				randombodypart = random.choice(hitzone.aliases)
 
-			miss_mod += round(ewwep.apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self, shootee_data = target_data, hitzone = hitzone) + ewwep.apply_combat_mods(user_data=target_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other, shooter_data = enemy_data, hitzone = hitzone), 2)
-			crit_mod += round(ewwep.apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self, shootee_data = target_data, hitzone = hitzone) + ewwep.apply_combat_mods(user_data=target_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other, shooter_data = enemy_data, hitzone = hitzone), 2)
-			dmg_mod += round(ewwep.apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = target_data, hitzone = hitzone) + ewwep.apply_combat_mods(user_data=target_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = enemy_data, hitzone = hitzone), 2)
+			shooter_status_mods = ewwep.get_shooter_status_mods(enemy_data, target_data, hitzone)
+			shootee_status_mods = ewwep.get_shootee_status_mods(target_data, enemy_data, hitzone)
+
+			miss_mod += round(shooter_status_mods['miss'] + shootee_status_mods['miss'], 2)
+			crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
+			dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 			
 			# maybe enemies COULD have weapon skills? could punishes players who die to the same enemy without mining up beforehand
 			# slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
@@ -462,7 +465,7 @@ class EwEnemy:
 						sap_damage += 1
 
 					enemy_data.persist()
-					target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server)
+					target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server, data_level = 1)
 
 					# apply defensive mods
 					slimes_damage *= ewwep.damage_mod_defend(
@@ -506,6 +509,46 @@ class EwEnemy:
 
 					slimes_directdamage = slimes_damage - slimes_tobleed
 					slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
+
+					# Damage victim's wardrobe (heh, WARdrobe... get it??)
+					victim_cosmetics = ewitem.inventory(
+						id_user = target_data.id_user,
+						id_server = target_data.id_server,
+						item_type_filter = ewcfg.it_cosmetic
+					)
+
+					onbreak_responses = []
+
+					for cosmetic in victim_cosmetics:
+						c = EwItem(cosmetic.get('id_item'))
+
+						# Damage it if the cosmetic is adorned and it has a durability limit
+						if c.item_props.get("adorned") == 'true' and c.item_props['durability'] is not None:
+
+							#print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
+
+							durability_afterhit = int(c.item_props['durability']) - slimes_damage
+
+							#print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
+
+							if durability_afterhit <= 0:  # If it breaks
+								c.item_props['durability'] = durability_afterhit
+								c.persist()
+
+
+								target_data.persist()
+
+								onbreak_responses.append(
+									str(c.item_props['str_onbreak']).format(c.item_props['cosmetic_name']))
+
+								ewitem.item_delete(id_item = c.id_item)
+
+							else:
+								c.item_props['durability'] = durability_afterhit
+								c.persist()
+
+						else:
+							pass
 
 					market_data.splattered_slimes += slimes_damage
 					market_data.persist()
@@ -555,6 +598,10 @@ class EwEnemy:
 									name_target=target_player.display_name
 								))
 
+							if len(onbreak_responses) != 0:
+								for onbreak_response in onbreak_responses:
+									response += "\n\n" + onbreak_response
+
 							response += "\n\n{}".format(used_attacktype.str_kill.format(
 								name_enemy=enemy_data.display_name,
 								name_target=("<@!{}>".format(target_data.id_user)),
@@ -563,6 +610,12 @@ class EwEnemy:
 							target_data.trauma = used_attacktype.id_type
 
 						else:
+							response = ""
+
+							if len(onbreak_responses) != 0:
+								for onbreak_response in onbreak_responses:
+									response = onbreak_response + "\n\n"
+
 							response = "{name_target} is hit!!\n\n{name_target} has died.".format(
 								name_target=target_player.display_name)
 
@@ -585,7 +638,7 @@ class EwEnemy:
 						if check_death(enemy_data) == False:
 							enemy_data = EwEnemy(id_enemy=self.id_enemy)
 
-						target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server)
+						target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server, data_level = 1)
 					else:
 						# A non-lethal blow!
 						# apply injury
@@ -631,6 +684,9 @@ class EwEnemy:
 									damage=damage,
 									sap_response=sap_response
 								)
+								if len(onbreak_responses) != 0:
+									for onbreak_response in onbreak_responses:
+										response += "\n\n" + onbreak_response
 						else:
 							if miss:
 								response = "{target_name} dodges the {enemy_name}'s strike.".format(
@@ -640,6 +696,10 @@ class EwEnemy:
 									target_name=target_player.display_name,
 									damage=damage
 								)
+							if len(onbreak_responses) != 0:
+								for onbreak_response in onbreak_responses:
+									response += "\n" + onbreak_response
+
 						resp_cont.add_channel_response(ch_name, response)
 				else:
 					response = '{} is unable to attack {}.'.format(enemy_data.display_name, target_player.display_name)
@@ -678,11 +738,33 @@ class EwEnemy:
 		gang_base_response = ""
 
 		try:
-			# Raid bosses can only move into the city (capturable districts), never back into the outskirts.
-			destinations = ewcfg.poi_neighbors.get(self.poi).intersection(set(ewcfg.capturable_districts))
+			# Raid bosses can move into other parts of the outskirts as well as the city, including district zones.
+			destinations = ewcfg.poi_neighbors.get(self.poi)
+			
+			# Filter subzones and gang bases out.
+			# Nudge raidbosses into the city.
+			for destination in destinations:
+
+				destination_poi_data = ewcfg.id_to_poi.get(destination)
+				if destination_poi_data.is_subzone or destination_poi_data.is_gangbase:
+					destinations.remove(destination)
+				
+				if self.poi in ewcfg.outskirts_depths:
+					if destination in ewcfg.outskirts_depths:
+						destinations.remove(destination)
+				elif self.poi in ewcfg.outskirts:
+					if (destination in ewcfg.outskirts) or (destination in ewcfg.outskirts_depths):
+						destinations.remove(destination)
+				elif self.poi in ewcfg.outskirts_edges: 
+					if (destination in ewcfg.outskirts_edges) or (destination in ewcfg.outskirts):
+						destinations.remove(destination)
+					
+
 			if len(destinations) > 0:
+				
 				old_poi = self.poi
 				new_poi = random.choice(list(destinations))
+					
 				self.poi = new_poi
 				self.time_lastenter = int(time.time())
 				self.id_target = ""
@@ -1192,11 +1274,11 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weathe
 
 	while enemies_count >= ewcfg.max_enemies and try_count < 5:
 
-		# Sand bags only spawn in the dojo (aka South Sleezeborough)
+		# Sand bags only spawn in the dojo
 		if enemytype == ewcfg.enemy_type_sandbag:
-			potential_chosen_poi = ewcfg.poi_id_southsleezeborough
+			potential_chosen_poi = ewcfg.poi_id_dojo
 		else:
-			potential_chosen_poi = random.choice(ewcfg.outskirts_districts)
+			potential_chosen_poi = random.choice(ewcfg.outskirts)
 			
 		if pre_chosen_poi is not None:
 			potential_chosen_poi = pre_chosen_poi
@@ -1611,18 +1693,15 @@ def drop_enemy_loot(enemy_data, district_data):
 
 			item = items[random.randint(0, len(items) - 1)]
 
+			item_props = ewitem.gen_item_props(item)
+
 			ewitem.item_create(
-				item_type=ewcfg.it_cosmetic,
-				id_user=district_data.name,
-				id_server=district_data.id_server,
-				item_props={
-					'id_cosmetic': item.id_cosmetic,
-					'cosmetic_name': item.str_name,
-					'cosmetic_desc': item.str_desc,
-					'rarity': item.rarity,
-					'adorned': 'false'
-				}
+				item_type = ewcfg.it_cosmetic,
+				id_user = district_data.name,
+				id_server = district_data.id_server,
+				item_props = item_props
 			)
+
 			response = "They dropped a {item_name}!".format(item_name=item.str_name)
 			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 
@@ -1640,18 +1719,15 @@ def drop_enemy_loot(enemy_data, district_data):
 
 			item = items[random.randint(0, len(items) - 1)]
 
+			item_props = ewitem.gen_item_props(item)
+
 			ewitem.item_create(
-				item_type=ewcfg.it_cosmetic,
-				id_user=district_data.name,
-				id_server=district_data.id_server,
-				item_props={
-					'id_cosmetic': item.id_cosmetic,
-					'cosmetic_name': item.str_name,
-					'cosmetic_desc': item.str_desc,
-					'rarity': item.rarity,
-					'adorned': 'false'
-				}
+				item_type = ewcfg.it_cosmetic,
+				id_user = district_data.name,
+				id_server = district_data.id_server,
+				item_props = item_props
 			)
+
 			response = "They dropped a {item_name}!".format(item_name=item.str_name)
 			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 
@@ -1869,7 +1945,7 @@ def get_target_by_ai(enemy_data):
 
 	if enemy_data.ai == ewcfg.enemy_ai_defender:
 		if enemy_data.id_target != "":
-			target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
+			target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server, data_level = 1)
 
 	elif enemy_data.ai == ewcfg.enemy_ai_attacker_a:
 		users = ewutils.execute_sql_query(
@@ -1891,7 +1967,7 @@ def get_target_by_ai(enemy_data):
 				enemy_data.id_server
 			))
 		if len(users) > 0:
-			target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server)
+			target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level = 1)
 
 	elif enemy_data.ai == ewcfg.enemy_ai_attacker_b:
 		users = ewutils.execute_sql_query(
@@ -1914,7 +1990,7 @@ def get_target_by_ai(enemy_data):
 				enemy_data.id_server
 			))
 		if len(users) > 0:
-			target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server)
+			target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level = 1)
 			
 	# If an enemy is a raidboss, don't let it attack until some time has passed when entering a new district.
 	if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter > raidbossaggrotimer:

@@ -67,7 +67,7 @@ async def revive(cmd):
 				player_data.trauma = ""
 				poi_death = ewcfg.id_to_poi.get(player_data.poi_death)
 				if ewmap.inaccessible(poi = poi_death, user_data = player_data):
-					player_data.poi = ewcfg.poi_id_downtown
+					player_data.poi = ewcfg.poi_id_endlesswar
 				else:
 					player_data.poi = poi_death.id_poi
 			else:
@@ -76,7 +76,7 @@ async def revive(cmd):
 				# Give player some initial slimes.
 				player_data.change_slimes(n = ewcfg.slimes_onrevive)
 				# Get the player out of the sewers.
-				player_data.poi = ewcfg.poi_id_downtown
+				player_data.poi = ewcfg.poi_id_endlesswar
 
 
 
@@ -138,79 +138,88 @@ async def haunt(cmd):
 
 	if cmd.mentions_count > 1:
 		response = "You can only spook one person at a time. Who do you think you are, the Lord of Ghosts?"
-	elif cmd.mentions_count == 1:
-		# Get the user and target data from the database.
-		user_data = EwUser(member = cmd.message.author)
+	else: 
+		haunted_data = None
+		member = None
+		if cmd.mentions_count == 0 and cmd.tokens_count > 1:
+			server = ewutils.get_client().get_server(cmd.message.server.id)
+			member = server.get_member(cmd.tokens[1])
+			haunted_data = EwUser(member = member)
+		elif cmd.mentions_count == 1:
+			member = cmd.mentions[0]
+			haunted_data = EwUser(member = member)
+		
+		if member:
+			# Get the user and target data from the database.
+			user_data = EwUser(member = cmd.message.author)
+			market_data = EwMarket(id_server = cmd.message.server.id)
+			target_is_shambler = haunted_data.life_state == ewcfg.life_state_shambler
+			target_is_inhabitted = haunted_data.id_user == user_data.get_inhabitee()
 
-		member = cmd.mentions[0]
-		haunted_data = EwUser(member = member)
-		market_data = EwMarket(id_server = cmd.message.server.id)
-		target_is_shambler = haunted_data.life_state == ewcfg.life_state_shambler
-		target_is_inhabitted = haunted_data.id_user == user_data.get_inhabitee()
+			if user_data.life_state != ewcfg.life_state_corpse:
+				# Only dead players can haunt.
+				response = "You can't haunt now. Try {}.".format(ewcfg.cmd_suicide)
+			elif haunted_data.life_state == ewcfg.life_state_kingpin:
+				# Disallow haunting of generals.
+				response = "He is too far from the sewers in his ivory tower, and thus cannot be haunted."
+			elif (time_now - user_data.time_lasthaunt) < ewcfg.cd_haunt:
+				# Disallow haunting if the user has haunted too recently.
+				response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
+			elif ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+				response = "You can't commit violence from here."
+			elif time_now > haunted_data.time_expirpvp and not (target_is_shambler or target_is_inhabitted):
+				# Require the target to be flagged for PvP
+				response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
+			elif haunted_data.life_state == ewcfg.life_state_corpse:
+				# Dead players can't be haunted.
+				response = "{} is already dead.".format(member.display_name)
+			elif haunted_data.life_state == ewcfg.life_state_grandfoe:
+				# Grand foes can't be haunted.
+				response = "{} is invulnerable to ghosts.".format(member.display_name)
+			elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile or haunted_data.life_state == ewcfg.life_state_shambler:
+				# Target can be haunted by the player.
+				haunt_power_multiplier = 1
+				if user_data.poi == haunted_data.poi:
+					if user_data.poi == ewcfg.poi_id_thevoid:
+						# haunting is empowered by the void
+						haunt_power_multiplier *= 5
+					else: 
+						# when haunting someone face to face, you get double the amount
+						haunt_power_multiplier *= 2
+				haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio) * haunt_power_multiplier
 
-		if user_data.life_state != ewcfg.life_state_corpse:
-			# Only dead players can haunt.
-			response = "You can't haunt now. Try {}.".format(ewcfg.cmd_suicide)
-		elif haunted_data.life_state == ewcfg.life_state_kingpin:
-			# Disallow haunting of generals.
-			response = "He is too far from the sewers in his ivory tower, and thus cannot be haunted."
-		elif (time_now - user_data.time_lasthaunt) < ewcfg.cd_haunt:
-			# Disallow haunting if the user has haunted too recently.
-			response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
-		elif ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
-			response = "You can't commit violence from here."
-		elif time_now > haunted_data.time_expirpvp and not (target_is_shambler or target_is_inhabitted):
-			# Require the target to be flagged for PvP
-			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
-		elif haunted_data.life_state == ewcfg.life_state_corpse:
-			# Dead players can't be haunted.
-			response = "{} is already dead.".format(member.display_name)
-		elif haunted_data.life_state == ewcfg.life_state_grandfoe:
-			# Grand foes can't be haunted.
-			response = "{} is invulnerable to ghosts.".format(member.display_name)
-		elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile or haunted_data.life_state == ewcfg.life_state_shambler:
-			# Target can be haunted by the player.
-			haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio)
-			# if user_data.poi == haunted_data.poi:  # when haunting someone face to face, there is no cap and you get double the amount
-			# 	haunted_slimes *= 2
-			if haunted_slimes > ewcfg.slimes_hauntmax:
-				haunted_slimes = ewcfg.slimes_hauntmax
+				haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
+				user_data.change_slimes(n = -max(haunted_slimes, ewcfg.slimes_hauntmax), source = ewcfg.source_haunter)
+				market_data.negaslime -= haunted_slimes
+				user_data.time_lasthaunt = time_now
+				user_data.busted = False
 
-			#if -user_data.slimes < haunted_slimes:  # cap on for how much you can haunt
-			#	haunted_slimes = -user_data.slimes
+				user_poi = ewcfg.id_to_poi.get(user_data.poi)
+				if user_poi.is_district:
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack)
+				
+				resp_cont.add_member_to_update(cmd.message.author)
+				# Persist changes to the database.
+				user_data.persist()
+				haunted_data.persist()
+				market_data.persist()
 
-			haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
-			user_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunter)
-			market_data.negaslime -= haunted_slimes
-			user_data.time_lasthaunt = time_now
-			user_data.busted = False
+				response = "{} has been haunted by the ghost of {}! Slime has been lost!".format(member.display_name, cmd.message.author.display_name)
 
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack)
-			resp_cont.add_member_to_update(cmd.message.author)
-			# Persist changes to the database.
-			user_data.persist()
-			haunted_data.persist()
-			market_data.persist()
-
-			response = "{} has been haunted by the ghost of {}! Slime has been lost!".format(member.display_name, cmd.message.author.display_name)
-
-			haunted_channel = ewcfg.id_to_poi.get(haunted_data.poi).channel
-			haunt_message = "You feel a cold shiver run down your spine"
-			if cmd.tokens_count > 2:
-				haunt_message_content = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
-				# Cut down really big messages so discord doesn't crash
-				if len(haunt_message_content) > 500:
-					haunt_message_content = haunt_message_content[:-500]
-				haunt_message += " and faintly hear the words \"{}\"".format(haunt_message_content)
-			haunt_message += "."
-			haunt_message = ewutils.formatMessage(member, haunt_message)
-			resp_cont.add_channel_response(haunted_channel, haunt_message)
+				haunted_channel = ewcfg.id_to_poi.get(haunted_data.poi).channel
+				haunt_message = "You feel a cold shiver run down your spine"
+				if cmd.tokens_count > 2:
+					haunt_message_content = re.sub("<.+>" if cmd.mentions_count == 1 else "\d{17,}", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
+					# Cut down really big messages so discord doesn't crash
+					if len(haunt_message_content) > 500:
+						haunt_message_content = haunt_message_content[:-500]
+					haunt_message += " and faintly hear the words \"{}\"".format(haunt_message_content)
+				haunt_message += "."
+				haunt_message = ewutils.formatMessage(member, haunt_message)
+				resp_cont.add_channel_response(haunted_channel, haunt_message)
 		else:
-			# Some condition we didn't think of.
-			response = "You cannot haunt {}.".format(member.display_name)
-	else:
-		# No mentions, or mentions we didn't understand.
-		response = "Your spookiness is appreciated, but ENDLESS WAR didn\'t understand that name."
+			# No mentions, or mentions we didn't understand.
+			response = "Your spookiness is appreciated, but ENDLESS WAR didn\'t understand that name."
 
 	# Send the response to the player.
 	resp_cont.add_channel_response(cmd.message.channel.name, response)
@@ -356,7 +365,7 @@ async def manifest(cmd):
 		response = "You are too weak to manifest. You need to gather more negative slime."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi_death)
+	poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid) # manifest ghosts directly into the void
 
 	response = "{}ing in {}.".format(cmd.tokens[0][1:].capitalize(), poi.str_name)
 
@@ -490,7 +499,7 @@ async def possess_weapon(cmd):
 				if msg != None:
 					if msg.content.lower() == ewcfg.cmd_accept:
 						accepted = True
-					elif message.content.lower() == ewcfg.cmd_refuse:
+					elif msg.content.lower() == ewcfg.cmd_refuse:
 						accepted = False
 			except:
 				accepted = False
@@ -515,3 +524,28 @@ async def possess_weapon(cmd):
 	
 	if response:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def crystalize_negapoudrin(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	if user_data.life_state != ewcfg.life_state_corpse:
+		response = "What the fuck do you think you're doing, you corporeal bitch?"
+	elif user_data.slimes >= (ewcfg.slimes_tomanifest + ewcfg.slimes_to_crystalize_negapoudrin):
+		# prevent ghosts from using so much antislime they can't manifest afterwards
+		response = "Crystalizing a negapoudrin requires a lot of negaslime, and you're not quite there yet."
+	else:
+		negapoudrin_data = next(i for i in ewcfg.item_list if i.id_item == ewcfg.item_id_negapoudrin)
+		ewitem.item_create(
+			item_type = ewcfg.it_item,
+			id_user = user_data.id_user,
+			id_server = cmd.message.server.id,
+			item_props={
+				'id_item': negapoudrin_data.id_item,
+				'item_name': negapoudrin_data.str_name,
+				'item_desc': negapoudrin_data.str_desc,
+			}
+		)
+		user_data.change_slimes(n = -ewcfg.slimes_to_crystalize_negapoudrin, source = ewcfg.source_spending)
+		user_data.persist()
+		response = "The cathedral's bells toll in the distance, and a rumbling {} can be heard echoing from deep within the sewers. A negapoudrin has formed.".format(ewcfg.cmd_boo)
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

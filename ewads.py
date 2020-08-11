@@ -117,12 +117,12 @@ async def advertise(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-	if cmd.message.channel.name != ewcfg.channel_slimecorphq:
+	if user_data.poi != ewcfg.poi_id_slimecorphq:
 		response = "To buy ad space, you'll need to go SlimeCorp HQ."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])

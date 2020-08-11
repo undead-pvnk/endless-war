@@ -150,8 +150,8 @@ async def reroll_last_mutation(cmd):
 		response = "You require the advanced equipment at the Slimeoid Lab to modify your mutations."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
@@ -219,8 +219,8 @@ async def clear_mutations(cmd):
 		response = "You require the advanced equipment at the Slimeoid Lab to modify your mutations."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
