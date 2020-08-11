@@ -486,19 +486,21 @@ class EwUser:
 			ewutils.logMsg("Failed to clear mutations for user {}.".format(self.id_user))
 
 	def equip(self, weapon_item = None):
+
+		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+
 		if self.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't equip weapons."
-		elif self.life_state == ewcfg.life_state_juvenile:
+		elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_farming not in weapon.classes:
 			response = "Juvies can't equip weapons."
 		elif self.life_state == ewcfg.life_state_shambler:
 			response = "Shamblers can't equip weapons."
 		elif self.weaponmarried == True:
 			current_weapon = ewitem.EwItem(id_item = self.weapon)
-			if weapon_item.item_props.get("married") == self.id_user:
+			if int(weapon_item.item_props.get("married")) == self.id_user:
 				response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
 				self.weapon = weapon_item.id_item
 
-				weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 				if ewcfg.weapon_class_captcha in weapon.classes:
 					captcha = ewutils.generate_captcha(length = weapon.captcha_length)
 					weapon_item.item_props["captcha"] = captcha
@@ -516,7 +518,6 @@ class EwUser:
 			if self.sidearm == self.weapon:
 				self.sidearm = -1
 
-			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 			if ewcfg.weapon_class_captcha in weapon.classes:
 				captcha = ewutils.generate_captcha(length = weapon.captcha_length)
 				weapon_item.item_props["captcha"] = captcha
@@ -526,9 +527,12 @@ class EwUser:
 		return response
 
 	def equip_sidearm(self, sidearm_item = None):
+		
+		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+
 		if self.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't equip weapons."
-		elif self.life_state == ewcfg.life_state_juvenile:
+		elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_farming not in sidearm.classes:
 			response = "Juvies can't equip weapons."
 		elif self.weaponmarried == True and sidearm_item.item_props.get("married") == self.id_user:
 			current_weapon = ewitem.EwItem(id_item = self.weapon)

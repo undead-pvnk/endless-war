@@ -1662,10 +1662,12 @@ crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
 reap_gain = 100000
 farm_slimes_peraction = 25000
 time_nextphase = 20 * 60 # 20 minutes
+time_lastphase_juvie = 10 * 60 # 10 minutes
 farm_tick_length = 60 # 1 minute
 
 farm_phase_sow = 0
 farm_phase_reap = 9
+farm_phase_reap_juvie = 5
 
 farm_action_none = 0
 farm_action_water = 1
@@ -2251,6 +2253,7 @@ col_time_lastphase = 'time_lastphase'
 col_slimes_onreap = 'slimes_onreap'
 col_action_required = 'action_required'
 col_crop = 'crop'
+col_sow_life_state = 'sow_life_state'
 
 # Database columns for troll romance
 col_quadrant = 'quadrant'
@@ -2465,6 +2468,10 @@ stat_paintbrush_kills = 'paintbrush_kills'
 stat_watercolor_kills = 'watercolor_kills'
 stat_thinnerbomb_kills = 'thinnerbomb_kills'
 stat_staff_kills = 'staff_kills'
+stat_hoe_kills = 'hoe_kills'
+stat_pitchfork_kills = 'pitchfork_kills'
+stat_shovel_kills = 'shovel_kills'
+stat_slimeringcan_kills = 'slimeringcan_kills'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -5332,6 +5339,8 @@ weapon_class_captcha = "captcha"
 weapon_class_defensive = "defensive"
 weapon_class_heavy = "heavy"
 weapon_class_paint = "paint"
+#juvies can equip these weapons
+weapon_class_farming = "farming"
 
 weapon_type_convert = {
 weapon_id_watercolors:wef_watercolors,
@@ -6242,7 +6251,8 @@ weapon_list = [
 			'miss_spray' : "**Miss!** Your painting sucks. God, you're stupid. ",
 			'crit_spray' : "After the thousandth failed watercolor gesamtkunstwerk you decide enough is enough. Fuck this. Fuck the gangs, fuck the violence, fuck the perpetually rotting lets player that compels you to rigor mortis yourself more frequently than you eat breakfast. The spite is so concentrated that it compels you to turn your life around. You get a fake ID, join the PTA, and rope them into cleaning every last inch of this district until the homeless population smell like citrus and give out free, non-tainted lollipops. However, your newfound peaceful life is interrupted by the night terrors ENDLESS WAR now gives you on a daily basis, and you decide to go back to being a gangster. You suppose some things never change.",
 			'equip_spray' : "You get out your 12 pack of watercolors. Can't believe you have to use one of these."
-			}),
+		}
+	),
 	EwWeapon(  # 29
 		id_weapon=weapon_id_thinnerbomb,
 		alias=[
@@ -6280,7 +6290,6 @@ weapon_list = [
 		'crit_spray' : "**Critical hit!** You take out a paint bomb and throw it at a particularly fragile looking building. The chemicals you used were so caustic that they burned a hole through the whole wall, preventing anyone from painting it for all of time!",
 		'equip_spray' : "You get your glass thinner bombs out you you can throw them in a moment's notice."
 	}),
-	
 	EwWeapon( # 30
 		id_weapon = weapon_id_staff,
 		alias = [
@@ -6315,11 +6324,52 @@ weapon_list = [
 		sap_cost = 2,
 		captcha_length = 10,
 	),
-]
-
-
-weapon_vendors = [
-	vendor_dojo
+	EwWeapon( # 31 TODO flavor
+		id_weapon = weapon_id_hoe,
+		str_miss = "**MISS!!** hoe ",
+		str_damage = "hoe dmg",
+		str_crit = "hoe crit",
+		str_kill = "hoe kill",
+		str_equip = "hoe equip",
+		str_name = "hoe",
+		str_weapon = "a hoe",
+		str_weaponmaster_self = "You are a rank {rank} farmer.",
+		str_weaponmaster = "They are a rank {rank} farmer.",
+		str_killdescriptor = "!reaped",
+		str_duel = "{name_player} and {name_target} discuss their latest harvest and exchange farming tips.",
+		str_description = "It's a farming hoe.",
+		str_scalp = "It's covered in dirt.",
+		fn_effect = wef_tool,
+		vendors = [vendor_atomicforest],
+		classes = [weapon_class_farming],
+		stat = stat_hoe_kills,
+		sap_cost = 2,
+		captcha_length = 2,
+		is_tool = True,
+	),
+	EwWeapon( # 32 TODO flavor
+		id_weapon = weapon_id_pitchfork,
+		str_miss = "**MISS!!** ",
+		str_damage = "pitchfork dmg",
+		str_crit = "pitchfork crit",
+		str_kill = "pitchfork kill",
+		str_equip = "pitchfork equip",
+		str_name = "pitchfork",
+		str_weapon = "a pitchfork",
+		str_weaponmaster_self = "You are a rank {rank} farmer.",
+		str_weaponmaster = "They are a rank {rank} farmer.",
+		str_killdescriptor = "!reaped",
+		str_duel = "{name_player} and {name_target} pitchfork spar.",
+		str_description = "It's a farming pitchfork.",
+		str_scalp = "pitchfork scalp.",
+		fn_effect = wef_tool,
+		vendors = [vendor_atomicforest],
+		classes = [weapon_class_farming],
+		stat = stat_pitchfork_kills,
+		sap_cost = 2,
+		captcha_length = 2,
+		is_tool = True,
+	),
 ]
 
 # A map of id_weapon to EwWeapon objects.
@@ -24931,7 +24981,7 @@ trauma_list = [
 		trauma_class = trauma_class_accuracy,
 	),
 	EwTrauma(  # 19
-		id_trauma = "fishingrod",
+		id_trauma = weapon_id_fishingrod,
 		str_trauma_self = "There is a piercing on the side of your mouth. How embarrassing!",
 		str_trauma = "There is a piercing on the side of their mouth. How embarrassing!",
 		trauma_class = trauma_class_hunger,
@@ -24965,6 +25015,18 @@ trauma_list = [
 		str_trauma_self = "Parts of your skin look necrotic, and you look like you haven't slept in days.",
 		str_trauma = "Parts of their skin look necrotic, and they look like they haven't slept in days.",
 		trauma_class = trauma_class_hunger,
+	),
+	EwTrauma(  # 25 TODO flavor
+		id_trauma = weapon_id_hoe,
+		str_trauma_self = "hoe trauma self.",
+		str_trauma = "hoe trauma",
+		trauma_class = trauma_class_hunger,
+	),
+	EwTrauma(  # 26 TODO flavor
+		id_trauma = weapon_id_pitchfork,
+		str_trauma_self = "pitchfork trauma self",
+		str_trauma = "pitchfork trauma",
+		trauma_class = trauma_class_bleeding,
 	),
 	EwTrauma( # 1
 		id_trauma = "fangs",
@@ -26323,7 +26385,7 @@ world_events = [
 		str_event_start = "You hit a sudden gap in the stone, with a scary looking drop. You see what looks like a trampoline on a building's roof at the bottom. Do you **{}** in?".format(cmd_jump),
 		str_event_end = "The wall collapses.",
 	),
-	EwEventDef(
+	EwEventDef( #TODO flavor
 		event_type = event_type_shambaquarium,
 		str_event_start = "brainz lol! placeholder. Do {}!",
 		str_event_end = "The cringe based brain wall collapses.",

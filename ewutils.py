@@ -144,7 +144,7 @@ class EwResponseContainer:
 		for ch in self.channel_responses:
 			if channel == None:
 				current_channel = get_channel(server = server, channel_name = ch)
-				if channel == None:
+				if current_channel == None:
 					current_channel = ch
 			else:
 				current_channel = channel
