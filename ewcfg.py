@@ -1034,6 +1034,8 @@ cmd_move = cmd_prefix + 'move'
 cmd_move_alt1 = cmd_prefix + 'goto'
 cmd_move_alt2 = cmd_prefix + 'walk'
 cmd_move_alt3 = cmd_prefix + 'sny'
+cmd_move_alt4 = cmd_prefix + 'tiptoe'
+cmd_move_alt5 = cmd_prefix + 'step'
 cmd_descend = cmd_prefix + 'descend'
 cmd_halt = cmd_prefix + 'halt'
 cmd_halt_alt1 = cmd_prefix + 'stop'
@@ -1427,7 +1429,7 @@ hunger_pertrickortreat = 6
 # Time it takes to move between various parts of the map
 travel_time_subzone = 20
 travel_time_district = 60
-travel_time_street = 30
+travel_time_street = 20
 travel_time_outskirt = 60
 travel_time_infinite = 900
 

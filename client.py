@@ -402,6 +402,8 @@ cmd_map = {
 	ewcfg.cmd_move_alt1: ewmap.move,
 	ewcfg.cmd_move_alt2: ewmap.move,
 	ewcfg.cmd_move_alt3: ewmap.move,
+	ewcfg.cmd_move_alt4: ewmap.move,
+	ewcfg.cmd_move_alt5: ewmap.move,
 
 	# go down
 	ewcfg.cmd_descend: ewmap.descend,
@@ -1388,7 +1390,7 @@ async def on_message(message):
 			Punish the user for swearing.
 		"""
 		if (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
-			print(content_tolower_list)
+			# print(content_tolower_list)
 			swear_multiplier = 0
 	
 			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
