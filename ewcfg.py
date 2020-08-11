@@ -450,65 +450,12 @@ location_id_empty = "empty"
 
 # Outskirts
 # Layer 1
-poi_id_wreckington_outskirts_edge = "wreckingtonoutskirtsedge"
-poi_id_cratersville_outskirts_edge = "cratersvilleoutskirtsedge"
-poi_id_oozegardens_outskirts_edge = "oozegardensoutskirtsedge"
-poi_id_southsleezeborough_outskirts_edge = "southsleezeboroughoutskirtsedge"
-poi_id_crookline_outskirts_edge = "crooklineoutskirtsedge"
-poi_id_dreadford_outskirts_edge = "dreadfordoutskirtsedge"
-poi_id_jaywalkerplain_outskirts_edge = "jaywalkerplainoutskirtsedge"
-poi_id_westglocksbury_outskirts_edge = "westglocksburyoutskirtsedge"
-poi_id_poloniumhill_outskirts_edge = "poloniumhilloutskirtsedge"
-poi_id_charcoalpark_outskirts_edge = "charcoalparkoutskirtsedge"
-poi_id_toxington_outskirts_edge = "toxingtonoutskirtsedge"
-poi_id_maimridge_outskirts_edge = "maimridgeoutskirtsedge"
-poi_id_arsonbrook_outskirts_edge = "arsonbrookoutskirtsedge"
-poi_id_brawlden_outskirts_edge = "brawldenoutskirtsedge"
-poi_id_newnewyonkers_outskirts_edge = "newnewyonkersoutskirtsedge"
-poi_id_assaultflatsbeach_outskirts_edge = "assaultflatsbeachoutskirtsedge"
-# Layer 2
-poi_id_wreckington_outskirts = "wreckingtonoutskirts"
-poi_id_cratersville_outskirts = "cratersvilleoutskirts"
-poi_id_oozegardens_outskirts = "oozegardensoutskirts"
-poi_id_southsleezeborough_outskirts = "southsleezeboroughoutskirts"
-poi_id_crookline_outskirts = "crooklineoutskirts"
-poi_id_dreadford_outskirts = "dreadfordoutskirts"
-poi_id_jaywalkerplain_outskirts = "jaywalkerplainoutskirts"
-poi_id_westglocksbury_outskirts = "westglocksburyoutskirts"
-poi_id_poloniumhill_outskirts = "poloniumhilloutskirts"
-poi_id_charcoalpark_outskirts = "charcoalparkoutskirts"
-poi_id_toxington_outskirts = "toxingtonoutskirts"
-poi_id_maimridge_outskirts = "maimridgeoutskirts"
-poi_id_arsonbrook_outskirts = "arsonbrookoutskirts"
-poi_id_brawlden_outskirts = "brawldenoutskirts"
-poi_id_newnewyonkers_outskirts = "newnewyonkersoutskirts"
-poi_id_assaultflatsbeach_outskirts = "assaultflatsbeachoutskirts"
-
-# Layer 3
-poi_id_wreckington_outskirts_depths = "wreckingtonoutskirtsdepths"
-poi_id_cratersville_outskirts_depths = "cratersvilleoutskirtsdepths"
-poi_id_oozegardens_outskirts_depths = "oozegardensoutskirtsdepths"
-poi_id_southsleezeborough_outskirts_depths = "southsleezeboroughoutskirtsdepths"
-poi_id_crookline_outskirts_depths = "crooklineoutskirtsdepths"
-poi_id_dreadford_outskirts_depths = "dreadfordoutskirtsdepths"
-poi_id_jaywalkerplain_outskirts_depths = "jaywalkerplainoutskirtsdepths"
-poi_id_westglocksbury_outskirts_depths = "westglocksburyoutskirtsdepths"
-poi_id_poloniumhill_outskirts_depths = "poloniumhilloutskirtsdepths"
-poi_id_charcoalpark_outskirts_depths = "charcoalparkoutskirtsdepths"
-poi_id_toxington_outskirts_depths = "toxingtonoutskirtsdepths"
-poi_id_maimridge_outskirts_depths = "maimridgeoutskirtsdepths"
-poi_id_arsonbrook_outskirts_depths = "arsonbrookoutskirtsdepths"
-poi_id_brawlden_outskirts_depths = "brawldenoutskirtsdepths"
-poi_id_newnewyonkers_outskirts_depths = "newnewyonkersoutskirtsdepths"
-poi_id_assaultflatsbeach_outskirts_depths = "assaultflatsbeachoutskirtsdepths"
-
-# Layer 1
-poi_id_south_outskirts = "southoutskirtsedge"
-poi_id_southwest_outskirts = "southwestoutskirtsedge"
-poi_id_west_outskirts = "westoutskirtsedge"
-poi_id_northwest_outskirts = "northwestoutskirtsedge"
-poi_id_north_outskirts = "northoutskirtsedge"
-poi_id_nuclear_beach = "nuclearbeachedge" # aka Assault Flats Beach Outskirts Edge
+poi_id_south_outskirts_edge = "southoutskirtsedge"
+poi_id_southwest_outskirts_edge = "southwestoutskirtsedge"
+poi_id_west_outskirts_edge = "westoutskirtsedge"
+poi_id_northwest_outskirts_edge = "northwestoutskirtsedge"
+poi_id_north_outskirts_edge = "northoutskirtsedge"
+poi_id_nuclear_beach_edge = "nuclearbeachedge" # aka Assault Flats Beach Outskirts Edge
 # Layer 2
 poi_id_south_outskirts = "southoutskirts"
 poi_id_southwest_outskirts = "southwestoutskirts"
@@ -517,12 +464,12 @@ poi_id_northwest_outskirts = "northwestoutskirts"
 poi_id_north_outskirts = "northoutskirts"
 poi_id_nuclear_beach = "nuclearbeach"
 # Layer 3
-poi_id_south_outskirts = "southoutskirtsdepths"
-poi_id_southwest_outskirts = "southwestoutskirtsdepths"
-poi_id_west_outskirts = "westoutskirtsdepths"
-poi_id_northwest_outskirts = "northwestoutskirtsdepths"
-poi_id_north_outskirts = "northoutskirtsdepths"
-poi_id_nuclear_beach = "nuclearbeachdepths" 
+poi_id_south_outskirts_depths = "southoutskirtsdepths"
+poi_id_southwest_outskirts_depths = "southwestoutskirtsdepths"
+poi_id_west_outskirts_depths = "westoutskirtsdepths"
+poi_id_northwest_outskirts_depths = "northwestoutskirtsdepths"
+poi_id_north_outskirts_depths = "northoutskirtsdepths"
+poi_id_nuclear_beach_depths = "nuclearbeachdepths" 
 
 # The Sphere
 poi_id_thesphere = "thesphere"
@@ -17702,15 +17649,14 @@ poi_list = [
 		pvp = False,
 	),
     EwPoi(  # Outskirts - 1
-		id_poi=poi_id_,
+		id_poi=poi_id_south_outskirts_edge,
 		alias=[
-			"",
-			"",
-			"",
+			"soedge",
+			"soe",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="South Outskirts Edge",
+		str_desc=str_generic_outskirts_description_edge,
+		channel="south-outskirts-edge",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17719,15 +17665,14 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 2
-		id_poi=poi_id_,
+		id_poi=poi_id_southwest_outskirts_edge,
 		alias=[
-			"",
-			"",
-			"",
+			"swoedge",
+			"swoe",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="Southwest Outskirts Edge",
+		str_desc=str_generic_outskirts_description_edge,
+		channel="southwest-outskirts-edge",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17736,15 +17681,14 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 3
-		id_poi=poi_id_,
+		id_poi=poi_id_west_outskirts_edge,
 		alias=[
-			"",
-			"",
-			"",
+			"woedge",
+			"woe",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="West Outskirts Edge",
+		str_desc=str_generic_outskirts_description_edge,
+		channel="west-outskirts-edge",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17753,15 +17697,14 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 4
-		id_poi=poi_id_,
+		id_poi=poi_id_northwest_outskirts_edge,
 		alias=[
-			"",
-			"",
-			"",
+			"nwoedge",
+			"nwo",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="Northwest Outskirts Edge",
+		str_desc="You’ve never seen ruins this... recent. This area used to be a part of Charcoal Park, but now it’s a complete ghost town. You might even mistake it for a bonafide part of the city were it not for all the desert raiders and bubbling acid pools everywhere. It really makes you think about what could’ve been, you know? Maybe if the Veteran center wasn’t shielding Charcoal Park from this mess, we could’ve gotten rid of that stupid-ass district ages ago.",
+		channel="northwest-outskirts-edge",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17770,15 +17713,14 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 5
-		id_poi=poi_id_,
+		id_poi=poi_id_north_outskirts_edge,
 		alias=[
-			"",
-			"",
-			"",
+			"noedge",
+			"noe",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="North Outskirts Edge",
+		str_desc=str_generic_outskirts_description_edge,
+		channel="north-outskirts-edge",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17787,15 +17729,14 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 6
-		id_poi=poi_id_,
+		id_poi=poi_id_nuclear_beach_edge,
 		alias=[
-			"",
-			"",
-			"",
+			"nbedge",
+			"nbe",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="Nuclear Beach Edge",
+		str_desc=str_generic_outskirts_description_edge,
+		channel="nuclear-outskirts-edge",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17804,15 +17745,13 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 7
-		id_poi=poi_id_,
+		id_poi=poi_id_south_outskirts,
 		alias=[
-			"",
-			"",
-			"",
+			"so",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="South Outskirts",
+		str_desc=str_generic_outskirts_description,
+		channel="south-outskirts",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17821,15 +17760,13 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 8
-		id_poi=poi_id_,
+		id_poi=poi_id_southwest_outskirts,
 		alias=[
-			"",
-			"",
-			"",
+			"swo",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="Southwest Outskirts",
+		str_desc=str_generic_outskirts_description,
+		channel="southwest-outskirts",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17838,15 +17775,13 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 9
-		id_poi=poi_id_,
+		id_poi=poi_id_west_outskirts,
 		alias=[
-			"",
-			"",
-			"",
+			"wo",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="West Outskirts",
+		str_desc=str_generic_outskirts_description,
+		channel="west-outskirts",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17855,15 +17790,13 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 10
-		id_poi=poi_id_,
+		id_poi=poi_id_northwest_outskirts,
 		alias=[
-			"",
-			"",
-			"",
+			"nwo",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="Northwest Outskirts",
+		str_desc=str_generic_outskirts_description,
+		channel="northwest-outskirts",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17872,15 +17805,13 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 11
-		id_poi=poi_id_,
+		id_poi=poi_id_north_outskirts,
 		alias=[
-			"",
-			"",
-			"",
+			"no",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="North Outskirts",
+		str_desc=str_generic_outskirts_description,
+		channel="north-outskirts",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17889,15 +17820,14 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 12
-		id_poi=poi_id_,
+		id_poi=poi_id_nuclearbeach,
 		alias=[
-			"",
-			"",
-			"",
+			"nb",
+			"nbeach",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="Nuclear Beach",
+		str_desc=str_generic_outskirts_description,
+		channel="nuclear-beach",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17906,15 +17836,14 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 13
-		id_poi=poi_id_,
+		id_poi=poi_id_south_outskirts_depths,
 		alias=[
-			"",
-			"",
-			"",
+			"sodepths",
+			"sod",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="South Outskirts Depths",
+		str_desc=str_generic_outskirts_description_depths,
+		channel="south-outskirts-depths",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17923,15 +17852,14 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 14
-		id_poi=poi_id_,
+		id_poi=poi_id_southwest_outskirts_depths,
 		alias=[
-			"",
-			"",
-			"",
+			"swodepths",
+			"swo",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="Southwest Outskirts Depths",
+		str_desc=str_generic_outskirts_description_depths,
+		channel="southwest-outskirts-depths",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17940,15 +17868,14 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 15
-		id_poi=poi_id_,
+		id_poi=poi_id_west_outskirts_depths,
 		alias=[
-			"",
-			"",
-			"",
+			"wodepths",
+			"wod",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="West Outskirts Depths",
+		str_desc=str_generic_outskirts_description_depths,
+		channel="west-outskirts-depths",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17957,15 +17884,14 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 16
-		id_poi=poi_id_,
+		id_poi=poi_id_northwest_outskirts_depths,
 		alias=[
-			"",
-			"",
-			"",
+			"nwodepths",
+			"nwod",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="Northwest Outskirts Depths",
+		str_desc=str_generic_outskirts_description_depths,
+		channel="northwest-outskirts-depths",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17974,15 +17900,14 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 17
-		id_poi=poi_id_,
+		id_poi=poi_id_north_outskirts_depths,
 		alias=[
-			"",
-			"",
-			"",
+			"nodepths",
+			"nod",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="North Outskirts Depths",
+		str_desc=str_generic_outskirts_description_depths,
+		channel="north-outskirts-depths",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -17991,15 +17916,14 @@ poi_list = [
 		},
 	),
     EwPoi(  # Outskirts - 18
-		id_poi=poi_id_,
+		id_poi=poi_id_nuclear_beach_depths,
 		alias=[
-			"",
-			"",
-			"",
+			"nbdepths",
+			"nbd",
 		],
-		str_name=" Outskirts ",
-		str_desc="{} To the _ is _. To the _ is _ Outskirts.".format(str_generic_outskirts_description_),
-		channel="-outskirts-",
+		str_name="Nuclear Beach Depths",
+		str_desc=str_generic_outskirts_description_depths,
+		channel="nuclear-beach-depths",
         wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
@@ -18201,6 +18125,26 @@ for poi in poi_list:
 			#print(poi.channel)
 		else:
 			outskirts_middle.append(poi.id_poi)
+        
+        if len(poi.neighbours) > 0:
+            poi.str_desc += " This outskirt is connected to "
+            
+            neighbor_index = 0
+            for neighbor_id in poi.neighbours.keys():
+                
+                current_neighbor = None
+                
+                for outskirt_neighbor in poi_list:
+                    if neighbor_id == outskirt_neighbor.id_poi:
+                        current_neighbor = outskirt_neighbor
+                        
+                if current_neighbor != None:
+                    if neighbor_index == (len(poi.neighbours.keys()) - 1):
+                        poi.str_desc += 'and {}.'.format(current_neighbor.str_name)
+                    else:
+                        poi.str_desc += '{}, '.format(current_neighbor.str_name)
+                
+                neighbor_index += 1
 		
 	if poi.is_street:
 		streets.append(poi.id_poi)

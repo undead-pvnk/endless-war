@@ -1187,8 +1187,7 @@ async def attack(cmd):
 				# Flag the user for PvP
 
 				user_poi = ewcfg.id_to_poi.get(user_data.poi)
-				if user_poi.is_district:
-					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, True)
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, True)
 
 				user_data.persist()
 				resp_cont.add_member_to_update(cmd.message.author)
