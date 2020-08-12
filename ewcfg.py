@@ -4286,8 +4286,8 @@ item_list = [
 	),
 	EwSeedPacket(
 		id_item=item_id_gaiaseedpack_brightshade,
-		cooldown=0,
-		cost=0,
+		cooldown=10,
+		cost=50,
 		str_name="Brightshade Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Brightshade Gaiaslimeoid. It costs 50 gaiaslime to !plant one, and has a 10 second cooldown.",
 		ingredients=[item_id_brightshadeberries],
@@ -4295,8 +4295,8 @@ item_list = [
 	),
 	EwSeedPacket(
 		id_item=item_id_gaiaseedpack_blacklimes,
-		cooldown=0,
-		cost=0,
+		cooldown=10,
+		cost=75,
 		str_name="Black Limes Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Black Limes Gaiaslimeoid. It costs 75 gaiaslime to !plant one, and has a 10 second cooldown.",
 		ingredients=[item_id_blacklimeade],
@@ -4439,7 +4439,7 @@ item_list = [
 	),
 	EwTombstone(
 		id_item=item_id_tombstone_shamblerdactyl,
-		cost=100,
+		cost=200,
 		brainpower=90,
 		stock=5,
 		str_name="Shamblerdactyl Tombstone",
