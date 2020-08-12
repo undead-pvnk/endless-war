@@ -671,6 +671,9 @@ cmd_map = {
 	
 	# Shuts down the bot with sys.exit()
 	ewcfg.cmd_shutdownbot: ewutils.shut_down_bot,
+	
+	# Checks the status of ewutils.TERMINATE
+	ewcfg.cmd_checkbot: ewutils.check_bot,
 
 	# debug commands
 	# ewcfg.cmd_debug1: ewdebug.debug1,

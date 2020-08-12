@@ -40,7 +40,7 @@ database = "rfck"
 discord_message_length_limit = 2000
 
 # Update intervals
-update_hookstillactive = 60 * 60 * 3
+update_hookstillactive = 60 * 60 * 1
 update_twitch = 60
 update_pvp = 60
 update_market = 900 #15 min
@@ -1287,6 +1287,7 @@ cmd_removeuseroverwrites = cmd_prefix + 'removeuseroverwrites'
 cmd_collectopics = cmd_prefix + 'collecttopics'
 cmd_synctopics = cmd_prefix + 'synctopics'
 cmd_shutdownbot = cmd_prefix + 'shutdownbot'
+cmd_checkbot = cmd_prefix + 'checkbot'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3

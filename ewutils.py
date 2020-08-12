@@ -2471,4 +2471,14 @@ async def shut_down_bot(cmd):
 	
 	logMsg('Goodbye!')
 	await asyncio.sleep(2)
-	sys.exit()
+	
+	while True:
+		sys.exit()
+		
+async def check_bot(cmd):
+	if not cmd.message.author.guild_permissions.administrator:
+		return
+	
+	logMsg('TERMINATE is currently: {}'.format(TERMINATE))
+	
+	return
