@@ -2533,6 +2533,17 @@ async def shut_down_bot(cmd):
 	
 	logMsg('Goodbye!')
 	await asyncio.sleep(2)
+	
+	while True:
+		sys.exit()
+		
+async def check_bot(cmd):
+	if not cmd.message.author.guild_permissions.administrator:
+		return
+	
+	logMsg('TERMINATE is currently: {}'.format(TERMINATE))
+	
+	return
 	sys.exit()
 
 def gvs_create_gaia_grid_mapping(user_data):

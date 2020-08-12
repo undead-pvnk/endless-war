@@ -2391,7 +2391,7 @@ async def aptCommands(cmd):
 		return await customize(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_aptdesc:
 		return await customize(cmd=cmd, isDesc=True)
-	elif cmd_text == ewcfg.cmd_move or cmd_text == ewcfg.cmd_move_alt1 or cmd_text == ewcfg.cmd_move_alt2 or cmd_text == ewcfg.cmd_move_alt3:
+	elif cmd_text == ewcfg.cmd_move or cmd_text == ewcfg.cmd_move_alt1 or cmd_text == ewcfg.cmd_move_alt2 or cmd_text == ewcfg.cmd_move_alt3 or cmd_text == ewcfg.cmd_move_alt4 or cmd_text == ewcfg.cmd_move_alt5:
 		return await ewmap.move(cmd=cmd, isApt = True)
 	elif cmd_text == ewcfg.cmd_knock:
 		return await knock(cmd=cmd)

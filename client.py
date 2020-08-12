@@ -402,6 +402,8 @@ cmd_map = {
 	ewcfg.cmd_move_alt1: ewmap.move,
 	ewcfg.cmd_move_alt2: ewmap.move,
 	ewcfg.cmd_move_alt3: ewmap.move,
+	ewcfg.cmd_move_alt4: ewmap.move,
+	ewcfg.cmd_move_alt5: ewmap.move,
 
 	# go down
 	ewcfg.cmd_descend: ewmap.descend,
@@ -671,6 +673,9 @@ cmd_map = {
 	
 	# Shuts down the bot with sys.exit()
 	ewcfg.cmd_shutdownbot: ewutils.shut_down_bot,
+	
+	# Checks the status of ewutils.TERMINATE
+	ewcfg.cmd_checkbot: ewutils.check_bot,
 
 	# debug commands
 	# ewcfg.cmd_debug1: ewdebug.debug1,
@@ -883,9 +888,6 @@ async def on_ready():
 	# Channels in the connected discord servers to send stock market updates to. Map of server ID to channel.
 	channels_stockmarket = {}
 
-	# PVP roles in the servers, used to update flags in the main loop
-	pvp_roles = {}
-
 	for server in client.guilds:
 		# Update server data in the database
 		ewserver.server_update(server = server)
@@ -930,12 +932,6 @@ async def on_ready():
 
 			except:
 				ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
-
-		# fetch all pvp roles to use in flag clearing later
-		pvp_roles[server.id] = []
-		for pvp_role in ewcfg.role_to_pvp_role.values():
-			role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
-			pvp_roles[server.id].append(server.get_role(role.id_role))
 
 		# kill people who left the server while the bot was offline
 		#ewutils.kill_quitters(server.id) #FIXME function get_member doesn't find users reliably
@@ -1051,9 +1047,14 @@ async def on_ready():
 
 			try:
 				for server in client.guilds:
+					# fetch all pvp roles
+					pvp_roles = []
+					for pvp_role in ewcfg.role_to_pvp_role.values():
+						role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
+						pvp_roles.append(server.get_role(role.id_role))
 
 					members = []
-					for role in pvp_roles[server.id]:
+					for role in pvp_roles:
 						if role is not None:
 							members.extend(role.members)
 
@@ -1322,7 +1323,8 @@ async def on_message(message):
 		)
 
 	content_tolower = message.content.lower()
-	# content_tolower_string = ewutils.flattenTokenListToString(content_tolower.split(" "))
+	content_tolower_list = content_tolower.split(" ")
+	
 	re_awoo = re.compile('.*![a]+[w]+o[o]+.*')
 	re_moan = re.compile('.*![b]+[r]+[a]+[i]+[n]+[z]+.*')
 
@@ -1360,7 +1362,7 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or len(message.author.roles) < 4 or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or len(message.author.roles) < 4 or (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
@@ -1399,10 +1401,9 @@ async def on_message(message):
 		"""
 			Punish the user for swearing.
 		"""
-		if (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
+		if (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
+			# print(content_tolower_list)
 			swear_multiplier = 0
-			
-			#print(content_tolower_string)
 	
 			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
 			usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
@@ -1421,18 +1422,18 @@ async def on_message(message):
 					swear_count = content_tolower.count(swear)
 
 					# Niche scenarios. If certain words are used, don't count their components as swears.
-					if swear == "fuck" and (content_tolower.count('<rowdyfucker431275088076079105>') > 0 or content_tolower.count('<fucker431424220837183489>') > 0):
-						#print('swear detection turned off for {}.'.format(swear))
-						continue
-					elif swear == "mick" and (content_tolower.count('gimmick') > 0):
-						#print('swear detection turned off for {}.'.format(swear))
-						continue
-					elif swear == "shit" and "shit" not in content_tolower:
+					if swear == "shit" and "shit" not in content_tolower:
 						#print('swear detection turned off for {}.'.format(swear))
 						continue
 					elif swear == "fag" and "fag" not in content_tolower:
 						#print('swear detection turned off for {}.'.format(swear))
 						continue
+					# elif swear == "fuck" and (content_tolower.count('<rowdyfucker431275088076079105>') > 0 or content_tolower.count('<fucker431424220837183489>') > 0):
+					# 	#print('swear detection turned off for {}.'.format(swear))
+					# 	continue
+					# elif swear == "mick" and (content_tolower.count('gimmick') > 0):
+					# 	#print('swear detection turned off for {}.'.format(swear))
+					# 	continue
 
 					for i in range(swear_count):
 						swear_multiplier += ewcfg.curse_words[swear]
@@ -1445,7 +1446,7 @@ async def on_message(message):
 				if swear_multiplier > 50:
 
 					# fine the user for swearing, based on how much they've sworn right now, as well as in the past
-					swear_jar_fee = usermodel.swear_jar * swear_multiplier * 10000
+					swear_jar_fee = usermodel.swear_jar * swear_multiplier * 100
 
 					# prevent user from reaching negative slimecoin
 					if swear_jar_fee > usermodel.slimecoin:

@@ -41,7 +41,7 @@ database = "rfck"
 discord_message_length_limit = 2000
 
 # Update intervals
-update_hookstillactive = 60 * 60 * 3
+update_hookstillactive = 60 * 60 * 1
 update_twitch = 60
 update_pvp = 60
 update_market = 900 #15 min
@@ -1005,6 +1005,8 @@ cmd_move = cmd_prefix + 'move'
 cmd_move_alt1 = cmd_prefix + 'goto'
 cmd_move_alt2 = cmd_prefix + 'walk'
 cmd_move_alt3 = cmd_prefix + 'sny'
+cmd_move_alt4 = cmd_prefix + 'tiptoe'
+cmd_move_alt5 = cmd_prefix + 'step'
 cmd_descend = cmd_prefix + 'descend'
 cmd_halt = cmd_prefix + 'halt'
 cmd_halt_alt1 = cmd_prefix + 'stop'
@@ -1259,6 +1261,7 @@ cmd_removeuseroverwrites = cmd_prefix + 'removeuseroverwrites'
 cmd_collectopics = cmd_prefix + 'collecttopics'
 cmd_synctopics = cmd_prefix + 'synctopics'
 cmd_shutdownbot = cmd_prefix + 'shutdownbot'
+cmd_checkbot = cmd_prefix + 'checkbot'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
@@ -1352,6 +1355,8 @@ offline_cmds = [
 	cmd_move_alt1,
 	cmd_move_alt2,
 	cmd_move_alt3,
+	cmd_move_alt4,
+	cmd_move_alt5,
 	cmd_descend,
 	cmd_halt,
 	cmd_halt_alt1,
@@ -1401,7 +1406,7 @@ hunger_pertrickortreat = 6
 # Time it takes to move between various parts of the map
 travel_time_subzone = 20
 travel_time_district = 60
-travel_time_street = 30
+travel_time_street = 20
 travel_time_outskirt = 60
 travel_time_infinite = 900
 
