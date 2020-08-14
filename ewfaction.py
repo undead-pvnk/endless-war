@@ -52,11 +52,14 @@ async def store(cmd):
 	if poi.community_chest == None:
 		response = "There is no community chest here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
+	else:
+		if len(poi.factions) > 0 and user_data.faction not in poi.factions:
+			response = "Get real, asshole. You haven't even enlisted into this gang yet, so it's not like they'd trust you with a key to their valubles."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 	
 	if item_sought:
 		item = EwItem(id_item = item_sought.get("id_item"))
@@ -106,17 +109,21 @@ async def take(cmd):
 	if poi.community_chest == None:
 		response = "There is no community chest here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
+	else:
+		if len(poi.factions) > 0 and user_data.faction not in poi.factions:
+			response = "Get real, asshole. You haven't even enlisted into this gang yet, so it's not like they'd trust you with a key to their valubles."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search = item_search, id_user = poi.community_chest, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = poi.community_chest, id_server = cmd.guild.id if cmd.guild is not None else None)
 	
 	if item_sought:
 		if item_sought.get('item_type') == ewcfg.it_food:
 			food_items = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
+				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_food
 			)
 
@@ -127,7 +134,7 @@ async def take(cmd):
 		if item_sought.get('item_type') == ewcfg.it_weapon:
 			weapons_held = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
+				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_weapon
 			)
 

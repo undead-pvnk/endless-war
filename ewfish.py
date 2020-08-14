@@ -35,8 +35,8 @@ fishers = {}
 fishing_counter = 0
 
 class EwOffer:
-	id_server = ""
-	id_user = ""
+	id_server = -1
+	id_user = -1
 	offer_give = 0
 	offer_receive = ""
 	time_sinceoffer = 0
@@ -336,7 +336,7 @@ async def cast(cmd):
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	
-	market_data = EwMarket(id_server = cmd.message.author.server.id)
+	market_data = EwMarket(id_server = cmd.message.author.guild.id)
 	statuses = user_data.getStatusEffects()
 
 	if cmd.message.author.id not in fishers.keys():
@@ -384,6 +384,8 @@ async def cast(cmd):
 			fisher.bait = False
 			fisher.pier = ewcfg.id_to_poi.get(user_data.poi)
 			fisher.current_fish = gen_fish(market_data, fisher, has_fishingrod)
+			
+			high_value_bait_used = False
 
 			global fishing_counter
 			fishing_counter += 1
@@ -391,7 +393,7 @@ async def cast(cmd):
 
 			item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			author = cmd.message.author
-			server = cmd.message.server
+			server = cmd.guild
 
 			item_sought = ewitem.find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
@@ -434,6 +436,9 @@ async def cast(cmd):
 					elif id_food == "kingpincrab":
 						if random.randrange(5) == 1:
 							fisher.current_fish = "uncookedkingpincrab"
+							
+					elif id_food == "masterbait":
+						high_value_bait_used = True
 
 					elif float(item.time_expir if item.time_expir is not None else 0) < time.time():
 						if random.randrange(2) == 1:
@@ -468,8 +473,14 @@ async def cast(cmd):
 			fun = 100
 
 			if fisher.bait == True:
-				# Bait attatched, user has a 1/7 chance to get a bite
-				fun = 70
+				# Bait attatched, chance to get a bite increases from 1/10 to 1/7
+				fun -= 30
+			if fisher.pier == ewcfg.poi_id_ferry:
+				# Fisher is on the ferry, chance to get a bite increases from 1/10 to 1/8
+				fun -= 20
+			if high_value_bait_used:
+				fun = 5
+				
 			bun = 0
 
 			while not ewutils.TERMINATE:
@@ -479,10 +490,12 @@ async def cast(cmd):
 				else:
 					damp = random.randrange(fun)
 				
-				if not fisher.high:
-					await asyncio.sleep(60)
-				else:
+				if fisher.high:
 					await asyncio.sleep(30)
+				elif high_value_bait_used:
+					await asyncio.sleep(5)
+				else:
+					await asyncio.sleep(60)
 
 				# Cancel if fishing was interrupted
 				if current_fishing_id != fisher.fishing_id:
@@ -570,7 +583,7 @@ async def reel(cmd):
 		else:
 			if fisher.current_fish == "item":
 				
-				slimesea_inventory = ewitem.inventory(id_server = cmd.message.server.id, id_user = ewcfg.poi_id_slimesea)			
+				slimesea_inventory = ewitem.inventory(id_server = cmd.guild.id, id_user = ewcfg.poi_id_slimesea)			
 
 				if fisher.pier.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.5:
 
@@ -584,7 +597,7 @@ async def reel(cmd):
 						ewitem.item_create(
 							item_type = item.item_type,
 							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
+							id_server = cmd.guild.id,
 							item_props = item_props
 						)
 
@@ -693,7 +706,7 @@ async def reel(cmd):
 
 				ewitem.item_create(
 					id_user = cmd.message.author.id,
-					id_server = cmd.message.server.id,
+					id_server = cmd.guild.id,
 					item_type = ewcfg.it_food,
 					item_props = {
 						'id_food': ewcfg.fish_map[fisher.current_fish].id_fish,
@@ -780,8 +793,8 @@ async def appraise(cmd):
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
-	payment = ewitem.find_item(item_search = "manhattanproject", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_food)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+	payment = ewitem.find_item(item_search = "manhattanproject", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_food)
 
 	# Checking availability of appraisal
 	#if market_data.clock < 8 or market_data.clock > 17:
@@ -899,7 +912,7 @@ async def barter(cmd):
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 
 	# Checking availability of appraisal
 	#if market_data.clock < 8 or market_data.clock > 17:
@@ -950,7 +963,7 @@ async def barter(cmd):
 
 			else:
 				offer = EwOffer(
-					id_server = cmd.message.server.id,
+					id_server = cmd.guild.id,
 					id_user = cmd.message.author.id,
 					offer_give = id_fish
 				)
@@ -1031,18 +1044,19 @@ async def barter(cmd):
 				accepted = False
 
 				try:
-					message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
+					message = await cmd.client.wait_for('message', timeout = 20, check=lambda message: message.author == cmd.message.author and 
+															message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 					if message != None:
-						if message.content.lower() == ewcfg.cmd_prefix + "accept":
+						if message.content.lower() == ewcfg.cmd_accept:
 							accepted = True
-						if message.content.lower() == ewcfg.cmd_prefix + "refuse":
+						if message.content.lower() == ewcfg.cmd_refuse:
 							accepted = False
 				except:
 					accepted = False
 
 				offer = EwOffer(
-					id_server = cmd.message.server.id,
+					id_server = cmd.guild.id,
 					id_user = cmd.message.author.id,
 					offer_give = id_fish
 				)
@@ -1051,7 +1065,7 @@ async def barter(cmd):
 				fish = EwItem(id_item = id_fish)
 
 				# cancel deal if fish is no longer in user's inventory
-				if fish.id_owner != user_data.id_user:
+				if fish.id_owner != str(user_data.id_user):
 					accepted = False
 
 				# cancel deal if the user has left Vagrant's Corner
@@ -1088,7 +1102,7 @@ async def barter(cmd):
 						ewitem.item_create(
 							item_type = item.item_type,
 							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
+							id_server = cmd.guild.id,
 							item_props = item_props
 						)
 
@@ -1130,7 +1144,7 @@ async def embiggen(cmd):
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "How are you going to embiggen your fish on the side of the street? You’ve got to see a professional for this, man. Head to the SlimeCorp Laboratory, they’ve got dozens of modern day magic potions ‘n shit over there."

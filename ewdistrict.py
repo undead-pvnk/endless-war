@@ -17,7 +17,7 @@ from ew import EwUser
 	district data model for database persistence
 """
 class EwDistrict:
-	id_server = ""
+	id_server = -1
 
 	# The district's identifying string
 	name = ""
@@ -186,7 +186,7 @@ class EwDistrict:
 			pvp_only = False
 		):
 		client = ewutils.get_client()
-		server = client.get_server(self.id_server)
+		server = client.get_guild(self.id_server)
 		if server == None:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
@@ -236,7 +236,7 @@ class EwDistrict:
 		):
 
 		client = ewutils.get_client()
-		server = client.get_server(self.id_server)
+		server = client.get_guild(self.id_server)
 		if server == None:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
@@ -670,7 +670,7 @@ async def capture_progress(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	response = ""
-	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.guild.id)
 	time_now = int(time.time())
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -804,7 +804,7 @@ async def shamble(cmd):
 	if poi is None:
 		return
 
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
 
 	if district_data.degradation < poi.max_degradation:
 		district_data.degradation += 1
@@ -963,7 +963,7 @@ async def capture_tick(id_server):
 
 					dist.persist()
 
-	await resp_cont_capture_tick.post()
+	# await resp_cont_capture_tick.post()
 
 """
 	Coroutine that continually calls capture_tick; is called once per server, and not just once globally
@@ -1016,7 +1016,7 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 		responses =  district.decay_capture_points()
 		resp_cont_decay_loop.add_response_container(responses)
 		district.persist()
-	await resp_cont_decay_loop.post()
+	# await resp_cont_decay_loop.post()
 
 async def change_spray(cmd):
 	user_data = EwUser(member=cmd.message.author)
