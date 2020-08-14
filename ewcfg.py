@@ -41,7 +41,7 @@ database = "rfck"
 discord_message_length_limit = 2000
 
 # Update intervals
-update_hookstillactive = 60 * 60 * 3
+update_hookstillactive = 60 * 60 * 1
 update_twitch = 60
 update_pvp = 60
 update_market = 900 #15 min
@@ -144,8 +144,6 @@ poi_id_sodafountain = "sodafountain"
 poi_id_bodega = "bodega"
 poi_id_wafflehouse = "wafflehouse"
 poi_id_basedhardware = "basedhardware"
-poi_id_atomicforest = "atomicforest"
-poi_id_downpourlaboratory = "downpourlaboratory"
 
 # transports
 poi_id_ferry = "ferry"
@@ -450,67 +448,26 @@ location_id_empty = "empty"
 
 # Outskirts
 # Layer 1
-poi_id_wreckington_outskirts_edge = "wreckingtonoutskirtsedge"
-poi_id_cratersville_outskirts_edge = "cratersvilleoutskirtsedge"
-poi_id_oozegardens_outskirts_edge = "oozegardensoutskirtsedge"
-poi_id_southsleezeborough_outskirts_edge = "southsleezeboroughoutskirtsedge"
-poi_id_crookline_outskirts_edge = "crooklineoutskirtsedge"
-poi_id_dreadford_outskirts_edge = "dreadfordoutskirtsedge"
-poi_id_jaywalkerplain_outskirts_edge = "jaywalkerplainoutskirtsedge"
-poi_id_westglocksbury_outskirts_edge = "westglocksburyoutskirtsedge"
-poi_id_poloniumhill_outskirts_edge = "poloniumhilloutskirtsedge"
-poi_id_charcoalpark_outskirts_edge = "charcoalparkoutskirtsedge"
-poi_id_toxington_outskirts_edge = "toxingtonoutskirtsedge"
-poi_id_maimridge_outskirts_edge = "maimridgeoutskirtsedge"
-poi_id_arsonbrook_outskirts_edge = "arsonbrookoutskirtsedge"
-poi_id_brawlden_outskirts_edge = "brawldenoutskirtsedge"
-poi_id_newnewyonkers_outskirts_edge = "newnewyonkersoutskirtsedge"
-poi_id_assaultflatsbeach_outskirts_edge = "assaultflatsbeachoutskirtsedge"
+poi_id_south_outskirts_edge = "southoutskirtsedge"
+poi_id_southwest_outskirts_edge = "southwestoutskirtsedge"
+poi_id_west_outskirts_edge = "westoutskirtsedge"
+poi_id_northwest_outskirts_edge = "northwestoutskirtsedge"
+poi_id_north_outskirts_edge = "northoutskirtsedge"
+poi_id_nuclear_beach_edge = "nuclearbeachedge" # aka Assault Flats Beach Outskirts Edge
 # Layer 2
-poi_id_wreckington_outskirts = "wreckingtonoutskirts"
-poi_id_cratersville_outskirts = "cratersvilleoutskirts"
-poi_id_oozegardens_outskirts = "oozegardensoutskirts"
-poi_id_southsleezeborough_outskirts = "southsleezeboroughoutskirts"
-poi_id_crookline_outskirts = "crooklineoutskirts"
-poi_id_dreadford_outskirts = "dreadfordoutskirts"
-poi_id_jaywalkerplain_outskirts = "jaywalkerplainoutskirts"
-poi_id_westglocksbury_outskirts = "westglocksburyoutskirts"
-poi_id_poloniumhill_outskirts = "poloniumhilloutskirts"
-poi_id_charcoalpark_outskirts = "charcoalparkoutskirts"
-poi_id_toxington_outskirts = "toxingtonoutskirts"
-poi_id_maimridge_outskirts = "maimridgeoutskirts"
-poi_id_arsonbrook_outskirts = "arsonbrookoutskirts"
-poi_id_brawlden_outskirts = "brawldenoutskirts"
-poi_id_newnewyonkers_outskirts = "newnewyonkersoutskirts"
-poi_id_assaultflatsbeach_outskirts = "assaultflatsbeachoutskirts"
-
-# Layer 3
-poi_id_wreckington_outskirts_depths = "wreckingtonoutskirtsdepths"
-poi_id_cratersville_outskirts_depths = "cratersvilleoutskirtsdepths"
-poi_id_oozegardens_outskirts_depths = "oozegardensoutskirtsdepths"
-poi_id_southsleezeborough_outskirts_depths = "southsleezeboroughoutskirtsdepths"
-poi_id_crookline_outskirts_depths = "crooklineoutskirtsdepths"
-poi_id_dreadford_outskirts_depths = "dreadfordoutskirtsdepths"
-poi_id_jaywalkerplain_outskirts_depths = "jaywalkerplainoutskirtsdepths"
-poi_id_westglocksbury_outskirts_depths = "westglocksburyoutskirtsdepths"
-poi_id_poloniumhill_outskirts_depths = "poloniumhilloutskirtsdepths"
-poi_id_charcoalpark_outskirts_depths = "charcoalparkoutskirtsdepths"
-poi_id_toxington_outskirts_depths = "toxingtonoutskirtsdepths"
-poi_id_maimridge_outskirts_depths = "maimridgeoutskirtsdepths"
-poi_id_arsonbrook_outskirts_depths = "arsonbrookoutskirtsdepths"
-poi_id_brawlden_outskirts_depths = "brawldenoutskirtsdepths"
-poi_id_newnewyonkers_outskirts_depths = "newnewyonkersoutskirtsdepths"
-poi_id_assaultflatsbeach_outskirts_depths = "assaultflatsbeachoutskirtsdepths"
-
-
-
 poi_id_south_outskirts = "southoutskirts"
 poi_id_southwest_outskirts = "southwestoutskirts"
 poi_id_west_outskirts = "westoutskirts"
 poi_id_northwest_outskirts = "northwestoutskirts"
 poi_id_north_outskirts = "northoutskirts"
-poi_id_nuclear_beach = "nuclearbeach" # aka Assault Flats Beach Outskirts
-
+poi_id_nuclear_beach = "nuclearbeach"
+# Layer 3
+poi_id_south_outskirts_depths = "southoutskirtsdepths"
+poi_id_southwest_outskirts_depths = "southwestoutskirtsdepths"
+poi_id_west_outskirts_depths = "westoutskirtsdepths"
+poi_id_northwest_outskirts_depths = "northwestoutskirtsdepths"
+poi_id_north_outskirts_depths = "northoutskirtsdepths"
+poi_id_nuclear_beach_depths = "nuclearbeachdepths" 
 
 # The Sphere
 poi_id_thesphere = "thesphere"
@@ -1046,6 +1003,8 @@ cmd_move = cmd_prefix + 'move'
 cmd_move_alt1 = cmd_prefix + 'goto'
 cmd_move_alt2 = cmd_prefix + 'walk'
 cmd_move_alt3 = cmd_prefix + 'sny'
+cmd_move_alt4 = cmd_prefix + 'tiptoe'
+cmd_move_alt5 = cmd_prefix + 'step'
 cmd_descend = cmd_prefix + 'descend'
 cmd_halt = cmd_prefix + 'halt'
 cmd_halt_alt1 = cmd_prefix + 'stop'
@@ -1301,6 +1260,7 @@ cmd_removeuseroverwrites = cmd_prefix + 'removeuseroverwrites'
 cmd_collectopics = cmd_prefix + 'collecttopics'
 cmd_synctopics = cmd_prefix + 'synctopics'
 cmd_shutdownbot = cmd_prefix + 'shutdownbot'
+cmd_checkbot = cmd_prefix + 'checkbot'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
@@ -1394,6 +1354,8 @@ offline_cmds = [
 	cmd_move_alt1,
 	cmd_move_alt2,
 	cmd_move_alt3,
+	cmd_move_alt4,
+	cmd_move_alt5,
 	cmd_descend,
 	cmd_halt,
 	cmd_halt_alt1,
@@ -1443,7 +1405,7 @@ hunger_pertrickortreat = 6
 # Time it takes to move between various parts of the map
 travel_time_subzone = 20
 travel_time_district = 60
-travel_time_street = 30
+travel_time_street = 20
 travel_time_outskirt = 60
 travel_time_infinite = 900
 
@@ -1841,30 +1803,30 @@ emote_staydead = "<:sd:506840095714836480>"
 emote_janus1 = "<:janus1:694404178956779592>"
 emote_janus2 = "<:janus2:694404179342655518>"
 emote_masterpoudrin = "<:masterpoudrin:694788959418712114>"
-emote_poketubers = "<:c_poketubers:???>"
-emote_pulpgourds = "<:c_pulpgourds:???>"
-emote_sourpotatoes = "<:c_sourpotatoes:???>"
-emote_bloodcabbages = "<:c_bloodcabbages:???>"
-emote_joybeans = "<:c_joybeans:???>"
-emote_purplekilliflower = "<:c_purplekilliflower:???>"
-emote_razornuts = "<:c_razornuts:???>"
-emote_pawpaw = "<:c_pawpaw:???>"
-emote_sludgeberries = "<:c_sludgeberries:???>"
-emote_suganmanuts = "<:c_suganmanuts:???>"
-emote_pinkrowddishes = "<:c_pinkrowddishes:???>"
-emote_dankwheat = "<:c_dankwheat:???>"
-emote_brightshade = "<:c_brightshade:???>"
-emote_blacklimes = "<:c_blacklimes:???>"
-emote_phosphorpoppies = "<:c_phosphorpoppies:???>"
-emote_direapples = "<:c_direapples:???>"
-emote_rustealeaves = "<:c_rustealeaves:???>"
-emote_metallicaps = "<:c_metallicaps:???>"
-emote_steelbeans = "<:c_steelbeans:???>"
-emote_aushucks = "<:c_aushucks:???>"
-emote_blankregional = "bt:???>"
-emote_greenlawn = "<:gt:???>"
-emote_limelawn = "<:lt:???>"
-emote_frozentile = "<:ft:???>"
+emote_poketubers = "<:c_poketubers:706989587112787998>"
+emote_pulpgourds = "<:c_pulpgourds:706989587469172746>"
+emote_sourpotatoes = "<:c_sourpotatoes:706989587196543067>"
+emote_bloodcabbages = "<:c_bloodcabbages:706989586475253832>"
+emote_joybeans = "<:c_joybeans:706989586949210223>"
+emote_killiflower = "<:c_killiflower:706989587003736114>"
+emote_razornuts = "<:c_razornuts:706989587129434364>"
+emote_pawpaw = "<:c_pawpaw:706989587137953812>"
+emote_sludgeberries = "<:c_sludgeberries:706989587205062656>"
+emote_suganmanuts = "<:c_suganmanuts:706989587276234862>"
+emote_pinkrowddishes = "<:c_pinkrowddishes:706989586684969091>"
+emote_dankwheat = "<:c_dankwheat:706989586714460222>"
+emote_brightshade = "<:c_brightshade:706989586676580373>"
+emote_blacklimes = "<:c_blacklimes:706989586890489947>"
+emote_phosphorpoppies = "<:c_phosphorpoppies:706989586898878496>"
+emote_direapples = "<:c_direapples:706989586928238663>"
+emote_rustealeaves = "<:c_rustealeaves:743337308295790642>"
+emote_metallicaps = "<:c_metallicaps:743337308228419714>"
+emote_steelbeans = "<:c_steelbeans:743337307968372757>"
+emote_aushucks = "<:c_aushucks:743337307859320923>"
+emote_blankregional = "bt:726254215118454804>"
+emote_greenlawn = "<:gt:726271625489809411>"
+emote_limelawn = "<:lt:726271664815472692>"
+emote_frozentile = "<:ft:706989586890489947>"
 
 # Emotes for the negaslime writhe animation
 emote_vt = "<:vt:492067858160025600>"
@@ -2176,7 +2138,7 @@ col_enemy_life_state = 'life_state'
 col_enemy_bleed_storage = 'bleed_storage'
 col_enemy_time_lastenter = 'time_lastenter'
 col_enemy_initialslimes = 'initialslimes'
-col_enemy_lifetime = 'lifetime'
+col_enemy_expiration_date = 'expiration_date'
 col_enemy_id_target = 'id_target'
 col_enemy_raidtimer = 'raidtimer'
 col_enemy_rare_status = 'rare_status'
@@ -4341,8 +4303,8 @@ item_list = [
 	),
 	EwSeedPacket(
 		id_item=item_id_gaiaseedpack_brightshade,
-		cooldown=0,
-		cost=0,
+		cooldown=10,
+		cost=50,
 		str_name="Brightshade Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Brightshade Gaiaslimeoid. It costs 50 gaiaslime to !plant one, and has a 10 second cooldown.",
 		ingredients=[item_id_brightshadeberries],
@@ -4350,8 +4312,8 @@ item_list = [
 	),
 	EwSeedPacket(
 		id_item=item_id_gaiaseedpack_blacklimes,
-		cooldown=0,
-		cost=0,
+		cooldown=10,
+		cost=75,
 		str_name="Black Limes Gaiaslimeoid Seed Packet",
 		str_desc="A seed packet for a Black Limes Gaiaslimeoid. It costs 75 gaiaslime to !plant one, and has a 10 second cooldown.",
 		ingredients=[item_id_blacklimeade],
@@ -4494,7 +4456,7 @@ item_list = [
 	),
 	EwTombstone(
 		id_item=item_id_tombstone_shamblerdactyl,
-		cost=100,
+		cost=200,
 		brainpower=90,
 		stock=5,
 		str_name="Shamblerdactyl Tombstone",
@@ -9243,19 +9205,19 @@ food_list = [
 		perishable = False,
 		vendors = [vendor_wafflehouse],
 	),
-    EwFood(
-        id_food = "masterbait",
-        alias = [
-            'master',
-            'masterball'
-        ],
-        recover_hunger = 1,
-        price = 10000000,
-        str_name = "Master Bait",
-        str_eat = "You toss the Master Bait into your mouth and chew thoroughly. Wow, what a waste of fucking time!",
-        str_desc = "The ultimate life form... for cathing fish, that is. It's said that attatching this strange, worm-like creature to the end of your hook will allow you to reel in fish almost as soon as you cast it off.",
-        perishable = False
-    ),
+	EwFood(
+		id_food = "masterbait",
+		alias = [
+			'master',
+			'masterball'
+		],
+		recover_hunger = 1,
+		price = 10000000,
+		str_name = "Master Bait",
+		str_eat = "You toss the Master Bait into your mouth and chew thoroughly. Wow, what a waste of fucking time!",
+		str_desc = "The ultimate life form... for cathing fish, that is. It's said that attatching this strange, worm-like creature to the end of your hook will allow you to reel in fish almost as soon as you cast it off.",
+		perishable = False
+	),
 ]
 
 # A map of id_food to EwFood objects.
@@ -12027,7 +11989,6 @@ poi_list = [
 			poi_id_oozegardens_street_b : travel_time_street,
 			poi_id_oozegardens_street_c : travel_time_street,
 			poi_id_oozegardens_street_d : travel_time_street,
-			#poi_id_atomicforest : travel_time_subzone,
 		},
 	),
 	EwPoi( # 18
@@ -12194,7 +12155,6 @@ poi_list = [
 			poi_id_assaultflatsbeach_street_a : travel_time_street,
 			poi_id_assaultflatsbeach_street_b: travel_time_street,
 			poi_id_beachresort : travel_time_subzone,
-			#poi_id_downpourlaboratory : travel_time_subzone,
 		},
 	),
 	EwPoi( # 24
@@ -12963,7 +12923,7 @@ poi_list = [
 			poi_id_cratersville_street_b : travel_time_street,
 			poi_id_cratersville_street_c : travel_time_street,
 			poi_id_wreckington_street_a : travel_time_street,
-			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_south_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13005,7 +12965,7 @@ poi_list = [
 			poi_id_cratersville_street_a : travel_time_street,
 			poi_id_cratersville_street_b : travel_time_street,
 			poi_id_oozegardens_street_d : travel_time_street,
-			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
+			poi_id_south_outskirts_edge : travel_time_outskirt,
 			poi_id_cv_mines : travel_time_subzone,
 			poi_id_cv_subway_station: travel_time_subzone,
 		}
@@ -13029,7 +12989,7 @@ poi_list = [
 			poi_id_wreckington : travel_time_street,
 			poi_id_wreckington_street_b : travel_time_street,
 			poi_id_cratersville_street_a : travel_time_street,
-			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_south_outskirts_edge : travel_time_outskirt,
 			poi_id_wt_subway_station: travel_time_subzone,
 		}
 	),
@@ -13050,7 +13010,7 @@ poi_list = [
 			poi_id_wreckington : travel_time_street,
 			poi_id_wreckington_street_a : travel_time_street,
 			poi_id_rowdyroughhouse : travel_time_street,
-			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
+			poi_id_south_outskirts_edge : travel_time_outskirt,
 			poi_id_diner : travel_time_subzone,
 			poi_id_wt_port : travel_time_subzone,
 			poi_id_wt_subway_station: travel_time_subzone,
@@ -13075,7 +13035,7 @@ poi_list = [
 			poi_id_oozegardens_street_d : travel_time_street,
 			poi_id_oozegardens_street_b : travel_time_street,
 			poi_id_southsleezeborough_street_d : travel_time_street,
-			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_south_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13138,7 +13098,7 @@ poi_list = [
 			poi_id_oozegardens_street_c : travel_time_street,
 			poi_id_oozegardens_street_a : travel_time_street,
 			poi_id_cratersville_street_c : travel_time_street,
-			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
+			poi_id_south_outskirts_edge : travel_time_outskirt,
 			poi_id_og_farms : travel_time_subzone,
 		}
 	),
@@ -13161,7 +13121,7 @@ poi_list = [
 			poi_id_southsleezeborough_street_d : travel_time_street,
 			poi_id_southsleezeborough_street_b : travel_time_street,
 			poi_id_crookline_street_b : travel_time_street,
-			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
 			poi_id_ssb_subway_station: travel_time_subzone,
 		}
 	),
@@ -13225,7 +13185,7 @@ poi_list = [
 			poi_id_southsleezeborough_street_c : travel_time_street,
 			poi_id_southsleezeborough_street_a : travel_time_street,
 			poi_id_oozegardens_street_a : travel_time_street,
-			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13493,7 +13453,7 @@ poi_list = [
 			poi_id_westglocksbury_street_b : travel_time_street,
 			poi_id_westglocksbury_street_d : travel_time_street,
 			poi_id_poloniumhill_street_d : travel_time_street,
-			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
 			poi_id_wgb_subway_station: travel_time_subzone,
 		}
 	),
@@ -13516,7 +13476,7 @@ poi_list = [
 			poi_id_westglocksbury_street_c : travel_time_street,
 			poi_id_westglocksbury_street_a : travel_time_street,
 			poi_id_jaywalkerplain_street_d : travel_time_street,
-			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13583,7 +13543,7 @@ poi_list = [
 			poi_id_jaywalkerplain_street_b : travel_time_street,
 			poi_id_jaywalkerplain_street_d : travel_time_street,
 			poi_id_dreadford_street_a : travel_time_street,
-			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
 			poi_id_jaywalkerplain_pier : travel_time_subzone,
 		}
 	),
@@ -13607,7 +13567,7 @@ poi_list = [
 			poi_id_jaywalkerplain_street_c : travel_time_street,
 			poi_id_jaywalkerplain_street_e : travel_time_street,
 			poi_id_westglocksbury_street_d : travel_time_street,
-			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
 			poi_id_jaywalkerplain_pier : travel_time_subzone,
 		}
 	),
@@ -13649,7 +13609,7 @@ poi_list = [
 			poi_id_crookline_street_d : travel_time_street,
 			poi_id_crookline_street_b : travel_time_street,
 			poi_id_dreadford_street_b : travel_time_street,
-			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
 			poi_id_crookline_pier : travel_time_subzone,
 			poi_id_cl_subway_station: travel_time_subzone,
 		}
@@ -13672,7 +13632,7 @@ poi_list = [
 			poi_id_crookline_street_a : travel_time_street,
 			poi_id_crookline_street_c : travel_time_street,
 			poi_id_southsleezeborough_street_a : travel_time_street,
-			poi_id_crookline_outskirts_edge : travel_time_outskirt,
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
 			poi_id_crookline_pier : travel_time_subzone,
 			poi_id_cl_subway_station: travel_time_subzone,
 		}
@@ -13734,7 +13694,7 @@ poi_list = [
 			poi_id_dreadford : travel_time_street,
 			poi_id_dreadford_street_b : travel_time_street,
 			poi_id_jaywalkerplain_street_c : travel_time_street,
-			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13759,7 +13719,7 @@ poi_list = [
 			poi_id_dreadford : travel_time_street,
 			poi_id_dreadford_street_a : travel_time_street,
 			poi_id_crookline_street_a : travel_time_street,
-			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
 			poi_id_df_blimp_tower : travel_time_subzone,
 		}
 	),
@@ -13902,7 +13862,7 @@ poi_list = [
 			poi_id_poloniumhill_street_b : travel_time_street,
 			poi_id_poloniumhill_street_d : travel_time_street,
 			poi_id_charcoalpark_street_b : travel_time_street,
-			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13923,7 +13883,7 @@ poi_list = [
 			poi_id_poloniumhill_street_c : travel_time_street,
 			poi_id_poloniumhill_street_e : travel_time_street,
 			poi_id_westglocksbury_street_c : travel_time_street,
-			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13972,7 +13932,7 @@ poi_list = [
 			poi_id_charcoalpark : travel_time_street,
 			poi_id_charcoalpark_street_b : travel_time_street,
 			poi_id_toxington_street_c : travel_time_street,
-			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -13993,7 +13953,7 @@ poi_list = [
 			poi_id_charcoalpark : travel_time_street,
 			poi_id_charcoalpark_street_a : travel_time_street,
 			poi_id_poloniumhill_street_c : travel_time_street,
-			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -14057,7 +14017,7 @@ poi_list = [
 			poi_id_toxington_street_b : travel_time_street,
 			poi_id_toxington_street_d : travel_time_street,
 			poi_id_charcoalpark_street_a : travel_time_street,
-			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -14079,7 +14039,7 @@ poi_list = [
 			poi_id_toxington_street_c : travel_time_street,
 			poi_id_toxington_street_e : travel_time_street,
 			poi_id_maimridge_street_c : travel_time_street,
-			poi_id_toxington_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
 			poi_id_toxington_pier : travel_time_subzone,
 		}
 	),
@@ -14144,7 +14104,7 @@ poi_list = [
 			poi_id_gatlingsdale_street_a : travel_time_street,
 			poi_id_gatlingsdale_street_c : travel_time_street,
 			poi_id_vandalpark_street_c : travel_time_street,
-            poi_id_nlacu : travel_time_subzone,
+			poi_id_nlacu : travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -14498,7 +14458,7 @@ poi_list = [
 			poi_id_arsonbrook_street_b : travel_time_street,
 			poi_id_arsonbrook_street_d : travel_time_street,
 			poi_id_maimridge_street_b : travel_time_street,
-			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+			poi_id_north_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -14519,7 +14479,7 @@ poi_list = [
 			poi_id_arsonbrook_street_c : travel_time_street,
 			poi_id_arsonbrook_street_e : travel_time_street,
 			poi_id_brawlden_street_a : travel_time_street,
-			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
+			poi_id_north_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -14581,7 +14541,7 @@ poi_list = [
 			poi_id_maimridge_street_a : travel_time_street,
 			poi_id_maimridge_street_c : travel_time_street,
 			poi_id_arsonbrook_street_c : travel_time_street,
-			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -14602,7 +14562,7 @@ poi_list = [
 			poi_id_maimridge_street_b : travel_time_street,
 			poi_id_maimridge_street_a : travel_time_street,
 			poi_id_toxington_street_d : travel_time_street,
-			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -14624,7 +14584,7 @@ poi_list = [
 			poi_id_brawlden_street_d : travel_time_street,
 			poi_id_brawlden_street_b : travel_time_street,
 			poi_id_arsonbrook_street_d : travel_time_street,
-			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_north_outskirts_edge : travel_time_outskirt,
 			poi_id_bd_subway_station: travel_time_subzone,
 		}
 	),
@@ -14646,7 +14606,7 @@ poi_list = [
 			poi_id_brawlden_street_a : travel_time_street,
 			poi_id_brawlden_street_c : travel_time_street,
 			poi_id_newnewyonkers_street_a : travel_time_street,
-			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
+			poi_id_north_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -14876,7 +14836,7 @@ poi_list = [
 			poi_id_newnewyonkers_street_d : travel_time_street,
 			poi_id_newnewyonkers_street_b : travel_time_street,
 			poi_id_brawlden_street_b : travel_time_street,
-			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_north_outskirts_edge : travel_time_outskirt,
 			poi_id_nny_subway_station: travel_time_subzone,
 		}
 	),
@@ -14897,7 +14857,7 @@ poi_list = [
 			poi_id_newnewyonkers_street_a : travel_time_street,
 			poi_id_newnewyonkers_street_c : travel_time_street,
 			poi_id_assaultflatsbeach_street_a : travel_time_street,
-			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
+			poi_id_north_outskirts_edge : travel_time_outskirt,
 		}
 	),
 	EwPoi(
@@ -14958,7 +14918,7 @@ poi_list = [
 			poi_id_assaultflatsbeach : travel_time_street,
 			poi_id_assaultflatsbeach_street_b : travel_time_street,
 			poi_id_newnewyonkers_street_b : travel_time_street,
-			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_nuclear_beach_edge : travel_time_outskirt,
 			poi_id_assaultflatsbeach_pier : travel_time_subzone,
 			poi_id_afb_blimp_tower : travel_time_subzone,
 		}
@@ -14980,7 +14940,7 @@ poi_list = [
 			poi_id_assaultflatsbeach : travel_time_street,
 			poi_id_assaultflatsbeach_street_a : travel_time_street,
 			poi_id_vagrantscorner_street_a : travel_time_street,
-			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
+			poi_id_nuclear_beach_edge : travel_time_outskirt,
 			poi_id_assaultflatsbeach_pier : travel_time_subzone,
 		}
 	),
@@ -15201,7 +15161,7 @@ poi_list = [
 		str_name = "ENDLESS WAR",
 		str_desc = "Its bright, neon green color nearly blinds you when observed from this close. You are overwhelmed by an acute, menacing aura as you crane your neck to observe the obelisk in its entirety. You almost thought you saw it looking back down at you, but it was probably just your imagination. You shouldn’t stay here any longer than you have to, you always get a weird feeling in the pit of your stomach when you stick around for too long.",
 		channel = channel_endlesswar,
-        wikipage = wiki_baseurl + "Downtown_NLACakaNM#ENDLESS_WAR",
+		wikipage = wiki_baseurl + "Downtown_NLACakaNM#ENDLESS_WAR",
 		role = "Endless War",
 		is_subzone = True,
 		pvp = False,
@@ -15250,7 +15210,7 @@ poi_list = [
 		str_desc = "A huge, cluttered space bursting at the seams with teller booths and data screens designed to display market data, blasting precious economic insight into your retinas. Discarded punch cards and ticker tape as trampled on by the mass of investors and shareholders that are constantly screaming \"BUY, SELL, BUY, SELL,\" over and over again at no one in particular. Recently reopened, tents line the streets, filled with eager investors. \n\nExits into Downtown NLACakaNM.",
 		topic = "https://ew.krakissi.net/market/",
 		channel = channel_stockexchange,
-        wikipage = wiki_baseurl + "Downtown_NLACakaNM#SlimeCorp_Stock_Exchange",
+		wikipage = wiki_baseurl + "Downtown_NLACakaNM#SlimeCorp_Stock_Exchange",
 		role = "Stock Exchange",
 		pvp = False,
 		is_subzone = True,
@@ -15270,7 +15230,7 @@ poi_list = [
 		str_name = "The Bazaar",
 		str_desc = "An open-air marketplace where professional merchants and regular citizens alike can hock their wares. Its currently completely barren, but what does catch your eye is a stall some weirdo's set up. Apparently his services include prying things off of propstands and luring fish out of their tanks.\n\nExits into Brawlden.",
 		channel = channel_bazaar,
-        wikipage = wiki_baseurl + "Smogsburg#The_Bazaar",
+		wikipage = wiki_baseurl + "Smogsburg#The_Bazaar",
 		role = "Bazaar",
 		pvp = False,
 		vendors = [
@@ -15296,7 +15256,7 @@ poi_list = [
 		str_name = "The Cinema",
 		str_desc = "A delightfully run-down movie theater, with warm carpeted walls fraying ever so slightly. Films hand picked by the Rowdy Fucker and/or Cop Killer are regularly screened.\n\nExits into Astatine Heights.",
 		channel = channel_cinema,
-        wikipage = wiki_baseurl + "Astatine_Heights#The_Cinema",
+		wikipage = wiki_baseurl + "Astatine_Heights#The_Cinema",
 		role = "Cinema",
 		pvp = False,
 		is_subzone = True,
@@ -15328,7 +15288,7 @@ poi_list = [
 				   "and brittle, you’ll wish you spent your time doing this more.\n\nExits into Krak Bay.",
 		topic = "Voted best food in NLACakaNM up until other places opened.",
 		channel = channel_foodcourt,
-        wikipage = wiki_baseurl + "Krak_Bay#The_Food_Court",
+		wikipage = wiki_baseurl + "Krak_Bay#The_Food_Court",
 		role = "Food Court",
 		pvp = False,
 		vendors = [
@@ -15357,7 +15317,7 @@ poi_list = [
 		str_name = "New Los Angeles City University",
 		str_desc = "An expansive campus housing massive numbers of students and administrators, all here in pursuit of knowledge. The campus is open to visitors, but there's nobody here. **Use '!help' to get info on game mechanics, or '!order' if you want to purchase a game guide.**\n\nExits into Gatlingsdale.",
 		channel = channel_nlacu,
-        wikipage = wiki_baseurl + "Gatlingsdale#New_Los_Angeles_City_University",
+		wikipage = wiki_baseurl + "Gatlingsdale#New_Los_Angeles_City_University",
 		role = "NLAC U",
 		pvp = False,
 		vendors = [
@@ -15382,7 +15342,7 @@ poi_list = [
 		str_name = "The Battle Arena",
 		str_desc = "A huge arena stadium capable of housing tens of thousands of battle enthusiasts, ringing a large field where Slimeoid Battles are held. All the seats are empty.\n\nExits into Vandal Park.",
 		channel = channel_arena,
-        wikipage = wiki_baseurl + "Vandal_Park#The_Battle_Arena",
+		wikipage = wiki_baseurl + "Vandal_Park#The_Battle_Arena",
 		role = "Arena",
 		pvp = False,
 		is_subzone = True,
@@ -15405,7 +15365,7 @@ poi_list = [
 		str_desc = "A traditional, modest Dojo, containing all the facilities and armaments necessary for becoming a cold-blooded killing machine. It’s rustic wood presentation is accentuated by bamboo and parchment walls that separate the Dojo floor into large tatami-matted sections. Groups of juveniles gather here to increase their viability in combat. These sparring children are overseen by the owner of the Dojo, an elderly master of martial artists, fittingly known as the Dojo Master. He observes you train from a distance, brooding, and lamenting his lost youth.\n\nExits into South Sleezeborough.",
 		topic = "Killers and Rowdys alike come here under an uneasy truce to train themselves in the arts of war.",
 		channel = channel_dojo,
-        wikipage = wiki_baseurl + "South_Sleezeborough#The_Dojo",
+		wikipage = wiki_baseurl + "South_Sleezeborough#The_Dojo",
 		role = "Dojo",
 		pvp = False,
 		is_subzone = True,
@@ -15435,7 +15395,7 @@ poi_list = [
 		str_desc = "A rustic tavern with dark wooden walls and floor, bearing innumerable knickknacks on the walls and high wooden stools arranged in front of a bar made of patina'd copper. It is crowded with seedy lowlifes and other generally undesirables, such as yourself.\n\nExits into Vagrant's Corner.",
 		topic = "The King's Wife's Son - the sleazy speakeasy of NLACakaNM. The only place in the city to get plastered. Hide your drinks if the Yum! Brands demolition men show up!",
 		channel = channel_speakeasy,
-        wikipage = wiki_baseurl + "Vagrant's_Corner#The_King's_Wife's_Son_Speakeasy",
+		wikipage = wiki_baseurl + "Vagrant's_Corner#The_King's_Wife's_Son_Speakeasy",
 		role = "Speakeasy",
 		pvp = False,
 		vendors = [
@@ -15461,7 +15421,7 @@ poi_list = [
 		str_name = "Outside the 7-11",
 		str_desc = "The darkened derelict 7-11 stands as it always has, a steadfast pillar of NLACakaNM culture. On its dirty exterior walls are spraypainted messages about \"patch notes\", \"github\", and other unparseable nonsense.\n\nExits into Poudrin Alley.",
 		channel = channel_711,
-        wikipage = wiki_baseurl + "Poudrin_Alley#Outside_the_7/11",
+		wikipage = wiki_baseurl + "Poudrin_Alley#Outside_the_7/11",
 		role = "7-11",
 		pvp = False,
 		vendors = [
@@ -15495,7 +15455,7 @@ poi_list = [
 		str_desc = "A nondescript building containing mysterious SlimeCorp industrial equipment. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from SlimeCorp on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
 		topic = "Bring your poudrins and some slime for the privilege of using these highly experimental Slimecorp technologies. Use !instructions to learn more.",
 		channel = channel_slimeoidlab,
-        wikipage = wiki_baseurl + "Brawlden#SlimeCorp_Slimeoid_Laboratory",
+		wikipage = wiki_baseurl + "Brawlden#SlimeCorp_Slimeoid_Laboratory",
 		role = "Slimeoid Lab",
 		pvp = False,
 		is_subzone = True,
@@ -15516,7 +15476,7 @@ poi_list = [
 		str_name = "The Mines",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR.\n\nExits into Juvie's Row.",
 		channel = channel_mines,
-        wikipage = wiki_baseurl + "Juvie's_Row#The_Mines",
+		wikipage = wiki_baseurl + "Juvie's_Row#The_Mines",
 		role = "Mines",
 		pvp = False,
 		is_subzone = True,
@@ -15540,7 +15500,7 @@ poi_list = [
 		str_desc = "The casino is filled with tables and machines for playing games of chance, and garishly decorated wall-to-wall. Lights which normally flash constantly cover everything, but now they all sit unlit. What's worse, you can see Sherman, the SlimeCorp salaryman staring you down near the back.\n\nExits into Green Light District.",
 		topic = "Put your slime on the line! Bet slimecoin on games of chance: slots, craps, pachinko, roulette, baccarat, and even the deadly Russian Roulette.",
 		channel = channel_casino,
-        wikipage = wiki_baseurl + "Green_Light_District#The_SlimeCorp_Casino",
+		wikipage = wiki_baseurl + "Green_Light_District#The_SlimeCorp_Casino",
 		role = "Casino",
 		pvp = False,
 		is_subzone = True,
@@ -15563,7 +15523,7 @@ poi_list = [
 		str_name = "The Cratersville Mines",
 		str_desc = "A veritable slime-mine of slime, rejuvenated by the revival of ENDLESS WAR.\n\nExits into Cratersville.",
 		channel = channel_cv_mines,
-        wikipage = wiki_baseurl + "Cratersville#The_Cratersville_Mines",
+		wikipage = wiki_baseurl + "Cratersville#The_Cratersville_Mines",
 		role = "Cratersville Mines",
 		pvp = False,
 		is_subzone = True,
@@ -15585,7 +15545,7 @@ poi_list = [
 		str_name = "The Toxington Mines",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR.\n\nExits into Toxington.",
 		channel = channel_tt_mines,
-        wikipage = wiki_baseurl + "Toxington#The_Toxington_Mines",
+		wikipage = wiki_baseurl + "Toxington#The_Toxington_Mines",
 		role = "Toxington Mines",
 		pvp = False,
 		is_subzone = True,
@@ -15610,7 +15570,7 @@ poi_list = [
 		str_desc = "A quaint hole-in-the-wall vintage diner. The wallpaper may be peeling and the ‘80s paint job might be faded, but you’ll be damned if this place didn’t make an aesthetic stomping grounds for cheapskate juveniles like yourself. All the staff know you by name, they’ve memorized your order, and frankly they love you. You’re like a ninth son to the inbred owner and his many, many wives. It’s a cramped space, only fitting about 20 people maximum. The fluorescent lighting from the ceiling lamps invade every nook and cranny of the cyan and purple diner, even when the natural daylight could easily illuminate it just as well. You think you can see some mold on certain corners of the floor. Oh man, so cool.\n\nExits into Wreckington.",
 		topic = "The Smoker’s Cough - A quaint hole-in-the-wall vintage diner. The wallpaper may be peeling and the ‘80s paint job might be faded, but you’ll be damned if this place didn’t make an aesthetic stomping grounds for cheapskate juveniles like yourself. It’s so… pulp.",
 		channel = channel_diner,
-        wikipage = wiki_baseurl + "Wreckington#The_Smoker's_Cough",
+		wikipage = wiki_baseurl + "Wreckington#The_Smoker's_Cough",
 		role = "Smoker's Cough",
 		pvp = False,
 		vendors = [
@@ -15637,7 +15597,7 @@ poi_list = [
 		str_desc = "The last bastion of sophistication in this godforsaken city. A dimly lit, atmospheric fine dining restaurant with waiters and tables and archaic stuff like that. Upper crust juveniles and older fugitives make up the majority of the patrons, making you stick out like a sore thumb. Quiet, respectable murmurs pollute the air alongside the scrapping of silverware and the occasional hoity toity laugh. Everything about this place makes you sick.\n\nExits into Astatine Heights.",
 		topic = "Red Mobster - The last bastion of sospchication in this godforsaken city. A dimly lit, atmospheric fine dining restaurant with waiters and tables and archaic stuff like that. Man, what a trip!",
 		channel = channel_seafood,
-        wikipage = wiki_baseurl + "Astatine_Heights#Red_Mobster_Seafood",
+		wikipage = wiki_baseurl + "Astatine_Heights#Red_Mobster_Seafood",
 		role = "Red Mobster Seafood",
 		pvp = False,
 		vendors = [
@@ -15664,7 +15624,7 @@ poi_list = [
 		str_name = "The Juvie's Row Farms",
 		str_desc = "An array of haphazardly placed farms dot the already dense, crowded areas between mining shaft entrances and impoverished juvenile housing. Pollution is rampant here, with the numerous trash heaps and sludge refineries enjoying the majority of earth under the smoke-smuggered stars. It’s soil is irradiated and barely arable, but it will do. It has to.\n\nExits into Juvie's Row.",
 		channel = channel_jr_farms,
-        wikipage = wiki_baseurl + "Juvie's_Row#The_Juvie's_Row_Farms",
+		wikipage = wiki_baseurl + "Juvie's_Row#The_Juvie's_Row_Farms",
 		role = "Juvie's Row Farms",
 		pvp = False,
 		is_subzone = True,
@@ -15685,16 +15645,21 @@ poi_list = [
 			"oozegardenfarms",
 			"oozegardenfarm",
 			"oozegardensf",
-			"oozegardensfarm"
+			"oozegardensfarm",
+            "atomicforest",
+            "atomic",
+            "forest",
+            "af"
 		],
 		str_name = "The Ooze Gardens Farms",
-		str_desc = "An impressive host of unique and exotic flora are grown here. Originally on private property, the expansive greenhouses were the weekly meeting place for the city’s botanical society. They have since been seized by imminent domain and are now a public park. It’s type of soil is vast and varied depending on where you choose to plant. Surely, anything can grow here.\n\nExits into Ooze Gardens.",
+		str_desc = "An impressive host of unique and exotic flora are grown here. Originally on private property, the expansive greenhouses were the weekly meeting place for the city’s botanical society. They have since been seized by imminent domain and are now a public park. It’s type of soil is vast and varied depending on where you choose to plant. Surely, anything can grow here. Deeper into the gardens lies a hidden grotto inhabited by the Garden Gankers! They say they aren't gonna let you just squat here, but you can use the milling machines and gaiaslimeoid incubation vats for free if you want.\n\nExits into Ooze Gardens.",
 		channel = channel_og_farms,
-        wikipage = wiki_baseurl + "Ooze_Gardens#The_Ooze_Gardens_Farms",
+		wikipage = wiki_baseurl + "Ooze_Gardens#The_Ooze_Gardens_Farms",
 		role = "Ooze Gardens Farms",
 		pvp = False,
 		is_subzone = True,
 		mother_districts = [poi_id_oozegardens_street_c, poi_id_oozegardens_street_d],
+        vendors=[vendor_atomicforest],
 		neighbors = {
 			poi_id_oozegardens_street_c : travel_time_subzone,
 			poi_id_oozegardens_street_d : travel_time_subzone,
@@ -15715,7 +15680,7 @@ poi_list = [
 		str_name = "The Arsonbrook Farms",
 		str_desc = "A series of reedy creeks interspersed with quiet farms and burnt, black trees. It’s overcast skies make the embers from frequent forest fires glow even brighter by comparison. It’s soil is fertile with copious amounts of soot and accompanying nutrients.\n\nExits into Arsonbrook.",
 		channel = channel_ab_farms,
-        wikipage = wiki_baseurl + "Arsonbrook#The_Arsonbrook_Farms",
+		wikipage = wiki_baseurl + "Arsonbrook#The_Arsonbrook_Farms",
 		role = "Arsonbrook Farms",
 		pvp = False,
 		is_subzone = True,
@@ -15736,7 +15701,7 @@ poi_list = [
 		str_name = "Neo Milwaukee State",
 		str_desc = "An abysmally funded public college, with a student body of high school has-beens and future gas station attendants. With nearly a 100% acceptance rate, it’s needless to say that the riff raff is not kept out of this seedy establishment. People are here to stumble through their meaningless lives, chasing normality and appeasing their poor parent’s ideas of success by enrolling in the first college they get accepted to and walking out four years later with thousands of dollars of debt and a BA in English. No one here is excited to learn, no one is excited to teach, no one is excited for anything here. They all just want to die, and thankfully they will someday. **Use '!help' to get info on game mechanics, or '!order' if you want to purchase a game guide.**\n\nExits into North Sleezeborough. ",
 		channel = channel_neomilwaukeestate,
-        wikipage = wiki_baseurl + "North_Sleezeborough#Neo_Miluwaukee_State",
+		wikipage = wiki_baseurl + "North_Sleezeborough#Neo_Miluwaukee_State",
 		role = "Neo Milwaukee State",
 		pvp = False,
 		vendors = [
@@ -15759,7 +15724,7 @@ poi_list = [
 		str_name = "The Resort",
 		str_desc = "The interior is lavishly decorated with all manner of tropically-inspired furnishings, all beautifully maintained with nary a speck of grime staining it’s pristine off-white walls. Exotic potted plants and natural lighting fill the hallways, which all smell like the inside of a women’s body wash bottle. Palm trees seemingly occupy half of the outside land on the complex, averaging about 2 feet apart from one another at most to your calculations. Imported red sand of the beach stretches toward the horizon, lapped by gentle waves of slime. Couples enjoy slima coladas and tanning by the slime pool. This place fucking disgusts you. Is… is that a stegosaurus in the distance?\n\nExits into Assault Flats Beach.",
 		channel = channel_beachresort,
-        wikipage = wiki_baseurl + "Assault_Flats_Beach#The_Resort",
+		wikipage = wiki_baseurl + "Assault_Flats_Beach#The_Resort",
 		role = "Beach Resort",
 		pvp = False,
 		vendors = [
@@ -15781,7 +15746,7 @@ poi_list = [
 		str_name = "The Country Club",
 		str_desc = "On top of a grassy hill, behind several wired/eletric fences, lies Dreadford’s famous country club. The lodge itself is a huge, old wooden lodge from the 1800s, with hundreds of knick-knacks, hunting trophies and historic photos hung up on the wall, and tacky rugs and furniture around a roaring fire in it’s center. Sprawling out from the club itself is the complex’s signature golf course, where all the pompous rich assholes go to waste their time and chit-chat with each other about cheating on their wives.\n\nExits into Dreadford.",
 		channel = channel_countryclub,
-        wikipage = wiki_baseurl + "Dreadford#The_Country_Club",
+		wikipage = wiki_baseurl + "Dreadford#The_Country_Club",
 		role = "Country Club",
 		pvp = False,
 		vendors = [
@@ -15807,7 +15772,7 @@ poi_list = [
 		str_name = "The SlimeCorp Recycling Plant",
 		str_desc = "It looks like just another blocky building with a huge chimney contributing to Smogsburg's unique air quality, but the SlimeCorp marketing assures you that this plant in fact contains the latest in recycling technology, able to automatically sort and sustainably process any item. Whatever this technology may entail, it sure smells a lot like burning trash.\n\nExits into Smogsburg.",
 		channel = channel_recyclingplant,
-        wikipage = wiki_baseurl + "Smogsburg#The_SlimeCorp_Recycling_Plant",
+		wikipage = wiki_baseurl + "Smogsburg#The_SlimeCorp_Recycling_Plant",
 		role = "Recycling Plant",
 		pvp = False,
 		is_subzone = True,
@@ -15826,7 +15791,7 @@ poi_list = [
 		str_name = "Toxington Pier",
 		str_desc = "A rickety, decaying pier stretching over a bubbling lake of molten slime. Use of your olfactory organs in any capacity is not recommended, the toxic fumes this district is known for originate here, from these lakes. But, there are some pretty sicknasty fuckin’ fishes down there, you bet.\n\nExits into Toxington.",
 		channel = channel_tt_pier,
-        wikipage = wiki_baseurl + "Toxington#Toxington_Pier",
+		wikipage = wiki_baseurl + "Toxington#Toxington_Pier",
 		role = "Toxington Pier",
 		pvp = False,
 		is_subzone = True,
@@ -15848,7 +15813,7 @@ poi_list = [
 		str_name = "Jaywalker Plain Pier",
 		str_desc = "An old, sundrenched pier stretching over a lake overgrown with reeds and similar vegetation. It’s just one of the many natural beauties overlooked by the district’s perpetually twisted (a colloquialism for being drunk and high at the same time) population.\n\nExits into Jaywalker Plain.",
 		channel = channel_jp_pier,
-        wikipage = wiki_baseurl + "Jaywalker_Plain#Jaywalker_Plain_Pier",
+		wikipage = wiki_baseurl + "Jaywalker_Plain#Jaywalker_Plain_Pier",
 		role = "Jaywalker Plain Pier",
 		pvp = False,
 		is_subzone = True,
@@ -15871,7 +15836,7 @@ poi_list = [
 		str_name = "Crookline Pier",
 		str_desc = "A dark, modern pier stretching over a large lake on the outskirts of the district. Bait shops and other aquatic-based stores surround the water, with the occasional restaurant breaking up the monotony.\n\nExits into Crookline.",
 		channel = channel_cl_pier,
-        wikipage = wiki_baseurl + "Crookline#Crookline_Pier",
+		wikipage = wiki_baseurl + "Crookline#Crookline_Pier",
 		role = "Crookline Pier",
 		pvp = False,
 		is_subzone = True,
@@ -15893,7 +15858,7 @@ poi_list = [
 		str_name = "Assault Flats Beach Pier",
 		str_desc = "A white, picturesque wooden pier stretching far out into the Slime Sea. This famous landmark is a common destination for robber barons on vacation, with a various roller coasters and rides occupying large parts of the pier. It’s really fucking lame, and you feel sick thinking about the astronomical slime the yuppies around you have ontained solely through inhereitance. You vow to piss on the ferris wheel if you get the proper mutations.\n\nExits into Assault Flats Beach.",
 		channel = channel_afb_pier,
-        wikipage = wiki_baseurl + "Assault_Flats_Beach#Assault_Flats_Beach_Pier",
+		wikipage = wiki_baseurl + "Assault_Flats_Beach#Assault_Flats_Beach_Pier",
 		role = "Assault Flats Beach Pier",
 		pvp = False,
 		is_subzone = True,
@@ -15933,7 +15898,7 @@ poi_list = [
 		str_name = "Juvie's Row Pier",
 		str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Juvie's Row wharf. A few fishermen and off-duty sailors from nearby Vagrant's Corner all fish and get drunk around you, singing jaunty tunes and cursing loudly. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Juvie's Row.",
 		channel = channel_jr_pier,
-        wikipage = wiki_baseurl + "Juvie's_Row#Juvie's_Row_Pier",
+		wikipage = wiki_baseurl + "Juvie's_Row#Juvie's_Row_Pier",
 		role = "Juvie's Row Pier",
 		pvp = False,
 		is_subzone = True,
@@ -15954,7 +15919,7 @@ poi_list = [
 		str_name = "Slime's End Pier",
 		str_desc = "A lonesome pier at the very end of the Slime’s End peninsula, stretching out into the Slime Sea. From here, you’re able to clearly make out Downtown in the distance, pumping light pollution into the normally polluted air. You’re itching to get back there and punch some grandmas once you’re done wringing slime out of fish.\n\nExits into Slime's End.",
 		channel = channel_se_pier,
-        wikipage = wiki_baseurl + "Slime's_End#Slime's_End_Pier",
+		wikipage = wiki_baseurl + "Slime's_End#Slime's_End_Pier",
 		role = "Slime's End Pier",
 		pvp = False,
 		is_subzone = True,
@@ -15970,7 +15935,7 @@ poi_list = [
 		str_name = "The Slime Sea",
 		str_desc = "Slime as far as the eye can see.",
 		channel = channel_slimesea,
-        wikipage = wiki_baseurl + "The_Slime_Sea",
+		wikipage = wiki_baseurl + "The_Slime_Sea",
 		role = "Slime Sea",
 		pvp = True
 	),
@@ -15988,7 +15953,7 @@ poi_list = [
 		str_name = "The Wreckington Ferry Port",
 		str_desc = "Caddy corner to Wreckington’s iconic junkyard lies its less famous shipyard, filled mostly with dozens upon dozens of different garbage barges dumping off metric tons of trash every day but also hosting this very terminal! The ferry takes you from here to Vagrant’s Corner, so just head there like you would any other district and you’ll hop on the ferry. Nifty!\n\nExits into Wreckington.",
 		channel = channel_wt_port,
-        wikipage = wiki_baseurl + "Wreckington#The_Wreckington_Ferry_Port",
+		wikipage = wiki_baseurl + "Wreckington#The_Wreckington_Ferry_Port",
 		role = "Wreckington Port",
 		pvp = True,
 		is_subzone = True,
@@ -16014,7 +15979,7 @@ poi_list = [
 		str_name = "The Vagrant's Corner Ferry Port",
 		str_desc = "Down one of hundreds of piers on the crowded Vagrant’s Corner wharf sits this dingy dinghy terminal. The ferry takes you from here to Wreckington, so just head there like you would any other district and you’ll hop on the ferry. Nifty!\n\nExits into Vagrant's Corner.",
 		channel = channel_vc_port,
-        wikipage = wiki_baseurl + "Vagrant's_Corner#The_Vagrant's_Corner_Ferry_Port",
+		wikipage = wiki_baseurl + "Vagrant's_Corner#The_Vagrant's_Corner_Ferry_Port",
 		role = "Vagrant's Corner Port",
 		pvp = True,
 		is_subzone = True,
@@ -16046,7 +16011,7 @@ poi_list = [
 		str_name = "The Toxington Subway Station",
 		str_desc = str_pink_subway_station_description + "\n\nExits into Toxington.",
 		channel = channel_tt_subway_station,
-        wikipage = wiki_baseurl + "Toxington#The_Toxington_Subway_Station",
+		wikipage = wiki_baseurl + "Toxington#The_Toxington_Subway_Station",
 		role = "Toxington Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16078,7 +16043,7 @@ poi_list = [
 		str_name = "The Astatine Heights Subway Station",
 		str_desc = str_pink_subway_station_description + "\n\nExits into Astatine Heights.",
 		channel = channel_ah_subway_station,
-        wikipage = wiki_baseurl + "Astatine_Heights#The_Astatine_Heights_Subway_Station",
+		wikipage = wiki_baseurl + "Astatine_Heights#The_Astatine_Heights_Subway_Station",
 		role = "Astatine Heights Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16110,7 +16075,7 @@ poi_list = [
 		str_name = "The Gatlingsdale Subway Station",
 		str_desc = str_pink_subway_station_description + "\n\nExits into Gatlingsdale.",
 		channel = channel_gd_subway_station,
-        wikipage = wiki_baseurl + "Gatlingsdale#The_Gatlingsdale_Subway_Station",
+		wikipage = wiki_baseurl + "Gatlingsdale#The_Gatlingsdale_Subway_Station",
 		role = "Gatlingsdale Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16141,7 +16106,7 @@ poi_list = [
 		str_name = "The Arsonbrook Subway Station",
 		str_desc = str_purple_subway_station_description + "\n\nExits into Arsonbrook.",
 		channel = channel_ab_subway_station,
-        wikipage = wiki_baseurl + "Arsonbrook#The_Arsonbrook_Subway_Station",
+		wikipage = wiki_baseurl + "Arsonbrook#The_Arsonbrook_Subway_Station",
 		role = "Arsonbrook Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16173,7 +16138,7 @@ poi_list = [
 		str_name = "The Cop Killtown Subway Station",
 		str_desc = str_pink_subway_station_description + "\n\nExits into Cop Killtown.",
 		channel = channel_ck_subway_station,
-        wikipage = wiki_baseurl + "Cop_Killtown#The_Cop_Killtown_Subway_Station",
+		wikipage = wiki_baseurl + "Cop_Killtown#The_Cop_Killtown_Subway_Station",
 		role = "Cop Killtown Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16204,7 +16169,7 @@ poi_list = [
 		str_name = "The Smogsburg Subway Station",
 		str_desc = str_purple_subway_station_description + "\n\nExits into Smogsburg.",
 		channel = channel_sb_subway_station,
-        wikipage = wiki_baseurl + "Smogsburg#The_Smogsburg_Subway_Station",
+		wikipage = wiki_baseurl + "Smogsburg#The_Smogsburg_Subway_Station",
 		role = "Smogsburg Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16230,7 +16195,7 @@ poi_list = [
 		str_name = "The Downtown NLACakaNM Subway Station",
 		str_desc = str_downtown_station_description,
 		channel = channel_dt_subway_station,
-        wikipage = wiki_baseurl + "Downtown_NLACakaNM#The_Downtown_NLACakaNM_Subway_Station",
+		wikipage = wiki_baseurl + "Downtown_NLACakaNM#The_Downtown_NLACakaNM_Subway_Station",
 		role = "Downtown Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16265,7 +16230,7 @@ poi_list = [
 						"\n\n" + str_gold_subway_station_description + \
 			"\n\nExits into Krak Bay.",
 		channel = channel_kb_subway_station,
-        wikipage = wiki_baseurl + "Krak_Bay#The_Krak_Bay_Subway_Station",
+		wikipage = wiki_baseurl + "Krak_Bay#The_Krak_Bay_Subway_Station",
 		role = "Krak Bay Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16296,7 +16261,7 @@ poi_list = [
 		str_name = "The Glocksbury Subway Station",
 		str_desc = str_black_subway_station_description + "\n\nExits into Glocksbury.",
 		channel = channel_gb_subway_station,
-        wikipage = wiki_baseurl + "Glocksbury#The_Glocksbury_Subway_Station",
+		wikipage = wiki_baseurl + "Glocksbury#The_Glocksbury_Subway_Station",
 		role = "Glocksbury Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16327,7 +16292,7 @@ poi_list = [
 		str_name = "The West Glocksbury Subway Station",
 		str_desc = str_black_subway_station_description + "\n\nExits into West Glocksbury.",
 		channel = channel_wgb_subway_station,
-        wikipage = wiki_baseurl + "West_Glocksbury#The_West_Glocksbury_Subway_Station",
+		wikipage = wiki_baseurl + "West_Glocksbury#The_West_Glocksbury_Subway_Station",
 		role = "West Glocksbury Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16358,7 +16323,7 @@ poi_list = [
 		str_name = "The Jaywalker Plain Subway Station",
 		str_desc = str_gold_subway_station_description + "\n\nExits into Jaywalker Plain.",
 		channel = channel_jp_subway_station,
-        wikipage = wiki_baseurl + "Jaywalker_Plain#The_Jaywalker_Plain_Subway_Station",
+		wikipage = wiki_baseurl + "Jaywalker_Plain#The_Jaywalker_Plain_Subway_Station",
 		role = "Jaywalker Plain Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16391,7 +16356,7 @@ poi_list = [
 		str_name = "The North Sleezeborough Subway Station",
 		str_desc = str_gold_subway_station_description + "\n\nExits into North Sleezeborough.",
 		channel = channel_nsb_subway_station,
-        wikipage = wiki_baseurl + "North_Sleezeborough#The_North_Sleezeborough_Subway_Station",
+		wikipage = wiki_baseurl + "North_Sleezeborough#The_North_Sleezeborough_Subway_Station",
 		role = "North Sleezeborough Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16424,7 +16389,7 @@ poi_list = [
 		str_name = "The South Sleezeborough Subway Station",
 		str_desc = str_purple_subway_station_description + "\n\nExits into South Sleezeborough.",
 		channel = channel_ssb_subway_station,
-        wikipage = wiki_baseurl + "South_Sleezeborough#The_South_Sleezeborough_Subway_Station",
+		wikipage = wiki_baseurl + "South_Sleezeborough#The_South_Sleezeborough_Subway_Station",
 		role = "South Sleezeborough Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16456,7 +16421,7 @@ poi_list = [
 		str_name = "The Cratersville Subway Station",
 		str_desc = str_pink_subway_station_description + "\n\nExits into Cratersville.",
 		channel = channel_cv_subway_station,
-        wikipage = wiki_baseurl + "Cratersville#The_Cratersville_Subway_Station",
+		wikipage = wiki_baseurl + "Cratersville#The_Cratersville_Subway_Station",
 		role = "Cratersville Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16488,7 +16453,7 @@ poi_list = [
 		str_name = "The Wreckington Subway Station",
 		str_desc = str_pink_subway_station_description + "\n\nExits into Wreckington.",
 		channel = channel_wt_subway_station,
-        wikipage = wiki_baseurl + "Wreckington#The_Wreckington_Subway_Station",
+		wikipage = wiki_baseurl + "Wreckington#The_Wreckington_Subway_Station",
 		role = "Wreckington Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16519,7 +16484,7 @@ poi_list = [
 		str_name = "The Rowdy Roughhouse Subway Station",
 		str_desc = str_pink_subway_station_description + "\n\nExits into Rowdy Roughhouse.",
 		channel = channel_rr_subway_station,
-        wikipage = wiki_baseurl + "Rowdy_Roughhouse#The_Rowdy_Roughhouse_Subway_Station",
+		wikipage = wiki_baseurl + "Rowdy_Roughhouse#The_Rowdy_Roughhouse_Subway_Station",
 		role = "Rowdy Roughhouse Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16551,7 +16516,7 @@ poi_list = [
 		str_name = "The Green Light District Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into Green Light District.",
 		channel = channel_gld_subway_station,
-        wikipage = wiki_baseurl + "Green_Light_District#The_Green_Light_District_Subway_Station",
+		wikipage = wiki_baseurl + "Green_Light_District#The_Green_Light_District_Subway_Station",
 		role = "Green Light District Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16582,7 +16547,7 @@ poi_list = [
 		str_name = "The Juvie's Row Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into Juvie's Row.",
 		channel = channel_jr_subway_station,
-        wikipage = wiki_baseurl + "Juvie's_Row#The_Juvie's_Row_Subway_Station",
+		wikipage = wiki_baseurl + "Juvie's_Row#The_Juvie's_Row_Subway_Station",
 		role = "Juvie's Row Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16613,7 +16578,7 @@ poi_list = [
 		str_name = "The Vagrant's Corner Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into Vagrant's Corner.",
 		channel = channel_vc_subway_station,
-        wikipage = wiki_baseurl + "Vagrant's_Corner#The_Vagrant's_Corner_Subway_Station",
+		wikipage = wiki_baseurl + "Vagrant's_Corner#The_Vagrant's_Corner_Subway_Station",
 		role = "Vagrant's Corner Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16644,7 +16609,7 @@ poi_list = [
 		str_name = "The Vandal Park Subway Station",
 		str_desc = str_black_subway_station_description + "\n\nExits into Vandal Park.",
 		channel = channel_vp_subway_station,
-        wikipage = wiki_baseurl + "Vandal_Park#The_Vandal_Park_Subway_Station",
+		wikipage = wiki_baseurl + "Vandal_Park#The_Vandal_Park_Subway_Station",
 		role = "Vandal Park Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16676,7 +16641,7 @@ poi_list = [
 		str_name = "The Crookline Subway Station",
 		str_desc = str_gold_subway_station_description + "\n\nExits into Crookline.",
 		channel = channel_cl_subway_station,
-        wikipage = wiki_baseurl + "Crookline#The_Crookline_Subway_Station",
+		wikipage = wiki_baseurl + "Crookline#The_Crookline_Subway_Station",
 		role = "Crookline Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16708,7 +16673,7 @@ poi_list = [
 		str_name = "The Ooze Gardens Subway Station",
 		str_desc = str_purple_subway_station_description + "\n\nExits into Ooze Gardens.",
 		channel = channel_og_subway_station,
-        wikipage = wiki_baseurl + "Ooze_Gardens#The_Ooze_Gardens_Subway_Station",
+		wikipage = wiki_baseurl + "Ooze_Gardens#The_Ooze_Gardens_Subway_Station",
 		role = "Crookline Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16739,7 +16704,7 @@ poi_list = [
 		str_name = "The Poudrin Alley Subway Station",
 		str_desc = str_purple_subway_station_description + "\n\nExits into Poudrin Alley.",
 		channel = channel_pa_subway_station,
-        wikipage = wiki_baseurl + "Poudrin_Alley#The_Poudrin_Alley_Subway_Station",
+		wikipage = wiki_baseurl + "Poudrin_Alley#The_Poudrin_Alley_Subway_Station",
 		role = "Poudrin Alley Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16770,7 +16735,7 @@ poi_list = [
 		str_name = "The Brawlden Subway Station",
 		str_desc = str_purple_subway_station_description + "\n\nExits into Brawlden.",
 		channel = channel_bd_subway_station,
-        wikipage = wiki_baseurl + "Brawlden#The_Brawlden_Subway_Station",
+		wikipage = wiki_baseurl + "Brawlden#The_Brawlden_Subway_Station",
 		role = "Brawlden Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16801,7 +16766,7 @@ poi_list = [
 		str_name = "The New New Yonkers Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into Brawlden.",
 		channel = channel_nny_subway_station,
-        wikipage = wiki_baseurl + "New_New_Yonkers#The_New_New_Yonkers_Subway_Station",
+		wikipage = wiki_baseurl + "New_New_Yonkers#The_New_New_Yonkers_Subway_Station",
 		role = "New New Yonkers Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16832,7 +16797,7 @@ poi_list = [
 		str_name = "The Little Chernobyl Subway Station",
 		str_desc = str_purple_subway_station_description + "\n\nExits into Little Chernobyl.",
 		channel = channel_lc_subway_station,
-        wikipage = wiki_baseurl + "Little_Chernobyl#The_Little_Chernobyl_Subway_Station",
+		wikipage = wiki_baseurl + "Little_Chernobyl#The_Little_Chernobyl_Subway_Station",
 		role = "Little Chernobyl Subway Station",
 		pvp = True,
 		is_subzone = True,
@@ -16893,7 +16858,7 @@ poi_list = [
 		str_name = "The Dreadford Blimp Tower",
 		str_desc = str_blimp_tower_description + "\n\nExits into Dreadford.",
 		channel = channel_df_blimp_tower,
-        wikipage = wiki_baseurl + "Dreadford#The_Dreadford_Blimp_Tower",
+		wikipage = wiki_baseurl + "Dreadford#The_Dreadford_Blimp_Tower",
 		role = "Dreadford Blimp Tower",
 		pvp = True,
 		is_subzone = True,
@@ -16923,7 +16888,7 @@ poi_list = [
 		str_name = "The Assault Flats Beach Blimp Tower",
 		str_desc = str_blimp_tower_description + "\n\nExits into Assault Flats Beach.",
 		channel = channel_afb_blimp_tower,
-        wikipage = wiki_baseurl + "Assault_Flats_Beach#The_Assault_Flats_Beach_Blimp_Tower",
+		wikipage = wiki_baseurl + "Assault_Flats_Beach#The_Assault_Flats_Beach_Blimp_Tower",
 		role = "Assault Flats Beach Blimp Tower",
 		pvp = True,
 		is_subzone = True,
@@ -16949,7 +16914,7 @@ poi_list = [
 		str_desc = "The sleek glass walls and cold, green tile flooring give the place an intimidating presence. That is, if it weren't for the disheveled drunk fellow sitting on the reception desk ahead of you. A huge 3-D SlimeCorp logo hangs off the ceiling above his head.\n\nExits into Old New Yonkers.",
 		pvp = False,
 		channel = channel_realestateagency,
-        wikipage = wiki_baseurl + "Old_New_Yonkers#SlimeCorp_Real_Esate_Agency",
+		wikipage = wiki_baseurl + "Old_New_Yonkers#SlimeCorp_Real_Esate_Agency",
 		role = "Real Estate Agency",
 		mother_districts = [poi_id_oldnewyonkers],
 		is_subzone = True,
@@ -16973,7 +16938,7 @@ poi_list = [
 		pvp = False,
 		vendors = [vendor_glocksburycomics],
 		channel = "glocksbury-comics",
-        wikipage = wiki_baseurl + "Glocksbury#Glocksbury_Comics",
+		wikipage = wiki_baseurl + "Glocksbury#Glocksbury_Comics",
 		role = "Glocksbury Comics",
 		mother_districts = [poi_id_glocksbury],
 		is_subzone = True,
@@ -16998,7 +16963,7 @@ poi_list = [
 		pvp=False,
 		vendors=[vendor_slimypersuits],
 		channel="slimy-persuits",
-        wikipage = wiki_baseurl + "New_New_Yonkers#Slimy_Persuits",
+		wikipage = wiki_baseurl + "New_New_Yonkers#Slimy_Persuits",
 		role="Slimy Persuits",
 		mother_districts  = [poi_id_newnewyonkers],
 		is_subzone=True,
@@ -17020,7 +16985,7 @@ poi_list = [
 		pvp=False,
 		vendors=[vendor_greencakecafe],
 		channel="green-cake-cafe",
-        wikipage = wiki_baseurl + "Little_Chernobyl#Green_Cake_Cafe",
+		wikipage = wiki_baseurl + "Little_Chernobyl#Green_Cake_Cafe",
 		role="Green Cake Cafe",
 		mother_districts = [poi_id_littlechernobyl],
 		is_subzone=True,
@@ -17042,7 +17007,7 @@ poi_list = [
 		str_desc="A sickening display of worship recently and secretly installed by those who wish to pay tribute to that blue cartoon, the one that's plagued our city for Slime Invictus knows HOW long. Legends say you can offer up your slime and !purify yourself with the deadly waters that fluctuate in, out, and around the fountain. Even THINKING about the act of doing such a thing makes you SICK... or, maybe not? There's no shame in trying something you've never tried before, you think to yourself.\n\nExits into Krak Bay.",
 		pvp=False,
 		channel=channel_sodafountain,
-        wikipage = wiki_baseurl + "Krak_Bay#The_Bicarbonate_Soda_Fountain",
+		wikipage = wiki_baseurl + "Krak_Bay#The_Bicarbonate_Soda_Fountain",
 		role="The Bicarbonate Soda Fountain",
 		mother_districts  = [poi_id_krakbay],
 		is_subzone=True,
@@ -17059,7 +17024,7 @@ poi_list = [
 		str_name = "The Ferry",
 		str_desc = "A modest two-story passenger ferry, built probably 80 years ago. Its faded paint is starting to crack and its creaky wood benches aren’t exactly comfortable. Though it’s not much to look at, you still love riding it. Out here, all you have to think about is the cool wind in your hair, the bright green glow of the Slime Sea searing your eyes, and the New Los Angeles City aka Neo Milwaukee skyline in the distance. You plug in earbuds to drown out the sea captain’s embarrassing Jungle Cruise-tier commentary over the microphone. Good times.",
 		channel = channel_ferry,
-        wikipage = wiki_baseurl + "Public_Transportation#The_Ferry",
+		wikipage = wiki_baseurl + "Public_Transportation#The_Ferry",
 		role = "Ferry",
 		pvp = True,
 		is_transport = True,
@@ -17074,7 +17039,7 @@ poi_list = [
 		str_name = "A Pink Line Subway Train",
 		str_desc = str_pink_subway_description,
 		channel = channel_subway_pink01,
-        wikipage = wiki_baseurl + "Public_Transportation#The_Pink_Line",
+		wikipage = wiki_baseurl + "Public_Transportation#The_Pink_Line",
 		role = "Subway Train PINK-01",
 		pvp = True,
 		is_transport = True,
@@ -17087,7 +17052,7 @@ poi_list = [
 		str_name = "A Pink Line Subway Train",
 		str_desc = str_pink_subway_description,
 		channel = channel_subway_pink02,
-        wikipage = wiki_baseurl + "Public_Transportation#The_Pink_Line",
+		wikipage = wiki_baseurl + "Public_Transportation#The_Pink_Line",
 		role = "Subway Train PINK-02",
 		pvp = True,
 		is_transport = True,
@@ -17100,7 +17065,7 @@ poi_list = [
 		str_name = "A Gold Line Subway Train",
 		str_desc = str_gold_subway_description,
 		channel = channel_subway_gold01,
-        wikipage = wiki_baseurl + "Public_Transportation#The_Gold_Line",
+		wikipage = wiki_baseurl + "Public_Transportation#The_Gold_Line",
 		role = "Subway Train GOLD-01",
 		pvp = True,
 		is_transport = True,
@@ -17113,7 +17078,7 @@ poi_list = [
 		str_name = "A Gold Line Subway Train",
 		str_desc = str_gold_subway_description,
 		channel = channel_subway_gold02,
-        wikipage = wiki_baseurl + "Public_Transportation#The_Gold_Line",
+		wikipage = wiki_baseurl + "Public_Transportation#The_Gold_Line",
 		role = "Subway Train GOLD-02",
 		pvp = True,
 		is_transport = True,
@@ -17125,7 +17090,7 @@ poi_list = [
 		id_poi = poi_id_subway_green01,
 		str_name = "A Green Line Subway Train",
 		str_desc = str_green_subway_description,
-        wikipage = wiki_baseurl + "Public_Transportation#The_Green_Line",
+		wikipage = wiki_baseurl + "Public_Transportation#The_Green_Line",
 		channel = channel_subway_green01,
 		role = "Subway Train GREEN-01",
 		pvp = True,
@@ -17139,7 +17104,7 @@ poi_list = [
 		str_name = "A Green Line Subway Train",
 		str_desc = str_green_subway_description,
 		channel = channel_subway_green02,
-        wikipage = wiki_baseurl + "Public_Transportation#The_Green_Line",
+		wikipage = wiki_baseurl + "Public_Transportation#The_Green_Line",
 		role = "Subway Train GREEN-02",
 		pvp = True,
 		is_transport = True,
@@ -17152,7 +17117,7 @@ poi_list = [
 		str_name = "A Black Line Subway Train",
 		str_desc = str_purple_subway_description,
 		channel = channel_subway_black01,
-        wikipage = wiki_baseurl + "Public_Transportation#The_Black_Line",
+		wikipage = wiki_baseurl + "Public_Transportation#The_Black_Line",
 		role = "Subway Train BLACK-01",
 		pvp = True,
 		is_transport = True,
@@ -17165,7 +17130,7 @@ poi_list = [
 		str_name = "A Black Line Subway Train",
 		str_desc = str_purple_subway_description,
 		channel = channel_subway_black02,
-        wikipage = wiki_baseurl + "Public_Transportation#The_Black_Line",
+		wikipage = wiki_baseurl + "Public_Transportation#The_Black_Line",
 		role = "Subway Train BLACK-02",
 		pvp = True,
 		is_transport = True,
@@ -17178,7 +17143,7 @@ poi_list = [
 		str_name = "A Purple Line Subway Train",
 		str_desc = str_purple_subway_description,
 		channel = channel_subway_purple01,
-        wikipage = wiki_baseurl + "Public_Transportation#The_Purple_Line",
+		wikipage = wiki_baseurl + "Public_Transportation#The_Purple_Line",
 		role = "Subway Train PURPLE-01",
 		pvp = True,
 		is_transport = True,
@@ -17191,7 +17156,7 @@ poi_list = [
 		str_name = "A Purple Line Subway Train",
 		str_desc = str_purple_subway_description,
 		channel = channel_subway_purple02,
-        wikipage = wiki_baseurl + "Public_Transportation#The_Purple_Line",
+		wikipage = wiki_baseurl + "Public_Transportation#The_Purple_Line",
 		role = "Subway Train PURPLE-02",
 		pvp = True,
 		is_transport = True,
@@ -17220,7 +17185,7 @@ poi_list = [
 		str_name = "The Blimp",
 		str_desc = str_blimp_description,
 		channel = channel_blimp,
-        wikipage = wiki_baseurl + "Public_Transportation#The_Blimp",
+		wikipage = wiki_baseurl + "Public_Transportation#The_Blimp",
 		role = "Blimp",
 		pvp = True,
 		is_transport = True,
@@ -17231,7 +17196,7 @@ poi_list = [
 	EwPoi( # apt-downtown
 		id_poi = poi_id_apt_downtown,
 		alias = [
-            
+			
 		],
 		str_name = "a Downtown apartment",
 		str_desc = "",
@@ -17645,7 +17610,7 @@ poi_list = [
 		str_name = "Slime's End Cliffs",
 		str_desc = "Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a leisurely cig. Someone's got their eyes on you. Exits into Slime's End.",
 		channel = channel_slimesendcliffs,
-        wikipage = wiki_baseurl + "Slime's_End#Slime's_End_Cliffs",
+		wikipage = wiki_baseurl + "Slime's_End#Slime's_End_Cliffs",
 		role = "Slime's End Cliffs",
 		mother_districts = [poi_id_slimesend],
 		pvp = True,
@@ -17663,7 +17628,7 @@ poi_list = [
 		str_name = "Bodega",
 		str_desc = "Located behind a secret door in a seemingly innocuous corner store, Bodega is a high end clothing store for the freshest kids in the city.\n\nFrom the outside, Bodega appears to be simply another of the interchangeable convenience stores found on nearly every block of every major city. The windows are completely packed by dusty non-perishables, and the interior is not much better with every  inch of space selling snacks or household basics in a visually deafening assault of brand names. However, those in the know simply stroll past all this noise and head for the old Snapple machine in the back of the shop. The machine is not that at all but a door that slides open to reveal a whole other store on the other side, this is the real Bodega. Neatly appointed, lacquered shelves hold the latest in street and skate fashion from shoes to shirts to jackets. The whole space is clean and orderly in a far cry from the cramped store front.\n\n(This description was literally just stolen and lightly edited from Atlas Obsurca. This is a real place in Boston, look it up. Pretty sick, huh?)\n\nThe well-trimmed, over-cologned four-eyed hipster behind the counter looks upon you with what can only be described as the freakish offspring of utter disdain and mindlessly sycophantic puppy-dog eyes that hope to lure you into an ill-advised purchase of high end socks that forces you to take out a second mortgage on your house. *SHARP INHALE*. He’ll !sew the dirty, unwashed rags you dare call clothing back together if it gets shredded in combat, for a price. You can also get your old outfits !retrofit'd with added combat functionalities here, also for a price.\n\nExits into Krak Bay.",
 		channel = channel_bodega,
-        wikipage = wiki_baseurl + "Krak_Bay#Bodega",
+		wikipage = wiki_baseurl + "Krak_Bay#Bodega",
 		role = "Bodega",
 		mother_districts = [poi_id_krakbay],
 		pvp = False,
@@ -17685,7 +17650,7 @@ poi_list = [
 		str_name = "the Waffle House",
 		str_desc = "As nondescript as its façade, the Waffle House has a very simplistic interior, going for a slightly modernized mid-century look. The warm lighting of the incandescent lightbulbs combines with the crispy fresh air coming from outside and the old timey music to give the place an extraordinarily comforting ambience. The entrance directly faces a short counter manned by old man Leopold, a pleasant guy in his 70s with a thick European accent who seems to run the entire joint. A few tables are laid by the windows, with a view that makes you wonder if you've gone blind. \n\nExits back into the Void.",
 		channel = channel_wafflehouse,
-        wikipage = wiki_baseurl + "The_Void#The_Waffle_House",
+		wikipage = wiki_baseurl + "The_Void#The_Waffle_House",
 		role = "Waffle House",
 		mother_districts = [poi_id_thevoid],
 		pvp = False,
@@ -17708,7 +17673,7 @@ poi_list = [
 		str_name = "Based Hardware",
 		str_desc = "A hardware store right beside a gas station. This place is a fucking mess, even by your standards. Cluttered stacks of washing machines and other various household necessities tower over you, turning the place into a goddamn corn maze made out of worn out appliances. Your only saving grace in terms of navigation is the piss-yellow incandescent lighting fixed to the ceiling. On the radio, you can hear a Sludgefest rendition of 'Hardware Store' by Weird-Al Yankovic quietly echoing throughout the makeshift corridors on loop. You think it'd be best to find what your looking for and make a dash to the checkout section, before some psychopath pulls you aside and bashes your skull in.",
 		channel = channel_basedhardware,
-        wikipage = wiki_baseurl + "West_Glocksbury#Based_Hardware",
+		wikipage = wiki_baseurl + "West_Glocksbury#Based_Hardware",
 		role = "Based Hardware",
 		mother_districts = [poi_id_westglocksbury],
 		pvp = False,
@@ -17746,1073 +17711,387 @@ poi_list = [
 		is_subzone = True,
 		pvp = False,
 	),
-	# Outskirts start here
 	EwPoi(  # Outskirts - 1
-		id_poi=poi_id_wreckington_outskirts_edge,
+		id_poi=poi_id_south_outskirts_edge,
 		alias=[
-			"wreckingtonoutskirtsedge",
-			"wtoutskirtsedge",
-			"wtoedge",
-			"wtoe",
+			"soedge",
+			"soe",
 		],
-		str_name="Wreckington Outskirts Edge",
-		str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="wreckington-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts",
+		str_name="South Outskirts Edge",
+		str_desc=str_generic_outskirts_description_edge,
+		channel="south-outskirts-edge",
+		wikipage = wiki_baseurl + "Outskirts#Edge",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
+			poi_id_south_outskirts : travel_time_outskirt,
 			poi_id_wreckington_street_a : travel_time_outskirt,
 			poi_id_wreckington_street_b : travel_time_outskirt,
-			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
-			poi_id_wreckington_outskirts : travel_time_outskirt,
+			poi_id_cratersville_street_a : travel_time_outskirt,
+			poi_id_cratersville_street_c : travel_time_outskirt,
+			poi_id_oozegardens_street_a : travel_time_outskirt,
+			poi_id_oozegardens_street_d : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 2
-		id_poi=poi_id_cratersville_outskirts_edge,
+		id_poi=poi_id_southwest_outskirts_edge,
 		alias=[
-			"cratersvilleoutskirtsedge",
-			"cvoutskirtsedge",
-			"cvoedge",
-			"cvoe",
+			"swoedge",
+			"swoe",
 		],
-		str_name="Cratersville Outskirts Edge",
-		str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description_edge),
-		channel="cratersville-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts",
+		str_name="Southwest Outskirts Edge",
+		str_desc=str_generic_outskirts_description_edge,
+		channel="southwest-outskirts-edge",
+		wikipage = wiki_baseurl + "Outskirts#Edge",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_cratersville_street_a : travel_time_outskirt,
-			poi_id_cratersville_street_c : travel_time_outskirt,
-			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
-			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
-			poi_id_cratersville_outskirts : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
+			poi_id_southwest_outskirts : travel_time_outskirt,
+			poi_id_south_outskirts_edge : travel_time_outskirt,
+			poi_id_southsleezeborough_street_a : travel_time_outskirt,
+			poi_id_southsleezeborough_street_d : travel_time_outskirt,
+			poi_id_crookline_street_a : travel_time_outskirt,
+			poi_id_crookline_street_b : travel_time_outskirt,
+			poi_id_dreadford_street_a : travel_time_outskirt,
+			poi_id_dreadford_street_b : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 3
-		id_poi=poi_id_oozegardens_outskirts_edge,
+		id_poi=poi_id_west_outskirts_edge,
 		alias=[
-			"oozegardensoutskirtsedge",
-			"ogoutskirtsedge",
-			"ogoedge",
-			"ogoe",
+			"woedge",
+			"woe",
 		],
-		str_name="Ooze Gardens Outskirts Edge",
-		str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="ooze-gardens-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts",
+		str_name="West Outskirts Edge",
+		str_desc=str_generic_outskirts_description_edge,
+		channel="west-outskirts-edge",
+		wikipage = wiki_baseurl + "Outskirts#Edge",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_oozegardens_street_a : travel_time_outskirt,
-			poi_id_oozegardens_street_d : travel_time_outskirt,
-			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
-			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
-			poi_id_oozegardens_outskirts : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts : travel_time_outskirt,
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
+			poi_id_jaywalkerplain_street_c : travel_time_outskirt,
+			poi_id_jaywalkerplain_street_d : travel_time_outskirt,
+			poi_id_westglocksbury_street_c : travel_time_outskirt,
+			poi_id_westglocksbury_street_d : travel_time_outskirt,
+			poi_id_poloniumhill_street_c : travel_time_outskirt,
+			poi_id_poloniumhill_street_d : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 4
-		id_poi=poi_id_southsleezeborough_outskirts_edge,
+		id_poi=poi_id_northwest_outskirts_edge,
 		alias=[
-			"southsleezeboroughoutskirtsedge",
-			"ssboutskirtsedge",
-			"ssboedge",
-			"ssboe",
+			"nwoedge",
+			"nwoe",
 		],
-		str_name="South Sleezeborough Outskirts Edge",
-		str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="south-sleezeborough-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts",
+		str_name="Northwest Outskirts Edge",
+		str_desc="You’ve never seen ruins this... recent. This area used to be a part of Charcoal Park, but now it’s a complete ghost town. You might even mistake it for a bonafide part of the city were it not for all the desert raiders and bubbling acid pools everywhere. It really makes you think about what could’ve been, you know? Maybe if the Veteran center wasn’t shielding Charcoal Park from this mess, we could’ve gotten rid of that stupid-ass district ages ago.",
+		channel="northwest-outskirts-edge",
+		wikipage = wiki_baseurl + "Outskirts#Edge",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_southsleezeborough_street_a : travel_time_outskirt,
-			poi_id_southsleezeborough_street_d : travel_time_outskirt,
-			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
-			poi_id_crookline_outskirts_edge : travel_time_outskirt,
-			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts : travel_time_outskirt,
+			poi_id_north_outskirts : travel_time_outskirt,
+			poi_id_charcoalpark_street_a : travel_time_outskirt,
+			poi_id_charcoalpark_street_b : travel_time_outskirt,
+			poi_id_toxington_street_c : travel_time_outskirt,
+			poi_id_toxington_street_d : travel_time_outskirt,
+			poi_id_maimridge_street_b : travel_time_outskirt,
+			poi_id_maimridge_street_c : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 5
-		id_poi=poi_id_crookline_outskirts_edge,
+		id_poi=poi_id_north_outskirts_edge,
 		alias=[
-			"crooklineoutskirtsedge",
-			"cloutskirtsedge",
-			"cloedge",
-			"cloe",
+			"noedge",
+			"noe",
 		],
-		str_name="Crookline Outskirts Edge",
-		str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="crookline-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts#Edge",
+		str_name="North Outskirts Edge",
+		str_desc=str_generic_outskirts_description_edge,
+		channel="north-outskirts-edge",
+		wikipage = wiki_baseurl + "Outskirts#Edge",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_crookline_street_a : travel_time_outskirt,
-			poi_id_crookline_street_b : travel_time_outskirt,
-			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
-			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
-			poi_id_crookline_outskirts : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts : travel_time_outskirt,
+			poi_id_nuclear_beach_edge : travel_time_outskirt,
+			poi_id_arsonbrook_street_c : travel_time_outskirt,
+			poi_id_arsonbrook_street_d : travel_time_outskirt,
+			poi_id_brawlden_street_a : travel_time_outskirt,
+			poi_id_brawlden_street_b : travel_time_outskirt,
+			poi_id_newnewyonkers_street_a : travel_time_outskirt,
+			poi_id_newnewyonkers_street_b : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 6
-		id_poi=poi_id_dreadford_outskirts_edge,
+		id_poi=poi_id_nuclear_beach_edge,
 		alias=[
-			"dreadfordoutskirtsedge",
-			"dfoutskirtsedge",
-			"dfoedge",
-			"dfoe",
+			"nbedge",
+			"nbe",
+            "downpourlab",
+            "dplab",
+            "brainz"
 		],
-		str_name="Dreadford Outskirts Edge",
-		str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="dreadford-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts#Edge",
-		pvp=True,
+		str_name="Nuclear Beach Edge - Location of Dr. Downpour's Laboratory",
+		# str_desc=str_generic_outskirts_description_edge,
+        str_desc = "An armored fortress towering over the shores of the Slime Sea. Inside, an oppressive mechanical atmosphere looms over your presence as you eye vats containing secreatures crowding the various facilities and corridors. One of the doors inside the complex holds a 3D printer designed entirely for tombstone production. A vending machine containing protective gear is close by, its florescent lighting giving off a low hum. A dock outside the laboratory is stocked with diving gear, perfect for a nice game of Shambaquarium.",
+		channel="nuclear-beach-edge",
+		wikipage = wiki_baseurl + "Outskirts#Edge",
+		# pvp=True,
 		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_dreadford_street_a : travel_time_outskirt,
-			poi_id_dreadford_street_b : travel_time_outskirt,
-			poi_id_crookline_outskirts_edge : travel_time_outskirt,
-			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
-			poi_id_dreadford_outskirts : travel_time_outskirt,
+		# is_outskirts = True,
+		# neighbors = {
+		# 	poi_id_north_outskirts_edge : travel_time_outskirt,
+		# 	poi_id_nuclear_beach : travel_time_outskirt,
+		# 	poi_id_assaultflatsbeach_street_a : travel_time_outskirt,
+		# 	poi_id_assaultflatsbeach_street_b : travel_time_outskirt,
+		# },
+        is_subzone = True,
+        neighbors = {
+			poi_id_north_outskirts_edge : travel_time_subzone,
+			poi_id_nuclear_beach : travel_time_subzone,
+			poi_id_assaultflatsbeach_street_a : travel_time_subzone,
+			poi_id_assaultflatsbeach_street_b : travel_time_subzone,
 		},
+        vendors = [vendor_downpourlaboratory]
 	),
 	EwPoi(  # Outskirts - 7
-		id_poi=poi_id_jaywalkerplain_outskirts_edge,
+		id_poi=poi_id_south_outskirts,
 		alias=[
-			"jaywalkerplainoutskirtsedge",
-			"jpoutskirtsedge",
-			"jpoedge",
-			"jpoe",
+			"so",
 		],
-		str_name="Jaywalker Plain Outskirts Edge",
-		str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="jaywalker-plain-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts#Edge",
+		str_name="South Outskirts",
+		str_desc=str_generic_outskirts_description,
+		channel="south-outskirts",
+		wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_jaywalkerplain_street_c : travel_time_outskirt,
-			poi_id_jaywalkerplain_street_d : travel_time_outskirt,
-			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
-			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
-			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
+			poi_id_southwest_outskirts : travel_time_outskirt,
+			poi_id_south_outskirts_depths : travel_time_outskirt,
+			poi_id_south_outskirts_edge : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 8
-		id_poi=poi_id_westglocksbury_outskirts_edge,
+		id_poi=poi_id_southwest_outskirts,
 		alias=[
-			"westglocksburyoutskirtsedge",
-			"wgboutskirtsedge",
-			"wgboedge",
-			"wgboe"
+			"swo",
 		],
-		str_name="West Glocksbury Outskirts Edge",
-		str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="west-glocksbury-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts#Edge",
+		str_name="Southwest Outskirts",
+		str_desc=str_generic_outskirts_description,
+		channel="southwest-outskirts",
+		wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_westglocksbury_street_c : travel_time_outskirt,
-			poi_id_westglocksbury_street_d : travel_time_outskirt,
-			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
-			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
-			poi_id_westglocksbury_outskirts : travel_time_outskirt,
+			poi_id_west_outskirts : travel_time_outskirt,
+			poi_id_southwest_outskirts_depths : travel_time_outskirt,
+			poi_id_southwest_outskirts_edge : travel_time_outskirt,
+			poi_id_south_outskirts : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 9
-		id_poi=poi_id_poloniumhill_outskirts_edge,
+		id_poi=poi_id_west_outskirts,
 		alias=[
-			"poloniumhilloutskirtsedge",
-			"phoutskirtsedge",
-			"phoedge",
-			"phoe",
+			"wo",
 		],
-		str_name="Polonium Hill Outskirts Edge",
-		str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="polonium-hill-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts#Edge",
+		str_name="West Outskirts",
+		str_desc=str_generic_outskirts_description,
+		channel="west-outskirts",
+		wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_poloniumhill_street_c : travel_time_outskirt,
-			poi_id_poloniumhill_street_d : travel_time_outskirt,
-			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
-			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
-			poi_id_poloniumhill_outskirts : travel_time_outskirt,
+			poi_id_southwest_outskirts : travel_time_outskirt,
+			poi_id_west_outskirts_depths : travel_time_outskirt,
+			poi_id_west_outskirts_edge : travel_time_outskirt,
+			poi_id_northwest_outskirts : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 10
-		id_poi=poi_id_charcoalpark_outskirts_edge,
+		id_poi=poi_id_northwest_outskirts,
 		alias=[
-			"charcoalparkoutskirtsedge",
-			"cpoutskirtsedge",
-			"cpoedge",
-			"cpoe",
+			"nwo",
 		],
-		str_name="Charcoal Park Outskirts Edge",
-		str_desc="You’ve never seen ruins this... recent. This area used to be a part of Charcoal Park, but now it’s a complete ghost town. You might even mistake it for a bonafide part of the city were it not for all the desert raiders and bubbling acid pools everywhere. It really makes you think about what could’ve been, you know? Maybe if the Veteran center wasn’t shielding Charcoal Park from this mess, we could’ve gotten rid of that stupid-ass district ages ago. {} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="charcoal-park-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts#Edge",
+		str_name="Northwest Outskirts",
+		str_desc=str_generic_outskirts_description,
+		channel="northwest-outskirts",
+		wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_charcoalpark_street_a : travel_time_outskirt,
-			poi_id_charcoalpark_street_b : travel_time_outskirt,
-			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
-			poi_id_toxington_outskirts_edge : travel_time_outskirt,
-			poi_id_charcoalpark_outskirts : travel_time_outskirt,
+			poi_id_north_outskirts : travel_time_outskirt,
+			poi_id_northwest_outskirts_depths : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 11
-		id_poi=poi_id_toxington_outskirts_edge,
+		id_poi=poi_id_north_outskirts,
 		alias=[
-			"toxingtonoutskirtsedge",
-			"ttoutskirtsedge",
-			"ttoedge",
-			"ttoe",
+			"no",
 		],
-		str_name="Toxington Outskirts Edge",
-		str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="toxington-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts#Edge",
+		str_name="North Outskirts",
+		str_desc=str_generic_outskirts_description,
+		channel="north-outskirts",
+		wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_toxington_street_c : travel_time_outskirt,
-			poi_id_toxington_street_d : travel_time_outskirt,
-			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
-			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
-			poi_id_toxington_outskirts : travel_time_outskirt,
+			poi_id_northwest_outskirts : travel_time_outskirt,
+			poi_id_northwest_outskirts_depths : travel_time_outskirt,
+			poi_id_northwest_outskirts_edge : travel_time_outskirt,
+			poi_id_west_outskirts : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 12
-		id_poi=poi_id_maimridge_outskirts_edge,
+		id_poi=poi_id_nuclear_beach,
 		alias=[
-			"maimridgeoutskirtsedge",
-			"mroutskirtsedge",
-			"mroedge",
-			"mroe",
+			"nb",
+			"nbeach",
 		],
-		str_name="Maimridge Outskirts Edge",
-		str_desc="{} To the South is Maimridge. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="maimridge-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts#Edge",
+		str_name="Nuclear Beach",
+		str_desc=str_generic_outskirts_description,
+		channel="nuclear-beach",
+		wikipage = wiki_baseurl + "Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_maimridge_street_b : travel_time_outskirt,
-			poi_id_maimridge_street_c : travel_time_outskirt,
-			poi_id_toxington_outskirts_edge : travel_time_outskirt,
-			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
-			poi_id_maimridge_outskirts : travel_time_outskirt,
+			poi_id_north_outskirts : travel_time_outskirt,
+			poi_id_nuclear_beach_depths : travel_time_outskirt,
+			poi_id_nuclear_beach_edge : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 13
-		id_poi=poi_id_arsonbrook_outskirts_edge,
+		id_poi=poi_id_south_outskirts_depths,
 		alias=[
-			"arsonbrookoutskirtsedge",
-			"aboutskirtsedge",
-			"aboedge",
-			"aboe",
+			"sodepths",
+			"sod",
 		],
-		str_name="Arsonbrook Outskirts Edge",
-		str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="arsonbrook-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts#Edge",
+		str_name="South Outskirts Depths",
+		str_desc=str_generic_outskirts_description_depths,
+		channel="south-outskirts-depths",
+		wikipage = wiki_baseurl + "Outskirts#Depths",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_arsonbrook_street_c : travel_time_outskirt,
-			poi_id_arsonbrook_street_d : travel_time_outskirt,
-			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
-			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
-			poi_id_arsonbrook_outskirts : travel_time_outskirt,
+			poi_id_southwest_outskirts_depths : travel_time_outskirt,
+			poi_id_south_outskirts : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 14
-		id_poi=poi_id_brawlden_outskirts_edge,
+		id_poi=poi_id_southwest_outskirts_depths,
 		alias=[
-			"brawldenoutskirtsedge",
-			"bdoutskirtsedge",
-			"bdoedge",
-			"bdoe",
+			"swodepths",
+			"swod",
 		],
-		str_name="Brawlden Outskirts Edge",
-		str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="brawlden-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts#Edge",
+		str_name="Southwest Outskirts Depths",
+		str_desc=str_generic_outskirts_description_depths,
+		channel="southwest-outskirts-depths",
+		wikipage = wiki_baseurl + "Outskirts#Depths",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_brawlden_street_a : travel_time_outskirt,
-			poi_id_brawlden_street_b : travel_time_outskirt,
-			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
-			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
-			poi_id_brawlden_outskirts : travel_time_outskirt,
+			poi_id_south_outskirts_depths : travel_time_outskirt,
+			poi_id_southwest_outskirts : travel_time_outskirt,
+			poi_id_west_outskirts_depths : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 15
-		id_poi=poi_id_newnewyonkers_outskirts_edge,
+		id_poi=poi_id_west_outskirts_depths,
 		alias=[
-			"newnewyonkersoutskirtsedge",
-			"nnyoutskirtsedge",
-			"nnyoedge",
-			"nnyoe",
+			"wodepths",
+			"wod",
 		],
-		str_name="New New Yonkers Outskirts Edge",
-		str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="new-new-yonkers-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts#Edge",
+		str_name="West Outskirts Depths",
+		str_desc=str_generic_outskirts_description_depths,
+		channel="west-outskirts-depths",
+		wikipage = wiki_baseurl + "Outskirts#Depths",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_newnewyonkers_street_a : travel_time_outskirt,
-			poi_id_newnewyonkers_street_b : travel_time_outskirt,
-			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
-			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
-			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
+			poi_id_northwest_outskirts_depths : travel_time_outskirt,
+			poi_id_west_outskirts : travel_time_outskirt,
+			poi_id_southwest_outskirts_depths : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 16
-		id_poi=poi_id_assaultflatsbeach_outskirts_edge,
+		id_poi=poi_id_northwest_outskirts_depths,
 		alias=[
-			"assaultflatsbeachoutskirtsedge",
-			"afboutskirtsedge",
-			"afboedge",
-			"afboe",
+			"nwodepths",
+			"nwod",
 		],
-		str_name="Assault Flats Beach Outskirts Edge",
-		str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description_edge),
-		channel="assault-flats-beach-outskirts-edge",
-        wikipage = wiki_baseurl + "Outskirts#Edge",
+		str_name="Northwest Outskirts Depths",
+		str_desc=str_generic_outskirts_description_depths,
+		channel="northwest-outskirts-depths",
+		wikipage = wiki_baseurl + "Outskirts#Depths",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_assaultflatsbeach_street_a : travel_time_outskirt,
-			poi_id_assaultflatsbeach_street_b : travel_time_outskirt,
-			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
-			poi_id_assaultflatsbeach_outskirts : travel_time_outskirt,
+			poi_id_north_outskirts_depths : travel_time_outskirt,
+			poi_id_northwest_outskirts : travel_time_outskirt,
+			poi_id_west_outskirts_depths : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 17
-		id_poi=poi_id_wreckington_outskirts,
+		id_poi=poi_id_north_outskirts_depths,
 		alias=[
-			"wreckingtonoutskirts",
-			"wtoutskirts",
-			"wto",
+			"nodepths",
+			"nod",
 		],
-		str_name="Wreckington Outskirts",
-		str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description),
-		coord=(59, 70),
-		channel="wreckington-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="Wreckington Outskirts",
+		str_name="North Outskirts Depths",
+		str_desc=str_generic_outskirts_description_depths,
+		channel="north-outskirts-depths",
+		wikipage = wiki_baseurl + "Outskirts#Depths",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_wreckington_outskirts_edge : travel_time_outskirt,
-			poi_id_cratersville_outskirts : travel_time_outskirt,
-			poi_id_wreckington_outskirts_depths : travel_time_outskirt,
+			poi_id_nuclear_beach_depths : travel_time_outskirt,
+			poi_id_north_outskirts : travel_time_outskirt,
+			poi_id_northwest_outskirts : travel_time_outskirt,
 		},
 	),
 	EwPoi(  # Outskirts - 18
-		id_poi=poi_id_cratersville_outskirts,
+		id_poi=poi_id_nuclear_beach_depths,
 		alias=[
-			"cratersvilleoutskirts",
-			"cvoutskirts",
-			"cvo",
+			"nbdepths",
+			"nbd",
 		],
-		str_name="Cratersville Outskirts",
-		str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description),
-		coord=(44, 70),
-		channel="cratersville-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="Cratersville Outskirts",
+		str_name="Nuclear Beach Depths",
+		str_desc=str_generic_outskirts_description_depths,
+		channel="nuclear-beach-depths",
+		wikipage = wiki_baseurl + "Outskirts#Depths",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts = True,
 		neighbors = {
-			poi_id_cratersville_outskirts_edge : travel_time_outskirt,
-			poi_id_wreckington_outskirts: travel_time_outskirt,
-			poi_id_oozegardens_outskirts : travel_time_outskirt,
-			poi_id_cratersville_outskirts_depths : travel_time_outskirt,
+			poi_id_nuclear_beach : travel_time_outskirt,
+			poi_id_north_outskirts_depths : travel_time_outskirt,
 		},
 	),
-	EwPoi(  # Outskirts - 19
-		id_poi=poi_id_oozegardens_outskirts,
-		alias=[
-			"oozegardensoutskirts",
-			"ogoutskirts",
-			"ogo",
-		],
-		str_name="Ooze Gardens Outskirts",
-		str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description),
-		coord=(35, 70),
-		channel="ooze-gardens-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="Ooze Gardens Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_oozegardens_outskirts_edge : travel_time_outskirt,
-			poi_id_cratersville_outskirts : travel_time_outskirt,
-			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
-			poi_id_oozegardens_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 20
-		id_poi=poi_id_southsleezeborough_outskirts,
-		alias=[
-			"southsleezeboroughoutskirts",
-			"ssboutskirts",
-			"ssbo",
-		],
-		str_name="South Sleezeborough Outskirts",
-		str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description),
-		coord=(27, 65),
-		channel="south-sleezeborough-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="South Sleezeborough Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_southsleezeborough_outskirts_edge : travel_time_outskirt,
-			poi_id_oozegardens_outskirts : travel_time_outskirt,
-			poi_id_crookline_outskirts : travel_time_outskirt,
-			poi_id_southsleezeborough_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 21
-		id_poi=poi_id_crookline_outskirts,
-		alias=[
-			"crooklineoutskirts",
-			"cloutskirts",
-			"clo",
-		],
-		str_name="Crookline Outskirts",
-		str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description),
-		coord=(18, 66),
-		channel="crookline-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="Crookline Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_crookline_outskirts_edge : travel_time_outskirt,
-			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
-			poi_id_dreadford_outskirts : travel_time_outskirt,
-			poi_id_crookline_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 22
-		id_poi=poi_id_dreadford_outskirts,
-		alias=[
-			"dreadfordoutskirts",
-			"dfoutskirts",
-			"dfo",
-		],
-		str_name="Dreadford Outskirts",
-		str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description),
-		coord=(2, 51),
-		channel="dreadford-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="Dreadford Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_dreadford_outskirts_edge : travel_time_outskirt,
-			poi_id_crookline_outskirts : travel_time_outskirt,
-			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
-			poi_id_dreadford_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 23
-		id_poi=poi_id_jaywalkerplain_outskirts,
-		alias=[
-			"jaywalkerplainoutskirts",
-			"jpoutskirts",
-			"jpo",
-		],
-		str_name="Jaywalker Plain Outskirts",
-		str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description),
-		coord=(5, 44),
-		channel="jaywalker-plain-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="Jaywalker Plain Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_jaywalkerplain_outskirts_edge : travel_time_outskirt,
-			poi_id_dreadford_outskirts : travel_time_outskirt,
-			poi_id_westglocksbury_outskirts : travel_time_outskirt,
-			poi_id_jaywalkerplain_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 24
-		id_poi=poi_id_westglocksbury_outskirts,
-		alias=[
-			"westglocksburyoutskirts",
-			"wgboutskirts",
-			"wgbo"
-		],
-		str_name="West Glocksbury Outskirts",
-		str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description),
-		coord=(6, 32),
-		channel="west-glocksbury-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="West Glocksbury Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_westglocksbury_outskirts_edge : travel_time_outskirt,
-			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
-			poi_id_poloniumhill_outskirts : travel_time_outskirt,
-			poi_id_westglocksbury_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 25
-		id_poi=poi_id_poloniumhill_outskirts,
-		alias=[
-			"poloniumhilloutskirts",
-			"phoutskirts",
-			"pho",
-		],
-		str_name="Polonium Hill Outskirts",
-		str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description),
-		coord=(7, 18),
-		channel="polonium-hill-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="Polonium Hill Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_poloniumhill_outskirts_edge : travel_time_outskirt,
-			poi_id_westglocksbury_outskirts : travel_time_outskirt,
-			poi_id_charcoalpark_outskirts : travel_time_outskirt,
-			poi_id_poloniumhill_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 26
-		id_poi=poi_id_charcoalpark_outskirts,
-		alias=[
-			"charcoalparkoutskirts",
-			"cpoutskirts",
-			"cpo",
-		],
-		str_name="Charcoal Park Outskirts",
-		str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description),
-		coord=(15, 4),
-		channel="charcoal-park-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="Charcoal Park Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_charcoalpark_outskirts_edge : travel_time_outskirt,
-			poi_id_poloniumhill_outskirts : travel_time_outskirt,
-			poi_id_toxington_outskirts : travel_time_outskirt,
-			poi_id_charcoalpark_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 27
-		id_poi=poi_id_toxington_outskirts,
-		alias=[
-			"toxingtonoutskirts",
-			"ttoutskirts",
-			"tto",
-		],
-		str_name="Toxington Outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description),
-		coord=(27, 4),
-		channel="toxington-outskirts",
-		role="Toxington Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_toxington_outskirts_edge : travel_time_outskirt,
-			poi_id_charcoalpark_outskirts : travel_time_outskirt,
-			poi_id_maimridge_outskirts : travel_time_outskirt,
-			poi_id_toxington_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 28
-		id_poi=poi_id_maimridge_outskirts,
-		alias=[
-			"maimridgeoutskirts",
-			"mroutskirts",
-			"mro",
-		],
-		str_name="Maimridge Outskirts",
-		str_desc="{} To the South is Maimridge. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description),
-		coord=(46, 10),
-		channel="maimridge-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="Maimridge Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_maimridge_outskirts_edge : travel_time_outskirt,
-			poi_id_toxington_outskirts : travel_time_outskirt,
-			poi_id_arsonbrook_outskirts : travel_time_outskirt,
-			poi_id_maimridge_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 29
-		id_poi=poi_id_arsonbrook_outskirts,
-		alias=[
-			"arsonbrookoutskirts",
-			"aboutskirts",
-			"abo",
-		],
-		str_name="Arsonbrook Outskirts",
-		str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description),
-		coord=(54, 2),
-		channel="arsonbrook-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="Arsonbrook Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_arsonbrook_outskirts_edge : travel_time_outskirt,
-			poi_id_maimridge_outskirts : travel_time_outskirt,
-			poi_id_brawlden_outskirts : travel_time_outskirt,
-			poi_id_arsonbrook_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 30
-		id_poi=poi_id_brawlden_outskirts,
-		alias=[
-			"brawldenoutskirts",
-			"bdoutskirts",
-			"bdo",
-		],
-		str_name="Brawlden Outskirts",
-		str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
-		coord=(71, 2),
-		channel="brawlden-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="Brawlden Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_brawlden_outskirts_edge : travel_time_outskirt,
-			poi_id_arsonbrook_outskirts : travel_time_outskirt,
-			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
-			poi_id_brawlden_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 31
-		id_poi=poi_id_newnewyonkers_outskirts,
-		alias=[
-			"newnewyonkersoutskirts",
-			"nnyoutskirts",
-			"nnyo",
-		],
-		str_name="New New Yonkers Outskirts",
-		str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description),
-		coord=(89, 6),
-		channel="new-new-yonkers-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="New New Yonkers Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_newnewyonkers_outskirts_edge : travel_time_outskirt,
-			poi_id_brawlden_outskirts : travel_time_outskirt,
-			poi_id_assaultflatsbeach_outskirts : travel_time_outskirt,
-			poi_id_newnewyonkers_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 32
-		id_poi=poi_id_assaultflatsbeach_outskirts,
-		alias=[
-			"assaultflatsbeachoutskirts",
-			"afboutskirts",
-			"afbo",
-		],
-		str_name="Assault Flats Beach Outskirts",
-		str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
-		coord=(99, 8),
-		channel="assault-flats-beach-outskirts",
-        wikipage = wiki_baseurl + "Outskirts",
-		role="Assault Flats Beach Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_assaultflatsbeach_outskirts_edge : travel_time_outskirt,
-			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
-			poi_id_assaultflatsbeach_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 33
-		id_poi=poi_id_wreckington_outskirts_depths,
-		alias=[
-			"wreckingtonoutskirtsdepths",
-			"wtoutskirtsdepths",
-			"wtodepths",
-			"wtod",
-		],
-		str_name="Wreckington Outskirts Depths",
-		str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="wreckington-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_wreckington_outskirts : travel_time_outskirt,
-			poi_id_cratersville_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 34
-		id_poi=poi_id_cratersville_outskirts_depths,
-		alias=[
-			"cratersvilleoutskirtsdepths",
-			"cvoutskirtsdepths",
-			"cvodepths",
-			"cvod",
-		],
-		str_name="Cratersville Outskirts Depths",
-		str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description_depths),
-		channel="cratersville-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_cratersville_outskirts : travel_time_outskirt,
-			poi_id_wreckington_outskirts_depths : travel_time_outskirt,
-			poi_id_oozegardens_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 35
-		id_poi=poi_id_oozegardens_outskirts_depths,
-		alias=[
-			"oozegardensoutskirtsdepths",
-			"ogoutskirtsdepths",
-			"ogodepths",
-			"ogod",
-		],
-		str_name="Ooze Gardens Outskirts Depths",
-		str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="ooze-gardens-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_oozegardens_outskirts : travel_time_outskirt,
-			poi_id_cratersville_outskirts_depths : travel_time_outskirt,
-			poi_id_southsleezeborough_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 36
-		id_poi=poi_id_southsleezeborough_outskirts_depths,
-		alias=[
-			"southsleezeboroughoutskirtsdepths",
-			"ssboutskirtsdepths",
-			"ssbodepths",
-			"ssbod",
-		],
-		str_name="South Sleezeborough Outskirts Depths",
-		str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="south-sleezeborough-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_southsleezeborough_outskirts : travel_time_outskirt,
-			poi_id_oozegardens_outskirts_depths : travel_time_outskirt,
-			poi_id_crookline_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 37
-		id_poi=poi_id_crookline_outskirts_depths,
-		alias=[
-			"crooklineoutskirtsdepths",
-			"cloutskirtsdepths",
-			"clodepths",
-			"clod",
-		],
-		str_name="Crookline Outskirts Depths",
-		str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="crookline-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_crookline_outskirts : travel_time_outskirt,
-			poi_id_southsleezeborough_outskirts_depths : travel_time_outskirt,
-			poi_id_dreadford_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 38
-		id_poi=poi_id_dreadford_outskirts_depths,
-		alias=[
-			"dreadfordoutskirtsdepths",
-			"dfoutskirtsdepths",
-			"dfodepths",
-			"dfod",
-		],
-		str_name="Dreadford Outskirts Depths",
-		str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="dreadford-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_dreadford_outskirts : travel_time_outskirt,
-			poi_id_crookline_outskirts_depths : travel_time_outskirt,
-			poi_id_jaywalkerplain_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 39
-		id_poi=poi_id_jaywalkerplain_outskirts_depths,
-		alias=[
-			"jaywalkerplainoutskirtsdepths",
-			"jpoutskirtsdepths",
-			"jpodepths",
-			"jpod",
-		],
-		str_name="Jaywalker Plain Outskirts Depths",
-		str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="jaywalker-plain-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_jaywalkerplain_outskirts : travel_time_outskirt,
-			poi_id_dreadford_outskirts_depths : travel_time_outskirt,
-			poi_id_westglocksbury_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 40
-		id_poi=poi_id_westglocksbury_outskirts_depths,
-		alias=[
-			"westglocksburyoutskirtsdepths",
-			"wgboutskirtsdepths",
-			"wgbodepths",
-			"wgbod",
-		],
-		str_name="West Glocksbury Outskirts Depths",
-		str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="west-glocksbury-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_westglocksbury_outskirts : travel_time_outskirt,
-			poi_id_jaywalkerplain_outskirts_depths : travel_time_outskirt,
-			poi_id_poloniumhill_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 41
-		id_poi=poi_id_poloniumhill_outskirts_depths,
-		alias=[
-			"poloniumhilloutskirtsdepths",
-			"phoutskirtsdepths",
-			"phodepths",
-			"phod",
-		],
-		str_name="Polonium Hill Outskirts Depths",
-		str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="polonium-hill-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_poloniumhill_outskirts : travel_time_outskirt,
-			poi_id_westglocksbury_outskirts_depths : travel_time_outskirt,
-			poi_id_charcoalpark_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 42
-		id_poi=poi_id_charcoalpark_outskirts_depths,
-		alias=[
-			"charcoalparkoutskirtsdepths",
-			"cpoutskirtsdepths",
-			"cpodepths",
-			"cpod",
-		],
-		str_name="Charcoal Park Outskirts Depths",
-		str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="charcoal-park-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_charcoalpark_outskirts : travel_time_outskirt,
-			poi_id_poloniumhill_outskirts_depths : travel_time_outskirt,
-			poi_id_toxington_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 43
-		id_poi=poi_id_toxington_outskirts_depths,
-		alias=[
-			"toxingtonoutskirtsdepths",
-			"ttoutskirtsdepths",
-			"ttodepths",
-			"ttod",
-		],
-		str_name="Toxington Outskirts Depths",
-		str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="toxington-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_toxington_outskirts : travel_time_outskirt,
-			poi_id_charcoalpark_outskirts_depths : travel_time_outskirt,
-			poi_id_maimridge_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 44
-		id_poi=poi_id_maimridge_outskirts_depths,
-		alias=[
-			"maimridgeoutskirtsdepths",
-			"mroutskirtsdepths",
-			"mrodepths",
-			"mrod",
-		],
-		str_name="Maimridge Outskirts Depths",
-		str_desc="{} To the South is Maimridge. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="maimridge-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_maimridge_outskirts : travel_time_outskirt,
-			poi_id_toxington_outskirts_depths : travel_time_outskirt,
-			poi_id_arsonbrook_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 45
-		id_poi=poi_id_arsonbrook_outskirts_depths,
-		alias=[
-			"arsonbrookoutskirtsdepths",
-			"aboutskirtsdepths",
-			"abodepths",
-			"abod",
-		],
-		str_name="Arsonbrook Outskirts Depths",
-		str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="arsonbrook-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_arsonbrook_outskirts : travel_time_outskirt,
-			poi_id_maimridge_outskirts_depths : travel_time_outskirt,
-			poi_id_brawlden_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 46
-		id_poi=poi_id_brawlden_outskirts_depths,
-		alias=[
-			"brawldenoutskirtsdepths",
-			"bdoutskirtsdepths",
-			"bdodepths",
-			"bdod",
-		],
-		str_name="Brawlden Outskirts Depths",
-		str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="brawlden-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_brawlden_outskirts : travel_time_outskirt,
-			poi_id_arsonbrook_outskirts_depths : travel_time_outskirt,
-			poi_id_newnewyonkers_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 47
-		id_poi=poi_id_newnewyonkers_outskirts_depths,
-		alias=[
-			"newnewyonkersoutskirtsdepths",
-			"nnyoutskirtsdepths",
-			"nnyodepths",
-			"nnyod",
-		],
-		str_name="New New Yonkers Outskirts Depths",
-		str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="new-new-yonkers-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_newnewyonkers_outskirts : travel_time_outskirt,
-			poi_id_brawlden_outskirts_depths : travel_time_outskirt,
-			poi_id_assaultflatsbeach_outskirts_depths : travel_time_outskirt,
-		},
-	),
-	EwPoi(  # Outskirts - 48
-		id_poi=poi_id_assaultflatsbeach_outskirts_depths,
-		alias=[
-			"assaultflatsbeachoutskirtsdepths",
-			"afboutskirtsdepths",
-			"afbodepths",
-			"afbod",
-		],
-		str_name="Assault Flats Beach Outskirts Depths",
-		str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description_depths),
-		channel="assault-flats-beach-outskirts-depths",
-        wikipage = wiki_baseurl + "Outskirts#Depths",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_assaultflatsbeach_outskirts : travel_time_outskirt,
-			poi_id_newnewyonkers_outskirts_depths : travel_time_outskirt,
-		},
-	)
 ]
 	
 
@@ -18874,7 +18153,7 @@ for poi in poi_list:
 						poi.str_desc += 'and {}.'.format(district_streets_list[i])
 					else:
 						poi.str_desc += '{}, '.format(district_streets_list[i])
-                        
+						
 	placeholder_channel_names_used = False
 		
 	# Subzones and streets need the same major roles as their mother/father districts.
@@ -19007,6 +18286,26 @@ for poi in poi_list:
 			#print(poi.channel)
 		else:
 			outskirts_middle.append(poi.id_poi)
+		
+		if len(poi.neighbors) > 0:
+			poi.str_desc += " This outskirt is connected to "
+			
+			neighbor_index = 0
+			for neighbor_id in poi.neighbors.keys():
+				
+				current_neighbor = None
+				
+				for outskirt_neighbor in poi_list:
+					if neighbor_id == outskirt_neighbor.id_poi:
+						current_neighbor = outskirt_neighbor
+						
+				if current_neighbor != None:
+					if neighbor_index == (len(poi.neighbors.keys()) - 1):
+						poi.str_desc += 'and {}.'.format(current_neighbor.str_name)
+					else:
+						poi.str_desc += '{}, '.format(current_neighbor.str_name)
+				
+				neighbor_index += 1
 		
 	if poi.is_street:
 		streets.append(poi.id_poi)
@@ -25174,10 +24473,10 @@ help_responses = {
 	"zines": "Zines are the hot new trend in Neo-Milwaukee and give slimebois of all shapes and sizes access to the free-market of information and culture.\n\nTo obtain a zine, you must head down to any of these locations: Green Cake Cafe, NLAC University, Neo-Milwaukee State, or Glockbury Comics.\n\nFrom there, you can **!browse** for zines. They are ordered by *Zine ID*, but you have many options for sorting them, including: **title, author, datepublished,** any of the genres (including **narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper,** and **experimental**.), **length, sales,** and **rating** (use **!browse [criteria]**). You can also add **reverse** on to any of these in order to make it display in reverse order. Example: **!browse bestsellers reverse** (essentially looks for worse-selling zines). Browsing in the Comic Shop will automatically browse for comic zines and browsing at the Colleges will look for historical zines (keep in mind that any zines can be bought from these places).\n\nYou can also **!browse [Zine ID]** in order to get info about that specific zine, including sales, length, genre, and rating.\n\nOnce you've found a zine that's caught your eye, simply **!orderzine [Zine ID]** to buy it for 10k slime.\n\nAfter absorbing the zine's content, it is your moral obligation as a reader to **!review [Zine Name] [Score]**. The potential scores range from between 1 and 5 *fucks* (whole numbers only). If you hate a zine, then give it one fuck. If you absolutely loved it, give it five fucks. Simple. By the way, if a zine's average rating is less than 2.0 by the time it gets to 10 ratings (or less than 1.5 by 5 ratings), it will be excluded from the default browse. The only way to purchase it will be to use the **worstrated** or **all** sorting methods.\n\nYou can **!shelve [zine name]** in your apartment after you've finished.",
 	"sap": "**Sap** is a resource your body produces to control your slime. It's integral to being able to act in combat. You can have a maximum amount of sap equal to 1.6 * ( your slime level ^ 0.75 ). When you spend it, it will regenerate at a rate of 1 sap every 5 seconds. You can spend your sap in a variety of ways: **!harden [number]** allows you to dedicate a variable amount of sap to your defense. Hardened sap reduces incoming damage by a factor of 10 / (10 + hardened sap). Your hardened sap counts against your maximum sap pool, so the more you dedicate to defense, the less you will have to attack. You can **!liquefy [number]** hardened sap back into your sap pool. Every attack requires at least 1 sap to complete. Different weapons have different sap costs. Some weapons have the ability to destroy an amount of hardened sap from your target, or ignore a portion of their hardened sap armor. This is referred to as **sap crushing** and **sap piercing** respectively. There are also other actions you can take in combat, that cost sap, such as: **!aim [player]** will slightly increase your hit chance and crit chance against that player for 10 seconds. It costs 2 sap. **!dodge [player]** will decrease that players hit chance against you for 10 seconds. It costs 3 sap. **!taunt [player]** will decrease that player's hit chance against targets other than you for 10 seconds. It costs 5 sap.",
 	"sprays":"**Sprays** are your signature piece of graffiti as a gangster. You can **!changespray <image link>** in order to set your own custom image. This image appears when you get a critical hit while capping, and you can also **!tag** to spray it anywhere.",
-    # Misc.
-    "shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
+	# Misc.
+	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
 
-    # Weapons
+	# Weapons
 	weapon_id_revolver: "**The revolver** is a weapon for sale at the Dojo. Attacking with the revolver costs 1 sap. It has a damage mod of 0.8 and an attack cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The revolver has sap crushing 2. After every 6 shots you will need to **!reload** it.",
 	weapon_id_dualpistols: "**The dual pistols** are a weapon for sale at the Dojo. Attacking with the dual pistols costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2, a miss chance of 40% and a 20% chance for a crit, which does 2x damage. The dual pistols have sap crushing 2. After every 12 shots you will need to **!reload** them.",
 	weapon_id_shotgun: "**The shotgun** is a weapon for sale at the Dojo. Attacking with the shotgun costs 5 sap. It has a damage mod of 1.65 and an attack cost mod of 1.5. It has a captcha length of 6, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The shotgun has sap crushing 5, which is doubled on a crit. After every 2 shots you will need to **!reload** it.",
@@ -25220,16 +24519,16 @@ help_responses_ordered_keys = [
 	"slimeoids", "cosmetics", "realestate", "apartments", "stocks",
 	"trading", "weather", "casino", "bleeding", "offline",
 	"profile", "manuscripts", "zines", "sap", "sprays",
-    "shambleball",
+	"shambleball",
 ]
 
 weapon_help_responses_ordered_keys = [
-    weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun, weapon_id_rifle, weapon_id_smg,
-    weapon_id_bat, weapon_id_brassknuckles, weapon_id_katana, weapon_id_broadsword, weapon_id_nunchucks,
-    weapon_id_scythe, weapon_id_yoyo, weapon_id_umbrella, weapon_id_knives, weapon_id_molotov,
-    weapon_id_grenades, weapon_id_garrote, weapon_id_minigun, weapon_id_bow, weapon_id_dclaw,
-    weapon_id_staff, weapon_id_spraycan, weapon_id_paintgun, weapon_id_paintroller, weapon_id_paintbrush,
-    weapon_id_watercolors, weapon_id_thinnerbomb
+	weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun, weapon_id_rifle, weapon_id_smg,
+	weapon_id_bat, weapon_id_brassknuckles, weapon_id_katana, weapon_id_broadsword, weapon_id_nunchucks,
+	weapon_id_scythe, weapon_id_yoyo, weapon_id_umbrella, weapon_id_knives, weapon_id_molotov,
+	weapon_id_grenades, weapon_id_garrote, weapon_id_minigun, weapon_id_bow, weapon_id_dclaw,
+	weapon_id_staff, weapon_id_spraycan, weapon_id_paintgun, weapon_id_paintroller, weapon_id_paintbrush,
+	weapon_id_watercolors, weapon_id_thinnerbomb
 ]
 
 mutation_descriptions = {
@@ -25481,11 +24780,11 @@ gvs_enemies = gvs_enemies_gaiaslimeoids + gvs_enemies_shamblers
 
 # List of raid bosses sorted by their spawn rarity.
 raid_boss_tiers = {
-	"Micro": [enemy_type_megaslime],
-	"Monstrous": [enemy_type_slimeasaurusrex, enemy_type_unnervingfightingoperator],
-	"Mega": [enemy_type_greeneyesslimedragon],
+	"micro": [enemy_type_megaslime],
+	"monstrous": [enemy_type_slimeasaurusrex, enemy_type_unnervingfightingoperator],
+	"mega": [enemy_type_greeneyesslimedragon],
 	# This can be left empty until we get more raid boss ideas.
-	#"Nega": [],
+	#"nega": [],
 }
 
 # List of enemies that are simply too powerful to have their rare variants spawn
@@ -26248,7 +25547,7 @@ gvs_enemy_emote_map = {
 	enemy_type_gaia_sourpotatoes: emote_sourpotatoes,
 	enemy_type_gaia_bloodcabbages: emote_bloodcabbages,
 	enemy_type_gaia_joybeans: emote_joybeans,
-	enemy_type_gaia_purplekilliflower: emote_purplekilliflower,
+	enemy_type_gaia_purplekilliflower: emote_killiflower,
 	enemy_type_gaia_razornuts: emote_razornuts,
 	enemy_type_gaia_pawpaw: emote_pawpaw,
 	enemy_type_gaia_sludgeberries: emote_sludgeberries,
@@ -26291,43 +25590,44 @@ gvs_enemy_emote_map_debug = {
 }
 
 gvs_almanac = {
-	enemy_type_gaia_poketubers: "",
-	enemy_type_gaia_pulpgourds: "",
-	enemy_type_gaia_sourpotatoes: "",
-	enemy_type_gaia_bloodcabbages: "",
-	enemy_type_gaia_joybeans: "",
-	enemy_type_gaia_purplekilliflower: "",
-	enemy_type_gaia_razornuts: "",
-	enemy_type_gaia_pawpaw: "",
-	enemy_type_gaia_sludgeberries: "",
-	enemy_type_gaia_suganmanuts: "",
-	enemy_type_gaia_pinkrowddishes: "",
-	enemy_type_gaia_dankwheat: "",
-	enemy_type_gaia_brightshade: "",
-	enemy_type_gaia_blacklimes: "",
-	enemy_type_gaia_phosphorpoppies: "",
-	enemy_type_gaia_direapples: "",
-	enemy_type_gaia_rustealeaves: "",
-	enemy_type_gaia_metallicaps: "",
-	enemy_type_gaia_steelbeans: "",
-	enemy_type_gaia_aushucks: "",
-	enemy_type_defaultshambler: "",
-	enemy_type_bucketshambler: "",
-	enemy_type_juveolanternshambler: "",
-	enemy_type_flagshambler: "",
-	enemy_type_shambonidriver: "",
-	enemy_type_mammoshambler: "",
-	enemy_type_gigashambler: "",
-	enemy_type_microshambler: "",
-	enemy_type_shamblersaurusrex: "",
-	enemy_type_shamblerdactyl: "",
-	enemy_type_dinoshambler: "",
-	enemy_type_ufoshambler: "",
-	enemy_type_brawldenboomer: "",
-	enemy_type_juvieshambler: "",
-	enemy_type_shambleballplayer: "",
-	enemy_type_shamblerwarlord: "",
-	enemy_type_shamblerraider: "",
+	enemy_type_gaia_poketubers: 'Poketubers are mines that deal massive damage when a shambler tries to attack one of them. However, they must take 15 seconds to prime beforehand, otherwise they\'re sitting ducks. When given a Joybean, they will entrench their roots into the ground ahead of them, spawning more fully primed poketubers in random locations ahead of it.\nPoketuber used to be a big shot. His analysis channel with Dire Apples was the talk of the town, even getting big shots like Aushucks to turn their heads in amazement. Nowadays though, he\'s washed up, and has to shill his patreon just to get by. "God, just fucking step on me already and end it all", Poketuber thinks to himself every day.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743641434841808967/poketubers_seedpacket.png',
+	enemy_type_gaia_pulpgourds: 'Gaiaslimeoids anywhere on the field can drink out of Pulp Gourds, replenishing their HP and draining that Pulp Gourd\'s storage in the process. Pulp Gourds can only be refilled by Blood Cabbages. When given a Joybean, their healing effect is doubled.\nPulp Gourd is the faithful and humble servant of Blood Cabbage, aiding her in her experiments. "I would sooner walk into the fires of Hell than see a wound on your leaves, Miss Cabbage", says Pulp Gourd. "Ohohoho~, you spoil me, sir Gourd", replies Blood Cabbage. Other Gaiaslimeoids aren\'t sure what the nature of their relationship is, and frankly it weirds them out a bit.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743258076152332339/pulpgourds_seedpacket.png',
+	enemy_type_gaia_sourpotatoes: 'Sour Potatoes are a great front-line attacker for any Garden Op. They can\'t dish out constant damage like a Pink Rowddish, but they make up for it by swallowing almost any shambler in front of it whole, killing it instantly. This immobilizes the Sour Potato for 10 seconds, however, leaving it vulnerable to attacks. When given a Joybean, they can launch out a ball of fire, which melts away the frozen slime trail left by Shambonis, in addition to dealing a fair amount of splash damage.\nIn a twist of fate, Sour Potatoes have turned into a popular pet across NLACakaNM. This is in opposition of the fact that Sour Potatoes are sentient, and aware of their own domestication. "Awww, who\'s a cute widdle doggy", a Juvenile says. "I can speak English you know. I\'m forming proper sentences, for fucks sake. Treat me with some dignity, *please*", says Sour Potato.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241053598908466/sourpotatoes_seedpacket.png',
+	enemy_type_gaia_bloodcabbages: 'Attacks coming from a Blood Cabbage are relatively weak compared to their Rowddish and Killiflower cohorts, but they have a special effect of draining health from enemy shamblers and redistributing it to their allies. They cannot heal themselves, however. When given a Joybean, their attacks will deal twice as much damage, and heal twice as much as a result. They can heal any Gaiaslimeoid within range, but will prioritize those that are low on health, saving Pulp Gourds for last.\nBlood Cabbage\'s obsession with the dark arts led her down an equally dark path in life. After pouring over countless forbidden tomes, she had found what she had been seeking, and used the hordes of undead Shamblers as her test subjects to measure her abilities. "Ahahaha... what a discovery! This ability will prove to be useful... whether my allies like it or not!"\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241003779227718/bloodcabbages_seedpacket.png',
+	enemy_type_gaia_joybeans: 'Joybeans act as an upgrade to other Gaiaslimeoids. They can either be planted onto blank tiles and used later when combined with other Gaiaslimeoids, or they can be planted on top of other Gaiaslimeoids. If two Joybeans combine, they explode into a fountain of sheer ecstasy, activating the Joybean effects of all Gaiaslimeoids within a short radius for 30 seconds.\nJoybean is very excitable. When in the presence of another Gaiaslimeoid, she can\'t help but start hyperventilating at the thought of being near them, and is frequently unable to contain herself. "Kyaaaaaa~!" Joybean cries out, as she glomps onto fellow Gaiaslimeoids.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241010506891374/joybeans_seedpacket.png',
+	enemy_type_gaia_purplekilliflower: 'Purple Killiflowers shoot out toxic vape clouds when they !dab. This allows them to target shamblers up to 6 tiles in front of them, piercing multiple Shamblers in the process. When given a Joybean, it will deal twice as much damage.\n"Fuck you Dad! It\'s called The Vapors, and it\'s way better than any shitty comic book you\'ve ever read! God, I HATE YOU!", says Killiflower, as he slams the door shut behind him. Choking back tears, he mutters to himself: "Don\'t let him see you cry..."\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241012104921098/killiflower_seedpacket.png',
+	enemy_type_gaia_razornuts: 'Razornuts aren\'t as hard or long as Suganmanuts, but their sharpened edges will harm any Shambler that tries to attack it. If a Razornut is damaged, you can !plant another one on top of it to repair it. When given a Joybean, its death will cause an explosion of shrapnel, dealing a fair amount of damage within a large radius around it.\nWhen a Shambler bites into Razornut, he doesn\'t care. He lets it happen, just to *feel* something. "Go on, give me your best. You aren\'t half as strong as the thugs I\'ve mauled in the past", says Razonut. "This shell right here, it\'s ready for the apocalypse.", he continues.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241045348843530/razornuts_seedpacket.png',
+	enemy_type_gaia_pawpaw: 'When planted, a Pawpaw will explode after a short amount of time, dealing massive damage in a small radius. If a Pawpaw is planted on top of a Joybean, this will increase its range significantly.\nPawpaw has been places and seen shit you would not believe. The guilt of his war crimes will be taken with him to the grave. "It\'s a good day to die.", says Pawpaw.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743258148239966308/pawpaw_seedpacket.png',
+	enemy_type_gaia_sludgeberries: 'Sludgeberries are a Gaiaslimeoid that will detonate into a sticky and immobilizing sludge, inflicting a stun effect on all shamblers within a short range. When given a Joybean, it will cover all Shamblers on the field in this sludge.\nThese Gaiaslimeoids are all the craze over at Pyrope Farms. "UM, G4RD3N G4NK3RS? SORRY, BUT W3 ONLY WORK UND3R DIR3CT ORD3RS FROM T3R3Z1 G4NG", says Sludgeberry.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241051401224192/sludgeberries_seedpacket.png',
+	enemy_type_gaia_suganmanuts: 'Suganmanuts\' large health pool allows it to provide a great amount of defensive utility in battle. If a Suganmanut is damaged, you can !plant another one on top of it to repair it. When given a Joybean, it will occasionally spit out its nut, ricocheting off of shamblers.\n"I swear I\'m not gay" says Suganmanuts. "I just like the taste". The look in his eye told a different story, however. That, and the 50 tabs of Grimedr he had open.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743240999492649071/suganmanuts_seedpacket.png',
+	enemy_type_gaia_pinkrowddishes: 'Pink Rowddishes attack by !thrash-ing about, dealing massive damage to all Shamblers within a short range in front of them. They can attack behind themselves as well. When given a Joybean, it will begin to violently scream. These screams act as an increase to its range, reaching three times as far as a basic attack.\nRowddishes are hot-blooded and looking to brawl. Though they have no eyes, they make up for it with intense reflexes. In some instances, they will even go as far as to lash out at the Garden Gankers who have planted them. "Back off, Juvie!", says Rowddish. "Unless you want me to turn you into a knuckle sandwich! Ha! Up-five", he says as he hi-fives himself. Even when there are no Shamblers around, Rowddishes will continue to pick fights with each other, frequently engaging in what are known as "No Hard Feelings Civil Wars".\nhttps://cdn.discordapp.com/attachments/743240814250950678/743258274761015326/pinkrowddish_seedpacket.png',
+	enemy_type_gaia_dankwheat: 'Dankwheat tend to be a utility-focussed Gaiaslimeoid, dealing minimal damage, but whatever does enter their short attack radius that surrounds them will be slowed down by a status effect. When given a Joybean, it can reach further in front and in back of it for targets, and the status effect will also lower the damage output of its targets.\n"Dude, what\'s a text command?" one stalk of Dankwheat says. "Dude, what GAME are we even IN right now??", another adds. "Guys, wait, hold on, my seaweed joint is running out, can one of you spot me?", the third one chimes in. These guys can never seem to get their fucking heads straight, outside of the 22 minutes every Saturday that a new MLP episode is on the air.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241007025488023/dankwheat_seedpacket.png',
+	enemy_type_gaia_brightshade: 'Brightshades are an essential plant to have in any Garden Op. Not only do they provide Garden Gankers with precious gaiaslime, but they will also periodically de-shamble a district. When given a Joybean, both of these effects are doubled in effectiveness.\nIn her past, Brightshade was a beautiful singer, frequently selling out even to large crowds. When the Shamblers came to town, she decided to put her career on hold, however. She is a shining gem among Gaiaslimeoids, revered and loved by all, and by some, perhaps a bit too much...\n"I just got this Brightshade poster off of Amoozeon, and oh my fucking God, you can see her TITS."\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241005406486658/brightshade_seedpacket.png',
+	enemy_type_gaia_blacklimes: 'When a Black Lime gets bitten, its sour taste will repulse the shambler and redirect it to a different lane entirely. If a Black Lime is damaged, you can !plant another one on top of it to repair it. When given a Joybean, it will shoot out a damaging stream of lime juice, shuffling all shamblers within its lane, and it will also be healed fully.\nOther Gaiaslimeoids worry about Black Lime... what he might do, who he might become. They only hang out with him as a preventative measure. "He\'s... he\'s just different, you know?", says Brightshade as she watches Black Lime brutally torture disease-infested rodents from a safe distance.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241002319347873/blacklimes_seedpacket.png',
+	enemy_type_gaia_phosphorpoppies: 'Phosphorpoppies will give Shamblers a \'bad trip\' when it shoots out its Binaural Brainwaves, or when it gets eaten. This will cause Shamblers to either hit, miss, or backfire in their attacks. When given a Joybean, its Binaural Brainwaves will inflict this effect 100% of the time, otherwise the effect only has a chance to be inflicted.\nPhosphoroppy is a total klutz, but she tries her best. Her simple-minded innocence led to her becoming a fan-favorite among many of the Garden Gankers, but behind those swirly eyes remains a horrible tragedy. A psychadelic experience aided by one of the Dankwheat brothers caused her to overload and see things no Gaiaslimeoid was meant to see. It fractured her mind, but her heart is still in there, ready to take on the Shamblers with everything she\'s got.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743258227696730152/phosphorpoppies_seedpacket.png',
+	enemy_type_gaia_direapples: 'Dire apples are a vital Gaiaslimeoid to have in any offensive setup. They can lob globules of acid or spit bullet seeds. When given a Joybean, their seed attacks will do more damage and will inflict an acidic burn on whatever shamblers it manages to hit.\n"How does a Gaiaslimeoid like me make the best of both worlds collide? Well, I could tell you, but I\'ve got a BIG meeting to catch." He speeds away in his sports car occupied by himself and several Phosphorpoppies. Only a puff of smoke is left behind.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241008828907660/direapples_seedpacket.png',
+	enemy_type_gaia_rustealeaves: 'Rustea Leaves are a grounded Gaiaslimeoid, and can attack only within a very short range of where they are planted. They are completely immune to conventional methods of Shambler offense, however, only being damaged by Gigashamblers, Shambonis, and UFO Shamblers. They can be planted on any tile, provided it\'s not already occupied by another Rustea Leaves. When given a Joybean, they will receive a significant boost in both health and damage output.\nRustea Leaves are the amalgamation of leftover shavings off of other metallic crops, culminating into one fearsome Gaiaslimeoid. He is the forgotten fourth member of the Metal Crop Bros, but despite all this, he manages to maintain a positive attitude. "You gotta work with tha hand yah dealt", he says. "These shamblahs ain\'t gonna moida themselves." Regardless of what he says though, he\'s still bitter about not being invited to the family reunion.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241049073254460/rustealeaves_seedpacket.png',
+	enemy_type_gaia_metallicaps: 'Metallicaps are a metallic upgrade Gaiaslimeoid, meaning that it can be planted on any tile, provided that a Steel Bean or Aushuck is not already occupying that tile. When planted on top of an attacking Gaiaslimeoid, it will provide a boost in damage, as well as an additional amount of damage in the form of a spores effect, which burns away the health of enemy shamblers. It cannot be given a Joybean.\nMetallicap is a rebellious youth, and the youngest member of the Metal Crop Bros. His affinity for metal music drives his other brothers up the goddamn wall, given how often he will throw parties over at the house and blast his music through his custom-made boombox. "Rules? HA! There\'s only one rule in this house brah, and that is, *TO GET DOWN AND PARTY!!!*", he says.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241014118187059/metallicaps_seedpacket.png',
+	enemy_type_gaia_steelbeans: 'Steel Beans are a metallic upgrade Gaiaslimeoid, meaning that it can be planted on any tile, provided that a Metallicap or Aushuck is not already occupying that tile. When planted on top of a gaiaslimeoid, it will act as an additional layer of health that a shambler must get rid of before it can attack the Gaiaslimeoid being protected. If a Steel Bean is damaged, you can !plant another one on top of it to repair it. It cannot be given a Joybean.\nSteel Bean is the middle child of the Metal Crop Bros. He has a deep fascination with conspiracy theories, to the point where his brothers seriously worry about his mental state at times. "We\'re all in a simulation man, they\'re pulling our strings with commands and we just have to follow what\'s in the program." When asked to clarify what he meant by this, Steel Bean replied "You wouldn\'t get it..."\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241056048644126/steelbeans_seedpacket.png',
+	enemy_type_gaia_aushucks: 'Aushucks are a metallic upgrade Gaiaslimeoid, meaning that it can be planted on any tile, provided that a Metallicap or Steel Bean is not already occupying that tile. When planted on top of a Gaiaslimeoid, it will produce Gaiaslime at the same rate as a regular brightshade. It can be planted on top of any Gaiaslimeoid, including Brightshades. It cannot be given a Joybean.\nAushuck is the eldest of the Metal Crop Bros. He got in on the ground floor with SlimeCoin after the last market crash and made a killing, and from then on he\'s been living the high life. His newfound wealth enables his smug personality, much to the ire of his younger brothers. Everything he owns is gold plated, including all his furniture and clothing. "Look at me, I fucking OWN this city", he says as he stands on the balcony of his luxury condo.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241000918450196/aushucks_seedpacket.png',
+	
+	enemy_type_defaultshambler: 'The Default Shambler is exactly what it sounds like. It has low defenses and low attack, and will slowly move towards the edge of the field.\n"Ughhhhhhhh, criiiiiiiinnnnngggggeeeee. Baaaaaasssseeeddddddd. Duuuuuddee I loooooovvveeee braaiiiiiiinnnnnnnzzzzz", says Default Shambler, as he lurches toward an enemy Gaiaslimeoid. they\'re all like this. Copy and paste this for every single type of Shambler, you aren\'t missing much.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241123576807435/defaultshambler_gravestone.png',
+	enemy_type_bucketshambler: 'The KFC Bucket shambler is exactly the same as a Default Shambler, it just has more HP.\nShamblers don\'t need to eat regular food, but they sometimes do, just for the enjoyment of chowing down on some nice fast food. They tend to go overboard, however, frequently placing the entire KFC bucket over their head just to get the last few crumbs down their gullet. This is how every KFC Bucket shambler is born, as they are too stupid to figure out how to take it off.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241141293416568/kfcbucket_shambler.png',
+	enemy_type_juveolanternshambler: 'The Juve-O\'-Lantern shambler is exactly the same as a Default Shambler, it just has significantly more HP.\nThe Juve-O\'-Lantern is crafty, at least by Shambler standards. He has taken a product of the Garden Gankers and used it against them. This increase in defense compensates for the lack of vision it provides, but to be fair Shamblers don\'t really need to worry about that when their only concern is with moving forward in a straight line.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241134977056858/juveolanternshambler_gravestone.png',
+	enemy_type_flagshambler: 'The Flag Shambler is exactly the same as a Default Shambler in terms of health and damage output, but it has the unique ability of boosting the damage of all shamblers on the field when it is present.\nThe Flag Shambler is one of the best units to have in a Graveyard Op, if only for his enthusiasm for the cause. He\'s gone as far as releasing his own album dedicated to Shambler pride, including sleeper hits such as "Amazing Brainz" and "Take Me Home, Shambler Road".\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241129260089374/flagshambler_gravestone.png',
+	enemy_type_shambonidriver: 'The Shamboni is a specialized unit, killing anything in its path and leaving behind a frozen slime trail, of which Gaiaslimeoids cannot be planted on. There\'s a catch, however: If it drives over Rustea Leaves or a primed Poketuber, it will not survive the attack and explode instantly.\nBeing turned into a Shambler has given the Shamboni Driver a new lease on life. In his past, he worked long hours with little pay, cleaning the Ice Rink over at Slime\'s End like any other wagecuck, but now he is a brave soldier in Dr. Downpour\'s army of the undead. Drive on, Shamboni. We believe in you.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241174197731389/shambonidriver_gravestone.png',
+	enemy_type_mammoshambler: 'The Mammoshambler is a Shambler Mammoslime. It may be slow, but it\'s tough as hell. It can slide on the frozen slime trail left behind by Shambonis to move as fast as a normal Shambler.\nMammoslimes were already bereft of any intelligent thoughts, but being turned into a Shambler has just made things worse. It will frequently be unable to tell friend from foe, and leave many ally Shamblers caught in the crossfire when it slams its massive tusks into the ground. Despite their massive size, they are terrified of Microshamblers.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241144229691463/mammoshambler_gravestone.png',
+	enemy_type_gigashambler: 'The Gigashambler is a powerful attacking unit. It is very slow, but can practically one-shot anything in its path once it lands a hit. It will toss a Microshambler off of its back when it is below half of its maximum health.\nThe Gigashambler is what every shambler aspires to be. When he enters the field, you will know. You won\'t just *see* him, you\'ll *sense* him and his chad-like presence. He\'ll make your heart rock. He\'ll make your dick rock. He\'ll make your ass fucking shake, bro.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241132112085123/gigashambler_gravestone.png',
+	enemy_type_microshambler: 'The Microshambler is a smaller version of the Default Shambler. He may not have much health, but he can be a vital distraction or even tear up the backlines of a Gaiaslimeoid defense if left unattended. One punch from a Pink Rowddish will send him flying.\nIf Microshambler could speak in complete sentences, he would probably say something like "Being small has its benefits. I may not be able to ride all the rollercoasters I want, but I\'m light enough for Big Bro to carry me on his back and give me a good view of the battlefield."For lack of a better word, he\'s the \'brainz\' of the Gigashambler/Microshambler tag team.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743259271298416640/microshambler_gravestone.png',
+	enemy_type_shamblersaurusrex: 'The Shamblersaurus Rex is a Shambler Slimeasaurus Rex. It is fairly bulky and can dish out reasonable damage, but the main draw is its mighty roar, which will stun all Gaiaslimeoids on the field for a brief time, once it reaches below half of its maximum health\n"A pitiable creature. It has the potential to be the king of this city, but it\'s held back by its lust for meat." comments Dr. Downpour. In an effort to maximize the potential of the Shamblersaurus Rex, he re-wired its brain and body to be an omnivore, setting it free to rampage onward towards Gaiaslimeoids and sate its hunger.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241168204333116/shamblersaurusrex_gravestone.png',
+	enemy_type_shamblerdactyl: 'The Shamblerdactyl is a Shambler Slimeadactyl. It will not attack in a conventional manner, instead opting to swoop down from the skies and snatch Gaiaslimeoids away from the field, effectively killing them instantly. Sour Potatoes can swallow them whole before it can have the chance to land this attack, however, and Phosphorpoppies will thwart their attacks outright if they are nearby a Shamblerdactyl.\nNo one knows where Shamblerdactyls take their victims after they are whisked away into the skies. Shambologists theorize that they are taken to somewhere in outskirts where their nest lies and newborn Shamblerdactyls are born and raised. At least, they would, if they weren\'t so wall-eyed and prone to crashing into things.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241161350709308/shamblerdactyl_gravestone.png',
+	enemy_type_dinoshambler: 'The Dinoshambler is a Shambler Dinoslime. It will not attack in a conventional manner, instead opting to jump over all Gaiaslimeoids in its path. This allows it to be a considerable threat against Garden Gankers who do not put a stop to its agile movements, either by catching it with a Sour Potato, slowing it down with a Dankwheat, or blocking it outright with an erect Suganmanut.\nThe Dinoshambler remains a carnivorous entity, less modified and altered compared to the Shamblersaurus Rex. They make use of their springy legs to leap over short distances, and seek out the mouth-watering Garden Gankers hiding behind the less-desireable leafy appendages of all Gaiaslimeoids. "Chew on this, you knock-off Secreature!", a gangster might say as they shoot down Dinoshamblers who prey on their Garden Ganker allies.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241126185795636/dinoshambler_gravestone.png',
+	enemy_type_ufoshambler: 'The UFO Shambler is a Shambler Unnerving Fighting Operator. It will not attack in a conventional manner, preferring to launch ranged attacks in the form of grenades. If a grenade lands nearby a Pink Rowddish, it will be thrown back, resulting in damage taken by the UFO Shambler. If a UFO Shambler runs out of grenades, or if all Gaiaslimeoids within its lane are taken out, it will then begin to move forward like any other shambler and instantly take out any Gaiaslimeoid it finds with a short-range blaster attack.\nOf all the modified Secreatures in Dr. Downpour\'s arsenal, this was by far the trickiest to overturn. Not only did it have to be genetically modified, but technologically modified as well. If all the right steps aren\'t properly taken, there\'s a chance they might be able to contact their homeworld, and god help us all if it comes to that.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241176811044965/ufoshambler_gravestone.png',
+	enemy_type_brawldenboomer: 'The Brawlden Boomer is a Shambler with slightly above-average defenses, as he is protected by his Boombox. Once the song on his boombox finishes playing, it will explode, damaging all nearby Gaiaslimeoids. If it is destroyed by Gaiaslimeoids before that point, then he will become enraged, gaining a significant boost to his offensive capabilities. Certain attacks will pierce through his boombox and deal damage to him directly, such as the globs of acid from Dire Apples, or the toxic vape from Killiflowers.\n"Music... they don\'t make it... like they used to...", says The Brawlden Boomer. You can\'t tell if turning into a Shambler caused him to look and act the way he does, or if he was already like this.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241120724811816/brawldenboomer_gravestone.png',
+	enemy_type_juvieshambler: 'The Juvie Shambler is a Shambler Juvie. What is less obvious, however, is their method of attack: They mine underground, circumventing all forms of Gaiaslimeoid defense, with the exception of primed Poketubers, which they will detonate upon digging underneath them. If the reach the back of the field, they will begin to walk towards their starting point, taking out Gaiaslimeoids from behind.\nJuvie Shamblers are as cowardly as they come, perhaps even more so than before they had been Shambled. The process of bicarbination has left them traumatized and unable to confront even the weakest of gangsters, instead opting to safely eliminate Gaiaslimeoids through careful navigation under their roots. Fucking pussies.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241138399608852/juvieshambler_gravestone.png',
+	enemy_type_shambleballplayer: 'The Shambleball Player is a bulkier version of the Default Shambler, with a unique ability: Any Gaiaslimeoid in their path will be kicked into the column behind them, provided that there is enough room. Their efforts to punt Razonuts will always end in failure, however, due to the sharpened edges puncturing straight through their cleats and damaging them instead. Sour Potatoes will also devour them before their kicks can go through.\nMany people in NLACakaNM, shamblers and non-shamblers alike, are under the impression that Shambeball is a real sport. This is a farce, however. Shambleball can be a fun pass time, but it lacks any notion of rules or formations. As a result, many Shambleball players are found to be wearing conflicting uniforms, be it those used for Soccer, Football, or Basketball. Many of them don\'t even know what game they\'re playing, but their single-digit-IQ allows them to enjoy it all the more.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743259662815592533/shambleballplayer_gravestone.png',
+	enemy_type_shamblerwarlord: 'The Shambler Warlord is a Shambler Desert Warlord. He is a fairly strong Shambler, and additionally, he will sometimes call in a handful of Shambler Raiders to surround him and protect him from enemy fire.\nThe Shambler Warlord willingly joined Dr. Downpour\'s forces, so as to get back at the residents of NLACakaNM, who continue to invade his outposts and slaughter his underlings. "Sure, braiiinz, whatever, I\'m just here to get the fucking job done", says Shambler Warlord.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241171219906621/shamblerwarlord_gravestone.png',
+	enemy_type_shamblerraider: 'The Shambler Raider is a Shambler Desert Raider. He is exactly the same as a Default Shambler, summoned whenever he is called upon by the Shambler Warlord.\n"N-no, it\'s not true!", Shambler Raider says, clutching his scythe. "I-I don\'t like gardening, this is just for combat!". We all know the truth though, Shambler Raider. You don\'t have to hide it.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241165436092476/shamblerraider_gravestone.png',
 }
 
 rain_protection = [

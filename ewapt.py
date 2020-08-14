@@ -1010,11 +1010,8 @@ async def watch(cmd):
 
 
 		poi = ewcfg.id_to_poi.get(user_model.poi)
-		token_array = ["!summonenemy" ,"megaslime", poi.mother_districts[0], ewcfg.tv_set_slime, ewcfg.tv_set_level, "The", "Slime"]
-
-		cmd.tokens = token_array
-
-		await ewhunting.summonenemy(is_bot_spawn=True, cmd=cmd)
+		
+		await ewhunting.spawn_enemy(pre_chosen_type=ewcfg.enemy_type_megaslime, pre_chosen_poi=poi.mother_districts[0], pre_chosen_slimes=ewcfg.tv_set_slime, pre_chosen_level=ewcfg.tv_set_level, pre_chosen_displayname="The Slime")
 		response = ""
 
 	user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
@@ -2391,7 +2388,7 @@ async def aptCommands(cmd):
 		return await customize(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_aptdesc:
 		return await customize(cmd=cmd, isDesc=True)
-	elif cmd_text == ewcfg.cmd_move or cmd_text == ewcfg.cmd_move_alt1 or cmd_text == ewcfg.cmd_move_alt2 or cmd_text == ewcfg.cmd_move_alt3:
+	elif cmd_text == ewcfg.cmd_move or cmd_text == ewcfg.cmd_move_alt1 or cmd_text == ewcfg.cmd_move_alt2 or cmd_text == ewcfg.cmd_move_alt3 or cmd_text == ewcfg.cmd_move_alt4 or cmd_text == ewcfg.cmd_move_alt5:
 		return await ewmap.move(cmd=cmd, isApt = True)
 	elif cmd_text == ewcfg.cmd_knock:
 		return await knock(cmd=cmd)

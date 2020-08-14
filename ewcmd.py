@@ -1504,8 +1504,7 @@ async def piss(cmd):
 					enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
 					
 					user_poi = ewcfg.id_to_poi.get(user_data.poi)
-					if user_poi.is_district:
-						user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, enlisted)
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, enlisted)
 					user_data.persist()
 					
 					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1924,8 +1923,7 @@ async def push(cmd):
 		enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
 		
 		user_poi = ewcfg.id_to_poi.get(user_data.poi)
-		if user_poi.is_district:
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, enlisted)
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, enlisted)
 		user_data.persist()
 
 		await ewrolemgr.updateRoles(client = cmd.client, member = target)
@@ -2827,8 +2825,8 @@ async def gvs_print_lane(cmd):
 async def gvs_incubate_gaiaslimeoid(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	
-	if user_data.poi != ewcfg.poi_id_atomicforest:
-		response = "You lack the proper equipment to create a Gaiaslimeoid. Head to Atomic Forest!"
+	if user_data.poi != ewcfg.poi_id_og_farms:
+		response = "You lack the proper equipment to create a Gaiaslimeoid. Head to the Atomic Forest in Ooze Gardens Farms!"
 	else:
 		if cmd.tokens_count < 2:
 			material_counter = 0
@@ -2883,8 +2881,8 @@ async def gvs_incubate_gaiaslimeoid(cmd):
 async def gvs_fabricate_tombstone(cmd):
 	user_data = EwUser(member=cmd.message.author)
 
-	if user_data.poi != ewcfg.poi_id_downpourlaboratory:
-		response = "You lack the proper equipment to fabricate a Tombstone. Head to Dr. Downpour's Laboratory!"
+	if user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
+		response = "You lack the proper equipment to fabricate a Tombstone. Head to Dr. Downpour's Laboratory at the edge of Nuclear Beach!"
 	else:
 		if cmd.tokens_count < 2:
 			tombstone_counter = 0

@@ -1507,22 +1507,17 @@ async def decrease_food_multiplier(id_user):
 		food_multiplier[id_user] = max(0, food_multiplier.get(id_user) - 1)
 
 async def spawn_enemies(id_server = None):
-	if not ewcfg.gvs_active:
-		if random.randrange(3) == 0:
-			weathertype = ewcfg.enemy_weathertype_normal
-			market_data = EwMarket(id_server=id_server)
-			# If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
-			if market_data.weather == ewcfg.weather_bicarbonaterain:
-				if random.randrange(3) < 2:
-					weathertype = ewcfg.enemy_weathertype_rainresist
-			
-			resp_cont = ewhunting.spawn_enemy(id_server=id_server, weather=weathertype)
-	
-			await resp_cont.post()
-	else:
-		# TODO: add in gvs_spawn_enemy
-		resp_cont = ewhunting.gvs_spawn_enemy(id_server=id_server)
+	if random.randrange(3) == 0:
+		weathertype = ewcfg.enemy_weathertype_normal
+		market_data = EwMarket(id_server=id_server)
 		
+		# If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
+		if market_data.weather == ewcfg.weather_bicarbonaterain:
+			if random.randrange(3) < 2:
+				weathertype = ewcfg.enemy_weathertype_rainresist
+		
+		resp_cont = ewhunting.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype)
+
 		await resp_cont.post()
 
 async def spawn_enemies_tick_loop(id_server):
@@ -2535,6 +2530,17 @@ async def shut_down_bot(cmd):
 	
 	logMsg('Goodbye!')
 	await asyncio.sleep(2)
+	
+	while True:
+		sys.exit()
+		
+async def check_bot(cmd):
+	if not cmd.message.author.guild_permissions.administrator:
+		return
+	
+	logMsg('TERMINATE is currently: {}'.format(TERMINATE))
+	
+	return
 	sys.exit()
 
 def gvs_create_gaia_grid_mapping(user_data):
