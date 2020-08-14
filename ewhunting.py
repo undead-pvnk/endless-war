@@ -67,8 +67,8 @@ class EwEnemy:
 	# Used to determine how much slime an enemy started out with to create a 'health bar' ( current slime / initial slime )
 	initialslimes = 0
 
-	# Enemies despawn when this number reaches 10800 (3 hours)
-	lifetime = 0
+	# Enemies despawn when this value is less than int(time.time())
+	expiration_date = 0
 
 	# Used by the 'defender' AI to determine who it should retaliate against
 	id_target = -1
@@ -93,12 +93,12 @@ class EwEnemy:
 	
 	# Tracks which user is associated with the enemy
 	owner = -1
+
+	# Coordinate used for enemies in Gankers Vs. Shamblers
+	gvs_coord = ""
 	
 	# Various properties different enemies might have
 	enemy_props = ""
-	
-	# Coordinate used for enemies in Gankers Vs. Shamblers
-	gvs_coord = ""
 
 	""" Load the enemy data from the database. """
 
@@ -141,7 +141,7 @@ class EwEnemy:
 						ewcfg.col_enemy_bleed_storage,
 						ewcfg.col_enemy_time_lastenter,
 						ewcfg.col_enemy_initialslimes,
-						ewcfg.col_enemy_lifetime,
+						ewcfg.col_enemy_expiration_date,
 						ewcfg.col_enemy_id_target,
 						ewcfg.col_enemy_raidtimer,
 						ewcfg.col_enemy_rare_status,
@@ -172,7 +172,7 @@ class EwEnemy:
 					self.bleed_storage = result[12]
 					self.time_lastenter = result[13]
 					self.initialslimes = result[14]
-					self.lifetime = result[15]
+					self.expiration_date = result[15]
 					self.id_target = result[16]
 					self.raidtimer = result[17]
 					self.rare_status = result[18]
@@ -229,7 +229,7 @@ class EwEnemy:
 					ewcfg.col_enemy_bleed_storage,
 					ewcfg.col_enemy_time_lastenter,
 					ewcfg.col_enemy_initialslimes,
-					ewcfg.col_enemy_lifetime,
+					ewcfg.col_enemy_expiration_date,
 					ewcfg.col_enemy_id_target,
 					ewcfg.col_enemy_raidtimer,
 					ewcfg.col_enemy_rare_status,
@@ -255,7 +255,7 @@ class EwEnemy:
 					self.bleed_storage,
 					self.time_lastenter,
 					self.initialslimes,
-					self.lifetime,
+					self.expiration_date,
 					self.id_target,
 					self.raidtimer,
 					self.rare_status,
@@ -1632,7 +1632,7 @@ async def summonenemy(cmd, is_bot_spawn = False):
 		enemy.id_server = user_data.id_server
 		enemy.poi = poi.id_poi
 		enemy.level = level_byslime(enemy.slimes)
-		enemy.lifetime = time_now
+		enemy.expiration_date = time_now + ewcfg.time_despawn
 		enemy.identifier = set_identifier(poi.id_poi, user_data.id_server)
 		enemy.weathertype = ewcfg.enemy_weathertype_normal
 		
@@ -1701,7 +1701,7 @@ async def summongvsenemy(cmd):
 		enemy.id_server = user_data.id_server
 		enemy.poi = poi.id_poi
 		enemy.level = level_byslime(enemy.slimes)
-		enemy.lifetime = time_now
+		enemy.expiration_date = time_now + ewcfg.time_despawn
 		enemy.identifier = set_identifier(poi.id_poi, user_data.id_server)
 		enemy.weathertype = ewcfg.enemy_weathertype_normal
 
@@ -1771,10 +1771,10 @@ async def enemy_perform_action(id_server):
 	
 	client = ewcfg.get_client()
 
-	despawn_timenow = int(time.time()) - ewcfg.time_despawn
+	time_now = int(time.time())
 
 	enemydata = ewutils.execute_sql_query(
-		"SELECT {id_enemy} FROM enemies WHERE ((enemies.poi IN (SELECT users.poi FROM users WHERE NOT (users.life_state = %s OR users.life_state = %s) AND users.id_server = {id_server})) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.lifetime < %s) OR (enemies.id_target != -1)) AND enemies.id_server = {id_server}".format(
+		"SELECT {id_enemy} FROM enemies WHERE ((enemies.poi IN (SELECT users.poi FROM users WHERE NOT (users.life_state = %s OR users.life_state = %s) AND users.id_server = {id_server})) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != -1)) AND enemies.id_server = {id_server}".format(
 		id_enemy=ewcfg.col_id_enemy,
 		id_server=id_server
 	), (
@@ -1782,7 +1782,7 @@ async def enemy_perform_action(id_server):
 		ewcfg.life_state_kingpin,
 		ewcfg.raid_bosses,
 		ewcfg.enemy_lifestate_dead,
-		despawn_timenow
+		time_now
 	))
 	#enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
 	#	id_enemy = ewcfg.col_id_enemy
@@ -1799,7 +1799,7 @@ async def enemy_perform_action(id_server):
 		resp_cont = ewutils.EwResponseContainer(id_server=id_server)
 
 		# If an enemy is marked for death or has been alive too long, delete it
-		if enemy.life_state == ewcfg.enemy_lifestate_dead or (enemy.lifetime < despawn_timenow):
+		if enemy.life_state == ewcfg.enemy_lifestate_dead or (enemy.expiration_date < time_now):
 			delete_enemy(enemy)
 		else:
 			# If an enemy is an activated raid boss, it has a 1/20 chance to move between districts.
@@ -1863,7 +1863,7 @@ async def enemy_perform_action_gvs(id_server):
 
 	client = ewcfg.get_client()
 
-	despawn_timenow = int(time.time()) - ewcfg.time_despawn
+	time_now = int(time.time())
 
 	condition_gaia_sees_shambler_player = "enemies.poi IN (SELECT users.poi FROM users WHERE (users.life_state = '{}'))".format(ewcfg.life_state_shambler)
 	condition_gaia_sees_shampler_enemy = "enemies.poi IN (SELECT enemies.poi FROM enemies WHERE (enemies.enemyclass = '{}'))".format(ewcfg.enemy_class_shambler)
@@ -1873,7 +1873,7 @@ async def enemy_perform_action_gvs(id_server):
 	#print(despawn_timenow)
 	
 	enemydata = ewutils.execute_sql_query(
-		"SELECT {id_enemy} FROM enemies WHERE (enemies.enemytype IN %s) AND (({condition_1}) OR ({condition_2}) OR ({condition_3}) OR ({condition_4}) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.lifetime < %s) OR (enemies.id_target != '')) AND enemies.id_server = {id_server}".format(
+		"SELECT {id_enemy} FROM enemies WHERE (enemies.enemytype IN %s) AND (({condition_1}) OR ({condition_2}) OR ({condition_3}) OR ({condition_4}) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != '')) AND enemies.id_server = {id_server}".format(
 			id_enemy=ewcfg.col_id_enemy,
 			id_server=id_server,
 			condition_1 = condition_gaia_sees_shambler_player,
@@ -1901,7 +1901,7 @@ async def enemy_perform_action_gvs(id_server):
 		resp_cont = ewutils.EwResponseContainer(id_server=id_server)
 
 		# If an enemy is marked for death or has been alive too long, delete it
-		if enemy.life_state == ewcfg.enemy_lifestate_dead or (enemy.lifetime < despawn_timenow):
+		if enemy.life_state == ewcfg.enemy_lifestate_dead or (enemy.expiration_date < time_now):
 			delete_enemy(enemy)
 		else:
 			# The GvS raidboss has pre-determined pathfinding
@@ -1972,12 +1972,28 @@ async def enemy_perform_action_gvs(id_server):
 				await resp_cont.post()
 
 # Spawns an enemy in a randomized outskirt district. If a district is full, it will try again, up to 5 times.
-def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weather = None):
+def spawn_enemy(
+		id_server, 
+		pre_chosen_type = None, 
+		pre_chosen_level = None,
+		pre_chosen_expiration = None,
+		pre_chosen_initialslimes = None,
+		pre_chosen_poi = None,
+		pre_chosen_identifier = None,
+		pre_chosen_hardened_sap = None,
+		pre_chosen_weather = None,
+		pre_chosen_faction = None,
+		pre_chosen_class = None,
+		pre_chosen_owner = None,
+		pre_chosen_coord = None,
+		gvs_active = False,
+	):
 	time_now = int(time.time())
 	response = ""
 	ch_name = ""
 	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
 	chosen_poi = ""
+	potential_chosen_poi = ""
 	threat_level = ""
 	boss_choices = []
 
@@ -2000,121 +2016,120 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weathe
 		threat_level_choice = random.randrange(1000)
 		
 		if threat_level_choice <= 450:
-			threat_level = "Micro"
+			threat_level = "micro"
 		elif threat_level_choice <= 720:
-			threat_level = "Monstrous"
+			threat_level = "monstrous"
 		elif threat_level_choice <= 900:
-			threat_level = "Mega"
+			threat_level = "mega"
 		else:
-			threat_level = "Mega"
-			#threat_level = "Nega"
+			threat_level = "mega"
+			#threat_level = "nega"
 		
 		boss_choices = ewcfg.raid_boss_tiers[threat_level]
 		enemytype = random.choice(boss_choices)
 		
 	if pre_chosen_type is not None:
 		enemytype = pre_chosen_type
-
-	# debug manual reassignment
-	# enemytype = 'juvie'
-
-	while enemies_count >= ewcfg.max_enemies and try_count < 5:
-
-		# Sand bags only spawn in the dojo
-		if enemytype == ewcfg.enemy_type_sandbag:
-			potential_chosen_poi = ewcfg.poi_id_dojo
-		else:
-			potential_chosen_poi = random.choice(ewcfg.outskirts)
-			
-		if pre_chosen_poi is not None:
-			potential_chosen_poi = pre_chosen_poi
-
-		# potential_chosen_poi = 'cratersvilleoutskirts'
-		potential_chosen_district = EwDistrict(district=potential_chosen_poi, id_server=id_server)
-		enemies_list = potential_chosen_district.get_enemies_in_district()
-		enemies_count = len(enemies_list)
-
-		if enemies_count < ewcfg.max_enemies:
-			chosen_poi = potential_chosen_poi
-			try_count = 5
-		else:
-			# Enemy couldn't spawn in that district, try again
-			try_count += 1
-
-	# If it couldn't find a district in 5 tries or less, back out of spawning that enemy.
-	if chosen_poi == "":
-		return resp_cont
 	
-	# If an enemy spawns in the Nuclear Beach, it should be remade as a 'pre-historic' enemy.
-	if potential_chosen_poi == ewcfg.poi_id_nuclear_beach:
-		enemytype = random.choice(ewcfg.pre_historic_enemies)
-		# If the enemy is a raid boss, re-roll it once to make things fair
-		if enemytype in ewcfg.raid_bosses:
-			enemytype = random.choice(ewcfg.pre_historic_enemies)
-	
-	# Recursively spawn enemies that belong to groups.
-	if enemytype in ewcfg.enemy_group_leaders:
-		sub_enemies_list = ewcfg.enemy_spawn_groups[enemytype]
-		sub_enemies_list_item_max = len(sub_enemies_list)
-		sub_enemy_list_item_count = 0
-		
-		while sub_enemy_list_item_count < sub_enemies_list_item_max:
-			sub_enemy_type = sub_enemies_list[sub_enemy_list_item_count][0] 
-			sub_enemy_spawning_max = sub_enemies_list[sub_enemy_list_item_count][1] 
-			sub_enemy_spawning_count = 0
-			
-			sub_enemy_list_item_count += 1
-			while sub_enemy_spawning_count < sub_enemy_spawning_max:
-				
-				sub_enemy_spawning_count += 1
-				
-				sub_resp_cont = spawn_enemy(id_server=id_server, pre_chosen_type=sub_enemy_type, pre_chosen_poi = chosen_poi)
+	if gvs_active == False:
 
-				resp_cont.add_response_container(sub_resp_cont)
+		while enemies_count >= ewcfg.max_enemies and try_count < 5:
 
-	if enemytype != None:
-		enemy = get_enemy_data(enemytype)
-
-		# Assign enemy attributes that weren't assigned in get_enemy_data
-		enemy.id_server = id_server
-		enemy.level = level_byslime(enemy.slimes)
-		enemy.lifetime = time_now
-		enemy.initialslimes = enemy.slimes
-		enemy.poi = chosen_poi
-		enemy.identifier = set_identifier(chosen_poi, id_server)
-		enemy.hardened_sap = int(enemy.level / 2)
-		enemy.weathertype = weather
-		
-		if weather != ewcfg.enemy_weathertype_normal:
-			if weather == ewcfg.enemy_weathertype_rainresist:
-				enemy.display_name = "Bicarbonate {}".format(enemy.display_name)
-				enemy.slimes *= 2
-
-		props = None
-		try:
-			props = ewcfg.enemy_data_table[enemytype]["props"]
-		except:
-			pass
-
-		enemy.enemy_props = props
-
-		enemy.persist()
-		enemy = EwEnemy(id_enemy=enemy.id_enemy)
-
-		if enemytype not in ewcfg.raid_bosses:
-			response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level, enemy.display_name, enemy.slimes)
+			# Sand bags only spawn in the dojo
 			if enemytype == ewcfg.enemy_type_sandbag:
-				response = "A new {} just got sent in. It's level {}, and has {} slime.\n*'Don't hold back!'*, the Dojo Master cries out from afar.".format(enemy.display_name, enemy.level, enemy.slimes)
+				potential_chosen_poi = ewcfg.poi_id_dojo
+			else:
+				potential_chosen_poi = random.choice(ewcfg.outskirts)
+
+			potential_chosen_district = EwDistrict(district=potential_chosen_poi, id_server=id_server)
+			enemies_list = potential_chosen_district.get_enemies_in_district()
+			enemies_count = len(enemies_list)
+
+			if enemies_count < ewcfg.max_enemies:
+				chosen_poi = potential_chosen_poi
+				try_count = 5
+			else:
+				# Enemy couldn't spawn in that district, try again
+				try_count += 1
+
+		# If it couldn't find a district in 5 tries or less, back out of spawning that enemy.
+		if chosen_poi == "":
+			return resp_cont
+
+		# If an enemy spawns in the Nuclear Beach, it should be remade as a 'pre-historic' enemy.
+		if potential_chosen_poi in [ewcfg.poi_id_nuclear_beach_edge, ewcfg.poi_id_nuclear_beach, ewcfg.poi_id_nuclear_beach_depths]:
+			enemytype = random.choice(ewcfg.pre_historic_enemies)
+			# If the enemy is a raid boss, re-roll it once to make things fair
+			if enemytype in ewcfg.raid_bosses:
+				enemytype = random.choice(ewcfg.pre_historic_enemies)
+
+		# Recursively spawn enemies that belong to groups.
+		if enemytype in ewcfg.enemy_group_leaders:
+			sub_enemies_list = ewcfg.enemy_spawn_groups[enemytype]
+			sub_enemies_list_item_max = len(sub_enemies_list)
+			sub_enemy_list_item_count = 0
+
+			while sub_enemy_list_item_count < sub_enemies_list_item_max:
+				sub_enemy_type = sub_enemies_list[sub_enemy_list_item_count][0]
+				sub_enemy_spawning_max = sub_enemies_list[sub_enemy_list_item_count][1]
+				sub_enemy_spawning_count = 0
+
+				sub_enemy_list_item_count += 1
+				while sub_enemy_spawning_count < sub_enemy_spawning_max:
+					sub_enemy_spawning_count += 1
+
+					sub_resp_cont = spawn_enemy(id_server=id_server, pre_chosen_type=sub_enemy_type, pre_chosen_poi=chosen_poi)
+
+					resp_cont.add_response_container(sub_resp_cont)
+
+		if enemytype != None:
+			enemy = get_enemy_data(enemytype)
+
+			# Assign enemy attributes that weren't assigned in get_enemy_data
+			enemy.id_server = id_server
+			enemy.level = level_byslime(enemy.slimes) if pre_chosen_level is None else pre_chosen_level
+			enemy.expiration_date = time_now + ewcfg.time_despawn if pre_chosen_expiration is None else pre_chosen_expiration
+			enemy.initialslimes = enemy.slimes if pre_chosen_initialslimes is None else pre_chosen_initialslimes
+			enemy.poi = chosen_poi if pre_chosen_poi is None else pre_chosen_poi
+			enemy.identifier = set_identifier(chosen_poi, id_server) if pre_chosen_identifier is None else pre_chosen_identifier
+			enemy.hardened_sap = int(enemy.level / 2) if pre_chosen_hardened_sap is None else pre_chosen_hardened_sap
+			enemy.weathertype = pre_chosen_weather
+			enemy.faction = '' if pre_chosen_faction is None else pre_chosen_faction
+			enemy.owner = -1 if pre_chosen_owner is None else pre_chosen_owner
+			enemy.gvs_coord = '' if pre_chosen_coord is None else pre_chosen_coord
+
+			if pre_chosen_weather != ewcfg.enemy_weathertype_normal:
+				if pre_chosen_weather == ewcfg.enemy_weathertype_rainresist:
+					enemy.display_name = "Bicarbonate {}".format(enemy.display_name)
+					enemy.slimes *= 2
+
+			props = None
+			try:
+				props = ewcfg.enemy_data_table[enemytype]["props"]
+			except:
+				pass
+
+			enemy.enemy_props = props
+
+			enemy.persist()
+			enemy = EwEnemy(id_enemy=enemy.id_enemy)
+
+			if enemytype not in ewcfg.raid_bosses:
+				response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level, enemy.display_name, enemy.slimes)
+				if enemytype == ewcfg.enemy_type_sandbag:
+					response = "A new {} just got sent in. It's level {}, and has {} slime.\n*'Don't hold back!'*, the Dojo Master cries out from afar.".format(
+						enemy.display_name, enemy.level, enemy.slimes)
+
+			ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
 			
-		ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
+	elif gvs_active == True:
+
+	
 
 	if len(response) > 0 and len(ch_name) > 0:
 		resp_cont.add_channel_response(ch_name, response)
 
 	return resp_cont
-
-# Spawns shamblers in districts that Garden Ops are taking place in.
-async def gvs_spawn_enemy(id_server):
 
 # Finds an enemy based on its regular/shorthand name, or its ID.
 def find_enemy(enemy_search=None, user_data=None):
@@ -2446,7 +2461,6 @@ def get_enemy_data(enemy_type):
 	enemy.id_target = -1
 	enemy.raidtimer = 0
 	enemy.rare_status = rare_status
-	enemy.weathertype = ""
 		
 	if enemy_type in ewcfg.raid_bosses:
 		enemy.life_state = ewcfg.enemy_lifestate_unactivated

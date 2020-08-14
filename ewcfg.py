@@ -1813,10 +1813,10 @@ emote_brightshade = "<:c_brightshade:706989586676580373>"
 emote_blacklimes = "<:c_blacklimes:706989586890489947>"
 emote_phosphorpoppies = "<:c_phosphorpoppies:706989586898878496>"
 emote_direapples = "<:c_direapples:706989586928238663>"
-emote_rustealeaves = "<:c_rustealeaves:???>"
-emote_metallicaps = "<:c_metallicaps:???>"
-emote_steelbeans = "<:c_steelbeans:???>"
-emote_aushucks = "<:c_aushucks:???>"
+emote_rustealeaves = "<:c_rustealeaves:743337308295790642>"
+emote_metallicaps = "<:c_metallicaps:743337308228419714>"
+emote_steelbeans = "<:c_steelbeans:743337307968372757>"
+emote_aushucks = "<:c_aushucks:743337307859320923>"
 emote_blankregional = "bt:726254215118454804>"
 emote_greenlawn = "<:gt:726271625489809411>"
 emote_limelawn = "<:lt:726271664815472692>"
@@ -2131,7 +2131,7 @@ col_enemy_life_state = 'life_state'
 col_enemy_bleed_storage = 'bleed_storage'
 col_enemy_time_lastenter = 'time_lastenter'
 col_enemy_initialslimes = 'initialslimes'
-col_enemy_lifetime = 'lifetime'
+col_enemy_expiration_date = 'expiration_date'
 col_enemy_id_target = 'id_target'
 col_enemy_raidtimer = 'raidtimer'
 col_enemy_rare_status = 'rare_status'
@@ -24698,11 +24698,11 @@ gvs_enemies = gvs_enemies_gaiaslimeoids + gvs_enemies_shamblers
 
 # List of raid bosses sorted by their spawn rarity.
 raid_boss_tiers = {
-	"Micro": [enemy_type_megaslime],
-	"Monstrous": [enemy_type_slimeasaurusrex, enemy_type_unnervingfightingoperator],
-	"Mega": [enemy_type_greeneyesslimedragon],
+	"micro": [enemy_type_megaslime],
+	"monstrous": [enemy_type_slimeasaurusrex, enemy_type_unnervingfightingoperator],
+	"mega": [enemy_type_greeneyesslimedragon],
 	# This can be left empty until we get more raid boss ideas.
-	#"Nega": [],
+	#"nega": [],
 }
 
 # List of enemies that are simply too powerful to have their rare variants spawn

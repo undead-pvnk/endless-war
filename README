@@ -237,14 +237,15 @@ CREATE TABLE enemies (
 	bleed_storage bigint NOT NULL DEFAULT '0',
 	time_lastenter int NOT NULL DEFAULT '0',
 	initialslimes bigint NOT NULL DEFAULT '0',
-	lifetime bigint NOT NULL DEFAULT '0',
-	id_target bigint NOT NULL DEFAULT -1,
+	expiration_date bigint NOT NULL DEFAULT '0',
+	id_target bigint NOT NULL DEFAULT '-1',
 	raidtimer bigint NOT NULL DEFAULT '0',
 	rare_status int NOT NULL DEFAULT '0',
 	hardened_sap int NOT NULL DEFAULT '0',
 	weathertype varchar(32) NOT NULL DEFAULT '',
 	faction varchar(32) NOT NULL DEFAULT '',
 	enemyclass varchar(32) NOT NULL DEFAULT '',
+	owner bigint NOT NULL DEFAULT '0'
 	gvs_coord varchar(16) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_enemy)
