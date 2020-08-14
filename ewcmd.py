@@ -2825,8 +2825,8 @@ async def gvs_print_lane(cmd):
 async def gvs_incubate_gaiaslimeoid(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	
-	if user_data.poi != ewcfg.poi_id_atomicforest:
-		response = "You lack the proper equipment to create a Gaiaslimeoid. Head to Atomic Forest!"
+	if user_data.poi != ewcfg.poi_id_og_farms:
+		response = "You lack the proper equipment to create a Gaiaslimeoid. Head to the Atomic Forest in Ooze Gardens Farms!"
 	else:
 		if cmd.tokens_count < 2:
 			material_counter = 0
@@ -2881,8 +2881,8 @@ async def gvs_incubate_gaiaslimeoid(cmd):
 async def gvs_fabricate_tombstone(cmd):
 	user_data = EwUser(member=cmd.message.author)
 
-	if user_data.poi != ewcfg.poi_id_downpourlaboratory:
-		response = "You lack the proper equipment to fabricate a Tombstone. Head to Dr. Downpour's Laboratory!"
+	if user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
+		response = "You lack the proper equipment to fabricate a Tombstone. Head to Dr. Downpour's Laboratory at the edge of Nuclear Beach!"
 	else:
 		if cmd.tokens_count < 2:
 			tombstone_counter = 0

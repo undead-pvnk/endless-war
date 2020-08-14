@@ -144,8 +144,6 @@ poi_id_sodafountain = "sodafountain"
 poi_id_bodega = "bodega"
 poi_id_wafflehouse = "wafflehouse"
 poi_id_basedhardware = "basedhardware"
-poi_id_atomicforest = "atomicforest"
-poi_id_downpourlaboratory = "downpourlaboratory"
 
 # transports
 poi_id_ferry = "ferry"
@@ -11934,7 +11932,6 @@ poi_list = [
 			poi_id_oozegardens_street_b : travel_time_street,
 			poi_id_oozegardens_street_c : travel_time_street,
 			poi_id_oozegardens_street_d : travel_time_street,
-			poi_id_atomicforest : travel_time_subzone,
 		},
 	),
 	EwPoi( # 18
@@ -12101,7 +12098,6 @@ poi_list = [
 			poi_id_assaultflatsbeach_street_a : travel_time_street,
 			poi_id_assaultflatsbeach_street_b: travel_time_street,
 			poi_id_beachresort : travel_time_subzone,
-			poi_id_downpourlaboratory : travel_time_subzone,
 		},
 	),
 	EwPoi( # 24
@@ -15592,16 +15588,21 @@ poi_list = [
 			"oozegardenfarms",
 			"oozegardenfarm",
 			"oozegardensf",
-			"oozegardensfarm"
+			"oozegardensfarm",
+            "atomicforest",
+            "atomic",
+            "forest",
+            "af"
 		],
 		str_name = "The Ooze Gardens Farms",
-		str_desc = "An impressive host of unique and exotic flora are grown here. Originally on private property, the expansive greenhouses were the weekly meeting place for the city’s botanical society. They have since been seized by imminent domain and are now a public park. It’s type of soil is vast and varied depending on where you choose to plant. Surely, anything can grow here.\n\nExits into Ooze Gardens.",
+		str_desc = "An impressive host of unique and exotic flora are grown here. Originally on private property, the expansive greenhouses were the weekly meeting place for the city’s botanical society. They have since been seized by imminent domain and are now a public park. It’s type of soil is vast and varied depending on where you choose to plant. Surely, anything can grow here. Deeper into the gardens lies a hidden grotto inhabited by the Garden Gankers! They say they aren't gonna let you just squat here, but you can use the milling machines and gaiaslimeoid incubation vats for free if you want.\n\nExits into Ooze Gardens.",
 		channel = channel_og_farms,
 		wikipage = wiki_baseurl + "Ooze_Gardens#The_Ooze_Gardens_Farms",
 		role = "Ooze Gardens Farms",
 		pvp = False,
 		is_subzone = True,
 		mother_districts = [poi_id_oozegardens_street_c, poi_id_oozegardens_street_d],
+        vendors=[vendor_atomicforest],
 		neighbors = {
 			poi_id_oozegardens_street_c : travel_time_subzone,
 			poi_id_oozegardens_street_d : travel_time_subzone,
@@ -17731,7 +17732,7 @@ poi_list = [
 		id_poi=poi_id_northwest_outskirts_edge,
 		alias=[
 			"nwoedge",
-			"nwo",
+			"nwoe",
 		],
 		str_name="Northwest Outskirts Edge",
 		str_desc="You’ve never seen ruins this... recent. This area used to be a part of Charcoal Park, but now it’s a complete ghost town. You might even mistake it for a bonafide part of the city were it not for all the desert raiders and bubbling acid pools everywhere. It really makes you think about what could’ve been, you know? Maybe if the Veteran center wasn’t shielding Charcoal Park from this mess, we could’ve gotten rid of that stupid-ass district ages ago.",
@@ -17782,20 +17783,32 @@ poi_list = [
 		alias=[
 			"nbedge",
 			"nbe",
+            "downpourlab",
+            "dplab",
+            "brainz"
 		],
-		str_name="Nuclear Beach Edge",
-		str_desc=str_generic_outskirts_description_edge,
-		channel="nuclear-outskirts-edge",
+		str_name="Nuclear Beach Edge - Location of Dr. Downpour's Laboratory",
+		# str_desc=str_generic_outskirts_description_edge,
+        str_desc = "An armored fortress towering over the shores of the Slime Sea. Inside, an oppressive mechanical atmosphere looms over your presence as you eye vats containing secreatures crowding the various facilities and corridors. One of the doors inside the complex holds a 3D printer designed entirely for tombstone production. A vending machine containing protective gear is close by, its florescent lighting giving off a low hum. A dock outside the laboratory is stocked with diving gear, perfect for a nice game of Shambaquarium.",
+		channel="nuclear-beach-edge",
 		wikipage = wiki_baseurl + "Outskirts#Edge",
-		pvp=True,
+		# pvp=True,
 		is_capturable=False,
-		is_outskirts = True,
-		neighbors = {
-			poi_id_north_outskirts_edge : travel_time_outskirt,
-			poi_id_nuclear_beach : travel_time_outskirt,
-			poi_id_assaultflatsbeach_street_a : travel_time_outskirt,
-			poi_id_assaultflatsbeach_street_b : travel_time_outskirt,
+		# is_outskirts = True,
+		# neighbors = {
+		# 	poi_id_north_outskirts_edge : travel_time_outskirt,
+		# 	poi_id_nuclear_beach : travel_time_outskirt,
+		# 	poi_id_assaultflatsbeach_street_a : travel_time_outskirt,
+		# 	poi_id_assaultflatsbeach_street_b : travel_time_outskirt,
+		# },
+        is_subzone = True,
+        neighbors = {
+			poi_id_north_outskirts_edge : travel_time_subzone,
+			poi_id_nuclear_beach : travel_time_subzone,
+			poi_id_assaultflatsbeach_street_a : travel_time_subzone,
+			poi_id_assaultflatsbeach_street_b : travel_time_subzone,
 		},
+        vendors = [vendor_downpourlaboratory]
 	),
 	EwPoi(  # Outskirts - 7
 		id_poi=poi_id_south_outskirts,
@@ -17932,7 +17945,7 @@ poi_list = [
 		id_poi=poi_id_southwest_outskirts_depths,
 		alias=[
 			"swodepths",
-			"swo",
+			"swod",
 		],
 		str_name="Southwest Outskirts Depths",
 		str_desc=str_generic_outskirts_description_depths,
@@ -18217,11 +18230,11 @@ for poi in poi_list:
 		else:
 			outskirts_middle.append(poi.id_poi)
 		
-		if len(poi.neighbours) > 0:
+		if len(poi.neighbors) > 0:
 			poi.str_desc += " This outskirt is connected to "
 			
 			neighbor_index = 0
-			for neighbor_id in poi.neighbours.keys():
+			for neighbor_id in poi.neighbors.keys():
 				
 				current_neighbor = None
 				
@@ -18230,7 +18243,7 @@ for poi in poi_list:
 						current_neighbor = outskirt_neighbor
 						
 				if current_neighbor != None:
-					if neighbor_index == (len(poi.neighbours.keys()) - 1):
+					if neighbor_index == (len(poi.neighbors.keys()) - 1):
 						poi.str_desc += 'and {}.'.format(current_neighbor.str_name)
 					else:
 						poi.str_desc += '{}, '.format(current_neighbor.str_name)
