@@ -2848,7 +2848,7 @@ async def gvs_incubate_gaiaslimeoid(cmd):
 				response = "That's not a crop material you can use, bitch."
 			else:
 
-				material_item = ewitem.find_item(item_search=material, id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None, item_type_filter=ewcfg.it_item)
+				material_item = ewitem.find_item(item_search=material, id_user=cmd.message.author.id, id_server=cmd.message.guild.id if cmd.message.guild is not None else None, item_type_filter=ewcfg.it_item)
 				if material_item == None:
 					response = "You don't have that crop material in your inventory, bitch."
 				else:
@@ -2866,7 +2866,7 @@ async def gvs_incubate_gaiaslimeoid(cmd):
 						generated_item_id = ewitem.item_create(
 							item_type=item_type,
 							id_user=cmd.message.author.id,
-							id_server=cmd.message.server.id,
+							id_server=cmd.message.guild.id,
 							item_props=item_props
 						)
 						
@@ -2922,7 +2922,7 @@ async def gvs_fabricate_tombstone(cmd):
 						generated_item_id = ewitem.item_create(
 							item_type=item_type,
 							id_user=cmd.message.author.id,
-							id_server=cmd.message.server.id,
+							id_server=cmd.message.guild.id,
 							item_props=item_props
 						)
 

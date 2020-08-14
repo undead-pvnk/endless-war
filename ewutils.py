@@ -464,13 +464,13 @@ def formatMessage(user_target, message):
 		if user_target.life_state == ewcfg.enemy_lifestate_alive:
 			
 			if user_target.enemyclass == ewcfg.enemy_class_gaiaslimeoid:
-				return "*{} {}:* {}".format(user_target.display_name, user_target.gvs_coord, message)
+				return "**{} ({}):** {}".format(user_target.display_name, user_target.gvs_coord, message)
 			else:
 				# Send messages for normal enemies, and allow mentioning with @
 				if user_target.identifier != '':
-					return "*{} {}:* {}".format(user_target.display_name, user_target.identifier, message)
+					return "**{} ({}):** {}".format(user_target.display_name, user_target.identifier, message)
 				else:
-					return "*{}:* {}".format(user_target.display_name, message)
+					return "**{}:** {}".format(user_target.display_name, message)
 
 		elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
 			return "{}".format(message)
