@@ -483,6 +483,7 @@ cmd_map = {
 	ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
 	ewcfg.cmd_createitem: ewcmd.create_item,
 	ewcfg.cmd_manualsoulbind: ewcmd.manual_soulbind,
+	ewcfg.cmd_editprops: ewitem.manually_edit_item_properties,
 	ewcfg.cmd_setslime: ewcmd.set_slime,
 	ewcfg.cmd_checkstats: ewcmd.check_stats,
 	# ewcfg.cmd_exalt: ewkingpin.exalt,
@@ -1929,13 +1930,13 @@ async def on_message(message):
 			elif randint == 3:
 				msg_mistake = "ENDLESS WAR pays you no mind."
 
-			await ewutils.send_message(client, cmd_obj.message.channel, msg_mistake, 2)
-			# await asyncio.sleep(2)
-			#try:
-			#	await msg.delete()
-			#	pass
-			#except:
-			#	pass
+			msg = await ewutils.send_message(client, cmd_obj.message.channel, msg_mistake, 2)
+			await asyncio.sleep(2)
+			try:
+				await msg.delete()
+				pass
+			except:
+				pass
 
 	elif content_tolower.find(ewcfg.cmd_howl) >= 0 or content_tolower.find(ewcfg.cmd_howl_alt1) >= 0 or re_awoo.match(content_tolower):
 		""" Howl if !howl is in the message at all. """

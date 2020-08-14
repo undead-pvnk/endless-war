@@ -2137,5 +2137,30 @@ async def lower_durability(general_item):
 	current_durability = general_item_data.item_props.get('durability')
 	general_item_data.item_props['durability'] = (int(current_durability) - 1)
 	general_item_data.persist()
+	
+async def manually_edit_item_properties(cmd):
+	
+	if not cmd.message.author.guild_permissions.administrator:
+		return
+	
+	if cmd.tokens_count == 4:
+		item_id = cmd.tokens[1]
+		column_name = cmd.tokens[2]
+		column_value = cmd.tokens[3]
 
+		ewutils.execute_sql_query("REPLACE INTO items_prop({}, {}, {}) VALUES(%s, %s, %s)".format(
+				ewcfg.col_id_item,
+				ewcfg.col_name,
+				ewcfg.col_value
+			), (
+				item_id,
+				column_name,
+				column_value
+			))
+		
+		response = "Edited item with ID {}. It's {} value has been set to {}.".format(item_id, column_name, column_value)
 
+	else:
+		response = 'Invalid number of options entered.\nProper usage is: !editprop [item ID] [name] [value], where [value] is in quotation marks if it is longer than one word.'
+
+	await ewutils.send_message(cmd.message.channel, response)
