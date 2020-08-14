@@ -2163,4 +2163,4 @@ async def manually_edit_item_properties(cmd):
 	else:
 		response = 'Invalid number of options entered.\nProper usage is: !editprop [item ID] [name] [value], where [value] is in quotation marks if it is longer than one word.'
 
-	await ewutils.send_message(cmd.message.channel, response)
+	await ewutils.send_message(cmd.client, cmd.message.channel, response)
