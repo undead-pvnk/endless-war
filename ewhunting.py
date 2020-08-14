@@ -1592,16 +1592,17 @@ class EwOperationData:
 			ewutils.databaseClose(conn_info)
 		
 # Debug command. Could be used for events, perhaps?
-async def summonenemy(cmd, is_bot_spawn = False):
+async def summonenemy(cmd):
 
 	author = cmd.message.author
 
-	if not author.guild_permissions.administrator and is_bot_spawn == False:
+	if not author.guild_permissions.administrator:
 		return
 
 	time_now = int(time.time())
 	response = ""
 	user_data = EwUser(member=cmd.message.author)
+	data_level = 0
 
 	enemytype = None
 	enemy_location = None
@@ -1610,6 +1611,8 @@ async def summonenemy(cmd, is_bot_spawn = False):
 	enemy_slimes = None
 	enemy_displayname = None
 	enemy_level = None
+	
+	resp_cont = None
 
 	if len(cmd.tokens) >= 3:
 
@@ -1625,48 +1628,32 @@ async def summonenemy(cmd, is_bot_spawn = False):
 		poi = ewcfg.id_to_poi.get(enemy_location)
 
 	if enemytype != None and poi != None:
-
-		enemy = get_enemy_data(enemytype)
-
-		# Assign enemy attributes that weren't assigned in get_enemy_data
-		enemy.id_server = user_data.id_server
-		enemy.poi = poi.id_poi
-		enemy.level = level_byslime(enemy.slimes)
-		enemy.expiration_date = time_now + ewcfg.time_despawn
-		enemy.identifier = set_identifier(poi.id_poi, user_data.id_server)
-		enemy.weathertype = ewcfg.enemy_weathertype_normal
 		
-		# Re-assign rare_status to 0 so custom names don't confuse the dict in ewcfg
-		enemy.rare_status = 0
-		
+		data_level = 1
+
 		if enemy_slimes != None and enemy_displayname != None and enemy_level != None and enemy_coord != None:
-			enemy.initialslimes = enemy_slimes
-			enemy.slimes = enemy_slimes
-			enemy.display_name = enemy_displayname
-			enemy.level = enemy_level
-			enemy.gvs_coord = enemy_coord
-
-		props = None
-		try:
-			props = ewcfg.enemy_data_table[enemytype]["props"]
-		except:
-			pass
-		
-		enemy.enemy_props = props
-
-		enemy.persist()
-
-		response = "**DEBUG**: You have summoned **{}**, a level {} enemy of type **{}**. It has {} slime. It spawned in {}.".format(
-			enemy.display_name,
-			enemy.level,
-			enemy.enemytype,
-			enemy.slimes,
-			enemy.poi
-		)
+			data_level = 2
+			
+		if data_level == 1:
+			resp_cont = spawn_enemy(id_server=cmd.message.guild.id, pre_chosen_type=enemytype, pre_chosen_poi=poi.id_poi, manual_spawn=True)
+		elif data_level == 2:
+			
+			resp_cont = spawn_enemy(
+				id_server=cmd.message.guild.id,
+				pre_chosen_type=enemytype, 
+				pre_chosen_poi=poi.id_poi, 
+				pre_chosen_level=enemy_level, 
+				pre_chosen_slimes=enemy_slimes,
+				pre_chosen_initialslimes = enemy_slimes,
+				pre_chosen_coord = enemy_coord,
+				pre_chosen_displayname=enemy_displayname,
+				manual_spawn = True,
+			)
+			
+		await resp_cont.post()
 		
 	else:
 		response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING / LOCATION. ADDITIONAL OPTIONS ARE SLIME / LEVEL / COORD / DISPLAYNAME"
-	if not is_bot_spawn:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
@@ -1692,24 +1679,9 @@ async def summongvsenemy(cmd):
 		poi = user_data.poi
 	else:
 		response = "Correct usage: !summongvsenemy [type] [coord] [joybean status ('yes', otherwise false)]"
-
-	if enemytype != None and poi != None and joybean_status != None and coord != None:
-
-		enemy = get_enemy_data(enemytype)
-
-		# Assign enemy attributes that weren't assigned in get_enemy_data
-		enemy.id_server = user_data.id_server
-		enemy.poi = poi.id_poi
-		enemy.level = level_byslime(enemy.slimes)
-		enemy.expiration_date = time_now + ewcfg.time_despawn
-		enemy.identifier = set_identifier(poi.id_poi, user_data.id_server)
-		enemy.weathertype = ewcfg.enemy_weathertype_normal
-
-		# Re-assign rare_status to 0 so custom names don't confuse the dict in ewcfg
-		enemy.rare_status = 0
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
-		enemy.gvs_coord = coord
-
+	if enemytype != None and poi != None and joybean_status != None and coord != None:
 		props = None
 		try:
 			props = ewcfg.enemy_data_table[enemytype]["props"]
@@ -1720,23 +1692,16 @@ async def summongvsenemy(cmd):
 		except:
 			pass
 
-		enemy.enemy_props = props
-
-		enemy.persist()
-
-		response = "**DEBUG**: You have summoned **{}**, a level {} enemy of type **{}**. It has {} slime. It spawned in {}, coordinate {}.".format(
-			enemy.display_name,
-			enemy.level,
-			enemy.enemytype,
-			enemy.slimes,
-			enemy.poi,
-			enemy.gvs_coord,
+		resp_cont = spawn_enemy(
+			id_server=cmd.message.guild.id, 
+			pre_chosen_type=enemytype, 
+			pre_chosen_poi=poi.id_poi,
+			pre_chosen_coord=coord,
+			pre_chosen_props=props,
+			manual_spawn=True,
 		)
-		
-		if enemy.enemy_props.get('joybean') == 'True':
-			response += " It has a joybean."
 	
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await resp_cont.post()
 
 
 async def delete_all_enemies(cmd=None, query_suffix="", id_server_sent=""):
@@ -1884,7 +1849,7 @@ async def enemy_perform_action_gvs(id_server):
 			ewcfg.gvs_enemies,
 			ewcfg.raid_bosses,
 			ewcfg.enemy_lifestate_dead,
-			despawn_timenow
+			time_now
 		))
 	# enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
 	#	id_enemy = ewcfg.col_id_enemy
@@ -1976,6 +1941,8 @@ def spawn_enemy(
 		id_server, 
 		pre_chosen_type = None, 
 		pre_chosen_level = None,
+		pre_chosen_slimes = None,
+		pre_chosen_displayname = None,
 		pre_chosen_expiration = None,
 		pre_chosen_initialslimes = None,
 		pre_chosen_poi = None,
@@ -1983,11 +1950,13 @@ def spawn_enemy(
 		pre_chosen_hardened_sap = None,
 		pre_chosen_weather = None,
 		pre_chosen_faction = None,
-		pre_chosen_class = None,
 		pre_chosen_owner = None,
 		pre_chosen_coord = None,
-		gvs_active = False,
+		pre_chosen_rarity = False,
+		pre_chosen_props = None,
+		manual_spawn = False,
 	):
+	
 	time_now = int(time.time())
 	response = ""
 	ch_name = ""
@@ -2031,7 +2000,7 @@ def spawn_enemy(
 	if pre_chosen_type is not None:
 		enemytype = pre_chosen_type
 	
-	if gvs_active == False:
+	if not manual_spawn:
 
 		while enemies_count >= ewcfg.max_enemies and try_count < 5:
 
@@ -2087,6 +2056,8 @@ def spawn_enemy(
 
 			# Assign enemy attributes that weren't assigned in get_enemy_data
 			enemy.id_server = id_server
+			enemy.slimes = enemy.slimes if pre_chosen_slimes is None else pre_chosen_slimes
+			enemy.display_name = enemy.display_name if pre_chosen_displayname is None else pre_chosen_displayname
 			enemy.level = level_byslime(enemy.slimes) if pre_chosen_level is None else pre_chosen_level
 			enemy.expiration_date = time_now + ewcfg.time_despawn if pre_chosen_expiration is None else pre_chosen_expiration
 			enemy.initialslimes = enemy.slimes if pre_chosen_initialslimes is None else pre_chosen_initialslimes
@@ -2097,6 +2068,7 @@ def spawn_enemy(
 			enemy.faction = '' if pre_chosen_faction is None else pre_chosen_faction
 			enemy.owner = -1 if pre_chosen_owner is None else pre_chosen_owner
 			enemy.gvs_coord = '' if pre_chosen_coord is None else pre_chosen_coord
+			enemy.rare_status = enemy.rare_status if pre_chosen_rarity is None else pre_chosen_rarity
 
 			if pre_chosen_weather != ewcfg.enemy_weathertype_normal:
 				if pre_chosen_weather == ewcfg.enemy_weathertype_rainresist:
@@ -2109,7 +2081,7 @@ def spawn_enemy(
 			except:
 				pass
 
-			enemy.enemy_props = props
+			enemy.enemy_props = props if pre_chosen_props is None else pre_chosen_props
 
 			enemy.persist()
 			enemy = EwEnemy(id_enemy=enemy.id_enemy)
@@ -2122,9 +2094,76 @@ def spawn_enemy(
 
 			ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
 			
-	elif gvs_active == True:
+	else:
+		# Enemy was spawned in outside of the normal enemy spawning tick loop.
 
-	
+		# Recursively spawn enemies that belong to groups.
+		if enemytype in ewcfg.enemy_group_leaders:
+			sub_enemies_list = ewcfg.enemy_spawn_groups[enemytype]
+			sub_enemies_list_item_max = len(sub_enemies_list)
+			sub_enemy_list_item_count = 0
+
+			while sub_enemy_list_item_count < sub_enemies_list_item_max:
+				sub_enemy_type = sub_enemies_list[sub_enemy_list_item_count][0]
+				sub_enemy_spawning_max = sub_enemies_list[sub_enemy_list_item_count][1]
+				sub_enemy_spawning_count = 0
+
+				sub_enemy_list_item_count += 1
+				while sub_enemy_spawning_count < sub_enemy_spawning_max:
+					sub_enemy_spawning_count += 1
+
+					sub_resp_cont = spawn_enemy(id_server=id_server, pre_chosen_type=sub_enemy_type, pre_chosen_poi=chosen_poi)
+
+					resp_cont.add_response_container(sub_resp_cont)
+
+		if enemytype != None:
+			enemy = get_enemy_data(enemytype)
+
+			# Assign enemy attributes that weren't assigned in get_enemy_data
+			enemy.id_server = id_server
+			enemy.slimes = enemy.slimes if pre_chosen_slimes is None else pre_chosen_slimes
+			enemy.display_name = enemy.display_name if pre_chosen_displayname is None else pre_chosen_displayname
+			enemy.level = level_byslime(enemy.slimes) if pre_chosen_level is None else pre_chosen_level
+			enemy.expiration_date = time_now + ewcfg.time_despawn if pre_chosen_expiration is None else pre_chosen_expiration
+			enemy.initialslimes = enemy.slimes if pre_chosen_initialslimes is None else pre_chosen_initialslimes
+			enemy.poi = chosen_poi if pre_chosen_poi is None else pre_chosen_poi
+			enemy.identifier = set_identifier(chosen_poi, id_server) if pre_chosen_identifier is None else pre_chosen_identifier
+			enemy.hardened_sap = int(enemy.level / 2) if pre_chosen_hardened_sap is None else pre_chosen_hardened_sap
+			enemy.weathertype = pre_chosen_weather
+			enemy.faction = '' if pre_chosen_faction is None else pre_chosen_faction
+			enemy.owner = -1 if pre_chosen_owner is None else pre_chosen_owner
+			enemy.gvs_coord = '' if pre_chosen_coord is None else pre_chosen_coord
+			enemy.rare_status = enemy.rare_status if pre_chosen_rarity is None else pre_chosen_rarity
+
+			if pre_chosen_weather != ewcfg.enemy_weathertype_normal:
+				if pre_chosen_weather == ewcfg.enemy_weathertype_rainresist:
+					enemy.display_name = "Bicarbonate {}".format(enemy.display_name)
+					enemy.slimes *= 2
+
+			props = None
+			try:
+				props = ewcfg.enemy_data_table[enemytype]["props"]
+			except:
+				pass
+
+			enemy.enemy_props = props if pre_chosen_props is None else pre_chosen_props
+
+			enemy.persist()
+			enemy = EwEnemy(id_enemy=enemy.id_enemy)
+
+			if enemytype not in ewcfg.raid_bosses:
+				
+				if enemytype in ewcfg.gvs_enemies_gaiaslimeoids:
+					response = "**A {} has been planted in {}!!**".format(enemy.display_name, enemy.gvs_coord)
+				elif enemytype in ewcfg.gvs_enemies_shamblers:
+					response = "**A {} creeps forward!!** It spawned in {}!".format(enemy.display_name, enemy.gvs_coord)
+				else:
+					response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level, enemy.display_name, enemy.slimes)
+					if enemytype == ewcfg.enemy_type_sandbag:
+						response = "A new {} just got sent in. It's level {}, and has {} slime.\n*'Don't hold back!'*, the Dojo Master cries out from afar.".format(
+							enemy.display_name, enemy.level, enemy.slimes)
+
+			ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
 
 	if len(response) > 0 and len(ch_name) > 0:
 		resp_cont.add_channel_response(ch_name, response)
@@ -3016,6 +3055,5 @@ def gvs_get_splash_coords(checked_splash_coords):
 			
 	return all_splash_coords
 
-
-
-async def gvs_update_gamestate(id_server):
+# TODO: Code in
+#async def gvs_update_gamestate(id_server):

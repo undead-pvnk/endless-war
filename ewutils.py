@@ -1510,11 +1510,11 @@ async def spawn_enemies(id_server = None):
 		market_data = EwMarket(id_server=id_server)
 		
 		# If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
-		if market_data.weather == ewcfg.weather_bicarbonaterain and not ewcfg.gvs_active:
+		if market_data.weather == ewcfg.weather_bicarbonaterain:
 			if random.randrange(3) < 2:
 				weathertype = ewcfg.enemy_weathertype_rainresist
 		
-		resp_cont = ewhunting.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype, gvs_active = ewcfg.gvs_active)
+		resp_cont = ewhunting.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype)
 
 		await resp_cont.post()
 

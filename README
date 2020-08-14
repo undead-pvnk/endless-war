@@ -66,7 +66,6 @@ CREATE TABLE users (
 	time_racialability int NOT NULL DEFAULT '0',
 	time_lastpremiumpurchase int NOT NULL DEFAULT '0',
 	spray varchar(400) NOT NULL DEFAULT 'https://img.booru.org/rfck//images/3/a69d72cf29cb750882de93b4640a175a88cdfd70.png',
-	time_lastpremiumpurchase int NOT NULL DEFAULT '0',
 	gvs_currency int NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
@@ -245,7 +244,7 @@ CREATE TABLE enemies (
 	weathertype varchar(32) NOT NULL DEFAULT '',
 	faction varchar(32) NOT NULL DEFAULT '',
 	enemyclass varchar(32) NOT NULL DEFAULT '',
-	owner bigint NOT NULL DEFAULT '0'
+	owner bigint NOT NULL DEFAULT '0',
 	gvs_coord varchar(16) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_enemy)

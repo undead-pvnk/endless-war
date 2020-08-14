@@ -2302,6 +2302,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				return
 			else:
 				return
+			
 		# else:
 		# pass
 		# enemy_data.persist()
