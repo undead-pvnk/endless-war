@@ -607,8 +607,6 @@ def path_to(
 			path_base = path
 			neighs = list(step_last.neighbors.keys())
 			
-			print(step_last.id_poi)
-
 			if step_penult != None and step_penult.id_poi in neighs:
 				neighs.remove(step_penult.id_poi)
 
