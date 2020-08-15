@@ -744,6 +744,11 @@ cmd_map = {
 	ewcfg.cmd_gvs_printgrid: ewcmd.gvs_print_grid,
 	ewcfg.cmd_gvs_printgrid_alt1: ewcmd.gvs_print_grid,
 	ewcfg.cmd_gvs_printlane: ewcmd.gvs_print_lane,
+	ewcfg.cmd_gvs_incubategaiaslimeoid: ewcmd.gvs_incubate_gaiaslimeoid,
+	ewcfg.cmd_gvs_fabricatetombstone: ewcmd.gvs_fabricate_tombstone,
+	ewcfg.cmd_gvs_joinoperation: ewcmd.gvs_join_operation,
+	ewcfg.cmd_gvs_leaveoperation: ewcmd.gvs_leave_operation,
+	ewcfg.cmd_gvs_almanac: ewcmd.almanac,
 
 	# race
 	ewcfg.cmd_set_race: ewrace.set_race,

@@ -1141,6 +1141,11 @@ cmd_prank = cmd_prefix + 'prank'
 cmd_gvs_printgrid = cmd_prefix + 'grid'
 cmd_gvs_printgrid_alt1 = cmd_prefix + 'lawn'
 cmd_gvs_printlane = cmd_prefix + 'lane'
+cmd_gvs_incubategaiaslimeoid = cmd_prefix + 'incubategaiaslimeoid'
+cmd_gvs_fabricatetombstone = cmd_prefix + 'fabricatetombstone'
+cmd_gvs_joinoperation = cmd_prefix + 'joinop'
+cmd_gvs_leaveoperation = cmd_prefix + 'leaveop'
+cmd_gvs_almanac = cmd_prefix + 'almanac'
 
 
 cmd_retire = cmd_prefix + 'retire'
@@ -4319,7 +4324,7 @@ item_list = [
 		cooldown=10,
 		cost=225,
 		str_name="Dire Apples Gaiaslimeoid Seed Packet",
-		str_desc="A seed packet for a Dire Apples Gaiaslimeoid. It costs 250 gaiaslime to !plant one, and has a 10 second cooldown.",
+		str_desc="A seed packet for a Dire Apples Gaiaslimeoid. It costs 225 gaiaslime to !plant one, and has a 10 second cooldown.",
 		ingredients=[item_id_direapplestems],
 		enemytype="direapples"
 	),
