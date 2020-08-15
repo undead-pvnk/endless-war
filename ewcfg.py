@@ -1071,6 +1071,7 @@ cmd_create = cmd_prefix + 'create'
 cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
 cmd_createitem = cmd_prefix + 'createitem'
 cmd_manualsoulbind = cmd_prefix + 'soulbind'
+cmd_editprops = cmd_prefix + 'editprops'
 cmd_setslime = cmd_prefix + 'setslime'
 cmd_checkstats = cmd_prefix + 'checkstats'
 cmd_exalt = cmd_prefix + 'exalt'
@@ -26069,7 +26070,6 @@ curse_responses = [ # scold the player for swearing
 	"Do you kiss your mother with that mouth?",
 	"Wow, maybe next time be a little nicer, won't you?",
 	"If you don't have anything nice to say, then don't say anything at all.",
-	"Wow, racist much???",
 	"Now that's just plain rude.",
 	"And just like that, some of your precious SlimeCoin goes right down the drain.",
 	"Calm down that attitude of yours, will you?",
