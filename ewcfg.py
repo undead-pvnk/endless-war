@@ -25080,7 +25080,6 @@ curse_responses = [ # scold the player for swearing
 	"Do you kiss your mother with that mouth?",
 	"Wow, maybe next time be a little nicer, won't you?",
 	"If you don't have anything nice to say, then don't say anything at all.",
-	"Wow, racist much???",
 	"Now that's just plain rude.",
 	"And just like that, some of your precious SlimeCoin goes right down the drain.",
 	"Calm down that attitude of yours, will you?",

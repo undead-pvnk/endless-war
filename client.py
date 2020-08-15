@@ -1411,15 +1411,15 @@ async def on_message(message):
 					if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
 						continue
 
-					swear_count = content_tolower.count(swear)
+					swear_count = content_tolower_list.count(swear)
 
 					# Niche scenarios. If certain words are used, don't count their components as swears.
-					if swear == "shit" and "shit" not in content_tolower:
-						#print('swear detection turned off for {}.'.format(swear))
-						continue
-					elif swear == "fag" and "fag" not in content_tolower:
-						#print('swear detection turned off for {}.'.format(swear))
-						continue
+					# if swear == "shit" and "shit" not in content_tolower:
+					# 	#print('swear detection turned off for {}.'.format(swear))
+					# 	continue
+					# elif swear == "fag" and "fag" not in content_tolower:
+					# 	#print('swear detection turned off for {}.'.format(swear))
+					# 	continue
 					# elif swear == "fuck" and (content_tolower.count('<rowdyfucker431275088076079105>') > 0 or content_tolower.count('<fucker431424220837183489>') > 0):
 					# 	#print('swear detection turned off for {}.'.format(swear))
 					# 	continue
