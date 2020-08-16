@@ -2733,7 +2733,7 @@ def sh_check_coord_for_gaia(enemy_data, sh_range, direction):
 						if len(gaia_data) > 0:
 							
 							low_attack_priority = [ewcfg.enemy_type_gaia_rustealeaves]
-							high_attack_priority = [ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_metallicaps, ewcfg.enemy_type_gaia_aushucks]
+							high_attack_priority = [ewcfg.enemy_type_gaia_metallicaps]
 							mid_attack_priority = []
 							for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
 								if enemy_id not in low_attack_priority and enemy_id not in high_attack_priority:

@@ -2546,7 +2546,7 @@ def gvs_create_gaia_grid_mapping(user_data):
 
 	# Grid print mapping and shambler targeting use different priority lists. Don't get these mixed up
 	printgrid_low_priority = [ewcfg.enemy_type_gaia_rustealeaves]
-	printgrid_mid_priority = [ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_metallicaps, ewcfg.enemy_type_gaia_aushucks]
+	printgrid_mid_priority = [ewcfg.enemy_type_gaia_steelbeans]
 	printgrid_high_priority = []
 	for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
 		if enemy_id not in printgrid_low_priority and enemy_id not in printgrid_mid_priority:
@@ -2601,7 +2601,7 @@ def gvs_create_gaia_lane_mapping(user_data, row_used):
 	# Grid print mapping and shambler targeting use different priority lists. Don't get these mixed up
 	printlane_low_priority = [ewcfg.enemy_type_gaia_rustealeaves]
 	printlane_mid_priority = []
-	printlane_high_priority = [ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_metallicaps, ewcfg.enemy_type_gaia_aushucks]
+	printlane_high_priority = [ewcfg.enemy_type_gaia_steelbeans]
 	for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
 		if enemy_id not in printlane_low_priority and enemy_id not in printlane_high_priority:
 			printlane_mid_priority.append(enemy_id)
@@ -2662,7 +2662,7 @@ def gvs_check_gaia_protected(enemy_data):
 	is_protected = False
 	
 	low_attack_priority = [ewcfg.enemy_type_gaia_rustealeaves]
-	high_attack_priority = [ewcfg.enemy_type_gaia_steelbeans, ewcfg.enemy_type_gaia_metallicaps, ewcfg.enemy_type_gaia_aushucks]
+	high_attack_priority = [ewcfg.enemy_type_gaia_steelbeans]
 	mid_attack_priority = []
 	for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
 		if enemy_id not in low_attack_priority and enemy_id not in high_attack_priority:

@@ -2810,10 +2810,18 @@ async def gvs_print_lane(cmd):
 								response += ewcfg.gvs_enemy_emote_map_debug[enemy_data.enemytype]
 								if props.get('joybean') == 'True':
 									response += "-{}".format(ewcfg.gvs_enemy_emote_map_debug[ewcfg.enemy_type_gaia_joybeans])
+								if props.get('metallicap') == 'True':
+									response += "-{}".format(ewcfg.gvs_enemy_emote_map_debug[ewcfg.enemy_type_gaia_metallicaps])
+								elif props.get('aushuck') == 'True':
+									response += "-{}".format(ewcfg.gvs_enemy_emote_map_debug[ewcfg.enemy_type_gaia_aushucks])
 							else:
 								response += ewcfg.gvs_enemy_emote_map[enemy_data.enemytype]
 								if props.get('joybean') == 'True':
 									response += "-{}".format(ewcfg.gvs_enemy_emote_map[ewcfg.enemy_type_gaia_joybeans])
+								if props.get('metallicap') == 'True':
+									response += "-{}".format(ewcfg.gvs_enemy_emote_map[ewcfg.enemy_type_gaia_metallicaps])
+								elif props.get('aushuck') == 'True':
+									response += "-{}".format(ewcfg.gvs_enemy_emote_map[ewcfg.enemy_type_gaia_aushucks])
 									
 							response += " "
 					
@@ -3167,4 +3175,16 @@ async def gvs_leave_operation(cmd):
 		
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def gvs_check_operations(cmd):
+	operations = ewutils.execute_sql_query("SELECT district, faction FROM gvs_ops_choices GROUP BY district, faction;")
 	
+	response = "There are currently no Garden Ops or Graveyard Ops at this time."
+	if len(operations) > 0:
+		response = ""
+		for op in operations:
+			response += "\nThere is a {} Op taking place in {}.".format('Garden' if op[1] == ewcfg.psuedo_faction_gankers else 'Graveyard', ewcfg.id_to_poi.get(op[1]).str_name)
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def gvs_plant_gaiaslimeoid(cmd):
+	pass

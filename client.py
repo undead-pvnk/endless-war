@@ -749,6 +749,8 @@ cmd_map = {
 	ewcfg.cmd_gvs_fabricatetombstone: ewcmd.gvs_fabricate_tombstone,
 	ewcfg.cmd_gvs_joinoperation: ewcmd.gvs_join_operation,
 	ewcfg.cmd_gvs_leaveoperation: ewcmd.gvs_leave_operation,
+	ewcfg.cmd_gvs_checkoperation: ewcmd.gvs_check_operations,
+	ewcfg.cmd_gvs_plantgaiaslimeoid: ewcmd.gvs_plant_gaiaslimeoid,
 	ewcfg.cmd_gvs_almanac: ewcmd.almanac,
 
 	# race
