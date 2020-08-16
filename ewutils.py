@@ -2821,6 +2821,28 @@ def gvs_check_if_in_operation(user_data):
 	else:
 		return False, None
 
+""" Returns a gaiaslimeoid's data from the user's poi and a given coord, or None if no gaiaslimeoid is there. """ 
+def gvs_gaiaslimeoid_at_coord(user_data, coord):
+
+	gaia = execute_sql_query(
+		"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} = %s".format(
+			id_enemy=ewcfg.col_id_enemy,
+			enemytype=ewcfg.col_enemy_type,
+			poi=ewcfg.col_enemy_poi,
+			life_state=ewcfg.col_enemy_life_state,
+			gvs_coord=ewcfg.col_enemy_gvs_coord,
+			enemyclass=ewcfg.col_enemy_class,
+		), (
+			user_data.id_server,
+			user_data.poi,
+			ewcfg.enemy_class_gaiaslimeoid,
+			coord
+		))
+	
+	if len(gaia) > 0:
+		return gaia[0]
+	else:
+		return None
 
 # async def gvs_check_if_in_operation_poi(user_data):
 # 

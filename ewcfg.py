@@ -923,7 +923,7 @@ cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
 cmd_summonenemy = cmd_prefix + 'summonenemy'
-cmd_summongvsenemy = cmd_prefix + 'summonenemy'
+cmd_summongvsenemy = cmd_prefix + 'summongvsenemy'
 cmd_deleteallenemies = cmd_prefix + 'deleteallenemies'
 cmd_negaslimeoid = cmd_prefix + 'negaslimeoid'
 cmd_battlenegaslimeoid = cmd_prefix + 'battlenegaslimeoid'
@@ -1143,6 +1143,11 @@ cmd_gvs_printgrid_alt1 = cmd_prefix + 'lawn'
 cmd_gvs_printlane = cmd_prefix + 'lane'
 cmd_gvs_searchforbrainz = cmd_prefix + 'searchforbrainz'
 cmd_gvs_grabbrainz = cmd_prefix + 'grabbrainz'
+cmd_gvs_dive = cmd_prefix + 'dive'
+cmd_gvs_resurface = cmd_prefix + 'resurface'
+cmd_gvs_sellgaiaslimeoid = cmd_prefix + 'sellgaiaslimeoid'
+cmd_gvs_sellgaiaslimeoid_alt = cmd_prefix + 'sellgaia'
+cmd_dig = cmd_prefix + 'dig'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -2623,7 +2628,7 @@ item_id_tombstone_juvieshambler = "juvieshamblertombstone"
 item_id_tombstone_shambleballplayer = "shambleballplayertombstone"
 item_id_tombstone_shamblerwarlord = "shamblerwarlordtombstone"
 item_id_tombstone_shamblerraider = "shamblerraidertombstone"
-
+item_id_gaiaslimeoid_pot = "gaiaslimeoidpot"
 
 #SLIMERNALIA
 item_id_sigillaria = "sigillaria"
@@ -5302,6 +5307,7 @@ weapon_class_defensive = "defensive"
 weapon_class_heavy = "heavy"
 weapon_class_paint = "paint"
 #juvies can equip these weapons
+weapon_class_juvie = "juvie"
 weapon_class_farming = "farming"
 
 weapon_type_convert = {
@@ -6302,8 +6308,9 @@ weapon_list = [
 		str_description = "It's a farming hoe.",
 		str_scalp = "It's covered in dirt.",
 		fn_effect = wef_tool,
+		price = 100000,
 		vendors = [vendor_atomicforest],
-		classes = [weapon_class_farming],
+		classes = [weapon_class_farming, weapon_class_juvie],
 		stat = stat_hoe_kills,
 		sap_cost = 2,
 		captcha_length = 2,
@@ -6325,9 +6332,58 @@ weapon_list = [
 		str_description = "It's a farming pitchfork.",
 		str_scalp = "pitchfork scalp.",
 		fn_effect = wef_tool,
+		price = 100000,
 		vendors = [vendor_atomicforest],
-		classes = [weapon_class_farming],
+		classes = [weapon_class_farming, weapon_class_juvie],
 		stat = stat_pitchfork_kills,
+		sap_cost = 2,
+		captcha_length = 2,
+		is_tool = True,
+	),
+	EwWeapon( # 33 TODO flavor
+		id_weapon = weapon_id_shovel,
+		str_miss = "**MISS!!** ",
+		str_damage = "shovel dmg",
+		str_crit = "shovel crit",
+		str_kill = "shovel kill",
+		str_equip = "shovel equip",
+		str_name = "shovel",
+		str_weapon = "a shovel",
+		str_weaponmaster_self = "You are a rank {rank} farmer.",
+		str_weaponmaster = "They are a rank {rank} farmer.",
+		str_killdescriptor = "!digged",
+		str_duel = "{name_player} and {name_target} shovel spar.",
+		str_description = "It's a shovel.",
+		str_scalp = "shovel scalp.",
+		fn_effect = wef_tool,
+		price = 100000,
+		vendors = [vendor_atomicforest],
+		classes = [weapon_class_juvie],
+		stat = stat_shovel_kills,
+		sap_cost = 2,
+		captcha_length = 2,
+		is_tool = True,
+	),
+	EwWeapon( # 34 TODO flavor
+		id_weapon = weapon_id_slimeringcan,
+		str_miss = "**MISS!!** ",
+		str_damage = "slimering can dmg",
+		str_crit = "slimering can crit",
+		str_kill = "slimering can kill",
+		str_equip = "slimering can equip",
+		str_name = "slimering can",
+		str_weapon = "a slimering can",
+		str_weaponmaster_self = "You are a rank {rank} green thumbed coward.",
+		str_weaponmaster = "They are a rank {rank} green thumbed coward.",
+		str_killdescriptor = "slimering canned",
+		str_duel = "{name_player} and {name_target} slimering can spar.",
+		str_description = "It's a slimering can.",
+		str_scalp = "slimering can scalp.",
+		fn_effect = wef_tool,
+		price = 100000,
+		vendors = [vendor_atomicforest],
+		classes = [weapon_class_juvie],
+		stat = stat_slimeringcan_kills,
 		sap_cost = 2,
 		captcha_length = 2,
 		is_tool = True,
@@ -24326,6 +24382,18 @@ trauma_list = [
 		str_trauma_self = "pitchfork trauma self",
 		str_trauma = "pitchfork trauma",
 		trauma_class = trauma_class_bleeding,
+	),
+	EwTrauma(  # 27 TODO flavor
+		id_trauma = weapon_id_shovel,
+		str_trauma_self = "shovel trauma self",
+		str_trauma = "shovel trauma",
+		trauma_class = trauma_class_sapregeneration,
+	),
+	EwTrauma(  # 28 TODO flavor
+		id_trauma = weapon_id_slimeringcan,
+		str_trauma_self = "slimering can self",
+		str_trauma = "slimering can trauma",
+		trauma_class = trauma_class_sapregeneration,
 	),
 	EwTrauma( # 1
 		id_trauma = "fangs",
