@@ -2819,24 +2819,19 @@ def gvs_check_if_in_operation(user_data):
 	else:
 		return False, None
 
-
-# async def gvs_check_if_in_operation_poi(user_data):
-# 
-# 	op_data = execute_sql_query(
-# 		"SELECT {district} FROM gvs_ops_choices WHERE {id_user} = %s".format(
-# 			id_user=ewcfg.col_id_user,
-# 			district=ewcfg.col_district
-# 		), (
-# 			user_data.id_user
-# 		))
-# 
-# 	in_operation = False
-# 	for op in op_data:
-# 		if op[0] == user_data.poi:
-# 			in_operation = True
-# 		else:
-# 			in_operation = False
-# 			break
-# 
-# 	return in_operation
+def gvs_get_gaias_from_coord(user_data, checked_coord):
+	gaias = execute_sql_query(
+		"SELECT id_enemy, enemytype FROM enemies WHERE poi = %s AND gvs_coord = %s".format(
+		), (
+			user_data.poi,
+			checked_coord
+		))
+	
+	gaias_typetoid = {}
+	
+	for gaia in gaias:
+		gaias_typetoid[gaia[0]] = gaia[1]
+	
+	return gaias_typetoid
+		
 	

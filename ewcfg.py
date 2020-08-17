@@ -24716,6 +24716,12 @@ gvs_enemies_shamblers = [
 	enemy_type_gvs_boss,
 ]
 gvs_enemies = gvs_enemies_gaiaslimeoids + gvs_enemies_shamblers
+repairable_gaias = [
+    enemy_type_gaia_blacklimes, 
+    enemy_type_gaia_razornuts, 
+    enemy_type_gaia_suganmanuts, 
+    enemy_type_gaia_steelbeans
+]
 
 # List of raid bosses sorted by their spawn rarity.
 raid_boss_tiers = {

@@ -15,14 +15,13 @@ import ewslimeoid
 import ewfaction
 import ewapt
 import ewprank
-import ewcmd
 import ewworldevent
 
 from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
-from ewhunting import find_enemy, delete_all_enemies, EwEnemy, EwOperationData
+from ewhunting import find_enemy, delete_all_enemies, EwEnemy, EwOperationData, spawn_enemy
 from ewstatuseffects import EwStatusEffect
 from ewstatuseffects import EwEnemyStatusEffect
 from ewdistrict import EwDistrict
@@ -3187,4 +3186,134 @@ async def gvs_check_operations(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def gvs_plant_gaiaslimeoid(cmd):
-	pass
+	seedpackets = ewcfg.seedpacket_ids
+	time_now = int(time.time())
+
+	user_data = EwUser(member=cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	district_data = EwDistrict(district=user_data.poi, id_server=user_data.id_server)
+	
+	if not user_data.life_state == ewcfg.life_state_juvenile:
+		response = "Only Juveniles of pure heart can lay down Gaiaslimeoids on the field."
+
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+	if not poi.is_district:
+		response = "You can't plant a Gaiaslimeoid here, dummy!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	in_operation, op_poi = ewutils.gvs_check_if_in_operation(user_data)
+	if not in_operation:
+		response = "You aren't even *in* an operation."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif user_data.poi != op_poi:
+		response = "You can't plant a Gaiaslimeoid here, dummy! Try heading to {}.".format(ewcfg.id_to_poi.get(op_poi).str_name)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+	if cmd.tokens_count < 3:
+		response = "You need to select a coordinate and seed packet, dummy!"
+	else:
+		coord = cmd.tokens[1].upper()
+		selected_item = ewutils.flattenTokenListToString(cmd.tokens[2:])
+		invalid_coord = False
+		
+		if not coord in ewcfg.gvs_valid_coords_gaia:
+			invalid_coord = True
+			response = "That's not a valid coordinate, bitch."
+
+		choices = seedpackets
+
+		found_choice = False
+		for choice in choices:
+			if selected_item in choice:
+				selected_item = choice
+				found_choice = True
+				break
+			else:
+				response = "That's not a valid seed packet you can select, bitch. (Hint: !plant [coord] [seed packet])"
+
+		if not found_choice or invalid_coord:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		item_sought = ewitem.find_item(item_search=selected_item, id_user=cmd.message.author.id, id_server=user_data.id_server)
+		if item_sought != None:
+			item = EwItem(id_item=item_sought.get('id_item'))
+			item_props = item.item_props
+			
+			enemytype = item_props.get('enemytype')
+			cooldown = item_props.get('cooldown')
+			cost = item_props.get('cost')
+			time_nextuse = item_props.get('time_nextuse')
+			
+			if cost > district_data.gaiaslime:
+				response = "There's not enough Gaiaslime to go around! ({}/{})".format(district_data.gaiaslime, cost)
+			elif time_nextuse > time_now:
+				response = "You need to wait {} seconds before you can plant that Gaiaslimeoid down.".format(time_nextuse - time_now)
+			else:
+				item.item_props['time_nextuse'] = time_now + cooldown
+				item.persist()
+				
+				gaias_in_coord = ewutils.gvs_get_gaias_from_coord(user_data, coord)
+				
+				if len(gaias_in_coord) > 0:
+					for gaia in gaias_in_coord.keys():
+						enemy_data = EwEnemy(id_enemy=gaias_in_coord[gaia])
+						
+						if enemytype == gaia:
+							if gaia in ewcfg.repairable_gaias:
+								enemy_data.slimes = enemy_data.initialslimes
+								enemy_data.persist()
+	
+								response = "The {} in {} was fully repaired!".format(enemy_data.display_name, enemy_data.gvs_coord)
+								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+							else:
+								response = "There's already a {} in that coordinate!".format(enemy_data.display_name)
+								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						else:
+							if enemy_data.enemy_props.get('joybean') == 'True' and enemytype == ewcfg.enemy_type_gaia_joybeans:
+								response = "A Joybean has already been planted there."
+								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+							elif enemy_data.enemy_props.get('metallicaps') == 'True' and enemytype == ewcfg.enemy_type_gaia_metallicaps:
+								response = "A Metallicap has already been planted there."
+								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+							elif enemy_data.enemy_props.get('aushucks') == 'True' and enemytype == ewcfg.enemy_type_gaia_aushucks:
+								response = "An Aushuck has already been planted there."
+								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+					resp_cont = spawn_enemy(
+						id_server=user_data.id_server,
+						pre_chosen_type=enemytype,
+						pre_chosen_poi=user_data.poi,
+						pre_chosen_identifier='',
+						pre_chosen_faction=ewcfg.psuedo_faction_gankers,
+						pre_chosen_owner=user_data.id_user,
+						pre_chosen_coord=coord,
+						manual_spawn=True,
+					)
+
+					return await resp_cont.post()
+					
+				else:
+					if enemytype == ewcfg.enemy_type_gaia_metallicaps:
+						response = "Metallicaps must be planted on top of attacking Gaiaslimeoids."
+					elif enemytype == ewcfg.enemy_type_gaia_aushucks:
+						response = "Aushucks must first be planted on top of existing Gaiaslimeoids."
+					else:
+						resp_cont = spawn_enemy(
+							id_server = user_data.id_server,
+							pre_chosen_type=enemytype,
+							pre_chosen_poi=user_data.poi,
+							pre_chosen_identifier='',
+							pre_chosen_faction=ewcfg.psuedo_faction_gankers,
+							pre_chosen_owner=user_data.id_user,
+							pre_chosen_coord=coord,
+							manual_spawn=True,
+						)
+						
+						return await resp_cont.post()
+
+		else:
+			response = "Are you sure you have that seed packet? Try using **!inv**"
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
