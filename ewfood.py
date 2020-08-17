@@ -55,6 +55,9 @@ class EwFood:
 	# The way that you can acquire this item. If blank, it's not relevant.
 	acquisition = ""
 
+	# Whether or not the item expires
+	perishable = True
+
 	#Timestamp when an item was fridged.
 
 	time_fridged = 0

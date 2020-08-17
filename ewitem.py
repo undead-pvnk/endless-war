@@ -1704,7 +1704,6 @@ def gen_item_props(item):
 	if not hasattr(item, "item_type"):
 		return item_props
 	if item.item_type == ewcfg.it_food:
-		
 		item_props = {
 			'id_food': item.id_food,
 			'food_name': item.str_name,
@@ -1714,7 +1713,7 @@ def gen_item_props(item):
 			'str_eat': item.str_eat,
 			'time_expir': int(time.time()) + item.time_expir,
 			'time_fridged': item.time_fridged,
-			'perishable': 'true',
+			'perishable': item.perishable,
 		}
 	elif item.item_type == ewcfg.it_item:
 		item_props = {
