@@ -55,6 +55,9 @@ territory_time_gain = 10
 # A variable which is used to determine how certain functions of enemies are to perform
 gvs_active = True
 
+# The max amount of degradation a district can have before it is shambled completely
+district_max_degradation = 10000
+
 # Market delta
 max_iw_swing = 30
 
@@ -2096,6 +2099,7 @@ col_credence_used = 'credence_used'
 col_gvs_currency = 'gvs_currency'
 col_horde_cooldown = 'horde_cooldown'
 col_gaiaslime = 'gaiaslime'
+col_shambler_stock = 'shambler_stock'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'
@@ -17815,7 +17819,9 @@ poi_list = [
 			poi_id_nuclear_beach : travel_time_subzone,
 			poi_id_assaultflatsbeach_street_a : travel_time_subzone,
 			poi_id_assaultflatsbeach_street_b : travel_time_subzone,
+            poi_id_assaultflatsbeach : travel_time_subzone,
 		},
+        mother_districts = [poi_id_assaultflatsbeach],
         vendors = [vendor_downpourlaboratory]
 	),
 	EwPoi(  # Outskirts - 7
@@ -23365,7 +23371,7 @@ mutations = [
 		id_mutation = mutation_id_dressedtokill,
 		str_describe_self = "You’re fabulously accompanied by a wide range of luxurious cosmetics due to **Dressed to Kill**.",
 		str_describe_other = "They’re fabulously accompanied by a wide range of luxurious cosmetics due to **Dressed to Kill**.",
-		str_acquire = "You are rocked by a complete fundamental change in your brain’s chemistry. Practically every cell in your body is reworked to apply this, the most ambitious mutation yet. You gain an appreciation for French haute couture. You have developed the mutation **Dressed to Kill**. Damage bonus if freshness is at least 1000.",
+		str_acquire = "You are rocked by a complete fundamental change in your brain’s chemistry. Practically every cell in your body is reworked to apply this, the most ambitious mutation yet. You gain an appreciation for French haute couture. You have developed the mutation **Dressed to Kill**. Damage bonus if freshness is at least 250.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_keensmell,
@@ -25484,7 +25490,7 @@ gvs_valid_coords_shambler = [
 
 gvs_coords_end = ['A0', 'B0', 'C0', 'D0', 'E0']
 
-gvs_coord_start = ['A-S', 'B-S', 'C-S', 'D-S', 'E-S']
+gvs_coords_start = ['A-S', 'B-S', 'C-S', 'D-S', 'E-S']
 
 gvs_enemy_emote_map = {
 	enemy_type_gaia_poketubers: emote_poketubers,
@@ -25976,7 +25982,6 @@ dance_responses = [
 	"{} gets the urge to !thrash, but holds back with all their might.",
 	"{} just kind of stands there, awkwardly. What did you expect?",
 	"{} makes a complete fool of themselves. Everyone gets secondhand embarrassment...",
-	# "{} does the Mayor Pete dance!", -- hm, maybe not...
 ]
 
 # list of genres and aliases

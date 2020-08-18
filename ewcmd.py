@@ -2984,6 +2984,11 @@ async def gvs_join_operation(cmd):
 	
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+	
+	if district_data.time_unlock > time_now:
+		response = "The area is too scarred from recent battles between the Garden Gankers and the Shamblers. It needs {} more seconds to heal before you can start an operation here.".format(district_data.time_unlock - time_now)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
 	if not poi.is_district:
 		response = "Oi, dumbass! You can't join an operation if you aren't in a district zone, first!"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -2996,6 +3001,16 @@ async def gvs_join_operation(cmd):
 		response = "Hey idiot, it's called *Gankers Vs. Shamblers!* No gangsters, ghosts, or SlimeCorp shills allowed!"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
+	if faction == ewcfg.psuedo_faction_gankers and district_data.degradation == 0:
+		response = "This place is already fully rejuvenated! You'll have to try somewhere else."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif faction == ewcfg.psuedo_faction_shamblers and district_data.degradation == ewcfg.district_max_degradation:
+		response = "This place is already fully shambled! You'll have to try somewhere else."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif poi.id_poi in [ewcfg.poi_id_assaultflatsbeach, ewcfg.poi_id_oozegardens]:
+		response = "It would be reckless to try and start an operation so close to the base of the {}. You'll have to try somewhere else.".format('Garden Gankers' if poi.id_poi == ewcfg.poi_id_oozegardens else 'Shamblers')
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	in_operation, op_poi = ewutils.gvs_check_if_in_operation(user_data)
 	if in_operation:
 		if op_poi != user_data.poi:
@@ -3096,6 +3111,11 @@ async def gvs_join_operation(cmd):
 
 				durability = int(item_props.get('durability'))
 				
+				if faction == ewcfg.psuedo_faction_shamblers:
+					shambler_stock = int(item_props.get('stock'))
+				else:
+					shambler_stock = 0
+				
 				if durability > 1:
 					item.item_props['durability'] -= 1
 					item.persist()
@@ -3105,7 +3125,7 @@ async def gvs_join_operation(cmd):
 					response += "\n(Your {} has been used up completely)".format(item_props.get('str_name'))
 					
 
-				op_data = EwOperationData(id_user=user_data.id_user, district=user_data.poi, enemytype=enemytype, faction=faction, id_item=item.id_item)
+				op_data = EwOperationData(id_user=user_data.id_user, district=user_data.poi, enemytype=enemytype, faction=faction, id_item=item.id_item, shambler_stock=shambler_stock)
 				op_data.persist()
 				
 			else:
@@ -3159,15 +3179,21 @@ async def gvs_leave_operation(cmd):
 			item_data = EwItem(id_item=item)
 			durability = int(item_data.item_props.get('durability'))
 			
-			if durability > 1:
-				item_data.item_props['durability'] -= 1
-				item_data.persist()
-				response += "\n(Your {}'s durability has been lowered)".format(item_data.item_props.get('str_name'))
+			if faction == ewcfg.psuedo_faction_gankers:
+				if durability > 1:
+					item_data.item_props['durability'] -= 1
+					item_data.persist()
+					response += "\n(Your {}'s durability has been lowered)".format(item_data.item_props.get('str_name'))
+				else:
+					ewitem.item_delete(item)
+					response += "\n(Your {} has been used up completely)".format(item_data.item_props.get('str_name'))
+				
 			else:
+				# To prevent shamblers from re-stocking operations with tombstones, they are destroyed upon leaving a graveyard op.
 				ewitem.item_delete(item)
 				response += "\n(Your {} has been used up completely)".format(item_data.item_props.get('str_name'))
 		
-		response += "\nAll your Gaiaslimeoids in {} wilt and die.".format(op_poi) if faction == ewcfg.psuedo_faction_gankers else "All the shamblers belonging to your gravestone in {} fall apart and collapse onto the ground.".format(op_poi)
+		response += "\nAll your Gaiaslimeoids in {} wilt and die.".format(op_poi) if faction == ewcfg.psuedo_faction_gankers else "All the shamblers belonging to your tombstone in {} fall apart and collapse onto the ground.".format(op_poi)
 		
 	else:
 		response = "Well, perhaps some other time, then."
@@ -3281,9 +3307,13 @@ async def gvs_plant_gaiaslimeoid(cmd):
 								response = "An Aushuck has already been planted there."
 								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+					district_data.gaiaslime -= cost
+					district_data.persist()
+
 					resp_cont = spawn_enemy(
 						id_server=user_data.id_server,
 						pre_chosen_type=enemytype,
+						pre_chosen_level=50,
 						pre_chosen_poi=user_data.poi,
 						pre_chosen_identifier='',
 						pre_chosen_faction=ewcfg.psuedo_faction_gankers,
@@ -3300,9 +3330,13 @@ async def gvs_plant_gaiaslimeoid(cmd):
 					elif enemytype == ewcfg.enemy_type_gaia_aushucks:
 						response = "Aushucks must first be planted on top of existing Gaiaslimeoids."
 					else:
+						district_data.gaiaslime -= cost
+						district_data.persist()
+						
 						resp_cont = spawn_enemy(
 							id_server = user_data.id_server,
 							pre_chosen_type=enemytype,
+							pre_chosen_level=50,
 							pre_chosen_poi=user_data.poi,
 							pre_chosen_identifier='',
 							pre_chosen_faction=ewcfg.psuedo_faction_gankers,

@@ -517,6 +517,7 @@ CREATE TABLE gvs_ops_choices (
     enemytype varchar(32) NOT NULL,
     faction varchar(16) NOT NULL,
     id_item int NOT NULL,
+    shambler_stock int NOT NULL,
     
     PRIMARY KEY (id_user, enemytype, district)
 );

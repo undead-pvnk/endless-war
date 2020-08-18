@@ -893,6 +893,7 @@ class EwEnemy:
 		if target_enemy != None and not group_attack:
 			
 			backfire = False
+			backfire_type = None
 
 			# Weaponized flavor text.
 			# hitzone = ewwep.get_hitzone()
@@ -911,6 +912,8 @@ class EwEnemy:
 			# Enemies don't select for these types of lifestates in their AI, this serves as a backup just in case.
 			if target_enemy.life_state != ewcfg.enemy_lifestate_unactivated and target_enemy.life_state != ewcfg.enemy_lifestate_dead:
 				was_killed = False
+				below_full = False
+				below_half = False
 				was_hurt = True
 
 				
@@ -927,9 +930,18 @@ class EwEnemy:
 				enemy_data.persist()
 				target_enemy = EwEnemy(id_enemy = target_enemy.id_enemy, id_server = target_enemy.id_server)
 
-				if slimes_damage >= target_enemy.slimes - target_enemy.bleed_storage:
+				if slimes_damage >= target_enemy.slimes: # - target_enemy.bleed_storage:
 					was_killed = True
-					slimes_damage = max(target_enemy.slimes - target_enemy.bleed_storage, 0)
+					slimes_damage = max(target_enemy.slimes, 0) # - target_enemy.bleed_storage
+				else:
+					# In Gankers Vs. Shamblers, responses are only sent out after the initial hit and when the target reaches below 50% HP
+					# This serves to ensure less responses cluttering up the channel and to preserve performance.
+					if target_enemy.slimes < target_enemy.initialslimes and not target_enemy.enemy_props.get('below_full') == 'True':
+						target_enemy.enemy_props['below_full'] = 'True'
+						below_full = True
+					elif target_enemy.slimes < int(target_enemy.initialslimes / 2) and not target_enemy.enemy_props.get('below_half') == 'True':
+						target_enemy.enemy_props['below_half'] = 'True'
+						below_half = True
 
 				sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=enemy_data.id_server)
 
@@ -996,10 +1008,19 @@ class EwEnemy:
 								name_target=target_enemy.display_name
 							))
 						elif backfire:
-							response = "{}".format(used_attacktype.str_backfire.format(
-								name_enemy=enemy_data.display_name,
-								name_target=target_enemy.display_name
-							))
+							if backfire_type == 'confusion':
+								response = "{} hurt itself in confusion!".format(
+									enemy_data.display_name
+								)
+							elif backfire_type == 'grenadethrow':
+								response = "{} had its grenade thrown right back at it!".format(
+									enemy_data.display_name
+								)
+							else:
+								response = "{}'s attack backfired!".format(
+									enemy_data.display_name
+								)
+							
 							if enemy_data.slimes - enemy_data.bleed_storage <= backfire_damage:
 								loot_cont = drop_enemy_loot(enemy_data, district_data)
 								resp_cont.add_response_container(loot_cont)
@@ -1018,6 +1039,9 @@ class EwEnemy:
 								target_name=target_enemy.display_name,
 								damage=damage,
 							)
+							
+					if below_full == False and below_half == False:
+						response = ""
 							
 					target_enemy.persist()
 					resp_cont.add_channel_response(ch_name, response)
@@ -1504,6 +1528,9 @@ class EwOperationData:
 	
 	# The ID of the item used in the operation
 	id_item = ""
+	
+	# The amount of shamblers stored in a tombstone.
+	shambler_stock = 0
 
 	def __init__(
 		self,
@@ -1511,15 +1538,17 @@ class EwOperationData:
 		district = "",
 		enemytype = "",
 		faction = "",
-		id_item = ""
+		id_item = "",
+		shambler_stock = 0,
 	):
 		self.id_user = id_user
 		self.district = district
 		self.enemytype = enemytype
 		self.faction = faction
 		self.id_item = id_item
+		self.shambler_stock = shambler_stock
 		
-		if(id_user != None):
+		if(id_user != ""):
 
 			try:
 				conn_info = ewutils.databaseConnect()
@@ -1527,9 +1556,10 @@ class EwOperationData:
 				cursor = conn.cursor()
 	
 				# Retrieve object
-				cursor.execute("SELECT {}, {} FROM gvs_ops_choices WHERE {} = %s AND {} = %s AND {} = %s".format(
+				cursor.execute("SELECT {}, {}, {} FROM gvs_ops_choices WHERE {} = %s AND {} = %s AND {} = %s".format(
 					ewcfg.col_faction,
 					ewcfg.col_id_item,
+					ewcfg.col_shambler_stock,
 					
 					ewcfg.col_id_user,
 					ewcfg.col_district,
@@ -1545,20 +1575,23 @@ class EwOperationData:
 					# Record found: apply the data to this object.
 					self.faction = result[0]
 					self.id_item = result[1]
+					self.shambler_stock = result[2]
 				else:
 					# Create a new database entry if the object is missing.
-					cursor.execute("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s)".format(
+					cursor.execute("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
 						ewcfg.col_id_user,
 						ewcfg.col_district,
 						ewcfg.col_enemy_type,
 						ewcfg.col_faction,
-						ewcfg.col_id_item
+						ewcfg.col_id_item,
+						ewcfg.col_shambler_stock,
 					), (
 						self.id_user,
 						self.district,
 						self.enemytype,
 						self.faction,
-						self.id_item
+						self.id_item,
+						self.shambler_stock,
 					))
 	
 					conn.commit()
@@ -1575,16 +1608,18 @@ class EwOperationData:
 			cursor = conn.cursor()
 
 			# Save the object.
-			cursor.execute("REPLACE INTO gvs_ops_choices({}, {}, {}, {}) VALUES(%s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_district,
 				ewcfg.col_enemy_type,
 				ewcfg.col_faction,
+				ewcfg.col_shambler_stock,
 			), (
 				self.id_user,
 				self.district,
 				self.enemytype,
-				self.faction
+				self.faction,
+				self.shambler_stock,
 			))
 
 			conn.commit()
@@ -1592,6 +1627,28 @@ class EwOperationData:
 			# Clean up the database handles.
 			cursor.close()
 			ewutils.databaseClose(conn_info)
+	
+	def delete(self):
+		try:
+			conn_info = ewutils.databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			cursor.execute("DELETE FROM gvs_ops_choices WHERE {id_user} = %s AND {enemytype} = %s AND {district} = %s".format(
+				id_user=ewcfg.col_id_user,
+				enemytype=ewcfg.col_enemy_type,
+				district=ewcfg.col_district,
+			), (
+				self.id_user,
+				self.enemytype,
+				self.district
+			))
+			
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			ewutils.databaseClose(conn_info)
+		
 		
 # Debug command. Could be used for events, perhaps?
 async def summonenemy(cmd):
@@ -2672,7 +2729,7 @@ async def sh_move(enemy_data):
 	current_coord = enemy_data.gvs_coord
 	has_moved = False
 
-	if current_coord in ewcfg.gvs_coord_start and enemy_data.enemytype == ewcfg.enemy_type_juvieshambler:
+	if current_coord in ewcfg.gvs_coords_start and enemy_data.enemytype == ewcfg.enemy_type_juvieshambler:
 		#Delete juvie shambler
 		pass
 	
@@ -2997,6 +3054,65 @@ def gvs_get_splash_coords(checked_splash_coords):
 			
 	return all_splash_coords
 
-# TODO: Code in
+# This function takes care of all win conditions within Gankers Vs. Shamblers.
+# It also handles turn timers, including gaiaslime generation, as well as spawning in shamblers
 async def gvs_update_gamestate(id_server):
-	return
+	
+	op_districts = ewutils.execute_sql_query("SELECT district FROM gvs_ops_choices GROUP BY district")
+	for district in op_districts:
+		graveyard_ops = ewutils.execute_sql_query("SELECT id_user, enemytype FROM gvs_ops_choices WHERE faction = 'shamblers' AND district = '{}' AND shambler_stock > 0".format(district))
+
+		if len(graveyard_ops) > 0:
+			
+			random_op = random.choice(graveyard_ops)
+			random_op_data = EwOperationData(id_user=random_op[0], district=district, enemytype=random_op[1])
+			random_district_data = EwDistrict(district=random_op_data.district, id_server=id_server)
+			
+			random_op_poi = ewcfg.id_to_poi.get(district)
+			channel = random_op_poi.channel
+		
+			# The chance for a shambler to spawn is directly proportional a districts level of degradation
+			# The lower the degradation is, the more often a shambler will spawn
+			
+			# 999 degradation ~ 1% spawn chance
+			# degradation lower or equal to 10 = 100% spawn chance
+			
+			shambler_spawn_chance = int(100 * (10 / (random_district_data.degradation)))
+			
+			if random.randrange(100) + 1 < shambler_spawn_chance:
+				resp_cont = spawn_enemy(
+					id_server=id_server,
+					pre_chosen_type=random_op_data.enemytype,
+					pre_chosen_level=50,
+					pre_chosen_poi=district,
+					pre_chosen_faction=ewcfg.psuedo_faction_shamblers,
+					pre_chosen_owner=random_op_data.id_user,
+					pre_chosen_coord=random.choice(ewcfg.gvs_coords_start),
+					manual_spawn=True
+				)
+				
+				random_op_data.shambler_stock -= 1
+				
+				if random_op_data.shambler_stock == 0:
+					breakdown_response = "The tombstone spawning in {}s breaks down and collapses!".format(random_op_data.enemytype.capitalize())
+					resp_cont.add_channel_response(channel, breakdown_response)
+				else:
+					random_op_data.persist()
+		else:
+			# No more stocked tombstones. Garden Gankers win!
+			pass
+		
+		# District has been fully rejuvenated. Garden Gankers win!
+		if random_district_data.degradation == 0:
+			pass
+		
+		# District has been fully shambled. Shamblers win!
+		if random_district_data.degradation == ewcfg.district_max_degradation:
+			pass
+		
+		# No more Garden Gankers left. Shamblers win!
+		if len(random_district_data.get_players_in_district(life_states=[ewcfg.life_state_juvenile])) == 0:
+			pass
+		
+		
+	

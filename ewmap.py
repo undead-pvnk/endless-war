@@ -248,7 +248,7 @@ class EwPoi:
 		is_tutorial = False,
 		has_ads = False,
 		write_manuscript = False,
-		max_degradation = 1000,
+		max_degradation = ewcfg.district_max_degradation,
 		neighbors = None,
 		topic = "",
 		wikipage = "",

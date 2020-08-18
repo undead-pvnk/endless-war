@@ -881,17 +881,6 @@ async def shamble(cmd):
 		if district_data.degradation == poi.max_degradation:
 			response = ewcfg.str_zone_degraded.format(poi = poi.str_name)
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
-			# new_topic = None
-			# if not cmd.message.channel.topic:
-			# 	new_topic = ewcfg.channel_topic_degraded
-			# elif not (ewcfg.channel_topic_degraded in cmd.message.channel.topic):
-			# 	new_topic = cmd.message.channel.topic + " " + ewcfg.channel_topic_degraded
-			# 
-			# if new_topic:
-			# 	try:
-			# 		await cmd.client.edit_channel(channel = cmd.message.channel, topic = new_topic)
-			# 	except:
-			# 		ewutils.logMsg('Failed to set channel topic for {} to {}'.format(cmd.message.channel.name, new_topic))
 			
 """
 	Updates/Increments the capture_points values of all districts every time it's called
