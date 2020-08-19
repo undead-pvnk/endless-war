@@ -1108,7 +1108,7 @@ async def move(cmd = None, isApt = False):
 
 					await ewrolemgr.updateRoles(client = client, member = member_object)
 
-					# also move any ghosts inhabitting the player
+					# also move any ghosts inhabiting the player
 					await user_data.move_inhabitants(id_poi = poi_current.id_poi)
 
 					try:
