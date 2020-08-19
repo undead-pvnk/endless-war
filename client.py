@@ -1209,11 +1209,9 @@ async def on_ready():
 							# 	market_data.weather = ewcfg.weather_bicarbonaterain
 
 							# Randomly select a new weather pattern. Try again if we get the same one we currently have.
-							# while market_data.weather == weather_old:
-							# 	pick = random.randrange(len(ewcfg.weather_list))
-							# 	market_data.weather = ewcfg.weather_list[pick].name
-
-						market_data.weather = ewcfg.weather_bicarbonaterain
+							while market_data.weather == weather_old:
+								pick = random.randrange(len(ewcfg.weather_list))
+								market_data.weather = ewcfg.weather_list[pick].name
 
 						# Log message for statistics tracking.
 						ewutils.logMsg("The weather changed. It's now {}.".format(market_data.weather))
