@@ -425,7 +425,7 @@ def canAttack(cmd):
 			response = "{}'s contract forbids you from harming them. You should've read the fine print.".format(member.display_name)
 
 		elif time_now > shootee_data.time_expirpvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user):
-			# Target is neither flagged for PvP, nor a shambler, nor a ghost inhabitting the player
+			# Target is neither flagged for PvP, nor a shambler, nor a ghost inhabiting the player
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
 		# Identify if the shooter and the shootee are on the same team.

@@ -1327,7 +1327,7 @@ async def russian_roulette(cmd):
 	time_now = int(time.time())
 	soulstake = False
 
-	if cmd.tokens[1] == "soul":
+	if len(cmd.tokens) > 1 and cmd.tokens[1] == "soul":
 		soulstake = True
 		
 	user_data = EwUser(member=cmd.message.author)

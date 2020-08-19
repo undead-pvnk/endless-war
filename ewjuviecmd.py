@@ -186,6 +186,7 @@ async def mine(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	mutations = user_data.get_mutations()
+	cosmetic_abilites = ewutils.get_cosmetic_abilities(id_user = cmd.message.author.id, id_server = cmd.guild.id)
 	time_now = int(time.time())
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
@@ -312,7 +313,7 @@ async def mine(cmd):
 				unearthed_item_chance *= 2
 			if has_pickaxe == True:
 				unearthed_item_chance *= 1.5
-			if ewcfg.mutation_id_lucky in mutations:
+			if ewcfg.mutation_id_lucky in mutations or ewcfg.cosmeticAbility_id_lucky in cosmetic_abilites:
 				unearthed_item_chance *= 1.33
 
 			# event bonus

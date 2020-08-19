@@ -455,7 +455,7 @@ async def let_go(cmd):
 		# Only ghosts can inhabit other players
 		response = "You feel a bit more at peace with the world."
 	elif not user_data.get_inhabitee():
-		response = "You're not inhabitting anyone right now."
+		response = "You're not inhabiting anyone right now."
 	else:
 		user_data.remove_inhabitation()
 		response = "You let go of the soul you've been tormenting."
@@ -468,7 +468,7 @@ async def possess_weapon(cmd):
 	if user_data.life_state != ewcfg.life_state_corpse:
 		response = "You have no idea what you're doing."
 	elif not user_data.get_inhabitee():
-		response = "You're not inhabitting anyone right now."
+		response = "You're not inhabiting anyone right now."
 	elif user_data.slimes >= (ewcfg.slimes_tomanifest + ewcfg.slimes_to_possess_weapon):
 		# prevent ghosts from using so much antislime they can't manifest afterwards
 		response = "You'll have to become stronger before you can perform occult arts of this level."

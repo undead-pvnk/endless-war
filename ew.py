@@ -240,10 +240,10 @@ class EwUser:
 			self.bounty = 0
 			self.time_lastdeath = time_now		
 	
-			# if self.life_state == ewcfg.life_state_shambler:
-			# 	self.degradation += 1
-			# else:
-			# 	self.degradation += 5
+			if self.life_state == ewcfg.life_state_shambler:
+				self.degradation += 1
+			else:
+				self.degradation += 5
 
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
@@ -384,8 +384,10 @@ class EwUser:
 		mutations = self.get_mutations()
 		statuses = self.getStatusEffects()
 
+		# booleans are stored as ints in the database, and are converted to string as we pull them out
+		# so this converts it back into an int, so it can be cast back into a boolean, and then flipped
+		item_is_non_perishable = not int(item_props.get("perishable", True)) 
 		user_has_spoiled_appetite = ewcfg.mutation_id_spoiledappetite in mutations
-		item_is_non_perishable = getattr(food_item, "perishable", False)
 		item_has_expired = float(getattr(food_item, "time_expir", 0)) < time.time()
 		if item_has_expired and not (user_has_spoiled_appetite or item_is_non_perishable):
 			response = "You realize that the food you were trying to eat is already spoiled. In disgust, you throw it away."

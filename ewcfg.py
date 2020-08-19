@@ -6865,15 +6865,13 @@ weather_list = [
 		sunset = "Visibility only grows worse in the fog as the sun sets and the daylight fades.",
 		night = "Everything is obscured by the darkness of night and the thick city smog."
 	),
-	# It was just that easy!
-
-	# EwWeather(
-	#  	name = weather_bicarbonaterain,
-	#  	sunrise = "Accursed bicarbonate soda and sugar rain blocks out the morning sun.",
-	#  	day = "The bicarbonate rain won't let up. That blue weasel is going to pay for this.",
-	#  	sunset = "The deadly rain keeps beating down mercilessly. You have a feeling it's going to be a long night.",
-	#  	night = "Clouds of doom obscure the moon as they dispense liquid death from above."
-	# ),
+    EwWeather(
+	 	name = weather_bicarbonaterain,
+	 	sunrise = "Accursed bicarbonate soda and sugar rain blocks out the morning sun.",
+	 	day = "The bicarbonate rain won't let up. That blue weasel is going to pay for this.",
+	 	sunset = "The deadly rain keeps beating down mercilessly. You have a feeling it's going to be a long night.",
+	 	night = "Clouds of doom obscure the moon as they dispense liquid death from above."
+	),
 ]
 
 # stock ids
@@ -9084,7 +9082,7 @@ food_list = [
 		recover_hunger = 20,
 		price = 2000,
 		str_name = "Awful Waffle",
-		str_eat = "You put this tough and floppy piece of cooked garbage in your mouth. You give up eat it with a knife and fork and relegate yourself to just holding it and taking bites off. It tastes like shit, makes you feel like shit, and will give you the shits when you're done. Why would you do this to yourself?",
+		str_eat = "You put this tough and floppy piece of cooked garbage in your mouth. You give up trying to eat it with a knife and fork, and relegate yourself to just holding it and taking bites off. It tastes like shit, makes you feel like shit, and will give you the shits when you're done. Why would you do this to yourself?",
 		str_desc = "You can feel the regret of the person who made this piece of shit waffle emanating from it. The watered down batter was not properly mixed or cooked for as long as it should've, leading to a lumpy, doughy mess that can barely be called a waffle.",
 		perishable = False,
 		vendors = [vendor_wafflehouse],

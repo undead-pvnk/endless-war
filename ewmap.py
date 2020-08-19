@@ -787,6 +787,10 @@ async def descend(cmd):
 
 		user_data.poi = ewcfg.poi_id_thevoid
 		user_data.time_lastenter = int(time.time())
+
+		enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
+		
 		user_data.persist()
 		ewutils.end_trade(user_data.id_user)
 		await ewrolemgr.updateRoles(client = ewutils.get_client(), member = cmd.message.author)
@@ -854,6 +858,9 @@ async def move(cmd = None, isApt = False):
 
 	if poi == None:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Never heard of it."))
+
+	if not ewutils.DEBUG and ewcfg.chname_to_poi.get(cmd.message.channel.name).id_poi != user_data.poi:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in your current district.").format(cmd.tokens[0]))
 
 	if user_data.poi == ewcfg.debugroom:
 		movement_method = "descending"
@@ -980,6 +987,11 @@ async def move(cmd = None, isApt = False):
 
 		user_data.poi = poi.id_poi
 		user_data.time_lastenter = int(time.time())
+
+		if user_data.poi in ewcfg.vulnerable_districts:
+			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
+		
 		user_data.persist()
 
 		ewutils.end_trade(user_data.id_user)
@@ -1102,13 +1114,18 @@ async def move(cmd = None, isApt = False):
 					
 					user_data.poi = poi_current.id_poi
 					user_data.time_lastenter = int(time.time())
+
+					if user_data.poi in ewcfg.vulnerable_districts:
+						enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+						user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
+						
 					user_data.persist()
 
 					ewutils.end_trade(user_data.id_user)
 
 					await ewrolemgr.updateRoles(client = client, member = member_object)
 
-					# also move any ghosts inhabitting the player
+					# also move any ghosts inhabiting the player
 					await user_data.move_inhabitants(id_poi = poi_current.id_poi)
 
 					try:
@@ -1256,6 +1273,11 @@ async def teleport(cmd):
 			ewutils.moves_active[cmd.message.author.id] = 0
 			user_data.poi = poi.id_poi
 			user_data.time_lastenter = int(time.time())
+
+			if user_data.poi in ewcfg.vulnerable_districts:
+				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
+			
 			user_data.persist()
 
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)

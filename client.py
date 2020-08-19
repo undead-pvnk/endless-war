@@ -904,7 +904,7 @@ async def on_ready():
 		# store the list of channels in an ewutils field
 		ewcfg.update_server_list(server = server)
 
-		# find roles and add them to the database
+		# find roles and add them tom the database
 		ewrolemgr.setupRoles(client = client, id_server = server.id)
 		
 		# Refresh the permissions of all users
@@ -1209,9 +1209,11 @@ async def on_ready():
 							# 	market_data.weather = ewcfg.weather_bicarbonaterain
 
 							# Randomly select a new weather pattern. Try again if we get the same one we currently have.
-							while market_data.weather == weather_old:
-								pick = random.randrange(len(ewcfg.weather_list))
-								market_data.weather = ewcfg.weather_list[pick].name
+							# while market_data.weather == weather_old:
+							# 	pick = random.randrange(len(ewcfg.weather_list))
+							# 	market_data.weather = ewcfg.weather_list[pick].name
+
+						market_data.weather = ewcfg.weather_bicarbonaterain
 
 						# Log message for statistics tracking.
 						ewutils.logMsg("The weather changed. It's now {}.".format(market_data.weather))
