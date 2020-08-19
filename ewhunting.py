@@ -3061,23 +3061,29 @@ async def gvs_update_gamestate(id_server):
 	op_districts = ewutils.execute_sql_query("SELECT district FROM gvs_ops_choices GROUP BY district")
 	for district in op_districts:
 		graveyard_ops = ewutils.execute_sql_query("SELECT id_user, enemytype FROM gvs_ops_choices WHERE faction = 'shamblers' AND district = '{}' AND shambler_stock > 0".format(district))
+		bot_garden_ops = ewutils.execute_sql_query("SELECT id_user, enemytype FROM gvs_ops_choices WHERE faction = 'gankers' AND district = '{}' AND id_user = 56709".format(district))
+		op_district_data = EwDistrict(district=district, id_server=id_server)
+		victor = None
+		time_now = int(time.time())
+
+		op_poi = ewcfg.id_to_poi.get(district)
+		channel = op_poi.channel
+		
+		if len(bot_garden_ops) > 0:
+			random_op = random.choice(graveyard_ops)
+			random_op_data = EwOperationData(id_user=random_op[0], district=district, enemytype=random_op[1])
 
 		if len(graveyard_ops) > 0:
 			
 			random_op = random.choice(graveyard_ops)
 			random_op_data = EwOperationData(id_user=random_op[0], district=district, enemytype=random_op[1])
-			random_district_data = EwDistrict(district=random_op_data.district, id_server=id_server)
-			
-			random_op_poi = ewcfg.id_to_poi.get(district)
-			channel = random_op_poi.channel
 		
-			# The chance for a shambler to spawn is directly proportional a districts level of degradation
-			# The lower the degradation is, the more often a shambler will spawn
+			# The chance for a shambler to spawn is directly proportional to the amount of tombstones
 			
-			# 999 degradation ~ 1% spawn chance
-			# degradation lower or equal to 10 = 100% spawn chance
+			# 3 tombstones = 20% chance
+			# 12 tombstones = 80% chance
 			
-			shambler_spawn_chance = int(100 * (10 / (random_district_data.degradation)))
+			shambler_spawn_chance = int(100 * (len(graveyard_ops)/15))
 			
 			if random.randrange(100) + 1 < shambler_spawn_chance:
 				resp_cont = spawn_enemy(
@@ -3099,20 +3105,41 @@ async def gvs_update_gamestate(id_server):
 				else:
 					random_op_data.persist()
 		else:
-			# No more stocked tombstones. Garden Gankers win!
-			pass
+			shamblers = ewutils.execute_sql_query("SELECT id_enemy FROM enemies WHERE enemyclass = %s".format(), (
+				ewcfg.enemy_class_shambler
+			))
+			if len(shamblers) == 0:
+				# No more stocked tombstones, and no more enemy shamblers. Garden Gankers win!
+				victor = ewcfg.psuedo_faction_gankers
 		
-		# District has been fully rejuvenated. Garden Gankers win!
-		if random_district_data.degradation == 0:
-			pass
-		
-		# District has been fully shambled. Shamblers win!
-		if random_district_data.degradation == ewcfg.district_max_degradation:
-			pass
-		
-		# No more Garden Gankers left. Shamblers win!
-		if len(random_district_data.get_players_in_district(life_states=[ewcfg.life_state_juvenile])) == 0:
-			pass
-		
-		
-	
+		# No more Garden Gankers left. Shamblers win?
+		if len(op_district_data.get_players_in_district(life_states=[ewcfg.life_state_juvenile])) == 0:
+			
+			# Check if the shamblers are fighting against the bot.
+			# If they are, they can only win if at least one shambler has reached the back.
+			if len(bot_garden_ops) > 0:
+				back_shamblers = ewutils.execute_sql_query("SELECT id_enemy FROM enemies WHERE gvs_coord IN %s".format(), (
+					ewcfg.gvs_coords_end
+				))
+				if len(back_shamblers) > 0:
+					# Shambler reached the back while no juveniles were around to help the bot. Shamblers win!
+					victor = ewcfg.psuedo_faction_shamblers
+			else:
+				# No juveniles left in the district, and there were no bot operations. Shamblers win!
+				victor = ewcfg.psuedo_faction_shamblers
+				
+		if victor != None:
+			if victor == ewcfg.psuedo_faction_gankers:
+				response = "***All tombstones have been emptied out! The Garden Gankers take victory!\nIt's rejuvenated completely!!***"
+				op_district_data.degradation = 0
+				op_district_data.time_unlock = time_now + 6000
+				op_district_data.persist()
+			else:
+				response = "***The shamblers have eaten the brainz of the Garden Gankers and take control of the district!\nIt's shambled completely!!***"
+				op_district_data.degradation = ewcfg.district_max_degradation
+				op_district_data.time_unlock = time_now + 6000
+				op_district_data.persist()
+
+			ewutils.execute_sql_query("DELETE FROM gvs_ops_choices WHERE district = '{}'".format(district))
+			await delete_all_enemies(cmd=None, query_suffix="AND poi = '{}'".format(district), id_server_sent=id_server)
+			return await ewutils.send_message(ewutils.get_client(), channel, response)

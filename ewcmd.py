@@ -3171,7 +3171,7 @@ async def gvs_leave_operation(cmd):
 		
 		items = ewutils.execute_sql_query("SELECT id_item FROM gvs_ops_choices WHERE id_user = '{}'".format(user_data.id_user))
 		ewutils.execute_sql_query("DELETE FROM gvs_ops_choices WHERE id_user = '{}'".format(user_data.id_user))
-		await delete_all_enemies(cmd=None, query_suffix="AND owner = '{}'", id_server_sent=user_data.id_server)
+		await delete_all_enemies(cmd=None, query_suffix="AND owner = '{}'".format(user_data.id_user), id_server_sent=user_data.id_server)
 		
 		response = "You drop out of your {} Op in {}.".format('Garden' if faction == ewcfg.psuedo_faction_gankers else 'Graveyard', op_poi)
 		

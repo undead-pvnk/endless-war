@@ -2833,5 +2833,54 @@ def gvs_get_gaias_from_coord(user_data, checked_coord):
 		gaias_typetoid[gaia[0]] = gaia[1]
 	
 	return gaias_typetoid
-		
+
+# If there are no player operations, spawn in ones that the bot uses
+def gvs_insert_bot_ops(id_server, district, enemyfaction):
 	
+	if enemyfaction == ewcfg.psuedo_faction_gankers:
+		possible_bot_types = [
+			ewcfg.enemy_type_gaia_suganmanuts,
+			ewcfg.enemy_type_gaia_pinkrowddishes,
+			ewcfg.enemy_type_gaia_purplekilliflower,
+			ewcfg.enemy_type_gaia_poketubers,
+			ewcfg.enemy_type_gaia_razornuts
+		]
+		for type in possible_bot_types:
+			execute_sql_query("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+				ewcfg.col_id_user,
+				ewcfg.col_district,
+				ewcfg.col_enemy_type,
+				ewcfg.col_faction,
+				ewcfg.col_id_item,
+				ewcfg.col_shambler_stock,
+			), (
+				56709,
+				district,
+				type,
+				enemyfaction,
+				0,
+				0,
+			))
+		
+	elif enemyfaction == ewcfg.psuedo_faction_shamblers:
+		possible_bot_types = [
+			ewcfg.enemy_type_defaultshambler,
+			ewcfg.enemy_type_bucketshambler,
+			ewcfg.enemy_type_juveolanternshambler
+		]
+		for type in possible_bot_types:
+			execute_sql_query("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+				ewcfg.col_id_user,
+				ewcfg.col_district,
+				ewcfg.col_enemy_type,
+				ewcfg.col_faction,
+				ewcfg.col_id_item,
+				ewcfg.col_shambler_stock,
+			), (
+				56709,
+				district,
+				type,
+				enemyfaction,
+				0,
+				20,
+			))
