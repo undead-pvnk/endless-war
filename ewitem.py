@@ -1704,7 +1704,6 @@ def gen_item_props(item):
 	if not hasattr(item, "item_type"):
 		return item_props
 	if item.item_type == ewcfg.it_food:
-		
 		item_props = {
 			'id_food': item.id_food,
 			'food_name': item.str_name,
@@ -1714,7 +1713,7 @@ def gen_item_props(item):
 			'str_eat': item.str_eat,
 			'time_expir': int(time.time()) + item.time_expir,
 			'time_fridged': item.time_fridged,
-			'perishable': 'true',
+			'perishable': item.perishable,
 		}
 	elif item.item_type == ewcfg.it_item:
 		item_props = {
@@ -1921,7 +1920,9 @@ async def squeeze(cmd):
 			timeleft = ewcfg.cd_squeeze - (int(time.time()) - usermodel.time_lasthaunt)
 			response = "It's still all rubbery and deflated from the last time you squeezed it. Give it {} seconds.".format(timeleft)
 		else:
-			if squeezetext != "":
+			if targetmodel.life_state == ewcfg.life_state_shambler:
+				receivingreport = "You feel searing palpitations in your chest, but your lust for brains overwhelms the pain of {} squeezing your soul.".format(cmd.message.author.display_name)
+			elif squeezetext != "":
 				receivingreport = "A voice in your head screams: \"{}\"\nSuddenly, you feel searing palpitations in your chest, and vomit slime all over the floor. Dammit, {} must be fucking around with your soul.".format(squeezetext, cmd.message.author.display_name)
 			else:
 				receivingreport = "You feel searing palpitations in your chest, and vomit slime all over the floor. Dammit, {} must be fucking with your soul.".format(cmd.message.author.display_name)
@@ -1931,13 +1932,14 @@ async def squeeze(cmd):
 			usermodel.time_lasthaunt = int(time.time())
 			usermodel.persist()
 
-			penalty = (targetmodel.slimes* -0.25)
-			targetmodel.change_slimes(n=penalty, source=ewcfg.source_haunted)
-			targetmodel.persist()
+			if targetmodel.life_state != ewcfg.life_state_shambler:
+				penalty = (targetmodel.slimes* -0.25)
+				targetmodel.change_slimes(n=penalty, source=ewcfg.source_haunted)
+				targetmodel.persist()
 
-			district_data = ewdistrict.EwDistrict(district=targetmodel.poi, id_server=cmd.guild.id)
-			district_data.change_slimes(n= -penalty, source=ewcfg.source_squeeze)
-			district_data.persist()
+				district_data = ewdistrict.EwDistrict(district=targetmodel.poi, id_server=cmd.guild.id)
+				district_data.change_slimes(n= -penalty, source=ewcfg.source_squeeze)
+				district_data.persist()
 
 			if receivingreport != "":
 				loc_channel = ewutils.get_channel(cmd.guild, poi.channel)

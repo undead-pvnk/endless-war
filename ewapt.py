@@ -631,7 +631,7 @@ async def apt_look(cmd):
 	frids = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
 
 	if(len(frids) > 0):
-		response += "The fridge contains: "
+		response += "\n\nThe fridge contains: "
 		fridge_pile = []
 		for frid in frids:
 			fridge_pile.append(frid.get('name'))
@@ -653,13 +653,13 @@ async def apt_look(cmd):
 			else:
 				closet_pile.append(closet.get('name'))
 		if len(closet_pile) > 0:
-			response += "The closet contains: "
+			response += "\n\nThe closet contains: "
 			response += ewutils.formatNiceList(closet_pile)
 			response = response + '.'
 			resp_cont.add_channel_response(cmd.message.channel, response)
 
 		if len(hatstand_pile) > 0:
-			response = "The hat stand holds: "
+			response = "\n\nThe hat stand holds: "
 			response += ewutils.formatNiceList(hatstand_pile)
 			response = response + '.'
 			resp_cont.add_channel_response(cmd.message.channel, response)
