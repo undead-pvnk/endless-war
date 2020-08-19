@@ -2986,7 +2986,15 @@ async def gvs_join_operation(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	
 	if district_data.time_unlock > time_now:
-		response = "The area is too scarred from recent battles between the Garden Gankers and the Shamblers. It needs {} more seconds to heal before you can start an operation here.".format(district_data.time_unlock - time_now)
+		
+		if int((district_data.time_unlock - time_now)/60) == 0:
+			time_remaining = district_data.time_unlock - time_now
+			time_used = 'seconds'
+		else:
+			time_remaining = int((district_data.time_unlock - time_now)/60)
+			time_used = 'minutes'
+		
+		response = "The area is too scarred from recent battles between the Garden Gankers and the Shamblers. It needs {} more {} to heal before you can start an operation here.".format(time_remaining, time_used)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
 	if not poi.is_district:
@@ -3006,6 +3014,12 @@ async def gvs_join_operation(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	elif faction == ewcfg.psuedo_faction_shamblers and district_data.degradation == ewcfg.district_max_degradation:
 		response = "This place is already fully shambled! You'll have to try somewhere else."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif poi.id_poi in [ewcfg.poi_id_juviesrow, ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
+		response = "This place is too heavily guarded. Trying to pull of an operation here strikes you as downright stupid."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif poi.id_poi == ewcfg.poi_id_thevoid:
+		response = "Wow, great idea shithead, this sure is prime real estate you're trying to take over here in the middle of fucking nowhere. Try somewhere else."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	elif poi.id_poi in [ewcfg.poi_id_assaultflatsbeach, ewcfg.poi_id_oozegardens]:
 		response = "It would be reckless to try and start an operation so close to the base of the {}. You'll have to try somewhere else.".format('Garden Gankers' if poi.id_poi == ewcfg.poi_id_oozegardens else 'Shamblers')

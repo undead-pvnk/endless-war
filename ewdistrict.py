@@ -837,51 +837,106 @@ async def shamble(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 
-	if user_data.life_state != ewcfg.life_state_shambler:
+	if user_data.life_state != ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_assaultflatsbeach:
 		response = "You have too many higher brain functions left to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
-	poi = ewcfg.id_to_poi.get(user_data.poi)
-	time_now = int(time.time())
-
-	if poi is None:
-		return
-	elif not poi.is_district:
-		response = "This doesn't seem like an important place to be shambling. Try a district zone instead."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	elif poi.id_poi == ewcfg.poi_id_oozegardens:
-		response = "The entire district is covered in Brightshades! You have no business shambling this part of town!"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	in_operation, op_poi = ewutils.gvs_check_if_in_operation(user_data)
-	if in_operation:
-		if op_poi != user_data.poi:
-			response = "You aren't allowed to !shamble this district, per Dr. Downpour's orders.\n(**!goto {}**)".format(op_poi)
-			return await ewutils.send_message(cmd.client, cmd.message.channel,  ewutils.formatMessage(cmd.message.author, response))
-	else:
-		response = "You aren't even in a Graveyard Op yet!\n(**!joinops [tombstone]**)"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
-	if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shambler_shamble:
-		response = "You know, you really just don't have the energy to shamble this place right now. Try again in {} seconds.".format(int(ewcfg.cd_shambler_shamble-(time_now-user_data.time_lasthaunt)))
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
-
-	if district_data.degradation < poi.max_degradation:
-		district_data.degradation += 1
-		# user_data.degradation += 1
-		user_data.time_lasthaunt = time_now
-		district_data.persist()
-		user_data.persist()
-		
-		response = "You shamble {}.".format(poi.str_name)
+	elif user_data.life_state == ewcfg.life_state_juvenile and user_data.poi == ewcfg.poi_id_assaultflatsbeach:
+		response = "You feel an overwhelming sympathy for the plight of the Shamblers and decide to join their ranks."
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		if district_data.degradation == poi.max_degradation:
-			response = ewcfg.str_zone_degraded.format(poi = poi.str_name)
-			await ewutils.send_message(cmd.client, cmd.message.channel, response)
-			
+		await asyncio.sleep(5)
+		
+		user_data = EwUser(member=cmd.message.author)
+		user_data.life_state = ewcfg.life_state_shambler
+
+		ewutils.moves_active[user_data.id_user] = 0
+
+		user_data.poi = ewcfg.poi_id_nuclear_beach_edge
+		user_data.persist()
+		
+		member = cmd.message.author
+
+		response = 'A voice on the intercom chimes in.\n**"Welcome, {}. Welcome to Downpour Laboratories. It\'s safer here. Please treat all machines and facilities with respect, they are precious to our cause."**'.format(member.display_name)
+
+		await ewrolemgr.updateRoles(client=cmd.client, member=member)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	else:
+		pass
+
+	# Rest in fucking pieces
+
+	# if poi is None:
+	# 	return
+	# elif not poi.is_district:
+	# 	response = "This doesn't seem like an important place to be shambling. Try a district zone instead."
+	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# elif poi.id_poi == ewcfg.poi_id_oozegardens:
+	# 	response = "The entire district is covered in Brightshades! You have no business shambling this part of town!"
+	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 
+	# in_operation, op_poi = ewutils.gvs_check_if_in_operation(user_data)
+	# if in_operation:
+	# 	if op_poi != user_data.poi:
+	# 		response = "You aren't allowed to !shamble this district, per Dr. Downpour's orders.\n(**!goto {}**)".format(op_poi)
+	# 		return await ewutils.send_message(cmd.client, cmd.message.channel,  ewutils.formatMessage(cmd.message.author, response))
+	# else:
+	# 	response = "You aren't even in a Graveyard Op yet!\n(**!joinops [tombstone]**)"
+	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 
+	# if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shambler_shamble:
+	# 	response = "You know, you really just don't have the energy to shamble this place right now. Try again in {} seconds.".format(int(ewcfg.cd_shambler_shamble-(time_now-user_data.time_lasthaunt)))
+	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 
+	# district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
+	# 
+	# if district_data.degradation < poi.max_degradation:
+	# 	district_data.degradation += 1
+	# 	# user_data.degradation += 1
+	# 	user_data.time_lasthaunt = time_now
+	# 	district_data.persist()
+	# 	user_data.persist()
+	# 	
+	# 	response = "You shamble {}.".format(poi.str_name)
+	# 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 
+	# 	if district_data.degradation == poi.max_degradation:
+	# 		response = ewcfg.str_zone_degraded.format(poi = poi.str_name)
+	# 		await ewutils.send_message(cmd.client, cmd.message.channel, response)
+
+async def rejuvenate(cmd):
+	user_data = EwUser(member=cmd.message.author)
+
+	if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_oozegardens:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif user_data.life_state == ewcfg.life_state_shambler and user_data.poi == ewcfg.poi_id_oozegardens:
+		response = "You decide to change your ways and become one of the Garden Gankers in order to overthrow your old master."
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		await asyncio.sleep(5)
+
+		user_data = EwUser(member=cmd.message.author)
+		user_data.life_state = ewcfg.life_state_juvenile
+
+		ewutils.moves_active[user_data.id_user] = 0
+
+		user_data.poi = ewcfg.poi_id_og_farms
+		user_data.persist()
+
+		client = ewutils.get_client()
+		server = client.get_guild(user_data.id_server)
+		member = server.get_member(user_data.id_user)
+
+		response = "You enter into Atomic Forest inside the farms of Ooze Gardens. Hortisolis gives you a big hug and says he's glad you've overcome your desire for vengeance in pursuit of deposing Downpour."
+
+		await ewrolemgr.updateRoles(client=cmd.client, member=member)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		pass
+
+
 """
 	Updates/Increments the capture_points values of all districts every time it's called
 """

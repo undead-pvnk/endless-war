@@ -2728,10 +2728,10 @@ def set_identifier(poi, id_server):
 async def sh_move(enemy_data):
 	current_coord = enemy_data.gvs_coord
 	has_moved = False
+	index = None
 
 	if current_coord in ewcfg.gvs_coords_start and enemy_data.enemytype == ewcfg.enemy_type_juvieshambler:
-		#Delete juvie shambler
-		pass
+		delete_enemy(enemy_data)
 	
 	if current_coord not in ewcfg.gvs_coords_end:
 		for row in ewcfg.gvs_valid_coords_shambler:
@@ -2743,6 +2743,12 @@ async def sh_move(enemy_data):
 				
 			enemy_data.gvs_coord = new_coord
 			enemy_data.persist()
+			
+			if new_coord in ewcfg.gvs_valid_coords_gaia and index != None:
+				poi_channel = ewcfg.id_to_poi.get(enemy_data.poi).channel
+				previous_gaia_coord = row[index - 2]
+				response = "The {} moved from {} to {}!".format(enemy_data.display_name, previous_gaia_coord, new_coord)
+				await ewutils.send_message(ewutils.get_client(), poi_channel, response)
 
 			print('shambler moved from {} to {} in {}.'.format(current_coord, new_coord, enemy_data.poi))
 			break

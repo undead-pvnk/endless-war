@@ -707,8 +707,9 @@ cmd_map = {
 	# Praying at the base of ENDLESS WAR.
 	ewcfg.cmd_pray: ewcmd.pray,
 
-	# shambling
+	# Gankers Vs. Shamblers gang swapping
 	ewcfg.cmd_shamble: ewdistrict.shamble,
+	ewcfg.cmd_rejuvenate: ewdistrict.rejuvenate,
 	
 	# shamble ball
 	ewcfg.cmd_shambleball: ewsports.shambleball,

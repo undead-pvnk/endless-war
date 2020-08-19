@@ -1127,6 +1127,7 @@ cmd_wrap = cmd_prefix + 'wrap'
 cmd_unwrap = cmd_prefix + 'unwrap'
 cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
 cmd_shamble = cmd_prefix + 'shamble'
+cmd_rejuvenate = cmd_prefix + 'rejuvenate'
 
 cmd_switch = cmd_prefix + 'switch'
 cmd_switch_alt_1 = cmd_prefix + 's'
@@ -15615,6 +15616,7 @@ poi_list = [
 		is_subzone = True,
 		mother_districts = [poi_id_oozegardens_street_c, poi_id_oozegardens_street_d],
         vendors=[vendor_atomicforest],
+        life_states=[life_state_juvenile],
 		neighbors = {
 			poi_id_oozegardens_street_c : travel_time_subzone,
 			poi_id_oozegardens_street_d : travel_time_subzone,
@@ -17822,7 +17824,8 @@ poi_list = [
             poi_id_assaultflatsbeach : travel_time_subzone,
 		},
         mother_districts = [poi_id_assaultflatsbeach],
-        vendors = [vendor_downpourlaboratory]
+        vendors = [vendor_downpourlaboratory],
+        life_states = [life_state_shambler]
 	),
 	EwPoi(  # Outskirts - 7
 		id_poi=poi_id_south_outskirts,
