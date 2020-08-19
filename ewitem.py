@@ -571,9 +571,9 @@ def item_destroyall(id_server = None, id_user = None, member = None):
 """
 def item_loot(
 	member = None,
-	id_user_target = ""
+	id_user_target = -1
 ):
-	if member == None or len(id_user_target) == 0:
+	if member == None or id_user_target == -1:
 		return
 
 	try:
@@ -1864,7 +1864,7 @@ async def returnsoul(cmd):
 	for inv_object in user_inv:
 		soul = inv_object
 		soul_item = EwItem(id_item=soul.get('id_item'))
-		if soul_item.item_props.get('user_id') == cmd.message.author.id:
+		if soul_item.item_props.get('user_id') == str(cmd.message.author.id):
 			break
 
 	if usermodel.has_soul == 1:
@@ -1872,7 +1872,7 @@ async def returnsoul(cmd):
 	elif soul:
 
 		if soul.get('item_type') == ewcfg.it_cosmetic and soul_item.item_props.get('id_cosmetic') == "soul":
-			if int(soul_item.item_props.get('user_id')) != cmd.message.author.id:
+			if soul_item.item_props.get('user_id') != str(cmd.message.author.id):
 				response = "That's not your soul. Nice try, though."
 			else:
 				response = "You open the soul jar and hold the opening to your chest. The soul begins to crawl in, and a warmth returns to your body. Not exactly the warmth you had before, but it's too wonderful to pass up. You feel invigorated and ready to take on the world."
@@ -2153,5 +2153,30 @@ async def lower_durability(general_item):
 	current_durability = general_item_data.item_props.get('durability')
 	general_item_data.item_props['durability'] = (int(current_durability) - 1)
 	general_item_data.persist()
+	
+async def manually_edit_item_properties(cmd):
+	
+	if not cmd.message.author.guild_permissions.administrator:
+		return
+	
+	if cmd.tokens_count == 4:
+		item_id = cmd.tokens[1]
+		column_name = cmd.tokens[2]
+		column_value = cmd.tokens[3]
 
+		ewutils.execute_sql_query("REPLACE INTO items_prop({}, {}, {}) VALUES(%s, %s, %s)".format(
+				ewcfg.col_id_item,
+				ewcfg.col_name,
+				ewcfg.col_value
+			), (
+				item_id,
+				column_name,
+				column_value
+			))
+		
+		response = "Edited item with ID {}. It's {} value has been set to {}.".format(item_id, column_name, column_value)
 
+	else:
+		response = 'Invalid number of options entered.\nProper usage is: !editprop [item ID] [name] [value], where [value] is in quotation marks if it is longer than one word.'
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, response)

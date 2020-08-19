@@ -1504,8 +1504,7 @@ async def piss(cmd):
 					enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
 					
 					user_poi = ewcfg.id_to_poi.get(user_data.poi)
-					if user_poi.is_district:
-						user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, enlisted)
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, enlisted)
 					user_data.persist()
 					
 					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1924,8 +1923,7 @@ async def push(cmd):
 		enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
 		
 		user_poi = ewcfg.id_to_poi.get(user_data.poi)
-		if user_poi.is_district:
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, enlisted)
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, enlisted)
 		user_data.persist()
 
 		await ewrolemgr.updateRoles(client = cmd.client, member = target)
