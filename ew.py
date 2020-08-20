@@ -821,18 +821,19 @@ class EwUser:
 			self.id_server
 		))
 
-	def get_weapon_possession(self):
+	def get_possession(self, possession_type = ''):
 		user_is_alive = self.life_state != ewcfg.life_state_corpse
-		data = ewutils.execute_sql_query("SELECT {id_ghost}, {id_fleshling}, {id_server} FROM inhabitations WHERE {id_target} = %s AND {id_server} = %s AND {empowered} = %s".format(
+		data = ewutils.execute_sql_query("SELECT {id_ghost}, {id_fleshling}, {id_server}, {empowered} FROM inhabitations WHERE {id_target} = %s AND {id_server} = %s AND {inverted} {empowered} = %s".format(
 			id_ghost = ewcfg.col_id_ghost,
 			id_fleshling = ewcfg.col_id_fleshling,
 			id_server = ewcfg.col_id_server,
 			id_target = ewcfg.col_id_fleshling if user_is_alive else ewcfg.col_id_ghost,
 			empowered = ewcfg.col_empowered,
+			inverted = '' if possession_type else 'NOT'
 		),(
 			self.id_user,
 			self.id_server,
-			True,
+			possession_type
 		))
 
 		try:
@@ -841,6 +842,19 @@ class EwUser:
 		except:
 			# otherwise return None
 			return None
+
+	def cancel_possession(self):
+		user_is_alive = self.life_state != ewcfg.life_state_corpse
+		ewutils.execute_sql_query(
+			"UPDATE inhabitations SET {empowered} = '' WHERE {id_target} = %s AND {id_server} = %s".format(
+				empowered = ewcfg.col_empowered,
+				id_target = ewcfg.col_id_fleshling if user_is_alive else ewcfg.col_id_ghost,
+				id_server = ewcfg.col_id_server,
+			),(
+				self.id_user,
+				self.id_server,
+			)
+		)
 
 	def get_fashion_stats(self):
 

@@ -374,7 +374,7 @@ def canAttack(cmd):
 		user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 		user_isshambler = user_data.life_state == ewcfg.life_state_shambler
   
-		weapon_possession_data = user_data.get_weapon_possession()
+		possession_data = user_data.get_possession()
 
 		if shootee_data.life_state == ewcfg.life_state_kingpin:
 			# Disallow killing generals.
@@ -413,7 +413,7 @@ def canAttack(cmd):
 			# Can't bust ghosts in their realm
 			response = "{} is empowered by the void, and deflects your attacks without breaking a sweat.".format(member.display_name)
 
-		elif weapon_possession_data and (shootee_data.id_user == weapon_possession_data[0]):
+		elif possession_data and (shootee_data.id_user == possession_data[0]):
 			# Target is possessing user's weapon
 			response = "{}'s contract forbids you from harming them. You should've read the fine print.".format(member.display_name)
 
@@ -1041,7 +1041,7 @@ async def attack(cmd):
 					if coinbounty > 0:
 						response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, cmd.message.author.display_name)
       
-					weapon_possession = user_data.get_weapon_possession()
+					weapon_possession = user_data.get_possession('weapon')
 					if weapon_possession:
 						response += fulfill_ghost_weapon_contract(weapon_possession, market_data, user_data, cmd.message.author.display_name)
 
@@ -2471,7 +2471,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			response = "{name_target} is hit!!\n\n{name_target} has died.".format(
 				name_target=enemy_data.display_name)
 
-		weapon_possession = user_data.get_weapon_possession()
+		weapon_possession = user_data.get_possession('weapon')
 		if weapon_possession:
 			response += fulfill_ghost_weapon_contract(weapon_possession, market_data, user_data, cmd.message.author.display_name)
 
@@ -2875,7 +2875,7 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 	damage_mod = 1
 
 	# Weapon possession
-	if user_data.get_weapon_possession():
+	if user_data.get_possession('weapon'):
 		damage_mod *= 1.2
 
 	# Lone wolf
@@ -3362,18 +3362,7 @@ def fulfill_ghost_weapon_contract(possession_data, market_data, user_data, user_
 	market_data.negaslime -= -negaslime_gained
 	market_data.persist()
 
-	# cancel possession
-	ewutils.execute_sql_query(
-		"UPDATE inhabitations SET {empowered} = %s WHERE {id_fleshling} = %s AND {id_server} = %s".format(
-			empowered = ewcfg.col_empowered,
-			id_fleshling = ewcfg.col_id_fleshling,
-			id_server = ewcfg.col_id_server,
-		),(
-			False,
-			user_data.id_user,
-			user_data.id_server,
-		)
-	)
+	user_data.cancel_possession()
 
 	server = ewutils.get_client().get_guild(user_data.id_server)
 	ghost_name = server.get_member(ghost_id).display_name

@@ -421,10 +421,7 @@ async def inhabit(cmd):
 				# Can't target ghosts
 				response = "You can't do that to your fellow ghost."
 			elif ewmap.poi_is_pvp(target_data.poi) == False:
-				response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
-			elif user_data.id_killer == target_data.id_user:
-				# Can't target the player's killer
-				response = "You wouldn't want a repeat of last time, better find someone else."
+				response = "You can't torment the living here."
 			else:
 				# cancel the ghost's movement
 				ewutils.moves_active[cmd.message.author.id] = 0
@@ -457,7 +454,7 @@ async def let_go(cmd):
 		# Only ghosts can inhabit other players
 		response = "You feel a bit more at peace with the world."
 	elif not user_data.get_inhabitee():
-		response = "You're not inhabiting anyone right now."
+		response = "You're not **{}**ing anyone right now.".format(ewcfg.cmd_inhabit)
 	else:
 		user_data.remove_inhabitation()
 		response = "You let go of the soul you've been tormenting."
@@ -470,9 +467,8 @@ async def possess_weapon(cmd):
 	if user_data.life_state != ewcfg.life_state_corpse:
 		response = "You have no idea what you're doing."
 	elif not user_data.get_inhabitee():
-		response = "You're not inhabiting anyone right now."
-	elif user_data.slimes >= (ewcfg.slimes_tomanifest + ewcfg.slimes_to_possess_weapon):
-		# prevent ghosts from using so much antislime they can't manifest afterwards
+		response = "You're not **{}**ing anyone right now.".format(ewcfg.cmd_inhabit)
+	elif user_data.slimes >= ewcfg.slimes_to_possess_weapon:
 		response = "You'll have to become stronger before you can perform occult arts of this level."
 	else:
 		server = cmd.guild
@@ -482,11 +478,11 @@ async def possess_weapon(cmd):
 		inhabitee_name = inhabitee_member.display_name
 		if inhabitee_data.weapon < 0:
 			response = "{} is not wielding a weapon right now.".format(inhabitee_name)
-		elif inhabitee_data.get_weapon_possession():
-			response = "{}'s weapon is already being possessed.".format(inhabitee_name)
+		elif inhabitee_data.get_possession():
+			response = "{} is already being possessed.".format(inhabitee_name)
 		else:
-			proposal_response = "You propose a trade to {}. " \
-				"You will possess their weapon to empower it, and in return they'll sacrifice a fifth of their slime to your name upon their next kill. " \
+			proposal_response = "You propose a trade to {}.\n" \
+				"You will possess their weapon to empower it, and in return they'll sacrifice a fifth of their slime to your name upon their next kill.\n" \
 				"Will they **{}** this exchange, or **{}** it?".format(inhabitee_name, ewcfg.cmd_accept, ewcfg.cmd_refuse)
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, proposal_response))
     
@@ -509,7 +505,7 @@ async def possess_weapon(cmd):
 					id_fleshling = ewcfg.col_id_fleshling,
 					id_ghost = ewcfg.col_id_ghost,
 				), (
-					True,
+					'weapon',
 					inhabitee_id,
 					user_data.id_user,
 				))
@@ -523,13 +519,68 @@ async def possess_weapon(cmd):
 	if response:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def possess_fishing_rod(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	if user_data.life_state != ewcfg.life_state_corpse:
+		response = "You have no idea what you're doing."
+	elif not user_data.get_inhabitee():
+		response = "You're not **{}**ing anyone right now.".format(ewcfg.cmd_inhabit)
+	elif user_data.slimes >= ewcfg.slimes_to_possess_fishing_rod:
+		response = "You'll have to become stronger before you can perform occult arts of this level."
+	else:
+		server = cmd.guild
+		inhabitee_id = user_data.get_inhabitee()
+		inhabitee_data = EwUser(id_user = inhabitee_id, id_server = user_data.id_server)
+		inhabitee_member = server.get_member(inhabitee_id)
+		inhabitee_name = inhabitee_member.display_name
+		if inhabitee_data.get_possession():
+			response = "{} is already being possessed.".format(inhabitee_name)
+		else:
+			proposal_response = "You propose a trade to {}.\n" \
+				"You will possess their fishing rod to enhance it, making it more attractive to fish. In exchange, you will corrupt away all of the fish's slime, and absorb it as antislime.\n" \
+				"Both of you will need to reel the fish in together, and failing to do so will nullify this contract.\nWill they **{}** this exchange, or **{}** it?".format(inhabitee_name, ewcfg.cmd_accept, ewcfg.cmd_refuse)
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, proposal_response))
+    
+			accepted = False
+			try:
+				msg = await cmd.client.wait_for('message', timeout = 30, check=lambda message: message.author == inhabitee_member and 
+														message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
+				if msg != None:
+					if msg.content.lower() == ewcfg.cmd_accept:
+						accepted = True
+					elif msg.content.lower() == ewcfg.cmd_refuse:
+						accepted = False
+			except:
+				accepted = False
+
+			if accepted:
+				ewutils.execute_sql_query(
+				"UPDATE inhabitations SET {empowered} = %s WHERE {id_fleshling} = %s AND {id_ghost} = %s".format(
+					empowered = ewcfg.col_empowered,
+					id_fleshling = ewcfg.col_id_fleshling,
+					id_ghost = ewcfg.col_id_ghost,
+				), (
+					'rod',
+					inhabitee_id,
+					user_data.id_user,
+				))
+				user_data.change_slimes(n = -ewcfg.slimes_to_possess_fishing_rod, source = ewcfg.source_ghost_contract)
+				user_data.persist()
+				accepted_response = "You feel a metallic taste in your mouth as you sign {}'s spectral contract. Their ghastly arms superpose yours, enhancing your grip and causing shadowy tendrils to appear near your rod's hook.".format(cmd.message.author.display_name)
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(inhabitee_member, accepted_response))
+			else:
+				response = "You should've known better, why would anyone ever trust you?"
+	
+	if response:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 async def crystalize_negapoudrin(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
 	if user_data.life_state != ewcfg.life_state_corpse:
 		response = "What the fuck do you think you're doing, you corporeal bitch?"
-	elif user_data.slimes >= (ewcfg.slimes_tomanifest + ewcfg.slimes_to_crystalize_negapoudrin):
-		# prevent ghosts from using so much antislime they can't manifest afterwards
+	elif user_data.slimes >= ewcfg.slimes_to_crystalize_negapoudrin:
 		response = "Crystalizing a negapoudrin requires a lot of negaslime, and you're not quite there yet."
 	else:
 		negapoudrin_data = next(i for i in ewcfg.item_list if i.id_item == ewcfg.item_id_negapoudrin)

@@ -951,6 +951,8 @@ cmd_manifest = cmd_prefix + 'manifest'
 cmd_inhabit = cmd_prefix + 'inhabit'
 cmd_letgo = cmd_prefix + 'letgo'
 cmd_possess_weapon = cmd_prefix + 'possessweapon'
+cmd_possess_fishing_rod = cmd_prefix + 'possessfishingrod'
+cmd_possess_fishing_rod_alt1 = cmd_prefix + 'possessrod'
 cmd_crystalize_negapoudrin = cmd_prefix + 'crystalizenegapoudrin'
 cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
@@ -1413,6 +1415,7 @@ slimes_invein = 4000
 slimes_pertile = 50
 slimes_tomanifest = -100000
 slimes_to_possess_weapon = -100000
+slimes_to_possess_fishing_rod = -10000
 slimes_to_crystalize_negapoudrin = -1000000
 slimes_cliffdrop = 200000
 slimes_item_drop = 10000
@@ -4770,7 +4773,7 @@ def wef_staff(ctn = None):
 			lambda _: weather_map.get(market_data.weather) == weather_foggy,
 			lambda _: (market_data.day % 31 == 15 and market_data.clock >= 20) or (market_data.day % 31 == 16 and market_data.clock <= 6), # moonless night
 			lambda ctn: not ctn.user_data.has_soul,
-			lambda ctn: ctn.user_data.get_weapon_possession(),
+			lambda ctn: ctn.user_data.get_possession('weapon'),
 			lambda ctn: ctn.user_data.poi == poi_id_thevoid,
 			lambda ctn: ctn.shootee_data.slimes > ctn.user_data.slimes,
 			lambda ctn: (ctn.user_data.swear_jar >= 500) or (ctn.shootee_data.swear_jar == 0),

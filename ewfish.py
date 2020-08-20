@@ -20,6 +20,9 @@ class EwFisher:
 	bait = False
 	high = False
 	fishing_id = 0
+	inhabitant_id = None
+	fleshling_reeled = False
+	ghost_reeled = False
 
 	def stop(self): 
 		self.fishing = False
@@ -30,6 +33,9 @@ class EwFisher:
 		self.bait = False
 		self.high = False
 		self.fishing_id = 0
+		self.inhabitant_id = None
+		self.fleshling_reeled = False
+		self.ghost_reeled = False
 
 fishers = {}
 fishing_counter = 0
@@ -384,6 +390,10 @@ async def cast(cmd):
 			fisher.bait = False
 			fisher.pier = ewcfg.id_to_poi.get(user_data.poi)
 			fisher.current_fish = gen_fish(market_data, fisher, has_fishingrod)
+
+			rod_possession = user_data.get_possession('rod')
+			if rod_possession: 
+				fisher.inhabitant_id = rod_possession[0]
 			
 			high_value_bait_used = False
 
@@ -476,8 +486,11 @@ async def cast(cmd):
 				# Bait attatched, chance to get a bite increases from 1/10 to 1/7
 				fun -= 30
 			if fisher.pier == ewcfg.poi_id_ferry:
-				# Fisher is on the ferry, chance to get a bite increases from 1/10 to 1/8
-				fun -= 20
+				# Fisher is on the ferry, chance to get a bite increases from 1/10 to 1/9
+				fun -= 10
+			if fisher.inhabitant_id:
+				# Having your rod possessed increases your chance to get a bite by 33%
+				fun = int(fun * 0.66)
 			if high_value_bait_used:
 				fun = 5
 				
@@ -531,8 +544,10 @@ async def cast(cmd):
 			await asyncio.sleep(8)
 
 			if fisher.bite != False:
+				response = "The fish got away..."
+				response += cancel_rod_possession(fisher, user_data)
 				fisher.stop()
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The fish got away..."))
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			else:
 				has_reeled = True
 
@@ -559,9 +574,28 @@ async def reel(cmd):
 	fisher = fishers[cmd.message.author.id]
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	# Ghosts cannot fish.
 	if user_data.life_state == ewcfg.life_state_corpse:
-		response = "You can't fish while you're dead. Try {}.".format(ewcfg.cmd_revive)
+		valid_possession = user_data.get_possession('rod')
+		if valid_possession:
+			inhabitee = user_data.get_inhabitee()
+			fisher = fishers[inhabitee] if inhabitee in fishers.keys() else None
+			if fisher:
+				if fisher.bite == False:
+					fisher.fleshling_reeled = True
+					response = "You reeled in too early! You and your pal get nothing."
+					response += cancel_rod_possession(fisher, user_data)
+					fisher.fleshling_reeled = True
+					fisher.stop()
+				else:
+					if fisher.fleshling_reeled:
+						response = await award_fish(fisher, cmd, user_data)
+					else:
+						fisher.ghost_reeled = True
+						response = "You reel in anticipation of your fleshy partner!"
+			else:
+				response = "You fleshy partner hasn't even cast their hook yet."
+		else:
+			response = "You can't fish while you're dead."
 
 	elif user_data.poi in ewcfg.piers:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -576,211 +610,216 @@ async def reel(cmd):
 
 		# If a fish isn't biting, then a player reels in nothing.
 		elif fisher.bite == False:
+			response = ''
+			if fisher.inhabitant_id:
+				fisher.ghost_reeled = True
+				response = "You reeled in too early! You and your pal get nothing."
+				response += cancel_rod_possession(fisher, user_data)
+			else:
+				response = "You reeled in too early! Nothing was caught."
 			fisher.stop()
-			response = "You reeled in too early! Nothing was caught."
 
 		# On successful reel.
 		else:
-			if fisher.current_fish == "item":
-				
-				slimesea_inventory = ewitem.inventory(id_server = cmd.guild.id, id_user = ewcfg.poi_id_slimesea)			
-
-				if fisher.pier.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.5:
-
-					item = random.choice(ewcfg.mine_results)
-				
-					unearthed_item_amount = (random.randrange(5) + 8) # anywhere from 8-12 drops
-
-					item_props = ewitem.gen_item_props(item)
-
-					for creation in range(unearthed_item_amount):
-						ewitem.item_create(
-							item_type = item.item_type,
-							id_user = cmd.message.author.id,
-							id_server = cmd.guild.id,
-							item_props = item_props
-						)
-
-					response = "You reel in {} {}s! ".format(unearthed_item_amount, item.str_name)
-
-				else:
-					item = random.choice(slimesea_inventory)
-
-					ewitem.give_item(id_item = item.get('id_item'), member = cmd.message.author)
-
-					response = "You reel in a {}!".format(item.get('name'))
-
-				fisher.stop()
-				user_data.persist()
-
+			if fisher.ghost_reeled or not fisher.inhabitant_id:
+				response = await award_fish(fisher, cmd, user_data)
 			else:
-				user_initial_level = user_data.slimelevel
-
-				gang_bonus = False
-
-				has_fishingrod = False
-
-				if user_data.weapon >= 0:
-					weapon_item = EwItem(id_item = user_data.weapon)
-					weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-					if weapon.id_weapon == "fishingrod":
-						has_fishingrod = True
-
-				#if user_data.sidearm >= 0:
-				#	sidearm_item = EwItem(id_item=user_data.sidearm)
-				#	sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
-				#	if sidearm.id_weapon == "fishingrod":
-				#		has_fishingrod = True
-
-				value = 0
-
-				if fisher.current_size == ewcfg.fish_size_miniscule:
-					slime_gain = ewcfg.fish_gain * 1
-					value += 10
-
-				elif fisher.current_size == ewcfg.fish_size_small:
-					slime_gain = ewcfg.fish_gain * 2
-
-					value += 20
-
-				elif fisher.current_size == ewcfg.fish_size_average:
-					slime_gain = ewcfg.fish_gain * 3
-					value += 30
-
-				elif fisher.current_size == ewcfg.fish_size_big:
-					slime_gain = ewcfg.fish_gain * 4
-					value += 40
-
-				elif fisher.current_size == ewcfg.fish_size_huge:
-					slime_gain = ewcfg.fish_gain * 5
-					value += 50
-
-				else:
-					slime_gain = ewcfg.fish_gain * 6
-					value += 60
-
-				if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_common:
-					value += 10
-
-				if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_uncommon:
-					value += 20
-
-				if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_rare:
-					value += 30
-
-				if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_promo:
-					value += 40
-
-				if user_data.life_state == 2:
-					if ewcfg.fish_map[fisher.current_fish].catch_time == ewcfg.fish_catchtime_day and user_data.faction == ewcfg.faction_rowdys:
-						gang_bonus = True
-						slime_gain = slime_gain * 1.5
-						value += 20
-
-					if ewcfg.fish_map[fisher.current_fish].catch_time == ewcfg.fish_catchtime_night and user_data.faction == ewcfg.faction_killers:
-						gang_bonus = True
-						slime_gain = slime_gain * 1.5
-						value += 20
-
-				if has_fishingrod == True:
-					slime_gain = slime_gain * 2
-
-				if fisher.current_fish == "plebefish":
-					slime_gain = ewcfg.fish_gain * .5
-					value = 10
-					
-				controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
-
-				if controlling_faction != "" and controlling_faction == user_data.faction:
-					slime_gain *= 2
-
-
-				if user_data.poi == ewcfg.poi_id_juviesrow_pier:
-					slime_gain = int(slime_gain / 4)
-
-				trauma = ewcfg.trauma_map.get(user_data.trauma)
-				if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
-					slime_gain *= (1 - 0.5 * user_data.degradation / 100)
-
-				slime_gain = max(0, round(slime_gain))
-
-				ewitem.item_create(
-					id_user = cmd.message.author.id,
-					id_server = cmd.guild.id,
-					item_type = ewcfg.it_food,
-					item_props = {
-						'id_food': ewcfg.fish_map[fisher.current_fish].id_fish,
-						'food_name': ewcfg.fish_map[fisher.current_fish].str_name,
-						'food_desc': ewcfg.fish_map[fisher.current_fish].str_desc,
-						'recover_hunger': 20,
-						'str_eat': ewcfg.str_eat_raw_material.format(ewcfg.fish_map[fisher.current_fish].str_name),
-						'rarity': ewcfg.fish_map[fisher.current_fish].rarity,
-						'size': fisher.current_size,
-						'time_expir': time.time() + ewcfg.std_food_expir,
-						'time_fridged': 0,
-						'acquisition': ewcfg.acquisition_fishing,
-						'value': value
-					}
-				)
-
-				response = "You reel in a {fish}! {flavor} You grab hold and wring {slime:,} slime from it. "\
-					.format(fish = ewcfg.fish_map[fisher.current_fish].str_name, flavor = ewcfg.fish_map[fisher.current_fish].str_desc, slime = slime_gain)
-
-				if gang_bonus == True:
-					if user_data.faction == ewcfg.faction_rowdys:
-						response += "The Rowdy-pride this fish is showing gave you more slime than usual. "
-					elif user_data.faction == ewcfg.faction_killers:
-						response += "The Killer-pride this fish is showing gave you more slime than usual. "
-
-				levelup_response = user_data.change_slimes(n = slime_gain, source = ewcfg.source_fishing)
-
-				was_levelup = True if user_initial_level < user_data.slimelevel else False
-
-				# Tell the player their slime level increased.
-				if was_levelup:
-					response += levelup_response
-
-				market_data = EwMarket(id_server=user_data.id_server)
-				# if market_data.caught_fish == ewcfg.debugfish_goal and fisher.pier.id_poi in ewcfg.debugpiers:
-				# 	
-				# 	item = ewcfg.debugitem
-				# 	
-				# 	ewitem.item_create(
-				# 		item_type=ewcfg.it_item,
-				# 		id_user=user_data.id_user,
-				# 		id_server=user_data.id_server,
-				# 		item_props={
-				# 			'id_item': item.id_item,
-				# 			'context': item.context,
-				# 			'item_name': item.str_name,
-				# 			'item_desc': item.str_desc,
-				# 		}
-				# 	),
-				# 	ewutils.logMsg('Created item: {}'.format(item.id_item))
-				# 	item = EwItem(id_item=item.id_item)
-				# 	item.persist()
-				# 	
-				# 	response += ewcfg.debugfish_response
-				# 	market_data.caught_fish += 1
-				# 	market_data.persist()
-				# 
-				# elif market_data.caught_fish < ewcfg.debugfish_goal and fisher.pier.id_poi in ewcfg.debugpiers:
-				# 	market_data.caught_fish += 1
-				# 	market_data.persist()
-
-				fisher.stop()
-
-				# Flag the user for PvP
-				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-				# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_fish, enlisted)
-				# 
-				user_data.persist()
-				# await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-				
+				fisher.fleshling_reeled = True
+				response = "You reel in anticipation of your ghostly partner!"
 	else:
 		response = "You cast your fishing rod unto a sidewalk. That is to say, you've accomplished nothing. Go to a pier if you want to fish."
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def award_fish(fisher, cmd, user_data): 
+	response = ""
+
+	actual_fisherman = None
+	if fisher.inhabitant_id:
+		actual_fisherman = user_data.get_possession()[1]
+
+	if fisher.current_fish == "item":
+		slimesea_inventory = ewitem.inventory(id_server = cmd.guild.id, id_user = ewcfg.poi_id_slimesea)			
+
+		if fisher.pier.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.5:
+
+			item = random.choice(ewcfg.mine_results)
+		
+			unearthed_item_amount = (random.randrange(5) + 8) # anywhere from 8-12 drops
+
+			item_props = ewitem.gen_item_props(item)
+
+			for creation in range(unearthed_item_amount):
+				ewitem.item_create(
+					item_type = item.item_type,
+					id_user = actual_fisherman or cmd.message.author.id,
+					id_server = cmd.guild.id,
+					item_props = item_props
+				)
+
+			response = "You reel in {} {}s! ".format(unearthed_item_amount, item.str_name)
+
+		else:
+			item = random.choice(slimesea_inventory)
+
+			ewitem.give_item(id_item = item.get('id_item'), member = cmd.message.author)
+
+			response = "You reel in a {}!".format(item.get('name'))
+
+		fisher.stop()
+		user_data.persist()
+
+	else:
+		user_initial_level = user_data.slimelevel
+
+		gang_bonus = False
+
+		has_fishingrod = False
+
+		if user_data.weapon >= 0:
+			weapon_item = EwItem(id_item = user_data.weapon)
+			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			if weapon.id_weapon == "fishingrod":
+				has_fishingrod = True
+
+		#if user_data.sidearm >= 0:
+		#	sidearm_item = EwItem(id_item=user_data.sidearm)
+		#	sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+		#	if sidearm.id_weapon == "fishingrod":
+		#		has_fishingrod = True
+
+		value = 0
+
+		if fisher.current_size == ewcfg.fish_size_miniscule:
+			slime_gain = ewcfg.fish_gain * 1
+			value += 10
+
+		elif fisher.current_size == ewcfg.fish_size_small:
+			slime_gain = ewcfg.fish_gain * 2
+
+			value += 20
+
+		elif fisher.current_size == ewcfg.fish_size_average:
+			slime_gain = ewcfg.fish_gain * 3
+			value += 30
+
+		elif fisher.current_size == ewcfg.fish_size_big:
+			slime_gain = ewcfg.fish_gain * 4
+			value += 40
+
+		elif fisher.current_size == ewcfg.fish_size_huge:
+			slime_gain = ewcfg.fish_gain * 5
+			value += 50
+
+		else:
+			slime_gain = ewcfg.fish_gain * 6
+			value += 60
+
+		if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_common:
+			value += 10
+
+		if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_uncommon:
+			value += 20
+
+		if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_rare:
+			value += 30
+
+		if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_promo:
+			value += 40
+
+		if user_data.life_state == 2:
+			if ewcfg.fish_map[fisher.current_fish].catch_time == ewcfg.fish_catchtime_day and user_data.faction == ewcfg.faction_rowdys:
+				gang_bonus = True
+				slime_gain = slime_gain * 1.5
+				value += 20
+
+			if ewcfg.fish_map[fisher.current_fish].catch_time == ewcfg.fish_catchtime_night and user_data.faction == ewcfg.faction_killers:
+				gang_bonus = True
+				slime_gain = slime_gain * 1.5
+				value += 20
+
+		if has_fishingrod == True:
+			slime_gain = slime_gain * 2
+
+		if fisher.current_fish == "plebefish":
+			slime_gain = ewcfg.fish_gain * .5
+			value = 10
+			
+		controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
+
+		if controlling_faction != "" and controlling_faction == user_data.faction:
+			slime_gain *= 2
+
+
+		if user_data.poi == ewcfg.poi_id_juviesrow_pier:
+			slime_gain = int(slime_gain / 4)
+
+		trauma = ewcfg.trauma_map.get(user_data.trauma)
+		if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
+			slime_gain *= (1 - 0.5 * user_data.degradation / 100)
+
+		slime_gain = max(0, round(slime_gain))
+
+		ewitem.item_create(
+			id_user = actual_fisherman or cmd.message.author.id,
+			id_server = cmd.guild.id,
+			item_type = ewcfg.it_food,
+			item_props = {
+				'id_food': ewcfg.fish_map[fisher.current_fish].id_fish,
+				'food_name': ewcfg.fish_map[fisher.current_fish].str_name,
+				'food_desc': ewcfg.fish_map[fisher.current_fish].str_desc,
+				'recover_hunger': 20,
+				'str_eat': ewcfg.str_eat_raw_material.format(ewcfg.fish_map[fisher.current_fish].str_name),
+				'rarity': ewcfg.fish_map[fisher.current_fish].rarity,
+				'size': fisher.current_size,
+				'time_expir': time.time() + ewcfg.std_food_expir,
+				'time_fridged': 0,
+				'acquisition': ewcfg.acquisition_fishing,
+				'value': value
+			}
+		)
+
+		if fisher.inhabitant_id:
+			server = cmd.guild
+			inhabitant_member = server.get_member(fisher.inhabitant_id)
+			inhabitant_name = inhabitant_member.display_name
+			inhabitant_data = EwUser(id_user = fisher.inhabitant_id, id_server = user_data.id_server)
+			inhabitee_name = server.get_member(actual_fisherman).display_name
+
+			slime_gain = int(0.25 * slime_gain)
+
+			response = "The two of you together manage to reel in a {fish}! {flavor} {ghost} haunts {slime:,} slime away from it before placing it on {fleshling}'s hands. "\
+				.format(
+					fish = ewcfg.fish_map[fisher.current_fish].str_name, 
+					flavor = ewcfg.fish_map[fisher.current_fish].str_desc, 
+					ghost = inhabitant_name,
+					fleshling = inhabitee_name,
+					slime = slime_gain,
+				)
+
+			inhabitant_data.change_slimes(n = -slime_gain)
+			inhabitant_data.persist()
+			fisher.stop()
+		else:
+			response = "You reel in a {fish}! {flavor} You grab hold and wring {slime:,} slime from it. "\
+				.format(fish = ewcfg.fish_map[fisher.current_fish].str_name, flavor = ewcfg.fish_map[fisher.current_fish].str_desc, slime = slime_gain)
+			if gang_bonus == True:
+				if user_data.faction == ewcfg.faction_rowdys:
+					response += "The Rowdy-pride this fish is showing gave you more slime than usual. "
+				elif user_data.faction == ewcfg.faction_killers:
+					response += "The Killer-pride this fish is showing gave you more slime than usual. "
+
+			levelup_response = user_data.change_slimes(n = slime_gain, source = ewcfg.source_fishing)
+			was_levelup = True if user_initial_level < user_data.slimelevel else False
+			# Tell the player their slime level increased.
+			if was_levelup:
+				response += levelup_response
+
+		fisher.stop()
+		# Flag the user for PvP
+		enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+		user_data.persist()
+	return response
 
 async def appraise(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -1246,3 +1285,17 @@ async def embiggen(cmd):
 			response = "Embiggen which fish? (check **!inventory**)"
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+def cancel_rod_possession(fisher, user_data):
+	response = ''
+	if fisher.inhabitant_id:
+		user_data.cancel_possession()
+		response += '\n'
+		if fisher.fleshling_reeled:
+			response += "Fucking ghosts, can't rely on them for anything."
+		elif fisher.ghost_reeled:
+			response += "You can't trust the living even for the simplest shit, I guess."
+		else:
+			response += "Are you two even trying?"
+		response += ' Your contract is dissolved.'
+	return response
