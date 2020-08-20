@@ -2807,19 +2807,19 @@ async def gvs_print_lane(cmd):
 							
 							if debug:
 								response += ewcfg.gvs_enemy_emote_map_debug[enemy_data.enemytype]
-								if props.get('joybean') == 'True':
+								if props.get('joybean') == 'true':
 									response += "-{}".format(ewcfg.gvs_enemy_emote_map_debug[ewcfg.enemy_type_gaia_joybeans])
-								if props.get('metallicap') == 'True':
+								if props.get('metallicap') == 'true':
 									response += "-{}".format(ewcfg.gvs_enemy_emote_map_debug[ewcfg.enemy_type_gaia_metallicaps])
-								elif props.get('aushuck') == 'True':
+								elif props.get('aushuck') == 'true':
 									response += "-{}".format(ewcfg.gvs_enemy_emote_map_debug[ewcfg.enemy_type_gaia_aushucks])
 							else:
 								response += ewcfg.gvs_enemy_emote_map[enemy_data.enemytype]
-								if props.get('joybean') == 'True':
+								if props.get('joybean') == 'true':
 									response += "-{}".format(ewcfg.gvs_enemy_emote_map[ewcfg.enemy_type_gaia_joybeans])
-								if props.get('metallicap') == 'True':
+								if props.get('metallicap') == 'true':
 									response += "-{}".format(ewcfg.gvs_enemy_emote_map[ewcfg.enemy_type_gaia_metallicaps])
-								elif props.get('aushuck') == 'True':
+								elif props.get('aushuck') == 'true':
 									response += "-{}".format(ewcfg.gvs_enemy_emote_map[ewcfg.enemy_type_gaia_aushucks])
 									
 							response += " "
@@ -3106,6 +3106,13 @@ async def gvs_join_operation(cmd):
 			if accepted:
 				ewutils.active_restrictions[user_data.id_user] = 4
 				
+				# If there are no player-generated operations, then the bot will simply spawn in ones automatically.
+				enemyfaction = ewcfg.psuedo_faction_gankers if faction == ewcfg.psuedo_faction_shamblers else ewcfg.psuedo_faction_gankers
+				opposing_ops = ewutils.execute_sql_query("SELECT enemytype FROM gvs_ops_choices WHERE district = '{}' AND faction = '{}'".format(user_data.poi, enemyfaction))
+				if len(opposing_ops) == 0:
+					ewutils.gvs_insert_bot_ops(user_data.id_server, user_data.poi, enemyfaction)
+					print('spawning in bot ops...')
+				
 				if in_operation:
 					if faction == ewcfg.psuedo_faction_gankers:
 						response = "You add your {} to the Garden Op".format(item_props.get('str_name'))
@@ -3215,13 +3222,40 @@ async def gvs_leave_operation(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def gvs_check_operations(cmd):
-	operations = ewutils.execute_sql_query("SELECT district, faction FROM gvs_ops_choices GROUP BY district, faction;")
 	
-	response = "There are currently no Garden Ops or Graveyard Ops at this time."
-	if len(operations) > 0:
-		response = ""
-		for op in operations:
-			response += "\nThere is a {} Op taking place in {}.".format('Garden' if op[1] == ewcfg.psuedo_faction_gankers else 'Graveyard', ewcfg.id_to_poi.get(op[1]).str_name)
+	if cmd.tokens_count == 1:
+		operations = ewutils.execute_sql_query("SELECT district, faction FROM gvs_ops_choices GROUP BY district, faction;")
+
+		response = "There are currently no Garden Ops or Graveyard Ops at this time."
+		if len(operations) > 0:
+			response = ""
+			for op in operations:
+				response += "\nThere is a {} Op taking place in {}.".format('Garden' if op[1] == ewcfg.psuedo_faction_gankers else 'Graveyard', ewcfg.id_to_poi.get(op[1]).str_name)
+
+	elif cmd.tokens_count > 1:
+		checked_district = ewutils.flattenTokenListToString(cmd.tokens[1:])
+		district = ewcfg.id_to_poi.get(checked_district)
+		
+		if district == None or not district.is_district:
+			response = "That's not a valid district that you can check"
+		else:
+			operations = ewutils.execute_sql_query("SELECT enemytype FROM gvs_ops_choices GROUP BY enemytype WHERE district = '{}'".format(district.id_poi))
+
+			if len(operations) > 0:
+				gaias = ewutils.execute_sql_query("SELECT enemytype FROM gvs_ops_choices GROUP BY enemytype WHERE district = '{}' AND faction = 'gankers'".format(district.id_poi))
+				shamblers = ewutils.execute_sql_query("SELECT enemytype FROM gvs_ops_choices GROUP BY enemytype WHERE district = '{}' AND faction = 'shamblers'".format(district.id_poi))
+	
+				response = "In {}, the currently selected seed packets and tombstones include...\n".format(district.str_name)
+				response += "**GAIASLIMEOIDS**"
+				for gaia in gaias:
+					response += "\n{}".format(gaia[0])
+				response += "\n**SHAMBLERS**"
+				for shambler in shamblers:
+					response += "\n{}".format(shambler[0])
+				
+			else:
+				response = "There aren't any operations going on in that district."
+		
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -3294,7 +3328,7 @@ async def gvs_plant_gaiaslimeoid(cmd):
 				item.item_props['time_nextuse'] = time_now + cooldown
 				item.persist()
 				
-				gaias_in_coord = ewutils.gvs_get_gaias_from_coord(user_data, coord)
+				gaias_in_coord = ewutils.gvs_get_gaias_from_coord(user_data.poi, coord)
 				
 				if len(gaias_in_coord) > 0:
 					for gaia in gaias_in_coord.keys():
@@ -3311,13 +3345,13 @@ async def gvs_plant_gaiaslimeoid(cmd):
 								response = "There's already a {} in that coordinate!".format(enemy_data.display_name)
 								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 						else:
-							if enemy_data.enemy_props.get('joybean') == 'True' and enemytype == ewcfg.enemy_type_gaia_joybeans:
+							if enemy_data.enemy_props.get('joybean') == 'true' and enemytype == ewcfg.enemy_type_gaia_joybeans:
 								response = "A Joybean has already been planted there."
 								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-							elif enemy_data.enemy_props.get('metallicaps') == 'True' and enemytype == ewcfg.enemy_type_gaia_metallicaps:
+							elif enemy_data.enemy_props.get('metallicaps') == 'true' and enemytype == ewcfg.enemy_type_gaia_metallicaps:
 								response = "A Metallicap has already been planted there."
 								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-							elif enemy_data.enemy_props.get('aushucks') == 'True' and enemytype == ewcfg.enemy_type_gaia_aushucks:
+							elif enemy_data.enemy_props.get('aushucks') == 'true' and enemytype == ewcfg.enemy_type_gaia_aushucks:
 								response = "An Aushuck has already been planted there."
 								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

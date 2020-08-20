@@ -1011,7 +1011,7 @@ async def watch(cmd):
 
 		poi = ewcfg.id_to_poi.get(user_model.poi)
 		
-		await ewhunting.spawn_enemy(pre_chosen_type=ewcfg.enemy_type_megaslime, pre_chosen_poi=poi.mother_districts[0], pre_chosen_slimes=ewcfg.tv_set_slime, pre_chosen_level=ewcfg.tv_set_level, pre_chosen_displayname="The Slime")
+		await ewhunting.spawn_enemy(id_server=cmd.message.guild.id, pre_chosen_type=ewcfg.enemy_type_megaslime, pre_chosen_poi=poi.mother_districts[0], pre_chosen_slimes=ewcfg.tv_set_slime, pre_chosen_level=ewcfg.tv_set_level, pre_chosen_displayname="The Slime")
 		response = ""
 
 	user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)

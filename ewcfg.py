@@ -6865,7 +6865,7 @@ weather_list = [
 		sunset = "Visibility only grows worse in the fog as the sun sets and the daylight fades.",
 		night = "Everything is obscured by the darkness of night and the thick city smog."
 	),
-    # EwWeather(
+	# EwWeather(
 	#  	name = weather_bicarbonaterain,
 	#  	sunrise = "Accursed bicarbonate soda and sugar rain blocks out the morning sun.",
 	#  	day = "The bicarbonate rain won't let up. That blue weasel is going to pay for this.",
@@ -15600,10 +15600,10 @@ poi_list = [
 			"oozegardenfarm",
 			"oozegardensf",
 			"oozegardensfarm",
-            "atomicforest",
-            "atomic",
-            "forest",
-            "af"
+			"atomicforest",
+			"atomic",
+			"forest",
+			"af"
 		],
 		str_name = "The Ooze Gardens Farms",
 		str_desc = "An impressive host of unique and exotic flora are grown here. Originally on private property, the expansive greenhouses were the weekly meeting place for the city’s botanical society. They have since been seized by imminent domain and are now a public park. It’s type of soil is vast and varied depending on where you choose to plant. Surely, anything can grow here. Deeper into the gardens lies a hidden grotto inhabited by the Garden Gankers! They say they aren't gonna let you just squat here, but you can use the milling machines and gaiaslimeoid incubation vats for free if you want.\n\nExits into Ooze Gardens.",
@@ -15613,8 +15613,8 @@ poi_list = [
 		pvp = False,
 		is_subzone = True,
 		mother_districts = [poi_id_oozegardens_street_c, poi_id_oozegardens_street_d],
-        vendors=[vendor_atomicforest],
-        life_states=[life_state_juvenile],
+		vendors=[vendor_atomicforest],
+		life_states=[life_state_juvenile],
 		neighbors = {
 			poi_id_oozegardens_street_c : travel_time_subzone,
 			poi_id_oozegardens_street_d : travel_time_subzone,
@@ -17795,13 +17795,13 @@ poi_list = [
 		alias=[
 			"nbedge",
 			"nbe",
-            "downpourlab",
-            "dplab",
-            "brainz"
+			"downpourlab",
+			"dplab",
+			"brainz"
 		],
 		str_name="Nuclear Beach Edge - Location of Dr. Downpour's Laboratory",
 		# str_desc=str_generic_outskirts_description_edge,
-        str_desc = "An armored fortress towering over the shores of the Slime Sea. Inside, an oppressive mechanical atmosphere looms over your presence as you eye vats containing secreatures crowding the various facilities and corridors. One of the doors inside the complex holds a 3D printer designed entirely for tombstone production. A vending machine containing protective gear is close by, its florescent lighting giving off a low hum. A dock outside the laboratory is stocked with diving gear, perfect for a nice game of Shambaquarium.",
+		str_desc = "An armored fortress towering over the shores of the Slime Sea. Inside, an oppressive mechanical atmosphere looms over your presence as you eye vats containing secreatures crowding the various facilities and corridors. One of the doors inside the complex holds a 3D printer designed entirely for tombstone production. A vending machine containing protective gear is close by, its florescent lighting giving off a low hum. A dock outside the laboratory is stocked with diving gear, perfect for a nice game of Shambaquarium.",
 		channel="nuclear-beach-edge",
 		wikipage = wiki_baseurl + "Outskirts#Edge",
 		# pvp=True,
@@ -17813,17 +17813,17 @@ poi_list = [
 		# 	poi_id_assaultflatsbeach_street_a : travel_time_outskirt,
 		# 	poi_id_assaultflatsbeach_street_b : travel_time_outskirt,
 		# },
-        is_subzone = True,
-        neighbors = {
+		is_subzone = True,
+		neighbors = {
 			poi_id_north_outskirts_edge : travel_time_subzone,
 			poi_id_nuclear_beach : travel_time_subzone,
 			poi_id_assaultflatsbeach_street_a : travel_time_subzone,
 			poi_id_assaultflatsbeach_street_b : travel_time_subzone,
-            poi_id_assaultflatsbeach : travel_time_subzone,
+			poi_id_assaultflatsbeach : travel_time_subzone,
 		},
-        mother_districts = [poi_id_assaultflatsbeach],
-        vendors = [vendor_downpourlaboratory],
-        life_states = [life_state_shambler]
+		mother_districts = [poi_id_assaultflatsbeach],
+		vendors = [vendor_downpourlaboratory],
+		life_states = [life_state_shambler]
 	),
 	EwPoi(  # Outskirts - 7
 		id_poi=poi_id_south_outskirts,
@@ -24724,10 +24724,10 @@ gvs_enemies_shamblers = [
 ]
 gvs_enemies = gvs_enemies_gaiaslimeoids + gvs_enemies_shamblers
 repairable_gaias = [
-    enemy_type_gaia_blacklimes, 
-    enemy_type_gaia_razornuts, 
-    enemy_type_gaia_suganmanuts, 
-    enemy_type_gaia_steelbeans
+	enemy_type_gaia_blacklimes, 
+	enemy_type_gaia_razornuts, 
+	enemy_type_gaia_suganmanuts, 
+	enemy_type_gaia_steelbeans
 ]
 
 # List of raid bosses sorted by their spawn rarity.
@@ -24824,13 +24824,9 @@ enemy_drop_tables = {
 		{item_id_dinoslimemeat: [100, 1, 1]}, 
 		{item_id_tradingcardpack: [100, 1, 1]}
 	],
-	enemy_type_gaia_pinkrowddishes: [
-		{item_id_pinkrowddishes: [100, 1, 1]}	
-	],
-	enemy_type_defaultshambler: [
-		{item_id_slimepoudrin: [100, 1, 1]}
-	]
 }
+for enemy in gvs_enemies:
+	enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}]
 
 # When making a new enemy, make sure to fill out slimerange, ai, attacktype, displayname, raredisplayname, and aliases.
 # Enemy data tables. Slime is stored as a range from min to max possible slime upon spawning.
@@ -24955,7 +24951,7 @@ enemy_data_table = {
 		"aliases": ['tuber'],
 		"class": enemy_class_gaiaslimeoid,
 		"props": {
-			'primed': 'False',
+			'primed': 'false',
 			'primecountdown': 3,
 			'setdamage': 500000
 		}
@@ -24997,7 +24993,7 @@ enemy_data_table = {
 		"props": {
 			'setdamage': 20000,
 			'range': 20,
-			'piercing': 'True',
+			'piercing': 'true',
 			'pierceamount': 3
 		}
 	},
@@ -25023,7 +25019,7 @@ enemy_data_table = {
 		"class": enemy_class_gaiaslimeoid,
 		"props": {
 			'range': 10,
-			'piercing': 'True',
+			'piercing': 'true',
 			'setdamage': '15000',
 		}
 	},
@@ -25050,7 +25046,7 @@ enemy_data_table = {
 		"props": {
 			'setdamage': 500000,
 			'direction': 'ring',
-			'splash': 'True'
+			'splash': 'true'
 		}
 	},
 	enemy_type_gaia_sludgeberries: {
@@ -25088,7 +25084,7 @@ enemy_data_table = {
 		"props": {
 			'range': 3,
 			'direction': 'frontandback',
-			'piercing': 'True',
+			'piercing': 'true',
 			'setdamage': 50000
 		}
 	},
@@ -25103,7 +25099,7 @@ enemy_data_table = {
 		"props": {
 			'setdamage': 10000,
 			'direction': 'ring',
-			'piercing': 'True',
+			'piercing': 'true',
 		}
 	},
 	enemy_type_gaia_brightshade: {
@@ -25140,7 +25136,7 @@ enemy_data_table = {
 		"class": enemy_class_gaiaslimeoid,
 		"props": {
 			'setdamage': 10000,
-			'piercing': 'True',
+			'piercing': 'true',
 			'pierceamount': 3
 		}
 	},
@@ -25154,8 +25150,8 @@ enemy_data_table = {
 		"class": enemy_class_gaiaslimeoid,
 		"props": {
 			'setdamage': 35000,
-			'splash': 'False'
-			# 'singletilepierce': 'True', JOYBEAN 
+			'splash': 'false'
+			# 'singletilepierce': 'true', JOYBEAN 
 			# 'pierceamount': 3
 		}
 	},
@@ -25293,7 +25289,7 @@ enemy_data_table = {
 		"props": {
 			'setdamage': 200000,
 			'turncountdown': 2,
-			'microspawned': 'False'
+			'microspawned': 'false'
 		}
 	},
 	enemy_type_microshambler: {
@@ -25372,7 +25368,7 @@ enemy_data_table = {
 			'setdamage': 30000,
 			'turncountdown': 2,
 			'boomboxcountdown': 12,
-			'boomboxbroken': 'False',
+			'boomboxbroken': 'false',
 			'boomboxhealth': 100000
 		}
 	},
@@ -25386,7 +25382,7 @@ enemy_data_table = {
 		"class": enemy_class_shambler,
 		"props": {
 			'setdamage': 40000,
-			'underground': 'True'
+			'underground': 'true'
 		}
 	},
 	enemy_type_shambleballplayer: {
@@ -25435,7 +25431,7 @@ enemy_data_table = {
 		"aliases": ['placeholder'],
 		"class": enemy_class_shambler,
 		"props": {
-			'onground': 'True',
+			'onground': 'true',
 			'setdamage': 100000
 		}
 	},

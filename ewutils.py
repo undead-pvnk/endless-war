@@ -468,7 +468,7 @@ def formatMessage(user_target, message):
 			else:
 				# Send messages for normal enemies, and allow mentioning with @
 				if user_target.identifier != '':
-					return "**{} ({}):** {}".format(user_target.display_name, user_target.identifier, message)
+					return "**{} [{}]:** {}".format(user_target.display_name, user_target.identifier, message)
 				else:
 					return "**{}:** {}".format(user_target.display_name, message)
 
@@ -2819,11 +2819,11 @@ def gvs_check_if_in_operation(user_data):
 	else:
 		return False, None
 
-def gvs_get_gaias_from_coord(user_data, checked_coord):
+def gvs_get_gaias_from_coord(poi, checked_coord):
 	gaias = execute_sql_query(
 		"SELECT id_enemy, enemytype FROM enemies WHERE poi = %s AND gvs_coord = %s".format(
 		), (
-			user_data.poi,
+			poi,
 			checked_coord
 		))
 	
@@ -2836,6 +2836,7 @@ def gvs_get_gaias_from_coord(user_data, checked_coord):
 
 # If there are no player operations, spawn in ones that the bot uses
 def gvs_insert_bot_ops(id_server, district, enemyfaction):
+	bot_id = 56709
 	
 	if enemyfaction == ewcfg.psuedo_faction_gankers:
 		possible_bot_types = [
@@ -2854,13 +2855,27 @@ def gvs_insert_bot_ops(id_server, district, enemyfaction):
 				ewcfg.col_id_item,
 				ewcfg.col_shambler_stock,
 			), (
-				56709,
+				bot_id,
 				district,
 				type,
 				enemyfaction,
 				0,
 				0,
 			))
+			
+			# To increase the challenge, a column of suganmanuts is placed down.
+			for coord in ['A6', 'B6', 'C6', 'D6', 'E6']:
+				ewhunting.spawn_enemy(
+					id_server=id_server,
+					pre_chosen_type=ewcfg.enemy_type_gaia_suganmanuts,
+					pre_chosen_level=50,
+					pre_chosen_poi=district,
+					pre_chosen_identifier='',
+					pre_chosen_faction=ewcfg.psuedo_faction_gankers,
+					pre_chosen_owner=bot_id,
+					pre_chosen_coord=coord,
+					manual_spawn=True,
+				)
 		
 	elif enemyfaction == ewcfg.psuedo_faction_shamblers:
 		possible_bot_types = [
@@ -2877,7 +2892,7 @@ def gvs_insert_bot_ops(id_server, district, enemyfaction):
 				ewcfg.col_id_item,
 				ewcfg.col_shambler_stock,
 			), (
-				56709,
+				bot_id,
 				district,
 				type,
 				enemyfaction,
