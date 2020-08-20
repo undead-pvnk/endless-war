@@ -384,9 +384,16 @@ class EwUser:
 		mutations = self.get_mutations()
 		statuses = self.getStatusEffects()
 
-		# booleans are stored as ints in the database, and are converted to string as we pull them out
-		# so this converts it back into an int, so it can be cast back into a boolean, and then flipped
-		item_is_non_perishable = not int(item_props.get("perishable", True)) 
+		# Find out if the item is perishable
+		if item_props.get('perishable') != None:
+			perishable_status = item_props.get('perishable')
+			if perishable_status == 'true' or perishable_status == '1':
+				item_is_non_perishable = False
+			else:
+				item_is_non_perishable = True
+		else:
+			item_is_non_perishable = False
+			
 		user_has_spoiled_appetite = ewcfg.mutation_id_spoiledappetite in mutations
 		item_has_expired = float(getattr(food_item, "time_expir", 0)) < time.time()
 		if item_has_expired and not (user_has_spoiled_appetite or item_is_non_perishable):
