@@ -25178,7 +25178,8 @@ enemy_data_table = {
 		"aliases": ['mushrooms','shrooms','shroomz','mushroom'],
 		"class": enemy_class_gaiaslimeoid,
 		"props": {
-			'setdamage': 30000
+			#'setdamage': 30000
+            'noprop': 'noprop'
 		}
 	},
 	enemy_type_gaia_steelbeans: {
@@ -25202,7 +25203,8 @@ enemy_data_table = {
 		"aliases": ['gold','shucks','corn'],
 		"class": enemy_class_gaiaslimeoid,
 		"props": {
-			'gaiaslimecountdown': 4
+			#'gaiaslimecountdown': 4
+            'noprop': 'noprop'
 		}
 	},
 	enemy_type_defaultshambler: {
@@ -25425,7 +25427,7 @@ enemy_data_table = {
 	enemy_type_gvs_boss: {
 		"slimerange": [5000000, 5000000],
 		"ai": enemy_ai_shambler,
-		"attacktype": enemy_attacktype_gvs_s_molotovbreath,
+		"attacktype": enemy_attacktype_unarmed,
 		"displayname": "PLACEHOLDER",
 		"raredisplayname": "NULL",
 		"aliases": ['placeholder'],

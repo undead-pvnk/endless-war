@@ -1919,6 +1919,11 @@ async def enemy_perform_action_gvs(id_server):
 	for row in enemydata:
 		
 		enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
+		
+		# Check if the enemy can act based on possible turn counters
+		if not check_enemy_can_act(enemy):
+			return
+		
 		resp_cont = ewutils.EwResponseContainer(id_server=id_server)
 
 		# If an enemy is marked for death or has been alive too long, delete it
@@ -2198,7 +2203,7 @@ def find_enemy(enemy_search=None, user_data=None):
 		tokens_set_upper = set(enemy_search_tokens_upper)
 		
 		identifiers_found = tokens_set_upper.intersection(set(ewcfg.identifier_letters))
-		
+		coordinates_found = tokens_set_upper.intersection(set(ewcfg.gvs_valid_coords_gaia))
 
 		if len(identifiers_found) > 0:
 
@@ -2215,6 +2220,27 @@ def find_enemy(enemy_search=None, user_data=None):
 				), (
 					user_data.poi,
 					searched_identifier,
+				))
+
+			for row in enemydata:
+				enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
+				enemy_found = enemy
+				break
+				
+		elif len(coordinates_found) > 0:
+			# user passed in a GvS coordinate for a district specific enemy
+
+			searched_coord= coordinates_found.pop()
+
+			enemydata = ewutils.execute_sql_query(
+				"SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {coord} = %s AND {life_state} = 1".format(
+					id_enemy=ewcfg.col_id_enemy,
+					poi=ewcfg.col_enemy_poi,
+					coord=ewcfg.col_enemy_gvs_coord,
+					life_state=ewcfg.col_enemy_life_state
+				), (
+					user_data.poi,
+					searched_coord,
 				))
 
 			for row in enemydata:
@@ -3058,7 +3084,7 @@ def gvs_get_splash_coords(checked_splash_coords):
 	return all_splash_coords
 
 # This function takes care of all win conditions within Gankers Vs. Shamblers.
-# It also handles turn timers, including gaiaslime generation, as well as spawning in shamblers
+# It also handles turn counters, including gaiaslime generation, as well as spawning in shamblers
 async def gvs_update_gamestate(id_server):
 	
 	op_districts = ewutils.execute_sql_query("SELECT district FROM gvs_ops_choices GROUP BY district")
@@ -3192,7 +3218,7 @@ async def gvs_update_gamestate(id_server):
 		
 	all_gvs_enemies = ewutils.execute_sql_query("SELECT id_enemy, enemytype FROM enemies WHERE enemytype IN {}".format(tuple(ewcfg.gvs_enemies)))
 	
-	# Handle specific turn timers and actions of all enemies
+	# Handle specific turn counters and actions of all enemies
 	for enemy in all_gvs_enemies:
 		
 		if enemy[1] == ewcfg.enemy_type_gaia_brightshade:
@@ -3218,5 +3244,65 @@ async def gvs_update_gamestate(id_server):
 					enemy_data.enemy_props['gaiaslimecountdown'] -= 1
 					
 				enemy_data.persist()
-				
+
+# Certain conditions may prevent a shambler from acting.
+def check_enemy_can_act(enemy_data):
+	
+	enemy_props = enemy_data.enemy_props
+	
+	turn_countdown = enemy_props.get('turncountdown')
+	dank_countdown = enemy_props.get('dankcountdown')
+	sludge_countdown = enemy_props.get('sludgecountdown')
+	hardened_sludge_countdown = enemy_props.get('hardsludgecountdown')
+	
+	waiting = False
+	stoned = False
+	sludged = False
+	hardened = False
+	
+	if turn_countdown != None:
+		if int(turn_countdown) > 0:
+			waiting = True
+			enemy_props['turncountdown'] -= 1
+		else:
+			waiting = False
+		
+	if dank_countdown != None:
+		if int(dank_countdown) > 0:
+			# If the countdown number is even, they can act. Otherwise, they cannot.
+			if dank_countdown % 2 == 0:
+				stoned = False
+			else:
+				stoned = True
+			
+			enemy_props['dankcountdown'] -= 1
+		else:
+			stoned = False
+		
+	# Regular sludge only slows a shambler down every other turn. Hardened sludge immobilizes them completely.
+	if sludge_countdown != None:
+		if int(sludge_countdown) > 0:
+			# If the countdown number is even, they can act. Otherwise, they cannot.
+			if sludge_countdown % 2 == 0:
+				sludged = False
+			else:
+				sludged = True
+
+			enemy_props['sludgecountdown'] -= 1
+		else:
+			sludged = False
+
+	if hardened_sludge_countdown != None:
+		if int(hardened_sludge_countdown) > 0:
+			hardened = True
+			enemy_props['hardsludgecountdown'] -= 1
+		else:
+			hardened = False
+	
+	enemy_data.persist()
+	
+	if not waiting and not stoned and not sludged and not hardened:
+		return True
+	else:
+		return False
 		
