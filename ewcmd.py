@@ -3402,3 +3402,35 @@ async def gvs_plant_gaiaslimeoid(cmd):
 			response = "Are you sure you have that seed packet? Try using **!inv**"
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def gvs_progress(cmd):
+	
+	op_districts = []
+	response = ""
+	
+	for poi in ewcfg.poi_list:
+		if poi.is_district and not poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow, ewcfg.poi_id_oozegardens, ewcfg.poi_id_assaultflatsbeach, ewcfg.poi_id_thevoid]:
+			op_districts.append(poi.id_poi)
+			
+	degradation_data = ewutils.execute_sql_query("SELECT district, degradation FROM districts WHERE district IN {}".format(tuple(op_districts)))
+	
+	non_degraded_districts = []
+	degraded_districts = []
+	
+	for district in degradation_data:
+		if district[1] == 0:
+			degraded_districts.append(district[0])
+		elif district[1] == ewcfg.district_max_degradation:
+			non_degraded_districts.append(district[0])
+	
+	response += "**Rejuvenated Districts**"
+	for non_deg in non_degraded_districts:
+		poi = ewcfg.id_to_poi.get(non_deg)
+		response += "\n{}".format(poi.str_name)
+	
+	response += "\n**Shambled Districts**"
+	for deg in degraded_districts:
+		poi = ewcfg.id_to_poi.get(deg)
+		response += "\n{}".format(poi.str_name)
+	
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
