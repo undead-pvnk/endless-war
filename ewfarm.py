@@ -24,6 +24,8 @@ class EwFarm:
 	slimes_onreap = 0
 	action_required = 0
 	crop = ""
+	# player's life state at sow
+	sow_life_state = 0
 
 	def __init__(
 		self,
@@ -37,7 +39,7 @@ class EwFarm:
 			self.name = farm
 
 			data = ewutils.execute_sql_query(
-				"SELECT {time_lastsow}, {phase}, {time_lastphase}, {slimes_onreap}, {action_required}, {crop} FROM farms WHERE id_server = %s AND id_user = %s AND {col_farm} = %s".format(
+				"SELECT {time_lastsow}, {phase}, {time_lastphase}, {slimes_onreap}, {action_required}, {crop}, {life_state} FROM farms WHERE id_server = %s AND id_user = %s AND {col_farm} = %s".format(
 					time_lastsow = ewcfg.col_time_lastsow,
 					col_farm = ewcfg.col_farm,
 					phase = ewcfg.col_phase,
@@ -45,6 +47,7 @@ class EwFarm:
 					slimes_onreap = ewcfg.col_slimes_onreap,
 					action_required = ewcfg.col_action_required,
 					crop = ewcfg.col_crop,
+					life_state = ewcfg.col_sow_life_state,
 				), (
 					id_server,
 					id_user,
@@ -60,6 +63,8 @@ class EwFarm:
 				self.slimes_onreap = data[0][3]
 				self.action_required = data[0][4]
 				self.crop = data[0][5]
+				self.sow_life_state = data[0][6]
+
 			else:  # create new entry
 				ewutils.execute_sql_query(
 					"REPLACE INTO farms (id_server, id_user, {col_farm}) VALUES (%s, %s, %s)".format(
@@ -73,7 +78,7 @@ class EwFarm:
 
 	def persist(self):
 		ewutils.execute_sql_query(
-			"REPLACE INTO farms(id_server, id_user, {farm}, {time_lastsow}, {phase}, {time_lastphase}, {slimes_onreap}, {action_required}, {crop}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			"REPLACE INTO farms(id_server, id_user, {farm}, {time_lastsow}, {phase}, {time_lastphase}, {slimes_onreap}, {action_required}, {crop}, {life_state}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				farm = ewcfg.col_farm,
 				time_lastsow = ewcfg.col_time_lastsow,
 				phase = ewcfg.col_phase,
@@ -81,6 +86,7 @@ class EwFarm:
 				slimes_onreap = ewcfg.col_slimes_onreap,
 				action_required = ewcfg.col_action_required,
 				crop = ewcfg.col_crop,
+				life_state = ewcfg.col_sow_life_state,
 			), (
 				self.id_server,
 				self.id_user,
@@ -91,6 +97,7 @@ class EwFarm:
 				self.slimes_onreap,
 				self.action_required,
 				self.crop,
+				self.sow_life_state,
 			)
 		)
 
@@ -146,8 +153,16 @@ async def reap(cmd):
 	cosmetic_abilites = ewutils.get_cosmetic_abilities(id_user = cmd.message.author.id, id_server = cmd.guild.id)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
+	# check if the user has a farming tool equipped
+	weapon_item = EwItem(id_item=user_data.weapon)
+	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+	has_tool = False
+	if weapon is not None:
+		if ewcfg.weapon_class_farming in weapon.classes:
+			has_tool = True
+
 	# Checking availability of reap action
-	if user_data.life_state != ewcfg.life_state_juvenile:
+	if user_data.life_state != ewcfg.life_state_juvenile and not has_tool:
 		response = "Only Juveniles of pure heart and with nothing better to do can farm."
 	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
@@ -193,6 +208,9 @@ async def reap(cmd):
 
 					if controlling_faction != "" and controlling_faction == user_data.faction:
 						slime_gain *= 2
+
+					if has_tool and weapon.id_weapon == ewcfg.weapon_id_hoe:
+						slime_gain *= 1.5
 
 					if user_data.poi == ewcfg.poi_id_jr_farms:
 						slime_gain = int(slime_gain / 4)
@@ -277,7 +295,11 @@ async def reap(cmd):
 						# else:
 						# 	response += "and a bushel of... hey, what the hell! You didn't reap anything! Must've been some odd seeds..."
 					else:
-						for vcreate in range(3):
+						unearthed_vegetable_amount = 3
+						if has_tool and weapon.id_weapon == ewcfg.weapon_id_pitchfork:
+							unearthed_vegetable_amount += 3
+
+						for vcreate in range(unearthed_vegetable_amount):
 							ewitem.item_create(
 								id_user = cmd.message.author.id,
 								id_server = cmd.guild.id,
@@ -297,7 +319,7 @@ async def reap(cmd):
 
 					user_data.hunger += ewcfg.hunger_perfarm
 					# Flag the user for PvP
-					enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+					#enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
 					# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_farm, enlisted)
 
 					user_data.persist()
@@ -319,9 +341,16 @@ async def sow(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	# check if the user has a farming tool equipped
+	weapon_item = EwItem(id_item=user_data.weapon)
+	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+	has_tool = False
+	if weapon is not None:
+		if ewcfg.weapon_class_farming in weapon.classes:
+			has_tool = True
 
 	# Checking availability of sow action
-	if user_data.life_state != ewcfg.life_state_juvenile:
+	if user_data.life_state != ewcfg.life_state_juvenile and not has_tool:
 		response = "Only Juveniles of pure heart and with nothing better to do can farm."
 
 	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
@@ -350,7 +379,8 @@ async def sow(cmd):
 		if farm.time_lastsow > 0:
 			response = "You’ve already sown something here. Try planting in another farming location. If you’ve planted in all three farming locations, you’re shit out of luck. Just wait, asshole."
 		else:
-			if cmd.tokens_count > 1:
+			# gangsters can only plant poudrins
+			if cmd.tokens_count > 1 and user_data.life_state == ewcfg.life_state_juvenile:
 				item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			else:
 				item_search = "slimepoudrin"
@@ -386,9 +416,18 @@ async def sow(cmd):
 				else:
 					response = "The soil has enough toxins without you burying your trash here."
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-					
+				
+				growth_time = ewcfg.crops_time_to_grow
+				if user_data.life_state == ewcfg.life_state_juvenile:
+					growth_time /= 2
+				
+				hours = int(growth_time / 60)
+				minutes = int(growth_time % 60)
+
+				str_growth_time = "{} hour{}{}".format(hours, "s" if hours > 1 else "", " and {} minutes".format(minutes) if minutes > 0 else "")
+
 				# Sowing
-				response = "You sow a {} into the fertile soil beneath you. It will grow in about 3 hours.".format(item_sought.get("name"))
+				response = "You sow a {} into the fertile soil beneath you. It will grow in about {}.".format(item_sought.get("name"), str_growth_time)
 
 				farm.time_lastsow = int(time.time() / 60)  # Grow time is stored in minutes.
 				farm.time_lastphase = int(time.time())
@@ -396,6 +435,7 @@ async def sow(cmd):
 				farm.crop = vegetable.id_food
 				farm.phase = ewcfg.farm_phase_sow
 				farm.action_required = ewcfg.farm_action_none
+				farm.sow_life_state = user_data.life_state
 				ewitem.item_delete(id_item = item_sought.get('id_item'))  # Remove Poudrins
 
 				farm.persist()
@@ -550,7 +590,7 @@ async def cultivate(cmd):
 
 	# Checking availability of irrigate action
 	if user_data.life_state != ewcfg.life_state_juvenile:
-		response = "Only Juveniles of pure heart and with nothing better to do can farm."
+		response = "Only Juveniles of pure heart and with nothing better to do can tend to their crops."
 	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
 	else:
@@ -586,7 +626,8 @@ async def cultivate(cmd):
 			farm.persist()
 		else:
 			response = farm_action.str_execute
-			farm.slimes_onreap += ewcfg.farm_slimes_peraction
+			# gvs - farm actions award more slime
+			farm.slimes_onreap += ewcfg.farm_slimes_peraction * 2
 			farm.action_required = ewcfg.farm_action_none
 			farm.persist()
 
@@ -612,10 +653,20 @@ def farm_tick(id_server):
 
 	for row in farms:
 		farm_data = EwFarm(id_server = id_server, id_user = row[0], farm = row[1])
+
+		time_nextphase = ewcfg.time_nextphase
+
+		# gvs - juvie's last farming phase lasts 10 minutes
+		if farm_data.sow_life_state == ewcfg.life_state_juvenile and farm_data.phase == (ewcfg.farm_phase_reap_juvie - 1):
+			time_nextphase = ewcfg.time_lastphase_juvie
 		
-		if time_now >= farm_data.time_lastphase + ewcfg.time_nextphase:
+		if time_now >= farm_data.time_lastphase + time_nextphase:
 			farm_data.phase += 1
 			farm_data.time_lastphase = time_now
+
+			# gvs - juvies only have 5 farming phases
+			if farm_data.sow_life_state == ewcfg.life_state_juvenile and farm_data.phase == ewcfg.farm_phase_reap_juvie:
+				farm_data.phase = ewcfg.farm_phase_reap
 				
 			if farm_data.phase < ewcfg.farm_phase_reap:
 				farm_data.action_required = random.choice(ewcfg.farm_action_ids)

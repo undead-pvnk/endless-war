@@ -1701,6 +1701,7 @@ async def summonenemy(cmd):
 				pre_chosen_initialslimes = enemy_slimes,
 				pre_chosen_coord = enemy_coord,
 				pre_chosen_displayname=enemy_displayname,
+				pre_chosen_weather=ewcfg.enemy_weathertype_normal,
 				manual_spawn = True,
 			)
 			
@@ -1749,9 +1750,10 @@ async def summongvsenemy(cmd):
 		resp_cont = spawn_enemy(
 			id_server=cmd.message.guild.id, 
 			pre_chosen_type=enemytype, 
-			pre_chosen_poi=poi.id_poi,
+			pre_chosen_poi=poi,
 			pre_chosen_coord=coord,
 			pre_chosen_props=props,
+			pre_chosen_weather=ewcfg.enemy_weathertype_normal,
 			manual_spawn=True,
 		)
 	

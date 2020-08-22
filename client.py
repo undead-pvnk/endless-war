@@ -753,6 +753,13 @@ cmd_map = {
 	ewcfg.cmd_gvs_checkoperation: ewcmd.gvs_check_operations,
 	ewcfg.cmd_gvs_plantgaiaslimeoid: ewcmd.gvs_plant_gaiaslimeoid,
 	ewcfg.cmd_gvs_almanac: ewcmd.almanac,
+	ewcfg.cmd_gvs_searchforbrainz: ewcmd.gvs_searchforbrainz,
+	ewcfg.cmd_gvs_grabbrainz: ewcmd.gvs_grabbrainz,
+	ewcfg.cmd_gvs_dive: ewcmd.gvs_dive,
+	ewcfg.cmd_gvs_resurface: ewcmd.gvs_resurface,
+	ewcfg.cmd_gvs_sellgaiaslimeoid: ewcmd.gvs_sell_gaiaslimeoid,
+	ewcfg.cmd_gvs_sellgaiaslimeoid_alt: ewcmd.gvs_sell_gaiaslimeoid,
+	ewcfg.cmd_dig: ewcmd.dig,
 
 	# race
 	ewcfg.cmd_set_race: ewrace.set_race,
@@ -1495,6 +1502,8 @@ async def on_message(message):
 				return await ewbook.zine_dm_commands(cmd=cmd_obj)
 			elif poi.is_apartment:
 				return await ewapt.aptCommands(cmd=cmd_obj)
+			elif ewcfg.cmd_gvs_grabbrainz in cmd_obj.message.content.lower():
+				return await ewcmd.gvs_grabbrainz(cmd_obj)
 			else:
 				
 				# Only send the help response once every thirty seconds. There's no need to spam it.
