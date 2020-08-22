@@ -220,7 +220,7 @@ class EwUser:
 				explode_district = ewdistrict.EwDistrict(district = self.poi, id_server = self.id_server)
 				explode_poi_channel = ewcfg.id_to_poi.get(self.poi).channel
 
-		if cause == ewcfg.cause_busted:
+		if self.life_state == ewcfg.life_state_corpse:
 			self.busted = True
 			self.poi = ewcfg.poi_id_thesewers
 			#self.slimes = int(self.slimes * 0.9)
