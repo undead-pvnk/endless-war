@@ -825,8 +825,6 @@ class EwEnemy:
 		ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel
 		
 		used_attacktype = ewcfg.attack_type_map.get(enemy_data.attacktype)
-		if used_attacktype == ewcfg.enemy_attacktype_unarmed:
-			return
 
 		# Get target's info based on its AI.
 		target_enemy, group_attack = get_target_by_ai(enemy_data, cannibalize = True)
@@ -1886,24 +1884,20 @@ async def enemy_perform_action_gvs(id_server):
 
 	time_now = int(time.time())
 
-	condition_gaia_sees_shambler_player = "enemies.poi IN (SELECT users.poi FROM users WHERE (users.life_state = '{}'))".format(ewcfg.life_state_shambler)
-	condition_gaia_sees_shampler_enemy = "enemies.poi IN (SELECT enemies.poi FROM enemies WHERE (enemies.enemyclass = '{}'))".format(ewcfg.enemy_class_shambler)
-	condition_shambler_sees_alive_player = "enemies.poi IN (SELECT users.poi FROM users WHERE (users.life_state IN {}))".format(tuple([ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]))
-	condition_shambler_sees_gaia_enemy = "enemies.poi IN (SELECT enemies.poi FROM enemies WHERE (enemies.enemyclass = '{}'))".format(ewcfg.enemy_class_gaiaslimeoid)
+	# condition_gaia_sees_shambler_player = "enemies.poi IN (SELECT users.poi FROM users WHERE (users.life_state = '{}'))".format(ewcfg.life_state_shambler)
+	# condition_gaia_sees_shampler_enemy = "enemies.poi IN (SELECT enemies.poi FROM enemies WHERE (enemies.enemyclass = '{}'))".format(ewcfg.enemy_class_shambler)
+	# condition_shambler_sees_alive_player = "enemies.poi IN (SELECT users.poi FROM users WHERE (users.life_state IN {}))".format(tuple([ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]))
+	# condition_shambler_sees_gaia_enemy = "enemies.poi IN (SELECT enemies.poi FROM enemies WHERE (enemies.enemyclass = '{}'))".format(ewcfg.enemy_class_gaiaslimeoid)
 
 	#print(despawn_timenow)
+	#"SELECT {id_enemy} FROM enemies WHERE (enemies.enemytype IN %s) AND (({condition_1}) OR ({condition_2}) OR ({condition_3}) OR ({condition_4}) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != '')) AND enemies.id_server = {id_server}"
 	
 	enemydata = ewutils.execute_sql_query(
-		"SELECT {id_enemy} FROM enemies WHERE (enemies.enemytype IN %s) AND (({condition_1}) OR ({condition_2}) OR ({condition_3}) OR ({condition_4}) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != '')) AND enemies.id_server = {id_server}".format(
+		"SELECT {id_enemy} FROM enemies WHERE (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != '')) AND enemies.id_server = {id_server}".format(
 			id_enemy=ewcfg.col_id_enemy,
 			id_server=id_server,
-			condition_1 = condition_gaia_sees_shambler_player,
-			condition_2 = condition_gaia_sees_shampler_enemy,
-			condition_3 = condition_shambler_sees_alive_player,
-			condition_4 = condition_shambler_sees_gaia_enemy
 		), (
 			ewcfg.gvs_enemies,
-			ewcfg.raid_bosses,
 			ewcfg.enemy_lifestate_dead,
 			time_now
 		))
@@ -1919,10 +1913,17 @@ async def enemy_perform_action_gvs(id_server):
 	for row in enemydata:
 		
 		enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
-		
-		# Check if the enemy can act based on possible turn counters
+
+		# This function returns a false value if that enemy can't act on that turn.
 		if not check_enemy_can_act(enemy):
-			return
+			continue
+		
+		# Go through turn counters unrelated to the prevention of acting on that turn. 
+		handle_turn_timers(enemy)
+		
+		# Unarmed Gaiaslimeoids have no role in combat.
+		if enemy.attacktype == ewcfg.enemy_attacktype_unarmed:
+			continue
 		
 		resp_cont = ewutils.EwResponseContainer(id_server=id_server)
 
@@ -1986,11 +1987,10 @@ async def enemy_perform_action_gvs(id_server):
 					
 					if len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_gaiaslimeoid])) > 0:
 						await enemy.cannibalize()
-					elif len(district_data.get_players_in_district(life_states = life_states)) > 0:
-						if enemy.gvs_coord in ewcfg.gvs_coords_end:
-							await enemy.kill()
-						else:
-							await sh_move(enemy)
+					elif len(district_data.get_players_in_district(life_states = life_states)) > 0 and enemy.gvs_coord in ewcfg.gvs_coords_end:
+						await enemy.kill()
+					else:
+						await sh_move(enemy)
 				else:
 					return
 				
@@ -3215,47 +3215,6 @@ async def gvs_update_gamestate(id_server):
 			ewutils.execute_sql_query("DELETE FROM gvs_ops_choices WHERE district = '{}'".format(district))
 			await delete_all_enemies(cmd=None, query_suffix="AND poi = '{}'".format(district), id_server_sent=id_server)
 			return await ewutils.send_message(ewutils.get_client(), channel, response)
-		
-	all_gvs_enemies = ewutils.execute_sql_query("SELECT id_enemy, enemytype FROM enemies WHERE enemytype IN {}".format(tuple(ewcfg.gvs_enemies)))
-	
-	# Handle specific turn counters and actions of all enemies
-	for enemy in all_gvs_enemies:
-		
-		if enemy[1] == ewcfg.enemy_type_gaia_brightshade:
-			enemy_data = EwEnemy(id_enemy=enemy[0])
-			countdown = enemy_data.enemy_props.get('gaiaslimecountdown')
-			
-			if countdown != None:
-				if countdown == 0:
-					enemy_data.enemy_props['gaiaslimecountdown'] = 4
-					district_data = EwDistrict(district=enemy_data.poi, id_server=id_server)
-					
-					if enemy_data.enemy_props['joybean'] != None:
-						if enemy_data.enemy_props['joybean'] == 'true':
-							district_data.gaiaslime += 50
-						else:
-							district_data.gaiaslime += 25
-					else:
-						district_data.gaiaslime += 25
-
-					district_data.persist()
-					
-				else:
-					enemy_data.enemy_props['gaiaslimecountdown'] -= 1
-					
-				enemy_data.persist()
-		
-		elif enemy[1] == ewcfg.enemy_type_gaia_poketubers:
-			enemy_data = EwEnemy(id_enemy=enemy[0])
-			countdown = enemy_data.enemy_props.get('primecountdown')
-			
-			if countdown != None:
-				if countdown == 0:
-					enemy_data.enemy_props['primed'] = 'true'
-				else:
-					enemy_data.enemy_props['primecountdown'] -= 1
-				
-				enemy_data.persist()
 
 # Certain conditions may prevent a shambler from acting.
 def check_enemy_can_act(enemy_data):
@@ -3317,4 +3276,39 @@ def check_enemy_can_act(enemy_data):
 		return True
 	else:
 		return False
-		
+
+def handle_turn_timers(enemy_data):
+	# Handle specific turn counters of all GvS enemies.
+	if enemy_data.enemytype == ewcfg.enemy_type_gaia_brightshade:
+		countdown = enemy_data.enemy_props.get('gaiaslimecountdown')
+
+		if countdown != None:
+			if countdown == 0:
+				enemy_data.enemy_props['gaiaslimecountdown'] = 4
+				district_data = EwDistrict(district=enemy_data.poi, id_server=enemy_data.id_server)
+
+				if enemy_data.enemy_props['joybean'] != None:
+					if enemy_data.enemy_props['joybean'] == 'true':
+						district_data.gaiaslime += 50
+					else:
+						district_data.gaiaslime += 25
+				else:
+					district_data.gaiaslime += 25
+
+				district_data.persist()
+
+			else:
+				enemy_data.enemy_props['gaiaslimecountdown'] -= 1
+
+			enemy_data.persist()
+
+	elif enemy_data.enemytype == ewcfg.enemy_type_gaia_poketubers:
+		countdown = enemy_data.enemy_props.get('primecountdown')
+
+		if countdown != None:
+			if countdown == 0:
+				enemy_data.enemy_props['primed'] = 'true'
+			else:
+				enemy_data.enemy_props['primecountdown'] -= 1
+
+			enemy_data.persist()
