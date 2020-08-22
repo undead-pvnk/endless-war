@@ -21,7 +21,7 @@ from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
-from ewhunting import find_enemy, delete_all_enemies, EwEnemy, EwOperationData, spawn_enemy
+from ewhunting import find_enemy, delete_all_enemies, EwEnemy, EwOperationData, spawn_enemy, delete_enemy
 from ewstatuseffects import EwStatusEffect
 from ewstatuseffects import EwEnemyStatusEffect
 from ewdistrict import EwDistrict
@@ -3439,49 +3439,67 @@ async def gvs_progress(cmd):
 """ Dig up a gaiaslimeoid """
 
 
-async def dig(cmd):  # TODO flavor and zen garden functionality
+async def dig(cmd): # TODO  zen garden functionality
 
 	if cmd.tokens_count < 2:
 		response = 'Specify which coordinate you want to dig up.'
-		return await ewutils.send_message(cmd.client, cmd.message.channel,
-										  ewutils.formatMessage(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	user_data = EwUser(member=cmd.message.author)
 
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel,
-										  ewutils.formatMessage(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	weapon_item = EwItem(id_item=user_data.weapon)
 
 	if weapon_item.item_props.get("weapon_type") != ewcfg.weapon_id_shovel:
-		response = "You can't dig Gaiaslimeoids without a shovel, dumbass. Buy one from Hortisoils at the Atomic Forest in Ooze Gardens Farms!"
-		return await ewutils.send_message(cmd.client, cmd.message.channel,
-										  ewutils.formatMessage(cmd.message.author, response))
+		response = "You can't dig Gaiaslimeoids without a shovel, dumbass. Buy one from Hortisolis at the Atomic Forest in Ooze Gardens Farms!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	coord = cmd.tokens[1].upper()
 	is_garden = False
 
 	# Look for gaiaslimeoid
-	gaia = ewutils.gvs_gaiaslimeoid_at_coord(user_data, coord)
+	gaias = ewutils.gvs_get_gaias_from_coord(user_data.poi, coord)
+
+	dig_low_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+	dig_mid_priority = []
+	dig_high_priority = [ewcfg.enemy_type_gaia_steelbeans]
+	
+	# ID of gaiaslimeoid found
+	dig_target = None
+
+	for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+		if enemy_id not in dig_mid_priority and enemy_id not in dig_mid_priority:
+			dig_mid_priority.append(enemy_id)
+
+	for target in dig_high_priority:
+		if target in gaias.keys():
+			dig_target = gaias[target]
+
+	for target in dig_mid_priority:
+		if target in gaias.keys():
+			dig_target = gaias[target]
+
+	for target in dig_low_priority:
+		if target in gaias.keys():
+			dig_target = gaias[target]
 
 	# is_garden = if it was a garden
 
-	if gaia is None:
+	if dig_target is None:
 		response = "There are no Gaiaslimeoids here."
-		return await ewutils.send_message(cmd.client, cmd.message.channel,
-										  ewutils.formatMessage(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if not is_garden:
 
-		enemy = EwEnemy(id_server=user_data.id_server, id_enemy=gaia[0])
+		enemy = EwEnemy(id_server=user_data.id_server, id_enemy=dig_target)
 		delete_enemy(enemy)
 
-		if random.random() < 0.2:  # 20% chance to fail
-			response = "Fail! Owned! LOL!"  # TODO Flavor
-			return await ewutils.send_message(cmd.client, cmd.message.channel,
-											  ewutils.formatMessage(cmd.message.author, response))
+		if random.random() < 0.3:  # 30% chance to fail
+			response = "Oh shit, you trip and fall while trying to dig it up! The Gaiaslimeoid is destroyed in the mishap!!"
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		ewitem.item_create(
 			item_type=ewcfg.it_item,
@@ -3489,40 +3507,34 @@ async def dig(cmd):  # TODO flavor and zen garden functionality
 			id_server=cmd.guild.id,
 			item_props={
 				'id_item': ewcfg.item_id_gaiaslimeoid_pot,
-				'item_name': "Pot containing a {} Gaiaslimeoid".format(gaia[1]),
-				'item_desc': "It's a pot with a {} units {} Gaiaslimeoid. You can place it in a zen garden or sell it to Hortisoils.".format(
-					"{size}", gaia[1]),  # TODO flavor 
+				'item_name': "Pot containing a {} Gaiaslimeoid".format(enemy.display_name),
+				'item_desc': "It's a pot with a {} foot-tall {} Gaiaslimeoid. You can place it in a zen garden or sell it to Hortisolis.".format("{size}", enemy.display_name),  # TODO flavor 
 				'time_lastslimed': int(time.time()),
 				'size': 1,
-				'gaiaslimeoid': gaia[1]
+				'gaiaslimeoid': enemy.enemytype
 			}
 		)
 
-		response = "You dig up a {} Gaiaslimeoid and place it in a pot!".format(gaia[1])
+		response = "You dig up a {} Gaiaslimeoid and place it in a pot!".format(enemy.display_name)
 
 	else:
 		response = "Placeholder zen garden dig"
 	# change owner
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel,
-									  ewutils.formatMessage(cmd.message.author, response))
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 """ Sell a potted gaiaslimeoid to Hortisolis """
-
-
 async def gvs_sell_gaiaslimeoid(cmd):
 	user_data = EwUser(member=cmd.message.author)
 
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel,
-										  ewutils.formatMessage(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	# Only at the Atomic Forest
 	if user_data.poi != ewcfg.poi_id_og_farms:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																								 "You have to be in the Atomic Forest to sell your Gaiaslimeoids."))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to be in the Atomic Forest to sell your Gaiaslimeoids."))
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
@@ -3531,26 +3543,20 @@ async def gvs_sell_gaiaslimeoid(cmd):
 		gaiaslimeoid = EwItem(id_item=item_sought.get('id_item'))
 
 		if gaiaslimeoid.item_props.get('id_item') != ewcfg.item_id_gaiaslimeoid_pot:
-			response = "Hortisolis tells you to fuck off."  # TODO flavor
-			return await ewutils.send_message(cmd.client, cmd.message.channel,
-											  ewutils.formatMessage(cmd.message.author, response))
+			response = "Hortisolis politely refuses that item. He informs you that it is not a potted Gaiaslimeoid."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		slime_gain = 10 * int(gaiaslimeoid.item_props.get('size'))  # TODO mathematics
+		slime_gain = 100000 * int(gaiaslimeoid.item_props.get('size'))
 
 		gaia_type = gaiaslimeoid.item_props.get('gaiaslimeoid')
 
-		response = "For your {} Gaiaslimeoid, I will give you {} slime. Do you {}, or {}?".format(gaia_type, slime_gain,
-																								  ewcfg.cmd_accept,
-																								  ewcfg.cmd_refuse)  # TODO flavor
+		response = 'Hortisolis speaks in a boisterous manner:\n"FOR THOUST {} GAIASLIMEOID, I SUBMIT {} SLIME. DO YOU {}, OR WOULD YOU RATHER {}?"'.format(gaia_type, slime_gain, ewcfg.cmd_accept, ewcfg.cmd_refuse)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		# Wait for an answer
 		accepted = False
 		try:
-			msg = await cmd.client.wait_for('message', timeout=30,
-											check=lambda message: message.author == cmd.message.author and
-																  message.content.lower() in [ewcfg.cmd_accept,
-																							  ewcfg.cmd_refuse])
+			msg = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 			if msg != None:
 				if msg.content == ewcfg.cmd_accept:
@@ -3570,38 +3576,28 @@ async def gvs_sell_gaiaslimeoid(cmd):
 
 			ewitem.item_delete(gaiaslimeoid.id_item)
 
-			response = "Hortisolis gives you {} slime for your {} Gaiaslimeoid.".format(slime_gain,
-																						gaiaslimeoid.item_props.get(
-																							'gaiaslimeoid'))  # TODO flavor
+			response = "Hortisolis gives you {} slime for your {} Gaiaslimeoid.".format(slime_gain, gaiaslimeoid.item_props.get('gaiaslimeoid'))  # TODO flavor
 
 		else:
-			response = "DIE ;-;"  # TODO flavor
+			response = '"A PITY, PERHAPS YOU WILL FIND SOME USE FOR IT ELSEWHERE. PRITHEE BE CAREFUL!"'
 
 	else:
 		response = "Are you sure you have that Gaiaslimeoid?"
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel,
-									  ewutils.formatMessage(cmd.message.author, response))
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 """ Lets shamblers enter the slime sea"""
-
-
 async def gvs_dive(cmd):
 	user_data = EwUser(member=cmd.message.author)
 
 	if user_data.life_state != ewcfg.life_state_shambler:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																								 "You're not based enough to do that."))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not based enough to do that."))
 
 	if user_data.poi != ewcfg.poi_id_nuclear_beach:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																								 "You have to {} at the Nuclear Beach.".format(
-																									 ewcfg.cmd_gvs_dive)))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to {} at the Nuclear Beach.".format(ewcfg.cmd_gvs_dive)))
 
-	await ewutils.send_message(cmd.client, cmd.message.channel,
-							   ewutils.formatMessage(cmd.message.author, "You begin swimming towards the Slime Sea."),
-							   delete_after=15)
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You begin swimming towards the Slime Sea."), delete_after=15)
 
 	await asyncio.sleep(15)
 
@@ -3611,31 +3607,22 @@ async def gvs_dive(cmd):
 
 	slimesea = ewcfg.id_to_poi.get(ewcfg.poi_id_slimesea)
 	sea_channel = ewutils.get_channel(cmd.guild, slimesea.channel)
-	await ewutils.send_message(cmd.client, sea_channel,
-							   ewutils.formatMessage(cmd.message.author, "You arrive in the Slime Sea."),
-							   delete_after=10)
+	await ewutils.send_message(cmd.client, sea_channel, ewutils.formatMessage(cmd.message.author, "You arrive in the Slime Sea."), delete_after=10)
 
 	await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
 
 """ Lets shamblers exit the slime sea"""
-
-
 async def gvs_resurface(cmd):
 	user_data = EwUser(member=cmd.message.author)
 
 	if user_data.life_state != ewcfg.life_state_shambler:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																								 "You're not based enough to do that."))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not based enough to do that."))
 
 	if user_data.poi != ewcfg.poi_id_slimesea:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																								 "You have to {} at the Slime Sea.".format(
-																									 ewcfg.cmd_gvs_resurface)))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to {} at the Slime Sea.".format(ewcfg.cmd_gvs_resurface)))
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																					  "You begin swimming towards the Nuclear Beach."),
-							   delete_after=15)
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You begin swimming towards the Nuclear Beach."), delete_after=15)
 
 	await asyncio.sleep(15)
 
@@ -3645,9 +3632,7 @@ async def gvs_resurface(cmd):
 
 	beach = ewcfg.id_to_poi.get(ewcfg.poi_id_nuclear_beach)
 	beach_channel = ewutils.get_channel(cmd.guild, beach.channel)
-	await ewutils.send_message(cmd.client, beach_channel,
-							   ewutils.formatMessage(cmd.message.author, "You arrive in the Nuclear Beach."),
-							   delete_after=10)
+	await ewutils.send_message(cmd.client, beach_channel, ewutils.formatMessage(cmd.message.author, "You arrive in the Nuclear Beach."), delete_after=10)
 
 	await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
@@ -3659,19 +3644,15 @@ async def gvs_searchforbrainz(cmd):
 	user_data = EwUser(member=cmd.message.author)
 
 	if user_data.life_state != ewcfg.life_state_shambler:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																								 "You're not based enough to do that."))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not based enough to do that."))
 
 	if user_data.poi != ewcfg.poi_id_slimesea:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																								 "You have to {} in the Slime Sea.".format(
-																									 ewcfg.cmd_gvs_searchforbrainz)))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to {} in the Slime Sea.".format(ewcfg.cmd_gvs_searchforbrainz)))
 
 	time_now = int(time.time())
 
 	if user_data.gvs_time_lastshambaquarium + ewcfg.cd_gvs_searchforbrainz >= time_now:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																								 "You'll have to rest for a while before searching for brainz again."))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You'll have to rest for a while before searching for brainz again."))
 
 	event_props = {}
 	event_props['id_user'] = cmd.message.author.id
@@ -3680,8 +3661,7 @@ async def gvs_searchforbrainz(cmd):
 	event_props['channel'] = cmd.message.author.id
 
 	# DM user
-	response = ewcfg.event_type_to_def.get(ewcfg.event_type_shambaquarium).str_event_start.format(
-		ewutils.text_to_regional_indicator(event_props['captcha']))
+	response = ewcfg.event_type_to_def.get(ewcfg.event_type_shambaquarium).str_event_start.format(ewutils.text_to_regional_indicator(event_props['captcha']))
 	try:
 		await ewutils.send_message(cmd.client, cmd.message.author, response)
 	except ewutils.discord.errors.Forbidden:
@@ -3692,13 +3672,10 @@ async def gvs_searchforbrainz(cmd):
 
 	# check if the user's state hasn't changed just in case
 	if user_data.life_state != ewcfg.life_state_shambler:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																								 "You're not based enough to do that."))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not based enough to do that."))
 
 	if user_data.poi != ewcfg.poi_id_slimesea:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																								 "You have to {} in the Slime Sea.".format(
-																									 ewcfg.cmd_gvs_searchforbrainz)))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to {} in the Slime Sea.".format(ewcfg.cmd_gvs_searchforbrainz)))
 
 	ewworldevent.create_world_event(
 		id_server=user_data.id_server,
@@ -3713,24 +3690,17 @@ async def gvs_searchforbrainz(cmd):
 
 
 """ Command for shamblers to get brains in the shambaquarium event """
-
-
 async def gvs_grabbrainz(cmd):
 	if not isinstance(cmd.message.channel, ewutils.discord.channel.DMChannel):
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																								 "You have to {} in DMs.".format(
-																									 ewcfg.cmd_gvs_grabbrainz)))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to {} in DMs.".format(ewcfg.cmd_gvs_grabbrainz)))
 
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
 
 	if user_data.life_state != ewcfg.life_state_shambler:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																								 "You're not based enough to do that."))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not based enough to do that."))
 
 	if user_data.poi != ewcfg.poi_id_slimesea:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																								 "You have to {} in the Slime Sea.".format(
-																									 ewcfg.cmd_gvs_grabbrainz)))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to {} in the Slime Sea.".format( ewcfg.cmd_gvs_grabbrainz)))
 
 	# look for a shambaquarium event belonging to this player
 	world_events = ewworldevent.get_world_events(id_server=cmd.guild.id)
@@ -3743,29 +3713,21 @@ async def gvs_grabbrainz(cmd):
 
 				if event_data.event_props.get('captcha').lower() == captcha:
 					event_data.event_props['brains_grabbed'] = int(event_data.event_props['brains_grabbed']) + 1
-					event_data.event_props['captcha'] = ewutils.generate_captcha(
-						int(event_data.event_props['brains_grabbed']))
+					event_data.event_props['captcha'] = ewutils.generate_captcha(int(event_data.event_props['brains_grabbed']))
 					event_data.persist()
 
 					user_data.gvs_currency += ewcfg.brainz_per_grab
 					user_data.persist()
 
-					response = "You grabbed {} brainz! Baaaaaased! New captcha: ".format(
-						ewcfg.brainz_per_grab) + ewutils.text_to_regional_indicator(event_data.event_props['captcha'])
-					return await ewutils.send_message(cmd.client, cmd.message.channel,
-													  ewutils.formatMessage(cmd.message.author, response))
+					response = "You grabbed {} brainz! Baaaaaased! New captcha: ".format(ewcfg.brainz_per_grab) + ewutils.text_to_regional_indicator(event_data.event_props['captcha'])
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				else:
-					event_data.event_props['captcha'] = ewutils.generate_captcha(
-						int(event_data.event_props['brains_grabbed']))
+					event_data.event_props['captcha'] = ewutils.generate_captcha(int(event_data.event_props['brains_grabbed']))
 					event_data.persist()
-					response = "Missed! That was pretty cringe dude... New captcha: " + ewutils.text_to_regional_indicator(
-						event_data.event_props['captcha'])
-					return await ewutils.send_message(cmd.client, cmd.message.channel,
-													  ewutils.formatMessage(cmd.message.author, response))
+					response = "Missed! That was pretty cringe dude... New captcha: " + ewutils.text_to_regional_indicator(event_data.event_props['captcha'])
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-				break
+				# break
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-																							 "You have to {} before trying to grab any brainz!".format(
-																								 ewcfg.cmd_gvs_searchforbrainz)))
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to {} before trying to grab any brainz!".format(ewcfg.cmd_gvs_searchforbrainz)))
