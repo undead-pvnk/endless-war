@@ -3269,10 +3269,11 @@ async def gvs_update_gamestate(id_server):
 			
 			# 3 tombstones = 20% chance
 			# 12 tombstones = 80% chance
+			# Don't spawn if there aren't available identifiers
 			
 			shambler_spawn_chance = int(100 * (len(graveyard_ops)/15))
 			
-			if random.randrange(100) + 1 < shambler_spawn_chance:
+			if random.randrange(100) + 1 < shambler_spawn_chance and len(op_district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_shambler])) < 26:
 				resp_cont = spawn_enemy(
 					id_server=id_server,
 					pre_chosen_type=random_op_data.enemytype,
@@ -3320,11 +3321,13 @@ async def gvs_update_gamestate(id_server):
 		if victor != None:
 			if victor == ewcfg.psuedo_faction_gankers:
 				response = "***All tombstones have been emptied out! The Garden Gankers take victory!\nIt's rejuvenated completely!!***"
+				op_district_data.gaiaslime = 0
 				op_district_data.degradation = 0
 				op_district_data.time_unlock = time_now + 6000
 				op_district_data.persist()
 			else:
 				response = "***The shamblers have eaten the brainz of the Garden Gankers and take control of the district!\nIt's shambled completely!!***"
+				op_district_data.gaiaslime = 0
 				op_district_data.degradation = ewcfg.district_max_degradation
 				op_district_data.time_unlock = time_now + 6000
 				op_district_data.persist()

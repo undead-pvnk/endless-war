@@ -759,7 +759,11 @@ cmd_map = {
 	ewcfg.cmd_gvs_resurface: ewcmd.gvs_resurface,
 	ewcfg.cmd_gvs_sellgaiaslimeoid: ewcmd.gvs_sell_gaiaslimeoid,
 	ewcfg.cmd_gvs_sellgaiaslimeoid_alt: ewcmd.gvs_sell_gaiaslimeoid,
-	ewcfg.cmd_dig: ewcmd.dig,
+	ewcfg.cmd_gvs_dig: ewcmd.dig,
+	ewcfg.cmd_gvs_progress: ewcmd.gvs_progress,
+	ewcfg.cmd_gvs_gaiaslime: ewcmd.gvs_gaiaslime,
+	ewcfg.cmd_gvs_gaiaslime_alt1: ewcmd.gvs_gaiaslime,
+	ewcfg.cmd_gvs_brainz: ewcmd.gvs_brainz,
 
 	# race
 	ewcfg.cmd_set_race: ewrace.set_race,

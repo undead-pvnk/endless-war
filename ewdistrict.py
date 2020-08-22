@@ -920,6 +920,7 @@ async def rejuvenate(cmd):
 		user_data = EwUser(member=cmd.message.author)
 		user_data.life_state = ewcfg.life_state_juvenile
 		user_data.degradation = 0
+		user_data.gvs_currency = 0
 
 		ewutils.moves_active[user_data.id_user] = 0
 

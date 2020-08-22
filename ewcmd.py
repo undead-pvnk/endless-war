@@ -2952,6 +2952,8 @@ async def almanac(cmd):
 
 		# display the list of topics in order
 		enemies = ewcfg.gvs_enemies
+		
+		# enemies = ewcfg.cmd_gvs_almanac.keys()
 		for enemy in enemies:
 			enemy_counter += 1
 			enemy_total += 1
@@ -3125,6 +3127,8 @@ async def gvs_join_operation(cmd):
 				else:
 					if faction == ewcfg.psuedo_faction_gankers:
 						response = "You ready up for a Garden Op in {} with your {}. *Ready, set, PLANT!*".format(poi.str_name, item_props.get('str_name'))
+						district_data.gaiaslime += 50
+						district_data.persist()
 					else:
 						response = "You place down your {} in {} and get ready for a Graveyard Op. *Ready, set, BRRRRAAAAAIIINNNNZZZZ!*".format(poi.str_name, item_props.get('str_name'))
 						response += "\n(You and your allies can add another one in {} seconds.)".format(brainpower)
@@ -3546,7 +3550,7 @@ async def gvs_sell_gaiaslimeoid(cmd):
 			response = "Hortisolis politely refuses that item. He informs you that it is not a potted Gaiaslimeoid."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		slime_gain = 100000 * int(gaiaslimeoid.item_props.get('size'))
+		slime_gain = 20000 * int(gaiaslimeoid.item_props.get('size'))
 
 		gaia_type = gaiaslimeoid.item_props.get('gaiaslimeoid')
 
@@ -3731,3 +3735,20 @@ async def gvs_grabbrainz(cmd):
 				# break
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to {} before trying to grab any brainz!".format(ewcfg.cmd_gvs_searchforbrainz)))
+
+async def gvs_gaiaslime(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	
+	district_data = EwDistrict(district=user_data.poi, id_server=user_data.id_server)
+	
+	if district_data.gaiaslime > 0:
+		response = "This district houses {} gaiaslime."
+	else:
+		response = "There is no gaiaslime to be found here."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+async def gvs_brainz(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	
+	response = "You have {} brainz.".format(user_data.gvs_currency)
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
