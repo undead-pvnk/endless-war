@@ -3508,7 +3508,7 @@ async def dig(cmd): # TODO  zen garden functionality
 			item_props={
 				'id_item': ewcfg.item_id_gaiaslimeoid_pot,
 				'item_name': "Pot containing a {} Gaiaslimeoid".format(enemy.display_name),
-				'item_desc': "It's a pot with a {} foot-tall {} Gaiaslimeoid. You can place it in a zen garden or sell it to Hortisolis.".format("{size}", enemy.display_name),  # TODO flavor 
+				'item_desc': "It's a pot with a {} foot-tall {} Gaiaslimeoid. You can place it in a zen garden or sell it to Hortisolis.".format("{size}", enemy.display_name),
 				'time_lastslimed': int(time.time()),
 				'size': 1,
 				'gaiaslimeoid': enemy.enemytype
@@ -3576,7 +3576,7 @@ async def gvs_sell_gaiaslimeoid(cmd):
 
 			ewitem.item_delete(gaiaslimeoid.id_item)
 
-			response = "Hortisolis gives you {} slime for your {} Gaiaslimeoid.".format(slime_gain, gaiaslimeoid.item_props.get('gaiaslimeoid'))  # TODO flavor
+			response = "Hortisolis gives you {} slime for your {} Gaiaslimeoid.".format(slime_gain, gaiaslimeoid.item_props.get('gaiaslimeoid'))
 
 		else:
 			response = '"A PITY, PERHAPS YOU WILL FIND SOME USE FOR IT ELSEWHERE. PRITHEE BE CAREFUL!"'
