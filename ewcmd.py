@@ -3104,7 +3104,10 @@ async def gvs_join_operation(cmd):
 				accepted = False
 				
 			if accepted:
-				ewutils.active_restrictions[user_data.id_user] = 4
+				
+				# Lock juveniles into the district for garden ops
+				if faction == ewcfg.psuedo_faction_gankers:
+					ewutils.active_restrictions[user_data.id_user] = 4
 				
 				# If there are no player-generated operations, then the bot will simply spawn in ones automatically.
 				enemyfaction = ewcfg.psuedo_faction_gankers if faction == ewcfg.psuedo_faction_shamblers else ewcfg.psuedo_faction_gankers

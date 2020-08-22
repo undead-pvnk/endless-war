@@ -1836,7 +1836,7 @@ async def enemy_perform_action(id_server):
 				ch_name = ewcfg.id_to_poi.get(enemy.poi).channel 
 
 				# Check if the enemy can do anything right now
-				if check_raidboss_countdown(enemy) and enemy.life_state == ewcfg.enemy_lifestate_unactivated:
+				if enemy.life_state == ewcfg.enemy_lifestate_unactivated and check_raidboss_countdown(enemy):
 					# Raid boss has activated!
 					response = "*The ground quakes beneath your feet as slime begins to pool into one hulking, solidified mass...*" \
 							"\n{} **{} has arrived! It's level {} and has {} slime!** {}\n".format(
@@ -1940,7 +1940,7 @@ async def enemy_perform_action_gvs(id_server):
 			ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
 
 			# Check if the enemy can do anything right now
-			if check_raidboss_countdown(enemy) and enemy.life_state == ewcfg.enemy_lifestate_unactivated:
+			if enemy.life_state == ewcfg.enemy_lifestate_unactivated and check_raidboss_countdown(enemy):
 				# Raid boss has activated!
 				response = "*The dreaded creature of Dr. Downpour claws its way into {}.*" \
 						   "\n{} **{} has arrived! It's level {} and has {} slime. Good luck.** {}\n".format(
@@ -1979,8 +1979,8 @@ async def enemy_perform_action_gvs(id_server):
 				if enemy.enemytype in ewcfg.gvs_enemies_gaiaslimeoids:
 					if len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_shambler])) > 0:
 						await enemy.cannibalize()
-					elif len(district_data.get_players_in_district(life_states = [ewcfg.life_state_shambler])) > 0:
-						await enemy.kill()
+					# elif len(district_data.get_players_in_district(life_states = [ewcfg.life_state_shambler])) > 0:
+					# 	await enemy.kill()
 				elif enemy.enemytype in ewcfg.gvs_enemies_shamblers:
 					life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
 					
@@ -3243,6 +3243,18 @@ async def gvs_update_gamestate(id_server):
 				else:
 					enemy_data.enemy_props['gaiaslimecountdown'] -= 1
 					
+				enemy_data.persist()
+		
+		elif enemy[1] == ewcfg.enemy_type_gaia_poketubers:
+			enemy_data = EwEnemy(id_enemy=enemy[0])
+			countdown = enemy_data.enemy_props.get('primecountdown')
+			
+			if countdown != None:
+				if countdown == 0:
+					enemy_data.enemy_props['primed'] = 'true'
+				else:
+					enemy_data.enemy_props['primecountdown'] -= 1
+				
 				enemy_data.persist()
 
 # Certain conditions may prevent a shambler from acting.

@@ -256,6 +256,9 @@ class EwUser:
 					food_fraction = 4
 					cosmetic_fraction = 4
 
+					# Remove them from Garden Ops where applicable
+					ewutils.execute_sql_query("DELETE FROM gvs_ops_choices WHERE id_user = '{}'".format(self.id_user))
+
 				else:  # If you were a Gangster.
 					item_fraction = 2
 					food_fraction = 2

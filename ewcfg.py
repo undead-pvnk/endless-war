@@ -24945,7 +24945,7 @@ enemy_data_table = {
 	enemy_type_gaia_poketubers: {
 		"slimerange": [100, 100],
 		"ai": enemy_ai_gaiaslimeoid,
-		"attacktype": enemy_attacktype_unarmed,
+		"attacktype": enemy_attacktype_gvs_g_explosion,
 		"displayname": "Poketuber",
 		"raredisplayname": "Joybean Poketuber",
 		"aliases": ['tuber'],
@@ -24953,7 +24953,8 @@ enemy_data_table = {
 		"props": {
 			'primed': 'false',
 			'primecountdown': 3,
-			'setdamage': 500000
+			'setdamage': 500000,
+            'range': 0.5
 		}
 	},
 	enemy_type_gaia_pulpgourds: {

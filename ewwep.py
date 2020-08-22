@@ -394,8 +394,8 @@ def canAttack(cmd):
 		elif user_isshambler == True and len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_gaiaslimeoid])) > 0:
 			response = "You can't attack them, they're protected by Gaiaslimeoids!"
 			
-		elif shootee_data.life_state == ewcfg.life_state_shambler and (user_iskillers == True or user_isrowdys == True or user_isslimecorp == True) and len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_shambler])) > 0:
-			response = "You can't attack them, they're protected by a horde of enemy Shamblers!"
+		# elif shootee_data.life_state == ewcfg.life_state_shambler and (user_iskillers == True or user_isrowdys == True or user_isslimecorp == True) and len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_shambler])) > 0:
+		# 	response = "You can't attack them, they're protected by a horde of enemy Shamblers!"
 
 		elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False and user_isshambler == False:
 			# Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
@@ -424,8 +424,8 @@ def canAttack(cmd):
 			# Target is possessing user's weapon
 			response = "{}'s contract forbids you from harming them. You should've read the fine print.".format(member.display_name)
 
-		elif time_now > shootee_data.time_expirpvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user):
-			# Target is neither flagged for PvP, nor a shambler, nor a ghost inhabiting the player
+		elif time_now > shootee_data.time_expirpvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user or user_isshambler):
+			# Target is neither flagged for PvP, nor a shambler, nor a ghost inhabiting the player. Player is not a shambler.
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
 		# Identify if the shooter and the shootee are on the same team.
@@ -971,8 +971,8 @@ async def attack(cmd):
 					if ewcfg.mutation_id_fungalfeaster in user_mutations:
 						user_data.hunger = 0
 
-					if shootee_data.life_state != ewcfg.life_state_shambler:
-						user_data.degradation -= int(shootee_data.slimelevel / 10)
+					# if shootee_data.life_state != ewcfg.life_state_shambler:
+					# 	user_data.degradation -= int(shootee_data.slimelevel / 10)
 
 					user_data.persist()
 					district_data.persist()
@@ -2136,19 +2136,21 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		response = "Hey ASSHOLE! They're on your side!!"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	elif (enemy_data.enemyclass == ewcfg.enemy_class_shambler and enemy_data.gvs_coord not in ewcfg.gvs_coords_end):
-		response = "It's no use, they're too far away!"
+		response = "It's best not to interfere with whatever those Juveniles are up to. If it gets close, that's your time to strike."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	elif (enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and ewutils.gvs_check_gaia_protected(enemy_data)):
-		response = "It's no use, there's another gaiaslimeoid in front that's protecting them!"
+	# elif (enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and ewutils.gvs_check_gaia_protected(enemy_data)):
+	# 	response = "It's no use, there's another gaiaslimeoid in front that's protecting them!"
+	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)) 
+	elif user_data.life_state == ewcfg.life_state_shambler:
+		response = "It's not worth going near those... *things*. You'd get torn to shreds, it's better to send out lackeys to do your job for you."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
-	if user_data.life_state == ewcfg.life_state_shambler:
-		if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shambler_attack:
-			response = "Your shitty zombie jaw is too tired to chew on that {}. Try again in {} seconds.".format(enemy_data.display_name, int(ewcfg.cd_shambler_attack-(time_now-user_data.time_lasthaunt)))
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		else:
-			user_data.time_lasthaunt = time_now
-			user_data.persist()
+
+		# if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shambler_attack:
+		# 	response = "Your shitty zombie jaw is too tired to chew on that {}. Try again in {} seconds.".format(enemy_data.display_name, int(ewcfg.cd_shambler_attack-(time_now-user_data.time_lasthaunt)))
+		# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		# else:
+		# 	user_data.time_lasthaunt = time_now
+		# 	user_data.persist()
 			
 
 
