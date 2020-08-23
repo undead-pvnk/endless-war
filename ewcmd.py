@@ -2650,8 +2650,7 @@ async def gvs_print_grid(cmd):
 	
 	grid_map = ewutils.gvs_create_gaia_grid_mapping(user_data)
 	
-	#TODO: Use proper emotes when update launches
-	debug = True
+	debug = False
 	if debug:
 		blue_blank = ':blue_heart:'
 		green_lawn = ':green_heart:'
@@ -2770,8 +2769,7 @@ async def gvs_print_lane(cmd):
 	author = cmd.message.author
 	user_data = EwUser(member=author)
 
-	# TODO: Use proper emotes when update launches
-	debug = True
+	debug = False
 	
 	response = ""
 	if cmd.tokens_count != 2:
