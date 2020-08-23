@@ -25808,7 +25808,7 @@ world_events = [
 	),
 	EwEventDef(
 		event_type = event_type_shambaquarium,
-		str_event_start = "Holy. Fucking. SHIT. You spot some brainz. Grab 'em all with {} before they get washed away by the current!",
+		str_event_start = "Holy. Fucking. SHIT. You spot some brainz. Grab 'em all with **{}** {} before they get washed away by the current!",
 		str_event_end = "The brainz drift away into the endless expanse of the Slime Sea. Cringe.",
 	),
 ]

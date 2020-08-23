@@ -3715,7 +3715,7 @@ async def gvs_searchforbrainz(cmd):
 	event_props['channel'] = cmd.message.author.id
 
 	# DM user
-	response = ewcfg.event_type_to_def.get(ewcfg.event_type_shambaquarium).str_event_start.format(ewutils.text_to_regional_indicator(event_props['captcha']))
+	response = ewcfg.event_type_to_def.get(ewcfg.event_type_shambaquarium).str_event_start.format(ewcfg.cmd_gvs_grabbrainz, ewutils.text_to_regional_indicator(event_props['captcha']))
 	try:
 		await ewutils.send_message(cmd.client, cmd.message.author, response)
 	except ewutils.discord.errors.Forbidden:
@@ -3766,8 +3766,9 @@ async def gvs_grabbrainz(cmd):
 				captcha = ewutils.flattenTokenListToString(cmd.tokens[1:]).lower()
 
 				if event_data.event_props.get('captcha').lower() == captcha:
-					event_data.event_props['brains_grabbed'] = int(event_data.event_props['brains_grabbed']) + 1
-					event_data.event_props['captcha'] = ewutils.generate_captcha(int(event_data.event_props['brains_grabbed']))
+					event_data.event_props['brains_grabbed'] = int(event_data.event_props['brains_grabbed']) + 1 
+					captcha_length = int(event_data.event_props['brains_grabbed'])
+					event_data.event_props['captcha'] = ewutils.generate_captcha(captcha_length if captcha_length < 8 else 8)
 					event_data.persist()
 
 					user_data.gvs_currency += ewcfg.brainz_per_grab
