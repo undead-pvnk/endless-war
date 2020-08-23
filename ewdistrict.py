@@ -91,8 +91,7 @@ class EwDistrict:
 				self.slimes = data[0][3]
 				self.time_unlock = data[0][4]
 				self.cap_side = data[0][5]
-				# self.degradation = data[0][6]
-				self.degradation = 0
+				self.degradation = data[0][6]
 
 				# ewutils.logMsg("EwDistrict object '" + self.name + "' created.  Controlling faction: " + self.controlling_faction + "; Capture progress: %d" % self.capture_points)
 			else:  # create new entry
