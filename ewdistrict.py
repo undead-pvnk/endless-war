@@ -637,7 +637,7 @@ class EwDistrict:
 		if checked_poi.is_district:
 			poi = checked_poi
 		elif checked_poi.is_street:
-			poi = ewcfg.id_to_poi.get(poi.father_district)
+			poi = ewcfg.id_to_poi.get(checked_poi.father_district)
 		elif checked_poi.is_subzone:
 			# Subzones are a more complicated affair to check for degradation.
 			# Look to see if its mother district is a district or a street, then check for degradation of the appropriate district.
