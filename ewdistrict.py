@@ -844,7 +844,7 @@ async def shamble(cmd):
 	if user_data.life_state != ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_assaultflatsbeach:
 		response = "You have too many higher brain functions left to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	elif user_data.life_state == ewcfg.life_state_juvenile and user_data.poi == ewcfg.poi_id_assaultflatsbeach:
+	elif user_data.life_state in [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted] and user_data.poi == ewcfg.poi_id_assaultflatsbeach:
 		response = "You feel an overwhelming sympathy for the plight of the Shamblers and decide to join their ranks."
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

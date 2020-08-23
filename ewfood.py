@@ -187,7 +187,7 @@ async def menu(cmd):
 
 				
 				if mother_district_data != None:
-					if mother_district_data.all_streets_taken() != "":
+					if mother_district_data.all_streets_taken() != "" and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
 						# prices are halved for the controlling gang
 						if mother_district_data.all_streets_taken() == user_data.faction:
 							value /= 2
@@ -379,7 +379,7 @@ async def order(cmd):
 
 				controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
-				if controlling_faction != "":
+				if controlling_faction != "" and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
 					# prices are halved for the controlling gang
 					if controlling_faction == user_data.faction:
 						value /= 2
