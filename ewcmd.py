@@ -3435,7 +3435,8 @@ async def gvs_progress(cmd):
 	
 	for poi in ewcfg.poi_list:
 		#if poi.is_district and not poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow, ewcfg.poi_id_oozegardens, ewcfg.poi_id_assaultflatsbeach, ewcfg.poi_id_thevoid]:
-		op_districts.append(poi.id_poi)
+		if poi.is_district:
+			op_districts.append(poi.id_poi)
 			
 	degradation_data = ewutils.execute_sql_query("SELECT district, degradation FROM districts WHERE district IN {}".format(tuple(op_districts)))
 	
