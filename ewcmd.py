@@ -3434,8 +3434,8 @@ async def gvs_progress(cmd):
 	response = ""
 	
 	for poi in ewcfg.poi_list:
-		if poi.is_district and not poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow, ewcfg.poi_id_oozegardens, ewcfg.poi_id_assaultflatsbeach, ewcfg.poi_id_thevoid]:
-			op_districts.append(poi.id_poi)
+		#if poi.is_district and not poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow, ewcfg.poi_id_oozegardens, ewcfg.poi_id_assaultflatsbeach, ewcfg.poi_id_thevoid]:
+		op_districts.append(poi.id_poi)
 			
 	degradation_data = ewutils.execute_sql_query("SELECT district, degradation FROM districts WHERE district IN {}".format(tuple(op_districts)))
 	
@@ -3447,16 +3447,26 @@ async def gvs_progress(cmd):
 			non_degraded_districts.append(district[0])
 		elif district[1] == ewcfg.district_max_degradation:
 			degraded_districts.append(district[0])
-	
+
+	counter = 0
 	response += "\n**Rejuvenated Districts**"
 	for non_deg in non_degraded_districts:
+		counter += 1
+		if counter % 5 == 0:
+			response += "\n"
+		
 		poi = ewcfg.id_to_poi.get(non_deg)
-		response += "\n{}".format(poi.str_name)
+		response += "{} ".format(poi.str_name)
 	
+	counter = 0
 	response += "\n**Shambled Districts**"
 	for deg in degraded_districts:
+		counter += 1
+		if counter % 5 == 0:
+			response += "\n"
+		
 		poi = ewcfg.id_to_poi.get(deg)
-		response += "\n{}".format(poi.str_name)
+		response += "{} ".format(poi.str_name)
 	
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
