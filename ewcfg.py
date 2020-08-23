@@ -12241,6 +12241,7 @@ poi_list = [
 			poi_id_assaultflatsbeach_street_a : travel_time_street,
 			poi_id_assaultflatsbeach_street_b: travel_time_street,
 			poi_id_beachresort : travel_time_subzone,
+            poi_id_nuclear_beach_edge : travel_time_subzone
 		},
 	),
 	EwPoi( # 24
@@ -15007,7 +15008,8 @@ poi_list = [
 			poi_id_nuclear_beach_edge : travel_time_outskirt,
 			poi_id_assaultflatsbeach_pier : travel_time_subzone,
 			poi_id_afb_blimp_tower : travel_time_subzone,
-		}
+            poi_id_nuclear_beach_edge: travel_time_subzone
+        }
 	),
 	EwPoi(
 		id_poi = poi_id_assaultflatsbeach_street_b,
@@ -15028,7 +15030,8 @@ poi_list = [
 			poi_id_vagrantscorner_street_a : travel_time_street,
 			poi_id_nuclear_beach_edge : travel_time_outskirt,
 			poi_id_assaultflatsbeach_pier : travel_time_subzone,
-		}
+            poi_id_nuclear_beach_edge: travel_time_subzone
+        }
 	),
 	EwPoi(
 		id_poi = poi_id_vagrantscorner_street_a,

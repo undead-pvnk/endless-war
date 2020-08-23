@@ -3452,22 +3452,31 @@ async def gvs_progress(cmd):
 	counter = 0
 	response += "\n**Rejuvenated Districts**"
 	for non_deg in non_degraded_districts:
-		counter += 1
 		if counter % 5 == 0:
 			response += "\n"
 		
 		poi = ewcfg.id_to_poi.get(non_deg)
-		response += "{} ".format(poi.str_name)
-	
+		counter += 1
+		
+		if counter != len(non_degraded_districts):
+			response += "{}, ".format(poi.str_name)
+		else:
+			response += "and {}.".format(poi.str_name)
+			
+			
 	counter = 0
 	response += "\n**Shambled Districts**"
 	for deg in degraded_districts:
-		counter += 1
 		if counter % 5 == 0:
 			response += "\n"
 		
 		poi = ewcfg.id_to_poi.get(deg)
-		response += "{} ".format(poi.str_name)
+		counter += 1
+
+		if counter != len(degraded_districts):
+			response += "{}, ".format(poi.str_name)
+		else:
+			response += "and {}.".format(poi.str_name)
 	
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

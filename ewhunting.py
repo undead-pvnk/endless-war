@@ -3484,10 +3484,13 @@ def handle_turn_timers(enemy_data):
 	
 	# Handle specific turn counters of all GvS enemies.
 	if enemy_data.enemytype == ewcfg.enemy_type_gaia_brightshade:
-		countdown = int(enemy_data.enemy_props.get('gaiaslimecountdown'))
+		countdown = enemy_data.enemy_props.get('gaiaslimecountdown')
 
 		if countdown != None:
-			if countdown == 0:
+			int_countdown = int(countdown)
+
+			if int_countdown == 0:
+
 				gaiaslime_amount = 0
 				
 				enemy_data.enemy_props['gaiaslimecountdown'] = 2
@@ -3507,24 +3510,27 @@ def handle_turn_timers(enemy_data):
 				response = "{} ({}) produced {} gaiaslime!".format(enemy_data.display_name, enemy_data.gvs_coord, gaiaslime_amount)
 
 			else:
-				enemy_data.enemy_props['gaiaslimecountdown'] = countdown - 1
+				enemy_data.enemy_props['gaiaslimecountdown'] = int_countdown - 1
 
 			enemy_data.persist()
 			return response
 
 	elif enemy_data.enemytype == ewcfg.enemy_type_gaia_poketubers:
-		countdown = int(enemy_data.enemy_props.get('primecountdown'))
 		
-		if enemy_data.enemy_props.get('primed') != 'true':
-
-			if countdown != None:
-				if countdown == 0:
+		countdown = enemy_data.enemy_props.get('primecountdown')
+		
+		if countdown != None:
+			int_countdown = int(countdown)
+		
+			if enemy_data.enemy_props.get('primed') != 'true':
+	
+				if int_countdown == 0:
 					enemy_data.enemy_props['primed'] = 'true'
 					
 					response = "{} ({}) is primed and ready.".format(enemy_data.display_name, enemy_data.gvs_coord)
 					
 				else:
-					enemy_data.enemy_props['primecountdown'] = countdown - 1
+					enemy_data.enemy_props['primecountdown'] = int_countdown - 1
 	
 				enemy_data.persist()
 				return response
