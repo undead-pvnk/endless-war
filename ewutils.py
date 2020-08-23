@@ -23,7 +23,7 @@ import ewwep
 from ew import EwUser
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
-from ewhunting import EwEnemy
+from ewhunting import EwEnemy, EwOperationData
 from ewmarket import EwMarket
 from ewstatuseffects import EwStatusEffect
 from ewstatuseffects import EwEnemyStatusEffect
@@ -144,6 +144,8 @@ class EwResponseContainer:
 		for ch in self.channel_responses:
 			if channel == None:
 				current_channel = get_channel(server = server, channel_name = ch)
+				if current_channel == None:
+					current_channel = ch
 			else:
 				current_channel = channel
 			try:
@@ -462,8 +464,15 @@ def formatMessage(user_target, message):
 	# If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
 	try:
 		if user_target.life_state == ewcfg.enemy_lifestate_alive:
-			# Send messages for normal enemies, and mentioning with @
-			return "*{}:* {}".format(user_target.display_name, message)
+			
+			if user_target.enemyclass == ewcfg.enemy_class_gaiaslimeoid:
+				return "**{} ({}):** {}".format(user_target.display_name, user_target.gvs_coord, message)
+			else:
+				# Send messages for normal enemies, and allow mentioning with @
+				if user_target.identifier != '':
+					return "**{} [{}] ({}):** {}".format(user_target.display_name, user_target.identifier, user_target.gvs_coord, message)
+				else:
+					return "**{}:** {}".format(user_target.display_name, message)
 
 		elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
 			return "{}".format(message)
@@ -855,18 +864,19 @@ async def burnSlimes(id_server = None):
 		time_now = int(time.time())
 		client = get_client()
 		server = client.get_guild(id_server)
+		status_origin = 'user'
 
 		results = {}
 
-		# Get users with burning effect
-		data = execute_sql_query("SELECT {id_user}, {value}, {source} from status_effects WHERE {id_status} = %s and {id_server} = %s".format(
+		# Get users with harmful status effects
+		data = execute_sql_query("SELECT {id_user}, {value}, {source}, {id_status} from status_effects WHERE {id_status} IN %s and {id_server} = %s".format(
 			id_user = ewcfg.col_id_user,
 			value = ewcfg.col_value,
 			id_status = ewcfg.col_id_status,
 			id_server = ewcfg.col_id_server,
 			source = ewcfg.col_source
 		), (
-			ewcfg.status_burning_id,
+			tuple(ewcfg.harmful_status_effects),
 			id_server
 		))
 
@@ -876,14 +886,24 @@ async def burnSlimes(id_server = None):
 			member = server.get_member(user_data.id_user)
 
 			slimes_dropped = user_data.totaldamage + user_data.slimes
+			used_status_id = result[3]
 
 			# Deal 10% of total slime to burn every second
 			slimes_to_burn = math.ceil(int(float(result[1])) * ewcfg.burn_tick_length / ewcfg.time_expire_burn)
 
+			# Check if a status effect originated from an enemy or a user.
 			killer_data = EwUser(id_server=id_server, id_user=result[2])
-
-			# Damage stats
-			ewstats.change_stat(user=killer_data, metric=ewcfg.stat_lifetime_damagedealt, n=slimes_to_burn)
+			if killer_data == None:
+				killer_data = EwEnemy(id_server=id_server, id_enemy=result[2])
+				if killer_data != None:
+					status_origin = 'enemy'
+				else:
+					# For now, skip over any status that did not originate from a user or an enemy. This might be changed in the future.
+					continue
+					
+			if status_origin == 'user':
+				# Damage stats
+				ewstats.change_stat(user=killer_data, metric=ewcfg.stat_lifetime_damagedealt, n=slimes_to_burn)
 
 			# Player died
 			if user_data.slimes - slimes_to_burn < 0:
@@ -894,29 +914,41 @@ async def burnSlimes(id_server = None):
 				poi = ewcfg.id_to_poi.get(user_data.poi)
 
 				# Kill stats
-				ewstats.increment_stat(user=killer_data, metric=ewcfg.stat_kills)
-				ewstats.track_maximum(user=killer_data, metric=ewcfg.stat_biggest_kill, value=int(slimes_dropped))
+				if status_origin == 'user':
+					ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_kills)
+					ewstats.track_maximum(user = killer_data, metric = ewcfg.stat_biggest_kill, value = int(slimes_dropped))
+	
+					if killer_data.slimelevel > user_data.slimelevel:
+						ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_lifetime_ganks)
+					elif killer_data.slimelevel < user_data.slimelevel:
+						ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_lifetime_takedowns)
 
-				if killer_data.slimelevel > user_data.slimelevel:
-					ewstats.increment_stat(user=killer_data, metric=ewcfg.stat_lifetime_ganks)
-				elif killer_data.slimelevel < user_data.slimelevel:
-					ewstats.increment_stat(user=killer_data, metric=ewcfg.stat_lifetime_takedowns)
-
-				# Collect bounty
-				coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
-
-				if user_data.slimes >= 0:
-					killer_data.change_slimecoin(n=coinbounty, coinsource=ewcfg.coinsource_bounty)
+					# Collect bounty
+					coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
+					
+					if user_data.slimes >= 0:
+						killer_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
 				# Kill player
-				user_data.id_killer = killer_data.id_user
+				if status_origin == 'user':
+					user_data.id_killer = killer_data.id_user
+				elif status_origin == 'enemy':
+					user_data.id_killer = killer_data.id_enemy
+					
 				user_data.trauma = ewcfg.trauma_id_environment
 				die_resp = user_data.die(cause=ewcfg.cause_burning)
 				# user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 
 				resp_cont.add_response_container(die_resp)
 
-				deathreport = "{} has burned to death.".format(player_data.display_name)
+				if used_status_id == ewcfg.status_burning_id:
+					deathreport = "{} has burned to death.".format(player_data.display_name)
+				elif used_status_id == ewcfg.status_acid_id:
+					deathreport = "{} has been melted to death by acid.".format(player_data.display_name)
+				elif used_status_id == ewcfg.status_spored_id:
+					deathreport = "{} has been overrun by spores.".format(player_data.display_name)
+				else:
+					deathreport = ""
 				resp_cont.add_channel_response(poi.channel, deathreport)
 
 				user_data.trauma = weapon.id_weapon
@@ -935,18 +967,19 @@ async def enemyBurnSlimes(id_server):
 		time_now = int(time.time())
 		client = get_client()
 		server = client.get_guild(id_server)
+		status_origin = 'user'
 
 		results = {}
 
-		# Get enemies with burning effect
-		data = execute_sql_query("SELECT {id_enemy}, {value}, {source} from enemy_status_effects WHERE {id_status} = %s and {id_server} = %s".format(
+		# Get enemies with harmful status effects
+		data = execute_sql_query("SELECT {id_enemy}, {value}, {source}, {id_status} from enemy_status_effects WHERE {id_status} IN %s and {id_server} = %s".format(
 			id_enemy = ewcfg.col_id_enemy,
 			value = ewcfg.col_value,
 			id_status = ewcfg.col_id_status,
 			id_server = ewcfg.col_id_server,
 			source = ewcfg.col_source
 		), (
-			ewcfg.status_burning_id,
+			ewcfg.harmful_status_effects,
 			id_server
 		))
 
@@ -955,19 +988,35 @@ async def enemyBurnSlimes(id_server):
 			enemy_data = EwEnemy(id_enemy = result[0], id_server = id_server)
 			
 			slimes_dropped = enemy_data.totaldamage + enemy_data.slimes
+			used_status_id = result[3]
 
 			# Deal 10% of total slime to burn every second
 			slimes_to_burn = math.ceil(int(float(result[1])) * ewcfg.burn_tick_length / ewcfg.time_expire_burn)
 
-			killer_data = EwUser(id_server = id_server, id_user=result[2])
-
-			# Damage stats
-			ewstats.change_stat(user = killer_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_to_burn)
+			# Check if a status effect originated from an enemy or a user.
+			killer_data = EwUser(id_server=id_server, id_user=result[2])
+			if killer_data == None:
+				killer_data = EwEnemy(id_server=id_server, id_enemy=result[2])
+				if killer_data != None:
+					status_origin = 'enemy'
+				else:
+					# For now, skip over any status that did not originate from a user or an enemy. This might be changed in the future.
+					continue
+			
+			if status_origin == 'user':
+				ewstats.change_stat(user = killer_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_to_burn)
 
 			if enemy_data.slimes - slimes_to_burn <= 0:
 				ewhunting.delete_enemy(enemy_data)
 
-				response = "{} has burned to death.".format(enemy_data.display_name)
+				if used_status_id == ewcfg.status_burning_id:
+					response = "{} has burned to death.".format(enemy_data.display_name)
+				elif used_status_id == ewcfg.status_acid_id:
+					response = "{} has been melted to death by acid.".format(enemy_data.display_name)
+				elif used_status_id == ewcfg.status_spored_id:
+					response = "{} has been overrun by spores.".format(enemy_data.display_name)
+				else:
+					response = ""
 				resp_cont.add_channel_response(ewcfg.id_to_poi.get(enemy_data.poi).channel, response)
 				
 				district_data = EwDistrict(id_server = id_server, district = enemy_data.poi)
@@ -1235,7 +1284,7 @@ def get_channel(server = None, channel_name = ""):
 	for chan in server.channels:
 		if chan.name == channel_name:
 			channel = chan
-
+	
 	if channel == None:
 		logMsg('Error: In get_channel(), could not find channel using channel_name "{}"'.format(channel_name))
 
@@ -1460,14 +1509,14 @@ async def decrease_food_multiplier(id_user):
 async def spawn_enemies(id_server = None):
 	if random.randrange(3) == 0:
 		weathertype = ewcfg.enemy_weathertype_normal
-
 		market_data = EwMarket(id_server=id_server)
+		
 		# If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
 		if market_data.weather == ewcfg.weather_bicarbonaterain:
 			if random.randrange(3) < 2:
 				weathertype = ewcfg.enemy_weathertype_rainresist
 		
-		resp_cont = ewhunting.spawn_enemy(id_server=id_server, weather=weathertype)
+		resp_cont = ewhunting.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype)
 
 		await resp_cont.post()
 
@@ -1485,7 +1534,17 @@ async def enemy_action_tick_loop(id_server):
 	while not TERMINATE:
 		await asyncio.sleep(interval)
 		# resp_cont = EwResponseContainer(id_server=id_server)
-		await ewhunting.enemy_perform_action(id_server)
+		if ewcfg.gvs_active:
+			await ewhunting.enemy_perform_action_gvs(id_server)
+		else:
+			await ewhunting.enemy_perform_action(id_server)
+			
+async def gvs_gamestate_tick_loop(id_server):
+	interval = ewcfg.gvs_gamestate_tick_length
+	# Causes various events to occur during a Garden or Graveyard ops in Gankers Vs. Shamblers
+	while not TERMINATE:
+		await asyncio.sleep(interval)
+		await ewhunting.gvs_update_gamestate(id_server)
 
 
 # Clears out id_target in enemies with defender ai. Primarily used for when players die or leave districts the defender is in.
@@ -2482,3 +2541,378 @@ async def check_bot(cmd):
 	logMsg('TERMINATE is currently: {}'.format(TERMINATE))
 	
 	return
+	sys.exit()
+
+def gvs_create_gaia_grid_mapping(user_data):
+	grid_map = {}
+
+	# Grid print mapping and shambler targeting use different priority lists. Don't get these mixed up
+	printgrid_low_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+	printgrid_mid_priority = [ewcfg.enemy_type_gaia_steelbeans]
+	printgrid_high_priority = []
+	for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+		if enemy_id not in printgrid_low_priority and enemy_id not in printgrid_mid_priority:
+			printgrid_high_priority.append(enemy_id)
+
+	gaias = execute_sql_query(
+		"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1 AND {enemyclass} = %s".format(
+			id_enemy=ewcfg.col_id_enemy,
+			enemytype=ewcfg.col_enemy_type,
+			poi=ewcfg.col_enemy_poi,
+			life_state=ewcfg.col_enemy_life_state,
+			gvs_coord=ewcfg.col_enemy_gvs_coord,
+			enemyclass=ewcfg.col_enemy_class,
+		), (
+			user_data.id_server,
+			user_data.poi,
+			ewcfg.enemy_class_gaiaslimeoid
+		))
+	
+	grid_conditions = execute_sql_query(
+		"SELECT coord, grid_condition FROM gvs_grid_conditions WHERE district = %s".format(
+		), (
+			user_data.poi,
+		))
+	
+	for condition in grid_conditions:
+		grid_map[condition[0]] = condition[1]
+	
+	for gaia in gaias:
+		try:
+			gaia_in_coord = grid_map[gaia[2]]
+			# No key error: Gaia is in coord already, check for priority
+			is_filled = True
+		except KeyError:
+			gaia_in_coord = ''
+			# Key error: Gaia was not in coord
+			is_filled = False
+			
+		if is_filled:
+			if gaia_in_coord in printgrid_low_priority and (gaia[1] in printgrid_mid_priority or gaia[1] in printgrid_high_priority):
+				grid_map[gaia[2]] = gaia[1]
+			if gaia_in_coord in printgrid_mid_priority and gaia[1] in printgrid_high_priority:
+				grid_map[gaia[2]] = gaia[1]
+		else:
+			grid_map[gaia[2]] = gaia[1]
+		
+	return grid_map
+
+
+def gvs_create_gaia_lane_mapping(user_data, row_used):
+
+	# Grid print mapping and shambler targeting use different priority lists. Don't get these mixed up
+	printlane_low_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+	printlane_mid_priority = []
+	printlane_high_priority = [ewcfg.enemy_type_gaia_steelbeans]
+	for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+		if enemy_id not in printlane_low_priority and enemy_id not in printlane_high_priority:
+			printlane_mid_priority.append(enemy_id)
+
+	gaias = execute_sql_query(
+		"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} IN %s".format(
+			id_enemy=ewcfg.col_id_enemy,
+			enemytype=ewcfg.col_enemy_type,
+			poi=ewcfg.col_enemy_poi,
+			life_state=ewcfg.col_enemy_life_state,
+			gvs_coord=ewcfg.col_enemy_gvs_coord,
+			enemyclass=ewcfg.col_enemy_class,
+		), (
+			user_data.id_server,
+			user_data.poi,
+			ewcfg.enemy_class_gaiaslimeoid,
+			tuple(row_used)
+		))
+
+	grid_conditions = execute_sql_query(
+		"SELECT coord, grid_condition FROM gvs_grid_conditions WHERE district = %s AND coord IN %s".format(
+		), (
+			user_data.poi,
+			tuple(row_used)
+		))
+	
+	coord_sets = []
+
+	for coord in row_used:
+		current_coord_set = [] 
+		for enemy in printlane_low_priority:
+			for gaia in gaias:
+				if gaia[1] == enemy and gaia[2] == coord:
+					current_coord_set.append(gaia[0])
+					
+		for enemy in printlane_mid_priority:
+			for gaia in gaias:
+				if gaia[1] == enemy and gaia[2] == coord:
+					current_coord_set.append(gaia[0])
+					
+		for enemy in printlane_high_priority:
+			for gaia in gaias:
+				if gaia[1] == enemy and gaia[2] == coord:
+					current_coord_set.append(gaia[0])
+					
+		for condition in grid_conditions:
+			if condition[0] == coord:
+				if condition[1] == 'frozen':
+					current_coord_set.append('frozen')
+					
+		coord_sets.append(current_coord_set)
+	
+
+	return coord_sets
+
+
+def gvs_check_gaia_protected(enemy_data):
+	is_protected = False
+	
+	low_attack_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+	high_attack_priority = [ewcfg.enemy_type_gaia_steelbeans]
+	mid_attack_priority = []
+	for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+		if enemy_id not in low_attack_priority and enemy_id not in high_attack_priority:
+			mid_attack_priority.append(enemy_id)
+	
+	checked_coords = []
+	enemy_coord = enemy_data.gvs_coord
+	for row in ewcfg.gvs_valid_coords_gaia:
+		if enemy_coord in row:
+			index = row.index(enemy_coord)
+			row_length = len(ewcfg.gvs_valid_coords_gaia)
+			for i in range(index+1, row_length):
+				checked_coords.append(ewcfg.gvs_valid_coords_gaia[i])
+				
+	gaias_in_front_coords = execute_sql_query(
+		"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} IN %s".format(
+			id_enemy=ewcfg.col_id_enemy,
+			enemytype=ewcfg.col_enemy_type,
+			life_state=ewcfg.col_enemy_life_state,
+			gvs_coord=ewcfg.col_enemy_gvs_coord,
+			enemyclass=ewcfg.col_enemy_class,
+		), (
+			ewcfg.enemy_class_gaiaslimeoid,
+			tuple(checked_coords)
+		))
+	
+	if len(gaias_in_front_coords) > 0:
+		is_protected = True
+	else:
+		gaias_in_same_coord = execute_sql_query(
+			"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} = %s".format(
+				id_enemy=ewcfg.col_id_enemy,
+				enemytype=ewcfg.col_enemy_type,
+				life_state=ewcfg.col_enemy_life_state,
+				gvs_coord=ewcfg.col_enemy_gvs_coord,
+				enemyclass=ewcfg.col_enemy_class,
+			), (
+				ewcfg.enemy_class_gaiaslimeoid,
+				enemy_coord
+			))
+		if len(gaias_in_same_coord) > 1:
+			same_coord_gaias_types = []
+			for gaia in gaias_in_same_coord:
+				same_coord_gaias_types.append(gaia[1])
+				
+			for type in same_coord_gaias_types:
+				if enemy_data.enemy_type in high_attack_priority:
+					is_protected = False
+					break
+				elif enemy_data.enemy_type in mid_attack_priority and type in high_attack_priority:
+					is_protected = True
+					break
+				elif enemy_data.enemy_type in low_attack_priority and (type in mid_attack_priority or type in high_attack_priority):
+					is_protected = True
+					break
+	
+		else:
+			is_protected = False
+	
+	return is_protected
+
+def gvs_check_operation_duplicate(id_user, district, enemytype, faction):
+	entry = None
+	
+	if faction == ewcfg.psuedo_faction_gankers:
+		entry = execute_sql_query(
+			"SELECT * FROM gvs_ops_choices WHERE id_user = %s AND district = %s AND enemytype = %s AND faction = %s".format(
+			), (
+				id_user, 
+				district, 
+				enemytype, 
+				faction
+			))
+	elif faction == ewcfg.psuedo_faction_shamblers:
+		entry = execute_sql_query(
+			"SELECT * FROM gvs_ops_choices WHERE district = %s AND enemytype = %s AND faction = %s".format(
+			), (
+				district,
+				enemytype,
+				faction
+			))
+
+	if len(entry) > 0:
+		return True
+	else:
+		return False
+	
+def gvs_check_operation_limit(id_user, district, enemytype, faction):
+	
+	limit_hit = False
+	tombstone_limit = 0
+	
+	if faction == ewcfg.psuedo_faction_gankers:
+		data = execute_sql_query(
+			"SELECT id_user FROM gvs_ops_choices WHERE id_user = %s AND district = %s AND faction = %s".format(
+			), (
+				id_user, 
+				district,
+				faction
+			))
+		
+		if len(data) >= 6:
+			limit_hit = True
+		else:
+			limit_hit = False
+		
+	elif faction == ewcfg.psuedo_faction_shamblers:
+		sh_data = execute_sql_query(
+			"SELECT enemytype FROM gvs_ops_choices WHERE district = %s AND faction = %s".format(
+			), (
+				district,
+				faction
+			))
+		
+		gg_data = execute_sql_query(
+			"SELECT id_user FROM gvs_ops_choices WHERE district = %s AND faction = %s".format(
+			), (
+				district,
+				enemytype,
+			))
+		
+		gg_id_list = []
+		for gg in gg_data:
+			gg_id_list.append(gg[0])
+			
+		gg_id_set = set(gg_id_list) # Remove duplicate user IDs
+		
+		if len(gg_id_set) == 0:
+			tombstone_limit = 3
+		elif len(gg_id_set) <= 3:
+			tombstone_limit = 6
+		elif len(gg_id_set) <= 6:
+			tombstone_limit = 10
+		else:
+			tombstone_limit = 12
+		
+		if len(sh_data) >= tombstone_limit:
+			limit_hit = True
+		else:
+			limit_hit = False
+			
+	return limit_hit, tombstone_limit
+
+def gvs_check_if_in_operation(user_data):
+	
+	op_data = execute_sql_query(
+		"SELECT id_user, district FROM gvs_ops_choices WHERE id_user = %s".format(
+		), (
+			user_data.id_user,
+		))
+
+	if len(op_data) > 0:
+		return True, op_data[0][1]
+	else:
+		return False, None
+
+def gvs_get_gaias_from_coord(poi, checked_coord):
+	gaias = execute_sql_query(
+		"SELECT id_enemy, enemytype FROM enemies WHERE poi = %s AND gvs_coord = %s".format(
+		), (
+			poi,
+			checked_coord
+		))
+	
+	gaias_id_to_type_map = {}
+	
+	for gaia in gaias:
+		if gaia[1] in ewcfg.gvs_enemies_gaiaslimeoids:
+			gaias_id_to_type_map[gaia[0]] = gaia[1]
+	
+	return gaias_id_to_type_map
+
+# If there are no player operations, spawn in ones that the bot uses
+def gvs_insert_bot_ops(id_server, district, enemyfaction):
+	bot_id = 56709
+	
+	if enemyfaction == ewcfg.psuedo_faction_gankers:
+		possible_bot_types = [
+			ewcfg.enemy_type_gaia_pinkrowddishes,
+			ewcfg.enemy_type_gaia_purplekilliflower,
+			ewcfg.enemy_type_gaia_poketubers,
+			ewcfg.enemy_type_gaia_razornuts
+		]
+		for type in possible_bot_types:
+			execute_sql_query("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+				ewcfg.col_id_user,
+				ewcfg.col_district,
+				ewcfg.col_enemy_type,
+				ewcfg.col_faction,
+				ewcfg.col_id_item,
+				ewcfg.col_shambler_stock,
+			), (
+				bot_id,
+				district,
+				type,
+				enemyfaction,
+				-1,
+				0,
+			))
+			
+			# To increase the challenge, a column of suganmanuts is placed down.
+			for coord in ['A6', 'B6', 'C6', 'D6', 'E6']:
+				ewhunting.spawn_enemy(
+					id_server=id_server,
+					pre_chosen_type=ewcfg.enemy_type_gaia_suganmanuts,
+					pre_chosen_level=50,
+					pre_chosen_poi=district,
+					pre_chosen_identifier='',
+					pre_chosen_faction=ewcfg.psuedo_faction_gankers,
+					pre_chosen_owner=bot_id,
+					pre_chosen_coord=coord,
+					manual_spawn=True,
+				)
+		
+	elif enemyfaction == ewcfg.psuedo_faction_shamblers:
+		possible_bot_types = [
+			ewcfg.enemy_type_defaultshambler,
+		]
+		for type in possible_bot_types:
+			execute_sql_query("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+				ewcfg.col_id_user,
+				ewcfg.col_district,
+				ewcfg.col_enemy_type,
+				ewcfg.col_faction,
+				ewcfg.col_id_item,
+				ewcfg.col_shambler_stock,
+			), (
+				bot_id,
+				district,
+				type,
+				enemyfaction,
+				-1,
+				20,
+			))
+			
+async def degrade_districts(cmd):
+	
+	if not cmd.message.author.guild_permissions.administrator:
+		return
+
+	gvs_districts = []
+
+	for poi in ewcfg.poi_list:
+		if poi.is_district and not poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow, ewcfg.poi_id_oozegardens, ewcfg.poi_id_thevoid]:
+			gvs_districts.append(poi.id_poi)
+
+	execute_sql_query("UPDATE districts SET degradation = 0")
+	execute_sql_query("UPDATE districts SET time_unlock = 0")
+	execute_sql_query("UPDATE districts SET degradation = 10000 WHERE district IN {}".format(tuple(gvs_districts)))
+	logMsg('Set proper degradation values.')
+	

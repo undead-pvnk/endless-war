@@ -248,7 +248,7 @@ class EwPoi:
 		is_tutorial = False,
 		has_ads = False,
 		write_manuscript = False,
-		max_degradation = 1000,
+		max_degradation = 10000,
 		neighbors = None,
 		topic = "",
 		wikipage = "",
@@ -606,7 +606,7 @@ def path_to(
 
 			path_base = path
 			neighs = list(step_last.neighbors.keys())
-
+			
 			if step_penult != None and step_penult.id_poi in neighs:
 				neighs.remove(step_penult.id_poi)
 
@@ -1747,12 +1747,11 @@ def get_enemies_look_resp(user_data, district_data):
 	# identifiers are converted into lowercase, then into emoticons for visual clarity.
 	# server emoticons are also used for clarity
 	
-	enemies_in_district = district_data.get_enemies_in_district()
+	enemies_in_district = district_data.get_enemies_in_district(classes=[ewcfg.enemy_class_normal, ewcfg.enemy_class_shambler])
 
 	num_enemies = len(enemies_in_district)
 
 	enemies_resp = "\n\n"
-	numerator = 0
 
 	if num_enemies == 0:
 		enemies_resp = ""
@@ -1765,7 +1764,7 @@ def get_enemies_look_resp(user_data, district_data):
 		else:
 			identifier_text = ""
 			
-		if found_enemy_data.ai == ewcfg.enemy_ai_coward or found_enemy_data.ai == ewcfg.enemy_ai_sandbag or (found_enemy_data.ai == ewcfg.enemy_ai_defender and found_enemy_data.id_target != user_data.id_user):
+		if found_enemy_data.ai == ewcfg.enemy_ai_coward or found_enemy_data.ai == ewcfg.enemy_ai_sandbag or (found_enemy_data.ai == ewcfg.enemy_ai_defender and found_enemy_data.id_target != user_data.id_user) or (found_enemy_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler) or (found_enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state != ewcfg.life_state_shambler):
 			threat_emote = ewcfg.emote_slimeheart
 		else:
 			threat_emote = ewcfg.emote_slimeskull
@@ -1773,11 +1772,14 @@ def get_enemies_look_resp(user_data, district_data):
 		enemies_resp += ("You look around and find a\n{} **{}" + identifier_text + "**\nin this location.").format(threat_emote, found_enemy_data.display_name)
 	else:
 		enemies_resp += "You notice several enemies in this district, such as\n"
-		while numerator < (len(enemies_in_district) - 1):
-			found_enemy_data = EwEnemy(id_enemy=enemies_in_district[numerator])
+		for i in range(len(enemies_in_district) - 1):
+			found_enemy_data = EwEnemy(id_enemy=enemies_in_district[i])
 
 			if found_enemy_data.identifier != '':
-				identifier_text = " {}".format(":regional_indicator_{}:".format(found_enemy_data.identifier.lower()))
+				if not ewcfg.gvs_active:
+					identifier_text = " {}".format(":regional_indicator_{}:".format(found_enemy_data.identifier.lower()))
+				else:
+					identifier_text = " {}, ({})".format(":regional_indicator_{}:".format(found_enemy_data.identifier.lower()), found_enemy_data.gvs_coord)
 			else:
 				identifier_text = ""
 
@@ -1788,12 +1790,14 @@ def get_enemies_look_resp(user_data, district_data):
 				threat_emote = ewcfg.emote_slimeskull
 
 			enemies_resp += ("{} **{}" + identifier_text + "**\n").format(threat_emote, found_enemy_data.display_name)
-			numerator += 1
 			
 		final_enemy_data = EwEnemy(id_enemy=enemies_in_district[num_enemies - 1])
 
 		if final_enemy_data.identifier != '':
-			identifier_text = " {}".format(":regional_indicator_{}:".format(final_enemy_data.identifier.lower()))
+			if not ewcfg.gvs_active:
+				identifier_text = " {}".format(":regional_indicator_{}:".format(final_enemy_data.identifier.lower()))
+			else:
+				identifier_text = " {}, ({})".format( ":regional_indicator_{}:".format(final_enemy_data.identifier.lower()), final_enemy_data.gvs_coord)
 		else:
 			identifier_text = ""
 			

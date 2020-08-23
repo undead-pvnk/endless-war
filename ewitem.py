@@ -1325,7 +1325,7 @@ async def item_look(cmd):
 
 			durability = item.item_props.get('durability')
 			if durability != None and item.item_type == ewcfg.it_item:
-				if item.item_props.get('id_item') in [ewcfg.item_id_paint_copper, ewcfg.item_id_paint_chrome, ewcfg.item_id_paint_gold]:
+				if item.item_props.get('id_item') in ewcfg.durability_items:
 					if durability == 1:
 						response += " It can only be used one more time."
 					else:
@@ -1436,6 +1436,22 @@ async def item_use(cmd):
 					
 			elif context == "prankcapsule":
 				response = ewsmelting.popcapsule(id_user=author, id_server=server, item=item)
+
+			elif context == ewcfg.item_id_modelovaccine:
+
+				if user_data.life_state == ewcfg.life_state_shambler:
+					user_data.life_state = ewcfg.life_state_juvenile
+					response = "You shoot the vaccine with the eagerness of a Juvenile on Slimernalia's Eve. It immediately dissolves throughout your bloodstream, causing your organs to feel like they're melting as your body undegrades." \
+								"Then, suddenly, you feel slime start to flow through you properly again. You feel rejuvenated, literally! Your genitals kinda itch, though.\n\n" \
+								"You have been cured! You are no longer a Shambler. Jesus Christ, finally."
+				else:
+					user_data.clear_status(id_status=ewcfg.status_modelovaccine_id)
+					response = user_data.applyStatus(ewcfg.status_modelovaccine_id)
+
+				user_data.degradation = 0
+				user_data.persist()
+
+				item_delete(item.id_item)
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1744,6 +1760,16 @@ def gen_item_props(item):
 			item_props["trap_user_id"] = item.trap_user_id
 			# Some prank items have nifty side effects
 			item_props["side_effect"] = item.side_effect
+		if item.context == ewcfg.context_seedpacket:
+			item_props["cooldown"] = item.cooldown
+			item_props["cost"] = item.cost
+			item_props["time_nextuse"] = item.time_nextuse
+			item_props["enemytype"] = item.enemytype
+		if item.context == ewcfg.context_tombstone:
+			item_props["brainpower"] = item.brainpower
+			item_props["cost"] = item.cost
+			item_props["stock"] = item.stock
+			item_props["enemytype"] = item.enemytype
 
 		try:
 			item_props["durability"] = item.durability

@@ -50,7 +50,12 @@ class EwDistrict:
 
 	# determines if the zone is functional
 	degradation = 0
-
+	
+	# a timestamp for when a shambler can next plant a tombstone
+	horde_cooldown = 0
+	
+	# the amount of gaiaslime the garden gankers have at their disposal
+	gaiaslime = 0
 
 	def __init__(self, id_server = None, district = None):
 		if id_server is not None and district is not None:
@@ -68,7 +73,7 @@ class EwDistrict:
 				self.max_capture_points = 0
 
 
-			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes}, {time_unlock}, {cap_side}, {degradation} FROM districts WHERE id_server = %s AND {district} = %s".format(
+			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes}, {time_unlock}, {cap_side}, {degradation}, {horde_cooldown}, {gaiaslime} FROM districts WHERE id_server = %s AND {district} = %s".format(
 
 				controlling_faction = ewcfg.col_controlling_faction,
 				capturing_faction = ewcfg.col_capturing_faction,
@@ -78,6 +83,8 @@ class EwDistrict:
 				time_unlock = ewcfg.col_time_unlock,
 				cap_side = ewcfg.col_cap_side,
 				degradation = ewcfg.col_degradation,
+				horde_cooldown = ewcfg.col_horde_cooldown,
+				gaiaslime = ewcfg.col_gaiaslime,
 			), (
 				id_server,
 				district
@@ -92,6 +99,8 @@ class EwDistrict:
 				self.time_unlock = data[0][4]
 				self.cap_side = data[0][5]
 				self.degradation = data[0][6]
+				self.horde_cooldown = data[0][7]
+				self.gaiaslime = data[0][8]
 
 				# ewutils.logMsg("EwDistrict object '" + self.name + "' created.  Controlling faction: " + self.controlling_faction + "; Capture progress: %d" % self.capture_points)
 			else:  # create new entry
@@ -104,7 +113,7 @@ class EwDistrict:
 				))
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}, {time_unlock}, {cap_side}, {degradation}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}, {time_unlock}, {cap_side}, {degradation}, {horde_cooldown}, {gaiaslime}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 			district = ewcfg.col_district,
 			controlling_faction = ewcfg.col_controlling_faction,
 			capturing_faction = ewcfg.col_capturing_faction,
@@ -113,6 +122,8 @@ class EwDistrict:
 			time_unlock = ewcfg.col_time_unlock,
 			cap_side = ewcfg.col_cap_side,
 			degradation = ewcfg.col_degradation,
+			horde_cooldown = ewcfg.col_horde_cooldown,
+			gaiaslime = ewcfg.col_gaiaslime,
 		), (
 			self.id_server,
 			self.name,
@@ -123,6 +134,8 @@ class EwDistrict:
 			self.time_unlock,
 			self.cap_side,
 			self.degradation,
+			self.horde_cooldown,
+			self.gaiaslime
 		))
 	
 	def get_number_of_friendly_neighbors(self):
@@ -233,6 +246,7 @@ class EwDistrict:
 			min_slimes = -math.inf,
 			max_slimes = math.inf,
 			scout_used = False,
+			classes = None,
 		):
 
 		client = ewutils.get_client()
@@ -241,11 +255,12 @@ class EwDistrict:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
 
-		enemies = ewutils.execute_sql_query("SELECT {id_enemy}, {slimes}, {level}, {enemytype} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1".format(
+		enemies = ewutils.execute_sql_query("SELECT {id_enemy}, {slimes}, {level}, {enemytype}, {enemyclass} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1".format(
 			id_enemy = ewcfg.col_id_enemy,
 			slimes = ewcfg.col_enemy_slimes,
 			level = ewcfg.col_enemy_level,
 			enemytype = ewcfg.col_enemy_type,
+			enemyclass = ewcfg.col_enemy_class,
 			poi = ewcfg.col_enemy_poi,
 			life_state = ewcfg.col_enemy_life_state
 		),(
@@ -260,11 +275,16 @@ class EwDistrict:
 			fetched_slimes = enemy_data_column[1] # data from slimes column in enemies table
 			fetched_level = enemy_data_column[2] # data from level column in enemies table
 			fetched_type = enemy_data_column[3] # data from enemytype column in enemies table
+			fetched_class = enemy_data_column[4] # data from enemyclass column in enemies table
 
 			# Append the enemy to the list if it meets the requirements
 			if max_level >= fetched_level >= min_level \
 			and max_slimes >= fetched_slimes >= min_slimes:
-				filtered_enemies.append(fetched_id_enemy)
+				if classes != None:
+					if fetched_class in classes:
+						filtered_enemies.append(fetched_id_enemy)
+				else:
+					filtered_enemies.append(fetched_id_enemy)
 				
 			# Don't show sandbags on !scout
 			if scout_used and fetched_type == ewcfg.enemy_type_sandbag:
@@ -606,12 +626,36 @@ class EwDistrict:
 
 	""" wether the district is still functional """
 	def is_degraded(self):
-		poi = ewcfg.id_to_poi.get(self.name)
-
-		if poi is None:
+		checked_poi = ewcfg.id_to_poi.get(self.name)
+		if checked_poi is None:
 			return True
 		
-		return self.degradation >= poi.max_degradation
+		poi = None
+		
+		# In the Gankers Vs. Shamblers event, importance is placed on districts
+		# As a result, if a district is degraded, then all of its subzones/streets are also now degraded
+		if checked_poi.is_district:
+			poi = checked_poi
+		elif checked_poi.is_street:
+			poi = ewcfg.id_to_poi.get(poi.father_district)
+		elif checked_poi.is_subzone:
+			# Subzones are a more complicated affair to check for degradation.
+			# Look to see if its mother district is a district or a street, then check for degradation of the appropriate district.
+			for mother_poi_id in checked_poi.mother_districts:
+				mother_poi = ewcfg.id_to_poi.get(mother_poi_id)
+				
+				if mother_poi.is_district:
+					# First mother POI found is a district. Break here and check for its degradation.
+					poi = mother_poi
+					break
+				elif mother_poi.is_street:
+					# First mother POI found is a street. Break here and check for its father district's degradation.
+					poi = ewcfg.id_to_poi.get(mother_poi.father_district)
+					break
+
+		# print('poi checked was {}. looking for {} degradation.'.format(self.name, poi.id_poi))
+		poi_district_data = EwDistrict(district = poi.id_poi, id_server = self.id_server)
+		return poi_district_data.degradation >= poi.max_degradation
 
 """
 	Informs the player about their current zone's capture progress
@@ -795,37 +839,113 @@ async def shamble(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 
-	if user_data.life_state != ewcfg.life_state_shambler:
+	if user_data.life_state != ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_assaultflatsbeach:
 		response = "You have too many higher brain functions left to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif user_data.life_state == ewcfg.life_state_juvenile and user_data.poi == ewcfg.poi_id_assaultflatsbeach:
+		response = "You feel an overwhelming sympathy for the plight of the Shamblers and decide to join their ranks."
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		await asyncio.sleep(5)
 		
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+		user_data = EwUser(member=cmd.message.author)
+		user_data.life_state = ewcfg.life_state_shambler
+		user_data.degradation = 100
 
-	if poi is None:
-		return
+		ewutils.moves_active[user_data.id_user] = 0
 
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
-
-	if district_data.degradation < poi.max_degradation:
-		district_data.degradation += 1
-		user_data.degradation += 1
-		district_data.persist()
+		user_data.poi = ewcfg.poi_id_nuclear_beach_edge
 		user_data.persist()
-		if district_data.degradation == poi.max_degradation:
-			response = ewcfg.str_zone_degraded.format(poi = poi.str_name)
-			await ewutils.send_message(cmd.client, cmd.message.channel, response)
-			# new_topic = None
-			# if not cmd.message.channel.topic:
-			# 	new_topic = ewcfg.channel_topic_degraded
-			# elif not (ewcfg.channel_topic_degraded in cmd.message.channel.topic):
-			# 	new_topic = cmd.message.channel.topic + " " + ewcfg.channel_topic_degraded
-			# 
-			# if new_topic:
-			# 	try:
-			# 		await cmd.client.edit_channel(channel = cmd.message.channel, topic = new_topic)
-			# 	except:
-			# 		ewutils.logMsg('Failed to set channel topic for {} to {}'.format(cmd.message.channel.name, new_topic))
-			
+		
+		member = cmd.message.author
+		
+		base_poi_channel = ewutils.get_channel(cmd.message.guild, 'nuclear-beach-edge')
+
+		response = 'You arrive inside the facility and are injected with a unique strain of the Modelovirus. Not long after, a voice on the intercom chimes in.\n**"Welcome, {}. Welcome to Downpour Laboratories. It\'s safer here. Please treat all machines and facilities with respect, they are precious to our cause."**'.format(member.display_name)
+
+		await ewrolemgr.updateRoles(client=cmd.client, member=member)
+		return await ewutils.send_message(cmd.client, base_poi_channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	else:
+		pass
+
+	# Rest in fucking pieces
+
+	# if poi is None:
+	# 	return
+	# elif not poi.is_district:
+	# 	response = "This doesn't seem like an important place to be shambling. Try a district zone instead."
+	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# elif poi.id_poi == ewcfg.poi_id_oozegardens:
+	# 	response = "The entire district is covered in Brightshades! You have no business shambling this part of town!"
+	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 
+	# in_operation, op_poi = ewutils.gvs_check_if_in_operation(user_data)
+	# if in_operation:
+	# 	if op_poi != user_data.poi:
+	# 		response = "You aren't allowed to !shamble this district, per Dr. Downpour's orders.\n(**!goto {}**)".format(op_poi)
+	# 		return await ewutils.send_message(cmd.client, cmd.message.channel,  ewutils.formatMessage(cmd.message.author, response))
+	# else:
+	# 	response = "You aren't even in a Graveyard Op yet!\n(**!joinops [tombstone]**)"
+	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 
+	# if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shambler_shamble:
+	# 	response = "You know, you really just don't have the energy to shamble this place right now. Try again in {} seconds.".format(int(ewcfg.cd_shambler_shamble-(time_now-user_data.time_lasthaunt)))
+	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 
+	# district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
+	# 
+	# if district_data.degradation < poi.max_degradation:
+	# 	district_data.degradation += 1
+	# 	# user_data.degradation += 1
+	# 	user_data.time_lasthaunt = time_now
+	# 	district_data.persist()
+	# 	user_data.persist()
+	# 	
+	# 	response = "You shamble {}.".format(poi.str_name)
+	# 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 
+	# 	if district_data.degradation == poi.max_degradation:
+	# 		response = ewcfg.str_zone_degraded.format(poi = poi.str_name)
+	# 		await ewutils.send_message(cmd.client, cmd.message.channel, response)
+
+async def rejuvenate(cmd):
+	user_data = EwUser(member=cmd.message.author)
+
+	if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_oozegardens:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif user_data.life_state == ewcfg.life_state_shambler and user_data.poi == ewcfg.poi_id_oozegardens:
+		response = "You decide to change your ways and become one of the Garden Gankers in order to overthrow your old master."
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		await asyncio.sleep(5)
+
+		user_data = EwUser(member=cmd.message.author)
+		user_data.life_state = ewcfg.life_state_juvenile
+		user_data.degradation = 0
+		user_data.gvs_currency = 0
+
+		ewutils.moves_active[user_data.id_user] = 0
+
+		user_data.poi = ewcfg.poi_id_og_farms
+		user_data.persist()
+
+		client = ewutils.get_client()
+		server = client.get_guild(user_data.id_server)
+		member = server.get_member(user_data.id_user)
+		
+		base_poi_channel = ewutils.get_channel(cmd.message.guild, ewcfg.channel_og_farms)
+
+		response = "You enter into Atomic Forest inside the farms of Ooze Gardens and are sterilized of the Modelovirus. Hortisolis gives you a big hug and says he's glad you've overcome your desire for vengeance in pursuit of deposing Downpour."
+
+		await ewrolemgr.updateRoles(client=cmd.client, member=member)
+		return await ewutils.send_message(cmd.client, base_poi_channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		pass
+
+
 """
 	Updates/Increments the capture_points values of all districts every time it's called
 """

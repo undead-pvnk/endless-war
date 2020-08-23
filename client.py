@@ -582,6 +582,8 @@ cmd_map = {
 
 	# Enemies
 	ewcfg.cmd_summonenemy: ewhunting.summonenemy,
+	ewcfg.cmd_deleteallenemies: ewhunting.delete_all_enemies,
+	ewcfg.cmd_summongvsenemy: ewhunting.summongvsenemy,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -675,6 +677,9 @@ cmd_map = {
 	
 	# Checks the status of ewutils.TERMINATE
 	ewcfg.cmd_checkbot: ewutils.check_bot,
+	
+	# Sets degradation values for GvS
+	ewcfg.cmd_degradedistricts: ewutils.degrade_districts,
 
 	# debug commands
 	# ewcfg.cmd_debug1: ewdebug.debug1,
@@ -705,14 +710,15 @@ cmd_map = {
 	# Praying at the base of ENDLESS WAR.
 	ewcfg.cmd_pray: ewcmd.pray,
 
-	# shambling
+	# Gankers Vs. Shamblers gang swapping
 	ewcfg.cmd_shamble: ewdistrict.shamble,
+	ewcfg.cmd_rejuvenate: ewdistrict.rejuvenate,
 	
-	# shamble ball
-	ewcfg.cmd_shambleball: ewsports.shambleball,
-	ewcfg.cmd_shamblego: ewsports.shamblego,
-	ewcfg.cmd_shamblestop: ewsports.shamblestop,
-	ewcfg.cmd_shambleleave: ewsports.shambleleave,
+	# slimeball
+	ewcfg.cmd_slimeball: ewsports.slimeball,
+	ewcfg.cmd_slimeballgo: ewsports.slimeballgo,
+	ewcfg.cmd_slimeballstop: ewsports.slimeballstop,
+	ewcfg.cmd_slimeballleave: ewsports.slimeballleave,
 
 	# flush items and slime from subzones into their mother district
 	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones,
@@ -738,6 +744,29 @@ cmd_map = {
 	# ewcfg.cmd_set_gambit: ewcmd.set_gambit, #debug
 	# ewcfg.cmd_pointandlaugh: ewcmd.point_and_laugh,
 	ewcfg.cmd_prank: ewcmd.prank,
+	
+	# Gankers Vs. Shamblers
+	ewcfg.cmd_gvs_printgrid: ewcmd.gvs_print_grid,
+	ewcfg.cmd_gvs_printgrid_alt1: ewcmd.gvs_print_grid,
+	ewcfg.cmd_gvs_printlane: ewcmd.gvs_print_lane,
+	ewcfg.cmd_gvs_incubategaiaslimeoid: ewcmd.gvs_incubate_gaiaslimeoid,
+	ewcfg.cmd_gvs_fabricatetombstone: ewcmd.gvs_fabricate_tombstone,
+	ewcfg.cmd_gvs_joinoperation: ewcmd.gvs_join_operation,
+	# ewcfg.cmd_gvs_leaveoperation: ewcmd.gvs_leave_operation,
+	ewcfg.cmd_gvs_checkoperation: ewcmd.gvs_check_operations,
+	ewcfg.cmd_gvs_plantgaiaslimeoid: ewcmd.gvs_plant_gaiaslimeoid,
+	ewcfg.cmd_gvs_almanac: ewcmd.almanac,
+	ewcfg.cmd_gvs_searchforbrainz: ewcmd.gvs_searchforbrainz,
+	ewcfg.cmd_gvs_grabbrainz: ewcmd.gvs_grabbrainz,
+	ewcfg.cmd_gvs_dive: ewcmd.gvs_dive,
+	ewcfg.cmd_gvs_resurface: ewcmd.gvs_resurface,
+	ewcfg.cmd_gvs_sellgaiaslimeoid: ewcmd.gvs_sell_gaiaslimeoid,
+	ewcfg.cmd_gvs_sellgaiaslimeoid_alt: ewcmd.gvs_sell_gaiaslimeoid,
+	ewcfg.cmd_gvs_dig: ewcmd.dig,
+	ewcfg.cmd_gvs_progress: ewcmd.gvs_progress,
+	ewcfg.cmd_gvs_gaiaslime: ewcmd.gvs_gaiaslime,
+	ewcfg.cmd_gvs_gaiaslime_alt1: ewcmd.gvs_gaiaslime,
+	ewcfg.cmd_gvs_brainz: ewcmd.gvs_brainz,
 
 	# race
 	ewcfg.cmd_set_race: ewrace.set_race,
@@ -941,13 +970,18 @@ async def on_ready():
 		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
 		
-		#if not debug:
-		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
-		await ewtransport.init_transports(id_server = server.id)
-		asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
+		if ewcfg.gvs_active:
+			asyncio.ensure_future(ewutils.gvs_gamestate_tick_loop(id_server=server.id))
+		else:
+			# Enemies do not spawn randomly during Gankers Vs. Shamblers
+			asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
+
+		if not debug:
+			await ewtransport.init_transports(id_server = server.id)
+			asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
-		asyncio.ensure_future(ewsports.shambleball_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewsports.slimeball_tick_loop(id_server = server.id))
 		
 		print('\nNUMBER OF CHANNELS IN SERVER: {}\n'.format(len(server.channels)))
 
@@ -1189,11 +1223,9 @@ async def on_ready():
 							# 	market_data.weather = ewcfg.weather_bicarbonaterain
 
 							# Randomly select a new weather pattern. Try again if we get the same one we currently have.
-							# while market_data.weather == weather_old:
-							# 	pick = random.randrange(len(ewcfg.weather_list))
-							# 	market_data.weather = ewcfg.weather_list[pick].name
-
-						market_data.weather = ewcfg.weather_bicarbonaterain
+							while market_data.weather == weather_old:
+								pick = random.randrange(len(ewcfg.weather_list))
+								market_data.weather = ewcfg.weather_list[pick].name
 
 						# Log message for statistics tracking.
 						ewutils.logMsg("The weather changed. It's now {}.".format(market_data.weather))
@@ -1477,6 +1509,8 @@ async def on_message(message):
 				return await ewbook.zine_dm_commands(cmd=cmd_obj)
 			elif poi.is_apartment:
 				return await ewapt.aptCommands(cmd=cmd_obj)
+			elif ewcfg.cmd_gvs_grabbrainz in cmd_obj.message.content.lower():
+				return await ewcmd.gvs_grabbrainz(cmd_obj)
 			else:
 				
 				# Only send the help response once every thirty seconds. There's no need to spam it.

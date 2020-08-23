@@ -80,6 +80,10 @@ class EwUser:
 	time_lastdeath = 0
 	time_racialability = 0
 	time_lastpremiumpurchase = 0
+	
+	#GANKERS VS SHAMBLERS
+	gvs_currency = 0
+	gvs_time_lastshambaquarium = 0
 
 	apt_zone = "empty"
 	visiting = "empty"
@@ -237,10 +241,10 @@ class EwUser:
 			self.bounty = 0
 			self.time_lastdeath = time_now		
 	
-			if self.life_state == ewcfg.life_state_shambler:
-				self.degradation += 1
-			else:
-				self.degradation += 5
+			# if self.life_state == ewcfg.life_state_shambler:
+			# 	self.degradation += 1
+			# else:
+			# 	self.degradation += 5
 
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
@@ -252,6 +256,9 @@ class EwUser:
 					item_fraction = 4
 					food_fraction = 4
 					cosmetic_fraction = 4
+
+					# Remove them from Garden Ops where applicable
+					ewutils.execute_sql_query("DELETE FROM gvs_ops_choices WHERE id_user = '{}'".format(self.id_user))
 
 				else:  # If you were a Gangster.
 					item_fraction = 2
@@ -419,6 +426,7 @@ class EwUser:
 						
 			try:
 				if item_props['id_food'] in ["coleslaw","bloodcabbagecoleslaw"]:
+					self.clear_status(id_status = ewcfg.status_ghostbust_id)
 					self.applyStatus(id_status = ewcfg.status_ghostbust_id)
 					#Bust player if they're a ghost
 					if self.life_state == ewcfg.life_state_corpse:
@@ -491,19 +499,21 @@ class EwUser:
 			ewutils.logMsg("Failed to clear mutations for user {}.".format(self.id_user))
 
 	def equip(self, weapon_item = None):
+
+		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+
 		if self.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't equip weapons."
-		elif self.life_state == ewcfg.life_state_juvenile:
+		elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in weapon.classes:
 			response = "Juvies can't equip weapons."
 		elif self.life_state == ewcfg.life_state_shambler:
 			response = "Shamblers can't equip weapons."
 		elif self.weaponmarried == True:
 			current_weapon = ewitem.EwItem(id_item = self.weapon)
-			if weapon_item.item_props.get("married") == self.id_user:
+			if int(weapon_item.item_props.get("married")) == self.id_user:
 				response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
 				self.weapon = weapon_item.id_item
 
-				weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 				if ewcfg.weapon_class_captcha in weapon.classes:
 					captcha = ewutils.generate_captcha(length = weapon.captcha_length)
 					weapon_item.item_props["captcha"] = captcha
@@ -521,7 +531,6 @@ class EwUser:
 			if self.sidearm == self.weapon:
 				self.sidearm = -1
 
-			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 			if ewcfg.weapon_class_captcha in weapon.classes:
 				captcha = ewutils.generate_captcha(length = weapon.captcha_length)
 				weapon_item.item_props["captcha"] = captcha
@@ -531,9 +540,12 @@ class EwUser:
 		return response
 
 	def equip_sidearm(self, sidearm_item = None):
+		
+		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+
 		if self.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't equip weapons."
-		elif self.life_state == ewcfg.life_state_juvenile:
+		elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in sidearm.classes:
 			response = "Juvies can't equip weapons."
 		elif self.weaponmarried == True and sidearm_item.item_props.get("married") == self.id_user:
 			current_weapon = ewitem.EwItem(id_item = self.weapon)
@@ -991,7 +1003,8 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -1046,6 +1059,8 @@ class EwUser:
 					ewcfg.col_race,
 					ewcfg.col_time_racialability,
 					ewcfg.col_time_lastpremiumpurchase,
+					ewcfg.col_gvs_currency,
+					ewcfg.col_gvs_time_lastshambaquarium,
 				), (
 					id_user,
 					id_server
@@ -1108,6 +1123,8 @@ class EwUser:
 					self.race = result[51]
 					self.time_racialability = result[52]
 					self.time_lastpremiumpurchase = result[53]
+					self.gvs_currency = result[54]
+					self.gvs_time_lastshambaquarium = result[55]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -1200,8 +1217,7 @@ class EwUser:
 			self.limit_fix()
 
 			# Save the object.
-
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -1259,6 +1275,8 @@ class EwUser:
 				ewcfg.col_race,
 				ewcfg.col_time_racialability,
 				ewcfg.col_time_lastpremiumpurchase,
+				ewcfg.col_gvs_currency,
+				ewcfg.col_gvs_time_lastshambaquarium,
 			), (
 				self.id_user,
 				self.id_server,
@@ -1317,6 +1335,8 @@ class EwUser:
 				self.race,
 				self.time_racialability,
 				self.time_lastpremiumpurchase,
+				self.gvs_currency,
+				self.gvs_time_lastshambaquarium,
 			))
 
 			conn.commit()
