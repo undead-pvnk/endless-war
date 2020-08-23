@@ -412,6 +412,9 @@ async def sow(cmd):
 					if ewcfg.vendor_farm not in vegetable.vendors:
 						response = "It sure would be nice if {}s grew on trees, but alas they do not. Idiot.".format(item_sought.get("name"))
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					elif user_data.life_state != ewcfg.life_state_juvenile:
+						response = "You lack the knowledge required to grow {}.".format(item_sought.get("name"))
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				else:
 					response = "The soil has enough toxins without you burying your trash here."
