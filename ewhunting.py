@@ -830,20 +830,32 @@ class EwEnemy:
 		target_enemy, group_attack = get_target_by_ai(enemy_data, cannibalize = True)
 		
 		if enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid:
+			if enemy_data.enemy_props.get('primed') != None:
+				if enemy_data.enemy_props.get('primed') != 'true':
+					return
+			
 			# target_enemy is a dict, enemy IDs are mapped to their coords
 			if len(target_enemy) == 1 and not group_attack:
 				#print('gaia found target')
 				used_id = None
+				
 				for key in target_enemy.keys():
 					used_id = key
+					
 				target_enemy = EwEnemy(id_enemy=used_id, id_server=enemy_data.id_server)
+				
 				# print('gaia changed target_enemy into enemy from dict')
 			elif len(target_enemy) == 0:
 				target_enemy = None
 		
 		elif enemy_data.enemyclass == ewcfg.enemy_class_shambler:
 			if target_enemy == None:
-				await sh_move(enemy_data)
+				return await sh_move(enemy_data)
+			elif enemy_data.enemytype == ewcfg.enemy_type_dinoshambler:
+				if target_enemy.enemytype == ewcfg.enemy_type_gaia_suganmanuts and enemy_data.enemy_props.get('jumping') == 'true':
+					enemy_data.enemy_props['jumping'] = 'false'
+				else:
+					return await sh_move(enemy_data)
 
 		if check_raidboss_countdown(enemy_data) and enemy_data.life_state == ewcfg.enemy_lifestate_unactivated:
 			# Raid boss has activated!
@@ -958,6 +970,37 @@ class EwEnemy:
 				#target_enemy.bleed_storage += slimes_tobleed
 				target_enemy.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
 				sewer_data.change_slimes(n=slimes_drained)
+				
+				if target_enemy.enemytype == ewcfg.enemy_type_gaia_razornuts:
+					bite_response = "{} [{}] ({}) bit on a razornut and got hurt! They lost 20000 slime!".format(enemy_data.display_name, enemy_data.identifier, enemy_data.gvs_coord)
+					enemy_data.change_slimes(n=-20000)
+					if enemy_data.slimes <= 0:
+						bite_response += " The attack killed {} [{}] ({}) in the process.".format(enemy_data.display_name, enemy_data.identifier, enemy_data.gvs_coord)
+
+						delete_enemy(enemy_data)
+						resp_cont.add_channel_response(ch_name, bite_response)
+
+						return await resp_cont.post()
+					else:
+						resp_cont.add_channel_response(ch_name, bite_response)
+				elif enemy_data.enemytype == ewcfg.enemy_type_shambleballplayer:
+					current_target_coord = target_enemy.gvs_coord
+					row = current_target_coord[0]
+					column = int(current_target_coord[1])
+					
+					if column < 9:
+						new_coord = "{}{}".format(row, column+1)
+						
+						gaias_in_coord = ewutils.gvs_get_gaias_from_coord(enemy_data.poi, new_coord)
+	
+						if len(gaias_in_coord) > 0:
+							pass
+						else:
+							punt_response = "{} [{}] ({}) punts a {} into {}!".format(enemy_data.display_name, enemy_data.identifier, enemy_data.gvs_coord, target_enemy.display_name, new_coord)
+							resp_cont.add_channel_response(ch_name, punt_response)
+							
+							target_enemy.gvs_coord = new_coord
+							target_enemy.persist()
 
 				if was_killed:
 					# Enemy was killed.
@@ -1028,9 +1071,9 @@ class EwEnemy:
 							damage=damage,
 						)
 							
-					if below_full == False and below_half == False:
-						should_post_resp_cont = False
-						response = ""
+					# if below_full == False and below_half == False:
+					# 	should_post_resp_cont = False
+					# 	response = ""
 							
 					target_enemy.persist()
 					resp_cont.add_channel_response(ch_name, response)
@@ -1040,6 +1083,9 @@ class EwEnemy:
 					enemy_data.persist()
 
 				district_data.persist()
+				
+			if enemy_data.attacktype == ewcfg.enemy_attacktype_gvs_g_explosion:
+				delete_enemy(enemy_data)
 				
 		elif target_enemy != None and group_attack:
 			# print('group attack...')
@@ -1154,9 +1200,9 @@ class EwEnemy:
 								damage=damage,
 							)
 	
-						if below_full == False and below_half == False:
-							should_post_resp_cont = False
-							response = ""
+						# if below_full == False and below_half == False:
+						# 	should_post_resp_cont = False
+						# 	response = ""
 	
 						target_enemy.persist()
 						resp_cont.add_channel_response(ch_name, response)
@@ -1166,6 +1212,9 @@ class EwEnemy:
 						enemy_data.persist()
 
 				district_data.persist()
+
+			if enemy_data.attacktype == ewcfg.enemy_attacktype_gvs_g_explosion:
+				delete_enemy(enemy_data)
 
 		# Send the response to the player.
 		resp_cont.format_channel_response(ch_name, enemy_data)
@@ -2034,13 +2083,25 @@ async def enemy_perform_action_gvs(id_server):
 	for row in enemydata:
 		
 		enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
+		
+		if enemy == None:
+			return
+
+		ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
+		
+		server = client.get_guild(id_server)
+		channel = ewutils.get_channel(server, ch_name)
 
 		# This function returns a false value if that enemy can't act on that turn.
 		if not check_enemy_can_act(enemy):
 			continue
 		
 		# Go through turn counters unrelated to the prevention of acting on that turn. 
-		handle_turn_timers(enemy)
+		turn_timer_response = handle_turn_timers(enemy)
+		if turn_timer_response != None and turn_timer_response != "":
+			await ewutils.send_message(client, channel, turn_timer_response)
+
+		enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
 		
 		# Unarmed Gaiaslimeoids have no role in combat.
 		if enemy.attacktype == ewcfg.enemy_attacktype_unarmed:
@@ -2059,7 +2120,6 @@ async def enemy_perform_action_gvs(id_server):
 					await resp_cont.post()
 
 			# If an enemy is alive, make it perform the kill (or cannibalize) function.
-			ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
 
 			# Check if the enemy can do anything right now
 			if enemy.life_state == ewcfg.enemy_lifestate_unactivated and check_raidboss_countdown(enemy):
@@ -2324,7 +2384,7 @@ def find_enemy(enemy_search=None, user_data=None):
 		tokens_set_upper = set(enemy_search_tokens_upper)
 		
 		identifiers_found = tokens_set_upper.intersection(set(ewcfg.identifier_letters))
-		coordinates_found = tokens_set_upper.intersection(set(ewcfg.gvs_valid_coords_gaia))
+		# coordinates_found = tokens_set_upper.intersection(set(ewcfg.gvs_valid_coords_gaia))
 
 		if len(identifiers_found) > 0:
 
@@ -2348,26 +2408,26 @@ def find_enemy(enemy_search=None, user_data=None):
 				enemy_found = enemy
 				break
 				
-		elif len(coordinates_found) > 0:
-			# user passed in a GvS coordinate for a district specific enemy
-
-			searched_coord= coordinates_found.pop()
-
-			enemydata = ewutils.execute_sql_query(
-				"SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {coord} = %s AND {life_state} = 1".format(
-					id_enemy=ewcfg.col_id_enemy,
-					poi=ewcfg.col_enemy_poi,
-					coord=ewcfg.col_enemy_gvs_coord,
-					life_state=ewcfg.col_enemy_life_state
-				), (
-					user_data.poi,
-					searched_coord,
-				))
-
-			for row in enemydata:
-				enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
-				enemy_found = enemy
-				break
+		# elif len(coordinates_found) > 0:
+		# 	# user passed in a GvS coordinate for a district specific enemy
+		# 
+		# 	searched_coord= coordinates_found.pop()
+		# 
+		# 	enemydata = ewutils.execute_sql_query(
+		# 		"SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {coord} = %s AND {life_state} = 1".format(
+		# 			id_enemy=ewcfg.col_id_enemy,
+		# 			poi=ewcfg.col_enemy_poi,
+		# 			coord=ewcfg.col_enemy_gvs_coord,
+		# 			life_state=ewcfg.col_enemy_life_state
+		# 		), (
+		# 			user_data.poi,
+		# 			searched_coord,
+		# 		))
+		# 
+		# 	for row in enemydata:
+		# 		enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
+		# 		enemy_found = enemy
+		# 		break
 		else:
 			# last token was a string, identify enemy by name
 
@@ -3420,37 +3480,51 @@ def check_enemy_can_act(enemy_data):
 		return False
 
 def handle_turn_timers(enemy_data):
+	response = ""
+	
 	# Handle specific turn counters of all GvS enemies.
 	if enemy_data.enemytype == ewcfg.enemy_type_gaia_brightshade:
 		countdown = int(enemy_data.enemy_props.get('gaiaslimecountdown'))
 
 		if countdown != None:
 			if countdown == 0:
+				gaiaslime_amount = 0
+				
 				enemy_data.enemy_props['gaiaslimecountdown'] = 2
 				district_data = EwDistrict(district=enemy_data.poi, id_server=enemy_data.id_server)
 
 				if enemy_data.enemy_props.get('joybean') != None:
 					if enemy_data.enemy_props.get('joybean') == 'true':
-						district_data.gaiaslime += 50
+						gaiaslime_amount = 50
 					else:
-						district_data.gaiaslime += 25
+						gaiaslime_amount = 25
 				else:
-					district_data.gaiaslime += 25
-
+					gaiaslime_amount = 25
+					
+				district_data.gaiaslime += gaiaslime_amount
 				district_data.persist()
+				
+				response = "{} ({}) produced {} gaiaslime!".format(enemy_data.display_name, enemy_data.gvs_coord, gaiaslime_amount)
 
 			else:
 				enemy_data.enemy_props['gaiaslimecountdown'] = countdown - 1
 
 			enemy_data.persist()
+			return response
 
 	elif enemy_data.enemytype == ewcfg.enemy_type_gaia_poketubers:
 		countdown = int(enemy_data.enemy_props.get('primecountdown'))
+		
+		if enemy_data.enemy_props.get('primed') != 'true':
 
-		if countdown != None:
-			if countdown == 0:
-				enemy_data.enemy_props['primed'] = 'true'
-			else:
-				enemy_data.enemy_props['primecountdown'] = countdown - 1
-
-			enemy_data.persist()
+			if countdown != None:
+				if countdown == 0:
+					enemy_data.enemy_props['primed'] = 'true'
+					
+					response = "{} ({}) is primed and ready.".format(enemy_data.display_name, enemy_data.gvs_coord)
+					
+				else:
+					enemy_data.enemy_props['primecountdown'] = countdown - 1
+	
+				enemy_data.persist()
+				return response

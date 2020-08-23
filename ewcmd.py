@@ -3155,8 +3155,7 @@ async def gvs_join_operation(cmd):
 				# 	response += "\n(Your {}'s durability has been lowered)".format(item_props.get('item_name'))
 				# else:
 				# 	ewitem.item_delete(item.id_item)
-				# 	response += "\n(Your {} has been used up completely)".format(item_props.get('item_name'))
-					
+				# 	response += "\n(Your {} has been used up completely)".format(item_props.get('item_name'))	
 
 				op_data = EwOperationData(
 					id_user=user_data.id_user,
@@ -3490,7 +3489,6 @@ async def dig(cmd): # TODO  zen garden functionality
 
 	# Look for gaiaslimeoid
 	gaias = ewutils.gvs_get_gaias_from_coord(user_data.poi, coord)
-	print(gaias)
 
 	dig_low_priority = [ewcfg.enemy_type_gaia_rustealeaves]
 	dig_mid_priority = []
