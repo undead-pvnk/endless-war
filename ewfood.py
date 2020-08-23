@@ -132,7 +132,7 @@ async def menu(cmd):
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 		#mother_district_data = EwDistrict(district = destination_poi.id_poi, id_server = user_data.id_server)
 
-		if district_data.is_degraded():
+		if district_data.is_degraded() and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
@@ -257,7 +257,7 @@ async def order(cmd):
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
-		if district_data.is_degraded():
+		if district_data.is_degraded() and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		#value = ewutils.flattenTokenListToString(cmd.tokens[1:2])
