@@ -470,7 +470,7 @@ def formatMessage(user_target, message):
 			else:
 				# Send messages for normal enemies, and allow mentioning with @
 				if user_target.identifier != '':
-					return "**{} [{}]:** {}".format(user_target.display_name, user_target.identifier, message)
+					return "**{} [{}] ({}):** {}".format(user_target.display_name, user_target.identifier, user_target.gvs_coord, message)
 				else:
 					return "**{}:** {}".format(user_target.display_name, message)
 
@@ -2747,7 +2747,7 @@ def gvs_check_operation_duplicate(id_user, district, enemytype, faction):
 				faction
 			))
 
-	if entry != None:
+	if len(entry) > 0:
 		return True
 	else:
 		return False
@@ -2817,7 +2817,7 @@ def gvs_check_if_in_operation(user_data):
 		))
 
 	if len(op_data) > 0:
-		return True, op_data[1]
+		return True, op_data[0][1]
 	else:
 		return False, None
 
@@ -2829,13 +2829,13 @@ def gvs_get_gaias_from_coord(poi, checked_coord):
 			checked_coord
 		))
 	
-	gaias_typetoid = {}
+	gaias_id_to_type_map = {}
 	
 	for gaia in gaias:
 		if gaia[1] in ewcfg.gvs_enemies_gaiaslimeoids:
-			gaias_typetoid[gaia[0]] = gaia[1]
+			gaias_id_to_type_map[gaia[0]] = gaia[1]
 	
-	return gaias_typetoid
+	return gaias_id_to_type_map
 
 # If there are no player operations, spawn in ones that the bot uses
 def gvs_insert_bot_ops(id_server, district, enemyfaction):
@@ -2862,7 +2862,7 @@ def gvs_insert_bot_ops(id_server, district, enemyfaction):
 				district,
 				type,
 				enemyfaction,
-				0,
+				-1,
 				0,
 			))
 			
@@ -2899,6 +2899,23 @@ def gvs_insert_bot_ops(id_server, district, enemyfaction):
 				district,
 				type,
 				enemyfaction,
-				0,
+				-1,
 				20,
 			))
+			
+async def degrade_districts(cmd):
+	
+	if not cmd.message.author.guild_permissions.administrator:
+		return
+
+	gvs_districts = []
+
+	for poi in ewcfg.poi_list:
+		if poi.is_district and not poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow, ewcfg.poi_id_oozegardens, ewcfg.poi_id_thevoid]:
+			gvs_districts.append(poi.id_poi)
+
+	execute_sql_query("UPDATE districts SET degradation = 0")
+	execute_sql_query("UPDATE districts SET time_unlock = 0")
+	execute_sql_query("UPDATE districts SET degradation = 10000 WHERE district IN {}".format(tuple(gvs_districts)))
+	logMsg('Set proper degradation values.')
+	

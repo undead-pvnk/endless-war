@@ -677,6 +677,9 @@ cmd_map = {
 	
 	# Checks the status of ewutils.TERMINATE
 	ewcfg.cmd_checkbot: ewutils.check_bot,
+	
+	# Sets degradation values for GvS
+	ewcfg.cmd_degradedistricts: ewutils.degrade_districts,
 
 	# debug commands
 	# ewcfg.cmd_debug1: ewdebug.debug1,
@@ -749,7 +752,7 @@ cmd_map = {
 	ewcfg.cmd_gvs_incubategaiaslimeoid: ewcmd.gvs_incubate_gaiaslimeoid,
 	ewcfg.cmd_gvs_fabricatetombstone: ewcmd.gvs_fabricate_tombstone,
 	ewcfg.cmd_gvs_joinoperation: ewcmd.gvs_join_operation,
-	ewcfg.cmd_gvs_leaveoperation: ewcmd.gvs_leave_operation,
+	# ewcfg.cmd_gvs_leaveoperation: ewcmd.gvs_leave_operation,
 	ewcfg.cmd_gvs_checkoperation: ewcmd.gvs_check_operations,
 	ewcfg.cmd_gvs_plantgaiaslimeoid: ewcmd.gvs_plant_gaiaslimeoid,
 	ewcfg.cmd_gvs_almanac: ewcmd.almanac,

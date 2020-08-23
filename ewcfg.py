@@ -1282,6 +1282,7 @@ cmd_collectopics = cmd_prefix + 'collecttopics'
 cmd_synctopics = cmd_prefix + 'synctopics'
 cmd_shutdownbot = cmd_prefix + 'shutdownbot'
 cmd_checkbot = cmd_prefix + 'checkbot'
+cmd_degradedistricts = cmd_prefix + 'degradedistricts'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
@@ -1659,7 +1660,7 @@ farm_action_weed = 3
 farm_action_pesticide = 4
 
 # gvs
-brainz_per_grab = 5
+brainz_per_grab = 25
 
 farm_actions = [
 	EwFarmAction(
@@ -1731,7 +1732,7 @@ cd_autocannibalize = 60 * 60 # can only eat yourself once per hour
 cd_drop_bone = 5 * 60
 cd_change_race = 24 * 60 * 60 # can only change your race once per day
 
-cd_gvs_searchforbrainz = 600
+cd_gvs_searchforbrainz = 300
 
 # PvP timer pushouts
 time_pvp_kill = 30 * 60
@@ -6764,20 +6765,20 @@ enemy_attack_type_list = [
 		#str_trauma = "NULL,
 		str_kill = "{name_target} has inhaled too much of {name_enemy}'s toxic vape cloud! {emote_skull}",
 		str_killdescriptor = "vaped to death",
-		str_damage = "{name_enemy} completely covers {name_enemy} in a toxic vape cloud!",
+		str_damage = "{name_enemy} completely covers {name_target} in a toxic vape cloud!",
 		str_groupattack = "{name_enemy} spreads its toxic vape cloud to a group of shamblers!",
 		fn_effect = atf_gvs_basic
 	),
 	EwAttackType( # GvS - 8
 		id_type = "g_hotbox",
 		str_crit = "NULL",
-		str_miss = "**MISS!** ",
+		str_miss = "**MISS!** weed",
 		#str_trauma_self = "NULL", 
 		#str_trauma = "NULL,
 		str_kill = " {emote_skull}",
 		str_killdescriptor = "forced to smoke too much weed",
-		str_damage = "",
-		str_groupattack = "",
+		str_damage = "weed",
+		str_groupattack = "weed",
 		fn_effect = atf_gvs_basic
 	),
 	EwAttackType( # GvS - 9
@@ -25095,7 +25096,7 @@ enemy_data_table = {
 			'primed': 'false',
 			'primecountdown': 3,
 			'setdamage': 500000,
-            'range': 0.5
+            'range': 1
 		}
 	},
 	enemy_type_gaia_pulpgourds: {
@@ -25160,7 +25161,7 @@ enemy_data_table = {
 		"aliases": ['purple','killiflower','cauliflower'],
 		"class": enemy_class_gaiaslimeoid,
 		"props": {
-			'range': 10,
+			'range': 12,
 			'piercing': 'true',
 			'setdamage': '15000',
 		}
@@ -25253,7 +25254,7 @@ enemy_data_table = {
 		"aliases": ['bright','shade'],
 		"class": enemy_class_gaiaslimeoid,
 		"props": {
-			'gaiaslimecountdown': 4
+			'gaiaslimecountdown': 2
 		}
 	},
 	enemy_type_gaia_blacklimes: {
@@ -25695,7 +25696,7 @@ gvs_almanac = {
 	enemy_type_gaia_suganmanuts: 'Suganmanuts\' large health pool allows it to provide a great amount of defensive utility in battle. If a Suganmanut is damaged, you can !plant another one on top of it to repair it. When given a Joybean, it will occasionally spit out its nut, ricocheting off of shamblers.\n"I swear I\'m not gay" says Suganmanuts. "I just like the taste". The look in his eye told a different story, however. That, and the 50 tabs of Grimedr he had open.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743240999492649071/suganmanuts_seedpacket.png',
 	enemy_type_gaia_pinkrowddishes: 'Pink Rowddishes attack by !thrash-ing about, dealing massive damage to all Shamblers within a short range in front of them. They can attack behind themselves as well. When given a Joybean, it will begin to violently scream. These screams act as an increase to its range, reaching three times as far as a basic attack.\nRowddishes are hot-blooded and looking to brawl. Though they have no eyes, they make up for it with intense reflexes. In some instances, they will even go as far as to lash out at the Garden Gankers who have planted them. "Back off, Juvie!", says Rowddish. "Unless you want me to turn you into a knuckle sandwich! Ha! Up-five", he says as he hi-fives himself. Even when there are no Shamblers around, Rowddishes will continue to pick fights with each other, frequently engaging in what are known as "No Hard Feelings Civil Wars".\nhttps://cdn.discordapp.com/attachments/743240814250950678/743258274761015326/pinkrowddish_seedpacket.png',
 	#enemy_type_gaia_dankwheat: 'Dankwheat tend to be a utility-focussed Gaiaslimeoid, dealing minimal damage, but whatever does enter their short attack radius that surrounds them will be slowed down by a status effect. When given a Joybean, it can reach further in front and in back of it for targets, and the status effect will also lower the damage output of its targets.\n"Dude, what\'s a text command?" one stalk of Dankwheat says. "Dude, what GAME are we even IN right now??", another adds. "Guys, wait, hold on, my seaweed joint is running out, can one of you spot me?", the third one chimes in. These guys can never seem to get their fucking heads straight, outside of the 22 minutes every Saturday that a new MLP episode is on the air.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241007025488023/dankwheat_seedpacket.png',
-	enemy_type_gaia_brightshade: 'Brightshades are an essential plant to have in any Garden Op. Not only do they provide Garden Gankers with precious gaiaslime, but they will also periodically de-shamble a district. When given a Joybean, both of these effects are doubled in effectiveness.\nIn her past, Brightshade was a beautiful singer, frequently selling out even to large crowds. When the Shamblers came to town, she decided to put her career on hold, however. She is a shining gem among Gaiaslimeoids, revered and loved by all, and by some, perhaps a bit too much...\n"I just got this Brightshade poster off of Amoozeon, and oh my fucking God, you can see her TITS."\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241005406486658/brightshade_seedpacket.png',
+	enemy_type_gaia_brightshade: 'Brightshades are an essential plant to have in any Garden Op. They provide Garden Gankers with precious gaiaslime, at a rate of 25 gaiaslime every 20 seconds. When given a Joybean, this output is doubled in effectiveness.\nIn her past, Brightshade was a beautiful singer, frequently selling out even to large crowds. When the Shamblers came to town, she decided to put her career on hold, however. She is a shining gem among Gaiaslimeoids, revered and loved by all, and by some, perhaps a bit too much...\n"I just got this Brightshade poster off of Amoozeon, and oh my fucking God, you can see her TITS."\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241005406486658/brightshade_seedpacket.png',
 	#enemy_type_gaia_blacklimes: 'When a Black Lime gets bitten, its sour taste will repulse the shambler and redirect it to a different lane entirely. If a Black Lime is damaged, you can !plant another one on top of it to repair it. When given a Joybean, it will shoot out a damaging stream of lime juice, shuffling all shamblers within its lane, and it will also be healed fully.\nOther Gaiaslimeoids worry about Black Lime... what he might do, who he might become. They only hang out with him as a preventative measure. "He\'s... he\'s just different, you know?", says Brightshade as she watches Black Lime brutally torture disease-infested rodents from a safe distance.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241002319347873/blacklimes_seedpacket.png',
 	#enemy_type_gaia_phosphorpoppies: 'Phosphorpoppies will give Shamblers a \'bad trip\' when it shoots out its Binaural Brainwaves, or when it gets eaten. This will cause Shamblers to either hit, miss, or backfire in their attacks. When given a Joybean, its Binaural Brainwaves will inflict this effect 100% of the time, otherwise the effect only has a chance to be inflicted.\nPhosphoroppy is a total klutz, but she tries her best. Her simple-minded innocence led to her becoming a fan-favorite among many of the Garden Gankers, but behind those swirly eyes remains a horrible tragedy. A psychadelic experience aided by one of the Dankwheat brothers caused her to overload and see things no Gaiaslimeoid was meant to see. It fractured her mind, but her heart is still in there, ready to take on the Shamblers with everything she\'s got.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743258227696730152/phosphorpoppies_seedpacket.png',
 	#enemy_type_gaia_direapples: 'Dire apples are a vital Gaiaslimeoid to have in any offensive setup. They can lob globules of acid or spit bullet seeds. When given a Joybean, their seed attacks will do more damage and will inflict an acidic burn on whatever shamblers it manages to hit.\n"How does a Gaiaslimeoid like me make the best of both worlds collide? Well, I could tell you, but I\'ve got a BIG meeting to catch." He speeds away in his sports car occupied by himself and several Phosphorpoppies. Only a puff of smoke is left behind.\nhttps://cdn.discordapp.com/attachments/743240814250950678/743241008828907660/direapples_seedpacket.png',

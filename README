@@ -518,8 +518,8 @@ CREATE TABLE gvs_ops_choices (
     district varchar(64) NOT NULL,
     enemytype varchar(32) NOT NULL,
     faction varchar(16) NOT NULL,
-    id_item int NOT NULL,
-    shambler_stock int NOT NULL,
+    id_item int NOT NULL DEFAULT '-1',
+    shambler_stock int NOT NULL DEFAULT '-1',
     
     PRIMARY KEY (id_user, enemytype, district)
 );

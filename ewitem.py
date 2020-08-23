@@ -1748,6 +1748,12 @@ def gen_item_props(item):
 			item_props["cooldown"] = item.cooldown
 			item_props["cost"] = item.cost
 			item_props["time_nextuse"] = item.time_nextuse
+			item_props["enemytype"] = item.enemytype
+		if item.context == ewcfg.context_tombstone:
+			item_props["brainpower"] = item.brainpower
+			item_props["cost"] = item.cost
+			item_props["stock"] = item.stock
+			item_props["enemytype"] = item.enemytype
 
 		try:
 			item_props["durability"] = item.durability

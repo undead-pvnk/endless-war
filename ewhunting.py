@@ -837,7 +837,7 @@ class EwEnemy:
 				for key in target_enemy.keys():
 					used_id = key
 				target_enemy = EwEnemy(id_enemy=used_id, id_server=enemy_data.id_server)
-				print('gaia changed target_enemy into enemy from dict')
+				# print('gaia changed target_enemy into enemy from dict')
 			elif len(target_enemy) == 0:
 				target_enemy = None
 		
@@ -1029,6 +1029,7 @@ class EwEnemy:
 						)
 							
 					if below_full == False and below_half == False:
+						should_post_resp_cont = False
 						response = ""
 							
 					target_enemy.persist()
@@ -1041,7 +1042,7 @@ class EwEnemy:
 				district_data.persist()
 				
 		elif target_enemy != None and group_attack:
-			print('group attack...')
+			# print('group attack...')
 			
 			for key in target_enemy.keys():
 				
@@ -1154,6 +1155,7 @@ class EwEnemy:
 							)
 	
 						if below_full == False and below_half == False:
+							should_post_resp_cont = False
 							response = ""
 	
 						target_enemy.persist()
@@ -1624,7 +1626,7 @@ class EwTombstone:
 class EwOperationData:
 	
 	# The ID of the user who chose a seedpacket/tombstone for that operation
-	id_user = ""
+	id_user = 0
 	
 	# The district that the operation takes place in
 	district = ""
@@ -1637,18 +1639,18 @@ class EwOperationData:
 	faction = ""
 	
 	# The ID of the item used in the operation
-	id_item = ""
+	id_item = 0
 	
 	# The amount of shamblers stored in a tombstone.
 	shambler_stock = 0
 
 	def __init__(
 		self,
-		id_user = "",
+		id_user = -1,
 		district = "",
 		enemytype = "",
 		faction = "",
-		id_item = "",
+		id_item = -1,
 		shambler_stock = 0,
 	):
 		self.id_user = id_user
@@ -1718,18 +1720,20 @@ class EwOperationData:
 			cursor = conn.cursor()
 
 			# Save the object.
-			cursor.execute("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_district,
 				ewcfg.col_enemy_type,
 				ewcfg.col_faction,
-				ewcfg.col_shambler_stock,
+				ewcfg.col_id_item,
+				ewcfg.col_shambler_stock
 			), (
 				self.id_user,
 				self.district,
 				self.enemytype,
 				self.faction,
-				self.shambler_stock,
+				self.id_item,
+				self.shambler_stock
 			))
 
 			conn.commit()
@@ -1865,8 +1869,8 @@ async def summongvsenemy(cmd):
 		resp_cont = spawn_enemy(
 			id_server=cmd.message.guild.id, 
 			pre_chosen_type=enemytype, 
-			pre_chosen_poi=poi,
-			pre_chosen_coord=coord,
+			pre_chosen_poi=poi.id_poi,
+			pre_chosen_coord=coord.upper(),
 			pre_chosen_props=props,
 			pre_chosen_weather=ewcfg.enemy_weathertype_normal,
 			manual_spawn=True,
@@ -2010,7 +2014,7 @@ async def enemy_perform_action_gvs(id_server):
 	#"SELECT {id_enemy} FROM enemies WHERE (enemies.enemytype IN %s) AND (({condition_1}) OR ({condition_2}) OR ({condition_3}) OR ({condition_4}) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != '')) AND enemies.id_server = {id_server}"
 	
 	enemydata = ewutils.execute_sql_query(
-		"SELECT {id_enemy} FROM enemies WHERE (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != '')) AND enemies.id_server = {id_server}".format(
+		"SELECT {id_enemy} FROM enemies WHERE ((enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != '')) AND enemies.id_server = {id_server}".format(
 			id_enemy=ewcfg.col_id_enemy,
 			id_server=id_server,
 		), (
@@ -2778,11 +2782,11 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 		if enemy_data.ai == ewcfg.enemy_ai_gaiaslimeoid:
 			
 			range = 1 if enemy_data.enemy_props.get('range') == None else int(enemy_data.enemy_props.get('range'))
-			direction = enemy_data.enemy_props.get('direction')
-			piercing = enemy_data.enemy_props.get('piercing')
-			splash = enemy_data.enemy_props.get('splash')
-			pierceamount = enemy_data.enemy_props.get('pierceamount')
-			singletilepierce = enemy_data.enemy_props.get('singletilepierce')
+			direction = 'right' if enemy_data.enemy_props.get('direction') == None else enemy_data.enemy_props.get('direction')
+			piercing = 'false' if enemy_data.enemy_props.get('piercing') == None else enemy_data.enemy_props.get('piercing')
+			splash = 'false' if enemy_data.enemy_props.get('splash') == None else enemy_data.enemy_props.get('splash')
+			pierceamount = '0' if enemy_data.enemy_props.get('pierceamount') == None else enemy_data.enemy_props.get('pierceamount')
+			singletilepierce = 'false' if enemy_data.enemy_props.get('singletilepierce') == None else enemy_data.enemy_props.get('singletilepierce')
 			
 			enemies = ga_check_coord_for_shambler(enemy_data, range, direction, piercing, splash, pierceamount, singletilepierce)
 			if len(enemies) > 1:
@@ -2792,7 +2796,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 				
 		elif enemy_data.ai == ewcfg.enemy_ai_shambler:
 			range = 1 if enemy_data.enemy_props.get('range') == None else int(enemy_data.enemy_props.get('range'))
-			direction = enemy_data.enemy_props.get('direction')
+			direction = 'left' if enemy_data.enemy_props.get('direction') == None else enemy_data.enemy_props.get('direction')
 			
 			enemies = sh_check_coord_for_gaia(enemy_data, range, direction)
 			if len(enemies) > 0:
@@ -2869,40 +2873,51 @@ async def sh_move(enemy_data):
 	current_coord = enemy_data.gvs_coord
 	has_moved = False
 	index = None
+	row = None
+	new_coord = 'NULL'
 
 	if current_coord in ewcfg.gvs_coords_start and enemy_data.enemytype == ewcfg.enemy_type_juvieshambler:
 		delete_enemy(enemy_data)
 	
 	if current_coord not in ewcfg.gvs_coords_end:
 		for row in ewcfg.gvs_valid_coords_shambler:
-			new_coord = 'NULL'
 
 			if current_coord in row:
 				index = row.index(current_coord)
 				new_coord = row[index - 1]
+				print(new_coord)
+				break
 				
-			enemy_data.gvs_coord = new_coord
-			enemy_data.persist()
-			
-			if new_coord in ewcfg.gvs_valid_coords_gaia and index != None:
+			if new_coord == 'NULL':
+				return
+				
+		enemy_data.gvs_coord = new_coord
+		enemy_data.persist()
+		
+		for gaia_row in ewcfg.gvs_valid_coords_gaia:
+			if new_coord in gaia_row and index != None and row != None:
 				poi_channel = ewcfg.id_to_poi.get(enemy_data.poi).channel
-				previous_gaia_coord = row[index - 2]
-				response = "The {} moved from {} to {}!".format(enemy_data.display_name, previous_gaia_coord, new_coord)
-				await ewutils.send_message(ewutils.get_client(), poi_channel, response)
+				
+				try:
+					previous_gaia_coord = row[index - 2]
+				except:
+					break
+					
+				response = "The {} moved from {} to {}!".format(enemy_data.display_name, new_coord, previous_gaia_coord)
+				client = ewutils.get_client()
+				server = client.get_guild(enemy_data.id_server)
+				channel = ewutils.get_channel(server, poi_channel)
+				
+				await ewutils.send_message(client, channel, response)
 
-			print('shambler moved from {} to {} in {}.'.format(current_coord, new_coord, enemy_data.poi))
-			break
+		print('shambler moved from {} to {} in {}.'.format(current_coord, new_coord, enemy_data.poi))
+
 
 	return has_moved
 
 def sh_check_coord_for_gaia(enemy_data, sh_range, direction):
 	current_coord = enemy_data.gvs_coord
 	gaias_in_coord = []
-	
-	if sh_range == None:
-		sh_range = 1
-	if direction == None:
-		direction = 'left'
 
 	if current_coord not in ewcfg.gvs_coords_end:
 		
@@ -2962,7 +2977,7 @@ def sh_check_coord_for_gaia(enemy_data, sh_range, direction):
 								if target in gaia_types.keys():
 									gaias_in_coord.append(gaia_types[target])
 
-							print('shambler in coord {} found gaia in coord {} in {}.'.format(current_coord, checked_coord, enemy_data.poi))
+							# print('shambler in coord {} found gaia in coord {} in {}.'.format(current_coord, checked_coord, enemy_data.poi))
 	
 	return gaias_in_coord
 
@@ -2970,26 +2985,13 @@ def ga_check_coord_for_shambler(enemy_data, ga_range, direction, piercing, splas
 	current_coord = enemy_data.gvs_coord
 	detected_shamblers = {}
 	
-	if ga_range == None:
-		ga_range = 2
-	if direction == None:
-		direction = 'right'
-	if piercing == None:
-		piercing = 'false'
-	if splash == None:
-		splash = 'false'
-	if pierceamount == None:
-		pierceamount = 0
-	if singletilepierce == None:
-		singletilepierce = 'false'
-	
 	for sh_row in ewcfg.gvs_valid_coords_shambler:
 
 		if current_coord in sh_row:
 			index = sh_row.index(current_coord)
 			checked_coords = gvs_grid_gather_coords(enemy_data.enemyclass, int(ga_range), direction, sh_row, index)
 			
-			print('GAIA -- CHECKED COORDS FOR {} WITH ID {}: {}'.format(enemy_data.enemytype, enemy_data.id_enemy, checked_coords))
+			# print('GAIA -- CHECKED COORDS FOR {} WITH ID {}: {}'.format(enemy_data.enemytype, enemy_data.id_enemy, checked_coords))
 
 			
 			# Check coordinate for shamblers in range of gaiaslimeoid.
@@ -3027,7 +3029,7 @@ def ga_check_coord_for_shambler(enemy_data, ga_range, direction, piercing, splas
 				elif int(pierceamount) > 0:
 					detected_shamblers = gvs_find_nearest_shambler(checked_coords, detected_shamblers, pierceamount, singletilepierce)
 				
-				print('gaia in coord {} found shambler in coords {} in {}.'.format(current_coord, checked_coords, enemy_data.poi))
+				# print('gaia in coord {} found shambler in coords {} in {}.'.format(current_coord, checked_coords, enemy_data.poi))
 
 			if splash == 'true':
 				
@@ -3064,10 +3066,11 @@ def ga_check_coord_for_shambler(enemy_data, ga_range, direction, piercing, splas
 def gvs_grid_gather_coords(enemyclass, gr_range, direction, row, index):
 	checked_coords = []
 	
-	if enemyclass == 'shambler':
+	if enemyclass == ewcfg.enemy_class_shambler:
 		index_change = -2
 		if direction == 'right':
 			index_change *= -1
+			
 		try:
 			checked_coords.append(row[index + index_change])
 		except:
@@ -3082,7 +3085,7 @@ def gvs_grid_gather_coords(enemyclass, gr_range, direction, row, index):
 			index_changes.append(i + 1)
 			
 		# If it reaches backwards with a range of 1, reflect current index changes
-		if direction == 'right':
+		if direction == 'left':
 			new_index_changes = []
 			
 			for change in index_changes:
@@ -3112,7 +3115,13 @@ def gvs_grid_gather_coords(enemyclass, gr_range, direction, row, index):
 				checked_coords.append(row[index + index_change])
 			except:
 				pass
+	
+		# print(index_changes)
 		
+	# print(gr_range)
+	# print(checked_coords)
+	# print(enemyclass)
+	
 	return checked_coords
 
 def gvs_find_nearest_shambler(checked_coords, detected_shamblers, pierceamount = 1, singletilepierce = 'false'):
@@ -3205,7 +3214,9 @@ def gvs_get_splash_coords(checked_splash_coords):
 async def gvs_update_gamestate(id_server):
 	
 	op_districts = ewutils.execute_sql_query("SELECT district FROM gvs_ops_choices GROUP BY district")
-	for district in op_districts:
+	for op_district in op_districts:
+		district = op_district[0]
+		
 		graveyard_ops = ewutils.execute_sql_query("SELECT id_user, enemytype FROM gvs_ops_choices WHERE faction = 'shamblers' AND district = '{}' AND shambler_stock > 0".format(district))
 		bot_garden_ops = ewutils.execute_sql_query("SELECT id_user, enemytype FROM gvs_ops_choices WHERE faction = 'gankers' AND district = '{}' AND id_user = 56709".format(district))
 		op_district_data = EwDistrict(district=district, id_server=id_server)
@@ -3213,91 +3224,97 @@ async def gvs_update_gamestate(id_server):
 		time_now = int(time.time())
 
 		op_poi = ewcfg.id_to_poi.get(district)
-		channel = op_poi.channel
+		client = ewutils.get_client()
+		server = client.get_guild(id_server)
+		channel = ewutils.get_channel(server, op_poi.channel)
 		
 		if len(bot_garden_ops) > 0:
-			random_op = random.choice(bot_garden_ops)
-			random_op_data = EwOperationData(id_user=random_op[0], district=district, enemytype=random_op[1])
-
-			possible_bot_types = [
-				ewcfg.enemy_type_gaia_suganmanuts,
-				ewcfg.enemy_type_gaia_pinkrowddishes,
-				ewcfg.enemy_type_gaia_purplekilliflower,
-				ewcfg.enemy_type_gaia_poketubers,
-				ewcfg.enemy_type_gaia_razornuts
-			]
+			if random.randrange(10) == 0:
 			
-			possible_bot_coords = [
-				'A1', 'A2', 'A3', 'A4', 'A5',
-				'B1', 'B2', 'B3', 'B4', 'B5',
-				'C1', 'C2', 'C3', 'C4', 'C5',
-				'D1', 'D2', 'D3', 'D4', 'D5',
-				'E1', 'E2', 'E3', 'E4', 'E5'
-			]
-			
-			for i in range(5):
-				chosen_type = random.choice(possible_bot_types)
-				chosen_coord = random.choice(possible_bot_coords)
-			
-				existing_gaias = ewutils.gvs_get_gaias_from_coord(district, chosen_coord)
-			
-				# If the coordinate is completely empty, spawn a gaiaslimeoid there.
-				# Otherwise, make up to 5 attempts when choosing random coordinates
-				if len(existing_gaias) == 0:
-					resp_cont = spawn_enemy(
-						id_server=id_server,
-						pre_chosen_type=chosen_type,
-						pre_chosen_level=50,
-						pre_chosen_poi=district,
-						pre_chosen_identifier='',
-						pre_chosen_faction=ewcfg.psuedo_faction_gankers,
-						pre_chosen_owner=56709,
-						pre_chosen_coord=chosen_coord,
-						manual_spawn=True,
-					)
-					await resp_cont.post()
-					
-					break
+				random_op = random.choice(bot_garden_ops)
+				random_op_data = EwOperationData(id_user=random_op[0], district=district, enemytype=random_op[1])
+	
+				possible_bot_types = [
+					ewcfg.enemy_type_gaia_suganmanuts,
+					ewcfg.enemy_type_gaia_pinkrowddishes,
+					ewcfg.enemy_type_gaia_purplekilliflower,
+					ewcfg.enemy_type_gaia_poketubers,
+					ewcfg.enemy_type_gaia_razornuts
+				]
 				
+				possible_bot_coords = [
+					'A1', 'A2', 'A3', 'A4', 'A5',
+					'B1', 'B2', 'B3', 'B4', 'B5',
+					'C1', 'C2', 'C3', 'C4', 'C5',
+					'D1', 'D2', 'D3', 'D4', 'D5',
+					'E1', 'E2', 'E3', 'E4', 'E5'
+				]
+				
+				
+				for i in range(5):
+					chosen_type = random.choice(possible_bot_types)
+					chosen_coord = random.choice(possible_bot_coords)
+				
+					existing_gaias = ewutils.gvs_get_gaias_from_coord(district, chosen_coord)
+				
+					# If the coordinate is completely empty, spawn a gaiaslimeoid there.
+					# Otherwise, make up to 5 attempts when choosing random coordinates
+					if len(existing_gaias) == 0:
+						resp_cont = spawn_enemy(
+							id_server=id_server,
+							pre_chosen_type=chosen_type,
+							pre_chosen_level=50,
+							pre_chosen_poi=district,
+							pre_chosen_identifier='',
+							pre_chosen_faction=ewcfg.psuedo_faction_gankers,
+							pre_chosen_owner=56709,
+							pre_chosen_coord=chosen_coord,
+							manual_spawn=True,
+						)
+						await resp_cont.post()
+						
+						break
+					
 
 		if len(graveyard_ops) > 0:
-			
-			random_op = random.choice(graveyard_ops)
-			random_op_data = EwOperationData(id_user=random_op[0], district=district, enemytype=random_op[1])
-		
+
 			# The chance for a shambler to spawn is directly proportional to the amount of tombstones
+
+			# 3 tombstones = 1/7 chance
+			# 12 tombstones = 4/7 chance
+
+			shambler_spawn_chance = int(100 * (len(graveyard_ops) / 21))
+			if random.randrange(100) + 1 < shambler_spawn_chance:
 			
-			# 3 tombstones = 20% chance
-			# 12 tombstones = 80% chance
-			# Don't spawn if there aren't available identifiers
+				random_op = random.choice(graveyard_ops)
+				random_op_data = EwOperationData(id_user=random_op[0], district=district, enemytype=random_op[1])
 			
-			shambler_spawn_chance = int(100 * (len(graveyard_ops)/15))
-			
-			if random.randrange(100) + 1 < shambler_spawn_chance and len(op_district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_shambler])) < 26:
-				resp_cont = spawn_enemy(
-					id_server=id_server,
-					pre_chosen_type=random_op_data.enemytype,
-					pre_chosen_level=50,
-					pre_chosen_poi=district,
-					pre_chosen_faction=ewcfg.psuedo_faction_shamblers,
-					pre_chosen_owner=random_op_data.id_user,
-					pre_chosen_coord=random.choice(ewcfg.gvs_coords_start),
-					manual_spawn=True
-				)
 				
-				random_op_data.shambler_stock -= 1
-				
-				if random_op_data.shambler_stock == 0:
-					breakdown_response = "The tombstone spawning in {}s breaks down and collapses!".format(random_op_data.enemytype.capitalize())
-					resp_cont.add_channel_response(channel, breakdown_response)
-				else:
+				# Don't spawn if there aren't available identifiers
+				if len(op_district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_shambler])) < 26:
+					resp_cont = spawn_enemy(
+						id_server=id_server,
+						pre_chosen_type=random_op_data.enemytype,
+						pre_chosen_level=50,
+						pre_chosen_poi=district,
+						pre_chosen_faction=ewcfg.psuedo_faction_shamblers,
+						pre_chosen_owner=random_op_data.id_user,
+						pre_chosen_coord=random.choice(ewcfg.gvs_coords_start),
+						manual_spawn=True
+					)
+					
+					random_op_data.shambler_stock -= 1
 					random_op_data.persist()
 					
-				await resp_cont.post()
+					if random_op_data.shambler_stock == 0:
+						breakdown_response = "The tombstone spawning in {}s breaks down and collapses!".format(random_op_data.enemytype.capitalize())
+						resp_cont.add_channel_response(channel, breakdown_response)
+					else:
+						random_op_data.persist()
+						
+					await resp_cont.post()
 		else:
-			shamblers = ewutils.execute_sql_query("SELECT id_enemy FROM enemies WHERE enemyclass = %s".format(), (
-				ewcfg.enemy_class_shambler
-			))
+			shamblers = ewutils.execute_sql_query("SELECT id_enemy FROM enemies WHERE enemyclass = '{}'".format(ewcfg.enemy_class_shambler))
 			if len(shamblers) == 0:
 				# No more stocked tombstones, and no more enemy shamblers. Garden Gankers win!
 				victor = ewcfg.psuedo_faction_gankers
@@ -3317,24 +3334,29 @@ async def gvs_update_gamestate(id_server):
 			else:
 				# No juveniles left in the district, and there were no bot operations. Shamblers win!
 				victor = ewcfg.psuedo_faction_shamblers
+		
+		all_garden_ops = ewutils.execute_sql_query("SELECT id_user FROM gvs_ops_choices WHERE faction = 'gankers' AND district = '{}'".format(district))
+		# No garden ops at all. Shamblers win!
+		if len(all_garden_ops) == 0:
+			victor = ewcfg.psuedo_faction_shamblers
 				
 		if victor != None:
 			if victor == ewcfg.psuedo_faction_gankers:
 				response = "***All tombstones have been emptied out! The Garden Gankers take victory!\nIt's rejuvenated completely!!***"
 				op_district_data.gaiaslime = 0
 				op_district_data.degradation = 0
-				op_district_data.time_unlock = time_now + 6000
+				op_district_data.time_unlock = time_now + 3600
 				op_district_data.persist()
 			else:
 				response = "***The shamblers have eaten the brainz of the Garden Gankers and take control of the district!\nIt's shambled completely!!***"
 				op_district_data.gaiaslime = 0
 				op_district_data.degradation = ewcfg.district_max_degradation
-				op_district_data.time_unlock = time_now + 6000
+				op_district_data.time_unlock = time_now + 3600
 				op_district_data.persist()
 
-			ewutils.execute_sql_query("DELETE FROM gvs_ops_choices WHERE district = '{}'".format(district))
+			ewutils.execute_sql_query("DELETE FROM gvs_ops_choices WHERE district = '{}'".format(district))			
 			await delete_all_enemies(cmd=None, query_suffix="AND poi = '{}'".format(district), id_server_sent=id_server)
-			return await ewutils.send_message(ewutils.get_client(), channel, response)
+			return await ewutils.send_message(client, channel, response)
 
 # Certain conditions may prevent a shambler from acting.
 def check_enemy_can_act(enemy_data):
@@ -3400,15 +3422,15 @@ def check_enemy_can_act(enemy_data):
 def handle_turn_timers(enemy_data):
 	# Handle specific turn counters of all GvS enemies.
 	if enemy_data.enemytype == ewcfg.enemy_type_gaia_brightshade:
-		countdown = enemy_data.enemy_props.get('gaiaslimecountdown')
+		countdown = int(enemy_data.enemy_props.get('gaiaslimecountdown'))
 
 		if countdown != None:
 			if countdown == 0:
-				enemy_data.enemy_props['gaiaslimecountdown'] = 4
+				enemy_data.enemy_props['gaiaslimecountdown'] = 2
 				district_data = EwDistrict(district=enemy_data.poi, id_server=enemy_data.id_server)
 
-				if enemy_data.enemy_props['joybean'] != None:
-					if enemy_data.enemy_props['joybean'] == 'true':
+				if enemy_data.enemy_props.get('joybean') != None:
+					if enemy_data.enemy_props.get('joybean') == 'true':
 						district_data.gaiaslime += 50
 					else:
 						district_data.gaiaslime += 25
@@ -3418,17 +3440,17 @@ def handle_turn_timers(enemy_data):
 				district_data.persist()
 
 			else:
-				enemy_data.enemy_props['gaiaslimecountdown'] -= 1
+				enemy_data.enemy_props['gaiaslimecountdown'] = countdown - 1
 
 			enemy_data.persist()
 
 	elif enemy_data.enemytype == ewcfg.enemy_type_gaia_poketubers:
-		countdown = enemy_data.enemy_props.get('primecountdown')
+		countdown = int(enemy_data.enemy_props.get('primecountdown'))
 
 		if countdown != None:
 			if countdown == 0:
 				enemy_data.enemy_props['primed'] = 'true'
 			else:
-				enemy_data.enemy_props['primecountdown'] -= 1
+				enemy_data.enemy_props['primecountdown'] = countdown - 1
 
 			enemy_data.persist()

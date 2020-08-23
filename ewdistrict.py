@@ -99,6 +99,8 @@ class EwDistrict:
 				self.time_unlock = data[0][4]
 				self.cap_side = data[0][5]
 				self.degradation = data[0][6]
+				self.horde_cooldown = data[0][7]
+				self.gaiaslime = data[0][8]
 
 				# ewutils.logMsg("EwDistrict object '" + self.name + "' created.  Controlling faction: " + self.controlling_faction + "; Capture progress: %d" % self.capture_points)
 			else:  # create new entry
@@ -856,11 +858,13 @@ async def shamble(cmd):
 		user_data.persist()
 		
 		member = cmd.message.author
+		
+		base_poi_channel = ewutils.get_channel(cmd.message.guild, 'nuclear-beach-edge')
 
-		response = 'A voice on the intercom chimes in.\n**"Welcome, {}. Welcome to Downpour Laboratories. It\'s safer here. Please treat all machines and facilities with respect, they are precious to our cause."**'.format(member.display_name)
+		response = 'You arrive inside the facility and are injected with a unique strain of the Modelovirus. Not long after, a voice on the intercom chimes in.\n**"Welcome, {}. Welcome to Downpour Laboratories. It\'s safer here. Please treat all machines and facilities with respect, they are precious to our cause."**'.format(member.display_name)
 
 		await ewrolemgr.updateRoles(client=cmd.client, member=member)
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, base_poi_channel, ewutils.formatMessage(cmd.message.author, response))
 	
 	else:
 		pass
@@ -930,11 +934,13 @@ async def rejuvenate(cmd):
 		client = ewutils.get_client()
 		server = client.get_guild(user_data.id_server)
 		member = server.get_member(user_data.id_user)
+		
+		base_poi_channel = ewutils.get_channel(cmd.message.guild, ewcfg.channel_og_farms)
 
-		response = "You enter into Atomic Forest inside the farms of Ooze Gardens. Hortisolis gives you a big hug and says he's glad you've overcome your desire for vengeance in pursuit of deposing Downpour."
+		response = "You enter into Atomic Forest inside the farms of Ooze Gardens and are sterilized of the Modelovirus. Hortisolis gives you a big hug and says he's glad you've overcome your desire for vengeance in pursuit of deposing Downpour."
 
 		await ewrolemgr.updateRoles(client=cmd.client, member=member)
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, base_poi_channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
 		pass

@@ -100,7 +100,7 @@ class EwFood:
 """ show all available food items """
 async def menu(cmd):
 	user_data = EwUser(member = cmd.message.author, data_level = 2)
-	if user_data.life_state == ewcfg.life_state_shambler:
+	if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -403,7 +403,7 @@ async def order(cmd):
 
 				if value > current_currency_amount:
 					# Not enough money.
-					response = "A {} costs {:,} {}, and you only have {:,}.".format(name, currency_used, value, current_currency_amount)
+					response = "A {} costs {:,} {}, and you only have {:,}.".format(name, value, currency_used, current_currency_amount)
 				else:
 					if item_type == ewcfg.it_food:
 						food_ordered = True
