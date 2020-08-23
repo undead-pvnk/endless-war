@@ -3136,11 +3136,11 @@ async def gvs_join_operation(cmd):
 						district_data.gaiaslime += 50
 						district_data.persist()
 					else:
-						response = "You place down your {} in {} and get ready for a Graveyard Op. *Ready, set, BRRRRAAAAAIIINNNNZZZZ!*".format(poi.str_name, item_props.get('item_name'))
+						response = "You place down your {} in {} and get ready for a Graveyard Op. *Ready, set, BRRRRAAAAAIIINNNNZZZZ!*".format(item_props.get('item_name'), poi.str_name)
 						response += "\n(You and your allies can add another one in {} seconds.)".format(brainpower)
 						
 				
-				durability = int(item_props.get('durability'))
+				# durability = int(item_props.get('durability'))
 				
 				if faction == ewcfg.psuedo_faction_shamblers:
 					shambler_stock = int(item_props.get('stock'))

@@ -3292,7 +3292,7 @@ async def gvs_update_gamestate(id_server):
 		channel = ewutils.get_channel(server, op_poi.channel)
 		
 		if len(bot_garden_ops) > 0:
-			if random.randrange(10) == 0:
+			if random.randrange(20) == 0:
 			
 				random_op = random.choice(bot_garden_ops)
 				random_op_data = EwOperationData(id_user=random_op[0], district=district, enemytype=random_op[1])
