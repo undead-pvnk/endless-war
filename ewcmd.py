@@ -3443,11 +3443,15 @@ async def gvs_progress(cmd):
 	non_degraded_districts = []
 	degraded_districts = []
 	
+	
 	for district in degradation_data:
 		if district[1] == 0:
 			non_degraded_districts.append(district[0])
 		elif district[1] == ewcfg.district_max_degradation:
 			degraded_districts.append(district[0])
+			
+	non_degraded_districts = set(non_degraded_districts)
+	degraded_districts = set(degraded_districts)
 
 	counter = 0
 	response += "\n**Rejuvenated Districts**"
