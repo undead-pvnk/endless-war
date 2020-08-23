@@ -2085,9 +2085,12 @@ async def enemy_perform_action_gvs(id_server):
 		enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
 		
 		if enemy == None:
-			return
+			continue
 
-		ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
+		if ewcfg.id_to_poi.get(enemy.poi) != None:
+			ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
+		else:
+			continue
 		
 		server = client.get_guild(id_server)
 		channel = ewutils.get_channel(server, ch_name)
