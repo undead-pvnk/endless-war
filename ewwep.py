@@ -2148,7 +2148,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# elif (enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and ewutils.gvs_check_gaia_protected(enemy_data)):
 	# 	response = "It's no use, there's another gaiaslimeoid in front that's protecting them!"
 	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)) 
-	elif user_data.life_state == ewcfg.life_state_shambler:
+	elif user_data.life_state == ewcfg.life_state_shambler and enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid:
 		response = "It's not worth going near those... *things*. You'd get torn to shreds, it's better to send out lackeys to do your job for you."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2338,11 +2338,17 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 			# Burn players in district
 			if ewcfg.weapon_class_burning in weapon.classes:
+				if enemy_data.enemyclass in [ewcfg.enemy_class_gaiaslimeoid, ewcfg.enemy_class_shambler]:
+					miss = True
+				
 				if not miss:
 					resp = burn_bystanders(user_data=user_data, burn_dmg=bystander_damage, life_states=life_states, factions=factions, district_data=district_data)
 					resp_cont.add_response_container(resp)
 
 			if ewcfg.weapon_class_exploding in weapon.classes:
+				if enemy_data.enemyclass in [ewcfg.enemy_class_gaiaslimeoid, ewcfg.enemy_class_shambler]:
+					miss = True
+				
 				user_data.persist()
 				enemy_data.persist()
 
@@ -2385,9 +2391,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if enemy_data.weathertype == ewcfg.enemy_weathertype_rainresist:
 		slimes_damage *= 1.5
 		
-	# Shamblers deal less damage to gaiaslimeoids
-	if enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state == ewcfg.life_state_shambler:
-		slimes_damage *= 0.25
+	# # Shamblers deal less damage to gaiaslimeoids
+	# if enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state == ewcfg.life_state_shambler:
+	# 	slimes_damage *= 0.25
 
 	if not sandbag_mode:
 		# apply hardened sap armor

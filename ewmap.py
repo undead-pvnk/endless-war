@@ -711,6 +711,9 @@ def inaccessible(user_data = None, poi = None):
 
 	if user_data.life_state == ewcfg.life_state_observer:
 		return False
+	
+	if user_data.life_state == ewcfg.life_state_shambler and poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow]:
+		return True
 
 	bans = user_data.get_bans()
 	vouchers = user_data.get_vouchers()
