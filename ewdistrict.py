@@ -652,6 +652,8 @@ class EwDistrict:
 					# First mother POI found is a street. Break here and check for its father district's degradation.
 					poi = ewcfg.id_to_poi.get(mother_poi.father_district)
 					break
+		else:
+			poi = checked_poi
 
 		# print('poi checked was {}. looking for {} degradation.'.format(self.name, poi.id_poi))
 		poi_district_data = EwDistrict(district = poi.id_poi, id_server = self.id_server)
