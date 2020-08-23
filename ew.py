@@ -426,6 +426,7 @@ class EwUser:
 						
 			try:
 				if item_props['id_food'] in ["coleslaw","bloodcabbagecoleslaw"]:
+					self.clear_status(id_status = ewcfg.status_ghostbust_id)
 					self.applyStatus(id_status = ewcfg.status_ghostbust_id)
 					#Bust player if they're a ghost
 					if self.life_state == ewcfg.life_state_corpse:

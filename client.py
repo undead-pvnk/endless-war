@@ -714,11 +714,11 @@ cmd_map = {
 	ewcfg.cmd_shamble: ewdistrict.shamble,
 	ewcfg.cmd_rejuvenate: ewdistrict.rejuvenate,
 	
-	# shamble ball
-	ewcfg.cmd_shambleball: ewsports.shambleball,
-	ewcfg.cmd_shamblego: ewsports.shamblego,
-	ewcfg.cmd_shamblestop: ewsports.shamblestop,
-	ewcfg.cmd_shambleleave: ewsports.shambleleave,
+	# slimeball
+	ewcfg.cmd_slimeball: ewsports.slimeball,
+	ewcfg.cmd_slimeballgo: ewsports.slimeballgo,
+	ewcfg.cmd_slimeballstop: ewsports.slimeballstop,
+	ewcfg.cmd_slimeballleave: ewsports.slimeballleave,
 
 	# flush items and slime from subzones into their mother district
 	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones,
@@ -981,7 +981,7 @@ async def on_ready():
 			asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
-		asyncio.ensure_future(ewsports.shambleball_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewsports.slimeball_tick_loop(id_server = server.id))
 		
 		print('\nNUMBER OF CHANNELS IN SERVER: {}\n'.format(len(server.channels)))
 

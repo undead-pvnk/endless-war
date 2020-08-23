@@ -1132,10 +1132,10 @@ cmd_rejuvenate = cmd_prefix + 'rejuvenate'
 cmd_switch = cmd_prefix + 'switch'
 cmd_switch_alt_1 = cmd_prefix + 's'
 
-cmd_shambleball = cmd_prefix + 'shambleball'
-cmd_shamblego = cmd_prefix + 'shamblego'
-cmd_shamblestop = cmd_prefix + 'shamblestop'
-cmd_shambleleave = cmd_prefix + 'shambleleave'
+cmd_slimeball = cmd_prefix + 'slimeball'
+cmd_slimeballgo = cmd_prefix + 'slimeballgo'
+cmd_slimeballstop = cmd_prefix + 'slimeballstop'
+cmd_slimeballleave = cmd_prefix + 'slimeballleave'
 cmd_gambit = cmd_prefix + 'gambit'
 cmd_credence = cmd_prefix + 'credence'
 cmd_get_credence = cmd_prefix + 'getcredence'
@@ -1629,8 +1629,8 @@ weather_tick_length = 10
 # how often to delete expired world events
 event_tick_length = 5
 
-# shambleball tick length
-shambleball_tick_length = 5
+# slimeball tick length
+slimeball_tick_length = 5
 
 # how often to refresh sap
 sap_tick_length = 5
@@ -2550,6 +2550,7 @@ vendor_bodega = "Bodega" # Clothing store in Krak Bay
 vendor_secretbodega = "Secret Bodega" # The secret clothing store in Krak Bay
 vendor_wafflehouse = "Waffle House" # waffle house in the void, sells non-perishable foods, 100 slime to 1 hunger
 vendor_basedhardware = "Based Hardware" # Hardware store in West Glocksbury
+vendor_lab = "Lab" #Slimecorp products
 vendor_atomicforest = "Atomic Forest Stockpile" # Storage of atomic forest
 vendor_downpourlaboratory = "Downpour Armament Vending Machines" # Store for shamblers to get stuff
 
@@ -2609,6 +2610,7 @@ item_id_dinoslimesteak = "dinoslimesteak"
 item_id_dyesolution = "dyesolution"
 item_id_textiles = "textiles"
 item_id_foodbase = "foodbase"
+item_id_modelovaccine = "modelovirusvaccine"
 item_id_gaiaseedpack_poketubers = "poketubersseedpacket"
 item_id_gaiaseedpack_pulpgourds = "pulpgourdsseedpacket"
 item_id_gaiaseedpack_sourpotatoes = "sourpotatoesseedpacket"
@@ -3450,6 +3452,18 @@ item_list = [
 		str_name = "Gellphone",
 		str_desc = "A cell phone manufactured by SlimeCorp. Turning it on allows you to access various apps and games.",
 		vendors = [vendor_bazaar],
+		price = 1000000
+	),
+	EwGeneralItem(
+		id_item = item_id_modelovaccine,
+		context = item_id_modelovaccine,
+		alias = [
+			"vaccine",
+			"cure",
+		],
+		str_name = "Modelovirus vaccine",
+		str_desc = "It’s a rusty syringe containing a thick, dark-red substance. It begins to bubble slightly when you shake it. A few charred bits rise to the top. Looks yummy!",
+		vendors = [vendor_lab],
 		price = 1000000
 	),
 	EwSlimeoidFood(
@@ -15535,6 +15549,9 @@ poi_list = [
 		neighbors = {
 			poi_id_brawlden : travel_time_subzone,
 		},
+		vendors = [
+			vendor_lab
+		],
 	),
 	EwPoi( # the-mines
 		id_poi = poi_id_mine,
@@ -23970,6 +23987,7 @@ status_aiming_id = "aiming"
 status_sapfatigue_id = "sapfatigue"
 status_rerollfatigue_id = "rerollfatigue"
 status_high_id = "high"
+status_modelovaccine_id = "modelovaccine"
 
 status_injury_head_id = "injury_head"
 status_injury_torso_id = "injury_torso"
@@ -24118,7 +24136,12 @@ status_effect_list = [
 		miss_mod = -0.06,
 		crit_mod = 0.03,
 	),
-
+	EwStatusEffectDef(
+		id_status = status_modelovaccine_id,
+		time_expire = 86400,
+		str_acquire = "You shoot the vaccine but… nothing happens. On the surface, anyway. The vaccine has successfully dissolved throughout your bloodstream, and you will now “cure” all those who come into contact with your pure, righteous slime. Meaning, it’s time to conduct some straight up genocide.",
+		str_describe_self = "The modelovirus vaccine running through your veins allows you to cure shamblers!"
+	),
 ]
 
 status_effects_def_map = {}
@@ -24256,7 +24279,7 @@ trauma_list = [
 	EwTrauma( # 2
 		id_trauma = weapon_id_dualpistols,
 		str_trauma_self = "You have several stitches embroidered into your chest over your numerous bullet wounds.",
-		str_trauma = "They have several stitches embroidered into your chest over your numerous bullet wounds.",
+		str_trauma = "They have several stitches embroidered into their chest over their numerous bullet wounds.",
 		trauma_class = trauma_class_bleeding,
 	),
 	EwTrauma( # 3
@@ -24561,8 +24584,8 @@ help_responses = {
 	"zines": "Zines are the hot new trend in Neo-Milwaukee and give slimebois of all shapes and sizes access to the free-market of information and culture.\n\nTo obtain a zine, you must head down to any of these locations: Green Cake Cafe, NLAC University, Neo-Milwaukee State, or Glockbury Comics.\n\nFrom there, you can **!browse** for zines. They are ordered by *Zine ID*, but you have many options for sorting them, including: **title, author, datepublished,** any of the genres (including **narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper,** and **experimental**.), **length, sales,** and **rating** (use **!browse [criteria]**). You can also add **reverse** on to any of these in order to make it display in reverse order. Example: **!browse bestsellers reverse** (essentially looks for worse-selling zines). Browsing in the Comic Shop will automatically browse for comic zines and browsing at the Colleges will look for historical zines (keep in mind that any zines can be bought from these places).\n\nYou can also **!browse [Zine ID]** in order to get info about that specific zine, including sales, length, genre, and rating.\n\nOnce you've found a zine that's caught your eye, simply **!orderzine [Zine ID]** to buy it for 10k slime.\n\nAfter absorbing the zine's content, it is your moral obligation as a reader to **!review [Zine Name] [Score]**. The potential scores range from between 1 and 5 *fucks* (whole numbers only). If you hate a zine, then give it one fuck. If you absolutely loved it, give it five fucks. Simple. By the way, if a zine's average rating is less than 2.0 by the time it gets to 10 ratings (or less than 1.5 by 5 ratings), it will be excluded from the default browse. The only way to purchase it will be to use the **worstrated** or **all** sorting methods.\n\nYou can **!shelve [zine name]** in your apartment after you've finished.",
 	"sap": "**Sap** is a resource your body produces to control your slime. It's integral to being able to act in combat. You can have a maximum amount of sap equal to 1.6 * ( your slime level ^ 0.75 ). When you spend it, it will regenerate at a rate of 1 sap every 5 seconds. You can spend your sap in a variety of ways: **!harden [number]** allows you to dedicate a variable amount of sap to your defense. Hardened sap reduces incoming damage by a factor of 10 / (10 + hardened sap). Your hardened sap counts against your maximum sap pool, so the more you dedicate to defense, the less you will have to attack. You can **!liquefy [number]** hardened sap back into your sap pool. Every attack requires at least 1 sap to complete. Different weapons have different sap costs. Some weapons have the ability to destroy an amount of hardened sap from your target, or ignore a portion of their hardened sap armor. This is referred to as **sap crushing** and **sap piercing** respectively. There are also other actions you can take in combat, that cost sap, such as: **!aim [player]** will slightly increase your hit chance and crit chance against that player for 10 seconds. It costs 2 sap. **!dodge [player]** will decrease that players hit chance against you for 10 seconds. It costs 3 sap. **!taunt [player]** will decrease that player's hit chance against targets other than you for 10 seconds. It costs 5 sap.",
 	"sprays":"**Sprays** are your signature piece of graffiti as a gangster. You can **!changespray <image link>** in order to set your own custom image. This image appears when you get a critical hit while capping, and you can also **!tag** to spray it anywhere.",
-	# Misc.
-	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
+    # Misc.
+    "slimeball": "Slimeball is a sport where two teams of players compete to get the ball into the opposing team's goal to score points. A game of Slimeball is started when a player does !slimeball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !slimeball to see your data, the ball's location and the score. To move around the field, use !slimeballgo [coordinates]. You can kick the ball by running into it. To stop, use !slimeballstop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !slimeballleave, or join a different game. A game of Slimeball ends when no players are left.",
 
 	# Weapons
 	weapon_id_revolver: "**The revolver** is a weapon for sale at the Dojo. Attacking with the revolver costs 1 sap. It has a damage mod of 0.8 and an attack cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The revolver has sap crushing 2. After every 6 shots you will need to **!reload** it.",
@@ -24607,7 +24630,7 @@ help_responses_ordered_keys = [
 	"slimeoids", "cosmetics", "realestate", "apartments", "stocks",
 	"trading", "weather", "casino", "bleeding", "offline",
 	"profile", "manuscripts", "zines", "sap", "sprays",
-	"shambleball",
+    "slimeball",
 ]
 
 weapon_help_responses_ordered_keys = [

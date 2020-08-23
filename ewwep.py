@@ -508,6 +508,7 @@ async def attack(cmd):
 	response = ""
 	deathreport = ""
 	levelup_response = ""
+	shambler_resp = ""
 	coinbounty = 0
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.guild.id)
 	market_data = EwMarket(id_server = cmd.guild.id)
@@ -958,6 +959,9 @@ async def attack(cmd):
 								'adorned': 'false'
 							}
 						)
+					elif ewcfg.status_modelovaccine_id in user_data.getStatusEffects():
+						shootee_data.degradation = 0
+						shambler_resp = "Your purified slime seeps into and emulsifies in their mangled corpse, healing their degraded body. When they revive, they’ll be a normal slimeboi like the rest of us. A pure, homogenous race of ENDLESS WAR fearing juveniles. It brings a tear to your eye."
 
 					# release bleed storage
 					if ewcfg.mutation_id_thickerthanblood in user_mutations:
@@ -1051,6 +1055,9 @@ async def attack(cmd):
 					weapon_possession = user_data.get_weapon_possession()
 					if weapon_possession:
 						response += fulfill_ghost_weapon_contract(weapon_possession, market_data, user_data, cmd.message.author.display_name)
+
+					if shambler_resp != "":
+						response += "\n\n" + shambler_resp
 
 					shootee_data.persist()
 					resp_cont.add_response_container(die_resp)

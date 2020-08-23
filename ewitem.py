@@ -1437,6 +1437,22 @@ async def item_use(cmd):
 			elif context == "prankcapsule":
 				response = ewsmelting.popcapsule(id_user=author, id_server=server, item=item)
 
+			elif context == ewcfg.item_id_modelovaccine:
+
+				if user_data.life_state == ewcfg.life_state_shambler:
+					user_data.life_state = ewcfg.life_state_juvenile
+					response = "You shoot the vaccine with the eagerness of a Juvenile on Slimernalia's Eve. It immediately dissolves throughout your bloodstream, causing your organs to feel like they're melting as your body undegrades." \
+								"Then, suddenly, you feel slime start to flow through you properly again. You feel rejuvenated, literally! Your genitals kinda itch, though.\n\n" \
+								"You have been cured! You are no longer a Shambler. Jesus Christ, finally."
+				else:
+					user_data.clear_status(id_status=ewcfg.status_modelovaccine_id)
+					response = user_data.applyStatus(ewcfg.status_modelovaccine_id)
+
+				user_data.degradation = 0
+				user_data.persist()
+
+				item_delete(item.id_item)
+
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
