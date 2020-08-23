@@ -2874,7 +2874,7 @@ async def sh_move(enemy_data):
 	has_moved = False
 	index = None
 	row = None
-	new_coord = 'NULL'
+	new_coord = None
 
 	if current_coord in ewcfg.gvs_coords_start and enemy_data.enemytype == ewcfg.enemy_type_juvieshambler:
 		delete_enemy(enemy_data)
@@ -2885,11 +2885,11 @@ async def sh_move(enemy_data):
 			if current_coord in row:
 				index = row.index(current_coord)
 				new_coord = row[index - 1]
-				print(new_coord)
+				# print(new_coord)
 				break
 				
-			if new_coord == 'NULL':
-				return
+		if new_coord == None:
+			return
 				
 		enemy_data.gvs_coord = new_coord
 		enemy_data.persist()
@@ -2910,7 +2910,7 @@ async def sh_move(enemy_data):
 				
 				await ewutils.send_message(client, channel, response)
 
-		print('shambler moved from {} to {} in {}.'.format(current_coord, new_coord, enemy_data.poi))
+		# print('shambler moved from {} to {} in {}.'.format(current_coord, new_coord, enemy_data.poi))
 
 
 	return has_moved
