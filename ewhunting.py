@@ -3280,9 +3280,14 @@ async def gvs_update_gamestate(id_server):
 	for op_district in op_districts:
 		district = op_district[0]
 		
-		graveyard_ops = ewutils.execute_sql_query("SELECT id_user, enemytype FROM gvs_ops_choices WHERE faction = 'shamblers' AND district = '{}' AND shambler_stock > 0".format(district))
+		graveyard_ops = ewutils.execute_sql_query("SELECT id_user, enemytype, shambler_stock FROM gvs_ops_choices WHERE faction = 'shamblers' AND district = '{}' AND shambler_stock > 0".format(district))
 		bot_garden_ops = ewutils.execute_sql_query("SELECT id_user, enemytype FROM gvs_ops_choices WHERE faction = 'gankers' AND district = '{}' AND id_user = 56709".format(district))
 		op_district_data = EwDistrict(district=district, id_server=id_server)
+
+		# Generate Gaiaslime passively over time, but in small amounts
+		op_district_data.gaiaslime += 5
+		op_district_data.persist()
+		
 		victor = None
 		time_now = int(time.time())
 
@@ -3340,9 +3345,19 @@ async def gvs_update_gamestate(id_server):
 
 		if len(graveyard_ops) > 0:
 
-			# The chance for a shambler to spawn is directly proportional to the amount of tombstones
+			# The chance for a shambler to spawn is inversely proportional to the amount of shamblers left in stock
+			# The less shamblers there are left, the more likely they are to spawn
+			current_stock = 0
+			full_stock = 0
+			
+			for op in graveyard_ops:
+				current_stock += op[2]
+				full_stock += ewcfg.tombstone_fullstock_map[op[1]]
+				
+			# Example: If full_stock is 50, and current_stock is 20, then the spawn chance is 70%
+			# ((1 - (20 / 50)) * 100) + 10 = 70
 
-			shambler_spawn_chance = int(100 * (len(graveyard_ops) / 8))
+			shambler_spawn_chance = int(((1 - (current_stock / full_stock)) * 100) + 10)
 			if random.randrange(100) + 1 < shambler_spawn_chance:
 
 				random_op = random.choice(graveyard_ops)
@@ -3376,9 +3391,11 @@ async def gvs_update_gamestate(id_server):
 			if len(shamblers) == 0:
 				# No more stocked tombstones, and no more enemy shamblers. Garden Gankers win!
 				victor = ewcfg.psuedo_faction_gankers
+				
+		op_juvies = ewutils.execute_sql_query("SELECT id_user FROM gvs_ops_choices WHERE faction = 'gankers' AND district = '{}' AND id_user != 56709 GROUP BY id_user".format(district))
 		
 		# No more Garden Gankers left. Shamblers win?
-		if len(op_district_data.get_players_in_district(life_states=[ewcfg.life_state_juvenile])) == 0:
+		if len(op_juvies) == 0:
 			
 			# Check if the shamblers are fighting against the bot.
 			# If they are, they can only win if at least one shambler has reached the back.
@@ -3402,9 +3419,8 @@ async def gvs_update_gamestate(id_server):
 			if victor == ewcfg.psuedo_faction_gankers:
 				response = "***All tombstones have been emptied out! The Garden Gankers take victory!\nThe district is rejuvenated completely!!***"
 				
-				juvies = op_district_data.get_players_in_district(life_states=[ewcfg.life_state_juvenile])
-				for juvie in juvies:
-					ewutils.active_restrictions[juvie] = 0 
+				for juvie in op_juvies:
+					ewutils.active_restrictions[juvie[0]] = 0 
 				
 				op_district_data.gaiaslime = 0
 				op_district_data.degradation = 0

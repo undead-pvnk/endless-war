@@ -4598,11 +4598,13 @@ for sp in item_list:
 		seedpacket_ids.append(sp.id_item)
 
 tombstone_enemytype_map = {}
+tombstone_fullstock_map = {}
 tombstone_ids = []
 for ts in item_list:
 	if ts.context == context_tombstone:
 		tombstone_enemytype_map[ts.id_item] = ts.enemytype
-		tombstone_ids.append(ts.id_item)
+        tombstone_fullstock_map[ts.enemytype] = ts.stock
+        tombstone_ids.append(ts.id_item)
 
 # A Weapon Effect Function for "revolver". Takes an EwEffectContainer as ctn.
 def wef_revolver(ctn = None):
