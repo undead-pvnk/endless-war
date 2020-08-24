@@ -31,7 +31,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.33 - You Are (Not) Safe In The Streets"
+version = "v3.4 - Gankers Vs. Shamblers"
 
 
 dir_msgqueue = 'msgqueue'

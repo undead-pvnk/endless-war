@@ -2882,6 +2882,7 @@ def gvs_insert_bot_ops(id_server, district, enemyfaction):
 	elif enemyfaction == ewcfg.psuedo_faction_shamblers:
 		possible_bot_types = [
 			ewcfg.enemy_type_defaultshambler,
+			ewcfg.enemy_type_bucketshambler,
 		]
 		for type in possible_bot_types:
 			execute_sql_query("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(

@@ -3292,10 +3292,10 @@ async def gvs_update_gamestate(id_server):
 		channel = ewutils.get_channel(server, op_poi.channel)
 		
 		if len(bot_garden_ops) > 0:
-			if random.randrange(20) == 0:
+			if random.randrange(25) == 0:
 			
-				random_op = random.choice(bot_garden_ops)
-				random_op_data = EwOperationData(id_user=random_op[0], district=district, enemytype=random_op[1])
+				# random_op = random.choice(bot_garden_ops)
+				# random_op_data = EwOperationData(id_user=random_op[0], district=district, enemytype=random_op[1])
 	
 				possible_bot_types = [
 					ewcfg.enemy_type_gaia_suganmanuts,
@@ -3312,7 +3312,6 @@ async def gvs_update_gamestate(id_server):
 					'D1', 'D2', 'D3', 'D4', 'D5',
 					'E1', 'E2', 'E3', 'E4', 'E5'
 				]
-				
 				
 				for i in range(5):
 					chosen_type = random.choice(possible_bot_types)
@@ -3343,15 +3342,11 @@ async def gvs_update_gamestate(id_server):
 
 			# The chance for a shambler to spawn is directly proportional to the amount of tombstones
 
-			# 3 tombstones = 1/7 chance
-			# 12 tombstones = 4/7 chance
-
-			shambler_spawn_chance = int(100 * (len(graveyard_ops) / 21))
+			shambler_spawn_chance = int(100 * (len(graveyard_ops) / 8))
 			if random.randrange(100) + 1 < shambler_spawn_chance:
-			
+
 				random_op = random.choice(graveyard_ops)
 				random_op_data = EwOperationData(id_user=random_op[0], district=district, enemytype=random_op[1])
-			
 				
 				# Don't spawn if there aren't available identifiers
 				if len(op_district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_shambler])) < 26:
@@ -3377,7 +3372,7 @@ async def gvs_update_gamestate(id_server):
 						
 					await resp_cont.post()
 		else:
-			shamblers = ewutils.execute_sql_query("SELECT id_enemy FROM enemies WHERE enemyclass = '{}'".format(ewcfg.enemy_class_shambler))
+			shamblers = ewutils.execute_sql_query("SELECT id_enemy FROM enemies WHERE enemyclass = '{}' AND poi = '{}'".format(ewcfg.enemy_class_shambler, district))
 			if len(shamblers) == 0:
 				# No more stocked tombstones, and no more enemy shamblers. Garden Gankers win!
 				victor = ewcfg.psuedo_faction_gankers
@@ -3405,7 +3400,12 @@ async def gvs_update_gamestate(id_server):
 				
 		if victor != None:
 			if victor == ewcfg.psuedo_faction_gankers:
-				response = "***All tombstones have been emptied out! The Garden Gankers take victory!\nIt's rejuvenated completely!!***"
+				response = "***All tombstones have been emptied out! The Garden Gankers take victory!\nThe district is rejuvenated completely!!***"
+				
+				juvies = op_district_data.get_players_in_district(life_states=[ewcfg.life_state_juvenile])
+				for juvie in juvies:
+					ewutils.active_restrictions[juvie] = 0 
+				
 				op_district_data.gaiaslime = 0
 				op_district_data.degradation = 0
 				op_district_data.time_unlock = time_now + 3600
