@@ -3069,6 +3069,18 @@ async def gvs_join_operation(cmd):
 			item = EwItem(id_item=item_sought.get('id_item'))
 			item_props = item.item_props
 			
+			id_item = item_props.get('id_item')
+			if id_item != None:
+				if faction == ewcfg.psuedo_faction_gankers and id_item not in seedpackets:
+					response = "That's not a valid seed packet you can select, bitch."
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				elif faction == ewcfg.psuedo_faction_shamblers and id_item not in tombstones:
+					response = "That's not a valid tombstone you can select, bitch."
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			else:
+				response = "That's not a valid {} you can select, bitch.".format('seed packet' if faction == ewcfg.psuedo_faction_gankers else 'tombstone')
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				
 			if item_props.get('brainpower') != None:
 				brainpower = int(item_props.get('brainpower')) # Only for tombstones
 			else:
