@@ -2829,6 +2829,7 @@ async def gvs_print_lane(cmd):
 
 async def gvs_incubate_gaiaslimeoid(cmd):
 	user_data = EwUser(member=cmd.message.author)
+	valid_material = False
 	
 	if user_data.poi != ewcfg.poi_id_og_farms:
 		response = "You lack the proper equipment to create a Gaiaslimeoid. Head to the Atomic Forest in Ooze Gardens Farms!"
@@ -2849,7 +2850,13 @@ async def gvs_incubate_gaiaslimeoid(cmd):
 					response += "\n"
 		else:
 			material = ewutils.flattenTokenListToString(cmd.tokens[1:])
-			if material not in ewcfg.seedpacket_ingredient_list:
+			
+			for material_id in ewcfg.seedpacket_ingredient_list:
+				if material in material_id or material == material_id:
+					valid_material = True
+					break
+					
+			if not valid_material:
 				response = "That's not a crop material you can use, bitch."
 			else:
 
@@ -2858,7 +2865,7 @@ async def gvs_incubate_gaiaslimeoid(cmd):
 					response = "You don't have that crop material in your inventory, bitch."
 				else:
 
-					generated_seedpacket_id = ewcfg.seedpacket_material_map[material]
+					generated_seedpacket_id = ewcfg.seedpacket_material_map[material_id]
 					item = ewcfg.item_map.get(generated_seedpacket_id)
 	
 					item_type = ewcfg.it_item
