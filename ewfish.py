@@ -257,17 +257,8 @@ def gen_fish(x, fisher, has_fishingrod):
 			if ewcfg.fish_map[fish].catch_time != None:
 				fish_pool.remove(fish)
 
-	if fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
-		for fish in fish_pool:
-			if ewcfg.fish_map[fish].slime == ewcfg.fish_slime_freshwater:
-				fish_pool.remove(fish)
-
-	elif fisher.pier.pier_type == ewcfg.fish_slime_freshwater:
-		for fish in fish_pool:
-			if ewcfg.fish_map[fish].slime == ewcfg.fish_slime_saltwater:
-				fish_pool.remove(fish)
-
-	fish = random.choice(fish_pool)
+	# Filter out fish from other pier types
+	fish = random.choice([fish for fish in fish_pool if ewcfg.fish_map[fish].slime == fisher.pier.pier_type])
 	
 	# Get fucked
 	if fisher.pier.id_poi == ewcfg.poi_id_juviesrow_pier:
@@ -341,7 +332,7 @@ async def cast(cmd):
 
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
-	
+
 	market_data = EwMarket(id_server = cmd.message.author.guild.id)
 	statuses = user_data.getStatusEffects()
 
@@ -363,12 +354,17 @@ async def cast(cmd):
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
+		rod_possession = user_data.get_possession('rod')
+		if rod_possession: 
+			fisher.inhabitant_id = rod_possession[0]
+
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
+		elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 			response = "You're too hungry to fish right now."
-
+		elif (not fisher.inhabitant_id) and (poi.id_poi == ewcfg.poi_id_blackpond):
+			response = "You cast your fishing line into the pond, but your hook bounces off its black waters like hard concrete."
 		else:
 			has_fishingrod = False
 
@@ -378,22 +374,12 @@ async def cast(cmd):
 				if weapon.id_weapon == "fishingrod":
 					has_fishingrod = True
 
-			#if user_data.sidearm >= 0:
-			#	sidearm_item = EwItem(id_item=user_data.sidearm)
-			#	sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
-			#	if sidearm.id_weapon == "fishingrod":
-			#		has_fishingrod = True
-
 			if ewcfg.status_high_id in statuses:
 				fisher.high = True
 			fisher.fishing = True
 			fisher.bait = False
-			fisher.pier = ewcfg.id_to_poi.get(user_data.poi)
+			fisher.pier = poi
 			fisher.current_fish = gen_fish(market_data, fisher, has_fishingrod)
-
-			rod_possession = user_data.get_possession('rod')
-			if rod_possession: 
-				fisher.inhabitant_id = rod_possession[0]
 			
 			high_value_bait_used = False
 
@@ -469,8 +455,10 @@ async def cast(cmd):
 
 			if fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
 				response += "vast Slime Sea."
-			else:
+			elif fisher.pier.pier_type == ewcfg.fish_slime_freshwater:
 				response += "glowing Slime Lake."
+			elif fisher.pier.pier_type == ewcfg.fish_slime_void:
+				response += "pond's black waters."
 
 			user_data.hunger += ewcfg.hunger_perfish * ewutils.hunger_cost_mod(user_data.slimelevel)
 			user_data.persist()
@@ -741,6 +729,10 @@ async def award_fish(fisher, cmd, user_data):
 		if has_fishingrod == True:
 			slime_gain = slime_gain * 2
 
+		if fisher.pier.pier_type == ewcfg.fish_slime_void:
+			slime_gain = slime_gain * 1.5
+			value += 30
+
 		if fisher.current_fish == "plebefish":
 			slime_gain = ewcfg.fish_gain * .5
 			value = 10
@@ -788,7 +780,7 @@ async def award_fish(fisher, cmd, user_data):
 
 			slime_gain = int(0.25 * slime_gain)
 
-			response = "The two of you together manage to reel in a {fish}! {flavor} {ghost} haunts {slime:,} slime away from it before placing it on {fleshling}'s hands. "\
+			response = "The two of you together manage to reel in a {fish}! {flavor} {ghost} haunts {slime:,} slime away from the fish before placing it on {fleshling}'s hands."\
 				.format(
 					fish = ewcfg.fish_map[fisher.current_fish].str_name, 
 					flavor = ewcfg.fish_map[fisher.current_fish].str_desc, 

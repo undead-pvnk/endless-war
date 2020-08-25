@@ -139,6 +139,7 @@ poi_id_greencakecafe = "greencakecafe"
 poi_id_sodafountain = "sodafountain"
 poi_id_bodega = "bodega"
 poi_id_wafflehouse = "wafflehouse"
+poi_id_blackpond = "blackpond"
 poi_id_basedhardware = "basedhardware"
 
 # transports
@@ -771,6 +772,7 @@ channel_apt_maimrdige ="maimridge-apartments"
 channel_slimesendcliffs = "slimes-end-cliffs"
 channel_bodega = "bodega"
 channel_wafflehouse = "wafflehouse"
+channel_blackpond = "blackpond"
 channel_basedhardware = "based-hardware"
 
 channel_prankfeed = "prank-feed"
@@ -8521,6 +8523,7 @@ fish_catchtime_day = "day"
 
 fish_slime_freshwater = "freshwater"
 fish_slime_saltwater = "saltwater"
+fish_slime_void = "void"
 
 fish_size_miniscule = "miniscule"
 fish_size_small = "small"
@@ -9206,6 +9209,123 @@ fish_list  =  [
 		catch_time = None,
 		catch_weather = fish_catchtime_rain,
 		str_desc = "Rejoice, horndogs.",
+	),
+	EwFish(
+		id_fish = "negaslimesquid",
+		str_name = "Negaslime Squid",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's just a black squid.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "voidfish",
+		str_name = "Void Fish",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Transluscent and quiet.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "corpsefish",
+		str_name = "Corpse Fish",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's just laying there.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "bonedoctopus",
+		str_name = "Boned Octopus",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Its tentacles crack while wriggling.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "kaleidoscuttle",
+		str_name = "Kaleidoscuttle",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Whoa, dude.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "deathfish",
+		str_name = "Death Fish",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It is the beast it worships.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "artifish",
+		str_name = "Artifish",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's chromatically abhorrent.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "ghostfish",
+		str_name = "Ghost Fish",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Goes well with coleslaw.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "boxcrab",
+		str_name = "Box Crab",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Hiding in its own little fort.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "bluejelly",
+		str_name = "Blue Jelly",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Its tentacles look like a mop head.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "lichfish",
+		str_name = "Lich Fish",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "What you didn't reel is its phylactery.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "logfish",
+		str_name = "Logfish",
+		rarity = fish_rarity_promo,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "WOODEN AND HORRIFYING.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "highmonkfish",
+		str_name = "High Monkfish",
+		rarity = fish_rarity_promo,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "First of its creed.",
+		slime = fish_slime_void
 	),
 ]
 
@@ -11708,7 +11828,7 @@ poi_list = [
 			"v",
 		],
 		str_name = "the Void",
-		str_desc = "A large open space, pitch black aside from the many old-style street lights illuminating several paths, whose intersection is marked by street sign, standing tall next to a memorial metal bench. At the end of each path is a well lit staircase leading underground, though one of them seems to be barred to prevent passage. One shorter path from the sign leads to the Waffle House, on the back of which is a ladder leading to its roof. The total silence of this place makes you very aware of the sounds your own body makes as you walk around, and the overbright lamps strain your vision even as total darkness envelops you.\n\nThis area contains the Waffle House.",
+		str_desc = "A large open space, pitch black aside from the many old-style street lights illuminating several paths, whose intersection is marked by street sign, standing tall next to a metal bench. At the end of each path is a well lit staircase leading underground, though one of them seems to be barred to prevent passage. One shorter path from the sign leads to the Waffle House, on the back of which is a ladder leading to its roof. The total silence of this place makes you very aware of the sounds your own body makes as you walk around, and the overbright lamps strain your vision even as total darkness envelops you.\n\nThis area contains the Waffle House, and the Black Pond.",
 		topic = "A peaceful place, despite the sense of liminality. Remember to **!look** around, if you're feeling lost.",
 		wikipage = wiki_baseurl + "The_Void",
 		channel = "the-void",
@@ -11717,6 +11837,7 @@ poi_list = [
 		pvp = True,
 		neighbors = {
 			poi_id_wafflehouse : travel_time_subzone,
+			poi_id_blackpond : travel_time_subzone,
 		},
 	),
 	EwPoi( # the-sewers
@@ -16905,6 +17026,27 @@ poi_list = [
 		vendors = [
 			vendor_wafflehouse,
 		],
+		is_subzone = True,
+		neighbors = {
+			poi_id_thevoid : travel_time_subzone,
+		},
+	),
+	EwPoi(  # the possessed-only pier in the void
+		id_poi = poi_id_blackpond,
+		alias = [
+			"bp",
+			"black pond",
+			"pond",
+		],
+		str_name = "the Black Pond",
+		str_desc = "A long dirt path from the barred passage to the Sewers leads here, to a pond around not much bigger than a tennis field, full of an oily black liquid. There's a narrow pier stretching all the way to the center of the pit, where you can find a plaque warning about the pond's waters, and urging visitors not to stay too long.\nTurns out the old adage, in this case, is quite literal: gaze long enough into this abyss and it will most definitely gaze back into you. Its irisless eyes and sharp smiles are rather charming, I have to admit.\n\nExits back into the Void.",
+		channel = channel_blackpond,
+        wikipage = wiki_baseurl + "The_Void#The_Black_Pond",
+		role = "Black Pond",
+		mother_districts = [poi_id_thevoid],
+		pvp = True,
+		is_pier = True,
+		pier_type = fish_slime_void,
 		is_subzone = True,
 		neighbors = {
 			poi_id_thevoid : travel_time_subzone,
