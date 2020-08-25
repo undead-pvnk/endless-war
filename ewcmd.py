@@ -3356,7 +3356,16 @@ async def gvs_plant_gaiaslimeoid(cmd):
 		if item_sought != None:
 			item = EwItem(id_item=item_sought.get('id_item'))
 			item_props = item.item_props
-			
+
+			id_item = item_props.get('id_item')
+			if id_item != None:
+				if id_item not in seedpackets:
+					response = "That's not a valid seed packet you can select, bitch."
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			else:
+				response = "That's not a valid seed packet you can select, bitch."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 			enemytype = item_props.get('enemytype')
 			cooldown = int(item_props.get('cooldown'))
 			cost = int(item_props.get('cost'))
@@ -3462,15 +3471,14 @@ async def gvs_progress(cmd):
 	non_degraded_districts = []
 	degraded_districts = []
 	
-	
 	for district in degradation_data:
 		if district[1] == 0:
 			non_degraded_districts.append(district[0])
 		elif district[1] == ewcfg.district_max_degradation:
 			degraded_districts.append(district[0])
 			
-	non_degraded_districts = set(non_degraded_districts)
-	degraded_districts = set(degraded_districts)
+	# non_degraded_districts = set(non_degraded_districts)
+	# degraded_districts = set(degraded_districts)
 
 	counter = 0
 	response += "\n**Rejuvenated Districts**"
