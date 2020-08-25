@@ -3466,7 +3466,7 @@ async def gvs_progress(cmd):
 		if poi.is_district:
 			op_districts.append(poi.id_poi)
 			
-	degradation_data = ewutils.execute_sql_query("SELECT district, degradation FROM districts WHERE district IN {}".format(tuple(op_districts)))
+	degradation_data = ewutils.execute_sql_query("SELECT district, degradation FROM districts WHERE district IN {} AND id_server = {}".format(tuple(op_districts), cmd.message.guild.id))
 	
 	non_degraded_districts = []
 	degraded_districts = []
