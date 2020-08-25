@@ -3400,9 +3400,7 @@ async def gvs_update_gamestate(id_server):
 			# Check if the shamblers are fighting against the bot.
 			# If they are, they can only win if at least one shambler has reached the back.
 			if len(bot_garden_ops) > 0:
-				back_shamblers = ewutils.execute_sql_query("SELECT id_enemy FROM enemies WHERE gvs_coord IN %s".format(), (
-					ewcfg.gvs_coords_end
-				))
+				back_shamblers = ewutils.execute_sql_query("SELECT id_enemy FROM enemies WHERE gvs_coord IN {}".format(tuple(ewcfg.gvs_coords_end)))
 				if len(back_shamblers) > 0:
 					# Shambler reached the back while no juveniles were around to help the bot. Shamblers win!
 					victor = ewcfg.psuedo_faction_shamblers
