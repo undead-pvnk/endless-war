@@ -2169,14 +2169,18 @@ async def enemy_perform_action_gvs(id_server):
 				elif enemy.enemytype in ewcfg.gvs_enemies_shamblers:
 					life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
 					
-					if len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_gaiaslimeoid])) > 0:
-						await enemy.cannibalize()
-					elif len(district_data.get_players_in_district(life_states = life_states)) > 0 and enemy.gvs_coord in ewcfg.gvs_coords_end:
-						await enemy.kill()
+					if enemy.gvs_coord in ewcfg.gvs_coords_end:
+						if len(district_data.get_players_in_district(life_states=life_states)) > 0 and enemy.gvs_coord in ewcfg.gvs_coords_end:
+							await enemy.kill()
+						else:
+							continue
 					else:
-						await sh_move(enemy)
+						if len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_gaiaslimeoid])) > 0:
+							await enemy.cannibalize()
+						else:
+							await sh_move(enemy)
 				else:
-					return
+					continue
 				
 			if resp_cont != None:
 				await resp_cont.post()
