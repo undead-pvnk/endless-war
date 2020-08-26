@@ -3578,7 +3578,7 @@ async def dig(cmd): # TODO  zen garden functionality
 		enemy = EwEnemy(id_server=user_data.id_server, id_enemy=dig_target)
 		delete_enemy(enemy)
 
-		if random.random() < 0:  # 90% chance to fail
+		if random.random() < 0.8:  # 90% chance to fail
 			response = "You dig up a {} Gaiaslimeoid."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
