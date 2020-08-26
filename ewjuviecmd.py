@@ -317,7 +317,9 @@ async def mine(cmd):
 				unearthed_item_chance *= 2
 			if has_pickaxe == True:
 				unearthed_item_chance *= 1.5
-			if ewcfg.mutation_id_lucky in mutations or ewcfg.cosmeticAbility_id_lucky in cosmetic_abilites:
+			if ewcfg.mutation_id_lucky in mutations:
+				unearthed_item_chance *= 1.33
+			if ewcfg.cosmeticAbility_id_lucky in cosmetic_abilites:
 				unearthed_item_chance *= 1.33
 
 			# event bonus
