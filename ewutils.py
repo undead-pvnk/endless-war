@@ -1455,7 +1455,11 @@ def get_client():
 """
 	Proxy to discord.py channel.send with exception handling.
 """
-async def send_message(client, channel, text, delete_after=None):
+async def send_message(client, channel, text, delete_after = None, filter_everyone = True):
+	#catch any future @everyone exploits
+	if filter_everyone: 
+		text = text.replace("@everyone","{at}everyone")
+
 	try:
 		return await channel.send(content=text, delete_after=delete_after)
 	except discord.errors.Forbidden:
@@ -2916,4 +2920,16 @@ async def degrade_districts(cmd):
 	execute_sql_query("UPDATE districts SET time_unlock = 0")
 	execute_sql_query("UPDATE districts SET degradation = 10000 WHERE district IN {}".format(tuple(gvs_districts)))
 	logMsg('Set proper degradation values.')
-	
+
+
+def mention_type(cmd, ew_id):
+	if cmd.client_id.user == ew_id.user:
+		return "ew"
+	elif cmd.author_id.user == ew_id.user:
+		return "self"
+	else:
+		return "other"
+
+
+
+

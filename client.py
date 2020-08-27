@@ -1412,26 +1412,38 @@ async def on_message(message):
 		tokens_count = len(tokens)
 		cmd = tokens[0].lower() if tokens_count >= 1 else ""
 
-		# remove mentions to us
-		mentions = list(filter(lambda user : user.id != client.user.id, message.mentions))
+		mentions = message.mentions
 		mentions_count = len(mentions)
+
+		playermodel = ewplayer.EwPlayer(id_user=message.author.id)
+		
+		if message.guild == None:
+			guild_used = ewcfg.server_list[playermodel.id_server]
+			admin_permissions = False
+		else:
+			guild_used = message.guild
+			admin_permissions = message.author.guild_permissions.administrator
 
 		# Create command object
 		cmd_obj = ewcmd.EwCmd(
 			tokens = tokens,
 			message = message,
 			client = client,
-			mentions = mentions
+			mentions = mentions,
+			guild = guild_used,
+			admin = admin_permissions
 		)
 		
+		# remove mentions to us #moved below cmd_obj because of EwIds #TODO: remove this and move debug commands somewhere else
+		mentions = list(filter(lambda user : user.id != client.user.id, message.mentions))
+		mentions_count = len(mentions)
+
 		"""
 			Punish the user for swearing.
 		"""
 		if (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
 			# print(content_tolower_list)
 			swear_multiplier = 0
-	
-			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
 			usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
 
 			if usermodel != None:
