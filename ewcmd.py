@@ -84,7 +84,7 @@ class EwCmd:
 		self.mention_ids = []
 		for user in mentions:
 			self.mention_ids.append(EwId(user.id, user.guild.id, user.display_name, user.guild_permissions.administrator))
-			print(EwId(user.id, user.guild.id, user.display_name, user.guild_permissions.administrator))
+			# print(EwId(user.id, user.guild.id, user.display_name, user.guild_permissions.administrator))
 
 		# remove mentions to us for commands that dont yet handle Endless War mentions with EwIds
 		self.mentions = list(filter(lambda user : user.id != client.user.id, mentions))
