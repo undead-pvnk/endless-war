@@ -1419,8 +1419,10 @@ async def on_message(message):
 		
 		if message.guild == None:
 			guild_used = ewcfg.server_list[playermodel.id_server]
+			admin_permissions = False
 		else:
 			guild_used = message.guild
+			admin_permissions = message.author.guild_permissions.administrator
 
 		# Create command object
 		cmd_obj = ewcmd.EwCmd(
@@ -1428,7 +1430,8 @@ async def on_message(message):
 			message = message,
 			client = client,
 			mentions = mentions,
-			guild = guild_used
+			guild = guild_used,
+			admin = admin_permissions
 		)
 		
 		# remove mentions to us #moved below cmd_obj because of EwIds #TODO: remove this and move debug commands somewhere else

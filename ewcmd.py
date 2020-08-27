@@ -66,7 +66,8 @@ class EwCmd:
 		message = None,
 		client = None,
 		mentions = [],
-		guild = None
+		guild = None,
+		admin = False,
 	):
 		self.tokens = tokens
 		self.message = message
@@ -78,9 +79,9 @@ class EwCmd:
 			self.cmd = tokens[0]
 
 		#Endless War's EwId
-		self.client_id = EwId(client.user.id, self.guild.id, client.user.name, admin = True) 
+		self.client_id = EwId(client.user.id, self.guild.id, client.user.name, admin = admin) 
 		#Author's EwId
-		self.author_id = EwId(message.author.id, self.guild.id, message.author.display_name, admin = message.author.guild_permissions.administrator) 
+		self.author_id = EwId(message.author.id, self.guild.id, message.author.display_name, admin = admin) 
 		#List of mentions' EwIds
 		self.mention_ids = []
 		for user in mentions:
