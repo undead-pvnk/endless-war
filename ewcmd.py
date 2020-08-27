@@ -40,8 +40,8 @@ class EwId:
 		self.display_name = display_name
 		self.admin = admin
 
-	def __repr__(self): #print() support 
-		return f"<EwId - {self.display_name}>"
+	def __repr__(self): #print() support
+		return "<EwId - {}>".format(self.display_name)
 
 """ class to send general data about an interaction to a command """
 class EwCmd:
