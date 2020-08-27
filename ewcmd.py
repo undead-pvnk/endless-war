@@ -1016,7 +1016,7 @@ async def dance(cmd):
 	
 	if user_data.life_state == ewcfg.life_state_juvenile:
 		dance_response = random.choice(ewcfg.dance_responses).format(member.display_name)
-		dance_response = "{} {} {}".format(ewcfg.emote_slime3, dance_response, ewcfg.emote_slime3)
+		dance_response = "{} {} {}".format(ewcfg.emote_slime3, dance_response, ewcfg.emote_slime3).replace("@", "{at}")
 		await ewutils.send_message(cmd.client, cmd.message.channel, dance_response)
 
 """
