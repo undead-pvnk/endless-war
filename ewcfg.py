@@ -7934,6 +7934,20 @@ food_list = [
 		str_desc = "It is literally just an upside-down pizza on top of another pizza. Your base, carnal desires will be the end of you one of these days."
 	),
 	EwFood(
+		id_food = "sixteencheesepizza",
+		alias = [
+			"sexdecuplecheese",
+			"extracheeseplease", #:)
+		],
+		recover_hunger = 500,
+		price = 5000,
+		inebriation = 0,
+		str_name = 'slice of sexdecuple cheese pizza',
+		vendors = [vendor_pizzahut],
+		str_eat = "As you bite into a mountain of half melted cheese, you feel a rush of nostalgic memories. You remember all laughs you've share while fishing with your pals and the mining parties you've thrown together. The real pizza must be the friends you made along the way because it certanly is this ball of grease you're eating.",
+		str_desc = "Is a slice of pizza a slice of pizza if its a pound of grease and melted cheeses with flimsy piece of flatbread underneath? This \"pizza\" really makes you think."
+	),
+	EwFood(
 		id_food = "nachosupreme",
 		alias = [
 			"ns",

@@ -981,9 +981,13 @@ class EwUser:
 		return int(res)
 
 	""" Create a new EwUser and optionally retrieve it from the database. """
-	def __init__(self, member = None, id_user = None, id_server = None, data_level = 0):
+	def __init__(self, ew_id = None, member = None, id_user = None, id_server = None, data_level = 0):
 
 		self.combatant_type = ewcfg.combatant_type_player
+
+		if ew_id != None:
+			id_user = ew_id.user
+			id_server = ew_id.guild
 
 		if(id_user == None) and (id_server == None):
 			if(member != None):
