@@ -1016,7 +1016,7 @@ async def dance(cmd):
 	
 	if user_data.life_state == ewcfg.life_state_juvenile:
 		dance_response = random.choice(ewcfg.dance_responses).format(member.display_name)
-		dance_response = "{} {} {}".format(ewcfg.emote_slime3, dance_response, ewcfg.emote_slime3)
+		dance_response = "{} {} {}".format(ewcfg.emote_slime3, dance_response, ewcfg.emote_slime3).replace("@", "{at}")
 		await ewutils.send_message(cmd.client, cmd.message.channel, dance_response)
 
 """
@@ -3063,7 +3063,7 @@ async def gvs_join_operation(cmd):
 		# if not found_choice:
 		# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
-		item_sought = ewitem.find_item(item_search=selected_item, id_user=user_data.id_user, id_server=user_data.id_server)
+		item_sought = ewitem.find_item(item_search=selected_item, id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
 		
 		if item_sought != None:
 			item = EwItem(id_item=item_sought.get('id_item'))
@@ -3352,7 +3352,7 @@ async def gvs_plant_gaiaslimeoid(cmd):
 		# if not found_choice or invalid_coord:
 		# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		item_sought = ewitem.find_item(item_search=selected_item, id_user=cmd.message.author.id, id_server=user_data.id_server)
+		item_sought = ewitem.find_item(item_search=selected_item, id_user=cmd.message.author.id, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
 		if item_sought != None:
 			item = EwItem(id_item=item_sought.get('id_item'))
 			item_props = item.item_props
@@ -3618,7 +3618,7 @@ async def gvs_sell_gaiaslimeoid(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to be in the Atomic Forest to sell your Gaiaslimeoids."))
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
+	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_item)
 
 	if item_sought:
 		gaiaslimeoid = EwItem(id_item=item_sought.get('id_item'))

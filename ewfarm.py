@@ -379,13 +379,21 @@ async def sow(cmd):
 		if farm.time_lastsow > 0:
 			response = "You’ve already sown something here. Try planting in another farming location. If you’ve planted in all three farming locations, you’re shit out of luck. Just wait, asshole."
 		else:
+			it_type_filter = None
+
 			# gangsters can only plant poudrins
 			if cmd.tokens_count > 1 and user_data.life_state == ewcfg.life_state_juvenile:
 				item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+				
+				# if the item selected was a vegetable, use a food only filter in find_item
+				for v in ewcfg.vegetable_list:
+					if item_search in v.id_food or item_search in v.str_name:
+						it_type_filter = ewcfg.it_food
+						break
 			else:
 				item_search = "slimepoudrin"
 
-			item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+			item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = it_type_filter)
 
 			if item_sought == None:
 				response = "You don't have anything to plant! Try collecting a poudrin."
@@ -453,7 +461,7 @@ async def mill(cmd):
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type=ewcfg.it_food)
 
 	# Checking availability of milling
 	if user_data.life_state != ewcfg.life_state_juvenile:
