@@ -1412,8 +1412,7 @@ async def on_message(message):
 		tokens_count = len(tokens)
 		cmd = tokens[0].lower() if tokens_count >= 1 else ""
 
-		# remove mentions to us
-		mentions = list(filter(lambda user : user.id != client.user.id, message.mentions))
+		mentions = message.mentions
 		mentions_count = len(mentions)
 
 		# Create command object
@@ -1424,6 +1423,10 @@ async def on_message(message):
 			mentions = mentions
 		)
 		
+		# remove mentions to us #moved below cmd_obj because of EwIds #TODO: remove this and move debug commands somewhere else
+		mentions = list(filter(lambda user : user.id != client.user.id, message.mentions))
+		mentions_count = len(mentions)
+
 		"""
 			Punish the user for swearing.
 		"""

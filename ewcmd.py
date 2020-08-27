@@ -27,6 +27,21 @@ from ewstatuseffects import EwEnemyStatusEffect
 from ewdistrict import EwDistrict
 from ewworldevent import EwWorldEvent
 
+""" wrapper for discord members """
+class EwId:
+	user = -1
+	guild = -1
+	display_name = ""
+	admin = False
+
+	def __init__(self, user, guild, display_name, admin):
+		self.user = user
+		self.guild = guild
+		self.display_name = display_name
+		self.admin = admin
+
+	def __repr__(self): #print() support 
+		return f"<EwId - {self.display_name}>"
 
 """ class to send general data about an interaction to a command """
 class EwCmd:
@@ -39,6 +54,12 @@ class EwCmd:
 	mentions_count = 0
 	guild = None
 
+	#EwId system
+	client_id = None
+	author_id = None
+	mention_ids = []
+
+
 	def __init__(
 		self,
 		tokens = [],
@@ -49,13 +70,27 @@ class EwCmd:
 		self.tokens = tokens
 		self.message = message
 		self.client = client
-		self.mentions = mentions
-		self.mentions_count = len(mentions)
 		self.guild = message.guild
 
 		if len(tokens) >= 1:
 			self.tokens_count = len(tokens)
 			self.cmd = tokens[0]
+
+		#Endless War's EwId
+		self.client_id = EwId(client.user.id, message.guild.id, client.user.name, admin = True) 
+		#Author's EwId
+		self.author_id = EwId(message.author.id, message.author.guild.id, message.author.display_name, admin = message.author.guild_permissions.administrator) 
+		#List of mentions' EwIds
+		self.mention_ids = []
+		for user in mentions:
+			self.mention_ids.append(EwId(user.id, user.guild.id, user.display_name, user.guild_permissions.administrator))
+			print(EwId(user.id, user.guild.id, user.display_name, user.guild_permissions.administrator))
+
+		# remove mentions to us for commands that dont yet handle Endless War mentions with EwIds
+		self.mentions = list(filter(lambda user : user.id != client.user.id, mentions))
+		self.mentions_count = len(self.mentions)
+
+
 
 """ Send an initial message you intend to edit later while processing the command. Returns handle to the message. """
 async def start(cmd = None, message = '...', channel = None, client = None):
@@ -101,31 +136,20 @@ def is_casino_open(t):
 
 	return True
 
-def gen_score_text(
-	id_user = None,
-	id_server = None,
-	display_name = None
-):
+def gen_score_text(ew_id):
 
-	user_data = EwUser(
-		id_user = id_user,
-		id_server = id_server
-	)
+	user_data = EwUser(ew_id = ew_id)
 
-	items = ewitem.inventory(
-		id_user = id_user,
-		id_server = id_server,
-		item_type_filter = ewcfg.it_item
-	)
+	items = ewitem.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
 
-	poudrin_amount = ewitem.find_poudrin(id_user = id_user, id_server = id_server)
+	poudrin_amount = ewitem.find_poudrin(id_user = user_data.id_user, id_server = user_data.id_server)
 
 	if user_data.life_state == ewcfg.life_state_grandfoe:
 		# Can't see a raid boss's slime score.
-		response = "{}'s power is beyond your understanding.".format(display_name)
+		response = "{}'s power is beyond your understanding.".format(ew_id.display_name)
 	else:
 		# return somebody's score
-		response = "{} currently has {:,} slime{}.".format(display_name, user_data.slimes, (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
+		response = "{} currently has {:,} slime{}.".format(ew_id.display_name, user_data.slimes, (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
 
 	return response
 
@@ -135,21 +159,29 @@ async def score(cmd):
 	user_data = None
 	member = None
 
-	if cmd.mentions_count == 0:
-		user_data = EwUser(member = cmd.message.author)
+	if len(cmd.mention_ids) == 0:
+		target_type = "self"
+	else:
+		target_type = ewutils.mention_type(cmd, cmd.mention_ids[0])
 
+	#endless war slime check
+	if target_type == "ew":
+		total = ewutils.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
+		totalslimes = total[0][0]
+		response = "ENDLESS WAR has amassed {:,} slime.".format(totalslimes)
+
+	#self slime check
+	elif target_type == "self":
+		user_data = EwUser(ew_id = cmd.author_id)
 		poudrin_amount = ewitem.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.guild.id)
 
 		# return my score
 		response = "You currently have {:,} slime{}.".format(user_data.slimes, (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
-
+	
+	#other user slime check
 	else:
-		member = cmd.mentions[0]
-		response = gen_score_text(
-			id_user = member.id,
-			id_server = member.guild.id,
-			display_name = member.display_name
-		)
+		member = cmd.mentions[0] #for ewrolemgr
+		response = gen_score_text(ew_id = cmd.mention_ids[0])
 
 	time_now_msg_start = int(time.time())
 	# Send the response to the player.
@@ -157,7 +189,7 @@ async def score(cmd):
 	time_now_msg_end = int(time.time())
 	
 	time_now_role_start = int(time.time())
-	if member != None:
+	if member != None: #update roles on other user slime check
 		await ewrolemgr.updateRoles(client = cmd.client, member = member)
 	time_now_role_end = int(time.time())
 	
@@ -165,6 +197,13 @@ async def score(cmd):
 	# ewutils.logMsg('send_message took {} seconds.'.format(time_now_msg_end - time_now_msg_start))
 	# ewutils.logMsg('updateRoles took {} seconds.'.format(time_now_role_end - time_now_role_start))
 	# ewutils.logMsg('total command time took {} seconds.'.format(time_now_cmd_end - time_now_cmd_start))
+
+	#endless war's slime
+	#total = ewutils.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
+	#totalslimes = total[0][0]
+	#
+	#return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "ENDLESS WAR has amassed {:,} slime.".format(totalslimes)))
+
 
 
 def gen_data_text(
@@ -365,7 +404,13 @@ async def data(cmd):
 	member = None
 	response = ""
 
-	if len(cmd.tokens) > 1 and cmd.mentions_count == 0:
+	if len(cmd.mention_ids) == 0:
+		target_type = "self"
+	else:
+		target_type = ewutils.mention_type(cmd, cmd.mention_ids[0])
+
+	#enemy data check 
+	if len(cmd.tokens) > 1 and cmd.mentions_count == 0 and len(cmd.mention_ids) == 0:
 		user_data = EwUser(member=cmd.message.author)
 
 		soughtenemy = " ".join(cmd.tokens[1:]).lower()
@@ -405,8 +450,13 @@ async def data(cmd):
 			response = "ENDLESS WAR didn't understand that name."
 
 
+	elif target_type == "ew":
+		response = "ENDLESS WAR is a level 666 ancient obelisk. He is weilding THE BONE HURTING BEAM. He is a rank 111 bone hurter. He has been weathered by months of bicarbonate rain. He has millions of confirmed kills."
+		response = "ENDLESS WAR is a level 666 ancient obelisk. He is weilding THE BONE HURTING BEAM. He is a rank 111 bone hurter. He has been weathered by months of bicarbonate rain. He has millions of confirmed kills."
 
-	elif cmd.mentions_count == 0:
+
+	#self data check
+	elif target_type == "self":
 
 		user_data = EwUser(member=cmd.message.author)
 		slimeoid = EwSlimeoid(member=cmd.message.author)
@@ -618,6 +668,8 @@ async def data(cmd):
 			response += "\n" + response_block
 
 		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(user_data.id_user)
+	
+	#other data check	
 	else:
 		member = cmd.mentions[0]
 		response = gen_data_text(
@@ -1559,100 +1611,19 @@ async def pray(cmd):
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	if user_data.life_state == ewcfg.life_state_kingpin:
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			"https://i.imgur.com/WgnoDSA.gif"
-		))
-		await asyncio.sleep(9)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			"https://i.imgur.com/M5GWGGc.gif"
-		))
-		await asyncio.sleep(3)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			"https://i.imgur.com/fkLZ3XX.gif"
-		))
-		await asyncio.sleep(3)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			"https://i.imgur.com/lUajXCs.gif"
-		))
-		await asyncio.sleep(9)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			"https://i.imgur.com/FIuGl0C.png"
-		))
-		await asyncio.sleep(6)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			"BUT SERIOUSLY, FOLKS... https://i.imgur.com/sAa0uwB.png"
-		))
-		await asyncio.sleep(3)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			"IT'S SLIMERNALIA! https://i.imgur.com/lbLNJNC.gif"
-		))
-		await asyncio.sleep(6)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			"***WHRRRRRRRRRRRR*** https://i.imgur.com/pvCfBQ2.gif"
-		))
-		await asyncio.sleep(6)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			"***WHRRRRRRRRRRRR*** https://i.imgur.com/e2PY1VJ.gif"
-		))
-		await asyncio.sleep(3)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			"DELICIOUS KINGPIN SLIME... https://i.imgur.com/2Cp1u43.png"
-		))
-		await asyncio.sleep(3)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			"JUST ENOUGH FOR A WEEK OR TWO OF CLEAR SKIES... https://i.imgur.com/L7T3V5b.gif"
-		))
-		await asyncio.sleep(9)
-		await ewutils.send_message(cmd.client, cmd.message.channel,
-			"@everyone Yo, Slimernalia! https://imgur.com/16mzAJT"
-		)
-		response = "NOW GO FORTH AND SPLATTER SLIME."
-		market_data = EwMarket(id_server = cmd.guild.id)
-		market_data.weather = ewcfg.weather_sunny
-		market_data.persist()
 
+	if len(cmd.mention_ids) == 0:
+		target_type = "ew"
 	else:
-		# Generates a random integer from 1 to 100. If it is below the prob of poudrin, the player gets a poudrin.
-		# If the random integer is above prob of poudrin but below probofpoud+probofdeath, then the player dies. Else,
-		# the player is blessed with a response from EW.
-		probabilityofpoudrin = 10
-		probabilityofdeath = 10
+		target_type = ewutils.mention_type(cmd, cmd.mention_ids[0])
+
+	#endless war disapoves of praying to others and has a high chance to kill
+	if target_type != "ew":
+		probabilityofdeath = 20
 		diceroll = random.randint(1, 100)
 
-		# Redeem the player for their sins.
-		market_data = EwMarket(id_server=cmd.guild.id)
-		market_data.global_swear_jar = max(0, market_data.global_swear_jar - 3)
-		market_data.persist()
-		user_data.swear_jar = 0
-		user_data.persist()
-
-		if diceroll < probabilityofpoudrin: # Player gets a poudrin.
-			item = random.choice(ewcfg.mine_results)
-
-			item_props = ewitem.gen_item_props(item)
-
-			ewitem.item_create(
-				item_type = item.item_type,
-				id_user = cmd.message.author.id,
-				id_server = cmd.guild.id,
-				item_props = item_props
-			)
-
-			response = "ENDLESS WAR takes pity on you, and with a minor tremor he materializes a {} in your pocket.".format(item.str_name)
-
-		elif diceroll < (probabilityofpoudrin + probabilityofdeath): # Player gets a face full of bone-hurting beam.
+		#don't kill kingpins
+		if user_data.life_state != ewcfg.life_state_kingpin and diceroll < probabilityofdeath:
 			response = "ENDLESS WAR doesn’t respond. You squint, looking directly into his eye, and think you begin to see particle effects begin to accumulate..."
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			await asyncio.sleep(3)
@@ -1665,8 +1636,77 @@ async def pray(cmd):
 			await die_resp.post()
 
 			response = "ENDLESS WAR completely and utterly obliterates you with a bone-hurting beam."
-
 		else:
+			response = "ENDLESS WAR disapproves of this idolatry."
+
+
+	else:
+		if user_data.life_state == ewcfg.life_state_kingpin:
+		# slimernalia 2019 revieal (this was left in for a long time lmao)
+		#	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+		#		cmd.message.author,
+		#		"https://i.imgur.com/WgnoDSA.gif"
+		#	))
+		#	await asyncio.sleep(9)
+		#	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+		#		cmd.message.author,
+		#		"https://i.imgur.com/M5GWGGc.gif"
+		#	))
+		#	await asyncio.sleep(3)
+		#	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+		#		cmd.message.author,
+		#		"https://i.imgur.com/fkLZ3XX.gif"
+		#	))
+		#	await asyncio.sleep(3)
+		#	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+		#		cmd.message.author,
+		#		"https://i.imgur.com/lUajXCs.gif"
+		#	))
+		#	await asyncio.sleep(9)
+		#	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+		#		cmd.message.author,
+		#		"https://i.imgur.com/FIuGl0C.png"
+		#	))
+		#	await asyncio.sleep(6)
+		#	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+		#		cmd.message.author,
+		#		"BUT SERIOUSLY, FOLKS... https://i.imgur.com/sAa0uwB.png"
+		#	))
+		#	await asyncio.sleep(3)
+		#	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+		#		cmd.message.author,
+		#		"IT'S SLIMERNALIA! https://i.imgur.com/lbLNJNC.gif"
+		#	))
+		#	await asyncio.sleep(6)
+		#	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+		#		cmd.message.author,
+		#		"***WHRRRRRRRRRRRR*** https://i.imgur.com/pvCfBQ2.gif"
+		#	))
+		#	await asyncio.sleep(6)
+		#	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+		#		cmd.message.author,
+		#		"***WHRRRRRRRRRRRR*** https://i.imgur.com/e2PY1VJ.gif"
+		#	))
+		#	await asyncio.sleep(3)
+		#	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+		#		cmd.message.author,
+		#		"DELICIOUS KINGPIN SLIME... https://i.imgur.com/2Cp1u43.png"
+		#	))
+		#	await asyncio.sleep(3)
+		#	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+		#		cmd.message.author,
+		#		"JUST ENOUGH FOR A WEEK OR TWO OF CLEAR SKIES... https://i.imgur.com/L7T3V5b.gif"
+		#	))
+		#	await asyncio.sleep(9)
+		#	await ewutils.send_message(cmd.client, cmd.message.channel,
+		#		"@everyone Yo, Slimernalia! https://imgur.com/16mzAJT"
+		#	)
+		#	response = "NOW GO FORTH AND SPLATTER SLIME."
+		#	market_data = EwMarket(id_server = cmd.guild.id)
+		#	market_data.weather = ewcfg.weather_sunny
+		#	market_data.persist()
+
+			#kingpins don't die or get poudrins
 			responses_list = ewcfg.pray_responses_list
 
 			if user_data.slimes > 1000000:
@@ -1675,6 +1715,58 @@ async def pray(cmd):
 				responses_list = responses_list + ["ENDLESS WAR can’t help but laugh at how little slime you have."]
 
 			response = random.choice(responses_list)
+		else:
+			# Generates a random integer from 1 to 100. If it is below the prob of poudrin, the player gets a poudrin.
+			# If the random integer is above prob of poudrin but below probofpoud+probofdeath, then the player dies. Else,
+			# the player is blessed with a response from EW.
+			probabilityofpoudrin = 10
+			probabilityofdeath = 10
+			diceroll = random.randint(1, 100)
+
+			# Redeem the player for their sins.
+			market_data = EwMarket(id_server=cmd.guild.id)
+			market_data.global_swear_jar = max(0, market_data.global_swear_jar - 3)
+			market_data.persist()
+			user_data.swear_jar = 0
+			user_data.persist()
+
+			if diceroll < probabilityofpoudrin: # Player gets a poudrin.
+				item = random.choice(ewcfg.mine_results)
+
+				item_props = ewitem.gen_item_props(item)
+
+				ewitem.item_create(
+					item_type = item.item_type,
+					id_user = cmd.message.author.id,
+					id_server = cmd.guild.id,
+					item_props = item_props
+				)
+
+				response = "ENDLESS WAR takes pity on you, and with a minor tremor he materializes a {} in your pocket.".format(item.str_name)
+
+			elif diceroll < (probabilityofpoudrin + probabilityofdeath): # Player gets a face full of bone-hurting beam.
+				response = "ENDLESS WAR doesn’t respond. You squint, looking directly into his eye, and think you begin to see particle effects begin to accumulate..."
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				await asyncio.sleep(3)
+
+				user_data = EwUser(member = cmd.message.author)
+				user_data.trauma = ewcfg.trauma_id_environment
+				die_resp = user_data.die(cause = ewcfg.cause_praying)
+				user_data.persist()
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+				await die_resp.post()
+
+				response = "ENDLESS WAR completely and utterly obliterates you with a bone-hurting beam."
+
+			else:
+				responses_list = ewcfg.pray_responses_list
+
+				if user_data.slimes > 1000000:
+					responses_list = responses_list + ["ENDLESS WAR is impressed by your vast amounts of slime."]
+				else:
+					responses_list = responses_list + ["ENDLESS WAR can’t help but laugh at how little slime you have."]
+
+				response = random.choice(responses_list)
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2305,7 +2397,7 @@ async def unwrap(cmd):
 
 
 async def yoslimernalia(cmd):
-	await ewutils.send_message(cmd.client, cmd.message.channel, '@everyone Yo, Slimernalia!')
+	await ewutils.send_message(cmd.client, cmd.message.channel, '@everyone Yo, Slimernalia!', filter_everyone = False)
 
 async def confirm(cmd):
 	return
