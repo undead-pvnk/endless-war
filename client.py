@@ -1415,12 +1415,20 @@ async def on_message(message):
 		mentions = message.mentions
 		mentions_count = len(mentions)
 
+		playermodel = ewplayer.EwPlayer(id_user=message.author.id)
+		
+		if message.guild == None:
+			guild_used = ewcfg.server_list[playermodel.id_server]
+		else:
+			guild_used = message.guild
+
 		# Create command object
 		cmd_obj = ewcmd.EwCmd(
 			tokens = tokens,
 			message = message,
 			client = client,
-			mentions = mentions
+			mentions = mentions,
+			guild = guild_used
 		)
 		
 		# remove mentions to us #moved below cmd_obj because of EwIds #TODO: remove this and move debug commands somewhere else
@@ -1433,8 +1441,6 @@ async def on_message(message):
 		if (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
 			# print(content_tolower_list)
 			swear_multiplier = 0
-	
-			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
 			usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
 
 			if usermodel != None:

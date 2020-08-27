@@ -65,25 +65,26 @@ class EwCmd:
 		tokens = [],
 		message = None,
 		client = None,
-		mentions = []
+		mentions = [],
+		guild = None
 	):
 		self.tokens = tokens
 		self.message = message
 		self.client = client
-		self.guild = message.guild
+		self.guild = guild
 
 		if len(tokens) >= 1:
 			self.tokens_count = len(tokens)
 			self.cmd = tokens[0]
 
 		#Endless War's EwId
-		self.client_id = EwId(client.user.id, message.guild.id, client.user.name, admin = True) 
+		self.client_id = EwId(client.user.id, self.guild.id, client.user.name, admin = True) 
 		#Author's EwId
-		self.author_id = EwId(message.author.id, message.author.guild.id, message.author.display_name, admin = message.author.guild_permissions.administrator) 
+		self.author_id = EwId(message.author.id, self.guild.id, message.author.display_name, admin = message.author.guild_permissions.administrator) 
 		#List of mentions' EwIds
 		self.mention_ids = []
 		for user in mentions:
-			self.mention_ids.append(EwId(user.id, user.guild.id, user.display_name, user.guild_permissions.administrator))
+			self.mention_ids.append(EwId(user.id, self.guild.id, user.display_name, user.guild_permissions.administrator))
 			# print(EwId(user.id, user.guild.id, user.display_name, user.guild_permissions.administrator))
 
 		# remove mentions to us for commands that dont yet handle Endless War mentions with EwIds
