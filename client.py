@@ -341,7 +341,7 @@ cmd_map = {
 	ewcfg.cmd_transfer_alt1: ewmarket.xfer,
 
 	# Redeem slime with SlimeCoin
-	ewcfg.cmd_redeem: ewmarket.redeem,
+	# ewcfg.cmd_redeem: ewmarket.redeem,
 
 	# Show the player's slime coin.
 	ewcfg.cmd_slimecoin: ewmarket.slimecoin,
