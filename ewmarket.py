@@ -516,6 +516,65 @@ async def withdraw(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+""" player turns slimecoin into slime """
+async def redeem(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	time_now = round(time.time())
+	market_data = EwMarket(id_server = cmd.message.author.guild.id)
+
+	if market_data.clock < 6 or market_data.clock >= 20:
+		response = ewcfg.str_exchange_closed
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if cmd.message.channel.name != ewcfg.channel_stockexchange:  #or user_data.poi != ewcfg.poi_id_downtown:
+		# Only allowed in the stock exchange.
+		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "withdraw")
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+
+	if district_data.is_degraded():
+		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		# Disallow withdraws from ghosts.
+		response = "Your slimebroker can't confirm your identity while you're dead."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		slimecoin_exchange_rate = 200000000000 # 200 billion slime
+
+		redeem_value = round(user_data.slimecoin / slimecoin_exchange_rate)
+
+		if redeem_value <= 0:
+			response = "Sadly, you haven't made enough Slimecoin to reedeem any slime!"
+
+		else:
+			response = ""
+
+			if user_data.life_state == ewcfg.life_state_enlisted:
+				response = "After you dot all the i’s and cross all the t’s, you immediately send your Kingpin half of your earnings."
+				role_boss = (ewcfg.role_copkiller if user_data.faction == ewcfg.faction_killers else ewcfg.role_rowdyfucker)
+				kingpin = ewutils.find_kingpin(id_server = cmd.guild.id, kingpin_role = role_boss)
+				if kingpin:
+					kingpin.change_slimes(n = int(redeem_value / 2))
+					kingpin.persist()
+
+			else:
+				response = "Your slimebroker pulls a fast one on you and gets you to sign a waiver that lets SlimeCorp keep half of your supposedly redeemed slime. Damn."
+
+			response += "You walk out with {:,}.".format(int(redeem_value / 2))
+			user_data.slimes += int(redeem_value / 2)
+			user_data.slimecoin = round(user_data.slimecoin % slimecoin_exchange_rate)
+			user_data.persist()
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ donate slime to slimecorp in exchange for slimecoin """
 async def donate(cmd):
