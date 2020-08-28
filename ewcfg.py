@@ -31,7 +31,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.4 - Gankers Vs. Shamblers"
+version = "v3.4b - LOL"
 
 
 dir_msgqueue = 'msgqueue'
@@ -1717,7 +1717,7 @@ cd_haunt = 600
 cd_shambler_shamble = 20
 cd_shambler_attack = 20
 cd_squeeze = 1200
-cd_invest = 1200
+cd_invest = 5 * 60
 cd_boombust = 22
 #For possible time limit on russian roulette
 cd_rr = 600
@@ -1740,6 +1740,7 @@ time_pvp_kill = 30 * 60
 time_pvp_attack = 10 * 60
 time_pvp_annex = 10 * 60 # NOT USED
 time_pvp_mine = 1 * 60 # NOT USED
+time_pvp_withdraw = 30 * 60
 time_pvp_scavenge = 3 * 60
 time_pvp_fish = 5 * 60 # NOT USED
 time_pvp_farm = 10 * 60 # NOT USED

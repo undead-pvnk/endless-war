@@ -502,6 +502,7 @@ async def withdraw(cmd):
 						stock.total_shares -= shares
 
 						response = "You exchange {shares:,} shares in {stock} for {coins:,} SlimeCoin.".format(coins = slimecoin, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
+						user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_withdraw, True)
 						user_data.persist()
 						stock.timestamp = round(time.time())
 						stock.persist()
@@ -530,6 +531,9 @@ async def redeem(cmd):
 		response = ewcfg.str_exchange_closed
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
+		response = ewcfg.str_exchange_busy.format(action = "redeem")
+
 	if cmd.message.channel.name != ewcfg.channel_stockexchange:  #or user_data.poi != ewcfg.poi_id_downtown:
 		# Only allowed in the stock exchange.
 		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "withdraw")
@@ -548,7 +552,7 @@ async def redeem(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
-		slimecoin_exchange_rate = 40000000000000 # 40 trillion slime
+		slimecoin_exchange_rate = 25000000000000 # 25 trillion slime
 
 		redeem_value = round(user_data.slimecoin / slimecoin_exchange_rate)
 

@@ -308,8 +308,8 @@ def canAttack(cmd):
 
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You can't commit violence from here."
-	elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
-		response = "You must go elsewhere to commit gang violence."
+	# elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
+	# 	response = "You must go elsewhere to commit gang violence."
 	elif channel_poi.id_poi != user_data.poi and user_data.poi not in channel_poi.mother_districts:
 		#Only way to do this right now is by using the gellphone
 		response = "Alas, you still can't shoot people through your phone."
