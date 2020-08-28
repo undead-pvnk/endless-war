@@ -9216,7 +9216,7 @@ fish_list  =  [
 		rarity = fish_rarity_common,
 		catch_time = None,
 		catch_weather = None,
-		str_desc = "It's just a black squid.",
+		str_desc = "It's just a black squid, but spooky",
 		slime = fish_slime_void
 	),
 	EwFish(
@@ -9225,7 +9225,7 @@ fish_list  =  [
 		rarity = fish_rarity_common,
 		catch_time = None,
 		catch_weather = None,
-		str_desc = "Transluscent and quiet.",
+		str_desc = "Translucent and quiet, it weighs less than nothing.",
 		slime = fish_slime_void
 	),
 	EwFish(
@@ -9279,7 +9279,7 @@ fish_list  =  [
 		rarity = fish_rarity_uncommon,
 		catch_time = None,
 		catch_weather = None,
-		str_desc = "Goes well with coleslaw.",
+		str_desc = "You remind yourself not to dip it in coleslaw.",
 		slime = fish_slime_void
 	),
 	EwFish(
@@ -17039,7 +17039,7 @@ poi_list = [
 			"pond",
 		],
 		str_name = "the Black Pond",
-		str_desc = "A long dirt path from the barred passage to the Sewers leads here, to a pond around not much bigger than a tennis field, full of an oily black liquid. There's a narrow pier stretching all the way to the center of the pit, where you can find a plaque warning about the pond's waters, and urging visitors not to stay too long.\nTurns out the old adage, in this case, is quite literal: gaze long enough into this abyss and it will most definitely gaze back into you. Its irisless eyes and sharp smiles are rather charming, I have to admit.\n\nExits back into the Void.",
+		str_desc = "A long dirt path from the barred passage to the Sewers leads here, to a pond not much bigger than a tennis field, full of an oily black liquid. There's a narrow pier stretching all the way to the center of the pit, where you can find a plaque warning about the pond's waters, urging visitors not to stay too long.\nTurns out the old adage, in this case, is quite literal: gaze long enough into this abyss and it will most definitely gaze back into you. Its irisless eyes and sharp smiles are rather charming, I have to admit.\n\nExits back into the Void.",
 		channel = channel_blackpond,
         wikipage = wiki_baseurl + "The_Void#The_Black_Pond",
 		role = "Black Pond",
@@ -24399,7 +24399,7 @@ help_responses = {
 	"food":"Food lowers your hunger by a set amount, and can be ordered from various **restaurants** within the city. Generally speaking, the more expensive food is, the more hunger it sates. You can **'!order [food name] togo'** to order it togo, otherwise you will eat it on the spot, and you can **'!use [food name]'** to use it once its in your inventory. You can only carry a certain amount of food depending on your level. Regular food items expire after 2 in-game days, or 12 hours in real life, while crops expire after 8 in-game days (48 hours), and food items gained from milling expire after a whole 2 weeks in real life. Three popular restauraunts close by various gang bases include **THE SPEAKEASY** (juveniles), **THE SMOKER'S COUGH** (rowdys), and **RED MOBSTER SEAFOOD** (killers), though there are other places to order food as well, such as the **Food Court**.",
 	"capturing":"Capping is a battle for influence over the 33 districts of NLACakaNM, and one of your main goals as a gangster. Capped territories award your kingpin slime, and give your teammates benefits while visiting. Start by visiting Based Hardware and equipping one of the paint tools sold there. Once you have that, you can **!spray <captcha>** while in a capturable district's streets to gain influence for your gang. Spraying graffiti in districts will increase influence for you, or decrease it for the enemy if they have influence there. Think of dealing influence to a district like dealing damage to a Juvie's soft squishy body, with critical hits, misses, and backfires included. As you go, you can check your **!progress** to see how much influence you still need. It can be more or less depending on the territory class, running from rank C to S. \n\nA few more things to note:\n>**!progress** will tell you the minimum and limit for territory capture. However, you can capture above that limit, as high as you want. The catch is that anything captured over this limit will decay faster.\n>Decapping does 0.8x the influence of capping, even though the cost remains the same.\n>Don't attack enemy territory when it is surrounded by enemy territory/outskirts. Small little bitches like yourself are prone to fucking up severely under that much pressure.\n>The nightlife starts in the late night. Fewer cops are around to erase your handiwork, so if you cap then you will gain a 33% capping bonus.\n>You can't kill for shit with paint tools equipped. Luckily, you can **!sidearm** a weapon or tool and quickly switch between your two equip slots using **switch** or **!s**.",
 	"transportation":"There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board pinktocv'. **'!disembark'** can be used to exit a train. **The Ferry** (which moves between Vagrant's Corner and Wreckington) and **The Blimp** (which moves between Dreadford and Assault Flats Beach) can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do. Refer to the diagram below on understanding which districts and streets have subway stations in them.\nhttps://cdn.discordapp.com/attachments/431237299137675297/734152135687798874/streets13.png",
-	"death": "Death is an integral mechanic to Endless War. Even the most experienced players will face the sewers every now and again. If you find yourself in such a situation, use **'!revive'** in the sewers channel, and you will return to the land of the living as a juvenile at the base of ENDLESS WAR. Dying will drop some of your unadorned cosmetics and food, and all of your unequiped weapons, but your currently adorned cosmetics and equiped weapon will remain in your inventory (Gangsters will lose half of their food/unadorned cosmetics, while Juveniles lose only a quarter). Alternatively, you can hold off on reviving and remain a **ghost**, which has its own gameplay mechanics associated with it. To learn more, use '!help ghosts' at one of the colleges or with a game guide.",
+	"death": "Death is an integral mechanic to Endless War. Even the most experienced players will face the sewers every now and again. If you find yourself in such a situation, use **'!revive'** in the sewers channel, and you will return to the land of the living as a juvenile at the base of ENDLESS WAR. Dying will drop some of your unadorned cosmetics and food, and all of your unequiped weapons, but your currently adorned cosmetics and equiped weapon will remain in your inventory (Gangsters will lose half of their food/unadorned cosmetics, while Juveniles lose only a quarter). Alternatively, you can hold off on reviving and remain a **ghost**, which has its own gameplay mechanics associated with it. To learn more, use '!help ghosts' at one of the colleges or with a game guide, or see the wiki page here: https://rfck.miraheze.org/wiki/Ghosts",
 	# Introductions, part 2
 	"dojo":"**The Dojo** is where you acquire weapons to fight and kill other players with. To purchase a weapon, use **'!order [weapon]'**. There are many weapons you can choose from (you can view all of them with !menu), and they all perform differently from one another. Once you've purchased a weapon, you can use **'!equip [weapon]'** to equip it, provided that you're enlisted in a gang beforehand. You can also name your weapon by spending a poudrin on it with **'!annoint [name]'**. Furthermore, annointing will increase your mastery over that weapon, but it's much more efficient to do so through **sparring**. To learn more about the sparring system and weapon ranks, use '!help sparring'.",
 	"subzones":"**Subzones** are areas locations within the districts of the city where gang violence off-limits, with the only exception being the subway stations, the trains, and the base of ENDLESS WAR. If you don't type anything in a sub-zone for 60 minutes, you'll get kicked out for loitering, so be sure to check up often if you don't wanna get booted out into the streets.",
