@@ -536,7 +536,7 @@ async def redeem(cmd):
 
 	if cmd.message.channel.name != ewcfg.channel_stockexchange:  #or user_data.poi != ewcfg.poi_id_downtown:
 		# Only allowed in the stock exchange.
-		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "withdraw")
+		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "redeem")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
