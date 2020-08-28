@@ -548,7 +548,7 @@ async def redeem(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
-		slimecoin_exchange_rate = 200000000000 # 200 billion slime
+		slimecoin_exchange_rate = 40000000000000 # 40 trillion slime
 
 		redeem_value = round(user_data.slimecoin / slimecoin_exchange_rate)
 
