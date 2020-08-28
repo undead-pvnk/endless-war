@@ -3030,7 +3030,7 @@ def damage_mod_defend(shootee_data, shootee_mutations, market_data, shootee_weap
 def get_sap_armor(shootee_data, sap_ignored):
 	# apply hardened sap armor
 	try:
-		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored + shootee_data.defense
+		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored + int(shootee_data.defense / 4)
 	except: # If shootee_data doesn't have defense, aka it's a monster
 		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored
 	level = 0
