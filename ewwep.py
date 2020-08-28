@@ -852,37 +852,39 @@ async def attack(cmd):
 
 				onbreak_responses = []
 
-				for cosmetic in victim_cosmetics:
-					if not int(cosmetic.get('soulbound')) == 1:
+				# the following code handles cosmetic durability loss
+
+				# for cosmetic in victim_cosmetics:
+				# 	if not int(cosmetic.get('soulbound')) == 1:
 					
-						c = EwItem(cosmetic.get('id_item'))
+				# 		c = EwItem(cosmetic.get('id_item'))
 	
-						# Damage it if the cosmetic is adorned and it has a durability limit
-						if c.item_props.get("adorned") == 'true' and c.item_props['durability'] is not None:
+				# 		# Damage it if the cosmetic is adorned and it has a durability limit
+				# 		if c.item_props.get("adorned") == 'true' and c.item_props['durability'] is not None:
 	
-							#print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
+				# 			#print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
 	
-							durability_afterhit = int(c.item_props['durability']) - slimes_damage
+				# 			durability_afterhit = int(c.item_props['durability']) - slimes_damage
 	
-							#print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
+				# 			#print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
 	
-							if durability_afterhit <= 0: # If it breaks
-								c.item_props['durability'] = durability_afterhit
-								c.persist()
+				# 			if durability_afterhit <= 0: # If it breaks
+				# 				c.item_props['durability'] = durability_afterhit
+				# 				c.persist()
 	
 	
-								shootee_data.persist()
+				# 				shootee_data.persist()
 	
-								onbreak_responses.append(str(c.item_props['str_onbreak']).format(c.item_props['cosmetic_name']))
+				# 				onbreak_responses.append(str(c.item_props['str_onbreak']).format(c.item_props['cosmetic_name']))
 	
-								ewitem.item_delete(id_item = c.id_item)
+				# 				ewitem.item_delete(id_item = c.id_item)
 	
-							else:
-								c.item_props['durability'] = durability_afterhit
-								c.persist()
+				# 			else:
+				# 				c.item_props['durability'] = durability_afterhit
+				# 				c.persist()
 	
-						else:
-							pass
+				# 		else:
+				# 			pass
 
 				market_data.splattered_slimes += slimes_damage
 				market_data.persist()
