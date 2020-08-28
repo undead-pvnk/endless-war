@@ -751,8 +751,8 @@ async def xfer(cmd):
 			value = None
 
 	if value != None:
-		# Cost including the 5% transfer fee.
-		cost_total = round(value * 1.05)
+		# Cost including the transfer fee.
+		cost_total = round(value * 100)
 
 		if user_data.slimecoin < cost_total:
 			response = "You don't have enough SlimeCoin. ({:,}/{:,})".format(user_data.slimecoin, cost_total)
