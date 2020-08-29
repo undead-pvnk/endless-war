@@ -1261,8 +1261,12 @@ async def barter_all(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def debug_create_random_fish(cmd):
-	print("create fish double disabled to safe")
-	return 
+	
+	if ewutils.DEBUG or cmd.message.author.guild_permissions.administrator:
+		pass
+	else:
+		return
+	
 	fish = random.choice(ewcfg.fish_names) 
 	
 
