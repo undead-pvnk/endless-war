@@ -1468,6 +1468,40 @@ async def send_message(client, channel, text, delete_after = None, filter_everyo
 	except:
 		logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
 
+""" Simpler to use version of send_message that formats message by default """ 
+async def send_response(response_text, cmd = None, delete_after = None, name = None, channel = None, format_name = True, format_ats = True, allow_everyone = False):
+
+	if cmd == None and channel == None:
+		raise Exception("No channel to send message to")
+
+	if channel == None:
+		channel = cmd.message.channel
+
+	if name == None and cmd != None:
+		name = cmd.author_id.display_name
+
+	if format_name and name != None:
+		response_text = "*{}:* {}".format(name, response_text)
+
+	global DEBUG
+	if DEBUG: # to see when the bot uses send_response vs send_message in --debug mode
+		response_text = "--{}".format(response_text)
+
+	if format_ats:
+		response_text = response_text.replace("@", "{at}")
+
+	allowed_mentions = discord.AllowedMentions(everyone=allow_everyone, users=False, roles=False)
+
+	try:
+		# TODO: experiment with allow_mentions argument. Might get rid of the need to filter "@"s
+		return await channel.send(content = response_text, delete_after = delete_after, allowed_mentions = allowed_mentions)
+	except discord.errors.Forbidden:
+		logMsg('Could not message user: {}\n{}'.format(channel, text))
+		raise
+	except:
+		logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
+
+
 """
 	Proxy to discord.py message.edit() with exception handling.
 """

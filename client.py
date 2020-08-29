@@ -470,6 +470,9 @@ cmd_map = {
 	ewcfg.cmd_barter: ewfish.barter,
 	ewcfg.cmd_embiggen: ewfish.embiggen,
 
+	"!barterall": ewfish.barter_all, #don't put it in ewcfg it doesn't need to be there
+	#"!createfish": ewfish.debug_create_random_fish,
+
 	#scavenging
 	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 	ewcfg.cmd_scavenge_alt1: ewjuviecmd.scavenge,
