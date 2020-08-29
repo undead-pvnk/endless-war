@@ -308,8 +308,8 @@ def canAttack(cmd):
 
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You can't commit violence from here."
-	elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
-		response = "You must go elsewhere to commit gang violence."
+	# elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
+	# 	response = "You must go elsewhere to commit gang violence."
 	elif channel_poi.id_poi != user_data.poi and user_data.poi not in channel_poi.mother_districts:
 		#Only way to do this right now is by using the gellphone
 		response = "Alas, you still can't shoot people through your phone."
@@ -584,7 +584,9 @@ async def attack(cmd):
 				crit_mod += 0.05
 
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-		slimes_damage = int((slimes_spent * (10 + user_data.attack)) * (100 + (user_data.weaponskill * 5)) / 100.0)
+		attack_stat_multiplier = 1 + (user_data.attack / 100) # 1% more damage per stat point
+		weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
+		slimes_damage = int(10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 
 		if user_data.weaponskill < 5:
 			miss_mod += (5 - user_data.weaponskill) / 10
@@ -850,37 +852,39 @@ async def attack(cmd):
 
 				onbreak_responses = []
 
-				for cosmetic in victim_cosmetics:
-					if not int(cosmetic.get('soulbound')) == 1:
-					
-						c = EwItem(cosmetic.get('id_item'))
-	
-						# Damage it if the cosmetic is adorned and it has a durability limit
-						if c.item_props.get("adorned") == 'true' and c.item_props['durability'] is not None:
-	
-							#print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
-	
-							durability_afterhit = int(c.item_props['durability']) - slimes_damage
-	
-							#print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
-	
-							if durability_afterhit <= 0: # If it breaks
-								c.item_props['durability'] = durability_afterhit
-								c.persist()
-	
-	
-								shootee_data.persist()
-	
-								onbreak_responses.append(str(c.item_props['str_onbreak']).format(c.item_props['cosmetic_name']))
-	
-								ewitem.item_delete(id_item = c.id_item)
-	
-							else:
-								c.item_props['durability'] = durability_afterhit
-								c.persist()
-	
-						else:
-							pass
+				# the following code handles cosmetic durability loss
+				
+				# for cosmetic in victim_cosmetics:
+				# 	if not int(cosmetic.get('soulbound')) == 1:
+				# 	
+				# 		c = EwItem(cosmetic.get('id_item'))
+				# 
+				# 		# Damage it if the cosmetic is adorned and it has a durability limit
+				# 		if c.item_props.get("adorned") == 'true' and c.item_props['durability'] is not None:
+				# 
+				# 			#print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
+				# 
+				# 			durability_afterhit = int(c.item_props['durability']) - slimes_damage
+				# 
+				# 			#print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
+				# 
+				# 			if durability_afterhit <= 0: # If it breaks
+				# 				c.item_props['durability'] = durability_afterhit
+				# 				c.persist()
+				# 
+				# 
+				# 				shootee_data.persist()
+				# 
+				# 				onbreak_responses.append(str(c.item_props['str_onbreak']).format(c.item_props['cosmetic_name']))
+				# 
+				# 				ewitem.item_delete(id_item = c.id_item)
+				# 
+				# 			else:
+				# 				c.item_props['durability'] = durability_afterhit
+				# 				c.persist()
+				# 
+				# 		else:
+				# 			pass
 
 				market_data.splattered_slimes += slimes_damage
 				market_data.persist()
@@ -2191,8 +2195,11 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
 	dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 
+
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-	slimes_damage = int((slimes_spent * (10 + user_data.attack)) * (100 + (user_data.weaponskill * 5)) / 100.0)
+	attack_stat_multiplier = 1 + (user_data.attack / 100) # 1% more damage per stat point
+	weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
+	slimes_damage = int(10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 	
 	if user_data.weaponskill < 5:
 		miss_mod += (5 - user_data.weaponskill) / 10
@@ -3025,7 +3032,7 @@ def damage_mod_defend(shootee_data, shootee_mutations, market_data, shootee_weap
 def get_sap_armor(shootee_data, sap_ignored):
 	# apply hardened sap armor
 	try:
-		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored + shootee_data.defense
+		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored + int(shootee_data.defense / 4)
 	except: # If shootee_data doesn't have defense, aka it's a monster
 		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored
 	level = 0
