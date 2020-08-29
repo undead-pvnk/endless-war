@@ -1569,7 +1569,7 @@ def get_move_speed(user_data):
 	statuses = user_data.getStatusEffects()
 	market_data = EwMarket(id_server = user_data.id_server)
 	trauma = ewcfg.trauma_map.get(user_data.trauma)
-	move_speed = 1.05 ** user_data.speed
+	move_speed = 1 + (user_data.speed / 100)
 
 	if user_data.life_state == ewcfg.life_state_shambler:
 		if market_data.weather == ewcfg.weather_bicarbonaterain:

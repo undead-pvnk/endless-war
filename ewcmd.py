@@ -453,8 +453,7 @@ async def data(cmd):
 
 
 	elif target_type == "ew":
-		response = "ENDLESS WAR is a level 666 ancient obelisk. He is weilding THE BONE HURTING BEAM. He is a rank 111 bone hurter. He has been weathered by months of bicarbonate rain. He has millions of confirmed kills."
-		response = "ENDLESS WAR is a level 666 ancient obelisk. He is weilding THE BONE HURTING BEAM. He is a rank 111 bone hurter. He has been weathered by months of bicarbonate rain. He has millions of confirmed kills."
+		response = "ENDLESS WAR is a level 666 ancient obelisk. He is wielding THE BONE HURTING BEAM. He is a rank 111 bone hurter. He has been weathered by months of bicarbonate rain. He has millions of confirmed kills."
 
 
 	#self data check
