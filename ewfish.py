@@ -1144,6 +1144,7 @@ async def barter_all(cmd):
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
 
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	food_items = ewitem.inventory(id_user = user_data.id_user, id_server = user_data.id_server,item_type_filter = ewcfg.it_food)
 	offer_items = [] #list of items to create when offer goes through
@@ -1260,6 +1261,8 @@ async def barter_all(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def debug_create_random_fish(cmd):
+	print("create fish double disabled to safe")
+	return 
 	fish = random.choice(ewcfg.fish_names) 
 	
 
