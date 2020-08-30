@@ -949,7 +949,6 @@ cmd_suicide = cmd_prefix + 'suicide'
 cmd_suicide_alt1 = cmd_prefix + 'seppuku'
 cmd_suicide_alt2 = cmd_prefix + 'sudoku'
 cmd_haunt = cmd_prefix + 'haunt'
-cmd_manifest = cmd_prefix + 'manifest'
 cmd_inhabit = cmd_prefix + 'inhabit'
 cmd_letgo = cmd_prefix + 'letgo'
 cmd_possess_weapon = cmd_prefix + 'possessweapon'
@@ -1414,7 +1413,6 @@ slimecoin_exchangerate = 1
 slimes_permill = 50000
 slimes_invein = 4000
 slimes_pertile = 50
-slimes_tomanifest = -100000
 slimes_to_possess_weapon = -100000
 slimes_to_possess_fishing_rod = -10000
 slimes_to_crystalize_negapoudrin = -1000000
@@ -1731,6 +1729,9 @@ cd_new_player = 3 * 24 * 60 * 60 # 72 Hours, 3 days
 cd_autocannibalize = 60 * 60 # can only eat yourself once per hour
 cd_drop_bone = 5 * 60
 cd_change_race = 24 * 60 * 60 # can only change your race once per day
+
+# in relation to time of death
+time_to_manifest = 24 * 60 * 60 # a day
 
 # PvP timer pushouts
 time_pvp_kill = 30 * 60
@@ -11837,6 +11838,7 @@ poi_list = [
 		neighbors = {
 			poi_id_wafflehouse : travel_time_subzone,
 			poi_id_blackpond : travel_time_subzone,
+			poi_id_thesewers : travel_time_district,
 		},
 	),
 	EwPoi( # the-sewers
@@ -11856,12 +11858,16 @@ poi_list = [
 		topic = "You have been gunned down, and your body has been swept down the drain into the sewers. Here you can commune with your fellow cadavers through the Neural Slime network. To revive yourself you must feed your carcass into ENDLESS WAR's churning maw and be reborn into Slime, continuing the war forever more.",
 		wikipage = wiki_baseurl + "The_Sewers",
 		channel = channel_sewers,
-		life_states = [
-			life_state_corpse
-		],
+		# to be moved to future ghost HQ if implemented
+		# life_states = [
+		# 	life_state_corpse
+		# ],
 		role = "Sewers",
 		community_chest = chest_id_thesewers,
-		is_gangbase = True
+		is_gangbase = True,
+		neighbors = {
+			poi_id_thevoid : travel_time_district,
+		},
 	),
 	# Streets start here
 	# EwPoi(
