@@ -15,6 +15,8 @@ import ewmap
 import ewrolemgr
 import ewslimeoid
 import ewitem
+import ewquadrants
+import ewstats
 from ew import EwUser
 from ewmarket import EwMarket
 from ewslimeoid import EwSlimeoid
@@ -153,6 +155,7 @@ async def haunt(cmd):
 			# Get the user and target data from the database.
 			user_data = EwUser(member = cmd.message.author)
 			market_data = EwMarket(id_server = cmd.guild.id)
+			target_poi = ewcfg.id_to_poi.get(haunted_data.poi)
 			target_is_shambler = haunted_data.life_state == ewcfg.life_state_shambler
 			target_is_inhabitted = haunted_data.id_user == user_data.get_inhabitee()
 
@@ -167,8 +170,8 @@ async def haunt(cmd):
 				response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
 			elif ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 				response = "You can't commit violence from here."
-			elif time_now > haunted_data.time_expirpvp and not (target_is_shambler or target_is_inhabitted):
-				# Require the target to be flagged for PvP
+			elif target_poi.pvp == False or (user_data.poi != haunted_data.poi and (time_now > haunted_data.time_expirpvp and not target_is_shambler)):
+				# Require the target to be in a PvP area, and flagged if it's a remote haunt
 				response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 			elif haunted_data.life_state == ewcfg.life_state_corpse:
 				# Dead players can't be haunted.
@@ -177,20 +180,71 @@ async def haunt(cmd):
 				# Grand foes can't be haunted.
 				response = "{} is invulnerable to ghosts.".format(member.display_name)
 			elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile or haunted_data.life_state == ewcfg.life_state_shambler:
-				# Target can be haunted by the player.
 				haunt_power_multiplier = 1
-				if user_data.poi == haunted_data.poi:
-					if user_data.poi == ewcfg.poi_id_thevoid:
-						# haunting is empowered by the void
-						haunt_power_multiplier *= 5
-					else: 
-						# when haunting someone face to face, you get double the amount
-						haunt_power_multiplier *= 2
-				haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio) * haunt_power_multiplier
 
-				haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
-				user_data.change_slimes(n = -min(haunted_slimes, ewcfg.slimes_hauntmax), source = ewcfg.source_haunter)
+				# power to the ancients
+				ghost_age = time_now - user_data.time_lastdeath
+				if ghost_age > 60 * 60 * 24 * 7: # dead for longer than
+					if ghost_age > 60 * 60 * 24 * 365: # one friggin year
+						haunt_power_multiplier *= 2.5
+					if ghost_age > 60 * 60 * 24 * 90: # three months
+						haunt_power_multiplier *= 2
+					elif ghost_age > 60 * 60 * 24 * 30: # one month
+						haunt_power_multiplier *= 1.5
+					else: # one week
+						haunt_power_multiplier *= 1.25
+
+				# vitriol as virtue
+				list_ids = []
+				for quadrant in ewcfg.quadrant_ids:
+					quadrant_data = ewquadrants.EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
+					if quadrant_data.id_target != -1 and quadrant_data.check_if_onesided() is False:
+						list_ids.append(quadrant_data.id_target)
+					if quadrant_data.id_target2 != -1 and quadrant_data.check_if_onesided() is False:
+						list_ids.append(quadrant_data.id_target2)
+				if haunted_data.id_user in list_ids: # any mutual quadrants
+					haunt_power_multiplier *= 1.2
+				if haunted_data.faction and ((not user_data.faction) or (user_data.faction != haunted_data.faction)): # opposite faction (or no faction at all)
+					haunt_power_multiplier *= 1.2
+				if user_data.id_killer == haunted_data.id_user: # haunting your murderer/buster
+					haunt_power_multiplier *= 1.2
+
+				# places of power.
+				if haunted_data.poi in [ewcfg.poi_id_thevoid, ewcfg.poi_id_wafflehouse, ewcfg.poi_id_blackpond]:
+					haunt_power_multiplier *= 2
+				elif haunted_data.poi in ewmap.get_void_connection_pois(cmd.guild.id):
+					haunt_power_multiplier *= 1.25
+
+				# glory to the vanquished
+				target_kills = ewstats.get_stat(user = haunted_data, metric = ewcfg.stat_kills)
+				if target_kills > 5:
+					haunt_power_multiplier *= 1.25 + (target_kills * 100) # 1% per kill after 5
+				else:
+					haunt_power_multiplier *= 1 + (target_kills * 5 / 100) # 5% per kill
+					
+				if time_now - haunted_data.time_lastkill < (60 * 15):
+					haunt_power_multiplier *= 1.5 # wet hands
+
+				# misc
+				if ewcfg.weather_map.get(market_data.weather) == ewcfg.weather_foggy:
+					haunt_power_multiplier *= 1.1
+				if not haunted_data.has_soul:
+					haunt_power_multiplier *= 1.2
+				# uncomment this after moon mechanics update
+				# if (market_data.day % 31 == 15 and market_data.clock >= 20) or (market_data.day % 31 == 16 and market_data.clock <= 6):
+				# 	haunt_power_multiplier *= 2
+
+				# divide haunt power by 2 if not in same area
+				if user_data.poi != haunted_data.poi:
+					haunt_power_multiplier /= 2
+
+				haunted_slimes = int((haunted_data.slimes / ewcfg.slimes_hauntratio) * haunt_power_multiplier)
+				slimes_lost = int(haunted_slimes / 5) # hauntee only loses 1/5th of what the ghost gets as antislime
+
+				haunted_data.change_slimes(n = -slimes_lost, source = ewcfg.source_haunted)
+				user_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunter)
 				market_data.negaslime -= haunted_slimes
+
 				user_data.time_lasthaunt = time_now
 				user_data.busted = False
 
@@ -203,7 +257,7 @@ async def haunt(cmd):
 				haunted_data.persist()
 				market_data.persist()
 
-				response = "{} has been haunted by the ghost of {}! Slime has been lost!".format(member.display_name, cmd.message.author.display_name)
+				response = "{} has been haunted by the ghost of {}! Slime has been lost! {} antislime congeals within you.".format(member.display_name, cmd.message.author.display_name, haunted_slimes)
 
 				haunted_channel = ewcfg.id_to_poi.get(haunted_data.poi).channel
 				haunt_message = "You feel a cold shiver run down your spine"
@@ -213,7 +267,7 @@ async def haunt(cmd):
 					if len(haunt_message_content) > 500:
 						haunt_message_content = haunt_message_content[:-500]
 					haunt_message += " and faintly hear the words \"{}\"".format(haunt_message_content)
-				haunt_message += "."
+				haunt_message += ". {} slime evaporates from your body.".format(slimes_lost)
 				haunt_message = ewutils.formatMessage(member, haunt_message)
 				resp_cont.add_channel_response(haunted_channel, haunt_message)
 		else:
