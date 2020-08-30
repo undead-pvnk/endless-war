@@ -1157,6 +1157,218 @@ async def barter(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def barter_all(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	#if shambler, break
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	#if non-zone channel, break
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
+	#if not in speakeasy, break
+	if cmd.message.channel.name != ewcfg.channel_speakeasy:
+		if user_data.poi in ewcfg.piers:
+			response = 'You ask a nearby fisherman if he wants to trade you anything for this fish you just caught. He tells you to fuck off, but also helpfully informs you that there’s an old sea captain that frequents the Speakeasy that might be able to help you. What an inexplicably helpful/grouchy fisherman!'
+		else:
+			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
+
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	food_items = ewitem.inventory(id_user = user_data.id_user, id_server = user_data.id_server,item_type_filter = ewcfg.it_food)
+	offer_items = [] #list of items to create when offer goes through
+	offer_slime = 0 #slime to give player when offer goes through
+	fish_ids_to_remove = [] #list of fish to delete when offer goes through
+
+	
+
+	#check if food item is a fish and add to offer if it is
+	for item in food_items:
+		fish =  EwItem(id_item = item.get('id_item'))
+		#if item is a fish, add to offer
+		if fish.item_props.get('acquisition') == ewcfg.acquisition_fishing:
+			fish_ids_to_remove.append(fish.id_item)
+			value = int(fish.item_props['value'])
+			
+			# Random choice between 0, 1, and 2
+			offer_decision = random.randint(0, 2)
+
+			if offer_decision != 2: # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
+				max_value = value * 6000 # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
+				min_value = max_value / 10 # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
+
+				slime_gain = round(random.triangular(min_value, max_value, min_value * 2))
+
+				offer_slime += slime_gain
+
+			else: # If Captain Albert Alexander wants to offer you an item for your fish. 33% chance. Once there are more unique items, we'll make this 50%.
+				potential_items = []
+				# Filters out all non-generic items without the current fish as an ingredient.
+				for result in ewcfg.appraise_results:
+					if result.ingredients == fish.item_props.get('id_item') or result.ingredients == "generic" and result.acquisition == ewcfg.acquisition_bartering:  # Generic means that it can be made with any fish.
+						potential_items.append(result)
+					else:
+						pass
+				# Filters out items of greater value than your fish.
+				for value_filter in potential_items:
+					if value < value_filter.context:
+						potential_items.remove(value_filter)
+					else:
+						pass
+				
+				offer_items.append(random.choice(potential_items))
+
+	#if player had some fish to offer
+	if offer_slime > 0 or len(offer_items) > 0:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+		
+		response = "You approach a man of particularly swashbuckling appearance, adorned in an old sea captain's uniform and bicorne cap, and surrounded by empty glass steins. You ask him if he is Captain Albert Alexander and he replies that he hasn’t heard that name in a long time. You drop all of your fish at his feet"
+		
+		
+		items_desc = ""
+		if len(offer_items) > 0:
+			if len(offer_items) > 4:
+				items_desc = "a handful items"
+			elif len(offer_items) > 1:
+				items_desc = "a few items"
+			else:
+				items_desc = "a {}".format(offer_items[0].str_name)
+
+
+		offer_desc = "{}{}{}".format((str(offer_slime) + " slime") if (offer_slime > 0) else "", " and " if (offer_slime > 0 and len(items_desc) > 0) else "", items_desc if (len(items_desc) > 0) else "")
+		response += ' \n"Hm, alright… for your fish... I’ll trade you {}!"'.format(offer_desc)
+
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+
+		response = ""
+
+		if offer_slime > 0:
+			slime_gain = offer_slime
+
+			user_initial_level = user_data.slimelevel
+
+			levelup_response = user_data.change_slimes(n = slime_gain, source = ewcfg.source_fishing)
+
+			was_levelup = True if user_initial_level < user_data.slimelevel else False
+
+			# Tell the player their slime level increased.
+			if was_levelup:
+				response += levelup_response
+				response += "\n\n"
+
+		if len(offer_items):
+			for item in offer_items:
+				item_props = ewitem.gen_item_props(item)	
+
+				ewitem.item_create(
+					item_type = item.item_type,
+					id_user = cmd.message.author.id,
+					id_server = cmd.guild.id,
+					item_props = item_props
+				)
+
+		for id in fish_ids_to_remove:
+			ewitem.item_delete(id_item = id)
+
+		user_data.persist()
+
+
+		response += '"Pleasure doing business with you, laddy!"'
+
+
+	#player has no fish
+	else:
+		response = "You need some fish to barter with Captain Albert Alexander. Get out there and do some fishing!"
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def debug_create_random_fish(cmd):
+	
+	if ewutils.DEBUG or cmd.message.author.guild_permissions.administrator:
+		pass
+	else:
+		return
+	
+	fish = random.choice(ewcfg.fish_names) 
+	
+
+	size_number = random.randint(0, 100)
+
+	if size_number >= 0 and size_number < 6:  # 5%
+		size = ewcfg.fish_size_miniscule
+	elif size_number >= 6 and size_number < 11:  # 5%
+		size = ewcfg.fish_size_small
+	elif size_number >= 11 and size_number < 31:  # 20%
+		size = ewcfg.fish_size_average
+	elif size_number >= 31 and size_number < 71:  # 40%
+		size = ewcfg.fish_size_big
+	elif size_number >= 71 and size_number < 91:  # 20
+		size = ewcfg.fish_size_huge
+	else:  # 10%
+		size = ewcfg.fish_size_colossal
+
+	value = 0
+
+	if size == ewcfg.fish_size_miniscule:
+		value += 10
+
+	elif size == ewcfg.fish_size_small:
+		value += 20
+
+	elif size == ewcfg.fish_size_average:
+		value += 30
+
+	elif size == ewcfg.fish_size_big:
+		value += 40
+
+	elif size == ewcfg.fish_size_huge:
+		value += 50
+
+	else:
+		value += 60
+
+	if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_common:
+		value += 10
+
+	if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_uncommon:
+		value += 20
+
+	if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_rare:
+		value += 30
+
+	if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
+		value += 40
+
+	ewitem.item_create(
+		id_user = cmd.message.author.id,
+		id_server = cmd.guild.id,
+		item_type = ewcfg.it_food,
+		item_props = {
+			'id_food': ewcfg.fish_map[fish].id_fish,
+			'food_name': ewcfg.fish_map[fish].str_name,
+			'food_desc': ewcfg.fish_map[fish].str_desc,
+			'recover_hunger': 20,
+			'str_eat': ewcfg.str_eat_raw_material.format(ewcfg.fish_map[fish].str_name),
+			'rarity': ewcfg.fish_map[fish].rarity,
+			'size': size,
+			'time_expir': time.time() + ewcfg.std_food_expir,
+			'time_fridged': 0,
+			'acquisition': ewcfg.acquisition_fishing,
+			'value': value
+		}
+	)
+
+
+
 def kill_dead_offers(id_server):
 	time_now = int(time.time() / 60)
 	ewutils.execute_sql_query("DELETE FROM offers WHERE {id_server} = %s AND {time_sinceoffer} < %s".format(

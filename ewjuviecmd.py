@@ -78,6 +78,10 @@ async def enlist(cmd):
 		response = "You're dead, bitch."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
+		response = "You can't do that right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
 	elif user_slimes < ewcfg.slimes_toenlist:
 		response = "You need to mine more slime to rise above your lowly station. ({}/{})".format(user_slimes, ewcfg.slimes_toenlist)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -186,6 +190,7 @@ async def mine(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	mutations = user_data.get_mutations()
+	cosmetic_abilites = ewutils.get_cosmetic_abilities(id_user = cmd.message.author.id, id_server = cmd.guild.id)
 	time_now = int(time.time())
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
@@ -313,6 +318,8 @@ async def mine(cmd):
 			if has_pickaxe == True:
 				unearthed_item_chance *= 1.5
 			if ewcfg.mutation_id_lucky in mutations:
+				unearthed_item_chance *= 1.33
+			if ewcfg.cosmeticAbility_id_lucky in cosmetic_abilites:
 				unearthed_item_chance *= 1.33
 
 			# event bonus
@@ -665,7 +672,10 @@ async def scavenge(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Slow down, you filthy hyena."))
 	
 	if user_data.poi == ewcfg.poi_id_slimesea:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You consider diving down to the bottom of the sea to grab some sick loot, but quickly change your mind when you {}.".format(random.choice(ewcfg.sea_scavenge_responses))))
+		if user_data.life_state == ewcfg.life_state_shambler:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Are you trying to grab random trash instead of !searchingforbrainz? Pretty cringe bro..."))
+		else:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You consider diving down to the bottom of the sea to grab some sick loot, but quickly change your mind when you {}.".format(random.choice(ewcfg.sea_scavenge_responses))))
 
 	# Scavenge only in location channels
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == True:

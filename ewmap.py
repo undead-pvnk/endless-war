@@ -248,7 +248,7 @@ class EwPoi:
 		is_tutorial = False,
 		has_ads = False,
 		write_manuscript = False,
-		max_degradation = 1000,
+		max_degradation = 10000,
 		neighbors = None,
 		topic = "",
 		wikipage = "",
@@ -606,7 +606,7 @@ def path_to(
 
 			path_base = path
 			neighs = list(step_last.neighbors.keys())
-
+			
 			if step_penult != None and step_penult.id_poi in neighs:
 				neighs.remove(step_penult.id_poi)
 
@@ -711,6 +711,9 @@ def inaccessible(user_data = None, poi = None):
 
 	if user_data.life_state == ewcfg.life_state_observer:
 		return False
+	
+	if user_data.life_state == ewcfg.life_state_shambler and poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow]:
+		return True
 
 	bans = user_data.get_bans()
 	vouchers = user_data.get_vouchers()
@@ -787,6 +790,10 @@ async def descend(cmd):
 
 		user_data.poi = ewcfg.poi_id_thevoid
 		user_data.time_lastenter = int(time.time())
+
+		enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
+		
 		user_data.persist()
 		ewutils.end_trade(user_data.id_user)
 		await ewrolemgr.updateRoles(client = ewutils.get_client(), member = cmd.message.author)
@@ -854,6 +861,9 @@ async def move(cmd = None, isApt = False):
 
 	if poi == None:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Never heard of it."))
+
+	if not ewutils.DEBUG and ewcfg.chname_to_poi.get(cmd.message.channel.name).id_poi != user_data.poi:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in your current district.").format(cmd.tokens[0]))
 
 	if user_data.poi == ewcfg.debugroom:
 		movement_method = "descending"
@@ -984,6 +994,11 @@ async def move(cmd = None, isApt = False):
 
 		user_data.poi = poi.id_poi
 		user_data.time_lastenter = int(time.time())
+
+		if user_data.poi in ewcfg.vulnerable_districts:
+			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
+		
 		user_data.persist()
 
 		ewutils.end_trade(user_data.id_user)
@@ -1108,6 +1123,11 @@ async def move(cmd = None, isApt = False):
 					
 					user_data.poi = poi_current.id_poi
 					user_data.time_lastenter = int(time.time())
+
+					if user_data.poi in ewcfg.vulnerable_districts:
+						enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+						user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
+						
 					user_data.persist()
 
 					ewutils.end_trade(user_data.id_user)
@@ -1218,11 +1238,11 @@ async def teleport(cmd):
 			response = "You can't {} that far.".format(cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		# 30 second windup before teleport goes through
+		# 15 second windup before teleport goes through (changing timeout to 15 is all i need to do right?)
 		windup_finished = True
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You get a running start to charge up your Quantum Legs..."))
 		try:
-			msg = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and 
+			msg = await cmd.client.wait_for('message', timeout=15, check=lambda message: message.author == cmd.message.author and 
 														cmd.message.content.startswith(ewcfg.cmd_prefix))
 
 			if msg != None:
@@ -1262,6 +1282,11 @@ async def teleport(cmd):
 			ewutils.moves_active[cmd.message.author.id] = 0
 			user_data.poi = poi.id_poi
 			user_data.time_lastenter = int(time.time())
+
+			if user_data.poi in ewcfg.vulnerable_districts:
+				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
+			
 			user_data.persist()
 
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
@@ -1652,7 +1677,7 @@ async def kick(id_server):
 			user_data = EwUser(id_user = id_user, id_server = id_server)
 
 			# checks if the player should be kicked from the subzone and kicks them if they should.
-			if poi.is_subzone and poi.id_poi != ewcfg.poi_id_thesphere:
+			if poi.is_subzone and poi.id_poi not in [ewcfg.poi_id_thesphere, ewcfg.poi_id_og_farms, ewcfg.poi_id_nuclear_beach_edge]:
 				
 				# Some subzones could potentially have multiple mother districts.
 				# Make sure to get one that's accessible before attempting a proper kickout.
@@ -1731,12 +1756,11 @@ def get_enemies_look_resp(user_data, district_data):
 	# identifiers are converted into lowercase, then into emoticons for visual clarity.
 	# server emoticons are also used for clarity
 	
-	enemies_in_district = district_data.get_enemies_in_district()
+	enemies_in_district = district_data.get_enemies_in_district(classes=[ewcfg.enemy_class_normal, ewcfg.enemy_class_shambler])
 
 	num_enemies = len(enemies_in_district)
 
 	enemies_resp = "\n\n"
-	numerator = 0
 
 	if num_enemies == 0:
 		enemies_resp = ""
@@ -1749,7 +1773,7 @@ def get_enemies_look_resp(user_data, district_data):
 		else:
 			identifier_text = ""
 			
-		if found_enemy_data.ai == ewcfg.enemy_ai_coward or found_enemy_data.ai == ewcfg.enemy_ai_sandbag or (found_enemy_data.ai == ewcfg.enemy_ai_defender and found_enemy_data.id_target != user_data.id_user):
+		if found_enemy_data.ai == ewcfg.enemy_ai_coward or found_enemy_data.ai == ewcfg.enemy_ai_sandbag or (found_enemy_data.ai == ewcfg.enemy_ai_defender and found_enemy_data.id_target != user_data.id_user) or (found_enemy_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler) or (found_enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state != ewcfg.life_state_shambler):
 			threat_emote = ewcfg.emote_slimeheart
 		else:
 			threat_emote = ewcfg.emote_slimeskull
@@ -1757,11 +1781,14 @@ def get_enemies_look_resp(user_data, district_data):
 		enemies_resp += ("You look around and find a\n{} **{}" + identifier_text + "**\nin this location.").format(threat_emote, found_enemy_data.display_name)
 	else:
 		enemies_resp += "You notice several enemies in this district, such as\n"
-		while numerator < (len(enemies_in_district) - 1):
-			found_enemy_data = EwEnemy(id_enemy=enemies_in_district[numerator])
+		for i in range(len(enemies_in_district) - 1):
+			found_enemy_data = EwEnemy(id_enemy=enemies_in_district[i])
 
 			if found_enemy_data.identifier != '':
-				identifier_text = " {}".format(":regional_indicator_{}:".format(found_enemy_data.identifier.lower()))
+				if not ewcfg.gvs_active:
+					identifier_text = " {}".format(":regional_indicator_{}:".format(found_enemy_data.identifier.lower()))
+				else:
+					identifier_text = " {}, ({})".format(":regional_indicator_{}:".format(found_enemy_data.identifier.lower()), found_enemy_data.gvs_coord)
 			else:
 				identifier_text = ""
 
@@ -1772,12 +1799,14 @@ def get_enemies_look_resp(user_data, district_data):
 				threat_emote = ewcfg.emote_slimeskull
 
 			enemies_resp += ("{} **{}" + identifier_text + "**\n").format(threat_emote, found_enemy_data.display_name)
-			numerator += 1
 			
 		final_enemy_data = EwEnemy(id_enemy=enemies_in_district[num_enemies - 1])
 
 		if final_enemy_data.identifier != '':
-			identifier_text = " {}".format(":regional_indicator_{}:".format(final_enemy_data.identifier.lower()))
+			if not ewcfg.gvs_active:
+				identifier_text = " {}".format(":regional_indicator_{}:".format(final_enemy_data.identifier.lower()))
+			else:
+				identifier_text = " {}, ({})".format( ":regional_indicator_{}:".format(final_enemy_data.identifier.lower()), final_enemy_data.gvs_coord)
 		else:
 			identifier_text = ""
 			

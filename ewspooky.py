@@ -31,9 +31,7 @@ async def revive(cmd):
 	else:
 		player_data = EwUser(member = cmd.message.author)
 
-		# For SWILLDERMUK, max possible respawn timers will be decreased by lowering degradation.
-		# player_data.degradation = min(player_data.degradation, 600)
-
+		#time_until_revive = (player_data.time_lastdeath + 600) - time_now
 		time_until_revive = (player_data.time_lastdeath + player_data.degradation) - time_now
 		
 		if time_until_revive > 0:

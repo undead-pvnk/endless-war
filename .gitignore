@@ -6,4 +6,7 @@ vcs.xml
 ewdebug.py
 .idea
 .idea/workspace.xml
-.vscode/launch.json
+.vscode
+.vs
+*.lnk
+*.g5r~

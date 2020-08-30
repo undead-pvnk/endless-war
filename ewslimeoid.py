@@ -2799,7 +2799,7 @@ async def saturateslimeoid(cmd):
 				slimeoid.persist()
 				
 				paint_bucket_item = EwItem(id_item=item_sought.get('id_item'))
-				if int(paint_bucket_item.item_props.get('durability')) == 1:
+				if int(paint_bucket_item.item_props.get('durability')) <= 1:
 					ewitem.item_delete(id_item=item_sought.get('id_item'))
 					response += "\nThe paint bucket is consumed in the process."
 				else:
@@ -3697,7 +3697,7 @@ def get_slimeoid_look_string(user_id = None, server_id = None):
 				cursor.execute(sql.format(ewcfg.col_name, ewcfg.col_id_user), [user_id])
 				if cursor.rowcount > 0:
 					iterate = 0
-					finalString += "In the freezer, you hear "
+					finalString += "\n\nIn the freezer, you hear "
 					for sloid in cursor:
 						if iterate > 0:
 							finalString += ", "

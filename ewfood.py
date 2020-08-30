@@ -100,7 +100,7 @@ class EwFood:
 """ show all available food items """
 async def menu(cmd):
 	user_data = EwUser(member = cmd.message.author, data_level = 2)
-	if user_data.life_state == ewcfg.life_state_shambler:
+	if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -108,7 +108,7 @@ async def menu(cmd):
 	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if poi is None or len(poi.vendors) == 0:
+	if poi is None or len(poi.vendors) == 0 or ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
@@ -132,7 +132,7 @@ async def menu(cmd):
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 		#mother_district_data = EwDistrict(district = destination_poi.id_poi, id_server = user_data.id_server)
 
-		if district_data.is_degraded():
+		if district_data.is_degraded() and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
@@ -187,7 +187,7 @@ async def menu(cmd):
 
 				
 				if mother_district_data != None:
-					if mother_district_data.all_streets_taken() != "":
+					if mother_district_data.all_streets_taken() != "" and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
 						# prices are halved for the controlling gang
 						if mother_district_data.all_streets_taken() == user_data.faction:
 							value /= 2
@@ -241,21 +241,23 @@ async def menu(cmd):
 # Buy items.
 async def order(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
+	if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	market_data = EwMarket(id_server = cmd.guild.id)
+	currency_used = 'slime'
+	current_currency_amount = user_data.slimes
 	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
-	if poi is None or len(poi.vendors) == 0:
+	if poi is None or len(poi.vendors) == 0 or ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
-		if district_data.is_degraded():
+		if district_data.is_degraded() and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		#value = ewutils.flattenTokenListToString(cmd.tokens[1:2])
@@ -339,6 +341,10 @@ async def order(cmd):
 						pass
 					else:
 						current_vendor = None
+						
+			if current_vendor == ewcfg.vendor_downpourlaboratory:
+				currency_used = 'brainz'
+				current_currency_amount = user_data.gvs_currency
 
 			if current_vendor is None or len(current_vendor) < 1:
 				response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
@@ -373,7 +379,7 @@ async def order(cmd):
 
 				controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
-				if controlling_faction != "":
+				if controlling_faction != "" and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
 					# prices are halved for the controlling gang
 					if controlling_faction == user_data.faction:
 						value /= 2
@@ -395,9 +401,9 @@ async def order(cmd):
 				if (user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe) and item_type == ewcfg.it_food:
 					value = 0
 
-				if value > user_data.slimes:
+				if value > current_currency_amount:
 					# Not enough money.
-					response = "A {} costs {:,} slime, and you only have {:,}.".format(name, value, user_data.slimes)
+					response = "A {} costs {:,} {}, and you only have {:,}.".format(name, value, currency_used, current_currency_amount)
 				else:
 					if item_type == ewcfg.it_food:
 						food_ordered = True
@@ -453,7 +459,7 @@ async def order(cmd):
 										response = "You swipe a {} from the counter at {}.".format(item.str_weapon, current_vendor)
 									else:
 										response = "You slam {:,} slime down on the counter at {} for {}.".format(value, current_vendor, item.str_weapon)
-										
+									
 									user_data.change_slimes(n=-value, source=ewcfg.source_spending)
 									user_data.persist()
 									return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -481,13 +487,14 @@ async def order(cmd):
 					if not food_ordered and togo:
 						value = int(value/1.5)
 
-					user_data.change_slimes(n = -value, source = ewcfg.source_spending)
+					if currency_used == 'slime':
+						user_data.change_slimes(n=-value, source=ewcfg.source_spending)
+					elif currency_used == 'brainz':
+						user_data.gvs_currency -= value
 
 					if company_data is not None:
 						company_data.recent_profits += value
 						company_data.persist()
-
-
 
 					if item.str_name == "arcade cabinet":
 						item_props['furniture_desc'] = random.choice(ewcfg.cabinets_list)
@@ -512,7 +519,7 @@ async def order(cmd):
 					if value == 0:
 						response = "You swipe a {} from the counter at {}.".format(item.str_name, current_vendor)
 					else:
-						response = "You slam {:,} slime down on the counter at {} for {}.".format(value, current_vendor, item.str_name)
+						response = "You slam {:,} {} down on the counter at {} for {}.".format(value, currency_used, current_vendor, item.str_name)
 
 					if food_ordered and not togo:
 						item_data = EwItem(id_item=id_item)

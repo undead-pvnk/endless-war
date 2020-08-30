@@ -15,7 +15,7 @@ from ew import EwUser
 async def pardon(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
-	if user_data.life_state != ewcfg.life_state_kingpin:
+	if user_data.life_state != ewcfg.life_state_kingpin and not cmd.message.author.guild_permissions.administrator:
 		response = "Only the Rowdy Fucker {} and the Cop Killer {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller)
 	else:
 		member = None
@@ -54,7 +54,7 @@ async def pardon(cmd):
 async def banish(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
-	if user_data.life_state != ewcfg.life_state_kingpin:
+	if user_data.life_state != ewcfg.life_state_kingpin and not cmd.message.author.guild_permissions.administrator:
 		response = "Only the Rowdy Fucker {} and the Cop Killer {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller)
 	else:
 		member = None
@@ -110,7 +110,7 @@ async def deadmega(cmd):
 """
 async def create(cmd):
 	#if not cmd.message.author.guild_permissions.administrator:
-	if EwUser(member = cmd.message.author).life_state != ewcfg.life_state_kingpin:
+	if EwUser(member = cmd.message.author).life_state != ewcfg.life_state_kingpin and not cmd.message.author.guild_permissions.administrator:
 		response = 'Lowly Non-Kingpins cannot hope to create items with their bare hands.'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

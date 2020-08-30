@@ -502,6 +502,7 @@ async def withdraw(cmd):
 						stock.total_shares -= shares
 
 						response = "You exchange {shares:,} shares in {stock} for {coins:,} SlimeCoin.".format(coins = slimecoin, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
+						user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_withdraw, True)
 						user_data.persist()
 						stock.timestamp = round(time.time())
 						stock.persist()
@@ -516,6 +517,68 @@ async def withdraw(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+""" player turns slimecoin into slime """
+async def redeem(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	time_now = round(time.time())
+	market_data = EwMarket(id_server = cmd.message.author.guild.id)
+
+	if market_data.clock < 6 or market_data.clock >= 20:
+		response = ewcfg.str_exchange_closed
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
+		response = ewcfg.str_exchange_busy.format(action = "redeem")
+
+	if cmd.message.channel.name != ewcfg.channel_stockexchange:  #or user_data.poi != ewcfg.poi_id_downtown:
+		# Only allowed in the stock exchange.
+		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "redeem")
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+
+	if district_data.is_degraded():
+		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		# Disallow withdraws from ghosts.
+		response = "Your slimebroker can't confirm your identity while you're dead."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		slimecoin_exchange_rate = 25000000000000 # 25 trillion slime
+
+		redeem_value = round(user_data.slimecoin / slimecoin_exchange_rate)
+
+		if redeem_value <= 0:
+			response = "Sadly, you haven't made enough Slimecoin to reedeem any slime!"
+
+		else:
+			response = ""
+
+			if user_data.life_state == ewcfg.life_state_enlisted:
+				response = "After you dot all the i’s and cross all the t’s, you immediately send your Kingpin half of your earnings."
+				role_boss = (ewcfg.role_copkiller if user_data.faction == ewcfg.faction_killers else ewcfg.role_rowdyfucker)
+				kingpin = ewutils.find_kingpin(id_server = cmd.guild.id, kingpin_role = role_boss)
+				if kingpin:
+					kingpin.change_slimes(n = int(redeem_value / 2))
+					kingpin.persist()
+
+			else:
+				response = "Your slimebroker pulls a fast one on you and gets you to sign a waiver that lets SlimeCorp keep half of your supposedly redeemed slime. Damn."
+
+			response += "You walk out with {:,}.".format(int(redeem_value / 2))
+			user_data.slimes += int(redeem_value / 2)
+			user_data.slimecoin = round(user_data.slimecoin % slimecoin_exchange_rate)
+			user_data.persist()
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ donate slime to slimecorp in exchange for slimecoin """
 async def donate(cmd):
@@ -692,8 +755,8 @@ async def xfer(cmd):
 			value = None
 
 	if value != None:
-		# Cost including the 5% transfer fee.
-		cost_total = round(value * 1.05)
+		# Cost including the transfer fee.
+		cost_total = round(value * 1.1)
 
 		if user_data.slimecoin < cost_total:
 			response = "You don't have enough SlimeCoin. ({:,}/{:,})".format(user_data.slimecoin, cost_total)
