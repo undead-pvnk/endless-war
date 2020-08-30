@@ -631,7 +631,7 @@ async def apt_look(cmd):
 	frids = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
 
 	if(len(frids) > 0):
-		response += "The fridge contains: "
+		response += "\n\nThe fridge contains: "
 		fridge_pile = []
 		for frid in frids:
 			fridge_pile.append(frid.get('name'))
@@ -653,13 +653,13 @@ async def apt_look(cmd):
 			else:
 				closet_pile.append(closet.get('name'))
 		if len(closet_pile) > 0:
-			response += "The closet contains: "
+			response += "\n\nThe closet contains: "
 			response += ewutils.formatNiceList(closet_pile)
 			response = response + '.'
 			resp_cont.add_channel_response(cmd.message.channel, response)
 
 		if len(hatstand_pile) > 0:
-			response = "The hat stand holds: "
+			response = "\n\nThe hat stand holds: "
 			response += ewutils.formatNiceList(hatstand_pile)
 			response = response + '.'
 			resp_cont.add_channel_response(cmd.message.channel, response)
@@ -1010,11 +1010,8 @@ async def watch(cmd):
 
 
 		poi = ewcfg.id_to_poi.get(user_model.poi)
-		token_array = ["!summonenemy" ,"megaslime", poi.mother_districts[0], ewcfg.tv_set_slime, ewcfg.tv_set_level, "The", "Slime"]
-
-		cmd.tokens = token_array
-
-		await ewhunting.summonenemy(is_bot_spawn=True, cmd=cmd)
+		
+		await ewhunting.spawn_enemy(id_server=cmd.message.guild.id, pre_chosen_type=ewcfg.enemy_type_megaslime, pre_chosen_poi=poi.mother_districts[0], pre_chosen_slimes=ewcfg.tv_set_slime, pre_chosen_level=ewcfg.tv_set_level, pre_chosen_displayname="The Slime")
 		response = ""
 
 	user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
@@ -2542,7 +2539,6 @@ async def aptCommands(cmd):
 			msg_mistake = "ENDLESS WAR denies you his favor."
 		elif randint == 3:
 			msg_mistake = "ENDLESS WAR pays you no mind."
-
 
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, msg_mistake), 2)
 

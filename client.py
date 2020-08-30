@@ -340,6 +340,9 @@ cmd_map = {
 	ewcfg.cmd_transfer: ewmarket.xfer,
 	ewcfg.cmd_transfer_alt1: ewmarket.xfer,
 
+	# Redeem slime with SlimeCoin
+	# ewcfg.cmd_redeem: ewmarket.redeem,
+
 	# Show the player's slime coin.
 	ewcfg.cmd_slimecoin: ewmarket.slimecoin,
 	ewcfg.cmd_slimecoin_alt1: ewmarket.slimecoin,
@@ -467,6 +470,9 @@ cmd_map = {
 	ewcfg.cmd_barter: ewfish.barter,
 	ewcfg.cmd_embiggen: ewfish.embiggen,
 
+	ewcfg.cmd_barterall: ewfish.barter_all,
+	# ewcfg.cmd_createfish: ewfish.debug_create_random_fish,
+
 	#scavenging
 	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 	ewcfg.cmd_scavenge_alt1: ewjuviecmd.scavenge,
@@ -483,6 +489,7 @@ cmd_map = {
 	ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
 	ewcfg.cmd_createitem: ewcmd.create_item,
 	ewcfg.cmd_manualsoulbind: ewcmd.manual_soulbind,
+	ewcfg.cmd_editprops: ewitem.manually_edit_item_properties,
 	ewcfg.cmd_setslime: ewcmd.set_slime,
 	ewcfg.cmd_checkstats: ewcmd.check_stats,
 	# ewcfg.cmd_exalt: ewkingpin.exalt,
@@ -581,6 +588,8 @@ cmd_map = {
 
 	# Enemies
 	ewcfg.cmd_summonenemy: ewhunting.summonenemy,
+	ewcfg.cmd_deleteallenemies: ewhunting.delete_all_enemies,
+	ewcfg.cmd_summongvsenemy: ewhunting.summongvsenemy,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -674,6 +683,9 @@ cmd_map = {
 	
 	# Checks the status of ewutils.TERMINATE
 	ewcfg.cmd_checkbot: ewutils.check_bot,
+	
+	# Sets degradation values for GvS
+	ewcfg.cmd_degradedistricts: ewutils.degrade_districts,
 
 	# debug commands
 	# ewcfg.cmd_debug1: ewdebug.debug1,
@@ -704,14 +716,15 @@ cmd_map = {
 	# Praying at the base of ENDLESS WAR.
 	ewcfg.cmd_pray: ewcmd.pray,
 
-	# shambling
+	# Gankers Vs. Shamblers gang swapping
 	ewcfg.cmd_shamble: ewdistrict.shamble,
+	ewcfg.cmd_rejuvenate: ewdistrict.rejuvenate,
 	
-	# shamble ball
-	ewcfg.cmd_shambleball: ewsports.shambleball,
-	ewcfg.cmd_shamblego: ewsports.shamblego,
-	ewcfg.cmd_shamblestop: ewsports.shamblestop,
-	ewcfg.cmd_shambleleave: ewsports.shambleleave,
+	# slimeball
+	ewcfg.cmd_slimeball: ewsports.slimeball,
+	ewcfg.cmd_slimeballgo: ewsports.slimeballgo,
+	ewcfg.cmd_slimeballstop: ewsports.slimeballstop,
+	ewcfg.cmd_slimeballleave: ewsports.slimeballleave,
 
 	# flush items and slime from subzones into their mother district
 	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones,
@@ -737,6 +750,29 @@ cmd_map = {
 	# ewcfg.cmd_set_gambit: ewcmd.set_gambit, #debug
 	# ewcfg.cmd_pointandlaugh: ewcmd.point_and_laugh,
 	ewcfg.cmd_prank: ewcmd.prank,
+	
+	# Gankers Vs. Shamblers
+	ewcfg.cmd_gvs_printgrid: ewcmd.gvs_print_grid,
+	ewcfg.cmd_gvs_printgrid_alt1: ewcmd.gvs_print_grid,
+	ewcfg.cmd_gvs_printlane: ewcmd.gvs_print_lane,
+	ewcfg.cmd_gvs_incubategaiaslimeoid: ewcmd.gvs_incubate_gaiaslimeoid,
+	ewcfg.cmd_gvs_fabricatetombstone: ewcmd.gvs_fabricate_tombstone,
+	ewcfg.cmd_gvs_joinoperation: ewcmd.gvs_join_operation,
+	# ewcfg.cmd_gvs_leaveoperation: ewcmd.gvs_leave_operation,
+	ewcfg.cmd_gvs_checkoperation: ewcmd.gvs_check_operations,
+	ewcfg.cmd_gvs_plantgaiaslimeoid: ewcmd.gvs_plant_gaiaslimeoid,
+	ewcfg.cmd_gvs_almanac: ewcmd.almanac,
+	ewcfg.cmd_gvs_searchforbrainz: ewcmd.gvs_searchforbrainz,
+	ewcfg.cmd_gvs_grabbrainz: ewcmd.gvs_grabbrainz,
+	ewcfg.cmd_gvs_dive: ewcmd.gvs_dive,
+	ewcfg.cmd_gvs_resurface: ewcmd.gvs_resurface,
+	ewcfg.cmd_gvs_sellgaiaslimeoid: ewcmd.gvs_sell_gaiaslimeoid,
+	ewcfg.cmd_gvs_sellgaiaslimeoid_alt: ewcmd.gvs_sell_gaiaslimeoid,
+	ewcfg.cmd_gvs_dig: ewcmd.dig,
+	ewcfg.cmd_gvs_progress: ewcmd.gvs_progress,
+	ewcfg.cmd_gvs_gaiaslime: ewcmd.gvs_gaiaslime,
+	ewcfg.cmd_gvs_gaiaslime_alt1: ewcmd.gvs_gaiaslime,
+	ewcfg.cmd_gvs_brainz: ewcmd.gvs_brainz,
 
 	# race
 	ewcfg.cmd_set_race: ewrace.set_race,
@@ -888,7 +924,7 @@ async def on_ready():
 		# store the list of channels in an ewutils field
 		ewcfg.update_server_list(server = server)
 
-		# find roles and add them to the database
+		# find roles and add them tom the database
 		ewrolemgr.setupRoles(client = client, id_server = server.id)
 		
 		# Refresh the permissions of all users
@@ -940,13 +976,18 @@ async def on_ready():
 		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
 		
-		#if not debug:
-		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
-		await ewtransport.init_transports(id_server = server.id)
-		asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
+		if ewcfg.gvs_active:
+			asyncio.ensure_future(ewutils.gvs_gamestate_tick_loop(id_server=server.id))
+		else:
+			# Enemies do not spawn randomly during Gankers Vs. Shamblers
+			asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
+
+		if not debug:
+			await ewtransport.init_transports(id_server = server.id)
+			asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
-		asyncio.ensure_future(ewsports.shambleball_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewsports.slimeball_tick_loop(id_server = server.id))
 		
 		print('\nNUMBER OF CHANNELS IN SERVER: {}\n'.format(len(server.channels)))
 
@@ -1377,26 +1418,38 @@ async def on_message(message):
 		tokens_count = len(tokens)
 		cmd = tokens[0].lower() if tokens_count >= 1 else ""
 
-		# remove mentions to us
-		mentions = list(filter(lambda user : user.id != client.user.id, message.mentions))
+		mentions = message.mentions
 		mentions_count = len(mentions)
+
+		playermodel = ewplayer.EwPlayer(id_user=message.author.id)
+		
+		if message.guild == None:
+			guild_used = ewcfg.server_list[playermodel.id_server]
+			admin_permissions = False
+		else:
+			guild_used = message.guild
+			admin_permissions = message.author.guild_permissions.administrator
 
 		# Create command object
 		cmd_obj = ewcmd.EwCmd(
 			tokens = tokens,
 			message = message,
 			client = client,
-			mentions = mentions
+			mentions = mentions,
+			guild = guild_used,
+			admin = admin_permissions
 		)
 		
+		# remove mentions to us #moved below cmd_obj because of EwIds #TODO: remove this and move debug commands somewhere else
+		mentions = list(filter(lambda user : user.id != client.user.id, message.mentions))
+		mentions_count = len(mentions)
+
 		"""
 			Punish the user for swearing.
 		"""
 		if (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
 			# print(content_tolower_list)
 			swear_multiplier = 0
-	
-			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
 			usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
 
 			if usermodel != None:
@@ -1410,15 +1463,15 @@ async def on_message(message):
 					if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
 						continue
 
-					swear_count = content_tolower.count(swear)
+					swear_count = content_tolower_list.count(swear)
 
 					# Niche scenarios. If certain words are used, don't count their components as swears.
-					if swear == "shit" and "shit" not in content_tolower:
-						#print('swear detection turned off for {}.'.format(swear))
-						continue
-					elif swear == "fag" and "fag" not in content_tolower:
-						#print('swear detection turned off for {}.'.format(swear))
-						continue
+					# if swear == "shit" and "shit" not in content_tolower:
+					# 	#print('swear detection turned off for {}.'.format(swear))
+					# 	continue
+					# elif swear == "fag" and "fag" not in content_tolower:
+					# 	#print('swear detection turned off for {}.'.format(swear))
+					# 	continue
 					# elif swear == "fuck" and (content_tolower.count('<rowdyfucker431275088076079105>') > 0 or content_tolower.count('<fucker431424220837183489>') > 0):
 					# 	#print('swear detection turned off for {}.'.format(swear))
 					# 	continue
@@ -1474,6 +1527,8 @@ async def on_message(message):
 				return await ewbook.zine_dm_commands(cmd=cmd_obj)
 			elif poi.is_apartment:
 				return await ewapt.aptCommands(cmd=cmd_obj)
+			elif ewcfg.cmd_gvs_grabbrainz in cmd_obj.message.content.lower():
+				return await ewcmd.gvs_grabbrainz(cmd_obj)
 			else:
 				
 				# Only send the help response once every thirty seconds. There's no need to spam it.
@@ -1582,7 +1637,9 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'damage'):
 			user_data = EwUser(member = message.author, data_level = 1)
 			slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-			slimes_damage = int((slimes_spent * (10 + user_data.attack)) * (100 + (user_data.weaponskill * 5)) / 100.0)
+			attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
+			weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
+			slimes_damage = int(10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "{}".format(slimes_damage)))
 
 		# Gives the user some slime
@@ -1929,13 +1986,13 @@ async def on_message(message):
 			elif randint == 3:
 				msg_mistake = "ENDLESS WAR pays you no mind."
 
-			await ewutils.send_message(client, cmd_obj.message.channel, msg_mistake, 2)
-			# await asyncio.sleep(2)
-			#try:
-			#	await msg.delete()
-			#	pass
-			#except:
-			#	pass
+			msg = await ewutils.send_message(client, cmd_obj.message.channel, msg_mistake, 2)
+			await asyncio.sleep(2)
+			try:
+				await msg.delete()
+				pass
+			except:
+				pass
 
 	elif content_tolower.find(ewcfg.cmd_howl) >= 0 or content_tolower.find(ewcfg.cmd_howl_alt1) >= 0 or re_awoo.match(content_tolower):
 		""" Howl if !howl is in the message at all. """
