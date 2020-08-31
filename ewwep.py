@@ -285,6 +285,7 @@ def canAttack(cmd):
 	time_now_float = time.time()
 	time_now = int(time_now_float)
 	user_data = EwUser(member = cmd.message.author)
+	district_data = EwDistrict(id_server=user_data.id_server, district=user_data.poi)
 	weapon_item = None
 	weapon = None
 	captcha = None
@@ -307,8 +308,8 @@ def canAttack(cmd):
 
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You can't commit violence from here."
-	elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
-		response = "You must go elsewhere to commit gang violence."
+	# elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
+	# 	response = "You must go elsewhere to commit gang violence."
 	elif channel_poi.id_poi != user_data.poi and user_data.poi not in channel_poi.mother_districts:
 		#Only way to do this right now is by using the gellphone
 		response = "Alas, you still can't shoot people through your phone."
@@ -389,6 +390,12 @@ def canAttack(cmd):
 
 		elif ewmap.poi_is_pvp(shootee_data.poi) == False:
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
+			
+		elif user_isshambler == True and len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_gaiaslimeoid])) > 0:
+			response = "You can't attack them, they're protected by Gaiaslimeoids!"
+			
+		# elif shootee_data.life_state == ewcfg.life_state_shambler and (user_iskillers == True or user_isrowdys == True or user_isslimecorp == True) and len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_shambler])) > 0:
+		# 	response = "You can't attack them, they're protected by a horde of enemy Shamblers!"
 
 		elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False and user_isshambler == False:
 			# Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
@@ -417,8 +424,8 @@ def canAttack(cmd):
 			# Target is possessing user's weapon
 			response = "{}'s contract forbids you from harming them. You should've read the fine print.".format(member.display_name)
 
-		elif time_now > shootee_data.time_expirpvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user):
-			# Target is neither flagged for PvP, nor a shambler, nor a ghost inhabitting the player
+		elif time_now > shootee_data.time_expirpvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user or user_isshambler):
+			# Target is neither flagged for PvP, nor a shambler, nor a ghost inhabiting the player. Player is not a shambler.
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
 		# Identify if the shooter and the shootee are on the same team.
@@ -501,6 +508,7 @@ async def attack(cmd):
 	response = ""
 	deathreport = ""
 	levelup_response = ""
+	shambler_resp = ""
 	coinbounty = 0
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.guild.id)
 	market_data = EwMarket(id_server = cmd.guild.id)
@@ -576,7 +584,9 @@ async def attack(cmd):
 				crit_mod += 0.05
 
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-		slimes_damage = int((slimes_spent * (10 + user_data.attack)) * (100 + (user_data.weaponskill * 5)) / 100.0)
+		attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
+		weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
+		slimes_damage = int(10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 
 		if user_data.weaponskill < 5:
 			miss_mod += (5 - user_data.weaponskill) / 10
@@ -802,8 +812,7 @@ async def attack(cmd):
 				# Flag the user for PvP
 
 				user_poi = ewcfg.id_to_poi.get(user_data.poi)
-				if user_poi.is_district:
-					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 				resp_cont.add_member_to_update(cmd.message.author)
 
@@ -843,35 +852,39 @@ async def attack(cmd):
 
 				onbreak_responses = []
 
-				for cosmetic in victim_cosmetics:
-						c = EwItem(cosmetic.get('id_item'))
-
-						# Damage it if the cosmetic is adorned and it has a durability limit
-						if c.item_props.get("adorned") == 'true' and c.item_props['durability'] is not None:
-
-							#print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
-
-							durability_afterhit = int(c.item_props['durability']) - slimes_damage
-
-							#print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
-
-							if durability_afterhit <= 0: # If it breaks
-								c.item_props['durability'] = durability_afterhit
-								c.persist()
-
-
-								shootee_data.persist()
-
-								onbreak_responses.append(str(c.item_props['str_onbreak']).format(c.item_props['cosmetic_name']))
-
-								ewitem.item_delete(id_item = c.id_item)
-
-							else:
-								c.item_props['durability'] = durability_afterhit
-								c.persist()
-
-						else:
-							pass
+				# the following code handles cosmetic durability loss
+				
+				# for cosmetic in victim_cosmetics:
+				# 	if not int(cosmetic.get('soulbound')) == 1:
+				# 	
+				# 		c = EwItem(cosmetic.get('id_item'))
+				# 
+				# 		# Damage it if the cosmetic is adorned and it has a durability limit
+				# 		if c.item_props.get("adorned") == 'true' and c.item_props['durability'] is not None:
+				# 
+				# 			#print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
+				# 
+				# 			durability_afterhit = int(c.item_props['durability']) - slimes_damage
+				# 
+				# 			#print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
+				# 
+				# 			if durability_afterhit <= 0: # If it breaks
+				# 				c.item_props['durability'] = durability_afterhit
+				# 				c.persist()
+				# 
+				# 
+				# 				shootee_data.persist()
+				# 
+				# 				onbreak_responses.append(str(c.item_props['str_onbreak']).format(c.item_props['cosmetic_name']))
+				# 
+				# 				ewitem.item_delete(id_item = c.id_item)
+				# 
+				# 			else:
+				# 				c.item_props['durability'] = durability_afterhit
+				# 				c.persist()
+				# 
+				# 		else:
+				# 			pass
 
 				market_data.splattered_slimes += slimes_damage
 				market_data.persist()
@@ -950,6 +963,9 @@ async def attack(cmd):
 								'adorned': 'false'
 							}
 						)
+					elif ewcfg.status_modelovaccine_id in user_data.getStatusEffects():
+						shootee_data.degradation = 0
+						shambler_resp = "Your purified slime seeps into and emulsifies in their mangled corpse, healing their degraded body. When they revive, they’ll be a normal slimeboi like the rest of us. A pure, homogenous race of ENDLESS WAR fearing juveniles. It brings a tear to your eye."
 
 					# release bleed storage
 					if ewcfg.mutation_id_thickerthanblood in user_mutations:
@@ -963,8 +979,8 @@ async def attack(cmd):
 					if ewcfg.mutation_id_fungalfeaster in user_mutations:
 						user_data.hunger = 0
 
-					if shootee_data.life_state != ewcfg.life_state_shambler:
-						user_data.degradation -= int(shootee_data.slimelevel / 10)
+					# if shootee_data.life_state != ewcfg.life_state_shambler:
+					# 	user_data.degradation -= int(shootee_data.slimelevel / 10)
 
 					user_data.persist()
 					district_data.persist()
@@ -1043,6 +1059,9 @@ async def attack(cmd):
 					weapon_possession = user_data.get_weapon_possession()
 					if weapon_possession:
 						response += fulfill_ghost_weapon_contract(weapon_possession, market_data, user_data, cmd.message.author.display_name)
+
+					if shambler_resp != "":
+						response += "\n\n" + shambler_resp
 
 					shootee_data.persist()
 					resp_cont.add_response_container(die_resp)
@@ -1180,8 +1199,7 @@ async def attack(cmd):
 				# Flag the user for PvP
 
 				user_poi = ewcfg.id_to_poi.get(user_data.poi)
-				if user_poi.is_district:
-					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, True)
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, True)
 
 				user_data.persist()
 				resp_cont.add_member_to_update(cmd.message.author)
@@ -2124,6 +2142,28 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	sandbag_mode = False
 	if enemy_data.enemytype == ewcfg.enemy_type_sandbag:
 		sandbag_mode = True
+	
+	if (enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (enemy_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
+		response = "Hey ASSHOLE! They're on your side!!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif (enemy_data.enemyclass == ewcfg.enemy_class_shambler and enemy_data.gvs_coord not in ewcfg.gvs_coords_end):
+		response = "It's best not to interfere with whatever those Juveniles are up to. If it gets close, that's your time to strike."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# elif (enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and ewutils.gvs_check_gaia_protected(enemy_data)):
+	# 	response = "It's no use, there's another gaiaslimeoid in front that's protecting them!"
+	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)) 
+	elif user_data.life_state == ewcfg.life_state_shambler and enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid:
+		response = "It's not worth going near those... *things*. You'd get torn to shreds, it's better to send out lackeys to do your job for you."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		# if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shambler_attack:
+		# 	response = "Your shitty zombie jaw is too tired to chew on that {}. Try again in {} seconds.".format(enemy_data.display_name, int(ewcfg.cd_shambler_attack-(time_now-user_data.time_lasthaunt)))
+		# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		# else:
+		# 	user_data.time_lasthaunt = time_now
+		# 	user_data.persist()
+			
+
 
 	user_mutations = user_data.get_mutations()
 
@@ -2155,8 +2195,11 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
 	dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 
+
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-	slimes_damage = int((slimes_spent * (10 + user_data.attack)) * (100 + (user_data.weaponskill * 5)) / 100.0)
+	attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
+	weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
+	slimes_damage = int(10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 	
 	if user_data.weaponskill < 5:
 		miss_mod += (5 - user_data.weaponskill) / 10
@@ -2273,10 +2316,11 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 			# TODO - Make enemies able to be strangled
 			# One of the players/enemies died in the meantime
-			if user_data.life_state == ewcfg.life_state_corpse or enemy_data.life_state == ewcfg.life_state_corpse:
+			if user_data.life_state == ewcfg.life_state_corpse or enemy_data.life_state == ewcfg.enemy_lifestate_dead:
 				return
 			else:
 				return
+			
 		# else:
 		# pass
 		# enemy_data.persist()
@@ -2301,11 +2345,17 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 			# Burn players in district
 			if ewcfg.weapon_class_burning in weapon.classes:
+				if enemy_data.enemyclass in [ewcfg.enemy_class_gaiaslimeoid, ewcfg.enemy_class_shambler]:
+					miss = True
+				
 				if not miss:
 					resp = burn_bystanders(user_data=user_data, burn_dmg=bystander_damage, life_states=life_states, factions=factions, district_data=district_data)
 					resp_cont.add_response_container(resp)
 
 			if ewcfg.weapon_class_exploding in weapon.classes:
+				if enemy_data.enemyclass in [ewcfg.enemy_class_gaiaslimeoid, ewcfg.enemy_class_shambler]:
+					miss = True
+				
 				user_data.persist()
 				enemy_data.persist()
 
@@ -2347,6 +2397,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# Bicarbonate enemies take more damage
 	if enemy_data.weathertype == ewcfg.enemy_weathertype_rainresist:
 		slimes_damage *= 1.5
+		
+	# # Shamblers deal less damage to gaiaslimeoids
+	# if enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state == ewcfg.life_state_shambler:
+	# 	slimes_damage *= 0.25
 
 	if not sandbag_mode:
 		# apply hardened sap armor
@@ -2589,8 +2643,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if not sandbag_mode:
 
 		user_poi = ewcfg.id_to_poi.get(user_data.poi)
-		if user_poi.is_district:
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 	resp_cont.add_member_to_update(cmd.message.author)
 	user_data.persist()
@@ -2730,6 +2783,16 @@ async def dodge(cmd):
 	if target_data == None:
 		response = "ENDLESS WAR didn't understand that name.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		try:
+			if (target_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (target_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
+				response = "Hey ASSHOLE! They're on your side!!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			elif (target_data.enemyclass == ewcfg.enemy_class_shambler and target_data.gvs_coord not in ewcfg.gvs_coords_end):
+				response = "It's no use, they're too far away!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		except:
+			pass
 
 	if target_data.poi != user_data.poi:
 		response = "You can't {} someone, who's not even here.".format(cmd.tokens[0])
@@ -2744,8 +2807,7 @@ async def dodge(cmd):
 	user_data.sap -= sap_cost
 
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
-	if user_poi.is_district:
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 	user_data.persist()
 
@@ -2790,6 +2852,16 @@ async def taunt(cmd):
 	if target_data == None:
 		response = "ENDLESS WAR didn't understand that name.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		try:
+			if (target_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (target_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
+				response = "Hey ASSHOLE! They're on your side!!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			elif (target_data.enemyclass == ewcfg.enemy_class_shambler and target_data.gvs_coord not in ewcfg.gvs_coords_end):
+				response = "It's no use, they're too far away!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		except:
+			pass
 
 	if target_data.poi != user_data.poi:
 		response = "You can't {} someone, who's not even here.".format(cmd.tokens[0])
@@ -2808,8 +2880,7 @@ async def taunt(cmd):
 	user_data.sap -= sap_cost
 
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
-	if user_poi.is_district:
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You spend {} sap to taunt {} into attacking you.".format(sap_cost, target.display_name)
@@ -2853,6 +2924,16 @@ async def aim(cmd):
 	if target_data == None:
 		response = "ENDLESS WAR didn't understand that name.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		try:
+			if (target_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_enlisted]) or (target_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler):
+				response = "Hey ASSHOLE! They're on your side!!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			elif (target_data.enemyclass == ewcfg.enemy_class_shambler and target_data.gvs_coord not in ewcfg.gvs_coords_end):
+				response = "It's no use, they're too far away!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		except:
+			pass
 
 	if target_data.poi != user_data.poi:
 		response = "You can't {} at someone, who's not even here.".format(cmd.tokens[0])
@@ -2867,8 +2948,7 @@ async def aim(cmd):
 	user_data.sap -= sap_cost
 
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
-	if user_poi.is_district:
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You spend {} sap to aim at {}'s weak spot.".format(sap_cost, target.display_name)
@@ -2952,7 +3032,7 @@ def damage_mod_defend(shootee_data, shootee_mutations, market_data, shootee_weap
 def get_sap_armor(shootee_data, sap_ignored):
 	# apply hardened sap armor
 	try:
-		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored + shootee_data.defense
+		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored + int(shootee_data.defense / 2)
 	except: # If shootee_data doesn't have defense, aka it's a monster
 		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored
 	level = 0

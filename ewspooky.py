@@ -29,9 +29,7 @@ async def revive(cmd):
 	else:
 		player_data = EwUser(member = cmd.message.author)
 
-		# For SWILLDERMUK, max possible respawn timers will be decreased by lowering degradation.
-		# player_data.degradation = min(player_data.degradation, 600)
-
+		#time_until_revive = (player_data.time_lastdeath + 600) - time_now
 		time_until_revive = (player_data.time_lastdeath + player_data.degradation) - time_now
 		
 		if time_until_revive > 0:
@@ -195,8 +193,7 @@ async def haunt(cmd):
 				user_data.busted = False
 
 				user_poi = ewcfg.id_to_poi.get(user_data.poi)
-				if user_poi.is_district:
-					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack)
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack)
 				
 				resp_cont.add_member_to_update(cmd.message.author)
 				# Persist changes to the database.
@@ -458,7 +455,7 @@ async def let_go(cmd):
 		# Only ghosts can inhabit other players
 		response = "You feel a bit more at peace with the world."
 	elif not user_data.get_inhabitee():
-		response = "You're not inhabitting anyone right now."
+		response = "You're not inhabiting anyone right now."
 	else:
 		user_data.remove_inhabitation()
 		response = "You let go of the soul you've been tormenting."
@@ -471,7 +468,7 @@ async def possess_weapon(cmd):
 	if user_data.life_state != ewcfg.life_state_corpse:
 		response = "You have no idea what you're doing."
 	elif not user_data.get_inhabitee():
-		response = "You're not inhabitting anyone right now."
+		response = "You're not inhabiting anyone right now."
 	elif user_data.slimes >= (ewcfg.slimes_tomanifest + ewcfg.slimes_to_possess_weapon):
 		# prevent ghosts from using so much antislime they can't manifest afterwards
 		response = "You'll have to become stronger before you can perform occult arts of this level."

@@ -78,6 +78,10 @@ async def enlist(cmd):
 		response = "You're dead, bitch."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
+		response = "You can't do that right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
 	elif user_slimes < ewcfg.slimes_toenlist:
 		response = "You need to mine more slime to rise above your lowly station. ({}/{})".format(user_slimes, ewcfg.slimes_toenlist)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -186,6 +190,7 @@ async def mine(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	mutations = user_data.get_mutations()
+	cosmetic_abilites = ewutils.get_cosmetic_abilities(id_user = cmd.message.author.id, id_server = cmd.guild.id)
 	time_now = int(time.time())
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
@@ -207,7 +212,7 @@ async def mine(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Killers only mine under cover of darkness. Wait for nightfall at 8pm.".format(ewcfg.cmd_revive)))
 
 	# Mine only in the mines.
-	if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+	if cmd.message.channel.name in [ewcfg.channel_mines, ewcfg.channel_cv_mines, ewcfg.channel_tt_mines]:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
@@ -313,6 +318,8 @@ async def mine(cmd):
 			if has_pickaxe == True:
 				unearthed_item_chance *= 1.5
 			if ewcfg.mutation_id_lucky in mutations:
+				unearthed_item_chance *= 1.33
+			if ewcfg.cosmeticAbility_id_lucky in cosmetic_abilites:
 				unearthed_item_chance *= 1.33
 
 			# event bonus
@@ -615,11 +622,16 @@ async def mismine(cmd, user_data, cause):
 		# Lose some slime
 		last_mismined_times[cmd.message.author.id] = None
 		# user_data.die(cause = ewcfg.cause_mining)
+		
+		accident_response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
+		
+		if random.randrange(4) == 0:
+			accident_response = "Big John arrives just in time to save you from your mining accident!\nhttps://cdn.discordapp.com/attachments/431275470902788107/743629505876197416/mine2.jpg"
+		else:
+			user_data.change_slimes(n = -(user_data.slimes / 2))
+			user_data.persist()
 
-		user_data.change_slimes(n = -(user_data.slimes / 2))
-		user_data.persist()
-
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have lost an arm and a leg in a mining accident. Tis but a scratch."))
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, accident_response))
 		# await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 		# sewerchannel = ewutils.get_channel(cmd.guild, ewcfg.channel_sewers)
 		# await ewutils.send_message(cmd.client, sewerchannel, "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, "You have died in a mining accident. {}".format(ewcfg.emote_slimeskull)))
@@ -660,7 +672,10 @@ async def scavenge(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Slow down, you filthy hyena."))
 	
 	if user_data.poi == ewcfg.poi_id_slimesea:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You consider diving down to the bottom of the sea to grab some sick loot, but quickly change your mind when you {}.".format(random.choice(ewcfg.sea_scavenge_responses))))
+		if user_data.life_state == ewcfg.life_state_shambler:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Are you trying to grab random trash instead of !searchingforbrainz? Pretty cringe bro..."))
+		else:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You consider diving down to the bottom of the sea to grab some sick loot, but quickly change your mind when you {}.".format(random.choice(ewcfg.sea_scavenge_responses))))
 
 	# Scavenge only in location channels
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == True:
@@ -1332,10 +1347,14 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 		if slimes_lost <= 0:
 			response = "You barely avoided getting into a mining accident."
 		else:
-			user_data.change_slimes(n = -slimes_lost)
-			user_data.persist()
 			response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
 
+			if random.randrange(4) == 0:
+				response = "Big John arrives just in time to save you from your mining accident!\nhttps://cdn.discordapp.com/attachments/431275470902788107/743629505876197416/mine2.jpg"
+			else:
+				user_data.change_slimes(n=-slimes_lost)
+				user_data.persist()
+				
 		init_grid_minesweeper(user_data.poi, user_data.id_server)
 
 		return response
@@ -1413,9 +1432,14 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 			mining_accident = True
 
 	if mining_accident:
-		user_data.change_slimes(n = -(user_data.slimes * 0.5))
-		user_data.persist()
+
 		response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
+
+		if random.randrange(4) == 0:
+			response = "Big John arrives just in time to save you from your mining accident!\nhttps://cdn.discordapp.com/attachments/431275470902788107/743629505876197416/mine2.jpg"
+		else:
+			user_data.change_slimes(n=-(user_data.slimes * 0.5))
+			user_data.persist()
 
 		init_grid_bubblebreaker(cmd.message.channel.name, user_data.id_server)
 
