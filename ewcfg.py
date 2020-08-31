@@ -31,7 +31,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.4b - LOL"
+version = "v3.5 - Ghost Fishing"
 
 
 dir_msgqueue = 'msgqueue'
@@ -10072,7 +10072,7 @@ fish_list  =  [
 		rarity = fish_rarity_common,
 		catch_time = None,
 		catch_weather = None,
-		str_desc = "It's just a black squid, but spooky",
+		str_desc = "It's just a black squid, but spooky.",
 		slime = fish_slime_void
 	),
 	EwFish(
