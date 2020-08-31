@@ -1340,14 +1340,14 @@ cmd_undress_slimeoid_alt1 = cmd_prefix + 'undecorateslimeoid'
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_clear_quadrant = cmd_prefix + "clearquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"
-cmd_get_flushed = cmd_prefix + "flushed"
-cmd_get_flushed_alt1 = cmd_prefix + "matesprit"
-cmd_get_pale = cmd_prefix + "pale"
-cmd_get_pale_alt1 = cmd_prefix + "moirail"
-cmd_get_caliginous = cmd_prefix + "caliginous"
-cmd_get_caliginous_alt1 = cmd_prefix + "kismesis"
-cmd_get_ashen = cmd_prefix + "ashen"
-cmd_get_ashen_alt1 = cmd_prefix + "auspistice"
+cmd_get_sloshed = cmd_prefix + "sloshed"
+cmd_get_sloshed_alt1 = cmd_prefix + "soulvent"
+cmd_get_roseate = cmd_prefix + "roseate"
+cmd_get_roseate_alt1 = cmd_prefix + "bedenizen"
+cmd_get_violacious = cmd_prefix + "violacious"
+cmd_get_violacious_alt1 = cmd_prefix + "amaranthagonist"
+cmd_get_policitous = cmd_prefix + "policitous"
+cmd_get_policitous_alt1 = cmd_prefix + "arbitraitor"
 
 cmd_trade = cmd_prefix + 'trade'
 cmd_offer = cmd_prefix + 'offer'
@@ -2557,6 +2557,7 @@ vendor_basedhardware = "Based Hardware" # Hardware store in West Glocksbury
 vendor_lab = "Lab" #Slimecorp products
 vendor_atomicforest = "Atomic Forest Stockpile" # Storage of atomic forest
 vendor_downpourlaboratory = "Downpour Armament Vending Machines" # Store for shamblers to get stuff
+vendor_prehistoricpark = "Prehistoric Park" # Store to barter fossils
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -2817,6 +2818,9 @@ item_id_dye_rainbow = "rainbowdye"
 item_id_paint_copper = "copperpaint"
 item_id_paint_chrome = "chromepaint"
 item_id_paint_gold = "goldpaint"
+
+#fossil ids
+item_id_thrashersaurus_plates = "thrashersaurusplates"
 
 #weapon ids
 weapon_id_revolver = 'revolver'
@@ -23572,91 +23576,91 @@ for mutation in mutations:
 	mutations_map[mutation.id_mutation] = mutation
 	mutation_ids.add(mutation.id_mutation)
 
-quadrant_flushed = "flushed"
-quadrant_pale = "pale"
-quadrant_caliginous = "caliginous"
-quadrant_ashen = "ashen"
+quadrant_sloshed = "sloshed"
+quadrant_roseate = "roseate"
+quadrant_violacious = "violacious"
+quadrant_policitous = "policitous"
 
 quadrant_ids = [
-	quadrant_flushed,
-	quadrant_pale,
-	quadrant_caliginous,
-	quadrant_ashen
+	quadrant_sloshed,
+	quadrant_roseate,
+	quadrant_violacious,
+	quadrant_policitous
 	]
 
 quadrants_map = {}
 
 quadrants = [
 	EwQuadrantFlavor(
-		id_quadrant = quadrant_flushed,
+		id_quadrant = quadrant_sloshed,
 
-		aliases = ["heart", "hearts", "matesprit", "matespritship"],
+		aliases = ["heart", "hearts", "soulvent", "soulution", "pinked", "pink", "hotpink"],
 
-		resp_add_onesided = "You have developed flushed feelings for {}.",
+		resp_add_onesided = "You have developed sloshed feelings for {}.",
 
-		resp_add_relationship = "You have entered into a matespritship with {}.",
+		resp_add_relationship = "You have entered into a soulution with {}.",
 
-		resp_view_onesided = "{} has a one-sided red crush on {}.",
+		resp_view_onesided = "{} has a one-sided pink crush on {}.",
 
 		resp_view_onesided_self = "You have a one-sided red crush on {}.",
 
-		resp_view_relationship = "{} is in a matespritship with {}. " + emote_hearts,
+		resp_view_relationship = "{} is in a soulution with {}. " + emote_hearts,
 
-		resp_view_relationship_self = "You are in a matespritship with {}. " + emote_hearts
+		resp_view_relationship_self = "You are in a soulution with {}. " + emote_hearts
 		),
 
 	EwQuadrantFlavor(
-		id_quadrant = quadrant_pale,
+		id_quadrant = quadrant_roseate,
 
-		aliases = ["diamond", "diamonds", "moirail", "moiraillegiance"],
+		aliases = ["hat", "hats", "bedenizen", "bedenaissance", "palepink","pastelpink"],
 
-		resp_add_onesided = "You have developed pale feelings for {}.",
+		resp_add_onesided = "You have developed roseate feelings for {}.",
 
-		resp_add_relationship = "You have entered into a moiraillegiance with {}.",
+		resp_add_relationship = "You have entered into a bedenaissance with {}.",
 
-		resp_view_onesided = "{} has a one-sided pale crush on {}.",
+		resp_view_onesided = "{} has a one-sided roseate crush on {}.",
 
-		resp_view_onesided_self = "You have a one-sided pale crush on {}.",
+		resp_view_onesided_self = "You have a one-sided roseate crush on {}.",
 
-		resp_view_relationship = "{} is in a moiraillegiance with {}. " + emote_diamonds,
+		resp_view_relationship = "{} is in a bedenaissance with {}. " + emote_diamonds,
 
-		resp_view_relationship_self = "You are in a moiraillegiance with {}. " + emote_diamonds
+		resp_view_relationship_self = "You are in a bedenaissance with {}. " + emote_diamonds
 		),
 
 	EwQuadrantFlavor(
-		id_quadrant = quadrant_caliginous,
+		id_quadrant = quadrant_violacious,
 
-		aliases = ["spade", "spades", "kismesis", "kismesissitude"],
+		aliases = ["slug", "slugs", "amaranthagonist", "amaranthagony", "purple", "violent", "hotpurple"],
 
-		resp_add_onesided = "You have developed caliginous feelings for {}.",
+		resp_add_onesided = "You have developed violacious feelings for {}.",
 
-		resp_add_relationship = "You have entered into a kismesissitude with {}.",
+		resp_add_relationship = "You have entered into a amaranthagony with {}.",
 
-		resp_view_onesided = "{} has a one-sided black crush on {}.",
+		resp_view_onesided = "{} has a one-sided violet crush on {}.",
 
-		resp_view_onesided_self = "You have a one-sided black crush on {}.",
+		resp_view_onesided_self = "You have a one-sided violet crush on {}.",
 
-		resp_view_relationship = "{} is in a kismesissitude with {}. " + emote_spades,
+		resp_view_relationship = "{} is in a amaranthagony with {}. " + emote_spades,
 
-		resp_view_relationship_self = "You are in a kismesissitude with {}. " + emote_spades
+		resp_view_relationship_self = "You are in a amaranthagony with {}. " + emote_spades
 		),
 
 	EwQuadrantFlavor(
-		id_quadrant = quadrant_ashen,
+		id_quadrant = quadrant_policitous,
 
-		aliases = ["club", "clubs", "auspistice", "auspisticism"],
+		aliases = ["shield", "shields", "arbitraitor", "arbitreason", "lightpurple", "pastelpurple"],
 
-		resp_add_onesided = "You have developed ashen feelings for {}.",
+		resp_add_onesided = "You have developed policitous feelings for {}.",
 
-		resp_add_relationship = "You have entered into an auspisticism with {}.",
+		resp_add_relationship = "You have entered into an arbitreason with {}.",
 
-		resp_view_onesided = "{} has a one-sided ashen crush on {}.",
+		resp_view_onesided = "{} has a one-sided policitous crush on {}.",
 
-		resp_view_onesided_self = "You have a one-sided ashen crush on {}.",
+		resp_view_onesided_self = "You have a one-sided policitous crush on {}.",
 
-		resp_view_relationship = "{} is in an auspisticism with {}. " + emote_clubs,
+		resp_view_relationship = "{} is in an arbitreason with {}. " + emote_clubs,
 
-		resp_view_relationship_self = "You are in an auspisticism with {}. " + emote_clubs
+		resp_view_relationship_self = "You are in an arbitreason with {}. " + emote_clubs
 		)
 
 	]
