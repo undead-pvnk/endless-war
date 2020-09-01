@@ -12331,7 +12331,7 @@ poi_list = [
 			"tx"
 		],
 		str_name = "Toxington",
-		str_desc = "You cover your mouth in a futile attempt to avoid breathing in the toxins rising from the nearby lakes and mineshafts. A thick fog of this foul-smelling, poisonous gas shrouds the entire district, making the land virtually uninhabitable. But, where there’s slime, people will settle. Juveniles from across the city are happy to spend their short lives in this hellhole for a chance to strike it rich.\nToxington has no redeemable aspects, outside of its abundance of slime veins underground and its lovely fishing spots above.\n\nThis area contains the Toxington Mines and the Toxington Subway Station. To the East is Astatine Heights. To the Southeast is Gatlingsdale. To the South is Polonium Hill. To the East is Charcoal Park. To the North is Toxington Outskirts.",
+		str_desc = "You cover your mouth in a futile attempt to avoid breathing in the toxins rising from the nearby lakes and mineshafts. A thick fog of this foul-smelling, poisonous gas shrouds the entire district, making the land virtually uninhabitable. But, where there’s slime, people will settle. Juveniles from across the city are happy to spend their short lives in this hellhole for a chance to strike it rich.\nToxington has no redeemable aspects, outside of its abundance of slime veins underground and its lovely fishing spots above.\n\nThis area contains the Toxington Mines and the Toxington Subway Station. To the East is Astatine Heights. To the Southeast is Gatlingsdale. To the South is Polonium Hill. To the West is Charcoal Park. To the North is Toxington Outskirts.",
 		topic = "Quiet residential neighborhood, continually choked with acidic vapors from the nearby slime reservoir.",
 		wikipage = wiki_baseurl + "Toxington",
 		coord = (14, 9),
@@ -13848,6 +13848,7 @@ poi_list = [
 			poi_id_vandalpark_street_d : travel_time_street,
 			poi_id_vandalpark_street_b : travel_time_street,
 			poi_id_westglocksbury_street_b : travel_time_street,
+			poi_id_vp_subway_station: travel_time_subzone,
 		}
 	),
 	EwPoi(
@@ -16731,7 +16732,6 @@ poi_list = [
 		transport_lines = set(),
 		neighbors = {
 			poi_id_vandalpark_street_a : travel_time_subzone,
-			poi_id_vp_subway_station: travel_time_subzone,
 		},
 	),
 	EwPoi(  # Crookline Subway Station
