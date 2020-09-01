@@ -994,7 +994,7 @@ async def harvest(cmd):
 """
 async def salute(cmd):
 	response = 'https://ew.krakissi.net/img/nlacakanm_flag.gif'
-	await ewutils.ewutils.send_response(response, cmd)
+	await ewutils.send_response(response, cmd)
 
 """
 	Burn the NLACakaNM flag.

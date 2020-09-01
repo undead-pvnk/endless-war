@@ -294,6 +294,11 @@ def canAttack(cmd):
 	for token in cmd.tokens:
 		tokens_lower.append(token.lower())
 
+	code_count = 0
+	for code in tokens_lower:
+		if code.upper() in ewcfg.captcha_dict:
+			code_count += 1
+
 	if user_data.weapon >= 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
@@ -329,7 +334,9 @@ def canAttack(cmd):
 		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again.\nSecurity Code: **{captcha}**".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam, captcha = ewutils.text_to_regional_indicator(captcha))
 	elif weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
 		response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
-
+	elif code_count > 1:
+		response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
+	
 	elif user_data.weapon == -1 and user_data.life_state != ewcfg.life_state_shambler:
 		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
 	elif cmd.mentions_count <= 0:
@@ -453,6 +460,14 @@ def canCap(cmd):
 	tokens_lower = []
 	for token in cmd.tokens:
 		tokens_lower.append(token.lower())
+
+	code_count = 0
+	for code in tokens_lower:
+		if code.upper() in ewcfg.captcha_dict:
+			code_count += 1
+			
+	# print(code_count)
+
 	#alternate sidearm model that i'm saving just in case
 	#if user_data.sidearm >= 0:
 	#	sidearm_item = EwItem(id_item=user_data.sidearm)
@@ -487,6 +502,8 @@ def canCap(cmd):
 	elif sidearm != None and sidearm.cooldown + (float(sidearm_item.item_props.get("time_lastattack")) if sidearm_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
 		response = "Your {weapon_name} isn't ready for another spray yet!".format(weapon_name=sidearm.id_weapon)
 	elif sidearm != None and ewcfg.weapon_class_captcha in sidearm.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
+		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
+	elif code_count > 1:
 		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 	elif user_data.life_state != ewcfg.life_state_enlisted:
 		response = "Juveniles are too cowardly and/or centrist to be vandalizing anything."
@@ -2012,8 +2029,13 @@ async def unjam(cmd):
 				tokens_lower = []
 				for token in cmd.tokens[1:]:
 					tokens_lower.append(token.lower())
+				
+				code_count = 0
+				for code in tokens_lower:
+					if code.upper() in ewcfg.captcha_dict:
+						code_count += 1
 
-				if captcha in tokens_lower:
+				if captcha in tokens_lower and code_count == 1:
 					weapon_item.item_props["jammed"] = "False"
 					weapon_item.persist()
 					response = weapon.str_unjam.format(name_player = cmd.message.author.display_name)
