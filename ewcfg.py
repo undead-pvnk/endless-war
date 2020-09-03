@@ -2557,7 +2557,6 @@ vendor_basedhardware = "Based Hardware" # Hardware store in West Glocksbury
 vendor_lab = "Lab" #Slimecorp products
 vendor_atomicforest = "Atomic Forest Stockpile" # Storage of atomic forest
 vendor_downpourlaboratory = "Downpour Armament Vending Machines" # Store for shamblers to get stuff
-vendor_prehistoricpark = "Prehistoric Park" # Store to barter fossils
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -2818,9 +2817,6 @@ item_id_dye_rainbow = "rainbowdye"
 item_id_paint_copper = "copperpaint"
 item_id_paint_chrome = "chromepaint"
 item_id_paint_gold = "goldpaint"
-
-#fossil ids
-item_id_thrashersaurus_plates = "thrashersaurusplates"
 
 #weapon ids
 weapon_id_revolver = 'revolver'
