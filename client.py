@@ -500,6 +500,10 @@ cmd_map = {
 
 	#smelting
 	ewcfg.cmd_smelt: ewsmelting.smelt,
+	ewcfg.cmd_wcim: ewsmelting.find_recipes_by_item,
+	ewcfg.cmd_wcim_alt1: ewsmelting.find_recipes_by_item,
+	ewcfg.cmd_wcim_alt2: ewsmelting.find_recipes_by_item,
+	ewcfg.cmd_wcim_alt3: ewsmelting.find_recipes_by_item,
 
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
