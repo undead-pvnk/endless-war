@@ -23576,17 +23576,17 @@ for mutation in mutations:
 	mutations_map[mutation.id_mutation] = mutation
 	mutation_ids.add(mutation.id_mutation)
 
-quadrant_sloshed = "sloshed"
-quadrant_roseate = "roseate"
-quadrant_violacious = "violacious"
-quadrant_policitous = "policitous"
+quadrant_sloshed = "flushed"
+quadrant_roseate = "pale"
+quadrant_violacious = "caliginous"
+quadrant_policitous = "ashen"
 
 quadrant_ids = [
 	quadrant_sloshed,
 	quadrant_roseate,
 	quadrant_violacious,
 	quadrant_policitous
-	]
+]
 
 quadrants_map = {}
 
