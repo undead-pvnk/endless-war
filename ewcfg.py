@@ -1867,10 +1867,10 @@ emote_h_ = "<:h_:492067806465228811>"
 emote_blank = "<:blank:570060211327336472>"
 
 # Emotes for troll romance
-emote_hearts = ":hearts:"
-emote_diamonds = ":diamonds:"
-emote_spades = ":spades:"
-emote_clubs = ":clubs:"
+emote_maws = "<:q_maws:751059507425050705>"
+emote_hats = "<:q_hats:751054968496324689>"
+emote_slugs = "<:q_slugs:751054968496324628>"
+emote_shields = "<:q_shields:751054968576016394>"
 emote_broken_heart = ":broken_heart:"
 
 # Emotes for minesweeper
@@ -23594,7 +23594,8 @@ quadrants = [
 	EwQuadrantFlavor(
 		id_quadrant = quadrant_sloshed,
 
-		aliases = ["heart", "hearts", "soulvent", "soulution", "pinked", "pink", "hotpink"],
+		aliases = ["maw", "maws", "soulvent", "soulution", "pinked", "pink", "hotpink", "brightpink", 
+		"flushed", "heart", "hearts", "matesprit", "matespritship"], # borrowing these from the original quadrants so people dont get mad/confused by using the "wrong" name 
 
 		resp_add_onesided = "You have developed sloshed feelings for {}.",
 
@@ -23602,17 +23603,18 @@ quadrants = [
 
 		resp_view_onesided = "{} has a one-sided pink crush on {}.",
 
-		resp_view_onesided_self = "You have a one-sided red crush on {}.",
+		resp_view_onesided_self = "You have a one-sided pink crush on {}.",
 
-		resp_view_relationship = "{} is in a soulution with {}. " + emote_hearts,
+		resp_view_relationship = "{} is in a soulution with {}. " + emote_maws,
 
-		resp_view_relationship_self = "You are in a soulution with {}. " + emote_hearts
+		resp_view_relationship_self = "You are in a soulution with {}. " + emote_maws
 		),
 
 	EwQuadrantFlavor(
 		id_quadrant = quadrant_roseate,
 
-		aliases = ["hat", "hats", "bedenizen", "bedenaissance", "palepink","pastelpink"],
+		aliases = ["hat", "hats", "bedenizen", "bedenaissance", "denizen", "palepink", "pastelpink", 
+		"pale", "diamond", "diamonds", "moirail", "moiraillegiance"], # borrowing these from the original quadrants so people dont get mad/confused by using the "wrong" name 
 
 		resp_add_onesided = "You have developed roseate feelings for {}.",
 
@@ -23622,15 +23624,16 @@ quadrants = [
 
 		resp_view_onesided_self = "You have a one-sided roseate crush on {}.",
 
-		resp_view_relationship = "{} is in a bedenaissance with {}. " + emote_diamonds,
+		resp_view_relationship = "{} is in a bedenaissance with {}. " + emote_hats,
 
-		resp_view_relationship_self = "You are in a bedenaissance with {}. " + emote_diamonds
+		resp_view_relationship_self = "You are in a bedenaissance with {}. " + emote_hats
 		),
 
 	EwQuadrantFlavor(
 		id_quadrant = quadrant_violacious,
 
-		aliases = ["slug", "slugs", "amaranthagonist", "amaranthagony", "purple", "violent", "hotpurple"],
+		aliases = ["slug", "slugs", "amaranthagonist", "amaranthagony", "antagonist", "agony", "purple", "violent", "violet", "hotpurple", 
+		"caliginous", "spade", "spades", "kismesis", "kismesissitude"], # borrowing these from the original quadrants so people dont get mad/confused by using the "wrong" name 
 
 		resp_add_onesided = "You have developed violacious feelings for {}.",
 
@@ -23640,15 +23643,16 @@ quadrants = [
 
 		resp_view_onesided_self = "You have a one-sided violet crush on {}.",
 
-		resp_view_relationship = "{} is in a amaranthagony with {}. " + emote_spades,
+		resp_view_relationship = "{} is in a amaranthagony with {}. " + emote_slugs,
 
-		resp_view_relationship_self = "You are in a amaranthagony with {}. " + emote_spades
+		resp_view_relationship_self = "You are in a amaranthagony with {}. " + emote_slugs
 		),
 
 	EwQuadrantFlavor(
 		id_quadrant = quadrant_policitous,
 
-		aliases = ["shield", "shields", "arbitraitor", "arbitreason", "lightpurple", "pastelpurple"],
+		aliases = ["shield", "shields", "arbitraitor", "arbitreason", "police", "traitor", "treason", "lightpurple", "pastelpurple", 
+		"ashen", "club", "clubs", "auspistice", "auspisticism"], # borrowing these from the original quadrants so people dont get mad/confused by using the "wrong" name 
 
 		resp_add_onesided = "You have developed policitous feelings for {}.",
 
@@ -23658,9 +23662,9 @@ quadrants = [
 
 		resp_view_onesided_self = "You have a one-sided policitous crush on {}.",
 
-		resp_view_relationship = "{} is in an arbitreason with {}. " + emote_clubs,
+		resp_view_relationship = "{} is in an arbitreason with {}. " + emote_shields,
 
-		resp_view_relationship_self = "You are in an arbitreason with {}. " + emote_clubs
+		resp_view_relationship_self = "You are in an arbitreason with {}. " + emote_shields
 		)
 
 	]
