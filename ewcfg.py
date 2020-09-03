@@ -23586,7 +23586,7 @@ quadrant_ids = [
 	quadrant_roseate,
 	quadrant_violacious,
 	quadrant_policitous
-]
+	]
 
 quadrants_map = {}
 
