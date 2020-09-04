@@ -477,8 +477,8 @@ async def cast(cmd):
 				# Fisher is on the ferry, chance to get a bite increases from 1/10 to 1/9
 				fun -= 10
 			if fisher.inhabitant_id:
-				# Having your rod possessed increases your chance to get a bite by 33%
-				fun = int(fun * 0.66)
+				# Having your rod possessed increases your chance to get a bite by 50%
+				fun = int(fun // 2)
 			if high_value_bait_used:
 				fun = 5
 				
