@@ -255,6 +255,8 @@ def gen_data_text(
 			race_prefix = "monstrous "
 		elif user_data.race == ewcfg.races["avian"]:
 			race_prefix = "feathery "
+		elif user_data.race == ewcfg.races["insectoid"]:
+			race_prefix = "chitinny "
 		elif user_data.race == ewcfg.races["other"]:
 			race_prefix = "peculiar "
 		elif user_data.race != "":
@@ -493,6 +495,8 @@ async def data(cmd):
 			race_prefix = "monstrous "
 		elif user_data.race == ewcfg.races["avian"]:
 			race_prefix = "feathery "
+		elif user_data.race == ewcfg.races["insectoid"]:
+			race_prefix = "chitinny "
 		elif user_data.race == ewcfg.races["other"]:
 			race_prefix = "peculiar "
 		elif user_data.race != "":

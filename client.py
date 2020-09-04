@@ -789,6 +789,7 @@ cmd_map = {
 	ewcfg.cmd_flutter: ewrace.flutter,
 	ewcfg.cmd_request_petting: ewrace.request_petting,
 	ewcfg.cmd_rampage: ewrace.rampage,
+	ewcfg.cmd_entomize: ewrace.entomize,
 	ewcfg.cmd_confuse: ewrace.confuse,
 }
 

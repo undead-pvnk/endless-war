@@ -1372,6 +1372,7 @@ cmd_jiggle = cmd_prefix + 'jiggle'
 cmd_request_petting = cmd_prefix + 'requestpetting'
 cmd_rampage = cmd_prefix + 'rampage'
 cmd_flutter = cmd_prefix + 'flutter'
+cmd_entomize = cmd_prefix + 'entomize'
 cmd_confuse = cmd_prefix + 'confuse'
 
 #SLIMERNALIA
@@ -26502,6 +26503,7 @@ races = {
 	'monster': 'monster',
 	'critter': 'critter',
 	'avian': 'avian',
+	'insectoid': 'insectoid',
 	'other': 'other',
 }
 
