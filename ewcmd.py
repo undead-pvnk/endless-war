@@ -258,7 +258,7 @@ def gen_data_text(
 		elif user_data.race == ewcfg.races["other"]:
 			race_prefix = "peculiar "
 		elif user_data.race != "":
-			race_prefix = "mentally disabled "
+			race_prefix = "mouthbreathing "
 
 		if user_data.life_state == ewcfg.life_state_corpse:
 			response = "{} is a {}level {} {}deadboi.".format(display_name, race_prefix, user_data.slimelevel, race_suffix)
@@ -496,7 +496,7 @@ async def data(cmd):
 		elif user_data.race == ewcfg.races["other"]:
 			race_prefix = "peculiar "
 		elif user_data.race != "":
-			race_prefix = "mentally disabled "
+			race_prefix = "mouthbreathing "
 
 		if user_data.life_state == ewcfg.life_state_corpse:
 			response += "You are a {}level {} {}deadboi.".format(race_prefix, user_data.slimelevel, race_suffix)

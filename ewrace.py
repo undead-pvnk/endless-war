@@ -56,7 +56,7 @@ async def set_race(cmd):
 				elif desired_race == ewcfg.races["other"]:
 					response = 'ENDLESS WAR struggles to categorize you, and files you under "other". Your peculiar form can be used to **{}** those around you.'.format(ewcfg.cmd_confuse)
 				elif desired_race in forbidden_races:
-					response = 'In its infinite wisdom, ENDLESS WAR sees past your attempt at being funny and acknowledges you for what you _truly_ are: **a fucking retard**.'
+					response = 'In its infinite wisdom, ENDLESS WAR sees past your attempt at being funny and acknowledges you for what you _truly_ are: **a fucking idiot**.'
 
 				# only set the cooldown if the user is switching race, rather than setting it up for the first time
 				if user_data.race: 
