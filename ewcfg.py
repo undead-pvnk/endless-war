@@ -4751,9 +4751,9 @@ def wef_bat(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.sap_damage = 2
 
-	# Increased miss chance if attacking within less than three seconds after last attack
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
+	# Disabled - Increased miss chance if attacking within less than three seconds after last attack
+	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	#ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
 
 	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
 
@@ -4780,7 +4780,7 @@ def wef_bat(ctn = None):
 # weapon effect function for "brassknuckles"
 def wef_brassknuckles(ctn = None):
 	last_attack = (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else 0)
-	successful_timing = 2.1 > (ctn.time_now - last_attack) > 1.9
+	successful_timing = 2.6 > (ctn.time_now - last_attack) > 1.4
 	user_mutations = ctn.user_data.get_mutations()
 	ctn.strikes = 0
 
@@ -4837,21 +4837,20 @@ def wef_katana(ctn = None):
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.3)
 	ctn.sap_damage = 0
 
-	# Decreased damage if attacking within less than four seconds after last attack
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	# Disabled - Decreased damage if attacking within less than four seconds after last attack
+	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 
-	damage_min = ctn.slimes_damage / 10
+	#damage_min = ctn.slimes_damage / 10
 
+	#if time_lastattack > 0:
+	#	ctn.slimes_damage = damage_min * ((min(time_lastattack, 5) / 5)**0.5  * 10)
+	#else:
+	#	ctn.slimes_damage = damage_min
 
-	if time_lastattack > 0:
-		ctn.slimes_damage = damage_min * ((min(time_lastattack, 5) / 5)**0.5  * 10)
-	else:
-		ctn.slimes_damage = damage_min
+	#ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
 
-	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
-
-	if 5.2 > time_lastattack > 4.8:
-		ctn.sap_ignored = 10
+	#if 5.2 > time_lastattack > 4.8:
+	#	ctn.sap_ignored = 10
 
 
 	weapons_held = ewitem.inventory(
@@ -4910,8 +4909,8 @@ def wef_nunchucks(ctn = None):
 	ctn.slimes_damage = 0
 	user_mutations = ctn.user_data.get_mutations()
 
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 100 * 55
+	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	#ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 100 * 55
 
 	for count in range(4):
 		if (random.randrange(100) + 1) > (25 + int(100 * ctn.miss_mod)):
@@ -4949,15 +4948,15 @@ def wef_scythe(ctn = None):
 	ctn.slimes_damage = ctn.slimes_damage * max(1, min(target_kills, 10))
 	ctn.sap_ignored = 3 * min(target_kills, 10)
 
-	# Decreased damage if attacking within less than three seconds after last attack
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	damage_min = ctn.slimes_damage / 10
-	if time_lastattack > 0:
-		ctn.slimes_damage = damage_min * ((min(time_lastattack, 3)/3)**0.5 * 10)
-	else:
-		ctn.slimes_damage = damage_min
+	# Disabled - Decreased damage if attacking within less than three seconds after last attack
+	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	#damage_min = ctn.slimes_damage / 10
+	#if time_lastattack > 0:
+	#	ctn.slimes_damage = damage_min * ((min(time_lastattack, 3)/3)**0.5 * 10)
+	#else:
+	#	ctn.slimes_damage = damage_min
 
-	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
+	#ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
 
 	aim = (random.randrange(10) + 1)
 
@@ -4986,14 +4985,14 @@ def wef_yoyo(ctn = None):
 	else:
 		ctn.weapon_item.item_props["consecutive_hits"] = 0
 
-	damage_min = ctn.slimes_damage / 10
+	#damage_min = ctn.slimes_damage / 10
 
-	if time_lastattack > 0:
-		ctn.slimes_damage = damage_min * ((min(time_lastattack, 2)/2) ** 0.5 * 10)
-	else:
-		ctn.slimes_damage = damage_min
+	#if time_lastattack > 0:
+	#	ctn.slimes_damage = damage_min * ((min(time_lastattack, 2)/2) ** 0.5 * 10)
+	#else:
+	#	ctn.slimes_damage = damage_min
 
-	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
+	#ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
 
 	if time_lastattack >= 2:
 		ctn.sap_damage = 1
@@ -5156,9 +5155,9 @@ def wef_bass(ctn = None):
 	ctn.sap_damage = 1
 	ctn.sap_ignored = 5
 
-	# Increased miss chance if attacking within less than three seconds after last attack
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
+	# Disabled - Increased miss chance if attacking within less than three seconds after last attack
+	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	#ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
 
 	ctn.slimes_damage = int(ctn.slimes_damage * (0.5 + random.randrange(200) / 100))
 
@@ -5198,8 +5197,8 @@ def wef_bow(ctn = None):
 	ctn.sap_damage = 1
 	ctn.sap_ignored = 8
 
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
+	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	#ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
 
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -5226,8 +5225,10 @@ def wef_dclaw(ctn = None):
 
 	ctn.sap_damage = 5
 	ctn.sap_ignored = 10
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (((5 - min(time_lastattack, 5)) / 5) ** 2) / 13 * 5
+	
+	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	#ctn.miss_mod += (((5 - min(time_lastattack, 5)) / 5) ** 2) / 13 * 5
+	
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.25:
@@ -5388,7 +5389,7 @@ weapon_list = [
 		fn_effect = wef_revolver,
 		clip_size = 6,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo, weapon_class_captcha],
+		classes = [weapon_class_ammo],
 		stat = stat_revolver_kills,
 		sap_cost = 1,
 		captcha_length = 3
@@ -5422,7 +5423,7 @@ weapon_list = [
 		clip_size = 12,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo, weapon_class_captcha],
+		classes = [weapon_class_ammo],
 		stat = stat_dual_pistols_kills,
 		sap_cost = 1,
 		captcha_length = 1
@@ -5456,7 +5457,7 @@ weapon_list = [
 		clip_size = 2,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo, weapon_class_captcha],
+		classes = [weapon_class_ammo],
 		stat = stat_shotgun_kills,
 		sap_cost = 4,
 		captcha_length = 5
@@ -5489,7 +5490,7 @@ weapon_list = [
 		clip_size = 4,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo, weapon_class_captcha],
+		classes = [weapon_class_ammo],
 		stat = stat_rifle_kills,
 		sap_cost = 3,
 		captcha_length = 4
@@ -5585,7 +5586,6 @@ weapon_list = [
 		fn_effect = wef_bat,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes= [weapon_class_captcha],
 		stat = stat_bat_kills,
 		sap_cost = 2,
 		captcha_length = 2
@@ -5615,7 +5615,6 @@ weapon_list = [
 		fn_effect = wef_brassknuckles,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes= [weapon_class_captcha],
 		stat = stat_brassknuckles_kills,
 		sap_cost = 1,
 		captcha_length = 2
@@ -5681,7 +5680,7 @@ weapon_list = [
 		clip_size = 1,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo, weapon_class_captcha, weapon_class_heavy],
+		classes = [weapon_class_ammo, weapon_class_heavy],
 		stat = stat_broadsword_kills,
 		sap_cost = 12,
 		captcha_length = 4
@@ -5713,7 +5712,6 @@ weapon_list = [
 		fn_effect = wef_nunchucks,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes= [weapon_class_captcha],
 		stat = stat_nunchucks_kills,
 		sap_cost = 4,
 		captcha_length = 3
@@ -5741,7 +5739,6 @@ weapon_list = [
 		fn_effect = wef_scythe,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes= [weapon_class_captcha],
 		stat = stat_scythe_kills,
 		sap_cost = 6,
 		captcha_length = 4
@@ -5771,7 +5768,6 @@ weapon_list = [
 		fn_effect = wef_yoyo,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes= [weapon_class_captcha],
 		stat = stat_yoyo_kills,
 		sap_cost = 1,
 		captcha_length = 2
@@ -5803,7 +5799,7 @@ weapon_list = [
 		fn_effect = wef_knives,
 		price = 500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_captcha],
+		classes = [weapon_class_thrown],
 		stat = stat_knives_kills,
 		sap_cost = 1,
 		captcha_length = 3
@@ -5836,7 +5832,7 @@ weapon_list = [
 		fn_effect = wef_molotov,
 		price = 500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_burning, weapon_class_captcha],
+		classes = [weapon_class_thrown, weapon_class_burning],
 		stat = stat_molotov_kills,
 		sap_cost = 1,
 		captcha_length = 4
@@ -5865,7 +5861,7 @@ weapon_list = [
 		fn_effect = wef_grenade,
 		price = 500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_exploding, weapon_class_captcha],
+		classes = [weapon_class_thrown, weapon_class_exploding],
 		stat = stat_grenade_kills,
 		sap_cost = 1,
 		captcha_length = 3
@@ -6010,7 +6006,7 @@ weapon_list = [
 		str_description = "It's an umbrella, both stylish and deadly.",
 		price = 100000,
 		vendors = [vendor_bazaar],
-		classes = [weapon_class_captcha, weapon_class_defensive],
+		classes = [weapon_class_defensive],
 		stat = stat_umbrella_kills,
 		sap_cost = 1,
 		captcha_length = 4
