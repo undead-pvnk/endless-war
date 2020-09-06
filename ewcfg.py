@@ -31,7 +31,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.4b - LOL"
+version = "v3.5 - Ghost Fishing"
 
 
 dir_msgqueue = 'msgqueue'
@@ -146,6 +146,7 @@ poi_id_greencakecafe = "greencakecafe"
 poi_id_sodafountain = "sodafountain"
 poi_id_bodega = "bodega"
 poi_id_wafflehouse = "wafflehouse"
+poi_id_blackpond = "blackpond"
 poi_id_basedhardware = "basedhardware"
 
 # transports
@@ -739,6 +740,7 @@ channel_apt_maimrdige ="maimridge-apartments"
 channel_slimesendcliffs = "slimes-end-cliffs"
 channel_bodega = "bodega"
 channel_wafflehouse = "wafflehouse"
+channel_blackpond = "blackpond"
 channel_basedhardware = "based-hardware"
 channel_atomicforest = "atomic-forest"
 channel_downpourlaboratory = "downpour-laboratory"
@@ -917,10 +919,11 @@ cmd_suicide = cmd_prefix + 'suicide'
 cmd_suicide_alt1 = cmd_prefix + 'seppuku'
 cmd_suicide_alt2 = cmd_prefix + 'sudoku'
 cmd_haunt = cmd_prefix + 'haunt'
-cmd_manifest = cmd_prefix + 'manifest'
 cmd_inhabit = cmd_prefix + 'inhabit'
 cmd_letgo = cmd_prefix + 'letgo'
 cmd_possess_weapon = cmd_prefix + 'possessweapon'
+cmd_possess_fishing_rod = cmd_prefix + 'possessfishingrod'
+cmd_possess_fishing_rod_alt1 = cmd_prefix + 'possessrod'
 cmd_crystalize_negapoudrin = cmd_prefix + 'crystalizenegapoudrin'
 cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
@@ -1373,6 +1376,7 @@ cmd_jiggle = cmd_prefix + 'jiggle'
 cmd_request_petting = cmd_prefix + 'requestpetting'
 cmd_rampage = cmd_prefix + 'rampage'
 cmd_flutter = cmd_prefix + 'flutter'
+cmd_entomize = cmd_prefix + 'entomize'
 cmd_confuse = cmd_prefix + 'confuse'
 
 #SLIMERNALIA
@@ -1404,16 +1408,15 @@ slimes_onrevive = 20
 slimes_onrevive_everyone = 20
 slimes_toenlist = 0
 slimes_perspar_base = 0
-slimes_hauntratio = 400
-slimes_hauntmax = 20000
+slimes_hauntratio = 1000
 slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 1
 slimes_permill = 50000
 slimes_invein = 4000
 slimes_pertile = 50
-slimes_tomanifest = -100000
 slimes_to_possess_weapon = -100000
+slimes_to_possess_fishing_rod = -10000
 slimes_to_crystalize_negapoudrin = -1000000
 slimes_cliffdrop = 200000
 slimes_item_drop = 10000
@@ -1738,8 +1741,10 @@ cd_new_player = 3 * 24 * 60 * 60 # 72 Hours, 3 days
 cd_autocannibalize = 60 * 60 # can only eat yourself once per hour
 cd_drop_bone = 5 * 60
 cd_change_race = 24 * 60 * 60 # can only change your race once per day
-
 cd_gvs_searchforbrainz = 300
+
+# in relation to time of death
+time_to_manifest = 24 * 60 * 60 # a day
 
 # PvP timer pushouts
 time_pvp_kill = 30 * 60
@@ -5259,7 +5264,7 @@ def wef_staff(ctn = None):
 			lambda _: weather_map.get(market_data.weather) == weather_foggy,
 			lambda _: (market_data.day % 31 == 15 and market_data.clock >= 20) or (market_data.day % 31 == 16 and market_data.clock <= 6), # moonless night
 			lambda ctn: not ctn.user_data.has_soul,
-			lambda ctn: ctn.user_data.get_weapon_possession(),
+			lambda ctn: ctn.user_data.get_possession('weapon'),
 			lambda ctn: ctn.user_data.poi == poi_id_thevoid,
 			lambda ctn: ctn.shootee_data.slimes > ctn.user_data.slimes,
 			lambda ctn: (ctn.user_data.swear_jar >= 500) or (ctn.shootee_data.swear_jar == 0),
@@ -9379,6 +9384,7 @@ fish_catchtime_day = "day"
 
 fish_slime_freshwater = "freshwater"
 fish_slime_saltwater = "saltwater"
+fish_slime_void = "void"
 
 fish_size_miniscule = "miniscule"
 fish_size_small = "small"
@@ -10064,6 +10070,123 @@ fish_list  =  [
 		catch_time = None,
 		catch_weather = fish_catchtime_rain,
 		str_desc = "Rejoice, horndogs.",
+	),
+	EwFish(
+		id_fish = "negaslimesquid",
+		str_name = "Negaslime Squid",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's just a black squid, but spooky.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "voidfish",
+		str_name = "Void Fish",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Translucent and quiet, it weighs less than nothing.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "corpsefish",
+		str_name = "Corpse Fish",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's just laying there.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "bonedoctopus",
+		str_name = "Boned Octopus",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Its tentacles crack while wriggling.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "kaleidoscuttle",
+		str_name = "Kaleidoscuttle",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Whoa, dude.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "deathfish",
+		str_name = "Death Fish",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It is the beast it worships.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "artifish",
+		str_name = "Artifish",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's chromatically abhorrent.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "ghostfish",
+		str_name = "Ghost Fish",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "You remind yourself not to dip it in coleslaw.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "boxcrab",
+		str_name = "Box Crab",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Hiding in its own little fort.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "bluejelly",
+		str_name = "Blue Jelly",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Its tentacles look like a mop head.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "lichfish",
+		str_name = "Lich Fish",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "What you didn't reel is its phylactery.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "logfish",
+		str_name = "Logfish",
+		rarity = fish_rarity_promo,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "WOODEN AND HORRIFYING.",
+		slime = fish_slime_void
+	),
+	EwFish(
+		id_fish = "highmonkfish",
+		str_name = "High Monkfish",
+		rarity = fish_rarity_promo,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "First of its creed.",
+		slime = fish_slime_void
 	),
 ]
 
@@ -12567,7 +12690,7 @@ poi_list = [
 			"v",
 		],
 		str_name = "the Void",
-		str_desc = "A large open space, pitch black aside from the many old-style street lights illuminating several paths, whose intersection is marked by street sign, standing tall next to a memorial metal bench. At the end of each path is a well lit staircase leading underground, though one of them seems to be barred to prevent passage. One shorter path from the sign leads to the Waffle House, on the back of which is a ladder leading to its roof. The total silence of this place makes you very aware of the sounds your own body makes as you walk around, and the overbright lamps strain your vision even as total darkness envelops you.\n\nThis area contains the Waffle House.",
+		str_desc = "A large open space, pitch black aside from the many old-style street lights illuminating several paths, whose intersection is marked by street sign, standing tall next to a metal bench. At the end of each path is a well lit staircase leading underground. One shorter path from the sign leads to the Waffle House, on the back of which is a ladder leading to its roof. The total silence of this place makes you very aware of the sounds your own body makes as you walk around, and the overbright lamps strain your vision even as total darkness envelops you.\n\nThis area contains the Waffle House, and the Black Pond.",
 		topic = "A peaceful place, despite the sense of liminality. Remember to **!look** around, if you're feeling lost.",
 		wikipage = wiki_baseurl + "The_Void",
 		channel = "the-void",
@@ -12576,6 +12699,8 @@ poi_list = [
 		pvp = True,
 		neighbors = {
 			poi_id_wafflehouse : travel_time_subzone,
+			poi_id_blackpond : travel_time_subzone,
+			poi_id_thesewers : travel_time_district,
 		},
 	),
 	EwPoi( # the-sewers
@@ -12595,12 +12720,16 @@ poi_list = [
 		topic = "You have been gunned down, and your body has been swept down the drain into the sewers. Here you can commune with your fellow cadavers through the Neural Slime network. To revive yourself you must feed your carcass into ENDLESS WAR's churning maw and be reborn into Slime, continuing the war forever more.",
 		wikipage = wiki_baseurl + "The_Sewers",
 		channel = channel_sewers,
-		life_states = [
-			life_state_corpse
-		],
+		# to be moved to future ghost HQ if implemented
+		# life_states = [
+		# 	life_state_corpse
+		# ],
 		role = "Sewers",
 		community_chest = chest_id_thesewers,
-		is_gangbase = True
+		is_gangbase = True,
+		neighbors = {
+			poi_id_thevoid : travel_time_district,
+		},
 	),
 	# Streets start here
 	# EwPoi(
@@ -17774,6 +17903,27 @@ poi_list = [
 		vendors = [
 			vendor_wafflehouse,
 		],
+		is_subzone = True,
+		neighbors = {
+			poi_id_thevoid : travel_time_subzone,
+		},
+	),
+	EwPoi(  # the possessed-only pier in the void
+		id_poi = poi_id_blackpond,
+		alias = [
+			"bp",
+			"black pond",
+			"pond",
+		],
+		str_name = "the Black Pond",
+		str_desc = "A long dirt path from the passage to the Sewers leads here, to a pond not much bigger than a tennis field, full of an oily black liquid. There's a narrow pier stretching all the way to the center of the pit, where you can find a plaque warning about the pond's waters, urging visitors not to stay too long.\nTurns out the old adage, in this case, is quite literal: gaze long enough into this abyss and it will most definitely gaze back into you. Its irisless eyes and sharp smiles are rather charming, I have to admit.\n\nExits back into the Void.",
+		channel = channel_blackpond,
+        wikipage = wiki_baseurl + "The_Void#The_Black_Pond",
+		role = "Black Pond",
+		mother_districts = [poi_id_thevoid],
+		pvp = True,
+		is_pier = True,
+		pier_type = fish_slime_void,
 		is_subzone = True,
 		neighbors = {
 			poi_id_thevoid : travel_time_subzone,
@@ -24578,7 +24728,7 @@ help_responses = {
 	"food":"Food lowers your hunger by a set amount, and can be ordered from various **restaurants** within the city. Generally speaking, the more expensive food is, the more hunger it sates. You can **'!order [food name] togo'** to order it togo, otherwise you will eat it on the spot, and you can **'!use [food name]'** to use it once its in your inventory. You can only carry a certain amount of food depending on your level. Regular food items expire after 2 in-game days, or 12 hours in real life, while crops expire after 8 in-game days (48 hours), and food items gained from milling expire after a whole 2 weeks in real life. Three popular restauraunts close by various gang bases include **THE SPEAKEASY** (juveniles), **THE SMOKER'S COUGH** (rowdys), and **RED MOBSTER SEAFOOD** (killers), though there are other places to order food as well, such as the **Food Court**.",
 	"capturing":"Capping is a battle for influence over the 33 districts of NLACakaNM, and one of your main goals as a gangster. Capped territories award your kingpin slime, and give your teammates benefits while visiting. Start by visiting Based Hardware and equipping one of the paint tools sold there. Once you have that, you can **!spray <captcha>** while in a capturable district's streets to gain influence for your gang. Spraying graffiti in districts will increase influence for you, or decrease it for the enemy if they have influence there. Think of dealing influence to a district like dealing damage to a Juvie's soft squishy body, with critical hits, misses, and backfires included. As you go, you can check your **!progress** to see how much influence you still need. It can be more or less depending on the territory class, running from rank C to S. \n\nA few more things to note:\n>**!progress** will tell you the minimum and limit for territory capture. However, you can capture above that limit, as high as you want. The catch is that anything captured over this limit will decay faster.\n>Decapping does 0.8x the influence of capping, even though the cost remains the same.\n>Don't attack enemy territory when it is surrounded by enemy territory/outskirts. Small little bitches like yourself are prone to fucking up severely under that much pressure.\n>The nightlife starts in the late night. Fewer cops are around to erase your handiwork, so if you cap then you will gain a 33% capping bonus.\n>You can't kill for shit with paint tools equipped. Luckily, you can **!sidearm** a weapon or tool and quickly switch between your two equip slots using **switch** or **!s**.",
 	"transportation":"There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board pinktocv'. **'!disembark'** can be used to exit a train. **The Ferry** (which moves between Vagrant's Corner and Wreckington) and **The Blimp** (which moves between Dreadford and Assault Flats Beach) can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do. Refer to the diagram below on understanding which districts and streets have subway stations in them.\nhttps://cdn.discordapp.com/attachments/431237299137675297/734152135687798874/streets13.png",
-	"death": "Death is an integral mechanic to Endless War. Even the most experienced players will face the sewers every now and again. If you find yourself in such a situation, use **'!revive'** in the sewers channel, and you will return to the land of the living as a juvenile at the base of ENDLESS WAR. Dying will drop some of your unadorned cosmetics and food, and all of your unequiped weapons, but your currently adorned cosmetics and equiped weapon will remain in your inventory (Gangsters will lose half of their food/unadorned cosmetics, while Juveniles lose only a quarter). Alternatively, you can hold off on reviving and remain a **ghost**, which has its own gameplay mechanics associated with it. To learn more, use '!help ghosts' at one of the colleges or with a game guide.",
+	"death": "Death is an integral mechanic to Endless War. Even the most experienced players will face the sewers every now and again. If you find yourself in such a situation, use **'!revive'** in the sewers channel, and you will return to the land of the living as a juvenile at the base of ENDLESS WAR. Dying will drop some of your unadorned cosmetics and food, and all of your unequiped weapons, but your currently adorned cosmetics and equiped weapon will remain in your inventory (Gangsters will lose half of their food/unadorned cosmetics, while Juveniles lose only a quarter). Alternatively, you can hold off on reviving and remain a **ghost**, which has its own gameplay mechanics associated with it. To learn more, use '!help ghosts' at one of the colleges or with a game guide, or see the wiki page here: https://rfck.miraheze.org/wiki/Ghosts",
 	# Introductions, part 2
 	"dojo":"**The Dojo** is where you acquire weapons to fight and kill other players with. To purchase a weapon, use **'!order [weapon]'**. There are many weapons you can choose from (you can view all of them with !menu), and they all perform differently from one another. Once you've purchased a weapon, you can use **'!equip [weapon]'** to equip it, provided that you're enlisted in a gang beforehand. You can also name your weapon by spending a poudrin on it with **'!annoint [name]'**. Furthermore, annointing will increase your mastery over that weapon, but it's much more efficient to do so through **sparring**. To learn more about the sparring system and weapon ranks, use '!help sparring'.",
 	"subzones":"**Subzones** are areas locations within the districts of the city where gang violence off-limits, with the only exception being the subway stations, the trains, and the base of ENDLESS WAR. If you don't type anything in a sub-zone for 60 minutes, you'll get kicked out for loitering, so be sure to check up often if you don't wanna get booted out into the streets.",
@@ -24596,7 +24746,7 @@ help_responses = {
 	"mymutations":"You read some research notes about your current mutations...", # will print out a list of mutations with their specific mechanics
 	"smelting": "Smelting is a way for you to craft certain items from certain ingredients. To smelt, you use **'!smelt [item name]'**, which will either smelt you the item, or tell which items you need to smelt the item. Popular items gained from smelting are **Cosmetics**, as well as the coveted **Pickaxe** and **Super Fishing Rod**. If you're stuck, you can look up the crafting recipes for any item with **!whatcanimake [itemname]**.",
 	"sparring": "**Sparring** can be done between two players using **'!spar [player]'**. Sparring, provided that both players spar with the same weapon type and are not at full hunger, will increase both of your mastery **LEVEL**, which is a hidden value, by one. The publicly displayed value, mastery **RANK** (which is just your mastery level minus 4), is more important. It should be noted that the damage you deal with your weapon is increased even if you haven't reached rank 1 yet. However, once you do reach at least mastery rank 2 (Again, this would be level 6), when you next revive, you will now **permanently** be at level 6 for that weapon type until you annoint or spar again. Essentially, this means you will always start back at rank 2. Once you reach **rank 6**, you can no longer annoint your weapon rank any higher, and must instead kill other players/enemies (that are higher in both slime and level than you) to do so. Reaching rank 6 also stops you from increasing your own rank through sparring, unless you are sparring with someone who has a higher weapon rank than you. You can only spar up to someone else's mastery rank, minus 1 (example: Sparring with a rank 15 master of the katana would, at most, allow you to get to rank 14). Sparring has a one minute cooldown and raises your hunger by about 5%. Once you reach rank 8, you may also **'!marry'** your weapon, resulting in a matrimonial ceremony that increases your rank by two.",
-	"ghosts": "Ghosts can perform an action known as **haunting**. Every use of **'!haunt'** takes up the total amount of slime from the haunted player, divided by 400, at a max of 20,000 per !haunt. You may also add a customized message by doing '!haunt [@player] [message]'. It can be done face-to-face like with !kill, or done remotely at the sewers. As a ghost, you can only move within a small radius around the area at which you died, and can only leave the sewers after gaining at least 100,000 negative slime with **'!manifest'**. Furthermore, if a player has consumed **coleslaw**, they can **'!bust'** ghosts, which sends them back to the sewers. **Negative Slime** is gained through haunting, and allows ghosts to summon **negaslimoids** in the city, with the use of **'!summon [name]'**. Negaslimeoids haunt all players within a district, and also decay capture progress. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a Negaslimeoid has entered into.",
+	"ghosts": "Ghost gameplay revolves around the acquisition of antislime, through haunting and possession. Every use of **'!haunt'** away a small portion of slime from the haunted player, and grants it to the ghost as antislime. The amount of slime taken starts at 1/1000th and varies depending on a number of conditions, and you may also add a customized message by doing '!haunt [@player] [message]'. It can be done face-to-face like with !kill, or done remotely with decreased potency. As a ghost, you can only leave the sewers after being dead for at least a day. Furthermore, if a player has consumed **coleslaw**, they can **'!bust'** ghosts, which sends them back to the sewers. After amassing sufficient **Negative Slime** ghosts can summon **negaslimoids** in the city, with the use of **'!summon [name]'**. Negaslimeoids haunt all players within a district, and also decay capture progress. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a Negaslimeoid has entered into. Ghosts can also **!inhabit** living players to move alongside them. If a ghost has sufficient antislime, they may also **!possessweapon** or **!possessfishingrod** to grant bonuses to the player they're inhabiting, with a potential reward in antislime if conditions are fulfilled. For more detailed information on ghost mechanics, see https://rfck.miraheze.org/wiki/Ghosts",
 	# Additional gameplay mechanics, part 2
 	"slimeoids":"**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park. Slimeoids can also be used to fight off **negaslimeoids** that have been summoned by ghosts, though be warned, as this is a fight to the death! If your slimeoid dies, it's **HEART** is dropped, which can be sown in the ground like a poudrin, or taken to the labs to revive your slimeoid with **'!restoreslimeoid'**. In regards to your slimeoid's stats, a slimeoid's **'Moxie'** represents its physical attack, **'Chutzpah'** its special attack, and **'Grit'** its defense. Additionally, the color you dye your slimeoid with **'!saturateslimeoid'** also plays into combat. Your slimeoid gets attack bonuses against slimeoids that have its split complementary hue and resist slimeoids with its analgous hues. For more information, see the diagrams linked below (credits to Connor#3355). There are also various commands you can perform on your slimeoid, such as **'!observeslimeoid'**, **'!petslimeoid'**, **'!walkslimeoid'**, and **'!playfetch'**. To humanely and ethically euthanize your slimeoid, use **'!dissolveslimeoid'** at the laboratory. To store and release your slimeoid in a bottle (Warning: This bottle is dropped upon death!!), use **'!bottleslimeoid'** and **'!unbottleslimeoid [slimeoid]'**, respectively.\n<https://cdn.discordapp.com/attachments/492088204053184533/586310921274523648/SLIMEOID-HUE.png>\n<https://cdn.discordapp.com/attachments/177891183173959680/586662087653064706/SLIMEOID-HUE.gif>\n<https://cdn.discordapp.com/attachments/177891183173959680/586662095848996894/SLIMEOID_HUE_NOTE.png>",
 	"cosmetics":"**Cosmetics** are items that the player may wear. To equip and un-equip a cosmetic, use **'!adorn [cosmetic]'** and **'!dedorn [cosmetic]'**. If you have four slime poudrins and a cosmetic material, you can use **'!smelt'** to create a new one from scratch. These cosmetic materials can be obtained from using **'!crush'** on vegetables gained by farming. Cosmetics can either be of 'plebian' or 'patrician' quality, indicating their rarity. If you win an art contest held for the community, a Kingpin will make a **Princep** cosmetic for you, which is custom tailored, and will not leave your inventory upon death. Cosmetics can be dyed with **!dyecosmetic [cosmetic name/id] [dye name/id]**. To check which cosmetics you have adorned, you can use !fashion.",
@@ -26360,6 +26510,7 @@ races = {
 	'monster': 'monster',
 	'critter': 'critter',
 	'avian': 'avian',
+	'insectoid': 'insectoid',
 	'other': 'other',
 }
 
