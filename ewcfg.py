@@ -5189,6 +5189,7 @@ def wef_umbrella(ctn = None):
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+
 # weapon effect function for "minecraft bow"
 def wef_bow(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
@@ -5212,7 +5213,6 @@ def wef_bow(ctn = None):
 		ctn.slimes_damage = int(dmg * 3)
 
 # weapon effect function for "Dragon Claw"
-
 def wef_dclaw(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()

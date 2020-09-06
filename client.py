@@ -1398,13 +1398,13 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or len(message.author.roles) < 4 or (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or len(message.author.roles) < 4:# or (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
 				direct message (server == None)
 				user is new/has no roles (len(roles) < 4)
-				user is swearing
+				user is swearing - temp disabled
 		"""
 
 		#Ignore users with weird characters in their name
@@ -1451,6 +1451,8 @@ async def on_message(message):
 		"""
 			Punish the user for swearing.
 		"""
+
+		""" 
 		if (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
 			# print(content_tolower_list)
 			swear_multiplier = 0
@@ -1504,8 +1506,6 @@ async def on_message(message):
 					
 					response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
 					await ewutils.send_message(client, message.channel, response)
-				#else:
-					#print("swear threshold not met")
 
 				market_data.persist()
 				usermodel.persist()
@@ -1513,7 +1513,8 @@ async def on_message(message):
 			# if the message wasn't a command, we can stop here
 			if not message.content.startswith(ewcfg.cmd_prefix):
 				return
-
+		"""
+		
 		"""
 			Handle direct messages.
 		"""
