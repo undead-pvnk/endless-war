@@ -1876,10 +1876,10 @@ emote_h_ = "<:h_:492067806465228811>"
 emote_blank = "<:blank:570060211327336472>"
 
 # Emotes for troll romance
-emote_maws = "<:q_maws:751059507425050705>"
-emote_hats = "<:q_hats:751054968496324689>"
-emote_slugs = "<:q_slugs:751054968496324628>"
-emote_shields = "<:q_shields:751054968576016394>"
+emote_maws = "<:q_maws:752228834027241554>"
+emote_hats = "<:q_hats:752228833968783441>"
+emote_slugs = "<:q_slugs:752228834333556756>"
+emote_shields = "<:q_shields:752228833897218159>"
 emote_broken_heart = ":broken_heart:"
 
 # Emotes for minesweeper
