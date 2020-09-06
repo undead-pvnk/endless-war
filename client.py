@@ -146,18 +146,18 @@ cmd_map = {
 	ewcfg.cmd_mutations_alt_1: ewcmd.mutations,
 
 	# sap system
-	ewcfg.cmd_view_sap: ewcmd.view_sap,
-	ewcfg.cmd_harden_sap: ewwep.harden_sap,
-	ewcfg.cmd_harden_sap_alt1: ewwep.harden_sap,
-	ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
+	#ewcfg.cmd_view_sap: ewcmd.view_sap,
+	#ewcfg.cmd_harden_sap: ewwep.harden_sap,
+	#ewcfg.cmd_harden_sap_alt1: ewwep.harden_sap,
+	#ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
 
 	
 	# combat sap commands
-	ewcfg.cmd_taunt: ewwep.taunt,
-	ewcfg.cmd_aim: ewwep.aim,
-	ewcfg.cmd_dodge: ewwep.dodge,
-	ewcfg.cmd_dodge_alt1: ewwep.dodge,
-	ewcfg.cmd_dodge_alt2: ewwep.dodge,
+	#ewcfg.cmd_taunt: ewwep.taunt,
+	#ewcfg.cmd_aim: ewwep.aim,
+	#ewcfg.cmd_dodge: ewwep.dodge,
+	#ewcfg.cmd_dodge_alt1: ewwep.dodge,
+	#ewcfg.cmd_dodge_alt2: ewwep.dodge,
 
 	# Check how hungry you are.
 	ewcfg.cmd_hunger: ewcmd.hunger,
@@ -975,7 +975,8 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
-		asyncio.ensure_future(ewutils.sap_tick_loop(id_server = server.id))
+		# sap is disabled
+		#asyncio.ensure_future(ewutils.sap_tick_loop(id_server = server.id))
 		# SWILLDERMUK
 		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))

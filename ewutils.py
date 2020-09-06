@@ -1676,8 +1676,13 @@ def explode(damage = 0, district_data = None, market_data = None):
 		)
 
 		# apply sap armor
-		sap_armor = ewwep.get_sap_armor(shootee_data = user_data, sap_ignored = 0)
-		slimes_damage_target *= sap_armor
+		#sap_armor = ewwep.get_sap_armor(shootee_data = user_data, sap_ignored = 0)
+		#slimes_damage_target *= sap_armor
+		#slimes_damage_target = int(max(0, slimes_damage_target))
+
+		# apply fashion armor
+		fashion_armor = ewwep.get_fashion_armor(shootee_data = user_data)
+		slimes_damage_target *= fashion_armor
 		slimes_damage_target = int(max(0, slimes_damage_target))
 
 		player_data = EwPlayer(id_user = user_data.id_user)
@@ -1719,9 +1724,9 @@ def explode(damage = 0, district_data = None, market_data = None):
 		slimes_damage_target = damage
 			
 		# apply sap armor
-		sap_armor = ewwep.get_sap_armor(shootee_data = enemy_data, sap_ignored = 0)
-		slimes_damage_target *= sap_armor
-		slimes_damage_target = int(max(0, slimes_damage_target))
+		#sap_armor = ewwep.get_sap_armor(shootee_data = enemy_data, sap_ignored = 0)
+		#slimes_damage_target *= sap_armor
+		#slimes_damage_target = int(max(0, slimes_damage_target))
 
 		slimes_damage = slimes_damage_target
 		if enemy_data.slimes < slimes_damage + enemy_data.bleed_storage:

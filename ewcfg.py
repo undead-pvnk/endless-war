@@ -4615,7 +4615,7 @@ def wef_revolver(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 2
+	#ctn.sap_damage = 2
 
 	if aim <= (1 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -4632,7 +4632,7 @@ def wef_revolver(ctn = None):
 def wef_dualpistols(ctn = None):
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 2
+	#ctn.sap_damage = 2
 
 	if aim <= (4 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -4649,7 +4649,7 @@ def wef_dualpistols(ctn = None):
 def wef_shotgun(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.65)
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
-	ctn.sap_damage = 5
+	#ctn.sap_damage = 5
 
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
@@ -4664,21 +4664,21 @@ def wef_shotgun(ctn = None):
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
-		ctn.sap_damage *= 2
+		#ctn.sap_damage *= 2
 
 # weapon effect function for "rifle"
 def wef_rifle(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.25)
 	aim = (random.randrange(10) + 1)
-	ctn.sap_ignored = 10
-	ctn.sap_damage = 2
+	#ctn.sap_ignored = 10
+	#ctn.sap_damage = 2
 
 	if aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
-		ctn.sap_damage += 2
-		ctn.sap_ignored += 10
+		#ctn.sap_damage += 2
+		#ctn.sap_ignored += 10
 
 # weapon effect function for "smg"
 def wef_smg(ctn = None):
@@ -4712,7 +4712,7 @@ def wef_smg(ctn = None):
 		if ctn.strikes == 0:
 			ctn.miss = True
 
-	ctn.sap_damage = ctn.strikes
+	#ctn.sap_damage = ctn.strikes
 
 # weapon effect function for "minigun"
 def wef_minigun(ctn = None):
@@ -4742,14 +4742,14 @@ def wef_minigun(ctn = None):
 	if ctn.strikes == 0:
 		ctn.miss = True
 
-	ctn.sap_damage = 2 * ctn.strikes
+	#ctn.sap_damage = 2 * ctn.strikes
 
 # weapon effect function for "bat"
 def wef_bat(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
 	dmg = ctn.slimes_damage
-	ctn.sap_damage = 2
+	#ctn.sap_damage = 2
 
 	# Disabled - Increased miss chance if attacking within less than three seconds after last attack
 	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
@@ -4796,7 +4796,7 @@ def wef_brassknuckles(ctn = None):
 	consecutive_hits = (int(ctn.weapon_item.item_props.get("consecutive_hits")) if ctn.weapon_item.item_props.get("consecutive_hits") != None else 0)
 	if consecutive_hits == 2 and successful_timing:
 		ctn.crit = True
-		ctn.sap_damage = 5
+		#ctn.sap_damage = 5
 		ctn.slimes_damage *= 3
 		ctn.weapon_item.item_props["consecutive_hits"] = 0
 
@@ -4835,7 +4835,7 @@ def wef_brassknuckles(ctn = None):
 def wef_katana(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.3)
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.3)
-	ctn.sap_damage = 0
+	#ctn.sap_damage = 0
 
 	# Disabled - Decreased damage if attacking within less than four seconds after last attack
 	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
@@ -4867,7 +4867,7 @@ def wef_katana(ctn = None):
 	elif len(weapons_held) == 1:
 		ctn.crit = True
 		ctn.slimes_damage *= 1.5
-		ctn.sap_ignored *= 1.5
+		#ctn.sap_ignored *= 1.5
 
 # weapon effect function for "broadsword"
 def wef_broadsword(ctn = None):
@@ -4876,8 +4876,8 @@ def wef_broadsword(ctn = None):
 	ctn.slimes_damage *= 3
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 5
-	ctn.sap_ignored = 20
+	#ctn.sap_damage = 5
+	#ctn.sap_ignored = 20
 
 	ctn.slimes_damage += int( dmg * (min(10, int(ctn.weapon_item.item_props.get("kills"))) / 2) )
 
@@ -4899,7 +4899,7 @@ def wef_broadsword(ctn = None):
 
 	elif aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
-		ctn.sap_damage *= 2
+		#ctn.sap_damage *= 2
 		ctn.slimes_damage *= 2
 
 # weapon effect function for "nun-chucks"
@@ -4931,14 +4931,14 @@ def wef_nunchucks(ctn = None):
 		ctn.backfire = True
 		ctn.backfire_damage = dmg * 2
 
-	ctn.sap_damage = ctn.strikes
+	#ctn.sap_damage = ctn.strikes
 
 # weapon effect function for "scythe"
 def wef_scythe(ctn = None):
 	ctn.slimes_spent = int(ctn.slimes_spent * 3)
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 0
+	#ctn.sap_damage = 0
 
 	try:
 		target_kills = ewstats.get_stat(user = ctn.shootee_data, metric = stat_kills)
@@ -4946,7 +4946,7 @@ def wef_scythe(ctn = None):
 		target_kills = 4
 
 	ctn.slimes_damage = ctn.slimes_damage * max(1, min(target_kills, 10))
-	ctn.sap_ignored = 3 * min(target_kills, 10)
+	#ctn.sap_ignored = 3 * min(target_kills, 10)
 
 	# Disabled - Decreased damage if attacking within less than three seconds after last attack
 	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
@@ -4994,8 +4994,8 @@ def wef_yoyo(ctn = None):
 
 	#ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
 
-	if time_lastattack >= 2:
-		ctn.sap_damage = 1
+	#if time_lastattack >= 2:
+	#	ctn.sap_damage = 1
 
 	ctn.weapon_item.item_props["consecutive_hits"] = int(ctn.weapon_item.item_props["consecutive_hits"]) + 1
 	aim = (random.uniform(0, 100))
@@ -5017,7 +5017,7 @@ def wef_knives(ctn = None):
 	ctn.slimes_spent = int(ctn.slimes_spent * 0.25)
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 0
+	#ctn.sap_damage = 0
 
 	aim = (random.randrange(10) + 1)
 
@@ -5038,8 +5038,8 @@ def wef_molotov(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
 	ctn.slimes_spent *= 1
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 0
-	ctn.sap_ignored = 10
+	#ctn.sap_damage = 0
+	#ctn.sap_ignored = 10
 
 	aim = (random.randrange(10) + 1)
 
@@ -5073,7 +5073,7 @@ def wef_grenade(ctn = None):
 	ctn.slimes_spent *= 1
 	ctn.bystander_damage = int(dmg * 0.3)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 5
+	#ctn.sap_damage = 5
 
 	aim = (random.randrange(10) + 1)
 
@@ -5102,8 +5102,8 @@ def wef_grenade(ctn = None):
 # weapon effect function for "garrote"
 def wef_garrote(ctn = None):
 	ctn.slimes_damage *= 15
-	ctn.sap_damage = 0
-	ctn.sap_ignored = ctn.shootee_data.hardened_sap
+	#ctn.sap_damage = 0
+	#ctn.sap_ignored = ctn.shootee_data.hardened_sap
 
 	user_mutations = ctn.user_data.get_mutations()
 	aim = (random.randrange(100) + 1)
@@ -5129,7 +5129,7 @@ def wef_garrote(ctn = None):
 # weapon effect function for all weapons which double as tools.
 def wef_tool(ctn = None):
 	ctn.slimes_damage *= 0.2
-	ctn.sap_damage = 0
+	#ctn.sap_damage = 0
 
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
@@ -5152,8 +5152,8 @@ def wef_bass(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
 	dmg = ctn.slimes_damage
-	ctn.sap_damage = 1
-	ctn.sap_ignored = 5
+	#ctn.sap_damage = 1
+	#ctn.sap_ignored = 5
 
 	# Disabled - Increased miss chance if attacking within less than three seconds after last attack
 	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
@@ -5177,7 +5177,7 @@ def wef_umbrella(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 1
+	#ctn.sap_damage = 1
 
 	if aim <= (1 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -5194,8 +5194,8 @@ def wef_bow(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
 	dmg = ctn.slimes_damage
-	ctn.sap_damage = 1
-	ctn.sap_ignored = 8
+	#ctn.sap_damage = 1
+	#ctn.sap_ignored = 8
 
 	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	#ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
@@ -5223,8 +5223,8 @@ def wef_dclaw(ctn = None):
 
 	ctn.bystander_damage = int(dmg * 0.5)
 
-	ctn.sap_damage = 5
-	ctn.sap_ignored = 10
+	#ctn.sap_damage = 5
+	#ctn.sap_ignored = 10
 	
 	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	#ctn.miss_mod += (((5 - min(time_lastattack, 5)) / 5) ** 2) / 13 * 5
@@ -5273,7 +5273,7 @@ def wef_staff(ctn = None):
 		
 		ctn.slimes_spent = int(ctn.slimes_spent * 3)
 		ctn.slimes_damage = int(ctn.slimes_damage * (0.6 + conditions_met * 1.2))
-		ctn.sap_ignored = 6 * conditions_met
+		#ctn.sap_ignored = 6 * conditions_met
 		if conditions_met >= (random.randrange(15) + 1): # 6.66% per condition met
 			ctn.crit = True
 			ctn.slimes_damage = int(ctn.slimes_damage * 1.8)
@@ -5289,8 +5289,8 @@ def wef_paintgun(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * .7)
 	ctn.slimes_spent = int(ctn.slimes_spent * .75)
 	aim = (random.randrange(10) + 1)
-	ctn.sap_ignored = 10
-	ctn.sap_damage = 2
+	#ctn.sap_ignored = 10
+	#ctn.sap_damage = 2
 
 	if aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
@@ -5313,13 +5313,13 @@ def wef_paintroller(ctn = None):
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
-		ctn.sap_damage *= 2
+		#ctn.sap_damage *= 2
 
 def wef_watercolors(ctn = None):
 	ctn.slimes_damage = 4000
 	aim = (random.randrange(1000) + 1)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 0
+	#ctn.sap_damage = 0
 
 	if aim <= (1 + int(1000 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -5391,7 +5391,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo],
 		stat = stat_revolver_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 3
 	),
 	EwWeapon( # 2
@@ -5425,7 +5425,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo],
 		stat = stat_dual_pistols_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 1
 	),
 	EwWeapon( # 3
@@ -5459,7 +5459,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo],
 		stat = stat_shotgun_kills,
-		sap_cost = 4,
+		#sap_cost = 4,
 		captcha_length = 5
 	),
 	EwWeapon( # 4
@@ -5492,7 +5492,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo],
 		stat = stat_rifle_kills,
-		sap_cost = 3,
+		#sap_cost = 3,
 		captcha_length = 4
 	),
 	EwWeapon( # 5
@@ -5526,7 +5526,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo, weapon_class_jammable],
 		stat = stat_smg_kills,
-		sap_cost = 3,
+		#sap_cost = 3,
 		captcha_length = 6
 	),
 	EwWeapon( # 6
@@ -5557,7 +5557,7 @@ weapon_list = [
 		vendors = [vendor_bazaar],
 		classes= [weapon_class_captcha, weapon_class_heavy],
 		stat = stat_minigun_kills,
-		sap_cost = 15,
+		#sap_cost = 15,
 		captcha_length = 10
 	),
 	EwWeapon( # 7
@@ -5587,7 +5587,7 @@ weapon_list = [
 		price = 10000,
 		vendors = [vendor_dojo],
 		stat = stat_bat_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2
 	),
 	EwWeapon( # 8
@@ -5616,7 +5616,7 @@ weapon_list = [
 		price = 10000,
 		vendors = [vendor_dojo],
 		stat = stat_brassknuckles_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 2
 	),
 	EwWeapon( # 9
@@ -5647,7 +5647,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes= [weapon_class_captcha],
 		stat = stat_katana_kills,
-		sap_cost = 3,
+		#sap_cost = 3,
 		captcha_length = 8
 	),
 	EwWeapon( # 10
@@ -5682,7 +5682,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo, weapon_class_heavy],
 		stat = stat_broadsword_kills,
-		sap_cost = 12,
+		#sap_cost = 12,
 		captcha_length = 4
 	),
 	EwWeapon( # 11
@@ -5713,7 +5713,7 @@ weapon_list = [
 		price = 10000,
 		vendors = [vendor_dojo],
 		stat = stat_nunchucks_kills,
-		sap_cost = 4,
+		#sap_cost = 4,
 		captcha_length = 3
 	),
 	EwWeapon( # 12
@@ -5740,7 +5740,7 @@ weapon_list = [
 		price = 10000,
 		vendors = [vendor_dojo],
 		stat = stat_scythe_kills,
-		sap_cost = 6,
+		#sap_cost = 6,
 		captcha_length = 4
 	),
 	EwWeapon( # 13
@@ -5769,7 +5769,7 @@ weapon_list = [
 		price = 10000,
 		vendors = [vendor_dojo],
 		stat = stat_yoyo_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 2
 	),
 	EwWeapon( # 14
@@ -5801,7 +5801,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_thrown],
 		stat = stat_knives_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 3
 	),
 	EwWeapon( # 15
@@ -5834,7 +5834,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_thrown, weapon_class_burning],
 		stat = stat_molotov_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 4
 	),
 	EwWeapon( # 16
@@ -5863,7 +5863,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_thrown, weapon_class_exploding],
 		stat = stat_grenade_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 3
 	),
 	EwWeapon( # 17
@@ -5892,7 +5892,7 @@ weapon_list = [
 		price = 10000,
 		vendors = [vendor_dojo],
 		stat = stat_garrote_kills,
-		sap_cost = 5,
+		#sap_cost = 5,
 	),
 	EwWeapon(  # 18
 		id_weapon = weapon_id_pickaxe,
@@ -5919,7 +5919,7 @@ weapon_list = [
 		str_description = "It's a pickaxe.",
 		acquisition = acquisition_smelting,
 		stat = stat_pickaxe_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2,
 		is_tool = 1
 	),
@@ -5951,7 +5951,7 @@ weapon_list = [
 		str_description = "It's a super fishing rod.",
 		acquisition = acquisition_smelting,
 		stat = stat_fishingrod_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2,
 		is_tool = 1
 	),
@@ -5978,7 +5978,7 @@ weapon_list = [
 		str_description = "It's a bass guitar. All of its strings are completely out of tune and rusted.",
 		acquisition = acquisition_smelting,
 		stat = stat_bass_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2
 	),
 	EwWeapon(  # 21
@@ -6008,7 +6008,7 @@ weapon_list = [
 		vendors = [vendor_bazaar],
 		classes = [weapon_class_defensive],
 		stat = stat_umbrella_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 4
 	),
 	EwWeapon(  # 22
@@ -6034,7 +6034,7 @@ weapon_list = [
 		str_description = "It's a newly crafted minecraft bow, complete with a set of minecraft arrows",
 		acquisition = acquisition_smelting,
 		stat = stat_bow_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2
 	),
 	EwWeapon(  # 23
@@ -6061,7 +6061,7 @@ weapon_list = [
 		acquisition = acquisition_smelting,
 		stat = stat_dclaw_kills,
 		classes = [weapon_class_burning],
-		sap_cost = 5,
+		#sap_cost = 5,
 		captcha_length = 2),
 
 	EwWeapon(  # 24
@@ -6091,7 +6091,7 @@ weapon_list = [
 		vendors = [vendor_basedhardware],
 		stat=stat_spraycan_kills,
 		classes=[weapon_class_paint, weapon_class_captcha],
-		sap_cost=2,
+		#sap_cost=2,
 		captcha_length=3,
 		is_tool = 1,
 		str_backfire = "As {name_player} shakes the can to fire another shot, the thing suddenly explodes on them!",
@@ -6130,7 +6130,7 @@ weapon_list = [
 		classes=[weapon_class_paint, weapon_class_ammo, weapon_class_captcha],
 		clip_size = 15,
 		price = 5000,
-		sap_cost=2,
+		#sap_cost=2,
 		captcha_length=4,
 		is_tool = 1,
 		str_reload = "*Click.* You grab a paint cylinder from god knows where and load it into your gun, chucking the leftover one behind an alleyway.",
@@ -6170,7 +6170,7 @@ weapon_list = [
 		vendors=[vendor_basedhardware],
 		stat=stat_paintroller_kills,
 		classes=[weapon_class_paint, weapon_class_captcha],
-		sap_cost=2,
+		#sap_cost=2,
 		captcha_length=4,
 		is_tool=1,
 		str_backfire = "{name_player} waves the paint roller around like it's a plastic toy, spreading paint nowhere but giving themselves a thorough welt in the head from the 2 square inches of it that could actually do any damage. How'd they manage that?",
@@ -6207,7 +6207,7 @@ weapon_list = [
 		vendors=[vendor_basedhardware],
 		stat=stat_paintbrush_kills,
 		classes=[weapon_class_paint, weapon_class_captcha],
-		sap_cost=2,
+		#sap_cost=2,
 		price = 100,
 		captcha_length=3,
 		is_tool=1,
@@ -6243,7 +6243,7 @@ weapon_list = [
 		vendors=[vendor_basedhardware],
 		stat=stat_watercolor_kills,
 		classes=[weapon_class_paint, weapon_class_captcha],
-		sap_cost=2,
+		#sap_cost=2,
 		price = 1300,
 		captcha_length=3,
 		is_tool=1,
@@ -6281,7 +6281,7 @@ weapon_list = [
 		vendors=[vendor_basedhardware],
 		stat=stat_thinnerbomb_kills,
 		classes=[weapon_class_paint, weapon_class_thrown, weapon_class_captcha],
-		sap_cost=2,
+		#sap_cost=2,
 		price = 150,
 		captcha_length=4,
 		is_tool = 1,
@@ -6323,7 +6323,7 @@ weapon_list = [
 		fn_effect = wef_staff,
 		acquisition = acquisition_smelting,
 		stat = stat_staff_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 10,
 	),
 	EwWeapon( # 31
@@ -6346,7 +6346,7 @@ weapon_list = [
 		vendors = [vendor_atomicforest],
 		classes = [weapon_class_farming, weapon_class_juvie],
 		stat = stat_hoe_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2,
 		is_tool = True,
 	),
@@ -6370,7 +6370,7 @@ weapon_list = [
 		vendors = [vendor_atomicforest],
 		classes = [weapon_class_farming, weapon_class_juvie],
 		stat = stat_pitchfork_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2,
 		is_tool = True,
 	),
@@ -6394,7 +6394,7 @@ weapon_list = [
 		vendors = [vendor_atomicforest],
 		classes = [weapon_class_juvie],
 		stat = stat_shovel_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2,
 		is_tool = True,
 	),
@@ -6418,7 +6418,7 @@ weapon_list = [
 		vendors = [vendor_atomicforest],
 		classes = [weapon_class_juvie],
 		stat = stat_slimeringcan_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2,
 		is_tool = True,
 	),
@@ -6435,7 +6435,7 @@ def atf_fangs(ctn = None):
 	# Reskin of dual pistols
 
 	aim = (random.randrange(10) + 1)
-	ctn.sap_damage = 1
+	#ctn.sap_damage = 1
 
 	if aim == (1 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
@@ -6449,8 +6449,8 @@ def atf_talons(ctn = None):
 
 	ctn.miss = False
 	ctn.slimes_damage = int(0.85 * ctn.slimes_damage)
-	ctn.sap_damage = 0
-	ctn.sap_ignored = 10
+	#ctn.sap_damage = 0
+	#ctn.sap_ignored = 10
 
 	if (random.randrange(10) + 1) == (10 + int(10 * ctn.crit_mod)):
 		ctn.crit = True
@@ -6462,8 +6462,8 @@ def atf_raiderscythe(ctn = None):
 	ctn.enemy_data.change_slimes(n = (-ctn.slimes_spent * 0.33), source = source_self_damage)
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
 	aim = (random.randrange(10) + 1)
-	ctn.sap_damage = 0
-	ctn.sap_ignored = 5
+	#ctn.sap_damage = 0
+	#ctn.sap_ignored = 5
 
 	if aim <= (2 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
@@ -6476,7 +6476,7 @@ def atf_gunkshot(ctn = None):
 	# Reskin of rifle
 
 	aim = (random.randrange(10) + 1)
-	ctn.sap_damage = 2
+	#ctn.sap_damage = 2
 
 	if aim <= (2 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
@@ -6489,7 +6489,7 @@ def atf_tusks(ctn = None):
 	# Reskin of bat
 
 	aim = (random.randrange(21) - 10)
-	ctn.sap_damage = 3
+	#ctn.sap_damage = 3
 	if aim <= (-9 + int(21 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
@@ -6505,8 +6505,8 @@ def atf_molotovbreath(ctn = None):
 
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
-	ctn.sap_damage = 0
-	ctn.sap_ignored = 10
+	#ctn.sap_damage = 0
+	#ctn.sap_ignored = 10
 
 	aim = (random.randrange(10) + 1)
 
@@ -6526,7 +6526,7 @@ def atf_molotovbreath(ctn = None):
 
 def atf_armcannon(ctn = None):
 	dmg = ctn.slimes_damage
-	ctn.sap_damage = 2
+	#ctn.sap_damage = 2
 
 	aim = (random.randrange(20) + 1)
 

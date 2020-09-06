@@ -818,22 +818,22 @@ async def crush(cmd):
 			ewitem.item_delete(id_item=sought_id)
 
 			status_effects = user_data.getStatusEffects()
-			sap_resp = ""
-			if ewcfg.status_sapfatigue_id not in status_effects:
-				sap_gain = 5
-				sap_gain = max(0, min(sap_gain, ewutils.sap_max_bylevel(user_data.slimelevel) - (user_data.hardened_sap + user_data.sap)))
-				if sap_gain > 0:
-					user_data.sap += sap_gain
-					user_data.applyStatus(id_status = ewcfg.status_sapfatigue_id, source = user_data.id_user)
-					sap_resp = " and {} sap".format(sap_gain)
+			#sap_resp = ""
+			#if ewcfg.status_sapfatigue_id not in status_effects:
+			#	sap_gain = 5
+			#	sap_gain = max(0, min(sap_gain, ewutils.sap_max_bylevel(user_data.slimelevel) - (user_data.hardened_sap + user_data.sap)))
+			#	if sap_gain > 0:
+			#		user_data.sap += sap_gain
+			#		user_data.applyStatus(id_status = ewcfg.status_sapfatigue_id, source = user_data.id_user)
+			#		sap_resp = " and {} sap".format(sap_gain)
 
 			levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
 			user_data.persist()
 			
 			if crunch_used:
-				response = "You crunch the hardened slime crystal with your bare teeth.\nYou gain {} slime{}. Sick, dude!!".format(crush_slimes, sap_resp)
+				response = "You crunch the hardened slime crystal with your bare teeth.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
 			else:
-				response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime{}. Sick, dude!!".format(crush_slimes, sap_resp)
+				response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
 			
 			if len(levelup_response) > 0:
 				response += "\n\n" + levelup_response
