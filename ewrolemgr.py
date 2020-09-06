@@ -445,10 +445,10 @@ async def updateRoles(
 
 	poi_roles_remove = []
 	for poi in ewcfg.poi_list:
-		if poi.major_role != None and poi.major_role != poi_major_role:
-			poi_roles_remove.append(poi.major_role)
-		if poi.minor_role != None and poi.minor_role != poi_minor_role:
-			poi_roles_remove.append(poi.minor_role)
+		#if poi.major_role != None and poi.major_role != poi_major_role:
+		poi_roles_remove.append(poi.major_role)
+		#if poi.minor_role != None and poi.minor_role != poi_minor_role:
+		poi_roles_remove.append(poi.minor_role)
 
 	misc_roles_remove = [
 		ewcfg.role_gellphone,
