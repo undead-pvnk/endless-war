@@ -238,11 +238,17 @@ async def find_recipes_by_item(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
-	
+	used_recipe = None
 	
 	# if the player specifies an item name
 	if cmd.tokens_count > 1:
 		sought_item = ewutils.flattenTokenListToString(cmd.tokens[1:])
+		
+		# Allow for the use of recipe aliases
+		found_recipe = ewcfg.smelting_recipe_map.get(sought_item)
+		if found_recipe != None:
+			used_recipe = found_recipe.id_recipe
+
 		# item_sought_in_inventory = ewitem.find_item(item_search=sought_item, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
 		makes_sought_item = []
 		uses_sought_item = []
@@ -262,6 +268,10 @@ async def find_recipes_by_item(cmd):
 				
 			# find recipes used to create this item
 			elif sought_item in ewcfg.smelting_recipe_map[name].products:
+				makes_sought_item.append(ewcfg.smelting_recipe_map[name])
+			
+			# finds recipes based on possible recipe aliases
+			elif used_recipe in ewcfg.smelting_recipe_map[name].products:
 				makes_sought_item.append(ewcfg.smelting_recipe_map[name])
 		
 		# zero matches in either of the above:
