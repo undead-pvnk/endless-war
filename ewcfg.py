@@ -4881,7 +4881,7 @@ def wef_broadsword(ctn = None):
 
 	ctn.slimes_damage += int( dmg * (min(10, int(ctn.weapon_item.item_props.get("kills"))) / 2) )
 
-	if aim <= (2 + int(10 * ctn.miss_mod)):
+	if aim <= (1 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
@@ -4890,7 +4890,7 @@ def wef_broadsword(ctn = None):
 			ctn.backfire = True
 			ctn.backfire_damage = ctn.slimes_damage
 
-	elif aim <= (3 + int(10 * ctn.miss_mod)):
+	elif aim <= (2 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
