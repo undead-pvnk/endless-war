@@ -255,10 +255,12 @@ def gen_data_text(
 			race_prefix = "monstrous "
 		elif user_data.race == ewcfg.races["avian"]:
 			race_prefix = "feathery "
+		elif user_data.race == ewcfg.races["insectoid"]:
+			race_prefix = "chitinny "
 		elif user_data.race == ewcfg.races["other"]:
 			race_prefix = "peculiar "
 		elif user_data.race != "":
-			race_prefix = "mentally disabled "
+			race_prefix = "mouthbreathing "
 
 		if user_data.life_state == ewcfg.life_state_corpse:
 			response = "{} is a {}level {} {}deadboi.".format(display_name, race_prefix, user_data.slimelevel, race_suffix)
@@ -493,10 +495,12 @@ async def data(cmd):
 			race_prefix = "monstrous "
 		elif user_data.race == ewcfg.races["avian"]:
 			race_prefix = "feathery "
+		elif user_data.race == ewcfg.races["insectoid"]:
+			race_prefix = "chitinny "
 		elif user_data.race == ewcfg.races["other"]:
 			race_prefix = "peculiar "
 		elif user_data.race != "":
-			race_prefix = "mentally disabled "
+			race_prefix = "mouthbreathing "
 
 		if user_data.life_state == ewcfg.life_state_corpse:
 			response += "You are a {}level {} {}deadboi.".format(race_prefix, user_data.slimelevel, race_suffix)
@@ -613,8 +617,12 @@ async def data(cmd):
 			inhabitee_id = user_data.get_inhabitee()
 			if inhabitee_id:
 				inhabitee_name = server.get_member(inhabitee_id).display_name
-				if user_data.get_weapon_possession():
-					response_block += "You are currently possessing {}'s weapon. ".format(inhabitee_name)
+				possession = user_data.get_possession()
+				if possession:
+					if possession[3] == 'weapon':
+						response_block += "You are currently possessing {}'s weapon. ".format(inhabitee_name)
+					elif possession[3] == 'rod':
+						response_block += "You are currently possessing {}'s fishing rod. ".format(inhabitee_name)
 				else:
 					response_block += "You are currently inhabiting the body of {}. ".format(inhabitee_name)
 		else:
@@ -623,17 +631,18 @@ async def data(cmd):
 				inhabitant_names = []
 				for inhabitant_id in inhabitant_ids:
 					inhabitant_names.append(server.get_member(inhabitant_id).display_name)
-					ghost_in_weapon = user_data.get_weapon_possession()
+					possession = user_data.get_possession()
+					possession_type = 'fishing rod' if possession[3] == 'rod' else possession[3]
 				if len(inhabitant_names) == 1:
-					response_block += "You are inhabited by the ghost of {}{}. ".format(inhabitant_names[0], ', who is possessing your weapon' if ghost_in_weapon else '')
+					response_block += "You are inhabited by the ghost of {}{}. ".format(inhabitant_names[0], ', who is possessing your ' + possession_type if possession else '')
 				else:
 					response_block += "You are inhabited by the ghosts of {}{} and {}. ".format(
 						", ".join(inhabitant_names[:-1]), 
 						"" if len(inhabitant_names) == 2 else ",", 
 						inhabitant_names[-1]
 					)
-					if ghost_in_weapon:
-							response_block += "{} is also possessing your weapon. ".format(server.get_member(ghost_in_weapon[0]).display_name)
+					if possession:
+						response_block += "{} is also possessing your {}. ".format(server.get_member(ghost_in_weapon[0]).display_name, possession_type)
 
 	
 		if user_data.swear_jar >= 500:

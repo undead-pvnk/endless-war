@@ -230,6 +230,73 @@ async def smeltsoul(cmd):
 			response = "That's not a reanimated corpse. It only looks like one. Get rid of the fake shit and we'll get started."
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+# "wcim", "whatcanimake", "whatmake", "usedfor" command - finds the item the player is asking for and tells them all smelting recipes that use that item 
+# added by huck on 9/3/2020
+async def find_recipes_by_item(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	
+	
+	# if the player specifies an item name
+	if cmd.tokens_count > 1:
+		sought_item = ewutils.flattenTokenListToString(cmd.tokens[1:])
+		# item_sought_in_inventory = ewitem.find_item(item_search=sought_item, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+		makes_sought_item = []
+		uses_sought_item = []
+		
+		# if the item name is an item in the player's inventory, we're assuming that the player is looking up information about this item specifically.
+		# if item_sought_in_inventory is not None:
+			# sought_item = item_sought_in_inventory.id_item
+			# print(item_sought_in_inventory['item_def'])
+		# man i could NOT get this to work . maybe another day
+		
+		
+		# finds the recipes in questions that applys
+		for name in ewcfg.recipe_names:
+			# find recipes that this item is used as an ingredient in
+			if ewcfg.smelting_recipe_map[name].ingredients.get(sought_item) is not None:
+				uses_sought_item.append(name)
+				
+			# find recipes used to create this item
+			elif sought_item in ewcfg.smelting_recipe_map[name].products:
+				makes_sought_item.append(ewcfg.smelting_recipe_map[name])
+		
+		# zero matches in either of the above:
+		if len(makes_sought_item) < 1 and len(uses_sought_item) < 1:
+			response = "No recipes found for *{}*.".format(sought_item)
+
+		#adds the recipe list to a response
+		else:
+			response = "\n"
+			for item in makes_sought_item:
+				# formats items in form "# item" (like "1 poudrin" or whatever)
+				ingredients_list = []
+				ingredient_strings = []
+				for ingredient in item.ingredients:
+					ingredient_strings.append("{} {}".format(item.ingredients.get(ingredient), ingredient))
+				
+				response += "To smelt this item, you'll need *{}*.\n".format(ewutils.formatNiceList(names = ingredient_strings, conjunction = "and"))
+				
+				# just in case there's more than one crafting recipe for this item, for some reason
+				if len(makes_sought_item) > 1:
+					response += "Alternatively, "
+
+			if len(uses_sought_item) > 0:
+				response += "This item can be used to smelt *{}*.".format(ewutils.formatNiceList(names = uses_sought_item, conjunction = "and"))
+	
+	
+	
+	# if the player doesnt specify a 2nd argument
+	else:
+		response = "Please specify an item you would like to look up usage for."
+	
+	
+	
+	# send response to player
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 def unwrap(id_user = None, id_server = None, item = None):
 	response = "You eagerly rip open a pack of Secreatures™ trading cards!!"

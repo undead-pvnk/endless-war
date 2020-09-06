@@ -424,8 +424,8 @@ async def order(cmd):
 
 						if target != None:
 							target_data = EwUser(member=target)
-							if target_data.life_state == ewcfg.life_state_corpse and target_data.get_weapon_possession():
-								response = "How are you planning to feed a weapon?"
+							if target_data.life_state == ewcfg.life_state_corpse and target_data.get_possession():
+								response = "How are you planning to feed them while they're possessing you?"
 								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 							elif target_data.poi != user_data.poi:
 								response = "You can't order anything for them because they aren't here!"
