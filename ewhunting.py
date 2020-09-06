@@ -565,7 +565,7 @@ class EwEnemy:
 	
 					#sap_damage = min(sap_damage, target_data.hardened_sap)
 
-					injury_severity = ewwep.get_injury_severity(target_data, slimes_damage, crit)
+					#injury_severity = ewwep.get_injury_severity(target_data, slimes_damage, crit)
 
 					if slimes_damage >= target_data.slimes - target_data.bleed_storage:
 						was_killed = True
@@ -723,8 +723,8 @@ class EwEnemy:
 					else:
 						# A non-lethal blow!
 						# apply injury
-						if injury_severity > 0:
-							target_data.apply_injury(hitzone.id_injury, injury_severity, enemy_data.id_enemy)
+						#if injury_severity > 0:
+						#	target_data.apply_injury(hitzone.id_injury, injury_severity, enemy_data.id_enemy)
 
 						if used_attacktype != ewcfg.enemy_attacktype_unarmed:
 							if miss:

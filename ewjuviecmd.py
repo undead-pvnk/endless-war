@@ -406,9 +406,9 @@ async def mine(cmd):
 			if user_data.life_state == ewcfg.life_state_juvenile:
 				mining_yield *= 2
 
-			trauma = ewcfg.trauma_map.get(user_data.trauma)
-			if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
-				mining_yield *= (1 - 0.5 * user_data.degradation / 100)
+			#trauma = ewcfg.trauma_map.get(user_data.trauma)
+			#if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
+			#	mining_yield *= (1 - 0.5 * user_data.degradation / 100)
 
 			mining_yield = max(0, round(mining_yield))
 

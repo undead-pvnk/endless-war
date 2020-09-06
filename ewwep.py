@@ -804,7 +804,7 @@ async def attack(cmd):
 
 			#sap_damage = min(sap_damage, shootee_data.hardened_sap)
 
-			injury_severity = get_injury_severity(shootee_data, slimes_damage, crit)
+			#injury_severity = get_injury_severity(shootee_data, slimes_damage, crit)
 
 			# Damage stats
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_max_hitdealt, value = slimes_damage)
@@ -1091,8 +1091,8 @@ async def attack(cmd):
 					# A non-lethal blow!
 					
 					# apply injury
-					if injury_severity > 0:
-						shootee_data.apply_injury(hitzone.id_injury, injury_severity, user_data.id_user)
+					#if injury_severity > 0:
+					#	shootee_data.apply_injury(hitzone.id_injury, injury_severity, user_data.id_user)
 
 					if weapon != None:
 						if miss:
@@ -2096,26 +2096,26 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
 			mods['dmg'] += status_flavor.dmg_mod_self
 
 		# apply hitzone damage and crit mod
-		if hitzone != None and status == hitzone.id_injury:
-			status_data = EwStatusEffect(id_status = status, user_data = user_data)
-			try:
-				value_int = int(status_data.value)
-				
-				mods['crit'] += 0.5 * value_int / 10
-				mods['dmg'] += 1 * value_int / 10
-
-			except:
-				ewutils.logMsg("error with int conversion")
+		#if hitzone != None and status == hitzone.id_injury:
+		#	status_data = EwStatusEffect(id_status = status, user_data = user_data)
+		#	try:
+		#		value_int = int(status_data.value)
+		#		
+		#		mods['crit'] += 0.5 * value_int / 10
+		#		mods['dmg'] += 1 * value_int / 10
+		#
+		#	except:
+		#		ewutils.logMsg("error with int conversion")
 
 	#apply trauma mods
-	if user_data.combatant_type == 'player':
-		trauma = ewcfg.trauma_map.get(user_data.trauma)
+	#if user_data.combatant_type == 'player':
+	#	trauma = ewcfg.trauma_map.get(user_data.trauma)
 
-		if trauma != None:
-			if trauma.trauma_class == ewcfg.trauma_class_movespeed:
-				mods['miss'] += 0.3 * user_data.degradation / 100
-			elif trauma.trauma_class == ewcfg.trauma_class_damage:
-				mods['dmg'] -= 0.9 * user_data.degradation / 100
+	#	if trauma != None:
+	#		if trauma.trauma_class == ewcfg.trauma_class_movespeed:
+	#			mods['miss'] += 0.3 * user_data.degradation / 100
+	#		elif trauma.trauma_class == ewcfg.trauma_class_damage:
+	#			mods['dmg'] -= 0.9 * user_data.degradation / 100
 
 
 	return mods
@@ -2150,11 +2150,11 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
 			mods['dmg'] += status_flavor.dmg_mod
 
 	#apply trauma mods
-	if user_data.combatant_type == 'player':
-		trauma = ewcfg.trauma_map.get(user_data.trauma)
+	#if user_data.combatant_type == 'player':
+	#	trauma = ewcfg.trauma_map.get(user_data.trauma)
 
-		if trauma != None and trauma.trauma_class == ewcfg.trauma_class_accuracy:
-			mods['miss'] -= 0.2 * user_data.degradation / 100
+	#	if trauma != None and trauma.trauma_class == ewcfg.trauma_class_accuracy:
+	#		mods['miss'] -= 0.2 * user_data.degradation / 100
 
 	return mods
 

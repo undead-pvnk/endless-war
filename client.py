@@ -883,7 +883,6 @@ async def on_ready():
 
 
 	for id_poi in ewcfg.landmark_pois:
-		break
 		ewutils.logMsg("beginning landmark precomputation for " + id_poi)
 		ewmap.landmarks[id_poi] = ewmap.score_map_from(
 			poi_start = id_poi,
