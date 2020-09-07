@@ -146,18 +146,18 @@ cmd_map = {
 	ewcfg.cmd_mutations_alt_1: ewcmd.mutations,
 
 	# sap system
-	ewcfg.cmd_view_sap: ewcmd.view_sap,
-	ewcfg.cmd_harden_sap: ewwep.harden_sap,
-	ewcfg.cmd_harden_sap_alt1: ewwep.harden_sap,
-	ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
+	#ewcfg.cmd_view_sap: ewcmd.view_sap,
+	#ewcfg.cmd_harden_sap: ewwep.harden_sap,
+	#ewcfg.cmd_harden_sap_alt1: ewwep.harden_sap,
+	#ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
 
 	
 	# combat sap commands
-	ewcfg.cmd_taunt: ewwep.taunt,
-	ewcfg.cmd_aim: ewwep.aim,
-	ewcfg.cmd_dodge: ewwep.dodge,
-	ewcfg.cmd_dodge_alt1: ewwep.dodge,
-	ewcfg.cmd_dodge_alt2: ewwep.dodge,
+	#ewcfg.cmd_taunt: ewwep.taunt,
+	#ewcfg.cmd_aim: ewwep.aim,
+	#ewcfg.cmd_dodge: ewwep.dodge,
+	#ewcfg.cmd_dodge_alt1: ewwep.dodge,
+	#ewcfg.cmd_dodge_alt2: ewwep.dodge,
 
 	# Check how hungry you are.
 	ewcfg.cmd_hunger: ewcmd.hunger,
@@ -663,13 +663,16 @@ cmd_map = {
 	ewcfg.cmd_lol: ewcmd.lol,
 
 	# restores poi roles to their proper names, only usable by admins
-	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
+	# Disabled - poi roles are not used right now
+	#ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 	
 	# hides all poi role names, only usable by admins
-	ewcfg.cmd_hiderolenames: ewrolemgr.hideRoleNames,
+	# Disabled - poi roles are not used right now
+	#ewcfg.cmd_hiderolenames: ewrolemgr.hideRoleNames,
 	
 	# recreates all hidden poi roles in the server in case restoreRoleNames doesnt work, only usable by admins
-	ewcfg.cmd_recreateroles: ewrolemgr.recreateRoles,
+	# Disabled - poi roles are not used right now
+	#ewcfg.cmd_recreateroles: ewrolemgr.recreateRoles,
 	
 	# deletes all roles in the server of a particular type
 	ewcfg.cmd_deleteroles: ewrolemgr.deleteRoles,
@@ -977,7 +980,8 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
-		asyncio.ensure_future(ewutils.sap_tick_loop(id_server = server.id))
+		# sap is disabled
+		#asyncio.ensure_future(ewutils.sap_tick_loop(id_server = server.id))
 		# SWILLDERMUK
 		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
@@ -1400,13 +1404,13 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None: # or (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
 				direct message (server == None)
 				user is new/has no roles (len(roles) < 4)
-				user is swearing
+				user is swearing - temp disabled
 		"""
 
 		#Ignore users with weird characters in their name
@@ -1453,6 +1457,8 @@ async def on_message(message):
 		"""
 			Punish the user for swearing.
 		"""
+
+		""" 
 		if (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
 			# print(content_tolower_list)
 			swear_multiplier = 0
@@ -1506,8 +1512,6 @@ async def on_message(message):
 					
 					response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
 					await ewutils.send_message(client, message.channel, response)
-				#else:
-					#print("swear threshold not met")
 
 				market_data.persist()
 				usermodel.persist()
@@ -1515,7 +1519,8 @@ async def on_message(message):
 			# if the message wasn't a command, we can stop here
 			if not message.content.startswith(ewcfg.cmd_prefix):
 				return
-
+		"""
+		
 		"""
 			Handle direct messages.
 		"""

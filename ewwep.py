@@ -120,7 +120,7 @@ class EwWeapon:
 	stat = ""
 	
 	# sap needed to fire
-	sap_cost = 0
+	#sap_cost = 0
 
 	# length of captcha you need to solve to fire
 	captcha_length = 0
@@ -164,7 +164,7 @@ class EwWeapon:
 		classes = [],
 		acquisition = "dojo",
 		stat = "",
-		sap_cost = 0,
+		#sap_cost = 0,
 		captcha_length = 0,
 		is_tool = 0,
 		tool_props = None
@@ -202,7 +202,7 @@ class EwWeapon:
 		self.classes = classes
 		self.acquisition = acquisition
 		self.stat = stat
-		self.sap_cost = sap_cost
+		#self.sap_cost = sap_cost
 		self.captcha_length = captcha_length
 		self.is_tool = is_tool
 		self.tool_props = tool_props,
@@ -227,8 +227,8 @@ class EwEffectContainer:
 	bystander_damage = 0
 	miss_mod = 0
 	crit_mod = 0
-	sap_damage = 0
-	sap_ignored = 0
+	#sap_damage = 0
+	#sap_ignored = 0
 
 	# Debug method to dump out the members of this object.
 	def dump(self):
@@ -258,8 +258,8 @@ class EwEffectContainer:
 		bystander_damage = 0,
 		miss_mod = 0,
 		crit_mod = 0,
-		sap_damage = 0,
-		sap_ignored = 0,
+		#sap_damage = 0,
+		#sap_ignored = 0,
 		backfire_damage = 0
 	):
 		self.miss = miss
@@ -276,8 +276,8 @@ class EwEffectContainer:
 		self.bystander_damage = bystander_damage
 		self.miss_mod = miss_mod
 		self.crit_mod = crit_mod
-		self.sap_damage = sap_damage
-		self.sap_ignored = sap_ignored
+		#self.sap_damage = sap_damage
+		#self.sap_ignored = sap_ignored
 		self.backfire_damage = backfire_damage
 
 def canAttack(cmd):
@@ -322,8 +322,8 @@ def canAttack(cmd):
 		response = "One shot at a time!"
 	elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 		response = "You are too exhausted for gang violence right now. Go get some grub!"
-	elif weapon != None and user_data.sap < weapon.sap_cost:
-		response = "You don't have enough sap to attack. ({}/{})".format(user_data.sap, weapon.sap_cost)
+	#elif weapon != None and user_data.sap < weapon.sap_cost:
+	#	response = "You don't have enough sap to attack. ({}/{})".format(user_data.sap, weapon.sap_cost)
 	elif weapon != None and ewcfg.weapon_class_ammo in weapon.classes and int(weapon_item.item_props.get('ammo')) == 0:
 		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
 	elif weapon != None and ewcfg.weapon_class_thrown in weapon.classes and weapon_item.stack_size == 0:
@@ -579,8 +579,8 @@ async def attack(cmd):
 		miss_mod = 0
 		crit_mod = 0
 		dmg_mod = 0
-		sap_damage = 0
-		sap_ignored = 0
+		#sap_damage = 0
+		#sap_ignored = 0
 
 		# Weaponized flavor text.
 		hitzone = get_hitzone()
@@ -600,10 +600,10 @@ async def attack(cmd):
 				miss_mod -= 0.1
 				crit_mod += 0.05
 
-		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
+		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 30)
 		attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
 		weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
-		slimes_damage = int(10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
+		slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 
 		if user_data.weaponskill < 5:
 			miss_mod += (5 - user_data.weaponskill) / 10
@@ -638,9 +638,9 @@ async def attack(cmd):
 			ewstats.increment_stat(user = user_data, metric = ewcfg.stat_ghostbusts)
 
 			# pay sap cost
-			if weapon != None:
-				user_data.sap -= weapon.sap_cost
-				user_data.limit_fix()
+			#if weapon != None:
+			#	user_data.sap -= weapon.sap_cost
+			#	user_data.limit_fix()
 
 			# Persist every users' data.
 			user_data.persist()
@@ -675,8 +675,8 @@ async def attack(cmd):
 					bystander_damage = bystander_damage,
 					miss_mod = miss_mod,
 					crit_mod = crit_mod,
-					sap_damage = sap_damage,
-					sap_ignored = sap_ignored,
+					#sap_damage = sap_damage,
+					#sap_ignored = sap_ignored,
 					backfire_damage = backfire_damage
 				)
 
@@ -692,8 +692,8 @@ async def attack(cmd):
 				slimes_spent = ctn.slimes_spent
 				strikes = ctn.strikes
 				bystander_damage = ctn.bystander_damage
-				sap_damage = ctn.sap_damage
-				sap_ignored = ctn.sap_ignored
+				#sap_damage = ctn.sap_damage
+				#sap_ignored = ctn.sap_ignored
 				backfire_damage = ctn.backfire_damage
 				# user_data and shootee_data should be passed by reference, so there's no need to assign them back from the effect container.
 
@@ -708,7 +708,7 @@ async def attack(cmd):
 				# Spend slimes, to a minimum of zero
 				user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
 
-				user_data.sap -= weapon.sap_cost
+				#user_data.sap -= weapon.sap_cost
 				user_data.limit_fix()
 				user_data.persist()
 
@@ -752,7 +752,7 @@ async def attack(cmd):
 
 				if ewcfg.weapon_class_exploding in weapon.classes:
 					if not miss:
-						resp = weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, market_data = market_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=False, sap_damage = 2)
+						resp = weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, market_data = market_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=False)
 						resp_cont.add_response_container(resp)
 
 			# can't hit lucky lucy
@@ -761,15 +761,15 @@ async def attack(cmd):
 
 			if miss or backfire or jammed:
 				slimes_damage = 0
-				sap_damage = 0
+				#sap_damage = 0
 				weapon_item.item_props["consecutive_hits"] = 0
 				crit = False
 
-			if crit:
-				sap_damage += 1
+			#if crit:
+			#	sap_damage += 1
 
-			if user_data.life_state == ewcfg.life_state_shambler:
-				sap_damage += 1	
+			#if user_data.life_state == ewcfg.life_state_shambler:
+			#	sap_damage += 1	
 
 			# Remove !revive invulnerability.
 			user_data.time_lastrevive = 0
@@ -790,17 +790,21 @@ async def attack(cmd):
 				shootee_weapon = shootee_weapon
 			)
 			
-			if shootee_weapon != None:
-				if sap_damage > 0 and ewcfg.weapon_class_defensive in shootee_weapon.classes:
-					sap_damage -= 1
+			#if shootee_weapon != None:
+			#	if sap_damage > 0 and ewcfg.weapon_class_defensive in shootee_weapon.classes:
+			#		sap_damage -= 1
 
-			sap_armor = get_sap_armor(shootee_data = shootee_data, sap_ignored = sap_ignored)
-			slimes_damage *= sap_armor
-			slimes_damage = int(max(slimes_damage, 0))
+			#sap_armor = get_sap_armor(shootee_data = shootee_data, sap_ignored = sap_ignored)
+			#slimes_damage *= sap_armor
+			#slimes_damage = int(max(slimes_damage, 0))
 
-			sap_damage = min(sap_damage, shootee_data.hardened_sap)
+			fashion_armor = get_fashion_armor(shootee_data)
+			slimes_damage *= fashion_armor
+			slimes_damage = int(max(0, slimes_damage))
 
-			injury_severity = get_injury_severity(shootee_data, slimes_damage, crit)
+			#sap_damage = min(sap_damage, shootee_data.hardened_sap)
+
+			#injury_severity = get_injury_severity(shootee_data, slimes_damage, crit)
 
 			# Damage stats
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_max_hitdealt, value = slimes_damage)
@@ -911,7 +915,7 @@ async def attack(cmd):
 				district_data.change_slimes(n = slimes_splatter, source = ewcfg.source_killing)
 				shootee_data.bleed_storage += slimes_tobleed
 				shootee_data.change_slimes(n = - slimes_directdamage, source = ewcfg.source_damage)
-				shootee_data.hardened_sap -= sap_damage
+				#shootee_data.hardened_sap -= sap_damage
 				sewer_data.change_slimes(n = slimes_drained)
 				sewer_data.persist()
 
@@ -1087,8 +1091,8 @@ async def attack(cmd):
 					# A non-lethal blow!
 					
 					# apply injury
-					if injury_severity > 0:
-						shootee_data.apply_injury(hitzone.id_injury, injury_severity, user_data.id_user)
+					#if injury_severity > 0:
+					#	shootee_data.apply_injury(hitzone.id_injury, injury_severity, user_data.id_user)
 
 					if weapon != None:
 						if miss:
@@ -1136,14 +1140,14 @@ async def attack(cmd):
 									hitzone = randombodypart,
 								))
 
-							sap_response = ""
-							if sap_damage > 0:
-								sap_response = " and {sap_damage} hardened sap".format(sap_damage = sap_damage)
+							#sap_response = ""
+							#if sap_damage > 0:
+							#	sap_response = " and {sap_damage} hardened sap".format(sap_damage = sap_damage)
 
-							response += " {target_name} loses {damage:,} slime{sap_response}!".format(
+							response += " {target_name} loses {damage:,} slime!".format(
 								target_name = member.display_name,
-								damage = damage,
-								sap_response = sap_response
+								damage = damage
+							#	sap_response = sap_response
 							)
 
 							if len(onbreak_responses) != 0:
@@ -1314,7 +1318,7 @@ async def suicide(cmd):
 	await resp_cont.post()
 
 """ Damage all players in a district; Exploding weapon's effect """
-def weapon_explosion(user_data = None, shootee_data = None, district_data = None, market_data = None, life_states = None, factions = None, slimes_damage = 0, backfire = None, time_now = 0, target_enemy = None, sap_damage = 0, sap_ignored = 0):
+def weapon_explosion(user_data = None, shootee_data = None, district_data = None, market_data = None, life_states = None, factions = None, slimes_damage = 0, backfire = None, time_now = 0, target_enemy = None):
 	
 	enemy_data = None
 	if user_data != None and shootee_data != None and district_data != None:
@@ -1379,8 +1383,12 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				)
 
 				# apply sap armor
-				sap_armor = get_sap_armor(shootee_data = target_data, sap_ignored = sap_ignored)
-				slimes_damage_target *= sap_armor
+				#sap_armor = get_sap_armor(shootee_data = target_data, sap_ignored = sap_ignored)
+				#slimes_damage_target *= sap_armor
+				#slimes_damage_target = int(max(0, slimes_damage_target))
+
+				fashion_armor = get_fashion_armor(target_data)
+				slimes_damage_target *= fashion_armor
 				slimes_damage_target = int(max(0, slimes_damage_target))
 
 				slimes_dropped = target_data.totaldamage + target_data.slimes
@@ -1416,8 +1424,8 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				sewer_data.change_slimes(n = slimes_drained)
 				sewer_data.persist()
 
-				sap_damage_target = min(sap_damage, target_data.hardened_sap)
-				target_data.hardened_sap -= sap_damage_target
+				#sap_damage_target = min(sap_damage, target_data.hardened_sap)
+				#target_data.hardened_sap -= sap_damage_target
 
 				if was_killed:
 					#adjust statistics
@@ -1459,11 +1467,11 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					resp_cont.add_member_to_update(server.get_member(target_data.id_user))
 				#Survived the explosion
 				else:
-					sap_response = ""
-					if sap_damage_target > 0:
-						sap_response = " and {} hardened sap".format(sap_damage_target)
+					#sap_response = ""
+					#if sap_damage_target > 0:
+					#	sap_response = " and {} hardened sap".format(sap_damage_target)
 
-					response += "{} was caught in an explosion during your fight with {} and lost {:,} slime{}".format(target_player.display_name, shootee_player.display_name, damage, sap_response)
+					response += "{} was caught in an explosion during your fight with {} and lost {:,} slime!".format(target_player.display_name, shootee_player.display_name, damage)
 					resp_cont.add_channel_response(channel, response)
 					target_data.persist()
 
@@ -1491,9 +1499,9 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				target_enemy_data = EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
 
 				# apply sap armor
-				sap_armor = get_sap_armor(shootee_data = target_enemy_data, sap_ignored = sap_ignored)
-				slimes_damage_target *= sap_armor
-				slimes_damage_target = int(max(0, slimes_damage_target))
+				#sap_armor = get_sap_armor(shootee_data = target_enemy_data, sap_ignored = sap_ignored)
+				#slimes_damage_target *= sap_armor
+				#slimes_damage_target = int(max(0, slimes_damage_target))
 
 				slimes_dropped = target_enemy_data.totaldamage + target_enemy_data.slimes
 
@@ -1520,8 +1528,8 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				sewer_data.change_slimes(n=slimes_drained)
 				sewer_data.persist()
 
-				sap_damage_target = min(sap_damage, target_enemy_data.hardened_sap)
-				target_enemy_data.hardened_sap -= sap_damage_target
+				#sap_damage_target = min(sap_damage, target_enemy_data.hardened_sap)
+				#target_enemy_data.hardened_sap -= sap_damage_target
 
 				if was_killed:
 					# adjust statistics
@@ -1548,10 +1556,10 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 
 				# Survived the explosion
 				else:
-					sap_response = ""
-					if sap_damage_target > 0:
-						sap_response = " and {} hardened sap".format(sap_damage_target)
-					response += "{} was caught in an explosion during your fight with {} and lost {:,} slime{}".format(target_enemy_data.display_name, shootee_player.display_name, damage, sap_response)
+					#sap_response = ""
+					#if sap_damage_target > 0:
+					#	sap_response = " and {} hardened sap".format(sap_damage_target)
+					response += "{} was caught in an explosion during your fight with {} and lost {:,} slime!".format(target_enemy_data.display_name, shootee_player.display_name, damage)
 					resp_cont.add_channel_response(channel, response)
 					target_enemy_data.persist()
 
@@ -2088,26 +2096,26 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
 			mods['dmg'] += status_flavor.dmg_mod_self
 
 		# apply hitzone damage and crit mod
-		if hitzone != None and status == hitzone.id_injury:
-			status_data = EwStatusEffect(id_status = status, user_data = user_data)
-			try:
-				value_int = int(status_data.value)
-				
-				mods['crit'] += 0.5 * value_int / 10
-				mods['dmg'] += 1 * value_int / 10
-
-			except:
-				ewutils.logMsg("error with int conversion")
+		#if hitzone != None and status == hitzone.id_injury:
+		#	status_data = EwStatusEffect(id_status = status, user_data = user_data)
+		#	try:
+		#		value_int = int(status_data.value)
+		#		
+		#		mods['crit'] += 0.5 * value_int / 10
+		#		mods['dmg'] += 1 * value_int / 10
+		#
+		#	except:
+		#		ewutils.logMsg("error with int conversion")
 
 	#apply trauma mods
-	if user_data.combatant_type == 'player':
-		trauma = ewcfg.trauma_map.get(user_data.trauma)
+	#if user_data.combatant_type == 'player':
+	#	trauma = ewcfg.trauma_map.get(user_data.trauma)
 
-		if trauma != None:
-			if trauma.trauma_class == ewcfg.trauma_class_movespeed:
-				mods['miss'] += 0.3 * user_data.degradation / 100
-			elif trauma.trauma_class == ewcfg.trauma_class_damage:
-				mods['dmg'] -= 0.9 * user_data.degradation / 100
+	#	if trauma != None:
+	#		if trauma.trauma_class == ewcfg.trauma_class_movespeed:
+	#			mods['miss'] += 0.3 * user_data.degradation / 100
+	#		elif trauma.trauma_class == ewcfg.trauma_class_damage:
+	#			mods['dmg'] -= 0.9 * user_data.degradation / 100
 
 
 	return mods
@@ -2142,11 +2150,11 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
 			mods['dmg'] += status_flavor.dmg_mod
 
 	#apply trauma mods
-	if user_data.combatant_type == 'player':
-		trauma = ewcfg.trauma_map.get(user_data.trauma)
+	#if user_data.combatant_type == 'player':
+	#	trauma = ewcfg.trauma_map.get(user_data.trauma)
 
-		if trauma != None and trauma.trauma_class == ewcfg.trauma_class_accuracy:
-			mods['miss'] -= 0.2 * user_data.degradation / 100
+	#	if trauma != None and trauma.trauma_class == ewcfg.trauma_class_accuracy:
+	#		mods['miss'] -= 0.2 * user_data.degradation / 100
 
 	return mods
 
@@ -2201,8 +2209,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	miss_mod = 0
 	crit_mod = 0
 	dmg_mod = 0
-	sap_damage = 0
-	sap_ignored = 0
+	#sap_damage = 0
+	#sap_ignored = 0
 
 	# Weaponized flavor text.
 	hitzone = get_hitzone()
@@ -2218,10 +2226,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 
 
-	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
+	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 30)
 	attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
 	weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
-	slimes_damage = int(10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
+	slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 	
 	if user_data.weaponskill < 5:
 		miss_mod += (5 - user_data.weaponskill) / 10
@@ -2273,8 +2281,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			bystander_damage=bystander_damage,
 			miss_mod=miss_mod,
 			crit_mod=crit_mod,
-			sap_damage=sap_damage,
-			sap_ignored=sap_ignored,
+			#sap_damage=sap_damage,
+			#sap_ignored=sap_ignored,
 			backfire_damage=backfire_damage
 		)
 
@@ -2291,8 +2299,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		slimes_spent = ctn.slimes_spent
 		strikes = ctn.strikes
 		bystander_damage = ctn.bystander_damage
-		sap_damage = ctn.sap_damage
-		sap_ignored = ctn.sap_ignored
+		#sap_damage = ctn.sap_damage
+		#sap_ignored = ctn.sap_ignored
 		backfire_damage = ctn.backfire_damage
 		# user_data and enemy_data should be passed by reference, so there's no need to assign them back from the effect container.
 		
@@ -2319,10 +2327,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 		# Spend slimes, to a minimum of zero
 		user_data.change_slimes(n=(-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source=ewcfg.source_spending)
-		user_data.persist()
 
 		# Spend sap
-		user_data.sap -= weapon.sap_cost
+		#user_data.sap -= weapon.sap_cost
 		user_data.limit_fix()
 		user_data.persist()
 
@@ -2390,15 +2397,15 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	if miss or backfire or jammed:
 		slimes_damage = 0
-		sap_damage = 0
+		#sap_damage = 0
 		weapon_item.item_props["consecutive_hits"] = 0
 		crit = False
 
-	if crit:
-		sap_damage += 1
+	#if crit:
+	#	sap_damage += 1
 
-	if user_data.life_state == ewcfg.life_state_shambler:
-		sap_damage += 1
+	#if user_data.life_state == ewcfg.life_state_shambler:
+	#	sap_damage += 1
 
 	# Remove !revive invulnerability.
 	user_data.time_lastrevive = 0
@@ -2424,13 +2431,13 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# if enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state == ewcfg.life_state_shambler:
 	# 	slimes_damage *= 0.25
 
-	if not sandbag_mode:
+	#if not sandbag_mode:
 		# apply hardened sap armor
-		sap_armor = get_sap_armor(shootee_data = enemy_data, sap_ignored = sap_ignored)
-		slimes_damage *= sap_armor
-		slimes_damage = int(max(slimes_damage, 0))
+		#sap_armor = get_sap_armor(shootee_data = enemy_data, sap_ignored = sap_ignored)
+		#slimes_damage *= sap_armor
+		#slimes_damage = int(max(slimes_damage, 0))
 
-	sap_damage = min(sap_damage, enemy_data.hardened_sap)
+	#sap_damage = min(sap_damage, enemy_data.hardened_sap)
 
 	# Damage stats
 	ewstats.track_maximum(user=user_data, metric=ewcfg.stat_max_hitdealt, value=slimes_damage)
@@ -2469,7 +2476,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
 	enemy_data.bleed_storage += slimes_tobleed
 	enemy_data.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
-	enemy_data.hardened_sap -= sap_damage
+	#enemy_data.hardened_sap -= sap_damage
 	enemy_data.persist()
 	sewer_data.change_slimes(n=slimes_drained)
 	sewer_data.persist()
@@ -2610,14 +2617,14 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 						hitzone = randombodypart,
 					))
 
-				sap_response = ""
-				if sap_damage > 0:
-					sap_response = " and {sap_damage} hardened sap".format(sap_damage = sap_damage)
+				#sap_response = ""
+				#if sap_damage > 0:
+				#	sap_response = " and {sap_damage} hardened sap".format(sap_damage = sap_damage)
 
-				response += " {target_name} loses {damage:,} slime{sap_response}!".format(
+				response += " {target_name} loses {damage:,} slime!".format(
 					target_name=enemy_data.display_name,
-					damage=damage,
-					sap_response=sap_response
+					damage=damage
+				#	sap_response=sap_response
 				)
 
 				if enemy_data.ai == ewcfg.enemy_ai_coward:
@@ -3070,6 +3077,13 @@ def get_sap_armor(shootee_data, sap_ignored):
 		sap_armor = (10 + abs(effective_hardened_sap)) / 10
 	return sap_armor
 
+def get_fashion_armor(shootee_data):
+	effective_armor = int(shootee_data.defense / 2)
+
+	if effective_armor >= 0:
+		return 10 / (10 + effective_armor)
+	else:
+		return (10 + abs(effective_armor)) / 10
 
 
 async def spray(cmd):
@@ -3133,8 +3147,8 @@ async def spray(cmd):
 		miss_mod = 0
 		crit_mod = 0
 		dmg_mod = 0
-		sap_damage = 0
-		sap_ignored = 0
+		#sap_damage = 0
+		#sap_ignored = 0
 
 		weapon.fn_effect = ewcfg.weapon_type_convert.get(weapon.id_weapon)
 
@@ -3173,8 +3187,8 @@ async def spray(cmd):
 				bystander_damage=bystander_damage,
 				miss_mod=miss_mod,
 				crit_mod=crit_mod,
-				sap_damage=sap_damage,
-				sap_ignored=sap_ignored,
+				#sap_damage=sap_damage,
+				#sap_ignored=sap_ignored,
 				backfire_damage=backfire_damage
 			)
 
@@ -3191,7 +3205,7 @@ async def spray(cmd):
 			jammed = ctn.jammed
 			slimes_damage = ctn.slimes_damage
 			slimes_spent = ctn.slimes_spent
-			sap_damage = ctn.sap_damage
+			#sap_damage = ctn.sap_damage
 			backfire_damage = ctn.backfire_damage
 
 			if backfire is True and random.randint(0, 1) == 0:

@@ -733,6 +733,10 @@ async def award_fish(fisher, cmd, user_data):
 		if has_fishingrod == True:
 			slime_gain = slime_gain * 2
 
+		#trauma = ewcfg.trauma_map.get(user_data.trauma)
+		#if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
+		#	slime_gain *= (1 - 0.5 * user_data.degradation / 100)
+
 		if fisher.pier.pier_type == ewcfg.fish_slime_void:
 			slime_gain = slime_gain * 1.5
 			value += 30

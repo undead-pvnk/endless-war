@@ -43,8 +43,8 @@ class EwUser:
 	arrested = False
 	active_slimeoid = -1
 	splattered_slimes = 0
-	sap = 0
-	hardened_sap = 0
+	#sap = 0
+	#hardened_sap = 0
 	race = ""
 	attack = 0
 	defense = 0
@@ -111,9 +111,9 @@ class EwUser:
 		if self.move_speed <= 0:
 			self.move_speed = 1
 
-		self.sap = max(0, min(self.sap, ewutils.sap_max_bylevel(self.slimelevel) - self.hardened_sap))
+		#self.sap = max(0, min(self.sap, ewutils.sap_max_bylevel(self.slimelevel) - self.hardened_sap))
 
-		self.hardened_sap = max(0, min(self.hardened_sap, ewutils.sap_max_bylevel(self.slimelevel) - self.sap))
+		#self.hardened_sap = max(0, min(self.hardened_sap, ewutils.sap_max_bylevel(self.slimelevel) - self.sap))
 
 		self.degradation = max(0, self.degradation)
 
@@ -289,8 +289,8 @@ class EwUser:
 		if cause == ewcfg.cause_leftserver:
 			ewitem.item_dropall(id_server=self.id_server, id_user=self.id_user)
 
-		self.sap = 0
-		self.hardened_sap = 0
+		#self.sap = 0
+		#self.hardened_sap = 0
 		self.attack = 0
 		self.defense = 0
 		self.speed = 0
@@ -1022,7 +1022,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -1061,8 +1061,8 @@ class EwUser:
 					ewcfg.col_visiting,
 					ewcfg.col_active_slimeoid,
 					ewcfg.col_has_soul,
-					ewcfg.col_sap,
-					ewcfg.col_hardened_sap,
+					#ewcfg.col_sap,
+					#ewcfg.col_hardened_sap,
 					ewcfg.col_festivity,
 					ewcfg.col_festivity_from_slimecoin,
 					ewcfg.col_slimernalia_kingpin,
@@ -1125,25 +1125,25 @@ class EwUser:
 					self.visiting = result[34]
 					self.active_slimeoid = result[35]
 					self.has_soul = result[36]
-					self.sap = result[37]
-					self.hardened_sap = result[38]
-					self.festivity = result[39]
-					self.festivity_from_slimecoin = result[40]
-					self.slimernalia_kingpin = (result[41] == 1)
-					self.manuscript = result[42]
-					self.spray = result[43]
-					self.swear_jar = result[44]
-					self.degradation = result[45]
-					self.time_lastdeath = result[46]
-					self.sidearm = result[47]
-					self.gambit = result[48]
-					self.credence = result[49]
-					self.credence_used = result[50]
-					self.race = result[51]
-					self.time_racialability = result[52]
-					self.time_lastpremiumpurchase = result[53]
-					self.gvs_currency = result[54]
-					self.gvs_time_lastshambaquarium = result[55]
+					#self.sap = result[37]
+					#self.hardened_sap = result[38]
+					self.festivity = result[37]
+					self.festivity_from_slimecoin = result[38]
+					self.slimernalia_kingpin = (result[39] == 1)
+					self.manuscript = result[40]
+					self.spray = result[41]
+					self.swear_jar = result[42]
+					self.degradation = result[43]
+					self.time_lastdeath = result[44]
+					self.sidearm = result[45]
+					self.gambit = result[46]
+					self.credence = result[47]
+					self.credence_used = result[48]
+					self.race = result[49]
+					self.time_racialability = result[50]
+					self.time_lastpremiumpurchase = result[51]
+					self.gvs_currency = result[52]
+					self.gvs_time_lastshambaquarium = result[52]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -1236,7 +1236,7 @@ class EwUser:
 			self.limit_fix()
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -1277,8 +1277,8 @@ class EwUser:
 				ewcfg.col_visiting,
 				ewcfg.col_active_slimeoid,
 				ewcfg.col_has_soul,
-				ewcfg.col_sap,
-				ewcfg.col_hardened_sap,
+				#ewcfg.col_sap,
+				#ewcfg.col_hardened_sap,
 				ewcfg.col_festivity,
 				ewcfg.col_festivity_from_slimecoin,
 				ewcfg.col_slimernalia_kingpin,
@@ -1337,8 +1337,8 @@ class EwUser:
 				self.visiting,
 				self.active_slimeoid,
 				self.has_soul,
-				self.sap,
-				self.hardened_sap,
+				#self.sap,
+				#self.hardened_sap,
 				self.festivity,
 				self.festivity_from_slimecoin,
 				self.slimernalia_kingpin,
