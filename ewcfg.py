@@ -24714,39 +24714,55 @@ for bait in food_list:
 		pass
 
 # If a fish doesn't bite, send one of these.
-nobite_text = [
+generic_fishing_text = [
 	"You patiently wait...",
 	"This is so fucking boring...",
-	"You watch your hook bob...",
 	"You grow impatient and kick the rotted wooden guard rails...",
 	"AUUUUUGH JUST BITE THE FUCKING HOOK ALREADY...",
 	"You begin to zone-out a bit...",
 	"Shouldn't you be doing something productive?",
 	"You sit patiently, eagerly awaiting a fish to bite. Thanks to your concentration, this descriptive contradiction does not occur to you.",
-	"You begin to daydream about fish sex... Gross...",
-	"You begin to daydream about fish sex... Hot...",
+	"Maybe one day your wife will pardon you...",
+	"You feel the oncoming downward spiral...",
+	"You wonder if the Space Navy has been formed yet...",
+	"You start to slip into an existential crisis...",
+	"You hum some sea shanties...",
+	"Fuck fish...",
+	"Fish..."
+]
+normal_fishing_text = [
+	"You watch your hook bob...",
 	"You see a fish about to bite your hook, but you shout in elation, scaring it away...",
 	"You make direct eye contact with a fish, only to quickly look away...",
 	"♪ Fishing for Fishies! ♪",
 	"♪ That Captain Albert Alexander! ♪",
-	"You get the urge to jump in and try to grab a fish, before remembering that you can't swim...",
-	"You hum some sea shanties...",
-	"You start to slip into an existential crisis...",
-	"You jitter as other seamen catch fish before you. Fuck fishing...",
-	"You feel the oncoming downward spiral...",
-	"You shake your head as a young seaman baits a perfectly good slice of pizza on his hook... What a cretin...",
-	"You wonder if the Space Navy has been formed yet...",
-	"Man... Why were you excited for this shit?",
 	"Still better than Minesweeper...",
-	"Maybe one day your wife will pardon you...",
-	"Fuck fish...",
-	"You let out a deep sigh, scaring away a fish...",
+	"Man... Why were you excited for this shit?",
+	"You begin to daydream about fish sex... Gross...",
+	"You begin to daydream about fish sex... Hot...",
+	"You get the urge to jump in and try to grab a fish, before remembering that you can't swim...",
+	"You jitter as other seamen catch fish before you. Fuck fishing...",
+	"You shake your head as a young seaman baits a perfectly good slice of pizza on his hook... What a cretin...",
 	"Wouldn't it be funny if you just reached into the sea and grabbed one? Haha, yeah, that'd be funny...",
 	"You see a bird carry off a Plebefish in the distance... Good riddance...",
 	"You spot a stray bullet in the distance...",
 	"You see a dead body float up to the surface of the Slime...",
-	"Fish..."
-]
+	"You let out a deep sigh, scaring away a fish...",
+] + generic_fishing_text
+void_fishing_text = [
+	"You get the urge to jump in and try to grab a fish, before the voice reminds you that you can't swim...",
+	"Did the water just wink at you?",
+	"That guy in the water looks so handsome... You should give him your number.",
+	"Your mother motions you to join her in the water, it's nice and warm!",
+	"HAHAHAHA OH WOW",
+	"Hmmm?",
+	"Man, the water looks fucking delicious, you should take a sip.",
+	"Wait, why did you come here again?",
+	"God, what a beautiful smile. So many of them, too.",
+	"Go on, take a nap, the fish will wait for you.",
+	"What is _that_?",
+	"The girl across the pond has such a nice voice... Please keep singing...",
+] + generic_fishing_text
 
 generic_help_response = "Check out the guide for help: https://ew.krakissi.net/guide/\nThe guide won't cover everything though, and may even be a bit outdated in some places, so you can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work by using the !help command there. Portable game guides can also be bought there for 10,000 slime."
 
