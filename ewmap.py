@@ -779,41 +779,33 @@ async def descend(cmd):
 		life_state = user_data.life_state
 		faction = user_data.faction
 		await asyncio.sleep(travel_duration)
+		try:
+			await descent_message.delete()
+		except:
+			pass
+		
+		user_data = EwUser(member = cmd.message.author)
+		if move_current == ewutils.moves_active[cmd.message.author.id] and user_data.life_state == life_state and faction == user_data.faction:
+			user_data.poi = ewcfg.poi_id_thevoid
+			user_data.time_lastenter = int(time.time())
 
-		if user_data.life_state != life_state or faction != user_data.faction:
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, user_data.life_state == ewcfg.life_state_enlisted)
+			
+			user_data.persist()
+			ewutils.end_trade(user_data.id_user)
+			await ewrolemgr.updateRoles(client = ewutils.get_client(), member = cmd.message.author)
+			await user_data.move_inhabitants(id_poi = ewcfg.poi_id_thevoid)
+
+			void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+			response = "You go up the flight of stairs and find yourself in {}.".format(void_poi.str_name)
+			msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+			await asyncio.sleep(20)
 			try:
-				await descent_message.delete()
+				await msg.delete()
 				pass
 			except:
 				pass
 			return
-
-		user_data.poi = ewcfg.poi_id_thevoid
-		user_data.time_lastenter = int(time.time())
-
-		enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
-		
-		user_data.persist()
-		ewutils.end_trade(user_data.id_user)
-		await ewrolemgr.updateRoles(client = ewutils.get_client(), member = cmd.message.author)
-		await user_data.move_inhabitants(id_poi = ewcfg.poi_id_thevoid)
-		try:
-			await descent_message.delete()
-			pass
-		except:
-			pass
-
-		void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
-		response = "You go up the flight of stairs and find yourself in {}.".format(void_poi.str_name)
-		msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
-		await asyncio.sleep(20)
-		try:
-			await msg.delete()
-			pass
-		except:
-			pass
-		return
 	else:
 		return await move(cmd)
 	
