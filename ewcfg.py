@@ -11495,6 +11495,18 @@ furniture_list = [
 		furniture_place_desc = "You do a little maraca dance while nobody's watching and quickly toss them out of sight.",
 		furn_set = "instrument"
 	),
+	EwFurniture(
+		id_furniture = "saxophone",
+		str_name = "saxophone",
+		str_desc = "A metal-based plant-based saxophone.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "A saxophone is leaning against the wall.",
+		furniture_place_desc = "You lean your saxaphone up against the wall",
+		furn_set = "instrument"
+	),
 ]
 
 
@@ -13818,7 +13830,7 @@ poi_list = [
 			"tent"
 		],
 		str_name = "Tent City",
-		str_desc = "This street used to be a congested road, but now the only traffic on it are hobos really putting the “home” in “homeless”. Tents and cardboard boxes are set up up and down this street, providing totally sufficient protection against the elements for their swathes of downtrodden inhabitants. Generations of people impoverished from birth have grown up here, never knowing anything but the tents. Drug abuse and sexual assault are rampant. Many have lost their minds and ramble on about insane conspiracy theorists and incoherent beliefs. It would be funny if it weren’t so sad. Actually, that last part is still funny. Who ever heard of a “round earth”?",
+		str_desc = "This street used to be a congested road, but now the only traffic on it are hobos really putting the “home” in “homeless”. Tents and cardboard boxes are set up up and down this street, providing totally sufficient protection against the elements for their swathes of downtrodden inhabitants. Generations of people impoverished from birth have grown up here, never knowing anything but the tents. Drug abuse and violent crimes are rampant. Many have lost their minds and ramble on about insane conspiracy theorists and incoherent beliefs. It would be funny if it weren’t so sad. Actually, that last part is still funny. Who ever heard of a “round earth”?",
 		channel = 'tent-city',
 		wikipage = wiki_baseurl + "Jaywalker_Plain#Tent_City",
 		is_street = True,
@@ -21097,6 +21109,23 @@ smelting_recipe_list = [
 			'phosphorpoppies':1
 		},
 		products = ['gourdmaracas']
+	),
+	EwSmeltingRecipe(
+		id_recipe = "saxophone",
+		str_name = "a saxophone",
+		alias = [
+			"sax",
+			"saxamaphone",
+		],
+		ingredients = {
+			weapon_id_shotgun: 1,
+			'earlbrowntea': 1,
+			item_id_metallicapheads: 4,
+			item_id_cute_material: 10,
+			item_id_aushuckstalks: 1,
+			item_id_slimepoudrin: 5,
+		},
+		products = ['saxophone']
 	),
 	EwSmeltingRecipe(
 		id_recipe="whitedye",
