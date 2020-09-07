@@ -281,19 +281,29 @@ async def find_recipes_by_item(cmd):
 		#adds the recipe list to a response
 		else:
 			response = "\n"
+			number_recipe = 1
+			list_length = len(makes_sought_item)
 			for item in makes_sought_item:
-				# formats items in form "# item" (like "1 poudrin" or whatever)
-				ingredients_list = []
-				ingredient_strings = []
-				for ingredient in item.ingredients:
-					ingredient_strings.append("{} {}".format(item.ingredients.get(ingredient), ingredient))
+				if (item.id_recipe == "toughcosmetic" and ewcfg.cosmetic_map[sought_item].style is not ewcfg.style_tough
+				or item.id_recipe == "smartcosmetic" and ewcfg.cosmetic_map[sought_item].style is not ewcfg.style_smart
+				or item.id_recipe == "beautifulcosmetic" and ewcfg.cosmetic_map[sought_item].style is not ewcfg.style_beautiful
+				or item.id_recipe == "cutecosmetic" and ewcfg.cosmetic_map[sought_item].style is not ewcfg.style_cute
+				or item.id_recipe == "coolcosmetic" and ewcfg.cosmetic_map[sought_item].style is not ewcfg.style_cool):
+					list_length -= 1
+					continue
+				else:
+					# formats items in form "# item" (like "1 poudrin" or whatever)
+					ingredients_list = []
+					ingredient_strings = []
+					for ingredient in item.ingredients:
+						ingredient_strings.append("{} {}".format(item.ingredients.get(ingredient), ingredient))
 				
-				response += "To smelt this item, you'll need *{}*.\n".format(ewutils.formatNiceList(names = ingredient_strings, conjunction = "and"))
-				
-				# just in case there's more than one crafting recipe for this item, for some reason
-				if len(makes_sought_item) > 1:
-					response += "Alternatively, "
-
+					if number_recipe == 1:
+						response += "To smelt this item, you'll need *{}*. ({})\n".format(ewutils.formatNiceList(names = ingredient_strings, conjunction = "and"), item.id_recipe)
+					else:
+						response += "Alternatively, to smelt this item, you'll need *{}*. ({})\n".format(ewutils.formatNiceList(names = ingredient_strings, conjunction = "and"), item.id_recipe)
+					number_recipe += 1
+					
 			if len(uses_sought_item) > 0:
 				response += "This item can be used to smelt *{}*.".format(ewutils.formatNiceList(names = uses_sought_item, conjunction = "and"))
 	
