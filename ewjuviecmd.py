@@ -1518,7 +1518,7 @@ def create_mining_event(cmd):
 		randomn = random.random()
 
 		# gap into the void
-		if randomn < 0.1:
+		if randomn < 0.05:
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi

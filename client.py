@@ -269,9 +269,6 @@ cmd_map = {
 	# Ghosts can haunt enlisted players to reduce their slime score.
 	ewcfg.cmd_haunt: ewspooky.haunt,
 
-	# how ghosts leave the sewers
-	ewcfg.cmd_manifest: ewspooky.manifest,
-
 	# ghosts can inhabit players to follow them around
 	ewcfg.cmd_inhabit: ewspooky.inhabit,
 
@@ -280,6 +277,10 @@ cmd_map = {
 
 	# ghosts can empower the weapon of the player they're inhabiting
 	ewcfg.cmd_possess_weapon: ewspooky.possess_weapon,
+
+	# ghosts can enhance fishing for the player they're inhabiting
+	ewcfg.cmd_possess_fishing_rod: ewspooky.possess_fishing_rod,
+	ewcfg.cmd_possess_fishing_rod_alt1: ewspooky.possess_fishing_rod,
 
 	# ghosts can turn their negaslime into negapoudrins
 	ewcfg.cmd_crystalize_negapoudrin: ewspooky.crystalize_negapoudrin,
@@ -500,6 +501,10 @@ cmd_map = {
 
 	#smelting
 	ewcfg.cmd_smelt: ewsmelting.smelt,
+	ewcfg.cmd_wcim: ewsmelting.find_recipes_by_item,
+	ewcfg.cmd_wcim_alt1: ewsmelting.find_recipes_by_item,
+	ewcfg.cmd_wcim_alt2: ewsmelting.find_recipes_by_item,
+	ewcfg.cmd_wcim_alt3: ewsmelting.find_recipes_by_item,
 
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
@@ -595,14 +600,14 @@ cmd_map = {
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
 	ewcfg.cmd_clear_quadrant: ewquadrants.clear_quadrant,
 	ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
-	ewcfg.cmd_get_flushed: ewquadrants.get_flushed,
-	ewcfg.cmd_get_flushed_alt1: ewquadrants.get_flushed,
-	ewcfg.cmd_get_pale: ewquadrants.get_pale,
-	ewcfg.cmd_get_pale_alt1: ewquadrants.get_pale,
-	ewcfg.cmd_get_caliginous: ewquadrants.get_caliginous,
-	ewcfg.cmd_get_caliginous_alt1: ewquadrants.get_caliginous,
-	ewcfg.cmd_get_ashen: ewquadrants.get_ashen,
-	ewcfg.cmd_get_ashen_alt1: ewquadrants.get_ashen,
+	ewcfg.cmd_get_sloshed: ewquadrants.get_sloshed,
+	ewcfg.cmd_get_sloshed_alt1: ewquadrants.get_sloshed,
+	ewcfg.cmd_get_roseate: ewquadrants.get_roseate,
+	ewcfg.cmd_get_roseate_alt1: ewquadrants.get_roseate,
+	ewcfg.cmd_get_violacious: ewquadrants.get_violacious,
+	ewcfg.cmd_get_violacious_alt1: ewquadrants.get_violacious,
+	ewcfg.cmd_get_policitous: ewquadrants.get_policitous,
+	ewcfg.cmd_get_policitous_alt1: ewquadrants.get_policitous,
 
 	# mutations
 	ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
@@ -788,6 +793,7 @@ cmd_map = {
 	ewcfg.cmd_flutter: ewrace.flutter,
 	ewcfg.cmd_request_petting: ewrace.request_petting,
 	ewcfg.cmd_rampage: ewrace.rampage,
+	ewcfg.cmd_entomize: ewrace.entomize,
 	ewcfg.cmd_confuse: ewrace.confuse,
 }
 
@@ -1394,7 +1400,7 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or len(message.author.roles) < 4 or (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
@@ -1546,8 +1552,8 @@ async def on_message(message):
 			return
 
 		# assign the appropriate roles to a user with less than @everyone, faction, both location roles
-		if len(message.author.roles) < 4:
-			await ewrolemgr.updateRoles(client = client, member = message.author)
+		# if len(message.author.roles) < 4:
+			# await ewrolemgr.updateRoles(client = client, member = message.author)
 
 		user_data = EwUser(member = message.author)
 		if user_data.arrested:
@@ -1636,7 +1642,8 @@ async def on_message(message):
 		# Shows damage
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'damage'):
 			user_data = EwUser(member = message.author, data_level = 1)
-			attack_stat_multiplier = 1 + (user_data.attack / 100) # 1% more damage per stat point
+			slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
+			attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
 			weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
 			slimes_damage = int(10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "{}".format(slimes_damage)))

@@ -294,6 +294,11 @@ def canAttack(cmd):
 	for token in cmd.tokens:
 		tokens_lower.append(token.lower())
 
+	code_count = 0
+	for code in tokens_lower:
+		if code.upper() in ewcfg.captcha_dict:
+			code_count += 1
+
 	if user_data.weapon >= 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
@@ -329,7 +334,9 @@ def canAttack(cmd):
 		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again.\nSecurity Code: **{captcha}**".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam, captcha = ewutils.text_to_regional_indicator(captcha))
 	elif weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
 		response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
-
+	elif code_count > 1:
+		response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
+	
 	elif user_data.weapon == -1 and user_data.life_state != ewcfg.life_state_shambler:
 		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
 	elif cmd.mentions_count <= 0:
@@ -375,7 +382,7 @@ def canAttack(cmd):
 		user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 		user_isshambler = user_data.life_state == ewcfg.life_state_shambler
   
-		weapon_possession_data = user_data.get_weapon_possession()
+		possession_data = user_data.get_possession()
 
 		if shootee_data.life_state == ewcfg.life_state_kingpin:
 			# Disallow killing generals.
@@ -416,11 +423,11 @@ def canAttack(cmd):
 			# Target is a ghost but user is not able to bust 
 			response = "You don't know how to fight a ghost."
 
-		elif shootee_data.life_state == ewcfg.life_state_corpse and shootee_data.poi == ewcfg.poi_id_thevoid:
+		elif shootee_data.life_state == ewcfg.life_state_corpse and shootee_data.poi in [ewcfg.poi_id_thevoid, ewcfg.poi_id_blackpond]:
 			# Can't bust ghosts in their realm
 			response = "{} is empowered by the void, and deflects your attacks without breaking a sweat.".format(member.display_name)
 
-		elif weapon_possession_data and (shootee_data.id_user == weapon_possession_data[0]):
+		elif possession_data and (shootee_data.id_user == possession_data[0]):
 			# Target is possessing user's weapon
 			response = "{}'s contract forbids you from harming them. You should've read the fine print.".format(member.display_name)
 
@@ -453,6 +460,14 @@ def canCap(cmd):
 	tokens_lower = []
 	for token in cmd.tokens:
 		tokens_lower.append(token.lower())
+
+	code_count = 0
+	for code in tokens_lower:
+		if code.upper() in ewcfg.captcha_dict:
+			code_count += 1
+			
+	# print(code_count)
+
 	#alternate sidearm model that i'm saving just in case
 	#if user_data.sidearm >= 0:
 	#	sidearm_item = EwItem(id_item=user_data.sidearm)
@@ -487,6 +502,8 @@ def canCap(cmd):
 	elif sidearm != None and sidearm.cooldown + (float(sidearm_item.item_props.get("time_lastattack")) if sidearm_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
 		response = "Your {weapon_name} isn't ready for another spray yet!".format(weapon_name=sidearm.id_weapon)
 	elif sidearm != None and ewcfg.weapon_class_captcha in sidearm.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
+		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
+	elif code_count > 1:
 		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 	elif user_data.life_state != ewcfg.life_state_enlisted:
 		response = "Juveniles are too cowardly and/or centrist to be vandalizing anything."
@@ -584,7 +601,7 @@ async def attack(cmd):
 				crit_mod += 0.05
 
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-		attack_stat_multiplier = 1 + (user_data.attack / 100) # 1% more damage per stat point
+		attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
 		weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
 		slimes_damage = int(10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 
@@ -1056,7 +1073,7 @@ async def attack(cmd):
 					if coinbounty > 0:
 						response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, cmd.message.author.display_name)
       
-					weapon_possession = user_data.get_weapon_possession()
+					weapon_possession = user_data.get_possession('weapon')
 					if weapon_possession:
 						response += fulfill_ghost_weapon_contract(weapon_possession, market_data, user_data, cmd.message.author.display_name)
 
@@ -2012,8 +2029,13 @@ async def unjam(cmd):
 				tokens_lower = []
 				for token in cmd.tokens[1:]:
 					tokens_lower.append(token.lower())
+				
+				code_count = 0
+				for code in tokens_lower:
+					if code.upper() in ewcfg.captcha_dict:
+						code_count += 1
 
-				if captcha in tokens_lower:
+				if captcha in tokens_lower and code_count == 1:
 					weapon_item.item_props["jammed"] = "False"
 					weapon_item.persist()
 					response = weapon.str_unjam.format(name_player = cmd.message.author.display_name)
@@ -2197,7 +2219,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-	attack_stat_multiplier = 1 + (user_data.attack / 100) # 1% more damage per stat point
+	attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
 	weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
 	slimes_damage = int(10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 	
@@ -2525,7 +2547,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			response = "{name_target} is hit!!\n\n{name_target} has died.".format(
 				name_target=enemy_data.display_name)
 
-		weapon_possession = user_data.get_weapon_possession()
+		weapon_possession = user_data.get_possession('weapon')
 		if weapon_possession:
 			response += fulfill_ghost_weapon_contract(weapon_possession, market_data, user_data, cmd.message.author.display_name)
 
@@ -2959,7 +2981,7 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 	damage_mod = 1
 
 	# Weapon possession
-	if user_data.get_weapon_possession():
+	if user_data.get_possession('weapon'):
 		damage_mod *= 1.2
 
 	# Lone wolf
@@ -3032,7 +3054,7 @@ def damage_mod_defend(shootee_data, shootee_mutations, market_data, shootee_weap
 def get_sap_armor(shootee_data, sap_ignored):
 	# apply hardened sap armor
 	try:
-		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored + int(shootee_data.defense / 4)
+		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored + int(shootee_data.defense / 2)
 	except: # If shootee_data doesn't have defense, aka it's a monster
 		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored
 	level = 0
@@ -3446,18 +3468,7 @@ def fulfill_ghost_weapon_contract(possession_data, market_data, user_data, user_
 	market_data.negaslime -= -negaslime_gained
 	market_data.persist()
 
-	# cancel possession
-	ewutils.execute_sql_query(
-		"UPDATE inhabitations SET {empowered} = %s WHERE {id_fleshling} = %s AND {id_server} = %s".format(
-			empowered = ewcfg.col_empowered,
-			id_fleshling = ewcfg.col_id_fleshling,
-			id_server = ewcfg.col_id_server,
-		),(
-			False,
-			user_data.id_user,
-			user_data.id_server,
-		)
-	)
+	user_data.cancel_possession()
 
 	server = ewutils.get_client().get_guild(user_data.id_server)
 	ghost_name = server.get_member(ghost_id).display_name

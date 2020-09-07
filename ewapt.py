@@ -2484,14 +2484,14 @@ async def aptCommands(cmd):
 		return await ewmarket.quarterlyreport(cmd=cmd)
 	elif ewcfg.cmd_salute == cmd_text:
 		return await ewcmd.salute(cmd=cmd)
-	elif ewcfg.cmd_get_ashen == cmd_text or ewcfg.cmd_get_ashen_alt1 == cmd_text:
-		return await ewquadrants.get_ashen(cmd=cmd)
-	elif ewcfg.cmd_get_caliginous == cmd_text or ewcfg.cmd_get_caliginous_alt1 == cmd_text:
-		return await ewquadrants.get_caliginous(cmd=cmd)
-	elif ewcfg.cmd_get_flushed == cmd_text or ewcfg.cmd_get_flushed_alt1 == cmd_text:
-		return await ewquadrants.get_ashen(cmd=cmd)
-	elif ewcfg.cmd_get_pale == cmd_text or ewcfg.cmd_get_pale_alt1 == cmd_text:
-		return await ewquadrants.get_pale(cmd=cmd)
+	elif ewcfg.cmd_get_policitous == cmd_text or ewcfg.cmd_get_policitous_alt1 == cmd_text:
+		return await ewquadrants.get_policitous(cmd=cmd)
+	elif ewcfg.cmd_get_violacious == cmd_text or ewcfg.cmd_get_violacious_alt1 == cmd_text:
+		return await ewquadrants.get_violacious(cmd=cmd)
+	elif ewcfg.cmd_get_sloshed == cmd_text or ewcfg.cmd_get_sloshed_alt1 == cmd_text:
+		return await ewquadrants.get_sloshed(cmd=cmd)
+	elif ewcfg.cmd_get_roseate == cmd_text or ewcfg.cmd_get_roseate_alt1 == cmd_text:
+		return await ewquadrants.get_roseate(cmd=cmd)
 	elif ewcfg.cmd_get_quadrants == cmd_text:
 		return await ewquadrants.get_quadrants(cmd=cmd)
 	elif ewcfg.cmd_harvest == cmd_text:
