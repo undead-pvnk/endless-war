@@ -518,7 +518,7 @@ async def cast(cmd):
 					return
 
 				if damp > 10:
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, random.choice(ewcfg.nobite_text)))
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, random.choice(ewcfg.void_fishing_text if fisher.pier.pier_type == ewcfg.fish_slime_void else ewcfg.normal_fishing_text)))
 					fun -= 2
 					bun += 1
 					if bun >= 5:
