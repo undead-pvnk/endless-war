@@ -216,7 +216,7 @@ async def haunt(cmd):
 				# glory to the vanquished
 				target_kills = ewstats.get_stat(user = haunted_data, metric = ewcfg.stat_kills)
 				if target_kills > 5:
-					haunt_power_multiplier *= 1.25 + (target_kills * 100) # 1% per kill after 5
+					haunt_power_multiplier *= 1.25 + (target_kills / 100) # 1% per kill after 5
 				else:
 					haunt_power_multiplier *= 1 + (target_kills * 5 / 100) # 5% per kill
 					
