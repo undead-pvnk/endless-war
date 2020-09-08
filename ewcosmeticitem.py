@@ -125,7 +125,7 @@ async def adorn(cmd):
 
 		cosmetic_items = ewitem.inventory(
 			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
+			id_server = cmd.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
 		)
 
@@ -133,6 +133,12 @@ async def adorn(cmd):
 		item_from_slimeoid = None
 		already_adorned = False
 		space_adorned = 0
+
+		for item in cosmetic_items:
+			i = EwItem(item.get('id_item'))
+			# Get space used adorned cosmetics
+			if i.item_props['adorned'] == 'true':
+				space_adorned += int(i.item_props['size'])
 
 		# Check all cosmetics found
 		for item in cosmetic_items:
@@ -155,10 +161,6 @@ async def adorn(cmd):
 				else:
 					item_sought = i
 					break
-
-			# Get space used adorned cosmetics
-			if i.item_props['adorned'] == 'true':
-				space_adorned += int(i.item_props['size'])
 
 		if item_sought == None:
 			item_sought = item_from_slimeoid
@@ -213,7 +215,7 @@ async def dedorn(cmd):
 
 		cosmetic_items = ewitem.inventory(
 			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
+			id_server = cmd.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
 		)
 
@@ -256,41 +258,44 @@ async def dedorn(cmd):
 
 
 async def dye(cmd):
-	first_id = ewutils.flattenTokenListToString(cmd.tokens[1:2])
-	second_id = ewutils.flattenTokenListToString(cmd.tokens[2:])
+	hat_id = ewutils.flattenTokenListToString(cmd.tokens[1:2])
+	dye_id = ewutils.flattenTokenListToString(cmd.tokens[2:])
 
 	try:
-		first_id_int = int(first_id)
-		second_id_int = int(second_id)
+		hat_id_int = int(hat_id)
 	except:
-		first_id_int = None
-		second_id_int = None
+		hat_id_int = None
+		
+	try:
+		dye_id_int = int(dye_id)
+	except:
+		dye_id_int = None
 
-	if first_id != None and len(first_id) > 0 and second_id != None and len(second_id) > 0:
+	if hat_id != None and len(hat_id) > 0 and dye_id != None and len(dye_id) > 0:
 		response = "You don't have one."
 
 		items = ewitem.inventory(
 			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
+			id_server = cmd.guild.id,
 		)
 
 		cosmetic = None
 		dye = None
 		for item in items:
-			if item.get('id_item') in [first_id_int, second_id_int] or first_id in ewutils.flattenTokenListToString(item.get('name')) or second_id in ewutils.flattenTokenListToString(item.get('name')):
+			
+			if int(item.get('id_item')) == hat_id_int or hat_id in ewutils.flattenTokenListToString(item.get('name')):
 				if item.get('item_type') == ewcfg.it_cosmetic and cosmetic is None:
 					cosmetic = item
 
+			if int(item.get('id_item')) == dye_id_int or dye_id in ewutils.flattenTokenListToString(item.get('name')):
 				if item.get('item_type') == ewcfg.it_item and item.get('name') in ewcfg.dye_map and dye is None:
 					dye = item	
 
-				if cosmetic != None and dye != None:
-					break
+			if cosmetic != None and dye != None:
+				break
 
 		if cosmetic != None:
 			if dye != None:
-				user_data = EwUser(member = cmd.message.author)
-
 				cosmetic_item = EwItem(id_item=cosmetic.get("id_item"))
 				dye_item = EwItem(id_item=dye.get("id_item"))
 
@@ -425,7 +430,7 @@ async def sew(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
 	# Player must be at the Bodega
-	if cmd.message.channel.name == ewcfg.channel_bodega:
+	if user_data.poi == ewcfg.poi_id_bodega:
 		item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 		try:
@@ -439,7 +444,7 @@ async def sew(cmd):
 
 			cosmetic_items = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
+				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_cosmetic
 			)
 
@@ -477,16 +482,24 @@ async def sew(cmd):
 							original_durability = int(float(item_sought.item_props['original_durability'])) # If it's a scalp created after
 
 					else: # Find the mold of the item in ewcfg.cosmetic_items_list
-						original_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
-						original_durability = original_item.durability
+						if item_sought.item_props.get('rarity') == ewcfg.rarity_princeps:
+							original_durability = ewcfg.base_durability * 100
+							original_item = None # Princeps do not have existing templates
+						else:
+							try:
+								original_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
+								original_durability = original_item.durability
+							except:
+								original_durability = ewcfg.base_durability
 
-					current_durability = int(item_sought.item_props['durability'])
+					current_durability = int(float(item_sought.item_props['durability']))
 
 					# If the cosmetic is actually damaged at all
 					if current_durability < original_durability:
 						difference = abs(current_durability - original_durability)
 
-						cost_ofrepair = difference * 4 # NO ONE SAID IT WOULD BE EASY
+						# cost_ofrepair = difference * 4 # NO ONE SAID IT WOULD BE EASY
+						cost_ofrepair = 10000 # I did...
 
 						if cost_ofrepair > user_data.slimes:
 							response = 'The hipster behind the counter narrows his gaze, his thick-rimmed glasses magnify his hatred of your ignoble ancestry.\n"Sir… it would cost {:,} to sew this garment back together. That’s more slime than you or your clan could ever accrue. Good day, sir. I SAID GOOD DAY. Come back when you’re a little, mmmmhh, *richer*."'.format(cost_ofrepair)
@@ -500,22 +513,23 @@ async def sew(cmd):
 							accepted = False
 
 							try:
-								message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
+								message = await cmd.client.wait_for('message', timeout = 20, check=lambda message: message.author == cmd.message.author and 
+																message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 								if message != None:
-									if message.content.lower() == "!accept":
+									if message.content.lower() == ewcfg.cmd_accept:
 										accepted = True
-									if message.content.lower() == "!refuse":
+									if message.content.lower() == ewcfg.cmd_refuse:
 										accepted = False
 							except:
 								accepted = False
 
 							# Cancel deal if the hat is no longer in user's inventory
-							if item_sought.id_owner != user_data.id_user:
+							if item_sought.id_owner != str(user_data.id_user):
 								accepted = False
 
 							# Cancel deal if the user has left Krak Bay
-							if user_data.poi != ewcfg.poi_id_krakbay:
+							if user_data.poi != ewcfg.poi_id_bodega:
 								accepted = False
 
 							# Candel deal if the user doesn't have enough slime anymore
@@ -523,7 +537,7 @@ async def sew(cmd):
 								accepted = False
 
 							if accepted == True:
-								user_data.slimes -= cost_ofrepair
+								user_data.change_slimes(n=-cost_ofrepair, source=ewcfg.source_spending)
 								user_data.persist()
 
 								item_sought.item_props['durability'] = original_durability
@@ -546,7 +560,7 @@ async def retrofit(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
 	# Player must be at the Bodega
-	if cmd.message.channel.name == ewcfg.channel_bodega:
+	if user_data.poi == ewcfg.poi_id_bodega:
 		item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 		try:
@@ -560,7 +574,7 @@ async def retrofit(cmd):
 
 			cosmetic_items = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
+				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_cosmetic
 			)
 
@@ -598,6 +612,11 @@ async def retrofit(cmd):
 
 					# Get the stats retrofitting would give you from the item model in ewcfg.cosmetic_items_list
 					desired_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
+					
+					if desired_item == None:
+						response = "The hipster behind the counter doesn't really know what to do with that cosmetic, it's simply too outdated and worn out. He thinks you should just take it home and stuff it inside a box as a souvenir."
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 					desired_item_stats = {}
 
 					for stat in ewcfg.playerstats_list:
@@ -610,11 +629,7 @@ async def retrofit(cmd):
 
 					# Check to see if the cosmetic is actually outdated
 					if current_item_stats != desired_item_stats:
-						if desired_item.price:
-							cost_ofretrofit = desired_item.price * 4
-
-						else:
-							cost_ofretrofit = 1000000 # This is a completely random number that I arbitrarily pulled out of my ass
+						cost_ofretrofit = 100 # This is a completely random number that I arbitrarily pulled out of my ass
 
 						if cost_ofretrofit > user_data.slimes:
 							response = 'The hipster behind the counter narrows his gaze, his thick-rimmed glasses magnify his hatred of your ignoble ancestry.\n"Sir… it would cost {:,} to retrofit this garment with updated combat abilities. That’s more slime than you or your clan could ever accrue. Good day, sir. I SAID GOOD DAY. Come back when you’re a little, mmmmhh, *richer*."'.format(cost_ofretrofit)
@@ -628,22 +643,23 @@ async def retrofit(cmd):
 							accepted = False
 
 							try:
-								message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
+								message = await cmd.client.wait_for('message', timeout = 20, check=lambda message: message.author == cmd.message.author and 
+																message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 								if message != None:
-									if message.content.lower() == "!accept":
+									if message.content.lower() == ewcfg.cmd_accept:
 										accepted = True
-									if message.content.lower() == "!refuse":
+									if message.content.lower() == ewcfg.cmd_refuse:
 										accepted = False
 							except:
 								accepted = False
 
 							# Cancel deal if the hat is no longer in user's inventory
-							if item_sought.id_owner != user_data.id_user:
+							if item_sought.id_owner != str(user_data.id_user):
 								accepted = False
 
 							# Cancel deal if the user has left Krak Bay
-							if user_data.poi != ewcfg.poi_id_krakbay:
+							if user_data.poi != ewcfg.poi_id_bodega:
 								accepted = False
 
 							# Candel deal if the user doesn't have enough slime anymore

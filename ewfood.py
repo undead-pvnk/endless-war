@@ -55,6 +55,9 @@ class EwFood:
 	# The way that you can acquire this item. If blank, it's not relevant.
 	acquisition = ""
 
+	# Whether or not the item expires
+	perishable = True
+
 	#Timestamp when an item was fridged.
 
 	time_fridged = 0
@@ -74,6 +77,7 @@ class EwFood:
 		time_fridged =0,
 		ingredients = "",
 		acquisition = "",
+		perishable = True
 	):
 		self.item_type = ewcfg.it_food
 
@@ -90,40 +94,57 @@ class EwFood:
 		self.time_fridged = time_fridged
 		self.ingredients = ingredients
 		self.acquisition = acquisition
+		self.perishable = perishable
 
 
 """ show all available food items """
 async def menu(cmd):
-	user_data = EwUser(member = cmd.message.author, data_level = 1)
-	if user_data.life_state == ewcfg.life_state_shambler:
+	user_data = EwUser(member = cmd.message.author, data_level = 2)
+	if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	market_data = EwMarket(id_server = cmd.message.server.id)
-	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+	market_data = EwMarket(id_server = cmd.guild.id)
+	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if poi is None or len(poi.vendors) == 0:
+	if poi is None or len(poi.vendors) == 0 or ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		
+		mother_district_data = None
+		for mother_poi in poi.mother_districts:
 
-		if district_data.is_degraded():
+			mother_poi_data = ewcfg.id_to_poi.get(mother_poi)
+
+			if mother_poi_data.is_district:
+				# One of the mother pois was a district, get its controlling faction
+				mother_district_data = EwDistrict(district=mother_poi, id_server=user_data.id_server)
+				break
+			else:
+				# One of the mother pois was a street, get the father district of that street and its controlling faction
+				father_poi = mother_poi_data.father_district
+				mother_district_data = EwDistrict(district=father_poi, id_server=user_data.id_server)
+				break
+
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+		#mother_district_data = EwDistrict(district = destination_poi.id_poi, id_server = user_data.id_server)
+
+		if district_data.is_degraded() and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		if poi.is_subzone:
-			district_data = EwDistrict(district = poi.mother_district, id_server = cmd.message.server.id)
-		else:
-			district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
-
+		
+		controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
+		
 		response = "{} Menu:\n\n".format(poi.str_name)
 
 		vendors_list = poi.vendors
 
 		for vendor in vendors_list:
 			if vendor == ewcfg.vendor_secretbodega:
-				if user_data.freshness < 5000:
+				if user_data.freshness < ewcfg.freshnesslevel_4:
 					continue
 				else:
 					response += '\nThe hipster behind the counter nearly falls out of his chair after laying eyes on the sheer, unadulterated freshness before him.\n"S-Sir! Your outfit... i-it is positively ***on fleek!!*** As I see you are a fashion enthusiast like myself, let me show you the good stuff…"\n'
@@ -164,15 +185,16 @@ async def menu(cmd):
 				if stock_data != None:
 					value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
 
-
-				if district_data.controlling_faction != "":
-					# prices are halved for the controlling gang
-					if district_data.controlling_faction == user_data.faction:
-						value /= 2
-
-					# and 4 times as much for enemy gangsters
-					elif user_data.faction != "":
-						value *= 4
+				
+				if mother_district_data != None:
+					if mother_district_data.all_streets_taken() != "" and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
+						# prices are halved for the controlling gang
+						if mother_district_data.all_streets_taken() == user_data.faction:
+							value /= 2
+	
+						# and 4 times as much for enemy gangsters
+						elif user_data.faction != "":
+							value *= 4
 
 				value = int(value)
 
@@ -184,7 +206,7 @@ async def menu(cmd):
 			response += "**{}**: *{}*\n".format(vendor, ewutils.formatNiceList(names = items))
 
 			if vendor == ewcfg.vendor_bodega:
-				if user_data.freshness < 100:
+				if user_data.freshness < ewcfg.freshnesslevel_1:
 					response += "\nThe hipster behind the counter is utterly repulsed by the fashion disaster in front of him. Looks like you just aren’t fresh enough for him."
 			if user_data.has_soul == 0:
 				if vendor == ewcfg.vendor_dojo:
@@ -200,10 +222,18 @@ async def menu(cmd):
 				elif vendor == ewcfg.vendor_beachresort or vendor == ewcfg.vendor_countryclub:
 					response += "\n\nEverything looks so fancy here, but it doesn't really appeal to you since you don't have a soul."
 				elif vendor == ewcfg.vendor_bodega:
-					if user_data.freshness < 100:
+					if user_data.freshness < ewcfg.freshnesslevel_1:
 						response += ".. and you probably never will be."
-
-
+				elif vendor == ewcfg.vendor_glocksburycomics:
+					response += "\n\nThe cashier here tries to start up a conversation about life being worth living. You're having none of it."
+				elif vendor == ewcfg.vendor_basedhardware:
+					response += "\n\nSo many industrial metals here... You contemplate which you could use to kill yourself..."
+				elif vendor == ewcfg.vendor_basedhardware:
+					response += "\n\nNot even waffles could hope to make your emptiness go away."
+				elif vendor == ewcfg.vendor_greencakecafe:
+					response += "\n\nThe barista behind the counter pauses to look at your soulless misery for a second, but decides you're not worth it and gets back to work."
+				elif vendor == ewcfg.vendor_slimypersuits:
+					response += "\n\nYour mere presence in here ruins the cheery atmosphere."
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -211,20 +241,23 @@ async def menu(cmd):
 # Buy items.
 async def order(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
+	if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	market_data = EwMarket(id_server = cmd.message.server.id)
-	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
-	if poi is None or len(poi.vendors) == 0:
+	market_data = EwMarket(id_server = cmd.guild.id)
+	currency_used = 'slime'
+	current_currency_amount = user_data.slimes
+	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	if poi is None or len(poi.vendors) == 0 or ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
-		if district_data.is_degraded():
+		if district_data.is_degraded() and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		#value = ewutils.flattenTokenListToString(cmd.tokens[1:2])
@@ -308,6 +341,10 @@ async def order(cmd):
 						pass
 					else:
 						current_vendor = None
+						
+			if current_vendor == ewcfg.vendor_downpourlaboratory:
+				currency_used = 'brainz'
+				current_currency_amount = user_data.gvs_currency
 
 			if current_vendor is None or len(current_vendor) < 1:
 				response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
@@ -316,6 +353,17 @@ async def order(cmd):
 				response = ""
 
 				value = item.price
+				premium_purchase = True if item_id in ewcfg.premium_items else False
+				if premium_purchase:
+					togo = True # Just in case they order a premium food item, don't make them eat it right then and there.
+					
+					if ewcfg.cd_premium_purchase > (int(time.time()) - user_data.time_lastpremiumpurchase):
+						response = "That item is in very limited stock! The vendor asks that you refrain from purchasing it for a day or two."
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+					elif ewcfg.cd_new_player > (int(time.time()) - user_data.time_joined):
+						response = "You've only been in the city for a few days. The vendor doesn't trust you with that item very much..."
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				stock_data = None
 				company_data = None
@@ -329,15 +377,11 @@ async def order(cmd):
 				if stock_data is not None:
 					value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
 
-				if poi.is_subzone:
-					district_data = EwDistrict(district = poi.mother_district, id_server = cmd.message.server.id)
-				else:
-					district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+				controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
-
-				if district_data.controlling_faction != "":
+				if controlling_faction != "" and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
 					# prices are halved for the controlling gang
-					if district_data.controlling_faction == user_data.faction:
+					if controlling_faction == user_data.faction:
 						value /= 2
 
 					# and 4 times as much for enemy gangsters
@@ -357,16 +401,16 @@ async def order(cmd):
 				if (user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe) and item_type == ewcfg.it_food:
 					value = 0
 
-				if value > user_data.slimes:
+				if value > current_currency_amount:
 					# Not enough money.
-					response = "A {} costs {:,} slime, and you only have {:,}.".format(name, value, user_data.slimes)
+					response = "A {} costs {:,} {}, and you only have {:,}.".format(name, value, currency_used, current_currency_amount)
 				else:
 					if item_type == ewcfg.it_food:
 						food_ordered = True
 
 						food_items = ewitem.inventory(
 							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
+							id_server = cmd.guild.id,
 							item_type_filter = ewcfg.it_food
 						)
 
@@ -380,8 +424,8 @@ async def order(cmd):
 
 						if target != None:
 							target_data = EwUser(member=target)
-							if target_data.life_state == ewcfg.life_state_corpse and target_data.get_weapon_possession():
-								response = "How are you planning to feed a weapon?"
+							if target_data.life_state == ewcfg.life_state_corpse and target_data.get_possession():
+								response = "How are you planning to feed them while they're possessing you?"
 								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 							elif target_data.poi != user_data.poi:
 								response = "You can't order anything for them because they aren't here!"
@@ -395,7 +439,7 @@ async def order(cmd):
 					elif item_type == ewcfg.it_weapon:
 						weapons_held = ewitem.inventory(
 							id_user = user_data.id_user,
-							id_server = cmd.message.server.id,
+							id_server = cmd.guild.id,
 							item_type_filter = ewcfg.it_weapon
 						)
 
@@ -415,7 +459,7 @@ async def order(cmd):
 										response = "You swipe a {} from the counter at {}.".format(item.str_weapon, current_vendor)
 									else:
 										response = "You slam {:,} slime down on the counter at {} for {}.".format(value, current_vendor, item.str_weapon)
-										
+									
 									user_data.change_slimes(n=-value, source=ewcfg.source_spending)
 									user_data.persist()
 									return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -443,13 +487,14 @@ async def order(cmd):
 					if not food_ordered and togo:
 						value = int(value/1.5)
 
-					user_data.change_slimes(n = -value, source = ewcfg.source_spending)
+					if currency_used == 'slime':
+						user_data.change_slimes(n=-value, source=ewcfg.source_spending)
+					elif currency_used == 'brainz':
+						user_data.gvs_currency -= value
 
 					if company_data is not None:
 						company_data.recent_profits += value
 						company_data.persist()
-
-
 
 					if item.str_name == "arcade cabinet":
 						item_props['furniture_desc'] = random.choice(ewcfg.cabinets_list)
@@ -465,7 +510,7 @@ async def order(cmd):
 					id_item = ewitem.item_create(
 						item_type = item_type,
 						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
+						id_server = cmd.guild.id,
 						stack_max = 20 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else -1,
 						stack_size = 1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
 						item_props = item_props
@@ -474,7 +519,7 @@ async def order(cmd):
 					if value == 0:
 						response = "You swipe a {} from the counter at {}.".format(item.str_name, current_vendor)
 					else:
-						response = "You slam {:,} slime down on the counter at {} for {}.".format(value, current_vendor, item.str_name)
+						response = "You slam {:,} {} down on the counter at {} for {}.".format(value, currency_used, current_vendor, item.str_name)
 
 					if food_ordered and not togo:
 						item_data = EwItem(id_item=id_item)
@@ -504,6 +549,9 @@ async def order(cmd):
 							response += "\n\n*{}*: ".format(user_player_data.display_name) + user_data.eat(item_data)
 							user_data.persist()
 							asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
+							
+					if premium_purchase:
+						user_data.time_lastpremiumpurchase = int(time.time())
 
 					user_data.persist()
 

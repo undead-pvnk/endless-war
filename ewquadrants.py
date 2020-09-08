@@ -46,15 +46,15 @@ class EwQuadrantFlavor:
 
 class EwQuadrant:
 
-	id_server = ""
+	id_server = -1
 
-	id_user = ""
+	id_user = -1
 
 	quadrant = ""
 
-	id_target = ""
+	id_target = -1
 
-	id_target2 = ""
+	id_target2 = -1
 
 
 	def __init__(self, id_server = None, id_user = None, quadrant = None, id_target = None, id_target2 = None):
@@ -66,7 +66,7 @@ class EwQuadrant:
 			if id_target is not None:
 				
 				self.id_target = id_target
-				if quadrant == ewcfg.quadrant_ashen and id_target2 is not None:
+				if quadrant == ewcfg.quadrant_policitous and id_target2 is not None:
 					self.id_target2 = id_target2
 
 				ewutils.execute_sql_query("REPLACE INTO quadrants ({col_id_server}, {col_id_user}, {col_quadrant}, {col_target}, {col_target2}) VALUES (%s, %s, %s, %s, %s)".format(
@@ -120,7 +120,7 @@ class EwQuadrant:
 	def check_if_onesided(self):
 		target_quadrant = EwQuadrant(id_server = self.id_server, id_user = self.id_target, quadrant = self.quadrant)
 
-		if self.quadrant == ewcfg.quadrant_ashen:
+		if self.quadrant == ewcfg.quadrant_policitous:
 			if self.id_target2 is not None:
 				target2_quadrant = EwQuadrant(id_server = self.id_server, id_user = self.id_target2, quadrant = self.quadrant)
 				target_targets = [target_quadrant.id_target, target_quadrant.id_target2]
@@ -142,7 +142,7 @@ async def add_quadrant(cmd):
 	response = ""
 	author = cmd.message.author
 	quadrant = None
-	user_data = ew.EwUser(id_user=author.id, id_server=author.server.id)
+	user_data = ew.EwUser(id_user=author.id, id_server=author.guild.id)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -168,10 +168,10 @@ async def add_quadrant(cmd):
 
 	target = cmd.mentions[0].id
 	target2 = None
-	if quadrant.id_quadrant == ewcfg.quadrant_ashen and cmd.mentions_count > 1:
+	if quadrant.id_quadrant == ewcfg.quadrant_policitous and cmd.mentions_count > 1:
 		target2 = cmd.mentions[1].id
 
-	quadrant_data = EwQuadrant(id_server = author.server.id, id_user = author.id, quadrant = quadrant.id_quadrant, id_target = target, id_target2 = target2)
+	quadrant_data = EwQuadrant(id_server = author.guild.id, id_user = author.id, quadrant = quadrant.id_quadrant, id_target = target, id_target2 = target2)
 	
 	onesided = quadrant_data.check_if_onesided()
 
@@ -196,7 +196,7 @@ async def clear_quadrant(cmd):
 	response = ""
 	author = cmd.message.author
 	quadrant = None
-	user_data = ew.EwUser(id_user=author.id, id_server=author.server.id)
+	user_data = ew.EwUser(id_user=author.id, id_server=author.guild.id)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -211,15 +211,16 @@ async def clear_quadrant(cmd):
 		response = "Please select a quadrant for your romantic feelings."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
-	quadrant_data = EwQuadrant(id_server=author.server.id, id_user=author.id, quadrant=quadrant.id_quadrant)
+	quadrant_data = EwQuadrant(id_server=author.guild.id, id_user=author.id, quadrant=quadrant.id_quadrant)
 	
-	if quadrant_data.id_target != "":
-		target_member_data = cmd.message.server.get_member(quadrant_data.id_target)
+	if quadrant_data.id_target != -1:
+		target_member_data = cmd.guild.get_member(quadrant_data.id_target)
+		target_member_data_2 = None
 		
-		if quadrant_data.id_target2 != "":
-			target_member_data_2 = cmd.message.server.get_member(quadrant_data.id_target)
+		if quadrant_data.id_target2 != -1:
+			target_member_data_2 = cmd.guild.get_member(quadrant_data.id_target)
 
-		quadrant_data = EwQuadrant(id_server=author.server.id, id_user=author.id, quadrant=quadrant.id_quadrant, id_target="", id_target2="")
+		quadrant_data = EwQuadrant(id_server=author.guild.id, id_user=author.id, quadrant=quadrant.id_quadrant, id_target=-1, id_target2=-1)
 		quadrant_data.persist()
 
 		response = "You break up with {}. Maybe it's for the best...".format(target_member_data.display_name)
@@ -239,8 +240,8 @@ async def get_quadrants(cmd):
 	else:
 		member = author
 	for quadrant in ewcfg.quadrant_ids:
-		quadrant_data = EwQuadrant(id_server = member.server.id, id_user = member.id, quadrant = quadrant)
-		if quadrant_data.id_target != "":
+		quadrant_data = EwQuadrant(id_server = cmd.guild.id, id_user = member.id, quadrant = quadrant)
+		if quadrant_data.id_target != -1:
 			response += "\n"
 			response += get_quadrant(cmd, quadrant)
 
@@ -252,7 +253,7 @@ async def get_quadrants(cmd):
 		else:
 			response = response.format("Your")
 
-	user_data = ew.EwUser(id_user=member.id, id_server=member.server.id)
+	user_data = ew.EwUser(id_user=member.id, id_server=member.guild.id)
 	if user_data.has_soul == 0:
 		response = "{} can't truly form any bonds without {} soul."
 		if cmd.mentions_count > 0:
@@ -262,23 +263,23 @@ async def get_quadrants(cmd):
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def get_flushed(cmd):
-	response = get_quadrant(cmd, ewcfg.quadrant_flushed)
+async def get_sloshed(cmd):
+	response = get_quadrant(cmd, ewcfg.quadrant_sloshed)
 		
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def get_pale(cmd):
-	response = get_quadrant(cmd, ewcfg.quadrant_pale)
+async def get_roseate(cmd):
+	response = get_quadrant(cmd, ewcfg.quadrant_roseate)
 		
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def get_caliginous(cmd):
-	response = get_quadrant(cmd, ewcfg.quadrant_caliginous)
+async def get_violacious(cmd):
+	response = get_quadrant(cmd, ewcfg.quadrant_violacious)
 		
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def get_ashen(cmd):
-	response = get_quadrant(cmd, ewcfg.quadrant_ashen)
+async def get_policitous(cmd):
+	response = get_quadrant(cmd, ewcfg.quadrant_policitous)
 		
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -287,24 +288,23 @@ def get_quadrant(cmd, id_quadrant):
 	author = cmd.message.author
 	quadrant = ewcfg.quadrants_map[id_quadrant]
 	if cmd.mentions_count == 0:
-		quadrant_data = EwQuadrant(id_server = author.server.id, id_user = author.id, quadrant = quadrant.id_quadrant)
-		if author.server.get_member(quadrant_data.id_target) is None:
-			quadrant_data.id_target = ""
-		if author.server.get_member(quadrant_data.id_target2) is None:
-			quadrant_data.id_target2 = ""
+		quadrant_data = EwQuadrant(id_server = author.guild.id, id_user = author.id, quadrant = quadrant.id_quadrant)
+		if author.guild.get_member(quadrant_data.id_target) is None:
+			quadrant_data.id_target = -1 
+		if author.guild.get_member(quadrant_data.id_target2) is None:
+			quadrant_data.id_target2 = -1
 
 		quadrant_data.persist()
-		
 
-		if quadrant_data.id_target == "":
+		if quadrant_data.id_target == -1:
 			response = "You have no one in this quadrant."
 		else:
 			onesided = quadrant_data.check_if_onesided()
 
-			if quadrant.id_quadrant == ewcfg.quadrant_ashen and quadrant_data.id_target2 != "":
-				target_name = "{} and {}".format(author.server.get_member(quadrant_data.id_target).display_name, author.server.get_member(quadrant_data.id_target2).display_name)
+			if quadrant.id_quadrant == ewcfg.quadrant_policitous and quadrant_data.id_target2 != -1:
+				target_name = "{} and {}".format(author.guild.get_member(quadrant_data.id_target).display_name, author.guild.get_member(quadrant_data.id_target2).display_name)
 			else:
-				target_name = author.server.get_member(quadrant_data.id_target).display_name
+				target_name = author.guild.get_member(quadrant_data.id_target).display_name
 
 			if not onesided:
 				response = quadrant.resp_view_relationship_self.format(target_name)
@@ -313,11 +313,11 @@ def get_quadrant(cmd, id_quadrant):
 
 	else:
 		member = cmd.mentions[0]
-		quadrant_data = EwQuadrant(id_server = member.server.id, id_user = member.id, quadrant = quadrant.id_quadrant)
+		quadrant_data = EwQuadrant(id_server = member.guild.id, id_user = member.id, quadrant = quadrant.id_quadrant)
 
-		if author.server.get_member(quadrant_data.id_target) is None:
+		if author.guild.get_member(quadrant_data.id_target) is None:
 			quadrant_data.id_target = ""
-		if author.server.get_member(quadrant_data.id_target2) is None:
+		if author.guild.get_member(quadrant_data.id_target2) is None:
 			quadrant_data.id_target2 = ""
 
 		quadrant_data.persist()
@@ -328,10 +328,10 @@ def get_quadrant(cmd, id_quadrant):
 
 			onesided = quadrant_data.check_if_onesided()
 
-			if quadrant.id_quadrant == ewcfg.quadrant_ashen and quadrant_data.id_target2 != "":
-				target_name = "{} and {}".format(author.server.get_member(quadrant_data.id_target).display_name, author.server.get_member(quadrant_data.id_target2).display_name)
+			if quadrant.id_quadrant == ewcfg.quadrant_policitous and quadrant_data.id_target2 != -1:
+				target_name = "{} and {}".format(author.guild.get_member(quadrant_data.id_target).display_name, author.guild.get_member(quadrant_data.id_target2).display_name)
 			else:
-				target_name = author.server.get_member(quadrant_data.id_target).display_name
+				target_name = author.guild.get_member(quadrant_data.id_target).display_name
 
 			if not onesided:
 				response = quadrant.resp_view_relationship.format(member.display_name, target_name)

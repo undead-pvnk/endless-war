@@ -8,8 +8,8 @@ from ewplayer import EwPlayer
 
 class EwBook:
 	id_book = 0
-	id_server = ""
-	id_user = ""
+	id_server = -1
+	id_user = -1
 
 	# The name of the book
 	title = ""
@@ -58,7 +58,7 @@ class EwBook:
 			query_suffix = " id_book = {}".format(self.id_book)
 
 		elif member is not None:
-			self.id_server = member.server.id
+			self.id_server = member.guild.id
 			self.id_user = member.id
 			query_suffix = " id_server = {} AND id_user = {}".format(self.id_server, self.id_user)
 			if book_state is not None:
@@ -198,8 +198,8 @@ def bought_check(bought):
 # The purpose of this is to make finding the average rating easier and to measure sales based on the amount of different people that buy them.
 class EwBookSale:
 	id_book = 0
-	id_user = ""
-	id_server = ""
+	id_user = -1
+	id_server = -1
 
 	# If a user bought the book. 0 is not bought.
 	bought = 0
@@ -214,7 +214,7 @@ class EwBookSale:
 	):
 		self.id_book = id_book
 		self.id_user = member.id
-		self.id_server = member.server.id
+		self.id_server = member.guild.id
 
 		try:
 			conn_info = ewutils.databaseConnect()
@@ -289,16 +289,10 @@ async def begin_manuscript(cmd = None, dm = False):
 
 	cost = 20000
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.slimes < cost:
 		 response = "You don't have enough slime to create a manuscript. ({:,}/{:,})".format(user_data.slimes, cost)
@@ -337,16 +331,10 @@ async def set_pen_name(cmd = None, dm = False):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
 		response = "You are just too hungry to alter the pen name of your masterpiece!"
@@ -375,16 +363,10 @@ async def set_genre(cmd = None, dm = False):
 
 	genre = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
 		response = "You are just too hungry to alter the title of your masterpiece!"
@@ -413,17 +395,10 @@ async def set_length(cmd = None, dm = False):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
-
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
 		response = "You are just too hungry to alter the length of your masterpiece!"
@@ -468,12 +443,13 @@ async def set_length(cmd = None, dm = False):
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					try:
-						message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
+						message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
+														message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 						if message != None:
-							if message.content.lower() == "!accept":
+							if message.content.lower() == ewcfg.cmd_accept:
 								accepted = True
-							if message.content.lower() == "!refuse":
+							if message.content.lower() == ewcfg.cmd_refuse:
 								accepted = False
 
 					except:
@@ -507,16 +483,10 @@ async def set_title(cmd = None, dm = False):
 
 	title = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
 		response = "You are just too hungry to alter the title of your masterpiece!"
@@ -548,16 +518,10 @@ async def edit_page(cmd = None, dm = False):
 
 	response = ""
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -605,12 +569,13 @@ async def edit_page(cmd = None, dm = False):
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					try:
-						message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
+						message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
+														message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 						if message != None:
-							if message.content.lower() == "!accept":
+							if message.content.lower() == ewcfg.cmd_accept:
 								accepted = True
-							if message.content.lower() == "!refuse":
+							if message.content.lower() == ewcfg.cmd_refuse:
 								accepted = False
 					except:
 						accepted = False
@@ -630,17 +595,10 @@ async def view_page(cmd = None, dm = False):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
-
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -678,17 +636,10 @@ async def check_manuscript(cmd = None, dm = False):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
-
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -723,16 +674,10 @@ async def publish_manuscript(cmd = None, dm = False):
 
 	market_data = EwMarket(id_server = user_data.id_server)
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -758,12 +703,13 @@ async def publish_manuscript(cmd = None, dm = False):
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 			try:
-				message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
+				message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
+														message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 				if message != None:
-					if message.content.lower() == "!accept":
+					if message.content.lower() == ewcfg.cmd_accept:
 						accepted = True
-					if message.content.lower() == "!refuse":
+					if message.content.lower() == ewcfg.cmd_refuse:
 						accepted = False
 			except:
 				accepted = False
@@ -832,7 +778,7 @@ async def read_book(cmd = None, dm = False):
 			book_title = ewutils.flattenTokenListToString(cmd.tokens[1:len(cmd.tokens) - 1])
 			page_number = ewutils.getIntToken(cmd.tokens)
 
-		book_sought = ewitem.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_book)
+		book_sought = ewitem.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_book)
 
 		if book_sought:
 			book = EwItem(id_item = book_sought.get('id_item'))
@@ -851,12 +797,13 @@ async def read_book(cmd = None, dm = False):
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				try:
-					message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
+					message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
+														message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 					if message != None:
-						if message.content.lower() == "!accept":
+						if message.content.lower() == ewcfg.cmd_accept:
 							accepted = True
-						if message.content.lower() == "!refuse":
+						if message.content.lower() == ewcfg.cmd_refuse:
 							accepted = False
 				except:
 					accepted = False
@@ -1020,7 +967,8 @@ async def browse_zines(cmd):
 	else:
 		sort_token = "null"
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	user_data = EwUser(member=cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if not poi.write_manuscript:
 		response = "You can't browse for zines here! Try going to the cafe. If you're looking for educational zines, try the colleges. If you can't read, then you might want to try the comic shop."
@@ -1030,16 +978,16 @@ async def browse_zines(cmd):
 	else:
 		if not sort_token.isdigit():
 			book_list = []
-			resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.server.id)
+			resp_cont = ewutils.EwResponseContainer(id_server=cmd.guild.id)
 			query_suffix = ""
 			query_sort = "id_book"
 			more_selects = ""
 			quality = "= 1"
 
-			if cmd.message.channel.name in ["nlac-university", "neo-milwaukee-state"]:
+			if user_data.poi in ["nlac-university", "neo-milwaukee-state"]:
 				query_suffix = "AND b.genre = 1 "
 
-			elif cmd.message.channel.name in ["glocksbury-comics"]:
+			elif user_data.poi in ["glocksbury-comics"]:
 				query_suffix = "AND b.genre = 2 "
 
 			if sort_token in ("bookname", "name", "title", "booktitle", "zinename", "zinetitle"):
@@ -1102,7 +1050,7 @@ async def browse_zines(cmd):
 						"WHERE b.id_server = %s AND b.book_state {} {}".format(quality, query_suffix) +
 						"ORDER BY b.{}".format(query_sort)
 				), (
-					cmd.message.server.id,
+					cmd.guild.id,
 				))
 
 				data = cursor.fetchall()
@@ -1169,7 +1117,7 @@ async def browse_zines(cmd):
 		else:
 			id_book = int(sort_token)
 
-			if int_is_zine(id_book, cmd.message.server.id):
+			if int_is_zine(id_book, cmd.guild.id):
 				book = EwBook(id_book=id_book)
 				title = book.title
 				author = book.author
@@ -1217,7 +1165,7 @@ async def order_zine(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if not poi.write_manuscript:
 		response = "You can't buy zines here! Try going to the cafe. If you're looking for educational books, try the colleges. If you can't read, then you might want to try the comic shop."
@@ -1229,7 +1177,7 @@ async def order_zine(cmd):
 		if cmd.tokens[1].isdigit():
 			id_book = int(cmd.tokens[1])
 
-			if int_is_zine(id_book, cmd.message.server.id):
+			if int_is_zine(id_book, cmd.guild.id):
 				book = EwBook(id_book=id_book)
 				accepted = True
 				if book.genre == 3:
@@ -1239,12 +1187,13 @@ async def order_zine(cmd):
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					try:
-						message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
+						message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
+														message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
 						if message != None:
-							if message.content.lower() == "!accept":
+							if message.content.lower() == ewcfg.cmd_accept:
 								accepted = True
-							if message.content.lower() == "!refuse":
+							if message.content.lower() == ewcfg.cmd_refuse:
 								accepted = False
 					except:
 						accepted = False
@@ -1262,7 +1211,7 @@ async def order_zine(cmd):
 						ewitem.item_create(
 							item_type=ewcfg.it_book,
 							id_user=user_data.id_user,
-							id_server=cmd.message.server.id,
+							id_server=cmd.guild.id,
 							item_props={
 								"title": book.title,
 								"author": book.author,
@@ -1289,7 +1238,7 @@ async def order_zine(cmd):
 							ewitem.item_create(
 								item_type=ewcfg.it_item,
 								id_user=author.id_user,
-								id_server=cmd.message.server.id,
+								id_server=cmd.guild.id,
 								item_props={
 									'context': 'poudrin',
 									'item_name': 'Royalty Poudrin',
@@ -1323,7 +1272,7 @@ async def rate_zine(cmd):
 				response = "Easy now, keep your fucks between 1 and 5."
 
 			else:
-				book_sought = ewitem.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
+				book_sought = ewitem.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
 
 				if book_sought:
 					book_item = EwItem(id_item=book_sought.get('id_item'))
@@ -1349,7 +1298,7 @@ async def rate_zine(cmd):
 										ewcfg.col_rating,
 									)
 							), (
-								cmd.message.server.id,
+								cmd.guild.id,
 								cmd.message.author.id,
 							))
 
@@ -1408,13 +1357,13 @@ async def take_down_zine(cmd):
 		if book.isdigit():
 			book = int(book)
 
-		if not author.server_permissions.administrator:
+		if not author.guild_permissions.administrator:
 			admin = False
 
 		else:
 			admin = True
 
-		if int_is_zine(book, cmd.message.server.id):
+		if int_is_zine(book, cmd.guild.id):
 			book = EwBook(id_book = book)
 
 			if (not admin and book.id_user == cmd.message.author.id) and book.book_state > 0:
@@ -1446,13 +1395,13 @@ async def untake_down_zine(cmd):
 		if book.isdigit():
 			book = int(book)
 
-		if not author.server_permissions.administrator:
+		if not author.guild_permissions.administrator:
 			admin = False
 
 		else:
 			admin = True
 
-		if int_is_zine(id_book = book, id_server = cmd.message.server.id, negative = True):
+		if int_is_zine(id_book = book, id_server = cmd.guild.id, negative = True):
 			book = EwBook(id_book=book)
 
 			if book.book_state >= 0:
@@ -1482,9 +1431,8 @@ async def zine_dm_commands(cmd):
 	player = EwPlayer(id_user=cmd.message.author.id)
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
 	server = ewcfg.server_list[user_data.id_server]
-	member_object = server.get_member(player.id_user)
+	member_object = server.get_member(user_data.id_user)
 	cmd.message.author = member_object
-	cmd.message.server = server
 	dm = True
 
 	if cmd_text in [ewcfg.cmd_beginmanuscript, ewcfg.cmd_beginmanuscript_alt_1, ewcfg.cmd_beginmanuscript_alt_2]:

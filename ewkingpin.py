@@ -15,7 +15,7 @@ from ew import EwUser
 async def pardon(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
-	if user_data.life_state != ewcfg.life_state_kingpin:
+	if user_data.life_state != ewcfg.life_state_kingpin and not cmd.message.author.guild_permissions.administrator:
 		response = "Only the Rowdy Fucker {} and the Cop Killer {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller)
 	else:
 		member = None
@@ -54,7 +54,7 @@ async def pardon(cmd):
 async def banish(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
-	if user_data.life_state != ewcfg.life_state_kingpin:
+	if user_data.life_state != ewcfg.life_state_kingpin and not cmd.message.author.guild_permissions.administrator:
 		response = "Only the Rowdy Fucker {} and the Cop Killer {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller)
 	else:
 		member = None
@@ -109,7 +109,8 @@ async def deadmega(cmd):
 	Command that creates a princeps cosmetic item
 """
 async def create(cmd):
-	if EwUser(member = cmd.message.author).life_state != ewcfg.life_state_kingpin:
+	#if not cmd.message.author.guild_permissions.administrator:
+	if EwUser(member = cmd.message.author).life_state != ewcfg.life_state_kingpin and not cmd.message.author.guild_permissions.administrator:
 		response = 'Lowly Non-Kingpins cannot hope to create items with their bare hands.'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -134,7 +135,7 @@ async def create(cmd):
 	}
 
 	new_item_id = ewitem.item_create(
-		id_server = cmd.message.server.id,
+		id_server = cmd.guild.id,
 		id_user = recipient.id,
 		item_type = ewcfg.it_cosmetic,
 		item_props = item_props
@@ -152,7 +153,7 @@ async def create(cmd):
 # 	author = cmd.message.author
 # 	user_data = EwUser(member=author)
 # 
-# 	if not author.server_permissions.administrator and user_data.life_state != ewcfg.life_state_kingpin:
+# 	if not author.guild_permissions.administrator and user_data.life_state != ewcfg.life_state_kingpin:
 # 		response = "You do not have the power within you worthy of !exalting another player."
 # 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 # 
@@ -181,7 +182,7 @@ async def create(cmd):
 # 	medallion_id = ewitem.item_create(
 # 		item_type=medallion.item_type,
 # 		id_user=recipient.id,
-# 		id_server=cmd.message.server.id,
+# 		id_server=cmd.guild.id,
 # 		item_props=medallion_props
 # 	)
 # 
@@ -209,7 +210,7 @@ async def create(cmd):
 # 		mask_id = ewitem.item_create(
 # 			item_type=mask.item_type,
 # 			id_user=recipient.id,
-# 			id_server=cmd.message.server.id,
+# 			id_server=cmd.guild.id,
 # 			item_props=mask_props
 # 		)
 # 
@@ -232,7 +233,7 @@ async def create(cmd):
 # 		sword_id = ewitem.item_create(
 # 			item_type=sword.item_type,
 # 			id_user=recipient.id,
-# 			id_server=cmd.message.server.id,
+# 			id_server=cmd.guild.id,
 # 			item_props=sword_props
 # 		)
 # 
