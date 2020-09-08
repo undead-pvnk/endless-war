@@ -406,9 +406,9 @@ async def mine(cmd):
 			if user_data.life_state == ewcfg.life_state_juvenile:
 				mining_yield *= 2
 
-			trauma = ewcfg.trauma_map.get(user_data.trauma)
-			if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
-				mining_yield *= (1 - 0.5 * user_data.degradation / 100)
+			#trauma = ewcfg.trauma_map.get(user_data.trauma)
+			#if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
+			#	mining_yield *= (1 - 0.5 * user_data.degradation / 100)
 
 			mining_yield = max(0, round(mining_yield))
 
@@ -818,22 +818,22 @@ async def crush(cmd):
 			ewitem.item_delete(id_item=sought_id)
 
 			status_effects = user_data.getStatusEffects()
-			sap_resp = ""
-			if ewcfg.status_sapfatigue_id not in status_effects:
-				sap_gain = 5
-				sap_gain = max(0, min(sap_gain, ewutils.sap_max_bylevel(user_data.slimelevel) - (user_data.hardened_sap + user_data.sap)))
-				if sap_gain > 0:
-					user_data.sap += sap_gain
-					user_data.applyStatus(id_status = ewcfg.status_sapfatigue_id, source = user_data.id_user)
-					sap_resp = " and {} sap".format(sap_gain)
+			#sap_resp = ""
+			#if ewcfg.status_sapfatigue_id not in status_effects:
+			#	sap_gain = 5
+			#	sap_gain = max(0, min(sap_gain, ewutils.sap_max_bylevel(user_data.slimelevel) - (user_data.hardened_sap + user_data.sap)))
+			#	if sap_gain > 0:
+			#		user_data.sap += sap_gain
+			#		user_data.applyStatus(id_status = ewcfg.status_sapfatigue_id, source = user_data.id_user)
+			#		sap_resp = " and {} sap".format(sap_gain)
 
 			levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
 			user_data.persist()
 			
 			if crunch_used:
-				response = "You crunch the hardened slime crystal with your bare teeth.\nYou gain {} slime{}. Sick, dude!!".format(crush_slimes, sap_resp)
+				response = "You crunch the hardened slime crystal with your bare teeth.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
 			else:
-				response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime{}. Sick, dude!!".format(crush_slimes, sap_resp)
+				response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
 			
 			if len(levelup_response) > 0:
 				response += "\n\n" + levelup_response
@@ -1518,7 +1518,7 @@ def create_mining_event(cmd):
 		randomn = random.random()
 
 		# gap into the void
-		if randomn < 0.1:
+		if randomn < 0.05:
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi

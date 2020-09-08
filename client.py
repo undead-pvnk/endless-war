@@ -146,18 +146,18 @@ cmd_map = {
 	ewcfg.cmd_mutations_alt_1: ewcmd.mutations,
 
 	# sap system
-	ewcfg.cmd_view_sap: ewcmd.view_sap,
-	ewcfg.cmd_harden_sap: ewwep.harden_sap,
-	ewcfg.cmd_harden_sap_alt1: ewwep.harden_sap,
-	ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
+	#ewcfg.cmd_view_sap: ewcmd.view_sap,
+	#ewcfg.cmd_harden_sap: ewwep.harden_sap,
+	#ewcfg.cmd_harden_sap_alt1: ewwep.harden_sap,
+	#ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
 
 	
 	# combat sap commands
-	ewcfg.cmd_taunt: ewwep.taunt,
-	ewcfg.cmd_aim: ewwep.aim,
-	ewcfg.cmd_dodge: ewwep.dodge,
-	ewcfg.cmd_dodge_alt1: ewwep.dodge,
-	ewcfg.cmd_dodge_alt2: ewwep.dodge,
+	#ewcfg.cmd_taunt: ewwep.taunt,
+	#ewcfg.cmd_aim: ewwep.aim,
+	#ewcfg.cmd_dodge: ewwep.dodge,
+	#ewcfg.cmd_dodge_alt1: ewwep.dodge,
+	#ewcfg.cmd_dodge_alt2: ewwep.dodge,
 
 	# Check how hungry you are.
 	ewcfg.cmd_hunger: ewcmd.hunger,
@@ -269,9 +269,6 @@ cmd_map = {
 	# Ghosts can haunt enlisted players to reduce their slime score.
 	ewcfg.cmd_haunt: ewspooky.haunt,
 
-	# how ghosts leave the sewers
-	ewcfg.cmd_manifest: ewspooky.manifest,
-
 	# ghosts can inhabit players to follow them around
 	ewcfg.cmd_inhabit: ewspooky.inhabit,
 
@@ -280,6 +277,10 @@ cmd_map = {
 
 	# ghosts can empower the weapon of the player they're inhabiting
 	ewcfg.cmd_possess_weapon: ewspooky.possess_weapon,
+
+	# ghosts can enhance fishing for the player they're inhabiting
+	ewcfg.cmd_possess_fishing_rod: ewspooky.possess_fishing_rod,
+	ewcfg.cmd_possess_fishing_rod_alt1: ewspooky.possess_fishing_rod,
 
 	# ghosts can turn their negaslime into negapoudrins
 	ewcfg.cmd_crystalize_negapoudrin: ewspooky.crystalize_negapoudrin,
@@ -500,6 +501,10 @@ cmd_map = {
 
 	#smelting
 	ewcfg.cmd_smelt: ewsmelting.smelt,
+	ewcfg.cmd_wcim: ewsmelting.find_recipes_by_item,
+	ewcfg.cmd_wcim_alt1: ewsmelting.find_recipes_by_item,
+	ewcfg.cmd_wcim_alt2: ewsmelting.find_recipes_by_item,
+	ewcfg.cmd_wcim_alt3: ewsmelting.find_recipes_by_item,
 
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
@@ -595,14 +600,14 @@ cmd_map = {
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
 	ewcfg.cmd_clear_quadrant: ewquadrants.clear_quadrant,
 	ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
-	ewcfg.cmd_get_flushed: ewquadrants.get_flushed,
-	ewcfg.cmd_get_flushed_alt1: ewquadrants.get_flushed,
-	ewcfg.cmd_get_pale: ewquadrants.get_pale,
-	ewcfg.cmd_get_pale_alt1: ewquadrants.get_pale,
-	ewcfg.cmd_get_caliginous: ewquadrants.get_caliginous,
-	ewcfg.cmd_get_caliginous_alt1: ewquadrants.get_caliginous,
-	ewcfg.cmd_get_ashen: ewquadrants.get_ashen,
-	ewcfg.cmd_get_ashen_alt1: ewquadrants.get_ashen,
+	ewcfg.cmd_get_sloshed: ewquadrants.get_sloshed,
+	ewcfg.cmd_get_sloshed_alt1: ewquadrants.get_sloshed,
+	ewcfg.cmd_get_roseate: ewquadrants.get_roseate,
+	ewcfg.cmd_get_roseate_alt1: ewquadrants.get_roseate,
+	ewcfg.cmd_get_violacious: ewquadrants.get_violacious,
+	ewcfg.cmd_get_violacious_alt1: ewquadrants.get_violacious,
+	ewcfg.cmd_get_policitous: ewquadrants.get_policitous,
+	ewcfg.cmd_get_policitous_alt1: ewquadrants.get_policitous,
 
 	# mutations
 	ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
@@ -658,13 +663,16 @@ cmd_map = {
 	ewcfg.cmd_lol: ewcmd.lol,
 
 	# restores poi roles to their proper names, only usable by admins
-	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
+	# Disabled - poi roles are not used right now
+	#ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 	
 	# hides all poi role names, only usable by admins
-	ewcfg.cmd_hiderolenames: ewrolemgr.hideRoleNames,
+	# Disabled - poi roles are not used right now
+	#ewcfg.cmd_hiderolenames: ewrolemgr.hideRoleNames,
 	
 	# recreates all hidden poi roles in the server in case restoreRoleNames doesnt work, only usable by admins
-	ewcfg.cmd_recreateroles: ewrolemgr.recreateRoles,
+	# Disabled - poi roles are not used right now
+	#ewcfg.cmd_recreateroles: ewrolemgr.recreateRoles,
 	
 	# deletes all roles in the server of a particular type
 	ewcfg.cmd_deleteroles: ewrolemgr.deleteRoles,
@@ -788,6 +796,7 @@ cmd_map = {
 	ewcfg.cmd_flutter: ewrace.flutter,
 	ewcfg.cmd_request_petting: ewrace.request_petting,
 	ewcfg.cmd_rampage: ewrace.rampage,
+	ewcfg.cmd_entomize: ewrace.entomize,
 	ewcfg.cmd_confuse: ewrace.confuse,
 }
 
@@ -971,7 +980,8 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
-		asyncio.ensure_future(ewutils.sap_tick_loop(id_server = server.id))
+		# sap is disabled
+		#asyncio.ensure_future(ewutils.sap_tick_loop(id_server = server.id))
 		# SWILLDERMUK
 		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
@@ -1394,13 +1404,13 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or len(message.author.roles) < 4 or (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None: # or (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
 				direct message (server == None)
 				user is new/has no roles (len(roles) < 4)
-				user is swearing
+				user is swearing - temp disabled
 		"""
 
 		#Ignore users with weird characters in their name
@@ -1447,6 +1457,8 @@ async def on_message(message):
 		"""
 			Punish the user for swearing.
 		"""
+
+		""" 
 		if (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
 			# print(content_tolower_list)
 			swear_multiplier = 0
@@ -1500,8 +1512,6 @@ async def on_message(message):
 					
 					response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
 					await ewutils.send_message(client, message.channel, response)
-				#else:
-					#print("swear threshold not met")
 
 				market_data.persist()
 				usermodel.persist()
@@ -1509,7 +1519,8 @@ async def on_message(message):
 			# if the message wasn't a command, we can stop here
 			if not message.content.startswith(ewcfg.cmd_prefix):
 				return
-
+		"""
+		
 		"""
 			Handle direct messages.
 		"""
@@ -1546,8 +1557,8 @@ async def on_message(message):
 			return
 
 		# assign the appropriate roles to a user with less than @everyone, faction, both location roles
-		if len(message.author.roles) < 4:
-			await ewrolemgr.updateRoles(client = client, member = message.author)
+		# if len(message.author.roles) < 4:
+			# await ewrolemgr.updateRoles(client = client, member = message.author)
 
 		user_data = EwUser(member = message.author)
 		if user_data.arrested:

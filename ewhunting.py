@@ -83,7 +83,7 @@ class EwEnemy:
 	weathertype = 0
 
 	# Sap armor
-	hardened_sap = 0
+	#hardened_sap = 0
 	
 	# What faction the enemy belongs to
 	faction = ""
@@ -125,7 +125,7 @@ class EwEnemy:
 
 				# Retrieve object
 				cursor.execute(
-					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
 						ewcfg.col_id_enemy,
 						ewcfg.col_id_server,
 						ewcfg.col_enemy_slimes,
@@ -145,7 +145,7 @@ class EwEnemy:
 						ewcfg.col_enemy_id_target,
 						ewcfg.col_enemy_raidtimer,
 						ewcfg.col_enemy_rare_status,
-						ewcfg.col_enemy_hardened_sap,
+						#ewcfg.col_enemy_hardened_sap,
 						ewcfg.col_enemy_weathertype,
 						ewcfg.col_faction,
 						ewcfg.col_enemy_class,
@@ -176,12 +176,12 @@ class EwEnemy:
 					self.id_target = result[16]
 					self.raidtimer = result[17]
 					self.rare_status = result[18]
-					self.hardened_sap = result[19]
-					self.weathertype = result[20]
-					self.faction = result[21]
-					self.enemyclass = result[22]
-					self.owner = result[23]
-					self.gvs_coord = result[24]
+					#self.hardened_sap = result[19]
+					self.weathertype = result[19]
+					self.faction = result[20]
+					self.enemyclass = result[21]
+					self.owner = result[22]
+					self.gvs_coord = result[23]
 
 					# Retrieve additional properties
 					cursor.execute("SELECT {}, {} FROM enemies_prop WHERE id_enemy = %s".format(
@@ -213,7 +213,7 @@ class EwEnemy:
 
 			# Save the object.
 			cursor.execute(
-				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 					ewcfg.col_id_enemy,
 					ewcfg.col_id_server,
 					ewcfg.col_enemy_slimes,
@@ -233,7 +233,7 @@ class EwEnemy:
 					ewcfg.col_enemy_id_target,
 					ewcfg.col_enemy_raidtimer,
 					ewcfg.col_enemy_rare_status,
-					ewcfg.col_enemy_hardened_sap,
+					#ewcfg.col_enemy_hardened_sap,
 					ewcfg.col_enemy_weathertype,
 					ewcfg.col_faction,
 					ewcfg.col_enemy_class,
@@ -259,7 +259,7 @@ class EwEnemy:
 					self.id_target,
 					self.raidtimer,
 					self.rare_status,
-					self.hardened_sap,
+					#self.hardened_sap,
 					self.weathertype,
 					self.faction,
 					self.enemyclass,
@@ -426,8 +426,8 @@ class EwEnemy:
 			backfire = False
 			backfire_damage = 0
 			strikes = 0
-			sap_damage = 0
-			sap_ignored = 0
+			#sap_damage = 0
+			#sap_ignored = 0
 			miss_mod = 0
 			crit_mod = 0
 			dmg_mod = 0
@@ -510,8 +510,8 @@ class EwEnemy:
 							slimes_damage=slimes_damage,
 							enemy_data=enemy_data,
 							target_data=target_data,
-							sap_damage=sap_damage,
-							sap_ignored=sap_ignored,
+							#sap_damage=sap_damage,
+							#sap_ignored=sap_ignored,
 							backfire_damage=backfire_damage,
 							miss_mod=miss_mod,
 							crit_mod=crit_mod
@@ -526,8 +526,8 @@ class EwEnemy:
 						crit = ctn.crit
 						slimes_damage = ctn.slimes_damage
 						strikes = ctn.strikes
-						sap_damage = ctn.sap_damage
-						sap_ignored = ctn.sap_ignored
+						#sap_damage = ctn.sap_damage
+						#sap_ignored = ctn.sap_ignored
 						backfire_damage = ctn.backfire_damage
 
 					# can't hit lucky lucy
@@ -536,11 +536,11 @@ class EwEnemy:
 
 					if miss:
 						slimes_damage = 0
-						sap_damage = 0
+						#sap_damage = 0
 						crit = False
 	
-					if crit:
-						sap_damage += 1
+					#if crit:
+					#	sap_damage += 1
 
 					enemy_data.persist()
 					target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server, data_level = 1)
@@ -553,19 +553,19 @@ class EwEnemy:
 						market_data = market_data
 					)
 
-					if target_weapon != None:
-						if sap_damage > 0 and ewcfg.weapon_class_defensive in target_weapon.classes:
-							sap_damage -= 1
+					#if target_weapon != None:
+					#	if sap_damage > 0 and ewcfg.weapon_class_defensive in target_weapon.classes:
+					#		sap_damage -= 1
 
 			
 					# apply hardened sap armor
-					sap_armor = ewwep.get_sap_armor(shootee_data = target_data, sap_ignored = sap_ignored)
-					slimes_damage *= sap_armor
-					slimes_damage = int(max(slimes_damage, 0))
+					#sap_armor = ewwep.get_sap_armor(shootee_data = target_data, sap_ignored = sap_ignored)
+					#slimes_damage *= sap_armor
+					#slimes_damage = int(max(slimes_damage, 0))
 	
-					sap_damage = min(sap_damage, target_data.hardened_sap)
+					#sap_damage = min(sap_damage, target_data.hardened_sap)
 
-					injury_severity = ewwep.get_injury_severity(target_data, slimes_damage, crit)
+					#injury_severity = ewwep.get_injury_severity(target_data, slimes_damage, crit)
 
 					if slimes_damage >= target_data.slimes - target_data.bleed_storage:
 						was_killed = True
@@ -636,7 +636,7 @@ class EwEnemy:
 					district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
 					target_data.bleed_storage += slimes_tobleed
 					target_data.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
-					target_data.hardened_sap -= sap_damage
+					#target_data.hardened_sap -= sap_damage
 					sewer_data.change_slimes(n=slimes_drained)
 
 					if was_killed:
@@ -723,8 +723,8 @@ class EwEnemy:
 					else:
 						# A non-lethal blow!
 						# apply injury
-						if injury_severity > 0:
-							target_data.apply_injury(hitzone.id_injury, injury_severity, enemy_data.id_enemy)
+						#if injury_severity > 0:
+						#	target_data.apply_injury(hitzone.id_injury, injury_severity, enemy_data.id_enemy)
 
 						if used_attacktype != ewcfg.enemy_attacktype_unarmed:
 							if miss:
@@ -757,13 +757,14 @@ class EwEnemy:
 										name_enemy=enemy_data.display_name,
 										name_target=target_player.display_name
 									))
-								sap_response = ""
-								if sap_damage > 0:
-									sap_response = " and {sap_damage} hardened sap".format(sap_damage = sap_damage)
-								response += " {target_name} loses {damage:,} slime{sap_response}!".format(
+								#sap_response = ""
+								#if sap_damage > 0:
+								#	sap_response = " and {sap_damage} hardened sap".format(sap_damage = sap_damage)
+
+								response += " {target_name} loses {damage:,} slime!".format(
 									target_name=target_player.display_name,
-									damage=damage,
-									sap_response=sap_response
+									damage=damage
+									#sap_response=sap_response
 								)
 								if len(onbreak_responses) != 0:
 									for onbreak_response in onbreak_responses:
@@ -1525,8 +1526,8 @@ class EwEnemyEffectContainer:
 	slimes_damage = 0
 	enemy_data = None
 	target_data = None
-	sap_damage = 0
-	sap_ignored = 0
+	#sap_damage = 0
+	#sap_ignored = 0
 	miss_mod = 0
 	crit_mod = 0
 
@@ -1552,8 +1553,8 @@ class EwEnemyEffectContainer:
 			slimes_spent=0,
 			enemy_data=None,
 			target_data=None,
-			sap_damage=0,
-			sap_ignored=0,
+			#sap_damage=0,
+			#sap_ignored=0,
 			backfire_damage=0,
 			miss_mod=0,
 			crit_mod=0
@@ -1566,8 +1567,8 @@ class EwEnemyEffectContainer:
 		self.slimes_spent = slimes_spent
 		self.enemy_data = enemy_data
 		self.target_data = target_data
-		self.sap_damage = sap_damage
-		self.sap_ignored = sap_ignored
+		#self.sap_damage = sap_damage
+		#self.sap_ignored = sap_ignored
 		self.backfire_damage = backfire_damage
 		self.miss_mod = miss_mod
 		self.crit_mod = crit_mod
@@ -2198,7 +2199,7 @@ def spawn_enemy(
 		pre_chosen_initialslimes = None,
 		pre_chosen_poi = None,
 		pre_chosen_identifier = None,
-		pre_chosen_hardened_sap = None,
+		#pre_chosen_hardened_sap = None,
 		pre_chosen_weather = None,
 		pre_chosen_faction = None,
 		pre_chosen_owner = None,
@@ -2301,7 +2302,7 @@ def spawn_enemy(
 		enemy.initialslimes = enemy.slimes if pre_chosen_initialslimes is None else pre_chosen_initialslimes
 		enemy.poi = chosen_poi
 		enemy.identifier = set_identifier(chosen_poi, id_server) if pre_chosen_identifier is None else pre_chosen_identifier
-		enemy.hardened_sap = int(enemy.level / 2) if pre_chosen_hardened_sap is None else pre_chosen_hardened_sap
+		#enemy.hardened_sap = int(enemy.level / 2) if pre_chosen_hardened_sap is None else pre_chosen_hardened_sap
 		enemy.weathertype = ewcfg.enemy_weathertype_normal if pre_chosen_weather is None else pre_chosen_weather
 		enemy.faction = '' if pre_chosen_faction is None else pre_chosen_faction
 		enemy.owner = -1 if pre_chosen_owner is None else pre_chosen_owner

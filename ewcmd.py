@@ -255,10 +255,12 @@ def gen_data_text(
 			race_prefix = "monstrous "
 		elif user_data.race == ewcfg.races["avian"]:
 			race_prefix = "feathery "
+		elif user_data.race == ewcfg.races["insectoid"]:
+			race_prefix = "chitinny "
 		elif user_data.race == ewcfg.races["other"]:
 			race_prefix = "peculiar "
 		elif user_data.race != "":
-			race_prefix = "mentally disabled "
+			race_prefix = "mouthbreathing "
 
 		if user_data.life_state == ewcfg.life_state_corpse:
 			response = "{} is a {}level {} {}deadboi.".format(display_name, race_prefix, user_data.slimelevel, race_suffix)
@@ -406,9 +408,9 @@ async def data(cmd):
 		enemy = find_enemy(soughtenemy, user_data)
 		if enemy != None:
 			if enemy.attacktype != ewcfg.enemy_attacktype_unarmed:
-				response = "{} is a level {} enemy. They have {:,} slime, {:,} hardened sap, and attack with their {}. ".format(enemy.display_name, enemy.level, enemy.slimes, enemy.hardened_sap, enemy.attacktype)
+				response = "{} is a level {} enemy. They have {:,} slime and attack with their {}. ".format(enemy.display_name, enemy.level, enemy.slimes, enemy.attacktype)
 			else:
-				response = "{} is a level {} enemy. They have {:,} slime, and {:,} hardened sap. ".format(enemy.display_name, enemy.level, enemy.slimes, enemy.hardened_sap)
+				response = "{} is a level {} enemy. They have {:,} slime".format(enemy.display_name, enemy.level, enemy.slimes)#, enemy.hardened_sap)
 		
 			statuses = enemy.getStatusEffects()
 
@@ -493,10 +495,12 @@ async def data(cmd):
 			race_prefix = "monstrous "
 		elif user_data.race == ewcfg.races["avian"]:
 			race_prefix = "feathery "
+		elif user_data.race == ewcfg.races["insectoid"]:
+			race_prefix = "chitinny "
 		elif user_data.race == ewcfg.races["other"]:
 			race_prefix = "peculiar "
 		elif user_data.race != "":
-			race_prefix = "mentally disabled "
+			race_prefix = "mouthbreathing "
 
 		if user_data.life_state == ewcfg.life_state_corpse:
 			response += "You are a {}level {} {}deadboi.".format(race_prefix, user_data.slimelevel, race_suffix)
@@ -613,8 +617,12 @@ async def data(cmd):
 			inhabitee_id = user_data.get_inhabitee()
 			if inhabitee_id:
 				inhabitee_name = server.get_member(inhabitee_id).display_name
-				if user_data.get_weapon_possession():
-					response_block += "You are currently possessing {}'s weapon. ".format(inhabitee_name)
+				possession = user_data.get_possession()
+				if possession:
+					if possession[3] == 'weapon':
+						response_block += "You are currently possessing {}'s weapon. ".format(inhabitee_name)
+					elif possession[3] == 'rod':
+						response_block += "You are currently possessing {}'s fishing rod. ".format(inhabitee_name)
 				else:
 					response_block += "You are currently inhabiting the body of {}. ".format(inhabitee_name)
 		else:
@@ -623,17 +631,18 @@ async def data(cmd):
 				inhabitant_names = []
 				for inhabitant_id in inhabitant_ids:
 					inhabitant_names.append(server.get_member(inhabitant_id).display_name)
-					ghost_in_weapon = user_data.get_weapon_possession()
+					possession = user_data.get_possession()
+					possession_type = 'fishing rod' if possession[3] == 'rod' else possession[3]
 				if len(inhabitant_names) == 1:
-					response_block += "You are inhabited by the ghost of {}{}. ".format(inhabitant_names[0], ', who is possessing your weapon' if ghost_in_weapon else '')
+					response_block += "You are inhabited by the ghost of {}{}. ".format(inhabitant_names[0], ', who is possessing your ' + possession_type if possession else '')
 				else:
 					response_block += "You are inhabited by the ghosts of {}{} and {}. ".format(
 						", ".join(inhabitant_names[:-1]), 
 						"" if len(inhabitant_names) == 2 else ",", 
 						inhabitant_names[-1]
 					)
-					if ghost_in_weapon:
-							response_block += "{} is also possessing your weapon. ".format(server.get_member(ghost_in_weapon[0]).display_name)
+					if possession:
+						response_block += "{} is also possessing your {}. ".format(server.get_member(ghost_in_weapon[0]).display_name, possession_type)
 
 	
 		if user_data.swear_jar >= 500:
@@ -994,7 +1003,7 @@ async def harvest(cmd):
 """
 async def salute(cmd):
 	response = 'https://ew.krakissi.net/img/nlacakanm_flag.gif'
-	await ewutils.ewutils.send_response(response, cmd)
+	await ewutils.send_response(response, cmd)
 
 """
 	Burn the NLACakaNM flag.
@@ -1192,7 +1201,7 @@ async def help(cmd):
 		
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 
-		dojo_topics = ["dojo", "sparring", "combat", "sap", ewcfg.weapon_id_revolver, ewcfg.weapon_id_dualpistols, ewcfg.weapon_id_shotgun, ewcfg.weapon_id_rifle, ewcfg.weapon_id_smg, ewcfg.weapon_id_minigun, ewcfg.weapon_id_bat, ewcfg.weapon_id_brassknuckles, ewcfg.weapon_id_katana, ewcfg.weapon_id_broadsword, ewcfg.weapon_id_nunchucks, ewcfg.weapon_id_scythe, ewcfg.weapon_id_yoyo, ewcfg.weapon_id_bass, ewcfg.weapon_id_umbrella, ewcfg.weapon_id_knives, ewcfg.weapon_id_molotov, ewcfg.weapon_id_grenades, ewcfg.weapon_id_garrote]
+		dojo_topics = ["dojo", "sparring", "combat", ewcfg.weapon_id_revolver, ewcfg.weapon_id_dualpistols, ewcfg.weapon_id_shotgun, ewcfg.weapon_id_rifle, ewcfg.weapon_id_smg, ewcfg.weapon_id_minigun, ewcfg.weapon_id_bat, ewcfg.weapon_id_brassknuckles, ewcfg.weapon_id_katana, ewcfg.weapon_id_broadsword, ewcfg.weapon_id_nunchucks, ewcfg.weapon_id_scythe, ewcfg.weapon_id_yoyo, ewcfg.weapon_id_bass, ewcfg.weapon_id_umbrella, ewcfg.weapon_id_knives, ewcfg.weapon_id_molotov, ewcfg.weapon_id_grenades, ewcfg.weapon_id_garrote]
 
 		if poi is None:
 			# catch-all response for when user isn't in a sub-zone with a help response
@@ -1209,7 +1218,7 @@ async def help(cmd):
 			response = ewcfg.help_responses['zines']
 		elif cmd.message.channel.name in ewcfg.channel_dojo and not len(cmd.tokens) > 1:
 			# dojo help
-			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**. For general information about combat, do **'!help combat'**. For information about the sap system, do **'!help sap'**. For information about a specific weapon, do **'!help [weapon]'**."
+			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**. For general information about combat, do **'!help combat'**. For information about a specific weapon, do **'!help [weapon]'**." #For information about the sap system, do **'!help sap'**.
 		elif cmd.message.channel.name in ewcfg.channel_dojo and len(cmd.tokens) > 1:
 			topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			if topic in dojo_topics and topic in ewcfg.help_responses:
@@ -1536,24 +1545,24 @@ async def piss(cmd):
 					response = "You piss right through them! Their ghostly form ripples as the stream of urine pours endlessly unto them."
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				
-				if user_data.sap < ewcfg.sap_spend_piss:
-					response = "You don't have enough liquid sap to !piss..."
-				else:
-					sap_damage_target = min(ewcfg.sap_crush_piss, target_user_data.hardened_sap)
-					target_user_data.hardened_sap -= sap_damage_target
-					target_user_data.persist()
-					
-					user_data.sap -= ewcfg.sap_spend_piss
-					user_data.limit_fix()
-					enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-					
-					user_poi = ewcfg.id_to_poi.get(user_data.poi)
-					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, enlisted)
-					user_data.persist()
-					
-					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-					
-					response = "You spend {} liquid sap to !piss HARD and FAST right onto {}!! They lose {} hardened sap!".format(ewcfg.sap_spend_piss, target_member.display_name, sap_damage_target)
+				#if user_data.sap < ewcfg.sap_spend_piss:
+				#	response = "You don't have enough liquid sap to !piss..."
+				#else:
+				#sap_damage_target = min(ewcfg.sap_crush_piss, target_user_data.hardened_sap)
+				#target_user_data.hardened_sap -= sap_damage_target
+				#target_user_data.persist()
+				
+				#user_data.sap -= ewcfg.sap_spend_piss
+				#user_data.limit_fix()
+				#enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+				
+				#user_poi = ewcfg.id_to_poi.get(user_data.poi)
+				#user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, enlisted)
+				#user_data.persist()
+				
+				#await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+				
+				response = "You spend {} liquid sap to !piss HARD and FAST right onto {}!!".format(ewcfg.sap_spend_piss, target_member.display_name)
 			else:
 				response = "You can't !piss on someone who isn't there! Moron!"
 
@@ -2212,7 +2221,7 @@ async def purify(cmd):
 				
 				user_data.slimelevel = 1
 				user_data.slimes = 0
-				user_data.hardened_sap = 0
+				#user_data.hardened_sap = 0
 				
 				new_weaponskill = int(user_data.weaponskill * 0.75)
 				
@@ -3219,6 +3228,7 @@ async def gvs_join_operation(cmd):
 				
 				# Lock juveniles into the district for garden ops
 				if faction == ewcfg.psuedo_faction_gankers:
+					ewutils.moves_active[user_data.id_user] = 0
 					ewutils.active_restrictions[user_data.id_user] = 4
 				
 				# If there are no player-generated operations, then the bot will simply spawn in ones automatically.

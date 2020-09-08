@@ -81,21 +81,21 @@ def setupRoles(client = None, id_server = -1):
 			except:
 				ewutils.logMsg('Failed to set up role {}'.format(poi.role))
 		
-		if poi.major_role in roles_map:
-			try:
-				role_data = EwRole(id_server = id_server, name = poi.major_role)
-				role_data.id_role = roles_map[poi.major_role].id
-				role_data.persist()
-			except:
-				ewutils.logMsg('Failed to set up major role {}'.format(poi.major_role))
+		#if poi.major_role in roles_map:
+		#	try:
+		#		role_data = EwRole(id_server = id_server, name = poi.major_role)
+		#		role_data.id_role = roles_map[poi.major_role].id
+		#		role_data.persist()
+		#	except:
+		#		ewutils.logMsg('Failed to set up major role {}'.format(poi.major_role))
 				
-		if poi.minor_role in roles_map:
-			try:
-				role_data = EwRole(id_server = id_server, name = poi.minor_role)
-				role_data.id_role = roles_map[poi.minor_role].id
-				role_data.persist()
-			except:
-				ewutils.logMsg('Failed to set up minor role {}'.format(poi.minor_role))
+		#if poi.minor_role in roles_map:
+		#	try:
+		#		role_data = EwRole(id_server = id_server, name = poi.minor_role)
+		#		role_data.id_role = roles_map[poi.minor_role].id
+		#		role_data.persist()
+		#	except:
+		#		ewutils.logMsg('Failed to set up minor role {}'.format(poi.minor_role))
 
 	for faction_role in ewcfg.faction_roles:
 		if faction_role in roles_map:
@@ -445,10 +445,10 @@ async def updateRoles(
 
 	poi_roles_remove = []
 	for poi in ewcfg.poi_list:
-		if poi.major_role != None and poi.major_role != poi_major_role:
-			poi_roles_remove.append(poi.major_role)
-		if poi.minor_role != None and poi.minor_role != poi_minor_role:
-			poi_roles_remove.append(poi.minor_role)
+		#if poi.major_role != None and poi.major_role != poi_major_role:
+		poi_roles_remove.append(poi.major_role)
+		#if poi.minor_role != None and poi.minor_role != poi_minor_role:
+		poi_roles_remove.append(poi.minor_role)
 
 	misc_roles_remove = [
 		ewcfg.role_gellphone,
@@ -520,21 +520,22 @@ async def updateRoles(
 	except:
 		ewutils.logMsg('error: couldn\'t find tutorial role {}'.format(tutorial_role))
 		
-	try:
-		major_role_data = EwRole(id_server = id_server, name = poi_major_role)
-		if not major_role_data.id_role in role_ids and major_role_data.id_role != '':
-			role_ids.append(int(major_role_data.id_role))
+	# poi roles are disabled
+	#try:
+	#	major_role_data = EwRole(id_server = id_server, name = poi_major_role)
+	#	if not major_role_data.id_role in role_ids and major_role_data.id_role != '':
+	#		role_ids.append(int(major_role_data.id_role))
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
-	except:
-		ewutils.logMsg('error: couldn\'t find major role {}'.format(poi_major_role))
+	#except:
+	#	ewutils.logMsg('error: couldn\'t find major role {}'.format(poi_major_role))
 
-	try:
-		minor_role_data = EwRole(id_server = id_server, name = poi_minor_role)
-		if not minor_role_data.id_role in role_ids and minor_role_data.id_role != '':
-			role_ids.append(int(minor_role_data.id_role))
+	#try:
+	#	minor_role_data = EwRole(id_server = id_server, name = poi_minor_role)
+	#	if not minor_role_data.id_role in role_ids and minor_role_data.id_role != '':
+	#		role_ids.append(int(minor_role_data.id_role))
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
-	except:
-		ewutils.logMsg('error: couldn\'t find minor role {}'.format(poi_minor_role))
+	#except:
+	#	ewutils.logMsg('error: couldn\'t find minor role {}'.format(poi_minor_role))
 
 	try:
 		role_data = EwRole(id_server = id_server, name = role_gellphone)
@@ -629,7 +630,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 		for poi in ewcfg.poi_list:
 			channel = ewutils.get_channel(server, poi.channel)
 			if channel == None:
-				ewutils.logMsg('Error: In refresh_user_perms, could not get channel for {}'.format(poi.channel))
+				#ewutils.logMsg('Error: In refresh_user_perms, could not get channel for {}'.format(poi.channel))
 				# Second try
 				channel = ewutils.get_channel(server, poi.channel)
 				if channel == None:

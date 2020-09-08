@@ -55,8 +55,10 @@ async def set_race(cmd):
 					response = "ENDLESS WAR acknowledges you as some kind of bird creature. You can now **{}** to fly away for a quick escape.".format(ewcfg.cmd_flutter)
 				elif desired_race == ewcfg.races["other"]:
 					response = 'ENDLESS WAR struggles to categorize you, and files you under "other". Your peculiar form can be used to **{}** those around you.'.format(ewcfg.cmd_confuse)
+				elif desired_race == ewcfg.races["insectoid"]:
+					response = 'ENDLESS WAR acknowledges you as an insectoid lifeform. You may now **{}** alongside other creepy-crawlies of your ilk.'.format(ewcfg.cmd_entomize)
 				elif desired_race in forbidden_races:
-					response = 'In its infinite wisdom, ENDLESS WAR sees past your attempt at being funny and acknowledges you for what you _truly_ are: **a fucking retard**.'
+					response = 'In its infinite wisdom, ENDLESS WAR sees past your attempt at being funny and acknowledges you for what you _truly_ are: **a fucking idiot**.'
 
 				# only set the cooldown if the user is switching race, rather than setting it up for the first time
 				if user_data.race: 
@@ -386,6 +388,25 @@ async def flutter(cmd):
 			excuses.append("you're too full from your last meal for such vigorous exercise.")
 
 		response += random.choice(excuses)
+	else:
+		response = "You people are not allowed to do that."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def entomize(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	if user_data.race == ewcfg.races["insectoid"]:
+		responses = [
+			"You bust some crazy dance moves and waggling motions to alert all onlookers where they may find the nearest diner.",
+			"You think back to when you were just a little grub, suckling on the regurgitated nutrient slurry of your caretakers from the hive. Ah...",
+			"Like the noble violinist, you croon your hindleg and forewing together to make a beautiful chirping sound, alerting everyone in the immediate vicinity that you're totally DTF right now. _Nice_.",
+			"You think about how cool it is to be just a little bug. _Awww yeeeah_.",
+			"The biological imperative to propagate future members of your species flares up, blotting out all other thoughts.\nYou remind yourself that you will most likely be cannibalized post-coitus, which thankfully kills your libido.",
+			"You wiggle your thorax and rhythmically bounce up and down on all segmented legs, imitating the rustling of leaves and branches in the wind to confuse potential predators.\nThe only thing you accomplish is causing passersby to clear away from you quickly and awkwardly.",
+			"A wayward leaf brushes against your neck, sending a shock down each and every one of your muscles and ligaments. You instinctively skitter up the wall of a nearby apartment complex.",
+		]
+		response = random.choice(responses)
 	else:
 		response = "You people are not allowed to do that."
 
