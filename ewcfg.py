@@ -31,7 +31,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.5 - Ghost Fishing"
+version = "v3.51 - Ghost Fishing"
 
 
 dir_msgqueue = 'msgqueue'
