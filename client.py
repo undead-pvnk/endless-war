@@ -663,16 +663,13 @@ cmd_map = {
 	ewcfg.cmd_lol: ewcmd.lol,
 
 	# restores poi roles to their proper names, only usable by admins
-	# Disabled - poi roles are not used right now
-	#ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
+	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 	
 	# hides all poi role names, only usable by admins
-	# Disabled - poi roles are not used right now
-	#ewcfg.cmd_hiderolenames: ewrolemgr.hideRoleNames,
+	ewcfg.cmd_hiderolenames: ewrolemgr.hideRoleNames,
 	
 	# recreates all hidden poi roles in the server in case restoreRoleNames doesnt work, only usable by admins
-	# Disabled - poi roles are not used right now
-	#ewcfg.cmd_recreateroles: ewrolemgr.recreateRoles,
+	ewcfg.cmd_recreateroles: ewrolemgr.recreateRoles,
 	
 	# deletes all roles in the server of a particular type
 	ewcfg.cmd_deleteroles: ewrolemgr.deleteRoles,

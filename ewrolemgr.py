@@ -81,21 +81,21 @@ def setupRoles(client = None, id_server = -1):
 			except:
 				ewutils.logMsg('Failed to set up role {}'.format(poi.role))
 		
-		#if poi.major_role in roles_map:
-		#	try:
-		#		role_data = EwRole(id_server = id_server, name = poi.major_role)
-		#		role_data.id_role = roles_map[poi.major_role].id
-		#		role_data.persist()
-		#	except:
-		#		ewutils.logMsg('Failed to set up major role {}'.format(poi.major_role))
+		if poi.major_role in roles_map:
+			try:
+				role_data = EwRole(id_server = id_server, name = poi.major_role)
+				role_data.id_role = roles_map[poi.major_role].id
+				role_data.persist()
+			except:
+				ewutils.logMsg('Failed to set up major role {}'.format(poi.major_role))
 				
-		#if poi.minor_role in roles_map:
-		#	try:
-		#		role_data = EwRole(id_server = id_server, name = poi.minor_role)
-		#		role_data.id_role = roles_map[poi.minor_role].id
-		#		role_data.persist()
-		#	except:
-		#		ewutils.logMsg('Failed to set up minor role {}'.format(poi.minor_role))
+		if poi.minor_role in roles_map:
+			try:
+				role_data = EwRole(id_server = id_server, name = poi.minor_role)
+				role_data.id_role = roles_map[poi.minor_role].id
+				role_data.persist()
+			except:
+				ewutils.logMsg('Failed to set up minor role {}'.format(poi.minor_role))
 
 	for faction_role in ewcfg.faction_roles:
 		if faction_role in roles_map:
@@ -445,8 +445,8 @@ async def updateRoles(
 
 	poi_roles_remove = []
 	for poi in ewcfg.poi_list:
-		#if poi.major_role != None and poi.major_role != poi_major_role:
-		poi_roles_remove.append(poi.major_role)
+		if poi.major_role != None and poi.major_role != poi_major_role:
+			poi_roles_remove.append(poi.major_role)
 		#if poi.minor_role != None and poi.minor_role != poi_minor_role:
 		poi_roles_remove.append(poi.minor_role)
 
@@ -521,13 +521,13 @@ async def updateRoles(
 		ewutils.logMsg('error: couldn\'t find tutorial role {}'.format(tutorial_role))
 		
 	# poi roles are disabled
-	#try:
-	#	major_role_data = EwRole(id_server = id_server, name = poi_major_role)
-	#	if not major_role_data.id_role in role_ids and major_role_data.id_role != '':
-	#		role_ids.append(int(major_role_data.id_role))
+	try:
+		major_role_data = EwRole(id_server = id_server, name = poi_major_role)
+		if not major_role_data.id_role in role_ids and major_role_data.id_role != '':
+			role_ids.append(int(major_role_data.id_role))
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
-	#except:
-	#	ewutils.logMsg('error: couldn\'t find major role {}'.format(poi_major_role))
+	except:
+		ewutils.logMsg('error: couldn\'t find major role {}'.format(poi_major_role))
 
 	#try:
 	#	minor_role_data = EwRole(id_server = id_server, name = poi_minor_role)
@@ -645,6 +645,13 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 				for i in range(ewcfg.permissions_tries):
 					await channel.set_permissions(used_member, overwrite=None)
 
+				# Handle mine walls
+				if poi.id_poi in ewcfg.mines_wall_map:
+					wall_channel = ewutils.get_channel(server, ewcfg.mines_wall_map[poi.id_poi])
+					if wall_channel is not None:
+						for i in range(ewcfg.permissions_tries):
+							await wall_channel.set_permissions(used_member, overwrite=None)
+
 				#time_now_end = int(time.time())
 				#print('took {} seconds to delete channel permissions'.format(time_now_end - time_now_start))
 				#print('\ndeleted overwrite in {} for {}\n'.format(channel, member))
@@ -674,6 +681,15 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 
 				for i in range(ewcfg.permissions_tries):
 					await correct_channel.set_permissions(used_member, overwrite=overwrite)
+
+				# Handle mine walls
+				if correct_poi.id_poi in ewcfg.mines_wall_map:
+					wall_channel = ewutils.get_channel(server, ewcfg.mines_wall_map[correct_poi.id_poi])
+					if wall_channel is not None:
+						overwrite = discord.PermissionOverwrite()
+						overwrite.read_messages = True
+						for i in range(ewcfg.permissions_tries):
+							await wall_channel.set_permissions(used_member, overwrite=overwrite)
 
 				#time_now_end = int(time.time())
 				#print('took {} seconds to update channel permissions'.format(time_now_end - time_now_start))
