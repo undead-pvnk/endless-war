@@ -491,8 +491,8 @@ def canCap(cmd):
 	elif user_data.poi == ewcfg.poi_id_juviesrow:
 			response = "Nah, the Rowdys and Killers have both agreed this is neutral ground. You don’t want to start a diplomatic crisis, " \
 					   "just stick to spraying down sick graffiti and splattering your rival gang across the pavement in the other districts."
-	elif district_data.is_degraded():
-		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+	#elif district_data.is_degraded():
+		#response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 	elif not user_data.poi in ewcfg.capturable_districts:
 		response = "This zone cannot be captured."
 		if poi.is_district == True:
