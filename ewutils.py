@@ -720,7 +720,7 @@ async def bleedSlimes(id_server = None):
 
 				if slimes_to_bleed >= 1:
 
-					real_bleed = round(slimes_to_bleed * bleed_mod)
+					real_bleed = round(slimes_to_bleed) # * bleed_mod)
 
 					user_data.bleed_storage -= slimes_to_bleed
 					user_data.change_slimes(n=- real_bleed, source=ewcfg.source_bleeding)
