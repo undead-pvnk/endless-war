@@ -854,7 +854,7 @@ async def move(cmd = None, isApt = False):
 	if poi == None:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Never heard of it."))
 
-	if not ewutils.DEBUG and ewcfg.chname_to_poi.get(cmd.message.channel.name).id_poi != user_data.poi:
+	if not ewutils.DEBUG and not isApt and ewcfg.chname_to_poi.get(cmd.message.channel.name).id_poi != user_data.poi:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in your current district.").format(cmd.tokens[0]))
 
 	if user_data.poi == ewcfg.debugroom:

@@ -2006,12 +2006,14 @@ async def on_message(message):
 		""" Howl if !howl is in the message at all. """
 		return await ewcmd.cmd_howl(ewcmd.EwCmd(
 			message = message,
-			client = client
+			client = client,
+			guild = message.guild
 		))
 	elif content_tolower.find(ewcfg.cmd_moan) >= 0 or re_moan.match(content_tolower):
 		return await ewcmd.cmd_moan(ewcmd.EwCmd(
 			message=message,
-			client=client
+			client=client,
+			guild = message.guild
 		))
 
 # find our REST API token
