@@ -447,8 +447,8 @@ async def updateRoles(
 	for poi in ewcfg.poi_list:
 		if poi.major_role != None and poi.major_role != poi_major_role:
 			poi_roles_remove.append(poi.major_role)
-		if poi.minor_role != None and poi.minor_role != poi_minor_role:
-			poi_roles_remove.append(poi.minor_role)
+		#if poi.minor_role != None and poi.minor_role != poi_minor_role:
+		poi_roles_remove.append(poi.minor_role)
 
 	misc_roles_remove = [
 		ewcfg.role_gellphone,
@@ -520,6 +520,7 @@ async def updateRoles(
 	except:
 		ewutils.logMsg('error: couldn\'t find tutorial role {}'.format(tutorial_role))
 		
+	# poi roles are disabled
 	try:
 		major_role_data = EwRole(id_server = id_server, name = poi_major_role)
 		if not major_role_data.id_role in role_ids and major_role_data.id_role != '':
@@ -528,13 +529,13 @@ async def updateRoles(
 	except:
 		ewutils.logMsg('error: couldn\'t find major role {}'.format(poi_major_role))
 
-	try:
-		minor_role_data = EwRole(id_server = id_server, name = poi_minor_role)
-		if not minor_role_data.id_role in role_ids and minor_role_data.id_role != '':
-			role_ids.append(int(minor_role_data.id_role))
+	#try:
+	#	minor_role_data = EwRole(id_server = id_server, name = poi_minor_role)
+	#	if not minor_role_data.id_role in role_ids and minor_role_data.id_role != '':
+	#		role_ids.append(int(minor_role_data.id_role))
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
-	except:
-		ewutils.logMsg('error: couldn\'t find minor role {}'.format(poi_minor_role))
+	#except:
+	#	ewutils.logMsg('error: couldn\'t find minor role {}'.format(poi_minor_role))
 
 	try:
 		role_data = EwRole(id_server = id_server, name = role_gellphone)
@@ -629,7 +630,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 		for poi in ewcfg.poi_list:
 			channel = ewutils.get_channel(server, poi.channel)
 			if channel == None:
-				ewutils.logMsg('Error: In refresh_user_perms, could not get channel for {}'.format(poi.channel))
+				#ewutils.logMsg('Error: In refresh_user_perms, could not get channel for {}'.format(poi.channel))
 				# Second try
 				channel = ewutils.get_channel(server, poi.channel)
 				if channel == None:
@@ -643,6 +644,13 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 
 				for i in range(ewcfg.permissions_tries):
 					await channel.set_permissions(used_member, overwrite=None)
+
+				# Handle mine walls
+				if poi.id_poi in ewcfg.mines_wall_map:
+					wall_channel = ewutils.get_channel(server, ewcfg.mines_wall_map[poi.id_poi])
+					if wall_channel is not None:
+						for i in range(ewcfg.permissions_tries):
+							await wall_channel.set_permissions(used_member, overwrite=None)
 
 				#time_now_end = int(time.time())
 				#print('took {} seconds to delete channel permissions'.format(time_now_end - time_now_start))
@@ -673,6 +681,15 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 
 				for i in range(ewcfg.permissions_tries):
 					await correct_channel.set_permissions(used_member, overwrite=overwrite)
+
+				# Handle mine walls
+				if correct_poi.id_poi in ewcfg.mines_wall_map:
+					wall_channel = ewutils.get_channel(server, ewcfg.mines_wall_map[correct_poi.id_poi])
+					if wall_channel is not None:
+						overwrite = discord.PermissionOverwrite()
+						overwrite.read_messages = True
+						for i in range(ewcfg.permissions_tries):
+							await wall_channel.set_permissions(used_member, overwrite=overwrite)
 
 				#time_now_end = int(time.time())
 				#print('took {} seconds to update channel permissions'.format(time_now_end - time_now_start))

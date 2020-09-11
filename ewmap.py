@@ -779,41 +779,33 @@ async def descend(cmd):
 		life_state = user_data.life_state
 		faction = user_data.faction
 		await asyncio.sleep(travel_duration)
+		try:
+			await descent_message.delete()
+		except:
+			pass
+		
+		user_data = EwUser(member = cmd.message.author)
+		if move_current == ewutils.moves_active[cmd.message.author.id] and user_data.life_state == life_state and faction == user_data.faction:
+			user_data.poi = ewcfg.poi_id_thevoid
+			user_data.time_lastenter = int(time.time())
 
-		if user_data.life_state != life_state or faction != user_data.faction:
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, user_data.life_state == ewcfg.life_state_enlisted)
+			
+			user_data.persist()
+			ewutils.end_trade(user_data.id_user)
+			await ewrolemgr.updateRoles(client = ewutils.get_client(), member = cmd.message.author)
+			await user_data.move_inhabitants(id_poi = ewcfg.poi_id_thevoid)
+
+			void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+			response = "You go up the flight of stairs and find yourself in {}.".format(void_poi.str_name)
+			msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+			await asyncio.sleep(20)
 			try:
-				await descent_message.delete()
+				await msg.delete()
 				pass
 			except:
 				pass
 			return
-
-		user_data.poi = ewcfg.poi_id_thevoid
-		user_data.time_lastenter = int(time.time())
-
-		enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
-		
-		user_data.persist()
-		ewutils.end_trade(user_data.id_user)
-		await ewrolemgr.updateRoles(client = ewutils.get_client(), member = cmd.message.author)
-		await user_data.move_inhabitants(id_poi = ewcfg.poi_id_thevoid)
-		try:
-			await descent_message.delete()
-			pass
-		except:
-			pass
-
-		void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
-		response = "You go up the flight of stairs and find yourself in {}.".format(void_poi.str_name)
-		msg = await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, void_poi.channel), ewutils.formatMessage(cmd.message.author, response))
-		await asyncio.sleep(20)
-		try:
-			await msg.delete()
-			pass
-		except:
-			pass
-		return
 	else:
 		return await move(cmd)
 	
@@ -938,7 +930,11 @@ async def move(cmd = None, isApt = False):
 	minutes = int(path.cost / 60)
 	seconds = path.cost % 60
 
-	walking_into_sewers = (user_data.life_state != ewcfg.life_state_corpse) and (poi.id_poi == ewcfg.poi_id_thesewers)
+	life_state = user_data.life_state
+	faction = user_data.faction
+
+	# walking_into_sewers = (user_data.life_state != ewcfg.life_state_corpse) and (poi.id_poi == ewcfg.poi_id_thesewers)
+	walking_into_sewers = poi.id_poi == ewcfg.poi_id_thesewers
 
 	if user_data.has_soul == 1:
 		walk_text = "walking"
@@ -956,7 +952,10 @@ async def move(cmd = None, isApt = False):
 		walk_response = None
 
 		if walking_into_sewers:
-			walk_response = "You begin your descent to {}.{}\nI'm sure you've heard, but people who go down there don't come back alive. You still have time to **{}**, if you'd like.".format(poi.str_name, distance_text, ewcfg.cmd_halt_alt1)
+			if user_data.life_state == ewcfg.life_state_corpse:
+				walk_response = "You begin to sink through the earth, retreating to your corpse deep in {}.{}".format(poi.str_name, distance_text)
+			else:
+				walk_response = "You begin your descent to {}.{}\nI'm sure you've heard, but people who go down there don't come back alive. You still have time to **{}**, if you'd like.".format(poi.str_name, distance_text, ewcfg.cmd_halt_alt1)
 		else:
 			walk_response = "You begin {} to {}.{}".format( walk_text, poi.str_name, distance_text)
 		msg_walk_start = await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, walk_response))
@@ -968,12 +967,9 @@ async def move(cmd = None, isApt = False):
 	#print('pathfinding in move function took {} seconds'.format(time_move_end - time_move_start))
 
 
-	life_state = user_data.life_state
-	faction = user_data.faction
-
 	# Moving to or from a place not on the map (e.g. the sewers)
 	#if poi.coord == None or poi_current == None or poi_current.coord == None:
-	if len(poi.neighbors.keys()) == 0 or poi_current == None or len(poi_current.neighbors.keys()) == 0:
+	if len(poi.neighbors.keys()) == 0 or poi_current == None or len(poi_current.neighbors.keys()) == 0 or (walking_into_sewers and life_state == ewcfg.life_state_corpse):
 		if path.cost > 0:
 			await asyncio.sleep(path.cost)
 

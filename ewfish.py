@@ -188,12 +188,16 @@ def gen_fish(x, fisher, has_fishingrod):
 
 	rarity_number = random.randint(0, 100)
 
+	# TODO: reimplement chance to get items in black pond using negapoudrin 
+	# fragments when any of that shit has any use beyond making staves.
+	# just ctrl+f the variable below and remove anything to do with it
+	voidfishing = fisher.pier.pier_type == ewcfg.fish_slime_void
 	if has_fishingrod == True:
-		if rarity_number >= 0 and rarity_number < 21:  # 20%
+		if rarity_number >= 0 and rarity_number < 21 and not voidfishing:  # 20%
 			fish = "item"
 			return fish
 
-		elif rarity_number >= 21 and rarity_number < 31:  # 10%
+		elif voidfishing or rarity_number >= 21 and rarity_number < 31:  # 10%
 			for fish in ewcfg.fish_names:
 				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_common:
 					fish_pool.append(fish)
@@ -213,7 +217,7 @@ def gen_fish(x, fisher, has_fishingrod):
 					fish_pool.append(fish)
 
 	else:
-		if rarity_number >= 0 and rarity_number < 11: # 10%
+		if rarity_number >= 0 and rarity_number < 11 and not voidfishing: # 10%
 			fish = "item"
 			return fish
 
@@ -222,7 +226,7 @@ def gen_fish(x, fisher, has_fishingrod):
 				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_common:
 					fish_pool.append(fish)
 
-		elif rarity_number >= 61 and rarity_number < 91: # 30%
+		elif voidfishing or rarity_number >= 61 and rarity_number < 91: # 30%
 			for fish in ewcfg.fish_names:
 				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_uncommon:
 					fish_pool.append(fish)
@@ -514,7 +518,7 @@ async def cast(cmd):
 					return
 
 				if damp > 10:
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, random.choice(ewcfg.nobite_text)))
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, random.choice(ewcfg.void_fishing_text if fisher.pier.pier_type == ewcfg.fish_slime_void else ewcfg.normal_fishing_text)))
 					fun -= 2
 					bun += 1
 					if bun >= 5:
@@ -728,6 +732,10 @@ async def award_fish(fisher, cmd, user_data):
 
 		if has_fishingrod == True:
 			slime_gain = slime_gain * 2
+
+		#trauma = ewcfg.trauma_map.get(user_data.trauma)
+		#if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
+		#	slime_gain *= (1 - 0.5 * user_data.degradation / 100)
 
 		if fisher.pier.pier_type == ewcfg.fish_slime_void:
 			slime_gain = slime_gain * 1.5

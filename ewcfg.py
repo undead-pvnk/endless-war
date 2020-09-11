@@ -31,7 +31,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.5 - Ghost Fishing"
+version = "v3.51 - Ghost Fishing"
 
 
 dir_msgqueue = 'msgqueue'
@@ -4624,7 +4624,7 @@ def wef_revolver(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 2
+	#ctn.sap_damage = 2
 
 	if aim <= (1 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -4641,7 +4641,7 @@ def wef_revolver(ctn = None):
 def wef_dualpistols(ctn = None):
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 2
+	#ctn.sap_damage = 2
 
 	if aim <= (4 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -4658,7 +4658,7 @@ def wef_dualpistols(ctn = None):
 def wef_shotgun(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.65)
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
-	ctn.sap_damage = 5
+	#ctn.sap_damage = 5
 
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
@@ -4673,21 +4673,21 @@ def wef_shotgun(ctn = None):
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
-		ctn.sap_damage *= 2
+		#ctn.sap_damage *= 2
 
 # weapon effect function for "rifle"
 def wef_rifle(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.25)
 	aim = (random.randrange(10) + 1)
-	ctn.sap_ignored = 10
-	ctn.sap_damage = 2
+	#ctn.sap_ignored = 10
+	#ctn.sap_damage = 2
 
 	if aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
-		ctn.sap_damage += 2
-		ctn.sap_ignored += 10
+		#ctn.sap_damage += 2
+		#ctn.sap_ignored += 10
 
 # weapon effect function for "smg"
 def wef_smg(ctn = None):
@@ -4721,7 +4721,7 @@ def wef_smg(ctn = None):
 		if ctn.strikes == 0:
 			ctn.miss = True
 
-	ctn.sap_damage = ctn.strikes
+	#ctn.sap_damage = ctn.strikes
 
 # weapon effect function for "minigun"
 def wef_minigun(ctn = None):
@@ -4751,18 +4751,18 @@ def wef_minigun(ctn = None):
 	if ctn.strikes == 0:
 		ctn.miss = True
 
-	ctn.sap_damage = 2 * ctn.strikes
+	#ctn.sap_damage = 2 * ctn.strikes
 
 # weapon effect function for "bat"
 def wef_bat(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
 	dmg = ctn.slimes_damage
-	ctn.sap_damage = 2
+	#ctn.sap_damage = 2
 
-	# Increased miss chance if attacking within less than three seconds after last attack
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
+	# Disabled - Increased miss chance if attacking within less than three seconds after last attack
+	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	#ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
 
 	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
 
@@ -4789,23 +4789,23 @@ def wef_bat(ctn = None):
 # weapon effect function for "brassknuckles"
 def wef_brassknuckles(ctn = None):
 	last_attack = (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else 0)
-	successful_timing = 2.1 > (ctn.time_now - last_attack) > 1.9
+	successful_timing = 2.6 > (ctn.time_now - last_attack) > 1.4
 	user_mutations = ctn.user_data.get_mutations()
 	ctn.strikes = 0
 
-	damage_min = ctn.slimes_damage / 10
+	#damage_min = ctn.slimes_damage / 10
 
-	if last_attack > 0:
-		ctn.slimes_damage = damage_min * ((min(last_attack, 2) / 2)**0.5  * 10)
-	else:
-		ctn.slimes_damage = damage_min
+	#if last_attack > 0:
+	#	ctn.slimes_damage = damage_min * ((min(last_attack, 2) / 2)**0.5  * 10)
+	#else:
+	#	ctn.slimes_damage = damage_min
 
-	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
+	#ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
 
 	consecutive_hits = (int(ctn.weapon_item.item_props.get("consecutive_hits")) if ctn.weapon_item.item_props.get("consecutive_hits") != None else 0)
 	if consecutive_hits == 2 and successful_timing:
 		ctn.crit = True
-		ctn.sap_damage = 5
+		#ctn.sap_damage = 5
 		ctn.slimes_damage *= 3
 		ctn.weapon_item.item_props["consecutive_hits"] = 0
 
@@ -4844,23 +4844,22 @@ def wef_brassknuckles(ctn = None):
 def wef_katana(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.3)
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.3)
-	ctn.sap_damage = 0
+	#ctn.sap_damage = 0
 
-	# Decreased damage if attacking within less than four seconds after last attack
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	# Disabled - Decreased damage if attacking within less than four seconds after last attack
+	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 
-	damage_min = ctn.slimes_damage / 10
+	#damage_min = ctn.slimes_damage / 10
 
+	#if time_lastattack > 0:
+	#	ctn.slimes_damage = damage_min * ((min(time_lastattack, 5) / 5)**0.5  * 10)
+	#else:
+	#	ctn.slimes_damage = damage_min
 
-	if time_lastattack > 0:
-		ctn.slimes_damage = damage_min * ((min(time_lastattack, 5) / 5)**0.5  * 10)
-	else:
-		ctn.slimes_damage = damage_min
+	#ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
 
-	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
-
-	if 5.2 > time_lastattack > 4.8:
-		ctn.sap_ignored = 10
+	#if 5.2 > time_lastattack > 4.8:
+	#	ctn.sap_ignored = 10
 
 
 	weapons_held = ewitem.inventory(
@@ -4877,7 +4876,7 @@ def wef_katana(ctn = None):
 	elif len(weapons_held) == 1:
 		ctn.crit = True
 		ctn.slimes_damage *= 1.5
-		ctn.sap_ignored *= 1.5
+		#ctn.sap_ignored *= 1.5
 
 # weapon effect function for "broadsword"
 def wef_broadsword(ctn = None):
@@ -4886,12 +4885,12 @@ def wef_broadsword(ctn = None):
 	ctn.slimes_damage *= 3
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 5
-	ctn.sap_ignored = 20
+	#ctn.sap_damage = 5
+	#ctn.sap_ignored = 20
 
 	ctn.slimes_damage += int( dmg * (min(10, int(ctn.weapon_item.item_props.get("kills"))) / 2) )
 
-	if aim <= (2 + int(10 * ctn.miss_mod)):
+	if aim <= (1 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
@@ -4900,7 +4899,7 @@ def wef_broadsword(ctn = None):
 			ctn.backfire = True
 			ctn.backfire_damage = ctn.slimes_damage
 
-	elif aim <= (3 + int(10 * ctn.miss_mod)):
+	elif aim <= (2 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
@@ -4909,7 +4908,7 @@ def wef_broadsword(ctn = None):
 
 	elif aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
-		ctn.sap_damage *= 2
+		#ctn.sap_damage *= 2
 		ctn.slimes_damage *= 2
 
 # weapon effect function for "nun-chucks"
@@ -4919,8 +4918,8 @@ def wef_nunchucks(ctn = None):
 	ctn.slimes_damage = 0
 	user_mutations = ctn.user_data.get_mutations()
 
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 100 * 55
+	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	#ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 100 * 55
 
 	for count in range(4):
 		if (random.randrange(100) + 1) > (25 + int(100 * ctn.miss_mod)):
@@ -4941,14 +4940,14 @@ def wef_nunchucks(ctn = None):
 		ctn.backfire = True
 		ctn.backfire_damage = dmg * 2
 
-	ctn.sap_damage = ctn.strikes
+	#ctn.sap_damage = ctn.strikes
 
 # weapon effect function for "scythe"
 def wef_scythe(ctn = None):
 	ctn.slimes_spent = int(ctn.slimes_spent * 3)
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 0
+	#ctn.sap_damage = 0
 
 	try:
 		target_kills = ewstats.get_stat(user = ctn.shootee_data, metric = stat_kills)
@@ -4956,17 +4955,17 @@ def wef_scythe(ctn = None):
 		target_kills = 4
 
 	ctn.slimes_damage = ctn.slimes_damage * max(1, min(target_kills, 10))
-	ctn.sap_ignored = 3 * min(target_kills, 10)
+	#ctn.sap_ignored = 3 * min(target_kills, 10)
 
-	# Decreased damage if attacking within less than three seconds after last attack
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	damage_min = ctn.slimes_damage / 10
-	if time_lastattack > 0:
-		ctn.slimes_damage = damage_min * ((min(time_lastattack, 3)/3)**0.5 * 10)
-	else:
-		ctn.slimes_damage = damage_min
+	# Disabled - Decreased damage if attacking within less than three seconds after last attack
+	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	#damage_min = ctn.slimes_damage / 10
+	#if time_lastattack > 0:
+	#	ctn.slimes_damage = damage_min * ((min(time_lastattack, 3)/3)**0.5 * 10)
+	#else:
+	#	ctn.slimes_damage = damage_min
 
-	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
+	#ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
 
 	aim = (random.randrange(10) + 1)
 
@@ -4995,17 +4994,17 @@ def wef_yoyo(ctn = None):
 	else:
 		ctn.weapon_item.item_props["consecutive_hits"] = 0
 
-	damage_min = ctn.slimes_damage / 10
+	#damage_min = ctn.slimes_damage / 10
 
-	if time_lastattack > 0:
-		ctn.slimes_damage = damage_min * ((min(time_lastattack, 2)/2) ** 0.5 * 10)
-	else:
-		ctn.slimes_damage = damage_min
+	#if time_lastattack > 0:
+	#	ctn.slimes_damage = damage_min * ((min(time_lastattack, 2)/2) ** 0.5 * 10)
+	#else:
+	#	ctn.slimes_damage = damage_min
 
-	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
+	#ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
 
-	if time_lastattack >= 2:
-		ctn.sap_damage = 1
+	#if time_lastattack >= 2:
+	#	ctn.sap_damage = 1
 
 	ctn.weapon_item.item_props["consecutive_hits"] = int(ctn.weapon_item.item_props["consecutive_hits"]) + 1
 	aim = (random.uniform(0, 100))
@@ -5027,7 +5026,7 @@ def wef_knives(ctn = None):
 	ctn.slimes_spent = int(ctn.slimes_spent * 0.25)
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 0
+	#ctn.sap_damage = 0
 
 	aim = (random.randrange(10) + 1)
 
@@ -5048,8 +5047,8 @@ def wef_molotov(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
 	ctn.slimes_spent *= 1
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 0
-	ctn.sap_ignored = 10
+	#ctn.sap_damage = 0
+	#ctn.sap_ignored = 10
 
 	aim = (random.randrange(10) + 1)
 
@@ -5083,7 +5082,7 @@ def wef_grenade(ctn = None):
 	ctn.slimes_spent *= 1
 	ctn.bystander_damage = int(dmg * 0.3)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 5
+	#ctn.sap_damage = 5
 
 	aim = (random.randrange(10) + 1)
 
@@ -5112,8 +5111,8 @@ def wef_grenade(ctn = None):
 # weapon effect function for "garrote"
 def wef_garrote(ctn = None):
 	ctn.slimes_damage *= 15
-	ctn.sap_damage = 0
-	ctn.sap_ignored = ctn.shootee_data.hardened_sap
+	#ctn.sap_damage = 0
+	#ctn.sap_ignored = ctn.shootee_data.hardened_sap
 
 	user_mutations = ctn.user_data.get_mutations()
 	aim = (random.randrange(100) + 1)
@@ -5139,7 +5138,7 @@ def wef_garrote(ctn = None):
 # weapon effect function for all weapons which double as tools.
 def wef_tool(ctn = None):
 	ctn.slimes_damage *= 0.2
-	ctn.sap_damage = 0
+	#ctn.sap_damage = 0
 
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
@@ -5162,12 +5161,12 @@ def wef_bass(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
 	dmg = ctn.slimes_damage
-	ctn.sap_damage = 1
-	ctn.sap_ignored = 5
+	#ctn.sap_damage = 1
+	#ctn.sap_ignored = 5
 
-	# Increased miss chance if attacking within less than three seconds after last attack
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
+	# Disabled - Increased miss chance if attacking within less than three seconds after last attack
+	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	#ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
 
 	ctn.slimes_damage = int(ctn.slimes_damage * (0.5 + random.randrange(200) / 100))
 
@@ -5187,7 +5186,7 @@ def wef_umbrella(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 1
+	#ctn.sap_damage = 1
 
 	if aim <= (1 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -5199,16 +5198,17 @@ def wef_umbrella(ctn = None):
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+
 # weapon effect function for "minecraft bow"
 def wef_bow(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
 	dmg = ctn.slimes_damage
-	ctn.sap_damage = 1
-	ctn.sap_ignored = 8
+	#ctn.sap_damage = 1
+	#ctn.sap_ignored = 8
 
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
+	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	#ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
 
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -5222,7 +5222,6 @@ def wef_bow(ctn = None):
 		ctn.slimes_damage = int(dmg * 3)
 
 # weapon effect function for "Dragon Claw"
-
 def wef_dclaw(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
@@ -5233,10 +5232,12 @@ def wef_dclaw(ctn = None):
 
 	ctn.bystander_damage = int(dmg * 0.5)
 
-	ctn.sap_damage = 5
-	ctn.sap_ignored = 10
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (((5 - min(time_lastattack, 5)) / 5) ** 2) / 13 * 5
+	#ctn.sap_damage = 5
+	#ctn.sap_ignored = 10
+	
+	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	#ctn.miss_mod += (((5 - min(time_lastattack, 5)) / 5) ** 2) / 13 * 5
+	
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.25:
@@ -5281,7 +5282,7 @@ def wef_staff(ctn = None):
 		
 		ctn.slimes_spent = int(ctn.slimes_spent * 3)
 		ctn.slimes_damage = int(ctn.slimes_damage * (0.6 + conditions_met * 1.2))
-		ctn.sap_ignored = 6 * conditions_met
+		#ctn.sap_ignored = 6 * conditions_met
 		if conditions_met >= (random.randrange(15) + 1): # 6.66% per condition met
 			ctn.crit = True
 			ctn.slimes_damage = int(ctn.slimes_damage * 1.8)
@@ -5297,8 +5298,8 @@ def wef_paintgun(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * .7)
 	ctn.slimes_spent = int(ctn.slimes_spent * .75)
 	aim = (random.randrange(10) + 1)
-	ctn.sap_ignored = 10
-	ctn.sap_damage = 2
+	#ctn.sap_ignored = 10
+	#ctn.sap_damage = 2
 
 	if aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
@@ -5321,13 +5322,13 @@ def wef_paintroller(ctn = None):
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
-		ctn.sap_damage *= 2
+		#ctn.sap_damage *= 2
 
 def wef_watercolors(ctn = None):
 	ctn.slimes_damage = 4000
 	aim = (random.randrange(1000) + 1)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 0
+	#ctn.sap_damage = 0
 
 	if aim <= (1 + int(1000 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -5397,9 +5398,9 @@ weapon_list = [
 		fn_effect = wef_revolver,
 		clip_size = 6,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo, weapon_class_captcha],
+		classes = [weapon_class_ammo],
 		stat = stat_revolver_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 3
 	),
 	EwWeapon( # 2
@@ -5431,9 +5432,9 @@ weapon_list = [
 		clip_size = 12,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo, weapon_class_captcha],
+		classes = [weapon_class_ammo],
 		stat = stat_dual_pistols_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 1
 	),
 	EwWeapon( # 3
@@ -5465,9 +5466,9 @@ weapon_list = [
 		clip_size = 2,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo, weapon_class_captcha],
+		classes = [weapon_class_ammo],
 		stat = stat_shotgun_kills,
-		sap_cost = 4,
+		#sap_cost = 4,
 		captcha_length = 5
 	),
 	EwWeapon( # 4
@@ -5498,9 +5499,9 @@ weapon_list = [
 		clip_size = 4,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo, weapon_class_captcha],
+		classes = [weapon_class_ammo],
 		stat = stat_rifle_kills,
-		sap_cost = 3,
+		#sap_cost = 3,
 		captcha_length = 4
 	),
 	EwWeapon( # 5
@@ -5534,7 +5535,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo, weapon_class_jammable],
 		stat = stat_smg_kills,
-		sap_cost = 3,
+		#sap_cost = 3,
 		captcha_length = 6
 	),
 	EwWeapon( # 6
@@ -5565,7 +5566,7 @@ weapon_list = [
 		vendors = [vendor_bazaar],
 		classes= [weapon_class_captcha, weapon_class_heavy],
 		stat = stat_minigun_kills,
-		sap_cost = 15,
+		#sap_cost = 15,
 		captcha_length = 10
 	),
 	EwWeapon( # 7
@@ -5594,9 +5595,8 @@ weapon_list = [
 		fn_effect = wef_bat,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes= [weapon_class_captcha],
 		stat = stat_bat_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2
 	),
 	EwWeapon( # 8
@@ -5624,9 +5624,8 @@ weapon_list = [
 		fn_effect = wef_brassknuckles,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes= [weapon_class_captcha],
 		stat = stat_brassknuckles_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 2
 	),
 	EwWeapon( # 9
@@ -5657,7 +5656,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes= [weapon_class_captcha],
 		stat = stat_katana_kills,
-		sap_cost = 3,
+		#sap_cost = 3,
 		captcha_length = 8
 	),
 	EwWeapon( # 10
@@ -5690,9 +5689,9 @@ weapon_list = [
 		clip_size = 1,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo, weapon_class_captcha, weapon_class_heavy],
+		classes = [weapon_class_ammo, weapon_class_heavy],
 		stat = stat_broadsword_kills,
-		sap_cost = 12,
+		#sap_cost = 12,
 		captcha_length = 4
 	),
 	EwWeapon( # 11
@@ -5722,9 +5721,8 @@ weapon_list = [
 		fn_effect = wef_nunchucks,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes= [weapon_class_captcha],
 		stat = stat_nunchucks_kills,
-		sap_cost = 4,
+		#sap_cost = 4,
 		captcha_length = 3
 	),
 	EwWeapon( # 12
@@ -5750,9 +5748,8 @@ weapon_list = [
 		fn_effect = wef_scythe,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes= [weapon_class_captcha],
 		stat = stat_scythe_kills,
-		sap_cost = 6,
+		#sap_cost = 6,
 		captcha_length = 4
 	),
 	EwWeapon( # 13
@@ -5780,9 +5777,8 @@ weapon_list = [
 		fn_effect = wef_yoyo,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes= [weapon_class_captcha],
 		stat = stat_yoyo_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 2
 	),
 	EwWeapon( # 14
@@ -5812,9 +5808,9 @@ weapon_list = [
 		fn_effect = wef_knives,
 		price = 500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_captcha],
+		classes = [weapon_class_thrown],
 		stat = stat_knives_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 3
 	),
 	EwWeapon( # 15
@@ -5845,9 +5841,9 @@ weapon_list = [
 		fn_effect = wef_molotov,
 		price = 500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_burning, weapon_class_captcha],
+		classes = [weapon_class_thrown, weapon_class_burning],
 		stat = stat_molotov_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 4
 	),
 	EwWeapon( # 16
@@ -5874,9 +5870,9 @@ weapon_list = [
 		fn_effect = wef_grenade,
 		price = 500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_exploding, weapon_class_captcha],
+		classes = [weapon_class_thrown, weapon_class_exploding],
 		stat = stat_grenade_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 3
 	),
 	EwWeapon( # 17
@@ -5905,7 +5901,7 @@ weapon_list = [
 		price = 10000,
 		vendors = [vendor_dojo],
 		stat = stat_garrote_kills,
-		sap_cost = 5,
+		#sap_cost = 5,
 	),
 	EwWeapon(  # 18
 		id_weapon = weapon_id_pickaxe,
@@ -5932,7 +5928,7 @@ weapon_list = [
 		str_description = "It's a pickaxe.",
 		acquisition = acquisition_smelting,
 		stat = stat_pickaxe_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2,
 		is_tool = 1
 	),
@@ -5964,7 +5960,7 @@ weapon_list = [
 		str_description = "It's a super fishing rod.",
 		acquisition = acquisition_smelting,
 		stat = stat_fishingrod_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2,
 		is_tool = 1
 	),
@@ -5991,7 +5987,7 @@ weapon_list = [
 		str_description = "It's a bass guitar. All of its strings are completely out of tune and rusted.",
 		acquisition = acquisition_smelting,
 		stat = stat_bass_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2
 	),
 	EwWeapon(  # 21
@@ -6019,9 +6015,9 @@ weapon_list = [
 		str_description = "It's an umbrella, both stylish and deadly.",
 		price = 100000,
 		vendors = [vendor_bazaar],
-		classes = [weapon_class_captcha, weapon_class_defensive],
+		classes = [weapon_class_defensive],
 		stat = stat_umbrella_kills,
-		sap_cost = 1,
+		#sap_cost = 1,
 		captcha_length = 4
 	),
 	EwWeapon(  # 22
@@ -6047,7 +6043,7 @@ weapon_list = [
 		str_description = "It's a newly crafted minecraft bow, complete with a set of minecraft arrows",
 		acquisition = acquisition_smelting,
 		stat = stat_bow_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2
 	),
 	EwWeapon(  # 23
@@ -6074,7 +6070,7 @@ weapon_list = [
 		acquisition = acquisition_smelting,
 		stat = stat_dclaw_kills,
 		classes = [weapon_class_burning],
-		sap_cost = 5,
+		#sap_cost = 5,
 		captcha_length = 2),
 
 	EwWeapon(  # 24
@@ -6104,7 +6100,7 @@ weapon_list = [
 		vendors = [vendor_basedhardware],
 		stat=stat_spraycan_kills,
 		classes=[weapon_class_paint, weapon_class_captcha],
-		sap_cost=2,
+		#sap_cost=2,
 		captcha_length=3,
 		is_tool = 1,
 		str_backfire = "As {name_player} shakes the can to fire another shot, the thing suddenly explodes on them!",
@@ -6143,7 +6139,7 @@ weapon_list = [
 		classes=[weapon_class_paint, weapon_class_ammo, weapon_class_captcha],
 		clip_size = 15,
 		price = 5000,
-		sap_cost=2,
+		#sap_cost=2,
 		captcha_length=4,
 		is_tool = 1,
 		str_reload = "*Click.* You grab a paint cylinder from god knows where and load it into your gun, chucking the leftover one behind an alleyway.",
@@ -6183,7 +6179,7 @@ weapon_list = [
 		vendors=[vendor_basedhardware],
 		stat=stat_paintroller_kills,
 		classes=[weapon_class_paint, weapon_class_captcha],
-		sap_cost=2,
+		#sap_cost=2,
 		captcha_length=4,
 		is_tool=1,
 		str_backfire = "{name_player} waves the paint roller around like it's a plastic toy, spreading paint nowhere but giving themselves a thorough welt in the head from the 2 square inches of it that could actually do any damage. How'd they manage that?",
@@ -6220,7 +6216,7 @@ weapon_list = [
 		vendors=[vendor_basedhardware],
 		stat=stat_paintbrush_kills,
 		classes=[weapon_class_paint, weapon_class_captcha],
-		sap_cost=2,
+		#sap_cost=2,
 		price = 100,
 		captcha_length=3,
 		is_tool=1,
@@ -6256,7 +6252,7 @@ weapon_list = [
 		vendors=[vendor_basedhardware],
 		stat=stat_watercolor_kills,
 		classes=[weapon_class_paint, weapon_class_captcha],
-		sap_cost=2,
+		#sap_cost=2,
 		price = 1300,
 		captcha_length=3,
 		is_tool=1,
@@ -6294,7 +6290,7 @@ weapon_list = [
 		vendors=[vendor_basedhardware],
 		stat=stat_thinnerbomb_kills,
 		classes=[weapon_class_paint, weapon_class_thrown, weapon_class_captcha],
-		sap_cost=2,
+		#sap_cost=2,
 		price = 150,
 		captcha_length=4,
 		is_tool = 1,
@@ -6336,7 +6332,7 @@ weapon_list = [
 		fn_effect = wef_staff,
 		acquisition = acquisition_smelting,
 		stat = stat_staff_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 10,
 	),
 	EwWeapon( # 31
@@ -6359,7 +6355,7 @@ weapon_list = [
 		vendors = [vendor_atomicforest],
 		classes = [weapon_class_farming, weapon_class_juvie],
 		stat = stat_hoe_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2,
 		is_tool = True,
 	),
@@ -6383,7 +6379,7 @@ weapon_list = [
 		vendors = [vendor_atomicforest],
 		classes = [weapon_class_farming, weapon_class_juvie],
 		stat = stat_pitchfork_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2,
 		is_tool = True,
 	),
@@ -6407,7 +6403,7 @@ weapon_list = [
 		vendors = [vendor_atomicforest],
 		classes = [weapon_class_juvie],
 		stat = stat_shovel_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2,
 		is_tool = True,
 	),
@@ -6431,7 +6427,7 @@ weapon_list = [
 		vendors = [vendor_atomicforest],
 		classes = [weapon_class_juvie],
 		stat = stat_slimeringcan_kills,
-		sap_cost = 2,
+		#sap_cost = 2,
 		captcha_length = 2,
 		is_tool = True,
 	),
@@ -6448,7 +6444,7 @@ def atf_fangs(ctn = None):
 	# Reskin of dual pistols
 
 	aim = (random.randrange(10) + 1)
-	ctn.sap_damage = 1
+	#ctn.sap_damage = 1
 
 	if aim == (1 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
@@ -6462,8 +6458,8 @@ def atf_talons(ctn = None):
 
 	ctn.miss = False
 	ctn.slimes_damage = int(0.85 * ctn.slimes_damage)
-	ctn.sap_damage = 0
-	ctn.sap_ignored = 10
+	#ctn.sap_damage = 0
+	#ctn.sap_ignored = 10
 
 	if (random.randrange(10) + 1) == (10 + int(10 * ctn.crit_mod)):
 		ctn.crit = True
@@ -6475,8 +6471,8 @@ def atf_raiderscythe(ctn = None):
 	ctn.enemy_data.change_slimes(n = (-ctn.slimes_spent * 0.33), source = source_self_damage)
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
 	aim = (random.randrange(10) + 1)
-	ctn.sap_damage = 0
-	ctn.sap_ignored = 5
+	#ctn.sap_damage = 0
+	#ctn.sap_ignored = 5
 
 	if aim <= (2 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
@@ -6489,7 +6485,7 @@ def atf_gunkshot(ctn = None):
 	# Reskin of rifle
 
 	aim = (random.randrange(10) + 1)
-	ctn.sap_damage = 2
+	#ctn.sap_damage = 2
 
 	if aim <= (2 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
@@ -6502,7 +6498,7 @@ def atf_tusks(ctn = None):
 	# Reskin of bat
 
 	aim = (random.randrange(21) - 10)
-	ctn.sap_damage = 3
+	#ctn.sap_damage = 3
 	if aim <= (-9 + int(21 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
@@ -6518,8 +6514,8 @@ def atf_molotovbreath(ctn = None):
 
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
-	ctn.sap_damage = 0
-	ctn.sap_ignored = 10
+	#ctn.sap_damage = 0
+	#ctn.sap_ignored = 10
 
 	aim = (random.randrange(10) + 1)
 
@@ -6539,7 +6535,7 @@ def atf_molotovbreath(ctn = None):
 
 def atf_armcannon(ctn = None):
 	dmg = ctn.slimes_damage
-	ctn.sap_damage = 2
+	#ctn.sap_damage = 2
 
 	aim = (random.randrange(20) + 1)
 
@@ -15852,7 +15848,7 @@ poi_list = [
 			"kf" #killer food
 		],
 		str_name = "Red Mobster Seafood",
-		str_desc = "The last bastion of sophistication in this godforsaken city. A dimly lit, atmospheric fine dining restaurant with waiters and tables and archaic stuff like that. Upper crust juveniles and older fugitives make up the majority of the patrons, making you stick out like a sore thumb. Quiet, respectable murmurs pollute the air alongside the scrapping of silverware and the occasional hoity toity laugh. Everything about this place makes you sick.\n\nExits into Astatine Heights.",
+		str_desc = "The last bastion of sophistication in this godforsaken city. A dimly lit, atmospheric fine dining restaurant with waiters and tables and archaic stuff like that. Upper crust juveniles and older fugitives make up the majority of the patrons, making you stick out like a sore thumb. Quiet, respectable murmurs pollute the air alongside the scrapping of silverware and the occasional hoity toity laugh. Everything about this place makes you sick.\n\nExits into Decaying Slums.",
 		topic = "Red Mobster - The last bastion of sospchication in this godforsaken city. A dimly lit, atmospheric fine dining restaurant with waiters and tables and archaic stuff like that. Man, what a trip!",
 		channel = channel_seafood,
 		wikipage = wiki_baseurl + "Astatine_Heights#Red_Mobster_Seafood",
@@ -24714,39 +24710,55 @@ for bait in food_list:
 		pass
 
 # If a fish doesn't bite, send one of these.
-nobite_text = [
+generic_fishing_text = [
 	"You patiently wait...",
 	"This is so fucking boring...",
-	"You watch your hook bob...",
 	"You grow impatient and kick the rotted wooden guard rails...",
 	"AUUUUUGH JUST BITE THE FUCKING HOOK ALREADY...",
 	"You begin to zone-out a bit...",
 	"Shouldn't you be doing something productive?",
 	"You sit patiently, eagerly awaiting a fish to bite. Thanks to your concentration, this descriptive contradiction does not occur to you.",
-	"You begin to daydream about fish sex... Gross...",
-	"You begin to daydream about fish sex... Hot...",
+	"Maybe one day your wife will pardon you...",
+	"You feel the oncoming downward spiral...",
+	"You wonder if the Space Navy has been formed yet...",
+	"You start to slip into an existential crisis...",
+	"You hum some sea shanties...",
+	"Fuck fish...",
+	"Fish..."
+]
+normal_fishing_text = [
+	"You watch your hook bob...",
 	"You see a fish about to bite your hook, but you shout in elation, scaring it away...",
 	"You make direct eye contact with a fish, only to quickly look away...",
 	"♪ Fishing for Fishies! ♪",
 	"♪ That Captain Albert Alexander! ♪",
-	"You get the urge to jump in and try to grab a fish, before remembering that you can't swim...",
-	"You hum some sea shanties...",
-	"You start to slip into an existential crisis...",
-	"You jitter as other seamen catch fish before you. Fuck fishing...",
-	"You feel the oncoming downward spiral...",
-	"You shake your head as a young seaman baits a perfectly good slice of pizza on his hook... What a cretin...",
-	"You wonder if the Space Navy has been formed yet...",
-	"Man... Why were you excited for this shit?",
 	"Still better than Minesweeper...",
-	"Maybe one day your wife will pardon you...",
-	"Fuck fish...",
-	"You let out a deep sigh, scaring away a fish...",
+	"Man... Why were you excited for this shit?",
+	"You begin to daydream about fish sex... Gross...",
+	"You begin to daydream about fish sex... Hot...",
+	"You get the urge to jump in and try to grab a fish, before remembering that you can't swim...",
+	"You jitter as other seamen catch fish before you. Fuck fishing...",
+	"You shake your head as a young seaman baits a perfectly good slice of pizza on his hook... What a cretin...",
 	"Wouldn't it be funny if you just reached into the sea and grabbed one? Haha, yeah, that'd be funny...",
 	"You see a bird carry off a Plebefish in the distance... Good riddance...",
 	"You spot a stray bullet in the distance...",
 	"You see a dead body float up to the surface of the Slime...",
-	"Fish..."
-]
+	"You let out a deep sigh, scaring away a fish...",
+] + generic_fishing_text
+void_fishing_text = [
+	"You get the urge to jump in and try to grab a fish, before the voice reminds you that you can't swim...",
+	"Did the water just wink at you?",
+	"That guy in the water looks so handsome... You should give him your number.",
+	"Your mother motions you to join her in the water, it's nice and warm!",
+	"HAHAHAHA OH WOW",
+	"Hmmm?",
+	"Man, the water looks fucking delicious, you should take a sip.",
+	"Wait, why did you come here again?",
+	"God, what a beautiful smile. So many of them, too.",
+	"Go on, take a nap, the fish will wait for you.",
+	"What is _that_?",
+	"The girl across the pond has such a nice voice... Please keep singing...",
+] + generic_fishing_text
 
 generic_help_response = "Check out the guide for help: https://ew.krakissi.net/guide/\nThe guide won't cover everything though, and may even be a bit outdated in some places, so you can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work by using the !help command there. Portable game guides can also be bought there for 10,000 slime."
 
@@ -24792,34 +24804,34 @@ help_responses = {
 	"profile": "This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
 	"manuscripts": "First of all, to start a manuscript, you're gonna need to head down to the Cafe, either University, or the Comic Shop.\n\nYou can **!beginmanuscript [title]** at the cost of 20k slime.\n\nIf you happen to regret your choice of title, you can just **!settitle [new title]**.\n\nThe author name is already set to your nickname, but if you want to change it, you change your nickname and then **!setpenname**.\n\nYou're required to specify a genre for your future zine by using **!setgenre [genre name]** (Genre list includes: narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper, and experimental).\n\nIf at any time you would like to look at the title, author name, and length of your manuscript, then use **!manuscript**.\n\n*NOW*, if you actually want to start getting stuff done, you're gonna need to **!editpage [page number] [content]**. Every zine has 10 pages (kinda) that you can work with, but you can **!setpages [pages]** to customize it (maximum is 20, minimum is 5). Each holds a maximum of 1500 characters of content. You can fill it with information, image links, smut, whatever floats your freakish boat. If you try to edit a page that already has writing, it will ask you to confirm the change before overwriting it.\n\nYou can also set a cover, which is optional. You do this with **!editpage cover [image link]**.\n\nTo check any of your pages, simply **!viewpage [number]** to see how it looks.\n\nKeep in mind that manuscripts ARE NOT items and can't be lost on death. They're accessible from any authoring location (Cafe, NLACU, NMS, Comics). A player can only have 1 manuscript out at a time.\n\nOnce you are completely finished, you can **!publish** your manuscript (it will ask you to confirm that you are completely done with it), which will enable the citizens of the town to purchase it from any zine place. From there, it will be bought and rated by the people and you may even earn some royalty poudrins for it.",
 	"zines": "Zines are the hot new trend in Neo-Milwaukee and give slimebois of all shapes and sizes access to the free-market of information and culture.\n\nTo obtain a zine, you must head down to any of these locations: Green Cake Cafe, NLAC University, Neo-Milwaukee State, or Glockbury Comics.\n\nFrom there, you can **!browse** for zines. They are ordered by *Zine ID*, but you have many options for sorting them, including: **title, author, datepublished,** any of the genres (including **narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper,** and **experimental**.), **length, sales,** and **rating** (use **!browse [criteria]**). You can also add **reverse** on to any of these in order to make it display in reverse order. Example: **!browse bestsellers reverse** (essentially looks for worse-selling zines). Browsing in the Comic Shop will automatically browse for comic zines and browsing at the Colleges will look for historical zines (keep in mind that any zines can be bought from these places).\n\nYou can also **!browse [Zine ID]** in order to get info about that specific zine, including sales, length, genre, and rating.\n\nOnce you've found a zine that's caught your eye, simply **!orderzine [Zine ID]** to buy it for 10k slime.\n\nAfter absorbing the zine's content, it is your moral obligation as a reader to **!review [Zine Name] [Score]**. The potential scores range from between 1 and 5 *fucks* (whole numbers only). If you hate a zine, then give it one fuck. If you absolutely loved it, give it five fucks. Simple. By the way, if a zine's average rating is less than 2.0 by the time it gets to 10 ratings (or less than 1.5 by 5 ratings), it will be excluded from the default browse. The only way to purchase it will be to use the **worstrated** or **all** sorting methods.\n\nYou can **!shelve [zine name]** in your apartment after you've finished.",
-	"sap": "**Sap** is a resource your body produces to control your slime. It's integral to being able to act in combat. You can have a maximum amount of sap equal to 1.6 * ( your slime level ^ 0.75 ). When you spend it, it will regenerate at a rate of 1 sap every 5 seconds. You can spend your sap in a variety of ways: **!harden [number]** allows you to dedicate a variable amount of sap to your defense. Hardened sap reduces incoming damage by a factor of 10 / (10 + hardened sap). Your hardened sap counts against your maximum sap pool, so the more you dedicate to defense, the less you will have to attack. You can **!liquefy [number]** hardened sap back into your sap pool. Every attack requires at least 1 sap to complete. Different weapons have different sap costs. Some weapons have the ability to destroy an amount of hardened sap from your target, or ignore a portion of their hardened sap armor. This is referred to as **sap crushing** and **sap piercing** respectively. There are also other actions you can take in combat, that cost sap, such as: **!aim [player]** will slightly increase your hit chance and crit chance against that player for 10 seconds. It costs 2 sap. **!dodge [player]** will decrease that players hit chance against you for 10 seconds. It costs 3 sap. **!taunt [player]** will decrease that player's hit chance against targets other than you for 10 seconds. It costs 5 sap.",
+	#"sap": "**Sap** is a resource your body produces to control your slime. It's integral to being able to act in combat. You can have a maximum amount of sap equal to 1.6 * ( your slime level ^ 0.75 ). When you spend it, it will regenerate at a rate of 1 sap every 5 seconds. You can spend your sap in a variety of ways: **!harden [number]** allows you to dedicate a variable amount of sap to your defense. Hardened sap reduces incoming damage by a factor of 10 / (10 + hardened sap). Your hardened sap counts against your maximum sap pool, so the more you dedicate to defense, the less you will have to attack. You can **!liquefy [number]** hardened sap back into your sap pool. Every attack requires at least 1 sap to complete. Different weapons have different sap costs. Some weapons have the ability to destroy an amount of hardened sap from your target, or ignore a portion of their hardened sap armor. This is referred to as **sap crushing** and **sap piercing** respectively. There are also other actions you can take in combat, that cost sap, such as: **!aim [player]** will slightly increase your hit chance and crit chance against that player for 10 seconds. It costs 2 sap. **!dodge [player]** will decrease that players hit chance against you for 10 seconds. It costs 3 sap. **!taunt [player]** will decrease that player's hit chance against targets other than you for 10 seconds. It costs 5 sap.",
 	"sprays":"**Sprays** are your signature piece of graffiti as a gangster. You can **!changespray <image link>** in order to set your own custom image. This image appears when you get a critical hit while capping, and you can also **!tag** to spray it anywhere.",
 	# Misc.
 	"slimeball": "Slimeball is a sport where two teams of players compete to get the ball into the opposing team's goal to score points. A game of Slimeball is started when a player does !slimeball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !slimeball to see your data, the ball's location and the score. To move around the field, use !slimeballgo [coordinates]. You can kick the ball by running into it. To stop, use !slimeballstop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !slimeballleave, or join a different game. A game of Slimeball ends when no players are left.",
 
 	# Weapons
-	weapon_id_revolver: "**The revolver** is a weapon for sale at the Dojo. Attacking with the revolver costs 1 sap. It has a damage mod of 0.8 and an attack cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The revolver has sap crushing 2. After every 6 shots you will need to **!reload** it.",
-	weapon_id_dualpistols: "**The dual pistols** are a weapon for sale at the Dojo. Attacking with the dual pistols costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2, a miss chance of 40% and a 20% chance for a crit, which does 2x damage. The dual pistols have sap crushing 2. After every 12 shots you will need to **!reload** them.",
-	weapon_id_shotgun: "**The shotgun** is a weapon for sale at the Dojo. Attacking with the shotgun costs 5 sap. It has a damage mod of 1.65 and an attack cost mod of 1.5. It has a captcha length of 6, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The shotgun has sap crushing 5, which is doubled on a crit. After every 2 shots you will need to **!reload** it.",
-	weapon_id_rifle: "**The rifle** is a weapon for sale at the Dojo. Attacking with the rifle costs 4 sap. It has a damage mod of 1.25 and an attack cost mod of 1.25. It has a captcha length of 4, and a 20% chance for a crit, which does 2x damage. The rifle never misses. The rifle has sap piercing 10 and sap crush 2, which are both doubled on a crit. After every 4 shots you will need to **!reload** it.",
-	weapon_id_smg: "**The SMG** is a weapon for sale at the Dojo. Attacking with the SMG costs 3 sap. It has a damage mod of 0.2 and an attack cost mod of 1. It has a captcha length of 4 and a 20% chance to jam with every attack, in which case you will need to **!unjam** it to continue firing. The SMG only requires a captcha for !unjam, not for every !kill. For every !kill it shoots 6 bullets, each of which has a 25% miss chance, and a 5% chance for a crit, which does 3x damage. Every bullet has sap crushing 1. After every 4 attacks you will need to **!reload** it.",
-	weapon_id_minigun: "**The minigun** is a heavy weapon not for sale at the Dojo. Attacking with the minigun costs 15 sap. It has a damage mod of 0.8 and an attack cost mod of 5. It has a captcha length of 10. For every !kill it shoots 10 bullets, each of which has a 50% miss chance, and a 10% chance for a crit, which does 2x damage. Every bullet has sap crushing 2.",
-	weapon_id_bat: "**The nailbat** is a weapon for sale at the Dojo. Attacking with the bat costs 2 sap. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a captcha length of 2, a miss chance of 1/13, a 1/13 chance for a crit, which increases the damage mod to 4, and a 1/13 chance to backfire and damage the wielder instead. The bat has sap crushing 2. If you takes less than 3 seconds between attacks, your miss chance will increase.",
-	weapon_id_brassknuckles: "**The brass knuckles** are a weapon for sale at the Dojo. Attacking with the brass knuckles costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 2 punches. Every punch has a 20% miss chance. If you land 3 successful attacks (not punches) in succession with perfect timing, the third attack will throw an extra punch, which deals 3x damage and has 5 sap crushing. If you takes less than 2 seconds between attacks, your damage will decrease. For perfect timing you need to take 2 seconds between attacks exactly.",
-	weapon_id_katana: "**The katana** is a weapon for sale at the Dojo. Attacking with the katana costs 3 sap. It has a damage mod of 1.3 and an attack cost mod of 1.3. It has a captcha length of 8. The katana never misses. If the katana is the only weapon in your inventory, it crits for 1.5x damage on every hit. If you takes less than 5 seconds between attacks, your damage will decrease. If you take exactly 5 seconds between attacks, the katana gains sap piercing 10 (sap piercing 15 on a crit).",
-	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. Attacking with the broadsword costs 12 sap. It has a damage mod of 3 and an attack cost mod of 5. It has a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire and damage the wielder instead. The broadsword has sap crushing 5 and sap piercing 20. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 0.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
-	weapon_id_nunchucks: "**The nunchucks** are a weapon for sale at the Dojo. Attacking with the nunchucks costs 4 sap. They have a damage mod of 0.25 and an attack cost mod of 1. They have a captcha length of 3. For every !kill they throw 4 blows. Every blow has a 25% miss chance and 1 sap crushing. If all 4 blows hit, you deal an additional blow that does 4x damage. If all shots miss, the nunchucks will backfire for 2x damage. If you takes less than 3 seconds between attacks, your miss chance will increase.",
-	weapon_id_scythe: "**The scythe** is a weapon for sale at the Dojo. Attacking with the scythe costs 6 sap. It has a damage mod of 0.5 and an attack cost mod of 3. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 3x damage. The scythe has sap piercing 3 for every kill your opponent got this life, up to sap piercing 30. The scythe's damage mod also increases by 0.5 for every kill your opponent got this life, up to a maximum damage mod of 5. If you take less than 3 seconds between attacks, your damage will decrease.",
-	weapon_id_yoyo: "**The yo-yo** is a weapon for sale at the Dojo. Attacking with the yo-yo costs 1 sap. It has a damage mod of 0.5 and an attack cost mod of 1. It has a captcha length of 2, a miss chance of 18.75% and a 10% chance for a crit, which does 2x damage. The yo-yo's damage mod increases by 0.25 for every successful consecutive hit, without getting hit yourself. If you take 2 seconds or more between your attacks, the yo-yo gains 1 sap crush; otherwise your damage will decrease.",
-	weapon_id_bass: "**The bass guitar** is a weapon not for sale at the Dojo. Attacking with the bass costs 2 sap. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. The bass does not require a captcha to use. The bass has sap crushing 1 and sap piercing 5. If you takes less than 3 seconds between attacks, your miss chance will increase.",
-	weapon_id_umbrella: "**The umbrella** is a weapon for sale at the Bazaar. Attacking with the umbrella costs 1 sap. It has a damage mod of 0.5 and an attack cost mod of 1. It has a captcha length of 4, a miss chance of 10%, and a 10% chance for a crit, which does 2x damage. The umbrella has sap crushing 1. The umbrella decreases incoming damage by 75% and reduces sap crushing of incoming attacks by 1.",
-	weapon_id_knives: "**The throwing knives** are a weapon for sale at the Dojo. Attacking with the knives costs 1 sap. They have a damage mod of 0.5 and an attack cost mod of 0.25. They have a captcha length of 3, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. When you attack with a throwing knife, it is used up, and you have to buy more.",
-	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. Attacking with the molotovs costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 1. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. They have sap piercing 10. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
-	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 1. They have a captcha length of 3, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 5. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
-	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
-	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. Attacking with the dragon claw costs 5 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. It has sap crushing 5 and sap piercing 10. It you take less than 5 seconds between attacks, your miss chance will increase. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
-	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 3. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase.",
-	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 2 sap. Dealing damage with the staff requires attacking five times in a 15-second window, with the first four !kill command only being preparetion for the fifth. The attack cost multiplier is 0.5 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 0.6, sap piercing 0, and a 0% chance to crit, which deals 1.8x damage. A number of conditions may be met to increase the damage multiplier by 1.2, sap piercing by 6, and crit chance by 6.66%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
+	weapon_id_revolver: "**The revolver** is a weapon for sale at the Dojo. It has a damage mod of 0.8 and an attack cost mod of 1. It has a miss chance of 10% and a 10% chance for a crit, which does 2x damage. After every 6 shots you will need to **!reload** it.",
+	weapon_id_dualpistols: "**The dual pistols** are a weapon for sale at the Dojo. They have a damage mod of 1 and an attack cost mod of 1. They have a miss chance of 40% and a 20% chance for a crit, which does 2x damage. After every 12 shots you will need to **!reload** them.",
+	weapon_id_shotgun: "**The shotgun** is a weapon for sale at the Dojo. It has a damage mod of 1.65 and an attack cost mod of 1.5. It has a miss chance of 10% and a 10% chance for a crit, which does 2x damage. After every 2 shots you will need to **!reload** it.",
+	weapon_id_rifle: "**The rifle** is a weapon for sale at the Dojo. It has a damage mod of 1.25 and an attack cost mod of 1.25. It has a 20% chance for a crit, which does 2x damage. The rifle never misses. After every 4 shots you will need to **!reload** it.",
+	weapon_id_smg: "**The SMG** is a weapon for sale at the Dojo. It has a damage mod of 0.2 and an attack cost mod of 1. It has a 20% chance to jam with every attack, in which case you will need to **!unjam** it to continue firing. The SMG only requires a captcha for !unjam, not for every !kill. For every !kill it shoots 6 bullets, each of which has a 25% miss chance, and a 5% chance for a crit, which does 3x damage. After every 4 attacks you will need to **!reload** it.",
+	weapon_id_minigun: "**The minigun** is a heavy weapon not for sale at the Dojo. It has a damage mod of 0.8 and an attack cost mod of 5. It has a captcha length of 10. For every !kill it shoots 10 bullets, each of which has a 50% miss chance, and a 10% chance for a crit, which does 2x damage.",
+	weapon_id_bat: "**The nailbat** is a weapon for sale at the Dojo. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a miss chance of 1/13, a 1/13 chance for a crit, which increases the damage mod to 4, and a 1/13 chance to backfire and damage the wielder instead.",
+	weapon_id_brassknuckles: "**The brass knuckles** are a weapon for sale at the Dojo. They have a damage mod of 1 and an attack cost mod of 1. For every !kill they throw 2 punches. Every punch has a 20% miss chance. If you land 3 successful attacks (not punches) in succession with perfect timing, the third attack will throw an extra punch, which deals 3x damage. For perfect timing you need to take between 1.5 to 2.5 seconds between attacks.",
+	weapon_id_katana: "**The katana** is a weapon for sale at the Dojo. It has a damage mod of 1.3 and an attack cost mod of 1.3. It has a captcha length of 8. The katana never misses. If the katana is the only weapon in your inventory, it crits for 1.5x damage on every hit.",
+	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. It has a damage mod of 3 and an attack cost mod of 5. It has a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 10% chance to backfire and damage the wielder instead. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 0.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
+	weapon_id_nunchucks: "**The nunchucks** are a weapon for sale at the Dojo. They have a damage mod of 0.25 and an attack cost mod of 1. For every !kill they throw 4 blows. Every blow has a 25% miss chance. If all 4 blows hit, you deal an additional blow that does 4x damage. If all shots miss, the nunchucks will backfire for 2x damage.",
+	weapon_id_scythe: "**The scythe** is a weapon for sale at the Dojo. It has a damage mod of 0.5 and an attack cost mod of 3. It has a miss chance of 10% and a 10% chance for a crit, which does 3x damage. The scythe's damage mod increases by 0.5 for every kill your opponent got this life, up to a maximum damage mod of 5.",
+	weapon_id_yoyo: "**The yo-yo** is a weapon for sale at the Dojo. It has a damage mod of 0.5 and an attack cost mod of 1. It has a miss chance of 18.75% and a 10% chance for a crit, which does 2x damage. The yo-yo's damage mod increases by 0.25 for every successful consecutive hit, without getting hit yourself.",
+	weapon_id_bass: "**The bass guitar** is a weapon not for sale at the Dojo. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. The bass does not require a captcha to use.",
+	weapon_id_umbrella: "**The umbrella** is a weapon for sale at the Bazaar. It has a damage mod of 0.5 and an attack cost mod of 1. It has a miss chance of 10%, and a 10% chance for a crit, which does 2x damage. The umbrella decreases incoming damage by 75%.",
+	weapon_id_knives: "**The throwing knives** are a weapon for sale at the Dojo. They have a damage mod of 0.5 and an attack cost mod of 0.25. They have a miss chance of 10% and a 10% chance for a crit, which does 2x damage. When you attack with a throwing knife, it is used up, and you have to buy more.",
+	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. They have a damage mod of 0.75 and an attack cost mod of 1. They have a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
+	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. They have a damage mod of 0.75 and an attack cost mod of 1. They have a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
+	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. It has a damage mod of 15 and an attack cost mod of 1. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
+	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
+	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 3.",
+	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Dealing damage with the staff requires attacking five times in a 15-second window, with the first four !kill command only being preparetion for the fifth. The attack cost multiplier is 0.5 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 0.6, sap piercing 0, and a 0% chance to crit, which deals 1.8x damage. A number of conditions may be met to increase the damage multiplier by 1.2, sap piercing by 6, and crit chance by 6.66%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
 	
 	weapon_id_spraycan: "**The spray can** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.8 and a spray cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
 	weapon_id_paintgun: "**The paint gun** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.7 and a spray cost mod of 0.75. It has a captcha length of 6, a miss chance of O% and a 20% chance for a crit, which does 2x influence.",
