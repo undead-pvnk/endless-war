@@ -440,7 +440,7 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-		'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = ewcfg.database, charset = "utf8"),
+		'conn': MySQLdb.connect(host = "localhost", user = "root", passwd = "theapocolypse3" , db = ewcfg.database, charset = "utf8"),
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -2970,6 +2970,13 @@ def mention_type(cmd, ew_id):
 	else:
 		return "other"
 
-
-
+def get_mutation_alias(name):
+	if ewcfg.mutations_map.get('name') != None:
+		return name
+	else:
+		for mutation in ewcfg.mutations_map:
+			for alias in mutation.alias:
+				if name == alias:
+					return mutation.name
+		return 0
 

@@ -88,6 +88,8 @@ class EwUser:
 	apt_zone = "empty"
 	visiting = "empty"
 	has_soul = 1
+	#random seed for mutaiton calculation
+	rand_seed = 0
 
 	move_speed = 1 # not a database column
 
@@ -171,12 +173,11 @@ class EwUser:
 				response += "You have been empowered by slime and are now a level {} slimeboi.".format(new_level)
 			for level in range(self.slimelevel+1, new_level+1):
 				current_mutations = self.get_mutations()
-				
-				if (level in ewcfg.mutation_milestones) and (self.life_state not in [ewcfg.life_state_corpse, ewcfg.life_state_shambler]) and (len(current_mutations) < 10):
+				print(self.get_mutation_level())
+				print(self.get_mutation_next_level())
+				if (level >= self.get_mutation_level() + self.get_mutation_next_level()) and (self.life_state not in [ewcfg.life_state_corpse, ewcfg.life_state_shambler]) and (self.get_mutation_level() < 50):
 					
-					new_mutation = random.choice(list(ewcfg.mutation_ids))
-					while new_mutation in current_mutations:
-						new_mutation = random.choice(list(ewcfg.mutation_ids))
+					new_mutation = self.get_mutation_next()
 
 					add_success = self.add_mutation(new_mutation)
 					if add_success:
@@ -214,6 +215,7 @@ class EwUser:
 		if cause == ewcfg.cause_weather:
 			resp_cont.add_channel_response(poi.channel, deathreport)
 
+
 		# Grab necessary data for spontaneous combustion before stat reset
 		explosion_block_list = [ewcfg.cause_leftserver, ewcfg.cause_cliff]
 		user_hasCombustion = False
@@ -229,6 +231,8 @@ class EwUser:
 			self.poi = ewcfg.poi_id_thesewers
 			#self.slimes = int(self.slimes * 0.9)
 		else:
+			if cause != ewcfg.cause_suicide or self.slimelevel > 10:
+				self.rand_seed = random.randrange(500000)
 			self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
 			self.slimes = 0
 			self.slimelevel = 1
@@ -240,6 +244,9 @@ class EwUser:
 			self.inebriation = 0
 			self.bounty = 0
 			self.time_lastdeath = time_now
+
+
+
 	
 			# if self.life_state == ewcfg.life_state_shambler:
 			# 	self.degradation += 1
@@ -446,19 +453,23 @@ class EwUser:
 		return response
 
 
-	def add_mutation(self, id_mutation):
+	def add_mutation(self, id_mutation, is_artificial = 0):
 		mutations = self.get_mutations()
 		if id_mutation in mutations:
 			return False
 		try:
-			ewutils.execute_sql_query("REPLACE INTO mutations({id_server}, {id_user}, {id_mutation}) VALUES (%s, %s, %s)".format(
+			ewutils.execute_sql_query("REPLACE INTO mutations({id_server}, {id_user}, {id_mutation}, {tier}, {artificial}) VALUES (%s, %s, %s, %s, %s)".format(
 					id_server = ewcfg.col_id_server,
 					id_user = ewcfg.col_id_user,
-					id_mutation = ewcfg.col_id_mutation
+					id_mutation = ewcfg.col_id_mutation,
+					tier = ewcfg.col_tier,
+					artificial = ewcfg.col_artificial
 				),(
 					self.id_server,
 					self.id_user,
-					id_mutation
+					id_mutation,
+					ewcfg.mutations_map.get(id_mutation).tier,
+					is_artificial
 				))
 
 			return True
@@ -498,6 +509,90 @@ class EwUser:
 				))
 		except:
 			ewutils.logMsg("Failed to clear mutations for user {}.".format(self.id_user))
+
+	def get_mutation_level(self):
+		result = 0
+
+		try:
+			tiers = ewutils.execute_sql_query(
+				"SELECT SUM({tier}) FROM mutations WHERE {id_server} = %s AND {id_user} = %s;".format(
+					tier = ewcfg.col_tier,
+					id_server=ewcfg.col_id_server,
+					id_user=ewcfg.col_id_user,
+
+				), (
+					self.id_server,
+					self.id_user
+				))
+
+			for tier_data in tiers:
+				result = tier_data[0]
+
+
+			if result is None:
+				result = 0
+
+			#random.seed(self.rand_seed + mutation_dat)
+
+		except:
+			ewutils.logMsg("Failed to fetch mutations for user {}.".format(self.id_user))
+
+		finally:
+			return result
+
+
+	def get_mutation_next_level(self):
+		next_mutation = self.get_mutation_next()
+		next_mutation_obj = ewcfg.mutations_map.get(next_mutation)
+		if next_mutation_obj != None:
+			return next_mutation_obj.tier
+		else:
+			return 50
+
+
+	def get_mutation_next(self):
+		counter = 0
+		result = ""
+		current_mutations = self.get_mutations()
+
+		if self.get_mutation_level() >= 50:
+			return 0
+
+		seed = int(self.rand_seed)
+		try:
+			counter_data = ewutils.execute_sql_query(
+				"SELECT SUM({mutation_counter}) FROM mutations WHERE {id_server} = %s AND {id_user} = %s;".format(
+					mutation_counter=ewcfg.col_mutation_counter,
+					id_server=ewcfg.col_id_server,
+					id_user=ewcfg.col_id_user,
+
+				), (
+					self.id_server,
+					self.id_user
+				))
+
+			for ids in counter_data:
+				counter = ids[0]
+			if counter == None:
+				counter = 0
+			random.seed(counter + seed)
+
+			for x in range(1000):
+				result = random.choice(list(ewcfg.mutation_ids))
+
+				if result not in current_mutations and ewcfg.mutations_map[result].tier + self.get_mutation_level() <= 50:
+					return result
+
+			result = "rhinoskin"
+
+		except:
+			ewutils.logMsg("Failed to fetch mutations for user {}.".format(self.id_user))
+
+		finally:
+			print(result)
+			return result
+
+
 
 	def equip(self, weapon_item = None):
 
@@ -1022,7 +1117,8 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -1080,6 +1176,7 @@ class EwUser:
 					ewcfg.col_time_lastpremiumpurchase,
 					ewcfg.col_gvs_currency,
 					ewcfg.col_gvs_time_lastshambaquarium,
+					ewcfg.col_rand_seed
 				), (
 					id_user,
 					id_server
@@ -1144,15 +1241,18 @@ class EwUser:
 					self.time_lastpremiumpurchase = result[51]
 					self.gvs_currency = result[52]
 					self.gvs_time_lastshambaquarium = result[52]
+					self.rand_seed = result[53]
+
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
 					# Create a new database entry if the object is missing.
-					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
+					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state, rand_seed) VALUES(%s, %s, %s, %s, %s)", (
 						id_user,
 						id_server,
 						self.poi,
-						self.life_state
+						self.life_state,
+						random.randrange(500000)
 					))
 					
 					conn.commit()
@@ -1236,7 +1336,8 @@ class EwUser:
 			self.limit_fix()
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -1296,6 +1397,7 @@ class EwUser:
 				ewcfg.col_time_lastpremiumpurchase,
 				ewcfg.col_gvs_currency,
 				ewcfg.col_gvs_time_lastshambaquarium,
+				ewcfg.col_rand_seed
 			), (
 				self.id_user,
 				self.id_server,
@@ -1356,6 +1458,7 @@ class EwUser:
 				self.time_lastpremiumpurchase,
 				self.gvs_currency,
 				self.gvs_time_lastshambaquarium,
+				self.rand_seed
 			))
 
 			conn.commit()
