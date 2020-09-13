@@ -7038,19 +7038,19 @@ for weather in weather_list:
 
 # All food items in the game.
 food_list = [
-EwFood(
-	id_food = "slimentonic",
-	alias = [
-		"tonic",
-	],
-	recover_hunger = 18,
-	price = 200,
-	inebriation = 2,
-	str_name = 'slime n\' tonic',
-	vendors = [vendor_bar, vendor_countryclub],
-	str_eat = "You stir your slime n' tonic with a thin straw before chugging it lustily.",
-	str_desc = "The drink that has saved more juveniles’ lives than any trip to the nurse’s office could.",
-),
+	EwFood(
+		id_food = "slimentonic",
+		alias = [
+			"tonic",
+		],
+		recover_hunger = 18,
+		price = 200,
+		inebriation = 2,
+		str_name = 'slime n\' tonic',
+		vendors = [vendor_bar, vendor_countryclub],
+		str_eat = "You stir your slime n' tonic with a thin straw before chugging it lustily.",
+		str_desc = "The drink that has saved more juveniles’ lives than any trip to the nurse’s office could.",
+	),
 	EwFood(
 		id_food = "slimacolada",
 		alias = [
@@ -9220,7 +9220,7 @@ EwFood(
 	),
 	EwFood(
 		id_food = "desiccantpacket",
-		recover_hunger = 1,
+		recover_hunger = 2,
 		str_name = "Desiccant Packet",
 		str_eat = "You rip open the packet and pour it’s forbidden fruit into your mouth, taking great delight in chewing up and then sloshing around the silica gel in your mouth before swallowing. Your stomach growls angrily, but… nothing else really happens. Huh, really? Usually these things go on forever. I guess you’ve eaten so much other indigestible garbage before that your stomach’s just sort of used to it.",
 		str_desc = "It’s a tiny pocket full of highly-toxic, moisture-absorbing, gel beads. You know you shouldn’t eat this, but… just an ounce couldn’t hurt, right?",
