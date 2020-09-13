@@ -392,6 +392,8 @@ cmd_map = {
 	# use an item
 	ewcfg.cmd_use: ewitem.item_use,
 
+	# eat a food item from a player's inventory
+	ewcfg.cmd_eat: ewfood.eat_item,
 
 	# Remove a megaslime (1 mil slime) from a general.
 	ewcfg.cmd_deadmega: ewkingpin.deadmega,

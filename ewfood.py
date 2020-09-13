@@ -560,3 +560,39 @@ async def order(cmd):
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def eat_item(cmd):
+	
+	user_data = EwUser(member=cmd.message.author)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+	food_item = None
+
+	# look for a food item if a name was given
+	if item_search:
+		item_sought = ewitem.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)
+		if item_sought:
+			food_item = EwItem(id_item = item_sought.get('id_item'))
+		
+	# otherwise find the first useable food
+	else:
+		food_inv = ewitem.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)
+
+		for food in food_inv:
+			food_item = EwItem(id_item = food.get('id_item'))
+			
+			# check if the user can eat this item 
+			if float(getattr(food_item, "time_expir", 0)) > time.time() or \
+				food_item.item_props.get('perishable') not in ['true', '1'] or \
+				ewcfg.mutation_id_spoiledappetite in user_data.get_mutations():
+				break
+
+	if food_item != None:
+		response = user_data.eat(food_item)
+	else:
+		if item_search:
+			response = "Are you sure you have that item?"
+		else:
+			response = "You don't have anything to eat."
+	
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
