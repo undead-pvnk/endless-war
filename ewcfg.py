@@ -12729,6 +12729,7 @@ poi_list = [
 		is_gangbase = True,
 		neighbors = {
 			poi_id_thevoid : travel_time_district,
+			poi_id_poudrinalley_street_e : travel_time_street,
 		},
 	),
 	# Streets start here
@@ -13142,6 +13143,7 @@ poi_list = [
 			poi_id_poudrinalley_street_d : travel_time_street,
 			poi_id_poudrinalley_street_a : travel_time_street,
 			poi_id_cratersville_street_b : travel_time_street,
+			poi_id_thesewers : travel_time_street,
 		}
 	),
 	EwPoi(
