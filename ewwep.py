@@ -600,7 +600,7 @@ async def attack(cmd):
 				miss_mod -= 0.1
 				crit_mod += 0.05
 
-		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 30)
+		slimes_spent = int(ewutils.slime_bylevel(min(user_data.slimelevel, 50)) / 30)
 		attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
 		weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
 		slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
@@ -839,10 +839,10 @@ async def attack(cmd):
 
 				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
 					was_killed = True
-					if ewcfg.mutation_id_thickerthanblood in user_mutations:
-						slimes_damage = 0
-					else:
-						slimes_damage = max(shootee_data.slimes - shootee_data.bleed_storage, 0)
+					#if ewcfg.mutation_id_thickerthanblood in user_mutations:
+					slimes_damage = 0
+					#else:
+					#	slimes_damage = max(shootee_data.slimes - shootee_data.bleed_storage, 0)
 
 				sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.guild.id)
 				# move around slime as a result of the shot
@@ -865,11 +865,11 @@ async def attack(cmd):
 				slimes_splatter = slimes_damage - slimes_toboss - slimes_tobleed - slimes_drained
 
 				# Damage victim's wardrobe (heh, WARdrobe... get it??)
-				victim_cosmetics = ewitem.inventory(
-					id_user = member.id,
-					id_server = cmd.guild.id,
-					item_type_filter = ewcfg.it_cosmetic
-				)
+				#victim_cosmetics = ewitem.inventory(
+				#	id_user = member.id,
+				#	id_server = cmd.guild.id,
+				#	item_type_filter = ewcfg.it_cosmetic
+				#)
 
 				onbreak_responses = []
 
@@ -989,13 +989,13 @@ async def attack(cmd):
 						shambler_resp = "Your purified slime seeps into and emulsifies in their mangled corpse, healing their degraded body. When they revive, they’ll be a normal slimeboi like the rest of us. A pure, homogenous race of ENDLESS WAR fearing juveniles. It brings a tear to your eye."
 
 					# release bleed storage
-					if ewcfg.mutation_id_thickerthanblood in user_mutations:
-						slimes_todistrict = 0
-						slimes_tokiller = shootee_data.slimes
-					else:
-						slimes_todistrict = shootee_data.slimes / 2
-						slimes_tokiller = shootee_data.slimes / 2
-					district_data.change_slimes(n = slimes_todistrict, source = ewcfg.source_killing)
+					#if ewcfg.mutation_id_thickerthanblood in user_mutations:
+					#slimes_todistrict = 0
+					slimes_tokiller = shootee_data.slimes
+					#else:
+					#	slimes_todistrict = shootee_data.slimes / 2
+					#	slimes_tokiller = shootee_data.slimes / 2
+					#district_data.change_slimes(n = slimes_todistrict, source = ewcfg.source_killing)
 					levelup_response = user_data.change_slimes(n = slimes_tokiller, source = ewcfg.source_killing)
 					if ewcfg.mutation_id_fungalfeaster in user_mutations:
 						user_data.hunger = 0
@@ -2226,7 +2226,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 
 
-	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 30)
+	slimes_spent = int(ewutils.slime_bylevel(min(user_data.slimelevel, 50)) / 30)
 	attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
 	weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
 	slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
@@ -2449,10 +2449,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	if slimes_damage >= enemy_data.slimes - enemy_data.bleed_storage:
 		was_killed = True
-		if ewcfg.mutation_id_thickerthanblood in user_mutations:
-			slimes_damage = 0
-		else:
-			slimes_damage = max(enemy_data.slimes - enemy_data.bleed_storage, 0)
+		#if ewcfg.mutation_id_thickerthanblood in user_mutations:
+		#	slimes_damage = 0
+		#else:
+		slimes_damage = max(enemy_data.slimes - enemy_data.bleed_storage, 0)
 
 	sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=cmd.guild.id)
 	# move around slime as a result of the shot
@@ -2500,12 +2500,12 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			user_data.add_weaponskill(n=1, weapon_type=weapon.id_weapon)
 
 		# release bleed storage
-		if ewcfg.mutation_id_thickerthanblood in user_mutations:
-			slimes_todistrict = enemy_data.slimes * 0.25
-			slimes_tokiller = enemy_data.slimes * 0.75
-		else:
-			slimes_todistrict = enemy_data.slimes / 2
-			slimes_tokiller = enemy_data.slimes / 2
+		#if ewcfg.mutation_id_thickerthanblood in user_mutations:
+		#	slimes_todistrict = enemy_data.slimes * 0.25
+		#	slimes_tokiller = enemy_data.slimes * 0.75
+		#else:
+		slimes_todistrict = enemy_data.slimes / 2
+		slimes_tokiller = enemy_data.slimes / 2
 			
 		if sandbag_mode:
 			slimes_todistrict = 0
@@ -3158,12 +3158,12 @@ async def spray(cmd):
 		crit_mod += round(shooter_status_mods['crit'], 2)
 		dmg_mod += round(shooter_status_mods['dmg'], 2)
 		
-		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 300)
+		slimes_spent = int(ewutils.slime_bylevel(min(user_data.slimelevel, 50)) / 300)
 		slimes_damage = int((50000 + slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
 		slimes_spent = round(slimes_spent * .1125)
 		statuses = user_data.getStatusEffects()
 
-		backfire_damage = int(ewutils.slime_bylevel(user_data.slimelevel) / 20)
+		backfire_damage = int(ewutils.slime_bylevel(min(user_data.slimelevel, 50)) / 20)
 
 		if weapon is None:
 			slimes_damage /= 2  # penalty for not using a weapon, otherwise fists would be on par with other weapons

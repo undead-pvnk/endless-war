@@ -392,6 +392,8 @@ cmd_map = {
 	# use an item
 	ewcfg.cmd_use: ewitem.item_use,
 
+	# eat a food item from a player's inventory
+	ewcfg.cmd_eat: ewfood.eat_item,
 
 	# Remove a megaslime (1 mil slime) from a general.
 	ewcfg.cmd_deadmega: ewkingpin.deadmega,
@@ -2006,12 +2008,14 @@ async def on_message(message):
 		""" Howl if !howl is in the message at all. """
 		return await ewcmd.cmd_howl(ewcmd.EwCmd(
 			message = message,
-			client = client
+			client = client,
+			guild = message.guild
 		))
 	elif content_tolower.find(ewcfg.cmd_moan) >= 0 or re_moan.match(content_tolower):
 		return await ewcmd.cmd_moan(ewcmd.EwCmd(
 			message=message,
-			client=client
+			client=client,
+			guild = message.guild
 		))
 
 # find our REST API token
