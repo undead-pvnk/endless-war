@@ -5173,7 +5173,7 @@ def wef_bass(ctn = None):
 
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.25:
+			if random.random() < 0.5:
 				ctn.miss = True
 		else:
 			ctn.miss = True
@@ -5213,7 +5213,7 @@ def wef_bow(ctn = None):
 
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.25:
+			if random.random() < 0.5:
 				ctn.miss = True
 		else:
 			ctn.miss = True
@@ -5241,7 +5241,7 @@ def wef_dclaw(ctn = None):
 	
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.25:
+			if random.random() < 0.5:
 				ctn.miss = True
 		else:
 			ctn.miss = True
