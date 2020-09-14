@@ -9218,7 +9218,7 @@ food_list = [
 	),
 	EwFood(
 		id_food = "desiccantpacket",
-		recover_hunger = 1750,
+		recover_hunger = 2,
 		str_name = "Desiccant Packet",
 		str_eat = "You rip open the packet and pour it’s forbidden fruit into your mouth, taking great delight in chewing up and then sloshing around the silica gel in your mouth before swallowing. Your stomach growls angrily, but… nothing else really happens. Huh, really? Usually these things go on forever. I guess you’ve eaten so much other indigestible garbage before that your stomach’s just sort of used to it.",
 		str_desc = "It’s a tiny pocket full of highly-toxic, moisture-absorbing, gel beads. You know you shouldn’t eat this, but… just an ounce couldn’t hurt, right?",
@@ -12739,6 +12739,7 @@ poi_list = [
 		is_gangbase = True,
 		neighbors = {
 			poi_id_thevoid : travel_time_district,
+			poi_id_poudrinalley_street_e : travel_time_street,
 		},
 	),
 	# Streets start here
@@ -13152,6 +13153,7 @@ poi_list = [
 			poi_id_poudrinalley_street_d : travel_time_street,
 			poi_id_poudrinalley_street_a : travel_time_street,
 			poi_id_cratersville_street_b : travel_time_street,
+			poi_id_thesewers : travel_time_street,
 		}
 	),
 	EwPoi(

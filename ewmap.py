@@ -1001,22 +1001,9 @@ async def move(cmd = None, isApt = False):
 
 		await ewrolemgr.updateRoles(client = client, member = member_object)
 
-		channel = cmd.message.channel
-
 		# Send the message in the channel for this POI if possible, else in the origin channel for the move.
-
-		for ch in server_data.channels:
-			if ch.name == poi.channel:
-				channel = ch
-				break
-
-		msg_walk_enter = await ewutils.send_message(cmd.client, 
-			channel,
-			ewutils.formatMessage(
-				cmd.message.author,
-				"You {} {}.".format(poi.str_enter, poi.str_name)
-			)
-		)
+		channel = [ch for ch in server_data.channels if ch.name == poi_current.channel][0] or cmd.message.channel
+		msg_walk_enter = await send_arrival_response(cmd, poi, channel)
 		
 		try:
 			await msg_walk_start.delete()
@@ -1079,7 +1066,8 @@ async def move(cmd = None, isApt = False):
 
 					return
 
-				channel = cmd.message.channel
+				# Send the message in the player's current if possible, else in the origin channel for the move.
+				channel = [ch for ch in server_data.channels if ch.name == poi_current.channel][0] or cmd.message.channel
 
 				# Prevent access to the zone if it's closed.
 				if poi_current.closed == True:
@@ -1088,13 +1076,6 @@ async def move(cmd = None, isApt = False):
 							message_closed = poi_current.str_closed
 						else:
 							message_closed = "The way into {} is blocked.".format(poi_current.str_name)
-
-						# Send the message in the player's current if possible, else in the origin channel for the move.
-						poi_current = ewcfg.id_to_poi.get(user_data.poi)
-						for ch in server_data.channels:
-							if ch.name == poi_current.channel:
-								channel = ch
-								break
 					finally:
 						return await ewutils.send_message(cmd.client, 
 							channel,
@@ -1103,12 +1084,6 @@ async def move(cmd = None, isApt = False):
 								message_closed
 							)
 						)
-
-				# Send the message in the channel for this POI if possible, else in the origin channel for the move.
-				for ch in server_data.channels:
-					if ch.name == poi_current.channel:
-						channel = ch
-						break
 
 				if user_data.poi != poi_current.id_poi:
 					if walking_into_sewers and poi_current.id_poi == ewcfg.poi_id_thesewers:
@@ -1139,13 +1114,7 @@ async def move(cmd = None, isApt = False):
 					except:
 						pass
 
-					msg_walk_start = await ewutils.send_message(cmd.client, 
-						channel,
-						ewutils.formatMessage(
-							cmd.message.author,
-							"You {} {}.".format(poi_current.str_enter, poi_current.str_name)
-						)
-					)
+					msg_walk_start = await send_arrival_response(cmd, poi_current, channel)
 
 					# SWILLDERMUK
 					await ewutils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
@@ -1412,7 +1381,7 @@ async def look(cmd):
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You stand {} {}.\n\n{}\n\n<{}>{}\n\n{}...".format(
+			"You stand {} {}.\n\n{}\n\n<{}>\n{}\n\n{}...".format(
 				poi.str_in,
 				poi.str_name,
 				poi.str_desc,
@@ -2004,3 +1973,16 @@ def get_void_connections_resp(poi, id_server):
 	elif poi in void_connections:
 		response = "There's also a well lit staircase leading underground, but it looks too clean to be an entrance to the subway."
 	return response
+
+async def send_arrival_response(cmd, poi, channel):
+	response = "You {} {}.".format(poi.str_enter, poi.str_name)
+	if poi.id_poi in get_void_connection_pois(cmd.guild.id):
+		response += "\nYou notice an underground passage that wasn't there last time you came here."
+
+	return await ewutils.send_message(cmd.client, 
+			channel,
+			ewutils.formatMessage(
+				cmd.message.author,
+				response
+			)
+		)
