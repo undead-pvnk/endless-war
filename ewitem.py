@@ -77,6 +77,8 @@ class EwItem:
 	stack_size = 0
 	soulbound = False
 
+	template = "-2"
+
 	item_props = None
 
 	def __init__(
@@ -96,14 +98,15 @@ class EwItem:
 				cursor = conn.cursor()
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {} FROM items WHERE id_item = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {} FROM items WHERE id_item = %s".format(
 					ewcfg.col_id_server,
 					ewcfg.col_id_user,
 					ewcfg.col_item_type,
 					ewcfg.col_time_expir,
 					ewcfg.col_stack_max,
 					ewcfg.col_stack_size,
-					ewcfg.col_soulbound
+					ewcfg.col_soulbound,
+					ewcfg.col_template
 				), (
 					self.id_item,
 				))
@@ -118,6 +121,7 @@ class EwItem:
 					self.stack_max = result[4]
 					self.stack_size = result[5]
 					self.soulbound = (result[6] != 0)
+					self.template = result[7]
 
 					# Retrieve additional properties
 					cursor.execute("SELECT {}, {} FROM items_prop WHERE id_item = %s".format(
@@ -137,6 +141,9 @@ class EwItem:
 				else:
 					# Item not found.
 					self.id_item = -1
+			
+				if self.template == "-2":
+					self.persist()
 
 			finally:
 				# Clean up the database handles.
@@ -145,13 +152,32 @@ class EwItem:
 
 	""" Save item data object to the database. """
 	def persist(self):
+		
+		if self.template == "-2":
+			if self.item_type == ewcfg.it_item:
+				self.template = self.item_props.get("id_item", "bad general item id")
+			elif self.item_type == ewcfg.it_food:
+				self.template = self.item_props.get("id_food", "bad food id")
+			elif self.item_type == ewcfg.it_weapon:
+				self.template = self.item_props.get("weapon_type", "bad weapon id")
+			elif self.item_type == ewcfg.it_cosmetic:
+				self.template = self.item_props.get("id_cosmetic", "bad cosmetic id")
+			elif self.item_type == ewcfg.it_furniture:
+				self.template = self.item_props.get("id_furniture", "bad furniture id")
+			elif self.item_type == ewcfg.it_book:
+				self.template = "player book"
+			elif self.item_type == ewcfg.it_medal:
+				self.template = "MEDAL ITEM????" #p sure these are fake news
+			elif self.item_type == ewcfg.it_questitem:
+				self.template = "QUEST ITEM????"
+
 		try:
 			conn_info = ewutils.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
 			# Save the object.
-			cursor.execute("REPLACE INTO items({}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO items({}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_item,
 				ewcfg.col_id_server,
 				ewcfg.col_id_user,
@@ -159,7 +185,8 @@ class EwItem:
 				ewcfg.col_time_expir,
 				ewcfg.col_stack_max,
 				ewcfg.col_stack_size,
-				ewcfg.col_soulbound
+				ewcfg.col_soulbound,
+				ewcfg.col_template
 			), (
 				self.id_item,
 				self.id_server,
@@ -168,7 +195,8 @@ class EwItem:
 				self.time_expir if self.time_expir is not None else self.item_props['time_expir'] if 'time_expir' in self.item_props.keys() else 0,
 				self.stack_max,
 				self.stack_size,
-				(1 if self.soulbound else 0)
+				(1 if self.soulbound else 0),
+				self.template
 			))
 
 			# Remove all existing property rows.
@@ -190,7 +218,7 @@ class EwItem:
 					self.item_props[name]
 				))
 
-			conn.commit()
+			conn.commit()			
 		finally:
 			# Clean up the database handles.
 			cursor.close()
@@ -300,6 +328,28 @@ def item_create(
 		ewutils.logMsg('Tried to create invalid item_type: {}'.format(item_type))
 		return
 
+
+
+
+	if item_type == ewcfg.it_item:
+		template_id = item_props.get("id_name", "bad general item id")
+	elif item_type == ewcfg.it_food:
+		template_id = item_props.get("id_food", "bad food id")
+	elif item_type == ewcfg.it_weapon:
+		template_id = item_props.get("weapon_type", "bad food id")
+	elif item_type == ewcfg.it_cosmetic:
+		template_id = item_props.get("id_cosmetic", "bad food id")
+	elif item_type == ewcfg.it_furniture:
+		template_id = item_props.get("id_furniture ", "bad furniture id")
+	elif item_type == ewcfg.it_book:
+		template_id = item_props.get("id_food", "bad food id")
+	elif item_type == ewcfg.it_medal:
+		template_id = "MEDAL ITEM????" #p sure these are fake news
+	elif item_type == ewcfg.it_questitem:
+		template_id = "QUEST ITEM????"
+	else:
+		template_id = "-1";
+
 	try:
 		# Get database handles if they weren't passed.
 		conn_info = ewutils.databaseConnect()
@@ -308,20 +358,22 @@ def item_create(
 
 		# Create the item in the database.
 
-		cursor.execute("INSERT INTO items({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+		cursor.execute("INSERT INTO items({}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
 			ewcfg.col_item_type,
 			ewcfg.col_id_user,
 			ewcfg.col_id_server,
 			ewcfg.col_soulbound,
 			ewcfg.col_stack_max,
-			ewcfg.col_stack_size
+			ewcfg.col_stack_size,
+			ewcfg.col_template
 		), (
 			item_type,
 			id_user,
 			id_server,
 			(1 if item_def.soulbound else 0),
 			stack_max,
-			stack_size
+			stack_size,
+			template_id,
 		))
 
 		item_id = cursor.lastrowid

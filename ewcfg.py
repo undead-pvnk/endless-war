@@ -2040,6 +2040,7 @@ col_value = "value"
 col_stack_max = 'stack_max'
 col_stack_size = 'stack_size'
 col_soulbound = 'soulbound'
+col_template = 'template'
 
 #Database columns for apartments
 col_apt_name = 'apt_name'
