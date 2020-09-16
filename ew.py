@@ -220,7 +220,7 @@ class EwUser:
 		if (cause not in explosion_block_list) and (poi.pvp):
 			if ewcfg.mutation_id_spontaneouscombustion in self.get_mutations():
 				user_hasCombustion = True
-				explode_damage = ewutils.slime_bylevel(min(self.slimelevel, 50)) / 5
+				explode_damage = ewutils.slime_bylevel(user_data.slimelevel) / 5
 				explode_district = ewdistrict.EwDistrict(district = self.poi, id_server = self.id_server)
 				explode_poi_channel = ewcfg.id_to_poi.get(self.poi).channel
 

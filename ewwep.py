@@ -600,7 +600,7 @@ async def attack(cmd):
 				miss_mod -= 0.1
 				crit_mod += 0.05
 
-		slimes_spent = int(ewutils.slime_bylevel(min(user_data.slimelevel, 50)) / 30)
+		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 30)
 		attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
 		weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
 		slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
@@ -2226,7 +2226,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 
 
-	slimes_spent = int(ewutils.slime_bylevel(min(user_data.slimelevel, 50)) / 30)
+	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 30)
 	attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
 	weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
 	slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
@@ -3158,12 +3158,12 @@ async def spray(cmd):
 		crit_mod += round(shooter_status_mods['crit'], 2)
 		dmg_mod += round(shooter_status_mods['dmg'], 2)
 		
-		slimes_spent = int(ewutils.slime_bylevel(min(user_data.slimelevel, 50)) / 300)
+		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 300)
 		slimes_damage = int((50000 + slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
 		slimes_spent = round(slimes_spent * .1125)
 		statuses = user_data.getStatusEffects()
 
-		backfire_damage = int(ewutils.slime_bylevel(min(user_data.slimelevel, 50)) / 20)
+		backfire_damage = int(ewutils.slime_bylevel(user_data.slimelevel) / 20)
 
 		if weapon is None:
 			slimes_damage /= 2  # penalty for not using a weapon, otherwise fists would be on par with other weapons
