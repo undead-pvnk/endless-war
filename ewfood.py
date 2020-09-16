@@ -405,6 +405,9 @@ async def order(cmd):
 					# Not enough money.
 					response = "A {} costs {:,} {}, and you only have {:,}.".format(name, value, currency_used, current_currency_amount)
 				else:
+					mutations = user_data.get_mutations()
+					if random.randrange(10) == 0 and ewcfg.mutation_id_stickyfingers in mutations:
+						value = 0
 					if item_type == ewcfg.it_food:
 						food_ordered = True
 

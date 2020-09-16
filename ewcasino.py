@@ -1389,8 +1389,11 @@ async def russian_roulette(cmd):
 		response = "Both players must be in the casino."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
+	challenger_mutations = challenger.get_mutations()
+	challengee_mutations = challengee.get_mutations()
+
 	#Players have to be enlisted
-	playable_life_states = [ewcfg.life_state_enlisted,ewcfg.life_state_lucky,ewcfg.life_state_executive]
+	playable_life_states = [ewcfg.life_state_enlisted,ewcfg.life_state_lucky,ewcfg.life_state_executive, ewcfg.life_state_juvenile]
 	if challenger.life_state not in playable_life_states or challengee.life_state not in playable_life_states:
 		if challenger.life_state == ewcfg.life_state_corpse:
 			response = "You try to grab the gun, but it falls through your hands. Ghosts can't hold weapons.".format(author.display_name).replace("@", "\{at\}")
@@ -1409,6 +1412,12 @@ async def russian_roulette(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 	elif (challenger.has_soul == 0 or challengee.has_soul == 0) and soulstake:
 		response = "A soul game of russian roulette can't be played unless both players have souls planted firmly in their body."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+	elif (challenger.life_state == ewcfg.life_state_juvenile and ewcfg.mutation_id_nervesofsteel not in challenger_mutations):
+		response = "Juveniles are usually too cowardly to gamble their lives."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+	elif (challengee.life_state == ewcfg.life_state_juvenile and ewcfg.mutation_id_nervesofsteel not in challengee_mutations):
+		response = "Juveniles are usually too cowardly to gamble their lives."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	#Assign a challenger so players can't be challenged

@@ -724,7 +724,7 @@ async def scavenge(cmd):
 				if scavenge_combos.get(user_data.id_user) > 0 and (time_now - user_data.time_lastscavenge) < 60:
 					if scavenge_captchas.get(user_data.id_user).lower() == item_search.lower():
 						scavenge_combos[user_data.id_user] += 1
-						new_captcha = gen_scavenge_captcha(scavenge_combos.get(user_data.id_user))
+						new_captcha = gen_scavenge_captcha(n=scavenge_combos.get(user_data.id_user), id_user=user_data.id_user, id_server=user_data.id_server)
 						response += "New captcha: **" + ewutils.text_to_regional_indicator(new_captcha) + "**"
 						scavenge_captchas[user_data.id_user] = new_captcha
 						has_comboed = True
@@ -756,7 +756,7 @@ async def scavenge(cmd):
 						response += loot_resp +"\n\n"
 
 				scavenge_combos[user_data.id_user] = 1
-				new_captcha = gen_scavenge_captcha(1)
+				new_captcha = gen_scavenge_captcha(n=1, id_user=user_data.id_user, id_server=user_data.id_server)
 				response += "New captcha: **" + ewutils.text_to_regional_indicator(new_captcha) + "**"
 				scavenge_captchas[user_data.id_user] = new_captcha
 
@@ -1535,7 +1535,7 @@ def create_mining_event(cmd):
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
-			event_props['captcha'] = ewutils.generate_captcha(length = 8)
+			event_props['captcha'] = ewutils.generate_captcha(length = 8, id_user=user_data.id_user ,id_server=user_data.id_server)
 			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
 				id_server = cmd.guild.id,
@@ -1588,7 +1588,7 @@ def create_mining_event(cmd):
 				event_props = event_props
 			)
 
-def gen_scavenge_captcha(n = 0):
+def gen_scavenge_captcha(n = 0, id_user = 0, id_server = 0):
 	captcha_length = math.ceil(n / 3)
 
-	return ewutils.generate_captcha(captcha_length)
+	return ewutils.generate_captcha(length=captcha_length, id_server=id_server, id_user=id_user)

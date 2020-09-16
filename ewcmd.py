@@ -3833,7 +3833,7 @@ async def gvs_searchforbrainz(cmd):
 	event_props = {}
 	event_props['id_user'] = cmd.message.author.id
 	event_props['brains_grabbed'] = 1
-	event_props['captcha'] = ewutils.generate_captcha(1)
+	event_props['captcha'] = ewutils.generate_captcha(length=1, id_user=user_data.id_user, id_server=user_data.id_server)
 	event_props['channel'] = cmd.message.author.id
 
 	# DM user
@@ -3890,7 +3890,7 @@ async def gvs_grabbrainz(cmd):
 				if event_data.event_props.get('captcha').lower() == captcha:
 					event_data.event_props['brains_grabbed'] = int(event_data.event_props['brains_grabbed']) + 1 
 					captcha_length = int(event_data.event_props['brains_grabbed'])
-					event_data.event_props['captcha'] = ewutils.generate_captcha(captcha_length if captcha_length < 8 else 8)
+					event_data.event_props['captcha'] = ewutils.generate_captcha(length=captcha_length if captcha_length < 8 else 8, id_user=user_data.id_user, id_server=user_data.id_server)
 					event_data.persist()
 
 					user_data.gvs_currency += ewcfg.brainz_per_grab
@@ -3900,7 +3900,7 @@ async def gvs_grabbrainz(cmd):
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				else:
-					event_data.event_props['captcha'] = ewutils.generate_captcha(int(event_data.event_props['brains_grabbed']))
+					event_data.event_props['captcha'] = ewutils.generate_captcha(length=int(event_data.event_props['brains_grabbed']), id_user=user_data.id_user, id_server=user_data.id_server)
 					event_data.persist()
 					response = "Missed! That was pretty cringe dude... New captcha: " + ewutils.text_to_regional_indicator(event_data.event_props['captcha'])
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

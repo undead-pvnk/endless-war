@@ -153,9 +153,11 @@ async def haunt(cmd):
 			# Get the user and target data from the database.
 			user_data = EwUser(member = cmd.message.author)
 			market_data = EwMarket(id_server = cmd.guild.id)
+			target_mutations = haunted_data.get_mutations()
 			target_poi = ewcfg.id_to_poi.get(haunted_data.poi)
 			target_is_shambler = haunted_data.life_state == ewcfg.life_state_shambler
 			target_is_inhabitted = haunted_data.id_user == user_data.get_inhabitee()
+
 
 			if user_data.life_state != ewcfg.life_state_corpse:
 				# Only dead players can haunt.
@@ -239,6 +241,11 @@ async def haunt(cmd):
 				haunted_slimes = int((haunted_data.slimes / ewcfg.slimes_hauntratio) * haunt_power_multiplier)
 				slimes_lost = int(haunted_slimes / 5) # hauntee only loses 1/5th of what the ghost gets as antislime
 
+				if ewcfg.mutation_id_coleblooded in target_mutations:
+					haunted_slimes = -10000
+					if haunted_data.slimes < haunted_slimes:
+						haunted_slimes = haunted_data.slimes
+
 				haunted_data.change_slimes(n = -slimes_lost, source = ewcfg.source_haunted)
 				user_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunter)
 				market_data.negaslime -= haunted_slimes
@@ -256,6 +263,8 @@ async def haunt(cmd):
 				market_data.persist()
 
 				response = "{} has been haunted by the ghost of {}! Slime has been lost! {} antislime congeals within you.".format(member.display_name, cmd.message.author.display_name, haunted_slimes)
+				if ewcfg.mutation_id_coleblooded in target_mutations:
+					response = "{} has been haunted by the ghost of {}! Their exorcising coleslaw blood purges {} antislime from your being! Better not do that again.".format(member.display_name, cmd.message.author.display_name, -haunted_slimes)
 
 				haunted_channel = ewcfg.id_to_poi.get(haunted_data.poi).channel
 				haunt_message = "You feel a cold shiver run down your spine"
@@ -266,6 +275,9 @@ async def haunt(cmd):
 						haunt_message_content = haunt_message_content[:-500]
 					haunt_message += " and faintly hear the words \"{}\"".format(haunt_message_content)
 				haunt_message += ". {} slime evaporates from your body.".format(slimes_lost)
+				if ewcfg.mutation_id_coleblooded in target_mutations:
+					haunt_message += " The ghost that did it wails in agony as their ectoplasm boils in your coleslaw blood!"
+
 				haunt_message = ewutils.formatMessage(member, haunt_message)
 				resp_cont.add_channel_response(haunted_channel, haunt_message)
 		else:

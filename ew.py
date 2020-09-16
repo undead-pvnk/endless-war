@@ -611,7 +611,7 @@ class EwUser:
 				self.weapon = weapon_item.id_item
 
 				if ewcfg.weapon_class_captcha in weapon.classes:
-					captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+					captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=self.id_user, id_server=self.id_server)
 					weapon_item.item_props["captcha"] = captcha
 					response += "\nSecurity code: **{}**".format(ewutils.text_to_regional_indicator(captcha))
 			else:
@@ -628,7 +628,7 @@ class EwUser:
 				self.sidearm = -1
 
 			if ewcfg.weapon_class_captcha in weapon.classes:
-				captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+				captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=self.id_user, id_server=self.id_server)
 				weapon_item.item_props["captcha"] = captcha
 				response += "\nSecurity code: **{}**".format(ewutils.text_to_regional_indicator(captcha))
 
@@ -786,7 +786,11 @@ class EwUser:
 			return base_capacity
 
 	def get_hunger_max(self):
-		return ewutils.hunger_max_bylevel(self.slimelevel)
+		mutations = self.get_mutations()
+		has_ba = 0
+		if ewcfg.mutation_id_bottomlessappetite in mutations:
+			has_ba = 1
+		return ewutils.hunger_max_bylevel(slimelevel=self.slimelevel, has_bottomless_appetite=has_ba)
 
 
 	def get_mention(self):

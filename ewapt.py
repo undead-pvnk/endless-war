@@ -689,6 +689,7 @@ async def store_item(cmd, dest):
 	destination = dest #used to separate the compartment keyword from the string displayed to the user.
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	user_mutations = usermodel.get_mutations()
 	apt_model = EwApartment(id_server=playermodel.id_server, id_user=cmd.message.author.id)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
@@ -737,6 +738,8 @@ async def store_item(cmd, dest):
 		elif apt_model.apt_class == ewcfg.property_class_s:
 			storage_limit_base *= 8
 
+		if ewcfg.mutation_id_packrat in user_mutations:
+			storage_limit_base *= 2
 
 		name_string = item_sought.get('name')
 
@@ -1481,7 +1484,7 @@ async def trickortreat(cmd = None):
 		response = "The undead are too wicked and impure for such acts. Seems you can't have your cake and !haunt it too on Double Halloween."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
+	if user_data.hunger >= user_data.get_hunger_max:
 		response = "You're too hungry to trick-or-treat right now."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

@@ -1381,9 +1381,12 @@ def sap_max_bylevel(slimelevel):
 """
 	Calculate the maximum hunger level at the player's slimelevel
 """
-def hunger_max_bylevel(slimelevel):
+def hunger_max_bylevel(slimelevel, has_bottomless_appetite = 0):
 	# note that when you change this formula, you'll also have to adjust its sql equivalent in pushupServerHunger
-	return max(ewcfg.min_stamina, slimelevel ** 2)
+	mult = 1
+	if has_bottomless_appetite == 1:
+		mult = 3
+	return max(ewcfg.min_stamina, slimelevel ** 2) * mult
 
 
 """
@@ -1808,11 +1811,17 @@ def text_to_regional_indicator(text):
 def generate_captcha_random(length = 4):
 	return "".join([random.choice(ewcfg.alphabet) for _ in range(length)]).upper()
 
-def generate_captcha(length = 4):
+def generate_captcha(length = 4, id_user = 0, id_server = 0):
+	length_final = length
+	if id_user > 0 and id_server > 0:
+		user_data = EwUser(id_user=id_user, id_server=id_server)
+		mutations = user_data.get_mutations()
+		if ewcfg.mutation_id_dyslexia in mutations:
+			length_final = max(1, length_final-3)
 	try:
-		return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == length])
+		return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == length_final])
 	except:
-		return generate_captcha_random(length)
+		return generate_captcha_random(length=length_final)
 
 async def sap_tick_loop(id_server):
 	interval = ewcfg.sap_tick_length
@@ -2980,3 +2989,16 @@ def get_mutation_alias(name):
 					return mutation.name
 		return 0
 
+def get_fingernail_item(cmd):
+	item = ewcfg.weapon_map.get(ewcfg.weapon_id_fingernails)
+	item_props = ewitem.gen_item_props(item)
+	id_item = ewitem.item_create(
+		item_type=ewcfg.it_weapon,
+		id_user=cmd.message.author.id,
+		id_server=cmd.guild.id,
+		stack_max=-1,
+		stack_size=0,
+		item_props=item_props
+	)
+
+	return id_item

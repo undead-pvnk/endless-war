@@ -289,7 +289,7 @@ def canAttack(cmd):
 	weapon_item = None
 	weapon = None
 	captcha = None
-
+	mutations = user_data.get_mutations()
 	tokens_lower = []
 	for token in cmd.tokens:
 		tokens_lower.append(token.lower())
@@ -320,7 +320,7 @@ def canAttack(cmd):
 		response = "Alas, you still can't shoot people through your phone."
 	elif cmd.mentions_count > 1:
 		response = "One shot at a time!"
-	elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
+	elif user_data.hunger >= user_data.get_hunger_max:
 		response = "You are too exhausted for gang violence right now. Go get some grub!"
 	#elif weapon != None and user_data.sap < weapon.sap_cost:
 	#	response = "You don't have enough sap to attack. ({}/{})".format(user_data.sap, weapon.sap_cost)
@@ -337,7 +337,7 @@ def canAttack(cmd):
 	elif code_count > 1:
 		response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 	
-	elif user_data.weapon == -1 and user_data.life_state != ewcfg.life_state_shambler:
+	elif user_data.weapon == -1 and user_data.life_state != ewcfg.life_state_shambler and ewcfg.mutation_id_lethalfingernails not in mutations:
 		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
 	elif cmd.mentions_count <= 0:
 		# user is going after enemies rather than players
@@ -534,9 +534,29 @@ async def attack(cmd):
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	weapon = None
 	weapon_item = None
+	user_mutations = user_data.get_mutations()
+
 	if user_data.weapon >= 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		if weapon.is_tool == 1 and user_data.sidearm >= 0 and ewcfg.mutation_id_ambidextrous in user_mutations:
+			sidearm_item = EwItem(id_item = user_data.sidearm)
+			sidearm = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			if sidearm.is_tool == 0:
+				weapon_item = sidearm_item
+				weapon = sidearm
+	elif ewcfg.mutation_id_ambidextrous in user_mutations and user_data.sidearm >= 0:
+		weapon_item = EwItem(id_item=user_data.sidearm)
+		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+
+	elif ewcfg.mutation_id_lethalfingernails in user_mutations:
+		id_item = ewutils.get_fingernail_item(cmd=cmd)
+		weapon_item = EwItem(id_item=id_item)
+		weapon = ewcfg.weapon_map.get(ewcfg.weapon_id_fingernails)
+
+
+		#todo Created a weapon object to cover my bases, check if this is necessary. Also see if you can move this somewhere else
+
 
 	response = canAttack(cmd)
 
@@ -564,7 +584,7 @@ async def attack(cmd):
 			shootee_weapon_item = EwItem(id_item = shootee_data.weapon)
 			shootee_weapon = ewcfg.weapon_map.get(shootee_weapon_item.item_props.get("weapon_type"))
 
-		user_mutations = user_data.get_mutations()
+
 		shootee_mutations = shootee_data.get_mutations()
 
 		district_data = EwDistrict(district = user_data.poi, id_server = cmd.guild.id)
@@ -744,6 +764,8 @@ async def attack(cmd):
 				life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_shambler]
 				factions = ["", user_data.faction if backfire else shootee_data.faction]
 
+
+
 				# Burn players in district
 				if ewcfg.weapon_class_burning in weapon.classes:
 					if not miss:
@@ -754,6 +776,10 @@ async def attack(cmd):
 					if not miss:
 						resp = weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, market_data = market_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=False)
 						resp_cont.add_response_container(resp)
+
+				if ewcfg.mutation_id_napalmsnot in user_mutations and ewcfg.mutation_id_napalmsnot not in shootee_mutations and random.randrange(5) == 0:
+					resp = shootee_data.applyStatus(id_status=ewcfg.status_burning_id, value=bystander_damage,source=user_data.id_user).format(name_player=cmd.message.author.display_name)
+					resp_cont.add_channel_response(cmd.message.channel.name, resp)
 
 			# can't hit lucky lucy
 			if shootee_data.life_state == ewcfg.life_state_lucky:
@@ -1045,7 +1071,7 @@ async def attack(cmd):
 							response += "\n" + weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
 						if ewcfg.weapon_class_captcha in weapon.classes:
-							new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+							new_captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=user_data.id_user, id_server=user_data.id_server)
 							response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 							weapon_item.item_props['captcha'] = new_captcha
 							weapon_item.persist()
@@ -1158,7 +1184,7 @@ async def attack(cmd):
 							response += "\nn"+weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
 						if ewcfg.weapon_class_captcha in weapon.classes or jammed:
-							new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+							new_captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=user_data.id_user, id_server=user_data.id_server)
 							response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 							weapon_item.item_props['captcha'] = new_captcha
 							weapon_item.persist()
@@ -1243,6 +1269,7 @@ async def attack(cmd):
 		resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
 		
 		await resp_cont.post()
+	ewitem.item_delete(id_item=weapon_item.id_item)
 
 """ player kills themself """
 async def suicide(cmd):
@@ -1256,6 +1283,7 @@ async def suicide(cmd):
 	else:
 		# Get the user data.
 		user_data = EwUser(member = cmd.message.author)
+		mutations = user_data.get_mutations()
 		if user_data.life_state == ewcfg.life_state_shambler:
 			response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1271,7 +1299,7 @@ async def suicide(cmd):
 
 		if user_isdead:
 			response = "Too late for that."
-		elif user_isjuvenile:
+		elif user_isjuvenile and ewcfg.mutation_id_nervesofsteel not in mutations:
 			response = "Juveniles are too cowardly for suicide."
 		elif user_isgeneral:
 			response = "\*click* Alas, your gun has jammed."
@@ -1574,8 +1602,11 @@ def burn_bystanders(user_data = None, burn_dmg = 0, life_states = None, factions
 		for bystander in bystander_users:
 			bystander_user_data = EwUser(id_user = bystander, id_server = user_data.id_server)
 			bystander_player_data = EwPlayer(id_user = bystander, id_server = user_data.id_server)
-			resp = bystander_user_data.applyStatus(id_status=ewcfg.status_burning_id, value=burn_dmg, source=user_data.id_user).format(name_player = bystander_player_data.display_name)
-			resp_cont.add_channel_response(channel, resp)
+			bystander_mutation = bystander_user_data.get_mutations()
+
+			if ewcfg.mutation_id_napalmsnot not in bystander_mutation:
+				resp = bystander_user_data.applyStatus(id_status=ewcfg.status_burning_id, value=burn_dmg, source=user_data.id_user).format(name_player = bystander_player_data.display_name)
+				resp_cont.add_channel_response(channel, resp)
 
 		bystander_enemies = district_data.get_enemies_in_district()
 
@@ -1620,11 +1651,11 @@ async def spar(cmd):
 			user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 			user_isdead = user_data.life_state == ewcfg.life_state_corpse
 
-			if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
+			if user_data.hunger >= user_data.get_hunger_max:
 				response = "You are too exhausted to train right now. Go get some grub!"
 			elif user_data.poi != ewcfg.poi_id_dojo or sparred_data.poi != ewcfg.poi_id_dojo:
 				response = "Both players need to be in the dojo to spar."
-			elif sparred_data.hunger >= ewutils.hunger_max_bylevel(sparred_data.slimelevel):
+			elif sparred_data.hunger >= user_data.get_hunger_max():
 				response = "{} is too exhausted to train right now. They need a snack!".format(member.display_name)
 			elif user_isdead == True:
 				response = "The dead think they're too cool for conventional combat. Pricks."
@@ -2546,7 +2577,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					name_player=cmd.message.author.display_name)
 
 			if ewcfg.weapon_class_captcha in weapon.classes:
-				new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+				new_captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=user_data.id_user, id_server=user_data.id_server)
 				response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 				weapon_item.item_props['captcha'] = new_captcha
 				weapon_item.persist()
@@ -2638,7 +2669,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					name_player=cmd.message.author.display_name)
 	
 			if ewcfg.weapon_class_captcha in weapon.classes or jammed:
-				new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+				new_captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=user_data.id_user, id_server=user_data.id_server)
 				response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 				weapon_item.item_props['captcha'] = new_captcha
 				weapon_item.persist()
@@ -3140,6 +3171,7 @@ async def spray(cmd):
 		miss = False
 		crit = False
 		backfire = False
+		surrounded_backfire = False
 
 		jammed = False
 		strikes = 0
@@ -3211,8 +3243,9 @@ async def spray(cmd):
 			if backfire is True and random.randint(0, 1) == 0:
 				miss = False
 
-			if district_data.all_neighbors_friendly() and user_data.faction != district_data.controlling_faction:
+			if district_data.all_neighbors_friendly() and user_data.faction != district_data.controlling_faction and ewcfg.mutation_id_nervesofsteel not in user_mutations:
 				backfire = True
+				surrounded_backfire = True
 
 			if miss is True and random.randint(0, 1) == 0:
 				miss = False
@@ -3277,7 +3310,10 @@ async def spray(cmd):
 				if miss:
 					response = weapon.tool_props[0].get('miss_spray')
 				elif backfire:
-					response = "You're in a dangerous place, and it's having an effect on your nerves...\n" + weapon.str_backfire.format(name_player = cmd.message.author.display_name) + "\nNext time, don't cap this deep in enemy territory.\n {} loses {} slime!".format(cmd.message.author.display_name, backfire_damage)
+					if surrounded_backfire:
+						response = "You're in a dangerous place, and it's having an effect on your nerves...\n" + weapon.str_backfire.format(name_player = cmd.message.author.display_name) + "\nNext time, don't cap this deep in enemy territory.\n {} loses {} slime!".format(cmd.message.author.display_name, backfire_damage)
+					else:
+						response = weapon.str_backfire.format(name_player=cmd.message.author.display_name) + "\n {} loses {} slime!".format(cmd.message.author.display_name, backfire_damage)
 
 					if user_data.slimes - user_data.bleed_storage <= backfire_damage:
 						district_data.change_slimes(n=user_data.slimes)
@@ -3347,7 +3383,7 @@ async def spray(cmd):
 
 				if ewcfg.weapon_class_captcha in weapon.classes or jammed:
 					if weapon.id_weapon != ewcfg.weapon_id_paintgun:
-						new_captcha_low = ewutils.generate_captcha(length = weapon.captcha_length)
+						new_captcha_low = ewutils.generate_captcha(length = weapon.captcha_length, id_user=user_data.id_user, id_server=user_data.id_server)
 						new_captcha = ewutils.text_to_regional_indicator(new_captcha_low)
 						#new_loc = new_loc.replace(new_captcha_low, new_captcha)
 						response += "\nNew captcha is {}.".format(new_captcha)
