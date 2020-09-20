@@ -1215,7 +1215,8 @@ async def attack(cmd):
 				kingpin = ewutils.find_kingpin(id_server = cmd.guild.id, kingpin_role = role_boss)
 
 				if kingpin:
-					
+					if ewcfg.mutation_id_handyman in user_mutations and weapon.is_tool == 1:
+						boss_slimes *= 2
 					kingpin.change_slimes(n = boss_slimes)
 					kingpin.persist()
 
@@ -1508,7 +1509,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					kingpin = ewutils.find_kingpin(id_server = server.id, kingpin_role = role_boss)
 
 					if kingpin:
-						
+
 						kingpin.change_slimes(n = boss_slimes)
 						kingpin.persist()
 
@@ -3297,6 +3298,8 @@ async def spray(cmd):
 
 			if ewcfg.mutation_id_patriot in user_mutations:
 				slimes_damage *= 1.25
+			if ewcfg.mutation_id_unnaturalcharisma in user_mutations:
+				slimes_damage *= 1.2
 			if len(gangsters_in_district) == 1 and ewcfg.mutation_id_lonewolf in user_mutations:
 				slimes_damage *= 1.25
 

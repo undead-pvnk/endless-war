@@ -10,6 +10,7 @@ import ewstats
 import ewutils
 import ewitem
 from ewmarket import EwMarket
+from ewplayer import EwPlayer
 
 from ew import EwUser
 from ewstatuseffects import EwStatusEffect
@@ -413,3 +414,63 @@ async def clear_mutations(cmd):
 	user_data.clear_mutations()
 	response = "After several minutes long elevator descents, in the depths of some basement level far below the laboratory's lobby, you lay down on a reclined medical chair. A SlimeCorp employee finishes the novel length terms of service they were reciting and asks you if you have any questions. You weren’t listening so you just tell them to get on with it so you can go back to getting slime. They oblige.\nThey grab a random used syringe with just a dash of black serum still left inside it. They carefully stab you with it, injecting the mystery formula into your bloodstream. Almost immediately, normalcy returns to your inherently abnormal life… your body returns to whatever might be considered normal for your species. You hand off one of your hard-earned poudrins to the SlimeCorp employee for their troubles."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def track_oneeyeopen(cmd):
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
+	target_data = EwUser(member = cmd.mentions[0])
+	mutations = user_data.get_mutations()
+
+	if ewcfg.mutation_id_oneeyeopen not in mutations:
+		response = "No can do. Your third eye is feeling pretty flaccid today."
+	elif cmd.mentions_count == 0:
+		response = "Who are you tracking?"
+	elif cmd.mentions_count > 1:
+		response = "Nice try, but you're not the NSA. Limit your espionage to one poor sap."
+	elif cmd.mentions[0] == cmd.message.author:
+		response = "You set your third eye to track yourself. However, you are too uncomfortable with your body to keep it there. Better try something else."
+	else:
+		response = "Your third eye slips out of your forehead and wanders its way to {}'s location. Just a matter of time..."
+		mutation_data = EwMutation(id_user=user_data.id_user, id_server=user_data.id_server, id_mutation=ewcfg.mutation_id_oneeyeopen)
+		mutation_data.data = target_data.id_user
+		mutation_data.persist()
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def shakeoff(cmd):
+	user_data = EwUser(member=cmd.message.author)
+
+	if cmd.mentions_count == 0:
+		response = "God knows there are like a million third eyes floating around. You'll have to specify whose you're looking for."
+
+	elif cmd.mentions_count > 1:
+		response = "Cut your poor eye some slack. It can only stalk 1 poor sucker."
+
+	else:
+		target_data = EwUser(member=cmd.mentions[0])
+		try:
+			ewutils.execute_sql_query(
+				"UPDATE mutations SET {data} = %s WHERE {id_server} = %s AND {mutation} = %s and {id_user} = %s;".format(
+					data=ewcfg.col_mutation_data,
+					id_server=ewcfg.col_id_server,
+					id_user=ewcfg.col_id_user,
+					mutation=ewcfg.col_id_mutation,
+				), (
+					"",
+					user_data.id_server,
+					ewcfg.mutation_id_oneeyeopen,
+					target_data.id_user
+				))
+			response = "You search high and low for {}'s third eye, shouting a bit to give it a good scare. If it was stalking you it certainly isn't now.".format(cmd.mentions[0].display_name)
+		except:
+			ewutils.logMsg("Failed to undo tracking for {}.".format(user_data.id_user))
+			response = ""
+	return await ewutils.send_message(cmd.client, cmd.message.channel,ewutils.formatMessage(cmd.message.author, response))
+
+async def clench(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = "You clench your butt cheeks together..."
+	ewutils.clenched[user_data.id_user] = 1
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await asyncio.sleep(5)
+	ewutils.clenched[user_data.id_user] = 0

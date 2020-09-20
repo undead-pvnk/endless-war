@@ -1967,19 +1967,19 @@ async def push(cmd):
 		# Target is not flagged for PvP.
 		response = "{} is not mired in the ENDLESS WAR right now.".format(target.display_name)
 
-	elif (ewcfg.mutation_id_bigbones in target_mutations or ewcfg.mutation_id_fatchance in target_mutations) and ewcfg.mutation_id_lightasafeather not in target_mutations:
+	elif (ewcfg.mutation_id_bigbones in target_mutations or ewcfg.mutation_id_fatchance in target_mutations) and (ewcfg.mutation_id_lightasafeather not in target_mutations and ewcfg.mutation_id_airlock not in target_mutations):
 		response = "You try to push {}, but they're way too heavy. It's always fat people, constantly trying to prevent your murderous schemes.".format(target.display_name)
 
 	elif targetmodel.life_state == ewcfg.life_state_kingpin:
 		response = "You sneak behind the kingpin and prepare to push. The crime you're about to commit is so heinous that you start snickering to yourself, and {} catches you in the act. Shit, mission failed.".format(target.display_name)
 
-	elif ewcfg.mutation_id_lightasafeather in user_mutations:
+	elif ewcfg.mutation_id_lightasafeather in user_mutations or  ewcfg.mutation_id_airlock in user_mutations:
 		response = "You strain to push {} off the cliff, but your light frame gives you no lifting power.".format(target.display_name)
 
 	else:
 		response = "You push {} off the cliff and watch them scream in agony as they fall. Sea monsters frenzy on their body before they even land, gnawing them to jagged ribbons and gushing slime back to the clifftop.".format(target.display_name)
 
-		if ewcfg.mutation_id_lightasafeather in target_mutations:
+		if ewcfg.mutation_id_lightasafeather in target_mutations or ewcfg.mutation_id_airlock in target_mutations:
 			response = "You pick {} up with your thumb and index finger, and gently toss them off the cliff. Wow. That was easy.".format(target.display_name)
 
 		slimetotal = targetmodel.slimes * 0.75

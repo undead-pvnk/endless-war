@@ -212,6 +212,9 @@ async def reap(cmd):
 					if has_tool and weapon.id_weapon == ewcfg.weapon_id_hoe:
 						slime_gain *= 1.5
 
+					if ewcfg.mutation_id_greenfingers in mutations:
+						slime_gain *= 1.2
+
 					if user_data.poi == ewcfg.poi_id_jr_farms:
 						slime_gain = int(slime_gain / 4)
 
@@ -427,10 +430,13 @@ async def sow(cmd):
 				else:
 					response = "The soil has enough toxins without you burying your trash here."
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				
+
+				mutations = user_data.get_mutations()
 				growth_time = ewcfg.crops_time_to_grow
 				if user_data.life_state == ewcfg.life_state_juvenile:
 					growth_time /= 2
+				if ewcfg.mutation_id_greenfingers in mutations:
+					growth_time /= 1.5
 				
 				hours = int(growth_time / 60)
 				minutes = int(growth_time % 60)

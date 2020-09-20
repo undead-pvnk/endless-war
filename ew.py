@@ -1046,6 +1046,9 @@ class EwUser:
 				else:
 					style_count[style] = 1
 
+		mutations = self.get_mutations()
+		bonus_freshness = 500 if ewcfg.mutation_id_unnaturalcharisma in mutations else 0
+
 		#calc hue modifier
 		hue_mod = 1
 		if len(hue_count) > 0:
@@ -1067,7 +1070,9 @@ class EwUser:
 		if style_count[dominant_style] / adorned_cosmetics >= 0.6:
 			style_mod = style_count[dominant_style] / adorned_cosmetics * 10
 
-		return int(base_freshness * hue_mod * style_mod)
+
+
+		return int(base_freshness * hue_mod * style_mod) + bonus_freshness
 
 	def get_festivity(self):
 		data = ewutils.execute_sql_query(

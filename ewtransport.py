@@ -405,7 +405,7 @@ async def disembark(cmd):
 				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				return await resp_cont.post()
 			
-			elif ewcfg.mutation_id_lightasafeather in user_mutations:
+			elif ewcfg.mutation_id_lightasafeather in user_mutations or ewcfg.mutation_id_airlock in user_mutations:
 				response = "With a running jump you launch yourself out of the blimp and begin falling to your soon-to-be demise... but then a strong updraft breaks your fall and you land unscathed. "
 				response = ewutils.formatMessage(cmd.message.author, response)
 				resp_cont.add_channel_response(channel = stop_poi.channel, response = response)
