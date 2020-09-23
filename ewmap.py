@@ -577,6 +577,9 @@ def path_to(
 				continue
 			if path.cost >= score_current:
 				continue
+			if user_data.life_state != ewcfg.life_state_corpse and (poi_end and poi_end.id_poi != step_last.id_poi == ewcfg.poi_id_thesewers):
+				# can't route through the sewers unless you're dead
+				continue
 
 			score_map[step_last.id_poi] = path.cost
 			#ewutils.logMsg("visiting " + str(step_last))
