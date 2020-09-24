@@ -220,7 +220,7 @@ class EwUser:
 		if (cause not in explosion_block_list) and (poi.pvp):
 			if ewcfg.mutation_id_spontaneouscombustion in self.get_mutations():
 				user_hasCombustion = True
-				explode_damage = ewutils.slime_bylevel(min(self.slimelevel, 50)) / 5
+				explode_damage = ewutils.slime_bylevel(self.slimelevel) / 5
 				explode_district = ewdistrict.EwDistrict(district = self.poi, id_server = self.id_server)
 				explode_poi_channel = ewcfg.id_to_poi.get(self.poi).channel
 
@@ -256,7 +256,6 @@ class EwUser:
 					item_fraction = 4
 					food_fraction = 4
 					cosmetic_fraction = 4
-					self.slimecoin = int(self.slimecoin) - (int(self.slimecoin) / 4)
 
 					# Remove them from Garden Ops where applicable
 					ewutils.execute_sql_query("DELETE FROM gvs_ops_choices WHERE id_user = {}".format(self.id_user))
@@ -265,7 +264,6 @@ class EwUser:
 					item_fraction = 2
 					food_fraction = 2
 					cosmetic_fraction = 2
-					self.slimecoin = int(self.slimecoin) - (int(self.slimecoin) / 2)
 
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_item, fraction = item_fraction) # Drop a random fraction of your items on the ground.
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_food, fraction = food_fraction) # Drop a random fraction of your food on the ground.

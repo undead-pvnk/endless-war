@@ -631,8 +631,12 @@ async def data(cmd):
 				inhabitant_names = []
 				for inhabitant_id in inhabitant_ids:
 					inhabitant_names.append(server.get_member(inhabitant_id).display_name)
-					possession = user_data.get_possession()
+
+				possession = user_data.get_possession()
+				if possession is not None:
+					ghost_in_weapon = possession[0]
 					possession_type = 'fishing rod' if possession[3] == 'rod' else possession[3]
+
 				if len(inhabitant_names) == 1:
 					response_block += "You are inhabited by the ghost of {}{}. ".format(inhabitant_names[0], ', who is possessing your ' + possession_type if possession else '')
 				else:
@@ -642,7 +646,7 @@ async def data(cmd):
 						inhabitant_names[-1]
 					)
 					if possession:
-						response_block += "{} is also possessing your {}. ".format(server.get_member(ghost_in_weapon[0]).display_name, possession_type)
+						response_block += "{} is also possessing your {}. ".format(server.get_member(ghost_in_weapon).display_name, possession_type)
 
 	
 		if user_data.swear_jar >= 500:
