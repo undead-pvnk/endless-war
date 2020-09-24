@@ -30,10 +30,20 @@ from ewhunting import EwSeedPacket, EwTombstone
 
 import ewdebug
 
+import csv
+import os.path
+
+relative_path = os.path.abspath(os.path.dirname(__file__))
+
+food_file_path = os.path.join(relative_path, "json/food.json")
+fish_file_path = os.path.join(relative_path, "json/fish.json")
+furniture_file_path = os.path.join(relative_path, "json/poi.json")
+poi_file_path = os.path.join(relative_path, "json/furniture.json")
+cosmetic_items_file_path = os.path.join(relative_path, "json/cosmetic_items.json")
+
 # Global configuration options.
 
 version = "v3.51 - Ghost Fishing"
-
 
 dir_msgqueue = 'msgqueue'
 
@@ -7037,7 +7047,7 @@ for weather in weather_list:
 
 
 food_list = []
-with open('json\\food.json') as f:
+with open(food_file_path) as f:
 	foods = json.load(f)
 	for i in foods:
 		i = foods[i]
@@ -7120,7 +7130,7 @@ fish_size_colossal = "colossal"
 
 # All the fish, baby!
 fish_list = []
-with open('json\\fish.json') as f:
+with open(fish_file_path) as f:
 	fish = json.load(f)
 	for i in fish:
 		i = fish[i]
@@ -7241,7 +7251,7 @@ the_slime_lyrics= [
 
 
 furniture_list = []
-with open('json\\furniture.json') as f:
+with open(furniture_file_path) as f:
 	furniture = json.load(f)
 	for i in furniture:
 		i = furniture[i]
@@ -7444,7 +7454,7 @@ for item_def in item_def_list:
 
 #load EwPois from json to poi_list
 poi_list = []
-with open('json\\poi.json') as f:
+with open(poi_file_path) as f:
 	pois = json.load(f)
 	for i in pois:
 		i = pois[i]
@@ -8150,7 +8160,7 @@ cosmeticAbility_id_lucky = "lucky"
 
 #load EwCosmeticItems from json to cosmetic_items_list
 cosmetic_items_list = []
-with open('json\\cosmetic_items.json') as f:
+with open(cosmetic_items_file_path) as f:
 	cosmetic_items = json.load(f)
 	for i in cosmetic_items:
 		i = cosmetic_items[i]

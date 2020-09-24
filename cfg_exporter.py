@@ -29,6 +29,8 @@ from ewprank import EwPrankItem
 from ewmarket import EwMarket
 from ewhunting import EwSeedPacket, EwTombstone
 
+from ewcfg import food_file_path, fish_file_path, furniture_file_path, poi_file_path, cosmetic_items_file_path
+
 import ewdebug
 
 class EwCosmeticItem:
@@ -27084,11 +27086,11 @@ def export_json(_list, _export_file):
 
     return export_dict
     
-print(json.dumps(export_json(cosmetic_items_list, "json\\cosmetic_items.json"), indent = 4))
-print(json.dumps(export_json(poi_list, "json\\poi.json"), indent = 4))
-print(json.dumps(export_json(food_list, "json\\food.json"), indent = 4))
-print(json.dumps(export_json(fish_list, "json\\fish.json"), indent = 4))
-print(json.dumps(export_json(furniture_list, "json\\furniture.json"), indent = 4))
+print(json.dumps(export_json(cosmetic_items_list, cosmetic_items_file_path), indent = 4))
+print(json.dumps(export_json(poi_list, poi_file_path), indent = 4))
+print(json.dumps(export_json(food_list, food_file_path), indent = 4))
+print(json.dumps(export_json(fish_list, fish_file_path), indent = 4))
+print(json.dumps(export_json(furniture_list, furniture_file_path), indent = 4))
 
 
 
