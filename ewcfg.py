@@ -5,6 +5,7 @@ import ewstats
 import ewitem
 import random
 import json
+import os
 from ewcosmeticitem import EwCosmeticItem
 from ewsmelting import EwSmeltingRecipe
 from ewwep import EwWeapon
@@ -7037,7 +7038,7 @@ for weather in weather_list:
 
 
 food_list = []
-with open('json\\food.json') as f:
+with open(os.path.join('json', 'food.json')) as f:
 	foods = json.load(f)
 	for i in foods:
 		i = foods[i]
@@ -7120,7 +7121,7 @@ fish_size_colossal = "colossal"
 
 # All the fish, baby!
 fish_list = []
-with open('json\\fish.json') as f:
+with open(os.path.join('json', 'fish.json')) as f:
 	fish = json.load(f)
 	for i in fish:
 		i = fish[i]
@@ -7241,7 +7242,7 @@ the_slime_lyrics= [
 
 
 furniture_list = []
-with open('json\\furniture.json') as f:
+with open(os.path.join('json', 'furniture.json')) as f:
 	furniture = json.load(f)
 	for i in furniture:
 		i = furniture[i]
@@ -7444,7 +7445,7 @@ for item_def in item_def_list:
 
 #load EwPois from json to poi_list
 poi_list = []
-with open('json\\poi.json') as f:
+with open(os.path.join('json', 'poi.json')) as f:
 	pois = json.load(f)
 	for i in pois:
 		i = pois[i]
@@ -8150,7 +8151,7 @@ cosmeticAbility_id_lucky = "lucky"
 
 #load EwCosmeticItems from json to cosmetic_items_list
 cosmetic_items_list = []
-with open('json\\cosmetic_items.json') as f:
+with open(os.path.join('json', 'cosmetic_items.json')) as f:
 	cosmetic_items = json.load(f)
 	for i in cosmetic_items:
 		i = cosmetic_items[i]

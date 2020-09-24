@@ -9,6 +9,7 @@ import ewstats
 import ewitem
 import random
 import json
+import os
 from ewsmelting import EwSmeltingRecipe
 from ewwep import EwWeapon
 from ewhunting import EwAttackType
@@ -27084,11 +27085,11 @@ def export_json(_list, _export_file):
 
     return export_dict
     
-print(json.dumps(export_json(cosmetic_items_list, "json\\cosmetic_items.json"), indent = 4))
-print(json.dumps(export_json(poi_list, "json\\poi.json"), indent = 4))
-print(json.dumps(export_json(food_list, "json\\food.json"), indent = 4))
-print(json.dumps(export_json(fish_list, "json\\fish.json"), indent = 4))
-print(json.dumps(export_json(furniture_list, "json\\furniture.json"), indent = 4))
+print(json.dumps(export_json(cosmetic_items_list, os.path.join('json', 'cosmetic_items.json')), indent = 4))
+print(json.dumps(export_json(poi_list, os.path.join('json', 'poi.json')), indent = 4))
+print(json.dumps(export_json(food_list, os.path.join('json', 'food.json')), indent = 4))
+print(json.dumps(export_json(fish_list, os.path.join('json', 'fish.json')), indent = 4))
+print(json.dumps(export_json(furniture_list, os.path.join('json', 'furniture.json')), indent = 4))
 
 
 
