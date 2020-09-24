@@ -270,14 +270,20 @@ def item_delete(
 """
 def item_drop(
 	id_item = None
+	other_poi = None
 ):
 	try:
 		item_data = EwItem(id_item = id_item)
 		user_data = EwUser(id_user = item_data.id_owner, id_server = item_data.id_server)
+		if other_poi = None:
+			dest = user_data.poi
+		else
+			dest = other_poi
+
 		if item_data.item_type == ewcfg.it_cosmetic:
 			item_data.item_props["adorned"] = "false"
 		item_data.persist()
-		give_item(id_user = user_data.poi, id_server = item_data.id_server, id_item = item_data.id_item)
+		give_item(id_user = dest, id_server = item_data.id_server, id_item = item_data.id_item)
 	except:
 		ewutils.logMsg("Failed to drop item {}.".format(id_item))
 
@@ -377,13 +383,16 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 	#try:
 	user_data = EwUser(id_server = id_server, id_user = id_user)
 	items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
+	mutations = user_data.get_mutations()
+
 
 	drop_candidates = []
 	#safe_items = [ewcfg.item_id_gameguide]
 
 	# Filter out Soulbound items.
 	for item in items:
-		if item.get('soulbound') == False:
+		item_obj = EwItem
+		if item.get('soulbound') == False and not (ewcfg.mutation_id_rigormortis in mutations and item_obj.item_props.get('preserved') ==  user_data.id_user):
 			drop_candidates.append(item)
 
 	filtered_items = []
@@ -418,6 +427,21 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 				break
 	#except:
 	#	ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
+
+	try:
+
+		ewutils.execute_sql_query(
+			"DELETE FROM item_props WHERE {} = %s AND  {} = %s", (
+				ewcfg.col_name,
+				ewcfg.col_value
+			),
+			(
+				'preserved',
+				user_data.id_user
+			))
+
+	except:
+		ewutils.logMsg('Failed to remove preserved tags from items.'.format(id_user))
 
 """
 	Dedorn all of a player's cosmetics
@@ -2192,3 +2216,45 @@ async def manually_edit_item_properties(cmd):
 		response = 'Invalid number of options entered.\nProper usage is: !editprop [item ID] [name] [value], where [value] is in quotation marks if it is longer than one word.'
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, response)
+
+
+async def longdrop(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	mutations = user_data.get_mutations()
+
+	destination = cmd.tokens[1]
+	dest_poi = ewcfg.id_to_poi.get(destination)
+
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[2:])
+	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id,  id_server=user_data.id_server)
+
+
+	if ewcfg.mutation_id_longarms not in mutations:
+		response = "As if anything on you was long enough to do that."
+	elif cmd.tokens_count == 1:
+		response = "You'll need for information that that. Try !longdrop <location> <item>."
+	elif not item_sought:
+		response = "You don't have that item."
+	elif dest_poi == None:
+		response = "Never heard of it."
+	elif inaccessible(user_data = user_data, poi = dest_poi):
+		response = "Your arm hits a wall before it can make the drop off. Shit, probably can't take it over there."
+	elif user_data.poi not in dest_poi.neighbors.keys():
+		response = "You can't take it that far. What if a bird or car runs into it?"
+	else:
+		item_obj = EwItem(item_sought.get('id_item'))
+		if item_obj.soulbound == True and item_obj.item_props.get('context') != 'housekey':
+			response = "You still can't drop a soulbound item. Having really long arms doesn't grant you that ability."
+		elif item_obj.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item_obj.id_item == user_data.weapon:
+			if user_data.weaponmarried:
+				weapon = ewcfg.weapon_map.get(item_obj.item_props.get("weapon_type"))
+				response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			else:
+				user_data.weapon = -1
+				user_data.persist()
+
+			item_drop(id_item=item_sought.get('id_item'), other_poi=dest_poi.id_poi)
+			response = "You stretch your arms and drop your " + item_sought.get("name") + 'into {}.'.format(dest_poi.str_name)
+			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

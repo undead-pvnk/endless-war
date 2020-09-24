@@ -382,10 +382,14 @@ async def set_genre(cmd = None, dm = False):
 			id_genre = i
 
 		book = EwBook(member = cmd.message.author, book_state = 0)
-		book.genre = id_genre
-		book.persist()
 
-		response = "You scribble {} onto the back cover.".format(genre)
+		if id_genre == 10 and not cmd.message.author.guild_permissions.administrator:
+			response = "You're not a doctor. The publishing company's gonna skin your ass, so you better not."
+		else:
+			book.genre = id_genre
+			book.persist()
+
+			response = "You scribble {} onto the back cover.".format(genre)
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -990,6 +994,9 @@ async def browse_zines(cmd):
 			elif user_data.poi in ["glocksbury-comics"]:
 				query_suffix = "AND b.genre = 2 "
 
+			elif user_data.poi in [ewcfg.poi_id_clinicofslimoplasty]:
+				query_suffix = "AND b.genre = 10"
+
 			if sort_token in ("bookname", "name", "title", "booktitle", "zinename", "zinetitle"):
 				query_sort = "title"
 
@@ -1202,6 +1209,10 @@ async def order_zine(cmd):
 					response = "No porn for you."
 
 				elif accepted:
+					if book.genre != 10 and poi.id_poi == ewcfg.poi_id_clinicofslimoplasty:
+						response = "Specify a zine to purchase. Find zine IDs with !browse."
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 					user_data = EwUser(member=cmd.message.author)
 
 					if user_data.slimes < ewcfg.zine_cost:
@@ -1231,20 +1242,20 @@ async def order_zine(cmd):
 						user_data.change_slimes(n = -(ewcfg.zine_cost), source = ewcfg.source_spending)
 						
 						user_data.persist()
+						if book.genre != 10:
+							author = EwUser(id_user = book.id_user, id_server = book.id_server)
 
-						author = EwUser(id_user = book.id_user, id_server = book.id_server)
-
-						if author.id_user != user_data.id_user:
-							ewitem.item_create(
-								item_type=ewcfg.it_item,
-								id_user=author.id_user,
-								id_server=cmd.guild.id,
-								item_props={
-									'context': 'poudrin',
-									'item_name': 'Royalty Poudrin',
-									'item_desc': 'You received this less powerful poudrin from some fool who decided to buy your zine. !crush it for 5k slime.',
-									'id_item': 'royaltypoudrin'
-								})
+							if author.id_user != user_data.id_user:
+								ewitem.item_create(
+									item_type=ewcfg.it_item,
+									id_user=author.id_user,
+									id_server=cmd.guild.id,
+									item_props={
+										'context': 'poudrin',
+										'item_name': 'Royalty Poudrin',
+										'item_desc': 'You received this less powerful poudrin from some fool who decided to buy your zine. !crush it for 5k slime.',
+										'id_item': 'royaltypoudrin'
+									})
 
 						response = "You manage to locate {} by {} in the vast array of zines on the bookshelf, so you bring it to the counter and hand over {:,} slime to the employee. Now it's time to !read it.".format(book.title, book.author, ewcfg.zine_cost)
 

@@ -416,6 +416,8 @@ class EwUser:
 			if self.id_user in ewutils.food_multiplier and ewutils.food_multiplier.get(self.id_user) > 0:
 				if ewcfg.mutation_id_bingeeater in mutations:
 					hunger_restored *= ewutils.food_multiplier.get(self.id_user)
+					if ewutils.food_multiplier.get(self.id_user) >= 5 and ewcfg.status_foodcoma_id not in self.getStatusEffects():
+						self.applyStatus(id_status=ewcfg.status_foodcoma_id, source=self.id_user, id_target=self.id_user)
 				ewutils.food_multiplier[self.id_user] += 1
 			else:
 				ewutils.food_multiplier[self.id_user] = 1
@@ -579,6 +581,13 @@ class EwUser:
 
 			for x in range(1000):
 				result = random.choice(list(ewcfg.mutation_ids))
+
+				if result == ewcfg.mutation_id_airlock:
+					if ewcfg.mutation_id_whitenationalist in current_mutations or ewcfg.mutation_id_lightasafeather in current_mutations:
+						continue
+				if result in [ewcfg.mutation_id_lightasafeather, ewcfg.mutation_id_whitenationalist]:
+					if ewcfg.mutation_id_airlock in current_mutations:
+						continue
 
 				if result not in current_mutations and ewcfg.mutations_map[result].tier + self.get_mutation_level() <= 50:
 					return result

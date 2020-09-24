@@ -444,7 +444,7 @@ async def shakeoff(cmd):
 		response = "God knows there are like a million third eyes floating around. You'll have to specify whose you're looking for."
 
 	elif cmd.mentions_count > 1:
-		response = "Cut your poor eye some slack. It can only stalk 1 poor sucker."
+		response = "You're not that good at finding private eyes. Look for one at a time."
 
 	else:
 		target_data = EwUser(member=cmd.mentions[0])
@@ -474,3 +474,60 @@ async def clench(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	await asyncio.sleep(5)
 	ewutils.clenched[user_data.id_user] = 0
+
+async def preserve(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+
+	if item_sought:
+		item_obj = ewitem.EwItem(id_item=item_sought.id_item)
+
+		if ewcfg.mutation_id_rigormortis not in mutations:
+			response = "You can't just preserve something by saying you're going to. Everything ends eventually."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		elif item_obj.soulbound == True:
+			response = "This thing's bound to your soul. There's no need to preserve it twice."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		elif item_obj.item_props.get('preserved') == user_data.id_user:
+			response = "Didn't you already preserve this? You're so paranoid."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		elif item_obj.item_props.get('preserved') == "nopreserve":
+			response = "You shove it into your body but it just won't fit for some reason. That phrasing was completely intentional, by the way."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		else:
+
+			rigor = EwMutation(id_user=cmd.message.author.id, id_server=cmd.message.guild.id, id_mutation=ewcfg.mutation_id_rigormortis)
+
+			if rigor.data.isdigit() == False:
+				num = 0
+			else:
+				num = int(rigor.data.isdigit())
+
+			if num >=5:
+				response = "Your body's dried up, it's lost its ability to preserve objects."
+			else:
+				response = "You take the {} and embrace it with all your might. As you squeeze, it slowly but surely begins to phase inside your body. That won't get stolen anytime soon!".format(item_sought.get('name'))
+				num += 1
+				rigor.data = str(num)
+				item_obj.item_props['preserved'] = user_data.id_user
+				rigor.persist()
+				item_obj.persist()
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		response = "Preserve what?"
+		return await ewutils.send_message(cmd.client, cmd.message.channel,  ewutils.formatMessage(cmd.message.author, response))
+
+
+async def waft(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	mutations = user_data.get_mutations()
+	if ewcfg.mutation_id_aposematicstench not in mutations:
+		response = "You stink, but not that badly. Get Aposematic Stench before you try that."
+	else:
+		user_data.applyStatus(ewcfg.status_repelled_id)
+		response = "You clench as hard as you can, and your pores excrete a mushroom cloud of pure, olive green musk. It's so caustic you might not have eyebrows anymore."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

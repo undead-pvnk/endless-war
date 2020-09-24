@@ -330,6 +330,7 @@ async def cast(cmd):
 	time_now = round(time.time())
 	has_reeled = False
 	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -480,6 +481,8 @@ async def cast(cmd):
 			if fisher.pier == ewcfg.poi_id_ferry:
 				# Fisher is on the ferry, chance to get a bite increases from 1/10 to 1/9
 				fun -= 10
+			if ewcfg.mutation_id_lucky in mutations:
+				fun -= 20
 			if fisher.inhabitant_id:
 				# Having your rod possessed increases your chance to get a bite by 50%
 				fun = int(fun // 2)

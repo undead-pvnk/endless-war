@@ -798,6 +798,16 @@ cmd_map = {
 	ewcfg.cmd_rampage: ewrace.rampage,
 	ewcfg.cmd_entomize: ewrace.entomize,
 	ewcfg.cmd_confuse: ewrace.confuse,
+
+	ewcfg.cmd_preserve: ewmutation.preserve,
+	ewcfg.cmd_stink: ewmutation.waft,
+	ewcfg.cmd_slap: ewmap.slap,
+	ewcfg.cmd_track: ewmap.tracker,
+	ewcfg.cmd_longdrop: ewitem.longdrop,
+	ewcfg.cmd_shakeoff: ewmutation.shakeoff,
+	ewcfg.cmd_clench: ewmutation.clench,
+	ewcfg.cmd_thirdeye: ewmap.tracker,
+	ewcfg.cmd_loop: ewmap.loop,
 }
 
 debug = False

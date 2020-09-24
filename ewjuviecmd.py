@@ -205,10 +205,10 @@ async def mine(cmd):
 
 	# Enlisted players only mine at certain times.
 	if user_data.life_state == ewcfg.life_state_enlisted:
-		if user_data.faction == ewcfg.faction_rowdys and (market_data.clock < 8 or market_data.clock > 17):
+		if user_data.faction == ewcfg.faction_rowdys and (market_data.clock < 8 or market_data.clock > 17) and ewcfg.mutation_id_lightminer not in mutations:
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Rowdies only mine in the daytime. Wait for full daylight at 8am.".format(ewcfg.cmd_revive)))
 
-		if user_data.faction == ewcfg.faction_killers and (market_data.clock < 20 and market_data.clock > 5):
+		if user_data.faction == ewcfg.faction_killers and (market_data.clock < 20 and market_data.clock > 5) and ewcfg.mutation_id_lightminer not in mutations:
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Killers only mine under cover of darkness. Wait for nightfall at 8pm.".format(ewcfg.cmd_revive)))
 
 	# Mine only in the mines.
@@ -247,6 +247,10 @@ async def mine(cmd):
 						if captcha in tokens_lower:
 							ewworldevent.delete_world_event(id_event = id_event)
 							response = "You escape from the collapsing mineshaft."
+							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						elif ewcfg.mutation_id_lightminer in mutations:
+							ewworldevent.delete_world_event(id_event=id_event)
+							response = "You nimbly step outside the collapse without even thinking about it."
 							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 						else:
 							return await mismine(cmd, user_data, ewcfg.event_type_minecollapse)
@@ -731,6 +735,11 @@ async def scavenge(cmd):
 						response += "New captcha: **" + ewutils.text_to_regional_indicator(new_captcha) + "**"
 						scavenge_captchas[user_data.id_user] = new_captcha
 						has_comboed = True
+
+						if ewcfg.mutation_id_dumpsterdiver in mutations:
+							has_comboed = False
+							item_search = item_search[random.randrange(len(item_search))]
+
 					else:
 						scavenge_combos[user_data.id_user] = 0
 
@@ -761,6 +770,8 @@ async def scavenge(cmd):
 				scavenge_combos[user_data.id_user] = 1
 				new_captcha = gen_scavenge_captcha(n=1, id_user=user_data.id_user, id_server=user_data.id_server)
 				response += "New captcha: **" + ewutils.text_to_regional_indicator(new_captcha) + "**"
+				if ewcfg.mutation_id_webbedfeet in mutations:
+					response += "\nYour flippers pick up {:,} slime.".format(scavenge_yield)
 				scavenge_captchas[user_data.id_user] = new_captcha
 
 			# Fatigue the scavenger.

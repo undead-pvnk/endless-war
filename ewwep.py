@@ -285,6 +285,7 @@ def canAttack(cmd):
 	time_now_float = time.time()
 	time_now = int(time_now_float)
 	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
 	district_data = EwDistrict(id_server=user_data.id_server, district=user_data.poi)
 	weapon_item = None
 	weapon = None
@@ -419,7 +420,7 @@ def canAttack(cmd):
 			# Target is already dead and not a ghost.
 			response = "{} is already dead.".format(member.display_name)
 		
-		elif shootee_data.life_state == ewcfg.life_state_corpse and ewcfg.status_ghostbust_id not in user_data.getStatusEffects():
+		elif shootee_data.life_state == ewcfg.life_state_corpse and ewcfg.status_ghostbust_id not in user_data.getStatusEffects() and ewcfg.mutation_id_coleblooded  not in mutations:
 			# Target is a ghost but user is not able to bust 
 			response = "You don't know how to fight a ghost."
 
@@ -620,10 +621,26 @@ async def attack(cmd):
 				miss_mod -= 0.1
 				crit_mod += 0.05
 
-		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 30)
+		min_level_3as = math.ceil((1 / 10) ** 0.25 * user_data.slimelevel)
+		if ewcfg.mutation_id_threesashroud in user_mutations:
+			allies_in_district = district_data.get_players_in_district(min_level=min_level_3as, life_states=[ewcfg.life_state_enlisted], factions=[user_data.faction])
+			if len(allies_in_district) > 3:
+				crit_mod *= 2
+
+		if weapon.is_tool == 1:
+			capped_level = min(35, user_data.slimelevel)
+		else:
+			capped_level = user_data.slimelevel
+
+
+
+		slimes_spent = int(ewutils.slime_bylevel(capped_level) / 30)
 		attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
 		weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
 		slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
+
+		#Tool damage is maximized at level 35 but proportional cost remains the same
+		slimes_spent = int(ewutils.slime_bylevel(capped_level) / 30)
 
 		if user_data.weaponskill < 5:
 			miss_mod += (5 - user_data.weaponskill) / 10
@@ -777,8 +794,8 @@ async def attack(cmd):
 						resp = weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, market_data = market_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=False)
 						resp_cont.add_response_container(resp)
 
-				if ewcfg.mutation_id_napalmsnot in user_mutations and ewcfg.mutation_id_napalmsnot not in shootee_mutations and random.randrange(5) == 0:
-					resp = shootee_data.applyStatus(id_status=ewcfg.status_burning_id, value=bystander_damage,source=user_data.id_user).format(name_player=cmd.message.author.display_name)
+				if ewcfg.mutation_id_napalmsnot in user_mutations and ewcfg.mutation_id_napalmsnot not in shootee_mutations:
+					resp = shootee_data.applyStatus(id_status=ewcfg.status_burning_id, value=bystander_damage * .5,source=user_data.id_user).format(name_player=cmd.message.author.display_name)
 					resp_cont.add_channel_response(cmd.message.channel.name, resp)
 
 			# can't hit lucky lucy
@@ -815,7 +832,8 @@ async def attack(cmd):
 				market_data = market_data,
 				shootee_weapon = shootee_weapon
 			)
-			
+
+
 			#if shootee_weapon != None:
 			#	if sap_damage > 0 and ewcfg.weapon_class_defensive in shootee_weapon.classes:
 			#		sap_damage -= 1
@@ -3090,6 +3108,34 @@ def damage_mod_defend(shootee_data, shootee_mutations, market_data, shootee_weap
 
 	return damage_mod
 
+
+def damage_mod_cap(user_data, market_data, user_mutations, district_data, weapon):
+	damage_mod = 1
+
+	time_current = market_data.clock
+
+	# Weapon possession
+	if user_data.get_possession('weapon'):
+		damage_mod *= 1.2
+
+	if weapon.id_weapon == ewcfg.weapon_id_thinnerbomb:
+		if user_data.faction == district_data.controlling_faction:
+			slimes_damage = round(damage_mod * .2)
+		else:
+			damage_mod *= 3
+			damage_mod *= 3
+
+	if ewcfg.mutation_id_patriot in user_mutations:
+		damage_mod *= 1.5
+	if ewcfg.mutation_id_unnaturalcharisma in user_mutations:
+		damage_mod *= 1.2
+
+	if 3 <= time_current <= 10:
+		damage_mod *= (4 / 3)
+
+	return damage_mod
+
+
 def get_sap_armor(shootee_data, sap_ignored):
 	# apply hardened sap armor
 	try:
@@ -3279,33 +3325,17 @@ async def spray(cmd):
 			user_data.time_lastrevive = 0
 			market_data = EwMarket(id_server=cmd.guild.id)
 			# apply attacker damage mods
-			slimes_damage *= damage_mod_attack(
+			slimes_damage *= damage_mod_cap(
 				user_data=user_data,
 				user_mutations=user_mutations,
 				market_data=market_data,
-				district_data=district_data
+				district_data=district_data,
+				weapon = weapon
 			)
+
 			if weapon.id_weapon == ewcfg.weapon_id_watercolors:
 				if not (miss or backfire or jammed):
 					slimes_damage = ewcfg.min_garotte
-
-			elif weapon.id_weapon == ewcfg.weapon_id_thinnerbomb:
-				if user_data.faction == district_data.controlling_faction:
-					slimes_damage = round(slimes_damage * .2)
-				else:
-					slimes_damage *= 3
-					backfire_damage *= 3
-
-			if ewcfg.mutation_id_patriot in user_mutations:
-				slimes_damage *= 1.25
-			if ewcfg.mutation_id_unnaturalcharisma in user_mutations:
-				slimes_damage *= 1.2
-			if len(gangsters_in_district) == 1 and ewcfg.mutation_id_lonewolf in user_mutations:
-				slimes_damage *= 1.25
-
-			if 3 <= time_current <= 10:
-				slimes_damage *= (4/3)
-
 			#if (user_data.faction != district_data.controlling_faction and (user_data.faction is None or user_data.faction == '')) and district_data.capture_points > ewcfg.limit_influence[district_data.property_class]:
 			#	slimes_damage = round(slimes_damage / 5)
 			#	pass
