@@ -132,9 +132,19 @@ async def menu(cmd):
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 		#mother_district_data = EwDistrict(district = destination_poi.id_poi, id_server = user_data.id_server)
 
+		shambler_multiplier = 1 #for speakeasy during shambler times
+
 		if district_data.is_degraded() and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			if poi.id_poi == ewcfg.poi_id_speakeasy:
+				shambler_multiplier = 4
+			else:
+				response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+
+
+
 		
 		controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 		
@@ -167,6 +177,7 @@ async def menu(cmd):
 
 				value = 0
 
+
 				if item_item:
 					value = item_item.price
 
@@ -185,7 +196,9 @@ async def menu(cmd):
 				if stock_data != None:
 					value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
 
-				
+				#multiply by 4 is speakeasy is shambled
+				value *= shambler_multiplier
+
 				if mother_district_data != None:
 					if mother_district_data.all_streets_taken() != "" and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
 						# prices are halved for the controlling gang
@@ -257,9 +270,15 @@ async def order(cmd):
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
+
+		shambler_multiplier = 1 #for speakeasy during shambler times
+
 		if district_data.is_degraded() and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			if poi.id_poi == ewcfg.poi_id_speakeasy:
+				shambler_multiplier = 4
+			else:
+				response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		#value = ewutils.flattenTokenListToString(cmd.tokens[1:2])
 
 		#if cmd.tokens_count > 1:
@@ -388,6 +407,9 @@ async def order(cmd):
 					elif user_data.faction != "":
 						value *= 4
 				
+				# raise shambled speakeasy price 4 times
+				value *= shambler_multiplier
+
 				# Raise the price for togo ordering. This gets lowered back down later if someone does togo ordering on a non-food item by mistake.
 				if togo:
 					value *= 1.5
@@ -565,7 +587,6 @@ async def order(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-
 async def devour(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -619,4 +640,41 @@ async def devour(cmd):
 	else:
 		response = "Are you sure you have that item?"
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def eat_item(cmd):
+	
+	user_data = EwUser(member=cmd.message.author)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+	food_item = None
+
+	# look for a food item if a name was given
+	if item_search:
+		item_sought = ewitem.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)
+		if item_sought:
+			food_item = EwItem(id_item = item_sought.get('id_item'))
+		
+	# otherwise find the first useable food
+	else:
+		food_inv = ewitem.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)
+
+		for food in food_inv:
+			food_item = EwItem(id_item = food.get('id_item'))
+			
+			# check if the user can eat this item 
+			if float(getattr(food_item, "time_expir", 0)) > time.time() or \
+				food_item.item_props.get('perishable') not in ['true', '1'] or \
+				ewcfg.mutation_id_spoiledappetite in user_data.get_mutations():
+				break
+
+	if food_item != None:
+		response = user_data.eat(food_item)
+	else:
+		if item_search:
+			response = "Are you sure you have that item?"
+		else:
+			response = "You don't have anything to eat."
+	
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

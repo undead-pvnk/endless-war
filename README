@@ -165,6 +165,7 @@ CREATE TABLE items (
 	stack_max int NOT NULL DEFAULT '-1',
 	stack_size int NOT NULL DEFAULT '1',
 	soulbound int NOT NULL DEFAULT '0',
+	template varchar(64) NOT NULL DEFAULT '-2',
 
 	PRIMARY KEY (id_item)
 ) ENGINE = INNODB;

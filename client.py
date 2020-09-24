@@ -392,6 +392,8 @@ cmd_map = {
 	# use an item
 	ewcfg.cmd_use: ewitem.item_use,
 
+	# eat a food item from a player's inventory
+	ewcfg.cmd_eat: ewfood.eat_item,
 
 	# Remove a megaslime (1 mil slime) from a general.
 	ewcfg.cmd_deadmega: ewkingpin.deadmega,
@@ -663,16 +665,13 @@ cmd_map = {
 	ewcfg.cmd_lol: ewcmd.lol,
 
 	# restores poi roles to their proper names, only usable by admins
-	# Disabled - poi roles are not used right now
-	#ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
+	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 	
 	# hides all poi role names, only usable by admins
-	# Disabled - poi roles are not used right now
-	#ewcfg.cmd_hiderolenames: ewrolemgr.hideRoleNames,
+	ewcfg.cmd_hiderolenames: ewrolemgr.hideRoleNames,
 	
 	# recreates all hidden poi roles in the server in case restoreRoleNames doesnt work, only usable by admins
-	# Disabled - poi roles are not used right now
-	#ewcfg.cmd_recreateroles: ewrolemgr.recreateRoles,
+	ewcfg.cmd_recreateroles: ewrolemgr.recreateRoles,
 	
 	# deletes all roles in the server of a particular type
 	ewcfg.cmd_deleteroles: ewrolemgr.deleteRoles,
@@ -2019,12 +2018,14 @@ async def on_message(message):
 		""" Howl if !howl is in the message at all. """
 		return await ewcmd.cmd_howl(ewcmd.EwCmd(
 			message = message,
-			client = client
+			client = client,
+			guild = message.guild
 		))
 	elif content_tolower.find(ewcfg.cmd_moan) >= 0 or re_moan.match(content_tolower):
 		return await ewcmd.cmd_moan(ewcmd.EwCmd(
 			message=message,
-			client=client
+			client=client,
+			guild = message.guild
 		))
 
 # find our REST API token
