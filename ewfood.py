@@ -670,6 +670,7 @@ async def eat_item(cmd):
 
 	if food_item != None:
 		response = user_data.eat(food_item)
+		user_data.persist()
 	else:
 		if item_search:
 			response = "Are you sure you have that item?"
