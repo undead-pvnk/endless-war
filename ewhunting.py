@@ -343,7 +343,7 @@ class EwEnemy:
 					response = response.format(enemy_data.display_name, enemy_data.display_name)
 					resp_cont.add_channel_response(ch_name, response)
 					resp_cont.format_channel_response(ch_name, enemy_data)
-					return await resp_cont.post()
+					return resp_cont
 					
 					
 		if enemy_data.ai == ewcfg.enemy_ai_sandbag:
@@ -1259,11 +1259,11 @@ class EwEnemy:
 				if self.poi in ewcfg.outskirts_depths:
 					if destination in ewcfg.outskirts_depths:
 						destinations.remove(destination)
-				elif self.poi in ewcfg.outskirts:
-					if (destination in ewcfg.outskirts) or (destination in ewcfg.outskirts_depths):
+				elif self.poi in ewcfg.outskirts_middle:
+					if (destination in ewcfg.outskirts_middle) or (destination in ewcfg.outskirts_depths):
 						destinations.remove(destination)
 				elif self.poi in ewcfg.outskirts_edges: 
-					if (destination in ewcfg.outskirts_edges) or (destination in ewcfg.outskirts):
+					if (destination in ewcfg.outskirts_edges) or (destination in ewcfg.outskirts_middle):
 						destinations.remove(destination)
 					
 

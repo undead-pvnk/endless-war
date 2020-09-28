@@ -55,7 +55,7 @@ permissions_tries = 1
 territory_time_gain = 10
 
 # A variable which is used to determine how certain functions of enemies are to perform
-gvs_active = True
+gvs_active = False
 
 # The max amount of degradation a district can have before it is shambled completely
 district_max_degradation = 10000

@@ -2259,7 +2259,7 @@
         "str_onbreak": "",
         "rarity": "Patrician",
         "stats": {
-            "defense": 10
+            "defense": 1
         },
         "ability": "",
         "durability": 5000000,
@@ -2283,7 +2283,7 @@
         "str_onbreak": "",
         "rarity": "Patrician",
         "stats": {
-            "defense": 15
+            "defense": 1
         },
         "ability": "",
         "durability": 5000000,

@@ -469,10 +469,12 @@ def formatMessage(user_target, message):
 				return "**{} ({}):** {}".format(user_target.display_name, user_target.gvs_coord, message)
 			else:
 				# Send messages for normal enemies, and allow mentioning with @
-				if user_target.identifier != '':
+				if user_target.identifier != '' and user_target.enemyclass == ewcfg.enemy_class_shambler:
 					return "**{} [{}] ({}):** {}".format(user_target.display_name, user_target.identifier, user_target.gvs_coord, message)
+				elif user_target.identifier != '':
+					return "*{} [{}]* {}".format(user_target.display_name, user_target.identifier, message)
 				else:
-					return "**{}:** {}".format(user_target.display_name, message)
+					return "*{}:* {}".format(user_target.display_name, message)
 
 		elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
 			return "{}".format(message)
@@ -1591,7 +1593,7 @@ def check_defender_targets(user_data, enemy_data):
 	searched_user = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
 
 	if (defending_enemy.poi != searched_user.poi) or (searched_user.life_state == ewcfg.life_state_corpse):
-		defending_enemy.id_target = ""
+		defending_enemy.id_target = 0
 		defending_enemy.persist()
 		return False
 	else:

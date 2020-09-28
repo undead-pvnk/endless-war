@@ -1367,11 +1367,11 @@ async def arrest(cmd):
 		member = cmd.mentions[0]
 		user_data = EwUser(member = member)
 		user_data.arrested = True
-		user_data.poi = ewcfg.poi_id_juviesrow
+		user_data.poi = ewcfg.poi_id_thesphere
 		user_data.change_slimes(n = - user_data.slimes)
 		user_data.persist()
 
-		response = "{} is thrown into one of the Juvenile Detention Center's high security solitary confinement cells.".format(member.display_name)
+		response = "{} is thrown into one of the Juvenile Detention Center's high security solitary confinement spheres.".format(member.display_name)
 		await ewrolemgr.updateRoles(client = cmd.client, member = member)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1389,6 +1389,7 @@ async def release(cmd):
 		member = cmd.mentions[0]
 		user_data = EwUser(member = member)
 		user_data.arrested = False
+		user_data.poi = ewcfg.poi_id_juviesrow
 		user_data.persist()
 
 		response = "{} is released. But beware, the cops will be keeping an eye on you.".format(member.display_name)

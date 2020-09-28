@@ -530,7 +530,7 @@ permissions_tries = 1
 territory_time_gain = 10
 
 # A variable which is used to determine how certain functions of enemies are to perform
-gvs_active = True
+gvs_active = False
 
 # The max amount of degradation a district can have before it is shambled completely
 district_max_degradation = 10000
@@ -12875,7 +12875,7 @@ poi_list = [
             poi_id_assaultflatsbeach_street_a : travel_time_street,
             poi_id_assaultflatsbeach_street_b: travel_time_street,
             poi_id_beachresort : travel_time_subzone,
-            poi_id_nuclear_beach_edge : travel_time_subzone
+            # poi_id_nuclear_beach_edge : travel_time_subzone
         },
     ),
     EwPoi( # 24
@@ -16387,7 +16387,7 @@ poi_list = [
             "af"
         ],
         str_name = "The Ooze Gardens Farms",
-        str_desc = "An impressive host of unique and exotic flora are grown here. Originally on private property, the expansive greenhouses were the weekly meeting place for the city’s botanical society. They have since been seized by imminent domain and are now a public park. It’s type of soil is vast and varied depending on where you choose to plant. Surely, anything can grow here. Deeper into the gardens lies a hidden grotto inhabited by the Garden Gankers! They say they aren't gonna let you just squat here, but you can use the milling machines and gaiaslimeoid incubation vats for free if you want.\n\nExits into Ooze Gardens.",
+        str_desc = "An impressive host of unique and exotic flora are grown here. Originally on private property, the expansive greenhouses were the weekly meeting place for the city’s botanical society. They have since been seized by imminent domain and are now a public park. It’s type of soil is vast and varied depending on where you choose to plant. Surely, anything can grow here. Deeper into the gardens lies a hidden grotto inhabited by the Garden Gankers! They say they aren't gonna let you just squat here, but you can use the milling machines for free if you want.\n\nExits into Ooze Gardens.",
         channel = channel_og_farms,
         wikipage = wiki_baseurl + "Ooze_Gardens#The_Ooze_Gardens_Farms",
         role = "Ooze Gardens Farms",
@@ -16395,7 +16395,7 @@ poi_list = [
         is_subzone = True,
         mother_districts = [poi_id_oozegardens_street_c, poi_id_oozegardens_street_d],
         vendors=[vendor_atomicforest],
-        life_states=[life_state_juvenile],
+        # life_states=[life_state_juvenile],
         neighbors = {
             poi_id_oozegardens_street_c : travel_time_subzone,
             poi_id_oozegardens_street_d : travel_time_subzone,
@@ -18601,30 +18601,30 @@ poi_list = [
             "brainz"
         ],
         str_name="Nuclear Beach Edge - Location of Dr. Downpour's Laboratory",
-        # str_desc=str_generic_outskirts_description_edge,
-        str_desc = "An armored fortress towering over the shores of the Slime Sea. Inside, an oppressive mechanical atmosphere looms over your presence as you eye vats containing secreatures crowding the various facilities and corridors. One of the doors inside the complex holds a 3D printer designed entirely for tombstone production. A vending machine containing protective gear is close by, its florescent lighting giving off a low hum. A dock outside the laboratory is stocked with diving gear, perfect for a nice game of Shambaquarium.",
+        str_desc=str_generic_outskirts_description_edge + " The ruins of a great laboratory lay here.",
+        # str_desc = "An armored fortress towering over the shores of the Slime Sea. Inside, an oppressive mechanical atmosphere looms over your presence as you eye vats containing secreatures crowding the various facilities and corridors. One of the doors inside the complex holds a 3D printer designed entirely for tombstone production. A vending machine containing protective gear is close by, its florescent lighting giving off a low hum. A dock outside the laboratory is stocked with diving gear, perfect for a nice game of Shambaquarium.",
         channel="nuclear-beach-edge",
         wikipage = wiki_baseurl + "Outskirts#Edge",
-        # pvp=True,
+        pvp=True,
         is_capturable=False,
-        # is_outskirts = True,
-        # neighbors = {
-        # 	poi_id_north_outskirts_edge : travel_time_outskirt,
-        # 	poi_id_nuclear_beach : travel_time_outskirt,
-        # 	poi_id_assaultflatsbeach_street_a : travel_time_outskirt,
-        # 	poi_id_assaultflatsbeach_street_b : travel_time_outskirt,
-        # },
-        is_subzone = True,
+        is_outskirts = True,
         neighbors = {
-            poi_id_north_outskirts_edge : travel_time_subzone,
-            poi_id_nuclear_beach : travel_time_subzone,
-            poi_id_assaultflatsbeach_street_a : travel_time_subzone,
-            poi_id_assaultflatsbeach_street_b : travel_time_subzone,
-            poi_id_assaultflatsbeach : travel_time_subzone,
+        	poi_id_north_outskirts_edge : travel_time_outskirt,
+        	poi_id_nuclear_beach : travel_time_outskirt,
+        	poi_id_assaultflatsbeach_street_a : travel_time_outskirt,
+        	poi_id_assaultflatsbeach_street_b : travel_time_outskirt,
         },
-        mother_districts = [poi_id_assaultflatsbeach],
-        vendors = [vendor_downpourlaboratory],
-        life_states = [life_state_shambler]
+        # is_subzone = True,
+        # neighbors = {
+        #     poi_id_north_outskirts_edge : travel_time_subzone,
+        #     poi_id_nuclear_beach : travel_time_subzone,
+        #     poi_id_assaultflatsbeach_street_a : travel_time_subzone,
+        #     poi_id_assaultflatsbeach_street_b : travel_time_subzone,
+        #     poi_id_assaultflatsbeach : travel_time_subzone,
+        # },
+        # mother_districts = [poi_id_assaultflatsbeach],
+        # vendors = [vendor_downpourlaboratory],
+        # life_states = [life_state_shambler]
     ),
     EwPoi(  # Outskirts - 7
         id_poi=poi_id_south_outskirts,
@@ -20891,7 +20891,7 @@ cosmetic_items_list = [
         rarity = rarity_patrician,
         price = 1000,
         stats = {
-            stat_defense: 10
+            stat_defense: 1
         },
         durability = base_durability * 2,
         style = style_smart,
@@ -20905,7 +20905,7 @@ cosmetic_items_list = [
         rarity = rarity_patrician,
         price = 2000,
         stats = {
-            stat_defense: 15
+            stat_defense: 1
         },
         durability = base_durability * 2,
         style = style_cute,
