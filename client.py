@@ -68,7 +68,9 @@ from ewstatuseffects import EwStatusEffect
 ewutils.logMsg('Starting up...')
 init_complete = False
 
-client = discord.Client()
+intents = discord.Intents.all()
+
+client = discord.Client(intents=intents)
 
 # A map containing user IDs and the last time in UTC seconds since we sent them
 # the help doc via DM. This is to prevent spamming.
