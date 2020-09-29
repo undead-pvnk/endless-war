@@ -1898,7 +1898,7 @@ slimes_to_possess_fishing_rod = -10000
 slimes_to_crystalize_negapoudrin = -1000000
 slimes_cliffdrop = 200000
 slimes_item_drop = 10000
-slimes_shambler = 1000000
+slimes_shambler = 10
 
 # hunger
 min_stamina = 100
@@ -18600,7 +18600,7 @@ poi_list = [
             "dplab",
             "brainz"
         ],
-        str_name="Nuclear Beach Edge - Location of Dr. Downpour's Laboratory",
+        str_name="Nuclear Beach Edge",
         str_desc=str_generic_outskirts_description_edge + " The ruins of a great laboratory lay here.",
         # str_desc = "An armored fortress towering over the shores of the Slime Sea. Inside, an oppressive mechanical atmosphere looms over your presence as you eye vats containing secreatures crowding the various facilities and corridors. One of the doors inside the complex holds a 3D printer designed entirely for tombstone production. A vending machine containing protective gear is close by, its florescent lighting giving off a low hum. A dock outside the laboratory is stocked with diving gear, perfect for a nice game of Shambaquarium.",
         channel="nuclear-beach-edge",
@@ -19034,7 +19034,7 @@ for poi in poi_list:
 
     if poi.is_outskirts:
         outskirts.append(poi.id_poi)
-        # For spawning purposes. Rarer enemies will spawn more often in the father layers of the 48 outskirts.
+        # For spawning purposes. Rarer enemies will spawn more often in the father layers of the 18 outskirts.
         
         # It's a bit of a simplistic solution, but this way we don't have to add an attribute to EwPoi
         if 'edge' in poi.str_name.lower():

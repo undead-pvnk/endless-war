@@ -1423,7 +1423,7 @@ slimes_to_possess_fishing_rod = -10000
 slimes_to_crystalize_negapoudrin = -1000000
 slimes_cliffdrop = 200000
 slimes_item_drop = 10000
-slimes_shambler = 1000000
+slimes_shambler = 10
 
 # hunger
 min_stamina = 100
@@ -7682,7 +7682,7 @@ for poi in poi_list:
 
 	if poi.is_outskirts:
 		outskirts.append(poi.id_poi)
-		# For spawning purposes. Rarer enemies will spawn more often in the father layers of the 48 outskirts.
+		# For spawning purposes. Rarer enemies will spawn more often in the father layers of the 18 outskirts.
 		
 		# It's a bit of a simplistic solution, but this way we don't have to add an attribute to EwPoi
 		if 'edge' in poi.str_name.lower():
