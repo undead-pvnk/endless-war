@@ -233,6 +233,12 @@ class EwUser:
 		else:
 			if cause != ewcfg.cause_suicide or self.slimelevel > 10:
 				self.rand_seed = random.randrange(500000)
+
+			if ewcfg.mutation_id_rigormortis in self.get_mutations():
+				rigor = True
+			else:
+				rigor = False
+
 			self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
 			self.slimes = 0
 			self.slimelevel = 1
@@ -272,13 +278,13 @@ class EwUser:
 					food_fraction = 2
 					cosmetic_fraction = 2
 
-				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_item, fraction = item_fraction) # Drop a random fraction of your items on the ground.
-				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_food, fraction = food_fraction) # Drop a random fraction of your food on the ground.
+				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_item, fraction = item_fraction, rigor=rigor) # Drop a random fraction of your items on the ground.
+				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_food, fraction = food_fraction, rigor=rigor) # Drop a random fraction of your food on the ground.
 
-				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_cosmetic, fraction = cosmetic_fraction) # Drop a random fraction of your unadorned cosmetics on the ground.
+				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_cosmetic, fraction = cosmetic_fraction, rigor=rigor) # Drop a random fraction of your unadorned cosmetics on the ground.
 				ewitem.item_dedorn_cosmetics(id_server = self.id_server, id_user = self.id_user) # Unadorn all of your adorned hats.
 
-				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_weapon, fraction = 1) # Drop random fraction of your unequipped weapons on the ground.
+				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_weapon, fraction = 1, rigor=rigor) # Drop random fraction of your unequipped weapons on the ground.
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_max_onrevive)
 
 			self.life_state = ewcfg.life_state_corpse
@@ -590,7 +596,7 @@ class EwUser:
 				if result not in current_mutations and ewcfg.mutations_map[result].tier + self.get_mutation_level() <= 50:
 					return result
 
-			result = "rhinoskin"
+			result = ""
 
 		except:
 			ewutils.logMsg("Failed to fetch mutations for user {}.".format(self.id_user))
@@ -1024,8 +1030,11 @@ class EwUser:
 
 		adorned_cosmetics = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['adorned'] == 'true')
 
+		mutations = self.get_mutations()
+		bonus_freshness = 500 if ewcfg.mutation_id_unnaturalcharisma in mutations else 0
+
 		if len(cosmetic_items) == 0 or adorned_cosmetics < 2:
-			return 0
+			return bonus_freshness
 
 		base_freshness = 0
 		hue_count = {}
@@ -1053,8 +1062,7 @@ class EwUser:
 				else:
 					style_count[style] = 1
 
-		mutations = self.get_mutations()
-		bonus_freshness = 500 if ewcfg.mutation_id_unnaturalcharisma in mutations else 0
+
 
 		#calc hue modifier
 		hue_mod = 1
@@ -1258,6 +1266,7 @@ class EwUser:
 					self.gvs_currency = result[52]
 					self.gvs_time_lastshambaquarium = result[52]
 					self.rand_seed = result[53]
+
 
 				else:
 					self.poi = ewcfg.poi_id_downtown

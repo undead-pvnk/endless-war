@@ -280,7 +280,7 @@ class EwEffectContainer:
 		#self.sap_ignored = sap_ignored
 		self.backfire_damage = backfire_damage
 
-def canAttack(cmd):
+def canAttack(cmd, amb_switch = 0):
 	response = ""
 	time_now_float = time.time()
 	time_now = int(time_now_float)
@@ -300,7 +300,11 @@ def canAttack(cmd):
 		if code.upper() in ewcfg.captcha_dict:
 			code_count += 1
 
-	if user_data.weapon >= 0:
+	if amb_switch == 1:
+		weapon_item = EwItem(id_item=user_data.sidearm)
+		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		captcha = weapon_item.item_props.get('captcha')
+	elif user_data.weapon >= 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		captcha = weapon_item.item_props.get('captcha')
@@ -321,7 +325,7 @@ def canAttack(cmd):
 		response = "Alas, you still can't shoot people through your phone."
 	elif cmd.mentions_count > 1:
 		response = "One shot at a time!"
-	elif user_data.hunger >= user_data.get_hunger_max:
+	elif user_data.hunger >= user_data.get_hunger_max():
 		response = "You are too exhausted for gang violence right now. Go get some grub!"
 	#elif weapon != None and user_data.sap < weapon.sap_cost:
 	#	response = "You don't have enough sap to attack. ({}/{})".format(user_data.sap, weapon.sap_cost)
@@ -337,11 +341,14 @@ def canAttack(cmd):
 		response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 	elif code_count > 1:
 		response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
-	
-	elif user_data.weapon == -1 and user_data.life_state != ewcfg.life_state_shambler and ewcfg.mutation_id_lethalfingernails not in mutations:
+
+	elif user_data.weapon == -1 and user_data.life_state != ewcfg.life_state_shambler and ewcfg.mutation_id_lethalfingernails not in mutations and ewcfg.mutation_id_ambidextrous not in mutations:
+		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
+	elif ewcfg.mutation_id_ambidextrous in mutations and user_data.weapon == -1 and user_data.sidearm == -1 and user_data.life_state != ewcfg.life_state_shambler and ewcfg.mutation_id_lethalfingernails not in mutations:
 		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
 	elif cmd.mentions_count <= 0:
 		# user is going after enemies rather than players
+
 
 		# Get target's info.
 		# converts ['THE', 'Lost', 'juvie'] into 'the lost juvie'
@@ -530,7 +537,7 @@ async def attack(cmd):
 	coinbounty = 0
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.guild.id)
 	market_data = EwMarket(id_server = cmd.guild.id)
-
+	amb_switch = 0
 	user_data = EwUser(member = cmd.message.author, data_level = 1)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	weapon = None
@@ -540,26 +547,34 @@ async def attack(cmd):
 	if user_data.weapon >= 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+
 		if weapon.is_tool == 1 and user_data.sidearm >= 0 and ewcfg.mutation_id_ambidextrous in user_mutations:
 			sidearm_item = EwItem(id_item = user_data.sidearm)
-			sidearm = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+
 			if sidearm.is_tool == 0:
 				weapon_item = sidearm_item
 				weapon = sidearm
+				amb_switch = 1
+
+
 	elif ewcfg.mutation_id_ambidextrous in user_mutations and user_data.sidearm >= 0:
 		weapon_item = EwItem(id_item=user_data.sidearm)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		amb_switch = 1
 
 	elif ewcfg.mutation_id_lethalfingernails in user_mutations:
 		id_item = ewutils.get_fingernail_item(cmd=cmd)
 		weapon_item = EwItem(id_item=id_item)
 		weapon = ewcfg.weapon_map.get(ewcfg.weapon_id_fingernails)
+		ewutils.weaponskills_set(member = cmd.message.author, weapon=ewcfg.weapon_id_fingernails, weaponskill=10)
+		user_data.weaponskill = 10
 
 
 		#todo Created a weapon object to cover my bases, check if this is necessary. Also see if you can move this somewhere else
 
 
-	response = canAttack(cmd)
+	response = canAttack(cmd=cmd, amb_switch=amb_switch)
 
 	if response == "":
 		# Get shooting player's info
@@ -695,7 +710,8 @@ async def attack(cmd):
 			user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
 
 			#randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
-
+			if ewcfg.mutation_id_napalmsnot in user_mutations:
+				bystander_damage = slimes_damage * 0.5
 			# Weapon-specific adjustments
 			if weapon != None and weapon.fn_effect != None:
 
@@ -797,7 +813,7 @@ async def attack(cmd):
 						resp_cont.add_response_container(resp)
 
 				if ewcfg.mutation_id_napalmsnot in user_mutations and ewcfg.mutation_id_napalmsnot not in shootee_mutations:
-					resp = shootee_data.applyStatus(id_status=ewcfg.status_burning_id, value=bystander_damage * .5,source=user_data.id_user).format(name_player=cmd.message.author.display_name)
+					resp = shootee_data.applyStatus(id_status=ewcfg.status_burning_id, value=bystander_damage * .5, source=user_data.id_user).format(name_player=cmd.mentions[0].display_name)
 					resp_cont.add_channel_response(cmd.message.channel.name, resp)
 
 			# can't hit lucky lucy
@@ -1290,7 +1306,8 @@ async def attack(cmd):
 		resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
 		
 		await resp_cont.post()
-	ewitem.item_delete(id_item=weapon_item.id_item)
+	if weapon_item.item_props.get("weapon_type") == "fingernails":
+		ewitem.item_delete(id_item=weapon_item.id_item)
 
 """ player kills themself """
 async def suicide(cmd):
@@ -1672,7 +1689,7 @@ async def spar(cmd):
 			user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 			user_isdead = user_data.life_state == ewcfg.life_state_corpse
 
-			if user_data.hunger >= user_data.get_hunger_max:
+			if user_data.hunger >= user_data.get_hunger_max():
 				response = "You are too exhausted to train right now. Go get some grub!"
 			elif user_data.poi != ewcfg.poi_id_dojo or sparred_data.poi != ewcfg.poi_id_dojo:
 				response = "Both players need to be in the dojo to spar."

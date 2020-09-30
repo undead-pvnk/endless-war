@@ -297,15 +297,15 @@ def item_delete(
 	Drop item into current district.
 """
 def item_drop(
-	id_item = None
+	id_item = None,
 	other_poi = None
 ):
 	try:
 		item_data = EwItem(id_item = id_item)
 		user_data = EwUser(id_user = item_data.id_owner, id_server = item_data.id_server)
-		if other_poi = None:
+		if other_poi == None:
 			dest = user_data.poi
-		else
+		else:
 			dest = other_poi
 
 		if item_data.item_type == ewcfg.it_cosmetic:
@@ -431,7 +431,7 @@ def item_dropall(
 """
 	Drop some of a player's non-soulbound items into their district.
 """
-def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fraction = None):
+def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fraction = None, rigor = False):
 	#try:
 	user_data = EwUser(id_server = id_server, id_user = id_user)
 	items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
@@ -443,8 +443,8 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 
 	# Filter out Soulbound items.
 	for item in items:
-		item_obj = EwItem
-		if item.get('soulbound') == False and not (ewcfg.mutation_id_rigormortis in mutations and item_obj.item_props.get('preserved') ==  user_data.id_user):
+		item_obj = EwItem(id_item = item.get('id_item'))
+		if item.get('soulbound') == False and not (rigor == True and item_obj.item_props.get('preserved') ==  user_data.id_user):
 			drop_candidates.append(item)
 
 	filtered_items = []
@@ -481,9 +481,8 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 	#	ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
 
 	try:
-
 		ewutils.execute_sql_query(
-			"DELETE FROM item_props WHERE {} = %s AND  {} = %s", (
+			"DELETE FROM items_prop WHERE {} = %s AND  {} = %s".format(
 				ewcfg.col_name,
 				ewcfg.col_value
 			),
@@ -1775,7 +1774,16 @@ async def discard(cmd):
 				else:
 					user_data.weapon = -1
 					user_data.persist()
-					
+
+			elif item.item_type == ewcfg.it_weapon and user_data.sidearm >= 0 and item.id_item == user_data.sidearm:
+				if user_data.weaponmarried:
+					weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+					response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				else:
+					user_data.sidearm = -1
+					user_data.persist()
+
 			response = "You throw away your " + item_sought.get("name")
 			item_drop(id_item = item.id_item)
 
@@ -1795,7 +1803,19 @@ def gen_item_props(item):
 	item_props = {}
 	if not hasattr(item, "item_type"):
 		return item_props
-	if item.item_type == ewcfg.it_food:
+	if item.acquisition == ewcfg.acquisition_fishing and item.item_type == ewcfg.it_food:
+		item_props = {
+			'id_food': item.id_fish,
+			'food_name': item.str_name,
+			'food_desc': item.str_desc,
+			'recover_hunger': 20,
+			'str_eat': ewcfg.str_eat_raw_material.format(item.str_name),
+			'time_expir': int(time.time()) + ewcfg.std_food_expir,
+			'time_fridged': 0,
+			'perishable': item.perishable,
+			'acquisition': ewcfg.acquisition_fishing,
+		}
+	elif item.item_type == ewcfg.it_food:
 		item_props = {
 			'id_food': item.id_food,
 			'food_name': item.str_name,
@@ -2278,7 +2298,7 @@ async def longdrop(cmd):
 	dest_poi = ewcfg.id_to_poi.get(destination)
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[2:])
-	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id,  id_server=user_data.id_server)
+	item_sought = find_item(item_search=item_search, id_user=cmd.message.author.id,  id_server=user_data.id_server)
 
 
 	if ewcfg.mutation_id_longarms not in mutations:
@@ -2289,10 +2309,10 @@ async def longdrop(cmd):
 		response = "You don't have that item."
 	elif dest_poi == None:
 		response = "Never heard of it."
-	elif inaccessible(user_data = user_data, poi = dest_poi):
+	elif ewutils.inaccessible(user_data = user_data, poi = dest_poi):
 		response = "Your arm hits a wall before it can make the drop off. Shit, probably can't take it over there."
 	elif user_data.poi not in dest_poi.neighbors.keys():
-		response = "You can't take it that far. What if a bird or car runs into it?"
+		response = "You can't take it that far. What if a bird or car runs into your hand?"
 	else:
 		item_obj = EwItem(item_sought.get('id_item'))
 		if item_obj.soulbound == True and item_obj.item_props.get('context') != 'housekey':
@@ -2306,7 +2326,7 @@ async def longdrop(cmd):
 				user_data.weapon = -1
 				user_data.persist()
 
-			item_drop(id_item=item_sought.get('id_item'), other_poi=dest_poi.id_poi)
-			response = "You stretch your arms and drop your " + item_sought.get("name") + 'into {}.'.format(dest_poi.str_name)
-			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+		item_drop(id_item=item_sought.get('id_item'), other_poi=dest_poi.id_poi)
+		response = "You stretch your arms and drop your " + item_sought.get("name") + ' into {}.'.format(dest_poi.str_name)
+		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

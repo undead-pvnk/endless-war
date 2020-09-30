@@ -21,6 +21,9 @@ class EwMutationFlavor:
 	# The mutation's name
 	id_mutation = ""
 
+	#The mutation's name for use in strings
+	str_name = ""
+
 	# String used to describe the mutation when you !data yourself
 	str_describe_self = ""
 
@@ -41,6 +44,7 @@ class EwMutationFlavor:
 
 	def __init__(self,
 		id_mutation = "",
+		str_name = "",
 		str_describe_self = "",
 		str_describe_other = "",
 		str_acquire = "",
@@ -49,6 +53,8 @@ class EwMutationFlavor:
 		alias = None):
 
 		self.id_mutation = id_mutation
+
+		self.str_name = str_name
 
 		if str_describe_self == "":
 			str_describe_self = "You have the {} mutation.".format(self.id_mutation)
@@ -121,6 +127,8 @@ class EwMutation:
 					# Record found: apply the data to this object.
 					self.data = result[0]
 					self.mutation_counter = result[1]
+					self.tier = result[2]
+					self.artificial = result[3]
 
 			finally:
 				# Clean up the database handles.
@@ -138,7 +146,7 @@ class EwMutation:
 
 
 			# Save the object.
-			cursor.execute("REPLACE INTO mutations(id_user, id_server, {id_mutation}, {data}, {mutation_counter}, {tier}, {artificial},) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO mutations(id_user, id_server, {id_mutation}, {data}, {mutation_counter}, {tier}, {artificial}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
 					id_mutation = ewcfg.col_id_mutation,
 					data = ewcfg.col_mutation_data,
 					mutation_counter = ewcfg.col_mutation_counter,
@@ -244,8 +252,8 @@ async def reroll_last_mutation(cmd):
 async def chemo(cmd):
 	user_data = EwUser(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_goonyinfirmary:
-		response = "Chemotherapy doesn't just grow on trees. You'll need to go to Goony Infirmary in Poudrin Alley to get some."
+	if cmd.message.channel.name != ewcfg.channel_clinicofslimoplasty:
+		response = "Chemotherapy doesn't just grow on trees. You'll need to go to the clinic in Crookline to get some."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	elif user_data.life_state == ewcfg.life_state_shambler:
 		response = '"Oh goodness me, it seems like another one of these decaying subhumans has wandered into my office. Go on, shoo!"\n\nTough luck, seems shamblers aren\'t welcome here.'.format(cmd.tokens[0])
@@ -272,6 +280,10 @@ async def chemo(cmd):
 	elif cmd.tokens[1] == "all":
 
 		for mutation in mutations:
+
+			price = ewcfg.mutations_map.get(mutation).tier * 5000
+			user_data.change_slimes(n=-price, source=ewcfg.source_spending)
+
 			mutation_obj = EwMutation(id_mutation=mutation, id_user=user_data.id_user, id_server=cmd.message.guild.id)
 			if mutation_obj.artificial == 0:
 				try:
@@ -287,12 +299,14 @@ async def chemo(cmd):
 						))
 				except:
 					ewutils.logMsg("Failed to clear mutations for user {}.".format(user_data.id_user))
-			response = '"Everything, eh? All right then. This might hurt a lottle!" Auntie Dusttrap takes a specialized shop vac and sucks the slime out of you. While you\'re reeling in slimeless existential dread, she runs it through a filtration process that gets rid of the carcinogens that cause mutation. She grabs the now purified canister and haphazardly dumps it back into you. You feel pure, energized, and ready to dirty up your slime some more!'
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		user_data.persist()
+		response = '"Everything, eh? All right then. This might hurt a lottle!" Auntie Dusttrap takes a specialized shop vac and sucks the slime out of you. While you\'re reeling in slimeless existential dread, she runs it through a filtration process that gets rid of the carcinogens that cause mutation. She grabs the now purified canister and haphazardly dumps it back into you. You feel pure, energized, and ready to dirty up your slime some more!'
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
 		target = ewutils.get_mutation_alias(target_name)
 		mutation_obj = EwMutation(id_mutation=target, id_user=user_data.id_user, id_server=cmd.message.guild.id)
+
 
 		if target == 0:
 			response = '"I don\'t know what kind of gold-rush era disease that is, but I have no idea how to take it out of you."'
@@ -300,13 +314,17 @@ async def chemo(cmd):
 		elif target not in mutations:
 			response = '"Oy vey, another hypochondriac. You don\'t have that mutation, so I can\'t remove it."'
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		elif ewcfg.mutations_map.get(target).tier * 5000 < user_data.slimes:
+		elif ewcfg.mutations_map.get(target).tier * 5000 > user_data.slimes:
 			response = '"We\'re not selling gumballs here. It\'s chemotherapy. It\'ll cost at least {} slime, ya idjit!"'.format(ewcfg.mutations_map.get(target).tier * 5000)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		elif mutation_obj.artificial == 1:
 			response = '"Hey, didn\'t I do that to ya? Well no refunds!"\n\nGuess you can\'t get rid of artificial mutations with chemo.'
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
+			price = ewcfg.mutations_map.get(target).tier * 5000
+			user_data.change_slimes(n=-price, source=ewcfg.source_spending)
+			user_data.persist()
+
 			try:
 				ewutils.execute_sql_query("DELETE FROM mutations WHERE {id_server} = %s AND {id_user} = %s AND {mutation} = %s".format(
 					id_server=ewcfg.col_id_server,
@@ -319,14 +337,14 @@ async def chemo(cmd):
 				))
 			except:
 				ewutils.logMsg("Failed to clear mutations for user {}.".format(user_data.id_user))
-			response = '"Alright, dearie, let\'s get you purged." You enter a dingy looking operating room, with slime strewn all over the floor. Dr. Dusttrap pulls out a needle the size of your bicep and injects into odd places on your body. After a few minutes of this, you get fatigued and go under.\n\n You wake up missing the {} mutation. Nice!'
+			response = '"Alright, dearie, let\'s get you purged." You enter a dingy looking operating room, with slime strewn all over the floor. Dr. Dusttrap pulls out a needle the size of your bicep and injects into odd places on your body. After a few minutes of this, you get fatigued and go under.\n\n You wake up and {} is gone. Nice!'.format(ewcfg.mutations_map.get(target).str_name)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def graft(cmd):
 	user_data = EwUser(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_goonyinfirmary:
-		response = "Chemotherapy doesn't just grow on trees. You'll need to go to Goony Infirmary in Poudrin Alley to get some."
+	if cmd.message.channel.name != ewcfg.channel_clinicofslimoplasty:
+		response = "Chemotherapy doesn't just grow on trees. You'll need to go to the clinic in Crookline to get some."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	elif user_data.life_state == ewcfg.life_state_shambler:
 		response = '"Oh goodness me, it seems like another one of these decaying subhumans has wandered into my office. Go on, shoo!"\n\nTough luck, seems shamblers aren\'t welcome here.'.format(cmd.tokens[0])
@@ -361,10 +379,13 @@ async def graft(cmd):
 	elif user_data.get_mutation_level() + ewcfg.mutations_map[target].tier > min([user_data.slimelevel, 50]):
 		response = '"Your body\'s already full of mutations. Your sentient tumors will probably start bitin\' once I take out my scalpel."\n\nLevel:{}/50\nMutation Levels Added:{}/{}'.format(user_data.slimelevel,user_data.get_mutation_level(),user_data.slimelevel)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	elif ewcfg.mutations_map.get(target).tier * 10000 < user_data.slimes:
+	elif ewcfg.mutations_map.get(target).tier * 10000 > user_data.slimes:
 		response = '"We\'re not selling gumballs here. It\'s cosmetic surgery. It\'ll cost at least {} slime, ya idjit!"'.format(ewcfg.mutations_map.get(target).tier * 10000)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
+		price = ewcfg.mutations_map.get(target).tier * 10000
+		user_data.change_slimes(n=-price, source=ewcfg.source_spending)
+		user_data.persist()
 		user_data.add_mutation(id_mutation=target, is_artificial=1)
 		response = ewcfg.mutations_map[target].str_transplant
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -418,7 +439,8 @@ async def clear_mutations(cmd):
 
 async def track_oneeyeopen(cmd):
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
-	target_data = EwUser(member = cmd.mentions[0])
+	if cmd.mentions_count > 0:
+		target_data = EwUser(member=cmd.mentions[0])
 	mutations = user_data.get_mutations()
 
 	if ewcfg.mutation_id_oneeyeopen not in mutations:
@@ -430,7 +452,7 @@ async def track_oneeyeopen(cmd):
 	elif cmd.mentions[0] == cmd.message.author:
 		response = "You set your third eye to track yourself. However, you are too uncomfortable with your body to keep it there. Better try something else."
 	else:
-		response = "Your third eye slips out of your forehead and wanders its way to {}'s location. Just a matter of time..."
+		response = "Your third eye slips out of your forehead and wanders its way to {}'s location. Just a matter of time...".format(cmd.mentions[0].display_name)
 		mutation_data = EwMutation(id_user=user_data.id_user, id_server=user_data.id_server, id_mutation=ewcfg.mutation_id_oneeyeopen)
 		mutation_data.data = target_data.id_user
 		mutation_data.persist()
@@ -482,8 +504,17 @@ async def preserve(cmd):
 
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
 
+
 	if item_sought:
-		item_obj = ewitem.EwItem(id_item=item_sought.id_item)
+		item_obj = ewitem.EwItem(id_item=item_sought.get('id_item'))
+		print(item_obj.item_props.get('preserved'))
+		print(user_data.id_user)
+
+		if item_obj.item_props.get('preserved') == None:
+			preserve_id = 0
+		else:
+			preserve_id = int(item_obj.item_props.get('preserved'))
+
 
 		if ewcfg.mutation_id_rigormortis not in mutations:
 			response = "You can't just preserve something by saying you're going to. Everything ends eventually."
@@ -491,7 +522,7 @@ async def preserve(cmd):
 		elif item_obj.soulbound == True:
 			response = "This thing's bound to your soul. There's no need to preserve it twice."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		elif item_obj.item_props.get('preserved') == user_data.id_user:
+		elif preserve_id == int(user_data.id_user):
 			response = "Didn't you already preserve this? You're so paranoid."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		elif item_obj.item_props.get('preserved') == "nopreserve":
@@ -504,7 +535,7 @@ async def preserve(cmd):
 			if rigor.data.isdigit() == False:
 				num = 0
 			else:
-				num = int(rigor.data.isdigit())
+				num = int(rigor.data)
 
 			if num >=5:
 				response = "Your body's dried up, it's lost its ability to preserve objects."
@@ -528,6 +559,6 @@ async def waft(cmd):
 		response = "You stink, but not that badly. Get Aposematic Stench before you try that."
 	else:
 		user_data.applyStatus(ewcfg.status_repelled_id)
-		response = "You clench as hard as you can, and your pores excrete a mushroom cloud of pure, olive green musk. It's so caustic you might not have eyebrows anymore."
+		response = "You clench as hard as you can, and your pores excrete a mushroom cloud of pure, olive green musk. It's so caustic you might not have eyebrows anymore. You "
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

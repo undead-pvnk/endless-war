@@ -658,7 +658,6 @@ channel_apt = "apartment"
 channel_sodafountain = "the-bicarbonate-soda-fountain"
 channel_greencakecafe = "green-cake-cafe"
 channel_glocksburycomics = "glocksbury-comics"
-channel_goonyinfirmary = "goony-infirmary"
 
 channel_wt_port = "wreckington-port"
 channel_vc_port = "vagrants-corner-port"
@@ -1150,6 +1149,8 @@ cmd_shakeoff = cmd_prefix + 'shakeoff'
 cmd_clench = cmd_prefix + 'clench'
 cmd_thirdeye = cmd_prefix + 'thirdeye'
 cmd_loop = cmd_prefix + 'loop'
+cmd_chemo = cmd_prefix + 'chemo'
+cmd_graft = cmd_prefix + 'graft'
 
 
 cmd_switch = cmd_prefix + 'switch'
@@ -6476,7 +6477,7 @@ weapon_list = [
         str_weaponmaster="",
         # str_trauma_self = "A single clean scar runs across the entire length of your body.",
         # str_trauma = "A single clean scar runs across the entire length of their body.",
-        str_kill="{name_player} lunges at {name_target} with fingernails bared and mercilessly rips them to pieces, tufts of skin flying every which way. When the dust settles, {name_target} is unrecognizable, and more importantly, dead as fuck. {emote_skull}",
+        str_kill="{name_player} lunges at {name_target} with fingernails bared! They're mercilessly rips them to pieces, tufts of skin flying every which way! **BRRRRRRRAP!!!** When the dust settles, {name_target} is unrecognizable, and more importantly, dead as fuck. {emote_skull}",
         str_killdescriptor="torn apart",
         str_damage="{name_target} is slashed across the {hitzone}!!",
         str_duel="",
@@ -8181,6 +8182,44 @@ for line in transport_lines:
 			poi_data.transport_lines.add(line.id_line)
 
 
+landlocked_destinations ={
+    poi_id_maimridge_street_c:poi_id_oozegardens_street_a, #Colloid->Festival
+    poi_id_oozegardens_street_a:poi_id_maimridge_street_c, #Festival->Colloid
+    poi_id_maimridge_street_b:poi_id_cratersville_street_a, #Ski Lodges->End Lines
+    poi_id_cratersville_street_a:poi_id_maimridge_street_b, #End Lines->Ski Lodges
+    poi_id_arsonbrook_street_c:poi_id_cratersville_street_c, #Tilly -> Dynamite
+    poi_id_cratersville_street_c:poi_id_arsonbrook_street_c, #Dynamite->Tilly
+    poi_id_arsonbrook_street_d:poi_id_oozegardens_street_d, #Crassus->Zoo
+    poi_id_oozegardens_street_d:poi_id_arsonbrook_street_d, #Zoo->Crassus
+    poi_id_crookline_street_a:poi_id_newnewyonkers_street_a, #Doxy->Concrete
+    poi_id_newnewyonkers_street_a:poi_id_crookline_street_a, #Concrete->Doxy
+    poi_id_newnewyonkers_street_b:poi_id_crookline_street_b, #Broadway->MacGuffin
+    poi_id_crookline_street_b:poi_id_newnewyonkers_street_b, #MacGuffin->Broadway
+    poi_id_brawlden_street_b:poi_id_southsleezeborough_street_a, #Brownstone->China
+    poi_id_southsleezeborough_street_a:poi_id_brawlden_street_b, #China->Brownstone
+    poi_id_assaultflatsbeach_street_b:poi_id_dreadford_street_b, #Beachfront->Hangem
+    poi_id_dreadford_street_b:poi_id_assaultflatsbeach_street_b, #Hangem->Beachfront
+    poi_id_vagrantscorner_street_a:poi_id_westglocksbury_street_c, #Wharf->Goosh
+    poi_id_westglocksbury_street_c:poi_id_vagrantscorner_street_a,#Goosh->Wharf
+    poi_id_poloniumhill_street_d:poi_id_ferry, #Sawdust->Ferry
+    poi_id_ferry:poi_id_poloniumhill_street_d, #Ferry->Sawdust
+    poi_id_slimesendcliffs:poi_id_poloniumhill_street_c, #Cliffs->Geller
+    poi_id_poloniumhill_street_c:poi_id_slimesendcliffs, #Geller->Cliffs
+    poi_id_wreckington_street_b:poi_id_toxington_street_c,#Scrapyard->Quarantined
+    poi_id_toxington_street_c:poi_id_wreckington_street_b,#Quarantined->Scrapyard
+    poi_id_brawlden_street_a:poi_id_southsleezeborough_street_a, #Abandoned->China
+    poi_id_westglocksbury_street_d:poi_id_vagrantscorner_street_a, #Highway->Wharf
+    poi_id_jaywalkerplain_street_d:poi_id_vagrantscorner_street_a, #Qoute->Wharf
+    poi_id_toxington_street_d:poi_id_ferry, #Carcinogen->Ferry
+    poi_id_dreadford_street_a:poi_id_assaultflatsbeach_street_b, #Scaffold->Beachfront
+    poi_id_charcoalpark_street_a:poi_id_wreckington_street_b, #Church->Scrapyard
+    poi_id_charcoalpark_street_b:poi_id_cratersville_street_a, #Veteran->Endline
+}
+
+
+
+
+
 # Fashion styles for cosmetics
 style_cool = "cool"
 style_tough = "tough"
@@ -8189,7 +8228,7 @@ style_beautiful = "beautiful"
 style_cute = "cute"
 
 freshnesslevel_1 = 500
-freshnesslevel_2 = 100
+freshnesslevel_2 = 1000
 freshnesslevel_3 = 2000
 freshnesslevel_4 = 3000
 
@@ -11373,20 +11412,14 @@ mutation_id_napalmsnot = "napalmsnot"
 mutation_id_ambidextrous = "ambidextrous"
 mutation_id_landlocked = "landlocked"
 mutation_id_dyslexia = "dyslexia"
-
 mutation_id_oneeyeopen = "oneeyeopen"
 mutation_id_ditchslap = "ditchslap"
 mutation_id_greenfingers = "greenfingers"
 mutation_id_handyman = "handyman"
 mutation_id_unnaturalcharisma = "unnaturalcharisma"
 mutation_id_bottomlessappetite = "bottomlessappetite"
-mutation_id_bloodsacrifice = "bloodsacrifice"
-mutation_id_lockjaw = "lockjaw"
-mutation_id_sixthsenseofdirection = "6thsenseofdirection"
 mutation_id_rigormortis = "rigormortis"
 mutation_id_longarms = "longarms"
-mutation_id_racialdysphoria = "racialdysphoria"
-mutation_id_discerningcannibal = "discerningcannibal"
 mutation_id_airlock = "airlock"
 mutation_id_lightminer = "lightminer"
 
@@ -11395,6 +11428,7 @@ mutation_milestones = [5,10,15,20,25,30,35,40,45,50]
 mutations = [
 	EwMutationFlavor(
 		id_mutation = mutation_id_spontaneouscombustion,
+		str_name = "Spontaneous Combustion",
 		alias = ['sc', 'spc', 'spontaneous', 'combustion'],
 		str_describe_self = "On the surface you look calm and ready, probably unrelated to your onset of **Spontaneous Combustion**.",
 		str_describe_other = "On the surface they look calm and ready, probably unrelated to their onset of **Spontaneous Combustion**.",
@@ -11404,6 +11438,7 @@ mutations = [
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_fungalfeaster,
+		str_name="Fungal Feaster",
         alias = ['ff', 'fungal', 'feaster', 'fungus'],
 		str_describe_self = "Tiny mushrooms and other fungi sprout from the top of your head and shoulders due to **Fungal Feaster**.",
 		str_describe_other = "Tiny mushrooms and other fungi sprout from the top of their head and shoulders due to **Fungal Feaster**.",
@@ -11413,6 +11448,7 @@ mutations = [
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_sharptoother,
+		str_name="Sharptoother",
         alias = ['st', 'tooth', 'sharp', 'sharptooth'],
 		str_describe_self = "Your inhuman hand-eye-teeth coordination is the stuff of legends due to **Sharptoother**.",
 		str_describe_other = "Their inhuman hand-eye-teeth coordination is the stuff of legends due to **Sharptoother**.",
@@ -11422,6 +11458,7 @@ mutations = [
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_2ndamendment,
+		str_name="2nd Amendment",
         alias = ['2a', 'second', 'sa'],
 		str_describe_self = "A spare pair of arms extend from your monstrously large shoulders due to **2nd Amendment**.",
 		str_describe_other = "A spare pair of arms extend from their monstrously large shoulders due to **2nd Amendment**.",
@@ -11431,6 +11468,7 @@ mutations = [
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_bleedingheart,
+		str_name="Bleeding Heart",
         alias = ['bleed', 'bh', 'bdh'],
 		str_describe_self = "Your heartbeat’s rhythm is sporadic and will randomly change intensity due to **Bleeding Heart**.",
 		str_describe_other = "Their heartbeat’s rhythm is sporadic and will randomly change intensity due to **Bleeding Heart**.",
@@ -11440,6 +11478,7 @@ mutations = [
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_nosferatu,
+		str_name="Noseferatu",
         alias = ['nose', 'nf', 'vampire'],
 		str_describe_self = "Your freakishly huge, hooked schnoz and pointed ears give you a ghoulish appearance due to **Noseferatu**.",
 		str_describe_other = "Their freakishly huge, hooked schnoz and pointed ears give them a ghoulish appearance due to **Noseferatu**.",
@@ -11449,6 +11488,7 @@ mutations = [
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_organicfursuit,
+		str_name="Organic Fursuit",
         alias = ['ogf', 'organic', 'fursuit', 'of'],
 		str_describe_self = "Your shedding is a constant source of embarrassment due to **Organic Fursuit**.",
 		str_describe_other = "Their shedding is a constant source of embarrassment due to **Organic Fursuit**.",
@@ -11458,6 +11498,7 @@ mutations = [
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_lightasafeather,
+		str_name="Light as a Feather",
         alias = ['laaf', 'laf', 'lf', 'light', 'feather'],
 		str_describe_self = "Your anorexic, frail physique causes even light breezes to blow you off course due to **Light As A Feather**.",
 		str_describe_other = "Their anorexic, frail physique causes even light breezes to blow them off course due to **Light As A Feather**.",
@@ -11467,6 +11508,7 @@ mutations = [
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_whitenationalist,
+		str_name="White Nationalist",
         alias = ['wn', 'white', 'racism'],
 		str_describe_self = "Your bleached white, peeling skin is surely the envy of lesser races due to **White Nationalist**.",
 		str_describe_other = "Their bleached white, peeling skin is surely the envy of lesser races due to **White Nationalist**.",
@@ -11476,6 +11518,7 @@ mutations = [
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_spoiledappetite,
+		str_name="Spoiled Appetite",
         alias = ['spoiled'],
 		str_describe_self = "Your frequent, unholy belches could incapacitate a Megaslime due to **Spoiled Appetite**.",
 		str_describe_other = "Their frequent, unholy belches could incapacitate a Megaslime due to **Spoiled Appetite**.",
@@ -11485,6 +11528,7 @@ mutations = [
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_bigbones,
+		str_name="Big Bones",
         alias = ['bb', 'bones', 'big'],
 		str_describe_self = "You can often be seen consuming enough calories to power a small country due to **Big Bones**.",
 		str_describe_other = "They can often be seen consuming enough calories to power a small country due to **Big Bones**.",
@@ -11494,6 +11538,7 @@ mutations = [
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_fatchance,
+		str_name="Fat Chance",
         alias=['fc', 'fat', 'chance', 'obesity'],
 		str_describe_self = "Your impressive girth provides ample amounts of armor against attacks due to **Fat Chance**.",
 		str_describe_other = "Their impressive girth provides ample amounts of armor against attacks due to **Fat Chance**.",
@@ -11503,6 +11548,7 @@ mutations = [
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_fastmetabolism,
+		str_name="Fast Metabolism",
         alias=['fm', 'metabolism'],
 		str_describe_self = "Fierce boiling and sizzling can be heard from deep inside your stomach due to **Fast Metabolism**.",
 		str_describe_other = "Fierce boiling and sizzling can be heard from deep inside their stomach due to **Fast Metabolism**.",
@@ -11512,15 +11558,17 @@ mutations = [
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_bingeeater,
+		str_name="Binge Eater",
         alias = ['binge', 'be'],
 		str_describe_self = "You’re always one criticism away from devouring several large pizzas due to **Binge Eater**.",
 		str_describe_other = "They’re always one criticism away from devouring several large pizzas due to **Binge Eater**.",
-		str_acquire = "Your mouth begins to mimic chewing over and over again, opening and closing all on it’s own. You’re suddenly able to smell the food being carried by passersby for sometimes hours after they’ve left your sight. Your mouth dries and you sweat profusely even just being in the same room as food. Even now, just thinking about food, you begin to tremble. You can barely contain yourself. You don’t need it. You don’t need it. You don’t need it. You don’t need it... You need it. You have developed the mutation **Binge Eater**. Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds.",
+		str_acquire = "Your mouth begins to mimic chewing over and over again, opening and closing all on it’s own. You’re suddenly able to smell the food being carried by passersby for sometimes hours after they’ve left your sight. Your mouth dries and you sweat profusely even just being in the same room as food. Even now, just thinking about food, you begin to tremble. You can barely contain yourself. You don’t need it. You don’t need it. You don’t need it. You don’t need it... You need it. You have developed the mutation **Binge Eater**. Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds.  If you eat many food items at once, go into a 5 minute food coma that buffs your defense.",
         tier = 5,
-        str_transplant="Dr. Dusttrap offers you some cookies from her employee lounge. You decide to accept. However, she didn't tell you they be full of morphine and 70-year old antidepressants. You compulsively start eating and your metabolism begins to enter a state of eternal balls-tripping. The magnitude of hunger is so uncontrollable you consider cannibalizing Dusttrap herself. Don't worry, eventually it will calm down, so long as you don't have a relapse.\n\n You have developed the mutation **Binge Eater**. Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds."
+        str_transplant="Dr. Dusttrap offers you some cookies from her employee lounge. You decide to accept. However, she didn't tell you they be full of morphine and 70-year old antidepressants. You compulsively start eating and your metabolism begins to enter a state of eternal balls-tripping. The magnitude of hunger is so uncontrollable you consider cannibalizing Dusttrap herself. Don't worry, eventually it will calm down, so long as you don't have a relapse.\n\n You have developed the mutation **Binge Eater**. Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds. If you eat many food items at once, go into a 5 minute food coma that buffs your defense."
         ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_lonewolf,
+		str_name="Lone Wolf",
         alias = ['lw', 'lone', 'wolf'],
 		str_describe_self = "You stand out from the crowd, mostly because you stay far away from them due to **Lone Wolf**.",
 		str_describe_other = "They stand out from the crowd, mostly because they stay far away from them due to **Lone Wolf**.",
@@ -11529,15 +11577,17 @@ mutations = [
         str_transplant = "After a long time under the knife, you wake up to find your genes spliced with the DNA of Dr. Wolf. You are both unwilling and unable to engage in conversation with anybody, and deep within your soul, you develop the uncontrollable urge to pout.\n\nYou have developed the mutation **Lone Wolf**. 50% damage buff when in a district alone."),
 	EwMutationFlavor(
 		id_mutation = mutation_id_quantumlegs,
+		str_name="Quantum Legs",
         alias = ['ql', 'quantum'],
 		str_describe_self = "You’ve got nothing of note below the belt due to **Quantum Legs**.",
 		str_describe_other = "They’ve got nothing of note below the belt due to **Quantum Legs**.",
-		str_acquire = "Before you can even register it’s happening, your legs simply evaporate into a light mist that dissolves into the atmosphere. You ungracefully fall to the ground in pure shock, horror, and unrivaled agony. You are now literally half the person you used to be. What the hell are you supposed to do now? You scramble to try and find someone that can help you, moving to a nearby phone booth. Wait… how did you just do that? You have developed the mutation **Quantum Legs**. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you after an uninterrupted 30 second running start, with a cooldown of 3 hours.",
+		str_acquire = "Before you can even register it’s happening, your legs simply evaporate into a light mist that dissolves into the atmosphere. You ungracefully fall to the ground in pure shock, horror, and unrivaled agony. You are now literally half the person you used to be. What the hell are you supposed to do now? You scramble to try and find someone that can help you, moving to a nearby phone booth. Wait… how did you just do that? You have developed the mutation **Quantum Legs**. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you after an uninterrupted 15 second running start, with a cooldown of 3 hours.",
         tier=5,
-        str_transplant="Dr. Dusttrap places you under hypnosis, using the power of psychological suggestion to convince you your legs aren't real. She then covers your lower half in a tarp and sets up an elaborate poison injection system that places your legs in a superposition of life and death. When the tarp comes off, your legs are gone. You hop off the table and somehow walk back to the waiting room.\n\nYou have developed the mutation **Quantum Legs**. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you after an uninterrupted 30 second running start, with a cooldown of 3 hours.",
+        str_transplant="Dr. Dusttrap places you under hypnosis, using the power of psychological suggestion to convince you your legs aren't real. She then covers your lower half in a tarp and sets up an elaborate poison injection system that places your legs in a superposition of life and death. When the tarp comes off, your legs are gone. You hop off the table and somehow walk back to the waiting room.\n\nYou have developed the mutation **Quantum Legs**. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you after an uninterrupted 15 second running start, with a cooldown of 3 hours.",
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_chameleonskin,
+		str_name="Chameleon Skin",
         alias = ['cs', 'chameleon'],
 		str_describe_self = "Your skin quickly adjusts and camouflages you in your current surroundings due to **Chameleon Skin**.",
 		str_describe_other = "Their skin quickly adjusts and camouflages them in their current surroundings due to **Chameleon Skin**.",
@@ -11548,6 +11598,7 @@ mutations = [
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_patriot,
+		str_name="Patriot",
         alias = ['pt'],
 		str_describe_self = "You beam with intense pride over your faction’s sophisticated culture and history due to **Patriot**.",
 		str_describe_other = "They beam with intense pride over their faction’s sophisticated culture and history due to **Patriot**.",
@@ -11558,6 +11609,7 @@ mutations = [
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_socialanimal,
+		str_name="Social Animal",
         alias = ['social', 'animal'],
 		str_describe_self = "Your charming charisma and dashing good looks make you the life of the party due to **Social Animal**.",
 		str_describe_other = "Their charming charisma and dashing good looks make them the life of the party due to **Social Animal**.",
@@ -11568,34 +11620,38 @@ mutations = [
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_threesashroud,
+		str_name="Three's a Shroud",
         alias = ['3s', 'shroud', '3as'],
 		str_describe_self = "You tend to blend into the crowd due to **Three’s A Shroud**.",
 		str_describe_other = "They tend to blend into the crowd due to **Three’s A Shroud**.",
-		str_acquire = "A distinct sense of loneliness pervades your entire body. You’re reduced to the verge of tears without really knowing why. You suddenly feel very conscious of how utterly useless you are. You want to fade away so badly, you’d give anything just to be invisible. Everyone would like it better that way. You have developed the mutation **Three’s A Shroud**. Cannot be scouted if there are more than 3 allies in your district.",
+		str_acquire = "A distinct sense of loneliness pervades your entire body. You’re reduced to the verge of tears without really knowing why. You suddenly feel very conscious of how utterly useless you are. You want to fade away so badly, you’d give anything just to be invisible. Everyone would like it better that way. You have developed the mutation **Three’s A Shroud**. Cannot be scouted and crit rate doubled if there are more than 3 allies in your district.",
         tier=3,
-        str_transplant="Botox is injected into your upper and lower jaw muscles. The simplest method needed to blend into the crowd just turns out to be making it hurt to speak or eat. You become scrawnier and more unassuming, and you slowly begin to fade out of conversations. Paying for a surgery like this was probably a terrible idea.\n\nYou have developed the mutation **Three’s A Shroud**. Cannot be scouted if there are more than 3 allies in your district.",
+        str_transplant="Botox is injected into your upper and lower jaw muscles. The simplest method needed to blend into the crowd just turns out to be making it hurt to speak or eat. You become scrawnier and more unassuming, and you slowly begin to fade out of conversations. Paying for a surgery like this was probably a terrible idea.\n\nYou have developed the mutation **Three’s A Shroud**. Cannot be scouted and crit rate doubled if there are more than 3 allies in your district.",
 
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_aposematicstench,
+		str_name="Aposematic Stench",
         alias = ['as', 'stench'],
 		str_describe_self = "A putrid stench permeates around you all hours of the day due to **Aposematic Stench**.",
 		str_describe_other = "A putrid stench permeates around them all hours of the day due to **Aposematic Stench**.",
-		str_acquire = "Your eyes water as you begin secreting pheromones into the air from every indecent nook and cranny on your body. You smell so unbelievably terrible that even you are not immune from frequent coughs and wheezes when you catch a particularly bad whiff. You have developed the mutation **Aposematic Stench**. For every 5 levels you gain, you appear as 1 more person when being scouted.",
+		str_acquire = "Your eyes water as you begin secreting pheromones into the air from every indecent nook and cranny on your body. You smell so unbelievably terrible that even you are not immune from frequent coughs and wheezes when you catch a particularly bad whiff. You have developed the mutation **Aposematic Stench**. For every 5 levels you gain, you appear as 1 more person when being scouted. Use !stink to put on secreature repellent at any time.",
         tier=3,
-        str_transplant="Dr. Dusttrap installs a slot in the small of your back that fits Fuck Energy Bodyspray canisters into it. She tells you that this will augment your hormones to make you smell terrible. Makes sense, you suppose. It'd be nice if she didn't take sponsorships from Slimecorp, though.\n\nYou have developed the mutation **Aposematic Stench**. For every 5 levels you gain, you appear as 1 more person when being scouted.",
+        str_transplant="Dr. Dusttrap installs a slot in the small of your back that fits Fuck Energy Bodyspray canisters into it. She tells you that this will augment your hormones to make you smell terrible. Makes sense, you suppose. It'd be nice if she didn't take sponsorships from Slimecorp, though.\n\nYou have developed the mutation **Aposematic Stench**. For every 5 levels you gain, you appear as 1 more person when being scouted. Use !stink to put on secreature repellent at any time.",
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_lucky,
+		str_name="Lucky",
         alias = ['luck'],
 		str_describe_self = "You are extremely fortunate due to **Lucky**.",
 		str_describe_other = "They are extremely fortunate due to **Lucky**.",
-		str_acquire = "Just as you level up, you are struck by lightning. You struggle to stand at first, but after the initial shock wears off you quickly dust the cartoonish soot from your clothes and begin walking again. Then, you’re struck again. You stand up again. This happens a few more times before you’re forced by the astronomically low odds of you being alive to conclude you are a statistical anomaly and thus normal concepts of fortune do not apply to you. You have developed the mutation **Lucky**. Drastically increased chance to unearth slime poudrins and odds of winning slime casino games.",
+		str_acquire = "Just as you level up, you are struck by lightning. You struggle to stand at first, but after the initial shock wears off you quickly dust the cartoonish soot from your clothes and begin walking again. Then, you’re struck again. You stand up again. This happens a few more times before you’re forced by the astronomically low odds of you being alive to conclude you are a statistical anomaly and thus normal concepts of fortune do not apply to you. You have developed the mutation **Lucky**. Drastically increased chance to unearth slime poudrins and odds of winning slime casino games. !reel chance also increases.",
         tier=5,
-        str_transplant="'We're sorry, deary,' the doctor says, 'this is still an experimental treatment.' You roll your eyes, knowing that basically all her surgeries are like that. She starts by taking out her stash of dead leprechauns and transplanting a few body parts. She unexpectedly shoots you through the hand, and you scream in pain. \"Sorry, if the gun's not jamming that means it didn't work.\" She tried everything in the book, rabbit's foot fingers, lucky penny tooth fillings, you name it. More bullets to the hand. Eventually the luck charm takes after she cuts three of your toes off. Doesn't make sense, but at least nothing unfortunate will happen to you now.\n\nYou have developed the mutation **Lucky**. Drastically increased chance to unearth slime poudrins and odds of winning slime casino games.",
+        str_transplant="'We're sorry, deary,' the doctor says, 'this is still an experimental treatment.' You roll your eyes, knowing that basically all her surgeries are like that. She starts by taking out her stash of dead leprechauns and transplanting a few body parts. She unexpectedly shoots you through the hand, and you scream in pain. \"Sorry, if the gun's not jamming that means it didn't work.\" She tried everything in the book, rabbit's foot fingers, lucky penny tooth fillings, you name it. More bullets to the hand. Eventually the luck charm takes after she cuts three of your toes off. Doesn't make sense, but at least nothing unfortunate will happen to you now.\n\nYou have developed the mutation **Lucky**. Drastically increased chance to unearth slime poudrins and odds of winning slime casino games. !reel chance also increases.",
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_dressedtokill,
+		str_name="Dressed to Kill",
         alias = ['dtk', 'dressed', 'kill'],
 		str_describe_self = "You’re fabulously accompanied by a wide range of luxurious cosmetics due to **Dressed to Kill**.",
 		str_describe_other = "They’re fabulously accompanied by a wide range of luxurious cosmetics due to **Dressed to Kill**.",
@@ -11606,6 +11662,7 @@ mutations = [
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_keensmell,
+		str_name="Keen Smell",
         alias = ['ks', 'smell', 'keen'],
 		str_describe_self = "You have an uncanny ability to track and identify scents due to **Keen Smell**.",
 		str_describe_other = "They have an uncanny ability to track and identify scents due to **Keen Smell**.",
@@ -11616,36 +11673,40 @@ mutations = [
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_dumpsterdiver,
+		str_name="Dumpster Diver",
         alias = ['dd', 'dumpster'],
 		str_describe_self = "You are exceptionally good at picking up trash due to **Dumpster Diver**.",
 		str_describe_other = "They are exceptionally good at picking up trash due to **Dumpster Diver**.",
-		str_acquire = "A cold rush overtakes you, fogging your mind and causing a temporary lapse in vision. When your mind clears again and you snap back to reality, you notice so many tiny details you hadn’t before. All the loose change scattered on the floor, all the pebbles on the sidewalk, every unimportant object you would have normally glanced over now assaults your senses. You have an uncontrollable desire to pick them all up. You have developed the mutation **Dumpster Diver**. 10 times chance to get items while scavenging.",
+		str_acquire = "A cold rush overtakes you, fogging your mind and causing a temporary lapse in vision. When your mind clears again and you snap back to reality, you notice so many tiny details you hadn’t before. All the loose change scattered on the floor, all the pebbles on the sidewalk, every unimportant object you would have normally glanced over now assaults your senses. You have an uncontrollable desire to pick them all up. You have developed the mutation **Dumpster Diver**. 10 times chance to get items while scavenging. Captcha scavenging will use parts of the captcha to scavenge for items.",
         tier=2,
-        str_transplant="You ask for the ability to hyperfocus on unimportant trash. In order to accomplish this, you are injected with several vaccines to unrelated diseases until you receive enough to acquire autism. Simple but effective, just like Grandma used to make.\n\nYou have developed the mutation **Dumpster Diver**. 10 times chance to get items while scavenging.",
+        str_transplant="You ask for the ability to hyperfocus on unimportant trash. In order to accomplish this, you are injected with several vaccines to unrelated diseases until you receive enough to acquire autism. Simple but effective, just like Grandma used to make.\n\nYou have developed the mutation **Dumpster Diver**. 10 times chance to get items while scavenging. Captcha scavenging will use parts of the captcha to scavenge for items.",
 
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_trashmouth,
+		str_name="Trash Mouth",
         alias = ['trash', 'tm'],
 		str_describe_self = "You have the mouth of a sailor and the vocabulary of a fourteen year old due to **Trash Mouth**.",
 		str_describe_other = "They have the mouth of a sailor and the vocabulary of a fourteen year old due to **Trash Mouth**.",
-		str_acquire = "You drop down onto your knees, your inhibitions wash away as a new lust overtakes you. You begin shoveling literally everything you can pry off the floor into your mouth with such supernatural vigor that a nearby priest spontaneously dies. You have developed the mutation **Trash Mouth**. Reach maximum power scavenges faster.",
+		str_acquire = "You drop down onto your knees, your inhibitions wash away as a new lust overtakes you. You begin shoveling literally everything you can pry off the floor into your mouth with such supernatural vigor that a nearby priest spontaneously dies. You have developed the mutation **Trash Mouth**. Reach maximum power scavenges faster. You can eat furniture and cosmetics.",
         tier=5,
-        str_transplant="You get off the fucking chair in the goddamn waiting room and ask for a dirty mouth. The bitch doctor thinks you're a retard but slices your body up anyway. After a million fucking years of bullshit you eventually start to develop an extreme oral fixation and want to suck on everything in Dusttrap's office, even including Dusttrap's dusttrap. Whoops, I meant her cunt.\n\nYou have developed the mutation **Trash Mouth**. Reach maximum power scavenges faster.",
+        str_transplant="You get off the fucking chair in the goddamn waiting room and ask for a dirty mouth. The bitch doctor thinks you're a retard but slices your body up anyway. After a million fucking years of bullshit you eventually start to develop an extreme oral fixation and want to suck on everything in Dusttrap's office, even including Dusttrap's dusttrap. Whoops, I meant her cunt.\n\nYou have developed the mutation **Trash Mouth**. Reach maximum power scavenges faster. You can eat furniture and cosmetics.",
 
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_webbedfeet,
+		str_name="Webbed Feet",
         alias = ['wf', 'webbed'],
 		str_describe_self = "Your toes are connected by a thin layer of skin due to **Webbed Feet**.",
 		str_describe_other = "Their toes are connected by a thin layer of skin due to **Webbed Feet**.",
-		str_acquire = "Your feet grow a thin layer of skin, allowing you to swim through piles of slime, soaking up their precious nutrients easily. You have developed the mutation **Webbed Feet**. Your scavenging power increases the more slime there is in a district.",
+		str_acquire = "Your feet grow a thin layer of skin, allowing you to swim through piles of slime, soaking up their precious nutrients easily. You have developed the mutation **Webbed Feet**. Your scavenging power increases the more slime there is in a district. You can also feel out the amount of slime you scavenge.",
         tier=4,
-        str_transplant="Your feet receive a new transplant, where skinflaps are sewn into the spaces between your toes. Not much complexity or detail work there. You decide that's a good thing.\n\nYou have developed the mutation **Webbed Feet**. Your scavenging power increases the more slime there is in a district.",
+        str_transplant="Your feet receive a new transplant, where skinflaps are sewn into the spaces between your toes. Not much complexity or detail work there. You decide that's a good thing.\n\nYou have developed the mutation **Webbed Feet**. Your scavenging power increases the more slime there is in a district. You can also feel out the amount of slime you scavenge.",
 
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_enlargedbladder,
+		str_name="Enlarged Bladder",
         alias = ['eb', 'bladder'],
 		str_describe_self = "You have an enlarged bladder due to **Enlarged Bladder**.",
 		str_describe_other = "They have an enlarged bladder due to **Enlarged Bladder**.",
@@ -11655,6 +11716,7 @@ mutations = [
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_davyjoneskeister,
+		str_name="Davy Jones' Keister",
         alias = ['djk', 'keister', 'davyjones'],
 		str_describe_self = "Your ass is tailor made for the high seas due to **Davy Jones' Keister**.",
 		str_describe_other = "Their ass is tailor made for the high seas due to **Davy Jones' Keister**.",
@@ -11664,15 +11726,17 @@ mutations = [
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_stickyfingers,
+		str_name="Sticky Fingers",
         alias = ['sf', 'sticky'],
 		str_describe_self = "Your hands can't let go of anything due to **Sticky Fingers**.",
 		str_describe_other = "Their hands can't let go of anything due to **Sticky Fingers**.",
-		str_acquire = "Your body begins to tremble, and you get an enormous pressure in your forearms as they begin to turn sickly pale. You feel your pores being pried open, as they excrete a thin layer of film along your palms and down your hand. You glide your fingers across the back of your hand... oh fuck. They won't come apart! You have developed the mutation **Sticky Fingers**. 10% chance to steal from shops when using !order.",
+		str_acquire = "Your body begins to tremble, and you get an enormous pressure in your forearms as they begin to turn sickly pale. You feel your pores being pried open, as they excrete a thin layer of film along your palms and down your hand. You glide your fingers across the back of your hand... oh fuck. They won't come apart! You have developed the mutation **Sticky Fingers**. 20% chance to steal from shops when using !order.",
         tier=3,
-        str_transplant= "Dr. Dusttrap takes out a culture of artificially developed adhesive bacteria and proceeds to inject it into your bloodstream.\"Now, this'll clog your arteries like nobody's business, but if you want sticky hands, you just gotta grin and bear it. Also, be sure not to take antibiotics ever again, or you'll kill the poor strain.\" After letting the disease settle in, you find you can now sweat glue.\n\nYou have developed the mutation **Sticky Fingers**. 10% chance to steal from shops when using !order.",
+        str_transplant= "Dr. Dusttrap takes out a culture of artificially developed adhesive bacteria and proceeds to inject it into your bloodstream.\"Now, this'll clog your arteries like nobody's business, but if you want sticky hands, you just gotta grin and bear it. Also, be sure not to take antibiotics ever again, or you'll kill the poor strain.\" After letting the disease settle in, you find you can now sweat glue.\n\nYou have developed the mutation **Sticky Fingers**. 20% chance to steal from shops when using !order.",
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_coleblooded,
+		str_name="Cole Blooded",
         alias = ['cb', 'cole', 'slaw'],
 		str_describe_self = "Ghosts fear your arteries due to **Cole Blooded**.",
 		str_describe_other = "Ghosts fear their arteries due to **Cole Blooded**.",
@@ -11682,6 +11746,7 @@ mutations = [
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_nervesofsteel,
+		str_name="Nerves of Steel",
         alias = ['nos', 'nerves', 'nerve'],
 		str_describe_self = "You are absolutely fearless due to **Nerves of Steel**.",
 		str_describe_other = "They are absolutely fearless due to **Nerves of Steel**.",
@@ -11691,6 +11756,7 @@ mutations = [
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_packrat,
+		str_name="Packrat",
         alias = ['pack', 'rat', 'pr'],
 		str_describe_self = "Your constant hoarding has sabotaged your whole life due to **Packrat**.",
 		str_describe_other = "Their constant hoarding has sabotaged their whole life due to **Packrat**.",
@@ -11700,15 +11766,17 @@ mutations = [
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_landlocked,
+		str_name="Landlocked",
         alias = ['ll', 'land', 'lock'],
 		str_describe_self = "You feel trapped in a loop due to **Landlocked**.",
 		str_describe_other = "They feel trapped in a loop due to due to **Landlocked**.",
-		str_acquire = "You start to feel lightheaded, and your vision blurs. When you're lucid again, you notice that the sky has changed color. Is that a barrier? Whatever the case, it seems like you're able to see it now. Wonder what happens if you run into it? You have developed the mutation **Landlocked**. Use !loop at the edge of a map to warp to the opposite side.",
+		str_acquire = "You start to feel lightheaded, and your vision blurs. When you're lucid again, you notice that the sky has changed color. Is that a barrier? Whatever the case, it seems like you're able to see it now. Wonder what happens if you run into it? You have developed the mutation **Landlocked**. Use !loop at a street bordering the outskirts to warp to the opposite side.",
         tier=8,
-        str_transplant= "Dusttrap somehow manages to pull out a Slimecorp teleportation core from her little box of tricks. Christ, it's the size of a dinner plate... She plugs it into her computer and does a bit of finagling with the GPS, when replaces your appendix with it. What a deal, you got an appendix removal out of the surgery!\n\nYou have developed the mutation **Landlocked**. Use !loop at the edge of a map to warp to the opposite side.",
+        str_transplant= "Dusttrap somehow manages to pull out a Slimecorp teleportation core from her little box of tricks. Christ, it's the size of a dinner plate... She plugs it into her computer and does a bit of finagling with the GPS, when replaces your appendix with it. What a deal, you got an appendix removal out of the surgery!\n\nYou have developed the mutation **Landlocked**. Use !loop at a street bordering the outskirts to warp to the opposite side.",
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_lethalfingernails,
+		str_name="Lethal Fingernails",
         alias = ['lf', 'fingernails', 'lethal', 'nails'],
 		str_describe_self = "Your nails cut flesh like butter due to **Lethal Fingernails**.",
 		str_describe_other = "Their nails cut flesh like butter due to **Lethal Fingernails**.",
@@ -11718,15 +11786,17 @@ mutations = [
     ),
 EwMutationFlavor(
 		id_mutation = mutation_id_napalmsnot,
+		str_name="Napalm Snot",
         alias = ['ns', 'napalmsnot', 'napalm'],
 		str_describe_self = "You can spew firebomb loogies due to **Napalm Snot**.",
 		str_describe_other = "They can spew firebomb loogies due to **Napalm Snot**.",
-		str_acquire = "You can feel the fire in your belly. Wait, that's your lungs! Breathing gets harder and steam starts to quickly leak out your mouth. Little by little, you can also feel a suffocating glob of phlegm building in your throat. It starts as the spiciest shit you can imagine, but you quickly adapt, like getting used to a hot shower. Time to spit loogies and commit arson. You have developed the mutation **Napalm Snot**. 20% chance to proc burn on an attack. Gain immunity to burn damage.",
+		str_acquire = "You can feel the fire in your belly. Wait, that's your lungs! Breathing gets harder and steam starts to quickly leak out your mouth. Little by little, you can also feel a suffocating glob of phlegm building in your throat. It starts as the spiciest shit you can imagine, but you quickly adapt, like getting used to a hot shower. Time to spit loogies and commit arson. You have developed the mutation **Napalm Snot**. Deal burn damage when attacking with any weapon. Gain immunity to burn damage.",
         tier=8,
-        str_transplant= "Dr. Dusttrap drags out her organ cooler and pulls out a Blue Eyes Slime Dragon fire bladder. Oxygenation is a bitch, so she shrinkwraps it and adds a protective plastic covering for good measure. One external implant to the back later, and you're the proud new owner of a firebreath organ. It's really uncomfortable to sit in chairs now that you have a big tank on your back that makes you burp fire when squeezed, but those are the consequences of bloodlust.\n\nYou have developed the mutation **Napalm Snot**. 20% chance to proc burn on an attack. Gain immunity to burn damage.",
+        str_transplant= "Dr. Dusttrap drags out her organ cooler and pulls out a Blue Eyes Slime Dragon fire bladder. Oxygenation is a bitch, so she shrinkwraps it and adds a protective plastic covering for good measure. One external implant to the back later, and you're the proud new owner of a firebreath organ. It's really uncomfortable to sit in chairs now that you have a big tank on your back that makes you burp fire when squeezed, but those are the consequences of bloodlust.\n\nDeal burn damage when attacking with any weapon. Gain immunity to burn damage.",
     ),
 EwMutationFlavor(
 		id_mutation = mutation_id_ambidextrous,
+		str_name="Ambidextrous",
         alias = ['ab', 'ambi'],
 		str_describe_self = "Your left and right arms can multitask like hell due to **Ambidextrous**.",
 		str_describe_other = "Their left and right arms can multitask like hell due to **Ambidextrous**.",
@@ -11736,6 +11806,7 @@ EwMutationFlavor(
     ),
 EwMutationFlavor(
 		id_mutation = mutation_id_dyslexia,
+		str_name="Dyslexia",
         alias = ['dl', 'lex'],
 		str_describe_self = "Long words make your head hurt due to **Dyslexia**.",
 		str_describe_other = "Long words make their head hurt due to **Dyslexia**.",
@@ -11745,6 +11816,7 @@ EwMutationFlavor(
     ),
 EwMutationFlavor(
 		id_mutation = mutation_id_bottomlessappetite,
+		str_name="Bottomless Appetite",
         alias = ['ba', 'bottomless'],
 		str_describe_self = "You could devour a horse, its carriage, and the frumpy nobles inside it due to **Bottomless Appetite**.",
 		str_describe_other = "They could devour a horse, its carriage, and the frumpy nobles inside it due to **Bottomless Appetite**.",
@@ -11754,6 +11826,7 @@ EwMutationFlavor(
     ),
 EwMutationFlavor(
 		id_mutation = mutation_id_airlock,
+		str_name="Air Lock",
         alias = ['al', 'air'],
 		str_describe_self = "The weather is your bitch due to **Airlock**.",
 		str_describe_other = "The weather is their bitch due to **Airlock**.",
@@ -11763,24 +11836,27 @@ EwMutationFlavor(
     ),
 EwMutationFlavor(
 		id_mutation = mutation_id_unnaturalcharisma,
+		str_name = "Unnatural Charisma",
         alias = ['uc', 'charisma'],
 		str_describe_self = "Your unbridled charm can manipulate the unwashed masses due to **Unnatural Charisma**.",
 		str_describe_other = "Their unbridled charm can manipulate the unwashed masses due to **Unnatural Charisma**.",
 		str_acquire = "You hear rubbery squeaking sounds stirring throughout your body. You hair starts to condense and slick back, and the grime and sugar start to evaporate from your teeth. You attempt to gasp in shock, but it comes out a seductive purr. You don't just make women swoon, you have no choice but to do so. You have developed the mutation **Unnatural Charisma**. 20% capping increase and +500 freshness.",
         tier=4,
-        str_transplant= "You notice the \"Make Me Pretty, I'm Begging You\" option on the menu and decide to go for broke. You are filled with experimental pheromones, and your undergo intense botoxing and head rearrangement. Coming out of the procedure, your face is completely unrecognizable, but you nonetheless have an urge to go fuck yourself. Just to top things off, the doctor uses your jawline to cut a pane of glass clean in half.\n\nYou have developed the mutation **Unnatural Charisma**. 20% capping increase and +500 freshness.",
+        str_transplant= "You notice the \"Make Me Pretty, I'm Begging You\" option on the menu and decide to go for broke. You are filled with experimental pheromones, and your undergo intense botoxing and head rearrangement. Coming out of the procedure, your face is completely unrecognizable, but you nonetheless have an urge to literally go fuck yourself. Just to top things off, the doctor uses your jawline to cut a pane of glass clean in half.\n\nYou have developed the mutation **Unnatural Charisma**. 20% capping increase and +500 freshness.",
     ),
 EwMutationFlavor(
 		id_mutation = mutation_id_ditchslap,
+		str_name="Ditch Slap",
         alias = ['ds', 'slap', 'ditch'],
 		str_describe_self = "You can knock someone into next precinct due to **Ditch Slap**.",
 		str_describe_other = "They can knock someone into next precinct due to **Ditch Slap**.",
 		str_acquire = "A fly grazes past your left eye. God, how annoying. You absentmindedly try to wave it away. The moment you do, you feel a surge of power in your backhand, and hit the fucker so hard it vaporizes on touch. The massive shockwave blows your hair back and scares away a distant stray cat. Jesus, it's like you're throwing Kamehameha waves or some shit. You have developed the mutation **Ditch Slap**. !slap <district> @player to knock allies into a nearby district or subzone, with a few exceptions.",
-        tier=5,
+        tier=6,
         str_transplant= "Dr. Dusttrap takes out a hydraulic brace she says is designed for old-school freight trains and starts fitting it snugly into your left arm. \"You know, one time I forgot to ask if someone was left handed before doing this. They killed themselves trying to brush their teeth. Can you believe it?\" With those words, she stitches up the incision, work done. You don't think she asked your dominant hand...\n\nYou have developed the mutation **Ditch Slap**. !slap <district> @player to knock allies into a nearby district or subzone, with a few exceptions.",
     ),
 EwMutationFlavor(
 		id_mutation = mutation_id_oneeyeopen,
+		str_name="One Eye Open",
         alias = ['oeo', 'oneeye', '1eo'],
 		str_describe_self = "Your third eye's in the sky due to **One Eye Open**.",
 		str_describe_other = "Their third eye's in the sky due to **One Eye Open**.",
@@ -11790,6 +11866,7 @@ EwMutationFlavor(
     ),
 EwMutationFlavor(
 		id_mutation = mutation_id_handyman,
+		str_name="Handy Man",
         alias = ['hm', 'handy'],
 		str_describe_self = "You've grown many graspers with minds of their own due to **Handy Man**.",
 		str_describe_other = "They've grown many graspers with minds of their own due to **Handy Man**.",
@@ -11799,6 +11876,7 @@ EwMutationFlavor(
     ),
 EwMutationFlavor(
 		id_mutation = mutation_id_greenfingers,
+		str_name="Green Fingers",
         alias = ['gf', 'greenthumb', 'green'],
 		str_describe_self = "You're one with the gardens due to **Green Fingers**.",
 		str_describe_other = "They're one with the gardens due to **Green Fingers**.",
@@ -11808,6 +11886,7 @@ EwMutationFlavor(
     ),
 EwMutationFlavor(
 		id_mutation = mutation_id_rigormortis,
+		str_name="Rigor Mortis",
         alias = ['rm', 'rigor', 'rig'],
 		str_describe_self = "You really can take it with you due to  **Rigor Mortis**.",
 		str_describe_other = "They really can take it with them due to **Rigor Mortis**.",
@@ -11817,6 +11896,7 @@ EwMutationFlavor(
     ),
 EwMutationFlavor(
 		id_mutation = mutation_id_longarms,
+		str_name="Long Arms",
         alias = ['la', 'long', 'longarms'],
 		str_describe_self = "Your reach extends to the skies above due to **Long Arms**.",
 		str_describe_other = "Their reach extends to the skies above due to **Long Arms**.",
@@ -11826,6 +11906,7 @@ EwMutationFlavor(
     ),
 EwMutationFlavor(
 		id_mutation = mutation_id_lightminer,
+		str_name="Light Miner",
         alias = ['lm', 'miner'],
 		str_describe_self = "You've adapted to mining in any conditions due to **Light Miner**.",
 		str_describe_other = "They've adapted to minimg in any conditions due to **Light Miner**.",
@@ -12444,7 +12525,7 @@ status_effect_list = [
 	),
     EwStatusEffectDef(
 		id_status = status_slapped_id,
-		time_expire = 120,
+		time_expire = 300,
 		str_acquire = "You're tuckered out. Better not get slapped for awhile.",
 		str_describe_self = "You got ditch slapped recently and are really feeling it."
 	),
@@ -12986,21 +13067,21 @@ mutation_descriptions = {
 	mutation_id_bigbones: "The amount of food items you can hold in your inventory is doubled.",
 	mutation_id_fatchance: "Take 25% less damage from attacks when above 50% hunger.",
 	mutation_id_fastmetabolism: "Movement speed is increased by 33% when below 40% hunger.",
-	mutation_id_bingeeater: "Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds.",
+	mutation_id_bingeeater: "Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds. Eating lots of food at once puts you in a raging food coma, increasing defense.",
 	mutation_id_lonewolf: "20% capture discount and 50% more damage when in a district without any friendly gangsters. Stacks with the Patriot mutation.",
-	mutation_id_quantumlegs: "You can now use the !tp command, allowing you to teleport to a district up to two locations away from you after an uninterrupted 30 second running start, with a cooldown of 3 hours.",
+	mutation_id_quantumlegs: "You can now use the !tp command, allowing you to teleport to a district up to two locations away from you after an uninterrupted 15 second running start, with a cooldown of 3 hours.",
 	mutation_id_chameleonskin: "While offline, you can move to and scout other districts and cannot be scouted.",
 	mutation_id_patriot: "20% capture discount. Stacks with the Lone Wolf mutation.",
 	mutation_id_socialanimal: "Your damage increases by 10% for every ally in your district.",
-	mutation_id_threesashroud: "Cannot be scouted if there are more than 3 allies in your district. Cannot be scouted by players with the Keen Smell mutation.",
-	mutation_id_aposematicstench: "For every 5 levels you gain, you appear as 1 more person when being scouted. Cannot be scouted by players with the Keen Smell mutation.",
-	mutation_id_lucky: "33% higher chance to get slime poudrins from mining and farming.",
-	mutation_id_dressedtokill: "50% more damage if freshness is at least 1000.",
+	mutation_id_threesashroud: "Cannot be scouted and crit chance is doubled if there are more than 3 allies in your district. Cannot be scouted by players with the Keen Smell mutation.",
+	mutation_id_aposematicstench: "For every 5 levels you gain, you appear as 1 more person when being scouted. Cannot be scouted by players with the Keen Smell mutation. Use !stink to produce a monster repelling effect. Attacking enemies with it on causes a temporary damage nerf and the removal of the effect.",
+	mutation_id_lucky: "33% higher chance to get slime poudrins from mining and farming. Increased !reel chance.",
+	mutation_id_dressedtokill: "50% more damage if freshness is at least 250.",
 	mutation_id_keensmell: "Scouting will list off the names of players and enemies within a district. Will not work on players with the Aposematic Stench or Three's A Shroud mutations.",
 	mutation_id_enlargedbladder: "You can use the !piss command, which, if targeted at a player like with !kill, spends 1 of your liquid sap, but crushes 3 of the target's hardened sap.",
-	mutation_id_dumpsterdiver: "10x chance to get items while scavenging with just '!scavenge'.",
-	mutation_id_trashmouth: "Reach maximum power scavenges 3 times as fast. Example: The soft cooldown of 15 seconds on scavenging is now reduced to 5 seconds.",
-	mutation_id_webbedfeet: "Your scavenging power increases the more slime there is in a district. Caps out at 400% more slime gained from scavenging, but does stack with the White Nationalist mutation.",
+	mutation_id_dumpsterdiver: "10x chance to get items while scavenging with just '!scavenge'. Captcha scavenges search for items using a random single letter of the captcha.",
+	mutation_id_trashmouth: "Reach maximum power scavenges 3 times as fast. Example: The soft cooldown of 15 seconds on scavenging is now reduced to 5 seconds. You can also eat cosmetics and furniture.",
+	mutation_id_webbedfeet: "Your scavenging power increases the more slime there is in a district. Caps out at 400% more slime gained from scavenging, but does stack with the White Nationalist mutation. You can feel out the amount of slime you scavenge.",
 
     mutation_id_dyslexia:"The size of captchas is decreased by 3 characters. If a captcha is smaller than 3, the captcha length will be 1 instead.",
     mutation_id_handyman:"If you kill an enemy gangster with a tool instead of a weapon, your kingpin gets double the slime they normally do.",
@@ -14693,7 +14774,9 @@ server_list = {}
 	store a server in a dictionary
 """
 def update_server_list(server):
-	server_list[server.id] = server
+	print(server.id)
+	print(type(server.id))
+	server_list[str(server.id)] = server
 
 
 client_ref = None

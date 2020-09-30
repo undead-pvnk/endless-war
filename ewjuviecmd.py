@@ -733,6 +733,8 @@ async def scavenge(cmd):
 						scavenge_combos[user_data.id_user] += 1
 						new_captcha = gen_scavenge_captcha(n=scavenge_combos.get(user_data.id_user), id_user=user_data.id_user, id_server=user_data.id_server)
 						response += "New captcha: **" + ewutils.text_to_regional_indicator(new_captcha) + "**"
+						if ewcfg.mutation_id_webbedfeet in mutations:
+							response += "\nYour flippers pick up {:,} slime.".format(scavenge_yield)
 						scavenge_captchas[user_data.id_user] = new_captcha
 						has_comboed = True
 

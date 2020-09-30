@@ -254,6 +254,7 @@ async def menu(cmd):
 # Buy items.
 async def order(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
 	if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -372,6 +373,10 @@ async def order(cmd):
 				response = ""
 
 				value = item.price
+
+				if random.randrange(5) == 0 and ewcfg.mutation_id_stickyfingers in mutations:
+					value = 0
+
 				premium_purchase = True if item_id in ewcfg.premium_items else False
 				if premium_purchase:
 					togo = True # Just in case they order a premium food item, don't make them eat it right then and there.
@@ -610,8 +615,10 @@ async def devour(cmd):
 				furn = ewcfg.furniture_map.get(item_obj.item_props.get('id_furniture'))
 				if furn.acquisition != ewcfg.acquisition_bazaar:
 					recover_hunger = 320
-				elif furn.price < 50:
+				elif furn.price < 500:
 					recover_hunger = 0
+				elif furn.price < 5000:
+					recover_hunger = 50
 				elif furn.price < 1000000:
 					recover_hunger = 320
 				else:
@@ -619,7 +626,7 @@ async def devour(cmd):
 			elif item_obj.item_type == ewcfg.it_food:
 				recover_hunger = item_obj.item_props.get('recover_hunger')
 			else:
-				recover_hunger = 320
+				recover_hunger = 100
 
 			item_obj.item_props = {
 			'id_food': "convertedfood",

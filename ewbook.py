@@ -995,7 +995,7 @@ async def browse_zines(cmd):
 				query_suffix = "AND b.genre = 2 "
 
 			elif user_data.poi in [ewcfg.poi_id_clinicofslimoplasty]:
-				query_suffix = "AND b.genre = 10"
+				query_suffix = "AND b.genre = 10 "
 
 			if sort_token in ("bookname", "name", "title", "booktitle", "zinename", "zinetitle"):
 				query_sort = "title"

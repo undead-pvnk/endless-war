@@ -1272,6 +1272,7 @@ async def teleport(cmd):
 			user_data.persist()
 
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+			print(poi.id_poi)
 			await one_eye_dm(id_user=user_data.id_user, id_server=user_data.id_server, poi=poi.id_poi)
 			await user_data.move_inhabitants(id_poi = poi.id_poi)
 			resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1875,7 +1876,6 @@ async def loop(cmd):
 
 	time_now = int(time.time())
 	user_data = EwUser(member=cmd.message.author)
-	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd)
 	mutations = user_data.get_mutations()
 	resp_cont = ewutils.EwResponseContainer(id_server=cmd.guild.id)
 	dest_poi = ewcfg.landlocked_destinations.get(user_data.poi)
@@ -1890,9 +1890,8 @@ async def loop(cmd):
 		response = "You don't feel very loopy at the moment. Just psychotic, mostly."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	elif user_data.poi not in ewcfg.landlocked_destinations.keys():
-		response = "You need to be on the edge of the map to !loop through it. Try any outskirts depths, the ferry, or Slime's End Cliffs."
-
-
+		response = "You need to be on the edge of the map to !loop through it. Try a street bordering a district, the ferry, or Slime's End Cliffs."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		global move_counter
 		move_counter += 1
@@ -1901,7 +1900,7 @@ async def loop(cmd):
 		await asyncio.sleep(20)
 
 		if move_current == ewutils.moves_active[cmd.message.author.id]:
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "VOIIII-".format(dest_poi_obj.str_name)))
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "**VOIIII-**".format(dest_poi_obj.str_name)))
 
 			user_data = EwUser(member=cmd.message.author)
 			ewutils.moves_active[cmd.message.author.id] = 0
@@ -1912,7 +1911,7 @@ async def loop(cmd):
 			user_data.persist()
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 			await ewutils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, user_data.id_user)
-			return await ewutils.send_message(cmd.client, dest_poi_obj.channel, ewutils.formatMessage(cmd.message.author,"-OIIIIP".format(dest_poi_obj.str_name)))
+			return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, dest_poi_obj.channel), ewutils.formatMessage(cmd.message.author,"**-OIIIIP!!!**\n\n{} jumps out of a wormhole!".format(cmd.message.author.display_name)))
 		else:
 			pass
 
@@ -1929,6 +1928,11 @@ async def slap(cmd):
 
 	mutations = user_data.get_mutations()
 	resp_cont = ewutils.EwResponseContainer(id_server=cmd.guild.id)
+
+	if cmd.tokens_count < 3:
+		response = "You'll need to specify who and where you're slapping. Try !slap <target> <location>."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	dest_poi = cmd.tokens[2].lower()
 	dest_poi_obj = ewcfg.id_to_poi.get(dest_poi)
 
@@ -1946,6 +1950,8 @@ async def slap(cmd):
 
 	if target_data.poi != user_data.poi:
 		response = "Not right now. You can't slap what you can't see."
+	elif user_data.id_user == target_data.id_user:
+		response = "Stop hitting yourself."
 	elif ewutils.active_restrictions.get(target_data.id_user) != None and ewutils.active_restrictions.get(target_data.id_user) > 0:
 		response = "They're in the middle of something, be patient."
 	elif target_data.life_state == ewcfg.life_state_corpse:
@@ -1962,20 +1968,21 @@ async def slap(cmd):
 
 		if dest_poi_obj.id_poi not in user_poi.neighbors.keys():
 			response = "You can't hit them that far."
-		elif inaccessible(user_data=target_data, poi=dest_poi_obj.id_poi):
+		elif inaccessible(user_data=target_data, poi=dest_poi_obj):
 			response = "That place is locked up good. You can't get a good launch angle to send them there."
-		elif time_lastuse + 180 * 60 > time_now:
-			response = "Your arm is spent from the last time you obliterated someone. Try again in {} minutes.".format(math.ceil((time_lastuse + 180*60 - time_now)/60))
+		#elif time_lastuse + 180 * 60 > time_now:
+			#response = "Your arm is spent from the last time you obliterated someone. Try again in {} minutes.".format(math.ceil((time_lastuse + 180*60 - time_now)/60))
 		elif user_data.faction != target_data.faction:
 			response = "You try to slap {}, but they realize what you're doing and jump back. Welp, back to the drawing board.".format(cmd.mentions[0].display_name)
 		elif user_poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown] or user_poi.is_apartment:
 			response = "They're currently in their room. You'd have to carry {} out of it to slap them, which would be gay.".format(cmd.mentions[0].display_name)
-		elif ewcfg.status_slapped_id in user_data.getStatusEffects():
+		elif ewcfg.status_slapped_id in target_data.getStatusEffects():
 			response = "Don't turn this into domestic abuse now. Can't you see they're still reeling from the last time?"
 		elif (ewutils.clenched.get(target_data.id_user) == None or ewutils.clenched.get(target_data.id_user) == 0) and (user_poi.is_subzone or user_poi.is_district):
 			response = "You wind up your slappin' hand and take a swing, but {} is all relaxed and you can't get a good angle. They end up flying into the wall. Better not touch people who aren't prepared to get hit...".format(cmd.mentions[0].display_name)
 		else:
 			response = "You wind up your slap. This one's gonna hurt. Steady as she goes...WHAM! {} is sent flying helplessly into {}!".format(cmd.mentions[0].display_name, dest_poi_obj.str_name)
+			target_data.applyStatus(id_status = ewcfg.status_slapped_id)
 			dm_response = "WHAP! {} smacked you into {}!".format(cmd.message.author.display_name, dest_poi_obj.str_name)
 			target_response = "**CRAAAAAAAAAAAASH!** You arrive in {}!".format(dest_poi_obj.str_name)
 			ewutils.moves_active[cmd.message.author.id] = 0
@@ -1990,14 +1997,15 @@ async def slap(cmd):
 			mutation_data.persist()
 
 			user_data.persist()
+			target_data.persist()
 
 			await ewrolemgr.updateRoles(client=ewutils.get_client(), member=cmd.mentions[0])
 			await user_data.move_inhabitants(id_poi=dest_poi_obj.id_poi)
 
 			await ewutils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, target_data.id_user)
 
-			await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.message.author, dm_response))
-			await ewutils.send_message(cmd.client, dest_poi_obj, ewutils.formatMessage(cmd.message.author, response))
+			await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], dm_response))
+			await ewutils.send_message(cmd.client, ewutils.get_channel(server=cmd.mentions[0].guild, channel_name=dest_poi_obj.channel), ewutils.formatMessage(cmd.mentions[0], target_response))
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2127,15 +2135,28 @@ def get_void_connections_resp(poi, id_server):
 
 
 async def one_eye_dm(id_user=None, id_server=None, poi=None):
+
 	poi_obj = ewcfg.id_to_poi.get(poi)
 	client = ewutils.get_client()
 	server = client.get_guild(id_server)
+	if server == None:
+		print('fuck1')
+
+	server = client.get_guild(str(id_server))
+	if server == None:
+		print('fuck2')
+
+	server = client.get_guild(int(id_server))
+	if server == None:
+		print('fuck3')
+
+
 	id_player = EwPlayer(id_user=id_user, id_server=id_server)
 
-	if poi_obj.pvp == True or poi_obj.is_street == True:
+	if poi_obj.is_street == True:
 		try:
 			recipients = ewutils.execute_sql_query(
-				"SELECT {id_user} FROM mutations WHERE {id_server} = %s AND {mutation} = %s and {data} = %s;".format(
+				"SELECT {id_user} FROM mutations WHERE {id_server} = %s AND {mutation} = %s and {data} = %s".format(
 					data=ewcfg.col_mutation_data,
 					id_server=ewcfg.col_id_server,
 					id_user=ewcfg.col_id_user,
@@ -2143,15 +2164,19 @@ async def one_eye_dm(id_user=None, id_server=None, poi=None):
 				), (
 					id_server,
 					ewcfg.mutation_id_oneeyeopen,
-					id_user
+					str(id_user),
 				))
+			print('third')
+			print(recipients)
 			for recipient in recipients:
-				member = server.get_member(recipient[0])
+				print(recipient)
+				print(recipient[0])
+				member = server.get_member(int(recipient[0]))
+				print('fourth')
 				mutation = EwMutation(id_server=id_server, id_user=recipient[0], id_mutation=ewcfg.mutation_id_oneeyeopen)
 				mutation.data = ""
 				mutation.persist()
-				await ewutils.send_message(client, member, ewutils.formatMessage(member, "{} is stirring...".format(
-					id_player.display_name)))
+				await ewutils.send_message(client, member, ewutils.formatMessage(member, "{} is stirring...".format(id_player.display_name)))
 
 		except:
 			ewutils.logMsg("Failed to do OEO notificaitons for {}.".format(id_user))
@@ -2186,4 +2211,6 @@ async def send_arrival_response(cmd, poi, channel):
 				response
 			)
 		)
+
+
 

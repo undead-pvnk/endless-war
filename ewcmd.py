@@ -2521,6 +2521,13 @@ async def create_item(cmd):
 		if item != None:
 			item_id = item.id_weapon
 			name = item.str_weapon
+
+	if item == None:
+		item = ewcfg.fish_map.get(value)
+		item_type = ewcfg.it_food
+		if item != None:
+			item_id = item.id_fish
+			name = item.str_name
 			
 	if item != None:
 		

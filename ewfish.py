@@ -366,7 +366,7 @@ async def cast(cmd):
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		elif user_data.hunger >= user_data.get_hunger_max:
+		elif user_data.hunger >= user_data.get_hunger_max():
 			response = "You're too hungry to fish right now."
 		elif (not fisher.inhabitant_id) and (poi.id_poi == ewcfg.poi_id_blackpond):
 			response = "You cast your fishing line into the pond, but your hook bounces off its black waters like hard concrete."
@@ -1029,6 +1029,7 @@ async def barter(cmd):
 						slime_gain = round(random.triangular(min_value, max_value, min_value * 2))
 
 						offer.offer_receive = slime_gain
+						offer.persist()
 						response = '\n"You know what, laddy? I like the cut of your jib. I\'ll change my offer. How about {} slime for your {}?"'.format(slime_gain, name)
 
 					else:

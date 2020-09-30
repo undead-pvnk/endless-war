@@ -1484,7 +1484,7 @@ async def trickortreat(cmd = None):
 		response = "The undead are too wicked and impure for such acts. Seems you can't have your cake and !haunt it too on Double Halloween."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if user_data.hunger >= user_data.get_hunger_max:
+	if user_data.hunger >= user_data.get_hunger_max():
 		response = "You're too hungry to trick-or-treat right now."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

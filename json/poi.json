@@ -5622,7 +5622,8 @@
             "crookline": 20,
             "crooklinestreetb": 20,
             "crooklinestreetd": 20,
-            "northsleezeboroughstreetc": 20
+            "northsleezeboroughstreetc": 20,
+            "clinicofslimoplasty": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Crookline#Manteca_Street"
@@ -5682,7 +5683,8 @@
             "crookline": 20,
             "crooklinestreetc": 20,
             "crooklinestreeta": 20,
-            "jaywalkerplainstreetb": 20
+            "jaywalkerplainstreetb": 20,
+            "clinicofslimoplasty": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Crookline#Perdio_Valley"
@@ -16886,6 +16888,71 @@
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/West_Glocksbury#Based_Hardware"
+    },
+    "clinicofslimoplasty": {
+        "id_poi": "clinicofslimoplasty",
+        "alias": [
+            "cos",
+            "clinic",
+            "doctor",
+            "doc",
+            "chemo"
+        ],
+        "str_name": "NLACakaNM Clinic of Slimoplasty",
+        "str_desc": "You walk downstairs into a crumbling, cramped old waiting room. The checkered tile floors and hole-filled upholstery look like they've been around for decades, and so does the shriveled old lady lounging behind the reception desk. The left magazine rack has some old Shonen Jump subscriptions and assorted propaganda pamphlets left behind over the years, and the right one's full of booklets detailing psychotic surgical procedures and body modificaitons. The doctor is in, bring your own anaesthetic. Exits into Perdido Valley and Manteca Street.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "clinic-of-slimoplasty",
+        "role": "Clinic of Slimoplasty",
+        "major_role": "crookline_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "clinicofslimoplasty": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [
+        ],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+            "crooklinestreetc",
+            "crooklinestreetd"
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": true,
+        "max_degradation": 10000,
+        "neighbors": {
+            "crooklinestreetc": 20,
+            "crooklinestreetd": 20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/Crookline#NLACakaNM_Clinic_of_Slimoplasty"
     },
     "classroom": {
         "id_poi": "classroom",

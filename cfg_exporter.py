@@ -27044,7 +27044,7 @@ server_list = {}
     store a server in a dictionary
 """
 def update_server_list(server):
-    server_list[server.id] = server
+    server_list[str(server.id)] = server
 
 
 client_ref = None

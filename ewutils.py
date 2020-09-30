@@ -15,6 +15,7 @@ import ewstats
 import ewitem
 import ewhunting
 import ewrolemgr
+import ewmap
 
 import discord
 
@@ -137,9 +138,10 @@ class EwResponseContainer:
 		if self.client == None:
 			logMsg("Couldn't find client")
 			return messages
-			
+
 		server = self.client.get_guild(self.id_server)
 		if server == None:
+			print('to grandma\'s house we go')
 			logMsg("Couldn't find server with id {}".format(self.id_server))
 			return messages
 
@@ -2985,13 +2987,14 @@ def mention_type(cmd, ew_id):
 		return "other"
 
 def get_mutation_alias(name):
-	if ewcfg.mutations_map.get('name') != None:
+	if ewcfg.mutations_map.get(name) != None:
 		return name
 	else:
+
 		for mutation in ewcfg.mutations_map:
-			for alias in mutation.alias:
+			for alias in ewcfg.mutations_map.get(mutation).alias:
 				if name == alias:
-					return mutation.name
+					return mutation
 		return 0
 
 def get_fingernail_item(cmd):
@@ -3007,3 +3010,41 @@ def get_fingernail_item(cmd):
 	)
 
 	return id_item
+
+
+def inaccessible(user_data=None, poi=None):
+	if poi == None or user_data == None:
+		return True
+
+	if user_data.life_state == ewcfg.life_state_observer:
+		return False
+
+	if user_data.life_state == ewcfg.life_state_shambler and poi.id_poi in [ewcfg.poi_id_rowdyroughhouse,
+																			ewcfg.poi_id_copkilltown,
+																			ewcfg.poi_id_juviesrow]:
+		return True
+
+	bans = user_data.get_bans()
+	vouchers = user_data.get_vouchers()
+
+	locked_districts_list = ewmap.retrieve_locked_districts(user_data.id_server)
+
+	if (
+			len(poi.factions) > 0 and
+			(set(vouchers).isdisjoint(set(poi.factions)) or user_data.faction != "") and
+			user_data.faction not in poi.factions
+	) or (
+			len(poi.life_states) > 0 and
+			user_data.life_state not in poi.life_states
+	):
+		return True
+	elif (
+			len(poi.factions) > 0 and
+			len(bans) > 0 and
+			set(poi.factions).issubset(set(bans))
+	):
+		return True
+	elif poi.id_poi in locked_districts_list and user_data.life_state not in [ewcfg.life_state_executive, ewcfg.life_state_lucky]:
+		return True
+	else:
+		return False

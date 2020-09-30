@@ -243,8 +243,8 @@ async def haunt(cmd):
 
 				if ewcfg.mutation_id_coleblooded in target_mutations:
 					haunted_slimes = -10000
-					if haunted_data.slimes < haunted_slimes:
-						haunted_slimes = haunted_data.slimes
+					if user_data.slimes > haunted_slimes:
+						haunted_slimes = user_data.slimes
 
 				haunted_data.change_slimes(n = -slimes_lost, source = ewcfg.source_haunted)
 				user_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunter)
