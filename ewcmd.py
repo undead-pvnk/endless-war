@@ -1071,7 +1071,7 @@ async def dab(cmd):
 async def dance(cmd):
 	user_data = EwUser(ew_id = cmd.author_id)
 	
-	if user_data.life_state == ewcfg.life_state_juvenile:
+	if user_data.life_state == ewcfg.life_state_juvenile or user_data.life_state == ewcfg.life_state_shambler:
 		response = random.choice(ewcfg.dance_responses).format(cmd.author_id.display_name)
 		response = "{} {} {}".format(ewcfg.emote_slime3, response, ewcfg.emote_slime3)
 		await ewutils.send_response(response, cmd, format_name = False)
