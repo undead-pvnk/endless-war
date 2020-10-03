@@ -168,6 +168,8 @@ class EwDistrict:
 				return False
 			elif neighbor_poi.id_poi == rival_gang_poi:
 				return False
+			elif neighbor_poi.id_poi == ewcfg.poi_id_juviesrow:
+				return False
 		return True
 
 	def all_streets_taken(self):
