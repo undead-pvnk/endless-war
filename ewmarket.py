@@ -875,12 +875,27 @@ async def stocks(cmd):
 """ show player's slimecoin balance """
 async def slimecoin(cmd):
 	if cmd.mentions_count == 0:
-		coins = EwUser(member = cmd.message.author).slimecoin
-		response = "You have {:,} SlimeCoin.".format(coins)
+		user_data = EwUser(member = cmd.message.author)
+		coins = user_data.slimecoin
+		credits = user_data.salary_credits
+		response = "You have {:,} SlimeCoin".format(coins)
+		
+		if credits != 0:
+			response += " and {:,} SlimeCorp Salary Credits.".format(credits)
+		else:
+			response += "."
+		
 	else:
 		member = cmd.mentions[0]
-		coins = EwUser(member = member).slimecoin
-		response = "{} has {:,} SlimeCoin.".format(member.display_name, coins)
+		user_data = EwUser(member = member)
+		coins = user_data.slimecoin
+		credits = user_data.salary_credits
+		response = "{} has {:,} SlimeCoin".format(member.display_name, coins)
+		
+		if credits != 0:
+			response += " and {:,} SlimeCorp Salary Credits.".format(credits)
+		else:
+			response += "."
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

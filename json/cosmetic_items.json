@@ -1481,7 +1481,9 @@
         "ingredients": "",
         "acquisition": "smelting",
         "price": 0,
-        "vendors": [],
+        "vendors": [
+            "The Breakroom"
+        ],
         "is_hat": false
     },
     "overalls": {
@@ -2297,5 +2299,29 @@
             "Downpour Armament Vending Machines"
         ],
         "is_hat": true
+    },
+    "rollerblades": {
+        "id_cosmetic": "rollerblades",
+        "str_name": "Rollerblades",
+        "str_desc": "A wicked sicknasty D-I-Y set of inline skates. These ones may not be magnetically driven or powered by netrium batteries, but they do the job just fine.",
+        "str_onadorn": "You slip into your rollerblades and tighten the straps. Let's get scratchin'.",
+        "str_unadorn": "You unfasten the belts and straps on your rollerblades.",
+        "str_onbreak": "Your rollerblades break down! Time to make a break for it on foot!",
+        "rarity": "Patrician",
+        "stats": {
+            "attack": -5,
+            "defense": -10,
+            "speed": 10
+        },
+        "ability": "boost",
+        "durability": 250000,
+        "size": 0,
+        "style": "cool",
+        "freshness": 10,
+        "ingredients": "",
+        "acquisition": "smelting",
+        "price": 0,
+        "vendors": [],
+        "is_hat": false
     }
 }

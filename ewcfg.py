@@ -150,6 +150,7 @@ poi_id_bodega = "bodega"
 poi_id_wafflehouse = "wafflehouse"
 poi_id_blackpond = "blackpond"
 poi_id_basedhardware = "basedhardware"
+poi_id_thebreakroom = "thebreakroom"
 
 # transports
 poi_id_ferry = "ferry"
@@ -483,6 +484,7 @@ chest_id_copkilltown = "copkilltownchest"
 chest_id_rowdyroughhouse = "rowdyroughhousechest"
 chest_id_juviesrow = "juviesrowchest"
 chest_id_thesewers = "sewerschest"
+chest_id_breakroom = "breakroomchest"
 
 # Transport types
 transport_type_ferry = "ferry"
@@ -536,6 +538,9 @@ role_shambler = "shamblers"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
 role_slimecorp = "slimecorp"
+role_slimecorp_pvp = "slimecorpvulnerable"
+role_slimecorp_active = "slimecorpotp"
+role_executive = "executive"
 role_deathfurnace = "deathfurnace"
 role_donor = "terezigang"
 role_tutorial = "newintown"
@@ -565,12 +570,15 @@ faction_roles = [
 	role_copkillers,
 	role_copkillers_pvp,
 	role_copkillers_active,
+	role_executive,
+	role_slimecorp,
+	role_slimecorp_pvp,
+	role_slimecorp_active,
 	role_corpse,
 	role_corpse_pvp,
 	role_corpse_active,
 	role_kingpin,
 	role_grandfoe,
-	role_slimecorp,
 	role_tutorial,
 	role_shambler,
 	]
@@ -579,14 +587,16 @@ role_to_pvp_role = {
 	role_juvenile : role_juvenile_pvp,
 	role_rowdyfuckers : role_rowdyfuckers_pvp,
 	role_copkillers : role_copkillers_pvp,
-	role_corpse : role_corpse_pvp
+	role_corpse : role_corpse_pvp,
+	role_slimecorp : role_slimecorp_pvp
 	}
 
 role_to_active_role = {
 	role_juvenile : role_juvenile_active,
 	role_rowdyfuckers : role_rowdyfuckers_active,
 	role_copkillers : role_copkillers_active,
-	role_corpse : role_corpse_active
+	role_corpse : role_corpse_active,
+	role_slimecorp : role_slimecorp_active
 	}
 
 misc_roles = {
@@ -605,8 +615,10 @@ faction_killers = "killers"
 gangbase_killers = "Cop Killtown"
 faction_rowdys = "rowdys"
 gangbase_rowdys = "Rowdy Roughhouse"
+faction_slimecorp = "slimecorp"
+gangbase_slimecorp = "The Breakroom"
 faction_banned = "banned"
-factions = [faction_killers, faction_rowdys]
+factions = [faction_killers, faction_rowdys, faction_slimecorp]
 psuedo_faction_gankers = 'gankers' # not attatched to a user's data
 psuedo_faction_shamblers = 'shamblers' # same as above
 
@@ -657,6 +669,7 @@ channel_apt = "apartment"
 channel_sodafountain = "the-bicarbonate-soda-fountain"
 channel_greencakecafe = "green-cake-cafe"
 channel_glocksburycomics = "glocksbury-comics"
+channel_breakroom = "the-breakroom"
 
 channel_wt_port = "wreckington-port"
 channel_vc_port = "vagrants-corner-port"
@@ -1045,6 +1058,7 @@ cmd_thrash = cmd_prefix + 'thrash'
 cmd_dab = cmd_prefix + 'dab'
 cmd_boo = cmd_prefix + 'boo'
 cmd_dance = cmd_prefix + 'dance'
+cmd_propaganda = cmd_prefix + 'propaganda'
 cmd_coinflip = cmd_prefix + 'co1nfl1p'
 cmd_spook = cmd_prefix + 'spook'
 cmd_makecostume = cmd_prefix + 'makecostume'
@@ -1137,6 +1151,9 @@ cmd_unwrap = cmd_prefix + 'unwrap'
 cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
 cmd_shamble = cmd_prefix + 'shamble'
 cmd_rejuvenate = cmd_prefix + 'rejuvenate'
+cmd_clockin = cmd_prefix + 'clockin'
+cmd_clockout = cmd_prefix + 'clockout'
+cmd_sanitize = cmd_prefix + 'sanitize'
 
 cmd_switch = cmd_prefix + 'switch'
 cmd_switch_alt_1 = cmd_prefix + 's'
@@ -2108,7 +2125,7 @@ col_sap = 'sap'
 col_hardened_sap = 'hardened_sap'
 col_manuscript = "manuscript"
 col_spray = "spray"
-col_swear_jar = 'swear_jar'
+col_salary_credits = 'salary_credits'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
 col_sidearm = 'sidearm'
@@ -2415,6 +2432,7 @@ stat_total_slimecoin_invested = 'total_slimecoin_invested'
 stat_total_slimecoin_withdrawn = 'total_slimecoin_withdrawn'
 stat_total_slimecoin_from_recycling = 'total_slimecoin_from_recycling'
 stat_total_slimecoin_from_swearing = 'total_slimecoin_from_swearing'
+stat_total_slimecoin_from_salary = 'total_slimecoin_from_salary'
 stat_bounty_collected = 'bounty_collected'
 stat_max_bounty = 'max_bounty'
 stat_ghostbusts = 'ghostbusts'
@@ -2508,6 +2526,7 @@ coinsource_invest = 6
 coinsource_withdraw = 7
 coinsource_recycle = 8
 coinsource_swearjar = 9
+coinsource_salary = 10
 
 # Causes of death, for statistics tracking
 cause_killing = 0
@@ -2570,6 +2589,7 @@ vendor_basedhardware = "Based Hardware" # Hardware store in West Glocksbury
 vendor_lab = "Lab" #Slimecorp products
 vendor_atomicforest = "Atomic Forest Stockpile" # Storage of atomic forest
 vendor_downpourlaboratory = "Downpour Armament Vending Machines" # Store for shamblers to get stuff
+vendor_breakroom = "The Breakroom" # Security officers can order items here for free.
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -5272,7 +5292,7 @@ def wef_staff(ctn = None):
 			lambda ctn: ctn.user_data.get_possession('weapon'),
 			lambda ctn: ctn.user_data.poi == poi_id_thevoid,
 			lambda ctn: ctn.shootee_data.slimes > ctn.user_data.slimes,
-			lambda ctn: (ctn.user_data.swear_jar >= 500) or (ctn.shootee_data.swear_jar == 0),
+			lambda ctn: (ctn.user_data.salary_credits <= -50000) or (ctn.shootee_data.salary_credits == 0),
 			lambda ctn: (ctn.user_data.poi_death == ctn.user_data.poi) or (ctn.shootee_data.poi_death == ctn.shootee_data.poi),
 			lambda ctn: (ctn.user_data.id_killer == ctn.shootee_data.id_user) or (ctn.user_data.id_user == ctn.shootee_data.id_killer),
 			lambda ctn: (ctn.shootee_data.life_state == life_state_juvenile) or (ctn.shootee_data.life_state == life_state_enlisted and ctn.shootee_data.faction == ctn.user_data.faction),
@@ -5401,7 +5421,7 @@ weapon_list = [
 		str_scalp = " It has a bullet hole in it.",
 		fn_effect = wef_revolver,
 		clip_size = 6,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		classes = [weapon_class_ammo],
 		stat = stat_revolver_kills,
 		#sap_cost = 1,
@@ -5435,7 +5455,7 @@ weapon_list = [
 		fn_effect = wef_dualpistols,
 		clip_size = 12,
 		price = 10000,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		classes = [weapon_class_ammo],
 		stat = stat_dual_pistols_kills,
 		#sap_cost = 1,
@@ -5469,7 +5489,7 @@ weapon_list = [
 		fn_effect = wef_shotgun,
 		clip_size = 2,
 		price = 10000,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		classes = [weapon_class_ammo],
 		stat = stat_shotgun_kills,
 		#sap_cost = 4,
@@ -5502,7 +5522,7 @@ weapon_list = [
 		fn_effect = wef_rifle,
 		clip_size = 4,
 		price = 10000,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		classes = [weapon_class_ammo],
 		stat = stat_rifle_kills,
 		#sap_cost = 3,
@@ -5536,7 +5556,7 @@ weapon_list = [
 		fn_effect = wef_smg,
 		clip_size = 4,
 		price = 10000,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		classes = [weapon_class_ammo, weapon_class_jammable],
 		stat = stat_smg_kills,
 		#sap_cost = 3,
@@ -5598,7 +5618,7 @@ weapon_list = [
 		str_scalp = " It has a couple nails in it.",
 		fn_effect = wef_bat,
 		price = 10000,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		stat = stat_bat_kills,
 		#sap_cost = 2,
 		captcha_length = 2
@@ -5627,7 +5647,7 @@ weapon_list = [
 		str_scalp = " It has bone fragments in it.",
 		fn_effect = wef_brassknuckles,
 		price = 10000,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		stat = stat_brassknuckles_kills,
 		#sap_cost = 1,
 		captcha_length = 2
@@ -5657,7 +5677,7 @@ weapon_list = [
 		str_scalp = " It seems to have been removed with some precision.",
 		fn_effect = wef_katana,
 		price = 10000,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		classes= [weapon_class_captcha],
 		stat = stat_katana_kills,
 		#sap_cost = 3,
@@ -5692,7 +5712,7 @@ weapon_list = [
 		fn_effect = wef_broadsword,
 		clip_size = 1,
 		price = 10000,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		classes = [weapon_class_ammo, weapon_class_heavy],
 		stat = stat_broadsword_kills,
 		#sap_cost = 12,
@@ -5724,7 +5744,7 @@ weapon_list = [
 		str_scalp = " It looks very bruised.",
 		fn_effect = wef_nunchucks,
 		price = 10000,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		stat = stat_nunchucks_kills,
 		#sap_cost = 4,
 		captcha_length = 3
@@ -5751,7 +5771,7 @@ weapon_list = [
 		str_scalp = " It's cut in two pieces.",
 		fn_effect = wef_scythe,
 		price = 10000,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		stat = stat_scythe_kills,
 		#sap_cost = 6,
 		captcha_length = 4
@@ -5780,7 +5800,7 @@ weapon_list = [
 		str_scalp = " It has a ball bearing hidden inside it. You can spin it like a fidget spinner.",
 		fn_effect = wef_yoyo,
 		price = 10000,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		stat = stat_yoyo_kills,
 		#sap_cost = 1,
 		captcha_length = 2
@@ -5811,7 +5831,7 @@ weapon_list = [
 		str_scalp = " It has about a half dozen stab holes in it.",
 		fn_effect = wef_knives,
 		price = 500,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		classes = [weapon_class_thrown],
 		stat = stat_knives_kills,
 		#sap_cost = 1,
@@ -5844,7 +5864,7 @@ weapon_list = [
 		str_scalp = " It's burnt to a crisp!",
 		fn_effect = wef_molotov,
 		price = 500,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		classes = [weapon_class_thrown, weapon_class_burning],
 		stat = stat_molotov_kills,
 		#sap_cost = 1,
@@ -5873,7 +5893,7 @@ weapon_list = [
 		str_scalp = " It's covered in metallic shrapnel.",
 		fn_effect = wef_grenade,
 		price = 500,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		classes = [weapon_class_thrown, weapon_class_exploding],
 		stat = stat_grenade_kills,
 		#sap_cost = 1,
@@ -5903,7 +5923,7 @@ weapon_list = [
 		str_scalp = " It's a deep shade of blue.",
 		fn_effect = wef_garrote,
 		price = 10000,
-		vendors = [vendor_dojo],
+		vendors = [vendor_dojo, vendor_breakroom],
 		stat = stat_garrote_kills,
 		#sap_cost = 5,
 	),
@@ -6101,7 +6121,7 @@ weapon_list = [
 		str_scalp="The scalp is a nice shade of mauve.",
 		fn_effect=wef_tool,
 		str_description="It's a Based Hardware brand spray can, in your gang's color. The blurb on the backside preaches about the merits of street art and murals, but you're pretty sure that's just to cover their ass.",
-		vendors = [vendor_basedhardware],
+		vendors = [vendor_basedhardware, vendor_breakroom],
 		stat=stat_spraycan_kills,
 		classes=[weapon_class_paint, weapon_class_captcha],
 		#sap_cost=2,
@@ -6138,7 +6158,7 @@ weapon_list = [
 		str_scalp="The scalp is colorful, from both blood and paint.",
 		fn_effect=wef_tool,
 		str_description="It's an industrial strength two handed paint gun with a sniper scope attached. What do they use this for in industry, anyway?",
-		vendors=[vendor_basedhardware],
+		vendors=[vendor_basedhardware, vendor_breakroom],
 		stat=stat_paintgun_kills,
 		classes=[weapon_class_paint, weapon_class_ammo, weapon_class_captcha],
 		clip_size = 15,
@@ -6180,7 +6200,7 @@ weapon_list = [
 		fn_effect=wef_tool,
 		price = 4500,
 		str_description="It's a long, broom-like plastic paint roller with a spongy brush and metal axle. The modern man's bo staff.",
-		vendors=[vendor_basedhardware],
+		vendors=[vendor_basedhardware, vendor_breakroom],
 		stat=stat_paintroller_kills,
 		classes=[weapon_class_paint, weapon_class_captcha],
 		#sap_cost=2,
@@ -6217,7 +6237,7 @@ weapon_list = [
 		str_scalp="The scalp has a bunch of welts, and has a faint smell of lead.",
 		fn_effect=wef_tool,
 		str_description="A stack of large, coarse-bristled paintbrushes, linked together on a burlap string.",
-		vendors=[vendor_basedhardware],
+		vendors=[vendor_basedhardware, vendor_breakroom],
 		stat=stat_paintbrush_kills,
 		classes=[weapon_class_paint, weapon_class_captcha],
 		#sap_cost=2,
@@ -6253,7 +6273,7 @@ weapon_list = [
 		str_scalp="The scalp is perfectly intact.",
 		fn_effect=wef_tool,
 		str_description="A 12 pack of watercolors, the kind you used when you were a 5 years old boy.",
-		vendors=[vendor_basedhardware],
+		vendors=[vendor_basedhardware, vendor_breakroom],
 		stat=stat_watercolor_kills,
 		classes=[weapon_class_paint, weapon_class_captcha],
 		#sap_cost=2,
@@ -6291,7 +6311,7 @@ weapon_list = [
 		str_scalp="The scalp smells awful, you can hardly hold it.",
 		fn_effect=wef_tool,
 		str_description="A pack of brittle glass bottles filled with paint thinner. This stuff vaporizes like nobody's business, and could strip the osmotic membrane off a slimeoid.",
-		vendors=[vendor_basedhardware],
+		vendors=[vendor_basedhardware, vendor_breakroom],
 		stat=stat_thinnerbomb_kills,
 		classes=[weapon_class_paint, weapon_class_thrown, weapon_class_captcha],
 		#sap_cost=2,
@@ -8147,6 +8167,7 @@ soul_durability = 100000000 # 100 mega
 cosmetic_id_raincoat = "raincoat"
 
 cosmeticAbility_id_lucky = "lucky"
+cosmeticAbility_id_boost = "boost" # Not in use. Rollerblades have this ability.
 
 
 #load EwCosmeticItems from json to cosmetic_items_list
@@ -9620,6 +9641,23 @@ smelting_recipe_list = [
 		},
 		products=[item_id_stick]
 	),
+	EwSmeltingRecipe(
+        id_recipe="rollerblades",
+        str_name="a pair of rollerblades",
+        alias=[
+            'rollerblades',
+            'inlineskates',
+            'skates',
+            'jsr'
+        ],
+        ingredients={
+            item_id_oldboot: 2, # Shoes
+            item_id_slimepoudrin: 8, # Wheels
+            item_id_leather: 1, # Buckles
+            item_id_string: 2, # Laces
+        },
+        products=["rollerblades"]
+    )
 ]
 #smelting_recipe_list += ewdebug.debugrecipes
 
@@ -14121,6 +14159,11 @@ dance_responses = [
 	"{} gets the urge to !thrash, but holds back with all their might.",
 	"{} just kind of stands there, awkwardly. What did you expect?",
 	"{} makes a complete fool of themselves. Everyone gets secondhand embarrassment...",
+]
+
+# links to SlimeCorp propaganda
+propaganda = [
+	'https://cdn.discordapp.com/attachments/431238867459375145/617526157239386113/image0.jpg',
 ]
 
 # list of genres and aliases

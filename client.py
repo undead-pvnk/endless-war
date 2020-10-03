@@ -178,6 +178,9 @@ cmd_map = {
 	# Juvies can dance
 	ewcfg.cmd_dance: ewcmd.dance,
 	
+	# SlimeCorp security officers can post propaganda
+	ewcfg.cmd_propaganda: ewcmd.propaganda,
+	
 	# Terezi Gang can flip coins
 	ewcfg.cmd_coinflip: ewcmd.coinflip,
     
@@ -194,7 +197,7 @@ cmd_map = {
 	ewcfg.cmd_endlesswar: ewcmd.endlesswar,
 	
 	# Show the number of swears in the global swear jar.
-	ewcfg.cmd_swear_jar: ewcmd.swearjar,
+	# ewcfg.cmd_swear_jar: ewcmd.swearjar,
 
 	# Display the progress towards the current Quarterly Goal.
 	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
@@ -712,6 +715,11 @@ cmd_map = {
 
 	# grant slimecorp executive status
 	ewcfg.cmd_promote: ewcmd.promote,
+	
+	# SlimeCorp commands
+	ewcfg.cmd_clockin: ewmap.clockin,
+	ewcfg.cmd_clockout: ewmap.clockout,
+	ewcfg.cmd_sanitize: ewwep.sanitize,
 
 	# trading
 	ewcfg.cmd_trade: ewmarket.trade,
@@ -1215,6 +1223,7 @@ async def on_ready():
 
 					if market_data.clock == 6 and market_data.day % 8 == 0:
 						await ewapt.rent_time(id_server=server.id)
+						await ewutils.pay_salary(id_server=server.id)
 
 					market_data = EwMarket(id_server=server.id)
 
@@ -1403,13 +1412,13 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None: # or (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
 				direct message (server == None)
 				user is new/has no roles (len(roles) < 4)
-				user is swearing - temp disabled
+				user is a security officer and has cussed
 		"""
 
 		#Ignore users with weird characters in their name
@@ -1455,9 +1464,8 @@ async def on_message(message):
 
 		"""
 			Punish the user for swearing.
+			The swear_jar attribute has been repurposed for SlimeCorp security officers
 		"""
-
-		""" 
 		if (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
 			# print(content_tolower_list)
 			swear_multiplier = 0
@@ -1468,11 +1476,6 @@ async def on_message(message):
 
 				# gather all the swear words the user typed.
 				for swear in ewcfg.curse_words.keys():
-
-					if swear == "buster" and usermodel.faction == ewcfg.faction_rowdys:
-						continue
-					if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
-						continue
 
 					swear_count = content_tolower_list.count(swear)
 
@@ -1493,23 +1496,17 @@ async def on_message(message):
 					for i in range(swear_count):
 						swear_multiplier += ewcfg.curse_words[swear]
 
-						market_data.global_swear_jar += 1
-
-						usermodel.swear_jar += 1
+						# usermodel.swear_jar += 1
 
 				# don't fine the user or send out the message if there weren't enough curse words
-				if swear_multiplier > 50:
+				if swear_multiplier > 10:
 
 					# fine the user for swearing, based on how much they've sworn right now, as well as in the past
-					swear_jar_fee = usermodel.swear_jar * swear_multiplier * 100
+					swear_jar_fee = swear_multiplier * 10000
 
-					# prevent user from reaching negative slimecoin
-					if swear_jar_fee > usermodel.slimecoin:
-						swear_jar_fee = usermodel.slimecoin
-
-					usermodel.change_slimecoin(n=-1 * swear_jar_fee, coinsource=ewcfg.coinsource_swearjar)
+					usermodel.salary_credits -= swear_jar_fee
 					
-					response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
+					response = '*{}*: Your SlimeCorp headset chatters in your ear...\n"Reminder: Foul language is strictly prohibited. {} salary credits have been docked from your profile."'.format(message.author.display_name, swear_jar_fee)
 					await ewutils.send_message(client, message.channel, response)
 
 				market_data.persist()
@@ -1518,7 +1515,6 @@ async def on_message(message):
 			# if the message wasn't a command, we can stop here
 			if not message.content.startswith(ewcfg.cmd_prefix):
 				return
-		"""
 		
 		"""
 			Handle direct messages.
@@ -1527,7 +1523,7 @@ async def on_message(message):
 			playermodel = ewplayer.EwPlayer(id_user = message.author.id)
 			usermodel = EwUser(id_user=message.author.id, id_server= playermodel.id_server)
 			poi = ewcfg.id_to_poi.get(usermodel.poi)
-			cmd_obj.guild = ewcfg.server_list[playermodel.id_server]
+			cmd_obj.guild = ewcfg.drserver_list[playermodel.id_server]
 			# Direct message the player their inventory.
 			if ewitem.cmd_is_inventory(cmd):
 				return await ewitem.inventory_print(cmd_obj)

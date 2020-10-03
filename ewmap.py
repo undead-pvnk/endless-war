@@ -1645,7 +1645,7 @@ async def kick(id_server):
 			user_data = EwUser(id_user = id_user, id_server = id_server)
 
 			# checks if the player should be kicked from the subzone and kicks them if they should.
-			if poi.is_subzone and poi.id_poi not in [ewcfg.poi_id_thesphere]:
+			if poi.is_subzone and poi.id_poi not in [ewcfg.poi_id_thesphere, ewcfg.poi_id_thebreakroom]:
 				
 				# Some subzones could potentially have multiple mother districts.
 				# Make sure to get one that's accessible before attempting a proper kickout.
@@ -1989,3 +1989,82 @@ async def send_arrival_response(cmd, poi, channel):
 				response
 			)
 		)
+
+
+async def clockout(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	# poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi_dest = ewcfg.id_to_poi.get(ewcfg.poi_id_slimecorphq)
+
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
+	elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
+		response = "You can't do that right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	elif user_data.poi != ewcfg.poi_id_thebreakroom:
+		response = "You don't work here."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		global move_counter
+
+		move_counter += 1
+		move_current = ewutils.moves_active[cmd.message.author.id] = move_counter
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You start walking towards the lobby of SlimeCorp HQ."))
+		await asyncio.sleep(20)
+
+		if move_current == ewutils.moves_active[cmd.message.author.id]:
+			user_data = EwUser(member=cmd.message.author)
+			user_data.poi = poi_dest.id_poi
+			user_data.persist()
+			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+			response = "Well, time to get to work."
+
+			client = ewutils.get_client()
+			server = client.get_guild(user_data.id_server)
+
+			await ewutils.send_message(cmd.client, ewutils.get_channel(server, poi_dest.channel),  ewutils.formatMessage(cmd.message.author, response))
+
+
+async def clockin(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	# poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi_dest = ewcfg.id_to_poi.get(ewcfg.poi_id_thebreakroom)
+
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
+	elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
+		response = "You can't do that right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	elif user_data.poi != ewcfg.poi_id_slimecorphq:
+		response = "You don't work here."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	elif user_data.faction != ewcfg.faction_slimecorp and user_data.life_state != ewcfg.life_state_executive:
+		response = "Security guards block your path. It seems the only way through is to assimilate into their ranks and !enlist slimecorp."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		global move_counter
+
+		move_counter += 1
+		move_current = ewutils.moves_active[cmd.message.author.id] = move_counter
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You start walking towards the breakroom."))
+		await asyncio.sleep(20)
+
+		if move_current == ewutils.moves_active[cmd.message.author.id]:
+			user_data = EwUser(member=cmd.message.author)
+			user_data.poi = poi_dest.id_poi
+			user_data.persist()
+			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+			response = "Welcome to the breakroom. It's safer here."
+
+			client = ewutils.get_client()
+			server = client.get_guild(user_data.id_server)
+
+			await ewutils.send_message(cmd.client, ewutils.get_channel(server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
+

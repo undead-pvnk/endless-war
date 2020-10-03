@@ -367,20 +367,20 @@ def gen_data_text(
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
 			
-		if user_data.swear_jar >= 500:
-			response_block += "They're going to The Underworld for the things they've said."
-		elif user_data.swear_jar >= 100:
-			response_block += "They swear like a sailor!"
-		elif user_data.swear_jar >= 50:
-			response_block += "They have quite a profane vocabulary."
-		elif user_data.swear_jar >= 10:
-			response_block += "They've said some naughty things in the past."
-		elif user_data.swear_jar >= 5:
-			response_block += "They've cussed a handful of times here and there."
-		elif user_data.swear_jar > 0:
-			response_block += "They've sworn only a few times."
-		else:
-			response_block += "Their mouth is clean as a whistle."
+		# if user_data.swear_jar >= 500:
+		# 	response_block += "They're going to The Underworld for the things they've said."
+		# elif user_data.swear_jar >= 100:
+		# 	response_block += "They swear like a sailor!"
+		# elif user_data.swear_jar >= 50:
+		# 	response_block += "They have quite a profane vocabulary."
+		# elif user_data.swear_jar >= 10:
+		# 	response_block += "They've said some naughty things in the past."
+		# elif user_data.swear_jar >= 5:
+		# 	response_block += "They've cussed a handful of times here and there."
+		# elif user_data.swear_jar > 0:
+		# 	response_block += "They've sworn only a few times."
+		# else:
+		# 	response_block += "Their mouth is clean as a whistle."
 			
 		if len(response_block) > 0:
 			response += "\n" + response_block
@@ -649,20 +649,20 @@ async def data(cmd):
 						response_block += "{} is also possessing your {}. ".format(server.get_member(ghost_in_weapon).display_name, possession_type)
 
 	
-		if user_data.swear_jar >= 500:
-			response_block += "You're going to The Underworld for the things you've said."
-		elif user_data.swear_jar >= 100:
-			response_block += "You swear like a sailor!"
-		elif user_data.swear_jar >= 50:
-			response_block += "You have quite a profane vocabulary."
-		elif user_data.swear_jar >= 10:
-			response_block += "You've said some naughty things in the past."
-		elif user_data.swear_jar >= 5:
-			response_block += "You've cussed a handful of times here and there."
-		elif user_data.swear_jar > 0:
-			response_block += "You've sworn only a few times."
-		else:
-			response_block += "Your mouth is clean as a whistle."
+		# if user_data.swear_jar >= 500:
+		# 	response_block += "You're going to The Underworld for the things you've said."
+		# elif user_data.swear_jar >= 100:
+		# 	response_block += "You swear like a sailor!"
+		# elif user_data.swear_jar >= 50:
+		# 	response_block += "You have quite a profane vocabulary."
+		# elif user_data.swear_jar >= 10:
+		# 	response_block += "You've said some naughty things in the past."
+		# elif user_data.swear_jar >= 5:
+		# 	response_block += "You've cussed a handful of times here and there."
+		# elif user_data.swear_jar > 0:
+		# 	response_block += "You've sworn only a few times."
+		# else:
+		# 	response_block += "Your mouth is clean as a whistle."
 			
 
 		if len(response_block) > 0:
@@ -1076,6 +1076,15 @@ async def dance(cmd):
 		response = "{} {} {}".format(ewcfg.emote_slime3, response, ewcfg.emote_slime3)
 		await ewutils.send_response(response, cmd, format_name = False)
 
+"""
+	Slimecorp PROPAGANDIZES
+"""
+async def propaganda(cmd):
+	user_data = EwUser(ew_id = cmd.author_id)
+	
+	if (user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_slimecorp) or user_data.life_state == ewcfg.life_state_executive:
+		response = random.choice(ewcfg.propaganda)
+		await ewutils.send_response(response, cmd, format_name=False)
 
 """
 	Ghosts BOO
@@ -1734,7 +1743,6 @@ async def pray(cmd):
 			market_data = EwMarket(id_server=cmd.guild.id)
 			market_data.global_swear_jar = max(0, market_data.global_swear_jar - 3)
 			market_data.persist()
-			user_data.swear_jar = 0
 			user_data.persist()
 
 			if diceroll < probabilityofpoudrin: # Player gets a poudrin.

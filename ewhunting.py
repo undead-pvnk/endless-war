@@ -468,7 +468,8 @@ class EwEnemy:
 
 			target_iskillers = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_killers
 			target_isrowdys = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_rowdys
-			target_isslimecorp = target_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
+			target_isslimecorp = target_data.life_state == ewcfg.life_state_enlisted and target_data.life_state == ewcfg.faction_slimecorp
+			target_isexecutive = target_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 			target_isjuvie = target_data.life_state == ewcfg.life_state_juvenile
 			target_isnotdead = target_data.life_state != ewcfg.life_state_corpse
 			target_isshambler = target_data.life_state == ewcfg.life_state_shambler
@@ -486,7 +487,7 @@ class EwEnemy:
 				resp_cont.add_channel_response(ch_name, response)
 
 			# enemies dont fuck with ghosts, ghosts dont fuck with enemies.
-			elif (target_iskillers or target_isrowdys or target_isjuvie or target_isslimecorp or target_isshambler) and (target_isnotdead):
+			elif (target_iskillers or target_isrowdys or target_isjuvie or target_isexecutive or target_isshambler or target_isslimecorp) and (target_isnotdead):
 				was_killed = False
 				was_hurt = False
 

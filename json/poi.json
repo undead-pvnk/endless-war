@@ -11408,7 +11408,6 @@
         "id_poi": "thebeachresort",
         "alias": [
             "resort",
-            "br",
             "r"
         ],
         "str_name": "The Resort",
@@ -16884,6 +16883,67 @@
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/West_Glocksbury#Based_Hardware"
+    },
+    "thebreakroom": {
+        "id_poi": "thebreakroom",
+        "alias": [
+            "breakroom",
+            "br"
+        ],
+        "str_name": "The SlimeCorp Headquaters Breakroom",
+        "str_desc": "A high-class corporate breakroom. This place has everything! Storage lockers, vending machines, ration dispensers, heck, even free weapon caches! Who WOULDN'T want to be a security officer with benefits like these?",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": [],
+        "coord_alias": [],
+        "channel": "the-breakroom",
+        "role": "The Breakroom",
+        "major_role": "downtown_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "thebreakroom": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [
+            "slimecorp"
+        ],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [
+            "The Breakroom"
+        ],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": true,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+            "downtown"
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": "breakroomchest",
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {},
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/SlimeCorp"
     },
     "classroom": {
         "id_poi": "classroom",

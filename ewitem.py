@@ -1751,7 +1751,12 @@ async def discard(cmd):
 				else:
 					user_data.weapon = -1
 					user_data.persist()
-					
+			# elif item.item_type == ewcfg.it_cosmetic:
+			# 	# Prevent the item from being dropped if it is adorned
+			# 	if item_sought.get("adorned") == 'true':
+			# 		response = "You need to !dedorn your {} first, before you can throw it away.".format(item_sought.get("name"))
+			# 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			
 			response = "You throw away your " + item_sought.get("name")
 			item_drop(id_item = item.id_item)
 
