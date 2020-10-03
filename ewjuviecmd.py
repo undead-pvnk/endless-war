@@ -154,16 +154,16 @@ async def enlist(cmd):
 		if ewcfg.faction_slimecorp in bans:
 			response = "You are banned from enlisting in the {} security forces.".format(ewcfg.faction_slimecorp)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		# if ewcfg.faction_slimecorp not in vouchers and user_data.faction != ewcfg.faction_slimecorp:
-		# 	response = "You need a current security officer's permission to join the {} security forces.".format(ewcfg.faction_slimecorp)
-		# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		if ewcfg.faction_slimecorp not in vouchers and user_data.faction != ewcfg.faction_slimecorp:
+			response = "You need a current executive or security officer's permission to join the {} security forces.".format(ewcfg.faction_slimecorp)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		elif user_data.life_state in [ewcfg.life_state_enlisted] and user_data.faction == ewcfg.faction_slimecorp:
 			response = "You are already enlisted in the {} security forces! Look, your name is red! Get a clue, idiot.".format(user_data.faction)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		# elif user_data.faction == ewcfg.faction_killers or user_data.faction == ewcfg.faction_rowdys:
-		# 	response = "Traitor! You can only {} in the {} security forces, you treacherous cretin. Ask for a {} if you're that weak-willed.".format(ewcfg.cmd_enlist, user_data.faction, ewcfg.cmd_pardon)
+		# 	response = "Traitor! You can't {} in the {} security forces, you treacherous cretin. Ask for a {} if you're that weak-willed.".format(ewcfg.cmd_enlist, user_data.faction, ewcfg.cmd_pardon)
 		# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		else:
