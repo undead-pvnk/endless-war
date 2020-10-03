@@ -3966,7 +3966,7 @@ async def payday(cmd):
 		response = "You don't work here."
 	elif market_data.clock < 6 or market_data.clock >= 8:
 		response = "The kind lady at the receptionist desk informs you that paychecks can only be collected between 6 and 8 AM."
-	elif credits <= 0:
+	elif credits <= 9999:
 		response = "You don't have any salary credits that can be exchanged..."
 	else:
 		user_data.salary_credits = 0
