@@ -200,8 +200,7 @@ cmd_map = {
 	# ewcfg.cmd_swear_jar: ewcmd.swearjar,
 
 	# Display the progress towards the current Quarterly Goal.
-	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
-
+	# ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
 
 	ewcfg.cmd_retire: ewapt.retire,
 	ewcfg.cmd_depart: ewapt.depart,
