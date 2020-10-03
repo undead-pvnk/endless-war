@@ -1412,7 +1412,7 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
@@ -1466,51 +1466,58 @@ async def on_message(message):
 			Punish the user for swearing.
 			The swear_jar attribute has been repurposed for SlimeCorp security officers
 		"""
-		if (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
+		if (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
 			# print(content_tolower_list)
 			swear_multiplier = 0
 			usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
 
 			if usermodel != None:
 				market_data = EwMarket(id_server=usermodel.id_server)
+				
+				if usermodel.faction == ewcfg.faction_slimecorp and usermodel.life_state == ewcfg.life_state_enlisted:
 
-				# gather all the swear words the user typed.
-				for swear in ewcfg.curse_words.keys():
-
-					swear_count = content_tolower_list.count(swear)
-
-					# Niche scenarios. If certain words are used, don't count their components as swears.
-					# if swear == "shit" and "shit" not in content_tolower:
-					# 	#print('swear detection turned off for {}.'.format(swear))
-					# 	continue
-					# elif swear == "fag" and "fag" not in content_tolower:
-					# 	#print('swear detection turned off for {}.'.format(swear))
-					# 	continue
-					# elif swear == "fuck" and (content_tolower.count('<rowdyfucker431275088076079105>') > 0 or content_tolower.count('<fucker431424220837183489>') > 0):
-					# 	#print('swear detection turned off for {}.'.format(swear))
-					# 	continue
-					# elif swear == "mick" and (content_tolower.count('gimmick') > 0):
-					# 	#print('swear detection turned off for {}.'.format(swear))
-					# 	continue
-
-					for i in range(swear_count):
-						swear_multiplier += ewcfg.curse_words[swear]
-
-						# usermodel.swear_jar += 1
-
-				# don't fine the user or send out the message if there weren't enough curse words
-				if swear_multiplier > 10:
-
-					# fine the user for swearing, based on how much they've sworn right now, as well as in the past
-					swear_jar_fee = swear_multiplier * 10000
-
-					usermodel.salary_credits -= swear_jar_fee
-					
-					response = '*{}*: Your SlimeCorp headset chatters in your ear...\n"Reminder: Foul language is strictly prohibited. {} salary credits have been docked from your profile."'.format(message.author.display_name, swear_jar_fee)
-					await ewutils.send_message(client, message.channel, response)
-
-				market_data.persist()
-				usermodel.persist()
+					# gather all the swear words the user typed.
+					for swear in ewcfg.curse_words.keys():
+	
+						swear_count = content_tolower.count(swear)
+	
+						# Niche scenarios. If certain words are used, don't count their components as swears.
+						if swear == "shit" and "shit" not in content_tolower:
+							#print('swear detection turned off for {}.'.format(swear))
+							continue
+							
+						# This one's funny, keep this one on. Bit of a gamer...
+						# elif swear == "fag" and "fag" not in content_tolower:
+							#print('swear detection turned off for {}.'.format(swear))
+							# continue
+						
+						elif swear == "fuck" and (content_tolower.count('<rowdyfucker431275088076079105>') > 0 or content_tolower.count('<fucker431424220837183489>') > 0):
+							#print('swear detection turned off for {}.'.format(swear))
+							continue
+						elif swear == "mick" and (content_tolower.count('gimmick') > 0):
+							#print('swear detection turned off for {}.'.format(swear))
+							continue
+	
+						for i in range(swear_count):
+							swear_multiplier += ewcfg.curse_words[swear]
+	
+							# usermodel.swear_jar += 1
+						
+					# print('multiplier: {}'.format(swear_multiplier))
+	
+					# don't fine the user or send out the message if there weren't enough curse words
+					if swear_multiplier > 10:
+	
+						# fine the user for swearing, based on how much they've sworn right now, as well as in the past
+						swear_jar_fee = swear_multiplier * 10000
+	
+						usermodel.salary_credits -= swear_jar_fee
+						
+						response = '*{}*: Your SlimeCorp headset chatters in your ear...\n"Reminder: Foul language is strictly prohibited. {} salary credits have been docked from your profile."'.format(message.author.display_name, swear_jar_fee)
+						await ewutils.send_message(client, message.channel, response)
+	
+					market_data.persist()
+					usermodel.persist()
 			
 			# if the message wasn't a command, we can stop here
 			if not message.content.startswith(ewcfg.cmd_prefix):

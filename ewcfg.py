@@ -14164,6 +14164,13 @@ dance_responses = [
 # links to SlimeCorp propaganda
 propaganda = [
 	'https://cdn.discordapp.com/attachments/431238867459375145/617526157239386113/image0.jpg',
+	'https://cdn.discordapp.com/attachments/761984492868993031/761984545087946764/break_free_goon.png',
+	'https://cdn.discordapp.com/attachments/761984492868993031/761984547549478942/corp_goon_1.png',
+	'https://cdn.discordapp.com/attachments/761984492868993031/761984566562258984/saint_goon.png',
+	'https://cdn.discordapp.com/attachments/761984492868993031/761984567249731664/D7xtNC8XYAI5uB9.png',
+	'https://cdn.discordapp.com/attachments/761984492868993031/761984569460391967/DeQWu9iX0AA-F7H.png',
+	'https://cdn.discordapp.com/attachments/761984492868993031/761984575228215316/securityforce2.png',
+	'https://cdn.discordapp.com/attachments/761984492868993031/761984576205619220/slime_corp_designs.png',
 ]
 
 # list of genres and aliases
