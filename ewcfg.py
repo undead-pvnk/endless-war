@@ -1154,6 +1154,8 @@ cmd_rejuvenate = cmd_prefix + 'rejuvenate'
 cmd_clockin = cmd_prefix + 'clockin'
 cmd_clockout = cmd_prefix + 'clockout'
 cmd_sanitize = cmd_prefix + 'sanitize'
+cmd_paycheck = cmd_prefix + 'paycheck'
+cmd_payday = cmd_prefix + 'payday'
 
 cmd_switch = cmd_prefix + 'switch'
 cmd_switch_alt_1 = cmd_prefix + 's'

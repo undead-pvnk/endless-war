@@ -719,6 +719,8 @@ cmd_map = {
 	ewcfg.cmd_clockin: ewmap.clockin,
 	ewcfg.cmd_clockout: ewmap.clockout,
 	ewcfg.cmd_sanitize: ewwep.sanitize,
+	ewcfg.cmd_paycheck: ewcmd.paycheck,
+	ewcfg.cmd_payday: ewcmd.payday,
 
 	# trading
 	ewcfg.cmd_trade: ewmarket.trade,

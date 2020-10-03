@@ -1419,6 +1419,7 @@ async def promote(cmd):
 		member = cmd.mentions[0]
 		user_data = EwUser(member = member)
 		user_data.life_state = ewcfg.life_state_executive
+		user_data.faction = ewcfg.faction_slimecorp
 		user_data.persist()
 
 		await ewrolemgr.updateRoles(client = cmd.client, member = member)
@@ -3937,4 +3938,44 @@ async def gvs_brainz(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	
 	response = "You have {} brainz.".format(user_data.gvs_currency)
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def paycheck(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	credits = user_data.salary_credits
+	
+	if credits == 0:
+		response = "You don't have any salary credits..."
+	else:
+		response = "You have {:,} salary credits.".format(credits)
+
+		if credits > 10000:
+			response += " They can be exchanged for {:,} slime with !payday at SlimeCorp HQ.".format(int(credits/10000))
+			
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def payday(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	credits = user_data.salary_credits
+
+	market_data = EwMarket(id_server=cmd.message.author.guild.id)
+
+	if user_data.poi != ewcfg.poi_id_slimecorphq:
+		response = "You don't work here."
+	elif user_data.faction != ewcfg.faction_slimecorp:
+		response = "You don't work here."
+	elif market_data.clock < 6 or market_data.clock >= 8:
+		response = "The kind lady at the receptionist desk informs you that paychecks can only be collected between 6 and 8 AM."
+	elif credits <= 0:
+		response = "You don't have any salary credits that can be exchanged..."
+	else:
+		user_data.salary_credits = 0
+		
+		slime_added = int(credits/10000)
+		user_data.change_slimes(n=slime_added, source=ewcfg.coinsource_salary)
+		
+		user_data.persist()
+		
+		response = "You cash in all of your salary credits for {:,} slime.".format(slime_added)
+		
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
