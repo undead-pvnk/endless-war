@@ -142,10 +142,6 @@ async def menu(cmd):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-
-
-
-		
 		controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 		
 		response = "{} Menu:\n\n".format(poi.str_name)
@@ -208,6 +204,9 @@ async def menu(cmd):
 						# and 4 times as much for enemy gangsters
 						elif user_data.faction != "":
 							value *= 4
+							
+				if vendor == ewcfg.vendor_breakroom and user_data.faction == ewcfg.faction_slimecorp:
+					value = 0
 
 				value = int(value)
 
@@ -418,6 +417,9 @@ async def order(cmd):
 				# Raise the price for togo ordering. This gets lowered back down later if someone does togo ordering on a non-food item by mistake.
 				if togo:
 					value *= 1.5
+					
+				if current_vendor == ewcfg.vendor_breakroom and user_data.faction == ewcfg.faction_slimecorp:
+					value = 0
 					
 				value = int(value)
 

@@ -2846,7 +2846,8 @@
         "price": 1000,
         "str_name": "Chocolate Slimecorp Badges",
         "vendors": [
-            "Slimy Persuits"
+            "Slimy Persuits",
+            "The Breakroom"
         ],
         "str_eat": "You eat the Chocolate Slimecorp Badges. They taste surprisingly good. Maybe they're home-made?",
         "inebriation": 0,
@@ -3588,6 +3589,138 @@
         "inebriation": 0,
         "str_desc": "The ultimate life form... for cathing fish, that is. It's said that attatching this strange, worm-like creature to the end of your hook will allow you to reel in fish almost as soon as you cast it off.",
         "time_expir": 43200,
+        "time_fridged": 0,
+        "ingredients": "",
+        "acquisition": "",
+        "perishable": false
+    },
+    "slimecorpration1": {
+        "item_type": "food",
+        "id_food": "slimecorpration1",
+        "alias": [
+            "ration1",
+            "rationone"
+        ],
+        "recover_hunger": 1500,
+        "price": 0,
+        "str_name": "SlimeCorp Security Officer Ration: Menu #1",
+        "vendors": [
+            "The Breakroom"
+        ],
+        "str_eat": "You unload the ration and heat up the rectangular slab of pizza in the appropriate ration heater bag. The cookies are, surprisingly, not stale, and the fruit punch effectively washes down the slimy, yet delicious pizza grease.",
+        "inebriation": 0,
+        "str_desc": "A SlimeCorp security officer ration. This one contains cheese pizza, cookies, and a fruit punch drink. Everything that you could ever want.",
+        "time_expir": 1000000,
+        "time_fridged": 0,
+        "ingredients": "",
+        "acquisition": "",
+        "perishable": false
+    },
+    "slimecorpration2": {
+        "item_type": "food",
+        "id_food": "slimecorpration2",
+        "alias": [
+            "ration2",
+            "rationtwo"
+        ],
+        "recover_hunger": 1500,
+        "price": 0,
+        "str_name": "SlimeCorp Security Officer Ration: Menu #2",
+        "vendors": [
+            "The Breakroom"
+        ],
+        "str_eat": "You tear open the ration and treat yourself to breakfast. The instant coffee is dark and bitter, fitting for the hard life of a security officer. The sausage patties offer a slight spice, pairing well with a mild forkful of hashbrowns and scrambled eggs.",
+        "inebriation": 0,
+        "str_desc": "A SlimeCorp security officer ration. This one is tailored for breakfast, with a hashbrown/egg mixture, instant coffee, and sausage patties.",
+        "time_expir": 1000000,
+        "time_fridged": 0,
+        "ingredients": "",
+        "acquisition": "",
+        "perishable": false
+    },
+    "slimecorpration3": {
+        "item_type": "food",
+        "id_food": "slimecorpration3",
+        "alias": [
+            "ration3",
+            "rationthree"
+        ],
+        "recover_hunger": 1500,
+        "price": 0,
+        "str_name": "SlimeCorp Security Officer Ration: Menu #3",
+        "vendors": [
+            "The Breakroom"
+        ],
+        "str_eat": "You unpack the ration and heat up the pasta in the plastic baggy. While waiting for it to properly boil the tortellini, you delightfully chew on some suganmanuts, washing it down with the chocolately sweetness of the protein drink. The tortellini makes for an excellent main course, giving you a full stomach and a sense of satisfaction. Who knew prepackaged military food could be this good?",
+        "inebriation": 0,
+        "str_desc": "A SlimeCorp security officer ration. This one is designed for vegetarians, sporting some cheesy tortellini in tomato sauce, along with a chocolate protein drink and suganmanuts trail mix.",
+        "time_expir": 1000000,
+        "time_fridged": 0,
+        "ingredients": "",
+        "acquisition": "",
+        "perishable": false
+    },
+    "slimecorpration4": {
+        "item_type": "food",
+        "id_food": "slimecorpration4",
+        "alias": [
+            "ration4",
+            "rationfour"
+        ],
+        "recover_hunger": 1500,
+        "price": 0,
+        "str_name": "SlimeCorp Security Officer Ration: Menu #4",
+        "vendors": [
+            "The Breakroom"
+        ],
+        "str_eat": "You bust open the ration and help yourself to its earthly contents. You dip the fries in the tub of coleslaw, but not before cramming your face with spoonfuls of pulp gourd pie. Your face looks like a goddamn warzone after eating this, with smears of red coleslaw painted over pulp gourd filling and fry crumbs. Wash up, officer! The streets need cleaning, and so do you!",
+        "inebriation": 0,
+        "str_desc": "A SlimeCorp security officer ration. This one is a farmer's specialty, sporting Sour Potato French Fries, Blood Cabbage Coleslaw, and Pulp Gourd Pie.",
+        "time_expir": 1000000,
+        "time_fridged": 0,
+        "ingredients": "",
+        "acquisition": "",
+        "perishable": false
+    },
+    "slimecorpration5": {
+        "item_type": "food",
+        "id_food": "slimecorpration5",
+        "alias": [
+            "ration5",
+            "rationfive"
+        ],
+        "recover_hunger": 1500,
+        "price": 0,
+        "str_name": "SlimeCorp Security Officer Ration: Menu #5",
+        "vendors": [
+            "The Breakroom"
+        ],
+        "str_eat": "You unpackage the ration. It's portion are small, but the variety of it is what separates it from the other rations. The omelet goes down smooth after half a dozen forkfuls, and you gulp down the cream soda while enjoying the beef and rice wrapped in the tortillas. Whoever put this together really knew what they were doing. It may be mild, but it's delicious!",
+        "inebriation": 0,
+        "str_desc": "A SlimeCorp security officer ration. This one was actually designed by the higher-ups as a commemoration of particularly diligent security officer. It's got fried rice with beef, a ham and cheese omelet, two tortillas, and a cream soda beverage base.",
+        "time_expir": 1000000,
+        "time_fridged": 0,
+        "ingredients": "",
+        "acquisition": "",
+        "perishable": false
+    },
+    "slimecorpration6": {
+        "item_type": "food",
+        "id_food": "slimecorpration6",
+        "alias": [
+            "ration6",
+            "rationsix"
+        ],
+        "recover_hunger": 1500,
+        "price": 0,
+        "str_name": "SlimeCorp Security Officer Ration: Menu #6",
+        "vendors": [
+            "The Breakroom"
+        ],
+        "str_eat": "You rip open the ration packaging and sink your teeth into the slab of meat as soon as it finishes cooking in the bag. Each juicy bite of the steak further activates your predator instincts, with the smooth caffeinated roast heightening your nerves to boot. OOH-RAH!",
+        "inebriation": 0,
+        "str_desc": "A SlimeCorp security officer ration. This one is well known as the 'Carnivore's Delight', consisting of one large dinoslime steak, and nothing else save for a small coffee packet, with creamer and sugar on the side.",
+        "time_expir": 1000000,
         "time_fridged": 0,
         "ingredients": "",
         "acquisition": "",

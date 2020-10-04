@@ -388,6 +388,9 @@ async def updateRoles(
 		ewcfg.role_rowdyfuckers,
 		ewcfg.role_rowdyfuckers_pvp,
 		ewcfg.role_rowdyfuckers_active,
+		ewcfg.role_slimecorp,
+		ewcfg.role_slimecorp_pvp,
+		ewcfg.role_slimecorp_active,
 		ewcfg.role_copkillers,
 		ewcfg.role_copkillers_pvp,
 		ewcfg.role_copkillers_active,
@@ -396,7 +399,7 @@ async def updateRoles(
 		ewcfg.role_corpse_active,
 		ewcfg.role_kingpin,
 		ewcfg.role_grandfoe,
-		ewcfg.role_slimecorp,
+		ewcfg.role_executive,
 		ewcfg.role_tutorial,
 		ewcfg.role_shambler,
 	]

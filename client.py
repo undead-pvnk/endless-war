@@ -178,6 +178,9 @@ cmd_map = {
 	# Juvies can dance
 	ewcfg.cmd_dance: ewcmd.dance,
 	
+	# SlimeCorp security officers can post propaganda
+	ewcfg.cmd_propaganda: ewcmd.propaganda,
+	
 	# Terezi Gang can flip coins
 	ewcfg.cmd_coinflip: ewcmd.coinflip,
     
@@ -194,11 +197,10 @@ cmd_map = {
 	ewcfg.cmd_endlesswar: ewcmd.endlesswar,
 	
 	# Show the number of swears in the global swear jar.
-	ewcfg.cmd_swear_jar: ewcmd.swearjar,
+	# ewcfg.cmd_swear_jar: ewcmd.swearjar,
 
 	# Display the progress towards the current Quarterly Goal.
-	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
-
+	# ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
 
 	ewcfg.cmd_retire: ewapt.retire,
 	ewcfg.cmd_depart: ewapt.depart,
@@ -712,6 +714,13 @@ cmd_map = {
 
 	# grant slimecorp executive status
 	ewcfg.cmd_promote: ewcmd.promote,
+	
+	# SlimeCorp commands
+	ewcfg.cmd_clockin: ewmap.clockin,
+	ewcfg.cmd_clockout: ewmap.clockout,
+	ewcfg.cmd_sanitize: ewwep.sanitize,
+	ewcfg.cmd_paycheck: ewcmd.paycheck,
+	ewcfg.cmd_payday: ewcmd.payday,
 
 	# trading
 	ewcfg.cmd_trade: ewmarket.trade,
@@ -724,8 +733,8 @@ cmd_map = {
 	ewcfg.cmd_pray: ewcmd.pray,
 
 	# Gankers Vs. Shamblers gang swapping
-	ewcfg.cmd_shamble: ewdistrict.shamble,
-	ewcfg.cmd_rejuvenate: ewdistrict.rejuvenate,
+	# ewcfg.cmd_shamble: ewdistrict.shamble,
+	# ewcfg.cmd_rejuvenate: ewdistrict.rejuvenate,
 	
 	# slimeball
 	ewcfg.cmd_slimeball: ewsports.slimeball,
@@ -759,27 +768,27 @@ cmd_map = {
 	ewcfg.cmd_prank: ewcmd.prank,
 	
 	# Gankers Vs. Shamblers
-	ewcfg.cmd_gvs_printgrid: ewcmd.gvs_print_grid,
-	ewcfg.cmd_gvs_printgrid_alt1: ewcmd.gvs_print_grid,
-	ewcfg.cmd_gvs_printlane: ewcmd.gvs_print_lane,
-	ewcfg.cmd_gvs_incubategaiaslimeoid: ewcmd.gvs_incubate_gaiaslimeoid,
-	ewcfg.cmd_gvs_fabricatetombstone: ewcmd.gvs_fabricate_tombstone,
-	ewcfg.cmd_gvs_joinoperation: ewcmd.gvs_join_operation,
+	# ewcfg.cmd_gvs_printgrid: ewcmd.gvs_print_grid,
+	# ewcfg.cmd_gvs_printgrid_alt1: ewcmd.gvs_print_grid,
+	# ewcfg.cmd_gvs_printlane: ewcmd.gvs_print_lane,
+	# ewcfg.cmd_gvs_incubategaiaslimeoid: ewcmd.gvs_incubate_gaiaslimeoid,
+	# ewcfg.cmd_gvs_fabricatetombstone: ewcmd.gvs_fabricate_tombstone,
+	# ewcfg.cmd_gvs_joinoperation: ewcmd.gvs_join_operation,
 	# ewcfg.cmd_gvs_leaveoperation: ewcmd.gvs_leave_operation,
-	ewcfg.cmd_gvs_checkoperation: ewcmd.gvs_check_operations,
-	ewcfg.cmd_gvs_plantgaiaslimeoid: ewcmd.gvs_plant_gaiaslimeoid,
+	# ewcfg.cmd_gvs_checkoperation: ewcmd.gvs_check_operations,
+	# ewcfg.cmd_gvs_plantgaiaslimeoid: ewcmd.gvs_plant_gaiaslimeoid,
 	ewcfg.cmd_gvs_almanac: ewcmd.almanac,
-	ewcfg.cmd_gvs_searchforbrainz: ewcmd.gvs_searchforbrainz,
-	ewcfg.cmd_gvs_grabbrainz: ewcmd.gvs_grabbrainz,
-	ewcfg.cmd_gvs_dive: ewcmd.gvs_dive,
-	ewcfg.cmd_gvs_resurface: ewcmd.gvs_resurface,
-	ewcfg.cmd_gvs_sellgaiaslimeoid: ewcmd.gvs_sell_gaiaslimeoid,
-	ewcfg.cmd_gvs_sellgaiaslimeoid_alt: ewcmd.gvs_sell_gaiaslimeoid,
-	ewcfg.cmd_gvs_dig: ewcmd.dig,
-	ewcfg.cmd_gvs_progress: ewcmd.gvs_progress,
-	ewcfg.cmd_gvs_gaiaslime: ewcmd.gvs_gaiaslime,
-	ewcfg.cmd_gvs_gaiaslime_alt1: ewcmd.gvs_gaiaslime,
-	ewcfg.cmd_gvs_brainz: ewcmd.gvs_brainz,
+	# ewcfg.cmd_gvs_searchforbrainz: ewcmd.gvs_searchforbrainz,
+	# ewcfg.cmd_gvs_grabbrainz: ewcmd.gvs_grabbrainz,
+	# ewcfg.cmd_gvs_dive: ewcmd.gvs_dive,
+	# ewcfg.cmd_gvs_resurface: ewcmd.gvs_resurface,
+	# ewcfg.cmd_gvs_sellgaiaslimeoid: ewcmd.gvs_sell_gaiaslimeoid,
+	# ewcfg.cmd_gvs_sellgaiaslimeoid_alt: ewcmd.gvs_sell_gaiaslimeoid,
+	# ewcfg.cmd_gvs_dig: ewcmd.dig,
+	# ewcfg.cmd_gvs_progress: ewcmd.gvs_progress,
+	# ewcfg.cmd_gvs_gaiaslime: ewcmd.gvs_gaiaslime,
+	# ewcfg.cmd_gvs_gaiaslime_alt1: ewcmd.gvs_gaiaslime,
+	# ewcfg.cmd_gvs_brainz: ewcmd.gvs_brainz,
 
 	# race
 	ewcfg.cmd_set_race: ewrace.set_race,
@@ -1228,6 +1237,7 @@ async def on_ready():
 
 					if market_data.clock == 6 and market_data.day % 8 == 0:
 						await ewapt.rent_time(id_server=server.id)
+						await ewutils.pay_salary(id_server=server.id)
 
 					market_data = EwMarket(id_server=server.id)
 
@@ -1418,13 +1428,13 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None: # or (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
 				direct message (server == None)
 				user is new/has no roles (len(roles) < 4)
-				user is swearing - temp disabled
+				user is a security officer and has cussed
 		"""
 
 		#Ignore users with weird characters in their name
@@ -1470,70 +1480,64 @@ async def on_message(message):
 
 		"""
 			Punish the user for swearing.
+			The swear_jar attribute has been repurposed for SlimeCorp security officers
 		"""
-
-		""" 
-		if (any(swear in content_tolower_list for swear in ewcfg.curse_words.keys())):
+		if (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
 			# print(content_tolower_list)
 			swear_multiplier = 0
 			usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
 
 			if usermodel != None:
 				market_data = EwMarket(id_server=usermodel.id_server)
+				
+				if usermodel.faction == ewcfg.faction_slimecorp and usermodel.life_state == ewcfg.life_state_enlisted:
 
-				# gather all the swear words the user typed.
-				for swear in ewcfg.curse_words.keys():
-
-					if swear == "buster" and usermodel.faction == ewcfg.faction_rowdys:
-						continue
-					if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
-						continue
-
-					swear_count = content_tolower_list.count(swear)
-
-					# Niche scenarios. If certain words are used, don't count their components as swears.
-					# if swear == "shit" and "shit" not in content_tolower:
-					# 	#print('swear detection turned off for {}.'.format(swear))
-					# 	continue
-					# elif swear == "fag" and "fag" not in content_tolower:
-					# 	#print('swear detection turned off for {}.'.format(swear))
-					# 	continue
-					# elif swear == "fuck" and (content_tolower.count('<rowdyfucker431275088076079105>') > 0 or content_tolower.count('<fucker431424220837183489>') > 0):
-					# 	#print('swear detection turned off for {}.'.format(swear))
-					# 	continue
-					# elif swear == "mick" and (content_tolower.count('gimmick') > 0):
-					# 	#print('swear detection turned off for {}.'.format(swear))
-					# 	continue
-
-					for i in range(swear_count):
-						swear_multiplier += ewcfg.curse_words[swear]
-
-						market_data.global_swear_jar += 1
-
-						usermodel.swear_jar += 1
-
-				# don't fine the user or send out the message if there weren't enough curse words
-				if swear_multiplier > 50:
-
-					# fine the user for swearing, based on how much they've sworn right now, as well as in the past
-					swear_jar_fee = usermodel.swear_jar * swear_multiplier * 100
-
-					# prevent user from reaching negative slimecoin
-					if swear_jar_fee > usermodel.slimecoin:
-						swear_jar_fee = usermodel.slimecoin
-
-					usermodel.change_slimecoin(n=-1 * swear_jar_fee, coinsource=ewcfg.coinsource_swearjar)
-					
-					response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
-					await ewutils.send_message(client, message.channel, response)
-
-				market_data.persist()
-				usermodel.persist()
+					# gather all the swear words the user typed.
+					for swear in ewcfg.curse_words.keys():
+	
+						swear_count = content_tolower.count(swear)
+	
+						# Niche scenarios. If certain words are used, don't count their components as swears.
+						if swear == "shit" and "shit" not in content_tolower:
+							#print('swear detection turned off for {}.'.format(swear))
+							continue
+							
+						# This one's funny, keep this one on. Bit of a gamer...
+						# elif swear == "fag" and "fag" not in content_tolower:
+							#print('swear detection turned off for {}.'.format(swear))
+							# continue
+						
+						elif swear == "fuck" and (content_tolower.count('<rowdyfucker431275088076079105>') > 0 or content_tolower.count('<fucker431424220837183489>') > 0):
+							#print('swear detection turned off for {}.'.format(swear))
+							continue
+						elif swear == "mick" and (content_tolower.count('gimmick') > 0):
+							#print('swear detection turned off for {}.'.format(swear))
+							continue
+	
+						for i in range(swear_count):
+							swear_multiplier += ewcfg.curse_words[swear]
+	
+							# usermodel.swear_jar += 1
+						
+					# print('multiplier: {}'.format(swear_multiplier))
+	
+					# don't fine the user or send out the message if there weren't enough curse words
+					if swear_multiplier > 10:
+	
+						# fine the user for swearing, based on how much they've sworn right now, as well as in the past
+						swear_jar_fee = swear_multiplier * 10000
+	
+						usermodel.salary_credits -= swear_jar_fee
+						
+						response = '*{}*: Your SlimeCorp headset chatters in your ear...\n"Reminder: Foul language is strictly prohibited. {} salary credits have been docked from your profile."'.format(message.author.display_name, swear_jar_fee)
+						await ewutils.send_message(client, message.channel, response)
+	
+					market_data.persist()
+					usermodel.persist()
 			
 			# if the message wasn't a command, we can stop here
 			if not message.content.startswith(ewcfg.cmd_prefix):
 				return
-		"""
 		
 		"""
 			Handle direct messages.

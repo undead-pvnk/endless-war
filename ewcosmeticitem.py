@@ -201,6 +201,7 @@ async def adorn(cmd):
 
 async def dedorn(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	# ewutils.moves_active[cmd.message.author.id] = 0
 
 	# Check to see if you even have the item you want to repair
 	item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])

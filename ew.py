@@ -58,7 +58,7 @@ class EwUser:
 	
 	manuscript = -1
 	spray = "https://img.booru.org/rfck//images/3/a69d72cf29cb750882de93b4640a175a88cdfd70.png"
-	swear_jar = 0
+	salary_credits = 0
 	degradation = 0
 	
 	#SWILLDERMUK
@@ -361,6 +361,9 @@ class EwUser:
 				ewstats.change_stat(user = self, metric = ewcfg.stat_total_slimecoin_invested, n = change)
 			if coinsource == ewcfg.coinsource_swearjar:
 				ewstats.change_stat(user = self, metric = ewcfg.stat_total_slimecoin_from_swearing, n = change)
+			if coinsource == ewcfg.coinsource_salary:
+				ewstats.change_stat(user = self, metric = ewcfg.stat_total_slimecoin_from_salary, n = change)
+
 
 	def add_weaponskill(self, n = 0, weapon_type = None):
 		# Save the current weapon's skill
@@ -1190,7 +1193,7 @@ class EwUser:
 					ewcfg.col_slimernalia_kingpin,
 					ewcfg.col_manuscript,
 					ewcfg.col_spray,
-					ewcfg.col_swear_jar,
+					ewcfg.col_salary_credits,
 					ewcfg.col_degradation,
 					ewcfg.col_time_lastdeath,
 					ewcfg.col_sidearm,
@@ -1259,7 +1262,7 @@ class EwUser:
 					self.slimernalia_kingpin = (result[39] == 1)
 					self.manuscript = result[40]
 					self.spray = result[41]
-					self.swear_jar = result[42]
+					self.salary_credits = result[42]
 					self.degradation = result[43]
 					self.time_lastdeath = result[44]
 					self.sidearm = result[45]
@@ -1417,7 +1420,7 @@ class EwUser:
 				ewcfg.col_slimernalia_kingpin,
 				ewcfg.col_manuscript,
 				ewcfg.col_spray,
-				ewcfg.col_swear_jar,
+				ewcfg.col_salary_credits,
 				ewcfg.col_degradation,
 				ewcfg.col_time_lastdeath,
 				ewcfg.col_sidearm,
@@ -1479,7 +1482,7 @@ class EwUser:
 				self.slimernalia_kingpin,
 				self.manuscript,
 				self.spray,
-				self.swear_jar,
+				self.salary_credits,
 				self.degradation,
 				self.time_lastdeath,
 				self.sidearm,

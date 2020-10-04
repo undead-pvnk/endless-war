@@ -9241,7 +9241,7 @@
             "paradise"
         ],
         "str_name": "Paradise Slums",
-        "str_desc": "It\u2019s an adorable beachtown which has long ago slid into decay. The further you get from the coast, the more homelessness and vandalism run rampant. The only thing left to remind you that you\u2019re on vacation are the palm trees. This street connects back into Assault Flats Beach. This street is connected to Broadway, and Beachfront Properties. This street also exits into Assault Flats Beach Pier, The Assault Flats Beach Blimp Tower, and Nuclear Beach Edge - Location of Dr. Downpour's Laboratory.",
+        "str_desc": "It\u2019s an adorable beachtown which has long ago slid into decay. The further you get from the coast, the more homelessness and vandalism run rampant. The only thing left to remind you that you\u2019re on vacation are the palm trees. This street connects back into Assault Flats Beach. This street is connected to Broadway, and Beachfront Properties. This street also exits into Assault Flats Beach Pier, The Assault Flats Beach Blimp Tower, and Nuclear Beach Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -9303,7 +9303,7 @@
             "beachfront"
         ],
         "str_name": "Beachfront Properties",
-        "str_desc": "This stretch of beach is probably the only part of the city you could actually consider kind of pretty. It\u2019s almost entirely privately owned by the resort, which has gobbled up most of the valuable coastline to either develop or charge access to, but some luxury condominiums have been built here and there. These condominiums are subject to frequent raiding by S.W.A.T. teams to make sure the peace is kept. This street connects back into Assault Flats Beach. This street is connected to Paradise Slums, and Long Wharf. This street also exits into Assault Flats Beach Pier, and Nuclear Beach Edge - Location of Dr. Downpour's Laboratory.",
+        "str_desc": "This stretch of beach is probably the only part of the city you could actually consider kind of pretty. It\u2019s almost entirely privately owned by the resort, which has gobbled up most of the valuable coastline to either develop or charge access to, but some luxury condominiums have been built here and there. These condominiums are subject to frequent raiding by S.W.A.T. teams to make sure the peace is kept. This street connects back into Assault Flats Beach. This street is connected to Paradise Slums, and Long Wharf. This street also exits into Assault Flats Beach Pier, and Nuclear Beach Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -11220,7 +11220,7 @@
             "af"
         ],
         "str_name": "The Ooze Gardens Farms",
-        "str_desc": "An impressive host of unique and exotic flora are grown here. Originally on private property, the expansive greenhouses were the weekly meeting place for the city\u2019s botanical society. They have since been seized by imminent domain and are now a public park. It\u2019s type of soil is vast and varied depending on where you choose to plant. Surely, anything can grow here. Deeper into the gardens lies a hidden grotto inhabited by the Garden Gankers! They say they aren't gonna let you just squat here, but you can use the milling machines and gaiaslimeoid incubation vats for free if you want.\n\nExits into Ooze Gardens.",
+        "str_desc": "An impressive host of unique and exotic flora are grown here. Originally on private property, the expansive greenhouses were the weekly meeting place for the city\u2019s botanical society. They have since been seized by imminent domain and are now a public park. It\u2019s type of soil is vast and varied depending on where you choose to plant. Surely, anything can grow here. Deeper into the gardens lies a hidden grotto inhabited by the Garden Gankers! They say they aren't gonna let you just squat here, but you can use the milling machines for free if you want.\n\nExits into Ooze Gardens.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -11238,9 +11238,7 @@
         },
         "pvp": false,
         "factions": [],
-        "life_states": [
-            1
-        ],
+        "life_states": [],
         "closed": false,
         "str_closed": null,
         "vendors": [
@@ -11412,7 +11410,6 @@
         "id_poi": "thebeachresort",
         "alias": [
             "resort",
-            "br",
             "r"
         ],
         "str_name": "The Resort",
@@ -16889,6 +16886,7 @@
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/West_Glocksbury#Based_Hardware"
     },
+
     "clinicofslimoplasty": {
         "id_poi": "clinicofslimoplasty",
         "alias": [
@@ -16920,8 +16918,7 @@
         "life_states": [],
         "closed": false,
         "str_closed": null,
-        "vendors": [
-        ],
+        "vendors": [],
         "property_class": "",
         "is_district": false,
         "is_gangbase": false,
@@ -16953,6 +16950,65 @@
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Crookline#NLACakaNM_Clinic_of_Slimoplasty"
+    },
+    "thebreakroom": {
+        "id_poi": "thebreakroom",
+        "alias": [
+            "breakroom",
+            "br"
+        ],
+        "str_name": "The SlimeCorp Headquaters Breakroom",
+        "str_desc": "A high-class corporate breakroom. This place has everything! Storage lockers, vending machines, ration dispensers, heck, even free weapon caches! Who WOULDN'T want to be a security officer with benefits like these?",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": [],
+        "coord_alias": [],
+        "channel": "the-breakroom",
+        "role": "The Breakroom",
+        "major_role": "downtown_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "thebreakroom": [
+                "read",
+                "send",
+                "connect"
+            ],
+        "factions": [
+            "slimecorp"
+        ],
+         "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [
+            "The Breakroom"
+        ],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": true,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+            "downtown"
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": "breakroomchest",
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {},
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/SlimeCorp"
     },
     "classroom": {
         "id_poi": "classroom",
@@ -17431,7 +17487,7 @@
             "noe"
         ],
         "str_name": "North Outskirts Edge",
-        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. This outskirt is connected to Northwest Outskirts Edge, Northwest Outskirts, Nuclear Beach Edge - Location of Dr. Downpour's Laboratory, Tilly Hill, Crassus Square, Abandoned Warehouse, Brownstone Row, Concrete Park, and Broadway.",
+        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. This outskirt is connected to Northwest Outskirts Edge, Northwest Outskirts, Nuclear Beach Edge, Tilly Hill, Crassus Square, Abandoned Warehouse, Brownstone Row, Concrete Park, and Broadway.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -17498,15 +17554,15 @@
             "dplab",
             "brainz"
         ],
-        "str_name": "Nuclear Beach Edge - Location of Dr. Downpour's Laboratory",
-        "str_desc": "An armored fortress towering over the shores of the Slime Sea. Inside, an oppressive mechanical atmosphere looms over your presence as you eye vats containing secreatures crowding the various facilities and corridors. One of the doors inside the complex holds a 3D printer designed entirely for tombstone production. A vending machine containing protective gear is close by, its florescent lighting giving off a low hum. A dock outside the laboratory is stocked with diving gear, perfect for a nice game of Shambaquarium.",
+        "str_name": "Nuclear Beach Edge",
+        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. The ruins of a great laboratory lay here.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
         "channel": "nuclear-beach-edge",
         "role": null,
-        "major_role": "assaultflatsbeach_major",
+        "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
             "nuclearbeachedge": [
@@ -17517,31 +17573,25 @@
         },
         "pvp": true,
         "factions": [],
-        "life_states": [
-            3
-        ],
+        "life_states": [],
         "closed": false,
         "str_closed": null,
-        "vendors": [
-            "Downpour Armament Vending Machines"
-        ],
+        "vendors": [],
         "property_class": "",
         "is_district": false,
         "is_gangbase": false,
         "is_capturable": false,
-        "is_subzone": true,
+        "is_subzone": false,
         "is_apartment": false,
         "is_street": false,
-        "mother_districts": [
-            "assaultflatsbeach"
-        ],
+        "mother_districts": [],
         "father_district": "",
         "is_transport": false,
         "transport_type": "",
         "default_line": "",
         "default_stop": "",
         "is_transport_stop": false,
-        "is_outskirts": false,
+        "is_outskirts": true,
         "community_chest": null,
         "is_pier": false,
         "pier_type": null,
@@ -17553,8 +17603,7 @@
             "northoutskirtsedge": 20,
             "nuclearbeach": 20,
             "assaultflatsbeachstreeta": 20,
-            "assaultflatsbeachstreetb": 20,
-            "assaultflatsbeach": 20
+            "assaultflatsbeachstreetb": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Outskirts#Edge"
@@ -17860,7 +17909,7 @@
             "nbeach"
         ],
         "str_name": "Nuclear Beach",
-        "str_desc": "It's a wasteland, devoid of all life except for slime beasts. This outskirt is connected to North Outskirts, Nuclear Beach Depths, and Nuclear Beach Edge - Location of Dr. Downpour's Laboratory.",
+        "str_desc": "It's a wasteland, devoid of all life except for slime beasts. This outskirt is connected to North Outskirts, Nuclear Beach Depths, and Nuclear Beach Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,

@@ -219,6 +219,9 @@ async def reroll_last_mutation(cmd):
 	reroll_fatigue = EwStatusEffect(id_status = ewcfg.status_rerollfatigue_id, user_data = user_data)
 
 	poudrins_needed = int(1.5 ** int(reroll_fatigue.value))
+	
+	if user_data.faction == ewcfg.faction_slimecorp:
+		poudrins_needed = 0
 
 	poudrins = ewitem.find_item_all(item_search = ewcfg.item_id_slimepoudrin, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
 

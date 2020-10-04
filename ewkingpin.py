@@ -60,8 +60,11 @@ async def banish(cmd):
 		member = None
 		if cmd.mentions_count == 1:
 			member = cmd.mentions[0]
-			if member.id == cmd.message.author.id:
-				member = None
+			
+			# >:]
+			
+			# if member.id == cmd.message.author.id:
+			# 	member = None
 
 		if member == None:
 			response = "Who?"
