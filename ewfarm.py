@@ -269,6 +269,10 @@ async def reap(cmd):
 						metallic_crop_ammount = 1
 						if random.randrange(10) == 0:
 							metallic_crop_ammount = 5 if random.randrange(2) == 0 else 6
+
+						if has_tool and weapon.id_weapon == ewcfg.weapon_id_pitchfork:
+							metallic_crop_ammount *= 2
+
 						
 						for vcreate in range(metallic_crop_ammount):
 							ewitem.item_create(
@@ -297,7 +301,7 @@ async def reap(cmd):
 					else:
 						unearthed_vegetable_amount = 3
 						if has_tool and weapon.id_weapon == ewcfg.weapon_id_pitchfork:
-							unearthed_vegetable_amount += 3
+							unearthed_vegetable_amount *= 2
 
 						for vcreate in range(unearthed_vegetable_amount):
 							ewitem.item_create(
