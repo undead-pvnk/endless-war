@@ -91,7 +91,7 @@ class EwUser:
 	#random seed for mutaiton calculation
 	rand_seed = 0
 	#when a user was last hit
-	time_lasthit = 0
+	time_lasthit = 2
 
 	move_speed = 1 # not a database column
 
@@ -1206,7 +1206,7 @@ class EwUser:
 					ewcfg.col_gvs_currency,
 					ewcfg.col_gvs_time_lastshambaquarium,
 					ewcfg.col_rand_seed,
-					ewcfg.col_time_lasthit
+					ewcfg.col_time_lasthit,
 				), (
 					id_user,
 					id_server
@@ -1214,9 +1214,6 @@ class EwUser:
 				result = cursor.fetchone()
 
 				if result != None:
-					if id_user == 98363284821934080:
-						for bits in result:
-							print(bits)
 					# Record found: apply the data to this object.
 					self.slimes = result[0]
 					self.slimelevel = result[1]
@@ -1273,9 +1270,9 @@ class EwUser:
 					self.time_racialability = result[50]
 					self.time_lastpremiumpurchase = result[51]
 					self.gvs_currency = result[52]
-					self.gvs_time_lastshambaquarium = result[52]
-					self.rand_seed = result[53]
-					self.time_lasthit = result[54]
+					self.gvs_time_lastshambaquarium = result[53]
+					self.rand_seed = result[54]
+					self.time_lasthit = result[55]
 
 
 				else:

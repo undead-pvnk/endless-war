@@ -619,12 +619,12 @@ async def bleedout(cmd):
 	elif user_data.bleed_storage > user_data.slimes: #don't think this is possible, but just in case
 		response = "Wait, wouldn't that kill you? Better not."
 	else:
-		response = "You clutch your malformed heart and squeeze as hard as you can. The intense pain makes you fall to your knees, and your slime drops to the floor under you as you gasp desperately for relief. You have been bled dry."
+		response = "You clutch your malformed heart and squeeze as hard as you can. The intense pain makes you fall to your knees, and your slime drops in spurts to the floor under you as you gasp desperately for relief. You have been bled dry."
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(id_server=cmd.message.guild.id, district=poi.id_poi)
-		user_data.bleed_storage = 0
 		user_data.change_slimes(n=-user_data.bleed_storage, source=ewcfg.source_bleeding)
 		district_data.change_slimes(n=user_data.bleed_storage, source=ewcfg.source_bleeding)
+		user_data.bleed_storage = 0
 		user_data.persist()
 		district_data.persist()
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

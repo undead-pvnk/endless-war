@@ -139,7 +139,7 @@ class EwResponseContainer:
 			logMsg("Couldn't find client")
 			return messages
 
-		server = self.client.get_guild(self.id_server)
+		server = self.client.get_guild(int(self.id_server))
 		if server == None:
 			print('to grandma\'s house we go')
 			logMsg("Couldn't find server with id {}".format(self.id_server))
@@ -470,7 +470,6 @@ def databaseClose(conn_info):
 def formatMessage(user_target, message):
 	# If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
 
-
 	try:
 		if user_target.life_state == ewcfg.enemy_lifestate_alive:
 			
@@ -483,12 +482,16 @@ def formatMessage(user_target, message):
 				elif user_target.identifier != '':
 					return "*{} [{}]* {}".format(user_target.display_name, user_target.identifier, message)
 				else:
-
-					#user_obj = EwUser(id_user=user_target.id_user, id_server=user_target.id_server)
-					#mutations = user_obj.get_mutations()
-					#if ewcfg.mutation_id_amnesia in mutations:
-					#	user_target.display_name = '?????'
-					return "*{}:* {}".format(user_target.display_name, message)
+					if hasattr(user_target, "id_user") and hasattr(user_target, "id_server"):
+						user_obj = EwUser(id_server=user_target.id_server, id_user=user_target.id_user)
+					else:
+						user_obj = EwUser(member = user_target)
+					mutations = user_obj.get_mutations()
+					if ewcfg.mutation_id_amnesia in mutations:
+						display_name = '?????'
+					else:
+						display_name = user_target.display_name
+					return "*{}:* {}".format(display_name, message)
 
 
 		elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
@@ -496,11 +499,17 @@ def formatMessage(user_target, message):
 
 	# If user_target isn't an enemy, catch the exception.
 	except:
-		#user_obj = EwUser(id_user=user_target.id_user, id_server=user_target.id_server)
-		#mutations = user_obj.get_mutations()
-		#if ewcfg.mutation_id_amnesia in mutations:
-		#	user_target.display_name = '?????'
-		return "*{}:* {}".format(user_target.display_name, message).replace("@", "{at}")
+		if hasattr(user_target, "id_user") and hasattr(user_target, "id_server"):
+			user_obj = EwUser(id_server=user_target.id_server, id_user=user_target.id_user)
+		else:
+			user_obj = EwUser(member=user_target)
+		mutations = user_obj.get_mutations()
+		if ewcfg.mutation_id_amnesia in mutations:
+			display_name = '?????'
+		else:
+			display_name = user_target.display_name
+
+		return "*{}:* {}".format(display_name, message).replace("@", "{at}")
 
 """ Decay slime totals for all users, with the exception of Kingpins"""
 def decaySlimes(id_server = None):
@@ -719,7 +728,7 @@ async def bleedSlimes(id_server = None):
 			resp_cont = EwResponseContainer(id_server = id_server)
 			for user in users:
 				user_data = EwUser(id_user = user[0], id_server = id_server)
-				print("bleederpre:{}".format(user_data.time_lasthit))
+
 				mutations = user_data.get_mutations()
 				member = server.get_member(user_data.id_user)
 				if ewcfg.mutation_id_bleedingheart not in mutations or user_data.time_lasthit < int(time.time()) - ewcfg.time_bhbleed:
@@ -763,7 +772,7 @@ async def bleedSlimes(id_server = None):
 						total_bled += real_bleed
 
 					await ewrolemgr.updateRoles(client=client, member=member)
-					print("bleederpost:{}".format(user_data.time_lasthit))
+
 
 			await resp_cont.post()
 
@@ -1502,6 +1511,9 @@ async def send_message(client, channel, text, delete_after = None, filter_everyo
 """ Simpler to use version of send_message that formats message by default """ 
 async def send_response(response_text, cmd = None, delete_after = None, name = None, channel = None, format_name = True, format_ats = True, allow_everyone = False):
 
+	user_data = EwUser(member = cmd.message.author)
+	user_mutations = user_data.get_mutations()
+
 	if cmd == None and channel == None:
 		raise Exception("No channel to send message to")
 
@@ -1510,6 +1522,8 @@ async def send_response(response_text, cmd = None, delete_after = None, name = N
 
 	if name == None and cmd != None:
 		name = cmd.author_id.display_name
+		if ewcfg.mutation_id_amnesia in user_mutations:
+			name = '?????'
 
 	if format_name and name != None:
 		response_text = "*{}:* {}".format(name, response_text)
@@ -3071,7 +3085,7 @@ def inaccessible(user_data=None, poi=None):
 	else:
 		return False
 
-== == == =
+
 
 # Pay out salaries. SlimeCoin can be taken away or given depending on if the user has positive or negative credits.
 async def pay_salary(id_server=None):

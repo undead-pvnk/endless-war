@@ -819,6 +819,7 @@ cmd_map = {
 	ewcfg.cmd_devour: ewfood.devour,
 	ewcfg.cmd_chemo: ewmutation.chemo,
 	ewcfg.cmd_graft: ewmutation.graft,
+	ewcfg.cmd_bleedout:ewmutation.bleedout
 }
 
 debug = False

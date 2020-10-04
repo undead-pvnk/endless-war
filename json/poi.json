@@ -16972,11 +16972,13 @@
                 "read",
                 "send",
                 "connect"
-            ],
+            ]
+        },
+        "pvp": false,
         "factions": [
             "slimecorp"
         ],
-         "life_states": [],
+        "life_states": [],
         "closed": false,
         "str_closed": null,
         "vendors": [
