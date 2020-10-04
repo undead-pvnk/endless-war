@@ -693,6 +693,7 @@ async def data(cmd):
 """ Finally, separates mutations from !data """
 async def mutations(cmd):
 	response = ""
+	total_levels = 0
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member=cmd.message.author)
 		mutations = user_data.get_mutations()
@@ -711,10 +712,15 @@ async def mutations(cmd):
 		mutations = user_data.get_mutations()
 		for mutation in mutations:
 			mutation_flavor = ewcfg.mutations_map[mutation]
-			response += "{} ".format(mutation_flavor.str_describe_other)
+			total_levels += mutation_flavor.tier
+			if cmd.tokens[1] == "level":
+				response = "**LEVEL {}**:{} \n".format(mutation_flavor.tier, mutation_flavor.str_describe_other)
+			else:
+				response += "{} ".format(mutation_flavor.str_describe_other)
 		if len(mutations) == 0:
 			response = "They are miraculously unmodified from their normal genetic code!"
-
+		elif cmd.tokens[1] == "level":
+			response += "Total Levels: {}/50\nMutation Levels Added: {}/{}".format(user_data.slimelevel, total_levels, max(50, user_data.slimelevel))
 	await ewutils.send_response(response, cmd)
 
 """ Check how hungry you are. """

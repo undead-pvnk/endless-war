@@ -1349,7 +1349,9 @@ async def on_member_join(member):
 
 @client.event
 async def on_message_delete(message):
-	if message != None and message.guild != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
+	user_data = EwUser(member=message.author)
+	mutations = user_data.get_mutations()
+	if message != None and message.guild != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix) and ewcfg.mutation_id_amnesia not in mutations:
 		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
 		await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'))
 

@@ -469,6 +469,8 @@ def databaseClose(conn_info):
 """ format responses with the username: """
 def formatMessage(user_target, message):
 	# If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
+
+
 	try:
 		if user_target.life_state == ewcfg.enemy_lifestate_alive:
 			
@@ -479,6 +481,10 @@ def formatMessage(user_target, message):
 				if user_target.identifier != '':
 					return "**{} [{}] ({}):** {}".format(user_target.display_name, user_target.identifier, user_target.gvs_coord, message)
 				else:
+					#user_obj = EwUser(id_user=user_target.id_user, id_server=user_target.id_server)
+					#mutations = user_obj.get_mutations()
+					#if ewcfg.mutation_id_amnesia in mutations:
+					#	user_target.display_name = '?????'
 					return "**{}:** {}".format(user_target.display_name, message)
 
 		elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
@@ -486,6 +492,10 @@ def formatMessage(user_target, message):
 
 	# If user_target isn't an enemy, catch the exception.
 	except:
+		#user_obj = EwUser(id_user=user_target.id_user, id_server=user_target.id_server)
+		#mutations = user_obj.get_mutations()
+		#if ewcfg.mutation_id_amnesia in mutations:
+		#	user_target.display_name = '?????'
 		return "*{}:* {}".format(user_target.display_name, message).replace("@", "{at}")
 
 """ Decay slime totals for all users, with the exception of Kingpins"""
@@ -705,48 +715,51 @@ async def bleedSlimes(id_server = None):
 			resp_cont = EwResponseContainer(id_server = id_server)
 			for user in users:
 				user_data = EwUser(id_user = user[0], id_server = id_server)
+				print("bleederpre:{}".format(user_data.time_lasthit))
+				mutations = user_data.get_mutations()
 				member = server.get_member(user_data.id_user)
-				
-				slimes_to_bleed = user_data.bleed_storage * (
-							1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
-				slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
-				slimes_dropped = user_data.totaldamage + user_data.slimes
+				if ewcfg.mutation_id_bleedingheart not in mutations or user_data.time_lasthit < int(time.time()) - ewcfg.time_bhbleed:
+					slimes_to_bleed = user_data.bleed_storage * (
+								1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
+					slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
+					slimes_dropped = user_data.totaldamage + user_data.slimes
 
-				#trauma = ewcfg.trauma_map.get(user_data.trauma)
-				#bleed_mod = 1
-				#if trauma != None and trauma.trauma_class == ewcfg.trauma_class_bleeding:
-				#	bleed_mod += 0.5 * user_data.degradation / 100
+					#trauma = ewcfg.trauma_map.get(user_data.trauma)
+					#bleed_mod = 1
+					#if trauma != None and trauma.trauma_class == ewcfg.trauma_class_bleeding:
+					#	bleed_mod += 0.5 * user_data.degradation / 100
 
-				# round up or down, randomly weighted
-				remainder = slimes_to_bleed - int(slimes_to_bleed)
-				if random.random() < remainder:
-					slimes_to_bleed += 1
-				slimes_to_bleed = int(slimes_to_bleed)
+					# round up or down, randomly weighted
+					remainder = slimes_to_bleed - int(slimes_to_bleed)
+					if random.random() < remainder:
+						slimes_to_bleed += 1
+					slimes_to_bleed = int(slimes_to_bleed)
 
-				slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
+					slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
 
-				if slimes_to_bleed >= 1:
+					if slimes_to_bleed >= 1:
 
-					real_bleed = round(slimes_to_bleed) # * bleed_mod)
+						real_bleed = round(slimes_to_bleed) # * bleed_mod)
 
-					user_data.bleed_storage -= slimes_to_bleed
-					user_data.change_slimes(n=- real_bleed, source=ewcfg.source_bleeding)
+						user_data.bleed_storage -= slimes_to_bleed
+						user_data.change_slimes(n=- real_bleed, source=ewcfg.source_bleeding)
 
-					district_data = EwDistrict(id_server=id_server, district=user_data.poi)
-					district_data.change_slimes(n=real_bleed, source=ewcfg.source_bleeding)
-					district_data.persist()
+						district_data = EwDistrict(id_server=id_server, district=user_data.poi)
+						district_data.change_slimes(n=real_bleed, source=ewcfg.source_bleeding)
+						district_data.persist()
 
-					if user_data.slimes < 0:
-						user_data.trauma = ewcfg.trauma_id_environment
-						die_resp = user_data.die(cause=ewcfg.cause_bleeding)
-						# user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
-						player_data = EwPlayer(id_server=user_data.id_server, id_user=user_data.id_user)
-						resp_cont.add_response_container(die_resp)
-					user_data.persist()
+						if user_data.slimes < 0:
+							user_data.trauma = ewcfg.trauma_id_environment
+							die_resp = user_data.die(cause=ewcfg.cause_bleeding)
+							# user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+							player_data = EwPlayer(id_server=user_data.id_server, id_user=user_data.id_user)
+							resp_cont.add_response_container(die_resp)
+						user_data.persist()
 
-					total_bled += real_bleed
+						total_bled += real_bleed
 
-				await ewrolemgr.updateRoles(client=client, member=member)
+					await ewrolemgr.updateRoles(client=client, member=member)
+					print("bleederpost:{}".format(user_data.time_lasthit))
 
 			await resp_cont.post()
 
@@ -1293,7 +1306,8 @@ def get_channel(server = None, channel_name = ""):
 			channel = chan
 	
 	if channel == None:
-		logMsg('Error: In get_channel(), could not find channel using channel_name "{}"'.format(channel_name))
+		pass
+		#logMsg('Error: In get_channel(), could not find channel using channel_name "{}"'.format(channel_name))
 
 	return channel
 

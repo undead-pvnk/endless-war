@@ -291,7 +291,7 @@ async def begin_manuscript(cmd = None, dm = False):
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript:
+	if not poi.write_manuscript or poi.id_poi == ewcfg.poi_id_clinicofslimoplasty:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
 
 	elif user_data.slimes < cost:
@@ -1215,8 +1215,13 @@ async def order_zine(cmd):
 
 					user_data = EwUser(member=cmd.message.author)
 
+					if book.genre != 10:
+						price = ewcfg.zine_cost
+					else:
+						price = ewcfg.zine_cost/4
+
 					if user_data.slimes < ewcfg.zine_cost:
-						response = "YOU CAN'T AFFORD IT. ({:,}/{:,})".format(user_data.slimes, ewcfg.zine_cost)
+						response = "YOU CAN'T AFFORD IT. ({:,}/{:,})".format(user_data.slimes, price)
 
 					else:
 						ewitem.item_create(
@@ -1239,7 +1244,7 @@ async def order_zine(cmd):
 								book_sale.persist()
 								book.persist()
 
-						user_data.change_slimes(n = -(ewcfg.zine_cost), source = ewcfg.source_spending)
+						user_data.change_slimes(n = -(price), source = ewcfg.source_spending)
 						
 						user_data.persist()
 						if book.genre != 10:

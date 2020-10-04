@@ -1151,7 +1151,7 @@ cmd_thirdeye = cmd_prefix + 'thirdeye'
 cmd_loop = cmd_prefix + 'loop'
 cmd_chemo = cmd_prefix + 'chemo'
 cmd_graft = cmd_prefix + 'graft'
-
+cmd_bleedout = cmd_prefix + 'bleedout'
 
 cmd_switch = cmd_prefix + 'switch'
 cmd_switch_alt_1 = cmd_prefix + 's'
@@ -1464,6 +1464,8 @@ slimecoin_toadvertise = 1000000
 max_concurrent_ads = 8
 max_length_ads = 500
 uptime_ads = 7 * 24 * 60 * 60 # one week
+
+time_bhbleed = 300 #5 minutes
 
 # currencies you can gamble at the casino
 currency_slime = "slime"
@@ -2259,7 +2261,8 @@ col_mutation_data = 'data'
 col_mutation_counter = 'mutation_counter'
 col_tier = 'tier'
 col_artificial = 'artificial'
-col_rand_seed = "rand_seed"
+col_rand_seed = 'rand_seed'
+col_time_lasthit = 'time_lasthit'
 
 # Database columns for transports
 col_transport_type = 'transport_type'
@@ -5357,11 +5360,11 @@ def wef_paintroller(ctn = None):
 
 def wef_watercolors(ctn = None):
 	ctn.slimes_damage = 4000
-	aim = (random.randrange(1000) + 1)
+	aim = (random.randrange(250) + 1)
 	user_mutations = ctn.user_data.get_mutations()
 	#ctn.sap_damage = 0
 
-	if aim <= (1 + int(1000 * ctn.miss_mod)):
+	if aim <= (1 + int(250 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
@@ -11422,6 +11425,7 @@ mutation_id_rigormortis = "rigormortis"
 mutation_id_longarms = "longarms"
 mutation_id_airlock = "airlock"
 mutation_id_lightminer = "lightminer"
+mutation_id_amnesia = "amnesia"
 
 mutation_milestones = [5,10,15,20,25,30,35,40,45,50]
 
@@ -11472,9 +11476,9 @@ mutations = [
         alias = ['bleed', 'bh', 'bdh'],
 		str_describe_self = "Your heartbeat’s rhythm is sporadic and will randomly change intensity due to **Bleeding Heart**.",
 		str_describe_other = "Their heartbeat’s rhythm is sporadic and will randomly change intensity due to **Bleeding Heart**.",
-		str_acquire = "To say you experience “heart palpitations” is a gross understatement. Your heart feels like it explodes and reforms over and over for the express amusement of some cruel god’s sick sense of humor. You begin to cough up blood and basically continue to do so for the rest of your life. You have developed the mutation **Bleeding Heart**. Upon being hit, none of your slime is splattered onto the street. It is all stored as bleed damage.",
-		tier = 5,
-        str_transplant = "Auntie Dustrap takes one of her scalpels and jams it deep into your chest. Your heart, as is natural for a stabbed heart, begins to sputter and palpitate. Looks like the surgery is over. Shit, you could've done that yourself.\n\nYou have developed the mutation **Bleeding Heart**. Upon being hit, none of your slime is splattered onto the street. It is all stored as bleed damage.",
+		str_acquire = "To say you experience “heart palpitations” is a gross understatement. Your heart feels like it explodes and reforms over and over for the express amusement of some cruel god’s sick sense of humor. You begin to cough up blood and basically continue to do so for the rest of your life. You have developed the mutation **Bleeding Heart**. When hit, bleeding is delayed for 5 minutes.",
+		tier = 2,
+        str_transplant = "Auntie Dustrap takes one of her scalpels and jams it deep into your chest. Your heart, as is natural for a stabbed heart, begins to sputter and palpitate. Looks like the surgery is over. Shit, you could've done that yourself.\n\nYou have developed the mutation **Bleeding Heart**. When hit, bleeding is delayed for 5 minutes.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_nosferatu,
@@ -11482,9 +11486,9 @@ mutations = [
         alias = ['nose', 'nf', 'vampire'],
 		str_describe_self = "Your freakishly huge, hooked schnoz and pointed ears give you a ghoulish appearance due to **Noseferatu**.",
 		str_describe_other = "Their freakishly huge, hooked schnoz and pointed ears give them a ghoulish appearance due to **Noseferatu**.",
-		str_acquire = "The bridge of your nose nearly triples in size. You recoil as the heat of nearby lights sear your skin, forcing you to seek cover under the shadows of dark, secluded alleyways. Your freakish appearance make you a social outcast, filling you with a deep resentment which evolves into unbridled rage. You will have your revenge. You have developed the mutation **Noseferatu**. At night, upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage.",
+		str_acquire = "The bridge of your nose nearly triples in size. You recoil as the heat of nearby lights sear your skin, forcing you to seek cover under the shadows of dark, secluded alleyways. Your freakish appearance make you a social outcast, filling you with a deep resentment which evolves into unbridled rage. You will have your revenge. You have developed the mutation **Noseferatu**. At night, when attacking, 60% of splattered slime is absorbed directly into your slimecount.",
 		tier = 5,
-        str_transplant = "You ask for the super jumbo size nose job. The doctor blindfolds you and takes you to her van. A quick drive later, you arrive at Slimecorp Labs, where you descend to the embiggening ward. A small amount of bright green fluid gets injected into the tip of your nose, and it grows to sizes beyond your wildest dreams.\n\nYou have developed the mutation **Noseferatu**. At night, upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage.",
+        str_transplant = "You ask for the super jumbo size nose job. The doctor blindfolds you and takes you to her van. A quick drive later, you arrive at Slimecorp Labs, where you descend to the embiggening ward. A small amount of bright green fluid gets injected into the tip of your nose, and it grows to sizes beyond your wildest dreams.\n\nYou have developed the mutation **Noseferatu**. At night, when attacking, 60% of splattered slime is absorbed directly into your slimecount.",
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_organicfursuit,
@@ -11912,6 +11916,16 @@ EwMutationFlavor(
 		str_describe_other = "They've adapted to minimg in any conditions due to **Light Miner**.",
 		str_acquire = "Several adaptations bombard your body all at once. You feel a aching friction in your eyes, and your vision begins to hyperfocus on small objects on the street. You start to notice you're able to see in the dark, even the cracks in the sidewalk or the slime in a nearby burning trash can. Meanwhile, your arms and legs become thinner and lankier and you develop a fading sense of allegiance to your gangs important traditions. Killers mine at night? Rowdys don't? Why? You have developed the mutation **Light Miner**. You can mine at any time, and mineshaft collapses do not affect you.",
         tier=2,
+        str_transplant= "Dr. Dusttrap gets out the needles. \"Sad to say, but your measly surgery fee could only afford me 80s era steroids. Basically, horse tranquilizers, these. There are some wigs in the back in case your hair goes though, so take one if you need it.\" Of course, being the idiot you were, you didn't think she would go for an eye injection. She went for the eye injection. The good news is you can see better than ever. Damn, Dusttrap really should clean this place.\n\nYou have developed the mutation **Light Miner**. You can mine at any time, and mineshaft collapses do not affect you.",
+    ),
+EwMutationFlavor(
+		id_mutation = mutation_id_amnesia,
+		str_name="Amnesia",
+        alias = ['amn'],
+		str_describe_self = "You and everyone else have forgotten your identity due to **Amnesia**.",
+		str_describe_other = "They've adapted to minimg in any conditions due to **Amnesia**.",
+		str_acquire = "You have developed the mutation **Amnesia**. Kill feed will report 60 seconds after a kill",
+        tier=3,
         str_transplant= "Dr. Dusttrap gets out the needles. \"Sad to say, but your measly surgery fee could only afford me 80s era steroids. Basically, horse tranquilizers, these. There are some wigs in the back in case your hair goes though, so take one if you need it.\" Of course, being the idiot you were, you didn't think she would go for an eye injection. She went for the eye injection. The good news is you can see better than ever. Damn, Dusttrap really should clean this place.\n\nYou have developed the mutation **Light Miner**. You can mine at any time, and mineshaft collapses do not affect you.",
     ),
 	]
@@ -13058,8 +13072,8 @@ mutation_descriptions = {
 	mutation_id_fungalfeaster: "On a fatal blow, restore all of your hunger.",
 	mutation_id_sharptoother: "The chance to miss with a weapon is reduced by 50%. Specifically, a normal miss will now have a 50% to either go through as a miss or a hit.",
 	mutation_id_2ndamendment: "One extra equippable weapon slot in your inventory. You receive a 25% damage buff if two non-tool weapons are in both your weapon slots.",
-	mutation_id_bleedingheart: "Upon being hit, none of your slime is splattered onto the street. It is all stored as bleed damage instead. This does not counteract the Nosferatu mutation.",
-	mutation_id_nosferatu: "At night (8PM-6AM), upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage. This overrides the Bleeding Heart mutation.",
+	mutation_id_bleedingheart: "When you are hit, bleeding pauses for 5 minutes.",
+	mutation_id_nosferatu: "At night (8PM-6AM), upon successful hit, 60% of splattered slime is absorbed directly into your slime count.",
 	mutation_id_organicfursuit: "Double damage, double movement speed, and 10x damage reduction every 31st night. Use **'!fursuit'** to check if it's active.",
 	mutation_id_lightasafeather: "Double movement speed while weather is windy. Use **'!weather'** to check if it's windy.",
 	mutation_id_whitenationalist: "Cannot be scouted regularly and you scavenge 50% more slime while weather is snowy, which also stacks with the Webbed Feet mutation. Use **'!weather'** to check if it's snowing. You can still be scouted by players with the Keen Smell mutation.",

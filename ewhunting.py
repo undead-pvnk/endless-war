@@ -582,8 +582,8 @@ class EwEnemy:
 					damage = slimes_damage
 
 					slimes_tobleed = int((slimes_damage - slimes_drained) / 2)
-					if ewcfg.mutation_id_bleedingheart in target_mutations:
-						slimes_tobleed *= 2
+					#if ewcfg.mutation_id_bleedingheart in target_mutations:
+					#	slimes_tobleed *= 2
 
 					slimes_directdamage = slimes_damage - slimes_tobleed
 					slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
@@ -631,11 +631,17 @@ class EwEnemy:
 					# 		else:
 					# 			pass
 
+
+
+
 					market_data.splattered_slimes += slimes_damage
 					market_data.persist()
 					district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
 					target_data.bleed_storage += slimes_tobleed
-					target_data.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
+					print('moolah')
+					target_data.change_slimes(n=-slimes_directdamage, source=ewcfg.source_damage)
+					target_data.time_lasthit = int(time_now)
+
 					#target_data.hardened_sap -= sap_damage
 					sewer_data.change_slimes(n=slimes_drained)
 
