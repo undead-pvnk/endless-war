@@ -1271,7 +1271,7 @@ async def attack(cmd):
 			if user_inital_level < user_data.slimelevel:
 				resp_cont.add_channel_response(cmd.message.channel.name, "\n" + levelup_response)
 			# Team kills don't award slime to the kingpin.
-			if user_data.faction != shootee_data.faction and user_data.life_state != ewcfg.life_state_shambler:
+			if user_data.faction != shootee_data.faction and user_data.life_state != ewcfg.life_state_shambler and user_data.faction != ewcfg.faction_slimecorp:
 				# Give slimes to the boss if possible.
 				kingpin = ewutils.find_kingpin(id_server = cmd.guild.id, kingpin_role = role_boss)
 
@@ -1583,7 +1583,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					resp_cont.add_channel_response(channel, response)
 					target_data.persist()
 
-				if user_data.faction != target_data.faction:
+				if user_data.faction != target_data.faction and user_data.faction != ewcfg.faction_slimecorp::
 					# Give slimes to the boss if possible.
 					kingpin = ewutils.find_kingpin(id_server = server.id, kingpin_role = role_boss)
 

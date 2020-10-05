@@ -1515,6 +1515,46 @@ async def balance_cosmetics(cmd):
 								'freshness': 0,
 								'adorned': 'false',
 							}
+					elif id_cosmetic == "costume":
+						if item_data.item_props.get('context') == 'costume':
+							item_data.item_props = {
+									'id_cosmetic': 'dhcostume',
+									'cosmetic_name': item_data.item_props['cosmetic_name'],
+									'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+									'str_onadorn': ewcfg.str_generic_onadorn,
+									'str_unadorn': ewcfg.str_generic_unadorn,
+									'str_onbreak': ewcfg.str_generic_onbreak,
+									'rarity': ewcfg.rarity_plebeian,
+									'attack': 1,
+									'defense': 1,
+									'speed': 1,
+									'ability': None,
+									'durability': ewcfg.base_durability * 100,
+									'size': 1,
+									'fashion_style': ewcfg.style_cute,
+									'freshness': 0,
+									'adorned': 'false',
+								}
+					elif id_cosmetic == 'cigarettebutt':
+						if item_data.item_props.get('id_cosmetic') == 'cigarettebutt':
+							item_data.item_props = {
+								'id_cosmetic': 'cigarettebutt',
+								'cosmetic_name': item_data.item_props['cosmetic_name'],
+								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+								'str_onadorn': ewcfg.str_generic_onadorn,
+								'str_unadorn': ewcfg.str_generic_unadorn,
+								'str_onbreak': ewcfg.str_generic_onbreak,
+								'rarity': ewcfg.rarity_plebeian,
+								'attack': 2,
+								'defense': 0,
+								'speed': 0,
+								'ability': None,
+								'durability': ewcfg.base_durability / 2,
+								'size': 1,
+								'fashion_style': ewcfg.style_cool,
+								'freshness': 5,
+								'adorned': 'false',
+							}
 					else:
 						if item_data.item_props['id_cosmetic'] == id_cosmetic:
 							item = ewcfg.cosmetic_map.get(item_data.item_props['id_cosmetic'])
@@ -1540,7 +1580,9 @@ async def balance_cosmetics(cmd):
 					item_data.persist()
 
 					ewutils.logMsg('Balanced cosmetic: {}'.format(id_item))
-		except:
+
+		except Exception as e:
+			ewutils.logMsg(e)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Failure."))
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Success!"))

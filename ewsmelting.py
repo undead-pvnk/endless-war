@@ -284,11 +284,11 @@ async def find_recipes_by_item(cmd):
 			number_recipe = 1
 			list_length = len(makes_sought_item)
 			for item in makes_sought_item:
-				if (item.id_recipe == "toughcosmetic" and ewcfg.cosmetic_map[sought_item].style is not ewcfg.style_tough
-				or item.id_recipe == "smartcosmetic" and ewcfg.cosmetic_map[sought_item].style is not ewcfg.style_smart
-				or item.id_recipe == "beautifulcosmetic" and ewcfg.cosmetic_map[sought_item].style is not ewcfg.style_beautiful
-				or item.id_recipe == "cutecosmetic" and ewcfg.cosmetic_map[sought_item].style is not ewcfg.style_cute
-				or item.id_recipe == "coolcosmetic" and ewcfg.cosmetic_map[sought_item].style is not ewcfg.style_cool):
+				if (item.id_recipe == "toughcosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_tough
+				or item.id_recipe == "smartcosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_smart
+				or item.id_recipe == "beautifulcosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_beautiful
+				or item.id_recipe == "cutecosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_cute
+				or item.id_recipe == "coolcosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_cool):
 					list_length -= 1
 					continue
 				else:
