@@ -694,14 +694,24 @@ async def data(cmd):
 async def mutations(cmd):
 	response = ""
 	total_levels = 0
+
+	if "level" in cmd.tokens:
+		response += "\n"
+
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member=cmd.message.author)
 		mutations = user_data.get_mutations()
 		for mutation in mutations:
 			mutation_flavor = ewcfg.mutations_map[mutation]
-			response += "{} ".format(mutation_flavor.str_describe_self)
+			total_levels += mutation_flavor.tier
+			if "level" in cmd.tokens:
+				response += "**LEVEL {}**:{} \n".format(mutation_flavor.tier, mutation_flavor.str_describe_self)
+			else:
+				response += "{} ".format(mutation_flavor.str_describe_self)
 		if len(mutations) == 0:
 			response = "You are miraculously unmodified from your normal genetic code!"
+		elif "level" in cmd.tokens:
+			response += "Total Levels: {}/50\nMutation Levels Added: {}/{}".format(user_data.slimelevel, total_levels, max(50, user_data.slimelevel))
 
 	else:
 		member = cmd.mentions[0]
@@ -713,13 +723,13 @@ async def mutations(cmd):
 		for mutation in mutations:
 			mutation_flavor = ewcfg.mutations_map[mutation]
 			total_levels += mutation_flavor.tier
-			if cmd.tokens[1] == "level":
-				response = "**LEVEL {}**:{} \n".format(mutation_flavor.tier, mutation_flavor.str_describe_other)
+			if "level" in cmd.tokens:
+				response += "**LEVEL {}**:{} \n".format(mutation_flavor.tier, mutation_flavor.str_describe_other)
 			else:
 				response += "{} ".format(mutation_flavor.str_describe_other)
 		if len(mutations) == 0:
 			response = "They are miraculously unmodified from their normal genetic code!"
-		elif cmd.tokens[1] == "level":
+		elif "level" in cmd.tokens:
 			response += "Total Levels: {}/50\nMutation Levels Added: {}/{}".format(user_data.slimelevel, total_levels, max(50, user_data.slimelevel))
 	await ewutils.send_response(response, cmd)
 

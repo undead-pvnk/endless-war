@@ -33,7 +33,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.60 - Quarterly Report 3"
+version = "v3.61 - Chemotherapy Update"
 
 
 dir_msgqueue = 'msgqueue'
