@@ -538,8 +538,6 @@ async def preserve(cmd):
 
 	if item_sought:
 		item_obj = ewitem.EwItem(id_item=item_sought.get('id_item'))
-		print(item_obj.item_props.get('preserved'))
-		print(user_data.id_user)
 
 		if item_obj.item_props.get('preserved') == None:
 			preserve_id = 0

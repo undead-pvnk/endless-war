@@ -1001,7 +1001,6 @@ async def attack(cmd):
 				shootee_data.time_lasthit = int(time_now)
 				shootee_data.persist()
 				shootee_data.change_slimes(n = -slimes_directdamage, source = ewcfg.source_damage)
-				print("{}, eh?".format(-slimes_directdamage))
 				shootee_data.persist()
 				#shootee_data.hardened_sap -= sap_damage
 				sewer_data.change_slimes(n = slimes_drained)

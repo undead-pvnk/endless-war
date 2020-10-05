@@ -175,8 +175,6 @@ class EwUser:
 				response += "You have been empowered by slime and are now a level {} slimeboi.".format(new_level)
 			for level in range(self.slimelevel+1, new_level+1):
 				current_mutations = self.get_mutations()
-				print(self.get_mutation_level())
-				print(self.get_mutation_next_level())
 				if (level >= self.get_mutation_level() + self.get_mutation_next_level()) and (self.life_state not in [ewcfg.life_state_corpse, ewcfg.life_state_shambler]) and (self.get_mutation_level() < 50):
 					
 					new_mutation = self.get_mutation_next()
@@ -607,7 +605,6 @@ class EwUser:
 			ewutils.logMsg("Failed to fetch mutations for user {}.".format(self.id_user))
 
 		finally:
-			print(result)
 			return result
 
 

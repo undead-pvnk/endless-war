@@ -639,7 +639,6 @@ class EwEnemy:
 					market_data.persist()
 					district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
 					target_data.bleed_storage += slimes_tobleed
-					print('moolah')
 					target_data.change_slimes(n=-slimes_directdamage, source=ewcfg.source_damage)
 					target_data.time_lasthit = int(time_now)
 

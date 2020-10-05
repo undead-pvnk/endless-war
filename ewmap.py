@@ -1272,7 +1272,6 @@ async def teleport(cmd):
 			user_data.persist()
 
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-			print(poi.id_poi)
 			await one_eye_dm(id_user=user_data.id_user, id_server=user_data.id_server, poi=poi.id_poi)
 			await user_data.move_inhabitants(id_poi = poi.id_poi)
 			resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -2139,16 +2138,10 @@ async def one_eye_dm(id_user=None, id_server=None, poi=None):
 	poi_obj = ewcfg.id_to_poi.get(poi)
 	client = ewutils.get_client()
 	server = client.get_guild(id_server)
-	if server == None:
-		print('fuck1')
 
 	server = client.get_guild(str(id_server))
-	if server == None:
-		print('fuck2')
 
 	server = client.get_guild(int(id_server))
-	if server == None:
-		print('fuck3')
 
 
 	id_player = EwPlayer(id_user=id_user, id_server=id_server)
@@ -2166,13 +2159,8 @@ async def one_eye_dm(id_user=None, id_server=None, poi=None):
 					ewcfg.mutation_id_oneeyeopen,
 					str(id_user),
 				))
-			print('third')
-			print(recipients)
 			for recipient in recipients:
-				print(recipient)
-				print(recipient[0])
 				member = server.get_member(int(recipient[0]))
-				print('fourth')
 				mutation = EwMutation(id_server=id_server, id_user=recipient[0], id_mutation=ewcfg.mutation_id_oneeyeopen)
 				mutation.data = ""
 				mutation.persist()
