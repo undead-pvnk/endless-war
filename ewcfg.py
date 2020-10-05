@@ -14843,7 +14843,7 @@ server_list = {}
 def update_server_list(server):
 	print(server.id)
 	print(type(server.id))
-	server_list[str(server.id)] = server
+	server_list[server.id] = server
 
 
 client_ref = None
