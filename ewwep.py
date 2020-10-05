@@ -1583,7 +1583,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					resp_cont.add_channel_response(channel, response)
 					target_data.persist()
 
-				if user_data.faction != target_data.faction and user_data.faction != ewcfg.faction_slimecorp::
+				if user_data.faction != target_data.faction and user_data.faction != ewcfg.faction_slimecorp:
 					# Give slimes to the boss if possible.
 					kingpin = ewutils.find_kingpin(id_server = server.id, kingpin_role = role_boss)
 
