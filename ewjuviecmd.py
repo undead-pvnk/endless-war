@@ -27,11 +27,23 @@ last_mismined_times = {}
 juviesrow_mines = {}
 toxington_mines = {}
 cratersville_mines = {}
+juviesrow_mines_minesweeper = {}
+toxington_mines_minesweeper = {}
+cratersville_mines_minesweeper = {}
+juviesrow_mines_bubblebreaker = {}
+toxington_mines_bubblebreaker = {}
+cratersville_mines_bubblebreaker = {}
 
 mines_map = {
 	ewcfg.poi_id_mine: juviesrow_mines,
 	ewcfg.poi_id_tt_mines: toxington_mines,
-	ewcfg.poi_id_cv_mines: cratersville_mines
+	ewcfg.poi_id_cv_mines: cratersville_mines,
+	ewcfg.poi_id_mine_sweeper: juviesrow_mines_minesweeper,
+	ewcfg.poi_id_tt_mines_sweeper: toxington_mines_minesweeper,
+	ewcfg.poi_id_cv_mines_sweeper: cratersville_mines_minesweeper,
+	ewcfg.poi_id_mine_bubble: juviesrow_mines_bubblebreaker,
+	ewcfg.poi_id_tt_mines_bubble: toxington_mines_bubblebreaker,
+	ewcfg.poi_id_cv_mines_bubble: cratersville_mines_bubblebreaker
 }
 
 scavenge_combos = {}
@@ -277,7 +289,7 @@ async def mine(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Killers only mine under cover of darkness. Wait for nightfall at 8pm.".format(ewcfg.cmd_revive)))
 
 	# Mine only in the mines.
-	if cmd.message.channel.name in [ewcfg.channel_mines, ewcfg.channel_cv_mines, ewcfg.channel_tt_mines]:
+	if cmd.message.channel.name in ewcfg.mining_channels:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
@@ -295,12 +307,9 @@ async def mine(cmd):
 			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
 
 			world_events = ewworldevent.get_world_events(id_server = cmd.guild.id)
-			minigame_event = None
+			mining_type = ewcfg.mines_mining_type_map.get(user_data.poi)
 			for id_event in world_events:
-				if world_events.get(id_event) in ewcfg.grid_type_by_mining_event:
-					event_data = EwWorldEvent(id_event = id_event)
-					if event_data.event_props.get('poi') == user_data.poi:
-						minigame_event = event_data.event_type
+
 				if world_events.get(id_event) == ewcfg.event_type_minecollapse:
 					event_data = EwWorldEvent(id_event = id_event)
 					if int(event_data.event_props.get('id_user')) == user_data.id_user and event_data.event_props.get('poi') == user_data.poi:
@@ -326,7 +335,7 @@ async def mine(cmd):
 			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
 			grid = grid_cont.grid
 
-			grid_type = ewcfg.grid_type_by_mining_event.get(minigame_event)
+			grid_type = ewcfg.grid_type_by_mining_type.get(mining_type)
 			if grid_type != grid_cont.grid_type:
 				init_grid(user_data.poi, user_data.id_server)
 				printgrid = True
@@ -342,7 +351,9 @@ async def mine(cmd):
 				response = mining_yield
 				if len(response) > 0:
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return # await print_grid(cmd)
+				if time_now > grid_cont.time_last_posted + 10:
+					await print_grid(cmd)
+				return
 					
 
 
@@ -421,9 +432,6 @@ async def mine(cmd):
 					if event_data.event_type == ewcfg.event_type_minecollapse:
 						str_event_start = str_event_start.format(cmd = ewcfg.cmd_mine, captcha = ewutils.text_to_regional_indicator(event_data.event_props.get('captcha')))
 					response += str_event_start + "\n"
-				if event_data.event_type in [ewcfg.event_type_minesweeper, ewcfg.event_type_pokemine, ewcfg.event_type_bubblebreaker]:
-					init_grid(poi = event_data.event_props.get('poi'), id_server = event_data.id_server)
-					printgrid = True
 
 			if random.random() < unearthed_item_chance:
 				unearthed_item = True
@@ -559,14 +567,9 @@ async def flag(cmd):
 			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
 
 			world_events = ewworldevent.get_world_events(id_server = cmd.guild.id)
-			minigame_event = None
-			for id_event in world_events:
-				if world_events.get(id_event) in ewcfg.grid_type_by_mining_event:
-					event_data = EwWorldEvent(id_event = id_event)
-					if event_data.event_props.get('poi') == user_data.poi:
-						minigame_event = event_data.event_type
+			mining_type = ewcfg.mines_mining_type_map.get(user_data.poi)
 
-			if minigame_event != ewcfg.event_type_minesweeper:
+			if mining_type != ewcfg.mining_type_minesweeper:
 				response = "What do you think you can flag here?"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -580,7 +583,7 @@ async def flag(cmd):
 			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
 			grid = grid_cont.grid
 
-			grid_type = ewcfg.grid_type_by_mining_event.get(minigame_event)
+			grid_type = ewcfg.grid_type_by_mining_type.get(mining_event)
 			if grid_type != grid_cont.grid_type:
 				init_grid(user_data.poi, user_data.id_server)
 				printgrid = True
@@ -957,19 +960,13 @@ async def crush(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 def init_grid(poi, id_server):
-	world_events = ewworldevent.get_world_events(id_server = id_server)
-	minigame_event = None
-	for id_event in world_events:
-		if world_events.get(id_event) in [ewcfg.event_type_minesweeper, ewcfg.event_type_pokemine, ewcfg.event_type_bubblebreaker]:
-			event_data = EwWorldEvent(id_event = id_event)
-			if event_data.event_props.get('poi') == poi:
-				minigame_event = event_data.event_type
+	mining_type = ewcfg.mines_mining_type_map.get(poi)
 
-	if minigame_event == ewcfg.event_type_minesweeper:
+	if mining_type == ewcfg.mining_type_minesweeper:
 		return init_grid_minesweeper(poi, id_server)
-	elif minigame_event == ewcfg.event_type_pokemine:
+	elif mining_type == ewcfg.mining_type_pokemine:
 		return init_grid_pokemine(poi, id_server)
-	elif minigame_event == ewcfg.event_type_bubblebreaker:
+	elif mining_type == ewcfg.mining_type_bubblebreaker:
 		return init_grid_bubblebreaker(poi, id_server)
 	else:
 		return init_grid_none(poi, id_server)
@@ -1435,6 +1432,8 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 	user_data = EwUser(member = cmd.message.author)
 	grid = grid_cont.grid
 
+	hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
+
 	row = -1
 	col = -1
 	bubble_add = None
@@ -1444,6 +1443,13 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 
 	for token in cmd.tokens[1:]:
 		token_lower = token.lower()
+
+		coords = token_lower
+		if coords == "reset":
+			user_data.hunger += int(ewcfg.hunger_perminereset * hunger_cost_mod)
+			user_data.persist()
+			init_grid_bubblebreaker(user_data.poi, user_data.id_server)
+			return ""
 
 		if col < 1:
 			for char in token_lower:
@@ -1527,7 +1533,7 @@ def create_mining_event(cmd):
 	life_states = [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile]
 	num_miners = len(mine_district_data.get_players_in_district(life_states = life_states, ignore_offline = True))
 	
-	common_event_chance = 0.6 # 6/10
+	common_event_chance = 0.7 # 7/10
 	uncommon_event_chance = 0.3 # 3/10
 	rare_event_chance = 0.1 / num_miners # 1/10 for 1 miner, 1/20 for 2 miners, etc.
 	
@@ -1541,12 +1547,12 @@ def create_mining_event(cmd):
 	# 0.91 < (0.6 + 0.05), condition not met
 	# 0.91 < (0.9 + 0.05), condition met, uncommon event used
 	
-	if randomn < (common_event_chance + (0.1 - rare_event_chance)):
+	if randomn < common_event_chance: # + (0.1 - rare_event_chance)):
 		common_event_triggered = True
-	elif randomn < (common_event_chance + uncommon_event_chance + (0.1 - rare_event_chance)):
+	else: # randomn < (common_event_chance + uncommon_event_chance + (0.1 - rare_event_chance)):
 		uncommon_event_triggered = True
-	else:
-		rare_event_triggered = True
+	#else:
+	#	rare_event_triggered = True
 
 	# common event
 	if common_event_triggered:
@@ -1622,7 +1628,8 @@ def create_mining_event(cmd):
 				time_expir = time_now + 5,
 				event_props = event_props
 			)
-			
+
+	"""
 	# rare event
 	elif rare_event_triggered:
 		randomn = random.random()
@@ -1652,6 +1659,7 @@ def create_mining_event(cmd):
 				time_expir = time_now + 60*3,
 				event_props = event_props
 			)
+		"""
 
 def gen_scavenge_captcha(n = 0):
 	captcha_length = math.ceil(n / 3)

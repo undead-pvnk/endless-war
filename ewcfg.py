@@ -119,6 +119,8 @@ poi_id_realestate = "realestateagency"
 poi_id_glocksburycomics = "glocksburycomics"
 poi_id_slimypersuits = "slimypersuits"
 poi_id_mine = "themines"
+poi_id_mine_sweeper = "theminessweeper"
+poi_id_mine_bubble = "theminesbubble"
 poi_id_thecasino = "thecasino"
 poi_id_711 = "outsidethe711"
 poi_id_speakeasy = "thekingswifessonspeakeasy"
@@ -133,7 +135,11 @@ poi_id_stockexchange = "theslimestockexchange"
 poi_id_endlesswar = "endlesswar"
 poi_id_slimecorphq = "slimecorphq"
 poi_id_cv_mines = "cratersvillemines"
+poi_id_cv_mines_sweeper = "cratersvilleminessweeper"
+poi_id_cv_mines_bubble = "cratersvilleminesbubble"
 poi_id_tt_mines = "toxingtonmines"
+poi_id_tt_mines_sweeper = "toxingtonminessweeper"
+poi_id_tt_mines_bubble = "toxingtonminesbubble"
 poi_id_diner = "smokerscough"
 poi_id_seafood = "redmobster"
 poi_id_jr_farms = "juviesrowfarms"
@@ -624,6 +630,8 @@ psuedo_faction_shamblers = 'shamblers' # same as above
 
 # Channel names
 channel_mines = "the-mines"
+channel_mines_sweeper = "the-mines-minesweeper"
+channel_mines_bubble = "the-mines-bubble-breaker"
 channel_downtown = "downtown"
 channel_combatzone = "combat-zone"
 channel_endlesswar = "endless-war"
@@ -644,7 +652,11 @@ channel_recyclingplant = "slimecorp-recycling-plant"
 channel_slimecorphq = "slimecorp-hq"
 channel_leaderboard = "leaderboard"
 channel_cv_mines = "cratersville-mines"
+channel_cv_mines_sweeper = "cratersville-mines-minesweeper"
+channel_cv_mines_bubble = "cratersville-mines-bubble-breaker"
 channel_tt_mines = "toxington-mines"
+channel_tt_mines_sweeper = "toxington-mines-minesweeper"
+channel_tt_mines_bubble = "toxington-mines-bubble-breaker"
 channel_diner = "smokers-cough"
 channel_seafood = "red-mobster"
 channel_jr_farms = "juvies-row-farms"
@@ -717,9 +729,12 @@ channel_subway_purple02 = "subway-train-purple-02"
 channel_blimp = "blimp"
 
 channel_killfeed = "kill-feed"
-channel_jrmineswall = "the-mines-wall"
-channel_ttmineswall = "toxington-mines-wall"
-channel_cvmineswall = "cratersville-mines-wall"
+channel_jrmineswall_sweeper = "the-mines-wall-sweeper"
+channel_ttmineswall_sweeper = "toxington-mines-wall-sweeper"
+channel_cvmineswall_sweeper = "cratersville-mines-wall-sweeper"
+channel_jrmineswall_bubble = "the-mines-wall-bubble"
+channel_ttmineswall_bubble = "toxington-mines-wall-bubble"
+channel_cvmineswall_bubble = "cratersville-mines-wall-bubble"
 
 channel_apt_downtown = "downtown-apartments"
 channel_apt_smogsburg ="smogsburg-apartments"
@@ -1918,10 +1933,21 @@ emote_ms_6 = ":six:"
 emote_ms_7 = ":seven:"
 emote_ms_8 = ":eight:"
 
+# mining types
+mining_type_minesweeper = "minesweeper"
+mining_type_pokemine = "pokemine"
+mining_type_bubblebreaker = "bubblebreaker"
+
 # mining grid types
 mine_grid_type_minesweeper = "minesweeper"
 mine_grid_type_pokemine = "pokemining"
 mine_grid_type_bubblebreaker = "bubblebreaker"
+
+grid_type_by_mining_type = {
+	mining_type_minesweeper: mine_grid_type_minesweeper,
+	mining_type_pokemine: mine_grid_type_pokemine,
+	mining_type_bubblebreaker: mine_grid_type_bubblebreaker,
+}
 
 # mining sweeper
 cell_mine = 1
@@ -1985,11 +2011,38 @@ number_emote_map = {
 
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 
+# map of mines and their respective wall
 mines_wall_map = {
-	poi_id_mine : channel_jrmineswall,
-	poi_id_tt_mines : channel_ttmineswall,
-	poi_id_cv_mines : channel_cvmineswall
+	poi_id_mine_sweeper : channel_jrmineswall_sweeper,
+	poi_id_tt_mines_sweeper : channel_ttmineswall_sweeper,
+	poi_id_cv_mines_sweeper : channel_cvmineswall_sweeper,
+	poi_id_mine_bubble : channel_jrmineswall_bubble,
+	poi_id_tt_mines_bubble : channel_ttmineswall_bubble,
+	poi_id_cv_mines_bubble : channel_cvmineswall_bubble
 }
+
+# map of mines and the type of mining done in them
+mines_mining_type_map = {
+	poi_id_mine_sweeper : mining_type_minesweeper,
+	poi_id_cv_mines_sweeper : mining_type_minesweeper,
+	poi_id_tt_mines_sweeper : mining_type_minesweeper,
+	poi_id_mine_bubble : mining_type_bubblebreaker,
+	poi_id_cv_mines_bubble : mining_type_bubblebreaker,
+	poi_id_tt_mines_bubble : mining_type_bubblebreaker
+}
+
+# list of channels you can !mine in
+mining_channels = [
+	channel_mines,
+	channel_mines_sweeper,
+	channel_mines_bubble,
+	channel_cv_mines,
+	channel_cv_mines_sweeper,
+	channel_cv_mines_bubble,
+	channel_tt_mines,
+	channel_tt_mines_sweeper,
+	channel_tt_mines_bubble
+]
 
 # trading
 trade_state_proposed = 0
@@ -12561,7 +12614,7 @@ help_responses = {
 	"wanted":"If you find that you have a role with 'Wanted' in the name, be alarmed. This means that you are able to be attacked by gangsters! Always be on the look out and remember to check your corners.",
 	"combat": "Once you have enlisted in a gang, you can engage in gang violence. To do so you will need a weapon, which you can find at the Dojo and a target. To attack an enemy, you have to **!equip** a weapon and **!kill [player]**. Attacking costs slime and sap. The default cost for attacking is ((your slime level)^4 / 60), and the default damage it does to your opponent is ((your slimelevel)^4 / 6). Every weapon has an attack cost mod and a damage mod that may change these default values. When you reduce a player's slime count below 0 with your attacks, they die. Most weapons will ask you to input a security code with every attack. This security code, also referred to as a captcha, is displayed after a previous !kill or when you !inspect your weapon. Heavy weapons increase crit chance by 5% and decrease miss chance by 10% against you, when you carry them.",
 	# Ways to gain slime
-	"mining": "Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by a little bit. The more slime you mine for, the higher your level gets. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively. If you are enlisted, you can make use of the **pickaxe**, which increases the amount of slime you gain from mining. Currently mining is event-based. Similarly to clicker games your base action is **!mine**, but various events may dynamically change the way mining works, from simple slimeboosts to full-on minigames. Basic instructions for these events come, when the event starts.",
+	"mining": "Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by a little bit. The more slime you mine for, the higher your level gets. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively. If you are enlisted, you can make use of the **pickaxe**, which increases the amount of slime you gain from mining. Currently mining is event-based, with events like simple slimboosts or guaranteed poudrins for a certain time. Similarly to clicker games your base action is **!mine**, however some mines can dynamically change how mining works. Basic instructions for these variations can be found in those mines.",
 	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging raises your hunger by 1% with every command entered. If you type **!scavenge** by itself, you will be given a captca to type. The more captchas you type correctly, the more slime you will gain. To check how much slime you can scavenge, use **'!look'** while in a district channel. You can also scavenge for items by doing '!scavenge [item name]'.",
 	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. It is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 200,000 slime, with a 1/30 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days, or 12 hours in real life), it will **die out**. In addition to slime, farming also provides you with various **crops** which can be used for **milling**, but you can also **'!crush'** them to gain cosmetic materials for smelting random cosmetics. Crops can be eaten by themselves, but it's much more useful if you use **'!mill'** on them while at a farm, granting you crop materials used for smelting **dyes**, as well as food items and cosmetics associated with that crop, all at the cost of 50,000 slime per '!mill'. Dyes can be used on slimeoids with **'!saturateslimeoid'**. Crops can also be sown themselves with '!sow [crop name]', and upon reaping you be rewarded with a bushel of that crop, as well as 100,000 slime. You can, however, increase the slime gained from sowing crops by using **'!checkfarm'**, and performing **'!irrigate'**, **'!fertilize'**, **'!pesticide'** or **'!weed'** if neccessary. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
 	"fishing": "**Fishing** can be done by performing the **'!cast'** command at one of the six piers, including **Juvie's Row Pier**, **Crookline Pier**, **Jaywalker Plain Pier**, **Toxington Pier**, **Assault Flats Beach Pier**, **Slime's End Pier**, as well as **The Ferry**. To reel in a fish, use **'!reel'** when the game tells you that you have a bite. If you don't reel in quick enough, the fish will get away. If you are enlisted and have the **fishing rod** equiped, you will have increased chances of reeling in a fish. For more information about fishing, refer to this helpful guide (credits to Miller#2705).\n<https://www.youtube.com/watch?v=tHDeSukIqME>\nAs an addendum to that video, note that fish can be taken to the labs in Brawlden, where they can be made more valuble in bartering by increasing their size with **'!embiggen [fish]'**.",
@@ -13764,9 +13817,6 @@ event_type_slimeglob = "slimeglob"
 event_type_slimefrenzy = "slimefrenzy"
 event_type_poudrinfrenzy = "poudrinfrenzy"
 event_type_minecollapse = "minecollapse"
-event_type_minesweeper = "minesweeper"
-event_type_pokemine = "pokemine"
-event_type_bubblebreaker = "bubblebreaker"
 event_type_voidhole = "voidhole"
 event_type_voidconnection = "voidconnection"
 event_type_shambaquarium = "shambaquarium"
@@ -13791,21 +13841,6 @@ world_events = [
 		str_event_start = "The mineshaft starts collapsing around you.\nGet out of there quickly! ({cmd} {captcha})",
 	),
 	EwEventDef(
-		event_type = event_type_minesweeper,
-		str_event_start = "You notice the wall bulging slightly and you can dig into it. ({} coordinates, {} coordinates)".format(cmd_mine, cmd_flag),
-		str_event_end = "The wall collapses.",
-	),
-	EwEventDef(
-		event_type = event_type_pokemine,
-		str_event_start = "You notice the wall bulging slightly and you can dig into it. ({} coordinates)".format(cmd_mine, cmd_flag),
-		str_event_end = "The wall collapses.",
-	),
-	EwEventDef(
-		event_type = event_type_bubblebreaker,
-		str_event_start = "You notice the wall bulging slightly and you can dig into it.({} column number)".format(cmd_mine),
-		str_event_end = "The wall collapses.",
-	),
-	EwEventDef(
 		event_type = event_type_voidhole,
 		str_event_start = "You hit a sudden gap in the stone, with a scary looking drop. You see what looks like a trampoline on a building's roof at the bottom. Do you **{}** in?".format(cmd_jump),
 		str_event_end = "The wall collapses.",
@@ -13821,12 +13856,6 @@ event_type_to_def = {}
 
 for event in world_events:
 	event_type_to_def[event.event_type] = event
-
-grid_type_by_mining_event = {
-	event_type_minesweeper: mine_grid_type_minesweeper,
-	event_type_pokemine: mine_grid_type_pokemine,
-	event_type_bubblebreaker: mine_grid_type_bubblebreaker,
-}
 
 halloween_tricks_tricker = [
 	"You open the door and give {} a hearty '!SPOOK'. They lose {} slime!",
