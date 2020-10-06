@@ -611,14 +611,15 @@ async def devour(cmd):
 		elif item_obj.soulbound == True:
 			response = "You attempt to consume the {}, but you realize it's soulbound and that you were about to eat your own existnece. Your life flashes before your eyes, so you decide to stop.".format(item_sought.get('name'))
 		else:
+
 			str_eat = "You unhinge your gaping maw and shove the {} right down, no chewing or anything. It's about as nutritious as you'd expect.".format(item_sought.get('name'))
 
 			if item_obj.item_type == ewcfg.it_cosmetic:
-				recover_hunger = 320
+				recover_hunger = 100
 			elif item_obj.item_type == ewcfg.it_furniture:
 				furn = ewcfg.furniture_map.get(item_obj.item_props.get('id_furniture'))
 				if furn.acquisition != ewcfg.acquisition_bazaar:
-					recover_hunger = 320
+					recover_hunger = 100
 				elif furn.price < 500:
 					recover_hunger = 0
 				elif furn.price < 5000:
@@ -628,7 +629,25 @@ async def devour(cmd):
 				else:
 					recover_hunger = 16000
 			elif item_obj.item_type == ewcfg.it_food:
+				if item_obj.item_props.get('perishable') != None:
+					perishable_status = item_obj.item_props.get('perishable')
+					if perishable_status == 'true' or perishable_status == '1':
+						item_is_non_perishable = False
+					else:
+						item_is_non_perishable = True
+				else:
+					item_is_non_perishable = False
+
+				user_has_spoiled_appetite = ewcfg.mutation_id_spoiledappetite in mutations
+				item_has_expired = float(getattr(item_obj, "time_expir", 0)) < time.time()
+
+				if item_has_expired and not (user_has_spoiled_appetite or item_is_non_perishable):
+					response = "You realize that the food you were trying to eat is already spoiled. Ugh, not eating that."
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					# ewitem.item_drop(food_item.id_item)
+
 				recover_hunger = item_obj.item_props.get('recover_hunger')
+
 			else:
 				recover_hunger = 100
 
@@ -656,6 +675,7 @@ async def devour(cmd):
 async def eat_item(cmd):
 	
 	user_data = EwUser(member=cmd.message.author)
+	mutations = user_data.get_mutations()
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 	food_item = None
@@ -665,6 +685,10 @@ async def eat_item(cmd):
 		item_sought = ewitem.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)
 		if item_sought:
 			food_item = EwItem(id_item = item_sought.get('id_item'))
+		else:
+			item_sought = ewitem.find_item(item_search=item_search, id_user=user_data.id_user, id_server=user_data.id_server)
+			if item_sought and ewcfg.mutation_id_trashmouth in mutations:
+				return await devour(cmd=cmd)
 		
 	# otherwise find the first useable food
 	else:

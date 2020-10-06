@@ -4044,3 +4044,16 @@ async def payday(cmd):
 		response = "You cash in all of your salary credits for {:,} slime.".format(slime_added)
 		
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def check_flag(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if user_data.time_expirpvp < int(time.time()):
+		response = "You don't have a flag."
+	elif poi.is_street and abs(user_data.time_expirpvp - int(time.time())) < 60:
+		response = "You're in a street, so the flag's always on."
+	else:
+		response = "You have {:,} seconds left on your flag.".format(abs(user_data.time_expirpvp - int(time.time())))
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

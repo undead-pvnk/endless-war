@@ -170,8 +170,8 @@ async def haunt(cmd):
 				response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
 			elif ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 				response = "You can't commit violence from here."
-			elif target_poi.pvp == False or (user_data.poi != haunted_data.poi and (time_now > haunted_data.time_expirpvp and not target_is_shambler)):
-				# Require the target to be in a PvP area, and flagged if it's a remote haunt
+			elif (target_poi.pvp == False and target_poi.is_subzone == False) or (user_data.poi != haunted_data.poi and (time_now > haunted_data.time_expirpvp and not target_is_shambler)):
+			#Require the target to be in a PvP area, and flagged if it's a remote haunt
 				response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 			elif haunted_data.life_state == ewcfg.life_state_corpse:
 				# Dead players can't be haunted.

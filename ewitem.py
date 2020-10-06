@@ -1262,8 +1262,8 @@ async def item_look(cmd):
 					if ewcfg.mutation_id_spoiledappetite in mutations:
 						response += ". Yummy!"
 					else:
-						response += ", so you decide to throw it away."
-						item_drop(id_item)
+						response += "."
+						#item_drop(id_item)
 
 			if item.item_type == ewcfg.it_weapon:
 				response += "\n\n"

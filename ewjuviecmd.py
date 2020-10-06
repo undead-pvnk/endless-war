@@ -1205,6 +1205,8 @@ async def print_grid_bubblebreaker(cmd):
 			await ewutils.edit_message(cmd.client, grid_cont.wall_message, grid_edit)
 
 # for pokemining
+
+
 def get_cell_symbol_bubblebreaker(cell):
 	if cell == ewcfg.cell_bubble_empty:
 		return " "

@@ -416,8 +416,8 @@ class EwUser:
 		user_has_spoiled_appetite = ewcfg.mutation_id_spoiledappetite in mutations
 		item_has_expired = float(getattr(food_item, "time_expir", 0)) < time.time()
 		if item_has_expired and not (user_has_spoiled_appetite or item_is_non_perishable):
-			response = "You realize that the food you were trying to eat is already spoiled. In disgust, you throw it away."
-			ewitem.item_drop(food_item.id_item)
+			response = "You realize that the food you were trying to eat is already spoiled. Ugh, not eating that."
+			#ewitem.item_drop(food_item.id_item)
 		else:
 			hunger_restored = int(item_props['recover_hunger'])
 			if self.id_user in ewutils.food_multiplier and ewutils.food_multiplier.get(self.id_user) > 0:
