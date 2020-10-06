@@ -5,7 +5,7 @@
 #
 # Read a player's data from the endless-war database and present an HTML view.
 import sys
-import cgi
+import html
 
 import ewutils
 import ewcmd
@@ -61,7 +61,7 @@ print("</div>")
 # Header bar
 print("<header><h2>{faction}<a href=player.html?pl={id_user}>{display_name}</a></h2></header>".format(
 	id_user = id_user,
-	display_name = cgi.escape(player.display_name),
+	display_name = html.escape(player.display_name),
 	faction = faction(user_data.faction, user_data.life_state)
 ))
 
@@ -69,7 +69,7 @@ print("<header><h2>{faction}<a href=player.html?pl={id_user}>{display_name}</a><
 # Main body
 print("<div>")
 
-print("<p>{}</p>".format(cgi.escape("".join(ewcmd.gen_data_text(
+print("<p>{}</p>".format(html.escape("".join(ewcmd.gen_data_text(
 	id_user = id_user,
 	id_server = id_server,
 	display_name = player.display_name
