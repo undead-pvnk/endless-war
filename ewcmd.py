@@ -1639,7 +1639,7 @@ async def piss(cmd):
 				
 				#await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				
-				response = "You spend {} liquid sap to !piss HARD and FAST right onto {}!!".format(ewcfg.sap_spend_piss, target_member.display_name)
+				response = "You piss HARD and FAST right onto {}!!".format(target_member.display_name)
 			else:
 				response = "You can't !piss on someone who isn't there! Moron!"
 
