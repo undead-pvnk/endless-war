@@ -10761,7 +10761,7 @@
             "jrm"
         ],
         "str_name": "The Mines",
-        "str_desc": "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR.\n\nExits into Juvie's Row.",
+        "str_desc": "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR.\n\n This place contains The Mines - Minesweeper and The Mines - Bubble Breaker. Exits into Juvie's Row.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -10808,7 +10808,130 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "juviesrow": 20
+            "juviesrow": 20,
+            "theminessweeper" : 20,
+            "theminesbubble" : 20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/Juvie's_Row#The_Mines"
+    },
+    "theminessweeper": {
+        "id_poi": "theminessweeper",
+        "alias": [
+            "minesweeper",
+            "ms",
+            "jrms"
+        ],
+        "str_name": "The Mines - Minesweeper",
+        "str_desc": "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR. There's a lot of slime to be mined in here, however some sick fucks thought it'd be really funny to turn the floor into a minefield. Be careful not to set off any explosives when you !mine.\n\nExits into The Mines.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "the-mines-minesweeper",
+        "role": "Mines",
+        "major_role": "juviesrow_major",
+        "minor_role": "themines_minor",
+        "permissions": {
+            "theminessweeper": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+            "juviesrow"
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "themines": 20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/Juvie's_Row#The_Mines"
+    },
+    "theminesbubble": {
+        "id_poi": "theminesbubble",
+        "alias": [
+            "bubblebreaker",
+            "bubble",
+            "mb",
+            "jrmb"
+        ],
+        "str_name": "The Mines - Bubble Breaker",
+        "str_desc": "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR. Explosions from the neighboring floor have caused this place to become highly dangerous. Try not to get caught under a collapsing mineshaft.\n\nExits into The Mines.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "the-mines-bubble-breaker",
+        "role": "Mines",
+        "major_role": "juviesrow_major",
+        "minor_role": "themines_minor",
+        "permissions": {
+            "theminesbubble": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+            "juviesrow"
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "themines": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Juvie's_Row#The_Mines"
@@ -10889,7 +11012,7 @@
             "cratersvillem"
         ],
         "str_name": "The Cratersville Mines",
-        "str_desc": "A veritable slime-mine of slime, rejuvenated by the revival of ENDLESS WAR.\n\nExits into Cratersville.",
+        "str_desc": "A veritable slime-mine of slime, rejuvenated by the revival of ENDLESS WAR.\n\n This place contains The Cratersville Mines - Minesweeper and The Cratersville Mines - Bubble Breaker. Exits into Cratersville.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -10936,7 +11059,137 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "cratersvillestreetc": 20
+            "cratersvillestreetc": 20,
+            "cratersvilleminessweeper" : 20,
+            "cratersvilleminesbubble" : 20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/Cratersville#The_Cratersville_Mines"
+    },
+    "cratersvilleminessweeper": {
+        "id_poi": "cratersvilleminessweeper",
+        "alias": [
+            "minesweeper2",
+            "cvminesweeper",
+            "cminesweeper",
+            "cvmsweeper",
+            "cvms"
+        ],
+        "str_name": "The Cratersville Mines - Minesweeper",
+        "str_desc": "A veritable slime-mine of slime, rejuvenated by the revival of ENDLESS WAR. There's a lot of slime to be mined in here, however some sick fucks thought it'd be really funny to turn the floor into a minefield. Be careful not to set off any explosives when you !mine.\n\nExits into Cratersville.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "cratersville-mines-minesweeper",
+        "role": "Cratersville Mines",
+        "major_role": "cratersville_major",
+        "minor_role": "cratersvillemines_minor",
+        "permissions": {
+            "cratersvilleminessweeper": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+            "cratersvillestreetc"
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "cratersvillemines": 20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/Cratersville#The_Cratersville_Mines"
+    },
+    "cratersvilleminesbubble": {
+        "id_poi": "cratersvilleminesbubble",
+        "alias": [
+            "bubblebreaker2",
+            "cvmbubblebreaker",
+            "cmbubblebreaker",
+            "cvbubblebreaker",
+            "bubble2",
+            "cvbubble",
+            "cbubble",
+            "cvbubble",
+            "cvmb"
+        ],
+        "str_name": "The Cratersville Mines - Bubble Breaker",
+        "str_desc": "A veritable slime-mine of slime, rejuvenated by the revival of ENDLESS WAR. Explosions from the neighboring floor have caused this place to become highly dangerous. Try not to get caught under a collapsing mineshaft.\n\nExits into Cratersville.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "cratersville-mines-bubble-breaker",
+        "role": "Cratersville Mines",
+        "major_role": "cratersville_major",
+        "minor_role": "cratersvillemines_minor",
+        "permissions": {
+            "cratersvilleminesbubble": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+            "cratersvillestreetc"
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "cratersvillemines": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Cratersville#The_Cratersville_Mines"
@@ -10952,7 +11205,7 @@
             "toxingtonm"
         ],
         "str_name": "The Toxington Mines",
-        "str_desc": "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR.\n\nExits into Toxington.",
+        "str_desc": "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR.\n\n This place contains The Toxington Mines - Minesweeper and The Toxington Mines - Bubble Breaker. Exits into Toxington.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -10999,7 +11252,144 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "toxingtonstreeta": 20
+            "toxingtonstreeta": 20,
+            "toxingtonminessweeper" : 20,
+            "toxingtonminesbubble": 20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/Toxington#The_Toxington_Mines"
+    },
+    "toxingtonminessweeper": {
+        "id_poi": "toxingtonminessweeper",
+        "alias": [
+            "minesweeper3",
+            "ttminesweeper",
+            "ttmsweeper",
+            "toxmsweeper",
+            "toxingtonminesweeper",
+            "toxingtonmsweeper",
+            "ttms"
+        ],
+        "str_name": "The Toxington Mines - Minesweeper",
+        "str_desc": "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR. There's a lot of slime to be mined in here, however some sick fucks thought it'd be really funny to turn the floor into a minefield. Be careful not to set off any explosives when you !mine.\n\nExits into Toxington.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "toxington-mines-minesweeper",
+        "role": "Toxington Mines",
+        "major_role": "toxington_major",
+        "minor_role": "toxingtonmines_minor",
+        "permissions": {
+            "toxingtonminessweeper": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+            "toxingtonstreeta"
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "toxingtonmines": 20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/Toxington#The_Toxington_Mines"
+    },
+    "toxingtonminesbubble": {
+        "id_poi": "toxingtonminesbubble",
+        "alias": [
+            "bubblebreaker3",
+            "ttminebubblebreaker",
+            "ttmbubblebreaker",
+            "toxmbubblebreaker",
+            "toxingtonbubblebreaker",
+            "toxingtonmbubblebreaker",
+            "bubble3",
+            "ttminebubble",
+            "ttmbubble",
+            "toxmbubble",
+            "toxingtonbubble",
+            "toxingtonmbubble",
+            "ttmb",
+            "ttb"
+        ],
+        "str_name": "The Toxington Mines - Bubble Breaker",
+        "str_desc": "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR. Explosions from the neighboring floor have caused this place to become highly dangerous. Try not to get caught under a collapsing mineshaft.\n\nExits into Toxington.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "toxington-mines-bubble-breaker",
+        "role": "Toxington Mines",
+        "major_role": "toxington_major",
+        "minor_role": "toxingtonmines_minor",
+        "permissions": {
+            "toxingtonminesbubble": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+            "toxingtonstreeta"
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "toxingtonmines": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Toxington#The_Toxington_Mines"

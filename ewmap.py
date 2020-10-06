@@ -1073,8 +1073,14 @@ async def move(cmd = None, isApt = False):
 
 					return
 
-				# Send the message in the player's current if possible, else in the origin channel for the move.
-				channel = [ch for ch in server_data.channels if ch.name == poi_current.channel][0] or cmd.message.channel
+				channel = cmd.message.channel
+
+				# Send the message in the channel for this POI if possible, else in the origin channel for the move.
+
+				for ch in server_data.channels:
+					if ch.name == poi.channel:
+						channel = ch
+						break
 
 				# Prevent access to the zone if it's closed.
 				if poi_current.closed == True:
