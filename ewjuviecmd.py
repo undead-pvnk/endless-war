@@ -554,7 +554,7 @@ async def flag(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Killers only mine under cover of darkness. Wait for nightfall at 8pm.".format(ewcfg.cmd_revive)))
 
 	# Mine only in the mines.
-	if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+	if user_data.poi in ewcfg.mining_channels:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
