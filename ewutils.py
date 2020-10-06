@@ -15,6 +15,7 @@ import ewstats
 import ewitem
 import ewhunting
 import ewrolemgr
+import ewmap
 
 import discord
 
@@ -51,6 +52,11 @@ active_target_map = {}
 # Map of users to their restriction level, typically in a mini-game. This prevents people from moving, teleporting, boarding, retiring, or suiciding in Russian Roulette/Duels
 active_restrictions = {}
 
+#Map of users that have their butthole clenched
+clenched = {}
+
+#When using SSOD, adjusted paths are listed here.
+path_ssod = {}
 
 class Message:
 	# Send the message to this exact channel by name.
@@ -132,8 +138,8 @@ class EwResponseContainer:
 		if self.client == None:
 			logMsg("Couldn't find client")
 			return messages
-			
-		server = self.client.get_guild(self.id_server)
+
+		server = self.client.get_guild(int(self.id_server))
 		if server == None:
 			logMsg("Couldn't find server with id {}".format(self.id_server))
 			return messages
@@ -462,6 +468,7 @@ def databaseClose(conn_info):
 """ format responses with the username: """
 def formatMessage(user_target, message):
 	# If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
+
 	try:
 		if user_target.life_state == ewcfg.enemy_lifestate_alive:
 			
@@ -474,14 +481,34 @@ def formatMessage(user_target, message):
 				elif user_target.identifier != '':
 					return "*{} [{}]* {}".format(user_target.display_name, user_target.identifier, message)
 				else:
-					return "*{}:* {}".format(user_target.display_name, message)
+					if hasattr(user_target, "id_user") and hasattr(user_target, "id_server"):
+						user_obj = EwUser(id_server=user_target.id_server, id_user=user_target.id_user)
+					else:
+						user_obj = EwUser(member = user_target)
+					mutations = user_obj.get_mutations()
+					if ewcfg.mutation_id_amnesia in mutations:
+						display_name = '?????'
+					else:
+						display_name = user_target.display_name
+					return "*{}:* {}".format(display_name, message)
+
 
 		elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
 			return "{}".format(message)
 
 	# If user_target isn't an enemy, catch the exception.
 	except:
-		return "*{}:* {}".format(user_target.display_name, message).replace("@", "{at}")
+		if hasattr(user_target, "id_user") and hasattr(user_target, "id_server"):
+			user_obj = EwUser(id_server=user_target.id_server, id_user=user_target.id_user)
+		else:
+			user_obj = EwUser(member=user_target)
+		mutations = user_obj.get_mutations()
+		if ewcfg.mutation_id_amnesia in mutations:
+			display_name = '?????'
+		else:
+			display_name = user_target.display_name
+
+		return "*{}:* {}".format(display_name, message).replace("@", "{at}")
 
 """ Decay slime totals for all users, with the exception of Kingpins"""
 def decaySlimes(id_server = None):
@@ -700,48 +727,51 @@ async def bleedSlimes(id_server = None):
 			resp_cont = EwResponseContainer(id_server = id_server)
 			for user in users:
 				user_data = EwUser(id_user = user[0], id_server = id_server)
+
+				mutations = user_data.get_mutations()
 				member = server.get_member(user_data.id_user)
-				
-				slimes_to_bleed = user_data.bleed_storage * (
-							1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
-				slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
-				slimes_dropped = user_data.totaldamage + user_data.slimes
+				if ewcfg.mutation_id_bleedingheart not in mutations or user_data.time_lasthit < int(time.time()) - ewcfg.time_bhbleed:
+					slimes_to_bleed = user_data.bleed_storage * (
+								1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
+					slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
+					slimes_dropped = user_data.totaldamage + user_data.slimes
 
-				#trauma = ewcfg.trauma_map.get(user_data.trauma)
-				#bleed_mod = 1
-				#if trauma != None and trauma.trauma_class == ewcfg.trauma_class_bleeding:
-				#	bleed_mod += 0.5 * user_data.degradation / 100
+					#trauma = ewcfg.trauma_map.get(user_data.trauma)
+					#bleed_mod = 1
+					#if trauma != None and trauma.trauma_class == ewcfg.trauma_class_bleeding:
+					#	bleed_mod += 0.5 * user_data.degradation / 100
 
-				# round up or down, randomly weighted
-				remainder = slimes_to_bleed - int(slimes_to_bleed)
-				if random.random() < remainder:
-					slimes_to_bleed += 1
-				slimes_to_bleed = int(slimes_to_bleed)
+					# round up or down, randomly weighted
+					remainder = slimes_to_bleed - int(slimes_to_bleed)
+					if random.random() < remainder:
+						slimes_to_bleed += 1
+					slimes_to_bleed = int(slimes_to_bleed)
 
-				slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
+					slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
 
-				if slimes_to_bleed >= 1:
+					if slimes_to_bleed >= 1:
 
-					real_bleed = round(slimes_to_bleed) # * bleed_mod)
+						real_bleed = round(slimes_to_bleed) # * bleed_mod)
 
-					user_data.bleed_storage -= slimes_to_bleed
-					user_data.change_slimes(n=- real_bleed, source=ewcfg.source_bleeding)
+						user_data.bleed_storage -= slimes_to_bleed
+						user_data.change_slimes(n=- real_bleed, source=ewcfg.source_bleeding)
 
-					district_data = EwDistrict(id_server=id_server, district=user_data.poi)
-					district_data.change_slimes(n=real_bleed, source=ewcfg.source_bleeding)
-					district_data.persist()
+						district_data = EwDistrict(id_server=id_server, district=user_data.poi)
+						district_data.change_slimes(n=real_bleed, source=ewcfg.source_bleeding)
+						district_data.persist()
 
-					if user_data.slimes < 0:
-						user_data.trauma = ewcfg.trauma_id_environment
-						die_resp = user_data.die(cause=ewcfg.cause_bleeding)
-						# user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
-						player_data = EwPlayer(id_server=user_data.id_server, id_user=user_data.id_user)
-						resp_cont.add_response_container(die_resp)
-					user_data.persist()
+						if user_data.slimes < 0:
+							user_data.trauma = ewcfg.trauma_id_environment
+							die_resp = user_data.die(cause=ewcfg.cause_bleeding)
+							# user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+							player_data = EwPlayer(id_server=user_data.id_server, id_user=user_data.id_user)
+							resp_cont.add_response_container(die_resp)
+						user_data.persist()
 
-					total_bled += real_bleed
+						total_bled += real_bleed
 
-				await ewrolemgr.updateRoles(client=client, member=member)
+					await ewrolemgr.updateRoles(client=client, member=member)
+
 
 			await resp_cont.post()
 
@@ -1386,9 +1416,12 @@ def sap_max_bylevel(slimelevel):
 """
 	Calculate the maximum hunger level at the player's slimelevel
 """
-def hunger_max_bylevel(slimelevel):
+def hunger_max_bylevel(slimelevel, has_bottomless_appetite = 0):
 	# note that when you change this formula, you'll also have to adjust its sql equivalent in pushupServerHunger
-	return max(ewcfg.min_stamina, slimelevel ** 2)
+	mult = 1
+	if has_bottomless_appetite == 1:
+		mult = 2
+	return max(ewcfg.min_stamina, slimelevel ** 2) * mult
 
 
 """
@@ -1476,6 +1509,9 @@ async def send_message(client, channel, text, delete_after = None, filter_everyo
 """ Simpler to use version of send_message that formats message by default """ 
 async def send_response(response_text, cmd = None, delete_after = None, name = None, channel = None, format_name = True, format_ats = True, allow_everyone = False):
 
+	user_data = EwUser(member = cmd.message.author)
+	user_mutations = user_data.get_mutations()
+
 	if cmd == None and channel == None:
 		raise Exception("No channel to send message to")
 
@@ -1484,6 +1520,8 @@ async def send_response(response_text, cmd = None, delete_after = None, name = N
 
 	if name == None and cmd != None:
 		name = cmd.author_id.display_name
+		if ewcfg.mutation_id_amnesia in user_mutations:
+			name = '?????'
 
 	if format_name and name != None:
 		response_text = "*{}:* {}".format(name, response_text)
@@ -1629,7 +1667,7 @@ def get_move_speed(user_data):
 
 	if ewcfg.mutation_id_organicfursuit in mutations and check_fursuit_active(user_data.id_server):
 		move_speed *= 2
-	if ewcfg.mutation_id_lightasafeather in mutations and market_data.weather == "windy":
+	if (ewcfg.mutation_id_lightasafeather in mutations or ewcfg.mutation_id_airlock) in mutations and market_data.weather == "windy":
 		move_speed *= 2
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
@@ -1813,11 +1851,17 @@ def text_to_regional_indicator(text):
 def generate_captcha_random(length = 4):
 	return "".join([random.choice(ewcfg.alphabet) for _ in range(length)]).upper()
 
-def generate_captcha(length = 4):
+def generate_captcha(length = 4, id_user = 0, id_server = 0):
+	length_final = length
+	if id_user > 0 and id_server > 0:
+		user_data = EwUser(id_user=id_user, id_server=id_server)
+		mutations = user_data.get_mutations()
+		if ewcfg.mutation_id_dyslexia in mutations:
+			length_final = max(1, length_final-3)
 	try:
-		return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == length])
+		return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == length_final])
 	except:
-		return generate_captcha_random(length)
+		return generate_captcha_random(length=length_final)
 
 async def sap_tick_loop(id_server):
 	interval = ewcfg.sap_tick_length
@@ -2975,9 +3019,74 @@ def mention_type(cmd, ew_id):
 	else:
 		return "other"
 
+
+def get_mutation_alias(name):
+	if ewcfg.mutations_map.get(name) != None:
+		return name
+	else:
+
+		for mutation in ewcfg.mutations_map:
+			for alias in ewcfg.mutations_map.get(mutation).alias:
+				if name == alias:
+					return mutation
+		return 0
+
+def get_fingernail_item(cmd):
+	item = ewcfg.weapon_map.get(ewcfg.weapon_id_fingernails)
+	item_props = ewitem.gen_item_props(item)
+	id_item = ewitem.item_create(
+		item_type=ewcfg.it_weapon,
+		id_user=cmd.message.author.id,
+		id_server=cmd.guild.id,
+		stack_max=-1,
+		stack_size=0,
+		item_props=item_props
+	)
+
+	return id_item
+
+
+def inaccessible(user_data=None, poi=None):
+	if poi == None or user_data == None:
+		return True
+
+	if user_data.life_state == ewcfg.life_state_observer:
+		return False
+
+	if user_data.life_state == ewcfg.life_state_shambler and poi.id_poi in [ewcfg.poi_id_rowdyroughhouse,
+																			ewcfg.poi_id_copkilltown,
+																			ewcfg.poi_id_juviesrow]:
+		return True
+
+	bans = user_data.get_bans()
+	vouchers = user_data.get_vouchers()
+
+	locked_districts_list = ewmap.retrieve_locked_districts(user_data.id_server)
+
+	if (
+			len(poi.factions) > 0 and
+			(set(vouchers).isdisjoint(set(poi.factions)) or user_data.faction != "") and
+			user_data.faction not in poi.factions
+	) or (
+			len(poi.life_states) > 0 and
+			user_data.life_state not in poi.life_states
+	):
+		return True
+	elif (
+			len(poi.factions) > 0 and
+			len(bans) > 0 and
+			set(poi.factions).issubset(set(bans))
+	):
+		return True
+	elif poi.id_poi in locked_districts_list and user_data.life_state not in [ewcfg.life_state_executive, ewcfg.life_state_lucky]:
+		return True
+	else:
+		return False
+
+
+
 # Pay out salaries. SlimeCoin can be taken away or given depending on if the user has positive or negative credits.
-async def pay_salary(id_server = None):
-	
+async def pay_salary(id_server=None):
 	print('paying salary...')
 
 	try:
@@ -2986,7 +3095,7 @@ async def pay_salary(id_server = None):
 		cursor = conn.cursor()
 		client = get_client()
 		if id_server != None:
-			#get all players with apartments. If a player is evicted, thir rent is 0, so this will not affect any bystanders.
+			# get all players with apartments. If a player is evicted, thir rent is 0, so this will not affect any bystanders.
 			cursor.execute("SELECT id_user FROM users WHERE salary_credits != 0 AND id_server = {}".format(id_server))
 
 			security_officers = cursor.fetchall()
@@ -2996,13 +3105,13 @@ async def pay_salary(id_server = None):
 
 				user_data = EwUser(id_user=officer_id_user, id_server=id_server)
 				credits = user_data.salary_credits
-				
+
 				# Prevent the user from obtaining negative slimecoin
 				if credits < 0 and user_data.slimecoin < (-1 * credits):
 					user_data.change_slimecoin(n=-user_data.slimecoin, coinsource=ewcfg.coinsource_salary)
 				else:
-					user_data.change_slimecoin(n = user_data.salary_credits, coinsource = ewcfg.coinsource_salary)
-				
+					user_data.change_slimecoin(n=user_data.salary_credits, coinsource=ewcfg.coinsource_salary)
+
 				user_data.persist()
 	finally:
 		cursor.close()

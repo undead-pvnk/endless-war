@@ -108,7 +108,9 @@ async def menu(cmd):
 	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if poi is None or len(poi.vendors) == 0 or ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+	if user_data.poi == ewcfg.poi_id_clinicofslimoplasty:
+		response = "Try {}browse. The menu is in the zines.".format(ewcfg.cmd_prefix)
+	elif poi is None or len(poi.vendors) == 0 or ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
@@ -253,6 +255,7 @@ async def menu(cmd):
 # Buy items.
 async def order(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
 	if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -371,6 +374,10 @@ async def order(cmd):
 				response = ""
 
 				value = item.price
+
+				if random.randrange(5) == 0 and ewcfg.mutation_id_stickyfingers in mutations:
+					value = 0
+
 				premium_purchase = True if item_id in ewcfg.premium_items else False
 				if premium_purchase:
 					togo = True # Just in case they order a premium food item, don't make them eat it right then and there.
@@ -429,6 +436,9 @@ async def order(cmd):
 					# Not enough money.
 					response = "A {} costs {:,} {}, and you only have {:,}.".format(name, value, currency_used, current_currency_amount)
 				else:
+					mutations = user_data.get_mutations()
+					if random.randrange(5) == 0 and ewcfg.mutation_id_stickyfingers in mutations:
+						value = 0
 					if item_type == ewcfg.it_food:
 						food_ordered = True
 
@@ -585,6 +595,64 @@ async def order(cmd):
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+
+async def devour(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(id_server=cmd.message.guild.id, id_user=cmd.message.author.id, item_search=item_search)
+	mutations = user_data.get_mutations()
+
+	if ewcfg.mutation_id_trashmouth not in mutations:
+		response = "Wait, what? Quit trying to put everything in your mouth."
+	elif item_sought:
+		item_obj = EwItem(id_item=item_sought.get('id_item'))
+		if (item_obj.item_type not in [ewcfg.it_cosmetic, ewcfg.it_furniture, ewcfg.it_food] and item_obj.item_props.get('id_item') != 'slimepoudrin') or item_obj.item_props.get('id_cosmetic') == 'soul':
+			response = "You swallow the {} whole, but after realizing this might be a mistake, you cough it back up.".format(item_sought.get('name'))
+		elif item_obj.soulbound == True:
+			response = "You attempt to consume the {}, but you realize it's soulbound and that you were about to eat your own existnece. Your life flashes before your eyes, so you decide to stop.".format(item_sought.get('name'))
+		else:
+			str_eat = "You unhinge your gaping maw and shove the {} right down, no chewing or anything. It's about as nutritious as you'd expect.".format(item_sought.get('name'))
+
+			if item_obj.item_type == ewcfg.it_cosmetic:
+				recover_hunger = 320
+			elif item_obj.item_type == ewcfg.it_furniture:
+				furn = ewcfg.furniture_map.get(item_obj.item_props.get('id_furniture'))
+				if furn.acquisition != ewcfg.acquisition_bazaar:
+					recover_hunger = 320
+				elif furn.price < 500:
+					recover_hunger = 0
+				elif furn.price < 5000:
+					recover_hunger = 50
+				elif furn.price < 1000000:
+					recover_hunger = 320
+				else:
+					recover_hunger = 16000
+			elif item_obj.item_type == ewcfg.it_food:
+				recover_hunger = item_obj.item_props.get('recover_hunger')
+			else:
+				recover_hunger = 100
+
+			item_obj.item_props = {
+			'id_food': "convertedfood",
+			'food_name': "",
+			'food_desc': "",
+			'recover_hunger': recover_hunger,
+			'inebriation': 0,
+			'str_eat': str_eat,
+			'time_expir': time.time() + ewcfg.std_food_expir,
+			'time_fridged': 0,
+			'perishable': True,
+			}
+
+			response = user_data.eat(item_obj)
+			user_data.persist()
+	elif item_search == "":
+		response = "Devour what?"
+	else:
+		response = "Are you sure you have that item?"
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 async def eat_item(cmd):
 	
 	user_data = EwUser(member=cmd.message.author)
@@ -621,3 +689,4 @@ async def eat_item(cmd):
 			response = "You don't have anything to eat."
 	
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+

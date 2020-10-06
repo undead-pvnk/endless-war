@@ -68,7 +68,9 @@ from ewstatuseffects import EwStatusEffect
 ewutils.logMsg('Starting up...')
 init_complete = False
 
-client = discord.Client()
+intents = discord.Intents.all()
+
+client = discord.Client(intents=intents)
 
 # A map containing user IDs and the last time in UTC seconds since we sent them
 # the help doc via DM. This is to prevent spamming.
@@ -806,6 +808,20 @@ cmd_map = {
 	ewcfg.cmd_rampage: ewrace.rampage,
 	ewcfg.cmd_entomize: ewrace.entomize,
 	ewcfg.cmd_confuse: ewrace.confuse,
+
+	ewcfg.cmd_preserve: ewmutation.preserve,
+	ewcfg.cmd_stink: ewmutation.waft,
+	ewcfg.cmd_slap: ewmap.slap,
+	ewcfg.cmd_track: ewmutation.track_oneeyeopen,
+	ewcfg.cmd_longdrop: ewitem.longdrop,
+	ewcfg.cmd_shakeoff: ewmutation.shakeoff,
+	ewcfg.cmd_clench: ewmutation.clench,
+	ewcfg.cmd_thirdeye: ewmap.tracker,
+	ewcfg.cmd_loop: ewmap.loop,
+	ewcfg.cmd_devour: ewfood.devour,
+	ewcfg.cmd_chemo: ewmutation.chemo,
+	ewcfg.cmd_graft: ewmutation.graft,
+	ewcfg.cmd_bleedout:ewmutation.bleedout
 }
 
 debug = False
@@ -1346,7 +1362,9 @@ async def on_member_join(member):
 
 @client.event
 async def on_message_delete(message):
-	if message != None and message.guild != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
+	user_data = EwUser(member=message.author)
+	mutations = user_data.get_mutations()
+	if message != None and message.guild != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix) and ewcfg.mutation_id_amnesia not in mutations:
 		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
 		await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'))
 

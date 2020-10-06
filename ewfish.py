@@ -330,6 +330,7 @@ async def cast(cmd):
 	time_now = round(time.time())
 	has_reeled = False
 	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -365,7 +366,7 @@ async def cast(cmd):
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
+		elif user_data.hunger >= user_data.get_hunger_max():
 			response = "You're too hungry to fish right now."
 		elif (not fisher.inhabitant_id) and (poi.id_poi == ewcfg.poi_id_blackpond):
 			response = "You cast your fishing line into the pond, but your hook bounces off its black waters like hard concrete."
@@ -480,6 +481,8 @@ async def cast(cmd):
 			if fisher.pier == ewcfg.poi_id_ferry:
 				# Fisher is on the ferry, chance to get a bite increases from 1/10 to 1/9
 				fun -= 10
+			if ewcfg.mutation_id_lucky in mutations:
+				fun -= 20
 			if fisher.inhabitant_id:
 				# Having your rod possessed increases your chance to get a bite by 50%
 				fun = int(fun // 2)
@@ -942,6 +945,7 @@ async def appraise(cmd):
 
 async def barter(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1018,6 +1022,16 @@ async def barter(cmd):
 
 						response = '\n"Well, back again I see! My offer still stands, I’ll trade ya {} slime for your {}"'.format(slime_gain, name)
 
+					elif ewcfg.mutation_id_davyjoneskeister in mutations:
+						max_value = value * 6000  # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
+						min_value = max_value / 10  # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
+
+						slime_gain = round(random.triangular(min_value, max_value, min_value * 2))
+
+						offer.offer_receive = slime_gain
+						offer.persist()
+						response = '\n"You know what, laddy? I like the cut of your jib. I\'ll change my offer. How about {} slime for your {}?"'.format(slime_gain, name)
+
 					else:
 						for result in ewcfg.appraise_results:
 							if hasattr(result, 'id_item'):
@@ -1048,7 +1062,7 @@ async def barter(cmd):
 					# Random choice between 0, 1, and 2
 					offer_decision = random.randint(0, 2)
 
-					if offer_decision != 2: # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
+					if offer_decision != 2 or ewcfg.mutation_id_davyjoneskeister in mutations: # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
 						max_value = value * 6000 # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
 						min_value = max_value / 10 # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
 
@@ -1167,6 +1181,7 @@ async def barter(cmd):
 
 async def barter_all(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
 	#if shambler, break
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
@@ -1203,7 +1218,7 @@ async def barter_all(cmd):
 			# Random choice between 0, 1, and 2
 			offer_decision = random.randint(0, 2)
 
-			if offer_decision != 2: # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
+			if offer_decision != 2 or ewcfg.mutation_id_davyjoneskeister in mutations: # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
 				max_value = value * 6000 # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
 				min_value = max_value / 10 # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
 

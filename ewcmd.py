@@ -693,14 +693,25 @@ async def data(cmd):
 """ Finally, separates mutations from !data """
 async def mutations(cmd):
 	response = ""
+	total_levels = 0
+
+	if "level" in cmd.tokens:
+		response += "\n"
+
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member=cmd.message.author)
 		mutations = user_data.get_mutations()
 		for mutation in mutations:
 			mutation_flavor = ewcfg.mutations_map[mutation]
-			response += "{} ".format(mutation_flavor.str_describe_self)
+			total_levels += mutation_flavor.tier
+			if "level" in cmd.tokens:
+				response += "**LEVEL {}**:{} \n".format(mutation_flavor.tier, mutation_flavor.str_describe_self)
+			else:
+				response += "{} ".format(mutation_flavor.str_describe_self)
 		if len(mutations) == 0:
 			response = "You are miraculously unmodified from your normal genetic code!"
+		elif "level" in cmd.tokens:
+			response += "Total Levels: {}/50\nMutation Levels Added: {}/{}".format(user_data.slimelevel, total_levels, min(50, user_data.slimelevel))
 
 	else:
 		member = cmd.mentions[0]
@@ -711,10 +722,15 @@ async def mutations(cmd):
 		mutations = user_data.get_mutations()
 		for mutation in mutations:
 			mutation_flavor = ewcfg.mutations_map[mutation]
-			response += "{} ".format(mutation_flavor.str_describe_other)
+			total_levels += mutation_flavor.tier
+			if "level" in cmd.tokens:
+				response += "**LEVEL {}**:{} \n".format(mutation_flavor.tier, mutation_flavor.str_describe_other)
+			else:
+				response += "{} ".format(mutation_flavor.str_describe_other)
 		if len(mutations) == 0:
 			response = "They are miraculously unmodified from their normal genetic code!"
-
+		elif "level" in cmd.tokens:
+			response += "Total Levels: {}/50\nMutation Levels Added: {}/{}".format(user_data.slimelevel, total_levels, min(50, user_data.slimelevel))
 	await ewutils.send_response(response, cmd)
 
 """ Check how hungry you are. """
@@ -1499,6 +1515,46 @@ async def balance_cosmetics(cmd):
 								'freshness': 0,
 								'adorned': 'false',
 							}
+					elif id_cosmetic == "costume":
+						if item_data.item_props.get('context') == 'costume':
+							item_data.item_props = {
+									'id_cosmetic': 'dhcostume',
+									'cosmetic_name': item_data.item_props['cosmetic_name'],
+									'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+									'str_onadorn': ewcfg.str_generic_onadorn,
+									'str_unadorn': ewcfg.str_generic_unadorn,
+									'str_onbreak': ewcfg.str_generic_onbreak,
+									'rarity': ewcfg.rarity_plebeian,
+									'attack': 1,
+									'defense': 1,
+									'speed': 1,
+									'ability': None,
+									'durability': ewcfg.base_durability * 100,
+									'size': 1,
+									'fashion_style': ewcfg.style_cute,
+									'freshness': 0,
+									'adorned': 'false',
+								}
+					elif id_cosmetic == 'cigarettebutt':
+						if item_data.item_props.get('id_cosmetic') == 'cigarettebutt':
+							item_data.item_props = {
+								'id_cosmetic': 'cigarettebutt',
+								'cosmetic_name': item_data.item_props['cosmetic_name'],
+								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+								'str_onadorn': ewcfg.str_generic_onadorn,
+								'str_unadorn': ewcfg.str_generic_unadorn,
+								'str_onbreak': ewcfg.str_generic_onbreak,
+								'rarity': ewcfg.rarity_plebeian,
+								'attack': 2,
+								'defense': 0,
+								'speed': 0,
+								'ability': None,
+								'durability': ewcfg.base_durability / 2,
+								'size': 1,
+								'fashion_style': ewcfg.style_cool,
+								'freshness': 5,
+								'adorned': 'false',
+							}
 					else:
 						if item_data.item_props['id_cosmetic'] == id_cosmetic:
 							item = ewcfg.cosmetic_map.get(item_data.item_props['id_cosmetic'])
@@ -1524,7 +1580,9 @@ async def balance_cosmetics(cmd):
 					item_data.persist()
 
 					ewutils.logMsg('Balanced cosmetic: {}'.format(id_item))
-		except:
+
+		except Exception as e:
+			ewutils.logMsg(e)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Failure."))
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Success!"))
@@ -1981,19 +2039,19 @@ async def push(cmd):
 		# Target is not flagged for PvP.
 		response = "{} is not mired in the ENDLESS WAR right now.".format(target.display_name)
 
-	elif (ewcfg.mutation_id_bigbones in target_mutations or ewcfg.mutation_id_fatchance in target_mutations) and ewcfg.mutation_id_lightasafeather not in target_mutations:
+	elif (ewcfg.mutation_id_bigbones in target_mutations or ewcfg.mutation_id_fatchance in target_mutations) and (ewcfg.mutation_id_lightasafeather not in target_mutations and ewcfg.mutation_id_airlock not in target_mutations):
 		response = "You try to push {}, but they're way too heavy. It's always fat people, constantly trying to prevent your murderous schemes.".format(target.display_name)
 
 	elif targetmodel.life_state == ewcfg.life_state_kingpin:
 		response = "You sneak behind the kingpin and prepare to push. The crime you're about to commit is so heinous that you start snickering to yourself, and {} catches you in the act. Shit, mission failed.".format(target.display_name)
 
-	elif ewcfg.mutation_id_lightasafeather in user_mutations:
+	elif ewcfg.mutation_id_lightasafeather in user_mutations or  ewcfg.mutation_id_airlock in user_mutations:
 		response = "You strain to push {} off the cliff, but your light frame gives you no lifting power.".format(target.display_name)
 
 	else:
 		response = "You push {} off the cliff and watch them scream in agony as they fall. Sea monsters frenzy on their body before they even land, gnawing them to jagged ribbons and gushing slime back to the clifftop.".format(target.display_name)
 
-		if ewcfg.mutation_id_lightasafeather in target_mutations:
+		if ewcfg.mutation_id_lightasafeather in target_mutations or ewcfg.mutation_id_airlock in target_mutations:
 			response = "You pick {} up with your thumb and index finger, and gently toss them off the cliff. Wow. That was easy.".format(target.display_name)
 
 		slimetotal = targetmodel.slimes * 0.75
@@ -2531,6 +2589,13 @@ async def create_item(cmd):
 		if item != None:
 			item_id = item.id_weapon
 			name = item.str_weapon
+
+	if item == None:
+		item = ewcfg.fish_map.get(value)
+		item_type = ewcfg.it_food
+		if item != None:
+			item_id = item.id_fish
+			name = item.str_name
 			
 	if item != None:
 		
@@ -3847,7 +3912,7 @@ async def gvs_searchforbrainz(cmd):
 	event_props = {}
 	event_props['id_user'] = cmd.message.author.id
 	event_props['brains_grabbed'] = 1
-	event_props['captcha'] = ewutils.generate_captcha(1)
+	event_props['captcha'] = ewutils.generate_captcha(length=1, id_user=user_data.id_user, id_server=user_data.id_server)
 	event_props['channel'] = cmd.message.author.id
 
 	# DM user
@@ -3904,7 +3969,7 @@ async def gvs_grabbrainz(cmd):
 				if event_data.event_props.get('captcha').lower() == captcha:
 					event_data.event_props['brains_grabbed'] = int(event_data.event_props['brains_grabbed']) + 1 
 					captcha_length = int(event_data.event_props['brains_grabbed'])
-					event_data.event_props['captcha'] = ewutils.generate_captcha(captcha_length if captcha_length < 8 else 8)
+					event_data.event_props['captcha'] = ewutils.generate_captcha(length=captcha_length if captcha_length < 8 else 8, id_user=user_data.id_user, id_server=user_data.id_server)
 					event_data.persist()
 
 					user_data.gvs_currency += ewcfg.brainz_per_grab
@@ -3914,7 +3979,7 @@ async def gvs_grabbrainz(cmd):
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				else:
-					event_data.event_props['captcha'] = ewutils.generate_captcha(int(event_data.event_props['brains_grabbed']))
+					event_data.event_props['captcha'] = ewutils.generate_captcha(length=int(event_data.event_props['brains_grabbed']), id_user=user_data.id_user, id_server=user_data.id_server)
 					event_data.persist()
 					response = "Missed! That was pretty cringe dude... New captcha: " + ewutils.text_to_regional_indicator(event_data.event_props['captcha'])
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

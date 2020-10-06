@@ -88,6 +88,10 @@ class EwUser:
 	apt_zone = "empty"
 	visiting = "empty"
 	has_soul = 1
+	#random seed for mutaiton calculation
+	rand_seed = 0
+	#when a user was last hit
+	time_lasthit = 2
 
 	move_speed = 1 # not a database column
 
@@ -171,12 +175,9 @@ class EwUser:
 				response += "You have been empowered by slime and are now a level {} slimeboi.".format(new_level)
 			for level in range(self.slimelevel+1, new_level+1):
 				current_mutations = self.get_mutations()
-				
-				if (level in ewcfg.mutation_milestones) and (self.life_state not in [ewcfg.life_state_corpse, ewcfg.life_state_shambler]) and (len(current_mutations) < 10):
+				if (level >= self.get_mutation_level() + self.get_mutation_next_level()) and (self.life_state not in [ewcfg.life_state_corpse, ewcfg.life_state_shambler]) and (self.get_mutation_level() < 50):
 					
-					new_mutation = random.choice(list(ewcfg.mutation_ids))
-					while new_mutation in current_mutations:
-						new_mutation = random.choice(list(ewcfg.mutation_ids))
+					new_mutation = self.get_mutation_next()
 
 					add_success = self.add_mutation(new_mutation)
 					if add_success:
@@ -214,6 +215,7 @@ class EwUser:
 		if cause == ewcfg.cause_weather:
 			resp_cont.add_channel_response(poi.channel, deathreport)
 
+
 		# Grab necessary data for spontaneous combustion before stat reset
 		explosion_block_list = [ewcfg.cause_leftserver, ewcfg.cause_cliff]
 		user_hasCombustion = False
@@ -229,6 +231,14 @@ class EwUser:
 			self.poi = ewcfg.poi_id_thesewers
 			#self.slimes = int(self.slimes * 0.9)
 		else:
+			if cause != ewcfg.cause_suicide or self.slimelevel > 10:
+				self.rand_seed = random.randrange(500000)
+
+			if ewcfg.mutation_id_rigormortis in self.get_mutations():
+				rigor = True
+			else:
+				rigor = False
+
 			self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
 			self.slimes = 0
 			self.slimelevel = 1
@@ -240,6 +250,9 @@ class EwUser:
 			self.inebriation = 0
 			self.bounty = 0
 			self.time_lastdeath = time_now
+
+
+
 	
 			# if self.life_state == ewcfg.life_state_shambler:
 			# 	self.degradation += 1
@@ -265,13 +278,13 @@ class EwUser:
 					food_fraction = 2
 					cosmetic_fraction = 2
 
-				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_item, fraction = item_fraction) # Drop a random fraction of your items on the ground.
-				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_food, fraction = food_fraction) # Drop a random fraction of your food on the ground.
+				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_item, fraction = item_fraction, rigor=rigor) # Drop a random fraction of your items on the ground.
+				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_food, fraction = food_fraction, rigor=rigor) # Drop a random fraction of your food on the ground.
 
-				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_cosmetic, fraction = cosmetic_fraction) # Drop a random fraction of your unadorned cosmetics on the ground.
+				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_cosmetic, fraction = cosmetic_fraction, rigor=rigor) # Drop a random fraction of your unadorned cosmetics on the ground.
 				ewitem.item_dedorn_cosmetics(id_server = self.id_server, id_user = self.id_user) # Unadorn all of your adorned hats.
 
-				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_weapon, fraction = 1) # Drop random fraction of your unequipped weapons on the ground.
+				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_weapon, fraction = 1, rigor=rigor) # Drop random fraction of your unequipped weapons on the ground.
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_max_onrevive)
 
 			self.life_state = ewcfg.life_state_corpse
@@ -410,6 +423,8 @@ class EwUser:
 			if self.id_user in ewutils.food_multiplier and ewutils.food_multiplier.get(self.id_user) > 0:
 				if ewcfg.mutation_id_bingeeater in mutations:
 					hunger_restored *= ewutils.food_multiplier.get(self.id_user)
+					if ewutils.food_multiplier.get(self.id_user) >= 5 and ewcfg.status_foodcoma_id not in self.getStatusEffects():
+						self.applyStatus(id_status=ewcfg.status_foodcoma_id, source=self.id_user, id_target=self.id_user)
 				ewutils.food_multiplier[self.id_user] += 1
 			else:
 				ewutils.food_multiplier[self.id_user] = 1
@@ -447,19 +462,23 @@ class EwUser:
 		return response
 
 
-	def add_mutation(self, id_mutation):
+	def add_mutation(self, id_mutation, is_artificial = 0):
 		mutations = self.get_mutations()
 		if id_mutation in mutations:
 			return False
 		try:
-			ewutils.execute_sql_query("REPLACE INTO mutations({id_server}, {id_user}, {id_mutation}) VALUES (%s, %s, %s)".format(
+			ewutils.execute_sql_query("REPLACE INTO mutations({id_server}, {id_user}, {id_mutation}, {tier}, {artificial}) VALUES (%s, %s, %s, %s, %s)".format(
 					id_server = ewcfg.col_id_server,
 					id_user = ewcfg.col_id_user,
-					id_mutation = ewcfg.col_id_mutation
+					id_mutation = ewcfg.col_id_mutation,
+					tier = ewcfg.col_tier,
+					artificial = ewcfg.col_artificial
 				),(
 					self.id_server,
 					self.id_user,
-					id_mutation
+					id_mutation,
+					ewcfg.mutations_map.get(id_mutation).tier,
+					is_artificial
 				))
 
 			return True
@@ -500,6 +519,96 @@ class EwUser:
 		except:
 			ewutils.logMsg("Failed to clear mutations for user {}.".format(self.id_user))
 
+	def get_mutation_level(self):
+		result = 0
+
+		try:
+			tiers = ewutils.execute_sql_query(
+				"SELECT SUM({tier}) FROM mutations WHERE {id_server} = %s AND {id_user} = %s;".format(
+					tier = ewcfg.col_tier,
+					id_server=ewcfg.col_id_server,
+					id_user=ewcfg.col_id_user,
+
+				), (
+					self.id_server,
+					self.id_user
+				))
+
+			for tier_data in tiers:
+				result = tier_data[0]
+
+
+			if result is None:
+				result = 0
+
+			#random.seed(self.rand_seed + mutation_dat)
+
+		except:
+			ewutils.logMsg("Failed to fetch mutations for user {}.".format(self.id_user))
+
+		finally:
+			return result
+
+
+	def get_mutation_next_level(self):
+		next_mutation = self.get_mutation_next()
+		next_mutation_obj = ewcfg.mutations_map.get(next_mutation)
+		if next_mutation_obj != None:
+			return next_mutation_obj.tier
+		else:
+			return 50
+
+
+	def get_mutation_next(self):
+		counter = 0
+		result = ""
+		current_mutations = self.get_mutations()
+
+		if self.get_mutation_level() >= 50:
+			return 0
+
+		seed = int(self.rand_seed)
+		try:
+			counter_data = ewutils.execute_sql_query(
+				"SELECT SUM({mutation_counter}) FROM mutations WHERE {id_server} = %s AND {id_user} = %s;".format(
+					mutation_counter=ewcfg.col_mutation_counter,
+					id_server=ewcfg.col_id_server,
+					id_user=ewcfg.col_id_user,
+
+				), (
+					self.id_server,
+					self.id_user
+				))
+
+			for ids in counter_data:
+				counter = ids[0]
+			if counter == None:
+				counter = 0
+			random.seed(counter + seed)
+
+			for x in range(1000):
+				result = random.choice(list(ewcfg.mutation_ids))
+
+				if result == ewcfg.mutation_id_airlock:
+					if ewcfg.mutation_id_whitenationalist in current_mutations or ewcfg.mutation_id_lightasafeather in current_mutations:
+						continue
+				if result in [ewcfg.mutation_id_lightasafeather, ewcfg.mutation_id_whitenationalist]:
+					if ewcfg.mutation_id_airlock in current_mutations:
+						continue
+
+				if result not in current_mutations and ewcfg.mutations_map[result].tier + self.get_mutation_level() <= 50:
+					return result
+
+			result = ""
+
+		except:
+			ewutils.logMsg("Failed to fetch mutations for user {}.".format(self.id_user))
+
+		finally:
+			return result
+
+
+
 	def equip(self, weapon_item = None):
 
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
@@ -517,7 +626,7 @@ class EwUser:
 				self.weapon = weapon_item.id_item
 
 				if ewcfg.weapon_class_captcha in weapon.classes:
-					captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+					captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=self.id_user, id_server=self.id_server)
 					weapon_item.item_props["captcha"] = captcha
 					response += "\nSecurity code: **{}**".format(ewutils.text_to_regional_indicator(captcha))
 			else:
@@ -534,7 +643,7 @@ class EwUser:
 				self.sidearm = -1
 
 			if ewcfg.weapon_class_captcha in weapon.classes:
-				captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+				captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=self.id_user, id_server=self.id_server)
 				weapon_item.item_props["captcha"] = captcha
 				response += "\nSecurity code: **{}**".format(ewutils.text_to_regional_indicator(captcha))
 
@@ -692,7 +801,11 @@ class EwUser:
 			return base_capacity
 
 	def get_hunger_max(self):
-		return ewutils.hunger_max_bylevel(self.slimelevel)
+		mutations = self.get_mutations()
+		has_ba = 0
+		if ewcfg.mutation_id_bottomlessappetite in mutations:
+			has_ba = 1
+		return ewutils.hunger_max_bylevel(slimelevel=self.slimelevel, has_bottomless_appetite=has_ba)
 
 
 	def get_mention(self):
@@ -919,8 +1032,11 @@ class EwUser:
 
 		adorned_cosmetics = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['adorned'] == 'true')
 
+		mutations = self.get_mutations()
+		bonus_freshness = 500 if ewcfg.mutation_id_unnaturalcharisma in mutations else 0
+
 		if len(cosmetic_items) == 0 or adorned_cosmetics < 2:
-			return 0
+			return bonus_freshness
 
 		base_freshness = 0
 		hue_count = {}
@@ -948,6 +1064,8 @@ class EwUser:
 				else:
 					style_count[style] = 1
 
+
+
 		#calc hue modifier
 		hue_mod = 1
 		if len(hue_count) > 0:
@@ -969,7 +1087,9 @@ class EwUser:
 		if style_count[dominant_style] / adorned_cosmetics >= 0.6:
 			style_mod = style_count[dominant_style] / adorned_cosmetics * 10
 
-		return int(base_freshness * hue_mod * style_mod)
+
+
+		return int(base_freshness * hue_mod * style_mod) + bonus_freshness
 
 	def get_festivity(self):
 		data = ewutils.execute_sql_query(
@@ -1023,7 +1143,8 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -1081,6 +1202,8 @@ class EwUser:
 					ewcfg.col_time_lastpremiumpurchase,
 					ewcfg.col_gvs_currency,
 					ewcfg.col_gvs_time_lastshambaquarium,
+					ewcfg.col_rand_seed,
+					ewcfg.col_time_lasthit,
 				), (
 					id_user,
 					id_server
@@ -1144,16 +1267,21 @@ class EwUser:
 					self.time_racialability = result[50]
 					self.time_lastpremiumpurchase = result[51]
 					self.gvs_currency = result[52]
-					self.gvs_time_lastshambaquarium = result[52]
+					self.gvs_time_lastshambaquarium = result[53]
+					self.rand_seed = result[54]
+					self.time_lasthit = result[55]
+
+
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
 					# Create a new database entry if the object is missing.
-					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
+					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state, rand_seed) VALUES(%s, %s, %s, %s, %s)", (
 						id_user,
 						id_server,
 						self.poi,
-						self.life_state
+						self.life_state,
+						random.randrange(500000)
 					))
 					
 					conn.commit()
@@ -1237,7 +1365,8 @@ class EwUser:
 			self.limit_fix()
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -1297,6 +1426,8 @@ class EwUser:
 				ewcfg.col_time_lastpremiumpurchase,
 				ewcfg.col_gvs_currency,
 				ewcfg.col_gvs_time_lastshambaquarium,
+				ewcfg.col_rand_seed,
+				ewcfg.col_time_lasthit
 			), (
 				self.id_user,
 				self.id_server,
@@ -1357,6 +1488,8 @@ class EwUser:
 				self.time_lastpremiumpurchase,
 				self.gvs_currency,
 				self.gvs_time_lastshambaquarium,
+				self.rand_seed,
+				self.time_lasthit
 			))
 
 			conn.commit()

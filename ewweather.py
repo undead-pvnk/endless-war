@@ -54,6 +54,31 @@ async def weather_tick(id_server = None):
 	if id_server != None:
 		try:
 			market_data = EwMarket(id_server = id_server)
+
+			if market_data.weather == ewcfg.weather_sunny:
+				exposed_pois = []
+				exposed_pois.extend(ewcfg.capturable_districts)
+				exposed_pois.extend(ewcfg.outskirts)
+				exposed_pois = tuple(exposed_pois)
+
+				users = ewutils.execute_sql_query(
+					"SELECT id_user FROM users WHERE id_server = %s AND {poi} IN %s AND {life_state} > 0".format(
+						poi=ewcfg.col_poi,
+						life_state=ewcfg.col_life_state
+					), (
+						id_server,
+						exposed_pois
+
+					))
+				for user in users:
+					user_data = EwUser(id_user=user[0], id_server=id_server)
+					if user_data.life_state == ewcfg.life_state_kingpin:
+						continue
+					else:
+						mutations = user_data.get_mutations()
+						if ewcfg.mutation_id_airlock in mutations:
+							user_data.hunger -= min(user_data.hunger, 5)
+
 			if market_data.weather != ewcfg.weather_bicarbonaterain:
 				return
 
