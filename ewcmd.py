@@ -1556,7 +1556,7 @@ async def balance_cosmetics(cmd):
 								'adorned': 'false',
 							}
 					else:
-						if item_data.item_props['id_cosmetic'] == id_cosmetic:
+						if item_data.item_props.get('id_cosmetic') == id_cosmetic:
 							item = ewcfg.cosmetic_map.get(item_data.item_props['id_cosmetic'])
 							item_data.item_props = {
 								'id_cosmetic': item.id_cosmetic,
@@ -1580,6 +1580,10 @@ async def balance_cosmetics(cmd):
 					item_data.persist()
 
 					ewutils.logMsg('Balanced cosmetic: {}'.format(id_item))
+
+		except KeyError as k:
+			ewutils.logMsg("Key error: " + k)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Failure."))
 
 		except Exception as e:
 			ewutils.logMsg(e)
