@@ -369,7 +369,7 @@ async def chemo(cmd):
 				))
 			except:
 				ewutils.logMsg("Failed to clear mutations for user {}.".format(user_data.id_user))
-			response = '"Alright, dearie, let\'s get you purged." You enter a dingy looking operating room, with slime strewn all over the floor. Dr. Dusttrap pulls out a needle the size of your bicep and injects into odd places on your body. After a few minutes of this, you get fatigued and go under.\n\n You wake up and {} is gone. Nice!'.format(ewcfg.mutations_map.get(target).str_name)
+			response = '"Alright, dearie, let\'s get you purged." You enter a dingy looking operating room, with slime strewn all over the floor. Dr. Dusttrap pulls out a needle the size of your bicep and injects into odd places on your body. After a few minutes of this, you get fatigued and go under.\n\n You wake up and {} is gone. Nice! \nMutation Levels Added:{}/{}'.format(ewcfg.mutations_map.get(target).str_name, user_data.get_mutation_level(), min(user_data.slimelevel, 50))
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def graft(cmd):
@@ -402,13 +402,13 @@ async def graft(cmd):
 	mutations = user_data.get_mutations()
 
 	if target == 0:
-		response = '"What? My ears aren\'t what they used to be. I thought you suggested I give you {}. Only braindead squicks would say that."'
+		response = '"What? My ears aren\'t what they used to be. I thought you suggested I give you {}. Only braindead squicks would say that."'.format(' '.join(cmd.tokens[1:]))
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	elif target in mutations:
 		response = '"Nope, you already have that mutation. Hey, I thought I was supposed to be the senile one here!"'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	elif user_data.get_mutation_level() + ewcfg.mutations_map[target].tier > min([user_data.slimelevel, 50]):
-		response = '"Your body\'s already full of mutations. Your sentient tumors will probably start bitin\' once I take out my scalpel."\n\nLevel:{}/50\nMutation Levels Added:{}/{}'.format(user_data.slimelevel,user_data.get_mutation_level(), max(user_data.slimelevel, 50))
+		response = '"Your body\'s already full of mutations. Your sentient tumors will probably start bitin\' once I take out my scalpel."\n\nLevel:{}/50\nMutation Levels Added:{}/{}'.format(user_data.slimelevel,user_data.get_mutation_level(), min(user_data.slimelevel, 50))
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	elif ewcfg.mutations_map.get(target).tier * 10000 > user_data.slimes:
 		response = '"We\'re not selling gumballs here. It\'s cosmetic surgery. It\'ll cost at least {} slime, ya idjit!"'.format(ewcfg.mutations_map.get(target).tier * 10000)
@@ -418,7 +418,7 @@ async def graft(cmd):
 		user_data.change_slimes(n=-price, source=ewcfg.source_spending)
 		user_data.persist()
 		user_data.add_mutation(id_mutation=target, is_artificial=1)
-		response = ewcfg.mutations_map[target].str_transplant
+		response = ewcfg.mutations_map[target].str_transplant + "\n\nMutation Levels Added:{}/{}".format(user_data.get_mutation_level(), min(user_data.slimelevel, 50))
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 

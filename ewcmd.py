@@ -711,7 +711,7 @@ async def mutations(cmd):
 		if len(mutations) == 0:
 			response = "You are miraculously unmodified from your normal genetic code!"
 		elif "level" in cmd.tokens:
-			response += "Total Levels: {}/50\nMutation Levels Added: {}/{}".format(user_data.slimelevel, total_levels, max(50, user_data.slimelevel))
+			response += "Total Levels: {}/50\nMutation Levels Added: {}/{}".format(user_data.slimelevel, total_levels, min(50, user_data.slimelevel))
 
 	else:
 		member = cmd.mentions[0]
@@ -730,7 +730,7 @@ async def mutations(cmd):
 		if len(mutations) == 0:
 			response = "They are miraculously unmodified from their normal genetic code!"
 		elif "level" in cmd.tokens:
-			response += "Total Levels: {}/50\nMutation Levels Added: {}/{}".format(user_data.slimelevel, total_levels, max(50, user_data.slimelevel))
+			response += "Total Levels: {}/50\nMutation Levels Added: {}/{}".format(user_data.slimelevel, total_levels, min(50, user_data.slimelevel))
 	await ewutils.send_response(response, cmd)
 
 """ Check how hungry you are. """

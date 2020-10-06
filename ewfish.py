@@ -1181,6 +1181,7 @@ async def barter(cmd):
 
 async def barter_all(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
 	#if shambler, break
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
@@ -1217,7 +1218,7 @@ async def barter_all(cmd):
 			# Random choice between 0, 1, and 2
 			offer_decision = random.randint(0, 2)
 
-			if offer_decision != 2: # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
+			if offer_decision != 2 or ewcfg.mutation_id_davyjoneskeister in mutations: # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
 				max_value = value * 6000 # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
 				min_value = max_value / 10 # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
 

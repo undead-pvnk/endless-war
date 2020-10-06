@@ -2354,6 +2354,8 @@ async def aptCommands(cmd):
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
 	server = ewcfg.server_list[user_data.id_server]
 	member_object = server.get_member(user_data.id_user)
+	cmd.message.author = member_object
+
 
 	if cmd_text == ewcfg.cmd_depart or cmd_text == ewcfg.cmd_retire:
 		return await depart(cmd)
@@ -2402,7 +2404,7 @@ async def aptCommands(cmd):
 	elif cmd_text == ewcfg.cmd_browse:
 		return await browse(cmd=cmd)
 	# from here, all commands are prebuilt and just set to work in DMs
-	cmd.message.author = member_object
+
 	if cmd_text == ewcfg.cmd_use:
 		return await ewitem.item_use(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_pot:

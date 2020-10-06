@@ -5398,6 +5398,16 @@ def wef_watercolors(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage *= 1
 
+def wef_fingernails(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
+	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
+	#ctn.sap_damage = 2
+	ctn.miss = False
+
+	if aim >= (10 - int(10 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage *= 2
 
 
 vendor_dojo = "Dojo"
@@ -6509,7 +6519,7 @@ weapon_list = [
         str_duel="",
         str_description="",
         str_scalp=" Multiple slash marks run across it.",
-        fn_effect=wef_katana,
+        fn_effect=wef_fingernails,
         price=0,
         vendors=[],
         classes=[],
@@ -11504,7 +11514,7 @@ mutations = [
 	EwMutationFlavor(
 		id_mutation = mutation_id_2ndamendment,
 		str_name="2nd Amendment",
-        alias = ['2a', 'second', 'sa'],
+        alias = ['2a', 'second', 'secondamendment'],
 		str_describe_self = "A spare pair of arms extend from your monstrously large shoulders due to **2nd Amendment**.",
 		str_describe_other = "A spare pair of arms extend from their monstrously large shoulders due to **2nd Amendment**.",
 		str_acquire = "You feel an intense, sharp pain in the back of your shoulders. Skin tears and muscles rip as you grow a brand new set of arms, ready, willing, prepared to fight. You have developed the mutation **2nd Amendment**. Extra equippable gun slot, and a damage bonus when sidearming another weapon.",
@@ -11762,7 +11772,7 @@ mutations = [
 	EwMutationFlavor(
 		id_mutation = mutation_id_davyjoneskeister,
 		str_name="Davy Jones' Keister",
-        alias = ['djk', 'keister', 'davyjones'],
+        alias = ['djk', 'keister', 'davyjones', 'davy'],
 		str_describe_self = "Your ass is tailor made for the high seas due to **Davy Jones' Keister**.",
 		str_describe_other = "Their ass is tailor made for the high seas due to **Davy Jones' Keister**.",
 		str_acquire = "You begin to feel a crawling sensation on your hindquarters. Layers of skin built for long hours on the tavern bench slowly creep upward along your ass and up your back. Your mind surges with an unfounded confidence as you recall every close call with a secreature and tussle with a gangster. Never have you been on the high seas, not a day in your life, and you're somehow still a sea dog to the bone. For some reason your mind jumps to your conversations with that old fellow at the tavern. Wonder how he's doing? You have developed the mutation **Davy Jones' Keister**. No trash deals when bartering with Albert Alexander.",
@@ -11825,9 +11835,9 @@ mutations = [
         alias = ['lf', 'fingernails', 'lethal', 'nails'],
 		str_describe_self = "Your nails cut flesh like butter due to **Lethal Fingernails**.",
 		str_describe_other = "Their nails cut flesh like butter due to **Lethal Fingernails**.",
-		str_acquire = "You feel an uncontrollable burning in your fingertips as blood begins to rush to them. In short bursts, your fingernails begin to pop out of your cuticle, hardening to diamond. It hurts like hell. First to an inch, then to five, then to nine. You have developed the mutation **Lethal Fingernails**. As a gangster, unarmed combat deals as much damage as a level 6 katana.",
+		str_acquire = "You feel an uncontrollable burning in your fingertips as blood begins to rush to them. In short bursts, your fingernails begin to pop out of your cuticle, hardening to diamond. It hurts like hell. First to an inch, then to five, then to nine. You have developed the mutation **Lethal Fingernails**. As a gangster, unarmed combat deals as much damage as a level 6 revolver with 0% miss chance.",
         tier=5,
-        str_transplant= "You end up bringing in several katanas from the dojo for this one. Dusttrap tells you to bring your own metal for this procedure. You're brought into the operating room, where all your fingernails are removed. In their place, you're given sword nails, individually forged to fit your own tiny child fingers. They turned out way heavier than expected, you probably should've gotten some knives instead.\n\nYou have developed the mutation **Lethal Fingernails**. As a gangster, unarmed combat deals as much damage as a level 6 katana.",
+        str_transplant= "You end up bringing in several katanas from the dojo for this one. Dusttrap tells you to bring your own metal for this procedure. You're brought into the operating room, where all your fingernails are removed. In their place, you're given sword nails, individually forged to fit your own tiny child fingers. They turned out way heavier than expected, you probably should've gotten some knives instead.\n\nYou have developed the mutation **Lethal Fingernails**. As a gangster, unarmed combat deals as much damage as a level 6 revolver with 0% miss chance.",
     ),
 EwMutationFlavor(
 		id_mutation = mutation_id_napalmsnot,
@@ -12935,6 +12945,48 @@ trauma_list = [
 		str_trauma = "Their chest is somewhat concave.",
 		trauma_class = trauma_class_hunger,
 	),
+	EwTrauma( # 10
+			id_trauma = weapon_id_fingernails,
+			str_trauma_self = "Criscrossed slash marks cover your body.",
+			str_trauma = "Criscrossed slash marks cover their body.",
+			trauma_class = trauma_class_hunger,
+		),
+	EwTrauma( # 11
+			id_trauma = weapon_id_spraycan,
+			str_trauma_self = "Your breath smells awful, and you talk in a wheeze.",
+			str_trauma = "Their breath smells awful, and they talk in a wheeze.",
+			trauma_class = trauma_class_accuracy,
+		),
+	EwTrauma( # 12
+			id_trauma = weapon_id_paintroller,
+			str_trauma_self = "Mishhapen welts cover the top of your head.",
+			str_trauma = "Misshhapen welts cover the top of their head.",
+			trauma_class = trauma_class_bleeding,
+		),
+	EwTrauma( # 13
+			id_trauma = weapon_id_paintgun,
+			str_trauma_self = "Your stitched-up form looks barely held together.",
+			str_trauma = "Their stitched-up form looks barely held together.",
+			trauma_class = trauma_class_bleeding,
+		),
+	EwTrauma( # 14
+			id_trauma = weapon_id_paintbrush,
+			str_trauma_self = "Your eyes are bloodshot, and splinters stick out of your torso.",
+			str_trauma = "Their eyes are bloodshot, and splinters stick out of their torso.",
+			trauma_class = trauma_class_accuracy,
+		),
+	EwTrauma( # 14
+			id_trauma = weapon_id_thinnerbomb,
+			str_trauma_self = "Light scars run across your face, which is a disturbing blue discoloration.",
+			str_trauma = "Light scars run across their face, which is a disturbing blue discoloration.",
+			trauma_class = trauma_class_accuracy,
+		),
+	EwTrauma( # 14
+			id_trauma = weapon_id_watercolors,
+			str_trauma_self = "You are a dumb suicidal idiot and despise watercolors as a concept.",
+			str_trauma = "They are a dumb suicidal idiot and despise watercolors as a concept.",
+			trauma_class = trauma_class_accuracy,
+		),
 ]
 
 trauma_map = {}
@@ -13026,7 +13078,7 @@ help_responses = {
 	"fishing": "**Fishing** can be done by performing the **'!cast'** command at one of the six piers, including **Juvie's Row Pier**, **Crookline Pier**, **Jaywalker Plain Pier**, **Toxington Pier**, **Assault Flats Beach Pier**, **Slime's End Pier**, as well as **The Ferry**. To reel in a fish, use **'!reel'** when the game tells you that you have a bite. If you don't reel in quick enough, the fish will get away. If you are enlisted and have the **fishing rod** equiped, you will have increased chances of reeling in a fish. For more information about fishing, refer to this helpful guide (credits to Miller#2705).\n<https://www.youtube.com/watch?v=tHDeSukIqME>\nAs an addendum to that video, note that fish can be taken to the labs in Brawlden, where they can be made more valuble in bartering by increasing their size with **'!embiggen [fish]'**.",
 	"hunting": "**Hunting** is another way to gain slime in ENDLESS WAR. To hunt, you can visit **The Outskirts**, which are layered areas located next to the edge of the map (Wreckington -> Wreckington Outskirts Edge, Wreckington Outskirts Edge -> Wreckington Outskirts, etc). In the outskirts, you will find enemies that you can !kill. Rather than doing '!kill @' like with players, with enemies you can either type their display name ('!kill Dinoslime'), their shorthand name ('!kill dino'), or their identifying letter ('!kill A'), which can be accessed with !look or !survey (WARNING: Raid bosses moving around the city do not have identifying letters. You must use the other targeting methods to attack them). To see how much slime an enemy has, you can do '!data [enemy name]', or just !data with any of the previous types of methods listed. Enemies will drop items and slime upon death, and some enemies are more powerful and threatening than others. In fact, there are enemies powerful enough to hold their own against the gangsters in the city, called **Raid Bosses**, and will enter into the city as a result, rather than just staying in the outskirts like regular enemies. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a raid boss has entered into. Enemies despawn after **3 hours in real life**.",
 	# Additional gameplay mechanics, part 1
-	"mutations": "**Mutations** are helpful bonuses you acquire every five levels. When you acquire a mutation, a short text response will indicate what it can do. To reroll your most recent mutation, you can visit the labs and type **'!rerollmutation'**. To get rid of all your current mutations, you can also do **'!sterilizemutations'**.",
+	"mutations": "**Mutations** are helpful bonuses you acquire when you level up. The more powerful your next mutation, the more level ups it takes to acquire. This is represented my the mutation's level. When you acquire a mutation, a short text response will indicate what it can do. To modify your mutations, you need to go to NLACakaNM Clinic of Slimoplasty in Crookline. When you get there, you can !chemo <mutation> to remove a mutation you acquired, or !chemo all to remove all possible mutations from your body. You can use !graft <mutation> to add a mutation to yourself. Keep in mind that you cannot use !chemo on a mutation if you got it through grafting, and you can only !graft a mutation if you have enough space in your mutations pool. You will likely need to !chemo a mutation out in order to !graft something else.",
 	"mymutations":"You read some research notes about your current mutations...", # will print out a list of mutations with their specific mechanics
 	"smelting": "Smelting is a way for you to craft certain items from certain ingredients. To smelt, you use **'!smelt [item name]'**, which will either smelt you the item, or tell which items you need to smelt the item. Popular items gained from smelting are **Cosmetics**, as well as the coveted **Pickaxe** and **Super Fishing Rod**. If you're stuck, you can look up the crafting recipes for any item with **!whatcanimake [itemname]**.",
 	"sparring": "**Sparring** can be done between two players using **'!spar [player]'**. Sparring, provided that both players spar with the same weapon type and are not at full hunger, will increase both of your mastery **LEVEL**, which is a hidden value, by one. The publicly displayed value, mastery **RANK** (which is just your mastery level minus 4), is more important. It should be noted that the damage you deal with your weapon is increased even if you haven't reached rank 1 yet. However, once you do reach at least mastery rank 2 (Again, this would be level 6), when you next revive, you will now **permanently** be at level 6 for that weapon type until you annoint or spar again. Essentially, this means you will always start back at rank 2. Once you reach **rank 6**, you can no longer annoint your weapon rank any higher, and must instead kill other players/enemies (that are higher in both slime and level than you) to do so. Reaching rank 6 also stops you from increasing your own rank through sparring, unless you are sparring with someone who has a higher weapon rank than you. You can only spar up to someone else's mastery rank, minus 1 (example: Sparring with a rank 15 master of the katana would, at most, allow you to get to rank 14). Sparring has a one minute cooldown and raises your hunger by about 5%. Once you reach rank 8, you may also **'!marry'** your weapon, resulting in a matrimonial ceremony that increases your rank by two.",
@@ -13113,7 +13165,7 @@ mutation_descriptions = {
 	mutation_id_fungalfeaster: "On a fatal blow, restore all of your hunger.",
 	mutation_id_sharptoother: "The chance to miss with a weapon is reduced by 50%. Specifically, a normal miss will now have a 50% to either go through as a miss or a hit.",
 	mutation_id_2ndamendment: "One extra equippable weapon slot in your inventory. You receive a 25% damage buff if two non-tool weapons are in both your weapon slots.",
-	mutation_id_bleedingheart: "When you are hit, bleeding pauses for 5 minutes.",
+	mutation_id_bleedingheart: "When you are hit, bleeding pauses for 5 minutes. Use !bleedout to empty your bleed storage onto the floor.",
 	mutation_id_nosferatu: "At night (8PM-6AM), upon successful hit, 60% of splattered slime is absorbed directly into your slime count.",
 	mutation_id_organicfursuit: "Double damage, double movement speed, and 10x damage reduction every 31st night. Use **'!fursuit'** to check if it's active.",
 	mutation_id_lightasafeather: "Double movement speed while weather is windy. Use **'!weather'** to check if it's windy.",
@@ -13123,10 +13175,10 @@ mutation_descriptions = {
 	mutation_id_fatchance: "Take 25% less damage from attacks when above 50% hunger.",
 	mutation_id_fastmetabolism: "Movement speed is increased by 33% when below 40% hunger.",
 	mutation_id_bingeeater: "Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds. Eating lots of food at once puts you in a raging food coma, increasing defense.",
-	mutation_id_lonewolf: "20% capture discount and 50% more damage when in a district without any friendly gangsters. Stacks with the Patriot mutation.",
+	mutation_id_lonewolf: "50% more damage when in a district without any friendly gangsters. Stacks with the Patriot mutation.",
 	mutation_id_quantumlegs: "You can now use the !tp command, allowing you to teleport to a district up to two locations away from you after an uninterrupted 15 second running start, with a cooldown of 3 hours.",
 	mutation_id_chameleonskin: "While offline, you can move to and scout other districts and cannot be scouted.",
-	mutation_id_patriot: "20% capture discount. Stacks with the Lone Wolf mutation.",
+	mutation_id_patriot: "25% influence bonus. Stacks with Unnatural Charisma.",
 	mutation_id_socialanimal: "Your damage increases by 10% for every ally in your district.",
 	mutation_id_threesashroud: "Cannot be scouted and crit chance is doubled if there are more than 3 allies in your district. Cannot be scouted by players with the Keen Smell mutation.",
 	mutation_id_aposematicstench: "For every 5 levels you gain, you appear as 1 more person when being scouted. Cannot be scouted by players with the Keen Smell mutation. Use !stink to produce a monster repelling effect. Attacking enemies with it on causes a temporary damage nerf and the removal of the effect.",
@@ -13150,14 +13202,15 @@ mutation_descriptions = {
     mutation_id_greenfingers:"Farming wait time is decreased by 33%, and yields are increased by 20%.",
     mutation_id_lightminer:"You can mine at any time of day. You are also immune to mineshaft collapses.",
     mutation_id_longarms:"You can !longdrop <destination> <item> to drop an item in an adjacent district.",
-    mutation_id_lethalfingernails:"If you have no weapon, you will use your fingernails instead. They do the same damage as a captchaless katana.",
+    mutation_id_lethalfingernails:"If you have no weapon, you will use your fingernails instead. They do the same damage as a level 6 revolver with no miss.",
     mutation_id_davyjoneskeister:"When making deals with Captain Albert Alexander, you only receive offers for slime, not items.",
     mutation_id_oneeyeopen:"Use !track @user to keep your eye on a specific player. If they move to a PVP zone, you will receive  a DM. If you are being tracked, you can !shakeoff @user to remove their tracking. To check who you'ree currently tracking, use !thirdeye.",
     mutation_id_bottomlessappetite:"Your maximum hunger is doubled.",
-    mutation_id_airlock:"Combined effects of White Nationalist and Light as a Feather. This mutation is mutually exclusive with those.",
+    mutation_id_airlock:"Combined effects of White Nationalist and Light as a Feather. This mutation is mutually exclusive with those. You also gain passive hunger when it's sunny, fire immunity in rain, and crit bonuses in the fog.",
     mutation_id_ambidextrous:"If you are unarmed or have a tool equipped, and have a weapon in your sidearm slot, you will default to that weapon.",
     mutation_id_coleblooded:"You get the ability to bust ghosts without coleslaw. If a ghost haunts you, they lose negaslime instead of gaining it.",
-    mutation_id_landlocked:"When standing in a street either bordering an outskirt or the Slime Sea, use !loop to warp to the opposite side of the map. This also works on the ferry and at Slime's End Cliffs. There is a 20 second travel time when using !loop."
+    mutation_id_landlocked:"When standing in a street either bordering an outskirt or the Slime Sea, use !loop to warp to the opposite side of the map. This also works on the ferry and at Slime's End Cliffs. There is a 20 second travel time when using !loop.",
+	mutation_id_amnesia:"Your display name is replaced with ????? in EW's messages, and you can delete your message commands without ENDLESS WAR reacting. On a kill, the kill feed message is delayed by 60 seconds."
 
 }
 
