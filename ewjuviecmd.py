@@ -529,6 +529,7 @@ async def mine(cmd):
 async def flag(cmd):
 	market_data = EwMarket(id_server = cmd.message.author.guild.id)
 	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -547,14 +548,14 @@ async def flag(cmd):
 
 	# Enlisted players only mine at certain times.
 	if user_data.life_state == ewcfg.life_state_enlisted:
-		if user_data.faction == ewcfg.faction_rowdys and (market_data.clock < 8 or market_data.clock > 17):
+		if user_data.faction == ewcfg.faction_rowdys and (market_data.clock < 8 or market_data.clock > 17) and ewcfg.mutation_id_lightminer not in mutations:
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Rowdies only mine in the daytime. Wait for full daylight at 8am.".format(ewcfg.cmd_revive)))
 
-		if user_data.faction == ewcfg.faction_killers and (market_data.clock < 20 and market_data.clock > 5):
+		if user_data.faction == ewcfg.faction_killers and (market_data.clock < 20 and market_data.clock > 5) and ewcfg.mutation_id_lightminer not in mutations:
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Killers only mine under cover of darkness. Wait for nightfall at 8pm.".format(ewcfg.cmd_revive)))
 
 	# Mine only in the mines.
-	if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+	if user_data.poi in ewcfg.mining_channels:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
@@ -700,8 +701,12 @@ async def mismine(cmd, user_data, cause):
 		if random.randrange(4) == 0:
 			accident_response = "Big John arrives just in time to save you from your mining accident!\nhttps://cdn.discordapp.com/attachments/431275470902788107/743629505876197416/mine2.jpg"
 		else:
-			user_data.change_slimes(n = -(user_data.slimes / 2))
-			user_data.persist()
+			mutations = user_data.get_mutations()
+			if ewcfg.mutation_id_lightminer in mutations:
+				response = "You instinctively jump out of the way of the collapsing shaft, not a scratch on you. Whew, really gets your blood pumping."
+			else:
+				user_data.change_slimes(n=-(user_data.slimes * 0.5))
+				user_data.persist()
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, accident_response))
 		# await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1432,8 +1437,12 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 			if random.randrange(4) == 0:
 				response = "Big John arrives just in time to save you from your mining accident!\nhttps://cdn.discordapp.com/attachments/431275470902788107/743629505876197416/mine2.jpg"
 			else:
-				user_data.change_slimes(n=-slimes_lost)
-				user_data.persist()
+				mutations = user_data.get_mutations()
+				if ewcfg.mutation_id_lightminer in mutations:
+					response = "You instinctively jump out of the way of the collapsing shaft, not a scratch on you. Whew, really gets your blood pumping."
+				else:
+					user_data.change_slimes(n=-(user_data.slimes * 0.5))
+					user_data.persist()
 				
 		init_grid_minesweeper(user_data.poi, user_data.id_server)
 
@@ -1527,8 +1536,12 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 		if random.randrange(4) == 0:
 			response = "Big John arrives just in time to save you from your mining accident!\nhttps://cdn.discordapp.com/attachments/431275470902788107/743629505876197416/mine2.jpg"
 		else:
-			user_data.change_slimes(n=-(user_data.slimes * 0.5))
-			user_data.persist()
+			mutations = user_data.get_mutations()
+			if ewcfg.mutation_id_lightminer in mutations:
+				response = "You instinctively jump out of the way of the collapsing shaft, not a scratch on you. Whew, really gets your blood pumping."
+			else:
+				user_data.change_slimes(n=-(user_data.slimes * 0.5))
+				user_data.persist()
 
 		init_grid_bubblebreaker(cmd.message.channel.name, user_data.id_server)
 

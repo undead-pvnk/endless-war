@@ -926,7 +926,7 @@ async def attack(cmd):
 				sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.guild.id)
 				# move around slime as a result of the shot
 				if was_shambler or was_juvenile or user_data.faction == shootee_data.faction:
-					slimes_drained = int(3 * slimes_damage / 4) # 3/4
+					slimes_drained = 0 #int(3 * slimes_damage / 4) # 3/4
 					slimes_toboss = 0
 				else:
 					slimes_drained = 0
@@ -3880,7 +3880,9 @@ async def switch_weapon(cmd):
 	user_data.sidearm = weapon_holder
 	user_data.persist()
 
-	if user_data.weapon == -1 and user_data.sidearm == -1:
+	if user_data.weaponmarried:
+		response = "You don't have the heart to cheat on your wife with your side ho. Not right in front of her. Not like this."
+	elif user_data.weapon == -1 and user_data.sidearm == -1:
 		response = "You switch your nothing for nothing. What a notable exchange."
 	elif user_data.weapon == -1 and user_data.sidearm:
 		response = "You put your weapon away."
