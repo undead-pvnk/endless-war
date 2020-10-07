@@ -28,8 +28,8 @@ async def tweet(cmd):
         
         tweet_content = ' '.join(cmd.tokens[1:])
         # embed limits
-        if len(tweet_content) > 1024:
-            response = "Alright there bud, slow down a bit. No one's gonna read all that ({}/1024).".format(len(tweet_content))
+        if len(tweet_content) > 280:
+            response = "Alright there bud, slow down a bit. No one's gonna read all that ({}/280).".format(len(tweet_content))
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
         tweet = ewutils.discord.Embed()
