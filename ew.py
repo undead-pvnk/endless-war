@@ -1116,6 +1116,16 @@ class EwUser:
 
 		return int(res)
 
+	def has_gellphone(self):
+		gellphones = ewitem.find_item_all(item_search = ewcfg.item_id_gellphone, id_user = self.id_user, id_server = self.id_server, item_type_filter = ewcfg.it_item)
+
+		for phone in gellphones:
+			phone_data = ewitem.EwItem(id_item = phone.get('id_item'))
+			if phone_data.item_props.get('active') == 'true':
+				return True
+
+		return False
+
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, ew_id = None, member = None, id_user = None, id_server = None, data_level = 0):
 

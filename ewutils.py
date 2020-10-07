@@ -1493,13 +1493,16 @@ def get_client():
 """
 	Proxy to discord.py channel.send with exception handling.
 """
-async def send_message(client, channel, text, delete_after = None, filter_everyone = True):
+async def send_message(client, channel, text = None, embed = None, delete_after = None, filter_everyone = True):
 	#catch any future @everyone exploits
-	if filter_everyone: 
+	if filter_everyone and text is not None: 
 		text = text.replace("@everyone","{at}everyone")
 
 	try:
-		return await channel.send(content=text, delete_after=delete_after)
+		if text is not None:
+			return await channel.send(content=text, delete_after=delete_after)
+		if embed is not None:
+			return await channel.send(embed=embed)
 	except discord.errors.Forbidden:
 		logMsg('Could not message user: {}\n{}'.format(channel, text))
 		raise

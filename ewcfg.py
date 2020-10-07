@@ -908,6 +908,8 @@ channel_greenlightdistrict_street_b = "green-light-district-street-b"
 channel_greenlightdistrict_street_c = "green-light-district-street-c"
 channel_slimesend_street_a = "slimes-end-street-a"
 
+channel_slimetwitter = "slime-twitter"
+
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
 hideout_by_faction = {
 	faction_rowdys: channel_rowdyroughhouse,
@@ -1433,6 +1435,9 @@ cmd_flutter = cmd_prefix + 'flutter'
 cmd_entomize = cmd_prefix + 'entomize'
 cmd_confuse = cmd_prefix + 'confuse'
 
+# Slime Twitter
+cmd_tweet = cmd_prefix + 'tweet'
+
 #SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
@@ -1952,6 +1957,9 @@ emote_ms_5 = ":purple_heart:"
 emote_ms_6 = ":six:"
 emote_ms_7 = ":seven:"
 emote_ms_8 = ":eight:"
+
+# Emote for deleting slime tweets
+emote_delete_tweet = emote_blank
 
 # mining types
 mining_type_minesweeper = "minesweeper"
@@ -14915,6 +14923,18 @@ races = {
 	'avian': 'avian',
 	'insectoid': 'insectoid',
 	'other': 'other',
+}
+
+# slime twitter stuff
+tweet_color_by_lifestate = {
+	life_state_corpse : '010101',
+	life_state_juvenile: '33cc4a'
+}
+
+tweet_color_by_faction = {
+	faction_killers : 'b585ff',
+	faction_rowdys : 'f390b6',
+	faction_slimecorp : 'ff0000'
 }
 
 # lists of all the discord server objects served by bot, identified by the server id
