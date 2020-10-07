@@ -908,6 +908,8 @@ channel_greenlightdistrict_street_b = "green-light-district-street-b"
 channel_greenlightdistrict_street_c = "green-light-district-street-c"
 channel_slimesend_street_a = "slimes-end-street-a"
 
+channel_slimetwitter = "slime-twitter"
+
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
 hideout_by_faction = {
 	faction_rowdys: channel_rowdyroughhouse,
@@ -1433,6 +1435,9 @@ cmd_flutter = cmd_prefix + 'flutter'
 cmd_entomize = cmd_prefix + 'entomize'
 cmd_confuse = cmd_prefix + 'confuse'
 
+# Slime Twitter
+cmd_tweet = cmd_prefix + 'tweet'
+
 #SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
@@ -1952,6 +1957,9 @@ emote_ms_5 = ":purple_heart:"
 emote_ms_6 = ":six:"
 emote_ms_7 = ":seven:"
 emote_ms_8 = ":eight:"
+
+# Emote for deleting slime tweets
+emote_delete_tweet = emote_blank
 
 # mining types
 mining_type_minesweeper = "minesweeper"
@@ -7688,7 +7696,7 @@ for poi in poi_list:
 	if poi.is_district:
 		poi.major_role = '{}_major'.format(poi.id_poi)
 		streets_resp = ''
-		
+		"""
 		district_streets_list = []
 		for street_poi in poi_list:
 			if street_poi.father_district == poi.id_poi:
@@ -7705,6 +7713,7 @@ for poi in poi_list:
 						poi.str_desc += 'and {}.'.format(district_streets_list[i])
 					else:
 						poi.str_desc += '{}, '.format(district_streets_list[i])
+		"""
 						
 	placeholder_channel_names_used = False
 		
@@ -11754,9 +11763,9 @@ mutations = [
         alias = ['luck'],
 		str_describe_self = "You are extremely fortunate due to **Lucky**.",
 		str_describe_other = "They are extremely fortunate due to **Lucky**.",
-		str_acquire = "Just as you level up, you are struck by lightning. You struggle to stand at first, but after the initial shock wears off you quickly dust the cartoonish soot from your clothes and begin walking again. Then, you’re struck again. You stand up again. This happens a few more times before you’re forced by the astronomically low odds of you being alive to conclude you are a statistical anomaly and thus normal concepts of fortune do not apply to you. You have developed the mutation **Lucky**. Drastically increased chance to unearth slime poudrins and odds of winning slime casino games. !reel chance also increases.",
+		str_acquire = "Just as you level up, you are struck by lightning. You struggle to stand at first, but after the initial shock wears off you quickly dust the cartoonish soot from your clothes and begin walking again. Then, you’re struck again. You stand up again. This happens a few more times before you’re forced by the astronomically low odds of you being alive to conclude you are a statistical anomaly and thus normal concepts of fortune do not apply to you. You have developed the mutation **Lucky**. Drastically increased chance to unearth slime poudrins. !reel chance also increases.",
         tier=5,
-        str_transplant="\"Tough luck, runt,\" the doctor says, 'but this is still an experimental treatment.' You roll your eyes, knowing that basically all her surgeries are like that. She starts by taking out her stash of dead leprechauns and transplanting a few body parts. She unexpectedly shoots you through the hand, and you scream in pain. \"Quit yer whinin' I have to do this. If the gun's not jamming that means it didn't work.\" She tried everything in the book, rabbit's foot fingers, lucky penny tooth fillings, you name it. More bullets to the hand. Eventually the luck charm takes after she cuts three of your toes off. Doesn't make sense, but at least nothing unfortunate will happen to you now.\n\nYou have developed the mutation **Lucky**. Drastically increased chance to unearth slime poudrins and odds of winning slime casino games. !reel chance also increases.",
+        str_transplant="\"Tough luck, runt,\" the doctor says, 'but this is still an experimental treatment.' You roll your eyes, knowing that basically all her surgeries are like that. She starts by taking out her stash of dead leprechauns and transplanting a few body parts. She unexpectedly shoots you through the hand, and you scream in pain. \"Quit yer whinin' I have to do this. If the gun's not jamming that means it didn't work.\" She tried everything in the book, rabbit's foot fingers, lucky penny tooth fillings, you name it. More bullets to the hand. Eventually the luck charm takes after she cuts three of your toes off. Doesn't make sense, but at least nothing unfortunate will happen to you now.\n\nYou have developed the mutation **Lucky**. Drastically increased chance to unearth slime poudrins. !reel chance also increases.",
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_dressedtokill,
@@ -14915,6 +14924,18 @@ races = {
 	'avian': 'avian',
 	'insectoid': 'insectoid',
 	'other': 'other',
+}
+
+# slime twitter stuff
+tweet_color_by_lifestate = {
+	life_state_corpse : '010101',
+	life_state_juvenile: '33cc4a'
+}
+
+tweet_color_by_faction = {
+	faction_killers : 'b585ff',
+	faction_rowdys : 'f390b6',
+	faction_slimecorp : 'ff0000'
 }
 
 # lists of all the discord server objects served by bot, identified by the server id

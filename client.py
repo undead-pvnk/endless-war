@@ -54,6 +54,7 @@ import ewads
 import ewbook
 import ewsports
 import ewrace
+import ewslimetwitter
 import ewdebug
 
 from ewitem import EwItem
@@ -78,6 +79,9 @@ last_helped_times = {}
 
 # Map of server ID to a map of active users on that server.
 active_users_map = {}
+
+# Map of server ID to slime twitter channels
+channels_slimetwitter = {}
 
 # Map of all command words in the game to their implementing function.
 cmd_map = {
@@ -810,6 +814,7 @@ cmd_map = {
 	ewcfg.cmd_entomize: ewrace.entomize,
 	ewcfg.cmd_confuse: ewrace.confuse,
 
+	# Mutations
 	ewcfg.cmd_preserve: ewmutation.preserve,
 	ewcfg.cmd_stink: ewmutation.waft,
 	ewcfg.cmd_slap: ewmap.slap,
@@ -822,7 +827,10 @@ cmd_map = {
 	ewcfg.cmd_devour: ewfood.devour,
 	ewcfg.cmd_chemo: ewmutation.chemo,
 	ewcfg.cmd_graft: ewmutation.graft,
-	ewcfg.cmd_bleedout:ewmutation.bleedout
+	ewcfg.cmd_bleedout:ewmutation.bleedout,
+
+	# Slime Twitter
+	ewcfg.cmd_tweet: ewslimetwitter.tweet
 }
 
 debug = False
@@ -975,6 +983,10 @@ async def on_ready():
 				elif(channel.name == ewcfg.channel_stockexchange):
 					channels_stockmarket[server.id] = channel
 					ewutils.logMsg("• found channel for stock exchange: {}".format(channel.name))
+
+				elif(channel.name == ewcfg.channel_slimetwitter):
+					channels_slimetwitter[server.id] = channel
+					ewutils.logMsg("• found channel for slime twitter: {}".format(channel.name))
 
 		# create all the districts in the database
 		for poi_object in ewcfg.poi_list:
@@ -2040,6 +2052,24 @@ async def on_message(message):
 			client=client,
 			guild = message.guild
 		))
+
+@client.event
+async def on_raw_reaction_add(payload):
+	# We only respond to reactions in the slime twitter channel
+	if channels_slimetwitter[payload.guild_id] is not None and payload.channel_id == channels_slimetwitter[payload.guild_id].id:
+		message = await channels_slimetwitter[payload.guild_id].fetch_message(payload.message_id)		
+
+		if len(message.embeds) > 0:
+			
+			embed = message.embeds[0]
+			userid = "<@!{}>".format(payload.user_id)
+
+			# Ignore reaction if it's not from the slime tweet author
+			if embed.description == userid:
+
+				if (str(payload.emoji) == ewcfg.emote_delete_tweet):
+					await message.delete()
+
 
 # find our REST API token
 token = ewutils.getToken()
