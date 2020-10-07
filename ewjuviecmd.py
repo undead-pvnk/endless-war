@@ -555,7 +555,7 @@ async def flag(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Killers only mine under cover of darkness. Wait for nightfall at 8pm.".format(ewcfg.cmd_revive)))
 
 	# Mine only in the mines.
-	if user_data.poi in ewcfg.mining_channels:
+	if cmd.message.channel.name in ewcfg.mining_channels:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
@@ -571,7 +571,6 @@ async def flag(cmd):
 			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
 			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
 
-			world_events = ewworldevent.get_world_events(id_server = cmd.guild.id)
 			mining_type = ewcfg.mines_mining_type_map.get(user_data.poi)
 
 			if mining_type != ewcfg.mining_type_minesweeper:
@@ -588,7 +587,7 @@ async def flag(cmd):
 			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
 			grid = grid_cont.grid
 
-			grid_type = ewcfg.grid_type_by_mining_type.get(mining_event)
+			grid_type = ewcfg.grid_type_by_mining_type.get(mining_type)
 			if grid_type != grid_cont.grid_type:
 				init_grid(user_data.poi, user_data.id_server)
 				printgrid = True
@@ -599,8 +598,8 @@ async def flag(cmd):
 			row = -1
 			col = -1
 			if cmd.tokens_count < 2:
-				response = "Please specify which Minesweeper vein to mine."
-				return response
+				response = "Please specify which Minesweeper vein to flag."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 			for token in cmd.tokens[1:]:
 				

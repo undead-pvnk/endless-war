@@ -460,16 +460,8 @@ async def updateRoles(
 
 	# Remove user's gellphone role if they don't have a phone
 	role_gellphone = None
-	gellphones = ewitem.find_item_all(item_search = ewcfg.item_id_gellphone, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
-	gellphone_active = False
-
-	for phone in gellphones:
-		phone_data = ewitem.EwItem(id_item = phone.get('id_item'))
-		if phone_data.item_props.get('active') == 'true':
-			gellphone_active = True
-			break
 		
-	if gellphone_active == True:
+	if user_data.has_gellphone():
 		role_gellphone = ewcfg.role_gellphone
 		misc_roles_remove.remove(ewcfg.role_gellphone)
 

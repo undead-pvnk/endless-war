@@ -2302,6 +2302,7 @@ async def manually_edit_item_properties(cmd):
 async def longdrop(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	mutations = user_data.get_mutations()
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	destination = cmd.tokens[1]
 	dest_poi = ewcfg.id_to_poi.get(destination)
@@ -2320,7 +2321,7 @@ async def longdrop(cmd):
 		response = "Never heard of it."
 	elif ewutils.inaccessible(user_data = user_data, poi = dest_poi):
 		response = "Your arm hits a wall before it can make the drop off. Shit, probably can't take it over there."
-	elif user_data.poi not in dest_poi.neighbors.keys():
+	elif user_data.poi not in dest_poi.neighbors.keys() and dest_poi.id_poi not in poi.mother_districts:
 		response = "You can't take it that far. What if a bird or car runs into your hand?"
 	else:
 		item_obj = EwItem(item_sought.get('id_item'))
