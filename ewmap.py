@@ -1009,7 +1009,11 @@ async def move(cmd = None, isApt = False):
 		await ewrolemgr.updateRoles(client = client, member = member_object)
 
 		# Send the message in the channel for this POI if possible, else in the origin channel for the move.
-		channel = [ch for ch in server_data.channels if ch.name == poi_current.channel][0] or cmd.message.channel
+		for ch in server_data.channels:
+			if ch.name == poi.channel:
+				channel = ch
+				break
+
 		msg_walk_enter = await send_arrival_response(cmd, poi, channel)
 		
 		try:
@@ -1076,9 +1080,8 @@ async def move(cmd = None, isApt = False):
 				channel = cmd.message.channel
 
 				# Send the message in the channel for this POI if possible, else in the origin channel for the move.
-
 				for ch in server_data.channels:
-					if ch.name == poi.channel:
+					if ch.name == poi_current.channel:
 						channel = ch
 						break
 
