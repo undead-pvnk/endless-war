@@ -469,6 +469,7 @@ def canCap(cmd, capture_type):
 	sidearm_viable = 0
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
+	market_data = EwMarket(id_server=cmd.guild.id)
 
 	tokens_lower = []
 	for token in cmd.tokens:
@@ -532,6 +533,10 @@ def canCap(cmd, capture_type):
 		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
 	elif sidearm_viable == 0:
 		response = "With what, your piss? Get some paint from Based Hardware and stop fucking around."
+	elif not 3 <= market_data.clock <= 10 and user_data.faction != ewcfg.faction_slimecorp:
+		response = "You can't !spray while all these people are around. The cops are no problem but the street sweepers will fucking kill you."
+	elif not 3 <= market_data.clock <= 10 and user_data.faction == ewcfg.faction_slimecorp:
+		response = 'Your SlimeCorp headset chatters in your ear...\n"SlimeCorp protocol only allows sanitization during hours where federal sanitizers are not at work. Please cease and desist."'
 
 	return response
 
@@ -3202,7 +3207,6 @@ def damage_mod_cap(user_data, market_data, user_mutations, district_data, weapon
 			slimes_damage = round(damage_mod * .2)
 		else:
 			damage_mod *= 3
-			damage_mod *= 3
 
 	if ewcfg.mutation_id_patriot in user_mutations:
 		damage_mod *= 1.5
@@ -3262,11 +3266,11 @@ async def spray(cmd):
 	# 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
 
 	# Get shooting player's info
-
 	weapon = None
 	weapon_item = None
 	sidearm_viable = 0
 	user_mutations = user_data.get_mutations()
+
 
 
 	#if user_data.sidearm >= 0:

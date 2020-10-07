@@ -399,7 +399,7 @@ class EwDistrict:
 		street_poi = ewcfg.id_to_poi.get(self.name)
 		district_poi = ewcfg.id_to_poi.get(street_poi.father_district)
 		num_districts = len(ewutils.get_street_list(street_poi.father_district))
-
+		invasion_response = ""
 		max_capture = ewcfg.limit_influence[district_poi.property_class]/num_districts
 		progress_percent_before = int(self.capture_points / max_capture * 100)
 
@@ -444,7 +444,7 @@ class EwDistrict:
 
 		if self.controlling_faction == "" and progress > 0 and self.cap_side == actor and self.capture_points + progress > (ewcfg.min_influence[district_poi.property_class]/num_districts):
 			self.controlling_faction = actor
-
+			invasion_response = "{} just captured {}.".format(self.capturing_faction.capitalize(), ewcfg.id_to_poi[self.name].str_name)
 
 
 		# display a message if it's reached a certain amount
@@ -537,9 +537,10 @@ class EwDistrict:
 						progress = progress_percent_after
 					)
 					channels = [ewcfg.id_to_poi[self.name].channel]
-					
-					for ch in channels:
-						resp_cont_change_cp.add_channel_response(channel = ch, response = message)
+
+					if invasion_response != "":
+						for ch in channels:
+							resp_cont_change_cp.add_channel_response(channel = ch, response = invasion_response)
 
 		if progress < 0 and self.capture_points == 0:
 			self.capturing_faction = ""

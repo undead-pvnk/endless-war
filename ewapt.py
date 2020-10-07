@@ -20,6 +20,7 @@ import ewhunting
 import ewwep
 import ewquadrants
 import ewdistrict
+import ewmutation
 
 from ewitem import EwItem
 from ewdistrict import EwDistrict
@@ -2535,6 +2536,20 @@ async def aptCommands(cmd):
 		return await ewdistrict.tag(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_sidearm:
 		return await ewwep.sidearm(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_stink:
+		return await ewmutation.waft(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_bleedout:
+		return await ewmutation.bleedout(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_thirdeye:
+		return await ewmap.tracker(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_track:
+		return await ewmutation.track_oneeyeopen(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_preserve:
+		return await ewmutation.preserve(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_clench:
+		return await ewmutation.clench(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_longdrop:
+		return await ewitem.longdrop(cmd=cmd)
 	#elif cmd_text == ewcfg.cmd_trick or cmd_text == ewcfg.cmd_treat:
 	#	pass
 	elif cmd_text[0]==ewcfg.cmd_prefix: #faliure text

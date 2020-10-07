@@ -444,7 +444,7 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 	# Filter out Soulbound items.
 	for item in items:
 		item_obj = EwItem(id_item = item.get('id_item'))
-		if item.get('soulbound') == False and not (rigor == True and item_obj.item_props.get('preserved') ==  user_data.id_user):
+		if item.get('soulbound') == False and not (rigor == True and item_obj.item_props.get('preserved') ==  user_data.id_user) and item_obj.item_props.get('context') != 'gellphone':
 			drop_candidates.append(item)
 
 	filtered_items = []
