@@ -1527,10 +1527,6 @@ async def scout(cmd):
 			response = "You can't scout that far."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		if user_poi.id_poi in poi.mother_districts:
-			response = "Why scout? Just pop your head in!"
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		# don't show low level players or enemies
