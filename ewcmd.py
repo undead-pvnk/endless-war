@@ -2534,6 +2534,7 @@ async def forge_master_poudrin(cmd):
 		member.display_name)
 	await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
+
 # A debug function designed to generate almost any kind of item within the game. Can be used to give items to users.
 async def create_item(cmd):
 	if not cmd.message.author.guild_permissions.administrator:

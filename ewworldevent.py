@@ -247,6 +247,7 @@ async def event_tick(id_server):
 			response = event_def.str_event_end if event_def else ""
 			if event_data.event_type == ewcfg.event_type_minecollapse:
 				user_data = EwUser(id_user = event_data.event_props.get('id_user'), id_server = id_server)
+				mutations = user_data.get_mutations()
 				if user_data.poi == event_data.event_props.get('poi'):
 
 					player_data = EwPlayer(id_user=user_data.id_user)
@@ -255,8 +256,12 @@ async def event_tick(id_server):
 					if random.randrange(4) == 0:
 						response = "*{}*: Big John arrives just in time to save you from your mining accident!\nhttps://cdn.discordapp.com/attachments/431275470902788107/743629505876197416/mine2.jpg".format(player_data.display_name)
 					else:
-						user_data.change_slimes(n = -(user_data.slimes * 0.5))
-						user_data.persist()
+
+						if ewcfg.mutation_id_lightminer in mutations:
+							response = "*{}*: You instinctively jump out of the way of the collapsing shaft, not a scratch on you. Whew, really gets your blood pumping.".format(player_data.display_name)
+						else:
+							user_data.change_slimes(n = -(user_data.slimes * 0.5))
+							user_data.persist()
 
 					
 			# check if any void connections have expired, if so pop it and create a new one
