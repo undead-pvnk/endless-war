@@ -7696,7 +7696,7 @@ for poi in poi_list:
 	if poi.is_district:
 		poi.major_role = '{}_major'.format(poi.id_poi)
 		streets_resp = ''
-		
+		"""
 		district_streets_list = []
 		for street_poi in poi_list:
 			if street_poi.father_district == poi.id_poi:
@@ -7713,6 +7713,7 @@ for poi in poi_list:
 						poi.str_desc += 'and {}.'.format(district_streets_list[i])
 					else:
 						poi.str_desc += '{}, '.format(district_streets_list[i])
+		"""
 						
 	placeholder_channel_names_used = False
 		
