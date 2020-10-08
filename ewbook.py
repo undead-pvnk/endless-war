@@ -1220,7 +1220,7 @@ async def order_zine(cmd):
 					else:
 						price = ewcfg.zine_cost/4
 
-					if user_data.slimes < ewcfg.zine_cost:
+					if user_data.slimes < price:
 						response = "YOU CAN'T AFFORD IT. ({:,}/{:,})".format(user_data.slimes, price)
 
 					else:

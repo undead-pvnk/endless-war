@@ -1375,11 +1375,13 @@ async def on_member_join(member):
 
 @client.event
 async def on_message_delete(message):
-	user_data = EwUser(member=message.author)
-	mutations = user_data.get_mutations()
-	if message != None and message.guild != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix) and ewcfg.mutation_id_amnesia not in mutations:
-		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
-		await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'))
+	if message != None and message.guild != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
+		user_data = EwUser(member=message.author)
+		mutations = user_data.get_mutations()
+
+		if ewcfg.mutation_id_amnesia not in mutations:
+			ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'))
 
 @client.event
 async def on_message(message):
@@ -2056,7 +2058,10 @@ async def on_message(message):
 @client.event
 async def on_raw_reaction_add(payload):
 	# We only respond to reactions in the slime twitter channel
-	if channels_slimetwitter[payload.guild_id] is not None and payload.channel_id == channels_slimetwitter[payload.guild_id].id:
+	if (payload.guild_id is not None # not a dm
+		and channels_slimetwitter[payload.guild_id] is not None # server has a slime twitter channel
+		and payload.channel_id == channels_slimetwitter[payload.guild_id].id): # reaction was in that channel
+
 		message = await channels_slimetwitter[payload.guild_id].fetch_message(payload.message_id)		
 
 		if len(message.embeds) > 0:
