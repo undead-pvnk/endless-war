@@ -1492,6 +1492,7 @@ hunger_perfish = 15
 hunger_perscavenge = 2
 hunger_pertick = 3
 hunger_pertrickortreat = 6
+hunger_perlmcollapse = 100
 
 # Time it takes to move between various parts of the map
 travel_time_subzone = 20

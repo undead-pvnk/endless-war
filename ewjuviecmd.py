@@ -1419,7 +1419,7 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 	elif grid[row][col] == ewcfg.cell_empty:
 		grid[row][col] = ewcfg.cell_empty_open
 		grid_cont.cells_mined += 1
-		mining_yield = grid_multiplier * 5 * get_mining_yield_default(cmd)
+		mining_yield = grid_multiplier * .4 * get_mining_yield_default(cmd)
 
 	unmined_cells = get_unmined_cell_count(grid_cont)
 
@@ -1438,9 +1438,11 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 			else:
 				mutations = user_data.get_mutations()
 				if ewcfg.mutation_id_lightminer in mutations:
-					response = "You instinctively jump out of the way of the collapsing shaft, not a scratch on you. Whew, really gets your blood pumping."
+					response = "You instinctively jump out of the way of the live mine, barely escaping with your life. Whew, really gets your blood pumping."
+					user_data.hunger += int(ewcfg.hunger_perlmcollapse * hunger_cost_mod)
+					user_data.persist()
 				else:
-					user_data.change_slimes(n=-(user_data.slimes * 0.5))
+					user_data.change_slimes(n=-(user_data.slimes * 0.3))
 					user_data.persist()
 				
 		init_grid_minesweeper(user_data.poi, user_data.id_server)
@@ -1539,7 +1541,7 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 			if ewcfg.mutation_id_lightminer in mutations:
 				response = "You instinctively jump out of the way of the collapsing shaft, not a scratch on you. Whew, really gets your blood pumping."
 			else:
-				user_data.change_slimes(n=-(user_data.slimes * 0.5))
+				user_data.change_slimes(n=-(user_data.slimes * 0.3))
 				user_data.persist()
 
 		init_grid_bubblebreaker(cmd.message.channel.name, user_data.id_server)

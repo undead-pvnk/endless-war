@@ -337,67 +337,59 @@ async def smoke(cmd):
 			if int(item.item_props.get('size')) > 0:
 				space_adorned += int(item.item_props.get('size'))
 
+
+			response = "You light a cig and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
+			item.item_props['cosmetic_desc'] = "A single lit cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool."
 			if space_adorned < ewutils.max_adornspace_bylevel(usermodel.slimelevel):
-				response = "You light a cig and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
-				item.item_props['cosmetic_desc'] = "A single lit cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool."
 				item.item_props['adorned'] = "true"
-				item.persist()
+			item.persist()
+			usermodel.persist()
 
 
-				usermodel.persist()
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			await asyncio.sleep(60)
+			item = EwItem(id_item=item_sought.get('id_item'))
+
+			response = "The cigarette fizzled out."
+
+			item.item_props['cosmetic_desc'] = "It's a cigarette butt. What kind of hoarder holds on to these?"
+			item.item_props['adorned'] = "false"
+			item.item_props['id_cosmetic'] = "cigarettebutt"
+			item.item_props['cosmetic_name'] = "cigarette butt"
+			item.persist()
 
 
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				await asyncio.sleep(60)
-				item = EwItem(id_item=item_sought.get('id_item'))
-
-				response = "The cigarette fizzled out."
-
-				item.item_props['cosmetic_desc'] = "It's a cigarette butt. What kind of hoarder holds on to these?"
-				item.item_props['adorned'] = "false"
-				item.item_props['id_cosmetic'] = "cigarettebutt"
-				item.item_props['cosmetic_name'] = "cigarette butt"
-				item.persist()
-
-
-				usermodel.persist()
-
-			else:
-				response = "Sadly, you cannot smoke the cigarette. To smoke it, you'd have to have it inbetween your lips for approximately a minute, which technically counts as adorning something. " \
-						   "And, seeing as you are out of adornable cosmetic space, you cannot do that. Sorry. Weird how this message doesn't show up when you suck all that dick though, huh?"
+			usermodel.persist()
 
 		elif item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigar":
 			if int(item.item_props['size']) > 0:
 				space_adorned += int(item.item_props['size'])
 
+
+			response = "You light up your stogie and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
+			item.item_props['cosmetic_desc'] = "A single lit cigar sticking out of your mouth. These thing take their time to kick in, but it's all worth it to look like a supreme gentleman."
 			if space_adorned < ewutils.max_adornspace_bylevel(usermodel.slimelevel):
-				response = "You light up your stogie and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
-				item.item_props['cosmetic_desc'] = "A single lit cigar sticking out of your mouth. These thing take their time to kick in, but it's all worth it to look like a supreme gentleman."
 				item.item_props['adorned'] = "true"
 
-				item.persist()
+			item.persist()
 
 
-				usermodel.persist()
+			usermodel.persist()
 
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				await asyncio.sleep(300)
-				item = EwItem(id_item=item_sought.get('id_item'))
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			await asyncio.sleep(300)
+			item = EwItem(id_item=item_sought.get('id_item'))
 
-				response = "The cigar fizzled out."
+			response = "The cigar fizzled out."
 
-				item.item_props['cosmetic_desc'] = "It's a cigar stump. It's seen better days."
-				item.item_props['adorned'] = "false"
-				item.item_props['id_cosmetic'] = "cigarstump"
-				item.item_props['cosmetic_name'] = "cigar stump"
-				item.persist()
+			item.item_props['cosmetic_desc'] = "It's a cigar stump. It's seen better days."
+			item.item_props['adorned'] = "false"
+			item.item_props['id_cosmetic'] = "cigarstump"
+			item.item_props['cosmetic_name'] = "cigar stump"
+			item.persist()
 
 
-				usermodel.persist()
-
-			else:
-				response = "Sadly, you cannot smoke the cigar. To smoke it, you'd have to have it inbetween your lips for approximately a minute, which technically counts as adorning something. " \
-						   "And, seeing as you are out of adornable cosmetic space, you cannot do that. Sorry. Weird how this message doesn't show up when you suck all that dick though, huh?"
+			usermodel.persist()
 		else:
 			response = "You can't smoke that."
 	else:
