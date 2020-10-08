@@ -1565,11 +1565,15 @@ async def on_message(message):
 			usermodel = EwUser(id_user=message.author.id, id_server= playermodel.id_server)
 			poi = ewcfg.id_to_poi.get(usermodel.poi)
 			cmd_obj.guild = ewcfg.server_list[playermodel.id_server]
+			cmd_obj.message.author = cmd_obj.guild.get_member(playermodel.id_user)
+
 			# Direct message the player their inventory.
 			if ewitem.cmd_is_inventory(cmd):
 				return await ewitem.inventory_print(cmd_obj)
 			elif cmd == ewcfg.cmd_inspect:
 				return await ewitem.item_look(cmd_obj)
+			elif cmd == ewcfg.cmd_tweet:
+				return await ewslimetwitter.tweet(cmd_obj)
 			elif cmd in ewcfg.zine_commands:
 				return await ewbook.zine_dm_commands(cmd=cmd_obj)
 			elif poi.is_apartment:

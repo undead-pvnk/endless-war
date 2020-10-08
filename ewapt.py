@@ -2353,10 +2353,6 @@ async def aptCommands(cmd):
 	cmd_text = cmd.tokens[0].lower() if tokens_count >= 1 else ""
 	player = EwPlayer(id_user=cmd.message.author.id)
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
-	server = ewcfg.server_list[user_data.id_server]
-	member_object = server.get_member(user_data.id_user)
-	cmd.message.author = member_object
-
 
 	if cmd_text == ewcfg.cmd_depart or cmd_text == ewcfg.cmd_retire:
 		return await depart(cmd)
