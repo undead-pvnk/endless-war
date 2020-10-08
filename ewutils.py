@@ -508,7 +508,7 @@ def formatMessage(user_target, message):
 		else:
 			display_name = user_target.display_name
 
-		return "*{}:* {}".format(display_name, message).replace("@", "{at}")
+		return "*{}:* {}".format(display_name, message).replace("{", "\{").replace("@", "{at}")
 
 """ Decay slime totals for all users, with the exception of Kingpins"""
 def decaySlimes(id_server = None):

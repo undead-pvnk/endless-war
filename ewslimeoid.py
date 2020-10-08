@@ -2412,6 +2412,9 @@ async def slimeoidbattle(cmd):
 	#	response = "You can only have Slimeoid Battles at the Battle Arena."
 	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if ewutils.channel_name_is_poi(str(cmd.message.channel)) is False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
 	if cmd.mentions_count != 1:
 		#Must mention only one player
 		response = "Mention the player you want to challenge."
