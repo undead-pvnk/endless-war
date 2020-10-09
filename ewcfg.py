@@ -7395,6 +7395,30 @@ the_slime_lyrics= [
 "Welp, there it went. The Slime begins to wreak havoc outside your apartment. Can you believe you sat on your ass for like 6 hours?"
 ]
 
+jams_saxophone = ["https://www.youtube.com/watch?v=Z2tvlp7RnlM&ab_channel=rgsmusicargentina", "https://www.youtube.com/watch?v=-yg7aZpIXRI&ab_channel=domtheodore", "https://www.youtube.com/watch?v=9Zyr0IDaRXQ&ab_channel=JohnColtrane-Topic"],
+jams_drums = ["https://www.youtube.com/watch?v=fE6YN9VcPPA&ab_channel=ProphetOfTheMoons", "https://www.youtube.com/watch?v=4D4iSmpT-bI&ab_channel=BuddyRich-Topic", "https://www.youtube.com/watch?v=US7c9ASVfNc&ab_channel=kekecanberk"],
+jams_xylophone = ["https://www.youtube.com/watch?v=QGDXuJlJdec&ab_channel=Klagmar", "https://www.youtube.com/watch?v=-1dSY6ZuXEY&ab_channel=Dr.Blase", "https://www.youtube.com/watch?v=NUBSNWVG55Y&ab_channel=VictorMendoza"],
+jams_bass = ["https://www.youtube.com/watch?v=Pyral_8aZp8&ab_channel=MingusBigBand-Topic", "https://www.youtube.com/watch?v=hnVFGz0xYKE&ab_channel=TheMarsVolta-Topic", "https://www.youtube.com/watch?v=ogKDBbi2thA&ab_channel=MadMaxOnlyMusic"],
+jams_clarinet = ["https://www.youtube.com/watch?v=4dm3Ml9g_cs&ab_channel=CatsPjamas1", "https://www.youtube.com/watch?v=Im2JDdcXO9Y&ab_channel=EvanChristopher%26ClarinetRoad", "https://www.youtube.com/watch?v=r2S1I_ien6A&ab_channel=WorldWar2Music"],
+jams_vuvuzela = ["https://www.youtube.com/watch?v=oyAP6PpAzK8&ab_channel=TheAttilaX", "https://www.youtube.com/watch?v=-E6ljLSOkbY&ab_channel=TehN1ppe", ],
+jams_guitar = ["https://www.youtube.com/watch?v=hNRHHRjep3E&ab_channel=rtwodtwo565", "https://www.youtube.com/watch?v=mBbyrqNhyNE&ab_channel=Metal8909", "https://www.youtube.com/watch?v=xnKhsTXoKCI&ab_channel=MotherRussiaMr"],
+jams_maracas = ["https://www.youtube.com/watch?v=etYb-p8uhWA&ab_channel=GilvaSunner", "https://www.youtube.com/watch?v=EstIvN0_hcg&ab_channel=Cz%C5%82owiekDrzewo", "https://www.youtube.com/watch?v=l8R_OQz_BtU&ab_channel=majabsalu"]
+jams_cornet = ["https://www.youtube.com/watch?v=mPP65UcGxq0&ab_channel=Ham_", "https://www.youtube.com/watch?v=FJrUBEtoNQU&ab_channel=ropa79", "https://www.youtube.com/watch?v=KxibMBV3nFo&ab_channel=TheJazzplaylist"]
+jams_trombone = ["https://www.youtube.com/watch?v=WEWLuBB7_FE&ab_channel=mixablemusic", "https://www.youtube.com/watch?v=lqngnNy1_Cg&ab_channel=DaveYama", "https://www.youtube.com/watch?v=1ZGeYR8b-mg&ab_channel=AllThatJazzDonKaart"]
+
+jam_tunes = {
+	"solidpoudringuitar" : jams_guitar,
+	"craftsmansclarinet" : jams_clarinet,
+	"gourdmaracas" : jams_maracas,
+	"saxophone" : jams_saxophone,
+	"woodenvuvuzela" : jams_vuvuzela,
+	"fishbonexylophone" : jams_xylophone,
+	"beastskindrums" : jams_drums,
+	"bass" : jams_bass,
+	"trombone" : jams_trombone,
+	"cornet": jams_cornet
+}
+
 
 furniture_list = []
 with open(os.path.join('json', 'furniture.json')) as f:
@@ -9002,8 +9026,8 @@ smelting_recipe_list = [
 			"drum",
 		],
 		ingredients = {
-			'dinoslimemeat': 25,
-			'dinoslimesteak' : 5,
+			'dinoslimemeat': 5,
+			'dinoslimesteak' : 2,
 			'scalp': 5,
 			'string' : 3,
 			'stick' : 2
@@ -9061,6 +9085,42 @@ smelting_recipe_list = [
 			item_id_slimepoudrin: 5,
 		},
 		products = ['saxophone']
+	),
+	EwSmeltingRecipe(
+		id_recipe="cornet",
+		str_name="a cornet",
+		alias=[
+			"trumpet",
+			"horn",
+			"trump"
+		],
+		ingredients={
+			weapon_id_slimeringcan: 1,
+			'goobalibre': 1,
+			item_id_steelbeanpods: 2,
+			item_id_tough_material: 10,
+			item_id_aushuckstalks: 2,
+			item_id_slimepoudrin: 6,
+		},
+		products=['cornet']
+	),
+	EwSmeltingRecipe(
+		id_recipe="trombone",
+		str_name="a trombone",
+		alias=[
+			"tbone",
+			"bestinstrument",
+			"sackbut"
+		],
+		ingredients={
+			weapon_id_shotgun: 2,
+			'manhattanproject': 1,
+			item_id_metallicapheads: 1,
+			item_id_smart_material: 10,
+			item_id_aushuckstalks: 3,
+			item_id_slimepoudrin: 10,
+		},
+		products=['trombone']
 	),
 	EwSmeltingRecipe(
 		id_recipe="whitedye",

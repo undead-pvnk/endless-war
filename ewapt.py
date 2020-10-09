@@ -2314,8 +2314,15 @@ async def jam(cmd):
 		if item.item_props.get("id_furniture") in ewcfg.furniture_instrument or item.item_props.get("weapon_type") == ewcfg.weapon_id_bass:
 			cycle = random.randrange(20)
 			response = ""
-			for x in range(1, cycle):
-				response += random.choice([":musical_note:", ":notes:"])
+			if random.randint(0, 15) == 0:
+				if item.item_props.get("id_furniture") == None:
+					item_key = "bass"
+				else:
+					item_key = item.item_props.get("id_furniture")
+				response = random.choice(ewcfg.jam_tunes[item_key])
+			else:
+				for x in range(1, cycle):
+					response += random.choice([":musical_note:", ":notes:"])
 		else:
 			response = "You place your mouth on the {} but it makes no noise. Either that's not an instrument or you aren't good enough.".format(item_sought.get('name'))
 	else:
