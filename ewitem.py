@@ -1408,7 +1408,7 @@ async def item_look(cmd):
 
 			response = name + (" x{:,}".format(item.stack_size) if (item.stack_size >= 1) else "") + "\n\n" + response
 
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(player, response))
 		else:
 			if iterate == len(item_dest) and response == "":
 				if item_search:  # if they didnt forget to specify an item and it just wasn't found

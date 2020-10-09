@@ -241,56 +241,59 @@ async def event_tick(id_server):
 		))
 
 		for row in data:
-			event_data = EwWorldEvent(id_event = row[0])
-			event_def = ewcfg.event_type_to_def.get(event_data.event_type)
+			try:
+				event_data = EwWorldEvent(id_event = row[0])
+				event_def = ewcfg.event_type_to_def.get(event_data.event_type)
 
-			response = event_def.str_event_end if event_def else ""
-			if event_data.event_type == ewcfg.event_type_minecollapse:
-				user_data = EwUser(id_user = event_data.event_props.get('id_user'), id_server = id_server)
-				mutations = user_data.get_mutations()
-				if user_data.poi == event_data.event_props.get('poi'):
+				response = event_def.str_event_end if event_def else ""
+				if event_data.event_type == ewcfg.event_type_minecollapse:
+					user_data = EwUser(id_user = event_data.event_props.get('id_user'), id_server = id_server)
+					mutations = user_data.get_mutations()
+					if user_data.poi == event_data.event_props.get('poi'):
 
-					player_data = EwPlayer(id_user=user_data.id_user)
-					response = "*{}*: You have lost an arm and a leg in a mining accident. Tis but a scratch.".format(player_data.display_name)
+						player_data = EwPlayer(id_user=user_data.id_user)
+						response = "*{}*: You have lost an arm and a leg in a mining accident. Tis but a scratch.".format(player_data.display_name)
 
-					if random.randrange(4) == 0:
-						response = "*{}*: Big John arrives just in time to save you from your mining accident!\nhttps://cdn.discordapp.com/attachments/431275470902788107/743629505876197416/mine2.jpg".format(player_data.display_name)
-					else:
-
-						if ewcfg.mutation_id_lightminer in mutations:
-							response = "*{}*: You instinctively jump out of the way of the collapsing shaft, not a scratch on you. Whew, really gets your blood pumping.".format(player_data.display_name)
+						if random.randrange(4) == 0:
+							response = "*{}*: Big John arrives just in time to save you from your mining accident!\nhttps://cdn.discordapp.com/attachments/431275470902788107/743629505876197416/mine2.jpg".format(player_data.display_name)
 						else:
-							user_data.change_slimes(n = -(user_data.slimes * 0.5))
-							user_data.persist()
 
-					
-			# check if any void connections have expired, if so pop it and create a new one
-			elif event_data.event_type == ewcfg.event_type_voidconnection:
-				void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
-				void_poi.neighbors.pop(event_data.event_props.get('poi'), "")
-				create_void_connection(id_server)
-				
-			if len(response) > 0:
-				poi = event_data.event_props.get('poi')
-				channel = event_data.event_props.get('channel')
-				if channel != None:
+							if ewcfg.mutation_id_lightminer in mutations:
+								response = "*{}*: You instinctively jump out of the way of the collapsing shaft, not a scratch on you. Whew, really gets your blood pumping.".format(player_data.display_name)
+							else:
+								user_data.change_slimes(n = -(user_data.slimes * 0.5))
+								user_data.persist()
 
-					# in shambaquarium the event happens in the user's DMs
-					if event_data.event_type == ewcfg.event_type_shambaquarium:
-						client = ewutils.get_client()
-						channel = client.get_guild(id_server).get_member(int(channel))
 
-					resp_cont.add_channel_response(channel, response)
-				elif poi != None:
-					poi_def = ewcfg.id_to_poi.get(poi)
-					if poi_def != None:
-						resp_cont.add_channel_response(poi_def.channel, response)
+				# check if any void connections have expired, if so pop it and create a new one
+				elif event_data.event_type == ewcfg.event_type_voidconnection:
+					void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+					void_poi.neighbors.pop(event_data.event_props.get('poi'), "")
+					create_void_connection(id_server)
 
-				else:
-					for ch in ewcfg.hideout_channels:
-						resp_cont.add_channel_response(ch, response)
+				if len(response) > 0:
+					poi = event_data.event_props.get('poi')
+					channel = event_data.event_props.get('channel')
+					if channel != None:
 
-			delete_world_event(event_data.id_event)
+						# in shambaquarium the event happens in the user's DMs
+						if event_data.event_type == ewcfg.event_type_shambaquarium:
+							client = ewutils.get_client()
+							channel = client.get_guild(id_server).get_member(int(channel))
+
+						resp_cont.add_channel_response(channel, response)
+					elif poi != None:
+						poi_def = ewcfg.id_to_poi.get(poi)
+						if poi_def != None:
+							resp_cont.add_channel_response(poi_def.channel, response)
+
+					else:
+						for ch in ewcfg.hideout_channels:
+							resp_cont.add_channel_response(ch, response)
+
+				delete_world_event(event_data.id_event)
+			except:
+				ewutils.logMsg("Error in event tick for server {}".format(id_server))
 
 		await resp_cont.post()
 					

@@ -71,13 +71,16 @@ async def weather_tick(id_server = None):
 
 					))
 				for user in users:
-					user_data = EwUser(id_user=user[0], id_server=id_server)
-					if user_data.life_state == ewcfg.life_state_kingpin:
-						continue
-					else:
-						mutations = user_data.get_mutations()
-						if ewcfg.mutation_id_airlock in mutations:
-							user_data.hunger -= min(user_data.hunger, 5)
+					try:
+						user_data = EwUser(id_user=user[0], id_server=id_server)
+						if user_data.life_state == ewcfg.life_state_kingpin:
+							continue
+						else:
+							mutations = user_data.get_mutations()
+							if ewcfg.mutation_id_airlock in mutations:
+								user_data.hunger -= min(user_data.hunger, 5)
+					except:
+						ewutils.logMsg("Error occurred in weather tick for server {}".format(id_server))
 
 			if market_data.weather != ewcfg.weather_bicarbonaterain:
 				return

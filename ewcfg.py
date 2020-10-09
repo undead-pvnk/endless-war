@@ -14859,7 +14859,7 @@ curse_responses = [ # scold the player for swearing
 
 captcha_dict = [
 	#3
-	'GOO', 'MUD', 'COP', 'WAR', 'BEN',
+	'GOO', 'MUD', 'DIE', 'WAR', 'BEN',
 	'EYE', 'ARM', 'LEG', 'BOO', 'DAB',
 	'KFC', 'GAY', 'LOL', 'GUN', 'MUK',
 	'POW', 'WOW', 'POP', 'OWO', 'HIP',
@@ -14874,11 +14874,11 @@ captcha_dict = [
 	'ZOOM', 'FIVE', 'NINE', 'BASS', 'FIRE',
 	'TEXT', 'AWOO',
 	#5
-	'SLIME', 'BOORU', 'ROWDY', 'GHOST', 'ORDER',
+	'GUNKY', 'BOORU', 'ROWDY', 'GHOST', 'ORDER',
 	'SCARE', 'BULLY', 'FERRY', 'SAINT', 'SLASH',
 	'SLOSH', 'PARTY', 'JUVIE', 'BASED', 'TULPA',
 	'SLURP', 'MONTH', 'SEVEN', 'BRASS', 'MINES',
-	'GREEN', 'LIGHT', 'FURRY', 'PIZZA', 'ARENA',
+	'CHEMO', 'LIGHT', 'FURRY', 'PIZZA', 'ARENA',
 	'LUCKY', 'RIFLE', '56709',
 	#6
 	'SLUDGE', 'KILLER', 'MUNCHY', 'BLAAAP', 'BARTER',

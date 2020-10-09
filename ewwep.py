@@ -1343,8 +1343,10 @@ async def attack(cmd):
 		resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
 		
 		await resp_cont.post()
-	if weapon_item.item_props.get("weapon_type") == "fingernails":
-		ewitem.item_delete(id_item=weapon_item.id_item)
+
+	if weapon_item:
+		if weapon_item.item_props.get("weapon_type") == "fingernails":
+			ewitem.item_delete(id_item=weapon_item.id_item)
 
 """ player kills themself """
 async def suicide(cmd):
