@@ -481,16 +481,7 @@ def formatMessage(user_target, message):
 				elif user_target.identifier != '':
 					return "*{} [{}]* {}".format(user_target.display_name, user_target.identifier, message)
 				else:
-					if hasattr(user_target, "id_user") and hasattr(user_target, "id_server"):
-						user_obj = EwUser(id_server=user_target.id_server, id_user=user_target.id_user)
-					else:
-						user_obj = EwUser(member = user_target)
-					mutations = user_obj.get_mutations()
-					if ewcfg.mutation_id_amnesia in mutations:
-						display_name = '?????'
-					else:
-						display_name = user_target.display_name
-					return "*{}:* {}".format(display_name, message)
+					return "*{}:* {}".format(user_target.display_name, message)
 
 
 		elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
