@@ -1520,7 +1520,9 @@ class EwEnemy:
 		
 		return resp_cont
 	
-	
+	@property
+	def slimelevel(self):
+		return self.level
 
 # Reskinned version of effect container from ewwep.
 class EwEnemyEffectContainer:

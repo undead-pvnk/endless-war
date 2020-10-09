@@ -18,19 +18,19 @@ def get_tweet_color(user_data):
 
 async def tweet(cmd):
     
-    user_data = EwUser(member=cmd.message.author)
+    user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
     
     if user_data.has_gellphone():
 
         if cmd.tokens_count < 2:
             response = "Tweet what?"
-            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-        
+            return await ewutils.send_response(response, cmd)
+
         tweet_content = ' '.join(cmd.tokens[1:])
         # embed limits
         if len(tweet_content) > 280:
             response = "Alright there bud, slow down a bit. No one's gonna read all that ({}/280).".format(len(tweet_content))
-            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            return await ewutils.send_response(response, cmd)
 
         tweet = ewutils.discord.Embed()
 
@@ -53,4 +53,4 @@ async def tweet(cmd):
 
     else:
         response = "You need to have a gellphone to !tweet."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await ewutils.send_response(response, cmd)

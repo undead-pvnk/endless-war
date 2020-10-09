@@ -2215,32 +2215,19 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
 						continue
 
 		if status_flavor is not None:
-			mods['miss'] += status_flavor.miss_mod_self
+			if status == ewcfg.status_taunted_id:
+				# taunting has decreased effectiveness the lower the taunter's level is compared to the tauntee
+				taunter = EwUser(id_user=status_data.source, id_server=user_data.id_server)
+
+				if taunter.slimelevel < user_data.slimelevel:
+					mods['miss'] += round(status_flavor.miss_mod_self / (user_data.slimelevel / taunter.slimelevel), 2)
+				else:
+					mods['miss'] += status_flavor.miss_mod_self
+
+			else: 
+				mods['miss'] += status_flavor.miss_mod_self
 			mods['crit'] += status_flavor.crit_mod_self
 			mods['dmg'] += status_flavor.dmg_mod_self
-
-		# apply hitzone damage and crit mod
-		#if hitzone != None and status == hitzone.id_injury:
-		#	status_data = EwStatusEffect(id_status = status, user_data = user_data)
-		#	try:
-		#		value_int = int(status_data.value)
-		#		
-		#		mods['crit'] += 0.5 * value_int / 10
-		#		mods['dmg'] += 1 * value_int / 10
-		#
-		#	except:
-		#		ewutils.logMsg("error with int conversion")
-
-	#apply trauma mods
-	#if user_data.combatant_type == 'player':
-	#	trauma = ewcfg.trauma_map.get(user_data.trauma)
-
-	#	if trauma != None:
-	#		if trauma.trauma_class == ewcfg.trauma_class_movespeed:
-	#			mods['miss'] += 0.3 * user_data.degradation / 100
-	#		elif trauma.trauma_class == ewcfg.trauma_class_damage:
-	#			mods['dmg'] -= 0.9 * user_data.degradation / 100
-
 
 	return mods
 
@@ -2837,86 +2824,11 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	
 		await resp_cont.post()
 
-async def harden_sap(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-
-	statuses = user_data.getStatusEffects()
-	response = ""
-
-	if user_data.life_state == ewcfg.life_state_corpse:
-		response = "You're dead, bitch."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
-	sap_to_harden = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
-	
-	if sap_to_harden == None:
-		sap_to_harden = 1
-	
-	if sap_to_harden <= 0:
-		sap_to_harden = user_data.sap
-
-	if sap_to_harden > user_data.sap:
-		response = "You don't have that much sap to harden."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	harden_mod = 1
-	if ewcfg.status_injury_torso_id in statuses:
-		status_data = EwStatusEffect(id_status = ewcfg.status_injury_torso_id, user_data = user_data)
-		harden_mod -= 0.5 * int(status_data.value) / 10
-
-	harden_real = max(0, int(sap_to_harden * harden_mod))
-
-	user_data.hardened_sap += harden_real
-	user_data.sap -= sap_to_harden
-
-	user_data.persist()
-
-	response = "You harden {} sap.".format(harden_real)
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-async def liquefy_sap(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-
-	response = ""
-
-	if user_data.life_state == ewcfg.life_state_corpse:
-		response = "You're dead, bitch."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
-	sap_to_liquefy = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
-	
-	if sap_to_liquefy == None:
-		sap_to_liquefy = 1
-	
-	if sap_to_liquefy <= 0:
-		sap_to_liquefy = user_data.hardened_sap
-
-	if sap_to_liquefy > user_data.hardened_sap:
-		response = "You don't have that much hardened sap."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	user_data.sap += sap_to_liquefy
-	user_data.hardened_sap -= sap_to_liquefy
-
-	user_data.persist()
-
-	response = "You liquefy {} sap.".format(sap_to_liquefy)
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
 async def dodge(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
 
 	response = ""
 
@@ -2924,18 +2836,8 @@ async def dodge(cmd):
 		response = "A bit late for that, don't you think?"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	sap_cost = 3
-	
-	if sap_cost > user_data.sap:
-		response = "You don't have enough sap to {}. ({}/{})".format(cmd.tokens[0], user_data.sap, sap_cost)
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	#if cmd.mentions_count < 1:
-	#	response = "Whose attacks do you want to {}?".format(cmd.tokens[0])
-	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
 	if cmd.mentions_count > 1:
-		response = "You can only focus on dodging one person at a time.".format(cmd.tokens[0])
+		response = "You can only focus on dodging one person at a time."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
 	if cmd.mentions_count == 1:
@@ -2946,7 +2848,7 @@ async def dodge(cmd):
 		target_data = target = ewhunting.find_enemy(enemy_search=huntedenemy, user_data=user_data)
 
 	if target_data == None:
-		response = "ENDLESS WAR didn't understand that name.".format(cmd.tokens[0])
+		response = "ENDLESS WAR didn't understand that name."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		try:
@@ -2969,14 +2871,10 @@ async def dodge(cmd):
 
 	user_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = (target.id if target_data.combatant_type == "player" else target_data.id_enemy))
 
-	user_data.sap -= sap_cost
-
-	user_poi = ewcfg.id_to_poi.get(user_data.poi)
 	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
-
 	user_data.persist()
 
-	response = "You spend {} sap to focus on dodging {}'s attacks.".format(sap_cost, target.display_name)
+	response = "You focus on dodging {}'s attacks.".format(target.display_name)
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2986,25 +2884,14 @@ async def taunt(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-
 	response = ""
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "A bit late for that, don't you think?"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	sap_cost = 5
-	
-	if sap_cost > user_data.sap:
-		response = "You don't have enough sap to {}. ({}/{})".format(cmd.tokens[0], user_data.sap, sap_cost)
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	#if cmd.mentions_count < 1:
-	#	response = "Who do you want to {}?".format(cmd.tokens[0])
-	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
 	if cmd.mentions_count > 1:
-		response = "You can only focus on taunting one person at a time.".format(cmd.tokens[0])
+		response = "You can only focus on taunting one person at a time."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
 	if cmd.mentions_count == 1:
@@ -3015,7 +2902,7 @@ async def taunt(cmd):
 		target_data = target = ewhunting.find_enemy(enemy_search=huntedenemy, user_data=user_data)
 
 	if target_data == None:
-		response = "ENDLESS WAR didn't understand that name.".format(cmd.tokens[0])
+		response = "ENDLESS WAR didn't understand that name."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		try:
@@ -3042,13 +2929,10 @@ async def taunt(cmd):
 		
 	target_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = cmd.message.author.id)
 
-	user_data.sap -= sap_cost
-
-	user_poi = ewcfg.id_to_poi.get(user_data.poi)
 	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
-	response = "You spend {} sap to taunt {} into attacking you.".format(sap_cost, target.display_name)
+	response = "You taunt {} into attacking you.".format(target.display_name)
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -3058,25 +2942,14 @@ async def aim(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-
 	response = ""
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "A bit late for that, don't you think?"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	sap_cost = 2
-	
-	if sap_cost > user_data.sap:
-		response = "You don't have enough sap to {}. ({}/{})".format(cmd.tokens[0], user_data.sap, sap_cost)
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	#if cmd.mentions_count < 1:
-	#	response = "Who do you want to {} at?".format(cmd.tokens[0])
-	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
 	if cmd.mentions_count > 1:
-		response = "You can only focus on aiming at one person at a time.".format(cmd.tokens[0])
+		response = "You can only focus on aiming at one person at a time."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
 	if cmd.mentions_count == 1:
@@ -3087,7 +2960,7 @@ async def aim(cmd):
 		target_data = target = ewhunting.find_enemy(enemy_search=huntedenemy, user_data=user_data)
 
 	if target_data == None:
-		response = "ENDLESS WAR didn't understand that name.".format(cmd.tokens[0])
+		response = "ENDLESS WAR didn't understand that name."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		try:
@@ -3110,13 +2983,10 @@ async def aim(cmd):
 
 	user_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = (target.id if target_data.combatant_type == "player" else target_data.id_enemy))
 
-	user_data.sap -= sap_cost
-
-	user_poi = ewcfg.id_to_poi.get(user_data.poi)
 	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
-	response = "You spend {} sap to aim at {}'s weak spot.".format(sap_cost, target.display_name)
+	response = "You aim at {}'s weak spot.".format(target.display_name)
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

@@ -150,20 +150,13 @@ cmd_map = {
 	# Show a player's mutations.
 	ewcfg.cmd_mutations: ewcmd.mutations,
 	ewcfg.cmd_mutations_alt_1: ewcmd.mutations,
-
-	# sap system
-	#ewcfg.cmd_view_sap: ewcmd.view_sap,
-	#ewcfg.cmd_harden_sap: ewwep.harden_sap,
-	#ewcfg.cmd_harden_sap_alt1: ewwep.harden_sap,
-	#ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
-
 	
-	# combat sap commands
-	#ewcfg.cmd_taunt: ewwep.taunt,
-	#ewcfg.cmd_aim: ewwep.aim,
-	#ewcfg.cmd_dodge: ewwep.dodge,
-	#ewcfg.cmd_dodge_alt1: ewwep.dodge,
-	#ewcfg.cmd_dodge_alt2: ewwep.dodge,
+	# combat commands
+	ewcfg.cmd_taunt: ewwep.taunt,
+	ewcfg.cmd_aim: ewwep.aim,
+	ewcfg.cmd_dodge: ewwep.dodge,
+	ewcfg.cmd_dodge_alt1: ewwep.dodge,
+	ewcfg.cmd_dodge_alt2: ewwep.dodge,
 
 	# Check how hungry you are.
 	ewcfg.cmd_hunger: ewcmd.hunger,
@@ -1017,8 +1010,7 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
-		# sap is disabled
-		#asyncio.ensure_future(ewutils.sap_tick_loop(id_server = server.id))
+
 		# SWILLDERMUK
 		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
@@ -1565,11 +1557,15 @@ async def on_message(message):
 			usermodel = EwUser(id_user=message.author.id, id_server= playermodel.id_server)
 			poi = ewcfg.id_to_poi.get(usermodel.poi)
 			cmd_obj.guild = ewcfg.server_list[playermodel.id_server]
+			cmd_obj.message.author = cmd_obj.guild.get_member(playermodel.id_user)
+
 			# Direct message the player their inventory.
 			if ewitem.cmd_is_inventory(cmd):
 				return await ewitem.inventory_print(cmd_obj)
 			elif cmd == ewcfg.cmd_inspect:
 				return await ewitem.item_look(cmd_obj)
+			elif cmd == ewcfg.cmd_tweet:
+				return await ewslimetwitter.tweet(cmd_obj)
 			elif cmd in ewcfg.zine_commands:
 				return await ewbook.zine_dm_commands(cmd=cmd_obj)
 			elif poi.is_apartment:
