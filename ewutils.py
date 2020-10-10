@@ -1640,8 +1640,8 @@ def get_move_speed(user_data):
 	statuses = user_data.getStatusEffects()
 	market_data = EwMarket(id_server = user_data.id_server)
 	#trauma = ewcfg.trauma_map.get(user_data.trauma)
-	move_speed = 1 + (user_data.speed / 50)
-	# move_speed = 1.05 ** user_data.speed
+	# disabled until held items update
+	# move_speed = 1 + (user_data.speed / 50)
 
 	if user_data.life_state == ewcfg.life_state_shambler:
 		if market_data.weather == ewcfg.weather_bicarbonaterain:
@@ -1718,8 +1718,10 @@ def explode(damage = 0, district_data = None, market_data = None):
 		#slimes_damage_target = int(max(0, slimes_damage_target))
 
 		# apply fashion armor
-		fashion_armor = ewwep.get_fashion_armor(shootee_data = user_data)
-		slimes_damage_target *= fashion_armor
+
+		# disabled until held items update
+		# fashion_armor = ewwep.get_fashion_armor(shootee_data = user_data)
+		# slimes_damage_target *= fashion_armor
 		slimes_damage_target = int(max(0, slimes_damage_target))
 
 		player_data = EwPlayer(id_user = user_data.id_user)
