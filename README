@@ -297,8 +297,8 @@ CREATE TABLE mutations (
 	id_user bigint NOT NULL,
 	mutation varchar(32) NOT NULL,
 	data varchar(64) NOT NULL DEFAULT '',
-    artificial smallint NOT NULL DEFAULT = '0',
-    tier int NOT NULL DEFAULT = '0',
+    artificial smallint NOT NULL DEFAULT '0',
+    tier int NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (mutation_counter)
 );
