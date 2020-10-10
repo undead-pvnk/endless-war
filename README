@@ -68,8 +68,8 @@ CREATE TABLE users (
 	spray varchar(400) NOT NULL DEFAULT 'https://img.booru.org/rfck//images/3/a69d72cf29cb750882de93b4640a175a88cdfd70.png',
 	gvs_currency int NOT NULL DEFAULT '0',
 	gvs_time_lastshambaquarium int NOT NULL DEFAULT '0',
-	time_lasthit int NOT NULL DEFAULT '0'
-	rand_seed bigint NOT NULL DEFAULT '0'
+	time_lasthit int NOT NULL DEFAULT '0',
+	rand_seed bigint NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
