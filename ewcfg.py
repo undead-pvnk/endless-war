@@ -2586,6 +2586,7 @@ stat_pitchfork_kills = 'pitchfork_kills'
 stat_shovel_kills = 'shovel_kills'
 stat_slimeringcan_kills = 'slimeringcan_kills'
 stat_fingernails_kills = 'fingernails_kills'
+stat_roomba_kills = 'roomba_kills'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -2984,6 +2985,7 @@ weapon_id_shovel = 'shovel'
 weapon_id_slimeringcan = 'slimeringcan'
 
 weapon_id_fingernails = 'fingernails'
+weapon_id_roomba = 'roomba'
 
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
@@ -5494,7 +5496,8 @@ weapon_id_spraycan:wef_revolver,
 weapon_id_paintroller:wef_paintroller,
 weapon_id_thinnerbomb:wef_molotov,
 weapon_id_paintgun:wef_paintgun,
-weapon_id_paintbrush:wef_knives
+weapon_id_paintbrush:wef_knives,
+weapon_id_roomba:wef_revolver
 }
 
 
@@ -6590,6 +6593,42 @@ weapon_list = [
         # sap_cost = 3,
         captcha_length=8
     ),
+	EwWeapon(  # 35
+		id_weapon=weapon_id_roomba,
+		alias=[
+			"roomba",
+			"vaccuum"
+		],
+		str_crit="**Critical hit!!** {name_target} gets a concussion via roomba to the face!!",
+		str_miss="**MISS!** The roomba forgets where it is and begins tripping around!",
+		str_equip="You turn on your Roomba and place it on the ground.",
+		str_name="roomba",
+		str_weapon="a roomba",
+		str_weaponmaster_self="You are a rank {rank} roomba acolyte.",
+		str_weaponmaster="They are a rank {rank} roomba acolyte.",
+		# str_trauma_self = "A single clean scar runs across the entire length of your body.",
+		# str_trauma = "A single clean scar runs across the entire length of their body.",
+		str_kill="{name_player} jumps at {name_target} using the roomba as a springboard! Screaming bloody murder, they beat {name_target} to within an inch of their life. The roomba follows, sucking whatever morsel of slime was left. Job finished. {emote_skull}",
+		str_killdescriptor="sucked dry",
+		str_damage="{name_player}'s roomba sucks gobs of slime out of {name_target}'s {hitzone}!!",
+		str_duel="{name_player} and {name_target} begin engineering their portable vaccums into high class battle bots. By the time you're done the Dojo floor is spotless and everyone nearby is dead.",
+		str_description="It's a high powered portable vaccuum designed to clean up dust. You use it to spread paint around by attaching a spray can to the back.",
+		str_scalp=" It looks stretched and wrinkled.",
+		fn_effect=wef_tool,
+		price=40000,
+		str_backfire="You roomba turns on you! Its shitty AI thinks your feet are its prey, and it sucks away some precious slime!",
+		vendors=[vendor_basedhardware],
+		classes=[weapon_class_paint, weapon_class_captcha],
+		stat=stat_fingernails_kills,
+		# sap_cost = 3,
+		captcha_length=8,
+		tool_props = {
+		'reg_spray' : "The roomba continues its intrepid journey spraying paint around town.",
+		'miss_spray' : "**Miss!** Fuck, the thing got stuck on a pothole again.",
+		'crit_spray' : "**Critical hit!** A bystander walking by kicks your roomba as it's moving, which inadvertently overclocks its processor!! It speeds around the area with reckless abandon. Go go go!",
+		'equip_spray' : "You pull out your roomba and set it on the ground."
+	}
+	),
 ]
 
 # A map of id_weapon to EwWeapon objects.
@@ -11678,7 +11717,7 @@ mutations = [
 	EwMutationFlavor(
 		id_mutation = mutation_id_lightasafeather,
 		str_name="Light as a Feather",
-        alias = ['laaf', 'laf', 'lf', 'light', 'feather'],
+        alias = ['laaf', 'laf', 'lf', 'feather'],
 		str_describe_self = "Your anorexic, frail physique causes even light breezes to blow you off course due to **Light As A Feather**.",
 		str_describe_other = "Their anorexic, frail physique causes even light breezes to blow them off course due to **Light As A Feather**.",
 		str_acquire = "Your body fat begins to dissolve right before your eyes, turning into a foul-smelling liquid that drenches the floor beneath you. You quickly pass conventionally attractive weights and turn into a hideous near-skeleton. The only thing resting between your bones and your skin is a thin layer of muscles that resemble lunch meat slices. You have developed the mutation **Light As A Feather**. Double movement speed while weather is windy.",
@@ -13111,7 +13150,14 @@ trauma_list = [
 			str_trauma = "They are a dumb suicidal idiot and despise watercolors as a concept.",
 			trauma_class = trauma_class_accuracy,
 		),
+	EwTrauma( # 15
+				id_trauma = weapon_id_roomba,
+				str_trauma_self = "Your skin is stretched amd misshapen, flabby and tight in different spots.",
+				str_trauma = "Their skin is stretched amd misshapen, flabby and tight in different spots.",
+				trauma_class = trauma_class_accuracy,
+			),
 ]
+
 
 trauma_map = {}
 
@@ -15006,8 +15052,6 @@ server_list = {}
 	store a server in a dictionary
 """
 def update_server_list(server):
-	print(server.id)
-	print(type(server.id))
 	server_list[server.id] = server
 
 

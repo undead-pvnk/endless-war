@@ -1419,7 +1419,7 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 	elif grid[row][col] == ewcfg.cell_empty:
 		grid[row][col] = ewcfg.cell_empty_open
 		grid_cont.cells_mined += 1
-		mining_yield = grid_multiplier * 1 * get_mining_yield_default(cmd)
+		mining_yield = grid_multiplier * 1.7 * get_mining_yield_default(cmd)
 
 	unmined_cells = get_unmined_cell_count(grid_cont)
 

@@ -89,7 +89,11 @@ def change_stat(id_server = None, id_user = None, user = None, metric = None, n 
 		return
 
 	old_value = get_stat(id_server = id_server, id_user = id_user, metric = metric)
-	set_stat(id_server = id_server, id_user = id_user, metric = metric, value = old_value + n)
+	if old_value + n >= 9223372036854775807:
+		total = 9223372036854775807
+	else:
+		total = old_value + n
+	set_stat(id_server = id_server, id_user = id_user, metric = metric, value = total)
 
 
 def increment_stat(id_server = None, id_user = None, user = None, metric = None):
