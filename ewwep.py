@@ -675,6 +675,7 @@ async def attack(cmd):
 
 		# disabled until held items update
 		# attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
+		attack_stat_multiplier = 1
 		weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
 		slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 
@@ -2344,6 +2345,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 30)
 	# disabled until held items update
 	# attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
+	attack_stat_multiplier = 1
 	weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
 	slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 	

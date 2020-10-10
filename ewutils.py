@@ -1642,6 +1642,7 @@ def get_move_speed(user_data):
 	#trauma = ewcfg.trauma_map.get(user_data.trauma)
 	# disabled until held items update
 	# move_speed = 1 + (user_data.speed / 50)
+	move_speed = 1
 
 	if user_data.life_state == ewcfg.life_state_shambler:
 		if market_data.weather == ewcfg.weather_bicarbonaterain:
