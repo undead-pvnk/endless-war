@@ -3064,7 +3064,7 @@ async def pay_salary(id_server=None):
 
 # Give Brimstone Programmer role to a member
 async def make_bp(cmd):
-
+	return
 	if EwUser(member = cmd.message.author).life_state != ewcfg.life_state_kingpin and not cmd.author_id.admin:
 		return
 
