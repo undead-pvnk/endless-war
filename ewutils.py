@@ -1859,57 +1859,6 @@ def generate_captcha(length = 4, id_user = 0, id_server = 0):
 		return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == length_final])
 	except:
 		return generate_captcha_random(length=length_final)
-
-async def sap_tick_loop(id_server):
-	interval = ewcfg.sap_tick_length
-	# causes a capture tick to happen exactly every 10 seconds (the "elapsed" thing might be unnecessary, depending on how long capture_tick ends up taking on average)
-	while not TERMINATE:
-		await asyncio.sleep(interval)
-		sap_tick(id_server)
-
-def sap_tick(id_server):
-
-	try:
-		users = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {life_state} > 0 AND {sap} + {hardened_sap} < {level}".format(
-			id_user = ewcfg.col_id_user,
-			life_state = ewcfg.col_life_state,
-			sap = ewcfg.col_sap,
-			hardened_sap = ewcfg.col_hardened_sap,
-			level = ewcfg.col_slimelevel,
-			id_server = ewcfg.col_id_server,
-		),(
-			id_server,
-		))
-
-		for user in users:
-			user_data = EwUser(id_user = user[0], id_server = id_server)
-			trauma = ewcfg.trauma_map.get(user_data.trauma)
-			sap_chance = 1
-			if trauma != None and trauma.trauma_class == ewcfg.trauma_class_sapregeneration:
-				sap_chance -= 0.5 * user_data.degradation / 100
-
-			if random.random() < sap_chance:
-				user_data.sap += 1
-
-			user_data.limit_fix()
-			user_data.persist()
-
-		enemies = execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {id_server} = %s AND {hardened_sap} < {level} / 2".format(
-			id_enemy = ewcfg.col_id_enemy,
-			hardened_sap = ewcfg.col_enemy_hardened_sap,
-			level = ewcfg.col_enemy_level,
-			id_server = ewcfg.col_id_server,
-		),(
-			id_server,
-		))
-
-		for enemy in enemies:
-			if random.random() < 0.5:
-				enemy_data = EwEnemy(id_enemy = enemy[0])
-				enemy_data.hardened_sap += 1
-				enemy_data.persist()
-	except:
-		logMsg("An error occured in sap tick for server {}".format(id_server))
 		
 async def spawn_prank_items_tick_loop(id_server):
 	#DEBUG
@@ -3114,4 +3063,25 @@ async def pay_salary(id_server=None):
 		cursor.close()
 		databaseClose(conn_info)
 
+# Give Brimstone Programmer role to a member
+async def make_bp(cmd):
+	return
+	if EwUser(member = cmd.message.author).life_state != ewcfg.life_state_kingpin and not cmd.author_id.admin:
+		return
 
+	if cmd.mentions_count > 0:
+		recipient = cmd.mentions[0]
+	else:
+		response = 'who?'
+		return await send_message(cmd.client, cmd.message.channel, formatMessage(cmd.message.author, response))
+
+	bp_role = None
+	for role in cmd.guild.roles:
+		if role.name == "Brimstone Programmer":
+			bp_role = role
+			break
+	
+	if bp_role:
+		await recipient.add_roles(bp_role)
+	else:
+		logMsg("Could not find Brimstone Programmer role.")
