@@ -673,8 +673,8 @@ async def attack(cmd):
 
 		slimes_spent = int(ewutils.slime_bylevel(capped_level) / 30)
 
-
-		attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
+		# disabled until held items update
+		# attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
 		weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
 		slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 
@@ -882,8 +882,9 @@ async def attack(cmd):
 			#slimes_damage *= sap_armor
 			#slimes_damage = int(max(slimes_damage, 0))
 
-			fashion_armor = get_fashion_armor(shootee_data)
-			slimes_damage *= fashion_armor
+			# disabled until held items update
+			# fashion_armor = get_fashion_armor(shootee_data)
+			# slimes_damage *= fashion_armor
 			slimes_damage = int(max(0, slimes_damage))
 
 			#sap_damage = min(sap_damage, shootee_data.hardened_sap)
@@ -1495,8 +1496,9 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				#slimes_damage_target *= sap_armor
 				#slimes_damage_target = int(max(0, slimes_damage_target))
 
-				fashion_armor = get_fashion_armor(target_data)
-				slimes_damage_target *= fashion_armor
+				# disabled until held items update
+				# fashion_armor = get_fashion_armor(target_data)
+				# slimes_damage_target *= fashion_armor
 				slimes_damage_target = int(max(0, slimes_damage_target))
 
 				slimes_dropped = target_data.totaldamage + target_data.slimes
@@ -2340,7 +2342,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 30)
-	attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
+	# disabled until held items update
+	# attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
 	weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
 	slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 	

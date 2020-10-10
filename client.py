@@ -1680,7 +1680,8 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'damage'):
 			user_data = EwUser(member = message.author, data_level = 1)
 			slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-			attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
+			# disabled until held items update
+			# attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
 			weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
 			slimes_damage = int(10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "{}".format(slimes_damage)))
