@@ -2314,7 +2314,7 @@ async def jam(cmd):
 		if item.item_props.get("id_furniture") in ewcfg.furniture_instrument or item.item_props.get("weapon_type") == ewcfg.weapon_id_bass:
 			cycle = random.randrange(20)
 			response = ""
-			if random.randint(0, 15) == 0:
+			if random.randint(0, 10) == 0:
 				if item.item_props.get("id_furniture") == None:
 					item_key = "bass"
 				else:

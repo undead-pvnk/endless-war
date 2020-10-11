@@ -821,7 +821,8 @@ cmd_map = {
 	ewcfg.cmd_devour: ewfood.devour,
 	ewcfg.cmd_chemo: ewmutation.chemo,
 	ewcfg.cmd_graft: ewmutation.graft,
-	ewcfg.cmd_bleedout:ewmutation.bleedout,
+	ewcfg.cmd_bleedout: ewmutation.bleedout,
+	ewcfg.cmd_skullbash: ewitem.skullbash,
 
 	# Slime Twitter
 	ewcfg.cmd_tweet: ewslimetwitter.tweet
