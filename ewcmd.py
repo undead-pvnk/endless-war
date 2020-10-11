@@ -804,32 +804,6 @@ async def fashion(cmd):
 
 			response += " Your total freshness rating is {}.\n\n".format(user_data.freshness)
 
-
-			#gameplay relvant stuff, inspect order
-
-			response += "All told, your outfit "
-
-			stat_responses = []
-
-			for stat in ewcfg.playerstats_list:
-
-				if stat in stats_breakdown.keys():
-					if abs(int(stats_breakdown[stat])) > 0:
-
-						if int(stats_breakdown[stat]) > 0:
-							stat_response = "increases your "
-						else:
-							stat_response = "decreases your "
-
-						stat_response += "{stat} by {amount}".format(stat = stat, amount = int(stats_breakdown[stat]))
-
-						stat_responses.append(stat_response)
-
-			if len(stat_responses) == 0:
-				response += "doesn't affect your stats at all."
-			else:
-				response += ewutils.formatNiceList(names = stat_responses, conjunction = "and") + ". \n\n"
-
 			space_remaining = ewutils.max_adornspace_bylevel(user_data.slimelevel) - space_adorned
 
 			if space_remaining == 0:
