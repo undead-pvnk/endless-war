@@ -1506,7 +1506,7 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 
 	cells_to_clear = []
 	
-	slimes_pertile = 3 * get_mining_yield_default(cmd)
+	slimes_pertile = 1.8 * get_mining_yield_default(cmd)
 	if grid[row][col] != ewcfg.cell_bubble_empty:
 		mining_accident = True
 	else:
