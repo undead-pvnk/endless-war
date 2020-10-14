@@ -290,7 +290,6 @@ def canAttack(cmd, amb_switch = 0):
 	weapon_item = None
 	weapon = None
 	captcha = None
-	mutations = user_data.get_mutations()
 	tokens_lower = []
 	for token in cmd.tokens:
 		tokens_lower.append(token.lower())
@@ -337,10 +336,26 @@ def canAttack(cmd, amb_switch = 0):
 		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name = weapon.id_weapon)
 	elif weapon != None and weapon_item.item_props.get("jammed") == "True":
 		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again.\nSecurity Code: **{captcha}**".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam, captcha = ewutils.text_to_regional_indicator(captcha))
-	elif weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
-		response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
-	elif code_count > 1:
-		response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
+	elif weapon != None and (ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower) or code_count > 1:
+		if (ewcfg.weapon_class_burning in weapon.classes or weapon_class_exploding in weapon.classes):
+			slime_backfired = int(user_data.slimes * (0.1 + random.random() / 20))
+			user_data.change_slimes(n = -slime_backfired, source = ewcfg.source_haunted)
+			user_data.persist()
+			if (ewcfg.weapon_class_burning in weapon.classes):
+				response = random.choice([
+					"In an amazing display of discipline you let idle embers catch onto a chunk of dry cloth, turning you into a bonfire.", 
+					"You learn first hand the pain you wish to inflict upon thine enemy, and suffer, like a bitch.",
+					"The bright flames sear your retina, blinding you long enough for the fire to scorch the rest of your body."
+				])
+			else:
+				response = random.choice([
+					"Your lacking explosive safety causes the payload to explode right in your grip, separating you from your hands!", 
+					"You're thrown to the pavement by the blast of your bomb, with each finger bent and broken. Looks like some bone's sticking out, too!",
+					"Why don't these explosives have proper training manuals? You'll never get to know, as you're splattered across the concrete."
+				])
+			response += "\nYou lose {} slime. Learn to type, you fucking idiot.".format(slime_backfired)
+		else:
+			response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 
 	elif user_data.weapon == -1 and user_data.life_state != ewcfg.life_state_shambler and ewcfg.mutation_id_lethalfingernails not in mutations and ewcfg.mutation_id_ambidextrous not in mutations:
 		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
@@ -650,11 +665,6 @@ async def attack(cmd):
 		miss_mod += round(shooter_status_mods['miss'] + shootee_status_mods['miss'], 2)
 		crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
 		dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
-
-		if shootee_weapon != None:
-			if ewcfg.weapon_class_heavy in shootee_weapon.classes:
-				miss_mod -= 0.1
-				crit_mod += 0.05
 
 		if ewcfg.mutation_id_airlock in user_mutations and market_data.weather == ewcfg.weather_foggy:
 			crit_mod += .1
