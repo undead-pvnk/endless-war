@@ -4779,7 +4779,7 @@ def get_weapon_type_stats(weapon_type):
 			"crit_multiplier": 1.5,
 			"hit_chance": 0.8,
 		},
-		"heavy": {
+		"defensive": {
 			"damage_multiplier": 0.75,
 			"cost_multiplier": 1.5,
 			"crit_chance": 0.1,
@@ -4928,7 +4928,7 @@ def wef_staff(ctn = None):
 		except:
 			pass
 	
-	ctn.slimes_spent = int(ctn.slimes_spent * 3)
+	ctn.slimes_spent = int(ctn.slimes_spent * 2)
 	ctn.slimes_damage = int(ctn.slimes_damage * (0.3 + conditions_met * 0.6))
 	if conditions_met >= (random.randrange(15) + 1): # 6.66% per condition met
 		ctn.crit = True
@@ -5043,6 +5043,7 @@ weapon_list = [
 		str_reload_warning = "**BANG--** *tk tk...* **SHIT!!** {name_player} just spent the last of the ammo in their revolver’s chamber, it’s out of bullets!!",
 		str_scalp = " It has a bullet hole in it.",
 		fn_effect = get_normal_attack(cost_multiplier = 0.8),
+		price = 10000,
 		clip_size = 6,
 		vendors = [vendor_dojo, vendor_breakroom],
 		classes = [weapon_class_ammo],
@@ -5100,7 +5101,7 @@ weapon_list = [
 		str_damage = "{name_target} takes a shotgun blast to the {hitzone}!!",
 		str_duel = "**BOOM.** {name_player} and {name_target} stand about five feet away from a wall, pumping it full of lead over and over to study it's bullet spread.",
 		str_description = "It's a shotgun.",
-		str_reload = "You tilt your shotgun and pop shell after shell into it’s chamber before cocking the forend back. Groovy.",
+		str_reload = "You tilt your shotgun and pop shell after shell into its chamber before cocking the forend back. Groovy.",
 		str_reload_warning = "**chk--** *...* **SHIT!!** {name_player}’s shotgun has ejected the last shell in it’s chamber, it’s out of ammo!!",
 		str_scalp = " It has a gaping hole in the center.",
 		fn_effect = get_normal_attack(cost_multiplier = 4, weapon_type = 'heavy'),
@@ -5619,7 +5620,7 @@ weapon_list = [
 		str_damage = "{name_target} is struck in the {hitzone}!!",
 		str_duel = "**THWACK THWACK.** {name_player} and {name_target} practice their fencing technique, before comparing their favorite umbrella patterns.",
 		str_scalp = " At least it didn't get wet.",
-		fn_effect = get_normal_attack(weapon_type = 'heavy'),
+		fn_effect = get_normal_attack(weapon_type = 'defensive'),
 		str_description = "It's an umbrella, both stylish and deadly.",
 		price = 100000,
 		vendors = [vendor_bazaar],
@@ -12742,29 +12743,40 @@ help_responses = {
 	"slimeball": "Slimeball is a sport where two teams of players compete to get the ball into the opposing team's goal to score points. A game of Slimeball is started when a player does !slimeball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !slimeball to see your data, the ball's location and the score. To move around the field, use !slimeballgo [coordinates]. You can kick the ball by running into it. To stop, use !slimeballstop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !slimeballleave, or join a different game. A game of Slimeball ends when no players are left.",
 
 	# Weapons
-	weapon_id_revolver: "**The revolver** is a weapon for sale at the Dojo. It has a damage mod of 0.8 and an attack cost mod of 1. It has a miss chance of 10% and a 10% chance for a crit, which does 2x damage. After every 6 shots you will need to **!reload** it.",
-	weapon_id_dualpistols: "**The dual pistols** are a weapon for sale at the Dojo. They have a damage mod of 1 and an attack cost mod of 1. They have a miss chance of 40% and a 20% chance for a crit, which does 2x damage. After every 12 shots you will need to **!reload** them.",
-	weapon_id_shotgun: "**The shotgun** is a weapon for sale at the Dojo. It has a damage mod of 1.65 and an attack cost mod of 1.5. It has a miss chance of 10% and a 10% chance for a crit, which does 2x damage. After every 2 shots you will need to **!reload** it.",
-	weapon_id_rifle: "**The rifle** is a weapon for sale at the Dojo. It has a damage mod of 1.25 and an attack cost mod of 1.25. It has a 20% chance for a crit, which does 2x damage. The rifle never misses. After every 4 shots you will need to **!reload** it.",
-	weapon_id_smg: "**The SMG** is a weapon for sale at the Dojo. It has a damage mod of 0.2 and an attack cost mod of 1. It has a 20% chance to jam with every attack, in which case you will need to **!unjam** it to continue firing. The SMG only requires a captcha for !unjam, not for every !kill. For every !kill it shoots 6 bullets, each of which has a 25% miss chance, and a 5% chance for a crit, which does 3x damage. After every 4 attacks you will need to **!reload** it.",
-	weapon_id_minigun: "**The minigun** is a heavy weapon not for sale at the Dojo. It has a damage mod of 0.8 and an attack cost mod of 5. It has a captcha length of 10. For every !kill it shoots 10 bullets, each of which has a 50% miss chance, and a 10% chance for a crit, which does 2x damage.",
-	weapon_id_bat: "**The nailbat** is a weapon for sale at the Dojo. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a miss chance of 1/13, a 1/13 chance for a crit, which increases the damage mod to 4, and a 1/13 chance to backfire and damage the wielder instead.",
-	weapon_id_brassknuckles: "**The brass knuckles** are a weapon for sale at the Dojo. They have a damage mod of 1 and an attack cost mod of 1. For every !kill they throw 2 punches. Every punch has a 20% miss chance. If you land 3 successful attacks (not punches) in succession with perfect timing, the third attack will throw an extra punch, which deals 3x damage. For perfect timing you need to take between 1.5 to 2.5 seconds between attacks.",
-	weapon_id_katana: "**The katana** is a weapon for sale at the Dojo. It has a damage mod of 1.3 and an attack cost mod of 1.3. It has a captcha length of 8. The katana never misses. If the katana is the only weapon in your inventory, it crits for 1.5x damage on every hit.",
-	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. It has a damage mod of 3 and an attack cost mod of 5. It has a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 10% chance to backfire and damage the wielder instead. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 0.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
-	weapon_id_nunchucks: "**The nunchucks** are a weapon for sale at the Dojo. They have a damage mod of 0.25 and an attack cost mod of 1. For every !kill they throw 4 blows. Every blow has a 25% miss chance. If all 4 blows hit, you deal an additional blow that does 4x damage. If all shots miss, the nunchucks will backfire for 2x damage.",
-	weapon_id_scythe: "**The scythe** is a weapon for sale at the Dojo. It has a damage mod of 0.5 and an attack cost mod of 3. It has a miss chance of 10% and a 10% chance for a crit, which does 3x damage. The scythe's damage mod increases by 0.5 for every kill your opponent got this life, up to a maximum damage mod of 5.",
-	weapon_id_yoyo: "**The yo-yo** is a weapon for sale at the Dojo. It has a damage mod of 0.5 and an attack cost mod of 1. It has a miss chance of 18.75% and a 10% chance for a crit, which does 2x damage. The yo-yo's damage mod increases by 0.25 for every successful consecutive hit, without getting hit yourself.",
-	weapon_id_bass: "**The bass guitar** is a weapon not for sale at the Dojo. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. The bass does not require a captcha to use.",
-	weapon_id_umbrella: "**The umbrella** is a weapon for sale at the Bazaar. It has a damage mod of 0.5 and an attack cost mod of 1. It has a miss chance of 10%, and a 10% chance for a crit, which does 2x damage. The umbrella decreases incoming damage by 75%.",
-	weapon_id_knives: "**The throwing knives** are a weapon for sale at the Dojo. They have a damage mod of 0.5 and an attack cost mod of 0.25. They have a miss chance of 10% and a 10% chance for a crit, which does 2x damage. When you attack with a throwing knife, it is used up, and you have to buy more.",
-	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. They have a damage mod of 0.75 and an attack cost mod of 1. They have a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
-	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. They have a damage mod of 0.75 and an attack cost mod of 1. They have a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
-	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. It has a damage mod of 15 and an attack cost mod of 1. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
-	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
-	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 3.",
-	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Dealing damage with the staff requires attacking five times in a 15-second window, with the first four !kill command only being preparetion for the fifth. The attack cost multiplier is 0.5 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 0.6, sap piercing 0, and a 0% chance to crit, which deals 1.8x damage. A number of conditions may be met to increase the damage multiplier by 1.2, sap piercing by 6, and crit chance by 6.66%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
-	
+	"normal": "**Normal weapons** include the **Dual Pistols**, **Revolver**, and the **Yo-yo**. They have a damage modifier of 110%, no cost modifier, 20% crit chance, a crit multiplier of 180%, and a 90% chance to hit. These are straight forward weapons with no gimmicks and average damage.",
+	"multiple-hit": "**Multiple hit weapons** include the **SMG**, **Assault RIfle**, and the **Nunchuck*. They deal three attacks per kill command with an overall cost modifier of 80%, and each attack has a 40% damage modifier, 20% crit chance, a crit multiplier of 150%, and an 85% chance to hit. These are very safe reliable weapons, though they deal slightly below average damage on average.",
+	"variable-damage": "**Variable damage weapons** include the **Nailbat**, **Bass**, and the **Brass Knuckles*. They have a randomised damage modifier between 50% and 250%, no cost modifier, 10% crit chance, a crit multiplier of 150%, and a 90% chance to hit. On average, these weapons deal pretty good damage for a very reasonable attack cost, but their unreliability can make them quite risky to use.",
+	"small-game": "**Small game weapons** include the **Knives** and the **Minecraft Bow**. They have a damage modifier of 50%, a cost modifier of 25%, 10% crit chance, a crit multiplier of 200%, and a 95% chance to hit. These are reliable and underpowered weapons, with extremely low usage costs making them very efficient. Best used for bullying weaklings and hunting.",
+	"heavy": "**Heavy weapons** include the **Scythe** and the **Broadsword**. They have a damage modifier of 300%, a cost modifier of 500%, 5% crit chance, a crit multiplier of 150%, and an 80% chance to hit. Unreliable and incredibly expensive to compensate for their incredible damage, these weapons are best used when you _really_ want to get that kill, no matter what.",
+	"defensive": "**Heavy weapons** currently only include the **Umbrella*. While you have one equipped, you take 25% reduced damage! They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 150%, and an 85% chance to hit, with a captcha of 4. Best used for punching down or protecting yourself while traveling, these weapons are typically too weak and unwieldy for use in normal combat scenarios.",
+	"precision": "**Precision weapons** currently only include the **Katana*. They have a damage modifier of 130%, a cost modifier of 130%, a crit multiplier of 200%, with a captcha of 4. They always hit, and get a guaranteed crit if you have no other weapons equipped. These weapons deal very high and reliably damage, but only if you're willing to bear the burden of their captcha and the lack of flexibility they impose.",
+	"incendiary": "**Incendiary weapons** include the **Molotov Bottles* and the **Dragon Claw**. They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 200%, a 90% chance to hit, and a captcha of 4. You will take 10% to 15% of your slime as damage if you enter the captcha wrong! They also deal an extra 50% damage to the target and any flagged enemies in the area over time, causing them to explode on death. A more powerful alternative to explosive weapons, if you can deal with the damage being dealt over time, rather than on one go.",
+	"explosive": "**Incendiary weapons** currently only include the **Grenades**. They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 200%, a 90% chance to hit, and a captcha of 4. You will take 10% to 15% of your slime as damage if you enter the captcha wrong! They also deal an extra 50% damage to the target and any flagged enemies in the area. The go-to if you're being swarmed by a mob of weaklings, can clear entire districts in one go.",
+
+	weapon_id_revolver: "**The revolver** is a normal weapon for sale at the Dojo. It's an ordinary six-shot revolver, so you'll have to **!reload** it after attacking six times, though its attack cost is reduced to 80% to compensate. Goes well with a cowboy hat.",
+	weapon_id_dualpistols: "**The dual pistols** are a normal weapon for sale at the Dojo. Shockingly, these aren't that common, despite the city being chock-full of gangsters.",
+	weapon_id_shotgun: "**The shotgun** is a heavy weapon for sale at the Dojo. It's a double barrelled shotgun, so you'll need to !reload after every two shots, though your cost multiplier is reduced down to 400% to compensate. Grass grows, birds fly, sun shines, and this thing hurts people; _it's a force of nature_.",
+	weapon_id_rifle: "**The rifle** is a multiple-hit weapon for sale at the Dojo. Its magazine only holds enough boolets for ten attacks, so you'll have to **!reload** after hitting the throttle limit, but its cost multiplier goes down to 70% to compensate. The experts are still undecided, but most people would agree this is a FAMAS.",
+	weapon_id_smg: "**The SMG** is a multiple hit-weapon for sale at the Dojo. Its magazine only holds enough boolets for ten attacks, so you'll have to **!reload** after hitting the throttle limit, but its cost multiplier goes down to 70% to compensate. This is pretty good if you like to move around a lot, since the crosshair doesn't grow that much while you're sprinting.",
+	weapon_id_bat: "**The nailbat** is a variable-damage weapon for sale at the Dojo. This thing could actually be used to hit balls if you took the nails off it, but that seems a little high-tech...",
+	weapon_id_brassknuckles: "**The brass knuckles** are a variable-damage weapon for sale at the Dojo. Made by sanding away most of a huge pair of metal gauntlets.",
+	weapon_id_katana: "**The katana** is a precision weapon for sale at the Dojo. This weapon is folded over a thousand times, so it can cut clean through steel and is vastly superior to any other weapon on earth.",
+	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. Modeled after a legendary Scottish blade, said to have lopped off a hundred enemy heads and then its own wielder's.",
+	weapon_id_nunchucks: "**The nunchucks** are a multiple-hit weapon for sale at the Dojo. 我不僅在未經武裝的戰鬥中接受了廣泛的訓練，而且我可以接觸到美國海軍陸戰隊的整個武庫，而且我會盡其所能將你那可悲的屁股從整個非洲大陸上擦掉，你一點都不討厭。 如果只有您能知道您的小“聰明”評論對您造成了什麼邪惡的報應，也許您會held之以鼻。 但是你不能，你沒有，現在你要付出代價了，你這該死的白痴。 我會在你周圍大怒，你會淹死在裡面。 你他媽的死了，孩子。",
+	weapon_id_scythe: "**The scythe** is a heavy weapon for sale at the Dojo. Often mistaken for a bardiche, this is actually one of the better weapons for a PvE-focused DEX build if you don't mind the long recovery animation after whiffing an attack.",
+	weapon_id_yoyo: "**The yo-yo** is a normal weapon for sale at the Dojo. All the sick tricks you can pull off with this thing are frankly unremarkable compared to the primal joy of cracking a hole through someone's skull with this tungsten wheel of death.",
+	weapon_id_bass: "**The bass guitar** is a variable-damage weapon acquired via smelting. It makes the most beautiful sounds when plucking your enemies' tendons.",
+	weapon_id_umbrella: "**The umbrella** is a defensive weapon for sale at the Bazaar. It has a futurecore feel to it, with the reinforced graphene canopy allowing visibility from the inside out, but not the other way around. Certainly one of the most stylish weapons seen in the city.",
+	weapon_id_knives: "**The throwing knives** are a small-game weapon for sale at the Dojo. These are often quite dull, relying less on the knives's inherent properties and more on the slime-fueled superstrength of its wielders to pierce through their targets.",
+	weapon_id_molotov: "**The molotov bottles** are an incendiary weapon for sale at the Dojo. Made with a special slime-based concoction powerful enough to level Juvie's Row if applied correctly. This shit is like bottled malice.",
+	weapon_id_grenades: "**The grenades** are an explosive weapon for sale at the Dojo. These may actually be nuclear powered, judging by their ability to wipe out entire districts full of gangsters in one blast.",
+	weapon_id_dclaw: "**The Dragon Claw** is an incendiary weapon acquired via smelting. It merges into your body, turning your arm into a weapon of mass destruction.",
+	weapon_id_bow: "**The minecraft bow** is a small-game weapon acquired via smelting. The calming music most people hum while wielding this thing is quite the interesting contrast, when considered along with the impaled corpses they leave behind.",
+
+	weapon_id_garrote: "**The Garrote Wire** is a unique weapon. It has a damage modifier of 1500%, no cost modifier, guaranteed hits, and a 1% chance for a crit, which does 1000% damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
+	weapon_id_minigun: "The **Minigun** is a special variant of **variable damage weapons**. It deals ten attacks per kill command with an overall cost modifier of 500%, and each attack has a 30% damage modifier, 10% crit chance, a crit multiplier of 200%, and a 50% chance to hit, with a captcha of 6. This is a strange weapon that can potentially deal astronomical damage if used in the right circumstances, and if you're willing to deal with its exceptionally long captcha.",
+	weapon_id_staff: "The **Eldritch Staff** is a unique weapon. By default, it has a damage modifier of 30%, a cost modifier of 200%, guaranteed hits, no crit chance, and a crit multiplier of 180%. A number of conditions may be met to increase the damage multiplier by 60% and crit chance by 6.66%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
+
 	weapon_id_spraycan: "**The spray can** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.8 and a spray cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
 	weapon_id_paintgun: "**The paint gun** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.7 and a spray cost mod of 0.75. It has a captcha length of 6, a miss chance of O% and a 20% chance for a crit, which does 2x influence.",
 	weapon_id_paintroller: "**The paint roller** is a paint tool for sale at Based Hardware. It has a capping modifier of 1.75 and a spray cost mod of 4. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
@@ -12788,12 +12800,18 @@ help_responses_ordered_keys = [
 ]
 
 weapon_help_responses_ordered_keys = [
-	weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun, weapon_id_rifle, weapon_id_smg,
-	weapon_id_bat, weapon_id_brassknuckles, weapon_id_katana, weapon_id_broadsword, weapon_id_nunchucks,
-	weapon_id_scythe, weapon_id_yoyo, weapon_id_umbrella, weapon_id_knives, weapon_id_molotov,
-	weapon_id_grenades, weapon_id_garrote, weapon_id_minigun, weapon_id_bow, weapon_id_dclaw,
-	weapon_id_staff, weapon_id_spraycan, weapon_id_paintgun, weapon_id_paintroller, weapon_id_paintbrush,
-	weapon_id_watercolors, weapon_id_thinnerbomb
+	weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun,
+	weapon_id_rifle, weapon_id_smg, weapon_id_bat, 
+	weapon_id_brassknuckles, weapon_id_katana, weapon_id_broadsword,
+	weapon_id_nunchucks, weapon_id_scythe, weapon_id_yoyo,
+	weapon_id_bass, weapon_id_umbrella, weapon_id_knives,
+	weapon_id_molotov, weapon_id_grenades, weapon_id_dclaw, weapon_id_bow,
+	weapon_id_garrote, weapon_id_minigun, weapon_id_staff,
+	weapon_id_spraycan, weapon_id_paintgun, weapon_id_paintroller, weapon_id_paintbrush,
+	weapon_id_watercolors, weapon_id_thinnerbomb,
+	"normal", "multiple-hit", "variable-damage",
+	"small-game", "heavy", "defensive",
+	"precision", "incendiary", "explosive",
 ]
 
 mutation_descriptions = {

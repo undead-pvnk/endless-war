@@ -1204,7 +1204,18 @@ async def help(cmd):
 		
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 
-		dojo_topics = ["dojo", "sparring", "combat", ewcfg.weapon_id_revolver, ewcfg.weapon_id_dualpistols, ewcfg.weapon_id_shotgun, ewcfg.weapon_id_rifle, ewcfg.weapon_id_smg, ewcfg.weapon_id_minigun, ewcfg.weapon_id_bat, ewcfg.weapon_id_brassknuckles, ewcfg.weapon_id_katana, ewcfg.weapon_id_broadsword, ewcfg.weapon_id_nunchucks, ewcfg.weapon_id_scythe, ewcfg.weapon_id_yoyo, ewcfg.weapon_id_bass, ewcfg.weapon_id_umbrella, ewcfg.weapon_id_knives, ewcfg.weapon_id_molotov, ewcfg.weapon_id_grenades, ewcfg.weapon_id_garrote]
+		dojo_topics = [
+			"dojo", "sparring", "combat", ewcfg.weapon_id_revolver, 
+			ewcfg.weapon_id_dualpistols, ewcfg.weapon_id_shotgun, ewcfg.weapon_id_rifle, 
+			ewcfg.weapon_id_smg, ewcfg.weapon_id_minigun, ewcfg.weapon_id_bat, ewcfg.weapon_id_brassknuckles, 
+			ewcfg.weapon_id_katana, ewcfg.weapon_id_broadsword, ewcfg.weapon_id_nunchucks, 
+			ewcfg.weapon_id_scythe, ewcfg.weapon_id_yoyo, ewcfg.weapon_id_bass, 
+			ewcfg.weapon_id_umbrella, ewcfg.weapon_id_knives, ewcfg.weapon_id_molotov, 
+			ewcfg.weapon_id_grenades, ewcfg.weapon_id_garrote,
+			"normal", "multiple-hit", "variable-damage",
+			"small-game", "heavy", "defensive",
+			"precision", "incendiary", "explosive",
+		]
 
 		if poi is None:
 			# catch-all response for when user isn't in a sub-zone with a help response
@@ -1221,7 +1232,7 @@ async def help(cmd):
 			response = ewcfg.help_responses['zines']
 		elif cmd.message.channel.name in ewcfg.channel_dojo and not len(cmd.tokens) > 1:
 			# dojo help
-			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**. For general information about combat, do **'!help combat'**. For information about a specific weapon, do **'!help [weapon]'**." #For information about the sap system, do **'!help sap'**.
+			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**. For general information about combat, do **'!help combat'**. For information about a specific weapon, do **'!help [weapon/weapon type]'**. The different weapon types are: **normal**, **multiple-hit**, **variable-damage**, **small-game**, **heavy**, **defensive**, **precision**, **incendiary**, and **explosive**." #For information about the sap system, do **'!help sap'**.
 		elif cmd.message.channel.name in ewcfg.channel_dojo and len(cmd.tokens) > 1:
 			topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			if topic in dojo_topics and topic in ewcfg.help_responses:
