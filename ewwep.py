@@ -305,8 +305,6 @@ def canAttack(cmd, amb_switch = 0):
 	#	response = "You don't have enough sap to attack. ({}/{})".format(user_data.sap, weapon.sap_cost)
 	elif weapon != None and ewcfg.weapon_class_ammo in weapon.classes and int(weapon_item.item_props.get('ammo')) == 0:
 		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
-	elif weapon != None and ewcfg.weapon_class_thrown in weapon.classes and weapon_item.stack_size == 0:
-		response = "You're out of {}! Go buy more at the {}".format(weapon.str_weapon, ewutils.formatNiceList(names = weapon.vendors, conjunction="or" ))
 	elif weapon != None and weapon.cooldown + (float(weapon_item.item_props.get("time_lastattack")) if weapon_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
 		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name = weapon.id_weapon)
 	elif weapon != None and (ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower) or code_count > 1:
@@ -505,8 +503,6 @@ def canCap(cmd, capture_type, roomba_loop = 0):
 		response = "This zone cannot be captured."
 		if poi.is_district == True:
 			response += " To take this district, you need to enter into the streets."
-	elif sidearm != None and ewcfg.weapon_class_thrown in sidearm.classes and sidearm_item.stack_size == 0:
-		response = "You're out of {}! Go buy more at the {}".format(sidearm.str_weapon, ewutils.formatNiceList(names=sidearm.vendors,  conjunction="or"))
 	elif sidearm != None and sidearm.cooldown + (float(sidearm_item.item_props.get("time_lastattack")) if sidearm_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
 		response = "Your {weapon_name} isn't ready for another {command} yet!".format(weapon_name=sidearm.id_weapon, command=cmd.tokens[0].lower())
 	elif sidearm != None and ewcfg.weapon_class_captcha in sidearm.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower and roomba_loop == 0:
@@ -788,10 +784,6 @@ async def attack(cmd):
 				# Remove a bullet from the weapon
 				if ewcfg.weapon_class_ammo in weapon.classes:
 					weapon_item.item_props['ammo'] = int(weapon_item.item_props.get("ammo")) - 1
-
-				# Remove one item from stack
-				if ewcfg.weapon_class_thrown in weapon.classes:
-					weapon_item.stack_size -= 1
 
 				life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_shambler]
 				factions = ["", shootee_data.faction]
@@ -2373,10 +2365,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		# Remove a bullet from the weapon
 		if ewcfg.weapon_class_ammo in weapon.classes:
 			weapon_item.item_props['ammo'] = int(weapon_item.item_props.get("ammo")) - 1
-
-		# Remove one item from stack
-		if ewcfg.weapon_class_thrown in weapon.classes:
-			weapon_item.stack_size -= 1
 		
 		if not sandbag_mode:
 			life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_shambler]
@@ -3142,9 +3130,6 @@ async def spray(cmd):
 				if ewcfg.weapon_class_ammo in weapon.classes:
 					weapon_item.item_props['ammo'] = int(weapon_item.item_props.get("ammo")) - 1
 
-				# Remove one item from stack
-				if ewcfg.weapon_class_thrown in weapon.classes:
-					weapon_item.stack_size -= 1
 				if miss:
 					slimes_damage = 0
 
@@ -3429,9 +3414,6 @@ async def sanitize(cmd):
 				if ewcfg.weapon_class_ammo in weapon.classes:
 					weapon_item.item_props['ammo'] = int(weapon_item.item_props.get("ammo")) - 1
 
-				# Remove one item from stack
-				if ewcfg.weapon_class_thrown in weapon.classes:
-					weapon_item.stack_size -= 1
 				if miss:
 					slimes_damage = 0
 

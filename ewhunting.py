@@ -2559,8 +2559,8 @@ def drop_enemy_loot(enemy_data, district_data):
 					item_type=item_type,
 					id_user=enemy_data.poi,
 					id_server=enemy_data.id_server,
-					stack_max=20 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else -1,
-					stack_size=1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
+					stack_max= -1,
+					stack_size= 0,
 					item_props=item_props
 				)
 
