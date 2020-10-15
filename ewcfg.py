@@ -33,7 +33,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.61 - Chemotherapy Update"
+version = "v3.62 - Weapon Simplification Update"
 
 
 dir_msgqueue = 'msgqueue'
