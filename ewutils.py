@@ -1854,7 +1854,7 @@ def generate_captcha(length = 4, id_user = 0, id_server = 0):
 		user_data = EwUser(id_user=id_user, id_server=id_server)
 		mutations = user_data.get_mutations()
 		if ewcfg.mutation_id_dyslexia in mutations:
-			length_final = max(1, length_final-3)
+			length_final = max(1, length_final - 1)
 	try:
 		return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == length_final])
 	except:
