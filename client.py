@@ -100,8 +100,6 @@ cmd_map = {
 	ewcfg.cmd_reload: ewwep.reload,
 	ewcfg.cmd_reload_alt1: ewwep.reload,
 	
-	# Fix your jammed gun
-	ewcfg.cmd_unjam: ewwep.unjam,
 
 	# Choose your weapon
 	ewcfg.cmd_equip: ewwep.equip,

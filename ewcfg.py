@@ -933,7 +933,6 @@ cmd_shoot_alt6 = cmd_prefix + 'hug'
 cmd_attack = cmd_prefix + 'attack'
 cmd_reload = cmd_prefix + 'reload'
 cmd_reload_alt1 = cmd_prefix + 'loadthegun'
-cmd_unjam = cmd_prefix + 'unjam'
 cmd_devour = cmd_prefix + 'devour'
 cmd_mine = cmd_prefix + 'mine'
 cmd_flag = cmd_prefix + 'flag'
@@ -4766,20 +4765,21 @@ def get_weapon_type_stats(weapon_type):
 			"hit_chance": 0.95,
 		},
 		"variable_damage": {
-			"damage_multiplier": 0.5 + random.random() * 2,
+			"damage_multiplier": 0.5,
+			"variable_damage_multiplier": 2,
 			"cost_multiplier": 1,
 			"crit_chance": 0.1,
 			"crit_multiplier": 1.5,
 			"hit_chance": 0.9,
 		},
-		"heavy_weapon": {
+		"heavy": {
 			"damage_multiplier": 3,
 			"cost_multiplier": 5,
 			"crit_chance": 0.1,
 			"crit_multiplier": 1.5,
 			"hit_chance": 0.8,
 		},
-		"defensive_weapon": {
+		"heavy": {
 			"damage_multiplier": 0.75,
 			"cost_multiplier": 1.5,
 			"crit_chance": 0.1,
@@ -4812,7 +4812,7 @@ def get_weapon_type_stats(weapon_type):
 		},
 		"explosive": {
 			"damage_multiplier": 0.5,
-			"bystander_damage": 0.25 + random.random() / 2,
+			"bystander_damage": 0.5,
 			"cost_multiplier": 1,
 			"crit_chance": 0.1,
 			"crit_multiplier": 2,
@@ -4843,27 +4843,35 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None):
 		guarantee_crit = (weapon_type == "precision" and ctn.user_data.sidearm == -1)
 
 		if hit_roll < weapon_stats["hit_chance"]:
-			hit_damage = base_damage * weapon_stats["damage_multiplier"]
+			effective_multiplier = weapon_stats["damage_multiplier"] 
+			if "variable_damage_multiplier" in weapon_stats:
+				effective_multiplier += random.random() * weapon_stats["variable_damage_multiplier"]
+
+			hit_damage = base_damage * effective_multiplier
 			if guarantee_crit or random.random() < weapon_stats["crit_chance"]:
-				ctn.crit = True
 				hit_damage *= weapon_stats["crit_multiplier"]
+				if not ("shots" in weapon_stats):
+					ctn.crit = True
 		
-		return round(hit_damage)
+		return hit_damage
 
 	def attack(ctn):
-		ctn.slimes_spent = round(ctn.slimes_spent * weapon_stats["cost_multiplier"])
-		if "bystander_damage" in weapon_stats:
-			ctn.bystander_damage = weapon_stats["bystander_damage"]
-
+		ctn.slimes_spent = int(ctn.slimes_spent * weapon_stats["cost_multiplier"])
 		damage = 0
 		if "shots" in weapon_stats:
+			ctn.crit = True
 			for _ in range(weapon_stats["shots"]):
-				damage += get_hit_damage(ctn)
+				hit_damage = get_hit_damage(ctn)
+				damage += hit_damage
+				if hit_damage == 0:
+					ctn.crit = False
 		else:
 			damage = get_hit_damage(ctn)
+			if "bystander_damage" in weapon_stats:
+				ctn.bystander_damage = damage * weapon_stats["bystander_damage"]
 		
 		if damage:
-			ctn.slimes_damage = damage
+			ctn.slimes_damage = int(damage)
 		else:
 			ctn.miss = True
 
@@ -5096,7 +5104,7 @@ weapon_list = [
 		str_reload = "You tilt your shotgun and pop shell after shell into it’s chamber before cocking the forend back. Groovy.",
 		str_reload_warning = "**chk--** *...* **SHIT!!** {name_player}’s shotgun has ejected the last shell in it’s chamber, it’s out of ammo!!",
 		str_scalp = " It has a gaping hole in the center.",
-		fn_effect = get_normal_attack(cost_multiplier = 4, weapon_type = 'heavy_weapon'),
+		fn_effect = get_normal_attack(cost_multiplier = 4, weapon_type = 'heavy'),
 		clip_size = 2,
 		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
@@ -5154,10 +5162,10 @@ weapon_list = [
 		str_damage = "A reckless barrage of bullets pummel {name_target}’s {hitzone}!!",
 		str_duel = "**RATTA TATTA TAT!!** {name_player} and {name_target} spray bullets across the floor and walls of the Dojo, having a great time.",
 		str_description = "It's a submachine gun.",
-		str_jammed = "Your SMG jams again, goddamn piece of shit gun...",
+		# str_jammed = "Your SMG jams again, goddamn piece of shit gun...",
 		str_reload = "You hastily rip the spent magazine out of your SMG, before slamming a fresh one back into it.",
 		str_reload_warning = "**RATTA TATTA--** *tk tk tk tk…* **SHIT!!** {name_player}’s SMG just chewed up the last of it’s magazine, it’s out of bullets!!",
-		str_unjam = "{name_player} successfully whacks their SMG hard enough to dislodge whatever hunk of gunk was blocking it’s internal processes.",
+		# str_unjam = "{name_player} successfully whacks their SMG hard enough to dislodge whatever hunk of gunk was blocking it’s internal processes.",
 		str_scalp = " It has a bunch of holes strewn throughout it.",
 		fn_effect = get_normal_attack(cost_multiplier = 0.7, weapon_type = 'burst_fire'),
 		clip_size = 10,
@@ -5215,7 +5223,7 @@ weapon_list = [
 		str_kill = "{name_player} pulls back for a brutal swing! **CRUNCCHHH.** {name_target}'s brains splatter over the sidewalk. {emote_skull}",
 		str_killdescriptor = "nail bat battered",
 		str_damage = "{name_target} is struck with a hard blow to the {hitzone}!!",
-		str_backfire = "{name_player} recklessly budgens themselves with a particularly overzealous swing! Man, how the hell could they fuck up so badly?",
+		# str_backfire = "{name_player} recklessly budgens themselves with a particularly overzealous swing! Man, how the hell could they fuck up so badly?",
 		str_duel = "**SMASHH! CRAASH!!** {name_player} and {name_target} run through the neighborhood, breaking windshields, crushing street signs, and generally having a hell of a time.",
 		str_description = "It's a nailbat.",
 		str_scalp = " It has a couple nails in it.",
@@ -5291,7 +5299,7 @@ weapon_list = [
 		],
 		str_crit = "Critical hit!! {name_player} screams at the top of their lungs and unleashes a devastating overhead swing that maims {name_target}.",
 		str_miss = "You missed! You grunt as your failed overhead swing sends ripples through the air.",
-		str_backfire = "You feel the bones in your wrists snap as you botch your swing with the heavy blade!! Fucking ouch dawg!",
+		# str_backfire = "You feel the bones in your wrists snap as you botch your swing with the heavy blade!! Fucking ouch dawg!",
 		str_equip = "You equip the broadsword.",
 		str_name = "broadsword",
 		str_weapon = "a broadsword",
@@ -5309,7 +5317,7 @@ weapon_list = [
 		str_scalp = " It was sloppily lopped off.",
 		clip_size = 1,
 		price = 10000,
-		fn_effect = get_normal_attack(weapon_type = 'heavy_weapon'),
+		fn_effect = get_normal_attack(weapon_type = 'heavy'),
 		vendors = [vendor_dojo, vendor_breakroom],
 		stat = stat_broadsword_kills,
 	),
@@ -5323,7 +5331,7 @@ weapon_list = [
 			"nunchucks"
 		],
 		str_crit = "**COMBO!** {name_player} strikes {name_target} with a flurry of 5 vicious blows!",
-		str_backfire = "**Whack!!** {name_player} fucks up their kung-fu routine and whacks themselves in the head with their own nun-chucks!!",
+		# str_backfire = "**Whack!!** {name_player} fucks up their kung-fu routine and whacks themselves in the head with their own nun-chucks!!",
 		str_equip = "You equip the nun-chucks.",
 		str_name = "nun-chucks",
 		str_weapon = "nun-chucks",
@@ -5363,7 +5371,7 @@ weapon_list = [
 		str_description = "It's a scythe.",
 		str_scalp = " It's cut in two pieces.",
 		price = 10000,
-		fn_effect = get_normal_attack(weapon_type = 'heavy_weapon'),
+		fn_effect = get_normal_attack(weapon_type = 'heavy'),
 		vendors = [vendor_dojo, vendor_breakroom],
 		stat = stat_scythe_kills,
 	),
@@ -5432,7 +5440,7 @@ weapon_list = [
 			"bombs",
 			"moly"
 		],
-		str_backfire = "**Oh, the humanity!!** The bottle bursts in {name_player}'s hand, burning them terribly!!",
+		# str_backfire = "**Oh, the humanity!!** The bottle bursts in {name_player}'s hand, burning them terribly!!",
 		str_miss = "**A dud!!** the rag failed to ignite the molotov!",
 		str_crit = "{name_player}’s cocktail shatters at the feet of {name_target}, sending a shower of shattered shards of glass into them!!",
 		str_equip = "You equip the molotov cocktail.",
@@ -5612,7 +5620,7 @@ weapon_list = [
 		str_damage = "{name_target} is struck in the {hitzone}!!",
 		str_duel = "**THWACK THWACK.** {name_player} and {name_target} practice their fencing technique, before comparing their favorite umbrella patterns.",
 		str_scalp = " At least it didn't get wet.",
-		fn_effect = get_normal_attack(weapon_type = 'defensive_weapon'),
+		fn_effect = get_normal_attack(weapon_type = 'heavy'),
 		str_description = "It's an umbrella, both stylish and deadly.",
 		price = 100000,
 		vendors = [vendor_bazaar],
@@ -5701,7 +5709,7 @@ weapon_list = [
 		#sap_cost=2,
 		captcha_length=3,
 		is_tool = 1,
-		str_backfire = "As {name_player} shakes the can to fire another shot, the thing suddenly explodes on them!",
+		# str_backfire = "As {name_player} shakes the can to fire another shot, the thing suddenly explodes on them!",
 		tool_props = {
 		'reg_spray' : "You run down the streets, tagging buildings, street signs and old ladies with spray paint in the image of the {gang}!",
 		'miss_spray' : "**Miss!** Your can seems to be low on spray. You fill it up and give it a good shake. Good as new!",
@@ -5741,7 +5749,7 @@ weapon_list = [
 		captcha_length=4,
 		is_tool = 1,
 		str_reload = "*Click.* You grab a paint cylinder from god knows where and load it into your gun, chucking the leftover one behind an alleyway.",
-		str_backfire = "Whoops, looks like somebody didn't fasten the paint cylinder hard enough! {name_player} gets a thorough spray to the face!",
+		# str_backfire = "Whoops, looks like somebody didn't fasten the paint cylinder hard enough! {name_player} gets a thorough spray to the face!",
 		tool_props = {
 			'reg_spray':  "You find a patch of wall several yards away that hasn't been vandalized yet. Time to take aim and...BAM! Nice shot!",
 			'miss_spray': "**Miss!** Your aim was as sharp as ever, but a fucking pigeon took the hit! Christ, what are the odds?",
@@ -5780,7 +5788,7 @@ weapon_list = [
 		#sap_cost=2,
 		captcha_length=4,
 		is_tool=1,
-		str_backfire = "{name_player} waves the paint roller around like it's a plastic toy, spreading paint nowhere but giving themselves a thorough welt in the head from the 2 square inches of it that could actually do any damage. How'd they manage that?",
+		# str_backfire = "{name_player} waves the paint roller around like it's a plastic toy, spreading paint nowhere but giving themselves a thorough welt in the head from the 2 square inches of it that could actually do any damage. How'd they manage that?",
 		tool_props = {
 			'reg_spray' : "You roll paint over as much surface area as your puny little Juvie legs can take you to.",
 			'miss_spray' : "**Miss!** The sponge on your roller snaps off and it takes too long for you to notice. What a waste!",
@@ -5818,7 +5826,7 @@ weapon_list = [
 		price = 100,
 		captcha_length=3,
 		is_tool=1,
-		str_backfire = "In an attempt to paint faster, {name_player} sticks one of the handles in their mouth and try to use it to cover more ground. Instead, they broke your teeth and scraped their cheek on a hard brick surface. Better not try that again...",
+		# str_backfire = "In an attempt to paint faster, {name_player} sticks one of the handles in their mouth and try to use it to cover more ground. Instead, they broke your teeth and scraped their cheek on a hard brick surface. Better not try that again...",
 		tool_props = {
 			'reg_spray' : "You paint vulgar {gang} symbols on as many buildings as you can.",
 			'miss_spray' : "**Miss!** You finish with a paint can and have to switch! You waste too much time getting the can open.",
@@ -5854,7 +5862,7 @@ weapon_list = [
 		price = 1300,
 		captcha_length=3,
 		is_tool=1,
-		str_backfire = "{name_player} has the idea of trying to paint their parents fucking, thinking it will be really funny and everyone will love them. Pretty soon we're going to have to ban watercolors because people like you are using them to molest yourself.",
+		# str_backfire = "{name_player} has the idea of trying to paint their parents fucking, thinking it will be really funny and everyone will love them. Pretty soon we're going to have to ban watercolors because people like you are using them to molest yourself.",
 		tool_props = {
 			'reg_spray' : "Nice drawing, {curse}! ",
 			'miss_spray' : "**Miss!** Your painting sucks. God, you're stupid. ",
@@ -5892,7 +5900,7 @@ weapon_list = [
 		price = 150,
 		captcha_length=4,
 		is_tool = 1,
-		str_backfire = "You haven't had a good buzz in awhile, so you take a whiff of one of your thinner bombs. Great trip and all, but you rough yourself up convulsing on the ground while it happens.",
+		# str_backfire = "You haven't had a good buzz in awhile, so you take a whiff of one of your thinner bombs. Great trip and all, but you rough yourself up convulsing on the ground while it happens.",
 		tool_props = {
 		'reg_spray' : "You find a vandalized wall and toss a thinner bomb on it! You hear a faint sizzling as paint begins to strip off the walls. Sick!",
 		'miss_spray' : "**Miss!** You make a mistake on the throw's distance and it bursts uselessly on the ground. You got to do some littering, so at least there's that.",
@@ -6081,7 +6089,7 @@ weapon_list = [
 		str_scalp=" It looks stretched and wrinkled.",
 		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		price=40000,
-		str_backfire="You roomba turns on you! Its shitty AI thinks your feet are its prey, and it sucks away some precious slime!",
+		# str_backfire="You roomba turns on you! Its shitty AI thinks your feet are its prey, and it sucks away some precious slime!",
 		vendors=[vendor_basedhardware],
 		classes=[weapon_class_paint, weapon_class_captcha],
 		stat=stat_fingernails_kills,
@@ -6184,11 +6192,7 @@ def atf_molotovbreath(ctn = None):
 
 	#ctn.bystander_damage = dmg * 0.5
 
-	if aim <= (2 + int(10 * ctn.miss_mod)):
-		ctn.backfire = True
-		ctn.backfire_damage = dmg
-
-	elif aim == (3 + int(10 * ctn.miss_mod)):
+	if aim == (3 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 
@@ -6306,7 +6310,7 @@ enemy_attack_type_list = [
 	),
 	EwAttackType( # 6
 		id_type = "molotovbreath",
-		str_backfire = "**Oh the humanity!!** {name_enemy} tries to let out a breath of fire, but it combusts while still inside their maw!!",
+		# str_backfire = "**Oh the humanity!!** {name_enemy} tries to let out a breath of fire, but it combusts while still inside their maw!!",
 		str_crit = "**Critical hit!!** {name_target} is char grilled by {name_enemy}'s barrage of molotov breath!",
 		str_miss = "**{name_enemy} missed!** Their shot hits the ground instead, causing embers to shoot out in all directions!",
 		#str_trauma_self = "You're wrapped in two layers of bandages. What skin is showing appears burn-scarred.",
@@ -7073,7 +7077,6 @@ item_def_list = [
 			'kills': 0,
 			'consecutive_hits': 0,
 			'time_lastattack': 0,
-			'jammed': 0,
 			'totalkills': 0
 		}
 	),
