@@ -824,6 +824,8 @@ cmd_map = {
 	ewcfg.cmd_bleedout: ewmutation.bleedout,
 	ewcfg.cmd_skullbash: ewitem.skullbash,
 
+	ewcfg.cmd_manual_unban:ewcmd.unban_manual,
+
 	# Slime Twitter
 	ewcfg.cmd_tweet: ewslimetwitter.tweet
 }

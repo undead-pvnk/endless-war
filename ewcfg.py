@@ -1192,6 +1192,8 @@ cmd_graft = cmd_prefix + 'graft'
 cmd_bleedout = cmd_prefix + 'bleedout'
 cmd_skullbash = cmd_prefix + 'skullbash'
 
+cmd_manual_unban = cmd_prefix + 'unban'
+
 cmd_switch = cmd_prefix + 'switch'
 cmd_switch_alt_1 = cmd_prefix + 's'
 
