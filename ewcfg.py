@@ -33,7 +33,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.61 - Chemotherapy Update"
+version = "v3.62 - Weapon Simplification Update"
 
 
 dir_msgqueue = 'msgqueue'
@@ -933,7 +933,6 @@ cmd_shoot_alt6 = cmd_prefix + 'hug'
 cmd_attack = cmd_prefix + 'attack'
 cmd_reload = cmd_prefix + 'reload'
 cmd_reload_alt1 = cmd_prefix + 'loadthegun'
-cmd_unjam = cmd_prefix + 'unjam'
 cmd_devour = cmd_prefix + 'devour'
 cmd_mine = cmd_prefix + 'mine'
 cmd_flag = cmd_prefix + 'flag'
@@ -4745,494 +4744,141 @@ for ts in item_list:
 		tombstone_fullstock_map[ts.enemytype] = ts.stock
 		tombstone_ids.append(ts.id_item)
 
-# A Weapon Effect Function for "revolver". Takes an EwEffectContainer as ctn.
-def wef_revolver(ctn = None):
-	ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
-	aim = (random.randrange(10) + 1)
-	user_mutations = ctn.user_data.get_mutations()
-	#ctn.sap_damage = 2
-
-	if aim <= (1 + int(10 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-		else:
-			ctn.miss = True
-
-	elif aim >= (10 - int(10 * ctn.crit_mod)):
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-
-# weapon effect function for "dualpistols"
-def wef_dualpistols(ctn = None):
-	aim = (random.randrange(10) + 1)
-	user_mutations = ctn.user_data.get_mutations()
-	#ctn.sap_damage = 2
-
-	if aim <= (4 + int(10 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-		else:
-			ctn.miss = True
-
-	elif aim >= (9 - int(10 * ctn.crit_mod)):
-		ctn.crit = True
-		ctn.slimes_damage = int(ctn.slimes_damage * 2)
-
-# weapon effect function for "shotgun"
-def wef_shotgun(ctn = None):
-	ctn.slimes_damage = int(ctn.slimes_damage * 1.65)
-	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
-	#ctn.sap_damage = 5
-
-	aim = (random.randrange(10) + 1)
-	user_mutations = ctn.user_data.get_mutations()
-
-	if aim <= (1 + int(10 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-		else:
-			ctn.miss = True
-
-	elif aim >= (10 - int(10 * ctn.crit_mod)):
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-		#ctn.sap_damage *= 2
-
-# weapon effect function for "rifle"
-def wef_rifle(ctn = None):
-	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
-	ctn.slimes_spent = int(ctn.slimes_spent * 1.25)
-	aim = (random.randrange(10) + 1)
-	#ctn.sap_ignored = 10
-	#ctn.sap_damage = 2
-
-	if aim >= (9 - int(10 * ctn.crit_mod)):
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-		#ctn.sap_damage += 2
-		#ctn.sap_ignored += 10
-
-# weapon effect function for "smg"
-def wef_smg(ctn = None):
-	dmg = int(ctn.slimes_damage * 0.4)
-	ctn.slimes_damage = 0
-	jam = (random.randrange(10) + 1)
-	user_mutations = ctn.user_data.get_mutations()
-
-	if jam <= 2:
-		ctn.weapon_item.item_props["jammed"] = "True"
-		ctn.jammed = True
-	else:
-		for count in range(6):
-			aim = (random.randrange(100) + 1)
-			if aim > (25 + int(100 * ctn.miss_mod)):
-				ctn.strikes += 1
-
-				if aim >= (95 - int(100 * ctn.crit_mod)):
-					ctn.slimes_damage += int(dmg * 1.5)
-				else:
-					ctn.slimes_damage += int(dmg * 0.5)
-			elif mutation_id_sharptoother in user_mutations:
-				if random.random() < 0.5:
-					ctn.strikes += 1
-
-					if aim >= (95 - int(100 * ctn.crit_mod)):
-						ctn.slimes_damage += int(dmg * 1.5)
-					else:
-						ctn.slimes_damage += int(dmg * 0.5)
-
-		if ctn.strikes == 0:
-			ctn.miss = True
-
-	#ctn.sap_damage = ctn.strikes
-
-# weapon effect function for "minigun"
-def wef_minigun(ctn = None):
-	dmg = 0.8 * ctn.slimes_damage
-	ctn.slimes_damage = 0
-	user_mutations = ctn.user_data.get_mutations()
-
-	for count in range(10):
-		aim = (random.randrange(10) + 1)
-
-		if aim > (5 + int(10 * ctn.miss_mod)):
-			ctn.strikes += 1
-
-			if aim >= (10 - int(10 * ctn.crit_mod)):
-				ctn.slimes_damage += dmg * 2
-			else:
-				ctn.slimes_damage += dmg
-		elif mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.strikes += 1
-
-				if aim >= 10 - int(10 * ctn.crit_mod):
-					ctn.slimes_damage += dmg * 2
-				else:
-					ctn.slimes_damage += dmg
-
-	if ctn.strikes == 0:
-		ctn.miss = True
-
-	#ctn.sap_damage = 2 * ctn.strikes
-
-# weapon effect function for "bat"
-def wef_bat(ctn = None):
-	aim = (random.randrange(0, 13) - 2)
-	user_mutations = ctn.user_data.get_mutations()
-	dmg = ctn.slimes_damage
-	#ctn.sap_damage = 2
-
-	# Disabled - Increased miss chance if attacking within less than three seconds after last attack
-	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	#ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
-
-	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
-
-	if aim <= (-2 + int(13 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.backfire = True
-				ctn.backfire_damage = ctn.slimes_damage
-		else:
-			ctn.backfire = True
-			ctn.backfire_damage = ctn.slimes_damage
-
-	elif aim <= (-1 + int(13 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-		else:
-			ctn.miss = True
-
-	elif aim >= (10 - int(13 * ctn.crit_mod)):
-		ctn.crit = True
-		ctn.slimes_damage = int(dmg * 4)
-
-# weapon effect function for "brassknuckles"
-def wef_brassknuckles(ctn = None):
-	last_attack = (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else 0)
-	successful_timing = 2.6 > (ctn.time_now - last_attack) > 1.4
-	user_mutations = ctn.user_data.get_mutations()
-	ctn.strikes = 0
-
-	#damage_min = ctn.slimes_damage / 10
-
-	#if last_attack > 0:
-	#	ctn.slimes_damage = damage_min * ((min(last_attack, 2) / 2)**0.5  * 10)
-	#else:
-	#	ctn.slimes_damage = damage_min
-
-	#ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
-
-	consecutive_hits = (int(ctn.weapon_item.item_props.get("consecutive_hits")) if ctn.weapon_item.item_props.get("consecutive_hits") != None else 0)
-	if consecutive_hits == 2 and successful_timing:
-		ctn.crit = True
-		#ctn.sap_damage = 5
-		ctn.slimes_damage *= 3
-		ctn.weapon_item.item_props["consecutive_hits"] = 0
-
-	else:
-		aim1 = (random.randrange(10) + 1)
-		aim2 = (random.randrange(10) + 1)
-		whiff1 = 1
-		whiff2 = 1
-
-		if aim1 <= (2 + int(10 * ctn.miss_mod)):
-			if mutation_id_sharptoother in user_mutations:
-				if random.random() < 0.5:
-					whiff1 = 0
-			else:
-				whiff1 = 0
-		if aim2 <= (2 + int(10 * ctn.miss_mod)):
-			if mutation_id_sharptoother in user_mutations:
-				if random.random() < 0.5:
-					whiff2 = 0
-			else:
-				whiff2 = 0
-
-		if whiff1 == 0 and whiff2 == 0:
-			ctn.miss = True
-		else:
-			ctn.strikes = whiff1 + whiff2
-			ctn.slimes_damage = (ctn.slimes_damage * whiff1) + (ctn.slimes_damage * whiff2)
-			if successful_timing:
-				ctn.weapon_item.item_props["consecutive_hits"] = consecutive_hits + 1
-			else:
-				ctn.weapon_item.item_props["consecutive_hits"] = 0
-
-
-
-# weapon effect function for "katana"
-def wef_katana(ctn = None):
-	ctn.slimes_damage = int(ctn.slimes_damage * 1.3)
-	ctn.slimes_spent = int(ctn.slimes_spent * 1.3)
-	#ctn.sap_damage = 0
-
-	# Disabled - Decreased damage if attacking within less than four seconds after last attack
-	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-
-	#damage_min = ctn.slimes_damage / 10
-
-	#if time_lastattack > 0:
-	#	ctn.slimes_damage = damage_min * ((min(time_lastattack, 5) / 5)**0.5  * 10)
-	#else:
-	#	ctn.slimes_damage = damage_min
-
-	#ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
-
-	#if 5.2 > time_lastattack > 4.8:
-	#	ctn.sap_ignored = 10
-
-
-	weapons_held = ewitem.inventory(
-		id_user = ctn.user_data.id_user,
-		id_server = ctn.user_data.id_server,
-		item_type_filter = it_weapon
-	)
-
-	#lucky lucy's lucky katana always crits
-	if ctn.user_data.life_state == life_state_lucky:
-		ctn.crit = True
-		ctn.slimes_damage *= 7.77
-
-	elif len(weapons_held) == 1:
-		ctn.crit = True
-		ctn.slimes_damage *= 1.5
-		#ctn.sap_ignored *= 1.5
-
-# weapon effect function for "broadsword"
-def wef_broadsword(ctn = None):
-	ctn.slimes_spent = int(ctn.slimes_spent * 5)
-	dmg = ctn.slimes_damage
-	ctn.slimes_damage *= 3
-	aim = (random.randrange(10) + 1)
-	user_mutations = ctn.user_data.get_mutations()
-	#ctn.sap_damage = 5
-	#ctn.sap_ignored = 20
-
-	ctn.slimes_damage += int( dmg * (min(10, int(ctn.weapon_item.item_props.get("kills"))) / 2) )
-
-	if aim <= (1 + int(10 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.backfire = True
-				ctn.backfire_damage = ctn.slimes_damage
-		else:
-			ctn.backfire = True
-			ctn.backfire_damage = ctn.slimes_damage
-
-	elif aim <= (2 + int(10 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-		else:
-			ctn.miss = True
-
-	elif aim >= (9 - int(10 * ctn.crit_mod)):
-		ctn.crit = True
-		#ctn.sap_damage *= 2
-		ctn.slimes_damage *= 2
-
-# weapon effect function for "nun-chucks"
-def wef_nunchucks(ctn = None):
-	ctn.strikes = 0
-	dmg = ctn.slimes_damage
-	ctn.slimes_damage = 0
-	user_mutations = ctn.user_data.get_mutations()
-
-	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	#ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 100 * 55
-
-	for count in range(4):
-		if (random.randrange(100) + 1) > (25 + int(100 * ctn.miss_mod)):
-			ctn.strikes += 1
-			ctn.slimes_damage += int(dmg * 0.25)
-		elif mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.strikes += 1
-				ctn.slimes_damage += int(dmg * 0.25)
-
-	if ctn.strikes == 4:
-		ctn.crit = True
-		# extra hit that deals 2* base damage
-		ctn.strikes = 5
-		ctn.slimes_damage += dmg * 2
-
-	elif ctn.strikes == 0:
-		ctn.backfire = True
-		ctn.backfire_damage = dmg * 2
-
-	#ctn.sap_damage = ctn.strikes
-
-# weapon effect function for "scythe"
-def wef_scythe(ctn = None):
-	ctn.slimes_spent = int(ctn.slimes_spent * 3)
-	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
-	user_mutations = ctn.user_data.get_mutations()
-	#ctn.sap_damage = 0
-
-	try:
-		target_kills = ewstats.get_stat(user = ctn.shootee_data, metric = stat_kills)
-	except:
-		target_kills = 4
-
-	ctn.slimes_damage = ctn.slimes_damage * max(1, min(target_kills, 10))
-	#ctn.sap_ignored = 3 * min(target_kills, 10)
-
-	# Disabled - Decreased damage if attacking within less than three seconds after last attack
-	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	#damage_min = ctn.slimes_damage / 10
-	#if time_lastattack > 0:
-	#	ctn.slimes_damage = damage_min * ((min(time_lastattack, 3)/3)**0.5 * 10)
-	#else:
-	#	ctn.slimes_damage = damage_min
-
-	#ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
-
-	aim = (random.randrange(10) + 1)
-
-	if aim <= (1 + int(10 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-		else:
-			ctn.miss = True
-
-	elif aim >= (10 - int(10 * ctn.crit_mod)):
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-
-# weapon effect function for "yo-yos"
-def wef_yoyo(ctn = None):
-	base_dmg = ctn.slimes_damage
-	ctn.slimes_damage = ctn.slimes_damage * 0.5
-	user_mutations = ctn.user_data.get_mutations()
-
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-
-	#Consecutive hits only valid for a minute
-	if time_lastattack < 60:
-		ctn.slimes_damage += (base_dmg * (int(ctn.weapon_item.item_props.get("consecutive_hits")) * 0.25))
-	else:
-		ctn.weapon_item.item_props["consecutive_hits"] = 0
-
-	#damage_min = ctn.slimes_damage / 10
-
-	#if time_lastattack > 0:
-	#	ctn.slimes_damage = damage_min * ((min(time_lastattack, 2)/2) ** 0.5 * 10)
-	#else:
-	#	ctn.slimes_damage = damage_min
-
-	#ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
-
-	#if time_lastattack >= 2:
-	#	ctn.sap_damage = 1
-
-	ctn.weapon_item.item_props["consecutive_hits"] = int(ctn.weapon_item.item_props["consecutive_hits"]) + 1
-	aim = (random.uniform(0, 100))
-
-	if aim <= (18.75 + (100 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-		else:
-			ctn.miss = True
-
-	elif aim >= (90 - (100 * ctn.crit_mod)):
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-
-
-# weapon effect function for "knives"
-def wef_knives(ctn = None):
-	ctn.slimes_spent = int(ctn.slimes_spent * 0.25)
-	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
-	user_mutations = ctn.user_data.get_mutations()
-	#ctn.sap_damage = 0
-
-	aim = (random.randrange(10) + 1)
-
-	if aim <= (1 + int(10 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-		else:
-			ctn.miss = True
-
-	elif aim >= (10 - int(10 * ctn.crit_mod)):
-		ctn.crit = True
-		ctn.slimes_damage = int(ctn.slimes_damage * 2)
-
-# weapon effect function for "molotov"
-def wef_molotov(ctn = None):
-	dmg = ctn.slimes_damage
-	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
-	ctn.slimes_spent *= 1
-	user_mutations = ctn.user_data.get_mutations()
-	#ctn.sap_damage = 0
-	#ctn.sap_ignored = 10
-
-	aim = (random.randrange(10) + 1)
-
-	ctn.bystander_damage = dmg * 0.5
-
-	if aim <= (2 + int(10 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.backfire = True
-				ctn.backfire_damage = dmg
-		else:
-			ctn.backfire = True
-			ctn.backfire_damage = dmg
-
-	elif aim > 2 and aim <= (3 + int(10 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-		else:
-			ctn.miss = True
-
-	else:
-		if aim >= (10 - int(10 * ctn.crit_mod)):
+def get_weapon_type_stats(weapon_type):
+	types = {
+		"normal": {
+			"damage_multiplier": 1.1,
+			"cost_multiplier": 1,
+			"crit_chance": 0.2,
+			"crit_multiplier": 1.8,
+			"hit_chance": 0.9,
+		},
+		"precision": {
+			"damage_multiplier": 1.3,
+			"cost_multiplier": 1.3,
+			"crit_chance": 0,
+			"crit_multiplier": 2,
+			"hit_chance": 1,
+		},
+		"small_game": {
+			"damage_multiplier": 0.5,
+			"cost_multiplier": 0.25,
+			"crit_chance": 0.1,
+			"crit_multiplier": 2,
+			"hit_chance": 0.95,
+		},
+		"variable_damage": {
+			"damage_multiplier": 0.5,
+			"variable_damage_multiplier": 2,
+			"cost_multiplier": 1,
+			"crit_chance": 0.1,
+			"crit_multiplier": 1.5,
+			"hit_chance": 0.9,
+		},
+		"heavy": {
+			"damage_multiplier": 3,
+			"cost_multiplier": 5,
+			"crit_chance": 0.1,
+			"crit_multiplier": 1.5,
+			"hit_chance": 0.8,
+		},
+		"defensive": {
+			"damage_multiplier": 0.75,
+			"cost_multiplier": 1.5,
+			"crit_chance": 0.1,
+			"crit_multiplier": 1.5,
+			"hit_chance": 0.85,
+		},
+		"burst_fire": {
+			"damage_multiplier": 0.4,
+			"cost_multiplier": 0.8,
+			"crit_chance": 0.2,
+			"crit_multiplier": 1.5,
+			"hit_chance": 0.85,
+			"shots": 3
+		},
+		"minigun": {
+			"damage_multiplier": 0.3,
+			"cost_multiplier": 5,
+			"crit_chance": 0.1,
+			"crit_multiplier": 2,
+			"hit_chance": 0.5,
+			"shots": 10
+		},
+		"incendiary": {
+			"damage_multiplier": 0.75,
+			"bystander_damage": 0.5,
+			"cost_multiplier": 1.5,
+			"crit_chance": 0.1,
+			"crit_multiplier": 2,
+			"hit_chance": 0.9,
+		},
+		"explosive": {
+			"damage_multiplier": 0.5,
+			"bystander_damage": 0.5,
+			"cost_multiplier": 1,
+			"crit_chance": 0.1,
+			"crit_multiplier": 2,
+			"hit_chance": 0.9,
+		},
+		"tool": {
+			"damage_multiplier": 0.5,
+			"cost_multiplier": 1,
+			"crit_chance": 0.2,
+			"crit_multiplier": 1.8,
+			"hit_chance": 0.9,
+		},
+	}
+
+	return types[weapon_type]
+
+def get_normal_attack(weapon_type = "normal", cost_multiplier = None):
+	weapon_stats = get_weapon_type_stats(weapon_type)
+	if cost_multiplier:
+		weapon_stats["cost_multiplier"] = cost_multiplier
+
+	def get_hit_damage(ctn):
+		hit_damage = 0
+		base_damage = ctn.slimes_damage
+
+		player_has_sharptoother = (mutation_id_sharptoother in ctn.user_data.get_mutations())
+		hit_roll = min(random.random(), random.random()) if player_has_sharptoother else random.random()
+		guarantee_crit = (weapon_type == "precision" and ctn.user_data.sidearm == -1)
+
+		if hit_roll < weapon_stats["hit_chance"]:
+			effective_multiplier = weapon_stats["damage_multiplier"] 
+			if "variable_damage_multiplier" in weapon_stats:
+				effective_multiplier += random.random() * weapon_stats["variable_damage_multiplier"]
+
+			hit_damage = base_damage * effective_multiplier
+			if guarantee_crit or random.random() < weapon_stats["crit_chance"]:
+				hit_damage *= weapon_stats["crit_multiplier"]
+				if not ("shots" in weapon_stats):
+					ctn.crit = True
+		
+		return hit_damage
+
+	def attack(ctn):
+		ctn.slimes_spent = int(ctn.slimes_spent * weapon_stats["cost_multiplier"])
+		damage = 0
+		if "shots" in weapon_stats:
 			ctn.crit = True
-			ctn.slimes_damage *= 2
-
-# weapon effect function for "grenade"
-def wef_grenade(ctn = None):
-	dmg = ctn.slimes_damage
-	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
-	ctn.slimes_spent *= 1
-	ctn.bystander_damage = int(dmg * 0.3)
-	user_mutations = ctn.user_data.get_mutations()
-	#ctn.sap_damage = 5
-
-	aim = (random.randrange(10) + 1)
-
-	if aim <= (1 + int(10 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-				ctn.bystander_damage = 0
+			for _ in range(weapon_stats["shots"]):
+				hit_damage = get_hit_damage(ctn)
+				damage += hit_damage
+				if hit_damage == 0:
+					ctn.crit = False
+		else:
+			damage = get_hit_damage(ctn)
+			if "bystander_damage" in weapon_stats:
+				ctn.bystander_damage = damage * weapon_stats["bystander_damage"]
+		
+		if damage:
+			ctn.slimes_damage = int(damage)
 		else:
 			ctn.miss = True
-			ctn.bystander_damage = 0
 
-	elif aim > 1 and aim <= (2 + int(10 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.backfire = True
-				ctn.backfire_damage = ctn.slimes_damage
-		else:
-			ctn.backfire = True
-			ctn.backfire_damage = ctn.slimes_damage
-
-	elif aim >= (10 - int(10 * ctn.crit_mod)):
-		ctn.crit = True
-		ctn.slimes_damage = dmg * 4
+	return attack
 
 # weapon effect function for "garrote"
 def wef_garrote(ctn = None):
@@ -5261,163 +4907,35 @@ def wef_garrote(ctn = None):
 		#Start strangling target
 		ctn.shootee_data.applyStatus(id_status=status_strangled_id, source=ctn.user_data.id_user)
 
-# weapon effect function for all weapons which double as tools.
-def wef_tool(ctn = None):
-	ctn.slimes_damage *= 0.2
-	#ctn.sap_damage = 0
-
-	aim = (random.randrange(10) + 1)
-	user_mutations = ctn.user_data.get_mutations()
-
-	if aim == 1:
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-				ctn.slimes_damage = 0
-		else:
-			ctn.miss = True
-			ctn.slimes_damage = 0
-
-	elif aim == 10:
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-
-# weapon effect function for "bass"
-def wef_bass(ctn = None):
-	aim = (random.randrange(0, 13) - 2)
-	user_mutations = ctn.user_data.get_mutations()
-	dmg = ctn.slimes_damage
-	#ctn.sap_damage = 1
-	#ctn.sap_ignored = 5
-
-	# Disabled - Increased miss chance if attacking within less than three seconds after last attack
-	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	#ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
-
-	ctn.slimes_damage = int(ctn.slimes_damage * (0.5 + random.randrange(200) / 100))
-
-	if aim <= (-2 + int(13 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-		else:
-			ctn.miss = True
-
-	elif aim >= (9 - int(13 * ctn.crit_mod)):
-		ctn.crit = True
-		ctn.slimes_damage = int(dmg * 4)
-
-# A Weapon Effect Function for "umbrella". Takes an EwEffectContainer as ctn.
-def wef_umbrella(ctn = None):
-	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
-	aim = (random.randrange(10) + 1)
-	user_mutations = ctn.user_data.get_mutations()
-	#ctn.sap_damage = 1
-
-	if aim <= (1 + int(10 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-		else:
-			ctn.miss = True
-
-	elif aim >= (10 - int(10 * ctn.crit_mod)):
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-
-# weapon effect function for "minecraft bow"
-def wef_bow(ctn = None):
-	aim = (random.randrange(0, 13) - 2)
-	user_mutations = ctn.user_data.get_mutations()
-	dmg = ctn.slimes_damage
-	#ctn.sap_damage = 1
-	#ctn.sap_ignored = 8
-
-	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	#ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
-
-	if aim <= (-2 + int(13 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-		else:
-			ctn.miss = True
-
-	elif aim >= (9 - int(16 * ctn.crit_mod)):
-		ctn.crit = True
-		ctn.slimes_damage = int(dmg * 3)
-
-# weapon effect function for "Dragon Claw"
-def wef_dclaw(ctn = None):
-	aim = (random.randrange(0, 13) - 2)
-	user_mutations = ctn.user_data.get_mutations()
-	dmg = ctn.slimes_damage
-	if mutation_id_fastmetabolism in user_mutations or mutation_id_lightasafeather in user_mutations:
-		ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
-		ctn.slimes_spent *= 0.5
-
-	ctn.bystander_damage = int(dmg * 0.5)
-
-	#ctn.sap_damage = 5
-	#ctn.sap_ignored = 10
-	
-	#time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	#ctn.miss_mod += (((5 - min(time_lastattack, 5)) / 5) ** 2) / 13 * 5
-	
-	if aim <= (-2 + int(13 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.miss = True
-		else:
-			ctn.miss = True
-	elif aim >= (9 - int(13 * ctn.crit_mod)):
-		ctn.crit = True
-		ctn.slimes_damage = int(dmg * 4)
-
 # weapon effect function for "Eldritch Staff"
-
 def wef_staff(ctn = None):
-	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-
-	if time_lastattack > 15 or not ctn.weapon_item.item_props["preparation_attack_count"]:
-		ctn.weapon_item.item_props["preparation_attack_count"] = 0
+	market_data = EwMarket(id_server = ctn.user_data.id_server)
+	conditions_met = 0
+	conditions = {
+		lambda _: 3 <= market_data.clock < 4, # witching hour
+		lambda _: weather_map.get(market_data.weather) == weather_foggy,
+		lambda _: (market_data.day % 31 == 15 and market_data.clock >= 20) or (market_data.day % 31 == 16 and market_data.clock <= 6), # moonless night
+		lambda ctn: not ctn.user_data.has_soul,
+		lambda ctn: ctn.user_data.get_possession('weapon'),
+		lambda ctn: ctn.user_data.poi == poi_id_thevoid,
+		lambda ctn: ctn.shootee_data.slimes > ctn.user_data.slimes,
+		lambda ctn: (ctn.user_data.salary_credits <= -50000) or (ctn.shootee_data.salary_credits == 0),
+		lambda ctn: (ctn.user_data.poi_death == ctn.user_data.poi) or (ctn.shootee_data.poi_death == ctn.shootee_data.poi),
+		lambda ctn: (ctn.user_data.id_killer == ctn.shootee_data.id_user) or (ctn.user_data.id_user == ctn.shootee_data.id_killer),
+		lambda ctn: (ctn.shootee_data.life_state == life_state_juvenile) or (ctn.shootee_data.life_state == life_state_enlisted and ctn.shootee_data.faction == ctn.user_data.faction),
+	}
+	for condition in conditions:
+		try:
+			if condition(ctn):
+				conditions_met += 1
+		except:
+			pass
 	
-	# requires four attack commands to deal damage
-	if int(ctn.weapon_item.item_props["preparation_attack_count"]) == 4:
-		market_data = EwMarket(id_server = ctn.user_data.id_server)
-		conditions_met = 0
-		conditions = {
-			lambda _: 3 <= market_data.clock < 4, # witching hour
-			lambda _: weather_map.get(market_data.weather) == weather_foggy,
-			lambda _: (market_data.day % 31 == 15 and market_data.clock >= 20) or (market_data.day % 31 == 16 and market_data.clock <= 6), # moonless night
-			lambda ctn: not ctn.user_data.has_soul,
-			lambda ctn: ctn.user_data.get_possession('weapon'),
-			lambda ctn: ctn.user_data.poi == poi_id_thevoid,
-			lambda ctn: ctn.shootee_data.slimes > ctn.user_data.slimes,
-			lambda ctn: (ctn.user_data.salary_credits <= -50000) or (ctn.shootee_data.salary_credits == 0),
-			lambda ctn: (ctn.user_data.poi_death == ctn.user_data.poi) or (ctn.shootee_data.poi_death == ctn.shootee_data.poi),
-			lambda ctn: (ctn.user_data.id_killer == ctn.shootee_data.id_user) or (ctn.user_data.id_user == ctn.shootee_data.id_killer),
-			lambda ctn: (ctn.shootee_data.life_state == life_state_juvenile) or (ctn.shootee_data.life_state == life_state_enlisted and ctn.shootee_data.faction == ctn.user_data.faction),
-		}
-		for condition in conditions:
-			try:
-				if condition(ctn):
-					conditions_met += 1
-			except:
-				pass
-		
-		ctn.slimes_spent = int(ctn.slimes_spent * 3)
-		ctn.slimes_damage = int(ctn.slimes_damage * (0.6 + conditions_met * 1.2))
-		#ctn.sap_ignored = 6 * conditions_met
-		if conditions_met >= (random.randrange(15) + 1): # 6.66% per condition met
-			ctn.crit = True
-			ctn.slimes_damage = int(ctn.slimes_damage * 1.8)
-
-		ctn.weapon_item.item_props["preparation_attack_count"] = 0
-	else:
-		ctn.weapon_item.item_props["preparation_attack_count"] = int(ctn.weapon_item.item_props["preparation_attack_count"]) + 1
-		ctn.slimes_spent = int(ctn.slimes_spent * 0.5)
-		ctn.miss = True
+	ctn.slimes_spent = int(ctn.slimes_spent * 2)
+	ctn.slimes_damage = int(ctn.slimes_damage * (0.3 + conditions_met * 0.6))
+	if conditions_met >= (random.randrange(15) + 1): # 6.66% per condition met
+		ctn.crit = True
+		ctn.slimes_damage = int(ctn.slimes_damage * 1.8)
 
 
 def wef_paintgun(ctn = None):
@@ -5482,13 +5000,10 @@ def wef_fingernails(ctn = None):
 vendor_dojo = "Dojo"
 
 weapon_class_ammo = "ammo"
-weapon_class_thrown = "thrown"
 weapon_class_exploding = "exploding"
 weapon_class_burning = "burning"
-weapon_class_jammable = "jammable"
 weapon_class_captcha = "captcha"
 weapon_class_defensive = "defensive"
-weapon_class_heavy = "heavy"
 weapon_class_paint = "paint"
 #juvies can equip these weapons
 weapon_class_juvie = "juvie"
@@ -5496,15 +5011,13 @@ weapon_class_farming = "farming"
 
 weapon_type_convert = {
 weapon_id_watercolors:wef_watercolors,
-weapon_id_spraycan:wef_revolver,
+weapon_id_spraycan:get_normal_attack(),
 weapon_id_paintroller:wef_paintroller,
-weapon_id_thinnerbomb:wef_molotov,
+weapon_id_thinnerbomb:get_normal_attack(weapon_type = 'incendiary'),
 weapon_id_paintgun:wef_paintgun,
-weapon_id_paintbrush:wef_knives,
-weapon_id_roomba:wef_revolver
+weapon_id_paintbrush:get_normal_attack(weapon_type = 'small_game'),
+weapon_id_roomba:get_normal_attack()
 }
-
-
 
 # All weapons in the game.
 weapon_list = [
@@ -5532,13 +5045,12 @@ weapon_list = [
 		str_reload = "You swing out the revolver’s chamber, knocking out the used shells onto the floor before hastily slamming fresh bullets back into it.",
 		str_reload_warning = "**BANG--** *tk tk...* **SHIT!!** {name_player} just spent the last of the ammo in their revolver’s chamber, it’s out of bullets!!",
 		str_scalp = " It has a bullet hole in it.",
-		fn_effect = wef_revolver,
+		fn_effect = get_normal_attack(cost_multiplier = 0.8),
+		price = 10000,
 		clip_size = 6,
 		vendors = [vendor_dojo, vendor_breakroom],
 		classes = [weapon_class_ammo],
 		stat = stat_revolver_kills,
-		#sap_cost = 1,
-		captcha_length = 3
 	),
 	EwWeapon( # 2
 		id_weapon = weapon_id_dualpistols,
@@ -5565,14 +5077,10 @@ weapon_list = [
 		str_reload = "You swing out the handles on both of your pistols, knocking out the used magazines onto the floor before hastily slamming fresh mags back into them.",
 		str_reload_warning = "**tk tk tk tk--** *tk...* **SHIT!!** {name_player} just spent the last of the ammo in their dual pistol’s mags, they’re out of bullets!!",
 		str_scalp = " It has a couple bullet holes in it.",
-		fn_effect = wef_dualpistols,
-		clip_size = 12,
+		fn_effect = get_normal_attack(),
 		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
-		classes = [weapon_class_ammo],
 		stat = stat_dual_pistols_kills,
-		#sap_cost = 1,
-		captcha_length = 1
 	),
 	EwWeapon( # 3
 		id_weapon = weapon_id_shotgun,
@@ -5596,17 +5104,15 @@ weapon_list = [
 		str_damage = "{name_target} takes a shotgun blast to the {hitzone}!!",
 		str_duel = "**BOOM.** {name_player} and {name_target} stand about five feet away from a wall, pumping it full of lead over and over to study it's bullet spread.",
 		str_description = "It's a shotgun.",
-		str_reload = "You tilt your shotgun and pop shell after shell into it’s chamber before cocking the forend back. Groovy.",
+		str_reload = "You tilt your shotgun and pop shell after shell into its chamber before cocking the forend back. Groovy.",
 		str_reload_warning = "**chk--** *...* **SHIT!!** {name_player}’s shotgun has ejected the last shell in it’s chamber, it’s out of ammo!!",
 		str_scalp = " It has a gaping hole in the center.",
-		fn_effect = wef_shotgun,
+		fn_effect = get_normal_attack(cost_multiplier = 4, weapon_type = 'heavy'),
 		clip_size = 2,
 		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
 		classes = [weapon_class_ammo],
 		stat = stat_shotgun_kills,
-		#sap_cost = 4,
-		captcha_length = 5
 	),
 	EwWeapon( # 4
 		id_weapon = weapon_id_rifle,
@@ -5632,14 +5138,12 @@ weapon_list = [
 		str_reload = "You hastily rip the spent magazine out of your assault rifle, before slamming a fresh one back into it.",
 		str_reload_warning = "**RAT-TAT-TAT--** *ttrrr...* **SHIT!!** {name_player}’s rifle just chewed up the last of it’s magazine, it’s out of bullets!!",
 		str_scalp = " It has a shit-load of holes in it.",
-		fn_effect = wef_rifle,
-		clip_size = 4,
+		fn_effect = get_normal_attack(cost_multiplier = 0.7, weapon_type = 'burst_fire'),
+		clip_size = 10,
 		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
 		classes = [weapon_class_ammo],
 		stat = stat_rifle_kills,
-		#sap_cost = 3,
-		captcha_length = 4
 	),
 	EwWeapon( # 5
 		id_weapon = weapon_id_smg,
@@ -5661,19 +5165,17 @@ weapon_list = [
 		str_damage = "A reckless barrage of bullets pummel {name_target}’s {hitzone}!!",
 		str_duel = "**RATTA TATTA TAT!!** {name_player} and {name_target} spray bullets across the floor and walls of the Dojo, having a great time.",
 		str_description = "It's a submachine gun.",
-		str_jammed = "Your SMG jams again, goddamn piece of shit gun...",
+		# str_jammed = "Your SMG jams again, goddamn piece of shit gun...",
 		str_reload = "You hastily rip the spent magazine out of your SMG, before slamming a fresh one back into it.",
 		str_reload_warning = "**RATTA TATTA--** *tk tk tk tk…* **SHIT!!** {name_player}’s SMG just chewed up the last of it’s magazine, it’s out of bullets!!",
-		str_unjam = "{name_player} successfully whacks their SMG hard enough to dislodge whatever hunk of gunk was blocking it’s internal processes.",
+		# str_unjam = "{name_player} successfully whacks their SMG hard enough to dislodge whatever hunk of gunk was blocking it’s internal processes.",
 		str_scalp = " It has a bunch of holes strewn throughout it.",
-		fn_effect = wef_smg,
-		clip_size = 4,
+		fn_effect = get_normal_attack(cost_multiplier = 0.7, weapon_type = 'burst_fire'),
+		clip_size = 10,
 		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
-		classes = [weapon_class_ammo, weapon_class_jammable],
+		classes = [weapon_class_ammo],
 		stat = stat_smg_kills,
-		#sap_cost = 3,
-		captcha_length = 6
 	),
 	EwWeapon( # 6
 		id_weapon = weapon_id_minigun,
@@ -5698,13 +5200,12 @@ weapon_list = [
 		#str_reload = "You curse under your breath, before pulling a fresh belt of bullets from hammerspace and jamming it into your minigun’s hungry feed.",
 		#str_reload_warning = "**TKTKTKTKTKTK--** *wrrrrrr…* **SHIT!!** {name_player}’s minigun just inhaled the last of it’s belt, it’s out of bullets!!",
 		str_scalp = " It looks more like a thick slice of swiss cheese than a scalp.",
-		fn_effect = wef_minigun,
+		fn_effect = get_normal_attack(weapon_type = 'minigun'),
 		price = 1000000,
 		vendors = [vendor_bazaar],
-		classes= [weapon_class_captcha, weapon_class_heavy],
+		classes= [weapon_class_captcha],
 		stat = stat_minigun_kills,
-		#sap_cost = 15,
-		captcha_length = 10
+		captcha_length = 6
 	),
 	EwWeapon( # 7
 		id_weapon = weapon_id_bat,
@@ -5725,16 +5226,14 @@ weapon_list = [
 		str_kill = "{name_player} pulls back for a brutal swing! **CRUNCCHHH.** {name_target}'s brains splatter over the sidewalk. {emote_skull}",
 		str_killdescriptor = "nail bat battered",
 		str_damage = "{name_target} is struck with a hard blow to the {hitzone}!!",
-		str_backfire = "{name_player} recklessly budgens themselves with a particularly overzealous swing! Man, how the hell could they fuck up so badly?",
+		# str_backfire = "{name_player} recklessly budgens themselves with a particularly overzealous swing! Man, how the hell could they fuck up so badly?",
 		str_duel = "**SMASHH! CRAASH!!** {name_player} and {name_target} run through the neighborhood, breaking windshields, crushing street signs, and generally having a hell of a time.",
 		str_description = "It's a nailbat.",
 		str_scalp = " It has a couple nails in it.",
-		fn_effect = wef_bat,
+		fn_effect = get_normal_attack(weapon_type = 'variable_damage'),
 		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
 		stat = stat_bat_kills,
-		#sap_cost = 2,
-		captcha_length = 2
 	),
 	EwWeapon( # 8
 		id_weapon = weapon_id_brassknuckles,
@@ -5758,12 +5257,10 @@ weapon_list = [
 		str_duel = "**POW! BIFF!!** {name_player} and {name_target} take turns punching each other in the abs. It hurts so good.",
 		str_description = "They're brass knuckles.",
 		str_scalp = " It has bone fragments in it.",
-		fn_effect = wef_brassknuckles,
+		fn_effect = get_normal_attack(weapon_type = 'variable_damage'),
 		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
 		stat = stat_brassknuckles_kills,
-		#sap_cost = 1,
-		captcha_length = 2
 	),
 	EwWeapon( # 9
 		id_weapon = weapon_id_katana,
@@ -5788,13 +5285,12 @@ weapon_list = [
 		str_duel = "**CRACK!! THWACK!! CRACK!!** {name_player} and {name_target} duel with bamboo swords, viciously striking at head, wrist and belly.",
 		str_description = "It's a katana.",
 		str_scalp = " It seems to have been removed with some precision.",
-		fn_effect = wef_katana,
+		fn_effect = get_normal_attack(weapon_type = 'precision'),
 		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
 		classes= [weapon_class_captcha],
 		stat = stat_katana_kills,
-		#sap_cost = 3,
-		captcha_length = 8
+		captcha_length = 4
 	),
 	EwWeapon( # 10
 		id_weapon = weapon_id_broadsword,
@@ -5806,7 +5302,7 @@ weapon_list = [
 		],
 		str_crit = "Critical hit!! {name_player} screams at the top of their lungs and unleashes a devastating overhead swing that maims {name_target}.",
 		str_miss = "You missed! You grunt as your failed overhead swing sends ripples through the air.",
-		str_backfire = "You feel the bones in your wrists snap as you botch your swing with the heavy blade!! Fucking ouch dawg!",
+		# str_backfire = "You feel the bones in your wrists snap as you botch your swing with the heavy blade!! Fucking ouch dawg!",
 		str_equip = "You equip the broadsword.",
 		str_name = "broadsword",
 		str_weapon = "a broadsword",
@@ -5822,14 +5318,11 @@ weapon_list = [
 		str_reload = "You summon strength and muster might from every muscle on your body to hoist your broadsword up for another swing.",
 		str_reload_warning = "**THUD...** {name_player}’s broadsword is too heavy, it’s blade has fallen to the ground!!",
 		str_scalp = " It was sloppily lopped off.",
-		fn_effect = wef_broadsword,
 		clip_size = 1,
 		price = 10000,
+		fn_effect = get_normal_attack(weapon_type = 'heavy'),
 		vendors = [vendor_dojo, vendor_breakroom],
-		classes = [weapon_class_ammo, weapon_class_heavy],
 		stat = stat_broadsword_kills,
-		#sap_cost = 12,
-		captcha_length = 4
 	),
 	EwWeapon( # 11
 		id_weapon = weapon_id_nunchucks,
@@ -5841,7 +5334,7 @@ weapon_list = [
 			"nunchucks"
 		],
 		str_crit = "**COMBO!** {name_player} strikes {name_target} with a flurry of 5 vicious blows!",
-		str_backfire = "**Whack!!** {name_player} fucks up their kung-fu routine and whacks themselves in the head with their own nun-chucks!!",
+		# str_backfire = "**Whack!!** {name_player} fucks up their kung-fu routine and whacks themselves in the head with their own nun-chucks!!",
 		str_equip = "You equip the nun-chucks.",
 		str_name = "nun-chucks",
 		str_weapon = "nun-chucks",
@@ -5855,12 +5348,10 @@ weapon_list = [
 		str_duel = "**HII-YA! HOOOAAAAAHHHH!!** {name_player} and {name_target} twirl wildly around one another, lashing out with kung-fu precision.",
 		str_description = "They're nunchucks.",
 		str_scalp = " It looks very bruised.",
-		fn_effect = wef_nunchucks,
+		fn_effect = get_normal_attack(weapon_type = 'burst_fire'),
 		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
 		stat = stat_nunchucks_kills,
-		#sap_cost = 4,
-		captcha_length = 3
 	),
 	EwWeapon( # 12
 		id_weapon = weapon_id_scythe,
@@ -5882,12 +5373,10 @@ weapon_list = [
 		str_duel = "**WHOOSH, WHOOSH** {name_player} and {name_target} swing their blades in wide arcs, dodging one another's deadly slashes.",
 		str_description = "It's a scythe.",
 		str_scalp = " It's cut in two pieces.",
-		fn_effect = wef_scythe,
 		price = 10000,
+		fn_effect = get_normal_attack(weapon_type = 'heavy'),
 		vendors = [vendor_dojo, vendor_breakroom],
 		stat = stat_scythe_kills,
-		#sap_cost = 6,
-		captcha_length = 4
 	),
 	EwWeapon( # 13
 		id_weapon = weapon_id_yoyo,
@@ -5911,12 +5400,10 @@ weapon_list = [
 		str_duel = "whhzzzzzz {name_player} and {name_target} practice trying to Walk the Dog for hours. It never clicks.",
 		str_description = "It's a yo-yo.",
 		str_scalp = " It has a ball bearing hidden inside it. You can spin it like a fidget spinner.",
-		fn_effect = wef_yoyo,
+		fn_effect = get_normal_attack(),
 		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
 		stat = stat_yoyo_kills,
-		#sap_cost = 1,
-		captcha_length = 2
 	),
 	EwWeapon( # 14
 		id_weapon = weapon_id_knives,
@@ -5942,13 +5429,10 @@ weapon_list = [
 		str_duel = "**TING! TING!!** {name_player} and {name_target} take turns hitting one another's knives out of the air.",
 		str_description = "They're throwing knives.",
 		str_scalp = " It has about a half dozen stab holes in it.",
-		fn_effect = wef_knives,
-		price = 500,
+		fn_effect = get_normal_attack(weapon_type = 'small_game'),
+		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
-		classes = [weapon_class_thrown],
 		stat = stat_knives_kills,
-		#sap_cost = 1,
-		captcha_length = 3
 	),
 	EwWeapon( # 15
 		id_weapon = weapon_id_molotov,
@@ -5959,7 +5443,7 @@ weapon_list = [
 			"bombs",
 			"moly"
 		],
-		str_backfire = "**Oh, the humanity!!** The bottle bursts in {name_player}'s hand, burning them terribly!!",
+		# str_backfire = "**Oh, the humanity!!** The bottle bursts in {name_player}'s hand, burning them terribly!!",
 		str_miss = "**A dud!!** the rag failed to ignite the molotov!",
 		str_crit = "{name_player}’s cocktail shatters at the feet of {name_target}, sending a shower of shattered shards of glass into them!!",
 		str_equip = "You equip the molotov cocktail.",
@@ -5975,12 +5459,11 @@ weapon_list = [
 		str_duel = "{name_player} and {name_target} compare notes on frontier chemistry, seeking the optimal combination of combustibility and fuel efficiency.",
 		str_description = "These are glass bottles filled with some good ol' fashioned pyrotechnics.",
 		str_scalp = " It's burnt to a crisp!",
-		fn_effect = wef_molotov,
-		price = 500,
+		fn_effect = get_normal_attack(weapon_type = 'incendiary'),
+		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
-		classes = [weapon_class_thrown, weapon_class_burning],
+		classes = [weapon_class_burning, weapon_class_captcha],
 		stat = stat_molotov_kills,
-		#sap_cost = 1,
 		captcha_length = 4
 	),
 	EwWeapon( # 16
@@ -6004,13 +5487,12 @@ weapon_list = [
 		str_duel = "**KA-BOOM!!** {name_player} and {name_target} pull the pin out of their grenades and hold it in their hands to get a feel for how long it takes for them to explode. They lose a few body parts in the process.",
 		str_description = "A stack of grenades.",
 		str_scalp = " It's covered in metallic shrapnel.",
-		fn_effect = wef_grenade,
-		price = 500,
+		fn_effect = get_normal_attack(weapon_type = 'explosive'),
+		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
-		classes = [weapon_class_thrown, weapon_class_exploding],
+		classes = [weapon_class_exploding, weapon_class_captcha],
 		stat = stat_grenade_kills,
-		#sap_cost = 1,
-		captcha_length = 3
+		captcha_length = 4
 	),
 	EwWeapon( # 17
 		id_weapon = weapon_id_garrote,
@@ -6038,7 +5520,6 @@ weapon_list = [
 		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
 		stat = stat_garrote_kills,
-		#sap_cost = 5,
 	),
 	EwWeapon(  # 18
 		id_weapon = weapon_id_pickaxe,
@@ -6061,12 +5542,10 @@ weapon_list = [
 		str_damage = "{name_target} is lightly tapped on the {hitzone}!!",
 		str_duel = "**THWACK, THWACK** {name_player} and {name_target} spend some quality time together, catching up and discussing movies they recently watched or food they recently ate.",
 		str_scalp = " It reeks of dirt and poudrins. How embarrassing!",
-		fn_effect = wef_tool,
+		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		str_description = "It's a pickaxe.",
 		acquisition = acquisition_smelting,
 		stat = stat_pickaxe_kills,
-		#sap_cost = 2,
-		captcha_length = 2,
 		is_tool = 1
 	),
 	EwWeapon(  # 19
@@ -6093,12 +5572,10 @@ weapon_list = [
 		str_damage = "{name_target} is lightly pierced on the {hitzone}!!",
 		str_duel = "**whsssh, whsssh** {name_player} and {name_target} spend some quality time together, discussing fishing strategy and preferred types of bait.",
 		str_scalp = " It has a fishing hook stuck in it. How embarrassing!",
-		fn_effect = wef_tool,
+		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		str_description = "It's a super fishing rod.",
 		acquisition = acquisition_smelting,
 		stat = stat_fishingrod_kills,
-		#sap_cost = 2,
-		captcha_length = 2,
 		is_tool = 1
 	),
 	EwWeapon(  # 20
@@ -6120,12 +5597,10 @@ weapon_list = [
 		str_damage = "{name_target} is whacked across the {hitzone}!!",
 		str_duel = "**SMASHHH.** {name_player} and {name_target} smash their bass together before admiring eachothers skillful basslines.",
 		str_scalp = " If you listen closely, you can still hear the echoes of a sick bassline from yesteryear.",
-		fn_effect = wef_bass,
+		fn_effect = get_normal_attack(weapon_type = 'variable_damage'),
 		str_description = "It's a bass guitar. All of its strings are completely out of tune and rusted.",
 		acquisition = acquisition_smelting,
 		stat = stat_bass_kills,
-		#sap_cost = 2,
-		captcha_length = 2
 	),
 	EwWeapon(  # 21
 		id_weapon = weapon_id_umbrella,
@@ -6148,13 +5623,12 @@ weapon_list = [
 		str_damage = "{name_target} is struck in the {hitzone}!!",
 		str_duel = "**THWACK THWACK.** {name_player} and {name_target} practice their fencing technique, before comparing their favorite umbrella patterns.",
 		str_scalp = " At least it didn't get wet.",
-		fn_effect = wef_umbrella,
+		fn_effect = get_normal_attack(weapon_type = 'defensive'),
 		str_description = "It's an umbrella, both stylish and deadly.",
 		price = 100000,
 		vendors = [vendor_bazaar],
-		classes = [weapon_class_defensive],
+		classes = [weapon_class_defensive, weapon_class_captcha],
 		stat = stat_umbrella_kills,
-		#sap_cost = 1,
 		captcha_length = 4
 	),
 	EwWeapon(  # 22
@@ -6176,12 +5650,10 @@ weapon_list = [
 		str_damage = "{name_target} is shot in the {hitzone}!!",
 		str_duel = "{name_player} and {name_target} shoot distant targets, {name_player} is clearly the superior bowman.",
 		str_scalp = " The scalp has pixels covering it.",
-		fn_effect = wef_bow,
+		fn_effect = get_normal_attack(weapon_type = 'small_game'),
 		str_description = "It's a newly crafted minecraft bow, complete with a set of minecraft arrows",
 		acquisition = acquisition_smelting,
 		stat = stat_bow_kills,
-		#sap_cost = 2,
-		captcha_length = 2
 	),
 	EwWeapon(  # 23
 		id_weapon = weapon_id_dclaw,
@@ -6202,13 +5674,13 @@ weapon_list = [
 		str_damage = random.choice(["{name_target} is slashed across the {hitzone}!!","{name_player} furiously slashes {name_target} across the {hitzone}!!","{name_player} flicks their fingers and a jet of flame ignites from the dragon claw, burning {name_target} in the {hitzone}!!"]),
 		str_duel = "**SLICE!! SWIPE!! SLASH!!** {name_player} and {name_target} cut the fuck out of eachother, a fire extinguisher is never more than a meter away.",
 		str_scalp = "The scalp is burning and doesn't look like it's gonna stop.",
-		fn_effect = wef_dclaw,
+		fn_effect = get_normal_attack(weapon_type = 'incendiary'),
 		str_description = "It's the core of a Dragon Claw, it will morph around whatever hand it is held by granting them the power of the elusive GREEN EYES SLIME DRAGON. If you listen closely you can hear whines of the dragon soul as it remains perpetually trapped in the weapon.",
 		acquisition = acquisition_smelting,
 		stat = stat_dclaw_kills,
-		classes = [weapon_class_burning],
-		#sap_cost = 5,
-		captcha_length = 2),
+		classes = [weapon_class_burning, weapon_class_captcha],
+		captcha_length = 4
+	),
 
 	EwWeapon(  # 24
 		id_weapon=weapon_id_spraycan,
@@ -6232,7 +5704,7 @@ weapon_list = [
 								  "{name_player} humiliates {name_target} by bringing a spray can to a gunfight, mentally damaging them in the {hitzone}!!"]),
 		str_duel="**PSSS PSSS PSSSSSHH!** {name_player} and {name_target} spray the dojo walls until they get dizzy from the smell.",
 		str_scalp="The scalp is a nice shade of mauve.",
-		fn_effect=wef_tool,
+		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		str_description="It's a Based Hardware brand spray can, in your gang's color. The blurb on the backside preaches about the merits of street art and murals, but you're pretty sure that's just to cover their ass.",
 		vendors = [vendor_basedhardware, vendor_breakroom],
 		stat=stat_spraycan_kills,
@@ -6240,7 +5712,7 @@ weapon_list = [
 		#sap_cost=2,
 		captcha_length=3,
 		is_tool = 1,
-		str_backfire = "As {name_player} shakes the can to fire another shot, the thing suddenly explodes on them!",
+		# str_backfire = "As {name_player} shakes the can to fire another shot, the thing suddenly explodes on them!",
 		tool_props = {
 		'reg_spray' : "You run down the streets, tagging buildings, street signs and old ladies with spray paint in the image of the {gang}!",
 		'miss_spray' : "**Miss!** Your can seems to be low on spray. You fill it up and give it a good shake. Good as new!",
@@ -6269,7 +5741,7 @@ weapon_list = [
 								  "{name_player} attacks {name_target} with harmless paint!!"]),
 		str_duel="**SPLAT TAT TAT!!** {name_player} and {name_target} harass everyone in the dojo with their paint guns.",
 		str_scalp="The scalp is colorful, from both blood and paint.",
-		fn_effect=wef_tool,
+		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		str_description="It's an industrial strength two handed paint gun with a sniper scope attached. What do they use this for in industry, anyway?",
 		vendors=[vendor_basedhardware, vendor_breakroom],
 		stat=stat_paintgun_kills,
@@ -6280,7 +5752,7 @@ weapon_list = [
 		captcha_length=4,
 		is_tool = 1,
 		str_reload = "*Click.* You grab a paint cylinder from god knows where and load it into your gun, chucking the leftover one behind an alleyway.",
-		str_backfire = "Whoops, looks like somebody didn't fasten the paint cylinder hard enough! {name_player} gets a thorough spray to the face!",
+		# str_backfire = "Whoops, looks like somebody didn't fasten the paint cylinder hard enough! {name_player} gets a thorough spray to the face!",
 		tool_props = {
 			'reg_spray':  "You find a patch of wall several yards away that hasn't been vandalized yet. Time to take aim and...BAM! Nice shot!",
 			'miss_spray': "**Miss!** Your aim was as sharp as ever, but a fucking pigeon took the hit! Christ, what are the odds?",
@@ -6310,7 +5782,7 @@ weapon_list = [
 								  "{name_player} rolls paint all over {name_target}'s {hitzone}!!"]),
 		str_duel="{name_player} and {name_target} quietly pass the time rolling paint over the windows of nearby houses You both have learned tranquility.",
 		str_scalp="The scalp is split in half, with a big hole right in the middle.",
-		fn_effect=wef_tool,
+		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		price = 4500,
 		str_description="It's a long, broom-like plastic paint roller with a spongy brush and metal axle. The modern man's bo staff.",
 		vendors=[vendor_basedhardware, vendor_breakroom],
@@ -6319,7 +5791,7 @@ weapon_list = [
 		#sap_cost=2,
 		captcha_length=4,
 		is_tool=1,
-		str_backfire = "{name_player} waves the paint roller around like it's a plastic toy, spreading paint nowhere but giving themselves a thorough welt in the head from the 2 square inches of it that could actually do any damage. How'd they manage that?",
+		# str_backfire = "{name_player} waves the paint roller around like it's a plastic toy, spreading paint nowhere but giving themselves a thorough welt in the head from the 2 square inches of it that could actually do any damage. How'd they manage that?",
 		tool_props = {
 			'reg_spray' : "You roll paint over as much surface area as your puny little Juvie legs can take you to.",
 			'miss_spray' : "**Miss!** The sponge on your roller snaps off and it takes too long for you to notice. What a waste!",
@@ -6348,7 +5820,7 @@ weapon_list = [
 								  "{name_player} grazes {name_target}'s {hitzone} with coarse bristles!!"]),
 		str_duel="{name_player} and {name_target} paint random text commands on the walls outside the Dojo. {name_target} paints some furry art when nobody's looking.",
 		str_scalp="The scalp has a bunch of welts, and has a faint smell of lead.",
-		fn_effect=wef_tool,
+		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		str_description="A stack of large, coarse-bristled paintbrushes, linked together on a burlap string.",
 		vendors=[vendor_basedhardware, vendor_breakroom],
 		stat=stat_paintbrush_kills,
@@ -6357,7 +5829,7 @@ weapon_list = [
 		price = 100,
 		captcha_length=3,
 		is_tool=1,
-		str_backfire = "In an attempt to paint faster, {name_player} sticks one of the handles in their mouth and try to use it to cover more ground. Instead, they broke your teeth and scraped their cheek on a hard brick surface. Better not try that again...",
+		# str_backfire = "In an attempt to paint faster, {name_player} sticks one of the handles in their mouth and try to use it to cover more ground. Instead, they broke your teeth and scraped their cheek on a hard brick surface. Better not try that again...",
 		tool_props = {
 			'reg_spray' : "You paint vulgar {gang} symbols on as many buildings as you can.",
 			'miss_spray' : "**Miss!** You finish with a paint can and have to switch! You waste too much time getting the can open.",
@@ -6384,7 +5856,7 @@ weapon_list = [
 		str_damage="```ini\n[{name_player} paints a picture of {name_target}. Their self esteem takes a hit!]\n```",
 		str_duel="```json\n\"{name_player} and {name_target} practice art using Dojo-owned easels and canvases. Eventually, the training session breaks down and, you just throw paint water at each other and giggle like schoolgirls.\"\n```",
 		str_scalp="The scalp is perfectly intact.",
-		fn_effect=wef_tool,
+		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		str_description="A 12 pack of watercolors, the kind you used when you were a 5 years old boy.",
 		vendors=[vendor_basedhardware, vendor_breakroom],
 		stat=stat_watercolor_kills,
@@ -6393,7 +5865,7 @@ weapon_list = [
 		price = 1300,
 		captcha_length=3,
 		is_tool=1,
-		str_backfire = "{name_player} has the idea of trying to paint their parents fucking, thinking it will be really funny and everyone will love them. Pretty soon we're going to have to ban watercolors because people like you are using them to molest yourself.",
+		# str_backfire = "{name_player} has the idea of trying to paint their parents fucking, thinking it will be really funny and everyone will love them. Pretty soon we're going to have to ban watercolors because people like you are using them to molest yourself.",
 		tool_props = {
 			'reg_spray' : "Nice drawing, {curse}! ",
 			'miss_spray' : "**Miss!** Your painting sucks. God, you're stupid. ",
@@ -6422,16 +5894,16 @@ weapon_list = [
 								  "{name_player} slashes {name_target} with a broken thinnerbomb! Ooh, right in the {hitzone}!!"]),
 		str_duel="{name_player} and {name_target} build a resistance to the noxious chemicals they're using by drinking paint thinner together. Cheers.",
 		str_scalp="The scalp smells awful, you can hardly hold it.",
-		fn_effect=wef_tool,
+		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		str_description="A pack of brittle glass bottles filled with paint thinner. This stuff vaporizes like nobody's business, and could strip the osmotic membrane off a slimeoid.",
 		vendors=[vendor_basedhardware, vendor_breakroom],
 		stat=stat_thinnerbomb_kills,
-		classes=[weapon_class_paint, weapon_class_thrown, weapon_class_captcha],
+		classes=[weapon_class_paint, weapon_class_captcha],
 		#sap_cost=2,
-		price = 150,
+		price = 15000,
 		captcha_length=4,
 		is_tool = 1,
-		str_backfire = "You haven't had a good buzz in awhile, so you take a whiff of one of your thinner bombs. Great trip and all, but you rough yourself up convulsing on the ground while it happens.",
+		# str_backfire = "You haven't had a good buzz in awhile, so you take a whiff of one of your thinner bombs. Great trip and all, but you rough yourself up convulsing on the ground while it happens.",
 		tool_props = {
 		'reg_spray' : "You find a vandalized wall and toss a thinner bomb on it! You hear a faint sizzling as paint begins to strip off the walls. Sick!",
 		'miss_spray' : "**Miss!** You make a mistake on the throw's distance and it bursts uselessly on the ground. You got to do some littering, so at least there's that.",
@@ -6487,7 +5959,7 @@ weapon_list = [
 		str_duel = "{name_player} and {name_target} discuss their latest harvest and exchange farming tips.",
 		str_description = "It's a farming hoe.",
 		str_scalp = "It's covered in dirt.",
-		fn_effect = wef_tool,
+		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		price = 100000,
 		vendors = [vendor_atomicforest],
 		classes = [weapon_class_farming, weapon_class_juvie],
@@ -6511,7 +5983,7 @@ weapon_list = [
 		str_duel = "{name_player} and {name_target} joust with their pithforks. Thankfully, no one gets hurt in the process.",
 		str_description = "It's a farming pitchfork.",
 		str_scalp = "It's got three holes in it.",
-		fn_effect = wef_tool,
+		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		price = 100000,
 		vendors = [vendor_atomicforest],
 		classes = [weapon_class_farming, weapon_class_juvie],
@@ -6535,7 +6007,7 @@ weapon_list = [
 		str_duel = "{name_player} and {name_target} perform a high-shovel. The moment could not be more perfect.",
 		str_description = "It's a shovel.",
 		str_scalp = "It's flattened.",
-		fn_effect = wef_tool,
+		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		price = 100000,
 		vendors = [vendor_atomicforest],
 		classes = [weapon_class_juvie],
@@ -6559,7 +6031,7 @@ weapon_list = [
 		str_duel = "{name_player} and {name_target} water flowers together. Sometimes it's nice to be a fucking weak willed coward, y'know?",
 		str_description = "It's a slimering can.",
 		str_scalp = "It's soaking wet.",
-		fn_effect = wef_tool,
+		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		price = 100000,
 		vendors = [vendor_atomicforest],
 		classes = [weapon_class_juvie],
@@ -6618,9 +6090,9 @@ weapon_list = [
 		str_duel="{name_player} and {name_target} begin engineering their portable vaccums into high class battle bots. By the time you're done the Dojo floor is spotless and everyone nearby is dead.",
 		str_description="It's a high powered portable vaccuum designed to clean up dust. You use it to spread paint around by attaching a spray can to the back.",
 		str_scalp=" It looks stretched and wrinkled.",
-		fn_effect=wef_tool,
+		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		price=40000,
-		str_backfire="You roomba turns on you! Its shitty AI thinks your feet are its prey, and it sucks away some precious slime!",
+		# str_backfire="You roomba turns on you! Its shitty AI thinks your feet are its prey, and it sucks away some precious slime!",
 		vendors=[vendor_basedhardware],
 		classes=[weapon_class_paint, weapon_class_captcha],
 		stat=stat_fingernails_kills,
@@ -6723,11 +6195,7 @@ def atf_molotovbreath(ctn = None):
 
 	#ctn.bystander_damage = dmg * 0.5
 
-	if aim <= (2 + int(10 * ctn.miss_mod)):
-		ctn.backfire = True
-		ctn.backfire_damage = dmg
-
-	elif aim == (3 + int(10 * ctn.miss_mod)):
+	if aim == (3 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 
@@ -6845,7 +6313,7 @@ enemy_attack_type_list = [
 	),
 	EwAttackType( # 6
 		id_type = "molotovbreath",
-		str_backfire = "**Oh the humanity!!** {name_enemy} tries to let out a breath of fire, but it combusts while still inside their maw!!",
+		# str_backfire = "**Oh the humanity!!** {name_enemy} tries to let out a breath of fire, but it combusts while still inside their maw!!",
 		str_crit = "**Critical hit!!** {name_target} is char grilled by {name_enemy}'s barrage of molotov breath!",
 		str_miss = "**{name_enemy} missed!** Their shot hits the ground instead, causing embers to shoot out in all directions!",
 		#str_trauma_self = "You're wrapped in two layers of bandages. What skin is showing appears burn-scarred.",
@@ -7612,7 +7080,6 @@ item_def_list = [
 			'kills': 0,
 			'consecutive_hits': 0,
 			'time_lastattack': 0,
-			'jammed': 0,
 			'totalkills': 0
 		}
 	),
@@ -13279,29 +12746,40 @@ help_responses = {
 	"slimeball": "Slimeball is a sport where two teams of players compete to get the ball into the opposing team's goal to score points. A game of Slimeball is started when a player does !slimeball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !slimeball to see your data, the ball's location and the score. To move around the field, use !slimeballgo [coordinates]. You can kick the ball by running into it. To stop, use !slimeballstop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !slimeballleave, or join a different game. A game of Slimeball ends when no players are left.",
 
 	# Weapons
-	weapon_id_revolver: "**The revolver** is a weapon for sale at the Dojo. It has a damage mod of 0.8 and an attack cost mod of 1. It has a miss chance of 10% and a 10% chance for a crit, which does 2x damage. After every 6 shots you will need to **!reload** it.",
-	weapon_id_dualpistols: "**The dual pistols** are a weapon for sale at the Dojo. They have a damage mod of 1 and an attack cost mod of 1. They have a miss chance of 40% and a 20% chance for a crit, which does 2x damage. After every 12 shots you will need to **!reload** them.",
-	weapon_id_shotgun: "**The shotgun** is a weapon for sale at the Dojo. It has a damage mod of 1.65 and an attack cost mod of 1.5. It has a miss chance of 10% and a 10% chance for a crit, which does 2x damage. After every 2 shots you will need to **!reload** it.",
-	weapon_id_rifle: "**The rifle** is a weapon for sale at the Dojo. It has a damage mod of 1.25 and an attack cost mod of 1.25. It has a 20% chance for a crit, which does 2x damage. The rifle never misses. After every 4 shots you will need to **!reload** it.",
-	weapon_id_smg: "**The SMG** is a weapon for sale at the Dojo. It has a damage mod of 0.2 and an attack cost mod of 1. It has a 20% chance to jam with every attack, in which case you will need to **!unjam** it to continue firing. The SMG only requires a captcha for !unjam, not for every !kill. For every !kill it shoots 6 bullets, each of which has a 25% miss chance, and a 5% chance for a crit, which does 3x damage. After every 4 attacks you will need to **!reload** it.",
-	weapon_id_minigun: "**The minigun** is a heavy weapon not for sale at the Dojo. It has a damage mod of 0.8 and an attack cost mod of 5. It has a captcha length of 10. For every !kill it shoots 10 bullets, each of which has a 50% miss chance, and a 10% chance for a crit, which does 2x damage.",
-	weapon_id_bat: "**The nailbat** is a weapon for sale at the Dojo. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a miss chance of 1/13, a 1/13 chance for a crit, which increases the damage mod to 4, and a 1/13 chance to backfire and damage the wielder instead.",
-	weapon_id_brassknuckles: "**The brass knuckles** are a weapon for sale at the Dojo. They have a damage mod of 1 and an attack cost mod of 1. For every !kill they throw 2 punches. Every punch has a 20% miss chance. If you land 3 successful attacks (not punches) in succession with perfect timing, the third attack will throw an extra punch, which deals 3x damage. For perfect timing you need to take between 1.5 to 2.5 seconds between attacks.",
-	weapon_id_katana: "**The katana** is a weapon for sale at the Dojo. It has a damage mod of 1.3 and an attack cost mod of 1.3. It has a captcha length of 8. The katana never misses. If the katana is the only weapon in your inventory, it crits for 1.5x damage on every hit.",
-	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. It has a damage mod of 3 and an attack cost mod of 5. It has a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 10% chance to backfire and damage the wielder instead. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 0.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
-	weapon_id_nunchucks: "**The nunchucks** are a weapon for sale at the Dojo. They have a damage mod of 0.25 and an attack cost mod of 1. For every !kill they throw 4 blows. Every blow has a 25% miss chance. If all 4 blows hit, you deal an additional blow that does 4x damage. If all shots miss, the nunchucks will backfire for 2x damage.",
-	weapon_id_scythe: "**The scythe** is a weapon for sale at the Dojo. It has a damage mod of 0.5 and an attack cost mod of 3. It has a miss chance of 10% and a 10% chance for a crit, which does 3x damage. The scythe's damage mod increases by 0.5 for every kill your opponent got this life, up to a maximum damage mod of 5.",
-	weapon_id_yoyo: "**The yo-yo** is a weapon for sale at the Dojo. It has a damage mod of 0.5 and an attack cost mod of 1. It has a miss chance of 18.75% and a 10% chance for a crit, which does 2x damage. The yo-yo's damage mod increases by 0.25 for every successful consecutive hit, without getting hit yourself.",
-	weapon_id_bass: "**The bass guitar** is a weapon not for sale at the Dojo. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. The bass does not require a captcha to use.",
-	weapon_id_umbrella: "**The umbrella** is a weapon for sale at the Bazaar. It has a damage mod of 0.5 and an attack cost mod of 1. It has a miss chance of 10%, and a 10% chance for a crit, which does 2x damage. The umbrella decreases incoming damage by 75%.",
-	weapon_id_knives: "**The throwing knives** are a weapon for sale at the Dojo. They have a damage mod of 0.5 and an attack cost mod of 0.25. They have a miss chance of 10% and a 10% chance for a crit, which does 2x damage. When you attack with a throwing knife, it is used up, and you have to buy more.",
-	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. They have a damage mod of 0.75 and an attack cost mod of 1. They have a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
-	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. They have a damage mod of 0.75 and an attack cost mod of 1. They have a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
-	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. It has a damage mod of 15 and an attack cost mod of 1. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
-	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
-	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 3.",
-	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Dealing damage with the staff requires attacking five times in a 15-second window, with the first four !kill command only being preparetion for the fifth. The attack cost multiplier is 0.5 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 0.6, sap piercing 0, and a 0% chance to crit, which deals 1.8x damage. A number of conditions may be met to increase the damage multiplier by 1.2, sap piercing by 6, and crit chance by 6.66%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
-	
+	"normal": "**Normal weapons** include the **Dual Pistols**, **Revolver**, and the **Yo-yo**. They have a damage modifier of 110%, no cost modifier, 20% crit chance, a crit multiplier of 180%, and a 90% chance to hit. These are straight forward weapons with no gimmicks and average damage.",
+	"multiple-hit": "**Multiple hit weapons** include the **SMG**, **Assault RIfle**, and the **Nunchuck*. They deal three attacks per kill command with an overall cost modifier of 80%, and each attack has a 40% damage modifier, 20% crit chance, a crit multiplier of 150%, and an 85% chance to hit. These are very safe reliable weapons, though they deal slightly below average damage on average.",
+	"variable-damage": "**Variable damage weapons** include the **Nailbat**, **Bass**, and the **Brass Knuckles*. They have a randomised damage modifier between 50% and 250%, no cost modifier, 10% crit chance, a crit multiplier of 150%, and a 90% chance to hit. On average, these weapons deal pretty good damage for a very reasonable attack cost, but their unreliability can make them quite risky to use.",
+	"small-game": "**Small game weapons** include the **Knives** and the **Minecraft Bow**. They have a damage modifier of 50%, a cost modifier of 25%, 10% crit chance, a crit multiplier of 200%, and a 95% chance to hit. These are reliable and underpowered weapons, with extremely low usage costs making them very efficient. Best used for bullying weaklings and hunting.",
+	"heavy": "**Heavy weapons** include the **Scythe** and the **Broadsword**. They have a damage modifier of 300%, a cost modifier of 500%, 5% crit chance, a crit multiplier of 150%, and an 80% chance to hit. Unreliable and incredibly expensive to compensate for their incredible damage, these weapons are best used when you _really_ want to get that kill, no matter what.",
+	"defensive": "**Heavy weapons** currently only include the **Umbrella*. While you have one equipped, you take 25% reduced damage! They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 150%, and an 85% chance to hit, with a captcha of 4. Best used for punching down or protecting yourself while traveling, these weapons are typically too weak and unwieldy for use in normal combat scenarios.",
+	"precision": "**Precision weapons** currently only include the **Katana*. They have a damage modifier of 130%, a cost modifier of 130%, a crit multiplier of 200%, with a captcha of 4. They always hit, and get a guaranteed crit if you have no other weapons equipped. These weapons deal very high and reliably damage, but only if you're willing to bear the burden of their captcha and the lack of flexibility they impose.",
+	"incendiary": "**Incendiary weapons** include the **Molotov Bottles* and the **Dragon Claw**. They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 200%, a 90% chance to hit, and a captcha of 4. You will take 10% to 15% of your slime as damage if you enter the captcha wrong! They also deal an extra 50% damage to the target and any flagged enemies in the area over time, causing them to explode on death. A more powerful alternative to explosive weapons, if you can deal with the damage being dealt over time, rather than on one go.",
+	"explosive": "**Incendiary weapons** currently only include the **Grenades**. They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 200%, a 90% chance to hit, and a captcha of 4. You will take 10% to 15% of your slime as damage if you enter the captcha wrong! They also deal an extra 50% damage to the target and any flagged enemies in the area. The go-to if you're being swarmed by a mob of weaklings, can clear entire districts in one go.",
+
+	weapon_id_revolver: "**The revolver** is a normal weapon for sale at the Dojo. It's an ordinary six-shot revolver, so you'll have to **!reload** it after attacking six times, though its attack cost is reduced to 80% to compensate. Goes well with a cowboy hat.",
+	weapon_id_dualpistols: "**The dual pistols** are a normal weapon for sale at the Dojo. Shockingly, these aren't that common, despite the city being chock-full of gangsters.",
+	weapon_id_shotgun: "**The shotgun** is a heavy weapon for sale at the Dojo. It's a double barrelled shotgun, so you'll need to !reload after every two shots, though your cost multiplier is reduced down to 400% to compensate. Grass grows, birds fly, sun shines, and this thing hurts people; _it's a force of nature_.",
+	weapon_id_rifle: "**The rifle** is a multiple-hit weapon for sale at the Dojo. Its magazine only holds enough boolets for ten attacks, so you'll have to **!reload** after hitting the throttle limit, but its cost multiplier goes down to 70% to compensate. The experts are still undecided, but most people would agree this is a FAMAS.",
+	weapon_id_smg: "**The SMG** is a multiple hit-weapon for sale at the Dojo. Its magazine only holds enough boolets for ten attacks, so you'll have to **!reload** after hitting the throttle limit, but its cost multiplier goes down to 70% to compensate. This is pretty good if you like to move around a lot, since the crosshair doesn't grow that much while you're sprinting.",
+	weapon_id_bat: "**The nailbat** is a variable-damage weapon for sale at the Dojo. This thing could actually be used to hit balls if you took the nails off it, but that seems a little high-tech...",
+	weapon_id_brassknuckles: "**The brass knuckles** are a variable-damage weapon for sale at the Dojo. Made by sanding away most of a huge pair of metal gauntlets.",
+	weapon_id_katana: "**The katana** is a precision weapon for sale at the Dojo. This weapon is folded over a thousand times, so it can cut clean through steel and is vastly superior to any other weapon on earth.",
+	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. Modeled after a legendary Scottish blade, said to have lopped off a hundred enemy heads and then its own wielder's.",
+	weapon_id_nunchucks: "**The nunchucks** are a multiple-hit weapon for sale at the Dojo. 我不僅在未經武裝的戰鬥中接受了廣泛的訓練，而且我可以接觸到美國海軍陸戰隊的整個武庫，而且我會盡其所能將你那可悲的屁股從整個非洲大陸上擦掉，你一點都不討厭。 如果只有您能知道您的小“聰明”評論對您造成了什麼邪惡的報應，也許您會held之以鼻。 但是你不能，你沒有，現在你要付出代價了，你這該死的白痴。 我會在你周圍大怒，你會淹死在裡面。 你他媽的死了，孩子。",
+	weapon_id_scythe: "**The scythe** is a heavy weapon for sale at the Dojo. Often mistaken for a bardiche, this is actually one of the better weapons for a PvE-focused DEX build if you don't mind the long recovery animation after whiffing an attack.",
+	weapon_id_yoyo: "**The yo-yo** is a normal weapon for sale at the Dojo. All the sick tricks you can pull off with this thing are frankly unremarkable compared to the primal joy of cracking a hole through someone's skull with this tungsten wheel of death.",
+	weapon_id_bass: "**The bass guitar** is a variable-damage weapon acquired via smelting. It makes the most beautiful sounds when plucking your enemies' tendons.",
+	weapon_id_umbrella: "**The umbrella** is a defensive weapon for sale at the Bazaar. It has a futurecore feel to it, with the reinforced graphene canopy allowing visibility from the inside out, but not the other way around. Certainly one of the most stylish weapons seen in the city.",
+	weapon_id_knives: "**The throwing knives** are a small-game weapon for sale at the Dojo. These are often quite dull, relying less on the knives's inherent properties and more on the slime-fueled superstrength of its wielders to pierce through their targets.",
+	weapon_id_molotov: "**The molotov bottles** are an incendiary weapon for sale at the Dojo. Made with a special slime-based concoction powerful enough to level Juvie's Row if applied correctly. This shit is like bottled malice.",
+	weapon_id_grenades: "**The grenades** are an explosive weapon for sale at the Dojo. These may actually be nuclear powered, judging by their ability to wipe out entire districts full of gangsters in one blast.",
+	weapon_id_dclaw: "**The Dragon Claw** is an incendiary weapon acquired via smelting. It merges into your body, turning your arm into a weapon of mass destruction.",
+	weapon_id_bow: "**The minecraft bow** is a small-game weapon acquired via smelting. The calming music most people hum while wielding this thing is quite the interesting contrast, when considered along with the impaled corpses they leave behind.",
+
+	weapon_id_garrote: "**The Garrote Wire** is a unique weapon. It has a damage modifier of 1500%, no cost modifier, guaranteed hits, and a 1% chance for a crit, which does 1000% damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
+	weapon_id_minigun: "The **Minigun** is a special variant of **variable damage weapons**. It deals ten attacks per kill command with an overall cost modifier of 500%, and each attack has a 30% damage modifier, 10% crit chance, a crit multiplier of 200%, and a 50% chance to hit, with a captcha of 6. This is a strange weapon that can potentially deal astronomical damage if used in the right circumstances, and if you're willing to deal with its exceptionally long captcha.",
+	weapon_id_staff: "The **Eldritch Staff** is a unique weapon. By default, it has a damage modifier of 30%, a cost modifier of 200%, guaranteed hits, no crit chance, and a crit multiplier of 180%. A number of conditions may be met to increase the damage multiplier by 60% and crit chance by 6.66%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
+
 	weapon_id_spraycan: "**The spray can** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.8 and a spray cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
 	weapon_id_paintgun: "**The paint gun** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.7 and a spray cost mod of 0.75. It has a captcha length of 6, a miss chance of O% and a 20% chance for a crit, which does 2x influence.",
 	weapon_id_paintroller: "**The paint roller** is a paint tool for sale at Based Hardware. It has a capping modifier of 1.75 and a spray cost mod of 4. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
@@ -13325,12 +12803,18 @@ help_responses_ordered_keys = [
 ]
 
 weapon_help_responses_ordered_keys = [
-	weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun, weapon_id_rifle, weapon_id_smg,
-	weapon_id_bat, weapon_id_brassknuckles, weapon_id_katana, weapon_id_broadsword, weapon_id_nunchucks,
-	weapon_id_scythe, weapon_id_yoyo, weapon_id_umbrella, weapon_id_knives, weapon_id_molotov,
-	weapon_id_grenades, weapon_id_garrote, weapon_id_minigun, weapon_id_bow, weapon_id_dclaw,
-	weapon_id_staff, weapon_id_spraycan, weapon_id_paintgun, weapon_id_paintroller, weapon_id_paintbrush,
-	weapon_id_watercolors, weapon_id_thinnerbomb
+	weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun,
+	weapon_id_rifle, weapon_id_smg, weapon_id_bat, 
+	weapon_id_brassknuckles, weapon_id_katana, weapon_id_broadsword,
+	weapon_id_nunchucks, weapon_id_scythe, weapon_id_yoyo,
+	weapon_id_bass, weapon_id_umbrella, weapon_id_knives,
+	weapon_id_molotov, weapon_id_grenades, weapon_id_dclaw, weapon_id_bow,
+	weapon_id_garrote, weapon_id_minigun, weapon_id_staff,
+	weapon_id_spraycan, weapon_id_paintgun, weapon_id_paintroller, weapon_id_paintbrush,
+	weapon_id_watercolors, weapon_id_thinnerbomb,
+	"normal", "multiple-hit", "variable-damage",
+	"small-game", "heavy", "defensive",
+	"precision", "incendiary", "explosive",
 ]
 
 mutation_descriptions = {

@@ -477,36 +477,14 @@ async def order(cmd):
 							item_type_filter = ewcfg.it_weapon
 						)
 
-						has_weapon = False
-
-						# Thrown weapons are stackable
-						if ewcfg.weapon_class_thrown in item.classes:
-							# Check the player's inventory for the weapon and add amount to stack size. Create a new item the max stack size has been reached
-							for wep in weapons_held:
-								weapon = EwItem(id_item=wep.get("id_item"))
-								if weapon.item_props.get("weapon_type") == item.id_weapon and weapon.stack_size < weapon.stack_max:
-									has_weapon = True
-									weapon.stack_size += 1
-									weapon.persist()
-									
-									if value == 0:
-										response = "You swipe a {} from the counter at {}.".format(item.str_weapon, current_vendor)
-									else:
-										response = "You slam {:,} slime down on the counter at {} for {}.".format(value, current_vendor, item.str_weapon)
-									
-									user_data.change_slimes(n=-value, source=ewcfg.source_spending)
-									user_data.persist()
-									return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-						if has_weapon == False:
-							if len(weapons_held) >= user_data.get_weapon_capacity():
-								response = "You can't carry any more weapons."
-								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						if len(weapons_held) >= user_data.get_weapon_capacity():
+							response = "You can't carry any more weapons."
+							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-							elif user_data.life_state == ewcfg.life_state_corpse:
-								response = "Ghosts can't hold weapons."
-								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						elif user_data.life_state == ewcfg.life_state_corpse:
+							response = "Ghosts can't hold weapons."
+							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					item_props = ewitem.gen_item_props(item)
 
@@ -545,8 +523,8 @@ async def order(cmd):
 						item_type = item_type,
 						id_user = cmd.message.author.id,
 						id_server = cmd.guild.id,
-						stack_max = 20 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else -1,
-						stack_size = 1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
+						stack_max = -1,
+						stack_size = 0,
 						item_props = item_props
 					)
 					
