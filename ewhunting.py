@@ -423,8 +423,6 @@ class EwEnemy:
 
 			miss = False
 			crit = False
-			backfire = False
-			backfire_damage = 0
 			strikes = 0
 			#sap_damage = 0
 			#sap_ignored = 0
@@ -506,14 +504,12 @@ class EwEnemy:
 						# Build effect container
 						ctn = EwEnemyEffectContainer(
 							miss=miss,
-							backfire=backfire,
 							crit=crit,
 							slimes_damage=slimes_damage,
 							enemy_data=enemy_data,
 							target_data=target_data,
 							#sap_damage=sap_damage,
 							#sap_ignored=sap_ignored,
-							backfire_damage=backfire_damage,
 							miss_mod=miss_mod,
 							crit_mod=crit_mod
 						)
@@ -523,13 +519,11 @@ class EwEnemy:
 
 						# Apply effects for non-reference values
 						miss = ctn.miss
-						backfire = ctn.backfire
 						crit = ctn.crit
 						slimes_damage = ctn.slimes_damage
 						strikes = ctn.strikes
 						#sap_damage = ctn.sap_damage
 						#sap_ignored = ctn.sap_ignored
-						backfire_damage = ctn.backfire_damage
 
 					# can't hit lucky lucy
 					if target_data.life_state == ewcfg.life_state_lucky:
@@ -738,19 +732,6 @@ class EwEnemy:
 									name_enemy=enemy_data.display_name,
 									name_target=target_player.display_name
 								))
-							elif backfire:
-								response = "{}".format(used_attacktype.str_backfire.format(
-									name_enemy = enemy_data.display_name,
-									name_target = target_player.display_name
-								))
-								if enemy_data.slimes - enemy_data.bleed_storage <= backfire_damage:
-									loot_cont = drop_enemy_loot(enemy_data, district_data)
-									resp_cont.add_response_container(loot_cont)
-									enemy_data.life_state = ewcfg.enemy_lifestate_dead
-									delete_enemy(enemy_data)
-								else:
-									enemy_data.change_slimes(n = -backfire_damage / 2)
-									enemy_data.bleed_storage += int(backfire_damage / 2)
 							else:
 								response = used_attacktype.str_damage.format(
 									name_enemy=enemy_data.display_name,
@@ -910,9 +891,7 @@ class EwEnemy:
 
 		if target_enemy != None and not group_attack:
 			
-			backfire = False
 			miss = False
-			backfire_type = None
 
 			# Weaponized flavor text.
 			# hitzone = ewwep.get_hitzone()
@@ -926,7 +905,6 @@ class EwEnemy:
 			if set_damage != None:
 				slimes_damage = set_damage
 
-			backfire_damage = slimes_damage
 
 			# Enemies don't select for these types of lifestates in their AI, this serves as a backup just in case.
 			if target_enemy.life_state != ewcfg.enemy_lifestate_unactivated and target_enemy.life_state != ewcfg.enemy_lifestate_dead:
@@ -939,7 +917,6 @@ class EwEnemy:
 				if used_attacktype.fn_effect != None:
 
 					# Apply effects for non-reference values
-					backfire = False # Make sure to account for UFO shamblers and rowddishes throwing back grenades
 					miss = False # Make sure to account for phosphorpoppies statuses
 					
 				if miss:
@@ -1049,26 +1026,6 @@ class EwEnemy:
 							name_enemy=enemy_data.display_name,
 							name_target=target_enemy.display_name
 						))
-					elif backfire:
-						if backfire_type == 'confusion':
-							response = "{} hurt itself in confusion!".format(
-								enemy_data.display_name
-							)
-						elif backfire_type == 'grenadethrow':
-							response = "{} had its grenade thrown right back at it!".format(
-								enemy_data.display_name
-							)
-						else:
-							response = "{}'s attack backfired!".format(
-								enemy_data.display_name
-							)
-						
-						if enemy_data.slimes - enemy_data.bleed_storage <= backfire_damage:
-							enemy_data.life_state = ewcfg.enemy_lifestate_dead
-							delete_enemy(enemy_data)
-						else:
-							enemy_data.change_slimes(n=-int(backfire_damage / 2))
-							enemy_data.bleed_storage += int(backfire_damage / 2)
 					else:
 						response = used_attacktype.str_damage.format(
 							name_enemy=enemy_data.display_name,
@@ -1114,7 +1071,6 @@ class EwEnemy:
 				if set_damage != None:
 					slimes_damage = set_damage
 	
-				backfire_damage = slimes_damage
 	
 				# Enemies don't select for these types of lifestates in their AI, this serves as a backup just in case.
 				if target_enemy.life_state != ewcfg.enemy_lifestate_unactivated and target_enemy.life_state != ewcfg.enemy_lifestate_dead:
@@ -1527,8 +1483,6 @@ class EwEnemy:
 # Reskinned version of effect container from ewwep.
 class EwEnemyEffectContainer:
 	miss = False
-	backfire = False
-	backfire_damage = 0
 	crit = False
 	strikes = 0
 	slimes_damage = 0
@@ -1542,9 +1496,8 @@ class EwEnemyEffectContainer:
 	# Debug method to dump out the members of this object.
 	def dump(self):
 		print(
-			"effect:\nmiss: {miss}\ncrit: {crit}\nbackfire: {backfire}\nstrikes: {strikes}\nslimes_damage: {slimes_damage}\nslimes_spent: {slimes_spent}".format(
+			"effect:\nmiss: {miss}\ncrit: {crit}\nstrikes: {strikes}\nslimes_damage: {slimes_damage}\nslimes_spent: {slimes_spent}".format(
 				miss=self.miss,
-				backfire=self.backfire,
 				crit=self.crit,
 				strikes=self.strikes,
 				slimes_damage=self.slimes_damage,
@@ -1554,7 +1507,6 @@ class EwEnemyEffectContainer:
 	def __init__(
 			self,
 			miss=False,
-			backfire=False,
 			crit=False,
 			strikes=0,
 			slimes_damage=0,
@@ -1563,12 +1515,10 @@ class EwEnemyEffectContainer:
 			target_data=None,
 			#sap_damage=0,
 			#sap_ignored=0,
-			backfire_damage=0,
 			miss_mod=0,
 			crit_mod=0
 	):
 		self.miss = miss
-		self.backfire = backfire
 		self.crit = crit
 		self.strikes = strikes
 		self.slimes_damage = slimes_damage
@@ -1577,7 +1527,6 @@ class EwEnemyEffectContainer:
 		self.target_data = target_data
 		#self.sap_damage = sap_damage
 		#self.sap_ignored = sap_ignored
-		self.backfire_damage = backfire_damage
 		self.miss_mod = miss_mod
 		self.crit_mod = crit_mod
 		
@@ -2610,8 +2559,8 @@ def drop_enemy_loot(enemy_data, district_data):
 					item_type=item_type,
 					id_user=enemy_data.poi,
 					id_server=enemy_data.id_server,
-					stack_max=20 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else -1,
-					stack_size=1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
+					stack_max= -1,
+					stack_size= 0,
 					item_props=item_props
 				)
 
@@ -2651,9 +2600,6 @@ class EwAttackType:
 	# Displayed when a non-lethal hit occurs.
 	str_damage = ""
 
-	# Displayed when an attack backfires
-	str_backfire = ""
-
 	# Function that applies the special effect for this weapon.
 	fn_effect = None
 
@@ -2677,7 +2623,6 @@ class EwAttackType:
 			fn_effect=None,
 			str_crit="",
 			str_miss="",
-			str_backfire = "",
 			str_groupattack = "",
 	):
 		self.id_type = id_type
@@ -2686,7 +2631,6 @@ class EwAttackType:
 		self.str_trauma = str_trauma
 		self.str_trauma_self = str_trauma_self
 		self.str_damage = str_damage
-		self.str_backfire = str_backfire
 		self.fn_effect = fn_effect
 		self.str_crit = str_crit
 		self.str_miss = str_miss

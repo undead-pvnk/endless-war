@@ -1398,7 +1398,7 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 	elif grid[row][col] == ewcfg.cell_empty:
 		grid[row][col] = ewcfg.cell_empty_open
 		grid_cont.cells_mined += 1
-		mining_yield = grid_multiplier * 1 * get_mining_yield_default(cmd)
+		mining_yield = grid_multiplier * 1.7 * get_mining_yield_default(cmd)
 
 	unmined_cells = get_unmined_cell_count(grid_cont)
 
@@ -1485,7 +1485,7 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 
 	cells_to_clear = []
 	
-	slimes_pertile = 3 * get_mining_yield_default(cmd)
+	slimes_pertile = 1.8 * get_mining_yield_default(cmd)
 	if grid[row][col] != ewcfg.cell_bubble_empty:
 		mining_accident = True
 	else:

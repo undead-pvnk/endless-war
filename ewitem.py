@@ -1408,7 +1408,7 @@ async def item_look(cmd):
 
 			response = name + (" x{:,}".format(item.stack_size) if (item.stack_size >= 1) else "") + "\n\n" + response
 
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(player, response))
 		else:
 			if iterate == len(item_dest) and response == "":
 				if item_search:  # if they didnt forget to specify an item and it just wasn't found
@@ -2340,3 +2340,29 @@ async def longdrop(cmd):
 		response = "You stretch your arms and drop your " + item_sought.get("name") + ' into {}.'.format(dest_poi.str_name)
 		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def skullbash(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	item_stash = inventory(id_user=cmd.message.author.id, id_server=user_data.id_server)
+	item_sought = None
+	for item_piece in item_stash:
+		item = EwItem(id_item=item_piece.get('id_item'))
+		if item_piece.get('item_type') == ewcfg.it_furniture and item.item_props.get('id_furniture') == "brick":
+			item_sought = item_piece
+
+	if item_sought:
+		if user_data.life_state == ewcfg.life_state_corpse:
+			response = "Your head is too incorporeal to do that."
+		elif user_data.life_state == ewcfg.life_state_shambler:
+			response = "Your head is too soft and malleable to do that."
+		else:
+			ewutils.active_restrictions[user_data.id_user] = 2
+			response = "You suck in your gut and mentally prepare to lose a few brain cells. 3...2...1...WHACK! Ugh. You're gonna need a minute."
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			await asyncio.sleep(600)
+			ewutils.active_restrictions[user_data.id_user] = 0
+			response = "The stars slowly begin to fade from your vision. Looks like you're lucid again."
+	else:
+		response = "You don't have a hard enough brick to bash your head in."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

@@ -100,8 +100,6 @@ cmd_map = {
 	ewcfg.cmd_reload: ewwep.reload,
 	ewcfg.cmd_reload_alt1: ewwep.reload,
 	
-	# Fix your jammed gun
-	ewcfg.cmd_unjam: ewwep.unjam,
 
 	# Choose your weapon
 	ewcfg.cmd_equip: ewwep.equip,
@@ -822,7 +820,10 @@ cmd_map = {
 	ewcfg.cmd_devour: ewfood.devour,
 	ewcfg.cmd_chemo: ewmutation.chemo,
 	ewcfg.cmd_graft: ewmutation.graft,
-	ewcfg.cmd_bleedout:ewmutation.bleedout,
+	ewcfg.cmd_bleedout: ewmutation.bleedout,
+	ewcfg.cmd_skullbash: ewitem.skullbash,
+
+	ewcfg.cmd_manual_unban:ewcmd.unban_manual,
 
 	# Slime Twitter
 	ewcfg.cmd_tweet: ewslimetwitter.tweet
@@ -1684,7 +1685,9 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'damage'):
 			user_data = EwUser(member = message.author, data_level = 1)
 			slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-			attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
+			# disabled until held items update
+			# attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
+			attack_stat_multiplier = 1
 			weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
 			slimes_damage = int(10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "{}".format(slimes_damage)))

@@ -811,11 +811,16 @@ async def descend(cmd):
 	Player command to move themselves from one place to another.
 """
 async def move(cmd = None, isApt = False):
-	
+
+	player_data = EwPlayer(id_user=cmd.message.author.id)
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=player_data.id_server, data_level=1)
+	poi_current = ewcfg.id_to_poi.get(user_data.poi)
+
 	time_move_start = int(time.time())
-	
+
 	if isApt == False and ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+		channelid = ewutils.get_channel(cmd.guild, poi_current.channel)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.\n{}".format(cmd.tokens[0], "<#{}>".format(channelid.id))))
 
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	if target_name == None or len(target_name) == 0:
@@ -824,9 +829,6 @@ async def move(cmd = None, isApt = False):
 	if target_name in ewcfg.streets:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "https://www.goodreads.com/quotes/106313-the-beginning-of-wisdom-is-to-call-things-by-their ...bitch"))
 
-	player_data = EwPlayer(id_user=cmd.message.author.id)
-	user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server, data_level = 1)
-	poi_current = ewcfg.id_to_poi.get(user_data.poi)
 	poi = ewcfg.id_to_poi.get(target_name)
 	if poi_current.is_apartment == True:
 		isApt = True
@@ -1658,7 +1660,7 @@ async def kick(id_server):
 						user_data.time_lastenter = int(time.time())
 						user_data.persist()
 						await ewrolemgr.updateRoles(client = client, member = member_object)
-	
+						await user_data.move_inhabitants(id_poi=mother_district_chosen)
 						mother_district_channel = ewutils.get_channel(server, ewcfg.id_to_poi[mother_district_chosen].channel)
 						response = "You have been kicked out for loitering! You can only stay in a sub-zone and twiddle your thumbs for 1 hour at a time."
 						await ewutils.send_message(client, mother_district_channel, ewutils.formatMessage(member_object, response))
