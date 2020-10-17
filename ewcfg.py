@@ -4843,13 +4843,13 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None):
 		hit_roll = min(random.random(), random.random()) if player_has_sharptoother else random.random()
 		guarantee_crit = (weapon_type == "precision" and ctn.user_data.sidearm == -1)
 
-		if hit_roll < weapon_stats["hit_chance"]:
+		if hit_roll < (weapon_stats["hit_chance"] + ctn.hit_chance_mod):
 			effective_multiplier = weapon_stats["damage_multiplier"] 
 			if "variable_damage_multiplier" in weapon_stats:
 				effective_multiplier += random.random() * weapon_stats["variable_damage_multiplier"]
 
 			hit_damage = base_damage * effective_multiplier
-			if guarantee_crit or random.random() < weapon_stats["crit_chance"]:
+			if guarantee_crit or random.random() < (weapon_stats["crit_chance"] + ctn.crit_mod):
 				hit_damage *= weapon_stats["crit_multiplier"]
 				if not ("shots" in weapon_stats):
 					ctn.crit = True
@@ -4886,7 +4886,7 @@ def wef_garrote(ctn = None):
 
 	user_mutations = ctn.user_data.get_mutations()
 	aim = (random.randrange(100) + 1)
-	if aim <= int(100 * ctn.miss_mod):
+	if aim <= int(100 * ctn.hit_chance_mod):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
@@ -4954,7 +4954,7 @@ def wef_paintroller(ctn = None):
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
 
-	if aim <= (1 + int(10 * ctn.miss_mod)):
+	if aim <= (1 + int(10 * ctn.hit_chance_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
@@ -4972,7 +4972,7 @@ def wef_watercolors(ctn = None):
 	user_mutations = ctn.user_data.get_mutations()
 	#ctn.sap_damage = 0
 
-	if aim <= (1 + int(250 * ctn.miss_mod)):
+	if aim <= (1 + int(250 * ctn.hit_chance_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
@@ -6118,7 +6118,7 @@ def atf_fangs(ctn = None):
 	aim = (random.randrange(10) + 1)
 	#ctn.sap_damage = 1
 
-	if aim == (1 + int(10 * ctn.miss_mod)):
+	if aim == (1 + int(10 * ctn.hit_chance_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 	elif aim == (10 - int(10 * ctn.crit_mod)):
@@ -6146,7 +6146,7 @@ def atf_raiderscythe(ctn = None):
 	#ctn.sap_damage = 0
 	#ctn.sap_ignored = 5
 
-	if aim <= (2 + int(10 * ctn.miss_mod)):
+	if aim <= (2 + int(10 * ctn.hit_chance_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 	elif aim >= (9 - int(10 * ctn.crit_mod)):
@@ -6159,7 +6159,7 @@ def atf_gunkshot(ctn = None):
 	aim = (random.randrange(10) + 1)
 	#ctn.sap_damage = 2
 
-	if aim <= (2 + int(10 * ctn.miss_mod)):
+	if aim <= (2 + int(10 * ctn.hit_chance_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 	elif aim >= (9 - int(10 * ctn.crit_mod)):
@@ -6171,7 +6171,7 @@ def atf_tusks(ctn = None):
 
 	aim = (random.randrange(21) - 10)
 	#ctn.sap_damage = 3
-	if aim <= (-9 + int(21 * ctn.miss_mod)):
+	if aim <= (-9 + int(21 * ctn.hit_chance_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 
@@ -6193,7 +6193,7 @@ def atf_molotovbreath(ctn = None):
 
 	#ctn.bystander_damage = dmg * 0.5
 
-	if aim == (3 + int(10 * ctn.miss_mod)):
+	if aim == (3 + int(10 * ctn.hit_chance_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 
@@ -6207,7 +6207,7 @@ def atf_armcannon(ctn = None):
 
 	aim = (random.randrange(20) + 1)
 
-	if aim <= (2 + int(20 * ctn.miss_mod)):
+	if aim <= (2 + int(20 * ctn.hit_chance_mod)):
 		ctn.miss = True
 
 	if aim == (20 - int(20 * ctn.crit_mod)):
@@ -6219,7 +6219,7 @@ def atf_axe(ctn=None):
 	ctn.slimes_damage *= 0.7
 	aim = (random.randrange(10) + 1)
 
-	if aim <= (4 + int(10 * ctn.miss_mod)):
+	if aim <= (4 + int(10 * ctn.hit_chance_mod)):
 		ctn.miss = True
 
 	if aim == (10 - int(10 * ctn.crit_mod)):
@@ -6231,7 +6231,7 @@ def atf_hooves(ctn=None):
 	ctn.slimes_damage *= 0.4
 	aim = (random.randrange(30) + 1)
 
-	if aim <= (5 + int(30 * ctn.miss_mod)):
+	if aim <= (5 + int(30 * ctn.hit_chance_mod)):
 		ctn.miss = True
 
 	if aim > (25 - int(30 * ctn.crit_mod)):
@@ -12114,21 +12114,21 @@ status_effect_list = [
 		time_expire = 10,
 		str_describe = "They have assumed an evasive stance.",
 		str_describe_self = "You have assumed an evasive stance.",
-		miss_mod = 0.25
+		hit_chance_mod = -0.25
 	),
 	EwStatusEffectDef(
 		id_status = status_taunted_id,
 		time_expire = 10,
 		str_describe = "They are fuming with rage.",
 		str_describe_self = "You are fuming with rage.",
-		miss_mod_self = 0.25
+		hit_chance_mod_self = -0.25
 	),
 	EwStatusEffectDef(
 		id_status = status_aiming_id,
 		time_expire = 10,
 		str_describe = "They are taking careful aim.",
 		str_describe_self = "You are taking careful aim.",
-		miss_mod_self = -0.1,
+		hit_chance_mod_self = 0.1,
 		crit_mod_self = 0.2
 	),
 	EwStatusEffectDef(
@@ -12144,9 +12144,9 @@ status_effect_list = [
 		id_status = status_injury_head_id,
 		str_describe = "Their head looks {severity}",
 		str_describe_self = "Your head looks {severity}",
-		miss_mod_self = 0.05,
+		hit_chance_mod_self = -0.05,
 		crit_mod_self = -0.1,
-		miss_mod = -0.01,
+		hit_chance_mod = 0.01,
 		crit_mod = 0.01,
 	),
 	EwStatusEffectDef(
@@ -12158,14 +12158,14 @@ status_effect_list = [
 		id_status = status_injury_arms_id,
 		str_describe = "Their arms look {severity}",
 		str_describe_self = "Your arms look {severity}",
-		miss_mod_self = 0.05,
+		hit_chance_mod_self = -0.05,
 		crit_mod_self = -0.1,
 	),
 	EwStatusEffectDef(
 		id_status = status_injury_legs_id,
 		str_describe = "Their legs look {severity}",
 		str_describe_self = "Your legs look {severity}",
-		miss_mod = -0.06,
+		hit_chance_mod = 0.06,
 		crit_mod = 0.03,
 	),
 	EwStatusEffectDef(

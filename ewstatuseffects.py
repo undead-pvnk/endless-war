@@ -13,10 +13,10 @@ class EwStatusEffectDef:
 	str_describe = ""
 	str_describe_self = ""
 	dmg_mod_self = 0
-	miss_mod_self = 0
+	hit_chance_mod_self = 0
 	crit_mod_self = 0
 	dmg_mod = 0
-	miss_mod = 0
+	hit_chance_mod = 0
 	crit_mod = 0
 
 	def __init__(
@@ -27,10 +27,10 @@ class EwStatusEffectDef:
 		str_describe = "",
 		str_describe_self = "",
 		dmg_mod_self = 0,
-		miss_mod_self = 0,
+		hit_chance_mod_self = 0,
 		crit_mod_self = 0,
 		dmg_mod = 0,
-		miss_mod = 0,
+		hit_chance_mod = 0,
 		crit_mod = 0
 	):
 		self.id_status = id_status
@@ -39,10 +39,10 @@ class EwStatusEffectDef:
 		self.str_describe = str_describe
 		self.str_describe_self = str_describe_self
 		self.dmg_mod_self = dmg_mod_self
-		self.miss_mod_self = miss_mod_self
+		self.hit_chance_mod_self = hit_chance_mod_self
 		self.crit_mod_self = crit_mod_self
 		self.dmg_mod = dmg_mod
-		self.miss_mod = miss_mod
+		self.hit_chance_mod = hit_chance_mod
 		self.crit_mod = crit_mod
 
 class EwStatusEffect:

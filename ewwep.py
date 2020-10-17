@@ -207,7 +207,7 @@ class EwEffectContainer:
 	weapon_item = None
 	time_now = 0
 	bystander_damage = 0
-	miss_mod = 0
+	hit_chance_mod = 0
 	crit_mod = 0
 	#sap_damage = 0
 	#sap_ignored = 0
@@ -235,7 +235,7 @@ class EwEffectContainer:
 		weapon_item = None,
 		time_now = 0,
 		bystander_damage = 0,
-		miss_mod = 0,
+		hit_chance_mod = 0,
 		crit_mod = 0,
 		#sap_damage = 0,
 		#sap_ignored = 0,
@@ -250,7 +250,7 @@ class EwEffectContainer:
 		self.weapon_item = weapon_item
 		self.time_now = time_now
 		self.bystander_damage = bystander_damage
-		self.miss_mod = miss_mod
+		self.hit_chance_mod = hit_chance_mod
 		self.crit_mod = crit_mod
 		#self.sap_damage = sap_damage
 		#self.sap_ignored = sap_ignored
@@ -611,7 +611,7 @@ async def attack(cmd):
 		crit = False
 		strikes = 0
 		bystander_damage = 0
-		miss_mod = 0
+		hit_chance_mod = 0
 		crit_mod = 0
 		dmg_mod = 0
 		#sap_damage = 0
@@ -627,7 +627,7 @@ async def attack(cmd):
 		shootee_status_mods = get_shootee_status_mods(shootee_data, user_data, hitzone)
 
 
-		miss_mod += round(shooter_status_mods['miss'] + shootee_status_mods['miss'], 2)
+		hit_chance_mod += round(shooter_status_mods['hit_chance'] + shootee_status_mods['hit_chance'], 2)
 		crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
 		dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 
@@ -658,7 +658,7 @@ async def attack(cmd):
 		slimes_spent = int(ewutils.slime_bylevel(capped_level) / 30)
 
 		if user_data.weaponskill < 5:
-			miss_mod += (5 - user_data.weaponskill) / 10
+			hit_chance_mod -= (5 - user_data.weaponskill) / 10
 
 		if weapon is None:
 			slimes_damage /= 2  # penalty for not using a weapon, otherwise fists would be on par with other weapons
@@ -724,7 +724,7 @@ async def attack(cmd):
 					shootee_data = shootee_data,
 					time_now = time_now_float,
 					bystander_damage = bystander_damage,
-					miss_mod = miss_mod,
+					hit_chance_mod = hit_chance_mod,
 					crit_mod = crit_mod,
 					#sap_damage = sap_damage,
 					#sap_ignored = sap_ignored,
@@ -2083,7 +2083,7 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
 	mods = {
 		'dmg': 0,
 		'crit': 0,
-		'miss': 0
+		'hit_chance': 0
 	}
 
 	user_statuses = user_data.getStatusEffects()
@@ -2115,12 +2115,12 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
 				taunter = EwUser(id_user=status_data.source, id_server=user_data.id_server)
 
 				if taunter.slimelevel < user_data.slimelevel:
-					mods['miss'] += round(status_flavor.miss_mod_self / (user_data.slimelevel / taunter.slimelevel), 2)
+					mods['hit_chance'] += round(status_flavor.hit_chance_mod_self / (user_data.slimelevel / taunter.slimelevel), 2)
 				else:
-					mods['miss'] += status_flavor.miss_mod_self
+					mods['hit_chance'] += status_flavor.hit_chance_mod_self
 
 			else: 
-				mods['miss'] += status_flavor.miss_mod_self
+				mods['hit_chance'] += status_flavor.hit_chance_mod_self
 			mods['crit'] += status_flavor.crit_mod_self
 			mods['dmg'] += status_flavor.dmg_mod_self
 
@@ -2132,7 +2132,7 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
 	mods = {
 		'dmg': 0,
 		'crit': 0,
-		'miss': 0
+		'hit_chance': 0
 	}
 
 	user_statuses = user_data.getStatusEffects()
@@ -2151,7 +2151,7 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
 					continue
 
 		if status_flavor is not None:
-			mods['miss'] += status_flavor.miss_mod
+			mods['hit_chance'] += status_flavor.hit_chance_mod
 			mods['crit'] += status_flavor.crit_mod
 			mods['dmg'] += status_flavor.dmg_mod
 
@@ -2209,7 +2209,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	crit = False
 	strikes = 0
 	bystander_damage = 0
-	miss_mod = 0
+	hit_chance_mod = 0
 	crit_mod = 0
 	dmg_mod = 0
 	#sap_damage = 0
@@ -2224,7 +2224,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	shooter_status_mods = get_shooter_status_mods(user_data, enemy_data, hitzone)
 	shootee_status_mods = get_shootee_status_mods(enemy_data, user_data, hitzone)
 
-	miss_mod += round(shooter_status_mods['miss'] + shootee_status_mods['miss'], 2)
+	hit_chance_mod += round(shooter_status_mods['hit_chance'] + shootee_status_mods['hit_chance'], 2)
 	crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
 	dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 
@@ -2237,7 +2237,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 	
 	if user_data.weaponskill < 5:
-		miss_mod += (5 - user_data.weaponskill) / 10
+		hit_chance_mod -= (5 - user_data.weaponskill) / 10
 
 	# If the player is using a repel, remove the repel, and make the first hit do 99.9% less damage, rounded up.
 	statuses = user_data.getStatusEffects()
@@ -2283,7 +2283,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			shootee_data=enemy_data,
 			time_now=time_now_float,
 			bystander_damage=bystander_damage,
-			miss_mod=miss_mod,
+			hit_chance_mod=hit_chance_mod,
 			crit_mod=crit_mod,
 			#sap_damage=sap_damage,
 			#sap_ignored=sap_ignored,
@@ -3025,7 +3025,7 @@ async def spray(cmd):
 			crit = False
 			strikes = 0
 			bystander_damage = 0
-			miss_mod = 0
+			hit_chance_mod = 0
 			crit_mod = 0
 			dmg_mod = 0
 			#sap_damage = 0
@@ -3035,7 +3035,7 @@ async def spray(cmd):
 
 			shooter_status_mods = get_shooter_status_mods(user_data, None, None)
 
-			miss_mod += round(shooter_status_mods['miss'], 2)
+			hit_chance_mod += round(shooter_status_mods['hit_chance'], 2)
 			crit_mod += round(shooter_status_mods['crit'], 2)
 			dmg_mod += round(shooter_status_mods['dmg'], 2)
 
@@ -3062,7 +3062,7 @@ async def spray(cmd):
 					shootee_data=None,
 					time_now=time_now,
 					bystander_damage=bystander_damage,
-					miss_mod=miss_mod,
+					hit_chance_mod=hit_chance_mod,
 					crit_mod=crit_mod,
 					#sap_damage=sap_damage,
 					#sap_ignored=sap_ignored,
@@ -3290,7 +3290,7 @@ async def sanitize(cmd):
 
 			strikes = 0
 			bystander_damage = 0
-			miss_mod = 0
+			hit_chance_mod = 0
 			crit_mod = 0
 			dmg_mod = 0
 			# sap_damage = 0
@@ -3300,7 +3300,7 @@ async def sanitize(cmd):
 
 			shooter_status_mods = get_shooter_status_mods(user_data, None, None)
 
-			miss_mod += round(shooter_status_mods['miss'], 2)
+			hit_chance_mod += round(shooter_status_mods['hit_chance'], 2)
 			crit_mod += round(shooter_status_mods['crit'], 2)
 			dmg_mod += round(shooter_status_mods['dmg'], 2)
 
@@ -3327,7 +3327,7 @@ async def sanitize(cmd):
 					shootee_data=None,
 					time_now=time_now,
 					bystander_damage=bystander_damage,
-					miss_mod=miss_mod,
+					hit_chance_mod=hit_chance_mod,
 					crit_mod=crit_mod,
 					# sap_damage=sap_damage,
 					# sap_ignored=sap_ignored,
