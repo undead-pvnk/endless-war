@@ -2254,43 +2254,6 @@ async def purify(cmd):
 		response = "Purify yourself how? With what? Your own piss?"
 		
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-
-async def flush_subzones(cmd):
-	member = cmd.message.author
-	
-	if not member.guild_permissions.administrator:
-		return
-	
-	subzone_to_mother_districts = {}
-
-	for poi in ewcfg.poi_list:
-		if poi.is_subzone:
-			subzone_to_mother_districts[poi.id_poi] = poi.mother_districts
-
-
-	for subzone in subzone_to_mother_districts:
-		mother_districts = subzone_to_mother_districts.get(subzone)
-		
-		used_mother_district = mother_districts[0]
-		
-		ewutils.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
-			id_owner = ewcfg.col_id_user,
-			id_server = ewcfg.col_id_server
-		), (
-			used_mother_district,
-			subzone,
-			cmd.guild.id
-		))
-
-		subzone_data = EwDistrict(district = subzone, id_server = cmd.guild.id)
-		district_data = EwDistrict(district = used_mother_district, id_server = cmd.guild.id)
-
-		district_data.change_slimes(n = subzone_data.slimes)
-		subzone_data.change_slimes(n = -subzone_data.slimes)
-
-		district_data.persist()
-		subzone_data.persist()
 	
 async def wrap(cmd):
 	

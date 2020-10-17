@@ -744,7 +744,8 @@ cmd_map = {
 	ewcfg.cmd_slimeballleave: ewsports.slimeballleave,
 
 	# flush items and slime from subzones into their mother district
-	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones,
+	ewcfg.cmd_flushsubzones: ewmap.flush_subzones,
+	ewcfg.cmd_flushstreets: ewmap.flush_streets,
 
 	#swap weapons
 	ewcfg.cmd_switch: ewwep.switch_weapon,

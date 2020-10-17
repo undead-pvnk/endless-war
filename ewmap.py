@@ -2251,4 +2251,79 @@ async def clockin(cmd):
 
 			await ewutils.send_message(cmd.client, ewutils.get_channel(server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
 
+async def flush_subzones(cmd):
+	member = cmd.message.author
+	
+	if not member.guild_permissions.administrator:
+		return
+	
+	subzone_to_mother_districts = {}
+
+	for poi in ewcfg.poi_list:
+		if poi.is_subzone:
+			subzone_to_mother_districts[poi.id_poi] = poi.mother_districts
+
+	for subzone in subzone_to_mother_districts:
+		mother_districts = subzone_to_mother_districts.get(subzone)
+		
+		used_mother_district = mother_districts[0]
+		
+		ewutils.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
+			id_owner = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server
+		), (
+			used_mother_district,
+			subzone,
+			cmd.guild.id
+		))
+
+		subzone_data = EwDistrict(district = subzone, id_server = cmd.guild.id)
+		district_data = EwDistrict(district = used_mother_district, id_server = cmd.guild.id)
+
+		district_data.change_slimes(n = subzone_data.slimes)
+		subzone_data.change_slimes(n = -subzone_data.slimes)
+
+		district_data.persist()
+		subzone_data.persist()
+
+async def flush_streets(cmd):
+
+	member = cmd.message.author
+	
+	if not member.guild_permissions.administrator:
+		return
+
+	for poi in ewcfg.poi_list:
+		if poi.is_street:
+
+			street_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
+
+			players = street_data.get_players_in_district()
+			for player in players:
+				user_data = EwUser(id_user=player, id_server=cmd.guild.id)
+				user_data.poi = ewcfg.poi_id_juviesrow
+				user_data.persist()
+				member = cmd.guild.get_member(player)
+				await ewrolemgr.updateRoles(client=cmd.client, member=member)
+
+			ewutils.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
+				id_owner = ewcfg.col_id_user,
+				id_server = ewcfg.col_id_server
+			), (
+				poi.father_district,
+				poi.id_poi,
+				cmd.guild.id
+			))
+
+			district_data = EwDistrict(district = poi.father_district, id_server = cmd.guild.id)
+
+			district_data.change_slimes(n = street_data.slimes)
+			street_data.change_slimes(n = -street_data.slimes)
+
+			district_data.persist()
+			street_data.persist()
+
+			ewutils.logMsg("Cleared {}.".format(poi.id_poi))
+
+	ewutils.logMsg("Finished flushing streets.")
 
