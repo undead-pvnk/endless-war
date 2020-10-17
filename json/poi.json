@@ -6,7 +6,7 @@
             "dt"
         ],
         "str_name": "Downtown NLACakaNM",
-        "str_desc": "Skyscrapers and high-rise apartments tower above the jam-packed, bustling city streets below for as far as the eye can see. In this dense concrete jungle, your attention is constantly being divided among a thousand different things. Neon, fluorescent signs flash advertisements for all manner of amenities and businesses. The streets rumble with the sound of engines and metal scraping from the subway system deep underground. Hordes of men and women from every imaginable background walk these cruel streets, trying desperately to eke out a pitiful existence for themselves. This district never unwinds from its constant 24/7 slime-induced mania for even a moment, let alone sleep.\nDowntown is the beating heart of New Los Angeles City, aka Neo Milwaukee. With settlements in the area predating the emergence of slime, its prime location along the newly formed coastline naturally grew it into the cultural, economic, and literal center of the city. Due to its symbolic and strategic importance, it's home to the most intense gang violence of the city. Gunshots and screams followed by police sirens are background noises for this district. Some say that this propensity for violence is result of the sinister influence from an old obelisk in the center of town, ominously called ENDLESS WAR. You aren\u2019t sure if you believe that, though.\n\nThis area contains ENDLESS WAR, SlimeCorp HQ, the Slime Stock Exchange and the Downtown Subway Station. To the north is Smogsburg. To the East is the Green Light District. To the South is the Rowdy Roughhouse. To the Southwest is Poudrin Alley. To the West is Krak Bay. To the Northwest is Cop Killtown. This area is connected to North End, the Waterfront, Downtown Crossing, The Common, Combat Zone, and Financial District.",
+        "str_desc": "Skyscrapers and high-rise apartments tower above the jam-packed, bustling city streets below for as far as the eye can see. In this dense concrete jungle, your attention is constantly being divided among a thousand different things. Neon, fluorescent signs flash advertisements for all manner of amenities and businesses. The streets rumble with the sound of engines and metal scraping from the subway system deep underground. Hordes of men and women from every imaginable background walk these cruel streets, trying desperately to eke out a pitiful existence for themselves. This district never unwinds from its constant 24/7 slime-induced mania for even a moment, let alone sleep.\nDowntown is the beating heart of New Los Angeles City, aka Neo Milwaukee. With settlements in the area predating the emergence of slime, its prime location along the newly formed coastline naturally grew it into the cultural, economic, and literal center of the city. Due to its symbolic and strategic importance, it's home to the most intense gang violence of the city. Gunshots and screams followed by police sirens are background noises for this district. Some say that this propensity for violence is result of the sinister influence from an old obelisk in the center of town, ominously called ENDLESS WAR. You aren\u2019t sure if you believe that, though.\n\nThis area contains ENDLESS WAR, SlimeCorp HQ, the Slime Stock Exchange and the Downtown Subway Station. To the north is Smogsburg. To the East is the Green Light District. To the South is the Rowdy Roughhouse. To the Southwest is Poudrin Alley. To the West is Krak Bay. To the Northwest is Cop Killtown.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -77,15 +77,10 @@
             "rowdyroughhouse": 60,
             "copkilltown": 60,
             "greenlightdistrict": 60,
-            "downtownstreeta": 20,
-            "downtownstreetb": 20,
-            "downtownstreetc": 20,
-            "downtownstreetd": 20,
-            "downtownstreete": 20,
-            "downtownstreetf": 20,
             "theslimestockexchange": 20,
             "endlesswar": 20,
-            "slimecorphq": 20
+            "slimecorphq": 20,
+            "downtownsubwaystation": 20
         },
         "topic": "The Heart of New Los Angeles City, aka Neo Milwaukee. Site of the Slime Stock Exchange, the corporate headquarters of Slimecorp and Yum! Brands, and ENDLESS WAR itself.",
         "wikipage": "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM"
@@ -98,7 +93,7 @@
             "sb"
         ],
         "str_name": "Smogsburg",
-        "str_desc": "In every direction, smokestacks belch out copious amounts of pollution into the atmosphere, creating a thick cloud that shrouds the district in sickening smog. It covers the district so completely that you can barely make out what time day it is. Your lungs can\u2019t take much more of standing here, just do what you want to do and get out.\nSmogsburg is comprise of dozens of slime refineries and poudrin mills that turn unrefined, raw materials like the sludge from the city\u2019s harbor into useful, pure slime. Functioning as the city\u2019s premier industrial sector, it is by far the district hardest on the environment.\n\nThis area contains the Bazaar, the SlimeCorp Recycling Plant and the Smogsburg Subway Station. To the North is Arsonbrook. To the Northeast is Little Chernobyl. To the East is Old New Yonkers. To the South is Downtown NLACakaNM. To the West is Cop Killtown. To the Northwest is Astatine Heights. This area is connected to Pollution Dumping Wharf, The West Quarter, Company Town Square, Sludge Refinery, and Factory Row.",
+        "str_desc": "In every direction, smokestacks belch out copious amounts of pollution into the atmosphere, creating a thick cloud that shrouds the district in sickening smog. It covers the district so completely that you can barely make out what time day it is. Your lungs can\u2019t take much more of standing here, just do what you want to do and get out.\nSmogsburg is comprise of dozens of slime refineries and poudrin mills that turn unrefined, raw materials like the sludge from the city\u2019s harbor into useful, pure slime. Functioning as the city\u2019s premier industrial sector, it is by far the district hardest on the environment.\n\nThis area contains the Bazaar, the SlimeCorp Recycling Plant and the Smogsburg Subway Station. To the North is Arsonbrook. To the Northeast is Little Chernobyl. To the East is Old New Yonkers. To the South is Downtown NLACakaNM. To the West is Cop Killtown. To the Northwest is Astatine Heights.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -151,13 +146,9 @@
             "astatineheights": 60,
             "arsonbrook": 60,
             "oldnewyonkers": 60,
-            "smogsburgstreeta": 20,
-            "smogsburgstreetb": 20,
-            "smogsburgstreetc": 20,
-            "smogsburgstreetd": 20,
-            "smogsburgstreete": 20,
             "thebazaar": 20,
-            "recyclingplant": 20
+            "recyclingplant": 20,
+            "smogsburgsubwaystation": 20
         },
         "topic": "Dense industrial district in central NLACakaNM.",
         "wikipage": "https://rfck.miraheze.org/wiki/Smogsburg"
@@ -231,10 +222,6 @@
             "smogsburg": 60,
             "astatineheights": 60,
             "gatlingsdale": 60,
-            "gatlingsdalestreeta": 20,
-            "astatineheightsstreetf": 20,
-            "smogsburgstreetc": 20,
-            "downtownstreetf": 20,
             "copkilltownsubwaystation": 20
         },
         "topic": "Team Cop Headquarters. No Rowdies Allowdies. https://discord.gg/xSQQD2M",
@@ -247,7 +234,7 @@
             "kb"
         ],
         "str_name": "Krak Bay",
-        "str_desc": "Long street blocks are are densely packed with stores and restaurants, mixed in with townhouses and accompanied by modern skyscrapers and sprawling in-door shopping malls. These amenities and a scenic view of the River of Slime on its coast makes this district a favorite of a juvenile out on the town.\nKrak Bay is a bustling commercial district, featuring stores from across the retail spectrum. From economic, practical convenience stores to high-class, swanky restaurants, Krak Bay has it all. It is also home to some of the most recognizable fixtures of the city\u2019s skyline, most notably the Poudrintial Tower and the shopping mall at its base which contains the city\u2019s prized food court.\n\nThis area contains the Food Court, Bicarbonate Soda Fountain, and the Krak Bay Subway Station. To the East is Downtown NLACakaNM. To the Southeast is Poudrin Alley. To the South is Ooze Gardens. To the Southwest is South Sleezeborough. To the West is North Sleezeborough. To the Northwest is Glocksbury. This area is connected to Esplanade, Minotaur Square, Goobury Street, Huntington Avenue, The Mall, and Golden Gunk Bridge.",
+        "str_desc": "Long street blocks are are densely packed with stores and restaurants, mixed in with townhouses and accompanied by modern skyscrapers and sprawling in-door shopping malls. These amenities and a scenic view of the River of Slime on its coast makes this district a favorite of a juvenile out on the town.\nKrak Bay is a bustling commercial district, featuring stores from across the retail spectrum. From economic, practical convenience stores to high-class, swanky restaurants, Krak Bay has it all. It is also home to some of the most recognizable fixtures of the city\u2019s skyline, most notably the Poudrintial Tower and the shopping mall at its base which contains the city\u2019s prized food court.\n\nThis area contains the Food Court, Bicarbonate Soda Fountain, and the Krak Bay Subway Station. To the East is Downtown NLACakaNM. To the Southeast is Poudrin Alley. To the South is Ooze Gardens. To the Southwest is South Sleezeborough. To the West is North Sleezeborough. To the Northwest is Glocksbury.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -301,15 +288,10 @@
             "southsleezeborough": 60,
             "northsleezeborough": 60,
             "glocksbury": 60,
-            "krakbaystreeta": 20,
-            "krakbaystreetb": 20,
-            "krakbaystreetc": 20,
-            "krakbaystreetd": 20,
-            "krakbaystreete": 20,
-            "krakbaystreetf": 20,
             "bodega": 20,
             "thefoodcourt": 20,
-            "sodafountain": 20
+            "sodafountain": 20,
+            "krakbaysubwaystation": 20
         },
         "topic": "Bustling commercial area located along the Slime River. Site of the NLACakaNM Food Court.",
         "wikipage": "https://rfck.miraheze.org/wiki/Krak_Bay"
@@ -321,7 +303,7 @@
             "pa"
         ],
         "str_name": "Poudrin Alley",
-        "str_desc": "Densely packed, claustrophobic mazes of residential apartments stand above poorly planned roads with broken streetlights that spark and flicker over the cracked pavement. Only the locals know how to navigate the residential labyrinth effectively, by utilizing the interconnected, narrow alleyways the district is named for.\nPoudrin Alley is the principal residential district of the city, outfitted with enough low-rent apartments for the lower-middle class to house the entire city on its own. Sadly, for most of the impoverished dredges of the city, these low rents just aren\u2019t low enough and the majority of the apartments go unused.\n\nThis area contains the 7-11. To the Northeast is Downtown NLACakaNM. To the East is the Rowdy Roughhouse. To the South is Cratersville. To the Southwest is Ooze Gardens. To the Northwest is Krak Bay. This area is connected to 24 Karat Shopping, Apartment Complex, Abandoned Intersection, Skewer Road, and Drain Trench.",
+        "str_desc": "Densely packed, claustrophobic mazes of residential apartments stand above poorly planned roads with broken streetlights that spark and flicker over the cracked pavement. Only the locals know how to navigate the residential labyrinth effectively, by utilizing the interconnected, narrow alleyways the district is named for.\nPoudrin Alley is the principal residential district of the city, outfitted with enough low-rent apartments for the lower-middle class to house the entire city on its own. Sadly, for most of the impoverished dredges of the city, these low rents just aren\u2019t low enough and the majority of the apartments go unused.\n\nThis area contains the 7-11 and Drain Trench. To the Northeast is Downtown NLACakaNM. To the East is the Rowdy Roughhouse. To the South is Cratersville. To the Southwest is Ooze Gardens. To the Northwest is Krak Bay.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -374,12 +356,8 @@
             "oozegardens": 60,
             "cratersville": 60,
             "rowdyroughhouse": 60,
-            "poudrinalleystreeta": 20,
-            "poudrinalleystreetb": 20,
-            "poudrinalleystreetc": 20,
-            "poudrinalleystreetd": 20,
-            "poudrinalleystreete": 20,
-            "outsidethe711": 20
+            "outsidethe711": 20,
+            "draintrench": 20
         },
         "topic": "A low-rent residential district. Site of the city's one and only 7-11 (closed for renovations).",
         "wikipage": "https://rfck.miraheze.org/wiki/Poudrin_Alley"
@@ -449,9 +427,6 @@
             "downtown": 60,
             "poudrinalley": 60,
             "wreckington": 60,
-            "downtownstreetc": 20,
-            "poudrinalleystreeta": 20,
-            "wreckingtonstreetb": 20,
             "rowdyroughhousesubwaystation": 20
         },
         "topic": "For only the most boisterous and violent of Rowdy children. Click here: https://discord.gg/JZ2AaJ2",
@@ -464,7 +439,7 @@
             "gld"
         ],
         "str_name": "Green Light District",
-        "str_desc": "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district\u2019s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous SlimeCorp Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the SlimeCorp Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM. This area is connected to Seedy Street, Parking Garage, and The Strip.",
+        "str_desc": "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district\u2019s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous SlimeCorp Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the SlimeCorp Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -515,10 +490,8 @@
             "downtown": 60,
             "juviesrow": 60,
             "vagrantscorner": 60,
-            "greenlightdistrictstreeta": 20,
-            "greenlightdistrictstreetb": 20,
-            "greenlightdistrictstreetc": 20,
-            "thecasino": 20
+            "thecasino": 20,
+            "greenlightsubwaystation": 20
         },
         "topic": "The seediest corner of NLACakaNM. Site of the Slime Casino.",
         "wikipage": "https://rfck.miraheze.org/wiki/Green_Light_District"
@@ -529,7 +502,7 @@
             "ony"
         ],
         "str_name": "Old New Yonkers",
-        "str_desc": "Rows of three-story brick condominiums with white marble moulding wind along lanes of old asphalt roads with faded markings. Spiked wrought-iron gates protect the lawn of the district\u2019s principal institutions, like the senior center.\nOld New Yonkers is popular with the older citizens of the city, due to its incredibly boring, gentrified residential landscape. Modest outdoor malls sells useless shit like candles and soaps, and the elderly population fills up their lumpy, sagging bodies at chain restaurants like Applebee\u2019s and fucking IHOP.\n\nThis area contains the Slimecorp Real Estate Agency. To the Northeast is New New Yonkers. To the Southeast is Vagrant's Corner. To the Southwest is Smogsburg. To the East is Little Chernobyl. To the Northwest is Brawlden. This area is connected to Usury Lane, Old Folks Home, Luxury Townhouses, Shopping Center, and Morty Hill.",
+        "str_desc": "Rows of three-story brick condominiums with white marble moulding wind along lanes of old asphalt roads with faded markings. Spiked wrought-iron gates protect the lawn of the district\u2019s principal institutions, like the senior center.\nOld New Yonkers is popular with the older citizens of the city, due to its incredibly boring, gentrified residential landscape. Modest outdoor malls sells useless shit like candles and soaps, and the elderly population fills up their lumpy, sagging bodies at chain restaurants like Applebee\u2019s and fucking IHOP.\n\nThis area contains the Slimecorp Real Estate Agency. To the Northeast is New New Yonkers. To the Southeast is Vagrant's Corner. To the Southwest is Smogsburg. To the East is Little Chernobyl. To the Northwest is Brawlden.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -582,11 +555,6 @@
             "vagrantscorner": 60,
             "smogsburg": 60,
             "littlechernobyl": 60,
-            "oldnewyonkersstreeta": 20,
-            "oldnewyonkersstreetb": 20,
-            "oldnewyonkersstreetc": 20,
-            "oldnewyonkersstreetd": 20,
-            "oldnewyonkersstreete": 20,
             "realestateagency": 20
         },
         "topic": "Heavily gentrified residential neighborhood.",
@@ -601,7 +569,7 @@
             "lc"
         ],
         "str_name": "Little Chernobyl",
-        "str_desc": "Dilapidated office buildings overgrown with ivy and the bombed-out frames of unidentifiable structures comprise the majority of the housing for this sparsely populated district. Radioactive almost to the point of warding off thieves and vandals (but not quite), many people report seeing strange creatures and various cryptids roaming the abandoned power plant complex at night.\nLittle Chernobyl might not be much to look at or often discussed nowadays, but don\u2019t be fooled by its current irrelevance. Long ago, it was home to Arizona's largest nuclear power plant. An electrical blackout caused a total safety system failure, leading in a cataclysmic nuclear meltdown. This caused nuclear waste to flood into the Grand Canyon and create the Slime Sea we know and love today.\n\nThis area contains Green Cake Cafe. To the North is Brawlden. To the East is Old New Yonkers. To the West is Arsonbrook. This area is connected to Half-Life Road, Reactor Ground Zero, and Bombed-Out Buildings.",
+        "str_desc": "Dilapidated office buildings overgrown with ivy and the bombed-out frames of unidentifiable structures comprise the majority of the housing for this sparsely populated district. Radioactive almost to the point of warding off thieves and vandals (but not quite), many people report seeing strange creatures and various cryptids roaming the abandoned power plant complex at night.\nLittle Chernobyl might not be much to look at or often discussed nowadays, but don\u2019t be fooled by its current irrelevance. Long ago, it was home to Arizona's largest nuclear power plant. An electrical blackout caused a total safety system failure, leading in a cataclysmic nuclear meltdown. This caused nuclear waste to flood into the Grand Canyon and create the Slime Sea we know and love today.\n\nThis area contains Green Cake Cafe. To the North is Brawlden. To the East is Old New Yonkers. To the West is Arsonbrook.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -652,9 +620,6 @@
             "arsonbrook": 60,
             "brawlden": 60,
             "oldnewyonkers": 60,
-            "littlechernobylstreeta": 20,
-            "littlechernobylstreetb": 20,
-            "littlechernobylstreetc": 20,
             "greencakecafe": 20
         },
         "topic": "Home to the R&D headquarters of many a small business and international conglomerate alike. Don't drink the water.",
@@ -667,7 +632,7 @@
             "ab"
         ],
         "str_name": "Arsonbrook",
-        "str_desc": "This district is seemingly eternally overcast, allowing the dark plumes of smoke from distant fires fade into the soft grey clouds. A thin layer of soot rests upon basically the entire district, providing nutrient-rich soil which the rural farmers in the north of the district take advantage of. In the south, enclaves of civilization have started to pop up, learning from the mistakes of previous generations and building out of brick instead of wood. Aesthetically, these settlements resemble a small mining town from the mountainous forests of the northwest, just replace the rugged terrain with flat land and the evergreens with burnt, charcoal frames of trees that used to be. A Starbucks tried to open here once.\nArsonbook is easily among the most peaceful districts of the city, as long as you count constant wildfires and destruction of property from arson as peaceful. The locals are used to that sort of thing though, so they\u2019re pretty mellow. Kick back, relax, and don\u2019t get too attached to your house if you plan on living here.\n\nThis area contains the Arsonbrook Farms and the Arsonbrook Subway Station. To the East is Brawlden. To the Southeast is Little Chernobyl. To the South is Smogsburg. To the West is Astatine Heights. To the North is Arsonbrook Outskirts. This area is connected to Stillwater town, Cinder State Forest, Tilly Hill, Crassus Square, and Riverbank.",
+        "str_desc": "This district is seemingly eternally overcast, allowing the dark plumes of smoke from distant fires fade into the soft grey clouds. A thin layer of soot rests upon basically the entire district, providing nutrient-rich soil which the rural farmers in the north of the district take advantage of. In the south, enclaves of civilization have started to pop up, learning from the mistakes of previous generations and building out of brick instead of wood. Aesthetically, these settlements resemble a small mining town from the mountainous forests of the northwest, just replace the rugged terrain with flat land and the evergreens with burnt, charcoal frames of trees that used to be. A Starbucks tried to open here once.\nArsonbook is easily among the most peaceful districts of the city, as long as you count constant wildfires and destruction of property from arson as peaceful. The locals are used to that sort of thing though, so they\u2019re pretty mellow. Kick back, relax, and don\u2019t get too attached to your house if you plan on living here.\n\nThis area contains the Arsonbrook Farms and the Arsonbrook Subway Station. To the East is Brawlden. To the Southeast is Little Chernobyl. To the South is Smogsburg. To the West is Astatine Heights. To the North is Arsonbrook Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -720,11 +685,8 @@
             "smogsburg": 60,
             "littlechernobyl": 60,
             "brawlden": 60,
-            "arsonbrookstreeta": 20,
-            "arsonbrookstreetb": 20,
-            "arsonbrookstreetc": 20,
-            "arsonbrookstreetd": 20,
-            "arsonbrookstreete": 20
+            "arsonbrookfarms": 20,
+            "arsonbrooksubwaystation": 20
         },
         "topic": "A commercial district home to many bitter business rivals vying for economic domination.",
         "wikipage": "https://rfck.miraheze.org/wiki/Arsonbrook"
@@ -737,7 +699,7 @@
             "ah"
         ],
         "str_name": "Astatine Heights",
-        "str_desc": "Swanky modern condominiums jut out of the steep hills to the north, while to the south rows of picture-perfect suburban homes with disgustingly well-maintained lawns constrict around freshly-laid roads. Luxury boutiques and high-class restaurants compete for the wallets of privileged, rich yuppies.\nAstatine Heights is the home to many of the wealthiest men and women of the city, with many of the residents forcing their fratty Republican sons to the prestigious college N.L.A.C.U. in neighboring Gatlingsdale. The difference between Astatine Heights and other affluent districts of the city is that the majority of residents have not passed onto the elysian fields of retirement, and thus have at least a sliver of personality and ambition left in their community, however gentrified it might be.\n\nThis area contains NLACakaNM Cinemas, the Red Mobster Seafood Restaurant and the Astatine Heights Subway Station. To the East is Arsonbrook. To the Southeast is Smogsburg. To the South is Cop Killtown. To the Southwest is Gatlingsdale. To the West is Toxington. To the North is Astatine Heights Outskirts. This area is connected to 85th Street, Decaying Slums, Mountain Condos, Astatine Trail, Gated Community, and Barbette Boulevard.",
+        "str_desc": "Swanky modern condominiums jut out of the steep hills to the north, while to the south rows of picture-perfect suburban homes with disgustingly well-maintained lawns constrict around freshly-laid roads. Luxury boutiques and high-class restaurants compete for the wallets of privileged, rich yuppies.\nAstatine Heights is the home to many of the wealthiest men and women of the city, with many of the residents forcing their fratty Republican sons to the prestigious college N.L.A.C.U. in neighboring Gatlingsdale. The difference between Astatine Heights and other affluent districts of the city is that the majority of residents have not passed onto the elysian fields of retirement, and thus have at least a sliver of personality and ambition left in their community, however gentrified it might be.\n\nThis area contains NLACakaNM Cinemas, the Red Mobster Seafood Restaurant and the Astatine Heights Subway Station. To the East is Arsonbrook. To the Southeast is Smogsburg. To the South is Cop Killtown. To the Southwest is Gatlingsdale. To the West is Toxington. To the North is Astatine Heights Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -791,13 +753,9 @@
             "maimridge": 60,
             "arsonbrook": 60,
             "smogsburg": 60,
-            "astatineheightsstreeta": 20,
-            "astatineheightsstreetb": 20,
-            "astatineheightsstreetc": 20,
-            "astatineheightsstreetd": 20,
-            "astatineheightsstreete": 20,
-            "astatineheightsstreetf": 20,
-            "nlacakanmcinemas": 20
+            "redmobster": 20,
+            "nlacakanmcinemas": 20,
+            "astatineheightssubwaystation": 20
         },
         "topic": "A nice orderly neighrborhood populated by filthy yuppies. A great place to raise your kids.",
         "wikipage": "https://rfck.miraheze.org/wiki/Astatine_Heights"
@@ -810,7 +768,7 @@
             "gd"
         ],
         "str_name": "Gatlingsdale",
-        "str_desc": "Hundreds of small \u201cnerdy\u201d retail stores and ethnically-diverse restaurants are compact into a dense, bustling plaza just minutes from the prestigious N.L.A.C.U. college campus. Almost all of district is comprised of or controlled by the sprawling ivy league university. Featuring smoky cafes, vintage clothing boutiques, and independent bookstores, this district is perfectly catered to the pompous hipsters that flood its streets every day after class.\nGatlingsdale is a historic district, with many of its winding cobblestone roads and gaslamp streetlights dating back to the early days of the city.\n\nThis District contains New Los Angeles City University and the Gatlingsdale Subway Station. To the Northeast is Astatine Heights. To the Southeast is Cop Killtown. To the Southwest is Vandal Park. To the West is Polonium Hill. To the Northwest is Toxington. This area is connected to The Garage, N.L.A.C.U. Campus, University Square, N.L.A.C.U. Institute of Slimeology, and Sludgeberry Street.",
+        "str_desc": "Hundreds of small \u201cnerdy\u201d retail stores and ethnically-diverse restaurants are compact into a dense, bustling plaza just minutes from the prestigious N.L.A.C.U. college campus. Almost all of district is comprised of or controlled by the sprawling ivy league university. Featuring smoky cafes, vintage clothing boutiques, and independent bookstores, this district is perfectly catered to the pompous hipsters that flood its streets every day after class.\nGatlingsdale is a historic district, with many of its winding cobblestone roads and gaslamp streetlights dating back to the early days of the city.\n\nThis District contains New Los Angeles City University and the Gatlingsdale Subway Station. To the Northeast is Astatine Heights. To the Southeast is Cop Killtown. To the Southwest is Vandal Park. To the West is Polonium Hill. To the Northwest is Toxington.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -863,12 +821,8 @@
             "vandalpark": 60,
             "copkilltown": 60,
             "astatineheights": 60,
-            "gatlingsdalestreeta": 20,
-            "gatlingsdalestreetb": 20,
-            "gatlingsdalestreetc": 20,
-            "gatlingsdalestreetd": 20,
-            "gatlingsdalestreete": 20,
-            "newlosangelescityuniversity": 20
+            "newlosangelescityuniversity": 20,
+            "gatlingsdalesubwaystation": 20
         },
         "topic": "The seat of higher education in NLACakaNM.",
         "wikipage": "https://rfck.miraheze.org/wiki/Gatlingsdale"
@@ -881,7 +835,7 @@
             "vp"
         ],
         "str_name": "Vandal Park",
-        "str_desc": "A laundry list of various sports amenities and public parks dot the landscape of this athletically minded district. These include soccer fields, skate parks, swimming pools, and of course the district\u2019s famous Battle Arena.\nVandal Park\u2019s numerous open spaces and its more-or-less clean air make it an attractive destination for juveniles seeking a stroll. Despite this you\u2019ve still got to keep your wits about you here if you want to not get publicly executed against one of the pretty trees.\n\nThis area contains the Battle Arena. To the Northeast is Gatlingsdale. To the South is Glocksbury. To the Southwest is West Glocksbury. To the Northwest is Polonium Hill. This area is connected to Ashtray Park, The Fens, Tookewlforskewl Skatepark, and The Playground.",
+        "str_desc": "A laundry list of various sports amenities and public parks dot the landscape of this athletically minded district. These include soccer fields, skate parks, swimming pools, and of course the district\u2019s famous Battle Arena.\nVandal Park\u2019s numerous open spaces and its more-or-less clean air make it an attractive destination for juveniles seeking a stroll. Despite this you\u2019ve still got to keep your wits about you here if you want to not get publicly executed against one of the pretty trees.\n\nThis area contains the Battle Arena. To the Northeast is Gatlingsdale. To the South is Glocksbury. To the Southwest is West Glocksbury. To the Northwest is Polonium Hill.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -933,10 +887,6 @@
             "poloniumhill": 60,
             "westglocksbury": 60,
             "glocksbury": 60,
-            "vandalparkstreeta": 20,
-            "vandalparkstreetb": 20,
-            "vandalparkstreetc": 20,
-            "vandalparkstreetd": 20,
             "thebattlearena": 20
         },
         "topic": "Home to the NLACakaNM athletic complex. Site of the Slimeoid Battle Arena.",
@@ -950,7 +900,7 @@
             "gb"
         ],
         "str_name": "Glocksbury",
-        "str_desc": "Semi-orderly residential neighborhoods with discolored white picket fences protecting unkempt lawns for as far as the eye can far. This district likes to pretend its a quiet suburb, but the regular screams and gunshots coupled with numerous chalk outlines of human bodies on the street make this hard to believe. You smell bacon. *Figurative* bacon. The cops must be lurking nearby somewhere.\nGlocksbury\u2019s flaccid attempts at normalcy are fueled by it hosting the city\u2019s police department, which is hilariously ineffectual and underfunded to the point of absurdity. In this city, the bumbling police act as target practice to the local gangs rather than actual authorities to be obeyed. But, they sure like to pretend they are.\n\nThis area contains Glocksbury Comics, and the Glocksbury Subway Station. To the North is Vandal Park. To the Southeast is Krak Bay. To the South is North Sleezeborough. To the West is West Glocksbury. To the West is West Glocksbury Outskirts. This area is connected to Police Station, Dog Parks, Snitch Street, Mugshot Road, and Cul-de-sac.",
+        "str_desc": "Semi-orderly residential neighborhoods with discolored white picket fences protecting unkempt lawns for as far as the eye can far. This district likes to pretend its a quiet suburb, but the regular screams and gunshots coupled with numerous chalk outlines of human bodies on the street make this hard to believe. You smell bacon. *Figurative* bacon. The cops must be lurking nearby somewhere.\nGlocksbury\u2019s flaccid attempts at normalcy are fueled by it hosting the city\u2019s police department, which is hilariously ineffectual and underfunded to the point of absurdity. In this city, the bumbling police act as target practice to the local gangs rather than actual authorities to be obeyed. But, they sure like to pretend they are.\n\nThis area contains Glocksbury Comics, and the Glocksbury Subway Station. To the North is Vandal Park. To the Southeast is Krak Bay. To the South is North Sleezeborough. To the West is West Glocksbury. To the West is West Glocksbury Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1003,12 +953,8 @@
             "jaywalkerplain": 60,
             "northsleezeborough": 60,
             "krakbay": 60,
-            "glocksburystreeta": 20,
-            "glocksburystreetb": 20,
-            "glocksburystreetc": 20,
-            "glocksburystreetd": 20,
-            "glocksburystreete": 20,
-            "glocksburycomics": 20
+            "glocksburycomics": 20,
+            "glocksburysubwaystation": 20
         },
         "topic": "A grimy little neighborhood with lower-than-average crime rates in all categories except Police Brutality.",
         "wikipage": "https://rfck.miraheze.org/wiki/Glocksbury"
@@ -1025,7 +971,7 @@
             "ns"
         ],
         "str_name": "North Sleezeborough",
-        "str_desc": "Sleepy brownstone apartments and about 50,000 different terrible pizza places populate this slow paced, gentrifying district. Outdoor malls have started to spring up here and there, mostly around the college campus of Neo Milwaukee State. Retired parents rest on benches, throwing crumbs of bread at birds and squandering the twilight years of their misspent life. Students with curious facial hair and suspenders lurk in vinyl record stores and horde ironic knick-knacks.\nNorth Sleezeborough residents really, really don't care about anything. It wouldn\u2019t be fair to call them nihilistic, that implies self-reflection or philosophical quandary, they are just so lethargic that they might as well categorically be considered legally dead. Alongside these generally older occupants are younger students who have flocked to the dirt cheap public college of Neo Milwaukee State to continue their mediocre education.\n\nThis area contains Neo Milwaukee State and the North Sleezeborough Subway Station. To the North is Glocksbury. To the East is Krak Bay. To the South is South Sleezeborough. This area is connected to Drive-By Drive-Thrus, WWW Ring, Carbohydrate Containment Boulevard, Pond Scum Road, and Slob Plaza.",
+        "str_desc": "Sleepy brownstone apartments and about 50,000 different terrible pizza places populate this slow paced, gentrifying district. Outdoor malls have started to spring up here and there, mostly around the college campus of Neo Milwaukee State. Retired parents rest on benches, throwing crumbs of bread at birds and squandering the twilight years of their misspent life. Students with curious facial hair and suspenders lurk in vinyl record stores and horde ironic knick-knacks.\nNorth Sleezeborough residents really, really don't care about anything. It wouldn\u2019t be fair to call them nihilistic, that implies self-reflection or philosophical quandary, they are just so lethargic that they might as well categorically be considered legally dead. Alongside these generally older occupants are younger students who have flocked to the dirt cheap public college of Neo Milwaukee State to continue their mediocre education.\n\nThis area contains Neo Milwaukee State and the North Sleezeborough Subway Station. To the North is Glocksbury. To the East is Krak Bay. To the South is South Sleezeborough.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1078,12 +1024,8 @@
             "crookline": 60,
             "southsleezeborough": 60,
             "krakbay": 60,
-            "northsleezeboroughstreeta": 20,
-            "northsleezeboroughstreetb": 20,
-            "northsleezeboroughstreetc": 20,
-            "northsleezeboroughstreetd": 20,
-            "northsleezeboroughstreete": 20,
-            "neomilwaukeestate": 20
+            "neomilwaukeestate": 20,
+            "northsleezesubwaystation": 20
         },
         "topic": "A modest little burrough with a few trendy shops and cafes starting to pop up here and there.",
         "wikipage": "https://rfck.miraheze.org/wiki/North_Sleezeborough"
@@ -1100,7 +1042,7 @@
             "ss"
         ],
         "str_name": "South Sleezeborough",
-        "str_desc": "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations exotic architectural styles of this district\u2019s ethnic ghettos. In these stereotypical neighborhoods, you get an eclectic view of organized crime from across the world! Boy, aren\u2019t you lucky? There are a bunch of these little national enclaves here, but only a few are useful to you in territory control. South Sleezeborough\u2019s a hotspot for legal and illegal immigrants alike. To the residents of South Sleezeborough, it\u2019s not about if you\u2019re new to the city or not or about what you look like, it\u2019s about if you\u2019re valuable to one of the many established violent local gangs or not. If you\u2019re not\u2026 well, for your sake I hope you are.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline. To the South is South Sleezeborough Outskirts. This area is connected to Chinatown, Little Italy, Little Tokyo, and Cartel Turf.",
+        "str_desc": "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations exotic architectural styles of this district\u2019s ethnic ghettos. In these stereotypical neighborhoods, you get an eclectic view of organized crime from across the world! Boy, aren\u2019t you lucky? There are a bunch of these little national enclaves here, but only a few are useful to you in territory control. South Sleezeborough\u2019s a hotspot for legal and illegal immigrants alike. To the residents of South Sleezeborough, it\u2019s not about if you\u2019re new to the city or not or about what you look like, it\u2019s about if you\u2019re valuable to one of the many established violent local gangs or not. If you\u2019re not\u2026 well, for your sake I hope you are.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline. To the South is South Sleezeborough Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1152,10 +1094,8 @@
             "northsleezeborough": 60,
             "krakbay": 60,
             "oozegardens": 60,
-            "southsleezeboroughstreeta": 20,
-            "southsleezeboroughstreetb": 20,
-            "southsleezeboroughstreetc": 20,
-            "southsleezeboroughstreetd": 20
+            "thedojo": 20,
+            "southsleezesubwaystation": 20
         },
         "topic": "A dreary and dull burrough for the old and boring. Site of the Dojo.",
         "wikipage": "https://rfck.miraheze.org/wiki/South_Sleezeborough"
@@ -1168,7 +1108,7 @@
             "og"
         ],
         "str_name": "Ooze Gardens",
-        "str_desc": "Walking paths connect dozens of greenhouses and gardens featuring rare, exotic, and irradiated flora. This district is really just one big park, broken up into several sections hosting different types of botanical attractions, as well as several museums and even the city\u2019s zoo. Musical concerts are often held in one of the several outdoor amphitheatres that are scattered across the district. Truly, an amusement park for lovers of nature and culture.\nOoze Gardens is a clear cultural outlier of the city. The residents of this district are largely pacifist, choosing music, love, and psychedelic drugs over violent crime. They make you sick.\n\nThis area contains the Ooze Gardens Farms. To the North is Krak Bay. To the Northeast is Poudrin Alley. To the East is Cratersville. To the West is South Sleezeborough. To the South is Ooze Gardens Outskirts. This area is connected to Festival Grounds, Wine Gardens, Museum Row, and NLACakaNM Zoo.",
+        "str_desc": "Walking paths connect dozens of greenhouses and gardens featuring rare, exotic, and irradiated flora. This district is really just one big park, broken up into several sections hosting different types of botanical attractions, as well as several museums and even the city\u2019s zoo. Musical concerts are often held in one of the several outdoor amphitheatres that are scattered across the district. Truly, an amusement park for lovers of nature and culture.\nOoze Gardens is a clear cultural outlier of the city. The residents of this district are largely pacifist, choosing music, love, and psychedelic drugs over violent crime. They make you sick.\n\nThis area contains the Ooze Gardens Farms. To the North is Krak Bay. To the Northeast is Poudrin Alley. To the East is Cratersville. To the West is South Sleezeborough. To the South is Ooze Gardens Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1220,10 +1160,7 @@
             "krakbay": 60,
             "poudrinalley": 60,
             "cratersville": 60,
-            "oozegardensstreeta": 20,
-            "oozegardensstreetb": 20,
-            "oozegardensstreetc": 20,
-            "oozegardensstreetd": 20
+            "oozegardensfarms": 20
         },
         "topic": "A quiet and scenic district. Only slightly more dense with ooze than the rest of NLACakaNM.",
         "wikipage": "https://rfck.miraheze.org/wiki/Ooze_Gardens"
@@ -1236,7 +1173,7 @@
             "cv"
         ],
         "str_name": "Cratersville",
-        "str_desc": "Crumbling infrastructure is commonplace here. The craters and smaller potholes that give this district its name are scattered liberally across the streets and sidewalks. Unruly miners have refused to limit their excavating to the designated mining sector and scavenge even the residential roads for meager drops of slime.\nCratersville really sucks to live in. I mean, obviously. Look at this place. Even aside from the huge fucking holes everywhere, you\u2019ve still got to deal with the constant sound of mining and dynamite explosions underground.\n\nThis area contains the Cratersville Mines and the Cratersville Subway Station. To the North is Poudrin Alley. To the Northeast is the Rowdy Roughhouse. To the East is Wreckington. To the West is Ooze Gardens. To the South is Cratersville Outskirts. This area is connected to The End Lines, The Caldera, and Dynamite Lane.",
+        "str_desc": "Crumbling infrastructure is commonplace here. The craters and smaller potholes that give this district its name are scattered liberally across the streets and sidewalks. Unruly miners have refused to limit their excavating to the designated mining sector and scavenge even the residential roads for meager drops of slime.\nCratersville really sucks to live in. I mean, obviously. Look at this place. Even aside from the huge fucking holes everywhere, you\u2019ve still got to deal with the constant sound of mining and dynamite explosions underground.\n\nThis area contains the Cratersville Mines and the Cratersville Subway Station. To the North is Poudrin Alley. To the Northeast is the Rowdy Roughhouse. To the East is Wreckington. To the West is Ooze Gardens. To the South is Cratersville Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1287,9 +1224,8 @@
             "oozegardens": 60,
             "poudrinalley": 60,
             "wreckington": 60,
-            "cratersvillestreeta": 20,
-            "cratersvillestreetb": 20,
-            "cratersvillestreetc": 20
+            "cratersvillemines": 20,
+            "cratersvillesubwaystation": 20
         },
         "topic": "A modest residential district peppered here and there with debris from several recently collapsed Wreckington business headquarters.",
         "wikipage": "https://rfck.miraheze.org/wiki/Cratersville"
@@ -1303,7 +1239,7 @@
             "wt"
         ],
         "str_name": "Wreckington",
-        "str_desc": "Piles of rubble and scrap metal lean against partially demolished buildings that barely remain standing. Sadly, these structures are often all the critically impoverished residents of Wreckington have to house themselves. Constant new construction projects promise new opportunities for the deteriorating district, but these promises are too often broken by lack of funding and interest. Jackhammers pummeling the asphalt and wrecking balls knocking down apartment complexes can be heard throughout the entire district, 24/7.\nWreckington isn\u2019t completely barren however, its strategic location on the coast and cheap property makes its shipyard a favorite among unscrupulous sailors. It also features a ferry connection to Vagrant\u2019s Corner, if you\u2019re so inclined to visit the eastern districts.\n\nThis area contains the Smoker's Cough Diner, the Wreckington Ferry Port and the Wreckington Subway Station. To the North is the Rowdy Roughhouse. To the West is Cratersville. To the South is Wreckington Outskirts. This area is connected to Permanent Construction Zone, and The Scrapyard.",
+        "str_desc": "Piles of rubble and scrap metal lean against partially demolished buildings that barely remain standing. Sadly, these structures are often all the critically impoverished residents of Wreckington have to house themselves. Constant new construction projects promise new opportunities for the deteriorating district, but these promises are too often broken by lack of funding and interest. Jackhammers pummeling the asphalt and wrecking balls knocking down apartment complexes can be heard throughout the entire district, 24/7.\nWreckington isn\u2019t completely barren however, its strategic location on the coast and cheap property makes its shipyard a favorite among unscrupulous sailors. It also features a ferry connection to Vagrant\u2019s Corner, if you\u2019re so inclined to visit the eastern districts.\n\nThis area contains the Smoker's Cough Diner, the Wreckington Ferry Port and the Wreckington Subway Station. To the North is the Rowdy Roughhouse. To the West is Cratersville. To the South is Wreckington Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1353,8 +1289,8 @@
         "neighbors": {
             "cratersville": 60,
             "rowdyroughhouse": 60,
-            "wreckingtonstreeta": 20,
-            "wreckingtonstreetb": 20
+            "smokerscough": 20,
+            "wreckingtonsubwaystation": 20
         },
         "topic": "A former residential district that's now mostly demolished. Go here if you want to wreck some shit, no one will care.",
         "wikipage": "https://rfck.miraheze.org/wiki/Wreckington"
@@ -1417,8 +1353,6 @@
         "neighbors": {
             "greenlightdistrict": 60,
             "vagrantscorner": 60,
-            "greenlightdistrictstreetb": 20,
-            "vagrantscornerstreetc": 20,
             "themines": 20,
             "juviesrowfarms": 20,
             "juviesrowpier": 20,
@@ -1436,7 +1370,7 @@
             "se"
         ],
         "str_name": "Slime's End",
-        "str_desc": "There\u2019s not much to see here, as this sparsely populated district is mainly comprised of small residential enclaves and barren terrain. Maybe a tree here and there, I don\u2019t know.\nSlime\u2019s End is a narrow peninsula is bordered on both sides by the Slime Sea. The phosphorescence illuminates the sky with an eerily green glow.\n\nThis area contains the Slime's End Cliffs. To the North is Vagrant's Corner. This area is connected to Sandy Neck",
+        "str_desc": "There\u2019s not much to see here, as this sparsely populated district is mainly comprised of small residential enclaves and barren terrain. Maybe a tree here and there, I don\u2019t know.\nSlime\u2019s End is a narrow peninsula is bordered on both sides by the Slime Sea. The phosphorescence illuminates the sky with an eerily green glow.\n\nThis area contains the Slime's End Cliffs. To the North is Vagrant's Corner.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1485,8 +1419,8 @@
         "max_degradation": 10000,
         "neighbors": {
             "vagrantscorner": 60,
-            "slimesendstreeta": 20,
-            "slimesendcliffs": 20
+            "slimesendcliffs": 20,
+            "slimesendpier": 20
         },
         "topic": "The furthest point of NLACakaNM into the Slime Sea (formerly the Grand Canyon). The green glow of slime makes Slime's End bright as day, 24/7.",
         "wikipage": "https://rfck.miraheze.org/wiki/Slime's_End"
@@ -1499,7 +1433,7 @@
             "vc"
         ],
         "str_name": "Vagrant's Corner",
-        "str_desc": "A foul, fishy smell pervades the entire district, emanating from the harbor. This wretched wharf is home to the seediest underbelly of the city, besides the neighboring Green Light District of course. Pirates and other seafaring scoundrels patron the local taverns and other haunts of ill repute while on shore leave. The harsh glow of the Slimea Sea illuminates the undersides of the innumerable docks that extend out from this district, as well as the heavy industrial equipment designed to pump slime into the cargo holds of outbound barges.\nVagrant\u2019s Corner features the largest seaport of the city, with almost all seabound imports and exports funnel through it. It also features a ferry connection to Wreckington, if you\u2019re so inclined to visit the southern districts.\n\nThis area contains The King's Wife's Son Speakeasy, and the Vagrant's Corner Ferry Port. To the North is New New Yonkers. To the Northeast is Assault Flats Beach. To the South is Slime's End. To the Southwest is Juvie's Row. To the West is the Green Light District. To the Northwest is Old New Yonkers. This area is connected to Long Wharf, The Dockyard, Pubcrawl Road, Seaside Market, Trimountaine, and Cockfight Backstreet.",
+        "str_desc": "A foul, fishy smell pervades the entire district, emanating from the harbor. This wretched wharf is home to the seediest underbelly of the city, besides the neighboring Green Light District of course. Pirates and other seafaring scoundrels patron the local taverns and other haunts of ill repute while on shore leave. The harsh glow of the Slimea Sea illuminates the undersides of the innumerable docks that extend out from this district, as well as the heavy industrial equipment designed to pump slime into the cargo holds of outbound barges.\nVagrant\u2019s Corner features the largest seaport of the city, with almost all seabound imports and exports funnel through it. It also features a ferry connection to Wreckington, if you\u2019re so inclined to visit the southern districts.\n\nThis area contains The King's Wife's Son Speakeasy, and the Vagrant's Corner Ferry Port. To the North is New New Yonkers. To the Northeast is Assault Flats Beach. To the South is Slime's End. To the Southwest is Juvie's Row. To the West is the Green Light District. To the Northwest is Old New Yonkers.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1553,13 +1487,8 @@
             "assaultflatsbeach": 60,
             "newnewyonkers": 60,
             "oldnewyonkers": 60,
-            "vagrantscornerstreeta": 20,
-            "vagrantscornerstreetb": 20,
-            "vagrantscornerstreetc": 20,
-            "vagrantscornerstreetd": 20,
-            "vagrantscornerstreete": 20,
-            "vagrantscornerstreetf": 20,
-            "thekingswifessonspeakeasy": 20
+            "thekingswifessonspeakeasy": 20,
+            "vagrantscornersubwaystation": 20
         },
         "topic": "Dingy port district and site of innumerable shady back-alley dealings.",
         "wikipage": "https://rfck.miraheze.org/wiki/Vagrant's_Corner"
@@ -1575,7 +1504,7 @@
             "afb"
         ],
         "str_name": "Assault Flats Beach",
-        "str_desc": "Colorfully painted wooden storefronts and towering condominium complexes peer out from the coastline of this scenic beach town. Most of the district is owned by the sprawling luxury resort the district is best known for, as well as virtually the entirety of the actual beach of Assault Flats Beach.\nAssault Flats Beach is by far one of if not the most expensive districts in the city to live in, due to its complete subjugation by the resort and accompanying security force, it is also the safest district to live in by a long shot. But, as you venture away from the coast you\u2019ll begin to see more of the city\u2019s standard crime rate return. Interestingly, the district is a favorite among archaeologists for its unprecedented density of jurassic fossils hidden deep underground. Some even say dinosaurs still roam the outskirts of the district to the north, but frankly that just seems ridiculous. I mean, we all know dinosaurs aren\u2019t real.\n\nThis area contains the Resort, the Assault Flats Beach Blimp Tower and the Assault Flats Beach Subway Station. To the South is Vagrant's Corner. To the West is New New Yonkers. To the North is Assault Flats Beach Outskirts. This area is connected to Paradise Slums, and Beachfront Properties.",
+        "str_desc": "Colorfully painted wooden storefronts and towering condominium complexes peer out from the coastline of this scenic beach town. Most of the district is owned by the sprawling luxury resort the district is best known for, as well as virtually the entirety of the actual beach of Assault Flats Beach.\nAssault Flats Beach is by far one of if not the most expensive districts in the city to live in, due to its complete subjugation by the resort and accompanying security force, it is also the safest district to live in by a long shot. But, as you venture away from the coast you\u2019ll begin to see more of the city\u2019s standard crime rate return. Interestingly, the district is a favorite among archaeologists for its unprecedented density of jurassic fossils hidden deep underground. Some even say dinosaurs still roam the outskirts of the district to the north, but frankly that just seems ridiculous. I mean, we all know dinosaurs aren\u2019t real.\n\nThis area contains the Resort, the Assault Flats Beach Blimp Tower and the Assault Flats Beach Subway Station. To the South is Vagrant's Corner. To the West is New New Yonkers. To the North is Assault Flats Beach Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1625,10 +1554,11 @@
         "neighbors": {
             "newnewyonkers": 60,
             "vagrantscorner": 60,
-            "assaultflatsbeachstreeta": 20,
-            "assaultflatsbeachstreetb": 20,
             "thebeachresort": 20,
-            "nuclearbeachedge": 20
+            "nuclearbeachedge": 20,
+            "assaultflatsbeachpier": 20,
+            "assaultflatsblimptower": 20,
+            "assaultflatssubwaystation": 20
         },
         "topic": "Posh beach real estate, recently gentrified and ripe for the vacationing!",
         "wikipage": "https://rfck.miraheze.org/wiki/Assault_Flats_Beach"
@@ -1641,7 +1571,7 @@
             "nny"
         ],
         "str_name": "New New Yonkers",
-        "str_desc": "Nightclubs and trendy restaurants have popped up in slick, modern buildings while the same old, reliable brownstones host arcades, bowling alleys and other teenage favorites. Featuring probably the best nightlife in the city, New New Yonkers is a favorite hangout spot among the juveniles of the city and consequently has an alarming crime rate. Many of the older residents want to see these fun times come to an end however, seeking to emulate the gentrified suburbia of Old New Yonkers to the south. This is adamantly resisted by the rough-and-tumble youth, those who\u2019s to say if this district will remain the bastion of good times it is today.\nNew New Yonkers is the best district to hang out in on a weekend with your friends. Really, what else can a district aspire to?\n\nTo the East is Assault Flats Beach. To the South is Vagrant's Corner. To the Southwest is Old New Yonkers. To the West is Brawlden. To the North is New New Yonkers Outskirts. This area is connected to Concrete Park, Broadway, Ghetto Townhouses, and Single Gentrified Street.",
+        "str_desc": "Nightclubs and trendy restaurants have popped up in slick, modern buildings while the same old, reliable brownstones host arcades, bowling alleys and other teenage favorites. Featuring probably the best nightlife in the city, New New Yonkers is a favorite hangout spot among the juveniles of the city and consequently has an alarming crime rate. Many of the older residents want to see these fun times come to an end however, seeking to emulate the gentrified suburbia of Old New Yonkers to the south. This is adamantly resisted by the rough-and-tumble youth, those who\u2019s to say if this district will remain the bastion of good times it is today.\nNew New Yonkers is the best district to hang out in on a weekend with your friends. Really, what else can a district aspire to?\n\nTo the East is Assault Flats Beach. To the South is Vagrant's Corner. To the Southwest is Old New Yonkers. To the West is Brawlden. To the North is New New Yonkers Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1693,10 +1623,6 @@
             "oldnewyonkers": 60,
             "vagrantscorner": 60,
             "assaultflatsbeach": 60,
-            "newnewyonkersstreeta": 20,
-            "newnewyonkersstreetb": 20,
-            "newnewyonkersstreetc": 20,
-            "newnewyonkersstreetd": 20,
             "slimypersuits": 20
         },
         "topic": "Hip up-and-coming neighborhood rapidly becoming more gentrified and less cool.",
@@ -1709,7 +1635,7 @@
             "bd"
         ],
         "str_name": "Brawlden",
-        "str_desc": "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by SlimeCorp. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You\u2019ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook. To the North is Brawlden Outskirts. This area is connected to Abandoned Warehouse, Brownstone Row, Brawlden Private School District, and Used Car Dealership.",
+        "str_desc": "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by SlimeCorp. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You\u2019ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook. To the North is Brawlden Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1761,10 +1687,6 @@
             "littlechernobyl": 60,
             "oldnewyonkers": 60,
             "newnewyonkers": 60,
-            "brawldenstreeta": 20,
-            "brawldenstreetb": 20,
-            "brawldenstreetc": 20,
-            "brawldenstreetd": 20,
             "slimecorpslimeoidlaboratory": 20
         },
         "topic": "Sleepy little burrough in northern NLACakaNM. Site of the Slimecorp Slimeoid Laboratories.",
@@ -1780,7 +1702,7 @@
             "tx"
         ],
         "str_name": "Toxington",
-        "str_desc": "You cover your mouth in a futile attempt to avoid breathing in the toxins rising from the nearby lakes and mineshafts. A thick fog of this foul-smelling, poisonous gas shrouds the entire district, making the land virtually uninhabitable. But, where there\u2019s slime, people will settle. Juveniles from across the city are happy to spend their short lives in this hellhole for a chance to strike it rich.\nToxington has no redeemable aspects, outside of its abundance of slime veins underground and its lovely fishing spots above.\n\nThis area contains the Toxington Mines and the Toxington Subway Station. To the East is Astatine Heights. To the Southeast is Gatlingsdale. To the South is Polonium Hill. To the West is Charcoal Park. To the North is Toxington Outskirts. This area is connected to Gravel Mounds, Cyanide Swamp, Quarantined Zones, Carcinogenic Quarry, and Geyser Springs.",
+        "str_desc": "You cover your mouth in a futile attempt to avoid breathing in the toxins rising from the nearby lakes and mineshafts. A thick fog of this foul-smelling, poisonous gas shrouds the entire district, making the land virtually uninhabitable. But, where there\u2019s slime, people will settle. Juveniles from across the city are happy to spend their short lives in this hellhole for a chance to strike it rich.\nToxington has no redeemable aspects, outside of its abundance of slime veins underground and its lovely fishing spots above.\n\nThis area contains the Toxington Mines and the Toxington Subway Station. To the East is Astatine Heights. To the Southeast is Gatlingsdale. To the South is Polonium Hill. To the West is Charcoal Park. To the North is Toxington Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1833,11 +1755,9 @@
             "gatlingsdale": 60,
             "astatineheights": 60,
             "maimridge": 60,
-            "toxingtonstreeta": 20,
-            "toxingtonstreetb": 20,
-            "toxingtonstreetc": 20,
-            "toxingtonstreetd": 20,
-            "toxingtonstreete": 20
+            "toxingtonmines": 20,
+            "toxingtonpier": 20,
+            "toxingtonsubwaystation": 20
         },
         "topic": "Quiet residential neighborhood, continually choked with acidic vapors from the nearby slime reservoir.",
         "wikipage": "https://rfck.miraheze.org/wiki/Toxington"
@@ -1853,7 +1773,7 @@
             "ch"
         ],
         "str_name": "Charcoal Park",
-        "str_desc": "A completely unremarkable, quiet retirement community. The citizens are fed up with slime, honestly. Pathetic little gardens rest in front of the uneven parking lots of corporate complexes housing dentists, fortune-tellers, real estate agencies, and other equally dull and pointless ventures.\nCharcoal Park is where boring people go to die. No one is happy to be here.\n\nTo the East is Toxington. To the South is Polonium Hill. To the Northwest is Charcoal Park Outskirts. This area is connected to The Church of the Holy Slimefoot, and Veterans Center.",
+        "str_desc": "A completely unremarkable, quiet retirement community. The citizens are fed up with slime, honestly. Pathetic little gardens rest in front of the uneven parking lots of corporate complexes housing dentists, fortune-tellers, real estate agencies, and other equally dull and pointless ventures.\nCharcoal Park is where boring people go to die. No one is happy to be here.\n\nTo the East is Toxington. To the South is Polonium Hill. To the Northwest is Charcoal Park Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1902,9 +1822,7 @@
         "max_degradation": 10000,
         "neighbors": {
             "toxington": 60,
-            "poloniumhill": 60,
-            "charcoalparkstreeta": 20,
-            "charcoalparkstreetb": 20
+            "poloniumhill": 60
         },
         "topic": "Quiet surburban retirement community. Residents like to have a good laugh at the expense of the unfortunate residents of Toxington.",
         "wikipage": "https://rfck.miraheze.org/wiki/Charcoal_Park"
@@ -1918,7 +1836,7 @@
             "ph"
         ],
         "str_name": "Polonium Hill",
-        "str_desc": "The gently rolling astroturf hills are sprinkled with hideous mansions that obviously cost a fortune but look like complete shit. This whole district feels like it tries way to hard to come across as high-society, when it's really just some residential district on the far-flung edges of the city.\nPolonium Hills residents really want you to think they're rich.\n\nTo the North is Charcoal Park. To the Northeast is Toxington. To the East is Gatlingsdale. To the Southeast is Vandal park. To the South is West Glocksbury. To the West is Polonium Hill Outskirts. This area is connected to Wholesale Warehouse, Curie Highschool, Geller Point, Sawdust Lumberyard, and Sort Of Mansions.",
+        "str_desc": "The gently rolling astroturf hills are sprinkled with hideous mansions that obviously cost a fortune but look like complete shit. This whole district feels like it tries way to hard to come across as high-society, when it's really just some residential district on the far-flung edges of the city.\nPolonium Hills residents really want you to think they're rich.\n\nTo the North is Charcoal Park. To the Northeast is Toxington. To the East is Gatlingsdale. To the Southeast is Vandal park. To the South is West Glocksbury. To the West is Polonium Hill Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1970,12 +1888,7 @@
             "toxington": 60,
             "gatlingsdale": 60,
             "vandalpark": 60,
-            "westglocksbury": 60,
-            "poloniumhillstreeta": 20,
-            "poloniumhillstreetb": 20,
-            "poloniumhillstreetc": 20,
-            "poloniumhillstreetd": 20,
-            "poloniumhillstreete": 20
+            "westglocksbury": 60
         },
         "topic": "Residential neighborhood covered in low-quality, high-cost minimansions. The butt of many a NLACakaNM inside joke.",
         "wikipage": "https://rfck.miraheze.org/wiki/Polonium_Hill"
@@ -1991,7 +1904,7 @@
             "wg"
         ],
         "str_name": "West Glocksbury",
-        "str_desc": "Glocksbury-styled neighborhoods continue into its western counterpart, though liberated from the oppressive yolk of the city\u2019s police department enforcing its poor attempts at enforcing societal values. This, coupled with its location on the outer edge of the city leads to some brutal, cruel crimes being perpetrated by maniacs with little grip on reality. Gunshots ring out regularly from somewhere in the distance, behind laundromats and barber shops.\nWest Glocksbury\u2019s startlingly high violent crime rate may make even some of the most jaded residents of the city may get nervous.\n\nThis area contains the West Glocksbury Subway Station. To the North is Polonium Hill. To the Northeast is Vandal Park. To the East is Glocksbury. This area is connected to Oilscum Avenue, Scanty Heights, Goosh Creek, and Highway 89-A.",
+        "str_desc": "Glocksbury-styled neighborhoods continue into its western counterpart, though liberated from the oppressive yolk of the city\u2019s police department enforcing its poor attempts at enforcing societal values. This, coupled with its location on the outer edge of the city leads to some brutal, cruel crimes being perpetrated by maniacs with little grip on reality. Gunshots ring out regularly from somewhere in the distance, behind laundromats and barber shops.\nWest Glocksbury\u2019s startlingly high violent crime rate may make even some of the most jaded residents of the city may get nervous.\n\nThis area contains the West Glocksbury Subway Station. To the North is Polonium Hill. To the Northeast is Vandal Park. To the East is Glocksbury.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -2043,11 +1956,8 @@
             "vandalpark": 60,
             "glocksbury": 60,
             "jaywalkerplain": 60,
-            "westglocksburystreeta": 20,
-            "westglocksburystreetb": 20,
-            "westglocksburystreetc": 20,
-            "westglocksburystreetd": 20,
-            "basedhardware": 20
+            "basedhardware": 20,
+            "westglocksburysubwaystation": 20
         },
         "topic": "An otherwise unremarkable residential district with a distressingly high violent crime rate.",
         "wikipage": "https://rfck.miraheze.org/wiki/West_Glocksbury"
@@ -2062,7 +1972,7 @@
             "jp"
         ],
         "str_name": "Jaywalker Plain",
-        "str_desc": "Though about half of this district is made of up parks, don\u2019t mistake this for a wealthy district. These neglected, overgrown open spaces only help to congest the poor communities of Jaywalker Plains into tightly packed slums. This, coupled with being a backwater on the edge of the city with nothing to do, has bred a district that leads the city only in amount of narcotics injected per capita. Everyone is on a bad trip in Jaywalker Plain. Maniacs roam the street, screaming obscenities and striping naked in public. Homeless men ramble incoherent nonsense while picking drunken fights with one another on the side of the street. Many strange and unusual crimes are perpetrated here and reported on by local news teams to the amusement of residents of neighboring districts. \u201cDid you hear what that guy from Jaywalker Plain did the other day,\u201d is a common conversation starter in the western districts.\nJaywalker Plain has actually become a common residential district for lower income students attending the nearby Neo Milwaukee State wanting to avoid the already cheap rates of apartments in North Sleezebrorough. Because of this, you\u2019re guaranteed to see a lot of young artists and hipsters roaming this broken, nightmare hellscape of a district looking for cafes to leech Wi-Fi access off of. Good luck with that.\n\nThis area contains the Jaywalker Plain Subway Station. To the North is West Glocksbury. To the Northeast is Glocksbury. To the East is North Sleezeborough. To the Southwest is Crookline. To the South is Dreadford. To the West is Jaywalker Plain Outskirts. This area is connected to Outside the Planned Parenthood, Black Alleyways, The Emerald Noose, Qoute Unqoute Art Galleries, and Tent City.",
+        "str_desc": "Though about half of this district is made of up parks, don\u2019t mistake this for a wealthy district. These neglected, overgrown open spaces only help to congest the poor communities of Jaywalker Plains into tightly packed slums. This, coupled with being a backwater on the edge of the city with nothing to do, has bred a district that leads the city only in amount of narcotics injected per capita. Everyone is on a bad trip in Jaywalker Plain. Maniacs roam the street, screaming obscenities and striping naked in public. Homeless men ramble incoherent nonsense while picking drunken fights with one another on the side of the street. Many strange and unusual crimes are perpetrated here and reported on by local news teams to the amusement of residents of neighboring districts. \u201cDid you hear what that guy from Jaywalker Plain did the other day,\u201d is a common conversation starter in the western districts.\nJaywalker Plain has actually become a common residential district for lower income students attending the nearby Neo Milwaukee State wanting to avoid the already cheap rates of apartments in North Sleezebrorough. Because of this, you\u2019re guaranteed to see a lot of young artists and hipsters roaming this broken, nightmare hellscape of a district looking for cafes to leech Wi-Fi access off of. Good luck with that.\n\nThis area contains the Jaywalker Plain Subway Station. To the North is West Glocksbury. To the Northeast is Glocksbury. To the East is North Sleezeborough. To the Southwest is Crookline. To the South is Dreadford. To the West is Jaywalker Plain Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -2115,11 +2025,8 @@
             "northsleezeborough": 60,
             "crookline": 60,
             "dreadford": 60,
-            "jaywalkerplainstreeta": 20,
-            "jaywalkerplainstreetb": 20,
-            "jaywalkerplainstreetc": 20,
-            "jaywalkerplainstreetd": 20,
-            "jaywalkerplainstreete": 20
+            "jaywalkerplainpier": 20,
+            "jaywalkerplainsubwaystation": 20
         },
         "topic": "Don't forget to look left and right before crossing.",
         "wikipage": "https://rfck.miraheze.org/wiki/Jaywalker_Plain"
@@ -2132,7 +2039,7 @@
             "cl"
         ],
         "str_name": "Crookline",
-        "str_desc": "Most of this district is shrouded in total darkness, the unregulated construction of skyscrapers obstructing sunlight from ever reaching the streets far below them. Streetlights and the dense arrays of neon signs advertising speakeasy after speakeasy are the only illumination you\u2019re provided with while traveling the narrow, twisting streets of this district. You\u2019ll have to keep your wits about you if you want to leave here with your wallet, Crookline is perhaps most known for its hordes of petty thieves who specialise in stealing from clueless juveniles from the posher districts. Despite these hurdles, or possibly because of them, Crookline has a bustling nightlife heavily featuring those aforementioned speakeasies. No matter where you are in this district, you\u2019re not more than a block or two from a jazz club. You sort of feel like you\u2019re on the set of a film noir movie when you traverse these dark alleyways.\nCrookline was a historically rebellious settlement on the edge of New Los Angeles City aka Neo Milwaukee, resisting full annexation for years until it was fully culturally and economically dominated by the city. Because of this, the residents have always kept an independent streak, and remain vehemently opposed most aspects of slime past its purely utilitarian purposes. You get the feeling the denizens of this district would have been happier if there was gold discovered in the area rather than the green, morality obliterating substance they\u2019re stuck with.\n\n To the North is Jaywalker Plain. To the Northeast is North Sleezeborough. To the East is South Sleezeborough. To the West is Dreadford. To the South is Crookline Outskirts. This area is connected to Doxy Avenue, Lake Macguffin, Manteca Street, and Perdido Valley.",
+        "str_desc": "Most of this district is shrouded in total darkness, the unregulated construction of skyscrapers obstructing sunlight from ever reaching the streets far below them. Streetlights and the dense arrays of neon signs advertising speakeasy after speakeasy are the only illumination you\u2019re provided with while traveling the narrow, twisting streets of this district. You\u2019ll have to keep your wits about you if you want to leave here with your wallet, Crookline is perhaps most known for its hordes of petty thieves who specialise in stealing from clueless juveniles from the posher districts. Despite these hurdles, or possibly because of them, Crookline has a bustling nightlife heavily featuring those aforementioned speakeasies. No matter where you are in this district, you\u2019re not more than a block or two from a jazz club. You sort of feel like you\u2019re on the set of a film noir movie when you traverse these dark alleyways.\nCrookline was a historically rebellious settlement on the edge of New Los Angeles City aka Neo Milwaukee, resisting full annexation for years until it was fully culturally and economically dominated by the city. Because of this, the residents have always kept an independent streak, and remain vehemently opposed most aspects of slime past its purely utilitarian purposes. You get the feeling the denizens of this district would have been happier if there was gold discovered in the area rather than the green, morality obliterating substance they\u2019re stuck with.\n\n To the North is Jaywalker Plain. To the Northeast is North Sleezeborough. To the East is South Sleezeborough. To the West is Dreadford. To the South is Crookline Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -2184,10 +2091,8 @@
             "jaywalkerplain": 60,
             "northsleezeborough": 60,
             "southsleezeborough": 60,
-            "crooklinestreeta": 20,
-            "crooklinestreetb": 20,
-            "crooklinestreetc": 20,
-            "crooklinestreetd": 20
+            "crooklinepier": 20,
+            "clinicofslimoplasty": 20
         },
         "topic": "A rebellious district on the far reaches of the city. Rich in culture and literal wealth, just hope that you don\u2019t get pickpocketed while there.",
         "wikipage": "https://rfck.miraheze.org/wiki/Crookline"
@@ -2200,7 +2105,7 @@
             "df"
         ],
         "str_name": "Dreadford",
-        "str_desc": "Neatly spaced colonial revival mansions and chapels are broken up by botches of thick, twisting woods. This district is largely rural and suburban, with a small town center with various necessities like Whole Foods and a cemetery. The residents of this district are very, very wealthy and meticulously maintain the gated community they\u2019ve grown for themselves. Perhaps the most obvious example of this is the country club and its accompanying golf course, which comprises a large chunk of the district.\nDreadford is one of the oldest settlements of the area, being inhabited by humans as far back as 1988. The original founders were fleeing restrict criminals rights laws, and established the town of Dreadford in what was then a barren Arizonian desert. These first settlers had quite the pension of holding kangaroo courts, which often amounted to just reading the list of crimes the accused was charged with before hanging them immediately. Some nooses still hang on trees around the district, begging to be finally used.\n\n This area contains the Country Club and the Dreadford Blimp Tower. To the North is Jaywalker Plain. To the East is Crookline. To the Southwest is Dreadford Outskirts. This area is connected to Scaffold Forest, and Hang-'Em Square.",
+        "str_desc": "Neatly spaced colonial revival mansions and chapels are broken up by botches of thick, twisting woods. This district is largely rural and suburban, with a small town center with various necessities like Whole Foods and a cemetery. The residents of this district are very, very wealthy and meticulously maintain the gated community they\u2019ve grown for themselves. Perhaps the most obvious example of this is the country club and its accompanying golf course, which comprises a large chunk of the district.\nDreadford is one of the oldest settlements of the area, being inhabited by humans as far back as 1988. The original founders were fleeing restrict criminals rights laws, and established the town of Dreadford in what was then a barren Arizonian desert. These first settlers had quite the pension of holding kangaroo courts, which often amounted to just reading the list of crimes the accused was charged with before hanging them immediately. Some nooses still hang on trees around the district, begging to be finally used.\n\n This area contains the Country Club and the Dreadford Blimp Tower. To the North is Jaywalker Plain. To the East is Crookline. To the Southwest is Dreadford Outskirts.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -2250,8 +2155,6 @@
         "neighbors": {
             "jaywalkerplain": 60,
             "crookline": 60,
-            "dreadfordstreeta": 20,
-            "dreadfordstreetb": 20,
             "thecountryclub": 20
         },
         "topic": "Ford of Dread.",
@@ -2266,7 +2169,7 @@
             "mario"
         ],
         "str_name": "Maimridge",
-        "str_desc": "In front of you rests the formidable mountain range of Mt. Srxek, known for having freezing temperatures during even the summer months, and for having the highest peaks in the county. Snow falls near the tops of these mountains basically all year \u2018round, and as such a community of suicidal winter sport enthusiasts and adventurous explorers have set up shop across the range, establishing lodging and tacky souvenir shops in and around ancient Native American burial grounds, because it\u2019s not like they were using the place anymore. Unfortunately, or perhaps fortunately for the thrill seekers among us, the mountains here are far too steep for anyone to actually skii down without a death wish to attempt them. Seriously, there are just a series of ninety degree drops in some places, and that\u2019s not even to mention the yetis, don\u2019t even get me started on the yetis. Of course, none of this stops the locals, who eagerly careen off the side of cliffs and then take the lift back up for seconds after they revive. If you want to down some cheap instant hot coco before flying off the summit of a fucking mountain, then this district is for you. Maimridge used to be considered part of the outskirts, but recently it has grown enough of a stable population to be considered a real district. Its claim to fame is, of course, the impressive mountains in its borders. This area is connected to The Summit, Ski Lodges, and Colloid Springs.",
+        "str_desc": "In front of you rests the formidable mountain range of Mt. Srxek, known for having freezing temperatures during even the summer months, and for having the highest peaks in the county. Snow falls near the tops of these mountains basically all year \u2018round, and as such a community of suicidal winter sport enthusiasts and adventurous explorers have set up shop across the range, establishing lodging and tacky souvenir shops in and around ancient Native American burial grounds, because it\u2019s not like they were using the place anymore. Unfortunately, or perhaps fortunately for the thrill seekers among us, the mountains here are far too steep for anyone to actually skii down without a death wish to attempt them. Seriously, there are just a series of ninety degree drops in some places, and that\u2019s not even to mention the yetis, don\u2019t even get me started on the yetis. Of course, none of this stops the locals, who eagerly careen off the side of cliffs and then take the lift back up for seconds after they revive. If you want to down some cheap instant hot coco before flying off the summit of a fucking mountain, then this district is for you. Maimridge used to be considered part of the outskirts, but recently it has grown enough of a stable population to be considered a real district. Its claim to fame is, of course, the impressive mountains in its borders.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -2313,10 +2216,7 @@
         "neighbors": {
             "toxington": 60,
             "astatineheights": 60,
-            "arsonbrook": 60,
-            "maimridgestreeta": 20,
-            "maimridgestreetb": 20,
-            "maimridgestreetc": 20
+            "arsonbrook": 60
         },
         "topic": "NLACakaNM\u2019s frigid, untamed crown jewel. Site of Mt. Srxek.",
         "wikipage": "https://rfck.miraheze.org/wiki/Maimridge"
@@ -2442,7 +2342,7 @@
         "max_degradation": 10000,
         "neighbors": {
             "thevoid": 60,
-            "poudrinalleystreete": 20
+            "draintrench": 20
         },
         "topic": "You have been gunned down, and your body has been swept down the drain into the sewers. Here you can commune with your fellow cadavers through the Neural Slime network. To revive yourself you must feed your carcass into ENDLESS WAR's churning maw and be reborn into Slime, continuing the war forever more.",
         "wikipage": "https://rfck.miraheze.org/wiki/The_Sewers"
@@ -3225,10 +3125,9 @@
         "max_degradation": 10000,
         "neighbors": {
             "poudrinalley": 20,
-            "poudrinalleystreete": 20,
+            "draintrench": 20,
             "poudrinalleystreetb": 20,
-            "rowdyroughhouse": 20,
-            "poudrinalleysubwaystation": 20
+            "rowdyroughhouse": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Poudrin_Alley#24_Karat_Shopping"
@@ -3408,16 +3307,15 @@
         "neighbors": {
             "poudrinalley": 20,
             "poudrinalleystreetc": 20,
-            "poudrinalleystreete": 20,
+            "draintrench": 20,
             "oozegardensstreetc": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Poudrin_Alley#Skewer_Road"
     },
-    "poudrinalleystreete": {
-        "id_poi": "poudrinalleystreete",
+    "draintrench": {
+        "id_poi": "draintrench",
         "alias": [
-            "draintrench",
             "trench"
         ],
         "str_name": "Drain Trench",
@@ -3429,9 +3327,9 @@
         "channel": "drain-trench",
         "role": null,
         "major_role": "poudrinalley_major",
-        "minor_role": "poudrinalleystreete_minor",
+        "minor_role": "draintrench_minor",
         "permissions": {
-            "poudrinalleystreete": [
+            "draintrench": [
                 "read",
                 "send",
                 "connect"
@@ -3447,11 +3345,13 @@
         "is_district": false,
         "is_gangbase": false,
         "is_capturable": true,
-        "is_subzone": false,
+        "is_subzone": true,
         "is_apartment": false,
-        "is_street": true,
-        "mother_districts": [],
-        "father_district": "poudrinalley",
+        "is_street": false,
+        "mother_districts": [
+            "poudrinalley"
+        ],
+        "father_district": "",
         "is_transport": false,
         "transport_type": "",
         "default_line": "",
@@ -3467,9 +3367,6 @@
         "max_degradation": 10000,
         "neighbors": {
             "poudrinalley": 20,
-            "poudrinalleystreetd": 20,
-            "poudrinalleystreeta": 20,
-            "cratersvillestreetb": 20,
             "thesewers": 20
         },
         "topic": "",
@@ -3592,7 +3489,7 @@
             "cratersville": 20,
             "cratersvillestreeta": 20,
             "cratersvillestreetc": 20,
-            "poudrinalleystreete": 20,
+            "draintrench": 20,
             "cratersvillesubwaystation": 20
         },
         "topic": "",
@@ -3965,8 +3862,7 @@
             "oozegardensstreetb": 20,
             "oozegardensstreetd": 20,
             "poudrinalleystreetd": 20,
-            "oozegardensfarms": 20,
-            "oozegardenssubwaystation": 20
+            "oozegardensfarms": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Ooze_Gardens#Museum_Row"
@@ -5498,8 +5394,7 @@
             "crooklinestreetb": 20,
             "dreadfordstreetb": 20,
             "southwestoutskirtsedge": 60,
-            "crooklinepier": 20,
-            "crooklinesubwaystation": 20
+            "crooklinepier": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Crookline#Doxy_Avenue"
@@ -5561,8 +5456,7 @@
             "crooklinestreetc": 20,
             "southsleezeboroughstreeta": 20,
             "southwestoutskirtsedge": 60,
-            "crooklinepier": 20,
-            "crooklinesubwaystation": 20
+            "crooklinepier": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Crookline#Lake_Macguffin"
@@ -5870,8 +5764,7 @@
             "vandalpark": 20,
             "vandalparkstreetd": 20,
             "vandalparkstreetb": 20,
-            "westglocksburystreetb": 20,
-            "vandalparksubwaystation": 20
+            "westglocksburystreetb": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Vandal_Park#Ashtray_Park"
@@ -8315,8 +8208,7 @@
             "brawldenstreetd": 20,
             "brawldenstreetb": 20,
             "arsonbrookstreetd": 20,
-            "northoutskirtsedge": 60,
-            "brawldensubwaystation": 20
+            "northoutskirtsedge": 60
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Brawlden#Abandoned_Warehouse"
@@ -8560,8 +8452,7 @@
             "littlechernobyl": 20,
             "littlechernobylstreetc": 20,
             "littlechernobylstreetb": 20,
-            "arsonbrookstreete": 20,
-            "littlechernobylsubwaystation": 20
+            "arsonbrookstreete": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Little_Chernobyl#Half-Life_Road"
@@ -9047,8 +8938,7 @@
             "newnewyonkersstreetd": 20,
             "newnewyonkersstreetb": 20,
             "brawldenstreetb": 20,
-            "northoutskirtsedge": 60,
-            "newnewyonkerssubwaystation": 20
+            "northoutskirtsedge": 60
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/New_New_Yonkers#Concrete_Park"
@@ -10326,8 +10216,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "krakbay",
-            "krakbaystreetd"
+            "krakbay"
         ],
         "father_district": "",
         "is_transport": false,
@@ -10344,8 +10233,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "krakbay": 20,
-            "krakbaystreetd": 20
+            "krakbay": 20
         },
         "topic": "Voted best food in NLACakaNM up until other places opened.",
         "wikipage": "https://rfck.miraheze.org/wiki/Krak_Bay#The_Food_Court"
@@ -10520,7 +10408,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "southsleezeboroughstreetb"
+            "southsleezeborough"
         ],
         "father_district": "",
         "is_transport": false,
@@ -10537,7 +10425,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "southsleezeboroughstreetb": 20
+            "southsleezeborough": 20
         },
         "topic": "Killers and Rowdys alike come here under an uneasy truce to train themselves in the arts of war.",
         "wikipage": "https://rfck.miraheze.org/wiki/South_Sleezeborough#The_Dojo"
@@ -10655,8 +10543,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "poudrinalley",
-            "poudrinalleystreetb"
+            "poudrinalley"
         ],
         "father_district": "",
         "is_transport": false,
@@ -10673,8 +10560,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "poudrinalley": 20,
-            "poudrinalleystreetb": 20
+            "poudrinalley": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Poudrin_Alley#Outside_the_7/11"
@@ -11042,7 +10928,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "cratersvillestreetc"
+            "cratersville"
         ],
         "father_district": "",
         "is_transport": false,
@@ -11059,7 +10945,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "cratersvillestreetc": 20,
+            "cratersville": 20,
             "cratersvilleminessweeper" : 20,
             "cratersvilleminesbubble" : 20
         },
@@ -11235,7 +11121,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "toxingtonstreeta"
+            "toxington"
         ],
         "father_district": "",
         "is_transport": false,
@@ -11252,7 +11138,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "toxingtonstreeta": 20,
+            "toxington": 20,
             "toxingtonminessweeper" : 20,
             "toxingtonminesbubble": 20
         },
@@ -11439,7 +11325,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "wreckingtonstreetb"
+            "wreckington"
         ],
         "father_district": "",
         "is_transport": false,
@@ -11456,7 +11342,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "wreckingtonstreetb": 20
+            "wreckington": 20
         },
         "topic": "The Smoker\u2019s Cough - A quaint hole-in-the-wall vintage diner. The wallpaper may be peeling and the \u201880s paint job might be faded, but you\u2019ll be damned if this place didn\u2019t make an aesthetic stomping grounds for cheapskate juveniles like yourself. It\u2019s so\u2026 pulp.",
         "wikipage": "https://rfck.miraheze.org/wiki/Wreckington#The_Smoker's_Cough"
@@ -11505,7 +11391,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "astatineheightsstreetb"
+            "astatineheights"
         ],
         "father_district": "",
         "is_transport": false,
@@ -11522,7 +11408,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "astatineheightsstreetb": 20
+            "astatineheights": 20
         },
         "topic": "Red Mobster - The last bastion of sospchication in this godforsaken city. A dimly lit, atmospheric fine dining restaurant with waiters and tables and archaic stuff like that. Man, what a trip!",
         "wikipage": "https://rfck.miraheze.org/wiki/Astatine_Heights#Red_Mobster_Seafood"
@@ -11642,8 +11528,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "oozegardensstreetc",
-            "oozegardensstreetd"
+            "oozegardens"
         ],
         "father_district": "",
         "is_transport": false,
@@ -11660,8 +11545,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "oozegardensstreetc": 20,
-            "oozegardensstreetd": 20
+            "oozegardens": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Ooze_Gardens#The_Ooze_Gardens_Farms"
@@ -11709,8 +11593,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "arsonbrookstreeta",
-            "arsonbrookstreetb"
+            "arsonbrook"
         ],
         "father_district": "",
         "is_transport": false,
@@ -11727,8 +11610,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "arsonbrookstreeta": 20,
-            "arsonbrookstreete": 20
+            "arsonbrook": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Arsonbrook#The_Arsonbrook_Farms"
@@ -12021,8 +11903,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "toxingtonstreetd",
-            "toxingtonstreete"
+            "toxington"
         ],
         "father_district": "",
         "is_transport": false,
@@ -12039,8 +11920,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "toxingtonstreetd": 20,
-            "toxingtonstreete": 20
+            "toxington": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Toxington#Toxington_Pier"
@@ -12083,8 +11963,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "jaywalkerplainstreeta",
-            "jaywalkerplainstreetb"
+            "jaywalkerplain"
         ],
         "father_district": "",
         "is_transport": false,
@@ -12101,8 +11980,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "jaywalkerplainstreetc": 20,
-            "jaywalkerplainstreetd": 20
+            "jaywalkerplain": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Jaywalker_Plain#Jaywalker_Plain_Pier"
@@ -12145,8 +12023,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "crooklinestreeta",
-            "crooklinestreetb"
+            "crookline"
         ],
         "father_district": "",
         "is_transport": false,
@@ -12163,8 +12040,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "crooklinestreeta": 20,
-            "crooklinestreetb": 20
+            "crookline": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Crookline#Crookline_Pier"
@@ -12207,8 +12083,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "assaultflatsbeachstreeta",
-            "assaultflatsbeachstreetb"
+            "assaultflatsbeach"
         ],
         "father_district": "",
         "is_transport": false,
@@ -12225,8 +12100,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "assaultflatsbeachstreeta": 20,
-            "assaultflatsbeachstreetb": 20
+            "assaultflatsbeach": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Assault_Flats_Beach#Assault_Flats_Beach_Pier"
@@ -12329,7 +12203,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "slimesendstreeta"
+            "slimesend"
         ],
         "father_district": "",
         "is_transport": false,
@@ -12346,7 +12220,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "slimesendstreeta": 20
+            "slimesend": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Slime's_End#Slime's_End_Pier"
@@ -12445,7 +12319,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "wreckingtonstreetb"
+            "wreckington"
         ],
         "father_district": "",
         "is_transport": false,
@@ -12462,7 +12336,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "wreckingtonstreetb": 20
+            "wreckington": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Wreckington#The_Wreckington_Ferry_Port"
@@ -12510,8 +12384,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "vagrantscornerstreeta",
-            "vagrantscornerstreetb"
+            "vagrantscorner"
         ],
         "father_district": "",
         "is_transport": false,
@@ -12528,8 +12401,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "vagrantscornerstreeta": 20,
-            "vagrantscornerstreetb": 20
+            "vagrantscorner": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Vagrant's_Corner#The_Vagrant's_Corner_Ferry_Port"
@@ -12552,7 +12424,7 @@
             "tts"
         ],
         "str_name": "The Toxington Subway Station",
-        "str_desc": "It's absolutely fucking disgusting. By far the worst subway line, the Pink Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Pink Line so bad? The world may never know.\n\nExits into Toxington.",
+        "str_desc": "This sparsely decorated terminal replicates the feeling of riding on a Red Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Red Line train be late. Still doesn't make you like being on one though.\n\nExits into Toxington.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -12582,8 +12454,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "toxingtonstreeta",
-            "toxingtonstreete"
+            "toxington"
         ],
         "father_district": "",
         "is_transport": false,
@@ -12600,8 +12471,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "toxingtonstreeta": 20,
-            "toxingtonstreete": 20
+            "toxington": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Toxington#The_Toxington_Subway_Station"
@@ -12624,7 +12494,7 @@
             "ahs"
         ],
         "str_name": "The Astatine Heights Subway Station",
-        "str_desc": "It's absolutely fucking disgusting. By far the worst subway line, the Pink Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Pink Line so bad? The world may never know.\n\nExits into Astatine Heights.",
+        "str_desc": "This sparsely decorated terminal replicates the feeling of riding on a Red Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Red Line train be late. Still doesn't make you like being on one though.\n\nExits into Astatine Heights.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -12654,8 +12524,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "astatineheightsstreeta",
-            "astatineheightsstreetb"
+            "astatineheights"
         ],
         "father_district": "",
         "is_transport": false,
@@ -12672,8 +12541,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "astatineheightsstreeta": 20,
-            "astatineheightsstreetb": 20
+            "astatineheights": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Astatine_Heights#The_Astatine_Heights_Subway_Station"
@@ -12696,7 +12564,7 @@
             "gds"
         ],
         "str_name": "The Gatlingsdale Subway Station",
-        "str_desc": "It's absolutely fucking disgusting. By far the worst subway line, the Pink Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Pink Line so bad? The world may never know.\n\nExits into Gatlingsdale.",
+        "str_desc": "This sparsely decorated terminal replicates the feeling of riding on a Red Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Red Line train be late. Still doesn't make you like being on one though.\n\nExits into Gatlingsdale.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -12726,7 +12594,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "gatlingsdalestreeta"
+            "gatlingsdale"
         ],
         "father_district": "",
         "is_transport": false,
@@ -12743,7 +12611,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "gatlingsdalestreeta": 20
+            "gatlingsdale": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Gatlingsdale#The_Gatlingsdale_Subway_Station"
@@ -12766,7 +12634,7 @@
             "abs"
         ],
         "str_name": "The Arsonbrook Subway Station",
-        "str_desc": "It is clean and well-kempt, just like the Purple Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible.\n\nExits into Arsonbrook.",
+        "str_desc": "It's absolutely fucking disgusting. By far the worst subway line, the Yellow Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Yellow Line so bad? The world may never know.\n\nExits into Arsonbrook.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -12796,7 +12664,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "arsonbrookstreeta"
+            "arsonbrook"
         ],
         "father_district": "",
         "is_transport": false,
@@ -12813,7 +12681,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "arsonbrookstreeta": 20
+            "arsonbrook": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Arsonbrook#The_Arsonbrook_Subway_Station"
@@ -12837,7 +12705,7 @@
             "cs"
         ],
         "str_name": "The Cop Killtown Subway Station",
-        "str_desc": "It's absolutely fucking disgusting. By far the worst subway line, the Pink Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Pink Line so bad? The world may never know.\n\nExits into Cop Killtown.",
+        "str_desc": "This sparsely decorated terminal replicates the feeling of riding on a Red Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Red Line train be late. Still doesn't make you like being on one though.\n\nExits into Cop Killtown.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -12907,7 +12775,7 @@
             "sbs"
         ],
         "str_name": "The Smogsburg Subway Station",
-        "str_desc": "It is clean and well-kempt, just like the Purple Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible.\n\nExits into Smogsburg.",
+        "str_desc": "Much like its trains, Green Line terminals have fallen into disrepair. It's vintage aesthetic only exasperating it's crumbling infrastructure, making the whole line seem like a old, dilapidated mess. But, you'll give it one thing, it's pretty cool looking from the perspective of urban exploration. You've dreamed of exploring it's vast, abandoned subway networks ever since you first rode on it. They could lead to anywhere. So close, and yet so mysterious.\n\nBelow it, on a lower level of the station, is a yellow line terminal.\n\nIt's absolutely fucking disgusting. By far the worst subway line, the Yellow Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Yellow Line so bad? The world may never know.\n\nExits into Smogsburg.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -12937,7 +12805,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "smogsburgstreetc"
+            "smogsburg"
         ],
         "father_district": "",
         "is_transport": false,
@@ -12954,7 +12822,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "smogsburgstreetc": 20
+            "smogsburg": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Smogsburg#The_Smogsburg_Subway_Station"
@@ -13002,8 +12870,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "downtownstreetd",
-            "downtownstreete"
+            "downtown"
         ],
         "father_district": "",
         "is_transport": false,
@@ -13020,8 +12887,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "downtownstreetd": 20,
-            "downtownstreete": 20
+            "downtown": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM#The_Downtown_NLACakaNM_Subway_Station"
@@ -13044,7 +12910,7 @@
             "kbs"
         ],
         "str_name": "The Krak Bay Subway Station",
-        "str_desc": "This sparsely decorated terminal replicates the feeling of riding on a Black Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Black Line train be late. Still doesn't make you like being on one though.\n\nBelow it, on a lower level of the station, is a gold line terminal.\n\nThe walls of the Gold Line are covered in terrible murals. Covered. Imagine your loaded in the level geometry of the station into Unity and then Googled \u201cterrible street art murals\u201d and skipped to page nine and then loaded each image as textures unto the geometry, not even accounting for when one object ended and another surface began. No one knows why it\u2019s like this.\n\nExits into Krak Bay.",
+        "str_desc": "Much like its trains, Green Line terminals have fallen into disrepair. It's vintage aesthetic only exasperating it's crumbling infrastructure, making the whole line seem like a old, dilapidated mess. But, you'll give it one thing, it's pretty cool looking from the perspective of urban exploration. You've dreamed of exploring it's vast, abandoned subway networks ever since you first rode on it. They could lead to anywhere. So close, and yet so mysterious.\n\nBelow it, on a lower level of the station, is a yellow line terminal.\n\nIt's absolutely fucking disgusting. By far the worst subway line, the Yellow Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Yellow Line so bad? The world may never know.\n\nExits into Krak Bay.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -13074,7 +12940,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "krakbaystreeta"
+            "krakbay"
         ],
         "father_district": "",
         "is_transport": false,
@@ -13091,7 +12957,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "krakbaystreeta": 20
+            "krakbay": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Krak_Bay#The_Krak_Bay_Subway_Station"
@@ -13114,7 +12980,7 @@
             "gbs"
         ],
         "str_name": "The Glocksbury Subway Station",
-        "str_desc": "This sparsely decorated terminal replicates the feeling of riding on a Black Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Black Line train be late. Still doesn't make you like being on one though.\n\nExits into Glocksbury.",
+        "str_desc": "Much like its trains, Green Line terminals have fallen into disrepair. It's vintage aesthetic only exasperating it's crumbling infrastructure, making the whole line seem like a old, dilapidated mess. But, you'll give it one thing, it's pretty cool looking from the perspective of urban exploration. You've dreamed of exploring it's vast, abandoned subway networks ever since you first rode on it. They could lead to anywhere. So close, and yet so mysterious.\n\nExits into Glocksbury.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -13144,7 +13010,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "glocksburystreetc"
+            "glocksbury"
         ],
         "father_district": "",
         "is_transport": false,
@@ -13161,7 +13027,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "glocksburystreetc": 20
+            "glocksbury": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Glocksbury#The_Glocksbury_Subway_Station"
@@ -13184,7 +13050,7 @@
             "wgbs"
         ],
         "str_name": "The West Glocksbury Subway Station",
-        "str_desc": "This sparsely decorated terminal replicates the feeling of riding on a Black Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Black Line train be late. Still doesn't make you like being on one though.\n\nExits into West Glocksbury.",
+        "str_desc": "Much like its trains, Green Line terminals have fallen into disrepair. It's vintage aesthetic only exasperating it's crumbling infrastructure, making the whole line seem like a old, dilapidated mess. But, you'll give it one thing, it's pretty cool looking from the perspective of urban exploration. You've dreamed of exploring it's vast, abandoned subway networks ever since you first rode on it. They could lead to anywhere. So close, and yet so mysterious.\n\nExits into West Glocksbury.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -13214,7 +13080,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "westglocksburystreetc"
+            "westglocksbury"
         ],
         "father_district": "",
         "is_transport": false,
@@ -13231,7 +13097,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "westglocksburystreetc": 20
+            "westglocksbury": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/West_Glocksbury#The_West_Glocksbury_Subway_Station"
@@ -13254,7 +13120,7 @@
             "jps"
         ],
         "str_name": "The Jaywalker Plain Subway Station",
-        "str_desc": "The walls of the Gold Line are covered in terrible murals. Covered. Imagine your loaded in the level geometry of the station into Unity and then Googled \u201cterrible street art murals\u201d and skipped to page nine and then loaded each image as textures unto the geometry, not even accounting for when one object ended and another surface began. No one knows why it\u2019s like this.\n\nExits into Jaywalker Plain.",
+        "str_desc": "Much like its trains, Green Line terminals have fallen into disrepair. It's vintage aesthetic only exasperating it's crumbling infrastructure, making the whole line seem like a old, dilapidated mess. But, you'll give it one thing, it's pretty cool looking from the perspective of urban exploration. You've dreamed of exploring it's vast, abandoned subway networks ever since you first rode on it. They could lead to anywhere. So close, and yet so mysterious.\n\nExits into Jaywalker Plain.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -13284,8 +13150,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "jaywalkerplainstreeta",
-            "jaywalkerplainstreetb"
+            "jaywalkerplain"
         ],
         "father_district": "",
         "is_transport": false,
@@ -13302,8 +13167,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "jaywalkerplainstreeta": 20,
-            "jaywalkerplainstreetb": 20
+            "jaywalkerplain": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Jaywalker_Plain#The_Jaywalker_Plain_Subway_Station"
@@ -13327,7 +13191,7 @@
             "nsbs"
         ],
         "str_name": "The North Sleezeborough Subway Station",
-        "str_desc": "The walls of the Gold Line are covered in terrible murals. Covered. Imagine your loaded in the level geometry of the station into Unity and then Googled \u201cterrible street art murals\u201d and skipped to page nine and then loaded each image as textures unto the geometry, not even accounting for when one object ended and another surface began. No one knows why it\u2019s like this.\n\nExits into North Sleezeborough.",
+        "str_desc": "Much like its trains, Green Line terminals have fallen into disrepair. It's vintage aesthetic only exasperating it's crumbling infrastructure, making the whole line seem like a old, dilapidated mess. But, you'll give it one thing, it's pretty cool looking from the perspective of urban exploration. You've dreamed of exploring it's vast, abandoned subway networks ever since you first rode on it. They could lead to anywhere. So close, and yet so mysterious.\n\nExits into North Sleezeborough.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -13357,7 +13221,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "northsleezeboroughstreeta"
+            "northsleezeborough"
         ],
         "father_district": "",
         "is_transport": false,
@@ -13374,8 +13238,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "northsleezeboroughstreeta": 20,
-            "northsleezesubwaystation": 20
+            "northsleezeborough": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/North_Sleezeborough#The_North_Sleezeborough_Subway_Station"
@@ -13399,7 +13262,7 @@
             "ssbs"
         ],
         "str_name": "The South Sleezeborough Subway Station",
-        "str_desc": "It is clean and well-kempt, just like the Purple Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible.\n\nExits into South Sleezeborough.",
+        "str_desc": "It's absolutely fucking disgusting. By far the worst subway line, the Yellow Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Yellow Line so bad? The world may never know.\n\nExits into South Sleezeborough.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -13429,8 +13292,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "southsleezeboroughstreeta",
-            "southsleezeboroughstreetb"
+            "southsleezeborough"
         ],
         "father_district": "",
         "is_transport": false,
@@ -13447,8 +13309,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "southsleezeboroughstreeta": 20,
-            "southsleezeboroughstreetb": 20
+            "southsleezeborough": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/South_Sleezeborough#The_South_Sleezeborough_Subway_Station"
@@ -13471,7 +13332,7 @@
             "cvs"
         ],
         "str_name": "The Cratersville Subway Station",
-        "str_desc": "It's absolutely fucking disgusting. By far the worst subway line, the Pink Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Pink Line so bad? The world may never know.\n\nExits into Cratersville.",
+        "str_desc": "This sparsely decorated terminal replicates the feeling of riding on a Red Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Red Line train be late. Still doesn't make you like being on one though.\n\nExits into Cratersville.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -13501,8 +13362,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "cratersvillestreetb",
-            "cratersvillestreetc"
+            "cratersville"
         ],
         "father_district": "",
         "is_transport": false,
@@ -13519,8 +13379,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "cratersvillestreetb": 20,
-            "cratersvillestreetc": 20
+            "cratersville": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Cratersville#The_Cratersville_Subway_Station"
@@ -13543,7 +13402,7 @@
             "wts"
         ],
         "str_name": "The Wreckington Subway Station",
-        "str_desc": "It's absolutely fucking disgusting. By far the worst subway line, the Pink Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Pink Line so bad? The world may never know.\n\nExits into Wreckington.",
+        "str_desc": "This sparsely decorated terminal replicates the feeling of riding on a Red Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Red Line train be late. Still doesn't make you like being on one though.\n\nExits into Wreckington.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -13573,8 +13432,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "wreckingtonstreeta",
-            "wreckingtonstreetb"
+            "wreckington"
         ],
         "father_district": "",
         "is_transport": false,
@@ -13591,8 +13449,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "wreckingtonstreeta": 20,
-            "wreckingtonstreetb": 20
+            "wreckington": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Wreckington#The_Wreckington_Subway_Station"
@@ -13614,7 +13471,7 @@
             "rrs"
         ],
         "str_name": "The Rowdy Roughhouse Subway Station",
-        "str_desc": "It's absolutely fucking disgusting. By far the worst subway line, the Pink Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Pink Line so bad? The world may never know.\n\nExits into Rowdy Roughhouse.",
+        "str_desc": "This sparsely decorated terminal replicates the feeling of riding on a Red Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Red Line train be late. Still doesn't make you like being on one though.\n\nExits into Rowdy Roughhouse.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -13685,7 +13542,7 @@
             "glds"
         ],
         "str_name": "The Green Light District Subway Station",
-        "str_desc": "Much like its trains, Green Line terminals have fallen into disrepair. It's vintage aesthetic only exasperating it's crumbling infrastructure, making the whole line seem like a old, dilapidated mess. But, you'll give it one thing, it's pretty cool looking from the perspective of urban exploration. You've dreamed of exploring it's vast, abandoned subway networks ever since you first rode on it. They could lead to anywhere. So close, and yet so mysterious.\n\nExits into Green Light District.",
+        "str_desc": "It is clean and well-kempt, just like the Blue Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible.\n\nExits into Green Light District.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -13715,7 +13572,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "greenlightdistrictstreetc"
+            "greenlightdistrict"
         ],
         "father_district": "",
         "is_transport": false,
@@ -13732,7 +13589,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "greenlightdistrictstreetc": 20
+            "greenlightdistrict": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Green_Light_District#The_Green_Light_District_Subway_Station"
@@ -13755,7 +13612,7 @@
             "jrs"
         ],
         "str_name": "The Juvie's Row Subway Station",
-        "str_desc": "Much like its trains, Green Line terminals have fallen into disrepair. It's vintage aesthetic only exasperating it's crumbling infrastructure, making the whole line seem like a old, dilapidated mess. But, you'll give it one thing, it's pretty cool looking from the perspective of urban exploration. You've dreamed of exploring it's vast, abandoned subway networks ever since you first rode on it. They could lead to anywhere. So close, and yet so mysterious.\n\nExits into Juvie's Row.",
+        "str_desc": "It is clean and well-kempt, just like the Blue Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible.\n\nExits into Juvie's Row.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -13825,7 +13682,7 @@
             "vcs"
         ],
         "str_name": "The Vagrant's Corner Subway Station",
-        "str_desc": "Much like its trains, Green Line terminals have fallen into disrepair. It's vintage aesthetic only exasperating it's crumbling infrastructure, making the whole line seem like a old, dilapidated mess. But, you'll give it one thing, it's pretty cool looking from the perspective of urban exploration. You've dreamed of exploring it's vast, abandoned subway networks ever since you first rode on it. They could lead to anywhere. So close, and yet so mysterious.\n\nExits into Vagrant's Corner.",
+        "str_desc": "It is clean and well-kempt, just like the Blue Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible.\n\nExits into Vagrant's Corner.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -13855,7 +13712,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "vagrantscornerstreeta"
+            "vagrantscorner"
         ],
         "father_district": "",
         "is_transport": false,
@@ -13872,40 +13729,45 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "vagrantscornerstreeta": 20
+            "vagrantscorner": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Vagrant's_Corner#The_Vagrant's_Corner_Subway_Station"
     },
-    "vandalparksubwaystation": {
-        "id_poi": "vandalparksubwaystation",
+    "assaultflatssubwaystation": {
+        "id_poi": "assaultflatssubwaystation",
         "alias": [
-            "vandalparksubway",
-            "vandalparksub",
-            "vandalparkstation",
-            "vandalsubwaystation",
-            "vandalsubway",
-            "vandalsub",
-            "vandalstation",
-            "vpsubwaystation",
-            "vpsubway",
-            "vpsub",
-            "vpstation",
-            "vandals",
-            "vps"
+            "assaultflatsbeachsubwaystation",
+			"assaultflatsbeachsubway",
+			"assaultflatsbeachsub",
+			"assaultflatsbeachstation",
+			"assaultflatssubwaystation",
+			"assaultflatssubway",
+			"assaultflatssub",
+			"assaultflatsstation",
+			"beachsubwaystation",
+			"beachsubway",
+			"beachsub",
+			"beachstation",
+			"afbsubwaystation",
+			"afbsubway",
+			"afbsub",
+			"afbstation",
+			"assaultflatss",
+			"afbs"
         ],
-        "str_name": "The Vandal Park Subway Station",
-        "str_desc": "This sparsely decorated terminal replicates the feeling of riding on a Black Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Black Line train be late. Still doesn't make you like being on one though.\n\nExits into Vandal Park.",
+        "str_name": "The Assault Flats Beach Subway Station",
+        "str_desc": "It is clean and well-kempt, just like the Blue Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible.\n\nExits into Vagrant's Corner.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "vandal-park-subway-station",
-        "role": "Vandal Park Subway Station",
-        "major_role": "vandalpark_major",
+        "channel": "assault-flats-beach-subway-station",
+        "role": "Assault Flats Beach Subway Station",
+        "major_role": "assaultflatsbeach_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "vandalparksubwaystation": [
+            "assaultflatssubwaystation": [
                 "read",
                 "send",
                 "connect"
@@ -13925,7 +13787,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "vandalparkstreeta"
+            "assaultflatsbeach"
         ],
         "father_district": "",
         "is_transport": false,
@@ -13942,432 +13804,10 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "vandalparkstreeta": 20
+            "assaultflatsbeach": 20
         },
         "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Vandal_Park#The_Vandal_Park_Subway_Station"
-    },
-    "crooklinesubwaystation": {
-        "id_poi": "crooklinesubwaystation",
-        "alias": [
-            "crooklinesubway",
-            "crooklinesub",
-            "crooklinestation",
-            "crooksubwaystation",
-            "crooksubway",
-            "crooksub",
-            "crookstation",
-            "clsubwaystation",
-            "clsubway",
-            "clsub",
-            "clstation",
-            "crooks",
-            "cls"
-        ],
-        "str_name": "The Crookline Subway Station",
-        "str_desc": "The walls of the Gold Line are covered in terrible murals. Covered. Imagine your loaded in the level geometry of the station into Unity and then Googled \u201cterrible street art murals\u201d and skipped to page nine and then loaded each image as textures unto the geometry, not even accounting for when one object ended and another surface began. No one knows why it\u2019s like this.\n\nExits into Crookline.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "crookline-subway-station",
-        "role": "Crookline Subway Station",
-        "major_role": "crookline_major",
-        "minor_role": "nullminorrole",
-        "permissions": {
-            "crooklinesubwaystation": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": true,
-        "is_apartment": false,
-        "is_street": false,
-        "mother_districts": [
-            "crooklinestreeta",
-            "crooklinestreetb"
-        ],
-        "father_district": "",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": true,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {
-            "crooklinestreeta": 20,
-            "crooklinestreetb": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Crookline#The_Crookline_Subway_Station"
-    },
-    "oozegardenssubwaystation": {
-        "id_poi": "oozegardenssubwaystation",
-        "alias": [
-            "oozegardenssubway",
-            "oozegardenssub",
-            "oozegardensstation",
-            "oozesubwaystation",
-            "oozesubway",
-            "oozesub",
-            "oozestation",
-            "ogsubwaystation",
-            "ogsubway",
-            "ogsub",
-            "ogstation",
-            "oozes",
-            "ogs"
-        ],
-        "str_name": "The Ooze Gardens Subway Station",
-        "str_desc": "It is clean and well-kempt, just like the Purple Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible.\n\nExits into Ooze Gardens.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "ooze-gardens-subway-station",
-        "role": "Crookline Subway Station",
-        "major_role": "oozegardens_major",
-        "minor_role": "nullminorrole",
-        "permissions": {
-            "oozegardenssubwaystation": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": true,
-        "is_apartment": false,
-        "is_street": false,
-        "mother_districts": [
-            "oozegardensstreetc"
-        ],
-        "father_district": "",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": true,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {
-            "oozegardensstreetc": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Ooze_Gardens#The_Ooze_Gardens_Subway_Station"
-    },
-    "poudrinalleysubwaystation": {
-        "id_poi": "poudrinalleysubwaystation",
-        "alias": [
-            "poudrinalleysubway",
-            "poudrinalleysub",
-            "poudrinalleystation",
-            "poudrinalleystation",
-            "poudrinsubway",
-            "poudrinsub",
-            "poudrinstation",
-            "pasubwaystation",
-            "pasubway",
-            "pasub",
-            "pastation",
-            "poudrins",
-            "pas"
-        ],
-        "str_name": "The Poudrin Alley Subway Station",
-        "str_desc": "It is clean and well-kempt, just like the Purple Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible.\n\nExits into Poudrin Alley.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "poudrin-alley-subway-station",
-        "role": "Poudrin Alley Subway Station",
-        "major_role": "poudrinalley_major",
-        "minor_role": "nullminorrole",
-        "permissions": {
-            "poudrinalleysubwaystation": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": true,
-        "is_apartment": false,
-        "is_street": false,
-        "mother_districts": [
-            "poudrinalleystreeta"
-        ],
-        "father_district": "",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": true,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {
-            "poudrinalleystreeta": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Poudrin_Alley#The_Poudrin_Alley_Subway_Station"
-    },
-    "brawldensubwaystation": {
-        "id_poi": "brawldensubwaystation",
-        "alias": [
-            "brawldensubway",
-            "brawldensub",
-            "brawldenstation",
-            "brawlsubwaystation",
-            "brawlsubway",
-            "brawlsub",
-            "brawlstation",
-            "bdsubwaystation",
-            "bdsubway",
-            "bdsub",
-            "bdstation",
-            "brawls",
-            "bds"
-        ],
-        "str_name": "The Brawlden Subway Station",
-        "str_desc": "It is clean and well-kempt, just like the Purple Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible.\n\nExits into Brawlden.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "brawlden-subway-station",
-        "role": "Brawlden Subway Station",
-        "major_role": "brawlden_major",
-        "minor_role": "nullminorrole",
-        "permissions": {
-            "brawldensubwaystation": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": true,
-        "is_apartment": false,
-        "is_street": false,
-        "mother_districts": [
-            "brawldenstreeta"
-        ],
-        "father_district": "",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": true,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {
-            "brawldenstreeta": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Brawlden#The_Brawlden_Subway_Station"
-    },
-    "newnewyonkerssubwaystation": {
-        "id_poi": "newnewyonkerssubwaystation",
-        "alias": [
-            "newnewyonkerssubway",
-            "newnewyonkerssub",
-            "newnewyonkersstation",
-            "yonkerssubwaystation",
-            "yonkerssubway",
-            "yonkerssub",
-            "yonkersstation",
-            "nnysubwaystation",
-            "nnysubway",
-            "nnysub",
-            "nnystation",
-            "yonkerss",
-            "nnys"
-        ],
-        "str_name": "The New New Yonkers Subway Station",
-        "str_desc": "Much like its trains, Green Line terminals have fallen into disrepair. It's vintage aesthetic only exasperating it's crumbling infrastructure, making the whole line seem like a old, dilapidated mess. But, you'll give it one thing, it's pretty cool looking from the perspective of urban exploration. You've dreamed of exploring it's vast, abandoned subway networks ever since you first rode on it. They could lead to anywhere. So close, and yet so mysterious.\n\nExits into Brawlden.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "new-new-yonkers-subway-station",
-        "role": "New New Yonkers Subway Station",
-        "major_role": "newnewyonkers_major",
-        "minor_role": "nullminorrole",
-        "permissions": {
-            "newnewyonkerssubwaystation": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": true,
-        "is_apartment": false,
-        "is_street": false,
-        "mother_districts": [
-            "newnewyonkersstreeta"
-        ],
-        "father_district": "",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": true,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {
-            "newnewyonkersstreeta": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/New_New_Yonkers#The_New_New_Yonkers_Subway_Station"
-    },
-    "littlechernobylsubwaystation": {
-        "id_poi": "littlechernobylsubwaystation",
-        "alias": [
-            "littlechernobylsubway",
-            "littlechernobylsub",
-            "littlechernobylstation",
-            "littlesubwaystation",
-            "littlesubway",
-            "littlesub",
-            "littlestation",
-            "lcsubwaystation",
-            "lcsubway",
-            "lcsub",
-            "lcstation",
-            "littles",
-            "lcs"
-        ],
-        "str_name": "The Little Chernobyl Subway Station",
-        "str_desc": "It is clean and well-kempt, just like the Purple Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible.\n\nExits into Little Chernobyl.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "little-chernobyl-subway-station",
-        "role": "Little Chernobyl Subway Station",
-        "major_role": "littlechernobyl_major",
-        "minor_role": "nullminorrole",
-        "permissions": {
-            "littlechernobylsubwaystation": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": true,
-        "is_apartment": false,
-        "is_street": false,
-        "mother_districts": [
-            "littlechernobylstreeta"
-        ],
-        "father_district": "",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": true,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {
-            "littlechernobylstreeta": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Little_Chernobyl#The_Little_Chernobyl_Subway_Station"
+        "wikipage": "https://rfck.miraheze.org/wiki/Assault_Flats_Beach#The_Assault_Flats_Beach_Subway_Station"
     },
     "dreadfordblimptower": {
         "id_poi": "dreadfordblimptower",
@@ -14413,7 +13853,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "dreadfordstreetb"
+            "dreadford"
         ],
         "father_district": "",
         "is_transport": false,
@@ -14430,7 +13870,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "dreadfordstreetb": 20
+            "dreadford": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Dreadford#The_Dreadford_Blimp_Tower"
@@ -14482,7 +13922,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "assaultflatsbeachstreeta"
+            "assaultflatsbeach"
         ],
         "father_district": "",
         "is_transport": false,
@@ -14499,7 +13939,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "assaultflatsbeachstreeta": 20
+            "assaultflatsbeach": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Assault_Flats_Beach#The_Assault_Flats_Beach_Blimp_Tower"
@@ -14881,21 +14321,21 @@
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Ferry"
     },
-    "subwaypink01": {
-        "id_poi": "subwaypink01",
+    "subwayred01": {
+        "id_poi": "subwayred01",
         "alias": [],
-        "str_name": "A Pink Line Subway Train",
-        "str_desc": "If there's one word to describe the Pink Line, it's \"confusing\". It's by far the filthiest subway line in the city, which is exponentially worsened by it's bizarre, unexplainable faux wood paneling that lines every train. You can only imagine that this design decision was made to make the subway feel less sterile and more homely, but the constant stench of piss and homeless people puking sort of ruins that idea. Riding the Pink Line makes you feel like you're at your grandma's house every single time you ride it, if your grandma's house was in Jaywalker Plain.",
+        "str_name": "A Red Line Subway Train",
+        "str_desc": "Red Line trains are strictly uniform, with dull, minimalistic furnishings producing a borderline depressing experience. Almost completely grey aside from it's style guide mandated red accents, everything is purely practical. It provides just enough for its commuting salarymen to get to work in the morning and home at night.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "subway-train-pink-01",
-        "role": "Subway Train PINK-01",
+        "channel": "subway-train-red-01",
+        "role": "Subway Train R-01",
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwaypink01": [
+            "subwayred01": [
                 "read",
                 "send",
                 "connect"
@@ -14918,7 +14358,7 @@
         "father_district": "",
         "is_transport": true,
         "transport_type": "subway",
-        "default_line": "subwaypinknorth",
+        "default_line": "subwayrednorth",
         "default_stop": "downtownsubwaystation",
         "is_transport_stop": false,
         "is_outskirts": false,
@@ -14931,23 +14371,23 @@
         "max_degradation": 10000,
         "neighbors": {},
         "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Pink_Line"
+        "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Red_Line"
     },
-    "subwaypink02": {
-        "id_poi": "subwaypink02",
+    "subwayred02": {
+        "id_poi": "subwayred02",
         "alias": [],
-        "str_name": "A Pink Line Subway Train",
-        "str_desc": "If there's one word to describe the Pink Line, it's \"confusing\". It's by far the filthiest subway line in the city, which is exponentially worsened by it's bizarre, unexplainable faux wood paneling that lines every train. You can only imagine that this design decision was made to make the subway feel less sterile and more homely, but the constant stench of piss and homeless people puking sort of ruins that idea. Riding the Pink Line makes you feel like you're at your grandma's house every single time you ride it, if your grandma's house was in Jaywalker Plain.",
+        "str_name": "A Red Line Subway Train",
+        "str_desc": "Red Line trains are strictly uniform, with dull, minimalistic furnishings producing a borderline depressing experience. Almost completely grey aside from it's style guide mandated red accents, everything is purely practical. It provides just enough for its commuting salarymen to get to work in the morning and home at night.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "subway-train-pink-02",
-        "role": "Subway Train PINK-02",
+        "channel": "subway-train-red-02",
+        "role": "Subway Train RED-02",
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwaypink02": [
+            "subwayred02": [
                 "read",
                 "send",
                 "connect"
@@ -14970,7 +14410,7 @@
         "father_district": "",
         "is_transport": true,
         "transport_type": "subway",
-        "default_line": "subwaypinksouth",
+        "default_line": "subwayredsouth",
         "default_stop": "downtownsubwaystation",
         "is_transport_stop": false,
         "is_outskirts": false,
@@ -14983,23 +14423,23 @@
         "max_degradation": 10000,
         "neighbors": {},
         "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Pink_Line"
+        "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Red_Line"
     },
-    "subwaygold01": {
-        "id_poi": "subwaygold01",
+    "subwayyellow01": {
+        "id_poi": "subwayyellow01",
         "alias": [],
-        "str_name": "A Gold Line Subway Train",
-        "str_desc": "Construction started on the Gold Line in the 90\u2019s, and it shows. It\u2019s just so fucking gaudy. Opulent, even. It\u2019s vaporwave gone wrong. Geometric patterns with clashing color combinations and art styles are plastered over every square inch of the walls, and the seats are made of that awful upholstery from old Taco Bell\u2122 booths.",
+        "str_name": "A Yellow Line Subway Train",
+        "str_desc": "If there's one word to describe the Yellow Line, it's \"confusing\". It's by far the filthiest subway line in the city, which is exponentially worsened by it's bizarre, unexplainable faux wood paneling that lines every train. You can only imagine that this design decision was made to make the subway feel less sterile and more homely, but the constant stench of piss and homeless people puking sort of ruins that idea. Riding the Yellow Line makes you feel like you're at your grandma's house every single time you ride it, if your grandma's house was in Jaywalker Plain.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "subway-train-gold-01",
-        "role": "Subway Train GOLD-01",
+        "channel": "subway-train-yellow-01",
+        "role": "Subway Train YELLOW-01",
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwaygold01": [
+            "subwayyellow01": [
                 "read",
                 "send",
                 "connect"
@@ -15022,7 +14462,7 @@
         "father_district": "",
         "is_transport": true,
         "transport_type": "subway",
-        "default_line": "subwaygoldeast",
+        "default_line": "subwayyellownorth",
         "default_stop": "downtownsubwaystation",
         "is_transport_stop": false,
         "is_outskirts": false,
@@ -15035,23 +14475,23 @@
         "max_degradation": 10000,
         "neighbors": {},
         "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Gold_Line"
+        "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Yellow_Line"
     },
-    "subwaygold02": {
-        "id_poi": "subwaygold02",
+    "subwayyellow02": {
+        "id_poi": "subwayyellow02",
         "alias": [],
-        "str_name": "A Gold Line Subway Train",
-        "str_desc": "Construction started on the Gold Line in the 90\u2019s, and it shows. It\u2019s just so fucking gaudy. Opulent, even. It\u2019s vaporwave gone wrong. Geometric patterns with clashing color combinations and art styles are plastered over every square inch of the walls, and the seats are made of that awful upholstery from old Taco Bell\u2122 booths.",
+        "str_name": "A Yellow Line Subway Train",
+        "str_desc": "If there's one word to describe the Yellow Line, it's \"confusing\". It's by far the filthiest subway line in the city, which is exponentially worsened by it's bizarre, unexplainable faux wood paneling that lines every train. You can only imagine that this design decision was made to make the subway feel less sterile and more homely, but the constant stench of piss and homeless people puking sort of ruins that idea. Riding the Yellow Line makes you feel like you're at your grandma's house every single time you ride it, if your grandma's house was in Jaywalker Plain.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "subway-train-gold-02",
-        "role": "Subway Train GOLD-02",
+        "channel": "subway-train-yellow-02",
+        "role": "Subway Train YELLOW-02",
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwaygold02": [
+            "subwayyellow02": [
                 "read",
                 "send",
                 "connect"
@@ -15074,7 +14514,7 @@
         "father_district": "",
         "is_transport": true,
         "transport_type": "subway",
-        "default_line": "subwaygoldwest",
+        "default_line": "subwayyellowsouth",
         "default_stop": "downtownsubwaystation",
         "is_transport_stop": false,
         "is_outskirts": false,
@@ -15087,7 +14527,7 @@
         "max_degradation": 10000,
         "neighbors": {},
         "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Gold_Line"
+        "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Yellow_Line"
     },
     "subwaygreen01": {
         "id_poi": "subwaygreen01",
@@ -15193,21 +14633,21 @@
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Green_Line"
     },
-    "subwayblack01": {
-        "id_poi": "subwayblack01",
+    "subwayblue01": {
+        "id_poi": "subwayblue01",
         "alias": [],
-        "str_name": "A Black Line Subway Train",
-        "str_desc": "Probably the nicest subway line in the city, the Purple Line isn't defined by its poor hygiene or mechanical condition. Instead, it's defined by its relative normality. More-or-less clean floors, brightly lit interiors, upholstery on the seats. These stunning, almost sci-fi levels of perfection are a sight to behold. Wow!",
+        "str_name": "A Blue Line Subway Train",
+        "str_desc": "Probably the nicest subway line in the city, the Blue Line isn't defined by its poor hygiene or mechanical condition. Instead, it's defined by its relative normality. More-or-less clean floors, brightly lit interiors, upholstery on the seats. These stunning, almost sci-fi levels of perfection are a sight to behold. Wow!",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "subway-train-black-02",
-        "role": "Subway Train BLACK-02",
+        "channel": "subway-train-blue-01",
+        "role": "Subway Train BLUE-01",
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwayblack01": [
+            "subwayblue01": [
                 "read",
                 "send",
                 "connect"
@@ -15230,7 +14670,7 @@
         "father_district": "",
         "is_transport": true,
         "transport_type": "subway",
-        "default_line": "subwayblackwest",
+        "default_line": "subwayblueeast",
         "default_stop": "downtownsubwaystation",
         "is_transport_stop": false,
         "is_outskirts": false,
@@ -15243,23 +14683,23 @@
         "max_degradation": 10000,
         "neighbors": {},
         "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Black_Line"
+        "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Blue_Line"
     },
-    "subwaypurple01": {
-        "id_poi": "subwaypurple01",
+    "subwayblue02": {
+        "id_poi": "subwayblue02",
         "alias": [],
-        "str_name": "A Purple Line Subway Train",
-        "str_desc": "Probably the nicest subway line in the city, the Purple Line isn't defined by its poor hygiene or mechanical condition. Instead, it's defined by its relative normality. More-or-less clean floors, brightly lit interiors, upholstery on the seats. These stunning, almost sci-fi levels of perfection are a sight to behold. Wow!",
+        "str_name": "A Blue Line Subway Train",
+        "str_desc": "Probably the nicest subway line in the city, the Blue Line isn't defined by its poor hygiene or mechanical condition. Instead, it's defined by its relative normality. More-or-less clean floors, brightly lit interiors, upholstery on the seats. These stunning, almost sci-fi levels of perfection are a sight to behold. Wow!",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "subway-train-purple-01",
-        "role": "Subway Train PURPLE-01",
+        "channel": "subway-train-blue-02",
+        "role": "Subway Train BLUE-02",
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwaypurple01": [
+            "subwayblue02": [
                 "read",
                 "send",
                 "connect"
@@ -15282,7 +14722,7 @@
         "father_district": "",
         "is_transport": true,
         "transport_type": "subway",
-        "default_line": "subwaypurplenorth",
+        "default_line": "subwaybluewest",
         "default_stop": "downtownsubwaystation",
         "is_transport_stop": false,
         "is_outskirts": false,
@@ -15295,59 +14735,7 @@
         "max_degradation": 10000,
         "neighbors": {},
         "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Purple_Line"
-    },
-    "subwaypurple02": {
-        "id_poi": "subwaypurple02",
-        "alias": [],
-        "str_name": "A Purple Line Subway Train",
-        "str_desc": "Probably the nicest subway line in the city, the Purple Line isn't defined by its poor hygiene or mechanical condition. Instead, it's defined by its relative normality. More-or-less clean floors, brightly lit interiors, upholstery on the seats. These stunning, almost sci-fi levels of perfection are a sight to behold. Wow!",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "subway-train-purple-02",
-        "role": "Subway Train PURPLE-02",
-        "major_role": "nullmajorrole",
-        "minor_role": "nullminorrole",
-        "permissions": {
-            "subwaypurple02": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": false,
-        "is_apartment": false,
-        "is_street": false,
-        "mother_districts": [],
-        "father_district": "",
-        "is_transport": true,
-        "transport_type": "subway",
-        "default_line": "subwaypurplesouth",
-        "default_stop": "downtownsubwaystation",
-        "is_transport_stop": false,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {},
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Purple_Line"
+        "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Blue_Line"
     },
     "blimp": {
         "id_poi": "blimp",
@@ -17276,7 +16664,6 @@
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/West_Glocksbury#Based_Hardware"
     },
-
     "clinicofslimoplasty": {
         "id_poi": "clinicofslimoplasty",
         "alias": [
@@ -17317,8 +16704,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-            "crooklinestreetc",
-            "crooklinestreetd"
+            "crookline"
         ],
         "father_district": "",
         "is_transport": false,
@@ -17335,8 +16721,7 @@
         "write_manuscript": true,
         "max_degradation": 10000,
         "neighbors": {
-            "crooklinestreetc": 20,
-            "crooklinestreetd": 20
+            "crookline": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Crookline#NLACakaNM_Clinic_of_Slimoplasty"
@@ -17667,12 +17052,8 @@
         "neighbors": {
             "southwestoutskirtsedge": 60,
             "southoutskirts": 60,
-            "wreckingtonstreeta": 60,
-            "wreckingtonstreetb": 60,
-            "cratersvillestreeta": 60,
-            "cratersvillestreetc": 60,
-            "oozegardensstreeta": 60,
-            "oozegardensstreetd": 60
+            "wreckington": 60,
+            "cratersville": 60
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Outskirts#Edge"
@@ -17732,12 +17113,9 @@
             "westoutskirtsedge": 60,
             "southwestoutskirts": 60,
             "southoutskirtsedge": 60,
-            "southsleezeboroughstreeta": 60,
-            "southsleezeboroughstreetd": 60,
-            "crooklinestreeta": 60,
-            "crooklinestreetb": 60,
-            "dreadfordstreeta": 60,
-            "dreadfordstreetb": 60
+            "southsleezeborough": 60,
+            "crookline": 60,
+            "dreadford": 60
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Outskirts#Edge"
@@ -17797,12 +17175,9 @@
             "northwestoutskirtsedge": 60,
             "westoutskirts": 60,
             "southwestoutskirtsedge": 60,
-            "jaywalkerplainstreetc": 60,
-            "jaywalkerplainstreetd": 60,
-            "westglocksburystreetc": 60,
-            "westglocksburystreetd": 60,
-            "poloniumhillstreetc": 60,
-            "poloniumhillstreetd": 60
+            "jaywalkerplain": 60,
+            "westglocksbury": 60,
+            "poloniumhill": 60
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Outskirts#Edge"
@@ -17862,12 +17237,9 @@
             "westoutskirtsedge": 60,
             "northwestoutskirts": 60,
             "northoutskirts": 60,
-            "charcoalparkstreeta": 60,
-            "charcoalparkstreetb": 60,
-            "toxingtonstreetc": 60,
-            "toxingtonstreetd": 60,
-            "maimridgestreetb": 60,
-            "maimridgestreetc": 60
+            "charcoalpark": 60,
+            "toxington": 60,
+            "maimridge": 60
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Outskirts#Edge"
@@ -17927,12 +17299,9 @@
             "northwestoutskirtsedge": 60,
             "northwestoutskirts": 60,
             "nuclearbeachedge": 60,
-            "arsonbrookstreetc": 60,
-            "arsonbrookstreetd": 60,
-            "brawldenstreeta": 60,
-            "brawldenstreetb": 60,
-            "newnewyonkersstreeta": 60,
-            "newnewyonkersstreetb": 60
+            "arsonbrook": 60,
+            "brawlden": 60,
+            "newnewyonkers": 60
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Outskirts#Edge"
@@ -17994,8 +17363,7 @@
         "neighbors": {
             "northoutskirtsedge": 20,
             "nuclearbeach": 20,
-            "assaultflatsbeachstreeta": 20,
-            "assaultflatsbeachstreetb": 20
+            "assaultflatsbeach": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Outskirts#Edge"

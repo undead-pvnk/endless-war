@@ -533,8 +533,7 @@ def score_map_from(
 def path_to(
 	poi_start = None,
 	poi_end = None,
-	user_data = None,
-	safe_path = None
+	user_data = None
 ):
 	#ewutils.logMsg("beginning pathfinding")
 	score_golf = math.inf
@@ -573,8 +572,6 @@ def path_to(
 		if path is not None:
 			step_last = path.steps[-1]
 			score_current = score_map.get(step_last.id_poi)
-			if safe_path == True and (step_last.is_street or step_last.is_outskirts):
-				continue
 			if path.cost >= score_current:
 				continue
 			if user_data.life_state != ewcfg.life_state_corpse and (poi_end and poi_end.id_poi != step_last.id_poi == ewcfg.poi_id_thesewers):
@@ -817,10 +814,6 @@ async def descend(cmd):
 """
 async def move(cmd = None, isApt = False):
 	
-	safe_path = False
-	if cmd.tokens[0] == ewcfg.cmd_move_alt4 or cmd.tokens[0] == ewcfg.cmd_move_alt5:
-		safe_path = True
-	
 	time_move_start = int(time.time())
 	
 	if isApt == False and ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
@@ -904,18 +897,14 @@ async def move(cmd = None, isApt = False):
 		path = path_to(
 			poi_start = poi_current.id_poi,
 			poi_end = target_name,
-			user_data = user_data,
-			safe_path = safe_path
+			user_data = user_data
 		)
 
 		if path != None:
 			path.cost = int(path.cost / user_data.move_speed)
 
 	if path == None:
-		if safe_path == True:
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "It's too dangerous to get there just by {}-ing.".format(cmd.tokens[0])))
-		else:
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't know how to get there."))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't know how to get there."))
 	if isApt:
 		path.cost += 20
 	global move_counter

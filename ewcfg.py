@@ -504,23 +504,20 @@ transport_line_ferry_wt_to_vc = "ferrywttovc"
 transport_line_ferry_vc_to_wt = "ferryvctowt"
 
 # Subway lines
-transport_line_subway_purple_northbound = "subwaypurplenorth"
-transport_line_subway_purple_southbound = "subwaypurplesouth"
+transport_line_subway_yellow_northbound = "subwayyellownorth"
+transport_line_subway_yellow_southbound = "subwayyellowsouth"
 
-transport_line_subway_pink_northbound = "subwaypinknorth"
-transport_line_subway_pink_southbound = "subwaypinksouth"
+transport_line_subway_red_northbound = "subwayrednorth"
+transport_line_subway_red_southbound = "subwayredsouth"
 
-transport_line_subway_gold_eastbound = "subwaygoldeast"
-transport_line_subway_gold_westbound = "subwaygoldwest"
+transport_line_subway_blue_eastbound = "subwayblueeast"
+transport_line_subway_blue_westbound = "subwaybluewest"
 
-transport_line_subway_black_eastbound = "subwayblackeast"
-transport_line_subway_black_westbound = "subwayblackwest"
+transport_line_subway_white_eastbound = "subwaywhiteeast"
+transport_line_subway_white_westbound = "subwaywhitewest"
 
 transport_line_subway_green_eastbound = "subwaygreeneast"
 transport_line_subway_green_westbound = "subwaygreenwest"
-
-transport_line_subway_gold_eastbound = "subwaygoldeast"
-transport_line_subway_gold_westbound = "subwaygoldwest"
 
 # Blimp lines
 transport_line_blimp_df_to_afb = "blimpdftoafb"
@@ -7947,72 +7944,65 @@ transport_lines = [
 			poi_id_vc_port : [60, poi_id_slimesea],
 			poi_id_slimesea : [120, poi_id_wt_port]
 			}
-
 		),
-	EwTransportLine( # purple subway line from south sleezeborough to brawlden
-		id_line = transport_line_subway_purple_northbound,
+	EwTransportLine( # yellow subway line from south sleezeborough to arsonbrook
+		id_line = transport_line_subway_yellow_northbound,
 		alias = [
-			"northpurpleline",
-			"northpurple",
-			"purplenorth",
-			"purpletobrawlden",
-			"purpletobrawl",
-			"purpletobd"
+			"northyellowline",
+			"northyellow",
+			"yellownorth",
+			"yellowtoarsonbrook",
+			"yellowtoarson",
+			"yellowtoab"
 			],
 		first_stop = poi_id_ssb_subway_station,
-		last_stop = poi_id_bd_subway_station,
-		next_line = transport_line_subway_purple_southbound,
-		str_name = "The purple subway line towards Brawlden",
+		last_stop = poi_id_ab_subway_station,
+		next_line = transport_line_subway_yellow_southbound,
+		str_name = "The yellow subway line towards Arsonbrook",
 		schedule = {
-			poi_id_ssb_subway_station : [20, poi_id_og_subway_station],
-			poi_id_og_subway_station : [20, poi_id_pa_subway_station],
-			poi_id_pa_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_ssb_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
 			poi_id_dt_subway_station : [20, poi_id_sb_subway_station],
-			poi_id_sb_subway_station: [20, poi_id_ab_subway_station],
-			poi_id_ab_subway_station: [20, poi_id_lc_subway_station],
-			poi_id_lc_subway_station: [20, poi_id_bd_subway_station],
+			poi_id_sb_subway_station : [20, poi_id_ab_subway_station]
 			}
 
 		),
-	EwTransportLine( # purple subway line from brawlden to south sleezeborough
-		id_line = transport_line_subway_purple_southbound,
+	EwTransportLine( # yellow subway line from arsonbrook to south sleezeborough
+		id_line = transport_line_subway_yellow_southbound,
 		alias = [
-			"southpurpleline",
-			"southpurple",
-			"purplesouth",
-			"purpletosouthsleezeborough",
-			"purpletosouthsleeze",
-			"purpletossb"
+			"southyellowline",
+			"southyellow",
+			"yellowsouth",
+			"yellowtosouthsleezeborough",
+			"yellowtosouthsleeze",
+			"yellowtossb"
 			],
-		first_stop = poi_id_bd_subway_station,
+		first_stop = poi_id_ab_subway_station,
 		last_stop = poi_id_ssb_subway_station,
-		next_line = transport_line_subway_purple_northbound,
-		str_name = "The purple subway line towards South Sleezeborough",
+		next_line = transport_line_subway_yellow_northbound,
+		str_name = "The yellow subway line towards South Sleezeborough",
 		schedule = {
-			poi_id_bd_subway_station: [20, poi_id_lc_subway_station],
-			poi_id_lc_subway_station: [20, poi_id_ab_subway_station],
 			poi_id_ab_subway_station : [20, poi_id_sb_subway_station],
 			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_pa_subway_station],
-			poi_id_pa_subway_station : [20, poi_id_og_subway_station],
-			poi_id_og_subway_station: [20, poi_id_ssb_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_ssb_subway_station]
 			}
 
 		),
-	EwTransportLine( # pink subway line from cratersville to toxington
-		id_line = transport_line_subway_pink_northbound,
+	EwTransportLine( # red subway line from cratersville to toxington
+		id_line = transport_line_subway_red_northbound,
 		alias = [
-			"northpinkline",
-			"northpink",
-			"pinknorth",
-			"pinktotoxington",
-			"pinktotox",
-			"pinktott"
+			"northredline",
+			"northred",
+			"rednorth",
+			"redtotoxington",
+			"redtotox",
+			"redtott"
 			],
 		first_stop = poi_id_cv_subway_station,
 		last_stop = poi_id_tt_subway_station,
-		next_line = transport_line_subway_pink_southbound,
-		str_name = "The pink subway line towards Toxington",
+		next_line = transport_line_subway_red_southbound,
+		str_name = "The red subway line towards Toxington",
 		schedule = {
 			poi_id_cv_subway_station : [20, poi_id_wt_subway_station],
 			poi_id_wt_subway_station : [20, poi_id_rr_subway_station],
@@ -8020,24 +8010,24 @@ transport_lines = [
 			poi_id_dt_subway_station : [20, poi_id_ck_subway_station],
 			poi_id_ck_subway_station : [20, poi_id_gd_subway_station],
 			poi_id_gd_subway_station : [20, poi_id_ah_subway_station],
-			poi_id_ah_subway_station: [20, poi_id_tt_subway_station],
+			poi_id_ah_subway_station : [20, poi_id_tt_subway_station]
 			}
 
 		),
-	EwTransportLine( # pink subway line from toxington to cratersville
-		id_line = transport_line_subway_pink_southbound,
+	EwTransportLine( # red subway line from toxington to cratersville
+		id_line = transport_line_subway_red_southbound,
 		alias = [
-			"southpinkline",
-			"southpink",
-			"pinksouth",
-			"pinktocratersville",
-			"pinktocraters",
-			"pinktocv"
+			"southredline",
+			"southred",
+			"redsouth",
+			"redtocratersville",
+			"redtocraters",
+			"redtocv"
 			],
 		first_stop = poi_id_tt_subway_station,
 		last_stop = poi_id_cv_subway_station,
-		next_line = transport_line_subway_pink_northbound,
-		str_name = "The pink subway line towards Cratersville",
+		next_line = transport_line_subway_red_northbound,
+		str_name = "The red subway line towards Cratersville",
 		schedule = {
 			poi_id_tt_subway_station : [20, poi_id_ah_subway_station],
 			poi_id_ah_subway_station : [20, poi_id_gd_subway_station],
@@ -8049,134 +8039,95 @@ transport_lines = [
 			}
 
 		),
-	EwTransportLine( # gold subway line from crookline to downtown
-		id_line = transport_line_subway_gold_eastbound,
-		alias = [
-			"goldeastline",
-			"goldeast",
-			"goldgreen",
-			"goldtodowntown",
-			"goldtodt"
-			],
-		first_stop = poi_id_cl_subway_station,
-		last_stop = poi_id_dt_subway_station,
-		next_line = transport_line_subway_gold_westbound,
-		str_name = "The gold subway line towards Downtown",
-		schedule = {
-			poi_id_cl_subway_station : [20, poi_id_jp_subway_station],
-			poi_id_jp_subway_station : [20, poi_id_nsb_subway_station],
-			poi_id_nsb_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
-			}
-
-		),
-	EwTransportLine( # gold subway line from downtown to crookline
-		id_line = transport_line_subway_gold_westbound,
-		alias = [
-			"goldwestline",
-			"goldwest",
-			"westgold",
-			"goldtocrookline",
-			"goldtocrook",
-			"goldtocl"
-			],
-		first_stop = poi_id_dt_subway_station,
-		last_stop = poi_id_cl_subway_station,
-		next_line = transport_line_subway_gold_eastbound,
-		str_name = "The gold subway line towards Crookline",
-		schedule = {
-			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_nsb_subway_station],
-			poi_id_nsb_subway_station : [20, poi_id_jp_subway_station],
-			poi_id_jp_subway_station: [20, poi_id_cl_subway_station],
-			}
-
-		),
-	EwTransportLine( # green subway line from downtown to new new yonkers
+	EwTransportLine( # green subway line from smogsburg to west glocksbury
 		id_line = transport_line_subway_green_eastbound,
 		alias = [
 			"greeneastline",
 			"greeneast",
 			"eastgreen",
-			"greentonewnewyonkers",
-			"greentonewnew",
-			"greentonew",
-			"greentonny"
+			"greentosmogsburg",
+			"greentosmogs",
+			"greentosb"
 			],
-		first_stop = poi_id_dt_subway_station,
-		last_stop = poi_id_nny_subway_station,
+		first_stop = poi_id_wgb_subway_station,
+		last_stop = poi_id_sb_subway_station,
 		next_line = transport_line_subway_green_westbound,
-		str_name = "The green subway line towards New New Yonkers",
+		str_name = "The green subway line towards Smogsburg",
 		schedule = {
-			poi_id_dt_subway_station : [20, poi_id_gld_subway_station],
-			poi_id_gld_subway_station : [20, poi_id_jr_subway_station],
-			poi_id_jr_subway_station : [20, poi_id_vc_subway_station],
-			poi_id_vc_subway_station : [20, poi_id_nny_subway_station]
+			poi_id_wgb_subway_station : [20, poi_id_jp_subway_station],
+			poi_id_jp_subway_station : [20, poi_id_nsb_subway_station],
+			poi_id_nsb_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_sb_subway_station]
 			}
 
 		),
-	EwTransportLine( # green subway line from new new yonkers to downtown
+	EwTransportLine( # green subway line from west glocksbury to smogsburg
 		id_line = transport_line_subway_green_westbound,
 		alias = [
 			"greenwestline",
 			"greenwest",
 			"westgreen",
-			"greentodowntown",
-			"greentodt"
+			"greentowestglocksbury",
+			"greentowestglocks",
+			"greentowgb"
+			],
+		first_stop = poi_id_sb_subway_station,
+		last_stop = poi_id_wgb_subway_station,
+		next_line = transport_line_subway_green_eastbound,
+		str_name = "The green subway line towards West Glocksbury",
+		schedule = {
+			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_gb_subway_station],
+			poi_id_gb_subway_station : [20, poi_id_wgb_subway_station]
+			}
+
+		),
+	EwTransportLine( # blue subway line from downtown to assault flats beach
+		id_line = transport_line_subway_blue_eastbound,
+		alias = [
+			"blueeastline",
+			"blueeast",
+			"eastblue",
+			"bluetoassaultflatsbeach",
+			"bluetoassaultflats",
+			"bluetobeach",
+			"bluetoafb"
+			],
+		first_stop = poi_id_dt_subway_station,
+		last_stop = poi_id_afb_subway_station,
+		next_line = transport_line_subway_blue_westbound,
+		str_name = "The blue subway line towards Assault Flats Beach",
+		schedule = {
+			poi_id_dt_subway_station : [20, poi_id_gld_subway_station],
+			poi_id_gld_subway_station : [20, poi_id_jr_subway_station],
+			poi_id_jr_subway_station : [20, poi_id_vc_subway_station],
+			poi_id_vc_subway_station : [20, poi_id_afb_subway_station]
+			}
+
+		),
+	EwTransportLine( # blue subway line from assault flats beach to downtown
+		id_line = transport_line_subway_blue_westbound,
+		alias = [
+			"bluewestline",
+			"bluewest",
+			"westblue",
+			"bluetodowntown",
+			"bluetodt"
 			],
 		first_stop = poi_id_afb_subway_station,
 		last_stop = poi_id_dt_subway_station,
-		next_line = transport_line_subway_green_eastbound,
-		str_name = "The green subway line towards Downtown",
+		next_line = transport_line_subway_blue_eastbound,
+		str_name = "The blue subway line towards Downtown NLACakaNM",
 		schedule = {
-			poi_id_nny_subway_station : [20, poi_id_vc_subway_station],
+			poi_id_afb_subway_station : [20, poi_id_vc_subway_station],
 			poi_id_vc_subway_station : [20, poi_id_jr_subway_station],
 			poi_id_jr_subway_station : [20, poi_id_gld_subway_station],
 			poi_id_gld_subway_station : [20, poi_id_dt_subway_station]
 			}
 
 		),
-	EwTransportLine(  # black subway line from downtown to west glocksbury
-		id_line = transport_line_subway_black_eastbound,
-		alias = [
-			"blackeastline",
-			"blackeast",
-			"eastblack",
-			"blacktowestglocksbury",
-			"blacktowestglocks",
-			"blacktowgb"
-		],
-		first_stop = poi_id_dt_subway_station,
-		last_stop = poi_id_wgb_subway_station,
-		next_line = transport_line_subway_black_westbound,
-		str_name = "The black subway line towards West Glocksbury",
-		schedule = {
-			poi_id_dt_subway_station: [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station: [20, poi_id_gb_subway_station],
-			poi_id_gb_subway_station: [20, poi_id_vp_subway_station],
-			poi_id_vp_subway_station: [20, poi_id_wgb_subway_station],
-		}
-	),
-	EwTransportLine(  # black subway line from west glocksbury to downtown
-		id_line = transport_line_subway_black_westbound,
-		alias = [
-			"blackwestline",
-			"blackwest",
-			"westblack",
-			"blacktodowntown",
-			"blacktodt"
-		],
-		first_stop = poi_id_wgb_subway_station,
-		last_stop = poi_id_dt_subway_station,
-		next_line = transport_line_subway_black_eastbound,
-		str_name = "The black subway line towards Downtown",
-		schedule = {
-			poi_id_wgb_subway_station: [20, poi_id_vp_subway_station],
-			poi_id_vp_subway_station: [20, poi_id_gb_subway_station],
-			poi_id_gb_subway_station: [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station: [20, poi_id_dt_subway_station],
-		}
-	),
 	# EwTransportLine( # white subway line from downtown to juvies row
 	# 	id_line = transport_line_subway_white_eastbound,
 	# 	alias = [

@@ -2319,7 +2319,7 @@ async def longdrop(cmd):
 		response = "You don't have that item."
 	elif dest_poi == None:
 		response = "Never heard of it."
-	elif ewutils.inaccessible(user_data = user_data, poi = dest_poi):
+	elif ewutils.inaccessible(user_data = user_data, poi = dest_poi) or dest_poi.is_street:
 		response = "Your arm hits a wall before it can make the drop off. Shit, probably can't take it over there."
 	elif user_data.poi not in dest_poi.neighbors.keys() and dest_poi.id_poi not in poi.mother_districts:
 		response = "You can't take it that far. What if a bird or car runs into your hand?"
