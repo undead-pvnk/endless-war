@@ -286,6 +286,7 @@ def canAttack(cmd, amb_switch = 0):
 	time_now = int(time_now_float)
 	user_data = EwUser(member = cmd.message.author)
 	mutations = user_data.get_mutations()
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(id_server=user_data.id_server, district=user_data.poi)
 	weapon_item = None
 	weapon = None
@@ -442,7 +443,7 @@ def canAttack(cmd, amb_switch = 0):
 			# Target is possessing user's weapon
 			response = "{}'s contract forbids you from harming them. You should've read the fine print.".format(member.display_name)
 
-		elif time_now > shootee_data.time_expirpvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user or user_isshambler):
+		elif not poi.pvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user or user_isshambler):
 			# Target is neither flagged for PvP, nor a shambler, nor a ghost inhabiting the player. Player is not a shambler.
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
@@ -515,8 +516,6 @@ def canCap(cmd, capture_type):
 		#response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 	elif not user_data.poi in ewcfg.capturable_districts:
 		response = "This zone cannot be captured."
-		if poi.is_district == True:
-			response += " To take this district, you need to enter into the streets."
 	elif sidearm != None and ewcfg.weapon_class_thrown in sidearm.classes and sidearm_item.stack_size == 0:
 		response = "You're out of {}! Go buy more at the {}".format(sidearm.str_weapon, ewutils.formatNiceList(names=sidearm.vendors,  conjunction="or"))
 	elif sidearm != None and sidearm.cooldown + (float(sidearm_item.item_props.get("time_lastattack")) if sidearm_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
@@ -914,10 +913,6 @@ async def attack(cmd):
 				was_shot = True
 
 			if was_shot:
-				# Flag the user for PvP
-
-				user_poi = ewcfg.id_to_poi.get(user_data.poi)
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 				resp_cont.add_member_to_update(cmd.message.author)
 
@@ -1312,11 +1307,6 @@ async def attack(cmd):
 					killfeed = 1
 				killfeed_resp_cont.format_channel_response(ewcfg.channel_killfeed, cmd.message.author)
 				killfeed_resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
-
-				# Flag the user for PvP
-
-				user_poi = ewcfg.id_to_poi.get(user_data.poi)
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, True)
 
 				user_data.persist()
 				resp_cont.add_member_to_update(cmd.message.author)
@@ -1817,9 +1807,6 @@ async def spar(cmd):
 							stronger_player.add_weaponskill(n = 1, weapon_type = weapon.id_weapon)
 
 					weaker_player.time_lastspar = time_now
-
-					# Flag the user for PvP
-					# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_spar, True)
 
 					user_data.persist()
 					sparred_data.persist()
@@ -2783,11 +2770,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# Enemy kills don't award slime to the kingpin.
 
 	# Persist user data.
-	# Flag the user for PvP
-	if not sandbag_mode:
-
-		user_poi = ewcfg.id_to_poi.get(user_data.poi)
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 	resp_cont.add_member_to_update(cmd.message.author)
 	user_data.persist()
@@ -2869,7 +2851,6 @@ async def dodge(cmd):
 
 	user_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = (target.id if target_data.combatant_type == "player" else target_data.id_enemy))
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You focus on dodging {}'s attacks.".format(target.display_name)
@@ -2927,7 +2908,6 @@ async def taunt(cmd):
 		
 	target_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = cmd.message.author.id)
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You taunt {} into attacking you.".format(target.display_name)
@@ -2981,7 +2961,6 @@ async def aim(cmd):
 
 	user_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = (target.id if target_data.combatant_type == "player" else target_data.id_enemy))
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You aim at {}'s weak spot.".format(target.display_name)
@@ -3126,9 +3105,6 @@ async def spray(cmd):
 
 	time_now_float = time.time()
 	time_now = int(time_now_float)
-
-	#was_pvp = user_data.time_expirpvp > time_now
-	#user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, enlisted=True)
 
 	user_data.persist()
 	# if not was_pvp:
@@ -3382,9 +3358,8 @@ async def spray(cmd):
 						new_captcha_gun = ewutils.text_to_regional_indicator(direction)
 						response += "\nNext target is {}.".format(new_captcha_gun)
 					weapon_item.persist()
-				father_district_poi = ewcfg.id_to_poi.get(poi.father_district)
-				number_streets = len(ewutils.get_street_list(father_district_poi.id_poi))
-				if district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.limit_influence[father_district_poi.property_class]/number_streets:
+
+				if district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.limit_influence[poi.property_class]:
 					if user_data.faction == ewcfg.faction_rowdys:
 						color = "pink"
 					elif user_data.faction == "slimecorp":
@@ -3392,12 +3367,6 @@ async def spray(cmd):
 					else:
 						color = "purple"
 					response += "\nThe street is awash in a sea of {}. It's hard to imagine where else you could spray down.".format(color)
-				elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > (ewcfg.min_influence[father_district_poi.property_class] + ewcfg.limit_influence[father_district_poi.property_class])/(2 * number_streets):
-					pass
-					response += "\nThe {} have developed a decent grip on this district.".format(user_data.faction)
-				elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.min_influence[father_district_poi.property_class]/number_streets:
-					pass
-					response += "\nThe {} have developed a loose grip on this district.".format(user_data.faction)
 
 		else:
 			if miss:
@@ -3418,9 +3387,6 @@ async def sanitize(cmd):
 
 	time_now_float = time.time()
 	time_now = int(time_now_float)
-
-	# was_pvp = user_data.time_expirpvp > time_now
-	# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, enlisted=True)
 
 	user_data.persist()
 	# if not was_pvp:
@@ -3677,8 +3643,6 @@ async def sanitize(cmd):
 						new_captcha_gun = ewutils.text_to_regional_indicator(direction)
 						response += "\nNext target is {}.".format(new_captcha_gun)
 					weapon_item.persist()
-				father_district_poi = ewcfg.id_to_poi.get(poi.father_district)
-				number_streets = len(ewutils.get_street_list(father_district_poi.id_poi))
 
 		else:
 			if miss:

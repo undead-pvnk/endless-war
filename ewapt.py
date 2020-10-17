@@ -1431,9 +1431,6 @@ async def knock(cmd = None):
 
 							user_data = EwUser(member=cmd.message.author)
 							
-							# Flag the person knocking to discourage spam
-							enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-							user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_knock, enlisted)
 							user_data.persist()
 							await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 							await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "They don't want your company, and have tipped off the authorities."))

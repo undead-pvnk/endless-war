@@ -502,7 +502,6 @@ async def withdraw(cmd):
 						stock.total_shares -= shares
 
 						response = "You exchange {shares:,} shares in {stock} for {coins:,} SlimeCoin.".format(coins = slimecoin, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
-						user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_withdraw, True)
 						user_data.persist()
 						stock.timestamp = round(time.time())
 						stock.persist()

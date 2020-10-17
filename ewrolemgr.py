@@ -371,6 +371,8 @@ async def updateRoles(
 	#roles_map = ewutils.getRoleMap(member.guild.roles)
 	roles_map_user = ewutils.getRoleIdMap(member.roles)
 
+	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+
 	if user_data.life_state != ewcfg.life_state_kingpin and ewcfg.role_kingpin in roles_map_user:
 		# Fix the life_state of kingpins, if somehow it wasn't set.
 		user_data.life_state = ewcfg.life_state_kingpin
@@ -413,7 +415,7 @@ async def updateRoles(
 	active_role = None
 	if faction_role in ewcfg.role_to_pvp_role:
 
-		if user_data.time_expirpvp >= time_now:
+		if not user_poi.is_apartment and user_poi.id_poi not in [ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_juviesrow, ewcfg.poi_id_thebreakroom]:
 			pvp_role = ewcfg.role_to_pvp_role.get(faction_role)
 			faction_roles_remove.remove(pvp_role)
 
@@ -427,8 +429,6 @@ async def updateRoles(
 		faction_roles_remove.remove(tutorial_role)
 
 	# Manage location roles.
-	user_poi = ewcfg.id_to_poi.get(user_data.poi)
-	#print(user_poi.id_poi)
 	if user_poi != None:
 		# poi_role = user_poi.role
 		poi_major_role = user_poi.major_role
@@ -573,34 +573,7 @@ async def updateRoles(
 	#ewutils.logMsg('found {} roles to replace'.format(len(replacement_roles)))
 	
 	try:
-		time_now = int(time.time())
-		was_pvp = user_data.time_expirpvp > time_now
-		user_is_pvp = False
-
-		role_ids = []
-		for pvp_role in ewcfg.role_to_pvp_role.values():
-			role = EwRole(id_server=member.guild.id, name = pvp_role)
-			role_ids.append(role.id_role)
-
-			for role in member.roles:
-				if role.id in role_ids:
-					user_is_pvp = True
-					break
-		
-		if remove_or_apply_flag != None:
-			
-			if was_pvp:
-				if remove_or_apply_flag == 'apply':
-					if not user_is_pvp:
-						# ewutils.logMsg('applying flag...')
-						await member.edit(roles=replacement_roles)
-			elif not was_pvp:
-				if remove_or_apply_flag == 'remove':
-					# ewutils.logMsg('removing flag...')
-					await member.edit(roles=replacement_roles)
-		else:
-			await member.edit(roles=replacement_roles)
-			
+		await member.edit(roles=replacement_roles)
 	except:
 		ewutils.logMsg('error: failed to replace roles for {}'.format(member.display_name))
 

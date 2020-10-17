@@ -789,8 +789,6 @@ async def descend(cmd):
 			user_data.poi = ewcfg.poi_id_thevoid
 			user_data.time_lastenter = int(time.time())
 
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, user_data.life_state == ewcfg.life_state_enlisted)
-			
 			user_data.persist()
 			ewutils.end_trade(user_data.id_user)
 			await ewrolemgr.updateRoles(client = ewutils.get_client(), member = cmd.message.author)
@@ -980,17 +978,9 @@ async def move(cmd = None, isApt = False):
 
 			return
 
-
-
 		user_data.poi = poi.id_poi
 		user_data.time_lastenter = int(time.time())
 
-
-
-		if user_data.poi in ewcfg.vulnerable_districts:
-			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
-		
 		user_data.persist()
 
 		ewutils.end_trade(user_data.id_user)
@@ -1099,10 +1089,6 @@ async def move(cmd = None, isApt = False):
 
 					user_data.poi = poi_current.id_poi
 					user_data.time_lastenter = int(time.time())
-
-					if user_data.poi in ewcfg.vulnerable_districts:
-						enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-						user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
 
 					user_data.persist()
 
@@ -1263,10 +1249,6 @@ async def teleport(cmd):
 			user_data.poi = poi.id_poi
 			user_data.time_lastenter = int(time.time())
 
-			if user_data.poi in ewcfg.vulnerable_districts:
-				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
-			
 			user_data.persist()
 
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
@@ -1982,10 +1964,6 @@ async def slap(cmd):
 			target_data.poi = dest_poi_obj.id_poi
 			user_data.time_lastenter = int(time.time())
 
-			if target_data.poi in ewcfg.vulnerable_districts:
-				enlisted = True if target_data.life_state == ewcfg.life_state_enlisted else False
-				target_data.time_expirpvp = ewutils.calculatePvpTimer(target_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
-
 			mutation_data.data = str(time_now)
 			mutation_data.persist()
 
@@ -2140,7 +2118,7 @@ async def one_eye_dm(id_user=None, id_server=None, poi=None):
 
 	id_player = EwPlayer(id_user=id_user, id_server=id_server)
 
-	if poi_obj.is_street == True:
+	if poi_obj.pvp:
 		try:
 			recipients = ewutils.execute_sql_query(
 				"SELECT {id_user} FROM mutations WHERE {id_server} = %s AND {mutation} = %s and {data} = %s".format(

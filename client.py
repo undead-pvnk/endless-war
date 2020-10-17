@@ -262,7 +262,7 @@ cmd_map = {
 	ewcfg.cmd_changelocks: ewapt.manual_changelocks,
 	ewcfg.cmd_setalarm: ewapt.set_alarm,
 	ewcfg.cmd_jam: ewapt.jam,
-	ewcfg.cmd_checkflag: ewcmd.check_flag,
+	#ewcfg.cmd_checkflag: ewcmd.check_flag,
 
 
 	# revive yourself as a juvenile after having been killed.
@@ -1108,11 +1108,13 @@ async def on_ready():
 			except:
 				ewutils.logMsg('Twitch handler hit an exception (continuing): {}'.format(json_string))
 				traceback.print_exc(file = sys.stdout)
-
+		
+		"""
 		# Flag all users in dangerous areas for PvP
 		for server in client.guilds:
 			await ewutils.flag_vulnerable_districts(id_server = server.id)
 
+		
 		# Clear PvP roles from players who are no longer flagged.
 		if (time_now - time_last_pvp) >= ewcfg.update_pvp:
 			time_last_pvp = time_now
@@ -1137,7 +1139,7 @@ async def on_ready():
 			except:
 				ewutils.logMsg('An error occurred in the scheduled role update task:')
 				traceback.print_exc(file=sys.stdout)
-
+		"""
 		# Adjust the exchange rate of slime for the market.
 		try:
 			for server in client.guilds:
