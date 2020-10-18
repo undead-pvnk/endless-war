@@ -1464,15 +1464,21 @@ async def item_use(cmd):
 					item_delete(item.id_item)
 			elif context == ewcfg.item_id_gellphone:
 
-				if item.item_props.get("active") == 'true':
+				if user_data.has_gellphone():
+					gellphones = find_item_all(item_search = ewcfg.item_id_gellphone, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
+
+					for phone in gellphones:
+						phone_data = EwItem(id_item = phone.get('id_item'))
+						phone_data.item_props['active'] = 'false'
+						phone_data.persist()
+
 					response = "You turn off your gellphone."
-					item.item_props['active'] = 'false'
+
 				else:
 					response = "You turn on your gellphone."
 					item.item_props['active'] = 'true'
-					
+					item.persist()
 
-				item.persist()
 					
 			elif context == ewcfg.context_prankitem:
 				item_action = ""
