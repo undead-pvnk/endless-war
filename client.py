@@ -1111,37 +1111,6 @@ async def on_ready():
 				ewutils.logMsg('Twitch handler hit an exception (continuing): {}'.format(json_string))
 				traceback.print_exc(file = sys.stdout)
 		
-		"""
-		# Flag all users in dangerous areas for PvP
-		for server in client.guilds:
-			await ewutils.flag_vulnerable_districts(id_server = server.id)
-
-		
-		# Clear PvP roles from players who are no longer flagged.
-		if (time_now - time_last_pvp) >= ewcfg.update_pvp:
-			time_last_pvp = time_now
-
-			try:
-				for server in client.guilds:
-					# fetch all pvp roles
-					pvp_roles = []
-					for pvp_role in ewcfg.role_to_pvp_role.values():
-						role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
-						pvp_roles.append(server.get_role(role.id_role))
-
-					members = []
-					for role in pvp_roles:
-						if role is not None:
-							members.extend(role.members)
-
-					# Monitor all user roles and update if a user is no longer flagged for PvP.
-					for member in members:
-						await ewrolemgr.updateRoles(client = client, member = member, remove_or_apply_flag = 'remove')
-
-			except:
-				ewutils.logMsg('An error occurred in the scheduled role update task:')
-				traceback.print_exc(file=sys.stdout)
-		"""
 		# Adjust the exchange rate of slime for the market.
 		try:
 			for server in client.guilds:
