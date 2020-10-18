@@ -2058,7 +2058,7 @@ async def skat(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	user_data = EwUser(member=cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.id_server)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
