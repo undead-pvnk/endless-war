@@ -610,15 +610,18 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 
 				#time_now_start = int(time.time())
 
-				for i in range(ewcfg.permissions_tries):
-					await channel.set_permissions(used_member, overwrite=None)
+				try:
+					for i in range(ewcfg.permissions_tries):
+						await channel.set_permissions(used_member, overwrite=None)
 
-				# Handle mine walls
-				if poi.id_poi in ewcfg.mines_wall_map:
-					wall_channel = ewutils.get_channel(server, ewcfg.mines_wall_map[poi.id_poi])
-					if wall_channel is not None:
-						for i in range(ewcfg.permissions_tries):
-							await wall_channel.set_permissions(used_member, overwrite=None)
+					# Handle mine walls
+					if poi.id_poi in ewcfg.mines_wall_map:
+						wall_channel = ewutils.get_channel(server, ewcfg.mines_wall_map[poi.id_poi])
+						if wall_channel is not None:
+							for i in range(ewcfg.permissions_tries):
+								await wall_channel.set_permissions(used_member, overwrite=None)
+				except:
+					ewutils.logMsg("Failed to remove permissions for {} in channel {}.".format(used_member.display_name, channel.name))
 
 				#time_now_end = int(time.time())
 				#print('took {} seconds to delete channel permissions'.format(time_now_end - time_now_start))
@@ -646,18 +649,20 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 				
 				#print(permissions_dict[user_data.poi])
 				#time_now_start = int(time.time())
+				try:
+					for i in range(ewcfg.permissions_tries):
+						await correct_channel.set_permissions(used_member, overwrite=overwrite)
 
-				for i in range(ewcfg.permissions_tries):
-					await correct_channel.set_permissions(used_member, overwrite=overwrite)
-
-				# Handle mine walls
-				if correct_poi.id_poi in ewcfg.mines_wall_map:
-					wall_channel = ewutils.get_channel(server, ewcfg.mines_wall_map[correct_poi.id_poi])
-					if wall_channel is not None:
-						overwrite = discord.PermissionOverwrite()
-						overwrite.read_messages = True
-						for i in range(ewcfg.permissions_tries):
-							await wall_channel.set_permissions(used_member, overwrite=overwrite)
+					# Handle mine walls
+					if correct_poi.id_poi in ewcfg.mines_wall_map:
+						wall_channel = ewutils.get_channel(server, ewcfg.mines_wall_map[correct_poi.id_poi])
+						if wall_channel is not None:
+							overwrite = discord.PermissionOverwrite()
+							overwrite.read_messages = True
+							for i in range(ewcfg.permissions_tries):
+								await wall_channel.set_permissions(used_member, overwrite=overwrite)
+				except:
+					ewutils.logMsg("Failed to add permissions to {} in channel {}.".format(used_member.display_name, channel.name))
 
 				#time_now_end = int(time.time())
 				#print('took {} seconds to update channel permissions'.format(time_now_end - time_now_start))
@@ -692,10 +697,12 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 			overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict[user_data.poi] else False
 		
 			#time_now_start = int(time.time())
-	
-			for i in range(ewcfg.permissions_tries):
-				await correct_channel.set_permissions(used_member, overwrite=overwrite)
 
+			try:
+				for i in range(ewcfg.permissions_tries):
+					await correct_channel.set_permissions(used_member, overwrite=overwrite)
+			except:
+				ewutils.logMsg("Failed to fix permissions for {}.".format(used_member.display_name))
 			#time_now_end = int(time.time())
 			#print('took {} seconds to generate channel permissions'.format(time_now_end - time_now_start))
 			# print('corrected overwrite in {} for {}'.format(correct_channel, member))
