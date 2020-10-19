@@ -411,11 +411,26 @@ async def updateRoles(
 
 	faction_roles_remove.remove(faction_role)
 
+	non_wanted_pois = [
+		ewcfg.poi_id_copkilltown, 
+		ewcfg.poi_id_rowdyroughhouse, 
+		ewcfg.poi_id_juviesrow, 
+		ewcfg.poi_id_thebreakroom,
+		ewcfg.poi_id_mine, 
+		ewcfg.poi_id_mine_bubble, 
+		ewcfg.poi_id_mine_sweeper, 
+		ewcfg.poi_id_juviesrow_pier, 
+		ewcfg.poi_id_jr_farms
+	 ]
+
 	pvp_role = None
 	active_role = None
 	if faction_role in ewcfg.role_to_pvp_role:
 
-		if not user_poi.is_apartment and user_poi.id_poi not in [ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_juviesrow, ewcfg.poi_id_thebreakroom]:
+		if not user_poi.is_apartment and \
+		user_poi.id_poi not in non_wanted_pois and \
+		user_data.life_state != ewcfg.life_state_juvenile or \
+		(user_data.life_state == ewcfg.life_state_juvenile and user_data.time_expirpvp >= time_now):
 			pvp_role = ewcfg.role_to_pvp_role.get(faction_role)
 			faction_roles_remove.remove(pvp_role)
 

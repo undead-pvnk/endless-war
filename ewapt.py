@@ -1430,7 +1430,9 @@ async def knock(cmd = None):
 							accepted = False
 
 							user_data = EwUser(member=cmd.message.author)
-							
+							# flag juvies
+							if user_data.life_state == ewcfg.life_state_juvenile:
+								user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_knock, False)
 							user_data.persist()
 							await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 							await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "They don't want your company, and have tipped off the authorities."))

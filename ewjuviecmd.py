@@ -502,11 +502,18 @@ async def mine(cmd):
 			if was_levelup:
 				response += levelup_response
 
+			# flag juvies
+			if user_data.life_state == ewcfg.life_state_juvenile:
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, False)
+
 			user_data.persist()
 
 			if printgrid:
 				await print_grid(cmd)
 
+			# gangsters don't need their roles updated
+			if user_data.life_state == ewcfg.life_state_juvenile:
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	else:
 		return await mismine(cmd, user_data, "channel")
@@ -850,10 +857,18 @@ async def scavenge(cmd):
 
 			user_data.time_lastscavenge = time_now
 
+			# flag juvies
+			if user_data.life_state == ewcfg.life_state_juvenile:
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_scavenge, False)
+
 			user_data.persist()
 
 			if not response == "":
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+			# gangsters don't need their roles updated
+			if user_data.life_state == ewcfg.life_state_juvenile:
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	else:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You'll find no slime here, this place has been picked clean. Head into the city to try and scavenge some slime."))
 
