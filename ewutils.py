@@ -2475,7 +2475,7 @@ def get_subzone_controlling_faction(subzone_id, id_server):
 			break
 
 	if district_data != None:
-		faction = district_data.all_streets_taken()
+		faction = district_data.controlling_faction
 		return faction
 
 def get_street_list(str_poi):

@@ -281,9 +281,9 @@ def make_district_control_board(id_server, title):
 
 	for district in districts:
 		district_data = EwDistrict(district = district, id_server = id_server)
-		if district_data.all_streets_taken() == ewcfg.faction_rowdys:
+		if district_data.controlling_faction == ewcfg.faction_rowdys:
 			rowdy_districts += 1
-		elif district_data.all_streets_taken() == ewcfg.faction_killers:
+		elif district_data.controlling_faction == ewcfg.faction_killers:
 			killer_districts += 1
 
 	rowdy_entry = [ewcfg.faction_rowdys.capitalize(), rowdy_districts]

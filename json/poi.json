@@ -686,7 +686,8 @@
             "littlechernobyl": 60,
             "brawlden": 60,
             "arsonbrookfarms": 20,
-            "arsonbrooksubwaystation": 20
+            "arsonbrooksubwaystation": 20,
+            "northoutskirtsedge": 120
         },
         "topic": "A commercial district home to many bitter business rivals vying for economic domination.",
         "wikipage": "https://rfck.miraheze.org/wiki/Arsonbrook"
@@ -1225,7 +1226,8 @@
             "poudrinalley": 60,
             "wreckington": 60,
             "cratersvillemines": 20,
-            "cratersvillesubwaystation": 20
+            "cratersvillesubwaystation": 20,
+            "southoutskirtsedge": 120
         },
         "topic": "A modest residential district peppered here and there with debris from several recently collapsed Wreckington business headquarters.",
         "wikipage": "https://rfck.miraheze.org/wiki/Cratersville"
@@ -1290,7 +1292,9 @@
             "cratersville": 60,
             "rowdyroughhouse": 60,
             "smokerscough": 20,
-            "wreckingtonsubwaystation": 20
+            "wreckingtonsubwaystation": 20,
+            "wreckingtonport": 20,
+            "southoutskirtsedge": 120
         },
         "topic": "A former residential district that's now mostly demolished. Go here if you want to wreck some shit, no one will care.",
         "wikipage": "https://rfck.miraheze.org/wiki/Wreckington"
@@ -1488,7 +1492,8 @@
             "newnewyonkers": 60,
             "oldnewyonkers": 60,
             "thekingswifessonspeakeasy": 20,
-            "vagrantscornersubwaystation": 20
+            "vagrantscornersubwaystation": 20,
+            "vagrantscornerport": 20
         },
         "topic": "Dingy port district and site of innumerable shady back-alley dealings.",
         "wikipage": "https://rfck.miraheze.org/wiki/Vagrant's_Corner"
@@ -1555,10 +1560,10 @@
             "newnewyonkers": 60,
             "vagrantscorner": 60,
             "thebeachresort": 20,
-            "nuclearbeachedge": 20,
             "assaultflatsbeachpier": 20,
             "assaultflatsblimptower": 20,
-            "assaultflatssubwaystation": 20
+            "assaultflatssubwaystation": 20,
+            "nuclearbeachedge": 120
         },
         "topic": "Posh beach real estate, recently gentrified and ripe for the vacationing!",
         "wikipage": "https://rfck.miraheze.org/wiki/Assault_Flats_Beach"
@@ -1623,7 +1628,8 @@
             "oldnewyonkers": 60,
             "vagrantscorner": 60,
             "assaultflatsbeach": 60,
-            "slimypersuits": 20
+            "slimypersuits": 20,
+            "northoutskirtsedge": 120
         },
         "topic": "Hip up-and-coming neighborhood rapidly becoming more gentrified and less cool.",
         "wikipage": "https://rfck.miraheze.org/wiki/New_New_Yonkers"
@@ -1687,7 +1693,8 @@
             "littlechernobyl": 60,
             "oldnewyonkers": 60,
             "newnewyonkers": 60,
-            "slimecorpslimeoidlaboratory": 20
+            "slimecorpslimeoidlaboratory": 20,
+            "northoutskirtsedge": 120
         },
         "topic": "Sleepy little burrough in northern NLACakaNM. Site of the Slimecorp Slimeoid Laboratories.",
         "wikipage": "https://rfck.miraheze.org/wiki/Brawlden"
@@ -1757,7 +1764,8 @@
             "maimridge": 60,
             "toxingtonmines": 20,
             "toxingtonpier": 20,
-            "toxingtonsubwaystation": 20
+            "toxingtonsubwaystation": 20,
+            "northwestoutskirtsedge": 120
         },
         "topic": "Quiet residential neighborhood, continually choked with acidic vapors from the nearby slime reservoir.",
         "wikipage": "https://rfck.miraheze.org/wiki/Toxington"
@@ -1822,7 +1830,8 @@
         "max_degradation": 10000,
         "neighbors": {
             "toxington": 60,
-            "poloniumhill": 60
+            "poloniumhill": 60,
+            "northwestoutskirtsedge": 120
         },
         "topic": "Quiet surburban retirement community. Residents like to have a good laugh at the expense of the unfortunate residents of Toxington.",
         "wikipage": "https://rfck.miraheze.org/wiki/Charcoal_Park"
@@ -1888,7 +1897,8 @@
             "toxington": 60,
             "gatlingsdale": 60,
             "vandalpark": 60,
-            "westglocksbury": 60
+            "westglocksbury": 60,
+            "westoutskirtsedge": 120
         },
         "topic": "Residential neighborhood covered in low-quality, high-cost minimansions. The butt of many a NLACakaNM inside joke.",
         "wikipage": "https://rfck.miraheze.org/wiki/Polonium_Hill"
@@ -1957,7 +1967,8 @@
             "glocksbury": 60,
             "jaywalkerplain": 60,
             "basedhardware": 20,
-            "westglocksburysubwaystation": 20
+            "westglocksburysubwaystation": 20,
+            "westoutskirtsedge": 120
         },
         "topic": "An otherwise unremarkable residential district with a distressingly high violent crime rate.",
         "wikipage": "https://rfck.miraheze.org/wiki/West_Glocksbury"
@@ -2026,7 +2037,8 @@
             "crookline": 60,
             "dreadford": 60,
             "jaywalkerplainpier": 20,
-            "jaywalkerplainsubwaystation": 20
+            "jaywalkerplainsubwaystation": 20,
+            "westoutskirtsedge": 120
         },
         "topic": "Don't forget to look left and right before crossing.",
         "wikipage": "https://rfck.miraheze.org/wiki/Jaywalker_Plain"
@@ -2092,7 +2104,8 @@
             "northsleezeborough": 60,
             "southsleezeborough": 60,
             "crooklinepier": 20,
-            "clinicofslimoplasty": 20
+            "clinicofslimoplasty": 20,
+            "southwestoutskirtsedge": 120
         },
         "topic": "A rebellious district on the far reaches of the city. Rich in culture and literal wealth, just hope that you don\u2019t get pickpocketed while there.",
         "wikipage": "https://rfck.miraheze.org/wiki/Crookline"
@@ -2155,7 +2168,9 @@
         "neighbors": {
             "jaywalkerplain": 60,
             "crookline": 60,
-            "thecountryclub": 20
+            "thecountryclub": 20,
+            "dreadfordblimptower": 20,
+            "southwestoutskirtsedge": 120
         },
         "topic": "Ford of Dread.",
         "wikipage": "https://rfck.miraheze.org/wiki/Dreadford"
@@ -2216,7 +2231,8 @@
         "neighbors": {
             "toxington": 60,
             "astatineheights": 60,
-            "arsonbrook": 60
+            "arsonbrook": 60,
+            "northwestoutskirtsedge": 120
         },
         "topic": "NLACakaNM\u2019s frigid, untamed crown jewel. Site of Mt. Srxek.",
         "wikipage": "https://rfck.miraheze.org/wiki/Maimridge"

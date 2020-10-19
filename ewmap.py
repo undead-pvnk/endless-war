@@ -572,6 +572,9 @@ def path_to(
 		if path is not None:
 			step_last = path.steps[-1]
 			score_current = score_map.get(step_last.id_poi)
+			if poi_end is not None and not poi_end.is_outskirts and step_last.is_outskirts:
+				# do not go through outskirts if the destination isn't part of them
+				continue
 			if path.cost >= score_current:
 				continue
 			if user_data.life_state != ewcfg.life_state_corpse and (poi_end and poi_end.id_poi != step_last.id_poi == ewcfg.poi_id_thesewers):
