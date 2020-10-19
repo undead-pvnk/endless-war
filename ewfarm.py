@@ -325,15 +325,11 @@ async def reap(cmd):
 						response += "\n\n" + levelup_response
 
 					user_data.hunger += ewcfg.hunger_perfarm
-					# Flag the user for PvP
-					#enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-					# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_farm, enlisted)
-
 					user_data.persist()
 
 					farm.time_lastsow = 0  # 0 means no seeds are currently planted
 					farm.persist()
-					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+					#await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

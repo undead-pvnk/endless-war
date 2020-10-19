@@ -504,23 +504,20 @@ transport_line_ferry_wt_to_vc = "ferrywttovc"
 transport_line_ferry_vc_to_wt = "ferryvctowt"
 
 # Subway lines
-transport_line_subway_purple_northbound = "subwaypurplenorth"
-transport_line_subway_purple_southbound = "subwaypurplesouth"
+transport_line_subway_yellow_northbound = "subwayyellownorth"
+transport_line_subway_yellow_southbound = "subwayyellowsouth"
 
-transport_line_subway_pink_northbound = "subwaypinknorth"
-transport_line_subway_pink_southbound = "subwaypinksouth"
+transport_line_subway_red_northbound = "subwayrednorth"
+transport_line_subway_red_southbound = "subwayredsouth"
 
-transport_line_subway_gold_eastbound = "subwaygoldeast"
-transport_line_subway_gold_westbound = "subwaygoldwest"
+transport_line_subway_blue_eastbound = "subwayblueeast"
+transport_line_subway_blue_westbound = "subwaybluewest"
 
-transport_line_subway_black_eastbound = "subwayblackeast"
-transport_line_subway_black_westbound = "subwayblackwest"
+transport_line_subway_white_eastbound = "subwaywhiteeast"
+transport_line_subway_white_westbound = "subwaywhitewest"
 
 transport_line_subway_green_eastbound = "subwaygreeneast"
 transport_line_subway_green_westbound = "subwaygreenwest"
-
-transport_line_subway_gold_eastbound = "subwaygoldeast"
-transport_line_subway_gold_westbound = "subwaygoldwest"
 
 # Blimp lines
 transport_line_blimp_df_to_afb = "blimpdftoafb"
@@ -1166,6 +1163,7 @@ cmd_confirm = cmd_prefix + 'confirm'
 cmd_cancel = cmd_prefix + 'cancel'
 cmd_pray = cmd_prefix + 'pray'
 cmd_flushsubzones = cmd_prefix + 'flushsubzones'
+cmd_flushstreets = cmd_prefix + 'flushstreets'
 cmd_wrap = cmd_prefix + 'wrap'
 cmd_unwrap = cmd_prefix + 'unwrap'
 cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
@@ -4845,13 +4843,13 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None):
 		hit_roll = min(random.random(), random.random()) if player_has_sharptoother else random.random()
 		guarantee_crit = (weapon_type == "precision" and ctn.user_data.sidearm == -1)
 
-		if hit_roll < weapon_stats["hit_chance"]:
+		if hit_roll < (weapon_stats["hit_chance"] + ctn.hit_chance_mod):
 			effective_multiplier = weapon_stats["damage_multiplier"] 
 			if "variable_damage_multiplier" in weapon_stats:
 				effective_multiplier += random.random() * weapon_stats["variable_damage_multiplier"]
 
 			hit_damage = base_damage * effective_multiplier
-			if guarantee_crit or random.random() < weapon_stats["crit_chance"]:
+			if guarantee_crit or random.random() < (weapon_stats["crit_chance"] + ctn.crit_mod):
 				hit_damage *= weapon_stats["crit_multiplier"]
 				if not ("shots" in weapon_stats):
 					ctn.crit = True
@@ -4888,7 +4886,7 @@ def wef_garrote(ctn = None):
 
 	user_mutations = ctn.user_data.get_mutations()
 	aim = (random.randrange(100) + 1)
-	if aim <= int(100 * ctn.miss_mod):
+	if aim <= int(100 * ctn.hit_chance_mod):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
@@ -4956,7 +4954,7 @@ def wef_paintroller(ctn = None):
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
 
-	if aim <= (1 + int(10 * ctn.miss_mod)):
+	if aim <= (1 + int(10 * ctn.hit_chance_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
@@ -4974,7 +4972,7 @@ def wef_watercolors(ctn = None):
 	user_mutations = ctn.user_data.get_mutations()
 	#ctn.sap_damage = 0
 
-	if aim <= (1 + int(250 * ctn.miss_mod)):
+	if aim <= (1 + int(250 * ctn.hit_chance_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
@@ -6120,7 +6118,7 @@ def atf_fangs(ctn = None):
 	aim = (random.randrange(10) + 1)
 	#ctn.sap_damage = 1
 
-	if aim == (1 + int(10 * ctn.miss_mod)):
+	if aim == (1 + int(10 * ctn.hit_chance_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 	elif aim == (10 - int(10 * ctn.crit_mod)):
@@ -6148,7 +6146,7 @@ def atf_raiderscythe(ctn = None):
 	#ctn.sap_damage = 0
 	#ctn.sap_ignored = 5
 
-	if aim <= (2 + int(10 * ctn.miss_mod)):
+	if aim <= (2 + int(10 * ctn.hit_chance_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 	elif aim >= (9 - int(10 * ctn.crit_mod)):
@@ -6161,7 +6159,7 @@ def atf_gunkshot(ctn = None):
 	aim = (random.randrange(10) + 1)
 	#ctn.sap_damage = 2
 
-	if aim <= (2 + int(10 * ctn.miss_mod)):
+	if aim <= (2 + int(10 * ctn.hit_chance_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 	elif aim >= (9 - int(10 * ctn.crit_mod)):
@@ -6173,7 +6171,7 @@ def atf_tusks(ctn = None):
 
 	aim = (random.randrange(21) - 10)
 	#ctn.sap_damage = 3
-	if aim <= (-9 + int(21 * ctn.miss_mod)):
+	if aim <= (-9 + int(21 * ctn.hit_chance_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 
@@ -6195,7 +6193,7 @@ def atf_molotovbreath(ctn = None):
 
 	#ctn.bystander_damage = dmg * 0.5
 
-	if aim == (3 + int(10 * ctn.miss_mod)):
+	if aim == (3 + int(10 * ctn.hit_chance_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 
@@ -6209,7 +6207,7 @@ def atf_armcannon(ctn = None):
 
 	aim = (random.randrange(20) + 1)
 
-	if aim <= (2 + int(20 * ctn.miss_mod)):
+	if aim <= (2 + int(20 * ctn.hit_chance_mod)):
 		ctn.miss = True
 
 	if aim == (20 - int(20 * ctn.crit_mod)):
@@ -6221,7 +6219,7 @@ def atf_axe(ctn=None):
 	ctn.slimes_damage *= 0.7
 	aim = (random.randrange(10) + 1)
 
-	if aim <= (4 + int(10 * ctn.miss_mod)):
+	if aim <= (4 + int(10 * ctn.hit_chance_mod)):
 		ctn.miss = True
 
 	if aim == (10 - int(10 * ctn.crit_mod)):
@@ -6233,7 +6231,7 @@ def atf_hooves(ctn=None):
 	ctn.slimes_damage *= 0.4
 	aim = (random.randrange(30) + 1)
 
-	if aim <= (5 + int(30 * ctn.miss_mod)):
+	if aim <= (5 + int(30 * ctn.hit_chance_mod)):
 		ctn.miss = True
 
 	if aim > (25 - int(30 * ctn.crit_mod)):
@@ -7480,72 +7478,65 @@ transport_lines = [
 			poi_id_vc_port : [60, poi_id_slimesea],
 			poi_id_slimesea : [120, poi_id_wt_port]
 			}
-
 		),
-	EwTransportLine( # purple subway line from south sleezeborough to brawlden
-		id_line = transport_line_subway_purple_northbound,
+	EwTransportLine( # yellow subway line from south sleezeborough to arsonbrook
+		id_line = transport_line_subway_yellow_northbound,
 		alias = [
-			"northpurpleline",
-			"northpurple",
-			"purplenorth",
-			"purpletobrawlden",
-			"purpletobrawl",
-			"purpletobd"
+			"northyellowline",
+			"northyellow",
+			"yellownorth",
+			"yellowtoarsonbrook",
+			"yellowtoarson",
+			"yellowtoab"
 			],
 		first_stop = poi_id_ssb_subway_station,
-		last_stop = poi_id_bd_subway_station,
-		next_line = transport_line_subway_purple_southbound,
-		str_name = "The purple subway line towards Brawlden",
+		last_stop = poi_id_ab_subway_station,
+		next_line = transport_line_subway_yellow_southbound,
+		str_name = "The yellow subway line towards Arsonbrook",
 		schedule = {
-			poi_id_ssb_subway_station : [20, poi_id_og_subway_station],
-			poi_id_og_subway_station : [20, poi_id_pa_subway_station],
-			poi_id_pa_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_ssb_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
 			poi_id_dt_subway_station : [20, poi_id_sb_subway_station],
-			poi_id_sb_subway_station: [20, poi_id_ab_subway_station],
-			poi_id_ab_subway_station: [20, poi_id_lc_subway_station],
-			poi_id_lc_subway_station: [20, poi_id_bd_subway_station],
+			poi_id_sb_subway_station : [20, poi_id_ab_subway_station]
 			}
 
 		),
-	EwTransportLine( # purple subway line from brawlden to south sleezeborough
-		id_line = transport_line_subway_purple_southbound,
+	EwTransportLine( # yellow subway line from arsonbrook to south sleezeborough
+		id_line = transport_line_subway_yellow_southbound,
 		alias = [
-			"southpurpleline",
-			"southpurple",
-			"purplesouth",
-			"purpletosouthsleezeborough",
-			"purpletosouthsleeze",
-			"purpletossb"
+			"southyellowline",
+			"southyellow",
+			"yellowsouth",
+			"yellowtosouthsleezeborough",
+			"yellowtosouthsleeze",
+			"yellowtossb"
 			],
-		first_stop = poi_id_bd_subway_station,
+		first_stop = poi_id_ab_subway_station,
 		last_stop = poi_id_ssb_subway_station,
-		next_line = transport_line_subway_purple_northbound,
-		str_name = "The purple subway line towards South Sleezeborough",
+		next_line = transport_line_subway_yellow_northbound,
+		str_name = "The yellow subway line towards South Sleezeborough",
 		schedule = {
-			poi_id_bd_subway_station: [20, poi_id_lc_subway_station],
-			poi_id_lc_subway_station: [20, poi_id_ab_subway_station],
 			poi_id_ab_subway_station : [20, poi_id_sb_subway_station],
 			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_pa_subway_station],
-			poi_id_pa_subway_station : [20, poi_id_og_subway_station],
-			poi_id_og_subway_station: [20, poi_id_ssb_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_ssb_subway_station]
 			}
 
 		),
-	EwTransportLine( # pink subway line from cratersville to toxington
-		id_line = transport_line_subway_pink_northbound,
+	EwTransportLine( # red subway line from cratersville to toxington
+		id_line = transport_line_subway_red_northbound,
 		alias = [
-			"northpinkline",
-			"northpink",
-			"pinknorth",
-			"pinktotoxington",
-			"pinktotox",
-			"pinktott"
+			"northredline",
+			"northred",
+			"rednorth",
+			"redtotoxington",
+			"redtotox",
+			"redtott"
 			],
 		first_stop = poi_id_cv_subway_station,
 		last_stop = poi_id_tt_subway_station,
-		next_line = transport_line_subway_pink_southbound,
-		str_name = "The pink subway line towards Toxington",
+		next_line = transport_line_subway_red_southbound,
+		str_name = "The red subway line towards Toxington",
 		schedule = {
 			poi_id_cv_subway_station : [20, poi_id_wt_subway_station],
 			poi_id_wt_subway_station : [20, poi_id_rr_subway_station],
@@ -7553,24 +7544,24 @@ transport_lines = [
 			poi_id_dt_subway_station : [20, poi_id_ck_subway_station],
 			poi_id_ck_subway_station : [20, poi_id_gd_subway_station],
 			poi_id_gd_subway_station : [20, poi_id_ah_subway_station],
-			poi_id_ah_subway_station: [20, poi_id_tt_subway_station],
+			poi_id_ah_subway_station : [20, poi_id_tt_subway_station]
 			}
 
 		),
-	EwTransportLine( # pink subway line from toxington to cratersville
-		id_line = transport_line_subway_pink_southbound,
+	EwTransportLine( # red subway line from toxington to cratersville
+		id_line = transport_line_subway_red_southbound,
 		alias = [
-			"southpinkline",
-			"southpink",
-			"pinksouth",
-			"pinktocratersville",
-			"pinktocraters",
-			"pinktocv"
+			"southredline",
+			"southred",
+			"redsouth",
+			"redtocratersville",
+			"redtocraters",
+			"redtocv"
 			],
 		first_stop = poi_id_tt_subway_station,
 		last_stop = poi_id_cv_subway_station,
-		next_line = transport_line_subway_pink_northbound,
-		str_name = "The pink subway line towards Cratersville",
+		next_line = transport_line_subway_red_northbound,
+		str_name = "The red subway line towards Cratersville",
 		schedule = {
 			poi_id_tt_subway_station : [20, poi_id_ah_subway_station],
 			poi_id_ah_subway_station : [20, poi_id_gd_subway_station],
@@ -7582,134 +7573,95 @@ transport_lines = [
 			}
 
 		),
-	EwTransportLine( # gold subway line from crookline to downtown
-		id_line = transport_line_subway_gold_eastbound,
-		alias = [
-			"goldeastline",
-			"goldeast",
-			"goldgreen",
-			"goldtodowntown",
-			"goldtodt"
-			],
-		first_stop = poi_id_cl_subway_station,
-		last_stop = poi_id_dt_subway_station,
-		next_line = transport_line_subway_gold_westbound,
-		str_name = "The gold subway line towards Downtown",
-		schedule = {
-			poi_id_cl_subway_station : [20, poi_id_jp_subway_station],
-			poi_id_jp_subway_station : [20, poi_id_nsb_subway_station],
-			poi_id_nsb_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
-			}
-
-		),
-	EwTransportLine( # gold subway line from downtown to crookline
-		id_line = transport_line_subway_gold_westbound,
-		alias = [
-			"goldwestline",
-			"goldwest",
-			"westgold",
-			"goldtocrookline",
-			"goldtocrook",
-			"goldtocl"
-			],
-		first_stop = poi_id_dt_subway_station,
-		last_stop = poi_id_cl_subway_station,
-		next_line = transport_line_subway_gold_eastbound,
-		str_name = "The gold subway line towards Crookline",
-		schedule = {
-			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_nsb_subway_station],
-			poi_id_nsb_subway_station : [20, poi_id_jp_subway_station],
-			poi_id_jp_subway_station: [20, poi_id_cl_subway_station],
-			}
-
-		),
-	EwTransportLine( # green subway line from downtown to new new yonkers
+	EwTransportLine( # green subway line from smogsburg to west glocksbury
 		id_line = transport_line_subway_green_eastbound,
 		alias = [
 			"greeneastline",
 			"greeneast",
 			"eastgreen",
-			"greentonewnewyonkers",
-			"greentonewnew",
-			"greentonew",
-			"greentonny"
+			"greentosmogsburg",
+			"greentosmogs",
+			"greentosb"
 			],
-		first_stop = poi_id_dt_subway_station,
-		last_stop = poi_id_nny_subway_station,
+		first_stop = poi_id_wgb_subway_station,
+		last_stop = poi_id_sb_subway_station,
 		next_line = transport_line_subway_green_westbound,
-		str_name = "The green subway line towards New New Yonkers",
+		str_name = "The green subway line towards Smogsburg",
 		schedule = {
-			poi_id_dt_subway_station : [20, poi_id_gld_subway_station],
-			poi_id_gld_subway_station : [20, poi_id_jr_subway_station],
-			poi_id_jr_subway_station : [20, poi_id_vc_subway_station],
-			poi_id_vc_subway_station : [20, poi_id_nny_subway_station]
+			poi_id_wgb_subway_station : [20, poi_id_jp_subway_station],
+			poi_id_jp_subway_station : [20, poi_id_nsb_subway_station],
+			poi_id_nsb_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_sb_subway_station]
 			}
 
 		),
-	EwTransportLine( # green subway line from new new yonkers to downtown
+	EwTransportLine( # green subway line from west glocksbury to smogsburg
 		id_line = transport_line_subway_green_westbound,
 		alias = [
 			"greenwestline",
 			"greenwest",
 			"westgreen",
-			"greentodowntown",
-			"greentodt"
+			"greentowestglocksbury",
+			"greentowestglocks",
+			"greentowgb"
+			],
+		first_stop = poi_id_sb_subway_station,
+		last_stop = poi_id_wgb_subway_station,
+		next_line = transport_line_subway_green_eastbound,
+		str_name = "The green subway line towards West Glocksbury",
+		schedule = {
+			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_gb_subway_station],
+			poi_id_gb_subway_station : [20, poi_id_wgb_subway_station]
+			}
+
+		),
+	EwTransportLine( # blue subway line from downtown to assault flats beach
+		id_line = transport_line_subway_blue_eastbound,
+		alias = [
+			"blueeastline",
+			"blueeast",
+			"eastblue",
+			"bluetoassaultflatsbeach",
+			"bluetoassaultflats",
+			"bluetobeach",
+			"bluetoafb"
+			],
+		first_stop = poi_id_dt_subway_station,
+		last_stop = poi_id_afb_subway_station,
+		next_line = transport_line_subway_blue_westbound,
+		str_name = "The blue subway line towards Assault Flats Beach",
+		schedule = {
+			poi_id_dt_subway_station : [20, poi_id_gld_subway_station],
+			poi_id_gld_subway_station : [20, poi_id_jr_subway_station],
+			poi_id_jr_subway_station : [20, poi_id_vc_subway_station],
+			poi_id_vc_subway_station : [20, poi_id_afb_subway_station]
+			}
+
+		),
+	EwTransportLine( # blue subway line from assault flats beach to downtown
+		id_line = transport_line_subway_blue_westbound,
+		alias = [
+			"bluewestline",
+			"bluewest",
+			"westblue",
+			"bluetodowntown",
+			"bluetodt"
 			],
 		first_stop = poi_id_afb_subway_station,
 		last_stop = poi_id_dt_subway_station,
-		next_line = transport_line_subway_green_eastbound,
-		str_name = "The green subway line towards Downtown",
+		next_line = transport_line_subway_blue_eastbound,
+		str_name = "The blue subway line towards Downtown NLACakaNM",
 		schedule = {
-			poi_id_nny_subway_station : [20, poi_id_vc_subway_station],
+			poi_id_afb_subway_station : [20, poi_id_vc_subway_station],
 			poi_id_vc_subway_station : [20, poi_id_jr_subway_station],
 			poi_id_jr_subway_station : [20, poi_id_gld_subway_station],
 			poi_id_gld_subway_station : [20, poi_id_dt_subway_station]
 			}
 
 		),
-	EwTransportLine(  # black subway line from downtown to west glocksbury
-		id_line = transport_line_subway_black_eastbound,
-		alias = [
-			"blackeastline",
-			"blackeast",
-			"eastblack",
-			"blacktowestglocksbury",
-			"blacktowestglocks",
-			"blacktowgb"
-		],
-		first_stop = poi_id_dt_subway_station,
-		last_stop = poi_id_wgb_subway_station,
-		next_line = transport_line_subway_black_westbound,
-		str_name = "The black subway line towards West Glocksbury",
-		schedule = {
-			poi_id_dt_subway_station: [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station: [20, poi_id_gb_subway_station],
-			poi_id_gb_subway_station: [20, poi_id_vp_subway_station],
-			poi_id_vp_subway_station: [20, poi_id_wgb_subway_station],
-		}
-	),
-	EwTransportLine(  # black subway line from west glocksbury to downtown
-		id_line = transport_line_subway_black_westbound,
-		alias = [
-			"blackwestline",
-			"blackwest",
-			"westblack",
-			"blacktodowntown",
-			"blacktodt"
-		],
-		first_stop = poi_id_wgb_subway_station,
-		last_stop = poi_id_dt_subway_station,
-		next_line = transport_line_subway_black_eastbound,
-		str_name = "The black subway line towards Downtown",
-		schedule = {
-			poi_id_wgb_subway_station: [20, poi_id_vp_subway_station],
-			poi_id_vp_subway_station: [20, poi_id_gb_subway_station],
-			poi_id_gb_subway_station: [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station: [20, poi_id_dt_subway_station],
-		}
-	),
 	# EwTransportLine( # white subway line from downtown to juvies row
 	# 	id_line = transport_line_subway_white_eastbound,
 	# 	alias = [
@@ -12162,21 +12114,21 @@ status_effect_list = [
 		time_expire = 10,
 		str_describe = "They have assumed an evasive stance.",
 		str_describe_self = "You have assumed an evasive stance.",
-		miss_mod = 0.25
+		hit_chance_mod = -0.25
 	),
 	EwStatusEffectDef(
 		id_status = status_taunted_id,
 		time_expire = 10,
 		str_describe = "They are fuming with rage.",
 		str_describe_self = "You are fuming with rage.",
-		miss_mod_self = 0.25
+		hit_chance_mod_self = -0.25
 	),
 	EwStatusEffectDef(
 		id_status = status_aiming_id,
 		time_expire = 10,
 		str_describe = "They are taking careful aim.",
 		str_describe_self = "You are taking careful aim.",
-		miss_mod_self = -0.1,
+		hit_chance_mod_self = 0.1,
 		crit_mod_self = 0.2
 	),
 	EwStatusEffectDef(
@@ -12192,9 +12144,9 @@ status_effect_list = [
 		id_status = status_injury_head_id,
 		str_describe = "Their head looks {severity}",
 		str_describe_self = "Your head looks {severity}",
-		miss_mod_self = 0.05,
+		hit_chance_mod_self = -0.05,
 		crit_mod_self = -0.1,
-		miss_mod = -0.01,
+		hit_chance_mod = 0.01,
 		crit_mod = 0.01,
 	),
 	EwStatusEffectDef(
@@ -12206,14 +12158,14 @@ status_effect_list = [
 		id_status = status_injury_arms_id,
 		str_describe = "Their arms look {severity}",
 		str_describe_self = "Your arms look {severity}",
-		miss_mod_self = 0.05,
+		hit_chance_mod_self = -0.05,
 		crit_mod_self = -0.1,
 	),
 	EwStatusEffectDef(
 		id_status = status_injury_legs_id,
 		str_describe = "Their legs look {severity}",
 		str_describe_self = "Your legs look {severity}",
-		miss_mod = -0.06,
+		hit_chance_mod = 0.06,
 		crit_mod = 0.03,
 	),
 	EwStatusEffectDef(
@@ -12704,7 +12656,7 @@ help_responses = {
 	"gangs":"**Gang Violence** is the center focus of **Rowdy Fuckers Cop Killers' ENDLESS WAR**. Enlisting in a gang allows you to attack other gang members, juveniles, ghosts, and slime beasts with the **'!kill'** command. To enlist in a gang, use **'!enlist'**. However, a member of that gang must use **'!vouch'** for you beforehand. Enlisting will permanently affiliate you with that gang, unless you are !pardon'd by the **ROWDY FUCKER** (Munchy), or the **COP KILLER** (Ben Saint). You may use **'!renounce'** to return to the life of a juvenile, but you will lose half of your current slime, and you will still be affiliated with that gang, thus disallowing you from entering the enemy's gang base. Additionally, a Kingpin, should they feel the need to, can inflict the '!banned' status upon you, preventing you from enlisting in their gang.",
 	"food":"Food lowers your hunger by a set amount, and can be ordered from various **restaurants** within the city. Generally speaking, the more expensive food is, the more hunger it sates. You can **'!order [food name] togo'** to order it togo, otherwise you will eat it on the spot, and you can **'!use [food name]'** to use it once its in your inventory. You can only carry a certain amount of food depending on your level. Regular food items expire after 2 in-game days, or 12 hours in real life, while crops expire after 8 in-game days (48 hours), and food items gained from milling expire after a whole 2 weeks in real life. Three popular restauraunts close by various gang bases include **THE SPEAKEASY** (juveniles), **THE SMOKER'S COUGH** (rowdys), and **RED MOBSTER SEAFOOD** (killers), though there are other places to order food as well, such as the **Food Court**.",
 	"capturing":"Capping is a battle for influence over the 33 districts of NLACakaNM, and one of your main goals as a gangster. Capped territories award your kingpin slime, and give your teammates benefits while visiting. Start by visiting Based Hardware and equipping one of the paint tools sold there. Once you have that, you can **!spray <captcha>** while in a capturable district's streets to gain influence for your gang. Spraying graffiti in districts will increase influence for you, or decrease it for the enemy if they have influence there. Think of dealing influence to a district like dealing damage to a Juvie's soft squishy body, with critical hits, misses, and backfires included. As you go, you can check your **!progress** to see how much influence you still need. It can be more or less depending on the territory class, running from rank C to S. \n\nA few more things to note:\n>**!progress** will tell you the minimum and limit for territory capture. However, you can capture above that limit, as high as you want. The catch is that anything captured over this limit will decay faster.\n>Decapping does 0.8x the influence of capping, even though the cost remains the same.\n>Don't attack enemy territory when it is surrounded by enemy territory/outskirts. Small little bitches like yourself are prone to fucking up severely under that much pressure.\n>The nightlife starts in the late night. Fewer cops are around to erase your handiwork, so if you cap then you will gain a 33% capping bonus.\n>You can't kill for shit with paint tools equipped. Luckily, you can **!sidearm** a weapon or tool and quickly switch between your two equip slots using **switch** or **!s**.",
-	"transportation":"There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board pinktocv'. **'!disembark'** can be used to exit a train. **The Ferry** (which moves between Vagrant's Corner and Wreckington) and **The Blimp** (which moves between Dreadford and Assault Flats Beach) can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do. Refer to the diagram below on understanding which districts and streets have subway stations in them.\nhttps://cdn.discordapp.com/attachments/431237299137675297/734152135687798874/streets13.png",
+	"transportation":"There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board pinktocv'. **'!disembark'** can be used to exit a train. **The Ferry** (which moves between Vagrant's Corner and Wreckington) and **The Blimp** (which moves between Dreadford and Assault Flats Beach) can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do. Refer to the diagram below on understanding which districts and streets have subway stations in them.\nhttps://cdn.discordapp.com/attachments/431238867459375145/570392908780404746/t_system_final_stop_telling_me_its_wrong_magicks.png",
 	"death": "Death is an integral mechanic to Endless War. Even the most experienced players will face the sewers every now and again. If you find yourself in such a situation, use **'!revive'** in the sewers channel, and you will return to the land of the living as a juvenile at the base of ENDLESS WAR. Dying will drop some of your unadorned cosmetics and food, and all of your unequiped weapons, but your currently adorned cosmetics and equiped weapon will remain in your inventory (Gangsters will lose half of their food/unadorned cosmetics, while Juveniles lose only a quarter). Alternatively, you can hold off on reviving and remain a **ghost**, which has its own gameplay mechanics associated with it. To learn more, use '!help ghosts' at one of the colleges or with a game guide, or see the wiki page here: https://rfck.miraheze.org/wiki/Ghosts",
 	# Introductions, part 2
 	"dojo":"**The Dojo** is where you acquire weapons to fight and kill other players with. To purchase a weapon, use **'!order [weapon]'**. There are many weapons you can choose from (you can view all of them with !menu), and they all perform differently from one another. Once you've purchased a weapon, you can use **'!equip [weapon]'** to equip it, provided that you're enlisted in a gang beforehand. You can also name your weapon by spending a poudrin on it with **'!annoint [name]'**. Furthermore, annointing will increase your mastery over that weapon, but it's much more efficient to do so through **sparring**. To learn more about the sparring system and weapon ranks, use '!help sparring'.",
@@ -12922,7 +12874,7 @@ enemy_attacktype_fangs = 'fangs'
 enemy_attacktype_talons = 'talons'
 enemy_attacktype_tusks = 'tusks'
 enemy_attacktype_raiderscythe = 'scythe'
-enemy_attacktype_gunkshot = 'gunk shot'
+enemy_attacktype_gunkshot = 'gunkshot'
 enemy_attacktype_molotovbreath = 'molotovbreath'
 enemy_attacktype_armcannon = 'armcannon'
 enemy_attacktype_axe = 'axe'

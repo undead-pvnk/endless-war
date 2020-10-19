@@ -426,7 +426,7 @@ class EwEnemy:
 			strikes = 0
 			#sap_damage = 0
 			#sap_ignored = 0
-			miss_mod = 0
+			hit_chance_mod = 0
 			crit_mod = 0
 			dmg_mod = 0
 
@@ -440,7 +440,7 @@ class EwEnemy:
 			shooter_status_mods = ewwep.get_shooter_status_mods(enemy_data, target_data, hitzone)
 			shootee_status_mods = ewwep.get_shootee_status_mods(target_data, enemy_data, hitzone)
 
-			miss_mod += round(shooter_status_mods['miss'] + shootee_status_mods['miss'], 2)
+			hit_chance_mod += round(shooter_status_mods['hit_chance'] + shootee_status_mods['hit_chance'], 2)
 			crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
 			dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 			
@@ -510,7 +510,7 @@ class EwEnemy:
 							target_data=target_data,
 							#sap_damage=sap_damage,
 							#sap_ignored=sap_ignored,
-							miss_mod=miss_mod,
+							hit_chance_mod=hit_chance_mod,
 							crit_mod=crit_mod
 						)
 
@@ -1490,7 +1490,7 @@ class EwEnemyEffectContainer:
 	target_data = None
 	#sap_damage = 0
 	#sap_ignored = 0
-	miss_mod = 0
+	hit_chance_mod = 0
 	crit_mod = 0
 
 	# Debug method to dump out the members of this object.
@@ -1515,7 +1515,7 @@ class EwEnemyEffectContainer:
 			target_data=None,
 			#sap_damage=0,
 			#sap_ignored=0,
-			miss_mod=0,
+			hit_chance_mod=0,
 			crit_mod=0
 	):
 		self.miss = miss
@@ -1527,7 +1527,7 @@ class EwEnemyEffectContainer:
 		self.target_data = target_data
 		#self.sap_damage = sap_damage
 		#self.sap_ignored = sap_ignored
-		self.miss_mod = miss_mod
+		self.hit_chance_mod = hit_chance_mod
 		self.crit_mod = crit_mod
 		
 class EwSeedPacket:
@@ -2712,7 +2712,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 	
 		elif enemy_data.ai == ewcfg.enemy_ai_attacker_a:
 			users = ewutils.execute_sql_query(
-				"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({time_expirpvp} > {time_now} OR {life_state} = {life_state_shambler}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {time_lastenter} ASC".format(
+				"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {time_lastenter} ASC".format(
 					id_user = ewcfg.col_id_user,
 					life_state = ewcfg.col_life_state,
 					time_lastenter = ewcfg.col_time_lastenter,
@@ -2723,8 +2723,6 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 					life_state_kingpin = ewcfg.life_state_kingpin,
 					life_state_shambler = ewcfg.life_state_shambler,
 					repel_status = ewcfg.status_repelled_id,
-					time_expirpvp = ewcfg.col_time_expirpvp,
-					time_now = time_now,
 				), (
 					enemy_data.poi,
 					enemy_data.id_server
@@ -2734,7 +2732,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 	
 		elif enemy_data.ai == ewcfg.enemy_ai_attacker_b:
 			users = ewutils.execute_sql_query(
-				"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({time_expirpvp} > {time_now} OR {life_state} = {life_state_shambler}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {slimes} DESC".format(
+				"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {slimes} DESC".format(
 					id_user = ewcfg.col_id_user,
 					life_state = ewcfg.col_life_state,
 					slimes = ewcfg.col_slimes,
@@ -2746,8 +2744,6 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 					life_state_kingpin = ewcfg.life_state_kingpin,
 					life_state_shambler = ewcfg.life_state_shambler,
 					repel_status = ewcfg.status_repelled_id,
-					time_expirpvp = ewcfg.col_time_expirpvp,
-					time_now = time_now,
 				), (
 					enemy_data.poi,
 					enemy_data.id_server

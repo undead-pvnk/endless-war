@@ -84,7 +84,6 @@ async def enlist(cmd):
 	time_now = int(time.time())
 	bans = user_data.get_bans()
 	vouchers = user_data.get_vouchers()
-	user_is_pvp = (user_data.time_expirpvp > time_now)
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're dead, bitch."
@@ -125,7 +124,6 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_killers
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_enlist, True)
 			for faction in vouchers:
 				user_data.unvouch(faction)
 			user_data.persist()
@@ -152,7 +150,7 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_rowdys
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_enlist, True)
+			
 			for faction in vouchers:
 				user_data.unvouch(faction)
 			user_data.persist()
@@ -217,7 +215,6 @@ async def enlist(cmd):
 				user_data.life_state = ewcfg.life_state_enlisted
 				user_data.faction = ewcfg.faction_slimecorp
 				user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_enlist)
 				user_data.persist()
 				await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 			else:
@@ -505,14 +502,7 @@ async def mine(cmd):
 			if was_levelup:
 				response += levelup_response
 
-			was_pvp = user_data.time_expirpvp > time_now
-			# Flag the user for PvP
-			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-			# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, enlisted)
-			# 
 			user_data.persist()
-			# if not was_pvp:
-			# 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 			if printgrid:
 				await print_grid(cmd)
@@ -860,18 +850,7 @@ async def scavenge(cmd):
 
 			user_data.time_lastscavenge = time_now
 
-			was_pvp = user_data.time_expirpvp > time_now
-
-			# Flag the user for PvP
-			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-			
-			user_poi = ewcfg.id_to_poi.get(user_data.poi)
-			if user_poi.is_district:
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_scavenge, enlisted)
-
 			user_data.persist()
-			if not was_pvp:
-				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 			if not response == "":
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

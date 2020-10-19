@@ -533,8 +533,7 @@ def score_map_from(
 def path_to(
 	poi_start = None,
 	poi_end = None,
-	user_data = None,
-	safe_path = None
+	user_data = None
 ):
 	#ewutils.logMsg("beginning pathfinding")
 	score_golf = math.inf
@@ -573,8 +572,6 @@ def path_to(
 		if path is not None:
 			step_last = path.steps[-1]
 			score_current = score_map.get(step_last.id_poi)
-			if safe_path == True and (step_last.is_street or step_last.is_outskirts):
-				continue
 			if path.cost >= score_current:
 				continue
 			if user_data.life_state != ewcfg.life_state_corpse and (poi_end and poi_end.id_poi != step_last.id_poi == ewcfg.poi_id_thesewers):
@@ -792,8 +789,6 @@ async def descend(cmd):
 			user_data.poi = ewcfg.poi_id_thevoid
 			user_data.time_lastenter = int(time.time())
 
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, user_data.life_state == ewcfg.life_state_enlisted)
-			
 			user_data.persist()
 			ewutils.end_trade(user_data.id_user)
 			await ewrolemgr.updateRoles(client = ewutils.get_client(), member = cmd.message.author)
@@ -816,10 +811,6 @@ async def descend(cmd):
 	Player command to move themselves from one place to another.
 """
 async def move(cmd = None, isApt = False):
-	
-	safe_path = False
-	if cmd.tokens[0] == ewcfg.cmd_move_alt4 or cmd.tokens[0] == ewcfg.cmd_move_alt5:
-		safe_path = True
 
 	player_data = EwPlayer(id_user=cmd.message.author.id)
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=player_data.id_server, data_level=1)
@@ -906,18 +897,14 @@ async def move(cmd = None, isApt = False):
 		path = path_to(
 			poi_start = poi_current.id_poi,
 			poi_end = target_name,
-			user_data = user_data,
-			safe_path = safe_path
+			user_data = user_data
 		)
 
 		if path != None:
 			path.cost = int(path.cost / user_data.move_speed)
 
 	if path == None:
-		if safe_path == True:
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "It's too dangerous to get there just by {}-ing.".format(cmd.tokens[0])))
-		else:
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't know how to get there."))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't know how to get there."))
 	if isApt:
 		path.cost += 20
 	global move_counter
@@ -993,17 +980,9 @@ async def move(cmd = None, isApt = False):
 
 			return
 
-
-
 		user_data.poi = poi.id_poi
 		user_data.time_lastenter = int(time.time())
 
-
-
-		if user_data.poi in ewcfg.vulnerable_districts:
-			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
-		
 		user_data.persist()
 
 		ewutils.end_trade(user_data.id_user)
@@ -1112,10 +1091,6 @@ async def move(cmd = None, isApt = False):
 
 					user_data.poi = poi_current.id_poi
 					user_data.time_lastenter = int(time.time())
-
-					if user_data.poi in ewcfg.vulnerable_districts:
-						enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-						user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
 
 					user_data.persist()
 
@@ -1276,10 +1251,6 @@ async def teleport(cmd):
 			user_data.poi = poi.id_poi
 			user_data.time_lastenter = int(time.time())
 
-			if user_data.poi in ewcfg.vulnerable_districts:
-				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
-			
 			user_data.persist()
 
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
@@ -1995,10 +1966,6 @@ async def slap(cmd):
 			target_data.poi = dest_poi_obj.id_poi
 			user_data.time_lastenter = int(time.time())
 
-			if target_data.poi in ewcfg.vulnerable_districts:
-				enlisted = True if target_data.life_state == ewcfg.life_state_enlisted else False
-				target_data.time_expirpvp = ewutils.calculatePvpTimer(target_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
-
 			mutation_data.data = str(time_now)
 			mutation_data.persist()
 
@@ -2153,7 +2120,7 @@ async def one_eye_dm(id_user=None, id_server=None, poi=None):
 
 	id_player = EwPlayer(id_user=id_user, id_server=id_server)
 
-	if poi_obj.is_street == True:
+	if poi_obj.pvp:
 		try:
 			recipients = ewutils.execute_sql_query(
 				"SELECT {id_user} FROM mutations WHERE {id_server} = %s AND {mutation} = %s and {data} = %s".format(
@@ -2286,4 +2253,79 @@ async def clockin(cmd):
 
 			await ewutils.send_message(cmd.client, ewutils.get_channel(server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
 
+async def flush_subzones(cmd):
+	member = cmd.message.author
+	
+	if not member.guild_permissions.administrator:
+		return
+	
+	subzone_to_mother_districts = {}
+
+	for poi in ewcfg.poi_list:
+		if poi.is_subzone:
+			subzone_to_mother_districts[poi.id_poi] = poi.mother_districts
+
+	for subzone in subzone_to_mother_districts:
+		mother_districts = subzone_to_mother_districts.get(subzone)
+		
+		used_mother_district = mother_districts[0]
+		
+		ewutils.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
+			id_owner = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server
+		), (
+			used_mother_district,
+			subzone,
+			cmd.guild.id
+		))
+
+		subzone_data = EwDistrict(district = subzone, id_server = cmd.guild.id)
+		district_data = EwDistrict(district = used_mother_district, id_server = cmd.guild.id)
+
+		district_data.change_slimes(n = subzone_data.slimes)
+		subzone_data.change_slimes(n = -subzone_data.slimes)
+
+		district_data.persist()
+		subzone_data.persist()
+
+async def flush_streets(cmd):
+
+	member = cmd.message.author
+	
+	if not member.guild_permissions.administrator:
+		return
+
+	for poi in ewcfg.poi_list:
+		if poi.is_street:
+
+			street_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
+
+			players = street_data.get_players_in_district()
+			for player in players:
+				user_data = EwUser(id_user=player, id_server=cmd.guild.id)
+				user_data.poi = ewcfg.poi_id_juviesrow
+				user_data.persist()
+				member = cmd.guild.get_member(player)
+				await ewrolemgr.updateRoles(client=cmd.client, member=member)
+
+			ewutils.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
+				id_owner = ewcfg.col_id_user,
+				id_server = ewcfg.col_id_server
+			), (
+				poi.father_district,
+				poi.id_poi,
+				cmd.guild.id
+			))
+
+			district_data = EwDistrict(district = poi.father_district, id_server = cmd.guild.id)
+
+			district_data.change_slimes(n = street_data.slimes)
+			street_data.change_slimes(n = -street_data.slimes)
+
+			district_data.persist()
+			street_data.persist()
+
+			ewutils.logMsg("Cleared {}.".format(poi.id_poi))
+
+	ewutils.logMsg("Finished flushing streets.")
 

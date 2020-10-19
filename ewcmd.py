@@ -1025,14 +1025,6 @@ async def thrash(cmd):
 
 	if (user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_kingpin) and user_data.faction == ewcfg.faction_rowdys:
 		
-		# time_now = time.time()
-		# was_pvp = user_data.time_expirpvp > time_now
-		# 
-		# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_pride)
-		# user_data.persist()
-		# 
-		# if not was_pvp:
-		# 	await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 		response = '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_rowdyfucker + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rowdyfucker + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf
 		await ewutils.send_response(response, cmd)
 
@@ -1044,14 +1036,6 @@ async def dab(cmd):
 
 	if (user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_kingpin) and user_data.faction == ewcfg.faction_killers:
 		
-		# time_now = time.time()
-		# was_pvp = user_data.time_expirpvp > time_now
-		# 
-		# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_pride)
-		# user_data.persist()
-		# 
-		# if not was_pvp:
-		# 	await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 		response = '\n'  + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + '\n' + ewcfg.emote_copkiller  + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_copkiller + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck
 		await ewutils.send_response(response, cmd)
 
@@ -1307,7 +1291,7 @@ async def map(cmd):
 	Link to the subway map
 """
 async def transportmap(cmd):
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Map of the subway: https://cdn.discordapp.com/attachments/431237299137675297/734152135687798874/streets13.png\nPlease note that there also exists a **blimp** that goes between Dreadford and Assault Flats Beach, as well as a **ferry** that goes between Wreckington and Vagrant's Corner."))
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Map of the subway: https://cdn.discordapp.com/attachments/431238867459375145/570392908780404746/t_system_final_stop_telling_me_its_wrong_magicks.png\nPlease note that there also exists a **blimp** that goes between Dreadford and Assault Flats Beach, as well as a **ferry** that goes between Wreckington and Vagrant's Corner."))
 
 
 """
@@ -1606,23 +1590,6 @@ async def piss(cmd):
 				if target_user_data.life_state == ewcfg.life_state_corpse:
 					response = "You piss right through them! Their ghostly form ripples as the stream of urine pours endlessly unto them."
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				
-				#if user_data.sap < ewcfg.sap_spend_piss:
-				#	response = "You don't have enough liquid sap to !piss..."
-				#else:
-				#sap_damage_target = min(ewcfg.sap_crush_piss, target_user_data.hardened_sap)
-				#target_user_data.hardened_sap -= sap_damage_target
-				#target_user_data.persist()
-				
-				#user_data.sap -= ewcfg.sap_spend_piss
-				#user_data.limit_fix()
-				#enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-				
-				#user_poi = ewcfg.id_to_poi.get(user_data.poi)
-				#user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, enlisted)
-				#user_data.persist()
-				
-				#await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				
 				response = "You piss HARD and FAST right onto {}!!".format(target_member.display_name)
 			else:
@@ -2006,9 +1973,9 @@ async def push(cmd):
 	elif targetmodel.life_state == ewcfg.life_state_corpse:
 		response = "You try to give ol' {} a shove, but they're a bit too dead to be taking up physical space.".format(target.display_name)
 
-	elif time_now > targetmodel.time_expirpvp:
+	#elif time_now > targetmodel.time_expirpvp:
 		# Target is not flagged for PvP.
-		response = "{} is not mired in the ENDLESS WAR right now.".format(target.display_name)
+	#	response = "{} is not mired in the ENDLESS WAR right now.".format(target.display_name)
 
 	elif (ewcfg.mutation_id_bigbones in target_mutations or ewcfg.mutation_id_fatchance in target_mutations) and (ewcfg.mutation_id_lightasafeather not in target_mutations and ewcfg.mutation_id_airlock not in target_mutations):
 		response = "You try to push {}, but they're way too heavy. It's always fat people, constantly trying to prevent your murderous schemes.".format(target.display_name)
@@ -2055,11 +2022,6 @@ async def push(cmd):
 		die_resp = targetmodel.die(cause = ewcfg.cause_cliff)
 		targetmodel.persist()
 
-		# Flag the user for PvP
-		enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-		
-		user_poi = ewcfg.id_to_poi.get(user_data.poi)
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, enlisted)
 		user_data.persist()
 
 		await ewrolemgr.updateRoles(client = cmd.client, member = target)
@@ -2277,43 +2239,6 @@ async def purify(cmd):
 		response = "Purify yourself how? With what? Your own piss?"
 		
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-
-async def flush_subzones(cmd):
-	member = cmd.message.author
-	
-	if not member.guild_permissions.administrator:
-		return
-	
-	subzone_to_mother_districts = {}
-
-	for poi in ewcfg.poi_list:
-		if poi.is_subzone:
-			subzone_to_mother_districts[poi.id_poi] = poi.mother_districts
-
-
-	for subzone in subzone_to_mother_districts:
-		mother_districts = subzone_to_mother_districts.get(subzone)
-		
-		used_mother_district = mother_districts[0]
-		
-		ewutils.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
-			id_owner = ewcfg.col_id_user,
-			id_server = ewcfg.col_id_server
-		), (
-			used_mother_district,
-			subzone,
-			cmd.guild.id
-		))
-
-		subzone_data = EwDistrict(district = subzone, id_server = cmd.guild.id)
-		district_data = EwDistrict(district = used_mother_district, id_server = cmd.guild.id)
-
-		district_data.change_slimes(n = subzone_data.slimes)
-		subzone_data.change_slimes(n = -subzone_data.slimes)
-
-		district_data.persist()
-		subzone_data.persist()
 	
 async def wrap(cmd):
 	

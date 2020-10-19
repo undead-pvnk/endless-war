@@ -1691,15 +1691,6 @@ async def duel(cmd):
 			
 		response = "{}***DRAW!***{}".format(ewcfg.emote_slimegun, ewcfg.emote_slimegun)
 		await ewutils.send_message(cmd.client, cmd.message.channel, response)
-		challenger = EwUser(member=author)
-		challengee = EwUser(member=member)
-		
-		# start the duel
-		challenger.time_expirpvp = ewutils.calculatePvpTimer(challenger.time_expirpvp, ewcfg.time_pvp_duel)
-		challengee.time_expirpvp = ewutils.calculatePvpTimer(challengee.time_expirpvp, ewcfg.time_pvp_duel)
-
-		challenger.persist()
-		challengee.persist()
 
 		await ewrolemgr.updateRoles(client=cmd.client, member=author)
 		await ewrolemgr.updateRoles(client=cmd.client, member=member)
@@ -1728,16 +1719,12 @@ async def duel(cmd):
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			challengee = EwUser(member=member)
 
-			challengee.time_expirpvp -= duel_timer
-
 		elif challengee.slimes <= 0:
 			# challengee lost
 			response = "**{} has won the duel!!**".format(author.display_name).replace("@","\{at\}")
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			challenger = EwUser(member=author)
 
-			challenger.time_expirpvp -= duel_timer
-		
 		else:
 			# timer stall
 			response = "**Neither dueler was bloodthirsty enough to finish the job in time! The duel is over!**"
@@ -2071,7 +2058,7 @@ async def skat(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	user_data = EwUser(member=cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.id_server)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():

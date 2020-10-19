@@ -207,7 +207,7 @@ class EwEffectContainer:
 	weapon_item = None
 	time_now = 0
 	bystander_damage = 0
-	miss_mod = 0
+	hit_chance_mod = 0
 	crit_mod = 0
 	#sap_damage = 0
 	#sap_ignored = 0
@@ -235,7 +235,7 @@ class EwEffectContainer:
 		weapon_item = None,
 		time_now = 0,
 		bystander_damage = 0,
-		miss_mod = 0,
+		hit_chance_mod = 0,
 		crit_mod = 0,
 		#sap_damage = 0,
 		#sap_ignored = 0,
@@ -250,7 +250,7 @@ class EwEffectContainer:
 		self.weapon_item = weapon_item
 		self.time_now = time_now
 		self.bystander_damage = bystander_damage
-		self.miss_mod = miss_mod
+		self.hit_chance_mod = hit_chance_mod
 		self.crit_mod = crit_mod
 		#self.sap_damage = sap_damage
 		#self.sap_ignored = sap_ignored
@@ -261,6 +261,7 @@ def canAttack(cmd, amb_switch = 0):
 	time_now = int(time_now_float)
 	user_data = EwUser(member = cmd.message.author)
 	mutations = user_data.get_mutations()
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(id_server=user_data.id_server, district=user_data.poi)
 	weapon_item = None
 	weapon = None
@@ -428,7 +429,7 @@ def canAttack(cmd, amb_switch = 0):
 			# Target is possessing user's weapon
 			response = "{}'s contract forbids you from harming them. You should've read the fine print.".format(member.display_name)
 
-		elif time_now > shootee_data.time_expirpvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user or user_isshambler):
+		elif not poi.pvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user or user_isshambler):
 			# Target is neither flagged for PvP, nor a shambler, nor a ghost inhabiting the player. Player is not a shambler.
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
@@ -501,8 +502,6 @@ def canCap(cmd, capture_type, roomba_loop = 0):
 		#response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 	elif not user_data.poi in ewcfg.capturable_districts:
 		response = "This zone cannot be captured."
-		if poi.is_district == True:
-			response += " To take this district, you need to enter into the streets."
 	elif sidearm != None and sidearm.cooldown + (float(sidearm_item.item_props.get("time_lastattack")) if sidearm_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
 		response = "Your {weapon_name} isn't ready for another {command} yet!".format(weapon_name=sidearm.id_weapon, command=cmd.tokens[0].lower())
 	elif sidearm != None and ewcfg.weapon_class_captcha in sidearm.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower and roomba_loop == 0:
@@ -612,7 +611,7 @@ async def attack(cmd):
 		crit = False
 		strikes = 0
 		bystander_damage = 0
-		miss_mod = 0
+		hit_chance_mod = 0
 		crit_mod = 0
 		dmg_mod = 0
 		#sap_damage = 0
@@ -628,7 +627,7 @@ async def attack(cmd):
 		shootee_status_mods = get_shootee_status_mods(shootee_data, user_data, hitzone)
 
 
-		miss_mod += round(shooter_status_mods['miss'] + shootee_status_mods['miss'], 2)
+		hit_chance_mod += round(shooter_status_mods['hit_chance'] + shootee_status_mods['hit_chance'], 2)
 		crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
 		dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 
@@ -659,7 +658,7 @@ async def attack(cmd):
 		slimes_spent = int(ewutils.slime_bylevel(capped_level) / 30)
 
 		if user_data.weaponskill < 5:
-			miss_mod += (5 - user_data.weaponskill) / 10
+			hit_chance_mod -= (5 - user_data.weaponskill) / 10
 
 		if weapon is None:
 			slimes_damage /= 2  # penalty for not using a weapon, otherwise fists would be on par with other weapons
@@ -725,7 +724,7 @@ async def attack(cmd):
 					shootee_data = shootee_data,
 					time_now = time_now_float,
 					bystander_damage = bystander_damage,
-					miss_mod = miss_mod,
+					hit_chance_mod = hit_chance_mod,
 					crit_mod = crit_mod,
 					#sap_damage = sap_damage,
 					#sap_ignored = sap_ignored,
@@ -882,10 +881,6 @@ async def attack(cmd):
 				was_shot = True
 
 			if was_shot:
-				# Flag the user for PvP
-
-				user_poi = ewcfg.id_to_poi.get(user_data.poi)
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 				resp_cont.add_member_to_update(cmd.message.author)
 
@@ -1254,11 +1249,6 @@ async def attack(cmd):
 					killfeed = 1
 				killfeed_resp_cont.format_channel_response(ewcfg.channel_killfeed, cmd.message.author)
 				killfeed_resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
-
-				# Flag the user for PvP
-
-				user_poi = ewcfg.id_to_poi.get(user_data.poi)
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, True)
 
 				user_data.persist()
 				resp_cont.add_member_to_update(cmd.message.author)
@@ -1763,9 +1753,6 @@ async def spar(cmd):
 
 					weaker_player.time_lastspar = time_now
 
-					# Flag the user for PvP
-					# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_spar, True)
-
 					user_data.persist()
 					sparred_data.persist()
 					# await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -2096,7 +2083,7 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
 	mods = {
 		'dmg': 0,
 		'crit': 0,
-		'miss': 0
+		'hit_chance': 0
 	}
 
 	user_statuses = user_data.getStatusEffects()
@@ -2128,12 +2115,12 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
 				taunter = EwUser(id_user=status_data.source, id_server=user_data.id_server)
 
 				if taunter.slimelevel < user_data.slimelevel:
-					mods['miss'] += round(status_flavor.miss_mod_self / (user_data.slimelevel / taunter.slimelevel), 2)
+					mods['hit_chance'] += round(status_flavor.hit_chance_mod_self / (user_data.slimelevel / taunter.slimelevel), 2)
 				else:
-					mods['miss'] += status_flavor.miss_mod_self
+					mods['hit_chance'] += status_flavor.hit_chance_mod_self
 
 			else: 
-				mods['miss'] += status_flavor.miss_mod_self
+				mods['hit_chance'] += status_flavor.hit_chance_mod_self
 			mods['crit'] += status_flavor.crit_mod_self
 			mods['dmg'] += status_flavor.dmg_mod_self
 
@@ -2145,7 +2132,7 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
 	mods = {
 		'dmg': 0,
 		'crit': 0,
-		'miss': 0
+		'hit_chance': 0
 	}
 
 	user_statuses = user_data.getStatusEffects()
@@ -2164,7 +2151,7 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
 					continue
 
 		if status_flavor is not None:
-			mods['miss'] += status_flavor.miss_mod
+			mods['hit_chance'] += status_flavor.hit_chance_mod
 			mods['crit'] += status_flavor.crit_mod
 			mods['dmg'] += status_flavor.dmg_mod
 
@@ -2222,7 +2209,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	crit = False
 	strikes = 0
 	bystander_damage = 0
-	miss_mod = 0
+	hit_chance_mod = 0
 	crit_mod = 0
 	dmg_mod = 0
 	#sap_damage = 0
@@ -2237,7 +2224,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	shooter_status_mods = get_shooter_status_mods(user_data, enemy_data, hitzone)
 	shootee_status_mods = get_shootee_status_mods(enemy_data, user_data, hitzone)
 
-	miss_mod += round(shooter_status_mods['miss'] + shootee_status_mods['miss'], 2)
+	hit_chance_mod += round(shooter_status_mods['hit_chance'] + shootee_status_mods['hit_chance'], 2)
 	crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
 	dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 
@@ -2250,7 +2237,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	slimes_damage = int(5 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 	
 	if user_data.weaponskill < 5:
-		miss_mod += (5 - user_data.weaponskill) / 10
+		hit_chance_mod -= (5 - user_data.weaponskill) / 10
 
 	# If the player is using a repel, remove the repel, and make the first hit do 99.9% less damage, rounded up.
 	statuses = user_data.getStatusEffects()
@@ -2296,7 +2283,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			shootee_data=enemy_data,
 			time_now=time_now_float,
 			bystander_damage=bystander_damage,
-			miss_mod=miss_mod,
+			hit_chance_mod=hit_chance_mod,
 			crit_mod=crit_mod,
 			#sap_damage=sap_damage,
 			#sap_ignored=sap_ignored,
@@ -2653,11 +2640,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# Enemy kills don't award slime to the kingpin.
 
 	# Persist user data.
-	# Flag the user for PvP
-	if not sandbag_mode:
-
-		user_poi = ewcfg.id_to_poi.get(user_data.poi)
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 	resp_cont.add_member_to_update(cmd.message.author)
 	user_data.persist()
@@ -2739,7 +2721,6 @@ async def dodge(cmd):
 
 	user_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = (target.id if target_data.combatant_type == "player" else target_data.id_enemy))
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You focus on dodging {}'s attacks.".format(target.display_name)
@@ -2797,7 +2778,6 @@ async def taunt(cmd):
 		
 	target_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = cmd.message.author.id)
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You taunt {} into attacking you.".format(target.display_name)
@@ -2851,7 +2831,6 @@ async def aim(cmd):
 
 	user_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = (target.id if target_data.combatant_type == "player" else target_data.id_enemy))
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You aim at {}'s weak spot.".format(target.display_name)
@@ -2999,21 +2978,11 @@ async def spray(cmd):
 		time_now_float = time.time()
 		time_now = int(time_now_float)
 
-		#was_pvp = user_data.time_expirpvp > time_now
-		#user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, enlisted=True)
-
-		user_data.persist()
-		# if not was_pvp:
-		# 	await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-		# 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
-
 		# Get shooting player's info
 		weapon = None
 		weapon_item = None
 		sidearm_viable = 0
 		user_mutations = user_data.get_mutations()
-
-
 
 		#if user_data.sidearm >= 0:
 		#	weapon_item = EwItem(id_item=user_data.sidearm)
@@ -3056,7 +3025,7 @@ async def spray(cmd):
 			crit = False
 			strikes = 0
 			bystander_damage = 0
-			miss_mod = 0
+			hit_chance_mod = 0
 			crit_mod = 0
 			dmg_mod = 0
 			#sap_damage = 0
@@ -3066,7 +3035,7 @@ async def spray(cmd):
 
 			shooter_status_mods = get_shooter_status_mods(user_data, None, None)
 
-			miss_mod += round(shooter_status_mods['miss'], 2)
+			hit_chance_mod += round(shooter_status_mods['hit_chance'], 2)
 			crit_mod += round(shooter_status_mods['crit'], 2)
 			dmg_mod += round(shooter_status_mods['dmg'], 2)
 
@@ -3093,7 +3062,7 @@ async def spray(cmd):
 					shootee_data=None,
 					time_now=time_now,
 					bystander_damage=bystander_damage,
-					miss_mod=miss_mod,
+					hit_chance_mod=hit_chance_mod,
 					crit_mod=crit_mod,
 					#sap_damage=sap_damage,
 					#sap_ignored=sap_ignored,
@@ -3224,9 +3193,8 @@ async def spray(cmd):
 							new_captcha_gun = ewutils.text_to_regional_indicator(direction)
 							response += "\nNext target is {}.".format(new_captcha_gun)
 						weapon_item.persist()
-					father_district_poi = ewcfg.id_to_poi.get(poi.father_district)
-					number_streets = len(ewutils.get_street_list(father_district_poi.id_poi))
-					if district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.limit_influence[father_district_poi.property_class]/number_streets:
+
+					if district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.limit_influence[poi.property_class]:
 						if user_data.faction == ewcfg.faction_rowdys:
 							color = "pink"
 						elif user_data.faction == "slimecorp":
@@ -3234,12 +3202,6 @@ async def spray(cmd):
 						else:
 							color = "purple"
 						response += "\nThe street is awash in a sea of {}. It's hard to imagine where else you could spray down.".format(color)
-					elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > (ewcfg.min_influence[father_district_poi.property_class] + ewcfg.limit_influence[father_district_poi.property_class])/(2 * number_streets):
-						pass
-						response += "\nThe {} have developed a decent grip on this district.".format(user_data.faction)
-					elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.min_influence[father_district_poi.property_class]/number_streets:
-						pass
-						response += "\nThe {} have developed a loose grip on this district.".format(user_data.faction)
 
 			else:
 				if miss:
@@ -3266,10 +3228,6 @@ async def spray(cmd):
 		else:
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-
-
-
-
 async def sanitize(cmd):
 	roomba_loop = 0
 	while 1:
@@ -3282,13 +3240,7 @@ async def sanitize(cmd):
 		time_now_float = time.time()
 		time_now = int(time_now_float)
 
-		# was_pvp = user_data.time_expirpvp > time_now
-		# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, enlisted=True)
-
 		user_data.persist()
-		# if not was_pvp:
-		# 	await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-		# 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
 
 		# Get shooting player's info
 
@@ -3338,7 +3290,7 @@ async def sanitize(cmd):
 
 			strikes = 0
 			bystander_damage = 0
-			miss_mod = 0
+			hit_chance_mod = 0
 			crit_mod = 0
 			dmg_mod = 0
 			# sap_damage = 0
@@ -3348,7 +3300,7 @@ async def sanitize(cmd):
 
 			shooter_status_mods = get_shooter_status_mods(user_data, None, None)
 
-			miss_mod += round(shooter_status_mods['miss'], 2)
+			hit_chance_mod += round(shooter_status_mods['hit_chance'], 2)
 			crit_mod += round(shooter_status_mods['crit'], 2)
 			dmg_mod += round(shooter_status_mods['dmg'], 2)
 
@@ -3375,7 +3327,7 @@ async def sanitize(cmd):
 					shootee_data=None,
 					time_now=time_now,
 					bystander_damage=bystander_damage,
-					miss_mod=miss_mod,
+					hit_chance_mod=hit_chance_mod,
 					crit_mod=crit_mod,
 					# sap_damage=sap_damage,
 					# sap_ignored=sap_ignored,
@@ -3515,8 +3467,6 @@ async def sanitize(cmd):
 							new_captcha_gun = ewutils.text_to_regional_indicator(direction)
 							response += "\nNext target is {}.".format(new_captcha_gun)
 						weapon_item.persist()
-					father_district_poi = ewcfg.id_to_poi.get(poi.father_district)
-					number_streets = len(ewutils.get_street_list(father_district_poi.id_poi))
 
 			else:
 				if miss:

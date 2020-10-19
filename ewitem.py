@@ -1464,15 +1464,21 @@ async def item_use(cmd):
 					item_delete(item.id_item)
 			elif context == ewcfg.item_id_gellphone:
 
-				if item.item_props.get("active") == 'true':
+				if user_data.has_gellphone():
+					gellphones = find_item_all(item_search = ewcfg.item_id_gellphone, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
+
+					for phone in gellphones:
+						phone_data = EwItem(id_item = phone.get('id_item'))
+						phone_data.item_props['active'] = 'false'
+						phone_data.persist()
+
 					response = "You turn off your gellphone."
-					item.item_props['active'] = 'false'
+
 				else:
 					response = "You turn on your gellphone."
 					item.item_props['active'] = 'true'
-					
+					item.persist()
 
-				item.persist()
 					
 			elif context == ewcfg.context_prankitem:
 				item_action = ""
@@ -2319,7 +2325,7 @@ async def longdrop(cmd):
 		response = "You don't have that item."
 	elif dest_poi == None:
 		response = "Never heard of it."
-	elif ewutils.inaccessible(user_data = user_data, poi = dest_poi):
+	elif ewutils.inaccessible(user_data = user_data, poi = dest_poi) or dest_poi.is_street:
 		response = "Your arm hits a wall before it can make the drop off. Shit, probably can't take it over there."
 	elif user_data.poi not in dest_poi.neighbors.keys() and dest_poi.id_poi not in poi.mother_districts:
 		response = "You can't take it that far. What if a bird or car runs into your hand?"
