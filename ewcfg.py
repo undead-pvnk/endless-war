@@ -7890,7 +7890,6 @@ with open(os.path.join('json', 'cosmetic_items.json')) as f:
 			str_unadorn = i['str_unadorn'],
 			str_onbreak = i['str_onbreak'],
 			rarity = i['rarity'],
-			stats = i['stats'],
 			ability = i['ability'],
 			durability = i['durability'],
 			size = i['size'],
