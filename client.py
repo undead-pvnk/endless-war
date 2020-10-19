@@ -260,7 +260,7 @@ cmd_map = {
 	ewcfg.cmd_changelocks: ewapt.manual_changelocks,
 	ewcfg.cmd_setalarm: ewapt.set_alarm,
 	ewcfg.cmd_jam: ewapt.jam,
-	#ewcfg.cmd_checkflag: ewcmd.check_flag,
+	ewcfg.cmd_checkflag: ewcmd.check_flag,
 
 
 	# revive yourself as a juvenile after having been killed.
