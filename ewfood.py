@@ -198,9 +198,9 @@ async def menu(cmd):
 				value *= shambler_multiplier
 
 				if mother_district_data != None:
-					if mother_district_data.all_streets_taken() != "" and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
+					if controlling_faction != "":
 						# prices are halved for the controlling gang
-						if mother_district_data.all_streets_taken() == user_data.faction:
+						if controlling_faction == user_data.faction:
 							value /= 2
 	
 						# and 4 times as much for enemy gangsters
@@ -275,7 +275,7 @@ async def order(cmd):
 
 		shambler_multiplier = 1 #for speakeasy during shambler times
 
-		if district_data.is_degraded() and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
+		if district_data.is_degraded():
 			if poi.id_poi == ewcfg.poi_id_speakeasy:
 				shambler_multiplier = 4
 			else:
