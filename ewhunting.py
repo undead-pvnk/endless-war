@@ -2712,7 +2712,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 	
 		elif enemy_data.ai == ewcfg.enemy_ai_attacker_a:
 			users = ewutils.execute_sql_query(
-				"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({time_expirpvp} > {time_now} OR {life_state} != {life_state_juvenile}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {time_lastenter} ASC".format(
+				"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({slimes} > {safe_slimes} OR {life_state} != {life_state_juvenile}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {time_lastenter} ASC".format(
 					id_user = ewcfg.col_id_user,
 					life_state = ewcfg.col_life_state,
 					time_lastenter = ewcfg.col_time_lastenter,
@@ -2723,8 +2723,8 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 					life_state_kingpin = ewcfg.life_state_kingpin,
 					life_state_juvenile = ewcfg.life_state_juvenile,
 					repel_status = ewcfg.status_repelled_id,
-					time_expirpvp = ewcfg.col_time_expirpvp,
-					time_now = time_now,
+					slimes = ewcfg.col_slimes,
+					safe_slimes = ewcfg.max_safe_slime,
 				), (
 					enemy_data.poi,
 					enemy_data.id_server
@@ -2734,7 +2734,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 	
 		elif enemy_data.ai == ewcfg.enemy_ai_attacker_b:
 			users = ewutils.execute_sql_query(
-				"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({time_expirpvp} > {time_now} OR {life_state} != {life_state_juvenile}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {slimes} DESC".format(
+				"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({slimes} > {safe_slimes} OR {life_state} != {life_state_juvenile}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {slimes} DESC".format(
 					id_user = ewcfg.col_id_user,
 					life_state = ewcfg.col_life_state,
 					slimes = ewcfg.col_slimes,
@@ -2746,8 +2746,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 					life_state_kingpin = ewcfg.life_state_kingpin,
 					life_state_juvenile = ewcfg.life_state_juvenile,
 					repel_status = ewcfg.status_repelled_id,
-					time_expirpvp = ewcfg.col_time_expirpvp,
-					time_now = time_now,
+					safe_slimes = ewcfg.max_safe_slime,
 				), (
 					enemy_data.poi,
 					enemy_data.id_server

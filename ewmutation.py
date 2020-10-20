@@ -356,9 +356,6 @@ async def chemo(cmd):
 		else:
 			price = ewcfg.mutations_map.get(target).tier * 5000
 			user_data.change_slimes(n=-price, source=ewcfg.source_spending)
-			# flag juvies
-			if user_data.life_state == ewcfg.life_state_juvenile:
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_chemo, False)	
 			user_data.persist()
 
 			try:
@@ -375,9 +372,6 @@ async def chemo(cmd):
 				ewutils.logMsg("Failed to clear mutations for user {}.".format(user_data.id_user))
 			response = '"Alright, dearie, let\'s get you purged." You enter a dingy looking operating room, with slime strewn all over the floor. Dr. Dusttrap pulls out a needle the size of your bicep and injects into odd places on your body. After a few minutes of this, you get fatigued and go under.\n\n You wake up and {} is gone. Nice! \nMutation Levels Added:{}/{}'.format(ewcfg.mutations_map.get(target).str_name, user_data.get_mutation_level(), min(user_data.slimelevel, 50))
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			
-			if user_data.life_state == ewcfg.life_state_juvenile:
-				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 async def graft(cmd):
 	user_data = EwUser(member=cmd.message.author)
@@ -422,17 +416,12 @@ async def graft(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		price = ewcfg.mutations_map.get(target).tier * 10000
-		user_data.change_slimes(n=-price, source=ewcfg.source_spending)
-		# flag juvies
-		if user_data.life_state == ewcfg.life_state_juvenile:
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_chemo, False)		
+		user_data.change_slimes(n=-price, source=ewcfg.source_spending)		
 		user_data.persist()
+
 		user_data.add_mutation(id_mutation=target, is_artificial=1)
 		response = ewcfg.mutations_map[target].str_transplant + "\n\nMutation Levels Added:{}/{}".format(user_data.get_mutation_level(), min(user_data.slimelevel, 50))
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
-		if user_data.life_state == ewcfg.life_state_juvenile:
-			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 async def clear_mutations(cmd):
 	user_data = EwUser(member = cmd.message.author)

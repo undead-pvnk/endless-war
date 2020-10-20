@@ -823,10 +823,6 @@ async def award_fish(fisher, cmd, user_data):
 
 		fisher.stop()
 
-		# Flag the user for PvP (juveniles only)
-		if user_data.life_state == ewcfg.life_state_juvenile:
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_fish, False)
-
 		user_data.persist()
 	return response
 

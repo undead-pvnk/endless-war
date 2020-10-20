@@ -325,13 +325,11 @@ async def reap(cmd):
 						response += "\n\n" + levelup_response
 
 					user_data.hunger += ewcfg.hunger_perfarm
-					# flag juvies
-					if user_data.life_state == ewcfg.life_state_juvenile:
-						user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_farm, False)
 					user_data.persist()
 
 					farm.time_lastsow = 0  # 0 means no seeds are currently planted
 					farm.persist()
+					
 					# gangsters don't need their roles updated
 					if user_data.life_state == ewcfg.life_state_juvenile:
 						await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)

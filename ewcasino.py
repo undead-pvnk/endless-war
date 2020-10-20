@@ -151,6 +151,9 @@ async def pachinko(cmd):
 
 	# Send the response to the player.
 	await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+	# gangsters don't need their roles updated
+	if user_data.life_state == ewcfg.life_state_juvenile:
+		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 
 async def craps(cmd):
@@ -282,6 +285,9 @@ async def craps(cmd):
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# gangsters don't need their roles updated
+	if user_data.life_state == ewcfg.life_state_juvenile:
+		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 async def slots(cmd):
 	resp = await ewcmd.start(cmd = cmd)
@@ -466,6 +472,9 @@ async def slots(cmd):
 
 	# Send the response to the player.
 	await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+	# gangsters don't need their roles updated
+	if user_data.life_state == ewcfg.life_state_juvenile:
+		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 async def roulette(cmd):
 	resp = await ewcmd.start(cmd = cmd)
@@ -674,6 +683,9 @@ async def roulette(cmd):
 
 	# Send the response to the player.
 	await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+	# gangsters don't need their roles updated
+	if user_data.life_state == ewcfg.life_state_juvenile:
+		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 async def baccarat(cmd):
 	resp = await ewcmd.start(cmd = cmd)
@@ -1317,6 +1329,9 @@ async def baccarat(cmd):
 
 				user_data.persist()
 				await ewutils.edit_message(cmd.client, resp_f, ewutils.formatMessage(cmd.message.author, response))
+				# gangsters don't need their roles updated
+				if user_data.life_state == ewcfg.life_state_juvenile:
+					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 		else:
 			response = "Specify how much {} you will wager.".format(currency_used)
