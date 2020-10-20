@@ -260,7 +260,7 @@ cmd_map = {
 	ewcfg.cmd_changelocks: ewapt.manual_changelocks,
 	ewcfg.cmd_setalarm: ewapt.set_alarm,
 	ewcfg.cmd_jam: ewapt.jam,
-	#ewcfg.cmd_checkflag: ewcmd.check_flag,
+	ewcfg.cmd_checkflag: ewcmd.check_flag,
 
 
 	# revive yourself as a juvenile after having been killed.
@@ -1110,6 +1110,22 @@ async def on_ready():
 			except:
 				ewutils.logMsg('Twitch handler hit an exception (continuing): {}'.format(json_string))
 				traceback.print_exc(file = sys.stdout)
+
+		# Clear PvP roles from juveniles who are no longer flagged.
+		if (time_now - time_last_pvp) >= ewcfg.update_pvp:
+			time_last_pvp = time_now
+
+			try:
+				for server in client.guilds:
+					juviepvp = ewrolemgr.EwRole(id_server = server.id, name = ewcfg.role_juvenile_pvp)
+					role = server.get_role(juviepvp.id_role)
+
+					# Monitor all user roles and update if a user is no longer flagged for PvP.
+					for member in role.members:
+						await ewrolemgr.updateRoles(client = client, member = member)
+
+			except:
+				ewutils.logMsg('An error occurred in the scheduled role update task')
 		
 		# Adjust the exchange rate of slime for the market.
 		try:

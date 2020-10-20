@@ -7,9 +7,6 @@
         "str_unadorn": "",
         "str_onbreak": "Your hat takes a hit, detatching the propeller and sending it twirling into the stratosphere. Looks like you'll never see it again.",
         "rarity": "Plebeian",
-        "stats": {
-            "speed": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 1,
@@ -31,9 +28,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": 2
-        },
         "ability": "lucky",
         "durability": 5000000,
         "size": 2,
@@ -55,10 +49,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1,
-            "defense": 1
-        },
         "ability": "",
         "durability": 3750000.0,
         "size": 0,
@@ -81,9 +71,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": -2
-        },
         "ability": "",
         "durability": 1250000.0,
         "size": 0,
@@ -106,10 +93,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1,
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -131,10 +114,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1,
-            "speed": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -156,9 +135,6 @@
         "str_unadorn": "",
         "str_onbreak": "You hat is torn to shreds. Welp, no more shivering timbers.",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -180,9 +156,6 @@
         "str_unadorn": "You remove your eyepatch to reveal the grisly wound benea- wait. Your eye is just fine! What kind of pathetic pirate LARPer did you turn out to be?",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -204,10 +177,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 3,
-            "defense": -1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -229,9 +198,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "speed": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -253,9 +219,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -277,9 +240,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -301,9 +261,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -326,9 +283,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -351,9 +305,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -375,11 +326,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": -1,
-            "defense": 2,
-            "speed": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -401,9 +347,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -425,10 +368,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 2,
-            "speed": 1
-        },
         "ability": "",
         "durability": 3750000.0,
         "size": 0,
@@ -450,11 +389,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 2,
-            "defense": -1,
-            "speed": 3
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -477,9 +411,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -501,10 +432,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 2,
-            "speed": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -526,9 +453,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "speed": 3
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -550,9 +474,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -574,10 +495,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 2,
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -599,10 +516,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 2,
-            "speed": -1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -624,10 +537,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1,
-            "defense": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -650,9 +559,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -674,11 +580,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 3,
-            "defense": -2,
-            "speed": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -700,9 +601,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -724,10 +622,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": 1,
-            "speed": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -749,11 +643,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1,
-            "defense": 3,
-            "speed": -2
-        },
         "ability": "",
         "durability": 5000000,
         "size": 2,
@@ -775,11 +664,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1,
-            "defense": 1,
-            "speed": 1
-        },
         "ability": "",
         "durability": 0,
         "size": 0,
@@ -801,9 +685,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "speed": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -825,9 +706,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -849,10 +727,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 2,
-            "speed": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -875,9 +749,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -899,9 +770,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -923,11 +791,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Patrician",
-        "stats": {
-            "attack": 4,
-            "defense": 6,
-            "speed": -4
-        },
         "ability": "",
         "durability": 10000000,
         "size": 2,
@@ -950,9 +813,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Patrician",
-        "stats": {
-            "attack": 4
-        },
         "ability": "",
         "durability": 10000000,
         "size": 0,
@@ -975,10 +835,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Patrician",
-        "stats": {
-            "attack": 3,
-            "defense": 1
-        },
         "ability": "",
         "durability": 10000000,
         "size": 0,
@@ -1001,11 +857,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Patrician",
-        "stats": {
-            "attack": 2,
-            "defense": 2,
-            "speed": 2
-        },
         "ability": "",
         "durability": 10000000,
         "size": 0,
@@ -1028,9 +879,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Patrician",
-        "stats": {
-            "speed": 4
-        },
         "ability": "",
         "durability": 10000000,
         "size": 0,
@@ -1053,9 +901,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1077,10 +922,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1,
-            "speed": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1102,9 +943,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "speed": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1126,11 +964,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 6,
-            "defense": -2,
-            "speed": -1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1152,9 +985,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "attack": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1174,9 +1004,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1196,9 +1023,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1218,9 +1042,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1240,10 +1061,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "defense": 2,
-            "speed": -1
-        },
         "ability": "",
         "durability": 3750000.0,
         "size": 0,
@@ -1263,9 +1080,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "attack": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1285,10 +1099,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "attack": 3,
-            "defense": -3
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1308,9 +1118,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "speed": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1330,9 +1137,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "attack": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1352,11 +1156,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "attack": 1,
-            "defense": 1,
-            "speed": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1376,10 +1175,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "attack": 1,
-            "defense": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1399,11 +1194,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "attack": 1,
-            "defense": 1,
-            "speed": -1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1423,9 +1213,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "speed": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1445,10 +1232,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "attack": 1,
-            "defense": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1468,11 +1251,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "attack": 3,
-            "defense": 3,
-            "speed": 3
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1494,9 +1272,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "defense": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1516,9 +1291,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1538,9 +1310,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "attack": 3
-        },
         "ability": "",
         "durability": 5000000,
         "size": 0,
@@ -1560,10 +1329,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "defense": 1,
-            "speed": 2
-        },
         "ability": "",
         "durability": 5000000,
         "size": 0,
@@ -1583,11 +1348,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "",
-        "stats": {
-            "defense": 1,
-            "speed": 1,
-            "attack": 1
-        },
         "ability": "",
         "durability": 5000000,
         "size": 0,
@@ -1607,9 +1367,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1631,7 +1388,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Double Halloween",
-        "stats": {},
         "ability": "",
         "durability": 0,
         "size": 0,
@@ -1651,9 +1407,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1673,9 +1426,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Patrician",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1698,9 +1448,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1722,11 +1469,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1,
-            "defense": 2,
-            "speed": -1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1746,10 +1488,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1,
-            "speed": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1771,10 +1509,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1,
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1797,11 +1531,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Swilldermuk",
-        "stats": {
-            "attack": 1,
-            "defense": 1,
-            "speed": 1
-        },
         "ability": "",
         "durability": 10000000,
         "size": 0,
@@ -1821,9 +1550,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Patrician",
-        "stats": {
-            "attack": 3
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1846,9 +1572,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1868,10 +1591,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1,
-            "speed": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1893,9 +1612,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1915,11 +1631,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1,
-            "defense": 1,
-            "speed": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1939,9 +1650,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1961,10 +1669,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1,
-            "defense": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -1984,9 +1688,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": 2
-        },
         "ability": "",
         "durability": 3750000.0,
         "size": 0,
@@ -2006,9 +1707,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -2028,11 +1726,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": -1,
-            "defense": -1,
-            "speed": -1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -2052,10 +1745,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 2,
-            "speed": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -2077,11 +1766,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 2,
-            "defense": -2,
-            "speed": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -2101,9 +1785,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -2123,10 +1804,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": -1,
-            "defense": 2
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -2146,9 +1823,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -2168,9 +1842,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -2190,9 +1861,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -2214,9 +1882,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "attack": -10
-        },
         "ability": "",
         "durability": 100,
         "size": 0,
@@ -2238,9 +1903,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 2500000,
         "size": 0,
@@ -2260,9 +1922,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Patrician",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 5000000,
         "size": 0,
@@ -2284,9 +1943,6 @@
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Patrician",
-        "stats": {
-            "defense": 1
-        },
         "ability": "",
         "durability": 5000000,
         "size": 0,
@@ -2308,11 +1964,6 @@
         "str_unadorn": "You unfasten the belts and straps on your rollerblades.",
         "str_onbreak": "Your rollerblades break down! Time to make a break for it on foot!",
         "rarity": "Patrician",
-        "stats": {
-            "attack": -5,
-            "defense": -10,
-            "speed": 10
-        },
         "ability": "boost",
         "durability": 250000,
         "size": 0,

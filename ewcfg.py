@@ -1811,20 +1811,21 @@ cd_gvs_searchforbrainz = 300
 time_to_manifest = 24 * 60 * 60 # a day
 
 # PvP timer pushouts
-time_pvp_kill = 30 * 60
-time_pvp_attack = 10 * 60
+time_pvp_kill = 30 * 60 # NOT USED
+time_pvp_attack = 10 * 60 # NOT USED
 time_pvp_annex = 10 * 60 # NOT USED
-time_pvp_mine = 1 * 60 # NOT USED
-time_pvp_withdraw = 30 * 60
-time_pvp_scavenge = 3 * 60
-time_pvp_fish = 5 * 60 # NOT USED
-time_pvp_farm = 10 * 60 # NOT USED
+time_pvp_mine = 5 * 60 
+time_pvp_withdraw = 30 * 60 # NOT USED
+time_pvp_scavenge = 10 * 60 
+time_pvp_fish = 10 * 60	
+time_pvp_farm = 30 * 60 
+time_pvp_chemo = 10 * 60 
 time_pvp_spar = 5 * 60 # NOT USED
-time_pvp_enlist = 5 * 60 
+time_pvp_enlist = 5 * 60 # NOT USED
 time_pvp_knock = 1 * 60 #temp fix. will probably add spam prevention or something funny like restraining orders later
-time_pvp_duel = 3 * 60
+time_pvp_duel = 3 * 60 # NOT USED
 time_pvp_pride = 1 * 60 # NOT USED
-time_pvp_vulnerable_districts = 1 * 60
+time_pvp_vulnerable_districts = 1 * 60 # NOT USED
 
 # time to get kicked out of subzone. 
 time_kickout = 60 * 60  # 1 hour
@@ -7870,7 +7871,6 @@ with open(os.path.join('json', 'cosmetic_items.json')) as f:
 			str_unadorn = i['str_unadorn'],
 			str_onbreak = i['str_onbreak'],
 			rarity = i['rarity'],
-			stats = i['stats'],
 			ability = i['ability'],
 			durability = i['durability'],
 			size = i['size'],
@@ -12727,7 +12727,7 @@ help_responses = {
 	"multiple-hit": "**Multiple hit weapons** include the **SMG**, **Assault Rifle**, and the **Nunchuck**. They deal three attacks per kill command with an overall cost modifier of 80%, and each attack has a 40% damage modifier, 20% crit chance, a crit multiplier of 150%, and an 85% chance to hit. These are very safe reliable weapons, though they deal slightly below average damage on average.",
 	"variable-damage": "**Variable damage weapons** include the **Nailbat**, **Bass**, and the **Brass Knuckles**. They have a randomised damage modifier between 50% and 250%, no cost modifier, 10% crit chance, a crit multiplier of 150%, and a 90% chance to hit. On average, these weapons deal pretty good damage for a very reasonable attack cost, but their unreliability can make them quite risky to use.",
 	"small-game": "**Small game weapons** include the **Knives** and the **Minecraft Bow**. They have a damage modifier of 50%, a cost modifier of 25%, 10% crit chance, a crit multiplier of 200%, and a 95% chance to hit. These are reliable and underpowered weapons, with extremely low usage costs making them very efficient. Best used for bullying weaklings and hunting.",
-	"heavy": "**Heavy weapons** include the **Scythe** and the **Broadsword**. They have a damage modifier of 300%, a cost modifier of 500%, 5% crit chance, a crit multiplier of 150%, and an 80% chance to hit. Unreliable and incredibly expensive to compensate for their incredible damage, these weapons are best used when you _really_ want to get that kill, no matter what.",
+	"heavy": "**Heavy weapons** include the **Scythe** and the **Broadsword**. They have a damage modifier of 300%, a cost modifier of 500%, 5% crit chance, a crit multiplier of 150%, and an 80% chance to hit. Unreliable and incredibly expensive to use, to compensate for their very high damage.",
 	"defensive": "**Heavy weapons** currently only include the **Umbrella**. While you have one equipped, you take 25% reduced damage! They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 150%, and an 85% chance to hit, with a captcha of 4. Best used for punching down or protecting yourself while traveling, these weapons are typically too weak and unwieldy for use in normal combat scenarios.",
 	"precision": "**Precision weapons** currently only include the **Katana**. They have a damage modifier of 130%, a cost modifier of 130%, a crit multiplier of 200%, with a captcha of 4. They always hit, and get a guaranteed crit if you have no other weapons equipped. These weapons deal very high and reliably damage, but only if you're willing to bear the burden of their captcha and the lack of flexibility they impose.",
 	"incendiary": "**Incendiary weapons** include the **Molotov Bottles** and the **Dragon Claw**. They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 200%, a 90% chance to hit, and a captcha of 4. You will take 10% to 15% of your slime as damage if you enter the captcha wrong! They also deal an extra 50% damage to the target and any flagged enemies in the area over time, causing them to explode on death. A more powerful alternative to explosive weapons, if you can deal with the damage being dealt over time, rather than on one go.",
@@ -12735,9 +12735,9 @@ help_responses = {
 
 	weapon_id_revolver: "**The revolver** is a normal weapon for sale at the Dojo. It's an ordinary six-shot revolver, so you'll have to **!reload** it after attacking six times, though its attack cost is reduced to 80% to compensate. Goes well with a cowboy hat.",
 	weapon_id_dualpistols: "**The dual pistols** are a normal weapon for sale at the Dojo. Shockingly, these aren't that common, despite the city being chock-full of gangsters.",
-	weapon_id_shotgun: "**The shotgun** is a heavy weapon for sale at the Dojo. It's a double barrelled shotgun, so you'll need to !reload after every two shots, though your cost multiplier is reduced down to 400% to compensate. Grass grows, birds fly, sun shines, and this thing hurts people; _it's a force of nature_.",
-	weapon_id_rifle: "**The rifle** is a multiple-hit weapon for sale at the Dojo. Its magazine only holds enough boolets for ten attacks, so you'll have to **!reload** after hitting the throttle limit, but its cost multiplier goes down to 70% to compensate. The experts are still undecided, but most people would agree this is a FAMAS.",
-	weapon_id_smg: "**The SMG** is a multiple hit-weapon for sale at the Dojo. Its magazine only holds enough boolets for ten attacks, so you'll have to **!reload** after hitting the throttle limit, but its cost multiplier goes down to 70% to compensate. This is pretty good if you like to move around a lot, since the crosshair doesn't grow that much while you're sprinting.",
+	weapon_id_shotgun: "**The shotgun** is a heavy weapon for sale at the Dojo. It's a double barrelled shotgun, so you'll need to !reload after every two shots, though your cost multiplier is reduced down to 400% to compensate. Grass grows, birds fly, sun shines, and this thing hurts people; it's a force of nature.",
+	weapon_id_rifle: "**The rifle** is a multiple-hit weapon for sale at the Dojo. Its magazine only holds enough bullets for ten attacks, so you'll have to **!reload** after hitting the rate limit, but its cost multiplier goes down to 70% to compensate. The experts are still undecided, but most people would agree this is a FAMAS.",
+	weapon_id_smg: "**The SMG** is a multiple hit-weapon for sale at the Dojo. Its magazine only holds enough bullets for ten attacks, so you'll have to **!reload** after hitting the rate limit, but its cost multiplier goes down to 70% to compensate. This is pretty good if you like to move around a lot, since the crosshair doesn't grow that much while you're sprinting.",
 	weapon_id_bat: "**The nailbat** is a variable-damage weapon for sale at the Dojo. This thing could actually be used to hit balls if you took the nails off it, but that seems a little high-tech...",
 	weapon_id_brassknuckles: "**The brass knuckles** are a variable-damage weapon for sale at the Dojo. Made by sanding away most of a huge pair of metal gauntlets.",
 	weapon_id_katana: "**The katana** is a precision weapon for sale at the Dojo. This weapon is folded over a thousand times, so it can cut clean through steel and is vastly superior to any other weapon on earth.",
