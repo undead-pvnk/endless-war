@@ -1811,20 +1811,21 @@ cd_gvs_searchforbrainz = 300
 time_to_manifest = 24 * 60 * 60 # a day
 
 # PvP timer pushouts
-time_pvp_kill = 30 * 60
-time_pvp_attack = 10 * 60
+time_pvp_kill = 30 * 60 # NOT USED
+time_pvp_attack = 10 * 60 # NOT USED
 time_pvp_annex = 10 * 60 # NOT USED
-time_pvp_mine = 1 * 60 # NOT USED
-time_pvp_withdraw = 30 * 60
-time_pvp_scavenge = 3 * 60
-time_pvp_fish = 5 * 60 # NOT USED
-time_pvp_farm = 10 * 60 # NOT USED
+time_pvp_mine = 5 * 60 
+time_pvp_withdraw = 30 * 60 # NOT USED
+time_pvp_scavenge = 10 * 60 
+time_pvp_fish = 10 * 60	
+time_pvp_farm = 30 * 60 
+time_pvp_chemo = 10 * 60 
 time_pvp_spar = 5 * 60 # NOT USED
-time_pvp_enlist = 5 * 60 
+time_pvp_enlist = 5 * 60 # NOT USED
 time_pvp_knock = 1 * 60 #temp fix. will probably add spam prevention or something funny like restraining orders later
-time_pvp_duel = 3 * 60
+time_pvp_duel = 3 * 60 # NOT USED
 time_pvp_pride = 1 * 60 # NOT USED
-time_pvp_vulnerable_districts = 1 * 60
+time_pvp_vulnerable_districts = 1 * 60 # NOT USED
 
 # time to get kicked out of subzone. 
 time_kickout = 60 * 60  # 1 hour

@@ -1290,7 +1290,8 @@
             "cratersville": 60,
             "rowdyroughhouse": 60,
             "smokerscough": 20,
-            "wreckingtonsubwaystation": 20
+            "wreckingtonsubwaystation": 20,
+            "wreckingtonport": 20
         },
         "topic": "A former residential district that's now mostly demolished. Go here if you want to wreck some shit, no one will care.",
         "wikipage": "https://rfck.miraheze.org/wiki/Wreckington"
@@ -1488,7 +1489,8 @@
             "newnewyonkers": 60,
             "oldnewyonkers": 60,
             "thekingswifessonspeakeasy": 20,
-            "vagrantscornersubwaystation": 20
+            "vagrantscornersubwaystation": 20,
+            "vagrantscornerport": 20
         },
         "topic": "Dingy port district and site of innumerable shady back-alley dealings.",
         "wikipage": "https://rfck.miraheze.org/wiki/Vagrant's_Corner"

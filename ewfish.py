@@ -625,6 +625,9 @@ async def reel(cmd):
 		response = "You cast your fishing rod unto a sidewalk. That is to say, you've accomplished nothing. Go to a pier if you want to fish."
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# gangsters don't need their roles updated
+	if user_data.life_state == ewcfg.life_state_juvenile:
+		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 async def award_fish(fisher, cmd, user_data): 
 	response = ""
@@ -819,8 +822,11 @@ async def award_fish(fisher, cmd, user_data):
 				response += levelup_response
 
 		fisher.stop()
-		# Flag the user for PvP
-		enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+
+		# Flag the user for PvP (juveniles only)
+		if user_data.life_state == ewcfg.life_state_juvenile:
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_fish, False)
+
 		user_data.persist()
 	return response
 

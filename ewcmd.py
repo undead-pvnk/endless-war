@@ -3958,10 +3958,10 @@ async def check_flag(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if user_data.time_expirpvp < int(time.time()):
+	if user_data.life_state != ewcfg.life_state_juvenile:
+		response = "https://img.booru.org/rfck//images/2/5c00b9d105d2435546ff6d3d9f545b05650d6631.png"
+	elif user_data.time_expirpvp < int(time.time()):
 		response = "You don't have a flag."
-	elif poi.is_street and abs(user_data.time_expirpvp - int(time.time())) < 60:
-		response = "You're in a street, so the flag's always on."
 	else:
 		response = "You have {:,} seconds left on your flag.".format(abs(user_data.time_expirpvp - int(time.time())))
 
