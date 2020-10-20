@@ -7768,39 +7768,64 @@ for line in transport_lines:
 			poi_data.transport_lines.add(line.id_line)
 
 
+
 landlocked_destinations ={
-    poi_id_maimridge_street_c:poi_id_oozegardens_street_a, #Colloid->Festival
-    poi_id_oozegardens_street_a:poi_id_maimridge_street_c, #Festival->Colloid
-    poi_id_maimridge_street_b:poi_id_cratersville_street_a, #Ski Lodges->End Lines
-    poi_id_cratersville_street_a:poi_id_maimridge_street_b, #End Lines->Ski Lodges
-    poi_id_arsonbrook_street_c:poi_id_cratersville_street_c, #Tilly -> Dynamite
-    poi_id_cratersville_street_c:poi_id_arsonbrook_street_c, #Dynamite->Tilly
-    poi_id_arsonbrook_street_d:poi_id_oozegardens_street_d, #Crassus->Zoo
-    poi_id_oozegardens_street_d:poi_id_arsonbrook_street_d, #Zoo->Crassus
-    poi_id_crookline_street_a:poi_id_newnewyonkers_street_a, #Doxy->Concrete
-    poi_id_newnewyonkers_street_a:poi_id_crookline_street_a, #Concrete->Doxy
-    poi_id_newnewyonkers_street_b:poi_id_crookline_street_b, #Broadway->MacGuffin
-    poi_id_crookline_street_b:poi_id_newnewyonkers_street_b, #MacGuffin->Broadway
-    poi_id_brawlden_street_b:poi_id_southsleezeborough_street_a, #Brownstone->China
-    poi_id_southsleezeborough_street_a:poi_id_brawlden_street_b, #China->Brownstone
-    poi_id_assaultflatsbeach_street_b:poi_id_dreadford_street_b, #Beachfront->Hangem
-    poi_id_dreadford_street_b:poi_id_assaultflatsbeach_street_b, #Hangem->Beachfront
-    poi_id_vagrantscorner_street_a:poi_id_westglocksbury_street_c, #Wharf->Goosh
-    poi_id_westglocksbury_street_c:poi_id_vagrantscorner_street_a,#Goosh->Wharf
-    poi_id_poloniumhill_street_d:poi_id_ferry, #Sawdust->Ferry
-    poi_id_ferry:poi_id_poloniumhill_street_d, #Ferry->Sawdust
-    poi_id_slimesendcliffs:poi_id_poloniumhill_street_c, #Cliffs->Geller
-    poi_id_poloniumhill_street_c:poi_id_slimesendcliffs, #Geller->Cliffs
-    poi_id_wreckington_street_b:poi_id_toxington_street_c,#Scrapyard->Quarantined
-    poi_id_toxington_street_c:poi_id_wreckington_street_b,#Quarantined->Scrapyard
-    poi_id_brawlden_street_a:poi_id_southsleezeborough_street_a, #Abandoned->China
-    poi_id_westglocksbury_street_d:poi_id_vagrantscorner_street_a, #Highway->Wharf
-    poi_id_jaywalkerplain_street_d:poi_id_vagrantscorner_street_a, #Qoute->Wharf
-    poi_id_toxington_street_d:poi_id_ferry, #Carcinogen->Ferry
-    poi_id_dreadford_street_a:poi_id_assaultflatsbeach_street_b, #Scaffold->Beachfront
-    poi_id_charcoalpark_street_a:poi_id_wreckington_street_b, #Church->Scrapyard
-    poi_id_charcoalpark_street_b:poi_id_cratersville_street_a, #Veteran->Endline
+	poi_id_maimridge:poi_id_wreckington,
+	poi_id_wreckington: poi_id_maimridge,
+	poi_id_cratersville:poi_id_arsonbrook,
+	poi_id_arsonbrook:poi_id_cratersville,
+	poi_id_oozegardens:poi_id_brawlden,
+	poi_id_brawlden:poi_id_oozegardens,
+	poi_id_southsleezeborough:poi_id_newnewyonkers,
+	poi_id_newnewyonkers:poi_id_southsleezeborough,
+	poi_id_dreadford:poi_id_assaultflatsbeach,
+	poi_id_assaultflatsbeach:poi_id_dreadford,
+	poi_id_crookline:poi_id_assaultflatsbeach,
+	poi_id_jaywalkerplain:poi_id_vagrantscorner,
+	poi_id_vagrantscorner:poi_id_jaywalkerplain,
+	poi_id_westglocksbury:poi_id_slimesendcliffs,
+	poi_id_slimesendcliffs:poi_id_westglocksbury,
+	poi_id_poloniumhill:poi_id_slimesend,
+	poi_id_slimesend:poi_id_poloniumhill,
+	poi_id_charcoalpark:poi_id_ferry,
+	poi_id_ferry:poi_id_charcoalpark,
+	poi_id_toxington:poi_id_ferry
+
 }
+
+#landlocked_destinations ={
+#    poi_id_maimridge_street_c:poi_id_oozegardens_street_a, #Colloid->Festival
+#    poi_id_oozegardens_street_a:poi_id_maimridge_street_c, #Festival->Colloid
+#    poi_id_maimridge_street_b:poi_id_cratersville_street_a, #Ski Lodges->End Lines
+#    poi_id_cratersville_street_a:poi_id_maimridge_street_b, #End Lines->Ski Lodges
+#    poi_id_arsonbrook_street_c:poi_id_cratersville_street_c, #Tilly -> Dynamite
+#    poi_id_cratersville_street_c:poi_id_arsonbrook_street_c, #Dynamite->Tilly
+#    poi_id_arsonbrook_street_d:poi_id_oozegardens_street_d, #Crassus->Zoo
+#    poi_id_oozegardens_street_d:poi_id_arsonbrook_street_d, #Zoo->Crassus
+#    poi_id_crookline_street_a:poi_id_newnewyonkers_street_a, #Doxy->Concrete
+#    poi_id_newnewyonkers_street_a:poi_id_crookline_street_a, #Concrete->Doxy
+#    poi_id_newnewyonkers_street_b:poi_id_crookline_street_b, #Broadway->MacGuffin
+#    poi_id_crookline_street_b:poi_id_newnewyonkers_street_b, #MacGuffin->Broadway
+#    poi_id_brawlden_street_b:poi_id_southsleezeborough_street_a, #Brownstone->China
+#    poi_id_southsleezeborough_street_a:poi_id_brawlden_street_b, #China->Brownstone
+#    poi_id_assaultflatsbeach_street_b:poi_id_dreadford_street_b, #Beachfront->Hangem
+#    poi_id_dreadford_street_b:poi_id_assaultflatsbeach_street_b, #Hangem->Beachfront
+#    poi_id_vagrantscorner_street_a:poi_id_westglocksbury_street_c, #Wharf->Goosh
+#    poi_id_westglocksbury_street_c:poi_id_vagrantscorner_street_a,#Goosh->Wharf
+#    poi_id_poloniumhill_street_d:poi_id_ferry, #Sawdust->Ferry
+#    poi_id_ferry:poi_id_poloniumhill_street_d, #Ferry->Sawdust
+#    poi_id_slimesendcliffs:poi_id_poloniumhill_street_c, #Cliffs->Geller
+#    poi_id_poloniumhill_street_c:poi_id_slimesendcliffs, #Geller->Cliffs
+#    poi_id_wreckington_street_b:poi_id_toxington_street_c,#Scrapyard->Quarantined
+#    poi_id_toxington_street_c:poi_id_wreckington_street_b,#Quarantined->Scrapyard
+#    poi_id_brawlden_street_a:poi_id_southsleezeborough_street_a, #Abandoned->China
+#    poi_id_westglocksbury_street_d:poi_id_vagrantscorner_street_a, #Highway->Wharf
+#    poi_id_jaywalkerplain_street_d:poi_id_vagrantscorner_street_a, #Qoute->Wharf
+#    poi_id_toxington_street_d:poi_id_ferry, #Carcinogen->Ferry
+#    poi_id_dreadford_street_a:poi_id_assaultflatsbeach_street_b, #Scaffold->Beachfront
+#    poi_id_charcoalpark_street_a:poi_id_wreckington_street_b, #Church->Scrapyard
+#    poi_id_charcoalpark_street_b:poi_id_cratersville_street_a, #Veteran->Endline
+#}
 
 
 

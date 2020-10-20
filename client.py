@@ -1271,7 +1271,7 @@ async def on_ready():
 					ewads.delete_expired_ads(id_server = server.id)
 
 					await ewdistrict.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
-
+					await ewmap.send_gangbase_messages(server.id, market_data.clock)
 					await ewmap.kick(server.id)
 
 					# Post leaderboards at 6am NLACakaNM time.
@@ -1421,11 +1421,13 @@ async def on_message(message):
 				user is a security officer and has cussed
 		"""
 
+
 		#Ignore users with weird characters in their name
-		try:
-			message.author.display_name[:3].encode('utf-8').decode('ascii')
-		except UnicodeError:
-			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "We don't take kindly to moon runes around here."))
+		if message.guild is not None:
+			try:
+				message.author.display_name[:3].encode('utf-8').decode('ascii')
+			except UnicodeError:
+				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "We don't take kindly to moon runes around here."))
 
 		# tokenize the message. the command should be the first word.
 		try:
@@ -1971,7 +1973,6 @@ async def on_message(message):
 			
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'hourforward'):
 			market_data = EwMarket(id_server=message.guild.id)
-			
 			market_data.clock += 1
 			response = "Time has progressed 1 hour forward manually."
 

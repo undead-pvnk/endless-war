@@ -588,7 +588,7 @@ async def waft(cmd):
 		response = "You stink, but not that badly. Get Aposematic Stench before you try that."
 	else:
 		user_data.applyStatus(ewcfg.status_repelled_id)
-		response = "You clench as hard as you can, and your pores excrete a mushroom cloud of pure, olive green musk. It's so caustic you might not have eyebrows anymore. You "
+		response = "You clench as hard as you can, and your pores excrete a mushroom cloud of pure, olive green musk. It's so caustic you might not have eyebrows anymore. You should be immune from monsters, though!"
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

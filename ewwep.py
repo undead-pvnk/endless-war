@@ -516,10 +516,10 @@ def canCap(cmd, capture_type, roomba_loop = 0):
 		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
 	elif sidearm_viable == 0:
 		response = "With what, your piss? Get some paint from Based Hardware and stop fucking around."
-	elif not 3 <= market_data.clock <= 10 and user_data.faction != ewcfg.faction_slimecorp:
-		response = "You can't !spray while all these people are around. The cops are no problem but the street sweepers will fucking kill you."
-	elif not 3 <= market_data.clock <= 10 and user_data.faction == ewcfg.faction_slimecorp:
-		response = 'Your SlimeCorp headset chatters in your ear...\n"SlimeCorp protocol only allows sanitization during hours where federal sanitizers are not at work. Please cease and desist."'
+	#elif not 3 <= market_data.clock <= 10 and user_data.faction != ewcfg.faction_slimecorp:
+	#	response = "You can't !spray while all these people are around. The cops are no problem but the street sweepers will fucking kill you."
+	#elif not 3 <= market_data.clock <= 10 and user_data.faction == ewcfg.faction_slimecorp:
+	#	response = 'Your SlimeCorp headset chatters in your ear...\n"SlimeCorp protocol only allows sanitization during hours where federal sanitizers are not at work. Please cease and desist."'
 
 	return response
 
@@ -2933,7 +2933,7 @@ def damage_mod_cap(user_data, market_data, user_mutations, district_data, weapon
 		damage_mod *= 1.2
 
 	if 3 <= time_current <= 10:
-		damage_mod *= (4 / 3)
+		damage_mod *= 2
 
 	return damage_mod
 

@@ -2329,3 +2329,21 @@ async def flush_streets(cmd):
 
 	ewutils.logMsg("Finished flushing streets.")
 
+async def send_gangbase_messages(server_id, clock):
+	#this can be added onto for events and such
+
+	response = ""
+	if clock == 3:
+		response = "The police are probably asleep, the lazy fucks. It's a good time for painting the town!"
+	elif clock == 11:
+		response = "Spray time's over, looks like the cops are back out. Fuck those guys."
+
+
+	client = ewutils.get_client()
+	server = client.get_guild(server_id)
+	channels = ewcfg.hideout_channels
+
+	if response != "":
+		for channel in channels:
+			post_channel = ewutils.get_channel(server, channel)
+			await ewutils.send_message(client, post_channel, response)
