@@ -3955,14 +3955,17 @@ async def payday(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def check_flag(cmd):
+
+	response = "https://img.booru.org/rfck//images/2/5c00b9d105d2435546ff6d3d9f545b05650d6631.png"
+	return await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	"""
 	user_data = EwUser(member=cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if user_data.life_state != ewcfg.life_state_juvenile:
-		response = "https://img.booru.org/rfck//images/2/5c00b9d105d2435546ff6d3d9f545b05650d6631.png"
-	elif user_data.time_expirpvp < int(time.time()):
+	if user_data.time_expirpvp < int(time.time()):
 		response = "You don't have a flag."
 	else:
 		response = "You have {:,} seconds left on your flag.".format(abs(user_data.time_expirpvp - int(time.time())))
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	"""

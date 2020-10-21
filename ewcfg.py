@@ -1463,6 +1463,9 @@ offline_cmds = [
 	# cmd_scrutinize
 ]
 
+# Maximum amount of slime juveniles can have before being killable
+max_safe_slime = 100000
+
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20

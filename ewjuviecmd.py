@@ -502,10 +502,6 @@ async def mine(cmd):
 			if was_levelup:
 				response += levelup_response
 
-			# flag juvies
-			if user_data.life_state == ewcfg.life_state_juvenile:
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, False)
-
 			user_data.persist()
 
 			if printgrid:
@@ -856,10 +852,6 @@ async def scavenge(cmd):
 					user_data.hunger += ewcfg.hunger_perscavenge
 
 			user_data.time_lastscavenge = time_now
-
-			# flag juvies
-			if user_data.life_state == ewcfg.life_state_juvenile:
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_scavenge, False)
 
 			user_data.persist()
 
