@@ -822,6 +822,7 @@ cmd_map = {
 	ewcfg.cmd_graft: ewmutation.graft,
 	ewcfg.cmd_bleedout: ewmutation.bleedout,
 	ewcfg.cmd_skullbash: ewitem.skullbash,
+	ewcfg.cmd_juviemode: ewjuviecmd.juviemode,
 
 	ewcfg.cmd_manual_unban:ewcmd.unban_manual,
 

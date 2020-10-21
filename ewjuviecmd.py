@@ -1683,3 +1683,20 @@ def gen_scavenge_captcha(n = 0, id_user = 0, id_server = 0):
 	captcha_length = math.ceil(n / 3)
 
 	return ewutils.generate_captcha(length=captcha_length, id_server=id_server, id_user=id_user)
+
+
+async def juviemode(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	status_effects = user_data.getStatusEffects()
+
+	if ewcfg.status_juviemode_id in status_effects:
+		user_data.clear_status(id_status=ewcfg.status_juviemode_id)
+		response = "You can't fucking take anymore. Slime. You need slime. SLIME. **SLLLLLLLLIIIIIIIIIMMMMMMMEEEEE!!!!!!!**"
+	elif user_data.life_state != ewcfg.life_state_juvenile:
+		response = "You think anyone but a cowardly ass Juvie would follow the law? You're not cut out for that life."
+	elif user_data.slimelevel > ewcfg.max_safe_level:
+		response = "You need to be level 18 and under. You're too plump with slime to start following the law now. Get dead, kid."
+	else:
+		user_data.applyStatus(id_status=ewcfg.status_juviemode_id)
+		response = "You summon forth all the cowardice in your heart, to forgo even slime, the most basic joy. You vow to carry no more than 100,000, the NLACakaNM's legal limit, on your person at any time."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

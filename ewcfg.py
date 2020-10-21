@@ -1188,7 +1188,7 @@ cmd_chemo = cmd_prefix + 'chemo'
 cmd_graft = cmd_prefix + 'graft'
 cmd_bleedout = cmd_prefix + 'bleedout'
 cmd_skullbash = cmd_prefix + 'skullbash'
-
+cmd_juviemode = cmd_prefix + 'legallimit'
 cmd_manual_unban = cmd_prefix + 'unban'
 
 cmd_switch = cmd_prefix + 'switch'
@@ -12049,6 +12049,7 @@ status_high_id = "high"
 status_modelovaccine_id = "modelovaccine"
 status_slapped_id = "slapped"
 status_foodcoma_id = "foodcoma"
+status_juviemode_id = "juviemode"
 
 status_injury_head_id = "injury_head"
 status_injury_torso_id = "injury_torso"
@@ -12215,6 +12216,12 @@ status_effect_list = [
 		str_acquire = "Calorie-induced rage consumes you! You could drink gasoline and get shot and not feel a damn thing!",
 		str_describe_self = "You're in the middle of a raging food coma.",
         dmg_mod_self = -0.4
+	),
+    EwStatusEffectDef(
+		id_status = status_juviemode_id,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "You're carrying slime under the legal limit."
 	),
 ]
 
