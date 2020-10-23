@@ -1498,9 +1498,10 @@
         "str_desc": "It's a brick. Can't build with it, can't eat it. All you can do is throw it through someone's window.",
         "rarity": "Plebeian",
         "acquisition": "bartering",
-        "price": 1000,
+        "price": 10000,
         "vendors": [
-            "bazaar"
+            "bazaar",
+            "Based Hardware"
         ],
         "furniture_place_desc": "You go outside your house and throw a brick through your window. Nobody can ever say you're a fake vandal now.",
         "furniture_look_desc": "Somebody threw a brick through the window.",
