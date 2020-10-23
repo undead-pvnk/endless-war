@@ -157,7 +157,16 @@ class EwResponseContainer:
 			try:
 				response = ""
 				while len(self.channel_responses[ch]) > 0:
-					if len(response) == 0 or len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
+					if len(self.channel_responses[ch][0]) > ewcfg.discord_message_length_limit:
+						response += "\n" + self.channel_responses[ch].pop(0)
+						length = len(response)
+
+						split_list = [(response[i:i+2000]) for i in range(0, length, 2000)]
+						for blurb in split_list:
+							message = await send_message(self.client, current_channel, blurb)
+							messages.append(message)
+						response = ""
+					elif len(response) == 0 or len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
 						response += "\n" + self.channel_responses[ch].pop(0)
 					else:
 						message = await send_message(self.client, current_channel, response)
