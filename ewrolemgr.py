@@ -588,8 +588,8 @@ async def updateRoles(
 	
 	try:
 		await member.edit(roles=replacement_roles)
-	except:
-		ewutils.logMsg('error: failed to replace roles for {}'.format(member.display_name))
+	except Exception as e:
+		ewutils.logMsg('error: failed to replace roles for {}:{}'.format(member.display_name, str(e)))
 
 	if refresh_perms:
 		await refresh_user_perms(client = client, id_server = id_server, used_member = member)
@@ -715,8 +715,8 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 			try:
 				for i in range(ewcfg.permissions_tries):
 					await correct_channel.set_permissions(used_member, overwrite=overwrite)
-			except:
-				ewutils.logMsg("Failed to fix permissions for {}.".format(used_member.display_name))
+			except Exception as e:
+				ewutils.logMsg("Failed to fix permissions for {}:{}.".format(used_member.display_name, str(e)))
 			#time_now_end = int(time.time())
 			#print('took {} seconds to generate channel permissions'.format(time_now_end - time_now_start))
 			# print('corrected overwrite in {} for {}'.format(correct_channel, member))
