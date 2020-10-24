@@ -1424,11 +1424,11 @@ async def on_message(message):
 
 
 		#Ignore users with weird characters in their name
-		if message.guild is not None:
-			try:
-				message.author.display_name[:3].encode('utf-8').decode('ascii')
-			except UnicodeError:
-				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "We don't take kindly to moon runes around here."))
+
+		try:
+			message.author.display_name[:3].encode('utf-8').decode('ascii')
+		except UnicodeError:
+			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "We don't take kindly to moon runes around here."))
 
 		# tokenize the message. the command should be the first word.
 		try:
