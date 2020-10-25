@@ -8433,7 +8433,7 @@ smelting_recipe_list = [
 		id_recipe = "humanskeleton",
 		str_name = "a human skeleton",
 		ingredients = {
-			'bone': 2,
+			'bone': 206,
 		},
 		products = ['humanskeleton']
 	),
@@ -8441,7 +8441,7 @@ smelting_recipe_list = [
 		id_recipe = "monsterskeleton",
 		str_name = "a wild beast's skeleton",
 		ingredients = {
-			item_id_monsterbones: 4,
+			item_id_monsterbones: 200,
 		},
 		products = ['dinoslimeskeleton', 'slimeadactylskeleton', 'mammoslimeskeleton', 'slimeasaurusskeleton', 'slimedragonskeleton']
 	),
