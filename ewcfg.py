@@ -2691,6 +2691,7 @@ vendor_lab = "Lab" #Slimecorp products
 vendor_atomicforest = "Atomic Forest Stockpile" # Storage of atomic forest
 vendor_downpourlaboratory = "Downpour Armament Vending Machines" # Store for shamblers to get stuff
 vendor_breakroom = "The Breakroom" # Security officers can order items here for free.
+vendor_rpcity = "RP City" # Double halloween costume store
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -3447,6 +3448,7 @@ item_list = [
 			"kit",
 			"costume",
 		],
+		vendors = [vendor_rpcity],
 		str_name = "Double Halloween Costume Kit",
 		str_desc = "A package of all the necessary tools and fabrics needed to make the Double Halloween costume of your dreams.",
 		price = 50000,
@@ -6760,6 +6762,11 @@ for v in food_list:
 			vegetable_to_cosmetic_material[v.id_food] = item_id_tough_material
 
 		vegetable_list.append(v)
+
+candy_ids_list = []
+for c in food_list:
+	if c.acquisition == acquisition_trickortreating:
+		candy_ids_list.append(c.id_food)
 		
 
 vendor_stock_map = {
@@ -9382,6 +9389,18 @@ smelting_recipe_list = [
             item_id_string: 2, # Laces
         },
         products=["rollerblades"]
+    ),
+	# TODO remove after double halloween
+	EwSmeltingRecipe(
+        id_recipe = "ticket",
+        str_name = "Ticket to the White Line",
+        alias = [
+            "tickettohell",
+        ],
+        ingredients = {
+            item_id_doublehalloweengrist: 100,
+        },
+        products = ['ticket']
     )
 ]
 #smelting_recipe_list += ewdebug.debugrecipes

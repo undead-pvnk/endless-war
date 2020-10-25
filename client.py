@@ -182,7 +182,7 @@ cmd_map = {
 	ewcfg.cmd_coinflip: ewcmd.coinflip,
     
 	# Make a costume for Double Halloween
-	#ewcfg.cmd_makecostume: ewitem.makecostume,
+	ewcfg.cmd_makecostume: ewitem.makecostume,
 
 	# Show the total of negative slime in the market.
 	ewcfg.cmd_negapool: ewspooky.negapool,
@@ -209,7 +209,7 @@ cmd_map = {
 	ewcfg.cmd_sign: ewapt.nothing,
 	ewcfg.cmd_upgrade: ewapt.upgrade,
 	ewcfg.cmd_knock: ewapt.knock,
-	#ewcfg.cmd_trickortreat: ewapt.trickortreat,
+	ewcfg.cmd_trickortreat: ewapt.trickortreat,
 	ewcfg.cmd_breaklease: ewapt.cancel,
 
 

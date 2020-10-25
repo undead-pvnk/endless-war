@@ -1494,15 +1494,12 @@ async def trickortreat(cmd = None):
 	costumes = 0
 	for it in items:
 		i = EwItem(it.get('id_item'))
-		context = i.item_props.get('context')
+		id_cosmetic = i.item_props.get('id_cosmetic')
 		adorned = i.item_props.get('adorned')
-		if context == 'costume' and adorned == 'true':
+		if id_cosmetic == 'dhcostume' and adorned == 'true':
 			costumes += 1
 
-	if costumes == 0 and cmd.mentions_count >= 1:
-		response = "How are you gonna go trick-or-treating without a costume on?"
-		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
-	elif costumes == 0 and cmd.mentions_count == 0:
+	if costumes == 0:
 		response = "How are you gonna go trick-or-treating without a costume on?"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1720,11 +1717,11 @@ async def trickortreat(cmd = None):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
 			response = "Whose door are you knocking?"
-			return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
 		response = "One door at a time, please."
-		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 async def cancel(cmd):
@@ -2394,8 +2391,8 @@ async def aptCommands(cmd):
 		return await ewmap.move(cmd=cmd, isApt = True)
 	elif cmd_text == ewcfg.cmd_knock:
 		return await knock(cmd=cmd)
-	#elif cmd_text == ewcfg.cmd_trickortreat:
-	#	return await trickortreat(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_trickortreat:
+		return await trickortreat(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_wash:
 		return await wash(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_browse:
