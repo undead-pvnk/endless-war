@@ -158,7 +158,7 @@ poi_id_blackpond = "blackpond"
 poi_id_basedhardware = "basedhardware"
 poi_id_clinicofslimoplasty = "clinicofslimoplasty"
 poi_id_thebreakroom = "thebreakroom"
-
+poi_id_underworld = "underworld"
 
 # transports
 poi_id_ferry = "ferry"
@@ -1543,6 +1543,8 @@ std_food_expir = 12 * 3600  # 12 hours
 farm_food_expir = 12 * 3600 * 4 # 2 days
 milled_food_expir = 12 * 3600 * 28 # 2 weeks
 
+horseman_death_cooldown = 12 * 3600 * 4 # 2 days
+
 # amount of slime you get from crushing a poudrin
 crush_slimes = 10000
 
@@ -2244,6 +2246,10 @@ col_gvs_time_lastshambaquarium = 'gvs_time_lastshambaquarium'
 col_horde_cooldown = 'horde_cooldown'
 col_gaiaslime = 'gaiaslime'
 col_shambler_stock = 'shambler_stock'
+
+# Double Halloween
+col_horseman_deaths = 'horseman_deaths'
+col_horseman_timeofdeath = 'horseman_timeofdeath'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'

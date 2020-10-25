@@ -1604,11 +1604,22 @@ async def spawn_enemies(id_server = None):
 
 		await resp_cont.post()
 
+	# TODO remove after double halloween
+	market_data = EwMarket(id_server=id_server)
+	underworld_district = EwDistrict(district=ewcfg.poi_id_underworld, id_server=id_server)
+	enemies_count = len(underworld_district.get_enemies_in_district())
+
+	if enemies_count == 0 and int(time.time()) > (market_data.horseman_timeofdeath + ewcfg.horseman_death_cooldown):
+		dh_resp_cont = ewhunting.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld, manual_spawn=True)
+
+		await dh_resp_cont.post()
+
+
 async def spawn_enemies_tick_loop(id_server):
 	interval = ewcfg.enemy_spawn_tick_length
 	# Causes the possibility of an enemy spawning every 10 seconds
 	while not TERMINATE:
-		await asyncio.sleep(interval)
+		await asyncio.sleep(6)
 		await spawn_enemies(id_server = id_server)
 
 

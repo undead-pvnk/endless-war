@@ -170,7 +170,8 @@ cmd_map = {
 	
 	# Ghosts can BOO 
 	ewcfg.cmd_boo: ewcmd.boo,
-	#ewcfg.cmd_spook: ewcmd.spook,
+	#TODO remove after double halloween
+	ewcfg.cmd_spook: ewcmd.spook,
 	
 	# Juvies can dance
 	ewcfg.cmd_dance: ewcmd.dance,
