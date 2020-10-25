@@ -2365,6 +2365,64 @@
         "topic": "You have been gunned down, and your body has been swept down the drain into the sewers. Here you can commune with your fellow cadavers through the Neural Slime network. To revive yourself you must feed your carcass into ENDLESS WAR's churning maw and be reborn into Slime, continuing the war forever more.",
         "wikipage": "https://rfck.miraheze.org/wiki/The_Sewers"
     },
+    "underworld": {
+        "id_poi": "underworld",
+        "alias": [
+            "hell",
+            "undertale",
+			"underground"
+        ],
+        "str_name": "The Underworld, last stop of the White Line",
+        "str_desc": "A cave underneath the city, well-lit by trash can bonfires scattered about. The walls are decorated with crude depictions of ENDLESS WAR. Strangely enough, there's a punching bag off in the distance, with what looks to be a picture of Phoebus taped onto it.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "the-underworld",
+        "role": "Underworld",
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "underworld": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": false,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "underworldsubwaystation": 20
+        },
+        "topic": "A cave underneath the city, well-lit by trash can bonfires scattered about. The walls are decorated with crude depictions of ENDLESS WAR. Strangely enough, there's a punching bag off in the distance, with what looks to be a picture of Phoebus taped onto it.",
+        "wikipage": "https://rfck.miraheze.org/wiki/The_Underworld"
+    },
     "downtownstreeta": {
         "id_poi": "downtownstreeta",
         "alias": [
@@ -13826,6 +13884,65 @@
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Assault_Flats_Beach#The_Assault_Flats_Beach_Subway_Station"
     },
+    "underworldsubwaystation": {
+        "id_poi": "underworldsubwaystation",
+        "alias": [
+            "uws",
+            "us"
+        ],
+        "str_name": "The Underworld Subway Station",
+        "str_desc": "A grimy subway station.\n\nExits into The Underworld.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "underworld-subway-station",
+        "role": "Underworld Subway Station",
+        "major_role": "assaultflatsbeach_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "underworldsubwaystation": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+            "underworld"
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": true,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "underworld": 20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/The_Underworld#The_Underworld_Subway_Station"
+    },
     "dreadfordblimptower": {
         "id_poi": "dreadfordblimptower",
         "alias": [
@@ -14818,6 +14935,58 @@
         "neighbors": {},
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_Blue_Line"
+    },
+    "subwaywhite01": {
+        "id_poi": "subwaywhite01",
+        "alias": [],
+        "str_name": "A White Line Subway Train",
+        "str_desc": "A grimy subway train.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "subway-train-white-01",
+        "role": "Subway Train WHITE-01",
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "subwaywhite01": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": false,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [],
+        "father_district": "",
+        "is_transport": true,
+        "transport_type": "subway",
+        "default_line": "subwaywhiteeast",
+        "default_stop": "downtownsubwaystation",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {},
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/Public_Transportation#The_White_Line"
     },
     "blimp": {
         "id_poi": "blimp",
