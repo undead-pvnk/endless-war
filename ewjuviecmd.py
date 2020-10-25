@@ -939,28 +939,32 @@ async def crush(cmd):
 			response = "You {} your {} in your mouth and spit it out to create some {}!!".format(command, crop_name, new_name)
 
 		elif item_data.item_props.get("id_food") in ewcfg.candy_ids_list:
+
 			ewitem.item_delete(id_item=sought_id)
-
-			gristnum = random.randrange(2) + 1
-			gristcount = 0
-
 			item_name = item_data.item_props.get('food_name')
 
-			response = "You crush the {} with an iron grip. You gain {} piece(s) of Double Halloween Grist!".format(item_name, gristnum)
+			if float(getattr(item_data, "time_expir", 0)) < time.time():
+				response = "The {} melts disappointingly in your hand...".format(item_name)
 
-			while gristcount < gristnum:
+			else:
+				gristnum = random.randrange(2) + 1
+				gristcount = 0
 
-				grist = ewcfg.item_map.get(ewcfg.item_id_doublehalloweengrist)
-				grist_props = ewitem.gen_item_props(grist)
+				response = "You crush the {} with an iron grip. You gain {} piece(s) of Double Halloween Grist!".format(item_name, gristnum)
 
-				ewitem.item_create(
-					item_type=grist.item_type,
-					id_user=cmd.message.author.id,
-					id_server=cmd.message.guild.id,
-					item_props=grist_props
-				)
+				while gristcount < gristnum:
 
-				gristcount += 1
+					grist = ewcfg.item_map.get(ewcfg.item_id_doublehalloweengrist)
+					grist_props = ewitem.gen_item_props(grist)
+
+					ewitem.item_create(
+						item_type=grist.item_type,
+						id_user=cmd.message.author.id,
+						id_server=cmd.message.guild.id,
+						item_props=grist_props
+					)
+
+					gristcount += 1
 
 	else:
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found

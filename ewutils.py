@@ -1619,7 +1619,7 @@ async def spawn_enemies_tick_loop(id_server):
 	interval = ewcfg.enemy_spawn_tick_length
 	# Causes the possibility of an enemy spawning every 10 seconds
 	while not TERMINATE:
-		await asyncio.sleep(6)
+		await asyncio.sleep(interval)
 		await spawn_enemies(id_server = id_server)
 
 
@@ -1687,7 +1687,9 @@ def get_move_speed(user_data):
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
 		
-	#move_speed *= 2
+	#TODO remove after double halloween
+	if user_data.life_state == ewcfg.life_state_corpse:
+		move_speed *= 2
 
 	move_speed = max(0.1, move_speed)
 

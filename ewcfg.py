@@ -8430,6 +8430,22 @@ smelting_recipe_list = [
 		products = ['soul']
 	),
 	EwSmeltingRecipe(
+		id_recipe = "humanskeleton",
+		str_name = "a human skeleton",
+		ingredients = {
+			'bone': 2,
+		},
+		products = ['humanskeleton']
+	),
+	EwSmeltingRecipe(
+		id_recipe = "monsterskeleton",
+		str_name = "a wild beast's skeleton",
+		ingredients = {
+			item_id_monsterbones: 4,
+		},
+		products = ['dinoslimeskeleton', 'slimeadactylskeleton', 'mammoslimeskeleton', 'slimeasaurusskeleton', 'slimedragonskeleton']
+	),
+	EwSmeltingRecipe(
 		id_recipe = "handmadechair",
 		str_name = "a handmade chair",
 		alias = [
@@ -13157,8 +13173,7 @@ enemy_drop_tables = {
 	enemy_type_desertraider: [
 		{item_id_slimepoudrin: [100, 1, 2]}, 
 		{rarity_plebeian: [50, 1, 1]},  
-		{"crop": [50, 3, 6]}, 
-		{item_id_monsterbones: [100, 3, 5]}
+		{"crop": [50, 3, 6]}
 	],
 	enemy_type_mammoslime: [
 		{item_id_slimepoudrin: [75, 5, 6]},  

@@ -497,7 +497,7 @@ cmd_map = {
 	ewcfg.cmd_setslime: ewcmd.set_slime,
 	ewcfg.cmd_checkstats: ewcmd.check_stats,
 	ewcfg.cmd_makebp : ewutils.make_bp,
-	# ewcfg.cmd_exalt: ewkingpin.exalt,
+	ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
@@ -1216,8 +1216,9 @@ async def on_ready():
 
 					ewutils.logMsg('The time is now {}.'.format(market_data.clock))
 
-					if not ewutils.check_fursuit_active(market_data.id_server):
-						ewcosmeticitem.dedorn_all_costumes()
+					#TODO uncomment after double halloween
+					#if not ewutils.check_fursuit_active(market_data.id_server):
+					#	ewcosmeticitem.dedorn_all_costumes()
 
 					if market_data.clock == 6 and market_data.day % 8 == 0:
 						await ewapt.rent_time(id_server=server.id)
