@@ -1562,15 +1562,15 @@ max_capture_points_a = 300000  # 300k
 max_capture_points_b = 200000  # 200k
 max_capture_points_c = 100000   # 100k
 
-limit_influence_s = 66600000
-limit_influence_a = 33300000
-limit_influence_b = 20000000
-limit_influence_c = 9500000
+limit_influence_s = 133200000
+limit_influence_a = 66600000
+limit_influence_b = 40000000
+limit_influence_c = 19000000
 
-min_influence_s = 33300000
-min_influence_a = 17000000
-min_influence_b = 10000000
-min_influence_c = 4500000
+min_influence_s = 66600000
+min_influence_a = 34000000
+min_influence_b = 20000000
+min_influence_c = 7000000
 
 min_garotte = 2000
 
@@ -2244,6 +2244,7 @@ col_gvs_time_lastshambaquarium = 'gvs_time_lastshambaquarium'
 col_horde_cooldown = 'horde_cooldown'
 col_gaiaslime = 'gaiaslime'
 col_shambler_stock = 'shambler_stock'
+col_juviemode = 'juviemode'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'
@@ -12773,7 +12774,7 @@ help_responses = {
 	weapon_id_paintroller: "**The paint roller** is a paint tool for sale at Based Hardware. It has a capping modifier of 1.75 and a spray cost mod of 4. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
 	weapon_id_paintbrush: "**The paint brush** is a paint tool for sale at Based Hardware. It has a capping modifier of 0.5 and a spray cost mod of .25. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 1.5x influence.",
 	weapon_id_watercolors: "**Watercolors** are a paint tool for sale at Based Hardware. It does a set 4000 influence per shot. It has a captcha length of 3, a miss chance of 10% and a .1% chance for a crit, which zeros out the whole district regardless of owner.",
-	weapon_id_thinnerbomb: "**Thinner bombs** are a paint tool for sale at Based Hardware. It has a capping modifier of 0.15 and a spray cost mod of 2. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence. When you cap with a thinner bomb, it is used up, and you have to buy more. When decapping, damage is multiplied by 15. This tool has a 10% chance of backfiring.",
+	weapon_id_thinnerbomb: "**Thinner bombs** are a paint tool for sale at Based Hardware. It has a capping modifier of 0.15 and a spray cost mod of 2. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence. When you cap with a thinner bomb, it is used up, and you have to buy more. When decapping, damage is multiplied by 10.",
 
 	# "otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
 }

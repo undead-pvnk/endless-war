@@ -82,7 +82,7 @@ class EwUser:
 	time_lastpremiumpurchase = 0
 	
 	#GANKERS VS SHAMBLERS
-	gvs_currency = 0
+	juviemode = 0
 	gvs_time_lastshambaquarium = 0
 
 	apt_zone = "empty"
@@ -127,8 +127,8 @@ class EwUser:
 		change = int(n)
 		self.slimes += change
 		if self.life_state == ewcfg.life_state_juvenile:
-			status_effects = self.getStatusEffects()
-			if ewcfg.status_juviemode_id in status_effects and self.slimes > ewcfg.max_safe_slime:
+
+			if self.juviemode == 1:
 				self.slimes = ewcfg.max_safe_slime
 
 		response = ""
@@ -1215,7 +1215,7 @@ class EwUser:
 					ewcfg.col_race,
 					ewcfg.col_time_racialability,
 					ewcfg.col_time_lastpremiumpurchase,
-					ewcfg.col_gvs_currency,
+					ewcfg.col_juviemode,
 					ewcfg.col_gvs_time_lastshambaquarium,
 					ewcfg.col_rand_seed,
 					ewcfg.col_time_lasthit,
@@ -1281,7 +1281,7 @@ class EwUser:
 					self.race = result[49]
 					self.time_racialability = result[50]
 					self.time_lastpremiumpurchase = result[51]
-					self.gvs_currency = result[52]
+					self.juviemode = result[52]
 					self.gvs_time_lastshambaquarium = result[53]
 					self.rand_seed = result[54]
 					self.time_lasthit = result[55]
@@ -1439,7 +1439,7 @@ class EwUser:
 				ewcfg.col_race,
 				ewcfg.col_time_racialability,
 				ewcfg.col_time_lastpremiumpurchase,
-				ewcfg.col_gvs_currency,
+				ewcfg.col_juviemode,
 				ewcfg.col_gvs_time_lastshambaquarium,
 				ewcfg.col_rand_seed,
 				ewcfg.col_time_lasthit
@@ -1501,7 +1501,7 @@ class EwUser:
 				self.race,
 				self.time_racialability,
 				self.time_lastpremiumpurchase,
-				self.gvs_currency,
+				self.juviemode,
 				self.gvs_time_lastshambaquarium,
 				self.rand_seed,
 				self.time_lasthit

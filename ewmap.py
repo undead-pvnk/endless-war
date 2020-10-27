@@ -1466,9 +1466,9 @@ async def scout(cmd):
 	market_data = EwMarket(id_server = cmd.guild.id)
 	mutations = user_data.get_mutations()
 
-	if user_data.life_state == ewcfg.life_state_corpse:
-		response = "Who cares? These meatbags all look the same to you."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	#if user_data.life_state == ewcfg.life_state_corpse:
+	#	response = "Who cares? These meatbags all look the same to you."
+	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	# if no arguments given, scout own location
 	if not len(cmd.tokens) > 1:

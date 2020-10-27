@@ -57,7 +57,7 @@ CREATE TABLE users (
 	time_racialability int NOT NULL DEFAULT '0',
 	time_lastpremiumpurchase int NOT NULL DEFAULT '0',
 	spray varchar(400) NOT NULL DEFAULT 'https://img.booru.org/rfck//images/3/a69d72cf29cb750882de93b4640a175a88cdfd70.png',
-	gvs_currency int NOT NULL DEFAULT '0',
+	juviemode int NOT NULL DEFAULT '0',
 	gvs_time_lastshambaquarium int NOT NULL DEFAULT '0',
 	time_lasthit int NOT NULL DEFAULT '0',
 	rand_seed bigint NOT NULL DEFAULT '0',

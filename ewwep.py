@@ -2923,9 +2923,9 @@ def damage_mod_cap(user_data, market_data, user_mutations, district_data, weapon
 
 	if weapon.id_weapon == ewcfg.weapon_id_thinnerbomb:
 		if user_data.faction == district_data.controlling_faction:
-			slimes_damage = round(damage_mod * .2)
+			slimes_damage = round(damage_mod * .1)
 		else:
-			damage_mod *= 3
+			damage_mod *= 2
 
 	if ewcfg.mutation_id_patriot in user_mutations:
 		damage_mod *= 1.5

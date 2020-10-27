@@ -124,6 +124,7 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_killers
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+			user_data.juviemode = 0
 			for faction in vouchers:
 				user_data.unvouch(faction)
 			user_data.persist()
@@ -1689,14 +1690,16 @@ async def juviemode(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	status_effects = user_data.getStatusEffects()
 
-	if ewcfg.status_juviemode_id in status_effects:
-		user_data.clear_status(id_status=ewcfg.status_juviemode_id)
+	if user_data.juviemode == 1:
+		user_data.juviemode = 0
+		user_data.persist()
 		response = "You can't fucking take anymore. Slime. You need slime. SLIME. **SLLLLLLLLIIIIIIIIIMMMMMMMEEEEE!!!!!!!**"
 	elif user_data.life_state != ewcfg.life_state_juvenile:
 		response = "You think anyone but a cowardly ass Juvie would follow the law? You're not cut out for that life."
 	elif user_data.slimelevel > ewcfg.max_safe_level:
 		response = "You need to be level 18 and under. You're too plump with slime to start following the law now. Get dead, kid."
 	else:
-		user_data.applyStatus(id_status=ewcfg.status_juviemode_id)
+		user_data.juviemode = 1
+		user_data.persist()
 		response = "You summon forth all the cowardice in your heart, to forgo even slime, the most basic joy. You vow to carry no more than 100,000, the NLACakaNM's legal limit, on your person at any time."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
