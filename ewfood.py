@@ -596,7 +596,10 @@ async def devour(cmd):
 				recover_hunger = 100
 			elif item_obj.item_type == ewcfg.it_furniture:
 				furn = ewcfg.furniture_map.get(item_obj.item_props.get('id_furniture'))
-				if furn.acquisition != ewcfg.acquisition_bazaar:
+				acquisition = None
+				if furn is not None:
+					acquisition = furn.acquisition
+				if acquisition != ewcfg.acquisition_bazaar:
 					recover_hunger = 100
 				elif furn.price < 500:
 					recover_hunger = 0

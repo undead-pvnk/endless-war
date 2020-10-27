@@ -2725,7 +2725,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 					repel_status = ewcfg.status_repelled_id,
 					slimes = ewcfg.col_slimes,
 					safe_level = ewcfg.max_safe_level,
-					level = ewcfg.col_level
+					level = ewcfg.col_slimelevel
 				), (
 					enemy_data.poi,
 					enemy_data.id_server
@@ -2748,7 +2748,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 					life_state_juvenile = ewcfg.life_state_juvenile,
 					repel_status = ewcfg.status_repelled_id,
 					safe_level = ewcfg.max_safe_level,
-					level = ewcfg.col_level
+					level = ewcfg.col_slimelevel
 				), (
 					enemy_data.poi,
 					enemy_data.id_server
