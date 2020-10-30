@@ -871,12 +871,12 @@ async def crush(cmd):
 	response = "" # if it's not overwritten
 	crush_slimes = ewcfg.crush_slimes
 
-	crunch_used = False
+	command = "crush"
 	if cmd.tokens[0] == (ewcfg.cmd_prefix + 'crunch'):
-		crunch_used = True
+		command = "crunch"
 	
 	if user_data.life_state == ewcfg.life_state_corpse:
-		response = "Alas, your ghostly form cannot {} anything. Lame.".format("crunch" if crunch_used else "crush")
+		response = "Alas, your ghostly form cannot {} anything. Lame.".format(command)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -886,30 +886,17 @@ async def crush(cmd):
 		sought_id = item_sought.get('id_item')
 		item_data = EwItem(id_item=sought_id)
 
-		response = "The item doesn't have !{} functionality".format("crunch" if crunch_used else "crush")  # if it's not overwritten
+		response = "The item doesn't have !{} functionality".format(command)  # if it's not overwritten
 
 		if item_data.item_props.get("id_item") == ewcfg.item_id_slimepoudrin:
 			# delete a slime poudrin from the player's inventory
 			ewitem.item_delete(id_item=sought_id)
 
-			status_effects = user_data.getStatusEffects()
-			#sap_resp = ""
-			#if ewcfg.status_sapfatigue_id not in status_effects:
-			#	sap_gain = 5
-			#	sap_gain = max(0, min(sap_gain, ewutils.sap_max_bylevel(user_data.slimelevel) - (user_data.hardened_sap + user_data.sap)))
-			#	if sap_gain > 0:
-			#		user_data.sap += sap_gain
-			#		user_data.applyStatus(id_status = ewcfg.status_sapfatigue_id, source = user_data.id_user)
-			#		sap_resp = " and {} sap".format(sap_gain)
-
 			levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
 			user_data.persist()
 			
-			if crunch_used:
-				response = "You crunch the hardened slime crystal with your bare teeth.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
-			else:
-				response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
-			
+			response = "You {} the hardened slime crystal with your bare teeth.\nYou gain {} slime. Sick, dude!!".format(command, crush_slimes)
+	
 			if len(levelup_response) > 0:
 				response += "\n\n" + levelup_response
 
@@ -921,11 +908,8 @@ async def crush(cmd):
 			levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
 			user_data.persist()
 
-			if crunch_used:
-				response = "You crunch your hard-earned slime crystal with your bare teeth.\nYou gain {} slime. Ah, the joy of writing!".format(crush_slimes)
-			else:
-				response = "You crush your hard-earned slime crystal with your bare hands.\nYou gain {} slime. Ah, the joy of writing!".format(crush_slimes)
-
+			response = "You {} your hard-earned slime crystal with your bare teeth.\nYou gain {} slime. Ah, the joy of writing!".format(command, crush_slimes)
+	
 			if len(levelup_response) > 0:
 				response += "\n\n" + levelup_response
 				
@@ -953,10 +937,36 @@ async def crush(cmd):
 				item_props=new_item_props
 			)
 
-			if crunch_used:
-				response = "You crunch your {} in your mouth and spit it out to create some {}!!".format(crop_name, new_name)
+			response = "You {} your {} in your mouth and spit it out to create some {}!!".format(command, crop_name, new_name)
+
+		elif item_data.item_props.get("id_food") in ewcfg.candy_ids_list:
+
+			ewitem.item_delete(id_item=sought_id)
+			item_name = item_data.item_props.get('food_name')
+
+			if float(getattr(item_data, "time_expir", 0)) < time.time():
+				response = "The {} melts disappointingly in your hand...".format(item_name)
+
 			else:
-				response = "You crush your {} in your hands and mold it into some {}!!".format(crop_name, new_name)
+				gristnum = random.randrange(2) + 1
+				gristcount = 0
+
+				response = "You crush the {} with an iron grip. You gain {} piece(s) of Double Halloween Grist!".format(item_name, gristnum)
+
+				while gristcount < gristnum:
+
+					grist = ewcfg.item_map.get(ewcfg.item_id_doublehalloweengrist)
+					grist_props = ewitem.gen_item_props(grist)
+
+					ewitem.item_create(
+						item_type=grist.item_type,
+						id_user=cmd.message.author.id,
+						id_server=cmd.message.guild.id,
+						item_props=grist_props
+					)
+
+					gristcount += 1
+
 	else:
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found
 			response = "You don't have one."

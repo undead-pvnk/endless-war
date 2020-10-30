@@ -158,7 +158,7 @@ poi_id_blackpond = "blackpond"
 poi_id_basedhardware = "basedhardware"
 poi_id_clinicofslimoplasty = "clinicofslimoplasty"
 poi_id_thebreakroom = "thebreakroom"
-
+poi_id_underworld = "underworld"
 
 # transports
 poi_id_ferry = "ferry"
@@ -1543,6 +1543,8 @@ std_food_expir = 12 * 3600  # 12 hours
 farm_food_expir = 12 * 3600 * 4 # 2 days
 milled_food_expir = 12 * 3600 * 28 # 2 weeks
 
+horseman_death_cooldown = 12 * 3600 * 4 # 2 days
+
 # amount of slime you get from crushing a poudrin
 crush_slimes = 10000
 
@@ -2246,6 +2248,10 @@ col_gaiaslime = 'gaiaslime'
 col_shambler_stock = 'shambler_stock'
 col_juviemode = 'juviemode'
 
+# Double Halloween
+col_horseman_deaths = 'horseman_deaths'
+col_horseman_timeofdeath = 'horseman_timeofdeath'
+
 #Database columns for bartering
 col_offer_give = 'offer_give'
 col_offer_receive = 'offer_receive'
@@ -2692,6 +2698,7 @@ vendor_lab = "Lab" #Slimecorp products
 vendor_atomicforest = "Atomic Forest Stockpile" # Storage of atomic forest
 vendor_downpourlaboratory = "Downpour Armament Vending Machines" # Store for shamblers to get stuff
 vendor_breakroom = "The Breakroom" # Security officers can order items here for free.
+vendor_rpcity = "RP City" # Double halloween costume store
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -3448,6 +3455,7 @@ item_list = [
 			"kit",
 			"costume",
 		],
+		vendors = [vendor_rpcity],
 		str_name = "Double Halloween Costume Kit",
 		str_desc = "A package of all the necessary tools and fabrics needed to make the Double Halloween costume of your dreams.",
 		price = 50000,
@@ -6761,6 +6769,11 @@ for v in food_list:
 			vegetable_to_cosmetic_material[v.id_food] = item_id_tough_material
 
 		vegetable_list.append(v)
+
+candy_ids_list = []
+for c in food_list:
+	if c.acquisition == acquisition_trickortreating:
+		candy_ids_list.append(c.id_food)
 		
 
 vendor_stock_map = {
@@ -7668,45 +7681,45 @@ transport_lines = [
 			}
 
 		),
-	# EwTransportLine( # white subway line from downtown to juvies row
-	# 	id_line = transport_line_subway_white_eastbound,
-	# 	alias = [
-	# 		"whiteeastline",
-	# 		"whiteeast",
-	# 		"eastwhite",
-	# 		"whitetojuviesrow",
-	# 		"whitetojuvies",
-	# 		"whitetojr"
-	# 	    ],
-	# 	first_stop = poi_id_underworld_subway_station,
-	# 	last_stop = poi_id_jr_subway_station,
-	# 	next_line = transport_line_subway_white_westbound,
-	# 	str_name = "The white subway line towards Juvie's Row",
-	# 	schedule = {
-	# 		poi_id_underworld_subway_station : [20, poi_id_dt_subway_station],
-	# 		poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
-	# 		poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
-	# 	    }
-	# 	),
-	# EwTransportLine( # white subway line from juvies row to downtown
-	# 	id_line = transport_line_subway_white_westbound,
-	# 	alias = [
-	# 		"whitewestline",
-	# 		"whitewest",
-	# 		"westwhite",
-	# 		"whitetounderworld",
-	# 		"whitetouw"
-	# 	    ],
-	# 	first_stop = poi_id_jr_subway_station,
-	# 	last_stop = poi_id_underworld_subway_station,
-	# 	next_line = transport_line_subway_white_eastbound,
-	# 	str_name = "The white subway line towards The Underworld",
-	# 	schedule = {
-	# 		poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
-	# 		poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
-	# 		poi_id_dt_subway_station : [20, poi_id_underworld_subway_station],
-	# 	    }
-	# 	),
+	EwTransportLine( # white subway line from downtown to juvies row
+	 	id_line = transport_line_subway_white_eastbound,
+	 	alias = [
+	 		"whiteeastline",
+			"whiteeast",
+	 		"eastwhite",
+	 		"whitetojuviesrow",
+	 		"whitetojuvies",
+	 		"whitetojr"
+	 	    ],
+	 	first_stop = poi_id_underworld_subway_station,
+	 	last_stop = poi_id_jr_subway_station,
+	 	next_line = transport_line_subway_white_westbound,
+	 	str_name = "The white subway line towards Juvie's Row",
+	 	schedule = {
+	 		poi_id_underworld_subway_station : [20, poi_id_dt_subway_station],
+	 		poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
+	 		poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
+	 	    }
+	 	),
+	EwTransportLine( # white subway line from juvies row to downtown
+	 	id_line = transport_line_subway_white_westbound,
+	 	alias = [
+	 		"whitewestline",
+	 		"whitewest",
+	 		"westwhite",
+	 		"whitetounderworld",
+	 		"whitetouw"
+	 	    ],
+	 	first_stop = poi_id_jr_subway_station,
+	 	last_stop = poi_id_underworld_subway_station,
+	 	next_line = transport_line_subway_white_eastbound,
+	 	str_name = "The white subway line towards The Underworld",
+	 	schedule = {
+	 		poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
+	 		poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
+	 		poi_id_dt_subway_station : [20, poi_id_underworld_subway_station],
+	 	    }
+	 	),
 	EwTransportLine( # blimp line from dreadford to assault flats beach
 		id_line = transport_line_blimp_df_to_afb,
 		alias = [
@@ -8416,6 +8429,22 @@ smelting_recipe_list = [
 			'reanimatedcorpse': 1,
 		},
 		products = ['soul']
+	),
+	EwSmeltingRecipe(
+		id_recipe = "humanskeleton",
+		str_name = "a human skeleton",
+		ingredients = {
+			'bone': 206,
+		},
+		products = ['humanskeleton']
+	),
+	EwSmeltingRecipe(
+		id_recipe = "monsterskeleton",
+		str_name = "a wild beast's skeleton",
+		ingredients = {
+			item_id_monsterbones: 200,
+		},
+		products = ['dinoslimeskeleton', 'slimeadactylskeleton', 'mammoslimeskeleton', 'slimeasaurusskeleton', 'slimedragonskeleton']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "handmadechair",
@@ -9383,6 +9412,18 @@ smelting_recipe_list = [
             item_id_string: 2, # Laces
         },
         products=["rollerblades"]
+    ),
+	# TODO remove after double halloween
+	EwSmeltingRecipe(
+        id_recipe = "ticket",
+        str_name = "Ticket to the White Line",
+        alias = [
+            "tickettohell",
+        ],
+        ingredients = {
+            item_id_doublehalloweengrist: 100,
+        },
+        products = ['ticket']
     )
 ]
 #smelting_recipe_list += ewdebug.debugrecipes
@@ -13133,8 +13174,7 @@ enemy_drop_tables = {
 	enemy_type_desertraider: [
 		{item_id_slimepoudrin: [100, 1, 2]}, 
 		{rarity_plebeian: [50, 1, 1]},  
-		{"crop": [50, 3, 6]}, 
-		{item_id_monsterbones: [100, 3, 5]}
+		{"crop": [50, 3, 6]}
 	],
 	enemy_type_mammoslime: [
 		{item_id_slimepoudrin: [75, 5, 6]},  

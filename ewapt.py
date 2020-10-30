@@ -1494,15 +1494,12 @@ async def trickortreat(cmd = None):
 	costumes = 0
 	for it in items:
 		i = EwItem(it.get('id_item'))
-		context = i.item_props.get('context')
+		id_cosmetic = i.item_props.get('id_cosmetic')
 		adorned = i.item_props.get('adorned')
-		if context == 'costume' and adorned == 'true':
+		if id_cosmetic == 'dhcostume' and adorned == 'true':
 			costumes += 1
 
-	if costumes == 0 and cmd.mentions_count >= 1:
-		response = "How are you gonna go trick-or-treating without a costume on?"
-		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
-	elif costumes == 0 and cmd.mentions_count == 0:
+	if costumes == 0:
 		response = "How are you gonna go trick-or-treating without a costume on?"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1559,7 +1556,7 @@ async def trickortreat(cmd = None):
 
 			if reject:
 				response = "No response. Maybe they're busy?"
-				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.channel, response))
 				response = "You just sort of wait in your apartment until they go away."
 				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
 
@@ -1582,7 +1579,7 @@ async def trickortreat(cmd = None):
 				item_name = item_props.get('food_name')
 
 				response = "{} gives you a {}. You thank them, and go about your business.".format(target.display_name, item_name)
-				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				response = "You give {} a {}. Happy Double Halloween, you knucklehead!".format(cmd.message.author.display_name, item_name)
 				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
 			else:
@@ -1620,7 +1617,7 @@ async def trickortreat(cmd = None):
 
 				user_data.persist()
 				response = ewcfg.halloween_tricks_trickee[trick_index].format(target.display_name, slime_loss)
-				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				response = ewcfg.halloween_tricks_tricker[trick_index].format(cmd.message.author.display_name, slime_loss)
 				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
 
@@ -1720,11 +1717,11 @@ async def trickortreat(cmd = None):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
 			response = "Whose door are you knocking?"
-			return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
 		response = "One door at a time, please."
-		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 async def cancel(cmd):
@@ -2394,8 +2391,8 @@ async def aptCommands(cmd):
 		return await ewmap.move(cmd=cmd, isApt = True)
 	elif cmd_text == ewcfg.cmd_knock:
 		return await knock(cmd=cmd)
-	#elif cmd_text == ewcfg.cmd_trickortreat:
-	#	return await trickortreat(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_trickortreat:
+		return await trickortreat(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_wash:
 		return await wash(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_browse:
@@ -2546,8 +2543,8 @@ async def aptCommands(cmd):
 		return await ewmutation.clench(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_longdrop:
 		return await ewitem.longdrop(cmd=cmd)
-	#elif cmd_text == ewcfg.cmd_trick or cmd_text == ewcfg.cmd_treat:
-	#	pass
+	elif cmd_text == ewcfg.cmd_trick or cmd_text == ewcfg.cmd_treat:
+		pass
 	elif cmd_text[0]==ewcfg.cmd_prefix: #faliure text
 		randint = random.randint(1, 3)
 		msg_mistake = "ENDLESS WAR is growing frustrated."

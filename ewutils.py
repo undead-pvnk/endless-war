@@ -1604,6 +1604,17 @@ async def spawn_enemies(id_server = None):
 
 		await resp_cont.post()
 
+	# TODO remove after double halloween
+	market_data = EwMarket(id_server=id_server)
+	underworld_district = EwDistrict(district=ewcfg.poi_id_underworld, id_server=id_server)
+	enemies_count = len(underworld_district.get_enemies_in_district())
+
+	if enemies_count == 0 and int(time.time()) > (market_data.horseman_timeofdeath + ewcfg.horseman_death_cooldown):
+		dh_resp_cont = ewhunting.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld, manual_spawn=True)
+
+		await dh_resp_cont.post()
+
+
 async def spawn_enemies_tick_loop(id_server):
 	interval = ewcfg.enemy_spawn_tick_length
 	# Causes the possibility of an enemy spawning every 10 seconds
@@ -1676,7 +1687,9 @@ def get_move_speed(user_data):
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
 		
-	#move_speed *= 2
+	#TODO remove after double halloween
+	if user_data.life_state == ewcfg.life_state_corpse:
+		move_speed *= 2
 
 	move_speed = max(0.1, move_speed)
 

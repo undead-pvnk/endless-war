@@ -2123,11 +2123,23 @@ async def makecostume(cmd):
 	item_desc = cmd.tokens[2]
 
 	item_props = {
+		'id_cosmetic': 'dhcostume',
 		"cosmetic_name": item_name,
 		"cosmetic_desc": item_desc,
+		'str_onadorn': ewcfg.str_generic_onadorn,
+		'str_unadorn': ewcfg.str_generic_unadorn,
+		'str_onbreak': ewcfg.str_generic_onbreak,
+		'attack': 1,
+		'defense': 1,
+		'speed': 1,
+		'ability': None,
+		'durability': ewcfg.base_durability * 100,
+		'size': 1,
+		'fashion_style': ewcfg.style_cute,
+		'freshness': 0,
 		"adorned": "false",
 		"rarity": "Plebeian",
-		"context": "costume",
+		"context": "costume"
 	}
 
 	new_item_id = item_create(

@@ -88,6 +88,8 @@ CREATE TABLE markets (
 	caught_fish int NOT NULL DEFAULT '0',
 	splattered_slimes bigint NOT NULL DEFAULT '0',
 	global_swear_jar bigint NOT NULL DEFAULT '0',
+	horseman_deaths int NOT NULL DEFAULT '0',
+	horseman_timeofdeath int NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_server)
 );
