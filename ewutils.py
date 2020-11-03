@@ -1614,6 +1614,13 @@ async def spawn_enemies(id_server = None):
 
 		await dh_resp_cont.post()
 
+def number_civilians(id_server):
+	query = execute_sql_query("SELECT COUNT(*) from enemies where enemytype in ('civilian', 'innocent') and id_server = id_server")
+	for counts in query:
+		if counts[0] < 20:
+			return 1
+		else:
+			return 0
 
 async def spawn_enemies_tick_loop(id_server):
 	interval = ewcfg.enemy_spawn_tick_length
@@ -1631,9 +1638,13 @@ async def enemy_action_tick_loop(id_server):
 		# resp_cont = EwResponseContainer(id_server=id_server)
 		if ewcfg.gvs_active:
 			await ewhunting.enemy_perform_action_gvs(id_server)
+
 		else:
 			await ewhunting.enemy_perform_action(id_server)
-			
+			if number_civilians(id_server=id_server) == 1:
+				ewhunting.spawn_enemy(id_server=id_server, pre_chosen_type=random.choice([ewcfg.enemy_type_civilian, ewcfg.enemy_type_civilian_innocent]), pre_chosen_poi=random.choice(ewcfg.capturable_districts), manual_spawn=True)
+
+
 async def gvs_gamestate_tick_loop(id_server):
 	interval = ewcfg.gvs_gamestate_tick_length
 	# Causes various events to occur during a Garden or Graveyard ops in Gankers Vs. Shamblers

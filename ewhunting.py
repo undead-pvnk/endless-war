@@ -678,7 +678,8 @@ class EwEnemy:
 							if crit:
 								response += " {}".format(used_attacktype.str_crit.format(
 									name_enemy=enemy_data.display_name,
-									name_target=target_player.display_name
+									name_target=target_player.display_name,
+									civ_weapon=random.choice(ewcfg.makeshift_weapons)
 								))
 
 							if len(onbreak_responses) != 0:

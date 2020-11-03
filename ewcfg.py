@@ -1681,7 +1681,7 @@ bleed_tick_length = 10
 
 # how often to decide whether or not to spawn an enemy
 enemy_spawn_tick_length = 60 * 3 # Three minutes
-
+#enemy_spawn_tick_length = 1
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 5
 
@@ -6150,7 +6150,7 @@ weapon_list = [
 		str_duel="**...** {name_player} and {name_target} clash with each other chainsaw blow for chainsaw blow like badasses.",
 		str_description="It's a multi-bladed chainsaw.",
 		str_scalp=" It's not really a scalp anymore, more of a paste.",
-		fn_effect=get_normal_attack(cost_multiplier=4, weapon_type='heavy'),
+		fn_effect=get_normal_attack(weapon_type='heavy'),
 		price=1000000,
 		vendors=[],
 		classes=[],
@@ -13468,7 +13468,7 @@ enemy_type_civilian: {
 	},
 enemy_type_civilian_innocent: {
 		"slimerange": [100001, 100001],
-		"ai": enemy_ai_attacker_a,
+		"ai": enemy_ai_defender,
 		"attacktype": enemy_attacktype_amateur,
 		"displayname": "Innocent Civilian",
 		"raredisplayname": "Puppy-Eyed Youth",
