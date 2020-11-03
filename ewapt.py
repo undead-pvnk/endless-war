@@ -705,7 +705,7 @@ async def store_item(cmd, dest):
 
 	if item_sought:
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
-		if item_sought.get('soulbound'):
+		if item_sought.get('soulbound') and ewitem.EwItem(id_item = item_sought.get('id_item')).item_props.get("context") != "housekey":
 			response = "You can't just put away soulbound items. You have to keep them in your pants at least until the Rapture hits."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

@@ -670,7 +670,9 @@ class EwEnemy:
 								name_enemy=enemy_data.display_name,
 								name_target=("<@!{}>".format(target_data.id_user)),
 								hitzone=randombodypart,
-								strikes=strikes
+								strikes=strikes,
+								civ_weapon = random.choice(ewcfg.makeshift_weapons)
+
 							)
 							kill_descriptor = used_attacktype.str_killdescriptor
 							if crit:
@@ -737,12 +739,14 @@ class EwEnemy:
 									name_enemy=enemy_data.display_name,
 									name_target=("<@!{}>".format(target_data.id_user)),
 									hitzone=randombodypart,
-									strikes=strikes
+									strikes=strikes,
+									civ_weapon = random.choice(ewcfg.makeshift_weapons)
 								)
 								if crit:
 									response += " {}".format(used_attacktype.str_crit.format(
 										name_enemy=enemy_data.display_name,
-										name_target=target_player.display_name
+										name_target=target_player.display_name,
+										civ_weapon = random.choice(ewcfg.makeshift_weapons)
 									))
 								#sap_response = ""
 								#if sap_damage > 0:
@@ -1952,7 +1956,7 @@ async def enemy_perform_action(id_server):
 			delete_enemy(enemy)
 		else:
 			# If an enemy is an activated raid boss, it has a 1/20 chance to move between districts.
-			if enemy.enemytype in ewcfg.raid_bosses and enemy.life_state == ewcfg.enemy_lifestate_alive and check_raidboss_movecooldown(enemy):
+			if enemy.enemytype in ewcfg.enemy_movers and enemy.life_state == ewcfg.enemy_lifestate_alive and check_raidboss_movecooldown(enemy):
 				if random.randrange(20) == 0:
 					resp_cont = enemy.move()
 					if resp_cont != None:

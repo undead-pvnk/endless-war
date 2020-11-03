@@ -2594,6 +2594,8 @@ stat_shovel_kills = 'shovel_kills'
 stat_slimeringcan_kills = 'slimeringcan_kills'
 stat_fingernails_kills = 'fingernails_kills'
 stat_roomba_kills = 'roomba_kills'
+stat_chainsaw_kills = 'chainsaw_kills'
+stat_megachainsaw_kills = 'megachainsaw_kills'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -2749,6 +2751,7 @@ item_id_dinoslimesteak = "dinoslimesteak"
 item_id_dyesolution = "dyesolution"
 item_id_textiles = "textiles"
 item_id_foodbase = "foodbase"
+item_id_civilianscalp = "civilianscalp"
 item_id_modelovaccine = "modelovirusvaccine"
 item_id_gaiaseedpack_poketubers = "poketubersseedpacket"
 item_id_gaiaseedpack_pulpgourds = "pulpgourdsseedpacket"
@@ -2978,6 +2981,8 @@ weapon_id_umbrella = 'umbrella'
 weapon_id_bow = 'bow'
 weapon_id_dclaw = 'dclaw'
 weapon_id_staff = 'staff'
+weapon_id_laywaster = 'laywaster'
+weapon_id_chainsaw = 'chainsaw'
 
 weapon_id_spraycan = 'spraycan'
 weapon_id_paintgun = 'paintgun'
@@ -4371,6 +4376,11 @@ item_list = [
 		str_desc = "The lengthy stalks of an Aushuck plant.",
 		acquisition = acquisition_milling,
 		ingredients = [item_id_aushucks],
+	),
+	EwGeneralItem(
+		id_item=item_id_civilianscalp,
+		str_name="civilian's scalp",
+		str_desc="It's the discarded scalp of an innocent NLACakaNM resident. You always wanted to kill one of these guys."
 	),
 	EwSeedPacket(
 		id_item=item_id_gaiaseedpack_poketubers,
@@ -6109,6 +6119,66 @@ weapon_list = [
 		'equip_spray' : "You pull out your roomba and set it on the ground."
 	}
 	),
+	EwWeapon(  # 36
+		id_weapon=weapon_id_laywaster,
+		alias=[
+			"chainsaw",
+			"megachainsaw",
+			"widowmaker",
+			"jessica"
+		],
+		str_crit="**Critical Hit!** {name_player} snaps {name_target} between two of the sawblades, ripping mercilessly into flesh and nearly vaporizing the spraying blood!",
+		str_miss="**Miss!** {name_player} swings the heavy blade around and hits nothing but air.",
+		str_equip="You rev up the Laywaster 9000.",
+		str_name="multiblade chainsaw",
+		str_weapon="a multiblade chainsaw",
+		str_weaponmaster_self="You are a rank {rank} master of the Laywaster 9000.",
+		str_weaponmaster="They are a rank {rank} master of the Laywaster 9000.",
+		# str_trauma_self = "You have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
+		# str_trauma = "They have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
+		str_kill="**VRRRRRRRRRRRRRRRRRRRRRRRRRRRR!**{name_player} swings violently through {name_target}'s unconscious body, each slash making them more unrecognizable than the last. As more and more blood flecks across {name_player}'s face, their opponent turns into a pile of viscera. {emote_skull}",
+		str_killdescriptor="shredded to a paste",
+		str_damage="{name_target}'s {hitzone} is torn into!! Blood flies everywhere!",
+		str_duel="**...** {name_player} and {name_target} clash with each other chainsaw blow for chainsaw blow like badasses.",
+		str_description="It's a multi-bladed chainsaw.",
+		str_scalp=" It's not really a scalp anymore, more of a paste.",
+		fn_effect=get_normal_attack(cost_multiplier=4, weapon_type='heavy'),
+		price=1000000,
+		vendors=[],
+		classes=[],
+		stat=stat_megachainsaw_kills,
+	),
+EwWeapon( # 37
+		id_weapon = weapon_id_chainsaw,
+		alias = [
+			"ripper",
+			"motoraxe"
+		],
+		str_crit = "**Critical hit!!** The jagged teeth of the chainsaw rest within {name_target}, body as the slime flies!!",
+		str_miss = "**You missed!!** In {name_player}’s excitement and desperation neither chain nor saw hits {name_target}!",
+		str_equip = "You equip the chainsaw.",
+		str_name = "chainsaw",
+		str_weapon = "a chainsaw",
+		str_weaponmaster_self = "You are a rank {rank} wielder of the chainsaw.",
+		str_weaponmaster = "They are a rank {rank} wielder of the chainsaw.",
+		#str_trauma_self = "Your body runs jagged with large chunks missing and patches of skin torn up.",
+		#str_trauma = "Their body runs jagged with large chunks missing and patches of skin torn up.",
+		str_kill = "**REEERNREERN!!** {name_player} revs up their chainsaw and carves up {name_target}’s torso, cutting through the guts,bile,viscera, and slime; sending it all flying. They’ve been cut down to size. {emote_skull}",
+		str_killdescriptor = "chainsaw’d",
+		str_damage = "The numerous finely tooth blades tear at {name_target}’s {hitzone}!!",
+		str_duel = "**...** {name_player} and {name_target} clash with each other chainsaw blow for chainsaw blow like badasses.",
+		str_description = "It's a chainsaw.",
+		#str_reload = "You desperately pull at the ripcord of your chainsaw trying to rev it back up to speed.",
+		#str_reload_warning = "**REEERNREERN--** *shhhhh…* **FUCK!!** {name_player}’s chainsaw just ran out of it’s rev!!",
+		str_scalp = "It’s more like a collection of dandruff then a scalp.",
+		fn_effect = get_normal_attack(weapon_type = 'heavy'),
+		price = 1000000,
+		vendors = [vendor_basedhardware],
+		classes= [],
+		stat = stat_chainsaw_kills,
+		captcha_length = 4
+	),
+
 ]
 
 # A map of id_weapon to EwWeapon objects.
@@ -6370,6 +6440,17 @@ enemy_attack_type_list = [
 		str_killdescriptor = "pushed around",
 		str_damage = "{name_target} gets bumped around a bit on their {hitzone}!",
 		fn_effect = atf_body
+	),
+	EwAttackType(  # 11
+		id_type="amateur",
+		str_crit="**AIIIIEEE!!** {name_enemy} screams in abject fear, lunging at {name_target}'s with a {civ_weapon} in hand! Fuck, they actually got you!",
+		str_miss="**MISS!** {name_enemy} trips and falls facefirst on the ground. {name_target} is holding back their laughter at how goddamn stupid this all is.",
+		# str_trauma_self = "Your have deep bruising on your torso.",
+		# str_trauma = "They have deep bruising on their torso.",
+		str_kill="{name_enemy} is thrown into an adrenaline rush! They brandish their {civ_weapon} and throw it in a perfect spiral, directly through {name_target}'s skull. {emote_skull}",
+		str_killdescriptor="felled",
+		str_damage="{name_enemy} bludgeons {name_target} in the {hitzone}! At least they try to...",
+		fn_effect=atf_body
 	),
 	# If str_trauma and str_trauma_self make a return, consider filling GvS attacktypes out in these attributes.
 	EwAttackType( # GvS - 1
@@ -6828,6 +6909,15 @@ bully_responses = [
 	"You scream \"HEY {target_name}! NICE {cosmetic} YOU'RE WEARING! DID YOUR MOM BUY IT FOR YA?\"",
 	"You grab {slimeoid} and give them a noogie. Just when {target_name} thinks this is all fun and games, you throw {slimeoid} into the street. They have a panic attack trying to get past all the traffic and back to safety."
 
+]
+
+makeshift_weapons = [
+"stick",
+"purse",
+"dollar store pepper spray",
+"backpack",
+"cosplay katana",
+"leather belt"
 ]
 
 cabinets_list = [
@@ -12616,6 +12706,24 @@ trauma_list = [
 				str_trauma = "Their skin is stretched amd misshapen, flabby and tight in different spots.",
 				trauma_class = trauma_class_accuracy,
 			),
+	EwTrauma(  # 16
+		id_trauma=weapon_id_chainsaw,
+		str_trauma_self="Your body is made almost exclusively out of scar tissue.",
+		str_trauma="Their body is made almost exclusively out of scar tissue.",
+		trauma_class=trauma_class_accuracy,
+	),
+	EwTrauma(  # 17
+		id_trauma=weapon_id_laywaster,
+		str_trauma_self="Your body is melting and mishhapen, like your skin was made of drenched paper mache.",
+		str_trauma="Their body is melting and mishhapen, like their skin was made of drenched paper mache.",
+		trauma_class=trauma_class_accuracy,
+	),
+	EwTrauma(  # 17
+		id_trauma='amateur',
+		str_trauma_self="You can still feel the circular scar inside your throat. Embarrassing...",
+		str_trauma="They can still feel the circular scar inside their throat. Embarrassing...",
+		trauma_class=trauma_class_accuracy,
+	),
 ]
 
 
@@ -12918,6 +13026,8 @@ enemy_attacktype_axe = 'axe'
 enemy_attacktype_hooves = 'hooves'
 enemy_attacktype_body = 'body'
 
+enemy_attacktype_amateur = 'amateur'
+
 enemy_attacktype_gvs_g_seeds = 'g_seeds'
 enemy_attacktype_gvs_g_appleacid = 'g_appleacid'
 enemy_attacktype_gvs_g_bloodshot = 'g_bloodshot'
@@ -12960,6 +13070,10 @@ enemy_type_megaslime = 'megaslime'
 enemy_type_slimeasaurusrex = 'slimeasaurusrex'
 enemy_type_greeneyesslimedragon = 'greeneyesslimedragon'
 enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
+
+enemy_type_civilian = 'civilian'
+enemy_type_civilian_innocent = 'innocent'
+
 # Gankers Vs. Shamblers enemies
 enemy_type_gaia_poketubers = "poketubers"
 enemy_type_gaia_pulpgourds = "pulpgourds"
@@ -13023,10 +13137,12 @@ enemy_class_gaiaslimeoid = 'gaiaslimeoid'
 enemy_class_shambler = 'shambler'
 
 # List of enemies sorted by their spawn rarity.
-common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime]
+common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime, enemy_type_civilian, enemy_type_civilian_innocent]
 uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime]
 rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed]
 raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
+
+enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator, enemy_type_civilian, enemy_type_civilian_innocent]
 
 # List of enemies that spawn in the Nuclear Beach
 pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
@@ -13176,6 +13292,14 @@ enemy_drop_tables = {
 		{item_id_dinoslimemeat: [100, 1, 1]}, 
 		{item_id_tradingcardpack: [100, 1, 1]}
 	],
+	enemy_type_civilian: [
+		{item_id_slimepoudrin: [20, 1, 1]},
+		{item_id_civilianscalp: [100, 1, 1]},
+	],
+	enemy_type_civilian_innocent: [
+		{item_id_slimepoudrin: [20, 1, 1]},
+		{item_id_civilianscalp: [100, 1, 1]},
+	],
 }
 for enemy in gvs_enemies:
 	enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}]
@@ -13287,12 +13411,28 @@ enemy_data_table = {
 		"aliases": ["dragon","greeneyes","greeneyesslimedragon","green"]
 	},
 	enemy_type_unnervingfightingoperator: {
-		"slimerange": [1000000, 3000000], 
-		"ai": enemy_ai_attacker_b, 
-		"attacktype": enemy_attacktype_armcannon, 
-		"displayname": "Unnerving Fighting Operator", 
-		"raredisplayname": "Unyielding Fierce Operator", 
+		"slimerange": [1000000, 3000000],
+		"ai": enemy_ai_attacker_b,
+		"attacktype": enemy_attacktype_armcannon,
+		"displayname": "Unnerving Fighting Operator",
+		"raredisplayname": "Unyielding Fierce Operator",
 		"aliases": ["ufo", "alien","unnervingfightingoperator","unnvering"]
+	},
+enemy_type_civilian: {
+		"slimerange": [100001, 100001],
+		"ai": enemy_ai_attacker_a,
+		"attacktype": enemy_attacktype_amateur,
+		"displayname": "Bloodthirsty Civilian",
+		"raredisplayname": "Closet Serial Killer",
+		"aliases": ["townsfolk", "citizen","civilian","bloodthirsty", "person"]
+	},
+enemy_type_civilian_innocent: {
+		"slimerange": [100001, 100001],
+		"ai": enemy_ai_attacker_a,
+		"attacktype": enemy_attacktype_amateur,
+		"displayname": "Innocent Civilian",
+		"raredisplayname": "Puppy-Eyed Youth",
+		"aliases": ["townsfolk", "citizen","civilian","innocent", "person"]
 	},
 	enemy_type_gaia_poketubers: {
 		"slimerange": [100, 100],
