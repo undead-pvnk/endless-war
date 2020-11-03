@@ -2677,16 +2677,14 @@
         "recover_hunger": 120,
         "price": 100,
         "str_name": "Paradox Chocs",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You eat the Paradox Chocs. They don't taste all that good, but that's part of their charm, you think.",
         "inebriation": 0,
         "str_desc": "A bag of chocolates. Almost all of them are shaped like the head of Paradox Crocs. Every bag also comes with a Koff head, a Seani head, and an ~~Ackro~~ Obama head.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "twixten": {
@@ -2698,16 +2696,14 @@
         "recover_hunger": 150,
         "price": 100,
         "str_name": "Twixten",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You sink your teeth into the Twixten, working your way down the blade, and finally giving a huge bite into the hilt. *CRUNCH*",
         "inebriation": 0,
         "str_desc": "A chocolate bar. It's shaped like a katana.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "sni": {
@@ -2719,16 +2715,14 @@
         "recover_hunger": 100,
         "price": 100,
         "str_name": "SNI-",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You take a bite out of your s... sn... ... ... SNI- *CHOMP*.",
         "inebriation": 0,
         "str_desc": "A chocolate bar with wafers on the inside. You can't bring yourself to say the name out loud, though.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "slimybears": {
@@ -2740,16 +2734,14 @@
         "recover_hunger": 80,
         "price": 100,
         "str_name": "Slimy Bears",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You stash a fistfull of Slimy Bears right into your gullet, chewing them thoroughly.",
         "inebriation": 0,
         "str_desc": "A packet of Slimy Bears. They come in a variety of colors, like purple, pink, green, and... yellow? Somehow this weirds you out a bit...",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "n8heads": {
@@ -2761,16 +2753,14 @@
         "recover_hunger": 60,
         "price": 100,
         "str_name": "N8heads",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You chew on a N8head. It stopped tasting good long before you were done sinking your teeth into it, but you felt committed enough to finish what you started. Fuckin shill.",
         "inebriation": 0,
         "str_desc": "A N8heads packet. They're bars of sour taffy, each with his signature shades imprinted onto them.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "turstwerthers": {
@@ -2782,16 +2772,14 @@
         "recover_hunger": 70,
         "price": 100,
         "str_name": "Turstwerthers",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You shatter the Turstwerthers in your mouth, and the gooey caramel seeps out with every bite. Simply delight!",
         "inebriation": 0,
         "str_desc": "A bag of Turstwerthers. They're hard caramels, shaped like elephant tusks.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "candybungis": {
@@ -2803,16 +2791,14 @@
         "recover_hunger": 100,
         "price": 1000,
         "str_name": "Candy (Bungis)",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You eat through the Candy (Bungis). Rather than imprint the temporary tattoo, you just shove the whole thing into your mouth and chew through it.",
         "inebriation": 0,
         "str_desc": "A rolled up fruit snack. An layer of ink it has allows you to imprint an image of Sky (Bungis) onto your tongue.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "licoricelobsters": {
@@ -2824,16 +2810,14 @@
         "recover_hunger": 150,
         "price": 1000,
         "str_name": "Licorice Lobsters",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You chomp on the Licorice Lobsters. Their slight bittersweetness fills you with memories of days gone by.",
         "inebriation": 0,
         "str_desc": "Yup. They're lobsters.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "chocolateslimecorpbadges": {
@@ -2845,17 +2829,14 @@
         "recover_hunger": 200,
         "price": 1000,
         "str_name": "Chocolate Slimecorp Badges",
-        "vendors": [
-            "Slimy Persuits",
-            "The Breakroom"
-        ],
+        "vendors": [],
         "str_eat": "You eat the Chocolate Slimecorp Badges. They taste surprisingly good. Maybe they're home-made?",
         "inebriation": 0,
         "str_desc": "A plastic bag of chocolates, all resembling that infamous logo. Snapping them in half reveals a thin layer of graham cracker on the inside.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "poudrinpops": {
@@ -2867,16 +2848,14 @@
         "recover_hunger": 100,
         "price": 1000,
         "str_name": "Poudrin Pops",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You crush the poudrin pops with your teeth alone. You don't gain any slime, but they do taste amazing.",
         "inebriation": 0,
         "str_desc": "Hard, green candy, meant to resemble Slime Poudrins. They're placed atop plastic rings, meant to be worn on your finger as you lick away.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "atms": {
@@ -2888,16 +2867,14 @@
         "recover_hunger": 130,
         "price": 1000,
         "str_name": "ATm's",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You snack on the packet of ATm's. The hard shell pairs nicely with the milk chocolate on the inside.",
         "inebriation": 0,
         "str_desc": "A packet of ATm's. They're all small, spherical chocolates with the @ symbol on them.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "seanis": {
@@ -2909,16 +2886,14 @@
         "recover_hunger": 90,
         "price": 1000,
         "str_name": "Seanis",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You chomp on the Seanis, slicing them in twain over and over. By the time you're finished with them, you've developed three cavities.",
         "inebriation": 0,
         "str_desc": "A packet of hard candies. They're small tablets, colored in fuchsia, purple, and seafoam green.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "bustahfingers": {
@@ -2930,16 +2905,14 @@
         "recover_hunger": 300,
         "price": 10000,
         "str_name": "Bustahfingers",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You chomp on each half of the Bustahfingers heartily. The thick layer of chocolate is complimented perfectly by the core of peanut butter inside.",
         "inebriation": 0,
         "str_desc": "A high quality candy bar, shaped like two nunchuks bonded together by a thin section of chocolate in the middle.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "marsbar": {
@@ -2951,16 +2924,14 @@
         "recover_hunger": 300,
         "price": 10000,
         "str_name": "Mars Bar",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You take a bite out of the mars bar. Shockingly, the nicotine on the inside pairs well with the creamy sweetness of the white chocolate shell.",
         "inebriation": 0,
         "str_desc": "A small cylindrical candy bar, unsurprisingly shaped like a cigarette. What is surprising, however, is that it contains tiny traces of nicotine on the inside.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "juvieranchers": {
@@ -2972,16 +2943,14 @@
         "recover_hunger": 30,
         "price": 10000,
         "str_name": "Juvie Ranchers",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You suck on the Juvie Ranchers. The Dire Apple ones are particularly sour.",
         "inebriation": 0,
         "str_desc": "A bag of hard candies, all flavored after the various crops of the city.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "swedishbassedgods": {
@@ -2993,16 +2962,14 @@
         "recover_hunger": 100,
         "price": 10000,
         "str_name": "Swedish Bassed Gods",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You chew through the Swedish Bassed Gods. Despite their unassuming appearance, they taste amazing. Truly a snack worthy of praise. Or would it be 'appraisal', in this case? Ah, forget it.",
         "inebriation": 0,
         "str_desc": "A packet of gummies shaped like the Bassed God. On the back of the packet, there's an advertisement for the Fishing Guild.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "endlesswarheads": {
@@ -3014,16 +2981,14 @@
         "recover_hunger": 250,
         "price": 10000,
         "str_name": "Endless Warheads",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You chew through the Endless Warheads. Combining different colored ones inside your mouth sets off a burst of flavor. Sick!!",
         "inebriation": 0,
         "str_desc": "A bag of sour candies coated in sugar. They're all multicolored, and shaped like the familiar obelisk it gets its name from.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "chutzpahcherries": {
@@ -3035,16 +3000,14 @@
         "recover_hunger": 250,
         "price": 10000,
         "str_name": "Chutzpah Cherries",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You gobble up the Chutzpah Cherries. Who knew euthanasia could taste this good!",
         "inebriation": 0,
         "str_desc": "A small box of dark red gummies, each one bearing the face of a slimeoid.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "slimesours": {
@@ -3056,16 +3019,14 @@
         "recover_hunger": 100,
         "price": 100000,
         "str_name": "Slime Sours",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You pop a few Slime Sours into your maw. They bubble in your mouth a bit, almost like they're carbonated or something. Luckily they taste excellent, and seemingly have no connection with the death raining from above.",
         "inebriation": 0,
         "str_desc": "A small plastic bag of gumdrops, each as green as slime itself. Apparently they're made entirely by hand.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "munchies": {
@@ -3077,16 +3038,14 @@
         "recover_hunger": 350,
         "price": 100000,
         "str_name": "Munchies",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You gorge yourself on the Munchies. What seemed like such a basic snack item reveals itself to be incredibly addictive. Before you know it, the bag is empty, leaving you to reflect on your gluttony.",
         "inebriation": 0,
         "str_desc": "A bag of crackers, with a thin layer of cream in the middle. They're all shaped like jester hats.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "magickspatchkids": {
@@ -3098,16 +3057,14 @@
         "recover_hunger": 100,
         "price": 100000,
         "str_name": "Magicks Patch Kids",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You munch on the Magicks Patch Kids. Sour. Sweet. !dab.",
         "inebriation": 0,
         "str_desc": "People are rather split on these. Some find them too sour, while others claim it to have an 'acquired taste'.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "krakel": {
@@ -3119,16 +3076,14 @@
         "recover_hunger": 320,
         "price": 100000,
         "str_name": "Krakel",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You take a large bite out of the Krakel bar. The rice lining the interior gives it a nice texture, and offsets the bitterness of the dark chocolate a bit.",
         "inebriation": 0,
         "str_desc": "A thick slab of dark chocolate. An engraving on the back reads 'SLURP SLIME, BUSTERS'. Go figure.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "strauberryshortcakes": {
@@ -3140,16 +3095,14 @@
         "recover_hunger": 250,
         "price": 100000,
         "str_name": "Strauberry Shortcakes",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You toss the shortcakes into your mouth one at a time, savoring every bite. Even though they're manufactured, somehow you feel like a lot of love went into making them. Maybe it's just because of all the sugar.",
         "inebriation": 0,
         "str_desc": "A packet containing two small pastries. An anchor symbol made of pink frosting is drawn onto both of them.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "n3crunch": {
@@ -3161,16 +3114,14 @@
         "recover_hunger": 250,
         "price": 100000,
         "str_name": "N3 Crunch",
-        "vendors": [
-            "Slimy Persuits"
-        ],
+        "vendors": [],
         "str_eat": "You bite through the N3 Crunch bar. It's just your basic chocolate bar, with no outstanding appeal other than the engraving on the front.",
         "inebriation": 0,
         "str_desc": "A chocolate bar popular with fans of Slimecorp. Each bar has an engraving of N3 on it. You try not to think about what people would do with these things behind closed doors.",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "trickortreating",
         "perishable": true
     },
     "sourpussbread": {

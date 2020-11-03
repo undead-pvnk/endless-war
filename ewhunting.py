@@ -2274,6 +2274,11 @@ def spawn_enemy(
 			if pre_chosen_weather == ewcfg.enemy_weathertype_rainresist:
 				enemy.display_name = "Bicarbonate {}".format(enemy.display_name)
 				enemy.slimes *= 2
+		
+		#TODO delete after double halloween
+		market_data = EwMarket(id_server=id_server)
+		if (enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman or enemytype == ewcfg.enemy_type_doublehorse) and market_data.horseman_deaths >= 1:
+			enemy.slimes *= 1.5
 
 		props = None
 		try:
@@ -2300,7 +2305,7 @@ def spawn_enemy(
 				while sub_enemy_spawning_count < sub_enemy_spawning_max:
 					sub_enemy_spawning_count += 1
 
-					sub_resp_cont = spawn_enemy(id_server=id_server, pre_chosen_type=sub_enemy_type, pre_chosen_poi=chosen_poi)
+					sub_resp_cont = spawn_enemy(id_server=id_server, pre_chosen_type=sub_enemy_type, pre_chosen_poi=chosen_poi, manual_spawn=True)
 
 					resp_cont.add_response_container(sub_resp_cont)
 
@@ -2310,6 +2315,15 @@ def spawn_enemy(
 				response = "**A {} has been planted in {}!!**".format(enemy.display_name, enemy.gvs_coord)
 			elif enemytype in ewcfg.gvs_enemies_shamblers:
 				response = "**A {} creeps forward!!** It spawned in {}!".format(enemy.display_name, enemy.gvs_coord)
+			elif enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman:
+				response = "***BEHOLD!!!***  The {} has arrvied to challenge thee! He is of {} slime, and {} in level. Happy Double Halloween, you knuckleheads!".format(enemy.display_name, enemy.slimes, enemy.level)
+
+				if market_data.horseman_deaths >= 1:
+					response += "\n***BACK SO SOON, MORTALS? I'M JUST GETTING WARMED UP, BAHAHAHAHAHAHA!!!***"
+
+			elif enemytype == ewcfg.enemy_type_doublehorse:
+				response = "***HARK!!!***  Clopping echoes throughout the cave! The {} has arrived with {} slime, and {} levels. And on top of him rides...".format(enemy.display_name, enemy.slimes, enemy.level)
+
 			else:
 				response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level, enemy.display_name, enemy.slimes)
 				if enemytype == ewcfg.enemy_type_sandbag:
