@@ -1641,9 +1641,6 @@ async def enemy_action_tick_loop(id_server):
 
 		else:
 			await ewhunting.enemy_perform_action(id_server)
-			if number_civilians(id_server=id_server) == 1:
-				ewhunting.spawn_enemy(id_server=id_server, pre_chosen_type=random.choice([ewcfg.enemy_type_civilian, ewcfg.enemy_type_civilian_innocent]), pre_chosen_poi=random.choice(ewcfg.capturable_districts), manual_spawn=True)
-
 
 async def gvs_gamestate_tick_loop(id_server):
 	interval = ewcfg.gvs_gamestate_tick_length
