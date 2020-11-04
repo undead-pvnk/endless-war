@@ -290,7 +290,7 @@ poi_id_apt_westglocksbury = "aptwestglocksbury"
 poi_id_apt_jaywalkerplain = "aptjaywalkerplain"
 poi_id_apt_crookline = "aptcrookline"
 poi_id_apt_dreadford = "aptdreadford"
-poi_id_apt_maimridge = "aptdreadford"
+poi_id_apt_maimridge = "aptmaimridge"
 
 # The streets -- There are 123 of them, to be exact
 poi_id_copkilltown_street_a = "copkilltownstreeta" # NOT USED
@@ -13178,12 +13178,12 @@ enemy_class_gaiaslimeoid = 'gaiaslimeoid'
 enemy_class_shambler = 'shambler'
 
 # List of enemies sorted by their spawn rarity.
-common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime, enemy_type_civilian, enemy_type_civilian_innocent]
+common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime]
 uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime]
 rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed]
 raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
 
-enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator, enemy_type_civilian, enemy_type_civilian_innocent]
+enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
 
 # List of enemies that spawn in the Nuclear Beach
 pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]

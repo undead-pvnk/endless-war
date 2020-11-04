@@ -689,7 +689,8 @@ class EwEnemy:
 							response += "\n\n{}".format(used_attacktype.str_kill.format(
 								name_enemy=enemy_data.display_name,
 								name_target=("<@!{}>".format(target_data.id_user)),
-								emote_skull=ewcfg.emote_slimeskull
+								emote_skull=ewcfg.emote_slimeskull,
+								civ_weapon=random.choice(ewcfg.makeshift_weapons)
 							))
 							target_data.trauma = used_attacktype.id_type
 
