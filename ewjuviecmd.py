@@ -391,13 +391,13 @@ async def mine(cmd):
 
 			# juvies get items 4 times as often as enlisted players
 			unearthed_item_chance = 1 / ewcfg.unearthed_item_rarity
-			if user_data.life_state == ewcfg.life_state_juvenile:
+			if user_data.life_state == ewcfg.life_state_juvenile and not user_data.juviemode:
 				unearthed_item_chance *= 2
-			if has_pickaxe == True:
+			if has_pickaxe == True and not user_data.juviemode:
 				unearthed_item_chance *= 1.5
-			if ewcfg.mutation_id_lucky in mutations:
+			if ewcfg.mutation_id_lucky in mutations and not user_data.juviemode:
 				unearthed_item_chance *= 1.33
-			if ewcfg.cosmeticAbility_id_lucky in cosmetic_abilites:
+			if ewcfg.cosmeticAbility_id_lucky in cosmetic_abilites and not user_data.juviemode:
 				unearthed_item_chance *= 1.33
 
 			# event bonus
@@ -1646,17 +1646,18 @@ def create_mining_event(cmd):
 			)
 		# 10 second poudrin frenzy
 		else:
-			event_props = {}
-			event_props['id_user'] = cmd.message.author.id
-			event_props['poi'] = user_data.poi
-			event_props['channel'] = cmd.message.channel.name
-			return ewworldevent.create_world_event(
-				id_server = cmd.guild.id,
-				event_type = ewcfg.event_type_poudrinfrenzy,
-				time_activate = time_now,
-				time_expir = time_now + 5,
-				event_props = event_props
-			)
+			if not user_data.juviemode:
+				event_props = {}
+				event_props['id_user'] = cmd.message.author.id
+				event_props['poi'] = user_data.poi
+				event_props['channel'] = cmd.message.channel.name
+				return ewworldevent.create_world_event(
+					id_server = cmd.guild.id,
+					event_type = ewcfg.event_type_poudrinfrenzy,
+					time_activate = time_now,
+					time_expir = time_now + 5,
+					event_props = event_props
+				)
 
 	"""
 	# rare event

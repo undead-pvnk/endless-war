@@ -633,8 +633,10 @@ async def award_fish(fisher, cmd, user_data):
 	response = ""
 
 	actual_fisherman = None
+	actual_fisherman_data = user_data
 	if fisher.inhabitant_id:
 		actual_fisherman = user_data.get_possession()[1]
+		actual_fisherman_data = EwUser(id_user=actual_fisherman, id_server=cmd.guild.id)
 
 	if fisher.current_fish == "item":
 		slimesea_inventory = ewitem.inventory(id_server = cmd.guild.id, id_user = ewcfg.poi_id_slimesea)			
@@ -643,7 +645,10 @@ async def award_fish(fisher, cmd, user_data):
 
 			item = random.choice(ewcfg.mine_results)
 		
-			unearthed_item_amount = (random.randrange(5) + 8) # anywhere from 8-12 drops
+			if actual_fisherman_data.juviemode:
+				unearthed_item_amount = 1
+			else:
+				unearthed_item_amount = (random.randrange(5) + 8) # anywhere from 8-12 drops
 
 			item_props = ewitem.gen_item_props(item)
 
@@ -679,12 +684,6 @@ async def award_fish(fisher, cmd, user_data):
 			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 			if weapon.id_weapon == "fishingrod":
 				has_fishingrod = True
-
-		#if user_data.sidearm >= 0:
-		#	sidearm_item = EwItem(id_item=user_data.sidearm)
-		#	sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
-		#	if sidearm.id_weapon == "fishingrod":
-		#		has_fishingrod = True
 
 		value = 0
 
@@ -781,7 +780,8 @@ async def award_fish(fisher, cmd, user_data):
 				'time_expir': time.time() + ewcfg.std_food_expir,
 				'time_fridged': 0,
 				'acquisition': ewcfg.acquisition_fishing,
-				'value': value
+				'value': value,
+				'noslime': actual_fisherman_data.juviemode
 			}
 		)
 
@@ -1064,7 +1064,7 @@ async def barter(cmd):
 					# Random choice between 0, 1, and 2
 					offer_decision = random.randint(0, 2)
 
-					if offer_decision != 2 or ewcfg.mutation_id_davyjoneskeister in mutations: # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
+					if (offer_decision != 2 or ewcfg.mutation_id_davyjoneskeister in mutations) and not item_props.get('noslime'): # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
 						max_value = value * 6000 # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
 						min_value = max_value / 10 # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
 
@@ -1220,7 +1220,7 @@ async def barter_all(cmd):
 			# Random choice between 0, 1, and 2
 			offer_decision = random.randint(0, 2)
 
-			if offer_decision != 2 or ewcfg.mutation_id_davyjoneskeister in mutations: # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
+			if (offer_decision != 2 or ewcfg.mutation_id_davyjoneskeister in mutations) and not fish.item_props.get('noslime'): # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
 				max_value = value * 6000 # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
 				min_value = max_value / 10 # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
 
