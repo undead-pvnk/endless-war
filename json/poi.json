@@ -16609,6 +16609,60 @@
         "topic": "",
         "wikipage": ""
     },
+    "aptmaimridge": {
+        "id_poi": "aptmaimridge",
+        "alias": [],
+        "str_name": "a Maimridge apartment",
+        "str_desc": "",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "maimridge-apartments",
+        "role": "Maimridge Apartments",
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "aptmaimridge": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": false,
+        "is_apartment": true,
+        "is_street": false,
+        "mother_districts": [
+            "maimridge"
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {},
+        "topic": "",
+        "wikipage": ""
+    },
     "slimesendcliffs": {
         "id_poi": "slimesendcliffs",
         "alias": [
