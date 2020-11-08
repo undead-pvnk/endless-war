@@ -14639,7 +14639,7 @@ captcha_dict = [
 	#5
 	'GUNKY', 'BOORU', 'ROWDY', 'GHOST', 'ORDER',
 	'SCARE', 'BULLY', 'FERRY', 'SAINT', 'SLASH',
-	'SLOSH', 'PARTY', 'JUVIE', 'BASED', 'TULPA',
+	'SLOSH', 'PARTY', 'BASED', 'TULPA',
 	'SLURP', 'MONTH', 'SEVEN', 'BRASS', 'MINES',
 	'CHEMO', 'LIGHT', 'FURRY', 'PIZZA', 'ARENA',
 	'LUCKY', 'RIFLE', '56709',

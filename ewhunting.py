@@ -663,6 +663,7 @@ class EwEnemy:
 						target_data.id_killer = enemy_data.id_enemy
 
 						#target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
+						civ_weapon = random.choice(ewcfg.makeshift_weapons)
 
 						kill_descriptor = "beaten to death"
 						if used_attacktype != ewcfg.enemy_attacktype_unarmed:
@@ -671,15 +672,14 @@ class EwEnemy:
 								name_target=("<@!{}>".format(target_data.id_user)),
 								hitzone=randombodypart,
 								strikes=strikes,
-								civ_weapon = random.choice(ewcfg.makeshift_weapons)
-
+								civ_weapon=civ_weapon
 							)
 							kill_descriptor = used_attacktype.str_killdescriptor
 							if crit:
 								response += " {}".format(used_attacktype.str_crit.format(
 									name_enemy=enemy_data.display_name,
 									name_target=target_player.display_name,
-									civ_weapon=random.choice(ewcfg.makeshift_weapons)
+									civ_weapon=civ_weapon
 								))
 
 							if len(onbreak_responses) != 0:
@@ -690,7 +690,7 @@ class EwEnemy:
 								name_enemy=enemy_data.display_name,
 								name_target=("<@!{}>".format(target_data.id_user)),
 								emote_skull=ewcfg.emote_slimeskull,
-								civ_weapon=random.choice(ewcfg.makeshift_weapons)
+								civ_weapon=civ_weapon
 							))
 							target_data.trauma = used_attacktype.id_type
 
@@ -2727,7 +2727,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 
 	if not cannibalize:
 		if enemy_data.ai == ewcfg.enemy_ai_defender:
-			if enemy_data.id_target != "":
+			if enemy_data.id_target != "" or enemy_data.id_target != -1:
 				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server, data_level = 1)
 	
 		elif enemy_data.ai == ewcfg.enemy_ai_attacker_a:
