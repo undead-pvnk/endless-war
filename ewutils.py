@@ -1699,9 +1699,9 @@ def get_move_speed(user_data):
 	#if user_data.life_state == ewcfg.life_state_corpse:
 	#	move_speed *= 2
 
-	#move_speed = max(0.1, move_speed)
+	move_speed = max(0.1, move_speed)
 
-	#return move_speed
+	return move_speed
 
 
 """ Damage all players in a district """
