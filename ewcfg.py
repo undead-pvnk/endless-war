@@ -1077,7 +1077,7 @@ cmd_dance = cmd_prefix + 'dance'
 cmd_propaganda = cmd_prefix + 'propaganda'
 cmd_coinflip = cmd_prefix + 'co1nfl1p'
 cmd_spook = cmd_prefix + 'spook'
-cmd_makecostume = cmd_prefix + 'makecostume'
+#cmd_makecostume = cmd_prefix + 'makecostume'
 cmd_trick = cmd_prefix + 'trick'
 cmd_treat = cmd_prefix + 'treat'
 cmd_russian = cmd_prefix + 'russianroulette'
@@ -1117,7 +1117,7 @@ cmd_editprops = cmd_prefix + 'editprops'
 cmd_setslime = cmd_prefix + 'setslime'
 cmd_checkstats = cmd_prefix + 'checkstats'
 cmd_makebp = cmd_prefix + 'makebp'
-cmd_exalt = cmd_prefix + 'exalt'
+#cmd_exalt = cmd_prefix + 'exalt'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
 cmd_discard_alt1 = cmd_prefix + 'drop'
@@ -1460,6 +1460,8 @@ offline_cmds = [
 	cmd_survey,
 	cmd_scout,
 	cmd_scout_alt1,
+	cmd_depart,
+	cmd_retire
 	# cmd_scrutinize
 ]
 
@@ -7771,45 +7773,45 @@ transport_lines = [
 			}
 
 		),
-	EwTransportLine( # white subway line from downtown to juvies row
-	 	id_line = transport_line_subway_white_eastbound,
-	 	alias = [
-	 		"whiteeastline",
-			"whiteeast",
-	 		"eastwhite",
-	 		"whitetojuviesrow",
-	 		"whitetojuvies",
-	 		"whitetojr"
-	 	    ],
-	 	first_stop = poi_id_underworld_subway_station,
-	 	last_stop = poi_id_jr_subway_station,
-	 	next_line = transport_line_subway_white_westbound,
-	 	str_name = "The white subway line towards Juvie's Row",
-	 	schedule = {
-	 		poi_id_underworld_subway_station : [20, poi_id_dt_subway_station],
-	 		poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
-	 		poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
-	 	    }
-	 	),
-	EwTransportLine( # white subway line from juvies row to downtown
-	 	id_line = transport_line_subway_white_westbound,
-	 	alias = [
-	 		"whitewestline",
-	 		"whitewest",
-	 		"westwhite",
-	 		"whitetounderworld",
-	 		"whitetouw"
-	 	    ],
-	 	first_stop = poi_id_jr_subway_station,
-	 	last_stop = poi_id_underworld_subway_station,
-	 	next_line = transport_line_subway_white_eastbound,
-	 	str_name = "The white subway line towards The Underworld",
-	 	schedule = {
-	 		poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
-	 		poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
-	 		poi_id_dt_subway_station : [20, poi_id_underworld_subway_station],
-	 	    }
-	 	),
+#	EwTransportLine( # white subway line from downtown to juvies row
+#	 	id_line = transport_line_subway_white_eastbound,
+#	 	alias = [
+#	 		"whiteeastline",
+#			"whiteeast",
+#	 		"eastwhite",
+#	 		"whitetojuviesrow",
+#	 		"whitetojuvies",
+#	 		"whitetojr"
+#	 	    ],
+#	 	first_stop = poi_id_underworld_subway_station,
+#	 	last_stop = poi_id_jr_subway_station,
+#	 	next_line = transport_line_subway_white_westbound,
+#	 	str_name = "The white subway line towards Juvie's Row",
+#	 	schedule = {
+#	 		poi_id_underworld_subway_station : [20, poi_id_dt_subway_station],
+#	 		poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
+#	 		poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
+#	 	    }
+#	 	),
+#	EwTransportLine( # white subway line from juvies row to downtown
+#	 	id_line = transport_line_subway_white_westbound,
+#	 	alias = [
+#	 		"whitewestline",
+#	 		"whitewest",
+#	 		"westwhite",
+#	 		"whitetounderworld",
+#	 		"whitetouw"
+#	 	    ],
+#	 	first_stop = poi_id_jr_subway_station,
+#	 	last_stop = poi_id_underworld_subway_station,
+#	 	next_line = transport_line_subway_white_eastbound,
+#	 	str_name = "The white subway line towards The Underworld",
+#	 	schedule = {
+#	 		poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
+#	 		poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
+#	 		poi_id_dt_subway_station : [20, poi_id_underworld_subway_station],
+#	 	    }
+#	 	),
 	EwTransportLine( # blimp line from dreadford to assault flats beach
 		id_line = transport_line_blimp_df_to_afb,
 		alias = [
@@ -9502,19 +9504,19 @@ smelting_recipe_list = [
             item_id_string: 2, # Laces
         },
         products=["rollerblades"]
-    ),
-	# TODO remove after double halloween
-	EwSmeltingRecipe(
-        id_recipe = "ticket",
-        str_name = "Ticket to the White Line",
-        alias = [
-            "tickettohell",
-        ],
-        ingredients = {
-            item_id_doublehalloweengrist: 100,
-        },
-        products = ['ticket']
     )
+	# TODO remove after double halloween
+	#EwSmeltingRecipe(
+    #    id_recipe = "ticket",
+    #    str_name = "Ticket to the White Line",
+    #    alias = [
+    #        "tickettohell",
+    #    ],
+    #    ingredients = {
+    #        item_id_doublehalloweengrist: 100,
+    #    },
+    #    products = ['ticket']
+    #)
 ]
 #smelting_recipe_list += ewdebug.debugrecipes
 
@@ -14732,3 +14734,69 @@ def set_client(cl):
 #     scream += "A"
 #     
 # print(scream)
+
+"""    /*"rpcity": {
+        "id_poi": "rpcity",
+        "alias": [
+            "rp",
+            "rp city",
+            "roleplay city",
+            "rpc",
+            "costumestore",
+            "costume"
+        ],
+        "str_name": "RP City",
+        "str_desc": "This place gives you the fucking creeps. A run-down shell of its former self, the RP City store has been long forgotten by most of the residents of NLACakaNM, but every Double Halloween, it somehow comes crawling back. All the amenities and costumes are ragged and decrepit, but it seems there's still a fresh supply of costume creation kits. Oh yeah, the register is also manned by a ghost, because why wouldn't it be. He doesn't seem to mind you browsing though, you figure he's just here to collect a paycheck. Such is life... er... the afterlife, rather.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "rp-city",
+        "role": "RP City",
+        "major_role": "littlechernobyl_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "rpcity": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [
+            "RP City"
+        ],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+            "littlechernobyl"
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": true,
+        "max_degradation": 10000,
+        "neighbors": {
+            "littlechernobyl": 20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/Little_Chernobyl#RP_City"
+    },*/"""

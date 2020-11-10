@@ -620,8 +620,7 @@
             "arsonbrook": 60,
             "brawlden": 60,
             "oldnewyonkers": 60,
-            "greencakecafe": 20,
-            "rpcity": 20
+            "greencakecafe": 20
         },
         "topic": "Home to the R&D headquarters of many a small business and international conglomerate alike. Don't drink the water.",
         "wikipage": "https://rfck.miraheze.org/wiki/Little_Chernobyl"
@@ -2186,7 +2185,7 @@
             "mario"
         ],
         "str_name": "Maimridge",
-        "str_desc": "In front of you rests the formidable mountain range of Mt. Srxek, known for having freezing temperatures during even the summer months, and for having the highest peaks in the county. Snow falls near the tops of these mountains basically all year \u2018round, and as such a community of suicidal winter sport enthusiasts and adventurous explorers have set up shop across the range, establishing lodging and tacky souvenir shops in and around ancient Native American burial grounds, because it\u2019s not like they were using the place anymore. Unfortunately, or perhaps fortunately for the thrill seekers among us, the mountains here are far too steep for anyone to actually skii down without a death wish to attempt them. Seriously, there are just a series of ninety degree drops in some places, and that\u2019s not even to mention the yetis, don\u2019t even get me started on the yetis. Of course, none of this stops the locals, who eagerly careen off the side of cliffs and then take the lift back up for seconds after they revive. If you want to down some cheap instant hot coco before flying off the summit of a fucking mountain, then this district is for you. Maimridge used to be considered part of the outskirts, but recently it has grown enough of a stable population to be considered a real district. Its claim to fame is, of course, the impressive mountains in its borders.",
+        "str_desc": "In front of you rests the formidable mountain range of Mt. Srxek, known for having freezing temperatures during even the summer months, and for having the highest peaks in the county. Snow falls near the tops of these mountains basically all year \u2018round, and as such a community of suicidal winter sport enthusiasts and adventurous explorers have set up shop across the range, establishing lodging and tacky souvenir shops in and around ancient Native American burial grounds, because it\u2019s not like they were using the place anymore. Unfortunately, or perhaps fortunately for the thrill seekers among us, the mountains here are far too steep for anyone to actually skii down without a death wish to attempt them. Seriously, there are just a series of ninety degree drops in some places, and that\u2019s not even to mention the yetis, don\u2019t even get me started on the yetis. Of course, none of this stops the locals, who eagerly careen off the side of cliffs and then take the lift back up for seconds after they revive. If you want to down some cheap instant hot coco before flying off the summit of a fucking mountain, then this district is for you. Maimridge used to be considered part of the outskirts, but recently it has grown enough of a stable population to be considered a real district. Its claim to fame is, of course, the impressive mountains in its borders. To the south is Astatine Heights. Toxington is to the west, Arsonbrook to the east, and the Northwest Outskirts are to the north.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -14337,71 +14336,6 @@
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Little_Chernobyl#Green_Cake_Cafe"
-    },
-    "rpcity": {
-        "id_poi": "rpcity",
-        "alias": [
-            "rp",
-            "rp city",
-            "roleplay city",
-            "rpc",
-            "costumestore",
-            "costume"
-        ],
-        "str_name": "RP City",
-        "str_desc": "This place gives you the fucking creeps. A run-down shell of its former self, the RP City store has been long forgotten by most of the residents of NLACakaNM, but every Double Halloween, it somehow comes crawling back. All the amenities and costumes are ragged and decrepit, but it seems there's still a fresh supply of costume creation kits. Oh yeah, the register is also manned by a ghost, because why wouldn't it be. He doesn't seem to mind you browsing though, you figure he's just here to collect a paycheck. Such is life... er... the afterlife, rather.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "rp-city",
-        "role": "RP City",
-        "major_role": "littlechernobyl_major",
-        "minor_role": "nullminorrole",
-        "permissions": {
-            "rpcity": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": false,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [
-            "RP City"
-        ],
-        "property_class": "",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": true,
-        "is_apartment": false,
-        "is_street": false,
-        "mother_districts": [
-            "littlechernobyl"
-        ],
-        "father_district": "",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": false,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": true,
-        "max_degradation": 10000,
-        "neighbors": {
-            "littlechernobyl": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Little_Chernobyl#RP_City"
     },
     "sodafountain": {
         "id_poi": "sodafountain",

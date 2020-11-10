@@ -287,13 +287,13 @@ async def embark(cmd):
 			if transport_data.current_line == transport_line.id_line:
 				ticket = None
 				# TODO remove after double halloween
-				user_data = EwUser(member = cmd.message.author)
-				if user_data.poi in [ewcfg.poi_id_dt_subway_station, ewcfg.poi_id_rr_subway_station, ewcfg.poi_id_jr_subway_station]:
-					if transport_line.id_line in [ewcfg.transport_line_subway_white_eastbound, ewcfg.transport_line_subway_white_westbound]:
-						ticket = ewitem.find_item(item_search=ewcfg.item_id_whitelineticket, id_user=cmd.message.author.id,  id_server=cmd.message.guild.id)
-						if ticket is None:
-							response = "You need a ticket to embark on the White Line."
-							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				#user_data = EwUser(member = cmd.message.author)
+				#if user_data.poi in [ewcfg.poi_id_dt_subway_station, ewcfg.poi_id_rr_subway_station, ewcfg.poi_id_jr_subway_station]:
+				#	if transport_line.id_line in [ewcfg.transport_line_subway_white_eastbound, ewcfg.transport_line_subway_white_westbound]:
+				#		ticket = ewitem.find_item(item_search=ewcfg.item_id_whitelineticket, id_user=cmd.message.author.id,  id_server=cmd.message.guild.id)
+				#		if ticket is None:
+				#			response = "You need a ticket to embark on the White Line."
+				#			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				last_stop_poi = ewcfg.id_to_poi.get(transport_line.last_stop)
 				response = "Embarking on {}.".format(transport_line.str_name)

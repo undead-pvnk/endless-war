@@ -153,11 +153,8 @@ async def adorn(cmd):
 				if i.item_props.get("adorned") == 'true':
 					already_adorned = True
 				elif i.item_props.get("context") == 'costume':
-					#if not ewutils.check_fursuit_active(i.id_server):
-					#	response = "You can't adorn your costume right now."
-					#else:
-					item_sought = i
-					break
+					if not ewutils.check_fursuit_active(i.id_server):
+						response = "You can't adorn your costume right now."
 				else:
 					item_sought = i
 					break

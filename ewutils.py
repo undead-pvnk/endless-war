@@ -1605,14 +1605,14 @@ async def spawn_enemies(id_server = None):
 		await resp_cont.post()
 
 	# TODO remove after double halloween
-	market_data = EwMarket(id_server=id_server)
-	underworld_district = EwDistrict(district=ewcfg.poi_id_underworld, id_server=id_server)
-	enemies_count = len(underworld_district.get_enemies_in_district())
+	#market_data = EwMarket(id_server=id_server)
+	#underworld_district = EwDistrict(district=ewcfg.poi_id_underworld, id_server=id_server)
+	#enemies_count = len(underworld_district.get_enemies_in_district())
 
-	if enemies_count == 0 and int(time.time()) > (market_data.horseman_timeofdeath + ewcfg.horseman_death_cooldown):
-		dh_resp_cont = ewhunting.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld, manual_spawn=True)
+	#if enemies_count == 0 and int(time.time()) > (market_data.horseman_timeofdeath + ewcfg.horseman_death_cooldown):
+	#	dh_resp_cont = ewhunting.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld, manual_spawn=True)
 
-		await dh_resp_cont.post()
+	#	await dh_resp_cont.post()
 
 def number_civilians(id_server):
 	query = execute_sql_query("SELECT COUNT(*) from enemies where enemytype in ('civilian', 'innocent') and id_server = id_server")
@@ -1696,12 +1696,12 @@ def get_move_speed(user_data):
 		move_speed *= 1.33
 		
 	#TODO remove after double halloween
-	if user_data.life_state == ewcfg.life_state_corpse:
-		move_speed *= 2
+	#if user_data.life_state == ewcfg.life_state_corpse:
+	#	move_speed *= 2
 
-	move_speed = max(0.1, move_speed)
+	#move_speed = max(0.1, move_speed)
 
-	return move_speed
+	#return move_speed
 
 
 """ Damage all players in a district """

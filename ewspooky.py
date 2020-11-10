@@ -239,7 +239,7 @@ async def haunt(cmd):
 					haunt_power_multiplier /= 2
 
 				# Double Halloween
-				haunt_power_multiplier *= 4
+				#haunt_power_multiplier *= 4
 
 				haunted_slimes = int((haunted_data.slimes / ewcfg.slimes_hauntratio) * haunt_power_multiplier)
 				slimes_lost = int(haunted_slimes / 5) # hauntee only loses 1/5th of what the ghost gets as antislime

@@ -171,7 +171,7 @@ cmd_map = {
 	# Ghosts can BOO 
 	ewcfg.cmd_boo: ewcmd.boo,
 	#TODO remove after double halloween
-	ewcfg.cmd_spook: ewcmd.spook,
+	#ewcfg.cmd_spook: ewcmd.spook,
 	
 	# Juvies can dance
 	ewcfg.cmd_dance: ewcmd.dance,
@@ -183,7 +183,7 @@ cmd_map = {
 	ewcfg.cmd_coinflip: ewcmd.coinflip,
     
 	# Make a costume for Double Halloween
-	ewcfg.cmd_makecostume: ewitem.makecostume,
+	#ewcfg.cmd_makecostume: ewitem.makecostume,
 
 	# Show the total of negative slime in the market.
 	ewcfg.cmd_negapool: ewspooky.negapool,
@@ -386,6 +386,7 @@ cmd_map = {
 	ewcfg.cmd_inventory_alt3: ewitem.inventory_print,
 	ewcfg.cmd_communitychest: ewitem.inventory_print,
 
+
 	# get an item's description
 	ewcfg.cmd_inspect: ewitem.item_look,
 	ewcfg.cmd_inspect_alt1: ewitem.item_look,
@@ -497,7 +498,7 @@ cmd_map = {
 	ewcfg.cmd_setslime: ewcmd.set_slime,
 	ewcfg.cmd_checkstats: ewcmd.check_stats,
 	ewcfg.cmd_makebp : ewutils.make_bp,
-	ewcfg.cmd_exalt: ewkingpin.exalt,
+	#ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
@@ -1216,9 +1217,9 @@ async def on_ready():
 
 					ewutils.logMsg('The time is now {}.'.format(market_data.clock))
 
-					#TODO uncomment after double halloween
-					#if not ewutils.check_fursuit_active(market_data.id_server):
-					#	ewcosmeticitem.dedorn_all_costumes()
+
+					if not ewutils.check_fursuit_active(market_data.id_server):
+						ewcosmeticitem.dedorn_all_costumes()
 
 					if market_data.clock == 6 and market_data.day % 8 == 0:
 						await ewapt.rent_time(id_server=server.id)

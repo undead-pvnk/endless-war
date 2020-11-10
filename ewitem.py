@@ -1074,6 +1074,7 @@ async def inventory_print(cmd):
 	sort_by_id = False
 	
 	stacking = False
+	search = False
 	stacked_message_list = []
 	stacked_item_map = {}
 
@@ -1094,6 +1095,13 @@ async def inventory_print(cmd):
 		if 'stack' in lower_token_list:
 			stacking = True
 
+		if 'search' in lower_token_list:
+			stacking = False
+			sort_by_id = False
+			sort_by_name = False
+			sort_by_type = False
+			search = True
+
 	if sort_by_id:
 		items = inventory(
 			id_user = inventory_source,
@@ -1105,6 +1113,14 @@ async def inventory_print(cmd):
 			id_user=inventory_source,
 			id_server=player.id_server,
 			item_sorting_method='type'
+		)
+	elif search == True:
+		print(ewutils.flattenTokenListToString(cmd.tokens[2:]))
+		items = find_item_all(
+			item_search = ewutils.flattenTokenListToString(cmd.tokens[2:]),
+			id_server=player.id_server,
+			id_user=inventory_source,
+			exact_search=False
 		)
 	else:
 		items = inventory(
@@ -1617,7 +1633,7 @@ def find_item(item_search = None, id_user = None, id_server = None, item_type_fi
 """
 	Find every item matching the search in the player's inventory (returns a list of (non-EwItem) item)
 """
-def find_item_all(item_search = None, id_user = None, id_server = None, item_type_filter = None):
+def find_item_all(item_search = None, id_user = None, id_server = None, item_type_filter = None, exact_search = True):
 	items_sought = []
 	props_to_search = [
 		'weapon_type',
@@ -1635,8 +1651,7 @@ def find_item_all(item_search = None, id_user = None, id_server = None, item_typ
 		for item in items:
 			item_data = EwItem(id_item = item.get('id_item'))
 			for prop in props_to_search:
-				if prop in item_data.item_props and \
-				ewutils.flattenTokenListToString(item_data.item_props.get(prop)) == item_search:
+				if prop in item_data.item_props and (ewutils.flattenTokenListToString(item_data.item_props.get(prop)) == item_search or (exact_search == False and item_search in ewutils.flattenTokenListToString(item_data.item_props.get(prop)))):
 					items_sought.append(item)
 					break
 
