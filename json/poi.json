@@ -14905,7 +14905,7 @@
         "is_street": false,
         "mother_districts": [],
         "father_district": "",
-        "is_transport": true,
+        "is_transport": false,
         "transport_type": "subway",
         "default_line": "subwaywhiteeast",
         "default_stop": "downtownsubwaystation",
