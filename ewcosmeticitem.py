@@ -400,16 +400,10 @@ def dedorn_all_costumes():
 
 	for costume_id in costumes:
 		costume_item = EwItem(id_item=costume_id)
-
-		usermodel = EwUser(id_user = costume_item.id_owner, id_server = costume_item.id_server)
 		
 		costume_item.item_props['adorned'] = 'false'
-
-		if costume_item.item_props['slimeoid'] == 'false':
-
-			usermodel.persist()
-
 		costume_item.item_props['slimeoid'] = 'false'
+		
 		costume_item.persist()
 		
 		costume_count += 1
