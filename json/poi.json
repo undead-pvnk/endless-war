@@ -632,7 +632,7 @@
             "ab"
         ],
         "str_name": "Arsonbrook",
-        "str_desc": "This district is seemingly eternally overcast, allowing the dark plumes of smoke from distant fires fade into the soft grey clouds. A thin layer of soot rests upon basically the entire district, providing nutrient-rich soil which the rural farmers in the north of the district take advantage of. In the south, enclaves of civilization have started to pop up, learning from the mistakes of previous generations and building out of brick instead of wood. Aesthetically, these settlements resemble a small mining town from the mountainous forests of the northwest, just replace the rugged terrain with flat land and the evergreens with burnt, charcoal frames of trees that used to be. A Starbucks tried to open here once.\nArsonbook is easily among the most peaceful districts of the city, as long as you count constant wildfires and destruction of property from arson as peaceful. The locals are used to that sort of thing though, so they\u2019re pretty mellow. Kick back, relax, and don\u2019t get too attached to your house if you plan on living here.\n\nThis area contains the Arsonbrook Farms and the Arsonbrook Subway Station. To the East is Brawlden. To the Southeast is Little Chernobyl. To the South is Smogsburg. To the West is Astatine Heights. To the North is Arsonbrook Outskirts.",
+        "str_desc": "This district is seemingly eternally overcast, allowing the dark plumes of smoke from distant fires fade into the soft grey clouds. A thin layer of soot rests upon basically the entire district, providing nutrient-rich soil which the rural farmers in the north of the district take advantage of. In the south, enclaves of civilization have started to pop up, learning from the mistakes of previous generations and building out of brick instead of wood. Aesthetically, these settlements resemble a small mining town from the mountainous forests of the northwest, just replace the rugged terrain with flat land and the evergreens with burnt, charcoal frames of trees that used to be. A Starbucks tried to open here once.\nArsonbook is easily among the most peaceful districts of the city, as long as you count constant wildfires and destruction of property from arson as peaceful. The locals are used to that sort of thing though, so they\u2019re pretty mellow. Kick back, relax, and don\u2019t get too attached to your house if you plan on living here.\n\nThis area contains the Arsonbrook Farms and the Arsonbrook Subway Station. To the East is Brawlden. To the Southeast is Little Chernobyl. To the South is Smogsburg. To the West is Astatine Heights. To the North is North Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1043,7 +1043,7 @@
             "ss"
         ],
         "str_name": "South Sleezeborough",
-        "str_desc": "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations exotic architectural styles of this district\u2019s ethnic ghettos. In these stereotypical neighborhoods, you get an eclectic view of organized crime from across the world! Boy, aren\u2019t you lucky? There are a bunch of these little national enclaves here, but only a few are useful to you in territory control. South Sleezeborough\u2019s a hotspot for legal and illegal immigrants alike. To the residents of South Sleezeborough, it\u2019s not about if you\u2019re new to the city or not or about what you look like, it\u2019s about if you\u2019re valuable to one of the many established violent local gangs or not. If you\u2019re not\u2026 well, for your sake I hope you are.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline. To the South is South Sleezeborough Outskirts.",
+        "str_desc": "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations exotic architectural styles of this district\u2019s ethnic ghettos. In these stereotypical neighborhoods, you get an eclectic view of organized crime from across the world! Boy, aren\u2019t you lucky? There are a bunch of these little national enclaves here, but only a few are useful to you in territory control. South Sleezeborough\u2019s a hotspot for legal and illegal immigrants alike. To the residents of South Sleezeborough, it\u2019s not about if you\u2019re new to the city or not or about what you look like, it\u2019s about if you\u2019re valuable to one of the many established violent local gangs or not. If you\u2019re not\u2026 well, for your sake I hope you are.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline. To the South is Southwest Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1096,7 +1096,8 @@
             "krakbay": 60,
             "oozegardens": 60,
             "thedojo": 20,
-            "southsleezesubwaystation": 20
+            "southsleezesubwaystation": 20,
+            "southwestoutskirtsedge": 120
         },
         "topic": "A dreary and dull burrough for the old and boring. Site of the Dojo.",
         "wikipage": "https://rfck.miraheze.org/wiki/South_Sleezeborough"
@@ -1109,7 +1110,7 @@
             "og"
         ],
         "str_name": "Ooze Gardens",
-        "str_desc": "Walking paths connect dozens of greenhouses and gardens featuring rare, exotic, and irradiated flora. This district is really just one big park, broken up into several sections hosting different types of botanical attractions, as well as several museums and even the city\u2019s zoo. Musical concerts are often held in one of the several outdoor amphitheatres that are scattered across the district. Truly, an amusement park for lovers of nature and culture.\nOoze Gardens is a clear cultural outlier of the city. The residents of this district are largely pacifist, choosing music, love, and psychedelic drugs over violent crime. They make you sick.\n\nThis area contains the Ooze Gardens Farms. To the North is Krak Bay. To the Northeast is Poudrin Alley. To the East is Cratersville. To the West is South Sleezeborough. To the South is Ooze Gardens Outskirts.",
+        "str_desc": "Walking paths connect dozens of greenhouses and gardens featuring rare, exotic, and irradiated flora. This district is really just one big park, broken up into several sections hosting different types of botanical attractions, as well as several museums and even the city\u2019s zoo. Musical concerts are often held in one of the several outdoor amphitheatres that are scattered across the district. Truly, an amusement park for lovers of nature and culture.\nOoze Gardens is a clear cultural outlier of the city. The residents of this district are largely pacifist, choosing music, love, and psychedelic drugs over violent crime. They make you sick.\n\nThis area contains the Ooze Gardens Farms. To the North is Krak Bay. To the Northeast is Poudrin Alley. To the East is Cratersville. To the West is South Sleezeborough. To the South is South Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1161,7 +1162,8 @@
             "krakbay": 60,
             "poudrinalley": 60,
             "cratersville": 60,
-            "oozegardensfarms": 20
+            "oozegardensfarms": 20,
+            "southoutskirtsedge": 120
         },
         "topic": "A quiet and scenic district. Only slightly more dense with ooze than the rest of NLACakaNM.",
         "wikipage": "https://rfck.miraheze.org/wiki/Ooze_Gardens"
@@ -1174,7 +1176,7 @@
             "cv"
         ],
         "str_name": "Cratersville",
-        "str_desc": "Crumbling infrastructure is commonplace here. The craters and smaller potholes that give this district its name are scattered liberally across the streets and sidewalks. Unruly miners have refused to limit their excavating to the designated mining sector and scavenge even the residential roads for meager drops of slime.\nCratersville really sucks to live in. I mean, obviously. Look at this place. Even aside from the huge fucking holes everywhere, you\u2019ve still got to deal with the constant sound of mining and dynamite explosions underground.\n\nThis area contains the Cratersville Mines and the Cratersville Subway Station. To the North is Poudrin Alley. To the Northeast is the Rowdy Roughhouse. To the East is Wreckington. To the West is Ooze Gardens. To the South is Cratersville Outskirts.",
+        "str_desc": "Crumbling infrastructure is commonplace here. The craters and smaller potholes that give this district its name are scattered liberally across the streets and sidewalks. Unruly miners have refused to limit their excavating to the designated mining sector and scavenge even the residential roads for meager drops of slime.\nCratersville really sucks to live in. I mean, obviously. Look at this place. Even aside from the huge fucking holes everywhere, you\u2019ve still got to deal with the constant sound of mining and dynamite explosions underground.\n\nThis area contains the Cratersville Mines and the Cratersville Subway Station. To the North is Poudrin Alley. To the Northeast is the Rowdy Roughhouse. To the East is Wreckington. To the West is Ooze Gardens. To the South is South Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1241,7 +1243,7 @@
             "wt"
         ],
         "str_name": "Wreckington",
-        "str_desc": "Piles of rubble and scrap metal lean against partially demolished buildings that barely remain standing. Sadly, these structures are often all the critically impoverished residents of Wreckington have to house themselves. Constant new construction projects promise new opportunities for the deteriorating district, but these promises are too often broken by lack of funding and interest. Jackhammers pummeling the asphalt and wrecking balls knocking down apartment complexes can be heard throughout the entire district, 24/7.\nWreckington isn\u2019t completely barren however, its strategic location on the coast and cheap property makes its shipyard a favorite among unscrupulous sailors. It also features a ferry connection to Vagrant\u2019s Corner, if you\u2019re so inclined to visit the eastern districts.\n\nThis area contains the Smoker's Cough Diner, the Wreckington Ferry Port and the Wreckington Subway Station. To the North is the Rowdy Roughhouse. To the West is Cratersville. To the South is Wreckington Outskirts.",
+        "str_desc": "Piles of rubble and scrap metal lean against partially demolished buildings that barely remain standing. Sadly, these structures are often all the critically impoverished residents of Wreckington have to house themselves. Constant new construction projects promise new opportunities for the deteriorating district, but these promises are too often broken by lack of funding and interest. Jackhammers pummeling the asphalt and wrecking balls knocking down apartment complexes can be heard throughout the entire district, 24/7.\nWreckington isn\u2019t completely barren however, its strategic location on the coast and cheap property makes its shipyard a favorite among unscrupulous sailors. It also features a ferry connection to Vagrant\u2019s Corner, if you\u2019re so inclined to visit the eastern districts.\n\nThis area contains the Smoker's Cough Diner, the Wreckington Ferry Port and the Wreckington Subway Station. To the North is the Rowdy Roughhouse. To the West is Cratersville. To the South is South Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1510,7 +1512,7 @@
             "afb"
         ],
         "str_name": "Assault Flats Beach",
-        "str_desc": "Colorfully painted wooden storefronts and towering condominium complexes peer out from the coastline of this scenic beach town. Most of the district is owned by the sprawling luxury resort the district is best known for, as well as virtually the entirety of the actual beach of Assault Flats Beach.\nAssault Flats Beach is by far one of if not the most expensive districts in the city to live in, due to its complete subjugation by the resort and accompanying security force, it is also the safest district to live in by a long shot. But, as you venture away from the coast you\u2019ll begin to see more of the city\u2019s standard crime rate return. Interestingly, the district is a favorite among archaeologists for its unprecedented density of jurassic fossils hidden deep underground. Some even say dinosaurs still roam the outskirts of the district to the north, but frankly that just seems ridiculous. I mean, we all know dinosaurs aren\u2019t real.\n\nThis area contains the Resort, the Assault Flats Beach Blimp Tower and the Assault Flats Beach Subway Station. To the South is Vagrant's Corner. To the West is New New Yonkers. To the North is Assault Flats Beach Outskirts.",
+        "str_desc": "Colorfully painted wooden storefronts and towering condominium complexes peer out from the coastline of this scenic beach town. Most of the district is owned by the sprawling luxury resort the district is best known for, as well as virtually the entirety of the actual beach of Assault Flats Beach.\nAssault Flats Beach is by far one of if not the most expensive districts in the city to live in, due to its complete subjugation by the resort and accompanying security force, it is also the safest district to live in by a long shot. But, as you venture away from the coast you\u2019ll begin to see more of the city\u2019s standard crime rate return. Interestingly, the district is a favorite among archaeologists for its unprecedented density of jurassic fossils hidden deep underground. Some even say dinosaurs still roam the outskirts of the district to the north, but frankly that just seems ridiculous. I mean, we all know dinosaurs aren\u2019t real.\n\nThis area contains the Resort, the Assault Flats Beach Blimp Tower and the Assault Flats Beach Subway Station. To the South is Vagrant's Corner. To the West is New New Yonkers. To the North is Nuclear Beach Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1577,7 +1579,7 @@
             "nny"
         ],
         "str_name": "New New Yonkers",
-        "str_desc": "Nightclubs and trendy restaurants have popped up in slick, modern buildings while the same old, reliable brownstones host arcades, bowling alleys and other teenage favorites. Featuring probably the best nightlife in the city, New New Yonkers is a favorite hangout spot among the juveniles of the city and consequently has an alarming crime rate. Many of the older residents want to see these fun times come to an end however, seeking to emulate the gentrified suburbia of Old New Yonkers to the south. This is adamantly resisted by the rough-and-tumble youth, those who\u2019s to say if this district will remain the bastion of good times it is today.\nNew New Yonkers is the best district to hang out in on a weekend with your friends. Really, what else can a district aspire to?\n\nTo the East is Assault Flats Beach. To the South is Vagrant's Corner. To the Southwest is Old New Yonkers. To the West is Brawlden. To the North is New New Yonkers Outskirts.",
+        "str_desc": "Nightclubs and trendy restaurants have popped up in slick, modern buildings while the same old, reliable brownstones host arcades, bowling alleys and other teenage favorites. Featuring probably the best nightlife in the city, New New Yonkers is a favorite hangout spot among the juveniles of the city and consequently has an alarming crime rate. Many of the older residents want to see these fun times come to an end however, seeking to emulate the gentrified suburbia of Old New Yonkers to the south. This is adamantly resisted by the rough-and-tumble youth, those who\u2019s to say if this district will remain the bastion of good times it is today.\nNew New Yonkers is the best district to hang out in on a weekend with your friends. Really, what else can a district aspire to?\n\nTo the East is Assault Flats Beach. To the South is Vagrant's Corner. To the Southwest is Old New Yonkers. To the West is Brawlden. To the North is North Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1642,7 +1644,7 @@
             "bd"
         ],
         "str_name": "Brawlden",
-        "str_desc": "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by SlimeCorp. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You\u2019ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook. To the North is Brawlden Outskirts.",
+        "str_desc": "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by SlimeCorp. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You\u2019ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook. To the North is North Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1710,7 +1712,7 @@
             "tx"
         ],
         "str_name": "Toxington",
-        "str_desc": "You cover your mouth in a futile attempt to avoid breathing in the toxins rising from the nearby lakes and mineshafts. A thick fog of this foul-smelling, poisonous gas shrouds the entire district, making the land virtually uninhabitable. But, where there\u2019s slime, people will settle. Juveniles from across the city are happy to spend their short lives in this hellhole for a chance to strike it rich.\nToxington has no redeemable aspects, outside of its abundance of slime veins underground and its lovely fishing spots above.\n\nThis area contains the Toxington Mines and the Toxington Subway Station. To the East is Astatine Heights. To the Southeast is Gatlingsdale. To the South is Polonium Hill. To the West is Charcoal Park. To the North is Toxington Outskirts.",
+        "str_desc": "You cover your mouth in a futile attempt to avoid breathing in the toxins rising from the nearby lakes and mineshafts. A thick fog of this foul-smelling, poisonous gas shrouds the entire district, making the land virtually uninhabitable. But, where there\u2019s slime, people will settle. Juveniles from across the city are happy to spend their short lives in this hellhole for a chance to strike it rich.\nToxington has no redeemable aspects, outside of its abundance of slime veins underground and its lovely fishing spots above.\n\nThis area contains the Toxington Mines and the Toxington Subway Station. To the East is Astatine Heights. To the Southeast is Gatlingsdale. To the South is Polonium Hill. To the West is Charcoal Park. To the North is Northwest Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1782,7 +1784,7 @@
             "ch"
         ],
         "str_name": "Charcoal Park",
-        "str_desc": "A completely unremarkable, quiet retirement community. The citizens are fed up with slime, honestly. Pathetic little gardens rest in front of the uneven parking lots of corporate complexes housing dentists, fortune-tellers, real estate agencies, and other equally dull and pointless ventures.\nCharcoal Park is where boring people go to die. No one is happy to be here.\n\nTo the East is Toxington. To the South is Polonium Hill. To the Northwest is Charcoal Park Outskirts.",
+        "str_desc": "A completely unremarkable, quiet retirement community. The citizens are fed up with slime, honestly. Pathetic little gardens rest in front of the uneven parking lots of corporate complexes housing dentists, fortune-tellers, real estate agencies, and other equally dull and pointless ventures.\nCharcoal Park is where boring people go to die. No one is happy to be here.\n\nTo the East is Toxington. To the South is Polonium Hill. To the Northwest is Northwest Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1846,7 +1848,7 @@
             "ph"
         ],
         "str_name": "Polonium Hill",
-        "str_desc": "The gently rolling astroturf hills are sprinkled with hideous mansions that obviously cost a fortune but look like complete shit. This whole district feels like it tries way to hard to come across as high-society, when it's really just some residential district on the far-flung edges of the city.\nPolonium Hills residents really want you to think they're rich.\n\nTo the North is Charcoal Park. To the Northeast is Toxington. To the East is Gatlingsdale. To the Southeast is Vandal park. To the South is West Glocksbury. To the West is Polonium Hill Outskirts.",
+        "str_desc": "The gently rolling astroturf hills are sprinkled with hideous mansions that obviously cost a fortune but look like complete shit. This whole district feels like it tries way to hard to come across as high-society, when it's really just some residential district on the far-flung edges of the city.\nPolonium Hills residents really want you to think they're rich.\n\nTo the North is Charcoal Park. To the Northeast is Toxington. To the East is Gatlingsdale. To the Southeast is Vandal park. To the South is West Glocksbury. To the West is West Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1915,7 +1917,7 @@
             "wg"
         ],
         "str_name": "West Glocksbury",
-        "str_desc": "Glocksbury-styled neighborhoods continue into its western counterpart, though liberated from the oppressive yolk of the city\u2019s police department enforcing its poor attempts at enforcing societal values. This, coupled with its location on the outer edge of the city leads to some brutal, cruel crimes being perpetrated by maniacs with little grip on reality. Gunshots ring out regularly from somewhere in the distance, behind laundromats and barber shops.\nWest Glocksbury\u2019s startlingly high violent crime rate may make even some of the most jaded residents of the city may get nervous.\n\nThis area contains the West Glocksbury Subway Station. To the North is Polonium Hill. To the Northeast is Vandal Park. To the East is Glocksbury.",
+        "str_desc": "Glocksbury-styled neighborhoods continue into its western counterpart, though liberated from the oppressive yolk of the city\u2019s police department enforcing its poor attempts at enforcing societal values. This, coupled with its location on the outer edge of the city leads to some brutal, cruel crimes being perpetrated by maniacs with little grip on reality. Gunshots ring out regularly from somewhere in the distance, behind laundromats and barber shops.\nWest Glocksbury\u2019s startlingly high violent crime rate may make even some of the most jaded residents of the city may get nervous.\n\nThis area contains the West Glocksbury Subway Station. To the North is Polonium Hill. To the Northeast is Vandal Park. To the East is Glocksbury. To the West is West Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1984,7 +1986,7 @@
             "jp"
         ],
         "str_name": "Jaywalker Plain",
-        "str_desc": "Though about half of this district is made of up parks, don\u2019t mistake this for a wealthy district. These neglected, overgrown open spaces only help to congest the poor communities of Jaywalker Plains into tightly packed slums. This, coupled with being a backwater on the edge of the city with nothing to do, has bred a district that leads the city only in amount of narcotics injected per capita. Everyone is on a bad trip in Jaywalker Plain. Maniacs roam the street, screaming obscenities and striping naked in public. Homeless men ramble incoherent nonsense while picking drunken fights with one another on the side of the street. Many strange and unusual crimes are perpetrated here and reported on by local news teams to the amusement of residents of neighboring districts. \u201cDid you hear what that guy from Jaywalker Plain did the other day,\u201d is a common conversation starter in the western districts.\nJaywalker Plain has actually become a common residential district for lower income students attending the nearby Neo Milwaukee State wanting to avoid the already cheap rates of apartments in North Sleezebrorough. Because of this, you\u2019re guaranteed to see a lot of young artists and hipsters roaming this broken, nightmare hellscape of a district looking for cafes to leech Wi-Fi access off of. Good luck with that.\n\nThis area contains the Jaywalker Plain Subway Station. To the North is West Glocksbury. To the Northeast is Glocksbury. To the East is North Sleezeborough. To the Southwest is Crookline. To the South is Dreadford. To the West is Jaywalker Plain Outskirts.",
+        "str_desc": "Though about half of this district is made of up parks, don\u2019t mistake this for a wealthy district. These neglected, overgrown open spaces only help to congest the poor communities of Jaywalker Plains into tightly packed slums. This, coupled with being a backwater on the edge of the city with nothing to do, has bred a district that leads the city only in amount of narcotics injected per capita. Everyone is on a bad trip in Jaywalker Plain. Maniacs roam the street, screaming obscenities and striping naked in public. Homeless men ramble incoherent nonsense while picking drunken fights with one another on the side of the street. Many strange and unusual crimes are perpetrated here and reported on by local news teams to the amusement of residents of neighboring districts. \u201cDid you hear what that guy from Jaywalker Plain did the other day,\u201d is a common conversation starter in the western districts.\nJaywalker Plain has actually become a common residential district for lower income students attending the nearby Neo Milwaukee State wanting to avoid the already cheap rates of apartments in North Sleezebrorough. Because of this, you\u2019re guaranteed to see a lot of young artists and hipsters roaming this broken, nightmare hellscape of a district looking for cafes to leech Wi-Fi access off of. Good luck with that.\n\nThis area contains the Jaywalker Plain Subway Station. To the North is West Glocksbury. To the Northeast is Glocksbury. To the East is North Sleezeborough. To the Southwest is Crookline. To the South is Dreadford. To the West is West Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -2052,7 +2054,7 @@
             "cl"
         ],
         "str_name": "Crookline",
-        "str_desc": "Most of this district is shrouded in total darkness, the unregulated construction of skyscrapers obstructing sunlight from ever reaching the streets far below them. Streetlights and the dense arrays of neon signs advertising speakeasy after speakeasy are the only illumination you\u2019re provided with while traveling the narrow, twisting streets of this district. You\u2019ll have to keep your wits about you if you want to leave here with your wallet, Crookline is perhaps most known for its hordes of petty thieves who specialise in stealing from clueless juveniles from the posher districts. Despite these hurdles, or possibly because of them, Crookline has a bustling nightlife heavily featuring those aforementioned speakeasies. No matter where you are in this district, you\u2019re not more than a block or two from a jazz club. You sort of feel like you\u2019re on the set of a film noir movie when you traverse these dark alleyways.\nCrookline was a historically rebellious settlement on the edge of New Los Angeles City aka Neo Milwaukee, resisting full annexation for years until it was fully culturally and economically dominated by the city. Because of this, the residents have always kept an independent streak, and remain vehemently opposed most aspects of slime past its purely utilitarian purposes. You get the feeling the denizens of this district would have been happier if there was gold discovered in the area rather than the green, morality obliterating substance they\u2019re stuck with.\n\n To the North is Jaywalker Plain. To the Northeast is North Sleezeborough. To the East is South Sleezeborough. To the West is Dreadford. To the South is Crookline Outskirts.",
+        "str_desc": "Most of this district is shrouded in total darkness, the unregulated construction of skyscrapers obstructing sunlight from ever reaching the streets far below them. Streetlights and the dense arrays of neon signs advertising speakeasy after speakeasy are the only illumination you\u2019re provided with while traveling the narrow, twisting streets of this district. You\u2019ll have to keep your wits about you if you want to leave here with your wallet, Crookline is perhaps most known for its hordes of petty thieves who specialise in stealing from clueless juveniles from the posher districts. Despite these hurdles, or possibly because of them, Crookline has a bustling nightlife heavily featuring those aforementioned speakeasies. No matter where you are in this district, you\u2019re not more than a block or two from a jazz club. You sort of feel like you\u2019re on the set of a film noir movie when you traverse these dark alleyways.\nCrookline was a historically rebellious settlement on the edge of New Los Angeles City aka Neo Milwaukee, resisting full annexation for years until it was fully culturally and economically dominated by the city. Because of this, the residents have always kept an independent streak, and remain vehemently opposed most aspects of slime past its purely utilitarian purposes. You get the feeling the denizens of this district would have been happier if there was gold discovered in the area rather than the green, morality obliterating substance they\u2019re stuck with.\n\n To the North is Jaywalker Plain. To the Northeast is North Sleezeborough. To the East is South Sleezeborough. To the West is Dreadford. To the South is Southwest Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -2119,7 +2121,7 @@
             "df"
         ],
         "str_name": "Dreadford",
-        "str_desc": "Neatly spaced colonial revival mansions and chapels are broken up by botches of thick, twisting woods. This district is largely rural and suburban, with a small town center with various necessities like Whole Foods and a cemetery. The residents of this district are very, very wealthy and meticulously maintain the gated community they\u2019ve grown for themselves. Perhaps the most obvious example of this is the country club and its accompanying golf course, which comprises a large chunk of the district.\nDreadford is one of the oldest settlements of the area, being inhabited by humans as far back as 1988. The original founders were fleeing restrict criminals rights laws, and established the town of Dreadford in what was then a barren Arizonian desert. These first settlers had quite the pension of holding kangaroo courts, which often amounted to just reading the list of crimes the accused was charged with before hanging them immediately. Some nooses still hang on trees around the district, begging to be finally used.\n\n This area contains the Country Club and the Dreadford Blimp Tower. To the North is Jaywalker Plain. To the East is Crookline. To the Southwest is Dreadford Outskirts.",
+        "str_desc": "Neatly spaced colonial revival mansions and chapels are broken up by botches of thick, twisting woods. This district is largely rural and suburban, with a small town center with various necessities like Whole Foods and a cemetery. The residents of this district are very, very wealthy and meticulously maintain the gated community they\u2019ve grown for themselves. Perhaps the most obvious example of this is the country club and its accompanying golf course, which comprises a large chunk of the district.\nDreadford is one of the oldest settlements of the area, being inhabited by humans as far back as 1988. The original founders were fleeing restrict criminals rights laws, and established the town of Dreadford in what was then a barren Arizonian desert. These first settlers had quite the pension of holding kangaroo courts, which often amounted to just reading the list of crimes the accused was charged with before hanging them immediately. Some nooses still hang on trees around the district, begging to be finally used.\n\n This area contains the Country Club and the Dreadford Blimp Tower. To the North is Jaywalker Plain. To the East is Crookline. To the Southwest is Southwest Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -17244,7 +17246,7 @@
             "soe"
         ],
         "str_name": "South Outskirts Edge",
-        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. This outskirt is connected to Southwest Outskirts Edge, South Outskirts, Permanent Construction Zone, The Scrapyard, The End Lines, Dynamite Lane, Festival Grounds, and NLACakaNM Zoo.",
+        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. This outskirt is connected to Southwest Outskirts Edge, South Outskirts, Wreckington, Cratersville and Ooze Gardens.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -17292,7 +17294,8 @@
             "southwestoutskirtsedge": 60,
             "southoutskirts": 60,
             "wreckington": 60,
-            "cratersville": 60
+            "cratersville": 60,
+            "oozegardens": 60
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Outskirts#Edge"
@@ -17304,7 +17307,7 @@
             "swoe"
         ],
         "str_name": "Southwest Outskirts Edge",
-        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. This outskirt is connected to West Outskirts Edge, Southwest Outskirts, South Outskirts Edge, Chinatown, Cartel Turf, Doxy Avenue, Lake Macguffin, Scaffold Forest, and Hang-'Em Square.",
+        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. This outskirt is connected to West Outskirts Edge, Southwest Outskirts, South Outskirts Edge, South Sleezeborough, Crookline and Dreadford.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -17366,7 +17369,7 @@
             "woe"
         ],
         "str_name": "West Outskirts Edge",
-        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. This outskirt is connected to Northwest Outskirts Edge, West Outskirts, Southwest Outskirts Edge, The Emerald Noose, Qoute Unqoute Art Galleries, Goosh Creek, Highway 89-A, Geller Point, and Sawdust Lumberyard.",
+        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. This outskirt is connected to Northwest Outskirts Edge, West Outskirts, Southwest Outskirts Edge, Jaywalkers Plain, West Glocksbury and Polonium Hill.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -17428,7 +17431,7 @@
             "nwoe"
         ],
         "str_name": "Northwest Outskirts Edge",
-        "str_desc": "You\u2019ve never seen ruins this... recent. This area used to be a part of Charcoal Park, but now it\u2019s a complete ghost town. You might even mistake it for a bonafide part of the city were it not for all the desert raiders and bubbling acid pools everywhere. It really makes you think about what could\u2019ve been, you know? Maybe if the Veteran center wasn\u2019t shielding Charcoal Park from this mess, we could\u2019ve gotten rid of that stupid-ass district ages ago. This outskirt is connected to West Outskirts Edge, Northwest Outskirts, North Outskirts, The Church of the Holy Slimefoot, Veterans Center, Quarantined Zones, Carcinogenic Quarry, Ski Lodges, and Colloid Springs.",
+        "str_desc": "You\u2019ve never seen ruins this... recent. This area used to be a part of Charcoal Park, but now it\u2019s a complete ghost town. You might even mistake it for a bonafide part of the city were it not for all the desert raiders and bubbling acid pools everywhere. It really makes you think about what could\u2019ve been, you know? Maybe if the Veteran center wasn\u2019t shielding Charcoal Park from this mess, we could\u2019ve gotten rid of that stupid-ass district ages ago. This outskirt is connected to West Outskirts Edge, Northwest Outskirts, North Outskirts, Charcoal Park, Toxington and Maimridge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -17490,7 +17493,7 @@
             "noe"
         ],
         "str_name": "North Outskirts Edge",
-        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. This outskirt is connected to Northwest Outskirts Edge, Northwest Outskirts, Nuclear Beach Edge, Tilly Hill, Crassus Square, Abandoned Warehouse, Brownstone Row, Concrete Park, and Broadway.",
+        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. This outskirt is connected to Northwest Outskirts Edge, Northwest Outskirts, Nuclear Beach Edge, Arsonbrook, Brawlden and New New Yonkers.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -17555,7 +17558,7 @@
             "brainz"
         ],
         "str_name": "Nuclear Beach Edge",
-        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. The ruins of a great laboratory lay here.",
+        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. The ruins of a great laboratory lay here. To the South is Assault Flats Beach.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -17602,7 +17605,7 @@
         "neighbors": {
             "northoutskirtsedge": 20,
             "nuclearbeach": 20,
-            "assaultflatsbeach": 20
+            "assaultflatsbeach": 60
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Outskirts#Edge"
