@@ -16,6 +16,7 @@ import traceback
 import re
 import os
 import shlex
+import logging
 
 import ewutils
 import ewcfg
@@ -68,6 +69,13 @@ from ewstatuseffects import EwStatusEffect
 
 ewutils.logMsg('Starting up...')
 init_complete = False
+
+# output discord logs to console
+logger = logging.getLogger('discord')
+logger.setLevel(logging.WARNING)
+handler = logging.StreamHandler(sys.stdout)
+handler.setFormatter(logging.Formatter('[%(asctime)s]:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 intents = discord.Intents.all()
 
