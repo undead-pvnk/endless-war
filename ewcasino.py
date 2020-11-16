@@ -2116,23 +2116,13 @@ async def skat(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	gellphones_challengee1 = ewitem.find_item_all(item_search = ewcfg.item_id_gellphone, id_user = challengee.id_user, id_server = challengee.id_server, item_type_filter = ewcfg.it_item)
 	gellphone_active_challengee1 = False
+	if challengee.has_gellphone():
+		gellphone_active_challengee1 = True
 
-	for phone in gellphones_challengee1:
-		phone_data = ewitem.EwItem(id_item = phone.get('id_item'))
-		if phone_data.item_props.get('active') == 'true':
-			gellphone_active_challengee1 = True
-			break
-
-	gellphones_challengee2 = ewitem.find_item_all(item_search = ewcfg.item_id_gellphone, id_user = challengee2.id_user, id_server = challengee2.id_server, item_type_filter = ewcfg.it_item)
 	gellphone_active_challengee2 = False
-
-	for phone in gellphones_challengee2:
-		phone_data = ewitem.EwItem(id_item = phone.get('id_item'))
-		if phone_data.item_props.get('active') == 'true':
-			gellphone_active_challengee2 = True
-			break
+	if challengee2.has_gellphone():
+		gellphone_active_challengee2 = True
 
 	#Players have been challenged
 	if ewutils.active_target_map.get(challenger.id_user) != None and ewutils.active_target_map.get(challenger.id_user) != "":

@@ -1485,14 +1485,14 @@ async def item_use(cmd):
 
 					for phone in gellphones:
 						phone_data = EwItem(id_item = phone.get('id_item'))
-						phone_data.item_props['active'] = 'false'
+						phone_data.item_props['gellphoneactive'] = 'false'
 						phone_data.persist()
 
 					response = "You turn off your gellphone."
 
 				else:
 					response = "You turn on your gellphone."
-					item.item_props['active'] = 'true'
+					item.item_props['gellphoneactive'] = 'true'
 					item.persist()
 
 					
