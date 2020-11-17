@@ -26,7 +26,7 @@ async def tweet(cmd):
             response = "Tweet what?"
             return await ewutils.send_response(response, cmd)
 
-        tweet_content = ' '.join(cmd.tokens[1:])
+        tweet_content = ' '.join("`{}`".format(token) if token.startswith("#") else token for token in cmd.tokens[1:])
         # embed limits
         if len(tweet_content) > 280:
             response = "Alright there bud, slow down a bit. No one's gonna read all that ({}/280).".format(len(tweet_content))

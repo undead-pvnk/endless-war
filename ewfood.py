@@ -375,9 +375,6 @@ async def order(cmd):
 
 				value = item.price
 
-				if random.randrange(5) == 0 and ewcfg.mutation_id_stickyfingers in mutations:
-					value = 0
-
 				premium_purchase = True if item_id in ewcfg.premium_items else False
 				if premium_purchase:
 					togo = True # Just in case they order a premium food item, don't make them eat it right then and there.
