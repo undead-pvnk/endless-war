@@ -1435,6 +1435,7 @@ cmd_rampage = cmd_prefix + 'rampage'
 cmd_flutter = cmd_prefix + 'flutter'
 cmd_entomize = cmd_prefix + 'entomize'
 cmd_confuse = cmd_prefix + 'confuse'
+cmd_shamble = cmd_prefix + 'shamble'
 
 # Slime Twitter
 cmd_tweet = cmd_prefix + 'tweet'
@@ -14690,6 +14691,7 @@ races = {
 	'avian': 'avian',
 	'insectoid': 'insectoid',
 	'other': 'other',
+	'shambler' : 'shambler'
 }
 
 # slime twitter stuff
