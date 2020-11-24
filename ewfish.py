@@ -781,7 +781,7 @@ async def award_fish(fisher, cmd, user_data):
 				'time_fridged': 0,
 				'acquisition': ewcfg.acquisition_fishing,
 				'value': value,
-				'noslime': actual_fisherman_data.juviemode
+				'noslime': 'true' if actual_fisherman_data.juviemode else 'false'
 			}
 		)
 
@@ -1024,7 +1024,7 @@ async def barter(cmd):
 
 						response = '\n"Well, back again I see! My offer still stands, I’ll trade ya {} slime for your {}"'.format(slime_gain, name)
 
-					elif ewcfg.mutation_id_davyjoneskeister in mutations:
+					elif ewcfg.mutation_id_davyjoneskeister in mutations and item_props.get('noslime') != "true":
 						max_value = value * 6000  # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
 						min_value = max_value / 10  # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
 
@@ -1064,7 +1064,7 @@ async def barter(cmd):
 					# Random choice between 0, 1, and 2
 					offer_decision = random.randint(0, 2)
 
-					if (offer_decision != 2 or ewcfg.mutation_id_davyjoneskeister in mutations) and not item_props.get('noslime'): # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
+					if (offer_decision != 2 or ewcfg.mutation_id_davyjoneskeister in mutations) and item_props.get('noslime') != "true": # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
 						max_value = value * 6000 # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
 						min_value = max_value / 10 # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
 
@@ -1220,7 +1220,7 @@ async def barter_all(cmd):
 			# Random choice between 0, 1, and 2
 			offer_decision = random.randint(0, 2)
 
-			if (offer_decision != 2 or ewcfg.mutation_id_davyjoneskeister in mutations) and not fish.item_props.get('noslime'): # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
+			if (offer_decision != 2 or ewcfg.mutation_id_davyjoneskeister in mutations) and fish.item_props.get('noslime') != "true": # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
 				max_value = value * 6000 # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
 				min_value = max_value / 10 # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
 
