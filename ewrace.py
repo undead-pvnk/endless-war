@@ -57,6 +57,8 @@ async def set_race(cmd):
 					response = 'ENDLESS WAR struggles to categorize you, and files you under "other". Your peculiar form can be used to **{}** those around you.'.format(ewcfg.cmd_confuse)
 				elif desired_race == ewcfg.races["insectoid"]:
 					response = 'ENDLESS WAR acknowledges you as an insectoid lifeform. You may now **{}** alongside other creepy-crawlies of your ilk.'.format(ewcfg.cmd_entomize)
+				elif desired_race == ewcfg.races["shambler"]:
+					response = 'ENDLESS WAR acknowledges you as one of the dead, is disturbed by your presence. You may now **{}** in the hordes of those like you'.format(ewcfg.cmd_shamble)
 				elif desired_race in forbidden_races:
 					response = 'In its infinite wisdom, ENDLESS WAR sees past your attempt at being funny and acknowledges you for what you _truly_ are: **a fucking idiot**.'
 
@@ -440,4 +442,22 @@ async def confuse(cmd):
 	else:
 		response = "You people are not allowed to do that."
 		
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def shamble(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	if user_data.race == ewcfg.races["shambler"]:
+		#Stole response system from the yiff system.
+		responses = [
+						"You shamble about aimlessly.",
+						"You run a decaying hand across the street, remembering what was.",
+						"You gnaw on the buildings, trying to relive the glory days.",
+						"You groan and walk about.",
+						"You remember when all the city was shambled, damn those gankers ruined it all...", #thanks dakat for this one
+						"It was a graveyard smash"
+					]
+		response = random.choice(responses)
+	else:
+		response = "You people are not allowed to do that."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
