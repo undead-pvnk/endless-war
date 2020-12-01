@@ -13,7 +13,8 @@ async def vouch(cmd):
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
+	last_messages = 
+	time_now = int(time.time())
 	response = ""
 	
 	if user_data.faction == "":
