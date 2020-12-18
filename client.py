@@ -816,6 +816,7 @@ cmd_map = {
 	ewcfg.cmd_rampage: ewrace.rampage,
 	ewcfg.cmd_entomize: ewrace.entomize,
 	ewcfg.cmd_confuse: ewrace.confuse,
+	ewcfg.cmd_shamble: ewrace.shamble,
 
 	# Mutations
 	ewcfg.cmd_preserve: ewmutation.preserve,
