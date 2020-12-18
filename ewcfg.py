@@ -160,6 +160,21 @@ poi_id_clinicofslimoplasty = "clinicofslimoplasty"
 poi_id_thebreakroom = "thebreakroom"
 
 
+poi_id_sc_n12_office = "n12office"
+poi_id_sc_n10_office = "n10office"
+poi_id_sc_elevator = "elevator"
+poi_id_watercooler = "watercooler"
+poi_id_sc_n13_office = "n13office"
+poi_id_sc_n8_office = "n8office"
+poi_id_sc_n2_office = "n2office"
+poi_id_sc_n6_office = "n6office"
+poi_id_sc_n11_office = "n11office"
+poi_id_sc_n5_office = "n5office"
+poi_id_sc_n7_office = "n7office"
+poi_id_sc_n9_office = "n9office"
+poi_id_sc_moon_penthouse = "moonpenthouse"
+poi_id_themoon = "themoon"
+
 # transports
 poi_id_ferry = "ferry"
 poi_id_subway_pink01 = "subwaypink01"
@@ -12600,6 +12615,15 @@ status_modelovaccine_id = "modelovaccine"
 status_slapped_id = "slapped"
 status_foodcoma_id = "foodcoma"
 
+status_n1 = "n1"
+status_n2 = "n2"
+status_n4 = "n4"
+status_n8 = "n8"
+status_n11 = "n11"
+status_n12 = "n12"
+status_n13 = "n13"
+
+
 status_injury_head_id = "injury_head"
 status_injury_torso_id = "injury_torso"
 status_injury_arms_id = "injury_arms"
@@ -12765,6 +12789,69 @@ status_effect_list = [
 		str_acquire = "Calorie-induced rage consumes you! You could drink gasoline and get shot and not feel a damn thing!",
 		str_describe_self = "You're in the middle of a raging food coma.",
         dmg_mod_self = -0.4
+	),
+    EwStatusEffectDef(
+		id_status = status_n1,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "You are god's gift to malice.",
+        dmg_mod_self = -0.5,
+		dmg_mod = 2,
+		miss_mod_self = -.2,
+		miss_mod = .35
+	),
+    EwStatusEffectDef(
+		id_status = status_n2,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "You shred like nobody's business.",
+        dmg_mod_self = -0.5,
+		miss_mod_self = -.2,
+		miss_mod = .5
+	),
+    EwStatusEffectDef(
+		id_status = status_n4,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "Sorry, you can't let them do that.",
+        dmg_mod_self = -1,
+		dmg_mod = -.5,
+	),
+    EwStatusEffectDef(
+		id_status = status_n8,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "You're itching to move on from this.",
+        dmg_mod_self = -0.5,
+		dmg_mod = 1.5,
+		crit_mod_self = .3
+	),
+    EwStatusEffectDef(
+		id_status = status_n11,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "You're feeling like putting your cronies to the test.",
+        dmg_mod_self = -0.5,
+		dmg_mod = 1.5,
+		crit_mod_self = .5
+	),
+    EwStatusEffectDef(
+		id_status = status_n12,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "Time to get nasty.",
+        dmg_mod_self = -0.5,
+		dmg_mod = 1.7,
+		crit_mod_self = .75
+	),
+	EwStatusEffectDef(
+		id_status=status_n13,
+		time_expire=86400,
+		str_acquire="",
+		str_describe_self="They're really starting to get on your nerves.",
+		dmg_mod_self=-0.5,
+		dmg_mod=1.5,
+		crit_mod_self=.5
 	),
 ]
 

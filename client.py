@@ -434,7 +434,7 @@ cmd_map = {
 	ewcfg.cmd_survey: ewmap.survey,
 	
 	# Inspect objects in a POI
-	# ewcfg.cmd_scrutinize: ewdebug.scrutinize,
+	ewcfg.cmd_scrutinize: ewdebug.scrutinize,
 
 	# Look around an adjacent POI
 	ewcfg.cmd_scout: ewmap.scout,
