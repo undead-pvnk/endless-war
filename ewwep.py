@@ -955,6 +955,8 @@ async def attack(cmd):
 				market_data.splattered_slimes += slimes_damage
 				market_data.persist()
 				user_data.splattered_slimes += slimes_damage
+				# SLIMERNALIA
+				user_data.festivity += slimes_splatter
 				user_data.persist()
 				boss_slimes += slimes_toboss
 				district_data.change_slimes(n = slimes_splatter, source = ewcfg.source_killing)
@@ -1470,6 +1472,8 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					user_data.change_slimes(n = slimes_splatter * 0.6, source= ewcfg.source_killing)
 					slimes_splatter *= .4
 
+				# SLIMERNALIA
+				user_data.festivity += slimes_splatter
 
 				boss_slimes += slimes_toboss
 				district_data.change_slimes(n = slimes_splatter, source = ewcfg.source_killing)
