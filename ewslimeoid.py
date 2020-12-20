@@ -2433,9 +2433,10 @@ async def slimeoidbattle(cmd):
 	challengee_slimeoid = EwSlimeoid(member = member)
 
 	bet = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
-	if bet == None or challenger.poi != ewcfg.poi_id_arena:
-		bet = 0
-	elif bet == -1:
+	#SLIMERNALIA
+	#if bet == None or challenger.poi != ewcfg.poi_id_arena:
+	#	bet = 0
+	if bet == -1:
 		bet = challenger.slimes
 
 	#Players have been challenged
@@ -2540,6 +2541,9 @@ async def slimeoidbattle(cmd):
 		challengee.change_slimes(n = -bet, source = ewcfg.source_slimeoid_betting)
 		challenger.change_slimes(n = -bet, source = ewcfg.source_slimeoid_betting)
 
+		challengee.festivity += bet
+		challenger.festivity += bet
+
 		challengee.persist()
 		challenger.persist()
 
@@ -2565,7 +2569,7 @@ async def slimeoidbattle(cmd):
 				challenger.persist()
 		elif result == 1:
 			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:{}".format(challengee_slimeoid.name, challengee_slimeoid.name, member.display_name, "" if bet == 0 else "\nThey recieve {:,} slime! The remaining {:,} slime goes to SlimeCorp.".format(winnings, slimecorp_fee))
-			
+
 			if challengee_slimeoid.coating != '':
 				challengee_slimeoid.coating = ''
 				response += "\n{} sheds its {} coating.".format(challengee_slimeoid.name, challengee_slimeoid.coating)
