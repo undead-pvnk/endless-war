@@ -480,10 +480,9 @@ async def updateRoles(
 		misc_roles_remove.remove(ewcfg.role_gellphone)
 
 	role_slimernalia = None
-	#if user_data.slimernalia_kingpin == True:
-	#	role_slimernalia = ewcfg.role_slimernalia
-	#	misc_roles_remove.remove(ewcfg.role_slimernalia)
-
+	if user_data.slimernalia_kingpin == True:
+		role_slimernalia = ewcfg.role_slimernalia
+		misc_roles_remove.remove(ewcfg.role_slimernalia)
 
 	role_ids = []
 	for role_id in roles_map_user:
