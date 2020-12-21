@@ -2433,9 +2433,10 @@ async def slimeoidbattle(cmd):
 	challengee_slimeoid = EwSlimeoid(member = member)
 
 	bet = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
-	if bet == None or challenger.poi != ewcfg.poi_id_arena:
-		bet = 0
-	elif bet == -1:
+	#SLIMERNALIA
+	#if bet == None or challenger.poi != ewcfg.poi_id_arena:
+	#	bet = 0
+	if bet == -1:
 		bet = challenger.slimes
 
 	#Players have been challenged
@@ -2540,6 +2541,9 @@ async def slimeoidbattle(cmd):
 		challengee.change_slimes(n = -bet, source = ewcfg.source_slimeoid_betting)
 		challenger.change_slimes(n = -bet, source = ewcfg.source_slimeoid_betting)
 
+		challengee.festivity += bet
+		challenger.festivity += bet
+
 		challengee.persist()
 		challenger.persist()
 
@@ -2565,7 +2569,7 @@ async def slimeoidbattle(cmd):
 				challenger.persist()
 		elif result == 1:
 			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:{}".format(challengee_slimeoid.name, challengee_slimeoid.name, member.display_name, "" if bet == 0 else "\nThey recieve {:,} slime! The remaining {:,} slime goes to SlimeCorp.".format(winnings, slimecorp_fee))
-			
+
 			if challengee_slimeoid.coating != '':
 				challengee_slimeoid.coating = ''
 				response += "\n{} sheds its {} coating.".format(challengee_slimeoid.name, challengee_slimeoid.coating)
@@ -3260,14 +3264,15 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 		challengee_slimeoid = EwSlimeoid(id_slimeoid = id_s1)
 
 		# Losing slimeoid loses clout and has a time_defeated cooldown.
-		if channel.name == ewcfg.channel_arena:
-			challengee_slimeoid.clout = calculate_clout_loss(challengee_slimeoid.clout)
+		#SLIMERNALIA
+		#if channel.name == ewcfg.channel_arena:
+		challengee_slimeoid.clout = calculate_clout_loss(challengee_slimeoid.clout)
 		challengee_slimeoid.time_defeated = int(time.time())
 		challengee_slimeoid.persist()
 		
-		if channel.name == ewcfg.channel_arena:
-			challenger_slimeoid.clout = calculate_clout_gain(challenger_slimeoid.clout)
-			challenger_slimeoid.persist()
+		#if channel.name == ewcfg.channel_arena:
+		challenger_slimeoid.clout = calculate_clout_gain(challenger_slimeoid.clout)
+		challenger_slimeoid.persist()
 
 		await ewutils.send_message(client, channel, response)
 		await asyncio.sleep(2)
@@ -3286,14 +3291,14 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 		challengee_slimeoid = EwSlimeoid(id_slimeoid = id_s1)
 	
 		# store defeated slimeoid's defeat time in the database
-		if channel.name == ewcfg.channel_arena:
-			challenger_slimeoid.clout = calculate_clout_loss(challenger_slimeoid.clout)
+		#if channel.name == ewcfg.channel_arena:
+		challenger_slimeoid.clout = calculate_clout_loss(challenger_slimeoid.clout)
 		challenger_slimeoid.time_defeated = int(time.time())
 		challenger_slimeoid.persist()
 		
-		if channel.name == ewcfg.channel_arena:
-			challengee_slimeoid.clout = calculate_clout_gain(challengee_slimeoid.clout)
-			challengee_slimeoid.persist()
+		#if channel.name == ewcfg.channel_arena:
+		challengee_slimeoid.clout = calculate_clout_gain(challengee_slimeoid.clout)
+		challengee_slimeoid.persist()
 
 		await ewutils.send_message(client, channel, response)
 		await asyncio.sleep(2)

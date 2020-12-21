@@ -760,13 +760,13 @@ cmd_map = {
 	ewcfg.cmd_switch_alt_1: ewwep.switch_weapon,
 	# Slimernalia
 	# Check your current festivity
-	#ewcfg.cmd_festivity: ewcmd.festivity,
+	ewcfg.cmd_festivity: ewcmd.festivity,
 	# Wrap a gift
-	#ewcfg.cmd_wrap: ewcmd.wrap,
+	ewcfg.cmd_wrap: ewcmd.wrap,
 	# Unwrap a gift
 	ewcfg.cmd_unwrap: ewcmd.unwrap,
 	# Yo, Slimernalia
-	#ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia
+	ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia,
 	
 	# Swilldermuk
 	# ewcfg.cmd_gambit: ewcmd.gambit,
@@ -1290,6 +1290,30 @@ async def on_ready():
 					# Post leaderboards at 6am NLACakaNM time.
 					if market_data.clock == 6:
 						await ewleaderboard.post_leaderboards(client = client, server = server)
+
+						# Depose current slimernalia kingpin
+						old_kingpin_id = ewutils.get_slimernalia_kingpin(server)
+						if old_kingpin_id != None:
+							old_kingpin = EwUser(id_user=old_kingpin_id, id_server=server.id)
+							old_kingpin.slimernalia_kingpin = False
+							old_kingpin.persist()
+							try:
+								old_kingpin_member = server.get_member(old_kingpin.id_user)
+								await ewrolemgr.updateRoles(client=client, member=old_kingpin_member)
+							except:
+								ewutils.logMsg("Error removing kingpin of slimernalia role from {} in server {}.".format(old_kingpin.id_user, server.id))
+
+						# Update the new kingpin of slimernalia
+						new_kingpin = EwUser(id_user=ewutils.get_most_festive(server), id_server=server.id)
+						new_kingpin.slimernalia_kingpin = True
+						new_kingpin.persist()
+						try:
+							new_kingpin_member = server.get_member(new_kingpin.id_user)
+							await ewrolemgr.updateRoles(client=client, member=new_kingpin_member)
+						except:
+							ewutils.logMsg("Error adding kingpin of slimernalia role to user {} in server {}.".format(new_kingpin.id_user, server.id))	
+
+
 
 		except:
 			ewutils.logMsg('An error occurred in the scheduled slime market update task:')
