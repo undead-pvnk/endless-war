@@ -487,6 +487,17 @@ async def order(cmd):
 							response = "Ghosts can't hold weapons."
 							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+					else:
+						other_items_held = ewitem.inventory(
+							id_user = user_data.id_user,
+							id_server = cmd.guild.id,
+							item_type_filter = item_type
+						)
+
+						if len(other_items_held) >= ewcfg.generic_inv_limit:
+							response = ewcfg.str_generic_inv_limit.format(item_type)
+							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 					item_props = ewitem.gen_item_props(item)
 
 					customtext = cmd.message.content[(len(cmd.tokens[0]) + len(cmd.tokens[1]) + 2):]

@@ -539,7 +539,7 @@ def item_lootspecific(id_server = None, id_user = None, item_search = None):
 					id_server = user_data.id_server
 				)
 			else:
-				response += " But you couldn't carry any more {} items, so you tossed it back.".format(item_type)
+				response += " But you couldn't carry any more {}s, so you tossed it back.".format(item_type)
 	return response
 
 
@@ -592,14 +592,24 @@ def item_lootrandom(id_server = None, id_user = None):
 					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
 
 			else:
-				if item_sought.get('name') == "Slime Poudrin":
-					ewstats.change_stat(
-						id_server = user_data.id_server,
-						id_user = user_data.id_user,
-						metric = ewcfg.stat_poudrins_looted,
-						n = 1
-					)
-				give_item(id_user = id_user, id_server = id_server, id_item = id_item)
+				other_items = inventory(
+				id_user=id_user,
+				id_server=id_server,
+				item_type_filter=item_sought.get('item_type')
+				)
+
+				if len(other_items) >= ewcfg.generic_inv_limit:
+					response = " But you couldn't carry any more of those, so you tossed it back"
+
+				else:
+					if item_sought.get('name') == "Slime Poudrin":
+						ewstats.change_stat(
+							id_server = user_data.id_server,
+							id_user = user_data.id_user,
+							metric = ewcfg.stat_poudrins_looted,
+							n = 1
+						)
+					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
 
 		else:
 			response += "You found a... oh, nevermind, it's just a piece of trash."
@@ -717,7 +727,16 @@ def check_inv_capacity(id_user = None, id_server = None, item_type = None):
 			else:
 				return True
 		else:
-			return True
+			other_items = inventory(
+				id_user=id_user,
+				id_server=id_server,
+				item_type_filter=item_type
+			)
+
+			if len(other_items) >= ewcfg.generic_inv_limit:
+				return False
+			else:
+				return True
 		
 	else:
 		return False
@@ -1708,6 +1727,16 @@ async def give(cmd):
 
 		#Slimernalia gifting
 		if item_sought.get('item_type') == ewcfg.it_item:
+			general_items = inventory(
+				id_user=recipient.id,
+				id_server=server.id,
+				item_type_filter=ewcfg.it_item
+			)
+
+			if len(general_items) >= ewcfg.generic_inv_limit:
+				response = "They can't carry any more of those."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 			item_data = EwItem(id_item = item_sought.get('id_item'))
 			#Slimernalia gifting
 			if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
@@ -1753,6 +1782,17 @@ async def give(cmd):
 		if item_sought.get('soulbound') and EwItem(id_item = item_sought.get('id_item')).item_props.get("context") != "housekey":
 			response = "You can't just give away soulbound items."
 		else:
+
+			other_items = inventory(
+				id_user=recipient.id,
+				id_server=server.id,
+				item_type_filter=item_sought.get('item_type')
+			)
+
+			if len(other_items) >= ewcfg.generic_inv_limit:
+				response = "They can't carry any more of those."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 			give_item(
 				member = recipient,
 				id_item = item_sought.get('id_item')

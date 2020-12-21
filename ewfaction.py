@@ -131,7 +131,7 @@ async def take(cmd):
 				response = "You can't carry any more food items."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		if item_sought.get('item_type') == ewcfg.it_weapon:
+		elif item_sought.get('item_type') == ewcfg.it_weapon:
 			weapons_held = ewitem.inventory(
 				id_user = cmd.message.author.id,
 				id_server = cmd.guild.id,
@@ -143,6 +143,16 @@ async def take(cmd):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			elif len(weapons_held) >= user_data.get_weapon_capacity():
 				response  = "You can't carry any more weapons."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		else:
+			other_items = ewitem.inventory(
+				id_user=cmd.message.author.id,
+				id_server=user_data.id_server,
+				item_type_filter=item_sought.get('item_type')
+			)
+			if len(other_items) >= ewcfg.generic_inv_limit:
+				response = ewcfg.str_generic_inv_limit.format(item_sought.get('item_type'))
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 		ewitem.give_item(id_item = item_sought.get('id_item'), id_server = user_data.id_server, id_user = user_data.id_user)

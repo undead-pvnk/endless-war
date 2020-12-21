@@ -874,6 +874,16 @@ async def remove_item(cmd, dest):
 				response = "You can't carry any more weapons."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+		else:
+			other_items = ewitem.inventory(
+				id_user=cmd.message.author.id,
+				id_server=playermodel.id_server,
+				item_type_filter=item_sought.get('item_type')
+			)
+			if len(other_items) >= ewcfg.generic_inv_limit:
+				response = ewcfg.str_generic_inv_limit.format(item_sought.get('item_type'))
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 		if item_sought.get('item_type') == ewcfg.it_food and destination == ewcfg.compartment_id_fridge:
 			#the formula is: expire time = expire time + current time - time frozen
 			item.item_props['time_expir'] = str(int(float(item.item_props.get('time_expir'))) + (int(time.time()) - int(float(item.item_props.get('time_fridged')))))
@@ -1849,6 +1859,10 @@ async def aquarium(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
+	if not ewitem.check_inv_capacity(id_server = cmd.guild.id, id_user = cmd.message.author.id, item_type = ewcfg.it_furniture):
+		response = "You don't have room for any more furniture items."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	if item_sought:
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_props.get('acquisition') == ewcfg.acquisition_fishing:
@@ -1895,6 +1909,10 @@ async def propstand(cmd):
 	usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+	if not ewitem.check_inv_capacity(id_server = cmd.guild.id, id_user = cmd.message.author.id, item_type = ewcfg.it_furniture):
+		response = "You don't have room for any more furniture items."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if item_sought:
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
@@ -1959,6 +1977,10 @@ async def flowerpot(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+	if not ewitem.check_inv_capacity(id_server = cmd.guild.id, id_user = cmd.message.author.id, item_type = ewcfg.it_furniture):
+		response = "You don't have room for any more furniture items."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if item_sought:
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))

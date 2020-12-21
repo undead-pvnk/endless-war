@@ -1530,7 +1530,6 @@ async def russian_roulette(cmd):
 					challengee = EwUser(member = member)
 					
 					challengee.change_slimes(n = challenger.slimes * 0.8, source = ewcfg.source_killing)
-					ewitem.item_loot(member = author, id_user_target = member.id)
 					
 					challenger.id_killer = challenger.id_user
 					challenger.trauma = ewcfg.trauma_id_suicide
@@ -1548,7 +1547,6 @@ async def russian_roulette(cmd):
 					challengee = EwUser(member = member)
 					
 					challenger.change_slimes(n = challengee.slimes * 0.8, source = ewcfg.source_killing)
-					ewitem.item_loot(member = member, id_user_target = author.id)
 
 					challengee.id_killer = challengee.id_user
 					challenger.trauma = ewcfg.trauma_id_suicide

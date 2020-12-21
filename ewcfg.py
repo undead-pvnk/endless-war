@@ -63,6 +63,9 @@ district_max_degradation = 10000
 # Market delta
 max_iw_swing = 30
 
+# An inventory limit for every item type that's not food or weapons
+generic_inv_limit = 1000
+
 # combatant ids to differentiate players and NPCs in combat
 combatant_type_player = "player"
 combatant_type_enemy = "enemy"
@@ -2112,6 +2115,7 @@ str_generic_onbreak = "Their {} broke!!"
 str_soul_onadorn = "{} has begun swirling around you."
 str_soul_unadorn = "{} has stopped swirling around you and you place it back into your hammerspace."
 str_soul_onbreak = "{} has ***SHATTERED.*** Uh oh."
+str_generic_inv_limit = "You can't fit another {} in your inventory!"
 
 generic_role_name = 'NLACakaNM'
 
