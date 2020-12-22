@@ -1626,6 +1626,10 @@ async def on_message(message):
 		cmd_fn = cmd_map.get(cmd)
 
 
+		if user_data.poi in ewdebug.act_pois.keys():
+			if content_tolower in ewdebug.act_pois.get(user_data.poi).keys():
+				return await ewdebug.act(cmd_obj, user_data.poi, content_tolower)
+
 		if user_data.poi in ewcfg.tutorial_pois:	
 			return await ewdungeons.tutorial_cmd(cmd_obj)
 

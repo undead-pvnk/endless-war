@@ -2435,6 +2435,9 @@ col_hue_fullcomp_1 = "hue_fullcomp_1"
 col_hue_fullcomp_2 = "hue_fullcomp_2"
 
 
+#Gamestate columns
+col_bit = "state_bit"
+col_id_state = "id_state"
 
 
 
@@ -15002,6 +15005,19 @@ zine_commands = [
 	cmd_setpages_alt_1,
 	cmd_setpages_alt_2,
 ]
+
+lock_states = {
+	"n13door":["n13office", "n4office"],
+	"n2door":["n2office", "n4office"],
+	"n3door":["n3office", "n4office"],
+	"n5door":["n5office", "n4office"],
+	"n7door":["n7office", "n4office"],
+	"n8door":["n8office", "n4office"],
+	"n9door":["n9office", "n4office"],
+	"n10door":["n10office", "slimecorphq"],
+	"n11door":["n11office", "n4office"]
+}
+
 
 curse_words = { # words that the player should be punished for saying via swear jar deduction. the higher number, the more the player gets punished.
 	"fag":20,

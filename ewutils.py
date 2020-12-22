@@ -446,7 +446,7 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-		'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = ewcfg.database, charset = "utf8"),
+		'conn': MySQLdb.connect(host = "localhost", user = "root", passwd = "theapocolypse3" , db = ewcfg.database, charset = "utf8"),
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -3085,3 +3085,21 @@ async def make_bp(cmd):
 		await recipient.add_roles(bp_role)
 	else:
 		logMsg("Could not find Brimstone Programmer role.")
+
+#Used when you have a secret command you only want seen under certain conditions.
+async def fake_failed_command(cmd):
+	client = get_client()
+	randint = random.randint(1, 3)
+	msg_mistake = "ENDLESS WAR is growing frustrated."
+	if randint == 2:
+		msg_mistake = "ENDLESS WAR denies you his favor."
+	elif randint == 3:
+		msg_mistake = "ENDLESS WAR pays you no mind."
+
+	msg = await send_message(client, cmd.message.channel, msg_mistake)
+	await asyncio.sleep(2)
+	try:
+		await msg.delete()
+		pass
+	except:
+		pass

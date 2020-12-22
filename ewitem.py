@@ -1421,7 +1421,7 @@ async def item_look(cmd):
 # this is basically just the item_look command with some other stuff at the bottom
 async def item_use(cmd):
 	use_mention_displayname = False
-	
+	user_data = EwUser(member=author)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
 	server = cmd.guild
@@ -1430,7 +1430,7 @@ async def item_use(cmd):
 
 	if item_sought:		
 		# Load the user before the item so that the right item props are used
-		user_data = EwUser(member = author)
+
 
 		item = EwItem(id_item = item_sought.get('id_item'))
 
