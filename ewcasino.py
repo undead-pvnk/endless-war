@@ -2829,7 +2829,9 @@ def slimecorp_collectfee(winnings):
 	return slimecorp_fee, new_winnings
 
 def slimecoin_to_festivity(value, festivity_old):
-	old_value = 1.00044 ** festivity_old
-	festivity_new = math.log(old_value + value) / math.log(1.00044)
-	
+	try:
+		old_value = 1.00044 ** festivity_old
+		festivity_new = math.log(old_value + value) / math.log(1.00044)
+	except:
+		festivity_new = math.log(9223372036854775807) / math.log(1.00044)
 	return festivity_new
