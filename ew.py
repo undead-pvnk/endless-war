@@ -1104,17 +1104,19 @@ class EwUser:
 
 	def get_festivity(self):
 		data = ewutils.execute_sql_query(
-		"SELECT FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) FROM users "\
+		"SELECT {festivity} + COALESCE(sigillaria, 0) + {festivity_from_slimecoin} FROM users "\
 		"LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} "\
-		"WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} WHERE users.{id_user} = %s AND users.{id_server} = %s".format(
+		"WHERE {type} = %s AND {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} WHERE users.{id_user} = %s AND users.{id_server} = %s".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
 			festivity = ewcfg.col_festivity,
 			festivity_from_slimecoin = ewcfg.col_festivity_from_slimecoin,
+			type = ewcfg.col_item_type,
 			name = ewcfg.col_name,
 			value = ewcfg.col_value,
 			id_item = ewcfg.col_id_item,
 		),(
+			ewcfg.it_furniture,
 			"id_furniture",
 			ewcfg.item_id_sigillaria,
 			self.id_user,
@@ -1125,7 +1127,7 @@ class EwUser:
 		for row in data:
 			res = row[0]
 
-		return int(res)
+		return res
 
 	def has_gellphone(self):
 		"""
