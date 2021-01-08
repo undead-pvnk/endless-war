@@ -1736,7 +1736,7 @@ async def give(cmd):
 			if len(general_items) >= ewcfg.generic_inv_limit:
 				response = "They can't carry any more of those."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
+			"""
 			item_data = EwItem(id_item = item_sought.get('id_item'))
 			#Slimernalia gifting
 			if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
@@ -1744,7 +1744,7 @@ async def give(cmd):
 				item_data.persist()
 				user_data.festivity += ewcfg.festivity_on_gift_giving
 				user_data.persist()
-
+			"""
 		# don't let people give others food when they shouldn't be able to carry more food items
 		if item_sought.get('item_type') == ewcfg.it_food:
 			food_items = inventory(

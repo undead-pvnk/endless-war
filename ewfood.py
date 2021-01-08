@@ -429,10 +429,6 @@ async def order(cmd):
 				if (user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe) and item_type == ewcfg.it_food:
 					value = 0
 
-				# SLIMERNALIA
-				if item_type == ewcfg.it_food:
-					value = 0
-
 				if value > current_currency_amount:
 					# Not enough money.
 					response = "A {} costs {:,} {}, and you only have {:,}.".format(name, value, currency_used, current_currency_amount)

@@ -1415,10 +1415,7 @@
         "ingredients": "",
         "acquisition": "",
         "price": 100,
-        "vendors": [
-            "bazaar",
-            "College"
-        ],
+        "vendors": [],
         "is_hat": false
     },
     "seacowcostume": {
