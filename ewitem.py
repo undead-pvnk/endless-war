@@ -1724,27 +1724,18 @@ async def give(cmd):
 	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
 	if item_sought:  # if an item was found
-
-		#Slimernalia gifting
+		
+		"""
+		# Slimernalia gifting
 		if item_sought.get('item_type') == ewcfg.it_item:
-			general_items = inventory(
-				id_user=recipient.id,
-				id_server=server.id,
-				item_type_filter=ewcfg.it_item
-			)
-
-			if len(general_items) >= ewcfg.generic_inv_limit:
-				response = "They can't carry any more of those."
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			"""
 			item_data = EwItem(id_item = item_sought.get('id_item'))
-			#Slimernalia gifting
+			
 			if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
 				item_data.item_props['gifted'] = "true"
 				item_data.persist()
 				user_data.festivity += ewcfg.festivity_on_gift_giving
 				user_data.persist()
-			"""
+		"""
 		# don't let people give others food when they shouldn't be able to carry more food items
 		if item_sought.get('item_type') == ewcfg.it_food:
 			food_items = inventory(
@@ -1757,7 +1748,7 @@ async def give(cmd):
 				response = "They can't carry any more food items."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		if item_sought.get('item_type') == ewcfg.it_weapon:
+		elif item_sought.get('item_type') == ewcfg.it_weapon:
 			weapons_held = inventory(
 				id_user = recipient.id,
 				id_server = server.id,
@@ -1773,16 +1764,8 @@ async def give(cmd):
 			elif len(weapons_held) >= recipient_data.get_weapon_capacity():
 				response  = "They can't carry any more weapons."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-		if item_sought.get('item_type') == ewcfg.it_cosmetic:
-			item_data = EwItem(id_item = item_sought.get('id_item'))
-			item_data.item_props["adorned"] = 'false'
-			item_data.persist()
-
-		if item_sought.get('soulbound') and EwItem(id_item = item_sought.get('id_item')).item_props.get("context") != "housekey":
-			response = "You can't just give away soulbound items."
 		else:
-
+			# inventory limits for items that aren't food or weapons
 			other_items = inventory(
 				id_user=recipient.id,
 				id_server=server.id,
@@ -1793,6 +1776,14 @@ async def give(cmd):
 				response = "They can't carry any more of those."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+		if item_sought.get('item_type') == ewcfg.it_cosmetic:
+			item_data = EwItem(id_item = item_sought.get('id_item'))
+			item_data.item_props["adorned"] = 'false'
+			item_data.persist()
+
+		if item_sought.get('soulbound') and EwItem(id_item = item_sought.get('id_item')).item_props.get("context") != "housekey":
+			response = "You can't just give away soulbound items."
+		else:
 			give_item(
 				member = recipient,
 				id_item = item_sought.get('id_item')
