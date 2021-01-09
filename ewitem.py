@@ -1336,7 +1336,7 @@ async def item_look(cmd):
 				response += "\n\n"
 
 				response += "It's an article of {rarity} rank.\n".format(rarity = item.item_props['rarity'])
-
+				"""
 				if any(stat in item.item_props.keys() for stat in ewcfg.playerstats_list):
 
 					response += "Adorning it "
@@ -1362,7 +1362,7 @@ async def item_look(cmd):
 						response += "doesn't affect your stats at all.\n"
 					else:
 						response += ewutils.formatNiceList(names = stats_breakdown, conjunction = "and") + ". \n"
-
+				"""
 				if item.item_props['durability'] is None:
 					response += "It can't be destroyed.\n"
 				else:

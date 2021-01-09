@@ -61,6 +61,7 @@ CREATE TABLE users (
 	gvs_time_lastshambaquarium int NOT NULL DEFAULT '0',
 	time_lasthit int NOT NULL DEFAULT '0',
 	rand_seed bigint NOT NULL DEFAULT '0',
+	verified boolean NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );

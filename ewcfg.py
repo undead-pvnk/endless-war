@@ -1442,6 +1442,8 @@ cmd_shamble = cmd_prefix + 'shamble'
 
 # Slime Twitter
 cmd_tweet = cmd_prefix + 'tweet'
+cmd_verification = cmd_prefix + 'requestverification'
+cmd_verification_alt = cmd_prefix + '#verify'
 
 #SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
@@ -1975,6 +1977,8 @@ emote_ms_8 = ":eight:"
 
 # Emote for deleting slime tweets
 emote_delete_tweet = emote_blank
+# Slime twitter verified checkmark
+emote_verified = "<:slime_checkmark:797234128398319626>"
 
 # mining types
 mining_type_minesweeper = "minesweeper"
@@ -2228,10 +2232,11 @@ col_salary_credits = 'salary_credits'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
 col_sidearm = 'sidearm'
-
 col_race = 'race'
 col_time_racialability = 'time_racialability'
 col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
+col_verified = 'verified'
+
 col_attack = 'attack'
 col_speed = 'speed'
 col_freshness = 'freshness'

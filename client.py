@@ -839,7 +839,9 @@ cmd_map = {
 	ewcfg.cmd_manual_unban:ewcmd.unban_manual,
 
 	# Slime Twitter
-	ewcfg.cmd_tweet: ewslimetwitter.tweet
+	ewcfg.cmd_tweet: ewslimetwitter.tweet,
+	ewcfg.cmd_verification: ewslimetwitter.verification,
+	ewcfg.cmd_verification_alt: ewslimetwitter.verification
 }
 
 debug = False
