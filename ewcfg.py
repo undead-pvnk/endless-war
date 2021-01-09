@@ -33,7 +33,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.7 - Yo, Slimernalia!"
+version = "v3.75 - No, Slimernalia!"
 
 
 dir_msgqueue = 'msgqueue'
@@ -3495,7 +3495,7 @@ item_list = [
 		],
 		str_name="Megaslime Wrapping Paper",
 		str_desc="Wrapping paper with Megaslimes plastered all over it. Blaargh!",
-		vendors=[vendor_glocksburycomics],
+		vendors=[],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3506,7 +3506,7 @@ item_list = [
 		],
 		str_name="Green Eyes Slime Dragon Wrapping Paper",
 		str_desc="Wrapping paper with many images of the Green Eyes Slime Dragon printed on it. Powerful...",
-		vendors=[vendor_glocksburycomics],
+		vendors=[],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3517,7 +3517,7 @@ item_list = [
 		],
 		str_name = "Phoebus Wrapping Paper",
 		str_desc = "A set of wrapping paper with Slime Invictus on it. Yo, Slimernalia!",
-		vendors = [vendor_glocksburycomics],
+		vendors = [],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3528,7 +3528,7 @@ item_list = [
 		],
 		str_name = "Slime Hearts Wrapping Paper",
 		str_desc = "Wrapping paper decorated with slime hearts. Cute!!",
-		vendors = [vendor_glocksburycomics],
+		vendors = [],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3539,7 +3539,7 @@ item_list = [
 		],
 		str_name = "Slime Skulls Wrapping Paper",
 		str_desc = "A roll of wrapping paper with Slime Skulls stamped all over it. Spooky...",
-		vendors = [vendor_glocksburycomics],
+		vendors = [],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3550,7 +3550,7 @@ item_list = [
 		],
 		str_name = "Sherman Wrapping Paper",
 		str_desc = "Wrapping paper with Sherman, the SlimeCorp salaryman etched into it. Jesus Christ, how horrifying!",
-		vendors = [vendor_glocksburycomics],
+		vendors = [],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3561,7 +3561,7 @@ item_list = [
 		],
 		str_name = "SlimeCorp Wrapping Paper",
 		str_desc = "A set of wrapping paper with that accursed logo printed all over it. What sort of corporate bootlicker would wrap a gift in this?",
-		vendors = [vendor_glocksburycomics],
+		vendors = [],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3572,7 +3572,7 @@ item_list = [
 		],
 		str_name = "Pickaxe Wrapping Paper",
 		str_desc = "A roll of wrapping paper with a bunch of pickaxes depicted on it. Perfect for Juvies who love to toil away in the mines.",
-		vendors = [vendor_glocksburycomics],
+		vendors = [],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3583,7 +3583,7 @@ item_list = [
 		],
 		str_name = "Ben Wrapping Paper",
 		str_desc = "Wrapping paper with the Cop Killer printed on it. !dab !dab !dab",
-		vendors = [vendor_glocksburycomics],
+		vendors = [],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3594,7 +3594,7 @@ item_list = [
 		],
 		str_name = "Munchy Wrapping Paper",
 		str_desc = "Wrapping paper with the Rowdy Fucker printed on it. !THRASH !THRASH !THRASH",
-		vendors = [vendor_glocksburycomics],
+		vendors = [],
 		price = 1000,
 	),
 	EwGeneralItem(

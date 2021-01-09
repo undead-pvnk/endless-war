@@ -440,7 +440,7 @@ class EwUser:
 			hunger_restored = round(hunger_restored)
 
 			#SLIMERNALIA
-			old_hunger = self.hunger
+			#old_hunger = self.hunger
 
 			self.hunger -= hunger_restored
 			if self.hunger < 0:
@@ -449,7 +449,7 @@ class EwUser:
 			if self.inebriation > 20:
 				self.inebriation = 20
 
-			self.festivity += old_hunger - self.hunger
+			#self.festivity += old_hunger - self.hunger
 						
 			try:
 				if item_props['id_food'] in ["coleslaw","bloodcabbagecoleslaw"]:
@@ -626,8 +626,8 @@ class EwUser:
 		if self.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't equip weapons."
 		#SLIMERNALIA
-		#elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in weapon.classes:
-		#	response = "Juvies can't equip weapons."
+		elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in weapon.classes:
+			response = "Juvies can't equip weapons."
 		elif self.life_state == ewcfg.life_state_shambler:
 			response = "Shamblers can't equip weapons."
 		elif self.weaponmarried == True:
@@ -667,8 +667,8 @@ class EwUser:
 
 		if self.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't equip weapons."
-		#elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in sidearm.classes:
-		#	response = "Juvies can't equip weapons."
+		elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in sidearm.classes:
+			response = "Juvies can't equip weapons."
 		elif self.weaponmarried == True and sidearm_item.item_props.get("married") == self.id_user:
 			current_weapon = ewitem.EwItem(id_item = self.weapon)
 			partner_name = current_weapon.item_props.get("weapon_name")

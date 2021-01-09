@@ -430,8 +430,8 @@ async def order(cmd):
 					value = 0
 
 				# SLIMERNALIA
-				if item_type == ewcfg.it_food:
-					value = 0
+				#if item_type == ewcfg.it_food:
+				#	value = 0
 
 				if value > current_currency_amount:
 					# Not enough money.
