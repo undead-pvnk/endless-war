@@ -2357,9 +2357,9 @@ async def unwrap(cmd):
 				gifted_item_name = gifted_item.item_props.get('{}'.format(gift_name_type))
 				gifted_item_message = item.item_props.get('context')
 
-				#user_data = EwUser(member=cmd.message.author)
-				#user_data.festivity += ewcfg.festivity_on_gift_wrapping
-				#user_data.persist()
+				user_data = EwUser(member=cmd.message.author)
+				user_data.festivity += ewcfg.festivity_on_gift_wrapping
+				user_data.persist()
 				
 				response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)
 				ewitem.item_delete(id_item=item_sought.get('id_item'))
