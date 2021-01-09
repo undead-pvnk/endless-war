@@ -28,6 +28,7 @@ from ewhunting import EwEnemy, EwOperationData
 from ewmarket import EwMarket
 from ewstatuseffects import EwStatusEffect
 from ewstatuseffects import EwEnemyStatusEffect
+from ewdungeons import EwGamestate
 from ewitem import EwItem
 #from ewprank import calculate_gambit_exchange
 
@@ -2992,42 +2993,51 @@ def get_fingernail_item(cmd):
 	return id_item
 
 
-def inaccessible(user_data=None, poi=None):
-	if poi == None or user_data == None:
-		return True
+def inaccessible(user_data = None, poi = None):
 
-	if user_data.life_state == ewcfg.life_state_observer:
-		return False
+    if poi == None or user_data == None:
+        return True
 
-	if user_data.life_state == ewcfg.life_state_shambler and poi.id_poi in [ewcfg.poi_id_rowdyroughhouse,
-																			ewcfg.poi_id_copkilltown,
-																			ewcfg.poi_id_juviesrow]:
-		return True
+    if user_data.life_state == ewcfg.life_state_observer:
+        return False
 
-	bans = user_data.get_bans()
-	vouchers = user_data.get_vouchers()
+    if user_data.life_state == ewcfg.life_state_shambler and poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow]:
+        return True
 
-	locked_districts_list = ewmap.retrieve_locked_districts(user_data.id_server)
 
-	if (
-			len(poi.factions) > 0 and
-			(set(vouchers).isdisjoint(set(poi.factions)) or user_data.faction != "") and
-			user_data.faction not in poi.factions
-	) or (
-			len(poi.life_states) > 0 and
-			user_data.life_state not in poi.life_states
-	):
-		return True
-	elif (
-			len(poi.factions) > 0 and
-			len(bans) > 0 and
-			set(poi.factions).issubset(set(bans))
-	):
-		return True
-	elif poi.id_poi in locked_districts_list and user_data.life_state not in [ewcfg.life_state_executive, ewcfg.life_state_lucky]:
-		return True
-	else:
-		return False
+    elevatorstop = EwGamestate(id_server=user_data.id_server, id_state='elevator')
+
+    for lock in ewcfg.lock_states:
+        if poi in ewcfg.lock_states.get(lock) and user_data.poi in ewcfg.lock_states.get(lock):
+            print(lock)
+            gamestate = EwGamestate(id_server=user_data.id_server, id_state=lock)
+            if gamestate.bit == 0 or elevatorstop.value not in ewcfg.lock_states.get(lock):
+                return True
+
+    bans = user_data.get_bans()
+    vouchers = user_data.get_vouchers()
+
+    locked_districts_list = ewmap.retrieve_locked_districts(user_data.id_server)
+
+    if(
+        len(poi.factions) > 0 and
+        (set(vouchers).isdisjoint(set(poi.factions)) or user_data.faction != "") and
+        user_data.faction not in poi.factions
+    ) or (
+        len(poi.life_states) > 0 and
+        user_data.life_state not in poi.life_states
+    ):
+        return True
+    elif(
+        len(poi.factions) > 0 and
+        len(bans) > 0 and
+        set(poi.factions).issubset(set(bans))
+    ):
+        return True
+    elif poi.id_poi in locked_districts_list and user_data.life_state not in [ewcfg.life_state_executive, ewcfg.life_state_lucky]:
+        return True
+    else:
+        return False
 
 
 

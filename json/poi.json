@@ -10144,7 +10144,8 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "downtown": 20
+            "downtown": 20,
+            "n10office": 20
         },
         "topic": "https://ew.krakissi.net/market/",
         "wikipage": "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM#SlimeCorp_Stock_Exchange"

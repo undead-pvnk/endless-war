@@ -80,6 +80,8 @@ class EwGamestate():
 					self.id_state = id_state
 					self.bit = data[0][0]
 					self.value = data[0][1]
+				else:
+					self.bit = None
 
 			except:
 				ewutils.logMsg("Failed to retrieve gamestate {} from database.".format(self.id_state))

@@ -667,6 +667,8 @@ cmd_map = {
 	# LOL
 	ewcfg.cmd_lol: ewcmd.lol,
 
+	ewcfg.cmd_zuck : ewitem.zuck,
+
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 	
@@ -825,7 +827,9 @@ cmd_map = {
 	ewcfg.cmd_skullbash: ewitem.skullbash,
 
 	# Slime Twitter
-	ewcfg.cmd_tweet: ewslimetwitter.tweet
+	ewcfg.cmd_tweet: ewslimetwitter.tweet,
+	ewcfg.cmd_changegamestate: ewdebug.change_gamestate,
+	ewcfg.cmd_press_button: ewdebug.elevator_press,
 }
 
 debug = False
@@ -982,7 +986,7 @@ async def on_ready():
 				elif(channel.name == ewcfg.channel_slimetwitter):
 					channels_slimetwitter[server.id] = channel
 					ewutils.logMsg("• found channel for slime twitter: {}".format(channel.name))
-
+		ewdebug.initialize_gamestate(id_server=server.id)
 		# create all the districts in the database
 		for poi_object in ewcfg.poi_list:
 			poi = poi_object.id_poi

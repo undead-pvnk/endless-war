@@ -719,13 +719,21 @@ def inaccessible(user_data = None, poi = None):
     if user_data.life_state == ewcfg.life_state_shambler and poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow]:
         return True
 
+    source_poi = ewcfg.id_to_poi.get(user_data.poi)
+
+    flamestate = EwGamestate(id_server=user_data.id_server, id_state='flamethrower')
+
+
+
+    if 'n4office' in poi.neighbors and 'n4office' in source_poi.neighbors:
+        return True
 
     elevatorstop = EwGamestate(id_server=user_data.id_server, id_state='elevator')
 
     for lock in ewcfg.lock_states:
-        if poi in ewcfg.lock_states.get(lock) and user_data.poi in ewcfg.lock_states.get(lock):
+        if poi.id_poi in ewcfg.lock_states.get(lock) and user_data.poi in ewcfg.lock_states.get(lock):
             gamestate = EwGamestate(id_server=user_data.id_server, id_state=lock)
-            if gamestate.bit == 0 or elevatorstop.value not in ewcfg.lock_states.get(lock):
+            if gamestate.bit == 0 or (elevatorstop.value not in ewcfg.lock_states.get(lock) and "slimecorphq" not in [poi.id_poi, user_data.poi]):
                 return True
 
     bans = user_data.get_bans()
@@ -848,6 +856,8 @@ async def move(cmd = None, isApt = False):
     if target_name in ewcfg.streets:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "https://www.goodreads.com/quotes/106313-the-beginning-of-wisdom-is-to-call-things-by-their ...bitch"))
 
+
+
     poi = ewcfg.id_to_poi.get(target_name)
     if poi_current.is_apartment == True:
         isApt = True
@@ -898,6 +908,10 @@ async def move(cmd = None, isApt = False):
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're already there, bitch."))
     elif isApt and poi.id_poi == user_data.poi[3:]:
         return await ewapt.depart(cmd=cmd)
+
+    flamestate = EwGamestate(id_state="flamethrower", id_server=user_data.id_server)
+    if 'n4office' == poi.id_poi and flamestate.bit == 1:
+        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You open the elevator, and are immediately met with fire spitting out of the elevator. Over the crackling flames you can hear a woman screaming \"AAAAAAAAGH FUCK YOU DIE DIE DIE DIE\". You're guessing entering now is a bad idea."))
 
     if inaccessible(user_data = user_data, poi = poi):
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))

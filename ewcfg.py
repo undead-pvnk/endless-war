@@ -1301,6 +1301,8 @@ cmd_retrofit = cmd_prefix + 'retrofit'
 cmd_sip = cmd_prefix + 'sip'
 cmd_fashion = cmd_prefix + 'fashion'
 
+cmd_zuck = cmd_prefix + 'zuck'
+
 cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
 cmd_beginmanuscript_alt_1 = cmd_prefix + 'createmanuscript'
 cmd_beginmanuscript_alt_2 = cmd_prefix + 'startmanuscript'
@@ -1455,6 +1457,9 @@ cmd_confuse = cmd_prefix + 'confuse'
 # Slime Twitter
 cmd_tweet = cmd_prefix + 'tweet'
 
+
+cmd_changegamestate = cmd_prefix + 'changegamestate'
+cmd_press_button = cmd_prefix + 'press'
 #SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
@@ -3620,6 +3625,71 @@ item_list = [
 		str_desc = "It’s a rusty syringe containing a thick, dark-red substance. It begins to bubble slightly when you shake it. A few charred bits rise to the top. Looks yummy!",
 		vendors = [vendor_lab],
 		price = 1000000
+	),
+	EwGeneralItem(
+		id_item = 'n2corpse',
+		context = 'corpse',
+		str_name = "N2's Corpse",
+		str_desc = "The unzucked corpse of N2. All these bloodstains make his outfit even more gaudy than usual.",
+		alias = [
+			"n2"
+		]
+	),
+EwGeneralItem(
+		id_item = 'n6corpse',
+		context = 'corpse',
+		str_name = "N6's Corpse",
+		str_desc = "The unzucked corpse of N6. Something is preventing her corpse from entering the Sewers.",
+		alias = [
+			"n6"
+		]
+	),
+EwGeneralItem(
+		id_item = 'n10corpse',
+		context = 'corpse',
+		str_name = "N10's Corpse",
+		str_desc = "The unzucked corpse of N10. Something about lugging this body around feels like a mistake.",
+		alias = [
+			"n10"
+		]
+	),
+EwGeneralItem(
+		id_item = 'n11corpse',
+		context = 'corpse',
+		str_name = "N11's Corpse",
+		str_desc = "The unzucked corpse of N11. You're having a rough time carrying it.",
+		alias = [
+			"n11"
+		]
+	),
+EwGeneralItem(
+		id_item = 'n12corpse',
+		context = 'corpse',
+		str_name = "N12's Corpse",
+		str_desc = "The unzucked corpse of N12. At this point she's hardly recognizable.",
+		alias = [
+			"n12"
+		]
+	),
+EwGeneralItem(
+		id_item = 'n13corpse',
+		context = 'corpse',
+		str_name = "N13's Corpse",
+		str_desc = "The unzucked corpse of N13. The bulb head looks so fragile but it's definitely not breaking anytime soon.",
+		alias = [
+			"n13"
+		]
+	),
+EwGeneralItem(
+		id_item = 'zucksyringe',
+		context = 'syringe',
+		str_name = "Zuckerberg Syringe",
+		str_desc = "It's a high-powered syringe that can take a slimeboi and pressurize them into a steel canister. Be careful who you use this on.",
+		alias = [
+			"syringe",
+			"needle",
+			"zucker"
+		]
 	),
 	EwSlimeoidFood(
 		id_item = item_id_fragilecandy,
@@ -7477,6 +7547,7 @@ jam_tunes = {
 	"trombone" : jams_trombone,
 	"cornet": jams_cornet
 }
+
 
 
 furniture_list = []
@@ -15180,3 +15251,5 @@ def set_client(cl):
 #     scream += "A"
 #     
 # print(scream)
+
+
