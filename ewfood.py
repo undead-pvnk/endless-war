@@ -429,10 +429,6 @@ async def order(cmd):
 				if (user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe) and item_type == ewcfg.it_food:
 					value = 0
 
-				# SLIMERNALIA
-				if item_type == ewcfg.it_food:
-					value = 0
-
 				if value > current_currency_amount:
 					# Not enough money.
 					response = "A {} costs {:,} {}, and you only have {:,}.".format(name, value, currency_used, current_currency_amount)
@@ -485,6 +481,17 @@ async def order(cmd):
 
 						elif user_data.life_state == ewcfg.life_state_corpse:
 							response = "Ghosts can't hold weapons."
+							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+					else:
+						other_items_held = ewitem.inventory(
+							id_user = user_data.id_user,
+							id_server = cmd.guild.id,
+							item_type_filter = item_type
+						)
+
+						if len(other_items_held) >= ewcfg.generic_inv_limit:
+							response = ewcfg.str_generic_inv_limit.format(item_type)
 							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					item_props = ewitem.gen_item_props(item)

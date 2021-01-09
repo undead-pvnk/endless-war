@@ -33,7 +33,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.7 - Yo, Slimernalia!"
+version = "v3.71 - No Slimernalia"
 
 
 dir_msgqueue = 'msgqueue'
@@ -62,6 +62,9 @@ district_max_degradation = 10000
 
 # Market delta
 max_iw_swing = 30
+
+# An inventory limit for every item type that's not food or weapons
+generic_inv_limit = 1000
 
 # combatant ids to differentiate players and NPCs in combat
 combatant_type_player = "player"
@@ -1439,6 +1442,8 @@ cmd_shamble = cmd_prefix + 'shamble'
 
 # Slime Twitter
 cmd_tweet = cmd_prefix + 'tweet'
+cmd_verification = cmd_prefix + 'requestverification'
+cmd_verification_alt = cmd_prefix + '#verify'
 
 #SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
@@ -1972,6 +1977,8 @@ emote_ms_8 = ":eight:"
 
 # Emote for deleting slime tweets
 emote_delete_tweet = emote_blank
+# Slime twitter verified checkmark
+emote_verified = "<:slime_checkmark:797234128398319626>"
 
 # mining types
 mining_type_minesweeper = "minesweeper"
@@ -2112,6 +2119,7 @@ str_generic_onbreak = "Their {} broke!!"
 str_soul_onadorn = "{} has begun swirling around you."
 str_soul_unadorn = "{} has stopped swirling around you and you place it back into your hammerspace."
 str_soul_onbreak = "{} has ***SHATTERED.*** Uh oh."
+str_generic_inv_limit = "You can't fit another {} in your inventory!"
 
 generic_role_name = 'NLACakaNM'
 
@@ -2224,10 +2232,11 @@ col_salary_credits = 'salary_credits'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
 col_sidearm = 'sidearm'
-
 col_race = 'race'
 col_time_racialability = 'time_racialability'
 col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
+col_verified = 'verified'
+
 col_attack = 'attack'
 col_speed = 'speed'
 col_freshness = 'freshness'
@@ -3495,7 +3504,6 @@ item_list = [
 		],
 		str_name="Megaslime Wrapping Paper",
 		str_desc="Wrapping paper with Megaslimes plastered all over it. Blaargh!",
-		vendors=[vendor_glocksburycomics],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3506,7 +3514,6 @@ item_list = [
 		],
 		str_name="Green Eyes Slime Dragon Wrapping Paper",
 		str_desc="Wrapping paper with many images of the Green Eyes Slime Dragon printed on it. Powerful...",
-		vendors=[vendor_glocksburycomics],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3517,7 +3524,6 @@ item_list = [
 		],
 		str_name = "Phoebus Wrapping Paper",
 		str_desc = "A set of wrapping paper with Slime Invictus on it. Yo, Slimernalia!",
-		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3528,7 +3534,6 @@ item_list = [
 		],
 		str_name = "Slime Hearts Wrapping Paper",
 		str_desc = "Wrapping paper decorated with slime hearts. Cute!!",
-		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3539,7 +3544,6 @@ item_list = [
 		],
 		str_name = "Slime Skulls Wrapping Paper",
 		str_desc = "A roll of wrapping paper with Slime Skulls stamped all over it. Spooky...",
-		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3550,7 +3554,6 @@ item_list = [
 		],
 		str_name = "Sherman Wrapping Paper",
 		str_desc = "Wrapping paper with Sherman, the SlimeCorp salaryman etched into it. Jesus Christ, how horrifying!",
-		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3561,7 +3564,6 @@ item_list = [
 		],
 		str_name = "SlimeCorp Wrapping Paper",
 		str_desc = "A set of wrapping paper with that accursed logo printed all over it. What sort of corporate bootlicker would wrap a gift in this?",
-		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3572,7 +3574,6 @@ item_list = [
 		],
 		str_name = "Pickaxe Wrapping Paper",
 		str_desc = "A roll of wrapping paper with a bunch of pickaxes depicted on it. Perfect for Juvies who love to toil away in the mines.",
-		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3583,7 +3584,6 @@ item_list = [
 		],
 		str_name = "Ben Wrapping Paper",
 		str_desc = "Wrapping paper with the Cop Killer printed on it. !dab !dab !dab",
-		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
 	EwGeneralItem(
@@ -3594,7 +3594,6 @@ item_list = [
 		],
 		str_name = "Munchy Wrapping Paper",
 		str_desc = "Wrapping paper with the Rowdy Fucker printed on it. !THRASH !THRASH !THRASH",
-		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
 	EwGeneralItem(

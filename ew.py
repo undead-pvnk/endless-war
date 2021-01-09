@@ -93,6 +93,9 @@ class EwUser:
 	#when a user was last hit
 	time_lasthit = 2
 
+	# twitter
+	verified = False
+
 	move_speed = 1 # not a database column
 
 	""" fix data in this object if it's out of acceptable ranges """
@@ -439,17 +442,12 @@ class EwUser:
 	
 			hunger_restored = round(hunger_restored)
 
-			#SLIMERNALIA
-			old_hunger = self.hunger
-
 			self.hunger -= hunger_restored
 			if self.hunger < 0:
 				self.hunger = 0
 			self.inebriation += int(item_props['inebriation'])
 			if self.inebriation > 20:
 				self.inebriation = 20
-
-			self.festivity += old_hunger - self.hunger
 						
 			try:
 				if item_props['id_food'] in ["coleslaw","bloodcabbagecoleslaw"]:
@@ -625,9 +623,8 @@ class EwUser:
 
 		if self.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't equip weapons."
-		#SLIMERNALIA
-		#elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in weapon.classes:
-		#	response = "Juvies can't equip weapons."
+		elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in weapon.classes:
+			response = "Juvies can't equip weapons."
 		elif self.life_state == ewcfg.life_state_shambler:
 			response = "Shamblers can't equip weapons."
 		elif self.weaponmarried == True:
@@ -667,8 +664,8 @@ class EwUser:
 
 		if self.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't equip weapons."
-		#elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in sidearm.classes:
-		#	response = "Juvies can't equip weapons."
+		elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in sidearm.classes:
+			response = "Juvies can't equip weapons."
 		elif self.weaponmarried == True and sidearm_item.item_props.get("married") == self.id_user:
 			current_weapon = ewitem.EwItem(id_item = self.weapon)
 			partner_name = current_weapon.item_props.get("weapon_name")
@@ -1104,17 +1101,19 @@ class EwUser:
 
 	def get_festivity(self):
 		data = ewutils.execute_sql_query(
-		"SELECT FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) FROM users "\
+		"SELECT {festivity} + COALESCE(sigillaria, 0) + {festivity_from_slimecoin} FROM users "\
 		"LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} "\
-		"WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} WHERE users.{id_user} = %s AND users.{id_server} = %s".format(
+		"WHERE {type} = %s AND {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} WHERE users.{id_user} = %s AND users.{id_server} = %s".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
 			festivity = ewcfg.col_festivity,
 			festivity_from_slimecoin = ewcfg.col_festivity_from_slimecoin,
+			type = ewcfg.col_item_type,
 			name = ewcfg.col_name,
 			value = ewcfg.col_value,
 			id_item = ewcfg.col_id_item,
 		),(
+			ewcfg.it_furniture,
 			"id_furniture",
 			ewcfg.item_id_sigillaria,
 			self.id_user,
@@ -1125,7 +1124,7 @@ class EwUser:
 		for row in data:
 			res = row[0]
 
-		return int(res)
+		return res
 
 	def has_gellphone(self):
 		"""
@@ -1178,7 +1177,7 @@ class EwUser:
 
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -1238,6 +1237,7 @@ class EwUser:
 					ewcfg.col_gvs_time_lastshambaquarium,
 					ewcfg.col_rand_seed,
 					ewcfg.col_time_lasthit,
+					ewcfg.col_verified,
 				), (
 					id_user,
 					id_server
@@ -1304,7 +1304,7 @@ class EwUser:
 					self.gvs_time_lastshambaquarium = result[53]
 					self.rand_seed = result[54]
 					self.time_lasthit = result[55]
-
+					self.verified = result[56]
 
 				else:
 					self.poi = ewcfg.poi_id_downtown
@@ -1400,7 +1400,7 @@ class EwUser:
 
 			# Save the object.
 
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -1461,7 +1461,8 @@ class EwUser:
 				ewcfg.col_juviemode,
 				ewcfg.col_gvs_time_lastshambaquarium,
 				ewcfg.col_rand_seed,
-				ewcfg.col_time_lasthit
+				ewcfg.col_time_lasthit,
+				ewcfg.col_verified,
 			), (
 				self.id_user,
 				self.id_server,
@@ -1523,7 +1524,8 @@ class EwUser:
 				self.juviemode,
 				self.gvs_time_lastshambaquarium,
 				self.rand_seed,
-				self.time_lasthit
+				self.time_lasthit,
+				self.verified
 			))
 
 			conn.commit()

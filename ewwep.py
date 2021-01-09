@@ -285,7 +285,7 @@ def canAttack(cmd, amb_switch = 0):
 		captcha = weapon_item.item_props.get('captcha')
 
 	channel_poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	#SLIMERNALIA
+	"""
 	if user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse:
 		if user_data.life_state == ewcfg.life_state_enlisted:
 			response = "Not so fast, you scrooge! Only Juveniles can attack during Slimernalia."
@@ -293,8 +293,9 @@ def canAttack(cmd, amb_switch = 0):
 			response = "You lack the moral fiber necessary for violence."
 	elif user_data.slimelevel <= ewcfg.max_safe_level:
 		response = "You are still too cowardly to hurt another being."
+	"""
 
-	elif ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You can't commit violence from here."
 	# elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
 	# 	response = "You must go elsewhere to commit gang violence."
@@ -355,13 +356,12 @@ def canAttack(cmd, amb_switch = 0):
 			# disallow kill if the player has killed recently
 			response = "Take a moment to appreciate your last slaughter."
 
-		#SLIMERNALIA
-		#elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isshambler == False and user_isslimecorp == False:
-		#	# Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
-		#	if user_data.life_state == ewcfg.life_state_juvenile:
-		#		response = "Juveniles lack the moral fiber necessary for violence."
-		#	else:
-		#		response = "You lack the moral fiber necessary for violence."
+		elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isshambler == False and user_isslimecorp == False:
+			# Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
+			if user_data.life_state == ewcfg.life_state_juvenile:
+				response = "Juveniles lack the moral fiber necessary for violence."
+			else:
+				response = "You lack the moral fiber necessary for violence."
 
 		elif enemy_data != None:
 			# enemy found, redirect variables to code in ewhunting
@@ -404,13 +404,12 @@ def canAttack(cmd, amb_switch = 0):
 		# elif shootee_data.life_state == ewcfg.life_state_shambler and (user_iskillers == True or user_isrowdys == True or user_isexecutive == True or user_isslimecorp == True) and len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_shambler])) > 0:
 		# 	response = "You can't attack them, they're protected by a horde of enemy Shamblers!"
 
-		#SLIMERNALIA
-		#elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isshambler == False and user_isslimecorp == False:
+		elif user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isshambler == False and user_isslimecorp == False:
 			# Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
-		#	if user_data.life_state == ewcfg.life_state_juvenile:
-		#		response = "Juveniles lack the moral fiber necessary for violence."
-		#	else:
-		#		response = "You lack the moral fiber necessary for violence."
+			if user_data.life_state == ewcfg.life_state_juvenile:
+				response = "Juveniles lack the moral fiber necessary for violence."
+			else:
+				response = "You lack the moral fiber necessary for violence."
 
 		elif (time_now - shootee_data.time_lastrevive) < ewcfg.invuln_onrevive:
 			# User is currently invulnerable.
@@ -787,11 +786,7 @@ async def attack(cmd):
 					weapon_item.item_props['ammo'] = int(weapon_item.item_props.get("ammo")) - 1
 
 				life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_shambler]
-				#SLIMERNALIA
-				factions = ["", ewcfg.faction_rowdys, ewcfg.faction_killers, ewcfg.faction_slimecorp]
-				#factions = ["", shootee_data.faction]
-
-
+				factions = ["", shootee_data.faction]
 
 				# Burn players in district
 				if ewcfg.weapon_class_burning in weapon.classes:
@@ -955,8 +950,6 @@ async def attack(cmd):
 				market_data.splattered_slimes += slimes_damage
 				market_data.persist()
 				user_data.splattered_slimes += slimes_damage
-				# SLIMERNALIA
-				user_data.festivity += slimes_splatter
 				user_data.persist()
 				boss_slimes += slimes_toboss
 				district_data.change_slimes(n = slimes_splatter, source = ewcfg.source_killing)
@@ -1009,7 +1002,6 @@ async def attack(cmd):
 						scalp_text = ""
 					
 					if shootee_data.life_state != ewcfg.life_state_shambler:
-						"""
 						# Drop shootee scalp
 						ewitem.item_create(
 							item_type = ewcfg.it_cosmetic,
@@ -1033,19 +1025,6 @@ async def attack(cmd):
 								'fashion_style': ewcfg.style_cool,
 								'freshness': 10,
 								'adorned': 'false'
-							}
-						)"""
-						ewitem.item_create(
-							item_type = ewcfg.it_furniture,
-							id_user = cmd.message.author.id,
-							id_server = cmd.guild.id,
-							item_props = {
-								'id_furniture': ewcfg.item_id_sigillaria,
-								'furniture_name': "{}'s sigillaria".format(shootee_name),
-								'furniture_desc': "A sigillaria of {}.".format(shootee_name),
-								'rarity': ewcfg.rarity_patrician,
-								'furniture_place_desc': "You place the figurine, filling your apartment with Slimernalia cheer.",
-								'furniture_look_desc': "There's a sigillaria of {}.".format(shootee_name),
 							}
 						)
 					elif ewcfg.status_modelovaccine_id in user_data.getStatusEffects():
@@ -1318,9 +1297,8 @@ async def suicide(cmd):
 
 		if user_isdead:
 			response = "Too late for that."
-		#SLIMERNALIA
-		#elif user_isjuvenile and ewcfg.mutation_id_nervesofsteel not in mutations:
-		#	response = "Juveniles are too cowardly for suicide."
+		elif user_isjuvenile and ewcfg.mutation_id_nervesofsteel not in mutations:
+			response = "Juveniles are too cowardly for suicide."
 		elif user_isgeneral:
 			response = "\*click* Alas, your gun has jammed."
 		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky or user_isjuvenile or user_isslimecorp:
@@ -1471,9 +1449,6 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				if ewcfg.mutation_id_nosferatu in user_mutations and (market_data.clock < 6 or market_data.clock >= 20):
 					user_data.change_slimes(n = slimes_splatter * 0.6, source= ewcfg.source_killing)
 					slimes_splatter *= .4
-
-				# SLIMERNALIA
-				user_data.festivity += slimes_splatter
 
 				boss_slimes += slimes_toboss
 				district_data.change_slimes(n = slimes_splatter, source = ewcfg.source_killing)
@@ -1697,11 +1672,9 @@ async def spar(cmd):
 				response = "{} is too exhausted to train right now. They need a snack!".format(member.display_name)
 			elif user_isdead == True:
 				response = "The dead think they're too cool for conventional combat. Pricks."
-			elif not (user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isslimecorp == False) or user_data.life_state == ewcfg.life_state_corpse:
+			elif (user_iskillers == False and user_isrowdys == False and user_isexecutive == False and user_isslimecorp == False) or user_data.life_state == ewcfg.life_state_corpse:
 				# Only killers, rowdys, the cop killer, and the rowdy fucker can spar
-				#SLIMERNALIA
-				response = "Not so fast, you scrooge! Only Juveniles can spar during Slimernalia."
-				#response = "Juveniles lack the backbone necessary for combat."
+				response = "Juveniles lack the backbone necessary for combat."
 			else:
 				was_juvenile = False
 				was_sparred = False
@@ -1731,14 +1704,12 @@ async def spar(cmd):
 				elif sparred_data.life_state == ewcfg.life_state_juvenile:
 					# Target is a juvenile.
 					was_juvenile = True
-
-				#SLIMERNALIA
-				#elif (user_iskillers and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction == ewcfg.faction_killers)) or (user_isrowdys and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction == ewcfg.faction_rowdys)) or (user_isslimecorp and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction == ewcfg.faction_slimecorp)):
+				elif (user_iskillers and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction == ewcfg.faction_killers)) or (user_isrowdys and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction == ewcfg.faction_rowdys)) or (user_isslimecorp and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction == ewcfg.faction_slimecorp)):
 					# User can be sparred.
 					was_sparred = True
-				#elif (user_iskillers and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction != ewcfg.faction_killers)) or (user_isrowdys and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction != ewcfg.faction_rowdys)) or (user_isslimecorp and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction != ewcfg.faction_slimecorp)):
+				elif (user_iskillers and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction != ewcfg.faction_killers)) or (user_isrowdys and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction != ewcfg.faction_rowdys)) or (user_isslimecorp and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction != ewcfg.faction_slimecorp)):
 					# Target is a member of the opposing faction.
-				#	was_enemy = True
+					was_enemy = True
 
 
 				#if the duel is successful
@@ -2377,8 +2348,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				bystander_faction = "rowdys"
 
 			#SLIMERNALIA
-			factions = ["", ewcfg.faction_rowdys, ewcfg.faction_killers, ewcfg.faction_slimecorp]
-			#factions = ["", bystander_faction]
+			factions = ["", bystander_faction]
 
 			# Burn players in district
 			if ewcfg.weapon_class_burning in weapon.classes:

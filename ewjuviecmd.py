@@ -442,22 +442,24 @@ async def mine(cmd):
 				# If there are multiple possible products, randomly select one.
 				item = random.choice(ewcfg.mine_results)
 
-				item_props = ewitem.gen_item_props(item)
+				if ewitem.check_inv_capacity(id_server = cmd.guild.id, id_user = user_data.id_user, item_type = item.item_type):
 
-				for creation in range(unearthed_item_amount):
-					ewitem.item_create(
-						item_type = item.item_type,
-						id_user = cmd.message.author.id,
-						id_server = cmd.guild.id,
-						item_props = item_props
-					)
+					item_props = ewitem.gen_item_props(item)
 
-				if unearthed_item_amount == 1:
-					response += "You unearthed a {}! ".format(item.str_name)
-				else:
-					response += "You unearthed {} {}s! ".format(unearthed_item_amount, item.str_name)
+					for creation in range(unearthed_item_amount):
+						ewitem.item_create(
+							item_type = item.item_type,
+							id_user = cmd.message.author.id,
+							id_server = cmd.guild.id,
+							item_props = item_props
+						)
 
-				ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = unearthed_item_amount)
+					if unearthed_item_amount == 1:
+						response += "You unearthed a {}! ".format(item.str_name)
+					else:
+						response += "You unearthed {} {}s! ".format(unearthed_item_amount, item.str_name)
+
+					ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = unearthed_item_amount)
 
 				# ewutils.logMsg('{} has found {} {}(s)!'.format(cmd.message.author.display_name, item.str_name, unearthed_item_amount))
 
@@ -1646,7 +1648,7 @@ def create_mining_event(cmd):
 			)
 		# 10 second poudrin frenzy
 		else:
-			if not user_data.juviemode:
+			if not user_data.juviemode and ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_item):
 				event_props = {}
 				event_props['id_user'] = cmd.message.author.id
 				event_props['poi'] = user_data.poi

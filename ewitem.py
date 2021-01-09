@@ -539,7 +539,7 @@ def item_lootspecific(id_server = None, id_user = None, item_search = None):
 					id_server = user_data.id_server
 				)
 			else:
-				response += " But you couldn't carry any more {} items, so you tossed it back.".format(item_type)
+				response += " But you couldn't carry any more {}s, so you tossed it back.".format(item_type)
 	return response
 
 
@@ -592,14 +592,24 @@ def item_lootrandom(id_server = None, id_user = None):
 					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
 
 			else:
-				if item_sought.get('name') == "Slime Poudrin":
-					ewstats.change_stat(
-						id_server = user_data.id_server,
-						id_user = user_data.id_user,
-						metric = ewcfg.stat_poudrins_looted,
-						n = 1
-					)
-				give_item(id_user = id_user, id_server = id_server, id_item = id_item)
+				other_items = inventory(
+				id_user=id_user,
+				id_server=id_server,
+				item_type_filter=item_sought.get('item_type')
+				)
+
+				if len(other_items) >= ewcfg.generic_inv_limit:
+					response = " But you couldn't carry any more of those, so you tossed it back"
+
+				else:
+					if item_sought.get('name') == "Slime Poudrin":
+						ewstats.change_stat(
+							id_server = user_data.id_server,
+							id_user = user_data.id_user,
+							metric = ewcfg.stat_poudrins_looted,
+							n = 1
+						)
+					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
 
 		else:
 			response += "You found a... oh, nevermind, it's just a piece of trash."
@@ -717,7 +727,16 @@ def check_inv_capacity(id_user = None, id_server = None, item_type = None):
 			else:
 				return True
 		else:
-			return True
+			other_items = inventory(
+				id_user=id_user,
+				id_server=id_server,
+				item_type_filter=item_type
+			)
+
+			if len(other_items) >= ewcfg.generic_inv_limit:
+				return False
+			else:
+				return True
 		
 	else:
 		return False
@@ -1317,7 +1336,7 @@ async def item_look(cmd):
 				response += "\n\n"
 
 				response += "It's an article of {rarity} rank.\n".format(rarity = item.item_props['rarity'])
-
+				"""
 				if any(stat in item.item_props.keys() for stat in ewcfg.playerstats_list):
 
 					response += "Adorning it "
@@ -1343,7 +1362,7 @@ async def item_look(cmd):
 						response += "doesn't affect your stats at all.\n"
 					else:
 						response += ewutils.formatNiceList(names = stats_breakdown, conjunction = "and") + ". \n"
-
+				"""
 				if item.item_props['durability'] is None:
 					response += "It can't be destroyed.\n"
 				else:
@@ -1705,17 +1724,18 @@ async def give(cmd):
 	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
 	if item_sought:  # if an item was found
-
-		#Slimernalia gifting
+		
+		"""
+		# Slimernalia gifting
 		if item_sought.get('item_type') == ewcfg.it_item:
 			item_data = EwItem(id_item = item_sought.get('id_item'))
-			#Slimernalia gifting
+			
 			if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
 				item_data.item_props['gifted'] = "true"
 				item_data.persist()
 				user_data.festivity += ewcfg.festivity_on_gift_giving
 				user_data.persist()
-
+		"""
 		# don't let people give others food when they shouldn't be able to carry more food items
 		if item_sought.get('item_type') == ewcfg.it_food:
 			food_items = inventory(
@@ -1728,7 +1748,7 @@ async def give(cmd):
 				response = "They can't carry any more food items."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		if item_sought.get('item_type') == ewcfg.it_weapon:
+		elif item_sought.get('item_type') == ewcfg.it_weapon:
 			weapons_held = inventory(
 				id_user = recipient.id,
 				id_server = server.id,
@@ -1743,6 +1763,17 @@ async def give(cmd):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			elif len(weapons_held) >= recipient_data.get_weapon_capacity():
 				response  = "They can't carry any more weapons."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		else:
+			# inventory limits for items that aren't food or weapons
+			other_items = inventory(
+				id_user=recipient.id,
+				id_server=server.id,
+				item_type_filter=item_sought.get('item_type')
+			)
+
+			if len(other_items) >= ewcfg.generic_inv_limit:
+				response = "They can't carry any more of those."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if item_sought.get('item_type') == ewcfg.it_cosmetic:

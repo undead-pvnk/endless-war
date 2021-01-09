@@ -2727,7 +2727,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 
 	if not cannibalize:
 		if enemy_data.ai == ewcfg.enemy_ai_defender:
-			if enemy_data.id_target != "" or enemy_data.id_target != -1:
+			if enemy_data.id_target != -1:
 				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server, data_level = 1)
 	
 		elif enemy_data.ai == ewcfg.enemy_ai_attacker_a:
