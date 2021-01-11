@@ -2059,7 +2059,7 @@ async def on_raw_reaction_add(payload):
 			userid = "<@!{}>".format(payload.user_id)
 
 			# Ignore reaction if it's not from the slime tweet author
-			if embed.description == userid:
+			if embed.description.startswith(userid):
 
 				if (str(payload.emoji) == ewcfg.emote_delete_tweet):
 					await message.delete()
