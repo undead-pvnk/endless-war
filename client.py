@@ -841,7 +841,10 @@ cmd_map = {
 	# Slime Twitter
 	ewcfg.cmd_tweet: ewslimetwitter.tweet,
 	ewcfg.cmd_verification: ewslimetwitter.verification,
-	ewcfg.cmd_verification_alt: ewslimetwitter.verification
+	ewcfg.cmd_verification_alt: ewslimetwitter.verification,
+
+	# Check your weapon masteries
+	ewcfg.cmd_mastery: ewcmd.check_mastery
 }
 
 debug = False
