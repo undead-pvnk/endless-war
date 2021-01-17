@@ -786,6 +786,7 @@ def inventory(
 
 	try:
 
+		time_before = time.time()
 		conn_info = ewutils.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
@@ -813,7 +814,11 @@ def inventory(
 			), [
 				id_server
 			])
+			# DEBUG: for profiling
+			# time_after = time.time()
+			# ewutils.logMsg("Time for items fetch: {}".format(time_after - time_before))
 
+			# time_before = time.time()
 			for row in cursor:
 				id_item = row[0]
 				item_type = row[1]
@@ -1022,6 +1027,35 @@ def inventory(
 						'item_def': item_def
 					})
 
+			# DEBUG: for profiling
+			# time_after = time.time()
+			# ewutils.logMsg("Time for item preparation: {}".format(time_after - time_before))
+			# time_before = time.time()
+			if len(items) > 0:
+				item_ids = tuple(map(lambda i: i.get('id_item'), items))
+
+				item_map = {}
+
+				for item in items:
+					item['item_props'] = {}
+					item_map[item.get('id_item')] = item
+
+				cursor.execute("SELECT id_item, name, value FROM items_prop WHERE id_item IN %s", (item_ids,))
+
+				for row in cursor:
+					id_item = row[0]
+					name = row[1]
+					value = row[2]
+				
+					item = item_map.get(id_item)
+					item.get('item_props')[name] = value
+
+			# DEBUG: for profiling
+			# time_after = time.time()
+
+			# ewutils.logMsg("Time for item props fetch: {}".format(time_after - time_before))
+			# time_before = time.time()
+
 			for item in items:
 				item_def = item.get('item_def')
 				id_item = item.get('id_item')
@@ -1036,14 +1070,14 @@ def inventory(
 
 				# Name requires variable substitution. Look up the item properties.
 				if name.find('{') >= 0:
-					item_inst = EwItem(id_item = id_item)
+					item_inst = item
 
-					if item_inst != None and item_inst.id_item >= 0:
-						name = name.format_map(item_inst.item_props)
+					if item_inst != None and item_inst.get('id_item') >= 0:
+						name = name.format_map(item_inst.get('item_props'))
 
 						if name.find('{') >= 0:
 							try:
-								name = name.format_map(item_inst.item_props)
+								name = name.format_map(item_inst.get('item_props'))
 							except:
 								pass
 								#print("Exception caught in ewitem -- Item might have brackets inside name.")
@@ -1052,10 +1086,14 @@ def inventory(
 								# Therefore, in most circumstances we can ignore when a key error comes from here, since that item has already been given a name.
 
 				#if a weapon has no name show its type instead
-				if name == "" and item_inst.item_type == ewcfg.it_weapon:
-					name = item_inst.item_props.get("weapon_type")
+				if name == "" and item_inst.get('item_type') == ewcfg.it_weapon:
+					name = item_inst.get('item_props').get("weapon_type")
 					
 				item['name'] = name
+			time_after = time.time()
+	
+			# DEBUG: for profiling
+			# ewutils.logMsg("Time for name assignment: {}".format(time_after - time_before))
 	finally:
 		# Clean up the database handles.
 		cursor.close()
