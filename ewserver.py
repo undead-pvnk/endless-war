@@ -6,7 +6,7 @@ import ewcfg
 	other meta data is needed in a scope where it's not normally available.
 """
 class EwServer:
-	id_server = ""
+	id_server = -1
 
 	name = ""
 	icon = ""

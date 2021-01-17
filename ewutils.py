@@ -15,6 +15,7 @@ import ewstats
 import ewitem
 import ewhunting
 import ewrolemgr
+import ewmap
 
 import discord
 
@@ -23,7 +24,7 @@ import ewwep
 from ew import EwUser
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
-from ewhunting import EwEnemy
+from ewhunting import EwEnemy, EwOperationData
 from ewmarket import EwMarket
 from ewstatuseffects import EwStatusEffect
 from ewstatuseffects import EwEnemyStatusEffect
@@ -51,6 +52,11 @@ active_target_map = {}
 # Map of users to their restriction level, typically in a mini-game. This prevents people from moving, teleporting, boarding, retiring, or suiciding in Russian Roulette/Duels
 active_restrictions = {}
 
+#Map of users that have their butthole clenched
+clenched = {}
+
+#When using SSOD, adjusted paths are listed here.
+path_ssod = {}
 
 class Message:
 	# Send the message to this exact channel by name.
@@ -80,7 +86,7 @@ class Message:
 """
 class EwResponseContainer:
 	client = None
-	id_server = ""
+	id_server = -1
 	channel_responses = {}
 	channel_topics = {}
 	members_to_update = []
@@ -132,8 +138,8 @@ class EwResponseContainer:
 		if self.client == None:
 			logMsg("Couldn't find client")
 			return messages
-			
-		server = self.client.get_server(self.id_server)
+
+		server = self.client.get_guild(int(self.id_server))
 		if server == None:
 			logMsg("Couldn't find server with id {}".format(self.id_server))
 			return messages
@@ -144,12 +150,23 @@ class EwResponseContainer:
 		for ch in self.channel_responses:
 			if channel == None:
 				current_channel = get_channel(server = server, channel_name = ch)
+				if current_channel == None:
+					current_channel = ch
 			else:
 				current_channel = channel
 			try:
 				response = ""
 				while len(self.channel_responses[ch]) > 0:
-					if len(response) == 0 or len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
+					if len(self.channel_responses[ch][0]) > ewcfg.discord_message_length_limit:
+						response += "\n" + self.channel_responses[ch].pop(0)
+						length = len(response)
+
+						split_list = [(response[i:i+2000]) for i in range(0, length, 2000)]
+						for blurb in split_list:
+							message = await send_message(self.client, current_channel, blurb)
+							messages.append(message)
+						response = ""
+					elif len(response) == 0 or len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
 						response += "\n" + self.channel_responses[ch].pop(0)
 					else:
 						message = await send_message(self.client, current_channel, response)
@@ -161,12 +178,12 @@ class EwResponseContainer:
 				logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
 				
 
-		for ch in self.channel_topics:
-			channel = get_channel(server = server, channel_name = ch)
-			try:
-				await self.client.edit_channel(channel = channel, topic = self.channel_topics[ch])
-			except:
-				logMsg('Failed to set channel topic for {} to {}'.format(ch, self.channel_topics[ch]))
+		# for ch in self.channel_topics:
+		# 	channel = get_channel(server = server, channel_name = ch)
+		# 	try:
+		# 		await channel.edit(topic = self.channel_topics[ch])
+		# 	except:
+		# 		logMsg('Failed to set channel topic for {} to {}'.format(ch, self.channel_topics[ch]))
 
 		return messages
 
@@ -403,6 +420,8 @@ def getRoleIdMap(roles):
 
 """ canonical lowercase no space name for a role """
 def mapRoleName(roleName):
+	if type(roleName) == int:
+		return roleName
 	return roleName.replace(" ", "").lower()
 
 """ connect to the database """
@@ -457,18 +476,39 @@ def databaseClose(conn_info):
 
 """ format responses with the username: """
 def formatMessage(user_target, message):
-    # If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
-    try:
-        if user_target.life_state == ewcfg.enemy_lifestate_alive:
-            # Send messages for normal enemies, and mentioning with @
-            return "*{}:* {}".format(user_target.display_name, message)
+	# If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
 
-        elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
-            return "{}".format(message)
+	try:
+		if user_target.life_state == ewcfg.enemy_lifestate_alive:
+			
+			if user_target.enemyclass == ewcfg.enemy_class_gaiaslimeoid:
+				return "**{} ({}):** {}".format(user_target.display_name, user_target.gvs_coord, message)
+			else:
+				# Send messages for normal enemies, and allow mentioning with @
+				if user_target.identifier != '' and user_target.enemyclass == ewcfg.enemy_class_shambler:
+					return "**{} [{}] ({}):** {}".format(user_target.display_name, user_target.identifier, user_target.gvs_coord, message)
+				elif user_target.identifier != '':
+					return "*{} [{}]* {}".format(user_target.display_name, user_target.identifier, message)
+				else:
+					return "*{}:* {}".format(user_target.display_name, message)
 
-    # If user_target isn't an enemy, catch the exception.
-    except:
-        return "*{}:* {}".format(user_target.display_name, message).replace("@", "{at}")
+
+		elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
+			return "{}".format(message)
+
+	# If user_target isn't an enemy, catch the exception.
+	except:
+		if hasattr(user_target, "id_user") and hasattr(user_target, "id_server"):
+			user_obj = EwUser(id_server=user_target.id_server, id_user=user_target.id_user)
+		else:
+			user_obj = EwUser(member=user_target)
+		mutations = user_obj.get_mutations()
+		if ewcfg.mutation_id_amnesia in mutations:
+			display_name = '?????'
+		else:
+			display_name = user_target.display_name
+
+		return "*{}:* {}".format(display_name, message).replace("{", "\{").replace("@", "{at}")
 
 """ Decay slime totals for all users, with the exception of Kingpins"""
 def decaySlimes(id_server = None):
@@ -541,12 +581,52 @@ def decaySlimes(id_server = None):
 			cursor.close()
 			databaseClose(conn_info)
 
+"""
+	Kills users who have left the server while the bot was offline
+"""
+def kill_quitters(id_server = None):
+	if id_server != None:
+		try:
+			client = get_client()
+			server = client.get_guild(id_server)
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND ( life_state > 0 OR slimes < 0 )".format(
+			), (
+				id_server,
+			))
+
+			users = cursor.fetchall()
+
+			for user in users:
+				member = server.get_member(user[0])
+
+				# Make sure to kill players who may have left while the bot was offline.
+				if member is None:
+					try:
+						user_data = EwUser(id_user = user[0], id_server = id_server)
+
+						user_data.trauma = ewcfg.trauma_id_suicide
+						user_data.die(cause=ewcfg.cause_leftserver)
+						user_data.persist()
+
+						logMsg('Player with id {} killed for leaving the server.'.format(user[0]))
+					except:
+						logMsg('Failed to kill member who left the server.')
+
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+
 """ Flag all users in the Outskirts for PvP """
 async def flag_outskirts(id_server = None):
 	if id_server != None:
 		try:
 			client = get_client()
-			server = client.get_server(id_server)
+			server = client.get_guild(id_server)
 			conn_info = databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
@@ -554,7 +634,7 @@ async def flag_outskirts(id_server = None):
 			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND poi IN %s".format(
 			), (
 				id_server,
-				tuple(ewcfg.outskirts_districts)
+				tuple(ewcfg.outskirts)
 
 			))
 
@@ -564,9 +644,47 @@ async def flag_outskirts(id_server = None):
 				user_data = EwUser(id_user = user[0], id_server = id_server)
 				# Flag the user for PvP
 				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, enlisted)
+				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
 				user_data.persist()
 				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+
+"""
+	Flag all users in vulnerable territory, defined as capturable territory (streets) and outskirts.
+"""
+async def flag_vulnerable_districts(id_server = None):
+	if id_server != None:
+		try:
+			client = get_client()
+			server = client.get_guild(id_server)
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND poi IN %s".format(
+			), (
+				id_server,
+				tuple(ewcfg.vulnerable_districts)
+
+			))
+
+			users = cursor.fetchall()
+
+			for user in users:
+				user_data = EwUser(id_user = user[0], id_server = id_server)
+				member = server.get_member(user_data.id_user)
+
+				# Flag the user for PvP
+				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_vulnerable_districts, enlisted)
+				user_data.persist()
+				
+				await ewrolemgr.updateRoles(client = client, member = member, remove_or_apply_flag = 'apply')
 
 			conn.commit()
 		finally:
@@ -592,7 +710,7 @@ async def bleedSlimes(id_server = None):
 	if id_server != None:
 		try:
 			client = get_client()
-			server = client.get_server(id_server)
+			server = client.get_guild(id_server)
 			conn_info = databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
@@ -609,45 +727,51 @@ async def bleedSlimes(id_server = None):
 			resp_cont = EwResponseContainer(id_server = id_server)
 			for user in users:
 				user_data = EwUser(id_user = user[0], id_server = id_server)
-				slimes_to_bleed = user_data.bleed_storage * (1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
-				slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
-				slimes_dropped = user_data.totaldamage + user_data.slimes
 
-				trauma = ewcfg.trauma_map.get(user_data.trauma)
-				bleed_mod = 1
-				if trauma != None and trauma.trauma_class == ewcfg.trauma_class_bleeding:
-					bleed_mod += 0.5 * user_data.degradation / 100
+				mutations = user_data.get_mutations()
+				member = server.get_member(user_data.id_user)
+				if ewcfg.mutation_id_bleedingheart not in mutations or user_data.time_lasthit < int(time.time()) - ewcfg.time_bhbleed:
+					slimes_to_bleed = user_data.bleed_storage * (
+								1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
+					slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
+					slimes_dropped = user_data.totaldamage + user_data.slimes
 
-				#round up or down, randomly weighted
-				remainder = slimes_to_bleed - int(slimes_to_bleed)
-				if random.random() < remainder: 
-					slimes_to_bleed += 1 
-				slimes_to_bleed = int(slimes_to_bleed)
+					#trauma = ewcfg.trauma_map.get(user_data.trauma)
+					#bleed_mod = 1
+					#if trauma != None and trauma.trauma_class == ewcfg.trauma_class_bleeding:
+					#	bleed_mod += 0.5 * user_data.degradation / 100
 
-				slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
+					# round up or down, randomly weighted
+					remainder = slimes_to_bleed - int(slimes_to_bleed)
+					if random.random() < remainder:
+						slimes_to_bleed += 1
+					slimes_to_bleed = int(slimes_to_bleed)
 
-				if slimes_to_bleed >= 1:
+					slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
 
-					real_bleed = round(slimes_to_bleed * bleed_mod)
+					if slimes_to_bleed >= 1:
 
-					user_data.bleed_storage -= slimes_to_bleed
-					user_data.change_slimes(n = - real_bleed, source = ewcfg.source_bleeding)
+						real_bleed = round(slimes_to_bleed) # * bleed_mod)
 
-					district_data = EwDistrict(id_server = id_server, district = user_data.poi)
-					district_data.change_slimes(n = real_bleed, source = ewcfg.source_bleeding)
-					district_data.persist()
+						user_data.bleed_storage -= slimes_to_bleed
+						user_data.change_slimes(n=- real_bleed, source=ewcfg.source_bleeding)
 
-					if user_data.slimes < 0:
-						user_data.trauma = ewcfg.trauma_id_environment
-						die_resp = user_data.die(cause = ewcfg.cause_bleeding)
-						#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
-						player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
-						resp_cont.add_response_container(die_resp)
-					user_data.persist()
+						district_data = EwDistrict(id_server=id_server, district=user_data.poi)
+						district_data.change_slimes(n=real_bleed, source=ewcfg.source_bleeding)
+						district_data.persist()
 
-					total_bled += real_bleed
+						if user_data.slimes < 0:
+							user_data.trauma = ewcfg.trauma_id_environment
+							die_resp = user_data.die(cause=ewcfg.cause_bleeding)
+							# user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+							player_data = EwPlayer(id_server=user_data.id_server, id_user=user_data.id_user)
+							resp_cont.add_response_container(die_resp)
+						user_data.persist()
 
-				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+						total_bled += real_bleed
+
+					await ewrolemgr.updateRoles(client=client, member=member)
+
 
 			await resp_cont.post()
 
@@ -771,76 +895,100 @@ async def burnSlimes(id_server = None):
 	if id_server != None:
 		time_now = int(time.time())
 		client = get_client()
-		server = client.get_server(id_server)
+		server = client.get_guild(id_server)
+		status_origin = 'user'
 
 		results = {}
 
-		# Get users with burning effect
-		data = execute_sql_query("SELECT {id_user}, {value}, {source} from status_effects WHERE {id_status} = %s and {id_server} = %s".format(
+		# Get users with harmful status effects
+		data = execute_sql_query("SELECT {id_user}, {value}, {source}, {id_status} from status_effects WHERE {id_status} IN %s and {id_server} = %s".format(
 			id_user = ewcfg.col_id_user,
 			value = ewcfg.col_value,
 			id_status = ewcfg.col_id_status,
 			id_server = ewcfg.col_id_server,
 			source = ewcfg.col_source
 		), (
-			ewcfg.status_burning_id,
+			tuple(ewcfg.harmful_status_effects),
 			id_server
 		))
 
 		resp_cont = EwResponseContainer(id_server = id_server)
 		for result in data:
 			user_data = EwUser(id_user = result[0], id_server = id_server)
+			member = server.get_member(user_data.id_user)
 
 			slimes_dropped = user_data.totaldamage + user_data.slimes
+			used_status_id = result[3]
 
 			# Deal 10% of total slime to burn every second
 			slimes_to_burn = math.ceil(int(float(result[1])) * ewcfg.burn_tick_length / ewcfg.time_expire_burn)
 
-			killer_data = EwUser(id_server = id_server, id_user=result[2])
-
-			# Damage stats
-			ewstats.change_stat(user = killer_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_to_burn)
+			# Check if a status effect originated from an enemy or a user.
+			killer_data = EwUser(id_server=id_server, id_user=result[2])
+			if killer_data == None:
+				killer_data = EwEnemy(id_server=id_server, id_enemy=result[2])
+				if killer_data != None:
+					status_origin = 'enemy'
+				else:
+					# For now, skip over any status that did not originate from a user or an enemy. This might be changed in the future.
+					continue
+					
+			if status_origin == 'user':
+				# Damage stats
+				ewstats.change_stat(user=killer_data, metric=ewcfg.stat_lifetime_damagedealt, n=slimes_to_burn)
 
 			# Player died
-			if user_data.slimes - slimes_to_burn < 0:	
+			if user_data.slimes - slimes_to_burn < 0:
 				weapon = ewcfg.weapon_map.get(ewcfg.weapon_id_molotov)
 
-				player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
-				killer = EwPlayer(id_server = id_server, id_user=killer_data.id_user)
+				player_data = EwPlayer(id_server=user_data.id_server, id_user=user_data.id_user)
+				killer = EwPlayer(id_server=id_server, id_user=killer_data.id_user)
 				poi = ewcfg.id_to_poi.get(user_data.poi)
 
 				# Kill stats
-				ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_kills)
-				ewstats.track_maximum(user = killer_data, metric = ewcfg.stat_biggest_kill, value = int(slimes_dropped))
+				if status_origin == 'user':
+					ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_kills)
+					ewstats.track_maximum(user = killer_data, metric = ewcfg.stat_biggest_kill, value = int(slimes_dropped))
+	
+					if killer_data.slimelevel > user_data.slimelevel:
+						ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_lifetime_ganks)
+					elif killer_data.slimelevel < user_data.slimelevel:
+						ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_lifetime_takedowns)
 
-				if killer_data.slimelevel > user_data.slimelevel:
-					ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_lifetime_ganks)
-				elif killer_data.slimelevel < user_data.slimelevel:
-					ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_lifetime_takedowns)
-
-				# Collect bounty
-				coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
-				
-				if user_data.slimes >= 0:
-					killer_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
+					# Collect bounty
+					coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
+					
+					if user_data.slimes >= 0:
+						killer_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
 				# Kill player
-				user_data.id_killer = killer_data.id_user
+				if status_origin == 'user':
+					user_data.id_killer = killer_data.id_user
+				elif status_origin == 'enemy':
+					user_data.id_killer = killer_data.id_enemy
+					
 				user_data.trauma = ewcfg.trauma_id_environment
-				die_resp = user_data.die(cause = ewcfg.cause_burning)
-				#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+				die_resp = user_data.die(cause=ewcfg.cause_burning)
+				# user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 
 				resp_cont.add_response_container(die_resp)
-				
-				deathreport = "{} has burned to death.".format(player_data.display_name)
+
+				if used_status_id == ewcfg.status_burning_id:
+					deathreport = "{} has burned to death.".format(player_data.display_name)
+				elif used_status_id == ewcfg.status_acid_id:
+					deathreport = "{} has been melted to death by acid.".format(player_data.display_name)
+				elif used_status_id == ewcfg.status_spored_id:
+					deathreport = "{} has been overrun by spores.".format(player_data.display_name)
+				else:
+					deathreport = ""
 				resp_cont.add_channel_response(poi.channel, deathreport)
 
 				user_data.trauma = weapon.id_weapon
 
 				user_data.persist()
-				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+				await ewrolemgr.updateRoles(client=client, member=member)
 			else:
-				user_data.change_slimes(n = -slimes_to_burn, source = ewcfg.source_damage)
+				user_data.change_slimes(n=-slimes_to_burn, source=ewcfg.source_damage)
 				user_data.persist()
 				
 
@@ -850,19 +998,20 @@ async def enemyBurnSlimes(id_server):
 	if id_server != None:
 		time_now = int(time.time())
 		client = get_client()
-		server = client.get_server(id_server)
+		server = client.get_guild(id_server)
+		status_origin = 'user'
 
 		results = {}
 
-		# Get enemies with burning effect
-		data = execute_sql_query("SELECT {id_enemy}, {value}, {source} from enemy_status_effects WHERE {id_status} = %s and {id_server} = %s".format(
+		# Get enemies with harmful status effects
+		data = execute_sql_query("SELECT {id_enemy}, {value}, {source}, {id_status} from enemy_status_effects WHERE {id_status} IN %s and {id_server} = %s".format(
 			id_enemy = ewcfg.col_id_enemy,
 			value = ewcfg.col_value,
 			id_status = ewcfg.col_id_status,
 			id_server = ewcfg.col_id_server,
 			source = ewcfg.col_source
 		), (
-			ewcfg.status_burning_id,
+			ewcfg.harmful_status_effects,
 			id_server
 		))
 
@@ -871,19 +1020,35 @@ async def enemyBurnSlimes(id_server):
 			enemy_data = EwEnemy(id_enemy = result[0], id_server = id_server)
 			
 			slimes_dropped = enemy_data.totaldamage + enemy_data.slimes
+			used_status_id = result[3]
 
 			# Deal 10% of total slime to burn every second
 			slimes_to_burn = math.ceil(int(float(result[1])) * ewcfg.burn_tick_length / ewcfg.time_expire_burn)
 
-			killer_data = EwUser(id_server = id_server, id_user=result[2])
-
-			# Damage stats
-			ewstats.change_stat(user = killer_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_to_burn)
+			# Check if a status effect originated from an enemy or a user.
+			killer_data = EwUser(id_server=id_server, id_user=result[2])
+			if killer_data == None:
+				killer_data = EwEnemy(id_server=id_server, id_enemy=result[2])
+				if killer_data != None:
+					status_origin = 'enemy'
+				else:
+					# For now, skip over any status that did not originate from a user or an enemy. This might be changed in the future.
+					continue
+			
+			if status_origin == 'user':
+				ewstats.change_stat(user = killer_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_to_burn)
 
 			if enemy_data.slimes - slimes_to_burn <= 0:
 				ewhunting.delete_enemy(enemy_data)
 
-				response = "{} has burned to death.".format(enemy_data.display_name)
+				if used_status_id == ewcfg.status_burning_id:
+					response = "{} has burned to death.".format(enemy_data.display_name)
+				elif used_status_id == ewcfg.status_acid_id:
+					response = "{} has been melted to death by acid.".format(enemy_data.display_name)
+				elif used_status_id == ewcfg.status_spored_id:
+					response = "{} has been overrun by spores.".format(enemy_data.display_name)
+				else:
+					response = ""
 				resp_cont.add_channel_response(ewcfg.id_to_poi.get(enemy_data.poi).channel, response)
 				
 				district_data = EwDistrict(id_server = id_server, district = enemy_data.poi)
@@ -992,7 +1157,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 	weaponskills = {}
 
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None:
@@ -1027,7 +1192,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 """ Set an individual weapon skill value for a player. """
 def weaponskills_set(id_server = None, id_user = None, member = None, weapon = None, weaponskill = 0):
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None and weapon != None:
@@ -1057,7 +1222,7 @@ def weaponskills_set(id_server = None, id_user = None, member = None, weapon = N
 """ Clear all weapon skills for a player (probably called on death). """
 def weaponskills_clear(id_server = None, id_user = None, member = None, weaponskill = None):
 	if member != None:
-		id_server = member.server.id
+		id_server = member.guild.id
 		id_user = member.id
 
 	if id_server != None and id_user != None:
@@ -1130,7 +1295,7 @@ def execute_sql_query(sql_query = None, sql_replacements = None):
 """
 async def post_in_channels(id_server, message, channels = None):
 	client = get_client()
-	server = client.get_server(id = id_server)
+	server = client.get_guild(id = id_server)
 
 	if channels is None and server is not None:
 		channels = server.channels
@@ -1139,7 +1304,7 @@ async def post_in_channels(id_server, message, channels = None):
 		if type(channel) is str:  # if the channels are passed as strings instead of discord channel objects
 			channel = get_channel(server, channel)
 		if channel is not None and channel.type == discord.ChannelType.text:
-			await send_message(client, channel, message)
+			await channel.send(content=message)
 	return
 
 """
@@ -1151,6 +1316,9 @@ def get_channel(server = None, channel_name = ""):
 	for chan in server.channels:
 		if chan.name == channel_name:
 			channel = chan
+	
+	if channel == None:
+		logMsg('Error: In get_channel(), could not find channel using channel_name "{}"'.format(channel_name))
 
 	return channel
 
@@ -1175,6 +1343,9 @@ def get_faction(user_data = None, life_state = 0, faction = ""):
 
 		elif faction == ewcfg.faction_rowdys:
 			faction_role = ewcfg.role_rowdyfuckers
+			
+		elif faction == ewcfg.faction_slimecorp:
+			faction_role = ewcfg.role_slimecorp
 
 		else:
 			faction_role = ewcfg.role_juvenile
@@ -1186,10 +1357,10 @@ def get_faction(user_data = None, life_state = 0, faction = ""):
 		faction_role = ewcfg.role_grandfoe
 
 	elif life_state == ewcfg.life_state_executive:
-		faction_role = ewcfg.role_slimecorp
+		faction_role = ewcfg.role_executive
 
 	elif life_state == ewcfg.life_state_lucky:
-		faction_role = ewcfg.role_slimecorp
+		faction_role = ewcfg.role_executive
 	
 	elif life_state == ewcfg.life_state_shambler:
 		faction_role = ewcfg.role_shambler
@@ -1245,9 +1416,12 @@ def sap_max_bylevel(slimelevel):
 """
 	Calculate the maximum hunger level at the player's slimelevel
 """
-def hunger_max_bylevel(slimelevel):
+def hunger_max_bylevel(slimelevel, has_bottomless_appetite = 0):
 	# note that when you change this formula, you'll also have to adjust its sql equivalent in pushupServerHunger
-	return max(ewcfg.min_stamina, slimelevel ** 2)
+	mult = 1
+	if has_bottomless_appetite == 1:
+		mult = 2
+	return max(ewcfg.min_stamina, slimelevel ** 2) * mult
 
 
 """
@@ -1262,7 +1436,7 @@ def hunger_cost_mod(slimelevel):
 """
 def food_carry_capacity_bylevel(slimelevel):
 	return math.ceil(slimelevel / ewcfg.max_food_in_inv_mod)
-        
+		
 """
 	Calculate how many weapons the player can carry
 """
@@ -1317,23 +1491,69 @@ def get_client():
 
 
 """
-	Proxy to discord.py Client.send_message with exception handling.
+	Proxy to discord.py channel.send with exception handling.
 """
-async def send_message(client, channel, text):
+async def send_message(client, channel, text = None, embed = None, delete_after = None, filter_everyone = True):
+	#catch any future @everyone exploits
+	if filter_everyone and text is not None: 
+		text = text.replace("@everyone","{at}everyone")
+
 	try:
-		return await client.send_message(channel, text)
+		if text is not None:
+			return await channel.send(content=text, delete_after=delete_after)
+		if embed is not None:
+			return await channel.send(embed=embed)
 	except discord.errors.Forbidden:
 		logMsg('Could not message user: {}\n{}'.format(channel, text))
 		raise
 	except:
 		logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
 
+""" Simpler to use version of send_message that formats message by default """ 
+async def send_response(response_text, cmd = None, delete_after = None, name = None, channel = None, format_name = True, format_ats = True, allow_everyone = False):
+
+	user_data = EwUser(member = cmd.message.author)
+	user_mutations = user_data.get_mutations()
+
+	if cmd == None and channel == None:
+		raise Exception("No channel to send message to")
+
+	if channel == None:
+		channel = cmd.message.channel
+
+	if name == None and cmd != None:
+		name = cmd.author_id.display_name
+		if ewcfg.mutation_id_amnesia in user_mutations:
+			name = '?????'
+
+	if format_name and name != None:
+		response_text = "*{}:* {}".format(name, response_text)
+
+	global DEBUG
+	if DEBUG: # to see when the bot uses send_response vs send_message in --debug mode
+		response_text = "--{}".format(response_text)
+
+	if format_ats:
+		response_text = response_text.replace("@", "{at}")
+
+	allowed_mentions = discord.AllowedMentions(everyone=allow_everyone, users=False, roles=False)
+
+	try:
+		# TODO: experiment with allow_mentions argument. Might get rid of the need to filter "@"s
+		return await channel.send(content = response_text, delete_after = delete_after, allowed_mentions = allowed_mentions)
+	except discord.errors.Forbidden:
+		logMsg('Could not message user: {}\n{}'.format(channel, text))
+		raise
+	except:
+		logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
+
+
 """
-	Proxy to discord.py Client.edit_message with exception handling.
+	Proxy to discord.py message.edit() with exception handling.
 """
 async def edit_message(client, message, text):
 	try:
-		return await client.edit_message(message, text)
+		return await message.edit(content=str(text))
 	except:
 		logMsg('Failed to edit message. Updated text would have been:\n{}'.format(text))
 
@@ -1373,16 +1593,34 @@ async def decrease_food_multiplier(id_user):
 async def spawn_enemies(id_server = None):
 	if random.randrange(3) == 0:
 		weathertype = ewcfg.enemy_weathertype_normal
-
 		market_data = EwMarket(id_server=id_server)
+		
 		# If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
 		if market_data.weather == ewcfg.weather_bicarbonaterain:
 			if random.randrange(3) < 2:
 				weathertype = ewcfg.enemy_weathertype_rainresist
 		
-		resp_cont = ewhunting.spawn_enemy(id_server=id_server, weather=weathertype)
+		resp_cont = ewhunting.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype)
 
 		await resp_cont.post()
+
+	# TODO remove after double halloween
+	#market_data = EwMarket(id_server=id_server)
+	#underworld_district = EwDistrict(district=ewcfg.poi_id_underworld, id_server=id_server)
+	#enemies_count = len(underworld_district.get_enemies_in_district())
+
+	#if enemies_count == 0 and int(time.time()) > (market_data.horseman_timeofdeath + ewcfg.horseman_death_cooldown):
+	#	dh_resp_cont = ewhunting.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld, manual_spawn=True)
+
+	#	await dh_resp_cont.post()
+
+def number_civilians(id_server):
+	query = execute_sql_query("SELECT COUNT(*) from enemies where enemytype in ('civilian', 'innocent') and id_server = id_server")
+	for counts in query:
+		if counts[0] < 20:
+			return 1
+		else:
+			return 0
 
 async def spawn_enemies_tick_loop(id_server):
 	interval = ewcfg.enemy_spawn_tick_length
@@ -1398,7 +1636,18 @@ async def enemy_action_tick_loop(id_server):
 	while not TERMINATE:
 		await asyncio.sleep(interval)
 		# resp_cont = EwResponseContainer(id_server=id_server)
-		await ewhunting.enemy_perform_action(id_server)
+		if ewcfg.gvs_active:
+			await ewhunting.enemy_perform_action_gvs(id_server)
+
+		else:
+			await ewhunting.enemy_perform_action(id_server)
+
+async def gvs_gamestate_tick_loop(id_server):
+	interval = ewcfg.gvs_gamestate_tick_length
+	# Causes various events to occur during a Garden or Graveyard ops in Gankers Vs. Shamblers
+	while not TERMINATE:
+		await asyncio.sleep(interval)
+		await ewhunting.gvs_update_gamestate(id_server)
 
 
 # Clears out id_target in enemies with defender ai. Primarily used for when players die or leave districts the defender is in.
@@ -1407,7 +1656,7 @@ def check_defender_targets(user_data, enemy_data):
 	searched_user = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
 
 	if (defending_enemy.poi != searched_user.poi) or (searched_user.life_state == ewcfg.life_state_corpse):
-		defending_enemy.id_target = ""
+		defending_enemy.id_target = 0
 		defending_enemy.persist()
 		return False
 	else:
@@ -1418,8 +1667,10 @@ def get_move_speed(user_data):
 	mutations = user_data.get_mutations()
 	statuses = user_data.getStatusEffects()
 	market_data = EwMarket(id_server = user_data.id_server)
-	trauma = ewcfg.trauma_map.get(user_data.trauma)
-	move_speed = 1.05 ** user_data.speed
+	#trauma = ewcfg.trauma_map.get(user_data.trauma)
+	# disabled until held items update
+	# move_speed = 1 + (user_data.speed / 50)
+	move_speed = 1
 
 	if user_data.life_state == ewcfg.life_state_shambler:
 		if market_data.weather == ewcfg.weather_bicarbonaterain:
@@ -1427,22 +1678,26 @@ def get_move_speed(user_data):
 		else:
 			move_speed *= 0.5
 
-	if ewcfg.status_injury_legs_id in statuses:
-		status_data = EwStatusEffect(id_status = ewcfg.status_injury_legs_id, user_data = user_data)
-		try:
-			move_speed *= max(0, (1 - 0.2 * int(status_data.value) / 10))
-		except:
-			logMsg("failed int conversion while getting move speed for user {}".format(user_data.id_user))
+	#if ewcfg.status_injury_legs_id in statuses:
+	#	status_data = EwStatusEffect(id_status = ewcfg.status_injury_legs_id, user_data = user_data)
+	#	try:
+	#		move_speed *= max(0, (1 - 0.2 * int(status_data.value) / 10))
+	#	except:
+	#		logMsg("failed int conversion while getting move speed for user {}".format(user_data.id_user))
 
-	if (trauma != None) and (trauma.trauma_class == ewcfg.trauma_class_movespeed):
-		move_speed *= max(0, (1 - 0.5 * user_data.degradation / 100))
+	#if (trauma != None) and (trauma.trauma_class == ewcfg.trauma_class_movespeed):
+	#	move_speed *= max(0, (1 - 0.5 * user_data.degradation / 100))
 
 	if ewcfg.mutation_id_organicfursuit in mutations and check_fursuit_active(user_data.id_server):
 		move_speed *= 2
-	if ewcfg.mutation_id_lightasafeather in mutations and market_data.weather == "windy":
+	if (ewcfg.mutation_id_lightasafeather in mutations or ewcfg.mutation_id_airlock) in mutations and market_data.weather == "windy":
 		move_speed *= 2
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
+		
+	#TODO remove after double halloween
+	#if user_data.life_state == ewcfg.life_state_corpse:
+	#	move_speed *= 2
 
 	move_speed = max(0.1, move_speed)
 
@@ -1458,7 +1713,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 		market_data = EwMarket(id_server = district_data.id_server)
 
 	client = get_client()
-	server = client.get_server(id_server)
+	server = client.get_guild(id_server)
 
 	resp_cont = EwResponseContainer(id_server = id_server)
 	response = ""
@@ -1489,8 +1744,15 @@ def explode(damage = 0, district_data = None, market_data = None):
 		)
 
 		# apply sap armor
-		sap_armor = ewwep.get_sap_armor(shootee_data = user_data, sap_ignored = 0)
-		slimes_damage_target *= sap_armor
+		#sap_armor = ewwep.get_sap_armor(shootee_data = user_data, sap_ignored = 0)
+		#slimes_damage_target *= sap_armor
+		#slimes_damage_target = int(max(0, slimes_damage_target))
+
+		# apply fashion armor
+
+		# disabled until held items update
+		# fashion_armor = ewwep.get_fashion_armor(shootee_data = user_data)
+		# slimes_damage_target *= fashion_armor
 		slimes_damage_target = int(max(0, slimes_damage_target))
 
 		player_data = EwPlayer(id_user = user_data.id_user)
@@ -1532,9 +1794,9 @@ def explode(damage = 0, district_data = None, market_data = None):
 		slimes_damage_target = damage
 			
 		# apply sap armor
-		sap_armor = ewwep.get_sap_armor(shootee_data = enemy_data, sap_ignored = 0)
-		slimes_damage_target *= sap_armor
-		slimes_damage_target = int(max(0, slimes_damage_target))
+		#sap_armor = ewwep.get_sap_armor(shootee_data = enemy_data, sap_ignored = 0)
+		#slimes_damage_target *= sap_armor
+		#slimes_damage_target = int(max(0, slimes_damage_target))
 
 		slimes_damage = slimes_damage_target
 		if enemy_data.slimes < slimes_damage + enemy_data.bleed_storage:
@@ -1572,7 +1834,9 @@ async def delete_last_message(client, last_messages, tick_length):
 		return
 	await asyncio.sleep(tick_length)
 	try:
-		await client.delete_message(last_messages[-1])
+		msg = last_messages[-1]
+		await msg.delete()
+		pass
 	except:
 		logMsg("failed to delete last message")
 
@@ -1586,6 +1850,10 @@ def check_confirm_or_cancel(string):
 	
 def check_trick_or_treat(string):
 	if string.content.lower() == ewcfg.cmd_treat or string.content.lower() == ewcfg.cmd_trick:
+		return True
+	
+def check_is_command(string):
+	if string.content.startswith(ewcfg.cmd_prefix):
 		return True
 	
 def end_trade(id_user):
@@ -1602,67 +1870,25 @@ def end_trade(id_user):
 def text_to_regional_indicator(text):
 	# note that inside the quotes below is a zero-width space, 
 	# used to prevent the regional indicators from turning into flags
-	return "‎".join([chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
+	# also note that this only works for digits and english letters
+  
+	###return "‎".join([chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
+	return "‎".join([c + '\ufe0f\u20e3' if c.isdigit() else chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
 
 def generate_captcha_random(length = 4):
 	return "".join([random.choice(ewcfg.alphabet) for _ in range(length)]).upper()
 
-def generate_captcha(length = 4):
+def generate_captcha(length = 4, id_user = 0, id_server = 0):
+	length_final = length
+	if id_user > 0 and id_server > 0:
+		user_data = EwUser(id_user=id_user, id_server=id_server)
+		mutations = user_data.get_mutations()
+		if ewcfg.mutation_id_dyslexia in mutations:
+			length_final = max(1, length_final - 1)
 	try:
-		return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == length])
+		return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == length_final])
 	except:
-		return generate_captcha_random(length)
-
-async def sap_tick_loop(id_server):
-	interval = ewcfg.sap_tick_length
-	# causes a capture tick to happen exactly every 10 seconds (the "elapsed" thing might be unnecessary, depending on how long capture_tick ends up taking on average)
-	while not TERMINATE:
-		await asyncio.sleep(interval)
-		sap_tick(id_server)
-
-def sap_tick(id_server):
-
-	try:
-		users = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {life_state} > 0 AND {sap} + {hardened_sap} < {level}".format(
-			id_user = ewcfg.col_id_user,
-			life_state = ewcfg.col_life_state,
-			sap = ewcfg.col_sap,
-			hardened_sap = ewcfg.col_hardened_sap,
-			level = ewcfg.col_slimelevel,
-			id_server = ewcfg.col_id_server,
-		),(
-			id_server,
-		))
-
-		for user in users:
-			user_data = EwUser(id_user = user[0], id_server = id_server)
-			trauma = ewcfg.trauma_map.get(user_data.trauma)
-			sap_chance = 1
-			if trauma != None and trauma.trauma_class == ewcfg.trauma_class_sapregeneration:
-				sap_chance -= 0.5 * user_data.degradation / 100
-
-			if random.random() < sap_chance:
-				user_data.sap += 1
-
-			user_data.limit_fix()
-			user_data.persist()
-
-		enemies = execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {id_server} = %s AND {hardened_sap} < {level} / 2".format(
-			id_enemy = ewcfg.col_id_enemy,
-			hardened_sap = ewcfg.col_enemy_hardened_sap,
-			level = ewcfg.col_enemy_level,
-			id_server = ewcfg.col_id_server,
-		),(
-			id_server,
-		))
-
-		for enemy in enemies:
-			if random.random() < 0.5:
-				enemy_data = EwEnemy(id_enemy = enemy[0])
-				enemy_data.hardened_sap += 1
-				enemy_data.persist()
-	except:
-		logMsg("An error occured in sap tick for server {}".format(id_server))
+		return generate_captcha_random(length=length_final)
 		
 async def spawn_prank_items_tick_loop(id_server):
 	#DEBUG
@@ -1734,7 +1960,7 @@ async def spawn_prank_items(id_server):
 		
 		client = get_client()
 		
-		server = client.get_server(id_server)
+		server = client.get_guild(id_server)
 	
 		district_channel = get_channel(server=server, channel_name=district_channel_name)
 		
@@ -1877,7 +2103,7 @@ async def activate_trap_items(district, id_server, id_user):
 
 		client = get_client()
 
-		server = client.get_server(id_server)
+		server = client.get_guild(id_server)
 		
 		member = server.get_member(id_user)
 
@@ -1909,13 +2135,13 @@ async def activate_trap_items(district, id_server, id_user):
 		trap_chance = int(trap_item_data.item_props.get('trap_chance'))
 		trap_user_id = trap_item_data.item_props.get('trap_user_id')
 		
-		if trap_user_id == user_data.id_user:
+		if int(trap_user_id) == user_data.id_user:
 			#print('trap same user id')
 			return
 		
 		if random.randrange(101) < trap_chance:
 			# Trap was triggered!
-			pranker_data = EwUser(id_user=trap_user_id, id_server=id_server)
+			pranker_data = EwUser(id_user=int(trap_user_id), id_server=id_server)
 			pranked_data = user_data
 
 			response = trap_item_data.item_props.get('prank_desc')
@@ -1960,7 +2186,7 @@ def check_fursuit_active(id_server):
 def create_death_report(cause = None, user_data = None):
 	
 	client = ewcfg.get_client()
-	server = client.get_server(user_data.id_server)
+	server = client.get_guild(user_data.id_server)
 
 	# User display name is used repeatedly later, grab now
 	user_member = server.get_member(user_data.id_user)
@@ -2065,6 +2291,30 @@ def get_slimernalia_kingpin(server):
 
 	return None
 
+async def update_slimernalia_kingpin(client, server):
+	# Depose current slimernalia kingpin
+	old_kingpin_id = get_slimernalia_kingpin(server)
+	if old_kingpin_id != None:
+		old_kingpin = EwUser(id_user=old_kingpin_id, id_server=server.id)
+		old_kingpin.slimernalia_kingpin = False
+		old_kingpin.persist()
+		try:
+			old_kingpin_member = server.get_member(old_kingpin.id_user)
+			await ewrolemgr.updateRoles(client=client, member=old_kingpin_member)
+		except:
+			logMsg("Error removing kingpin of slimernalia role from {} in server {}.".format(old_kingpin.id_user, server.id))
+
+	# Update the new kingpin of slimernalia
+	new_kingpin = EwUser(id_user=get_most_festive(server), id_server=server.id)
+	new_kingpin.slimernalia_kingpin = True
+	new_kingpin.persist()
+	try:
+		new_kingpin_member = server.get_member(new_kingpin.id_user)
+		await ewrolemgr.updateRoles(client=client, member=new_kingpin_member)
+	except:
+		logMsg("Error adding kingpin of slimernalia role to user {} in server {}.".format(new_kingpin.id_user, server.id))	
+
+
 # Get the player with the most festivity
 def get_most_festive(server):
 	data = execute_sql_query(
@@ -2100,7 +2350,8 @@ def return_server_role(server, role_name):
 """ Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
 def calculatePvpTimer(current_time_expirpvp, timer, enlisted = False):
 	if enlisted:
-		timer *= 4
+		timer *= 1
+		#timer *= 4
 
 	desired_time_expirpvp = int(time.time()) + timer
 
@@ -2115,11 +2366,11 @@ async def add_pvp_role(cmd = None):
 	roles_map_user = getRoleMap(member.roles)
 
 	if ewcfg.role_copkillers in roles_map_user and ewcfg.role_copkillers_pvp not in roles_map_user:
-		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_copkillers_pvp])
+		await member.add_roles(cmd.roles_map[ewcfg.role_copkillers_pvp])
 	elif ewcfg.role_rowdyfuckers in roles_map_user and ewcfg.role_rowdyfuckers_pvp not in roles_map_user:
-		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
+		await member.add_roles(cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
 	elif ewcfg.role_juvenile in roles_map_user and ewcfg.role_juvenile_pvp not in roles_map_user:
-		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_juvenile_pvp])
+		await member.add_roles(cmd.roles_map[ewcfg.role_juvenile_pvp])
 		
 """
 	Returns true if the specified name is used by any POI.
@@ -2180,44 +2431,16 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 			adorned_ids.append(c.item_props['id_cosmetic'])
 			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
-	# if len(adorned_cosmetics) != 0:
-	# 	# Assess if there's a cohesive style
-	# 	if len(adorned_styles) != 0:
-	# 		counted_styles = collections.Counter(adorned_styles)
-	# 		dominant_style = max(counted_styles, key = counted_styles.get)
-	#
-	# 		relative_style_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
-	# 		# If the outfit has a dominant style
-	# 		if relative_style_amount >= 60:
-	# 			total_freshness *= (relative_style_amount ** 2) / 1000 # If the entire outfit has a cohesive style, multiply by 10
-	#
-	# 	#Assess if there's a cohesive color palette, meaning if there's only three hues or less for the entire outfit (entire outfit must be dyed)
-	# 	if len(adorned_hues) != 0:
-	# 		counted_hues = collections.Counter(adorned_hues)
-	# 		dominant_hue = max(counted_hues, key = counted_hues.get)
-	#
-	# 		relative_hue_amount = round(int(counted_hues.get(dominant_hue) / len(adorned_hues) * 100))
-	#
-	# 		# If the outfit has a dominant hue
-	# 		if dominant_hue != '' and relative_hue_amount >= 60:
-	# 			color_design = False
-	#
-	# 			neutrals = [ewcfg.hue_id_white, ewcfg.hue_id_grey, ewcfg.hue_id_black, ewcfg.hue_id_brown]
-	# 			complementaries = []
-	#
-	# 			for hue in ewcfg.hue_list:
-	# 				if hue.id_hue == dominant_hue:
-	# 					complementaries = list(hue.effectiveness.keys()) # Add that hue's complimentary, analogus complementaries, and analogus hues to it's complementaries list
-	#
-	# 			for hue in adorned_hues:
-	# 				if hue == dominant_hue or hue in complementaries or hue in neutrals:
-	# 					color_design = True
-	# 				else:
-	# 					color_design = False
-	# 					break
-	#
-	# 			if color_design:
-	# 				total_freshness *= 5
+	if len(adorned_cosmetics) != 0:
+		# Assess if there's a cohesive style
+		if len(adorned_styles) != 0:
+			counted_styles = collections.Counter(adorned_styles)
+			dominant_style = max(counted_styles, key = counted_styles.get)
+
+			relative_style_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
+			# If the outfit has a dominant style
+			if relative_style_amount >= 60:
+				total_freshness *= int(relative_style_amount / 10) # If relative amount is 60 --> multiply by 6. 70 --> 7, 80 --> 8, etc. Rounds down, so 69 --> 6.
 
 	if wanted_info is not None and wanted_info == "dominant_style" and dominant_style is not None:
 		return dominant_style
@@ -2234,43 +2457,685 @@ def get_style_freshness_rating(user_data, dominant_style = None):
 	if dominant_style == None:
 		dominant_style = "fresh"
 
-	if user_data.freshness < 1000:
+	if user_data.freshness < ewcfg.freshnesslevel_1:
 		response = "Your outfit is starting to look pretty fresh, but you’ve got a long way to go if you wanna be NLACakaNM’s next top model."
 	else:
-		if user_data.freshness < 3000:
+		if user_data.freshness < ewcfg.freshnesslevel_2:
 			response = "Your outfit is low-key on point, not gonna lie. You’re goin’ places, kid."
-		elif user_data.freshness < 4000:
+		elif user_data.freshness < ewcfg.freshnesslevel_3:
 			response = "Your outfit is lookin’ fresh as hell, goddamn! You shop so much you can probably speak Italian."
-		elif user_data.freshness < 5000:
-			response = "Your outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Your Grimstagram has attracted a small following."
+		elif user_data.freshness < ewcfg.freshnesslevel_4:
+			response = "Your outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Your Instragrime has attracted a small following."
 		else:
-			response = "Holy shit! Your outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** You’ve blown up on Grimstagram, and you’ve got modeling gigs with fashion labels all across the city."
+			response = "Holy shit! Your outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** You’ve blown up on Instragrime, and you’ve got modeling gigs with fashion labels all across the city."
 
 		if dominant_style == ewcfg.style_cool:
-			if user_data.freshness < 5000:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
 				response += " You’re lookin’ wicked cool, dude. Like, straight up radical, man. For real, like, ta-haaa, seriously? Damn, bro. Sick."
 			else:
 				response += " Hey, kids, the world just got cooler. You’re the swingingest thing from coast-to-coast, and that ain’t no boast. You’re every slimegirl’s dream, you know what I mean? You’re where it’s at, and a far-out-happenin’ cat to boot. Man, it must hurt to be this hip."
 		elif dominant_style == ewcfg.style_tough:
-			if user_data.freshness < 5000:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
 				response += " You’re lookin’ tough as hell. Juveniles of all affiliations are starting to act nervous around you."
 			else:
 				response += " You’re just about the toughest-lookin' juveniledelinquent in the whole detention center. Ain’t nobody gonna pick a fight with you anymore, goddamn."
 		elif dominant_style == ewcfg.style_smart:
-			if user_data.freshness < 5000:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
 				response += " You’re starting to look like a real hipster, wearing all these smartypants garments. You love it, the people around you hate it."
 			else:
 				response += " You know extensive facts about bands that are so underground they’ve released their albums through long-since-expired Vocaroo links. You’re a leading hashtag warrior on various internet forums, and your opinions are well known by everyone who has spoken to you for more than five minutes. Everyone wants to knock your lights out, but… you’re just too fresh. "
 		elif dominant_style == ewcfg.style_beautiful:
-			if user_data.freshness < 5000:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
 				response += " You’re looking extremely handsome in all of those beautiful garments. If only this refined, elegant reflected in your manners when cracking into a Arizonian Kingpin Crab."
 			else:
 				response += " You’re the belle of the ball at every ball you attend, which has never happened. But, if you *were* to ever attend one, your beautiful outfit would surely distinguish you from the crowd. Who knows, you might even find TRUE LOVE because of it and get MARRIED. That is, if you weren’t already married to slime."
 		elif dominant_style == ewcfg.style_cute:
-			if user_data.freshness < 5000:
+			if user_data.freshness < ewcfg.freshnesslevel_4:
 				response += " Awwwhhh, look at you! You’re sooo cute~, oh my gosh. I could just eat you up, and then vomit you back up after I read back the previous line I’ve just written."
 			else:
-				response += " It is almost kowai how kawaii you are right now. Your legions of fans slobber all over each new post on Grimstagram and leave very strange comments. You’re stopped for autographs in public now, and there hasn’t been a selfie taken with you that hasn’t featured a hover hand."
+				response += " It is almost kowai how kawaii you are right now. Your legions of fans slobber all over each new post on Instragrime and leave very strange comments. You’re stopped for autographs in public now, and there hasn’t been a selfie taken with you that hasn’t featured a hover hand."
 
 	return response
 
+
+def get_subzone_controlling_faction(subzone_id, id_server):
+	
+	subzone = ewcfg.id_to_poi.get(subzone_id)
+	
+	if subzone == None:
+		return
+	else:
+		if not subzone.is_subzone:
+			return
+	
+	mother_pois = subzone.mother_districts
+
+	# Get all the mother pois of a subzone in order to find the father poi, which is either one of the mother pois or the father poi of the mother poi
+	# Subzones such as the food court will have both a district poi and a street poi as one of their mother pois
+	district_data = None
+
+	for mother_poi in mother_pois:
+		
+		mother_poi_data = ewcfg.id_to_poi.get(mother_poi)
+		
+		if mother_poi_data.is_district:
+			# One of the mother pois was a district, get its controlling faction
+			district_data = EwDistrict(district=mother_poi, id_server=id_server)
+			break
+		else:
+			# One of the mother pois was a street, get the father district of that street and its controlling faction
+			father_poi = mother_poi_data.father_district
+			district_data = EwDistrict(district=father_poi, id_server=id_server)
+			break
+
+	if district_data != None:
+		faction = district_data.controlling_faction
+		return faction
+
+def get_street_list(str_poi):
+	poi = ewcfg.id_to_poi.get(str_poi)
+	neighbor_list = poi.neighbors
+	poi_list = []
+	if poi.is_district == False:
+		return poi_list
+	else:
+		for neighbor in neighbor_list.keys():
+			neighbor_poi = ewcfg.id_to_poi.get(neighbor)
+			if neighbor_poi.is_street == True:
+				poi_list.append(neighbor)
+		return poi_list
+	
+async def collect_topics(cmd):
+	
+	if not cmd.message.author.guild_permissions.administrator:
+		return
+	
+	client = get_client()
+	server = client.get_guild(cmd.guild.id)
+	topic_count = 0
+	
+	for channel in server.channels:
+		
+		if channel.type != discord.ChannelType.text:
+			continue
+		elif channel.topic == None or channel.topic == '':
+			continue
+		elif channel.topic == '(Closed indefinitely) Currently controlled by no one.':
+			continue
+			
+		found_poi = False
+		for poi in ewcfg.poi_list:
+			if channel.name == poi.channel:
+				found_poi = True
+				break
+				
+		if found_poi:
+			topic_count += 1
+			print('\n{}\n=================\n{}'.format(channel.name, channel.topic))
+			
+	print('POI topics found: {}'.format(topic_count))
+	
+	
+async def sync_topics(cmd):
+	
+	if not cmd.message.author.guild_permissions.administrator:
+		return
+	
+	
+	for poi in ewcfg.poi_list:
+
+		poi_has_blank_topic = False
+		if poi.topic == None or poi.topic == '':
+			poi_has_blank_topic = True
+		
+		channel = get_channel(cmd.guild, poi.channel)
+		
+		if channel == None:
+			logMsg('Failed to get channel for {}'.format(poi.id_poi))
+			continue
+		
+		if channel.topic == poi.topic:
+			continue
+			
+		if (poi_has_blank_topic and channel.topic == None) or (poi_has_blank_topic and channel.topic == ''):
+			continue
+
+		if poi_has_blank_topic:
+			new_topic = ''
+			debug_info = 'be a blank topic.'
+		else:
+			new_topic = poi.topic
+			debug_info = poi.topic
+			
+		try:
+			await asyncio.sleep(2)
+			await channel.edit(topic = new_topic)
+			logMsg('Changed channel topic for {} to {}'.format(channel, debug_info))
+		except:
+			logMsg('Failed to set channel topic for {} to {}'.format(channel, debug_info))
+			
+	logMsg('Finished syncing topics.')
+	
+async def shut_down_bot(cmd):
+	
+	if not cmd.message.author.guild_permissions.administrator:
+		return await ewwep.suicide(cmd=cmd)
+	
+	logMsg('Goodbye!')
+	await asyncio.sleep(2)
+	
+	while True:
+		sys.exit()
+		
+async def check_bot(cmd):
+	if not cmd.message.author.guild_permissions.administrator:
+		return
+	
+	logMsg('TERMINATE is currently: {}'.format(TERMINATE))
+	
+	return
+	sys.exit()
+
+def gvs_create_gaia_grid_mapping(user_data):
+	grid_map = {}
+
+	# Grid print mapping and shambler targeting use different priority lists. Don't get these mixed up
+	printgrid_low_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+	printgrid_mid_priority = [ewcfg.enemy_type_gaia_steelbeans]
+	printgrid_high_priority = []
+	for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+		if enemy_id not in printgrid_low_priority and enemy_id not in printgrid_mid_priority:
+			printgrid_high_priority.append(enemy_id)
+
+	gaias = execute_sql_query(
+		"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1 AND {enemyclass} = %s".format(
+			id_enemy=ewcfg.col_id_enemy,
+			enemytype=ewcfg.col_enemy_type,
+			poi=ewcfg.col_enemy_poi,
+			life_state=ewcfg.col_enemy_life_state,
+			gvs_coord=ewcfg.col_enemy_gvs_coord,
+			enemyclass=ewcfg.col_enemy_class,
+		), (
+			user_data.id_server,
+			user_data.poi,
+			ewcfg.enemy_class_gaiaslimeoid
+		))
+	
+	grid_conditions = execute_sql_query(
+		"SELECT coord, grid_condition FROM gvs_grid_conditions WHERE district = %s".format(
+		), (
+			user_data.poi,
+		))
+	
+	for condition in grid_conditions:
+		grid_map[condition[0]] = condition[1]
+	
+	for gaia in gaias:
+		try:
+			gaia_in_coord = grid_map[gaia[2]]
+			# No key error: Gaia is in coord already, check for priority
+			is_filled = True
+		except KeyError:
+			gaia_in_coord = ''
+			# Key error: Gaia was not in coord
+			is_filled = False
+			
+		if is_filled:
+			if gaia_in_coord in printgrid_low_priority and (gaia[1] in printgrid_mid_priority or gaia[1] in printgrid_high_priority):
+				grid_map[gaia[2]] = gaia[1]
+			if gaia_in_coord in printgrid_mid_priority and gaia[1] in printgrid_high_priority:
+				grid_map[gaia[2]] = gaia[1]
+		else:
+			grid_map[gaia[2]] = gaia[1]
+		
+	return grid_map
+
+
+def gvs_create_gaia_lane_mapping(user_data, row_used):
+
+	# Grid print mapping and shambler targeting use different priority lists. Don't get these mixed up
+	printlane_low_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+	printlane_mid_priority = []
+	printlane_high_priority = [ewcfg.enemy_type_gaia_steelbeans]
+	for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+		if enemy_id not in printlane_low_priority and enemy_id not in printlane_high_priority:
+			printlane_mid_priority.append(enemy_id)
+
+	gaias = execute_sql_query(
+		"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} IN %s".format(
+			id_enemy=ewcfg.col_id_enemy,
+			enemytype=ewcfg.col_enemy_type,
+			poi=ewcfg.col_enemy_poi,
+			life_state=ewcfg.col_enemy_life_state,
+			gvs_coord=ewcfg.col_enemy_gvs_coord,
+			enemyclass=ewcfg.col_enemy_class,
+		), (
+			user_data.id_server,
+			user_data.poi,
+			ewcfg.enemy_class_gaiaslimeoid,
+			tuple(row_used)
+		))
+
+	grid_conditions = execute_sql_query(
+		"SELECT coord, grid_condition FROM gvs_grid_conditions WHERE district = %s AND coord IN %s".format(
+		), (
+			user_data.poi,
+			tuple(row_used)
+		))
+	
+	coord_sets = []
+
+	for coord in row_used:
+		current_coord_set = [] 
+		for enemy in printlane_low_priority:
+			for gaia in gaias:
+				if gaia[1] == enemy and gaia[2] == coord:
+					current_coord_set.append(gaia[0])
+					
+		for enemy in printlane_mid_priority:
+			for gaia in gaias:
+				if gaia[1] == enemy and gaia[2] == coord:
+					current_coord_set.append(gaia[0])
+					
+		for enemy in printlane_high_priority:
+			for gaia in gaias:
+				if gaia[1] == enemy and gaia[2] == coord:
+					current_coord_set.append(gaia[0])
+					
+		for condition in grid_conditions:
+			if condition[0] == coord:
+				if condition[1] == 'frozen':
+					current_coord_set.append('frozen')
+					
+		coord_sets.append(current_coord_set)
+	
+
+	return coord_sets
+
+
+def gvs_check_gaia_protected(enemy_data):
+	is_protected = False
+	
+	low_attack_priority = [ewcfg.enemy_type_gaia_rustealeaves]
+	high_attack_priority = [ewcfg.enemy_type_gaia_steelbeans]
+	mid_attack_priority = []
+	for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
+		if enemy_id not in low_attack_priority and enemy_id not in high_attack_priority:
+			mid_attack_priority.append(enemy_id)
+	
+	checked_coords = []
+	enemy_coord = enemy_data.gvs_coord
+	for row in ewcfg.gvs_valid_coords_gaia:
+		if enemy_coord in row:
+			index = row.index(enemy_coord)
+			row_length = len(ewcfg.gvs_valid_coords_gaia)
+			for i in range(index+1, row_length):
+				checked_coords.append(ewcfg.gvs_valid_coords_gaia[i])
+				
+	gaias_in_front_coords = execute_sql_query(
+		"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} IN %s".format(
+			id_enemy=ewcfg.col_id_enemy,
+			enemytype=ewcfg.col_enemy_type,
+			life_state=ewcfg.col_enemy_life_state,
+			gvs_coord=ewcfg.col_enemy_gvs_coord,
+			enemyclass=ewcfg.col_enemy_class,
+		), (
+			ewcfg.enemy_class_gaiaslimeoid,
+			tuple(checked_coords)
+		))
+	
+	if len(gaias_in_front_coords) > 0:
+		is_protected = True
+	else:
+		gaias_in_same_coord = execute_sql_query(
+			"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} = %s".format(
+				id_enemy=ewcfg.col_id_enemy,
+				enemytype=ewcfg.col_enemy_type,
+				life_state=ewcfg.col_enemy_life_state,
+				gvs_coord=ewcfg.col_enemy_gvs_coord,
+				enemyclass=ewcfg.col_enemy_class,
+			), (
+				ewcfg.enemy_class_gaiaslimeoid,
+				enemy_coord
+			))
+		if len(gaias_in_same_coord) > 1:
+			same_coord_gaias_types = []
+			for gaia in gaias_in_same_coord:
+				same_coord_gaias_types.append(gaia[1])
+				
+			for type in same_coord_gaias_types:
+				if enemy_data.enemy_type in high_attack_priority:
+					is_protected = False
+					break
+				elif enemy_data.enemy_type in mid_attack_priority and type in high_attack_priority:
+					is_protected = True
+					break
+				elif enemy_data.enemy_type in low_attack_priority and (type in mid_attack_priority or type in high_attack_priority):
+					is_protected = True
+					break
+	
+		else:
+			is_protected = False
+	
+	return is_protected
+
+def gvs_check_operation_duplicate(id_user, district, enemytype, faction):
+	entry = None
+	
+	if faction == ewcfg.psuedo_faction_gankers:
+		entry = execute_sql_query(
+			"SELECT * FROM gvs_ops_choices WHERE id_user = %s AND district = %s AND enemytype = %s AND faction = %s".format(
+			), (
+				id_user, 
+				district, 
+				enemytype, 
+				faction
+			))
+	elif faction == ewcfg.psuedo_faction_shamblers:
+		entry = execute_sql_query(
+			"SELECT * FROM gvs_ops_choices WHERE district = %s AND enemytype = %s AND faction = %s".format(
+			), (
+				district,
+				enemytype,
+				faction
+			))
+
+	if len(entry) > 0:
+		return True
+	else:
+		return False
+	
+def gvs_check_operation_limit(id_user, district, enemytype, faction):
+	
+	limit_hit = False
+	tombstone_limit = 0
+	
+	if faction == ewcfg.psuedo_faction_gankers:
+		data = execute_sql_query(
+			"SELECT id_user FROM gvs_ops_choices WHERE id_user = %s AND district = %s AND faction = %s".format(
+			), (
+				id_user, 
+				district,
+				faction
+			))
+		
+		if len(data) >= 6:
+			limit_hit = True
+		else:
+			limit_hit = False
+		
+	elif faction == ewcfg.psuedo_faction_shamblers:
+		sh_data = execute_sql_query(
+			"SELECT enemytype FROM gvs_ops_choices WHERE district = %s AND faction = %s".format(
+			), (
+				district,
+				faction
+			))
+		
+		gg_data = execute_sql_query(
+			"SELECT id_user FROM gvs_ops_choices WHERE district = %s AND faction = %s".format(
+			), (
+				district,
+				enemytype,
+			))
+		
+		gg_id_list = []
+		for gg in gg_data:
+			gg_id_list.append(gg[0])
+			
+		gg_id_set = set(gg_id_list) # Remove duplicate user IDs
+		
+		if len(gg_id_set) == 0:
+			tombstone_limit = 3
+		elif len(gg_id_set) <= 3:
+			tombstone_limit = 6
+		elif len(gg_id_set) <= 6:
+			tombstone_limit = 10
+		else:
+			tombstone_limit = 12
+		
+		if len(sh_data) >= tombstone_limit:
+			limit_hit = True
+		else:
+			limit_hit = False
+			
+	return limit_hit, tombstone_limit
+
+def gvs_check_if_in_operation(user_data):
+	
+	op_data = execute_sql_query(
+		"SELECT id_user, district FROM gvs_ops_choices WHERE id_user = %s".format(
+		), (
+			user_data.id_user,
+		))
+
+	if len(op_data) > 0:
+		return True, op_data[0][1]
+	else:
+		return False, None
+
+def gvs_get_gaias_from_coord(poi, checked_coord):
+	gaias = execute_sql_query(
+		"SELECT id_enemy, enemytype FROM enemies WHERE poi = %s AND gvs_coord = %s".format(
+		), (
+			poi,
+			checked_coord
+		))
+	
+	gaias_id_to_type_map = {}
+	
+	for gaia in gaias:
+		if gaia[1] in ewcfg.gvs_enemies_gaiaslimeoids:
+			gaias_id_to_type_map[gaia[0]] = gaia[1]
+	
+	return gaias_id_to_type_map
+
+# If there are no player operations, spawn in ones that the bot uses
+def gvs_insert_bot_ops(id_server, district, enemyfaction):
+	bot_id = 56709
+	
+	if enemyfaction == ewcfg.psuedo_faction_gankers:
+		possible_bot_types = [
+			ewcfg.enemy_type_gaia_pinkrowddishes,
+			ewcfg.enemy_type_gaia_purplekilliflower,
+			ewcfg.enemy_type_gaia_poketubers,
+			ewcfg.enemy_type_gaia_razornuts
+		]
+		for type in possible_bot_types:
+			execute_sql_query("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+				ewcfg.col_id_user,
+				ewcfg.col_district,
+				ewcfg.col_enemy_type,
+				ewcfg.col_faction,
+				ewcfg.col_id_item,
+				ewcfg.col_shambler_stock,
+			), (
+				bot_id,
+				district,
+				type,
+				enemyfaction,
+				-1,
+				0,
+			))
+			
+			# To increase the challenge, a column of suganmanuts is placed down.
+			for coord in ['A6', 'B6', 'C6', 'D6', 'E6']:
+				ewhunting.spawn_enemy(
+					id_server=id_server,
+					pre_chosen_type=ewcfg.enemy_type_gaia_suganmanuts,
+					pre_chosen_level=50,
+					pre_chosen_poi=district,
+					pre_chosen_identifier='',
+					pre_chosen_faction=ewcfg.psuedo_faction_gankers,
+					pre_chosen_owner=bot_id,
+					pre_chosen_coord=coord,
+					manual_spawn=True,
+				)
+		
+	elif enemyfaction == ewcfg.psuedo_faction_shamblers:
+		possible_bot_types = [
+			ewcfg.enemy_type_defaultshambler,
+			ewcfg.enemy_type_bucketshambler,
+		]
+		for type in possible_bot_types:
+			execute_sql_query("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+				ewcfg.col_id_user,
+				ewcfg.col_district,
+				ewcfg.col_enemy_type,
+				ewcfg.col_faction,
+				ewcfg.col_id_item,
+				ewcfg.col_shambler_stock,
+			), (
+				bot_id,
+				district,
+				type,
+				enemyfaction,
+				-1,
+				20,
+			))
+			
+async def degrade_districts(cmd):
+	
+	if not cmd.message.author.guild_permissions.administrator:
+		return
+
+	gvs_districts = []
+
+	for poi in ewcfg.poi_list:
+		if poi.is_district and not poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow, ewcfg.poi_id_oozegardens, ewcfg.poi_id_thevoid]:
+			gvs_districts.append(poi.id_poi)
+
+	execute_sql_query("UPDATE districts SET degradation = 0")
+	execute_sql_query("UPDATE districts SET time_unlock = 0")
+	execute_sql_query("UPDATE districts SET degradation = 10000 WHERE district IN {}".format(tuple(gvs_districts)))
+	logMsg('Set proper degradation values.')
+
+
+def mention_type(cmd, ew_id):
+	if cmd.client_id.user == ew_id.user:
+		return "ew"
+	elif cmd.author_id.user == ew_id.user:
+		return "self"
+	else:
+		return "other"
+
+
+def get_mutation_alias(name):
+	if ewcfg.mutations_map.get(name) != None:
+		return name
+	else:
+
+		for mutation in ewcfg.mutations_map:
+			for alias in ewcfg.mutations_map.get(mutation).alias:
+				if name == alias:
+					return mutation
+		return 0
+
+def get_fingernail_item(cmd):
+	item = ewcfg.weapon_map.get(ewcfg.weapon_id_fingernails)
+	item_props = ewitem.gen_item_props(item)
+	id_item = ewitem.item_create(
+		item_type=ewcfg.it_weapon,
+		id_user=cmd.message.author.id,
+		id_server=cmd.guild.id,
+		stack_max=-1,
+		stack_size=0,
+		item_props=item_props
+	)
+
+	return id_item
+
+
+def inaccessible(user_data=None, poi=None):
+	if poi == None or user_data == None:
+		return True
+
+	if user_data.life_state == ewcfg.life_state_observer:
+		return False
+
+	if user_data.life_state == ewcfg.life_state_shambler and poi.id_poi in [ewcfg.poi_id_rowdyroughhouse,
+																			ewcfg.poi_id_copkilltown,
+																			ewcfg.poi_id_juviesrow]:
+		return True
+
+	bans = user_data.get_bans()
+	vouchers = user_data.get_vouchers()
+
+	locked_districts_list = ewmap.retrieve_locked_districts(user_data.id_server)
+
+	if (
+			len(poi.factions) > 0 and
+			(set(vouchers).isdisjoint(set(poi.factions)) or user_data.faction != "") and
+			user_data.faction not in poi.factions
+	) or (
+			len(poi.life_states) > 0 and
+			user_data.life_state not in poi.life_states
+	):
+		return True
+	elif (
+			len(poi.factions) > 0 and
+			len(bans) > 0 and
+			set(poi.factions).issubset(set(bans))
+	):
+		return True
+	elif poi.id_poi in locked_districts_list and user_data.life_state not in [ewcfg.life_state_executive, ewcfg.life_state_lucky]:
+		return True
+	else:
+		return False
+
+
+
+# Pay out salaries. SlimeCoin can be taken away or given depending on if the user has positive or negative credits.
+async def pay_salary(id_server=None):
+	print('paying salary...')
+
+	try:
+		conn_info = databaseConnect()
+		conn = conn_info.get('conn')
+		cursor = conn.cursor()
+		client = get_client()
+		if id_server != None:
+			# get all players with apartments. If a player is evicted, thir rent is 0, so this will not affect any bystanders.
+			cursor.execute("SELECT id_user FROM users WHERE salary_credits != 0 AND id_server = {}".format(id_server))
+
+			security_officers = cursor.fetchall()
+
+			for officer in security_officers:
+				officer_id_user = int(officer[0])
+
+				user_data = EwUser(id_user=officer_id_user, id_server=id_server)
+				credits = user_data.salary_credits
+
+				# Prevent the user from obtaining negative slimecoin
+				if credits < 0 and user_data.slimecoin < (-1 * credits):
+					user_data.change_slimecoin(n=-user_data.slimecoin, coinsource=ewcfg.coinsource_salary)
+				else:
+					user_data.change_slimecoin(n=user_data.salary_credits, coinsource=ewcfg.coinsource_salary)
+
+				user_data.persist()
+	finally:
+		cursor.close()
+		databaseClose(conn_info)
+
+# Give Brimstone Programmer role to a member
+async def make_bp(cmd):
+	return
+	if EwUser(member = cmd.message.author).life_state != ewcfg.life_state_kingpin and not cmd.author_id.admin:
+		return
+
+	if cmd.mentions_count > 0:
+		recipient = cmd.mentions[0]
+	else:
+		response = 'who?'
+		return await send_message(cmd.client, cmd.message.channel, formatMessage(cmd.message.author, response))
+
+	bp_role = None
+	for role in cmd.guild.roles:
+		if role.name == "Brimstone Programmer":
+			bp_role = role
+			break
+	
+	if bp_role:
+		await recipient.add_roles(bp_role)
+	else:
+		logMsg("Could not find Brimstone Programmer role.")

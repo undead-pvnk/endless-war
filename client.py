@@ -16,6 +16,7 @@ import traceback
 import re
 import os
 import shlex
+import logging
 
 import ewutils
 import ewcfg
@@ -53,6 +54,8 @@ import ewdungeons
 import ewads
 import ewbook
 import ewsports
+import ewrace
+import ewslimetwitter
 import ewdebug
 
 from ewitem import EwItem
@@ -67,7 +70,16 @@ from ewstatuseffects import EwStatusEffect
 ewutils.logMsg('Starting up...')
 init_complete = False
 
-client = discord.Client()
+# output discord logs to console
+logger = logging.getLogger('discord')
+logger.setLevel(logging.WARNING)
+handler = logging.StreamHandler(sys.stdout)
+handler.setFormatter(logging.Formatter('[%(asctime)s]:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
+
+intents = discord.Intents.all()
+
+client = discord.Client(intents=intents)
 
 # A map containing user IDs and the last time in UTC seconds since we sent them
 # the help doc via DM. This is to prevent spamming.
@@ -75,6 +87,9 @@ last_helped_times = {}
 
 # Map of server ID to a map of active users on that server.
 active_users_map = {}
+
+# Map of server ID to slime twitter channels
+channels_slimetwitter = {}
 
 # Map of all command words in the game to their implementing function.
 cmd_map = {
@@ -86,19 +101,19 @@ cmd_map = {
 	ewcfg.cmd_shoot_alt3: ewwep.attack,
 	ewcfg.cmd_shoot_alt4: ewwep.attack,
 	ewcfg.cmd_shoot_alt5: ewwep.attack,
+	ewcfg.cmd_shoot_alt6: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	# Reload
 	ewcfg.cmd_reload: ewwep.reload,
 	ewcfg.cmd_reload_alt1: ewwep.reload,
 	
-	# Fix your jammed gun
-	ewcfg.cmd_unjam: ewwep.unjam,
 
 	# Choose your weapon
 	ewcfg.cmd_equip: ewwep.equip,
 	ewcfg.cmd_arm: ewwep.equip,
 	ewcfg.cmd_arsenalize: ewwep.equip,
+	ewcfg.cmd_sidearm: ewwep.sidearm,
 	
 	# Kill yourself
 	ewcfg.cmd_suicide: ewwep.suicide,
@@ -141,15 +156,8 @@ cmd_map = {
 	# Show a player's mutations.
 	ewcfg.cmd_mutations: ewcmd.mutations,
 	ewcfg.cmd_mutations_alt_1: ewcmd.mutations,
-
-	# sap system
-	ewcfg.cmd_view_sap: ewcmd.view_sap,
-	ewcfg.cmd_harden_sap: ewwep.harden_sap,
-	ewcfg.cmd_harden_sap_alt1: ewwep.harden_sap,
-	ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
-
 	
-	# combat sap commands
+	# combat commands
 	ewcfg.cmd_taunt: ewwep.taunt,
 	ewcfg.cmd_aim: ewwep.aim,
 	ewcfg.cmd_dodge: ewwep.dodge,
@@ -170,10 +178,14 @@ cmd_map = {
 	
 	# Ghosts can BOO 
 	ewcfg.cmd_boo: ewcmd.boo,
+	#TODO remove after double halloween
 	#ewcfg.cmd_spook: ewcmd.spook,
 	
 	# Juvies can dance
 	ewcfg.cmd_dance: ewcmd.dance,
+	
+	# SlimeCorp security officers can post propaganda
+	ewcfg.cmd_propaganda: ewcmd.propaganda,
 	
 	# Terezi Gang can flip coins
 	ewcfg.cmd_coinflip: ewcmd.coinflip,
@@ -191,11 +203,10 @@ cmd_map = {
 	ewcfg.cmd_endlesswar: ewcmd.endlesswar,
 	
 	# Show the number of swears in the global swear jar.
-	ewcfg.cmd_swear_jar: ewcmd.swearjar,
+	# ewcfg.cmd_swear_jar: ewcmd.swearjar,
 
 	# Display the progress towards the current Quarterly Goal.
-	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
-
+	# ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
 
 	ewcfg.cmd_retire: ewapt.retire,
 	ewcfg.cmd_depart: ewapt.depart,
@@ -207,7 +218,7 @@ cmd_map = {
 	ewcfg.cmd_sign: ewapt.nothing,
 	ewcfg.cmd_upgrade: ewapt.upgrade,
 	ewcfg.cmd_knock: ewapt.knock,
-	#ewcfg.cmd_trickortreat: ewapt.trickortreat,
+	ewcfg.cmd_trickortreat: ewapt.trickortreat,
 	ewcfg.cmd_breaklease: ewapt.cancel,
 
 
@@ -258,6 +269,7 @@ cmd_map = {
 	ewcfg.cmd_changelocks: ewapt.manual_changelocks,
 	ewcfg.cmd_setalarm: ewapt.set_alarm,
 	ewcfg.cmd_jam: ewapt.jam,
+	ewcfg.cmd_checkflag: ewcmd.check_flag,
 
 
 	# revive yourself as a juvenile after having been killed.
@@ -265,9 +277,6 @@ cmd_map = {
 
 	# Ghosts can haunt enlisted players to reduce their slime score.
 	ewcfg.cmd_haunt: ewspooky.haunt,
-
-	# how ghosts leave the sewers
-	ewcfg.cmd_manifest: ewspooky.manifest,
 
 	# ghosts can inhabit players to follow them around
 	ewcfg.cmd_inhabit: ewspooky.inhabit,
@@ -277,6 +286,10 @@ cmd_map = {
 
 	# ghosts can empower the weapon of the player they're inhabiting
 	ewcfg.cmd_possess_weapon: ewspooky.possess_weapon,
+
+	# ghosts can enhance fishing for the player they're inhabiting
+	ewcfg.cmd_possess_fishing_rod: ewspooky.possess_fishing_rod,
+	ewcfg.cmd_possess_fishing_rod_alt1: ewspooky.possess_fishing_rod,
 
 	# ghosts can turn their negaslime into negapoudrins
 	ewcfg.cmd_crystalize_negapoudrin: ewspooky.crystalize_negapoudrin,
@@ -337,6 +350,9 @@ cmd_map = {
 	ewcfg.cmd_transfer: ewmarket.xfer,
 	ewcfg.cmd_transfer_alt1: ewmarket.xfer,
 
+	# Redeem slime with SlimeCoin
+	# ewcfg.cmd_redeem: ewmarket.redeem,
+
 	# Show the player's slime coin.
 	ewcfg.cmd_slimecoin: ewmarket.slimecoin,
 	ewcfg.cmd_slimecoin_alt1: ewmarket.slimecoin,
@@ -378,6 +394,7 @@ cmd_map = {
 	ewcfg.cmd_inventory_alt3: ewitem.inventory_print,
 	ewcfg.cmd_communitychest: ewitem.inventory_print,
 
+
 	# get an item's description
 	ewcfg.cmd_inspect: ewitem.item_look,
 	ewcfg.cmd_inspect_alt1: ewitem.item_look,
@@ -385,6 +402,8 @@ cmd_map = {
 	# use an item
 	ewcfg.cmd_use: ewitem.item_use,
 
+	# eat a food item from a player's inventory
+	ewcfg.cmd_eat: ewfood.eat_item,
 
 	# Remove a megaslime (1 mil slime) from a general.
 	ewcfg.cmd_deadmega: ewkingpin.deadmega,
@@ -399,6 +418,8 @@ cmd_map = {
 	ewcfg.cmd_move_alt1: ewmap.move,
 	ewcfg.cmd_move_alt2: ewmap.move,
 	ewcfg.cmd_move_alt3: ewmap.move,
+	ewcfg.cmd_move_alt4: ewmap.move,
+	ewcfg.cmd_move_alt5: ewmap.move,
 
 	# go down
 	ewcfg.cmd_descend: ewmap.descend,
@@ -431,8 +452,14 @@ cmd_map = {
 	ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
 
 	# Change your current POI capture progress
-	ewcfg.cmd_annex: ewdistrict.annex,
-	ewcfg.cmd_annex_alt1: ewdistrict.annex,
+
+	#ewcfg.cmd_annex: ewdistrict.annex,
+	ewcfg.cmd_spray: ewwep.spray,
+	#ewcfg.cmd_annex_alt1: ewdistrict.annex,
+	ewcfg.cmd_spray_alt1: ewwep.spray,
+	ewcfg.cmd_changespray:ewdistrict.change_spray,
+	ewcfg.cmd_changespray:ewdistrict.change_spray,
+	ewcfg.cmd_tag:ewdistrict.tag,
 
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
@@ -441,6 +468,7 @@ cmd_map = {
 	#farming
 	ewcfg.cmd_sow: ewfarm.sow,
 	ewcfg.cmd_reap: ewfarm.reap,
+	ewcfg.cmd_reap_alt: ewfarm.reap,
 	ewcfg.cmd_check_farm: ewfarm.check_farm,
 	ewcfg.cmd_irrigate: ewfarm.cultivate,
 	ewcfg.cmd_weed: ewfarm.cultivate,
@@ -455,6 +483,9 @@ cmd_map = {
 	ewcfg.cmd_barter: ewfish.barter,
 	ewcfg.cmd_embiggen: ewfish.embiggen,
 
+	ewcfg.cmd_barterall: ewfish.barter_all,
+	# ewcfg.cmd_createfish: ewfish.debug_create_random_fish,
+
 	#scavenging
 	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 	ewcfg.cmd_scavenge_alt1: ewjuviecmd.scavenge,
@@ -462,6 +493,7 @@ cmd_map = {
 	#cosmetics
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
+	ewcfg.cmd_dedorn_alt1: ewcosmeticitem.dedorn,
 	ewcfg.cmd_sew: ewcosmeticitem.sew,
 	ewcfg.cmd_retrofit: ewcosmeticitem.retrofit,
 	ewcfg.cmd_fashion: ewcmd.fashion,
@@ -470,8 +502,11 @@ cmd_map = {
 	ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
 	ewcfg.cmd_createitem: ewcmd.create_item,
 	ewcfg.cmd_manualsoulbind: ewcmd.manual_soulbind,
+	ewcfg.cmd_editprops: ewitem.manually_edit_item_properties,
 	ewcfg.cmd_setslime: ewcmd.set_slime,
-	# ewcfg.cmd_exalt: ewkingpin.exalt,
+	ewcfg.cmd_checkstats: ewcmd.check_stats,
+	ewcfg.cmd_makebp : ewutils.make_bp,
+	#ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
@@ -479,6 +514,10 @@ cmd_map = {
 
 	#smelting
 	ewcfg.cmd_smelt: ewsmelting.smelt,
+	ewcfg.cmd_wcim: ewsmelting.find_recipes_by_item,
+	ewcfg.cmd_wcim_alt1: ewsmelting.find_recipes_by_item,
+	ewcfg.cmd_wcim_alt2: ewsmelting.find_recipes_by_item,
+	ewcfg.cmd_wcim_alt3: ewsmelting.find_recipes_by_item,
 
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
@@ -542,6 +581,7 @@ cmd_map = {
 	ewcfg.cmd_instructions: ewslimeoid.instructions,
 	ewcfg.cmd_playfetch: ewslimeoid.playfetch,
 	ewcfg.cmd_petslimeoid: ewslimeoid.petslimeoid,
+	ewcfg.cmd_abuseslimeoid: ewslimeoid.abuseslimeoid,
 	ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
 	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
@@ -566,19 +606,21 @@ cmd_map = {
 
 	# Enemies
 	ewcfg.cmd_summonenemy: ewhunting.summonenemy,
+	ewcfg.cmd_deleteallenemies: ewhunting.delete_all_enemies,
+	ewcfg.cmd_summongvsenemy: ewhunting.summongvsenemy,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
 	ewcfg.cmd_clear_quadrant: ewquadrants.clear_quadrant,
 	ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
-	ewcfg.cmd_get_flushed: ewquadrants.get_flushed,
-	ewcfg.cmd_get_flushed_alt1: ewquadrants.get_flushed,
-	ewcfg.cmd_get_pale: ewquadrants.get_pale,
-	ewcfg.cmd_get_pale_alt1: ewquadrants.get_pale,
-	ewcfg.cmd_get_caliginous: ewquadrants.get_caliginous,
-	ewcfg.cmd_get_caliginous_alt1: ewquadrants.get_caliginous,
-	ewcfg.cmd_get_ashen: ewquadrants.get_ashen,
-	ewcfg.cmd_get_ashen_alt1: ewquadrants.get_ashen,
+	ewcfg.cmd_get_sloshed: ewquadrants.get_sloshed,
+	ewcfg.cmd_get_sloshed_alt1: ewquadrants.get_sloshed,
+	ewcfg.cmd_get_roseate: ewquadrants.get_roseate,
+	ewcfg.cmd_get_roseate_alt1: ewquadrants.get_roseate,
+	ewcfg.cmd_get_violacious: ewquadrants.get_violacious,
+	ewcfg.cmd_get_violacious_alt1: ewquadrants.get_violacious,
+	ewcfg.cmd_get_policitous: ewquadrants.get_policitous,
+	ewcfg.cmd_get_policitous_alt1: ewquadrants.get_policitous,
 
 	# mutations
 	ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
@@ -587,6 +629,8 @@ cmd_map = {
 	ewcfg.cmd_teleport: ewmap.teleport,
 	ewcfg.cmd_teleport_alt1: ewmap.teleport,
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
+	ewcfg.cmd_print_map_data: ewmap.print_map_data,
+	ewcfg.cmd_ping_me: ewcmd.ping_me,
 	ewcfg.cmd_boot: ewmap.boot,
 	ewcfg.cmd_bootall:ewapt.lobbywarning,
 
@@ -633,6 +677,33 @@ cmd_map = {
 
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
+	
+	# hides all poi role names, only usable by admins
+	ewcfg.cmd_hiderolenames: ewrolemgr.hideRoleNames,
+	
+	# recreates all hidden poi roles in the server in case restoreRoleNames doesnt work, only usable by admins
+	ewcfg.cmd_recreateroles: ewrolemgr.recreateRoles,
+	
+	# deletes all roles in the server of a particular type
+	ewcfg.cmd_deleteroles: ewrolemgr.deleteRoles,
+		
+	# removes all user overwrites in the server's poi channels
+	ewcfg.cmd_removeuseroverwrites: ewrolemgr.remove_user_overwrites,
+	
+	# Collects all channel topics.
+	ewcfg.cmd_collectopics: ewutils.collect_topics,
+	
+	# Changes those channel topics according to what's in their EwPoi definition
+	ewcfg.cmd_synctopics: ewutils.sync_topics,
+	
+	# Shuts down the bot with sys.exit()
+	ewcfg.cmd_shutdownbot: ewutils.shut_down_bot,
+	
+	# Checks the status of ewutils.TERMINATE
+	ewcfg.cmd_checkbot: ewutils.check_bot,
+	
+	# Sets degradation values for GvS
+	ewcfg.cmd_degradedistricts: ewutils.degrade_districts,
 
 	# debug commands
 	# ewcfg.cmd_debug1: ewdebug.debug1,
@@ -652,6 +723,13 @@ cmd_map = {
 
 	# grant slimecorp executive status
 	ewcfg.cmd_promote: ewcmd.promote,
+	
+	# SlimeCorp commands
+	ewcfg.cmd_clockin: ewmap.clockin,
+	ewcfg.cmd_clockout: ewmap.clockout,
+	ewcfg.cmd_sanitize: ewwep.sanitize,
+	ewcfg.cmd_paycheck: ewcmd.paycheck,
+	ewcfg.cmd_payday: ewcmd.payday,
 
 	# trading
 	ewcfg.cmd_trade: ewmarket.trade,
@@ -663,18 +741,24 @@ cmd_map = {
 	# Praying at the base of ENDLESS WAR.
 	ewcfg.cmd_pray: ewcmd.pray,
 
-	# shambling
-	ewcfg.cmd_shamble: ewdistrict.shamble,
+	# Gankers Vs. Shamblers gang swapping
+	# ewcfg.cmd_shamble: ewdistrict.shamble,
+	# ewcfg.cmd_rejuvenate: ewdistrict.rejuvenate,
 	
-	# shamble ball
-	ewcfg.cmd_shambleball: ewsports.shambleball,
-	ewcfg.cmd_shamblego: ewsports.shamblego,
-	ewcfg.cmd_shamblestop: ewsports.shamblestop,
-	ewcfg.cmd_shambleleave: ewsports.shambleleave,
+	# slimeball
+	ewcfg.cmd_slimeball: ewsports.slimeball,
+	ewcfg.cmd_slimeballgo: ewsports.slimeballgo,
+	ewcfg.cmd_slimeballstop: ewsports.slimeballstop,
+	ewcfg.cmd_slimeballleave: ewsports.slimeballleave,
 
 	# flush items and slime from subzones into their mother district
-	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones,
-	
+	ewcfg.cmd_flushsubzones: ewmap.flush_subzones,
+	ewcfg.cmd_flushstreets: ewmap.flush_streets,
+
+	#swap weapons
+	ewcfg.cmd_switch: ewwep.switch_weapon,
+	ewcfg.cmd_switch_alt_1: ewwep.switch_weapon,
+
 	# Slimernalia
 	# Check your current festivity
 	#ewcfg.cmd_festivity: ewcmd.festivity,
@@ -683,7 +767,7 @@ cmd_map = {
 	# Unwrap a gift
 	ewcfg.cmd_unwrap: ewcmd.unwrap,
 	# Yo, Slimernalia
-	#ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia
+	#ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia,
 	
 	# Swilldermuk
 	# ewcfg.cmd_gambit: ewcmd.gambit,
@@ -693,20 +777,71 @@ cmd_map = {
 	# ewcfg.cmd_set_gambit: ewcmd.set_gambit, #debug
 	# ewcfg.cmd_pointandlaugh: ewcmd.point_and_laugh,
 	ewcfg.cmd_prank: ewcmd.prank,
+	
+	# Gankers Vs. Shamblers
+	# ewcfg.cmd_gvs_printgrid: ewcmd.gvs_print_grid,
+	# ewcfg.cmd_gvs_printgrid_alt1: ewcmd.gvs_print_grid,
+	# ewcfg.cmd_gvs_printlane: ewcmd.gvs_print_lane,
+	# ewcfg.cmd_gvs_incubategaiaslimeoid: ewcmd.gvs_incubate_gaiaslimeoid,
+	# ewcfg.cmd_gvs_fabricatetombstone: ewcmd.gvs_fabricate_tombstone,
+	# ewcfg.cmd_gvs_joinoperation: ewcmd.gvs_join_operation,
+	# ewcfg.cmd_gvs_leaveoperation: ewcmd.gvs_leave_operation,
+	# ewcfg.cmd_gvs_checkoperation: ewcmd.gvs_check_operations,
+	# ewcfg.cmd_gvs_plantgaiaslimeoid: ewcmd.gvs_plant_gaiaslimeoid,
+	ewcfg.cmd_gvs_almanac: ewcmd.almanac,
+	# ewcfg.cmd_gvs_searchforbrainz: ewcmd.gvs_searchforbrainz,
+	# ewcfg.cmd_gvs_grabbrainz: ewcmd.gvs_grabbrainz,
+	# ewcfg.cmd_gvs_dive: ewcmd.gvs_dive,
+	# ewcfg.cmd_gvs_resurface: ewcmd.gvs_resurface,
+	# ewcfg.cmd_gvs_sellgaiaslimeoid: ewcmd.gvs_sell_gaiaslimeoid,
+	# ewcfg.cmd_gvs_sellgaiaslimeoid_alt: ewcmd.gvs_sell_gaiaslimeoid,
+	# ewcfg.cmd_gvs_dig: ewcmd.dig,
+	# ewcfg.cmd_gvs_progress: ewcmd.gvs_progress,
+	# ewcfg.cmd_gvs_gaiaslime: ewcmd.gvs_gaiaslime,
+	# ewcfg.cmd_gvs_gaiaslime_alt1: ewcmd.gvs_gaiaslime,
+	# ewcfg.cmd_gvs_brainz: ewcmd.gvs_brainz,
 
 	# race
-	ewcfg.cmd_set_race: ewcmd.set_race,
-	ewcfg.cmd_set_race_alt1: ewcmd.set_race,
-	ewcfg.cmd_reset_race: ewcmd.reset_race,
-	ewcfg.cmd_exist: ewcmd.exist,
-	ewcfg.cmd_ree: ewcmd.ree,
-	ewcfg.cmd_autocannibalize: ewcmd.autocannibalize,
-	ewcfg.cmd_rattle: ewcmd.rattle,
-	ewcfg.cmd_beep: ewcmd.beep,
-	ewcfg.cmd_yiff: ewcmd.yiff,
-	ewcfg.cmd_hiss: ewcmd.hiss,
-	ewcfg.cmd_jiggle: ewcmd.jiggle,
-	ewcfg.cmd_confuse: ewcmd.confuse,
+	ewcfg.cmd_set_race: ewrace.set_race,
+	ewcfg.cmd_set_race_alt1: ewrace.set_race,
+	ewcfg.cmd_exist: ewrace.exist,
+	ewcfg.cmd_ree: ewrace.ree,
+	ewcfg.cmd_autocannibalize: ewrace.autocannibalize,
+	ewcfg.cmd_rattle: ewrace.rattle,
+	ewcfg.cmd_beep: ewrace.beep,
+	ewcfg.cmd_yiff: ewrace.yiff,
+	ewcfg.cmd_hiss: ewrace.hiss,
+	ewcfg.cmd_jiggle: ewrace.jiggle,
+	ewcfg.cmd_flutter: ewrace.flutter,
+	ewcfg.cmd_request_petting: ewrace.request_petting,
+	ewcfg.cmd_rampage: ewrace.rampage,
+	ewcfg.cmd_entomize: ewrace.entomize,
+	ewcfg.cmd_confuse: ewrace.confuse,
+	ewcfg.cmd_shamble: ewrace.shamble,
+
+	# Mutations
+	ewcfg.cmd_preserve: ewmutation.preserve,
+	ewcfg.cmd_stink: ewmutation.waft,
+	ewcfg.cmd_slap: ewmap.slap,
+	ewcfg.cmd_track: ewmutation.track_oneeyeopen,
+	ewcfg.cmd_longdrop: ewitem.longdrop,
+	ewcfg.cmd_shakeoff: ewmutation.shakeoff,
+	ewcfg.cmd_clench: ewmutation.clench,
+	ewcfg.cmd_thirdeye: ewmap.tracker,
+	ewcfg.cmd_loop: ewmap.loop,
+	ewcfg.cmd_devour: ewfood.devour,
+	ewcfg.cmd_chemo: ewmutation.chemo,
+	ewcfg.cmd_graft: ewmutation.graft,
+	ewcfg.cmd_bleedout: ewmutation.bleedout,
+	ewcfg.cmd_skullbash: ewitem.skullbash,
+	ewcfg.cmd_juviemode: ewjuviecmd.juviemode,
+
+	ewcfg.cmd_manual_unban:ewcmd.unban_manual,
+
+	# Slime Twitter
+	ewcfg.cmd_tweet: ewslimetwitter.tweet,
+	ewcfg.cmd_verification: ewslimetwitter.verification,
+	ewcfg.cmd_verification_alt: ewslimetwitter.verification
 }
 
 debug = False
@@ -775,15 +910,21 @@ async def on_ready():
 	for poi in ewcfg.poi_list:
 		if poi.role != None:
 			poi.role = ewutils.mapRoleName(poi.role)
+		if poi.major_role != None:
+			poi.major_role = ewutils.mapRoleName(poi.major_role)
+		if poi.minor_role != None:
+			poi.minor_role = ewutils.mapRoleName(poi.minor_role)
 
 		neighbors = []
 		neighbor_ids = []
-		if poi.coord != None:
-			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_observer)
+		#if poi.coord != None:
+		if len(poi.neighbors.keys()) > 0:
+			neighbors = ewmap.path_to(poi_start = poi.id_poi, user_data = fake_observer)
 		#elif poi.id_poi == ewcfg.poi_id_thesewers:
 		#	neighbors = ewcfg.poi_list
 
 		if neighbors != None:
+			
 			for neighbor in neighbors:
 				neighbor_ids.append(neighbor.id_poi)
 
@@ -793,9 +934,8 @@ async def on_ready():
 
 	for id_poi in ewcfg.landmark_pois:
 		ewutils.logMsg("beginning landmark precomputation for " + id_poi)
-		poi = ewcfg.id_to_poi.get(id_poi)
 		ewmap.landmarks[id_poi] = ewmap.score_map_from(
-			coord_start = poi.coord,
+			poi_start = id_poi,
 			user_data = fake_observer,
 			landmark_mode = True
 		)
@@ -805,7 +945,7 @@ async def on_ready():
 	ewutils.logMsg("finished landmark precomputation")
 
 	try:
-		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version))
+		await client.change_presence(activity = discord.Game(name = "EW " + ewcfg.version))
 	except:
 		ewutils.logMsg("Failed to change_presence!")
 
@@ -830,18 +970,18 @@ async def on_ready():
 	# Channels in the connected discord servers to send stock market updates to. Map of server ID to channel.
 	channels_stockmarket = {}
 
-	for server in client.servers:
+	for server in client.guilds:
 		# Update server data in the database
 		ewserver.server_update(server = server)
 
 		# store the list of channels in an ewutils field
 		ewcfg.update_server_list(server = server)
 
-		# find roles and add them to the database
+		# find roles and add them tom the database
 		ewrolemgr.setupRoles(client = client, id_server = server.id)
-
-		# hides the names of poi roles
-		await ewrolemgr.hideRoleNames(client = client, id_server = server.id)
+		
+		# Refresh the permissions of all users
+		# await ewrolemgr.refresh_user_perms(client = client, id_server = server.id, startup = True)
 
 		# Grep around for channels
 		ewutils.logMsg("connected to server: {}".format(server.name))
@@ -854,6 +994,10 @@ async def on_ready():
 				elif(channel.name == ewcfg.channel_stockexchange):
 					channels_stockmarket[server.id] = channel
 					ewutils.logMsg("• found channel for stock exchange: {}".format(channel.name))
+
+				elif(channel.name == ewcfg.channel_slimetwitter):
+					channels_slimetwitter[server.id] = channel
+					ewutils.logMsg("• found channel for slime twitter: {}".format(channel.name))
 
 		# create all the districts in the database
 		for poi_object in ewcfg.poi_list:
@@ -875,24 +1019,34 @@ async def on_ready():
 			except:
 				ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
 
+		# kill people who left the server while the bot was offline
+		#ewutils.kill_quitters(server.id) #FIXME function get_member doesn't find users reliably
+
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.enemy_action_tick_loop(id_server=server.id))
-		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
-		asyncio.ensure_future(ewutils.sap_tick_loop(id_server = server.id))
+
 		# SWILLDERMUK
 		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
 		
+		if ewcfg.gvs_active:
+			asyncio.ensure_future(ewutils.gvs_gamestate_tick_loop(id_server=server.id))
+		else:
+			# Enemies do not spawn randomly during Gankers Vs. Shamblers
+			asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
+
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
 			asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
-		asyncio.ensure_future(ewsports.shambleball_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewsports.slimeball_tick_loop(id_server = server.id))
+		
+		print('\nNUMBER OF CHANNELS IN SERVER: {}\n'.format(len(server.channels)))
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')
@@ -972,34 +1126,9 @@ async def on_ready():
 				ewutils.logMsg('Twitch handler hit an exception (continuing): {}'.format(json_string))
 				traceback.print_exc(file = sys.stdout)
 
-		# Flag all users in the Outskirts for PvP
-		await ewutils.flag_outskirts(id_server = server.id)
-
-		# Clear PvP roles from players who are no longer flagged.
-		if (time_now - time_last_pvp) >= ewcfg.update_pvp:
-			time_last_pvp = time_now
-
-			try:
-				for server in client.servers:
-					role_ids = []
-					for pvp_role in ewcfg.role_to_pvp_role.values():
-						role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
-						role_ids.append(role.id_role)
-
-					# Monitor all user roles and update if a user is no longer flagged for PvP.
-					for member in server.members:
-						for role in member.roles:
-							if role.id in role_ids:
-								await ewrolemgr.updateRoles(client = client, member = member)
-								break
-
-			except:
-				ewutils.logMsg('An error occurred in the scheduled role update task:')
-				traceback.print_exc(file=sys.stdout)
-
 		# Adjust the exchange rate of slime for the market.
 		try:
-			for server in client.servers:
+			for server in client.guilds:
 
 				# Load market data from the database.
 				market_data = EwMarket(id_server = server.id)
@@ -1092,17 +1221,21 @@ async def on_ready():
 						market_data.bazaar_wares['furniture3'] = bw_furniture3
 
 
-						if random.random() < 0.01:
+						if random.random() < 0.05: # 1 / 20
 							market_data.bazaar_wares['minigun'] = ewcfg.weapon_id_minigun
 
 
 					market_data.persist()
+
+					ewutils.logMsg('The time is now {}.'.format(market_data.clock))
+
 
 					if not ewutils.check_fursuit_active(market_data.id_server):
 						ewcosmeticitem.dedorn_all_costumes()
 
 					if market_data.clock == 6 and market_data.day % 8 == 0:
 						await ewapt.rent_time(id_server=server.id)
+						await ewutils.pay_salary(id_server=server.id)
 
 					market_data = EwMarket(id_server=server.id)
 
@@ -1154,7 +1287,7 @@ async def on_ready():
 					ewads.delete_expired_ads(id_server = server.id)
 
 					await ewdistrict.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
-
+					await ewmap.send_gangbase_messages(server.id, market_data.clock)
 					await ewmap.kick(server.id)
 
 					# Post leaderboards at 6am NLACakaNM time.
@@ -1196,7 +1329,7 @@ async def on_ready():
 					ewutils.logMsg('in file {} message for channel {} (reverb {})\n{}'.format(msg_file, msg.channel, msg.reverb, msg.message))
 				else:
 					# Send messages to every connected server.
-					for server in client.servers:
+					for server in client.guilds:
 						for channel in server.channels:
 							if channel.name in msg_channel_names:
 								await ewutils.send_message(client, channel, "**{}**".format(msg.message))
@@ -1211,11 +1344,11 @@ async def on_ready():
 
 @client.event
 async def on_member_join(member):
-	ewutils.logMsg("New member \"{}\" joined. Configuring default roles now.".format(member.display_name))
+	ewutils.logMsg("New member \"{}\" joined. Configuring default roles / permissions now.".format(member.display_name))
 	await ewrolemgr.updateRoles(client = client, member = member)
 	ewplayer.player_update(
 		member = member,
-		server = member.server
+		server = member.guild
 	)
 	user_data = EwUser(member = member)
 
@@ -1224,9 +1357,13 @@ async def on_member_join(member):
 
 @client.event
 async def on_message_delete(message):
-	if message != None and message.server != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
-		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
-		await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
+	if message != None and message.guild != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
+		user_data = EwUser(member=message.author)
+		mutations = user_data.get_mutations()
+
+		if ewcfg.mutation_id_amnesia not in mutations:
+			ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'))
 
 @client.event
 async def on_message(message):
@@ -1237,27 +1374,28 @@ async def on_message(message):
 	if message.author.id == client.user.id or message.author.bot == True:
 		return
 
-	if message.server != None:
+	if message.guild != None:
 		# Note that the user posted a message.
-		active_map = active_users_map.get(message.server.id)
+		active_map = active_users_map.get(message.guild.id)
 		if active_map == None:
 			active_map = {}
-			active_users_map[message.server.id] = active_map
+			active_users_map[message.guild.id] = active_map
 		active_map[message.author.id] = True
 
 		# Update player information.
 		ewplayer.player_update(
 			member = message.author,
-			server = message.server
+			server = message.guild
 		)
 
 	content_tolower = message.content.lower()
-	content_tolower_string = ewutils.flattenTokenListToString(content_tolower.split(" "))
+	content_tolower_list = content_tolower.split(" ")
+	
 	re_awoo = re.compile('.*![a]+[w]+o[o]+.*')
 	re_moan = re.compile('.*![b]+[r]+[a]+[i]+[n]+[z]+.*')
 
 	# update the player's time_last_action which is used for kicking AFK players out of subzones
-	if message.server != None:
+	if message.guild != None:
 
 		try:
 			ewutils.execute_sql_query("UPDATE users SET {time_last_action} = %s WHERE id_user = %s AND id_server = %s".format(
@@ -1265,18 +1403,17 @@ async def on_message(message):
 			), (
 				int(time.time()),
 				message.author.id,
-				message.server.id
+				message.guild.id
 			))
 		except:
-			ewutils.logMsg('server {}: failed to update time_last_action for {}'.format(message.server.id, message.author.id))
+			ewutils.logMsg('server {}: failed to update time_last_action for {}'.format(message.guild.id, message.author.id))
 		
 		user_data = EwUser(member = message.author)
-		
 		statuses = user_data.getStatusEffects()
 
 		if ewcfg.status_strangled_id in statuses:
 			strangle_effect = EwStatusEffect(id_status=ewcfg.status_strangled_id, user_data=user_data)
-			source = EwPlayer(id_user=strangle_effect.source, id_server=message.server.id)
+			source = EwPlayer(id_user=strangle_effect.source, id_server=message.guild.id)
 			response = "You manage to break {}'s garrote wire!".format(source.display_name)
 			user_data.clear_status(ewcfg.status_strangled_id)			
 			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
@@ -1291,16 +1428,18 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in content_tolower_string for swear in ewcfg.curse_words.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
 				direct message (server == None)
-				user is new/has no roles (len(roles) < 2)
-				user is swearing
+				user is new/has no roles (len(roles) < 4)
+				user is a security officer and has cussed
 		"""
 
+
 		#Ignore users with weird characters in their name
+
 		try:
 			message.author.display_name[:3].encode('utf-8').decode('ascii')
 		except UnicodeError:
@@ -1315,118 +1454,135 @@ async def on_message(message):
 		tokens_count = len(tokens)
 		cmd = tokens[0].lower() if tokens_count >= 1 else ""
 
-		# remove mentions to us
-		mentions = list(filter(lambda user : user.id != client.user.id, message.mentions))
+		mentions = message.mentions
 		mentions_count = len(mentions)
+
+		playermodel = ewplayer.EwPlayer(id_user=message.author.id)
+		
+		if message.guild == None:
+			guild_used = ewcfg.server_list[playermodel.id_server]
+			admin_permissions = False
+		else:
+			guild_used = message.guild
+			admin_permissions = message.author.guild_permissions.administrator
 
 		# Create command object
 		cmd_obj = ewcmd.EwCmd(
 			tokens = tokens,
 			message = message,
 			client = client,
-			mentions = mentions
+			mentions = mentions,
+			guild = guild_used,
+			admin = admin_permissions
 		)
 		
+		# remove mentions to us #moved below cmd_obj because of EwIds #TODO: remove this and move debug commands somewhere else
+		mentions = list(filter(lambda user : user.id != client.user.id, message.mentions))
+		mentions_count = len(mentions)
+
 		"""
 			Punish the user for swearing.
+			The swear_jar attribute has been repurposed for SlimeCorp security officers
 		"""
-		if (any(swear in content_tolower_string for swear in ewcfg.curse_words.keys())):
-			
+		if (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
+			# print(content_tolower_list)
 			swear_multiplier = 0
-			
-			#print(content_tolower_string)
-	
-			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
 			usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
 
 			if usermodel != None:
 				market_data = EwMarket(id_server=usermodel.id_server)
+				
+				if usermodel.faction == ewcfg.faction_slimecorp and usermodel.life_state == ewcfg.life_state_enlisted:
 
-				# gather all the swear words the user typed.
-				for swear in ewcfg.curse_words.keys():
-
-					if swear == "buster" and usermodel.faction == ewcfg.faction_rowdys:
-						continue
-					if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
-						continue
-
-					swear_count = content_tolower_string.count(swear)
-
-					# Niche scenarios. If certain words are used, don't count their components as swears.
-					if swear == "fuck" and (content_tolower_string.count('<rowdyfucker431275088076079105>') > 0 or content_tolower_string.count('<fucker431424220837183489>') > 0):
-						#print('swear detection turned off for {}.'.format(swear))
-						continue
-					elif swear == "mick" and (content_tolower_string.count('gimmick') > 0):
-						#print('swear detection turned off for {}.'.format(swear))
-						continue
-					elif swear == "shit" and "shit" not in content_tolower:
-						#print('swear detection turned off for {}.'.format(swear))
-						continue
-					elif swear == "fag" and "fag" not in content_tolower:
-						#print('swear detection turned off for {}.'.format(swear))
-						continue
-
-					for i in range(swear_count):
-						swear_multiplier += ewcfg.curse_words[swear]
-
-						market_data.global_swear_jar += 1
-
-						usermodel.swear_jar += 1
-
-				# don't fine the user or send out the message if there weren't enough curse words
-				if swear_multiplier > 20:
-
-					# fine the user for swearing, based on how much they've sworn right now, as well as in the past
-					swear_jar_fee = usermodel.swear_jar * swear_multiplier * 10000
-
-					# prevent user from reaching negative slimecoin
-					if swear_jar_fee > usermodel.slimecoin:
-						swear_jar_fee = usermodel.slimecoin
-
-					usermodel.change_slimecoin(n=-1 * swear_jar_fee, coinsource=ewcfg.coinsource_swearjar)
-					
-					response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
-					await ewutils.send_message(client, message.channel, response)
-				#else:
-					#print("swear threshold not met")
-
-				market_data.persist()
-				usermodel.persist()
+					# gather all the swear words the user typed.
+					for swear in ewcfg.curse_words.keys():
+	
+						swear_count = content_tolower.count(swear)
+	
+						# Niche scenarios. If certain words are used, don't count their components as swears.
+						if swear == "shit" and "shit" not in content_tolower:
+							#print('swear detection turned off for {}.'.format(swear))
+							continue
+							
+						# This one's funny, keep this one on. Bit of a gamer...
+						# elif swear == "fag" and "fag" not in content_tolower:
+							#print('swear detection turned off for {}.'.format(swear))
+							# continue
+						
+						elif swear == "fuck" and (content_tolower.count('<rowdyfucker431275088076079105>') > 0 or content_tolower.count('<fucker431424220837183489>') > 0):
+							#print('swear detection turned off for {}.'.format(swear))
+							continue
+						elif swear == "mick" and (content_tolower.count('gimmick') > 0):
+							#print('swear detection turned off for {}.'.format(swear))
+							continue
+	
+						for i in range(swear_count):
+							swear_multiplier += ewcfg.curse_words[swear]
+	
+							# usermodel.swear_jar += 1
+						
+					# print('multiplier: {}'.format(swear_multiplier))
+	
+					# don't fine the user or send out the message if there weren't enough curse words
+					if swear_multiplier > 10:
+	
+						# fine the user for swearing, based on how much they've sworn right now, as well as in the past
+						swear_jar_fee = swear_multiplier * 10000
+	
+						usermodel.salary_credits -= swear_jar_fee
+						
+						response = '*{}*: Your SlimeCorp headset chatters in your ear...\n"Reminder: Foul language is strictly prohibited. {} salary credits have been docked from your profile."'.format(message.author.display_name, swear_jar_fee)
+						await ewutils.send_message(client, message.channel, response)
+	
+					market_data.persist()
+					usermodel.persist()
 			
 			# if the message wasn't a command, we can stop here
 			if not message.content.startswith(ewcfg.cmd_prefix):
 				return
-
+		
 		"""
 			Handle direct messages.
 		"""
-		if message.server == None:
+		if message.guild == None:
 			playermodel = ewplayer.EwPlayer(id_user = message.author.id)
 			usermodel = EwUser(id_user=message.author.id, id_server= playermodel.id_server)
 			poi = ewcfg.id_to_poi.get(usermodel.poi)
+			cmd_obj.guild = ewcfg.server_list[playermodel.id_server]
+			cmd_obj.message.author = cmd_obj.guild.get_member(playermodel.id_user)
+
 			# Direct message the player their inventory.
 			if ewitem.cmd_is_inventory(cmd):
 				return await ewitem.inventory_print(cmd_obj)
 			elif cmd == ewcfg.cmd_inspect:
 				return await ewitem.item_look(cmd_obj)
+			elif cmd == ewcfg.cmd_tweet:
+				return await ewslimetwitter.tweet(cmd_obj)
 			elif cmd in ewcfg.zine_commands:
 				return await ewbook.zine_dm_commands(cmd=cmd_obj)
 			elif poi.is_apartment:
 				return await ewapt.aptCommands(cmd=cmd_obj)
+			elif ewcfg.cmd_gvs_grabbrainz in cmd_obj.message.content.lower():
+				return await ewcmd.gvs_grabbrainz(cmd_obj)
 			else:
-				time_last = last_helped_times.get(message.author.id, 0)
-
-				# Only send the help doc once every thirty seconds. There's no need to spam it.
-				if (time_now - time_last) > 30:
-					last_helped_times[message.author.id] = time_now
-					await ewutils.send_message(client, message.channel, ewcfg.generic_help_response)
+				
+				# Only send the help response once every thirty seconds. There's no need to spam it.
+				# Also, don't send out response if the user doesn't actually type a command.
+				if message.content.startswith(ewcfg.cmd_prefix):
+					time_last = last_helped_times.get(message.author.id, 0)
+					if (time_now - time_last) > 30:
+						last_helped_times[message.author.id] = time_now
+						direct_help_response = "ENDLESS WAR doesn't allow you to do that command in DMs.\nIf you're confused about what you're doing, you might want to get some **!help** over at the server."
+						await ewutils.send_message(client, message.channel, direct_help_response)
+				else:
+					return
 
 			# Nothing else to do in a DM.
 			return
 
-		# assign the appropriate roles to a user with less than @everyone, faction, location
-		if len(message.author.roles) < 3:
-			await ewrolemgr.updateRoles(client = client, member = message.author)
+		# assign the appropriate roles to a user with less than @everyone, faction, both location roles
+		# if len(message.author.roles) < 4:
+			# await ewrolemgr.updateRoles(client = client, member = message.author)
 
 		user_data = EwUser(member = message.author)
 		if user_data.arrested:
@@ -1450,6 +1606,7 @@ async def on_message(message):
 
 				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
+		statuses = user_data.getStatusEffects()
 		# Ignore stunned players
 		if ewcfg.status_stunned_id in statuses:
 			return
@@ -1472,7 +1629,7 @@ async def on_message(message):
 			item_id = ewitem.item_create(
 				item_type = 'medal',
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_props = {
 					'medal_name': 'Test Award',
 					'medal_desc': '**{medal_name}**: *Awarded to Krak by Krak for testing shit.*'
@@ -1495,7 +1652,7 @@ async def on_message(message):
 					ewitem.item_create(
 						item_type = ewcfg.it_item,
 						id_user = message.author.id,
-						id_server = message.server.id,
+						id_server = message.guild.id,
 						item_props = {
 							'id_item': item.id_item,
 							'context': item.context,
@@ -1515,7 +1672,11 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'damage'):
 			user_data = EwUser(member = message.author, data_level = 1)
 			slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-			slimes_damage = int((slimes_spent * (10 + user_data.attack)) * (100 + (user_data.weaponskill * 5)) / 100.0)
+			# disabled until held items update
+			# attack_stat_multiplier = 1 + (user_data.attack / 50) # 2% more damage per stat point
+			attack_stat_multiplier = 1
+			weapon_skill_multiplier = 1 + ((user_data.weaponskill * 5) / 100) # 5% more damage per skill point
+			slimes_damage = int(10 * slimes_spent * attack_stat_multiplier * weapon_skill_multiplier) # ten times slime spent, multiplied by both multipliers
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "{}".format(slimes_damage)))
 
 		# Gives the user some slime
@@ -1546,7 +1707,7 @@ async def on_message(message):
 		# Deletes all items in your inventory.
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'clearinv'):
 			user_data = EwUser(member = message.author)
-			ewitem.item_destroyall(id_server = message.server.id, id_user = message.author.id)
+			ewitem.item_destroyall(id_server = message.guild.id, id_user = message.author.id)
 			response = "You destroy every single item in your inventory."
 			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
@@ -1554,7 +1715,7 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createapple'):
 			item_id = ewitem.item_create(
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_type = ewcfg.it_food,
 				item_props = {
 					'id_food': "direapples",
@@ -1575,7 +1736,7 @@ async def on_message(message):
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'weathertick'):
 
-			await ewapt.setOffAlarms(id_server=message.server.id)
+			await ewapt.setOffAlarms(id_server=message.guild.id)
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createhat'):
 			patrician_rarity = 20
@@ -1597,10 +1758,10 @@ async def on_message(message):
 
 			item_props = ewitem.gen_item_props(item)
 
-			ewitem.item_create(
+			item_id = ewitem.item_create(
 				item_type = item.item_type,
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_props = item_props
 			)
 
@@ -1617,7 +1778,7 @@ async def on_message(message):
 			item_id = ewitem.item_create(
 				item_type = ewcfg.it_food,
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_props = {
 					'id_food': item.id_food,
 					'food_name': item.str_name,
@@ -1643,7 +1804,7 @@ async def on_message(message):
 			ewitem.item_create(
 				item_type = item.item_type,
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_props = item_props
 			)
 
@@ -1678,7 +1839,7 @@ async def on_message(message):
 			ewitem.item_create(
 				item_type = ewcfg.it_cosmetic,
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_props = {
 					'id_cosmetic': item.id_cosmetic,
 					'cosmetic_name': item.str_name,
@@ -1695,7 +1856,7 @@ async def on_message(message):
 			ewitem.item_create(
 				item_type = ewcfg.it_cosmetic,
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_props = {
 					'id_cosmetic': 'scalp',
 					'cosmetic_name': "My scalp",
@@ -1709,7 +1870,7 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createoldsoul'):
 			ewitem.item_create(
 				id_user = message.author.id,
-				id_server = message.server.id,
+				id_server = message.guild.id,
 				item_type = ewcfg.it_cosmetic,
 				item_props = {
 					'id_cosmetic': "soul",
@@ -1731,7 +1892,7 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'delete'):
 			items = ewitem.inventory(
 				id_user = message.author.id,
-				id_server = message.server.id
+				id_server = message.guild.id
 			)
 
 			for item in items:
@@ -1755,14 +1916,14 @@ async def on_message(message):
 			if mentions_count == 0:
 				response = 'Set who\'s role?'
 			else:
-				roles_map = ewutils.getRoleMap(message.server.roles)
+				roles_map = ewutils.getRoleMap(message.guild.roles)
 				role_target = tokens[1]
 				role = roles_map.get(role_target)
 
 				if role != None:
 					for user in mentions:
 						try:
-							await client.replace_roles(user, role)
+							await user.edit(roles=role)
 						except:
 							ewutils.logMsg('Failed to replace_roles for user {} with {}.'.format(user.display_name, role.name))
 
@@ -1799,7 +1960,7 @@ async def on_message(message):
 			
 		# Toggles rain on and off
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'toggledownfall'):
-			market_data = EwMarket(id_server=message.server.id)
+			market_data = EwMarket(id_server=message.guild.id)
 			
 			if market_data.weather == ewcfg.weather_bicarbonaterain:
 				newweather = ewcfg.weather_sunny
@@ -1814,7 +1975,7 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'dayforward'):
-			market_data = EwMarket(id_server=message.server.id)
+			market_data = EwMarket(id_server=message.guild.id)
 
 			market_data.day += 1
 			market_data.persist()
@@ -1827,8 +1988,7 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 			
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'hourforward'):
-			market_data = EwMarket(id_server=message.server.id)
-			
+			market_data = EwMarket(id_server=message.guild.id)
 			market_data.clock += 1
 			response = "Time has progressed 1 hour forward manually."
 
@@ -1845,7 +2005,7 @@ async def on_message(message):
 			
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'postleaderboard'):
 			try:
-				for server in client.servers:
+				for server in client.guilds:
 					await ewleaderboard.post_leaderboards(client=client, server=server)
 			except:
 				pass
@@ -1862,10 +2022,11 @@ async def on_message(message):
 			elif randint == 3:
 				msg_mistake = "ENDLESS WAR pays you no mind."
 
-			msg = await ewutils.send_message(client, cmd_obj.message.channel, msg_mistake)
+			msg = await ewutils.send_message(client, cmd_obj.message.channel, msg_mistake, 2)
 			await asyncio.sleep(2)
 			try:
-				await client.delete_message(msg)
+				await msg.delete()
+				pass
 			except:
 				pass
 
@@ -1873,13 +2034,36 @@ async def on_message(message):
 		""" Howl if !howl is in the message at all. """
 		return await ewcmd.cmd_howl(ewcmd.EwCmd(
 			message = message,
-			client = client
+			client = client,
+			guild = message.guild
 		))
 	elif content_tolower.find(ewcfg.cmd_moan) >= 0 or re_moan.match(content_tolower):
 		return await ewcmd.cmd_moan(ewcmd.EwCmd(
 			message=message,
-			client=client
+			client=client,
+			guild = message.guild
 		))
+
+@client.event
+async def on_raw_reaction_add(payload):
+	# We only respond to reactions in the slime twitter channel
+	if (payload.guild_id is not None # not a dm
+		and channels_slimetwitter[payload.guild_id] is not None # server has a slime twitter channel
+		and payload.channel_id == channels_slimetwitter[payload.guild_id].id): # reaction was in that channel
+
+		message = await channels_slimetwitter[payload.guild_id].fetch_message(payload.message_id)		
+
+		if len(message.embeds) > 0:
+			
+			embed = message.embeds[0]
+			userid = "<@!{}>".format(payload.user_id)
+
+			# Ignore reaction if it's not from the slime tweet author
+			if embed.description == userid:
+
+				if (str(payload.emoji) == ewcfg.emote_delete_tweet):
+					await message.delete()
+
 
 # find our REST API token
 token = ewutils.getToken()

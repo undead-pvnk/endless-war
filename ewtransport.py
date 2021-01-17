@@ -5,6 +5,7 @@ import ewutils
 import ewcfg
 import ewmap
 import ewrolemgr
+import ewitem
 
 from ew import EwUser
 from ewdistrict import EwDistrict
@@ -15,7 +16,7 @@ from ewdistrict import EwDistrict
 """
 class EwTransport:
 	# server id
-	id_server = ""
+	id_server = -1
 
 	# id of the EwPoi object for this transport
 	poi = ""
@@ -106,7 +107,8 @@ class EwTransport:
 				await asyncio.sleep(schedule[0])
 				for message in last_messages:
 					try:
-						await client.delete_message(message)
+						await message.delete()
+						pass
 					except:
 						ewutils.logMsg("Failed to delete message while moving transport {}.".format(transport_line.str_name))
 				self.current_stop = schedule[1]
@@ -115,11 +117,11 @@ class EwTransport:
 				stop_data = ewcfg.id_to_poi.get(self.current_stop)
 
 				# announce new stop inside the transport
-				if stop_data.is_subzone:
-					stop_mother = ewcfg.id_to_poi.get(stop_data.mother_district)
-					response = "We have reached {}.".format(stop_mother.str_name)
-				else:
-					response = "We have reached {}.".format(stop_data.str_name)
+				# if stop_data.is_subzone:
+				# 	stop_mother = ewcfg.id_to_poi.get(stop_data.mother_district)
+				# 	response = "We have reached {}.".format(stop_mother.str_name)
+				# else:
+				response = "We have reached {}.".format(stop_data.str_name)
 
 				next_line = transport_line
 
@@ -132,11 +134,11 @@ class EwTransport:
 				else:
 					next_stop = ewcfg.id_to_poi.get(transport_line.schedule.get(stop_data.id_poi)[1])
 					if next_stop.is_transport_stop:
-						if next_stop.is_subzone:
-							stop_mother = ewcfg.id_to_poi.get(next_stop.mother_district)
-							response += " The next stop is {}.".format(stop_mother.str_name)
-						else:
-							response += " The next stop is {}.".format(next_stop.str_name)
+						# if next_stop.is_subzone:
+						# 	stop_mother = ewcfg.id_to_poi.get(next_stop.mother_district)
+						# 	response += " The next stop is {}.".format(stop_mother.str_name)
+						# else:
+						response += " The next stop is {}.".format(next_stop.str_name)
 				resp_cont.add_channel_response(poi_data.channel, response)
 
 				# announce transport has arrived at the stop
@@ -229,14 +231,14 @@ async def embark(cmd):
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+	user_data = EwUser(member = cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	user_data = EwUser(member = cmd.message.author)
 	response = ""
 
 	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
@@ -248,7 +250,7 @@ async def embark(cmd):
 		response = "You might want to **{}** of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 
 	# must be at a transport stop to enter a transport
 	if poi != None and poi.id_poi in ewcfg.transport_stops:
@@ -283,6 +285,16 @@ async def embark(cmd):
 
 			# check if one of the vehicles at the stop matches up with the line, the user wants to board
 			if transport_data.current_line == transport_line.id_line:
+				ticket = None
+				# TODO remove after double halloween
+				#user_data = EwUser(member = cmd.message.author)
+				#if user_data.poi in [ewcfg.poi_id_dt_subway_station, ewcfg.poi_id_rr_subway_station, ewcfg.poi_id_jr_subway_station]:
+				#	if transport_line.id_line in [ewcfg.transport_line_subway_white_eastbound, ewcfg.transport_line_subway_white_westbound]:
+				#		ticket = ewitem.find_item(item_search=ewcfg.item_id_whitelineticket, id_user=cmd.message.author.id,  id_server=cmd.message.guild.id)
+				#		if ticket is None:
+				#			response = "You need a ticket to embark on the White Line."
+				#			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 				last_stop_poi = ewcfg.id_to_poi.get(transport_line.last_stop)
 				response = "Embarking on {}.".format(transport_line.str_name)
 				# schedule tasks for concurrent execution
@@ -309,9 +321,11 @@ async def embark(cmd):
 						transport_poi = ewcfg.id_to_poi.get(transport_data.poi)
 
 						response = "You enter the {}.".format(transport_data.transport_type)
+						if ticket is not None:
+							ewitem.item_delete(ticket.get("id_item"))
 						await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 						await user_data.move_inhabitants(id_poi = transport_data.poi)
-						return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, transport_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+						return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, transport_poi.channel), ewutils.formatMessage(cmd.message.author, response))
 					else:
 						response = "The {} starts moving just as you try to get on.".format(transport_data.transport_type)
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -345,8 +359,8 @@ async def disembark(cmd):
 		response = "{}ing.".format(cmd.tokens[0][1:].lower()).capitalize()
 
 		stop_poi = ewcfg.id_to_poi.get(transport_data.current_stop)
-		if stop_poi.is_subzone:
-			stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
+		# if stop_poi.is_subzone:
+		# 	stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
 
 		if ewmap.inaccessible(user_data = user_data, poi = stop_poi):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
@@ -404,7 +418,7 @@ async def disembark(cmd):
 				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				return await resp_cont.post()
 			
-			elif ewcfg.mutation_id_lightasafeather in user_mutations:
+			elif ewcfg.mutation_id_lightasafeather in user_mutations or ewcfg.mutation_id_airlock in user_mutations:
 				response = "With a running jump you launch yourself out of the blimp and begin falling to your soon-to-be demise... but then a strong updraft breaks your fall and you land unscathed. "
 				response = ewutils.formatMessage(cmd.message.author, response)
 				resp_cont.add_channel_response(channel = stop_poi.channel, response = response)
@@ -427,9 +441,8 @@ async def disembark(cmd):
 
 		# update user location, if move successful
 		else:
-			if stop_poi.is_subzone:
-				stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
-
+			# if stop_poi.is_subzone:
+			# 	stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
 
 			if ewmap.inaccessible(user_data = user_data, poi = stop_poi):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
@@ -439,7 +452,7 @@ async def disembark(cmd):
 			await user_data.move_inhabitants(id_poi = stop_poi.id_poi)
 			response = "You enter {}".format(stop_poi.str_name)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, stop_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, stop_poi.channel), ewutils.formatMessage(cmd.message.author, response))
 
 			# SWILLDERMUK
 			await ewutils.activate_trap_items(stop_poi.id_poi, user_data.id_server, user_data.id_user)
@@ -454,7 +467,7 @@ async def check_schedule(cmd):
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 	response = ""
 
 

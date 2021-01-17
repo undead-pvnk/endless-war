@@ -52,23 +52,30 @@ async def store(cmd):
 	if poi.community_chest == None:
 		response = "There is no community chest here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
+	else:
+		if len(poi.factions) > 0 and user_data.faction not in poi.factions:
+			response = "Get real, asshole. You haven't even enlisted into this gang yet, so it's not like they'd trust you with a key to their valubles."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 	
 	if item_sought:
 		item = EwItem(id_item = item_sought.get("id_item"))
 
 		if not item.soulbound:
-			if item.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item.id_item == user_data.weapon:
-				if user_data.weaponmarried:
-					weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
-					response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('name'))
-					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				else:
-					user_data.weapon = -1
+			if item.item_type == ewcfg.it_weapon:
+				if user_data.weapon >= 0 and item.id_item == user_data.weapon:
+					if user_data.weaponmarried:
+						weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+						response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('name'))
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					else:
+						user_data.weapon = -1
+						user_data.persist()
+				elif item.id_item == user_data.sidearm:
+					user_data.sidearm = -1
 					user_data.persist()
 
 			if item.item_type == ewcfg.it_cosmetic:
@@ -102,17 +109,21 @@ async def take(cmd):
 	if poi.community_chest == None:
 		response = "There is no community chest here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
+	else:
+		if len(poi.factions) > 0 and user_data.faction not in poi.factions:
+			response = "Get real, asshole. You haven't even enlisted into this gang yet, so it's not like they'd trust you with a key to their valubles."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search = item_search, id_user = poi.community_chest, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = poi.community_chest, id_server = cmd.guild.id if cmd.guild is not None else None)
 	
 	if item_sought:
 		if item_sought.get('item_type') == ewcfg.it_food:
 			food_items = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
+				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_food
 			)
 
@@ -120,10 +131,10 @@ async def take(cmd):
 				response = "You can't carry any more food items."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		if item_sought.get('item_type') == ewcfg.it_weapon:
+		elif item_sought.get('item_type') == ewcfg.it_weapon:
 			weapons_held = ewitem.inventory(
 				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
+				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_weapon
 			)
 
@@ -132,6 +143,16 @@ async def take(cmd):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			elif len(weapons_held) >= user_data.get_weapon_capacity():
 				response  = "You can't carry any more weapons."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		else:
+			other_items = ewitem.inventory(
+				id_user=cmd.message.author.id,
+				id_server=user_data.id_server,
+				item_type_filter=item_sought.get('item_type')
+			)
+			if len(other_items) >= ewcfg.generic_inv_limit:
+				response = ewcfg.str_generic_inv_limit.format(item_sought.get('item_type'))
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 		ewitem.give_item(id_item = item_sought.get('id_item'), id_server = user_data.id_server, id_user = user_data.id_user)

@@ -15,8 +15,8 @@ from ew import EwUser
 async def pardon(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
-	if user_data.life_state != ewcfg.life_state_kingpin:
-		response = "Only the Rowdy Fucker {} and the Cop Killer {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller)
+	if user_data.life_state != ewcfg.life_state_kingpin and user_data.life_state != ewcfg.life_state_executive and not cmd.message.author.guild_permissions.administrator:
+		response = "Only the Rowdy Fucker {}, the Cop Killer {} and Slimecorp Executives {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller, ewcfg.emote_slimecorp)
 	else:
 		member = None
 		if cmd.mentions_count == 1:
@@ -54,14 +54,17 @@ async def pardon(cmd):
 async def banish(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
-	if user_data.life_state != ewcfg.life_state_kingpin:
-		response = "Only the Rowdy Fucker {} and the Cop Killer {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller)
+	if user_data.life_state != ewcfg.life_state_kingpin and user_data.life_state != ewcfg.life_state_executive and not cmd.message.author.guild_permissions.administrator:
+		response = "Only the Rowdy Fucker {}, the Cop Killer {} and Slimecorp Executives {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller, ewcfg.emote_slimecorp)
 	else:
 		member = None
 		if cmd.mentions_count == 1:
 			member = cmd.mentions[0]
-			if member.id == cmd.message.author.id:
-				member = None
+			
+			# >:]
+			
+			# if member.id == cmd.message.author.id:
+			# 	member = None
 
 		if member == None:
 			response = "Who?"
@@ -109,7 +112,8 @@ async def deadmega(cmd):
 	Command that creates a princeps cosmetic item
 """
 async def create(cmd):
-	if EwUser(member = cmd.message.author).life_state != ewcfg.life_state_kingpin:
+	#if not cmd.message.author.guild_permissions.administrator:
+	if EwUser(member = cmd.message.author).life_state != ewcfg.life_state_kingpin and not cmd.message.author.guild_permissions.administrator:
 		response = 'Lowly Non-Kingpins cannot hope to create items with their bare hands.'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -134,7 +138,7 @@ async def create(cmd):
 	}
 
 	new_item_id = ewitem.item_create(
-		id_server = cmd.message.server.id,
+		id_server = cmd.guild.id,
 		id_user = recipient.id,
 		item_type = ewcfg.it_cosmetic,
 		item_props = item_props
@@ -148,48 +152,47 @@ async def create(cmd):
 """
 	Command that grants someone a specific cosmetic for an event.
 """
-# async def exalt(cmd):
-# 	author = cmd.message.author
-# 	user_data = EwUser(member=author)
-# 
-# 	if not author.server_permissions.administrator and user_data.life_state != ewcfg.life_state_kingpin:
-# 		response = "You do not have the power within you worthy of !exalting another player."
-# 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-# 
-# 
-# 	if cmd.mentions_count > 0:
-# 		recipient = cmd.mentions[0]
-# 	else:
-# 		response = 'You need to specify a recipient. Usage: !exalt @[recipient].'
-# 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-# 	
-# 	recipient_data = EwUser(member=recipient)
-# 	
+async def exalt(cmd):
+	author = cmd.message.author
+	user_data = EwUser(member=author)
+
+	if not author.guild_permissions.administrator and user_data.life_state != ewcfg.life_state_kingpin:
+		response = "You do not have the power within you worthy of !exalting another player."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if cmd.mentions_count > 0:
+		recipient = cmd.mentions[0]
+	else:
+		response = 'You need to specify a recipient. Usage: !exalt @[recipient].'
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	recipient_data = EwUser(member=recipient)
+
 # 	DOUBLE HALLOWEEN
 # 
 # 	# Gather the Medallion
-# 	medallion_results = []
-# 	for m in ewcfg.cosmetic_items_list:
-# 		if m.ingredients == 'HorsemanSoul':
-# 			medallion_results.append(m)
-# 		else:
-# 			pass
-# 
-# 	medallion = medallion_results[0]
-# 	medallion_props = ewitem.gen_item_props(medallion)
-# 
-# 	medallion_id = ewitem.item_create(
-# 		item_type=medallion.item_type,
-# 		id_user=recipient.id,
-# 		id_server=cmd.message.server.id,
-# 		item_props=medallion_props
-# 	)
-# 
-# 	# Soulbind the medallion. A player can get at most twice, but later on a new command could be added to destroy them/trade them in.
-# 	# I imagine this would be something similar to how players can destroy Australium Wrenches in TF2, which broadcasts a message to everyone in the game, or something.
-# 	ewitem.soulbind(medallion_id)
-# 
-# 	response = "**{} has been gifted the Double Halloween Medallion!!**\n".format(recipient.display_name)
+	medallion_results = []
+	for m in ewcfg.cosmetic_items_list:
+		if m.ingredients == 'HorsemanSoul':
+			medallion_results.append(m)
+		else:
+			pass
+ 
+	medallion = medallion_results[0]
+	medallion_props = ewitem.gen_item_props(medallion)
+
+	medallion_id = ewitem.item_create(
+		item_type=medallion.item_type,
+		id_user=recipient.id,
+		id_server=cmd.guild.id,
+		item_props=medallion_props
+	)
+ 
+ 	# Soulbind the medallion. A player can get at most twice, but later on a new command could be added to destroy them/trade them in.
+ 	# I imagine this would be something similar to how players can destroy Australium Wrenches in TF2, which broadcasts a message to everyone in the game, or something.
+	ewitem.soulbind(medallion_id)
+
+	response = "**{} has been gifted the Double Halloween Medallion!!**\n".format(recipient.display_name)
 # 	
 # 	SWILLDERMUK
 # 	
@@ -209,7 +212,7 @@ async def create(cmd):
 # 		mask_id = ewitem.item_create(
 # 			item_type=mask.item_type,
 # 			id_user=recipient.id,
-# 			id_server=cmd.message.server.id,
+# 			id_server=cmd.guild.id,
 # 			item_props=mask_props
 # 		)
 # 
@@ -232,7 +235,7 @@ async def create(cmd):
 # 		sword_id = ewitem.item_create(
 # 			item_type=sword.item_type,
 # 			id_user=recipient.id,
-# 			id_server=cmd.message.server.id,
+# 			id_server=cmd.guild.id,
 # 			item_props=sword_props
 # 		)
 # 
@@ -240,4 +243,4 @@ async def create(cmd):
 # 
 # 		response = "In response to their unparalleled ability to let everything go to shit and be the laughingstock of all of NLACakaNM, {} recieves the SWORD OF SEETHING! God help us all...".format(recipient.display_name)
 # 
-# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
