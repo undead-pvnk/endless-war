@@ -54,6 +54,34 @@ async def weather_tick(id_server = None):
 	if id_server != None:
 		try:
 			market_data = EwMarket(id_server = id_server)
+
+			if market_data.weather == ewcfg.weather_sunny:
+				exposed_pois = []
+				exposed_pois.extend(ewcfg.capturable_districts)
+				exposed_pois.extend(ewcfg.outskirts)
+				exposed_pois = tuple(exposed_pois)
+
+				users = ewutils.execute_sql_query(
+					"SELECT id_user FROM users WHERE id_server = %s AND {poi} IN %s AND {life_state} > 0".format(
+						poi=ewcfg.col_poi,
+						life_state=ewcfg.col_life_state
+					), (
+						id_server,
+						exposed_pois
+
+					))
+				for user in users:
+					try:
+						user_data = EwUser(id_user=user[0], id_server=id_server)
+						if user_data.life_state == ewcfg.life_state_kingpin:
+							continue
+						else:
+							mutations = user_data.get_mutations()
+							if ewcfg.mutation_id_airlock in mutations:
+								user_data.hunger -= min(user_data.hunger, 5)
+					except:
+						ewutils.logMsg("Error occurred in weather tick for server {}".format(id_server))
+
 			if market_data.weather != ewcfg.weather_bicarbonaterain:
 				return
 
@@ -63,7 +91,7 @@ async def weather_tick(id_server = None):
 			exposed_pois = tuple(exposed_pois)
 
 			client = ewutils.get_client()
-			server = client.get_server(id_server)
+			server = client.get_guild(id_server)
 
 			
 
@@ -135,7 +163,7 @@ async def weather_tick(id_server = None):
 							'item_desc': "A poudrin-like crystal. If you listen carefully you can hear something that sounds like a faint heartbeat."
 						}
 						ewitem.item_create(
-							id_user = user_data.id_user,
+							id_user = str(user_data.id_user),
 							id_server = id_server,
 							item_type = ewcfg.it_item,
 							item_props = item_props

@@ -13,10 +13,10 @@ class EwStatusEffectDef:
 	str_describe = ""
 	str_describe_self = ""
 	dmg_mod_self = 0
-	miss_mod_self = 0
+	hit_chance_mod_self = 0
 	crit_mod_self = 0
 	dmg_mod = 0
-	miss_mod = 0
+	hit_chance_mod = 0
 	crit_mod = 0
 
 	def __init__(
@@ -27,10 +27,10 @@ class EwStatusEffectDef:
 		str_describe = "",
 		str_describe_self = "",
 		dmg_mod_self = 0,
-		miss_mod_self = 0,
+		hit_chance_mod_self = 0,
 		crit_mod_self = 0,
 		dmg_mod = 0,
-		miss_mod = 0,
+		hit_chance_mod = 0,
 		crit_mod = 0
 	):
 		self.id_status = id_status
@@ -39,21 +39,21 @@ class EwStatusEffectDef:
 		self.str_describe = str_describe
 		self.str_describe_self = str_describe_self
 		self.dmg_mod_self = dmg_mod_self
-		self.miss_mod_self = miss_mod_self
+		self.hit_chance_mod_self = hit_chance_mod_self
 		self.crit_mod_self = crit_mod_self
 		self.dmg_mod = dmg_mod
-		self.miss_mod = miss_mod
+		self.hit_chance_mod = hit_chance_mod
 		self.crit_mod = crit_mod
 
 class EwStatusEffect:
-	id_server = ""
-	id_user = ""
+	id_server = -1
+	id_user = -1
 	id_status = ""
 	
 	time_expire = -1
 	value = 0
 	source = ""
-	id_target = ""
+	id_target = -1
 
 	def __init__(
 		self,
@@ -64,7 +64,7 @@ class EwStatusEffect:
 		source = "",
 		id_user = None,
 		id_server = None,
-		id_target = "",
+		id_target = -1,
 	):
 		if user_data != None:
 			id_user = user_data.id_user
@@ -168,14 +168,14 @@ class EwStatusEffect:
 			ewutils.databaseClose(conn_info)
 
 class EwEnemyStatusEffect:
-	id_server = ""
-	id_enemy = ""
+	id_server = -1
+	id_enemy = -1
 	id_status = ""
 	
 	time_expire = -1
 	value = 0
 	source = ""
-	id_target = ""
+	id_target = -1
 
 	def __init__(
 		self,
@@ -186,7 +186,7 @@ class EwEnemyStatusEffect:
 		source = "",
 		id_enemy = None,
 		id_server = None,
-		id_target = "",
+		id_target = -1,
 	):
 		if enemy_data != None:
 			id_enemy = enemy_data.id_enemy
@@ -265,7 +265,7 @@ class EwEnemyStatusEffect:
 			cursor = conn.cursor()
 
 			# Save the object.
-			cursor.execute("REPLACE INTO status_effects({}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO enemy_status_effects({}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_server,
 				ewcfg.col_id_enemy,
 				ewcfg.col_id_status,

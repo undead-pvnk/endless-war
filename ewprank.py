@@ -93,16 +93,16 @@ col_prank_count = 'prank_count'
 col_id_server = 'id_server'
 		
 class PrankIndex:
-	id_server = ""
-	id_user_pranker = ""
-	id_user_pranked = ""
+	id_server = -1
+	id_user_pranker = -1
+	id_user_pranked = -1
 	prank_count = 0 # How many times has user 1 (pranker) pranked user 2 (pranked)?
 	
 	def __init__(
 		self,
-		id_server = "",
-		id_user_pranker = "",
-		id_user_pranked = "",
+		id_server = -1,
+		id_user_pranker = -1,
+		id_user_pranked = -1,
 		prank_count = 0,
 	):
 		self.id_server = id_server
@@ -315,7 +315,7 @@ async def prank_item_effect_response(cmd, item):
 					pass
 				
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), chosen_response))
-				#prank_feed_channel = ewutils.get_channel(cmd.message.server, 'prank-feed')
+				#prank_feed_channel = ewutils.get_channel(cmd.guild, 'prank-feed')
 				#await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (chosen_response+"\n`-------------------------`")))
 
 				# The longer time goes on without the pranked person typing in the command, the more gambit they lose
@@ -326,10 +326,10 @@ async def prank_item_effect_response(cmd, item):
 	
 				accepted = 0
 				try:
-					msg = await cmd.client.wait_for_message(timeout=response_timer, author=member)
+					msg = await cmd.client.wait_for('message', timeout=response_timer,check=lambda message: message.author == member)
 	
 					if msg != None:
-						if msg.content == "!" + response_command:
+						if msg.content.lower() == "!" + response_command:
 							accepted = 1
 							
 							if limit != 5:
@@ -397,7 +397,7 @@ async def prank_item_effect_trap(cmd, item):
 
 		#item.item_props["trap_stored_credence"] = halved_credence
 		item.item_props["trap_stored_credence"] = 0
-		item.item_props["trap_user_id"] = pranker_data.id_user
+		item.item_props["trap_user_id"] = str(pranker_data.id_user)
 		
 		item.persist()
 		pranker_data.persist()

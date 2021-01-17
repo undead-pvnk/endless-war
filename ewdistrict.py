@@ -8,13 +8,16 @@ import ewcfg
 import ewstats
 import ewutils
 import ewrolemgr
+
 from ew import EwUser
+
+
 
 """
 	district data model for database persistence
 """
 class EwDistrict:
-	id_server = ""
+	id_server = -1
 
 	# The district's identifying string
 	name = ""
@@ -40,8 +43,19 @@ class EwDistrict:
 	# Time until the district unlocks for capture again
 	time_unlock = 0
 
+
+	#Amount of influence in a district
+
+	cap_side = ""
+
 	# determines if the zone is functional
 	degradation = 0
+	
+	# a timestamp for when a shambler can next plant a tombstone
+	horde_cooldown = 0
+	
+	# the amount of gaiaslime the garden gankers have at their disposal
+	gaiaslime = 0
 
 	def __init__(self, id_server = None, district = None):
 		if id_server is not None and district is not None:
@@ -58,14 +72,19 @@ class EwDistrict:
 			else:
 				self.max_capture_points = 0
 
-			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes}, {time_unlock}, {degradation} FROM districts WHERE id_server = %s AND {district} = %s".format(
+
+			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes}, {time_unlock}, {cap_side}, {degradation}, {horde_cooldown}, {gaiaslime} FROM districts WHERE id_server = %s AND {district} = %s".format(
+
 				controlling_faction = ewcfg.col_controlling_faction,
 				capturing_faction = ewcfg.col_capturing_faction,
 				capture_points = ewcfg.col_capture_points,
 				district = ewcfg.col_district,
 				slimes = ewcfg.col_district_slimes,
 				time_unlock = ewcfg.col_time_unlock,
+				cap_side = ewcfg.col_cap_side,
 				degradation = ewcfg.col_degradation,
+				horde_cooldown = ewcfg.col_horde_cooldown,
+				gaiaslime = ewcfg.col_gaiaslime,
 			), (
 				id_server,
 				district
@@ -78,7 +97,11 @@ class EwDistrict:
 				self.capture_points = data[0][2]
 				self.slimes = data[0][3]
 				self.time_unlock = data[0][4]
-				self.degradation = data[0][5]
+				self.cap_side = data[0][5]
+				self.degradation = data[0][6]
+				self.horde_cooldown = data[0][7]
+				self.gaiaslime = data[0][8]
+
 				# ewutils.logMsg("EwDistrict object '" + self.name + "' created.  Controlling faction: " + self.controlling_faction + "; Capture progress: %d" % self.capture_points)
 			else:  # create new entry
 				ewutils.execute_sql_query("REPLACE INTO districts ({id_server}, {district}) VALUES (%s, %s)".format(
@@ -90,14 +113,17 @@ class EwDistrict:
 				))
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}, {time_unlock}, {degradation}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)".format(
+		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}, {time_unlock}, {cap_side}, {degradation}, {horde_cooldown}, {gaiaslime}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 			district = ewcfg.col_district,
 			controlling_faction = ewcfg.col_controlling_faction,
 			capturing_faction = ewcfg.col_capturing_faction,
 			capture_points = ewcfg.col_capture_points,
 			slimes = ewcfg.col_district_slimes,
 			time_unlock = ewcfg.col_time_unlock,
+			cap_side = ewcfg.col_cap_side,
 			degradation = ewcfg.col_degradation,
+			horde_cooldown = ewcfg.col_horde_cooldown,
+			gaiaslime = ewcfg.col_gaiaslime,
 		), (
 			self.id_server,
 			self.name,
@@ -106,7 +132,10 @@ class EwDistrict:
 			self.capture_points,
 			self.slimes,
 			self.time_unlock,
+			self.cap_side,
 			self.degradation,
+			self.horde_cooldown,
+			self.gaiaslime
 		))
 	
 	def get_number_of_friendly_neighbors(self):
@@ -122,16 +151,42 @@ class EwDistrict:
 		return friendly_neighbors
 
 	def all_neighbors_friendly(self):
+		rival_gang_poi = "none"
 		if self.controlling_faction == "":
 			return False
-		
+		elif self.controlling_faction == ewcfg.faction_killers:
+			rival_gang_poi = ewcfg.poi_id_rowdyroughhouse
+		elif self.controlling_faction == ewcfg.faction_rowdys:
+			rival_gang_poi = ewcfg.poi_id_copkilltown
+
+
 		neighbors = ewcfg.poi_neighbors[self.name]
 		for neighbor_id in neighbors:
 			neighbor_poi = ewcfg.id_to_poi.get(neighbor_id)
 			neighbor_data = EwDistrict(id_server = self.id_server, district = neighbor_id)
-			if neighbor_data.controlling_faction != self.controlling_faction and not neighbor_poi.is_subzone and not neighbor_poi.is_outskirts:
+			if neighbor_data.controlling_faction != self.controlling_faction and not neighbor_poi.is_subzone and not neighbor_poi.is_outskirts or neighbor_poi.id_poi == rival_gang_poi:
+				return False
+			elif neighbor_poi.id_poi == ewcfg.poi_id_juviesrow:
 				return False
 		return True
+
+	def all_streets_taken(self):
+		street_name_list = ewutils.get_street_list(self.name)
+		
+		if self.name == ewcfg.poi_id_rowdyroughhouse:
+			return ewcfg.faction_rowdys
+		elif self.name == ewcfg.poi_id_copkilltown:
+			return ewcfg.faction_killers
+
+		faction_list = []
+		for name in street_name_list:
+			district_data = EwDistrict(id_server=self.id_server, district=name)
+			faction_list.append(district_data.controlling_faction)
+	
+		if len(faction_list) > 0 and all(faction == faction_list[0] for faction in faction_list):
+			return faction_list[0]
+		else:
+			return ""
 
 	def get_players_in_district(self,
 			min_level = 0,
@@ -144,20 +199,19 @@ class EwDistrict:
 			pvp_only = False
 		):
 		client = ewutils.get_client()
-		server = client.get_server(self.id_server)
+		server = client.get_guild(self.id_server)
 		if server == None:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
 		time_now = int(time.time())
 
-		players = ewutils.execute_sql_query("SELECT {id_user}, {slimes}, {slimelevel}, {faction}, {life_state}, {time_expirpvp} FROM users WHERE id_server = %s AND {poi} = %s".format(
+		players = ewutils.execute_sql_query("SELECT {id_user}, {slimes}, {slimelevel}, {faction}, {life_state} FROM users WHERE id_server = %s AND {poi} = %s".format(
 			id_user = ewcfg.col_id_user,
 			slimes = ewcfg.col_slimes,
 			slimelevel = ewcfg.col_slimelevel,
 			faction = ewcfg.col_faction,
 			life_state = ewcfg.col_life_state,
-			poi = ewcfg.col_poi,
-			time_expirpvp = ewcfg.col_time_expirpvp
+			poi = ewcfg.col_poi
 		),(
 			self.id_server,
 			self.name
@@ -170,7 +224,6 @@ class EwDistrict:
 			slimelevel = player[2]
 			faction = player[3]
 			life_state = player[4]
-			time_expirpvp = player[5]
 			
 			member = server.get_member(id_user)
 
@@ -180,7 +233,7 @@ class EwDistrict:
 				and (len(life_states) == 0 or life_state in life_states) \
 				and (len(factions) == 0 or faction in factions) \
 				and not (ignore_offline and member.status == discord.Status.offline) \
-				and not (pvp_only and time_expirpvp < time_now and life_state != ewcfg.life_state_shambler):
+				and not (pvp_only and life_state == ewcfg.life_state_juvenile and slimelevel <= ewcfg.max_safe_level):
 					filtered_players.append(id_user)
 
 		return filtered_players
@@ -191,19 +244,21 @@ class EwDistrict:
 			min_slimes = -math.inf,
 			max_slimes = math.inf,
 			scout_used = False,
+			classes = None,
 		):
 
 		client = ewutils.get_client()
-		server = client.get_server(self.id_server)
+		server = client.get_guild(self.id_server)
 		if server == None:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
 
-		enemies = ewutils.execute_sql_query("SELECT {id_enemy}, {slimes}, {level}, {enemytype} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1".format(
+		enemies = ewutils.execute_sql_query("SELECT {id_enemy}, {slimes}, {level}, {enemytype}, {enemyclass} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1".format(
 			id_enemy = ewcfg.col_id_enemy,
 			slimes = ewcfg.col_enemy_slimes,
 			level = ewcfg.col_enemy_level,
 			enemytype = ewcfg.col_enemy_type,
+			enemyclass = ewcfg.col_enemy_class,
 			poi = ewcfg.col_enemy_poi,
 			life_state = ewcfg.col_enemy_life_state
 		),(
@@ -218,11 +273,16 @@ class EwDistrict:
 			fetched_slimes = enemy_data_column[1] # data from slimes column in enemies table
 			fetched_level = enemy_data_column[2] # data from level column in enemies table
 			fetched_type = enemy_data_column[3] # data from enemytype column in enemies table
+			fetched_class = enemy_data_column[4] # data from enemyclass column in enemies table
 
 			# Append the enemy to the list if it meets the requirements
 			if max_level >= fetched_level >= min_level \
 			and max_slimes >= fetched_slimes >= min_slimes:
-				filtered_enemies.append(fetched_id_enemy)
+				if classes != None:
+					if fetched_class in classes:
+						filtered_enemies.append(fetched_id_enemy)
+				else:
+					filtered_enemies.append(fetched_id_enemy)
 				
 			# Don't show sandbags on !scout
 			if scout_used and fetched_type == ewcfg.enemy_type_sandbag:
@@ -232,31 +292,38 @@ class EwDistrict:
 
 	def decay_capture_points(self):
 		resp_cont_decay = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
-		if self.capture_points > 0 and self.time_unlock == 0:
+		if self.capture_points > 0:
+				#and self.time_unlock == 0:
 
 			neighbors = ewcfg.poi_neighbors[self.name]
 			all_neighbors_friendly = self.all_neighbors_friendly()
 
-
-			decay = -math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
+			decay = -math.ceil(ewcfg.limit_influence_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
+			#decay = -math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
 
 			slimeoids = ewutils.get_slimeoids_in_poi(poi = self.name, id_server = self.id_server, sltype = ewcfg.sltype_nega)
 			
 			nega_present = len(slimeoids) > 0
-			
+
+			poi = ewcfg.id_to_poi.get(self.name)
+
 			if nega_present:
 				decay *= 1.5
+			if self.capture_points + (decay * 3) > (ewcfg.limit_influence[poi.property_class]):
+				decay *= 3
 
-
-			if self.controlling_faction == "" or not all_neighbors_friendly or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
+			if self.controlling_faction == "" or (not self.all_neighbors_friendly() and self.capture_points > ewcfg.limit_influence[poi.property_class]) or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
+				#if (self.capture_points + int(decay) < ewcfg.min_influence[self.property_class] and self.capture_points >= ewcfg.min_influence[self.property_class]) and not nega_present and self.controlling_faction != "":
+				#	responses = self.change_capture_points(self.capture_points - ewcfg.min_influence[self.property_class], ewcfg.actor_decay)
+				#else:
 				responses = self.change_capture_points(int(decay), ewcfg.actor_decay)
 				resp_cont_decay.add_response_container(responses)
 
-		if self.capture_points < 0:
-			self.capture_points = 0
+		#if self.capture_points < 0:
+		#	self.capture_points = 0
 
-		if self.capture_points == 0:
+		if self.capture_points <= 0:
 			if self.controlling_faction != "":  # if it was owned by a faction
 
 				message = "The {faction} have lost control over {district} because of sheer negligence.".format(
@@ -269,7 +336,6 @@ class EwDistrict:
 			responses = self.change_ownership("", ewcfg.actor_decay)
 			resp_cont_decay.add_response_container(responses)
 			self.capturing_faction = ""
-
 		return resp_cont_decay
 
 	def change_capture_lock(self, progress):
@@ -324,7 +390,10 @@ class EwDistrict:
 		return resp_cont
 
 	def change_capture_points(self, progress, actor, num_lock = 0):  # actor can either be a faction or "decay"
-		progress_percent_before = int(self.capture_points / self.max_capture_points * 100)
+		district_poi = ewcfg.id_to_poi.get(self.name)
+		invasion_response = ""
+		max_capture = ewcfg.limit_influence[district_poi.property_class]
+		progress_percent_before = int(self.capture_points / max_capture * 100)
 
 		self.capture_points += progress
 
@@ -333,22 +402,38 @@ class EwDistrict:
 		# ensures that the value doesn't exceed the bounds
 		if self.capture_points < 0:
 			self.capture_points = 0
-		elif self.capture_points > self.max_capture_points:
-			self.capture_points = self.max_capture_points
 
-		progress_percent_after = int(self.capture_points / self.max_capture_points * 100)
 
-		if num_lock > 0 \
-		and self.capture_points == self.max_capture_points \
-		and progress > 0 \
-		and self.property_class in ewcfg.capture_locks \
-		and self.time_unlock == 0:
-			base_time_unlock = ewcfg.capture_locks.get(self.property_class)
-			responses = self.change_capture_lock(base_time_unlock + (num_lock - 1) * ewcfg.capture_lock_per_gangster)
-			resp_cont_change_cp.add_response_container(responses)
+		if self.cap_side == "" and actor != ewcfg.actor_decay:
+			self.cap_side = actor
+		if self.capture_points <= 0:
+			self.cap_side = ""
+			self.controlling_faction = ""
 
-		if progress > 0 and actor != ewcfg.actor_decay:
+
+		#elif self.capture_points > self.max_capture_points:
+		#	self.capture_points = self.max_capture_points
+		#where we're going we don't need roads
+
+		progress_percent_after = int(self.capture_points / max_capture * 100)
+
+		#if num_lock > 0 \
+		#and self.capture_points == max_capture \
+		#and progress > 0 \
+		#and self.property_class in ewcfg.capture_locks \
+		#and self.time_unlock == 0:
+		#	base_time_unlock = ewcfg.capture_locks.get(self.property_class)
+		#	responses = self.change_capture_lock(base_time_unlock + (num_lock - 1) * ewcfg.capture_lock_per_gangster)
+		#	resp_cont_change_cp.add_response_container(responses)
+
+		if actor != ewcfg.actor_decay:
 			self.capturing_faction = actor
+
+
+		if self.controlling_faction == "" and progress > 0 and self.cap_side == actor and self.capture_points + progress > (ewcfg.min_influence[district_poi.property_class]):
+			self.controlling_faction = actor
+			invasion_response = "{} just captured {}.".format(self.capturing_faction.capitalize(), district_poi.str_name)
+
 
 		# display a message if it's reached a certain amount
 		if (progress_percent_after // ewcfg.capture_milestone) != (progress_percent_before // ewcfg.capture_milestone):  # if a progress milestone was reached
@@ -356,10 +441,10 @@ class EwDistrict:
 				if ewcfg.capture_milestone <= progress_percent_after < ewcfg.capture_milestone * 2:  # if its the first milestone
 					message = "{faction} have started capturing {district}. Current progress: {progress}%".format(
 						faction = self.capturing_faction.capitalize(),
-						district = ewcfg.id_to_poi[self.name].str_name,
+						district = district_poi.str_name,
 						progress = progress_percent_after
 					)
-					channels = [ewcfg.id_to_poi[self.name].channel]
+					channels = [district_poi.channel]
 
 					for ch in channels:
 						resp_cont_change_cp.add_channel_response(channel = ch, response = message)
@@ -368,7 +453,7 @@ class EwDistrict:
 					if progress_percent_after >= 30 > progress_percent_before:  # if the milestone of 30% was just reached
 						message = "{faction} are capturing {district}.".format(
 							faction = self.capturing_faction.capitalize(),
-							district = ewcfg.id_to_poi[self.name].str_name,
+							district = district_poi.str_name,
 							progress = progress_percent_after
 						)
 						if self.controlling_faction == ewcfg.faction_rowdys:
@@ -387,36 +472,36 @@ class EwDistrict:
 							district = ewcfg.id_to_poi[self.name].str_name,
 							progress = progress_percent_after
 						)
-						channels = [ewcfg.id_to_poi[self.name].channel]
+						channels = [district_poi.channel]
 						
 						for ch in channels:
 							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 					else:
 						message = "{faction} are renewing their grasp on {district}. Current control level: {progress}%".format(
 							faction = self.capturing_faction.capitalize(),
-							district = ewcfg.id_to_poi[self.name].str_name,
+							district = district_poi.str_name,
 							progress = progress_percent_after
 						)
-						channels = [ewcfg.id_to_poi[self.name].channel]
+						channels = [district_poi.channel]
 						
 						for ch in channels:
 							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 			else:  # if it was a negative change
 				if self.controlling_faction != "":  # if the district is owned by a faction
-					if progress_percent_after < 20 <= progress_percent_before:
+					if progress_percent_after < 50 <= progress_percent_before:
 						message = "{faction}' control of {district} is slipping.".format(
 							faction = self.controlling_faction.capitalize(),
-							district = ewcfg.id_to_poi[self.name].str_name,
+							district = district_poi.str_name,
 							progress = progress_percent_after
 						)
 						channels = ewcfg.hideout_channels
 						for ch in channels:
 							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
-					elif progress_percent_after < 50 <= progress_percent_before and actor != ewcfg.actor_decay:
+					elif progress_percent_after < 75 <= progress_percent_before and actor != ewcfg.actor_decay:
 						message = "{faction} are de-capturing {district}.".format(
 							faction = actor.capitalize(),
-							district = ewcfg.id_to_poi[self.name].str_name,
+							district = district_poi.str_name,
 							progress = progress_percent_after
 						)
 						channels = ewcfg.hideout_channels
@@ -426,37 +511,38 @@ class EwDistrict:
 
 					message = "{faction}' control of {district} has decreased. Remaining control level: {progress}%".format(
 						faction = self.controlling_faction.capitalize(),
-						district = ewcfg.id_to_poi[self.name].str_name,
+						district = district_poi.str_name,
 						progress = progress_percent_after
 					)
-					channels = [ewcfg.id_to_poi[self.name].channel]
+					channels = [district_poi.channel]
 					
 					for ch in channels:
 						resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 				else:  # if it's an uncontrolled district
 					message = "{faction}' capture progress of {district} has decreased. Remaining progress: {progress}%".format(
 						faction = self.capturing_faction.capitalize(),
-						district = ewcfg.id_to_poi[self.name].str_name,
+						district = district_poi.str_name,
 						progress = progress_percent_after
 					)
-					channels = [ewcfg.id_to_poi[self.name].channel]
-					
-					for ch in channels:
-						resp_cont_change_cp.add_channel_response(channel = ch, response = message)
+					channels = [district_poi.channel]
+
+					if invasion_response != "":
+						for ch in channels:
+							resp_cont_change_cp.add_channel_response(channel = ch, response = invasion_response)
 
 		if progress < 0 and self.capture_points == 0:
 			self.capturing_faction = ""
 
 		# if capture_points is at its maximum value (or above), assign the district to the capturing faction
-		if self.capture_points == self.max_capture_points:
-			responses = self.change_ownership(self.capturing_faction, actor)
-			resp_cont_change_cp.add_response_container(responses)
+		#if self.capture_points > max_capture:
+		#	responses = self.change_ownership(self.capturing_faction, actor)
+		#	resp_cont_change_cp.add_response_container(responses)
 
 		# if the district has decayed or been de-captured and it wasn't neutral anyway, make it neutral
-		elif self.capture_points == 0 and self.controlling_faction != "":
-			responses = self.change_ownership("", actor)
-			resp_cont_change_cp.add_response_container(responses)
-
+		#elif self.capture_points == 0 and self.controlling_faction != "":
+		#	responses = self.change_ownership("", actor)
+		#	resp_cont_change_cp.add_response_container(responses)
+		#return
 		return resp_cont_change_cp
 
 	"""
@@ -531,12 +617,38 @@ class EwDistrict:
 
 	""" wether the district is still functional """
 	def is_degraded(self):
-		poi = ewcfg.id_to_poi.get(self.name)
-
-		if poi is None:
+		checked_poi = ewcfg.id_to_poi.get(self.name)
+		if checked_poi is None:
 			return True
 		
-		return self.degradation >= poi.max_degradation
+		poi = None
+		
+		# In the Gankers Vs. Shamblers event, importance is placed on districts
+		# As a result, if a district is degraded, then all of its subzones/streets are also now degraded
+		if checked_poi.is_district:
+			poi = checked_poi
+		elif checked_poi.is_street:
+			poi = ewcfg.id_to_poi.get(checked_poi.father_district)
+		elif checked_poi.is_subzone:
+			# Subzones are a more complicated affair to check for degradation.
+			# Look to see if its mother district is a district or a street, then check for degradation of the appropriate district.
+			for mother_poi_id in checked_poi.mother_districts:
+				mother_poi = ewcfg.id_to_poi.get(mother_poi_id)
+				
+				if mother_poi.is_district:
+					# First mother POI found is a district. Break here and check for its degradation.
+					poi = mother_poi
+					break
+				elif mother_poi.is_street:
+					# First mother POI found is a street. Break here and check for its father district's degradation.
+					poi = ewcfg.id_to_poi.get(mother_poi.father_district)
+					break
+		else:
+			poi = checked_poi
+
+		# print('poi checked was {}. looking for {} degradation.'.format(self.name, poi.id_poi))
+		poi_district_data = EwDistrict(district = poi.id_poi, id_server = self.id_server)
+		return poi_district_data.degradation >= poi.max_degradation
 
 """
 	Informs the player about their current zone's capture progress
@@ -552,33 +664,35 @@ async def capture_progress(cmd):
 		response += "This zone cannot be captured."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	district_data = EwDistrict(id_server = user_data.id_server, district = user_data.poi)
-
+	district_data = EwDistrict(id_server=user_data.id_server, district=user_data.poi)
 
 	if district_data.controlling_faction != "":
 		response += "{} control this district. ".format(district_data.controlling_faction.capitalize())
+	elif district_data.capturing_faction != "" and district_data.cap_side != district_data.capturing_faction:
+		response += "{} are de-capturing this district. ".format(district_data.capturing_faction.capitalize())
 	elif district_data.capturing_faction != "":
 		response += "{} are capturing this district. ".format(district_data.capturing_faction.capitalize())
 	else:
-		response += "Nobody has staked a claim to this district yet. ".format(district_data.controlling_faction.capitalize())
+		response += "Nobody has staked a claim to this district yet."
 
-	response += "Current capture progress: {:.3g}%".format(100 * district_data.capture_points / district_data.max_capture_points)
-
-	if district_data.time_unlock > 0:
+	response += "\n\n**Current influence: {:,}**\nMinimum influence: {:,}\nMaximum influence: {:,}\nPercentage to maximum influence: {:,}%".format(abs(district_data.capture_points), int(ewcfg.min_influence[district_data.property_class]), int(ewcfg.limit_influence[district_data.property_class]), round((abs(district_data.capture_points) * 100/(ewcfg.limit_influence[district_data.property_class])), 1))
 
 
-		response += "\nThis district cannot be captured currently. It will unlock in {}.".format(ewutils.formatNiceTime(seconds = district_data.time_unlock, round_to_minutes = True))
+	#if district_data.time_unlock > 0:
+
+
+		#response += "\nThis district cannot be captured currently. It will unlock in {}.".format(ewutils.formatNiceTime(seconds = district_data.time_unlock, round_to_minutes = True))
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
 
-async def annex(cmd):
+
+"""async def annex(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	response = ""
-	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.guild.id)
 	time_now = int(time.time())
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -691,52 +805,129 @@ async def annex(cmd):
 	user_data.change_slimes(n = -slimes_cap * capture_discount, source = ewcfg.source_spending)
 
 	# Flag the user for PvP
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, True)
+	# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, True)
 
 	user_data.persist()
 	district_data.persist()
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	return await resp_cont.post()
-
+"""
 async def shamble(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 
-	if user_data.life_state != ewcfg.life_state_shambler:
+	if user_data.life_state != ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_assaultflatsbeach:
 		response = "You have too many higher brain functions left to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif user_data.life_state in [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted] and user_data.poi == ewcfg.poi_id_assaultflatsbeach:
+		response = "You feel an overwhelming sympathy for the plight of the Shamblers and decide to join their ranks."
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		await asyncio.sleep(5)
 		
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		user_data = EwUser(member=cmd.message.author)
+		user_data.life_state = ewcfg.life_state_shambler
+		user_data.degradation = 100
 
-	if poi is None:
-		return
+		ewutils.moves_active[user_data.id_user] = 0
 
-	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
-
-	if district_data.degradation < poi.max_degradation:
-		district_data.degradation += 1
-		user_data.degradation += 1
-		district_data.persist()
+		user_data.poi = ewcfg.poi_id_nuclear_beach_edge
 		user_data.persist()
-		if district_data.degradation == poi.max_degradation:
-			response = ewcfg.str_zone_degraded.format(poi = poi.str_name)
-			await ewutils.send_message(cmd.client, cmd.message.channel, response)
-			new_topic = None
-			if not cmd.message.channel.topic:
-				new_topic = ewcfg.channel_topic_degraded
-			elif not (ewcfg.channel_topic_degraded in cmd.message.channel.topic):
-				new_topic = cmd.message.channel.topic + " " + ewcfg.channel_topic_degraded
-			
-			if new_topic:
-				try:
-					await cmd.client.edit_channel(channel = cmd.message.channel, topic = new_topic)
-				except:
-					ewutils.logMsg('Failed to set channel topic for {} to {}'.format(cmd.message.channel.name, new_topic))
-			
+		
+		member = cmd.message.author
+		
+		base_poi_channel = ewutils.get_channel(cmd.message.guild, 'nuclear-beach-edge')
+
+		response = 'You arrive inside the facility and are injected with a unique strain of the Modelovirus. Not long after, a voice on the intercom chimes in.\n**"Welcome, {}. Welcome to Downpour Laboratories. It\'s safer here. Please treat all machines and facilities with respect, they are precious to our cause."**'.format(member.display_name)
+
+		await ewrolemgr.updateRoles(client=cmd.client, member=member)
+		return await ewutils.send_message(cmd.client, base_poi_channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	else:
+		pass
+
+	# Rest in fucking pieces
+
+	# if poi is None:
+	# 	return
+	# elif not poi.is_district:
+	# 	response = "This doesn't seem like an important place to be shambling. Try a district zone instead."
+	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# elif poi.id_poi == ewcfg.poi_id_oozegardens:
+	# 	response = "The entire district is covered in Brightshades! You have no business shambling this part of town!"
+	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 
+	# in_operation, op_poi = ewutils.gvs_check_if_in_operation(user_data)
+	# if in_operation:
+	# 	if op_poi != user_data.poi:
+	# 		response = "You aren't allowed to !shamble this district, per Dr. Downpour's orders.\n(**!goto {}**)".format(op_poi)
+	# 		return await ewutils.send_message(cmd.client, cmd.message.channel,  ewutils.formatMessage(cmd.message.author, response))
+	# else:
+	# 	response = "You aren't even in a Graveyard Op yet!\n(**!joinops [tombstone]**)"
+	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 
+	# if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shambler_shamble:
+	# 	response = "You know, you really just don't have the energy to shamble this place right now. Try again in {} seconds.".format(int(ewcfg.cd_shambler_shamble-(time_now-user_data.time_lasthaunt)))
+	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 
+	# district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
+	# 
+	# if district_data.degradation < poi.max_degradation:
+	# 	district_data.degradation += 1
+	# 	# user_data.degradation += 1
+	# 	user_data.time_lasthaunt = time_now
+	# 	district_data.persist()
+	# 	user_data.persist()
+	# 	
+	# 	response = "You shamble {}.".format(poi.str_name)
+	# 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 
+	# 	if district_data.degradation == poi.max_degradation:
+	# 		response = ewcfg.str_zone_degraded.format(poi = poi.str_name)
+	# 		await ewutils.send_message(cmd.client, cmd.message.channel, response)
+
+async def rejuvenate(cmd):
+	user_data = EwUser(member=cmd.message.author)
+
+	if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_oozegardens:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif user_data.life_state == ewcfg.life_state_shambler and user_data.poi == ewcfg.poi_id_oozegardens:
+		response = "You decide to change your ways and become one of the Garden Gankers in order to overthrow your old master."
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		await asyncio.sleep(5)
+
+		user_data = EwUser(member=cmd.message.author)
+		user_data.life_state = ewcfg.life_state_juvenile
+		user_data.degradation = 0
+		#user_data.gvs_currency = 0
+
+		ewutils.moves_active[user_data.id_user] = 0
+
+		user_data.poi = ewcfg.poi_id_og_farms
+		user_data.persist()
+
+		client = ewutils.get_client()
+		server = client.get_guild(user_data.id_server)
+		member = server.get_member(user_data.id_user)
+		
+		base_poi_channel = ewutils.get_channel(cmd.message.guild, ewcfg.channel_og_farms)
+
+		response = "You enter into Atomic Forest inside the farms of Ooze Gardens and are sterilized of the Modelovirus. Hortisolis gives you a big hug and says he's glad you've overcome your desire for vengeance in pursuit of deposing Downpour."
+
+		await ewrolemgr.updateRoles(client=cmd.client, member=member)
+		return await ewutils.send_message(cmd.client, base_poi_channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		pass
+
+
 """
 	Updates/Increments the capture_points values of all districts every time it's called
 """
+
 async def capture_tick(id_server):
 	# the variables might apparently be accessed before assignment if i didn't declare them here
 	cursor = None
@@ -870,7 +1061,7 @@ async def capture_tick(id_server):
 
 					dist.persist()
 
-	await resp_cont_capture_tick.post()
+	# await resp_cont_capture_tick.post()
 
 """
 	Coroutine that continually calls capture_tick; is called once per server, and not just once globally
@@ -901,7 +1092,10 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 
 				# if the kingpin is controlling this district give the kingpin slime based on the district's property class
 				if district.controlling_faction == (ewcfg.faction_killers if kingpin.faction == ewcfg.faction_killers else ewcfg.faction_rowdys):
-					slimegain = ewcfg.district_control_slime_yields[district.property_class]
+					poi = ewcfg.id_to_poi.get(id_district)
+
+					slimegain = ewcfg.district_control_slime_yields[poi.property_class]
+
 					# increase slimeyields by 10 percent per friendly neighbor
 					friendly_mod = 1 + 0.1 * district.get_number_of_friendly_neighbors()
 					total_slimegain += slimegain * friendly_mod
@@ -918,4 +1112,31 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 		responses =  district.decay_capture_points()
 		resp_cont_decay_loop.add_response_container(responses)
 		district.persist()
-	await resp_cont_decay_loop.post()
+	# await resp_cont_decay_loop.post()
+
+async def change_spray(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	newspray = cmd.message.content[(len(ewcfg.cmd_changespray)):].strip()
+
+	if newspray == "":
+		response = "You need to add an image link to change your spray."
+	elif len(newspray) > 400:
+		response = "Fucking christ, are you painting the Sistine Chapel? Use a shorter link."
+	else:
+		response = "Got it. Spray set."
+		user_data.spray = newspray
+		user_data.persist()
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def tag(cmd):
+	user_data = EwUser(member=cmd.message.author)
+
+	if user_data.life_state in(ewcfg.life_state_enlisted, ewcfg.life_state_kingpin):
+		response = user_data.spray
+	else:
+		response = "Save the spraying for the gangsters. You're either too gay or dead to participate in this sort of thing."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+

@@ -90,18 +90,23 @@ async def smelt(cmd):
 
 			# If you don't have all the necessary ingredients.
 			if len(missing_ingredients) > 0:
-				response = "You’ve never done this before, have you? To smelt {}, you’ll need to combine *{}*.".format(found_recipe.str_name, ewutils.formatNiceList(names = necessary_ingredients_list, conjunction = "and"))
+				response = "You've never done this before, have you? To smelt {}, you’ll need to combine *{}*.".format(found_recipe.str_name, ewutils.formatNiceList(names = necessary_ingredients_list, conjunction = "and"))
 
 				response += " You are missing *{}*.".format(ewutils.formatNiceList(names = missing_ingredients, conjunction = "and"))
 
 			else:
 				# If you try to smelt a random cosmetic, use old smelting code to calculate what your result will be.
 				if found_recipe.id_recipe == "coolcosmetic" or found_recipe.id_recipe == "toughcosmetic" or found_recipe.id_recipe == "smartcosmetic" or found_recipe.id_recipe == "beautifulcosmetic" or found_recipe.id_recipe == "cutecosmetic":
+					
+					if not ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_cosmetic):
+						response = "You can't carry anymore cosmetic items."
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					
 					patrician_rarity = 100
 					patrician_smelted = random.randint(1, patrician_rarity)
 					patrician = False
 
-					if patrician_smelted == 1:
+					if patrician_smelted <= 5:
 						patrician = True
 
 					cosmetics_list = []
@@ -138,7 +143,7 @@ async def smelt(cmd):
 					ewitem.item_create(
 						item_type = item.item_type,
 						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
+						id_server = cmd.guild.id,
 						item_props = item_props
 					)
 
@@ -176,12 +181,16 @@ async def smelt(cmd):
 					# If there are multiple possible products, randomly select one.
 					item = random.choice(possible_results)
 
+					if ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = item.item_type):
+						response = "You can't carry any more {}s.".format(item.item_type)
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 					item_props = ewitem.gen_item_props(item)
 
 					newitem_id = ewitem.item_create(
 						item_type = item.item_type,
 						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
+						id_server = cmd.guild.id,
 						item_props = item_props
 					)
 
@@ -194,7 +203,7 @@ async def smelt(cmd):
 						newitem = ewitem.EwItem(id_item=newitem_id)
 						newitem.item_props['target'] = id_item
 						newitem.persist()
-						ewitem.give_item(id_item=id_item, id_user='soulcraft', id_server=cmd.message.server.id)
+						ewitem.give_item(id_item=id_item, id_user='soulcraft', id_server=cmd.guild.id)
 
 				name = ""
 				if hasattr(item, 'str_name'):
@@ -216,20 +225,107 @@ async def smelt(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def smeltsoul(cmd):
-	item = ewitem.find_item(item_search="reanimatedcorpse", id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	item = ewitem.find_item(item_search="reanimatedcorpse", id_user=cmd.message.author.id, id_server=cmd.guild.id)
 	if not item:
 		response = "You can't rip a soul out of a nonexistent object."
 	else:
 		item_obj = ewitem.EwItem(id_item=item.get('id_item'))
 		if item_obj.item_props.get('target') != None and item_obj.item_props.get('target') != "":
 			targetid = item_obj.item_props.get('target')
-			ewitem.give_item(id_user=cmd.message.author.id, id_item=targetid, id_server=cmd.message.server.id)
+			ewitem.give_item(id_user=cmd.message.author.id, id_item=targetid, id_server=cmd.guild.id)
 			response = "You ripped the soul out of the reanimated corpse. It's in mangled bits now."
 			ewitem.item_delete(id_item=item.get('id_item'))
 		else:
 			response = "That's not a reanimated corpse. It only looks like one. Get rid of the fake shit and we'll get started."
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+# "wcim", "whatcanimake", "whatmake", "usedfor" command - finds the item the player is asking for and tells them all smelting recipes that use that item 
+# added by huck on 9/3/2020
+async def find_recipes_by_item(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	used_recipe = None
+	
+	# if the player specifies an item name
+	if cmd.tokens_count > 1:
+		sought_item = ewutils.flattenTokenListToString(cmd.tokens[1:])
+		
+		# Allow for the use of recipe aliases
+		found_recipe = ewcfg.smelting_recipe_map.get(sought_item)
+		if found_recipe != None:
+			used_recipe = found_recipe.id_recipe
+
+		# item_sought_in_inventory = ewitem.find_item(item_search=sought_item, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+		makes_sought_item = []
+		uses_sought_item = []
+		
+		# if the item name is an item in the player's inventory, we're assuming that the player is looking up information about this item specifically.
+		# if item_sought_in_inventory is not None:
+			# sought_item = item_sought_in_inventory.id_item
+			# print(item_sought_in_inventory['item_def'])
+		# man i could NOT get this to work . maybe another day
+		
+		
+		# finds the recipes in questions that applys
+		for name in ewcfg.recipe_names:
+			# find recipes that this item is used as an ingredient in
+			if ewcfg.smelting_recipe_map[name].ingredients.get(sought_item) is not None:
+				uses_sought_item.append(name)
+				
+			# find recipes used to create this item
+			elif sought_item in ewcfg.smelting_recipe_map[name].products:
+				makes_sought_item.append(ewcfg.smelting_recipe_map[name])
+			
+			# finds recipes based on possible recipe aliases
+			elif used_recipe in ewcfg.smelting_recipe_map[name].products:
+				makes_sought_item.append(ewcfg.smelting_recipe_map[name])
+		
+		# zero matches in either of the above:
+		if len(makes_sought_item) < 1 and len(uses_sought_item) < 1:
+			response = "No recipes found for *{}*.".format(sought_item)
+
+		#adds the recipe list to a response
+		else:
+			response = "\n"
+			number_recipe = 1
+			list_length = len(makes_sought_item)
+			for item in makes_sought_item:
+				if (item.id_recipe == "toughcosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_tough
+				or item.id_recipe == "smartcosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_smart
+				or item.id_recipe == "beautifulcosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_beautiful
+				or item.id_recipe == "cutecosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_cute
+				or item.id_recipe == "coolcosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_cool):
+					list_length -= 1
+					continue
+				else:
+					# formats items in form "# item" (like "1 poudrin" or whatever)
+					ingredients_list = []
+					ingredient_strings = []
+					for ingredient in item.ingredients:
+						ingredient_strings.append("{} {}".format(item.ingredients.get(ingredient), ingredient))
+				
+					if number_recipe == 1:
+						response += "To smelt this item, you'll need *{}*. ({})\n".format(ewutils.formatNiceList(names = ingredient_strings, conjunction = "and"), item.id_recipe)
+					else:
+						response += "Alternatively, to smelt this item, you'll need *{}*. ({})\n".format(ewutils.formatNiceList(names = ingredient_strings, conjunction = "and"), item.id_recipe)
+					number_recipe += 1
+					
+			if len(uses_sought_item) > 0:
+				response += "This item can be used to smelt *{}*.".format(ewutils.formatNiceList(names = uses_sought_item, conjunction = "and"))
+	
+	
+	
+	# if the player doesnt specify a 2nd argument
+	else:
+		response = "Please specify an item you would like to look up usage for."
+	
+	
+	
+	# send response to player
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 def unwrap(id_user = None, id_server = None, item = None):
 	response = "You eagerly rip open a pack of Secreatures™ trading cards!!"
