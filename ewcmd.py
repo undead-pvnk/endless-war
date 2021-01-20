@@ -4024,7 +4024,8 @@ async def check_mastery(cmd):
 	else:
 		wepskills = ewutils.weaponskills_get(member=cmd.message.author)
 		for skill, level in wepskills.items():
-			message += message_line.format(level["skill"], skill.lower())
+			if level.get("skill") >= 5:
+				message += message_line.format(level["skill"]-4, skill.lower())
 		response = message
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

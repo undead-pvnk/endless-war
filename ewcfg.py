@@ -9505,7 +9505,21 @@ smelting_recipe_list = [
             item_id_string: 2, # Laces
         },
         products=["rollerblades"]
-    )
+    ),
+	EwSmeltingRecipe(
+		id_recipe="ferroslimeoid",
+		str_name="a ferroslimeoid",
+		alias=[
+			'ferroslimeoid',
+			'magnet',
+		],
+		ingredients={
+			item_id_tincan: 2,  # metal dust
+			item_id_slimepoudrin: 5,  # lifeforce
+			item_id_string: 1,  # Scarf/tether
+		},
+		products=["ferroslimeoid"]
+	)
 	# TODO remove after double halloween
 	#EwSmeltingRecipe(
     #    id_recipe = "ticket",

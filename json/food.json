@@ -3677,20 +3677,20 @@
         "acquisition": "",
         "perishable": false
     },
-        "ferroslimeoid": {
+    "ferroslimeoid": {
         "item_type": "food",
         "id_food": "ferroslimeoid",
         "alias": [
-            "master",
-            "masterball"
+            "ferro",
+            "magnet"
         ],
         "recover_hunger": 1,
         "price": 10000000,
-        "str_name": "Master Bait",
+        "str_name": "Ferroslimeoid",
         "vendors": [],
-        "str_eat": "You toss the Master Bait into your mouth and chew thoroughly. Wow, what a waste of fucking time!",
+        "str_eat": "The ferroslimeoid screams in terror as it nears your mouth. As you chew you feel its little limbs squirming. Its cries die down as it slides down your throat. You shudder as it hits your stomach. Tasty",
         "inebriation": 0,
-        "str_desc": "The ultimate life form... for cathing fish, that is. It's said that attatching this strange, worm-like creature to the end of your hook will allow you to reel in fish almost as soon as you cast it off.",
+        "str_desc":  "A small magnetic slimeoid created with illegal means, usually used as live bait. DO NOT EAT",
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
