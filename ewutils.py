@@ -158,7 +158,16 @@ class EwResponseContainer:
 			try:
 				response = ""
 				while len(self.channel_responses[ch]) > 0:
-					if len(response) == 0 or len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
+					if len(self.channel_responses[ch][0]) > ewcfg.discord_message_length_limit:
+						response += "\n" + self.channel_responses[ch].pop(0)
+						length = len(response)
+
+						split_list = [(response[i:i+2000]) for i in range(0, length, 2000)]
+						for blurb in split_list:
+							message = await send_message(self.client, current_channel, blurb)
+							messages.append(message)
+						response = ""
+					elif len(response) == 0 or len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
 						response += "\n" + self.channel_responses[ch].pop(0)
 					else:
 						message = await send_message(self.client, current_channel, response)
@@ -1596,6 +1605,24 @@ async def spawn_enemies(id_server = None):
 
 		await resp_cont.post()
 
+	# TODO remove after double halloween
+	#market_data = EwMarket(id_server=id_server)
+	#underworld_district = EwDistrict(district=ewcfg.poi_id_underworld, id_server=id_server)
+	#enemies_count = len(underworld_district.get_enemies_in_district())
+
+	#if enemies_count == 0 and int(time.time()) > (market_data.horseman_timeofdeath + ewcfg.horseman_death_cooldown):
+	#	dh_resp_cont = ewhunting.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld, manual_spawn=True)
+
+	#	await dh_resp_cont.post()
+
+def number_civilians(id_server):
+	query = execute_sql_query("SELECT COUNT(*) from enemies where enemytype in ('civilian', 'innocent') and id_server = id_server")
+	for counts in query:
+		if counts[0] < 20:
+			return 1
+		else:
+			return 0
+
 async def spawn_enemies_tick_loop(id_server):
 	interval = ewcfg.enemy_spawn_tick_length
 	# Causes the possibility of an enemy spawning every 10 seconds
@@ -1612,9 +1639,10 @@ async def enemy_action_tick_loop(id_server):
 		# resp_cont = EwResponseContainer(id_server=id_server)
 		if ewcfg.gvs_active:
 			await ewhunting.enemy_perform_action_gvs(id_server)
+
 		else:
 			await ewhunting.enemy_perform_action(id_server)
-			
+
 async def gvs_gamestate_tick_loop(id_server):
 	interval = ewcfg.gvs_gamestate_tick_length
 	# Causes various events to occur during a Garden or Graveyard ops in Gankers Vs. Shamblers
@@ -1668,7 +1696,9 @@ def get_move_speed(user_data):
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
 		
-	#move_speed *= 2
+	#TODO remove after double halloween
+	#if user_data.life_state == ewcfg.life_state_corpse:
+	#	move_speed *= 2
 
 	move_speed = max(0.1, move_speed)
 
@@ -1855,7 +1885,7 @@ def generate_captcha(length = 4, id_user = 0, id_server = 0):
 		user_data = EwUser(id_user=id_user, id_server=id_server)
 		mutations = user_data.get_mutations()
 		if ewcfg.mutation_id_dyslexia in mutations:
-			length_final = max(1, length_final-3)
+			length_final = max(1, length_final - 1)
 	try:
 		return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == length_final])
 	except:
@@ -2262,6 +2292,30 @@ def get_slimernalia_kingpin(server):
 
 	return None
 
+async def update_slimernalia_kingpin(client, server):
+	# Depose current slimernalia kingpin
+	old_kingpin_id = get_slimernalia_kingpin(server)
+	if old_kingpin_id != None:
+		old_kingpin = EwUser(id_user=old_kingpin_id, id_server=server.id)
+		old_kingpin.slimernalia_kingpin = False
+		old_kingpin.persist()
+		try:
+			old_kingpin_member = server.get_member(old_kingpin.id_user)
+			await ewrolemgr.updateRoles(client=client, member=old_kingpin_member)
+		except:
+			logMsg("Error removing kingpin of slimernalia role from {} in server {}.".format(old_kingpin.id_user, server.id))
+
+	# Update the new kingpin of slimernalia
+	new_kingpin = EwUser(id_user=get_most_festive(server), id_server=server.id)
+	new_kingpin.slimernalia_kingpin = True
+	new_kingpin.persist()
+	try:
+		new_kingpin_member = server.get_member(new_kingpin.id_user)
+		await ewrolemgr.updateRoles(client=client, member=new_kingpin_member)
+	except:
+		logMsg("Error adding kingpin of slimernalia role to user {} in server {}.".format(new_kingpin.id_user, server.id))	
+
+
 # Get the player with the most festivity
 def get_most_festive(server):
 	data = execute_sql_query(
@@ -2476,7 +2530,7 @@ def get_subzone_controlling_faction(subzone_id, id_server):
 			break
 
 	if district_data != None:
-		faction = district_data.all_streets_taken()
+		faction = district_data.controlling_faction
 		return faction
 
 def get_street_list(str_poi):

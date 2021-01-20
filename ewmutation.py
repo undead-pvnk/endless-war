@@ -9,6 +9,7 @@ import ewcfg
 import ewstats
 import ewutils
 import ewitem
+import ewrolemgr
 from ewmarket import EwMarket
 from ewplayer import EwPlayer
 
@@ -370,7 +371,7 @@ async def chemo(cmd):
 			except:
 				ewutils.logMsg("Failed to clear mutations for user {}.".format(user_data.id_user))
 			response = '"Alright, dearie, let\'s get you purged." You enter a dingy looking operating room, with slime strewn all over the floor. Dr. Dusttrap pulls out a needle the size of your bicep and injects into odd places on your body. After a few minutes of this, you get fatigued and go under.\n\n You wake up and {} is gone. Nice! \nMutation Levels Added:{}/{}'.format(ewcfg.mutations_map.get(target).str_name, user_data.get_mutation_level(), min(user_data.slimelevel, 50))
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def graft(cmd):
 	user_data = EwUser(member=cmd.message.author)
@@ -415,12 +416,12 @@ async def graft(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		price = ewcfg.mutations_map.get(target).tier * 10000
-		user_data.change_slimes(n=-price, source=ewcfg.source_spending)
+		user_data.change_slimes(n=-price, source=ewcfg.source_spending)		
 		user_data.persist()
+
 		user_data.add_mutation(id_mutation=target, is_artificial=1)
 		response = ewcfg.mutations_map[target].str_transplant + "\n\nMutation Levels Added:{}/{}".format(user_data.get_mutation_level(), min(user_data.slimelevel, 50))
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def clear_mutations(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -588,7 +589,7 @@ async def waft(cmd):
 		response = "You stink, but not that badly. Get Aposematic Stench before you try that."
 	else:
 		user_data.applyStatus(ewcfg.status_repelled_id)
-		response = "You clench as hard as you can, and your pores excrete a mushroom cloud of pure, olive green musk. It's so caustic you might not have eyebrows anymore. You "
+		response = "You clench as hard as you can, and your pores excrete a mushroom cloud of pure, olive green musk. It's so caustic you might not have eyebrows anymore. You should be immune from monsters, though!"
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

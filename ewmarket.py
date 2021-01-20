@@ -35,6 +35,10 @@ class EwMarket:
 	splattered_slimes = 0
 	global_swear_jar = 0
 
+	# Double halloween
+	horseman_deaths = 0
+	horseman_timeofdeath = 0
+
 	# Dict of bazaar items available for purchase
 	bazaar_wares = None
 
@@ -50,7 +54,7 @@ class EwMarket:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar} FROM markets WHERE id_server = %s".format(
+				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath} FROM markets WHERE id_server = %s".format(
 					time_lasttick = ewcfg.col_time_lasttick,
 					slimes_revivefee = ewcfg.col_slimes_revivefee,
 					negaslime = ewcfg.col_negaslime,
@@ -63,6 +67,9 @@ class EwMarket:
 					caught_fish = ewcfg.col_caught_fish,
 					splattered_slimes = ewcfg.col_splattered_slimes,
 					global_swear_jar = ewcfg.col_global_swear_jar,
+					horseman_deaths = ewcfg.col_horseman_deaths,
+					horseman_timeofdeath = ewcfg.col_horseman_timeofdeath,
+					
 				), (self.id_server, ))
 				result = cursor.fetchone();
 
@@ -80,6 +87,8 @@ class EwMarket:
 					self.caught_fish = result[9]
 					self.splattered_slimes = result[10]
 					self.global_swear_jar = result[11]
+					self.horseman_deaths = result[12]
+					self.horseman_timeofdeath = result[13]
 
 					cursor.execute("SELECT {}, {} FROM bazaar_wares WHERE {} = %s".format(
 						ewcfg.col_name,
@@ -114,7 +123,7 @@ class EwMarket:
 			cursor = conn.cursor();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				id_server = ewcfg.col_id_server,
 				time_lasttick = ewcfg.col_time_lasttick,
 				slimes_revivefee = ewcfg.col_slimes_revivefee,
@@ -128,6 +137,8 @@ class EwMarket:
 				caught_fish = ewcfg.col_caught_fish,
 				splattered_slimes = ewcfg.col_splattered_slimes,
 				global_swear_jar = ewcfg.col_global_swear_jar,
+				horseman_deaths = ewcfg.col_horseman_deaths,
+				horseman_timeofdeath = ewcfg.col_horseman_timeofdeath,
 			), (
 				self.id_server,
 				self.time_lasttick,
@@ -142,6 +153,8 @@ class EwMarket:
 				self.caught_fish,
 				self.splattered_slimes,
 				self.global_swear_jar,
+				self.horseman_deaths,
+				self.horseman_timeofdeath,
 			))
 
 			cursor.execute("DELETE FROM bazaar_wares WHERE {} = %s".format(
@@ -502,7 +515,6 @@ async def withdraw(cmd):
 						stock.total_shares -= shares
 
 						response = "You exchange {shares:,} shares in {stock} for {coins:,} SlimeCoin.".format(coins = slimecoin, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
-						user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_withdraw, True)
 						user_data.persist()
 						stock.timestamp = round(time.time())
 						stock.persist()
@@ -1498,90 +1510,104 @@ async def complete_trade(cmd):
 		else:
 			trade_partner = EwUser(id_user=trader_id, id_server=user_data.id_server)
 
-			weapons_held = ewitem.inventory(
-				id_user = user_data.id_user,
-				id_server = user_data.id_server,
-				item_type_filter = ewcfg.it_weapon
-			)
-
-			food_held = ewitem.inventory(
-				id_user = user_data.id_user,
-				id_server = user_data.id_server,
-				item_type_filter = ewcfg.it_food
-			)
 			#items this player is offering
-			weapons_offered = []
-			food_offered = []
+			items_offered = {}
 
-			trader_weapons_held = ewitem.inventory(
-				id_user = trade_partner.id_user,
-				id_server = trade_partner.id_server,
-				item_type_filter = ewcfg.it_weapon
-			)
-
-			trader_food_held = ewitem.inventory(
-				id_user = trade_partner.id_user,
-				id_server = trade_partner.id_server,
-				item_type_filter = ewcfg.it_food
-			)
 			#items the other player is offering
-			trader_weapons_offered = []
-			trader_food_offered = []
+			trader_items_offered = {}
 
 			for item in ewutils.trading_offers.get(user_data.id_user):
-				if item.get("item_type") == ewcfg.it_weapon:
-					weapons_offered.append(item)
-				elif item.get("item_type") == ewcfg.it_food:
-					food_offered.append(item)
+				if items_offered.get(item.get("item_type")) != None:
+					items_offered[item.get("item_type")] += 1
+				else:
+					items_offered[item.get("item_type")] = 1
 
 			for item in ewutils.trading_offers.get(trade_partner.id_user):
-				if item.get("item_type") == ewcfg.it_weapon:
-					trader_weapons_offered.append(item)
-				elif item.get("item_type") == ewcfg.it_food:
-					trader_food_offered.append(item)
+				if trader_items_offered.get(item.get("item_type")) != None:
+					trader_items_offered[item.get("item_type")] += 1
+				else:
+					trader_items_offered[item.get("item_type")] = 1
 
-			if len(trader_weapons_offered) > 0 and (user_data.get_weapon_capacity() < len(weapons_held) + len(trader_weapons_offered) - len(weapons_offered)):
-				response = "You can't carry any more weapons."
-			elif len(trader_food_offered) > 0 and (user_data.get_food_capacity() < len(food_held) + len(trader_food_offered) - len(food_offered)):
-				response = "You can't carry any more food."
+			# check items currently held + items being given to the player - items the player is giving
+			# check other user's inventory capacity
+			for item_type in items_offered:
+				it_held = ewitem.inventory(
+					id_user = trade_partner.id_user,
+					id_server = trade_partner.id_server,
+					item_type_filter = item_type
+				)
 
-			elif len(weapons_offered) > 0 and (trade_partner.get_weapon_capacity() < len(trader_weapons_held) - len(trader_weapons_offered) + len(weapons_offered)):
-				response = "They can't carry any more weapons."
-			elif len(food_offered) > 0 and (trade_partner.get_food_capacity() < len(trader_food_held) - len(trader_food_offered) + len(food_offered)):
-				response = "They can't carry any more food."
+				if item_type == ewcfg.it_food:
+					if (len(it_held) + items_offered[ewcfg.it_food] - trader_items_offered.get(ewcfg.it_food, 0)) > trade_partner.get_food_capacity():
+						response = "They can't carry any more food items."
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				elif item_type == ewcfg.it_weapon:
+					if (len(it_held) + items_offered[ewcfg.it_weapon] - trader_items_offered.get(ewcfg.it_weapon, 0)) > trade_partner.get_weapon_capacity():
+						response = "They can't carry any more weapon items."
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				else:
+					if (len(it_held) + items_offered[item_type] - trader_items_offered.get(item_type, 0)) > ewcfg.generic_inv_limit:
+						response = "They can't carry any more {}s.".format(item_type)
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-			else:
-				for item in list(ewutils.trading_offers.get(user_data.id_user)):
-					if item.get("id_item") == user_data.weapon:
-						user_data.weapon = -1
-						user_data.persist()
-					elif item.get("item_type") == ewcfg.it_cosmetic:
-						cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
-						cosmetic.item_props["adorned"] = 'false'
-						cosmetic.item_props["slimeoid"] = 'false'
-						cosmetic.persist()
-				
-					ewitem.give_item(id_item=item.get("id_item"), id_user=trade_partner.id_user, id_server=trade_partner.id_server)	
+			# check own user's inventory capacity
+			for item_type in trader_items_offered:
+				it_held = ewitem.inventory(
+					id_user = user_data.id_user,
+					id_server = user_data.id_server,
+					item_type_filter = item_type
+				)
 
-				for item in list(ewutils.trading_offers.get(trade_partner.id_user)):
-					if item.get("id_item") == trade_partner.weapon:
-						trade_partner.weapon = -1
-						trade_partner.persist()
-					elif item.get("item_type") == ewcfg.it_cosmetic:
-						cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
-						cosmetic.item_props["adorned"] = 'false'
-						cosmetic.item_props["slimeoid"] = 'false'
-						cosmetic.persist()
+				if item_type == ewcfg.it_food:
+					if (len(it_held) + trader_items_offered[ewcfg.it_food] - items_offered.get(ewcfg.it_food, 0)) > user_data.get_food_capacity():
+						response = "You can't carry any more food items."
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				elif item_type == ewcfg.it_weapon:
+					if (len(it_held) + trader_items_offered[ewcfg.it_weapon] - items_offered.get(ewcfg.it_weapon, 0)) > user_data.get_weapon_capacity():
+						response = "You can't carry any more weapon items."
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				else:
+					if (len(it_held) + trader_items_offered.get(item_type) - items_offered.get(item_type, 0)) > ewcfg.generic_inv_limit:
+						response = "You can't carry any more {}s.".format(item_type)
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-					ewitem.give_item(id_item=item.get("id_item"), id_user=user_data.id_user, id_server=user_data.id_server)			
-						
-				ewutils.active_trades[user_data.id_user] = {}
-				ewutils.active_trades[trade_partner.id_user] = {}
+			for item in list(ewutils.trading_offers.get(user_data.id_user)):
+				if item.get("id_item") == user_data.weapon:
+					user_data.weapon = -1
+					user_data.persist()
+				elif item.get("id_item") == user_data.sidearm:
+					user_data.sidearm = -1
+					user_data.persist()
+				elif item.get("item_type") == ewcfg.it_cosmetic:
+					cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
+					cosmetic.item_props["adorned"] = 'false'
+					cosmetic.item_props["slimeoid"] = 'false'
+					cosmetic.persist()
+			
+				ewitem.give_item(id_item=item.get("id_item"), id_user=trade_partner.id_user, id_server=trade_partner.id_server)	
 
-				ewutils.trading_offers[user_data.id_user] = []
-				ewutils.trading_offers[trade_partner.id_user] = []
+			for item in list(ewutils.trading_offers.get(trade_partner.id_user)):
+				if item.get("id_item") == trade_partner.weapon:
+					trade_partner.weapon = -1
+					trade_partner.persist()
+				elif item.get("id_item") == trade_partner.sidearm:
+					trade_partner.sidearm = -1
+					user_data.persist()
+				elif item.get("item_type") == ewcfg.it_cosmetic:
+					cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
+					cosmetic.item_props["adorned"] = 'false'
+					cosmetic.item_props["slimeoid"] = 'false'
+					cosmetic.persist()
 
-				response = "You shake hands to commemorate another successful deal. That is their hand, right?"
+				ewitem.give_item(id_item=item.get("id_item"), id_user=user_data.id_user, id_server=user_data.id_server)			
+					
+			ewutils.active_trades[user_data.id_user] = {}
+			ewutils.active_trades[trade_partner.id_user] = {}
+
+			ewutils.trading_offers[user_data.id_user] = []
+			ewutils.trading_offers[trade_partner.id_user] = []
+
+			response = "You shake hands to commemorate another successful deal. That is their hand, right?"
 	else:
 		response = "You're not trading with anyone right now."
 

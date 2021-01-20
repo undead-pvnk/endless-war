@@ -16,6 +16,7 @@ import traceback
 import re
 import os
 import shlex
+import logging
 
 import ewutils
 import ewcfg
@@ -69,6 +70,13 @@ from ewstatuseffects import EwStatusEffect
 ewutils.logMsg('Starting up...')
 init_complete = False
 
+# output discord logs to console
+logger = logging.getLogger('discord')
+logger.setLevel(logging.WARNING)
+handler = logging.StreamHandler(sys.stdout)
+handler.setFormatter(logging.Formatter('[%(asctime)s]:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
+
 intents = discord.Intents.all()
 
 client = discord.Client(intents=intents)
@@ -100,8 +108,6 @@ cmd_map = {
 	ewcfg.cmd_reload: ewwep.reload,
 	ewcfg.cmd_reload_alt1: ewwep.reload,
 	
-	# Fix your jammed gun
-	ewcfg.cmd_unjam: ewwep.unjam,
 
 	# Choose your weapon
 	ewcfg.cmd_equip: ewwep.equip,
@@ -172,6 +178,7 @@ cmd_map = {
 	
 	# Ghosts can BOO 
 	ewcfg.cmd_boo: ewcmd.boo,
+	#TODO remove after double halloween
 	#ewcfg.cmd_spook: ewcmd.spook,
 	
 	# Juvies can dance
@@ -211,7 +218,7 @@ cmd_map = {
 	ewcfg.cmd_sign: ewapt.nothing,
 	ewcfg.cmd_upgrade: ewapt.upgrade,
 	ewcfg.cmd_knock: ewapt.knock,
-	#ewcfg.cmd_trickortreat: ewapt.trickortreat,
+	ewcfg.cmd_trickortreat: ewapt.trickortreat,
 	ewcfg.cmd_breaklease: ewapt.cancel,
 
 
@@ -387,6 +394,7 @@ cmd_map = {
 	ewcfg.cmd_inventory_alt3: ewitem.inventory_print,
 	ewcfg.cmd_communitychest: ewitem.inventory_print,
 
+
 	# get an item's description
 	ewcfg.cmd_inspect: ewitem.item_look,
 	ewcfg.cmd_inspect_alt1: ewitem.item_look,
@@ -498,7 +506,7 @@ cmd_map = {
 	ewcfg.cmd_setslime: ewcmd.set_slime,
 	ewcfg.cmd_checkstats: ewcmd.check_stats,
 	ewcfg.cmd_makebp : ewutils.make_bp,
-	# ewcfg.cmd_exalt: ewkingpin.exalt,
+	#ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
@@ -746,11 +754,13 @@ cmd_map = {
 	ewcfg.cmd_slimeballleave: ewsports.slimeballleave,
 
 	# flush items and slime from subzones into their mother district
-	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones,
+	ewcfg.cmd_flushsubzones: ewmap.flush_subzones,
+	ewcfg.cmd_flushstreets: ewmap.flush_streets,
 
 	#swap weapons
 	ewcfg.cmd_switch: ewwep.switch_weapon,
 	ewcfg.cmd_switch_alt_1: ewwep.switch_weapon,
+
 	# Slimernalia
 	# Check your current festivity
 	#ewcfg.cmd_festivity: ewcmd.festivity,
@@ -759,7 +769,7 @@ cmd_map = {
 	# Unwrap a gift
 	ewcfg.cmd_unwrap: ewcmd.unwrap,
 	# Yo, Slimernalia
-	#ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia
+	#ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia,
 	
 	# Swilldermuk
 	# ewcfg.cmd_gambit: ewcmd.gambit,
@@ -809,6 +819,7 @@ cmd_map = {
 	ewcfg.cmd_rampage: ewrace.rampage,
 	ewcfg.cmd_entomize: ewrace.entomize,
 	ewcfg.cmd_confuse: ewrace.confuse,
+	ewcfg.cmd_shamble: ewrace.shamble,
 
 	# Mutations
 	ewcfg.cmd_preserve: ewmutation.preserve,
@@ -825,13 +836,24 @@ cmd_map = {
 	ewcfg.cmd_graft: ewmutation.graft,
 	ewcfg.cmd_bleedout: ewmutation.bleedout,
 	ewcfg.cmd_skullbash: ewitem.skullbash,
+	ewcfg.cmd_juviemode: ewjuviecmd.juviemode,
+
+	ewcfg.cmd_manual_unban:ewcmd.unban_manual,
 
 	# Slime Twitter
 	ewcfg.cmd_tweet: ewslimetwitter.tweet,
+
 	ewcfg.cmd_changegamestate: ewdebug.change_gamestate,
 	ewcfg.cmd_press_button: ewdebug.elevator_press,
 	ewcfg.cmd_addstatuseffect: ewutils.assign_status_effect,
 	ewcfg.cmd_getattire: ewcmd.get_attire,
+
+	ewcfg.cmd_verification: ewslimetwitter.verification,
+	ewcfg.cmd_verification_alt: ewslimetwitter.verification,
+
+	# Check your weapon masteries
+	ewcfg.cmd_mastery: ewcmd.check_mastery
+
 }
 
 debug = False
@@ -1116,35 +1138,6 @@ async def on_ready():
 				ewutils.logMsg('Twitch handler hit an exception (continuing): {}'.format(json_string))
 				traceback.print_exc(file = sys.stdout)
 
-		# Flag all users in dangerous areas for PvP
-		for server in client.guilds:
-			await ewutils.flag_vulnerable_districts(id_server = server.id)
-
-		# Clear PvP roles from players who are no longer flagged.
-		if (time_now - time_last_pvp) >= ewcfg.update_pvp:
-			time_last_pvp = time_now
-
-			try:
-				for server in client.guilds:
-					# fetch all pvp roles
-					pvp_roles = []
-					for pvp_role in ewcfg.role_to_pvp_role.values():
-						role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
-						pvp_roles.append(server.get_role(role.id_role))
-
-					members = []
-					for role in pvp_roles:
-						if role is not None:
-							members.extend(role.members)
-
-					# Monitor all user roles and update if a user is no longer flagged for PvP.
-					for member in members:
-						await ewrolemgr.updateRoles(client = client, member = member, remove_or_apply_flag = 'remove')
-
-			except:
-				ewutils.logMsg('An error occurred in the scheduled role update task:')
-				traceback.print_exc(file=sys.stdout)
-
 		# Adjust the exchange rate of slime for the market.
 		try:
 			for server in client.guilds:
@@ -1248,6 +1241,7 @@ async def on_ready():
 
 					ewutils.logMsg('The time is now {}.'.format(market_data.clock))
 
+
 					if not ewutils.check_fursuit_active(market_data.id_server):
 						ewcosmeticitem.dedorn_all_costumes()
 
@@ -1305,7 +1299,7 @@ async def on_ready():
 					ewads.delete_expired_ads(id_server = server.id)
 
 					await ewdistrict.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
-
+					await ewmap.send_gangbase_messages(server.id, market_data.clock)
 					await ewmap.kick(server.id)
 
 					# Post leaderboards at 6am NLACakaNM time.
@@ -1455,7 +1449,9 @@ async def on_message(message):
 				user is a security officer and has cussed
 		"""
 
+
 		#Ignore users with weird characters in their name
+
 		try:
 			message.author.display_name[:3].encode('utf-8').decode('ascii')
 		except UnicodeError:
@@ -1669,24 +1665,29 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createpoudrin'):
 			for item in ewcfg.item_list:
 				if item.context == "poudrin":
-					ewitem.item_create(
-						item_type = ewcfg.it_item,
-						id_user = message.author.id,
-						id_server = message.guild.id,
-						item_props = {
-							'id_item': item.id_item,
-							'context': item.context,
-							'item_name': item.str_name,
-							'item_desc': item.str_desc,
-						}
-					),
-					ewutils.logMsg('Created item: {}'.format(item.id_item))
-					item = EwItem(id_item = item.id_item)
-					item.persist()
+					poudrin_count = 1 
+					if cmd_obj.tokens_count > 1:
+						try:
+							poudrin_count = int(cmd_obj.tokens[1])
+						except:
+							poudrin_count = 1
+					for i in range(poudrin_count):
+						ewitem.item_create(
+							item_type = ewcfg.it_item,
+							id_user = message.author.id,
+							id_server = message.guild.id,
+							item_props = {
+								'id_item': item.id_item,
+								'context': item.context,
+								'item_name': item.str_name,
+								'item_desc': item.str_desc,
+							}
+						)
+						ewutils.logMsg('Created item: {}'.format(item.id_item))
 			else:
 				pass
 
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Poudrin created."))
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Poudrin(s) created."))
 
 		# Shows damage
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'damage'):
@@ -2009,7 +2010,6 @@ async def on_message(message):
 			
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'hourforward'):
 			market_data = EwMarket(id_server=message.guild.id)
-			
 			market_data.clock += 1
 			response = "Time has progressed 1 hour forward manually."
 
@@ -2080,7 +2080,7 @@ async def on_raw_reaction_add(payload):
 			userid = "<@!{}>".format(payload.user_id)
 
 			# Ignore reaction if it's not from the slime tweet author
-			if embed.description == userid:
+			if embed.description.startswith(userid):
 
 				if (str(payload.emoji) == ewcfg.emote_delete_tweet):
 					await message.delete()

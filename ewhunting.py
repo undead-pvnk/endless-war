@@ -423,12 +423,10 @@ class EwEnemy:
 
 			miss = False
 			crit = False
-			backfire = False
-			backfire_damage = 0
 			strikes = 0
 			#sap_damage = 0
 			#sap_ignored = 0
-			miss_mod = 0
+			hit_chance_mod = 0
 			crit_mod = 0
 			dmg_mod = 0
 
@@ -442,7 +440,7 @@ class EwEnemy:
 			shooter_status_mods = ewwep.get_shooter_status_mods(enemy_data, target_data, hitzone)
 			shootee_status_mods = ewwep.get_shootee_status_mods(target_data, enemy_data, hitzone)
 
-			miss_mod += round(shooter_status_mods['miss'] + shootee_status_mods['miss'], 2)
+			hit_chance_mod += round(shooter_status_mods['hit_chance'] + shootee_status_mods['hit_chance'], 2)
 			crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
 			dmg_mod += round(shooter_status_mods['dmg'] + shootee_status_mods['dmg'], 2)
 			
@@ -506,15 +504,13 @@ class EwEnemy:
 						# Build effect container
 						ctn = EwEnemyEffectContainer(
 							miss=miss,
-							backfire=backfire,
 							crit=crit,
 							slimes_damage=slimes_damage,
 							enemy_data=enemy_data,
 							target_data=target_data,
 							#sap_damage=sap_damage,
 							#sap_ignored=sap_ignored,
-							backfire_damage=backfire_damage,
-							miss_mod=miss_mod,
+							hit_chance_mod=hit_chance_mod,
 							crit_mod=crit_mod
 						)
 
@@ -523,13 +519,11 @@ class EwEnemy:
 
 						# Apply effects for non-reference values
 						miss = ctn.miss
-						backfire = ctn.backfire
 						crit = ctn.crit
 						slimes_damage = ctn.slimes_damage
 						strikes = ctn.strikes
 						#sap_damage = ctn.sap_damage
 						#sap_ignored = ctn.sap_ignored
-						backfire_damage = ctn.backfire_damage
 
 					# can't hit lucky lucy
 					if target_data.life_state == ewcfg.life_state_lucky:
@@ -669,6 +663,7 @@ class EwEnemy:
 						target_data.id_killer = enemy_data.id_enemy
 
 						#target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
+						civ_weapon = random.choice(ewcfg.makeshift_weapons)
 
 						kill_descriptor = "beaten to death"
 						if used_attacktype != ewcfg.enemy_attacktype_unarmed:
@@ -676,13 +671,15 @@ class EwEnemy:
 								name_enemy=enemy_data.display_name,
 								name_target=("<@!{}>".format(target_data.id_user)),
 								hitzone=randombodypart,
-								strikes=strikes
+								strikes=strikes,
+								civ_weapon=civ_weapon
 							)
 							kill_descriptor = used_attacktype.str_killdescriptor
 							if crit:
 								response += " {}".format(used_attacktype.str_crit.format(
 									name_enemy=enemy_data.display_name,
-									name_target=target_player.display_name
+									name_target=target_player.display_name,
+									civ_weapon=civ_weapon
 								))
 
 							if len(onbreak_responses) != 0:
@@ -692,7 +689,8 @@ class EwEnemy:
 							response += "\n\n{}".format(used_attacktype.str_kill.format(
 								name_enemy=enemy_data.display_name,
 								name_target=("<@!{}>".format(target_data.id_user)),
-								emote_skull=ewcfg.emote_slimeskull
+								emote_skull=ewcfg.emote_slimeskull,
+								civ_weapon=civ_weapon
 							))
 							target_data.trauma = used_attacktype.id_type
 
@@ -738,30 +736,19 @@ class EwEnemy:
 									name_enemy=enemy_data.display_name,
 									name_target=target_player.display_name
 								))
-							elif backfire:
-								response = "{}".format(used_attacktype.str_backfire.format(
-									name_enemy = enemy_data.display_name,
-									name_target = target_player.display_name
-								))
-								if enemy_data.slimes - enemy_data.bleed_storage <= backfire_damage:
-									loot_cont = drop_enemy_loot(enemy_data, district_data)
-									resp_cont.add_response_container(loot_cont)
-									enemy_data.life_state = ewcfg.enemy_lifestate_dead
-									delete_enemy(enemy_data)
-								else:
-									enemy_data.change_slimes(n = -backfire_damage / 2)
-									enemy_data.bleed_storage += int(backfire_damage / 2)
 							else:
 								response = used_attacktype.str_damage.format(
 									name_enemy=enemy_data.display_name,
 									name_target=("<@!{}>".format(target_data.id_user)),
 									hitzone=randombodypart,
-									strikes=strikes
+									strikes=strikes,
+									civ_weapon = random.choice(ewcfg.makeshift_weapons)
 								)
 								if crit:
 									response += " {}".format(used_attacktype.str_crit.format(
 										name_enemy=enemy_data.display_name,
-										name_target=target_player.display_name
+										name_target=target_player.display_name,
+										civ_weapon = random.choice(ewcfg.makeshift_weapons)
 									))
 								#sap_response = ""
 								#if sap_damage > 0:
@@ -910,9 +897,7 @@ class EwEnemy:
 
 		if target_enemy != None and not group_attack:
 			
-			backfire = False
 			miss = False
-			backfire_type = None
 
 			# Weaponized flavor text.
 			# hitzone = ewwep.get_hitzone()
@@ -926,7 +911,6 @@ class EwEnemy:
 			if set_damage != None:
 				slimes_damage = set_damage
 
-			backfire_damage = slimes_damage
 
 			# Enemies don't select for these types of lifestates in their AI, this serves as a backup just in case.
 			if target_enemy.life_state != ewcfg.enemy_lifestate_unactivated and target_enemy.life_state != ewcfg.enemy_lifestate_dead:
@@ -939,7 +923,6 @@ class EwEnemy:
 				if used_attacktype.fn_effect != None:
 
 					# Apply effects for non-reference values
-					backfire = False # Make sure to account for UFO shamblers and rowddishes throwing back grenades
 					miss = False # Make sure to account for phosphorpoppies statuses
 					
 				if miss:
@@ -1049,26 +1032,6 @@ class EwEnemy:
 							name_enemy=enemy_data.display_name,
 							name_target=target_enemy.display_name
 						))
-					elif backfire:
-						if backfire_type == 'confusion':
-							response = "{} hurt itself in confusion!".format(
-								enemy_data.display_name
-							)
-						elif backfire_type == 'grenadethrow':
-							response = "{} had its grenade thrown right back at it!".format(
-								enemy_data.display_name
-							)
-						else:
-							response = "{}'s attack backfired!".format(
-								enemy_data.display_name
-							)
-						
-						if enemy_data.slimes - enemy_data.bleed_storage <= backfire_damage:
-							enemy_data.life_state = ewcfg.enemy_lifestate_dead
-							delete_enemy(enemy_data)
-						else:
-							enemy_data.change_slimes(n=-int(backfire_damage / 2))
-							enemy_data.bleed_storage += int(backfire_damage / 2)
 					else:
 						response = used_attacktype.str_damage.format(
 							name_enemy=enemy_data.display_name,
@@ -1114,7 +1077,6 @@ class EwEnemy:
 				if set_damage != None:
 					slimes_damage = set_damage
 	
-				backfire_damage = slimes_damage
 	
 				# Enemies don't select for these types of lifestates in their AI, this serves as a backup just in case.
 				if target_enemy.life_state != ewcfg.enemy_lifestate_unactivated and target_enemy.life_state != ewcfg.enemy_lifestate_dead:
@@ -1527,8 +1489,6 @@ class EwEnemy:
 # Reskinned version of effect container from ewwep.
 class EwEnemyEffectContainer:
 	miss = False
-	backfire = False
-	backfire_damage = 0
 	crit = False
 	strikes = 0
 	slimes_damage = 0
@@ -1536,15 +1496,14 @@ class EwEnemyEffectContainer:
 	target_data = None
 	#sap_damage = 0
 	#sap_ignored = 0
-	miss_mod = 0
+	hit_chance_mod = 0
 	crit_mod = 0
 
 	# Debug method to dump out the members of this object.
 	def dump(self):
 		print(
-			"effect:\nmiss: {miss}\ncrit: {crit}\nbackfire: {backfire}\nstrikes: {strikes}\nslimes_damage: {slimes_damage}\nslimes_spent: {slimes_spent}".format(
+			"effect:\nmiss: {miss}\ncrit: {crit}\nstrikes: {strikes}\nslimes_damage: {slimes_damage}\nslimes_spent: {slimes_spent}".format(
 				miss=self.miss,
-				backfire=self.backfire,
 				crit=self.crit,
 				strikes=self.strikes,
 				slimes_damage=self.slimes_damage,
@@ -1554,7 +1513,6 @@ class EwEnemyEffectContainer:
 	def __init__(
 			self,
 			miss=False,
-			backfire=False,
 			crit=False,
 			strikes=0,
 			slimes_damage=0,
@@ -1563,12 +1521,10 @@ class EwEnemyEffectContainer:
 			target_data=None,
 			#sap_damage=0,
 			#sap_ignored=0,
-			backfire_damage=0,
-			miss_mod=0,
+			hit_chance_mod=0,
 			crit_mod=0
 	):
 		self.miss = miss
-		self.backfire = backfire
 		self.crit = crit
 		self.strikes = strikes
 		self.slimes_damage = slimes_damage
@@ -1577,8 +1533,7 @@ class EwEnemyEffectContainer:
 		self.target_data = target_data
 		#self.sap_damage = sap_damage
 		#self.sap_ignored = sap_ignored
-		self.backfire_damage = backfire_damage
-		self.miss_mod = miss_mod
+		self.hit_chance_mod = hit_chance_mod
 		self.crit_mod = crit_mod
 		
 class EwSeedPacket:
@@ -2003,7 +1958,7 @@ async def enemy_perform_action(id_server):
 			delete_enemy(enemy)
 		else:
 			# If an enemy is an activated raid boss, it has a 1/20 chance to move between districts.
-			if enemy.enemytype in ewcfg.raid_bosses and enemy.life_state == ewcfg.enemy_lifestate_alive and check_raidboss_movecooldown(enemy):
+			if enemy.enemytype in ewcfg.enemy_movers and enemy.life_state == ewcfg.enemy_lifestate_alive and check_raidboss_movecooldown(enemy):
 				if random.randrange(20) == 0:
 					resp_cont = enemy.move()
 					if resp_cont != None:
@@ -2321,6 +2276,11 @@ def spawn_enemy(
 			if pre_chosen_weather == ewcfg.enemy_weathertype_rainresist:
 				enemy.display_name = "Bicarbonate {}".format(enemy.display_name)
 				enemy.slimes *= 2
+		
+		#TODO delete after double halloween
+		market_data = EwMarket(id_server=id_server)
+		if (enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman or enemytype == ewcfg.enemy_type_doublehorse) and market_data.horseman_deaths >= 1:
+			enemy.slimes *= 1.5
 
 		props = None
 		try:
@@ -2347,7 +2307,7 @@ def spawn_enemy(
 				while sub_enemy_spawning_count < sub_enemy_spawning_max:
 					sub_enemy_spawning_count += 1
 
-					sub_resp_cont = spawn_enemy(id_server=id_server, pre_chosen_type=sub_enemy_type, pre_chosen_poi=chosen_poi)
+					sub_resp_cont = spawn_enemy(id_server=id_server, pre_chosen_type=sub_enemy_type, pre_chosen_poi=chosen_poi, manual_spawn=True)
 
 					resp_cont.add_response_container(sub_resp_cont)
 
@@ -2357,6 +2317,15 @@ def spawn_enemy(
 				response = "**A {} has been planted in {}!!**".format(enemy.display_name, enemy.gvs_coord)
 			elif enemytype in ewcfg.gvs_enemies_shamblers:
 				response = "**A {} creeps forward!!** It spawned in {}!".format(enemy.display_name, enemy.gvs_coord)
+			elif enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman:
+				response = "***BEHOLD!!!***  The {} has arrvied to challenge thee! He is of {} slime, and {} in level. Happy Double Halloween, you knuckleheads!".format(enemy.display_name, enemy.slimes, enemy.level)
+
+				if market_data.horseman_deaths >= 1:
+					response += "\n***BACK SO SOON, MORTALS? I'M JUST GETTING WARMED UP, BAHAHAHAHAHAHA!!!***"
+
+			elif enemytype == ewcfg.enemy_type_doublehorse:
+				response = "***HARK!!!***  Clopping echoes throughout the cave! The {} has arrived with {} slime, and {} levels. And on top of him rides...".format(enemy.display_name, enemy.slimes, enemy.level)
+
 			else:
 				response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level, enemy.display_name, enemy.slimes)
 				if enemytype == ewcfg.enemy_type_sandbag:
@@ -2610,8 +2579,8 @@ def drop_enemy_loot(enemy_data, district_data):
 					item_type=item_type,
 					id_user=enemy_data.poi,
 					id_server=enemy_data.id_server,
-					stack_max=20 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else -1,
-					stack_size=1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
+					stack_max= -1,
+					stack_size= 0,
 					item_props=item_props
 				)
 
@@ -2651,9 +2620,6 @@ class EwAttackType:
 	# Displayed when a non-lethal hit occurs.
 	str_damage = ""
 
-	# Displayed when an attack backfires
-	str_backfire = ""
-
 	# Function that applies the special effect for this weapon.
 	fn_effect = None
 
@@ -2677,7 +2643,6 @@ class EwAttackType:
 			fn_effect=None,
 			str_crit="",
 			str_miss="",
-			str_backfire = "",
 			str_groupattack = "",
 	):
 		self.id_type = id_type
@@ -2686,7 +2651,6 @@ class EwAttackType:
 		self.str_trauma = str_trauma
 		self.str_trauma_self = str_trauma_self
 		self.str_damage = str_damage
-		self.str_backfire = str_backfire
 		self.fn_effect = fn_effect
 		self.str_crit = str_crit
 		self.str_miss = str_miss
@@ -2763,12 +2727,12 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 
 	if not cannibalize:
 		if enemy_data.ai == ewcfg.enemy_ai_defender:
-			if enemy_data.id_target != "":
+			if enemy_data.id_target != -1:
 				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server, data_level = 1)
 	
 		elif enemy_data.ai == ewcfg.enemy_ai_attacker_a:
 			users = ewutils.execute_sql_query(
-				"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({time_expirpvp} > {time_now} OR {life_state} = {life_state_shambler}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {time_lastenter} ASC".format(
+				"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({level} > {safe_level} OR {life_state} != {life_state_juvenile}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {time_lastenter} ASC".format(
 					id_user = ewcfg.col_id_user,
 					life_state = ewcfg.col_life_state,
 					time_lastenter = ewcfg.col_time_lastenter,
@@ -2777,10 +2741,11 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 					targettimer = targettimer,
 					life_state_corpse = ewcfg.life_state_corpse,
 					life_state_kingpin = ewcfg.life_state_kingpin,
-					life_state_shambler = ewcfg.life_state_shambler,
+					life_state_juvenile = ewcfg.life_state_juvenile,
 					repel_status = ewcfg.status_repelled_id,
-					time_expirpvp = ewcfg.col_time_expirpvp,
-					time_now = time_now,
+					slimes = ewcfg.col_slimes,
+					safe_level = ewcfg.max_safe_level,
+					level = ewcfg.col_slimelevel
 				), (
 					enemy_data.poi,
 					enemy_data.id_server
@@ -2790,7 +2755,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 	
 		elif enemy_data.ai == ewcfg.enemy_ai_attacker_b:
 			users = ewutils.execute_sql_query(
-				"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({time_expirpvp} > {time_now} OR {life_state} = {life_state_shambler}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {slimes} DESC".format(
+				"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({level} > {safe_level} OR {life_state} != {life_state_juvenile}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {slimes} DESC".format(
 					id_user = ewcfg.col_id_user,
 					life_state = ewcfg.col_life_state,
 					slimes = ewcfg.col_slimes,
@@ -2800,10 +2765,10 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 					targettimer = targettimer,
 					life_state_corpse = ewcfg.life_state_corpse,
 					life_state_kingpin = ewcfg.life_state_kingpin,
-					life_state_shambler = ewcfg.life_state_shambler,
+					life_state_juvenile = ewcfg.life_state_juvenile,
 					repel_status = ewcfg.status_repelled_id,
-					time_expirpvp = ewcfg.col_time_expirpvp,
-					time_now = time_now,
+					safe_level = ewcfg.max_safe_level,
+					level = ewcfg.col_slimelevel
 				), (
 					enemy_data.poi,
 					enemy_data.id_server

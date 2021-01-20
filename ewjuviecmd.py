@@ -84,7 +84,6 @@ async def enlist(cmd):
 	time_now = int(time.time())
 	bans = user_data.get_bans()
 	vouchers = user_data.get_vouchers()
-	user_is_pvp = (user_data.time_expirpvp > time_now)
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're dead, bitch."
@@ -125,7 +124,7 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_killers
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_enlist, True)
+			user_data.juviemode = 0
 			for faction in vouchers:
 				user_data.unvouch(faction)
 			user_data.persist()
@@ -152,7 +151,7 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_rowdys
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_enlist, True)
+			
 			for faction in vouchers:
 				user_data.unvouch(faction)
 			user_data.persist()
@@ -217,7 +216,6 @@ async def enlist(cmd):
 				user_data.life_state = ewcfg.life_state_enlisted
 				user_data.faction = ewcfg.faction_slimecorp
 				user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_enlist)
 				user_data.persist()
 				await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 			else:
@@ -393,13 +391,13 @@ async def mine(cmd):
 
 			# juvies get items 4 times as often as enlisted players
 			unearthed_item_chance = 1 / ewcfg.unearthed_item_rarity
-			if user_data.life_state == ewcfg.life_state_juvenile:
+			if user_data.life_state == ewcfg.life_state_juvenile and not user_data.juviemode:
 				unearthed_item_chance *= 2
-			if has_pickaxe == True:
+			if has_pickaxe == True and not user_data.juviemode:
 				unearthed_item_chance *= 1.5
-			if ewcfg.mutation_id_lucky in mutations:
+			if ewcfg.mutation_id_lucky in mutations and not user_data.juviemode:
 				unearthed_item_chance *= 1.33
-			if ewcfg.cosmeticAbility_id_lucky in cosmetic_abilites:
+			if ewcfg.cosmeticAbility_id_lucky in cosmetic_abilites and not user_data.juviemode:
 				unearthed_item_chance *= 1.33
 
 			# event bonus
@@ -444,22 +442,24 @@ async def mine(cmd):
 				# If there are multiple possible products, randomly select one.
 				item = random.choice(ewcfg.mine_results)
 
-				item_props = ewitem.gen_item_props(item)
+				if ewitem.check_inv_capacity(id_server = cmd.guild.id, id_user = user_data.id_user, item_type = item.item_type):
 
-				for creation in range(unearthed_item_amount):
-					ewitem.item_create(
-						item_type = item.item_type,
-						id_user = cmd.message.author.id,
-						id_server = cmd.guild.id,
-						item_props = item_props
-					)
+					item_props = ewitem.gen_item_props(item)
 
-				if unearthed_item_amount == 1:
-					response += "You unearthed a {}! ".format(item.str_name)
-				else:
-					response += "You unearthed {} {}s! ".format(unearthed_item_amount, item.str_name)
+					for creation in range(unearthed_item_amount):
+						ewitem.item_create(
+							item_type = item.item_type,
+							id_user = cmd.message.author.id,
+							id_server = cmd.guild.id,
+							item_props = item_props
+						)
 
-				ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = unearthed_item_amount)
+					if unearthed_item_amount == 1:
+						response += "You unearthed a {}! ".format(item.str_name)
+					else:
+						response += "You unearthed {} {}s! ".format(unearthed_item_amount, item.str_name)
+
+					ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = unearthed_item_amount)
 
 				# ewutils.logMsg('{} has found {} {}(s)!'.format(cmd.message.author.display_name, item.str_name, unearthed_item_amount))
 
@@ -505,18 +505,14 @@ async def mine(cmd):
 			if was_levelup:
 				response += levelup_response
 
-			was_pvp = user_data.time_expirpvp > time_now
-			# Flag the user for PvP
-			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-			# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, enlisted)
-			# 
 			user_data.persist()
-			# if not was_pvp:
-			# 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 			if printgrid:
 				await print_grid(cmd)
 
+			# gangsters don't need their roles updated
+			if user_data.life_state == ewcfg.life_state_juvenile:
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	else:
 		return await mismine(cmd, user_data, "channel")
@@ -860,21 +856,14 @@ async def scavenge(cmd):
 
 			user_data.time_lastscavenge = time_now
 
-			was_pvp = user_data.time_expirpvp > time_now
-
-			# Flag the user for PvP
-			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-			
-			user_poi = ewcfg.id_to_poi.get(user_data.poi)
-			if user_poi.is_district:
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_scavenge, enlisted)
-
 			user_data.persist()
-			if not was_pvp:
-				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 			if not response == "":
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+			# gangsters don't need their roles updated
+			if user_data.life_state == ewcfg.life_state_juvenile:
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	else:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You'll find no slime here, this place has been picked clean. Head into the city to try and scavenge some slime."))
 
@@ -884,12 +873,12 @@ async def crush(cmd):
 	response = "" # if it's not overwritten
 	crush_slimes = ewcfg.crush_slimes
 
-	crunch_used = False
+	command = "crush"
 	if cmd.tokens[0] == (ewcfg.cmd_prefix + 'crunch'):
-		crunch_used = True
+		command = "crunch"
 	
 	if user_data.life_state == ewcfg.life_state_corpse:
-		response = "Alas, your ghostly form cannot {} anything. Lame.".format("crunch" if crunch_used else "crush")
+		response = "Alas, your ghostly form cannot {} anything. Lame.".format(command)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -899,30 +888,17 @@ async def crush(cmd):
 		sought_id = item_sought.get('id_item')
 		item_data = EwItem(id_item=sought_id)
 
-		response = "The item doesn't have !{} functionality".format("crunch" if crunch_used else "crush")  # if it's not overwritten
+		response = "The item doesn't have !{} functionality".format(command)  # if it's not overwritten
 
 		if item_data.item_props.get("id_item") == ewcfg.item_id_slimepoudrin:
 			# delete a slime poudrin from the player's inventory
 			ewitem.item_delete(id_item=sought_id)
 
-			status_effects = user_data.getStatusEffects()
-			#sap_resp = ""
-			#if ewcfg.status_sapfatigue_id not in status_effects:
-			#	sap_gain = 5
-			#	sap_gain = max(0, min(sap_gain, ewutils.sap_max_bylevel(user_data.slimelevel) - (user_data.hardened_sap + user_data.sap)))
-			#	if sap_gain > 0:
-			#		user_data.sap += sap_gain
-			#		user_data.applyStatus(id_status = ewcfg.status_sapfatigue_id, source = user_data.id_user)
-			#		sap_resp = " and {} sap".format(sap_gain)
-
 			levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
 			user_data.persist()
 			
-			if crunch_used:
-				response = "You crunch the hardened slime crystal with your bare teeth.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
-			else:
-				response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
-			
+			response = "You {} the hardened slime crystal with your bare teeth.\nYou gain {} slime. Sick, dude!!".format(command, crush_slimes)
+	
 			if len(levelup_response) > 0:
 				response += "\n\n" + levelup_response
 
@@ -934,11 +910,8 @@ async def crush(cmd):
 			levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
 			user_data.persist()
 
-			if crunch_used:
-				response = "You crunch your hard-earned slime crystal with your bare teeth.\nYou gain {} slime. Ah, the joy of writing!".format(crush_slimes)
-			else:
-				response = "You crush your hard-earned slime crystal with your bare hands.\nYou gain {} slime. Ah, the joy of writing!".format(crush_slimes)
-
+			response = "You {} your hard-earned slime crystal with your bare teeth.\nYou gain {} slime. Ah, the joy of writing!".format(command, crush_slimes)
+	
 			if len(levelup_response) > 0:
 				response += "\n\n" + levelup_response
 				
@@ -966,10 +939,36 @@ async def crush(cmd):
 				item_props=new_item_props
 			)
 
-			if crunch_used:
-				response = "You crunch your {} in your mouth and spit it out to create some {}!!".format(crop_name, new_name)
+			response = "You {} your {} in your mouth and spit it out to create some {}!!".format(command, crop_name, new_name)
+
+		elif item_data.item_props.get("id_food") in ewcfg.candy_ids_list:
+
+			ewitem.item_delete(id_item=sought_id)
+			item_name = item_data.item_props.get('food_name')
+
+			if float(getattr(item_data, "time_expir", 0)) < time.time():
+				response = "The {} melts disappointingly in your hand...".format(item_name)
+
 			else:
-				response = "You crush your {} in your hands and mold it into some {}!!".format(crop_name, new_name)
+				gristnum = random.randrange(2) + 1
+				gristcount = 0
+
+				response = "You crush the {} with an iron grip. You gain {} piece(s) of Double Halloween Grist!".format(item_name, gristnum)
+
+				while gristcount < gristnum:
+
+					grist = ewcfg.item_map.get(ewcfg.item_id_doublehalloweengrist)
+					grist_props = ewitem.gen_item_props(grist)
+
+					ewitem.item_create(
+						item_type=grist.item_type,
+						id_user=cmd.message.author.id,
+						id_server=cmd.message.guild.id,
+						item_props=grist_props
+					)
+
+					gristcount += 1
+
 	else:
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found
 			response = "You don't have one."
@@ -1649,17 +1648,18 @@ def create_mining_event(cmd):
 			)
 		# 10 second poudrin frenzy
 		else:
-			event_props = {}
-			event_props['id_user'] = cmd.message.author.id
-			event_props['poi'] = user_data.poi
-			event_props['channel'] = cmd.message.channel.name
-			return ewworldevent.create_world_event(
-				id_server = cmd.guild.id,
-				event_type = ewcfg.event_type_poudrinfrenzy,
-				time_activate = time_now,
-				time_expir = time_now + 5,
-				event_props = event_props
-			)
+			if not user_data.juviemode and ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_item):
+				event_props = {}
+				event_props['id_user'] = cmd.message.author.id
+				event_props['poi'] = user_data.poi
+				event_props['channel'] = cmd.message.channel.name
+				return ewworldevent.create_world_event(
+					id_server = cmd.guild.id,
+					event_type = ewcfg.event_type_poudrinfrenzy,
+					time_activate = time_now,
+					time_expir = time_now + 5,
+					event_props = event_props
+				)
 
 	"""
 	# rare event
@@ -1697,3 +1697,22 @@ def gen_scavenge_captcha(n = 0, id_user = 0, id_server = 0):
 	captcha_length = math.ceil(n / 3)
 
 	return ewutils.generate_captcha(length=captcha_length, id_server=id_server, id_user=id_user)
+
+
+async def juviemode(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	status_effects = user_data.getStatusEffects()
+
+	if user_data.juviemode == 1:
+		user_data.juviemode = 0
+		user_data.persist()
+		response = "You can't fucking take anymore. Slime. You need slime. SLIME. **SLLLLLLLLIIIIIIIIIMMMMMMMEEEEE!!!!!!!**"
+	elif user_data.life_state != ewcfg.life_state_juvenile:
+		response = "You think anyone but a cowardly ass Juvie would follow the law? You're not cut out for that life."
+	elif user_data.slimelevel > ewcfg.max_safe_level:
+		response = "You need to be level 18 and under. You're too plump with slime to start following the law now. Get dead, kid."
+	else:
+		user_data.juviemode = 1
+		user_data.persist()
+		response = "You summon forth all the cowardice in your heart, to forgo even slime, the most basic joy. You vow to carry no more than 100,000, the NLACakaNM's legal limit, on your person at any time."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

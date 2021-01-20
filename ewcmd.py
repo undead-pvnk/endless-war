@@ -121,7 +121,7 @@ async def cmd_moan(cmd):
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	response = ewcfg.moans[random.randrange(len(ewcfg.moans))]
 
-	if user_data.life_state != ewcfg.life_state_shambler:
+	if user_data.life_state != ewcfg.life_state_shambler and user_data.race != ewcfg.races["shambler"]:
 		response = "You're not really feeling it... Maybe if you lacked cognitive function, you'd be more inclined to moan, about brains, perhaps."
 		return await ewutils.send_response(response, cmd)
 
@@ -1033,14 +1033,6 @@ async def thrash(cmd):
 
 	if (user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_kingpin) and user_data.faction == ewcfg.faction_rowdys:
 		
-		# time_now = time.time()
-		# was_pvp = user_data.time_expirpvp > time_now
-		# 
-		# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_pride)
-		# user_data.persist()
-		# 
-		# if not was_pvp:
-		# 	await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 		response = '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_rowdyfucker + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rowdyfucker + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf
 		await ewutils.send_response(response, cmd)
 
@@ -1052,14 +1044,6 @@ async def dab(cmd):
 
 	if (user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_kingpin) and user_data.faction == ewcfg.faction_killers:
 		
-		# time_now = time.time()
-		# was_pvp = user_data.time_expirpvp > time_now
-		# 
-		# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_pride)
-		# user_data.persist()
-		# 
-		# if not was_pvp:
-		# 	await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 		response = '\n'  + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + '\n' + ewcfg.emote_copkiller  + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_copkiller + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck
 		await ewutils.send_response(response, cmd)
 
@@ -1212,7 +1196,18 @@ async def help(cmd):
 		
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 
-		dojo_topics = ["dojo", "sparring", "combat", ewcfg.weapon_id_revolver, ewcfg.weapon_id_dualpistols, ewcfg.weapon_id_shotgun, ewcfg.weapon_id_rifle, ewcfg.weapon_id_smg, ewcfg.weapon_id_minigun, ewcfg.weapon_id_bat, ewcfg.weapon_id_brassknuckles, ewcfg.weapon_id_katana, ewcfg.weapon_id_broadsword, ewcfg.weapon_id_nunchucks, ewcfg.weapon_id_scythe, ewcfg.weapon_id_yoyo, ewcfg.weapon_id_bass, ewcfg.weapon_id_umbrella, ewcfg.weapon_id_knives, ewcfg.weapon_id_molotov, ewcfg.weapon_id_grenades, ewcfg.weapon_id_garrote]
+		dojo_topics = [
+			"dojo", "sparring", "combat", ewcfg.weapon_id_revolver, 
+			ewcfg.weapon_id_dualpistols, ewcfg.weapon_id_shotgun, ewcfg.weapon_id_rifle, 
+			ewcfg.weapon_id_smg, ewcfg.weapon_id_minigun, ewcfg.weapon_id_bat, ewcfg.weapon_id_brassknuckles, 
+			ewcfg.weapon_id_katana, ewcfg.weapon_id_broadsword, ewcfg.weapon_id_nunchucks, 
+			ewcfg.weapon_id_scythe, ewcfg.weapon_id_yoyo, ewcfg.weapon_id_bass, 
+			ewcfg.weapon_id_umbrella, ewcfg.weapon_id_knives, ewcfg.weapon_id_molotov, 
+			ewcfg.weapon_id_grenades, ewcfg.weapon_id_garrote,
+			"normal", "multiple-hit", "variable-damage",
+			"small-game", "heavy", "defensive",
+			"precision", "incendiary", "explosive",
+		]
 
 		if poi is None:
 			# catch-all response for when user isn't in a sub-zone with a help response
@@ -1229,7 +1224,7 @@ async def help(cmd):
 			response = ewcfg.help_responses['zines']
 		elif cmd.message.channel.name in ewcfg.channel_dojo and not len(cmd.tokens) > 1:
 			# dojo help
-			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**. For general information about combat, do **'!help combat'**. For information about a specific weapon, do **'!help [weapon]'**." #For information about the sap system, do **'!help sap'**.
+			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**. For general information about combat, do **'!help combat'**. For information about a specific weapon, do **'!help [weapon/weapon type]'**. The different weapon types are: **normal**, **multiple-hit**, **variable-damage**, **small-game**, **heavy**, **defensive**, **precision**, **incendiary**, and **explosive**." #For information about the sap system, do **'!help sap'**.
 		elif cmd.message.channel.name in ewcfg.channel_dojo and len(cmd.tokens) > 1:
 			topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			if topic in dojo_topics and topic in ewcfg.help_responses:
@@ -1304,7 +1299,7 @@ async def map(cmd):
 	Link to the subway map
 """
 async def transportmap(cmd):
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Map of the subway: https://cdn.discordapp.com/attachments/431237299137675297/734152135687798874/streets13.png\nPlease note that there also exists a **blimp** that goes between Dreadford and Assault Flats Beach, as well as a **ferry** that goes between Wreckington and Vagrant's Corner."))
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Map of the subway: https://cdn.discordapp.com/attachments/431238867459375145/570392908780404746/t_system_final_stop_telling_me_its_wrong_magicks.png\nPlease note that there also exists a **blimp** that goes between Dreadford and Assault Flats Beach, as well as a **ferry** that goes between Wreckington and Vagrant's Corner."))
 
 
 """
@@ -1603,23 +1598,6 @@ async def piss(cmd):
 				if target_user_data.life_state == ewcfg.life_state_corpse:
 					response = "You piss right through them! Their ghostly form ripples as the stream of urine pours endlessly unto them."
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				
-				#if user_data.sap < ewcfg.sap_spend_piss:
-				#	response = "You don't have enough liquid sap to !piss..."
-				#else:
-				#sap_damage_target = min(ewcfg.sap_crush_piss, target_user_data.hardened_sap)
-				#target_user_data.hardened_sap -= sap_damage_target
-				#target_user_data.persist()
-				
-				#user_data.sap -= ewcfg.sap_spend_piss
-				#user_data.limit_fix()
-				#enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-				
-				#user_poi = ewcfg.id_to_poi.get(user_data.poi)
-				#user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, enlisted)
-				#user_data.persist()
-				
-				#await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				
 				response = "You piss HARD and FAST right onto {}!!".format(target_member.display_name)
 			else:
@@ -2003,9 +1981,9 @@ async def push(cmd):
 	elif targetmodel.life_state == ewcfg.life_state_corpse:
 		response = "You try to give ol' {} a shove, but they're a bit too dead to be taking up physical space.".format(target.display_name)
 
-	elif time_now > targetmodel.time_expirpvp:
+	#elif time_now > targetmodel.time_expirpvp:
 		# Target is not flagged for PvP.
-		response = "{} is not mired in the ENDLESS WAR right now.".format(target.display_name)
+	#	response = "{} is not mired in the ENDLESS WAR right now.".format(target.display_name)
 
 	elif (ewcfg.mutation_id_bigbones in target_mutations or ewcfg.mutation_id_fatchance in target_mutations) and (ewcfg.mutation_id_lightasafeather not in target_mutations and ewcfg.mutation_id_airlock not in target_mutations):
 		response = "You try to push {}, but they're way too heavy. It's always fat people, constantly trying to prevent your murderous schemes.".format(target.display_name)
@@ -2052,11 +2030,6 @@ async def push(cmd):
 		die_resp = targetmodel.die(cause = ewcfg.cause_cliff)
 		targetmodel.persist()
 
-		# Flag the user for PvP
-		enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-		
-		user_poi = ewcfg.id_to_poi.get(user_data.poi)
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, enlisted)
 		user_data.persist()
 
 		await ewrolemgr.updateRoles(client = cmd.client, member = target)
@@ -2274,43 +2247,6 @@ async def purify(cmd):
 		response = "Purify yourself how? With what? Your own piss?"
 		
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-
-async def flush_subzones(cmd):
-	member = cmd.message.author
-	
-	if not member.guild_permissions.administrator:
-		return
-	
-	subzone_to_mother_districts = {}
-
-	for poi in ewcfg.poi_list:
-		if poi.is_subzone:
-			subzone_to_mother_districts[poi.id_poi] = poi.mother_districts
-
-
-	for subzone in subzone_to_mother_districts:
-		mother_districts = subzone_to_mother_districts.get(subzone)
-		
-		used_mother_district = mother_districts[0]
-		
-		ewutils.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
-			id_owner = ewcfg.col_id_user,
-			id_server = ewcfg.col_id_server
-		), (
-			used_mother_district,
-			subzone,
-			cmd.guild.id
-		))
-
-		subzone_data = EwDistrict(district = subzone, id_server = cmd.guild.id)
-		district_data = EwDistrict(district = used_mother_district, id_server = cmd.guild.id)
-
-		district_data.change_slimes(n = subzone_data.slimes)
-		subzone_data.change_slimes(n = -subzone_data.slimes)
-
-		district_data.persist()
-		subzone_data.persist()
 	
 async def wrap(cmd):
 	
@@ -2383,8 +2319,10 @@ async def wrap(cmd):
 					'gifted': "false"
 				}
 			)
-			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "gift", id_server=cmd.guild.id)
+			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=str(cmd.message.author.id) + "gift", id_server=cmd.guild.id)
 			ewitem.item_delete(id_item=paper_item.id_item)
+
+			user_data.festivity += ewcfg.festivity_on_gift_wrapping
 
 			user_data.persist()
 	else:
@@ -2426,6 +2364,10 @@ async def unwrap(cmd):
 				
 				gifted_item_name = gifted_item.item_props.get('{}'.format(gift_name_type))
 				gifted_item_message = item.item_props.get('context')
+
+				#user_data = EwUser(member=cmd.message.author)
+				#user_data.festivity += ewcfg.festivity_on_gift_wrapping
+				#user_data.persist()
 				
 				response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)
 				ewitem.item_delete(id_item=item_sought.get('id_item'))
@@ -2498,6 +2440,18 @@ async def forge_master_poudrin(cmd):
 		member.display_name)
 	await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
+
+async def unban_manual(cmd):
+	if not cmd.message.author.guild_permissions.administrator:
+		return
+	if len(cmd.tokens) == 2:
+		id = int(cmd.tokens[1])
+		user_obj = cmd.client.get_user(id)
+		await cmd.guild.unban(user_obj)
+		response = "Success"
+	else:
+		response = "Failure {}".format(len(cmd.mentions))
+	await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
 # A debug function designed to generate almost any kind of item within the game. Can be used to give items to users.
 async def create_item(cmd):
@@ -2574,8 +2528,8 @@ async def create_item(cmd):
 			item_type=item_type,
 			id_user=item_recipient.id,
 			id_server=cmd.guild.id,
-			stack_max=20 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else -1,
-			stack_size=1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
+			stack_max=-1,
+			stack_size=0,
 			item_props=item_props
 		)
 		
@@ -4015,17 +3969,25 @@ async def payday(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def check_flag(cmd):
+
+	response = "https://img.booru.org/rfck//images/2/5c00b9d105d2435546ff6d3d9f545b05650d6631.png"
+	return await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	"""
 	user_data = EwUser(member=cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if user_data.time_expirpvp < int(time.time()):
 		response = "You don't have a flag."
-	elif poi.is_street and abs(user_data.time_expirpvp - int(time.time())) < 60:
-		response = "You're in a street, so the flag's always on."
 	else:
 		response = "You have {:,} seconds left on your flag.".format(abs(user_data.time_expirpvp - int(time.time())))
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+	"""
+
+
+
 
 
 async def exec_mutations(cmd):
@@ -4051,3 +4013,31 @@ async def exec_mutations(cmd):
 	else:
 		response = "Slimecorp hasn't issued them mutations in their current position."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def get_attire(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	status = user_data.getStatusEffects()
+	if user_data.poi != ewcfg.poi_id_thebreakroom:
+		response = "Are you a Slimecorp Security Force official, planted firmly in their lavish breakroom? No? Then you're not getting shit."
+	elif ewcfg.status_kevlarattire in status:
+		response = "You're already armed, though. This stuff's too expensive so the company's not gonna let you double dip."
+	elif user_data.life_state != ewcfg.life_state_enlisted:
+		response = "You're not committed enough to wear this attire. You're a slob. How did you even get in here?"
+	else:
+		return await ewutils.assign_status_effect(status_name='kevlarattire', user_id=cmd.message.author.id, server_id=cmd.guild.id)
+
+async def check_mastery(cmd):
+	message_line = "You are a rank {} master of the {}. \n"
+	message = "\nYou close your eyes for a moment, recalling your masteries. \n"
+	if cmd.mentions_count > 0:
+		response = "You can only recall your own weapon masteries!"
+	else:
+		wepskills = ewutils.weaponskills_get(member=cmd.message.author)
+		for skill, level in wepskills.items():
+			message += message_line.format(level["skill"], skill.lower())
+		response = message
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+

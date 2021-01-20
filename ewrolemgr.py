@@ -371,6 +371,8 @@ async def updateRoles(
 	#roles_map = ewutils.getRoleMap(member.guild.roles)
 	roles_map_user = ewutils.getRoleIdMap(member.roles)
 
+	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+
 	if user_data.life_state != ewcfg.life_state_kingpin and ewcfg.role_kingpin in roles_map_user:
 		# Fix the life_state of kingpins, if somehow it wasn't set.
 		user_data.life_state = ewcfg.life_state_kingpin
@@ -409,11 +411,25 @@ async def updateRoles(
 
 	faction_roles_remove.remove(faction_role)
 
+	non_wanted_pois = [
+		ewcfg.poi_id_copkilltown, 
+		ewcfg.poi_id_rowdyroughhouse, 
+		ewcfg.poi_id_juviesrow, 
+		ewcfg.poi_id_thebreakroom,
+		ewcfg.poi_id_mine, 
+		ewcfg.poi_id_mine_bubble, 
+		ewcfg.poi_id_mine_sweeper, 
+		ewcfg.poi_id_juviesrow_pier, 
+		ewcfg.poi_id_jr_farms
+	 ]
+
 	pvp_role = None
 	active_role = None
 	if faction_role in ewcfg.role_to_pvp_role:
 
-		if user_data.time_expirpvp >= time_now:
+		if not user_poi.is_apartment and \
+		user_poi.id_poi not in non_wanted_pois and \
+		(user_data.life_state != ewcfg.life_state_juvenile or user_data.slimelevel > ewcfg.max_safe_level):
 			pvp_role = ewcfg.role_to_pvp_role.get(faction_role)
 			faction_roles_remove.remove(pvp_role)
 
@@ -427,8 +443,6 @@ async def updateRoles(
 		faction_roles_remove.remove(tutorial_role)
 
 	# Manage location roles.
-	user_poi = ewcfg.id_to_poi.get(user_data.poi)
-	#print(user_poi.id_poi)
 	if user_poi != None:
 		# poi_role = user_poi.role
 		poi_major_role = user_poi.major_role
@@ -466,10 +480,9 @@ async def updateRoles(
 		misc_roles_remove.remove(ewcfg.role_gellphone)
 
 	role_slimernalia = None
-	#if user_data.slimernalia_kingpin == True:
-	#	role_slimernalia = ewcfg.role_slimernalia
-	#	misc_roles_remove.remove(ewcfg.role_slimernalia)
-
+	if user_data.slimernalia_kingpin == True:
+		role_slimernalia = ewcfg.role_slimernalia
+		misc_roles_remove.remove(ewcfg.role_slimernalia)
 
 	role_ids = []
 	for role_id in roles_map_user:
@@ -573,36 +586,9 @@ async def updateRoles(
 	#ewutils.logMsg('found {} roles to replace'.format(len(replacement_roles)))
 	
 	try:
-		time_now = int(time.time())
-		was_pvp = user_data.time_expirpvp > time_now
-		user_is_pvp = False
-
-		role_ids = []
-		for pvp_role in ewcfg.role_to_pvp_role.values():
-			role = EwRole(id_server=member.guild.id, name = pvp_role)
-			role_ids.append(role.id_role)
-
-			for role in member.roles:
-				if role.id in role_ids:
-					user_is_pvp = True
-					break
-		
-		if remove_or_apply_flag != None:
-			
-			if was_pvp:
-				if remove_or_apply_flag == 'apply':
-					if not user_is_pvp:
-						# ewutils.logMsg('applying flag...')
-						await member.edit(roles=replacement_roles)
-			elif not was_pvp:
-				if remove_or_apply_flag == 'remove':
-					# ewutils.logMsg('removing flag...')
-					await member.edit(roles=replacement_roles)
-		else:
-			await member.edit(roles=replacement_roles)
-			
-	except:
-		ewutils.logMsg('error: failed to replace roles for {}'.format(member.display_name))
+		await member.edit(roles=replacement_roles)
+	except Exception as e:
+		ewutils.logMsg('error: failed to replace roles for {}:{}'.format(member.display_name, str(e)))
 
 	if refresh_perms:
 		await refresh_user_perms(client = client, id_server = id_server, used_member = member)
@@ -637,15 +623,18 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 
 				#time_now_start = int(time.time())
 
-				for i in range(ewcfg.permissions_tries):
-					await channel.set_permissions(used_member, overwrite=None)
+				try:
+					for i in range(ewcfg.permissions_tries):
+						await channel.set_permissions(used_member, overwrite=None)
 
-				# Handle mine walls
-				if poi.id_poi in ewcfg.mines_wall_map:
-					wall_channel = ewutils.get_channel(server, ewcfg.mines_wall_map[poi.id_poi])
-					if wall_channel is not None:
-						for i in range(ewcfg.permissions_tries):
-							await wall_channel.set_permissions(used_member, overwrite=None)
+					# Handle mine walls
+					if poi.id_poi in ewcfg.mines_wall_map:
+						wall_channel = ewutils.get_channel(server, ewcfg.mines_wall_map[poi.id_poi])
+						if wall_channel is not None:
+							for i in range(ewcfg.permissions_tries):
+								await wall_channel.set_permissions(used_member, overwrite=None)
+				except:
+					ewutils.logMsg("Failed to remove permissions for {} in channel {}.".format(used_member.display_name, channel.name))
 
 				#time_now_end = int(time.time())
 				#print('took {} seconds to delete channel permissions'.format(time_now_end - time_now_start))
@@ -673,18 +662,20 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 				
 				#print(permissions_dict[user_data.poi])
 				#time_now_start = int(time.time())
+				try:
+					for i in range(ewcfg.permissions_tries):
+						await correct_channel.set_permissions(used_member, overwrite=overwrite)
 
-				for i in range(ewcfg.permissions_tries):
-					await correct_channel.set_permissions(used_member, overwrite=overwrite)
-
-				# Handle mine walls
-				if correct_poi.id_poi in ewcfg.mines_wall_map:
-					wall_channel = ewutils.get_channel(server, ewcfg.mines_wall_map[correct_poi.id_poi])
-					if wall_channel is not None:
-						overwrite = discord.PermissionOverwrite()
-						overwrite.read_messages = True
-						for i in range(ewcfg.permissions_tries):
-							await wall_channel.set_permissions(used_member, overwrite=overwrite)
+					# Handle mine walls
+					if correct_poi.id_poi in ewcfg.mines_wall_map:
+						wall_channel = ewutils.get_channel(server, ewcfg.mines_wall_map[correct_poi.id_poi])
+						if wall_channel is not None:
+							overwrite = discord.PermissionOverwrite()
+							overwrite.read_messages = True
+							for i in range(ewcfg.permissions_tries):
+								await wall_channel.set_permissions(used_member, overwrite=overwrite)
+				except:
+					ewutils.logMsg("Failed to add permissions to {} in channel {}.".format(used_member.display_name, channel.name))
 
 				#time_now_end = int(time.time())
 				#print('took {} seconds to update channel permissions'.format(time_now_end - time_now_start))
@@ -719,10 +710,12 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 			overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict[user_data.poi] else False
 		
 			#time_now_start = int(time.time())
-	
-			for i in range(ewcfg.permissions_tries):
-				await correct_channel.set_permissions(used_member, overwrite=overwrite)
 
+			try:
+				for i in range(ewcfg.permissions_tries):
+					await correct_channel.set_permissions(used_member, overwrite=overwrite)
+			except Exception as e:
+				ewutils.logMsg("Failed to fix permissions for {}:{}.".format(used_member.display_name, str(e)))
 			#time_now_end = int(time.time())
 			#print('took {} seconds to generate channel permissions'.format(time_now_end - time_now_start))
 			# print('corrected overwrite in {} for {}'.format(correct_channel, member))

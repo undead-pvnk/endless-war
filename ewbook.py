@@ -1180,6 +1180,9 @@ async def order_zine(cmd):
 	elif len(cmd.tokens) == 1:
 		response = "Specify a zine to purchase. Find zine IDs with !browse."
 
+	elif not ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_book):
+		response = "You can't carry any more zines."
+
 	else:
 		if cmd.tokens[1].isdigit():
 			id_book = int(cmd.tokens[1])
@@ -1247,10 +1250,11 @@ async def order_zine(cmd):
 						user_data.change_slimes(n = -(price), source = ewcfg.source_spending)
 						
 						user_data.persist()
+
 						if book.genre != 10:
 							author = EwUser(id_user = book.id_user, id_server = book.id_server)
 
-							if author.id_user != user_data.id_user:
+							if author.id_user != user_data.id_user and ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_item):
 								ewitem.item_create(
 									item_type=ewcfg.it_item,
 									id_user=author.id_user,

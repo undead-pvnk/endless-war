@@ -82,7 +82,7 @@ class EwUser:
 	time_lastpremiumpurchase = 0
 	
 	#GANKERS VS SHAMBLERS
-	gvs_currency = 0
+	juviemode = 0
 	gvs_time_lastshambaquarium = 0
 
 	apt_zone = "empty"
@@ -92,6 +92,9 @@ class EwUser:
 	rand_seed = 0
 	#when a user was last hit
 	time_lasthit = 2
+
+	# twitter
+	verified = False
 
 	move_speed = 1 # not a database column
 
@@ -126,6 +129,11 @@ class EwUser:
 	def change_slimes(self, n = 0, source = None):
 		change = int(n)
 		self.slimes += change
+		if self.life_state == ewcfg.life_state_juvenile:
+
+			if self.juviemode == 1 and self.slimes > ewcfg.max_safe_slime:
+				self.slimes = ewcfg.max_safe_slime
+
 		response = ""
 
 		if n >= 0:
@@ -1103,17 +1111,19 @@ class EwUser:
 
 	def get_festivity(self):
 		data = ewutils.execute_sql_query(
-		"SELECT FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) FROM users "\
+		"SELECT {festivity} + COALESCE(sigillaria, 0) + {festivity_from_slimecoin} FROM users "\
 		"LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} "\
-		"WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} WHERE users.{id_user} = %s AND users.{id_server} = %s".format(
+		"WHERE {type} = %s AND {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} WHERE users.{id_user} = %s AND users.{id_server} = %s".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
 			festivity = ewcfg.col_festivity,
 			festivity_from_slimecoin = ewcfg.col_festivity_from_slimecoin,
+			type = ewcfg.col_item_type,
 			name = ewcfg.col_name,
 			value = ewcfg.col_value,
 			id_item = ewcfg.col_id_item,
 		),(
+			ewcfg.it_furniture,
 			"id_furniture",
 			ewcfg.item_id_sigillaria,
 			self.id_user,
@@ -1124,17 +1134,30 @@ class EwUser:
 		for row in data:
 			res = row[0]
 
-		return int(res)
+		return res
 
 	def has_gellphone(self):
+		"""
 		gellphones = ewitem.find_item_all(item_search = ewcfg.item_id_gellphone, id_user = self.id_user, id_server = self.id_server, item_type_filter = ewcfg.it_item)
 
 		for phone in gellphones:
 			phone_data = ewitem.EwItem(id_item = phone.get('id_item'))
 			if phone_data.item_props.get('active') == 'true':
 				return True
+		"""
+		data = ewutils.execute_sql_query(
+		"SELECT it.* FROM items it INNER JOIN items_prop itp ON it.id_item = itp.id_item WHERE it.{id_user} = '%s' AND itp.{name} = %s AND itp.{value} = %s".format(
+			id_user = ewcfg.col_id_user,
+			id_item = ewcfg.col_id_item,
+			name = ewcfg.col_name,
+			value = ewcfg.col_value
+		),(
+			self.id_user,
+			"gellphoneactive",
+			"true"
+		))
 
-		return False
+		return len(data) > 0
 
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, ew_id = None, member = None, id_user = None, id_server = None, data_level = 0):
@@ -1164,7 +1187,7 @@ class EwUser:
 
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -1220,10 +1243,11 @@ class EwUser:
 					ewcfg.col_race,
 					ewcfg.col_time_racialability,
 					ewcfg.col_time_lastpremiumpurchase,
-					ewcfg.col_gvs_currency,
+					ewcfg.col_juviemode,
 					ewcfg.col_gvs_time_lastshambaquarium,
 					ewcfg.col_rand_seed,
 					ewcfg.col_time_lasthit,
+					ewcfg.col_verified,
 				), (
 					id_user,
 					id_server
@@ -1286,11 +1310,11 @@ class EwUser:
 					self.race = result[49]
 					self.time_racialability = result[50]
 					self.time_lastpremiumpurchase = result[51]
-					self.gvs_currency = result[52]
+					self.juviemode = result[52]
 					self.gvs_time_lastshambaquarium = result[53]
 					self.rand_seed = result[54]
 					self.time_lasthit = result[55]
-
+					self.verified = result[56]
 
 				else:
 					self.poi = ewcfg.poi_id_downtown
@@ -1386,7 +1410,7 @@ class EwUser:
 
 			# Save the object.
 
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -1444,10 +1468,11 @@ class EwUser:
 				ewcfg.col_race,
 				ewcfg.col_time_racialability,
 				ewcfg.col_time_lastpremiumpurchase,
-				ewcfg.col_gvs_currency,
+				ewcfg.col_juviemode,
 				ewcfg.col_gvs_time_lastshambaquarium,
 				ewcfg.col_rand_seed,
-				ewcfg.col_time_lasthit
+				ewcfg.col_time_lasthit,
+				ewcfg.col_verified,
 			), (
 				self.id_user,
 				self.id_server,
@@ -1506,10 +1531,11 @@ class EwUser:
 				self.race,
 				self.time_racialability,
 				self.time_lastpremiumpurchase,
-				self.gvs_currency,
+				self.juviemode,
 				self.gvs_time_lastshambaquarium,
 				self.rand_seed,
-				self.time_lasthit
+				self.time_lasthit,
+				self.verified
 			))
 
 			conn.commit()

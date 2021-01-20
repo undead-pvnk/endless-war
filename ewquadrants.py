@@ -316,9 +316,9 @@ def get_quadrant(cmd, id_quadrant):
 		quadrant_data = EwQuadrant(id_server = member.guild.id, id_user = member.id, quadrant = quadrant.id_quadrant)
 
 		if author.guild.get_member(quadrant_data.id_target) is None:
-			quadrant_data.id_target = ""
+			quadrant_data.id_target = -1
 		if author.guild.get_member(quadrant_data.id_target2) is None:
-			quadrant_data.id_target2 = ""
+			quadrant_data.id_target2 = -1
 
 		quadrant_data.persist()
 

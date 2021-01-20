@@ -705,7 +705,7 @@ async def store_item(cmd, dest):
 
 	if item_sought:
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
-		if item_sought.get('soulbound'):
+		if item_sought.get('soulbound') and ewitem.EwItem(id_item = item_sought.get('id_item')).item_props.get("context") != "housekey":
 			response = "You can't just put away soulbound items. You have to keep them in your pants at least until the Rapture hits."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -872,6 +872,16 @@ async def remove_item(cmd, dest):
 			)
 			if len(wep_items) >= usermodel.get_weapon_capacity():
 				response = "You can't carry any more weapons."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		else:
+			other_items = ewitem.inventory(
+				id_user=cmd.message.author.id,
+				id_server=playermodel.id_server,
+				item_type_filter=item_sought.get('item_type')
+			)
+			if len(other_items) >= ewcfg.generic_inv_limit:
+				response = ewcfg.str_generic_inv_limit.format(item_sought.get('item_type'))
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if item_sought.get('item_type') == ewcfg.it_food and destination == ewcfg.compartment_id_fridge:
@@ -1429,13 +1439,6 @@ async def knock(cmd = None):
 						if message.content.lower() == ewcfg.cmd_refuse:
 							accepted = False
 
-							user_data = EwUser(member=cmd.message.author)
-							
-							# Flag the person knocking to discourage spam
-							enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-							user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_knock, enlisted)
-							user_data.persist()
-							await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 							await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "They don't want your company, and have tipped off the authorities."))
 					else:
 						pass
@@ -1501,15 +1504,12 @@ async def trickortreat(cmd = None):
 	costumes = 0
 	for it in items:
 		i = EwItem(it.get('id_item'))
-		context = i.item_props.get('context')
+		id_cosmetic = i.item_props.get('id_cosmetic')
 		adorned = i.item_props.get('adorned')
-		if context == 'costume' and adorned == 'true':
+		if id_cosmetic == 'dhcostume' and adorned == 'true':
 			costumes += 1
 
-	if costumes == 0 and cmd.mentions_count >= 1:
-		response = "How are you gonna go trick-or-treating without a costume on?"
-		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
-	elif costumes == 0 and cmd.mentions_count == 0:
+	if costumes == 0:
 		response = "How are you gonna go trick-or-treating without a costume on?"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1566,7 +1566,7 @@ async def trickortreat(cmd = None):
 
 			if reject:
 				response = "No response. Maybe they're busy?"
-				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.channel, response))
 				response = "You just sort of wait in your apartment until they go away."
 				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
 
@@ -1589,7 +1589,7 @@ async def trickortreat(cmd = None):
 				item_name = item_props.get('food_name')
 
 				response = "{} gives you a {}. You thank them, and go about your business.".format(target.display_name, item_name)
-				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				response = "You give {} a {}. Happy Double Halloween, you knucklehead!".format(cmd.message.author.display_name, item_name)
 				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
 			else:
@@ -1627,7 +1627,7 @@ async def trickortreat(cmd = None):
 
 				user_data.persist()
 				response = ewcfg.halloween_tricks_trickee[trick_index].format(target.display_name, slime_loss)
-				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				response = ewcfg.halloween_tricks_tricker[trick_index].format(cmd.message.author.display_name, slime_loss)
 				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
 
@@ -1727,11 +1727,11 @@ async def trickortreat(cmd = None):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
 			response = "Whose door are you knocking?"
-			return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
 		response = "One door at a time, please."
-		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 async def cancel(cmd):
@@ -1859,6 +1859,10 @@ async def aquarium(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
+	if not ewitem.check_inv_capacity(id_server = cmd.guild.id, id_user = cmd.message.author.id, item_type = ewcfg.it_furniture):
+		response = "You don't have room for any more furniture items."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	if item_sought:
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_props.get('acquisition') == ewcfg.acquisition_fishing:
@@ -1905,6 +1909,10 @@ async def propstand(cmd):
 	usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+	if not ewitem.check_inv_capacity(id_server = cmd.guild.id, id_user = cmd.message.author.id, item_type = ewcfg.it_furniture):
+		response = "You don't have room for any more furniture items."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if item_sought:
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
@@ -1969,6 +1977,10 @@ async def flowerpot(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+	if not ewitem.check_inv_capacity(id_server = cmd.guild.id, id_user = cmd.message.author.id, item_type = ewcfg.it_furniture):
+		response = "You don't have room for any more furniture items."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if item_sought:
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
@@ -2401,8 +2413,8 @@ async def aptCommands(cmd):
 		return await ewmap.move(cmd=cmd, isApt = True)
 	elif cmd_text == ewcfg.cmd_knock:
 		return await knock(cmd=cmd)
-	#elif cmd_text == ewcfg.cmd_trickortreat:
-	#	return await trickortreat(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_trickortreat:
+		return await trickortreat(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_wash:
 		return await wash(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_browse:
@@ -2553,8 +2565,8 @@ async def aptCommands(cmd):
 		return await ewmutation.clench(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_longdrop:
 		return await ewitem.longdrop(cmd=cmd)
-	#elif cmd_text == ewcfg.cmd_trick or cmd_text == ewcfg.cmd_treat:
-	#	pass
+	elif cmd_text == ewcfg.cmd_trick or cmd_text == ewcfg.cmd_treat:
+		pass
 	elif cmd_text[0]==ewcfg.cmd_prefix: #faliure text
 		randint = random.randint(1, 3)
 		msg_mistake = "ENDLESS WAR is growing frustrated."
