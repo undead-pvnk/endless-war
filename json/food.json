@@ -3694,7 +3694,7 @@
         "time_expir": 43200,
         "time_fridged": 0,
         "ingredients": "",
-        "acquisition": "",
+        "acquisition": "smelting",
         "perishable": false
     }
 }

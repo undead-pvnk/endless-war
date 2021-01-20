@@ -9511,7 +9511,7 @@ smelting_recipe_list = [
 		str_name="a ferroslimeoid",
 		alias=[
 			'ferroslimeoid',
-			'magnet',
+			'magnet'
 		],
 		ingredients={
 			item_id_tincan: 2,  # metal dust
