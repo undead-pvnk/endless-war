@@ -12461,8 +12461,8 @@ status_effect_list = [
 		str_describe = "He is god's gift to malice.",
         dmg_mod_self = -0.5,
 		dmg_mod = 2,
-		miss_mod_self = -.2,
-		miss_mod = .35
+		hit_chance_mod_self = +.2,
+		hit_chance_mod = -.35
 	),
     EwStatusEffectDef(
 		id_status = status_n2,
@@ -12471,8 +12471,8 @@ status_effect_list = [
 		str_describe_self = "You shred like nobody's business.",
 		str_describe = "They shred like nobody's business.",
         dmg_mod_self = -0.5,
-		miss_mod_self = -.2,
-		miss_mod = .5
+		hit_chance_mod_self = +.2,
+		hit_chance_mod = -.5
 	),
     EwStatusEffectDef(
 		id_status = status_n4,
