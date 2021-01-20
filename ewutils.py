@@ -3113,3 +3113,16 @@ async def fake_failed_command(cmd):
 		pass
 	except:
 		pass
+
+async def assign_status_effect(cmd = None, status_name = None, user_id = None, server_id = None):
+	if status_name is not None:
+		user_data = EwUser(id_server=server_id, id_user = user_id)
+		response = user_data.applyStatus(id_status=status_name, source = user_id, id_target = user_id)
+	else:
+		if not cmd.message.author.guild_permissions.administrator or cmd.mentions_count == 0:
+			return await fake_failed_command(cmd)
+		target = cmd.mentions[0]
+		status_name = flattenTokenListToString(cmd.tokens[2:])
+		user_data = EwUser(member=target)
+		response = user_data.applyStatus(id_status=status_name, source=user_data.id_user, id_target=user_data.id_user)
+	return await send_message(cmd.client, cmd.message.channel, formatMessage(cmd.message.author, response))

@@ -193,11 +193,15 @@ class EwUser:
 
 		
 	def die(self, cause = None):
+
+
 		time_now = int(time.time())
 
 		ewutils.end_trade(self.id_user)
 
 		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
+
+
 
 		client = ewcfg.get_client()
 		server = client.get_guild(self.id_server)
@@ -211,10 +215,16 @@ class EwUser:
 		deathreport = ewutils.create_death_report(cause = cause, user_data = self)
 		resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 
+
 		poi = ewcfg.id_to_poi.get(self.poi)
 		if cause == ewcfg.cause_weather:
 			resp_cont.add_channel_response(poi.channel, deathreport)
 
+		status = self.getStatusEffects()
+		if "n1" in status:
+			response = "But N1 doesn't die!"
+			resp_cont.add_channel_response(poi.channel, response)
+			return(resp_cont)
 
 		# Grab necessary data for spontaneous combustion before stat reset
 		explosion_block_list = [ewcfg.cause_leftserver, ewcfg.cause_cliff]

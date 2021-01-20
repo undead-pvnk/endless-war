@@ -1460,6 +1460,8 @@ cmd_tweet = cmd_prefix + 'tweet'
 
 cmd_changegamestate = cmd_prefix + 'changegamestate'
 cmd_press_button = cmd_prefix + 'press'
+cmd_addstatuseffect = cmd_prefix + 'addstatuseffect'
+cmd_getattire = cmd_prefix + 'getattire'
 #SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
@@ -12696,7 +12698,7 @@ status_n8 = "n8"
 status_n11 = "n11"
 status_n12 = "n12"
 status_n13 = "n13"
-
+status_kevlarattire = "kevlarattire"
 
 status_injury_head_id = "injury_head"
 status_injury_torso_id = "injury_torso"
@@ -12869,6 +12871,7 @@ status_effect_list = [
 		time_expire = 86400,
 		str_acquire = "",
 		str_describe_self = "You are god's gift to malice.",
+		str_describe = "He is god's gift to malice.",
         dmg_mod_self = -0.5,
 		dmg_mod = 2,
 		miss_mod_self = -.2,
@@ -12879,6 +12882,7 @@ status_effect_list = [
 		time_expire = 86400,
 		str_acquire = "",
 		str_describe_self = "You shred like nobody's business.",
+		str_describe = "They shred like nobody's business.",
         dmg_mod_self = -0.5,
 		miss_mod_self = -.2,
 		miss_mod = .5
@@ -12888,6 +12892,7 @@ status_effect_list = [
 		time_expire = 86400,
 		str_acquire = "",
 		str_describe_self = "Sorry, you can't let them do that.",
+		str_describe = "Sorry, they can't let you do this.",
         dmg_mod_self = -1,
 		dmg_mod = -.5,
 	),
@@ -12905,6 +12910,7 @@ status_effect_list = [
 		time_expire = 86400,
 		str_acquire = "",
 		str_describe_self = "You're feeling like putting your cronies to the test.",
+		str_describe = "You're afraid of this guy.",
         dmg_mod_self = -0.5,
 		dmg_mod = 1.5,
 		crit_mod_self = .5
@@ -12914,6 +12920,7 @@ status_effect_list = [
 		time_expire = 86400,
 		str_acquire = "",
 		str_describe_self = "Time to get nasty.",
+		str_describe = "She barely looks human.",
         dmg_mod_self = -0.5,
 		dmg_mod = 1.7,
 		crit_mod_self = .75
@@ -12923,9 +12930,18 @@ status_effect_list = [
 		time_expire=86400,
 		str_acquire="",
 		str_describe_self="They're really starting to get on your nerves.",
+		str_describe= "You're really starting to get on his nerves.",
 		dmg_mod_self=-0.5,
 		dmg_mod=1.5,
 		crit_mod_self=.5
+	),
+	EwStatusEffectDef(
+		id_status=status_kevlarattire,
+		time_expire=86400,
+		str_acquire="You pull up the tie on your snazzy looking new armor, and adorn the matching eyewear.",
+		str_describe="They're outfitted in the latest kevlar attire.",
+		str_describe_self="You're outfitted in the latest kevlar attire.",
+		dmg_mod_self=-0.2,
 	),
 ]
 
@@ -15076,7 +15092,7 @@ zine_commands = [
 	cmd_setpages_alt_1,
 	cmd_setpages_alt_2,
 ]
-
+#lock states between two specific districts
 lock_states = {
 	"n13door":["n13office", "n4office"],
 	"n2door":["n2office", "n4office"],
@@ -15088,6 +15104,11 @@ lock_states = {
 	"n10door":["n10office", "slimecorphq"],
 	"n11door":["n11office", "n4office"]
 }
+
+region_lock_states = {
+	"slimecorptunnel":["lobbylock1", "lobbylock2"]
+}
+
 
 
 curse_words = { # words that the player should be punished for saying via swear jar deduction. the higher number, the more the player gets punished.

@@ -830,6 +830,8 @@ cmd_map = {
 	ewcfg.cmd_tweet: ewslimetwitter.tweet,
 	ewcfg.cmd_changegamestate: ewdebug.change_gamestate,
 	ewcfg.cmd_press_button: ewdebug.elevator_press,
+	ewcfg.cmd_addstatuseffect: ewutils.assign_status_effect,
+	ewcfg.cmd_getattire: ewcmd.get_attire,
 }
 
 debug = False

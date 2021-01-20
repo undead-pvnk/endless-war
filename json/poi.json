@@ -18764,7 +18764,8 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n10office": 20
+            "n10office": 20,
+            "slimecorptunnel": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/SlimeCorp"
@@ -18774,8 +18775,7 @@
         "alias": [
             "slimecorpoffices1f",
             "offices1f",
-            "1f",
-            "lobby"
+            "1f"
         ],
         "str_name": "Slimecorp Offices 1F",
         "str_desc": "The 1st floor corporate office of Slimecorp is awfully quiet now that you've barged in. The wagecucks are all hiding under their **DESKS** hoping you'll go away. Ha, sick. There's no time to lose, though. You're pretty sure a secretary already called 911.\n\nYou notice N10 works here. His desk is a real dust trap, but it's well organized. Maybe he doesn't use it much? Anyhow, looks like you can log into his **COMPUTER**. You also notice the **DOOR** to Slimecorp HQ unlocks from this side. You can go to the Elevator from here, as well as Slimecorp's hidden research facility and Slimecorp HQ.",
@@ -19434,6 +19434,369 @@
         "max_degradation": 10000,
         "neighbors": {
             "n4office":20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/SlimeCorp"
+    },
+     "slimecorphotel": {
+        "id_poi": "slimecorphotel",
+        "alias": [
+            "schotel",
+            "hotel",
+            "nickelodeonhotel",
+            "nickelodeon",
+            "nick",
+            "lobby",
+            "hotellobby"
+        ],
+        "str_name": "Nickelodeon Hotel Lobby",
+        "str_desc": "Uneven layers of dust cover the room. The front desk ahead of you sits unattended, the bell long since stolen. The stairs leading to the 2nd floor are clogged with assorted wood and **ANIMATRONICS**, but nothing looks useful. Honestly, being called the Nickelodeon Hotel, you would expect a flashier place, but everything that once made it a child honeypot has been taken down. Too bad. Maybe there's some other secrets worth looking into.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "hotel-lobby",
+        "role": null,
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "slimecorphotel": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+            "nuclearbeachdepths"
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "nuclearbeachdepths":20,
+            "room102":20,
+            "room103":20,
+            "room104":20,
+            "lobbybackroom": 20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/SlimeCorp"
+    },
+         "room102": {
+        "id_poi": "room102",
+        "alias": [
+            "102"
+        ],
+        "str_name": "Room 102",
+        "str_desc": "Somebody must've spruced this place up, the dust is cleared out. Probably **NINA**, Slimecorp's resident lawyer. She's on the chair over there, typing away on her laptop. Apart from that there's a **COFFEE MACHINE** and a **BED** both in their expected places. Christ, it's like you went back in time to when this room was hospitable.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "room-102",
+        "role": null,
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "room102": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "slimecorphotel":20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/SlimeCorp"
+    },
+     "room103": {
+        "id_poi": "room103",
+        "alias": [
+            "103"
+        ],
+        "str_name": "Room 103",
+        "str_desc": "Apart from the corpse stink coming from a certain someone, Room 103 is pretty quaint looking. The **FILING CABINET** sticks out, and some prescription **MEDICINE BOTTLES** are strewn all over the floor, but apart from that, it looks like any other hotel room you've seen.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "room-103",
+        "role": null,
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "room103": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "slimecorphotel":20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/SlimeCorp"
+    },
+     "room104": {
+        "id_poi": "room104",
+        "alias": [
+            "104"
+        ],
+        "str_name": "Room 104",
+        "str_desc": "Nothing but wooden **CRATES** line the walls, stacking halfway to the ceiling. There's a small **HOLE** on the right wall that leads to the dusty wasteland outside. The furniture and appliances have all been taken out too, probably to make room for all this.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "room-104",
+        "role": null,
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "room104": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "slimecorphotel":20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/SlimeCorp"
+    },
+         "lobbybackroom": {
+        "id_poi": "lobbybackroom",
+        "alias": [
+            "backroom",
+            "backlobby"
+        ],
+        "str_name": "The Lobby Backroom",
+        "str_desc": "After hopping behind the front desk you're greeted with a massive steel cellar **DOOR**. It takes up half the floorspace, there's barely any room to stand behind the counter. To the left of that, near the **KEY RACK** you notice a relatively new-looking **INVOICE** on the far countertop.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "lobby-backroom",
+        "role": null,
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "lobbybackroom": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "slimecorphotel":20,
+            "slimecorptunnel": 20
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/SlimeCorp"
+    },
+     "slimecorptunnel": {
+        "id_poi": "slimecorptunnel",
+        "alias": [
+            "corridor",
+            "tunnel"
+        ],
+        "str_name": "Slimecorp Hidden Tunnel",
+        "str_desc": "You feel a cold breeze through this dark, steel corridor. It's pitch black, and you can hear faint, unknown sounds in the distance. It's unbelievably long, too, maybe 3 or 4 miles. One exit leads to the Underground Research Facility. The other goes to the Lobby Backroom.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "lobby-backroom",
+        "role": null,
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "lobbybackroom": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "lobbybackroom":180,
+            "n12office": 180
+
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/SlimeCorp"

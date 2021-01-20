@@ -730,11 +730,21 @@ def inaccessible(user_data = None, poi = None):
 
     elevatorstop = EwGamestate(id_server=user_data.id_server, id_state='elevator')
 
+    #locks that inhibit one route, used for the elevator
     for lock in ewcfg.lock_states:
         if poi.id_poi in ewcfg.lock_states.get(lock) and user_data.poi in ewcfg.lock_states.get(lock):
             gamestate = EwGamestate(id_server=user_data.id_server, id_state=lock)
             if gamestate.bit == 0 or (elevatorstop.value not in ewcfg.lock_states.get(lock) and "slimecorphq" not in [poi.id_poi, user_data.poi]):
                 return True
+
+    #locks that inhibit a POI
+    for lock in ewcfg.region_lock_states:
+        if poi.id_poi == lock:
+            for state in ewcfg.region_lock_states.get(lock):
+                gamestate = EwGamestate(id_server=user_data.id_server, id_state=state)
+                if gamestate.bit == 0:
+                    return True
+
 
     bans = user_data.get_bans()
     vouchers = user_data.get_vouchers()
