@@ -1322,6 +1322,7 @@ cmd_untakedown = cmd_prefix + 'untakedown'
 cmd_untakedown_alt_1 = cmd_prefix + 'uncopyrightstrike'
 cmd_untakedown_alt_2 = cmd_prefix + 'undeletezine'
 cmd_lol = cmd_prefix + 'lol'
+cmd_mastery = cmd_prefix + 'mastery'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
