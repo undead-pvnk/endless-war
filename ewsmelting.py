@@ -181,7 +181,7 @@ async def smelt(cmd):
 					# If there are multiple possible products, randomly select one.
 					item = random.choice(possible_results)
 
-					if ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = item.item_type):
+					if not ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = item.item_type):
 						response = "You can't carry any more {}s.".format(item.item_type)
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
