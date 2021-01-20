@@ -1575,6 +1575,9 @@ async def complete_trade(cmd):
 				if item.get("id_item") == user_data.weapon:
 					user_data.weapon = -1
 					user_data.persist()
+				elif item.get("id_item") == user_data.sidearm:
+					user_data.sidearm = -1
+					user_data.persist()
 				elif item.get("item_type") == ewcfg.it_cosmetic:
 					cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
 					cosmetic.item_props["adorned"] = 'false'
@@ -1587,6 +1590,9 @@ async def complete_trade(cmd):
 				if item.get("id_item") == trade_partner.weapon:
 					trade_partner.weapon = -1
 					trade_partner.persist()
+				elif item.get("id_item") == trade_partner.sidearm:
+					trade_partner.sidearm = -1
+					user_data.persist()
 				elif item.get("item_type") == ewcfg.it_cosmetic:
 					cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
 					cosmetic.item_props["adorned"] = 'false'

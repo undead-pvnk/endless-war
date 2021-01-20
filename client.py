@@ -841,7 +841,10 @@ cmd_map = {
 	# Slime Twitter
 	ewcfg.cmd_tweet: ewslimetwitter.tweet,
 	ewcfg.cmd_verification: ewslimetwitter.verification,
-	ewcfg.cmd_verification_alt: ewslimetwitter.verification
+	ewcfg.cmd_verification_alt: ewslimetwitter.verification,
+
+	# Check your weapon masteries
+	ewcfg.cmd_mastery: ewcmd.check_mastery
 }
 
 debug = False
@@ -1649,24 +1652,29 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createpoudrin'):
 			for item in ewcfg.item_list:
 				if item.context == "poudrin":
-					ewitem.item_create(
-						item_type = ewcfg.it_item,
-						id_user = message.author.id,
-						id_server = message.guild.id,
-						item_props = {
-							'id_item': item.id_item,
-							'context': item.context,
-							'item_name': item.str_name,
-							'item_desc': item.str_desc,
-						}
-					),
-					ewutils.logMsg('Created item: {}'.format(item.id_item))
-					item = EwItem(id_item = item.id_item)
-					item.persist()
+					poudrin_count = 1 
+					if cmd_obj.tokens_count > 1:
+						try:
+							poudrin_count = int(cmd_obj.tokens[1])
+						except:
+							poudrin_count = 1
+					for i in range(poudrin_count):
+						ewitem.item_create(
+							item_type = ewcfg.it_item,
+							id_user = message.author.id,
+							id_server = message.guild.id,
+							item_props = {
+								'id_item': item.id_item,
+								'context': item.context,
+								'item_name': item.str_name,
+								'item_desc': item.str_desc,
+							}
+						)
+						ewutils.logMsg('Created item: {}'.format(item.id_item))
 			else:
 				pass
 
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Poudrin created."))
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Poudrin(s) created."))
 
 		# Shows damage
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'damage'):
@@ -2059,7 +2067,7 @@ async def on_raw_reaction_add(payload):
 			userid = "<@!{}>".format(payload.user_id)
 
 			# Ignore reaction if it's not from the slime tweet author
-			if embed.description == userid:
+			if embed.description.startswith(userid):
 
 				if (str(payload.emoji) == ewcfg.emote_delete_tweet):
 					await message.delete()

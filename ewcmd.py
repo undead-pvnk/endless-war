@@ -3979,6 +3979,7 @@ async def check_flag(cmd):
 
 
 
+
 async def exec_mutations(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	status = user_data.getStatusEffects()
@@ -4014,4 +4015,18 @@ async def get_attire(cmd):
 		response = "You're not committed enough to wear this attire. You're a slob. How did you even get in here?"
 	else:
 		return await ewutils.assign_status_effect(status_name='kevlarattire', user_id=cmd.message.author.id, server_id=cmd.guild.id)
+
+async def check_mastery(cmd):
+	message_line = "You are a rank {} master of the {}. \n"
+	message = "\nYou close your eyes for a moment, recalling your masteries. \n"
+	if cmd.mentions_count > 0:
+		response = "You can only recall your own weapon masteries!"
+	else:
+		wepskills = ewutils.weaponskills_get(member=cmd.message.author)
+		for skill, level in wepskills.items():
+			message += message_line.format(level["skill"], skill.lower())
+		response = message
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
