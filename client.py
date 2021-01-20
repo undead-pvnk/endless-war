@@ -668,7 +668,7 @@ cmd_map = {
 	ewcfg.cmd_lol: ewcmd.lol,
 
 	ewcfg.cmd_zuck : ewitem.zuck,
-
+	ewcfg.cmd_combo : ewdebug.combo,
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 	

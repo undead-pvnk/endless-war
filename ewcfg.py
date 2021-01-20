@@ -1302,6 +1302,7 @@ cmd_sip = cmd_prefix + 'sip'
 cmd_fashion = cmd_prefix + 'fashion'
 
 cmd_zuck = cmd_prefix + 'zuck'
+cmd_combo = cmd_prefix + 'combo'
 
 cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
 cmd_beginmanuscript_alt_1 = cmd_prefix + 'createmanuscript'
