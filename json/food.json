@@ -3676,5 +3676,25 @@
         "ingredients": "",
         "acquisition": "",
         "perishable": false
+    },
+        "ferroslimeoid": {
+        "item_type": "food",
+        "id_food": "ferroslimeoid",
+        "alias": [
+            "master",
+            "masterball"
+        ],
+        "recover_hunger": 1,
+        "price": 10000000,
+        "str_name": "Master Bait",
+        "vendors": [],
+        "str_eat": "You toss the Master Bait into your mouth and chew thoroughly. Wow, what a waste of fucking time!",
+        "inebriation": 0,
+        "str_desc": "The ultimate life form... for cathing fish, that is. It's said that attatching this strange, worm-like creature to the end of your hook will allow you to reel in fish almost as soon as you cast it off.",
+        "time_expir": 43200,
+        "time_fridged": 0,
+        "ingredients": "",
+        "acquisition": "",
+        "perishable": false
     }
 }

@@ -638,10 +638,10 @@ async def award_fish(fisher, cmd, user_data):
 		actual_fisherman = user_data.get_possession()[1]
 		actual_fisherman_data = EwUser(id_user=actual_fisherman, id_server=cmd.guild.id)
 
-	if fisher.current_fish == "item":
+	if fisher.current_fish in ["item", "seaitem"]:
 		slimesea_inventory = ewitem.inventory(id_server = cmd.guild.id, id_user = ewcfg.poi_id_slimesea)			
 
-		if fisher.pier.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.5:
+		if (fisher.pier.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.5) and fisher.current_fish == "item":
 
 			item = random.choice(ewcfg.mine_results)
 		

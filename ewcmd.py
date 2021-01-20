@@ -3974,4 +3974,44 @@ async def check_flag(cmd):
 		response = "You have {:,} seconds left on your flag.".format(abs(user_data.time_expirpvp - int(time.time())))
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	"""
+
+
+
+async def exec_mutations(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	status = user_data.getStatusEffects()
+
+	if ewcfg.status_n1:
+		response = "They fight without expending themselves due to **Perfection**. They're precise even without a target due to **Indiscriminate Rage**. They're hard to fell and cut deep due to **Monolith Body**. They are immaculate and unaging due to **Immortality**."
+	elif ewcfg.status_n2:
+		response = "They have unparalleled coordination, speed and reaction time due to **Fucked Out**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
+	elif ewcfg.status_n4:
+		response = "They are capable of murder by machine due to **Napalm Hacker**. Their hiding spot evades you due to **Super Amnesia**."
+	elif ewcfg.status_n8:
+		response = "They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
+	elif ewcfg.status_n11:
+		response = "They command a crowd through fear and punishment due to **Unnatural Intimidation**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
+	elif ewcfg.status_n12:
+		response = "Their body holds untold numbers of quirks and perks due to **Full Aberrant**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
+	elif ewcfg.status_n13:
+		response = "They are prone to explosive entries due to **Tantrum**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
+	elif user_data.life_state == ewcfg.life_state_lucky:
+		response = "They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. "
+	else:
+		response = "Slimecorp hasn't issued them mutations in their current position."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def get_attire(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	status = user_data.getStatusEffects()
+	if user_data.poi != ewcfg.poi_id_thebreakroom:
+		response = "Are you a Slimecorp Security Force official, planted firmly in their lavish breakroom? No? Then you're not getting shit."
+	elif ewcfg.status_kevlarattire in status:
+		response = "You're already armed, though. This stuff's too expensive so the company's not gonna let you double dip."
+	elif user_data.life_state != ewcfg.life_state_enlisted:
+		response = "You're not committed enough to wear this attire. You're a slob. How did you even get in here?"
+	else:
+		return await ewutils.assign_status_effect(status_name='kevlarattire', user_id=cmd.message.author.id, server_id=cmd.guild.id)
+
