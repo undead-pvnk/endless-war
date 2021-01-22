@@ -4,7 +4,7 @@ import ewcfg
 import ewutils
 from ew import EwUser
 from ewplayer import EwPlayer
-from ewmarket import EwMarket
+from ewmarket import EwMarket, EwStock
 from ewdistrict import EwDistrict
 
 
@@ -23,7 +23,9 @@ async def post_leaderboards(client = None, server = None):
 	topslimes = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_slimes)
 	await ewutils.send_message(client, leaderboard_channel, topslimes)
 	#topcoins = make_userdata_board(server = server, category = ewcfg.col_slimecoin, title = ewcfg.leaderboard_slimecoin)
+	ewutils.logMsg("starting net worth calc")
 	topcoins = make_stocks_top_board(server = server)
+	ewutils.logMsg("finished net worth calc")
 	await ewutils.send_message(client, leaderboard_channel, topcoins)
 	topghosts = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_ghosts, lowscores = True, rows = 3)
 	await ewutils.send_message(client, leaderboard_channel, topghosts)
@@ -54,16 +56,35 @@ async def post_leaderboards(client = None, server = None):
 def make_stocks_top_board(server = None):
 	entries = []
 	try:
-		data = ewutils.execute_sql_query((
-			"SELECT pl.display_name, u.life_state, u.faction, nw.total " +
+		players_coin = ewutils.execute_sql_query((
+			"SELECT pl.display_name, u.life_state, u.faction, u.slimecoin, IFNULL(sh_kfc.shares, 0), IFNULL(sh_tb.shares, 0), IFNULL(sh_ph.shares, 0), u.id_user " +
 			"FROM users AS u " +
 			"INNER JOIN players AS pl ON u.id_user = pl.id_user " +
-			"INNER JOIN net_worth AS nw ON u.id_user = nw.id_user AND u.id_server = nw.id_server "
+			"LEFT JOIN shares AS sh_kfc ON sh_kfc.id_user = u.id_user AND sh_kfc.id_server = u.id_server AND sh_kfc.stock = 'kfc' " +
+			"LEFT JOIN shares AS sh_tb ON sh_tb.id_user = u.id_user AND sh_tb.id_server = u.id_server AND sh_tb.stock = 'tacobell' " +
+			"LEFT JOIN shares AS sh_ph ON sh_ph.id_user = u.id_user AND sh_ph.id_server = u.id_server AND sh_ph.stock = 'pizzahut' " +
 			"WHERE u.id_server = %(id_server)s " +
-			"ORDER BY nw.total DESC LIMIT 5"
+			"ORDER BY u.slimecoin DESC"
 		), {
 			"id_server" : server.id,
 		})
+		
+		stock_kfc = EwStock(id_server = server.id, stock = 'kfc')
+		stock_tb = EwStock(id_server = server.id, stock = 'tacobell')
+		stock_ph = EwStock(id_server = server.id, stock = 'pizzahut')
+
+		shares_value = lambda shares, stock: round(shares * (stock.exchange_rate / 1000.0))
+
+		net_worth = lambda u: u[3] + shares_value(u[4], stock_kfc) + shares_value(u[5], stock_tb) + shares_value(u[6], stock_ph)
+
+
+		nw_map = {}
+		for user in players_coin:
+			nw_map[user[-1]] = net_worth(user)
+
+		players_coin = sorted(players_coin, key = lambda u: nw_map.get(u[-1]), reverse=True)
+
+		data = map(lambda u: [u[0], u[1], u[2], nw_map.get(u[-1])], players_coin[:5])
 
 		if data != None:
 			for row in data:
