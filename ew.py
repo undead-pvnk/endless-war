@@ -1344,39 +1344,12 @@ class EwUser:
 					self.weaponskill = 0
 
 				if data_level > 0:
-					"""cursor.execute("SELECT {}, {}, {} FROM fashion_stats WHERE id_user = %s AND id_server = %s".format(
-						ewcfg.col_attack,
-						ewcfg.col_defense,
-						ewcfg.col_speed,
-					), (
-
-						id_user,
-						id_server,
-					))
-					result = cursor.fetchone()
-
-					if result != None:
-						self.attack = result[0]
-						self.defense = result[1]
-						self.speed = result[2]"""
-
 					result = self.get_fashion_stats()
 					self.attack = result[0]
 					self.defense = result[1]
 					self.speed = result[2]
 					
 					if data_level > 1:
-						"""cursor.execute("SELECT {} FROM freshness WHERE id_user = %s AND id_server = %s".format(
-							ewcfg.col_freshness,
-						),(
-							id_user,
-							id_server
-						))
-
-						result = cursor.fetchone()
-
-						if result != None:
-							self.freshness = result[0]"""
 						self.freshness = self.get_freshness()
 
 					self.move_speed = ewutils.get_move_speed(self)
