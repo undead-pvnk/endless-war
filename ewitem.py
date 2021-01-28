@@ -440,7 +440,6 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 
 	drop_candidates = []
 	#safe_items = [ewcfg.item_id_gameguide]
-	print('rigor:{}'.format(rigor))
 	# Filter out Soulbound items.
 	for item in items:
 		item_obj = EwItem(id_item = item.get('id_item'))
