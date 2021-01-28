@@ -527,9 +527,21 @@ def canCap(cmd, capture_type, roomba_loop = 0):
 
 """ Player deals damage to another player. """
 
+async def n1_die(cmd):
+	user_data = EwUser(member=cmd.message.author, data_level=1)
+	if ewcfg.status_n1 not in user_data.getStatusEffects():
+		return await ewutils.fake_failed_command(cmd)
+	else:
+		district_data = EwDistrict(district=user_data.poi, id_server=user_data.id_server)
+		players = district_data.get_players_in_district()
+		if len(players) > 1:
+			players = players.remove(user_data.id_user)
+			target = random.choice(players)
+			return await attack(cmd=cmd, n1_die = target)
 
 
-async def attack(cmd):
+
+async def attack(cmd, n1_die = None):
 
 	time_now_float = time.time()
 	time_now = int(time_now_float)
@@ -542,6 +554,7 @@ async def attack(cmd):
 	market_data = EwMarket(id_server = cmd.guild.id)
 	amb_switch = 0
 	user_data = EwUser(member = cmd.message.author, data_level = 1)
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	weapon = None
 	weapon_item = None
@@ -578,7 +591,8 @@ async def attack(cmd):
 		#todo Created a weapon object to cover my bases, check if this is necessary. Also see if you can move this somewhere else
 
 
-	response = canAttack(cmd=cmd, amb_switch=amb_switch)
+	if n1_die is None:
+		response = canAttack(cmd=cmd, amb_switch=amb_switch)
 
 	if response == "":
 		# Get shooting player's info
@@ -587,15 +601,21 @@ async def attack(cmd):
 			user_data.persist()
 
 		# Get target's info.
-		member = cmd.mentions[0]
-		if member.id == cmd.message.author.id:
-			response = "Try {}.".format(ewcfg.cmd_suicide)
-			resp_cont.add_channel_response(cmd.message.channel.name, response)
-			return await resp_cont.post()
+		if n1_die is None:
+			member = cmd.mentions[0]
+			if member.id == cmd.message.author.id:
+				response = "Try {}.".format(ewcfg.cmd_suicide)
+				resp_cont.add_channel_response(cmd.message.channel.name, response)
+				return await resp_cont.post()
+			else:
+				shootee_data = EwUser(member = member, data_level = 1)
+			shootee_slimeoid = EwSlimeoid(member = member)
+			shootee_name = member.display_name
 		else:
-			shootee_data = EwUser(member = member, data_level = 1)
-		shootee_slimeoid = EwSlimeoid(member = member)
-		shootee_name = member.display_name
+			shootee_data = EwUser(id_server=cmd.guild.id, id_user=n1_die, data_level=1)
+			shootee_slimeoid = EwSlimeoid(id_user=n1_die, id_server = cmd.guild.id)
+			shootee_player = EwPlayer(id_user=n1_die, id_server = cmd.guild.id)
+			shootee_name = shootee_player.display_name
 
 
 		shootee_weapon = None

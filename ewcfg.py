@@ -967,6 +967,7 @@ cmd_spar = cmd_prefix + 'spar'
 cmd_suicide = cmd_prefix + 'suicide'
 cmd_suicide_alt1 = cmd_prefix + 'seppuku'
 cmd_suicide_alt2 = cmd_prefix + 'sudoku'
+cmd_n1_die = cmd_prefix + 'die'
 cmd_haunt = cmd_prefix + 'haunt'
 cmd_inhabit = cmd_prefix + 'inhabit'
 cmd_letgo = cmd_prefix + 'letgo'
@@ -1246,6 +1247,7 @@ cmd_gvs_gaiaslime_alt1 = cmd_prefix + 'gs'
 cmd_gvs_brainz = cmd_prefix + 'brainz'
 
 cmd_retire = cmd_prefix + 'retire'
+cmd_paspeaker = cmd_prefix + 'paspeaker'
 cmd_depart = cmd_prefix + 'depart'
 cmd_consult = cmd_prefix + 'consult'
 cmd_sign_lease = cmd_prefix + 'signlease'
@@ -2799,6 +2801,7 @@ item_id_textiles = "textiles"
 item_id_foodbase = "foodbase"
 item_id_civilianscalp = "civilianscalp"
 item_id_modelovaccine = "modelovirusvaccine"
+item_id_key = "key"
 item_id_gaiaseedpack_poketubers = "poketubersseedpacket"
 item_id_gaiaseedpack_pulpgourds = "pulpgourdsseedpacket"
 item_id_gaiaseedpack_sourpotatoes = "sourpotatoesseedpacket"
@@ -4483,6 +4486,18 @@ EwGeneralItem(
 		id_item=item_id_civilianscalp,
 		str_name="civilian's scalp",
 		str_desc="It's the discarded scalp of an innocent NLACakaNM resident. You always wanted to kill one of these guys."
+	),\
+	EwGeneralItem(
+		id_item = "key",
+		str_name = "Cabinet Key",
+		str_desc = "It's a tiny key. Some idiot must've left this in the middle of the street, it's weathered down right out of the box.",
+		context = "key"
+	),
+	EwGeneralItem(
+		id_item = "coordinate sheet"
+		str_name = "Coordinates"
+		str_desc = "It's a small slip of paper that reads: \"36.174435, -112.043243, N. Beach Depths\""
+		context = "droppable"
 	),
 	EwSeedPacket(
 		id_item=item_id_gaiaseedpack_poketubers,
@@ -4493,6 +4508,7 @@ EwGeneralItem(
 		ingredients=[item_id_poketubereyes],
 		enemytype="poketubers"
 	),
+
 	# EwSeedPacket(
 	# 	id_item=item_id_gaiaseedpack_pulpgourds,
 	# 	cooldown=45,
@@ -14760,8 +14776,9 @@ lock_states = {
 	"n7door":["n7office", "n4office"],
 	"n8door":["n8office", "n4office"],
 	"n9door":["n9office", "n4office"],
-	"n10door":["n10office", "slimecorphq"],
-	"n11door":["n11office", "n4office"]
+	"n10door":["n10office", "n4office"],
+	"n11door":["n11office", "n4office"],
+	"groundfloordoor":["slimecorphq", "n10office"]
 }
 
 region_lock_states = {

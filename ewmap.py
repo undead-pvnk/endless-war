@@ -722,8 +722,6 @@ def inaccessible(user_data = None, poi = None):
 
     source_poi = ewcfg.id_to_poi.get(user_data.poi)
 
-    flamestate = EwGamestate(id_server=user_data.id_server, id_state='flamethrower')
-
 
 
     if 'n4office' in poi.neighbors and 'n4office' in source_poi.neighbors:
@@ -930,6 +928,9 @@ async def move(cmd=None, isApt=False):
                                           ewutils.formatMessage(cmd.message.author, "You're already there, bitch."))
     elif isApt and poi.id_poi == user_data.poi[3:]:
         return await ewapt.depart(cmd=cmd)
+    flamestate = EwGamestate(id_server=user_data.id_server, id_state='flamethrower')
+    if 'n4office' == poi.id_poi and flamestate.bit == 1:
+        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You open the elevator, and are immediately met with fire spitting out of the elevator. Over the crackling flames you can hear a woman screaming \"AAAAAAAAGH FUCK YOU DIE DIE DIE DIE\". You're guessing entering now is a bad idea."))
 
     if inaccessible(user_data=user_data, poi=poi):
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
@@ -1397,13 +1398,13 @@ async def look(cmd):
         return await ewapt.apt_look(cmd=cmd)
 
     if poi.is_subzone or poi.id_poi == ewcfg.poi_id_thevoid: # Triggers if you input the command in the void or a sub-zone.
-
+        wikichar = '<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-            "You stand {} {}.\n\n{}\n\n<{}>\n{}\n\n{}".format(
+            "You stand {} {}.\n\n{}\n\n{}\n{}\n\n{}".format(
                 poi.str_in,
                 poi.str_name,
                 poi.str_desc,
-                poi.wikipage,
+                wikichar,
                 void_resp,
                 degrade_resp,
             )
@@ -1438,13 +1439,14 @@ async def look(cmd):
 
     # post result to channel
     if poi != None:
+        wikichar = '<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''
         await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
             cmd.message.author,
-            "You stand {} {}.\n\n{}\n\n<{}>\n{}\n\n{}...".format(
+            "You stand {} {}.\n\n{}\n\n{}\n{}\n\n{}...".format(
                 poi.str_in,
                 poi.str_name,
                 poi.str_desc,
-                poi.wikipage,
+                wikichar,
                 void_resp,
                 degrade_resp,
             )

@@ -119,6 +119,7 @@ cmd_map = {
 	ewcfg.cmd_suicide: ewwep.suicide,
 	ewcfg.cmd_suicide_alt1: ewwep.suicide,
 	ewcfg.cmd_suicide_alt2: ewwep.suicide,
+	ewcfg.cmd_n1_die : ewwep.n1_die,
 
 	# Spar with an ally
 	ewcfg.cmd_spar: ewwep.spar,
@@ -207,7 +208,7 @@ cmd_map = {
 
 	# Display the progress towards the current Quarterly Goal.
 	# ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
-
+	ewcfg.cmd_paspeaker: ewkingpin.pa_command,
 	ewcfg.cmd_retire: ewapt.retire,
 	ewcfg.cmd_depart: ewapt.depart,
 	ewcfg.cmd_consult: ewapt.consult,
@@ -1622,6 +1623,8 @@ async def on_message(message):
 		# Ignore stunned players
 		if ewcfg.status_stunned_id in statuses:
 			return
+
+
 
 		# Check the main command map for the requested command.
 		global cmd_map

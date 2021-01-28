@@ -437,15 +437,17 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
     items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
     mutations = user_data.get_mutations()
 
-
     drop_candidates = []
     #safe_items = [ewcfg.item_id_gameguide]
 
     # Filter out Soulbound items.
     for item in items:
         item_obj = EwItem(id_item = item.get('id_item'))
+        if item_obj.item_props.get('context') in ["corpse", "droppable"]:
+            give_item(id_user=user_data.poi, id_server=id_server, id_item=id_item)
         if item.get('soulbound') == False and not (rigor == True and item_obj.item_props.get('preserved') ==  user_data.id_user) and item_obj.item_props.get('context') != 'gellphone':
             drop_candidates.append(item)
+
 
     filtered_items = []
 
@@ -520,105 +522,105 @@ def item_dedorn_cosmetics(
 
 
 def item_lootspecific(id_server = None, id_user = None, item_search = None):
-	response = ""
-	if id_server is not None and id_user is not None:
-		user_data = EwUser(id_user = id_user, id_server = id_server)
-		item_sought = find_item(
-			item_search = item_search, 
-			id_server = user_data.id_server, 
-			id_user = user_data.poi
-		)
-		if item_sought is not None:
-			item_type = item_sought.get("item_type")
-			response += "You found a {}!".format(item_sought.get("name"))
-			can_loot = check_inv_capacity(id_server = id_server, id_user = id_user, item_type = item_type)
-			if can_loot:
-				give_item(
-					id_item = item_sought.get("id_item"),
-					id_user = user_data.id_user,
-					id_server = user_data.id_server
-				)
-			else:
-				response += " But you couldn't carry any more {}s, so you tossed it back.".format(item_type)
-	return response
+    response = ""
+    if id_server is not None and id_user is not None:
+        user_data = EwUser(id_user = id_user, id_server = id_server)
+        item_sought = find_item(
+            item_search = item_search,
+            id_server = user_data.id_server,
+            id_user = user_data.poi
+        )
+        if item_sought is not None:
+            item_type = item_sought.get("item_type")
+            response += "You found a {}!".format(item_sought.get("name"))
+            can_loot = check_inv_capacity(id_server = id_server, id_user = id_user, item_type = item_type)
+            if can_loot:
+                give_item(
+                    id_item = item_sought.get("id_item"),
+                    id_user = user_data.id_user,
+                    id_server = user_data.id_server
+                )
+            else:
+                response += " But you couldn't carry any more {}s, so you tossed it back.".format(item_type)
+    return response
 
 
 """
     Transfer a random item from district inventory to player inventory
 """
 def item_lootrandom(id_server = None, id_user = None):
-	response = ""
+    response = ""
 
-	try:
-		user_data = EwUser(id_server = id_server, id_user = id_user)
+    try:
+        user_data = EwUser(id_server = id_server, id_user = id_user)
 
-		items_in_poi = ewutils.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
-				id_item = ewcfg.col_id_item,
-				id_owner = ewcfg.col_id_user,
-				id_server = ewcfg.col_id_server
-			),(
-				user_data.poi,
-				id_server
-			))
+        items_in_poi = ewutils.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
+                id_item = ewcfg.col_id_item,
+                id_owner = ewcfg.col_id_user,
+                id_server = ewcfg.col_id_server
+            ),(
+                user_data.poi,
+                id_server
+            ))
 
-		if len(items_in_poi) > 0:
-			id_item = random.choice(items_in_poi)[0]
+        if len(items_in_poi) > 0:
+            id_item = random.choice(items_in_poi)[0]
 
-			item_sought = find_item(item_search = str(id_item), id_user = user_data.poi, id_server = id_server)
+            item_sought = find_item(item_search = str(id_item), id_user = user_data.poi, id_server = id_server)
 
-			response += "You found a {}!".format(item_sought.get('name'))
+            response += "You found a {}!".format(item_sought.get('name'))
 
-			if item_sought.get('item_type') == ewcfg.it_food:
-				food_items = inventory(
-					id_user = id_user,
-					id_server = id_server,
-					item_type_filter = ewcfg.it_food
-				)
+            if item_sought.get('item_type') == ewcfg.it_food:
+                food_items = inventory(
+                    id_user = id_user,
+                    id_server = id_server,
+                    item_type_filter = ewcfg.it_food
+                )
 
-				if len(food_items) >= user_data.get_food_capacity():
-					response += " But you couldn't carry any more food items, so you tossed it back."
-				else:
-					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
-			elif item_sought.get('item_type') == ewcfg.it_weapon:
-				weapons_held = inventory(
-					id_user = id_user,
-					id_server = id_server,
-					item_type_filter = ewcfg.it_weapon
-				)
+                if len(food_items) >= user_data.get_food_capacity():
+                    response += " But you couldn't carry any more food items, so you tossed it back."
+                else:
+                    give_item(id_user = id_user, id_server = id_server, id_item = id_item)
+            elif item_sought.get('item_type') == ewcfg.it_weapon:
+                weapons_held = inventory(
+                    id_user = id_user,
+                    id_server = id_server,
+                    item_type_filter = ewcfg.it_weapon
+                )
 
-				if len(weapons_held) >= user_data.get_weapon_capacity():
-					response += " But you couldn't carry any more weapons, so you tossed it back."
-				else:
-					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
+                if len(weapons_held) >= user_data.get_weapon_capacity():
+                    response += " But you couldn't carry any more weapons, so you tossed it back."
+                else:
+                    give_item(id_user = id_user, id_server = id_server, id_item = id_item)
 
-			else:
-				other_items = inventory(
-				id_user=id_user,
-				id_server=id_server,
-				item_type_filter=item_sought.get('item_type')
-				)
+            else:
+                other_items = inventory(
+                id_user=id_user,
+                id_server=id_server,
+                item_type_filter=item_sought.get('item_type')
+                )
 
-				if len(other_items) >= ewcfg.generic_inv_limit:
-					response = " But you couldn't carry any more of those, so you tossed it back"
+                if len(other_items) >= ewcfg.generic_inv_limit:
+                    response = " But you couldn't carry any more of those, so you tossed it back"
 
-				else:
-					if item_sought.get('name') == "Slime Poudrin":
-						ewstats.change_stat(
-							id_server = user_data.id_server,
-							id_user = user_data.id_user,
-							metric = ewcfg.stat_poudrins_looted,
-							n = 1
-						)
-					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
+                else:
+                    if item_sought.get('name') == "Slime Poudrin":
+                        ewstats.change_stat(
+                            id_server = user_data.id_server,
+                            id_user = user_data.id_user,
+                            metric = ewcfg.stat_poudrins_looted,
+                            n = 1
+                        )
+                    give_item(id_user = id_user, id_server = id_server, id_item = id_item)
 
-		else:
-			response += "You found a... oh, nevermind, it's just a piece of trash."
+        else:
+            response += "You found a... oh, nevermind, it's just a piece of trash."
 
-	except:
-		ewutils.logMsg("Failed to loot random item")
+    except:
+        ewutils.logMsg("Failed to loot random item")
 
-	finally:
-		return response
+    finally:
+        return response
 
 """
     Destroy all of a player's non-soulbound items.
@@ -702,44 +704,44 @@ def item_loot(
 
 
 def check_inv_capacity(id_user = None, id_server = None, item_type = None):
-	if id_user is not None and id_server is not None and item_type is not None:
-		user_data = EwUser(id_user = id_user, id_server = id_server)
-		if item_type == ewcfg.it_food:
-			food_items = inventory(
-				id_user = id_user,
-				id_server = id_server,
-				item_type_filter = ewcfg.it_food
-			)
+    if id_user is not None and id_server is not None and item_type is not None:
+        user_data = EwUser(id_user = id_user, id_server = id_server)
+        if item_type == ewcfg.it_food:
+            food_items = inventory(
+                id_user = id_user,
+                id_server = id_server,
+                item_type_filter = ewcfg.it_food
+            )
 
-			if len(food_items) >= user_data.get_food_capacity():
-				return False
-			else:
-				return True
-		elif item_type == ewcfg.it_weapon:
-			weapons_held = inventory(
-				id_user = id_user,
-				id_server = id_server,
-				item_type_filter = ewcfg.it_weapon
-			)
+            if len(food_items) >= user_data.get_food_capacity():
+                return False
+            else:
+                return True
+        elif item_type == ewcfg.it_weapon:
+            weapons_held = inventory(
+                id_user = id_user,
+                id_server = id_server,
+                item_type_filter = ewcfg.it_weapon
+            )
 
-			if len(weapons_held) >= user_data.get_weapon_capacity():
-				return False
-			else:
-				return True
-		else:
-			other_items = inventory(
-				id_user=id_user,
-				id_server=id_server,
-				item_type_filter=item_type
-			)
+            if len(weapons_held) >= user_data.get_weapon_capacity():
+                return False
+            else:
+                return True
+        else:
+            other_items = inventory(
+                id_user=id_user,
+                id_server=id_server,
+                item_type_filter=item_type
+            )
 
-			if len(other_items) >= ewcfg.generic_inv_limit:
-				return False
-			else:
-				return True
-		
-	else:
-		return False
+            if len(other_items) >= ewcfg.generic_inv_limit:
+                return False
+            else:
+                return True
+
+    else:
+        return False
 
 
 """
@@ -783,501 +785,501 @@ def inventory(
     item_type_filter = None,
     item_sorting_method = None,
 ):
-	items = []
+    items = []
 
-	try:
+    try:
 
-		time_before = time.time()
-		conn_info = ewutils.databaseConnect()
-		conn = conn_info.get('conn')
-		cursor = conn.cursor()
+        time_before = time.time()
+        conn_info = ewutils.databaseConnect()
+        conn = conn_info.get('conn')
+        cursor = conn.cursor()
 
-		sql = "SELECT {}, {}, {}, {}, {} FROM items WHERE {} = %s"
-		if id_user != None:
-			sql += " AND {} = '{}'".format(ewcfg.col_id_user, str(id_user))
-		if item_type_filter != None:
-			sql += " AND {} = '{}'".format(ewcfg.col_item_type, item_type_filter)
-		if item_sorting_method != None:
-			if item_sorting_method == 'type':
-				sql += " ORDER BY {}".format(ewcfg.col_item_type)
-			if item_sorting_method == 'id':
-				sql += " ORDER BY {}".format(ewcfg.col_id_item)
+        sql = "SELECT {}, {}, {}, {}, {} FROM items WHERE {} = %s"
+        if id_user != None:
+            sql += " AND {} = '{}'".format(ewcfg.col_id_user, str(id_user))
+        if item_type_filter != None:
+            sql += " AND {} = '{}'".format(ewcfg.col_item_type, item_type_filter)
+        if item_sorting_method != None:
+            if item_sorting_method == 'type':
+                sql += " ORDER BY {}".format(ewcfg.col_item_type)
+            if item_sorting_method == 'id':
+                sql += " ORDER BY {}".format(ewcfg.col_id_item)
 
-		if id_server != None:
-			cursor.execute(sql.format(
-				ewcfg.col_id_item,
-				ewcfg.col_item_type,
-				ewcfg.col_soulbound,
-				ewcfg.col_stack_max,
-				ewcfg.col_stack_size,
+        if id_server != None:
+            cursor.execute(sql.format(
+                ewcfg.col_id_item,
+                ewcfg.col_item_type,
+                ewcfg.col_soulbound,
+                ewcfg.col_stack_max,
+                ewcfg.col_stack_size,
 
-				ewcfg.col_id_server
-			), [
-				id_server
-			])
-			# DEBUG: for profiling
-			# time_after = time.time()
-			# ewutils.logMsg("Time for items fetch: {}".format(time_after - time_before))
+                ewcfg.col_id_server
+            ), [
+                id_server
+            ])
+            # DEBUG: for profiling
+            # time_after = time.time()
+            # ewutils.logMsg("Time for items fetch: {}".format(time_after - time_before))
 
-			# time_before = time.time()
-			for row in cursor:
-				id_item = row[0]
-				item_type = row[1]
-				soulbound = (row[2] == 1)
-				stack_max = row[3]
-				stack_size = row[4]
+            # time_before = time.time()
+            for row in cursor:
+                id_item = row[0]
+                item_type = row[1]
+                soulbound = (row[2] == 1)
+                stack_max = row[3]
+                stack_size = row[4]
 
-				if item_type == 'slimepoudrin':
-					item_data = EwItem(id_item = id_item)
-					item_type = ewcfg.it_item
-					item_data.item_type = item_type
-					for item in ewcfg.item_list:
-						if item.context == "poudrin":
-							item_props = {
-								'id_item': item.id_item,
-								'context': item.context,
-								'item_name': item.str_name,
-								'item_desc': item.str_desc
-							}
-					item_def = ewcfg.item_def_map.get(item_type)
-					item_data.item_props.update(item_def.item_props)
-					item_data.item_props.update(item_props)
-					item_data.persist()
+                if item_type == 'slimepoudrin':
+                    item_data = EwItem(id_item = id_item)
+                    item_type = ewcfg.it_item
+                    item_data.item_type = item_type
+                    for item in ewcfg.item_list:
+                        if item.context == "poudrin":
+                            item_props = {
+                                'id_item': item.id_item,
+                                'context': item.context,
+                                'item_name': item.str_name,
+                                'item_desc': item.str_desc
+                            }
+                    item_def = ewcfg.item_def_map.get(item_type)
+                    item_data.item_props.update(item_def.item_props)
+                    item_data.item_props.update(item_props)
+                    item_data.persist()
 
-					ewutils.logMsg('Updated poudrin to new format: {}'.format(id_item))
+                    ewutils.logMsg('Updated poudrin to new format: {}'.format(id_item))
 
-				if item_type == ewcfg.it_cosmetic:
-					item_data = EwItem(id_item = id_item)
-					item_type = ewcfg.it_cosmetic
-					item_data.item_type = item_type
-					
-					if 'fashion_style' not in item_data.item_props.keys():
-						if item_data.item_props.get('id_cosmetic') == 'soul':
-							item_data.item_props = {
-								'id_cosmetic': item_data.item_props['id_cosmetic'],
-								'cosmetic_name': item_data.item_props['cosmetic_name'],
-								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
-								'str_onadorn': ewcfg.str_soul_onadorn,
-								'str_unadorn': ewcfg.str_soul_unadorn,
-								'str_onbreak': ewcfg.str_soul_onbreak,
-								'rarity': ewcfg.rarity_patrician,
-								'attack': 6,
-								'defense': 6,
-								'speed': 6,
-								'ability': None,
-								'durability': ewcfg.soul_durability,
-								'size': 6,
-								'fashion_style': ewcfg.style_cool,
-								'freshness': 10,
-								'adorned': 'false',
-								'user_id': item_data.item_props['user_id']
-							}
-						elif item_data.item_props.get('id_cosmetic') == 'scalp':
-							item_data.item_props = {
-								'id_cosmetic': item_data.item_props['id_cosmetic'],
-								'cosmetic_name': item_data.item_props['cosmetic_name'],
-								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
-								'str_onadorn': ewcfg.str_generic_onadorn,
-								'str_unadorn': ewcfg.str_generic_unadorn,
-								'str_onbreak': ewcfg.str_generic_onbreak,
-								'rarity': ewcfg.rarity_plebeian,
-								'attack': 1,
-								'defense': 0,
-								'speed': 0,
-								'ability': None,
-								'durability': ewcfg.generic_scalp_durability,
-								'size': 1,
-								'fashion_style': ewcfg.style_cool,
-								'freshness': 0,
-								'adorned': 'false',
-							}
-						elif item_data.item_props.get('rarity') == ewcfg.rarity_princeps:
-							
-							# TODO: Make princeps have custom stats, etc. etc.
-							current_name = item_data.item_props.get('cosmetic_name')
-							current_desc = item_data.item_props.get('cosmetic_desc')
-							
-							print("Updated Princep '{}' for user with ID {}".format(current_name, id_user))
-							
-							item_data.item_props = {
-								'id_cosmetic': 'princep',
-								'cosmetic_name': current_name,
-								'cosmetic_desc': current_desc,
-								'str_onadorn': ewcfg.str_generic_onadorn,
-								'str_unadorn': ewcfg.str_generic_unadorn,
-								'str_onbreak': ewcfg.str_generic_onbreak,
-								'rarity': ewcfg.rarity_princeps,
-								'attack': 3,
-								'defense': 3,
-								'speed': 3,
-								'ability': None,
-								'durability': ewcfg.base_durability * 100,
-								'size': 1,
-								'fashion_style': ewcfg.style_cool,
-								'freshness': 100,
-								'adorned': 'false',
-							}
-							
-							pass
-						elif item_data.item_props.get('context') == 'costume':
-							
-							item_data.item_props = {
-								'id_cosmetic': 'dhcostume',
-								'cosmetic_name': item_data.item_props['cosmetic_name'],
-								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
-								'str_onadorn': ewcfg.str_generic_onadorn,
-								'str_unadorn': ewcfg.str_generic_unadorn,
-								'str_onbreak': ewcfg.str_generic_onbreak,
-								'rarity': ewcfg.rarity_plebeian,
-								'attack': 1,
-								'defense': 1,
-								'speed': 1,
-								'ability': None,
-								'durability': ewcfg.base_durability * 100,
-								'size': 1,
-								'fashion_style': ewcfg.style_cute,
-								'freshness': 0,
-								'adorned': 'false',
-							}
-						elif item_data.item_props.get('id_cosmetic') == 'cigarettebutt':
-							item_data.item_props = {
-								'id_cosmetic': 'cigarettebutt',
-								'cosmetic_name': item_data.item_props['cosmetic_name'],
-								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
-								'str_onadorn': ewcfg.str_generic_onadorn,
-								'str_unadorn': ewcfg.str_generic_unadorn,
-								'str_onbreak': ewcfg.str_generic_onbreak,
-								'rarity': ewcfg.rarity_plebeian,
-								'attack': 2,
-								'defense': 0,
-								'speed': 0,
-								'ability': None,
-								'durability': ewcfg.base_durability / 2,
-								'size': 1,
-								'fashion_style': ewcfg.style_cool,
-								'freshness': 5,
-								'adorned': 'false',
-							}
-							
-						else:
-							#print('ITEM PROPS: {}'.format(item_data.item_props))
-							
-							item = ewcfg.cosmetic_map.get(item_data.item_props.get('id_cosmetic'))
-							
-							if item == None:
-								if item_data.item_props.get('id_cosmetic') == None:
-									print('Item {} lacks an id_cosmetic attribute. Formatting now...'.format(id_item))
-									placeholder_id = 'oldcosmetic'
-								else:
-									print('Item {} has an invlaid id_cosmetic of {}. Formatting now...'.format(item_data.item_props, item_data.item_props.get('id_cosmetic')))
-									placeholder_id = item_data.item_props.get('id_cosmetic')
+                if item_type == ewcfg.it_cosmetic:
+                    item_data = EwItem(id_item = id_item)
+                    item_type = ewcfg.it_cosmetic
+                    item_data.item_type = item_type
 
-								item_data.item_props = {
-									'id_cosmetic': placeholder_id,
-									'cosmetic_name': item_data.item_props.get('cosmetic_name'),
-									'cosmetic_desc': item_data.item_props.get('cosmetic_desc'),
-									'str_onadorn': ewcfg.str_generic_onadorn,
-									'str_unadorn': ewcfg.str_generic_unadorn,
-									'str_onbreak': ewcfg.str_generic_onbreak,
-									'rarity': ewcfg.rarity_plebeian,
-									'attack': 1,
-									'defense': 1,
-									'speed': 1,
-									'ability': None,
-									'durability': ewcfg.base_durability,
-									'size': 1,
-									'fashion_style': ewcfg.style_cool,
-									'freshness':  0,
-									'adorned': 'false',
-								}
-							
-							else:
-							
-								item_data.item_props = {
-									'id_cosmetic': item.id_cosmetic,
-									'cosmetic_name': item.str_name,
-									'cosmetic_desc': item.str_desc,
-									'str_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
-									'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
-									'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
-									'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
-									'attack': 0,
-									'defense': 0,
-									'speed': 0,
-									'ability': item.ability if item.ability else None,
-									'durability': item.durability if item.durability else ewcfg.base_durability,
-									'size': item.size if item.size else 1,
-									'fashion_style': item.style if item.style else ewcfg.style_cool,
-									'freshness': item.freshness if item.freshness else 0,
-									'adorned': 'false',
-								}
+                    if 'fashion_style' not in item_data.item_props.keys():
+                        if item_data.item_props.get('id_cosmetic') == 'soul':
+                            item_data.item_props = {
+                                'id_cosmetic': item_data.item_props['id_cosmetic'],
+                                'cosmetic_name': item_data.item_props['cosmetic_name'],
+                                'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+                                'str_onadorn': ewcfg.str_soul_onadorn,
+                                'str_unadorn': ewcfg.str_soul_unadorn,
+                                'str_onbreak': ewcfg.str_soul_onbreak,
+                                'rarity': ewcfg.rarity_patrician,
+                                'attack': 6,
+                                'defense': 6,
+                                'speed': 6,
+                                'ability': None,
+                                'durability': ewcfg.soul_durability,
+                                'size': 6,
+                                'fashion_style': ewcfg.style_cool,
+                                'freshness': 10,
+                                'adorned': 'false',
+                                'user_id': item_data.item_props['user_id']
+                            }
+                        elif item_data.item_props.get('id_cosmetic') == 'scalp':
+                            item_data.item_props = {
+                                'id_cosmetic': item_data.item_props['id_cosmetic'],
+                                'cosmetic_name': item_data.item_props['cosmetic_name'],
+                                'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+                                'str_onadorn': ewcfg.str_generic_onadorn,
+                                'str_unadorn': ewcfg.str_generic_unadorn,
+                                'str_onbreak': ewcfg.str_generic_onbreak,
+                                'rarity': ewcfg.rarity_plebeian,
+                                'attack': 1,
+                                'defense': 0,
+                                'speed': 0,
+                                'ability': None,
+                                'durability': ewcfg.generic_scalp_durability,
+                                'size': 1,
+                                'fashion_style': ewcfg.style_cool,
+                                'freshness': 0,
+                                'adorned': 'false',
+                            }
+                        elif item_data.item_props.get('rarity') == ewcfg.rarity_princeps:
 
-						item_data.persist()
-						ewutils.logMsg('Updated cosmetic to new format: {}'.format(id_item))
-					    
-				item_def = ewcfg.item_def_map.get(item_type)
+                            # TODO: Make princeps have custom stats, etc. etc.
+                            current_name = item_data.item_props.get('cosmetic_name')
+                            current_desc = item_data.item_props.get('cosmetic_desc')
 
-				if(item_def != None):
-					items.append({
-						'id_item': id_item,
-						'item_type': item_type,
-						'soulbound': soulbound,
-						'stack_max': stack_max,
-						'stack_size': stack_size,
+                            print("Updated Princep '{}' for user with ID {}".format(current_name, id_user))
 
-						'item_def': item_def
-					})
+                            item_data.item_props = {
+                                'id_cosmetic': 'princep',
+                                'cosmetic_name': current_name,
+                                'cosmetic_desc': current_desc,
+                                'str_onadorn': ewcfg.str_generic_onadorn,
+                                'str_unadorn': ewcfg.str_generic_unadorn,
+                                'str_onbreak': ewcfg.str_generic_onbreak,
+                                'rarity': ewcfg.rarity_princeps,
+                                'attack': 3,
+                                'defense': 3,
+                                'speed': 3,
+                                'ability': None,
+                                'durability': ewcfg.base_durability * 100,
+                                'size': 1,
+                                'fashion_style': ewcfg.style_cool,
+                                'freshness': 100,
+                                'adorned': 'false',
+                            }
 
-			# DEBUG: for profiling
-			# time_after = time.time()
-			# ewutils.logMsg("Time for item preparation: {}".format(time_after - time_before))
-			# time_before = time.time()
-			if len(items) > 0:
-				item_ids = tuple(map(lambda i: i.get('id_item'), items))
+                            pass
+                        elif item_data.item_props.get('context') == 'costume':
 
-				item_map = {}
+                            item_data.item_props = {
+                                'id_cosmetic': 'dhcostume',
+                                'cosmetic_name': item_data.item_props['cosmetic_name'],
+                                'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+                                'str_onadorn': ewcfg.str_generic_onadorn,
+                                'str_unadorn': ewcfg.str_generic_unadorn,
+                                'str_onbreak': ewcfg.str_generic_onbreak,
+                                'rarity': ewcfg.rarity_plebeian,
+                                'attack': 1,
+                                'defense': 1,
+                                'speed': 1,
+                                'ability': None,
+                                'durability': ewcfg.base_durability * 100,
+                                'size': 1,
+                                'fashion_style': ewcfg.style_cute,
+                                'freshness': 0,
+                                'adorned': 'false',
+                            }
+                        elif item_data.item_props.get('id_cosmetic') == 'cigarettebutt':
+                            item_data.item_props = {
+                                'id_cosmetic': 'cigarettebutt',
+                                'cosmetic_name': item_data.item_props['cosmetic_name'],
+                                'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+                                'str_onadorn': ewcfg.str_generic_onadorn,
+                                'str_unadorn': ewcfg.str_generic_unadorn,
+                                'str_onbreak': ewcfg.str_generic_onbreak,
+                                'rarity': ewcfg.rarity_plebeian,
+                                'attack': 2,
+                                'defense': 0,
+                                'speed': 0,
+                                'ability': None,
+                                'durability': ewcfg.base_durability / 2,
+                                'size': 1,
+                                'fashion_style': ewcfg.style_cool,
+                                'freshness': 5,
+                                'adorned': 'false',
+                            }
 
-				for item in items:
-					item['item_props'] = {}
-					item_map[item.get('id_item')] = item
+                        else:
+                            #print('ITEM PROPS: {}'.format(item_data.item_props))
 
-				cursor.execute("SELECT id_item, name, value FROM items_prop WHERE id_item IN %s", (item_ids,))
+                            item = ewcfg.cosmetic_map.get(item_data.item_props.get('id_cosmetic'))
 
-				for row in cursor:
-					id_item = row[0]
-					name = row[1]
-					value = row[2]
-				
-					item = item_map.get(id_item)
-					item.get('item_props')[name] = value
+                            if item == None:
+                                if item_data.item_props.get('id_cosmetic') == None:
+                                    print('Item {} lacks an id_cosmetic attribute. Formatting now...'.format(id_item))
+                                    placeholder_id = 'oldcosmetic'
+                                else:
+                                    print('Item {} has an invlaid id_cosmetic of {}. Formatting now...'.format(item_data.item_props, item_data.item_props.get('id_cosmetic')))
+                                    placeholder_id = item_data.item_props.get('id_cosmetic')
 
-			# DEBUG: for profiling
-			# time_after = time.time()
+                                item_data.item_props = {
+                                    'id_cosmetic': placeholder_id,
+                                    'cosmetic_name': item_data.item_props.get('cosmetic_name'),
+                                    'cosmetic_desc': item_data.item_props.get('cosmetic_desc'),
+                                    'str_onadorn': ewcfg.str_generic_onadorn,
+                                    'str_unadorn': ewcfg.str_generic_unadorn,
+                                    'str_onbreak': ewcfg.str_generic_onbreak,
+                                    'rarity': ewcfg.rarity_plebeian,
+                                    'attack': 1,
+                                    'defense': 1,
+                                    'speed': 1,
+                                    'ability': None,
+                                    'durability': ewcfg.base_durability,
+                                    'size': 1,
+                                    'fashion_style': ewcfg.style_cool,
+                                    'freshness':  0,
+                                    'adorned': 'false',
+                                }
 
-			# ewutils.logMsg("Time for item props fetch: {}".format(time_after - time_before))
-			# time_before = time.time()
+                            else:
 
-			for item in items:
-				item_def = item.get('item_def')
-				id_item = item.get('id_item')
-				name = item_def.str_name
-				#print("761 -- {}".format(name))
+                                item_data.item_props = {
+                                    'id_cosmetic': item.id_cosmetic,
+                                    'cosmetic_name': item.str_name,
+                                    'cosmetic_desc': item.str_desc,
+                                    'str_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
+                                    'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
+                                    'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
+                                    'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
+                                    'attack': 0,
+                                    'defense': 0,
+                                    'speed': 0,
+                                    'ability': item.ability if item.ability else None,
+                                    'durability': item.durability if item.durability else ewcfg.base_durability,
+                                    'size': item.size if item.size else 1,
+                                    'fashion_style': item.style if item.style else ewcfg.style_cool,
+                                    'freshness': item.freshness if item.freshness else 0,
+                                    'adorned': 'false',
+                                }
 
-				quantity = 1
-				if item.get('stack_max') > 0:
-					quantity = item.get('stack_size')
+                        item_data.persist()
+                        ewutils.logMsg('Updated cosmetic to new format: {}'.format(id_item))
 
-				item['quantity'] = quantity
+                item_def = ewcfg.item_def_map.get(item_type)
 
-				# Name requires variable substitution. Look up the item properties.
-				if name.find('{') >= 0:
-					item_inst = item
+                if(item_def != None):
+                    items.append({
+                        'id_item': id_item,
+                        'item_type': item_type,
+                        'soulbound': soulbound,
+                        'stack_max': stack_max,
+                        'stack_size': stack_size,
 
-					if item_inst != None and item_inst.get('id_item') >= 0:
-						name = name.format_map(item_inst.get('item_props'))
+                        'item_def': item_def
+                    })
 
-						if name.find('{') >= 0:
-							try:
-								name = name.format_map(item_inst.get('item_props'))
-							except:
-								pass
-								#print("Exception caught in ewitem -- Item might have brackets inside name.")
-								# If a key error comes from here, it's likely that an item somehow got a { symbol placed inside its name
-								# Normally curly brackets are used for renaming an item based on what comes from item_def, such as {item_name}
-								# Therefore, in most circumstances we can ignore when a key error comes from here, since that item has already been given a name.
+            # DEBUG: for profiling
+            # time_after = time.time()
+            # ewutils.logMsg("Time for item preparation: {}".format(time_after - time_before))
+            # time_before = time.time()
+            if len(items) > 0:
+                item_ids = tuple(map(lambda i: i.get('id_item'), items))
 
-				#if a weapon has no name show its type instead
-				if name == "" and item_inst.get('item_type') == ewcfg.it_weapon:
-					name = item_inst.get('item_props').get("weapon_type")
-					
-				item['name'] = name
-			time_after = time.time()
-	
-			# DEBUG: for profiling
-			# ewutils.logMsg("Time for name assignment: {}".format(time_after - time_before))
-	finally:
-		# Clean up the database handles.
-		cursor.close()
-		ewutils.databaseClose(conn_info)
+                item_map = {}
 
-	return items
+                for item in items:
+                    item['item_props'] = {}
+                    item_map[item.get('id_item')] = item
 
+                cursor.execute("SELECT id_item, name, value FROM items_prop WHERE id_item IN %s", (item_ids,))
 
+                for row in cursor:
+                    id_item = row[0]
+                    name = row[1]
+                    value = row[2]
+
+                    item = item_map.get(id_item)
+                    item.get('item_props')[name] = value
+
+            # DEBUG: for profiling
+            # time_after = time.time()
+
+            # ewutils.logMsg("Time for item props fetch: {}".format(time_after - time_before))
+            # time_before = time.time()
+
+            for item in items:
+                item_def = item.get('item_def')
+                id_item = item.get('id_item')
+                name = item_def.str_name
+                #print("761 -- {}".format(name))
+
+                quantity = 1
+                if item.get('stack_max') > 0:
+                    quantity = item.get('stack_size')
+
+                item['quantity'] = quantity
+
+                # Name requires variable substitution. Look up the item properties.
+                if name.find('{') >= 0:
+                    item_inst = item
+
+                    if item_inst != None and item_inst.get('id_item') >= 0:
+                        name = name.format_map(item_inst.get('item_props'))
+
+                        if name.find('{') >= 0:
+                            try:
+                                name = name.format_map(item_inst.get('item_props'))
+                            except:
+                                pass
+                                #print("Exception caught in ewitem -- Item might have brackets inside name.")
+                                # If a key error comes from here, it's likely that an item somehow got a { symbol placed inside its name
+                                # Normally curly brackets are used for renaming an item based on what comes from item_def, such as {item_name}
+                                # Therefore, in most circumstances we can ignore when a key error comes from here, since that item has already been given a name.
+
+                #if a weapon has no name show its type instead
+                if name == "" and item_inst.get('item_type') == ewcfg.it_weapon:
+                    name = item_inst.get('item_props').get("weapon_type")
+
+                item['name'] = name
+            time_after = time.time()
+
+            # DEBUG: for profiling
+            # ewutils.logMsg("Time for name assignment: {}".format(time_after - time_before))
+    finally:
+        # Clean up the database handles.
+        cursor.close()
+        ewutils.databaseClose(conn_info)
+
+    return items
+
+async def droppables(cmd)
 
 """
     Dump out a player's inventory.
 """
 async def inventory_print(cmd):
 
-	community_chest = False
-	can_message_user = True
-	inventory_source = cmd.message.author.id
+    community_chest = False
+    can_message_user = True
+    inventory_source = cmd.message.author.id
 
-	player = EwPlayer(id_user = cmd.message.author.id)
+    player = EwPlayer(id_user = cmd.message.author.id)
 
-	user_data = EwUser(id_user = cmd.message.author.id, id_server = player.id_server)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
-	if cmd.tokens[0].lower() == ewcfg.cmd_communitychest:
-		if poi.community_chest == None:
-			response = "There is no community chest here."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		elif cmd.message.channel.name != poi.channel:
-			response = "You can't see the community chest from here."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		community_chest = True
-		can_message_user = False
-		inventory_source = poi.community_chest
+    user_data = EwUser(id_user = cmd.message.author.id, id_server = player.id_server)
+    poi = ewcfg.id_to_poi.get(user_data.poi)
+    if cmd.tokens[0].lower() == ewcfg.cmd_communitychest:
+        if poi.community_chest == None:
+            response = "There is no community chest here."
+            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        elif cmd.message.channel.name != poi.channel:
+            response = "You can't see the community chest from here."
+            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        community_chest = True
+        can_message_user = False
+        inventory_source = poi.community_chest
 
-	sort_by_type = False
-	sort_by_name = False
-	sort_by_id = False
-	
-	stacking = False
-	search = False
-	stacked_message_list = []
-	stacked_item_map = {}
+    sort_by_type = False
+    sort_by_name = False
+    sort_by_id = False
 
-	if cmd.tokens_count > 1:
-		token_list = cmd.tokens[1:]
-		lower_token_list = []
-		for token in token_list:
-			token = token.lower()
-			lower_token_list.append(token)
+    stacking = False
+    search = False
+    stacked_message_list = []
+    stacked_item_map = {}
 
-		if 'type' in lower_token_list:
-			sort_by_type = True
-		elif 'name' in lower_token_list:
-			sort_by_name = True
-		elif 'id' in lower_token_list:
-			sort_by_id = True
-			
-		if 'stack' in lower_token_list:
-			stacking = True
+    if cmd.tokens_count > 1:
+        token_list = cmd.tokens[1:]
+        lower_token_list = []
+        for token in token_list:
+            token = token.lower()
+            lower_token_list.append(token)
 
-		if 'search' in lower_token_list:
-			stacking = False
-			sort_by_id = False
-			sort_by_name = False
-			sort_by_type = False
-			search = True
+        if 'type' in lower_token_list:
+            sort_by_type = True
+        elif 'name' in lower_token_list:
+            sort_by_name = True
+        elif 'id' in lower_token_list:
+            sort_by_id = True
 
-	if sort_by_id:
-		items = inventory(
-			id_user = inventory_source,
-			id_server = player.id_server,
-			item_sorting_method='id'
-		)
-	elif sort_by_type:
-		items = inventory(
-			id_user=inventory_source,
-			id_server=player.id_server,
-			item_sorting_method='type'
-		)
-	elif search == True:
-		print(ewutils.flattenTokenListToString(cmd.tokens[2:]))
-		items = find_item_all(
-			item_search = ewutils.flattenTokenListToString(cmd.tokens[2:]),
-			id_server=player.id_server,
-			id_user=inventory_source,
-			exact_search=False
-		)
-	else:
-		items = inventory(
-			id_user=inventory_source,
-			id_server=player.id_server,
-		)
+        if 'stack' in lower_token_list:
+            stacking = True
 
-	if community_chest:
-		if len(items) == 0:
-			response = "The community chest is empty."
-		else:
-			response = "The community chest contains:"
-	else:
-		if len(items) == 0:
-			response = "You don't have anything."
-		else:
-			response = "You are holding:"
+        if 'search' in lower_token_list:
+            stacking = False
+            sort_by_id = False
+            sort_by_name = False
+            sort_by_type = False
+            search = True
 
-	msg_handle = None
-	try:
-		if can_message_user:
-			msg_handle = await ewutils.send_message(cmd.client, cmd.message.author, response)
-	except discord.errors.Forbidden:
-		response = "You'll have to allow Endless War to send you DMs to check your inventory!"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	except:
-		can_message_user = False
+    if sort_by_id:
+        items = inventory(
+            id_user = inventory_source,
+            id_server = player.id_server,
+            item_sorting_method='id'
+        )
+    elif sort_by_type:
+        items = inventory(
+            id_user=inventory_source,
+            id_server=player.id_server,
+            item_sorting_method='type'
+        )
+    elif search == True:
+        print(ewutils.flattenTokenListToString(cmd.tokens[2:]))
+        items = find_item_all(
+            item_search = ewutils.flattenTokenListToString(cmd.tokens[2:]),
+            id_server=player.id_server,
+            id_user=inventory_source,
+            exact_search=False
+        )
+    else:
+        items = inventory(
+            id_user=inventory_source,
+            id_server=player.id_server,
+        )
 
-	if msg_handle is None:
-		can_message_user = False
+    if community_chest:
+        if len(items) == 0:
+            response = "The community chest is empty."
+        else:
+            response = "The community chest contains:"
+    else:
+        if len(items) == 0:
+            response = "You don't have anything."
+        else:
+            response = "You are holding:"
 
-	if not can_message_user:
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    msg_handle = None
+    try:
+        if can_message_user:
+            msg_handle = await ewutils.send_message(cmd.client, cmd.message.author, response)
+    except discord.errors.Forbidden:
+        response = "You'll have to allow Endless War to send you DMs to check your inventory!"
+        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    except:
+        can_message_user = False
 
-	if sort_by_name:
-		items = sorted(items, key=lambda item: item.get('name').lower())
+    if msg_handle is None:
+        can_message_user = False
 
-	if len(items) > 0:
-		
-		response = ""
+    if not can_message_user:
+        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		for item in items:
-			id_item = item.get('id_item')
-			quantity = item.get('quantity')
+    if sort_by_name:
+        items = sorted(items, key=lambda item: item.get('name').lower())
 
-			if not stacking:
-				response_part = "\n{id_item}: {soulbound_style}{name}{soulbound_style}{quantity}".format(
-					id_item = item.get('id_item'),
-					name = item.get('name'),
-					soulbound_style = ("**" if item.get('soulbound') else ""),
-					quantity = (" x{:,}".format(quantity) if (quantity > 1) else "")
-				)
-			else:
+    if len(items) > 0:
 
-				item_name = item.get('name')
-				if item_name in stacked_item_map:
-					stacked_item = stacked_item_map.get(item_name)
-					stacked_item['quantity'] += item.get('quantity')
-				else:
-					stacked_item_map[item_name] = item
-				
-			if not stacking and len(response) + len(response_part) > 1492:
-				if can_message_user:
-					await ewutils.send_message(cmd.client, cmd.message.author, response)
-				else:
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        response = ""
 
-				response = ""
-				
-			if not stacking:
-				response += response_part
+        for item in items:
+            id_item = item.get('id_item')
+            quantity = item.get('quantity')
 
-		if stacking:
-			item_names = stacked_item_map.keys()
-			if sort_by_name:
-				item_names = sorted(item_names)
-			for item_name in item_names:
-				item = stacked_item_map.get(item_name)
-				quantity = item.get('quantity')
-				response_part = "\n{soulbound_style}{name}{soulbound_style}{quantity}".format(
-					name=item.get('name'),
-					soulbound_style=("**" if item.get('soulbound') else ""),
-					quantity=(" **x{:,}**".format(quantity) if (quantity > 0) else "")
-				)
-				
-				if len(response) + len(response_part) > 1492:
-					if can_message_user:
-						await ewutils.send_message(cmd.client, cmd.message.author, response)
-					else:
-						await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
-					response = ""
-				response += response_part
+            if not stacking:
+                response_part = "\n{id_item}: {soulbound_style}{name}{soulbound_style}{quantity}".format(
+                    id_item = item.get('id_item'),
+                    name = item.get('name'),
+                    soulbound_style = ("**" if item.get('soulbound') else ""),
+                    quantity = (" x{:,}".format(quantity) if (quantity > 1) else "")
+                )
+            else:
 
-		if can_message_user:
-			await ewutils.send_message(cmd.client, cmd.message.author, response)
-		else:
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                item_name = item.get('name')
+                if item_name in stacked_item_map:
+                    stacked_item = stacked_item_map.get(item_name)
+                    stacked_item['quantity'] += item.get('quantity')
+                else:
+                    stacked_item_map[item_name] = item
+
+            if not stacking and len(response) + len(response_part) > 1492:
+                if can_message_user:
+                    await ewutils.send_message(cmd.client, cmd.message.author, response)
+                else:
+                    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+                response = ""
+
+            if not stacking:
+                response += response_part
+
+        if stacking:
+            item_names = stacked_item_map.keys()
+            if sort_by_name:
+                item_names = sorted(item_names)
+            for item_name in item_names:
+                item = stacked_item_map.get(item_name)
+                quantity = item.get('quantity')
+                response_part = "\n{soulbound_style}{name}{soulbound_style}{quantity}".format(
+                    name=item.get('name'),
+                    soulbound_style=("**" if item.get('soulbound') else ""),
+                    quantity=(" **x{:,}**".format(quantity) if (quantity > 0) else "")
+                )
+
+                if len(response) + len(response_part) > 1492:
+                    if can_message_user:
+                        await ewutils.send_message(cmd.client, cmd.message.author, response)
+                    else:
+                        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+                    response = ""
+                response += response_part
+
+        if can_message_user:
+            await ewutils.send_message(cmd.client, cmd.message.author, response)
+        else:
+            await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 
@@ -1498,130 +1500,135 @@ async def item_look(cmd):
 
 # this is basically just the item_look command with some other stuff at the bottom
 async def item_use(cmd):
-	use_mention_displayname = False
-	
-	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	author = cmd.message.author
-	server = cmd.guild
+    use_mention_displayname = False
 
-	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    author = cmd.message.author
+    server = cmd.guild
 
-	if item_sought:		
-		# Load the user before the item so that the right item props are used
-		user_data = EwUser(member = author)
+    item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
-		item = EwItem(id_item = item_sought.get('id_item'))
+    if item_sought:
+        # Load the user before the item so that the right item props are used
+        user_data = EwUser(member = author)
 
-		response = "The item doesn't have !use functionality"  # if it's not overwritten
+        item = EwItem(id_item = item_sought.get('id_item'))
 
-		if item.item_type == ewcfg.it_food:
-			response = user_data.eat(item)
-			user_data.persist()
-			asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
+        response = "The item doesn't have !use functionality"  # if it's not overwritten
 
-		if item.item_type == ewcfg.it_weapon:
-			response = user_data.equip(item)
-			user_data.persist()
+        if item.item_type == ewcfg.it_food:
+            response = user_data.eat(item)
+            user_data.persist()
+            asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
 
-		if item.item_type == ewcfg.it_item:
-			name = item_sought.get('name')
-			context = item.item_props.get('context')
-			if name == "Trading Cards":
-				response = ewsmelting.unwrap(id_user = author, id_server = server, item = item)
-			elif (context == 'repel' or context == 'superrepel' or context == 'maxrepel'):
-				statuses = user_data.getStatusEffects()
-				if ewcfg.status_repelaftereffects_id in statuses:
-					response = "You need to wait a bit longer before applying more body spray."
-				else:
-					if context == 'repel':
-						response = user_data.applyStatus(ewcfg.status_repelled_id)
-					elif context == 'superrepel':
-						response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=2)
-					elif context == 'maxrepel':
-						response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=4)
-					item_delete(item.id_item)
-			elif context == ewcfg.item_id_gellphone:
+        if item.item_type == ewcfg.it_weapon:
+            response = user_data.equip(item)
+            user_data.persist()
 
-				if user_data.has_gellphone():
-					gellphones = find_item_all(item_search = ewcfg.item_id_gellphone, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
+        if item.item_type == ewcfg.it_item:
+            name = item_sought.get('name')
+            context = item.item_props.get('context')
+            if name == "Trading Cards":
+                response = ewsmelting.unwrap(id_user = author, id_server = server, item = item)
+            elif (context == 'repel' or context == 'superrepel' or context == 'maxrepel'):
+                statuses = user_data.getStatusEffects()
+                if ewcfg.status_repelaftereffects_id in statuses:
+                    response = "You need to wait a bit longer before applying more body spray."
+                else:
+                    if context == 'repel':
+                        response = user_data.applyStatus(ewcfg.status_repelled_id)
+                    elif context == 'superrepel':
+                        response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=2)
+                    elif context == 'maxrepel':
+                        response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=4)
+                    item_delete(item.id_item)
+            elif context == ewcfg.item_id_gellphone:
 
-					for phone in gellphones:
-						phone_data = EwItem(id_item = phone.get('id_item'))
-						phone_data.item_props['gellphoneactive'] = 'false'
-						phone_data.persist()
+                if user_data.has_gellphone():
+                    gellphones = find_item_all(item_search = ewcfg.item_id_gellphone, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
 
-					response = "You turn off your gellphone."
+                    for phone in gellphones:
+                        phone_data = EwItem(id_item = phone.get('id_item'))
+                        phone_data.item_props['gellphoneactive'] = 'false'
+                        phone_data.persist()
 
-				else:
-					response = "You turn on your gellphone."
-					item.item_props['gellphoneactive'] = 'true'
-					item.persist()
+                    response = "You turn off your gellphone."
 
-					
-			elif context == ewcfg.context_prankitem:
-				item_action = ""
-				side_effect = ""
+                else:
+                    response = "You turn on your gellphone."
+                    item.item_props['gellphoneactive'] = 'true'
+                    item.persist()
 
-				if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False): # or (user_data.poi not in ewcfg.capturable_districts):
-					response = "You need to be on the city streets to unleash that prank item's full potential."
-				else:
-					if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
-						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_instantuse(cmd, item)
-						if side_effect != "":
-							response += await perform_prank_item_side_effect(side_effect, cmd=cmd)
-							
-					elif item.item_props['prank_type'] == ewcfg.prank_type_response:
-						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_response(cmd, item)
-						if side_effect != "":
-							response += await perform_prank_item_side_effect(side_effect, cmd=cmd)
-							
-					elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
-						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_trap(cmd, item)
-						
-					if item_action == "delete":
-						item_delete(item.id_item)
-						#prank_feed_channel = ewutils.get_channel(cmd.guild, ewcfg.channel_prankfeed)
-						#await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response+"\n`-------------------------`")))
-						
-					elif item_action == "drop":
-						give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)
-						#print(item.item_props)
-			# elif context == "swordofseething":
-			# 
-			# 	item_delete(item.id_item)
-			# 	await ewdebug.begin_cataclysm(user_data)
-			# 
-			# 	response = ewdebug.last_words
-					
-			elif context == "prankcapsule":
-				response = ewsmelting.popcapsule(id_user=author, id_server=server, item=item)
 
-			elif context == ewcfg.item_id_modelovaccine:
+            elif context == ewcfg.context_prankitem:
+                item_action = ""
+                side_effect = ""
 
-				if user_data.life_state == ewcfg.life_state_shambler:
-					user_data.life_state = ewcfg.life_state_juvenile
-					response = "You shoot the vaccine with the eagerness of a Juvenile on Slimernalia's Eve. It immediately dissolves throughout your bloodstream, causing your organs to feel like they're melting as your body undegrades." \
-								"Then, suddenly, you feel slime start to flow through you properly again. You feel rejuvenated, literally! Your genitals kinda itch, though.\n\n" \
-								"You have been cured! You are no longer a Shambler. Jesus Christ, finally."
-				else:
-					user_data.clear_status(id_status=ewcfg.status_modelovaccine_id)
-					response = user_data.applyStatus(ewcfg.status_modelovaccine_id)
+                if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False): # or (user_data.poi not in ewcfg.capturable_districts):
+                    response = "You need to be on the city streets to unleash that prank item's full potential."
+                else:
+                    if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
+                        item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_instantuse(cmd, item)
+                        if side_effect != "":
+                            response += await perform_prank_item_side_effect(side_effect, cmd=cmd)
 
-				user_data.degradation = 0
-				user_data.persist()
+                    elif item.item_props['prank_type'] == ewcfg.prank_type_response:
+                        item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_response(cmd, item)
+                        if side_effect != "":
+                            response += await perform_prank_item_side_effect(side_effect, cmd=cmd)
 
-				item_delete(item.id_item)
+                    elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
+                        item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_trap(cmd, item)
 
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
-		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+                    if item_action == "delete":
+                        item_delete(item.id_item)
+                        #prank_feed_channel = ewutils.get_channel(cmd.guild, ewcfg.channel_prankfeed)
+                        #await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response+"\n`-------------------------`")))
 
-	else:
-		if item_search:  # if they didnt forget to specify an item and it just wasn't found
-			response = "You don't have one."
-		else:
-			response = "Use which item? (check **!inventory**)"
+                    elif item_action == "drop":
+                        give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)
+                        #print(item.item_props)
+            # elif context == "swordofseething":
+            #
+            # 	item_delete(item.id_item)
+            # 	await ewdebug.begin_cataclysm(user_data)
+            #
+            # 	response = ewdebug.last_words
 
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            elif context == "prankcapsule":
+                response = ewsmelting.popcapsule(id_user=author, id_server=server, item=item)
+
+            elif context == ewcfg.item_id_modelovaccine:
+
+                if user_data.life_state == ewcfg.life_state_shambler:
+                    user_data.life_state = ewcfg.life_state_juvenile
+                    response = "You shoot the vaccine with the eagerness of a Juvenile on Slimernalia's Eve. It immediately dissolves throughout your bloodstream, causing your organs to feel like they're melting as your body undegrades." \
+                                "Then, suddenly, you feel slime start to flow through you properly again. You feel rejuvenated, literally! Your genitals kinda itch, though.\n\n" \
+                                "You have been cured! You are no longer a Shambler. Jesus Christ, finally."
+                else:
+                    user_data.clear_status(id_status=ewcfg.status_modelovaccine_id)
+                    response = user_data.applyStatus(ewcfg.status_modelovaccine_id)
+
+                user_data.degradation = 0
+                user_data.persist()
+
+                item_delete(item.id_item)
+
+            elif ewcfg.item_id_key in context:
+                if user_data.poi == "room103":
+                    response = ewdebug.debug_code
+                    item_delete(item.id_item)
+
+        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
+        await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+
+    else:
+        if item_search:  # if they didnt forget to specify an item and it just wasn't found
+            response = "You don't have one."
+        else:
+            response = "Use which item? (check **!inventory**)"
+
+        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 """
@@ -1698,28 +1705,28 @@ def find_item(item_search = None, id_user = None, id_server = None, item_type_fi
 """
 
 def find_item_all(item_search = None, id_user = None, id_server = None, item_type_filter = None, exact_search = True):
-	items_sought = []
-	props_to_search = [
-		'weapon_type',
-		'id_item',
-		'id_food',
-		'id_cosmetic',
-		'id_furniture'
-	]
+    items_sought = []
+    props_to_search = [
+        'weapon_type',
+        'id_item',
+        'id_food',
+        'id_cosmetic',
+        'id_furniture'
+    ]
 
 
-	if item_search:
-		items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
+    if item_search:
+        items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
 
-		# find the first (i.e. the oldest) item that matches the search
-		for item in items:
-			item_data = EwItem(id_item = item.get('id_item'))
-			for prop in props_to_search:
-				if prop in item_data.item_props and (ewutils.flattenTokenListToString(item_data.item_props.get(prop)) == item_search or (exact_search == False and item_search in ewutils.flattenTokenListToString(item_data.item_props.get(prop)))):
-					items_sought.append(item)
-					break
+        # find the first (i.e. the oldest) item that matches the search
+        for item in items:
+            item_data = EwItem(id_item = item.get('id_item'))
+            for prop in props_to_search:
+                if prop in item_data.item_props and (ewutils.flattenTokenListToString(item_data.item_props.get(prop)) == item_search or (exact_search == False and item_search in ewutils.flattenTokenListToString(item_data.item_props.get(prop)))):
+                    items_sought.append(item)
+                    break
 
-	return items_sought
+    return items_sought
 
 
 """
@@ -1751,114 +1758,114 @@ def find_poudrin(id_user = None, id_server = None):
 """
 async def give(cmd):
 
-	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	author = cmd.message.author
-	server = cmd.guild
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    author = cmd.message.author
+    server = cmd.guild
 
-	if cmd.mentions:  # if they're not empty
-		recipient = cmd.mentions[0]
-	else:
-		response = "You have to specify the recipient of the item."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    if cmd.mentions:  # if they're not empty
+        recipient = cmd.mentions[0]
+    else:
+        response = "You have to specify the recipient of the item."
+        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	user_data = EwUser(member = author)
-	recipient_data = EwUser(member = recipient)
+    user_data = EwUser(member = author)
+    recipient_data = EwUser(member = recipient)
 
-	if user_data.poi != recipient_data.poi:
-		response = "You must be in the same location as the person you want to gift your item to, bitch."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    if user_data.poi != recipient_data.poi:
+        response = "You must be in the same location as the person you want to gift your item to, bitch."
+        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
+    item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
-	if item_sought:  # if an item was found
-		
-		"""
-		# Slimernalia gifting
-		if item_sought.get('item_type') == ewcfg.it_item:
-			item_data = EwItem(id_item = item_sought.get('id_item'))
-			
-			if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
-				item_data.item_props['gifted'] = "true"
-				item_data.persist()
-				user_data.festivity += ewcfg.festivity_on_gift_giving
-				user_data.persist()
-		"""
-		# don't let people give others food when they shouldn't be able to carry more food items
-		if item_sought.get('item_type') == ewcfg.it_food:
-			food_items = inventory(
-				id_user = recipient.id,
-				id_server = server.id,
-				item_type_filter = ewcfg.it_food
-			)
+    if item_sought:  # if an item was found
 
-			if len(food_items) >= recipient_data.get_food_capacity():
-				response = "They can't carry any more food items."
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        """
+        # Slimernalia gifting
+        if item_sought.get('item_type') == ewcfg.it_item:
+            item_data = EwItem(id_item = item_sought.get('id_item'))
+            
+            if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
+                item_data.item_props['gifted'] = "true"
+                item_data.persist()
+                user_data.festivity += ewcfg.festivity_on_gift_giving
+                user_data.persist()
+        """
+        # don't let people give others food when they shouldn't be able to carry more food items
+        if item_sought.get('item_type') == ewcfg.it_food:
+            food_items = inventory(
+                id_user = recipient.id,
+                id_server = server.id,
+                item_type_filter = ewcfg.it_food
+            )
 
-		elif item_sought.get('item_type') == ewcfg.it_weapon:
-			weapons_held = inventory(
-				id_user = recipient.id,
-				id_server = server.id,
-				item_type_filter = ewcfg.it_weapon
-			)
+            if len(food_items) >= recipient_data.get_food_capacity():
+                response = "They can't carry any more food items."
+                return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-			if user_data.weaponmarried and user_data.weapon == item_sought.get('id_item'):
-				response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('name'))
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			elif recipient_data.life_state == ewcfg.life_state_corpse:
-				response = "Ghosts can't hold weapons."
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			elif len(weapons_held) >= recipient_data.get_weapon_capacity():
-				response  = "They can't carry any more weapons."
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		else:
-			# inventory limits for items that aren't food or weapons
-			other_items = inventory(
-				id_user=recipient.id,
-				id_server=server.id,
-				item_type_filter=item_sought.get('item_type')
-			)
+        elif item_sought.get('item_type') == ewcfg.it_weapon:
+            weapons_held = inventory(
+                id_user = recipient.id,
+                id_server = server.id,
+                item_type_filter = ewcfg.it_weapon
+            )
 
-			if len(other_items) >= ewcfg.generic_inv_limit:
-				response = "They can't carry any more of those."
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            if user_data.weaponmarried and user_data.weapon == item_sought.get('id_item'):
+                response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('name'))
+                return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            elif recipient_data.life_state == ewcfg.life_state_corpse:
+                response = "Ghosts can't hold weapons."
+                return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            elif len(weapons_held) >= recipient_data.get_weapon_capacity():
+                response  = "They can't carry any more weapons."
+                return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        else:
+            # inventory limits for items that aren't food or weapons
+            other_items = inventory(
+                id_user=recipient.id,
+                id_server=server.id,
+                item_type_filter=item_sought.get('item_type')
+            )
 
-		if item_sought.get('item_type') == ewcfg.it_cosmetic:
-			item_data = EwItem(id_item = item_sought.get('id_item'))
-			item_data.item_props["adorned"] = 'false'
-			item_data.persist()
+            if len(other_items) >= ewcfg.generic_inv_limit:
+                response = "They can't carry any more of those."
+                return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		if item_sought.get('soulbound') and EwItem(id_item = item_sought.get('id_item')).item_props.get("context") != "housekey":
-			response = "You can't just give away soulbound items."
-		else:
-			give_item(
-				member = recipient,
-				id_item = item_sought.get('id_item')
-			)
+        if item_sought.get('item_type') == ewcfg.it_cosmetic:
+            item_data = EwItem(id_item = item_sought.get('id_item'))
+            item_data.item_props["adorned"] = 'false'
+            item_data.persist()
 
-			response = "You gave {recipient} a {item}".format(
-				recipient = recipient.display_name,
-				item = item_sought.get('name')
-			)
+        if item_sought.get('soulbound') and EwItem(id_item = item_sought.get('id_item')).item_props.get("context") != "housekey":
+            response = "You can't just give away soulbound items."
+        else:
+            give_item(
+                member = recipient,
+                id_item = item_sought.get('id_item')
+            )
 
-			if item_sought.get('id_item') == user_data.weapon:
-				user_data.weapon = -1
-				user_data.persist()
-			elif item_sought.get('id_item') == user_data.sidearm:
-				user_data.sidearm = -1
-				user_data.persist()
+            response = "You gave {recipient} a {item}".format(
+                recipient = recipient.display_name,
+                item = item_sought.get('name')
+            )
 
-			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+            if item_sought.get('id_item') == user_data.weapon:
+                user_data.weapon = -1
+                user_data.persist()
+            elif item_sought.get('id_item') == user_data.sidearm:
+                user_data.sidearm = -1
+                user_data.persist()
 
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
-	else:
-		if item_search:  # if they didnt forget to specify an item and it just wasn't found
-			response = "You don't have one."
-		else:
-			response = "Give which item? (check **!inventory**)"
+        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    else:
+        if item_search:  # if they didnt forget to specify an item and it just wasn't found
+            response = "You don't have one."
+        else:
+            response = "Give which item? (check **!inventory**)"
+
+        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """
     Throw away an item
@@ -2505,7 +2512,63 @@ async def zuck(cmd):
 
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def sherman_donate(cmd):
+    quarter5slime = ewdebug.EwGamestate(id_server=cmd.guild.id, id_state="shermanslime")
+    user_data = EwUser(member=cmd.message.author)
+    value = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
+    emptied = 0
+    if quarter5slime.bit == 0:
+        return "You can't donate here. Try it at SlimeCorp HQ!"
+    else:
+        if cmd.tokens_count != 3:
+            response = "Make sure you're giving Sherman money in the right format. It's !donate <donation type> <amount>."
+        elif flattenTokenListToString(cmd.tokens[1]) not in ['poudrins', 'slime', 'slimecoin']
+            response = "You need to donate in the form of Slimecoin, poudrins, or slime. Sherman doesn't take credit cards because he doesn't understand them."
+        else:
+            if flattenTokenListToString(cmd.tokens[1]) == "poudrins"
+                quarter5pouds = ewdebug.EwGamestate(id_server=cmd.guild.id, id_state="shermanpoud")
+                valuecount = 0
+                while valuecount <= value or poudrin = None
+                    poudrin = ewitem.find_item(item_search=ewcfg.item_id_slimepoudrin, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_item)
+                    if poudrin is None:
+                        emptied = 1
+                        break
+                    ewitem.item_delete(id_item = poudrin.get('id_item'))
+                    valuecount += 1
+                currentpouds = int(quarter5pouds.value)
+                currentpouds += valuecount
+                quarter5pouds.value = str(currentpouds)
+                quarter5pouds.persist()
+                if emptied:
+                    response = "Sherman empties your pockets of all your precious poudrins. He tries to juggle them all and fails miserably."
+                else:
+                    response = "You give Sherman {} poudrins. He tries to juggle them all and fails miserably."
 
 
+            elif flattenTokenListToString(cmd.tokens[1]) == "slime"
+                if user_data.slimes < value:
+                    response = "You don't have enough slime."
+                else:
+                    user_data.change_slimes(n = -value, source = ewcfg.source_spending)
+                    user_data.persist()
+                    currentslime = int(quarter5slime.value)
+                    currentslime += value
+                    quarter5slime.value = str(currentslime)
+                    quarter5slime.persist()
+                    response = "You donate {} slime to Sherman. He excitedly throws it up in the air and does a stupid little dance.".format(value)
 
+            elif flattenTokenListToString(cmd.tokens[1]) == "slimecoin"
+                quarter5coin = ewdebug.EwGamestate(id_server=cmd.guild.id, id_state="shermancoin")
+                if user_data.slimecoin < value:
+                    response = "You don't have enough slimecoin."
 
+                else:
+                    user_data.change_slimecoin(n=-value, source=ewcfg.source_spending)
+                    user_data.persist()
+                    currentcoin = int(quarter5slime.value)
+                    currentcoin += value
+                    quarter5coin.value = str(currentcoin)
+                    quarter5coin.persist()
+                    response = "You whip out Coinbase and transfer {} SlimeCoin into Sherman's account. He laughs giddily and slaps his thighs together.".format(value)
+
+        return response

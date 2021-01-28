@@ -7,7 +7,7 @@ import ewcfg
 import ewrolemgr
 import ewmap
 from ew import EwUser
-
+import re
 """
 	Release the specified player from their commitment to their faction.
 	Returns enlisted players to juvenile.
@@ -244,3 +244,16 @@ async def exalt(cmd):
 # 		response = "In response to their unparalleled ability to let everything go to shit and be the laughingstock of all of NLACakaNM, {} recieves the SWORD OF SEETHING! God help us all...".format(recipient.display_name)
 # 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def pa_command(cmd):
+	if not cmd.message.author.guild_permissions.administrator:
+		return await ewutils.fake_failed_command(cmd)
+	else:
+		poi = ewutils.flattenTokenListToString(cmd.tokens[1])
+		poi_obj = ewcfg.id_to_poi.get(poi)
+		loc_channel = ewutils.get_channel(cmd.guild, poi_obj.channel)
+		if poi is not None:
+			patext = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])+len(cmd.tokens[1])+1):]).strip()
+			if len(patext) > 500:
+				patext = patext[:-500]
+			return await ewutils.send_message(cmd.client, loc_channel, patext)
