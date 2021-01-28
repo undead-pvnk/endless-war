@@ -2406,7 +2406,7 @@ async def longdrop(cmd):
 	mutations = user_data.get_mutations()
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	destination = cmd.tokens[1]
+	destination = ewutils.flattenTokenListToString(cmd.tokens[1])
 	dest_poi = ewcfg.id_to_poi.get(destination)
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[2:])

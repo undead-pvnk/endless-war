@@ -406,7 +406,9 @@ class EwDistrict:
 
 		if self.cap_side == "" and actor != ewcfg.actor_decay:
 			self.cap_side = actor
-		if self.max_capture_points <= 0:
+
+
+		if self.capture_points <= 0:
 			self.cap_side = ""
 			self.controlling_faction = ""
 
