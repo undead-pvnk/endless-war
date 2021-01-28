@@ -68,7 +68,7 @@ class EwDistrict:
 					self.property_class = poi.property_class.lower()
 
 			if len(self.property_class) > 0:
-				self.max_capture_points = ewcfg.max_capture_points[self.property_class]
+				self.max_capture_points = ewcfg.limit_influence[self.property_class]
 			else:
 				self.max_capture_points = 0
 
@@ -406,13 +406,13 @@ class EwDistrict:
 
 		if self.cap_side == "" and actor != ewcfg.actor_decay:
 			self.cap_side = actor
-		if self.capture_points <= 0:
+		if self.max_capture_points <= 0:
 			self.cap_side = ""
 			self.controlling_faction = ""
 
 
-		#elif self.capture_points > self.max_capture_points:
-		#	self.capture_points = self.max_capture_points
+		elif self.capture_points > self.max_capture_points:
+			self.capture_points = self.max_capture_points
 		#where we're going we don't need roads
 
 		progress_percent_after = int(self.capture_points / max_capture * 100)

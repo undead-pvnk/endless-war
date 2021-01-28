@@ -459,6 +459,7 @@ def canCap(cmd, capture_type, roomba_loop = 0):
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
 	market_data = EwMarket(id_server=cmd.guild.id)
+	mutations = user_data.get_mutations()
 
 	tokens_lower = []
 	for token in cmd.tokens:
@@ -506,6 +507,8 @@ def canCap(cmd, capture_type, roomba_loop = 0):
 		response = "This zone cannot be captured."
 	elif sidearm != None and sidearm.cooldown + (float(sidearm_item.item_props.get("time_lastattack")) if sidearm_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
 		response = "Your {weapon_name} isn't ready for another {command} yet!".format(weapon_name=sidearm.id_weapon, command=cmd.tokens[0].lower())
+	elif district_data.all_neighbors_friendly() is True and district_data.controlling_faction != user_data.faction and ewcfg.mutation_id_nervesofsteel not in mutations:
+		response = "You're scared out of your mind and deep into enemy territory! Spraying here is just beyond you at this point."
 	elif sidearm != None and ewcfg.weapon_class_captcha in sidearm.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower and roomba_loop == 0:
 		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 	elif code_count > 1 and roomba_loop == 0:
@@ -3197,7 +3200,7 @@ async def spray(cmd):
 							response += "\nNext target is {}.".format(new_captcha_gun)
 						weapon_item.persist()
 
-					if district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.limit_influence[poi.property_class]:
+					if district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) >= ewcfg.limit_influence[poi.property_class]:
 						if user_data.faction == ewcfg.faction_rowdys:
 							color = "pink"
 						elif user_data.faction == "slimecorp":
@@ -3205,7 +3208,10 @@ async def spray(cmd):
 						else:
 							color = "purple"
 						response += "\nThe street is awash in a sea of {}. It's hard to imagine where else you could spray down.".format(color)
-
+					elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > (ewcfg.min_influence[poi.property_class] + ewcfg.limit_influence[poi.property_class]) / 2:
+						response += "\nThe {} have developed a decent grip on this district.".format(user_data.faction)
+					elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.min_influence[poi.property_class]:
+						response += "\nThe {} have developed a loose grip on this district.".format(user_data.faction)
 			else:
 				if miss:
 						response = "You spray something so obscure nobody notices."

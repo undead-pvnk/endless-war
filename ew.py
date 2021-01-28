@@ -295,6 +295,20 @@ class EwUser:
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_weapon, fraction = 1, rigor=rigor) # Drop random fraction of your unequipped weapons on the ground.
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_max_onrevive)
 
+			try:
+				ewutils.execute_sql_query(
+					"DELETE FROM items_prop WHERE {} = %s AND  {} = %s".format(
+						ewcfg.col_name,
+						ewcfg.col_value
+					),
+					(
+						'preserved',
+						self.id_user
+					))
+
+			except:
+				ewutils.logMsg('Failed to remove preserved tags from items.'.format(id_user))
+
 			self.life_state = ewcfg.life_state_corpse
 			self.poi_death = self.poi
 			self.poi = ewcfg.poi_id_thesewers

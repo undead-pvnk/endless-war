@@ -440,11 +440,11 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 
 	drop_candidates = []
 	#safe_items = [ewcfg.item_id_gameguide]
-
+	print('rigor:{}'.format(rigor))
 	# Filter out Soulbound items.
 	for item in items:
 		item_obj = EwItem(id_item = item.get('id_item'))
-		if item.get('soulbound') == False and not (rigor == True and item_obj.item_props.get('preserved') ==  user_data.id_user) and item_obj.item_props.get('context') != 'gellphone':
+		if item.get('soulbound') == False and not (rigor == True and item_obj.item_props.get('preserved') ==  str(user_data.id_user)) and item_obj.item_props.get('context') != 'gellphone':
 			drop_candidates.append(item)
 
 	filtered_items = []
@@ -480,19 +480,7 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 	#except:
 	#	ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
 
-	try:
-		ewutils.execute_sql_query(
-			"DELETE FROM items_prop WHERE {} = %s AND  {} = %s".format(
-				ewcfg.col_name,
-				ewcfg.col_value
-			),
-			(
-				'preserved',
-				user_data.id_user
-			))
 
-	except:
-		ewutils.logMsg('Failed to remove preserved tags from items.'.format(id_user))
 
 """
 	Dedorn all of a player's cosmetics

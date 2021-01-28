@@ -1387,6 +1387,8 @@ def get_faction_symbol(faction = "", faction_raw = ""):
 			result = ewcfg.emote_rf
 		elif faction == ewcfg.role_shambler:
 			result = ewcfg.emote_slimeskull
+		elif faction == ewcfg.role_slimecorp:
+			result = ewcfg.emote_slimecorp
 		else:
 			result = ewcfg.emote_blank
 
