@@ -1667,9 +1667,12 @@ def find_item(item_search = None, id_user = None, id_server = None, item_type_fi
 
 		# find the first (i.e. the oldest) item that matches the search
 		for item in items:
-			if item.get('id_item') == item_search_int or item_search in ewutils.flattenTokenListToString(item.get('name')):
+			item_name = ewutils.flattenTokenListToString(item.get('name'))
+			if item.get('id_item') == item_search_int or item_name == item_search:
 				item_sought = item
 				break
+			if item_sought == None and item_search in item_name:
+				item_sought = item
 
 	return item_sought
 
