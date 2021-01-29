@@ -1268,8 +1268,9 @@ class EwEnemy:
 				
 				if new_poi not in ewcfg.outskirts:
 					gang_base_response = "There are reports of a powerful enemy roaming around {}.".format(new_poi_def.str_name)
-					resp_cont.add_channel_response(ewcfg.channel_rowdyroughhouse, gang_base_response)
-					resp_cont.add_channel_response(ewcfg.channel_copkilltown, gang_base_response)
+					channels = ewcfg.hideout_channels
+					for ch in channels:
+						resp_cont.add_channel_response(ch, gang_base_response)
 		finally:
 			self.persist()
 			return resp_cont
