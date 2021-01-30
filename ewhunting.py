@@ -1201,7 +1201,7 @@ class EwEnemy:
 
 		try:
 			# Raid bosses can move into other parts of the outskirts as well as the city, including district zones.
-			destinations = ewcfg.poi_neighbors.get(self.poi)
+			destinations = set(ewcfg.poi_neighbors.get(self.poi))
 			
 			if self.enemytype in ewcfg.gvs_enemies:
 				path = [ewcfg.poi_id_assaultflatsbeach, ewcfg.poi_id_vagrantscorner, ewcfg.poi_id_greenlightdistrict, ewcfg.poi_id_downtown]
