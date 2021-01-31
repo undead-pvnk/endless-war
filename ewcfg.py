@@ -81,6 +81,10 @@ life_state_grandfoe = 8
 life_state_kingpin = 10
 life_state_observer = 20
 
+farm_life_state_juviethumb = 30
+farm_life_state_thumb = 31
+
+
 # Player stats. What, you ever play an RPG before, kid?
 stat_attack = 'attack'
 stat_defense = 'defense'
@@ -1344,6 +1348,9 @@ cmd_untakedown_alt_2 = cmd_prefix + 'undeletezine'
 cmd_lol = cmd_prefix + 'lol'
 cmd_mastery = cmd_prefix + 'mastery'
 
+cmd_getattire = cmd_prefix + 'getattire'
+cmd_pacommand = cmd_prefix + 'pacommand'
+
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
 apartment_dt_multiplier = 3000000000
@@ -1904,7 +1911,7 @@ wiki_baseurl = "https://rfck.miraheze.org/wiki/"
 emote_tacobell = "<:tacobell:431273890195570699>"
 emote_pizzahut = "<:pizzahut:431273890355085323>"
 emote_kfc = "<:kfc:431273890216673281>"
-emote_moon = "<:moon:431418525303963649>"
+emote_moon = "<:moon:499614945609252865>"
 emote_111 = "<:111:431547758181220377>"
 
 emote_copkiller = "<:copkiller:431275071945048075>"
@@ -9613,7 +9620,21 @@ smelting_recipe_list = [
             item_id_string: 2, # Laces
         },
         products=["rollerblades"]
-    )
+    ),
+	EwSmeltingRecipe(
+		id_recipe="ferroslimeoid",
+		str_name="a ferroslimeoid",
+		alias=[
+			'ferroslimeoid',
+			'magnet'
+		],
+		ingredients={
+			item_id_tincan: 2,  # metal dust
+			item_id_slimepoudrin: 5,  # lifeforce
+			item_id_string: 1,  # Scarf/tether
+		},
+		products=["ferroslimeoid"]
+	)
 	# TODO remove after double halloween
 	#EwSmeltingRecipe(
     #    id_recipe = "ticket",
@@ -12308,6 +12329,8 @@ status_injury_torso_id = "injury_torso"
 status_injury_arms_id = "injury_arms"
 status_injury_legs_id = "injury_legs"
 
+status_kevlarattire_id = "kevlarattire"
+
 
 time_expire_burn = 12
 time_expire_high = 30 * 60 # 30 minutes
@@ -12467,7 +12490,7 @@ status_effect_list = [
 		time_expire = 300,
 		str_acquire = "Calorie-induced rage consumes you! You could drink gasoline and get shot and not feel a damn thing!",
 		str_describe_self = "You're in the middle of a raging food coma.",
-        dmg_mod_self = -0.4
+        dmg_mod = -0.4
 	),
     EwStatusEffectDef(
 		id_status = status_n1,
@@ -12538,19 +12561,19 @@ status_effect_list = [
 		dmg_mod=1.5,
 		crit_mod_self=.5
 	),
-	EwStatusEffectDef(
-		id_status=status_kevlarattire,
-		time_expire=86400,
-		str_acquire="You pull up the tie on your snazzy looking new armor, and adorn the matching eyewear.",
-		str_describe="They're outfitted in the latest kevlar attire.",
-		str_describe_self="You're outfitted in the latest kevlar attire.",
-		dmg_mod_self=-0.2
-	),
+
 	EwStatusEffectDef(
 		id_status = status_juviemode_id,
 		time_expire = 86400,
 		str_acquire = "",
 		str_describe_self = "You're carrying slime under the legal limit."
+	),
+	EwStatusEffectDef(
+		id_status = status_kevlarattire_id,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "You're dressed to the nines in the latest Kevlar work attire.",
+		dmg_mod = -0.2
 	)
 ]
 
@@ -13038,7 +13061,7 @@ help_responses = {
 	# Introductions, part 1
 	"gangs":"**Gang Violence** is the center focus of **Rowdy Fuckers Cop Killers' ENDLESS WAR**. Enlisting in a gang allows you to attack other gang members, juveniles, ghosts, and slime beasts with the **'!kill'** command. To enlist in a gang, use **'!enlist'**. However, a member of that gang must use **'!vouch'** for you beforehand. Enlisting will permanently affiliate you with that gang, unless you are !pardon'd by the **ROWDY FUCKER** (Munchy), or the **COP KILLER** (Ben Saint). You may use **'!renounce'** to return to the life of a juvenile, but you will lose half of your current slime, and you will still be affiliated with that gang, thus disallowing you from entering the enemy's gang base. Additionally, a Kingpin, should they feel the need to, can inflict the '!banned' status upon you, preventing you from enlisting in their gang.",
 	"food":"Food lowers your hunger by a set amount, and can be ordered from various **restaurants** within the city. Generally speaking, the more expensive food is, the more hunger it sates. You can **'!order [food name] togo'** to order it togo, otherwise you will eat it on the spot, and you can **'!use [food name]'** to use it once its in your inventory. You can only carry a certain amount of food depending on your level. Regular food items expire after 2 in-game days, or 12 hours in real life, while crops expire after 8 in-game days (48 hours), and food items gained from milling expire after a whole 2 weeks in real life. Three popular restauraunts close by various gang bases include **THE SPEAKEASY** (juveniles), **THE SMOKER'S COUGH** (rowdys), and **RED MOBSTER SEAFOOD** (killers), though there are other places to order food as well, such as the **Food Court**.",
-	"capturing":"Capping is a battle for influence over the 33 districts of NLACakaNM, and one of your main goals as a gangster. Capped territories award your kingpin slime, and give your teammates benefits while visiting. Start by visiting Based Hardware and equipping one of the paint tools sold there. Once you have that, you can **!spray <captcha>** while in a capturable district's streets to gain influence for your gang. Spraying graffiti in districts will increase influence for you, or decrease it for the enemy if they have influence there. Think of dealing influence to a district like dealing damage to a Juvie's soft squishy body, with critical hits, misses, and backfires included. As you go, you can check your **!progress** to see how much influence you still need. It can be more or less depending on the territory class, running from rank C to S. \n\nA few more things to note:\n>**!progress** will tell you the minimum and limit for territory capture. However, you can capture above that limit, as high as you want. The catch is that anything captured over this limit will decay faster.\n>Decapping does 0.8x the influence of capping, even though the cost remains the same.\n>Don't attack enemy territory when it is surrounded by enemy territory/outskirts. Small little bitches like yourself are prone to fucking up severely under that much pressure.\n>The nightlife starts in the late night. Fewer cops are around to erase your handiwork, so if you cap then you will gain a 33% capping bonus.\n>You can't kill for shit with paint tools equipped. Luckily, you can **!sidearm** a weapon or tool and quickly switch between your two equip slots using **switch** or **!s**.",
+	"capturing":"Capping is a battle for influence over the 33 districts of NLACakaNM, and one of your main goals as a gangster. Capped territories award your kingpin slime, and give your teammates benefits while visiting. Start by visiting Based Hardware and equipping one of the paint tools sold there. Once you have that, you can **!spray <captcha>** while in a capturable district's streets to gain influence for your gang. Spraying graffiti in districts will increase influence for you, or decrease it for the enemy if they have influence there. Think of dealing influence to a district like dealing damage to a Juvie's soft squishy body, with critical hits, misses, and backfires included. As you go, you can check your **!progress** to see how much influence you still need. It can be more or less depending on the territory class, running from rank C to S. \n\nA few more things to note:\n>Decapping does 0.8x the influence of capping, even though the cost remains the same.\n>Don't attack enemy territory when it is surrounded by enemy territory/outskirts. Small little bitches like yourself are prone to fucking up severely under that much pressure.\n>The nightlife starts in the late night. Fewer cops are around to erase your handiwork, so if you cap then you will gain a 33% capping bonus.\n>You can't kill for shit with paint tools equipped. Luckily, you can **!sidearm** a weapon or tool and quickly switch between your two equip slots using **switch** or **!s**.",
 	"transportation":"There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board pinktocv'. **'!disembark'** can be used to exit a train. **The Ferry** (which moves between Vagrant's Corner and Wreckington) and **The Blimp** (which moves between Dreadford and Assault Flats Beach) can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do. Refer to the diagram below on understanding which districts and streets have subway stations in them.\nhttps://cdn.discordapp.com/attachments/431238867459375145/570392908780404746/t_system_final_stop_telling_me_its_wrong_magicks.png",
 	"death": "Death is an integral mechanic to Endless War. Even the most experienced players will face the sewers every now and again. If you find yourself in such a situation, use **'!revive'** in the sewers channel, and you will return to the land of the living as a juvenile at the base of ENDLESS WAR. Dying will drop some of your unadorned cosmetics and food, and all of your unequiped weapons, but your currently adorned cosmetics and equiped weapon will remain in your inventory (Gangsters will lose half of their food/unadorned cosmetics, while Juveniles lose only a quarter). Alternatively, you can hold off on reviving and remain a **ghost**, which has its own gameplay mechanics associated with it. To learn more, use '!help ghosts' at one of the colleges or with a game guide, or see the wiki page here: https://rfck.miraheze.org/wiki/Ghosts",
 	# Introductions, part 2

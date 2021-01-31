@@ -456,6 +456,12 @@ async def sow(cmd):
 				farm.phase = ewcfg.farm_phase_sow
 				farm.action_required = ewcfg.farm_action_none
 				farm.sow_life_state = user_data.life_state
+				if ewcfg.mutation_id_greenfingers in mutations:
+					if user_data.life_state == ewcfg.life_state_juvenile:
+						farm.sow_life_state = ewcfg.farm_life_state_juviethumb
+					else:
+						farm.sow_life_state = ewcfg.farm_life_state_thumb
+
 				ewitem.item_delete(id_item = item_sought.get('id_item'))  # Remove Poudrins
 
 				farm.persist()
@@ -677,9 +683,13 @@ def farm_tick(id_server):
 		time_nextphase = ewcfg.time_nextphase
 
 		# gvs - juvie's last farming phase lasts 10 minutes
-		if farm_data.sow_life_state == ewcfg.life_state_juvenile and farm_data.phase == (ewcfg.farm_phase_reap_juvie - 1):
+		if farm_data.sow_life_state in [ewcfg.life_state_juvenile, ewcfg.farm_life_state_juviethumb] and farm_data.phase == (ewcfg.farm_phase_reap_juvie - 1):
 			time_nextphase = ewcfg.time_lastphase_juvie
-		
+
+		if farm_data.sow_life_state in [ewcfg.farm_life_state_juviethumb, ewcfg.farm_life_state_thumb]:
+			time_nextphase /= 1.5
+
+
 		if time_now >= farm_data.time_lastphase + time_nextphase:
 			farm_data.phase += 1
 			farm_data.time_lastphase = time_now

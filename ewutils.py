@@ -1388,6 +1388,8 @@ def get_faction_symbol(faction = "", faction_raw = ""):
 			result = ewcfg.emote_rf
 		elif faction == ewcfg.role_shambler:
 			result = ewcfg.emote_slimeskull
+		elif faction == ewcfg.role_slimecorp:
+			result = ewcfg.emote_slimecorp
 		else:
 			result = ewcfg.emote_blank
 
@@ -3150,7 +3152,9 @@ async def make_bp(cmd):
 	else:
 		logMsg("Could not find Brimstone Programmer role.")
 
+
 #Used when you have a secret command you only want seen under certain conditions.
+
 async def fake_failed_command(cmd):
 	client = get_client()
 	randint = random.randint(1, 3)
@@ -3167,6 +3171,7 @@ async def fake_failed_command(cmd):
 		pass
 	except:
 		pass
+
 
 async def assign_status_effect(cmd = None, status_name = None, user_id = None, server_id = None):
 	if status_name is not None:

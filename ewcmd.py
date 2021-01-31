@@ -4019,12 +4019,16 @@ async def get_attire(cmd):
 	status = user_data.getStatusEffects()
 	if user_data.poi != ewcfg.poi_id_thebreakroom:
 		response = "Are you a Slimecorp Security Force official, planted firmly in their lavish breakroom? No? Then you're not getting shit."
-	elif ewcfg.status_kevlarattire in status:
+	elif ewcfg.status_kevlarattire_id in status:
 		response = "You're already armed, though. This stuff's too expensive so the company's not gonna let you double dip."
 	elif user_data.life_state != ewcfg.life_state_enlisted:
 		response = "You're not committed enough to wear this attire. You're a slob. How did you even get in here?"
 	else:
-		return await ewutils.assign_status_effect(status_name='kevlarattire', user_id=cmd.message.author.id, server_id=cmd.guild.id)
+		response = "You suit up in top-of-the-line Kevlar attire. Sleek. Professional. Bulletproof."
+		await ewutils.assign_status_effect(status_name='kevlarattire', user_id=cmd.message.author.id, server_id=cmd.guild.id, cmd=cmd)
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 
 async def check_mastery(cmd):
 	message_line = "You are a rank {} master of the {}. \n"
@@ -4034,7 +4038,8 @@ async def check_mastery(cmd):
 	else:
 		wepskills = ewutils.weaponskills_get(member=cmd.message.author)
 		for skill, level in wepskills.items():
-			message += message_line.format(level["skill"], skill.lower())
+			if level.get("skill") >= 5:
+				message += message_line.format(level["skill"]-4, skill.lower())
 		response = message
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

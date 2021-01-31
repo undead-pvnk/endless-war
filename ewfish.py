@@ -441,6 +441,9 @@ async def cast(cmd):
 					elif id_food == "masterbait":
 						high_value_bait_used = True
 
+					elif id_food == "ferroslimeoid":
+						fisher.current_fish = "seaitem"
+
 					elif float(item.time_expir if item.time_expir is not None else 0) < time.time():
 						if random.randrange(2) == 1:
 							fisher.current_fish = "plebefish"

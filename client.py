@@ -853,7 +853,10 @@ cmd_map = {
 	ewcfg.cmd_verification_alt: ewslimetwitter.verification,
 
 	# Check your weapon masteries
-	ewcfg.cmd_mastery: ewcmd.check_mastery
+
+	ewcfg.cmd_mastery: ewcmd.check_mastery,
+	ewcfg.cmd_getattire: ewcmd.get_attire,
+	ewcfg.cmd_pacommand: ewkingpin.pa_command
 
 }
 
