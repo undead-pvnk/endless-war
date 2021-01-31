@@ -915,11 +915,11 @@ channel_slimesend_street_a = "slimes-end-street-a"
 
 channel_slimetwitter = "slime-twitter"
 
-hideout_channels = [channel_rowdyroughhouse, channel_copkilltown, channel_slimecorpcomms]
+hideout_channels = [channel_rowdyroughhouse, channel_copkilltown, channel_breakroom]
 hideout_by_faction = {
 	faction_rowdys: channel_rowdyroughhouse,
 	faction_killers: channel_copkilltown,
-	faction_slimecorp: channel_slimecorpcomms
+	faction_slimecorp: channel_breakroom
 }
 
 
