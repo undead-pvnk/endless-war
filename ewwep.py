@@ -2068,7 +2068,6 @@ async def reload(cmd):
 
 # Returns the total modifier of all statuses of a certain type and target of a given player
 def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = None):
-
 	mods = {
 		'dmg': 0,
 		'crit': 0,
@@ -2076,6 +2075,7 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
 	}
 
 	user_statuses = user_data.getStatusEffects()
+
 	for status in user_statuses:
 		status_flavor = ewcfg.status_effects_def_map.get(status)
 
@@ -2111,6 +2111,7 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
 			else: 
 				mods['hit_chance'] += status_flavor.hit_chance_mod_self
 			mods['crit'] += status_flavor.crit_mod_self
+
 			mods['dmg'] += status_flavor.dmg_mod_self
 
 	return mods
@@ -2140,6 +2141,7 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
 					continue
 
 		if status_flavor is not None:
+
 			mods['hit_chance'] += status_flavor.hit_chance_mod
 			mods['crit'] += status_flavor.crit_mod
 			mods['dmg'] += status_flavor.dmg_mod

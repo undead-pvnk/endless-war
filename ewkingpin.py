@@ -7,6 +7,7 @@ import ewcfg
 import ewrolemgr
 import ewmap
 from ew import EwUser
+import re
 
 """
 	Release the specified player from their commitment to their faction.
@@ -117,7 +118,7 @@ async def create(cmd):
 		response = 'Lowly Non-Kingpins cannot hope to create items with their bare hands.'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if len(cmd.tokens) not in [4, 5]:
+	if len(cmd.tokens) not in [4, 5, 6]:
 		response = 'Usage: !create "<item_name>" "<item_desc>" <recipient> <rarity(optional)>, <context>(optional)'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -249,3 +250,25 @@ async def exalt(cmd):
 # 		response = "In response to their unparalleled ability to let everything go to shit and be the laughingstock of all of NLACakaNM, {} recieves the SWORD OF SEETHING! God help us all...".format(recipient.display_name)
 # 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def pa_command(cmd):
+	if not cmd.message.author.guild_permissions.administrator:
+		return await ewutils.fake_failed_command(cmd)
+	else:
+		if cmd.tokens_count >= 3:
+			poi = ewutils.flattenTokenListToString(cmd.tokens[1])
+
+			poi_obj = ewcfg.id_to_poi.get(poi)
+			if poi == "auditorium":
+				channel = "auditorium"
+			else:
+				channel = poi_obj.channel
+
+			loc_channel = ewutils.get_channel(cmd.guild, channel)
+
+			if poi is not None:
+				patext = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])+len(cmd.tokens[1])+1):]).strip()
+				if len(patext) > 500:
+					patext = patext[:-500]
+				return await ewutils.send_message(cmd.client, loc_channel, patext)

@@ -845,7 +845,8 @@ cmd_map = {
 
 	# Check your weapon masteries
 	ewcfg.cmd_mastery: ewcmd.check_mastery,
-	ewcfg.cmd_getattire: ewcmd.get_attire
+	ewcfg.cmd_getattire: ewcmd.get_attire,
+	ewcfg.cmd_pacommand: ewkingpin.pa_command
 }
 
 debug = False

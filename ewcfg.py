@@ -1329,6 +1329,7 @@ cmd_lol = cmd_prefix + 'lol'
 cmd_mastery = cmd_prefix + 'mastery'
 
 cmd_getattire = cmd_prefix + 'getattire'
+cmd_pacommand = cmd_prefix + 'pacommand'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
@@ -12211,7 +12212,7 @@ status_injury_torso_id = "injury_torso"
 status_injury_arms_id = "injury_arms"
 status_injury_legs_id = "injury_legs"
 
-status_kevlarattire = "kevlarattire"
+status_kevlarattire_id = "kevlarattire"
 
 
 time_expire_burn = 12
@@ -12372,7 +12373,7 @@ status_effect_list = [
 		time_expire = 300,
 		str_acquire = "Calorie-induced rage consumes you! You could drink gasoline and get shot and not feel a damn thing!",
 		str_describe_self = "You're in the middle of a raging food coma.",
-        dmg_mod_self = -0.4
+        dmg_mod = -0.4
 	),
     EwStatusEffectDef(
 		id_status = status_juviemode_id,
@@ -12384,7 +12385,8 @@ status_effect_list = [
 		id_status = status_kevlarattire_id,
 		time_expire = 86400,
 		str_acquire = "",
-		str_describe_self = "You're dressed to the nines in the latest Kevlar work attire."
+		str_describe_self = "You're dressed to the nines in the latest Kevlar work attire.",
+		dmg_mod = -0.2
 	),
 ]
 
