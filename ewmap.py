@@ -2338,10 +2338,10 @@ async def send_gangbase_messages(server_id, clock):
 	response = ""
 	if clock == 3:
 		response = "The police are probably asleep, the lazy fucks. It's a good time for painting the town!"
-		cop_response = "*BZZZRT* STATISTICS SHOW GANG ACTIVITY INCREASES AFTER NIGHTFALL. REMAIN VIGILANT."
+		cop_response = "STATISTICS SHOW GANG ACTIVITY INCREASES AFTER NIGHTFALL. REMAIN VIGILANT."
 	elif clock == 11:
 		response = "Spray time's over, looks like the cops are back out. Fuck those guys."
-		cop_response = "*BZZZRT* STATISTICS SHOW GANG ACTIVITY DECLINES DURING DAYLIGHT HOURS. GET TO WORK."
+		cop_response = "STATISTICS SHOW GANG ACTIVITY DECLINES DURING DAYLIGHT HOURS. GET TO WORK."
 
 
 	client = ewutils.get_client()
