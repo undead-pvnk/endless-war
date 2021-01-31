@@ -2351,7 +2351,7 @@ async def send_gangbase_messages(server_id, clock):
 	if response != "":
 		for channel in channels:
 			post_channel = ewutils.get_channel(server, channel)
-			if channel == "slimecorp-comms":
+			if channel == ewcfg.channel_slimecorpcomms:
 				await ewutils.send_message(client, post_channel, cop_response)
 			else:
 				await ewutils.send_message(client, post_channel, response)
