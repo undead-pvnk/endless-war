@@ -2338,8 +2338,10 @@ async def send_gangbase_messages(server_id, clock):
 	response = ""
 	if clock == 3:
 		response = "The police are probably asleep, the lazy fucks. It's a good time for painting the town!"
+		cop_response = "STATISTICS SHOW GANG ACTIVITY INCREASES AFTER NIGHTFALL. REMAIN VIGILANT."
 	elif clock == 11:
 		response = "Spray time's over, looks like the cops are back out. Fuck those guys."
+		cop_response = "STATISTICS SHOW GANG ACTIVITY DECLINES DURING DAYLIGHT HOURS. GET TO WORK."
 
 
 	client = ewutils.get_client()
@@ -2349,4 +2351,7 @@ async def send_gangbase_messages(server_id, clock):
 	if response != "":
 		for channel in channels:
 			post_channel = ewutils.get_channel(server, channel)
-			await ewutils.send_message(client, post_channel, response)
+			if channel == ewcfg.channel_breakroom:
+				await ewutils.send_message(client, post_channel, cop_response)
+			else:
+				await ewutils.send_message(client, post_channel, response)

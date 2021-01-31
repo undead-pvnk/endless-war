@@ -656,6 +656,7 @@ channel_cinema = "nlacakanm-cinemas"
 channel_bazaar = "bazaar"
 channel_recyclingplant = "slimecorp-recycling-plant"
 channel_slimecorphq = "slimecorp-hq"
+channel_slimecorpcomms = "slimecorp-comms"
 channel_leaderboard = "leaderboard"
 channel_cv_mines = "cratersville-mines"
 channel_cv_mines_sweeper = "cratersville-mines-minesweeper"
@@ -914,10 +915,11 @@ channel_slimesend_street_a = "slimes-end-street-a"
 
 channel_slimetwitter = "slime-twitter"
 
-hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
+hideout_channels = [channel_rowdyroughhouse, channel_copkilltown, channel_breakroom]
 hideout_by_faction = {
 	faction_rowdys: channel_rowdyroughhouse,
-	faction_killers: channel_copkilltown
+	faction_killers: channel_copkilltown,
+	faction_slimecorp: channel_breakroom
 }
 
 
