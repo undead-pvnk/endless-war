@@ -117,12 +117,14 @@ async def create(cmd):
 		response = 'Lowly Non-Kingpins cannot hope to create items with their bare hands.'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if len(cmd.tokens) != 4:
-		response = 'Usage: !create "<item_name>" "<item_desc>" <recipient>'
+	if len(cmd.tokens) not in [4, 5]:
+		response = 'Usage: !create "<item_name>" "<item_desc>" <recipient> <rarity(optional)>, <context>(optional)'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	item_name = cmd.tokens[1]
 	item_desc = cmd.tokens[2]
+	rarity =  cmd.tokens[4] if len(cmd.tokens) >= 5 and ewutils.flattenTokenListToString(cmd.tokens[4]) in ['princeps', 'plebeian', 'patrician'] else 'princeps'
+	context = cmd.tokens[5] if len(cmd.tokens) >= 6 else ''
 
 	if cmd.mentions[0]:
 		recipient = cmd.mentions[0]
@@ -134,8 +136,11 @@ async def create(cmd):
 		"cosmetic_name": item_name,
 		"cosmetic_desc": item_desc,
 		"adorned": "false",
-		"rarity": "princeps"
+		"rarity": rarity,
+		"context": context
 	}
+
+
 
 	new_item_id = ewitem.item_create(
 		id_server = cmd.guild.id,

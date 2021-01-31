@@ -3409,7 +3409,7 @@ async def sanitize(cmd):
 				if 3 <= time_current <= 10:
 					slimes_damage *= (4 / 3)
 
-				credits_added = int(abs(slimes_damage))
+				credits_added = int(abs(slimes_damage)) * 25
 
 				# if (user_data.faction != district_data.controlling_faction and (user_data.faction is None or user_data.faction == '')) and district_data.capture_points > ewcfg.limit_influence[district_data.property_class]:
 				#	slimes_damage = round(slimes_damage / 5)
