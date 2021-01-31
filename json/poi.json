@@ -17025,7 +17025,9 @@
         "has_ads": false,
         "write_manuscript": false,
         "max_degradation": 10000,
-        "neighbors": {},
+        "neighbors": {
+            "securityforcetunnel": 30
+        },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/SlimeCorp"
     },
@@ -18311,7 +18313,68 @@
         "max_degradation": 10000,
         "neighbors": {
             "nuclearbeach": 60,
-            "northoutskirtsdepths": 60
+            "northoutskirtsdepths": 60,
+            "securityforcetunnel": 30
+        },
+        "topic": "",
+        "wikipage": "https://rfck.miraheze.org/wiki/Outskirts#Depths"
+    },
+     "securityforcetunnel": {
+        "id_poi": "securityforcetunnel",
+        "alias": [
+            "sftunnel",
+            "sft"
+        ],
+        "str_name": "SlimeCorp Security Force Tunnel",
+        "str_desc": "This place must be miles long, and the higher-ups must've decided to save on lighting here since it's pitch black, too. Good thing it's linear if that's the case. \n\nExits are Nuclear Beach Outskirts and The Breakroom.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "security-force-tunnel",
+        "role": null,
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "securityforcetunnel": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [
+            "slimecorp"
+        ],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": true,
+        "is_capturable": false,
+        "is_subzone": false,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": true,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "nuclearbeachdepths": 360,
+            "thebreakroom": 360
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Outskirts#Depths"
