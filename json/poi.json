@@ -16975,7 +16975,7 @@
             "br"
         ],
         "str_name": "The SlimeCorp Headquaters Breakroom",
-        "str_desc": "A high-class corporate breakroom. This place has everything! Storage lockers, vending machines, ration dispensers, heck, even free weapon caches! Who WOULDN'T want to be a security officer with benefits like these?",
+        "str_desc": "A high-class corporate breakroom. This place has everything! Storage lockers, vending machines, ration dispensers, heck, even free weapon caches! Who WOULDN'T want to be a security officer with benefits like these? Exits into the Security Force Tunnel and Downtown.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [],
