@@ -250,6 +250,7 @@ async def renounce(cmd):
 		faction = user_data.faction
 		user_data.life_state = ewcfg.life_state_juvenile
 		user_data.weapon = -1
+		user_data.sidearm = -1
 		user_data.persist()
 		response = "You are no longer enlisted in the {}, but you are not free of association with them. Your former teammates immediately begin to beat the shit out of you, knocking {} slime out of you before you're able to get away.".format(faction, renounce_fee)
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -376,7 +377,7 @@ async def mine(cmd):
 			if user_data.weapon >= 0:
 				weapon_item = EwItem(id_item = user_data.weapon)
 				weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-				if weapon.id_weapon == ewcfg.weapon_id_pickaxe:
+				if weapon.id_weapon == ewcfg.weapon_id_pickaxe and user_data.life_state != ewcfg.life_state_juvenile:
 					has_pickaxe = True
 			#if user_data.sidearm >= 0:
 			#	sidearm_item = EwItem(id_item=user_data.sidearm)
