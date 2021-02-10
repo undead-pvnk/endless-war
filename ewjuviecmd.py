@@ -379,7 +379,7 @@ async def mine(cmd):
 			if user_data.weapon >= 0:
 				weapon_item = EwItem(id_item = user_data.weapon)
 				weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-				if weapon.id_weapon == ewcfg.weapon_id_pickaxe:
+				if weapon.id_weapon == ewcfg.weapon_id_pickaxe and user_data.life_state != ewcfg.life_state_juvenile:
 					has_pickaxe = True
 			#if user_data.sidearm >= 0:
 			#	sidearm_item = EwItem(id_item=user_data.sidearm)
