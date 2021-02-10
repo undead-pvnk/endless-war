@@ -4501,9 +4501,9 @@ EwGeneralItem(
 		context = "key"
 	),
 	EwGeneralItem(
-		id_item = "coordinate sheet"
-		str_name = "Coordinates"
-		str_desc = "It's a small slip of paper that reads: \"36.174435, -112.043243, N. Beach Depths\""
+		id_item = "coordinate sheet",
+		str_name = "Coordinates",
+		str_desc = "It's a small slip of paper that reads: \"36.174435, -112.043243, N. Beach Depths\"",
 		context = "droppable"
 	),
 	EwSeedPacket(

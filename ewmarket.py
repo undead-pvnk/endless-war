@@ -678,7 +678,7 @@ async def donate(cmd):
 			response = "You hand off one of your hard-earned poudrins to the front desk receptionist, who is all too happy to collect it. Pretty uneventful, but at the very least you’re glad donating isn’t physically painful anymore."
 
 	elif user_data.poi == ewcfg.poi_id_speakeasy:
-		response = ewitem.sherman_donate(cmd)
+		response = ewitem.sherman_donate(cmd=cmd)
 	else:
 		response = "To donate slime, go to the SlimeCorp HQ in Downtown. To donate poudrins, go to the SlimeCorp Lab in Brawlden."
 

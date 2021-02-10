@@ -230,8 +230,7 @@ class EwUser:
 
 		status = self.getStatusEffects()
 		if "n1" in status:
-			response = "But N1 doesn't die!"
-			resp_cont.add_channel_response(poi.channel, response)
+			self.change_slimes(n=-self.slimes, source=ewcfg.source_killing)
 			return(resp_cont)
 
 		# Grab necessary data for spontaneous combustion before stat reset

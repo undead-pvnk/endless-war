@@ -253,7 +253,8 @@ async def exalt(cmd):
 
 
 async def pa_command(cmd):
-	if not cmd.message.author.guild_permissions.administrator:
+	user_data = EwUser(member = cmd.message.author)
+	if not cmd.message.author.guild_permissions.administrator and user_data.life_state != ewcfg.life_state_executive:
 		return await ewutils.fake_failed_command(cmd)
 	else:
 		if cmd.tokens_count >= 3:
