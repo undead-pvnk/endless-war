@@ -4803,7 +4803,7 @@ def get_weapon_type_stats(weapon_type):
 		},
 		"variable_damage": {
 			"damage_multiplier": 0.75,
-			"variable_damage_multiplier": 3,
+			"variable_damage_multiplier": 1.5,
 			"cost_multiplier": 1,
 			"crit_chance": 0.1,
 			"crit_multiplier": 1.5,
