@@ -199,7 +199,6 @@ class EwWeapon:
 class EwEffectContainer:
 	miss = False
 	crit = False
-	strikes = 0
 	slimes_damage = 0
 	slimes_spent = 0
 	user_data = None
@@ -214,10 +213,9 @@ class EwEffectContainer:
 
 	# Debug method to dump out the members of this object.
 	def dump(self):
-		print("effect:\nmiss: {miss}\ncrit: {crit}\nstrikes: {strikes}\nslimes_damage: {slimes_damage}\nslimes_spent: {slimes_spent}\nexplosion_dmg: {bystander_damage}".format(
+		print("effect:\nmiss: {miss}\ncrit: {crit}\nslimes_damage: {slimes_damage}\nslimes_spent: {slimes_spent}\nexplosion_dmg: {bystander_damage}".format(
 			miss = self.miss,
 			crit = self.crit,
-			strikes = self.strikes,
 			slimes_damage = self.slimes_damage,
 			slimes_spent = self.slimes_spent,
 			bystander_damage = self.bystander_damage
@@ -227,7 +225,6 @@ class EwEffectContainer:
 		self,
 		miss = False,
 		crit = False,
-		strikes = 0,
 		slimes_damage = 0,
 		slimes_spent = 0,
 		user_data = None,
@@ -242,7 +239,6 @@ class EwEffectContainer:
 	):
 		self.miss = miss
 		self.crit = crit
-		self.strikes = strikes
 		self.slimes_damage = slimes_damage
 		self.slimes_spent = slimes_spent
 		self.user_data = user_data
@@ -614,7 +610,6 @@ async def attack(cmd):
 
 		miss = False
 		crit = False
-		strikes = 0
 		bystander_damage = 0
 		hit_chance_mod = 0
 		crit_mod = 0
@@ -743,7 +738,6 @@ async def attack(cmd):
 				crit = ctn.crit
 				slimes_damage = ctn.slimes_damage
 				slimes_spent = ctn.slimes_spent
-				strikes = ctn.strikes
 				bystander_damage = ctn.bystander_damage
 				#sap_damage = ctn.sap_damage
 				#sap_ignored = ctn.sap_ignored
@@ -1065,7 +1059,6 @@ async def attack(cmd):
 							name_player = cmd.message.author.display_name,
 							name_target = member.display_name,
 							hitzone = randombodypart,
-							strikes = strikes
 						)
 						kill_descriptor = weapon.str_killdescriptor
 						if crit:
@@ -1151,7 +1144,6 @@ async def attack(cmd):
 								name_player = cmd.message.author.display_name,
 								name_target = member.display_name,
 								hitzone = randombodypart,
-								strikes = strikes
 							)
 							if crit:
 								response += " {}".format(weapon.str_crit.format(
@@ -2198,7 +2190,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	miss = False
 	crit = False
-	strikes = 0
 	bystander_damage = 0
 	hit_chance_mod = 0
 	crit_mod = 0
@@ -2289,7 +2280,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		crit = ctn.crit
 		slimes_damage = ctn.slimes_damage
 		slimes_spent = ctn.slimes_spent
-		strikes = ctn.strikes
 		bystander_damage = ctn.bystander_damage
 		#sap_damage = ctn.sap_damage
 		#sap_ignored = ctn.sap_ignored
@@ -2513,7 +2503,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				name_player=cmd.message.author.display_name,
 				name_target=enemy_data.display_name,
 				hitzone=randombodypart,
-				strikes=strikes
 			)
 			kill_descriptor = weapon.str_killdescriptor
 			if crit:
@@ -2588,7 +2577,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					name_player=cmd.message.author.display_name,
 					name_target=enemy_data.display_name,
 					hitzone=randombodypart,
-					strikes=strikes
 				)
 				if crit:
 					response += " {}".format(weapon.str_crit.format(
@@ -3031,7 +3019,6 @@ async def spray(cmd):
 
 			miss = False
 			crit = False
-			strikes = 0
 			bystander_damage = 0
 			hit_chance_mod = 0
 			crit_mod = 0
@@ -3299,7 +3286,6 @@ async def sanitize(cmd):
 			miss = False
 			crit = False
 
-			strikes = 0
 			bystander_damage = 0
 			hit_chance_mod = 0
 			crit_mod = 0

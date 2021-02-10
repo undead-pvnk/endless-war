@@ -435,6 +435,9 @@ def path_step(path, poi_next, cost_next,  user_data, poi_end, landmark_mode = Fa
 						cost_next -= ewcfg.territory_time_gain
 					else:
 						cost_next += ewcfg.territory_time_gain
+				# Slimecorp gets a bonus in unclaimed territory
+				elif user_data.faction == ewcfg.faction_slimecorp:
+						cost_next -= ewcfg.territory_time_gain
 
 	path.steps.append(poi_next)
 
@@ -1041,6 +1044,9 @@ async def move(cmd = None, isApt = False):
 							val -= ewcfg.territory_time_gain
 						else:
 							val += ewcfg.territory_time_gain
+					# Slimecorp gets a bonus in unclaimed territory
+					elif user_data.faction == ewcfg.faction_slimecorp:
+						val -= ewcfg.territory_time_gain
 
 				val = int(val / user_data.move_speed)
 				await asyncio.sleep(val)

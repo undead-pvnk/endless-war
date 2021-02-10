@@ -466,7 +466,7 @@ class EwEnemy:
 
 			target_iskillers = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_killers
 			target_isrowdys = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_rowdys
-			target_isslimecorp = target_data.life_state == ewcfg.life_state_enlisted and target_data.life_state == ewcfg.faction_slimecorp
+			target_isslimecorp = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_slimecorp
 			target_isexecutive = target_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 			target_isjuvie = target_data.life_state == ewcfg.life_state_juvenile
 			target_isnotdead = target_data.life_state != ewcfg.life_state_corpse
