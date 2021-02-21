@@ -1602,10 +1602,13 @@ async def item_use(cmd):
 
                 item_delete(item.id_item)
 
-            elif ewcfg.item_id_key in context:
-                if user_data.poi == "room103":
+            elif ewcfg.item_id_key in context and context != 'housekey':
+                if user_data.poi == "room102" and context == 'reelkey':
+                    response = ewdebug.reel_code
+                if user_data.poi == "room103" and context == 'cabinetkey':
                     response = ewdebug.debug_code
-                    item_delete(item.id_item)
+
+
 
         await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
         await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)

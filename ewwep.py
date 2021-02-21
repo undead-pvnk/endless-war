@@ -521,6 +521,8 @@ def canCap(cmd, capture_type, roomba_loop = 0):
 		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
 	elif sidearm_viable == 0:
 		response = "With what, your piss? Get some paint from Based Hardware and stop fucking around."
+	elif district_data.cap_side == "slimecorp" and district_data.capture_points >= ewcfg.limit_influence[district_data.property_class]:
+		response = "Slimecorp has fully gentrified this place. They've got comm stations everywhere, nobody can lay a finger on {}.".format(poi.str_name)
 	#elif not 3 <= market_data.clock <= 10 and user_data.faction != ewcfg.faction_slimecorp:
 	#	response = "You can't !spray while all these people are around. The cops are no problem but the street sweepers will fucking kill you."
 	#elif not 3 <= market_data.clock <= 10 and user_data.faction == ewcfg.faction_slimecorp:
@@ -773,20 +775,28 @@ async def attack(cmd, n1_die = None):
 				#sap_ignored = ctn.sap_ignored
 				# user_data and shootee_data should be passed by reference, so there's no need to assign them back from the effect container.
 
-				if (slimes_spent > user_data.slimes):
-					# Not enough slime to shoot.
-					response = "You don't have enough slime to attack. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
-					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+				no_slime_cost = False
+				user_status_effects = user_data.getStatusEffects()
+				for stat in ewcfg.nocost:
+					if stat in user_status_effects:
+						no_slime_cost = True
+
+				if no_slime_cost != True:
+					if (slimes_spent > user_data.slimes):
+						# Not enough slime to shoot.
+						response = "You don't have enough slime to attack. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+					# Spend slimes, to a minimum of zero
+					user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
+
+					user_data.limit_fix()
+					user_data.persist()
+
 
 				weapon_item.item_props['time_lastattack'] = time_now_float
 				weapon_item.persist()
-
-				# Spend slimes, to a minimum of zero
-				user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
-
-				user_data.limit_fix()
-				user_data.persist()
-
 				if weapon.id_weapon == ewcfg.weapon_id_garrote:
 					shootee_data.persist()
 					response = "You wrap your wire around {}'s neck...".format(member.display_name)
@@ -3391,9 +3401,11 @@ async def sanitize(cmd):
 					response = "You don't have enough slime to sanitize. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-				if district_data.controlling_faction == "" and district_data.capture_points == 0:
-					response = "There's no graffiti to clean up here."
-					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+				#if district_data.controlling_faction == "" and district_data.capture_points == 0:
+				#	response = "There's no graffiti to clean up here."
+				#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				weapon_item.item_props['time_lastattack'] = time_now_float
 				weapon_item.persist()
@@ -3447,9 +3459,12 @@ async def sanitize(cmd):
 					if miss:
 						response = weapon.tool_props[0].get('miss_spray')
 					else:
-
 						response = "Your sanitizer-filled {} washes away the filth from the city streets.".format(weapon.str_name)
 						response += " You removed {:,} existing influence from gangsters.".format(int(abs(slimes_damage)))
+
+						if district_data.cap_side == "slimecorp" or district_data.cap_side == "":
+							response = "Your paint-filled {} covers the city in Slimecorp propaganda.".format(weapon.str_name)
+							response += " You added {:,} existing influence for Slimecorp.".format(round(int(abs(slimes_damage))/3))
 
 						if (user_data.faction != district_data.cap_side and district_data.cap_side != "") and (user_data.faction is not None or user_data.faction != ''):
 							slimes_damage = round(slimes_damage * -.8)
@@ -3473,9 +3488,11 @@ async def sanitize(cmd):
 						#	hitzone=randombodypart,
 						#	strikes=strikes
 						# )
+						if (district_data.cap_side == "slimecorp" or district_data.cap_side == '') == "" and crit:
+							response += " You score a critical hit adding {:,} additional influence!".format(round(abs(slimes_damage)/3))
+						elif crit:
+							response += " You score a critical hit, removing {:,} additional influence!".format(abs(slimes_damage))
 
-						if crit:
-							response += " You score a critical hit removes {:,} additional influence!".format(abs(slimes_damage))
 
 						response += " {:,} salary credits have been added to your profile.".format(credits_added)
 						user_data.salary_credits += credits_added

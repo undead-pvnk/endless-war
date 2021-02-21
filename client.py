@@ -120,7 +120,8 @@ cmd_map = {
 	ewcfg.cmd_suicide_alt1: ewwep.suicide,
 	ewcfg.cmd_suicide_alt2: ewwep.suicide,
 	ewcfg.cmd_n1_die : ewwep.n1_die,
-
+	ewcfg.cmd_haveastroke:ewapt.nothing,
+	ewcfg.cmd_moonhurtingbeam:ewapt.nothing,
 	# Spar with an ally
 	ewcfg.cmd_spar: ewwep.spar,
 
@@ -207,7 +208,7 @@ cmd_map = {
 	# ewcfg.cmd_swear_jar: ewcmd.swearjar,
 
 	# Display the progress towards the current Quarterly Goal.
-	# ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
+	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
 	ewcfg.cmd_paspeaker: ewkingpin.pa_command,
 	ewcfg.cmd_retire: ewapt.retire,
 	ewcfg.cmd_depart: ewapt.depart,
@@ -761,6 +762,7 @@ cmd_map = {
 	#swap weapons
 	ewcfg.cmd_switch: ewwep.switch_weapon,
 	ewcfg.cmd_switch_alt_1: ewwep.switch_weapon,
+	ewcfg.cmd_debug9: ewdebug.debug9,
 
 	# Slimernalia
 	# Check your current festivity
@@ -846,8 +848,8 @@ cmd_map = {
 
 	ewcfg.cmd_changegamestate: ewdebug.change_gamestate,
 	ewcfg.cmd_press_button: ewdebug.elevator_press,
+	ewcfg.cmd_call_elevator: ewdebug.elevator_call,
 	ewcfg.cmd_addstatuseffect: ewutils.assign_status_effect,
-	ewcfg.cmd_getattire: ewcmd.get_attire,
 
 	ewcfg.cmd_verification: ewslimetwitter.verification,
 	ewcfg.cmd_verification_alt: ewslimetwitter.verification,

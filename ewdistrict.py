@@ -395,6 +395,9 @@ class EwDistrict:
 		max_capture = ewcfg.limit_influence[district_poi.property_class]
 		progress_percent_before = int(self.capture_points / max_capture * 100)
 
+		if actor == 'slimecorp':
+			progress /= 3
+
 		self.capture_points += progress
 
 		resp_cont_change_cp = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)

@@ -971,6 +971,8 @@ cmd_spar = cmd_prefix + 'spar'
 cmd_suicide = cmd_prefix + 'suicide'
 cmd_suicide_alt1 = cmd_prefix + 'seppuku'
 cmd_suicide_alt2 = cmd_prefix + 'sudoku'
+cmd_haveastroke = cmd_prefix + 'haveastroke'
+cmd_moonhurtingbeam = cmd_prefix + 'moonhurtingbeam'
 cmd_n1_die = cmd_prefix + 'die'
 cmd_haunt = cmd_prefix + 'haunt'
 cmd_inhabit = cmd_prefix + 'inhabit'
@@ -1361,6 +1363,7 @@ soulprice = 500000000
 tv_set_slime = 5000000
 tv_set_level = 100
 
+
 cmd_promote = cmd_prefix + 'promote'
 
 cmd_arrest = cmd_prefix + 'arrest'
@@ -1385,6 +1388,7 @@ cmd_debug4 = cmd_prefix + ewdebug.cmd_debug4
 cmd_debug6 = cmd_prefix + ewdebug.cmd_debug6
 cmd_debug7 = cmd_prefix + ewdebug.cmd_debug7
 cmd_debug8 = cmd_prefix + ewdebug.cmd_debug8
+cmd_debug9 = cmd_prefix + ewdebug.cmd_debug9
 
 cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
 cmd_clear_mutations = cmd_prefix + 'sterilizemutations'
@@ -1476,6 +1480,7 @@ cmd_verification_alt = cmd_prefix + '#verify'
 
 cmd_changegamestate = cmd_prefix + 'changegamestate'
 cmd_press_button = cmd_prefix + 'press'
+cmd_call_elevator = cmd_prefix + 'callelevator'
 cmd_addstatuseffect = cmd_prefix + 'addstatuseffect'
 cmd_getattire = cmd_prefix + 'getattire'
 #SLIMERNALIA
@@ -4498,7 +4503,13 @@ EwGeneralItem(
 		id_item = "key",
 		str_name = "Cabinet Key",
 		str_desc = "It's a tiny key. Some idiot must've left this in the middle of the street, it's weathered down right out of the box.",
-		context = "key"
+		context = "cabinetkey"
+	),
+	EwGeneralItem(
+		id_item="filmreel",
+		str_name="Film Reel",
+		str_desc="It's a rell of film for one of Slimecorp's old training videos.",
+		context="reelkey"
 	),
 	EwGeneralItem(
 		id_item = "coordinate sheet",
@@ -6576,6 +6587,28 @@ enemy_attack_type_list = [
 		str_killdescriptor="felled",
 		str_damage="{name_enemy} bludgeons {name_target} in the {hitzone}! At least they try to...",
 		fn_effect=atf_body
+	),
+	EwAttackType(  # 11
+		id_type="stomp",
+		str_crit="**OH FUCK!** The titanoslime reels back onto its hind legs, stomping {name_target} deeper and deeper into the asphalt!",
+		str_miss="**MISS!** {name_target} jumps barely out of the way of a stomp!",
+		# str_trauma_self = "Your have deep bruising on your torso.",
+		# str_trauma = "They have deep bruising on their torso.",
+		str_kill="**CRUNCH!!** The titanoslime locks its teeth into your flesh, snapping you clean in half and swallowing all but your legs! You can feel the creatures stomach acid stinging on your face before you rapidly lose consciousness.{emote_skull}",
+		str_killdescriptor="vored",
+		str_damage="{name_enemy} swings it's car width legs full speed into {name_target}!",
+		fn_effect=atf_tusks
+	),
+	EwAttackType(  # 11
+		id_type="stompn6",
+		str_crit="**YIPPIE KI YAY MOTHER FUCKERS!!!** N6 pulls back the reins, reeling the Titanoslime up and stomping {name_target} deeper and deeper into the asphalt!",
+		str_miss="**MISS!** {name_target} jumps barely out of the way of a stomp! You can hear N6 cursing from atop her steed.",
+		# str_trauma_self = "Your have deep bruising on your torso.",
+		# str_trauma = "They have deep bruising on their torso.",
+		str_kill="N6 pulls out some kind of laser pistol and aims it directly at you. **FOOM!** You don't see the next moment because your eyes are now a fine powder. You bleed out the sockets for a few minutes before collapsing dead in the street.{emote_skull}",
+		str_killdescriptor="disintegrated",
+		str_damage="{name_enemy} swings it's car width legs full speed into {name_target}! N6 laughs and watches you eat shit on the pavement!",
+		fn_effect=atf_tusks
 	),
 	# If str_trauma and str_trauma_self make a return, consider filling GvS attacktypes out in these attributes.
 	EwAttackType( # GvS - 1
@@ -12322,6 +12355,11 @@ status_n8 = "n8"
 status_n11 = "n11"
 status_n12 = "n12"
 status_n13 = "n13"
+
+
+nocost = [status_n13, status_n12, status_n11, status_n4, status_n2, status_n1]
+
+
 status_kevlarattire = "kevlarattire"
 
 status_injury_head_id = "injury_head"
@@ -12498,8 +12536,8 @@ status_effect_list = [
 		str_acquire = "",
 		str_describe_self = "You are god's gift to malice.",
 		str_describe = "He is god's gift to malice.",
-        dmg_mod_self = -0.5,
-		dmg_mod = 2,
+        dmg_mod = -0.5,
+		dmg_mod_self = 1,
 		hit_chance_mod_self = +.2,
 		hit_chance_mod = -.35
 	),
@@ -12509,7 +12547,7 @@ status_effect_list = [
 		str_acquire = "",
 		str_describe_self = "You shred like nobody's business.",
 		str_describe = "They shred like nobody's business.",
-        dmg_mod_self = -0.5,
+        dmg_mod = -0.5,
 		hit_chance_mod_self = +.2,
 		hit_chance_mod = -.5
 	),
@@ -12519,8 +12557,8 @@ status_effect_list = [
 		str_acquire = "",
 		str_describe_self = "Sorry, you can't let them do that.",
 		str_describe = "Sorry, they can't let you do this.",
-        dmg_mod_self = -1,
-		dmg_mod = -.5,
+        dmg_mod = -1,
+		dmg_mod_self = -.5,
 	),
     EwStatusEffectDef(
 		id_status = status_n8,
@@ -12528,7 +12566,7 @@ status_effect_list = [
 		str_acquire = "",
 		str_describe_self = "You're itching to move on from this.",
         dmg_mod_self = -0.5,
-		dmg_mod = 1.5,
+		dmg_mod = 0.5,
 		crit_mod_self = .3
 	),
     EwStatusEffectDef(
@@ -12537,8 +12575,8 @@ status_effect_list = [
 		str_acquire = "",
 		str_describe_self = "You're feeling like putting your cronies to the test.",
 		str_describe = "You're afraid of this guy.",
-        dmg_mod_self = -0.5,
-		dmg_mod = 1.5,
+        dmg_mod = -0.5,
+		dmg_mod_self = 0.5,
 		crit_mod_self = .5
 	),
     EwStatusEffectDef(
@@ -12547,8 +12585,8 @@ status_effect_list = [
 		str_acquire = "",
 		str_describe_self = "Time to get nasty.",
 		str_describe = "She barely looks human.",
-        dmg_mod_self = -0.5,
-		dmg_mod = 1.7,
+        dmg_mod = -0.5,
+		dmg_mod_self = 0.7,
 		crit_mod_self = .75
 	),
 	EwStatusEffectDef(
@@ -12557,8 +12595,8 @@ status_effect_list = [
 		str_acquire="",
 		str_describe_self="They're really starting to get on your nerves.",
 		str_describe= "You're really starting to get on his nerves.",
-		dmg_mod_self=-0.5,
-		dmg_mod=1.5,
+		dmg_mod=-0.5,
+		dmg_mod_self=0.5,
 		crit_mod_self=.5
 	),
 
@@ -13286,6 +13324,8 @@ enemy_attacktype_armcannon = 'armcannon'
 enemy_attacktype_axe = 'axe'
 enemy_attacktype_hooves = 'hooves'
 enemy_attacktype_body = 'body'
+enemy_attacktype_stomp = 'stomp'
+enemy_attacktype_stomp_n6 = 'stompn6'
 
 enemy_attacktype_amateur = 'amateur'
 
@@ -13375,6 +13415,8 @@ enemy_type_shambleballplayer = "shambleballplayer"
 enemy_type_shamblerwarlord = "shamblerwarlord"
 enemy_type_shamblerraider = "shamblerraider"
 enemy_type_gvs_boss = "blueeyesshamblerdragon"
+enemy_type_titanoslime = "titanoslime"
+enemy_type_mutated_titanoslime = "mutatedtitanoslime"
 
 # Sandbag (Only spawns in the dojo, doesn't attack)
 enemy_type_sandbag = 'sandbag'
@@ -13401,7 +13443,7 @@ enemy_class_shambler = 'shambler'
 common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime]
 uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime]
 rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed]
-raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
+raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator, enemy_type_titanoslime]
 
 enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
 
@@ -13463,7 +13505,7 @@ repairable_gaias = [
 raid_boss_tiers = {
 	"micro": [enemy_type_megaslime],
 	"monstrous": [enemy_type_slimeasaurusrex, enemy_type_unnervingfightingoperator],
-	"mega": [enemy_type_greeneyesslimedragon],
+	"mega": [enemy_type_greeneyesslimedragon, enemy_type_titanoslime],
 	# This can be left empty until we get more raid boss ideas.
 	#"nega": [],
 }
@@ -13559,6 +13601,16 @@ enemy_drop_tables = {
 	enemy_type_civilian_innocent: [
 		{item_id_slimepoudrin: [20, 1, 1]},
 		{item_id_civilianscalp: [100, 1, 1]},
+	],
+	enemy_type_titanoslime: [
+		{item_id_slimepoudrin: [100, 15, 20]},
+		{rarity_patrician: [100, 1, 1]},
+		{item_id_monsterbones: [100, 5, 10]}
+	],
+	enemy_type_mutated_titanoslime: [
+		{item_id_slimepoudrin: [100, 15, 20]},
+		{'n6corpse': [100, 1, 1]},
+		{item_id_monsterbones: [100, 5, 10]}
 	],
 }
 for enemy in gvs_enemies:
@@ -13677,6 +13729,22 @@ enemy_data_table = {
 		"displayname": "Unnerving Fighting Operator",
 		"raredisplayname": "Unyielding Fierce Operator",
 		"aliases": ["ufo", "alien","unnervingfightingoperator","unnvering"]
+	},
+	enemy_type_titanoslime: {
+		"slimerange": [5000000, 7000000],
+		"ai": enemy_ai_attacker_b,
+		"attacktype": enemy_attacktype_stomp,
+		"displayname": "Titanoslime",
+		"raredisplayname": "Miscreated Titanoslime",
+		"aliases": ["titano", "titanoslime", "biglizard"]
+	},
+	enemy_type_titanoslime: {
+		"slimerange": [10000000, 10000000],
+		"ai": enemy_ai_attacker_b,
+		"attacktype": enemy_attacktype_stomp_n6,
+		"displayname": "N6 on a Mutated Titanoslime",
+		"raredisplayname": "Miscreated Mutated Titanoslime",
+		"aliases": ["n6", "mutatedtitanoslime", "mutated", "titanoslime", "bigtitano"]
 	},
 enemy_type_civilian: {
 		"slimerange": [100001, 100001],
@@ -14805,7 +14873,8 @@ lock_states = {
 }
 
 region_lock_states = {
-	"slimecorptunnel":["lobbylock1", "lobbylock2"]
+	"slimecorptunnel":["lobbylock1", "lobbylock2"],
+	"slimecorphotel": ["hotelfound"]
 }
 
 

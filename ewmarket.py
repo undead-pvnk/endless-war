@@ -12,6 +12,7 @@ import ewstats
 from ew import EwUser
 from ewplayer import EwPlayer
 from ewdistrict import EwDistrict
+from ewdungeons import EwGamestate
 
 class EwMarket:
 	id_server = -1
@@ -918,6 +919,8 @@ async def slimecoin(cmd):
 def market_tick(stock_data, id_server):
 	market_data = EwMarket(id_server = id_server)
 	company_data = EwCompany(id_server = id_server, stock = stock_data.id_stock)
+	crashstate = EwGamestate(id_server=id_server, id_state = 'stockcrashdive').bit
+
 
 	# Nudge the value back to stability.
 	market_rate = stock_data.market_rate
@@ -969,6 +972,9 @@ def market_tick(stock_data, id_server):
 	if noise == 0 and subnoise == 0:
 		boombust = (random.randrange(3) - 1) * 200
 
+		if crashstate == 1 and boombust > 0:
+			boombust = -boombust
+
 		# If a boombust occurs shortly after a previous boombust, make sure it's the opposite effect. (Boom follows bust, bust follows boom.)
 		if (stock_data.boombust > 0 and boombust > 0) or (stock_data.boombust < 0 and boombust < 0):
 			boombust *= -1
@@ -982,6 +988,10 @@ def market_tick(stock_data, id_server):
 		boombust = 0
 
 	market_rate += fluctuation + noise + subnoise + boombust
+
+	if market_rate > 500 and crashstate == 1:
+		market_rate = round(market_rate / 1.25)
+
 	if market_rate < 300:
 		market_rate = (300 + noise + subnoise)
 
@@ -1181,40 +1191,76 @@ def get_majority_shareholder(id_server = None, stock = None):
 
 async def quarterlyreport(cmd):
 	progress = 0
-	objective = 2000000000
-	goal = "SLIME SPLATTERED"
 	completion = False
+	q5state = EwGamestate(id_server=cmd.guild.id, id_state='qreport5')
+	if q5state.bit == False:
+		objective = 30
+		goal = "DISTRICTS GENTRIFIED"
+		completion = False
 
-	try:
-		conn_info = ewutils.databaseConnect()
-		conn = conn_info.get('conn')
-		cursor = conn.cursor()
+		districts = []
+		for poi in ewcfg.poi_list:
+			if poi.is_district and poi.is_capturable == True:
+				districts.append(poi)
 
-		# Display the progress towards the current Quarterly Goal, whatever that may be.
-		cursor.execute("SELECT {metric} FROM markets WHERE id_server = %s".format(
-			metric = ewcfg.col_splattered_slimes
-		), (cmd.guild.id, ))
+		for district in districts:
+			dist_obj = EwDistrict(id_server=cmd.guild.id, district=district.id_poi)
+			if dist_obj.capture_points >= ewcfg.limit_influence[dist_obj.property_class] and dist_obj.cap_side == 'slimecorp':
+				progress += 1
+		"""try:
+			conn_info = ewutils.databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+	
+			# Display the progress towards the current Quarterly Goal, whatever that may be.
+			cursor.execute("SELECT {metric} FROM markets WHERE id_server = %s".format(
+				metric = ewcfg.col_splattered_slimes
+			), (cmd.guild.id, ))
+	
+			result = cursor.fetchone();
+	
+			if result != None:
+				progress = result[0]
+	
+				if progress == None:
+					progress = 0
+	
+				if progress >= objective:
+					progress = objective
+					completion = True
+	
+		finally:
+			cursor.close()
+			ewutils.databaseClose(conn_info)"""
+		if progress >= 30:
+			completion = True
+		response = "{:,} / {:,} {}.".format(progress, objective, goal)
+		if completion == True:
+			response += " THE QUARTERLY GOAL HAS BEEN REACHED. PLEASE STAY TUNED FOR FURTHER ANNOUNCEMENTS."
+	else:
+		goal1 = 'SLIME DONATED'
+		objective1 = 10000000000
+		progress1 = 0
+		goal2 = 'SLIMECOIN DONATED'
+		objective2 = 1000000000000000000
+		progress2 = 0
+		goal3 = 'POUDRINS DONATED'
+		progress3 = 0
+		objective3 = 3000
+		shermanslime = EwGamestate(id_server=cmd.guild.id, id_state='shermanslime')
+		shermancoin = EwGamestate(id_server=cmd.guild.id, id_state='shermancoin')
+		shermanpoud = EwGamestate(id_server=cmd.guild.id, id_state='shermanpoud')
+		progress1 = int(shermanslime.value)
+		progress2 = int(shermancoin.value)
+		progress3 = int(shermanpoud.value)
+		response = "\n5TH QUARTERLY GOAL:\n{:,} / {:,} {}.".format(progress1, objective1, goal1)
+		response += "\n\n{:,} / {:,} {}.".format(progress2, objective2, goal2)
+		response += "\n\n{:,} / {:,} {}.".format(progress3, objective3, goal3)
 
-		result = cursor.fetchone();
-
-		if result != None:
-			progress = result[0]
-
-			if progress == None:
-				progress = 0
-
-			if progress >= objective:
-				progress = objective
-				completion = True
-
-	finally:
-		cursor.close()
-		ewutils.databaseClose(conn_info)
-
-	response = "{:,} / {:,} {}.".format(progress, objective, goal)
-
-	if completion == True:
-		response += " THE QUARTERLY GOAL HAS BEEN REACHED. PLEASE STAY TUNED FOR FURTHER ANNOUNCEMENTS."
+		if progress1 >= objective1 and progress2 >= objective2 and progress3 >= objective3:
+			completion = True
+		if completion == True:
+			response += " THE QUARTERLY GOAL HAS BEEN REACHED. PLEASE STAY TUNED FOR SHERMAN ACTUALLY DOING SOMETHING."
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

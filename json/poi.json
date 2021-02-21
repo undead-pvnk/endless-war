@@ -17027,7 +17027,8 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "securityforcetunnel": 30
+            "securityforcetunnel": 30,
+            "n11office": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/SlimeCorp"
@@ -18453,7 +18454,7 @@
             "1f"
         ],
         "str_name": "Slimecorp Offices **1F**",
-        "str_desc": "The 1st floor corporate office of Slimecorp is awfully quiet now that you've barged in. The wagecucks are all hiding under their **DESKS** hoping you'll go away. Ha, sick. There's no time to lose, though. You're pretty sure a secretary already called 911.\n\nYou notice N10 works here. His desk is a real dust trap, but it's well organized. Maybe he doesn't use it much? Anyhow, looks like you can log into his **COMPUTER**. You also notice the **DOOR** to Slimecorp HQ unlocks from this side. You also find M@'s **LAPTOP** on a desk right next to his. You can go to the Elevator from here, as well as Slimecorp's hidden research facility and Slimecorp HQ.",
+        "str_desc": "The 1st floor corporate office of Slimecorp is awfully quiet now that you've barged in. The wagecucks are all hiding under their **DESKS** hoping you'll go away. Ha, sick. There's no time to lose, though. You're pretty sure a secretary already called 911.\n\nYou notice N10 works here. His desk is a real dust trap, but it's well organized. Maybe he doesn't use it much? Anyhow, looks like you can log into his **COMPUTER**. You also notice the **DOOR** to Slimecorp HQ unlocks from this side. You also find M@'s **LAPTOP** on a desk right next to his. You can go to the Elevator from here, as well as Slimecorp's hidden research facility and Slimecorp HQ. Though you might have to !callelevator if it's on another floor.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18581,7 +18582,7 @@
             "3f"
         ],
         "str_name": "Slimecorp **3F**: Investments and Accounting",
-        "str_desc": "Your eyes are bombarded with **SCREENS** on all sides, full of seizure-inducing levels of stock-based data. The only surface not completely covered in the stuff is N13's **DESK**. Kept neat and tidy, the only thing you see that pops out is the **COMPUTER**.",
+        "str_desc": "Your eyes are bombarded with **SCREENS** on all sides, full of seizure-inducing levels of stock-based data. The only surface not completely covered in the stuff is N13's **DESK**. Kept neat and tidy, the only thing you see that pops out is the **COMPUTER**.\n\nExits back to the Elevator.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18641,7 +18642,7 @@
             "n2"
         ],
         "str_name": "Slimecorp **8F**: Marketing",
-        "str_desc": "An entire wall of this huge office is taken up by a **WHITEBOARD**, chock full of works in progress and scrapped ideas. They're messily scrawled all over it, not unlike the rest of this shithole. Snack food wrappers cover the floor and **DESK**, and the large **FILING CABINET** in the corner has seen inhumane levels of wear and tear.",
+        "str_desc": "An entire wall of this huge office is taken up by a **WHITEBOARD**, chock full of works in progress and scrapped ideas. They're messily scrawled all over it, not unlike the rest of this shithole. Snack food wrappers cover the floor and **DESK**, and the large **FILING CABINET** in the corner has seen inhumane levels of wear and tear.\n\nExits back to the Elevator.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18701,7 +18702,7 @@
             "20f"
         ],
         "str_name": "Slimecorp **20F**: Currently Vacant",
-        "str_desc": "The room is perfectly empty. The **DESK** is tidy, save for a layer of dust and a few packs of those sticky note things.",
+        "str_desc": "The room is perfectly empty. The **DESK** is tidy, save for a layer of dust and a few packs of those sticky note things.\n\nExits back to the Elevator.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18761,7 +18762,7 @@
             "filestorage"
         ],
         "str_name": "Slimecorp **103F**: File Storage",
-        "str_desc": "The shutters are closed in here, and it takes a few minutes to find the light switch. The office is pretty normal, save for being filled to the brim with various bullshit: **CLEANING SUPPLIES**, **FILING CABINETS**, what looks like a high-end **COFFEE MACHINE**, and a big laminated **SIGN** staring at you when you walk in.",
+        "str_desc": "The shutters are closed in here, and it takes a few minutes to find the light switch. The office is pretty normal, save for being filled to the brim with various bullshit: **CLEANING SUPPLIES**, **FILING CABINETS**, what looks like a high-end **COFFEE MACHINE**, and a big laminated **SIGN** staring at you when you walk in. \n\nExits back to the Elevator.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18821,7 +18822,7 @@
             "528f"
         ],
         "str_name": "Slimecorp **528F**: Administration",
-        "str_desc": "You smell smoke. You would think N3 keeps a clean house, but there's a pile of **SOOT** overflowing from a metal wastebasket beside her desk. Apart from that, the whole place is cleaned out.",
+        "str_desc": "You smell smoke. You would think N3 keeps a clean house, but there's a pile of **SOOT** overflowing from a metal wastebasket beside her desk. Apart from that, the whole place is cleaned out.\n\nExits back to the Elevator.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18881,7 +18882,7 @@
             "executiveassistance"
         ],
         "str_name": "Slimecorp **77777F**: Executive Assistance",
-        "str_desc": "There's a real soothing vibe in here, if you didn't know any better you'd drop in a beanbag chair and doze off. There's a **CORKBOARD** full of exotic tourist photos hanging on the wall as you walk in, and her desk has an assortment of beanie babies on it. N7's **LAPTOP** sits open on the desk, but it's in sleep mode.",
+        "str_desc": "There's a real soothing vibe in here, if you didn't know any better you'd drop in a beanbag chair and doze off. There's a **CORKBOARD** full of exotic tourist photos hanging on the wall as you walk in, and her desk has an assortment of beanie babies on it. N7's **LAPTOP** sits open on the desk, but it's in sleep mode.\n\nExits back to the Elevator.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18941,7 +18942,7 @@
             "humanresources"
         ],
         "str_name": "Slimecorp **8023f**: Human Resources",
-        "str_desc": "N11's office stinks of cigar, but apart from that it's pretty nice. The corner's lined with an L-shaped **LUXURY COUCH** and a coffee table. The walls are **BRICK**, a strange contrast for just one floor of the building. N11 as a standard issue **COMPUTER** at his desk, but it's tucked in a whole other corner, full of his family group photos and a few shots of giant fish he caught. Maybe he's trying to separate paperwork from his human resourcin' gig.",
+        "str_desc": "N11's office stinks of cigar, but apart from that it's pretty nice. The corner's lined with an L-shaped **LUXURY COUCH** and a coffee table. The walls are **BRICK**, a strange contrast for just one floor of the building. N11 as a standard issue **COMPUTER** at his desk, but it's tucked in a whole other corner, full of his family group photos and a few shots of giant fish he caught. Maybe he's trying to separate paperwork from his human resourcin' gig.\n\nExits back to the Elevator.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -19002,7 +19003,7 @@
             "penthouse"
         ],
         "str_name": "Slimecorp **Penthouse**: Executive Suite",
-        "str_desc": "The moment you stepped out of the elevator, the gravity completely flipped. You're on the top floor of the Slimecorp building standing on the ceiling, which is actually the floor. Looking below into the penthouse, you see the surface of the moon out of a glass floor beneath you. You're a long ways from home...\n\nThe inside of the room is completely torn apart, luxury furniture broken, all plumbing burst open and leaking into the cracks of the glass. N1's **LAPTOP** somehow survived the ruckus, as well as a tattered **AUTOBIOGRAPHY** authored by Sherman: Slimecorp Salaryman.",
+        "str_desc": "The moment you stepped out of the elevator, the gravity completely flipped. You're on the top floor of the Slimecorp building standing on the ceiling, which is actually the floor. Looking below into the penthouse, you see the surface of the moon out of a glass floor beneath you. You're a long ways from home...\n\nThe inside of the room is completely torn apart, luxury furniture broken, all plumbing burst open and leaking into the cracks of the glass. N1's **LAPTOP** somehow survived the ruckus, too. Exits are The Moon and The Elevator.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -19063,7 +19064,7 @@
             "n1"
         ],
         "str_name": "The Moon",
-        "str_desc": "Hey wait, you're on the moon. How are you able to breathe? Well never mind that, you've got bigger fish to fry. Go kill N1. Just because I'm the same ilk as that N1 guy doesn't mean I have any hangups about castrating the motherfucker.",
+        "str_desc": "Hey wait, you're on the moon. How are you able to breathe? Well never mind that, you've got bigger fish to fry. Go kill N1. Just because I'm the same ilk as that N1 guy doesn't mean I have any hangups about castrating the motherfucker. Exits into Slimecorp Penthouse.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -19127,7 +19128,7 @@
             "hotellobby"
         ],
         "str_name": "Nickelodeon Hotel Lobby",
-        "str_desc": "Uneven layers of dust cover the room. The front desk ahead of you sits unattended, the bell long since stolen. The stairs leading to the 2nd floor are clogged with assorted wood and **ANIMATRONICS**, but nothing looks useful. Honestly, being called the Nickelodeon Hotel, you would expect a flashier place, but everything that once made it a child honeypot has been taken down. Too bad. Maybe there's some other secrets worth looking into.",
+        "str_desc": "Uneven layers of dust cover the room. The front desk ahead of you sits unattended, the bell long since stolen. The stairs leading to the 2nd floor are clogged with assorted wood and **ANIMATRONICS**, but nothing looks useful. Honestly, being called the Nickelodeon Hotel, you would expect a flashier place, but everything that once made it a child honeypot has been taken down. Too bad. Maybe there's some other secrets worth looking into.\n\nExits into the Lobby Backroom, Room 102, Room 103, Room 104, and Nuclear Beach Depths.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -19189,7 +19190,7 @@
             "102"
         ],
         "str_name": "Room 102",
-        "str_desc": "Somebody must've spruced this place up, the dust is cleared out. Probably **NINA**, Slimecorp's resident lawyer. She's on the chair over there, typing away on her laptop. Apart from that there's a **COFFEE MACHINE** and a **BED** both in their expected places. Christ, it's like you went back in time to when this room was hospitable.",
+        "str_desc": "Somebody must've spruced this place up, the dust is cleared out. Probably **NINA**, Slimecorp's resident lawyer. She's on the chair over there, typing away on her laptop. Apart from that there's a **COFFEE MACHINE** and a **BED** both in their expected places. Christ, it's like you went back in time to when this room was hospitable. There's also a **PROJECTOR** stashed in the closet, built for old film reels.\n\nExits to the Slimecorp Hotel Lobby.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -19247,7 +19248,7 @@
             "103"
         ],
         "str_name": "Room 103",
-        "str_desc": "Apart from the corpse stink coming from a certain someone, Room 103 is pretty quaint looking. The **FILING CABINET** sticks out, and some prescription **MEDICINE BOTTLES** are strewn all over the floor, but apart from that, it looks like any other hotel room you've seen.",
+        "str_desc": "Apart from the corpse stink coming from a certain someone, Room 103 is pretty quaint looking. The locked **FILING CABINET** sticks out, and some prescription **MEDICINE BOTTLES** are strewn all over the floor, but apart from that, it looks like any other hotel room you've seen.\n\nExits to the Slimecorp Hotel Lobby.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -19305,7 +19306,7 @@
             "104"
         ],
         "str_name": "Room 104",
-        "str_desc": "Nothing but wooden **CRATES** line the walls, stacking halfway to the ceiling. There's a small **HOLE** on the right wall that leads to the dusty wasteland outside. The furniture and appliances have all been taken out too, probably to make room for all this.",
+        "str_desc": "Nothing but wooden **CRATES** line the walls, stacking halfway to the ceiling. There's a small **HOLE** on the right wall that leads to the dusty wasteland outside. The furniture and appliances have all been taken out too, probably to make room for all this.\n\nExits to the Slimecorp Hotel Lobby.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -19364,7 +19365,7 @@
             "backlobby"
         ],
         "str_name": "The Lobby Backroom",
-        "str_desc": "After hopping behind the front desk you're greeted with a massive steel cellar **DOOR**. It takes up half the floorspace, there's barely any room to stand behind the counter. To the left of that, near the **KEY RACK** you notice a relatively new-looking **INVOICE** on the far countertop.",
+        "str_desc": "After hopping behind the front desk you're greeted with a massive steel cellar **DOOR**. It takes up half the floorspace, there's barely any room to stand behind the counter. To the left of that, near the **KEY RACK** you notice a relatively new-looking **INVOICE** on the far countertop.\n\nExits to the Slimecorp Hotel Lobby.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
