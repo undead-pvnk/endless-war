@@ -455,7 +455,7 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-		'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = ewcfg.database, charset = "utf8"),
+		'conn': MySQLdb.connect(host = "localhost", user = "root", passwd = "theapocolypse3" , db = ewcfg.database, charset = "utf8"),
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -3173,3 +3173,15 @@ async def assign_status_effect(cmd = None, status_name = None, user_id = None, s
 		user_data = EwUser(member=target)
 		response = user_data.applyStatus(id_status=status_name, source=user_data.id_user, id_target=user_data.id_user)
 	return await send_message(cmd.client, cmd.message.channel, formatMessage(cmd.message.author, response))
+
+
+def messagesplit(stringIn, whitespace = '\n'):
+	currentMessage = stringIn
+	messagearray = []
+	while len(currentMessage) > 1500:
+		index = currentMessage.rfind(whitespace, beg = 0, end = 1500)
+		messagearray.append(currentMessage[:index])
+		currentMessage = currentMessage[index:]
+
+	messagearray.append(currentMessage)
+	return messagearray

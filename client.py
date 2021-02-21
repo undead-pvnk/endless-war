@@ -539,7 +539,7 @@ cmd_map = {
 	# Link to the guide.
 	ewcfg.cmd_help: ewcmd.help,
 	ewcfg.cmd_help_alt1: ewcmd.help,
-	ewcfg.cmd_help_alt2: ewcmd.help,
+	ewcfg.cmd_commands: ewcmd.commands,
 	ewcfg.cmd_help_alt3: ewcmd.help,
 
 	# Misc

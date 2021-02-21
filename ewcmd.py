@@ -4043,20 +4043,70 @@ async def commands(cmd):
 	if cmd.tokens_count == 1:
 		response += location_commands(cmd)
 		response += mutation_commands(cmd)
+		response += item_commands(cmd)
 		if response != "":
-			response += "\nLook up basic commands with **!commands basic**, \nor a full list with **!commands categories**."
+			response += "\nLook up basic commands with !commands basic, \nor a full list with !commands categories."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if cmd.tokens_count == 1 or category in ["basic", "basics"]:
-		response += ewcfg.basic_commands
+	if "categories" in category:
+		response += "Categories are: \nbasic: basic info.\nmyitems: Commands for items you have.\nmylocation: Commands based in this area.\nmymutations: Commands for the mutations you currently have.\nmyfaction: Commands for the faction you're in.\ncombat: Combat-based commands.\ncapping: Capping-based commands.\nplayerinfo: Commands that tell you some of your statistics.\noutsidelinks: These display links to outside the server.\nitems: Show item-related commands.\ncosmeticsanddyes: Display information on cosmetics and dyes.\nmisc: Miscellaneous commands.\nallitems: All item-specific commands.\nallmutations: All mutation specific commands.\nYou can also check the commands of a specific location using !commands location <district>."
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	if cmd.tokens_count == 1 or "basic" in category:
+		response += "\n\n" + ewcfg.basic_commands
+
+	if "myitems" in category:
+		response += "\n\n" + item_commands(cmd)
+	if "mylocation" in category:
+		response += "\n\n" + location_commands(cmd)
+	if "mymutations" in category:
+		response += "\n\n" + mutation_commands(cmd)
+	if "myfaction" in category:
+		if user_data.life_state == ewcfg.life_state_juvenile:
+			response += "\n\n"+ ewcfg.juvenile_commands
+		elif user_data.life_state == ewcfg.life_state_corpse:
+			response += "\n\n"+ ewcfg.corpse_commands
+		else:
+			if user_data.faction == 'rowdys':
+				response += "\n\n"+ "!thrash: Thrashing is a rowdy's fucking lifeblood.\n"
+			elif user_data.faction == 'killers':
+				response += "\n\n"+ "!dab: To dab on some haters.\n"
+			response +=  ewcfg.enlisted_commands
+	if "combat" in category:
+		response += "\n\n" + ewcfg.combat_commands
+	if "capping" in category:
+		response += "\n\n" + ewcfg.capping_commands
+	if "playerinfo" in category:
+		response += "\n\n" + ewcfg.player_info_commands
+	if "outsidelinks" in category:
+		response += "\n\n" + ewcfg.external_link_commands
+	if "items" in category:
+		response += "\n\n" + ewcfg.item_commands
+	if "cosmeticsanddyes" in category:
+		response += "\n\n" + ewcfg.cosmetics_dyes_commands
+	if "misc" in category:
+		response += "\n\n" + ewcfg.miscellaneous_commands
+	if "allitems" in category:
+		response += "\n\n"
+		for item in ewcfg.item_unique_commands.keys():
+			response += ewcfg.item_unique_commands.get(item)
+	if "allmutations" in category:
+		response += "\n\n"
+		for item in ewcfg.mutation_unique_commands.keys():
+			response += ewcfg.mutation_unique_commands.get(item)
+
+	messageArray = ewutils.messagesplit(stringIn=response)
+
+	for message in messageArray:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, message))
+	#return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 
 def location_commands(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	poi = user_data.poi
 	poi_obj = ewcfg.id_to_poi.get(poi)
-	response = "**THIS LOCATION:**\n"
+	response = "\n**THIS LOCATION:**\n"
 	if poi in [ewcfg.poi_id_mine, ewcfg.poi_id_mine_sweeper, ewcfg.poi_id_mine_bubble, ewcfg.poi_id_tt_mines,
 			   ewcfg.poi_id_tt_mines_sweeper, ewcfg.poi_id_tt_mines_bubble, ewcfg.poi_id_cv_mines,
 			   ewcfg.poi_id_cv_mines_sweeper, ewcfg.poi_id_cv_mines_bubble]:
@@ -4070,13 +4120,15 @@ def location_commands(cmd):
 	if poi in [ewcfg.poi_id_greencakecafe, ewcfg.poi_id_nlacu, ewcfg.poi_id_neomilwaukeestate,
 			   ewcfg.poi_id_glocksburycomics]:
 		response += ewcfg.zine_writing_places_commands
+	if poi in [ewcfg.poi_id_ab_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_jr_farms]:
+		response += ewcfg.farm_commands
 	if poi in [ewcfg.poi_id_nlacu, ewcfg.poi_id_neomilwaukeestate]:
 		response += ewcfg.universities_commands
 	if len(poi_obj.vendors) != 0:
 		response += ewcfg.shop_commands
 	if ewcfg.district_unique_commands.get(poi) is not None:
 		response += ewcfg.district_unique_commands.get(poi)
-	if response != "**THIS LOCATION:**\n":
+	if response != "\n**THIS LOCATION:**\n":
 		return response
 	else:
 		return ""
@@ -4084,14 +4136,29 @@ def location_commands(cmd):
 
 
 def mutation_commands(cmd):
-	response = "**CURRENT MUTATIONS:**\n"
+	response = "\n**CURRENT MUTATIONS:**"
 	user_data = EwUser(member=cmd.message.author)
 	mutations = user_data.get_mutations()
 	for mutation in mutations:
 		if ewcfg.mutation_unique_commands.get(mutation) is not None:
 			response += "\n" + ewcfg.mutation_unique_commands.get(mutation)
 
-	if response != "**CURRENT MUTATIONS:**\n":
+	if response != "\n**CURRENT MUTATIONS:**":
+		return response
+	else:
+		return ""
+
+def item_commands(cmd):
+	response = "\n**IN YOUR INVENTORY:**"
+	items_to_find = ewcfg.item_unique_commands.keys()
+	user_data = EwUser(member=cmd.message.author)
+
+	for lookup in items_to_find:
+		item_sought = ewitem.find_item(item_search=lookup, id_user=user_data.id_user, id_server=user_data.id_server)
+		if item_sought:
+			response += "\n" + ewcfg.item_unique_commands.get(lookup)
+
+	if response != "\n**IN YOUR INVENTORY:**":
 		return response
 	else:
 		return ""
