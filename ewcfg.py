@@ -5369,7 +5369,7 @@ weapon_list = [
 		],
 		str_crit = "**COMBO!** {name_player} strikes {name_target} with a flurry of 5 vicious blows!",
 		# str_backfire = "**Whack!!** {name_player} fucks up their kung-fu routine and whacks themselves in the head with their own nun-chucks!!",
-		str_miss = "**WOOSH** {name_player} whiffs every strike!"
+		str_miss = "**WOOSH** {name_player} whiffs every strike!",
 		str_equip = "You equip the nun-chucks.",
 		str_name = "nun-chucks",
 		str_weapon = "nun-chucks",
