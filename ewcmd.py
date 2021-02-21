@@ -4035,3 +4035,63 @@ async def check_mastery(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
+async def commands(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	response   = ""
+	category = ewutils.flattenTokenListToString(tokens = cmd.tokens[1:])
+
+	if cmd.tokens_count == 1:
+		response += location_commands(cmd)
+		response += mutation_commands(cmd)
+		if response != "":
+			response += "\nLook up basic commands with **!commands basic**, \nor a full list with **!commands categories**."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if cmd.tokens_count == 1 or category in ["basic", "basics"]:
+		response += ewcfg.basic_commands
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+def location_commands(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	poi = user_data.poi
+	poi_obj = ewcfg.id_to_poi.get(poi)
+	response = "**THIS LOCATION:**\n"
+	if poi in [ewcfg.poi_id_mine, ewcfg.poi_id_mine_sweeper, ewcfg.poi_id_mine_bubble, ewcfg.poi_id_tt_mines,
+			   ewcfg.poi_id_tt_mines_sweeper, ewcfg.poi_id_tt_mines_bubble, ewcfg.poi_id_cv_mines,
+			   ewcfg.poi_id_cv_mines_sweeper, ewcfg.poi_id_cv_mines_bubble]:
+		response += ewcfg.mine_commands
+	if poi_obj.is_pier == True:
+		response += ewcfg.pier_commands
+	if poi_obj.is_transport_stop == True or poi_obj.is_transport == True:
+		response += ewcfg.transport_commands
+	if poi_obj.is_apartment:
+		response += ewcfg.apartment_commands
+	if poi in [ewcfg.poi_id_greencakecafe, ewcfg.poi_id_nlacu, ewcfg.poi_id_neomilwaukeestate,
+			   ewcfg.poi_id_glocksburycomics]:
+		response += ewcfg.zine_writing_places_commands
+	if poi in [ewcfg.poi_id_nlacu, ewcfg.poi_id_neomilwaukeestate]:
+		response += ewcfg.universities_commands
+	if len(poi_obj.vendors) != 0:
+		response += ewcfg.shop_commands
+	if ewcfg.district_unique_commands.get(poi) is not None:
+		response += ewcfg.district_unique_commands.get(poi)
+	if response != "**THIS LOCATION:**\n":
+		return response
+	else:
+		return ""
+
+
+
+def mutation_commands(cmd):
+	response = "**CURRENT MUTATIONS:**\n"
+	user_data = EwUser(member=cmd.message.author)
+	mutations = user_data.get_mutations()
+	for mutation in mutations:
+		if ewcfg.mutation_unique_commands.get(mutation) is not None:
+			response += "\n" + ewcfg.mutation_unique_commands.get(mutation)
+
+	if response != "**CURRENT MUTATIONS:**\n":
+		return response
+	else:
+		return ""

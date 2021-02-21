@@ -424,11 +424,14 @@ async def graft(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def clear_mutations(cmd):
+	response = "SlimeCorp has recently undergone downsizing and will no longer provide mutations sterilization. We apologize for the inconvenience."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+"""
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
+	
 	market_data = EwMarket(id_server = user_data.id_server)
 	response = ""
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -467,7 +470,7 @@ async def clear_mutations(cmd):
 	user_data.clear_mutations()
 	response = "After several minutes long elevator descents, in the depths of some basement level far below the laboratory's lobby, you lay down on a reclined medical chair. A SlimeCorp employee finishes the novel length terms of service they were reciting and asks you if you have any questions. You weren’t listening so you just tell them to get on with it so you can go back to getting slime. They oblige.\nThey grab a random used syringe with just a dash of black serum still left inside it. They carefully stab you with it, injecting the mystery formula into your bloodstream. Almost immediately, normalcy returns to your inherently abnormal life… your body returns to whatever might be considered normal for your species. You hand off one of your hard-earned poudrins to the SlimeCorp employee for their troubles."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
+"""
 
 async def track_oneeyeopen(cmd):
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.guild.id)

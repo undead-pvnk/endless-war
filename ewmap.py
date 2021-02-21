@@ -205,6 +205,7 @@ class EwPoi:
 	# The wiki page associated with that poi
 	wikipage = ""
 
+
 	def __init__(
 		self,
 		id_poi = "unknown", 
