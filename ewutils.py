@@ -3179,7 +3179,7 @@ def messagesplit(stringIn, whitespace = '\n'):
 	currentMessage = stringIn
 	messagearray = []
 	while len(currentMessage) > 1500:
-		index = currentMessage.rfind(whitespace, beg = 0, end = 1500)
+		index = currentMessage.rfind(whitespace, 0, 1500)
 		messagearray.append(currentMessage[:index])
 		currentMessage = currentMessage[index:]
 

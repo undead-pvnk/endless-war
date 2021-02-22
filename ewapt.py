@@ -2457,6 +2457,8 @@ async def aptCommands(cmd):
 		return await ewslimeoid.slimeoid(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_adorn:
 		return await ewcosmeticitem.adorn(cmd=cmd)
+	elif cmd_text in [ewcfg.cmd_dedorn, ewcfg.cmd_dedorn_alt1]:
+		return await ewcosmeticitem.dedorn(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_smelt:
 		return await ewsmelting.smelt(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_dress_slimeoid or cmd_text == ewcfg.cmd_dress_slimeoid_alt1:
@@ -2539,8 +2541,10 @@ async def aptCommands(cmd):
 		return await bootall(cmd=cmd)
 	#elif cmd_text == "~bazaarupdate":
 	 #   return await bazaar_update(cmd)
-	elif cmd_text == ewcfg.cmd_help or cmd_text == ewcfg.cmd_help_alt1 or cmd_text == ewcfg.cmd_help_alt2 or cmd_text == ewcfg.cmd_help_alt3:
+	elif cmd_text == ewcfg.cmd_help or  cmd_text == ewcfg.cmd_help_alt3:
 		return await apt_help(cmd)
+	elif cmd_text == ewcfg.cmd_commands or  cmd_text == ewcfg.cmd_commands_alt1:
+		return await ewcmd.commands(cmd)
 	elif cmd_text == ewcfg.cmd_accept or cmd_text == ewcfg.cmd_refuse:
 		pass
 	elif cmd_text == ewcfg.cmd_switch or cmd_text == ewcfg.cmd_switch_alt_1:

@@ -4045,14 +4045,28 @@ async def commands(cmd):
 		response += mutation_commands(cmd)
 		response += item_commands(cmd)
 		if response != "":
-			response += "\nLook up basic commands with !commands basic, \nor a full list with !commands categories."
+			response += "\n\nLook up basic commands with !commands basic, \nor a full list with !commands categories."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if "categories" in category:
-		response += "Categories are: \nbasic: basic info.\nmyitems: Commands for items you have.\nmylocation: Commands based in this area.\nmymutations: Commands for the mutations you currently have.\nmyfaction: Commands for the faction you're in.\ncombat: Combat-based commands.\ncapping: Capping-based commands.\nplayerinfo: Commands that tell you some of your statistics.\noutsidelinks: These display links to outside the server.\nitems: Show item-related commands.\ncosmeticsanddyes: Display information on cosmetics and dyes.\nmisc: Miscellaneous commands.\nallitems: All item-specific commands.\nallmutations: All mutation specific commands.\nYou can also check the commands of a specific location using !commands location <district>."
+		response += "Categories are: \nbasic: basic info.\nmyitems: Commands for items you have.\nmylocation: Commands based in this area.\nmymutations: Commands for the mutations you currently have.\nmyfaction: Commands for the faction you're in.\nmyrace: The command for your current race.\ncombat: Combat-based commands.\ncapping: Capping-based commands.\nplayerinfo: Commands that tell you some of your statistics.\noutsidelinks: These display links to outside the server.\nitems: Show item-related commands.\ncosmeticsanddyes: Display information on cosmetics and dyes.\nsmelting: Smelting related commands.\ntrading: Trading related commands.\nquadrants: Quadrant related commands.\nslimeoids: Slimeoid-related commands.\njuvies: Commands for juvies.\nenlisted: Commands for enlisted players.\ncorpses:Commands for corpses.\nmisc: Miscellaneous commands.\nflavor: Other shitposty type commands.\nallitem: All item-specific commands.\nallmutation: All mutation specific commands.\nYou can also check the commands of a specific location using !commands location <district>."
 
 	if cmd.tokens_count == 1 or "basic" in category:
 		response += "\n\n" + ewcfg.basic_commands
+
+	if ewutils.flattenTokenListToString(tokens = cmd.tokens[1]) == 'location':
+		poi_look = ewutils.flattenTokenListToString(tokens = cmd.tokens[2])
+		poi_sought = ewcfg.id_to_poi.get(poi_look)
+		if poi_sought:
+			command_output = location_commands(cmd=cmd, search_poi=poi_sought.id_poi)
+			if command_output != "":
+				response += command_output
+			else:
+				response = "No commands for that region."
+		else:
+			response = "Not a real place."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if "myitems" in category:
 		response += "\n\n" + item_commands(cmd)
@@ -4071,6 +4085,18 @@ async def commands(cmd):
 			elif user_data.faction == 'killers':
 				response += "\n\n"+ "!dab: To dab on some haters.\n"
 			response +=  ewcfg.enlisted_commands
+	if "juvies" in category:
+		response += "\n\n"+ ewcfg.juvenile_commands
+	if "corpses" in category:
+		response += "\n\n" + ewcfg.corpse_commands
+	if "enlisted" in category:
+		response += "\n\n" + ewcfg.enlisted_commands
+	if "myrace" in category:
+		race = user_data.race
+		if ewcfg.race_unique_commands.get(race) is not None:
+			response += "\n\n" + ewcfg.race_unique_commands.get(race)
+		else:
+			response += "\n\nNo racial commands found."
 	if "combat" in category:
 		response += "\n\n" + ewcfg.combat_commands
 	if "capping" in category:
@@ -4083,16 +4109,26 @@ async def commands(cmd):
 		response += "\n\n" + ewcfg.item_commands
 	if "cosmeticsanddyes" in category:
 		response += "\n\n" + ewcfg.cosmetics_dyes_commands
+	if "smelting" in category:
+		response += "\n\n" + ewcfg.smelting_commands
+	if "trading" in category:
+		response += "\n\n" + ewcfg.trading_commands
+	if "quadrants" in category:
+		response += "\n\n" + ewcfg.quadrant_commands
 	if "misc" in category:
 		response += "\n\n" + ewcfg.miscellaneous_commands
-	if "allitems" in category:
+	if "flavor" in category:
+		response += "\n\n" + ewcfg.flavor_commands
+	if "allitem" in category:
 		response += "\n\n"
 		for item in ewcfg.item_unique_commands.keys():
-			response += ewcfg.item_unique_commands.get(item)
-	if "allmutations" in category:
+			response += "\n" + ewcfg.item_unique_commands.get(item)
+	if "allmutation" in category:
 		response += "\n\n"
 		for item in ewcfg.mutation_unique_commands.keys():
-			response += ewcfg.mutation_unique_commands.get(item)
+			response += "\n" + ewcfg.mutation_unique_commands.get(item)
+	if response == "":
+		response = "No commands found."
 
 	messageArray = ewutils.messagesplit(stringIn=response)
 
@@ -4102,9 +4138,12 @@ async def commands(cmd):
 
 
 
-def location_commands(cmd):
+def location_commands(cmd, search_poi = None):
 	user_data = EwUser(member=cmd.message.author)
-	poi = user_data.poi
+	if search_poi is not None:
+		poi = search_poi
+	else:
+		poi = user_data.poi
 	poi_obj = ewcfg.id_to_poi.get(poi)
 	response = "\n**THIS LOCATION:**\n"
 	if poi in [ewcfg.poi_id_mine, ewcfg.poi_id_mine_sweeper, ewcfg.poi_id_mine_bubble, ewcfg.poi_id_tt_mines,
@@ -4123,11 +4162,11 @@ def location_commands(cmd):
 	if poi in [ewcfg.poi_id_ab_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_jr_farms]:
 		response += ewcfg.farm_commands
 	if poi in [ewcfg.poi_id_nlacu, ewcfg.poi_id_neomilwaukeestate]:
-		response += ewcfg.universities_commands
+		response += "\n" + ewcfg.universities_commands
 	if len(poi_obj.vendors) != 0:
-		response += ewcfg.shop_commands
+		response += "\n" +  ewcfg.shop_commands
 	if ewcfg.district_unique_commands.get(poi) is not None:
-		response += ewcfg.district_unique_commands.get(poi)
+		response += "\n" + ewcfg.district_unique_commands.get(poi)
 	if response != "\n**THIS LOCATION:**\n":
 		return response
 	else:
@@ -4157,7 +4196,6 @@ def item_commands(cmd):
 		item_sought = ewitem.find_item(item_search=lookup, id_user=user_data.id_user, id_server=user_data.id_server)
 		if item_sought:
 			response += "\n" + ewcfg.item_unique_commands.get(lookup)
-
 	if response != "\n**IN YOUR INVENTORY:**":
 		return response
 	else:
