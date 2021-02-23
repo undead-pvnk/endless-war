@@ -1897,6 +1897,7 @@ async def loop(cmd):
 			user_data.poi = dest_poi
 			user_data.persist()
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+			await user_data.move_inhabitants(id_poi=dest_poi_obj.id_poi)
 			await ewutils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, user_data.id_user)
 			return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, dest_poi_obj.channel), ewutils.formatMessage(cmd.message.author,"**-OIIIIP!!!**\n\n{} jumps out of a wormhole!".format(cmd.message.author.display_name)))
 		else:

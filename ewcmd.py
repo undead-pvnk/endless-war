@@ -153,7 +153,7 @@ async def score(cmd):
 	time_now_cmd_start = int(time.time())
 	user_data = None
 	member = None
-
+	skune = True if ewutils.flattenTokenListToString(cmd.tokens[0]) == 'skune' else False
 	if len(cmd.mention_ids) == 0:
 		target_type = "self"
 	else:
@@ -171,7 +171,7 @@ async def score(cmd):
 		poudrin_amount = ewitem.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.guild.id)
 
 		# return my score
-		response = "You currently have {:,} slime{}.".format(user_data.slimes, (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
+		response = "You currently have {:,} {}{}.".format(user_data.slimes, "slime" if skune is False else "skune", (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
 	
 	# other user slime check
 	else:
@@ -1305,6 +1305,13 @@ async def wiki(cmd):
 """
 async def booru(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Rowdy Fuckers Cop Killers Booru: http://rfck.booru.org/'))
+
+"""
+	Link to the RFCK bandcamp.
+"""
+async def bandcamp(cmd):
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Rowdy Fuckers Cop Killers Bandcamp: https://rowdyfuckerscopkillers.bandcamp.com/releases'))
+
 
 """
 	Link to the leaderboards on ew.krakissi.net.

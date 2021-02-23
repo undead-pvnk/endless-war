@@ -1096,6 +1096,8 @@ async def inventory_print(cmd):
 	
 	community_chest = False
 	can_message_user = True
+	item_type = None
+
 	inventory_source = cmd.message.author.id
 
 	player = EwPlayer(id_user = cmd.message.author.id)
@@ -1139,6 +1141,21 @@ async def inventory_print(cmd):
 		if 'stack' in lower_token_list:
 			stacking = True
 
+		if 'general' in lower_token_list:
+			item_type = ewcfg.it_item
+
+		if 'weapon' in lower_token_list:
+			item_type = ewcfg.it_weapon
+
+		if 'furniture' in lower_token_list:
+			item_type = ewcfg.it_furniture
+
+		if 'cosmetic' in lower_token_list:
+			item_type = ewcfg.it_cosmetic
+
+		if 'food' in lower_token_list:
+			item_type = ewcfg.it_food
+
 		if 'search' in lower_token_list:
 			stacking = False
 			sort_by_id = False
@@ -1150,13 +1167,15 @@ async def inventory_print(cmd):
 		items = inventory(
 			id_user = inventory_source,
 			id_server = player.id_server,
-			item_sorting_method='id'
+			item_sorting_method='id',
+			item_type_filter = item_type
 		)
 	elif sort_by_type:
 		items = inventory(
 			id_user=inventory_source,
 			id_server=player.id_server,
-			item_sorting_method='type'
+			item_sorting_method='type',
+			item_type_filter = item_type
 		)
 	elif search == True:
 		items = find_item_all(
@@ -1170,6 +1189,7 @@ async def inventory_print(cmd):
 		items = inventory(
 			id_user=inventory_source,
 			id_server=player.id_server,
+			item_type_filter = item_type
 		)
 
 	if community_chest:

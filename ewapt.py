@@ -345,14 +345,14 @@ async def signlease(cmd):
 		user_data.persist()
 
 
-		if user_apt.key_1 != 0:
-			ewitem.item_delete(user_apt.key_1)
-			user_apt.key_1 = 0
-			user_apt.rent = user_apt.rent/1.5
-		if user_apt.key_2 != 0:
-			ewitem.item_delete(user_apt.key_2)
-			user_apt.key_2 = 0
-			user_apt.rent = user_apt.rent / 1.5
+		#if user_apt.key_1 != 0:
+			#ewitem.item_delete(user_apt.key_1)
+			#user_apt.key_1 = 0
+			#user_apt.rent = user_apt.rent/1.5
+		#if user_apt.key_2 != 0:
+			#ewitem.item_delete(user_apt.key_2)
+			#user_apt.key_2 = 0
+			#user_apt.rent = user_apt.rent / 1.5
 		user_apt.num_keys = 0
 
 		user_apt.name = "Slimecorp Apartment"
@@ -1117,6 +1117,8 @@ async def usekey(cmd, owner_user):
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	poi_dest = ewcfg.id_to_poi.get(ewcfg.poi_id_apt + owner_user.apt_zone)  # there isn't an easy way to change this, apologies for being a little hacky
 	inv = ewitem.inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id)
+	apartment = EwApartment(id_server=cmd.guild.id, id_user=owner_user.id_user)
+
 	key = None
 	for item_inv in inv:
 		if "key to" in item_inv.get('name'):
@@ -1129,6 +1131,8 @@ async def usekey(cmd, owner_user):
 	elif key == None:
 		response = "You don't have a key for their apartment."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif apartment.apt_class == ewcfg.property_class_c or (apartment.apt_class in [ewcfg.property_class_a, ewcfg.property_class_b] and key.id_item == apartment.key_2):
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Your key's not working at this new flat. Your roomates must've forgotten to upgrade apartments. Congratulations on the homelessness by the way.".format(cmd.tokens[0])))
 	elif owner_user.apt_zone != poi.id_poi:
 		response = "Your key doesn't match an apartment here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,  response))
