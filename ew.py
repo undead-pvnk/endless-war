@@ -316,7 +316,7 @@ class EwUser:
 					))
 
 			except:
-				ewutils.logMsg('Failed to remove preserved tags from items.'.format(id_user))
+				ewutils.logMsg('Failed to remove preserved tags from items.')
 
 			self.life_state = ewcfg.life_state_corpse
 			self.poi_death = self.poi

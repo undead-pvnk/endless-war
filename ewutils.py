@@ -3185,3 +3185,15 @@ async def assign_status_effect(cmd = None, status_name = None, user_id = None, s
 		user_data = EwUser(member=target)
 		response = user_data.applyStatus(id_status=status_name, source=user_data.id_user, id_target=user_data.id_user)
 	return await send_message(cmd.client, cmd.message.channel, formatMessage(cmd.message.author, response))
+
+
+def messagesplit(stringIn, whitespace = '\n'):
+	currentMessage = stringIn
+	messagearray = []
+	while len(currentMessage) > 1500:
+		index = currentMessage.rfind(whitespace, 0, 1500)
+		messagearray.append(currentMessage[:index])
+		currentMessage = currentMessage[index:]
+
+	messagearray.append(currentMessage)
+	return messagearray

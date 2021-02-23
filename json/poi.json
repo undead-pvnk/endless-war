@@ -2312,6 +2312,7 @@
             "ghosts",
             "ts",
             "s",
+	    "brazil",
             "loser"
         ],
         "str_name": "The Sewers",
@@ -2419,7 +2420,8 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "underworldsubwaystation": 20
+            "underworldsubwaystation": 20,
+            "thevoid": 20
         },
         "topic": "A cave underneath the city, well-lit by trash can bonfires scattered about. The walls are decorated with crude depictions of ENDLESS WAR. Strangely enough, there's a punching bag off in the distance, with what looks to be a picture of Phoebus taped onto it.",
         "wikipage": "https://rfck.miraheze.org/wiki/The_Underworld"
@@ -16976,7 +16978,7 @@
             "br"
         ],
         "str_name": "The SlimeCorp Headquaters Breakroom",
-        "str_desc": "A high-class corporate breakroom. This place has everything! Storage lockers, vending machines, ration dispensers, heck, even free weapon caches! Who WOULDN'T want to be a security officer with benefits like these?",
+        "str_desc": "A high-class corporate breakroom. This place has everything! Storage lockers, vending machines, ration dispensers, heck, even free weapon caches! Who WOULDN'T want to be a security officer with benefits like these? Exits into the Security Force Tunnel and Downtown.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [],

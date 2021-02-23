@@ -151,7 +151,7 @@ cmd_map = {
 	# Show the current slime score of a player.
 	ewcfg.cmd_score: ewcmd.score,
 	ewcfg.cmd_score_alt1: ewcmd.score,
-
+	ewcfg.cmd_score_alt2: ewcmd.score,
 	# Show a player's combat data.
 	ewcfg.cmd_data: ewcmd.data,
 
@@ -540,8 +540,8 @@ cmd_map = {
 
 	# Link to the guide.
 	ewcfg.cmd_help: ewcmd.help,
-	ewcfg.cmd_help_alt1: ewcmd.help,
-	ewcfg.cmd_help_alt2: ewcmd.help,
+	ewcfg.cmd_commands_alt1: ewcmd.commands,
+	ewcfg.cmd_commands: ewcmd.commands,
 	ewcfg.cmd_help_alt3: ewcmd.help,
 
 	# Misc
@@ -556,6 +556,7 @@ cmd_map = {
 	ewcfg.cmd_patchnotes: ewcmd.patchnotes,
 	ewcfg.cmd_wiki: ewcmd.wiki,
 	ewcfg.cmd_booru: ewcmd.booru,
+	ewcfg.cmd_bandcamp: ewcmd.bandcamp,
 	ewcfg.cmd_leaderboard: ewcmd.leaderboard,
 	ewcfg.cmd_leaderboard_alt1: ewcmd.leaderboard,
 
