@@ -205,6 +205,7 @@ class EwPoi:
 	# The wiki page associated with that poi
 	wikipage = ""
 
+
 	def __init__(
 		self,
 		id_poi = "unknown", 
@@ -435,6 +436,9 @@ def path_step(path, poi_next, cost_next,  user_data, poi_end, landmark_mode = Fa
 						cost_next -= ewcfg.territory_time_gain
 					else:
 						cost_next += ewcfg.territory_time_gain
+				# Slimecorp gets a bonus in unclaimed territory
+				elif user_data.faction == ewcfg.faction_slimecorp:
+						cost_next -= ewcfg.territory_time_gain
 
 	path.steps.append(poi_next)
 
@@ -1041,6 +1045,9 @@ async def move(cmd = None, isApt = False):
 							val -= ewcfg.territory_time_gain
 						else:
 							val += ewcfg.territory_time_gain
+					# Slimecorp gets a bonus in unclaimed territory
+					elif user_data.faction == ewcfg.faction_slimecorp:
+						val -= ewcfg.territory_time_gain
 
 				val = int(val / user_data.move_speed)
 				await asyncio.sleep(val)
@@ -1890,6 +1897,7 @@ async def loop(cmd):
 			user_data.poi = dest_poi
 			user_data.persist()
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+			await user_data.move_inhabitants(id_poi=dest_poi_obj.id_poi)
 			await ewutils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, user_data.id_user)
 			return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, dest_poi_obj.channel), ewutils.formatMessage(cmd.message.author,"**-OIIIIP!!!**\n\n{} jumps out of a wormhole!".format(cmd.message.author.display_name)))
 		else:
@@ -2338,8 +2346,10 @@ async def send_gangbase_messages(server_id, clock):
 	response = ""
 	if clock == 3:
 		response = "The police are probably asleep, the lazy fucks. It's a good time for painting the town!"
+		cop_response = "STATISTICS SHOW GANG ACTIVITY INCREASES AFTER NIGHTFALL. REMAIN VIGILANT."
 	elif clock == 11:
 		response = "Spray time's over, looks like the cops are back out. Fuck those guys."
+		cop_response = "STATISTICS SHOW GANG ACTIVITY DECLINES DURING DAYLIGHT HOURS. GET TO WORK."
 
 
 	client = ewutils.get_client()
@@ -2349,4 +2359,7 @@ async def send_gangbase_messages(server_id, clock):
 	if response != "":
 		for channel in channels:
 			post_channel = ewutils.get_channel(server, channel)
-			await ewutils.send_message(client, post_channel, response)
+			if channel == ewcfg.channel_breakroom:
+				await ewutils.send_message(client, post_channel, cop_response)
+			else:
+				await ewutils.send_message(client, post_channel, response)

@@ -3141,3 +3141,47 @@ async def make_bp(cmd):
 		await recipient.add_roles(bp_role)
 	else:
 		logMsg("Could not find Brimstone Programmer role.")
+
+
+async def fake_failed_command(cmd):
+	client = get_client()
+	randint = random.randint(1, 3)
+	msg_mistake = "ENDLESS WAR is growing frustrated."
+	if randint == 2:
+		msg_mistake = "ENDLESS WAR denies you his favor."
+	elif randint == 3:
+		msg_mistake = "ENDLESS WAR pays you no mind."
+
+	msg = await send_message(client, cmd.message.channel, msg_mistake)
+	await asyncio.sleep(2)
+	try:
+		await msg.delete()
+		pass
+	except:
+		pass
+
+
+async def assign_status_effect(cmd = None, status_name = None, user_id = None, server_id = None):
+	if status_name is not None:
+		user_data = EwUser(id_server=server_id, id_user = user_id)
+		response = user_data.applyStatus(id_status=status_name, source = user_id, id_target = user_id)
+	else:
+		if not cmd.message.author.guild_permissions.administrator or cmd.mentions_count == 0:
+			return await fake_failed_command(cmd)
+		target = cmd.mentions[0]
+		status_name = flattenTokenListToString(cmd.tokens[2:])
+		user_data = EwUser(member=target)
+		response = user_data.applyStatus(id_status=status_name, source=user_data.id_user, id_target=user_data.id_user)
+	return await send_message(cmd.client, cmd.message.channel, formatMessage(cmd.message.author, response))
+
+
+def messagesplit(stringIn, whitespace = '\n'):
+	currentMessage = stringIn
+	messagearray = []
+	while len(currentMessage) > 1500:
+		index = currentMessage.rfind(whitespace, 0, 1500)
+		messagearray.append(currentMessage[:index])
+		currentMessage = currentMessage[index:]
+
+	messagearray.append(currentMessage)
+	return messagearray

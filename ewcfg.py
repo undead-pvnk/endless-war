@@ -656,6 +656,7 @@ channel_cinema = "nlacakanm-cinemas"
 channel_bazaar = "bazaar"
 channel_recyclingplant = "slimecorp-recycling-plant"
 channel_slimecorphq = "slimecorp-hq"
+channel_slimecorpcomms = "slimecorp-comms"
 channel_leaderboard = "leaderboard"
 channel_cv_mines = "cratersville-mines"
 channel_cv_mines_sweeper = "cratersville-mines-minesweeper"
@@ -914,10 +915,11 @@ channel_slimesend_street_a = "slimes-end-street-a"
 
 channel_slimetwitter = "slime-twitter"
 
-hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
+hideout_channels = [channel_rowdyroughhouse, channel_copkilltown, channel_breakroom]
 hideout_by_faction = {
 	faction_rowdys: channel_rowdyroughhouse,
-	faction_killers: channel_copkilltown
+	faction_killers: channel_copkilltown,
+	faction_slimecorp: channel_breakroom
 }
 
 
@@ -942,11 +944,12 @@ cmd_mine = cmd_prefix + 'mine'
 cmd_flag = cmd_prefix + 'flag'
 cmd_score = cmd_prefix + 'slimes'
 cmd_score_alt1 = cmd_prefix + 'slime'
+cmd_score_alt2 = cmd_prefix + 'skune'
 cmd_giveslime = cmd_prefix + 'giveslime'
 cmd_giveslime_alt1 = cmd_prefix + 'giveslimes'
 cmd_help = cmd_prefix + 'help'
-cmd_help_alt1 = cmd_prefix + 'command'
-cmd_help_alt2 = cmd_prefix + 'commands'
+cmd_commands_alt1 = cmd_prefix + 'command'
+cmd_commands = cmd_prefix + 'commands'
 cmd_help_alt3 = cmd_prefix + 'guide'
 cmd_harvest = cmd_prefix + 'harvest'
 cmd_salute = cmd_prefix + 'salute'
@@ -1069,6 +1072,7 @@ cmd_map = cmd_prefix + 'map'
 cmd_transportmap = cmd_prefix + 'transportmap'
 cmd_wiki = cmd_prefix + 'wiki'
 cmd_booru = cmd_prefix + 'booru'
+cmd_bandcamp = cmd_prefix + 'bandcamp'
 cmd_pardon = cmd_prefix + 'pardon'
 cmd_banish = cmd_prefix + 'banish'
 cmd_vouch = cmd_prefix + 'vouch'
@@ -1327,6 +1331,9 @@ cmd_untakedown_alt_1 = cmd_prefix + 'uncopyrightstrike'
 cmd_untakedown_alt_2 = cmd_prefix + 'undeletezine'
 cmd_lol = cmd_prefix + 'lol'
 cmd_mastery = cmd_prefix + 'mastery'
+
+cmd_getattire = cmd_prefix + 'getattire'
+cmd_pacommand = cmd_prefix + 'pacommand'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
@@ -4797,16 +4804,16 @@ def get_weapon_type_stats(weapon_type):
 			"hit_chance": 0.95,
 		},
 		"variable_damage": {
-			"damage_multiplier": 0.5,
-			"variable_damage_multiplier": 2,
+			"damage_multiplier": 0.75,
+			"variable_damage_multiplier": 1.5,
 			"cost_multiplier": 1,
 			"crit_chance": 0.1,
 			"crit_multiplier": 1.5,
 			"hit_chance": 0.9,
 		},
 		"heavy": {
-			"damage_multiplier": 3,
-			"cost_multiplier": 5,
+			"damage_multiplier": 1.7,
+			"cost_multiplier": 2.75,
 			"crit_chance": 0.1,
 			"crit_multiplier": 1.5,
 			"hit_chance": 0.8,
@@ -5364,6 +5371,7 @@ weapon_list = [
 		],
 		str_crit = "**COMBO!** {name_player} strikes {name_target} with a flurry of 5 vicious blows!",
 		# str_backfire = "**Whack!!** {name_player} fucks up their kung-fu routine and whacks themselves in the head with their own nun-chucks!!",
+		str_miss = "**WOOSH** {name_player} whiffs every strike!",
 		str_equip = "You equip the nun-chucks.",
 		str_name = "nun-chucks",
 		str_weapon = "nun-chucks",
@@ -5373,7 +5381,7 @@ weapon_list = [
 		#str_trauma = "They are covered in deep bruises. They hate martial arts of all kinds.",
 		str_kill = "**HIIII-YAA!!** With expert timing, {name_player} brutally batters {name_target} to death, then strikes a sweet kung-fu pose. {emote_skull}",
 		str_killdescriptor = "fatally bludgeoned",
-		str_damage = "{name_target} takes {strikes} nun-chuck whacks directly in the {hitzone}!!",
+		str_damage = "{name_target} takes a bunch of nun-chuck whacks directly in the {hitzone}!!",
 		str_duel = "**HII-YA! HOOOAAAAAHHHH!!** {name_player} and {name_target} twirl wildly around one another, lashing out with kung-fu precision.",
 		str_description = "They're nunchucks.",
 		str_scalp = " It looks very bruised.",
@@ -7298,7 +7306,7 @@ with open(os.path.join('json', 'poi.json')) as f:
 				max_degradation = i['max_degradation'], 
 				neighbors = i['neighbors'], 
 				topic = i['topic'], 
-				wikipage = i['wikipage'], 
+				wikipage = i['wikipage']
 			))
 
 
@@ -12209,6 +12217,8 @@ status_injury_torso_id = "injury_torso"
 status_injury_arms_id = "injury_arms"
 status_injury_legs_id = "injury_legs"
 
+status_kevlarattire_id = "kevlarattire"
+
 
 time_expire_burn = 12
 time_expire_high = 30 * 60 # 30 minutes
@@ -12368,13 +12378,20 @@ status_effect_list = [
 		time_expire = 300,
 		str_acquire = "Calorie-induced rage consumes you! You could drink gasoline and get shot and not feel a damn thing!",
 		str_describe_self = "You're in the middle of a raging food coma.",
-        dmg_mod_self = -0.4
+        dmg_mod = -0.4
 	),
     EwStatusEffectDef(
 		id_status = status_juviemode_id,
 		time_expire = 86400,
 		str_acquire = "",
 		str_describe_self = "You're carrying slime under the legal limit."
+	),
+	EwStatusEffectDef(
+		id_status = status_kevlarattire_id,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "You're dressed to the nines in the latest Kevlar work attire.",
+		dmg_mod = -0.2
 	),
 ]
 
@@ -12910,10 +12927,10 @@ help_responses = {
 	"variable-damage": "**Variable damage weapons** include the **Nailbat**, **Bass**, and the **Brass Knuckles**. They have a randomised damage modifier between 50% and 250%, no cost modifier, 10% crit chance, a crit multiplier of 150%, and a 90% chance to hit. On average, these weapons deal pretty good damage for a very reasonable attack cost, but their unreliability can make them quite risky to use.",
 	"small-game": "**Small game weapons** include the **Knives** and the **Minecraft Bow**. They have a damage modifier of 50%, a cost modifier of 25%, 10% crit chance, a crit multiplier of 200%, and a 95% chance to hit. These are reliable and underpowered weapons, with extremely low usage costs making them very efficient. Best used for bullying weaklings and hunting.",
 	"heavy": "**Heavy weapons** include the **Scythe** and the **Broadsword**. They have a damage modifier of 300%, a cost modifier of 500%, 5% crit chance, a crit multiplier of 150%, and an 80% chance to hit. Unreliable and incredibly expensive to use, to compensate for their very high damage.",
-	"defensive": "**Heavy weapons** currently only include the **Umbrella**. While you have one equipped, you take 25% reduced damage! They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 150%, and an 85% chance to hit, with a captcha of 4. Best used for punching down or protecting yourself while traveling, these weapons are typically too weak and unwieldy for use in normal combat scenarios.",
+	"defensive": "**Defensive weapons** currently only include the **Umbrella**. While you have one equipped, you take 25% reduced damage! They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 150%, and an 85% chance to hit, with a captcha of 4. Best used for punching down or protecting yourself while traveling, these weapons are typically too weak and unwieldy for use in normal combat scenarios.",
 	"precision": "**Precision weapons** currently only include the **Katana**. They have a damage modifier of 130%, a cost modifier of 130%, a crit multiplier of 200%, with a captcha of 4. They always hit, and get a guaranteed crit if you have no other weapons equipped. These weapons deal very high and reliably damage, but only if you're willing to bear the burden of their captcha and the lack of flexibility they impose.",
 	"incendiary": "**Incendiary weapons** include the **Molotov Bottles** and the **Dragon Claw**. They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 200%, a 90% chance to hit, and a captcha of 4. You will take 10% to 15% of your slime as damage if you enter the captcha wrong! They also deal an extra 50% damage to the target and any flagged enemies in the area over time, causing them to explode on death. A more powerful alternative to explosive weapons, if you can deal with the damage being dealt over time, rather than on one go.",
-	"explosive": "**Incendiary weapons** currently only include the **Grenades**. They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 200%, a 90% chance to hit, and a captcha of 4. You will take 10% to 15% of your slime as damage if you enter the captcha wrong! They also deal an extra 50% damage to the target and any flagged enemies in the area. The go-to if you're being swarmed by a mob of weaklings, can clear entire districts in one go.",
+	"explosive": "**Explosive weapons** currently only include the **Grenades**. They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 200%, a 90% chance to hit, and a captcha of 4. You will take 10% to 15% of your slime as damage if you enter the captcha wrong! They also deal an extra 50% damage to the target and any flagged enemies in the area. The go-to if you're being swarmed by a mob of weaklings, can clear entire districts in one go.",
 
 	weapon_id_revolver: "**The revolver** is a normal weapon for sale at the Dojo. It's an ordinary six-shot revolver, so you'll have to **!reload** it after attacking six times, though its attack cost is reduced to 80% to compensate. Goes well with a cowboy hat.",
 	weapon_id_dualpistols: "**The dual pistols** are a normal weapon for sale at the Dojo. Shockingly, these aren't that common, despite the city being chock-full of gangsters.",
@@ -13007,7 +13024,7 @@ mutation_descriptions = {
 	mutation_id_trashmouth: "Reach maximum power scavenges 3 times as fast. Example: The soft cooldown of 15 seconds on scavenging is now reduced to 5 seconds. You can also eat cosmetics and furniture. You can also eat furniture and cosmetics using !devour <item>.",
 	mutation_id_webbedfeet: "Your scavenging power increases the more slime there is in a district. Caps out at 400% more slime gained from scavenging, but does stack with the White Nationalist mutation. You can feel out the amount of slime you scavenge.",
 
-    mutation_id_dyslexia:"The size of captchas is decreased by 3 characters. If a captcha is smaller than 3, the captcha length will be 1 instead.",
+    mutation_id_dyslexia:"The size of captchas is decreased by 1 character. If a captcha is 1, the captcha length will stay the same.",
     mutation_id_handyman:"If you kill an enemy gangster with a tool instead of a weapon, your kingpin gets double the slime they normally do.",
     mutation_id_packrat:"Apartment storage is doubled, regardless of apartment class.",
     mutation_id_stickyfingers:"When using !order at a store, there is a 20% chance to get the item for free. You still need to have the slime to purchase it, though.",
@@ -13063,6 +13080,111 @@ consult_responses = {
 "dreadford":"Have you ever wanted to suck on the sweet, sweet teat of ultra-decadence? Do you have multiple yachts? Do you buy both versions of Pokemon when they come out, just because you can blow the cash? Ha. Let me introduce you to the next level of opulence. Each apartment is a full-scale mansion, maintained by some of the finest slimebutlers in the industry. In the morning they tickle your feet to get you up, and at night they sing you Sixten ballads to drift you back to restful slumber. The place is bulletproof, fireproof, and doubles as a nuclear bunker if things go south. And it stores...everything. The price, you say? Shit, I was hoping you wouldn't ask.",
 "maimridge":"Perhaps you think it's sketchy that we're selling lightly refurbished log cabins built eons ago. Well let me ask you something, young juvie: do you like getting laid? Well, living in Maimridge is your ticket into ice-cold lust and debauchery. You just bring a lady friend or whoever into your isolated mountain cabin, and our state-of-the-art faulty electrical wiring will leave you stranded and huddling for warmth in no time flat! Wow...I'm picturing you now. Yeah, you definitely want this one."
 }
+
+
+basic_commands = "!slime: Check your slime.\n!look: Look at your surroundings.\n!survey: Get a shortened version of !look.\n!goto <district>: Move to a new area.\n!halt: Stop moving.\n!data: Check your current status.\n!slimecoin: Check your slimecoin.\n!eat: Eat food.\n!use: Use an item.\n!scavenge <captcha>: Scavenge slime off the ground.\n!map: Pull up the map.\n!scout <district>: Check for enemies in an adjacent district."
+juvenile_commands = "!dance: Dance, monkey.\n!enlist <gang>: Enlist in the Rowdys or the Killers.\n!legallimit: Juvies below 100,000 slime can cap their slime at that amount. They can't be killed below Level 18, so this makes them invulnerable."
+enlisted_commands = "!kill <player>: Kill your enemies. Depending on your weapon, you need to enter a captcha after this.\n!equip <tool/weapon>: Equip a tool or weapon.\n!sidearm: Sidearm a tool or weapon into a secondary slot.\n!switch: Switch weapons between your weapon and sidearm slots.\n!suicide: Nah, I'm not telling you what this does.\n!vouch: If a Juvie isn't affiliated, you can !vouch for them to join your gang."
+corpse_commands = "!boo: Become way too scary.\n!haunt <player>: You can haunt active players to rob them of some slime and get antislime.\n!inhabit <player>: Inhabit another player.\n!letgo: Stop inhabiting someone.\n!possessweapon: Possess the weapon of someone you're inhabiting.\n!possessfishingrod: Possess someone's fishing rod in the same way.\n!summonnegaslimeoid <name>:Summon a negaslimeoid to the surface.\n!negaslimeoid <name>: Check on a specific negaslimeoid.\n!crystalizenegapoudrin: Create a negapoudrin with negaslime."
+player_info_commands = "!data <player>: Check basic player info. Excluding <player> shows your own data.\n!slime <player>:Same as !data, but shows slime count.\n!slimecoin <player>: Same as the above two, but shows SlimeCoin.\n!hunger: Displays hunger.\n!mutations: Check mutations. Add 'level' to the end to display by mutation level.\n!fashion: Displays fashion info.\n!inv: Displays inventory. Add keywords after the command to filter or sort items. Keywords are: type, name, id, stack, search.\n!inv search <contents>: Display all items that contain <contents>.\n!apartment: Check your apartment.\n!mastery: Check weapon mastery."
+external_link_commands = "!map: Pull up the world map.\n!time: Get the latest RFCK time and weather.\n!transportmap: Pull a transportation map of the city.\n!patchnotes: See the latest patchnotes.\n!booru: Get a link to the RFCK Booru.\n!wiki: Get a link to the wiki.\n!leaderboard: Get a link to the online leaderboard.\n!bandcamp: Links to the bandcamp."
+combat_commands = "!kill <player>: Kill your enemies. Depending on your weapon, you need to enter a captcha after this.\n!equip <tool/weapon>: Equip a tool or weapon.\n!sidearm: Sidearm a tool or weapon into a secondary slot.\n!switch: Switch weapons between your weapon and sidearm slots.\n!aim <player>: Increase accuracy toward a target.\n!taunt <player>: Decrease you opponent's accuracy.\n!dodge <player>: Increase evasion for a short time.\n!reload: Some weapons have limited ammo and need to reload."
+capping_commands = "!spray <captcha>: Spray the district in your gang's paint.\n!sanitize <captcha>: If you are in the Slimecorp Security Force, you can cleaan up the streets.\n!progress: Displays capture progress in your current district.\n!tag: Spray your tagged image.\n!changespray <tag>:Change the image link that displays on a !tag."
+item_commands="!inv: Displays inventory. Add keywords after the command to filter or sort items. Keywords are: type, name, id, stack, search, general, food, cosmetic, furniture, weapon.\n!inv search <contents>: Display all items that contain <contents>.\n!inspect <item>: Inspect an item in your inventory.\n!discard <item>: Discard an item.\n!use <item>: Some items can be used.\n!trade <player>: Open a trade with a player.\n!offer <item>: Add an item to a trade.\n!removeoffer <item>:Remove an item from the trade.\n!completetrade: Finish the trade.\n!canceltrade:Cancel a trade.\n!smelt <item>: Smelt an item form ingredients.\n!whatcanimake <item>:Shows what you can smelt with an item."
+cosmetics_dyes_commands = "!adorn <cosmetic>: Wear a cosmetic\n!dedorn <cosmetic>: Take a cosmetic off.\n!dyecosmetic <cosmetic> <dye>: Dye a cosmetic using dyes in your inventory.\n!dyefurniture <furniture> <dye>: Change the color of furniture with dye.\n!saturateslimeoid <dye>: Dye your slimeoid."
+miscellaneous_commands = "!quarterlyreport: Display the current quarterly goal.\n!scrutinize <object>: Examine specific objects in an area. Usually reserved for dungeons and ARGs.\n!shakeoff: If someone with the One Eye Open mutation is following you, use this to shake them off.\n!extractsoul: Remove your soul. from your body and bottle it.\n!returnsoul: Return your soul to your body, only if you have it in your inventory.\n!squeezesoul <soul>: Squeeze a soul. The soul's owner will vomit 1/4 of their slime on the ground.\n!ads: View ads in a district.\n!knock <player>: Knock on a player's apartment door, if you're in the district.\n!endlesswar: Check the total ammassed slime of all players.\n!negaslime: Check total amassed antislime.\n!negaslimeoidbattle <negaslimeoid name>: Fight your slimeoid against a negaslimeoid."
+flavor_commands = "Command list: !salute\n!unsalute\n!hurl\n!howl\n!moan\n!pot\n!bully <target>\n!lol\n!jam <instrument>"
+slimeoid_commands = "!slimeoid: Check your slimeoid.\n!saturateslimeoid <dye>: Dye your slimeoid.\n!bottleslimeoid:Put your slimeoid in a bottle, turning them into an item.\n!unbottleslimeoid: Unbottle a slimeoid.\n!feedslimeoid <food>: Feed your slimeoid stat modifying candy.\n!dressslimeoid <cosmetic>: Dress up your slimeoid.\n!undressslimeoid: Take cosmetics off your slimeoid.\n!slimeoidbattle <player>: Challenge another player to a slimeoid battle.\n!playfetch, !petslimeoid, !abuseslimeoid, !walkslimeoid, !observeslimeoid: You can interact with your slimeoid in various ways."
+trading_commands = "!trade <player>: Open a trade with a player.\n!offer <item>: Add an item to a trade.\n!removeoffer <item>:Remove an item from the trade.\n!completetrade: Finish the trade.\n!canceltrade:Cancel a trade."
+smelting_commands = "!smelt <item>: Smelt an item form ingredients.\n!whatcanimake <item>:Shows what you can smelt with an item."
+quadrant_commands = "!addquadrant <quadrant> <player>: Add a player to your quadrants.\n!clearquadrant <quadrant>: Break up with someone in your quadrants.\n!quadrants: Displays a full list of quadrants.\n!sloshed, !roseate, !violacious, !policitous: Check on one of the four specific quadrants."
+
+
+
+farm_commands = "FARMS\n!sow <item>: Plant a poudrin or vegetable into the ground.\n!reap: Reap the crops and slime once they're ready to be harvested.\n!checkfarm: Look at the status of your crops.\n!irrigate, !weed, !fertilize, !pesticide: These commands can be used to increase farm yields, depending on the current status of the farm.\n!mill <crop>: Break down a crop into various smelting materials."
+shop_commands = "SHOPS\n!order <item>: Buy an item."
+pier_commands = "PIERS\n!cast <bait>: Cast your fishing line. Bait is optional, and you improve your tatches when equipped with a fishing rod.\n!reel Reel in a cast line."
+mine_commands = "MINES\n!mine: Use this one in the normal mines. A lot.\n!mine a1: Use coordinates when mining in Bubble Breaker and Minesweeper.\n!flag: This will flag off an area in Minesweeper."
+transport_commands = "TRANSPORT\n!schedule: Check the subway schedule.\n!embark: Used to board transports\n!disembark: Get off transports."
+zine_writing_places_commands = "ZINES\nbrowse <category>: Browse for zines. You can sort by title, author, date, length, et cetera by placing it after the command.\n!orderzine <zine>: Order a zine. Specify the name or number of the zine to pick one out.\n!read <zine ID> Begin reading a zine.\nThere are a lot of zine commands. I would recommend picking up HOW TO ZINE by Milly and learning the details there."
+universities_commands = "UNIVERSITIES\n!help <category>: Use this to teach yourself about various gameplay mechanics."
+apartment_commands = "APARTMENTS\nFor apartment-specific commands, use !help in DMs to get a list of commands. In addition to that, you can:\n!propstand <item> Turn an item into a piece of furniture.\n!aquarium <fish>: Turn a fish into an aquarium you can use as furniture.\n!pot <crop>: Turn a reaped crop into a flowerpot, same as the aquarium.\n!unpot: Remove a crop from its pot.\nGo to the Bazaar to undo prop stands and aquariums."
+
+mutation_unique_commands = {
+"oneeyeopen":"ONE EYE OPEN\n!thirdeye: Check the current status of your third eye.\n!track <player>:Get your eye to focus on someone and check their movements.",
+"aposematicstench":"APOSEMATIC STENCH\n!stink: Gain stink, which drives away monsters. It functions like Fuck Energy Body Spray.",
+"bleedingheart":"BLEEDING HEART\n!bleedout: Purge your bleed storage onto the ground all at once.",
+"longarms":"LONG ARMS\n!longdrop <location> <item>: Drop an item in an adjacent district.",
+"rigormortis":"RIGOR MORTIS\n!preserve <item>: Prevent an item from dropping when you die.",
+"ditchslap":"DITCH SLAP\n!slap <player> <location>: Slap an ally into another district.\n!clench: Clench your butt cheeks to prepare to be slapped. Have your allies use this.",
+"landlocked":"LANDLOCKED\n!loop: Use this on a district bordering an outskirt. It will loop you to the opposite end of the map.",
+"organicfursuit":"ORGANIC FURSUIT\n!fursuit: Check for the next full moon when your next\"furry episode\" begins.",
+"enlargedbladder":"ENLARGED BLADDER\n!piss: Need I say more?",
+"quantumlegs":"QUANTUM LEGS\n!tp <location>: Teleport up to two areas away.",
+"trashmouth":"TRASH MOUTH\n!devour item: Eat some non-food items."
+}
+
+item_unique_commands = {
+"brick":"BRICK\n!toss <player>: When near a player's apartment, you can throw bricks through their window. When near a player, you can throw it at them.\n!skullbash: With a brick, immobilize yourself for 10 minutes.",
+"alarmclock":"ALARM CLOCK\n!setalarm <time> <item>: When holding an alarm clock, you can set it to an in-game time. It will DM you when it sounds if it's in your inventory. You can set it to \"OFF\" instead of a time.",
+"slimepoudrin":"SLIME POUDRIN\n!annoint <name>: Anoint your weapon in slime and give it a name. Your weapon mastery increases.\n!crush poudrin: Break the poudrin and get slime.",
+"washingmachine":"WASHING MACHINE\n!wash <object>: Remove the dye from a slimeoid or a piece of clothing if it is in your apartment.",
+"laptopcomputer":"LAPTOP\n!browse: Browse the web on your laptop for RFCK Discord servers if it is in your apartment.",
+"cigarette":"CIGARETTE\n!smoke <cigarette>: Smoke cigarettes.",
+"cigar":"CIGAR\n!smoke <cigar>: Smoke cigars.",
+"pictureframe":"PICTURE FRAME\n!frame <image link>: Put an image in a picture frame.",
+"television":"TV\n!watch: Watch TV if it's in your apartment. Stop watching by taking the TV out of your apartment."
+}
+
+holidaycommands = {
+	"swildermuk":"",
+	"slimernalia":"",
+	"doublehalloween":"",
+}
+
+district_unique_commands = {
+"theslimestockexchange":"STOCK EXCHANGE\n!invest <amount> <stock>: Invest SlimeCoin into a stock.\nwithdraw <stock> <amount>: Remove SlimeCoin from shares of stock.\n!transfer <amount> <player>: Move your SlimeCoin to another player.\n!shares:Display your current shares.\n!rates:Display current SC:Slime exchange rates.\n!stocks: Displays currently available stocks.",
+"realestateagency":"REAL ESTATE\n!consult <district>: Get information and cost for an apartment.\n!signlease <district>: Purchase an apartment in a new location.\n!breaklease: Cancel the lease you currently have.\n!aptupgrade: Upgrade your apartment, from C to S.\n!changelocks: Erase all housekeys you have in circulation.\n!addkey: Add a housekey to your apartment.",
+"clinicofslimoplasty":"CLINIC\n!chemo <mutation>: Clear a mutation from yourself.\n!graft <mutation>: Attach a new mutation to yourself.\n!browse: Browse the medical zines available.\n!orderzine <zine>: Order a list of mutations to graft.",
+"thesewers":"SEWERS\n!revive: Revive.",
+"slimecorpslimeoidlaboratory":"SLIMEOID LAB\n!embiggen:Make a fish real big.\n!restoreslimeoid <slimeoid>: Restore a Slimeoid from a slimeoid heart.\n!instructions: Go over the many commands used to make a slimeoid.",
+"thecasino":"CASINO\n!slimecraps <amount> <currency>: Gamble at the craps table. Gambling types include slimecoin, slime, and your soul.\n!slimeroulette <amount> <bet> <type>:Gamble at the roulette wheel. Types are same as above, bet options are shown by typing !slimeroulette <amount>.\n!slimeslots <type>: Bet a fixed amount in slots. Accepts Slime and SlimeCoin.\n!slimepachinko <type> Same as above, but in pachinko.\n!slimebaccarat <amount> <currency> <hand>: Bet slime, slimecoin, or souls on baccarat. The hand is either 'player' or 'dealer'.\n!slimeskat <player> <player>: Challenge two players to a game of slimeskat. You bet Slimecoin once the game has started.\n!russianroulette <player>: Challenge your opponent to russian roulette. Add 'soul' to the end of the command to gamble souls.\n!betsoul: Exchange your soul for {} SlimeCoin.\n!buysoul <player>: Buy a soul off the casino for {} SlimeCoin, if one is in stock.".format(soulprice, soulprice),
+"thedojo":"DOJO\n!spar <player>: Spar with someone to increase your weapon level.\n!marry: Marry your weapon.\n!divorce: The inevitable, after marrying your weapon.",
+"thebattlearena":"BATTLE ARENA\n!slimeoidbattle <player>: Challenge a player to a slimeoid battle. They can !accept or !decline.",
+"slimecorphq":"SLIMECORP HQ\n!donate <amount>: Donate slime to Slimecorp and exchange it for SlimeCoin.\n!requestverification: Acquire a verified checkmark for Slime Twitter.\n!advertise <content>: Advertise something.\n!clockin: If you're in the Slimecorp Security Force, you enter the breakroom this way.\n!payday: Slimecorp can get slime for salary credits here.",
+"slimesendcliffs":"CLIFFS\n!push <player>: Push a player off the cliff.\n!jump: Jump off the cliff.\n!toss <item>: Toss an item off the cliff.",
+"sodafountain":"SODA FOUNTAIN\n!purify: At Level 50, you can reset slime to zero and level to 1. Mutations stick around.",
+"speakeasy":"SPEAKEASY\n!barter <fish>: Barter your fish with Albert Alexander.\nbarterall: All the fish will be removed from your inventory and exchanged with slime and items you would've gotten for bartering.\n!appraise: Get the quality of a fish reviewed by Albert Alexander.",
+"recyclingplant":"RECYCLING PLANT\n!recycle <item>: Recycle an item in exchange for SlimeCoin.",
+"copkilltown":"COP KILLTOWN\n!renounce: Unenlist from your gang in exchange for half your slime.\n!chest: Check the contents of the community chest.\n!snag <item>: Take items from the community chest.\n!stow <item>: Place inventory items in the community chest.",
+"rowdyroughhouse":"ROWDY ROUGHHOUSE\n!renounce: Unenlist from your gang in exchange for half your slime.\n!chest: Check the contents of the community chest.\n!snag <item>: Take items from the community chest.\n!stow <item>: Place inventory items in the community chest.",
+"juviesrow":"JUVIE'S ROW\n!chest: Check the contents of the community chest.\n!snag <item>: Take items from the community chest.\n!stow <item>: Place inventory items in the community chest.",
+"bazaar":"BAZAAR\n!unstand <item>: Remove an item from its prop stand.\n!releasefish <aquarium>: Remove fish from their aquarium.",
+"breakroom":"BREAKROOM\n!getattire: Get some Kevlar Attire for combat in the field.\n!clockout: Exit the breakroom and move to Slimecorp HQ.",
+"vandalpark":"VANDAL PARK\n!slimeball <team>: Join a game of Slimeball. Teams are purple and pink. Read about details in the Game Guide.",
+"endlesswar":"ENDLESS WAR\n!pray <target>: Pray to someone."
+}
+#humanoid, amphibian, food, skeleton, robot, furry, scalie, slime-derived, monster, critter, avian, insectoid, shambler, other
+race_unique_commands = {
+"humanoid":"!exist: Exist.",
+"amphibian":"!ree: Throw a good old fashioned tantrum.",
+"food":"!autocannibalize: Snack on yourself.",
+"skeleton":"!rattle: Channel your inner xylophone.",
+"robot":"!beep: Beep.",
+"furry":"!yiff: Be a degenerate.",
+"scalie":"!hiss: sssSsss.",
+"slime-derived":"!jiggle: The details are up to your imagination.",
+"monster":"!rampage: Go nuts.",
+"critter":"!requestpetting <player>: Weird stuff you critters are into these days.",
+"avian":"!flutter: Flap your wings. Show off.",
+"insectoid":"!entomize: Time to do insect things.",
+"shambler":"!shamble: BBBBRRRRRAAAAIIIIINNNNZZZZ.",
+"other":"!confuse: Not too hard to do with this crowd."
+}
+
+#!ads, look for possible ads
+#shops, piers, mines, transports, zine writing places, universities/game guides, subways, apartments
+
 
 sea_scavenge_responses = [
 	"see a school of Fuck Sharks circling below you",

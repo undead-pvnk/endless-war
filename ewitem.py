@@ -1096,6 +1096,8 @@ async def inventory_print(cmd):
 	
 	community_chest = False
 	can_message_user = True
+	item_type = None
+
 	inventory_source = cmd.message.author.id
 
 	player = EwPlayer(id_user = cmd.message.author.id)
@@ -1139,6 +1141,21 @@ async def inventory_print(cmd):
 		if 'stack' in lower_token_list:
 			stacking = True
 
+		if 'general' in lower_token_list:
+			item_type = ewcfg.it_item
+
+		if 'weapon' in lower_token_list:
+			item_type = ewcfg.it_weapon
+
+		if 'furniture' in lower_token_list:
+			item_type = ewcfg.it_furniture
+
+		if 'cosmetic' in lower_token_list:
+			item_type = ewcfg.it_cosmetic
+
+		if 'food' in lower_token_list:
+			item_type = ewcfg.it_food
+
 		if 'search' in lower_token_list:
 			stacking = False
 			sort_by_id = False
@@ -1150,26 +1167,29 @@ async def inventory_print(cmd):
 		items = inventory(
 			id_user = inventory_source,
 			id_server = player.id_server,
-			item_sorting_method='id'
+			item_sorting_method='id',
+			item_type_filter = item_type
 		)
 	elif sort_by_type:
 		items = inventory(
 			id_user=inventory_source,
 			id_server=player.id_server,
-			item_sorting_method='type'
+			item_sorting_method='type',
+			item_type_filter = item_type
 		)
 	elif search == True:
-		print(ewutils.flattenTokenListToString(cmd.tokens[2:]))
 		items = find_item_all(
 			item_search = ewutils.flattenTokenListToString(cmd.tokens[2:]),
 			id_server=player.id_server,
 			id_user=inventory_source,
-			exact_search=False
+			exact_search=False,
+			search_names=True
 		)
 	else:
 		items = inventory(
 			id_user=inventory_source,
 			id_server=player.id_server,
+			item_type_filter = item_type
 		)
 
 	if community_chest:
@@ -1680,7 +1700,7 @@ def find_item(item_search = None, id_user = None, id_server = None, item_type_fi
 """
 	Find every item matching the search in the player's inventory (returns a list of (non-EwItem) item)
 """
-def find_item_all(item_search = None, id_user = None, id_server = None, item_type_filter = None, exact_search = True):
+def find_item_all(item_search = None, id_user = None, id_server = None, item_type_filter = None, exact_search = True, search_names = False):
 	items_sought = []
 	props_to_search = [
 		'weapon_type',
@@ -1689,6 +1709,17 @@ def find_item_all(item_search = None, id_user = None, id_server = None, item_typ
 		'id_cosmetic',
 		'id_furniture'
 	]
+
+	if search_names == True:
+		props_to_search = [
+			'cosmetic_name',
+			'furniture_name',
+			'food_name',
+			'title',
+			'weapon_type',
+			'weapon_name',
+			'item_name'
+		]
 
 
 	if item_search:
