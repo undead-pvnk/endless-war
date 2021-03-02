@@ -202,6 +202,10 @@ cmd_map = {
 	# Show the total of positive slime in the world.
 	ewcfg.cmd_endlesswar: ewcmd.endlesswar,
 	
+	# Slimefest
+	ewcfg.cmd_win: ewcmd.win,
+	ewcfg.cmd_slimefest: ewcmd.slimefest,
+
 	# Show the number of swears in the global swear jar.
 	# ewcfg.cmd_swear_jar: ewcmd.swearjar,
 
