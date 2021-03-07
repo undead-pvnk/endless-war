@@ -19192,7 +19192,7 @@
             "102"
         ],
         "str_name": "Room 102",
-        "str_desc": "Somebody must've spruced this place up, the dust is cleared out. Probably **NINA**, Slimecorp's resident lawyer. She's on the chair over there, typing away on her laptop. Apart from that there's a **COFFEE MACHINE** and a **BED** both in their expected places. Christ, it's like you went back in time to when this room was hospitable. There's also a **PROJECTOR** stashed in the closet, built for old film reels.\n\nExits to the Slimecorp Hotel Lobby.",
+        "str_desc": "Somebody must've spruced this place up, the dust is cleared out. Probably **NINA**, Slimecorp's resident lawyer. She's on the chair over there, typing away on her laptop. Apart from that there's a **COFFEE MACHINE** and a **BED** both in their expected places. Christ, it's like you went back in time to when this room was hospitable. There's also a **PROJECTOR** stashed in the closet, built for old VHS tapes.\n\nExits to the Slimecorp Hotel Lobby.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,

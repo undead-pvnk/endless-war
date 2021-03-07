@@ -444,7 +444,7 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
     for item in items:
         item_obj = EwItem(id_item = item.get('id_item'))
         if item_obj.item_props.get('context') in ["corpse", "droppable"]:
-            give_item(id_user=user_data.poi, id_server=id_server, id_item=id_item)
+            give_item(id_user=user_data.poi, id_server=id_server, id_item=item_obj.id_item)
         if item.get('soulbound') == False and not (rigor == True and item_obj.item_props.get('preserved') ==  user_data.id_user) and item_obj.item_props.get('context') != 'gellphone':
             drop_candidates.append(item)
 

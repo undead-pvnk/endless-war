@@ -4511,12 +4511,12 @@ EwGeneralItem(
 	),
 	EwGeneralItem(
 		id_item="filmreel",
-		str_name="Film Reel",
-		str_desc="It's a rell of film for one of Slimecorp's old training videos.",
+		str_name="VHS Tape",
+		str_desc="It's a VHS for one of Slimecorp's old training videos.",
 		context="reelkey"
 	),
 	EwGeneralItem(
-		id_item = "coordinate sheet",
+		id_item = "coordinatesheet",
 		str_name = "Coordinates",
 		str_desc = "It's a small slip of paper that reads: \"36.174435, -112.043243, N. Beach Depths\"",
 		context = "droppable"
