@@ -13387,7 +13387,18 @@ district_unique_commands = {
 "bazaar":"BAZAAR\n!unstand <item>: Remove an item from its prop stand.\n!releasefish <aquarium>: Remove fish from their aquarium.",
 "breakroom":"BREAKROOM\n!getattire: Get some Kevlar Attire for combat in the field.\n!clockout: Exit the breakroom and move to Slimecorp HQ.",
 "vandalpark":"VANDAL PARK\n!slimeball <team>: Join a game of Slimeball. Teams are purple and pink. Read about details in the Game Guide.",
-"endlesswar":"ENDLESS WAR\n!pray <target>: Pray to someone."
+"endlesswar":"ENDLESS WAR\n!pray <target>: Pray to someone.",
+"lobbybackroom":"LOBBY BACKROOM\n!combo <combination>: Input a combination. The number sequence is all one sequence, for example, !combo 44311111",
+"n9office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n2office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n13office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n11office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n7office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n5office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n8office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n3office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n10office":"OFFICES\n!callelevator: Calls the elevator down to your floor.\n!open/!close door: Open a shortcut to Slimecorp HQ.\n!hack <target>: You can hack things? Sick, dude.",
+"n4office":"ELEVATOR\n!press <floor>: Ascend or descend into an available floor. The bolded portions in !scrutinize buttons are the keywords you want to use."
 }
 #humanoid, amphibian, food, skeleton, robot, furry, scalie, slime-derived, monster, critter, avian, insectoid, shambler, other
 race_unique_commands = {
