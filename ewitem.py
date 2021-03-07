@@ -686,7 +686,10 @@ def item_loot(
 
 	except:
 		ewutils.logMsg("Failed to loot items from user {}".format(member.id))
-			
+
+"""
+	Return false if a player's inventory is at or over capacity for a specific item type
+"""
 
 def check_inv_capacity(id_user = None, id_server = None, item_type = None):
 	if id_user is not None and id_server is not None and item_type is not None:
@@ -1640,6 +1643,20 @@ def give_item(
 		id_user = str(member.id)
 
 	if id_server is not None and id_user is not None and id_item is not None:
+		item = EwItem(id_item=id_item)
+
+		# Ensure general limit implementation
+		if ewutils.is_player_inventory(id_user, id_server):
+			# But only for players
+			other_items = inventory(
+					id_user=id_user,
+					id_server=id_server,
+					item_type_filter=item.item_type
+				)
+
+			if len(other_items) >= ewcfg.generic_inv_limit:
+				return False
+
 		ewutils.execute_sql_query(
 			"UPDATE items SET id_user = %s WHERE id_server = %s AND {id_item} = %s".format(
 				id_item = ewcfg.col_id_item
@@ -1652,7 +1669,6 @@ def give_item(
 
 		remove_from_trades(id_item)
 
-		item = EwItem(id_item = id_item)
 		# Reset the weapon's damage modifying stats
 		if item.item_type == ewcfg.it_weapon:
 			item.item_props["kills"] = 0
@@ -1660,7 +1676,7 @@ def give_item(
 			item.item_props["time_lastattack"] = 0
 			item.persist()
 
-	return
+	return True
 
 
 def soulbind(id_item):
