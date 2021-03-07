@@ -3185,3 +3185,26 @@ def messagesplit(stringIn, whitespace = '\n'):
 
 	messagearray.append(currentMessage)
 	return messagearray
+
+"""
+	Return true if inventory has associated User table entry
+"""
+def is_player_inventory(id_inventory, id_server):
+	# Access DB
+	conn_info = databaseConnect()
+	conn = conn_info.get('conn')
+	cursor = conn.cursor()
+
+	# Try to grab a value from a user with given id
+	cursor.execute("SELECT {} FROM users WHERE id_user = %s AND id_server = %s".format(
+		ewcfg.col_rand_seed
+	), (
+		id_inventory,
+		id_server
+	))
+	result = cursor.fetchone()
+
+	if result != None:
+		return True
+	else:
+		return False
