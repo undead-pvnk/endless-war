@@ -555,48 +555,17 @@ def item_lootrandom(id_server = None, id_user = None):
 
 			response += "You found a {}!".format(item_sought.get('name'))
 
-			if item_sought.get('item_type') == ewcfg.it_food:
-				food_items = inventory(
-					id_user = id_user,
-					id_server = id_server,
-					item_type_filter = ewcfg.it_food
-				)
-
-				if len(food_items) >= user_data.get_food_capacity():
-					response += " But you couldn't carry any more food items, so you tossed it back."
-				else:
-					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
-			elif item_sought.get('item_type') == ewcfg.it_weapon:
-				weapons_held = inventory(
-					id_user = id_user,
-					id_server = id_server,
-					item_type_filter = ewcfg.it_weapon
-				)
-
-				if len(weapons_held) >= user_data.get_weapon_capacity():
-					response += " But you couldn't carry any more weapons, so you tossed it back."
-				else:
-					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
-
+			if check_inv_capacity(id_user = id_user, id_server = id_server, item_type = item_sought.get('item_type')):
+				if item_sought.get('name') == "Slime Poudrin":
+					ewstats.change_stat(
+						id_server=user_data.id_server,
+						id_user=user_data.id_user,
+						metric=ewcfg.stat_poudrins_looted,
+						n=1
+					)
+				give_item(id_user=id_user, id_server=id_server, id_item=id_item)
 			else:
-				other_items = inventory(
-				id_user=id_user,
-				id_server=id_server,
-				item_type_filter=item_sought.get('item_type')
-				)
-
-				if len(other_items) >= ewcfg.generic_inv_limit:
-					response = " But you couldn't carry any more of those, so you tossed it back"
-
-				else:
-					if item_sought.get('name') == "Slime Poudrin":
-						ewstats.change_stat(
-							id_server = user_data.id_server,
-							id_user = user_data.id_user,
-							metric = ewcfg.stat_poudrins_looted,
-							n = 1
-						)
-					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
+				response += " But you couldn't carry any more {}s, so you tossed it back.".format(item_sought.get('item_type'))
 
 		else:
 			response += "You found a... oh, nevermind, it's just a piece of trash."

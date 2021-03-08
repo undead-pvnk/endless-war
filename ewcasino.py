@@ -267,7 +267,9 @@ async def craps(cmd):
 				slimecorp_fee, winnings = slimecorp_collectfee(winnings)
 				if currency_used == ewcfg.currency_soul:
 					currency_used = ewcfg.currency_slimecoin
-					ewitem.give_item(id_item=soul_id, member=cmd.message.author)
+					if not ewitem.give_item(id_item=soul_id, member=cmd.message.author):
+						ewitem.give_item(id_item=soul_id, id_user=ewcfg.poi_id_thecasino, id_server=user_data.id_server)
+						response += "\n\nThe dealer hands you the soul, but you're holding too many cosmetics and you drop it on the floor."
 				response += "\n\n**You rolled a 7! It's your lucky day. You won {:,} {currency}.** The remaining {:,} {currency} goes to SlimeCorp.".format(winnings, slimecorp_fee, currency = currency_used)
 			else:
 				response += "\n\nYou didn't roll 7. You lost your {}.".format(currency_used)
@@ -670,8 +672,10 @@ async def roulette(cmd):
 
 				response = "The ball landed on {}!\n".format(roll)
 				if currency_used == ewcfg.currency_soul and winnings > 0:
-						ewitem.give_item(id_item=soul_id, id_user=user_data.id_user, id_server=user_data.id_server)
-						currency_used = ewcfg.currency_slimecoin
+					if not ewitem.give_item(id_item=soul_id, id_user=user_data.id_user, id_server=user_data.id_server):
+						ewitem.give_item(id_item=soul_id, id_user=ewcfg.poi_id_thecasino, id_server=user_data.id_server)
+						response += " The dealer hands you the soul, but you're holding too many cosmetics and you drop it on the floor.\n"
+					currency_used = ewcfg.currency_slimecoin
 				else:
 					ewitem.give_item(id_item=soul_id, id_user="casinosouls", id_server=user_data.id_server)
 				if winnings > 0:
@@ -1331,7 +1335,9 @@ async def baccarat(cmd):
 					slimecorp_fee, winnings = slimecorp_collectfee(winnings)
 
 					if currency_used == ewcfg.currency_soul:
-						ewitem.give_item(id_item=soul_id, id_user=cmd.message.author.id, id_server=user_data.id_server)
+						if not ewitem.give_item(id_item=soul_id, id_user=cmd.message.author.id, id_server=user_data.id_server):
+							ewitem.give_item(id_item=soul_id, id_user=ewcfg.poi_id_thecasino, id_server=user_data.id_server)
+							response += "\n\nThe dealer hands you the soul, but you're holding too many cosmetics and you drop it on the floor."
 						currency_used = ewcfg.currency_slimecoin
 
 					response += "\n\n**You won {:,} {currency}!** The remaining {:,} {currency} goes to SlimeCorp.".format(winnings, slimecorp_fee, currency = currency_used)
@@ -2816,10 +2822,12 @@ async def buysoul(cmd):
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		ewitem.give_item(id_user=cmd.message.author.id, id_server=cmd.guild.id, id_item=selected_item.id_item)
-		user_data.change_slimecoin(coinsource=ewcfg.coinsource_spending, n= -ewcfg.soulprice)  # current price for souls is 500 mil slimecoin
-		user_data.persist()
-		response = "You buy {} off the casino. This will be fun.".format(selected_item.item_props.get('cosmetic_name'))
+		if ewitem.give_item(id_user=cmd.message.author.id, id_server=cmd.guild.id, id_item=selected_item.id_item):
+			user_data.change_slimecoin(coinsource=ewcfg.coinsource_spending, n= -ewcfg.soulprice)  # current price for souls is 500 mil slimecoin
+			user_data.persist()
+			response = "You buy {} off the casino. This will be fun.".format(selected_item.item_props.get('cosmetic_name'))
+		else:
+			response = "How do you expect to buy a soul when you cant even hold it? Dump some cosmetics weirdo."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 def slimecorp_collectfee(winnings):
