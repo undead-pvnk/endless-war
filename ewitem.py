@@ -1640,11 +1640,11 @@ def give_item(
 
 		# Reset the weapon's damage modifying stats
 		if item.item_type == ewcfg.it_weapon:
+			item.id_owner = id_user
 			item.item_props["kills"] = 0
 			item.item_props["consecutive_hits"] = 0
 			item.item_props["time_lastattack"] = 0
 			item.persist()
-
 	return True
 
 

@@ -3194,15 +3194,20 @@ def is_player_inventory(id_inventory, id_server):
 	conn_info = databaseConnect()
 	conn = conn_info.get('conn')
 	cursor = conn.cursor()
+	result = None
 
 	# Try to grab a value from a user with given id
-	cursor.execute("SELECT {} FROM users WHERE id_user = %s AND id_server = %s".format(
-		ewcfg.col_rand_seed
-	), (
-		id_inventory,
-		id_server
-	))
-	result = cursor.fetchone()
+	try:
+		cursor.execute("SELECT {} FROM users WHERE id_user = %s AND id_server = %s".format(
+			ewcfg.col_rand_seed
+		), (
+			id_inventory,
+			id_server
+		))
+		result = cursor.fetchone()
+	finally:
+		cursor.close()
+		databaseClose(conn_info)
 
 	if result != None:
 		return True
