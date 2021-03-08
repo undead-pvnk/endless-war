@@ -287,7 +287,7 @@ async def prank_item_effect_response(cmd, item):
 		ewutils.active_target_map[pranker_data.id_user] = pranked_data.id_user
 		ewutils.active_target_map[pranked_data.id_user] = pranker_data.id_user
 		ewutils.moves_active[pranker_data.id_user] = 0
-		#ewutils.moves_active[pranked_data.id_user] = 0
+		ewutils.moves_active[pranked_data.id_user] = 0
 		ewutils.active_restrictions[pranker_data.id_user] = 2 
 		ewutils.active_restrictions[pranked_data.id_user] = 2
 		
