@@ -2063,9 +2063,11 @@ async def releasefish(cmd):
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "aquarium" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
-				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.guild.id)
-				response = "The mysterious individual running the fish luring stall helps you coax the fish out of its tank."
-				ewitem.item_delete(id_item=item_sought.get('id_item'))
+				if ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.guild.id):
+					response = "The mysterious individual running the fish luring stall helps you coax the fish out of its tank."
+					ewitem.item_delete(id_item=item_sought.get('id_item'))
+				else:
+					response = "The individual running the fish luring stall coaxes the fish out of the tank, but you can't hold it, so they put it back and berate you for wasting their time."
 			elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
 				response = "Uh oh. This one's not coming out. "
 			else:
@@ -2097,9 +2099,12 @@ async def releaseprop(cmd):
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "propstand" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
-				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.guild.id)
-				response = "After a bit of tugging, you and the mysterious individual running the prop release stall pry the item of its stand."
-				ewitem.item_delete(id_item=item_sought.get('id_item'))
+				if ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.guild.id):
+					response = "After a bit of tugging, you and the mysterious individual running the prop release stall pry the item of its stand."
+					ewitem.item_delete(id_item=item_sought.get('id_item'))
+				else:
+					stood_item = EwItem(id_item=item.item_props.get('acquisition'))
+					response = "You can't carry any more {}s, so this is staying on the stand.".format(stood_item.item_type)
 			elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
 				response = "Uh oh. This one's not coming out. "
 			else:
@@ -2119,9 +2124,11 @@ async def unpot(cmd):
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "flowerpot" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
-				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.guild.id)
-				response = "You yank the foliage out of the pot."
-				ewitem.item_delete(id_item=item_sought.get('id_item'))
+				if ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.guild.id):
+					response = "You yank the foliage out of the pot."
+					ewitem.item_delete(id_item=item_sought.get('id_item'))
+				else:
+					response = "You try to yank at the foliage, but your hands are already full of food!"
 			else:
 				response = "Get the pot before you unpot it."
 		else:

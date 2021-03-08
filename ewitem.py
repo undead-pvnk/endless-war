@@ -555,48 +555,17 @@ def item_lootrandom(id_server = None, id_user = None):
 
 			response += "You found a {}!".format(item_sought.get('name'))
 
-			if item_sought.get('item_type') == ewcfg.it_food:
-				food_items = inventory(
-					id_user = id_user,
-					id_server = id_server,
-					item_type_filter = ewcfg.it_food
-				)
-
-				if len(food_items) >= user_data.get_food_capacity():
-					response += " But you couldn't carry any more food items, so you tossed it back."
-				else:
-					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
-			elif item_sought.get('item_type') == ewcfg.it_weapon:
-				weapons_held = inventory(
-					id_user = id_user,
-					id_server = id_server,
-					item_type_filter = ewcfg.it_weapon
-				)
-
-				if len(weapons_held) >= user_data.get_weapon_capacity():
-					response += " But you couldn't carry any more weapons, so you tossed it back."
-				else:
-					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
-
+			if check_inv_capacity(id_user = id_user, id_server = id_server, item_type = item_sought.get('item_type')):
+				if item_sought.get('name') == "Slime Poudrin":
+					ewstats.change_stat(
+						id_server=user_data.id_server,
+						id_user=user_data.id_user,
+						metric=ewcfg.stat_poudrins_looted,
+						n=1
+					)
+				give_item(id_user=id_user, id_server=id_server, id_item=id_item)
 			else:
-				other_items = inventory(
-				id_user=id_user,
-				id_server=id_server,
-				item_type_filter=item_sought.get('item_type')
-				)
-
-				if len(other_items) >= ewcfg.generic_inv_limit:
-					response = " But you couldn't carry any more of those, so you tossed it back"
-
-				else:
-					if item_sought.get('name') == "Slime Poudrin":
-						ewstats.change_stat(
-							id_server = user_data.id_server,
-							id_user = user_data.id_user,
-							metric = ewcfg.stat_poudrins_looted,
-							n = 1
-						)
-					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
+				response += " But you couldn't carry any more {}s, so you tossed it back.".format(item_sought.get('item_type'))
 
 		else:
 			response += "You found a... oh, nevermind, it's just a piece of trash."
@@ -686,7 +655,10 @@ def item_loot(
 
 	except:
 		ewutils.logMsg("Failed to loot items from user {}".format(member.id))
-			
+
+"""
+	Return false if a player's inventory is at or over capacity for a specific item type
+"""
 
 def check_inv_capacity(id_user = None, id_server = None, item_type = None):
 	if id_user is not None and id_server is not None and item_type is not None:
@@ -1640,6 +1612,20 @@ def give_item(
 		id_user = str(member.id)
 
 	if id_server is not None and id_user is not None and id_item is not None:
+		item = EwItem(id_item=id_item)
+
+		# Ensure general limit implementation
+		if ewutils.is_player_inventory(id_user, id_server):
+			# But only for players
+			other_items = inventory(
+					id_user=id_user,
+					id_server=id_server,
+					item_type_filter=item.item_type
+				)
+
+			if len(other_items) >= ewcfg.generic_inv_limit:
+				return False
+
 		ewutils.execute_sql_query(
 			"UPDATE items SET id_user = %s WHERE id_server = %s AND {id_item} = %s".format(
 				id_item = ewcfg.col_id_item
@@ -1652,7 +1638,6 @@ def give_item(
 
 		remove_from_trades(id_item)
 
-		item = EwItem(id_item = id_item)
 		# Reset the weapon's damage modifying stats
 		if item.item_type == ewcfg.it_weapon:
 			item.item_props["kills"] = 0
@@ -1660,7 +1645,7 @@ def give_item(
 			item.item_props["time_lastattack"] = 0
 			item.persist()
 
-	return
+	return True
 
 
 def soulbind(id_item):

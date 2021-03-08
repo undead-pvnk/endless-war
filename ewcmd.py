@@ -2295,6 +2295,8 @@ async def wrap(cmd):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		if item.soulbound:
 			response = "It's a nice gesture, but trying to gift someone a Soulbound item is going a bit too far, don't you think?"
+		elif ewitem.check_inv_capacity(id_user = cmd.message.author.id, id_server = cmd.guild.id, item_type = ewcfg.it_item):
+			response = ewcfg.str_generic_inv_limit.format(ewcfg.it_item)
 		else:
 			gift_name = "Gift"
 			
@@ -2339,37 +2341,38 @@ async def unwrap(cmd):
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_item:
 			if item.item_props.get('id_item') == "gift":
-				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user=cmd.message.author.id, id_server=cmd.guild.id)
-				
-				gifted_item = EwItem(id_item=item.item_props.get('acquisition'))
-				
-				gift_name_type = ''
-				if gifted_item.item_type == ewcfg.it_item:
-					gift_name_type = 'item_name'
-				elif gifted_item.item_type == ewcfg.it_medal:
-					gift_name_type = 'medal_name'
-				elif gifted_item.item_type == ewcfg.it_questitem:
-					gift_name_type = 'qitem_name'
-				elif gifted_item.item_type == ewcfg. it_food:
-					gift_name_type = 'food_name'
-				elif gifted_item.item_type == ewcfg.it_weapon:
-					gift_name_type = 'weapon_name'
-				elif gifted_item.item_type == ewcfg.it_cosmetic:
-					gift_name_type = 'cosmetic_name'
-				elif gifted_item.item_type == ewcfg.it_furniture:
-					gift_name_type = 'furniture_name'
-				elif gifted_item.item_type == ewcfg.it_book:
-					gift_name_type = 'title'
-				
-				gifted_item_name = gifted_item.item_props.get('{}'.format(gift_name_type))
-				gifted_item_message = item.item_props.get('context')
+				if ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user=cmd.message.author.id, id_server=cmd.guild.id):
+					gifted_item = EwItem(id_item=item.item_props.get('acquisition'))
 
-				#user_data = EwUser(member=cmd.message.author)
-				#user_data.festivity += ewcfg.festivity_on_gift_wrapping
-				#user_data.persist()
-				
-				response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)
-				ewitem.item_delete(id_item=item_sought.get('id_item'))
+					gift_name_type = ''
+					if gifted_item.item_type == ewcfg.it_item:
+						gift_name_type = 'item_name'
+					elif gifted_item.item_type == ewcfg.it_medal:
+						gift_name_type = 'medal_name'
+					elif gifted_item.item_type == ewcfg.it_questitem:
+						gift_name_type = 'qitem_name'
+					elif gifted_item.item_type == ewcfg. it_food:
+						gift_name_type = 'food_name'
+					elif gifted_item.item_type == ewcfg.it_weapon:
+						gift_name_type = 'weapon_name'
+					elif gifted_item.item_type == ewcfg.it_cosmetic:
+						gift_name_type = 'cosmetic_name'
+					elif gifted_item.item_type == ewcfg.it_furniture:
+						gift_name_type = 'furniture_name'
+					elif gifted_item.item_type == ewcfg.it_book:
+						gift_name_type = 'title'
+
+					gifted_item_name = gifted_item.item_props.get('{}'.format(gift_name_type))
+					gifted_item_message = item.item_props.get('context')
+
+					#user_data = EwUser(member=cmd.message.author)
+					#user_data.festivity += ewcfg.festivity_on_gift_wrapping
+					#user_data.persist()
+
+					response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)
+					ewitem.item_delete(id_item=item_sought.get('id_item'))
+				else:
+					response = "Whatever's inside, you can't hold anymore!"
 			else:
 				response = "You can't unwrap something that isn't a gift, bitch."
 		else:

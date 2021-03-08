@@ -1884,7 +1884,7 @@ async def loop(cmd):
 		move_counter += 1
 		move_current = ewutils.moves_active[cmd.message.author.id] = move_counter
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You start looping to {}.".format(dest_poi_obj.str_name)))
-		await asyncio.sleep(20)
+		await asyncio.sleep(60)
 
 		if move_current == ewutils.moves_active[cmd.message.author.id]:
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "**VOIIII-**".format(dest_poi_obj.str_name)))
