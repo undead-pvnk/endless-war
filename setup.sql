@@ -91,6 +91,7 @@ CREATE TABLE markets (
 	global_swear_jar bigint NOT NULL DEFAULT '0',
 	horseman_deaths int NOT NULL DEFAULT '0',
 	horseman_timeofdeath int NOT NULL DEFAULT '0',
+	winner varchar(32) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_server)
 );

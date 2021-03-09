@@ -33,7 +33,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.71 - No Slimernalia"
+version = "v3.72slimefest"
 
 
 dir_msgqueue = 'msgqueue'
@@ -784,6 +784,7 @@ channel_atomicforest = "atomic-forest"
 channel_downpourlaboratory = "downpour-laboratory"
 
 channel_prankfeed = "prank-feed"
+channel_slimefest = "slimefest"
 
 # Placeholders
 channel_copkilltown_street_a = "cop-killtown-street-a"
@@ -1185,6 +1186,8 @@ cmd_clockout = cmd_prefix + 'clockout'
 cmd_sanitize = cmd_prefix + 'sanitize'
 cmd_paycheck = cmd_prefix + 'paycheck'
 cmd_payday = cmd_prefix + 'payday'
+cmd_win = cmd_prefix + 'win'
+cmd_slimefest = cmd_prefix + 'slimefest'
 
 cmd_preserve = cmd_prefix + 'preserve'
 cmd_stink = cmd_prefix + 'stink'
@@ -2344,6 +2347,7 @@ col_decayed_slimes = 'decayed_slimes'
 col_donated_slimes = 'donated_slimes'
 col_donated_poudrins = 'donated_poudrins'
 col_splattered_slimes = 'splattered_slimes'
+col_winner = 'winner'
 
 # Database columns for stocks
 col_stock = 'stock'
