@@ -272,3 +272,21 @@ async def pa_command(cmd):
 				if len(patext) > 500:
 					patext = patext[:-500]
 				return await ewutils.send_message(cmd.client, loc_channel, patext)
+
+
+
+async def hogtie(cmd):
+	if not cmd.message.author.guild_permissions.administrator:
+		return await ewutils.fake_failed_command(cmd)
+	else:
+		if cmd.mentions_count == 1:
+			target_data = EwUser(member = cmd.mentions[0])
+			target_status = target_data.getStatusEffects()
+			if ewcfg.status_hogtied_id in target_status:
+				target_data.clear_status(id_status=ewcfg.status_hogtied_id)
+				response = "Whew-whee! She's buckin' so we gotta let 'er go."
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			else:
+				target_data.applyStatus(ewcfg.status_hogtied_id)
+				response = "Boy howdy! Looks like we lasso'd up a real heifer there! A dang ol' big'un."
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

@@ -1455,6 +1455,8 @@ cmd_entomize = cmd_prefix + 'entomize'
 cmd_confuse = cmd_prefix + 'confuse'
 cmd_shamble = cmd_prefix + 'shamble'
 
+cmd_hogtie = cmd_prefix + 'hogtie'
+
 # Slime Twitter
 cmd_tweet = cmd_prefix + 'tweet'
 cmd_verification = cmd_prefix + 'requestverification'
@@ -12222,7 +12224,7 @@ status_injury_arms_id = "injury_arms"
 status_injury_legs_id = "injury_legs"
 
 status_kevlarattire_id = "kevlarattire"
-
+status_hogtied_id = "hogtied"
 
 time_expire_burn = 12
 time_expire_high = 30 * 60 # 30 minutes
@@ -12396,6 +12398,11 @@ status_effect_list = [
 		str_acquire = "",
 		str_describe_self = "You're dressed to the nines in the latest Kevlar work attire.",
 		dmg_mod = -0.2
+	),
+	EwStatusEffectDef(
+		id_status = status_hogtied_id,
+		str_acquire= "They're tied up like a hog on a summer sunday.",
+		str_describe_self= "You're tied up like a hog on a summer sunday."
 	),
 ]
 

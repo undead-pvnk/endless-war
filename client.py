@@ -851,7 +851,8 @@ cmd_map = {
 	# Check your weapon masteries
 	ewcfg.cmd_mastery: ewcmd.check_mastery,
 	ewcfg.cmd_getattire: ewcmd.get_attire,
-	ewcfg.cmd_pacommand: ewkingpin.pa_command
+	ewcfg.cmd_pacommand: ewkingpin.pa_command,
+	ewcfg.cmd_hogtie: ewkingpin.hogtie
 }
 
 debug = False
@@ -1437,8 +1438,14 @@ async def on_message(message):
 
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
-	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
+		if str(message.channel) in ["nurses-office", "suggestion-box", "detention-center", "community-service", "playground", "graffiti-wall", "post-slime-drip", "outside-the-lunchroom", "outside-the-lunchrooom"]:
+			if ewcfg.status_hogtied_id in statuses:
+				response = random.choice(["MMMPH!", "MBBBBB", "HMMHM", "MMMMMHMMF!"])
+				await ewutils.send_message(client, message.channel, response)
+				await message.delete()
+				return
+
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())) or message.channel in ["nurses-office", "suggestion-box", "detention-center", "community-service", "playground", "graffiti-wall", "post-slime-drip", "outside-the-lunchroom", "outside-the-lunchrooom"]:
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
@@ -1550,7 +1557,8 @@ async def on_message(message):
 			# if the message wasn't a command, we can stop here
 			if not message.content.startswith(ewcfg.cmd_prefix):
 				return
-		
+
+
 		"""
 			Handle direct messages.
 		"""
