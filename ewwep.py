@@ -331,6 +331,9 @@ def canAttack(cmd, amb_switch = 0):
 		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
 	elif ewcfg.mutation_id_ambidextrous in mutations and user_data.weapon == -1 and user_data.sidearm == -1 and user_data.life_state != ewcfg.life_state_shambler and ewcfg.mutation_id_lethalfingernails not in mutations:
 		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
+	elif district_data.cap_side == "slimecorp" and district_data.capture_points >= ewcfg.limit_influence[district_data.property_class]:
+		response = "Slimecorp has fully gentrified this place. They've got comm stations everywhere, nobody can shed a drop of blood in {}.".format(poi.str_name)
+
 	elif cmd.mentions_count <= 0:
 		# user is going after enemies rather than players
 
@@ -518,7 +521,7 @@ def canCap(cmd, capture_type, roomba_loop = 0):
 	elif sidearm_viable == 0:
 		response = "With what, your piss? Get some paint from Based Hardware and stop fucking around."
 	elif district_data.cap_side == "slimecorp" and district_data.capture_points >= ewcfg.limit_influence[district_data.property_class]:
-		response = "Slimecorp has fully gentrified this place. They've got comm stations everywhere, nobody can lay a finger on {}.".format(poi.str_name)
+		response = "Slimecorp has fully gentrified this place. They've got comm stations everywhere. Nobody can lay a finger on {}!".format(poi.str_name)
 	#elif not 3 <= market_data.clock <= 10 and user_data.faction != ewcfg.faction_slimecorp:
 	#	response = "You can't !spray while all these people are around. The cops are no problem but the street sweepers will fucking kill you."
 	#elif not 3 <= market_data.clock <= 10 and user_data.faction == ewcfg.faction_slimecorp:
@@ -3450,7 +3453,7 @@ async def sanitize(cmd):
 
 						if district_data.cap_side == "slimecorp" or district_data.cap_side == "":
 							response = "Your paint-filled {} covers the city in Slimecorp propaganda.".format(weapon.str_name)
-							response += " You added {:,} existing influence for Slimecorp.".format(round(int(abs(slimes_damage))/3))
+							response += " You added {:,} existing influence for Slimecorp.".format(round(int(abs(slimes_damage))))
 
 						if (user_data.faction != district_data.cap_side and district_data.cap_side != "") and (user_data.faction is not None or user_data.faction != ''):
 							slimes_damage = round(slimes_damage * -.8)
@@ -3475,7 +3478,7 @@ async def sanitize(cmd):
 						#	strikes=strikes
 						# )
 						if (district_data.cap_side == "slimecorp" or district_data.cap_side == '') == "" and crit:
-							response += " You score a critical hit adding {:,} additional influence!".format(round(abs(slimes_damage)/3))
+							response += " You score a critical hit adding {:,} additional influence!".format(round(abs(slimes_damage)))
 						elif crit:
 							response += " You score a critical hit, removing {:,} additional influence!".format(abs(slimes_damage))
 
