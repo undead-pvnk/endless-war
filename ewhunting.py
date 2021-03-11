@@ -2241,6 +2241,9 @@ def spawn_enemy(
 		if chosen_poi == "":
 			return resp_cont
 
+		if enemytype == 'titanoslime':
+			potential_chosen_poi = 'downtown'
+
 		# If an enemy spawns in the Nuclear Beach, it should be remade as a 'pre-historic' enemy.
 		if potential_chosen_poi in [ewcfg.poi_id_nuclear_beach_edge, ewcfg.poi_id_nuclear_beach, ewcfg.poi_id_nuclear_beach_depths]:
 			enemytype = random.choice(ewcfg.pre_historic_enemies)

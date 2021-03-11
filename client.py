@@ -859,7 +859,8 @@ cmd_map = {
 
 	ewcfg.cmd_mastery: ewcmd.check_mastery,
 	ewcfg.cmd_getattire: ewcmd.get_attire,
-	ewcfg.cmd_pacommand: ewkingpin.pa_command
+	ewcfg.cmd_pacommand: ewkingpin.pa_command,
+	ewcfg.cmd_surveil: ewmap.surveil
 
 }
 

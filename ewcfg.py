@@ -1357,6 +1357,8 @@ cmd_mastery = cmd_prefix + 'mastery'
 cmd_getattire = cmd_prefix + 'getattire'
 cmd_pacommand = cmd_prefix + 'pacommand'
 
+cmd_surveil = cmd_prefix + 'surveil'
+
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
 apartment_dt_multiplier = 3000000000
@@ -6856,6 +6858,18 @@ enemy_attack_type_list = [
 		str_groupattack = "{name_enemy} blows up a group of gaiaslimeoids with its grenades!",
 		fn_effect = atf_gvs_basic
 	),
+	EwAttackType(  #
+		id_type="titanoslime",
+		str_crit="NULL",
+		str_miss="**MISS!** {name_target} barely jumps out of the way of {name_enemy}'s foot!",
+		# str_trauma_self = "NULL",
+		# str_trauma = "NULL,
+		str_kill="**WRYYYYYYYY!!!!!** {name_enemy}'s collossal jowls slice {name_target} completely in half! As they lose conciousness, {name_target} can feel the burn of the acid on their face as they sink helplessly into its churning stomach. {emote_skull}",
+		str_killdescriptor="vored",
+		str_damage="{name_target} takes the brunt of {name_enemy}'s stomp!",
+		str_groupattack="{name_enemy} tailsweeps a horde of gaiaslimeoids!",
+		fn_effect=atf_tusks
+	),
 ]
 
 # A map of id_type to EwAttackType objects.
@@ -11495,7 +11509,7 @@ mutations = [
 		str_describe_self = "Your frequent, unholy belches could incapacitate a Megaslime due to **Spoiled Appetite**.",
 		str_describe_other = "Their frequent, unholy belches could incapacitate a Megaslime due to **Spoiled Appetite**.",
 		str_acquire = "You become inexplicably tired, you develop bags under your eyes and can barely keep them open without fidgeting. Stenches begin to secrete from your body, which only worsens as your stomach lets out a deep, guttural growl that sounds like a dying animal being raped by an already dead animal. Which is to say, not pleasant. You are overcome with a singular thought. “What the hell, I’ll just eat some trash.” You have developed the mutation **Spoiled Appetite**. You can now eat spoiled food.",
-		tier = 7,
+		tier = 5,
         str_transplant = "You are force-fed cole slaw for several hours. Your desensitized taste buds will never recover from this, and you feel like you could digest anything. Of course, in her infinite wisdom, Dusttrap uses organic cole slaw, so you can't even bust ghosts afterward.\n\nYou have developed the mutation **Spoiled Appetite**. You can now eat spoiled food.",
 		),
 	EwMutationFlavor(
@@ -12582,6 +12596,7 @@ status_effect_list = [
 		str_describe = "You're afraid of this guy.",
         dmg_mod = -0.5,
 		dmg_mod_self = 0.5,
+
 		crit_mod_self = .5
 	),
     EwStatusEffectDef(
@@ -13448,6 +13463,7 @@ enemy_attacktype_body = 'body'
 enemy_attacktype_stomp = 'stomp'
 enemy_attacktype_stomp_n6 = 'stompn6'
 
+
 enemy_attacktype_amateur = 'amateur'
 
 enemy_attacktype_gvs_g_seeds = 'g_seeds'
@@ -13480,6 +13496,7 @@ enemy_weathertype_rainresist = 'rainresist'
 # Common enemies
 enemy_type_juvie = 'juvie'
 enemy_type_dinoslime = 'dinoslime'
+
 # Uncommon enemies
 enemy_type_slimeadactyl = 'slimeadactyl'
 enemy_type_desertraider = 'desertraider'
@@ -13859,7 +13876,7 @@ enemy_data_table = {
 		"raredisplayname": "Miscreated Titanoslime",
 		"aliases": ["titano", "titanoslime", "biglizard"]
 	},
-	enemy_type_titanoslime: {
+	enemy_type_mutated_titanoslime: {
 		"slimerange": [10000000, 10000000],
 		"ai": enemy_ai_attacker_b,
 		"attacktype": enemy_attacktype_stomp_n6,

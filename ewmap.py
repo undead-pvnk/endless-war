@@ -2323,6 +2323,38 @@ async def clockin(cmd):
 
             await ewutils.send_message(cmd.client, ewutils.get_channel(server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
 
+async def surveil(cmd):
+    user_data = EwUser(member = cmd.message.author)
+    players = []
+    districts = []
+    response = ""
+    if user_data.poi != ewcfg.poi_id_thebreakroom:
+        response = "You need to be in the Slimecorp Breakroom to spy on the masses."
+        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+
+    for poi in ewcfg.poi_list:
+        if poi.is_district and poi.is_capturable == True:
+            districts.append(poi)
+
+    for district in districts:
+        dist_obj = EwDistrict(id_server=cmd.guild.id, district=district.id_poi)
+        if dist_obj.capture_points >= ewcfg.limit_influence[dist_obj.property_class] and dist_obj.cap_side == 'slimecorp':
+            players.extend(dist_obj.get_players_in_district(life_states=[ewcfg.life_state_enlisted]))
+
+    if len(players) > 0:
+        for player in players:
+            target_obj = EwUser(id_user=player, id_server = cmd.guild.id)
+            player_obj = EwPlayer(id_user=player, id_server = cmd.guild.id)
+            poi = ewcfg.id_to_poi.get(target_obj.poi)
+            response += "{} is in {}.\n".format(player_obj.display_name, poi.str_name)
+    else:
+        response = "Nobody's out on the cameras now."
+
+    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 async def flush_subzones(cmd):
     member = cmd.message.author
 

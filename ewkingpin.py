@@ -273,3 +273,4 @@ async def pa_command(cmd):
 				if len(patext) > 500:
 					patext = patext[:-500]
 				return await ewutils.send_message(cmd.client, loc_channel, patext)
+
