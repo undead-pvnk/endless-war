@@ -1246,7 +1246,7 @@ async def quarterlyreport(cmd):
 			response += " THE QUARTERLY GOAL HAS BEEN REACHED. PLEASE STAY TUNED FOR FURTHER ANNOUNCEMENTS."
 	else:
 		goal1 = 'SLIME DONATED'
-		objective1 = 10000000000
+		objective1 = 1000000000
 		progress1 = 0
 		goal2 = 'SLIMECOIN DONATED'
 		objective2 = 1000000000000000000
