@@ -33,7 +33,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.71 - No Slimernalia"
+version = "v3.72slimefest"
 
 
 dir_msgqueue = 'msgqueue'
@@ -799,6 +799,7 @@ channel_atomicforest = "atomic-forest"
 channel_downpourlaboratory = "downpour-laboratory"
 
 channel_prankfeed = "prank-feed"
+channel_slimefest = "slimefest"
 
 # Placeholders
 channel_copkilltown_street_a = "cop-killtown-street-a"
@@ -1203,6 +1204,8 @@ cmd_clockout = cmd_prefix + 'clockout'
 cmd_sanitize = cmd_prefix + 'sanitize'
 cmd_paycheck = cmd_prefix + 'paycheck'
 cmd_payday = cmd_prefix + 'payday'
+cmd_win = cmd_prefix + 'win'
+cmd_slimefest = cmd_prefix + 'slimefest'
 
 cmd_preserve = cmd_prefix + 'preserve'
 cmd_stink = cmd_prefix + 'stink'
@@ -1477,6 +1480,8 @@ cmd_flutter = cmd_prefix + 'flutter'
 cmd_entomize = cmd_prefix + 'entomize'
 cmd_confuse = cmd_prefix + 'confuse'
 cmd_shamble = cmd_prefix + 'shamble'
+
+cmd_hogtie = cmd_prefix + 'hogtie'
 
 # Slime Twitter
 cmd_tweet = cmd_prefix + 'tweet'
@@ -2376,6 +2381,7 @@ col_decayed_slimes = 'decayed_slimes'
 col_donated_slimes = 'donated_slimes'
 col_donated_poudrins = 'donated_poudrins'
 col_splattered_slimes = 'splattered_slimes'
+col_winner = 'winner'
 
 # Database columns for stocks
 col_stock = 'stock'
@@ -5263,7 +5269,7 @@ weapon_list = [
 		str_reload = "You tilt your shotgun and pop shell after shell into its chamber before cocking the forend back. Groovy.",
 		str_reload_warning = "**chk--** *...* **SHIT!!** {name_player}’s shotgun has ejected the last shell in it’s chamber, it’s out of ammo!!",
 		str_scalp = " It has a gaping hole in the center.",
-		fn_effect = get_normal_attack(cost_multiplier = 4, weapon_type = 'heavy'),
+		fn_effect = get_normal_attack(cost_multiplier = 2.5, weapon_type = 'heavy'),
 		clip_size = 2,
 		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
@@ -12387,7 +12393,7 @@ status_injury_arms_id = "injury_arms"
 status_injury_legs_id = "injury_legs"
 
 status_kevlarattire_id = "kevlarattire"
-
+status_hogtied_id = "hogtied"
 
 time_expire_burn = 12
 time_expire_high = 30 * 60 # 30 minutes
@@ -12632,7 +12638,12 @@ status_effect_list = [
 		str_acquire = "",
 		str_describe_self = "You're dressed to the nines in the latest Kevlar work attire.",
 		dmg_mod = -0.2
-	)
+	),
+	EwStatusEffectDef(
+		id_status = status_hogtied_id,
+		str_acquire= "They're tied up like a hog on a summer sunday.",
+		str_describe_self= "You're tied up like a hog on a summer sunday."
+	),
 ]
 
 status_effects_def_map = {}
@@ -13166,7 +13177,7 @@ help_responses = {
 	"multiple-hit": "**Multiple hit weapons** include the **SMG**, **Assault Rifle**, and the **Nunchuck**. They deal three attacks per kill command with an overall cost modifier of 80%, and each attack has a 40% damage modifier, 20% crit chance, a crit multiplier of 150%, and an 85% chance to hit. These are very safe reliable weapons, though they deal slightly below average damage on average.",
 	"variable-damage": "**Variable damage weapons** include the **Nailbat**, **Bass**, and the **Brass Knuckles**. They have a randomised damage modifier between 50% and 250%, no cost modifier, 10% crit chance, a crit multiplier of 150%, and a 90% chance to hit. On average, these weapons deal pretty good damage for a very reasonable attack cost, but their unreliability can make them quite risky to use.",
 	"small-game": "**Small game weapons** include the **Knives** and the **Minecraft Bow**. They have a damage modifier of 50%, a cost modifier of 25%, 10% crit chance, a crit multiplier of 200%, and a 95% chance to hit. These are reliable and underpowered weapons, with extremely low usage costs making them very efficient. Best used for bullying weaklings and hunting.",
-	"heavy": "**Heavy weapons** include the **Scythe** and the **Broadsword**. They have a damage modifier of 300%, a cost modifier of 500%, 5% crit chance, a crit multiplier of 150%, and an 80% chance to hit. Unreliable and incredibly expensive to use, to compensate for their very high damage.",
+	"heavy": "**Heavy weapons** include the **Scythe**, **Shotgun**, and the **Broadsword**. They have a damage modifier of 170%, a cost modifier of 275%, 10% crit chance, a crit multiplier of 150%, and an 80% chance to hit. Unreliable and incredibly expensive to use, to compensate for their very high damage.",
 	"defensive": "**Defensive weapons** currently only include the **Umbrella**. While you have one equipped, you take 25% reduced damage! They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 150%, and an 85% chance to hit, with a captcha of 4. Best used for punching down or protecting yourself while traveling, these weapons are typically too weak and unwieldy for use in normal combat scenarios.",
 	"precision": "**Precision weapons** currently only include the **Katana**. They have a damage modifier of 130%, a cost modifier of 130%, a crit multiplier of 200%, with a captcha of 4. They always hit, and get a guaranteed crit if you have no other weapons equipped. These weapons deal very high and reliably damage, but only if you're willing to bear the burden of their captcha and the lack of flexibility they impose.",
 	"incendiary": "**Incendiary weapons** include the **Molotov Bottles** and the **Dragon Claw**. They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 200%, a 90% chance to hit, and a captcha of 4. You will take 10% to 15% of your slime as damage if you enter the captcha wrong! They also deal an extra 50% damage to the target and any flagged enemies in the area over time, causing them to explode on death. A more powerful alternative to explosive weapons, if you can deal with the damage being dealt over time, rather than on one go.",
@@ -13174,7 +13185,7 @@ help_responses = {
 
 	weapon_id_revolver: "**The revolver** is a normal weapon for sale at the Dojo. It's an ordinary six-shot revolver, so you'll have to **!reload** it after attacking six times, though its attack cost is reduced to 80% to compensate. Goes well with a cowboy hat.",
 	weapon_id_dualpistols: "**The dual pistols** are a normal weapon for sale at the Dojo. Shockingly, these aren't that common, despite the city being chock-full of gangsters.",
-	weapon_id_shotgun: "**The shotgun** is a heavy weapon for sale at the Dojo. It's a double barrelled shotgun, so you'll need to !reload after every two shots, though your cost multiplier is reduced down to 400% to compensate. Grass grows, birds fly, sun shines, and this thing hurts people; it's a force of nature.",
+	weapon_id_shotgun: "**The shotgun** is a heavy weapon for sale at the Dojo. It's a double barrelled shotgun, so you'll need to !reload after every two shots, though your cost multiplier is reduced down to 250% to compensate. Grass grows, birds fly, sun shines, and this thing hurts people; it's a force of nature.",
 	weapon_id_rifle: "**The rifle** is a multiple-hit weapon for sale at the Dojo. Its magazine only holds enough bullets for ten attacks, so you'll have to **!reload** after hitting the rate limit, but its cost multiplier goes down to 70% to compensate. The experts are still undecided, but most people would agree this is a FAMAS.",
 	weapon_id_smg: "**The SMG** is a multiple hit-weapon for sale at the Dojo. Its magazine only holds enough bullets for ten attacks, so you'll have to **!reload** after hitting the rate limit, but its cost multiplier goes down to 70% to compensate. This is pretty good if you like to move around a lot, since the crosshair doesn't grow that much while you're sprinting.",
 	weapon_id_bat: "**The nailbat** is a variable-damage weapon for sale at the Dojo. This thing could actually be used to hit balls if you took the nails off it, but that seems a little high-tech...",
@@ -13283,7 +13294,7 @@ mutation_descriptions = {
     mutation_id_airlock:"Combined effects of White Nationalist and Light as a Feather. This mutation is mutually exclusive with those. You also gain passive hunger when it's sunny, fire immunity in rain, and crit bonuses in the fog.",
     mutation_id_ambidextrous:"If you are unarmed or have a tool equipped, and have a weapon in your sidearm slot, you will default to that weapon.",
     mutation_id_coleblooded:"You get the ability to bust ghosts without coleslaw. If a ghost haunts you, they lose negaslime instead of gaining it.",
-    mutation_id_landlocked:"When standing in a street either bordering an outskirt or the Slime Sea, use !loop to warp to the opposite side of the map. This also works on the ferry and at Slime's End Cliffs. There is a 20 second travel time when using !loop.",
+    mutation_id_landlocked:"When standing in a street either bordering an outskirt or the Slime Sea, use !loop to warp to the opposite side of the map. This also works on the ferry and at Slime's End Cliffs. There is a 60 second travel time when using !loop.",
 	mutation_id_amnesia:"Your display name is replaced with ????? in EW's messages, and you can delete your message commands without ENDLESS WAR reacting. On a kill, the kill feed message is delayed by 60 seconds."
 
 }

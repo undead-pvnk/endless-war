@@ -40,6 +40,9 @@ class EwMarket:
 	horseman_deaths = 0
 	horseman_timeofdeath = 0
 
+	# slimefest
+	winner = ''
+
 	# Dict of bazaar items available for purchase
 	bazaar_wares = None
 
@@ -55,7 +58,7 @@ class EwMarket:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath} FROM markets WHERE id_server = %s".format(
+				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}, {winner} FROM markets WHERE id_server = %s".format(
 					time_lasttick = ewcfg.col_time_lasttick,
 					slimes_revivefee = ewcfg.col_slimes_revivefee,
 					negaslime = ewcfg.col_negaslime,
@@ -70,6 +73,7 @@ class EwMarket:
 					global_swear_jar = ewcfg.col_global_swear_jar,
 					horseman_deaths = ewcfg.col_horseman_deaths,
 					horseman_timeofdeath = ewcfg.col_horseman_timeofdeath,
+					winner = ewcfg.col_winner
 					
 				), (self.id_server, ))
 				result = cursor.fetchone();
@@ -90,6 +94,7 @@ class EwMarket:
 					self.global_swear_jar = result[11]
 					self.horseman_deaths = result[12]
 					self.horseman_timeofdeath = result[13]
+					self.winner = result[14]
 
 					cursor.execute("SELECT {}, {} FROM bazaar_wares WHERE {} = %s".format(
 						ewcfg.col_name,
@@ -124,7 +129,7 @@ class EwMarket:
 			cursor = conn.cursor();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}, {winner}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				id_server = ewcfg.col_id_server,
 				time_lasttick = ewcfg.col_time_lasttick,
 				slimes_revivefee = ewcfg.col_slimes_revivefee,
@@ -140,6 +145,7 @@ class EwMarket:
 				global_swear_jar = ewcfg.col_global_swear_jar,
 				horseman_deaths = ewcfg.col_horseman_deaths,
 				horseman_timeofdeath = ewcfg.col_horseman_timeofdeath,
+				winner = ewcfg.col_winner
 			), (
 				self.id_server,
 				self.time_lasttick,
@@ -156,6 +162,7 @@ class EwMarket:
 				self.global_swear_jar,
 				self.horseman_deaths,
 				self.horseman_timeofdeath,
+				self.winner
 			))
 
 			cursor.execute("DELETE FROM bazaar_wares WHERE {} = %s".format(

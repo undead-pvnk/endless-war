@@ -537,78 +537,48 @@ def item_lootspecific(id_server = None, id_user = None, item_search = None):
     Transfer a random item from district inventory to player inventory
 """
 def item_lootrandom(id_server = None, id_user = None):
-    response = ""
+	response = ""
 
-    try:
-        user_data = EwUser(id_server = id_server, id_user = id_user)
+	try:
+		user_data = EwUser(id_server = id_server, id_user = id_user)
 
-        items_in_poi = ewutils.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
-                id_item = ewcfg.col_id_item,
-                id_owner = ewcfg.col_id_user,
-                id_server = ewcfg.col_id_server
-            ),(
-                user_data.poi,
-                id_server
-            ))
+		items_in_poi = ewutils.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
+				id_item = ewcfg.col_id_item,
+				id_owner = ewcfg.col_id_user,
+				id_server = ewcfg.col_id_server
+			),(
+				user_data.poi,
+				id_server
+			))
 
-        if len(items_in_poi) > 0:
-            id_item = random.choice(items_in_poi)[0]
+		if len(items_in_poi) > 0:
+			id_item = random.choice(items_in_poi)[0]
 
-            item_sought = find_item(item_search = str(id_item), id_user = user_data.poi, id_server = id_server)
+			item_sought = find_item(item_search = str(id_item), id_user = user_data.poi, id_server = id_server)
 
-            response += "You found a {}!".format(item_sought.get('name'))
+			response += "You found a {}!".format(item_sought.get('name'))
 
-            if item_sought.get('item_type') == ewcfg.it_food:
-                food_items = inventory(
-                    id_user = id_user,
-                    id_server = id_server,
-                    item_type_filter = ewcfg.it_food
-                )
+			if check_inv_capacity(id_user = id_user, id_server = id_server, item_type = item_sought.get('item_type')):
+				if item_sought.get('name') == "Slime Poudrin":
+					ewstats.change_stat(
+						id_server=user_data.id_server,
+						id_user=user_data.id_user,
+						metric=ewcfg.stat_poudrins_looted,
+						n=1
+					)
+				give_item(id_user=id_user, id_server=id_server, id_item=id_item)
+			else:
+				response += " But you couldn't carry any more {}s, so you tossed it back.".format(item_sought.get('item_type'))
 
-                if len(food_items) >= user_data.get_food_capacity():
-                    response += " But you couldn't carry any more food items, so you tossed it back."
-                else:
-                    give_item(id_user = id_user, id_server = id_server, id_item = id_item)
-            elif item_sought.get('item_type') == ewcfg.it_weapon:
-                weapons_held = inventory(
-                    id_user = id_user,
-                    id_server = id_server,
-                    item_type_filter = ewcfg.it_weapon
-                )
+		else:
+			response += "You found a... oh, nevermind, it's just a piece of trash."
 
-                if len(weapons_held) >= user_data.get_weapon_capacity():
-                    response += " But you couldn't carry any more weapons, so you tossed it back."
-                else:
-                    give_item(id_user = id_user, id_server = id_server, id_item = id_item)
+	except:
+		ewutils.logMsg("Failed to loot random item")
 
-            else:
-                other_items = inventory(
-                id_user=id_user,
-                id_server=id_server,
-                item_type_filter=item_sought.get('item_type')
-                )
+	finally:
+		return response
 
-                if len(other_items) >= ewcfg.generic_inv_limit:
-                    response = " But you couldn't carry any more of those, so you tossed it back"
-
-                else:
-                    if item_sought.get('name') == "Slime Poudrin":
-                        ewstats.change_stat(
-                            id_server = user_data.id_server,
-                            id_user = user_data.id_user,
-                            metric = ewcfg.stat_poudrins_looted,
-                            n = 1
-                        )
-                    give_item(id_user = id_user, id_server = id_server, id_item = id_item)
-
-        else:
-            response += "You found a... oh, nevermind, it's just a piece of trash."
-
-    except:
-        ewutils.logMsg("Failed to loot random item")
-
-    finally:
-        return response
 
 """
     Destroy all of a player's non-soulbound items.
@@ -648,48 +618,52 @@ def item_loot(
     member = None,
     id_user_target = -1
 ):
-    if member == None or id_user_target == -1:
-        return
 
-    try:
-        target_data = EwUser(id_user = id_user_target, id_server = member.guild.id)
-        source_data = EwUser(member = member)
+	if member == None or id_user_target == -1:
+		return
 
-        # Transfer adorned cosmetics
-        data = ewutils.execute_sql_query(
-            "SELECT id_item FROM items " +
-            "WHERE id_user = %s AND id_server = %s AND soulbound = 0 AND item_type = %s AND id_item IN (" +
-                "SELECT id_item FROM items_prop " +
-                "WHERE name = 'adorned' AND value = 'true' " +
-            ")"
-        ,(
-            member.id,
-            member.guild.id,
-            ewcfg.it_cosmetic
-        ))
+	try:
+		target_data = EwUser(id_user = id_user_target, id_server = member.guild.id)
+		source_data = EwUser(member = member)
 
-        for row in data:
-            item_data = EwItem(id_item = row[0])
-            item_data.item_props["adorned"] = 'false'
-            item_data.id_owner = id_user_target
-            item_data.persist()
+		# Transfer adorned cosmetics
+		data = ewutils.execute_sql_query(
+			"SELECT id_item FROM items " +
+			"WHERE id_user = %s AND id_server = %s AND soulbound = 0 AND item_type = %s AND id_item IN (" +
+				"SELECT id_item FROM items_prop " +
+				"WHERE name = 'adorned' AND value = 'true' " +
+			")"
+		,(
+			member.id,
+			member.guild.id,
+			ewcfg.it_cosmetic
+		))
 
+		for row in data:
+			item_data = EwItem(id_item = row[0])
+			item_data.item_props["adorned"] = 'false'
+			item_data.id_owner = id_user_target
+			item_data.persist()
+				
 
-        ewutils.logMsg('Transferred {} cosmetic items.'.format(len(data)))
+		ewutils.logMsg('Transferred {} cosmetic items.'.format(len(data)))
 
-        if source_data.weapon >= 0:
-            weapons_held = inventory(
-                id_user = target_data.id_user,
-                id_server = target_data.id_server,
-                item_type_filter = ewcfg.it_weapon
-            )
+		if source_data.weapon >= 0:
+			weapons_held = inventory(
+				id_user = target_data.id_user,
+				id_server = target_data.id_server,
+				item_type_filter = ewcfg.it_weapon
+			)
 
-            if len(weapons_held) <= target_data.get_weapon_capacity():
-                give_item(id_user = target_data.id_user, id_server = target_data.id_server, id_item = source_data.weapon)
+			if len(weapons_held) <= target_data.get_weapon_capacity():
+				give_item(id_user = target_data.id_user, id_server = target_data.id_server, id_item = source_data.weapon)
 
-    except:
-        ewutils.logMsg("Failed to loot items from user {}".format(member.id))
+	except:
+		ewutils.logMsg("Failed to loot items from user {}".format(member.id))
 
+"""
+	Return false if a player's inventory is at or over capacity for a specific item type
+"""
 
 def check_inv_capacity(id_user = None, id_server = None, item_type = None):
     if id_user is not None and id_server is not None and item_type is not None:
@@ -1657,28 +1631,41 @@ def give_item(
         id_server = member.guild.id
         id_user = str(member.id)
 
-    if id_server is not None and id_user is not None and id_item is not None:
-        ewutils.execute_sql_query(
-            "UPDATE items SET id_user = %s WHERE id_server = %s AND {id_item} = %s".format(
-                id_item = ewcfg.col_id_item
-            ), (
-                id_user,
-                id_server,
-                id_item
-            )
-        )
 
+	if id_server is not None and id_user is not None and id_item is not None:
+		item = EwItem(id_item=id_item)
+
+		# Ensure general limit implementation
+		if ewutils.is_player_inventory(id_user, id_server):
+			# But only for players
+			other_items = inventory(
+					id_user=id_user,
+					id_server=id_server,
+					item_type_filter=item.item_type
+				)
+
+			if len(other_items) >= ewcfg.generic_inv_limit:
+				return False
+
+		ewutils.execute_sql_query(
+			"UPDATE items SET id_user = %s WHERE id_server = %s AND {id_item} = %s".format(
+				id_item = ewcfg.col_id_item
+			), (
+				id_user,
+				id_server,
+				id_item
+			)
+		)
         remove_from_trades(id_item)
 
-        item = EwItem(id_item = id_item)
-        # Reset the weapon's damage modifying stats
-        if item.item_type == ewcfg.it_weapon:
-            item.item_props["kills"] = 0
-            item.item_props["consecutive_hits"] = 0
-            item.item_props["time_lastattack"] = 0
-            item.persist()
-
-    return
+		# Reset the weapon's damage modifying stats
+		if item.item_type == ewcfg.it_weapon:
+			item.id_owner = id_user
+			item.item_props["kills"] = 0
+			item.item_props["consecutive_hits"] = 0
+			item.item_props["time_lastattack"] = 0
+			item.persist()
+	return True
 
 
 def soulbind(id_item):

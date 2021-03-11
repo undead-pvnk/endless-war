@@ -1914,51 +1914,51 @@ async def boot(cmd):
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def loop(cmd):
-    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
-    time_now = int(time.time())
-    user_data = EwUser(member=cmd.message.author)
-    mutations = user_data.get_mutations()
-    resp_cont = ewutils.EwResponseContainer(id_server=cmd.guild.id)
-    dest_poi = ewcfg.landlocked_destinations.get(user_data.poi)
-    dest_poi_obj = ewcfg.id_to_poi.get(dest_poi)
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
-    if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
-        response = "You can't do that right now."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	time_now = int(time.time())
+	user_data = EwUser(member=cmd.message.author)
+	mutations = user_data.get_mutations()
+	resp_cont = ewutils.EwResponseContainer(id_server=cmd.guild.id)
+	dest_poi = ewcfg.landlocked_destinations.get(user_data.poi)
+	dest_poi_obj = ewcfg.id_to_poi.get(dest_poi)
+
+	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
+		response = "You can't do that right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-    if ewcfg.mutation_id_landlocked not in mutations:
-        response = "You don't feel very loopy at the moment. Just psychotic, mostly."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-    elif user_data.poi not in ewcfg.landlocked_destinations.keys():
-        response = "You need to be on the edge of the map to !loop through it. Try a street bordering a district, the ferry, or Slime's End Cliffs."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-    else:
-        global move_counter
-        move_counter += 1
-        move_current = ewutils.moves_active[cmd.message.author.id] = move_counter
-        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You start looping to {}.".format(dest_poi_obj.str_name)))
-        await asyncio.sleep(20)
+	if ewcfg.mutation_id_landlocked not in mutations:
+		response = "You don't feel very loopy at the moment. Just psychotic, mostly."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif user_data.poi not in ewcfg.landlocked_destinations.keys():
+		response = "You need to be on the edge of the map to !loop through it. Try a street bordering a district, the ferry, or Slime's End Cliffs."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		global move_counter
+		move_counter += 1
+		move_current = ewutils.moves_active[cmd.message.author.id] = move_counter
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You start looping to {}.".format(dest_poi_obj.str_name)))
+		await asyncio.sleep(60)
 
-        if move_current == ewutils.moves_active[cmd.message.author.id]:
-            await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "**VOIIII-**".format(dest_poi_obj.str_name)))
+		if move_current == ewutils.moves_active[cmd.message.author.id]:
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "**VOIIII-**".format(dest_poi_obj.str_name)))
 
-            user_data = EwUser(member=cmd.message.author)
-            ewutils.moves_active[cmd.message.author.id] = 0
-            user_data.time_lastenter = int(time.time())
-            ewutils.active_target_map[user_data.id_user] = ""
-            ewutils.end_trade(user_data.id_user)
-            user_data.poi = dest_poi
-            user_data.persist()
-            await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-            await user_data.move_inhabitants(id_poi=dest_poi_obj.id_poi)
-            await ewutils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, user_data.id_user)
-            return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, dest_poi_obj.channel), ewutils.formatMessage(cmd.message.author,"**-OIIIIP!!!**\n\n{} jumps out of a wormhole!".format(cmd.message.author.display_name)))
-        else:
-            pass
-
+			user_data = EwUser(member=cmd.message.author)
+			ewutils.moves_active[cmd.message.author.id] = 0
+			user_data.time_lastenter = int(time.time())
+			ewutils.active_target_map[user_data.id_user] = ""
+			ewutils.end_trade(user_data.id_user)
+			user_data.poi = dest_poi
+			user_data.persist()
+			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+			await user_data.move_inhabitants(id_poi=dest_poi_obj.id_poi)
+			await ewutils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, user_data.id_user)
+			return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, dest_poi_obj.channel), ewutils.formatMessage(cmd.message.author,"**-OIIIIP!!!**\n\n{} jumps out of a wormhole!".format(cmd.message.author.display_name)))
+		else:
+			pass
 
 async def slap(cmd):
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
