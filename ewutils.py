@@ -3188,13 +3188,22 @@ def messagesplit(stringIn, whitespace = '\n'):
 
 """
 	Return true if inventory has associated User table entry
+	and a member object from selected server.
+	Member ensures they are present in game.
 """
 def is_player_inventory(id_inventory, id_server):
+	if id_server == None or id_inventory == None:
+		return false
+
+	# Grab the Discord Client
+	client = get_client()
+	discord_result = client.get_guild(id_server).get_member(id_inventory)
+
 	# Access DB
 	conn_info = databaseConnect()
 	conn = conn_info.get('conn')
 	cursor = conn.cursor()
-	result = None
+	db_result = None
 
 	# Try to grab a value from a user with given id
 	try:
@@ -3204,12 +3213,12 @@ def is_player_inventory(id_inventory, id_server):
 			id_inventory,
 			id_server
 		))
-		result = cursor.fetchone()
+		db_result = cursor.fetchone()
 	finally:
 		cursor.close()
 		databaseClose(conn_info)
 
-	if result != None:
+	if db_result != None and discord_result != None:
 		return True
 	else:
 		return False
