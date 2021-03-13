@@ -22,6 +22,7 @@ from ewplayer import EwPlayer
 from ewhunting import EwEnemy
 from ewstatuseffects import EwStatusEffect
 from ewstatuseffects import EwEnemyStatusEffect
+from ewdungeons import EwGamestate
 
 """ A weapon object which adds flavor text to kill/shoot. """
 class EwWeapon:
@@ -262,6 +263,7 @@ def canAttack(cmd, amb_switch = 0):
 	weapon_item = None
 	weapon = None
 	captcha = None
+	hacked = EwGamestate(id_server=user_data.id_server, id_state="n13door")
 	tokens_lower = []
 	for token in cmd.tokens:
 		tokens_lower.append(token.lower())
@@ -331,7 +333,9 @@ def canAttack(cmd, amb_switch = 0):
 		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
 	elif ewcfg.mutation_id_ambidextrous in mutations and user_data.weapon == -1 and user_data.sidearm == -1 and user_data.life_state != ewcfg.life_state_shambler and ewcfg.mutation_id_lethalfingernails not in mutations:
 		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
-	elif district_data.cap_side == "slimecorp" and district_data.capture_points >= ewcfg.limit_influence[district_data.property_class]:
+	elif district_data.cap_side == "slimecorp" and district_data.capture_points >= ewcfg.limit_influence[district_data.property_class] and hacked.bit == 1 and user_data.faction == ewcfg.faction_slimecorp:
+		response = "GENTRIFICATION LEVELS AT 100%. S.U.D.S. INSTALLATION COMPLETE. PLEASE PROCEED TO THE NEXT COMMUNITY."
+	elif district_data.cap_side == "slimecorp" and district_data.capture_points >= ewcfg.limit_influence[district_data.property_class] and hacked.bit == 0:
 		response = "Slimecorp has fully gentrified this place. They've got comm stations and cameras everywhere, nobody can shed a drop of blood in {}.".format(poi.str_name)
 
 	elif cmd.mentions_count <= 0:

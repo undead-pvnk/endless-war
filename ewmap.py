@@ -931,7 +931,7 @@ async def move(cmd=None, isApt=False):
                                           ewutils.formatMessage(cmd.message.author, "You're already there, bitch."))
     elif isApt and poi.id_poi == user_data.poi[3:]:
         return await ewapt.depart(cmd=cmd)
-    flamestate = EwGamestate(id_server=user_data.id_server, id_state='flamethrower')
+    flamestate = EwGamestate(id_server=user_data.id_server, id_state='n2door')
     if 'n4office' == poi.id_poi and flamestate.bit == 1:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You open the elevator, and are immediately met with fire spitting out of the elevator. Over the crackling flames you can hear a woman screaming \"AAAAAAAAGH FUCK YOU DIE DIE DIE DIE!!!!!\". You're guessing entering now is a bad idea."))
 
@@ -1934,7 +1934,7 @@ async def loop(cmd):
 		response = "You don't feel very loopy at the moment. Just psychotic, mostly."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	elif user_data.poi not in ewcfg.landlocked_destinations.keys():
-		response = "You need to be on the edge of the map to !loop through it. Try a street bordering a district, the ferry, or Slime's End Cliffs."
+		response = "You need to be on the edge of the map to !loop through it. Try a district bordering an outskirt, the ferry, or Slime's End Cliffs."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		global move_counter
