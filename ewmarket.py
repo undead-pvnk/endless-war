@@ -219,6 +219,10 @@ class EwStock:
 		if self.total_shares == None or self.total_shares < 0:
 			self.total_shares = 0
 
+		# quick fix for shares going past the integer cap
+		elif self.total_shares >= 9223372036854775807:
+			self.total_shares = 9223372036854775807
+
 	def __init__(self, id_server = None, stock = None, timestamp = None):
 		if id_server is not None and stock is not None:
 			self.id_server = id_server
