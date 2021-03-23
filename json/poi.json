@@ -18073,7 +18073,8 @@
             "n10office":20,
             "n11office":20,
             "n12office":20,
-            "n13office":20
+            "n13office":20,
+            "n7office": 20
         },
         "topic": "",
         "wikipage": ""
@@ -18433,7 +18434,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n7office":20
+            "n4office":20
         },
         "topic": "",
         "wikipage": ""
@@ -18934,12 +18935,12 @@
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "lobby-backroom",
+        "channel": "slimecorp-tunnel",
         "role": null,
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "lobbybackroom": [
+            "slimecorptunnel": [
                 "read",
                 "send",
                 "connect"

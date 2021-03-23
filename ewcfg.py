@@ -940,7 +940,7 @@ hideout_by_faction = {
 
 
 # Commands
-cmd_prefix = '!'
+cmd_prefix = '>'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -952,6 +952,7 @@ cmd_shoot_alt3 = cmd_prefix + 'ban'
 cmd_shoot_alt4 = cmd_prefix + 'pullthetrigger'
 cmd_shoot_alt5 = cmd_prefix + 'curbstomp'
 cmd_shoot_alt6 = cmd_prefix + 'hug'
+cmd_shoot_alt7 = cmd_prefix + 'stab'
 cmd_attack = cmd_prefix + 'attack'
 cmd_reload = cmd_prefix + 'reload'
 cmd_reload_alt1 = cmd_prefix + 'loadthegun'

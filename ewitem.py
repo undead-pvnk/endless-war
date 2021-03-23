@@ -2533,6 +2533,8 @@ def sherman_donate(cmd):
     if quarter5slime.bit == 0:
         response = "You can't donate here. Try it at SlimeCorp HQ!"
         return response
+    elif value < 0:
+        response = "Sherman needs an exact number. Try to confuse him with words and he'll be sniffing your pockets all day long."
     else:
         if cmd.tokens_count != 3:
             response = "Make sure you're giving Sherman money in the right format. It's !donate <donation type> <amount>."

@@ -4002,21 +4002,25 @@ async def check_flag(cmd):
 
 async def exec_mutations(cmd):
 	user_data = EwUser(member = cmd.message.author)
+
+	if cmd.mentions_count == 1:
+		user_data = EwUser(member = cmd.mentions[0])
+
 	status = user_data.getStatusEffects()
 
-	if ewcfg.status_n1:
+	if ewcfg.status_n1 in status:
 		response = "They fight without expending themselves due to **Perfection**. They're precise even without a target due to **Indiscriminate Rage**. They're hard to fell and cut deep due to **Monolith Body**. They are immaculate and unaging due to **Immortality**."
-	elif ewcfg.status_n2:
+	elif ewcfg.status_n2 in status:
 		response = "They have unparalleled coordination, speed and reaction time due to **Fucked Out**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
-	elif ewcfg.status_n4:
+	elif ewcfg.status_n4 in status:
 		response = "They are capable of murder by machine due to **Napalm Hacker**. Their hiding spot evades you due to **Super Amnesia**."
-	elif ewcfg.status_n8:
+	elif ewcfg.status_n8 in status:
 		response = "They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
-	elif ewcfg.status_n11:
+	elif ewcfg.status_n11 in status:
 		response = "They command a crowd through fear and punishment due to **Unnatural Intimidation**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
-	elif ewcfg.status_n12:
+	elif ewcfg.status_n12 in status:
 		response = "Their body holds untold numbers of quirks and perks due to **Full Aberrant**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
-	elif ewcfg.status_n13:
+	elif ewcfg.status_n13 in status:
 		response = "They are prone to explosive entries due to **Tantrum**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
 	elif user_data.life_state == ewcfg.life_state_lucky:
 		response = "They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. "

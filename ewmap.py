@@ -730,6 +730,8 @@ def inaccessible(user_data = None, poi = None):
 
     if 'n4office' in poi.neighbors and 'n4office' in source_poi.neighbors:
         return True
+    if 'themoon' == poi.id_poi and user_data.poi != 'n9office':
+        return True
 
     elevatorstop = EwGamestate(id_server=user_data.id_server, id_state='elevator')
 
@@ -931,7 +933,7 @@ async def move(cmd=None, isApt=False):
                                           ewutils.formatMessage(cmd.message.author, "You're already there, bitch."))
     elif isApt and poi.id_poi == user_data.poi[3:]:
         return await ewapt.depart(cmd=cmd)
-    flamestate = EwGamestate(id_server=user_data.id_server, id_state='n2door')
+    flamestate = EwGamestate(id_server=user_data.id_server, id_state='flamethrower')
     if 'n4office' == poi.id_poi and flamestate.bit == 1:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You open the elevator, and are immediately met with fire spitting out of the elevator. Over the crackling flames you can hear a woman screaming \"AAAAAAAAGH FUCK YOU DIE DIE DIE DIE!!!!!\". You're guessing entering now is a bad idea."))
 
