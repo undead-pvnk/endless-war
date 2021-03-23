@@ -186,6 +186,7 @@ cmd_map = {
 	
 	# Juvies can dance
 	ewcfg.cmd_dance: ewcmd.dance,
+	ewcfg.cmd_dance_alt1: ewcmd.dance,
 	
 	# SlimeCorp security officers can post propaganda
 	ewcfg.cmd_propaganda: ewcmd.propaganda,
