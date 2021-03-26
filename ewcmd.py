@@ -1825,7 +1825,7 @@ async def recycle(cmd):
 	response = ""
 
 	if user_data.poi != ewcfg.poi_id_recyclingplant:
-		response = "You can only {} your trash at the SlimeCorp Recycling Plant in Smogsburg.".format(cmd.tokens[0])
+		response = "You can only {} your trash at the Recycling Plant in Smogsburg.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)

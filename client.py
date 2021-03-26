@@ -189,7 +189,7 @@ cmd_map = {
 	ewcfg.cmd_dance_alt: ewcmd.dance,
 	
 	# SlimeCorp security officers can post propaganda
-	ewcfg.cmd_propaganda: ewcmd.propaganda,
+	#ewcfg.cmd_propaganda: ewcmd.propaganda,
 	
 	# Terezi Gang can flip coins
 	ewcfg.cmd_coinflip: ewcmd.coinflip,

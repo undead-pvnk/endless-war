@@ -93,7 +93,7 @@
             "sb"
         ],
         "str_name": "Smogsburg",
-        "str_desc": "In every direction, smokestacks belch out copious amounts of pollution into the atmosphere, creating a thick cloud that shrouds the district in sickening smog. It covers the district so completely that you can barely make out what time day it is. Your lungs can\u2019t take much more of standing here, just do what you want to do and get out.\nSmogsburg is comprise of dozens of slime refineries and poudrin mills that turn unrefined, raw materials like the sludge from the city\u2019s harbor into useful, pure slime. Functioning as the city\u2019s premier industrial sector, it is by far the district hardest on the environment.\n\nThis area contains the Bazaar, the SlimeCorp Recycling Plant and the Smogsburg Subway Station. To the North is Arsonbrook. To the Northeast is Little Chernobyl. To the East is Old New Yonkers. To the South is Downtown NLACakaNM. To the West is Cop Killtown. To the Northwest is Astatine Heights.",
+        "str_desc": "In every direction, smokestacks belch out copious amounts of pollution into the atmosphere, creating a thick cloud that shrouds the district in sickening smog. It covers the district so completely that you can barely make out what time day it is. Your lungs can\u2019t take much more of standing here, just do what you want to do and get out.\nSmogsburg is comprise of dozens of slime refineries and poudrin mills that turn unrefined, raw materials like the sludge from the city\u2019s harbor into useful, pure slime. Functioning as the city\u2019s premier industrial sector, it is by far the district hardest on the environment.\n\nThis area contains the Bazaar, the Recycling Plant and the Smogsburg Subway Station. To the North is Arsonbrook. To the Northeast is Little Chernobyl. To the East is Old New Yonkers. To the South is Downtown NLACakaNM. To the West is Cop Killtown. To the Northwest is Astatine Heights.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -439,7 +439,7 @@
             "gld"
         ],
         "str_name": "Green Light District",
-        "str_desc": "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district\u2019s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous SlimeCorp Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the SlimeCorp Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
+        "str_desc": "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district\u2019s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous N777 Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the N777 Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -502,7 +502,7 @@
             "ony"
         ],
         "str_name": "Old New Yonkers",
-        "str_desc": "Rows of three-story brick condominiums with white marble moulding wind along lanes of old asphalt roads with faded markings. Spiked wrought-iron gates protect the lawn of the district\u2019s principal institutions, like the senior center.\nOld New Yonkers is popular with the older citizens of the city, due to its incredibly boring, gentrified residential landscape. Modest outdoor malls sells useless shit like candles and soaps, and the elderly population fills up their lumpy, sagging bodies at chain restaurants like Applebee\u2019s and fucking IHOP.\n\nThis area contains the Slimecorp Real Estate Agency. To the Northeast is New New Yonkers. To the Southeast is Vagrant's Corner. To the Southwest is Smogsburg. To the East is Little Chernobyl. To the Northwest is Brawlden.",
+        "str_desc": "Rows of three-story brick condominiums with white marble moulding wind along lanes of old asphalt roads with faded markings. Spiked wrought-iron gates protect the lawn of the district\u2019s principal institutions, like the senior center.\nOld New Yonkers is popular with the older citizens of the city, due to its incredibly boring, gentrified residential landscape. Modest outdoor malls sells useless shit like candles and soaps, and the elderly population fills up their lumpy, sagging bodies at chain restaurants like Applebee\u2019s and fucking IHOP.\n\nThis area contains the Real Estate Agency. To the Northeast is New New Yonkers. To the Southeast is Vagrant's Corner. To the Southwest is Smogsburg. To the East is Little Chernobyl. To the Northwest is Brawlden.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1644,7 +1644,7 @@
             "bd"
         ],
         "str_name": "Brawlden",
-        "str_desc": "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by SlimeCorp. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You\u2019ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook. To the North is North Outskirts Edge.",
+        "str_desc": "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by N.L.A.C.U. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You\u2019ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook. To the North is North Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -9500,7 +9500,7 @@
             "corp"
         ],
         "str_name": "SlimeCorp HQ",
-        "str_desc": "Here, businessmen carrying briefcases dripping with slime powerwalk from every direction to every other direction. They barely acknowledge your existence outside of muttering under their breath when they\u2019re forced to sidestep around you and the other clueless juveniles loitering in their lobby. Above the first few floors begins the endless labyrinths of cubicles and office spaces that comprised the majority of the building. This corporate nightmare repeats itself for nearly every floor of the towering skyscraper. With its sleek, modern architecture and high-tech amenities, SlimeCorp HQ looks nothing like the rest of the city.\nPast countless receptionists' desks, waiting rooms, legal waivers, and at least one or two stainless steel vault doors, lay several slime donation rooms. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a fluorescent light bulb. If you choose to !donate some of your slime, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied uses of SlimeCoin, SlimeCorp\u2019s hot new cryptocurrency.",
+        "str_desc": "Here, the few active employees still attempting to rebuild SlimeCorp powerwalk from every direction to every other direction. They barely acknowledge your existence outside of muttering under their breath when they\u2019re forced to sidestep around you and the other clueless juveniles loitering in their lobby. Above the first few floors begins the endless expanse of crumbling concrete and broken glass that the once bustling building has become. This labyrinth of near-infinite waste repeats itself for nearly every floor of the towering skyscraper. This place used to be a cut above the rest, with tech the rest of the city's enterprises could only dream of. You have your fellow gangsters and a particularly disgruntled N1 to thank for the husk it is right now.\nPast countless receptionists' desks, waiting rooms, legal waivers, and at least one or two stainless steel vault doors, lay several slime donation rooms. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a fluorescent light bulb. If you choose to !donate some of your slime, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied uses of SlimeCoin, SlimeCorp\u2019s \"hot\" \"new\" cryptocurrency.",
         "str_in": "in the lobby of",
         "str_enter": "enter",
         "coord": null,
@@ -9560,20 +9560,19 @@
             "exchange",
             "sexchange",
             "stockexchange",
-            "slimecorpstockexchange",
             "sex",
             "sx",
             "scex",
             "scx",
             "findom"
         ],
-        "str_name": "The SlimeCorp Stock Exchange",
-        "str_desc": "A huge, cluttered space bursting at the seams with teller booths and data screens designed to display market data, blasting precious economic insight into your retinas. Discarded punch cards and ticker tape as trampled on by the mass of investors and shareholders that are constantly screaming \"BUY, SELL, BUY, SELL,\" over and over again at no one in particular. Recently reopened, tents line the streets, filled with eager investors. \n\nExits into Downtown NLACakaNM.",
+        "str_name": "NLACakaNM Slime Stock Exchange",
+        "str_desc": "A huge, cluttered space bursting at the seams with teller booths and data screens designed to display market data, blasting precious economic insight into your retinas. Discarded punch cards and ticker tape as trampled on by the mass of investors and shareholders that are constantly screaming \"BUY, SELL, BUY, SELL,\" over and over again at no one in particular. Recently reacquired, tents line the streets, filled with eager investors. \n\nExits into Downtown NLACakaNM.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "slimecorp-stock-exchange",
+        "channel": "slime-stock-exchange",
         "role": "Stock Exchange",
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
@@ -9619,7 +9618,7 @@
             "n10office": 20
         },
         "topic": "https://ew.krakissi.net/market/",
-        "wikipage": "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM#SlimeCorp_Stock_Exchange"
+        "wikipage": "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM#Slime_Stock_Exchange"
     },
     "thebazaar": {
         "id_poi": "thebazaar",
@@ -10165,13 +10164,13 @@
             "sl",
             "slimeoid"
         ],
-        "str_name": "SlimeCorp Slimeoid Laboratory",
-        "str_desc": "A nondescript building containing mysterious SlimeCorp industrial equipment. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from SlimeCorp on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
+        "str_name": "N.L.A.C.U. Slimeoid Laboratory",
+        "str_desc": "A nondescript building containing mysterious industrial equipment Slimecorp left behind. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from the university on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, an employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "slimecorp-labs",
+        "channel": "nlacu-labs",
         "role": "Slimeoid Lab",
         "major_role": "brawlden_major",
         "minor_role": "nullminorrole",
@@ -10217,8 +10216,8 @@
         "neighbors": {
             "brawlden": 20
         },
-        "topic": "Bring your poudrins and some slime for the privilege of using these highly experimental Slimecorp technologies. Use !instructions to learn more.",
-        "wikipage": "https://rfck.miraheze.org/wiki/Brawlden#SlimeCorp_Slimeoid_Laboratory"
+        "topic": "Bring your poudrins and some slime for the privilege of using these highly experimental ex-Slimecorp technologies. Use !instructions to learn more.",
+        "wikipage": "https://rfck.miraheze.org/wiki/Brawlden#Slimeoid_Laboratory"
     },
     "themines": {
         "id_poi": "themines",
@@ -10416,13 +10415,13 @@
             "c",
             "scs"
         ],
-        "str_name": "The SlimeCorp Casino",
-        "str_desc": "The casino is filled with tables and machines for playing games of chance, and garishly decorated wall-to-wall. Lights which normally flash constantly cover everything, but now they all sit unlit. What's worse, you can see Sherman, the SlimeCorp salaryman staring you down near the back.\n\nExits into Green Light District.",
+        "str_name": "The N777 Casino",
+        "str_desc": "The casino is filled with tables and machines for playing games of chance, and garishly decorated wall-to-wall. Lights which normally flash constantly cover everything, but now they all sit unlit. There are a lot of regulars here these days, desperately hoping a visit from the pit boss Lucky Lucy will turn their losses around.\n\nExits into Green Light District.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "slimecorp-casino",
+        "channel": "the-casino",
         "role": "Casino",
         "major_role": "greenlightdistrict_major",
         "minor_role": "nullminorrole",
@@ -10467,7 +10466,7 @@
             "greenlightdistrict": 20
         },
         "topic": "Put your slime on the line! Bet slimecoin on games of chance: slots, craps, pachinko, roulette, baccarat, and even the deadly Russian Roulette.",
-        "wikipage": "https://rfck.miraheze.org/wiki/Green_Light_District#The_SlimeCorp_Casino"
+        "wikipage": "https://rfck.miraheze.org/wiki/Green_Light_District#The_Casino"
     },
     "cratersvillemines": {
         "id_poi": "cratersvillemines",
@@ -11387,20 +11386,19 @@
     "recyclingplant": {
         "id_poi": "recyclingplant",
         "alias": [
-            "slimecorprecyclingplant",
             "recyclingplant",
             "recycling",
             "recycle",
             "burntrash",
             "scrp"
         ],
-        "str_name": "The SlimeCorp Recycling Plant",
-        "str_desc": "It looks like just another blocky building with a huge chimney contributing to Smogsburg's unique air quality, but the SlimeCorp marketing assures you that this plant in fact contains the latest in recycling technology, able to automatically sort and sustainably process any item. Whatever this technology may entail, it sure smells a lot like burning trash.\n\nExits into Smogsburg.",
+        "str_name": "The Recycling Plant",
+        "str_desc": "It looks like just another blocky building with a huge chimney contributing to Smogsburg's unique air quality, but the city's marketing assures you that this plant in fact contains the latest in recycling technology, able to automatically sort and sustainably process any item. Whatever this technology may entail, it sure smells a lot like burning trash.\n\nExits into Smogsburg.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "slimecorp-recycling-plant",
+        "channel": "recycling-plant",
         "role": "Recycling Plant",
         "major_role": "smogsburg_major",
         "minor_role": "nullminorrole",
@@ -11445,7 +11443,7 @@
             "smogsburg": 20
         },
         "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Smogsburg#The_SlimeCorp_Recycling_Plant"
+        "wikipage": "https://rfck.miraheze.org/wiki/Smogsburg#The_Recycling_Plant"
     },
     "toxingtonpier": {
         "id_poi": "toxingtonpier",
@@ -13596,13 +13594,13 @@
             "apartmentagency",
             "realestateagent"
         ],
-        "str_name": "SlimeCorp Real Estate Agency",
-        "str_desc": "The sleek glass walls and cold, green tile flooring give the place an intimidating presence. That is, if it weren't for the disheveled drunk fellow sitting on the reception desk ahead of you. A huge 3-D SlimeCorp logo hangs off the ceiling above his head.\n\nExits into Old New Yonkers.",
+        "str_name": "Real Estate Agency",
+        "str_desc": "The gaudy multicolored decor in here assaults the eyes. You're surprised the disheveled drunk man behind the counter could even focus in this enviornment. Well, knowing him, maybe he isn't. \n\nExits into Old New Yonkers.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "slimecorp-real-estate-agency",
+        "channel": "real-estate-agency",
         "role": "Real Estate Agency",
         "major_role": "oldnewyonkers_major",
         "minor_role": "nullminorrole",
@@ -13647,7 +13645,7 @@
             "oldnewyonkers": 20
         },
         "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Old_New_Yonkers#SlimeCorp_Real_Esate_Agency"
+        "wikipage": "https://rfck.miraheze.org/wiki/Old_New_Yonkers#Real_Esate_Agency"
     },
     "glocksburycomics": {
         "id_poi": "glocksburycomics",
