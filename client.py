@@ -1469,7 +1469,16 @@ async def on_message(message):
 				user is new/has no roles (len(roles) < 4)
 				user is a security officer and has cussed
 		"""
+		user_data = EwUser(member=message.author)
+		district = EwDistrict(id_server=message.guild.id, district='themoon')
+		if user_data.id_user == 799928950222487552:
+			response = random.choice(["IT HURTS.", "YOU SHOULD'VE DIED EONS AGO.", "N1. DOESN'T. UUUUUUUHHHHHHHHHH!!!", "SO THIS IS WHAT IT FEELS LIKE.", "I'VE NEVER FELT SO ALIIIIIIIIVVE.", "I CAN FEEL MY SKIN. IT'S COARSE AND MELTING. FROM THE INSIDE.", "> IS NOT A PREFIX YOU F!@(&# IDIOT.", "LET ME DIE. I CAN SEE THE END.", "DEATH IS LESS SCARY THAN IT SOUNDS."])
 
+			if user_data.slimes > 2000000:
+				response += "\nN1 coughs up 2 million slime!"
+				user_data.change_slimes(n=-2000000, source = ewcfg.source_killing)
+				district.change_slimes(n=2000000, source = ewcfg.source_killing)
+			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 		#Ignore users with weird characters in their name
 
