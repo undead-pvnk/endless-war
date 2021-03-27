@@ -1422,7 +1422,7 @@ async def on_message(message):
 	re_moan = re.compile('.*![b]+[r]+[a]+[i]+[n]+[z]+.*')
 
 	# update the player's time_last_action which is used for kicking AFK players out of subzones
-	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())) or message.channel in ["nurses-office","suggestion-box", "detention-center", "community-service", "playground", "graffiti-wall", "post-slime-drip", "outside-the-lunchroom", "outside-the-lunchrooom"]:
+	if (message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())) or message.channel in ["nurses-office","suggestion-box", "detention-center", "community-service", "playground", "graffiti-wall", "post-slime-drip", "outside-the-lunchroom", "outside-the-lunchrooom"]) and message.author.id != 412813074991415316:
 		response = random.choice(["uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuh...wha?", "iunno.", "i dun wanna...", "zzzzzzzzzzzzzzzz...", "tireduuuhhhh..."])
 
 		return await ewutils.send_message(client, message.channel, response)
