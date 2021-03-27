@@ -1422,6 +1422,10 @@ async def on_message(message):
 	re_moan = re.compile('.*![b]+[r]+[a]+[i]+[n]+[z]+.*')
 
 	# update the player's time_last_action which is used for kicking AFK players out of subzones
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())) or message.channel in ["nurses-office","suggestion-box", "detention-center", "community-service", "playground", "graffiti-wall", "post-slime-drip", "outside-the-lunchroom", "outside-the-lunchrooom"]:
+		response = random.choice(["uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuh...wha?", "iunno.", "i dun wanna...", "zzzzzzzzzzzzzzzz...", "tireduuuhhhh..."])
+
+		return await ewutils.send_message(client, message.channel, response)
 	if message.guild != None:
 
 		try:
@@ -1460,23 +1464,7 @@ async def on_message(message):
 				await ewutils.send_message(client, message.channel, response)
 				await message.delete()
 				return
-		if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())) or message.channel in ["nurses-office", "suggestion-box", "detention-center", "community-service", "playground", "graffiti-wall", "post-slime-drip", "outside-the-lunchroom", "outside-the-lunchrooom"]:
-			user_data = EwUser(member=message.author)
-			district = EwDistrict(id_server=message.guild.id, district='themoon')
-			if user_data.id_user == 799928950222487552:
-				response = random.choice(
-					["IT HURTS.", "YOU SHOULD'VE DIED EONS AGO.", "N1. DOESN'T. UUUUUUUHHHHHHHHHH!!!",
-					 "SO THIS IS WHAT IT FEELS LIKE.", "I'VE NEVER FELT SO ALIIIIIIIIVVE.",
-					 "I CAN FEEL MY SKIN. IT'S COARSE AND MELTING. FROM THE INSIDE.",
-					 "> IS NOT A PREFIX YOU F!@(&# IDIOT.", "LET ME DIE. I CAN SEE THE END.",
-					 "DEATH IS LESS SCARY THAN IT SOUNDS."])
 
-				if user_data.slimes > 2000000:
-					response += "\nN1 coughs up 2 million slime!"
-					user_data.change_slimes(n=-2000000, source=ewcfg.source_killing)
-					district.change_slimes(n=2000000, source=ewcfg.source_killing)
-				return await ewutils.send_message(client, message.channel,
-												  ewutils.formatMessage(message.author, response))
 
 	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())) or message.channel in ["nurses-office", "suggestion-box", "detention-center", "community-service", "playground", "graffiti-wall", "post-slime-drip", "outside-the-lunchroom", "outside-the-lunchrooom"]:
 		"""

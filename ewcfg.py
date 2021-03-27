@@ -33,7 +33,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.72slimefest"
+version = "v4.001intermission4"
 
 
 dir_msgqueue = 'msgqueue'
@@ -940,7 +940,7 @@ hideout_by_faction = {
 
 
 # Commands
-cmd_prefix = '>'
+cmd_prefix = '!'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
