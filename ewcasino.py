@@ -129,13 +129,13 @@ async def pachinko(cmd):
 			await asyncio.sleep(1)
 
 		winnings = int(winballs * value / 2)
-		slimecorp_fee, winnings = slimecorp_collectfee(winnings)
+
 
 		# Significant time has passed since the user issued this command. We can't trust that their data hasn't changed.
 		user_data = EwUser(member = cmd.message.author)
 
 		if winnings > 0:
-			response += "\n\n**You won {:,} {currency}!** The remaining {:,} {currency} goes to SlimeCorp".format(winnings, slimecorp_fee, currency = currency_used)
+			response += "\n\n**You won {:,} {currency}!**".format(winnings, currency = currency_used)
 		else:
 			response += "\n\nYou lost your {}.".format(currency_used)
 
@@ -264,13 +264,13 @@ async def craps(cmd):
 
 			if (roll1 + roll2) == 7:
 				winnings = 5 * value
-				slimecorp_fee, winnings = slimecorp_collectfee(winnings)
+
 				if currency_used == ewcfg.currency_soul:
 					currency_used = ewcfg.currency_slimecoin
 					if not ewitem.give_item(id_item=soul_id, member=cmd.message.author):
 						ewitem.give_item(id_item=soul_id, id_user=ewcfg.poi_id_thecasino, id_server=user_data.id_server)
 						response += "\n\nThe dealer hands you the soul, but you're holding too many cosmetics and you drop it on the floor."
-				response += "\n\n**You rolled a 7! It's your lucky day. You won {:,} {currency}.** The remaining {:,} {currency} goes to SlimeCorp.".format(winnings, slimecorp_fee, currency = currency_used)
+				response += "\n\n**You rolled a 7! It's your lucky day. You won {:,} {currency}.**".format(winnings, currency = currency_used)
 			else:
 				response += "\n\nYou didn't roll 7. You lost your {}.".format(currency_used)
 				if currency_used == ewcfg.currency_soul:
@@ -408,65 +408,65 @@ async def slots(cmd):
 		if roll1 == ewcfg.emote_tacobell and roll2 == ewcfg.emote_tacobell and roll3 == ewcfg.emote_tacobell:
 			winnings = 5 * value
 
-			slimecorp_fee, winnings = slimecorp_collectfee(winnings)
+
 			
-			response += "\n\n**¡Ándale! ¡Arriba! The machine spits out {:,} {currency}.** The remaining {:,} {currency} goes to SlimeCorp.".format(winnings, slimecorp_fee, currency = currency_used)
+			response += "\n\n**¡Ándale! ¡Arriba! The machine spits out {:,} {currency}.**".format(winnings, currency = currency_used)
 
 		elif roll1 == ewcfg.emote_pizzahut and roll2 == ewcfg.emote_pizzahut and roll3 == ewcfg.emote_pizzahut:
 			winnings = 5 * value
 
-			slimecorp_fee, winnings = slimecorp_collectfee(winnings)
+
 			
-			response += "\n\n**Oven-fired goodness! The machine spits out {:,} {currency}.** The remaining {:,} {currency} goes to SlimeCorp.".format(winnings, slimecorp_fee, currency = currency_used)
+			response += "\n\n**Oven-fired goodness! The machine spits out {:,} {currency}.**".format(winnings, currency = currency_used)
 
 		elif roll1 == ewcfg.emote_kfc and roll2 == ewcfg.emote_kfc and roll3 == ewcfg.emote_kfc:
 			winnings = 5 * value
 
-			slimecorp_fee, winnings = slimecorp_collectfee(winnings)
+
 			
-			response += "\n\n**The Colonel's dead eyes unnerve you deeply. The machine spits out {:,} {currency}.** The remaining {:,} {currency} goes to SlimeCorp.".format(winnings, slimecorp_fee, currency = currency_used)
+			response += "\n\n**The Colonel's dead eyes unnerve you deeply. The machine spits out {:,} {currency}.**".format(winnings, currency = currency_used)
 
 		elif (roll1 == ewcfg.emote_tacobell or roll1 == ewcfg.emote_kfc or roll1 == ewcfg.emote_pizzahut) and (roll2 == ewcfg.emote_tacobell or roll2 == ewcfg.emote_kfc or roll2 == ewcfg.emote_pizzahut) and (roll3 == ewcfg.emote_tacobell or roll3 == ewcfg.emote_kfc or roll3 == ewcfg.emote_pizzahut):
 			winnings = value
 
-			slimecorp_fee, winnings = slimecorp_collectfee(winnings)
+
 			
-			response += "\n\n**You dine on fast food. The machine spits out {:,} {currency}.** The remaining {:,} {currency} goes to SlimeCorp.".format(winnings, slimecorp_fee, currency = currency_used)
+			response += "\n\n**You dine on fast food. The machine spits out {:,} {currency}.**".format(winnings, currency = currency_used)
 
 		elif roll1 == ewcfg.emote_moon and roll2 == ewcfg.emote_moon and roll3 == ewcfg.emote_moon:
 			winnings = 5 * value
 
-			slimecorp_fee, winnings = slimecorp_collectfee(winnings)
+
 			
-			response += "\n\n**Tonight seems like a good night for VIOLENCE. The machine spits out {:,} {currency}.** The remaining {:,} {currency} goes to SlimeCorp.".format(winnings, slimecorp_fee, currency = currency_used)
+			response += "\n\n**Tonight seems like a good night for VIOLENCE. The machine spits out {:,} {currency}.**".format(winnings, currency = currency_used)
 
 		elif roll1 == ewcfg.emote_111 and roll2 == ewcfg.emote_111 and roll3 == ewcfg.emote_111:
 			winnings = 1111
 
-			slimecorp_fee, winnings = slimecorp_collectfee(winnings)
+
 			
-			response += "\n\n**111111111111111111111111111111111111111111111111**\n\n**The machine spits out {:,} {currency}.** The remaining {:,} {currency} goes to SlimeCorp.".format(winnings, slimecorp_fee, currency = currency_used)
+			response += "\n\n**111111111111111111111111111111111111111111111111**\n\n**The machine spits out {:,} {currency}.**".format(winnings, currency = currency_used)
 
 		elif roll1 == ewcfg.emote_copkiller and roll2 == ewcfg.emote_copkiller and roll3 == ewcfg.emote_copkiller:
 			winnings = 40 * value
 
-			slimecorp_fee, winnings = slimecorp_collectfee(winnings)
+
 			
-			response += "\n\n**How handsome!! The machine spits out {:,} {currency}.** The remaining {:,} {currency} goes to SlimeCorp.".format(winnings, slimecorp_fee, currency = currency_used)
+			response += "\n\n**How handsome!! The machine spits out {:,} {currency}.**".format(winnings, currency = currency_used)
 
 		elif roll1 == ewcfg.emote_rowdyfucker and roll2 == ewcfg.emote_rowdyfucker and roll3 == ewcfg.emote_rowdyfucker:
 			winnings = 40 * value
 
-			slimecorp_fee, winnings = slimecorp_collectfee(winnings)
+
 			
-			response += "\n\n**So powerful!! The machine spits out {:,} {currency}.** The remaining {:,} {currency} goes to SlimeCorp.".format(winnings, slimecorp_fee, currency = currency_used)
+			response += "\n\n**So powerful!! The machine spits out {:,} {currency}.**".format(winnings, currency = currency_used)
 
 		elif roll1 == ewcfg.emote_theeye and roll2 == ewcfg.emote_theeye and roll3 == ewcfg.emote_theeye:
 			winnings = 350 * value
 
-			slimecorp_fee, winnings = slimecorp_collectfee(winnings)
+
 			
-			response += "\n\n**JACKPOT!! The machine spews forth {:,} {currency}!** The remaining {:,} {currency} goes to SlimeCorp.".format(winnings, slimecorp_fee, currency = currency_used)
+			response += "\n\n**JACKPOT!! The machine spews forth {:,} {currency}!**".format(winnings, currency = currency_used)
 
 		else:
 			response += "\n\n*Nothing happens...*"
@@ -680,9 +680,9 @@ async def roulette(cmd):
 					ewitem.give_item(id_item=soul_id, id_user="casinosouls", id_server=user_data.id_server)
 				if winnings > 0:
 
-					slimecorp_fee, winnings = slimecorp_collectfee(winnings)
+
 					
-					response += " You won {:,} {currency}! The remaining {:,} {currency} goes to SlimeCorp.".format(winnings, slimecorp_fee, currency = currency_used)
+					response += " You won {:,} {currency}!".format(winnings, currency = currency_used)
 				else:
 					response += " You lost your bet..."
 
@@ -1332,7 +1332,7 @@ async def baccarat(cmd):
 				if bet == result:
 					winnings = (odds * value)
 
-					slimecorp_fee, winnings = slimecorp_collectfee(winnings)
+
 
 					if currency_used == ewcfg.currency_soul:
 						if not ewitem.give_item(id_item=soul_id, id_user=cmd.message.author.id, id_server=user_data.id_server):
@@ -1340,7 +1340,7 @@ async def baccarat(cmd):
 							response += "\n\nThe dealer hands you the soul, but you're holding too many cosmetics and you drop it on the floor."
 						currency_used = ewcfg.currency_slimecoin
 
-					response += "\n\n**You won {:,} {currency}!** The remaining {:,} {currency} goes to SlimeCorp.".format(winnings, slimecorp_fee, currency = currency_used)
+					response += "\n\n**You won {:,} {currency}!**".format(winnings, currency = currency_used)
 				else:
 					response += "\n\n*You lost your bet.*"
 
@@ -2629,9 +2629,7 @@ async def skat(cmd):
 
 			response = "You {} a {} game with a value of {}. You {} {} SlimeCoin.".format(winstate,gametype,str(totalvalue),gain,str(totalsc))
 			
-			if winstate == "won":
-				slimecorp_fee, totalsc = slimecorp_collectfee(totalsc)
-				response += "\nSlimeCorp subtracts a fee of {:,} SlimeCoin from your winnings, however.".format(slimecorp_fee)
+
 				
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
 

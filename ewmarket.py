@@ -689,10 +689,8 @@ async def donate(cmd):
 
 			response = "You hand off one of your hard-earned poudrins to the front desk receptionist, who is all too happy to collect it. Pretty uneventful, but at the very least you’re glad donating isn’t physically painful anymore."
 
-	elif user_data.poi == ewcfg.poi_id_speakeasy:
-		response = ewitem.sherman_donate(cmd=cmd)
 	else:
-		response = "To donate slime, go to the SlimeCorp HQ in Downtown. To donate poudrins, go to the SlimeCorp Lab in Brawlden."
+		response = "To donate slime, go to the SlimeCorp HQ in Downtown. To donate poudrins, go to the N.L.A.C.U. Lab in Brawlden."
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1200,80 +1198,6 @@ def get_majority_shareholder(id_server = None, stock = None):
 		finally:
 			return result
 
-async def quarterlyreport(cmd):
-	progress = 0
-	completion = False
-	q5state = EwGamestate(id_server=cmd.guild.id, id_state='qreport5')
-	if q5state.bit == False:
-		objective = 30
-		goal = "DISTRICTS GENTRIFIED"
-		completion = False
-
-		districts = []
-		for poi in ewcfg.poi_list:
-			if poi.is_district and poi.is_capturable == True:
-				districts.append(poi)
-
-		for district in districts:
-			dist_obj = EwDistrict(id_server=cmd.guild.id, district=district.id_poi)
-			if dist_obj.capture_points >= ewcfg.limit_influence[dist_obj.property_class] and dist_obj.cap_side == 'slimecorp':
-				progress += 1
-		"""try:
-			conn_info = ewutils.databaseConnect()
-			conn = conn_info.get('conn')
-			cursor = conn.cursor()
-	
-			# Display the progress towards the current Quarterly Goal, whatever that may be.
-			cursor.execute("SELECT {metric} FROM markets WHERE id_server = %s".format(
-				metric = ewcfg.col_splattered_slimes
-			), (cmd.guild.id, ))
-	
-			result = cursor.fetchone();
-	
-			if result != None:
-				progress = result[0]
-	
-				if progress == None:
-					progress = 0
-	
-				if progress >= objective:
-					progress = objective
-					completion = True
-	
-		finally:
-			cursor.close()
-			ewutils.databaseClose(conn_info)"""
-		if progress >= 30:
-			completion = True
-		response = "{:,} / {:,} {}.".format(progress, objective, goal)
-		if completion == True:
-			response += " THE QUARTERLY GOAL HAS BEEN REACHED. PLEASE STAY TUNED FOR FURTHER ANNOUNCEMENTS."
-	else:
-		goal1 = 'SLIME DONATED'
-		objective1 = 1000000000
-		progress1 = 0
-		goal2 = 'SLIMECOIN DONATED'
-		objective2 = 1000000000000000000
-		progress2 = 0
-		goal3 = 'POUDRINS DONATED'
-		progress3 = 0
-		objective3 = 3000
-		shermanslime = EwGamestate(id_server=cmd.guild.id, id_state='shermanslime')
-		shermancoin = EwGamestate(id_server=cmd.guild.id, id_state='shermancoin')
-		shermanpoud = EwGamestate(id_server=cmd.guild.id, id_state='shermanpoud')
-		progress1 = int(shermanslime.value)
-		progress2 = int(shermancoin.value)
-		progress3 = int(shermanpoud.value)
-		response = "\n5TH QUARTERLY GOAL:\n{:,} / {:,} {}.".format(progress1, objective1, goal1)
-		response += "\n\n{:,} / {:,} {}.".format(progress2, objective2, goal2)
-		response += "\n\n{:,} / {:,} {}.".format(progress3, objective3, goal3)
-
-		if progress1 >= objective1 and progress2 >= objective2 and progress3 >= objective3:
-			completion = True
-		if completion == True:
-			response += " THE QUARTERLY GOAL HAS BEEN REACHED. PLEASE STAY TUNED FOR SHERMAN ACTUALLY DOING SOMETHING."
-
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def trade(cmd):
 	user_data = EwUser(member=cmd.message.author)

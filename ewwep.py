@@ -535,20 +535,7 @@ def canCap(cmd, capture_type, roomba_loop = 0):
 
 """ Player deals damage to another player. """
 
-async def n1_die(cmd):
-	user_data = EwUser(member=cmd.message.author, data_level=1)
-	if ewcfg.status_n1 not in user_data.getStatusEffects():
-		return await ewutils.fake_failed_command(cmd)
-	else:
-		life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
-		district_data = EwDistrict(district=user_data.poi, id_server=user_data.id_server)
-		players = district_data.get_players_in_district(life_states=life_states)
 
-		if len(players) > 1:
-			players.remove(user_data.id_user)
-
-			target = random.choice(players)
-			return await attack(cmd=cmd, n1_die = target)
 
 
 

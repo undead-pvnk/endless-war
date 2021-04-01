@@ -17,7 +17,7 @@ async def pardon(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
 	if user_data.life_state != ewcfg.life_state_kingpin and user_data.life_state != ewcfg.life_state_executive and not cmd.message.author.guild_permissions.administrator:
-		response = "Only the Rowdy Fucker {}, the Cop Killer {} and Slimecorp Executives {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller, ewcfg.emote_slimecorp)
+		response = "Only the Rowdy Fucker {} and the Cop Killer {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller, ewcfg.emote_slimecorp)
 	else:
 		member = None
 		if cmd.mentions_count == 1:
@@ -56,7 +56,7 @@ async def banish(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
 	if user_data.life_state != ewcfg.life_state_kingpin and user_data.life_state != ewcfg.life_state_executive and not cmd.message.author.guild_permissions.administrator:
-		response = "Only the Rowdy Fucker {}, the Cop Killer {} and Slimecorp Executives {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller, ewcfg.emote_slimecorp)
+		response = "Only the Rowdy Fucker {} and the Cop Killer {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller)
 	else:
 		member = None
 		if cmd.mentions_count == 1:

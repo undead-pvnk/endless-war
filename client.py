@@ -120,7 +120,6 @@ cmd_map = {
 	ewcfg.cmd_suicide: ewwep.suicide,
 	ewcfg.cmd_suicide_alt1: ewwep.suicide,
 	ewcfg.cmd_suicide_alt2: ewwep.suicide,
-	ewcfg.cmd_n1_die : ewwep.n1_die,
 	ewcfg.cmd_haveastroke:ewapt.nothing,
 	ewcfg.cmd_moonhurtingbeam:ewapt.nothing,
 	# Spar with an ally
@@ -189,7 +188,7 @@ cmd_map = {
 	ewcfg.cmd_dance_alt: ewcmd.dance,
 	
 	# SlimeCorp security officers can post propaganda
-	ewcfg.cmd_propaganda: ewcmd.propaganda,
+	#ewcfg.cmd_propaganda: ewcmd.propaganda,
 	
 	# Terezi Gang can flip coins
 	ewcfg.cmd_coinflip: ewcmd.coinflip,
@@ -207,14 +206,14 @@ cmd_map = {
 	ewcfg.cmd_endlesswar: ewcmd.endlesswar,
 	
 	# Slimefest
-	ewcfg.cmd_win: ewcmd.win,
+	ewcfg.cmd_win: ewwep.attack,
 	ewcfg.cmd_slimefest: ewcmd.slimefest,
 
 	# Show the number of swears in the global swear jar.
 	# ewcfg.cmd_swear_jar: ewcmd.swearjar,
 
 	# Display the progress towards the current Quarterly Goal.
-	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
+	#ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
 	ewcfg.cmd_paspeaker: ewkingpin.pa_command,
 	ewcfg.cmd_retire: ewapt.retire,
 	ewcfg.cmd_depart: ewapt.depart,
@@ -685,7 +684,6 @@ cmd_map = {
 	ewcfg.cmd_lol: ewcmd.lol,
 
 	ewcfg.cmd_zuck : ewitem.zuck,
-	ewcfg.cmd_combo : ewdebug.combo,
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 	
@@ -854,8 +852,9 @@ cmd_map = {
 	ewcfg.cmd_tweet: ewslimetwitter.tweet,
 
 	ewcfg.cmd_changegamestate: ewdebug.change_gamestate,
-	ewcfg.cmd_press_button: ewdebug.elevator_press,
-	ewcfg.cmd_call_elevator: ewdebug.elevator_call,
+	ewcfg.cmd_display_states: ewdebug.display_states,
+	#ewcfg.cmd_press_button: ewdebug.elevator_press,
+	#ewcfg.cmd_call_elevator: ewdebug.elevator_call,
 	ewcfg.cmd_addstatuseffect: ewutils.assign_status_effect,
 
 	ewcfg.cmd_verification: ewslimetwitter.verification,

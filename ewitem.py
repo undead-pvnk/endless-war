@@ -2502,89 +2502,13 @@ async def zuck(cmd):
     user_data = EwUser(member=cmd.message.author)
 
     tokens = ewutils.flattenTokenListToString(cmd.tokens[1:])
-    print(tokens)
 
-    cor_item = find_item(item_search=tokens,  id_user=cmd.message.author.id, id_server=cmd.guild.id)
     syr_item = find_item(item_search="zuckerberg", id_user=cmd.message.author.id, id_server=cmd.guild.id)
+
     if syr_item:
-        print('syringe!')
-    if cor_item:
-        print('corpse!')
-
-    if syr_item and cor_item:
-        syr_item_obj  = EwItem(id_item=syr_item.get('id_item'))
-        cor_item_obj = EwItem(id_item=cor_item.get('id_item'))
-
-        if syr_item_obj.item_props.get('context') == 'syringe' and cor_item_obj.item_props.get('context') == 'corpse':
-            response = 'You press the machine up against {}. It makes a hideous sound as their bones and organs begin to pop and liquefy, and are sucked spiraling into the barrel. Welp, no turning back now.'.format(cor_item.get('name'))
-            item_delete(id_item=cor_item.get('id_item'))
-        else:
-            response = "Something you have there is counterfeit. Come on, zuckery is serious business."
+        response = "The syringe is all rusted out. It's a shame you zucked the only person capable of maintainting it."
     else:
         response = "You'll need a corpse and the zuck syringe before you can do that."
 
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-def sherman_donate(cmd):
-    quarter5slime = ewdebug.EwGamestate(id_server=cmd.guild.id, id_state="shermanslime")
-    user_data = EwUser(member=cmd.message.author)
-    value = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
-    emptied = 0
-    if quarter5slime.bit == 0:
-        response = "You can't donate here. Try it at SlimeCorp HQ!"
-        return response
-    elif value < 0:
-        response = "Sherman needs an exact number. Try to confuse him with words and he'll be sniffing your pockets all day long."
-    else:
-        if cmd.tokens_count != 3:
-            response = "Make sure you're giving Sherman money in the right format. It's !donate <donation type> <amount>."
-        elif ewutils.flattenTokenListToString(cmd.tokens[1]) not in ['poudrins', 'slime', 'slimecoin']:
-            response = "You need to donate in the form of Slimecoin, poudrins, or slime. Sherman doesn't take credit cards because he doesn't understand them."
-        else:
-            if ewutils.flattenTokenListToString(cmd.tokens[1]) == "poudrins":
-                quarter5pouds = ewdebug.EwGamestate(id_server=cmd.guild.id, id_state="shermanpoud")
-                valuecount = 0
-                while valuecount <= value or poudrin == None:
-                    poudrin = find_item(item_search=ewcfg.item_id_slimepoudrin, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_item)
-                    if poudrin is None:
-                        emptied = 1
-                        break
-                    item_delete(id_item = poudrin.get('id_item'))
-                    valuecount += 1
-                currentpouds = int(quarter5pouds.value)
-                currentpouds += valuecount
-                quarter5pouds.value = str(currentpouds)
-                quarter5pouds.persist()
-                if emptied:
-                    response = "Sherman empties your pockets of all your precious poudrins. He tries to juggle them all and fails miserably."
-                else:
-                    response = "You give Sherman {} poudrins. He joyfully tries to juggle them all and fails miserably.".format(value)
-
-
-            elif ewutils.flattenTokenListToString(cmd.tokens[1]) == "slime":
-                if user_data.slimes < value:
-                    response = "You don't have enough slime."
-                else:
-                    user_data.change_slimes(n = -value, source = ewcfg.source_spending)
-                    user_data.persist()
-                    currentslime = int(quarter5slime.value)
-                    currentslime += value
-                    quarter5slime.value = str(currentslime)
-                    quarter5slime.persist()
-                    response = "You donate {} slime to Sherman. He excitedly throws it up in the air and does a stupid little dance.".format(value)
-
-            elif ewutils.flattenTokenListToString(cmd.tokens[1]) == "slimecoin":
-                quarter5coin = ewdebug.EwGamestate(id_server=cmd.guild.id, id_state="shermancoin")
-                if user_data.slimecoin < value:
-                    response = "You don't have enough slimecoin."
-
-                else:
-                    user_data.change_slimecoin(n=-value, coinsource=ewcfg.source_spending)
-                    user_data.persist()
-                    currentcoin = int(quarter5coin.value)
-                    currentcoin += value
-                    quarter5coin.value = str(currentcoin)
-                    quarter5coin.persist()
-                    response = "You whip out Coinbase and transfer {} SlimeCoin into Sherman's account. He laughs giddily and slaps his thighs together.".format(value)
-
-        return response
