@@ -6,7 +6,7 @@
             "dt"
         ],
         "str_name": "Downtown NLACakaNM",
-        "str_desc": "Skyscrapers and high-rise apartments tower above the jam-packed, bustling city streets below for as far as the eye can see. In this dense concrete jungle, your attention is constantly being divided among a thousand different things. Neon, fluorescent signs flash advertisements for all manner of amenities and businesses. The streets rumble with the sound of engines and metal scraping from the subway system deep underground. Hordes of men and women from every imaginable background walk these cruel streets, trying desperately to eke out a pitiful existence for themselves. This district never unwinds from its constant 24/7 slime-induced mania for even a moment, let alone sleep.\nDowntown is the beating heart of New Los Angeles City, aka Neo Milwaukee. With settlements in the area predating the emergence of slime, its prime location along the newly formed coastline naturally grew it into the cultural, economic, and literal center of the city. Due to its symbolic and strategic importance, it's home to the most intense gang violence of the city. Gunshots and screams followed by police sirens are background noises for this district. Some say that this propensity for violence is result of the sinister influence from an old obelisk in the center of town, ominously called ENDLESS WAR. You aren\u2019t sure if you believe that, though.\n\nThis area contains ENDLESS WAR, SlimeCorp HQ, the Slime Stock Exchange and the Downtown Subway Station. To the north is Smogsburg. To the East is the Green Light District. To the South is the Rowdy Roughhouse. To the Southwest is Poudrin Alley. To the West is Krak Bay. To the Northwest is Cop Killtown.",
+        "str_desc": "Skyscrapers and high-rise apartments tower above the jam-packed, bustling city streets below for as far as the eye can see. In this dense concrete jungle, your attention is constantly being divided among a thousand different things. Neon, fluorescent signs flash advertisements for all manner of amenities and businesses. The streets rumble with the sound of engines and metal scraping from the subway system deep underground. Hordes of men and women from every imaginable background walk these cruel streets, trying desperately to eke out a pitiful existence for themselves. This district never unwinds from its constant 24/7 slime-induced mania for even a moment, let alone sleep.\nDowntown is the beating heart of New Los Angeles City, aka Neo Milwaukee. With settlements in the area predating the emergence of slime, its prime location along the newly formed coastline naturally grew it into the cultural, economic, and literal center of the city. Due to its symbolic and strategic importance, it's home to the most intense gang violence of the city. Gunshots and screams followed by police sirens are background noises for this district. Some say that this propensity for violence is result of the sinister influence from an old obelisk in the center of town, ominously called ENDLESS WAR. You aren\u2019t sure if you believe that, though.\n\nThis area contains ENDLESS WAR, SlimeCorp HQ, the Slime Stock Exchange and the Downtown Subway Station. To the north is Smogsburg. To the East is the Green Light District. To the South is the Rowdy Roughhouse. To the Southwest is Poudrin Alley. To the West is Krak Bay. To the Northwest is Cop Killtown. \n\nThe wrecked Slimecorp Building has broken pieces of its structure littered around the city, too. You can access every floor from here.\nAvailable floors: 1f, 3f, 8f, 20f, 103f, 5280f, 77777f, 809231f, and Penthouse.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -80,7 +80,18 @@
             "theslimestockexchange": 20,
             "endlesswar": 20,
             "slimecorphq": 20,
-            "downtownsubwaystation": 20
+            "downtownsubwaystation": 20,
+            "n10office": 20,
+            "n9office": 20,
+            "n8office": 20,
+            "n7office": 20,
+            "n5office": 20,
+            "n4office": 20,
+            "n3office": 20,
+            "n11office": 20,
+            "n13office": 20,
+            "n2office": 20,
+            "n12office": 20
         },
         "topic": "The Heart of New Los Angeles City, aka Neo Milwaukee. Site of the Slime Stock Exchange, the corporate headquarters of Slimecorp and Yum! Brands, and ENDLESS WAR itself.",
         "wikipage": "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM"
@@ -13595,7 +13606,7 @@
             "realestateagent"
         ],
         "str_name": "Real Estate Agency",
-        "str_desc": "The gaudy multicolored decor in here assaults the eyes. You're surprised the disheveled drunk man behind the counter could even focus in this enviornment. Well, knowing him, maybe he isn't. \n\nExits into Old New Yonkers.",
+        "str_desc": "The gaudy multicolored decor in here assaults the eyes. You're surprised the disheveled drunk realtor behind the counter could even focus in this enviornment. Well, knowing him, maybe he isn't. \n\nExits into Old New Yonkers.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -16496,7 +16507,6 @@
         },
         "pvp": false,
         "factions": [
-            "slimecorp"
         ],
         "life_states": [],
         "closed": false,
@@ -17942,7 +17952,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n10office": 20,
+            "downtown": 20,
             "slimecorptunnel": 20
         },
         "topic": "",
@@ -17956,7 +17966,7 @@
             "1f"
         ],
         "str_name": "Slimecorp Offices **1F**",
-        "str_desc": "The 1st floor corporate office of Slimecorp is awfully quiet now that you've barged in. The wagecucks are all hiding under their **DESKS** hoping you'll go away. Ha, sick. There's no time to lose, though. You're pretty sure a secretary already called 911.\n\nYou notice N10 works here. His desk is a real dust trap, but it's well organized. Maybe he doesn't use it much? Anyhow, looks like you can log into his **COMPUTER**. You also notice the **DOOR** to Slimecorp HQ unlocks from this side. You also find M@'s **LAPTOP** on a desk right next to his. You can go to the Elevator from here, as well as Slimecorp's hidden research facility and Slimecorp HQ. Though you might have to !callelevator if it's on another floor.",
+        "str_desc": "The 1st floor corporate office of Slimecorp is awfully quiet now that you've barged in. The wagecucks are all hiding under their **DESKS** hoping you'll go away. Ha, sick. There's no time to lose, though. You're pretty sure a secretary already called 911.\n\nYou notice N10 works here. His desk is a real dust trap, but it's well organized. Maybe he doesn't use it much? Anyhow, looks like you can log into his **COMPUTER**. You also notice the **DOOR** to Slimecorp HQ unlocks from this side. You also find M@'s **LAPTOP** on a desk right next to his. Exits into Downtown.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18003,9 +18013,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n12office":20,
-            "n4office": 20,
-            "slimecorphq": 20
+            "downtown":20
         },
         "topic": "",
         "wikipage": ""
@@ -18063,16 +18071,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n2office":20,
-            "n3office":20,
-            "n5office":20,
-            "n8office":20,
-            "n9office":20,
-            "n10office":20,
-            "n11office":20,
-            "n12office":20,
-            "n13office":20,
-            "n7office": 20
+            "downtown":20
         },
         "topic": "",
         "wikipage": ""
@@ -18085,7 +18084,7 @@
             "3f"
         ],
         "str_name": "Slimecorp **3F**: Investments and Accounting",
-        "str_desc": "Your eyes are bombarded with **SCREENS** on all sides, full of seizure-inducing levels of stock-based data. The only surface not completely covered in the stuff is N13's **DESK**. Kept neat and tidy, the only thing you see that pops out is the **COMPUTER**.\n\nExits back to the Elevator.",
+        "str_desc": "Your eyes are bombarded with **SCREENS** on all sides, full of seizure-inducing levels of stock-based data. The only surface not completely covered in the stuff is N13's **DESK**. Kept neat and tidy, the only thing you see that pops out is the **COMPUTER**.\n\nExits into Downtown.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18132,7 +18131,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n4office":20
+            "downtown":20
         },
         "topic": "",
         "wikipage": ""
@@ -18145,7 +18144,7 @@
             "n2"
         ],
         "str_name": "Slimecorp **8F**: Marketing",
-        "str_desc": "An entire wall of this huge office is taken up by a **WHITEBOARD**, chock full of works in progress and scrapped ideas. They're messily scrawled all over it, not unlike the rest of this shithole. Snack food wrappers cover the floor and **DESK**, and the large **FILING CABINET** in the corner has seen inhumane levels of wear and tear.\n\nExits back to the Elevator.",
+        "str_desc": "An entire wall of this huge office is taken up by a **WHITEBOARD**, chock full of works in progress and scrapped ideas. They're messily scrawled all over it, not unlike the rest of this shithole. Snack food wrappers cover the floor and **DESK**, and the large **FILING CABINET** in the corner has seen inhumane levels of wear and tear.\n\nExits into Downtown.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18192,7 +18191,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n4office":20
+            "downtown":20
         },
         "topic": "",
         "wikipage": ""
@@ -18205,7 +18204,7 @@
             "20f"
         ],
         "str_name": "Slimecorp **20F**: Currently Vacant",
-        "str_desc": "The room is perfectly empty. The **DESK** is tidy, save for a layer of dust and a few packs of those sticky note things.\n\nExits back to the Elevator.",
+        "str_desc": "The room is perfectly empty. The **DESK** is tidy, save for a layer of dust and a few packs of those sticky note things.\n\nExits into Downtown.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18252,7 +18251,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n4office":20
+            "downtown":20
         },
         "topic": "",
         "wikipage": ""
@@ -18265,7 +18264,7 @@
             "filestorage"
         ],
         "str_name": "Slimecorp **103F**: File Storage",
-        "str_desc": "The shutters are closed in here, and it takes a few minutes to find the light switch. The office is pretty normal, save for being filled to the brim with various bullshit: **CLEANING SUPPLIES**, **FILING CABINETS**, what looks like a high-end **COFFEE MACHINE**, and a big laminated **SIGN** staring at you when you walk in. \n\nExits back to the Elevator.",
+        "str_desc": "The shutters are closed in here, and it takes a few minutes to find the light switch. The office is pretty normal, save for being filled to the brim with various bullshit: **CLEANING SUPPLIES**, **FILING CABINETS**, what looks like a high-end **COFFEE MACHINE**, and a big laminated **SIGN** staring at you when you walk in. \n\nExits into Downtown.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18312,7 +18311,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n4office":20
+            "downtown":20
         },
         "topic": "",
         "wikipage": ""
@@ -18325,7 +18324,7 @@
             "5280f"
         ],
         "str_name": "Slimecorp **528F0**: Administration",
-        "str_desc": "You smell smoke. You would think N3 keeps a clean house, but there's a pile of **SOOT** overflowing from a metal wastebasket beside her desk. Apart from that, the whole place is cleaned out.\n\nExits back to the Elevator.",
+        "str_desc": "You smell smoke. You would think N3 keeps a clean house, but there's a pile of **SOOT** overflowing from a metal wastebasket beside her desk. Apart from that, the whole place is cleaned out.\n\nExits into Downtown.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18372,7 +18371,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n4office":20
+            "downtown":20
         },
         "topic": "",
         "wikipage": ""
@@ -18385,7 +18384,7 @@
             "executiveassistance"
         ],
         "str_name": "Slimecorp **77777F**: Executive Assistance",
-        "str_desc": "There's a real soothing vibe in here, if you didn't know any better you'd drop in a beanbag chair and doze off. There's a **CORKBOARD** full of exotic tourist photos hanging on the wall as you walk in, and her desk has an assortment of beanie babies on it. N7's **LAPTOP** sits open on the desk, but it's in sleep mode.\n\nExits back to the Elevator.",
+        "str_desc": "There's a real soothing vibe in here, if you didn't know any better you'd drop in a beanbag chair and doze off. There's a **CORKBOARD** full of exotic tourist photos hanging on the wall as you walk in, and her desk has an assortment of beanie babies on it. N7's **LAPTOP** sits open on the desk, but it's in sleep mode.\n\nExits into Downtown.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18432,7 +18431,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n4office":20
+            "downtown":20
         },
         "topic": "",
         "wikipage": ""
@@ -18445,7 +18444,7 @@
             "humanresources"
         ],
         "str_name": "Slimecorp **809231f**: Human Resources",
-        "str_desc": "N11's office stinks of cigar, but apart from that it's pretty nice. The corner's lined with an L-shaped **LUXURY COUCH** and a coffee table. The walls are **BRICK**, a strange contrast for just one floor of the building. N11 as a standard issue **COMPUTER** at his desk, but it's tucked in a whole other corner, full of his family group photos and a few shots of giant fish he caught. Maybe he's trying to separate paperwork from his human resourcin' gig.\n\nExits back to the Elevator.",
+        "str_desc": "N11's office stinks of cigar, but apart from that it's pretty nice. The corner's lined with an L-shaped **LUXURY COUCH** and a coffee table. The walls are **BRICK**, a strange contrast for just one floor of the building. N11 as a standard issue **COMPUTER** at his desk, but it's tucked in a whole other corner, full of his family group photos and a few shots of giant fish he caught. Maybe he's trying to separate paperwork from his human resourcin' gig.\n\nExits into Downtown.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18492,8 +18491,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n4office":20,
-            "thebreakroom": 20
+            "downtown":20
         },
         "topic": "",
         "wikipage": ""
@@ -18506,7 +18504,7 @@
             "penthouse"
         ],
         "str_name": "Slimecorp **Penthouse**: Executive Suite",
-        "str_desc": "The moment you stepped out of the elevator, the gravity completely flipped. You're on the top floor of the Slimecorp building standing on the ceiling, which is actually the floor. Looking below into the penthouse, you see the surface of the moon out of a glass floor beneath you. You're a long ways from home...\n\nThe inside of the room is completely torn apart, luxury furniture broken, all plumbing burst open and leaking into the cracks of the glass. N1's **LAPTOP** somehow survived the ruckus, too. Exits are The Moon and The Elevator.",
+        "str_desc": "Now that it's broken off from the rest of the building, gravity has you standing on the penthouse's walls. You're on the top floor of the Slimecorp building standing on the wall, which is actually the wall this time. Looking into the penthouse, you see the still-recovering shambles of Downtown out of the glass floor.\n\nThe inside of the room is completely torn apart, luxury furniture broken, all plumbing burst open and leaking into the cracks of the glass. N1's **LAPTOP** somehow survived the ruckus, too. Exits into Downtown.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18553,8 +18551,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n4office":20,
-            "themoon": 20
+            "downtown":20
         },
         "topic": "",
         "wikipage": ""
@@ -18567,7 +18564,7 @@
             "n1"
         ],
         "str_name": "The Moon",
-        "str_desc": "Hey wait, you're on the moon. How are you able to breathe? Well never mind that, you've got bigger fish to fry. Go kill N1. Just because I'm the same ilk as that N1 guy doesn't mean I have any hangups about castrating the motherfucker. Exits into Slimecorp Penthouse.",
+        "str_desc": "Hey wait, you're on the moon. How are you able to breathe? Well never mind that. You're doing it and that's what counts. There's a pretty sizable chunk taken out of it ever since N1 went and exploded. If only you could fish here, then you'd be able to fulfill your lifelong dream of imitating the guy from the Dreamworks logo. Whatever the case, there isn't anywhere else to go. !loop back or die, it's your decision.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18614,7 +18611,6 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n9office":20
         },
         "topic": "",
         "wikipage": ""
@@ -18928,7 +18924,7 @@
             "tunnel"
         ],
         "str_name": "Slimecorp Hidden Tunnel",
-        "str_desc": "You feel a cold breeze through this dark, steel corridor. It's pitch black, and you can hear faint, unknown sounds in the distance. It's unbelievably long, too, maybe 3 or 4 miles. One exit leads to the Underground Research Facility. The other goes to the Lobby Backroom.",
+        "str_desc": "You feel a cold breeze through this dark, steel corridor. It's pitch black, and you can hear faint, unknown sounds in the distance. It's unbelievably long, too, maybe 3 or 4 miles. The only exit goes back to the Lobby Backroom.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -18975,8 +18971,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "lobbybackroom":180,
-            "n12office": 180
+            "lobbybackroom":20
 
         },
         "topic": "",

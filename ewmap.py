@@ -727,21 +727,6 @@ def inaccessible(user_data = None, poi = None):
     source_poi = ewcfg.id_to_poi.get(user_data.poi)
 
 
-
-    if 'n4office' in poi.neighbors and 'n4office' in source_poi.neighbors:
-        return True
-    if 'themoon' == poi.id_poi and user_data.poi != 'n9office':
-        return True
-
-    elevatorstop = EwGamestate(id_server=user_data.id_server, id_state='elevator')
-
-    #locks that inhibit one route, used for the elevator
-    for lock in ewcfg.lock_states:
-        if poi.id_poi in ewcfg.lock_states.get(lock) and user_data.poi in ewcfg.lock_states.get(lock):
-            gamestate = EwGamestate(id_server=user_data.id_server, id_state=lock)
-            if gamestate.bit == 0 or (elevatorstop.value not in ewcfg.lock_states.get(lock) and "slimecorphq" not in [poi.id_poi, user_data.poi]):
-                return True
-
     #locks that inhibit a POI
     for lock in ewcfg.region_lock_states:
         if poi.id_poi == lock:

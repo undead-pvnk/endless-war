@@ -4059,53 +4059,14 @@ async def check_mastery(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-async def win(cmd):
 
-	#if cmd.message.channel.name != ewcfg.channel_slimefest:
-	#	response = "You have to participate in #{} to win.".format(ewcfg.channel_slimefest)
-	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	user_data = EwUser(member=cmd.message.author)
-
-	response = ''
-
-	if user_data.life_state == ewcfg.life_state_corpse:
-		response = "You have no dog in this race. You're not even a real live person."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	if user_data.life_state == ewcfg.life_state_juvenile:
-		response = "You're too scared to take Slimecorp down."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	if user_data.life_state == ewcfg.life_state_kingpin:
-		response = "Slime what?"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
-	#if user_data.slimes < 1:
-	#	response = "You don't have enough slime to win Slimefest!"
-	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	if user_data.faction == ewcfg.faction_slimecorp:
-		response = "You better. N11 won't be so nice anymore if you fuck this up for him."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	if user_data.faction in [ewcfg.faction_killers, ewcfg.faction_rowdys]:
-		response = "YEEEEEAAAAAAAHHHHHHH!!!! FUCK SHILLS!."
-		#user_data.slimes -= 1
-		#user_data.persist()
-		#market_data = EwMarket(id_server = cmd.guild.id)
-		#market_data.winner = user_data.faction
-		#market_data.persist()
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-		
 		
 		
 async def slimefest(cmd):
 
 	market_data = EwMarket(id_server = cmd.guild.id)
 	
-	response = "Slimecorp has taken down slimefest"
+	response = "Soon..."
 	#if market_data.winner == ewcfg.faction_killers:
 	#	response = "Killers are winning Slimefest."
 	#elif market_data.winner == ewcfg.faction_rowdys:

@@ -33,7 +33,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.72slimefest"
+version = "v4.002epilogue"
 
 
 dir_msgqueue = 'msgqueue'
@@ -940,7 +940,7 @@ hideout_by_faction = {
 
 
 # Commands
-cmd_prefix = '>'
+cmd_prefix = '!'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -978,7 +978,6 @@ cmd_suicide_alt1 = cmd_prefix + 'seppuku'
 cmd_suicide_alt2 = cmd_prefix + 'sudoku'
 cmd_haveastroke = cmd_prefix + 'haveastroke'
 cmd_moonhurtingbeam = cmd_prefix + 'moonhurtingbeam'
-cmd_n1_die = cmd_prefix + 'die'
 cmd_haunt = cmd_prefix + 'haunt'
 cmd_inhabit = cmd_prefix + 'inhabit'
 cmd_letgo = cmd_prefix + 'letgo'
@@ -1321,7 +1320,7 @@ cmd_sip = cmd_prefix + 'sip'
 cmd_fashion = cmd_prefix + 'fashion'
 
 cmd_zuck = cmd_prefix + 'zuck'
-cmd_combo = cmd_prefix + 'combo'
+
 
 cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
 cmd_beginmanuscript_alt_1 = cmd_prefix + 'createmanuscript'
@@ -1492,6 +1491,7 @@ cmd_verification_alt = cmd_prefix + '#verify'
 
 
 cmd_changegamestate = cmd_prefix + 'changegamestate'
+cmd_display_states = cmd_prefix + 'displaystates'
 cmd_press_button = cmd_prefix + 'press'
 cmd_call_elevator = cmd_prefix + 'callelevator'
 cmd_addstatuseffect = cmd_prefix + 'addstatuseffect'
@@ -8076,8 +8076,9 @@ landlocked_destinations ={
 	poi_id_slimesend:poi_id_poloniumhill,
 	poi_id_charcoalpark:poi_id_ferry,
 	poi_id_ferry:poi_id_charcoalpark,
-	poi_id_toxington:poi_id_ferry
-
+	poi_id_toxington:poi_id_ferry,
+	poi_id_thevoid:poi_id_themoon,
+	poi_id_themoon:poi_id_thevoid
 }
 
 #landlocked_destinations ={
