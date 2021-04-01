@@ -661,7 +661,7 @@ channel_endlesswar = "endless-war"
 channel_sewers = "the-sewers"
 channel_dojo = "the-dojo"
 channel_twitch_announcement = "rfck-chat"
-channel_casino = "casino"
+channel_casino = "the-casino"
 channel_stockexchange = "slime-stock-exchange"
 channel_foodcourt = "food-court"
 channel_slimeoidlab = "nlacu-labs"
@@ -11476,7 +11476,7 @@ mutations = [
 	EwMutationFlavor(
 		id_mutation = mutation_id_nosferatu,
 		str_name="Noseferatu",
-        alias = ['nose', 'nf', 'vampire'],
+        alias = ['nose', 'nf', 'vampire', 'noseferatu'],
 		str_describe_self = "Your freakishly huge, hooked schnoz and pointed ears give you a ghoulish appearance due to **Noseferatu**.",
 		str_describe_other = "Their freakishly huge, hooked schnoz and pointed ears give them a ghoulish appearance due to **Noseferatu**.",
 		str_acquire = "The bridge of your nose nearly triples in size. You recoil as the heat of nearby lights sear your skin, forcing you to seek cover under the shadows of dark, secluded alleyways. Your freakish appearance make you a social outcast, filling you with a deep resentment which evolves into unbridled rage. You will have your revenge. You have developed the mutation **Noseferatu**. At night, when attacking, 60% of splattered slime is absorbed directly into your slimecount.",
@@ -15097,7 +15097,7 @@ captcha_dict = [
 	'HEHE', 'WEED', 'LMAO', 'EPIC', 'NICE',
 	'SOUL', 'KILL', 'FREE', 'GOOP', 'CAVE',
 	'ZOOM', 'FIVE', 'NINE', 'BASS', 'FIRE',
-	'TEXT', 'AWOO',
+	'TEXT', 'AWOO', 'GOKU',
 	#5
 	'GUNKY', 'BOORU', 'ROWDY', 'GHOST', 'ORDER',
 	'SCARE', 'BULLY', 'FERRY', 'SAINT', 'SLASH',
