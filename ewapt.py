@@ -366,6 +366,19 @@ async def signlease(cmd):
 
 		if had_old_place:
 			response += " The receptionist calls up a moving crew, who quickly move your stuff to your new place. "
+		else:
+
+			for value in ewcfg.fuck_energies:
+				item = ewcfg.food_map.get(value)
+				item_props = ewitem.gen_item_props(item)
+				id_item = ewitem.item_create(
+					item_type=ewcfg.it_food,
+					id_user= '{}{}'.format(cmd.message.author.id, 'fridge'),
+					id_server=cmd.guild.id,
+					stack_max=-1,
+					stack_size=0,
+					item_props=item_props
+				)
 
 		await toss_squatters(user_data.id_user, user_data.id_server)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

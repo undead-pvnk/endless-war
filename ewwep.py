@@ -3589,14 +3589,17 @@ async def sidearm(cmd):
 
 async def switch_weapon(cmd):
 	user_data = EwUser(member = cmd.message.author)
+
+	if user_data.weaponmarried:
+		response = "You don't have the heart to cheat on your wife with your side ho. Not right in front of her. Not like this."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	weapon_holder = user_data.weapon
 	user_data.weapon = user_data.sidearm
 	user_data.sidearm = weapon_holder
 	user_data.persist()
 
-	if user_data.weaponmarried:
-		response = "You don't have the heart to cheat on your wife with your side ho. Not right in front of her. Not like this."
-	elif user_data.weapon == -1 and user_data.sidearm == -1:
+	if user_data.weapon == -1 and user_data.sidearm == -1:
 		response = "You switch your nothing for nothing. What a notable exchange."
 	elif user_data.weapon == -1 and user_data.sidearm:
 		response = "You put your weapon away."

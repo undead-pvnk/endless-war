@@ -2420,25 +2420,28 @@ async def flush_streets(cmd):
 
 async def send_gangbase_messages(server_id, clock):
     #this can be added onto for events and such
+    lucky_lucy = 0
+    casino_response = "**Lucky Lucy has arrived!** Now's the time to make your fortune!"
+    casino_end = "Aww, Lucy left."
 
     response = ""
     if clock == 3:
         response = "The police are probably asleep, the lazy fucks. It's a good time for painting the town!"
-        cop_response = "STATISTICS SHOW GANG ACTIVITY INCREASES AFTER NIGHTFALL. REMAIN VIGILANT."
     elif clock == 11:
         response = "Spray time's over, looks like the cops are back out. Fuck those guys."
-        cop_response = "STATISTICS SHOW GANG ACTIVITY DECLINES DURING DAYLIGHT HOURS. GET TO WORK."
-
-
+    elif random.randint(1, 50) == 1:
+        lucky_lucy = 1
 
     client = ewutils.get_client()
     server = client.get_guild(server_id)
     channels = ewcfg.hideout_channels
+    casino_channel = ewcfg.channel_casino
 
     if response != "":
         for channel in channels:
             post_channel = ewutils.get_channel(server, channel)
-            if channel == ewcfg.channel_breakroom:
-                await ewutils.send_message(client, post_channel, cop_response)
-            else:
-                await ewutils.send_message(client, post_channel, response)
+            await ewutils.send_message(client, post_channel, response)
+    if lucky_lucy == 1:
+        await ewutils.send_message(client, casino_channel, casino_response)
+        await asyncio.sleep(300)
+        await ewutils.send_message(client, casino_channel, casino_end)
