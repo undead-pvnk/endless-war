@@ -3567,6 +3567,10 @@ async def unbottleslimeoid(cmd):
 	active_slimeoid = EwSlimeoid(member= cmd.message.author)
 
 	if active_slimeoid.life_state == ewcfg.slimeoid_state_active:
+		
+		if active_slimeoidbattles.get(active_slimeoid.id_slimeoid):
+			response = "You can't do that right now."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		active_slimeoid.life_state = ewcfg.slimeoid_state_stored
 		active_slimeoid.id_user = ""
