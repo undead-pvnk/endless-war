@@ -422,15 +422,15 @@ async def cast(cmd):
 						if random.randrange(5) == 3:
 							fisher.current_fish = "marlinsupreme"
 
-					elif id_food in ["blacklimes", "blacklimesour"]:
+					elif id_food in "blacklimesour":
 						if random.randrange(2) == 1:
 							fisher.current_fish = "blacklimesalmon"
 
-					elif id_food in ["pinkrowddishes", "pinkrowdatouille"]:
+					elif id_food in "pinkrowdatouille":
 						if random.randrange(2) == 1:
 							fisher.current_fish = "thrash"
 
-					elif id_food in ["purplekilliflowercrustpizza", "purplekilliflower"]:
+					elif id_food in "purplekilliflowercrustpizza":
 						if random.randrange(2) == 1:
 							fisher.current_fish = "dab"
 
