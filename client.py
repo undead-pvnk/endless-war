@@ -152,6 +152,7 @@ cmd_map = {
 	ewcfg.cmd_score: ewcmd.score,
 	ewcfg.cmd_score_alt1: ewcmd.score,
 	ewcfg.cmd_score_alt2: ewcmd.score,
+	ewcfg.cmd_score_alt3: ewcmd.score,
 	# Show a player's combat data.
 	ewcfg.cmd_data: ewcmd.data,
 
@@ -285,22 +286,36 @@ cmd_map = {
 
 	# Ghosts can haunt enlisted players to reduce their slime score.
 	ewcfg.cmd_haunt: ewspooky.haunt,
+	ewcfg.cmd_haunt_alt1: ewspooky.haunt,
+	ewcfg.cmd_haunt_alt2: ewspooky.haunt,
+	ewcfg.cmd_haunt_alt3: ewspooky.haunt,
 
 	# ghosts can inhabit players to follow them around
 	ewcfg.cmd_inhabit: ewspooky.inhabit,
+	ewcfg.cmd_inhabit_alt1: ewspooky.inhabit,
+	ewcfg.cmd_inhabit_alt2: ewspooky.inhabit,
+	ewcfg.cmd_inhabit_alt3: ewspooky.inhabit,
 
 	# remove inhabitted status
 	ewcfg.cmd_letgo: ewspooky.let_go,
 
 	# ghosts can empower the weapon of the player they're inhabiting
 	ewcfg.cmd_possess_weapon: ewspooky.possess_weapon,
+	ewcfg.cmd_possess_weapon_alt1: ewspooky.possess_weapon,
+	ewcfg.cmd_possess_weapon_alt2: ewspooky.possess_weapon,
 
 	# ghosts can enhance fishing for the player they're inhabiting
 	ewcfg.cmd_possess_fishing_rod: ewspooky.possess_fishing_rod,
 	ewcfg.cmd_possess_fishing_rod_alt1: ewspooky.possess_fishing_rod,
+	ewcfg.cmd_possess_fishing_rod_alt2: ewspooky.possess_fishing_rod,
+	ewcfg.cmd_possess_fishing_rod_alt3: ewspooky.possess_fishing_rod,
+	ewcfg.cmd_possess_fishing_rod_alt4: ewspooky.possess_fishing_rod,
 
 	# ghosts can turn their negaslime into negapoudrins
 	ewcfg.cmd_crystalize_negapoudrin: ewspooky.crystalize_negapoudrin,
+	ewcfg.cmd_crystalize_negapoudrin_alt1: ewspooky.crystalize_negapoudrin,
+	ewcfg.cmd_crystalize_negapoudrin_alt2: ewspooky.crystalize_negapoudrin,
+	ewcfg.cmd_crystalize_negapoudrin_alt3: ewspooky.crystalize_negapoudrin,
 	
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
@@ -613,6 +628,8 @@ cmd_map = {
 	ewcfg.cmd_summonnegaslimeoid_alt2: ewspooky.summon_negaslimeoid,
 	ewcfg.cmd_battlenegaslimeoid: ewslimeoid.negaslimeoidbattle,
 	ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
+	ewcfg.cmd_battlenegaslimeoid_alt2: ewslimeoid.negaslimeoidbattle,
+	ewcfg.cmd_battlenegaslimeoid_alt3: ewslimeoid.negaslimeoidbattle,
 
 	# Enemies
 	ewcfg.cmd_summonenemy: ewhunting.summonenemy,
