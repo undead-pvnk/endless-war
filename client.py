@@ -385,6 +385,7 @@ cmd_map = {
 
 	# show player's current shares in a compant
 	ewcfg.cmd_shares: ewmarket.shares,
+	ewcfg.cmd_shares_alt1: ewmarket.shares,
 
 	# check available stocks
 	ewcfg.cmd_stocks: ewmarket.stocks,
