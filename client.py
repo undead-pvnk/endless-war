@@ -250,6 +250,7 @@ cmd_map = {
 	ewcfg.cmd_jump: ewcmd.jump,
 	ewcfg.cmd_push: ewcmd.push,
 	ewcfg.cmd_push_alt_1: ewcmd.push,
+	ewcfg.cmd_push_alt_2: ewcmd.push,
 
 
 	ewcfg.cmd_dyefurniture: ewapt.dyefurniture,
