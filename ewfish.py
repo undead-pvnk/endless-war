@@ -1027,7 +1027,20 @@ async def barter(cmd):
 				if offer.time_sinceoffer > 0 and time_offered < ewcfg.fish_offer_timeout:
 					offer_receive = str(offer.offer_receive)
 
-					if offer_receive.isdigit() == True:
+					if offer_receive.isdigit() == True and ewcfg.mutation_id_onemansjunk in mutations:
+						item = random.choice(items)
+
+						if hasattr(item, 'id_item'):
+							offer.offer_receive = item.id_item
+
+						if hasattr(item, 'id_food'):
+							offer.offer_receive = item.id_food
+
+						if hasattr(item, 'id_cosmetic'):
+							offer.offer_receive = item.id_cosmetic
+
+						response = '\n"Well, back again I see! That fish certainly looked better the last time I saw it. Best I’ll do is trade ya a {} for your {}."'.format(item.str_name, name)
+					elif offer_receive.isdigit() == True:
 						slime_gain = int(offer.offer_receive)
 
 						response = '\n"Well, back again I see! My offer still stands, I’ll trade ya {} slime for your {}"'.format(slime_gain, name)
@@ -1072,7 +1085,7 @@ async def barter(cmd):
 					# Random choice between 0, 1, and 2
 					offer_decision = random.randint(0, 2)
 
-					if (offer_decision != 2 or ewcfg.mutation_id_davyjoneskeister in mutations) and item_props.get('noslime') != "true": # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
+					if (offer_decision != 2 or ewcfg.mutation_id_davyjoneskeister in mutations) and item_props.get('noslime') != "true" and ewcfg.mutation_id_onemansjunk not in mutations: # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
 						max_value = value * 6000 # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
 						min_value = max_value / 10 # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
 
