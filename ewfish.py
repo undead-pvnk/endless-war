@@ -648,10 +648,10 @@ async def award_fish(fisher, cmd, user_data):
 
 			item = random.choice(ewcfg.mine_results)
 		
-			if actual_fisherman_data.juviemode:
-				unearthed_item_amount = 1
-			else:
-				unearthed_item_amount = (random.randrange(5) + 8) # anywhere from 8-12 drops
+			#if actual_fisherman_data.juviemode:
+			#	unearthed_item_amount = 1
+			#else:
+			unearthed_item_amount = (random.randrange(5) + 8) # anywhere from 8-12 drops
 
 			item_props = ewitem.gen_item_props(item)
 
@@ -789,7 +789,7 @@ async def award_fish(fisher, cmd, user_data):
 				'time_fridged': 0,
 				'acquisition': ewcfg.acquisition_fishing,
 				'value': value,
-				'noslime': 'true' if actual_fisherman_data.juviemode else 'false'
+				'noslime': 'false' #if not actual_fisherman_data.juviemode else 'true'
 			}
 		)
 

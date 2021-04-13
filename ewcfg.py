@@ -1525,8 +1525,8 @@ offline_cmds = [
 ]
 
 # Maximum amount of slime juveniles can have before being killable
-max_safe_slime = 100000
-max_safe_level = 18
+#max_safe_slime = 100000
+#max_safe_level = 18
 
 # Slime costs/values
 slimes_onrevive = 20
@@ -12379,7 +12379,7 @@ status_high_id = "high"
 status_modelovaccine_id = "modelovaccine"
 status_slapped_id = "slapped"
 status_foodcoma_id = "foodcoma"
-status_juviemode_id = "juviemode"
+#status_juviemode_id = "juviemode"
 
 status_n1 = "n1"
 status_n2 = "n2"
@@ -12634,12 +12634,12 @@ status_effect_list = [
 		crit_mod_self=.5
 	),
 
-	EwStatusEffectDef(
-		id_status = status_juviemode_id,
-		time_expire = 86400,
-		str_acquire = "",
-		str_describe_self = "You're carrying slime under the legal limit."
-	),
+	#EwStatusEffectDef(
+	#	id_status = status_juviemode_id,
+	#	time_expire = 86400,
+	#	str_acquire = "",
+	#	str_describe_self = "You're carrying slime under the legal limit."
+	#),
 	EwStatusEffectDef(
 		id_status = status_kevlarattire_id,
 		time_expire = 86400,

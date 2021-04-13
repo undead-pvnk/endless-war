@@ -434,7 +434,7 @@ def canAttack(cmd, amb_switch = 0):
 			# Target is possessing user's weapon
 			response = "{}'s contract forbids you from harming them. You should've read the fine print.".format(member.display_name)
 
-		elif not poi.pvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user or user_isshambler) or (shootee_data.life_state == ewcfg.life_state_juvenile and shootee_data.slimelevel <= ewcfg.max_safe_level):
+		elif not poi.pvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user or user_isshambler): #or (shootee_data.life_state == ewcfg.life_state_juvenile and shootee_data.slimelevel <= ewcfg.max_safe_level):
 			# Target is neither flagged for PvP, nor a shambler, nor a ghost inhabiting the player, nor a juvie above a certain threshold slime. Player is not a shambler.
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
