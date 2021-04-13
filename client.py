@@ -103,6 +103,7 @@ cmd_map = {
 	ewcfg.cmd_shoot_alt5: ewwep.attack,
 	ewcfg.cmd_shoot_alt6: ewwep.attack,
 	ewcfg.cmd_shoot_alt7: ewwep.attack,
+	ewcfg.cmd_shoot_alt8: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	# Reload
@@ -289,6 +290,8 @@ cmd_map = {
 	ewcfg.cmd_haunt_alt1: ewspooky.haunt,
 	ewcfg.cmd_haunt_alt2: ewspooky.haunt,
 	ewcfg.cmd_haunt_alt3: ewspooky.haunt,
+	ewcfg.cmd_haunt_alt4: ewspooky.haunt,
+	ewcfg.cmd_haunt_alt5: ewspooky.haunt,
 
 	# ghosts can inhabit players to follow them around
 	ewcfg.cmd_inhabit: ewspooky.inhabit,
@@ -316,6 +319,7 @@ cmd_map = {
 	ewcfg.cmd_crystalize_negapoudrin_alt1: ewspooky.crystalize_negapoudrin,
 	ewcfg.cmd_crystalize_negapoudrin_alt2: ewspooky.crystalize_negapoudrin,
 	ewcfg.cmd_crystalize_negapoudrin_alt3: ewspooky.crystalize_negapoudrin,
+	ewcfg.cmd_crystalize_negapoudrin_alt4: ewspooky.crystalize_negapoudrin,
 	
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
@@ -428,6 +432,7 @@ cmd_map = {
 
 	# eat a food item from a player's inventory
 	ewcfg.cmd_eat: ewfood.eat_item,
+	ewcfg.cmd_eat_alt1: ewfood.eat_item,
 
 	# Remove a megaslime (1 mil slime) from a general.
 	ewcfg.cmd_deadmega: ewkingpin.deadmega,
@@ -444,6 +449,7 @@ cmd_map = {
 	ewcfg.cmd_move_alt3: ewmap.move,
 	ewcfg.cmd_move_alt4: ewmap.move,
 	ewcfg.cmd_move_alt5: ewmap.move,
+	ewcfg.cmd_move_alt6: ewmap.move,
 
 	# go down
 	ewcfg.cmd_descend: ewmap.descend,
@@ -464,6 +470,7 @@ cmd_map = {
 	
 	# Look around the POI, but do not obtain the district's description (reduces clutter and response time).
 	ewcfg.cmd_survey: ewmap.survey,
+	ewcfg.cmd_survey_alt1: ewmap.survey,
 	
 	# Inspect objects in a POI
 	ewcfg.cmd_scrutinize: ewdebug.scrutinize,
@@ -513,6 +520,7 @@ cmd_map = {
 	#scavenging
 	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 	ewcfg.cmd_scavenge_alt1: ewjuviecmd.scavenge,
+	ewcfg.cmd_scavenge_alt2: ewjuviecmd.scavenge,
 
 	#cosmetics
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
@@ -521,6 +529,7 @@ cmd_map = {
 	ewcfg.cmd_sew: ewcosmeticitem.sew,
 	ewcfg.cmd_retrofit: ewcosmeticitem.retrofit,
 	ewcfg.cmd_fashion: ewcmd.fashion,
+	ewcfg.cmd_fashion_alt1: ewcmd.fashion,
 
 	ewcfg.cmd_create: ewkingpin.create,
 	ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
