@@ -292,6 +292,7 @@ cmd_map = {
 	ewcfg.cmd_haunt_alt3: ewspooky.haunt,
 	ewcfg.cmd_haunt_alt4: ewspooky.haunt,
 	ewcfg.cmd_haunt_alt5: ewspooky.haunt,
+	ewcfg.cmd_haunt_alt6: ewspooky.haunt,
 
 	# ghosts can inhabit players to follow them around
 	ewcfg.cmd_inhabit: ewspooky.inhabit,
