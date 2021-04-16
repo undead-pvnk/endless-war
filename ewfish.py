@@ -248,7 +248,7 @@ def gen_fish(x, fisher, has_fishingrod):
 			if ewcfg.fish_map[fish].catch_time == ewcfg.fish_catchtime_rain:
 				fish_pool.remove(fish)
 
-	if market_data.clock < 20 or market_data.clock > 5:
+	if 5 < market_data.clock < 20:
 		for fish in fish_pool:
 			if ewcfg.fish_map[fish].catch_time == ewcfg.fish_catchtime_night:
 				fish_pool.remove(fish)
