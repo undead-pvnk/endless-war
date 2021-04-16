@@ -232,9 +232,11 @@ async def smeltsoul(cmd):
 		item_obj = ewitem.EwItem(id_item=item.get('id_item'))
 		if item_obj.item_props.get('target') != None and item_obj.item_props.get('target') != "":
 			targetid = item_obj.item_props.get('target')
-			ewitem.give_item(id_user=cmd.message.author.id, id_item=targetid, id_server=cmd.guild.id)
-			response = "You ripped the soul out of the reanimated corpse. It's in mangled bits now."
-			ewitem.item_delete(id_item=item.get('id_item'))
+			if ewitem.give_item(id_user=cmd.message.author.id, id_item=targetid, id_server=cmd.guild.id):
+				response = "You ripped the soul out of the reanimated corpse. It's in mangled bits now."
+				ewitem.item_delete(id_item=item.get('id_item'))
+			else:
+				response = "You reach for the soul in the reanimated corpse, but your hands are full of cosmetics! Get rid of a few, freak."
 		else:
 			response = "That's not a reanimated corpse. It only looks like one. Get rid of the fake shit and we'll get started."
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

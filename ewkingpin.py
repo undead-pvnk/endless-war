@@ -7,6 +7,7 @@ import ewcfg
 import ewrolemgr
 import ewmap
 from ew import EwUser
+import re
 
 """
 	Release the specified player from their commitment to their faction.
@@ -16,7 +17,7 @@ async def pardon(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
 	if user_data.life_state != ewcfg.life_state_kingpin and user_data.life_state != ewcfg.life_state_executive and not cmd.message.author.guild_permissions.administrator:
-		response = "Only the Rowdy Fucker {}, the Cop Killer {} and Slimecorp Executives {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller, ewcfg.emote_slimecorp)
+		response = "Only the Rowdy Fucker {} and the Cop Killer {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller, ewcfg.emote_slimecorp)
 	else:
 		member = None
 		if cmd.mentions_count == 1:
@@ -55,7 +56,7 @@ async def banish(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
 	if user_data.life_state != ewcfg.life_state_kingpin and user_data.life_state != ewcfg.life_state_executive and not cmd.message.author.guild_permissions.administrator:
-		response = "Only the Rowdy Fucker {}, the Cop Killer {} and Slimecorp Executives {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller, ewcfg.emote_slimecorp)
+		response = "Only the Rowdy Fucker {} and the Cop Killer {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller)
 	else:
 		member = None
 		if cmd.mentions_count == 1:
@@ -117,12 +118,14 @@ async def create(cmd):
 		response = 'Lowly Non-Kingpins cannot hope to create items with their bare hands.'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if len(cmd.tokens) != 4:
-		response = 'Usage: !create "<item_name>" "<item_desc>" <recipient>'
+	if len(cmd.tokens) not in [4, 5, 6]:
+		response = 'Usage: !create "<item_name>" "<item_desc>" <recipient> <rarity(optional)>, <context>(optional)'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	item_name = cmd.tokens[1]
 	item_desc = cmd.tokens[2]
+	rarity =  cmd.tokens[4] if len(cmd.tokens) >= 5 and ewutils.flattenTokenListToString(cmd.tokens[4]) in ['princeps', 'plebeian', 'patrician'] else 'princeps'
+	context = cmd.tokens[5] if len(cmd.tokens) >= 6 else ''
 
 	if cmd.mentions[0]:
 		recipient = cmd.mentions[0]
@@ -134,8 +137,11 @@ async def create(cmd):
 		"cosmetic_name": item_name,
 		"cosmetic_desc": item_desc,
 		"adorned": "false",
-		"rarity": "princeps"
+		"rarity": rarity,
+		"context": context
 	}
+
+
 
 	new_item_id = ewitem.item_create(
 		id_server = cmd.guild.id,
@@ -244,3 +250,46 @@ async def exalt(cmd):
 # 		response = "In response to their unparalleled ability to let everything go to shit and be the laughingstock of all of NLACakaNM, {} recieves the SWORD OF SEETHING! God help us all...".format(recipient.display_name)
 # 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def pa_command(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	if not cmd.message.author.guild_permissions.administrator and user_data.life_state != ewcfg.life_state_executive:
+		return await ewutils.fake_failed_command(cmd)
+	else:
+		if cmd.tokens_count >= 3:
+			poi = ewutils.flattenTokenListToString(cmd.tokens[1])
+
+			poi_obj = ewcfg.id_to_poi.get(poi)
+			if poi == "auditorium":
+				channel = "auditorium"
+			else:
+				channel = poi_obj.channel
+
+			loc_channel = ewutils.get_channel(cmd.guild, channel)
+
+			if poi is not None:
+				patext = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])+len(cmd.tokens[1])+1):]).strip()
+				if len(patext) > 500:
+					patext = patext[:-500]
+				return await ewutils.send_message(cmd.client, loc_channel, patext)
+
+
+
+
+async def hogtie(cmd):
+	if not cmd.message.author.guild_permissions.administrator:
+		return await ewutils.fake_failed_command(cmd)
+	else:
+		if cmd.mentions_count == 1:
+			target_data = EwUser(member = cmd.mentions[0])
+			target_status = target_data.getStatusEffects()
+			if ewcfg.status_hogtied_id in target_status:
+				target_data.clear_status(id_status=ewcfg.status_hogtied_id)
+				response = "Whew-whee! She's buckin' so we gotta let 'er go."
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			else:
+				target_data.applyStatus(ewcfg.status_hogtied_id)
+				response = "Boy howdy! Looks like we lasso'd up a real heifer there! A dang ol' big'un."
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+

@@ -12,6 +12,7 @@ import ewstats
 from ew import EwUser
 from ewplayer import EwPlayer
 from ewdistrict import EwDistrict
+from ewdungeons import EwGamestate
 
 class EwMarket:
 	id_server = -1
@@ -39,6 +40,9 @@ class EwMarket:
 	horseman_deaths = 0
 	horseman_timeofdeath = 0
 
+	# slimefest
+	winner = ''
+
 	# Dict of bazaar items available for purchase
 	bazaar_wares = None
 
@@ -54,7 +58,7 @@ class EwMarket:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath} FROM markets WHERE id_server = %s".format(
+				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}, {winner} FROM markets WHERE id_server = %s".format(
 					time_lasttick = ewcfg.col_time_lasttick,
 					slimes_revivefee = ewcfg.col_slimes_revivefee,
 					negaslime = ewcfg.col_negaslime,
@@ -69,6 +73,7 @@ class EwMarket:
 					global_swear_jar = ewcfg.col_global_swear_jar,
 					horseman_deaths = ewcfg.col_horseman_deaths,
 					horseman_timeofdeath = ewcfg.col_horseman_timeofdeath,
+					winner = ewcfg.col_winner
 					
 				), (self.id_server, ))
 				result = cursor.fetchone();
@@ -89,6 +94,7 @@ class EwMarket:
 					self.global_swear_jar = result[11]
 					self.horseman_deaths = result[12]
 					self.horseman_timeofdeath = result[13]
+					self.winner = result[14]
 
 					cursor.execute("SELECT {}, {} FROM bazaar_wares WHERE {} = %s".format(
 						ewcfg.col_name,
@@ -123,7 +129,7 @@ class EwMarket:
 			cursor = conn.cursor();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}, {winner}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				id_server = ewcfg.col_id_server,
 				time_lasttick = ewcfg.col_time_lasttick,
 				slimes_revivefee = ewcfg.col_slimes_revivefee,
@@ -139,6 +145,7 @@ class EwMarket:
 				global_swear_jar = ewcfg.col_global_swear_jar,
 				horseman_deaths = ewcfg.col_horseman_deaths,
 				horseman_timeofdeath = ewcfg.col_horseman_timeofdeath,
+				winner = ewcfg.col_winner
 			), (
 				self.id_server,
 				self.time_lasttick,
@@ -155,6 +162,7 @@ class EwMarket:
 				self.global_swear_jar,
 				self.horseman_deaths,
 				self.horseman_timeofdeath,
+				self.winner
 			))
 
 			cursor.execute("DELETE FROM bazaar_wares WHERE {} = %s".format(
@@ -211,6 +219,10 @@ class EwStock:
 		
 		if self.total_shares == None or self.total_shares < 0:
 			self.total_shares = 0
+
+		# quick fix for shares going past the integer cap
+		elif self.total_shares >= 9223372036854775807:
+			self.total_shares = 9223372036854775807
 
 	def __init__(self, id_server = None, stock = None, timestamp = None):
 		if id_server is not None and stock is not None:
@@ -678,7 +690,7 @@ async def donate(cmd):
 			response = "You hand off one of your hard-earned poudrins to the front desk receptionist, who is all too happy to collect it. Pretty uneventful, but at the very least you’re glad donating isn’t physically painful anymore."
 
 	else:
-		response = "To donate slime, go to the SlimeCorp HQ in Downtown. To donate poudrins, go to the SlimeCorp Lab in Brawlden."
+		response = "To donate slime, go to the SlimeCorp HQ in Downtown. To donate poudrins, go to the N.L.A.C.U. Lab in Brawlden."
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -916,6 +928,8 @@ async def slimecoin(cmd):
 def market_tick(stock_data, id_server):
 	market_data = EwMarket(id_server = id_server)
 	company_data = EwCompany(id_server = id_server, stock = stock_data.id_stock)
+	crashstate = EwGamestate(id_server=id_server, id_state = 'stockcrashdive').bit
+
 
 	# Nudge the value back to stability.
 	market_rate = stock_data.market_rate
@@ -967,6 +981,9 @@ def market_tick(stock_data, id_server):
 	if noise == 0 and subnoise == 0:
 		boombust = (random.randrange(3) - 1) * 200
 
+		if crashstate == 1 and boombust > 0:
+			boombust = -boombust
+
 		# If a boombust occurs shortly after a previous boombust, make sure it's the opposite effect. (Boom follows bust, bust follows boom.)
 		if (stock_data.boombust > 0 and boombust > 0) or (stock_data.boombust < 0 and boombust < 0):
 			boombust *= -1
@@ -980,6 +997,10 @@ def market_tick(stock_data, id_server):
 		boombust = 0
 
 	market_rate += fluctuation + noise + subnoise + boombust
+
+	if market_rate > 500 and crashstate == 1:
+		market_rate = round(market_rate / 1.25)
+
 	if market_rate < 300:
 		market_rate = (300 + noise + subnoise)
 
@@ -1177,44 +1198,6 @@ def get_majority_shareholder(id_server = None, stock = None):
 		finally:
 			return result
 
-async def quarterlyreport(cmd):
-	progress = 0
-	objective = 2000000000
-	goal = "SLIME SPLATTERED"
-	completion = False
-
-	try:
-		conn_info = ewutils.databaseConnect()
-		conn = conn_info.get('conn')
-		cursor = conn.cursor()
-
-		# Display the progress towards the current Quarterly Goal, whatever that may be.
-		cursor.execute("SELECT {metric} FROM markets WHERE id_server = %s".format(
-			metric = ewcfg.col_splattered_slimes
-		), (cmd.guild.id, ))
-
-		result = cursor.fetchone();
-
-		if result != None:
-			progress = result[0]
-
-			if progress == None:
-				progress = 0
-
-			if progress >= objective:
-				progress = objective
-				completion = True
-
-	finally:
-		cursor.close()
-		ewutils.databaseClose(conn_info)
-
-	response = "{:,} / {:,} {}.".format(progress, objective, goal)
-
-	if completion == True:
-		response += " THE QUARTERLY GOAL HAS BEEN REACHED. PLEASE STAY TUNED FOR FURTHER ANNOUNCEMENTS."
-
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def trade(cmd):
 	user_data = EwUser(member=cmd.message.author)

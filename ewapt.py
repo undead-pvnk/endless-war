@@ -203,7 +203,7 @@ async def consult(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if user_data.poi != ewcfg.poi_id_realestate:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !consult at Slimecorp Real Estate in Old New Yonkers."))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !consult at the Real Estate Agency in Old New Yonkers."))
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
@@ -263,7 +263,7 @@ async def signlease(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if user_data.poi != ewcfg.poi_id_realestate:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !signlease at Slimecorp Real Estate in Old New Yonkers."))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !signlease at the Real Estate Agency in Old New Yonkers."))
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
@@ -309,7 +309,7 @@ async def signlease(cmd):
 	if(user_data.slimecoin < base_cost*4):
 		return await ewutils.send_message(cmd.client, cmd.message.channel,ewutils.formatMessage(cmd.message.author, "You can't afford it."))
 
-	response = "The receptionist slides you a contract. It reads:\n\n THE TENANT, {},  WILL HERETO SUBMIT {:,} SLIMECOIN EACH MONTH UNTIL THEY INEVITABLY HIT ROCK BOTTOM. THEY MUST ALSO PROVIDE A DOWN PAYMENT OF {:,} TO INSURE THE PROPERTY FROM THEIR GREASY JUVENILE HANDS. SLIMECORP IS NOT RESPONSIBLE FOR ANY INJURY OR PROPERTY DAMAGE THAT MAY OCCUR ON THE PREMISES. THEY'RE ALSO NOT RESPONSIBLE IN GENERAL. YOU ARE. BITCH. \n\nDo you !sign the document, or do you !rip it into a million pieces?".format(cmd.message.author.display_name, base_cost, base_cost*4)
+	response = "The receptionist slides you a contract. It reads:\n\n THE TENANT, {},  WILL HERETO SUBMIT {:,} SLIMECOIN EACH MONTH UNTIL THEY INEVITABLY HIT ROCK BOTTOM. THEY MUST ALSO PROVIDE A DOWN PAYMENT OF {:,} TO INSURE THE PROPERTY FROM THEIR GREASY JUVENILE HANDS. LANDLORD(S) ARE NOT RESPONSIBLE FOR ANY INJURY OR PROPERTY DAMAGE THAT MAY OCCUR ON THE PREMISES. THEY'RE ALSO NOT RESPONSIBLE IN GENERAL. YOU ARE. BITCH. \n\nDo you !sign the document, or do you !rip it into a million pieces?".format(cmd.message.author.display_name, base_cost, base_cost*4)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	try:
@@ -345,19 +345,19 @@ async def signlease(cmd):
 		user_data.persist()
 
 
-		if user_apt.key_1 != 0:
-			ewitem.item_delete(user_apt.key_1)
-			user_apt.key_1 = 0
-			user_apt.rent = user_apt.rent/1.5
-		if user_apt.key_2 != 0:
-			ewitem.item_delete(user_apt.key_2)
-			user_apt.key_2 = 0
-			user_apt.rent = user_apt.rent / 1.5
+		#if user_apt.key_1 != 0:
+			#ewitem.item_delete(user_apt.key_1)
+			#user_apt.key_1 = 0
+			#user_apt.rent = user_apt.rent/1.5
+		#if user_apt.key_2 != 0:
+			#ewitem.item_delete(user_apt.key_2)
+			#user_apt.key_2 = 0
+			#user_apt.rent = user_apt.rent / 1.5
 		user_apt.num_keys = 0
 
-		user_apt.name = "Slimecorp Apartment"
+		user_apt.name = "{}'s Apartment".format(cmd.message.author.display_name)
 		user_apt.apt_class = poi.property_class
-		user_apt.description = "You're on {}'s property.".format(cmd.message.author.display_name)
+		user_apt.description = "This new flat is fucking cash, bro.".format(cmd.message.author.display_name)
 		user_apt.poi = poi.id_poi
 		user_apt.rent = base_cost
 		user_apt.persist()
@@ -366,6 +366,19 @@ async def signlease(cmd):
 
 		if had_old_place:
 			response += " The receptionist calls up a moving crew, who quickly move your stuff to your new place. "
+		else:
+
+			for value in ewcfg.fuck_energies:
+				item = ewcfg.food_map.get(value)
+				item_props = ewitem.gen_item_props(item)
+				id_item = ewitem.item_create(
+					item_type=ewcfg.it_food,
+					id_user= '{}{}'.format(cmd.message.author.id, 'fridge'),
+					id_server=cmd.guild.id,
+					stack_max=-1,
+					stack_size=0,
+					item_props=item_props
+				)
 
 		await toss_squatters(user_data.id_user, user_data.id_server)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -973,7 +986,7 @@ async def upgrade(cmd):
 
 			usermodel.persist()
 			apt_model.persist()
-			response = "The deed is done. Back at your apartment, a Slimecorp builder nearly has a stroke trying to speed-renovate. You're now rank {}.".format(apt_model.apt_class)
+			response = "The deed is done. Back at your apartment, a builder nearly has a stroke trying to speed-renovate. You're now rank {}.".format(apt_model.apt_class)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def watch(cmd):
@@ -1117,6 +1130,8 @@ async def usekey(cmd, owner_user):
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	poi_dest = ewcfg.id_to_poi.get(ewcfg.poi_id_apt + owner_user.apt_zone)  # there isn't an easy way to change this, apologies for being a little hacky
 	inv = ewitem.inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id)
+	apartment = EwApartment(id_server=cmd.guild.id, id_user=owner_user.id_user)
+
 	key = None
 	for item_inv in inv:
 		if "key to" in item_inv.get('name'):
@@ -1129,6 +1144,8 @@ async def usekey(cmd, owner_user):
 	elif key == None:
 		response = "You don't have a key for their apartment."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif apartment.apt_class == ewcfg.property_class_c or (apartment.apt_class in [ewcfg.property_class_a, ewcfg.property_class_b] and key.id_item == apartment.key_2):
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Your key's not working at this new flat. Your roomates must've forgotten to upgrade apartments. Congratulations on the homelessness by the way.".format(cmd.tokens[0])))
 	elif owner_user.apt_zone != poi.id_poi:
 		response = "Your key doesn't match an apartment here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,  response))
@@ -1351,7 +1368,7 @@ async def apartment (cmd):
 
 
 async def apt_help(cmd):
-	response = "This is your apartment, your home away from home. You can store items here, but if you can't pay rent they will be ejected to the curb. You can store slimeoids here, too, but eviction sends them back to the real estate agency. You can only access them once you rent another apartment. Rent is charged every two IRL days, and if you can't afford the charge, you are evicted. \n\nHere's a command list. \n!depart: Leave your apartment. !goto commands work also.\n!look: look at your apartment, including all its items.\n!inspect <item>: Examine an item in the room or in your inventory.\n!stow <item>: Place an item in the room.\n!fridge/!closet/!decorate <item>: Place an item in a specific spot.\n!snag <item>: Take an item from storage.\n!unfridge/!uncloset/!undecorate <item>: Take an item from a specific spot.\n!freeze/!unfreeze <slimeoid name>: Deposit and withdraw your slimeoids. You can have 3 created at a time.\n!aptname <new name>:Change the apartment's name.\n!aptdesc <new name>: Change the apartment's base description."
+	response = "This is your apartment, your home away from home. You can store items here, but if you can't pay rent they will be ejected to the curb. You can store slimeoids here, too, but eviction sends them back to the real estate agency. You can only access them once you rent another apartment. Rent is charged every two IRL days, and if you can't afford the charge, you are evicted. \n\nHere's a command list. \n!depart: Leave your apartment. !goto commands work also.\n!look: look at your apartment, including all its items.\n!inspect <item>: Examine an item in the room or in your inventory.\n!stow <item>: Place an item in the room.\n!fridge/!closet/!decorate <item>: Place an item in a specific spot.\n!snag <item>: Take an item from storage.\n!unfridge/!uncloset/!undecorate <item>: Take an item from a specific spot.\n!freeze/!unfreeze <slimeoid name>: Deposit and withdraw your slimeoids. You can have 3 created at a time.\n!aptname <new name>:Change the apartment's name.\n!aptdesc <new name>: Change the apartment's base description.\n!bootall: Kick out any unwanted visitors in your apartment.\n!shelve <zine>:Store zines on your bookshelf.\n!unshelve <zine>: Take zines out of your bookshelf"
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
@@ -2059,9 +2076,11 @@ async def releasefish(cmd):
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "aquarium" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
-				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.guild.id)
-				response = "The mysterious individual running the fish luring stall helps you coax the fish out of its tank."
-				ewitem.item_delete(id_item=item_sought.get('id_item'))
+				if ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.guild.id):
+					response = "The mysterious individual running the fish luring stall helps you coax the fish out of its tank."
+					ewitem.item_delete(id_item=item_sought.get('id_item'))
+				else:
+					response = "The individual running the fish luring stall coaxes the fish out of the tank, but you can't hold it, so they put it back and berate you for wasting their time."
 			elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
 				response = "Uh oh. This one's not coming out. "
 			else:
@@ -2093,9 +2112,12 @@ async def releaseprop(cmd):
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "propstand" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
-				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.guild.id)
-				response = "After a bit of tugging, you and the mysterious individual running the prop release stall pry the item of its stand."
-				ewitem.item_delete(id_item=item_sought.get('id_item'))
+				if ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.guild.id):
+					response = "After a bit of tugging, you and the mysterious individual running the prop release stall pry the item of its stand."
+					ewitem.item_delete(id_item=item_sought.get('id_item'))
+				else:
+					stood_item = EwItem(id_item=item.item_props.get('acquisition'))
+					response = "You can't carry any more {}s, so this is staying on the stand.".format(stood_item.item_type)
 			elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
 				response = "Uh oh. This one's not coming out. "
 			else:
@@ -2115,9 +2137,11 @@ async def unpot(cmd):
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "flowerpot" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
-				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.guild.id)
-				response = "You yank the foliage out of the pot."
-				ewitem.item_delete(id_item=item_sought.get('id_item'))
+				if ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.guild.id):
+					response = "You yank the foliage out of the pot."
+					ewitem.item_delete(id_item=item_sought.get('id_item'))
+				else:
+					response = "You try to yank at the foliage, but your hands are already full of food!"
 			else:
 				response = "Get the pot before you unpot it."
 		else:
@@ -2457,6 +2481,8 @@ async def aptCommands(cmd):
 		return await ewslimeoid.slimeoid(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_adorn:
 		return await ewcosmeticitem.adorn(cmd=cmd)
+	elif cmd_text in [ewcfg.cmd_dedorn, ewcfg.cmd_dedorn_alt1]:
+		return await ewcosmeticitem.dedorn(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_smelt:
 		return await ewsmelting.smelt(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_dress_slimeoid or cmd_text == ewcfg.cmd_dress_slimeoid_alt1:
@@ -2539,8 +2565,10 @@ async def aptCommands(cmd):
 		return await bootall(cmd=cmd)
 	#elif cmd_text == "~bazaarupdate":
 	 #   return await bazaar_update(cmd)
-	elif cmd_text == ewcfg.cmd_help or cmd_text == ewcfg.cmd_help_alt1 or cmd_text == ewcfg.cmd_help_alt2 or cmd_text == ewcfg.cmd_help_alt3:
+	elif cmd_text == ewcfg.cmd_help or  cmd_text == ewcfg.cmd_help_alt3:
 		return await apt_help(cmd)
+	elif cmd_text == ewcfg.cmd_commands or  cmd_text == ewcfg.cmd_commands_alt1:
+		return await ewcmd.commands(cmd)
 	elif cmd_text == ewcfg.cmd_accept or cmd_text == ewcfg.cmd_refuse:
 		pass
 	elif cmd_text == ewcfg.cmd_switch or cmd_text == ewcfg.cmd_switch_alt_1:

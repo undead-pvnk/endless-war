@@ -28,6 +28,7 @@ from ewhunting import EwEnemy, EwOperationData
 from ewmarket import EwMarket
 from ewstatuseffects import EwStatusEffect
 from ewstatuseffects import EwEnemyStatusEffect
+from ewdungeons import EwGamestate
 from ewitem import EwItem
 #from ewprank import calculate_gambit_exchange
 
@@ -455,7 +456,7 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-		'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = ewcfg.database, charset = "utf8"),
+		'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = ewcfg.database, charset = "utf8mb4"),
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -3048,42 +3049,51 @@ def get_fingernail_item(cmd):
 	return id_item
 
 
-def inaccessible(user_data=None, poi=None):
-	if poi == None or user_data == None:
-		return True
+def inaccessible(user_data = None, poi = None):
 
-	if user_data.life_state == ewcfg.life_state_observer:
-		return False
+    if poi == None or user_data == None:
+        return True
 
-	if user_data.life_state == ewcfg.life_state_shambler and poi.id_poi in [ewcfg.poi_id_rowdyroughhouse,
-																			ewcfg.poi_id_copkilltown,
-																			ewcfg.poi_id_juviesrow]:
-		return True
+    if user_data.life_state == ewcfg.life_state_observer:
+        return False
 
-	bans = user_data.get_bans()
-	vouchers = user_data.get_vouchers()
+    if user_data.life_state == ewcfg.life_state_shambler and poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow]:
+        return True
 
-	locked_districts_list = ewmap.retrieve_locked_districts(user_data.id_server)
 
-	if (
-			len(poi.factions) > 0 and
-			(set(vouchers).isdisjoint(set(poi.factions)) or user_data.faction != "") and
-			user_data.faction not in poi.factions
-	) or (
-			len(poi.life_states) > 0 and
-			user_data.life_state not in poi.life_states
-	):
-		return True
-	elif (
-			len(poi.factions) > 0 and
-			len(bans) > 0 and
-			set(poi.factions).issubset(set(bans))
-	):
-		return True
-	elif poi.id_poi in locked_districts_list and user_data.life_state not in [ewcfg.life_state_executive, ewcfg.life_state_lucky]:
-		return True
-	else:
-		return False
+    elevatorstop = EwGamestate(id_server=user_data.id_server, id_state='elevator')
+
+    for lock in ewcfg.lock_states:
+        if poi in ewcfg.lock_states.get(lock) and user_data.poi in ewcfg.lock_states.get(lock):
+            print(lock)
+            gamestate = EwGamestate(id_server=user_data.id_server, id_state=lock)
+            if gamestate.bit == 0 or elevatorstop.value not in ewcfg.lock_states.get(lock):
+                return True
+
+    bans = user_data.get_bans()
+    vouchers = user_data.get_vouchers()
+
+    locked_districts_list = ewmap.retrieve_locked_districts(user_data.id_server)
+
+    if(
+        len(poi.factions) > 0 and
+        (set(vouchers).isdisjoint(set(poi.factions)) or user_data.faction != "") and
+        user_data.faction not in poi.factions
+    ) or (
+        len(poi.life_states) > 0 and
+        user_data.life_state not in poi.life_states
+    ):
+        return True
+    elif(
+        len(poi.factions) > 0 and
+        len(bans) > 0 and
+        set(poi.factions).issubset(set(bans))
+    ):
+        return True
+    elif poi.id_poi in locked_districts_list and user_data.life_state not in [ewcfg.life_state_executive, ewcfg.life_state_lucky]:
+        return True
+    else:
+        return False
 
 
 
@@ -3141,3 +3151,86 @@ async def make_bp(cmd):
 		await recipient.add_roles(bp_role)
 	else:
 		logMsg("Could not find Brimstone Programmer role.")
+
+
+#Used when you have a secret command you only want seen under certain conditions.
+
+async def fake_failed_command(cmd):
+	client = get_client()
+	randint = random.randint(1, 3)
+	msg_mistake = "ENDLESS WAR is growing frustrated."
+	if randint == 2:
+		msg_mistake = "ENDLESS WAR denies you his favor."
+	elif randint == 3:
+		msg_mistake = "ENDLESS WAR pays you no mind."
+
+	msg = await send_message(client, cmd.message.channel, msg_mistake)
+	await asyncio.sleep(2)
+	try:
+		await msg.delete()
+		pass
+	except:
+		pass
+
+
+async def assign_status_effect(cmd = None, status_name = None, user_id = None, server_id = None):
+	if status_name is not None:
+		user_data = EwUser(id_server=server_id, id_user = user_id)
+		response = user_data.applyStatus(id_status=status_name, source = user_id, id_target = user_id)
+	else:
+		if not cmd.message.author.guild_permissions.administrator or cmd.mentions_count == 0:
+			return await fake_failed_command(cmd)
+		target = cmd.mentions[0]
+		status_name = flattenTokenListToString(cmd.tokens[2:])
+		user_data = EwUser(member=target)
+		response = user_data.applyStatus(id_status=status_name, source=user_data.id_user, id_target=user_data.id_user)
+	return await send_message(cmd.client, cmd.message.channel, formatMessage(cmd.message.author, response))
+
+
+def messagesplit(stringIn, whitespace = '\n'):
+	currentMessage = stringIn
+	messagearray = []
+	while len(currentMessage) > 1500:
+		index = currentMessage.rfind(whitespace, 0, 1500)
+		messagearray.append(currentMessage[:index])
+		currentMessage = currentMessage[index:]
+
+	messagearray.append(currentMessage)
+	return messagearray
+
+"""
+	Return true if inventory has associated User table entry
+	and a member object from selected server.
+	Member ensures they are present in game.
+"""
+def is_player_inventory(id_inventory, id_server):
+	if id_server == None or id_inventory == None:
+		return false
+
+	# Grab the Discord Client
+	client = get_client()
+	discord_result = client.get_guild(id_server).get_member(id_inventory)
+
+	# Access DB
+	conn_info = databaseConnect()
+	conn = conn_info.get('conn')
+	cursor = conn.cursor()
+	db_result = None
+
+	# Try to grab a value from a user with given id
+	try:
+		cursor.execute("SELECT {} FROM users WHERE id_user = %s AND id_server = %s".format(
+			ewcfg.col_rand_seed
+		), (
+			id_inventory,
+			id_server
+		))
+		db_result = cursor.fetchone()
+	finally:
+		cursor.close()
+		databaseClose(conn_info)
+
+	if db_result != None and discord_result != None:
+		return True
+	else:
+		return False

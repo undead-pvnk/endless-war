@@ -201,11 +201,15 @@ class EwUser:
 
 		
 	def die(self, cause = None):
+
+
 		time_now = int(time.time())
 
 		ewutils.end_trade(self.id_user)
 
 		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
+
+
 
 		client = ewcfg.get_client()
 		server = client.get_guild(self.id_server)
@@ -219,10 +223,15 @@ class EwUser:
 		deathreport = ewutils.create_death_report(cause = cause, user_data = self)
 		resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 
+
 		poi = ewcfg.id_to_poi.get(self.poi)
 		if cause == ewcfg.cause_weather:
 			resp_cont.add_channel_response(poi.channel, deathreport)
 
+		status = self.getStatusEffects()
+		if "n1" in status:
+			self.change_slimes(n=-self.slimes, source=ewcfg.source_killing)
+			return(resp_cont)
 
 		# Grab necessary data for spontaneous combustion before stat reset
 		explosion_block_list = [ewcfg.cause_leftserver, ewcfg.cause_cliff]
@@ -307,7 +316,7 @@ class EwUser:
 					))
 
 			except:
-				ewutils.logMsg('Failed to remove preserved tags from items.'.format(id_user))
+				ewutils.logMsg('Failed to remove preserved tags from items.')
 
 			self.life_state = ewcfg.life_state_corpse
 			self.poi_death = self.poi
@@ -643,7 +652,7 @@ class EwUser:
 			response = "Shamblers can't equip weapons."
 		elif self.weaponmarried == True:
 			current_weapon = ewitem.EwItem(id_item = self.weapon)
-			if int(weapon_item.item_props.get("married")) == self.id_user:
+			if weapon_item.item_props.get("married") == self.id_user:
 				response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
 				self.weapon = weapon_item.id_item
 

@@ -466,7 +466,7 @@ class EwEnemy:
 
 			target_iskillers = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_killers
 			target_isrowdys = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_rowdys
-			target_isslimecorp = target_data.life_state == ewcfg.life_state_enlisted and target_data.life_state == ewcfg.faction_slimecorp
+			target_isslimecorp = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_slimecorp
 			target_isexecutive = target_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 			target_isjuvie = target_data.life_state == ewcfg.life_state_juvenile
 			target_isnotdead = target_data.life_state != ewcfg.life_state_corpse
@@ -1268,8 +1268,9 @@ class EwEnemy:
 				
 				if new_poi not in ewcfg.outskirts:
 					gang_base_response = "There are reports of a powerful enemy roaming around {}.".format(new_poi_def.str_name)
-					resp_cont.add_channel_response(ewcfg.channel_rowdyroughhouse, gang_base_response)
-					resp_cont.add_channel_response(ewcfg.channel_copkilltown, gang_base_response)
+					channels = ewcfg.hideout_channels
+					for ch in channels:
+						resp_cont.add_channel_response(ch, gang_base_response)
 		finally:
 			self.persist()
 			return resp_cont
@@ -2239,6 +2240,9 @@ def spawn_enemy(
 		# If it couldn't find a district in 5 tries or less, back out of spawning that enemy.
 		if chosen_poi == "":
 			return resp_cont
+
+		if enemytype == 'titanoslime':
+			potential_chosen_poi = 'downtown'
 
 		# If an enemy spawns in the Nuclear Beach, it should be remade as a 'pre-historic' enemy.
 		if potential_chosen_poi in [ewcfg.poi_id_nuclear_beach_edge, ewcfg.poi_id_nuclear_beach, ewcfg.poi_id_nuclear_beach_depths]:

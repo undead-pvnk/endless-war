@@ -655,22 +655,27 @@ async def award_fish(fisher, cmd, user_data):
 
 			item_props = ewitem.gen_item_props(item)
 
-			for creation in range(unearthed_item_amount):
-				ewitem.item_create(
-					item_type = item.item_type,
-					id_user = actual_fisherman or cmd.message.author.id,
-					id_server = cmd.guild.id,
-					item_props = item_props
-				)
+			# Ensure item limits are enforced, including food since this isn't the fish section
+			if ewitem.check_inv_capacity(id_user = actual_fisherman or cmd.message.author.id, id_server = cmd.guild.id, item_type = item.item_type):
+				for creation in range(unearthed_item_amount):
+					ewitem.item_create(
+						item_type = item.item_type,
+						id_user = actual_fisherman or cmd.message.author.id,
+						id_server = cmd.guild.id,
+						item_props = item_props
+					)
 
-			response = "You reel in {} {}s! ".format(unearthed_item_amount, item.str_name)
+				response = "You reel in {} {}s! ".format(unearthed_item_amount, item.str_name)
+			else:
+				response = "You woulda reeled in some {}s, but your back gave out under the weight of the rest of your {}s.".format(item.str_name, item.item_type)
 
 		else:
 			item = random.choice(slimesea_inventory)
 
-			ewitem.give_item(id_item = item.get('id_item'), member = cmd.message.author)
-
-			response = "You reel in a {}!".format(item.get('name'))
+			if ewitem.give_item(id_item = item.get('id_item'), member = cmd.message.author):
+				response = "You reel in a {}!".format(item.get('name'))
+			else:
+				response = "You woulda reeled in a {}, but your back gave out under the weight of the rest of your {}s.".format(item.str_name, item.item_type)
 
 		fisher.stop()
 		user_data.persist()

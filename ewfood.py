@@ -213,7 +213,7 @@ async def menu(cmd):
 				value = int(value)
 
 				if value != 0:
-					items.append('{name} ({price})'.format(name = item_name, price = value))
+					items.append('{} ({:,})'.format(item_name, value))
 				else:
 					items.append(item_name)
 

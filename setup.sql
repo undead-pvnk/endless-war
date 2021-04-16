@@ -91,6 +91,7 @@ CREATE TABLE markets (
 	global_swear_jar bigint NOT NULL DEFAULT '0',
 	horseman_deaths int NOT NULL DEFAULT '0',
 	horseman_timeofdeath int NOT NULL DEFAULT '0',
+	winner varchar(32) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_server)
 );
@@ -521,5 +522,14 @@ CREATE TABLE gvs_ops_choices (
     shambler_stock int NOT NULL DEFAULT '-1',
     
     PRIMARY KEY (id_user, enemytype, district)
+);
+
+CREATE TABLE gamestates (
+    id_server bigint NOT NULL,
+    id_state varchar(32) NOT NULL,
+    state_bit smallint NOT NULL DEFAULT '0',
+    value varchar(255) NOT NULL DEFAULT '',
+
+    PRIMARY KEY (id_server, id_state)
 );
 

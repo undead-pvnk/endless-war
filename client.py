@@ -102,6 +102,7 @@ cmd_map = {
 	ewcfg.cmd_shoot_alt4: ewwep.attack,
 	ewcfg.cmd_shoot_alt5: ewwep.attack,
 	ewcfg.cmd_shoot_alt6: ewwep.attack,
+	ewcfg.cmd_shoot_alt7: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	# Reload
@@ -119,7 +120,8 @@ cmd_map = {
 	ewcfg.cmd_suicide: ewwep.suicide,
 	ewcfg.cmd_suicide_alt1: ewwep.suicide,
 	ewcfg.cmd_suicide_alt2: ewwep.suicide,
-
+	ewcfg.cmd_haveastroke:ewapt.nothing,
+	ewcfg.cmd_moonhurtingbeam:ewapt.nothing,
 	# Spar with an ally
 	ewcfg.cmd_spar: ewwep.spar,
 
@@ -149,7 +151,7 @@ cmd_map = {
 	# Show the current slime score of a player.
 	ewcfg.cmd_score: ewcmd.score,
 	ewcfg.cmd_score_alt1: ewcmd.score,
-
+	ewcfg.cmd_score_alt2: ewcmd.score,
 	# Show a player's combat data.
 	ewcfg.cmd_data: ewcmd.data,
 
@@ -183,9 +185,10 @@ cmd_map = {
 	
 	# Juvies can dance
 	ewcfg.cmd_dance: ewcmd.dance,
+	ewcfg.cmd_dance_alt: ewcmd.dance,
 	
 	# SlimeCorp security officers can post propaganda
-	ewcfg.cmd_propaganda: ewcmd.propaganda,
+	#ewcfg.cmd_propaganda: ewcmd.propaganda,
 	
 	# Terezi Gang can flip coins
 	ewcfg.cmd_coinflip: ewcmd.coinflip,
@@ -202,12 +205,16 @@ cmd_map = {
 	# Show the total of positive slime in the world.
 	ewcfg.cmd_endlesswar: ewcmd.endlesswar,
 	
+	# Slimefest
+	ewcfg.cmd_win: ewwep.attack,
+	ewcfg.cmd_slimefest: ewcmd.slimefest,
+
 	# Show the number of swears in the global swear jar.
 	# ewcfg.cmd_swear_jar: ewcmd.swearjar,
 
 	# Display the progress towards the current Quarterly Goal.
-	# ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
-
+	#ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
+	ewcfg.cmd_paspeaker: ewkingpin.pa_command,
 	ewcfg.cmd_retire: ewapt.retire,
 	ewcfg.cmd_depart: ewapt.depart,
 	ewcfg.cmd_consult: ewapt.consult,
@@ -442,7 +449,7 @@ cmd_map = {
 	ewcfg.cmd_survey: ewmap.survey,
 	
 	# Inspect objects in a POI
-	# ewcfg.cmd_scrutinize: ewdebug.scrutinize,
+	ewcfg.cmd_scrutinize: ewdebug.scrutinize,
 
 	# Look around an adjacent POI
 	ewcfg.cmd_scout: ewmap.scout,
@@ -538,8 +545,8 @@ cmd_map = {
 
 	# Link to the guide.
 	ewcfg.cmd_help: ewcmd.help,
-	ewcfg.cmd_help_alt1: ewcmd.help,
-	ewcfg.cmd_help_alt2: ewcmd.help,
+	ewcfg.cmd_commands_alt1: ewcmd.commands,
+	ewcfg.cmd_commands: ewcmd.commands,
 	ewcfg.cmd_help_alt3: ewcmd.help,
 
 	# Misc
@@ -554,6 +561,7 @@ cmd_map = {
 	ewcfg.cmd_patchnotes: ewcmd.patchnotes,
 	ewcfg.cmd_wiki: ewcmd.wiki,
 	ewcfg.cmd_booru: ewcmd.booru,
+	ewcfg.cmd_bandcamp: ewcmd.bandcamp,
 	ewcfg.cmd_leaderboard: ewcmd.leaderboard,
 	ewcfg.cmd_leaderboard_alt1: ewcmd.leaderboard,
 
@@ -675,6 +683,7 @@ cmd_map = {
 	# LOL
 	ewcfg.cmd_lol: ewcmd.lol,
 
+	ewcfg.cmd_zuck : ewitem.zuck,
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 	
@@ -758,6 +767,7 @@ cmd_map = {
 	#swap weapons
 	ewcfg.cmd_switch: ewwep.switch_weapon,
 	ewcfg.cmd_switch_alt_1: ewwep.switch_weapon,
+	ewcfg.cmd_debug9: ewdebug.debug9,
 
 	# Slimernalia
 	# Check your current festivity
@@ -840,11 +850,24 @@ cmd_map = {
 
 	# Slime Twitter
 	ewcfg.cmd_tweet: ewslimetwitter.tweet,
+
+	ewcfg.cmd_changegamestate: ewdebug.change_gamestate,
+	ewcfg.cmd_display_states: ewdebug.display_states,
+	#ewcfg.cmd_press_button: ewdebug.elevator_press,
+	#ewcfg.cmd_call_elevator: ewdebug.elevator_call,
+	ewcfg.cmd_addstatuseffect: ewutils.assign_status_effect,
+
 	ewcfg.cmd_verification: ewslimetwitter.verification,
 	ewcfg.cmd_verification_alt: ewslimetwitter.verification,
 
 	# Check your weapon masteries
-	ewcfg.cmd_mastery: ewcmd.check_mastery
+
+	ewcfg.cmd_mastery: ewcmd.check_mastery,
+	ewcfg.cmd_getattire: ewcmd.get_attire,
+	ewcfg.cmd_pacommand: ewkingpin.pa_command,
+	ewcfg.cmd_surveil: ewmap.surveil,
+	ewcfg.cmd_hogtie: ewkingpin.hogtie
+
 }
 
 debug = False
@@ -1001,7 +1024,7 @@ async def on_ready():
 				elif(channel.name == ewcfg.channel_slimetwitter):
 					channels_slimetwitter[server.id] = channel
 					ewutils.logMsg("• found channel for slime twitter: {}".format(channel.name))
-
+		ewdebug.initialize_gamestate(id_server=server.id)
 		# create all the districts in the database
 		for poi_object in ewcfg.poi_list:
 			poi = poi_object.id_poi
@@ -1430,8 +1453,15 @@ async def on_message(message):
 
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
-	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
+		if str(message.channel) in ["nurses-office", "suggestion-box", "detention-center", "community-service", "playground", "graffiti-wall", "post-slime-drip", "outside-the-lunchroom", "outside-the-lunchrooom"]:
+			if ewcfg.status_hogtied_id in statuses:
+				response = random.choice(["MMMPH!", "MBBBBB", "HMMHM", "MMMMMHMMF!"])
+				await ewutils.send_message(client, message.channel, response)
+				await message.delete()
+				return
+
+
+	if message.content.startswith(ewcfg.cmd_prefix) or message.guild == None or (any(swear in content_tolower for swear in ewcfg.curse_words.keys())) or message.channel in ["nurses-office", "suggestion-box", "detention-center", "community-service", "playground", "graffiti-wall", "post-slime-drip", "outside-the-lunchroom", "outside-the-lunchrooom"]:
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
@@ -1543,7 +1573,8 @@ async def on_message(message):
 			# if the message wasn't a command, we can stop here
 			if not message.content.startswith(ewcfg.cmd_prefix):
 				return
-		
+
+
 		"""
 			Handle direct messages.
 		"""
@@ -1614,10 +1645,16 @@ async def on_message(message):
 		if ewcfg.status_stunned_id in statuses:
 			return
 
+
+
 		# Check the main command map for the requested command.
 		global cmd_map
 		cmd_fn = cmd_map.get(cmd)
 
+
+		if user_data.poi in ewdebug.act_pois.keys():
+			if content_tolower in ewdebug.act_pois.get(user_data.poi).keys():
+				return await ewdebug.act(cmd_obj, user_data.poi, content_tolower)
 
 		if user_data.poi in ewcfg.tutorial_pois:	
 			return await ewdungeons.tutorial_cmd(cmd_obj)

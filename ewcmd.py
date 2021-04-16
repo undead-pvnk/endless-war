@@ -153,7 +153,7 @@ async def score(cmd):
 	time_now_cmd_start = int(time.time())
 	user_data = None
 	member = None
-
+	skune = True if ewutils.flattenTokenListToString(cmd.tokens[0]) == 'skune' else False
 	if len(cmd.mention_ids) == 0:
 		target_type = "self"
 	else:
@@ -171,7 +171,7 @@ async def score(cmd):
 		poudrin_amount = ewitem.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.guild.id)
 
 		# return my score
-		response = "You currently have {:,} slime{}.".format(user_data.slimes, (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
+		response = "You currently have {:,} {}{}.".format(user_data.slimes, "slime" if skune is False else "skune", (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
 	
 	# other user slime check
 	else:
@@ -698,9 +698,14 @@ async def mutations(cmd):
 	if "level" in cmd.tokens:
 		response += "\n"
 
+
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member=cmd.message.author)
 		mutations = user_data.get_mutations()
+
+		if user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_lucky]:
+			return await exec_mutations(cmd)
+
 		for mutation in mutations:
 			mutation_flavor = ewcfg.mutations_map[mutation]
 			total_levels += mutation_flavor.tier
@@ -719,6 +724,9 @@ async def mutations(cmd):
 			id_user=member.id,
 			id_server=member.guild.id
 		)
+		if user_data.life_state in [ewcfg.life_state_executive, ewcfg.life_state_lucky]:
+			return await exec_mutations(cmd)
+
 		mutations = user_data.get_mutations()
 		for mutation in mutations:
 			mutation_flavor = ewcfg.mutations_map[mutation]
@@ -1307,6 +1315,13 @@ async def booru(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Rowdy Fuckers Cop Killers Booru: http://rfck.booru.org/'))
 
 """
+	Link to the RFCK bandcamp.
+"""
+async def bandcamp(cmd):
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Rowdy Fuckers Cop Killers Bandcamp: https://rowdyfuckerscopkillers.bandcamp.com/releases'))
+
+
+"""
 	Link to the leaderboards on ew.krakissi.net.
 """
 async def leaderboard(cmd):
@@ -1810,7 +1825,7 @@ async def recycle(cmd):
 	response = ""
 
 	if user_data.poi != ewcfg.poi_id_recyclingplant:
-		response = "You can only {} your trash at the SlimeCorp Recycling Plant in Smogsburg.".format(cmd.tokens[0])
+		response = "You can only {} your trash at the Recycling Plant in Smogsburg.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -2288,6 +2303,8 @@ async def wrap(cmd):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		if item.soulbound:
 			response = "It's a nice gesture, but trying to gift someone a Soulbound item is going a bit too far, don't you think?"
+		elif ewitem.check_inv_capacity(id_user = cmd.message.author.id, id_server = cmd.guild.id, item_type = ewcfg.it_item):
+			response = ewcfg.str_generic_inv_limit.format(ewcfg.it_item)
 		else:
 			gift_name = "Gift"
 			
@@ -2332,37 +2349,38 @@ async def unwrap(cmd):
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_item:
 			if item.item_props.get('id_item') == "gift":
-				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user=cmd.message.author.id, id_server=cmd.guild.id)
-				
-				gifted_item = EwItem(id_item=item.item_props.get('acquisition'))
-				
-				gift_name_type = ''
-				if gifted_item.item_type == ewcfg.it_item:
-					gift_name_type = 'item_name'
-				elif gifted_item.item_type == ewcfg.it_medal:
-					gift_name_type = 'medal_name'
-				elif gifted_item.item_type == ewcfg.it_questitem:
-					gift_name_type = 'qitem_name'
-				elif gifted_item.item_type == ewcfg. it_food:
-					gift_name_type = 'food_name'
-				elif gifted_item.item_type == ewcfg.it_weapon:
-					gift_name_type = 'weapon_name'
-				elif gifted_item.item_type == ewcfg.it_cosmetic:
-					gift_name_type = 'cosmetic_name'
-				elif gifted_item.item_type == ewcfg.it_furniture:
-					gift_name_type = 'furniture_name'
-				elif gifted_item.item_type == ewcfg.it_book:
-					gift_name_type = 'title'
-				
-				gifted_item_name = gifted_item.item_props.get('{}'.format(gift_name_type))
-				gifted_item_message = item.item_props.get('context')
+				if ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user=cmd.message.author.id, id_server=cmd.guild.id):
+					gifted_item = EwItem(id_item=item.item_props.get('acquisition'))
 
-				#user_data = EwUser(member=cmd.message.author)
-				#user_data.festivity += ewcfg.festivity_on_gift_wrapping
-				#user_data.persist()
-				
-				response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)
-				ewitem.item_delete(id_item=item_sought.get('id_item'))
+					gift_name_type = ''
+					if gifted_item.item_type == ewcfg.it_item:
+						gift_name_type = 'item_name'
+					elif gifted_item.item_type == ewcfg.it_medal:
+						gift_name_type = 'medal_name'
+					elif gifted_item.item_type == ewcfg.it_questitem:
+						gift_name_type = 'qitem_name'
+					elif gifted_item.item_type == ewcfg. it_food:
+						gift_name_type = 'food_name'
+					elif gifted_item.item_type == ewcfg.it_weapon:
+						gift_name_type = 'weapon_name'
+					elif gifted_item.item_type == ewcfg.it_cosmetic:
+						gift_name_type = 'cosmetic_name'
+					elif gifted_item.item_type == ewcfg.it_furniture:
+						gift_name_type = 'furniture_name'
+					elif gifted_item.item_type == ewcfg.it_book:
+						gift_name_type = 'title'
+
+					gifted_item_name = gifted_item.item_props.get('{}'.format(gift_name_type))
+					gifted_item_message = item.item_props.get('context')
+
+					#user_data = EwUser(member=cmd.message.author)
+					#user_data.festivity += ewcfg.festivity_on_gift_wrapping
+					#user_data.persist()
+
+					response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)
+					ewitem.item_delete(id_item=item_sought.get('id_item'))
+				else:
+					response = "Whatever's inside, you can't hold anymore!"
 			else:
 				response = "You can't unwrap something that isn't a gift, bitch."
 		else:
@@ -3975,28 +3993,34 @@ async def check_flag(cmd):
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+
 	"""
+
 
 
 
 
 async def exec_mutations(cmd):
 	user_data = EwUser(member = cmd.message.author)
+
+	if cmd.mentions_count == 1:
+		user_data = EwUser(member = cmd.mentions[0])
+
 	status = user_data.getStatusEffects()
 
-	if ewcfg.status_n1:
+	if ewcfg.status_n1 in status:
 		response = "They fight without expending themselves due to **Perfection**. They're precise even without a target due to **Indiscriminate Rage**. They're hard to fell and cut deep due to **Monolith Body**. They are immaculate and unaging due to **Immortality**."
-	elif ewcfg.status_n2:
+	elif ewcfg.status_n2 in status:
 		response = "They have unparalleled coordination, speed and reaction time due to **Fucked Out**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
-	elif ewcfg.status_n4:
+	elif ewcfg.status_n4 in status:
 		response = "They are capable of murder by machine due to **Napalm Hacker**. Their hiding spot evades you due to **Super Amnesia**."
-	elif ewcfg.status_n8:
+	elif ewcfg.status_n8 in status:
 		response = "They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
-	elif ewcfg.status_n11:
+	elif ewcfg.status_n11 in status:
 		response = "They command a crowd through fear and punishment due to **Unnatural Intimidation**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
-	elif ewcfg.status_n12:
+	elif ewcfg.status_n12 in status:
 		response = "Their body holds untold numbers of quirks and perks due to **Full Aberrant**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
-	elif ewcfg.status_n13:
+	elif ewcfg.status_n13 in status:
 		response = "They are prone to explosive entries due to **Tantrum**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
 	elif user_data.life_state == ewcfg.life_state_lucky:
 		response = "They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. "
@@ -4009,12 +4033,16 @@ async def get_attire(cmd):
 	status = user_data.getStatusEffects()
 	if user_data.poi != ewcfg.poi_id_thebreakroom:
 		response = "Are you a Slimecorp Security Force official, planted firmly in their lavish breakroom? No? Then you're not getting shit."
-	elif ewcfg.status_kevlarattire in status:
+	elif ewcfg.status_kevlarattire_id in status:
 		response = "You're already armed, though. This stuff's too expensive so the company's not gonna let you double dip."
 	elif user_data.life_state != ewcfg.life_state_enlisted:
 		response = "You're not committed enough to wear this attire. You're a slob. How did you even get in here?"
 	else:
-		return await ewutils.assign_status_effect(status_name='kevlarattire', user_id=cmd.message.author.id, server_id=cmd.guild.id)
+		response = "You suit up in top-of-the-line Kevlar attire. Sleek. Professional. Bulletproof."
+		await ewutils.assign_status_effect(status_name='kevlarattire', user_id=cmd.message.author.id, server_id=cmd.guild.id, cmd=cmd)
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 
 async def check_mastery(cmd):
 	message_line = "You are a rank {} master of the {}. \n"
@@ -4031,3 +4059,184 @@ async def check_mastery(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
+
+		
+		
+async def slimefest(cmd):
+
+	market_data = EwMarket(id_server = cmd.guild.id)
+	
+	response = "Soon..."
+	#if market_data.winner == ewcfg.faction_killers:
+	#	response = "Killers are winning Slimefest."
+	#elif market_data.winner == ewcfg.faction_rowdys:
+	#	response = "Rowdys are winning Slimefest."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+
+async def commands(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	response   = ""
+	category = ewutils.flattenTokenListToString(tokens = cmd.tokens[1:])
+
+	if cmd.tokens_count == 1:
+		response += location_commands(cmd)
+		response += mutation_commands(cmd)
+		response += item_commands(cmd)
+		if response != "":
+			response += "\n\nLook up basic commands with !commands basic, \nor a full list with !commands categories."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if "categories" in category:
+		response += "Categories are: \nbasic: basic info.\nmyitems: Commands for items you have.\nmylocation: Commands based in this area.\nmymutations: Commands for the mutations you currently have.\nmyfaction: Commands for the faction you're in.\nmyrace: The command for your current race.\ncombat: Combat-based commands.\ncapping: Capping-based commands.\nplayerinfo: Commands that tell you some of your statistics.\noutsidelinks: These display links to outside the server.\nitems: Show item-related commands.\ncosmeticsanddyes: Display information on cosmetics and dyes.\nsmelting: Smelting related commands.\ntrading: Trading related commands.\nquadrants: Quadrant related commands.\nslimeoids: Slimeoid-related commands.\njuvies: Commands for juvies.\nenlisted: Commands for enlisted players.\ncorpses:Commands for corpses.\nmisc: Miscellaneous commands.\nflavor: Other shitposty type commands.\nallitem: All item-specific commands.\nallmutation: All mutation specific commands.\nYou can also check the commands of a specific location using !commands location <district>."
+
+	if cmd.tokens_count == 1 or "basic" in category:
+		response += "\n\n" + ewcfg.basic_commands
+
+	if ewutils.flattenTokenListToString(tokens = cmd.tokens[1]) == 'location':
+		poi_look = ewutils.flattenTokenListToString(tokens = cmd.tokens[2])
+		poi_sought = ewcfg.id_to_poi.get(poi_look)
+		if poi_sought:
+			command_output = location_commands(cmd=cmd, search_poi=poi_sought.id_poi)
+			if command_output != "":
+				response += command_output
+			else:
+				response = "No commands for that region."
+		else:
+			response = "Not a real place."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+	if "myitems" in category:
+		response += "\n\n" + item_commands(cmd)
+	if "mylocation" in category:
+		response += "\n\n" + location_commands(cmd)
+	if "mymutations" in category:
+		response += "\n\n" + mutation_commands(cmd)
+	if "myfaction" in category:
+		if user_data.life_state == ewcfg.life_state_juvenile:
+			response += "\n\n"+ ewcfg.juvenile_commands
+		elif user_data.life_state == ewcfg.life_state_corpse:
+			response += "\n\n"+ ewcfg.corpse_commands
+		else:
+			if user_data.faction == 'rowdys':
+				response += "\n\n"+ "!thrash: Thrashing is a rowdy's fucking lifeblood.\n"
+			elif user_data.faction == 'killers':
+				response += "\n\n"+ "!dab: To dab on some haters.\n"
+			response +=  ewcfg.enlisted_commands
+	if "juvies" in category:
+		response += "\n\n"+ ewcfg.juvenile_commands
+	if "corpses" in category:
+		response += "\n\n" + ewcfg.corpse_commands
+	if "enlisted" in category:
+		response += "\n\n" + ewcfg.enlisted_commands
+	if "myrace" in category:
+		race = user_data.race
+		if ewcfg.race_unique_commands.get(race) is not None:
+			response += "\n\n" + ewcfg.race_unique_commands.get(race)
+		else:
+			response += "\n\nNo racial commands found."
+	if "combat" in category:
+		response += "\n\n" + ewcfg.combat_commands
+	if "capping" in category:
+		response += "\n\n" + ewcfg.capping_commands
+	if "playerinfo" in category:
+		response += "\n\n" + ewcfg.player_info_commands
+	if "outsidelinks" in category:
+		response += "\n\n" + ewcfg.external_link_commands
+	if "items" in category:
+		response += "\n\n" + ewcfg.item_commands
+	if "cosmeticsanddyes" in category:
+		response += "\n\n" + ewcfg.cosmetics_dyes_commands
+	if "smelting" in category:
+		response += "\n\n" + ewcfg.smelting_commands
+	if "trading" in category:
+		response += "\n\n" + ewcfg.trading_commands
+	if "quadrants" in category:
+		response += "\n\n" + ewcfg.quadrant_commands
+	if "misc" in category:
+		response += "\n\n" + ewcfg.miscellaneous_commands
+	if "flavor" in category:
+		response += "\n\n" + ewcfg.flavor_commands
+	if "allitem" in category:
+		response += "\n\n"
+		for item in ewcfg.item_unique_commands.keys():
+			response += "\n" + ewcfg.item_unique_commands.get(item)
+	if "allmutation" in category:
+		response += "\n\n"
+		for item in ewcfg.mutation_unique_commands.keys():
+			response += "\n" + ewcfg.mutation_unique_commands.get(item)
+	if response == "":
+		response = "No commands found."
+
+	messageArray = ewutils.messagesplit(stringIn=response)
+
+	for message in messageArray:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, message))
+	#return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+
+def location_commands(cmd, search_poi = None):
+	user_data = EwUser(member=cmd.message.author)
+	if search_poi is not None:
+		poi = search_poi
+	else:
+		poi = user_data.poi
+	poi_obj = ewcfg.id_to_poi.get(poi)
+	response = "\n**THIS LOCATION:**\n"
+	if poi in [ewcfg.poi_id_mine, ewcfg.poi_id_mine_sweeper, ewcfg.poi_id_mine_bubble, ewcfg.poi_id_tt_mines,
+			   ewcfg.poi_id_tt_mines_sweeper, ewcfg.poi_id_tt_mines_bubble, ewcfg.poi_id_cv_mines,
+			   ewcfg.poi_id_cv_mines_sweeper, ewcfg.poi_id_cv_mines_bubble]:
+		response += ewcfg.mine_commands
+	if poi_obj.is_pier == True:
+		response += ewcfg.pier_commands
+	if poi_obj.is_transport_stop == True or poi_obj.is_transport == True:
+		response += ewcfg.transport_commands
+	if poi_obj.is_apartment:
+		response += ewcfg.apartment_commands
+	if poi in [ewcfg.poi_id_greencakecafe, ewcfg.poi_id_nlacu, ewcfg.poi_id_neomilwaukeestate,
+			   ewcfg.poi_id_glocksburycomics]:
+		response += ewcfg.zine_writing_places_commands
+	if poi in [ewcfg.poi_id_ab_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_jr_farms]:
+		response += ewcfg.farm_commands
+	if poi in [ewcfg.poi_id_nlacu, ewcfg.poi_id_neomilwaukeestate]:
+		response += "\n" + ewcfg.universities_commands
+	if len(poi_obj.vendors) != 0:
+		response += "\n" +  ewcfg.shop_commands
+	if ewcfg.district_unique_commands.get(poi) is not None:
+		response += "\n" + ewcfg.district_unique_commands.get(poi)
+	if response != "\n**THIS LOCATION:**\n":
+		return response
+	else:
+		return ""
+
+
+
+def mutation_commands(cmd):
+	response = "\n**CURRENT MUTATIONS:**"
+	user_data = EwUser(member=cmd.message.author)
+	mutations = user_data.get_mutations()
+	for mutation in mutations:
+		if ewcfg.mutation_unique_commands.get(mutation) is not None:
+			response += "\n" + ewcfg.mutation_unique_commands.get(mutation)
+
+	if response != "\n**CURRENT MUTATIONS:**":
+		return response
+	else:
+		return ""
+
+def item_commands(cmd):
+	response = "\n**IN YOUR INVENTORY:**"
+	items_to_find = ewcfg.item_unique_commands.keys()
+	user_data = EwUser(member=cmd.message.author)
+
+	for lookup in items_to_find:
+		item_sought = ewitem.find_item(item_search=lookup, id_user=user_data.id_user, id_server=user_data.id_server)
+		if item_sought:
+			response += "\n" + ewcfg.item_unique_commands.get(lookup)
+	if response != "\n**IN YOUR INVENTORY:**":
+		return response
+	else:
+		return ""

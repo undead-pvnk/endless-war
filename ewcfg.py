@@ -33,7 +33,9 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.71 - No Slimernalia"
+
+version = "v4.002epilogue"
+
 
 
 dir_msgqueue = 'msgqueue'
@@ -121,7 +123,7 @@ slimeoid_stat_chutzpah = 'chutzpah'
 
 # ID tags for points of interest that are needed in code.
 poi_id_thesewers = "thesewers"
-poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
+poi_id_slimeoidlab = "slimeoidlaboratory"
 poi_id_realestate = "realestateagency"
 poi_id_glocksburycomics = "glocksburycomics"
 poi_id_slimypersuits = "slimypersuits"
@@ -166,6 +168,21 @@ poi_id_basedhardware = "basedhardware"
 poi_id_clinicofslimoplasty = "clinicofslimoplasty"
 poi_id_thebreakroom = "thebreakroom"
 poi_id_underworld = "underworld"
+
+poi_id_sc_n12_office = "n12office"
+poi_id_sc_n10_office = "n10office"
+poi_id_sc_elevator = "elevator"
+poi_id_watercooler = "watercooler"
+poi_id_sc_n13_office = "n13office"
+poi_id_sc_n8_office = "n8office"
+poi_id_sc_n2_office = "n2office"
+poi_id_sc_n6_office = "n6office"
+poi_id_sc_n11_office = "n11office"
+poi_id_sc_n5_office = "n5office"
+poi_id_sc_n7_office = "n7office"
+poi_id_sc_n9_office = "n9office"
+poi_id_sc_moon_penthouse = "moonpenthouse"
+poi_id_themoon = "themoon"
 
 # transports
 poi_id_ferry = "ferry"
@@ -644,18 +661,19 @@ channel_endlesswar = "endless-war"
 channel_sewers = "the-sewers"
 channel_dojo = "the-dojo"
 channel_twitch_announcement = "rfck-chat"
-channel_casino = "slimecorp-casino"
-channel_stockexchange = "slimecorp-stock-exchange"
+channel_casino = "the-casino"
+channel_stockexchange = "slime-stock-exchange"
 channel_foodcourt = "food-court"
-channel_slimeoidlab = "slimecorp-labs"
+channel_slimeoidlab = "nlacu-labs"
 channel_711 = "outside-the-7-11"
 channel_speakeasy = "speakeasy"
 channel_arena = "battle-arena"
 channel_nlacu = "nlac-university"
 channel_cinema = "nlacakanm-cinemas"
 channel_bazaar = "bazaar"
-channel_recyclingplant = "slimecorp-recycling-plant"
+channel_recyclingplant = "recycling-plant"
 channel_slimecorphq = "slimecorp-hq"
+channel_slimecorpcomms = "slimecorp-comms"
 channel_leaderboard = "leaderboard"
 channel_cv_mines = "cratersville-mines"
 channel_cv_mines_sweeper = "cratersville-mines-minesweeper"
@@ -682,7 +700,7 @@ channel_vc_pier = "vagrants-corner-pier"
 channel_se_pier = "slimes-end-pier"
 channel_jr_pier = "juvies-row-pier"
 channel_juviesrow = "juvies-row"
-channel_realestateagency = "slimecorp-real-estate-agency"
+channel_realestateagency = "real-estate-agency"
 channel_apt = "apartment"
 channel_sodafountain = "the-bicarbonate-soda-fountain"
 channel_greencakecafe = "green-cake-cafe"
@@ -783,6 +801,7 @@ channel_atomicforest = "atomic-forest"
 channel_downpourlaboratory = "downpour-laboratory"
 
 channel_prankfeed = "prank-feed"
+channel_slimefest = "slimefest"
 
 # Placeholders
 channel_copkilltown_street_a = "cop-killtown-street-a"
@@ -914,10 +933,11 @@ channel_slimesend_street_a = "slimes-end-street-a"
 
 channel_slimetwitter = "slime-twitter"
 
-hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
+hideout_channels = [channel_rowdyroughhouse, channel_copkilltown, channel_breakroom]
 hideout_by_faction = {
 	faction_rowdys: channel_rowdyroughhouse,
-	faction_killers: channel_copkilltown
+	faction_killers: channel_copkilltown,
+	faction_slimecorp: channel_breakroom
 }
 
 
@@ -934,6 +954,7 @@ cmd_shoot_alt3 = cmd_prefix + 'ban'
 cmd_shoot_alt4 = cmd_prefix + 'pullthetrigger'
 cmd_shoot_alt5 = cmd_prefix + 'curbstomp'
 cmd_shoot_alt6 = cmd_prefix + 'hug'
+cmd_shoot_alt7 = cmd_prefix + 'stab'
 cmd_attack = cmd_prefix + 'attack'
 cmd_reload = cmd_prefix + 'reload'
 cmd_reload_alt1 = cmd_prefix + 'loadthegun'
@@ -942,11 +963,12 @@ cmd_mine = cmd_prefix + 'mine'
 cmd_flag = cmd_prefix + 'flag'
 cmd_score = cmd_prefix + 'slimes'
 cmd_score_alt1 = cmd_prefix + 'slime'
+cmd_score_alt2 = cmd_prefix + 'skune'
 cmd_giveslime = cmd_prefix + 'giveslime'
 cmd_giveslime_alt1 = cmd_prefix + 'giveslimes'
 cmd_help = cmd_prefix + 'help'
-cmd_help_alt1 = cmd_prefix + 'command'
-cmd_help_alt2 = cmd_prefix + 'commands'
+cmd_commands_alt1 = cmd_prefix + 'command'
+cmd_commands = cmd_prefix + 'commands'
 cmd_help_alt3 = cmd_prefix + 'guide'
 cmd_harvest = cmd_prefix + 'harvest'
 cmd_salute = cmd_prefix + 'salute'
@@ -956,6 +978,8 @@ cmd_spar = cmd_prefix + 'spar'
 cmd_suicide = cmd_prefix + 'suicide'
 cmd_suicide_alt1 = cmd_prefix + 'seppuku'
 cmd_suicide_alt2 = cmd_prefix + 'sudoku'
+cmd_haveastroke = cmd_prefix + 'haveastroke'
+cmd_moonhurtingbeam = cmd_prefix + 'moonhurtingbeam'
 cmd_haunt = cmd_prefix + 'haunt'
 cmd_inhabit = cmd_prefix + 'inhabit'
 cmd_letgo = cmd_prefix + 'letgo'
@@ -1069,6 +1093,7 @@ cmd_map = cmd_prefix + 'map'
 cmd_transportmap = cmd_prefix + 'transportmap'
 cmd_wiki = cmd_prefix + 'wiki'
 cmd_booru = cmd_prefix + 'booru'
+cmd_bandcamp = cmd_prefix + 'bandcamp'
 cmd_pardon = cmd_prefix + 'pardon'
 cmd_banish = cmd_prefix + 'banish'
 cmd_vouch = cmd_prefix + 'vouch'
@@ -1081,6 +1106,7 @@ cmd_thrash = cmd_prefix + 'thrash'
 cmd_dab = cmd_prefix + 'dab'
 cmd_boo = cmd_prefix + 'boo'
 cmd_dance = cmd_prefix + 'dance'
+cmd_dance_alt = cmd_prefix + 'vance'
 cmd_propaganda = cmd_prefix + 'propaganda'
 cmd_coinflip = cmd_prefix + 'co1nfl1p'
 cmd_spook = cmd_prefix + 'spook'
@@ -1181,6 +1207,8 @@ cmd_clockout = cmd_prefix + 'clockout'
 cmd_sanitize = cmd_prefix + 'sanitize'
 cmd_paycheck = cmd_prefix + 'paycheck'
 cmd_payday = cmd_prefix + 'payday'
+cmd_win = cmd_prefix + 'win'
+cmd_slimefest = cmd_prefix + 'slimefest'
 
 cmd_preserve = cmd_prefix + 'preserve'
 cmd_stink = cmd_prefix + 'stink'
@@ -1235,6 +1263,7 @@ cmd_gvs_gaiaslime_alt1 = cmd_prefix + 'gs'
 cmd_gvs_brainz = cmd_prefix + 'brainz'
 
 cmd_retire = cmd_prefix + 'retire'
+cmd_paspeaker = cmd_prefix + 'paspeaker'
 cmd_depart = cmd_prefix + 'depart'
 cmd_consult = cmd_prefix + 'consult'
 cmd_sign_lease = cmd_prefix + 'signlease'
@@ -1292,6 +1321,9 @@ cmd_retrofit = cmd_prefix + 'retrofit'
 cmd_sip = cmd_prefix + 'sip'
 cmd_fashion = cmd_prefix + 'fashion'
 
+cmd_zuck = cmd_prefix + 'zuck'
+
+
 cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
 cmd_beginmanuscript_alt_1 = cmd_prefix + 'createmanuscript'
 cmd_beginmanuscript_alt_2 = cmd_prefix + 'startmanuscript'
@@ -1328,6 +1360,11 @@ cmd_untakedown_alt_2 = cmd_prefix + 'undeletezine'
 cmd_lol = cmd_prefix + 'lol'
 cmd_mastery = cmd_prefix + 'mastery'
 
+cmd_getattire = cmd_prefix + 'getattire'
+cmd_pacommand = cmd_prefix + 'pacommand'
+
+cmd_surveil = cmd_prefix + 'surveil'
+
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
 apartment_dt_multiplier = 3000000000
@@ -1337,6 +1374,7 @@ soulprice = 500000000
 
 tv_set_slime = 5000000
 tv_set_level = 100
+
 
 cmd_promote = cmd_prefix + 'promote'
 
@@ -1362,6 +1400,7 @@ cmd_debug4 = cmd_prefix + ewdebug.cmd_debug4
 cmd_debug6 = cmd_prefix + ewdebug.cmd_debug6
 cmd_debug7 = cmd_prefix + ewdebug.cmd_debug7
 cmd_debug8 = cmd_prefix + ewdebug.cmd_debug8
+cmd_debug9 = cmd_prefix + ewdebug.cmd_debug9
 
 cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
 cmd_clear_mutations = cmd_prefix + 'sterilizemutations'
@@ -1445,11 +1484,20 @@ cmd_entomize = cmd_prefix + 'entomize'
 cmd_confuse = cmd_prefix + 'confuse'
 cmd_shamble = cmd_prefix + 'shamble'
 
+cmd_hogtie = cmd_prefix + 'hogtie'
+
 # Slime Twitter
 cmd_tweet = cmd_prefix + 'tweet'
 cmd_verification = cmd_prefix + 'requestverification'
 cmd_verification_alt = cmd_prefix + '#verify'
 
+
+cmd_changegamestate = cmd_prefix + 'changegamestate'
+cmd_display_states = cmd_prefix + 'displaystates'
+cmd_press_button = cmd_prefix + 'press'
+cmd_call_elevator = cmd_prefix + 'callelevator'
+cmd_addstatuseffect = cmd_prefix + 'addstatuseffect'
+cmd_getattire = cmd_prefix + 'getattire'
 #SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
@@ -2106,7 +2154,7 @@ festivity_on_gift_wrapping = 100
 festivity_on_gift_giving = 10000
 
 # Common strings.
-str_casino_closed = "The SlimeCorp Casino only operates at night."
+str_casino_closed = "The Casino only operates at night."
 str_casino_negaslime_dealer = "\"We don't deal with negaslime around here.\", says the dealer disdainfully."
 str_casino_negaslime_machine = "The machine doesn't seem to accept antislime."
 str_exchange_closed = "The Exchange has closed for the night."
@@ -2337,6 +2385,7 @@ col_decayed_slimes = 'decayed_slimes'
 col_donated_slimes = 'donated_slimes'
 col_donated_poudrins = 'donated_poudrins'
 col_splattered_slimes = 'splattered_slimes'
+col_winner = 'winner'
 
 # Database columns for stocks
 col_stock = 'stock'
@@ -2448,6 +2497,9 @@ col_hue_fullcomp_1 = "hue_fullcomp_1"
 col_hue_fullcomp_2 = "hue_fullcomp_2"
 
 
+#Gamestate columns
+col_bit = "state_bit"
+col_id_state = "id_state"
 
 
 
@@ -2777,6 +2829,7 @@ item_id_textiles = "textiles"
 item_id_foodbase = "foodbase"
 item_id_civilianscalp = "civilianscalp"
 item_id_modelovaccine = "modelovirusvaccine"
+item_id_key = "key"
 item_id_gaiaseedpack_poketubers = "poketubersseedpacket"
 item_id_gaiaseedpack_pulpgourds = "pulpgourdsseedpacket"
 item_id_gaiaseedpack_sourpotatoes = "sourpotatoesseedpacket"
@@ -2979,6 +3032,9 @@ item_id_dye_rainbow = "rainbowdye"
 item_id_paint_copper = "copperpaint"
 item_id_paint_chrome = "chromepaint"
 item_id_paint_gold = "goldpaint"
+
+fuck_energies = ['khaotickilliflowerfuckenergy', 'rampagingrowddishfuckenergy', 'direappleciderfuckenergy', 'ultimateurinefuckenergy', 'superwaterfuckenergy', 'justcumfuckenergy', 'goonshinefuckenergy', 'liquidcoffeegroundsfuckenergy', 'joybeanjavafuckenergy', 'krakacolafuckenergy', 'drfuckerfuckenergy']
+
 
 #weapon ids
 weapon_id_revolver = 'revolver'
@@ -3627,6 +3683,71 @@ item_list = [
 		str_desc = "It’s a rusty syringe containing a thick, dark-red substance. It begins to bubble slightly when you shake it. A few charred bits rise to the top. Looks yummy!",
 		vendors = [vendor_lab],
 		price = 1000000
+	),
+	EwGeneralItem(
+		id_item = 'n2corpse',
+		context = 'corpse',
+		str_name = "N2's Corpse",
+		str_desc = "The unzucked corpse of N2. All these bloodstains make his outfit even more gaudy than usual.",
+		alias = [
+			"n2"
+		]
+	),
+EwGeneralItem(
+		id_item = 'n6corpse',
+		context = 'corpse',
+		str_name = "N6's Corpse",
+		str_desc = "The unzucked corpse of N6. Something is preventing her corpse from entering the Sewers.",
+		alias = [
+			"n6"
+		]
+	),
+EwGeneralItem(
+		id_item = 'n10corpse',
+		context = 'corpse',
+		str_name = "N10's Corpse",
+		str_desc = "The unzucked corpse of N10. Something about lugging this body around feels like a mistake.",
+		alias = [
+			"n10"
+		]
+	),
+EwGeneralItem(
+		id_item = 'n11corpse',
+		context = 'corpse',
+		str_name = "N11's Corpse",
+		str_desc = "The unzucked corpse of N11. You're having a rough time carrying it.",
+		alias = [
+			"n11"
+		]
+	),
+EwGeneralItem(
+		id_item = 'n12corpse',
+		context = 'corpse',
+		str_name = "N12's Corpse",
+		str_desc = "The unzucked corpse of N12. At this point she's hardly recognizable.",
+		alias = [
+			"n12"
+		]
+	),
+EwGeneralItem(
+		id_item = 'n13corpse',
+		context = 'corpse',
+		str_name = "N13's Corpse",
+		str_desc = "The unzucked corpse of N13. The bulb head looks so fragile but it's definitely not breaking anytime soon.",
+		alias = [
+			"n13"
+		]
+	),
+EwGeneralItem(
+		id_item = 'zucksyringe',
+		context = 'syringe',
+		str_name = "Zuckerberg Syringe",
+		str_desc = "It's a high-powered syringe that can take a slimeboi and pressurize them into a steel canister. Be careful who you use this on.",
+		alias = [
+			"syringe",
+			"needle",
+			"zucker"
+		]
 	),
 	EwSlimeoidFood(
 		id_item = item_id_fragilecandy,
@@ -4396,6 +4517,24 @@ item_list = [
 		id_item=item_id_civilianscalp,
 		str_name="civilian's scalp",
 		str_desc="It's the discarded scalp of an innocent NLACakaNM resident. You always wanted to kill one of these guys."
+	),\
+	EwGeneralItem(
+		id_item = "key",
+		str_name = "Cabinet Key",
+		str_desc = "It's a tiny key. Some idiot must've left this in the middle of the street, it's weathered down right out of the box.",
+		context = "cabinetkey"
+	),
+	EwGeneralItem(
+		id_item="filmreel",
+		str_name="VHS Tape",
+		str_desc="It's a VHS for one of Slimecorp's old training videos.",
+		context="reelkey"
+	),
+	EwGeneralItem(
+		id_item = "coordinatesheet",
+		str_name = "Coordinates",
+		str_desc = "It's a small slip of paper that reads: \"36.174435, -112.043243, N. Beach Depths\"",
+		context = "droppable"
 	),
 	EwSeedPacket(
 		id_item=item_id_gaiaseedpack_poketubers,
@@ -4406,6 +4545,7 @@ item_list = [
 		ingredients=[item_id_poketubereyes],
 		enemytype="poketubers"
 	),
+
 	# EwSeedPacket(
 	# 	id_item=item_id_gaiaseedpack_pulpgourds,
 	# 	cooldown=45,
@@ -4797,16 +4937,16 @@ def get_weapon_type_stats(weapon_type):
 			"hit_chance": 0.95,
 		},
 		"variable_damage": {
-			"damage_multiplier": 0.5,
-			"variable_damage_multiplier": 2,
+			"damage_multiplier": 0.75,
+			"variable_damage_multiplier": 1.5,
 			"cost_multiplier": 1,
 			"crit_chance": 0.1,
 			"crit_multiplier": 1.5,
 			"hit_chance": 0.9,
 		},
 		"heavy": {
-			"damage_multiplier": 3,
-			"cost_multiplier": 5,
+			"damage_multiplier": 1.7,
+			"cost_multiplier": 2.75,
 			"crit_chance": 0.1,
 			"crit_multiplier": 1.5,
 			"hit_chance": 0.8,
@@ -5136,7 +5276,7 @@ weapon_list = [
 		str_reload = "You tilt your shotgun and pop shell after shell into its chamber before cocking the forend back. Groovy.",
 		str_reload_warning = "**chk--** *...* **SHIT!!** {name_player}’s shotgun has ejected the last shell in it’s chamber, it’s out of ammo!!",
 		str_scalp = " It has a gaping hole in the center.",
-		fn_effect = get_normal_attack(cost_multiplier = 4, weapon_type = 'heavy'),
+		fn_effect = get_normal_attack(cost_multiplier = 2.5, weapon_type = 'heavy'),
 		clip_size = 2,
 		price = 10000,
 		vendors = [vendor_dojo, vendor_breakroom],
@@ -5364,6 +5504,7 @@ weapon_list = [
 		],
 		str_crit = "**COMBO!** {name_player} strikes {name_target} with a flurry of 5 vicious blows!",
 		# str_backfire = "**Whack!!** {name_player} fucks up their kung-fu routine and whacks themselves in the head with their own nun-chucks!!",
+		str_miss = "**WOOSH** {name_player} whiffs every strike!",
 		str_equip = "You equip the nun-chucks.",
 		str_name = "nun-chucks",
 		str_weapon = "nun-chucks",
@@ -5373,7 +5514,7 @@ weapon_list = [
 		#str_trauma = "They are covered in deep bruises. They hate martial arts of all kinds.",
 		str_kill = "**HIIII-YAA!!** With expert timing, {name_player} brutally batters {name_target} to death, then strikes a sweet kung-fu pose. {emote_skull}",
 		str_killdescriptor = "fatally bludgeoned",
-		str_damage = "{name_target} takes {strikes} nun-chuck whacks directly in the {hitzone}!!",
+		str_damage = "{name_target} takes a bunch of nun-chuck whacks directly in the {hitzone}!!",
 		str_duel = "**HII-YA! HOOOAAAAAHHHH!!** {name_player} and {name_target} twirl wildly around one another, lashing out with kung-fu precision.",
 		str_description = "They're nunchucks.",
 		str_scalp = " It looks very bruised.",
@@ -6467,6 +6608,28 @@ enemy_attack_type_list = [
 		str_damage="{name_enemy} bludgeons {name_target} in the {hitzone}! At least they try to...",
 		fn_effect=atf_body
 	),
+	EwAttackType(  # 11
+		id_type="stomp",
+		str_crit="**OH FUCK!** The titanoslime reels back onto its hind legs, stomping {name_target} deeper and deeper into the asphalt!",
+		str_miss="**MISS!** {name_target} jumps barely out of the way of a stomp!",
+		# str_trauma_self = "Your have deep bruising on your torso.",
+		# str_trauma = "They have deep bruising on their torso.",
+		str_kill="**CRUNCH!!** The titanoslime locks its teeth into your flesh, snapping you clean in half and swallowing all but your legs! You can feel the creatures stomach acid stinging on your face before you rapidly lose consciousness.{emote_skull}",
+		str_killdescriptor="vored",
+		str_damage="{name_enemy} swings it's car width legs full speed into {name_target}!",
+		fn_effect=atf_tusks
+	),
+	EwAttackType(  # 11
+		id_type="stompn6",
+		str_crit="**YIPPIE KI YAY MOTHER FUCKERS!!!** N6 pulls back the reins, reeling the Titanoslime up and stomping {name_target} deeper and deeper into the asphalt!",
+		str_miss="**MISS!** {name_target} jumps barely out of the way of a stomp! You can hear N6 cursing from atop her steed.",
+		# str_trauma_self = "Your have deep bruising on your torso.",
+		# str_trauma = "They have deep bruising on their torso.",
+		str_kill="N6 pulls out some kind of laser pistol and aims it directly at you. **FOOM!** You don't see the next moment because your eyes are now a fine powder. You bleed out the sockets for a few minutes before collapsing dead in the street.{emote_skull}",
+		str_killdescriptor="disintegrated",
+		str_damage="{name_enemy} swings it's car width legs full speed into {name_target}! N6 laughs and watches you eat shit on the pavement!",
+		fn_effect=atf_tusks
+	),
 	# If str_trauma and str_trauma_self make a return, consider filling GvS attacktypes out in these attributes.
 	EwAttackType( # GvS - 1
 		id_type = "g_seeds",
@@ -6707,6 +6870,18 @@ enemy_attack_type_list = [
 		str_damage = "{name_target} is caught in the blast zone of {name_enemy}'s grenades!",
 		str_groupattack = "{name_enemy} blows up a group of gaiaslimeoids with its grenades!",
 		fn_effect = atf_gvs_basic
+	),
+	EwAttackType(  #
+		id_type="titanoslime",
+		str_crit="NULL",
+		str_miss="**MISS!** {name_target} barely jumps out of the way of {name_enemy}'s foot!",
+		# str_trauma_self = "NULL",
+		# str_trauma = "NULL,
+		str_kill="**WRYYYYYYYY!!!!!** {name_enemy}'s collossal jowls slice {name_target} completely in half! As they lose conciousness, {name_target} can feel the burn of the acid on their face as they sink helplessly into its churning stomach. {emote_skull}",
+		str_killdescriptor="vored",
+		str_damage="{name_target} takes the brunt of {name_enemy}'s stomp!",
+		str_groupattack="{name_enemy} tailsweeps a horde of gaiaslimeoids!",
+		fn_effect=atf_tusks
 	),
 ]
 
@@ -7045,6 +7220,7 @@ jam_tunes = {
 }
 
 
+
 furniture_list = []
 with open(os.path.join('json', 'furniture.json')) as f:
 	furniture = json.load(f)
@@ -7298,7 +7474,7 @@ with open(os.path.join('json', 'poi.json')) as f:
 				max_degradation = i['max_degradation'], 
 				neighbors = i['neighbors'], 
 				topic = i['topic'], 
-				wikipage = i['wikipage'], 
+				wikipage = i['wikipage']
 			))
 
 
@@ -7905,8 +8081,9 @@ landlocked_destinations ={
 	poi_id_slimesend:poi_id_poloniumhill,
 	poi_id_charcoalpark:poi_id_ferry,
 	poi_id_ferry:poi_id_charcoalpark,
-	poi_id_toxington:poi_id_ferry
-
+	poi_id_toxington:poi_id_ferry,
+	poi_id_thevoid:poi_id_themoon,
+	poi_id_themoon:poi_id_thevoid
 }
 
 #landlocked_destinations ={
@@ -10638,7 +10815,7 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name}  hisses with frustrated rage! ",
 		str_revive = "{slimeoid_name} howls at your return, annoyed to have been kept waiting.",
 		str_spawn = "{slimeoid_name} shakes itself off to get rid of some excess gestation fluid, then starts to hiss at you. Seems like a real firecracker, this one.",
-		str_dissolve = "{slimeoid_name} hisses and spits with fury as you hold it over the SlimeCorp Dissolution Vats. Come on, get in there...\n{slimeoid_name} claws at you, clutching at the edge of the vat, screeching with rage even as you hold its head under the surface and wait for the chemical soup to do its work. At last, it stops fighting.\n\n{slimeoid_name} is no more.",
+		str_dissolve = "{slimeoid_name} hisses and spits with fury as you hold it over the N.L.A.C.U Dissolution Vats. Come on, get in there...\n{slimeoid_name} claws at you, clutching at the edge of the vat, screeching with rage even as you hold its head under the surface and wait for the chemical soup to do its work. At last, it stops fighting.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_a,
 		str_abuse= "{slimeoid_name} lashes out, trying to fight back."
 
@@ -10689,7 +10866,7 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} is losing its composure just a little! ",
 		str_revive = "{slimeoid_name} is downtown when you return from the sewers. You find it staring silently up at ENDLESS WAR.",
 		str_spawn = "{slimeoid_name} regards you silently from the floor. You can't tell if it likes you or not, but it starts to follow you regardless.",
-		str_dissolve = "You pick up {slimeoid_name} and hurl it into the SlimeCorp Dissolution Vats before it starts to suspect anything. It slowly sinks into the chemical soup, kind of like Arnold at the end of Terminator 2, only instead of giving you a thumbs-up, it stares at you with an unreadable expression. Betrayal? Confusion? Hatred? Yeah, probably.\n\n{slimeoid_name} is no more.",
+		str_dissolve = "You pick up {slimeoid_name} and hurl it into the N.L.A.C.U. Dissolution Vats before it starts to suspect anything. It slowly sinks into the chemical soup, kind of like Arnold at the end of Terminator 2, only instead of giving you a thumbs-up, it stares at you with an unreadable expression. Betrayal? Confusion? Hatred? Yeah, probably.\n\n{slimeoid_name} is no more.",
 		get_strat = get_strat_c,
 		str_abuse = "You can feel {slimeoid_name} trembling, but it just takes your abuse."
 	),
@@ -11302,12 +11479,12 @@ mutations = [
 	EwMutationFlavor(
 		id_mutation = mutation_id_nosferatu,
 		str_name="Noseferatu",
-        alias = ['nose', 'nf', 'vampire'],
+        alias = ['nose', 'nf', 'vampire', 'noseferatu'],
 		str_describe_self = "Your freakishly huge, hooked schnoz and pointed ears give you a ghoulish appearance due to **Noseferatu**.",
 		str_describe_other = "Their freakishly huge, hooked schnoz and pointed ears give them a ghoulish appearance due to **Noseferatu**.",
 		str_acquire = "The bridge of your nose nearly triples in size. You recoil as the heat of nearby lights sear your skin, forcing you to seek cover under the shadows of dark, secluded alleyways. Your freakish appearance make you a social outcast, filling you with a deep resentment which evolves into unbridled rage. You will have your revenge. You have developed the mutation **Noseferatu**. At night, when attacking, 60% of splattered slime is absorbed directly into your slimecount.",
 		tier = 5,
-        str_transplant = "You ask for the super jumbo size nose job. The doctor blindfolds you and takes you to her van. A quick drive later, you arrive at Slimecorp Labs, where you descend to the embiggening ward. A small amount of bright green fluid gets injected into the tip of your nose, and it grows to sizes beyond your wildest dreams.\n\nYou have developed the mutation **Noseferatu**. At night, when attacking, 60% of splattered slime is absorbed directly into your slimecount.",
+        str_transplant = "You ask for the super jumbo size nose job. The doctor blindfolds you and takes you to her van. A quick drive later, you arrive at N.L.A.C.U. Labs, where you descend to the embiggening ward. A small amount of bright green fluid gets injected into the tip of your nose, and it grows to sizes beyond your wildest dreams.\n\nYou have developed the mutation **Noseferatu**. At night, when attacking, 60% of splattered slime is absorbed directly into your slimecount.",
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_organicfursuit,
@@ -11346,7 +11523,7 @@ mutations = [
 		str_describe_self = "Your frequent, unholy belches could incapacitate a Megaslime due to **Spoiled Appetite**.",
 		str_describe_other = "Their frequent, unholy belches could incapacitate a Megaslime due to **Spoiled Appetite**.",
 		str_acquire = "You become inexplicably tired, you develop bags under your eyes and can barely keep them open without fidgeting. Stenches begin to secrete from your body, which only worsens as your stomach lets out a deep, guttural growl that sounds like a dying animal being raped by an already dead animal. Which is to say, not pleasant. You are overcome with a singular thought. “What the hell, I’ll just eat some trash.” You have developed the mutation **Spoiled Appetite**. You can now eat spoiled food.",
-		tier = 7,
+		tier = 5,
         str_transplant = "You are force-fed cole slaw for several hours. Your desensitized taste buds will never recover from this, and you feel like you could digest anything. Of course, in her infinite wisdom, Dusttrap uses organic cole slaw, so you can't even bust ghosts afterward.\n\nYou have developed the mutation **Spoiled Appetite**. You can now eat spoiled food.",
 		),
 	EwMutationFlavor(
@@ -12204,11 +12381,27 @@ status_slapped_id = "slapped"
 status_foodcoma_id = "foodcoma"
 status_juviemode_id = "juviemode"
 
+status_n1 = "n1"
+status_n2 = "n2"
+status_n4 = "n4"
+status_n8 = "n8"
+status_n11 = "n11"
+status_n12 = "n12"
+status_n13 = "n13"
+
+
+nocost = [status_n13, status_n12, status_n11, status_n4, status_n2, status_n1]
+
+
+status_kevlarattire = "kevlarattire"
+
 status_injury_head_id = "injury_head"
 status_injury_torso_id = "injury_torso"
 status_injury_arms_id = "injury_arms"
 status_injury_legs_id = "injury_legs"
 
+status_kevlarattire_id = "kevlarattire"
+status_hogtied_id = "hogtied"
 
 time_expire_burn = 12
 time_expire_high = 30 * 60 # 30 minutes
@@ -12368,13 +12561,96 @@ status_effect_list = [
 		time_expire = 300,
 		str_acquire = "Calorie-induced rage consumes you! You could drink gasoline and get shot and not feel a damn thing!",
 		str_describe_self = "You're in the middle of a raging food coma.",
-        dmg_mod_self = -0.4
+        dmg_mod = -0.4
 	),
     EwStatusEffectDef(
+		id_status = status_n1,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "You are god's gift to malice.",
+		str_describe = "He is god's gift to malice.",
+        dmg_mod = -0.5,
+		dmg_mod_self = 1,
+		hit_chance_mod_self = +.2,
+		hit_chance_mod = -.35
+	),
+    EwStatusEffectDef(
+		id_status = status_n2,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "You shred like nobody's business.",
+		str_describe = "They shred like nobody's business.",
+        dmg_mod = -0.5,
+		hit_chance_mod_self = +.2,
+		hit_chance_mod = -.5
+	),
+    EwStatusEffectDef(
+		id_status = status_n4,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "Sorry, you can't let them do that.",
+		str_describe = "Sorry, they can't let you do this.",
+        dmg_mod = -1,
+		dmg_mod_self = -.5,
+	),
+    EwStatusEffectDef(
+		id_status = status_n8,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "You're itching to move on from this.",
+        dmg_mod_self = -0.5,
+		dmg_mod = 0.5,
+		crit_mod_self = .3
+	),
+    EwStatusEffectDef(
+		id_status = status_n11,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "You're feeling like putting your cronies to the test.",
+		str_describe = "You're afraid of this guy.",
+        dmg_mod = -0.5,
+		dmg_mod_self = 0.5,
+
+		crit_mod_self = .5
+	),
+    EwStatusEffectDef(
+		id_status = status_n12,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "Time to get nasty.",
+		str_describe = "She barely looks human.",
+        dmg_mod = -0.5,
+		dmg_mod_self = 0.7,
+		crit_mod_self = .75
+	),
+	EwStatusEffectDef(
+		id_status=status_n13,
+		time_expire=86400,
+		str_acquire="",
+		str_describe_self="They're really starting to get on your nerves.",
+		str_describe= "You're really starting to get on his nerves.",
+		dmg_mod=-0.5,
+		dmg_mod_self=0.5,
+		crit_mod_self=.5
+	),
+
+	EwStatusEffectDef(
 		id_status = status_juviemode_id,
 		time_expire = 86400,
 		str_acquire = "",
 		str_describe_self = "You're carrying slime under the legal limit."
+	),
+	EwStatusEffectDef(
+		id_status = status_kevlarattire_id,
+		time_expire = 86400,
+		str_acquire = "",
+		str_describe_self = "You're dressed to the nines in the latest Kevlar work attire.",
+		dmg_mod = -0.2
+	),
+	EwStatusEffectDef(
+		id_status = status_hogtied_id,
+		str_acquire= "They're tied up like a hog on a summer sunday.",
+		str_describe_self= "You're tied up like a hog on a summer sunday."
 	),
 ]
 
@@ -12886,13 +13162,13 @@ help_responses = {
 	# Additional gameplay mechanics, part 2
 	"slimeoids":"**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park. Slimeoids can also be used to fight off **negaslimeoids** that have been summoned by ghosts, though be warned, as this is a fight to the death! If your slimeoid dies, it's **HEART** is dropped, which can be sown in the ground like a poudrin, or taken to the labs to revive your slimeoid with **'!restoreslimeoid'**. In regards to your slimeoid's stats, a slimeoid's **'Moxie'** represents its physical attack, **'Chutzpah'** its special attack, and **'Grit'** its defense. Additionally, the color you dye your slimeoid with **'!saturateslimeoid'** also plays into combat. Your slimeoid gets attack bonuses against slimeoids that have its split complementary hue and resist slimeoids with its analgous hues. For more information, see the diagrams linked below (credits to Connor#3355). There are also various commands you can perform on your slimeoid, such as **'!observeslimeoid'**, **'!petslimeoid'**, **'!walkslimeoid'**, and **'!playfetch'**. To humanely and ethically euthanize your slimeoid, use **'!dissolveslimeoid'** at the laboratory. To store and release your slimeoid in a bottle (Warning: This bottle is dropped upon death!!), use **'!bottleslimeoid'** and **'!unbottleslimeoid [slimeoid]'**, respectively.\n<https://cdn.discordapp.com/attachments/492088204053184533/586310921274523648/SLIMEOID-HUE.png>\n<https://cdn.discordapp.com/attachments/177891183173959680/586662087653064706/SLIMEOID-HUE.gif>\n<https://cdn.discordapp.com/attachments/177891183173959680/586662095848996894/SLIMEOID_HUE_NOTE.png>",
 	"cosmetics":"**Cosmetics** are items that the player may wear. To equip and un-equip a cosmetic, use **'!adorn [cosmetic]'** and **'!dedorn [cosmetic]'**. If you have four slime poudrins and a cosmetic material, you can use **'!smelt'** to create a new one from scratch. These cosmetic materials can be obtained from using **'!crush'** on vegetables gained by farming. Cosmetics can either be of 'plebian' or 'patrician' quality, indicating their rarity. If you win an art contest held for the community, a Kingpin will make a **Princep** cosmetic for you, which is custom tailored, and will not leave your inventory upon death. Cosmetics can be dyed with **!dyecosmetic [cosmetic name/id] [dye name/id]**. To check which cosmetics you have adorned, you can use !fashion.",
-	"realestate":"The **Slimecorp Real Estate Agency** is, well, the agency where you buy real estate. First, check out the property you want with **'!consult [district]'**. The real estate agent will tell you a bit about the area. \nOnce you've made your decision, you can **'!signlease [district]'** to seal the deal. There's a down payment, and you will be charged rent every 2 IRL days. Fair warning, though, if you already have an apartment and you rent a second one, you will be moved out of the first.\n\nFinally, if you own an apartment already, you can **'!aptupgrade'** it, improving its storage capabilities, but you'll be charged a huge down payment and your rent will double. The biggest upgrade stores 40 closet items, 20 food items, and 25 pieces of furniture. And if you're ready to cut and run, use **'!breaklease'** to end your contract. It'll cost another down payment, though.\n\nYou can !addkey to acquire a housekey. Giving this item to some lucky fellow gives them access to your apartment, including all your prized posessions. Getting burglarized? Use !changelocks to eliminate all housekeys you created. Both cost a premium, though.",
+	"realestate":"The **Real Estate Agency** is, well, the agency where you buy real estate. First, check out the property you want with **'!consult [district]'**. The real estate agent will tell you a bit about the area. \nOnce you've made your decision, you can **'!signlease [district]'** to seal the deal. There's a down payment, and you will be charged rent every 2 IRL days. Fair warning, though, if you already have an apartment and you rent a second one, you will be moved out of the first.\n\nFinally, if you own an apartment already, you can **'!aptupgrade'** it, improving its storage capabilities, but you'll be charged a huge down payment and your rent will double. The biggest upgrade stores 40 closet items, 20 food items, and 25 pieces of furniture. And if you're ready to cut and run, use **'!breaklease'** to end your contract. It'll cost another down payment, though.\n\nYou can !addkey to acquire a housekey. Giving this item to some lucky fellow gives them access to your apartment, including all your prized posessions. Getting burglarized? Use !changelocks to eliminate all housekeys you created. Both cost a premium, though.",
 	"apartments":"Once you've gotten yourself an apartment, there are a variety of things you can do inside it. To enter your apartment, do **'!retire'** in the district your apartment is located in. There are certain commands related to your apartment that you must do in a direct message to ENDLESS WAR. To change the name and description of your apartment, do **'!aptname [name]'** and **'!aptdesc [description]'**, respectively. To place and remove furniture (purchasable in The Bazaar), do **'!decorate [furniture]'** and **'!undecorate [furniture]'**, respectively. You can store and remove items with **'!stow'** and **'!snag'**, respectively. To store in and remove items from the fridge, do **'!fridge [item]'** and **'!unfridge [item]'**. To store in and remove items from the closet, do **'!closet [item]'** and **'!uncloset [item]'**, respectively. To store and remove your slimeoid, do **'!freeze'** and **'!unfreeze'**, respectively. To store and remove fish, do **'!aquarium [fish]'** and **'!releasefish [fish]'**, respectively. To store and remove items such as weapons and cosmetics, do **'!propstand [item]'** and **'!unstand [item]'**, respectively. To put away zines, do **!shelve [item]** and **!unshelve [item]**. To place crops into flower pots, do **pot [item]** and **unpot [item]** To enter someone else's apartment, you can do **'!knock [player]'**, which will prompt them to let you in. This list of commands can also be accessed by using !help in a direct message to ENDLESS WAR.",
 	"stocks":"**The Stock Exchange** is a sub-zone within downtown NLACakaNM, open only during the daytime (6AM-8PM). It allows players to **'!invest'** in various **'!stocks'**, which not only affects their own personal monetary gains, but the city's economy as well. Stocks will shift up and down value, which affects the price of food associated with the food chains of those respective stocks. The rate of exchange for stocks can be checked with **'!rates'**, and to withdraw your **'!shares'** from a stock, use **'!withdraw [amount] [stock]'** (the same logic also applies to !invest). Additionally, players may **'!transfer'** their slimecoin to other players at any time of the day while in the stock exchange, but at the cost of a 5% broker's fee and a 20 minute cooldown on subsequent transfers.",
 	# Additional gameplay mechanics, part 3
 	"trading": "Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Use **!removeoffer [item]** to remove an item from your offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**.",
 	"weather": "The weather of NLACakaNM can have certain outcomes on gameplay, most notably in regards to mutations like White Nationalist or Light As A Feather. Right now, however, you should be most concerned with **Bicarbonate Rain Storms**, which rapidly destroy slime both on the ground and within your very being. It's advised that you pick up a rain coat at The Bazaar to avoid further harm. To check the weather, use **'!weather'**.",
-	"casino": "**The Casino** is a sub-zone in Green Light District where players may bet their slime and slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, **'!slimebaccarat'**, and **!slimeskat**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where most of the loser's slime is transferred to the winner. A recent takeover by SlimeCorp has introduced a policy requiring 20% of all winnings to be sent directly to them. To bet with slime, simply add 'slime' to the name of the game you wish to play. Example: **!slimeslots 500 slime**.",
+	"casino": "**The Casino** is a sub-zone in Green Light District where players may bet their slime and slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, **'!slimebaccarat'**, and **!slimeskat**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where most of the loser's slime is transferred to the winner. To bet with slime, simply add 'slime' to the name of the game you wish to play. Example: **!slimeslots 500 slime**.",
 	"bleeding": "When you get hit by someone using a '!kill' command, certain things happen to your slime. Let's say you take 20,000 points of damage. **50%** of that slime, in this case 10,000, immediately becomes scavengeable. However, the other 50%, provided that you didn't die instantly, will undergo the **bleeding** process. 25% of that slime, in this case 5,000, is immediately added to a 'bleed pool', causing it to slowly trickle out of your body and onto the ground for it to be scavenged. The remaining 25% of that slime will **slowly** be added to the 'bleed pool', where it will then bleed, just as previously stated. Upon dying, your 'bleed pool' is immediately dumped onto the ground, ready to be scavenged. Think of it like the 'rolling HP' system from the game *EarthBound*. When you get hit, you don't take all your damage upfront, it instead slowly trickles down.",
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline. The exception to this, of course, is if you have the **Chameleon Skin** mutation, which lets you type a handful of commands even while offline, including **!goto**, **!look**, **!scout**, **!survey**, **!embark**, and **!disembark**.",
 	# Additional gameplay mechanics, part 4
@@ -12909,15 +13185,15 @@ help_responses = {
 	"multiple-hit": "**Multiple hit weapons** include the **SMG**, **Assault Rifle**, and the **Nunchuck**. They deal three attacks per kill command with an overall cost modifier of 80%, and each attack has a 40% damage modifier, 20% crit chance, a crit multiplier of 150%, and an 85% chance to hit. These are very safe reliable weapons, though they deal slightly below average damage on average.",
 	"variable-damage": "**Variable damage weapons** include the **Nailbat**, **Bass**, and the **Brass Knuckles**. They have a randomised damage modifier between 50% and 250%, no cost modifier, 10% crit chance, a crit multiplier of 150%, and a 90% chance to hit. On average, these weapons deal pretty good damage for a very reasonable attack cost, but their unreliability can make them quite risky to use.",
 	"small-game": "**Small game weapons** include the **Knives** and the **Minecraft Bow**. They have a damage modifier of 50%, a cost modifier of 25%, 10% crit chance, a crit multiplier of 200%, and a 95% chance to hit. These are reliable and underpowered weapons, with extremely low usage costs making them very efficient. Best used for bullying weaklings and hunting.",
-	"heavy": "**Heavy weapons** include the **Scythe** and the **Broadsword**. They have a damage modifier of 300%, a cost modifier of 500%, 5% crit chance, a crit multiplier of 150%, and an 80% chance to hit. Unreliable and incredibly expensive to use, to compensate for their very high damage.",
-	"defensive": "**Heavy weapons** currently only include the **Umbrella**. While you have one equipped, you take 25% reduced damage! They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 150%, and an 85% chance to hit, with a captcha of 4. Best used for punching down or protecting yourself while traveling, these weapons are typically too weak and unwieldy for use in normal combat scenarios.",
+	"heavy": "**Heavy weapons** include the **Scythe**, **Shotgun**, and the **Broadsword**. They have a damage modifier of 170%, a cost modifier of 275%, 10% crit chance, a crit multiplier of 150%, and an 80% chance to hit. Unreliable and incredibly expensive to use, to compensate for their very high damage.",
+	"defensive": "**Defensive weapons** currently only include the **Umbrella**. While you have one equipped, you take 25% reduced damage! They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 150%, and an 85% chance to hit, with a captcha of 4. Best used for punching down or protecting yourself while traveling, these weapons are typically too weak and unwieldy for use in normal combat scenarios.",
 	"precision": "**Precision weapons** currently only include the **Katana**. They have a damage modifier of 130%, a cost modifier of 130%, a crit multiplier of 200%, with a captcha of 4. They always hit, and get a guaranteed crit if you have no other weapons equipped. These weapons deal very high and reliably damage, but only if you're willing to bear the burden of their captcha and the lack of flexibility they impose.",
 	"incendiary": "**Incendiary weapons** include the **Molotov Bottles** and the **Dragon Claw**. They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 200%, a 90% chance to hit, and a captcha of 4. You will take 10% to 15% of your slime as damage if you enter the captcha wrong! They also deal an extra 50% damage to the target and any flagged enemies in the area over time, causing them to explode on death. A more powerful alternative to explosive weapons, if you can deal with the damage being dealt over time, rather than on one go.",
-	"explosive": "**Incendiary weapons** currently only include the **Grenades**. They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 200%, a 90% chance to hit, and a captcha of 4. You will take 10% to 15% of your slime as damage if you enter the captcha wrong! They also deal an extra 50% damage to the target and any flagged enemies in the area. The go-to if you're being swarmed by a mob of weaklings, can clear entire districts in one go.",
+	"explosive": "**Explosive weapons** currently only include the **Grenades**. They have a damage modifier of 75%, a cost modifier of 150%, 10% crit chance, a crit multiplier of 200%, a 90% chance to hit, and a captcha of 4. You will take 10% to 15% of your slime as damage if you enter the captcha wrong! They also deal an extra 50% damage to the target and any flagged enemies in the area. The go-to if you're being swarmed by a mob of weaklings, can clear entire districts in one go.",
 
 	weapon_id_revolver: "**The revolver** is a normal weapon for sale at the Dojo. It's an ordinary six-shot revolver, so you'll have to **!reload** it after attacking six times, though its attack cost is reduced to 80% to compensate. Goes well with a cowboy hat.",
 	weapon_id_dualpistols: "**The dual pistols** are a normal weapon for sale at the Dojo. Shockingly, these aren't that common, despite the city being chock-full of gangsters.",
-	weapon_id_shotgun: "**The shotgun** is a heavy weapon for sale at the Dojo. It's a double barrelled shotgun, so you'll need to !reload after every two shots, though your cost multiplier is reduced down to 400% to compensate. Grass grows, birds fly, sun shines, and this thing hurts people; it's a force of nature.",
+	weapon_id_shotgun: "**The shotgun** is a heavy weapon for sale at the Dojo. It's a double barrelled shotgun, so you'll need to !reload after every two shots, though your cost multiplier is reduced down to 250% to compensate. Grass grows, birds fly, sun shines, and this thing hurts people; it's a force of nature.",
 	weapon_id_rifle: "**The rifle** is a multiple-hit weapon for sale at the Dojo. Its magazine only holds enough bullets for ten attacks, so you'll have to **!reload** after hitting the rate limit, but its cost multiplier goes down to 70% to compensate. The experts are still undecided, but most people would agree this is a FAMAS.",
 	weapon_id_smg: "**The SMG** is a multiple hit-weapon for sale at the Dojo. Its magazine only holds enough bullets for ten attacks, so you'll have to **!reload** after hitting the rate limit, but its cost multiplier goes down to 70% to compensate. This is pretty good if you like to move around a lot, since the crosshair doesn't grow that much while you're sprinting.",
 	weapon_id_bat: "**The nailbat** is a variable-damage weapon for sale at the Dojo. This thing could actually be used to hit balls if you took the nails off it, but that seems a little high-tech...",
@@ -13007,7 +13283,7 @@ mutation_descriptions = {
 	mutation_id_trashmouth: "Reach maximum power scavenges 3 times as fast. Example: The soft cooldown of 15 seconds on scavenging is now reduced to 5 seconds. You can also eat cosmetics and furniture. You can also eat furniture and cosmetics using !devour <item>.",
 	mutation_id_webbedfeet: "Your scavenging power increases the more slime there is in a district. Caps out at 400% more slime gained from scavenging, but does stack with the White Nationalist mutation. You can feel out the amount of slime you scavenge.",
 
-    mutation_id_dyslexia:"The size of captchas is decreased by 3 characters. If a captcha is smaller than 3, the captcha length will be 1 instead.",
+    mutation_id_dyslexia:"The size of captchas is decreased by 1 character. If a captcha is 1, the captcha length will stay the same.",
     mutation_id_handyman:"If you kill an enemy gangster with a tool instead of a weapon, your kingpin gets double the slime they normally do.",
     mutation_id_packrat:"Apartment storage is doubled, regardless of apartment class.",
     mutation_id_stickyfingers:"When using !order at a store, there is a 20% chance to get the item for free. You still need to have the slime to purchase it, though.",
@@ -13026,7 +13302,7 @@ mutation_descriptions = {
     mutation_id_airlock:"Combined effects of White Nationalist and Light as a Feather. This mutation is mutually exclusive with those. You also gain passive hunger when it's sunny, fire immunity in rain, and crit bonuses in the fog.",
     mutation_id_ambidextrous:"If you are unarmed or have a tool equipped, and have a weapon in your sidearm slot, you will default to that weapon.",
     mutation_id_coleblooded:"You get the ability to bust ghosts without coleslaw. If a ghost haunts you, they lose negaslime instead of gaining it.",
-    mutation_id_landlocked:"When standing in a street either bordering an outskirt or the Slime Sea, use !loop to warp to the opposite side of the map. This also works on the ferry and at Slime's End Cliffs. There is a 20 second travel time when using !loop.",
+    mutation_id_landlocked:"When standing in a street either bordering an outskirt or the Slime Sea, use !loop to warp to the opposite side of the map. This also works on the ferry and at Slime's End Cliffs. There is a 60 second travel time when using !loop.",
 	mutation_id_amnesia:"Your display name is replaced with ????? in EW's messages, and you can delete your message commands without ENDLESS WAR reacting. On a kill, the kill feed message is delayed by 60 seconds."
 
 }
@@ -13041,7 +13317,7 @@ consult_responses = {
 "littlechernobyl":"You're an adventurous one, choosing the good ol' LC. The place is full of ruins and irradiated to hell. A friend of mine once walked into the place, scrawny and pathetic, and walked out a griseled man, full of testosterone and ready to wrestle another crazed mutant. Of course, his hair had fallen out, but never mind that. I'm sure your stay will be just as exciting. Just sign on the dotted line.",
 "arsonbrook":"Oh, Arsonbrook? Hang on, I actually need to check if that one's available. You know how it is. We have to make sure we're not selling any torched buildings to our customers. I realize how that sounds, but owning an apartment in Arsonbrook is easier than you think. Once you're settled in with a fire extinguisher or three, the local troublemakers will probably start going for emptier flats. And even if your house does get burned down, it'll be one hell of a story.",
 "astatineheights":"If you live with the yuppies in Astatine Heights, people will treat you like a god. When you walk by on the street, they'll say: \"Oh wow! I can't believe such a rich Juvie is able to tolerate my presence! I must fellate him now, such that my breathing is accepted in their presence!\" It has amazing garage space and a walk-in fridge. Trust me, the mere sight of it would make a communist keel over in disgusted envy.",
-"gatlingsdale":"You'll be living above a bookstore, it looks like. We'd have a normal apartment complex set up, but these pretentious small businesses refuse to sell their property. Guess you'll have to settle for living in some hipster's wet dream for now. We here at SlimeCorp are working to resolve the inconvenience as soon as we can. On the upside, you have every liberty to shout loudly below them and disrupt their quiet reading enviornment.",
+"gatlingsdale":"You'll be living above a bookstore, it looks like. We'd have a normal apartment complex set up, but these pretentious small businesses refuse to sell their property. Guess you'll have to settle for living in some hipster's wet dream for now. We are working to resolve the inconvenience as soon as we can. On the upside, you have every liberty to shout loudly below them and disrupt their quiet reading enviornment.",
 "vandalpark":"Did you know that the apartment complex we have for lease was once lived in by the famous Squickey Henderson? That guy hit like 297 home runs in his career, and you better believe he picked up his bat skills from gang violence. What I'm telling you is, if you buy property here, then you're on your way to the major leagues, probably! Besides, the apartment is actually pretty well built.",
 "glocksbury":"There are a lot of police here. I can see the frothing rage in your eyes already, but hear me out. If you want to go do the gang violence, or whatever you kids do these days, then you can go over someplace else and do it there. Then, when you come back, your poudrins and dire apples will still be unstolen. I suppose that still means you're living around cops all the time, but for this price, that may be an atrocity you have to endure.",
 "northsleezeborough":"This place may as well be called Land of the Doomers, for as lively as the citizens are. They're disenfranchised, depressed, and probably voted for Gary Johnson. My suggestion is not to avoid them like the plague. Instead, I think you really ought to liven up their lives a little. Seriously, here you have a group of un-harassed people just waiting for their lives to go from bad to worse! I think a juvenile delinquent like yourself would be right at home. Wait, is that incitement? Forget what I just said.",
@@ -13053,7 +13329,7 @@ consult_responses = {
 "vagrantscorner":"Hmm. I've never actually been to Vagrant's Corner. And all it says on this description is that it has a lot of pirates. Pirates are pretty cool, though. Like, remember that time when Luffy had Rob Lucci in the tower, and he Gum Gum Gatling-ed the living shit out of him and broke the building? That was sick, dude. OK, Google is telling me that there's a pretty good bar there, so I suppose that would be a perk, too.",
 "assaultflatsbeach":"Sure, the flat has massive storage space in all aspects. Sure, you can ride a blimp to work if you feel like it. Sure, it's the very definition of \"beachhouse on the waterfront\". But do you REALLY know why this is a top piece of real estate? Dinosaurs. They're huge, they attack people, they're just an all around riot. If you catch some of the ones here and sell them to paleontologists, this place will pay itself back in no time.",
 "newnewyonkers":"Let's be real for a second: I don't need to tell you why New New Yonkers is amazing. They have basically everything there: bowling, lazer tag, arcades, if it distracts adolescents, they have it. Don't let the disgusting old people tell you otherwise: this place is only going up from here. Sure, we had to skimp out a bit on the structural integrity of the place, but surely that won't be noticed until vandals eventually start trying to break it down.",
-"brawlden":"Brawlden's not too scary to live in, relatively speaking. Maybe you'll get pummeled by a straggling dad if you look at him funny, but chances are he won't kill you. If the lanky fellows down at Slimecorp Labs are able to live in Brawlden, I'm sure you can too. And think of the money you're saving! A \"quality\" apartment, complete with the best mini-fridge and cupboard this side of the city!",
+"brawlden":"Brawlden's not too scary to live in, relatively speaking. Maybe you'll get pummeled by a straggling dad if you look at him funny, but chances are he won't kill you. If the lanky fellows down at N.L.A.C.U. Labs are able to live in Brawlden, I'm sure you can too. And think of the money you're saving! A \"quality\" apartment, complete with the best mini-fridge and cupboard this side of the city!",
 "toxington":"Are you really considering living in a place that's completely overrun with deadly gases? It's called TOXINGTON, you idiot! The few people who live there now are miners whose brains were already poisoned into obsolescence. I know we technically sell it as a property, but come on, man! You have so much to live for! Call a suicide hotline or get a therapist or something. Anything but this.",
 "charcoalpark":"It's a po-dunk place with po-dunk people. That is to say, it doesn't matter. Charcoal Park is the equivalent of a flyover state, but its location on the edge of the map prevents even that utility. That's exactly why it's perfect for a juvie like yourself. If you want to go into hiding, I personally guarantee the cops will never find you. Of course, you may end up assimilating with the uninspired fucks that live there, but I think that it still fills a niche here in our fair city.",
 "poloniumhill":"If you live with the wannabes in Polonium Hill, people will treat you like a dog. When you walk by on the street, they'll say: \"Oh damn! I can't believe such a desperate Juvie is able to go on living! I must slit their throat just to put 'em out of their misery!\" It nonetheless has amazing storage space and a big, gaudy-looking fridge. Trust me, the mere sight of it would make a communist keel over from the abject waste of material goods. I'm just being honest, buddy. Go live in Astatine Heights instead.",
@@ -13063,6 +13339,122 @@ consult_responses = {
 "dreadford":"Have you ever wanted to suck on the sweet, sweet teat of ultra-decadence? Do you have multiple yachts? Do you buy both versions of Pokemon when they come out, just because you can blow the cash? Ha. Let me introduce you to the next level of opulence. Each apartment is a full-scale mansion, maintained by some of the finest slimebutlers in the industry. In the morning they tickle your feet to get you up, and at night they sing you Sixten ballads to drift you back to restful slumber. The place is bulletproof, fireproof, and doubles as a nuclear bunker if things go south. And it stores...everything. The price, you say? Shit, I was hoping you wouldn't ask.",
 "maimridge":"Perhaps you think it's sketchy that we're selling lightly refurbished log cabins built eons ago. Well let me ask you something, young juvie: do you like getting laid? Well, living in Maimridge is your ticket into ice-cold lust and debauchery. You just bring a lady friend or whoever into your isolated mountain cabin, and our state-of-the-art faulty electrical wiring will leave you stranded and huddling for warmth in no time flat! Wow...I'm picturing you now. Yeah, you definitely want this one."
 }
+
+
+basic_commands = "!slime: Check your slime.\n!look: Look at your surroundings.\n!survey: Get a shortened version of !look.\n!goto <district>: Move to a new area.\n!halt: Stop moving.\n!data: Check your current status.\n!slimecoin: Check your slimecoin.\n!eat: Eat food.\n!use: Use an item.\n!scavenge <captcha>: Scavenge slime off the ground.\n!map: Pull up the map.\n!scout <district>: Check for enemies in an adjacent district."
+juvenile_commands = "!dance: Dance, monkey.\n!enlist <gang>: Enlist in the Rowdys or the Killers.\n!legallimit: Juvies below 100,000 slime can cap their slime at that amount. They can't be killed below Level 18, so this makes them invulnerable."
+enlisted_commands = "!kill <player>: Kill your enemies. Depending on your weapon, you need to enter a captcha after this.\n!equip <tool/weapon>: Equip a tool or weapon.\n!sidearm: Sidearm a tool or weapon into a secondary slot.\n!switch: Switch weapons between your weapon and sidearm slots.\n!suicide: Nah, I'm not telling you what this does.\n!vouch: If a Juvie isn't affiliated, you can !vouch for them to join your gang."
+corpse_commands = "!boo: Become way too scary.\n!haunt <player>: You can haunt active players to rob them of some slime and get antislime.\n!inhabit <player>: Inhabit another player.\n!letgo: Stop inhabiting someone.\n!possessweapon: Possess the weapon of someone you're inhabiting.\n!possessfishingrod: Possess someone's fishing rod in the same way.\n!summonnegaslimeoid <name>:Summon a negaslimeoid to the surface.\n!negaslimeoid <name>: Check on a specific negaslimeoid.\n!crystalizenegapoudrin: Create a negapoudrin with negaslime."
+player_info_commands = "!data <player>: Check basic player info. Excluding <player> shows your own data.\n!slime <player>:Same as !data, but shows slime count.\n!slimecoin <player>: Same as the above two, but shows SlimeCoin.\n!hunger: Displays hunger.\n!mutations: Check mutations. Add 'level' to the end to display by mutation level.\n!fashion: Displays fashion info.\n!inv: Displays inventory. Add keywords after the command to filter or sort items. Keywords are: type, name, id, stack, search.\n!inv search <contents>: Display all items that contain <contents>.\n!apartment: Check your apartment.\n!mastery: Check weapon mastery."
+external_link_commands = "!map: Pull up the world map.\n!time: Get the latest RFCK time and weather.\n!transportmap: Pull a transportation map of the city.\n!patchnotes: See the latest patchnotes.\n!booru: Get a link to the RFCK Booru.\n!wiki: Get a link to the wiki.\n!leaderboard: Get a link to the online leaderboard.\n!bandcamp: Links to the bandcamp."
+combat_commands = "!kill <player>: Kill your enemies. Depending on your weapon, you need to enter a captcha after this.\n!equip <tool/weapon>: Equip a tool or weapon.\n!sidearm: Sidearm a tool or weapon into a secondary slot.\n!switch: Switch weapons between your weapon and sidearm slots.\n!aim <player>: Increase accuracy toward a target.\n!taunt <player>: Decrease you opponent's accuracy.\n!dodge <player>: Increase evasion for a short time.\n!reload: Some weapons have limited ammo and need to reload."
+capping_commands = "!spray <captcha>: Spray the district in your gang's paint.\n!progress: Displays capture progress in your current district.\n!tag: Spray your tagged image.\n!changespray <tag>:Change the image link that displays on a !tag."
+item_commands="!inv: Displays inventory. Add keywords after the command to filter or sort items. Keywords are: type, name, id, stack, search, general, food, cosmetic, furniture, weapon.\n!inv search <contents>: Display all items that contain <contents>.\n!inspect <item>: Inspect an item in your inventory.\n!discard <item>: Discard an item.\n!use <item>: Some items can be used.\n!trade <player>: Open a trade with a player.\n!offer <item>: Add an item to a trade.\n!removeoffer <item>:Remove an item from the trade.\n!completetrade: Finish the trade.\n!canceltrade:Cancel a trade.\n!smelt <item>: Smelt an item form ingredients.\n!whatcanimake <item>:Shows what you can smelt with an item."
+cosmetics_dyes_commands = "!adorn <cosmetic>: Wear a cosmetic\n!dedorn <cosmetic>: Take a cosmetic off.\n!dyecosmetic <cosmetic> <dye>: Dye a cosmetic using dyes in your inventory.\n!dyefurniture <furniture> <dye>: Change the color of furniture with dye.\n!saturateslimeoid <dye>: Dye your slimeoid."
+miscellaneous_commands = "!quarterlyreport: Display the current quarterly goal.\n!scrutinize <object>: Examine specific objects in an area. Usually reserved for dungeons and ARGs.\n!shakeoff: If someone with the One Eye Open mutation is following you, use this to shake them off.\n!extractsoul: Remove your soul. from your body and bottle it.\n!returnsoul: Return your soul to your body, only if you have it in your inventory.\n!squeezesoul <soul>: Squeeze a soul. The soul's owner will vomit 1/4 of their slime on the ground.\n!ads: View ads in a district.\n!knock <player>: Knock on a player's apartment door, if you're in the district.\n!endlesswar: Check the total ammassed slime of all players.\n!negaslime: Check total amassed antislime.\n!negaslimeoidbattle <negaslimeoid name>: Fight your slimeoid against a negaslimeoid."
+flavor_commands = "Command list: !salute\n!unsalute\n!hurl\n!howl\n!moan\n!pot\n!bully <target>\n!lol\n!jam <instrument>"
+slimeoid_commands = "!slimeoid: Check your slimeoid.\n!saturateslimeoid <dye>: Dye your slimeoid.\n!bottleslimeoid:Put your slimeoid in a bottle, turning them into an item.\n!unbottleslimeoid: Unbottle a slimeoid.\n!feedslimeoid <food>: Feed your slimeoid stat modifying candy.\n!dressslimeoid <cosmetic>: Dress up your slimeoid.\n!undressslimeoid: Take cosmetics off your slimeoid.\n!slimeoidbattle <player>: Challenge another player to a slimeoid battle.\n!playfetch, !petslimeoid, !abuseslimeoid, !walkslimeoid, !observeslimeoid: You can interact with your slimeoid in various ways."
+trading_commands = "!trade <player>: Open a trade with a player.\n!offer <item>: Add an item to a trade.\n!removeoffer <item>:Remove an item from the trade.\n!completetrade: Finish the trade.\n!canceltrade:Cancel a trade."
+smelting_commands = "!smelt <item>: Smelt an item form ingredients.\n!whatcanimake <item>:Shows what you can smelt with an item."
+quadrant_commands = "!addquadrant <quadrant> <player>: Add a player to your quadrants.\n!clearquadrant <quadrant>: Break up with someone in your quadrants.\n!quadrants: Displays a full list of quadrants.\n!sloshed, !roseate, !violacious, !policitous: Check on one of the four specific quadrants."
+
+
+
+farm_commands = "FARMS\n!sow <item>: Plant a poudrin or vegetable into the ground.\n!reap: Reap the crops and slime once they're ready to be harvested.\n!checkfarm: Look at the status of your crops.\n!irrigate, !weed, !fertilize, !pesticide: These commands can be used to increase farm yields, depending on the current status of the farm.\n!mill <crop>: Break down a crop into various smelting materials."
+shop_commands = "SHOPS\n!order <item>: Buy an item."
+pier_commands = "PIERS\n!cast <bait>: Cast your fishing line. Bait is optional, and you improve your tatches when equipped with a fishing rod.\n!reel Reel in a cast line."
+mine_commands = "MINES\n!mine: Use this one in the normal mines. A lot.\n!mine a1: Use coordinates when mining in Bubble Breaker and Minesweeper.\n!flag: This will flag off an area in Minesweeper."
+transport_commands = "TRANSPORT\n!schedule: Check the subway schedule.\n!embark: Used to board transports\n!disembark: Get off transports."
+zine_writing_places_commands = "ZINES\nbrowse <category>: Browse for zines. You can sort by title, author, date, length, et cetera by placing it after the command.\n!orderzine <zine>: Order a zine. Specify the name or number of the zine to pick one out.\n!read <zine ID> Begin reading a zine.\nThere are a lot of zine commands. I would recommend picking up HOW TO ZINE by Milly and learning the details there."
+universities_commands = "UNIVERSITIES\n!help <category>: Use this to teach yourself about various gameplay mechanics."
+apartment_commands = "APARTMENTS\nFor apartment-specific commands, use !help in DMs to get a list of commands. In addition to that, you can:\n!propstand <item> Turn an item into a piece of furniture.\n!aquarium <fish>: Turn a fish into an aquarium you can use as furniture.\n!pot <crop>: Turn a reaped crop into a flowerpot, same as the aquarium.\n!unpot: Remove a crop from its pot.\nGo to the Bazaar to undo prop stands and aquariums."
+
+mutation_unique_commands = {
+"oneeyeopen":"ONE EYE OPEN\n!thirdeye: Check the current status of your third eye.\n!track <player>:Get your eye to focus on someone and check their movements.",
+"aposematicstench":"APOSEMATIC STENCH\n!stink: Gain stink, which drives away monsters. It functions like Fuck Energy Body Spray.",
+"bleedingheart":"BLEEDING HEART\n!bleedout: Purge your bleed storage onto the ground all at once.",
+"longarms":"LONG ARMS\n!longdrop <location> <item>: Drop an item in an adjacent district.",
+"rigormortis":"RIGOR MORTIS\n!preserve <item>: Prevent an item from dropping when you die.",
+"ditchslap":"DITCH SLAP\n!slap <player> <location>: Slap an ally into another district.\n!clench: Clench your butt cheeks to prepare to be slapped. Have your allies use this.",
+"landlocked":"LANDLOCKED\n!loop: Use this on a district bordering an outskirt. It will loop you to the opposite end of the map.",
+"organicfursuit":"ORGANIC FURSUIT\n!fursuit: Check for the next full moon when your next\"furry episode\" begins.",
+"enlargedbladder":"ENLARGED BLADDER\n!piss: Need I say more?",
+"quantumlegs":"QUANTUM LEGS\n!tp <location>: Teleport up to two areas away.",
+"trashmouth":"TRASH MOUTH\n!devour item: Eat some non-food items."
+}
+
+item_unique_commands = {
+"brick":"BRICK\n!toss <player>: When near a player's apartment, you can throw bricks through their window. When near a player, you can throw it at them.\n!skullbash: With a brick, immobilize yourself for 10 minutes.",
+"alarmclock":"ALARM CLOCK\n!setalarm <time> <item>: When holding an alarm clock, you can set it to an in-game time. It will DM you when it sounds if it's in your inventory. You can set it to \"OFF\" instead of a time.",
+"slimepoudrin":"SLIME POUDRIN\n!annoint <name>: Anoint your weapon in slime and give it a name. Your weapon mastery increases.\n!crush poudrin: Break the poudrin and get slime.",
+"washingmachine":"WASHING MACHINE\n!wash <object>: Remove the dye from a slimeoid or a piece of clothing if it is in your apartment.",
+"laptopcomputer":"LAPTOP\n!browse: Browse the web on your laptop for RFCK Discord servers if it is in your apartment.",
+"cigarette":"CIGARETTE\n!smoke <cigarette>: Smoke cigarettes.",
+"cigar":"CIGAR\n!smoke <cigar>: Smoke cigars.",
+"pictureframe":"PICTURE FRAME\n!frame <image link>: Put an image in a picture frame.",
+"television":"TV\n!watch: Watch TV if it's in your apartment. Stop watching by taking the TV out of your apartment."
+}
+
+holidaycommands = {
+	"swildermuk":"",
+	"slimernalia":"",
+	"doublehalloween":"",
+}
+
+district_unique_commands = {
+"theslimestockexchange":"STOCK EXCHANGE\n!invest <amount> <stock>: Invest SlimeCoin into a stock.\nwithdraw <stock> <amount>: Remove SlimeCoin from shares of stock.\n!transfer <amount> <player>: Move your SlimeCoin to another player.\n!shares:Display your current shares.\n!rates:Display current SC:Slime exchange rates.\n!stocks: Displays currently available stocks.",
+"realestateagency":"REAL ESTATE\n!consult <district>: Get information and cost for an apartment.\n!signlease <district>: Purchase an apartment in a new location.\n!breaklease: Cancel the lease you currently have.\n!aptupgrade: Upgrade your apartment, from C to S.\n!changelocks: Erase all housekeys you have in circulation.\n!addkey: Add a housekey to your apartment.",
+"clinicofslimoplasty":"CLINIC\n!chemo <mutation>: Clear a mutation from yourself.\n!graft <mutation>: Attach a new mutation to yourself.\n!browse: Browse the medical zines available.\n!orderzine <zine>: Order a list of mutations to graft.",
+"thesewers":"SEWERS\n!revive: Revive.",
+"slimecorpslimeoidlaboratory":"SLIMEOID LAB\n!embiggen:Make a fish real big.\n!restoreslimeoid <slimeoid>: Restore a Slimeoid from a slimeoid heart.\n!instructions: Go over the many commands used to make a slimeoid.",
+"thecasino":"CASINO\n!slimecraps <amount> <currency>: Gamble at the craps table. Gambling types include slimecoin, slime, and your soul.\n!slimeroulette <amount> <bet> <type>:Gamble at the roulette wheel. Types are same as above, bet options are shown by typing !slimeroulette <amount>.\n!slimeslots <type>: Bet a fixed amount in slots. Accepts Slime and SlimeCoin.\n!slimepachinko <type> Same as above, but in pachinko.\n!slimebaccarat <amount> <currency> <hand>: Bet slime, slimecoin, or souls on baccarat. The hand is either 'player' or 'dealer'.\n!slimeskat <player> <player>: Challenge two players to a game of slimeskat. You bet Slimecoin once the game has started.\n!russianroulette <player>: Challenge your opponent to russian roulette. Add 'soul' to the end of the command to gamble souls.\n!betsoul: Exchange your soul for {} SlimeCoin.\n!buysoul <player>: Buy a soul off the casino for {} SlimeCoin, if one is in stock.".format(soulprice, soulprice),
+"thedojo":"DOJO\n!spar <player>: Spar with someone to increase your weapon level.\n!marry: Marry your weapon.\n!divorce: The inevitable, after marrying your weapon.",
+"thebattlearena":"BATTLE ARENA\n!slimeoidbattle <player>: Challenge a player to a slimeoid battle. They can !accept or !decline.",
+"slimecorphq":"SLIMECORP HQ\n!donate <amount>: Donate slime to Slimecorp and exchange it for SlimeCoin.\n!requestverification: Acquire a verified checkmark for Slime Twitter.\n!advertise <content>: Advertise something.\n!clockin: If you're in the Slimecorp Security Force, you enter the breakroom this way.\n!payday: Slimecorp can get slime for salary credits here.",
+"slimesendcliffs":"CLIFFS\n!push <player>: Push a player off the cliff.\n!jump: Jump off the cliff.\n!toss <item>: Toss an item off the cliff.",
+"sodafountain":"SODA FOUNTAIN\n!purify: At Level 50, you can reset slime to zero and level to 1. Mutations stick around.",
+"speakeasy":"SPEAKEASY\n!barter <fish>: Barter your fish with Albert Alexander.\nbarterall: All the fish will be removed from your inventory and exchanged with slime and items you would've gotten for bartering.\n!appraise: Get the quality of a fish reviewed by Albert Alexander.",
+"recyclingplant":"RECYCLING PLANT\n!recycle <item>: Recycle an item in exchange for SlimeCoin.",
+"copkilltown":"COP KILLTOWN\n!renounce: Unenlist from your gang in exchange for half your slime.\n!chest: Check the contents of the community chest.\n!snag <item>: Take items from the community chest.\n!stow <item>: Place inventory items in the community chest.",
+"rowdyroughhouse":"ROWDY ROUGHHOUSE\n!renounce: Unenlist from your gang in exchange for half your slime.\n!chest: Check the contents of the community chest.\n!snag <item>: Take items from the community chest.\n!stow <item>: Place inventory items in the community chest.",
+"juviesrow":"JUVIE'S ROW\n!chest: Check the contents of the community chest.\n!snag <item>: Take items from the community chest.\n!stow <item>: Place inventory items in the community chest.",
+"bazaar":"BAZAAR\n!unstand <item>: Remove an item from its prop stand.\n!releasefish <aquarium>: Remove fish from their aquarium.",
+"breakroom":"BREAKROOM\n!getattire: Get some Kevlar Attire for combat in the field.\n!clockout: Exit the breakroom and move to Slimecorp HQ.",
+"vandalpark":"VANDAL PARK\n!slimeball <team>: Join a game of Slimeball. Teams are purple and pink. Read about details in the Game Guide.",
+"endlesswar":"ENDLESS WAR\n!pray <target>: Pray to someone.",
+"lobbybackroom":"LOBBY BACKROOM\n!combo <combination>: Input a combination. The number sequence is all one sequence, for example, !combo 44311111",
+"n9office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n2office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n13office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n11office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n7office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n5office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n8office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n3office":"OFFICES\n!callelevator: Calls the elevator down to your floor.",
+"n10office":"OFFICES\n!callelevator: Calls the elevator down to your floor.\n!open/!close door: Open a shortcut to Slimecorp HQ.\n!hack <target>: You can hack things? Sick, dude.",
+"n4office":"ELEVATOR\n!press <floor>: Ascend or descend into an available floor. The bolded portions in !scrutinize buttons are the keywords you want to use."
+}
+#humanoid, amphibian, food, skeleton, robot, furry, scalie, slime-derived, monster, critter, avian, insectoid, shambler, other
+race_unique_commands = {
+"humanoid":"!exist: Exist.",
+"amphibian":"!ree: Throw a good old fashioned tantrum.",
+"food":"!autocannibalize: Snack on yourself.",
+"skeleton":"!rattle: Channel your inner xylophone.",
+"robot":"!beep: Beep.",
+"furry":"!yiff: Be a degenerate.",
+"scalie":"!hiss: sssSsss.",
+"slime-derived":"!jiggle: The details are up to your imagination.",
+"monster":"!rampage: Go nuts.",
+"critter":"!requestpetting <player>: Weird stuff you critters are into these days.",
+"avian":"!flutter: Flap your wings. Show off.",
+"insectoid":"!entomize: Time to do insect things.",
+"shambler":"!shamble: BBBBRRRRRAAAAIIIIINNNNZZZZ.",
+"other":"!confuse: Not too hard to do with this crowd."
+}
+
+#!ads, look for possible ads
+#shops, piers, mines, transports, zine writing places, universities/game guides, subways, apartments
+
 
 sea_scavenge_responses = [
 	"see a school of Fuck Sharks circling below you",
@@ -13087,6 +13479,9 @@ enemy_attacktype_armcannon = 'armcannon'
 enemy_attacktype_axe = 'axe'
 enemy_attacktype_hooves = 'hooves'
 enemy_attacktype_body = 'body'
+enemy_attacktype_stomp = 'stomp'
+enemy_attacktype_stomp_n6 = 'stompn6'
+
 
 enemy_attacktype_amateur = 'amateur'
 
@@ -13120,6 +13515,7 @@ enemy_weathertype_rainresist = 'rainresist'
 # Common enemies
 enemy_type_juvie = 'juvie'
 enemy_type_dinoslime = 'dinoslime'
+
 # Uncommon enemies
 enemy_type_slimeadactyl = 'slimeadactyl'
 enemy_type_desertraider = 'desertraider'
@@ -13176,6 +13572,8 @@ enemy_type_shambleballplayer = "shambleballplayer"
 enemy_type_shamblerwarlord = "shamblerwarlord"
 enemy_type_shamblerraider = "shamblerraider"
 enemy_type_gvs_boss = "blueeyesshamblerdragon"
+enemy_type_titanoslime = "titanoslime"
+enemy_type_mutated_titanoslime = "mutatedtitanoslime"
 
 # Sandbag (Only spawns in the dojo, doesn't attack)
 enemy_type_sandbag = 'sandbag'
@@ -13202,7 +13600,7 @@ enemy_class_shambler = 'shambler'
 common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime]
 uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime]
 rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed]
-raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
+raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator, enemy_type_titanoslime]
 
 enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
 
@@ -13264,7 +13662,7 @@ repairable_gaias = [
 raid_boss_tiers = {
 	"micro": [enemy_type_megaslime],
 	"monstrous": [enemy_type_slimeasaurusrex, enemy_type_unnervingfightingoperator],
-	"mega": [enemy_type_greeneyesslimedragon],
+	"mega": [enemy_type_greeneyesslimedragon, enemy_type_titanoslime],
 	# This can be left empty until we get more raid boss ideas.
 	#"nega": [],
 }
@@ -13360,6 +13758,16 @@ enemy_drop_tables = {
 	enemy_type_civilian_innocent: [
 		{item_id_slimepoudrin: [20, 1, 1]},
 		{item_id_civilianscalp: [100, 1, 1]},
+	],
+	enemy_type_titanoslime: [
+		{item_id_slimepoudrin: [100, 15, 20]},
+		{rarity_patrician: [100, 1, 1]},
+		{item_id_monsterbones: [100, 5, 10]}
+	],
+	enemy_type_mutated_titanoslime: [
+		{item_id_slimepoudrin: [100, 15, 20]},
+		{'n6corpse': [100, 1, 1]},
+		{item_id_monsterbones: [100, 5, 10]}
 	],
 }
 for enemy in gvs_enemies:
@@ -13478,6 +13886,22 @@ enemy_data_table = {
 		"displayname": "Unnerving Fighting Operator",
 		"raredisplayname": "Unyielding Fierce Operator",
 		"aliases": ["ufo", "alien","unnervingfightingoperator","unnvering"]
+	},
+	enemy_type_titanoslime: {
+		"slimerange": [5000000, 7000000],
+		"ai": enemy_ai_attacker_b,
+		"attacktype": enemy_attacktype_stomp,
+		"displayname": "Titanoslime",
+		"raredisplayname": "Miscreated Titanoslime",
+		"aliases": ["titano", "titanoslime", "biglizard"]
+	},
+	enemy_type_mutated_titanoslime: {
+		"slimerange": [10000000, 10000000],
+		"ai": enemy_ai_attacker_b,
+		"attacktype": enemy_attacktype_stomp_n6,
+		"displayname": "N6 on a Mutated Titanoslime",
+		"raredisplayname": "Miscreated Mutated Titanoslime",
+		"aliases": ["n6", "mutatedtitanoslime", "mutated", "titanoslime", "bigtitano"]
 	},
 enemy_type_civilian: {
 		"slimerange": [100001, 100001],
@@ -14591,6 +15015,26 @@ zine_commands = [
 	cmd_setpages_alt_1,
 	cmd_setpages_alt_2,
 ]
+#lock states between two specific districts
+lock_states = {
+	"n13door":["n13office", "n4office"],
+	"n2door":["n2office", "n4office"],
+	"n3door":["n3office", "n4office"],
+	"n5door":["n5office", "n4office"],
+	"n7door":["n7office", "n4office"],
+	"n8door":["n8office", "n4office"],
+	"n9door":["n9office", "n4office"],
+	"n10door":["n10office", "n4office"],
+	"n11door":["n11office", "n4office"],
+	"groundfloordoor":["slimecorphq", "n10office"]
+}
+
+region_lock_states = {
+	"slimecorptunnel":["lobbylock1", "lobbylock2"],
+	"slimecorphotel": ["hotelfound"]
+}
+
+
 
 curse_words = { # words that the player should be punished for saying via swear jar deduction. the higher number, the more the player gets punished.
 	"fag":20,
@@ -14656,7 +15100,7 @@ captcha_dict = [
 	'HEHE', 'WEED', 'LMAO', 'EPIC', 'NICE',
 	'SOUL', 'KILL', 'FREE', 'GOOP', 'CAVE',
 	'ZOOM', 'FIVE', 'NINE', 'BASS', 'FIRE',
-	'TEXT', 'AWOO',
+	'TEXT', 'AWOO', 'GOKU',
 	#5
 	'GUNKY', 'BOORU', 'ROWDY', 'GHOST', 'ORDER',
 	'SCARE', 'BULLY', 'FERRY', 'SAINT', 'SLASH',
@@ -14755,6 +15199,7 @@ def set_client(cl):
 #     
 # print(scream)
 
+
 """    /*"rpcity": {
         "id_poi": "rpcity",
         "alias": [
@@ -14820,3 +15265,4 @@ def set_client(cl):
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Little_Chernobyl#RP_City"
     },*/"""
+

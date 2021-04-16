@@ -6,7 +6,7 @@
             "dt"
         ],
         "str_name": "Downtown NLACakaNM",
-        "str_desc": "Skyscrapers and high-rise apartments tower above the jam-packed, bustling city streets below for as far as the eye can see. In this dense concrete jungle, your attention is constantly being divided among a thousand different things. Neon, fluorescent signs flash advertisements for all manner of amenities and businesses. The streets rumble with the sound of engines and metal scraping from the subway system deep underground. Hordes of men and women from every imaginable background walk these cruel streets, trying desperately to eke out a pitiful existence for themselves. This district never unwinds from its constant 24/7 slime-induced mania for even a moment, let alone sleep.\nDowntown is the beating heart of New Los Angeles City, aka Neo Milwaukee. With settlements in the area predating the emergence of slime, its prime location along the newly formed coastline naturally grew it into the cultural, economic, and literal center of the city. Due to its symbolic and strategic importance, it's home to the most intense gang violence of the city. Gunshots and screams followed by police sirens are background noises for this district. Some say that this propensity for violence is result of the sinister influence from an old obelisk in the center of town, ominously called ENDLESS WAR. You aren\u2019t sure if you believe that, though.\n\nThis area contains ENDLESS WAR, SlimeCorp HQ, the Slime Stock Exchange and the Downtown Subway Station. To the north is Smogsburg. To the East is the Green Light District. To the South is the Rowdy Roughhouse. To the Southwest is Poudrin Alley. To the West is Krak Bay. To the Northwest is Cop Killtown.",
+        "str_desc": "Skyscrapers and high-rise apartments tower above the jam-packed, bustling city streets below for as far as the eye can see. In this dense concrete jungle, your attention is constantly being divided among a thousand different things. Neon, fluorescent signs flash advertisements for all manner of amenities and businesses. The streets rumble with the sound of engines and metal scraping from the subway system deep underground. Hordes of men and women from every imaginable background walk these cruel streets, trying desperately to eke out a pitiful existence for themselves. This district never unwinds from its constant 24/7 slime-induced mania for even a moment, let alone sleep.\nDowntown is the beating heart of New Los Angeles City, aka Neo Milwaukee. With settlements in the area predating the emergence of slime, its prime location along the newly formed coastline naturally grew it into the cultural, economic, and literal center of the city. Due to its symbolic and strategic importance, it's home to the most intense gang violence of the city. Gunshots and screams followed by police sirens are background noises for this district. Some say that this propensity for violence is result of the sinister influence from an old obelisk in the center of town, ominously called ENDLESS WAR. You aren\u2019t sure if you believe that, though.\n\nThis area contains ENDLESS WAR, SlimeCorp HQ, the Slime Stock Exchange and the Downtown Subway Station. To the north is Smogsburg. To the East is the Green Light District. To the South is the Rowdy Roughhouse. To the Southwest is Poudrin Alley. To the West is Krak Bay. To the Northwest is Cop Killtown. \n\nThe wrecked Slimecorp Building has broken pieces of its structure littered around the city, too. You can access every floor from here.\nAvailable floors: 1f, 3f, 8f, 20f, 103f, 5280f, 77777f, 809231f, and Penthouse.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -80,7 +80,18 @@
             "theslimestockexchange": 20,
             "endlesswar": 20,
             "slimecorphq": 20,
-            "downtownsubwaystation": 20
+            "downtownsubwaystation": 20,
+            "n10office": 20,
+            "n9office": 20,
+            "n8office": 20,
+            "n7office": 20,
+            "n5office": 20,
+            "n4office": 20,
+            "n3office": 20,
+            "n11office": 20,
+            "n13office": 20,
+            "n2office": 20,
+            "n12office": 20
         },
         "topic": "The Heart of New Los Angeles City, aka Neo Milwaukee. Site of the Slime Stock Exchange, the corporate headquarters of Slimecorp and Yum! Brands, and ENDLESS WAR itself.",
         "wikipage": "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM"
@@ -93,7 +104,7 @@
             "sb"
         ],
         "str_name": "Smogsburg",
-        "str_desc": "In every direction, smokestacks belch out copious amounts of pollution into the atmosphere, creating a thick cloud that shrouds the district in sickening smog. It covers the district so completely that you can barely make out what time day it is. Your lungs can\u2019t take much more of standing here, just do what you want to do and get out.\nSmogsburg is comprise of dozens of slime refineries and poudrin mills that turn unrefined, raw materials like the sludge from the city\u2019s harbor into useful, pure slime. Functioning as the city\u2019s premier industrial sector, it is by far the district hardest on the environment.\n\nThis area contains the Bazaar, the SlimeCorp Recycling Plant and the Smogsburg Subway Station. To the North is Arsonbrook. To the Northeast is Little Chernobyl. To the East is Old New Yonkers. To the South is Downtown NLACakaNM. To the West is Cop Killtown. To the Northwest is Astatine Heights.",
+        "str_desc": "In every direction, smokestacks belch out copious amounts of pollution into the atmosphere, creating a thick cloud that shrouds the district in sickening smog. It covers the district so completely that you can barely make out what time day it is. Your lungs can\u2019t take much more of standing here, just do what you want to do and get out.\nSmogsburg is comprise of dozens of slime refineries and poudrin mills that turn unrefined, raw materials like the sludge from the city\u2019s harbor into useful, pure slime. Functioning as the city\u2019s premier industrial sector, it is by far the district hardest on the environment.\n\nThis area contains the Bazaar, the Recycling Plant and the Smogsburg Subway Station. To the North is Arsonbrook. To the Northeast is Little Chernobyl. To the East is Old New Yonkers. To the South is Downtown NLACakaNM. To the West is Cop Killtown. To the Northwest is Astatine Heights.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -439,7 +450,7 @@
             "gld"
         ],
         "str_name": "Green Light District",
-        "str_desc": "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district\u2019s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous SlimeCorp Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the SlimeCorp Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
+        "str_desc": "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district\u2019s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous N777 Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the N777 Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -502,7 +513,7 @@
             "ony"
         ],
         "str_name": "Old New Yonkers",
-        "str_desc": "Rows of three-story brick condominiums with white marble moulding wind along lanes of old asphalt roads with faded markings. Spiked wrought-iron gates protect the lawn of the district\u2019s principal institutions, like the senior center.\nOld New Yonkers is popular with the older citizens of the city, due to its incredibly boring, gentrified residential landscape. Modest outdoor malls sells useless shit like candles and soaps, and the elderly population fills up their lumpy, sagging bodies at chain restaurants like Applebee\u2019s and fucking IHOP.\n\nThis area contains the Slimecorp Real Estate Agency. To the Northeast is New New Yonkers. To the Southeast is Vagrant's Corner. To the Southwest is Smogsburg. To the East is Little Chernobyl. To the Northwest is Brawlden.",
+        "str_desc": "Rows of three-story brick condominiums with white marble moulding wind along lanes of old asphalt roads with faded markings. Spiked wrought-iron gates protect the lawn of the district\u2019s principal institutions, like the senior center.\nOld New Yonkers is popular with the older citizens of the city, due to its incredibly boring, gentrified residential landscape. Modest outdoor malls sells useless shit like candles and soaps, and the elderly population fills up their lumpy, sagging bodies at chain restaurants like Applebee\u2019s and fucking IHOP.\n\nThis area contains the Real Estate Agency. To the Northeast is New New Yonkers. To the Southeast is Vagrant's Corner. To the Southwest is Smogsburg. To the East is Little Chernobyl. To the Northwest is Brawlden.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1644,7 +1655,7 @@
             "bd"
         ],
         "str_name": "Brawlden",
-        "str_desc": "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by SlimeCorp. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You\u2019ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook. To the North is North Outskirts Edge.",
+        "str_desc": "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by N.L.A.C.U. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You\u2019ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook. To the North is North Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -2312,6 +2323,7 @@
             "ghosts",
             "ts",
             "s",
+	    "brazil",
             "loser"
         ],
         "str_name": "The Sewers",
@@ -2419,7 +2431,8 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "underworldsubwaystation": 20
+            "underworldsubwaystation": 20,
+            "thevoid": 20
         },
         "topic": "A cave underneath the city, well-lit by trash can bonfires scattered about. The walls are decorated with crude depictions of ENDLESS WAR. Strangely enough, there's a punching bag off in the distance, with what looks to be a picture of Phoebus taped onto it.",
         "wikipage": "https://rfck.miraheze.org/wiki/The_Underworld"
@@ -4062,7 +4075,6 @@
             "southsleezeborough": 20,
             "southsleezeboroughstreetd": 20,
             "southsleezeboroughstreetb": 20,
-            "crooklinestreetb": 20,
             "southwestoutskirtsedge": 60,
             "southsleezesubwaystation": 20
         },
@@ -4432,8 +4444,7 @@
         "neighbors": {
             "northsleezeborough": 20,
             "northsleezeboroughstreetb": 20,
-            "northsleezeboroughstreetd": 20,
-            "crooklinestreetc": 20
+            "northsleezeboroughstreetd": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/North_Sleezeborough#Carbohydrate_Containment_Boulevard"
@@ -4733,7 +4744,6 @@
             "glocksbury": 20,
             "glocksburystreetb": 20,
             "glocksburystreetd": 20,
-            "westglocksburystreeta": 20,
             "glocksburysubwaystation": 20
         },
         "topic": "",
@@ -4858,250 +4868,6 @@
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Glocksbury#Cul-de-sac"
     },
-    "westglocksburystreeta": {
-        "id_poi": "westglocksburystreeta",
-        "alias": [
-            "oilscumavenue",
-            "oilscum"
-        ],
-        "str_name": "Oilscum Avenue",
-        "str_desc": "This place looks and smells like fresh grease. Gas stations, convenience stores, and fast food chains define Oilscum as the main truck stop of the city. This is West Glocksbury, though, so 65% of said gas stations have already been burned to the ground or siphoned out for other arson-based activities. This street connects back into West Glocksbury. This street is connected to Snitch Street, Scanty Heights, and Highway 89-A.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "oilscum-avenue",
-        "role": null,
-        "major_role": "westglocksbury_major",
-        "minor_role": "westglocksburystreeta_minor",
-        "permissions": {
-            "westglocksburystreeta": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "c",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": false,
-        "is_apartment": false,
-        "is_street": true,
-        "mother_districts": [],
-        "father_district": "westglocksbury",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": false,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {
-            "westglocksbury": 20,
-            "westglocksburystreetd": 20,
-            "westglocksburystreetb": 20,
-            "glocksburystreetc": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/West_Glocksbury#Oilscum_Avenue"
-    },
-    "westglocksburystreetb": {
-        "id_poi": "westglocksburystreetb",
-        "alias": [
-            "scantyheights",
-            "scanty"
-        ],
-        "str_name": "Scanty Heights",
-        "str_desc": "Walking along this road, you would think you stumbled into a series of haunted houses right next to each other. Unexpectedly, this is all abandoned low income housing. They were originally much more expensive, but once it settled in that moving here was a complete death wish, the prices went way down. You could squat here for free if you wanted, assuming you could kill one of the freaks already doing just that. This street connects back into West Glocksbury. This street is connected to Oilscum Avenue, Goosh Creek, and Ashtray Park.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "scanty-heights",
-        "role": null,
-        "major_role": "westglocksbury_major",
-        "minor_role": "westglocksburystreetb_minor",
-        "permissions": {
-            "westglocksburystreetb": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "c",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": false,
-        "is_apartment": false,
-        "is_street": true,
-        "mother_districts": [],
-        "father_district": "westglocksbury",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": false,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {
-            "westglocksbury": 20,
-            "westglocksburystreeta": 20,
-            "westglocksburystreetc": 20,
-            "vandalparkstreeta": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/West_Glocksbury#Scanty_Heights"
-    },
-    "westglocksburystreetc": {
-        "id_poi": "westglocksburystreetc",
-        "alias": [
-            "gooshcreek",
-            "goosh"
-        ],
-        "str_name": "Goosh Creek",
-        "str_desc": "The slime river that splits West Glocksbury and Polonium Hill might look relaxing from a distance, but get any closer and you find it has turned into an off-white foul-smelling shell of its former self. The ash(snow?) from Polonium Hill blows south and mixes with the river, creating this disgusting, impure sluice. How convenient that this substance is so much easier to drown in than normal slime\u2026 This street connects back into West Glocksbury. This street is connected to Scanty Heights, Highway 89-A, and Sawdust Lumberyard. This street also exits into The West Glocksbury Subway Station",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "goosh-creek",
-        "role": null,
-        "major_role": "westglocksbury_major",
-        "minor_role": "westglocksburystreetc_minor",
-        "permissions": {
-            "westglocksburystreetc": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "c",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": false,
-        "is_apartment": false,
-        "is_street": true,
-        "mother_districts": [],
-        "father_district": "westglocksbury",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": false,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {
-            "westglocksbury": 20,
-            "westglocksburystreetb": 20,
-            "westglocksburystreetd": 20,
-            "poloniumhillstreetd": 20,
-            "westoutskirtsedge": 60,
-            "westglocksburysubwaystation": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/West_Glocksbury#Goosh_Creek"
-    },
-    "westglocksburystreetd": {
-        "id_poi": "westglocksburystreetd",
-        "alias": [
-            "highway89a",
-            "highway89",
-            "highway"
-        ],
-        "str_name": "Highway 89-A",
-        "str_desc": "This crumbling piece of infrastructure is the last highway out of the city, as such bandits love to rob the absolute fuck out of anyone entering or exiting. Serial killers and other assorted freaks also make their living preying on the sparse traffic here. This street connects back into West Glocksbury. This street is connected to Oilscum Avenue, Goosh Creek, and Qoute Unqoute Art Galleries.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "highway-89-a",
-        "role": null,
-        "major_role": "westglocksbury_major",
-        "minor_role": "westglocksburystreetd_minor",
-        "permissions": {
-            "westglocksburystreetd": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "c",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": false,
-        "is_apartment": false,
-        "is_street": true,
-        "mother_districts": [],
-        "father_district": "westglocksbury",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": false,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {
-            "westglocksbury": 20,
-            "westglocksburystreetc": 20,
-            "westglocksburystreeta": 20,
-            "jaywalkerplainstreetd": 20,
-            "westoutskirtsedge": 60
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/West_Glocksbury#Highway_89-A"
-    },
     "jaywalkerplainstreeta": {
         "id_poi": "jaywalkerplainstreeta",
         "alias": [
@@ -5220,7 +4986,6 @@
             "jaywalkerplain": 20,
             "jaywalkerplainstreeta": 20,
             "jaywalkerplainstreetc": 20,
-            "crooklinestreetd": 20,
             "jaywalkerplainsubwaystation": 20
         },
         "topic": "",
@@ -5347,7 +5112,6 @@
             "jaywalkerplain": 20,
             "jaywalkerplainstreetc": 20,
             "jaywalkerplainstreete": 20,
-            "westglocksburystreetd": 20,
             "westoutskirtsedge": 60,
             "jaywalkerplainpier": 20
         },
@@ -5413,252 +5177,6 @@
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Jaywalker_Plain#Tent_City"
-    },
-    "crooklinestreeta": {
-        "id_poi": "crooklinestreeta",
-        "alias": [
-            "doxyavenue",
-            "doxy"
-        ],
-        "str_name": "Doxy Avenue",
-        "str_desc": "Jazz clubs and diners decked out in flashy neon lights liven up this already crowded hotspot. Traffic is always jammed down here, and the locals have taken to the habit of just walking between the stopped cars to get across. The 24/7 nightlife here is really something else, and the pickpockets hiding in the bustle will make sure you pay full price for it. This street connects back into Crookline. This street is connected to Lake Macguffin, Perdido Valley, and Hang-'Em Square. This street also exits into Crookline Pier, and The Crookline Subway Station.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "doxy-avenue",
-        "role": null,
-        "major_role": "crookline_major",
-        "minor_role": "crooklinestreeta_minor",
-        "permissions": {
-            "crooklinestreeta": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "b",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": false,
-        "is_apartment": false,
-        "is_street": true,
-        "mother_districts": [],
-        "father_district": "crookline",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": false,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {
-            "crookline": 20,
-            "crooklinestreetd": 20,
-            "crooklinestreetb": 20,
-            "dreadfordstreetb": 20,
-            "southwestoutskirtsedge": 60,
-            "crooklinepier": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Crookline#Doxy_Avenue"
-    },
-    "crooklinestreetb": {
-        "id_poi": "crooklinestreetb",
-        "alias": [
-            "lakemacguffin",
-            "macguffin"
-        ],
-        "str_name": "Lake Macguffin",
-        "str_desc": "This lake is a quick drive away from the urban sprawl of Crookline proper. It\u2019s up a hill that\u2019s not crazy big but still overlooks not just this district but also neighboring Dreadford, Jaywalker Plain, and the Sleezeboroughs. Locals come here to dump off their dead bodies, silos of manure, maltese falcons, and any other highly sought after artifacts that need hiding. Our heroes will then venture out to this point in the third act before the flashback ends and the real perpetrators are locked up. This street connects back into Crookline. This street is connected to Chinatown, Doxy Avenue, and Manteca Street. This street also exits into Crookline Pier, and The Crookline Subway Station.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "lake-macguffin",
-        "role": null,
-        "major_role": "crookline_major",
-        "minor_role": "crooklinestreetb_minor",
-        "permissions": {
-            "crooklinestreetb": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "b",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": false,
-        "is_apartment": false,
-        "is_street": true,
-        "mother_districts": [],
-        "father_district": "crookline",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": false,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {
-            "crookline": 20,
-            "crooklinestreeta": 20,
-            "crooklinestreetc": 20,
-            "southsleezeboroughstreeta": 20,
-            "southwestoutskirtsedge": 60,
-            "crooklinepier": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Crookline#Lake_Macguffin"
-    },
-    "crooklinestreetc": {
-        "id_poi": "crooklinestreetc",
-        "alias": [
-            "manteca",
-            "mantecastreet"
-        ],
-        "str_name": "Manteca Street",
-        "str_desc": "It's cold, dark, and quiet. The old brick offices and boarding houses all look closed for the day no matter what time you're here. If you didn't know any better this might be a nice, moody place for a walk, but it's obvious the alleys are hiding something. Don't get caught under a streetlight. This street connects back into Crookline. This street is connected to Carbohydrate Containment Boulevard, Lake Macguffin, and Perdido Valley.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "manteca-street",
-        "role": null,
-        "major_role": "crookline_major",
-        "minor_role": "crooklinestreetc_minor",
-        "permissions": {
-            "crooklinestreetc": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "b",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": false,
-        "is_apartment": false,
-        "is_street": true,
-        "mother_districts": [],
-        "father_district": "crookline",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": false,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {
-            "crookline": 20,
-            "crooklinestreetb": 20,
-            "crooklinestreetd": 20,
-            "northsleezeboroughstreetc": 20,
-            "clinicofslimoplasty": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Crookline#Manteca_Street"
-    },
-    "crooklinestreetd": {
-        "id_poi": "crooklinestreetd",
-        "alias": [
-            "perdidovalley",
-            "perdido"
-        ],
-        "str_name": "Perdido Valley",
-        "str_desc": "You didn't think it was possible to get any lower, but you've found yourself descended into the under-underworld of Crookline. The high-society crimelords and psychotics of the city frequent the upper-floor style black markets here, indulging in strange, illegal fetishes and experimental substance abuse. You'd love to see those guys get a knife or two to the face, but you doubt the bouncers standing outside would let you in. This street connects back into Crookline. This street is connected to Black Alleyways, Doxy Avenue, and Manteca Street.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "perdido-valley",
-        "role": null,
-        "major_role": "crookline_major",
-        "minor_role": "crooklinestreetd_minor",
-        "permissions": {
-            "crooklinestreetd": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": true,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [],
-        "property_class": "b",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": false,
-        "is_apartment": false,
-        "is_street": true,
-        "mother_districts": [],
-        "father_district": "crookline",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": false,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": false,
-        "max_degradation": 10000,
-        "neighbors": {
-            "crookline": 20,
-            "crooklinestreetc": 20,
-            "crooklinestreeta": 20,
-            "jaywalkerplainstreetb": 20,
-            "clinicofslimoplasty": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Crookline#Perdio_Valley"
     },
     "dreadfordstreeta": {
         "id_poi": "dreadfordstreeta",
@@ -5779,7 +5297,6 @@
         "neighbors": {
             "dreadford": 20,
             "dreadfordstreeta": 20,
-            "crooklinestreeta": 20,
             "southwestoutskirtsedge": 60,
             "dreadfordblimptower": 20
         },
@@ -5840,8 +5357,7 @@
         "neighbors": {
             "vandalpark": 20,
             "vandalparkstreetd": 20,
-            "vandalparkstreetb": 20,
-            "westglocksburystreetb": 20
+            "vandalparkstreetb": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Vandal_Park#Ashtray_Park"
@@ -6263,7 +5779,6 @@
             "poloniumhill": 20,
             "poloniumhillstreetc": 20,
             "poloniumhillstreete": 20,
-            "westglocksburystreetc": 20,
             "westoutskirtsedge": 60
         },
         "topic": "",
@@ -9996,7 +9511,7 @@
             "corp"
         ],
         "str_name": "SlimeCorp HQ",
-        "str_desc": "Here, businessmen carrying briefcases dripping with slime powerwalk from every direction to every other direction. They barely acknowledge your existence outside of muttering under their breath when they\u2019re forced to sidestep around you and the other clueless juveniles loitering in their lobby. Above the first few floors begins the endless labyrinths of cubicles and office spaces that comprised the majority of the building. This corporate nightmare repeats itself for nearly every floor of the towering skyscraper. With its sleek, modern architecture and high-tech amenities, SlimeCorp HQ looks nothing like the rest of the city.\nPast countless receptionists' desks, waiting rooms, legal waivers, and at least one or two stainless steel vault doors, lay several slime donation rooms. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a fluorescent light bulb. If you choose to !donate some of your slime, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied uses of SlimeCoin, SlimeCorp\u2019s hot new cryptocurrency.",
+        "str_desc": "Here, the few active employees still attempting to rebuild SlimeCorp powerwalk from every direction to every other direction. They barely acknowledge your existence outside of muttering under their breath when they\u2019re forced to sidestep around you and the other clueless juveniles loitering in their lobby. Above the first few floors begins the endless expanse of crumbling concrete and broken glass that the once bustling building has become. This labyrinth of near-infinite waste repeats itself for nearly every floor of the towering skyscraper. This place used to be a cut above the rest, with tech the rest of the city's enterprises could only dream of. You have your fellow gangsters and a particularly disgruntled N1 to thank for the husk it is right now.\nPast countless receptionists' desks, waiting rooms, legal waivers, and at least one or two stainless steel vault doors, lay several slime donation rooms. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a fluorescent light bulb. If you choose to !donate some of your slime, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied uses of SlimeCoin, SlimeCorp\u2019s \"hot\" \"new\" cryptocurrency.",
         "str_in": "in the lobby of",
         "str_enter": "enter",
         "coord": null,
@@ -10056,20 +9571,19 @@
             "exchange",
             "sexchange",
             "stockexchange",
-            "slimecorpstockexchange",
             "sex",
             "sx",
             "scex",
             "scx",
             "findom"
         ],
-        "str_name": "The SlimeCorp Stock Exchange",
-        "str_desc": "A huge, cluttered space bursting at the seams with teller booths and data screens designed to display market data, blasting precious economic insight into your retinas. Discarded punch cards and ticker tape as trampled on by the mass of investors and shareholders that are constantly screaming \"BUY, SELL, BUY, SELL,\" over and over again at no one in particular. Recently reopened, tents line the streets, filled with eager investors. \n\nExits into Downtown NLACakaNM.",
+        "str_name": "NLACakaNM Slime Stock Exchange",
+        "str_desc": "A huge, cluttered space bursting at the seams with teller booths and data screens designed to display market data, blasting precious economic insight into your retinas. Discarded punch cards and ticker tape as trampled on by the mass of investors and shareholders that are constantly screaming \"BUY, SELL, BUY, SELL,\" over and over again at no one in particular. Recently reacquired, tents line the streets, filled with eager investors. \n\nExits into Downtown NLACakaNM.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "slimecorp-stock-exchange",
+        "channel": "slime-stock-exchange",
         "role": "Stock Exchange",
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
@@ -10111,10 +9625,11 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "downtown": 20
+            "downtown": 20,
+            "n10office": 20
         },
         "topic": "https://ew.krakissi.net/market/",
-        "wikipage": "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM#SlimeCorp_Stock_Exchange"
+        "wikipage": "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM#Slime_Stock_Exchange"
     },
     "thebazaar": {
         "id_poi": "thebazaar",
@@ -10660,13 +10175,13 @@
             "sl",
             "slimeoid"
         ],
-        "str_name": "SlimeCorp Slimeoid Laboratory",
-        "str_desc": "A nondescript building containing mysterious SlimeCorp industrial equipment. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from SlimeCorp on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
+        "str_name": "N.L.A.C.U. Slimeoid Laboratory",
+        "str_desc": "A nondescript building containing mysterious industrial equipment Slimecorp left behind. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from the university on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, an employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "slimecorp-labs",
+        "channel": "nlacu-labs",
         "role": "Slimeoid Lab",
         "major_role": "brawlden_major",
         "minor_role": "nullminorrole",
@@ -10712,8 +10227,8 @@
         "neighbors": {
             "brawlden": 20
         },
-        "topic": "Bring your poudrins and some slime for the privilege of using these highly experimental Slimecorp technologies. Use !instructions to learn more.",
-        "wikipage": "https://rfck.miraheze.org/wiki/Brawlden#SlimeCorp_Slimeoid_Laboratory"
+        "topic": "Bring your poudrins and some slime for the privilege of using these highly experimental ex-Slimecorp technologies. Use !instructions to learn more.",
+        "wikipage": "https://rfck.miraheze.org/wiki/Brawlden#Slimeoid_Laboratory"
     },
     "themines": {
         "id_poi": "themines",
@@ -10911,13 +10426,13 @@
             "c",
             "scs"
         ],
-        "str_name": "The SlimeCorp Casino",
-        "str_desc": "The casino is filled with tables and machines for playing games of chance, and garishly decorated wall-to-wall. Lights which normally flash constantly cover everything, but now they all sit unlit. What's worse, you can see Sherman, the SlimeCorp salaryman staring you down near the back.\n\nExits into Green Light District.",
+        "str_name": "The N777 Casino",
+        "str_desc": "The casino is filled with tables and machines for playing games of chance, and garishly decorated wall-to-wall. Lights which normally flash constantly cover everything, but now they all sit unlit. There are a lot of regulars here these days, desperately hoping a visit from the pit boss Lucky Lucy will turn their losses around.\n\nExits into Green Light District.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "slimecorp-casino",
+        "channel": "the-casino",
         "role": "Casino",
         "major_role": "greenlightdistrict_major",
         "minor_role": "nullminorrole",
@@ -10962,7 +10477,7 @@
             "greenlightdistrict": 20
         },
         "topic": "Put your slime on the line! Bet slimecoin on games of chance: slots, craps, pachinko, roulette, baccarat, and even the deadly Russian Roulette.",
-        "wikipage": "https://rfck.miraheze.org/wiki/Green_Light_District#The_SlimeCorp_Casino"
+        "wikipage": "https://rfck.miraheze.org/wiki/Green_Light_District#The_Casino"
     },
     "cratersvillemines": {
         "id_poi": "cratersvillemines",
@@ -11882,20 +11397,19 @@
     "recyclingplant": {
         "id_poi": "recyclingplant",
         "alias": [
-            "slimecorprecyclingplant",
             "recyclingplant",
             "recycling",
             "recycle",
             "burntrash",
             "scrp"
         ],
-        "str_name": "The SlimeCorp Recycling Plant",
-        "str_desc": "It looks like just another blocky building with a huge chimney contributing to Smogsburg's unique air quality, but the SlimeCorp marketing assures you that this plant in fact contains the latest in recycling technology, able to automatically sort and sustainably process any item. Whatever this technology may entail, it sure smells a lot like burning trash.\n\nExits into Smogsburg.",
+        "str_name": "The Recycling Plant",
+        "str_desc": "It looks like just another blocky building with a huge chimney contributing to Smogsburg's unique air quality, but the city's marketing assures you that this plant in fact contains the latest in recycling technology, able to automatically sort and sustainably process any item. Whatever this technology may entail, it sure smells a lot like burning trash.\n\nExits into Smogsburg.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "slimecorp-recycling-plant",
+        "channel": "recycling-plant",
         "role": "Recycling Plant",
         "major_role": "smogsburg_major",
         "minor_role": "nullminorrole",
@@ -11940,7 +11454,7 @@
             "smogsburg": 20
         },
         "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Smogsburg#The_SlimeCorp_Recycling_Plant"
+        "wikipage": "https://rfck.miraheze.org/wiki/Smogsburg#The_Recycling_Plant"
     },
     "toxingtonpier": {
         "id_poi": "toxingtonpier",
@@ -14091,13 +13605,13 @@
             "apartmentagency",
             "realestateagent"
         ],
-        "str_name": "SlimeCorp Real Estate Agency",
-        "str_desc": "The sleek glass walls and cold, green tile flooring give the place an intimidating presence. That is, if it weren't for the disheveled drunk fellow sitting on the reception desk ahead of you. A huge 3-D SlimeCorp logo hangs off the ceiling above his head.\n\nExits into Old New Yonkers.",
+        "str_name": "Real Estate Agency",
+        "str_desc": "The gaudy multicolored decor in here assaults the eyes. You're surprised the disheveled drunk realtor behind the counter could even focus in this enviornment. Well, knowing him, maybe he isn't. \n\nExits into Old New Yonkers.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "slimecorp-real-estate-agency",
+        "channel": "real-estate-agency",
         "role": "Real Estate Agency",
         "major_role": "oldnewyonkers_major",
         "minor_role": "nullminorrole",
@@ -14142,7 +13656,7 @@
             "oldnewyonkers": 20
         },
         "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Old_New_Yonkers#SlimeCorp_Real_Esate_Agency"
+        "wikipage": "https://rfck.miraheze.org/wiki/Old_New_Yonkers#Real_Esate_Agency"
     },
     "glocksburycomics": {
         "id_poi": "glocksburycomics",
@@ -16975,7 +16489,7 @@
             "br"
         ],
         "str_name": "The SlimeCorp Headquaters Breakroom",
-        "str_desc": "A high-class corporate breakroom. This place has everything! Storage lockers, vending machines, ration dispensers, heck, even free weapon caches! Who WOULDN'T want to be a security officer with benefits like these?",
+        "str_desc": "A high-class corporate breakroom. This place has everything! Storage lockers, vending machines, ration dispensers, heck, even free weapon caches! Who WOULDN'T want to be a security officer with benefits like these? Exits into the Security Force Tunnel and Downtown.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [],
@@ -16993,7 +16507,6 @@
         },
         "pvp": false,
         "factions": [
-            "slimecorp"
         ],
         "life_states": [],
         "closed": false,
@@ -17025,7 +16538,10 @@
         "has_ads": false,
         "write_manuscript": false,
         "max_degradation": 10000,
-        "neighbors": {},
+        "neighbors": {
+            "securityforcetunnel": 30,
+            "n11office": 20
+        },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/SlimeCorp"
     },
@@ -18311,9 +17827,1154 @@
         "max_degradation": 10000,
         "neighbors": {
             "nuclearbeach": 60,
-            "northoutskirtsdepths": 60
+            "northoutskirtsdepths": 60,
+            "slimecorphotel": 60,
+            "securityforcetunnel": 30
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Outskirts#Depths"
+    },
+     "securityforcetunnel": {
+        "id_poi": "securityforcetunnel",
+        "alias": [
+            "sftunnel",
+            "sft"
+        ],
+        "str_name": "SlimeCorp Security Force Tunnel",
+        "str_desc": "This place must be miles long, and the higher-ups must've decided to save on lighting here since it's pitch black, too. Good thing it's linear if that's the case. \n\nExits are Nuclear Beach Outskirts and The Breakroom.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "security-force-tunnel",
+        "role": null,
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "securityforcetunnel": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [
+            "slimecorp"
+        ],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "",
+        "is_district": false,
+        "is_gangbase": true,
+        "is_capturable": false,
+        "is_subzone": false,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": true,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "nuclearbeachdepths": 360,
+            "thebreakroom": 360
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+    "n12office": {
+        "id_poi": "n12office",
+        "alias": [
+            "hqlab",
+            "undergroundlab",
+            "zuck",
+            "schqresearchlab",
+            "facility",
+            "undergroundresearchfacility"
+        ],
+        "str_name": "Underground Research Facility",
+        "str_desc": "You hear a droning hum as you enter this dark basement laboratory. What little light you have is coming from the **COMPUTER** screen opened to its desktop at the far end of the room, and the status lights on several large cyndrilical **TANKS** lining down it. Tank #1000 looks pretty dented up, but the others appear nearly untouched. There's a door on the opposite end that leads to Slimecorp Offices 1F.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "underground-research-facility",
+        "role": null,
+        "major_role": "downtown_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "n12office": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": true,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "downtown": 20,
+            "slimecorptunnel": 20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+    "n10office": {
+        "id_poi": "n10office",
+        "alias": [
+            "slimecorpoffices1f",
+            "offices1f",
+            "1f"
+        ],
+        "str_name": "Slimecorp Offices **1F**",
+        "str_desc": "The 1st floor corporate office of Slimecorp is awfully quiet now that you've barged in. The wagecucks are all hiding under their **DESKS** hoping you'll go away. Ha, sick. There's no time to lose, though. You're pretty sure a secretary already called 911.\n\nYou notice N10 works here. His desk is a real dust trap, but it's well organized. Maybe he doesn't use it much? Anyhow, looks like you can log into his **COMPUTER**. You also notice the **DOOR** to Slimecorp HQ unlocks from this side. You also find M@'s **LAPTOP** on a desk right next to his. Exits into Downtown.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "slimecorp-offices-1f",
+        "role": null,
+        "major_role": "downtown_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "n10office": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": true,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "downtown":20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+        "n4office": {
+        "id_poi": "n4office",
+        "alias": [
+            "elevator"
+        ],
+        "str_name": "the Elevator",
+        "str_desc": "The fancy elevator, now completely covered in burn marks and smelling of gasoline, still appears to be playing elevator music and working perfectly well. You see a handful of elevator **BUTTONS**, most are unlit but a few are still accessible. If you squint hard enough you think you can see small **PIPES** poking out through the metal lattice on the ceiling.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "elevator",
+        "role": null,
+        "major_role": "downtown_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "n4office": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": true,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "downtown":20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+    "n13office": {
+        "id_poi": "n13office",
+        "alias": [
+            "office3f",
+            "investmentsandaccounting",
+            "3f"
+        ],
+        "str_name": "Slimecorp **3F**: Investments and Accounting",
+        "str_desc": "Your eyes are bombarded with **SCREENS** on all sides, full of seizure-inducing levels of stock-based data. The only surface not completely covered in the stuff is N13's **DESK**. Kept neat and tidy, the only thing you see that pops out is the **COMPUTER**.\n\nExits into Downtown.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "slimecorp-offices-3f",
+        "role": null,
+        "major_role": "downtown_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "n13office": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": true,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "downtown":20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+    "n2office": {
+        "id_poi": "n2office",
+        "alias": [
+            "marketing",
+            "8f",
+            "n2"
+        ],
+        "str_name": "Slimecorp **8F**: Marketing",
+        "str_desc": "An entire wall of this huge office is taken up by a **WHITEBOARD**, chock full of works in progress and scrapped ideas. They're messily scrawled all over it, not unlike the rest of this shithole. Snack food wrappers cover the floor and **DESK**, and the large **FILING CABINET** in the corner has seen inhumane levels of wear and tear.\n\nExits into Downtown.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "slimecorp-offices-8f",
+        "role": null,
+        "major_role": "downtown_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "n2office": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": true,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "downtown":20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+    "n8office": {
+        "id_poi": "n8office",
+        "alias": [
+            "n8",
+            "emptyoffice",
+            "20f"
+        ],
+        "str_name": "Slimecorp **20F**: Currently Vacant",
+        "str_desc": "The room is perfectly empty. The **DESK** is tidy, save for a layer of dust and a few packs of those sticky note things.\n\nExits into Downtown.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "slimecorp-offices-20f",
+        "role": null,
+        "major_role": "downtown_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "n8office": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": true,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "downtown":20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+    "n5office": {
+        "id_poi": "n5office",
+        "alias": [
+            "n5",
+            "103f",
+            "filestorage"
+        ],
+        "str_name": "Slimecorp **103F**: File Storage",
+        "str_desc": "The shutters are closed in here, and it takes a few minutes to find the light switch. The office is pretty normal, save for being filled to the brim with various bullshit: **CLEANING SUPPLIES**, **FILING CABINETS**, what looks like a high-end **COFFEE MACHINE**, and a big laminated **SIGN** staring at you when you walk in. \n\nExits into Downtown.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "slimecorp-offices-103f",
+        "role": null,
+        "major_role": "downtown_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "n5office": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": true,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "downtown":20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+    "n3office": {
+        "id_poi": "n3office",
+        "alias": [
+            "n3",
+            "administration",
+            "5280f"
+        ],
+        "str_name": "Slimecorp **528F0**: Administration",
+        "str_desc": "You smell smoke. You would think N3 keeps a clean house, but there's a pile of **SOOT** overflowing from a metal wastebasket beside her desk. Apart from that, the whole place is cleaned out.\n\nExits into Downtown.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "slimecorp-offices-5280f",
+        "role": null,
+        "major_role": "downtown_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "n3office": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": true,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "downtown":20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+    "n7office": {
+        "id_poi": "n7office",
+        "alias": [
+            "n7",
+            "77777f",
+            "executiveassistance"
+        ],
+        "str_name": "Slimecorp **77777F**: Executive Assistance",
+        "str_desc": "There's a real soothing vibe in here, if you didn't know any better you'd drop in a beanbag chair and doze off. There's a **CORKBOARD** full of exotic tourist photos hanging on the wall as you walk in, and her desk has an assortment of beanie babies on it. N7's **LAPTOP** sits open on the desk, but it's in sleep mode.\n\nExits into Downtown.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "slimecorp-offices-77777f",
+        "role": null,
+        "major_role": "downtown_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "n7office": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": true,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "downtown":20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+    "n11office": {
+        "id_poi": "n11office",
+        "alias": [
+            "809231f",
+            "n11",
+            "humanresources"
+        ],
+        "str_name": "Slimecorp **809231f**: Human Resources",
+        "str_desc": "N11's office stinks of cigar, but apart from that it's pretty nice. The corner's lined with an L-shaped **LUXURY COUCH** and a coffee table. The walls are **BRICK**, a strange contrast for just one floor of the building. N11 as a standard issue **COMPUTER** at his desk, but it's tucked in a whole other corner, full of his family group photos and a few shots of giant fish he caught. Maybe he's trying to separate paperwork from his human resourcin' gig.\n\nExits into Downtown.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "slimecorp-offices-809231f",
+        "role": null,
+        "major_role": "downtown_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "n11office": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": true,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "downtown":20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+    "n9office": {
+        "id_poi": "n9office",
+        "alias": [
+            "1000000f",
+            "n9",
+            "penthouse"
+        ],
+        "str_name": "Slimecorp **Penthouse**: Executive Suite",
+        "str_desc": "Now that it's broken off from the rest of the building, gravity has you standing on the penthouse's walls. You're on the top floor of the Slimecorp building standing on the wall, which is actually the wall this time. Looking into the penthouse, you see the still-recovering shambles of Downtown out of the glass floor.\n\nThe inside of the room is completely torn apart, luxury furniture broken, all plumbing burst open and leaking into the cracks of the glass. N1's **LAPTOP** somehow survived the ruckus, too. Exits into Downtown.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "slimecorp-penthouse",
+        "role": null,
+        "major_role": "downtown_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "n9office": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": true,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "downtown":20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+    "themoon": {
+        "id_poi": "themoon",
+        "alias": [
+            "moon",
+            "luna",
+            "n1"
+        ],
+        "str_name": "The Moon",
+        "str_desc": "Hey wait, you're on the moon. How are you able to breathe? Well never mind that. You're doing it and that's what counts. There's a pretty sizable chunk taken out of it ever since N1 went and exploded. If only you could fish here, then you'd be able to fulfill your lifelong dream of imitating the guy from the Dreamworks logo. Whatever the case, there isn't anywhere else to go. !loop back or die, it's your decision.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "the-moon",
+        "role": null,
+        "major_role": "downtown_major",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "themoon": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": true,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+     "slimecorphotel": {
+        "id_poi": "slimecorphotel",
+        "alias": [
+            "schotel",
+            "hotel",
+            "nickelodeonhotel",
+            "nickelodeon",
+            "nick",
+            "lobby",
+            "hotellobby"
+        ],
+        "str_name": "Nickelodeon Hotel Lobby",
+        "str_desc": "Uneven layers of dust cover the room. The front desk ahead of you sits unattended, the bell long since stolen. The stairs leading to the 2nd floor are clogged with assorted wood and **ANIMATRONICS**, but nothing looks useful. Honestly, being called the Nickelodeon Hotel, you would expect a flashier place, but everything that once made it a child honeypot has been taken down. Too bad. Maybe there's some other secrets worth looking into.\n\nExits into the Lobby Backroom, Room 102, Room 103, Room 104, and Nuclear Beach Depths.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "hotel-lobby",
+        "role": null,
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "slimecorphotel": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+            "nuclearbeachdepths"
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "nuclearbeachdepths":20,
+            "room102":20,
+            "room103":20,
+            "room104":20,
+            "lobbybackroom": 20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+         "room102": {
+        "id_poi": "room102",
+        "alias": [
+            "102"
+        ],
+        "str_name": "Room 102",
+        "str_desc": "Somebody must've spruced this place up, the dust is cleared out. Probably **NINA**, Slimecorp's resident lawyer. She's on the chair over there, typing away on her laptop. Apart from that there's a **COFFEE MACHINE** and a **BED** both in their expected places. Christ, it's like you went back in time to when this room was hospitable. There's also a **PROJECTOR** stashed in the closet, built for old VHS tapes.\n\nExits to the Slimecorp Hotel Lobby.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "room-102",
+        "role": null,
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "room102": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "slimecorphotel":20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+     "room103": {
+        "id_poi": "room103",
+        "alias": [
+            "103"
+        ],
+        "str_name": "Room 103",
+        "str_desc": "Apart from the corpse stink coming from a certain someone, Room 103 is pretty quaint looking. The locked **FILING CABINET** sticks out, and some prescription **MEDICINE BOTTLES** are strewn all over the floor, but apart from that, it looks like any other hotel room you've seen.\n\nExits to the Slimecorp Hotel Lobby.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "room-103",
+        "role": null,
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "room103": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "slimecorphotel":20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+     "room104": {
+        "id_poi": "room104",
+        "alias": [
+            "104"
+        ],
+        "str_name": "Room 104",
+        "str_desc": "Nothing but wooden **CRATES** line the walls, stacking halfway to the ceiling. There's a small **HOLE** on the right wall that leads to the dusty wasteland outside. The furniture and appliances have all been taken out too, probably to make room for all this.\n\nExits to the Slimecorp Hotel Lobby.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "room-104",
+        "role": null,
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "room104": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "slimecorphotel":20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+         "lobbybackroom": {
+        "id_poi": "lobbybackroom",
+        "alias": [
+            "backroom",
+            "backlobby"
+        ],
+        "str_name": "The Lobby Backroom",
+        "str_desc": "After hopping behind the front desk you're greeted with a massive steel cellar **DOOR**. It takes up half the floorspace, there's barely any room to stand behind the counter. To the left of that, near the **KEY RACK** you notice a relatively new-looking **INVOICE** on the far countertop.\n\nExits to the Slimecorp Hotel Lobby.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "lobby-backroom",
+        "role": null,
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "lobbybackroom": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "slimecorphotel":20,
+            "slimecorptunnel": 20
+        },
+        "topic": "",
+        "wikipage": ""
+    },
+     "slimecorptunnel": {
+        "id_poi": "slimecorptunnel",
+        "alias": [
+            "corridor",
+            "tunnel"
+        ],
+        "str_name": "Slimecorp Hidden Tunnel",
+        "str_desc": "You feel a cold breeze through this dark, steel corridor. It's pitch black, and you can hear faint, unknown sounds in the distance. It's unbelievably long, too, maybe 3 or 4 miles. The only exit goes back to the Lobby Backroom.",
+        "str_in": "in",
+        "str_enter": "enter",
+        "coord": null,
+        "coord_alias": [],
+        "channel": "slimecorp-tunnel",
+        "role": null,
+        "major_role": "nullmajorrole",
+        "minor_role": "nullminorrole",
+        "permissions": {
+            "slimecorptunnel": [
+                "read",
+                "send",
+                "connect"
+            ]
+        },
+        "pvp": false,
+        "factions": [],
+        "life_states": [],
+        "closed": false,
+        "str_closed": null,
+        "vendors": [],
+        "property_class": "A",
+        "is_district": false,
+        "is_gangbase": false,
+        "is_capturable": false,
+        "is_subzone": true,
+        "is_apartment": false,
+        "is_street": false,
+        "mother_districts": [
+
+        ],
+        "father_district": "",
+        "is_transport": false,
+        "transport_type": "",
+        "default_line": "",
+        "default_stop": "",
+        "is_transport_stop": false,
+        "is_outskirts": false,
+        "community_chest": null,
+        "is_pier": false,
+        "pier_type": null,
+        "is_tutorial": false,
+        "has_ads": false,
+        "write_manuscript": false,
+        "max_degradation": 10000,
+        "neighbors": {
+            "lobbybackroom":20
+
+        },
+        "topic": "",
+        "wikipage": ""
     }
 }
