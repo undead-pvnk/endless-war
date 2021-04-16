@@ -7731,6 +7731,9 @@ for poi in poi_list:
 # maps districts to their immediate neighbors
 poi_neighbors = {}
 
+time_movesubway = 10
+time_embark = 2
+
 transport_lines = [
 	EwTransportLine( # ferry line from wreckington to vagrant's corner
 		id_line = transport_line_ferry_wt_to_vc,
@@ -7786,10 +7789,10 @@ transport_lines = [
 		next_line = transport_line_subway_yellow_southbound,
 		str_name = "The yellow subway line towards Arsonbrook",
 		schedule = {
-			poi_id_ssb_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_sb_subway_station],
-			poi_id_sb_subway_station : [20, poi_id_ab_subway_station]
+			poi_id_ssb_subway_station : [time_movesubway, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [time_movesubway, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [time_movesubway, poi_id_sb_subway_station],
+			poi_id_sb_subway_station : [time_movesubway, poi_id_ab_subway_station]
 			}
 
 		),
@@ -7808,10 +7811,10 @@ transport_lines = [
 		next_line = transport_line_subway_yellow_northbound,
 		str_name = "The yellow subway line towards South Sleezeborough",
 		schedule = {
-			poi_id_ab_subway_station : [20, poi_id_sb_subway_station],
-			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_ssb_subway_station]
+			poi_id_ab_subway_station : [time_movesubway, poi_id_sb_subway_station],
+			poi_id_sb_subway_station : [time_movesubway, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [time_movesubway, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [time_movesubway, poi_id_ssb_subway_station]
 			}
 
 		),
@@ -7830,13 +7833,13 @@ transport_lines = [
 		next_line = transport_line_subway_red_southbound,
 		str_name = "The red subway line towards Toxington",
 		schedule = {
-			poi_id_cv_subway_station : [20, poi_id_wt_subway_station],
-			poi_id_wt_subway_station : [20, poi_id_rr_subway_station],
-			poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_ck_subway_station],
-			poi_id_ck_subway_station : [20, poi_id_gd_subway_station],
-			poi_id_gd_subway_station : [20, poi_id_ah_subway_station],
-			poi_id_ah_subway_station : [20, poi_id_tt_subway_station]
+			poi_id_cv_subway_station : [time_movesubway, poi_id_wt_subway_station],
+			poi_id_wt_subway_station : [time_movesubway, poi_id_rr_subway_station],
+			poi_id_rr_subway_station : [time_movesubway, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [time_movesubway, poi_id_ck_subway_station],
+			poi_id_ck_subway_station : [time_movesubway, poi_id_gd_subway_station],
+			poi_id_gd_subway_station : [time_movesubway, poi_id_ah_subway_station],
+			poi_id_ah_subway_station : [time_movesubway, poi_id_tt_subway_station]
 			}
 
 		),
@@ -7855,13 +7858,13 @@ transport_lines = [
 		next_line = transport_line_subway_red_northbound,
 		str_name = "The red subway line towards Cratersville",
 		schedule = {
-			poi_id_tt_subway_station : [20, poi_id_ah_subway_station],
-			poi_id_ah_subway_station : [20, poi_id_gd_subway_station],
-			poi_id_gd_subway_station : [20, poi_id_ck_subway_station],
-			poi_id_ck_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
-			poi_id_rr_subway_station : [20, poi_id_wt_subway_station],
-			poi_id_wt_subway_station : [20, poi_id_cv_subway_station]
+			poi_id_tt_subway_station : [time_movesubway, poi_id_ah_subway_station],
+			poi_id_ah_subway_station : [time_movesubway, poi_id_gd_subway_station],
+			poi_id_gd_subway_station : [time_movesubway, poi_id_ck_subway_station],
+			poi_id_ck_subway_station : [time_movesubway, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [time_movesubway, poi_id_rr_subway_station],
+			poi_id_rr_subway_station : [time_movesubway, poi_id_wt_subway_station],
+			poi_id_wt_subway_station : [time_movesubway, poi_id_cv_subway_station]
 			}
 
 		),
@@ -7880,11 +7883,11 @@ transport_lines = [
 		next_line = transport_line_subway_green_westbound,
 		str_name = "The green subway line towards Smogsburg",
 		schedule = {
-			poi_id_wgb_subway_station : [20, poi_id_jp_subway_station],
-			poi_id_jp_subway_station : [20, poi_id_nsb_subway_station],
-			poi_id_nsb_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_sb_subway_station]
+			poi_id_wgb_subway_station : [time_movesubway, poi_id_jp_subway_station],
+			poi_id_jp_subway_station : [time_movesubway, poi_id_nsb_subway_station],
+			poi_id_nsb_subway_station : [time_movesubway, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [time_movesubway, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [time_movesubway, poi_id_sb_subway_station]
 			}
 
 		),
@@ -7903,10 +7906,10 @@ transport_lines = [
 		next_line = transport_line_subway_green_eastbound,
 		str_name = "The green subway line towards West Glocksbury",
 		schedule = {
-			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
-			poi_id_kb_subway_station : [20, poi_id_gb_subway_station],
-			poi_id_gb_subway_station : [20, poi_id_wgb_subway_station]
+			poi_id_sb_subway_station : [time_movesubway, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [time_movesubway, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [time_movesubway, poi_id_gb_subway_station],
+			poi_id_gb_subway_station : [time_movesubway, poi_id_wgb_subway_station]
 			}
 
 		),
@@ -7926,10 +7929,10 @@ transport_lines = [
 		next_line = transport_line_subway_blue_westbound,
 		str_name = "The blue subway line towards Assault Flats Beach",
 		schedule = {
-			poi_id_dt_subway_station : [20, poi_id_gld_subway_station],
-			poi_id_gld_subway_station : [20, poi_id_jr_subway_station],
-			poi_id_jr_subway_station : [20, poi_id_vc_subway_station],
-			poi_id_vc_subway_station : [20, poi_id_afb_subway_station]
+			poi_id_dt_subway_station : [time_movesubway, poi_id_gld_subway_station],
+			poi_id_gld_subway_station : [time_movesubway, poi_id_jr_subway_station],
+			poi_id_jr_subway_station : [time_movesubway, poi_id_vc_subway_station],
+			poi_id_vc_subway_station : [time_movesubway, poi_id_afb_subway_station]
 			}
 
 		),
@@ -7947,10 +7950,10 @@ transport_lines = [
 		next_line = transport_line_subway_blue_eastbound,
 		str_name = "The blue subway line towards Downtown NLACakaNM",
 		schedule = {
-			poi_id_afb_subway_station : [20, poi_id_vc_subway_station],
-			poi_id_vc_subway_station : [20, poi_id_jr_subway_station],
-			poi_id_jr_subway_station : [20, poi_id_gld_subway_station],
-			poi_id_gld_subway_station : [20, poi_id_dt_subway_station]
+			poi_id_afb_subway_station : [time_movesubway, poi_id_vc_subway_station],
+			poi_id_vc_subway_station : [time_movesubway, poi_id_jr_subway_station],
+			poi_id_jr_subway_station : [time_movesubway, poi_id_gld_subway_station],
+			poi_id_gld_subway_station : [time_movesubway, poi_id_dt_subway_station]
 			}
 
 		),
@@ -7969,9 +7972,9 @@ transport_lines = [
 #	 	next_line = transport_line_subway_white_westbound,
 #	 	str_name = "The white subway line towards Juvie's Row",
 #	 	schedule = {
-#	 		poi_id_underworld_subway_station : [20, poi_id_dt_subway_station],
-#	 		poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
-#	 		poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
+#	 		poi_id_underworld_subway_station : [time_movesubway, poi_id_dt_subway_station],
+#	 		poi_id_dt_subway_station : [time_movesubway, poi_id_rr_subway_station],
+#	 		poi_id_rr_subway_station : [time_movesubway, poi_id_jr_subway_station]
 #	 	    }
 #	 	),
 #	EwTransportLine( # white subway line from juvies row to downtown
@@ -7988,9 +7991,9 @@ transport_lines = [
 #	 	next_line = transport_line_subway_white_eastbound,
 #	 	str_name = "The white subway line towards The Underworld",
 #	 	schedule = {
-#	 		poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
-#	 		poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
-#	 		poi_id_dt_subway_station : [20, poi_id_underworld_subway_station],
+#	 		poi_id_jr_subway_station : [time_movesubway, poi_id_rr_subway_station],
+#	 		poi_id_rr_subway_station : [time_movesubway, poi_id_dt_subway_station],
+#	 		poi_id_dt_subway_station : [time_movesubway, poi_id_underworld_subway_station],
 #	 	    }
 #	 	),
 	EwTransportLine( # blimp line from dreadford to assault flats beach
