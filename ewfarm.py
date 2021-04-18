@@ -695,7 +695,7 @@ def farm_tick(id_server):
 			farm_data.time_lastphase = time_now
 
 			# gvs - juvies only have 5 farming phases
-			if farm_data.sow_life_state == ewcfg.life_state_juvenile and farm_data.phase == ewcfg.farm_phase_reap_juvie:
+			if farm_data.sow_life_state in [ewcfg.life_state_juvenile, ewcfg.farm_life_state_juviethumb] and farm_data.phase == ewcfg.farm_phase_reap_juvie:
 				farm_data.phase = ewcfg.farm_phase_reap
 				
 			if farm_data.phase < ewcfg.farm_phase_reap:
