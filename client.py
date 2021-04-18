@@ -320,7 +320,6 @@ cmd_map = {
 	ewcfg.cmd_crystalize_negapoudrin_alt1: ewspooky.crystalize_negapoudrin,
 	ewcfg.cmd_crystalize_negapoudrin_alt2: ewspooky.crystalize_negapoudrin,
 	ewcfg.cmd_crystalize_negapoudrin_alt3: ewspooky.crystalize_negapoudrin,
-	ewcfg.cmd_crystalize_negapoudrin_alt4: ewspooky.crystalize_negapoudrin,
 	
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
