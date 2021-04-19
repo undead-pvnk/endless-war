@@ -1540,6 +1540,7 @@ offline_cmds = [
 	cmd_move_alt3,
 	cmd_move_alt4,
 	cmd_move_alt5,
+	cmd_move_alt6,
 	cmd_descend,
 	cmd_halt,
 	cmd_halt_alt1,
