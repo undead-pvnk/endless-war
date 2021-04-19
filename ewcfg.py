@@ -1550,6 +1550,7 @@ offline_cmds = [
 	cmd_disembark_alt1,
 	cmd_look,
 	cmd_survey,
+	cmd_survey_alt1,
 	cmd_scout,
 	cmd_scout_alt1,
 	cmd_depart,
