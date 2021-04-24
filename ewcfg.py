@@ -1347,7 +1347,7 @@ cmd_sew = cmd_prefix + 'sew'
 cmd_retrofit = cmd_prefix + 'retrofit'
 cmd_sip = cmd_prefix + 'sip'
 cmd_fashion = cmd_prefix + 'fashion'
-cmd_fashion_alt_1 = cmd_prefix + 'drip'
+cmd_fashion_alt1 = cmd_prefix + 'drip'
 
 cmd_zuck = cmd_prefix + 'zuck'
 
