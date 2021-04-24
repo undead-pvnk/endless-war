@@ -142,7 +142,7 @@ async def pachinko(cmd):
 		# add winnings
 		if currency_used == ewcfg.currency_slimecoin:
 			user_data.change_slimecoin(n = winnings, coinsource = ewcfg.coinsource_casino)
-		else:
+		elif currency_used == ewcfg.currency_slime:
 			levelup_response = user_data.change_slimes(n = winnings, source = ewcfg.source_casino)
 			
 			if levelup_response != "":
@@ -281,7 +281,7 @@ async def craps(cmd):
 				user_data.change_slimecoin(n = winnings - value, coinsource = ewcfg.coinsource_casino)
 				#SLIMERNALIA
 				#user_data.festivity_from_slimecoin += slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
-			else:
+			elif currency_used == ewcfg.currency_slime:
 				levelup_response = user_data.change_slimes(n = winnings - value, source = ewcfg.source_casino)
 
 				if levelup_response != "":
@@ -692,9 +692,9 @@ async def roulette(cmd):
 				# add winnings
 				user_data = EwUser(member = cmd.message.author)
 
-				if currency_used == ewcfg.currency_slimecoin:
+				if currency_used  == ewcfg.currency_slimecoin:
 					user_data.change_slimecoin(n = winnings, coinsource = ewcfg.coinsource_casino)
-				else:
+				elif currency_used == ewcfg.currency_slime:
 					levelup_response = user_data.change_slimes(n = winnings, source = ewcfg.source_casino)
 					
 					if levelup_response != "":
@@ -1352,7 +1352,7 @@ async def baccarat(cmd):
 				user_data = EwUser(member = cmd.message.author)
 				if currency_used == ewcfg.currency_slimecoin:
 					user_data.change_slimecoin(n = winnings, coinsource = ewcfg.coinsource_casino)
-				else:
+				elif currency_used == ewcfg.currency_slime:
 					levelup_response = user_data.change_slimes(n = winnings, source = ewcfg.source_casino)
 					
 					if levelup_response != "":
