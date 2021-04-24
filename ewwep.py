@@ -1938,6 +1938,13 @@ async def marry(cmd):
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+		user_data.weaponmarried = True
+		user_data.persist()
+
+		#Sets their weaponmarried table to true, so that "you are married to" appears instead of "you are wielding" intheir !data, you get an extra two mastery levels, and you can't change your weapon.
+		weapon_item.item_props["married"] = user_data.id_user
+		weapon_item.persist()
+
 		#Preform the ceremony 2: literally this time
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
@@ -1997,13 +2004,9 @@ async def marry(cmd):
 			"You begin to tear up, fondly regarding your last kill with your {} that you love so much. You lean down and kiss your new spouse on the handle, anointing an extra two mastery ranks with pure love. It remains completely motionless, because it is an inanimate object. The Dojo Master does a karate chop midair to bookend the entire experience. Sick, you’re married now!".format(weapon_name)
 		))
 
-		#Sets their weaponmarried table to true, so that "you are married to" appears instead of "you are wielding" intheir !data, you get an extra two mastery levels, and you can't change your weapon.
 		user_data = EwUser(member = cmd.message.author)
-		user_data.weaponmarried = True
 		user_data.add_weaponskill(n = 2, weapon_type = weapon.id_weapon)
 		user_data.persist()
-		weapon_item.item_props["married"] = user_data.id_user
-		weapon_item.persist()
 		return
 
 
