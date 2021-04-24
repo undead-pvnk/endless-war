@@ -333,7 +333,7 @@ async def embark(cmd):
 				response = "Embarking on {}.".format(transport_line.str_name)
 				# schedule tasks for concurrent execution
 				message_task = asyncio.ensure_future(ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)))
-				wait_task = asyncio.ensure_future(asyncio.sleep(5))
+				wait_task = asyncio.ensure_future(asyncio.sleep(ewcfg.time_embark))
 
 				# Take control of the move for this player.
 				ewmap.move_counter += 1
@@ -401,7 +401,7 @@ async def disembark(cmd):
 
 		# schedule tasks for concurrent execution
 		message_task = asyncio.ensure_future(ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)))
-		wait_task = asyncio.ensure_future(asyncio.sleep(5))
+		wait_task = asyncio.ensure_future(asyncio.sleep(ewcfg.time_embark))
 
 		# Take control of the move for this player.
 		ewmap.move_counter += 1
