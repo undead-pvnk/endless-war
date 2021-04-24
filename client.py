@@ -103,6 +103,7 @@ cmd_map = {
 	ewcfg.cmd_shoot_alt5: ewwep.attack,
 	ewcfg.cmd_shoot_alt6: ewwep.attack,
 	ewcfg.cmd_shoot_alt7: ewwep.attack,
+	ewcfg.cmd_shoot_alt8: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	# Reload
@@ -152,6 +153,7 @@ cmd_map = {
 	ewcfg.cmd_score: ewcmd.score,
 	ewcfg.cmd_score_alt1: ewcmd.score,
 	ewcfg.cmd_score_alt2: ewcmd.score,
+	ewcfg.cmd_score_alt3: ewcmd.score,
 	# Show a player's combat data.
 	ewcfg.cmd_data: ewcmd.data,
 
@@ -250,6 +252,7 @@ cmd_map = {
 	ewcfg.cmd_jump: ewcmd.jump,
 	ewcfg.cmd_push: ewcmd.push,
 	ewcfg.cmd_push_alt_1: ewcmd.push,
+	ewcfg.cmd_push_alt_2: ewcmd.push,
 
 
 	ewcfg.cmd_dyefurniture: ewapt.dyefurniture,
@@ -284,22 +287,39 @@ cmd_map = {
 
 	# Ghosts can haunt enlisted players to reduce their slime score.
 	ewcfg.cmd_haunt: ewspooky.haunt,
+	ewcfg.cmd_haunt_alt1: ewspooky.haunt,
+	ewcfg.cmd_haunt_alt2: ewspooky.haunt,
+	ewcfg.cmd_haunt_alt3: ewspooky.haunt,
+	ewcfg.cmd_haunt_alt4: ewspooky.haunt,
+	ewcfg.cmd_haunt_alt5: ewspooky.haunt,
+	ewcfg.cmd_haunt_alt6: ewspooky.haunt,
 
 	# ghosts can inhabit players to follow them around
 	ewcfg.cmd_inhabit: ewspooky.inhabit,
+	ewcfg.cmd_inhabit_alt1: ewspooky.inhabit,
+	ewcfg.cmd_inhabit_alt2: ewspooky.inhabit,
+	ewcfg.cmd_inhabit_alt3: ewspooky.inhabit,
 
 	# remove inhabitted status
 	ewcfg.cmd_letgo: ewspooky.let_go,
 
 	# ghosts can empower the weapon of the player they're inhabiting
 	ewcfg.cmd_possess_weapon: ewspooky.possess_weapon,
+	ewcfg.cmd_possess_weapon_alt1: ewspooky.possess_weapon,
+	ewcfg.cmd_possess_weapon_alt2: ewspooky.possess_weapon,
 
 	# ghosts can enhance fishing for the player they're inhabiting
 	ewcfg.cmd_possess_fishing_rod: ewspooky.possess_fishing_rod,
 	ewcfg.cmd_possess_fishing_rod_alt1: ewspooky.possess_fishing_rod,
+	ewcfg.cmd_possess_fishing_rod_alt2: ewspooky.possess_fishing_rod,
+	ewcfg.cmd_possess_fishing_rod_alt3: ewspooky.possess_fishing_rod,
+	ewcfg.cmd_possess_fishing_rod_alt4: ewspooky.possess_fishing_rod,
 
 	# ghosts can turn their negaslime into negapoudrins
 	ewcfg.cmd_crystalize_negapoudrin: ewspooky.crystalize_negapoudrin,
+	ewcfg.cmd_crystalize_negapoudrin_alt1: ewspooky.crystalize_negapoudrin,
+	ewcfg.cmd_crystalize_negapoudrin_alt2: ewspooky.crystalize_negapoudrin,
+	ewcfg.cmd_crystalize_negapoudrin_alt3: ewspooky.crystalize_negapoudrin,
 	
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
@@ -384,6 +404,7 @@ cmd_map = {
 
 	# show player's current shares in a compant
 	ewcfg.cmd_shares: ewmarket.shares,
+	ewcfg.cmd_shares_alt1: ewmarket.shares,
 
 	# check available stocks
 	ewcfg.cmd_stocks: ewmarket.stocks,
@@ -411,6 +432,7 @@ cmd_map = {
 
 	# eat a food item from a player's inventory
 	ewcfg.cmd_eat: ewfood.eat_item,
+	ewcfg.cmd_eat_alt1: ewfood.eat_item,
 
 	# Remove a megaslime (1 mil slime) from a general.
 	ewcfg.cmd_deadmega: ewkingpin.deadmega,
@@ -427,6 +449,7 @@ cmd_map = {
 	ewcfg.cmd_move_alt3: ewmap.move,
 	ewcfg.cmd_move_alt4: ewmap.move,
 	ewcfg.cmd_move_alt5: ewmap.move,
+	ewcfg.cmd_move_alt6: ewmap.move,
 
 	# go down
 	ewcfg.cmd_descend: ewmap.descend,
@@ -447,6 +470,7 @@ cmd_map = {
 	
 	# Look around the POI, but do not obtain the district's description (reduces clutter and response time).
 	ewcfg.cmd_survey: ewmap.survey,
+	ewcfg.cmd_survey_alt1: ewmap.survey,
 	
 	# Inspect objects in a POI
 	ewcfg.cmd_scrutinize: ewdebug.scrutinize,
@@ -496,6 +520,7 @@ cmd_map = {
 	#scavenging
 	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 	ewcfg.cmd_scavenge_alt1: ewjuviecmd.scavenge,
+	ewcfg.cmd_scavenge_alt2: ewjuviecmd.scavenge,
 
 	#cosmetics
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
@@ -504,6 +529,7 @@ cmd_map = {
 	ewcfg.cmd_sew: ewcosmeticitem.sew,
 	ewcfg.cmd_retrofit: ewcosmeticitem.retrofit,
 	ewcfg.cmd_fashion: ewcmd.fashion,
+	ewcfg.cmd_fashion_alt1: ewcmd.fashion,
 
 	ewcfg.cmd_create: ewkingpin.create,
 	ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
@@ -596,7 +622,9 @@ cmd_map = {
 	ewcfg.cmd_saturateslimeoid: ewslimeoid.saturateslimeoid,
 	ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
 	ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
+	ewcfg.cmd_bottleslimeoid_alt1: ewslimeoid.bottleslimeoid,
 	ewcfg.cmd_unbottleslimeoid: ewslimeoid.unbottleslimeoid,
+	ewcfg.cmd_unbottleslimeoid_alt1: ewslimeoid.unbottleslimeoid,
 	ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid,
 	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
 	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
@@ -611,6 +639,8 @@ cmd_map = {
 	ewcfg.cmd_summonnegaslimeoid_alt2: ewspooky.summon_negaslimeoid,
 	ewcfg.cmd_battlenegaslimeoid: ewslimeoid.negaslimeoidbattle,
 	ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
+	ewcfg.cmd_battlenegaslimeoid_alt2: ewslimeoid.negaslimeoidbattle,
+	ewcfg.cmd_battlenegaslimeoid_alt3: ewslimeoid.negaslimeoidbattle,
 
 	# Enemies
 	ewcfg.cmd_summonenemy: ewhunting.summonenemy,
@@ -817,6 +847,7 @@ cmd_map = {
 	ewcfg.cmd_exist: ewrace.exist,
 	ewcfg.cmd_ree: ewrace.ree,
 	ewcfg.cmd_autocannibalize: ewrace.autocannibalize,
+	ewcfg.cmd_autocannibalize_alt1: ewrace.autocannibalize,
 	ewcfg.cmd_rattle: ewrace.rattle,
 	ewcfg.cmd_beep: ewrace.beep,
 	ewcfg.cmd_yiff: ewrace.yiff,
@@ -824,6 +855,7 @@ cmd_map = {
 	ewcfg.cmd_jiggle: ewrace.jiggle,
 	ewcfg.cmd_flutter: ewrace.flutter,
 	ewcfg.cmd_request_petting: ewrace.request_petting,
+	ewcfg.cmd_request_petting_alt1: ewrace.request_petting,
 	ewcfg.cmd_rampage: ewrace.rampage,
 	ewcfg.cmd_entomize: ewrace.entomize,
 	ewcfg.cmd_confuse: ewrace.confuse,
