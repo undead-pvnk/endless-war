@@ -3205,7 +3205,12 @@ def messagesplit(stringIn, whitespace = '\n'):
 """
 def is_player_inventory(id_inventory, id_server):
 	if id_server == None or id_inventory == None:
-		return false
+		return False
+
+	if isinstance(id_inventory, int):
+		pass
+	elif not id_inventory.isdigit():
+		return False
 
 	# Grab the Discord Client
 	client = get_client()
