@@ -488,6 +488,7 @@ class EwUser:
 
 			response = item_props['str_eat'] + ("\n\nYou're stuffed!" if self.hunger <= 0 else "")
 
+
 			ewitem.item_delete(food_item.id_item)
 
 		return response

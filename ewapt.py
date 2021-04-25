@@ -2320,8 +2320,12 @@ async def setOffAlarms(id_server = None):
 		elif time_current == 12:
 			ampm = "pm"
 
+
+
 		item_search = "alarm clock set to {}{}".format(displaytime, ampm)
+		item_search_brick = "brick{:02d}".format(time_current)
 		clockinv = ewitem.find_item_all(item_search="alarmclock", id_server=id_server, item_type_filter = ewcfg.it_furniture)
+		brickinv = ewitem.find_item_all(item_search=item_search_brick, id_server=id_server, item_type_filter = ewcfg.it_furniture, search_names=True)
 
 		for clock in clockinv:
 			isFurnished = False
@@ -2339,6 +2343,28 @@ async def setOffAlarms(id_server = None):
 							await ewutils.send_message(client, clock_member, ewutils.formatMessage(clock_member, "BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP"))
 						except:
 							ewutils.logMsg("failed to send alarm to user {}".format(clock_member.id))
+
+		for brick in brickinv:
+			brick_obj = EwItem(id_item=brick.get('id_item'))
+			id_user = brick_obj.id_owner.replace("brickshit", "")
+			print(id_user)
+			brick_user = EwUser(id_server=id_server, id_user=id_user)
+			brick_member = server.get_member(user_id = int(id_user))
+			poi = ewcfg.id_to_poi.get(brick_user.poi)
+			channel_brick = ewutils.get_channel(server, poi.channel)
+			print('pass1')
+			if brick_member != None:
+				print('pass2')
+				if brick_member:
+					print('pass3')
+					try:
+						await ewutils.send_message(client, channel_brick, ewutils.formatMessage(brick_member, "UUUUUUUUUUGGGGGGGGGGGGHHHHHHHHHHH... OOOOOOOOOOOOOOOOOAAAAAAAAAAAAAAAHHHHH th-tunk. You just shit a brick. Congratulations?"))
+						brick_obj.id_owner = poi.id_poi
+						brick_obj.item_props['furniture_name'] = 'brick'
+						brick_obj.persist()
+					except:
+							ewutils.logMsg("failed to shit brick on user {}".format(brick_member.id))
+
 
 async def jam(cmd):
 	#def leppard and pearl jam? meet def jam. this is what the refrance, fuck yeah.

@@ -5002,7 +5002,7 @@ def get_weapon_type_stats(weapon_type):
 		},
 		"minigun": {
 			"damage_multiplier": 0.3,
-			"cost_multiplier": 5,
+			"cost_multiplier": 3,
 			"crit_chance": 0.1,
 			"crit_multiplier": 2,
 			"hit_chance": 0.5,
@@ -11559,7 +11559,7 @@ mutations = [
         alias = ['spoiled'],
 		str_describe_self = "Your frequent, unholy belches could incapacitate a Megaslime due to **Spoiled Appetite**.",
 		str_describe_other = "Their frequent, unholy belches could incapacitate a Megaslime due to **Spoiled Appetite**.",
-		str_acquire = "You become inexplicably tired, you develop bags under your eyes and can barely keep them open without fidgeting. Stenches begin to secrete from your body, which only worsens as your stomach lets out a deep, guttural growl that sounds like a dying animal being raped by an already dead animal. Which is to say, not pleasant. You are overcome with a singular thought. “What the hell, I’ll just eat some trash.” You have developed the mutation **Spoiled Appetite**. You can now eat spoiled food.",
+		str_acquire = "You become inexplicably tired, you develop bags under your eyes and can barely keep them open without fidgeting. Stenches begin to secrete from your body, which only worsens as your stomach lets out a deep, guttural growl that sounds like a dying animal being vored by an already dead animal. Which is to say, not pleasant. You are overcome with a singular thought. “What the hell, I’ll just eat some trash.” You have developed the mutation **Spoiled Appetite**. You can now eat spoiled food.",
 		tier = 5,
         str_transplant = "You are force-fed cole slaw for several hours. Your desensitized taste buds will never recover from this, and you feel like you could digest anything. Of course, in her infinite wisdom, Dusttrap uses organic cole slaw, so you can't even bust ghosts afterward.\n\nYou have developed the mutation **Spoiled Appetite**. You can now eat spoiled food.",
 		),

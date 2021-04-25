@@ -115,7 +115,7 @@ async def menu(cmd):
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
-		
+
 		mother_district_data = None
 		for mother_poi in poi.mother_districts:
 
@@ -145,7 +145,7 @@ async def menu(cmd):
 
 
 		controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
-		
+
 		response = "{} Menu:\n\n".format(poi.str_name)
 
 		vendors_list = poi.vendors
@@ -202,11 +202,11 @@ async def menu(cmd):
 						# prices are halved for the controlling gang
 						if controlling_faction == user_data.faction:
 							value /= 2
-	
+
 						# and 4 times as much for enemy gangsters
 						elif user_data.faction != "":
 							value *= 4
-							
+
 				if vendor == ewcfg.vendor_breakroom and user_data.faction == ewcfg.faction_slimecorp:
 					value = 0
 
@@ -341,7 +341,7 @@ async def order(cmd):
 		if item == None:
 			item = ewcfg.weapon_map.get(value)
 			item_type = ewcfg.it_weapon
-			if item != None: 
+			if item != None:
 				item_id = item.id_weapon
 				name = item.str_weapon
 
@@ -362,7 +362,7 @@ async def order(cmd):
 						pass
 					else:
 						current_vendor = None
-						
+
 			if current_vendor == ewcfg.vendor_downpourlaboratory:
 				currency_used = 'brainz'
 				current_currency_amount = user_data.gvs_currency
@@ -378,7 +378,7 @@ async def order(cmd):
 				premium_purchase = True if item_id in ewcfg.premium_items else False
 				if premium_purchase:
 					togo = True # Just in case they order a premium food item, don't make them eat it right then and there.
-					
+
 					if ewcfg.cd_premium_purchase > (int(time.time()) - user_data.time_lastpremiumpurchase):
 						response = "That item is in very limited stock! The vendor asks that you refrain from purchasing it for a day or two."
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -409,17 +409,17 @@ async def order(cmd):
 					# and 4 times as much for enemy gangsters
 					elif user_data.faction != "":
 						value *= 4
-				
+
 				# raise shambled speakeasy price 4 times
 				value *= shambler_multiplier
 
 				# Raise the price for togo ordering. This gets lowered back down later if someone does togo ordering on a non-food item by mistake.
 				if togo:
 					value *= 1.5
-					
+
 				if current_vendor == ewcfg.vendor_breakroom and user_data.faction == ewcfg.faction_slimecorp:
 					value = 0
-					
+
 				value = int(value)
 
 				food_ordered = False
@@ -535,7 +535,7 @@ async def order(cmd):
 						stack_size = 0,
 						item_props = item_props
 					)
-					
+
 					if value == 0:
 						response = "You swipe a {} from the counter at {}.".format(item.str_name, current_vendor)
 					else:
@@ -548,7 +548,7 @@ async def order(cmd):
 						if target_data != None:
 
 							target_player_data = EwPlayer(id_user=target_data.id_user)
-							
+
 							if value == 0:
 								response = "You swipe a {} from the counter at {} and give it to {}.".format(item.str_name, current_vendor, target_player_data.display_name)
 							else:
@@ -558,7 +558,7 @@ async def order(cmd):
 							target_data.persist()
 							asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
 						else:
-							
+
 							if value == 0:
 								response = "You swipe a {} from the counter at {} and eat it right on the spot.".format(item.str_name, current_vendor)
 							else:
@@ -569,7 +569,7 @@ async def order(cmd):
 							response += "\n\n*{}*: ".format(user_player_data.display_name) + user_data.eat(item_data)
 							user_data.persist()
 							asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
-							
+
 					if premium_purchase:
 						user_data.time_lastpremiumpurchase = int(time.time())
 
@@ -587,6 +587,7 @@ async def devour(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(id_server=cmd.message.guild.id, id_user=cmd.message.author.id, item_search=item_search)
 	mutations = user_data.get_mutations()
+	is_brick = 0
 
 	if ewcfg.mutation_id_trashmouth not in mutations:
 		response = "Wait, what? Quit trying to put everything in your mouth."
@@ -600,6 +601,7 @@ async def devour(cmd):
 
 			str_eat = "You unhinge your gaping maw and shove the {} right down, no chewing or anything. It's about as nutritious as you'd expect.".format(item_sought.get('name'))
 
+
 			if item_obj.item_type == ewcfg.it_cosmetic:
 				recover_hunger = 100
 			elif item_obj.item_type == ewcfg.it_furniture:
@@ -607,7 +609,12 @@ async def devour(cmd):
 				acquisition = None
 				if furn is not None:
 					acquisition = furn.acquisition
-				if acquisition != ewcfg.acquisition_bazaar:
+				if furn.id_furniture == 'brick':
+					brickeat(item_obj=item_obj)
+					is_brick = 1
+					recover_hunger = 50
+					response = str_eat
+				elif acquisition != ewcfg.acquisition_bazaar:
 					recover_hunger = 100
 				elif furn.price < 500:
 					recover_hunger = 0
@@ -651,8 +658,8 @@ async def devour(cmd):
 			'time_fridged': 0,
 			'perishable': True,
 			}
-
-			response = user_data.eat(item_obj)
+			if is_brick == 0:
+				response = user_data.eat(item_obj)
 			user_data.persist()
 	elif item_search == "":
 		response = "Devour what?"
@@ -662,7 +669,7 @@ async def devour(cmd):
 
 
 async def eat_item(cmd):
-	
+
 	user_data = EwUser(member=cmd.message.author)
 	mutations = user_data.get_mutations()
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -678,15 +685,15 @@ async def eat_item(cmd):
 			item_sought = ewitem.find_item(item_search=item_search, id_user=user_data.id_user, id_server=user_data.id_server)
 			if item_sought and ewcfg.mutation_id_trashmouth in mutations:
 				return await devour(cmd=cmd)
-		
+
 	# otherwise find the first useable food
 	else:
 		food_inv = ewitem.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)
 
 		for food in food_inv:
 			food_item = EwItem(id_item = food.get('id_item'))
-			
-			# check if the user can eat this item 
+
+			# check if the user can eat this item
 			if float(getattr(food_item, "time_expir", 0)) > time.time() or \
 				food_item.item_props.get('perishable') not in ['true', '1'] or \
 				ewcfg.mutation_id_spoiledappetite in user_data.get_mutations():
@@ -700,6 +707,20 @@ async def eat_item(cmd):
 			response = "Are you sure you have that item?"
 		else:
 			response = "You don't have anything to eat."
-	
+
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+
+#does this have anything to do with markets? yes. how do you think wall street gets its nutrients when there are no nearby food stands?
+#by eating the bricks in the trade center of course.
+#look i need to use markets and don't want to deal with any circular imports fuck you
+
+def brickeat(item_obj):
+	id_item = item_obj.id_item
+	market = EwMarket(id_server=item_obj.id_server)
+	pushedclock = ((market.clock + random.randint(6, 12)) % 24)+1
+	item_obj.item_props['furniture_name'] = 'brick{:02d}'.format(pushedclock)
+	digestion = '{}brickshit'.format(item_obj.id_owner)
+	print(digestion)
+	item_obj.persist()
+	ewitem.give_item(id_item=id_item, id_user=digestion, id_server=item_obj.id_server)

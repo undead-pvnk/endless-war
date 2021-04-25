@@ -2429,13 +2429,13 @@ async def send_gangbase_messages(server_id, clock):
         response = "The police are probably asleep, the lazy fucks. It's a good time for painting the town!"
     elif clock == 11:
         response = "Spray time's over, looks like the cops are back out. Fuck those guys."
-    elif random.randint(1, 50) == 1:
+    if random.randint(1, 50) == 2:
         lucky_lucy = 1
 
     client = ewutils.get_client()
     server = client.get_guild(server_id)
     channels = ewcfg.hideout_channels
-    casino_channel = ewcfg.channel_casino
+    casino_channel = ewutils.get_channel(server=server, channel_name=ewcfg.channel_casino)
 
     if response != "":
         for channel in channels:
