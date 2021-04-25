@@ -162,7 +162,7 @@ async def reap(cmd):
 			has_tool = True
 
 	# Checking availability of reap action
-	if user_data.life_state != ewcfg.life_state_juvenile and not has_tool:
+	if user_data.life_state != ewcfg.life_state_juvenile:
 		response = "Only Juveniles of pure heart and with nothing better to do can farm."
 	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
@@ -356,7 +356,7 @@ async def sow(cmd):
 			has_tool = True
 
 	# Checking availability of sow action
-	if user_data.life_state != ewcfg.life_state_juvenile and not has_tool:
+	if user_data.life_state != ewcfg.life_state_juvenile:
 		response = "Only Juveniles of pure heart and with nothing better to do can farm."
 
 	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
