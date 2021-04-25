@@ -414,6 +414,15 @@ async def graft(cmd):
 	elif ewcfg.mutations_map.get(target).tier * 10000 > user_data.slimes:
 		response = '"We\'re not selling gumballs here. It\'s cosmetic surgery. It\'ll cost at least {} slime, ya idjit!"'.format(ewcfg.mutations_map.get(target).tier * 10000)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif (target == ewcfg.mutation_id_davyjoneskeister and ewcfg.mutation_id_onemansjunk in mutations) or (target == ewcfg.mutation_id_onemansjunk and ewcfg.mutation_id_davyjoneskeister in mutations):
+		response = '"Well waddya need that for? Ya got just the opposite! It ain\'t pretty when they clash kid."'
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif target == ewcfg.mutation_id_airlock and (ewcfg.mutation_id_whitenationalist in mutations or ewcfg.mutation_id_lightasafeather in mutations):
+		response = '"Nope, you already have that mutation, or half of it anyway. They dont multiply y\'know."'
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif (target == ewcfg.mutation_id_whitenationalist or target == ewcfg.mutation_id_lightasafeather) and (ewcfg.mutation_id_airlock in mutations):
+		response = '"Nope, you already have that mutation, its even got a little extra tacked on."'
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		price = ewcfg.mutations_map.get(target).tier * 10000
 		user_data.change_slimes(n=-price, source=ewcfg.source_spending)		

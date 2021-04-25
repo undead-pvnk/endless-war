@@ -1559,8 +1559,8 @@ offline_cmds = [
 ]
 
 # Maximum amount of slime juveniles can have before being killable
-max_safe_slime = 100000
-max_safe_level = 18
+#max_safe_slime = 100000
+#max_safe_level = 18
 
 # Slime costs/values
 slimes_onrevive = 20
@@ -11439,6 +11439,7 @@ mutation_id_trashmouth = "trashmouth"
 mutation_id_webbedfeet = "webbedfeet"
 
 mutation_id_davyjoneskeister = "davyjoneskeister"
+mutation_id_onemansjunk = "onemansjunk"
 mutation_id_stickyfingers = "stickyfingers"
 mutation_id_coleblooded = "coleblooded"
 mutation_id_packrat = "packrat"
@@ -11760,6 +11761,16 @@ mutations = [
 		str_acquire = "You begin to feel a crawling sensation on your hindquarters. Layers of skin built for long hours on the tavern bench slowly creep upward along your ass and up your back. Your mind surges with an unfounded confidence as you recall every close call with a secreature and tussle with a gangster. Never have you been on the high seas, not a day in your life, and you're somehow still a sea dog to the bone. For some reason your mind jumps to your conversations with that old fellow at the tavern. Wonder how he's doing? You have developed the mutation **Davy Jones' Keister**. No trash deals when bartering with Albert Alexander.",
         tier=4,
         str_transplant="You are taken into the OR, where you're shown a number of asses in a catalogue. It takes awhile, but you find the \"Old Sea Captain\" model, and she goes to work. You don't know exactly what old Dusttrap did since your back was turned, but when you sit down you think she might've put in some memory foam. Eh, why complain? It's the exact size you ordered.\n\nYou have developed the mutation **Davy Jones' Keister**. No trash deals when bartering with Albert Alexander.",
+    ),
+	EwMutationFlavor(
+		id_mutation = mutation_id_onemansjunk,
+		str_name="One Man's Junk",
+        alias = ['omj', 'junk'],
+		str_describe_self = "You can spot the trashiest of deals thanks to **One man's Junk**.",
+		str_describe_other = "They can spot the trashiest of deals thanks to **One man's Junk**.",
+		str_acquire = "Your head starts to throb and you feel your eyes focus on the shining rubbish piled on the streets around you. As the headache fades your mind also begins to focus on this trash. You can't believe anyone would just drop this! You have developed the mutation **One Man's Junk**. Only receive items when bartering with Albert Alexander.",
+        tier=4,
+        str_transplant="You request the ability to pick out deals exclusively for trash. Dusttrap gives you a sideways look for a solid minute. \"Well, go ahead and start with the crap in the basement. I'm sure there's plenty for you to work with down there.\" After a light misting with some extra radioactive slime and a few hours picking up only the worst of the garbage from her basement, you can now spot a string in a storm drain from two districts over.\n\nYou have developed the mutation One Man's Junk. Only receive items when bartering with Albert Alexander.",
     ),
 	EwMutationFlavor(
 		id_mutation = mutation_id_stickyfingers,
@@ -12416,7 +12427,7 @@ status_high_id = "high"
 status_modelovaccine_id = "modelovaccine"
 status_slapped_id = "slapped"
 status_foodcoma_id = "foodcoma"
-status_juviemode_id = "juviemode"
+#status_juviemode_id = "juviemode"
 
 status_n1 = "n1"
 status_n2 = "n2"
@@ -12671,12 +12682,12 @@ status_effect_list = [
 		crit_mod_self=.5
 	),
 
-	EwStatusEffectDef(
-		id_status = status_juviemode_id,
-		time_expire = 86400,
-		str_acquire = "",
-		str_describe_self = "You're carrying slime under the legal limit."
-	),
+	#EwStatusEffectDef(
+	#	id_status = status_juviemode_id,
+	#	time_expire = 86400,
+	#	str_acquire = "",
+	#	str_describe_self = "You're carrying slime under the legal limit."
+	#),
 	EwStatusEffectDef(
 		id_status = status_kevlarattire_id,
 		time_expire = 86400,
@@ -13339,6 +13350,7 @@ mutation_descriptions = {
     mutation_id_longarms:"You can !longdrop <destination> <item> to drop an item in an adjacent district.",
     mutation_id_lethalfingernails:"If you have no weapon, you will use your fingernails instead. They do the same damage as a level 6 revolver with no miss.",
     mutation_id_davyjoneskeister:"When making deals with Captain Albert Alexander, you only receive offers for slime, not items.",
+    mutation_id_onemansjunk:"When bartering fish with Alexander, you will only receive offers for items, not slime",
     mutation_id_oneeyeopen:"Use !track @user to keep your eye on a specific player. If they move to a PVP zone, you will receive  a DM. If you are being tracked, you can !shakeoff @user to remove their tracking. To check who you'ree currently tracking, use !thirdeye.",
     mutation_id_bottomlessappetite:"Your maximum hunger is doubled.",
     mutation_id_airlock:"Combined effects of White Nationalist and Light as a Feather. This mutation is mutually exclusive with those. You also gain passive hunger when it's sunny, fire immunity in rain, and crit bonuses in the fog.",

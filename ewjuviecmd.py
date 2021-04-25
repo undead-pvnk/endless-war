@@ -124,7 +124,7 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_killers
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-			user_data.juviemode = 0
+			#user_data.juviemode = 0
 			for faction in vouchers:
 				user_data.unvouch(faction)
 			user_data.persist()
@@ -151,7 +151,7 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_rowdys
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-			user_data.juviemode = 0
+			#user_data.juviemode = 0
 			
 			for faction in vouchers:
 				user_data.unvouch(faction)
@@ -333,13 +333,13 @@ async def mine(cmd):
 
 			# juvies get items 4 times as often as enlisted players
 			unearthed_item_chance = 1 / ewcfg.unearthed_item_rarity
-			if user_data.life_state == ewcfg.life_state_juvenile and not user_data.juviemode:
+			if user_data.life_state == ewcfg.life_state_juvenile: #and not user_data.juviemode:
 				unearthed_item_chance *= 2
-			if has_pickaxe == True and not user_data.juviemode:
+			if has_pickaxe == True: #and not user_data.juviemode:
 				unearthed_item_chance *= 1.5
-			if ewcfg.mutation_id_lucky in mutations and not user_data.juviemode:
+			if ewcfg.mutation_id_lucky in mutations: #and not user_data.juviemode:
 				unearthed_item_chance *= 1.33
-			if ewcfg.cosmeticAbility_id_lucky in cosmetic_abilites and not user_data.juviemode:
+			if ewcfg.cosmeticAbility_id_lucky in cosmetic_abilites: #and not user_data.juviemode:
 				unearthed_item_chance *= 1.33
 
 			# event bonus
@@ -1590,7 +1590,7 @@ def create_mining_event(cmd):
 			)
 		# 10 second poudrin frenzy
 		else:
-			if not user_data.juviemode and ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_item):
+			if ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_item): #and not user_data.juviemode:
 				event_props = {}
 				event_props['id_user'] = cmd.message.author.id
 				event_props['poi'] = user_data.poi
@@ -1642,19 +1642,18 @@ def gen_scavenge_captcha(n = 0, id_user = 0, id_server = 0):
 
 
 async def juviemode(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	status_effects = user_data.getStatusEffects()
-
-	if user_data.juviemode == 1:
-		user_data.juviemode = 0
-		user_data.persist()
-		response = "You can't fucking take anymore. Slime. You need slime. SLIME. **SLLLLLLLLIIIIIIIIIMMMMMMMEEEEE!!!!!!!**"
-	elif user_data.life_state != ewcfg.life_state_juvenile:
-		response = "You think anyone but a cowardly ass Juvie would follow the law? You're not cut out for that life."
-	elif user_data.slimelevel > ewcfg.max_safe_level:
-		response = "You need to be level 18 and under. You're too plump with slime to start following the law now. Get dead, kid."
-	else:
-		user_data.juviemode = 1
-		user_data.persist()
-		response = "You summon forth all the cowardice in your heart, to forgo even slime, the most basic joy. You vow to carry no more than 100,000, the NLACakaNM's legal limit, on your person at any time."
+	#user_data = EwUser(member = cmd.message.author)
+	response = "What law? Juvies die, bitch."
+	#if user_data.juviemode == 1:
+	#	user_data.juviemode = 0
+	#	user_data.persist()
+	#	response = "You can't fucking take anymore. Slime. You need slime. SLIME. **SLLLLLLLLIIIIIIIIIMMMMMMMEEEEE!!!!!!!**"
+	#elif user_data.life_state != ewcfg.life_state_juvenile:
+	#	response = "You think anyone but a cowardly ass Juvie would follow the law? You're not cut out for that life."
+	#elif user_data.slimelevel > ewcfg.max_safe_level:
+	#	response = "You need to be level 18 and under. You're too plump with slime to start following the law now. Get dead, kid."
+	#else:
+	#	user_data.juviemode = 1
+	#	user_data.persist()
+	#	response = "You summon forth all the cowardice in your heart, to forgo even slime, the most basic joy. You vow to carry no more than 100,000, the NLACakaNM's legal limit, on your person at any time."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

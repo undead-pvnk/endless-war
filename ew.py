@@ -129,10 +129,10 @@ class EwUser:
 	def change_slimes(self, n = 0, source = None):
 		change = int(n)
 		self.slimes += change
-		if self.life_state == ewcfg.life_state_juvenile:
-
-			if self.juviemode == 1 and self.slimes > ewcfg.max_safe_slime:
-				self.slimes = ewcfg.max_safe_slime
+		#if self.life_state == ewcfg.life_state_juvenile:
+		#
+		#	if self.juviemode == 1 and self.slimes > ewcfg.max_safe_slime:
+		#		self.slimes = ewcfg.max_safe_slime
 
 		response = ""
 
@@ -626,6 +626,12 @@ class EwUser:
 						continue
 				if result in [ewcfg.mutation_id_lightasafeather, ewcfg.mutation_id_whitenationalist]:
 					if ewcfg.mutation_id_airlock in current_mutations:
+						continue
+				if result == ewcfg.mutation_id_onemansjunk:
+					if ewcfg.mutation_id_davyjoneskeister in current_mutations:
+						continue
+				if result == ewcfg.mutation_id_davyjoneskeister:
+					if ewcfg.mutation_id_onemansjunk in current_mutations:
 						continue
 
 				if result not in current_mutations and ewcfg.mutations_map[result].tier + self.get_mutation_level() <= 50:
