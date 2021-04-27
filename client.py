@@ -18,53 +18,53 @@ import os
 import shlex
 import logging
 
-import ewutils
-import ewcfg
-import ewfarm
-import ewcmd
-import ewcasino
-import ewfood
-import ewwep
-import ewjuviecmd
-import ewmarket
-import ewspooky
-import ewkingpin
-import ewplayer
-import ewserver
-import ewitem
-import ewmap
-import ewrolemgr
-import ewraidboss
-import ewleaderboard
-import ewcosmeticitem
-import ewslimeoid
-import ewdistrict
-import ewmutation
-import ewquadrants
-import ewtransport
-import ewstatuseffects
-import ewsmelting
-import ewhunting
-import ewfish
-import ewfaction
-import ewapt
-import ewweather
-import ewworldevent
-import ewdungeons
-import ewads
-import ewbook
-import ewsports
-import ewrace
-import ewslimetwitter
-import ewdebug
+import ew.utils as ewutils
+import ew.static.cfg as ewcfg
+import ew.farm as ewfarm
+import ew.cmd as ewcmd
+import ew.casino as ewcasino
+import ew.food as ewfood
+import ew.wep as ewwep
+import ew.juviecmd as ewjuviecmd
+import ew.market as ewmarket
+import ew.spooky as ewspooky
+import ew.kingpin as ewkingpin
+import ew.player as ewplayer
+import ew.server as ewserver
+import ew.item as ewitem
+import ew.move as ewmap
+import ew.rolemgr as ewrolemgr
+import ew.raidboss as ewraidboss
+import ew.leaderboard as ewleaderboard
+import ew.cosmeticitem as ewcosmeticitem
+import ew.slimeoid as ewslimeoid
+import ew.district as ewdistrict
+import ew.mutation as ewmutation
+import ew.quadrants as ewquadrants
+import ew.transport as ewtransport
+import ew.statuseffects as ewstatuseffects
+import ew.smelting as ewsmelting
+import ew.hunting as ewhunting
+import ew.fish as  ewfish
+import ew.faction as ewfaction
+import ew.apt as ewapt
+import ew.weather as ewweather
+import ew.worldevent as ewworldevent
+import ew.dungeons as ewdungeons
+import ew.ads as ewads
+import ew.book as ewbook
+import ew.sports as ewsports
+import ew.race as ewrace
+import ew.slimetwitter as ewslimetwitter
+import ew.debug as ewdebug
 
-from ewitem import EwItem
-from ew import EwUser
-from ewplayer import EwPlayer
-from ewmarket import EwMarket
-from ewmarket import EwStock
-from ewdistrict import EwDistrict
-from ewstatuseffects import EwStatusEffect
+from ew.item import EwItem
+from ew.user import EwUser
+from ew.player import EwPlayer
+from ew.market import EwMarket
+from ew.market import EwStock
+from ew.district import EwDistrict
+from ew.statuseffects import EwStatusEffect
 
 
 ewutils.logMsg('Starting up...')
