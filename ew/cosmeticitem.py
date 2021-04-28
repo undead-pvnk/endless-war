@@ -2,6 +2,7 @@ import math
 import random
 
 from .static import cfg as ewcfg
+from .static import cosmetics
 from . import item as ewitem
 from . import utils as ewutils
 import asyncio
@@ -9,105 +10,6 @@ import asyncio
 from .user import EwUser
 from .item import EwItem
 
-"""
-	Cosmetic item model object
-"""
-class EwCosmeticItem:
-	item_type = "cosmetic"
-
-	# The proper name of the cosmetic item
-	id_cosmetic = ""
-
-	# The string name of the cosmetic item
-	str_name = ""
-
-	# The text displayed when you !inspect it
-	str_desc = ""
-
-	# The text displayed when you !adorn it
-	str_onadorn = ""
-
-	# The text displayed when you take it off
-	str_unadorn = ""
-
-	# The text displayed when it breaks! Oh no!
-	str_onbreak = ""
-
-	# How rare the item is, can be "Plebeian", "Patrician", or "Princeps"
-	rarity = ""
-
-	# The stats the item increases/decreases
-	stats = {}
-
-	# Some items have special abilities that act like less powerful Mutations
-	ability = ""
-
-	# While !adorn'd, this item takes damage-- If this reaches 0, it breaks
-	durability = 0
-
-	# How much space this item takes up on your person-- You can only wear so many items at a time, the amount is determined by your level
-	size = 0
-
-	# What fashion style the cosmetic belongs to: Goth, jock, prep, nerd
-	style = ""
-
-	# How fresh a cosmetic is, in other words how fleek, in other words how godDAMN it is, in other words how good it looks
-	freshness = 0
-
-	# The ingredients necessary to make this item via it's acquisition method
-	ingredients = ""
-
-	# Cost in SlimeCoin to buy this item.
-	price = 0
-
-	# Names of the vendors selling this item.
-	vendors = []
-
-	#Whether a cosmetic is a hat or not
-	is_hat = False
-
-	def __init__(
-		self,
-		id_cosmetic = "",
-		str_name = "",
-		str_desc = "",
-		str_onadorn = "",
-		str_unadorn = "",
-		str_onbreak = "",
-		rarity = "",
-		stats = {},
-		ability = "",
-		durability = 0,
-		size = 0,
-		style = "",
-		freshness = 0,
-		ingredients = "",
-		acquisition = "",
-		price = 0,
-		vendors = [],
-		is_hat = False,
-
-	):
-		self.item_type = ewcfg.it_cosmetic
-
-		self.id_cosmetic = id_cosmetic
-		self.str_name = str_name
-		self.str_desc = str_desc
-		self.str_onadorn = str_onadorn
-		self.str_unadorn = str_unadorn
-		self.str_onbreak = str_onbreak
-		self.rarity = rarity
-		self.stats = stats
-		self.ability = ability
-		self.durability = durability
-		self.size = size
-		self.style = style
-		self.freshness = freshness
-		self.ingredients = ingredients
-		self.acquisition = acquisition
-		self.price = price
-		self.vendors = vendors
-		self.is_hat = is_hat
 
 async def adorn(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -465,13 +367,13 @@ async def sew(cmd):
 						else:
 							original_durability = int(float(item_sought.item_props['original_durability'])) # If it's a scalp created after
 
-					else: # Find the mold of the item in ewcfg.cosmetic_items_list
+					else: # Find the mold of the item in cosmetics.cosmetic_items_list
 						if item_sought.item_props.get('rarity') == ewcfg.rarity_princeps:
 							original_durability = ewcfg.base_durability * 100
 							original_item = None # Princeps do not have existing templates
 						else:
 							try:
-								original_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
+								original_item = cosmetics.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
 								original_durability = original_item.durability
 							except:
 								original_durability = ewcfg.base_durability
@@ -594,8 +496,8 @@ async def retrofit(cmd):
 					if 'ability' in item_sought.item_props.keys():
 						current_item_stats['ability'] = item_sought.item_props['ability']
 
-					# Get the stats retrofitting would give you from the item model in ewcfg.cosmetic_items_list
-					desired_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
+					# Get the stats retrofitting would give you from the item model in cosmetics.cosmetic_items_list
+					desired_item = cosmetics.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
 					
 					if desired_item == None:
 						response = "The hipster behind the counter doesn't really know what to do with that cosmetic, it's simply too outdated and worn out. He thinks you should just take it home and stuff it inside a box as a souvenir."

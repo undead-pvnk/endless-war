@@ -2,6 +2,7 @@ import random
 import asyncio
 import time
 from .static import cfg as ewcfg
+from .static import vendors
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -646,7 +647,7 @@ async def award_fish(fisher, cmd, user_data):
 
 		if (fisher.pier.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.2) and fisher.current_fish == "item":
 
-			item = random.choice(ewcfg.mine_results)
+			item = random.choice(vendors.mine_results)
 		
 			#if actual_fisherman_data.juviemode:
 			#	unearthed_item_amount = 1
@@ -1001,7 +1002,7 @@ async def barter(cmd):
 			items = []
 
 			# Filters out all non-generic items without the current fish as an ingredient.
-			for result in ewcfg.appraise_results:
+			for result in vendors.appraise_results:
 				if result.ingredients == fish.item_props.get('id_item') or result.ingredients == "generic" and result.acquisition == ewcfg.acquisition_bartering:  # Generic means that it can be made with any fish.
 					items.append(result)
 				else:
@@ -1056,7 +1057,7 @@ async def barter(cmd):
 						response = '\n"You know what, laddy? I like the cut of your jib. I\'ll change my offer. How about {} slime for your {}?"'.format(slime_gain, name)
 
 					else:
-						for result in ewcfg.appraise_results:
+						for result in vendors.appraise_results:
 							if hasattr(result, 'id_item'):
 								if result.id_item != offer.offer_receive:
 									pass
@@ -1252,7 +1253,7 @@ async def barter_all(cmd):
 			else: # If Captain Albert Alexander wants to offer you an item for your fish. 33% chance. Once there are more unique items, we'll make this 50%.
 				potential_items = []
 				# Filters out all non-generic items without the current fish as an ingredient.
-				for result in ewcfg.appraise_results:
+				for result in vendors.appraise_results:
 					if result.ingredients == fish.item_props.get('id_item') or result.ingredients == "generic" and result.acquisition == ewcfg.acquisition_bartering:  # Generic means that it can be made with any fish.
 						potential_items.append(result)
 					else:

@@ -7,6 +7,8 @@ import discord
 
 from . import utils as ewutils
 from .static import cfg as ewcfg
+from .static import cosmetics
+from .static import items as static_items
 from . import stats as ewstats
 from . import district as ewdistrict
 from . import rolemgr as ewrolemgr
@@ -17,50 +19,6 @@ from . import debug as ewdebug
 from .user import EwUser
 from .player import EwPlayer
 import re
-
-"""
-    EwItemDef is a class used to model base items. These are NOT the items
-    owned by players, but rather the description of what those items are.
-"""
-class EwItemDef:
-    # This is the unique reference name for this item.
-    item_type = ""
-
-    # If this is true, the item can not be traded or stolen.
-    soulbound = False
-
-    # If this value is positive, the item may actually be a pile of the same type of item, up to the specified size.
-    stack_max = -1
-
-    # If this value is greater than one, creating this item will actually give the user that many of them.
-    stack_size = 1
-
-    # Nice display name for this item.
-    str_name = ""
-
-    # The long description of this item's appearance.
-    str_desc = ""
-
-    # A map of default additional properties.
-    item_props = None
-
-    def __init__(
-        self,
-        item_type = "",
-        str_name = "",
-        str_desc = "",
-        soulbound = False,
-        stack_max = -1,
-        stack_size = 1,
-        item_props = None
-    ):
-        self.item_type = item_type
-        self.str_name = str_name
-        self.str_desc = str_desc
-        self.soulbound = soulbound
-        self.stack_max = stack_max
-        self.stack_size = stack_size
-        self.item_props = item_props
 
 """
     EwItem is the instance of an item (described by EwItemDef, linked by
@@ -224,46 +182,6 @@ class EwItem:
             cursor.close()
             ewutils.databaseClose(conn_info)
 
-"""
-    These are unassuming, tangible, multi-faceted, customizable items that you can actually interact with in-game.
-"""
-class EwGeneralItem:
-    item_type = "item"
-    id_item = " "
-    alias = []
-    context = ""
-    str_name = ""
-    str_desc = ""
-    ingredients = ""
-    acquisition = ""
-    price = 0
-    durability = 0
-    vendors = []
-
-    def __init__(
-        self,
-        id_item = " ",
-        alias = [],
-        context = "",
-        str_name = "",
-        str_desc = "",
-        ingredients = "",
-        acquisition = "",
-        price = 0,
-        durability = 0,
-        vendors = [],
-    ):
-        self.item_type = ewcfg.it_item
-        self.id_item = id_item
-        self.alias = alias
-        self.context = context
-        self.str_name = str_name
-        self.str_desc = str_desc
-        self.ingredients = ingredients
-        self.acquisition = acquisition
-        self.price = price
-        self.durability = durability
-        self.vendors = vendors
 
 
 """
@@ -795,7 +713,7 @@ def inventory(
                     item_data = EwItem(id_item = id_item)
                     item_type = ewcfg.it_item
                     item_data.item_type = item_type
-                    for item in ewcfg.item_list:
+                    for item in static_items.item_list:
                         if item.context == "poudrin":
                             item_props = {
                                 'id_item': item.id_item,
@@ -926,7 +844,7 @@ def inventory(
                         else:
                             #print('ITEM PROPS: {}'.format(item_data.item_props))
 
-                            item = ewcfg.cosmetic_map.get(item_data.item_props.get('id_cosmetic'))
+                            item = cosmetics.cosmetic_map.get(item_data.item_props.get('id_cosmetic'))
 
                             if item == None:
                                 if item_data.item_props.get('id_cosmetic') == None:
@@ -1407,7 +1325,7 @@ async def item_look(cmd):
                             original_item = None  # Princeps do not have existing templates
                         else:
                             try:
-                                original_item = ewcfg.cosmetic_map.get(item.item_props['id_cosmetic'])
+                                original_item = cosmetics.cosmetic_map.get(item.item_props['id_cosmetic'])
                                 original_durability = original_item.durability
                             except:
                                 original_durability = ewcfg.base_durability

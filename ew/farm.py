@@ -3,6 +3,7 @@ import random
 import asyncio
 
 from .static import cfg as ewcfg
+from .static import vendors
 from . import item as ewitem
 from . import utils as ewutils
 from . import rolemgr as ewrolemgr
@@ -241,7 +242,7 @@ async def reap(cmd):
 
 					if unearthed_item == True:
 						# If there are multiple possible products, randomly select one.
-						item = random.choice(ewcfg.mine_results)
+						item = random.choice(vendors.mine_results)
 
 						item_props = ewitem.gen_item_props(item)
 
@@ -497,7 +498,7 @@ async def mill(cmd):
 		items = []
 		vegetable = EwItem(id_item = item_sought.get('id_item'))
 
-		for result in ewcfg.mill_results:
+		for result in vendors.mill_results:
 			if type(result.ingredients) == str:
 				if vegetable.item_props.get('id_food') != result.ingredients:
 					pass

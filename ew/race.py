@@ -4,6 +4,7 @@ import time
 import collections
 
 from .static import cfg as ewcfg
+from .static import items as static_items
 from . import utils as ewutils
 from . import item as ewitem
 from . import cmd as ewcmd
@@ -132,7 +133,7 @@ async def rattle(cmd):
 	if user_data.race == ewcfg.races["skeleton"]:
 		time_now = int(time.time())
 		if (time_now > user_data.time_racialability) and random.randrange(10) == 0:
-			bone_item = next(i for i in ewcfg.item_list if i.context == "player_bone")
+			bone_item = next(i for i in static_items.item_list if i.context == "player_bone")
 			ewitem.item_create(
 				item_type = ewcfg.it_item,
 				id_user = user_data.poi,

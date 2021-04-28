@@ -20,6 +20,9 @@ import logging
 
 import ew.utils as ewutils
 import ew.static.cfg as ewcfg
+import ew.static.vendors as vendors
+import ew.static.cosmetics as cosmetics
+import ew.static.items as static_items
 import ew.farm as ewfarm
 import ew.cmd as ewcmd
 import ew.casino as ewcasino
@@ -1224,8 +1227,8 @@ async def on_ready():
 						bazaar_general_items = []
 						bazaar_furniture = []
 
-						for item in ewcfg.vendor_inv.get(ewcfg.vendor_bazaar):
-							if item in ewcfg.item_names:
+						for item in vendors.vendor_inv.get(ewcfg.vendor_bazaar):
+							if item in static_items.item_names:
 								bazaar_general_items.append(item)
 
 							elif item in ewcfg.food_names:
@@ -1825,7 +1828,7 @@ async def on_message(message):
 
 			items = []
 
-			for cosmetic in ewcfg.cosmetic_items_list:
+			for cosmetic in cosmetics.cosmetic_items_list:
 				if patrician and cosmetic.rarity == ewcfg.rarity_patrician:
 					items.append(cosmetic)
 				elif not patrician and cosmetic.rarity == ewcfg.rarity_plebeian:
@@ -1897,7 +1900,7 @@ async def on_message(message):
 
 			cosmetics_list = []
 
-			for result in ewcfg.cosmetic_items_list:
+			for result in cosmetics.cosmetic_items_list:
 				if result.acquisition == ewcfg.acquisition_smelting:
 					cosmetics_list.append(result)
 				else:

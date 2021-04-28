@@ -6,6 +6,7 @@ import time
 from . import cmd as ewcmd
 from . import utils as ewutils
 from .static import cfg as ewcfg
+from .static import cosmetics
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import market as ewmarket
@@ -661,7 +662,7 @@ async def apt_look(cmd):
 		hatstand_pile = []
 		for closet in closets:
 			closet_obj = ewitem.EwItem(id_item=closet.get('id_item'))
-			map_obj = ewcfg.cosmetic_map.get(closet_obj.item_props.get('id_cosmetic'))
+			map_obj = cosmetics.cosmetic_map.get(closet_obj.item_props.get('id_cosmetic'))
 			if has_hat_stand and map_obj and map_obj.is_hat == True:
 				hatstand_pile.append(closet.get('name'))
 			else:
@@ -805,7 +806,7 @@ async def store_item(cmd, dest):
 			response = "You store the {} in the {}.".format(name_string, destination)
 			hatrack = ewitem.find_item(id_server=playermodel.id_server, id_user=str(playermodel.id_user)+"decorate", item_search="hatstand")
 			if destination == "closet" and item_sought.get('item_type') == ewcfg.it_cosmetic:
-				map_obj = ewcfg.cosmetic_map.get(item.item_props.get('id_cosmetic'))
+				map_obj = cosmetics.cosmetic_map.get(item.item_props.get('id_cosmetic'))
 				if map_obj != None:
 					if map_obj.is_hat == True and hatrack:
 						response = "You hang the {} on the rack.".format(name_string)
@@ -910,7 +911,7 @@ async def remove_item(cmd, dest):
 
 		hatrack = ewitem.find_item(id_server=playermodel.id_server, id_user=str(playermodel.id_user) + "decorate", item_search="hatstand")
 		if destination == "closet" and item_sought.get('item_type') == ewcfg.it_cosmetic:
-			map_obj = ewcfg.cosmetic_map.get(item.item_props.get('id_cosmetic'))
+			map_obj = cosmetics.cosmetic_map.get(item.item_props.get('id_cosmetic'))
 			if map_obj != None:
 				if map_obj.is_hat == True and hatrack:
 					response = "You take the {} off the rack.".format(name_string)
@@ -1247,8 +1248,8 @@ def check(str):
 	#  bazaar_general_items = []
 	#  bazaar_furniture = []
 
-	# for item in ewcfg.vendor_inv.get(ewcfg.vendor_bazaar):
-	#	 if item in ewcfg.item_names:
+	# for item in vendors.vendor_inv.get(ewcfg.vendor_bazaar):
+	#	 if item in static_items.item_names:
 	#		bazaar_general_items.append(item)
 	#
 	#	   elif item in ewcfg.food_names:

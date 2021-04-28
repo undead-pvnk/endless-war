@@ -6,6 +6,8 @@ import random
 import math
 
 from .static import cfg as ewcfg
+from .static import vendors
+from .static import items as static_items
 from . import utils as ewutils
 from . import cmd as ewcmd
 from . import item as ewitem
@@ -382,7 +384,7 @@ async def mine(cmd):
 
 			if unearthed_item == True:
 				# If there are multiple possible products, randomly select one.
-				item = random.choice(ewcfg.mine_results)
+				item = random.choice(vendors.mine_results)
 
 				if ewitem.check_inv_capacity(id_server = cmd.guild.id, id_user = user_data.id_user, item_type = item.item_type):
 
@@ -863,7 +865,7 @@ async def crush(cmd):
 			crop_name = item_data.item_props.get('food_name')
 			# Turn the crop into its proper cosmetic material item.
 			cosmetic_material_id = ewcfg.vegetable_to_cosmetic_material[item_data.item_props.get("id_food")]
-			new_item = ewcfg.item_map.get(cosmetic_material_id)
+			new_item = static_items.item_map.get(cosmetic_material_id)
 
 			new_item_type = ewcfg.it_item
 			if new_item != None:
@@ -899,7 +901,7 @@ async def crush(cmd):
 
 				while gristcount < gristnum:
 
-					grist = ewcfg.item_map.get(ewcfg.item_id_doublehalloweengrist)
+					grist = static_items.item_map.get(ewcfg.item_id_doublehalloweengrist)
 					grist_props = ewitem.gen_item_props(grist)
 
 					ewitem.item_create(

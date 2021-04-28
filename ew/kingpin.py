@@ -4,6 +4,7 @@
 from . import item as ewitem
 from . import utils as ewutils
 from .static import cfg as ewcfg
+from .static import cosmetics
 from . import rolemgr as ewrolemgr
 from . import move as ewmap
 from .user import EwUser
@@ -178,7 +179,7 @@ async def exalt(cmd):
 # 
 # 	# Gather the Medallion
 	medallion_results = []
-	for m in ewcfg.cosmetic_items_list:
+	for m in cosmetics.cosmetic_items_list:
 		if m.ingredients == 'HorsemanSoul':
 			medallion_results.append(m)
 		else:
@@ -206,7 +207,7 @@ async def exalt(cmd):
 # 		# Give the user the Janus Mask
 # 
 # 		mask_results = []
-# 		for m in ewcfg.cosmetic_items_list:
+# 		for m in cosmetics.cosmetic_items_list:
 # 			if m.ingredients == 'SwilldermukFinalGambit':
 # 				mask_results.append(m)
 # 			else:
@@ -229,7 +230,7 @@ async def exalt(cmd):
 # 	else:
 # 		# Give the user the Sword of Seething
 # 		sword_results = []
-# 		for s in ewcfg.item_list:
+# 		for s in items.item_list:
 # 			if s.context == 'swordofseething':
 # 				sword_results.append(s)
 # 			else:

@@ -3,6 +3,9 @@ import time
 import asyncio
 
 from .static import cfg as ewcfg
+from .static import cosmetics
+from .static import vendors
+from .static import items as static_items
 from . import item as ewitem
 from . import utils as ewutils
 from . import move as ewmap
@@ -159,9 +162,9 @@ async def menu(cmd):
 
 			items = []
 			# If the vendor is the bazaar get the current rotation of items from the market_data
-			vendor_inv = ewcfg.vendor_inv[vendor] if vendor != ewcfg.vendor_bazaar else market_data.bazaar_wares.values()
+			vendor_inv = vendors.vendor_inv[vendor] if vendor != ewcfg.vendor_bazaar else market_data.bazaar_wares.values()
 			for item_name in vendor_inv:
-				item_item = ewcfg.item_map.get(item_name)
+				item_item = static_items.item_map.get(item_name)
 				food_item = ewcfg.food_map.get(item_name)
 				cosmetic_item = ewcfg.cosmetic_map.get(item_name)
 				furniture_item = ewcfg.furniture_map.get(item_name)
@@ -306,7 +309,7 @@ async def order(cmd):
 		if value == "mylittleponyfigurine":
 			value = random.choice(ewcfg.furniture_pony)
 
-		item = ewcfg.item_map.get(value)
+		item = static_items.item_map.get(value)
 
 		item_type = ewcfg.it_item
 		if item != None:

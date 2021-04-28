@@ -5,6 +5,9 @@ import builtins
 import collections
 
 from .static import cfg as ewcfg
+from .static import cosmetics
+from .static import vendors
+from .static import items as static_items
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -1541,7 +1544,7 @@ async def balance_cosmetics(cmd):
 							}
 					else:
 						if item_data.item_props.get('id_cosmetic') == id_cosmetic:
-							item = ewcfg.cosmetic_map.get(item_data.item_props['id_cosmetic'])
+							item = cosmetics.cosmetic_map.get(item_data.item_props['id_cosmetic'])
 							item_data.item_props = {
 								'id_cosmetic': item.id_cosmetic,
 								'cosmetic_name': item.str_name,
@@ -1776,7 +1779,7 @@ async def pray(cmd):
 			user_data.persist()
 
 			if diceroll < probabilityofpoudrin: # Player gets a poudrin.
-				item = random.choice(ewcfg.mine_results)
+				item = random.choice(vendors.mine_results)
 
 				item_props = ewitem.gen_item_props(item)
 
@@ -1868,7 +1871,7 @@ async def recycle(cmd):
 				else:
 					response += "."
 			elif pay == 0:
-				item_reward = random.choice(ewcfg.mine_results)
+				item_reward = random.choice(vendors.mine_results)
 
 				item_props = ewitem.gen_item_props(item_reward)
 
@@ -2484,7 +2487,7 @@ async def create_item(cmd):
 		response = "Proper usage of !createitem: **!createitem [item id] [recipient]**."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
-	item = ewcfg.item_map.get(value)
+	item = static_items.item_map.get(value)
 
 	item_type = ewcfg.it_item
 	if item != None:
@@ -2501,7 +2504,7 @@ async def create_item(cmd):
 
 	# Finds the item if it's an EwCosmeticItem.
 	if item == None:
-		item = ewcfg.cosmetic_map.get(value)
+		item = cosmetics.cosmetic_map.get(value)
 		item_type = ewcfg.it_cosmetic
 		if item != None:
 			item_id = item.id_cosmetic
@@ -2972,7 +2975,7 @@ async def gvs_incubate_gaiaslimeoid(cmd):
 				else:
 
 					generated_seedpacket_id = ewcfg.seedpacket_material_map[material_id]
-					item = ewcfg.item_map.get(generated_seedpacket_id)
+					item = static_items.item_map.get(generated_seedpacket_id)
 	
 					item_type = ewcfg.it_item
 					if item != None:
@@ -3025,7 +3028,7 @@ async def gvs_fabricate_tombstone(cmd):
 
 				brainz = user_data.gvs_currency
 				generated_tombstone_id = tombstone
-				item = ewcfg.item_map.get(generated_tombstone_id)
+				item = static_items.item_map.get(generated_tombstone_id)
 				if item != None:
 					cost = item.cost
 					name = item.str_name

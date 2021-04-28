@@ -2,6 +2,9 @@ import random
 import time
 
 from .static import cfg as ewcfg
+from .static import cosmetics
+from .static import vendors
+from .static import smelting
 from . import item as ewitem
 from . import utils as ewutils
 
@@ -53,7 +56,7 @@ async def smelt(cmd):
 	# Find sought recipe.
 	if cmd.tokens_count > 1:
 		sought_result = ewutils.flattenTokenListToString(cmd.tokens[1:])
-		found_recipe = ewcfg.smelting_recipe_map.get(sought_result)
+		found_recipe = smelting.smelting_recipe_map.get(sought_result)
 
 		if found_recipe != None:
 			if 'soul' in found_recipe.products:
@@ -152,7 +155,7 @@ async def smelt(cmd):
 					possible_results = []
 
 					# Matches the recipe's listed products to actual items.
-					for result in ewcfg.smelt_results:
+					for result in vendors.smelt_results:
 						if hasattr(result, 'id_item'):
 							if result.id_item not in found_recipe.products:
 								pass
@@ -256,7 +259,7 @@ async def find_recipes_by_item(cmd):
 		sought_item = ewutils.flattenTokenListToString(cmd.tokens[1:])
 		
 		# Allow for the use of recipe aliases
-		found_recipe = ewcfg.smelting_recipe_map.get(sought_item)
+		found_recipe = smelting.smelting_recipe_map.get(sought_item)
 		if found_recipe != None:
 			used_recipe = found_recipe.id_recipe
 
@@ -272,18 +275,18 @@ async def find_recipes_by_item(cmd):
 		
 		
 		# finds the recipes in questions that applys
-		for name in ewcfg.recipe_names:
+		for name in smelting.recipe_names:
 			# find recipes that this item is used as an ingredient in
-			if ewcfg.smelting_recipe_map[name].ingredients.get(sought_item) is not None:
+			if smelting.smelting_recipe_map[name].ingredients.get(sought_item) is not None:
 				uses_sought_item.append(name)
 				
 			# find recipes used to create this item
-			elif sought_item in ewcfg.smelting_recipe_map[name].products:
-				makes_sought_item.append(ewcfg.smelting_recipe_map[name])
+			elif sought_item in smelting.smelting_recipe_map[name].products:
+				makes_sought_item.append(smelting.smelting_recipe_map[name])
 			
 			# finds recipes based on possible recipe aliases
-			elif used_recipe in ewcfg.smelting_recipe_map[name].products:
-				makes_sought_item.append(ewcfg.smelting_recipe_map[name])
+			elif used_recipe in smelting.smelting_recipe_map[name].products:
+				makes_sought_item.append(smelting.smelting_recipe_map[name])
 		
 		# zero matches in either of the above:
 		if len(makes_sought_item) < 1 and len(uses_sought_item) < 1:
@@ -295,11 +298,11 @@ async def find_recipes_by_item(cmd):
 			number_recipe = 1
 			list_length = len(makes_sought_item)
 			for item in makes_sought_item:
-				if (item.id_recipe == "toughcosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_tough
-				or item.id_recipe == "smartcosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_smart
-				or item.id_recipe == "beautifulcosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_beautiful
-				or item.id_recipe == "cutecosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_cute
-				or item.id_recipe == "coolcosmetic" and ewcfg.cosmetic_map[sought_item].style != ewcfg.style_cool):
+				if (item.id_recipe == "toughcosmetic" and cosmetics.cosmetic_map[sought_item].style != ewcfg.style_tough
+				or item.id_recipe == "smartcosmetic" and cosmetics.cosmetic_map[sought_item].style != ewcfg.style_smart
+				or item.id_recipe == "beautifulcosmetic" and cosmetics.cosmetic_map[sought_item].style != ewcfg.style_beautiful
+				or item.id_recipe == "cutecosmetic" and cosmetics.cosmetic_map[sought_item].style != ewcfg.style_cute
+				or item.id_recipe == "coolcosmetic" and cosmetics.cosmetic_map[sought_item].style != ewcfg.style_cool):
 					list_length -= 1
 					continue
 				else:

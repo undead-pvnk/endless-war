@@ -4,6 +4,8 @@ import math
 import asyncio
 
 from .static import cfg as ewcfg
+from .static import cosmetics
+from .static import items as static_items
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -2483,7 +2485,7 @@ def drop_enemy_loot(enemy_data, district_data):
 		drop_min = drop_data_set[value][1]
 		drop_max = drop_data_set[value][2]
 		
-		item = ewcfg.item_map.get(value)
+		item = static_items.item_map.get(value)
 
 		item_type = ewcfg.it_item
 		if item != None:
@@ -2500,7 +2502,7 @@ def drop_enemy_loot(enemy_data, district_data):
 	
 		# Finds the item if it's an EwCosmeticItem.
 		if item == None:
-			item = ewcfg.cosmetic_map.get(value)
+			item = cosmetics.cosmetic_map.get(value)
 			item_type = ewcfg.it_cosmetic
 			if item != None:
 				item_id = item.id_cosmetic

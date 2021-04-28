@@ -10,6 +10,7 @@ import asyncio
 
 from . import cmd as ewcmd
 from .static import cfg as ewcfg
+from .static import items as static_items
 from . import utils as ewutils
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
@@ -593,7 +594,7 @@ async def crystalize_negapoudrin(cmd):
 	elif user_data.slimes >= ewcfg.slimes_to_crystalize_negapoudrin:
 		response = "Crystalizing a negapoudrin requires a lot of negaslime, and you're not quite there yet."
 	else:
-		negapoudrin_data = next(i for i in ewcfg.item_list if i.id_item == ewcfg.item_id_negapoudrin)
+		negapoudrin_data = next(i for i in static_items.item_list if i.id_item == ewcfg.item_id_negapoudrin)
 		ewitem.item_create(
 			item_type = ewcfg.it_item,
 			id_user = user_data.id_user,
