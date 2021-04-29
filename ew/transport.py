@@ -190,47 +190,6 @@ class EwTransport:
 				last_messages = await resp_cont.post()
 
 
-""" Object that defines a public transportation line """
-class EwTransportLine:
-
-	# name of the transport line
-	id_line = ""
-
-	# alternative names
-	alias = []
-
-	# Nice name for output
-	str_name = ""
-
-	# which stop the line starts at
-	first_stop = ""
-
-	# which stop the line ends at
-	last_stop = ""
-
-	# which line transports switch to after the last stop
-	next_line = ""
-
-	# how long to stay at each stop, and which stop follows
-	schedule = {}
-
-	def __init__(self,
-		id_line = "",
-		alias = [],
-		str_name = "",
-		first_stop = "",
-		last_stop = "",
-		next_line = "",
-		schedule = {}
-		):
-		self.id_line = id_line
-		self.alias = alias
-		self.str_name = str_name
-		self.first_stop = first_stop
-		self.last_stop = last_stop
-		self.next_line = next_line
-		self.schedule = schedule
-
 
 """ Starts movement of all transports. Called once at client startup """
 async def init_transports(id_server = None):

@@ -19,7 +19,7 @@ from .market import EwMarket
 from .slimeoid import EwSlimeoid
 from .district import EwDistrict
 from .player import EwPlayer
-from .hunting import EwEnemy
+#from .hunting import EwEnemy
 from .statuseffects import EwStatusEffect
 from .statuseffects import EwEnemyStatusEffect
 from .dungeons import EwGamestate
@@ -33,6 +33,7 @@ class EwEffectContainer:
 	slimes_spent = 0
 	user_data = None
 	shootee_data = None
+	market_data = None
 	weapon_item = None
 	time_now = 0
 	bystander_damage = 0
@@ -64,6 +65,7 @@ class EwEffectContainer:
 		bystander_damage = 0,
 		hit_chance_mod = 0,
 		crit_mod = 0,
+		market_data = None,
 		#sap_damage = 0,
 		#sap_ignored = 0,
 	):
@@ -78,6 +80,7 @@ class EwEffectContainer:
 		self.bystander_damage = bystander_damage
 		self.hit_chance_mod = hit_chance_mod
 		self.crit_mod = crit_mod
+		self.market_data = market_data
 		#self.sap_damage = sap_damage
 		#self.sap_ignored = sap_ignored
 
@@ -575,6 +578,7 @@ async def attack(cmd, n1_die = None):
 					bystander_damage = bystander_damage,
 					hit_chance_mod = hit_chance_mod,
 					crit_mod = crit_mod,
+					market_data = market_data,
 					#sap_damage = sap_damage,
 					#sap_ignored = sap_ignored,
 				)
@@ -1386,7 +1390,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				response = ""
 
 				slimes_damage_target = slimes_damage
-				target_enemy_data = EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
+				target_enemy_data = ewhunting.EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
 
 				# apply sap armor
 				#sap_armor = get_sap_armor(shootee_data = target_enemy_data, sap_ignored = sap_ignored)
@@ -1478,7 +1482,7 @@ def burn_bystanders(user_data = None, burn_dmg = 0, life_states = None, factions
 		bystander_enemies = district_data.get_enemies_in_district()
 
 		for bystander in bystander_enemies:
-			bystander_enemy_data = EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
+			bystander_enemy_data = ewhunting.EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
 			resp = bystander_enemy_data.applyStatus(id_status=ewcfg.status_burning_id, value=burn_dmg, source=user_data.id_user).format(name_player = bystander_enemy_data.display_name)
 			resp_cont.add_channel_response(channel, resp)
 
@@ -2130,6 +2134,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			bystander_damage=bystander_damage,
 			hit_chance_mod=hit_chance_mod,
 			crit_mod=crit_mod,
+			market_data=market_data,
 			#sap_damage=sap_damage,
 			#sap_ignored=sap_ignored,
 		)
@@ -2922,6 +2927,7 @@ async def spray(cmd):
 					bystander_damage=bystander_damage,
 					hit_chance_mod=hit_chance_mod,
 					crit_mod=crit_mod,
+					market_data=market_data,
 					#sap_damage=sap_damage,
 					#sap_ignored=sap_ignored,
 				)
@@ -3189,6 +3195,7 @@ async def sanitize(cmd):
 					bystander_damage=bystander_damage,
 					hit_chance_mod=hit_chance_mod,
 					crit_mod=crit_mod,
+					market_data=market_data,
 					# sap_damage=sap_damage,
 					# sap_ignored=sap_ignored,
 				)

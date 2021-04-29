@@ -4,47 +4,6 @@ import math
 from .static import cfg as ewcfg
 from . import utils as ewutils
 
-class EwStatusEffectDef:
-	id_status = ""
-	# Time until expiration, negative values have specific expiration conditions
-	time_expire = -1
-    
-	str_acquire = ""
-	str_describe = ""
-	str_describe_self = ""
-	dmg_mod_self = 0
-	hit_chance_mod_self = 0
-	crit_mod_self = 0
-	dmg_mod = 0
-	hit_chance_mod = 0
-	crit_mod = 0
-
-	def __init__(
-		self,
-		id_status = "",
-		time_expire = -1,
-		str_acquire = "",
-		str_describe = "",
-		str_describe_self = "",
-		dmg_mod_self = 0,
-		hit_chance_mod_self = 0,
-		crit_mod_self = 0,
-		dmg_mod = 0,
-		hit_chance_mod = 0,
-		crit_mod = 0
-	):
-		self.id_status = id_status
-		self.time_expire = time_expire
-		self.str_acquire = str_acquire
-		self.str_describe = str_describe
-		self.str_describe_self = str_describe_self
-		self.dmg_mod_self = dmg_mod_self
-		self.hit_chance_mod_self = hit_chance_mod_self
-		self.crit_mod_self = crit_mod_self
-		self.dmg_mod = dmg_mod
-		self.hit_chance_mod = hit_chance_mod
-		self.crit_mod = crit_mod
-
 class EwStatusEffect:
 	id_server = -1
 	id_user = -1

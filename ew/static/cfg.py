@@ -5,24 +5,21 @@ import random
 import json
 import os
 from ..model.weapon import EwWeapon
-from ..hunting import EwAttackType
-from ..weather import EwWeather
-from ..food import EwFood
+from ..model.hunting import EwAttackType
+from ..model.weather import EwWeather
+from ..model.food import EwFood
 from ..model.item import EwItemDef
-from ..move import EwPoi
-from ..mutation import EwMutationFlavor
-from ..slimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
-from ..quadrants import EwQuadrantFlavor
-from ..transport import EwTransportLine
-from ..statuseffects import EwStatusEffectDef
-from ..farm import EwFarmAction
-from ..fish import EwFish
-from ..apt import EwFurniture
-from ..worldevent import EwEventDef
-from ..dungeons import EwDungeonScene
-from ..trauma import EwTrauma, EwHitzone
-from ..market import EwMarket
-
+from ..model.poi import EwPoi, EwTransportLine
+from ..model.mutation import EwMutationFlavor
+from ..model.slimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
+from ..model.quadrants import EwQuadrantFlavor
+from ..model.status import EwStatusEffectDef
+from ..model.farm import EwFarmAction
+from ..model.fish import EwFish
+from ..model.item import EwFurniture
+from ..model.poi import EwEventDef
+from ..model.poi import EwDungeonScene
+from ..model.status import EwTrauma, EwHitzone
 
 from .. import debug as ewdebug
 
@@ -3333,7 +3330,7 @@ def wef_garrote(ctn = None):
 
 # weapon effect function for "Eldritch Staff"
 def wef_staff(ctn = None):
-	market_data = EwMarket(id_server = ctn.user_data.id_server)
+	market_data = ctn.market_data
 	conditions_met = 0
 	conditions = {
 		lambda _: 3 <= market_data.clock < 4, # witching hour

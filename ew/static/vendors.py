@@ -71,29 +71,29 @@ for furniture in ewcfg.furniture_list:
 	ewcfg.furniture_map[furniture.id_furniture] = furniture
 	ewcfg.furniture_names.append(furniture.id_furniture)
 	if furniture.furn_set == "haunted":
-		furniture_haunted.append(furniture.id_furniture)
+		ewcfg.furniture_haunted.append(furniture.id_furniture)
 	elif furniture.furn_set == "high class":
-		furniture_highclass.append(furniture.id_furniture)
+		ewcfg.furniture_highclass.append(furniture.id_furniture)
 	elif furniture.furn_set == "lgbt":
-		furniture_lgbt.append(furniture.id_furniture)
+		ewcfg.furniture_lgbt.append(furniture.id_furniture)
 	elif furniture.furn_set == "leather":
-		furniture_leather.append(furniture.id_furniture)
+		ewcfg.furniture_leather.append(furniture.id_furniture)
 	elif furniture.furn_set == "church":
-		furniture_church.append(furniture.id_furniture)
+		ewcfg.furniture_church.append(furniture.id_furniture)
 	elif furniture.furn_set == "pony":
-		furniture_pony.append(furniture.id_furniture)
+		ewcfg.furniture_pony.append(furniture.id_furniture)
 	elif furniture.furn_set == "blackvelvet":
-		furniture_blackvelvet.append(furniture.id_furniture)
+		ewcfg.furniture_blackvelvet.append(furniture.id_furniture)
 	elif furniture.furn_set == "seventies":
-		furniture_seventies.append(furniture.id_furniture)
+		ewcfg.furniture_seventies.append(furniture.id_furniture)
 	elif furniture.furn_set == "slimecorp":
-		furniture_slimecorp.append(furniture.id_furniture)
+		ewcfg.furniture_slimecorp.append(furniture.id_furniture)
 	elif furniture.furn_set == "shitty":
-		furniture_shitty.append(furniture.id_furniture)
+		ewcfg.furniture_shitty.append(furniture.id_furniture)
 	elif furniture.furn_set == "instrument":
-		furniture_instrument.append(furniture.id_furniture)
+		ewcfg.furniture_instrument.append(furniture.id_furniture)
 	elif furniture.furn_set == "specialhue":
-		furniture_specialhue.append(furniture.id_furniture)
+		ewcfg.furniture_specialhue.append(furniture.id_furniture)
 
 
 	for vendor in furniture.vendors:

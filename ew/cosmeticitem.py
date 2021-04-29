@@ -3,6 +3,7 @@ import random
 
 from .static import cfg as ewcfg
 from .static import cosmetics
+from .static import items as static_items
 from . import item as ewitem
 from . import utils as ewutils
 import asyncio
@@ -188,7 +189,7 @@ async def dye(cmd):
 					cosmetic = item
 
 			if int(item.get('id_item')) == dye_id_int or dye_id in ewutils.flattenTokenListToString(item.get('name')):
-				if item.get('item_type') == ewcfg.it_item and item.get('name') in ewcfg.dye_map and dye is None:
+				if item.get('item_type') == ewcfg.it_item and item.get('name') in static_items.dye_map and dye is None:
 					dye = item	
 
 			if cosmetic != None and dye != None:

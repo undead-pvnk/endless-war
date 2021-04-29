@@ -7,6 +7,7 @@ from . import cmd as ewcmd
 from . import utils as ewutils
 from .static import cfg as ewcfg
 from .static import cosmetics
+from .static import items as static_items
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import market as ewmarket
@@ -121,73 +122,6 @@ class EwApartment:
 				self.key_2
 
 			))
-class EwFurniture:
-	item_type = "furniture"
-
-	# The proper name of the furniture item
-	id_furniture = ""
-
-	# The string name of the furniture item
-	str_name = ""
-
-	# The text displayed when you look at it
-	str_desc = ""
-
-	# How rare the item is, can be "Plebeian", "Patrician", or "Princeps"
-	rarity = ""
-
-	# Cost in SlimeCoin to buy this item. (slime now, but hopefully we make an exception for furniture)
-	price = 0
-
-	# Names of the vendors selling this item. (yo munchy/ben, i kind of want to add a furniture mart)
-	vendors = []
-
-	#Text when placing the item
-	furniture_place_desc = ""
-
-	#Text when the generic "look" is used
-	furniture_look_desc = ""
-
-	#How you received this item
-	acquisition = ""
-
-	#the set that the furniture belongs to
-	furn_set = ""
-
-	#furniture color
-	hue = ""
-
-
-
-	def __init__(
-		self,
-		id_furniture = "",
-		str_name = "",
-		str_desc = "",
-		rarity = "",
-		acquisition = "",
-		price = 0,
-		vendors = [],
-		furniture_place_desc = "",
-		furniture_look_desc = "",
-		furn_set = "",
-		hue="",
-		num_keys = 0
-
-	):
-		self.item_type = ewcfg.it_furniture
-		self.id_furniture = id_furniture
-		self.str_name = str_name
-		self.str_desc = str_desc
-		self.rarity = rarity
-		self.acquisition = acquisition
-		self.price = price
-		self.vendors = vendors
-		self.furniture_place_desc = furniture_place_desc
-		self.furniture_look_desc = furniture_look_desc
-		self.furn_set = furn_set
-		self.hue = hue
-		self.num_keys = num_keys
 
 async def consult(cmd):
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -636,7 +570,7 @@ async def apt_look(cmd):
 		furn_response = "SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP.\n\n"
 
 
-	clock_data = ewcmd.weather_txt(id_server=playermodel.id_server)
+	clock_data = ewutils.weather_txt(id_server=playermodel.id_server)
 	clock_data = clock_data[16:20]
 	furn_response = furn_response.format(time = clock_data)
 	resp_cont.add_channel_response(cmd.message.channel, furn_response)
@@ -2249,7 +2183,7 @@ async def dyefurniture(cmd):
 				if item.get('item_type') == ewcfg.it_furniture and furniture is None:
 					furniture = item
 
-				if item.get('item_type') == ewcfg.it_item and item.get('name') in ewcfg.dye_map and dye is None:
+				if item.get('item_type') == ewcfg.it_item and item.get('name') in static_items.dye_map and dye is None:
 					dye = item
 
 				if furniture != None and dye != None:

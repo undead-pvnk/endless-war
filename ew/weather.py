@@ -15,30 +15,6 @@ from .slimeoid import EwSlimeoid
 from .hunting import EwEnemy
 from .item import EwItem
 
-""" A weather object. Pure flavor. """
-class EwWeather:
-	# The identifier for this weather pattern.
-	name = ""
-
-	str_sunrise = ""
-	str_day = ""
-	str_sunset = ""
-	str_night = ""
-
-	def __init__(
-		self,
-		name="",
-		sunrise="",
-		day="",
-		sunset="",
-		night=""
-	):
-		self.name = name
-		self.str_sunrise = sunrise
-		self.str_day = day
-		self.str_sunset = sunset
-		self.str_night = night
-
 """
 	Coroutine that continually calls weather_tick; is called once per server, and not just once globally
 """

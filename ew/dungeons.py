@@ -7,37 +7,6 @@ from . import rolemgr as ewrolemgr
 
 from .user import EwUser
 
-class EwDungeonScene:
-
-	# The text sent when a scene starts
-	text = ""
-
-	# Whether or not the dungeon is active
-	dungeon_state = True
-
-	# Where the scene is taking place
-	poi = None
-
-	# life state to assign for this scene
-	life_state = None
-
-	# Commands that can be used in a scene, and what scene ID that leads to
-	options = {}
-
-	def __init__(
-			self,
-			text="",
-			dungeon_state=True,
-			options={},
-			poi=None,
-			life_state=None,
-	):
-		self.text = text
-		self.dungeon_state = dungeon_state
-		self.options = options
-		self.poi = poi
-		self.life_state = life_state
-
 
 # maps users to where they are in the tutorial
 user_to_tutorial_state = {}

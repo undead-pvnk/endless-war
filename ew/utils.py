@@ -20,6 +20,7 @@ from . import move as ewmap
 import discord
 
 from .static import cfg as ewcfg
+from .static import items as static_items
 from . import wep as ewwep
 from .user import EwUser
 from .district import EwDistrict
@@ -1970,7 +1971,7 @@ async def spawn_prank_items(id_server):
 		pie_or_prank = random.randrange(3)
 		
 		if pie_or_prank == 0:
-			swilldermuk_food_item = random.choice(ewcfg.swilldermuk_food)
+			swilldermuk_food_item = random.choice(static_items.swilldermuk_food)
 
 			item_props = ewitem.gen_item_props(swilldermuk_food_item)
 
@@ -1989,14 +1990,14 @@ async def spawn_prank_items(id_server):
 			rarity_roll = random.randrange(10)
 			
 			if rarity_roll > 3:
-				prank_item = random.choice(ewcfg.prank_items_heinous)
+				prank_item = random.choice(static_items.prank_items_heinous)
 			elif rarity_roll > 0:
-				prank_item = random.choice(ewcfg.prank_items_scandalous)
+				prank_item = random.choice(static_items.prank_items_scandalous)
 			else:
-				prank_item = random.choice(ewcfg.prank_items_forbidden)
+				prank_item = random.choice(static_items.prank_items_forbidden)
 				
 			#Debug
-			#prank_item = ewcfg.prank_items_heinous[1] # Chinese Finger Trap
+			#prank_item = static_items.prank_items_heinous[1] # Chinese Finger Trap
 		
 			item_props = ewitem.gen_item_props(prank_item)
 		
@@ -3239,3 +3240,38 @@ def is_player_inventory(id_inventory, id_server):
 		return True
 	else:
 		return False
+
+def weather_txt(id_server):
+	response = ""
+	market_data = EwMarket(id_server = id_server)
+	time_current = market_data.clock
+	displaytime = str(time_current)
+	ampm = ''
+
+	if time_current <= 12:
+		ampm = 'AM'
+	if time_current > 12:
+		displaytime = str(time_current - 12)
+		ampm = 'PM'
+
+	if time_current == 0:
+		displaytime = 'midnight'
+		ampm = ''
+	if time_current == 12:
+		displaytime = 'high noon'
+		ampm = ''
+
+	flair = ''
+	weather_data = ewcfg.weather_map.get(market_data.weather)
+	if weather_data != None:
+		if time_current >= 6 and time_current <= 7:
+			flair = weather_data.str_sunrise
+		if time_current >= 8 and time_current <= 17:
+			flair = weather_data.str_day
+		if time_current >= 18 and time_current <= 19:
+			flair = weather_data.str_sunset
+		if time_current >= 20 or time_current <= 5:
+			flair = weather_data.str_night
+
+	response += "It is currently {}{} in NLACakaNM.{}".format(displaytime, ampm, (' ' + flair))
+	return response

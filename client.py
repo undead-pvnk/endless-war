@@ -1877,7 +1877,7 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Food created."))
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createdye'):
-			item = ewcfg.dye_list[random.randint(0, len(ewcfg.dye_list) - 1)]
+			item = static_items.dye_list[random.randint(0, len(ewcfg.dye_list) - 1)]
 
 			item_props = ewitem.gen_item_props(item)
 

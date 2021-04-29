@@ -5,44 +5,11 @@ from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import vendors
 from .static import smelting
+from .static import items as static_items
 from . import item as ewitem
 from . import utils as ewutils
 
 from .user import EwUser
-
-"""
-	Smelting Recipe Model Object
-"""
-
-class EwSmeltingRecipe:
-	# The proper name of the recipe.
-	id_recipe = ""
-
-	# The string name of the recipe.
-	str_name = ""
-
-	# A list of alternative names.
-	alias = []
-
-	# The ingredients for the recipe, by str_name of the object.
-	ingredients = []
-
-	# The product(s) created by the recipe, A tuple of the item type (it_food, it_cosmetic, etc) and item_props.
-	products = []
-
-	def __init__(
-		self,
-		id_recipe="",
-		str_name="",
-		alias = [],
-		ingredients = [],
-		products = [],
-	):
-		self.id_recipe = id_recipe
-		self.str_name = str_name
-		self.alias = alias
-		self.ingredients = ingredients
-		self.products = products
 
 # Smelting command. It's like other games call "crafting"... but BETTER and for FREE!!
 async def smelt(cmd):
@@ -368,11 +335,11 @@ def popcapsule(id_user = None, id_server = None, item = None):
 	ewitem.item_delete(item.id_item)
 
 	if rarity_roll > 3:
-		prank_item = random.choice(ewcfg.prank_items_heinous)
+		prank_item = random.choice(static_items.prank_items_heinous)
 	elif rarity_roll > 0:
-		prank_item = random.choice(ewcfg.prank_items_scandalous)
+		prank_item = random.choice(static_items.prank_items_scandalous)
 	else:
-		prank_item = random.choice(ewcfg.prank_items_forbidden)
+		prank_item = random.choice(static_items.prank_items_forbidden)
 
 	item_props = ewitem.gen_item_props(prank_item)
 

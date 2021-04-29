@@ -1,7 +1,7 @@
 from . import cfg as ewcfg
 from . import cosmetics
 
-from ..smelting import EwSmeltingRecipe
+from ..model.item import EwSmeltingRecipe
 
 smelting_recipe_list = [
 	EwSmeltingRecipe(
@@ -177,7 +177,7 @@ smelting_recipe_list = [
 	),
 	EwSmeltingRecipe(
 		id_recipe = ewcfg.item_id_forbidden111,
-		str_name = "The Forbidden {}".format(emote_111),
+		str_name = "The Forbidden {}".format(ewcfg.emote_111),
 		alias = [
 			"forbiddenone",
 			"forbidden",
@@ -209,7 +209,7 @@ smelting_recipe_list = [
 			ewcfg.item_id_slimepoudrin : 3,
 			ewcfg.item_id_stick : 2
 		},
-		products = [weapon_id_pickaxe]
+		products = [ewcfg.weapon_id_pickaxe]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "faggot",
@@ -261,7 +261,7 @@ smelting_recipe_list = [
 			ewcfg.item_id_string: 2,
 			ewcfg.item_id_stick: 3
 		},
-		products = [weapon_id_fishingrod]
+		products = [ewcfg.weapon_id_fishingrod]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "bass",
@@ -273,7 +273,7 @@ smelting_recipe_list = [
 			'thebassedgod' : 1,
 			ewcfg.item_id_string : 4
 		},
-		products = [weapon_id_bass]
+		products = [ewcfg.weapon_id_bass]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "bow",
@@ -285,7 +285,7 @@ smelting_recipe_list = [
 			ewcfg.item_id_stick: 3,
 			ewcfg.item_id_string: 3
 		},
-		products = [weapon_id_bow]
+		products = [ewcfg.weapon_id_bow]
 	),
 		EwSmeltingRecipe(
 		id_recipe = "ironingot",
@@ -354,10 +354,10 @@ smelting_recipe_list = [
 			ewcfg.item_id_ironingot: 1,
 			ewcfg.item_id_leather: 1
 		},
-		products = [weapon_id_dclaw]
+		products = [ewcfg.weapon_id_dclaw]
 	),
 	EwSmeltingRecipe(
-		id_recipe = weapon_id_staff,
+		id_recipe = ewcfg.weapon_id_staff,
 		str_name = "an eldritch staff",
 		alias = [
 			"eldritchstaff",
@@ -370,7 +370,7 @@ smelting_recipe_list = [
 			ewcfg.item_id_doublefaggot : 1,
 			ewcfg.item_id_negapoudrin : 1,
 		},
-		products = [weapon_id_staff]
+		products = [ewcfg.weapon_id_staff]
 	),
 
 	EwSmeltingRecipe(
@@ -551,7 +551,7 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			ewcfg.item_id_stick: 5,
-			weapon_id_bat:2,
+			ewcfg.weapon_id_bat:2,
 		},
 		products = ['ornatechair', 'shittychair']
 	),
@@ -566,7 +566,7 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			ewcfg.item_id_stick: 10,
-			weapon_id_bat: 4,
+			ewcfg.weapon_id_bat: 4,
 		},
 		products = ['ornatebench', 'shittybench']
 	),
@@ -581,7 +581,7 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			ewcfg.item_id_stick: 12,
-			weapon_id_bat :3,
+			ewcfg.weapon_id_bat :3,
 		},
 		products = ['ornatebed', 'shittybed']
 	),
@@ -596,7 +596,7 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			ewcfg.item_id_stick: 4,
-			weapon_id_bat: 1,
+			ewcfg.weapon_id_bat: 1,
 		},
 		products = ['ornatedesk', 'shittydesk']
 	),
@@ -692,7 +692,7 @@ smelting_recipe_list = [
 			"saxamaphone",
 		],
 		ingredients = {
-			weapon_id_shotgun: 1,
+			ewcfg.weapon_id_shotgun: 1,
 			'earlbrowntea': 1,
 			ewcfg.item_id_metallicapheads: 4,
 			ewcfg.item_id_cute_material: 10,
@@ -710,7 +710,7 @@ smelting_recipe_list = [
 			"trump"
 		],
 		ingredients={
-			weapon_id_slimeringcan: 1,
+			ewcfg.weapon_id_slimeringcan: 1,
 			'goobalibre': 1,
 			ewcfg.item_id_steelbeanpods: 2,
 			ewcfg.item_id_tough_material: 10,
@@ -728,7 +728,7 @@ smelting_recipe_list = [
 			"sackbut"
 		],
 		ingredients={
-			weapon_id_shotgun: 2,
+			ewcfg.weapon_id_shotgun: 2,
 			'manhattanproject': 1,
 			ewcfg.item_id_metallicapheads: 1,
 			ewcfg.item_id_smart_material: 10,

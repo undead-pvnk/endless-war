@@ -19,12 +19,13 @@ from . import faction as ewfaction
 from . import apt as ewapt
 from . import prank as ewprank
 from . import worldevent as ewworldevent
+from . import hunting as ewhunting
 
 from .user import EwUser
 from .market import EwMarket
 from .item import EwItem
 from .slimeoid import EwSlimeoid
-from .hunting import find_enemy, delete_all_enemies, EwEnemy, EwOperationData, spawn_enemy, delete_enemy
+#from .hunting import find_enemy, delete_all_enemies, EwEnemy, EwOperationData, spawn_enemy, delete_enemy
 from .statuseffects import EwStatusEffect
 from .statuseffects import EwEnemyStatusEffect
 from .district import EwDistrict
@@ -408,7 +409,7 @@ async def data(cmd):
 		user_data = EwUser(member=cmd.message.author)
 
 		soughtenemy = " ".join(cmd.tokens[1:]).lower()
-		enemy = find_enemy(soughtenemy, user_data)
+		enemy = ewhunting.find_enemy(soughtenemy, user_data)
 		if enemy != None:
 			if enemy.attacktype != ewcfg.enemy_attacktype_unarmed:
 				response = "{} is a level {} enemy. They have {:,} slime and attack with their {}. ".format(enemy.display_name, enemy.level, enemy.slimes, enemy.attacktype)
@@ -949,44 +950,10 @@ async def swearjar(cmd):
 	
 	return await ewutils.send_response(response, cmd)
 
-def weather_txt(id_server):
-	response = ""
-	market_data = EwMarket(id_server = id_server)
-	time_current = market_data.clock
-	displaytime = str(time_current)
-	ampm = ''
-
-	if time_current <= 12:
-		ampm = 'AM'
-	if time_current > 12:
-		displaytime = str(time_current - 12)
-		ampm = 'PM'
-
-	if time_current == 0:
-		displaytime = 'midnight'
-		ampm = ''
-	if time_current == 12:
-		displaytime = 'high noon'
-		ampm = ''
-
-	flair = ''
-	weather_data = ewcfg.weather_map.get(market_data.weather)
-	if weather_data != None:
-		if time_current >= 6 and time_current <= 7:
-			flair = weather_data.str_sunrise
-		if time_current >= 8 and time_current <= 17:
-			flair = weather_data.str_day
-		if time_current >= 18 and time_current <= 19:
-			flair = weather_data.str_sunset
-		if time_current >= 20 or time_current <= 5:
-			flair = weather_data.str_night
-
-	response += "It is currently {}{} in NLACakaNM.{}".format(displaytime, ampm, (' ' + flair))
-	return response
 
 """ time and weather information """
 async def weather(cmd):
-	response = weather_txt(cmd.guild.id)
+	response = ewutils.weather_txt(cmd.guild.id)
 
 	market_data = EwMarket(id_server=cmd.guild.id)
 	time_current = market_data.clock
@@ -2674,11 +2641,11 @@ async def prank(cmd):
 					rarity_roll = random.randrange(10)
 	
 					if rarity_roll > 3:
-						prank_item = random.choice(ewcfg.prank_items_heinous)
+						prank_item = random.choice(static_items.prank_items_heinous)
 					elif rarity_roll > 0:
-						prank_item = random.choice(ewcfg.prank_items_scandalous)
+						prank_item = random.choice(static_items.prank_items_scandalous)
 					else:
-						prank_item = random.choice(ewcfg.prank_items_forbidden)
+						prank_item = random.choice(static_items.prank_items_forbidden)
 	
 					item_props = ewitem.gen_item_props(prank_item)
 	
@@ -2909,7 +2876,7 @@ async def gvs_print_lane(cmd):
 						if enemy_id == 'frozen':
 							response += "FROZEN"
 						else:
-							enemy_data = EwEnemy(id_server=user_data.id_server, id_enemy=enemy_id)
+							enemy_data = ewhunting.EwEnemy(id_server=user_data.id_server, id_enemy=enemy_id)
 							props = enemy_data.enemy_props
 							
 							if debug:
@@ -2947,11 +2914,11 @@ async def gvs_incubate_gaiaslimeoid(cmd):
 			material_counter = 0
 			material_total = 0
 			response = "Please specify the crop material you will use. Options are...\n"
-			for material in ewcfg.seedpacket_ingredient_list:
+			for material in static_items.seedpacket_ingredient_list:
 				material_counter += 1
 				material_total += 1
 				response += "**{}**".format(material)
-				if material_total != len(ewcfg.seedpacket_ingredient_list):
+				if material_total != len(static_items.seedpacket_ingredient_list):
 					response += ", "
 
 				if material_counter == 5:
@@ -2960,7 +2927,7 @@ async def gvs_incubate_gaiaslimeoid(cmd):
 		else:
 			material = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			
-			for material_id in ewcfg.seedpacket_ingredient_list:
+			for material_id in static_items.seedpacket_ingredient_list:
 				if material in material_id or material == material_id:
 					valid_material = True
 					break
@@ -2974,7 +2941,7 @@ async def gvs_incubate_gaiaslimeoid(cmd):
 					response = "You don't have that crop material in your inventory, bitch."
 				else:
 
-					generated_seedpacket_id = ewcfg.seedpacket_material_map[material_id]
+					generated_seedpacket_id = static_items.seedpacket_material_map[material_id]
 					item = static_items.item_map.get(generated_seedpacket_id)
 	
 					item_type = ewcfg.it_item
@@ -3010,11 +2977,11 @@ async def gvs_fabricate_tombstone(cmd):
 			tombstone_total = 0
 			enemy_counter = 0
 			response = "Please specify the tombstone you want to fabricate. Options are...\n"
-			for tombstone in ewcfg.tombstone_enemytype_map.keys():
+			for tombstone in static_items.tombstone_enemytype_map.keys():
 				tombstone_counter += 1
 				tombstone_total += 1
 				response += "**{}**".format(tombstone)
-				if tombstone_total != len(ewcfg.tombstone_enemytype_map):
+				if tombstone_total != len(static_items.tombstone_enemytype_map):
 					response += ", "
 
 				if enemy_counter == 5:
@@ -3022,7 +2989,7 @@ async def gvs_fabricate_tombstone(cmd):
 					response += "\n"
 		else:
 			tombstone = ewutils.flattenTokenListToString(cmd.tokens[1:])
-			if tombstone not in ewcfg.tombstone_enemytype_map.keys():
+			if tombstone not in static_items.tombstone_enemytype_map.keys():
 				response = "That's not a valid tombstone you can make, bitch."
 			else:
 
@@ -3091,8 +3058,8 @@ async def almanac(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def gvs_join_operation(cmd):
-	seedpackets = ewcfg.seedpacket_ids
-	tombstones = ewcfg.tombstone_ids
+	seedpackets = static_items.seedpacket_ids
+	tombstones = static_items.tombstone_ids
 	time_now = int(time.time())
 
 	user_data = EwUser(member = cmd.message.author)
@@ -3284,7 +3251,7 @@ async def gvs_join_operation(cmd):
 				# 	ewitem.item_delete(item.id_item)
 				# 	response += "\n(Your {} has been used up completely)".format(item_props.get('item_name'))	
 
-				op_data = EwOperationData(
+				op_data = ewhunting.EwOperationData(
 					id_user=user_data.id_user,
 					district=user_data.poi, 
 					enemytype=enemytype, 
@@ -3338,7 +3305,7 @@ async def gvs_leave_operation(cmd):
 		
 		items = ewutils.execute_sql_query("SELECT id_item FROM gvs_ops_choices WHERE id_user = '{}'".format(user_data.id_user))
 		ewutils.execute_sql_query("DELETE FROM gvs_ops_choices WHERE id_user = '{}'".format(user_data.id_user))
-		await delete_all_enemies(cmd=None, query_suffix="AND owner = '{}' AND poi = '{}'".format(user_data.id_user, user_data.poi), id_server_sent=user_data.id_server)
+		await ewhunting.delete_all_enemies(cmd=None, query_suffix="AND owner = '{}' AND poi = '{}'".format(user_data.id_user, user_data.poi), id_server_sent=user_data.id_server)
 		
 		response = "You drop out of your {} Op in {}.".format('Garden' if faction == ewcfg.psuedo_faction_gankers else 'Graveyard', op_poi)
 		
@@ -3406,7 +3373,7 @@ async def gvs_check_operations(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def gvs_plant_gaiaslimeoid(cmd):
-	seedpackets = ewcfg.seedpacket_ids
+	seedpackets = static_items.seedpacket_ids
 	time_now = int(time.time())
 
 	user_data = EwUser(member=cmd.message.author)
@@ -3493,7 +3460,7 @@ async def gvs_plant_gaiaslimeoid(cmd):
 				
 				if len(gaias_in_coord) > 0:
 					for gaia in gaias_in_coord.keys():
-						enemy_data = EwEnemy(id_enemy=gaias_in_coord[gaia])
+						enemy_data = ewhunting.EwEnemy(id_enemy=gaias_in_coord[gaia])
 						
 						if enemytype == gaia:
 							if gaia in ewcfg.repairable_gaias:
@@ -3524,7 +3491,7 @@ async def gvs_plant_gaiaslimeoid(cmd):
 					district_data.gaiaslime -= cost
 					district_data.persist()
 
-					resp_cont = spawn_enemy(
+					resp_cont = ewhunting.spawn_enemy(
 						id_server=user_data.id_server,
 						pre_chosen_type=enemytype,
 						pre_chosen_level=50,
@@ -3547,7 +3514,7 @@ async def gvs_plant_gaiaslimeoid(cmd):
 						district_data.gaiaslime -= cost
 						district_data.persist()
 						
-						resp_cont = spawn_enemy(
+						resp_cont = ewhunting.spawn_enemy(
 							id_server = user_data.id_server,
 							pre_chosen_type=enemytype,
 							pre_chosen_level=50,
@@ -3685,8 +3652,8 @@ async def dig(cmd): # TODO  zen garden functionality
 
 	if not is_garden:
 
-		enemy = EwEnemy(id_server=user_data.id_server, id_enemy=dig_target)
-		delete_enemy(enemy)
+		enemy = ewhunting.EwEnemy(id_server=user_data.id_server, id_enemy=dig_target)
+		ewhunting.delete_enemy(enemy)
 
 		if random.random() < 0.8:  # 90% chance to fail
 			response = "You dig up a {} Gaiaslimeoid."

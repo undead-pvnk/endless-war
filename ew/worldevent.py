@@ -8,23 +8,6 @@ from . import utils as ewutils
 from .user import EwUser
 from .player import EwPlayer
 
-class EwEventDef:
-	event_type = ""
-	
-	str_event_start = ""
-	str_event_end = ""
-
-	def __init__(
-		self,
-		event_type = "",
-		str_event_start = "",
-		str_event_end = "",
-	):
-		self.event_type = event_type
-		self.str_event_start = str_event_start
-		self.str_event_end = str_event_end
-		
-
 class EwWorldEvent:
 	id_event = -1
 	id_server = -1
