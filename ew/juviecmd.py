@@ -8,6 +8,7 @@ import math
 from .static import cfg as ewcfg
 from .static import vendors
 from .static import items as static_items
+from .static import weapons as static_weapons
 from . import utils as ewutils
 from . import cmd as ewcmd
 from . import item as ewitem
@@ -319,12 +320,12 @@ async def mine(cmd):
 
 			if user_data.weapon >= 0:
 				weapon_item = EwItem(id_item = user_data.weapon)
-				weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+				weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 				if weapon.id_weapon == ewcfg.weapon_id_pickaxe and user_data.life_state != ewcfg.life_state_juvenile:
 					has_pickaxe = True
 			#if user_data.sidearm >= 0:
 			#	sidearm_item = EwItem(id_item=user_data.sidearm)
-			#	sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+			#	sidearm = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
 			#	if sidearm.id_weapon == ewcfg.weapon_id_pickaxe:
 			#		has_pickaxe = True
 

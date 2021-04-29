@@ -8,6 +8,7 @@ from . import utils as ewutils
 from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import items as static_items
+from .static import weapons as static_weapons
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import market as ewmarket
@@ -1878,7 +1879,7 @@ async def propstand(cmd):
 		else:
 			if item.item_type == ewcfg.it_weapon and usermodel.weapon >= 0 and item.id_item == usermodel.weapon:
 				if usermodel.weaponmarried:
-					weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+					weapon = static_weapons.weapon_map.get(item.item_props.get("weapon_type"))
 					response = "Your dearly beloved? Put on a propstand? At least have the decency to get a divorce at the dojo first, you cretin.".format(weapon.str_weapon)
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				else:

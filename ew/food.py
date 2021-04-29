@@ -6,6 +6,7 @@ from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import vendors
 from .static import items as static_items
+from .static import weapons as static_weapons
 from . import item as ewitem
 from . import utils as ewutils
 from . import move as ewmap
@@ -88,7 +89,7 @@ async def menu(cmd):
 				food_item = ewcfg.food_map.get(item_name)
 				cosmetic_item = ewcfg.cosmetic_map.get(item_name)
 				furniture_item = ewcfg.furniture_map.get(item_name)
-				weapon_item = ewcfg.weapon_map.get(item_name)
+				weapon_item = static_weapons.weapon_map.get(item_name)
 
 				# increase profits for the stock market
 				stock_data = None
@@ -262,7 +263,7 @@ async def order(cmd):
 					item.vendors = [ewcfg.vendor_bazaar]
 
 		if item == None:
-			item = ewcfg.weapon_map.get(value)
+			item = static_weapons.weapon_map.get(value)
 			item_type = ewcfg.it_weapon
 			if item != None:
 				item_id = item.id_weapon

@@ -4,6 +4,7 @@ import asyncio
 
 from . import utils as ewutils
 from .static import cfg as ewcfg
+from .static import weapons as static_weapons
 from . import stats as ewstats
 from . import item as ewitem
 from . import statuseffects as ewstatuseffects
@@ -403,7 +404,7 @@ class EwUser:
 			self.weaponskill += int(n)
 			ewstats.track_maximum(user = self, metric = ewcfg.stat_max_wepskill, value = self.weaponskill)
 
-			weapon = ewcfg.weapon_map.get(weapon_type)
+			weapon = static_weapons.weapon_map.get(weapon_type)
 			if ewcfg.weapon_class_paint in weapon.classes and self.weaponskill > 16:
 				self.weaponskill = 16
 
@@ -649,7 +650,7 @@ class EwUser:
 
 	def equip(self, weapon_item = None):
 
-		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 		if self.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't equip weapons."
@@ -690,7 +691,7 @@ class EwUser:
 
 	def equip_sidearm(self, sidearm_item = None):
 		
-		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+		sidearm = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
 
 		if self.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't equip weapons."

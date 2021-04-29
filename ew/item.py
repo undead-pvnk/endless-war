@@ -9,6 +9,7 @@ from . import utils as ewutils
 from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import items as static_items
+from .static import weapons as static_weapons
 from . import stats as ewstats
 from . import district as ewdistrict
 from . import rolemgr as ewrolemgr
@@ -1264,7 +1265,7 @@ async def item_look(cmd):
                     else:
                         response += "Your beloved partner. You can't help but give it a little kiss on the handle.\n"
 
-                weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+                weapon = static_weapons.weapon_map.get(item.item_props.get("weapon_type"))
 
                 if ewcfg.weapon_class_ammo in weapon.classes:
                     response += "Ammo: {}/{}".format(item.item_props.get("ammo"), weapon.clip_size) + "\n"
@@ -1814,7 +1815,7 @@ async def discard(cmd):
         if not item.soulbound:
             if item.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item.id_item == user_data.weapon:
                 if user_data.weaponmarried and item.item_props.get('married') == user_data.id_user:
-                    weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+                    weapon = static_weapons.weapon_map.get(item.item_props.get("weapon_type"))
                     response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
                     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
                 else:
@@ -1824,7 +1825,7 @@ async def discard(cmd):
 
             elif item.item_type == ewcfg.it_weapon and user_data.sidearm >= 0 and item.id_item == user_data.sidearm:
                 if user_data.weaponmarried and item.item_props.get('married') == user_data.id_user:
-                    weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+                    weapon = static_weapons.weapon_map.get(item.item_props.get("weapon_type"))
                     response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
                     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
                 else:
@@ -2376,7 +2377,7 @@ async def longdrop(cmd):
             response = "You still can't drop a soulbound item. Having really long arms doesn't grant you that ability."
         elif item_obj.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item_obj.id_item == user_data.weapon:
             if user_data.weaponmarried:
-                weapon = ewcfg.weapon_map.get(item_obj.item_props.get("weapon_type"))
+                weapon = static_weapons.weapon_map.get(item_obj.item_props.get("weapon_type"))
                 response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
                 return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
             else:

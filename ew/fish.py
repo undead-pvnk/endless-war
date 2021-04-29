@@ -3,6 +3,7 @@ import asyncio
 import time
 from .static import cfg as ewcfg
 from .static import vendors
+from .static import weapons as static_weapons
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -323,7 +324,7 @@ async def cast(cmd):
 
 			if user_data.weapon >= 0:
 				weapon_item = EwItem(id_item = user_data.weapon)
-				weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+				weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 				if weapon.id_weapon == "fishingrod":
 					has_fishingrod = True
 
@@ -637,7 +638,7 @@ async def award_fish(fisher, cmd, user_data):
 
 		if user_data.weapon >= 0:
 			weapon_item = EwItem(id_item = user_data.weapon)
-			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 			if weapon.id_weapon == "fishingrod":
 				has_fishingrod = True
 

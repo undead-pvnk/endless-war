@@ -4,6 +4,7 @@ import asyncio
 
 from .static import cfg as ewcfg
 from .static import vendors
+from .static import weapons as static_weapons
 from . import item as ewitem
 from . import utils as ewutils
 from . import rolemgr as ewrolemgr
@@ -127,7 +128,7 @@ async def reap(cmd):
 
 	# check if the user has a farming tool equipped
 	weapon_item = EwItem(id_item=user_data.weapon)
-	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+	weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 	has_tool = False
 	if weapon is not None:
 		if ewcfg.weapon_class_farming in weapon.classes:
@@ -321,7 +322,7 @@ async def sow(cmd):
 
 	# check if the user has a farming tool equipped
 	weapon_item = EwItem(id_item=user_data.weapon)
-	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+	weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 	has_tool = False
 	if weapon is not None:
 		if ewcfg.weapon_class_farming in weapon.classes:

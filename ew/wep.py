@@ -4,6 +4,7 @@ import random
 import math
 
 from .static import cfg as ewcfg
+from .static import weapons as static_weapons
 from . import captcha as ewcaptcha
 from . import utils as ewutils
 from . import item as ewitem
@@ -107,11 +108,11 @@ def canAttack(cmd, amb_switch = 0):
 
 	if amb_switch == 1:
 		weapon_item = EwItem(id_item=user_data.sidearm)
-		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		captcha = weapon_item.item_props.get('captcha')
 	elif user_data.weapon >= 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
-		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		captcha = weapon_item.item_props.get('captcha')
 
 	channel_poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
@@ -310,14 +311,14 @@ def canCap(cmd, capture_type, roomba_loop = 0):
 	#alternate sidearm model that i'm saving just in case
 	#if user_data.sidearm >= 0:
 	#	sidearm_item = EwItem(id_item=user_data.sidearm)
-	#	sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+	#	sidearm = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
 	#	captcha = sidearm_item.item_props.get('captcha')
 	#	if ewcfg.weapon_class_paint in sidearm.classes:
 	#		sidearm_viable = 1
 
 	if user_data.weapon >= 0: #and sidearm_viable == 0
 		sidearm_item = EwItem(id_item=user_data.weapon)
-		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+		sidearm = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
 		captcha = sidearm_item.item_props.get('captcha')
 		if ewcfg.weapon_class_paint in sidearm.classes:
 			sidearm_viable = 1
@@ -393,11 +394,11 @@ async def attack(cmd, n1_die = None):
 
 	if user_data.weapon >= 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
-		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 		if weapon.is_tool == 1 and user_data.sidearm >= 0 and ewcfg.mutation_id_ambidextrous in user_mutations:
 			sidearm_item = EwItem(id_item = user_data.sidearm)
-			sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+			sidearm = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
 
 			if sidearm.is_tool == 0:
 				weapon_item = sidearm_item
@@ -407,13 +408,13 @@ async def attack(cmd, n1_die = None):
 
 	elif ewcfg.mutation_id_ambidextrous in user_mutations and user_data.sidearm >= 0:
 		weapon_item = EwItem(id_item=user_data.sidearm)
-		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		amb_switch = 1
 
 	elif ewcfg.mutation_id_lethalfingernails in user_mutations:
 		id_item = ewutils.get_fingernail_item(cmd=cmd)
 		weapon_item = EwItem(id_item=id_item)
-		weapon = ewcfg.weapon_map.get(ewcfg.weapon_id_fingernails)
+		weapon = static_weapons.weapon_map.get(ewcfg.weapon_id_fingernails)
 		ewutils.weaponskills_set(member = cmd.message.author, weapon=ewcfg.weapon_id_fingernails, weaponskill=10)
 		user_data.weaponskill = 10
 
@@ -453,7 +454,7 @@ async def attack(cmd, n1_die = None):
 		shootee_weapon_item = None
 		if shootee_data.weapon >= 0:
 			shootee_weapon_item = EwItem(id_item = shootee_data.weapon)
-			shootee_weapon = ewcfg.weapon_map.get(shootee_weapon_item.item_props.get("weapon_type"))
+			shootee_weapon = static_weapons.weapon_map.get(shootee_weapon_item.item_props.get("weapon_type"))
 
 
 		shootee_mutations = shootee_data.get_mutations()
@@ -1218,7 +1219,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 			shootee_player = shootee_data
 
 		weapon_item = EwItem(id_item = user_data.weapon)
-		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 		client = ewutils.get_client()
 		server = client.get_guild(user_data.id_server)
@@ -1258,7 +1259,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				target_weapon = None
 				if target_data.weapon >= 0:
 					target_weapon_item = EwItem(id_item = target_data.weapon)
-					target_weapon = ewcfg.weapon_map.get(target_weapon_item.item_props.get("weapon_type"))
+					target_weapon = static_weapons.weapon_map.get(target_weapon_item.item_props.get("weapon_type"))
 
 
 				# apply defensive mods
@@ -1546,7 +1547,7 @@ async def spar(cmd):
 				#Determine if the !spar is a duel:
 				weapon = None
 				if user_data.weapon >= 0 and sparred_data.weapon >= 0 and weapon_item.item_props.get("weapon_type") == sparred_weapon_item.item_props.get("weapon_type"):
-					weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+					weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 					duel = True
 
 				if sparred_data.life_state == ewcfg.life_state_corpse:
@@ -1659,7 +1660,7 @@ async def equip(cmd):
 		item = EwItem(id_item = item_sought.get("id_item"))
 
 		if item.item_type == ewcfg.it_weapon:
-			weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+			weapon = static_weapons.weapon_map.get(item.item_props.get("weapon_type"))
 			#if weapon.is_tool == 1 and (user_data.sidearm < 0 or user_data.weapon >= 0):
 			#	return await sidearm(cmd =cmd)
 
@@ -1738,7 +1739,7 @@ async def marry(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	weapon_item = EwItem(id_item = user_data.weapon)
-	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+	weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 	display_name = cmd.message.author.display_name
 	if weapon != None:
 		weapon_name = weapon_item.item_props.get("weapon_name") if len(weapon_item.item_props.get("weapon_name")) > 0 else weapon.str_weapon
@@ -1850,7 +1851,7 @@ async def divorce(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	weapon_item = EwItem(id_item = user_data.weapon)
-	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+	weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 	if weapon != None:
 		weapon_name = weapon_item.item_props.get("weapon_name") if len(weapon_item.item_props.get("weapon_name")) > 0 else weapon.str_weapon
 
@@ -1898,7 +1899,7 @@ async def reload(cmd):
 
 	if user_data.weapon > 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
-		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 		if ewcfg.weapon_class_ammo in weapon.classes:
 			weapon_item.item_props["ammo"] = weapon.clip_size
@@ -1908,7 +1909,7 @@ async def reload(cmd):
 
 	if user_data.sidearm > 0:
 		sidearm_item = EwItem(id_item=user_data.sidearm)
-		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+		sidearm = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
 
 		if ewcfg.weapon_class_ammo in sidearm.classes:
 			sidearm_item.item_props["ammo"] = sidearm.clip_size
@@ -2747,9 +2748,9 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 	if ewcfg.mutation_id_2ndamendment in user_mutations:
 		if user_data.weapon != -1 and user_data.sidearm != -1:
 			weapon_item = EwItem(id_item=user_data.weapon)
-			weapon_c = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			weapon_c = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 			sidearm_item = EwItem(id_item=user_data.sidearm)
-			sidearm_c = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+			sidearm_c = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
 			if weapon_c.is_tool == 0 and sidearm_c.is_tool == 0:
 				damage_mod *= 1.25
 
@@ -2850,14 +2851,14 @@ async def spray(cmd):
 
 		#if user_data.sidearm >= 0:
 		#	weapon_item = EwItem(id_item=user_data.sidearm)
-		#	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		#	weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		#	captcha = weapon_item.item_props.get('captcha')
 		#	if ewcfg.weapon_class_paint in weapon.classes:
 		#		sidearm_viable = 1
 
 		if user_data.weapon >= 0 and sidearm_viable == 0:
 			weapon_item = EwItem(id_item=user_data.weapon)
-			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 			captcha = weapon_item.item_props.get('captcha')
 
 		if weapon_item is not None and roomba_loop == 0:
@@ -2894,7 +2895,7 @@ async def spray(cmd):
 			#sap_damage = 0
 			#sap_ignored = 0
 
-			weapon.fn_effect = ewcfg.weapon_type_convert.get(weapon.id_weapon)
+			weapon.fn_effect = static_weapons.weapon_type_convert.get(weapon.id_weapon)
 
 			shooter_status_mods = get_shooter_status_mods(user_data, None, None)
 
@@ -3118,14 +3119,14 @@ async def sanitize(cmd):
 
 		# if user_data.sidearm >= 0:
 		#	weapon_item = EwItem(id_item=user_data.sidearm)
-		#	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		#	weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		#	captcha = weapon_item.item_props.get('captcha')
 		#	if ewcfg.weapon_class_paint in weapon.classes:
 		#		sidearm_viable = 1
 
 		if user_data.weapon >= 0 and sidearm_viable == 0:
 			weapon_item = EwItem(id_item=user_data.weapon)
-			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 			captcha = weapon_item.item_props.get('captcha')
 
 		if weapon_item is not None and roomba_loop == 0:
@@ -3162,7 +3163,7 @@ async def sanitize(cmd):
 			# sap_damage = 0
 			# sap_ignored = 0
 
-			weapon.fn_effect = ewcfg.weapon_type_convert.get(weapon.id_weapon)
+			weapon.fn_effect = static_weapons.weapon_type_convert.get(weapon.id_weapon)
 
 			shooter_status_mods = get_shooter_status_mods(user_data, None, None)
 
@@ -3444,7 +3445,7 @@ async def switch_weapon(cmd):
 		response = "You put your weapon away."
 	elif user_data.weapon >= 0:
 		weapon_item = EwItem(id_item=user_data.weapon)
-		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		response = "**FWIP-CLICK!** You whip out your {}.".format(weapon_item.item_props.get("weapon_name") if weapon_item.item_props.get("weapon_name") != "" else weapon.str_name)
 		if ewcfg.weapon_class_captcha in weapon.classes:
 			newcaptcha = ewutils.text_to_regional_indicator(weapon_item.item_props.get('captcha'))

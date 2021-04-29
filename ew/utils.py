@@ -21,6 +21,7 @@ import discord
 
 from .static import cfg as ewcfg
 from .static import items as static_items
+from .static import weapons as static_weapons
 from . import wep as ewwep
 from .user import EwUser
 from .district import EwDistrict
@@ -941,7 +942,7 @@ async def burnSlimes(id_server = None):
 
 			# Player died
 			if user_data.slimes - slimes_to_burn < 0:
-				weapon = ewcfg.weapon_map.get(ewcfg.weapon_id_molotov)
+				weapon = static_weapons.weapon_map.get(ewcfg.weapon_id_molotov)
 
 				player_data = EwPlayer(id_server=user_data.id_server, id_user=user_data.id_user)
 				killer = EwPlayer(id_server=id_server, id_user=killer_data.id_user)
@@ -1737,7 +1738,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 		user_weapon_item = None
 		if user_data.weapon >= 0:
 			user_weapon_item = EwItem(id_item = user_data.weapon)
-			user_weapon = ewcfg.weapon_map.get(user_weapon_item.item_props.get("weapon_type"))
+			user_weapon = static_weapons.weapon_map.get(user_weapon_item.item_props.get("weapon_type"))
 
 		# apply defensive mods
 		slimes_damage_target = damage * ewwep.damage_mod_defend(
@@ -2211,7 +2212,7 @@ def create_death_report(cause = None, user_data = None):
 
 			# Get killer weapon
 			weapon_item = EwItem(id_item = killer_data.weapon)
-			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 			killer_nick = player_data.display_name
 
@@ -2224,7 +2225,7 @@ def create_death_report(cause = None, user_data = None):
 				deathreport = "{} ".format(ewcfg.emote_bustin) + formatMessage(user_player, deathreport)
 
 			if (cause == ewcfg.cause_burning): # Response for burning to death
-				deathreport = "You were {} by {}. {}".format(ewcfg.weapon_map.get(ewcfg.weapon_id_molotov).str_killdescriptor, killer_nick, ewcfg.emote_slimeskull)
+				deathreport = "You were {} by {}. {}".format(static_weapons.weapon_map.get(ewcfg.weapon_id_molotov).str_killdescriptor, killer_nick, ewcfg.emote_slimeskull)
 				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 		if(killer_isEnemy): # Generate responses for being killed by enemy
@@ -2272,7 +2273,7 @@ def create_death_report(cause = None, user_data = None):
 
 	if (cause == ewcfg.cause_backfire): # Response for death by self backfire
 		weapon_item = EwItem(id_item = user_data.weapon)
-		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		deathreport = "{} killed themselves with their own {}. Dumbass.".format(user_nick, weapon.str_name)
 
 	if (cause == ewcfg.cause_praying): # Response for praying
@@ -3036,7 +3037,7 @@ def get_mutation_alias(name):
 		return 0
 
 def get_fingernail_item(cmd):
-	item = ewcfg.weapon_map.get(ewcfg.weapon_id_fingernails)
+	item = static_weapons.weapon_map.get(ewcfg.weapon_id_fingernails)
 	item_props = ewitem.gen_item_props(item)
 	id_item = ewitem.item_create(
 		item_type=ewcfg.it_weapon,

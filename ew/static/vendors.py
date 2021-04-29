@@ -1,6 +1,7 @@
 from . import cfg as ewcfg
 from . import cosmetics
 from . import items as static_items
+from . import weapons
 
 # A map of vendor names to their items.
 vendor_inv = {}
@@ -105,10 +106,7 @@ for furniture in ewcfg.furniture_list:
 
 
 # Populate weapon map, including all aliases.
-for weapon in ewcfg.weapon_list:
-	ewcfg.weapon_map[weapon.id_weapon] = weapon
-	ewcfg.weapon_names.append(weapon.id_weapon)
-
+for weapon in weapons.weapon_list:
 	for vendor in weapon.vendors:
 		vendor_list = vendor_inv.get(vendor)
 
@@ -117,9 +115,6 @@ for weapon in ewcfg.weapon_list:
 			vendor_inv[vendor] = vendor_list
 
 		vendor_list.append(weapon.id_weapon)
-
-	for alias in weapon.alias:
-		ewcfg.weapon_map[alias] = weapon
 
 # List of items you can obtain via milling.
 mill_results = []
@@ -190,7 +185,7 @@ for s in cosmetics.cosmetic_items_list:
 	else:
 		pass
 
-for s in ewcfg.weapon_list:
+for s in weapons.weapon_list:
 	if s.acquisition == ewcfg.acquisition_smelting:
 		smelt_results.append(s)
 	else:

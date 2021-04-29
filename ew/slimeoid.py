@@ -3,6 +3,7 @@ import asyncio
 import time
 
 from .static import cfg as ewcfg
+from .static import slimeoid as sl_static
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -679,7 +680,7 @@ async def playfetch(cmd):
 			response = "{} is too beat up from its last battle to play fetch right now.".format(slimeoid.name)
 
 	else:
-		head = ewcfg.head_map.get(slimeoid.head)
+		head = sl_static.head_map.get(slimeoid.head)
 		response = head.str_fetch.format(
 			slimeoid_name = slimeoid.name
 		)
@@ -716,16 +717,16 @@ async def observeslimeoid(cmd):
 		result = options[roll]
 
 		if result == 'body':
-			part = ewcfg.body_map.get(slimeoid.body)
+			part = sl_static.body_map.get(slimeoid.body)
 
 		if result == 'weapon':
-			part = ewcfg.offense_map.get(slimeoid.weapon)
+			part = sl_static.offense_map.get(slimeoid.weapon)
 
 		if result == 'special':
-			part = ewcfg.special_map.get(slimeoid.special)
+			part = sl_static.special_map.get(slimeoid.special)
 
 		if result == 'brain':
-			part = ewcfg.brain_map.get(slimeoid.ai)
+			part = sl_static.brain_map.get(slimeoid.ai)
 
 		response = part.str_observe.format(
 			slimeoid_name = slimeoid.name
@@ -789,12 +790,12 @@ async def petslimeoid(cmd):
 
 	else:
 
-		armor = ewcfg.defense_map.get(slimeoid.armor)
+		armor = sl_static.defense_map.get(slimeoid.armor)
 		response = armor.str_pet.format(
 			slimeoid_name = slimeoid.name
 		)
 		response += " "
-		brain = ewcfg.brain_map.get(slimeoid.ai)
+		brain = sl_static.brain_map.get(slimeoid.ai)
 		response += brain.str_pet.format(
 			slimeoid_name = slimeoid.name
 		)
@@ -854,12 +855,12 @@ async def abuseslimeoid(cmd):
 
 	else:
 
-		armor = ewcfg.defense_map.get(slimeoid.armor)
+		armor = sl_static.defense_map.get(slimeoid.armor)
 		response = armor.str_abuse.format(
 			slimeoid_name = slimeoid.name
 		)
 		response += " "
-		brain = ewcfg.brain_map.get(slimeoid.ai)
+		brain = sl_static.brain_map.get(slimeoid.ai)
 		response += brain.str_abuse.format(
 			slimeoid_name = slimeoid.name
 		)
@@ -891,13 +892,13 @@ async def walkslimeoid(cmd):
 			response = "{} can barely move. It's still recovering from its injuries.".format(slimeoid.name)
 
 	else:
-		brain = ewcfg.brain_map.get(slimeoid.ai)
+		brain = sl_static.brain_map.get(slimeoid.ai)
 		response = brain.str_walk.format(
 			slimeoid_name = slimeoid.name
 		)
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		response += " With that done, you go for a leisurely stroll around {}, while ".format(poi.str_name)
-		legs = ewcfg.mobility_map.get(slimeoid.legs)
+		legs = sl_static.mobility_map.get(slimeoid.legs)
 		response += legs.str_walk.format(
 			slimeoid_name = slimeoid.name
 		)
@@ -1035,7 +1036,7 @@ async def dissolveslimeoid(cmd):
 		if slimeoid.life_state == ewcfg.slimeoid_state_forming:
 			response = "You hit a large red button with a white X on it. Immediately a buzzer goes off and the half-formed body of what would have been your new Slimeoid is flushed out of the gestation tank and down a drainage tube, along with your poudrin and slime. What a waste."
 		else:
-			brain = ewcfg.brain_map.get(slimeoid.ai)
+			brain = sl_static.brain_map.get(slimeoid.ai)
 			response = brain.str_dissolve.format(
 				slimeoid_name = slimeoid.name
 			)
@@ -1106,7 +1107,7 @@ async def growbody(cmd):
 		if cmd.tokens_count > 1:
 			value = cmd.tokens[1]
 			value = value.lower()
-			body = ewcfg.body_map.get(value)
+			body = sl_static.body_map.get(value)
 			if body != None:
 				if value in ["a", "b", "c", "d", "e", "f", "g"]:
 					response = " {}".format(body.str_create)
@@ -1157,7 +1158,7 @@ async def growhead(cmd):
 		if cmd.tokens_count > 1:
 			value = cmd.tokens[1]
 			value = value.lower()
-			head = ewcfg.head_map.get(value)
+			head = sl_static.head_map.get(value)
 			if head != None:
 				if value in ["a", "b", "c", "d", "e", "f", "g"]:
 					response = " {}".format(head.str_create)
@@ -1207,7 +1208,7 @@ async def growlegs(cmd):
 		if cmd.tokens_count > 1:
 			value = cmd.tokens[1]
 			value = value.lower()
-			mobility = ewcfg.mobility_map.get(value)
+			mobility = sl_static.mobility_map.get(value)
 			if mobility != None:
 				if value in ["a", "b", "c", "d", "e", "f", "g"]:
 					response = " {}".format(mobility.str_create)
@@ -1257,7 +1258,7 @@ async def growweapon(cmd):
 		if cmd.tokens_count > 1:
 			value = cmd.tokens[1]
 			value = value.lower()
-			offense = ewcfg.offense_map.get(value)
+			offense = sl_static.offense_map.get(value)
 			if offense != None:
 				if value in ["a", "b", "c", "d", "e", "f", "g"]:
 					response = " {}".format(offense.str_create)
@@ -1307,7 +1308,7 @@ async def growarmor(cmd):
 		if cmd.tokens_count > 1:
 			value = cmd.tokens[1]
 			value = value.lower()
-			defense = ewcfg.defense_map.get(value)
+			defense = sl_static.defense_map.get(value)
 			if defense != None:
 				if value in ["a", "b", "c", "d", "e", "f", "g"]:
 					response = " {}".format(defense.str_create)
@@ -1357,7 +1358,7 @@ async def growspecial(cmd):
 		if cmd.tokens_count > 1:
 			value = cmd.tokens[1]
 			value = value.lower()
-			special = ewcfg.special_map.get(value)
+			special = sl_static.special_map.get(value)
 			if special != None:
 				if value in ["a", "b", "c", "d", "e", "f", "g"]:
 					response = " {}".format(special.str_create)
@@ -1407,7 +1408,7 @@ async def growbrain(cmd):
 		if cmd.tokens_count > 1:
 			value = cmd.tokens[1]
 			value = value.lower()
-			brain = ewcfg.brain_map.get(value)
+			brain = sl_static.brain_map.get(value)
 			if brain != None:
 				if value in ["a", "b", "c", "d", "e", "f", "g"]:
 					response = " {}".format(brain.str_create)
@@ -1896,7 +1897,7 @@ async def spawnslimeoid(cmd):
 				response += "\n\n{} is a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
 				response += slimeoid_describe(slimeoid)
 
-				brain = ewcfg.brain_map.get(slimeoid.ai)
+				brain = sl_static.brain_map.get(slimeoid.ai)
 				response += "\n\n" + brain.str_spawn.format(
 					slimeoid_name = slimeoid.name
 				)
@@ -1913,31 +1914,31 @@ async def spawnslimeoid(cmd):
 def slimeoid_describe(slimeoid):
 	response = ""
 
-	body = ewcfg.body_map.get(slimeoid.body)
+	body = sl_static.body_map.get(slimeoid.body)
 	if body != None:
 		response += " {}".format(body.str_body)
 
-	head = ewcfg.head_map.get(slimeoid.head)
+	head = sl_static.head_map.get(slimeoid.head)
 	if head != None:
 		response += " {}".format(head.str_head)
 
-	mobility = ewcfg.mobility_map.get(slimeoid.legs)
+	mobility = sl_static.mobility_map.get(slimeoid.legs)
 	if mobility != None:
 		response += " {}".format(mobility.str_mobility)
 
-	offense = ewcfg.offense_map.get(slimeoid.weapon)
+	offense = sl_static.offense_map.get(slimeoid.weapon)
 	if offense != None:
 		response += " {}".format(offense.str_offense)
 
-	defense = ewcfg.defense_map.get(slimeoid.armor)
+	defense = sl_static.defense_map.get(slimeoid.armor)
 	if defense != None:
 		response += " {}".format(defense.str_armor)
 
-	special = ewcfg.special_map.get(slimeoid.special)
+	special = sl_static.special_map.get(slimeoid.special)
 	if special != None:
 		response += " {}".format(special.str_special)
 
-	brain = ewcfg.brain_map.get(slimeoid.ai)
+	brain = sl_static.brain_map.get(slimeoid.ai)
 	if brain != None:
 		response += " {}".format(brain.str_brain)
 
@@ -2614,11 +2615,11 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 	# initialize combat data for challengee
 	s1_combat_data = EwSlimeoidCombatData(
 		name = str(challengee_slimeoid.name),
-		weapon = ewcfg.offense_map.get(challengee_slimeoid.weapon),
-		armor = ewcfg.defense_map.get(challengee_slimeoid.armor),
-		special = ewcfg.special_map.get(challengee_slimeoid.special),
-		legs = ewcfg.mobility_map.get(challengee_slimeoid.legs),
-		brain = ewcfg.brain_map.get(challengee_slimeoid.ai),
+		weapon = sl_static.offense_map.get(challengee_slimeoid.weapon),
+		armor = sl_static.defense_map.get(challengee_slimeoid.armor),
+		special = sl_static.special_map.get(challengee_slimeoid.special),
+		legs = sl_static.mobility_map.get(challengee_slimeoid.legs),
+		brain = sl_static.brain_map.get(challengee_slimeoid.ai),
 		hue = ewcfg.hue_map.get(challengee_slimeoid.hue),
 		coating = challengee_slimeoid.coating,
 		moxie = challengee_slimeoid.atk + 1,
@@ -2635,11 +2636,11 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 	# initialize combat data for challenger
 	s2_combat_data = EwSlimeoidCombatData(
 		name = str(challenger_slimeoid.name),
-		weapon = ewcfg.offense_map.get(challenger_slimeoid.weapon),
-		armor = ewcfg.defense_map.get(challenger_slimeoid.armor),
-		special = ewcfg.special_map.get(challenger_slimeoid.special),
-		legs = ewcfg.mobility_map.get(challenger_slimeoid.legs),
-		brain = ewcfg.brain_map.get(challenger_slimeoid.ai),
+		weapon = sl_static.offense_map.get(challenger_slimeoid.weapon),
+		armor = sl_static.defense_map.get(challenger_slimeoid.armor),
+		special = sl_static.special_map.get(challenger_slimeoid.special),
+		legs = sl_static.mobility_map.get(challenger_slimeoid.legs),
+		brain = sl_static.brain_map.get(challenger_slimeoid.ai),
 		hue = ewcfg.hue_map.get(challenger_slimeoid.hue),
 		coating = challenger_slimeoid.coating,
 		moxie = challenger_slimeoid.atk + 1,
@@ -3336,8 +3337,8 @@ async def feedslimeoid(cmd):
 					slimeoid.persist()
 					ewitem.item_delete(id_item = item_data.id_item)
 					response = "{slimeoid_name} eats the {food_name}."
-					slimeoid_brain = ewcfg.brain_map.get(slimeoid.ai)
-					slimeoid_head = ewcfg.head_map.get(slimeoid.head)
+					slimeoid_brain = sl_static.brain_map.get(slimeoid.ai)
+					slimeoid_head = sl_static.head_map.get(slimeoid.head)
 					if slimeoid_brain != None and slimeoid_head != None:
 						response = "{} {}".format(slimeoid_brain.str_feed, slimeoid_head.str_feed)
 				else:

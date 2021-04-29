@@ -6,6 +6,7 @@ import asyncio
 from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import items as static_items
+from .static import weapons as static_weapons
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -410,7 +411,7 @@ class EwEnemy:
 			target_weapon_item = None
 			if target_data.weapon >= 0:
 				target_weapon_item = EwItem(id_item = target_data.weapon)
-				target_weapon = ewcfg.weapon_map.get(target_weapon_item.item_props.get("weapon_type"))
+				target_weapon = static_weapons.weapon_map.get(target_weapon_item.item_props.get("weapon_type"))
 			
 			server = client.get_guild(target_data.id_server)
 			# server = discord.guild(id=target_data.id_server)
@@ -2218,7 +2219,7 @@ def find_enemy(enemy_search=None, user_data=None):
 		# Check if the identifier letter inputted was a user's captcha. If so, ignore it.
 		if user_data.weapon >= 0:
 			weapon_item = EwItem(id_item=user_data.weapon)
-			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 			captcha = weapon_item.item_props.get('captcha')
 
 			if weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha in enemy_search_tokens_upper:
@@ -2368,7 +2369,7 @@ def drop_enemy_loot(enemy_data, district_data):
 					item.vendors = [ewcfg.vendor_bazaar]
 	
 		if item == None:
-			item = ewcfg.weapon_map.get(value)
+			item = static_weapons.weapon_map.get(value)
 			item_type = ewcfg.it_weapon
 			if item != None:
 				item_id = item.id_weapon

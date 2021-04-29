@@ -8,6 +8,7 @@ from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import vendors
 from .static import items as static_items
+from .static import weapons as static_weapons
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -288,7 +289,7 @@ def gen_data_text(
 		coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
 
 		weapon_item = EwItem(id_item=user_data.weapon)
-		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 		if weapon != None:
 			response += " {} {}{}.".format(
@@ -299,7 +300,7 @@ def gen_data_text(
 				response += " {}".format(weapon.str_weaponmaster.format(rank=(user_data.weaponskill - 4)))
 
 		sidearm_item = EwItem(id_item=user_data.sidearm)
-		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+		sidearm = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
 
 		if sidearm != None:
 			response += " They have sidearmed {}{}.".format((
@@ -531,7 +532,7 @@ async def data(cmd):
 		coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
 
 		weapon_item = EwItem(id_item=user_data.weapon)
-		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 		if weapon != None:
 			response += " {} {}{}.".format(
@@ -544,7 +545,7 @@ async def data(cmd):
 		trauma = ewcfg.trauma_map.get(user_data.trauma)
 
 		sidearm_item = EwItem(id_item=user_data.sidearm)
-		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+		sidearm = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
 
 		if sidearm != None:
 			response += " You have sidearmed {}{}.".format((
@@ -1814,7 +1815,7 @@ async def recycle(cmd):
 		if not item.soulbound:
 			if item.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item.id_item == user_data.weapon:
 				if user_data.weaponmarried:
-					weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+					weapon = static_weapons.weapon_map.get(item.item_props.get("weapon_type"))
 					response = "Woah, wow, hold on there! Domestic violence is one thing, but how could you just throw your faithful {} into a glorified incinerator? Look, we all have bad days, but that's no way to treat a weapon. At least get a proper divorce first, you animal.".format(weapon.str_weapon)
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				else:
@@ -2141,7 +2142,7 @@ async def toss_off_cliff(cmd):
 
 		elif item_obj.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item_obj.id_item == user_data.weapon:
 			if user_data.weaponmarried:
-				weapon = ewcfg.weapon_map.get(item_obj.item_props.get("weapon_type"))
+				weapon = static_weapons.weapon_map.get(item_obj.item_props.get("weapon_type"))
 				response = "You decide not to chuck your betrothed off the cliff because you care about them very very much. See {}? I'm not going to hurt you. You don't have to call that social worker again.".format(weapon.str_weapon)
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2487,7 +2488,7 @@ async def create_item(cmd):
 				item.vendors = [ewcfg.vendor_bazaar]
 
 	if item == None:
-		item = ewcfg.weapon_map.get(value)
+		item = static_weapons.weapon_map.get(value)
 		item_type = ewcfg.it_weapon
 		if item != None:
 			item_id = item.id_weapon
