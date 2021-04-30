@@ -5,6 +5,8 @@ import asyncio
 from . import utils as ewutils
 from .static import cfg as ewcfg
 from .static import weapons as static_weapons
+from .static import poi as poi_static
+from .static import mutations as static_mutations
 from . import stats as ewstats
 from . import item as ewitem
 from . import statuseffects as ewstatuseffects
@@ -190,7 +192,7 @@ class EwUser:
 
 					add_success = self.add_mutation(new_mutation)
 					if add_success:
-						response += "\n\nWhat’s this? You are mutating!! {}".format(ewcfg.mutations_map[new_mutation].str_acquire)
+						response += "\n\nWhat’s this? You are mutating!! {}".format(static_mutations.mutations_map[new_mutation].str_acquire)
 						
 			self.slimelevel = new_level
 			if self.life_state == ewcfg.life_state_corpse:
@@ -225,7 +227,7 @@ class EwUser:
 		resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 
 
-		poi = ewcfg.id_to_poi.get(self.poi)
+		poi = poi_static.id_to_poi.get(self.poi)
 		if cause == ewcfg.cause_weather:
 			resp_cont.add_channel_response(poi.channel, deathreport)
 
@@ -242,7 +244,7 @@ class EwUser:
 				user_hasCombustion = True
 				explode_damage = ewutils.slime_bylevel(self.slimelevel) / 5
 				explode_district = ewdistrict.EwDistrict(district = self.poi, id_server = self.id_server)
-				explode_poi_channel = ewcfg.id_to_poi.get(self.poi).channel
+				explode_poi_channel = poi_static.id_to_poi.get(self.poi).channel
 
 		if self.life_state == ewcfg.life_state_corpse:
 			self.busted = True
@@ -510,7 +512,7 @@ class EwUser:
 					self.id_server,
 					self.id_user,
 					id_mutation,
-					ewcfg.mutations_map.get(id_mutation).tier,
+					static_mutations.mutations_map.get(id_mutation).tier,
 					is_artificial
 				))
 
@@ -585,7 +587,7 @@ class EwUser:
 
 	def get_mutation_next_level(self):
 		next_mutation = self.get_mutation_next()
-		next_mutation_obj = ewcfg.mutations_map.get(next_mutation)
+		next_mutation_obj = static_mutations.mutations_map.get(next_mutation)
 		if next_mutation_obj != None:
 			return next_mutation_obj.tier
 		else:
@@ -620,7 +622,7 @@ class EwUser:
 			random.seed(counter + seed)
 
 			for x in range(1000):
-				result = random.choice(list(ewcfg.mutation_ids))
+				result = random.choice(list(static_mutations.mutation_ids))
 
 				if result == ewcfg.mutation_id_airlock:
 					if ewcfg.mutation_id_whitenationalist in current_mutations or ewcfg.mutation_id_lightasafeather in current_mutations:
@@ -635,7 +637,7 @@ class EwUser:
 					if ewcfg.mutation_id_onemansjunk in current_mutations:
 						continue
 
-				if result not in current_mutations and ewcfg.mutations_map[result].tier + self.get_mutation_level() <= 50:
+				if result not in current_mutations and static_mutations.mutations_map[result].tier + self.get_mutation_level() <= 50:
 					return result
 
 			result = ""

@@ -2,6 +2,8 @@ from . import cfg as ewcfg
 from . import cosmetics
 from . import items as static_items
 from . import weapons
+from . import food as static_food
+
 
 # A map of vendor names to their items.
 vendor_inv = {}
@@ -19,10 +21,7 @@ for item in static_items.item_list:
 		vendor_list.append(item.id_item)
 
 # Populate food map, including all aliases.
-for food in ewcfg.food_list:
-	ewcfg.food_map[food.id_food] = food
-	ewcfg.food_names.append(food.id_food)
-
+for food in static_food.food_list:
 	# Add food to its vendors' lists.
 	for vendor in food.vendors:
 		vendor_list = vendor_inv.get(vendor)
@@ -32,9 +31,6 @@ for food in ewcfg.food_list:
 			vendor_inv[vendor] = vendor_list
 
 		vendor_list.append(food.id_food)
-
-	for alias in food.alias:
-		ewcfg.food_map[alias] = food
 
 # Populate fish map, including all aliases.
 for fish in ewcfg.fish_list:
@@ -126,7 +122,7 @@ for m in static_items.item_list:
 	else:
 		pass
 
-for m in ewcfg.food_list:
+for m in static_food.food_list:
 	if m.acquisition == ewcfg.acquisition_milling:
 		mill_results.append(m)
 	else:
@@ -148,7 +144,7 @@ for a in static_items.item_list:
 	else:
 		pass
 
-for a in ewcfg.food_list:
+for a in static_food.food_list:
 	if a.acquisition == ewcfg.acquisition_bartering:
 		appraise_results.append(a)
 	else:
@@ -173,7 +169,7 @@ for s in static_items.item_list:
 	else:
 		pass
 
-for s in ewcfg.food_list:
+for s in static_food.food_list:
 	if s.acquisition == ewcfg.acquisition_smelting:
 		smelt_results.append(s)
 	else:
@@ -207,7 +203,7 @@ for m in static_items.item_list:
 	else:
 		pass
 
-for m in ewcfg.food_list:
+for m in static_food.food_list:
 	if m.acquisition == ewcfg.acquisition_mining:
 		mine_results.append(m)
 	else:

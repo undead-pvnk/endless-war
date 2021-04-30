@@ -4,6 +4,9 @@ import time
 from .static import cfg as ewcfg
 from .static import vendors
 from .static import weapons as static_weapons
+from .static import weather as weather_static
+from .static import food as static_food
+from .static import poi as poi_static
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -190,7 +193,7 @@ def gen_fish(x, fisher, has_fishingrod):
 					fish_pool.append(fish)
 
 	market_data = x #todo ?
-	weather_data = ewcfg.weather_map.get(market_data.weather)
+	weather_data = weather_static.weather_map.get(market_data.weather)
 
 	if weather_data.name != "rainy":
 		for fish in fish_pool:
@@ -304,8 +307,8 @@ async def cast(cmd):
 		response = "You've already cast a line."
 
 	# Only fish at The Pier
-	elif user_data.poi in ewcfg.piers:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	elif user_data.poi in poi_static.piers:
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		rod_possession = user_data.get_possession('rod')
@@ -356,7 +359,7 @@ async def cast(cmd):
 					id_food = item.item_props.get('id_food')
 					fisher.bait = True
 
-					if id_food in ewcfg.plebe_bait:
+					if id_food in static_food.plebe_bait:
 						fisher.current_fish = "plebefish"
 
 					elif id_food == "doublestuffedcrust":
@@ -519,7 +522,7 @@ async def reel(cmd):
 	if cmd.message.author.id not in fishers.keys():
 		fishers[cmd.message.author.id] = EwFisher()
 	fisher = fishers[cmd.message.author.id]
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		valid_possession = user_data.get_possession('rod')
@@ -544,8 +547,8 @@ async def reel(cmd):
 		else:
 			response = "You can't fish while you're dead."
 
-	elif user_data.poi in ewcfg.piers:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	elif user_data.poi in poi_static.piers:
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -802,13 +805,13 @@ async def appraise(cmd):
 	#	response = "You ask the bartender if he knows someone who would want to trade you something for your recently caught fish. Apparently, at night, an old commodore by the name of Captain Albert Alexander comes to drown his sorrows at this very tavern. You guess you’ll just have to sit here and wait for him, then."
 
 	if cmd.message.channel.name != ewcfg.channel_speakeasy:
-		if user_data.poi in ewcfg.piers:
+		if user_data.poi in poi_static.piers:
 			response = 'You ask a nearby fisherman if he could appraise this fish you just caught. He tells you to fuck off, but also helpfully informs you that there’s an old sea captain that frequents the Speakeasy that might be able to help you. What an inexplicably helpful/grouchy fisherman!'
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
 
 	elif item_sought:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -921,13 +924,13 @@ async def barter(cmd):
 	#	response = "You ask the bartender if he knows someone who would want to trade you something for your recently caught fish. Apparently, at night, an old commodore by the name of Captain Albert Alexander comes to drown his sorrows at this very tavern. You guess you’ll just have to sit here and wait for him, then."
 
 	if cmd.message.channel.name != ewcfg.channel_speakeasy:
-		if user_data.poi in ewcfg.piers:
+		if user_data.poi in poi_static.piers:
 			response = 'You ask a nearby fisherman if he wants to trade you anything for this fish you just caught. He tells you to fuck off, but also helpfully informs you that there’s an old sea captain that frequents the Speakeasy that might be able to help you. What an inexplicably helpful/grouchy fisherman!'
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
 
 	elif item_sought:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1165,7 +1168,7 @@ async def barter_all(cmd):
 
 	#if not in speakeasy, break
 	if cmd.message.channel.name != ewcfg.channel_speakeasy:
-		if user_data.poi in ewcfg.piers:
+		if user_data.poi in poi_static.piers:
 			response = 'You ask a nearby fisherman if he wants to trade you anything for this fish you just caught. He tells you to fuck off, but also helpfully informs you that there’s an old sea captain that frequents the Speakeasy that might be able to help you. What an inexplicably helpful/grouchy fisherman!'
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
@@ -1217,7 +1220,7 @@ async def barter_all(cmd):
 
 	#if player had some fish to offer
 	if offer_slime > 0 or len(offer_items) > 0:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1388,7 +1391,7 @@ async def embiggen(cmd):
 		response = "How are you going to embiggen your fish on the side of the street? You’ve got to see a professional for this, man. Head to the SlimeCorp Laboratory, they’ve got dozens of modern day magic potions ‘n shit over there."
 
 	elif item_sought:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():

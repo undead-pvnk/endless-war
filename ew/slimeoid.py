@@ -4,6 +4,7 @@ import time
 
 from .static import cfg as ewcfg
 from .static import slimeoid as sl_static
+from .static import poi as poi_static
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -223,7 +224,7 @@ class EwSlimeoid:
 		if (self.sltype != ewcfg.sltype_nega) or active_slimeoidbattles.get(self.id_slimeoid):
 			return resp_cont
 		market_data = EwMarket(id_server = self.id_server)
-		ch_name = ewcfg.id_to_poi.get(self.poi).channel
+		ch_name = poi_static.id_to_poi.get(self.poi).channel
 
 		data = ewutils.execute_sql_query("SELECT {id_user} FROM users WHERE {poi} = %s AND {id_server} = %s".format(
 			id_user = ewcfg.col_id_user,
@@ -260,10 +261,10 @@ class EwSlimeoid:
 		if active_slimeoidbattles.get(self.id_slimeoid):
 			return resp_cont
 		try:
-			destinations = ewcfg.poi_neighbors.get(self.poi).intersection(set(ewcfg.capturable_districts))
+			destinations = poi_static.poi_neighbors.get(self.poi).intersection(set(poi_static.capturable_districts))
 			if len(destinations) > 0:
 				self.poi = random.choice(list(destinations))
-				poi_def = ewcfg.id_to_poi.get(self.poi)
+				poi_def = poi_static.id_to_poi.get(self.poi)
 				ch_name = poi_def.channel
 		
 				response = "The air grows colder and color seems to drain from the streets and buildings around you. {} has arrived.".format(self.name)
@@ -896,7 +897,7 @@ async def walkslimeoid(cmd):
 		response = brain.str_walk.format(
 			slimeoid_name = slimeoid.name
 		)
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		response += " With that done, you go for a leisurely stroll around {}, while ".format(poi.str_name)
 		legs = sl_static.mobility_map.get(slimeoid.legs)
 		response += legs.str_walk.format(
@@ -956,7 +957,7 @@ async def incubateslimeoid(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1027,7 +1028,7 @@ async def dissolveslimeoid(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1097,7 +1098,7 @@ async def growbody(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1148,7 +1149,7 @@ async def growhead(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1198,7 +1199,7 @@ async def growlegs(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1248,7 +1249,7 @@ async def growweapon(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1298,7 +1299,7 @@ async def growarmor(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1348,7 +1349,7 @@ async def growspecial(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1398,7 +1399,7 @@ async def growbrain(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1449,7 +1450,7 @@ async def nameslimeoid(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1499,7 +1500,7 @@ async def raisemoxie(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1552,7 +1553,7 @@ async def lowermoxie(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1605,7 +1606,7 @@ async def raisegrit(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1658,7 +1659,7 @@ async def lowergrit(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1711,7 +1712,7 @@ async def raisechutzpah(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1764,7 +1765,7 @@ async def lowerchutzpah(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1816,7 +1817,7 @@ async def spawnslimeoid(cmd):
 
 	else:
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -2541,7 +2542,7 @@ async def restoreslimeoid(cmd):
 		response = "You must go to the SlimeCorp Laboratories in Brawlden to restore a Slimeoid."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():

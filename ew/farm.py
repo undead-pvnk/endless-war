@@ -5,6 +5,8 @@ import asyncio
 from .static import cfg as ewcfg
 from .static import vendors
 from .static import weapons as static_weapons
+from .static import food as static_food
+from .static import poi as poi_static
 from . import item as ewitem
 from . import utils as ewutils
 from . import rolemgr as ewrolemgr
@@ -124,7 +126,7 @@ async def reap(cmd):
 	levelup_response = ""
 	mutations = user_data.get_mutations()
 	cosmetic_abilites = ewutils.get_cosmetic_abilities(id_user = cmd.message.author.id, id_server = cmd.guild.id)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 
 	# check if the user has a farming tool equipped
 	weapon_item = EwItem(id_item=user_data.weapon)
@@ -140,7 +142,7 @@ async def reap(cmd):
 	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -234,9 +236,9 @@ async def reap(cmd):
 							response += "two {}s, ".format(item.str_name)
 
 					#  Determine what crop is grown.
-					vegetable = ewcfg.food_map.get(farm.crop)
+					vegetable = static_food.food_map.get(farm.crop)
 					if vegetable is None:
-						vegetable = random.choice(ewcfg.vegetable_list)
+						vegetable = random.choice(static_food.vegetable_list)
 
 					item_props = ewitem.gen_item_props(vegetable)
 
@@ -336,7 +338,7 @@ async def sow(cmd):
 		response = "The cracked, filthy concrete streets around you would be a pretty terrible place for a farm. Try again on more arable land."
 
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -365,7 +367,7 @@ async def sow(cmd):
 				item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 				
 				# if the item selected was a vegetable, use a food only filter in find_item
-				for v in ewcfg.vegetable_list:
+				for v in static_food.vegetable_list:
 					if item_search in v.id_food or item_search in v.str_name:
 						it_type_filter = ewcfg.it_food
 						break
@@ -381,10 +383,10 @@ async def sow(cmd):
 				item_data = EwItem(id_item = item_sought.get("id_item"))
 				if item_data.item_type == ewcfg.it_item:
 					if item_data.item_props.get("id_item") == ewcfg.item_id_slimepoudrin:
-						vegetable = random.choice(ewcfg.vegetable_list)
+						vegetable = random.choice(static_food.vegetable_list)
 						slimes_onreap *= 2
 					elif item_data.item_props.get("context") == ewcfg.context_slimeoidheart:
-						vegetable = random.choice(ewcfg.vegetable_list)
+						vegetable = random.choice(static_food.vegetable_list)
 						slimes_onreap *= 2
 
 						slimeoid_data = EwSlimeoid(id_slimeoid = item_data.item_props.get("subcontext"))
@@ -395,7 +397,7 @@ async def sow(cmd):
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				elif item_data.item_type == ewcfg.it_food:
 					food_id = item_data.item_props.get("id_food")
-					vegetable = ewcfg.food_map.get(food_id)
+					vegetable = static_food.food_map.get(food_id)
 					if ewcfg.vendor_farm not in vegetable.vendors:
 						response = "It sure would be nice if {}s grew on trees, but alas they do not. Idiot.".format(item_sought.get("name"))
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -461,7 +463,7 @@ async def mill(cmd):
 	# 	response = "It costs {} to !mill, and you only have {}.".format(ewcfg.slimes_permill, user_data.slimes)
 
 	elif item_sought:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -532,7 +534,7 @@ async def check_farm(cmd):
 	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -593,7 +595,7 @@ async def cultivate(cmd):
 	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():

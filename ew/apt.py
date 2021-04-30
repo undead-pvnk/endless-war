@@ -9,6 +9,8 @@ from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import items as static_items
 from .static import weapons as static_weapons
+from .static import food as static_food
+from .static import poi as poi_static
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import market as ewmarket
@@ -141,19 +143,19 @@ async def consult(cmd):
 	if user_data.poi != ewcfg.poi_id_realestate:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !consult at the Real Estate Agency in Old New Yonkers."))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(target_name)
+	poi = poi_static.id_to_poi.get(target_name)
 
 	if poi == None:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "That place doesn't exist. The stupidity of the question drives the realtor to down another bottle."))
 
-	elif poi.id_poi in ewcfg.transports:
+	elif poi.id_poi in poi_static.transports:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "As much as the realtor would like to charge you for being homeless, you can't pay rent for sleeping on public transport."))
 
 	elif poi.id_poi == ewcfg.poi_id_rowdyroughhouse or poi.id_poi == ewcfg.poi_id_copkilltown or poi.id_poi == ewcfg.poi_id_juviesrow:
@@ -201,14 +203,14 @@ async def signlease(cmd):
 	if user_data.poi != ewcfg.poi_id_realestate:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !signlease at the Real Estate Agency in Old New Yonkers."))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(target_name)
+	poi = poi_static.id_to_poi.get(target_name)
 
 	if poi == None:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "That place doesn't exist. The consultant behind the counter is aroused by your stupidity."))
@@ -216,7 +218,7 @@ async def signlease(cmd):
 	elif poi == ewcfg.poi_id_rowdyroughhouse or poi == ewcfg.poi_id_copkilltown or poi == ewcfg.poi_id_juviesrow:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "\"We don't have apartments in such...urban places,\" your consultant mutters under his breath."))
 
-	elif poi.id_poi in ewcfg.transports:
+	elif poi.id_poi in poi_static.transports:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "As much as the realtor would like to charge you for being homeless, you can't pay rent for sleeping on public transport."))
 
 	elif poi.is_subzone:
@@ -305,7 +307,7 @@ async def signlease(cmd):
 		else:
 
 			for value in ewcfg.fuck_energies:
-				item = ewcfg.food_map.get(value)
+				item = static_food.food_map.get(value)
 				item_props = ewitem.gen_item_props(item)
 				id_item = ewitem.item_create(
 					item_type=ewcfg.it_food,
@@ -322,8 +324,8 @@ async def signlease(cmd):
 
 async def retire(cmd):
 	user_data = EwUser(member=cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
-	poi_dest = ewcfg.id_to_poi.get(ewcfg.poi_id_apt + user_data.apt_zone) #there isn't an easy way to change this, apologies for being a little hacky
+	poi = poi_static.id_to_poi.get(user_data.poi)
+	poi_dest = poi_static.id_to_poi.get(ewcfg.poi_id_apt + user_data.apt_zone) #there isn't an easy way to change this, apologies for being a little hacky
 
 
 	owner_user = None
@@ -367,8 +369,8 @@ async def retire(cmd):
 async def depart(cmd=None, isGoto = False, movecurrent=None):
 	player = EwPlayer(id_user = cmd.message.author.id)
 	user_data = EwUser(id_user = player.id_user, id_server = player.id_server)
-	poi_source = ewcfg.id_to_poi.get(user_data.poi)
-	poi_dest = ewcfg.id_to_poi.get(poi_source.mother_districts[0])
+	poi_source = poi_static.id_to_poi.get(user_data.poi)
+	poi_dest = poi_static.id_to_poi.get(poi_source.mother_districts[0])
 
 	#isgoto checks if this is part of a goto command.
 
@@ -452,8 +454,8 @@ async def rent_time(id_server = None):
 				owner_rent_price = landowner[0]
 
 				user_data = EwUser(id_user=owner_id_user, id_server=id_server)
-				user_poi = ewcfg.id_to_poi.get(user_data.poi)
-				poi = ewcfg.id_to_poi.get(user_data.apt_zone)
+				user_poi = poi_static.id_to_poi.get(user_data.poi)
+				poi = poi_static.id_to_poi.get(user_data.apt_zone)
 
 				if owner_rent_price > user_data.slimecoin:
 
@@ -471,7 +473,7 @@ async def rent_time(id_server = None):
 
 					user_data = EwUser(id_user=owner_id_user, id_server=id_server)
 					user_apt = EwApartment(id_user=owner_id_user, id_server=id_server)
-					poi = ewcfg.id_to_poi.get(user_data.apt_zone)
+					poi = poi_static.id_to_poi.get(user_data.apt_zone)
 
 					toss_items(id_user=str(user_data.id_user) + 'closet', id_server=user_data.id_server, poi = poi)
 					toss_items(id_user=str(user_data.id_user) + 'fridge', id_server=user_data.id_server, poi = poi)
@@ -502,14 +504,14 @@ async def apt_look(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
 	apt_model = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
-	poi = ewcfg.id_to_poi.get(apt_model.poi)
+	poi = poi_static.id_to_poi.get(apt_model.poi)
 	lookObject = str(cmd.message.author.id)
 	isVisiting = False
 	resp_cont = ewutils.EwResponseContainer(id_server=playermodel.id_server)
 
 	if usermodel.visiting != ewcfg.location_id_empty:
 		apt_model = EwApartment(id_user=usermodel.visiting, id_server=playermodel.id_server)
-		poi = ewcfg.id_to_poi.get(apt_model.poi)
+		poi = poi_static.id_to_poi.get(apt_model.poi)
 		lookObject = str(usermodel.visiting)
 		isVisiting = True
 
@@ -884,7 +886,7 @@ async def upgrade(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
-		poi = ewcfg.id_to_poi.get(usermodel.poi)
+		poi = poi_static.id_to_poi.get(usermodel.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = usermodel.id_server)
 
 		if district_data.is_degraded():
@@ -937,7 +939,7 @@ async def watch(cmd):
 	apartment_model = EwApartment(id_server=cmd.guild.id, id_user=user_id)
 	apartment_model.persist()
 
-	poi_object = ewcfg.id_to_poi.get(poi)
+	poi_object = poi_static.id_to_poi.get(poi)
 	item_sought = ewitem.find_item(id_user=str(user_id) + ewcfg.compartment_id_decorate, id_server=player_model.id_server, item_search="television")
 	if item_sought:
 		item_obj = ewitem.EwItem(id_item=item_sought.get('id_item'))
@@ -972,7 +974,7 @@ async def watch(cmd):
 			await asyncio.sleep(8)
 
 
-		poi = ewcfg.id_to_poi.get(user_model.poi)
+		poi = poi_static.id_to_poi.get(user_model.poi)
 		
 		await ewhunting.spawn_enemy(id_server=cmd.message.guild.id, pre_chosen_type=ewcfg.enemy_type_megaslime, pre_chosen_poi=poi.mother_districts[0], pre_chosen_slimes=ewcfg.tv_set_slime, pre_chosen_level=ewcfg.tv_set_level, pre_chosen_displayname="The Slime")
 		response = ""
@@ -1003,7 +1005,7 @@ async def add_key(cmd):
 	elif user_data.slimecoin < apartment_data.rent:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to pay base rent in order to receive a new housekey. It sadly appears as though you can't even afford a new friend."))
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1063,8 +1065,8 @@ async def add_key(cmd):
 
 async def usekey(cmd, owner_user):
 	user_data = EwUser(member=cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
-	poi_dest = ewcfg.id_to_poi.get(ewcfg.poi_id_apt + owner_user.apt_zone)  # there isn't an easy way to change this, apologies for being a little hacky
+	poi = poi_static.id_to_poi.get(user_data.poi)
+	poi_dest = poi_static.id_to_poi.get(ewcfg.poi_id_apt + owner_user.apt_zone)  # there isn't an easy way to change this, apologies for being a little hacky
 	inv = ewitem.inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id)
 	apartment = EwApartment(id_server=cmd.guild.id, id_user=owner_user.id_user)
 
@@ -1123,7 +1125,7 @@ async def manual_changelocks(cmd):
 	elif user_data.slimecoin < apartment_data.rent * 0.5:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to pay half of base rent in order to change the locks around. Whatever scourge you set loose on your property, you'll just have to live with them."))
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1187,9 +1189,9 @@ def check(str):
 	#	 if item in static_items.item_names:
 	#		bazaar_general_items.append(item)
 	#
-	#	   elif item in ewcfg.food_names:
+	#	   elif item in static_food.food_names:
 	#		  bazaar_foods.append(item)
-	#	 elif item in ewcfg.cosmetic_names:
+	#	 elif item in cosmetics.cosmetic_names:
 	#		  bazaar_cosmetics.append(item)
 	#
 	#	   elif item in ewcfg.furniture_names:
@@ -1297,7 +1299,7 @@ async def apartment (cmd):
 		response = "You don't have an apartment."
 
 	else:
-		poi = ewcfg.id_to_poi.get(usermodel.apt_zone)
+		poi = poi_static.id_to_poi.get(usermodel.apt_zone)
 		response = "Your apartment is in {}. This {} rank apartment costs {:,} SlimeCoin a month.".format(poi.str_name, apartmentmodel.apt_class.upper(), apartmentmodel.rent)
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1344,7 +1346,7 @@ async def customize(cmd = None, isDesc = False):
 
 async def knock(cmd = None):
 	user_data = EwUser(member=cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 
 	target_data = None
 	if cmd.mentions_count == 0 and cmd.tokens_count > 1:
@@ -1356,7 +1358,7 @@ async def knock(cmd = None):
 		target_data = EwUser(member = cmd.mentions[0])
 
 	if target_data:
-		target_poi = ewcfg.id_to_poi.get(target_data.poi)
+		target_poi = poi_static.id_to_poi.get(target_data.poi)
 		if poi.is_apartment:
 			response = "You're already in an apartment."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1445,7 +1447,7 @@ async def trickortreat(cmd = None):
 		response = "You're too hungry to trick-or-treat right now."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	reject = False
 
 	items = ewitem.inventory(
@@ -1469,7 +1471,7 @@ async def trickortreat(cmd = None):
 	if cmd.mentions_count == 1:
 		target = cmd.mentions[0]
 		target_data = EwUser(member=target)
-		target_poi = ewcfg.id_to_poi.get(target_data.poi)
+		target_poi = poi_static.id_to_poi.get(target_data.poi)
 		if poi.is_apartment:
 			response = "You're already in an apartment."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1530,7 +1532,7 @@ async def trickortreat(cmd = None):
 			if treat:
 				ewutils.active_target_map[user_data.id_user] = ""
 				
-				item = random.choice(ewcfg.trickortreat_results)
+				item = random.choice(static_food.trickortreat_results)
 				item_props = ewitem.gen_item_props(item)
 				if item is not None:
 					ewitem.item_create(
@@ -1563,7 +1565,7 @@ async def trickortreat(cmd = None):
 				if user_data.slimes <= 0:
 					client = ewutils.get_client()
 					server = client.get_guild(user_data.id_server)
-					user_poi = ewcfg.id_to_poi.get(user_data.poi)
+					user_poi = poi_static.id_to_poi.get(user_data.poi)
 
 					resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
 					player_data = EwPlayer(id_user=user_data.id_user, id_server=user_data.id_server)
@@ -1586,7 +1588,7 @@ async def trickortreat(cmd = None):
 
 
 	elif cmd.mentions_count == 0:
-		user_poi = ewcfg.id_to_poi.get(user_data.poi)
+		user_poi = poi_static.id_to_poi.get(user_data.poi)
 
 		if user_poi.is_capturable:
 			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
@@ -1612,7 +1614,7 @@ async def trickortreat(cmd = None):
 				trick_chance = extremetrick
 
 			class_based_treats = []
-			for treat in ewcfg.trickortreat_results:
+			for treat in static_food.trickortreat_results:
 				if trick_chance == lowtrick and treat.price == 100:
 					class_based_treats.append(treat)
 				elif trick_chance == mediumtrick and treat.price == 1000:
@@ -1659,7 +1661,7 @@ async def trickortreat(cmd = None):
 				if user_data.slimes <= 0:
 					client = ewutils.get_client()
 					server = client.get_guild(user_data.id_server)
-					user_poi = ewcfg.id_to_poi.get(user_data.poi)
+					user_poi = poi_static.id_to_poi.get(user_data.poi)
 
 					resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
 					player_data = EwPlayer(id_user=user_data.id_user, id_server=user_data.id_server)
@@ -1703,14 +1705,14 @@ async def cancel(cmd):
 	elif aptmodel.rent * 4 > usermodel.slimecoin:
 		response = "You can't afford the lease separation. Time to take your eviction like a champ."
 	else:
-		poi = ewcfg.id_to_poi.get(usermodel.poi)
+		poi = poi_static.id_to_poi.get(usermodel.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = usermodel.id_server)
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		poi = ewcfg.id_to_poi.get(usermodel.apt_zone)
+		poi = poi_static.id_to_poi.get(usermodel.apt_zone)
 		response = "The separation will cost {:,} SlimeCoin. Do you !accept the termination, or !refuse it?".format(aptmodel.rent * 4)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		try:
@@ -1800,7 +1802,7 @@ async def toss_squatters(user_id = None, server_id = None, keepKeys = False):
 
 async def lobbywarning(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	if poi.is_apartment:
 		response = "Try that in a DM to ENDLESS WAR."
 	else:
@@ -1937,7 +1939,7 @@ async def flowerpot(cmd):
 
 	if item_sought:
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
-		vegetable = ewcfg.food_map.get(item.item_props.get('id_food'))
+		vegetable = static_food.food_map.get(item.item_props.get('id_food'))
 		if vegetable and ewcfg.vendor_farm in vegetable.vendors:
 
 			if float(item.item_props.get('time_expir')) < time.time():
@@ -1999,7 +2001,7 @@ async def releasefish(cmd):
 		response = "You need to see a specialist at The Bazaar to do that."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(usermodel.poi)
+	poi = poi_static.id_to_poi.get(usermodel.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = usermodel.id_server)
 
 	if district_data.is_degraded():
@@ -2035,7 +2037,7 @@ async def releaseprop(cmd):
 		response = "You need to see a specialist at The Bazaar to do that."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
@@ -2286,7 +2288,7 @@ async def setOffAlarms(id_server = None):
 			print(id_user)
 			brick_user = EwUser(id_server=id_server, id_user=id_user)
 			brick_member = server.get_member(user_id = int(id_user))
-			poi = ewcfg.id_to_poi.get(brick_user.poi)
+			poi = poi_static.id_to_poi.get(brick_user.poi)
 			channel_brick = ewutils.get_channel(server, poi.channel)
 			print('pass1')
 			if brick_member != None:

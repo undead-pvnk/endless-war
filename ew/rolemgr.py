@@ -3,6 +3,8 @@ import time
 import discord
 
 from .static import cfg as ewcfg
+from .static import poi as poi_static
+
 from . import utils as ewutils
 from . import item as ewitem
 
@@ -72,7 +74,7 @@ class EwRole:
 def setupRoles(client = None, id_server = -1):
 	
 	roles_map = ewutils.getRoleMap(client.get_guild(id_server).roles)
-	for poi in ewcfg.poi_list:
+	for poi in poi_static.poi_list:
 		if poi.role in roles_map:
 			try:
 				role_data = EwRole(id_server = id_server, name = poi.role)
@@ -129,7 +131,7 @@ async def hideRoleNames(cmd):
 	
 	ewutils.logMsg('Attempting to hide all role names...')
 	
-	for poi in ewcfg.poi_list:
+	for poi in poi_static.poi_list:
 			
 		if poi.is_street:
 			pass
@@ -191,7 +193,7 @@ async def restoreRoleNames(cmd):
 
 	ewutils.logMsg('Attempting to restore all role names...')
 	
-	for poi in ewcfg.poi_list:
+	for poi in poi_static.poi_list:
 
 		# Slow down just a bit every 20 Role change attempts
 		if role_counter >= 20:
@@ -247,7 +249,7 @@ async def recreateRoles(cmd):
 	# print(server_role_names)
 	roles_created = 0
 	
-	for poi in ewcfg.poi_list:
+	for poi in poi_static.poi_list:
 
 		# if poi.role != None:
 		# 
@@ -318,20 +320,20 @@ async def deleteRoles(cmd):
 	roles_deleted = 0
 
 	if delete_target == 'roles':
-		for poi in ewcfg.poi_list:
+		for poi in poi_static.poi_list:
 			if poi.role in server_role_names:
 				await roles_map[poi.role].delete()
 				roles_deleted += 1
 			
 	elif delete_target == 'majorroles':
-		for poi in ewcfg.poi_list:
+		for poi in poi_static.poi_list:
 			if poi.is_district:
 				if poi.major_role in server_role_names:
 					await roles_map[poi.major_role].delete()
 					roles_deleted += 1
 		
 	elif delete_target == 'minorroles':
-		for poi in ewcfg.poi_list:
+		for poi in poi_static.poi_list:
 			if poi.is_district or poi.is_street:
 				if poi.minor_role in server_role_names:
 					await roles_map[poi.minor_role].delete()
@@ -371,7 +373,7 @@ async def updateRoles(
 	#roles_map = ewutils.getRoleMap(member.guild.roles)
 	roles_map_user = ewutils.getRoleIdMap(member.roles)
 
-	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+	user_poi = poi_static.id_to_poi.get(user_data.poi)
 
 	if user_data.life_state != ewcfg.life_state_kingpin and ewcfg.role_kingpin in roles_map_user:
 		# Fix the life_state of kingpins, if somehow it wasn't set.
@@ -439,7 +441,7 @@ async def updateRoles(
 		# 	faction_roles_remove.remove(active_role)
 
 	tutorial_role = None
-	if user_data.poi in ewcfg.tutorial_pois:
+	if user_data.poi in poi_static.tutorial_pois:
 		tutorial_role = ewcfg.role_tutorial
 		faction_roles_remove.remove(tutorial_role)
 
@@ -457,12 +459,12 @@ async def updateRoles(
 
 
 	poi_permissions_remove = []
-	for poi in ewcfg.poi_list:
+	for poi in poi_static.poi_list:
 		if poi.permissions != None and poi.permissions != poi_permissions:
 			poi_permissions_remove.append(poi.id_poi)
 
 	poi_roles_remove = []
-	for poi in ewcfg.poi_list:
+	for poi in poi_static.poi_list:
 		if poi.major_role != None and poi.major_role != poi_major_role:
 			poi_roles_remove.append(poi.major_role)
 		#if poi.minor_role != None and poi.minor_role != poi_minor_role:
@@ -609,7 +611,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	user_data = EwUser(member=used_member)
 
 	if not startup:
-		for poi in ewcfg.poi_list:
+		for poi in poi_static.poi_list:
 			channel = ewutils.get_channel(server, poi.channel)
 			if channel == None:
 				#ewutils.logMsg('Error: In refresh_user_perms, could not get channel for {}'.format(poi.channel))
@@ -643,11 +645,11 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 			
 			elif used_member not in channel.overwrites and user_data.poi == poi.id_poi:
 
-				correct_poi = ewcfg.id_to_poi.get(user_data.poi)
+				correct_poi = poi_static.id_to_poi.get(user_data.poi)
 				
 				if correct_poi == None:
 					print('User {} has invalid POI of {}'.format(user_data.id_user, user_data.poi))
-					correct_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_downtown)
+					correct_poi = poi_static.id_to_poi.get(ewcfg.poi_id_downtown)
 				
 				correct_channel = ewutils.get_channel(server, correct_poi.channel)
 				#correct_lan_channel = "{}-LAN-connection".format(correct_channel)
@@ -690,13 +692,13 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	
 			# User might not have their poi set to downtown when they join the server.
 			if user_data.poi == None:
-				correct_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_downtown)
+				correct_poi = poi_static.id_to_poi.get(ewcfg.poi_id_downtown)
 			else:
-				correct_poi = ewcfg.id_to_poi.get(user_data.poi)
+				correct_poi = poi_static.id_to_poi.get(user_data.poi)
 			
 			if correct_poi == None:
 				print('User {} has invalid POI of {}'.format(user_data.id_user, user_data.poi))
-				correct_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_downtown)
+				correct_poi = poi_static.id_to_poi.get(ewcfg.poi_id_downtown)
 
 			#print(user_data.poi)
 			
@@ -750,7 +752,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	# 		#print(member)
 	# 		#print('member list: {}'.format(member_list))
 	# 		
-	# 		user_poi = ewcfg.id_to_poi.get(user[1])
+	# 		user_poi = poi_static.id_to_poi.get(user[1])
 	# 
 	# 		if current_member == None:
 	# 			# Second try.
@@ -768,7 +770,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	# 			# Member might have the wrong overwrite if the bot shut down/crashed right after persisting user data
 	# 			user_data = EwUser(member=current_member)
 	# 
-	# 			for poi in ewcfg.poi_list:
+	# 			for poi in poi_static.poi_list:
 	# 
 	# 				channel = ewutils.get_channel(server, poi.channel)
 	# 				if channel == None:
@@ -810,7 +812,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	# 		if current_member not in member_list:
 	# 			# Member has no overwrite -- fix this:
 	# 			user_data = EwUser(member=current_member)
-	# 			correct_poi = ewcfg.id_to_poi.get(user_data.poi)
+	# 			correct_poi = poi_static.id_to_poi.get(user_data.poi)
 	# 
 	# 			if correct_poi != None:
 	# 				permissions_dict = user_poi.permissions
@@ -852,7 +854,7 @@ async def remove_user_overwrites(cmd):
 	server = cmd.guild
 	client = ewutils.get_client()
 	
-	for poi in ewcfg.poi_list:
+	for poi in poi_static.poi_list:
 		
 		searched_channel = poi.channel
 		

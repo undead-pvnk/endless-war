@@ -2,6 +2,7 @@ import asyncio
 import random
 
 from .static import cfg as ewcfg
+from .static import poi as poi_static
 from . import utils as ewutils
 from . import rolemgr as ewrolemgr
 from . import item as ewitem
@@ -33,8 +34,8 @@ async def weather_tick(id_server = None):
 
 			if market_data.weather == ewcfg.weather_sunny:
 				exposed_pois = []
-				exposed_pois.extend(ewcfg.capturable_districts)
-				exposed_pois.extend(ewcfg.outskirts)
+				exposed_pois.extend(poi_static.capturable_districts)
+				exposed_pois.extend(poi_static.outskirts)
 				exposed_pois = tuple(exposed_pois)
 
 				users = ewutils.execute_sql_query(
@@ -62,8 +63,8 @@ async def weather_tick(id_server = None):
 				return
 
 			exposed_pois = []
-			exposed_pois.extend(ewcfg.capturable_districts)
-			exposed_pois.extend(ewcfg.outskirts)
+			exposed_pois.extend(poi_static.capturable_districts)
+			exposed_pois.extend(poi_static.outskirts)
 			exposed_pois = tuple(exposed_pois)
 
 			client = ewutils.get_client()
@@ -86,7 +87,7 @@ async def weather_tick(id_server = None):
 				user_data = EwUser(id_user = user[0], id_server = id_server)
 				if user_data.life_state == ewcfg.life_state_kingpin:
 					continue
-				user_poi = ewcfg.id_to_poi.get(user_data.poi)
+				user_poi = poi_static.id_to_poi.get(user_data.poi)
 				player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
 
 				protected = False
@@ -178,7 +179,7 @@ async def weather_tick(id_server = None):
 
 			for enemy in enemies:
 				enemy_data = EwEnemy(id_enemy = enemy[0])
-				enemy_poi = ewcfg.id_to_poi.get(enemy_data.poi)
+				enemy_poi = poi_static.id_to_poi.get(enemy_data.poi)
 
 				slimes_to_erase = enemy_data.slimes * 0.01 * ewcfg.weather_tick_length
 				slimes_to_erase = max(slimes_to_erase, ewcfg.weather_tick_length * 1000)

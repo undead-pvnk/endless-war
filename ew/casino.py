@@ -6,6 +6,7 @@ import math
 from . import cmd as ewcmd
 from . import utils as ewutils
 from .static import cfg as ewcfg
+from .static import poi as poi_static
 from . import rolemgr as ewrolemgr
 from . import item as ewitem
 from .user import EwUser
@@ -57,7 +58,7 @@ async def pachinko(cmd):
 		# Only allowed in the slime casino.
 		response = "You must go to the Casino to gamble your {}.".format(currency_used)
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -184,7 +185,7 @@ async def craps(cmd):
 		# Only allowed in the slime casino.
 		response = "You must go to the Casino to gamble your {}.".format(currency_used)
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -325,7 +326,7 @@ async def slots(cmd):
 		# Only allowed in the slime casino.
 		response = "You must go to the Casino to gamble your {}.".format(currency_used)
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -527,7 +528,7 @@ async def roulette(cmd):
 		# Only allowed in the slime casino.
 		response = "You must go to the #{} to gamble your {}.".format(ewcfg.channel_casino, currency_used)
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -743,7 +744,7 @@ async def baccarat(cmd):
 		await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
 		await asyncio.sleep(1)
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1383,7 +1384,7 @@ async def russian_roulette(cmd):
 		response = "You can only play russian roulette at the casino."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
@@ -1632,8 +1633,8 @@ async def duel(cmd):
 		response = "They lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
-	challenger_poi = ewcfg.id_to_poi.get(challenger.poi)
-	challengee_poi = ewcfg.id_to_poi.get(challengee.poi)
+	challenger_poi = poi_static.id_to_poi.get(challenger.poi)
+	challengee_poi = poi_static.id_to_poi.get(challengee.poi)
 	if not challenger_poi.is_district or not challengee_poi.is_district:
 		response = "Both participants need to be in a district zone."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -2108,7 +2109,7 @@ async def skat(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	user_data = EwUser(member=cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
@@ -2769,7 +2770,7 @@ async def betsoul(cmd):
 	elif item_select == None:
 		response = "You don't have any souls in your inventory. !extractsoul if you want to do this properly."
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -2814,7 +2815,7 @@ async def buysoul(cmd):
 	elif user_data.slimecoin < ewcfg.soulprice:
 		response = "Tough luck. You can't afford a soul. Poor you."
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():

@@ -1,6 +1,7 @@
 import asyncio
 
 from .static import cfg as ewcfg
+from .static import poi as poi_static
 from . import utils as ewutils
 from . import item as ewitem
 
@@ -48,7 +49,7 @@ async def store(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	response = ""
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	if poi.community_chest == None:
 		response = "There is no community chest here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -105,7 +106,7 @@ async def take(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	response = ""
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	if poi.community_chest == None:
 		response = "There is no community chest here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

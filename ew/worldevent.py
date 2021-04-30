@@ -3,6 +3,7 @@ import time
 import random
 
 from .static import cfg as ewcfg
+from .static import poi as poi_static
 from . import utils as ewutils
 
 from .user import EwUser
@@ -197,7 +198,7 @@ def delete_world_event(id_event):
 async def event_tick_loop(id_server):
 	# initialise void connections
 	void_connections = get_void_connection_pois(id_server)
-	void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+	void_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
 	for connection_poi in void_connections:
 		# add the existing connections as neighbors for the void
 		void_poi.neighbors[connection_poi] = ewcfg.travel_time_district
@@ -250,7 +251,7 @@ async def event_tick(id_server):
 
 				# check if any void connections have expired, if so pop it and create a new one
 				elif event_data.event_type == ewcfg.event_type_voidconnection:
-					void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+					void_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
 					void_poi.neighbors.pop(event_data.event_props.get('poi'), "")
 					create_void_connection(id_server)
 
@@ -266,7 +267,7 @@ async def event_tick(id_server):
 
 						resp_cont.add_channel_response(channel, response)
 					elif poi != None:
-						poi_def = ewcfg.id_to_poi.get(poi)
+						poi_def = poi_static.id_to_poi.get(poi)
 						if poi_def != None:
 							resp_cont.add_channel_response(poi_def.channel, response)
 
@@ -285,7 +286,7 @@ async def event_tick(id_server):
 
 def create_void_connection(id_server): 
 	existing_connections = get_void_connection_pois(id_server)
-	new_connection_poi = random.choice([poi.id_poi for poi in ewcfg.poi_list 
+	new_connection_poi = random.choice([poi.id_poi for poi in poi_static.poi_list 
 		if poi.is_district 
 		and not poi.is_gangbase 	
 		and poi.id_poi != ewcfg.poi_id_thevoid
@@ -293,7 +294,7 @@ def create_void_connection(id_server):
 	])
 
 	# add the new connection's POI as a neighbor for the void
-	void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+	void_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
 	void_poi.neighbors[new_connection_poi] = ewcfg.travel_time_district
 	ewutils.logMsg("updated void connections, current links are: {}".format(tuple(void_poi.neighbors.keys())))
 

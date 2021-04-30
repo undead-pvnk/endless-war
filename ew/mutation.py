@@ -6,6 +6,8 @@ import random
 import discord
 
 from .static import cfg as ewcfg
+from .static import poi as poi_static
+from .static import mutations as static_mutations
 from . import stats as ewstats
 from . import utils as ewutils
 from . import item as ewitem
@@ -131,7 +133,7 @@ async def reroll_last_mutation(cmd):
 		response = "You require the advanced equipment at the Slimeoid Lab to modify your mutations."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
@@ -180,15 +182,15 @@ async def reroll_last_mutation(cmd):
 		reroll_fatigue.persist()
 
 	mutation_data = EwMutation(id_server = user_data.id_server, id_user = user_data.id_user, id_mutation = last_mutation)
-	new_mutation = random.choice(list(ewcfg.mutation_ids))
+	new_mutation = random.choice(list(static_mutations.mutation_ids))
 	while new_mutation in mutations:
-		new_mutation = random.choice(list(ewcfg.mutation_ids))
+		new_mutation = random.choice(list(static_mutations.mutation_ids))
 
 	mutation_data.id_mutation = new_mutation
 	mutation_data.time_lastuse = int(time.time())
 	mutation_data.persist()
 
-	response = "After several minutes long elevator descents, in the depths of some basement level far below the laboratory's lobby, you lay down on a reclined medical chair. A SlimeCorp employee finishes the novel length terms of service they were reciting and asks you if you have any questions. You weren’t listening so you just tell them to get on with it so you can go back to getting slime. They oblige.\nThey grab a butterfly needle and carefully stab you with it, draining some strangely colored slime from your bloodstream. Almost immediately, the effects of your last mutation fade away… but, this feeling of respite is fleeting. The SlimeCorp employee writes down a few notes, files away the freshly drawn sample, and soon enough you are stabbed with syringes. This time, it’s already filled with some bizarre, multi-colored serum you’ve never seen before. The effects are instantaneous. {}\nYou hand off {} of your hard-earned poudrins to the SlimeCorp employee for their troubles.".format(ewcfg.mutations_map[new_mutation].str_acquire, poudrins_needed)
+	response = "After several minutes long elevator descents, in the depths of some basement level far below the laboratory's lobby, you lay down on a reclined medical chair. A SlimeCorp employee finishes the novel length terms of service they were reciting and asks you if you have any questions. You weren’t listening so you just tell them to get on with it so you can go back to getting slime. They oblige.\nThey grab a butterfly needle and carefully stab you with it, draining some strangely colored slime from your bloodstream. Almost immediately, the effects of your last mutation fade away… but, this feeling of respite is fleeting. The SlimeCorp employee writes down a few notes, files away the freshly drawn sample, and soon enough you are stabbed with syringes. This time, it’s already filled with some bizarre, multi-colored serum you’ve never seen before. The effects are instantaneous. {}\nYou hand off {} of your hard-earned poudrins to the SlimeCorp employee for their troubles.".format(static_mutations.mutations_map[new_mutation].str_acquire, poudrins_needed)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))"""
 
 async def chemo(cmd):
@@ -202,7 +204,7 @@ async def chemo(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
 	if district_data.is_degraded():
@@ -223,7 +225,7 @@ async def chemo(cmd):
 		finalprice = 0
 
 		for mutation in mutations:
-			finalprice += ewcfg.mutations_map.get(mutation).tier * 5000
+			finalprice += static_mutations.mutations_map.get(mutation).tier * 5000
 
 		if finalprice > user_data.slimes:
 			response = '"We\'re not selling gumballs here. It\'s chemotherapy. It\'ll cost at least {:,} slime, ya idjit!"'.format(finalprice)
@@ -251,7 +253,7 @@ async def chemo(cmd):
 
 				for mutation in mutations:
 
-					price = ewcfg.mutations_map.get(mutation).tier * 5000
+					price = static_mutations.mutations_map.get(mutation).tier * 5000
 					user_data.change_slimes(n=-price, source=ewcfg.source_spending)
 
 					mutation_obj = EwMutation(id_mutation=mutation, id_user=user_data.id_user, id_server=cmd.message.guild.id)
@@ -284,14 +286,14 @@ async def chemo(cmd):
 		elif target not in mutations:
 			response = '"Oy vey, another hypochondriac. You don\'t have that mutation, so I can\'t remove it."'
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		elif ewcfg.mutations_map.get(target).tier * 5000 > user_data.slimes:
-			response = '"We\'re not selling gumballs here. It\'s chemotherapy. It\'ll cost at least {} slime, ya idjit!"'.format(ewcfg.mutations_map.get(target).tier * 5000)
+		elif static_mutations.mutations_map.get(target).tier * 5000 > user_data.slimes:
+			response = '"We\'re not selling gumballs here. It\'s chemotherapy. It\'ll cost at least {} slime, ya idjit!"'.format(static_mutations.mutations_map.get(target).tier * 5000)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		elif mutation_obj.artificial == 1:
 			response = '"Hey, didn\'t I do that to ya? Well no refunds!"\n\nGuess you can\'t get rid of artificial mutations with chemo.'
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
-			price = ewcfg.mutations_map.get(target).tier * 5000
+			price = static_mutations.mutations_map.get(target).tier * 5000
 			user_data.change_slimes(n=-price, source=ewcfg.source_spending)
 			user_data.persist()
 
@@ -307,7 +309,7 @@ async def chemo(cmd):
 				))
 			except:
 				ewutils.logMsg("Failed to clear mutations for user {}.".format(user_data.id_user))
-			response = '"Alright, dearie, let\'s get you purged." You enter a dingy looking operating room, with slime strewn all over the floor. Dr. Dusttrap pulls out a needle the size of your bicep and injects into odd places on your body. After a few minutes of this, you get fatigued and go under.\n\n You wake up and {} is gone. Nice! \nMutation Levels Added:{}/{}'.format(ewcfg.mutations_map.get(target).str_name, user_data.get_mutation_level(), min(user_data.slimelevel, 50))
+			response = '"Alright, dearie, let\'s get you purged." You enter a dingy looking operating room, with slime strewn all over the floor. Dr. Dusttrap pulls out a needle the size of your bicep and injects into odd places on your body. After a few minutes of this, you get fatigued and go under.\n\n You wake up and {} is gone. Nice! \nMutation Levels Added:{}/{}'.format(static_mutations.mutations_map.get(target).str_name, user_data.get_mutation_level(), min(user_data.slimelevel, 50))
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def graft(cmd):
@@ -320,7 +322,7 @@ async def graft(cmd):
 		response = '"Oh goodness me, it seems like another one of these decaying subhumans has wandered into my office. Go on, shoo!"\n\nTough luck, seems shamblers aren\'t welcome here.'.format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
 
@@ -345,11 +347,11 @@ async def graft(cmd):
 	elif target in mutations:
 		response = '"Nope, you already have that mutation. Hey, I thought I was supposed to be the senile one here!"'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	elif user_data.get_mutation_level() + ewcfg.mutations_map[target].tier > min([user_data.slimelevel, 50]):
+	elif user_data.get_mutation_level() + static_mutations.mutations_map[target].tier > min([user_data.slimelevel, 50]):
 		response = '"Your body\'s already full of mutations. Your sentient tumors will probably start bitin\' once I take out my scalpel."\n\nLevel:{}/50\nMutation Levels Added:{}/{}'.format(user_data.slimelevel,user_data.get_mutation_level(), min(user_data.slimelevel, 50))
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	elif ewcfg.mutations_map.get(target).tier * 10000 > user_data.slimes:
-		response = '"We\'re not selling gumballs here. It\'s cosmetic surgery. It\'ll cost at least {} slime, ya idjit!"'.format(ewcfg.mutations_map.get(target).tier * 10000)
+	elif static_mutations.mutations_map.get(target).tier * 10000 > user_data.slimes:
+		response = '"We\'re not selling gumballs here. It\'s cosmetic surgery. It\'ll cost at least {} slime, ya idjit!"'.format(static_mutations.mutations_map.get(target).tier * 10000)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	elif (target == ewcfg.mutation_id_davyjoneskeister and ewcfg.mutation_id_onemansjunk in mutations) or (target == ewcfg.mutation_id_onemansjunk and ewcfg.mutation_id_davyjoneskeister in mutations):
 		response = '"Well waddya need that for? Ya got just the opposite! It ain\'t pretty when they clash kid."'
@@ -361,12 +363,12 @@ async def graft(cmd):
 		response = '"Nope, you already have that mutation, its even got a little extra tacked on."'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
-		price = ewcfg.mutations_map.get(target).tier * 10000
+		price = static_mutations.mutations_map.get(target).tier * 10000
 		user_data.change_slimes(n=-price, source=ewcfg.source_spending)		
 		user_data.persist()
 
 		user_data.add_mutation(id_mutation=target, is_artificial=1)
-		response = ewcfg.mutations_map[target].str_transplant + "\n\nMutation Levels Added:{}/{}".format(user_data.get_mutation_level(), min(user_data.slimelevel, 50))
+		response = static_mutations.mutations_map[target].str_transplant + "\n\nMutation Levels Added:{}/{}".format(user_data.get_mutation_level(), min(user_data.slimelevel, 50))
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def clear_mutations(cmd):
@@ -384,7 +386,7 @@ async def clear_mutations(cmd):
 		response = "You require the advanced equipment at the Slimeoid Lab to modify your mutations."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
@@ -568,7 +570,7 @@ async def bleedout(cmd):
 		response = "Wait, wouldn't that kill you? Better not."
 	else:
 		response = "You clutch your malformed heart and squeeze as hard as you can. The intense pain makes you fall to your knees, and your slime drops in spurts to the floor under you as you gasp desperately for relief. You have been bled dry."
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(id_server=cmd.message.guild.id, district=poi.id_poi)
 		user_data.change_slimes(n=-user_data.bleed_storage, source=ewcfg.source_bleeding)
 		district_data.change_slimes(n=user_data.bleed_storage, source=ewcfg.source_bleeding)

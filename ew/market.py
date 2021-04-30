@@ -8,6 +8,7 @@ from . import item as ewitem
 from . import rolemgr as ewrolemgr
 from . import utils as ewutils
 from .static import cfg as ewcfg
+from .static import poi as poi_static
 from . import stats as ewstats
 from .user import EwUser
 from .player import EwPlayer
@@ -358,7 +359,7 @@ async def invest(cmd):
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "invest")
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-    poi = ewcfg.id_to_poi.get(user_data.poi)
+    poi = poi_static.id_to_poi.get(user_data.poi)
     district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
     if district_data.is_degraded():
@@ -473,7 +474,7 @@ async def withdraw(cmd):
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "withdraw")
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-    poi = ewcfg.id_to_poi.get(user_data.poi)
+    poi = poi_static.id_to_poi.get(user_data.poi)
     district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
     if district_data.is_degraded():
@@ -563,7 +564,7 @@ async def redeem(cmd):
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "redeem")
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-    poi = ewcfg.id_to_poi.get(user_data.poi)
+    poi = poi_static.id_to_poi.get(user_data.poi)
     district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
     if district_data.is_degraded():
@@ -616,7 +617,7 @@ async def donate(cmd):
     time_now = round(time.time())
 
     if user_data.poi == ewcfg.poi_id_slimecorphq:
-        poi = ewcfg.id_to_poi.get(user_data.poi)
+        poi = poi_static.id_to_poi.get(user_data.poi)
         district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
         if district_data.is_degraded():
@@ -668,7 +669,7 @@ async def donate(cmd):
             response = ewcfg.str_exchange_specify.format(currency = "slime", action = "donate")
 
     elif user_data.poi == ewcfg.poi_id_slimeoidlab:
-        poi = ewcfg.id_to_poi.get(user_data.poi)
+        poi = poi_static.id_to_poi.get(user_data.poi)
         district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
         if district_data.is_degraded():
@@ -709,7 +710,7 @@ async def xfer(cmd):
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "transfer")
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-    poi = ewcfg.id_to_poi.get(user_data.poi)
+    poi = poi_static.id_to_poi.get(user_data.poi)
     district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
     if district_data.is_degraded():
@@ -817,7 +818,7 @@ async def rate(cmd):
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
     else:
-        poi = ewcfg.id_to_poi.get(user_data.poi)
+        poi = poi_static.id_to_poi.get(user_data.poi)
         district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
         if district_data.is_degraded():
@@ -884,7 +885,7 @@ async def stocks(cmd):
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
     else:
-        poi = ewcfg.id_to_poi.get(user_data.poi)
+        poi = poi_static.id_to_poi.get(user_data.poi)
         district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
         if district_data.is_degraded():

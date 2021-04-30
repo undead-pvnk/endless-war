@@ -173,7 +173,7 @@ def wef_staff(ctn = None):
 	conditions_met = 0
 	conditions = {
 		lambda _: 3 <= market_data.clock < 4, # witching hour
-		lambda _: ewcfg.weather_map.get(market_data.weather) == ewcfg.weather_foggy,
+		lambda _: market_data.weather == ewcfg.weather_foggy,
 		lambda _: (market_data.day % 31 == 15 and market_data.clock >= 20) or (market_data.day % 31 == 16 and market_data.clock <= 6), # moonless night
 		lambda ctn: not ctn.user_data.has_soul,
 		lambda ctn: ctn.user_data.get_possession('weapon'),

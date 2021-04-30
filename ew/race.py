@@ -5,6 +5,7 @@ import collections
 
 from .static import cfg as ewcfg
 from .static import items as static_items
+from .static import poi as poi_static
 from . import utils as ewutils
 from . import item as ewitem
 from . import cmd as ewcmd
@@ -216,7 +217,7 @@ async def yiff(cmd):
 		if cmd.mentions_count == 1:
 			target_data = EwUser(member = cmd.mentions[0])
 			if target_data.race == ewcfg.races["furry"]:
-				poi = ewcfg.id_to_poi.get(user_data.poi)
+				poi = poi_static.id_to_poi.get(user_data.poi)
 				if (target_data.poi == user_data.poi) and poi.is_apartment: # low effort
 					responses = [
 						"Wow.",

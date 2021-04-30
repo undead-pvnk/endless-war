@@ -3,6 +3,7 @@ import random
 import asyncio
 
 from .static import cfg as ewcfg
+from .static import poi as poi_static
 from . import utils as ewutils
 from . import move as ewmap
 
@@ -119,7 +120,7 @@ class EwSlimeballPlayer:
 					break			
 					
 		if len(response) > 0:
-			poi_data = ewcfg.id_to_poi.get(game_data.poi)
+			poi_data = poi_static.id_to_poi.get(game_data.poi)
 			resp_cont.add_channel_response(poi_data.channel, response)
 
 		return resp_cont
@@ -310,7 +311,7 @@ class EwSlimeballGame:
 				self.ball_velocity[i] += 1
 
 		if len(response) > 0:
-			poi_data = ewcfg.id_to_poi.get(self.poi)
+			poi_data = poi_static.id_to_poi.get(self.poi)
 			resp_cont.add_channel_response(poi_data.channel, response)
 
 		return resp_cont
@@ -345,7 +346,7 @@ async def slimeball_tick(id_server):
 				resp_cont.add_response_container(game.move_ball())
 
 			else:
-				poi_data = ewcfg.id_to_poi.get(game.poi)
+				poi_data = poi_static.id_to_poi.get(game.poi)
 				response = "Slimeball game ended with score purple {} : {} pink.".format(game.score_purple, game.score_pink)
 				resp_cont.add_channel_response(poi_data.channel, response)
 					
@@ -389,7 +390,7 @@ async def slimeball(cmd):
 		response = "You have to go into the city to play Slimeball."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi_data = ewcfg.id_to_poi.get(user_data.poi)
+	poi_data = poi_static.id_to_poi.get(user_data.poi)
 
 	if poi_data.id_poi != ewcfg.poi_id_vandalpark:
 		response = "You have to go Vandal Park to play {}.".format(cmd.cmd[1:])
@@ -464,10 +465,10 @@ async def slimeballgo(cmd):
 	global sb_games
 	game_data = sb_games.get(slimeball_player.id_game)
 
-	poi_data = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	poi_data = poi_static.chname_to_poi.get(cmd.message.channel.name)
 
 	if poi_data.id_poi != game_data.poi:
-		game_poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		game_poi = poi_static.chname_to_poi.get(cmd.message.channel.name)
 		response = "Your Slimeball game is happening in the #{} channel.".format(game_poi.channel)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -506,10 +507,10 @@ async def slimeballstop(cmd):
 	global sb_games
 	game_data = sb_games.get(slimeball_player.id_game)
 
-	poi_data = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	poi_data = poi_static.chname_to_poi.get(cmd.message.channel.name)
 
 	if poi_data.id_poi != game_data.poi:
-		game_poi = ewcfg.id_to_poi.get(game_data.poi)
+		game_poi = poi_static.id_to_poi.get(game_data.poi)
 		response = "Your {} game is happening in the #{} channel.".format(cmd.cmd[1:-4], game_poi.channel)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

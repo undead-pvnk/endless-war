@@ -7,6 +7,8 @@ from .static import cosmetics
 from .static import vendors
 from .static import items as static_items
 from .static import weapons as static_weapons
+from .static import food as static_food
+from .static import poi as poi_static
 from . import item as ewitem
 from . import utils as ewutils
 from . import move as ewmap
@@ -30,7 +32,7 @@ async def menu(cmd):
 
 	market_data = EwMarket(id_server = cmd.guild.id)
 	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 
 	if user_data.poi == ewcfg.poi_id_clinicofslimoplasty:
 		response = "Try {}browse. The menu is in the zines.".format(ewcfg.cmd_prefix)
@@ -38,12 +40,12 @@ async def menu(cmd):
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 
 		mother_district_data = None
 		for mother_poi in poi.mother_districts:
 
-			mother_poi_data = ewcfg.id_to_poi.get(mother_poi)
+			mother_poi_data = poi_static.id_to_poi.get(mother_poi)
 
 			if mother_poi_data.is_district:
 				# One of the mother pois was a district, get its controlling faction
@@ -86,7 +88,7 @@ async def menu(cmd):
 			vendor_inv = vendors.vendor_inv[vendor] if vendor != ewcfg.vendor_bazaar else market_data.bazaar_wares.values()
 			for item_name in vendor_inv:
 				item_item = static_items.item_map.get(item_name)
-				food_item = ewcfg.food_map.get(item_name)
+				food_item = static_food.food_map.get(item_name)
 				cosmetic_item = ewcfg.cosmetic_map.get(item_name)
 				furniture_item = ewcfg.furniture_map.get(item_name)
 				weapon_item = static_weapons.weapon_map.get(item_name)
@@ -188,12 +190,12 @@ async def order(cmd):
 	currency_used = 'slime'
 	current_currency_amount = user_data.slimes
 	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	if poi is None or len(poi.vendors) == 0 or ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 
@@ -239,7 +241,7 @@ async def order(cmd):
 
 		# Finds the item if it's an EwFood item.
 		if item == None:
-			item = ewcfg.food_map.get(value)
+			item = static_food.food_map.get(value)
 			item_type = ewcfg.it_food
 			if item != None:
 				item_id = item.id_food

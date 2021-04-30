@@ -9,6 +9,8 @@ from .static import cosmetics
 from .static import vendors
 from .static import items as static_items
 from .static import weapons as static_weapons
+from .static import poi as poi_static
+from .static import mutations as static_mutations
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -226,7 +228,7 @@ def gen_data_text(
 			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 	if user_data.life_state == ewcfg.life_state_grandfoe:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		if poi != None:
 			response = "{} is {} {}.".format(display_name, poi.str_in, poi.str_name)
 		else:
@@ -470,7 +472,7 @@ async def data(cmd):
 				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		if poi != None:
 			response = "You find yourself {} {}. ".format(poi.str_in, poi.str_name)
 
@@ -712,7 +714,7 @@ async def mutations(cmd):
 			return await exec_mutations(cmd)
 
 		for mutation in mutations:
-			mutation_flavor = ewcfg.mutations_map[mutation]
+			mutation_flavor = static_mutations.mutations_map[mutation]
 			total_levels += mutation_flavor.tier
 			if "level" in cmd.tokens:
 				response += "**LEVEL {}**:{} \n".format(mutation_flavor.tier, mutation_flavor.str_describe_self)
@@ -734,7 +736,7 @@ async def mutations(cmd):
 
 		mutations = user_data.get_mutations()
 		for mutation in mutations:
-			mutation_flavor = ewcfg.mutations_map[mutation]
+			mutation_flavor = static_mutations.mutations_map[mutation]
 			total_levels += mutation_flavor.tier
 			if "level" in cmd.tokens:
 				response += "**LEVEL {}**:{} \n".format(mutation_flavor.tier, mutation_flavor.str_describe_other)
@@ -1165,7 +1167,7 @@ async def help(cmd):
 		# poi variable assignment used for checking if player is in a vendor subzone or not
 		# poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 		
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 
 		dojo_topics = [
 			"dojo", "sparring", "combat", ewcfg.weapon_id_revolver, 
@@ -1222,7 +1224,7 @@ async def help(cmd):
 						response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
 			else:
 				response = 'ENDLESS WAR questions your belief in the existence of such information regarding the laboratory. Try referring to the topics list again by using just !help.'
-		elif cmd.message.channel.name in ewcfg.transport_stops_ch:
+		elif cmd.message.channel.name in poi_static.transport_stops_ch:
 			# transportation help
 			response = ewcfg.help_responses['transportation']
 		elif cmd.message.channel.name in ewcfg.channel_stockexchange:
@@ -1249,7 +1251,7 @@ async def help(cmd):
 		]:
 			# fishing help
 			response = ewcfg.help_responses['fishing']
-		elif user_data.poi in ewcfg.outskirts:
+		elif user_data.poi in poi_static.outskirts:
 			# hunting help
 			response = ewcfg.help_responses['hunting']
 		else:
@@ -1622,7 +1624,7 @@ async def pray(cmd):
 		response = "You must be in the presence of your lord if you wish to pray to him."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
@@ -1799,7 +1801,7 @@ async def recycle(cmd):
 		response = "You can only {} your trash at the Recycling Plant in Smogsburg.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
@@ -1871,7 +1873,7 @@ async def recycle(cmd):
 
 async def store_item(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 
 	if poi.community_chest != None:
 		return await ewfaction.store(cmd)
@@ -1883,7 +1885,7 @@ async def store_item(cmd):
 
 async def remove_item(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 
 	if poi.community_chest != None:
 		return await ewfaction.take(cmd)
@@ -2039,8 +2041,8 @@ async def jump(cmd):
 						await user_data.move_inhabitants(id_poi = ewcfg.poi_id_thevoid)
 						await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
-						void_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
-						wafflehouse_poi = ewcfg.id_to_poi.get(ewcfg.poi_id_thevoid)
+						void_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
+						wafflehouse_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
 						response = "You do a backflip on the way down, bounce on the trampoline a few times to reduce your momentum, and climb down a ladder from the roof, down to the ground. You find yourself standing next to {}, in {}.".format(wafflehouse_poi.str_name, void_poi.str_name)
 						await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, void_poi.channel), ewutils.formatMessage(cmd.message.author, response), 20)
 						#await asyncio.sleep(20)
@@ -2103,7 +2105,7 @@ async def toss_off_cliff(cmd):
 					item.id_owner = str(cmd.mentions[0].id) + ewcfg.compartment_id_decorate
 					item.persist()
 					response = "You throw a brick through {}'s window. Oh shit! Quick, scatter before they see you!".format(cmd.mentions[0].display_name)
-					if ewcfg.id_to_poi.get(target.poi).is_apartment	and target.visiting == ewcfg.location_id_empty:
+					if poi_static.id_to_poi.get(target.poi).is_apartment	and target.visiting == ewcfg.location_id_empty:
 						try:
 							await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], "SMAAASH! A brick flies through your window!"))
 						except:
@@ -2196,7 +2198,7 @@ async def purify(cmd):
 
 	
 	if user_data.poi == ewcfg.poi_id_sodafountain:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -2609,7 +2611,7 @@ async def prank(cmd):
 	# User must have the Janus Mask adorned, and must use the command in a capturable district's channel
 	user_data = EwUser(member=cmd.message.author)
 
-	if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False): #or (user_data.poi not in ewcfg.capturable_districts):
+	if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False): #or (user_data.poi not in poi_static.capturable_districts):
 		response = "The powers of the mask don't really resonate with you here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
@@ -2713,7 +2715,7 @@ async def ping_me(cmd):
 	except:
 		return
 	
-	pinged_poi = ewcfg.id_to_poi.get(requested_channel)
+	pinged_poi = poi_static.id_to_poi.get(requested_channel)
 	channel = ewutils.get_channel(cmd.guild, pinged_poi.channel)
 
 	if pinged_poi != None:
@@ -3064,7 +3066,7 @@ async def gvs_join_operation(cmd):
 	time_now = int(time.time())
 
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district=user_data.poi, id_server=user_data.id_server)
 	
 	response = ""
@@ -3344,11 +3346,11 @@ async def gvs_check_operations(cmd):
 		if len(operations) > 0:
 			response = ""
 			for op in operations:
-				response += "\nThere are operations taking place in {}.".format(ewcfg.id_to_poi.get(op[0]).str_name)
+				response += "\nThere are operations taking place in {}.".format(poi_static.id_to_poi.get(op[0]).str_name)
 
 	elif cmd.tokens_count > 1:
 		checked_district = ewutils.flattenTokenListToString(cmd.tokens[1:])
-		district = ewcfg.id_to_poi.get(checked_district)
+		district = poi_static.id_to_poi.get(checked_district)
 		
 		if district == None or not district.is_district:
 			response = "That's not a valid district that you can check"
@@ -3378,7 +3380,7 @@ async def gvs_plant_gaiaslimeoid(cmd):
 	time_now = int(time.time())
 
 	user_data = EwUser(member=cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district=user_data.poi, id_server=user_data.id_server)
 	
 	if not user_data.life_state == ewcfg.life_state_juvenile:
@@ -3396,7 +3398,7 @@ async def gvs_plant_gaiaslimeoid(cmd):
 		response = "You aren't even *in* an operation."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	elif user_data.poi != op_poi:
-		response = "You can't plant a Gaiaslimeoid here, dummy! Try heading to {}.".format(ewcfg.id_to_poi.get(op_poi).str_name)
+		response = "You can't plant a Gaiaslimeoid here, dummy! Try heading to {}.".format(poi_static.id_to_poi.get(op_poi).str_name)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
@@ -3539,7 +3541,7 @@ async def gvs_progress(cmd):
 	op_districts = []
 	response = ""
 	
-	for poi in ewcfg.poi_list:
+	for poi in poi_static.poi_list:
 		#if poi.is_district and not poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow, ewcfg.poi_id_oozegardens, ewcfg.poi_id_assaultflatsbeach, ewcfg.poi_id_thevoid]:
 		if poi.is_district:
 			op_districts.append(poi.id_poi)
@@ -3564,7 +3566,7 @@ async def gvs_progress(cmd):
 		if counter % 5 == 0:
 			response += "\n"
 		
-		poi = ewcfg.id_to_poi.get(non_deg)
+		poi = poi_static.id_to_poi.get(non_deg)
 		counter += 1
 		
 		if counter != len(non_degraded_districts):
@@ -3579,7 +3581,7 @@ async def gvs_progress(cmd):
 		if counter % 5 == 0:
 			response += "\n"
 		
-		poi = ewcfg.id_to_poi.get(deg)
+		poi = poi_static.id_to_poi.get(deg)
 		counter += 1
 
 		if counter != len(degraded_districts):
@@ -3764,7 +3766,7 @@ async def gvs_dive(cmd):
 	user_data.poi = ewcfg.poi_id_slimesea
 	user_data.persist()
 
-	slimesea = ewcfg.id_to_poi.get(ewcfg.poi_id_slimesea)
+	slimesea = poi_static.id_to_poi.get(ewcfg.poi_id_slimesea)
 	sea_channel = ewutils.get_channel(cmd.guild, slimesea.channel)
 	await ewutils.send_message(cmd.client, sea_channel, ewutils.formatMessage(cmd.message.author, "You arrive in the Slime Sea."), delete_after=10)
 
@@ -3789,7 +3791,7 @@ async def gvs_resurface(cmd):
 	user_data.poi = ewcfg.poi_id_nuclear_beach_edge
 	user_data.persist()
 
-	beach = ewcfg.id_to_poi.get(ewcfg.poi_id_nuclear_beach_edge)
+	beach = poi_static.id_to_poi.get(ewcfg.poi_id_nuclear_beach_edge)
 	beach_channel = ewutils.get_channel(cmd.guild, beach.channel)
 	await ewutils.send_message(cmd.client, beach_channel, ewutils.formatMessage(cmd.message.author, "You arrive in the Nuclear Beach."), delete_after=10)
 
@@ -3955,7 +3957,7 @@ async def check_flag(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 	"""
 	user_data = EwUser(member=cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 
 	if user_data.time_expirpvp < int(time.time()):
 		response = "You don't have a flag."
@@ -4067,7 +4069,7 @@ async def commands(cmd):
 
 	if ewutils.flattenTokenListToString(tokens = cmd.tokens[1]) == 'location':
 		poi_look = ewutils.flattenTokenListToString(tokens = cmd.tokens[2])
-		poi_sought = ewcfg.id_to_poi.get(poi_look)
+		poi_sought = poi_static.id_to_poi.get(poi_look)
 		if poi_sought:
 			command_output = location_commands(cmd=cmd, search_poi=poi_sought.id_poi)
 			if command_output != "":
@@ -4155,7 +4157,7 @@ def location_commands(cmd, search_poi = None):
 		poi = search_poi
 	else:
 		poi = user_data.poi
-	poi_obj = ewcfg.id_to_poi.get(poi)
+	poi_obj = poi_static.id_to_poi.get(poi)
 	response = "\n**THIS LOCATION:**\n"
 	if poi in [ewcfg.poi_id_mine, ewcfg.poi_id_mine_sweeper, ewcfg.poi_id_mine_bubble, ewcfg.poi_id_tt_mines,
 			   ewcfg.poi_id_tt_mines_sweeper, ewcfg.poi_id_tt_mines_bubble, ewcfg.poi_id_cv_mines,

@@ -22,6 +22,10 @@ import discord
 from .static import cfg as ewcfg
 from .static import items as static_items
 from .static import weapons as static_weapons
+from .static import hunting as hunt_static
+from .static import weather as weather_static
+from .static import poi as poi_static
+from .static import mutations as static_mutations
 from . import wep as ewwep
 from .user import EwUser
 from .district import EwDistrict
@@ -637,7 +641,7 @@ async def flag_outskirts(id_server = None):
 			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND poi IN %s".format(
 			), (
 				id_server,
-				tuple(ewcfg.outskirts)
+				tuple(poi_static.outskirts)
 
 			))
 
@@ -672,7 +676,7 @@ async def flag_vulnerable_districts(id_server = None):
 			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND poi IN %s".format(
 			), (
 				id_server,
-				tuple(ewcfg.vulnerable_districts)
+				tuple(poi_static.vulnerable_districts)
 
 			))
 
@@ -946,7 +950,7 @@ async def burnSlimes(id_server = None):
 
 				player_data = EwPlayer(id_server=user_data.id_server, id_user=user_data.id_user)
 				killer = EwPlayer(id_server=id_server, id_user=killer_data.id_user)
-				poi = ewcfg.id_to_poi.get(user_data.poi)
+				poi = poi_static.id_to_poi.get(user_data.poi)
 
 				# Kill stats
 				if status_origin == 'user':
@@ -1052,7 +1056,7 @@ async def enemyBurnSlimes(id_server):
 					response = "{} has been overrun by spores.".format(enemy_data.display_name)
 				else:
 					response = ""
-				resp_cont.add_channel_response(ewcfg.id_to_poi.get(enemy_data.poi).channel, response)
+				resp_cont.add_channel_response(poi_static.id_to_poi.get(enemy_data.poi).channel, response)
 				
 				district_data = EwDistrict(id_server = id_server, district = enemy_data.poi)
 				resp_cont.add_response_container(ewhunting.drop_enemy_loot(enemy_data, district_data))
@@ -1722,7 +1726,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 
 	resp_cont = EwResponseContainer(id_server = id_server)
 	response = ""
-	channel = ewcfg.id_to_poi.get(poi).channel
+	channel = poi_static.id_to_poi.get(poi).channel
 
 	life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive, ewcfg.life_state_shambler]
 	users = district_data.get_players_in_district(life_states = life_states, pvp_only = True)
@@ -1830,7 +1834,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 	return resp_cont
 
 def is_otp(user_data):
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	return user_data.poi not in [ewcfg.poi_id_thesewers, ewcfg.poi_id_juviesrow, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse] and (not poi.is_apartment)
 
 
@@ -1933,7 +1937,7 @@ async def spawn_prank_items(id_server):
 						time_last_action=ewcfg.col_time_last_action,
 					), (
 						id_server,
-						ewcfg.capturable_districts,
+						poi_static.capturable_districts,
 						(int(time.time()) - ewcfg.time_kickout),
 					))
 
@@ -1956,12 +1960,12 @@ async def spawn_prank_items(id_server):
 		
 		new_interval = (math.ceil(base_interval/active_users_count) * 5) # 5 active users = 1 minute timer, 10 = 30 second timer, and so on.
 		
-		district_id = random.choice(ewcfg.capturable_districts)
+		district_id = random.choice(poi_static.capturable_districts)
 		
 		#Debug
 		#district_id = 'wreckington'
 		
-		district_channel_name = ewcfg.id_to_poi.get(district_id).channel
+		district_channel_name = poi_static.id_to_poi.get(district_id).channel
 		
 		client = get_client()
 		
@@ -2045,7 +2049,7 @@ async def generate_credence(id_server):
 				time_last_action = ewcfg.col_time_last_action,
 			), (
 				id_server,
-				ewcfg.capturable_districts,
+				poi_static.capturable_districts,
 				(int(time.time()) - ewcfg.time_afk_swilldermuk),
 			))
 	
@@ -2104,7 +2108,7 @@ async def activate_trap_items(district, id_server, id_user):
 		conn = conn_info.get('conn')
 		cursor = conn.cursor();
 
-		district_channel_name = ewcfg.id_to_poi.get(district).channel
+		district_channel_name = poi_static.id_to_poi.get(district).channel
 
 		client = get_client()
 
@@ -2233,7 +2237,7 @@ def create_death_report(cause = None, user_data = None):
 			killer_data = ewhunting.EwEnemy(id_enemy = user_data.id_killer, id_server = user_data.id_server)
 
 			if killer_data.attacktype != ewcfg.enemy_attacktype_unarmed:
-				used_attacktype = ewcfg.attack_type_map.get(killer_data.attacktype)
+				used_attacktype = hunt_static.attack_type_map.get(killer_data.attacktype)
 			else:
 				used_attacktype = ewcfg.enemy_attacktype_unarmed
 			if (cause == ewcfg.cause_killing_enemy): # Response for dying to enemy attack
@@ -2382,7 +2386,7 @@ async def add_pvp_role(cmd = None):
 """
 def channel_name_is_poi(channel_name):
 	if channel_name != None:
-		return channel_name in ewcfg.chname_to_poi
+		return channel_name in poi_static.chname_to_poi
 
 	return False
 
@@ -2505,7 +2509,7 @@ def get_style_freshness_rating(user_data, dominant_style = None):
 
 def get_subzone_controlling_faction(subzone_id, id_server):
 	
-	subzone = ewcfg.id_to_poi.get(subzone_id)
+	subzone = poi_static.id_to_poi.get(subzone_id)
 	
 	if subzone == None:
 		return
@@ -2521,7 +2525,7 @@ def get_subzone_controlling_faction(subzone_id, id_server):
 
 	for mother_poi in mother_pois:
 		
-		mother_poi_data = ewcfg.id_to_poi.get(mother_poi)
+		mother_poi_data = poi_static.id_to_poi.get(mother_poi)
 		
 		if mother_poi_data.is_district:
 			# One of the mother pois was a district, get its controlling faction
@@ -2538,14 +2542,14 @@ def get_subzone_controlling_faction(subzone_id, id_server):
 		return faction
 
 def get_street_list(str_poi):
-	poi = ewcfg.id_to_poi.get(str_poi)
+	poi = poi_static.id_to_poi.get(str_poi)
 	neighbor_list = poi.neighbors
 	poi_list = []
 	if poi.is_district == False:
 		return poi_list
 	else:
 		for neighbor in neighbor_list.keys():
-			neighbor_poi = ewcfg.id_to_poi.get(neighbor)
+			neighbor_poi = poi_static.id_to_poi.get(neighbor)
 			if neighbor_poi.is_street == True:
 				poi_list.append(neighbor)
 		return poi_list
@@ -2569,7 +2573,7 @@ async def collect_topics(cmd):
 			continue
 			
 		found_poi = False
-		for poi in ewcfg.poi_list:
+		for poi in poi_static.poi_list:
 			if channel.name == poi.channel:
 				found_poi = True
 				break
@@ -2587,7 +2591,7 @@ async def sync_topics(cmd):
 		return
 	
 	
-	for poi in ewcfg.poi_list:
+	for poi in poi_static.poi_list:
 
 		poi_has_blank_topic = False
 		if poi.topic == None or poi.topic == '':
@@ -3006,7 +3010,7 @@ async def degrade_districts(cmd):
 
 	gvs_districts = []
 
-	for poi in ewcfg.poi_list:
+	for poi in poi_static.poi_list:
 		if poi.is_district and not poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow, ewcfg.poi_id_oozegardens, ewcfg.poi_id_thevoid]:
 			gvs_districts.append(poi.id_poi)
 
@@ -3026,12 +3030,12 @@ def mention_type(cmd, ew_id):
 
 
 def get_mutation_alias(name):
-	if ewcfg.mutations_map.get(name) != None:
+	if static_mutations.mutations_map.get(name) != None:
 		return name
 	else:
 
-		for mutation in ewcfg.mutations_map:
-			for alias in ewcfg.mutations_map.get(mutation).alias:
+		for mutation in static_mutations.mutations_map:
+			for alias in static_mutations.mutations_map.get(mutation).alias:
 				if name == alias:
 					return mutation
 		return 0
@@ -3263,7 +3267,7 @@ def weather_txt(id_server):
 		ampm = ''
 
 	flair = ''
-	weather_data = ewcfg.weather_map.get(market_data.weather)
+	weather_data = weather_static.weather_map.get(market_data.weather)
 	if weather_data != None:
 		if time_current >= 6 and time_current <= 7:
 			flair = weather_data.str_sunrise

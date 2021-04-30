@@ -3,6 +3,7 @@ import time
 
 from . import utils as ewutils
 from .static import cfg as ewcfg
+from .static import poi as poi_static
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import item as ewitem
@@ -53,7 +54,7 @@ class EwTransport:
 					self.current_stop = data[0][2]
 				# initialize it per the Poi default otherwise
 				else:
-					poi_data = ewcfg.id_to_poi.get(self.poi)
+					poi_data = poi_static.id_to_poi.get(self.poi)
 					if poi_data is not None:
 						self.transport_type = poi_data.transport_type
 						self.current_line = poi_data.default_line
@@ -86,7 +87,7 @@ class EwTransport:
 	""" Makes the object move across the world map. Called once at client startup for every object """
 	async def move_loop(self):
 		response = ""
-		poi_data = ewcfg.id_to_poi.get(self.poi)
+		poi_data = poi_static.id_to_poi.get(self.poi)
 		last_messages = []
 		# Loop till bot stops
 		while not ewutils.TERMINATE:
@@ -98,7 +99,7 @@ class EwTransport:
 				return
 
 			# Grab EwTransportLine object for current line
-			transport_line = ewcfg.id_to_transport_line[self.current_line]
+			transport_line = poi_static.id_to_transport_line[self.current_line]
 			client = ewutils.get_client()
 			resp_cont = ewutils.EwResponseContainer(client = client, id_server = self.id_server)
 
@@ -118,7 +119,7 @@ class EwTransport:
 					# check every second
 					while(twin_train.current_line == transport_line.next_line):
 						twin_train = EwTransport(id_server=self.id_server, poi=twin_poi)
-						if twin_train.current_stop == ewcfg.id_to_transport_line[twin_train.current_line].last_stop:
+						if twin_train.current_stop == poi_static.id_to_transport_line[twin_train.current_line].last_stop:
 							break
 						delay_track += 1
 						await asyncio.sleep(1)
@@ -144,11 +145,11 @@ class EwTransport:
 				self.persist()
 
 				# Grab EwPoi of station
-				stop_data = ewcfg.id_to_poi.get(self.current_stop)
+				stop_data = poi_static.id_to_poi.get(self.current_stop)
 
 				# announce new stop inside the transport
 				# if stop_data.is_subzone:
-				# 	stop_mother = ewcfg.id_to_poi.get(stop_data.mother_district)
+				# 	stop_mother = poi_static.id_to_poi.get(stop_data.mother_district)
 				# 	response = "We have reached {}.".format(stop_mother.str_name)
 				# else:
 				response = "We have reached {}.".format(stop_data.str_name)
@@ -162,14 +163,14 @@ class EwTransport:
 
 				# If it's at the end, announce new route
 				if stop_data.id_poi == transport_line.last_stop:
-					next_line = ewcfg.id_to_transport_line[transport_line.next_line]
+					next_line = poi_static.id_to_transport_line[transport_line.next_line]
 					response += " This {} will proceed on {}.".format(self.transport_type, next_line.str_name.replace("The", "the"))
 				else:
 					# Otherwise announce next stop, if usable
-					next_stop = ewcfg.id_to_poi.get(transport_line.schedule.get(stop_data.id_poi)[1])
+					next_stop = poi_static.id_to_poi.get(transport_line.schedule.get(stop_data.id_poi)[1])
 					if next_stop.is_transport_stop:
 						# if next_stop.is_subzone:
-						# 	stop_mother = ewcfg.id_to_poi.get(next_stop.mother_district)
+						# 	stop_mother = poi_static.id_to_poi.get(next_stop.mother_district)
 						# 	response += " The next stop is {}.".format(stop_mother.str_name)
 						# else:
 						response += " The next stop is {}.".format(next_stop.str_name)
@@ -194,7 +195,7 @@ class EwTransport:
 """ Starts movement of all transports. Called once at client startup """
 async def init_transports(id_server = None):
 	if id_server is not None:
-		for poi in ewcfg.transports:
+		for poi in poi_static.transports:
 			transport_data = EwTransport(id_server = id_server, poi = poi)
 			asyncio.ensure_future(transport_data.move_loop())
 
@@ -225,7 +226,7 @@ async def embark(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
 
 	if district_data.is_degraded():
@@ -246,7 +247,7 @@ async def embark(cmd):
 	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 
 	# must be at a transport stop to enter a transport
-	if poi != None and poi.id_poi in ewcfg.transport_stops:
+	if poi != None and poi.id_poi in poi_static.transport_stops:
 		transport_ids = get_transports_at_stop(id_server = user_data.id_server, stop = poi.id_poi)
 
 		# can't embark, when there's no vehicles to embark on
@@ -267,7 +268,7 @@ async def embark(cmd):
 		if target_name == None or len(target_name) == 0:
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Which transport line?"))
 
-		transport_line = ewcfg.id_to_transport_line.get(target_name)
+		transport_line = poi_static.id_to_transport_line.get(target_name)
 
 		# report failure, if an invalid argument was given
 		if transport_line == None:
@@ -288,7 +289,7 @@ async def embark(cmd):
 				#			response = "You need a ticket to embark on the White Line."
 				#			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-				last_stop_poi = ewcfg.id_to_poi.get(transport_line.last_stop)
+				last_stop_poi = poi_static.id_to_poi.get(transport_line.last_stop)
 				response = "Embarking on {}.".format(transport_line.str_name)
 				# schedule tasks for concurrent execution
 				message_task = asyncio.ensure_future(ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)))
@@ -311,7 +312,7 @@ async def embark(cmd):
 						user_data.poi = transport_data.poi
 						user_data.persist()
 
-						transport_poi = ewcfg.id_to_poi.get(transport_data.poi)
+						transport_poi = poi_static.id_to_poi.get(transport_data.poi)
 
 						response = "You enter the {}.".format(transport_data.transport_type)
 						if ticket is not None:
@@ -347,13 +348,13 @@ async def disembark(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	# can only disembark when you're on a transport vehicle
-	elif user_data.poi in ewcfg.transports:
+	elif user_data.poi in poi_static.transports:
 		transport_data = EwTransport(id_server = user_data.id_server, poi = user_data.poi)
 		response = "{}ing.".format(cmd.tokens[0][1:].lower()).capitalize()
 
-		stop_poi = ewcfg.id_to_poi.get(transport_data.current_stop)
+		stop_poi = poi_static.id_to_poi.get(transport_data.current_stop)
 		# if stop_poi.is_subzone:
-		# 	stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
+		# 	stop_poi = poi_static.id_to_poi.get(stop_poi.mother_district)
 
 		if ewmap.inaccessible(user_data = user_data, poi = stop_poi):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
@@ -380,7 +381,7 @@ async def disembark(cmd):
 		if user_data.poi != transport_data.poi:
 			return
 
-		stop_poi = ewcfg.id_to_poi.get(transport_data.current_stop)
+		stop_poi = poi_static.id_to_poi.get(transport_data.current_stop)
 
 		# juvies can't swim
 		if transport_data.current_stop == ewcfg.poi_id_slimesea and user_data.life_state != ewcfg.life_state_corpse:
@@ -435,7 +436,7 @@ async def disembark(cmd):
 		# update user location, if move successful
 		else:
 			# if stop_poi.is_subzone:
-			# 	stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
+			# 	stop_poi = poi_static.id_to_poi.get(stop_poi.mother_district)
 
 			if ewmap.inaccessible(user_data = user_data, poi = stop_poi):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
@@ -460,18 +461,18 @@ async def check_schedule(cmd):
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	response = ""
 
 
 	if poi.is_transport_stop:
 		response = "The following public transit lines stop here:"
 		for line in poi.transport_lines:
-			line_data = ewcfg.id_to_transport_line.get(line)
+			line_data = poi_static.id_to_transport_line.get(line)
 			response += "\n-" + line_data.str_name
 	elif poi.is_transport:
 		transport_data = EwTransport(id_server = user_data.id_server, poi = poi.id_poi)
-		transport_line = ewcfg.id_to_transport_line.get(transport_data.current_line)
+		transport_line = poi_static.id_to_transport_line.get(transport_data.current_line)
 		response = "This {} is following {}.".format(transport_data.transport_type, transport_line.str_name.replace("The", "the"))
 	else:
 		response = "There is no schedule to check here."

@@ -7,6 +7,9 @@ from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import items as static_items
 from .static import weapons as static_weapons
+from .static import hunting as hunt_static
+from .static import food as static_food
+from .static import poi as poi_static
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -318,7 +321,7 @@ class EwEnemy:
 		resp_cont = ewutils.EwResponseContainer(id_server=enemy_data.id_server)
 		district_data = EwDistrict(district=enemy_data.poi, id_server=enemy_data.id_server)
 		market_data = EwMarket(id_server=enemy_data.id_server)
-		ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel
+		ch_name = poi_static.id_to_poi.get(enemy_data.poi).channel
 
 		target_data = None
 		target_player = None
@@ -398,7 +401,7 @@ class EwEnemy:
 			should_post_resp_cont = False
 
 		if enemy_data.attacktype != ewcfg.enemy_attacktype_unarmed:
-			used_attacktype = ewcfg.attack_type_map.get(enemy_data.attacktype)
+			used_attacktype = hunt_static.attack_type_map.get(enemy_data.attacktype)
 		else:
 			return
 
@@ -822,9 +825,9 @@ class EwEnemy:
 		resp_cont = ewutils.EwResponseContainer(id_server=enemy_data.id_server)
 		district_data = EwDistrict(district=enemy_data.poi, id_server=enemy_data.id_server)
 		market_data = EwMarket(id_server=enemy_data.id_server)
-		ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel
+		ch_name = poi_static.id_to_poi.get(enemy_data.poi).channel
 		
-		used_attacktype = ewcfg.attack_type_map.get(enemy_data.attacktype)
+		used_attacktype = hunt_static.attack_type_map.get(enemy_data.attacktype)
 
 		# Get target's info based on its AI.
 		target_enemy, group_attack = get_target_by_ai(enemy_data, cannibalize = True)
@@ -1205,7 +1208,7 @@ class EwEnemy:
 
 		try:
 			# Raid bosses can move into other parts of the outskirts as well as the city, including district zones.
-			destinations = set(ewcfg.poi_neighbors.get(self.poi))
+			destinations = set(poi_static.poi_neighbors.get(self.poi))
 			
 			if self.enemytype in ewcfg.gvs_enemies:
 				path = [ewcfg.poi_id_assaultflatsbeach, ewcfg.poi_id_vagrantscorner, ewcfg.poi_id_greenlightdistrict, ewcfg.poi_id_downtown]
@@ -1224,18 +1227,18 @@ class EwEnemy:
 			# Nudge raidbosses into the city.
 			for destination in destinations:
 
-				destination_poi_data = ewcfg.id_to_poi.get(destination)
+				destination_poi_data = poi_static.id_to_poi.get(destination)
 				if destination_poi_data.is_subzone or destination_poi_data.is_gangbase:
 					destinations.remove(destination)
 				
-				if self.poi in ewcfg.outskirts_depths:
-					if destination in ewcfg.outskirts_depths:
+				if self.poi in poi_static.outskirts_depths:
+					if destination in poi_static.outskirts_depths:
 						destinations.remove(destination)
-				elif self.poi in ewcfg.outskirts_middle:
-					if (destination in ewcfg.outskirts_middle) or (destination in ewcfg.outskirts_depths):
+				elif self.poi in poi_static.outskirts_middle:
+					if (destination in poi_static.outskirts_middle) or (destination in poi_static.outskirts_depths):
 						destinations.remove(destination)
-				elif self.poi in ewcfg.outskirts_edges: 
-					if (destination in ewcfg.outskirts_edges) or (destination in ewcfg.outskirts_middle):
+				elif self.poi in poi_static.outskirts_edges: 
+					if (destination in poi_static.outskirts_edges) or (destination in poi_static.outskirts_middle):
 						destinations.remove(destination)
 					
 
@@ -1256,7 +1259,7 @@ class EwEnemy:
 				# When a raid boss enters a new district, give it a blank identifier
 				self.identifier = ''
 
-				new_poi_def = ewcfg.id_to_poi.get(new_poi)
+				new_poi_def = poi_static.id_to_poi.get(new_poi)
 				new_ch_name = new_poi_def.channel
 				new_district_response = "*A low roar booms throughout the district, as slime on the ground begins to slosh all around.*\n {} **{} has arrived!** {}".format(
 					ewcfg.emote_megaslime,
@@ -1266,11 +1269,11 @@ class EwEnemy:
 				resp_cont.add_channel_response(new_ch_name, new_district_response)
 
 				old_district_response = "{} has moved to {}!".format(self.display_name, new_poi_def.str_name)
-				old_poi_def = ewcfg.id_to_poi.get(old_poi)
+				old_poi_def = poi_static.id_to_poi.get(old_poi)
 				old_ch_name = old_poi_def.channel
 				resp_cont.add_channel_response(old_ch_name, old_district_response)
 				
-				if new_poi not in ewcfg.outskirts:
+				if new_poi not in poi_static.outskirts:
 					gang_base_response = "There are reports of a powerful enemy roaming around {}.".format(new_poi_def.str_name)
 					channels = ewcfg.hideout_channels
 					for ch in channels:
@@ -1405,7 +1408,7 @@ class EwEnemy:
 
 		if target_data != None:
 			target = EwPlayer(id_user = target_data.id_user, id_server = enemy_data.id_server)
-			ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel 
+			ch_name = poi_static.id_to_poi.get(enemy_data.poi).channel 
 
 			id_status = ewcfg.status_evasive_id
 
@@ -1437,7 +1440,7 @@ class EwEnemy:
 
 		if target_data != None:
 			target = EwPlayer(id_user = target_data.id_user, id_server = enemy_data.id_server)
-			ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel 
+			ch_name = poi_static.id_to_poi.get(enemy_data.poi).channel 
 
 			id_status = ewcfg.status_taunted_id
 
@@ -1472,7 +1475,7 @@ class EwEnemy:
 
 		if target_data != None:
 			target = EwPlayer(id_user = target_data.id_user, id_server = enemy_data.id_server)
-			ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel 
+			ch_name = poi_static.id_to_poi.get(enemy_data.poi).channel 
 
 			id_status = ewcfg.status_aiming_id
 
@@ -1667,7 +1670,7 @@ async def summonenemy(cmd):
 			enemy_coord = cmd.tokens[5]
 			enemy_displayname = " ".join(cmd.tokens[6:])
 	
-		poi = ewcfg.id_to_poi.get(enemy_location)
+		poi = poi_static.id_to_poi.get(enemy_location)
 
 	if enemytype != None and poi != None:
 		
@@ -1719,7 +1722,7 @@ async def summongvsenemy(cmd):
 		enemytype = cmd.tokens[1]
 		coord = cmd.tokens[2]
 		joybean_status = cmd.tokens[3]
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 	else:
 		response = "Correct usage: !summongvsenemy [type] [coord] [joybean status ('yes', otherwise false)]"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1821,7 +1824,7 @@ async def enemy_perform_action(id_server):
 			# If an enemy is alive and not a sandbag, make it perform the kill function.
 			if enemy.enemytype != ewcfg.enemy_type_sandbag:
 				
-				ch_name = ewcfg.id_to_poi.get(enemy.poi).channel 
+				ch_name = poi_static.id_to_poi.get(enemy.poi).channel 
 
 				# Check if the enemy can do anything right now
 				if enemy.life_state == ewcfg.enemy_lifestate_unactivated and check_raidboss_countdown(enemy):
@@ -1907,8 +1910,8 @@ async def enemy_perform_action_gvs(id_server):
 		if enemy == None:
 			continue
 
-		if ewcfg.id_to_poi.get(enemy.poi) != None:
-			ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
+		if poi_static.id_to_poi.get(enemy.poi) != None:
+			ch_name = poi_static.id_to_poi.get(enemy.poi).channel
 		else:
 			continue
 		
@@ -2077,7 +2080,7 @@ def spawn_enemy(
 			if enemytype == ewcfg.enemy_type_sandbag:
 				potential_chosen_poi = ewcfg.poi_id_dojo
 			else:
-				potential_chosen_poi = random.choice(ewcfg.outskirts)
+				potential_chosen_poi = random.choice(poi_static.outskirts)
 
 			potential_chosen_district = EwDistrict(district=potential_chosen_poi, id_server=id_server)
 			enemies_list = potential_chosen_district.get_enemies_in_district()
@@ -2189,7 +2192,7 @@ def spawn_enemy(
 					response = "A new {} just got sent in. It's level {}, and has {} slime.\n*'Don't hold back!'*, the Dojo Master cries out from afar.".format(
 						enemy.display_name, enemy.level, enemy.slimes)
 
-		ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
+		ch_name = poi_static.id_to_poi.get(enemy.poi).channel
 
 	if len(response) > 0 and len(ch_name) > 0:
 		resp_cont.add_channel_response(ch_name, response)
@@ -2311,7 +2314,7 @@ def delete_enemy(enemy_data):
 
 # Drops items into the district when an enemy dies.
 def drop_enemy_loot(enemy_data, district_data):
-	loot_poi = ewcfg.id_to_poi.get(district_data.name)
+	loot_poi = poi_static.id_to_poi.get(district_data.name)
 	loot_resp_cont = ewutils.EwResponseContainer(id_server=enemy_data.id_server)
 	response = ""
 
@@ -2345,7 +2348,7 @@ def drop_enemy_loot(enemy_data, district_data):
 	
 		# Finds the item if it's an EwFood item.
 		if item == None:
-			item = ewcfg.food_map.get(value)
+			item = static_food.food_map.get(value)
 			item_type = ewcfg.it_food
 			if item != None:
 				item_id = item.id_food
@@ -2379,7 +2382,7 @@ def drop_enemy_loot(enemy_data, district_data):
 		if item == None:
 			
 			if value == "crop":
-				item = random.choice(ewcfg.vegetable_list)
+				item = random.choice(static_food.vegetable_list)
 				item_type = ewcfg.it_food
 			
 			elif value in [ewcfg.rarity_plebeian, ewcfg.rarity_patrician]:
@@ -2742,7 +2745,7 @@ async def sh_move(enemy_data):
 		
 		for gaia_row in ewcfg.gvs_valid_coords_gaia:
 			if new_coord in gaia_row and index != None and row != None:
-				poi_channel = ewcfg.id_to_poi.get(enemy_data.poi).channel
+				poi_channel = poi_static.id_to_poi.get(enemy_data.poi).channel
 				
 				try:
 					previous_gaia_coord = row[index - 2]
@@ -3074,7 +3077,7 @@ async def gvs_update_gamestate(id_server):
 		victor = None
 		time_now = int(time.time())
 
-		op_poi = ewcfg.id_to_poi.get(district)
+		op_poi = poi_static.id_to_poi.get(district)
 		client = ewutils.get_client()
 		server = client.get_guild(id_server)
 		channel = ewutils.get_channel(server, op_poi.channel)

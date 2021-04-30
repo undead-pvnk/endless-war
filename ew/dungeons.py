@@ -2,6 +2,7 @@ import asyncio
 import random
 
 from .static import cfg as ewcfg
+from .static import poi as poi_static
 from . import utils as ewutils
 from . import rolemgr as ewrolemgr
 
@@ -97,7 +98,7 @@ async def begin_tutorial(member):
 	await ewrolemgr.updateRoles(client = ewutils.get_client(), member = member)
 
 	response = format_tutorial_response(scene)
-	poi_def = ewcfg.id_to_poi.get(user_data.poi)
+	poi_def = poi_static.id_to_poi.get(user_data.poi)
 	channels = [poi_def.channel]
 	return await ewutils.post_in_channels(member.guild.id, ewutils.formatMessage(member, response), channels)
 	
@@ -107,7 +108,7 @@ async def tutorial_cmd(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	client = cmd.client
 
-	if user_data.poi not in ewcfg.tutorial_pois:
+	if user_data.poi not in poi_static.tutorial_pois:
 		return
 
 	if user_data.id_user not in user_to_tutorial_state:
@@ -138,7 +139,7 @@ async def tutorial_cmd(cmd):
 
 		response = format_tutorial_response(scene)
 
-		poi_def = ewcfg.id_to_poi.get(user_data.poi)
+		poi_def = poi_static.id_to_poi.get(user_data.poi)
 		channels = [poi_def.channel]
 		return await ewutils.post_in_channels(cmd.guild.id, ewutils.formatMessage(cmd.message.author, response), channels)
 
@@ -160,7 +161,7 @@ async def tutorial_cmd(cmd):
 
 		response = format_tutorial_response(scene)
 
-		poi_def = ewcfg.id_to_poi.get(user_data.poi)
+		poi_def = poi_static.id_to_poi.get(user_data.poi)
 		channels = [poi_def.channel]
 		return await ewutils.post_in_channels(cmd.guild.id, ewutils.formatMessage(cmd.message.author, response), channels)
 

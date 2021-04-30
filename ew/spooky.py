@@ -11,6 +11,8 @@ import asyncio
 from . import cmd as ewcmd
 from .static import cfg as ewcfg
 from .static import items as static_items
+from .static import weather as weather_static
+from .static import poi as poi_static
 from . import utils as ewutils
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
@@ -66,7 +68,7 @@ async def revive(cmd):
 				player_data.life_state = ewcfg.life_state_shambler
 				player_data.change_slimes(n = 0.5 * ewcfg.slimes_shambler)
 				player_data.trauma = ""
-				poi_death = ewcfg.id_to_poi.get(player_data.poi_death)
+				poi_death = poi_static.id_to_poi.get(player_data.poi_death)
 				if ewmap.inaccessible(poi = poi_death, user_data = player_data):
 					player_data.poi = ewcfg.poi_id_endlesswar
 				else:
@@ -87,10 +89,10 @@ async def revive(cmd):
 			# Shower every district in the city with slime from the sewers.
 			sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.guild.id)
 			# the amount of slime showered is divided equally amongst the districts
-			districts_amount = len(ewcfg.capturable_districts)
+			districts_amount = len(poi_static.capturable_districts)
 			geyser_amount = int(0.5 * sewer_data.slimes / districts_amount)
 			# Get a list of all the districts
-			for poi in ewcfg.capturable_districts:
+			for poi in poi_static.capturable_districts:
 				district_data = EwDistrict(district = poi, id_server = cmd.guild.id)
 
 				district_data.change_slimes(n = geyser_amount)
@@ -103,7 +105,7 @@ async def revive(cmd):
 			for item in sewer_inv:
 				district = ewcfg.poi_id_slimesea
 				if random.random() < 0.5:
-					district = random.choice(ewcfg.capturable_districts)
+					district = random.choice(poi_static.capturable_districts)
 				ewitem.give_item(id_item=item.get("id_item"), id_user=district, id_server=sewer_data.id_server)
 
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -122,7 +124,7 @@ async def revive(cmd):
 			reunite += brain.str_revive.format(
 			slimeoid_name = slimeoid.name
 			)
-			new_poi = ewcfg.id_to_poi.get(player_data.poi)
+			new_poi = poi_static.id_to_poi.get(player_data.poi)
 			revivechannel = ewutils.get_channel(cmd.guild, new_poi.channel)
 			reunite = ewutils.formatMessage(cmd.message.author, reunite)
 			await ewutils.send_message(cmd.client, revivechannel, reunite)
@@ -155,7 +157,7 @@ async def haunt(cmd):
 			user_data = EwUser(member = cmd.message.author)
 			market_data = EwMarket(id_server = cmd.guild.id)
 			target_mutations = haunted_data.get_mutations()
-			target_poi = ewcfg.id_to_poi.get(haunted_data.poi)
+			target_poi = poi_static.id_to_poi.get(haunted_data.poi)
 			target_is_shambler = haunted_data.life_state == ewcfg.life_state_shambler
 			target_is_inhabitted = haunted_data.id_user == user_data.get_inhabitee()
 
@@ -227,7 +229,7 @@ async def haunt(cmd):
 					haunt_power_multiplier *= 1.5 # wet hands
 
 				# misc
-				if ewcfg.weather_map.get(market_data.weather) == ewcfg.weather_foggy:
+				if weather_static.weather_map.get(market_data.weather) == ewcfg.weather_foggy:
 					haunt_power_multiplier *= 1.1
 				if not haunted_data.has_soul:
 					haunt_power_multiplier *= 1.2
@@ -267,7 +269,7 @@ async def haunt(cmd):
 				if ewcfg.mutation_id_coleblooded in target_mutations:
 					response = "{} has been haunted by the ghost of {}! Their exorcising coleslaw blood purges {} antislime from your being! Better not do that again.".format(member.display_name, cmd.message.author.display_name, -haunted_slimes)
 
-				haunted_channel = ewcfg.id_to_poi.get(haunted_data.poi).channel
+				haunted_channel = poi_static.id_to_poi.get(haunted_data.poi).channel
 				haunt_message = "You feel a cold shiver run down your spine"
 				if cmd.tokens_count > 2:
 					haunt_message_content = re.sub("<.+>" if cmd.mentions_count == 1 else "\d{17,}", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
@@ -314,7 +316,7 @@ async def summon_negaslimeoid(cmd):
 		response = "Only the dead have the occult knowledge required to summon a cosmic horror."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if user_data.poi not in ewcfg.capturable_districts:
+	if user_data.poi not in poi_static.capturable_districts:
 		response = "You can't conduct the ritual here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

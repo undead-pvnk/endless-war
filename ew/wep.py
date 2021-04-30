@@ -5,6 +5,7 @@ import math
 
 from .static import cfg as ewcfg
 from .static import weapons as static_weapons
+from .static import poi as poi_static
 from . import captcha as ewcaptcha
 from . import utils as ewutils
 from . import item as ewitem
@@ -91,7 +92,7 @@ def canAttack(cmd, amb_switch = 0):
 	time_now = int(time_now_float)
 	user_data = EwUser(member = cmd.message.author)
 	mutations = user_data.get_mutations()
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(id_server=user_data.id_server, district=user_data.poi)
 	weapon_item = None
 	weapon = None
@@ -115,7 +116,7 @@ def canAttack(cmd, amb_switch = 0):
 		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		captcha = weapon_item.item_props.get('captcha')
 
-	channel_poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	channel_poi = poi_static.chname_to_poi.get(cmd.message.channel.name)
 	"""
 	if user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse:
 		if user_data.life_state == ewcfg.life_state_enlisted:
@@ -292,7 +293,7 @@ def canCap(cmd, capture_type, roomba_loop = 0):
 	sidearm = None
 	captcha = None
 	sidearm_viable = 0
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
 	market_data = EwMarket(id_server=cmd.guild.id)
 	mutations = user_data.get_mutations()
@@ -339,7 +340,7 @@ def canCap(cmd, capture_type, roomba_loop = 0):
 					   "just stick to spraying down sick graffiti and splattering your rival gang across the pavement in the other districts."
 	#elif district_data.is_degraded():
 		#response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-	elif not user_data.poi in ewcfg.capturable_districts:
+	elif not user_data.poi in poi_static.capturable_districts:
 		response = "This zone cannot be captured."
 	elif sidearm != None and sidearm.cooldown + (float(sidearm_item.item_props.get("time_lastattack")) if sidearm_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
 		response = "Your {weapon_name} isn't ready for another {command} yet!".format(weapon_name=sidearm.id_weapon, command=cmd.tokens[0].lower())
@@ -1224,7 +1225,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 		client = ewutils.get_client()
 		server = client.get_guild(user_data.id_server)
 
-		channel = ewcfg.id_to_poi.get(user_data.poi).channel
+		channel = poi_static.id_to_poi.get(user_data.poi).channel
 
 		resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
 
@@ -1468,7 +1469,7 @@ def burn_bystanders(user_data = None, burn_dmg = 0, life_states = None, factions
 	if life_states != None and factions != None and district_data != None:
 		bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions, pvp_only=True)
 		resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
-		channel = ewcfg.id_to_poi.get(district_data.name).channel
+		channel = poi_static.id_to_poi.get(district_data.name).channel
 		market_data = EwMarket(id_server=user_data.id_server)
 
 		for bystander in bystander_users:
@@ -1765,7 +1766,7 @@ async def marry(cmd):
 		response = "Ah, to recapture the magic of the first nights together… Sadly, those days are far behind you now. You’ve already had your special day, now it’s time to have the same boring days forever. Aren’t you glad you got married??"
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -1862,7 +1863,7 @@ async def divorce(cmd):
 	elif user_data.poi != ewcfg.poi_id_dojo:
 		response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
 	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -2880,7 +2881,7 @@ async def spray(cmd):
 				user_data.persist()
 
 			#Get district data
-			poi = ewcfg.id_to_poi.get(user_data.poi)
+			poi = poi_static.id_to_poi.get(user_data.poi)
 			district_data = EwDistrict(id_server=cmd.guild.id, district=poi.id_poi)
 
 			gangsters_in_district = district_data.get_players_in_district(min_slimes=ewcfg.min_slime_to_cap, life_states=[ewcfg.life_state_enlisted], ignore_offline=True)
@@ -3148,7 +3149,7 @@ async def sanitize(cmd):
 				user_data.persist()
 
 			# Get district data
-			poi = ewcfg.id_to_poi.get(user_data.poi)
+			poi = poi_static.id_to_poi.get(user_data.poi)
 			district_data = EwDistrict(id_server=cmd.guild.id, district=poi.id_poi)
 
 			gangsters_in_district = district_data.get_players_in_district(min_slimes=ewcfg.min_slime_to_cap, life_states=[ewcfg.life_state_enlisted], ignore_offline=True)

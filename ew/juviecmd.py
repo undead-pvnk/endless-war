@@ -9,6 +9,8 @@ from .static import cfg as ewcfg
 from .static import vendors
 from .static import items as static_items
 from .static import weapons as static_weapons
+from .static import food as static_food
+from .static import poi as poi_static
 from . import utils as ewutils
 from . import cmd as ewcmd
 from . import item as ewitem
@@ -212,7 +214,7 @@ async def mine(cmd):
 	mutations = user_data.get_mutations()
 	cosmetic_abilites = ewutils.get_cosmetic_abilities(id_user = cmd.message.author.id, id_server = cmd.guild.id)
 	time_now = int(time.time())
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = poi_static.id_to_poi.get(user_data.poi)
 
 	response = ""
 	# Kingpins can't mine.
@@ -233,7 +235,7 @@ async def mine(cmd):
 
 	# Mine only in the mines.
 	if cmd.message.channel.name in ewcfg.mining_channels:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -497,7 +499,7 @@ async def flag(cmd):
 
 	# Mine only in the mines.
 	if cmd.message.channel.name in ewcfg.mining_channels:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 		if district_data.is_degraded():
@@ -860,12 +862,12 @@ async def crush(cmd):
 			if len(levelup_response) > 0:
 				response += "\n\n" + levelup_response
 				
-		elif item_data.item_props.get("id_food") in ewcfg.vegetable_to_cosmetic_material.keys():
+		elif item_data.item_props.get("id_food") in static_food.vegetable_to_cosmetic_material.keys():
 			ewitem.item_delete(id_item=sought_id)
 			
 			crop_name = item_data.item_props.get('food_name')
 			# Turn the crop into its proper cosmetic material item.
-			cosmetic_material_id = ewcfg.vegetable_to_cosmetic_material[item_data.item_props.get("id_food")]
+			cosmetic_material_id = static_food.vegetable_to_cosmetic_material[item_data.item_props.get("id_food")]
 			new_item = static_items.item_map.get(cosmetic_material_id)
 
 			new_item_type = ewcfg.it_item
@@ -886,7 +888,7 @@ async def crush(cmd):
 
 			response = "You {} your {} in your mouth and spit it out to create some {}!!".format(command, crop_name, new_name)
 
-		elif item_data.item_props.get("id_food") in ewcfg.candy_ids_list:
+		elif item_data.item_props.get("id_food") in static_food.candy_ids_list:
 
 			ewitem.item_delete(id_item=sought_id)
 			item_name = item_data.item_props.get('food_name')

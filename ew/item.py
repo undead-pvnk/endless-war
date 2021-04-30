@@ -10,6 +10,7 @@ from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import items as static_items
 from .static import weapons as static_weapons
+from .static import poi as poi_static
 from . import stats as ewstats
 from . import district as ewdistrict
 from . import rolemgr as ewrolemgr
@@ -247,7 +248,7 @@ def item_create(
     stack_size = 0,
     item_props = None
 ):
-    item_def = ewcfg.item_def_map.get(item_type)
+    item_def = static_items.item_def_map.get(item_type)
 
     if item_def == None:
         ewutils.logMsg('Tried to create invalid item_type: {}'.format(item_type))
@@ -722,7 +723,7 @@ def inventory(
                                 'item_name': item.str_name,
                                 'item_desc': item.str_desc
                             }
-                    item_def = ewcfg.item_def_map.get(item_type)
+                    item_def = static_items.item_def_map.get(item_type)
                     item_data.item_props.update(item_def.item_props)
                     item_data.item_props.update(item_props)
                     item_data.persist()
@@ -898,7 +899,7 @@ def inventory(
                         item_data.persist()
                         ewutils.logMsg('Updated cosmetic to new format: {}'.format(id_item))
 
-                item_def = ewcfg.item_def_map.get(item_type)
+                item_def = static_items.item_def_map.get(item_type)
 
                 if(item_def != None):
                     items.append({
@@ -1001,7 +1002,7 @@ async def inventory_print(cmd):
     player = EwPlayer(id_user = cmd.message.author.id)
 
     user_data = EwUser(id_user = cmd.message.author.id, id_server = player.id_server)
-    poi = ewcfg.id_to_poi.get(user_data.poi)
+    poi = poi_static.id_to_poi.get(user_data.poi)
     if cmd.tokens[0].lower() == ewcfg.cmd_communitychest:
         if poi.community_chest == None:
             response = "There is no community chest here."
@@ -1196,7 +1197,7 @@ async def item_look(cmd):
     player = EwPlayer(id_user=cmd.message.author.id)
     server = player.id_server
     user_data = EwUser(id_user=cmd.message.author.id, id_server=server)
-    poi = ewcfg.id_to_poi.get(user_data.poi)
+    poi = poi_static.id_to_poi.get(user_data.poi)
     mutations = user_data.get_mutations()
 
     if user_data.visiting != ewcfg.location_id_empty:
@@ -1466,7 +1467,7 @@ async def item_use(cmd):
                 item_action = ""
                 side_effect = ""
 
-                if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False): # or (user_data.poi not in ewcfg.capturable_districts):
+                if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False): # or (user_data.poi not in poi_static.capturable_districts):
                     response = "You need to be on the city streets to unleash that prank item's full potential."
                 else:
                     if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
@@ -2105,7 +2106,7 @@ async def squeeze(cmd):
             else:
                 receivingreport = "You feel searing palpitations in your chest, and vomit slime all over the floor. Dammit, {} must be fucking with your soul.".format(cmd.message.author.display_name)
 
-            poi = ewcfg.id_to_poi.get(targetmodel.poi)
+            poi = poi_static.id_to_poi.get(targetmodel.poi)
 
             usermodel.time_lasthaunt = int(time.time())
             usermodel.persist()
@@ -2350,10 +2351,10 @@ async def manually_edit_item_properties(cmd):
 async def longdrop(cmd):
     user_data = EwUser(member=cmd.message.author)
     mutations = user_data.get_mutations()
-    poi = ewcfg.id_to_poi.get(user_data.poi)
+    poi = poi_static.id_to_poi.get(user_data.poi)
 
     destination = ewutils.flattenTokenListToString(cmd.tokens[1])
-    dest_poi = ewcfg.id_to_poi.get(destination)
+    dest_poi = poi_static.id_to_poi.get(destination)
 
     item_search = ewutils.flattenTokenListToString(cmd.tokens[2:])
     item_sought = find_item(item_search=item_search, id_user=cmd.message.author.id,  id_server=user_data.id_server)

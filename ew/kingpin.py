@@ -5,6 +5,7 @@ from . import item as ewitem
 from . import utils as ewutils
 from .static import cfg as ewcfg
 from .static import cosmetics
+from .static import poi as poi_static
 from . import rolemgr as ewrolemgr
 from . import move as ewmap
 from .user import EwUser
@@ -44,7 +45,7 @@ async def pardon(cmd):
 
 				response = "{} has been released from their association with the {}.".format(member.display_name, faction_old)
 
-			member_poi = ewcfg.id_to_poi.get(member_data.poi)
+			member_poi = poi_static.id_to_poi.get(member_data.poi)
 			if ewmap.inaccessible(user_data = member_data, poi = member_poi):
 				member_data.poi = ewcfg.poi_id_downtown
 			member_data.persist()
@@ -80,7 +81,7 @@ async def banish(cmd):
 				if member_data.life_state == ewcfg.life_state_enlisted:
 					member_data.life_state = ewcfg.life_state_juvenile
 
-			member_poi = ewcfg.id_to_poi.get(member_data.poi)
+			member_poi = poi_static.id_to_poi.get(member_data.poi)
 			if ewmap.inaccessible(user_data = member_data, poi = member_poi):
 				member_data.poi = ewcfg.poi_id_downtown
 			member_data.persist()
@@ -261,7 +262,7 @@ async def pa_command(cmd):
 		if cmd.tokens_count >= 3:
 			poi = ewutils.flattenTokenListToString(cmd.tokens[1])
 
-			poi_obj = ewcfg.id_to_poi.get(poi)
+			poi_obj = poi_static.id_to_poi.get(poi)
 			if poi == "auditorium":
 				channel = "auditorium"
 			else:

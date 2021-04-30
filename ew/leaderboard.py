@@ -1,6 +1,7 @@
 import datetime
 
 from .static import cfg as ewcfg
+from .static import poi as poi_static
 from . import utils as ewutils
 from .user import EwUser
 from .player import EwPlayer
@@ -347,7 +348,7 @@ def make_district_control_board(id_server, title):
 	entries = []
 	
 	districts = []
-	for poi in ewcfg.poi_list:
+	for poi in poi_static.poi_list:
 		if poi.is_district:
 			districts.append(poi.id_poi)
 			
