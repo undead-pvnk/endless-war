@@ -10,7 +10,7 @@ from . import item as ewitem
 from .backend import core as bknd_core
 
 from .user import EwUser
-from .district import EwDistrict
+from .backend.district import EwDistrict
 
 
 """

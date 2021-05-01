@@ -71,7 +71,7 @@ from ew.user import EwUser
 from ew.player import EwPlayer
 from ew.market import EwMarket
 from ew.market import EwStock
-from ew.district import EwDistrict
+from ew.backend.district import EwDistrict
 from ew.statuseffects import EwStatusEffect
 
 

@@ -1,4 +1,3 @@
-from .district import EwDistrict
 
 """
 	Commands and utilities related to dead players.
@@ -25,6 +24,7 @@ from .user import EwUser
 from .market import EwMarket
 from .slimeoid import EwSlimeoid
 from .backend.quadrants import EwQuadrant
+from .backend.district import EwDistrict
 
 """ revive yourself from the dead. """
 async def revive(cmd):

@@ -13,7 +13,7 @@ from . import stats as ewstats
 from .backend import core as bknd_core
 from .user import EwUser
 from .player import EwPlayer
-from .district import EwDistrict
+from .backend.district import EwDistrict
 from .backend.dungeons import EwGamestate
 
 class EwMarket:

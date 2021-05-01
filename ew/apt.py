@@ -28,7 +28,7 @@ from . import mutation as ewmutation
 from .backend import core as bknd_core
 
 from .item import EwItem
-from .district import EwDistrict
+from .backend.district import EwDistrict
 from .player import EwPlayer
 from .user import EwUser
 from .backend.apt import EwApartment

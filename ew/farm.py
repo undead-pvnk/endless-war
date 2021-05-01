@@ -18,7 +18,7 @@ from .user import EwUser
 from .market import EwMarket
 from .item import EwItem
 from .slimeoid import EwSlimeoid
-from .district import EwDistrict
+from .backend.district import EwDistrict
 
 class EwFarm:
 	id_server = -1

@@ -35,7 +35,7 @@ from .slimeoid import EwSlimeoid
 #from .hunting import find_enemy, delete_all_enemies, EwEnemy, EwOperationData, spawn_enemy, delete_enemy
 from .statuseffects import EwStatusEffect
 from .statuseffects import EwEnemyStatusEffect
-from .district import EwDistrict
+from .backend.district import EwDistrict
 from .backend.worldevent import EwWorldEvent
 
 """ wrapper for discord members """

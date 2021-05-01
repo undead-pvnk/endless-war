@@ -23,7 +23,7 @@ from .backend import worldevent as bknd_worldevent
 from .item import EwItem
 from .user import EwUser
 from .market import EwMarket
-from .district import EwDistrict
+from .backend.district import EwDistrict
 from .backend.worldevent import EwWorldEvent
 
 # Map of user ID to a map of recent miss-mining time to count. If the count

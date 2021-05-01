@@ -10,7 +10,7 @@ from .static import poi as poi_static
 from . import rolemgr as ewrolemgr
 from . import item as ewitem
 from .user import EwUser
-from .district import EwDistrict
+from .backend.district import EwDistrict
 
 # Map containing user IDs and the last time in UTC seconds since the pachinko
 # machine was used.

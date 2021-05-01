@@ -19,7 +19,7 @@ from .user import EwUser
 from .player import EwPlayer
 from .market import EwMarket, EwCompany, EwStock
 from .item import EwItem
-from .district import EwDistrict
+from .backend.district import EwDistrict
 
 
 

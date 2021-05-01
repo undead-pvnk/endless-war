@@ -17,7 +17,7 @@ from .backend import core as bknd_core
 from .market import EwMarket
 from .user import EwUser
 from .item import EwItem
-from .district import EwDistrict
+from .backend.district import EwDistrict
 
 class EwFisher:
 	fishing = False

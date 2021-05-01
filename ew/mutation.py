@@ -19,7 +19,7 @@ from .player import EwPlayer
 
 from .user import EwUser
 from .statuseffects import EwStatusEffect
-from .district import EwDistrict
+from .backend.district import EwDistrict
 
 
 class EwMutation:

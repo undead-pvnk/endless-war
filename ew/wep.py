@@ -20,7 +20,7 @@ from .user import EwUser
 from .item import EwItem
 from .market import EwMarket
 from .slimeoid import EwSlimeoid
-from .district import EwDistrict
+from .backend.district import EwDistrict
 from .player import EwPlayer
 #from .hunting import EwEnemy
 from .statuseffects import EwStatusEffect

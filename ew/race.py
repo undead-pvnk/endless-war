@@ -12,7 +12,7 @@ from . import cmd as ewcmd
 
 from .user import EwUser
 from .market import EwMarket
-from .district import EwDistrict
+from .backend.district import EwDistrict
 
 async def set_race(cmd):
 	response = ""

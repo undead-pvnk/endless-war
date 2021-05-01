@@ -31,7 +31,7 @@ from .static import hue as hue_static
 from .static import status as se_static
 from . import wep as ewwep
 from .user import EwUser
-from .district import EwDistrict
+from .backend.district import EwDistrict
 from .player import EwPlayer
 from .hunting import EwEnemy, EwOperationData
 from .market import EwMarket

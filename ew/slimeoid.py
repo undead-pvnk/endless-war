@@ -17,7 +17,7 @@ from .backend import core as bknd_core
 
 from .user import EwUser
 from .market import EwMarket
-from .district import EwDistrict
+from .backend.district import EwDistrict
 from .player import EwPlayer
 from .item import EwItem
 from .backend.quadrants import EwQuadrant

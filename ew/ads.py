@@ -7,7 +7,7 @@ from .backend import ads as bnkd_ads
 
 from .user import EwUser
 from .player import EwPlayer
-from .district import EwDistrict
+from .backend.district import EwDistrict
 from .backend.ads import EwAd
 
 

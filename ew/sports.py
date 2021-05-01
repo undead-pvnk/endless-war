@@ -9,7 +9,7 @@ from . import move as ewmap
 
 from .user import EwUser
 from .player import EwPlayer
-from .district import EwDistrict
+from .backend.district import EwDistrict
 
 sb_count = 0
 
