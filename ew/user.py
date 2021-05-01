@@ -7,6 +7,8 @@ from .static import cfg as ewcfg
 from .static import weapons as static_weapons
 from .static import poi as poi_static
 from .static import mutations as static_mutations
+from .static import hue as hue_static
+from .static import status as se_static
 from . import stats as ewstats
 from . import item as ewitem
 from . import statuseffects as ewstatuseffects
@@ -742,7 +744,7 @@ class EwUser:
 		if id_status != None:
 			status = None
 
-			status = ewcfg.status_effects_def_map.get(id_status)
+			status = se_static.status_effects_def_map.get(id_status)
 			time_expire = status.time_expire * multiplier
 
 			if status != None:
@@ -1092,7 +1094,7 @@ class EwUser:
 
 				base_freshness += int(cos.item_props['freshness']) / cosmetic_count
 
-				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
+				hue = hue_static.hue_map.get(cos.item_props.get('hue'))
 				if hue is not None:
 					if hue_count.get(hue):
 						hue_count[hue] += 1

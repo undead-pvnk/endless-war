@@ -10,6 +10,7 @@ from .static import weapons as static_weapons
 from .static import hunting as hunt_static
 from .static import food as static_food
 from .static import poi as poi_static
+from .static import status as se_static
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -1319,7 +1320,7 @@ class EwEnemy:
 		if id_status != None:
 			status = None
 
-			status = ewcfg.status_effects_def_map.get(id_status)
+			status = se_static.status_effects_def_map.get(id_status)
 			time_expire = status.time_expire * multiplier
 
 			if status != None:

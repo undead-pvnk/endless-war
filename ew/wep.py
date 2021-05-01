@@ -6,6 +6,7 @@ import math
 from .static import cfg as ewcfg
 from .static import weapons as static_weapons
 from .static import poi as poi_static
+from .static import status as se_static
 from . import captcha as ewcaptcha
 from . import utils as ewutils
 from . import item as ewitem
@@ -1938,7 +1939,7 @@ def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = Non
 	user_statuses = user_data.getStatusEffects()
 
 	for status in user_statuses:
-		status_flavor = ewcfg.status_effects_def_map.get(status)
+		status_flavor = se_static.status_effects_def_map.get(status)
 
 		# check target for targeted status effects
 		if status in [ewcfg.status_taunted_id, ewcfg.status_aiming_id, ewcfg.status_evasive_id]:
@@ -1988,7 +1989,7 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
 
 	user_statuses = user_data.getStatusEffects()
 	for status in user_statuses:
-		status_flavor = ewcfg.status_effects_def_map.get(status)
+		status_flavor = se_static.status_effects_def_map.get(status)
 
 		# check target for targeted status effects
 		if status in [ewcfg.status_evasive_id]:

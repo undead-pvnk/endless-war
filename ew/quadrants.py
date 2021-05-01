@@ -4,6 +4,7 @@ import random
 import discord
 
 from .static import cfg as ewcfg
+from .static import quadrants as quad_static
 from . import stats as ewstats
 from . import utils as ewutils
 from . import user as ew
@@ -113,8 +114,8 @@ async def add_quadrant(cmd):
 
 
 	for token in cmd.tokens[1:]:
-		if token.lower() in ewcfg.quadrants_map:
-			quadrant = ewcfg.quadrants_map[token.lower()]
+		if token.lower() in quad_static.quadrants_map:
+			quadrant = quad_static.quadrants_map[token.lower()]
 		if quadrant is not None:
 			break
 	
@@ -166,8 +167,8 @@ async def clear_quadrant(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	for token in cmd.tokens[1:]:
-		if token.lower() in ewcfg.quadrants_map:
-			quadrant = ewcfg.quadrants_map[token.lower()]
+		if token.lower() in quad_static.quadrants_map:
+			quadrant = quad_static.quadrants_map[token.lower()]
 		if quadrant is not None:
 			break
 
@@ -250,7 +251,7 @@ async def get_policitous(cmd):
 def get_quadrant(cmd, id_quadrant):
 
 	author = cmd.message.author
-	quadrant = ewcfg.quadrants_map[id_quadrant]
+	quadrant = quad_static.quadrants_map[id_quadrant]
 	if cmd.mentions_count == 0:
 		quadrant_data = EwQuadrant(id_server = author.guild.id, id_user = author.id, quadrant = quadrant.id_quadrant)
 		if author.guild.get_member(quadrant_data.id_target) is None:

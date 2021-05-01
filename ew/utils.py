@@ -26,6 +26,8 @@ from .static import hunting as hunt_static
 from .static import weather as weather_static
 from .static import poi as poi_static
 from .static import mutations as static_mutations
+from .static import hue as hue_static
+from .static import status as se_static
 from . import wep as ewwep
 from .user import EwUser
 from .district import EwDistrict
@@ -1094,7 +1096,7 @@ def removeExpiredStatuses(id_server = None):
 			status = row[0]
 			id_user = row[1]
 			user_data = EwUser(id_user = id_user, id_server = id_server)
-			status_def = ewcfg.status_effects_def_map.get(status)
+			status_def = se_static.status_effects_def_map.get(status)
 			status_effect = EwStatusEffect(id_status=status, user_data = user_data)
 	
 			if status_def.time_expire > 0:
@@ -1124,7 +1126,7 @@ def enemyRemoveExpiredStatuses(id_server = None):
 			status = row[0]
 			id_enemy = row[1]
 			enemy_data = EwEnemy(id_enemy = id_enemy, id_server = id_server)
-			status_def = ewcfg.status_effects_def_map.get(status)
+			status_def = se_static.status_effects_def_map.get(status)
 			status_effect = EwEnemyStatusEffect(id_status=status, enemy_data = enemy_data)
 	
 			if status_def.time_expire > 0:
@@ -2431,7 +2433,7 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 		if c.item_props['adorned'] == 'true':
 			adorned_styles.append(c.item_props.get('fashion_style'))
 
-			hue = ewcfg.hue_map.get(c.item_props.get('hue'))
+			hue = hue_static.hue_map.get(c.item_props.get('hue'))
 			adorned_hues.append(c.item_props.get('hue'))
 
 			if c.item_props['id_cosmetic'] not in adorned_ids:

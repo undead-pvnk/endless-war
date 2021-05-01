@@ -5,6 +5,7 @@ import time
 from .static import cfg as ewcfg
 from .static import slimeoid as sl_static
 from .static import poi as poi_static
+from .static import hue as hue_static
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -1943,11 +1944,11 @@ def slimeoid_describe(slimeoid):
 	if brain != None:
 		response += " {}".format(brain.str_brain)
 
-	hue = ewcfg.hue_map.get(slimeoid.hue)
+	hue = hue_static.hue_map.get(slimeoid.hue)
 	if hue != None:
 		response += " {}".format(hue.str_desc)
 		
-	# coating = ewcfg.hue_map.get(slimeoid.coating)
+	# coating = hue_static.hue_map.get(slimeoid.coating)
 	# if coating != None:
 	# 	response += " {}".format(coating.str_desc)
 
@@ -2086,7 +2087,7 @@ async def slimeoid(cmd):
 		for item in cosmetics:
 			cos = EwItem(id_item = item.get('id_item'))
 			if cos.item_props.get('slimeoid') == 'true':
-				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
+				hue = hue_static.hue_map.get(cos.item_props.get('hue'))
 				adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cos.item_props.get('cosmetic_name'))
 
 		if len(adorned_cosmetics) > 0:
@@ -2490,7 +2491,7 @@ async def saturateslimeoid(cmd):
 
 	elif item_sought:
 		value = item_search
-		hue = ewcfg.hue_map.get(value)
+		hue = hue_static.hue_map.get(value)
 		
 		
 
@@ -2621,7 +2622,7 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 		special = sl_static.special_map.get(challengee_slimeoid.special),
 		legs = sl_static.mobility_map.get(challengee_slimeoid.legs),
 		brain = sl_static.brain_map.get(challengee_slimeoid.ai),
-		hue = ewcfg.hue_map.get(challengee_slimeoid.hue),
+		hue = hue_static.hue_map.get(challengee_slimeoid.hue),
 		coating = challengee_slimeoid.coating,
 		moxie = challengee_slimeoid.atk + 1,
 		grit = challengee_slimeoid.defense + 1,
@@ -2642,7 +2643,7 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 		special = sl_static.special_map.get(challenger_slimeoid.special),
 		legs = sl_static.mobility_map.get(challenger_slimeoid.legs),
 		brain = sl_static.brain_map.get(challenger_slimeoid.ai),
-		hue = ewcfg.hue_map.get(challenger_slimeoid.hue),
+		hue = hue_static.hue_map.get(challenger_slimeoid.hue),
 		coating = challenger_slimeoid.coating,
 		moxie = challenger_slimeoid.atk + 1,
 		grit = challenger_slimeoid.defense + 1,

@@ -4,6 +4,7 @@ import random
 from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import items as static_items
+from .static import hue as hue_static
 from . import item as ewitem
 from . import utils as ewutils
 import asyncio
@@ -200,7 +201,7 @@ async def dye(cmd):
 				cosmetic_item = EwItem(id_item=cosmetic.get("id_item"))
 				dye_item = EwItem(id_item=dye.get("id_item"))
 
-				hue = ewcfg.hue_map.get(dye_item.item_props.get('id_item'))
+				hue = hue_static.hue_map.get(dye_item.item_props.get('id_item'))
 
 				response = "You dye your {} in {} paint!".format(cosmetic_item.item_props.get('cosmetic_name'), hue.str_name)
 				cosmetic_item.item_props['hue'] = hue.id_hue
@@ -580,7 +581,7 @@ async def retrofit(cmd):
 
 
 def update_hues():
-	for hue in ewcfg.hue_list:
+	for hue in hue_static.hue_list:
 			
 		hue_props = {
 			ewcfg.col_hue_analogous_1 : '',

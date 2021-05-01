@@ -11,6 +11,7 @@ from .static import cosmetics
 from .static import items as static_items
 from .static import weapons as static_weapons
 from .static import poi as poi_static
+from .static import hue as hue_static
 from . import stats as ewstats
 from . import district as ewdistrict
 from . import rolemgr as ewrolemgr
@@ -1372,12 +1373,12 @@ async def item_look(cmd):
 
                 response += "\n\nIt's freshness rating is {rating}.".format(rating=item.item_props['freshness'])
 
-                hue = ewcfg.hue_map.get(item.item_props.get('hue'))
+                hue = hue_static.hue_map.get(item.item_props.get('hue'))
                 if hue != None:
                     response += " It's been dyed in {} paint.".format(hue.str_name)
 
             if item.item_type == ewcfg.it_furniture:
-                hue = ewcfg.hue_map.get(item.item_props.get('hue'))
+                hue = hue_static.hue_map.get(item.item_props.get('hue'))
                 if hue != None:
                     response += " It's been dyed in {} paint.".format(hue.str_name)
 

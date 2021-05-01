@@ -11,6 +11,8 @@ from .static import items as static_items
 from .static import weapons as static_weapons
 from .static import poi as poi_static
 from .static import mutations as static_mutations
+from .static import hue as hue_static
+from .static import status as se_static
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -224,7 +226,7 @@ def gen_data_text(
 	for cosmetic in cosmetics:
 		cos = EwItem(id_item=cosmetic.get('id_item'))
 		if cos.item_props['adorned'] == 'true':
-			hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
+			hue = hue_static.hue_map.get(cos.item_props.get('hue'))
 			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 	if user_data.life_state == ewcfg.life_state_grandfoe:
@@ -350,7 +352,7 @@ def gen_data_text(
 		for status in statuses:
 			status_effect = EwStatusEffect(id_status=status, user_data=user_data)
 			if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
-				status_flavor = ewcfg.status_effects_def_map.get(status)
+				status_flavor = se_static.status_effects_def_map.get(status)
 
 				severity = ""
 				try:
@@ -424,7 +426,7 @@ async def data(cmd):
 			for status in statuses:
 				status_effect = EwEnemyStatusEffect(id_status=status, enemy_data=enemy)
 				if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
-					status_flavor = ewcfg.status_effects_def_map.get(status)
+					status_flavor = se_static.status_effects_def_map.get(status)
 
 					severity = ""
 					try:
@@ -468,7 +470,7 @@ async def data(cmd):
 		for cosmetic in cosmetics:
 			cos = EwItem(id_item=cosmetic.get('id_item'))
 			if cos.item_props['adorned'] == 'true':
-				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
+				hue = hue_static.hue_map.get(cos.item_props.get('hue'))
 				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 
@@ -595,7 +597,7 @@ async def data(cmd):
 		for status in statuses:
 			status_effect = EwStatusEffect(id_status=status, user_data=user_data)
 			if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
-				status_flavor = ewcfg.status_effects_def_map.get(status)
+				status_flavor = se_static.status_effects_def_map.get(status)
 
 				severity = ""
 				try:
@@ -787,7 +789,7 @@ async def fashion(cmd):
 
 			if c.item_props['adorned'] == 'true':
 
-				hue = ewcfg.hue_map.get(c.item_props.get('hue'))
+				hue = hue_static.hue_map.get(c.item_props.get('hue'))
 
 				adorned_styles.append(c.item_props.get('fashion_style'))
 
@@ -853,7 +855,7 @@ async def fashion(cmd):
 
 			if c.item_props['adorned'] == 'true':
 
-				hue = ewcfg.hue_map.get(c.item_props.get('hue'))
+				hue = hue_static.hue_map.get(c.item_props.get('hue'))
 
 				adorned_styles.append(c.item_props.get('fashion_style'))
 
@@ -1559,9 +1561,9 @@ async def piss(cmd):
 			if random.randint(1,100) < 2:
 				slimeoid = EwSlimeoid(member = cmd.message.author)
 				if slimeoid.life_state == ewcfg.slimeoid_state_active:
-					hue = ewcfg.hue_map.get("yellow")
+					hue = hue_static.hue_map.get("yellow")
 					response = "CONGRATULATIONS. You suddenly lose control of your HUGE COCK and saturate your {} with your PISS. {}".format(slimeoid.name, hue.str_saturate)
-					slimeoid.hue = (ewcfg.hue_map.get("yellow")).id_hue
+					slimeoid.hue = (hue_static.hue_map.get("yellow")).id_hue
 					slimeoid.persist()
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

@@ -11,6 +11,7 @@ from .static import items as static_items
 from .static import weapons as static_weapons
 from .static import food as static_food
 from .static import poi as poi_static
+from .static import hue as hue_static
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import market as ewmarket
@@ -538,7 +539,7 @@ async def apt_look(cmd):
 			has_hat_stand = True
 
 
-		hue = ewcfg.hue_map.get(i.item_props.get('hue'))
+		hue = hue_static.hue_map.get(i.item_props.get('hue'))
 		if hue != None and i.item_props.get('id_furniture') not in ewcfg.furniture_specialhue:
 			furn_response += " It's {}. ".format(hue.str_name)
 		elif i.item_props.get('id_furniture') in ewcfg.furniture_specialhue:
@@ -2199,7 +2200,7 @@ async def dyefurniture(cmd):
 				furniture_item = ewitem.EwItem(id_item=furniture.get("id_item"))
 				dye_item = ewitem.EwItem(id_item=dye.get("id_item"))
 
-				hue = ewcfg.hue_map.get(dye_item.item_props.get('id_item'))
+				hue = hue_static.hue_map.get(dye_item.item_props.get('id_item'))
 
 				response = "You dye your {} in {} paint!".format(furniture_item.item_props.get('furniture_name'), hue.str_name)
 				furniture_item.item_props['hue'] = hue.id_hue

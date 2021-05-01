@@ -7,6 +7,7 @@ from .static import vendors
 from .static import weapons as static_weapons
 from .static import food as static_food
 from .static import poi as poi_static
+from .static import farm as farm_static
 from . import item as ewitem
 from . import utils as ewutils
 from . import rolemgr as ewrolemgr
@@ -572,7 +573,7 @@ async def check_farm(cmd):
 					response = "Your crop looks powerful and bursting with nutrients."
 
 		else:
-			farm_action = ewcfg.id_to_farm_action.get(farm.action_required)
+			farm_action = farm_static.id_to_farm_action.get(farm.action_required)
 			response = farm_action.str_check
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -616,7 +617,7 @@ async def cultivate(cmd):
 		)
 
 		
-		farm_action = ewcfg.cmd_to_farm_action.get(cmd.tokens[0].lower())
+		farm_action = farm_static.cmd_to_farm_action.get(cmd.tokens[0].lower())
 
 		if farm.time_lastsow == 0:
 			response = "You missed a step, you haven’t planted anything here yet."
@@ -674,7 +675,7 @@ def farm_tick(id_server):
 				farm_data.phase = ewcfg.farm_phase_reap
 				
 			if farm_data.phase < ewcfg.farm_phase_reap:
-				farm_data.action_required = random.choice(ewcfg.farm_action_ids)
+				farm_data.action_required = random.choice(farm_static.farm_action_ids)
 			else:
 				farm_data.action_required = ewcfg.farm_action_none
 			farm_data.persist()
