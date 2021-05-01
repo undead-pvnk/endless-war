@@ -65,6 +65,7 @@ import ew.slimetwitter as ewslimetwitter
 import ew.debug as ewdebug
 import ew.backend.core as bknd_core
 import ew.backend.ads as bknd_ads
+import ew.backend.farm as bknd_farm
 
 from ew.item import EwItem
 from ew.user import EwUser
@@ -1109,7 +1110,7 @@ async def on_ready():
 			await ewtransport.init_transports(id_server = server.id)
 			asyncio.ensure_future(bknd_weather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
-		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
+		asyncio.ensure_future(bknd_farm.farm_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewsports.slimeball_tick_loop(id_server = server.id))
 		
 		print('\nNUMBER OF CHANNELS IN SERVER: {}\n'.format(len(server.channels)))
