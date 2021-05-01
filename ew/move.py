@@ -15,6 +15,7 @@ from . import apt as ewapt
 from . import ads as ewads
 from . import hunting as ewhunting
 from .backend import core as bknd_core
+from .backend import ads as bknd_ads
 
 
 from .user import EwUser
@@ -24,7 +25,7 @@ from .market import EwMarket
 from .mutation import EwMutation
 from .slimeoid import EwSlimeoid
 from .player import EwPlayer
-from .ads import EwAd
+from .backend.ads import EwAd
 from .item import EwItem
 from .dungeons import EwGamestate
 
@@ -942,7 +943,7 @@ async def move(cmd=None, isApt=False):
                     await ewutils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
 
                     if poi_current.has_ads:
-                        ads = ewads.get_ads(id_server=user_data.id_server)
+                        ads = bknd_ads.get_ads(id_server=user_data.id_server)
                         if len(ads) > 0:
                             id_ad = random.choice(ads)
                             ad_data = EwAd(id_ad=id_ad)
@@ -1190,7 +1191,7 @@ async def look(cmd):
     ad_resp = ""
     ad_formatting = ""
     if poi.has_ads:
-        ads = ewads.get_ads(id_server = user_data.id_server)
+        ads = bknd_ads.get_ads(id_server = user_data.id_server)
         if len(ads) > 0:
             id_ad = random.choice(ads)
             ad_data = EwAd(id_ad = id_ad)

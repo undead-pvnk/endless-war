@@ -64,6 +64,7 @@ import ew.race as ewrace
 import ew.slimetwitter as ewslimetwitter
 import ew.debug as ewdebug
 import ew.backend.core as bknd_core
+import ew.backend.ads as bknd_ads
 
 from ew.item import EwItem
 from ew.user import EwUser
@@ -1349,7 +1350,7 @@ async def on_ready():
 					ewfish.kill_dead_offers(id_server = server.id)
 
 					# kill advertisements that have timed out
-					ewads.delete_expired_ads(id_server = server.id)
+					bknd_ads.delete_expired_ads(id_server = server.id)
 
 					await ewdistrict.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
 					await ewmap.send_gangbase_messages(server.id, market_data.clock)
