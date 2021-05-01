@@ -1,6 +1,7 @@
 #import asyncio
 import time
 from . import utils as ewutils
+from .backend import core as bknd_core
 
 from .user import EwUser
 #from .player import EwPlayer
@@ -33,7 +34,7 @@ class PrankIndex:
 		self.prank_count = prank_count
 
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -57,11 +58,11 @@ class PrankIndex:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 	def persist(self):
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -83,7 +84,7 @@ class PrankIndex:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 			
 response_timer = 6 # How long does it take for a response item to send out its attacks
 afk_timer = 60 * 60 * 2 # 2 hours

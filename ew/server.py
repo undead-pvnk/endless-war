@@ -1,5 +1,6 @@
 from . import utils as ewutils
 from .static import cfg as ewcfg
+from .backend import core as bknd_core
 
 """
 	EwServer is a representation of a server, if the name of the server or
@@ -19,7 +20,7 @@ class EwServer:
 			self.id_server = id_server
 
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor()
 
@@ -45,7 +46,7 @@ class EwServer:
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 	""" Save server data object to the database. """
 	def persist(self):
@@ -53,7 +54,7 @@ class EwServer:
 			self.icon = ""
 
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -72,13 +73,13 @@ class EwServer:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 
 """ update the server record with the current data. """
 def server_update(server = None):
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
@@ -95,4 +96,4 @@ def server_update(server = None):
 		conn.commit()
 	finally:
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)

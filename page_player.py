@@ -10,6 +10,7 @@ import html
 from ew import utils as ewutils
 from ew import cmd as ewcmd
 import ew.static.cfg as ewcfg
+import ew.backend.core as bknd_core
 
 from ew.user import EwUser
 from ew.player import EwPlayer
@@ -78,7 +79,7 @@ print("<p>{}</p>".format(html.escape("".join(ewcmd.gen_data_text(
 
 print("<h3>Statistics</h3>")
 try:
-	conn_info = ewutils.databaseConnect()
+	conn_info = bknd_core.databaseConnect()
 	conn = conn_info.get('conn')
 	cursor = conn.cursor();
 
@@ -107,7 +108,7 @@ except:
 finally:
 	# Clean up the database handles.
 	cursor.close()
-	ewutils.databaseClose(conn_info)
+	bknd_core.databaseClose(conn_info)
 
 print("</div>")
 print("</article>")

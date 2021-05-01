@@ -5,9 +5,11 @@ import random
 from .static import cfg as ewcfg
 from .static import poi as poi_static
 from . import utils as ewutils
+from .backend import core as bknd_core
 
 from .user import EwUser
 from .player import EwPlayer
+
 
 class EwWorldEvent:
 	id_event = -1
@@ -29,7 +31,7 @@ class EwWorldEvent:
 
 			try:
 				# Retrieve object
-				result = ewutils.execute_sql_query("SELECT {}, {}, {}, {} FROM world_events WHERE id_event = %s".format(
+				result = bknd_core.execute_sql_query("SELECT {}, {}, {}, {} FROM world_events WHERE id_event = %s".format(
 					ewcfg.col_id_server,
 					ewcfg.col_event_type,
 					ewcfg.col_time_activate,
@@ -48,7 +50,7 @@ class EwWorldEvent:
 					self.time_expir = result[3]
 
 					# Retrieve additional properties
-					props = ewutils.execute_sql_query("SELECT {}, {} FROM world_events_prop WHERE id_event = %s".format(
+					props = bknd_core.execute_sql_query("SELECT {}, {} FROM world_events_prop WHERE id_event = %s".format(
 						ewcfg.col_name,
 						ewcfg.col_value
 					), (
@@ -73,7 +75,7 @@ class EwWorldEvent:
 	def persist(self):
 		try:
 			# Save the object.
-			ewutils.execute_sql_query("REPLACE INTO world_events({}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s)".format(
+			bknd_core.execute_sql_query("REPLACE INTO world_events({}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_event,
 				ewcfg.col_id_server,
 				ewcfg.col_event_type,
@@ -88,7 +90,7 @@ class EwWorldEvent:
 			))
 
 			# Remove all existing property rows.
-			ewutils.execute_sql_query("DELETE FROM world_events_prop WHERE {} = %s".format(
+			bknd_core.execute_sql_query("DELETE FROM world_events_prop WHERE {} = %s".format(
 				ewcfg.col_id_event
 			), (
 				self.id_event,
@@ -96,7 +98,7 @@ class EwWorldEvent:
 
 			# Write out all current property rows.
 			for name in self.event_props:
-				ewutils.execute_sql_query("INSERT INTO world_events_prop({}, {}, {}) VALUES(%s, %s, %s)".format(
+				bknd_core.execute_sql_query("INSERT INTO world_events_prop({}, {}, {}) VALUES(%s, %s, %s)".format(
 					ewcfg.col_id_event,
 					ewcfg.col_name,
 					ewcfg.col_value
@@ -121,7 +123,7 @@ def get_world_events(id_server = None, active_only = True):
 		query_suffix = " AND {col_time_activate} <= {time_now} AND ({col_time_expir} >= {time_now} OR {col_time_expir} < 0)"
 		query += query_suffix
 
-	data = ewutils.execute_sql_query(query.format(
+	data = bknd_core.execute_sql_query(query.format(
 		col_id_event = ewcfg.col_id_event,
 		col_event_type = ewcfg.col_event_type,
 		col_time_activate = ewcfg.col_time_activate,
@@ -147,7 +149,7 @@ def create_world_event(
 		return -1
 	try:
 		# Get database handles if they weren't passed.
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
@@ -180,14 +182,14 @@ def create_world_event(
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 
 	return event_id
 
 def delete_world_event(id_event):
 	try:
-		ewutils.execute_sql_query("DELETE FROM world_events WHERE {id_event} = %s".format(
+		bknd_core.execute_sql_query("DELETE FROM world_events WHERE {id_event} = %s".format(
 			id_event = ewcfg.col_id_event,
 		),(
 			id_event,
@@ -216,7 +218,7 @@ async def event_tick(id_server):
 	time_now = int(time.time())
 	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
 	try:
-		data = ewutils.execute_sql_query("SELECT {id_event} FROM world_events WHERE {time_expir} <= %s AND {time_expir} > 0 AND id_server = %s".format(
+		data = bknd_core.execute_sql_query("SELECT {id_event} FROM world_events WHERE {time_expir} <= %s AND {time_expir} > 0 AND id_server = %s".format(
 			id_event = ewcfg.col_id_event,
 			time_expir = ewcfg.col_time_expir,
 		),(
@@ -310,7 +312,7 @@ def create_void_connection(id_server):
 
 def get_void_connection_pois(id_server):
 	# in hindsight, doing this in python using get_world_events would've been easier and more future-proof
-	return sum(ewutils.execute_sql_query("SELECT {value} FROM world_events_prop WHERE {name} = 'poi' AND {id_event} IN (SELECT {id_event} FROM world_events WHERE {event_type} = %s AND {id_server} = %s)".format(
+	return sum(bknd_core.execute_sql_query("SELECT {value} FROM world_events_prop WHERE {name} = 'poi' AND {id_event} IN (SELECT {id_event} FROM world_events WHERE {event_type} = %s AND {id_server} = %s)".format(
 			value = ewcfg.col_value,
 			name = ewcfg.col_name,
 			id_event = ewcfg.col_id_event,

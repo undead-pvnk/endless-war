@@ -16,6 +16,7 @@ from . import item as ewitem
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
 from . import wep as ewwep
+from .backend import core as bknd_core
 
 from .user import EwUser
 from .item import EwItem
@@ -127,7 +128,7 @@ class EwEnemy:
 
 		if query_suffix != "":
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor();
 
@@ -209,13 +210,13 @@ class EwEnemy:
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 	""" Save enemy data object to the database. """
 
 	def persist(self):
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
@@ -306,7 +307,7 @@ class EwEnemy:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 	# Function that enemies use to attack or otherwise interact with players.
 	async def kill(self):
@@ -333,7 +334,7 @@ class EwEnemy:
 		# Get target's info based on its AI.
 
 		if enemy_data.ai == ewcfg.enemy_ai_coward:
-			users = ewutils.execute_sql_query(
+			users = bknd_core.execute_sql_query(
 				"SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin})".format(
 					id_user=ewcfg.col_id_user,
 					life_state=ewcfg.col_life_state,
@@ -1298,7 +1299,7 @@ class EwEnemy:
 		values = []
 
 		try:
-			data = ewutils.execute_sql_query("SELECT {id_status} FROM enemy_status_effects WHERE {id_server} = %s and {id_enemy} = %s".format(
+			data = bknd_core.execute_sql_query("SELECT {id_status} FROM enemy_status_effects WHERE {id_server} = %s and {id_enemy} = %s".format(
 				id_status = ewcfg.col_id_status,
 				id_server = ewcfg.col_id_server,
 				id_enemy = ewcfg.col_id_enemy
@@ -1344,7 +1345,7 @@ class EwEnemy:
 	def clear_status(self, id_status = None):
 		if id_status != None:
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor()
 
@@ -1363,11 +1364,11 @@ class EwEnemy:
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 	def clear_allstatuses(self):
 		try:
-			ewutils.execute_sql_query("DELETE FROM enemy_status_effects WHERE {id_server} = %s AND {id_enemy} = %s".format(
+			bknd_core.execute_sql_query("DELETE FROM enemy_status_effects WHERE {id_server} = %s AND {id_enemy} = %s".format(
 					id_server = ewcfg.col_id_server,
 					id_enemy = ewcfg.col_id_enemy
 				),(
@@ -1387,7 +1388,7 @@ class EwEnemy:
 		# Get target's info based on its AI.
 
 		if enemy_data.ai == ewcfg.enemy_ai_coward:
-			users = ewutils.execute_sql_query(
+			users = bknd_core.execute_sql_query(
 				"SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin})".format(
 					id_user=ewcfg.col_id_user,
 					life_state=ewcfg.col_life_state,
@@ -1536,7 +1537,7 @@ class EwOperationData:
 		if(id_user != ""):
 
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor()
 	
@@ -1584,11 +1585,11 @@ class EwOperationData:
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 	def persist(self):
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -1613,11 +1614,11 @@ class EwOperationData:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 	
 	def delete(self):
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -1634,7 +1635,7 @@ class EwOperationData:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 		
 		
 # Debug command. Could be used for events, perhaps?
@@ -1762,7 +1763,7 @@ async def delete_all_enemies(cmd=None, query_suffix="", id_server_sent=""):
 		
 		id_server = cmd.message.guild.id
 		
-		ewutils.execute_sql_query("DELETE FROM enemies WHERE id_server = {id_server}".format(
+		bknd_core.execute_sql_query("DELETE FROM enemies WHERE id_server = {id_server}".format(
 			id_server=id_server
 		))
 		
@@ -1771,7 +1772,7 @@ async def delete_all_enemies(cmd=None, query_suffix="", id_server_sent=""):
 	else:
 		id_server = id_server_sent
 
-		ewutils.execute_sql_query("DELETE FROM enemies WHERE id_server = {} {}".format(
+		bknd_core.execute_sql_query("DELETE FROM enemies WHERE id_server = {} {}".format(
 			id_server,
 			query_suffix
 		))
@@ -1786,7 +1787,7 @@ async def enemy_perform_action(id_server):
 
 	time_now = int(time.time())
 
-	enemydata = ewutils.execute_sql_query(
+	enemydata = bknd_core.execute_sql_query(
 		"SELECT {id_enemy} FROM enemies WHERE ((enemies.poi IN (SELECT users.poi FROM users WHERE NOT (users.life_state = %s OR users.life_state = %s) AND users.id_server = {id_server})) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != -1)) AND enemies.id_server = {id_server}".format(
 		id_enemy=ewcfg.col_id_enemy,
 		id_server=id_server
@@ -1797,7 +1798,7 @@ async def enemy_perform_action(id_server):
 		ewcfg.enemy_lifestate_dead,
 		time_now
 	))
-	#enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
+	#enemydata = bknd_core.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
 	#	id_enemy = ewcfg.col_id_enemy
 	#),(
 	#	id_server,
@@ -1886,7 +1887,7 @@ async def enemy_perform_action_gvs(id_server):
 	#print(despawn_timenow)
 	#"SELECT {id_enemy} FROM enemies WHERE (enemies.enemytype IN %s) AND (({condition_1}) OR ({condition_2}) OR ({condition_3}) OR ({condition_4}) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != '')) AND enemies.id_server = {id_server}"
 	
-	enemydata = ewutils.execute_sql_query(
+	enemydata = bknd_core.execute_sql_query(
 		"SELECT {id_enemy} FROM enemies WHERE ((enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.expiration_date < %s) OR (enemies.id_target != -1)) AND enemies.id_server = {id_server}".format(
 			id_enemy=ewcfg.col_id_enemy,
 			id_server=id_server,
@@ -1895,7 +1896,7 @@ async def enemy_perform_action_gvs(id_server):
 			ewcfg.enemy_lifestate_dead,
 			time_now
 		))
-	# enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
+	# enemydata = bknd_core.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
 	#	id_enemy = ewcfg.col_id_enemy
 	# ),(
 	#	id_server,
@@ -2240,7 +2241,7 @@ def find_enemy(enemy_search=None, user_data=None):
 
 			searched_identifier = identifiers_found.pop()
 
-			enemydata = ewutils.execute_sql_query(
+			enemydata = bknd_core.execute_sql_query(
 				"SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {identifier} = %s AND {life_state} = 1".format(
 					id_enemy=ewcfg.col_id_enemy,
 					poi=ewcfg.col_enemy_poi,
@@ -2261,7 +2262,7 @@ def find_enemy(enemy_search=None, user_data=None):
 		# 
 		# 	searched_coord= coordinates_found.pop()
 		# 
-		# 	enemydata = ewutils.execute_sql_query(
+		# 	enemydata = bknd_core.execute_sql_query(
 		# 		"SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {coord} = %s AND {life_state} = 1".format(
 		# 			id_enemy=ewcfg.col_id_enemy,
 		# 			poi=ewcfg.col_enemy_poi,
@@ -2279,7 +2280,7 @@ def find_enemy(enemy_search=None, user_data=None):
 		else:
 			# last token was a string, identify enemy by name
 
-			enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {life_state} = 1".format(
+			enemydata = bknd_core.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {life_state} = 1".format(
 				id_enemy=ewcfg.col_id_enemy,
 				poi=ewcfg.col_enemy_poi,
 				life_state=ewcfg.col_enemy_life_state
@@ -2306,7 +2307,7 @@ def find_enemy(enemy_search=None, user_data=None):
 def delete_enemy(enemy_data):
 	# print("DEBUG - {} - {} DELETED".format(enemy_data.id_enemy, enemy_data.display_name))
 	enemy_data.clear_allstatuses()
-	ewutils.execute_sql_query("DELETE FROM enemies WHERE {id_enemy} = %s".format(
+	bknd_core.execute_sql_query("DELETE FROM enemies WHERE {id_enemy} = %s".format(
 		id_enemy=ewcfg.col_id_enemy
 	), (
 		enemy_data.id_enemy,
@@ -2536,7 +2537,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server, data_level = 1)
 	
 		elif enemy_data.ai == ewcfg.enemy_ai_attacker_a:
-			users = ewutils.execute_sql_query(
+			users = bknd_core.execute_sql_query(
 				#"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({level} > {safe_level} OR {life_state} != {life_state_juvenile}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {time_lastenter} ASC".format(
 				"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({life_state} != {life_state_juvenile}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {time_lastenter} ASC".format(
 					id_user = ewcfg.col_id_user,
@@ -2560,7 +2561,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 				target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level = 1)
 	
 		elif enemy_data.ai == ewcfg.enemy_ai_attacker_b:
-			users = ewutils.execute_sql_query(
+			users = bknd_core.execute_sql_query(
 				#"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({level} > {safe_level} OR {life_state} != {life_state_juvenile}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {slimes} DESC".format(
 				"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({life_state} != {life_state_juvenile}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {slimes} DESC".format(
 					id_user = ewcfg.col_id_user,
@@ -2585,7 +2586,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 				
 		elif enemy_data.ai == ewcfg.enemy_ai_gaiaslimeoid:
 			
-			users = ewutils.execute_sql_query(
+			users = bknd_core.execute_sql_query(
 				"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({life_state} = {life_state_shambler}) ORDER BY {slimes} DESC".format(
 					id_user=ewcfg.col_id_user,
 					life_state=ewcfg.col_life_state,
@@ -2605,7 +2606,7 @@ def get_target_by_ai(enemy_data, cannibalize = False):
 				
 		elif enemy_data.ai == ewcfg.enemy_ai_shambler:
 
-			users = ewutils.execute_sql_query(
+			users = bknd_core.execute_sql_query(
 				"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT ({life_state} = {life_state_shambler} OR {life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) ORDER BY {slimes} DESC".format(
 					id_user=ewcfg.col_id_user,
 					life_state=ewcfg.col_life_state,
@@ -2780,7 +2781,7 @@ def sh_check_coord_for_gaia(enemy_data, sh_range, direction):
 				for gaia_row in ewcfg.gvs_valid_coords_gaia:
 					if checked_coord in gaia_row:
 						# Check coordinate for gaiaslimeoids in front of the shambler.
-						gaia_data = ewutils.execute_sql_query(
+						gaia_data = bknd_core.execute_sql_query(
 							"SELECT {id_enemy}, {enemytype} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} = %s AND {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_dead})".format(
 								id_enemy=ewcfg.col_id_enemy,
 								enemyclass=ewcfg.col_enemy_class,
@@ -2845,7 +2846,7 @@ def ga_check_coord_for_shambler(enemy_data, ga_range, direction, piercing, splas
 
 			
 			# Check coordinate for shamblers in range of gaiaslimeoid.
-			shambler_data = ewutils.execute_sql_query(
+			shambler_data = bknd_core.execute_sql_query(
 				"SELECT {id_enemy}, {enemytype} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} IN %s AND {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_dead} OR {life_state} = {life_state_unactivated})".format(
 					id_enemy=ewcfg.col_id_enemy,
 					enemyclass=ewcfg.col_enemy_class,
@@ -2892,7 +2893,7 @@ def ga_check_coord_for_shambler(enemy_data, ga_range, direction, piercing, splas
 				
 				splash_coords = gvs_get_splash_coords(checked_splash_coords)
 
-				splash_shambler_data = ewutils.execute_sql_query(
+				splash_shambler_data = bknd_core.execute_sql_query(
 					"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} IN %s AND {poi} = %s AND {id_server} = %s".format(
 						id_enemy=ewcfg.col_id_enemy,
 						enemyclass=ewcfg.col_enemy_class,
@@ -3063,12 +3064,12 @@ def gvs_get_splash_coords(checked_splash_coords):
 # It also handles turn counters, including gaiaslime generation, as well as spawning in shamblers
 async def gvs_update_gamestate(id_server):
 	
-	op_districts = ewutils.execute_sql_query("SELECT district FROM gvs_ops_choices GROUP BY district")
+	op_districts = bknd_core.execute_sql_query("SELECT district FROM gvs_ops_choices GROUP BY district")
 	for op_district in op_districts:
 		district = op_district[0]
 		
-		graveyard_ops = ewutils.execute_sql_query("SELECT id_user, enemytype, shambler_stock FROM gvs_ops_choices WHERE faction = 'shamblers' AND district = '{}' AND shambler_stock > 0".format(district))
-		bot_garden_ops = ewutils.execute_sql_query("SELECT id_user, enemytype FROM gvs_ops_choices WHERE faction = 'gankers' AND district = '{}' AND id_user = 56709".format(district))
+		graveyard_ops = bknd_core.execute_sql_query("SELECT id_user, enemytype, shambler_stock FROM gvs_ops_choices WHERE faction = 'shamblers' AND district = '{}' AND shambler_stock > 0".format(district))
+		bot_garden_ops = bknd_core.execute_sql_query("SELECT id_user, enemytype FROM gvs_ops_choices WHERE faction = 'gankers' AND district = '{}' AND id_user = 56709".format(district))
 		op_district_data = EwDistrict(district=district, id_server=id_server)
 
 		# Generate Gaiaslime passively over time, but in small amounts
@@ -3174,12 +3175,12 @@ async def gvs_update_gamestate(id_server):
 						
 					await resp_cont.post()
 		else:
-			shamblers = ewutils.execute_sql_query("SELECT id_enemy FROM enemies WHERE enemyclass = '{}' AND poi = '{}'".format(ewcfg.enemy_class_shambler, district))
+			shamblers = bknd_core.execute_sql_query("SELECT id_enemy FROM enemies WHERE enemyclass = '{}' AND poi = '{}'".format(ewcfg.enemy_class_shambler, district))
 			if len(shamblers) == 0:
 				# No more stocked tombstones, and no more enemy shamblers. Garden Gankers win!
 				victor = ewcfg.psuedo_faction_gankers
 				
-		op_juvies = ewutils.execute_sql_query("SELECT id_user FROM gvs_ops_choices WHERE faction = 'gankers' AND district = '{}' AND id_user != 56709 GROUP BY id_user".format(district))
+		op_juvies = bknd_core.execute_sql_query("SELECT id_user FROM gvs_ops_choices WHERE faction = 'gankers' AND district = '{}' AND id_user != 56709 GROUP BY id_user".format(district))
 		
 		# No more Garden Gankers left. Shamblers win?
 		if len(op_juvies) == 0:
@@ -3187,7 +3188,7 @@ async def gvs_update_gamestate(id_server):
 			# Check if the shamblers are fighting against the bot.
 			# If they are, they can only win if at least one shambler has reached the back.
 			if len(bot_garden_ops) > 0:
-				back_shamblers = ewutils.execute_sql_query("SELECT id_enemy FROM enemies WHERE gvs_coord IN {}".format(tuple(ewcfg.gvs_coords_end)))
+				back_shamblers = bknd_core.execute_sql_query("SELECT id_enemy FROM enemies WHERE gvs_coord IN {}".format(tuple(ewcfg.gvs_coords_end)))
 				if len(back_shamblers) > 0:
 					# Shambler reached the back while no juveniles were around to help the bot. Shamblers win!
 					victor = ewcfg.psuedo_faction_shamblers
@@ -3195,7 +3196,7 @@ async def gvs_update_gamestate(id_server):
 				# No juveniles left in the district, and there were no bot operations. Shamblers win!
 				victor = ewcfg.psuedo_faction_shamblers
 		
-		all_garden_ops = ewutils.execute_sql_query("SELECT id_user FROM gvs_ops_choices WHERE faction = 'gankers' AND district = '{}'".format(district))
+		all_garden_ops = bknd_core.execute_sql_query("SELECT id_user FROM gvs_ops_choices WHERE faction = 'gankers' AND district = '{}'".format(district))
 		# No garden ops at all. Shamblers win!
 		if len(all_garden_ops) == 0:
 			victor = ewcfg.psuedo_faction_shamblers
@@ -3218,7 +3219,7 @@ async def gvs_update_gamestate(id_server):
 				op_district_data.time_unlock = time_now + 3600
 				op_district_data.persist()
 
-			ewutils.execute_sql_query("DELETE FROM gvs_ops_choices WHERE district = '{}'".format(district))			
+			bknd_core.execute_sql_query("DELETE FROM gvs_ops_choices WHERE district = '{}'".format(district))			
 			await delete_all_enemies(cmd=None, query_suffix="AND poi = '{}'".format(district), id_server_sent=id_server)
 			return await ewutils.send_message(client, channel, response)
 

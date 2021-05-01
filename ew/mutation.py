@@ -12,6 +12,8 @@ from . import stats as ewstats
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
+from .backend import core as bknd_core
+
 from .market import EwMarket
 from .player import EwPlayer
 
@@ -45,7 +47,7 @@ class EwMutation:
 			self.id_mutation = id_mutation
 
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor();
 
@@ -73,14 +75,14 @@ class EwMutation:
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 	""" Save this mutation object to the database. """
 	def persist(self):
 	
 		try:
 			# Get database handles if they weren't passed.
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
@@ -106,11 +108,11 @@ class EwMutation:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 	def clear(self):
 		try:
-			ewutils.execute_sql_query("DELETE FROM mutations WHERE {mutation_counter} = %s".format(
+			bknd_core.execute_sql_query("DELETE FROM mutations WHERE {mutation_counter} = %s".format(
 					mutation_counter = ewcfg.col_mutation_counter
 				),(
 					self.mutation_counter
@@ -259,7 +261,7 @@ async def chemo(cmd):
 					mutation_obj = EwMutation(id_mutation=mutation, id_user=user_data.id_user, id_server=cmd.message.guild.id)
 					if mutation_obj.artificial == 0:
 						try:
-							ewutils.execute_sql_query(
+							bknd_core.execute_sql_query(
 								"DELETE FROM mutations WHERE {id_server} = %s AND {id_user} = %s AND {mutation} = %s".format(
 									id_server=ewcfg.col_id_server,
 									id_user=ewcfg.col_id_user,
@@ -298,7 +300,7 @@ async def chemo(cmd):
 			user_data.persist()
 
 			try:
-				ewutils.execute_sql_query("DELETE FROM mutations WHERE {id_server} = %s AND {id_user} = %s AND {mutation} = %s".format(
+				bknd_core.execute_sql_query("DELETE FROM mutations WHERE {id_server} = %s AND {id_user} = %s AND {mutation} = %s".format(
 					id_server=ewcfg.col_id_server,
 					id_user=ewcfg.col_id_user,
 					mutation = ewcfg.col_id_mutation
@@ -454,7 +456,7 @@ async def shakeoff(cmd):
 	else:
 		target_data = EwUser(member=cmd.mentions[0])
 		try:
-			ewutils.execute_sql_query(
+			bknd_core.execute_sql_query(
 				"UPDATE mutations SET {data} = %s WHERE {id_server} = %s AND {mutation} = %s and {id_user} = %s;".format(
 					data=ewcfg.col_mutation_data,
 					id_server=ewcfg.col_id_server,

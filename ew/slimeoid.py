@@ -13,6 +13,7 @@ from . import stats as ewstats
 from . import move as ewmap
 from . import casino as ewcasino
 from . import quadrants as ewquadrants
+from .backend import core as bknd_core
 
 from .user import EwUser
 from .market import EwMarket
@@ -83,7 +84,7 @@ class EwSlimeoid:
 
 		if query_suffix != "":
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor();
 
@@ -143,13 +144,13 @@ class EwSlimeoid:
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 
 	""" Save slimeoid data object to the database. """
 	def persist(self):
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
@@ -206,7 +207,7 @@ class EwSlimeoid:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 	def die(self):
 		self.life_state = ewcfg.slimeoid_state_dead
@@ -214,7 +215,7 @@ class EwSlimeoid:
 
 
 	def delete(self):
-		ewutils.execute_sql_query("DELETE FROM slimeoids WHERE {id_slimeoid} = %s".format(
+		bknd_core.execute_sql_query("DELETE FROM slimeoids WHERE {id_slimeoid} = %s".format(
 			id_slimeoid = ewcfg.col_id_slimeoid
 		),(
 			self.id_slimeoid,
@@ -227,7 +228,7 @@ class EwSlimeoid:
 		market_data = EwMarket(id_server = self.id_server)
 		ch_name = poi_static.id_to_poi.get(self.poi).channel
 
-		data = ewutils.execute_sql_query("SELECT {id_user} FROM users WHERE {poi} = %s AND {id_server} = %s".format(
+		data = bknd_core.execute_sql_query("SELECT {id_user} FROM users WHERE {poi} = %s AND {id_server} = %s".format(
 			id_user = ewcfg.col_id_user,
 			poi = ewcfg.col_poi,
 			id_server = ewcfg.col_id_server
@@ -1057,7 +1058,7 @@ async def dissolveslimeoid(cmd):
 					cos.item_props['slimeoid'] = 'false'
 					cos.persist()
 
-			ewutils.execute_sql_query(
+			bknd_core.execute_sql_query(
 				"DELETE FROM slimeoids WHERE {id_user} = %s AND {id_server} = %s".format(
 					id_user=ewcfg.col_id_user,
 					id_server=ewcfg.col_id_server,
@@ -3006,7 +3007,7 @@ async def slimeoid_tick_loop(id_server):
 		await slimeoid_tick(id_server)
 
 async def slimeoid_tick(id_server):
-	data = ewutils.execute_sql_query("SELECT {id_slimeoid} FROM slimeoids WHERE {sltype} = %s AND {id_server} = %s".format(
+	data = bknd_core.execute_sql_query("SELECT {id_slimeoid} FROM slimeoids WHERE {sltype} = %s AND {id_server} = %s".format(
 		id_slimeoid = ewcfg.col_id_slimeoid,
 		sltype = ewcfg.col_type,
 		id_server = ewcfg.col_id_server
@@ -3375,7 +3376,7 @@ def get_slimeoid_count(user_id = None, server_id = None):
 				count += 1
 		
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -3386,7 +3387,7 @@ def get_slimeoid_count(user_id = None, server_id = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 			return count
 
 def get_slimeoid_look_string(user_id = None, server_id = None):
@@ -3397,7 +3398,7 @@ def get_slimeoid_look_string(user_id = None, server_id = None):
 		if slimeoid_data:
 
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor()
 
@@ -3419,7 +3420,7 @@ def get_slimeoid_look_string(user_id = None, server_id = None):
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 				return finalString
 
@@ -3430,7 +3431,7 @@ def find_slimeoid(slimeoid_search=None, id_user=None, id_server=None):
 	# search for an ID instead of a name
 	slimeoid_list = []
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
@@ -3453,6 +3454,6 @@ def find_slimeoid(slimeoid_search=None, id_user=None, id_server=None):
 				
 	finally:
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 	return slimeoid_sought

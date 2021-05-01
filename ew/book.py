@@ -2,6 +2,7 @@ from .static import cfg as ewcfg
 from .static import poi as poi_static
 from . import utils as ewutils
 from . import item as ewitem
+from .backend import core as bknd_core
 
 from .user import EwUser
 from .market import EwMarket
@@ -68,7 +69,7 @@ class EwBook:
 				query_suffix += " AND book_state = {}".format(self.book_state)
 
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -125,11 +126,11 @@ class EwBook:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 	def persist(self):
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -188,7 +189,7 @@ class EwBook:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 
 def bought_check(bought):
@@ -219,7 +220,7 @@ class EwBookSale:
 		self.id_server = member.guild.id
 
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -245,11 +246,11 @@ class EwBookSale:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 	def persist(self):
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -273,7 +274,7 @@ class EwBookSale:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 readers = {}
 
@@ -940,7 +941,7 @@ def int_is_zine(id_book = None, id_server = None, negative = False):
 		direction = '<'
 	book_list = []
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
@@ -960,7 +961,7 @@ def int_is_zine(id_book = None, id_server = None, negative = False):
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 	if id_book in book_list:
 		return True
 	else:
@@ -1049,7 +1050,7 @@ async def browse_zines(cmd):
 					else:
 						query_sort = query_sort[:len(query_sort)-5]+" ASC"
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor()
 
@@ -1093,7 +1094,7 @@ async def browse_zines(cmd):
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 			if len(book_list) != 0:
 				resp_num = 0
@@ -1308,7 +1309,7 @@ async def rate_zine(cmd):
 						sale.rating = rating
 						sale.persist()
 						try:
-							conn_info = ewutils.databaseConnect()
+							conn_info = bknd_core.databaseConnect()
 							conn = conn_info.get('conn')
 							cursor = conn.cursor()
 
@@ -1336,7 +1337,7 @@ async def rate_zine(cmd):
 						finally:
 							# Clean up the database handles.
 							cursor.close()
-							ewutils.databaseClose(conn_info)
+							bknd_core.databaseClose(conn_info)
 
 						book.rating = str(total_rating / len(ratings))[:4]
 

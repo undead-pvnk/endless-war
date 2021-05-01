@@ -14,6 +14,7 @@ from . import item as ewitem
 from . import statuseffects as ewstatuseffects
 from . import district as ewdistrict
 from . import rolemgr  as ewrolemgr 
+from .backend import core as bknd_core
 from .statuseffects import EwStatusEffect
 
 """ User model for database persistence """
@@ -293,7 +294,7 @@ class EwUser:
 					cosmetic_fraction = 4
 
 					# Remove them from Garden Ops where applicable
-					ewutils.execute_sql_query("DELETE FROM gvs_ops_choices WHERE id_user = {}".format(self.id_user))
+					bknd_core.execute_sql_query("DELETE FROM gvs_ops_choices WHERE id_user = {}".format(self.id_user))
 
 				else:  # If you were a Gangster.
 					item_fraction = 2
@@ -310,7 +311,7 @@ class EwUser:
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_max_onrevive)
 
 			try:
-				ewutils.execute_sql_query(
+				bknd_core.execute_sql_query(
 					"DELETE FROM items_prop WHERE {} = %s AND  {} = %s".format(
 						ewcfg.col_name,
 						ewcfg.col_value
@@ -504,7 +505,7 @@ class EwUser:
 		if id_mutation in mutations:
 			return False
 		try:
-			ewutils.execute_sql_query("REPLACE INTO mutations({id_server}, {id_user}, {id_mutation}, {tier}, {artificial}) VALUES (%s, %s, %s, %s, %s)".format(
+			bknd_core.execute_sql_query("REPLACE INTO mutations({id_server}, {id_user}, {id_mutation}, {tier}, {artificial}) VALUES (%s, %s, %s, %s, %s)".format(
 					id_server = ewcfg.col_id_server,
 					id_user = ewcfg.col_id_user,
 					id_mutation = ewcfg.col_id_mutation,
@@ -527,7 +528,7 @@ class EwUser:
 	def get_mutations(self):
 		result = []
 		try:
-			mutations = ewutils.execute_sql_query("SELECT {id_mutation} FROM mutations WHERE {id_server} = %s AND {id_user} = %s;".format(
+			mutations = bknd_core.execute_sql_query("SELECT {id_mutation} FROM mutations WHERE {id_server} = %s AND {id_user} = %s;".format(
 					id_mutation = ewcfg.col_id_mutation,
 					id_server = ewcfg.col_id_server,
 					id_user = ewcfg.col_id_user
@@ -546,7 +547,7 @@ class EwUser:
 
 	def clear_mutations(self):
 		try:
-			ewutils.execute_sql_query("DELETE FROM mutations WHERE {id_server} = %s AND {id_user} = %s".format(
+			bknd_core.execute_sql_query("DELETE FROM mutations WHERE {id_server} = %s AND {id_user} = %s".format(
 					id_server = ewcfg.col_id_server,
 					id_user = ewcfg.col_id_user
 				),(
@@ -560,7 +561,7 @@ class EwUser:
 		result = 0
 
 		try:
-			tiers = ewutils.execute_sql_query(
+			tiers = bknd_core.execute_sql_query(
 				"SELECT SUM({tier}) FROM mutations WHERE {id_server} = %s AND {id_user} = %s;".format(
 					tier = ewcfg.col_tier,
 					id_server=ewcfg.col_id_server,
@@ -606,7 +607,7 @@ class EwUser:
 
 		seed = int(self.rand_seed)
 		try:
-			counter_data = ewutils.execute_sql_query(
+			counter_data = bknd_core.execute_sql_query(
 				"SELECT SUM({mutation_counter}) FROM mutations WHERE {id_server} = %s AND {id_user} = %s;".format(
 					mutation_counter=ewcfg.col_mutation_counter,
 					id_server=ewcfg.col_id_server,
@@ -722,7 +723,7 @@ class EwUser:
 		values = []
 
 		try:
-			data = ewutils.execute_sql_query("SELECT {id_status} FROM status_effects WHERE {id_server} = %s and {id_user} = %s".format(
+			data = bknd_core.execute_sql_query("SELECT {id_status} FROM status_effects WHERE {id_server} = %s and {id_user} = %s".format(
 				id_status = ewcfg.col_id_status,
 				id_server = ewcfg.col_id_server,
 				id_user = ewcfg.col_id_user
@@ -769,7 +770,7 @@ class EwUser:
 	def clear_status(self, id_status = None):
 		if id_status != None:
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor()
 
@@ -788,11 +789,11 @@ class EwUser:
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 	def clear_allstatuses(self):
 		try:
-			ewutils.execute_sql_query("DELETE FROM status_effects WHERE {id_server} = %s AND {id_user} = %s".format(
+			bknd_core.execute_sql_query("DELETE FROM status_effects WHERE {id_server} = %s AND {id_user} = %s".format(
 					id_server = ewcfg.col_id_server,
 					id_user = ewcfg.col_id_user
 				),(
@@ -857,7 +858,7 @@ class EwUser:
 	def ban(self, faction = None):
 		if faction is None:
 			return
-		ewutils.execute_sql_query("REPLACE INTO bans ({id_user}, {id_server}, {faction}) VALUES (%s,%s,%s)".format(
+		bknd_core.execute_sql_query("REPLACE INTO bans ({id_user}, {id_server}, {faction}) VALUES (%s,%s,%s)".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
 			faction = ewcfg.col_faction
@@ -870,7 +871,7 @@ class EwUser:
 	def unban(self, faction = None):
 		if faction is None:
 			return
-		ewutils.execute_sql_query("DELETE FROM bans WHERE {id_user} = %s AND {id_server} = %s AND {faction} = %s".format(
+		bknd_core.execute_sql_query("DELETE FROM bans WHERE {id_user} = %s AND {id_server} = %s AND {faction} = %s".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
 			faction = ewcfg.col_faction
@@ -882,7 +883,7 @@ class EwUser:
 
 	def get_bans(self):
 		bans = []
-		data = ewutils.execute_sql_query("SELECT {faction} FROM bans WHERE {id_user} = %s AND {id_server} = %s".format(
+		data = bknd_core.execute_sql_query("SELECT {faction} FROM bans WHERE {id_user} = %s AND {id_server} = %s".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
 			faction = ewcfg.col_faction
@@ -900,7 +901,7 @@ class EwUser:
 	def vouch(self, faction = None):
 		if faction is None:
 			return
-		ewutils.execute_sql_query("REPLACE INTO vouchers ({id_user}, {id_server}, {faction}) VALUES (%s,%s,%s)".format(
+		bknd_core.execute_sql_query("REPLACE INTO vouchers ({id_user}, {id_server}, {faction}) VALUES (%s,%s,%s)".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
 			faction = ewcfg.col_faction
@@ -913,7 +914,7 @@ class EwUser:
 	def unvouch(self, faction = None):
 		if faction is None:
 			return
-		ewutils.execute_sql_query("DELETE FROM vouchers WHERE {id_user} = %s AND {id_server} = %s AND {faction} = %s".format(
+		bknd_core.execute_sql_query("DELETE FROM vouchers WHERE {id_user} = %s AND {id_server} = %s AND {faction} = %s".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
 			faction = ewcfg.col_faction
@@ -925,7 +926,7 @@ class EwUser:
 
 	def get_vouchers(self):
 		vouchers = []
-		data = ewutils.execute_sql_query("SELECT {faction} FROM vouchers WHERE {id_user} = %s AND {id_server} = %s".format(
+		data = bknd_core.execute_sql_query("SELECT {faction} FROM vouchers WHERE {id_user} = %s AND {id_server} = %s".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
 			faction = ewcfg.col_faction
@@ -941,7 +942,7 @@ class EwUser:
 
 	def get_inhabitants(self):
 		inhabitants = []
-		data = ewutils.execute_sql_query("SELECT {id_ghost} FROM inhabitations WHERE {id_fleshling} = %s AND {id_server} = %s".format(
+		data = bknd_core.execute_sql_query("SELECT {id_ghost} FROM inhabitations WHERE {id_fleshling} = %s AND {id_server} = %s".format(
 			id_ghost = ewcfg.col_id_ghost,
 			id_fleshling = ewcfg.col_id_fleshling,
 			id_server = ewcfg.col_id_server,
@@ -956,7 +957,7 @@ class EwUser:
 		return inhabitants
 
 	def get_inhabitee(self):
-		data = ewutils.execute_sql_query("SELECT {id_fleshling} FROM inhabitations WHERE {id_ghost} = %s AND {id_server} = %s".format(
+		data = bknd_core.execute_sql_query("SELECT {id_fleshling} FROM inhabitations WHERE {id_ghost} = %s AND {id_server} = %s".format(
 			id_fleshling = ewcfg.col_id_fleshling,
 			id_ghost = ewcfg.col_id_ghost,
 			id_server = ewcfg.col_id_server,
@@ -988,7 +989,7 @@ class EwUser:
   
 	def remove_inhabitation(self):
 		user_is_alive = self.life_state != ewcfg.life_state_corpse
-		ewutils.execute_sql_query("DELETE FROM inhabitations WHERE {id_target} = %s AND {id_server} = %s".format(
+		bknd_core.execute_sql_query("DELETE FROM inhabitations WHERE {id_target} = %s AND {id_server} = %s".format(
 			# remove ghosts inhabiting player if user is a fleshling,
 			# or remove fleshling inhabited by player if user is a ghost
 			id_target = ewcfg.col_id_fleshling if user_is_alive else ewcfg.col_id_ghost,
@@ -1000,7 +1001,7 @@ class EwUser:
 
 	def get_possession(self, possession_type = ''):
 		user_is_alive = self.life_state != ewcfg.life_state_corpse
-		data = ewutils.execute_sql_query("SELECT {id_ghost}, {id_fleshling}, {id_server}, {empowered} FROM inhabitations WHERE {id_target} = %s AND {id_server} = %s AND {inverted} {empowered} = %s".format(
+		data = bknd_core.execute_sql_query("SELECT {id_ghost}, {id_fleshling}, {id_server}, {empowered} FROM inhabitations WHERE {id_target} = %s AND {id_server} = %s AND {inverted} {empowered} = %s".format(
 			id_ghost = ewcfg.col_id_ghost,
 			id_fleshling = ewcfg.col_id_fleshling,
 			id_server = ewcfg.col_id_server,
@@ -1022,7 +1023,7 @@ class EwUser:
 
 	def cancel_possession(self):
 		user_is_alive = self.life_state != ewcfg.life_state_corpse
-		ewutils.execute_sql_query(
+		bknd_core.execute_sql_query(
 			"UPDATE inhabitations SET {empowered} = '' WHERE {id_target} = %s AND {id_server} = %s".format(
 				empowered = ewcfg.col_empowered,
 				id_target = ewcfg.col_id_fleshling if user_is_alive else ewcfg.col_id_ghost,
@@ -1135,7 +1136,7 @@ class EwUser:
 		return int(base_freshness * hue_mod * style_mod) + bonus_freshness
 
 	def get_festivity(self):
-		data = ewutils.execute_sql_query(
+		data = bknd_core.execute_sql_query(
 		"SELECT {festivity} + COALESCE(sigillaria, 0) + {festivity_from_slimecoin} FROM users "\
 		"LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} "\
 		"WHERE {type} = %s AND {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} WHERE users.{id_user} = %s AND users.{id_server} = %s".format(
@@ -1170,7 +1171,7 @@ class EwUser:
 			if phone_data.item_props.get('active') == 'true':
 				return True
 		"""
-		data = ewutils.execute_sql_query(
+		data = bknd_core.execute_sql_query(
 		"SELECT it.* FROM items it INNER JOIN items_prop itp ON it.id_item = itp.id_item WHERE it.{id_user} = '%s' AND itp.{name} = %s AND itp.{value} = %s".format(
 			id_user = ewcfg.col_id_user,
 			id_item = ewcfg.col_id_item,
@@ -1204,7 +1205,7 @@ class EwUser:
 			self.id_user = id_user
 
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor()
 
@@ -1393,14 +1394,14 @@ class EwUser:
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 	""" Save this user object to the database. """
 	def persist(self):
 	
 		try:
 			# Get database handles if they weren't passed.
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -1540,4 +1541,4 @@ class EwUser:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)

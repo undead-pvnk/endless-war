@@ -10,6 +10,7 @@ from . import utils as ewutils
 from .static import cfg as ewcfg
 from .static import poi as poi_static
 from . import stats as ewstats
+from .backend import core as bknd_core
 from .user import EwUser
 from .player import EwPlayer
 from .district import EwDistrict
@@ -54,7 +55,7 @@ class EwMarket:
             self.bazaar_wares = {}
 
             try:
-                conn_info = ewutils.databaseConnect()
+                conn_info = bknd_core.databaseConnect()
                 conn = conn_info.get('conn')
                 cursor = conn.cursor();
 
@@ -120,12 +121,12 @@ class EwMarket:
             finally:
                 # Clean up the database handles.
                 cursor.close()
-                ewutils.databaseClose(conn_info)
+                bknd_core.databaseClose(conn_info)
 
     """ Save market data object to the database. """
     def persist(self):
         try:
-            conn_info = ewutils.databaseConnect()
+            conn_info = bknd_core.databaseConnect()
             conn = conn_info.get('conn')
             cursor = conn.cursor();
 
@@ -188,7 +189,7 @@ class EwMarket:
         finally:
             # Clean up the database handles.
             cursor.close()
-            ewutils.databaseClose(conn_info)
+            bknd_core.databaseClose(conn_info)
 
 class EwStock:
     id_server = -1
@@ -209,7 +210,7 @@ class EwStock:
     previous_entry = 0
 
     def limit_fix(self):
-        data = ewutils.execute_sql_query("SELECT SUM({shares}) FROM shares WHERE {stock} = %s".format(
+        data = bknd_core.execute_sql_query("SELECT SUM({shares}) FROM shares WHERE {stock} = %s".format(
             shares = ewcfg.col_shares,
             stock = ewcfg.col_stock,
         ),(
@@ -232,7 +233,7 @@ class EwStock:
 
             # get stock data at specified timestamp
             if timestamp is not None:
-                data = ewutils.execute_sql_query("SELECT {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp} FROM stocks WHERE id_server = %s AND {stock} = %s AND {timestamp} = %s".format(
+                data = bknd_core.execute_sql_query("SELECT {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp} FROM stocks WHERE id_server = %s AND {stock} = %s AND {timestamp} = %s".format(
                     stock = ewcfg.col_stock,
                     market_rate = ewcfg.col_market_rate,
                     exchange_rate = ewcfg.col_exchange_rate,
@@ -247,7 +248,7 @@ class EwStock:
             # otherwise get most recent data
             else:
 
-                data = ewutils.execute_sql_query("SELECT {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp} FROM stocks WHERE id_server = %s AND {stock} = %s ORDER BY {timestamp} DESC".format(
+                data = bknd_core.execute_sql_query("SELECT {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp} FROM stocks WHERE id_server = %s AND {stock} = %s ORDER BY {timestamp} DESC".format(
                     stock = ewcfg.col_stock,
                     market_rate = ewcfg.col_market_rate,
                     exchange_rate = ewcfg.col_exchange_rate,
@@ -259,7 +260,7 @@ class EwStock:
                     stock
                 ))
 
-            # slimecoin_total = ewutils.execute_sql_query()
+            # slimecoin_total = bknd_core.execute_sql_query()
 
             if len(data) > 0:  # if data is not empty, i.e. it found an entry
                 # data is always a two-dimensional array and if we only fetch one row, we have to type data[0][x]
@@ -279,7 +280,7 @@ class EwStock:
     def persist(self):
         self.limit_fix()
 
-        ewutils.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
+        bknd_core.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
             id_server = ewcfg.col_id_server,
             stock = ewcfg.col_stock,
             market_rate = ewcfg.col_market_rate,
@@ -314,7 +315,7 @@ class EwCompany:
 
             try:
                 # Retrieve object
-                result = ewutils.execute_sql_query("SELECT {recent_profits}, {total_profits} FROM companies WHERE {id_server} = %s AND {stock} = %s".format(
+                result = bknd_core.execute_sql_query("SELECT {recent_profits}, {total_profits} FROM companies WHERE {id_server} = %s AND {stock} = %s".format(
                     recent_profits = ewcfg.col_recent_profits,
                     total_profits = ewcfg.col_total_profits,
                     id_server = ewcfg.col_id_server,
@@ -335,7 +336,7 @@ class EwCompany:
     """ Save company data object to the database. """
     def persist(self):
         try:
-            ewutils.execute_sql_query("REPLACE INTO companies({recent_profits}, {total_profits}, {id_server}, {stock}) VALUES(%s,%s,%s,%s)".format(
+            bknd_core.execute_sql_query("REPLACE INTO companies({recent_profits}, {total_profits}, {id_server}, {stock}) VALUES(%s,%s,%s,%s)".format(
                 recent_profits = ewcfg.col_recent_profits,
                 total_profits = ewcfg.col_total_profits,
                 id_server = ewcfg.col_id_server,
@@ -1082,7 +1083,7 @@ def getRecentTotalShares(id_server=None, stock=None, count=2):
         try:
 
             count = round(count)
-            data = ewutils.execute_sql_query("SELECT {total_shares} FROM stocks WHERE {id_server} = %s AND {stock} = %s ORDER BY {timestamp} DESC LIMIT %s".format(
+            data = bknd_core.execute_sql_query("SELECT {total_shares} FROM stocks WHERE {id_server} = %s AND {stock} = %s ORDER BY {timestamp} DESC LIMIT %s".format(
                 stock = ewcfg.col_stock,
                 total_shares = ewcfg.col_total_shares,
                 id_server = ewcfg.col_id_server,
@@ -1117,7 +1118,7 @@ def getUserTotalShares(id_server=None, stock=None, id_user=None):
 
         try:
 
-            data = ewutils.execute_sql_query("SELECT {shares} FROM shares WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
+            data = bknd_core.execute_sql_query("SELECT {shares} FROM shares WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
                 stock = ewcfg.col_stock,
                 shares = ewcfg.col_shares,
                 id_server = ewcfg.col_id_server,
@@ -1142,7 +1143,7 @@ def updateUserTotalShares(id_server=None, stock=None, id_user=None, shares=0):
 
         try:
 
-            ewutils.execute_sql_query("REPLACE INTO shares({id_server}, {id_user}, {stock}, {shares}) VALUES(%s, %s, %s, %s)".format(
+            bknd_core.execute_sql_query("REPLACE INTO shares({id_server}, {id_user}, {stock}, {shares}) VALUES(%s, %s, %s, %s)".format(
                 stock = ewcfg.col_stock,
                 shares = ewcfg.col_shares,
                 id_server = ewcfg.col_id_server,
@@ -1180,7 +1181,7 @@ def get_majority_shareholder(id_server = None, stock = None):
     if id_server is not None and stock is not None:
         try:
 
-            data = ewutils.execute_sql_query("SELECT {id_user}, {shares} FROM shares WHERE {id_server} = %s AND {stock} = %s ORDER BY {shares} DESC LIMIT 1".format(
+            data = bknd_core.execute_sql_query("SELECT {id_user}, {shares} FROM shares WHERE {id_server} = %s AND {stock} = %s ORDER BY {shares} DESC LIMIT 1".format(
                 stock = ewcfg.col_stock,
                 shares = ewcfg.col_shares,
                 id_server = ewcfg.col_id_server,

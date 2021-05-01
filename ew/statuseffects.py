@@ -3,6 +3,7 @@ import math
 
 from .static import cfg as ewcfg
 from . import utils as ewutils
+from .backend import core as bknd_core
 
 class EwStatusEffect:
 	id_server = -1
@@ -40,7 +41,7 @@ class EwStatusEffect:
 			time_now = int(time.time())
 
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor()
 
@@ -92,12 +93,12 @@ class EwStatusEffect:
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 	""" Save item data object to the database. """
 	def persist(self):
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -124,7 +125,7 @@ class EwStatusEffect:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 class EwEnemyStatusEffect:
 	id_server = -1
@@ -162,7 +163,7 @@ class EwEnemyStatusEffect:
 			time_now = int(time.time())
 
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor()
 
@@ -214,12 +215,12 @@ class EwEnemyStatusEffect:
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 	""" Save item data object to the database. """
 	def persist(self):
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -246,5 +247,5 @@ class EwEnemyStatusEffect:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 

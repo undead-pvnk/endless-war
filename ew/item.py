@@ -18,6 +18,7 @@ from . import rolemgr as ewrolemgr
 from . import smelting as ewsmelting
 from . import prank as ewprank
 from . import debug as ewdebug
+from .backend import core as bknd_core
 
 from .user import EwUser
 from .player import EwPlayer
@@ -54,7 +55,7 @@ class EwItem:
             #self.item_props.clear()
 
             try:
-                conn_info = ewutils.databaseConnect()
+                conn_info = bknd_core.databaseConnect()
                 conn = conn_info.get('conn')
                 cursor = conn.cursor()
 
@@ -109,7 +110,7 @@ class EwItem:
             finally:
                 # Clean up the database handles.
                 cursor.close()
-                ewutils.databaseClose(conn_info)
+                bknd_core.databaseClose(conn_info)
 
     """ Save item data object to the database. """
     def persist(self):
@@ -133,7 +134,7 @@ class EwItem:
                 self.template = "QUEST ITEM????"
 
         try:
-            conn_info = ewutils.databaseConnect()
+            conn_info = bknd_core.databaseConnect()
             conn = conn_info.get('conn')
             cursor = conn.cursor()
 
@@ -183,7 +184,7 @@ class EwItem:
         finally:
             # Clean up the database handles.
             cursor.close()
-            ewutils.databaseClose(conn_info)
+            bknd_core.databaseClose(conn_info)
 
 
 
@@ -194,7 +195,7 @@ def item_delete(
     id_item = None
 ):
     try:
-        conn_info = ewutils.databaseConnect()
+        conn_info = bknd_core.databaseConnect()
         conn = conn_info.get('conn')
         cursor = conn.cursor()
 
@@ -209,7 +210,7 @@ def item_delete(
     finally:
         # Clean up the database handles.
         cursor.close()
-        ewutils.databaseClose(conn_info)
+        bknd_core.databaseClose(conn_info)
 
     remove_from_trades(id_item)
 
@@ -279,7 +280,7 @@ def item_create(
 
     try:
         # Get database handles if they weren't passed.
-        conn_info = ewutils.databaseConnect()
+        conn_info = bknd_core.databaseConnect()
         conn = conn_info.get('conn')
         cursor = conn.cursor()
 
@@ -323,7 +324,7 @@ def item_create(
     finally:
         # Clean up the database handles.
         cursor.close()
-        ewutils.databaseClose(conn_info)
+        bknd_core.databaseClose(conn_info)
 
 
     return item_id
@@ -339,7 +340,7 @@ def item_dropall(
     try:
         user_data = EwUser(id_server = id_server, id_user = id_user)
 
-        ewutils.execute_sql_query(
+        bknd_core.execute_sql_query(
             "UPDATE items SET id_user = %s WHERE id_user = %s AND id_server = %s AND soulbound = 0",(
                 user_data.poi,
                 id_user,
@@ -414,7 +415,7 @@ def item_dedorn_cosmetics(
 ):
     try:
 
-        ewutils.execute_sql_query(
+        bknd_core.execute_sql_query(
             "UPDATE items_prop SET value = 'false' WHERE (name = 'adorned') AND {id_item} IN (\
                 SELECT {id_item} FROM items WHERE {id_user} = %s AND {id_server} = %s\
             )".format(
@@ -463,7 +464,7 @@ def item_lootrandom(id_server = None, id_user = None):
     try:
         user_data = EwUser(id_server = id_server, id_user = id_user)
 
-        items_in_poi = ewutils.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
+        items_in_poi = bknd_core.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
                 id_item = ewcfg.col_id_item,
                 id_owner = ewcfg.col_id_user,
                 id_server = ewcfg.col_id_server
@@ -512,7 +513,7 @@ def item_destroyall(id_server = None, id_user = None, member = None):
     if id_server != None and id_user != None:
         try:
             # Get database handles if they weren't passed.
-            conn_info = ewutils.databaseConnect()
+            conn_info = bknd_core.databaseConnect()
             conn = conn_info.get('conn')
             cursor = conn.cursor()
 
@@ -529,7 +530,7 @@ def item_destroyall(id_server = None, id_user = None, member = None):
         finally:
             # Clean up the database handles.
             cursor.close()
-            ewutils.databaseClose(conn_info)
+            bknd_core.databaseClose(conn_info)
 
 
 """
@@ -548,7 +549,7 @@ def item_loot(
         source_data = EwUser(member = member)
 
         # Transfer adorned cosmetics
-        data = ewutils.execute_sql_query(
+        data = bknd_core.execute_sql_query(
             "SELECT id_item FROM items " +
             "WHERE id_user = %s AND id_server = %s AND soulbound = 0 AND item_type = %s AND id_item IN (" +
                 "SELECT id_item FROM items_prop " +
@@ -633,7 +634,7 @@ def check_inv_capacity(id_user = None, id_server = None, item_type = None):
 def get_inventory_size(owner = None, id_server = None):
     if owner != None and id_server != None:
         try:
-            items_in_poi = ewutils.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
+            items_in_poi = bknd_core.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
                     id_item = ewcfg.col_id_item,
                     id_owner = ewcfg.col_id_user,
                     id_server = ewcfg.col_id_server
@@ -673,7 +674,7 @@ def inventory(
     try:
 
         time_before = time.time()
-        conn_info = ewutils.databaseConnect()
+        conn_info = bknd_core.databaseConnect()
         conn = conn_info.get('conn')
         cursor = conn.cursor()
 
@@ -983,7 +984,7 @@ def inventory(
     finally:
         # Clean up the database handles.
         cursor.close()
-        ewutils.databaseClose(conn_info)
+        bknd_core.databaseClose(conn_info)
 
     return items
 
@@ -1568,7 +1569,7 @@ def give_item(
             if len(other_items) >= ewcfg.generic_inv_limit:
                 return False
 
-        ewutils.execute_sql_query(
+        bknd_core.execute_sql_query(
             "UPDATE items SET id_user = %s WHERE id_server = %s AND {id_item} = %s".format(
                 id_item = ewcfg.col_id_item
             ), (
@@ -2331,7 +2332,7 @@ async def manually_edit_item_properties(cmd):
         column_name = cmd.tokens[2]
         column_value = cmd.tokens[3]
 
-        ewutils.execute_sql_query("REPLACE INTO items_prop({}, {}, {}) VALUES(%s, %s, %s)".format(
+        bknd_core.execute_sql_query("REPLACE INTO items_prop({}, {}, {}) VALUES(%s, %s, %s)".format(
                 ewcfg.col_id_item,
                 ewcfg.col_name,
                 ewcfg.col_value

@@ -25,6 +25,7 @@ from . import wep as ewwep
 from . import quadrants as ewquadrants
 from . import district as ewdistrict
 from . import mutation as ewmutation
+from .backend import core as bknd_core
 
 from .item import EwItem
 from .district import EwDistrict
@@ -54,7 +55,7 @@ class EwApartment:
 			self.id_server = id_server
 
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor()
 
@@ -97,10 +98,10 @@ class EwApartment:
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 	def persist(self):
-		ewutils.execute_sql_query(
+		bknd_core.execute_sql_query(
 			"REPLACE INTO apartment ({col_id_server}, {col_id_user}, {col_apt_name}, {col_apt_description}, {col_poi}, {col_rent}, {col_apt_class}, {col_num_keys}, {col_key_1}, {col_key_2}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				col_id_server=ewcfg.col_id_server,
 				col_id_user=ewcfg.col_id_user,
@@ -435,7 +436,7 @@ def getPriceBase(cmd):
 async def rent_time(id_server = None):
 
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 		client = ewutils.get_client()
@@ -493,7 +494,7 @@ async def rent_time(id_server = None):
 					user_data.persist()
 	finally:
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 
 #async def rent_cycle(cmd):
@@ -1766,7 +1767,7 @@ async def toss_squatters(user_id = None, server_id = None, keepKeys = False):
 	
 	if player_info.id_server != None and member_data != None:
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 			client = ewutils.get_client()
@@ -1799,7 +1800,7 @@ async def toss_squatters(user_id = None, server_id = None, keepKeys = False):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 async def lobbywarning(cmd):
 	user_data = EwUser(member = cmd.message.author)

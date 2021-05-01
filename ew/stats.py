@@ -1,6 +1,7 @@
 from . import utils as ewutils
 from .static import cfg as ewcfg
 from . import event as ewevent
+from .backend import core as bknd_core
 
 """
 	Utility functions for recording statistics in the database
@@ -16,7 +17,7 @@ def get_stat(id_server = None, id_user = None, user = None, metric = None):
 	result = None
 
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor();
 
@@ -43,7 +44,7 @@ def get_stat(id_server = None, id_user = None, user = None, metric = None):
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 	return result
 
@@ -55,7 +56,7 @@ def set_stat(id_server = None, id_user = None, user = None, metric = None, value
 				id_user = user.id_user
 
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor();
 
@@ -75,7 +76,7 @@ def set_stat(id_server = None, id_user = None, user = None, metric = None, value
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 	ewevent.process_stat_change(id_server = id_server, id_user = id_user, metric = metric, value = value)
 
@@ -107,7 +108,7 @@ def track_maximum(id_server = None, id_user = None, user = None, metric = None, 
 				id_user = user.id_user
 
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor();
 
@@ -119,12 +120,12 @@ def track_maximum(id_server = None, id_user = None, user = None, metric = None, 
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 """ Set to zero stats that need to clear on death """
 def clear_on_death(id_server = None, id_user = None):
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
@@ -145,4 +146,4 @@ def clear_on_death(id_server = None, id_user = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)

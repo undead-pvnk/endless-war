@@ -5,6 +5,7 @@ from . import rolemgr as ewrolemgr
 from . import utils as ewutils
 from .static import cfg as ewcfg
 from . import cmd as ewcmd
+from .backend import core as bknd_core
 from .user import EwUser
 
 """
@@ -58,7 +59,7 @@ async def writhe(cmd):
 		# search for players in the negaslime's location in database and put them in a list
 		if id_server != None:
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor()
 
@@ -78,7 +79,7 @@ async def writhe(cmd):
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 		victim_list = []
 

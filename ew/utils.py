@@ -2,7 +2,6 @@ import sys
 import traceback
 import collections
 
-import MySQLdb
 import datetime
 import time
 import re
@@ -10,6 +9,8 @@ import random
 import string
 import asyncio
 import math
+
+from .backend import core as bknd_core
 
 from . import stats as ewstats
 from . import item as ewitem
@@ -42,9 +43,6 @@ from .item import EwItem
 
 TERMINATE = False
 DEBUG = False
-
-db_pool = {}
-db_pool_id = 0
 
 # Map of user IDs to their course ID.
 moves_active = {}
@@ -433,55 +431,6 @@ def mapRoleName(roleName):
 		return roleName
 	return roleName.replace(" ", "").lower()
 
-""" connect to the database """
-def databaseConnect():
-	conn_info = None
-
-	conn_id_todelete = []
-
-	global db_pool
-	global db_pool_id
-
-	# Iterate through open connections and find the currently active one.
-	for pool_id in db_pool:
-		conn_info_iter = db_pool.get(pool_id)
-
-		if conn_info_iter['closed'] == True:
-			if conn_info_iter['count'] <= 0:
-				conn_id_todelete.append(pool_id)
-		else:
-			conn_info = conn_info_iter
-
-	# Close and remove dead connections.
-	if len(conn_id_todelete) > 0:
-		for pool_id in conn_id_todelete:
-			conn_info_iter = db_pool[pool_id]
-			conn_info_iter['conn'].close()
-
-			del db_pool[pool_id]
-
-	# Create a new connection.
-	if conn_info == None:
-		db_pool_id += 1
-		conn_info = {
-		'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = ewcfg.database, charset = "utf8mb4"),
-			'created': int(time.time()),
-			'count': 1,
-			'closed': False
-		}
-		db_pool[db_pool_id] = conn_info
-	else:
-		conn_info['count'] += 1
-
-	return conn_info
-
-""" close (maybe) the active database connection """
-def databaseClose(conn_info):
-	conn_info['count'] -= 1
-
-	# Expire old database connections.
-	if (conn_info['created'] + 60) < int(time.time()):
-		conn_info['closed'] = True
 
 """ format responses with the username: """
 def formatMessage(user_target, message):
@@ -523,7 +472,7 @@ def formatMessage(user_target, message):
 def decaySlimes(id_server = None):
 	if id_server != None:
 		try:
-			conn_info = databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
@@ -588,7 +537,7 @@ def decaySlimes(id_server = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 """
 	Kills users who have left the server while the bot was offline
@@ -598,7 +547,7 @@ def kill_quitters(id_server = None):
 		try:
 			client = get_client()
 			server = client.get_guild(id_server)
-			conn_info = databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -628,7 +577,7 @@ def kill_quitters(id_server = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 """ Flag all users in the Outskirts for PvP """
 async def flag_outskirts(id_server = None):
@@ -636,7 +585,7 @@ async def flag_outskirts(id_server = None):
 		try:
 			client = get_client()
 			server = client.get_guild(id_server)
-			conn_info = databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
@@ -661,7 +610,7 @@ async def flag_outskirts(id_server = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 """
 	Flag all users in vulnerable territory, defined as capturable territory (streets) and outskirts.
@@ -671,7 +620,7 @@ async def flag_vulnerable_districts(id_server = None):
 		try:
 			client = get_client()
 			server = client.get_guild(id_server)
-			conn_info = databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -699,7 +648,7 @@ async def flag_vulnerable_districts(id_server = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 """
 	Coroutine that continually calls bleedSlimes; is called once per server, and not just once globally
@@ -720,7 +669,7 @@ async def bleedSlimes(id_server = None):
 		try:
 			client = get_client()
 			server = client.get_guild(id_server)
-			conn_info = databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
@@ -788,13 +737,13 @@ async def bleedSlimes(id_server = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)		
+			bknd_core.databaseClose(conn_info)		
 
 """ Bleed slime for all enemies """
 async def enemyBleedSlimes(id_server = None):
 	if id_server != None:
 		try:
-			conn_info = databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
@@ -837,13 +786,13 @@ async def enemyBleedSlimes(id_server = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 """ Increase hunger for every player in the server. """
 def pushupServerHunger(id_server = None):
 	if id_server != None:
 		try:
-			conn_info = databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
@@ -864,13 +813,13 @@ def pushupServerHunger(id_server = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 """ Reduce inebriation for every player in the server. """
 def pushdownServerInebriation(id_server = None):
 	if id_server != None:
 		try:
-			conn_info = databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
@@ -887,7 +836,7 @@ def pushdownServerInebriation(id_server = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 """
 	Coroutine that continually calls burnSlimes; is called once per server, and not just once globally
@@ -910,7 +859,7 @@ async def burnSlimes(id_server = None):
 		results = {}
 
 		# Get users with harmful status effects
-		data = execute_sql_query("SELECT {id_user}, {value}, {source}, {id_status} from status_effects WHERE {id_status} IN %s and {id_server} = %s".format(
+		data = bknd_core.execute_sql_query("SELECT {id_user}, {value}, {source}, {id_status} from status_effects WHERE {id_status} IN %s and {id_server} = %s".format(
 			id_user = ewcfg.col_id_user,
 			value = ewcfg.col_value,
 			id_status = ewcfg.col_id_status,
@@ -1013,7 +962,7 @@ async def enemyBurnSlimes(id_server):
 		results = {}
 
 		# Get enemies with harmful status effects
-		data = execute_sql_query("SELECT {id_enemy}, {value}, {source}, {id_status} from enemy_status_effects WHERE {id_status} IN %s and {id_server} = %s".format(
+		data = bknd_core.execute_sql_query("SELECT {id_enemy}, {value}, {source}, {id_status} from enemy_status_effects WHERE {id_status} IN %s and {id_server} = %s".format(
 			id_enemy = ewcfg.col_id_enemy,
 			value = ewcfg.col_value,
 			id_status = ewcfg.col_id_status,
@@ -1083,7 +1032,7 @@ def removeExpiredStatuses(id_server = None):
 		#client = get_client()
 		#server = client.get_server(id_server)
 
-		statuses = execute_sql_query("SELECT {id_status},{id_user} FROM status_effects WHERE id_server = %s AND {time_expire} < %s".format(
+		statuses = bknd_core.execute_sql_query("SELECT {id_status},{id_user} FROM status_effects WHERE id_server = %s AND {time_expire} < %s".format(
 			id_status = ewcfg.col_id_status,
 			id_user = ewcfg.col_id_user,
 			time_expire = ewcfg.col_time_expir
@@ -1113,7 +1062,7 @@ def enemyRemoveExpiredStatuses(id_server = None):
 	if id_server != None:
 		time_now = int(time.time())
 
-		statuses = execute_sql_query("SELECT {id_status}, {id_enemy} FROM enemy_status_effects WHERE id_server = %s AND {time_expire} < %s".format(
+		statuses = bknd_core.execute_sql_query("SELECT {id_status}, {id_enemy} FROM enemy_status_effects WHERE id_server = %s AND {time_expire} < %s".format(
 			id_status = ewcfg.col_id_status,
 			id_enemy = ewcfg.col_id_enemy,
 			time_expire = ewcfg.col_time_expir
@@ -1171,7 +1120,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 
 	if id_server != None and id_user != None:
 		try:
-			conn_info = databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
@@ -1194,7 +1143,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 	return weaponskills
 
@@ -1206,7 +1155,7 @@ def weaponskills_set(id_server = None, id_user = None, member = None, weapon = N
 
 	if id_server != None and id_user != None and weapon != None:
 		try:
-			conn_info = databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
@@ -1226,7 +1175,7 @@ def weaponskills_set(id_server = None, id_user = None, member = None, weapon = N
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 """ Clear all weapon skills for a player (probably called on death). """
 def weaponskills_clear(id_server = None, id_user = None, member = None, weaponskill = None):
@@ -1236,7 +1185,7 @@ def weaponskills_clear(id_server = None, id_user = None, member = None, weaponsk
 
 	if id_server != None and id_user != None:
 		try:
-			conn_info = databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
@@ -1256,7 +1205,7 @@ def weaponskills_clear(id_server = None, id_user = None, member = None, weaponsk
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 re_flattener = re.compile("[ '\"!@#$%^&*().,/?{}\[\];:]")
 
@@ -1276,27 +1225,6 @@ def flattenTokenListToString(tokens):
 
 	return target_name
 
-
-"""
-	Execute a given sql_query. (the purpose of this function is to minimize repeated code and keep functions readable)
-"""
-def execute_sql_query(sql_query = None, sql_replacements = None):
-	data = None
-
-	try:
-		conn_info = databaseConnect()
-		conn = conn_info.get('conn')
-		cursor = conn.cursor()
-		cursor.execute(sql_query, sql_replacements)
-		if sql_query.lower().startswith("select"):
-			data = cursor.fetchall()
-		conn.commit()
-	finally:
-		# Clean up the database handles.
-		cursor.close()
-		databaseClose(conn_info)
-
-	return data
 
 
 """
@@ -1466,7 +1394,7 @@ def max_adornspace_bylevel(slimelevel):
 	Returns an EwUser object of the selected kingpin
 """
 def find_kingpin(id_server, kingpin_role):
-	data = execute_sql_query("SELECT id_user FROM users WHERE id_server = %s AND {life_state} = %s AND {faction} = %s".format(
+	data = bknd_core.execute_sql_query("SELECT id_user FROM users WHERE id_server = %s AND {life_state} = %s AND {faction} = %s".format(
 		life_state = ewcfg.col_life_state,
 		faction = ewcfg.col_faction
 	), (
@@ -1587,7 +1515,7 @@ def get_slimeoids_in_poi(id_server = None, poi = None, sltype = None):
 	if poi is not None:
 		query += " AND {} = '{}'".format(ewcfg.col_poi, poi)
 
-	data = execute_sql_query(query,(
+	data = bknd_core.execute_sql_query(query,(
 		id_server,
 	))
 
@@ -1626,7 +1554,7 @@ async def spawn_enemies(id_server = None):
 	#	await dh_resp_cont.post()
 
 def number_civilians(id_server):
-	query = execute_sql_query("SELECT COUNT(*) from enemies where enemytype in ('civilian', 'innocent') and id_server = id_server")
+	query = bknd_core.execute_sql_query("SELECT COUNT(*) from enemies where enemytype in ('civilian', 'innocent') and id_server = id_server")
 	for counts in query:
 		if counts[0] < 20:
 			return 1
@@ -1926,7 +1854,7 @@ async def spawn_prank_items(id_server):
 
 		if id_server != None:
 			try:
-				conn_info = databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor();
 
@@ -1951,7 +1879,7 @@ async def spawn_prank_items(id_server):
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 		
 		# Avoid division by 0
 		if active_users_count == 0:
@@ -2039,7 +1967,7 @@ async def generate_credence(id_server):
 	
 	if id_server != None:
 		try:
-			conn_info = databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 	
@@ -2089,7 +2017,7 @@ async def generate_credence(id_server):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 			
 async def activate_trap_items(district, id_server, id_user):
 	# Return if --> User has 0 credence, there are no traps, or if the trap setter is the one who entered the district.
@@ -2106,7 +2034,7 @@ async def activate_trap_items(district, id_server, id_user):
 		return
 	
 	try:
-		conn_info = databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor();
 
@@ -2173,7 +2101,7 @@ async def activate_trap_items(district, id_server, id_user):
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 	await send_message(client, district_channel, formatMessage(member, response))
 	
 	# if not trap_was_dud:
@@ -2289,7 +2217,7 @@ def create_death_report(cause = None, user_data = None):
 
 # Get the current kingpin of slimernalia
 def get_slimernalia_kingpin(server):
-	data = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {slimernalia_kingpin} = true".format(
+	data = bknd_core.execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {slimernalia_kingpin} = true".format(
 		id_user = ewcfg.col_id_user,
 		id_server = ewcfg.col_id_server,
 		slimernalia_kingpin = ewcfg.col_slimernalia_kingpin
@@ -2328,7 +2256,7 @@ async def update_slimernalia_kingpin(client, server):
 
 # Get the player with the most festivity
 def get_most_festive(server):
-	data = execute_sql_query(
+	data = bknd_core.execute_sql_query(
 	"SELECT users.{id_user}, FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) as total_festivity FROM users "\
 	"LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} "\
 	"WHERE users.{id_server} = %s ORDER BY total_festivity DESC LIMIT 1".format(
@@ -2658,7 +2586,7 @@ def gvs_create_gaia_grid_mapping(user_data):
 		if enemy_id not in printgrid_low_priority and enemy_id not in printgrid_mid_priority:
 			printgrid_high_priority.append(enemy_id)
 
-	gaias = execute_sql_query(
+	gaias = bknd_core.execute_sql_query(
 		"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1 AND {enemyclass} = %s".format(
 			id_enemy=ewcfg.col_id_enemy,
 			enemytype=ewcfg.col_enemy_type,
@@ -2672,7 +2600,7 @@ def gvs_create_gaia_grid_mapping(user_data):
 			ewcfg.enemy_class_gaiaslimeoid
 		))
 	
-	grid_conditions = execute_sql_query(
+	grid_conditions = bknd_core.execute_sql_query(
 		"SELECT coord, grid_condition FROM gvs_grid_conditions WHERE district = %s".format(
 		), (
 			user_data.poi,
@@ -2712,7 +2640,7 @@ def gvs_create_gaia_lane_mapping(user_data, row_used):
 		if enemy_id not in printlane_low_priority and enemy_id not in printlane_high_priority:
 			printlane_mid_priority.append(enemy_id)
 
-	gaias = execute_sql_query(
+	gaias = bknd_core.execute_sql_query(
 		"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} IN %s".format(
 			id_enemy=ewcfg.col_id_enemy,
 			enemytype=ewcfg.col_enemy_type,
@@ -2727,7 +2655,7 @@ def gvs_create_gaia_lane_mapping(user_data, row_used):
 			tuple(row_used)
 		))
 
-	grid_conditions = execute_sql_query(
+	grid_conditions = bknd_core.execute_sql_query(
 		"SELECT coord, grid_condition FROM gvs_grid_conditions WHERE district = %s AND coord IN %s".format(
 		), (
 			user_data.poi,
@@ -2783,7 +2711,7 @@ def gvs_check_gaia_protected(enemy_data):
 			for i in range(index+1, row_length):
 				checked_coords.append(ewcfg.gvs_valid_coords_gaia[i])
 				
-	gaias_in_front_coords = execute_sql_query(
+	gaias_in_front_coords = bknd_core.execute_sql_query(
 		"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} IN %s".format(
 			id_enemy=ewcfg.col_id_enemy,
 			enemytype=ewcfg.col_enemy_type,
@@ -2798,7 +2726,7 @@ def gvs_check_gaia_protected(enemy_data):
 	if len(gaias_in_front_coords) > 0:
 		is_protected = True
 	else:
-		gaias_in_same_coord = execute_sql_query(
+		gaias_in_same_coord = bknd_core.execute_sql_query(
 			"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {life_state} = 1 AND {enemyclass} = %s AND {gvs_coord} = %s".format(
 				id_enemy=ewcfg.col_id_enemy,
 				enemytype=ewcfg.col_enemy_type,
@@ -2834,7 +2762,7 @@ def gvs_check_operation_duplicate(id_user, district, enemytype, faction):
 	entry = None
 	
 	if faction == ewcfg.psuedo_faction_gankers:
-		entry = execute_sql_query(
+		entry = bknd_core.execute_sql_query(
 			"SELECT * FROM gvs_ops_choices WHERE id_user = %s AND district = %s AND enemytype = %s AND faction = %s".format(
 			), (
 				id_user, 
@@ -2843,7 +2771,7 @@ def gvs_check_operation_duplicate(id_user, district, enemytype, faction):
 				faction
 			))
 	elif faction == ewcfg.psuedo_faction_shamblers:
-		entry = execute_sql_query(
+		entry = bknd_core.execute_sql_query(
 			"SELECT * FROM gvs_ops_choices WHERE district = %s AND enemytype = %s AND faction = %s".format(
 			), (
 				district,
@@ -2862,7 +2790,7 @@ def gvs_check_operation_limit(id_user, district, enemytype, faction):
 	tombstone_limit = 0
 	
 	if faction == ewcfg.psuedo_faction_gankers:
-		data = execute_sql_query(
+		data = bknd_core.execute_sql_query(
 			"SELECT id_user FROM gvs_ops_choices WHERE id_user = %s AND district = %s AND faction = %s".format(
 			), (
 				id_user, 
@@ -2876,14 +2804,14 @@ def gvs_check_operation_limit(id_user, district, enemytype, faction):
 			limit_hit = False
 		
 	elif faction == ewcfg.psuedo_faction_shamblers:
-		sh_data = execute_sql_query(
+		sh_data = bknd_core.execute_sql_query(
 			"SELECT enemytype FROM gvs_ops_choices WHERE district = %s AND faction = %s".format(
 			), (
 				district,
 				faction
 			))
 		
-		gg_data = execute_sql_query(
+		gg_data = bknd_core.execute_sql_query(
 			"SELECT id_user FROM gvs_ops_choices WHERE district = %s AND faction = %s".format(
 			), (
 				district,
@@ -2914,7 +2842,7 @@ def gvs_check_operation_limit(id_user, district, enemytype, faction):
 
 def gvs_check_if_in_operation(user_data):
 	
-	op_data = execute_sql_query(
+	op_data = bknd_core.execute_sql_query(
 		"SELECT id_user, district FROM gvs_ops_choices WHERE id_user = %s".format(
 		), (
 			user_data.id_user,
@@ -2926,7 +2854,7 @@ def gvs_check_if_in_operation(user_data):
 		return False, None
 
 def gvs_get_gaias_from_coord(poi, checked_coord):
-	gaias = execute_sql_query(
+	gaias = bknd_core.execute_sql_query(
 		"SELECT id_enemy, enemytype FROM enemies WHERE poi = %s AND gvs_coord = %s".format(
 		), (
 			poi,
@@ -2953,7 +2881,7 @@ def gvs_insert_bot_ops(id_server, district, enemyfaction):
 			ewcfg.enemy_type_gaia_razornuts
 		]
 		for type in possible_bot_types:
-			execute_sql_query("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+			bknd_core.execute_sql_query("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_district,
 				ewcfg.col_enemy_type,
@@ -2989,7 +2917,7 @@ def gvs_insert_bot_ops(id_server, district, enemyfaction):
 			ewcfg.enemy_type_bucketshambler,
 		]
 		for type in possible_bot_types:
-			execute_sql_query("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+			bknd_core.execute_sql_query("REPLACE INTO gvs_ops_choices({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_district,
 				ewcfg.col_enemy_type,
@@ -3016,9 +2944,9 @@ async def degrade_districts(cmd):
 		if poi.is_district and not poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown, ewcfg.poi_id_juviesrow, ewcfg.poi_id_oozegardens, ewcfg.poi_id_thevoid]:
 			gvs_districts.append(poi.id_poi)
 
-	execute_sql_query("UPDATE districts SET degradation = 0")
-	execute_sql_query("UPDATE districts SET time_unlock = 0")
-	execute_sql_query("UPDATE districts SET degradation = 10000 WHERE district IN {}".format(tuple(gvs_districts)))
+	bknd_core.execute_sql_query("UPDATE districts SET degradation = 0")
+	bknd_core.execute_sql_query("UPDATE districts SET time_unlock = 0")
+	bknd_core.execute_sql_query("UPDATE districts SET degradation = 10000 WHERE district IN {}".format(tuple(gvs_districts)))
 	logMsg('Set proper degradation values.')
 
 
@@ -3110,7 +3038,7 @@ async def pay_salary(id_server=None):
 	print('paying salary...')
 
 	try:
-		conn_info = databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 		client = get_client()
@@ -3135,7 +3063,7 @@ async def pay_salary(id_server=None):
 				user_data.persist()
 	finally:
 		cursor.close()
-		databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 # Give Brimstone Programmer role to a member
 async def make_bp(cmd):
@@ -3225,7 +3153,7 @@ def is_player_inventory(id_inventory, id_server):
 	discord_result = client.get_guild(id_server).get_member(id_inventory)
 
 	# Access DB
-	conn_info = databaseConnect()
+	conn_info = bknd_core.databaseConnect()
 	conn = conn_info.get('conn')
 	cursor = conn.cursor()
 	db_result = None
@@ -3241,7 +3169,7 @@ def is_player_inventory(id_inventory, id_server):
 		db_result = cursor.fetchone()
 	finally:
 		cursor.close()
-		databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 	if db_result != None and discord_result != None:
 		return True
