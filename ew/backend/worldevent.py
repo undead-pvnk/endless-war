@@ -2,13 +2,13 @@ import asyncio
 import time
 import random
 
-from .static import cfg as ewcfg
-from .static import poi as poi_static
-from . import utils as ewutils
-from .backend import core as bknd_core
+from ..static import cfg as ewcfg
+from ..static import poi as poi_static
+from .. import utils as ewutils
+from . import core as bknd_core
 
-from .user import EwUser
-from .player import EwPlayer
+from ..user import EwUser
+from ..player import EwPlayer
 
 
 class EwWorldEvent:

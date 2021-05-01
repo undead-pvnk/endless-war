@@ -55,7 +55,7 @@ import ew.fish as  ewfish
 import ew.faction as ewfaction
 import ew.apt as ewapt
 import ew.weather as ewweather
-import ew.worldevent as ewworldevent
+import ew.backend.worldevent as bknd_worldevent
 import ew.dungeons as ewdungeons
 import ew.ads as ewads
 import ew.book as ewbook
@@ -1093,7 +1093,7 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.enemy_action_tick_loop(id_server=server.id))
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
-		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
+		asyncio.ensure_future(bknd_worldevent.event_tick_loop(id_server = server.id))
 
 		# SWILLDERMUK
 		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))

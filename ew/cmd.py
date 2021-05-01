@@ -24,7 +24,7 @@ from . import slimeoid as ewslimeoid
 from . import faction as ewfaction
 from . import apt as ewapt
 from . import prank as ewprank
-from . import worldevent as ewworldevent
+from .backend import worldevent as bknd_worldevent
 from . import hunting as ewhunting
 from .backend import core as bknd_core
 
@@ -36,7 +36,7 @@ from .slimeoid import EwSlimeoid
 from .statuseffects import EwStatusEffect
 from .statuseffects import EwEnemyStatusEffect
 from .district import EwDistrict
-from .worldevent import EwWorldEvent
+from .backend.worldevent import EwWorldEvent
 
 """ wrapper for discord members """
 class EwId:
@@ -2030,7 +2030,7 @@ async def jump(cmd):
 		response = "You bonk your head on the shaft's ceiling."
 		# if voidhole world event is valid, move the guy to the void and post a message
 		# else, post something about them bonking their heads
-		world_events = ewworldevent.get_world_events(id_server = cmd.guild.id)
+		world_events = bknd_worldevent.get_world_events(id_server = cmd.guild.id)
 		for id_event in world_events:
 			if world_events.get(id_event) == ewcfg.event_type_voidhole:
 					event_data = EwWorldEvent(id_event = id_event)
@@ -3842,7 +3842,7 @@ async def gvs_searchforbrainz(cmd):
 	if user_data.poi != ewcfg.poi_id_slimesea:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to {} in the Slime Sea.".format(ewcfg.cmd_gvs_searchforbrainz)))
 
-	ewworldevent.create_world_event(
+	bknd_worldevent.create_world_event(
 		id_server=user_data.id_server,
 		event_type=ewcfg.event_type_shambaquarium,
 		time_activate=time_now,
@@ -3868,7 +3868,7 @@ async def gvs_grabbrainz(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to {} in the Slime Sea.".format( ewcfg.cmd_gvs_grabbrainz)))
 
 	# look for a shambaquarium event belonging to this player
-	world_events = ewworldevent.get_world_events(id_server=cmd.guild.id)
+	world_events = bknd_worldevent.get_world_events(id_server=cmd.guild.id)
 	for id_event in world_events:
 		if world_events.get(id_event) == ewcfg.event_type_shambaquarium:
 			event_data = EwWorldEvent(id_event=id_event)

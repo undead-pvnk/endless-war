@@ -30,7 +30,7 @@ from .item import EwItem
 from .dungeons import EwGamestate
 
 #from .hunting import EwEnemy
-from .worldevent import get_void_connection_pois
+from .backend.worldevent import get_void_connection_pois
 
 move_counter = 0
 
