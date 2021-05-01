@@ -7,6 +7,8 @@ from .static import weapons as static_weapons
 from .static import weather as weather_static
 from .static import food as static_food
 from .static import poi as poi_static
+from .static import fish as static_fish
+from .static import status as se_static
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -150,22 +152,22 @@ def gen_fish(x, fisher, has_fishingrod):
 			return fish
 
 		elif voidfishing or rarity_number >= 21 and rarity_number < 31:  # 10%
-			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_common:
+			for fish in static_fish.fish_names:
+				if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_common:
 					fish_pool.append(fish)
 
 		elif rarity_number >= 31 and rarity_number < 71:  # 40%
-			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_uncommon:
+			for fish in static_fish.fish_names:
+				if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_uncommon:
 					fish_pool.append(fish)
 
 		elif rarity_number >= 71 and rarity_number < 91:  # 20%
-			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_rare:
+			for fish in static_fish.fish_names:
+				if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_rare:
 					fish_pool.append(fish)
 		else:  # 10%
-			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
+			for fish in static_fish.fish_names:
+				if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
 					fish_pool.append(fish)
 
 	else:
@@ -174,22 +176,22 @@ def gen_fish(x, fisher, has_fishingrod):
 			return fish
 
 		elif rarity_number >= 11 and rarity_number < 61: # 50%
-			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_common:
+			for fish in static_fish.fish_names:
+				if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_common:
 					fish_pool.append(fish)
 
 		elif voidfishing or rarity_number >= 61 and rarity_number < 91: # 30%
-			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_uncommon:
+			for fish in static_fish.fish_names:
+				if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_uncommon:
 					fish_pool.append(fish)
 
 		elif rarity_number >= 91 and rarity_number < 100: # 9%
-			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_rare:
+			for fish in static_fish.fish_names:
+				if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_rare:
 					fish_pool.append(fish)
 		else: # 1%
-			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
+			for fish in static_fish.fish_names:
+				if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
 					fish_pool.append(fish)
 
 	market_data = x #todo ?
@@ -197,24 +199,24 @@ def gen_fish(x, fisher, has_fishingrod):
 
 	if weather_data.name != "rainy":
 		for fish in fish_pool:
-			if ewcfg.fish_map[fish].catch_time == ewcfg.fish_catchtime_rain:
+			if static_fish.fish_map[fish].catch_time == ewcfg.fish_catchtime_rain:
 				fish_pool.remove(fish)
 
 	if 5 < market_data.clock < 20:
 		for fish in fish_pool:
-			if ewcfg.fish_map[fish].catch_time == ewcfg.fish_catchtime_night:
+			if static_fish.fish_map[fish].catch_time == ewcfg.fish_catchtime_night:
 				fish_pool.remove(fish)
 	elif market_data.clock < 8 or market_data.clock > 17:
 		for fish in fish_pool:
-			if ewcfg.fish_map[fish].catch_time == ewcfg.fish_catchtime_day:
+			if static_fish.fish_map[fish].catch_time == ewcfg.fish_catchtime_day:
 				fish_pool.remove(fish)
 	else:
 		for fish in fish_pool:
-			if ewcfg.fish_map[fish].catch_time != None:
+			if static_fish.fish_map[fish].catch_time != None:
 				fish_pool.remove(fish)
 
 	# Filter out fish from other pier types
-	fish = random.choice([fish for fish in fish_pool if ewcfg.fish_map[fish].slime == fisher.pier.pier_type])
+	fish = random.choice([fish for fish in fish_pool if static_fish.fish_map[fish].slime == fisher.pier.pier_type])
 	
 	# Get fucked
 	if fisher.pier.id_poi == ewcfg.poi_id_juviesrow_pier:
@@ -672,25 +674,25 @@ async def award_fish(fisher, cmd, user_data):
 			slime_gain = ewcfg.fish_gain * 6
 			value += 60
 
-		if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_common:
+		if static_fish.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_common:
 			value += 10
 
-		if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_uncommon:
+		if static_fish.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_uncommon:
 			value += 20
 
-		if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_rare:
+		if static_fish.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_rare:
 			value += 30
 
-		if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_promo:
+		if static_fish.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_promo:
 			value += 40
 
 		if user_data.life_state == 2:
-			if ewcfg.fish_map[fisher.current_fish].catch_time == ewcfg.fish_catchtime_day and user_data.faction == ewcfg.faction_rowdys:
+			if static_fish.fish_map[fisher.current_fish].catch_time == ewcfg.fish_catchtime_day and user_data.faction == ewcfg.faction_rowdys:
 				gang_bonus = True
 				slime_gain = slime_gain * 1.5
 				value += 20
 
-			if ewcfg.fish_map[fisher.current_fish].catch_time == ewcfg.fish_catchtime_night and user_data.faction == ewcfg.faction_killers:
+			if static_fish.fish_map[fisher.current_fish].catch_time == ewcfg.fish_catchtime_night and user_data.faction == ewcfg.faction_killers:
 				gang_bonus = True
 				slime_gain = slime_gain * 1.5
 				value += 20
@@ -698,7 +700,7 @@ async def award_fish(fisher, cmd, user_data):
 		if has_fishingrod == True:
 			slime_gain = slime_gain * 2
 
-		#trauma = ewcfg.trauma_map.get(user_data.trauma)
+		#trauma = se_static.trauma_map.get(user_data.trauma)
 		#if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
 		#	slime_gain *= (1 - 0.5 * user_data.degradation / 100)
 
@@ -719,7 +721,7 @@ async def award_fish(fisher, cmd, user_data):
 		if user_data.poi == ewcfg.poi_id_juviesrow_pier:
 			slime_gain = int(slime_gain / 4)
 
-		trauma = ewcfg.trauma_map.get(user_data.trauma)
+		trauma = se_static.trauma_map.get(user_data.trauma)
 		if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
 			slime_gain *= (1 - 0.5 * user_data.degradation / 100)
 
@@ -730,12 +732,12 @@ async def award_fish(fisher, cmd, user_data):
 			id_server = cmd.guild.id,
 			item_type = ewcfg.it_food,
 			item_props = {
-				'id_food': ewcfg.fish_map[fisher.current_fish].id_fish,
-				'food_name': ewcfg.fish_map[fisher.current_fish].str_name,
-				'food_desc': ewcfg.fish_map[fisher.current_fish].str_desc,
+				'id_food': static_fish.fish_map[fisher.current_fish].id_fish,
+				'food_name': static_fish.fish_map[fisher.current_fish].str_name,
+				'food_desc': static_fish.fish_map[fisher.current_fish].str_desc,
 				'recover_hunger': 20,
-				'str_eat': ewcfg.str_eat_raw_material.format(ewcfg.fish_map[fisher.current_fish].str_name),
-				'rarity': ewcfg.fish_map[fisher.current_fish].rarity,
+				'str_eat': ewcfg.str_eat_raw_material.format(static_fish.fish_map[fisher.current_fish].str_name),
+				'rarity': static_fish.fish_map[fisher.current_fish].rarity,
 				'size': fisher.current_size,
 				'time_expir': time.time() + ewcfg.std_food_expir,
 				'time_fridged': 0,
@@ -756,8 +758,8 @@ async def award_fish(fisher, cmd, user_data):
 
 			response = "The two of you together manage to reel in a {fish}! {flavor} {ghost} haunts {slime:,} slime away from the fish before placing it on {fleshling}'s hands."\
 				.format(
-					fish = ewcfg.fish_map[fisher.current_fish].str_name, 
-					flavor = ewcfg.fish_map[fisher.current_fish].str_desc, 
+					fish = static_fish.fish_map[fisher.current_fish].str_name, 
+					flavor = static_fish.fish_map[fisher.current_fish].str_desc, 
 					ghost = inhabitant_name,
 					fleshling = inhabitee_name,
 					slime = slime_gain,
@@ -768,7 +770,7 @@ async def award_fish(fisher, cmd, user_data):
 			fisher.stop()
 		else:
 			response = "You reel in a {fish}! {flavor} You grab hold and wring {slime:,} slime from it. "\
-				.format(fish = ewcfg.fish_map[fisher.current_fish].str_name, flavor = ewcfg.fish_map[fisher.current_fish].str_desc, slime = slime_gain)
+				.format(fish = static_fish.fish_map[fisher.current_fish].str_name, flavor = static_fish.fish_map[fisher.current_fish].str_desc, slime = slime_gain)
 			if gang_bonus == True:
 				if user_data.faction == ewcfg.faction_rowdys:
 					response += "The Rowdy-pride this fish is showing gave you more slime than usual. "
@@ -1296,7 +1298,7 @@ async def debug_create_random_fish(cmd):
 	else:
 		return
 	
-	fish = random.choice(ewcfg.fish_names) 
+	fish = random.choice(static_fish.fish_names) 
 	
 
 	size_number = random.randint(0, 100)
@@ -1334,16 +1336,16 @@ async def debug_create_random_fish(cmd):
 	else:
 		value += 60
 
-	if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_common:
+	if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_common:
 		value += 10
 
-	if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_uncommon:
+	if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_uncommon:
 		value += 20
 
-	if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_rare:
+	if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_rare:
 		value += 30
 
-	if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
+	if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
 		value += 40
 
 	ewitem.item_create(
@@ -1351,12 +1353,12 @@ async def debug_create_random_fish(cmd):
 		id_server = cmd.guild.id,
 		item_type = ewcfg.it_food,
 		item_props = {
-			'id_food': ewcfg.fish_map[fish].id_fish,
-			'food_name': ewcfg.fish_map[fish].str_name,
-			'food_desc': ewcfg.fish_map[fish].str_desc,
+			'id_food': static_fish.fish_map[fish].id_fish,
+			'food_name': static_fish.fish_map[fish].str_name,
+			'food_desc': static_fish.fish_map[fish].str_desc,
 			'recover_hunger': 20,
-			'str_eat': ewcfg.str_eat_raw_material.format(ewcfg.fish_map[fish].str_name),
-			'rarity': ewcfg.fish_map[fish].rarity,
+			'str_eat': ewcfg.str_eat_raw_material.format(static_fish.fish_map[fish].str_name),
+			'rarity': static_fish.fish_map[fish].rarity,
 			'size': size,
 			'time_expir': time.time() + ewcfg.std_food_expir,
 			'time_fridged': 0,

@@ -86,7 +86,7 @@ async def begin_tutorial(member):
 	user_data = EwUser(member = member)
 	user_to_tutorial_state[user_data.id_user] = 0
 	
-	scene = ewcfg.dungeon_tutorial[0]
+	scene = poi_static.dungeon_tutorial[0]
 
 	if scene.poi != None:
 		user_data.poi = scene.poi
@@ -116,7 +116,7 @@ async def tutorial_cmd(cmd):
 	
 	tutorial_state = user_to_tutorial_state.get(user_data.id_user)
 
-	tutorial_scene = ewcfg.dungeon_tutorial[tutorial_state]
+	tutorial_scene = poi_static.dungeon_tutorial[tutorial_state]
 
 	cmd_content = cmd.message.content[1:].lower()
 	
@@ -125,7 +125,7 @@ async def tutorial_cmd(cmd):
 		new_state = 20
 		user_to_tutorial_state[user_data.id_user] = new_state
 
-		scene = ewcfg.dungeon_tutorial[new_state]
+		scene = poi_static.dungeon_tutorial[new_state]
 
 		if scene.poi != None:
 			user_data.poi = scene.poi
@@ -147,7 +147,7 @@ async def tutorial_cmd(cmd):
 		new_state = tutorial_scene.options.get(cmd_content)
 		user_to_tutorial_state[user_data.id_user] = new_state
 			
-		scene = ewcfg.dungeon_tutorial[new_state]
+		scene = poi_static.dungeon_tutorial[new_state]
 
 		if scene.poi != None:
 			user_data.poi = scene.poi

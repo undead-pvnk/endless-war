@@ -90,7 +90,7 @@ async def menu(cmd):
 				item_item = static_items.item_map.get(item_name)
 				food_item = static_food.food_map.get(item_name)
 				cosmetic_item = ewcfg.cosmetic_map.get(item_name)
-				furniture_item = ewcfg.furniture_map.get(item_name)
+				furniture_item = static_items.furniture_map.get(item_name)
 				weapon_item = static_weapons.weapon_map.get(item_name)
 
 				# increase profits for the stock market
@@ -230,7 +230,7 @@ async def order(cmd):
 		# Finds the item if it's an EwGeneralItem.
 
 		if value == "mylittleponyfigurine":
-			value = random.choice(ewcfg.furniture_pony)
+			value = random.choice(static_items.furniture_pony)
 
 		item = static_items.item_map.get(value)
 
@@ -256,12 +256,12 @@ async def order(cmd):
 				name = item.str_name
 
 		if item == None:
-			item = ewcfg.furniture_map.get(value)
+			item = static_items.furniture_map.get(value)
 			item_type = ewcfg.it_furniture
 			if item != None:
 				item_id = item.id_furniture
 				name = item.str_name
-				if item_id in ewcfg.furniture_pony:
+				if item_id in static_items.furniture_pony:
 					item.vendors = [ewcfg.vendor_bazaar]
 
 		if item == None:
@@ -284,7 +284,7 @@ async def order(cmd):
 			# Check if the item is available in the current bazaar item rotation
 			if current_vendor == ewcfg.vendor_bazaar:
 				if item_id not in market_data.bazaar_wares.values():
-					if item_id in ewcfg.furniture_pony and "mylittleponyfigurine" in market_data.bazaar_wares.values():
+					if item_id in static_items.furniture_pony and "mylittleponyfigurine" in market_data.bazaar_wares.values():
 						pass
 					else:
 						current_vendor = None
@@ -531,7 +531,7 @@ async def devour(cmd):
 			if item_obj.item_type == ewcfg.it_cosmetic:
 				recover_hunger = 100
 			elif item_obj.item_type == ewcfg.it_furniture:
-				furn = ewcfg.furniture_map.get(item_obj.item_props.get('id_furniture'))
+				furn = static_items.furniture_map.get(item_obj.item_props.get('id_furniture'))
 				acquisition = None
 				if furn is not None:
 					acquisition = furn.acquisition

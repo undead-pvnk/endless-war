@@ -745,7 +745,7 @@ async def bleedSlimes(id_server = None):
 					slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
 					slimes_dropped = user_data.totaldamage + user_data.slimes
 
-					#trauma = ewcfg.trauma_map.get(user_data.trauma)
+					#trauma = se_static.trauma_map.get(user_data.trauma)
 					#bleed_mod = 1
 					#if trauma != None and trauma.trauma_class == ewcfg.trauma_class_bleeding:
 					#	bleed_mod += 0.5 * user_data.degradation / 100
@@ -1678,7 +1678,7 @@ def get_move_speed(user_data):
 	mutations = user_data.get_mutations()
 	statuses = user_data.getStatusEffects()
 	market_data = EwMarket(id_server = user_data.id_server)
-	#trauma = ewcfg.trauma_map.get(user_data.trauma)
+	#trauma = se_static.trauma_map.get(user_data.trauma)
 	# disabled until held items update
 	# move_speed = 1 + (user_data.speed / 50)
 	move_speed = 1

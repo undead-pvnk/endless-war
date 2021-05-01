@@ -11,6 +11,7 @@ from .static import items as static_items
 from .static import weapons as static_weapons
 from .static import food as static_food
 from .static import poi as poi_static
+from .static import status as se_static
 from . import utils as ewutils
 from . import cmd as ewcmd
 from . import item as ewitem
@@ -374,7 +375,7 @@ async def mine(cmd):
 
 				if event_data.time_activate <= time.time():
 
-					event_def = ewcfg.event_type_to_def.get(event_data.event_type)
+					event_def = poi_static.event_type_to_def.get(event_data.event_type)
 					if event_def == None:
 						return ewutils.logMsg("Error, couldn't find event def for event type {}".format(event_data.event_type))
 					str_event_start = event_def.str_event_start
@@ -430,7 +431,7 @@ async def mine(cmd):
 			if user_data.life_state == ewcfg.life_state_juvenile:
 				mining_yield *= 2
 
-			#trauma = ewcfg.trauma_map.get(user_data.trauma)
+			#trauma = se_static.trauma_map.get(user_data.trauma)
 			#if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
 			#	mining_yield *= (1 - 0.5 * user_data.degradation / 100)
 

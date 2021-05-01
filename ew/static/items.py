@@ -1,9 +1,13 @@
+import os
+import json
+
 from . import cfg as ewcfg
 
 from ..model.item import EwGeneralItem, EwItemDef
+from ..model.item import EwPrankItem
+from ..model.item import EwFurniture
 from ..model.hunting import EwSeedPacket, EwTombstone
 from ..model.slimeoid import EwSlimeoidFood
-from ..model.item import EwPrankItem
 
 """
 	The list of item definitions. Instances of items are always based on these
@@ -1960,3 +1964,67 @@ for p in item_list:
 # 		swilldermuk_food.append(p)
 # 	else:
 # 		pass
+
+furniture_list = []
+with open(os.path.join('json', 'furniture.json')) as f:
+	furniture = json.load(f)
+	for i in furniture:
+		i = furniture[i]
+		furniture_list.append(
+			EwFurniture(
+				id_furniture = i['id_furniture'],
+				str_name = i['str_name'],
+				str_desc = i['str_desc'],
+				rarity = i['rarity'],
+				acquisition = i['acquisition'],
+				price = i['price'],
+				vendors = i['vendors'],
+				furniture_place_desc = i['furniture_place_desc'],
+				furniture_look_desc = i['furniture_look_desc'],
+				furn_set = i['furn_set'],
+				hue = i['hue'],
+				num_keys = i['num_keys']
+			))
+
+furniture_map = {}
+furniture_names = []
+furniture_lgbt = []
+furniture_highclass = []
+furniture_haunted = []
+furniture_leather = []
+furniture_church = []
+furniture_pony = []
+furniture_blackvelvet = []
+furniture_slimecorp = []
+furniture_seventies = []
+furniture_shitty = []
+furniture_instrument = []
+furniture_specialhue = []
+
+for furniture in furniture_list:
+	furniture_map[furniture.id_furniture] = furniture
+	furniture_names.append(furniture.id_furniture)
+	if furniture.furn_set == "haunted":
+		furniture_haunted.append(furniture.id_furniture)
+	elif furniture.furn_set == "high class":
+		furniture_highclass.append(furniture.id_furniture)
+	elif furniture.furn_set == "lgbt":
+		furniture_lgbt.append(furniture.id_furniture)
+	elif furniture.furn_set == "leather":
+		furniture_leather.append(furniture.id_furniture)
+	elif furniture.furn_set == "church":
+		furniture_church.append(furniture.id_furniture)
+	elif furniture.furn_set == "pony":
+		furniture_pony.append(furniture.id_furniture)
+	elif furniture.furn_set == "blackvelvet":
+		furniture_blackvelvet.append(furniture.id_furniture)
+	elif furniture.furn_set == "seventies":
+		furniture_seventies.append(furniture.id_furniture)
+	elif furniture.furn_set == "slimecorp":
+		furniture_slimecorp.append(furniture.id_furniture)
+	elif furniture.furn_set == "shitty":
+		furniture_shitty.append(furniture.id_furniture)
+	elif furniture.furn_set == "instrument":
+		furniture_instrument.append(furniture.id_furniture)
+	elif furniture.furn_set == "specialhue":
+		furniture_specialhue.append(furniture.id_furniture)

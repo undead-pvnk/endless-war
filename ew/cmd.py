@@ -13,6 +13,7 @@ from .static import poi as poi_static
 from .static import mutations as static_mutations
 from .static import hue as hue_static
 from .static import status as se_static
+from .static import fish as static_fish
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -311,7 +312,7 @@ def gen_data_text(
 					"" if len(sidearm_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
 						sidearm_item.item_props.get("weapon_name"))), sidearm.str_weapon)
 
-		trauma = ewcfg.trauma_map.get(user_data.trauma)
+		trauma = se_static.trauma_map.get(user_data.trauma)
 
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma)
@@ -546,7 +547,7 @@ async def data(cmd):
 			if user_data.weaponskill >= 5:
 				response += " {}".format(weapon.str_weaponmaster_self.format(rank=(user_data.weaponskill - 4)))
 
-		trauma = ewcfg.trauma_map.get(user_data.trauma)
+		trauma = se_static.trauma_map.get(user_data.trauma)
 
 		sidearm_item = EwItem(id_item=user_data.sidearm)
 		sidearm = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
@@ -2483,12 +2484,12 @@ async def create_item(cmd):
 			name = item.str_name
 
 	if item == None:
-		item = ewcfg.furniture_map.get(value)
+		item = static_items.furniture_map.get(value)
 		item_type = ewcfg.it_furniture
 		if item != None:
 			item_id = item.id_furniture
 			name = item.str_name
-			if item_id in ewcfg.furniture_pony:
+			if item_id in static_items.furniture_pony:
 				item.vendors = [ewcfg.vendor_bazaar]
 
 	if item == None:
@@ -2499,7 +2500,7 @@ async def create_item(cmd):
 			name = item.str_weapon
 
 	if item == None:
-		item = ewcfg.fish_map.get(value)
+		item = static_fish.fish_map.get(value)
 		item_type = ewcfg.it_food
 		if item != None:
 			item_id = item.id_fish
@@ -3824,7 +3825,7 @@ async def gvs_searchforbrainz(cmd):
 	event_props['channel'] = cmd.message.author.id
 
 	# DM user
-	response = ewcfg.event_type_to_def.get(ewcfg.event_type_shambaquarium).str_event_start.format(ewcfg.cmd_gvs_grabbrainz, ewutils.text_to_regional_indicator(event_props['captcha']))
+	response = poi_static.event_type_to_def.get(ewcfg.event_type_shambaquarium).str_event_start.format(ewcfg.cmd_gvs_grabbrainz, ewutils.text_to_regional_indicator(event_props['captcha']))
 	try:
 		await ewutils.send_message(cmd.client, cmd.message.author, response)
 	except ewutils.discord.errors.Forbidden:

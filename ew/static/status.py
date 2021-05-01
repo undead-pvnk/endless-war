@@ -1,6 +1,7 @@
 from . import cfg as ewcfg
 
 from ..model.status import EwStatusEffectDef
+from ..model.status import EwTrauma, EwHitzone
 
 
 status_effect_list = [
@@ -253,4 +254,376 @@ status_effects_def_map = {}
 
 for status in status_effect_list:
 	status_effects_def_map[status.id_status] = status
+
+# Places you might get !shot
+hitzones = [
+	EwHitzone(
+		name = "head",
+		aliases = [
+			"neck",
+			"jaw",
+			"face",
+			"nose",
+		],
+		id_injury = ewcfg.status_injury_head_id,
+	),
+	EwHitzone(
+		name = "torso",
+		aliases = [
+			"upper back",
+			"obliques",
+			"solar plexus",
+			"trapezius",
+			"chest",
+			"gut",
+			"abdomen",
+			"lower back",
+		],
+		id_injury = ewcfg.status_injury_torso_id,
+	),
+	EwHitzone(
+		name = "leg",
+		aliases = [
+			"foot",
+			"kneecap",
+			"Achilles' tendon",
+			"ankle",
+			"thigh",
+			"calf",
+		],
+		id_injury = ewcfg.status_injury_legs_id,
+	),
+	EwHitzone(
+		name = "arm",
+		aliases = [
+			"hand",
+			"wrist",
+			"shoulder",
+			"elbow",
+		],
+		id_injury = ewcfg.status_injury_arms_id,
+	),
+]
+
+hitzone_list = []
+hitzone_map = {}
+
+for hz in hitzones:
+	hitzone_list.append(hz.name)
+	hitzone_map[hz.name] = hz
+
+	for alias in hz.aliases:
+		hitzone_list.append(alias)
+		hitzone_map[alias] = hz
+
+	hitzone_map[hz.id_injury] = hz
+
+trauma_list = [
+	EwTrauma(
+		id_trauma = ewcfg.trauma_id_suicide,
+		str_trauma_self = "You are suffering from a tragic case of cowardice.",
+		str_trauma = "They are suffering from a tragic case of cowardice.",
+		trauma_class = ewcfg.trauma_class_damage,
+	),
+	EwTrauma(
+		id_trauma = ewcfg.trauma_id_betrayal,
+		str_trauma_self = "You look anxious around your teammates, wary of betrayal.",
+		str_trauma = "They look anxious around their teammates, wary of betrayal.",
+		trauma_class = ewcfg.trauma_class_movespeed,
+	),
+	EwTrauma(
+		id_trauma = ewcfg.trauma_id_environment,
+		str_trauma_self = "Your death could have resulted any number of situations, mostly related to your own idiocy.",
+		str_trauma = "Their death could have come from any number of situations, mostly related to their own idiocy.",
+		trauma_class = ewcfg.trauma_class_slimegain,
+	),
+	EwTrauma( # 1
+		id_trauma = ewcfg.weapon_id_revolver,
+		str_trauma_self = "You have scarring on both temples, which occasionally bleeds.",
+		str_trauma = "They have scarring on both temples, which occasionally bleeds.",
+		trauma_class = ewcfg.trauma_class_accuracy,
+	),
+	EwTrauma( # 2
+		id_trauma = ewcfg.weapon_id_dualpistols,
+		str_trauma_self = "You have several stitches embroidered into your chest over your numerous bullet wounds.",
+		str_trauma = "They have several stitches embroidered into their chest over their numerous bullet wounds.",
+		trauma_class = ewcfg.trauma_class_bleeding,
+	),
+	EwTrauma( # 3
+		id_trauma = ewcfg.weapon_id_shotgun,
+		str_trauma_self = "You have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
+		str_trauma = "They have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
+		trauma_class = ewcfg.trauma_class_bleeding,
+	),
+	EwTrauma( # 4
+		id_trauma = ewcfg.weapon_id_rifle,
+		str_trauma_self = "Your torso is riddled with scarred-over bulletholes.",
+		str_trauma = "Their torso is riddled with scarred-over bulletholes.",
+		trauma_class = ewcfg.trauma_class_bleeding,
+	),
+	EwTrauma( # 5
+		id_trauma = ewcfg.weapon_id_smg,
+		str_trauma_self = "Your copious amount of bullet holes trigger onlookers’ Trypophobia.",
+		str_trauma = "Their copious amount of bullet holes trigger onlookers’ Trypophobia.",
+		trauma_class = ewcfg.trauma_class_bleeding,
+	),
+	EwTrauma( # 6
+		id_trauma = ewcfg.weapon_id_minigun,
+		str_trauma_self = "What little is left of your body has large holes punched through it, resembling a slice of swiss cheese.",
+		str_trauma = "What little is left of their body has large holes punched through it, resembling a slice of swiss cheese.",
+		trauma_class = ewcfg.trauma_class_bleeding,
+	),
+	EwTrauma( # 7
+		id_trauma = ewcfg.weapon_id_bat,
+		str_trauma_self = "Your head appears to be slightly concave on one side.",
+		str_trauma = "Their head appears to be slightly concave on one side.",
+		trauma_class = ewcfg.trauma_class_accuracy,
+	),
+	EwTrauma( # 8
+		id_trauma = ewcfg.weapon_id_brassknuckles,
+		str_trauma_self = "You've got two black eyes, missing teeth, and a profoundly crooked nose.",
+		str_trauma = "They've got two black eyes, missing teeth, and a profoundly crooked nose.",
+		trauma_class = ewcfg.trauma_class_accuracy,
+	),
+	EwTrauma( # 9
+		id_trauma = ewcfg.weapon_id_katana,
+		str_trauma_self = "A single clean scar runs across the entire length of your body.",
+		str_trauma = "A single clean scar runs across the entire length of their body.",
+		trauma_class = ewcfg.trauma_class_hunger,
+	),
+	EwTrauma( # 10
+		id_trauma = ewcfg.weapon_id_broadsword,
+		str_trauma_self = "A large dent resembling that of a half-chopped down tree appears on the top of your head.",
+		str_trauma = "A dent resembling that of a half-chopped down tree appears on the top of their head.",
+		trauma_class = ewcfg.trauma_class_accuracy,
+	),
+	EwTrauma( # 11
+		id_trauma = ewcfg.weapon_id_nunchucks,
+		str_trauma_self = "You are covered in deep bruises. You hate martial arts of all kinds.",
+		str_trauma = "They are covered in deep bruises. They hate martial arts of all kinds.",
+		trauma_class = ewcfg.trauma_class_hunger,
+	),
+	EwTrauma( # 12
+		id_trauma = ewcfg.weapon_id_scythe,
+		str_trauma_self = "You are wrapped tightly in bandages that hold your two halves together.",
+		str_trauma = "They are wrapped tightly in bandages that hold their two halves together.",
+		trauma_class = ewcfg.trauma_class_movespeed,
+	),
+	EwTrauma( # 13
+		id_trauma = ewcfg.weapon_id_yoyo,
+		str_trauma_self = "Simple yo-yo tricks caught even in your peripheral vision triggers intense PTSD flashbacks.",
+		str_trauma = "Simple yo-yo tricks caught even in their peripheral vision triggers intense PTSD flashbacks.",
+		trauma_class = ewcfg.trauma_class_hunger,
+	),
+	EwTrauma( # 14
+		id_trauma = ewcfg.weapon_id_knives,
+		str_trauma_self = "You are covered in scarred-over lacerations and puncture wounds.",
+		str_trauma = "They are covered in scarred-over lacerations and puncture wounds.",
+		trauma_class = ewcfg.trauma_class_bleeding,
+	),
+	EwTrauma( # 15
+		id_trauma = ewcfg.weapon_id_molotov,
+		str_trauma_self = "You're wrapped in bandages. What skin is showing appears burn-scarred.",
+		str_trauma = "They're wrapped in bandages. What skin is showing appears burn-scarred.",
+		trauma_class = ewcfg.trauma_class_hunger,
+	),
+	EwTrauma( # 16
+		id_trauma = ewcfg.weapon_id_grenades,
+		str_trauma_self = "Blast scars and burned skin are spread unevenly across your body.",
+		str_trauma = "Blast scars and burned skin are spread unevenly across their body.",
+		trauma_class = ewcfg.trauma_class_hunger,
+	),
+	EwTrauma( # 17
+		id_trauma = ewcfg.weapon_id_garrote,
+		str_trauma_self = "There is noticeable bruising and scarring around your neck.",
+		str_trauma = "There is noticeable bruising and scarring around their neck.",
+		trauma_class = ewcfg.trauma_class_hunger,
+	),
+	EwTrauma(  # 18
+		id_trauma = ewcfg.weapon_id_pickaxe,
+		str_trauma_self = "There is a deep, precise indent in the crown of your skull. How embarrassing!",
+		str_trauma = "There is a deep, precise indent in the crown of their skull. How embarrassing!",
+		trauma_class = ewcfg.trauma_class_accuracy,
+	),
+	EwTrauma(  # 19
+		id_trauma = ewcfg.weapon_id_fishingrod,
+		str_trauma_self = "There is a piercing on the side of your mouth. How embarrassing!",
+		str_trauma = "There is a piercing on the side of their mouth. How embarrassing!",
+		trauma_class = ewcfg.trauma_class_hunger,
+	),
+	EwTrauma(  # 20
+		id_trauma = ewcfg.weapon_id_bass,
+		str_trauma_self = "There is a large concave dome in the side of your head.",
+		str_trauma = "There is a large concave dome in the side of their head.",
+		trauma_class = ewcfg.trauma_class_accuracy,
+	),
+	EwTrauma(  # 21
+		id_trauma = ewcfg.weapon_id_umbrella,
+		str_trauma_self = "You have a large hole in your chest.",
+		str_trauma = "They have a large hole in their chest.",
+		trauma_class = ewcfg.trauma_class_bleeding,
+	),
+	EwTrauma(  # 22
+		id_trauma = ewcfg.weapon_id_bow,
+		str_trauma_self = "There is a pixelated arrow in the side of your head.",
+		str_trauma = "There is a pixelated arrow in the side of their head.",
+		trauma_class = ewcfg.trauma_class_accuracy,
+	),
+	EwTrauma(  # 23
+		id_trauma = ewcfg.weapon_id_dclaw,
+		str_trauma_self = "Three smoldering claw marks are burned into your flesh, the flames `won't seem to extinguish.",
+		str_trauma = "Three smoldering claw marks are burned into their flesh, the flames won't seem to extinguish.",
+		trauma_class = ewcfg.trauma_class_sapregeneration,
+	),
+	EwTrauma(  # 24
+		id_trauma = ewcfg.weapon_id_staff,
+		str_trauma_self = "Parts of your skin look necrotic, and you look like you haven't slept in days.",
+		str_trauma = "Parts of their skin look necrotic, and they look like they haven't slept in days.",
+		trauma_class = ewcfg.trauma_class_hunger,
+	),
+	EwTrauma(  # 25 
+		id_trauma = ewcfg.weapon_id_hoe,
+		str_trauma_self = "You have a perfectly straight scar right on your neck.",
+		str_trauma = "They have a perfectly straight scar right on their neck.",
+		trauma_class = ewcfg.trauma_class_hunger,
+	),
+	EwTrauma(  # 26 
+		id_trauma = ewcfg.weapon_id_pitchfork,
+		str_trauma_self = "You have three evenly sized holes on your upper body.",
+		str_trauma = "They have three evenly sized holes on their upper body.",
+		trauma_class = ewcfg.trauma_class_bleeding,
+	),
+	EwTrauma(  # 27 
+		id_trauma = ewcfg.weapon_id_shovel,
+		str_trauma_self = "You have a cartoonishly large dent on your head.",
+		str_trauma = "They have a cartoonishly large dent on their head.",
+		trauma_class = ewcfg.trauma_class_sapregeneration,
+	),
+	EwTrauma(  # 28 
+		id_trauma = ewcfg.weapon_id_slimeringcan,
+		str_trauma_self = "Your throat is swollen.",
+		str_trauma = "Their throat is swollen.",
+		trauma_class = ewcfg.trauma_class_sapregeneration,
+	),
+	EwTrauma( # 1
+		id_trauma = "fangs",
+		str_trauma_self = "You have bite marks littered throughout your body.",
+		str_trauma = "They have bite marks littered throughout their body.",
+		trauma_class = ewcfg.trauma_class_bleeding,
+	),
+	EwTrauma( # 2
+		id_trauma = "talons",
+		str_trauma_self = "A large section of scars litter your abdomen.",
+		str_trauma = "A large section of scars litter their abdomen.",
+		trauma_class = ewcfg.trauma_class_hunger,
+	),
+	EwTrauma( # 4
+		id_trauma = "gunk shot",
+		str_trauma_self = "Several locations on your body have decayed from the aftermath of horrific radiation.",
+		str_trauma = "Several locations on their body have decayed from the aftermath of horrific radiation.",
+		trauma_class = ewcfg.trauma_class_sapregeneration,
+	),
+	EwTrauma( # 5
+		id_trauma = "tusks",
+		str_trauma_self = "You have one large scarred-over hole on your upper body.",
+		str_trauma = "They have one large scarred-over hole on their upper body.",
+		trauma_class = ewcfg.trauma_class_bleeding,
+	),
+	EwTrauma( # 6
+		id_trauma = "molotov breath",
+		str_trauma_self = "You're wrapped in two layers of bandages. What skin is showing appears burn-scarred.",
+		str_trauma = "They're wrapped in two layers of bandages. What skin is showing appears burn-scarred.",
+		trauma_class = ewcfg.trauma_class_hunger,
+	),
+	EwTrauma( # 7
+		id_trauma = "arm cannon",
+		str_trauma_self = "There's a deep bruising right in the middle of your forehead.",
+		str_trauma = "There's a deep bruising right in the middle of their forehead.",
+		trauma_class = ewcfg.trauma_class_accuracy,
+	),
+	EwTrauma( # 8
+		id_trauma = "axe",
+		str_trauma_self = "There's a hefty amount of bandages covering the top of your head",
+		str_trauma = "There's a hefty amount of bandages covering the top of their head",
+		trauma_class = ewcfg.trauma_class_accuracy,
+	),
+	EwTrauma( # 9
+		id_trauma = "hooves",
+		str_trauma_self = "Your chest is somewhat concave.",
+		str_trauma = "Their chest is somewhat concave.",
+		trauma_class = ewcfg.trauma_class_hunger,
+	),
+	EwTrauma( # 10
+			id_trauma = ewcfg.weapon_id_fingernails,
+			str_trauma_self = "Criscrossed slash marks cover your body.",
+			str_trauma = "Criscrossed slash marks cover their body.",
+			trauma_class = ewcfg.trauma_class_hunger,
+		),
+	EwTrauma( # 11
+			id_trauma = ewcfg.weapon_id_spraycan,
+			str_trauma_self = "Your breath smells awful, and you talk in a wheeze.",
+			str_trauma = "Their breath smells awful, and they talk in a wheeze.",
+			trauma_class = ewcfg.trauma_class_accuracy,
+		),
+	EwTrauma( # 12
+			id_trauma = ewcfg.weapon_id_paintroller,
+			str_trauma_self = "Mishhapen welts cover the top of your head.",
+			str_trauma = "Misshhapen welts cover the top of their head.",
+			trauma_class = ewcfg.trauma_class_bleeding,
+		),
+	EwTrauma( # 13
+			id_trauma = ewcfg.weapon_id_paintgun,
+			str_trauma_self = "Your stitched-up form looks barely held together.",
+			str_trauma = "Their stitched-up form looks barely held together.",
+			trauma_class = ewcfg.trauma_class_bleeding,
+		),
+	EwTrauma( # 14
+			id_trauma = ewcfg.weapon_id_paintbrush,
+			str_trauma_self = "Your eyes are bloodshot, and splinters stick out of your torso.",
+			str_trauma = "Their eyes are bloodshot, and splinters stick out of their torso.",
+			trauma_class = ewcfg.trauma_class_accuracy,
+		),
+	EwTrauma( # 14
+			id_trauma = ewcfg.weapon_id_thinnerbomb,
+			str_trauma_self = "Light scars run across your face, which is a disturbing blue discoloration.",
+			str_trauma = "Light scars run across their face, which is a disturbing blue discoloration.",
+			trauma_class = ewcfg.trauma_class_accuracy,
+		),
+	EwTrauma( # 14
+			id_trauma = ewcfg.weapon_id_watercolors,
+			str_trauma_self = "You are a dumb suicidal idiot and despise watercolors as a concept.",
+			str_trauma = "They are a dumb suicidal idiot and despise watercolors as a concept.",
+			trauma_class = ewcfg.trauma_class_accuracy,
+		),
+	EwTrauma( # 15
+				id_trauma = ewcfg.weapon_id_roomba,
+				str_trauma_self = "Your skin is stretched amd misshapen, flabby and tight in different spots.",
+				str_trauma = "Their skin is stretched amd misshapen, flabby and tight in different spots.",
+				trauma_class = ewcfg.trauma_class_accuracy,
+			),
+	EwTrauma(  # 16
+		id_trauma=ewcfg.weapon_id_chainsaw,
+		str_trauma_self="Your body is made almost exclusively out of scar tissue.",
+		str_trauma="Their body is made almost exclusively out of scar tissue.",
+		trauma_class=ewcfg.trauma_class_accuracy,
+	),
+	EwTrauma(  # 17
+		id_trauma=ewcfg.weapon_id_laywaster,
+		str_trauma_self="Your body is melting and mishhapen, like your skin was made of drenched paper mache.",
+		str_trauma="Their body is melting and mishhapen, like their skin was made of drenched paper mache.",
+		trauma_class=ewcfg.trauma_class_accuracy,
+	),
+	EwTrauma(  # 17
+		id_trauma='amateur',
+		str_trauma_self="You can still feel the circular scar inside your throat. Embarrassing...",
+		str_trauma="They can still feel the circular scar inside their throat. Embarrassing...",
+		trauma_class=ewcfg.trauma_class_accuracy,
+	),
+]
+
+
+trauma_map = {}
+
+for trauma in trauma_list:
+	trauma_map[trauma.id_trauma] = trauma
 

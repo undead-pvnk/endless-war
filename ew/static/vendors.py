@@ -3,7 +3,7 @@ from . import cosmetics
 from . import items as static_items
 from . import weapons
 from . import food as static_food
-
+from . import fish as static_fish
 
 # A map of vendor names to their items.
 vendor_inv = {}
@@ -33,10 +33,7 @@ for food in static_food.food_list:
 		vendor_list.append(food.id_food)
 
 # Populate fish map, including all aliases.
-for fish in ewcfg.fish_list:
-	ewcfg.fish_map[fish.id_fish] = fish
-	ewcfg.fish_names.append(fish.id_fish)
-
+for fish in static_fish.fish_list:
 	# Add fish to its vendors' lists.
 	for vendor in fish.vendors:
 		vendor_list = vendor_inv.get(vendor)
@@ -46,9 +43,6 @@ for fish in ewcfg.fish_list:
 			vendor_inv[vendor] = vendor_list
 
 		vendor_list.append(fish.id_fish)
-
-	for alias in fish.alias:
-		ewcfg.fish_map[alias] = fish
 
 # Populate cosmetic map.
 for cosmetic in cosmetics.cosmetic_items_list:
@@ -64,35 +58,7 @@ for cosmetic in cosmetics.cosmetic_items_list:
 		vendor_list.append(cosmetic.id_cosmetic)
 
 
-for furniture in ewcfg.furniture_list:
-	ewcfg.furniture_map[furniture.id_furniture] = furniture
-	ewcfg.furniture_names.append(furniture.id_furniture)
-	if furniture.furn_set == "haunted":
-		ewcfg.furniture_haunted.append(furniture.id_furniture)
-	elif furniture.furn_set == "high class":
-		ewcfg.furniture_highclass.append(furniture.id_furniture)
-	elif furniture.furn_set == "lgbt":
-		ewcfg.furniture_lgbt.append(furniture.id_furniture)
-	elif furniture.furn_set == "leather":
-		ewcfg.furniture_leather.append(furniture.id_furniture)
-	elif furniture.furn_set == "church":
-		ewcfg.furniture_church.append(furniture.id_furniture)
-	elif furniture.furn_set == "pony":
-		ewcfg.furniture_pony.append(furniture.id_furniture)
-	elif furniture.furn_set == "blackvelvet":
-		ewcfg.furniture_blackvelvet.append(furniture.id_furniture)
-	elif furniture.furn_set == "seventies":
-		ewcfg.furniture_seventies.append(furniture.id_furniture)
-	elif furniture.furn_set == "slimecorp":
-		ewcfg.furniture_slimecorp.append(furniture.id_furniture)
-	elif furniture.furn_set == "shitty":
-		ewcfg.furniture_shitty.append(furniture.id_furniture)
-	elif furniture.furn_set == "instrument":
-		ewcfg.furniture_instrument.append(furniture.id_furniture)
-	elif furniture.furn_set == "specialhue":
-		ewcfg.furniture_specialhue.append(furniture.id_furniture)
-
-
+for furniture in static_items.furniture_list:
 	for vendor in furniture.vendors:
 		vendor_list = vendor_inv.get(vendor)
 		if vendor_list == None:
@@ -187,7 +153,7 @@ for s in weapons.weapon_list:
 	else:
 		pass
 
-for s in ewcfg.furniture_list:
+for s in static_items.furniture_list:
 	if s.acquisition == ewcfg.acquisition_smelting:
 		smelt_results.append(s)
 	else:

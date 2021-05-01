@@ -1240,7 +1240,7 @@ async def on_ready():
 							elif item in cosmetics.cosmetic_names:
 								bazaar_cosmetics.append(item)
 
-							elif item in ewcfg.furniture_names:
+							elif item in static_items.furniture_names:
 								bazaar_furniture.append(item)
 
 						market_data.bazaar_wares['slimecorp1'] = ewcfg.weapon_id_umbrella

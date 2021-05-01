@@ -2010,7 +2010,7 @@ def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = Non
 
 	#apply trauma mods
 	#if user_data.combatant_type == 'player':
-	#	trauma = ewcfg.trauma_map.get(user_data.trauma)
+	#	trauma = se_static.trauma_map.get(user_data.trauma)
 
 	#	if trauma != None and trauma.trauma_class == ewcfg.trauma_class_accuracy:
 	#		mods['miss'] -= 0.2 * user_data.degradation / 100
@@ -3378,7 +3378,7 @@ def get_hitzone(injury_map = None):
 
 	injury = ewutils.weightedChoice(injury_map)
 
-	hitzone = ewcfg.hitzone_map.get(injury)
+	hitzone = set_static.hitzone_map.get(injury)
 
 	return hitzone
 

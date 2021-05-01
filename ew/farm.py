@@ -8,6 +8,7 @@ from .static import weapons as static_weapons
 from .static import food as static_food
 from .static import poi as poi_static
 from .static import farm as farm_static
+from .static import status as se_static
 from . import item as ewitem
 from . import utils as ewutils
 from . import rolemgr as ewrolemgr
@@ -194,7 +195,7 @@ async def reap(cmd):
 					if user_data.poi == ewcfg.poi_id_jr_farms:
 						slime_gain = int(slime_gain / 4)
 
-					#trauma = ewcfg.trauma_map.get(user_data.trauma)
+					#trauma = se_static.trauma_map.get(user_data.trauma)
 					#if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
 					#	slime_gain *= (1 - 0.5 * user_data.degradation / 100)
 

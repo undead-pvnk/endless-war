@@ -2274,10 +2274,10 @@ async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
 
         if random.randrange(2) == 0:
 
-            figurine_id = random.choice(ewcfg.furniture_pony)
+            figurine_id = random.choice(static_items.furniture_pony)
 
             #print(figurine_id)
-            item = ewcfg.furniture_map.get(figurine_id)
+            item = static_items.furniture_map.get(figurine_id)
 
             item_props = gen_item_props(item)
 

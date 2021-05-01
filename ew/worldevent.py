@@ -227,7 +227,7 @@ async def event_tick(id_server):
 		for row in data:
 			try:
 				event_data = EwWorldEvent(id_event = row[0])
-				event_def = ewcfg.event_type_to_def.get(event_data.event_type)
+				event_def = poi_static.event_type_to_def.get(event_data.event_type)
 
 				response = event_def.str_event_end if event_def else ""
 				if event_data.event_type == ewcfg.event_type_minecollapse:

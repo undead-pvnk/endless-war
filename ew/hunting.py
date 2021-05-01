@@ -2364,12 +2364,12 @@ def drop_enemy_loot(enemy_data, district_data):
 				name = item.str_name
 	
 		if item == None:
-			item = ewcfg.furniture_map.get(value)
+			item = static_items.furniture_map.get(value)
 			item_type = ewcfg.it_furniture
 			if item != None:
 				item_id = item.id_furniture
 				name = item.str_name
-				if item_id in ewcfg.furniture_pony:
+				if item_id in static_items.furniture_pony:
 					item.vendors = [ewcfg.vendor_bazaar]
 	
 		if item == None:
