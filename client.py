@@ -54,7 +54,7 @@ import ew.hunting as ewhunting
 import ew.fish as  ewfish
 import ew.faction as ewfaction
 import ew.apt as ewapt
-import ew.weather as ewweather
+import ew.backend.weather as bknd_weather
 import ew.backend.worldevent as bknd_worldevent
 import ew.dungeons as ewdungeons
 import ew.ads as ewads
@@ -1107,7 +1107,7 @@ async def on_ready():
 
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
-			asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
+			asyncio.ensure_future(bknd_weather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewsports.slimeball_tick_loop(id_server = server.id))
