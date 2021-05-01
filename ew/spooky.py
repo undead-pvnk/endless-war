@@ -24,6 +24,7 @@ from .backend import core as bknd_core
 from .user import EwUser
 from .market import EwMarket
 from .slimeoid import EwSlimeoid
+from .backend.quadrants import EwQuadrant
 
 """ revive yourself from the dead. """
 async def revive(cmd):

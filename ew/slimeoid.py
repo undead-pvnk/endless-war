@@ -20,6 +20,7 @@ from .market import EwMarket
 from .district import EwDistrict
 from .player import EwPlayer
 from .item import EwItem
+from .backend.quadrants import EwQuadrant
 
 active_slimeoidbattles = {}
 
