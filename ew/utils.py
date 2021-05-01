@@ -37,7 +37,7 @@ from .hunting import EwEnemy, EwOperationData
 from .market import EwMarket
 from .statuseffects import EwStatusEffect
 from .statuseffects import EwEnemyStatusEffect
-from .dungeons import EwGamestate
+from .backend.dungeons import EwGamestate
 from .item import EwItem
 #from .prank import calculate_gambit_exchange
 

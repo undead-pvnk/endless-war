@@ -27,7 +27,7 @@ from .slimeoid import EwSlimeoid
 from .player import EwPlayer
 from .backend.ads import EwAd
 from .item import EwItem
-from .dungeons import EwGamestate
+from .backend.dungeons import EwGamestate
 
 #from .hunting import EwEnemy
 from .backend.worldevent import get_void_connection_pois

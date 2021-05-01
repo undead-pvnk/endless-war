@@ -25,7 +25,7 @@ from .player import EwPlayer
 #from .hunting import EwEnemy
 from .statuseffects import EwStatusEffect
 from .statuseffects import EwEnemyStatusEffect
-from .dungeons import EwGamestate
+from .backend.dungeons import EwGamestate
 
 
 """ A data-moving class which holds references to objects we want to modify with weapon effects. """

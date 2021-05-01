@@ -14,7 +14,7 @@ from .backend import core as bknd_core
 from .user import EwUser
 from .player import EwPlayer
 from .district import EwDistrict
-from .dungeons import EwGamestate
+from .backend.dungeons import EwGamestate
 
 class EwMarket:
     id_server = -1
