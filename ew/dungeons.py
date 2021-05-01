@@ -5,6 +5,7 @@ from .static import cfg as ewcfg
 from .static import poi as poi_static
 from . import utils as ewutils
 from . import rolemgr as ewrolemgr
+from .backend import core as bknd_core
 
 from .user import EwUser
 
@@ -35,7 +36,7 @@ class EwGamestate():
 			self.id_server = id_server
 			self.id_state = id_state
 			try:
-				data = ewutils.execute_sql_query("SELECT {col_bit}, {col_value} FROM gamestates WHERE {id_server} = %s AND {id_state} = %s".format(
+				data = bknd_core.execute_sql_query("SELECT {col_bit}, {col_value} FROM gamestates WHERE {id_server} = %s AND {id_state} = %s".format(
 
 						id_state = ewcfg.col_id_state,
 						id_server = ewcfg.col_id_server,
@@ -56,7 +57,7 @@ class EwGamestate():
 			except:
 				ewutils.logMsg("Failed to retrieve gamestate {} from database.".format(self.id_state))
 	def persist(self):
-		ewutils.execute_sql_query(
+		bknd_core.execute_sql_query(
 			"REPLACE INTO gamestates ({id_server}, {id_state},  {col_bit}, {col_value}) VALUES (%s, %s, %s, %s)".format(
 				id_server=ewcfg.col_id_server,
 				id_state = ewcfg.col_id_state,

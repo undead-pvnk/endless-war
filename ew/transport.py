@@ -7,6 +7,7 @@ from .static import poi as poi_static
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import item as ewitem
+from .backend import core as bknd_core
 
 from .user import EwUser
 from .district import EwDistrict
@@ -37,7 +38,7 @@ class EwTransport:
 			self.id_server = id_server
 			self.poi = poi
 			try:
-				data = ewutils.execute_sql_query("SELECT {transport_type}, {current_line}, {current_stop} FROM transports WHERE {id_server} = %s AND {poi} = %s".format(
+				data = bknd_core.execute_sql_query("SELECT {transport_type}, {current_line}, {current_stop} FROM transports WHERE {id_server} = %s AND {poi} = %s".format(
 						transport_type = ewcfg.col_transport_type,
 						current_line = ewcfg.col_current_line,
 						current_stop = ewcfg.col_current_stop,
@@ -68,7 +69,7 @@ class EwTransport:
 	def persist(self):
 
 		try:
-			ewutils.execute_sql_query("REPLACE INTO transports ({id_server}, {poi}, {transport_type}, {current_line}, {current_stop}) VALUES (%s, %s, %s, %s, %s)".format(
+			bknd_core.execute_sql_query("REPLACE INTO transports ({id_server}, {poi}, {transport_type}, {current_line}, {current_stop}) VALUES (%s, %s, %s, %s, %s)".format(
 					id_server = ewcfg.col_id_server,
 					poi = ewcfg.col_poi,
 					transport_type = ewcfg.col_transport_type,
@@ -203,7 +204,7 @@ async def init_transports(id_server = None):
 def get_transports_at_stop(id_server, stop):
 	result = []
 	try:
-		data = ewutils.execute_sql_query("SELECT {poi} FROM transports WHERE {id_server} = %s AND {current_stop} = %s".format(
+		data = bknd_core.execute_sql_query("SELECT {poi} FROM transports WHERE {id_server} = %s AND {current_stop} = %s".format(
 				poi = ewcfg.col_poi,
 				id_server = ewcfg.col_id_server,
 				current_stop = ewcfg.col_current_stop

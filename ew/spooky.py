@@ -20,6 +20,7 @@ from . import slimeoid as ewslimeoid
 from . import item as ewitem
 from . import quadrants as ewquadrants
 from . import stats as ewstats
+from .backend import core as bknd_core
 from .user import EwUser
 from .market import EwMarket
 from .slimeoid import EwSlimeoid
@@ -300,7 +301,7 @@ async def negapool(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The dead have a total of {:,} negative slime at their disposal for summoning.".format(negaslime)))
 
 async def negaslime(cmd):
-	total = ewutils.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes < 0 AND id_server = '{}'".format(cmd.guild.id))
+	total = bknd_core.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes < 0 AND id_server = '{}'".format(cmd.guild.id))
 	total_negaslimes = total[0][0]
 	
 	if total_negaslimes:
@@ -441,7 +442,7 @@ async def inhabit(cmd):
 				# drop any previous inhabitation by the ghost
 				user_data.remove_inhabitation()
 				# add the new inhabitation
-				ewutils.execute_sql_query(
+				bknd_core.execute_sql_query(
 					"REPLACE INTO inhabitations({id_ghost}, {id_fleshling}, {id_server}) VALUES (%s, %s, %s)".format(
 						id_ghost = ewcfg.col_id_ghost,
 						id_fleshling = ewcfg.col_id_fleshling,
@@ -512,7 +513,7 @@ async def possess_weapon(cmd):
 				accepted = False
 
 			if accepted:
-				ewutils.execute_sql_query(
+				bknd_core.execute_sql_query(
 				"UPDATE inhabitations SET {empowered} = %s WHERE {id_fleshling} = %s AND {id_ghost} = %s".format(
 					empowered = ewcfg.col_empowered,
 					id_fleshling = ewcfg.col_id_fleshling,
@@ -568,7 +569,7 @@ async def possess_fishing_rod(cmd):
 				accepted = False
 
 			if accepted:
-				ewutils.execute_sql_query(
+				bknd_core.execute_sql_query(
 				"UPDATE inhabitations SET {empowered} = %s WHERE {id_fleshling} = %s AND {id_ghost} = %s".format(
 					empowered = ewcfg.col_empowered,
 					id_fleshling = ewcfg.col_id_fleshling,

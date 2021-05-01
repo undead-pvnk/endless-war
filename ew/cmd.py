@@ -26,6 +26,7 @@ from . import apt as ewapt
 from . import prank as ewprank
 from . import worldevent as ewworldevent
 from . import hunting as ewhunting
+from .backend import core as bknd_core
 
 from .user import EwUser
 from .market import EwMarket
@@ -171,7 +172,7 @@ async def score(cmd):
 
 	# endless war slime check
 	if target_type == "ew":
-		total = ewutils.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
+		total = bknd_core.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
 		totalslimes = total[0][0]
 		response = "ENDLESS WAR has amassed {:,} slime.".format(totalslimes)
 
@@ -932,7 +933,7 @@ async def fashion(cmd):
 
 
 async def endlesswar(cmd):
-	total = ewutils.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
+	total = bknd_core.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
 	totalslimes = total[0][0]
 	response = "ENDLESS WAR has amassed {:,} slime.".format(totalslimes)
 	return await ewutils.send_response(response, cmd)
@@ -1414,7 +1415,7 @@ async def balance_cosmetics(cmd):
 		id_cosmetic = cmd.tokens[1]
 
 		try:
-			data = ewutils.execute_sql_query(
+			data = bknd_core.execute_sql_query(
 				"SELECT {id_item}, {item_type}, {col_soulbound}, {col_stack_max}, {col_stack_size} FROM items WHERE {id_server} = {server_id} AND {item_type} = '{type_item}'".format(
 					id_item = ewcfg.col_id_item,
 					item_type = ewcfg.col_item_type,
@@ -3221,7 +3222,7 @@ async def gvs_join_operation(cmd):
 				
 				# If there are no player-generated operations, then the bot will simply spawn in ones automatically.
 				enemyfaction = ewcfg.psuedo_faction_gankers if faction == ewcfg.psuedo_faction_shamblers else ewcfg.psuedo_faction_shamblers
-				opposing_ops = ewutils.execute_sql_query("SELECT enemytype FROM gvs_ops_choices WHERE district = '{}' AND faction = '{}'".format(user_data.poi, enemyfaction))
+				opposing_ops = bknd_core.execute_sql_query("SELECT enemytype FROM gvs_ops_choices WHERE district = '{}' AND faction = '{}'".format(user_data.poi, enemyfaction))
 				if len(opposing_ops) == 0:
 					ewutils.gvs_insert_bot_ops(user_data.id_server, user_data.poi, enemyfaction)
 					# print('spawning in bot ops...')
@@ -3309,8 +3310,8 @@ async def gvs_leave_operation(cmd):
 	if accepted:
 		ewutils.active_restrictions[user_data.id_user] = 0
 		
-		items = ewutils.execute_sql_query("SELECT id_item FROM gvs_ops_choices WHERE id_user = '{}'".format(user_data.id_user))
-		ewutils.execute_sql_query("DELETE FROM gvs_ops_choices WHERE id_user = '{}'".format(user_data.id_user))
+		items = bknd_core.execute_sql_query("SELECT id_item FROM gvs_ops_choices WHERE id_user = '{}'".format(user_data.id_user))
+		bknd_core.execute_sql_query("DELETE FROM gvs_ops_choices WHERE id_user = '{}'".format(user_data.id_user))
 		await ewhunting.delete_all_enemies(cmd=None, query_suffix="AND owner = '{}' AND poi = '{}'".format(user_data.id_user, user_data.poi), id_server_sent=user_data.id_server)
 		
 		response = "You drop out of your {} Op in {}.".format('Garden' if faction == ewcfg.psuedo_faction_gankers else 'Graveyard', op_poi)
@@ -3343,7 +3344,7 @@ async def gvs_leave_operation(cmd):
 async def gvs_check_operations(cmd):
 	
 	if cmd.tokens_count == 1:
-		operations = ewutils.execute_sql_query("SELECT district, faction FROM gvs_ops_choices GROUP BY district;")
+		operations = bknd_core.execute_sql_query("SELECT district, faction FROM gvs_ops_choices GROUP BY district;")
 
 		response = "There are currently no Garden Ops or Graveyard Ops at this time."
 		if len(operations) > 0:
@@ -3358,11 +3359,11 @@ async def gvs_check_operations(cmd):
 		if district == None or not district.is_district:
 			response = "That's not a valid district that you can check"
 		else:
-			operations = ewutils.execute_sql_query("SELECT enemytype FROM gvs_ops_choices WHERE district = '{}' GROUP BY enemytype".format(district.id_poi))
+			operations = bknd_core.execute_sql_query("SELECT enemytype FROM gvs_ops_choices WHERE district = '{}' GROUP BY enemytype".format(district.id_poi))
 
 			if len(operations) > 0:
-				gaias = ewutils.execute_sql_query("SELECT enemytype FROM gvs_ops_choices WHERE district = '{}' AND faction = 'gankers' GROUP BY enemytype".format(district.id_poi))
-				shamblers = ewutils.execute_sql_query("SELECT enemytype FROM gvs_ops_choices WHERE district = '{}' AND faction = 'shamblers' GROUP BY enemytype".format(district.id_poi))
+				gaias = bknd_core.execute_sql_query("SELECT enemytype FROM gvs_ops_choices WHERE district = '{}' AND faction = 'gankers' GROUP BY enemytype".format(district.id_poi))
+				shamblers = bknd_core.execute_sql_query("SELECT enemytype FROM gvs_ops_choices WHERE district = '{}' AND faction = 'shamblers' GROUP BY enemytype".format(district.id_poi))
 	
 				response = "In {}, the currently selected seed packets and tombstones include...\n".format(district.str_name)
 				response += "**GAIASLIMEOIDS**"
@@ -3549,7 +3550,7 @@ async def gvs_progress(cmd):
 		if poi.is_district:
 			op_districts.append(poi.id_poi)
 			
-	degradation_data = ewutils.execute_sql_query("SELECT district, degradation FROM districts WHERE district IN {} AND id_server = {}".format(tuple(op_districts), cmd.message.guild.id))
+	degradation_data = bknd_core.execute_sql_query("SELECT district, degradation FROM districts WHERE district IN {} AND id_server = {}".format(tuple(op_districts), cmd.message.guild.id))
 	
 	non_degraded_districts = []
 	degraded_districts = []

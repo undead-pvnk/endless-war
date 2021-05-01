@@ -7,6 +7,7 @@ from .static import items as static_items
 from .static import hue as hue_static
 from . import item as ewitem
 from . import utils as ewutils
+from .backend import core as bknd_core
 import asyncio
 
 from .user import EwUser
@@ -299,7 +300,7 @@ async def smoke(cmd):
 
 
 def dedorn_all_costumes():
-	costumes = ewutils.execute_sql_query("SELECT id_item FROM items_prop WHERE name = 'context' AND value = 'costume' AND id_item IN (SELECT id_item FROM items_prop WHERE (name = 'adorned' OR name = 'slimeoid') AND value = 'true')")
+	costumes = bknd_core.execute_sql_query("SELECT id_item FROM items_prop WHERE name = 'context' AND value = 'costume' AND id_item IN (SELECT id_item FROM items_prop WHERE (name = 'adorned' OR name = 'slimeoid') AND value = 'true')")
 	costume_count = 0
 
 	for costume_id in costumes:
@@ -623,7 +624,7 @@ def update_hues():
 
 
 
-		ewutils.execute_sql_query("REPLACE INTO hues ({}, {}, {}, {}, {}, {}, {}, {}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)".format(
+		bknd_core.execute_sql_query("REPLACE INTO hues ({}, {}, {}, {}, {}, {}, {}, {}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)".format(
 			ewcfg.col_id_hue,
 			ewcfg.col_is_neutral,
 			ewcfg.col_hue_analogous_1,

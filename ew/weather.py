@@ -7,6 +7,7 @@ from . import utils as ewutils
 from . import rolemgr as ewrolemgr
 from . import item as ewitem
 from . import hunting as ewhunting
+from .backend import core as bknd_core
 
 from .user import EwUser
 from .market import EwMarket
@@ -38,7 +39,7 @@ async def weather_tick(id_server = None):
 				exposed_pois.extend(poi_static.outskirts)
 				exposed_pois = tuple(exposed_pois)
 
-				users = ewutils.execute_sql_query(
+				users = bknd_core.execute_sql_query(
 					"SELECT id_user FROM users WHERE id_server = %s AND {poi} IN %s AND {life_state} > 0".format(
 						poi=ewcfg.col_poi,
 						life_state=ewcfg.col_life_state
@@ -72,7 +73,7 @@ async def weather_tick(id_server = None):
 
 			
 
-			users = ewutils.execute_sql_query("SELECT id_user FROM users WHERE id_server = %s AND {poi} IN %s AND {life_state} > 0".format(
+			users = bknd_core.execute_sql_query("SELECT id_user FROM users WHERE id_server = %s AND {poi} IN %s AND {life_state} > 0".format(
 				poi = ewcfg.col_poi,
 				life_state = ewcfg.col_life_state
 			), (
@@ -166,7 +167,7 @@ async def weather_tick(id_server = None):
 				district_data.change_slimes(n = - slimes_to_erase, source = ewcfg.source_weather)
 				district_data.persist()
 			
-			enemies = ewutils.execute_sql_query("SELECT id_enemy FROM enemies WHERE id_server = %s AND {poi} IN %s AND {life_state} = %s AND {weathertype} != %s".format(
+			enemies = bknd_core.execute_sql_query("SELECT id_enemy FROM enemies WHERE id_server = %s AND {poi} IN %s AND {life_state} = %s AND {weathertype} != %s".format(
 				poi = ewcfg.col_enemy_poi,
 				life_state = ewcfg.col_enemy_life_state,
 				weathertype = ewcfg.col_enemy_weathertype

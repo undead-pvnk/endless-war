@@ -41,7 +41,7 @@ import ew.item as ewitem
 import ew.move as ewmap
 import ew.rolemgr as ewrolemgr
 import ew.raidboss as ewraidboss
-import ew.leaderboard as ewleaderboard
+import ew.backend.leaderboard as ewleaderboard
 import ew.cosmeticitem as ewcosmeticitem
 import ew.slimeoid as ewslimeoid
 import ew.district as ewdistrict
@@ -63,6 +63,7 @@ import ew.sports as ewsports
 import ew.race as ewrace
 import ew.slimetwitter as ewslimetwitter
 import ew.debug as ewdebug
+import ew.backend.core as bknd_core
 
 from ew.item import EwItem
 from ew.user import EwUser
@@ -1462,7 +1463,7 @@ async def on_message(message):
 	if message.guild != None:
 
 		try:
-			ewutils.execute_sql_query("UPDATE users SET {time_last_action} = %s WHERE id_user = %s AND id_server = %s".format(
+			bknd_core.execute_sql_query("UPDATE users SET {time_last_action} = %s WHERE id_user = %s AND id_server = %s".format(
 				time_last_action = ewcfg.col_time_last_action
 			), (
 				int(time.time()),

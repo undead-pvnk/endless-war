@@ -7,6 +7,7 @@ from .static import poi as poi_static
 
 from . import utils as ewutils
 from . import item as ewitem
+from .backend import core as bknd_core
 
 from .user import EwUser
 
@@ -21,7 +22,7 @@ class EwRole:
 			self.name = name
 
 
-			data = ewutils.execute_sql_query("SELECT {id_role} FROM roles WHERE id_server = %s AND {name} = %s".format(
+			data = bknd_core.execute_sql_query("SELECT {id_role} FROM roles WHERE id_server = %s AND {name} = %s".format(
 				id_role = ewcfg.col_id_role,
 				name = ewcfg.col_role_name
 			), (
@@ -33,7 +34,7 @@ class EwRole:
 				# data is always a two-dimensional array and if we only fetch one row, we have to type data[0][x]
 				self.id_role = data[0][0]
 			else:  # create new entry
-				ewutils.execute_sql_query("REPLACE INTO roles ({id_server}, {name}) VALUES (%s, %s)".format(
+				bknd_core.execute_sql_query("REPLACE INTO roles ({id_server}, {name}) VALUES (%s, %s)".format(
 					id_server = ewcfg.col_id_server,
 					name = ewcfg.col_role_name
 				), (
@@ -45,7 +46,7 @@ class EwRole:
 			self.id_role = id_role
 
 
-			data = ewutils.execute_sql_query("SELECT {name} FROM roles WHERE id_server = %s AND {id_role} = %s".format(
+			data = bknd_core.execute_sql_query("SELECT {name} FROM roles WHERE id_server = %s AND {id_role} = %s".format(
 				id_role = ewcfg.col_id_role,
 				name = ewcfg.col_role_name
 			), (
@@ -58,7 +59,7 @@ class EwRole:
 				self.name = data[0][0]
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO roles (id_server, {id_role}, {name}) VALUES(%s, %s, %s)".format(
+		bknd_core.execute_sql_query("REPLACE INTO roles (id_server, {id_role}, {name}) VALUES(%s, %s, %s)".format(
 			id_role = ewcfg.col_id_role,
 			name = ewcfg.col_role_name
 		), (
@@ -731,7 +732,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	# if startup:
 	# 	# On startup, give out permissions where necessary. This should only need to be done once, when the update goes live.
 	# 	
-	# 	conn_info = ewutils.databaseConnect()
+	# 	conn_info = bknd_core.databaseConnect()
 	# 	conn = conn_info.get('conn')
 	# 	cursor = conn.cursor();
 	# 

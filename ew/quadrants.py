@@ -8,6 +8,7 @@ from .static import quadrants as quad_static
 from . import stats as ewstats
 from . import utils as ewutils
 from . import user as ew
+from .backend import core as bknd_core
 
 class EwQuadrant:
 
@@ -34,7 +35,7 @@ class EwQuadrant:
 				if quadrant == ewcfg.quadrant_policitous and id_target2 is not None:
 					self.id_target2 = id_target2
 
-				ewutils.execute_sql_query("REPLACE INTO quadrants ({col_id_server}, {col_id_user}, {col_quadrant}, {col_target}, {col_target2}) VALUES (%s, %s, %s, %s, %s)".format(
+				bknd_core.execute_sql_query("REPLACE INTO quadrants ({col_id_server}, {col_id_user}, {col_quadrant}, {col_target}, {col_target2}) VALUES (%s, %s, %s, %s, %s)".format(
 					col_id_server = ewcfg.col_id_server,
 					col_id_user = ewcfg.col_id_user,
 					col_quadrant = ewcfg.col_quadrant,
@@ -49,7 +50,7 @@ class EwQuadrant:
 				))
 
 			else:
-				data = ewutils.execute_sql_query("SELECT {col_target}, {col_target2} FROM quadrants WHERE {col_id_server} = %s AND {col_id_user} = %s AND {col_quadrant} = %s".format(
+				data = bknd_core.execute_sql_query("SELECT {col_target}, {col_target2} FROM quadrants WHERE {col_id_server} = %s AND {col_id_user} = %s AND {col_quadrant} = %s".format(
 					col_target = ewcfg.col_quadrants_target,
 					col_target2 = ewcfg.col_quadrants_target2,
 					col_id_server = ewcfg.col_id_server,
@@ -68,7 +69,7 @@ class EwQuadrant:
 
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO quadrants ({col_id_server}, {col_id_user}, {col_quadrant}, {col_target}, {col_target2}) VALUES (%s, %s, %s, %s, %s)".format(
+		bknd_core.execute_sql_query("REPLACE INTO quadrants ({col_id_server}, {col_id_user}, {col_quadrant}, {col_target}, {col_target2}) VALUES (%s, %s, %s, %s, %s)".format(
 			col_id_server = ewcfg.col_id_server,
 			col_id_user = ewcfg.col_id_user,
 			col_quadrant = ewcfg.col_quadrant,

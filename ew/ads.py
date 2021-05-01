@@ -3,6 +3,7 @@ import time
 from .static import cfg as ewcfg
 from .static import poi as poi_static
 from . import utils as ewutils
+from .backend import core as bknd_core
 
 from .user import EwUser
 from .player import EwPlayer
@@ -24,7 +25,7 @@ class EwAd:
 	):
 		if id_ad != None:
 			self.id_ad = id_ad
-			data = ewutils.execute_sql_query("SELECT {id_server}, {id_sponsor}, {content}, {time_expir} FROM ads WHERE {id_ad} = %s".format(
+			data = bknd_core.execute_sql_query("SELECT {id_server}, {id_sponsor}, {content}, {time_expir} FROM ads WHERE {id_ad} = %s".format(
 				id_server = ewcfg.col_id_server,
 				id_sponsor = ewcfg.col_id_sponsor,
 				content = ewcfg.col_ad_content,
@@ -45,7 +46,7 @@ class EwAd:
 				self.id_ad = -1
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO ads ({}, {}, {}, {}, {}) VALUES (%s, %s, %s, %s, %s)".format(
+		bknd_core.execute_sql_query("REPLACE INTO ads ({}, {}, {}, {}, {}) VALUES (%s, %s, %s, %s, %s)".format(
 			ewcfg.col_id_ad,
 			ewcfg.col_id_server,
 			ewcfg.col_id_sponsor,
@@ -61,7 +62,7 @@ class EwAd:
 	
 
 def create_ad(id_server, id_sponsor, content, time_expir):
-	ewutils.execute_sql_query("INSERT INTO ads ({}, {}, {}, {}) VALUES (%s, %s, %s, %s)".format(
+	bknd_core.execute_sql_query("INSERT INTO ads ({}, {}, {}, {}) VALUES (%s, %s, %s, %s)".format(
 		ewcfg.col_id_server,
 		ewcfg.col_id_sponsor,
 		ewcfg.col_ad_content,
@@ -76,7 +77,7 @@ def create_ad(id_server, id_sponsor, content, time_expir):
 def get_ads(id_server):
 	time_now = int(time.time())
 	ad_ids = []
-	data = ewutils.execute_sql_query("SELECT {id_ad} FROM ads WHERE {id_server} = %s AND {time_expir} > %s ORDER BY {time_expir} ASC".format(
+	data = bknd_core.execute_sql_query("SELECT {id_ad} FROM ads WHERE {id_server} = %s AND {time_expir} > %s ORDER BY {time_expir} ASC".format(
 		id_ad = ewcfg.col_id_ad,
 		id_server = ewcfg.col_id_server,
 		time_expir = ewcfg.col_time_expir,
@@ -92,7 +93,7 @@ def get_ads(id_server):
 
 def delete_expired_ads(id_server):
 	time_now = int(time.time())
-	data = ewutils.execute_sql_query("DELETE FROM ads WHERE {id_server} = %s AND {time_expir} < %s".format(
+	data = bknd_core.execute_sql_query("DELETE FROM ads WHERE {id_server} = %s AND {time_expir} < %s".format(
 		id_server = ewcfg.col_id_server,
 		time_expir = ewcfg.col_time_expir,
 	),(

@@ -12,6 +12,7 @@ from .static import status as se_static
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
+from .backend import core as bknd_core
 
 from .market import EwMarket
 from .user import EwUser
@@ -66,7 +67,7 @@ class EwOffer:
 			self.id_user = id_user
 			self.offer_give = offer_give
 
-			data = ewutils.execute_sql_query(
+			data = bknd_core.execute_sql_query(
 				"SELECT {time_sinceoffer} FROM offers WHERE id_server = %s AND id_user = %s AND {col_offer_give} = %s".format(
 					time_sinceoffer = ewcfg.col_time_sinceoffer,
 					col_offer_give = ewcfg.col_offer_give,
@@ -81,7 +82,7 @@ class EwOffer:
 				# data is always a two-dimensional array and if we only fetch one row, we have to type data[0][x]
 				self.time_sinceoffer = data[0][0]
 
-			data = ewutils.execute_sql_query(
+			data = bknd_core.execute_sql_query(
 				"SELECT {col_offer_receive} FROM offers WHERE id_server = %s AND id_user = %s AND {col_offer_give} = %s".format(
 					col_offer_receive = ewcfg.col_offer_receive,
 					col_offer_give = ewcfg.col_offer_give,
@@ -97,7 +98,7 @@ class EwOffer:
 				self.offer_receive = data[0][0]
 
 			else:  # create new entry
-				ewutils.execute_sql_query(
+				bknd_core.execute_sql_query(
 					"REPLACE INTO offers(id_server, id_user, {col_offer_give}) VALUES (%s, %s, %s)".format(
 						col_offer_give = ewcfg.col_offer_give,
 					), (
@@ -108,7 +109,7 @@ class EwOffer:
 				)
 
 	def persist(self):
-		ewutils.execute_sql_query(
+		bknd_core.execute_sql_query(
 			"REPLACE INTO offers(id_server, id_user, {col_offer_give}, {col_offer_receive}, {col_time_sinceoffer}) VALUES (%s, %s, %s, %s, %s)".format(
 				col_offer_give = ewcfg.col_offer_give,
 				col_offer_receive = ewcfg.col_offer_receive,
@@ -123,7 +124,7 @@ class EwOffer:
 		)
 
 	def deal(self):
-		ewutils.execute_sql_query("DELETE FROM offers WHERE {id_user} = %s AND {id_server} = %s AND {col_offer_give} = %s".format(
+		bknd_core.execute_sql_query("DELETE FROM offers WHERE {id_user} = %s AND {id_server} = %s AND {col_offer_give} = %s".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
 			col_offer_give = ewcfg.col_offer_give,
@@ -1371,7 +1372,7 @@ async def debug_create_random_fish(cmd):
 
 def kill_dead_offers(id_server):
 	time_now = int(time.time() / 60)
-	ewutils.execute_sql_query("DELETE FROM offers WHERE {id_server} = %s AND {time_sinceoffer} < %s".format(
+	bknd_core.execute_sql_query("DELETE FROM offers WHERE {id_server} = %s AND {time_sinceoffer} < %s".format(
 		id_server = ewcfg.col_id_server,
 		time_sinceoffer = ewcfg.col_time_sinceoffer,
 	),(

@@ -14,6 +14,7 @@ from .static import poi as poi_static
 from . import apt as ewapt
 from . import ads as ewads
 from . import hunting as ewhunting
+from .backend import core as bknd_core
 
 
 from .user import EwUser
@@ -532,7 +533,7 @@ def inaccessible(user_data = None, poi = None):
 def retrieve_locked_districts(id_server):
     locked_districts_list = []
 
-    locked_districts = ewutils.execute_sql_query(
+    locked_districts = bknd_core.execute_sql_query(
         "SELECT {district} FROM global_locks WHERE id_server = %s AND {locked_status} = %s".format(
             district=ewcfg.col_district,
             locked_status=ewcfg.col_locked_status
@@ -1440,7 +1441,7 @@ async def scout(cmd):
 """
 async def kick(id_server):
     # Gets data for all living players from the database
-    all_living_players = ewutils.execute_sql_query("SELECT {poi}, {id_user} FROM users WHERE id_server = %s AND {life_state} > 0 AND {time_last_action} < %s".format(
+    all_living_players = bknd_core.execute_sql_query("SELECT {poi}, {id_user} FROM users WHERE id_server = %s AND {life_state} > 0 AND {time_last_action} < %s".format(
         poi = ewcfg.col_poi,
         id_user = ewcfg.col_id_user,
         time_last_action = ewcfg.col_time_last_action,
@@ -1811,7 +1812,7 @@ async def slap(cmd):
 def get_random_prank_item(user_data, district_data):
     response = ""
 
-    items_in_poi = ewutils.execute_sql_query(
+    items_in_poi = bknd_core.execute_sql_query(
         "SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
             id_item=ewcfg.col_id_item,
             id_owner=ewcfg.col_id_user,
@@ -1947,7 +1948,7 @@ async def one_eye_dm(id_user=None, id_server=None, poi=None):
 
     if poi_obj.pvp:
         try:
-            recipients = ewutils.execute_sql_query(
+            recipients = bknd_core.execute_sql_query(
                 "SELECT {id_user} FROM mutations WHERE {id_server} = %s AND {mutation} = %s and {data} = %s".format(
                     data=ewcfg.col_mutation_data,
                     id_server=ewcfg.col_id_server,
@@ -2127,7 +2128,7 @@ async def flush_subzones(cmd):
 
         used_mother_district = mother_districts[0]
 
-        ewutils.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
+        bknd_core.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
             id_owner = ewcfg.col_id_user,
             id_server = ewcfg.col_id_server
         ), (
@@ -2165,7 +2166,7 @@ async def flush_streets(cmd):
                 member = cmd.guild.get_member(player)
                 await ewrolemgr.updateRoles(client=cmd.client, member=member)
 
-            ewutils.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
+            bknd_core.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
                 id_owner = ewcfg.col_id_user,
                 id_server = ewcfg.col_id_server
             ), (

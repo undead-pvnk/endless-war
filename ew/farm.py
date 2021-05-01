@@ -12,6 +12,7 @@ from .static import status as se_static
 from . import item as ewitem
 from . import utils as ewutils
 from . import rolemgr as ewrolemgr
+from .backend import core as bknd_core
 
 from .user import EwUser
 from .market import EwMarket
@@ -43,7 +44,7 @@ class EwFarm:
 			self.id_user = id_user
 			self.name = farm
 
-			data = ewutils.execute_sql_query(
+			data = bknd_core.execute_sql_query(
 				"SELECT {time_lastsow}, {phase}, {time_lastphase}, {slimes_onreap}, {action_required}, {crop}, {life_state} FROM farms WHERE id_server = %s AND id_user = %s AND {col_farm} = %s".format(
 					time_lastsow = ewcfg.col_time_lastsow,
 					col_farm = ewcfg.col_farm,
@@ -71,7 +72,7 @@ class EwFarm:
 				self.sow_life_state = data[0][6]
 
 			else:  # create new entry
-				ewutils.execute_sql_query(
+				bknd_core.execute_sql_query(
 					"REPLACE INTO farms (id_server, id_user, {col_farm}) VALUES (%s, %s, %s)".format(
 						col_farm = ewcfg.col_farm
 					), (
@@ -82,7 +83,7 @@ class EwFarm:
 				)
 
 	def persist(self):
-		ewutils.execute_sql_query(
+		bknd_core.execute_sql_query(
 			"REPLACE INTO farms(id_server, id_user, {farm}, {time_lastsow}, {phase}, {time_lastphase}, {slimes_onreap}, {action_required}, {crop}, {life_state}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				farm = ewcfg.col_farm,
 				time_lastsow = ewcfg.col_time_lastsow,
@@ -644,7 +645,7 @@ async def farm_tick_loop(id_server):
 
 def farm_tick(id_server):
 	time_now = int(time.time())
-	farms = ewutils.execute_sql_query("SELECT {id_user}, {farm} FROM farms WHERE id_server = %s AND {time_lastsow} > 0 AND {phase} < %s".format(
+	farms = bknd_core.execute_sql_query("SELECT {id_user}, {farm} FROM farms WHERE id_server = %s AND {time_lastsow} > 0 AND {phase} < %s".format(
 		id_user = ewcfg.col_id_user,
 		farm = ewcfg.col_farm,
 		time_lastsow = ewcfg.col_time_lastsow,

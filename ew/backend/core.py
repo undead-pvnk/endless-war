@@ -1,6 +1,8 @@
 import MySQLdb
 import time
 
+from ..static import cfg as ewcfg
+
 db_pool = {}
 db_pool_id = 0
 
