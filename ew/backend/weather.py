@@ -14,7 +14,7 @@ from ..market import EwMarket
 from ..player import EwPlayer
 from .district import EwDistrict
 from ..slimeoid import EwSlimeoid
-from ..hunting import EwEnemy
+from .hunting import EwEnemy
 from ..item import EwItem
 
 """

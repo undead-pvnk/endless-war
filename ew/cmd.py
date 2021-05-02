@@ -37,6 +37,7 @@ from .statuseffects import EwStatusEffect
 from .statuseffects import EwEnemyStatusEffect
 from .backend.district import EwDistrict
 from .backend.worldevent import EwWorldEvent
+from .backend.hunting import EwEnemy, EwOperationData
 
 """ wrapper for discord members """
 class EwId:
@@ -2883,7 +2884,7 @@ async def gvs_print_lane(cmd):
 						if enemy_id == 'frozen':
 							response += "FROZEN"
 						else:
-							enemy_data = ewhunting.EwEnemy(id_server=user_data.id_server, id_enemy=enemy_id)
+							enemy_data = EwEnemy(id_server=user_data.id_server, id_enemy=enemy_id)
 							props = enemy_data.enemy_props
 							
 							if debug:
@@ -3258,7 +3259,7 @@ async def gvs_join_operation(cmd):
 				# 	ewitem.item_delete(item.id_item)
 				# 	response += "\n(Your {} has been used up completely)".format(item_props.get('item_name'))	
 
-				op_data = ewhunting.EwOperationData(
+				op_data = EwOperationData(
 					id_user=user_data.id_user,
 					district=user_data.poi, 
 					enemytype=enemytype, 
@@ -3467,7 +3468,7 @@ async def gvs_plant_gaiaslimeoid(cmd):
 				
 				if len(gaias_in_coord) > 0:
 					for gaia in gaias_in_coord.keys():
-						enemy_data = ewhunting.EwEnemy(id_enemy=gaias_in_coord[gaia])
+						enemy_data = EwEnemy(id_enemy=gaias_in_coord[gaia])
 						
 						if enemytype == gaia:
 							if gaia in ewcfg.repairable_gaias:
@@ -3659,7 +3660,7 @@ async def dig(cmd): # TODO  zen garden functionality
 
 	if not is_garden:
 
-		enemy = ewhunting.EwEnemy(id_server=user_data.id_server, id_enemy=dig_target)
+		enemy = EwEnemy(id_server=user_data.id_server, id_enemy=dig_target)
 		ewhunting.delete_enemy(enemy)
 
 		if random.random() < 0.8:  # 90% chance to fail

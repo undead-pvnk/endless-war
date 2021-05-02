@@ -30,6 +30,7 @@ from .item import EwItem
 from .backend.dungeons import EwGamestate
 
 #from .hunting import EwEnemy
+from .backend.hunting import EwEnemy
 from .backend.worldevent import get_void_connection_pois
 
 move_counter = 0
@@ -1373,7 +1374,7 @@ async def scout(cmd):
 
         detailed_enemies_resp = "You pick up the scent of the following enemies:\n"
         for enemy in enemies_in_district:
-            enemy_data = ewhunting.EwEnemy(id_enemy=enemy)
+            enemy_data = EwEnemy(id_enemy=enemy)
             detailed_enemies_resp += "\n**{}**\n".format(enemy_data.display_name)
             num_enemies += 1
 
@@ -1550,7 +1551,7 @@ def get_enemies_look_resp(user_data, district_data):
         enemies_resp = ""
     # enemies_resp += "You don't find any enemies in this district."
     elif num_enemies == 1:
-        found_enemy_data = ewhunting.EwEnemy(id_enemy=enemies_in_district[0])
+        found_enemy_data = EwEnemy(id_enemy=enemies_in_district[0])
 
         if found_enemy_data.identifier != '':
             identifier_text = " {}".format(":regional_indicator_{}:".format(found_enemy_data.identifier.lower()))
@@ -1566,7 +1567,7 @@ def get_enemies_look_resp(user_data, district_data):
     else:
         enemies_resp += "You notice several enemies in this district, such as\n"
         for i in range(len(enemies_in_district) - 1):
-            found_enemy_data = ewhunting.EwEnemy(id_enemy=enemies_in_district[i])
+            found_enemy_data = EwEnemy(id_enemy=enemies_in_district[i])
 
             if found_enemy_data.identifier != '':
                 if not ewcfg.gvs_active:
@@ -1584,7 +1585,7 @@ def get_enemies_look_resp(user_data, district_data):
 
             enemies_resp += ("{} **{}" + identifier_text + "**\n").format(threat_emote, found_enemy_data.display_name)
 
-        final_enemy_data = ewhunting.EwEnemy(id_enemy=enemies_in_district[num_enemies - 1])
+        final_enemy_data = EwEnemy(id_enemy=enemies_in_district[num_enemies - 1])
 
         if final_enemy_data.identifier != '':
             if not ewcfg.gvs_active:

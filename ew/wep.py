@@ -26,6 +26,7 @@ from .player import EwPlayer
 from .statuseffects import EwStatusEffect
 from .statuseffects import EwEnemyStatusEffect
 from .backend.dungeons import EwGamestate
+from .backend.hunting import EwEnemy
 
 
 """ A data-moving class which holds references to objects we want to modify with weapon effects. """
@@ -1393,7 +1394,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				response = ""
 
 				slimes_damage_target = slimes_damage
-				target_enemy_data = ewhunting.EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
+				target_enemy_data = EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
 
 				# apply sap armor
 				#sap_armor = get_sap_armor(shootee_data = target_enemy_data, sap_ignored = sap_ignored)
@@ -1485,7 +1486,7 @@ def burn_bystanders(user_data = None, burn_dmg = 0, life_states = None, factions
 		bystander_enemies = district_data.get_enemies_in_district()
 
 		for bystander in bystander_enemies:
-			bystander_enemy_data = ewhunting.EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
+			bystander_enemy_data = EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
 			resp = bystander_enemy_data.applyStatus(id_status=ewcfg.status_burning_id, value=burn_dmg, source=user_data.id_user).format(name_player = bystander_enemy_data.display_name)
 			resp_cont.add_channel_response(channel, resp)
 

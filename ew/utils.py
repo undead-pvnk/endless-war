@@ -33,12 +33,13 @@ from . import wep as ewwep
 from .user import EwUser
 from .backend.district import EwDistrict
 from .player import EwPlayer
-from .hunting import EwEnemy, EwOperationData
+from .backend.hunting import EwEnemy, EwOperationData
 from .market import EwMarket
 from .statuseffects import EwStatusEffect
 from .statuseffects import EwEnemyStatusEffect
 from .backend.dungeons import EwGamestate
 from .item import EwItem
+from .backend.hunting import EwEnemy
 #from .prank import calculate_gambit_exchange
 
 TERMINATE = False
@@ -2164,7 +2165,7 @@ def create_death_report(cause = None, user_data = None):
 
 		if(killer_isEnemy): # Generate responses for being killed by enemy
 			# Grab enemy data
-			killer_data = ewhunting.EwEnemy(id_enemy = user_data.id_killer, id_server = user_data.id_server)
+			killer_data = EwEnemy(id_enemy = user_data.id_killer, id_server = user_data.id_server)
 
 			if killer_data.attacktype != ewcfg.enemy_attacktype_unarmed:
 				used_attacktype = hunt_static.attack_type_map.get(killer_data.attacktype)
