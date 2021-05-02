@@ -27,10 +27,11 @@ from . import prank as ewprank
 from .backend import worldevent as bknd_worldevent
 from . import hunting as ewhunting
 from .backend import core as bknd_core
+from .backend import item as bknd_item
 
 from .user import EwUser
 from .market import EwMarket
-from .item import EwItem
+from .backend.item import EwItem
 from .slimeoid import EwSlimeoid
 #from .hunting import find_enemy, delete_all_enemies, EwEnemy, EwOperationData, spawn_enemy, delete_enemy
 from .statuseffects import EwStatusEffect
@@ -147,7 +148,7 @@ def gen_score_text(ew_id):
 
 	user_data = EwUser(ew_id = ew_id)
 
-	items = ewitem.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
+	items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
 
 	poudrin_amount = ewitem.find_poudrin(id_user = user_data.id_user, id_server = user_data.id_server)
 
@@ -220,7 +221,7 @@ def gen_data_text(
 	)
 	slimeoid = EwSlimeoid(id_user=id_user, id_server=id_server)
 
-	cosmetics = ewitem.inventory(
+	cosmetics = bknd_item.inventory(
 		id_user=user_data.id_user,
 		id_server=user_data.id_server,
 		item_type_filter=ewcfg.it_cosmetic
@@ -463,7 +464,7 @@ async def data(cmd):
 		user_data = EwUser(member=cmd.message.author)
 		slimeoid = EwSlimeoid(member=cmd.message.author)
 
-		cosmetics = ewitem.inventory(
+		cosmetics = bknd_item.inventory(
 			id_user=cmd.message.author.id,
 			id_server=cmd.guild.id,
 			item_type_filter=ewcfg.it_cosmetic
@@ -772,7 +773,7 @@ async def fashion(cmd):
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member=cmd.message.author, data_level = 2)
 
-		cosmetic_items = ewitem.inventory(
+		cosmetic_items = bknd_item.inventory(
 			id_user = cmd.message.author.id,
 			id_server = cmd.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
@@ -838,7 +839,7 @@ async def fashion(cmd):
 		member = cmd.mentions[0]
 		user_data = EwUser(member = member, data_level = 2)
 
-		cosmetic_items = ewitem.inventory(
+		cosmetic_items = bknd_item.inventory(
 			id_user = member.id,
 			id_server = cmd.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
@@ -1114,7 +1115,7 @@ async def help(cmd):
 	# help only checks for districts while in game channels
 
 	# checks if user is in a college or if they have a game guide
-	gameguide = ewitem.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
+	gameguide = bknd_item.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
 
 	if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu or gameguide:
 		if not len(cmd.tokens) > 1:
@@ -1758,7 +1759,7 @@ async def pray(cmd):
 
 				item_props = ewitem.gen_item_props(item)
 
-				ewitem.item_create(
+				bknd_item.item_create(
 					item_type = item.item_type,
 					id_user = cmd.message.author.id,
 					id_server = cmd.guild.id,
@@ -1814,7 +1815,7 @@ async def recycle(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+	item_sought = bknd_item.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 	
 	if item_sought:
 		item = EwItem(id_item = item_sought.get("id_item"))
@@ -1832,7 +1833,7 @@ async def recycle(cmd):
 				user_data.sidearm = -1
 				user_data.persist()
 
-			ewitem.item_delete(id_item = item.id_item)
+			bknd_item.item_delete(id_item = item.id_item)
 
 			pay = int(random.random() * 10 ** random.randrange(2,6))
 			response = "You put your {} into the designated opening. **CRUSH! Splat!** *hiss...* and it's gone. \"Thanks for keeping the city clean.\" a robotic voice informs you.".format(item_sought.get("name"))
@@ -1850,7 +1851,7 @@ async def recycle(cmd):
 
 				item_props = ewitem.gen_item_props(item_reward)
 
-				ewitem.item_create(
+				bknd_item.item_create(
 					item_type = item_reward.item_type,
 					id_user = cmd.message.author.id,
 					id_server = cmd.guild.id,
@@ -1934,7 +1935,7 @@ async def push(cmd):
 		else:
 			slimeoid_model = ""
 
-		cosmetics = ewitem.inventory(id_user=targetmodel.id_user, id_server=targetmodel.id_server, item_type_filter=ewcfg.it_cosmetic)
+		cosmetics = bknd_item.inventory(id_user=targetmodel.id_user, id_server=targetmodel.id_server, item_type_filter=ewcfg.it_cosmetic)
 		selected_cos = None
 		for cosmetic in cosmetics:
 			cosmetic_item = EwItem(id_item=cosmetic.get('id_item'))
@@ -1989,22 +1990,22 @@ async def push(cmd):
 		districtmodel.change_slimes(n=slimetotal)
 		districtmodel.persist()
 
-		cliff_inventory = ewitem.inventory(id_server=cmd.guild.id, id_user=targetmodel.id_user)
+		cliff_inventory = bknd_item.inventory(id_server=cmd.guild.id, id_user=targetmodel.id_user)
 		for item in cliff_inventory:
-			item_object = ewitem.EwItem(id_item=item.get('id_item'))
+			item_object = EwItem(id_item=item.get('id_item'))
 			if item.get('soulbound') == True:
 				pass
 
 			elif item_object.item_type == ewcfg.it_weapon:
 				if item.get('id_item') == targetmodel.weapon:
-					ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
+					bknd_item.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
 
 				else:
 					item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.guild.id)
 
 
 			elif item_object.item_props.get('adorned') == 'true':
-				ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
+				bknd_item.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
 
 			else:
 				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.guild.id)
@@ -2067,22 +2068,22 @@ async def jump(cmd):
 	else:
 		response = "Hmm. The cliff looks safe enough. You imagine, with the proper diving posture, you'll be able to land in the slime unharmed. You steel yourself for the fall, run along the cliff, and swan dive off its steep edge. Of course, you forgot that the Slime Sea is highly corrosive, there are several krakens there, and you can't swim. Welp, time to die."
 
-		cliff_inventory = ewitem.inventory(id_server=cmd.guild.id, id_user=user_data.id_user)
+		cliff_inventory = bknd_item.inventory(id_server=cmd.guild.id, id_user=user_data.id_user)
 		for item in cliff_inventory:
-			item_object = ewitem.EwItem(id_item=item.get('id_item'))
+			item_object = EwItem(id_item=item.get('id_item'))
 			if item.get('soulbound') == True:
 				pass
 
 			elif item_object.item_type == ewcfg.it_weapon:
 				if item.get('id_item') == user_data.weapon or item.get('id_item') == user_data.sidearm:
-					ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
+					bknd_item.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
 
 				else:
 					item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.guild.id)
 
 
 			elif item_object.item_props.get('adorned') == 'true':
-				ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
+				bknd_item.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.guild.id)
 
 			else:
 				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.guild.id)
@@ -2099,7 +2100,7 @@ async def jump(cmd):
 async def toss_off_cliff(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=user_data.id_server)
+	item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=user_data.id_server)
 
 	if cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
 		if item_sought:
@@ -2174,21 +2175,21 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 
 	if item_obj.item_props.get('id_furniture') == 'sord':
 		response = "You toss the sord off the cliff, but for whatever reason, the damn thing won't go down. It just keeps going up and up, as though gravity itself blocked this piece of shit jpeg artifact on Twitter. It eventually goes out of sight, where you assume it flies into the sun."
-		ewitem.item_delete(id_item=id_item)
+		bknd_item.item_delete(id_item=id_item)
 	elif random.randrange(500) < 125 or item_obj.item_type == ewcfg.it_questitem or item_obj.item_type == ewcfg.it_medal or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand":
 		response = "You toss the {} off the cliff. It sinks into the ooze disappointingly.".format(item_name)
-		ewitem.give_item(id_item=id_item, id_server=id_server, id_user=ewcfg.poi_id_slimesea)
+		bknd_item.give_item(id_item=id_item, id_server=id_server, id_user=ewcfg.poi_id_slimesea)
 
 	elif random.randrange(500) < 498:
 		response = "You toss the {} off the cliff. A nearby kraken swoops in and chomps it down with the cephalapod's equivalent of a smile. Your new friend kicks up some sea slime for you. Sick!".format(item_name)
 		slimetotal = 2000 + random.randrange(10000)
-		ewitem.item_delete(id_item=id_item)
+		bknd_item.item_delete(id_item=id_item)
 
 	else:
 		response = "{} Oh fuck. FEEDING FRENZY!!! Sea monsters lurch down on the spoils like it's fucking christmas, and a ridiculous level of slime debris covers the ground. {}".format(ewcfg.emote_slime1, ewcfg.emote_slime1)
 		slimetotal = 100000 + random.randrange(900000)
 
-		ewitem.item_delete(id_item=id_item)
+		bknd_item.item_delete(id_item=id_item)
 
 	districtmodel.change_slimes(n=slimetotal)
 	districtmodel.persist()
@@ -2257,7 +2258,7 @@ async def wrap(cmd):
 		response = "C'mon man, you got friends, don't you? Try and give a gift to someone other than yourself."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	paper_sought = ewitem.find_item(item_search="wrappingpaper", id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter = ewcfg.it_item)
+	paper_sought = bknd_item.find_item(item_search="wrappingpaper", id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter = ewcfg.it_item)
 	
 	if paper_sought:
 		paper_item = EwItem(id_item=paper_sought.get('id_item'))
@@ -2271,17 +2272,17 @@ async def wrap(cmd):
 	gift_message = cmd.tokens[2]
 	
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[3:])
-	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
+	item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
 
 	if item_sought:
-		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
+		item = EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_item:
 			if item.item_props.get('id_item') == "gift":
 				response = "It's already wrapped."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		if item.soulbound:
 			response = "It's a nice gesture, but trying to gift someone a Soulbound item is going a bit too far, don't you think?"
-		elif ewitem.check_inv_capacity(id_user = cmd.message.author.id, id_server = cmd.guild.id, item_type = ewcfg.it_item):
+		elif bknd_item.check_inv_capacity(id_user = cmd.message.author.id, id_server = cmd.guild.id, item_type = ewcfg.it_item):
 			response = ewcfg.str_generic_inv_limit.format(ewcfg.it_item)
 		else:
 			gift_name = "Gift"
@@ -2292,7 +2293,7 @@ async def wrap(cmd):
 
 			response = "You shroud your {} in {} and slap on a premade bow. Onto it, you attach a note containing the following text: '{}'.\nThis small act of kindness manages to endow you with Slimernalia spirit, if only a little.".format(item_sought.get('name'), paper_name, gift_address)
 			
-			ewitem.item_create(
+			bknd_item.item_create(
 				id_user=cmd.message.author.id,
 				id_server=cmd.guild.id,
 				item_type=ewcfg.it_item,
@@ -2306,8 +2307,8 @@ async def wrap(cmd):
 					'gifted': "false"
 				}
 			)
-			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=str(cmd.message.author.id) + "gift", id_server=cmd.guild.id)
-			ewitem.item_delete(id_item=paper_item.id_item)
+			bknd_item.give_item(id_item=item_sought.get('id_item'), id_user=str(cmd.message.author.id) + "gift", id_server=cmd.guild.id)
+			bknd_item.item_delete(id_item=paper_item.id_item)
 
 			user_data.festivity += ewcfg.festivity_on_gift_wrapping
 
@@ -2322,12 +2323,12 @@ async def wrap(cmd):
 
 async def unwrap(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
+	item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
 	if item_sought:
-		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
+		item = EwItem(id_item=item_sought.get('id_item'))
 		if item.item_type == ewcfg.it_item:
 			if item.item_props.get('id_item') == "gift":
-				if ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user=cmd.message.author.id, id_server=cmd.guild.id):
+				if bknd_item.give_item(id_item=item.item_props.get('acquisition'), id_user=cmd.message.author.id, id_server=cmd.guild.id):
 					gifted_item = EwItem(id_item=item.item_props.get('acquisition'))
 
 					gift_name_type = ''
@@ -2356,7 +2357,7 @@ async def unwrap(cmd):
 					#user_data.persist()
 
 					response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)
-					ewitem.item_delete(id_item=item_sought.get('id_item'))
+					bknd_item.item_delete(id_item=item_sought.get('id_item'))
 				else:
 					response = "Whatever's inside, you can't hold anymore!"
 			else:
@@ -2410,7 +2411,7 @@ async def forge_master_poudrin(cmd):
 		"id_cosmetic": "masterpoudrin",
 	}
 
-	new_item_id = ewitem.item_create(
+	new_item_id = bknd_item.item_create(
 		id_server=cmd.guild.id,
 		id_user=user_data.id_user,
 		item_type=ewcfg.it_cosmetic,
@@ -2512,7 +2513,7 @@ async def create_item(cmd):
 		
 		item_props = ewitem.gen_item_props(item)
 
-		generated_item_id = ewitem.item_create(
+		generated_item_id = bknd_item.item_create(
 			item_type=item_type,
 			id_user=item_recipient.id,
 			id_server=cmd.guild.id,
@@ -2625,7 +2626,7 @@ async def prank(cmd):
 	if cmd.mentions_count > 0:
 		mentions_user = True
 		
-	cosmetics = ewitem.inventory(
+	cosmetics = bknd_item.inventory(
 		id_user=user_data.id_user,
 		id_server=user_data.id_server,
 		item_type_filter=ewcfg.it_cosmetic
@@ -2658,7 +2659,7 @@ async def prank(cmd):
 					item_props = ewitem.gen_item_props(prank_item)
 	
 					# Set the user ID to 0 so it can't be given, looted, etc, before it gets deleted.
-					prank_item_id = ewitem.item_create(
+					prank_item_id = bknd_item.item_create(
 						item_type=prank_item.item_type,
 						id_user=0,
 						id_server=user_data.id_server,
@@ -2694,12 +2695,12 @@ async def prank(cmd):
 					response = pluck_response + response
 
 				if item_action == "delete":
-					ewitem.item_delete(item.id_item)
+					bknd_item.item_delete(item.id_item)
 					#prank_feed_channel = ewutils.get_channel(cmd.guild, ewcfg.channel_prankfeed)
 					#await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response + "\n`-------------------------`")))
 
 				elif item_action == "drop":
-					ewitem.give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)
+					bknd_item.give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)
 
 				break
 
@@ -2944,7 +2945,7 @@ async def gvs_incubate_gaiaslimeoid(cmd):
 				response = "That's not a crop material you can use, bitch."
 			else:
 
-				material_item = ewitem.find_item(item_search=material, id_user=cmd.message.author.id, id_server=cmd.message.guild.id if cmd.message.guild is not None else None, item_type_filter=ewcfg.it_item)
+				material_item = bknd_item.find_item(item_search=material, id_user=cmd.message.author.id, id_server=cmd.message.guild.id if cmd.message.guild is not None else None, item_type_filter=ewcfg.it_item)
 				if material_item == None:
 					response = "You don't have that crop material in your inventory, bitch."
 				else:
@@ -2954,12 +2955,12 @@ async def gvs_incubate_gaiaslimeoid(cmd):
 	
 					item_type = ewcfg.it_item
 					if item != None:
-						ewitem.item_delete(id_item=material_item.get('id_item'))
+						bknd_item.item_delete(id_item=material_item.get('id_item'))
 						name = item.str_name
 	
 						item_props = ewitem.gen_item_props(item)
 	
-						generated_item_id = ewitem.item_create(
+						generated_item_id = bknd_item.item_create(
 							item_type=item_type,
 							id_user=cmd.message.author.id,
 							id_server=cmd.message.guild.id,
@@ -3016,7 +3017,7 @@ async def gvs_fabricate_tombstone(cmd):
 
 						item_props = ewitem.gen_item_props(item)
 
-						generated_item_id = ewitem.item_create(
+						generated_item_id = bknd_item.item_create(
 							item_type=item_type,
 							id_user=cmd.message.author.id,
 							id_server=cmd.message.guild.id,
@@ -3147,7 +3148,7 @@ async def gvs_join_operation(cmd):
 		# if not found_choice:
 		# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
-		item_sought = ewitem.find_item(item_search=selected_item, id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
+		item_sought = bknd_item.find_item(item_search=selected_item, id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
 		
 		if item_sought != None:
 			item = EwItem(id_item=item_sought.get('id_item'))
@@ -3256,7 +3257,7 @@ async def gvs_join_operation(cmd):
 				# 	item.persist()
 				# 	response += "\n(Your {}'s durability has been lowered)".format(item_props.get('item_name'))
 				# else:
-				# 	ewitem.item_delete(item.id_item)
+				# 	bknd_item.item_delete(item.id_item)
 				# 	response += "\n(Your {} has been used up completely)".format(item_props.get('item_name'))	
 
 				op_data = EwOperationData(
@@ -3327,12 +3328,12 @@ async def gvs_leave_operation(cmd):
 					item_data.persist()
 					response += "\n(Your {}'s durability has been lowered)".format(item_data.item_props.get('item_name'))
 				else:
-					ewitem.item_delete(item)
+					bknd_item.item_delete(item)
 					response += "\n(Your {} has been used up completely)".format(item_data.item_props.get('item_name'))
 				
 			else:
 				# To prevent shamblers from re-stocking operations with tombstones, they are destroyed upon leaving a graveyard op.
-				ewitem.item_delete(item)
+				bknd_item.item_delete(item)
 				response += "\n(Your {} has been used up completely)".format(item_data.item_props.get('item_name'))
 		
 		response += "\nAll your Gaiaslimeoids in {} wilt and die.".format(op_poi) if faction == ewcfg.psuedo_faction_gankers else "All the shamblers belonging to your tombstone in {} fall apart and collapse onto the ground.".format(op_poi)
@@ -3437,7 +3438,7 @@ async def gvs_plant_gaiaslimeoid(cmd):
 		# if not found_choice or invalid_coord:
 		# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		item_sought = ewitem.find_item(item_search=selected_item, id_user=cmd.message.author.id, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
+		item_sought = bknd_item.find_item(item_search=selected_item, id_user=cmd.message.author.id, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
 		if item_sought != None:
 			item = EwItem(id_item=item_sought.get('id_item'))
 			item_props = item.item_props
@@ -3667,7 +3668,7 @@ async def dig(cmd): # TODO  zen garden functionality
 			response = "You dig up a {} Gaiaslimeoid."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		ewitem.item_create(
+		bknd_item.item_create(
 			item_type=ewcfg.it_item,
 			id_user=cmd.message.author.id,
 			id_server=cmd.guild.id,
@@ -3703,7 +3704,7 @@ async def gvs_sell_gaiaslimeoid(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to be in the Atomic Forest to sell your Gaiaslimeoids."))
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_item)
+	item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_item)
 
 	if item_sought:
 		gaiaslimeoid = EwItem(id_item=item_sought.get('id_item'))
@@ -3740,7 +3741,7 @@ async def gvs_sell_gaiaslimeoid(cmd):
 			user_data.change_slimes(slime_gain)
 			user_data.persist()
 
-			ewitem.item_delete(gaiaslimeoid.id_item)
+			bknd_item.item_delete(gaiaslimeoid.id_item)
 
 			response = "Hortisolis gives you {} slime for your {} Gaiaslimeoid.".format(slime_gain, gaiaslimeoid.item_props.get('gaiaslimeoid'))
 
@@ -4211,7 +4212,7 @@ def item_commands(cmd):
 	user_data = EwUser(member=cmd.message.author)
 
 	for lookup in items_to_find:
-		item_sought = ewitem.find_item(item_search=lookup, id_user=user_data.id_user, id_server=user_data.id_server)
+		item_sought = bknd_item.find_item(item_search=lookup, id_user=user_data.id_user, id_server=user_data.id_server)
 		if item_sought:
 			response += "\n" + ewcfg.item_unique_commands.get(lookup)
 	if response != "\n**IN YOUR INVENTORY:**":

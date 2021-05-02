@@ -3,10 +3,11 @@ from .static import poi as poi_static
 from . import utils as ewutils
 from . import item as ewitem
 from .backend import core as bknd_core
+from .backend import item as bknd_item
 
 from .user import EwUser
 from .market import EwMarket
-from .item import EwItem
+from .backend.item import EwItem
 from .player import EwPlayer
 from .backend.book import EwBook, EwBookSale
 
@@ -479,7 +480,7 @@ async def publish_manuscript(cmd = None, dm = False):
 				user_data.persist()
 				book.persist()
 
-				ewitem.item_create(
+				bknd_item.item_create(
 					item_type=ewcfg.it_book,
 					id_user=user_data.id_user,
 					id_server=book.id_server,
@@ -526,7 +527,7 @@ async def read_book(cmd = None, dm = False):
 			book_title = ewutils.flattenTokenListToString(cmd.tokens[1:len(cmd.tokens) - 1])
 			page_number = ewutils.getIntToken(cmd.tokens)
 
-		book_sought = ewitem.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_book)
+		book_sought = bknd_item.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_book)
 
 		if book_sought:
 			book = EwItem(id_item = book_sought.get('id_item'))
@@ -924,7 +925,7 @@ async def order_zine(cmd):
 	elif len(cmd.tokens) == 1:
 		response = "Specify a zine to purchase. Find zine IDs with !browse."
 
-	elif not ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_book):
+	elif not bknd_item.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_book):
 		response = "You can't carry any more zines."
 
 	else:
@@ -971,7 +972,7 @@ async def order_zine(cmd):
 						response = "YOU CAN'T AFFORD IT. ({:,}/{:,})".format(user_data.slimes, price)
 
 					else:
-						ewitem.item_create(
+						bknd_item.item_create(
 							item_type=ewcfg.it_book,
 							id_user=user_data.id_user,
 							id_server=cmd.guild.id,
@@ -998,8 +999,8 @@ async def order_zine(cmd):
 						if book.genre != 10:
 							author = EwUser(id_user = book.id_user, id_server = book.id_server)
 
-							if author.id_user != user_data.id_user and ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_item):
-								ewitem.item_create(
+							if author.id_user != user_data.id_user and bknd_item.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_item):
+								bknd_item.item_create(
 									item_type=ewcfg.it_item,
 									id_user=author.id_user,
 									id_server=cmd.guild.id,
@@ -1036,7 +1037,7 @@ async def rate_zine(cmd):
 				response = "Easy now, keep your fucks between 1 and 5."
 
 			else:
-				book_sought = ewitem.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+				book_sought = bknd_item.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
 
 				if book_sought:
 					book_item = EwItem(id_item=book_sought.get('id_item'))

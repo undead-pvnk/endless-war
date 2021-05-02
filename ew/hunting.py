@@ -17,9 +17,10 @@ from . import rolemgr as ewrolemgr
 from . import stats as ewstats
 from . import wep as ewwep
 from .backend import core as bknd_core
+from .backend import item as bknd_item
 
 from .user import EwUser
-from .item import EwItem
+from .backend.item import EwItem
 from .market import EwMarket
 from .player import EwPlayer
 from .backend.district import EwDistrict
@@ -827,7 +828,7 @@ def drop_enemy_loot(enemy_data, district_data):
 
 				item_props = ewitem.gen_item_props(item)
 	
-				generated_item_id = ewitem.item_create(
+				generated_item_id = bknd_item.item_create(
 					item_type=item_type,
 					id_user=enemy_data.poi,
 					id_server=enemy_data.id_server,

@@ -8,6 +8,7 @@ from .. import rolemgr as ewrolemgr
 from .. import item as ewitem
 from .. import hunting as ewhunting
 from . import core as bknd_core
+from . import item as bknd_item
 
 from ..user import EwUser
 from ..market import EwMarket
@@ -15,7 +16,7 @@ from ..player import EwPlayer
 from .district import EwDistrict
 from ..slimeoid import EwSlimeoid
 from .hunting import EwEnemy
-from ..item import EwItem
+from .item import EwItem
 
 """
 	Coroutine that continually calls weather_tick; is called once per server, and not just once globally
@@ -99,7 +100,7 @@ async def weather_tick(id_server = None):
 					if weapon_item.item_props.get('weapon_type') in ewcfg.rain_protection:
 						protected = True
 
-				cosmetics = ewitem.inventory(id_user = user_data.id_user, id_server = id_server, item_type_filter = ewcfg.it_cosmetic)
+				cosmetics = bknd_item.inventory(id_user = user_data.id_user, id_server = id_server, item_type_filter = ewcfg.it_cosmetic)
 
 				for cosmetic in cosmetics:
 					cosmetic_data = EwItem(id_item = cosmetic.get('id_item'))
@@ -140,7 +141,7 @@ async def weather_tick(id_server = None):
 							'item_name': "Heart of {}".format(slimeoid_data.name),
 							'item_desc': "A poudrin-like crystal. If you listen carefully you can hear something that sounds like a faint heartbeat."
 						}
-						ewitem.item_create(
+						bknd_item.item_create(
 							id_user = str(user_data.id_user),
 							id_server = id_server,
 							item_type = ewcfg.it_item,

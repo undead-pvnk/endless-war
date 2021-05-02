@@ -19,8 +19,9 @@ from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
 from .backend import worldevent as bknd_worldevent
+from .backend import item as bknd_item
 
-from .item import EwItem
+from .backend.item import EwItem
 from .user import EwUser
 from .market import EwMarket
 from .backend.district import EwDistrict
@@ -390,12 +391,12 @@ async def mine(cmd):
 				# If there are multiple possible products, randomly select one.
 				item = random.choice(vendors.mine_results)
 
-				if ewitem.check_inv_capacity(id_server = cmd.guild.id, id_user = user_data.id_user, item_type = item.item_type):
+				if bknd_item.check_inv_capacity(id_server = cmd.guild.id, id_user = user_data.id_user, item_type = item.item_type):
 
 					item_props = ewitem.gen_item_props(item)
 
 					for creation in range(unearthed_item_amount):
-						ewitem.item_create(
+						bknd_item.item_create(
 							item_type = item.item_type,
 							id_user = cmd.message.author.id,
 							id_server = cmd.guild.id,
@@ -772,12 +773,12 @@ async def scavenge(cmd):
 						response = loot_resp + "\n\n" + response
 
 			else:
-				loot_multiplier = 1.0 + ewitem.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
+				loot_multiplier = 1.0 + bknd_item.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
 				loot_chance = loot_multiplier / ewcfg.scavenge_item_rarity
 				if ewcfg.mutation_id_dumpsterdiver in mutations:
 					loot_chance *= 10
 				if random.random() < loot_chance:
-					loot_resp = ewitem.item_lootrandom(
+					loot_resp = bknd_item.item_lootrandom(
 						id_server = user_data.id_server,
 						id_user = user_data.id_user
 					)
@@ -830,7 +831,7 @@ async def crush(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server)
+	item_sought = bknd_item.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server)
 
 	if item_sought:
 		sought_id = item_sought.get('id_item')
@@ -840,7 +841,7 @@ async def crush(cmd):
 
 		if item_data.item_props.get("id_item") == ewcfg.item_id_slimepoudrin:
 			# delete a slime poudrin from the player's inventory
-			ewitem.item_delete(id_item=sought_id)
+			bknd_item.item_delete(id_item=sought_id)
 
 			levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
 			user_data.persist()
@@ -852,7 +853,7 @@ async def crush(cmd):
 
 		elif item_data.item_props.get("id_item") == ewcfg.item_id_royaltypoudrin:
 			# delete a royalty poudrin from the player's inventory
-			ewitem.item_delete(id_item=sought_id)
+			bknd_item.item_delete(id_item=sought_id)
 			crush_slimes = 5000
 
 			levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
@@ -864,7 +865,7 @@ async def crush(cmd):
 				response += "\n\n" + levelup_response
 				
 		elif item_data.item_props.get("id_food") in static_food.vegetable_to_cosmetic_material.keys():
-			ewitem.item_delete(id_item=sought_id)
+			bknd_item.item_delete(id_item=sought_id)
 			
 			crop_name = item_data.item_props.get('food_name')
 			# Turn the crop into its proper cosmetic material item.
@@ -880,7 +881,7 @@ async def crush(cmd):
 				new_name = None
 				new_item_props = None
 
-			generated_item_id = ewitem.item_create(
+			generated_item_id = bknd_item.item_create(
 				item_type=new_item_type,
 				id_user=cmd.message.author.id,
 				id_server=cmd.guild.id,
@@ -891,7 +892,7 @@ async def crush(cmd):
 
 		elif item_data.item_props.get("id_food") in static_food.candy_ids_list:
 
-			ewitem.item_delete(id_item=sought_id)
+			bknd_item.item_delete(id_item=sought_id)
 			item_name = item_data.item_props.get('food_name')
 
 			if float(getattr(item_data, "time_expir", 0)) < time.time():
@@ -908,7 +909,7 @@ async def crush(cmd):
 					grist = static_items.item_map.get(ewcfg.item_id_doublehalloweengrist)
 					grist_props = ewitem.gen_item_props(grist)
 
-					ewitem.item_create(
+					bknd_item.item_create(
 						item_type=grist.item_type,
 						id_user=cmd.message.author.id,
 						id_server=cmd.message.guild.id,
@@ -1596,7 +1597,7 @@ def create_mining_event(cmd):
 			)
 		# 10 second poudrin frenzy
 		else:
-			if ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_item): #and not user_data.juviemode:
+			if bknd_item.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_item): #and not user_data.juviemode:
 				event_props = {}
 				event_props['id_user'] = cmd.message.author.id
 				event_props['poi'] = user_data.poi

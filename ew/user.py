@@ -15,6 +15,9 @@ from . import statuseffects as ewstatuseffects
 from . import district as ewdistrict
 from . import rolemgr  as ewrolemgr 
 from .backend import core as bknd_core
+from .backend import item as bknd_item
+
+from .backend.item import EwItem
 from .statuseffects import EwStatusEffect
 
 """ User model for database persistence """
@@ -305,7 +308,7 @@ class EwUser:
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_food, fraction = food_fraction, rigor=rigor) # Drop a random fraction of your food on the ground.
 
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_cosmetic, fraction = cosmetic_fraction, rigor=rigor) # Drop a random fraction of your unadorned cosmetics on the ground.
-				ewitem.item_dedorn_cosmetics(id_server = self.id_server, id_user = self.id_user) # Unadorn all of your adorned hats.
+				bknd_item.item_dedorn_cosmetics(id_server = self.id_server, id_user = self.id_user) # Unadorn all of your adorned hats.
 
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_weapon, fraction = 1, rigor=rigor) # Drop random fraction of your unequipped weapons on the ground.
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_max_onrevive)
@@ -335,7 +338,7 @@ class EwUser:
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
 
 		if cause == ewcfg.cause_leftserver:
-			ewitem.item_dropall(id_server=self.id_server, id_user=self.id_user)
+			bknd_item.item_dropall(id_server=self.id_server, id_user=self.id_user)
 
 		#self.sap = 0
 		#self.hardened_sap = 0
@@ -359,7 +362,7 @@ class EwUser:
 				explosion = ewutils.explode(damage = explode_damage, district_data = explode_district)
 				resp_cont.add_response_container(explosion)
 
-		#ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
+		#bknd_item.item_destroyall(id_server = self.id_server, id_user = self.id_user)
 
 		ewutils.logMsg('server {}: {} was killed by {} - cause was {}'.format(self.id_server, self.id_user, self.id_killer, cause))
 
@@ -495,7 +498,7 @@ class EwUser:
 			response = item_props['str_eat'] + ("\n\nYou're stuffed!" if self.hunger <= 0 else "")
 
 
-			ewitem.item_delete(food_item.id_item)
+			bknd_item.item_delete(food_item.id_item)
 
 		return response
 
@@ -664,7 +667,7 @@ class EwUser:
 		elif self.life_state == ewcfg.life_state_shambler:
 			response = "Shamblers can't equip weapons."
 		elif self.weaponmarried == True:
-			current_weapon = ewitem.EwItem(id_item = self.weapon)
+			current_weapon = EwItem(id_item = self.weapon)
 			if weapon_item.item_props.get("married") == self.id_user:
 				response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
 				self.weapon = weapon_item.id_item
@@ -703,7 +706,7 @@ class EwUser:
 		elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in sidearm.classes:
 			response = "Juvies can't equip weapons."
 		elif self.weaponmarried == True and sidearm_item.item_props.get("married") == self.id_user:
-			current_weapon = ewitem.EwItem(id_item = self.weapon)
+			current_weapon = EwItem(id_item = self.weapon)
 			partner_name = current_weapon.item_props.get("weapon_name")
 			if partner_name in [None, ""]:
 				partner_name = "partner"
@@ -1036,7 +1039,7 @@ class EwUser:
 
 	def get_fashion_stats(self):
 
-		cosmetics = ewitem.inventory(
+		cosmetics = bknd_item.inventory(
 			id_user=self.id_user,
 			id_server=self.id_server,
 			item_type_filter=ewcfg.it_cosmetic
@@ -1046,7 +1049,7 @@ class EwUser:
 
 		cosmetic_items = []
 		for cosmetic in cosmetics:
-			cosmetic_items.append(ewitem.EwItem(id_item=cosmetic.get('id_item')))
+			cosmetic_items.append(EwItem(id_item=cosmetic.get('id_item')))
 
 		for cos in cosmetic_items:
 			if cos.item_props['adorned'] == 'true':
@@ -1064,7 +1067,7 @@ class EwUser:
 		return result
 
 	def get_freshness(self):
-		cosmetics = ewitem.inventory(
+		cosmetics = bknd_item.inventory(
 			id_user=self.id_user,
 			id_server=self.id_server,
 			item_type_filter=ewcfg.it_cosmetic
@@ -1072,7 +1075,7 @@ class EwUser:
 
 		cosmetic_items = []
 		for cosmetic in cosmetics:
-			cosmetic_items.append(ewitem.EwItem(id_item=cosmetic.get('id_item')))
+			cosmetic_items.append(EwItem(id_item=cosmetic.get('id_item')))
 
 		adorned_cosmetics = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['adorned'] == 'true')
 
@@ -1167,7 +1170,7 @@ class EwUser:
 		gellphones = ewitem.find_item_all(item_search = ewcfg.item_id_gellphone, id_user = self.id_user, id_server = self.id_server, item_type_filter = ewcfg.it_item)
 
 		for phone in gellphones:
-			phone_data = ewitem.EwItem(id_item = phone.get('id_item'))
+			phone_data = EwItem(id_item = phone.get('id_item'))
 			if phone_data.item_props.get('active') == 'true':
 				return True
 		"""
@@ -1366,7 +1369,7 @@ class EwUser:
 						id_user = id_user
 					)
 
-					weapon_item = ewitem.EwItem(id_item = self.weapon)
+					weapon_item = EwItem(id_item = self.weapon)
 
 					skill_data = skills.get(weapon_item.item_props.get("weapon_type"))
 					if skill_data != None:

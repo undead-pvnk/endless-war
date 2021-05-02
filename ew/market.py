@@ -11,10 +11,13 @@ from .static import cfg as ewcfg
 from .static import poi as poi_static
 from . import stats as ewstats
 from .backend import core as bknd_core
+from .backend import item as bknd_item
+
 from .user import EwUser
 from .player import EwPlayer
 from .backend.district import EwDistrict
 from .backend.dungeons import EwGamestate
+from .backend.item import EwItem
 
 class EwMarket:
     id_server = -1
@@ -677,13 +680,13 @@ async def donate(cmd):
             response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-        poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
+        poudrins = bknd_item.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
 
         if poudrins == None:
             response = "You have to own a poudrin in order to donate a poudrin. Duh."
 
         else:
-            ewitem.item_delete(id_item = poudrins.get('id_item'))  # Remove Poudrins
+            bknd_item.item_delete(id_item = poudrins.get('id_item'))  # Remove Poudrins
             market_data.donated_poudrins += 1
             market_data.persist()
             user_data.poudrin_donations += 1
@@ -1391,7 +1394,7 @@ async def offer_item(cmd):
         if item_search != None and len(item_search) > 0:
             item_sought = None
 
-            inventory = ewitem.inventory(
+            inventory = bknd_item.inventory(
                 id_user=user_data.id_user,
                 id_server=user_data.id_server
             )
@@ -1402,9 +1405,9 @@ async def offer_item(cmd):
                     item_sought = item
 
             if item_sought:
-                item = ewitem.EwItem(id_item=item_sought.get("id_item"))
+                item = EwItem(id_item=item_sought.get("id_item"))
 
-                if not item.soulbound or ewitem.EwItem(id_item = item_sought.get('id_item')).item_props.get("context") == "housekey":
+                if not item.soulbound or EwItem(id_item = item_sought.get('id_item')).item_props.get("context") == "housekey":
 
                     if item.id_item == user_data.weapon and user_data.weaponmarried:
                         response = "Unfortunately for you, the contract you signed before won't let you trade your partner away. You'll have to get your cuckoldry fix from somewhere else."
@@ -1447,7 +1450,7 @@ async def remove_offer(cmd):
         if item_search != None and len(item_search) > 0:
             item_sought = None
 
-            inventory = ewitem.inventory(
+            inventory = bknd_item.inventory(
                 id_user=user_data.id_user,
                 id_server=user_data.id_server
             )
@@ -1458,7 +1461,7 @@ async def remove_offer(cmd):
                     item_sought = item
 
             if item_sought:
-                item = ewitem.EwItem(id_item=item_sought.get("id_item"))
+                item = EwItem(id_item=item_sought.get("id_item"))
 
                 ewutils.trading_offers[user_data.id_user].remove(item_sought)
                 response = "You remove {} from your offers.".format(item_sought.get("name"))
@@ -1516,7 +1519,7 @@ async def complete_trade(cmd):
             # check items currently held + items being given to the player - items the player is giving
             # check other user's inventory capacity
             for item_type in items_offered:
-                it_held = ewitem.inventory(
+                it_held = bknd_item.inventory(
                     id_user = trade_partner.id_user,
                     id_server = trade_partner.id_server,
                     item_type_filter = item_type
@@ -1537,7 +1540,7 @@ async def complete_trade(cmd):
 
             # check own user's inventory capacity
             for item_type in trader_items_offered:
-                it_held = ewitem.inventory(
+                it_held = bknd_item.inventory(
                     id_user = user_data.id_user,
                     id_server = user_data.id_server,
                     item_type_filter = item_type
@@ -1564,12 +1567,12 @@ async def complete_trade(cmd):
                     user_data.sidearm = -1
                     user_data.persist()
                 elif item.get("item_type") == ewcfg.it_cosmetic:
-                    cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
+                    cosmetic = EwItem(id_item=item.get("id_item"))
                     cosmetic.item_props["adorned"] = 'false'
                     cosmetic.item_props["slimeoid"] = 'false'
                     cosmetic.persist()
 
-                ewitem.give_item(id_item=item.get("id_item"), id_user=trade_partner.id_user, id_server=trade_partner.id_server)
+                bknd_item.give_item(id_item=item.get("id_item"), id_user=trade_partner.id_user, id_server=trade_partner.id_server)
 
             for item in list(ewutils.trading_offers.get(trade_partner.id_user)):
                 if item.get("id_item") == trade_partner.weapon:
@@ -1579,12 +1582,12 @@ async def complete_trade(cmd):
                     trade_partner.sidearm = -1
                     user_data.persist()
                 elif item.get("item_type") == ewcfg.it_cosmetic:
-                    cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
+                    cosmetic = EwItem(id_item=item.get("id_item"))
                     cosmetic.item_props["adorned"] = 'false'
                     cosmetic.item_props["slimeoid"] = 'false'
                     cosmetic.persist()
 
-                ewitem.give_item(id_item=item.get("id_item"), id_user=user_data.id_user, id_server=user_data.id_server)
+                bknd_item.give_item(id_item=item.get("id_item"), id_user=user_data.id_user, id_server=user_data.id_server)
 
             ewutils.active_trades[user_data.id_user] = {}
             ewutils.active_trades[trade_partner.id_user] = {}

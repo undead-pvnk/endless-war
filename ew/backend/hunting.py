@@ -12,9 +12,10 @@ from .. import item as ewitem
 from .. import rolemgr as ewrolemgr
 from .. import wep as ewwep
 from . import core as bknd_core
+from . import item as bknd_item
 
 from ..user import EwUser
-from ..item import EwItem
+from .item import EwItem
 from ..market import EwMarket
 from ..player import EwPlayer
 from .district import EwDistrict
@@ -587,7 +588,7 @@ class EwEnemy:
 					slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
 
 					# Damage victim's wardrobe (heh, WARdrobe... get it??)
-					victim_cosmetics = ewitem.inventory(
+					victim_cosmetics = bknd_item.inventory(
 						id_user = target_data.id_user,
 						id_server = target_data.id_server,
 						item_type_filter = ewcfg.it_cosmetic

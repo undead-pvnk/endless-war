@@ -13,10 +13,11 @@ from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
 from .backend import fish as bknd_fish
+from .backend import item as bknd_item
 
 from .market import EwMarket
 from .user import EwUser
-from .item import EwItem
+from .backend.item import EwItem
 from .backend.district import EwDistrict
 from .backend.fish import EwOffer
 
@@ -263,7 +264,7 @@ async def cast(cmd):
 			author = cmd.message.author
 			server = cmd.guild
 
-			item_sought = ewitem.find_item(item_search = item_search, id_user = author.id, id_server = server.id)
+			item_sought = bknd_item.find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
 			if item_sought:
 				item = EwItem(id_item = item_sought.get('id_item'))
@@ -314,7 +315,7 @@ async def cast(cmd):
 					elif float(item.time_expir if item.time_expir is not None else 0) < time.time():
 						if random.randrange(2) == 1:
 							fisher.current_fish = "plebefish"
-					ewitem.item_delete(item_sought.get('id_item'))
+					bknd_item.item_delete(item_sought.get('id_item'))
 
 			if fisher.current_fish == "item":
 				fisher.current_size = "item"
@@ -509,7 +510,7 @@ async def award_fish(fisher, cmd, user_data):
 		actual_fisherman_data = EwUser(id_user=actual_fisherman, id_server=cmd.guild.id)
 
 	if fisher.current_fish in ["item", "seaitem"]:
-		slimesea_inventory = ewitem.inventory(id_server = cmd.guild.id, id_user = ewcfg.poi_id_slimesea)			
+		slimesea_inventory = bknd_item.inventory(id_server = cmd.guild.id, id_user = ewcfg.poi_id_slimesea)			
 
 		if (fisher.pier.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.2) and fisher.current_fish == "item":
 
@@ -523,9 +524,9 @@ async def award_fish(fisher, cmd, user_data):
 			item_props = ewitem.gen_item_props(item)
 
 			# Ensure item limits are enforced, including food since this isn't the fish section
-			if ewitem.check_inv_capacity(id_user = actual_fisherman or cmd.message.author.id, id_server = cmd.guild.id, item_type = item.item_type):
+			if bknd_item.check_inv_capacity(id_user = actual_fisherman or cmd.message.author.id, id_server = cmd.guild.id, item_type = item.item_type):
 				for creation in range(unearthed_item_amount):
-					ewitem.item_create(
+					bknd_item.item_create(
 						item_type = item.item_type,
 						id_user = actual_fisherman or cmd.message.author.id,
 						id_server = cmd.guild.id,
@@ -539,7 +540,7 @@ async def award_fish(fisher, cmd, user_data):
 		else:
 			item = random.choice(slimesea_inventory)
 
-			if ewitem.give_item(id_item = item.get('id_item'), member = cmd.message.author):
+			if bknd_item.give_item(id_item = item.get('id_item'), member = cmd.message.author):
 				response = "You reel in a {}!".format(item.get('name'))
 			else:
 				response = "You woulda reeled in a {}, but your back gave out under the weight of the rest of your {}s.".format(item.str_name, item.item_type)
@@ -640,7 +641,7 @@ async def award_fish(fisher, cmd, user_data):
 
 		slime_gain = max(0, round(slime_gain))
 
-		ewitem.item_create(
+		bknd_item.item_create(
 			id_user = actual_fisherman or cmd.message.author.id,
 			id_server = cmd.guild.id,
 			item_type = ewcfg.it_food,
@@ -712,8 +713,8 @@ async def appraise(cmd):
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
-	payment = ewitem.find_item(item_search = "manhattanproject", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_food)
+	item_sought = bknd_item.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+	payment = bknd_item.find_item(item_search = "manhattanproject", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_food)
 
 	# Checking availability of appraisal
 	#if market_data.clock < 8 or market_data.clock > 17:
@@ -807,7 +808,7 @@ async def appraise(cmd):
 				if value >= 100:
 					response += 'is the most magnificent specimen I’ve ever seen!"'
 
-				ewitem.item_delete(id_item = payment.get('id_item'))
+				bknd_item.item_delete(id_item = payment.get('id_item'))
 
 				user_data.persist()
 	else:
@@ -832,7 +833,7 @@ async def barter(cmd):
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+	item_sought = bknd_item.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 
 	# Checking availability of appraisal
 	#if market_data.clock < 8 or market_data.clock > 17:
@@ -1042,7 +1043,7 @@ async def barter(cmd):
 					else:
 						item_props = ewitem.gen_item_props(item)	
 
-						ewitem.item_create(
+						bknd_item.item_create(
 							item_type = item.item_type,
 							id_user = cmd.message.author.id,
 							id_server = cmd.guild.id,
@@ -1050,7 +1051,7 @@ async def barter(cmd):
 						)
 
 
-					ewitem.item_delete(id_item = item_sought.get('id_item'))
+					bknd_item.item_delete(id_item = item_sought.get('id_item'))
 
 					user_data.persist()
 
@@ -1090,7 +1091,7 @@ async def barter_all(cmd):
 
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	food_items = ewitem.inventory(id_user = user_data.id_user, id_server = user_data.id_server,item_type_filter = ewcfg.it_food)
+	food_items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server,item_type_filter = ewcfg.it_food)
 	offer_items = [] #list of items to create when offer goes through
 	offer_slime = 0 #slime to give player when offer goes through
 	fish_ids_to_remove = [] #list of fish to delete when offer goes through
@@ -1182,7 +1183,7 @@ async def barter_all(cmd):
 			for item in offer_items:
 				item_props = ewitem.gen_item_props(item)	
 
-				ewitem.item_create(
+				bknd_item.item_create(
 					item_type = item.item_type,
 					id_user = cmd.message.author.id,
 					id_server = cmd.guild.id,
@@ -1190,7 +1191,7 @@ async def barter_all(cmd):
 				)
 
 		for id in fish_ids_to_remove:
-			ewitem.item_delete(id_item = id)
+			bknd_item.item_delete(id_item = id)
 
 		user_data.persist()
 
@@ -1261,7 +1262,7 @@ async def debug_create_random_fish(cmd):
 	if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
 		value += 40
 
-	ewitem.item_create(
+	bknd_item.item_create(
 		id_user = cmd.message.author.id,
 		id_server = cmd.guild.id,
 		item_type = ewcfg.it_food,
@@ -1290,7 +1291,7 @@ async def embiggen(cmd):
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+	item_sought = bknd_item.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "How are you going to embiggen your fish on the side of the street? You’ve got to see a professional for this, man. Head to the SlimeCorp Laboratory, they’ve got dozens of modern day magic potions ‘n shit over there."
@@ -1316,7 +1317,7 @@ async def embiggen(cmd):
 			else:
 				for delete in range(2):
 					poudrin = poudrins_owned.pop()
-					ewitem.item_delete(id_item = poudrin.get("id_item"))
+					bknd_item.item_delete(id_item = poudrin.get("id_item"))
 				fish.item_props['id_furniture'] = "colossalsingingfishplaque"
 				fish.item_props['furniture_look_desc'] = "There's a fake fish mounted on the wall. Hoo boy, it's a whopper."
 				fish.item_props['furniture_place_desc'] = "You take a nail gun to the wall to force it to hold this fish. Christ,  this thing is your fucking Ishmael. Er, Moby Dick. Whatever."
@@ -1376,7 +1377,7 @@ async def embiggen(cmd):
 
 				for delete in range(poudrin_cost):
 					poudrin = poudrins_owned.pop()
-					ewitem.item_delete(id_item = poudrin.get("id_item"))
+					bknd_item.item_delete(id_item = poudrin.get("id_item"))
 
 				market_data.donated_poudrins += poudrin_cost
 				market_data.persist()

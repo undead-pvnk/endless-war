@@ -9,6 +9,7 @@ from .static import poi as poi_static
 from . import utils as ewutils
 from . import item as ewitem
 from . import cmd as ewcmd
+from .backend import item as bknd_item
 
 from .user import EwUser
 from .market import EwMarket
@@ -135,7 +136,7 @@ async def rattle(cmd):
 		time_now = int(time.time())
 		if (time_now > user_data.time_racialability) and random.randrange(10) == 0:
 			bone_item = next(i for i in static_items.item_list if i.context == "player_bone")
-			ewitem.item_create(
+			bknd_item.item_create(
 				item_type = ewcfg.it_item,
 				id_user = user_data.poi,
 				id_server = cmd.guild.id,

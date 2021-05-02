@@ -4,8 +4,9 @@ from .static import cfg as ewcfg
 from .static import poi as poi_static
 from . import utils as ewutils
 from . import item as ewitem
+from .backend import item as bknd_item
 
-from .item import EwItem
+from .backend.item import EwItem
 from .user import EwUser
 
 """allow a juvie to join your gang"""
@@ -60,7 +61,7 @@ async def store(cmd):
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+	item_sought = bknd_item.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 	
 	if item_sought:
 		item = EwItem(id_item = item_sought.get("id_item"))
@@ -86,7 +87,7 @@ async def store(cmd):
 					item.item_props["slimeoid"] = "false"
 			
 			item.persist()
-			ewitem.give_item(id_item = item.id_item, id_server = item.id_server, id_user = poi.community_chest)
+			bknd_item.give_item(id_item = item.id_item, id_server = item.id_server, id_user = poi.community_chest)
 
 			response = "You store your {} in the community chest.".format(item_sought.get("name"))
 
@@ -118,11 +119,11 @@ async def take(cmd):
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search = item_search, id_user = poi.community_chest, id_server = cmd.guild.id if cmd.guild is not None else None)
+	item_sought = bknd_item.find_item(item_search = item_search, id_user = poi.community_chest, id_server = cmd.guild.id if cmd.guild is not None else None)
 	
 	if item_sought:
 		if item_sought.get('item_type') == ewcfg.it_food:
-			food_items = ewitem.inventory(
+			food_items = bknd_item.inventory(
 				id_user = cmd.message.author.id,
 				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_food
@@ -133,7 +134,7 @@ async def take(cmd):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		elif item_sought.get('item_type') == ewcfg.it_weapon:
-			weapons_held = ewitem.inventory(
+			weapons_held = bknd_item.inventory(
 				id_user = cmd.message.author.id,
 				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_weapon
@@ -147,7 +148,7 @@ async def take(cmd):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		else:
-			other_items = ewitem.inventory(
+			other_items = bknd_item.inventory(
 				id_user=cmd.message.author.id,
 				id_server=user_data.id_server,
 				item_type_filter=item_sought.get('item_type')
@@ -156,7 +157,7 @@ async def take(cmd):
 				response = ewcfg.str_generic_inv_limit.format(item_sought.get('item_type'))
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
-		ewitem.give_item(id_item = item_sought.get('id_item'), id_server = user_data.id_server, id_user = user_data.id_user)
+		bknd_item.give_item(id_item = item_sought.get('id_item'), id_server = user_data.id_server, id_user = user_data.id_user)
 
 		response = "You retrieve a {} from the community chest.".format(item_sought.get("name"))
 

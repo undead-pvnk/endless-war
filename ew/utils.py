@@ -30,6 +30,8 @@ from .static import mutations as static_mutations
 from .static import hue as hue_static
 from .static import status as se_static
 from . import wep as ewwep
+from .backend import item as bknd_item
+
 from .user import EwUser
 from .backend.district import EwDistrict
 from .player import EwPlayer
@@ -38,7 +40,7 @@ from .market import EwMarket
 from .statuseffects import EwStatusEffect
 from .statuseffects import EwEnemyStatusEffect
 from .backend.dungeons import EwGamestate
-from .item import EwItem
+from .backend.item import EwItem
 from .backend.hunting import EwEnemy
 #from .prank import calculate_gambit_exchange
 
@@ -1911,7 +1913,7 @@ async def spawn_prank_items(id_server):
 
 			item_props = ewitem.gen_item_props(swilldermuk_food_item)
 
-			swilldermuk_food_item_id = ewitem.item_create(
+			swilldermuk_food_item_id = bknd_item.item_create(
 				item_type=swilldermuk_food_item.item_type,
 				id_user=district_id,
 				id_server=id_server,
@@ -1937,7 +1939,7 @@ async def spawn_prank_items(id_server):
 		
 			item_props = ewitem.gen_item_props(prank_item)
 		
-			prank_item_id = ewitem.item_create(
+			prank_item_id = bknd_item.item_create(
 				item_type=prank_item.item_type,
 				id_user=district_id,
 				id_server=id_server,
@@ -2097,7 +2099,7 @@ async def activate_trap_items(district, id_server, id_user):
 			trap_was_dud = True
 			response = "Close call! You were just about to eat shit and fall right into someone's {}, but luckily, it was a dud.".format(trap_item_data.item_props.get('item_name'))
 		
-		ewitem.item_delete(trap_id_item)
+		bknd_item.item_delete(trap_id_item)
 		
 	finally:
 		# Clean up the database handles.
@@ -2324,7 +2326,7 @@ def channel_name_is_poi(channel_name):
 def get_cosmetic_abilities(id_user, id_server):
 	active_abilities = []
 
-	cosmetic_items = ewitem.inventory(
+	cosmetic_items = bknd_item.inventory(
 		id_user = id_user,
 		id_server = id_server,
 		item_type_filter = ewcfg.it_cosmetic
@@ -2340,7 +2342,7 @@ def get_cosmetic_abilities(id_user, id_server):
 	return active_abilities
 
 def get_outfit_info(id_user, id_server, wanted_info = None):
-	cosmetic_items = ewitem.inventory(
+	cosmetic_items = bknd_item.inventory(
 		id_user = id_user,
 		id_server = id_server,
 		item_type_filter = ewcfg.it_cosmetic
@@ -2974,7 +2976,7 @@ def get_mutation_alias(name):
 def get_fingernail_item(cmd):
 	item = static_weapons.weapon_map.get(ewcfg.weapon_id_fingernails)
 	item_props = ewitem.gen_item_props(item)
-	id_item = ewitem.item_create(
+	id_item = bknd_item.item_create(
 		item_type=ewcfg.it_weapon,
 		id_user=cmd.message.author.id,
 		id_server=cmd.guild.id,

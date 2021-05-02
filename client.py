@@ -67,8 +67,9 @@ import ew.backend.core as bknd_core
 import ew.backend.ads as bknd_ads
 import ew.backend.farm as bknd_farm
 import ew.backend.fish as bknd_fish
+import ew.backend.item as bknd_item
 
-from ew.item import EwItem
+from ew.backend.item import EwItem
 from ew.user import EwUser
 from ew.player import EwPlayer
 from ew.market import EwMarket
@@ -1708,7 +1709,7 @@ async def on_message(message):
 		# FIXME debug
 		# Test item creation
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createtestitem'):
-			item_id = ewitem.item_create(
+			item_id = bknd_item.item_create(
 				item_type = 'medal',
 				id_user = message.author.id,
 				id_server = message.guild.id,
@@ -1738,7 +1739,7 @@ async def on_message(message):
 						except:
 							poudrin_count = 1
 					for i in range(poudrin_count):
-						ewitem.item_create(
+						bknd_item.item_create(
 							item_type = ewcfg.it_item,
 							id_user = message.author.id,
 							id_server = message.guild.id,
@@ -1794,13 +1795,13 @@ async def on_message(message):
 		# Deletes all items in your inventory.
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'clearinv'):
 			user_data = EwUser(member = message.author)
-			ewitem.item_destroyall(id_server = message.guild.id, id_user = message.author.id)
+			bknd_item.item_destroyall(id_server = message.guild.id, id_user = message.author.id)
 			response = "You destroy every single item in your inventory."
 			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createapple'):
-			item_id = ewitem.item_create(
+			item_id = bknd_item.item_create(
 				id_user = message.author.id,
 				id_server = message.guild.id,
 				item_type = ewcfg.it_food,
@@ -1845,7 +1846,7 @@ async def on_message(message):
 
 			item_props = ewitem.gen_item_props(item)
 
-			item_id = ewitem.item_create(
+			item_id = bknd_item.item_create(
 				item_type = item.item_type,
 				id_user = message.author.id,
 				id_server = message.guild.id,
@@ -1862,7 +1863,7 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createfood'):
 			item = static_food.food_list[random.randint(0, len(static_food.food_list) - 1)]
 
-			item_id = ewitem.item_create(
+			item_id = bknd_item.item_create(
 				item_type = ewcfg.it_food,
 				id_user = message.author.id,
 				id_server = message.guild.id,
@@ -1888,7 +1889,7 @@ async def on_message(message):
 
 			item_props = ewitem.gen_item_props(item)
 
-			ewitem.item_create(
+			bknd_item.item_create(
 				item_type = item.item_type,
 				id_user = message.author.id,
 				id_server = message.guild.id,
@@ -1923,7 +1924,7 @@ async def on_message(message):
 
 			item = items[random.randint(0, len(items) - 1)]
 
-			ewitem.item_create(
+			bknd_item.item_create(
 				item_type = ewcfg.it_cosmetic,
 				id_user = message.author.id,
 				id_server = message.guild.id,
@@ -1940,7 +1941,7 @@ async def on_message(message):
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createoldscalp'):
-			ewitem.item_create(
+			bknd_item.item_create(
 				item_type = ewcfg.it_cosmetic,
 				id_user = message.author.id,
 				id_server = message.guild.id,
@@ -1955,7 +1956,7 @@ async def on_message(message):
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createoldsoul'):
-			ewitem.item_create(
+			bknd_item.item_create(
 				id_user = message.author.id,
 				id_server = message.guild.id,
 				item_type = ewcfg.it_cosmetic,
@@ -1977,13 +1978,13 @@ async def on_message(message):
 		# FIXME debug
 		# Test item deletion
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'delete'):
-			items = ewitem.inventory(
+			items = bknd_item.inventory(
 				id_user = message.author.id,
 				id_server = message.guild.id
 			)
 
 			for item in items:
-				ewitem.item_delete(
+				bknd_item.item_delete(
 					id_item = item.get('id_item')
 				)
 

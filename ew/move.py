@@ -26,7 +26,7 @@ from .mutation import EwMutation
 from .slimeoid import EwSlimeoid
 from .player import EwPlayer
 from .backend.ads import EwAd
-from .item import EwItem
+from .backend.item import EwItem
 from .backend.dungeons import EwGamestate
 
 #from .hunting import EwEnemy

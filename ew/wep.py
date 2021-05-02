@@ -15,9 +15,10 @@ from . import rolemgr as ewrolemgr
 from . import stats as ewstats
 from . import statuseffects as ewstatuseffects
 from . import hunting as ewhunting
+from .backend import item as bknd_item
 
 from .user import EwUser
-from .item import EwItem
+from .backend.item import EwItem
 from .market import EwMarket
 from .slimeoid import EwSlimeoid
 from .backend.district import EwDistrict
@@ -532,7 +533,7 @@ async def attack(cmd, n1_die = None):
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_biggest_bust_level, value = shootee_data.slimelevel)
 
 			# Steal items
-			#ewitem.item_loot(member = member, id_user_target = cmd.message.author.id)
+			#bknd_item.item_loot(member = member, id_user_target = cmd.message.author.id)
 
 			shootee_data.id_killer = user_data.id_user
 			die_resp = shootee_data.die(cause = ewcfg.cause_busted)
@@ -762,7 +763,7 @@ async def attack(cmd, n1_die = None):
 				slimes_splatter = slimes_damage - slimes_toboss - slimes_tobleed - slimes_drained
 
 				# Damage victim's wardrobe (heh, WARdrobe... get it??)
-				#victim_cosmetics = ewitem.inventory(
+				#victim_cosmetics = bknd_item.inventory(
 				#	id_user = member.id,
 				#	id_server = cmd.guild.id,
 				#	item_type_filter = ewcfg.it_cosmetic
@@ -795,7 +796,7 @@ async def attack(cmd, n1_die = None):
 				#
 				# 				onbreak_responses.append(str(c.item_props['str_onbreak']).format(c.item_props['cosmetic_name']))
 				#
-				# 				ewitem.item_delete(id_item = c.id_item)
+				# 				bknd_item.item_delete(id_item = c.id_item)
 				#
 				# 			else:
 				# 				c.item_props['durability'] = durability_afterhit
@@ -852,7 +853,7 @@ async def attack(cmd, n1_die = None):
 						user_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
 					# Steal items
-					#ewitem.item_loot(member = member, id_user_target = cmd.message.author.id)
+					#bknd_item.item_loot(member = member, id_user_target = cmd.message.author.id)
 
 					#add bounty
 					user_data.add_bounty(n = (shootee_data.bounty / 2) + (slimes_dropped / 4))
@@ -865,7 +866,7 @@ async def attack(cmd, n1_die = None):
 
 					if shootee_data.life_state != ewcfg.life_state_shambler:
 						# Drop shootee scalp
-						ewitem.item_create(
+						bknd_item.item_create(
 							item_type = ewcfg.it_cosmetic,
 							id_user = cmd.message.author.id,
 							id_server = cmd.guild.id,
@@ -1129,7 +1130,7 @@ async def attack(cmd, n1_die = None):
 
 	if weapon_item:
 		if weapon_item.item_props.get("weapon_type") == "fingernails":
-			ewitem.item_delete(id_item=weapon_item.id_item)
+			bknd_item.item_delete(id_item=weapon_item.id_item)
 
 """ player kills themself """
 async def suicide(cmd):
@@ -1657,7 +1658,7 @@ async def equip(cmd):
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+	item_sought = bknd_item.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 
 	if item_sought:
 		item = EwItem(id_item = item_sought.get("id_item"))
@@ -1696,9 +1697,9 @@ async def annoint(cmd):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-			poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
+			poudrin = bknd_item.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
 
-			all_weapons = ewitem.inventory(
+			all_weapons = bknd_item.inventory(
 				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_weapon
 			)
@@ -1725,7 +1726,7 @@ async def annoint(cmd):
 					user_data.add_weaponskill(n = 1, weapon_type = weapon_item.item_props.get("weapon_type"))
 
 				# delete a slime poudrin from the player's inventory
-				ewitem.item_delete(id_item = poudrin.get('id_item'))
+				bknd_item.item_delete(id_item = poudrin.get('id_item'))
 
 				user_data.persist()
 
@@ -1888,7 +1889,7 @@ async def divorce(cmd):
 		user_data.persist()
 
 		#delete weapon item
-		ewitem.item_delete(id_item = weapon_item.id_item)
+		bknd_item.item_delete(id_item = weapon_item.id_item)
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -3412,7 +3413,7 @@ async def sidearm(cmd):
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+	item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
 
 	if item_sought:
 		item = EwItem(id_item=item_sought.get("id_item"))

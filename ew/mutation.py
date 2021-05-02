@@ -13,6 +13,7 @@ from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
 from .backend import core as bknd_core
+from .backend import item as bknd_item
 
 from .market import EwMarket
 from .player import EwPlayer
@@ -20,6 +21,7 @@ from .player import EwPlayer
 from .user import EwUser
 from .statuseffects import EwStatusEffect
 from .backend.district import EwDistrict
+from .backend.item import EwItem
 
 
 class EwMutation:
@@ -175,7 +177,7 @@ async def reroll_last_mutation(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		for delete in range(poudrins_needed):
-			ewitem.item_delete(id_item = poudrins.pop(0).get('id_item'))  # Remove Poudrins
+			bknd_item.item_delete(id_item = poudrins.pop(0).get('id_item'))  # Remove Poudrins
 		market_data.donated_poudrins += poudrins_needed
 		market_data.persist()
 		user_data.poudrin_donations += poudrins_needed
@@ -405,13 +407,13 @@ async def clear_mutations(cmd):
 		response = "You have not developed any specialized mutations yet."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
+	poudrin = bknd_item.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
 
 	if poudrin == None:
 		response = "You need a slime poudrin to replace a mutation."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
-		ewitem.item_delete(id_item = poudrin.get('id_item'))  # Remove Poudrins
+		bknd_item.item_delete(id_item = poudrin.get('id_item'))  # Remove Poudrins
 		market_data.donated_poudrins += 1
 		market_data.persist()
 		user_data.poudrin_donations += 1
@@ -487,11 +489,11 @@ async def preserve(cmd):
 	mutations = user_data.get_mutations()
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+	item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
 
 
 	if item_sought:
-		item_obj = ewitem.EwItem(id_item=item_sought.get('id_item'))
+		item_obj = EwItem(id_item=item_sought.get('id_item'))
 
 		if item_obj.item_props.get('preserved') == None:
 			preserve_id = 0

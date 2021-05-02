@@ -1,6 +1,7 @@
 import math
 import time
 import asyncio
+import random
 
 from .static import cfg as ewcfg
 from .static import cosmetics
@@ -12,13 +13,14 @@ from .static import poi as poi_static
 from . import item as ewitem
 from . import utils as ewutils
 from . import move as ewmap
-import random
 from . import rolemgr as ewrolemgr
 from . import statuseffects as ewstatuseffects
+from .backend import item as bknd_item
+
 from .user import EwUser
 from .player import EwPlayer
 from .market import EwMarket, EwCompany, EwStock
-from .item import EwItem
+from .backend.item import EwItem
 from .backend.district import EwDistrict
 
 
@@ -365,7 +367,7 @@ async def order(cmd):
 					if item_type == ewcfg.it_food:
 						food_ordered = True
 
-						food_items = ewitem.inventory(
+						food_items = bknd_item.inventory(
 							id_user = cmd.message.author.id,
 							id_server = cmd.guild.id,
 							item_type_filter = ewcfg.it_food
@@ -394,7 +396,7 @@ async def order(cmd):
 							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					elif item_type == ewcfg.it_weapon:
-						weapons_held = ewitem.inventory(
+						weapons_held = bknd_item.inventory(
 							id_user = user_data.id_user,
 							id_server = cmd.guild.id,
 							item_type_filter = ewcfg.it_weapon
@@ -410,7 +412,7 @@ async def order(cmd):
 							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					else:
-						other_items_held = ewitem.inventory(
+						other_items_held = bknd_item.inventory(
 							id_user = user_data.id_user,
 							id_server = cmd.guild.id,
 							item_type_filter = item_type
@@ -453,7 +455,7 @@ async def order(cmd):
 							item.str_name = item.str_name.format(custom = customtext)
 
 
-					id_item = ewitem.item_create(
+					id_item = bknd_item.item_create(
 						item_type = item_type,
 						id_user = cmd.message.author.id,
 						id_server = cmd.guild.id,
@@ -511,7 +513,7 @@ async def order(cmd):
 async def devour(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(id_server=cmd.message.guild.id, id_user=cmd.message.author.id, item_search=item_search)
+	item_sought = bknd_item.find_item(id_server=cmd.message.guild.id, id_user=cmd.message.author.id, item_search=item_search)
 	mutations = user_data.get_mutations()
 	is_brick = 0
 
@@ -604,17 +606,17 @@ async def eat_item(cmd):
 
 	# look for a food item if a name was given
 	if item_search:
-		item_sought = ewitem.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)
+		item_sought = bknd_item.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)
 		if item_sought:
 			food_item = EwItem(id_item = item_sought.get('id_item'))
 		else:
-			item_sought = ewitem.find_item(item_search=item_search, id_user=user_data.id_user, id_server=user_data.id_server)
+			item_sought = bknd_item.find_item(item_search=item_search, id_user=user_data.id_user, id_server=user_data.id_server)
 			if item_sought and ewcfg.mutation_id_trashmouth in mutations:
 				return await devour(cmd=cmd)
 
 	# otherwise find the first useable food
 	else:
-		food_inv = ewitem.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)
+		food_inv = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)
 
 		for food in food_inv:
 			food_item = EwItem(id_item = food.get('id_item'))
@@ -649,4 +651,4 @@ def brickeat(item_obj):
 	digestion = '{}brickshit'.format(item_obj.id_owner)
 	print(digestion)
 	item_obj.persist()
-	ewitem.give_item(id_item=id_item, id_user=digestion, id_server=item_obj.id_server)
+	bknd_item.give_item(id_item=id_item, id_user=digestion, id_server=item_obj.id_server)

@@ -8,6 +8,7 @@ from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import item as ewitem
 from .backend import core as bknd_core
+from .backend import item as bknd_item
 
 from .user import EwUser
 from .backend.district import EwDistrict
@@ -285,7 +286,7 @@ async def embark(cmd):
 				#user_data = EwUser(member = cmd.message.author)
 				#if user_data.poi in [ewcfg.poi_id_dt_subway_station, ewcfg.poi_id_rr_subway_station, ewcfg.poi_id_jr_subway_station]:
 				#	if transport_line.id_line in [ewcfg.transport_line_subway_white_eastbound, ewcfg.transport_line_subway_white_westbound]:
-				#		ticket = ewitem.find_item(item_search=ewcfg.item_id_whitelineticket, id_user=cmd.message.author.id,  id_server=cmd.message.guild.id)
+				#		ticket = bknd_item.find_item(item_search=ewcfg.item_id_whitelineticket, id_user=cmd.message.author.id,  id_server=cmd.message.guild.id)
 				#		if ticket is None:
 				#			response = "You need a ticket to embark on the White Line."
 				#			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -317,7 +318,7 @@ async def embark(cmd):
 
 						response = "You enter the {}.".format(transport_data.transport_type)
 						if ticket is not None:
-							ewitem.item_delete(ticket.get("id_item"))
+							bknd_item.item_delete(ticket.get("id_item"))
 						await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 						await user_data.move_inhabitants(id_poi = transport_data.poi)
 						return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, transport_poi.channel), ewutils.formatMessage(cmd.message.author, response))

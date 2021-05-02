@@ -1,5 +1,6 @@
 import math
 import random
+import asyncio
 
 from .static import cfg as ewcfg
 from .static import cosmetics
@@ -8,10 +9,10 @@ from .static import hue as hue_static
 from . import item as ewitem
 from . import utils as ewutils
 from .backend import core as bknd_core
-import asyncio
+from .backend import item as bknd_item
 
 from .user import EwUser
-from .item import EwItem
+from .backend.item import EwItem
 
 
 async def adorn(cmd):
@@ -28,7 +29,7 @@ async def adorn(cmd):
 	if item_id is not None and len(item_id) > 0:
 		response = "You don't have one."
 
-		cosmetic_items = ewitem.inventory(
+		cosmetic_items = bknd_item.inventory(
 			id_user = cmd.message.author.id,
 			id_server = cmd.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
@@ -116,7 +117,7 @@ async def dedorn(cmd):
 	if item_id is not None and len(item_id) > 0:
 		response = "You don't have one."
 
-		cosmetic_items = ewitem.inventory(
+		cosmetic_items = bknd_item.inventory(
 			id_user = cmd.message.author.id,
 			id_server = cmd.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
@@ -177,7 +178,7 @@ async def dye(cmd):
 	if hat_id != None and len(hat_id) > 0 and dye_id != None and len(dye_id) > 0:
 		response = "You don't have one."
 
-		items = ewitem.inventory(
+		items = bknd_item.inventory(
 			id_user = cmd.message.author.id,
 			id_server = cmd.guild.id,
 		)
@@ -208,7 +209,7 @@ async def dye(cmd):
 				cosmetic_item.item_props['hue'] = hue.id_hue
 
 				cosmetic_item.persist()
-				ewitem.item_delete(id_item=dye.get('id_item'))
+				bknd_item.item_delete(id_item=dye.get('id_item'))
 			else:
 				response = 'Use which dye? Check your **!inventory**.'
 		else:
@@ -220,10 +221,10 @@ async def dye(cmd):
 
 async def smoke(cmd):
 	usermodel = EwUser(member=cmd.message.author)
-	#item_sought = ewitem.find_item(item_search="cigarette", id_user=cmd.message.author.id, id_server=usermodel.id_server)
+	#item_sought = bknd_item.find_item(item_search="cigarette", id_user=cmd.message.author.id, id_server=usermodel.id_server)
 	item_sought = None
 	space_adorned = 0
-	item_stash = ewitem.inventory(id_user=cmd.message.author.id, id_server=usermodel.id_server)
+	item_stash = bknd_item.inventory(id_user=cmd.message.author.id, id_server=usermodel.id_server)
 	for item_piece in item_stash:
 		item = EwItem(id_item=item_piece.get('id_item'))
 		if item.item_props.get('adorned') == 'true':
@@ -331,7 +332,7 @@ async def sew(cmd):
 		if item_id != None and len(item_id) > 0:
 			response = "You don't have one."
 
-			cosmetic_items = ewitem.inventory(
+			cosmetic_items = bknd_item.inventory(
 				id_user = cmd.message.author.id,
 				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_cosmetic
@@ -461,7 +462,7 @@ async def retrofit(cmd):
 		if item_id != None and len(item_id) > 0:
 			response = "You don't have one."
 
-			cosmetic_items = ewitem.inventory(
+			cosmetic_items = bknd_item.inventory(
 				id_user = cmd.message.author.id,
 				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_cosmetic

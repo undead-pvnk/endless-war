@@ -8,8 +8,10 @@ from .static import smelting
 from .static import items as static_items
 from . import item as ewitem
 from . import utils as ewutils
+from .backend import item as bknd_item
 
 from .user import EwUser
+from .backend.item import EwItem
 
 # Smelting command. It's like other games call "crafting"... but BETTER and for FREE!!
 async def smelt(cmd):
@@ -68,7 +70,7 @@ async def smelt(cmd):
 				# If you try to smelt a random cosmetic, use old smelting code to calculate what your result will be.
 				if found_recipe.id_recipe == "coolcosmetic" or found_recipe.id_recipe == "toughcosmetic" or found_recipe.id_recipe == "smartcosmetic" or found_recipe.id_recipe == "beautifulcosmetic" or found_recipe.id_recipe == "cutecosmetic":
 					
-					if not ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_cosmetic):
+					if not bknd_item.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_cosmetic):
 						response = "You can't carry anymore cosmetic items."
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					
@@ -110,7 +112,7 @@ async def smelt(cmd):
 
 					item_props = ewitem.gen_item_props(item)
 
-					ewitem.item_create(
+					bknd_item.item_create(
 						item_type = item.item_type,
 						id_user = cmd.message.author.id,
 						id_server = cmd.guild.id,
@@ -151,13 +153,13 @@ async def smelt(cmd):
 					# If there are multiple possible products, randomly select one.
 					item = random.choice(possible_results)
 
-					if not ewitem.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = item.item_type):
+					if not bknd_item.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = item.item_type):
 						response = "You can't carry any more {}s.".format(item.item_type)
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					item_props = ewitem.gen_item_props(item)
 
-					newitem_id = ewitem.item_create(
+					newitem_id = bknd_item.item_create(
 						item_type = item.item_type,
 						id_user = cmd.message.author.id,
 						id_server = cmd.guild.id,
@@ -166,14 +168,14 @@ async def smelt(cmd):
 
 
 				for id_item in owned_ingredients:
-					item_check = ewitem.EwItem(id_item=id_item)
+					item_check = EwItem(id_item=id_item)
 					if item_check.item_props.get('id_cosmetic') != 'soul':
-						ewitem.item_delete(id_item = id_item)
+						bknd_item.item_delete(id_item = id_item)
 					else:
-						newitem = ewitem.EwItem(id_item=newitem_id)
+						newitem = EwItem(id_item=newitem_id)
 						newitem.item_props['target'] = id_item
 						newitem.persist()
-						ewitem.give_item(id_item=id_item, id_user='soulcraft', id_server=cmd.guild.id)
+						bknd_item.give_item(id_item=id_item, id_user='soulcraft', id_server=cmd.guild.id)
 
 				name = ""
 				if hasattr(item, 'str_name'):
@@ -195,16 +197,16 @@ async def smelt(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def smeltsoul(cmd):
-	item = ewitem.find_item(item_search="reanimatedcorpse", id_user=cmd.message.author.id, id_server=cmd.guild.id)
+	item = bknd_item.find_item(item_search="reanimatedcorpse", id_user=cmd.message.author.id, id_server=cmd.guild.id)
 	if not item:
 		response = "You can't rip a soul out of a nonexistent object."
 	else:
-		item_obj = ewitem.EwItem(id_item=item.get('id_item'))
+		item_obj = EwItem(id_item=item.get('id_item'))
 		if item_obj.item_props.get('target') != None and item_obj.item_props.get('target') != "":
 			targetid = item_obj.item_props.get('target')
-			if ewitem.give_item(id_user=cmd.message.author.id, id_item=targetid, id_server=cmd.guild.id):
+			if bknd_item.give_item(id_user=cmd.message.author.id, id_item=targetid, id_server=cmd.guild.id):
 				response = "You ripped the soul out of the reanimated corpse. It's in mangled bits now."
-				ewitem.item_delete(id_item=item.get('id_item'))
+				bknd_item.item_delete(id_item=item.get('id_item'))
 			else:
 				response = "You reach for the soul in the reanimated corpse, but your hands are full of cosmetics! Get rid of a few, freak."
 		else:
@@ -230,7 +232,7 @@ async def find_recipes_by_item(cmd):
 		if found_recipe != None:
 			used_recipe = found_recipe.id_recipe
 
-		# item_sought_in_inventory = ewitem.find_item(item_search=sought_item, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+		# item_sought_in_inventory = bknd_item.find_item(item_search=sought_item, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
 		makes_sought_item = []
 		uses_sought_item = []
 		
@@ -301,7 +303,7 @@ async def find_recipes_by_item(cmd):
 
 def unwrap(id_user = None, id_server = None, item = None):
 	response = "You eagerly rip open a pack of Secreatures™ trading cards!!"
-	ewitem.item_delete(item.id_item)
+	bknd_item.item_delete(item.id_item)
 	slimexodia = False
 
 	slimexodia_chance = 1 / 1000
@@ -318,7 +320,7 @@ def unwrap(id_user = None, id_server = None, item = None):
 
 		item_props = ewitem.gen_item_props(slimexodia_item)
 
-		ewitem.item_create(
+		bknd_item.item_create(
 			item_type = slimexodia_item.item_type,
 			id_user = id_user.id,
 			id_server = id_server.id,
@@ -332,7 +334,7 @@ def unwrap(id_user = None, id_server = None, item = None):
 
 def popcapsule(id_user = None, id_server = None, item = None):
 	rarity_roll = random.randrange(10)
-	ewitem.item_delete(item.id_item)
+	bknd_item.item_delete(item.id_item)
 
 	if rarity_roll > 3:
 		prank_item = random.choice(static_items.prank_items_heinous)
@@ -343,7 +345,7 @@ def popcapsule(id_user = None, id_server = None, item = None):
 
 	item_props = ewitem.gen_item_props(prank_item)
 
-	prank_item_id = ewitem.item_create(
+	prank_item_id = bknd_item.item_create(
 		item_type=prank_item.item_type,
 		id_user=id_user.id,
 		id_server=id_server.id,

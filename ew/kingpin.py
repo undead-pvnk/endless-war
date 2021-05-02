@@ -8,6 +8,8 @@ from .static import cosmetics
 from .static import poi as poi_static
 from . import rolemgr as ewrolemgr
 from . import move as ewmap
+from .backend import item as bknd_item
+
 from .user import EwUser
 import re
 
@@ -145,7 +147,7 @@ async def create(cmd):
 
 
 
-	new_item_id = ewitem.item_create(
+	new_item_id = bknd_item.item_create(
 		id_server = cmd.guild.id,
 		id_user = recipient.id,
 		item_type = ewcfg.it_cosmetic,
@@ -189,7 +191,7 @@ async def exalt(cmd):
 	medallion = medallion_results[0]
 	medallion_props = ewitem.gen_item_props(medallion)
 
-	medallion_id = ewitem.item_create(
+	medallion_id = bknd_item.item_create(
 		item_type=medallion.item_type,
 		id_user=recipient.id,
 		id_server=cmd.guild.id,
@@ -217,7 +219,7 @@ async def exalt(cmd):
 # 		mask = mask_results[0]
 # 		mask_props = ewitem.gen_item_props(mask)
 # 
-# 		mask_id = ewitem.item_create(
+# 		mask_id = bknd_item.item_create(
 # 			item_type=mask.item_type,
 # 			id_user=recipient.id,
 # 			id_server=cmd.guild.id,
@@ -240,7 +242,7 @@ async def exalt(cmd):
 # 		sword = sword_results[0]
 # 		sword_props = ewitem.gen_item_props(sword)
 # 
-# 		sword_id = ewitem.item_create(
+# 		sword_id = bknd_item.item_create(
 # 			item_type=sword.item_type,
 # 			id_user=recipient.id,
 # 			id_server=cmd.guild.id,

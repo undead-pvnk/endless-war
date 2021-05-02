@@ -12,10 +12,11 @@ from .static import status as se_static
 from . import item as ewitem
 from . import utils as ewutils
 from . import rolemgr as ewrolemgr
+from .backend import item as bknd_item
 
 from .user import EwUser
 from .market import EwMarket
-from .item import EwItem
+from .backend.item import EwItem
 from .slimeoid import EwSlimeoid
 from .backend.district import EwDistrict
 from .backend.farm import EwFarm
@@ -139,7 +140,7 @@ async def reap(cmd):
 						if item is not None:
 
 							for creation in range(unearthed_item_amount):
-								ewitem.item_create(
+								bknd_item.item_create(
 									item_type = item.item_type,
 									id_user = cmd.message.author.id,
 									id_server = cmd.guild.id,
@@ -169,7 +170,7 @@ async def reap(cmd):
 
 						
 						for vcreate in range(metallic_crop_ammount):
-							ewitem.item_create(
+							bknd_item.item_create(
 								id_user=cmd.message.author.id,
 								id_server=cmd.guild.id,
 								item_type=vegetable.item_type,
@@ -182,7 +183,7 @@ async def reap(cmd):
 							response += "and a bushel or two of {}!".format(vegetable.str_name)
 						# if random.randrange(10) == 0:
 						# 	for vcreate in range(6):
-						# 		ewitem.item_create(
+						# 		bknd_item.item_create(
 						# 			id_user=cmd.message.author.id,
 						# 			id_server=cmd.guild.id,
 						# 			item_type=vegetable.item_type,
@@ -198,7 +199,7 @@ async def reap(cmd):
 							unearthed_vegetable_amount *= 2
 
 						for vcreate in range(unearthed_vegetable_amount):
-							ewitem.item_create(
+							bknd_item.item_create(
 								id_user = cmd.message.author.id,
 								id_server = cmd.guild.id,
 								item_type = vegetable.item_type,
@@ -290,7 +291,7 @@ async def sow(cmd):
 			else:
 				item_search = "slimepoudrin"
 
-			item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = it_type_filter)
+			item_sought = bknd_item.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = it_type_filter)
 
 			if item_sought == None:
 				response = "You don't have anything to plant! Try collecting a poudrin."
@@ -353,7 +354,7 @@ async def sow(cmd):
 					else:
 						farm.sow_life_state = ewcfg.farm_life_state_thumb
 
-				ewitem.item_delete(id_item = item_sought.get('id_item'))  # Remove Poudrins
+				bknd_item.item_delete(id_item = item_sought.get('id_item'))  # Remove Poudrins
 
 				farm.persist()
 
@@ -367,7 +368,7 @@ async def mill(cmd):
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_food)
+	item_sought = bknd_item.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_food)
 
 	# Checking availability of milling
 	if user_data.life_state != ewcfg.life_state_juvenile:
@@ -407,7 +408,7 @@ async def mill(cmd):
 
 			item_props = ewitem.gen_item_props(item)
 			
-			ewitem.item_create(
+			bknd_item.item_create(
 				item_type = item.item_type,
 				id_user = cmd.message.author.id,
 				id_server = cmd.guild.id,
@@ -419,7 +420,7 @@ async def mill(cmd):
 			#market_data.donated_slimes += ewcfg.slimes_permill
 			market_data.persist()
 
-			ewitem.item_delete(id_item = item_sought.get('id_item'))
+			bknd_item.item_delete(id_item = item_sought.get('id_item'))
 			#user_data.change_slimes(n = -ewcfg.slimes_permill, source = ewcfg.source_spending)
 			#user_data.slime_donations += ewcfg.slimes_permill
 			user_data.persist()

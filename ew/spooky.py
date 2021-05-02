@@ -20,6 +20,8 @@ from . import item as ewitem
 from . import quadrants as ewquadrants
 from . import stats as ewstats
 from .backend import core as bknd_core
+from .backend import item as bknd_item
+
 from .user import EwUser
 from .market import EwMarket
 from .slimeoid import EwSlimeoid
@@ -103,12 +105,12 @@ async def revive(cmd):
 				district_data.persist()
 				sewer_data.persist()
 
-			sewer_inv = ewitem.inventory(id_user=sewer_data.name, id_server=sewer_data.id_server)
+			sewer_inv = bknd_item.inventory(id_user=sewer_data.name, id_server=sewer_data.id_server)
 			for item in sewer_inv:
 				district = ewcfg.poi_id_slimesea
 				if random.random() < 0.5:
 					district = random.choice(poi_static.capturable_districts)
-				ewitem.give_item(id_item=item.get("id_item"), id_user=district, id_server=sewer_data.id_server)
+				bknd_item.give_item(id_item=item.get("id_item"), id_user=district, id_server=sewer_data.id_server)
 
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -599,7 +601,7 @@ async def crystalize_negapoudrin(cmd):
 		response = "Crystalizing a negapoudrin requires a lot of negaslime, and you're not quite there yet."
 	else:
 		negapoudrin_data = next(i for i in static_items.item_list if i.id_item == ewcfg.item_id_negapoudrin)
-		ewitem.item_create(
+		bknd_item.item_create(
 			item_type = ewcfg.it_item,
 			id_user = user_data.id_user,
 			id_server = cmd.guild.id,
