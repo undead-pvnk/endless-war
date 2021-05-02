@@ -66,6 +66,7 @@ import ew.debug as ewdebug
 import ew.backend.core as bknd_core
 import ew.backend.ads as bknd_ads
 import ew.backend.farm as bknd_farm
+import ew.backend.fish as bknd_fish
 
 from ew.item import EwItem
 from ew.user import EwUser
@@ -1348,7 +1349,7 @@ async def on_ready():
 					ewutils.pushdownServerInebriation(id_server = server.id)
 
 					# Remove fish offers which have timed out
-					ewfish.kill_dead_offers(id_server = server.id)
+					bknd_fish.kill_dead_offers(id_server = server.id)
 
 					# kill advertisements that have timed out
 					bknd_ads.delete_expired_ads(id_server = server.id)
