@@ -36,7 +36,7 @@ import ew.market as ewmarket
 import ew.spooky as ewspooky
 import ew.kingpin as ewkingpin
 import ew.backend.player as bknd_player
-import ew.server as ewserver
+import ew.backend.server as bknd_server
 import ew.item as ewitem
 import ew.move as ewmap
 import ew.rolemgr as ewrolemgr
@@ -1041,7 +1041,7 @@ async def on_ready():
 
 	for server in client.guilds:
 		# Update server data in the database
-		ewserver.server_update(server = server)
+		bknd_server.server_update(server = server)
 
 		# store the list of channels in an ewutils field
 		ewcfg.update_server_list(server = server)

@@ -1,6 +1,6 @@
-from . import utils as ewutils
-from .static import cfg as ewcfg
-from .backend import core as bknd_core
+from .. import utils as ewutils
+from ..static import cfg as ewcfg
+from . import core as bknd_core
 
 """
 	EwServer is a representation of a server, if the name of the server or
