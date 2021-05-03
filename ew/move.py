@@ -20,7 +20,7 @@ from .backend import ads as bknd_ads
 
 from .user import EwUser
 from .backend.district import EwDistrict
-from .transport import EwTransport
+from .backend.transport import EwTransport
 from .backend.market import EwMarket
 from .backend.mutation import EwMutation
 from .backend.slimeoid import EwSlimeoid
