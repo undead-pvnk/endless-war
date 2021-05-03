@@ -524,7 +524,7 @@ async def award_fish(fisher, cmd, user_data):
 			item_props = ewitem.gen_item_props(item)
 
 			# Ensure item limits are enforced, including food since this isn't the fish section
-			if bknd_item.check_inv_capacity(id_user = actual_fisherman or cmd.message.author.id, id_server = cmd.guild.id, item_type = item.item_type):
+			if bknd_item.check_inv_capacity(user_data = actual_fisherman_data, item_type = item.item_type):
 				for creation in range(unearthed_item_amount):
 					bknd_item.item_create(
 						item_type = item.item_type,

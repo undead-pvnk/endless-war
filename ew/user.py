@@ -338,7 +338,7 @@ class EwUser:
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
 
 		if cause == ewcfg.cause_leftserver:
-			bknd_item.item_dropall(id_server=self.id_server, id_user=self.id_user)
+			bknd_item.item_dropall(self)
 
 		#self.sap = 0
 		#self.hardened_sap = 0

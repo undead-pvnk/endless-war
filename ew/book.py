@@ -925,7 +925,7 @@ async def order_zine(cmd):
 	elif len(cmd.tokens) == 1:
 		response = "Specify a zine to purchase. Find zine IDs with !browse."
 
-	elif not bknd_item.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_book):
+	elif not bknd_item.check_inv_capacity(user_data = user_data, item_type = ewcfg.it_book):
 		response = "You can't carry any more zines."
 
 	else:
@@ -999,7 +999,7 @@ async def order_zine(cmd):
 						if book.genre != 10:
 							author = EwUser(id_user = book.id_user, id_server = book.id_server)
 
-							if author.id_user != user_data.id_user and bknd_item.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_item):
+							if author.id_user != user_data.id_user and bknd_item.check_inv_capacity(user_data = user_data, item_type = ewcfg.it_item):
 								bknd_item.item_create(
 									item_type=ewcfg.it_item,
 									id_user=author.id_user,

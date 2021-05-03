@@ -2282,7 +2282,7 @@ async def wrap(cmd):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		if item.soulbound:
 			response = "It's a nice gesture, but trying to gift someone a Soulbound item is going a bit too far, don't you think?"
-		elif bknd_item.check_inv_capacity(id_user = cmd.message.author.id, id_server = cmd.guild.id, item_type = ewcfg.it_item):
+		elif bknd_item.check_inv_capacity(user_data = user_data, item_type = ewcfg.it_item):
 			response = ewcfg.str_generic_inv_limit.format(ewcfg.it_item)
 		else:
 			gift_name = "Gift"

@@ -70,7 +70,7 @@ async def smelt(cmd):
 				# If you try to smelt a random cosmetic, use old smelting code to calculate what your result will be.
 				if found_recipe.id_recipe == "coolcosmetic" or found_recipe.id_recipe == "toughcosmetic" or found_recipe.id_recipe == "smartcosmetic" or found_recipe.id_recipe == "beautifulcosmetic" or found_recipe.id_recipe == "cutecosmetic":
 					
-					if not bknd_item.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_cosmetic):
+					if not bknd_item.check_inv_capacity(user_data = user_data, item_type = ewcfg.it_cosmetic):
 						response = "You can't carry anymore cosmetic items."
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					
@@ -153,7 +153,7 @@ async def smelt(cmd):
 					# If there are multiple possible products, randomly select one.
 					item = random.choice(possible_results)
 
-					if not bknd_item.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = item.item_type):
+					if not bknd_item.check_inv_capacity(user_data = user_data, item_type = item.item_type):
 						response = "You can't carry any more {}s.".format(item.item_type)
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

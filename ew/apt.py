@@ -1719,10 +1719,11 @@ async def lobbywarning(cmd):
 
 async def aquarium(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
+	usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-	if not bknd_item.check_inv_capacity(id_server = cmd.guild.id, id_user = cmd.message.author.id, item_type = ewcfg.it_furniture):
+	if not bknd_item.check_inv_capacity(user_data = usermodel, item_type = ewcfg.it_furniture):
 		response = "You don't have room for any more furniture items."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1773,7 +1774,7 @@ async def propstand(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-	if not bknd_item.check_inv_capacity(id_server = cmd.guild.id, id_user = cmd.message.author.id, item_type = ewcfg.it_furniture):
+	if not bknd_item.check_inv_capacity(user_data = usermodel, item_type = ewcfg.it_furniture):
 		response = "You don't have room for any more furniture items."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1838,10 +1839,11 @@ async def propstand(cmd):
 
 async def flowerpot(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
+	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-	if not bknd_item.check_inv_capacity(id_server = cmd.guild.id, id_user = cmd.message.author.id, item_type = ewcfg.it_furniture):
+	if not bknd_item.check_inv_capacity(user_data = usermodel, item_type = ewcfg.it_furniture):
 		response = "You don't have room for any more furniture items."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

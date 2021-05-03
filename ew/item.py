@@ -115,7 +115,7 @@ def item_lootspecific(id_server = None, id_user = None, item_search = None):
         if item_sought is not None:
             item_type = item_sought.get("item_type")
             response += "You found a {}!".format(item_sought.get("name"))
-            can_loot = bknd_item.check_inv_capacity(id_server = id_server, id_user = id_user, item_type = item_type)
+            can_loot = bknd_item.check_inv_capacity(user_data = user_data, item_type = item_type)
             if can_loot:
                 bknd_item.give_item(
                     id_item = item_sought.get("id_item"),

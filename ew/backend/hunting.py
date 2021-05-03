@@ -648,7 +648,7 @@ class EwEnemy:
 						# Dedorn player cosmetics
 						#ewitem.item_dedorn_cosmetics(id_server=target_data.id_server, id_user=target_data.id_user)
 						# Drop all items into district
-						#ewitem.item_dropall(id_server=target_data.id_server, id_user=target_data.id_user)
+						#bknd_item.item_dropall(target_data)
 
 						# Give a bonus to the player's weapon skill for killing a stronger player.
 						# if target_data.slimelevel >= user_data.slimelevel and weapon is not None:

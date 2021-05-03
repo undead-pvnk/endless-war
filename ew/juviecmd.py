@@ -391,7 +391,7 @@ async def mine(cmd):
 				# If there are multiple possible products, randomly select one.
 				item = random.choice(vendors.mine_results)
 
-				if bknd_item.check_inv_capacity(id_server = cmd.guild.id, id_user = user_data.id_user, item_type = item.item_type):
+				if bknd_item.check_inv_capacity(user_data = user_data, item_type = item.item_type):
 
 					item_props = ewitem.gen_item_props(item)
 
@@ -1597,7 +1597,7 @@ def create_mining_event(cmd):
 			)
 		# 10 second poudrin frenzy
 		else:
-			if bknd_item.check_inv_capacity(id_server = user_data.id_server, id_user = user_data.id_user, item_type = ewcfg.it_item): #and not user_data.juviemode:
+			if bknd_item.check_inv_capacity(user_data = user_data, item_type = ewcfg.it_item): #and not user_data.juviemode:
 				event_props = {}
 				event_props['id_user'] = cmd.message.author.id
 				event_props['poi'] = user_data.poi

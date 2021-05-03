@@ -8,8 +8,6 @@ from ..static import items as static_items
 from .. import stats as ewstats
 from . import core as bknd_core
 
-from ..user import EwUser
-
 """
     EwItem is the instance of an item (described by EwItemDef, linked by
     item_type) which is possessed by a player and stored in the database.
@@ -297,22 +295,20 @@ def item_create(
     Drop all of a player's non-soulbound items into their district
 """
 def item_dropall(
-    id_server = None,
-    id_user = None
+    user_data
 ):
 
     try:
-        user_data = EwUser(id_server = id_server, id_user = id_user)
 
         bknd_core.execute_sql_query(
             "UPDATE items SET id_user = %s WHERE id_user = %s AND id_server = %s AND soulbound = 0",(
                 user_data.poi,
-                id_user,
-                id_server
+                user_data.id_user,
+                user_data.id_server
             ))
 
     except:
-        ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
+        ewutils.logMsg('Failed to drop items for user with id {}'.format(user_data.id_user))
 
 """
     Dedorn all of a player's cosmetics
@@ -342,11 +338,10 @@ def item_dedorn_cosmetics(
 """
     Transfer a random item from district inventory to player inventory
 """
-def item_lootrandom(id_server = None, id_user = None):
+def item_lootrandom(user_data):
     response = ""
 
     try:
-        user_data = EwUser(id_server = id_server, id_user = id_user)
 
         items_in_poi = bknd_core.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
                 id_item = ewcfg.col_id_item,
@@ -354,17 +349,17 @@ def item_lootrandom(id_server = None, id_user = None):
                 id_server = ewcfg.col_id_server
             ),(
                 user_data.poi,
-                id_server
+                user_data.id_server
             ))
 
         if len(items_in_poi) > 0:
             id_item = random.choice(items_in_poi)[0]
 
-            item_sought = find_item(item_search = str(id_item), id_user = user_data.poi, id_server = id_server)
+            item_sought = find_item(item_search = str(id_item), id_user = user_data.poi, id_server = user_data.id_server)
 
             response += "You found a {}!".format(item_sought.get('name'))
 
-            if check_inv_capacity(id_user = id_user, id_server = id_server, item_type = item_sought.get('item_type')):
+            if check_inv_capacity(user_data = user_data, item_type = item_sought.get('item_type')):
                 if item_sought.get('name') == "Slime Poudrin":
                     ewstats.change_stat(
                         id_server=user_data.id_server,
@@ -372,7 +367,7 @@ def item_lootrandom(id_server = None, id_user = None):
                         metric=ewcfg.stat_poudrins_looted,
                         n=1
                     )
-                give_item(id_user=id_user, id_server=id_server, id_item=id_item)
+                give_item(id_user=user_data.id_user, id_server=user_data.id_server, id_item=id_item)
             else:
                 response += " But you couldn't carry any more {}s, so you tossed it back.".format(item_sought.get('item_type'))
 
@@ -421,17 +416,14 @@ def item_destroyall(id_server = None, id_user = None, member = None):
     Loot all non-soulbound items from a player upon killing them, reassinging to id_user_target.
 """
 def item_loot(
-    member = None,
-    id_user_target = -1
+    source_data = None,
+    target_data = None,
 ):
 
-    if member == None or id_user_target == -1:
+    if source_data == None or target_data == None:
         return
 
     try:
-        target_data = EwUser(id_user = id_user_target, id_server = member.guild.id)
-        source_data = EwUser(member = member)
-
         # Transfer adorned cosmetics
         data = bknd_core.execute_sql_query(
             "SELECT id_item FROM items " +
@@ -440,8 +432,8 @@ def item_loot(
                 "WHERE name = 'adorned' AND value = 'true' " +
             ")"
         ,(
-            member.id,
-            member.guild.id,
+            source_data.id_user,
+            source_data.id_server,
             ewcfg.it_cosmetic
         ))
 
@@ -465,7 +457,7 @@ def item_loot(
                 give_item(id_user = target_data.id_user, id_server = target_data.id_server, id_item = source_data.weapon)
 
     except:
-        ewutils.logMsg("Failed to loot items from user {}".format(member.id))
+        ewutils.logMsg("Failed to loot items from user {}".format(source_data.id_user))
 
 """
     Check how many items are in a given district or player's inventory
@@ -876,13 +868,12 @@ def give_item(
     Return false if a player's inventory is at or over capacity for a specific item type
 """
 
-def check_inv_capacity(id_user = None, id_server = None, item_type = None):
-    if id_user is not None and id_server is not None and item_type is not None:
-        user_data = EwUser(id_user = id_user, id_server = id_server)
+def check_inv_capacity(user_data = None, item_type = None):
+    if user_data is not None and item_type is not None:
         if item_type == ewcfg.it_food:
             food_items = inventory(
-                id_user = id_user,
-                id_server = id_server,
+                id_user = user_data.id_user,
+                id_server = user_data.id_server,
                 item_type_filter = ewcfg.it_food
             )
 
@@ -892,8 +883,8 @@ def check_inv_capacity(id_user = None, id_server = None, item_type = None):
                 return True
         elif item_type == ewcfg.it_weapon:
             weapons_held = inventory(
-                id_user = id_user,
-                id_server = id_server,
+                id_user = user_data.id_user,
+                id_server = user_data.id_server,
                 item_type_filter = ewcfg.it_weapon
             )
 
@@ -903,8 +894,8 @@ def check_inv_capacity(id_user = None, id_server = None, item_type = None):
                 return True
         else:
             other_items = inventory(
-                id_user=id_user,
-                id_server=id_server,
+                id_user=user_data.id_user,
+                id_server=user_data.id_server,
                 item_type_filter=item_type
             )
 
