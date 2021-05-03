@@ -48,7 +48,6 @@ import ew.district as ewdistrict
 import ew.mutation as ewmutation
 import ew.quadrants as ewquadrants
 import ew.transport as ewtransport
-import ew.statuseffects as ewstatuseffects
 import ew.smelting as ewsmelting
 import ew.hunting as ewhunting
 import ew.fish as  ewfish
@@ -75,7 +74,7 @@ from ew.backend.player import EwPlayer
 from ew.backend.market import EwMarket
 from ew.backend.market import EwStock
 from ew.backend.district import EwDistrict
-from ew.statuseffects import EwStatusEffect
+from ew.backend.status import EwStatusEffect
 
 
 ewutils.logMsg('Starting up...')

@@ -11,14 +11,13 @@ from .static import hue as hue_static
 from .static import status as se_static
 from . import stats as ewstats
 from . import item as ewitem
-from . import statuseffects as ewstatuseffects
 from . import district as ewdistrict
 from . import rolemgr  as ewrolemgr 
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 
 from .backend.item import EwItem
-from .statuseffects import EwStatusEffect
+from .backend.status import EwStatusEffect
 
 """ User model for database persistence """
 class EwUser:

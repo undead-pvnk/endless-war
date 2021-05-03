@@ -25,7 +25,7 @@ from .backend.market import EwMarket
 from .backend.player import EwPlayer
 from .backend.district import EwDistrict
 from .backend.slimeoid import EwSlimeoid
-from .statuseffects import EwEnemyStatusEffect
+from .backend.status import EwEnemyStatusEffect
 from .model.hunting import EwEnemyEffectContainer
 from .backend.hunting import EwEnemy, EwOperationData
 

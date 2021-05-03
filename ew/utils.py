@@ -37,8 +37,8 @@ from .backend.district import EwDistrict
 from .backend.player import EwPlayer
 from .backend.hunting import EwEnemy, EwOperationData
 from .backend.market import EwMarket
-from .statuseffects import EwStatusEffect
-from .statuseffects import EwEnemyStatusEffect
+from .backend.status import EwStatusEffect
+from .backend.status import EwEnemyStatusEffect
 from .backend.dungeons import EwGamestate
 from .backend.item import EwItem
 from .backend.hunting import EwEnemy

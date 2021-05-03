@@ -18,7 +18,6 @@ from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
-from . import statuseffects as ewstatuseffects
 from . import move as ewmap
 from . import slimeoid as ewslimeoid
 from . import faction as ewfaction
@@ -34,8 +33,8 @@ from .backend.market import EwMarket
 from .backend.item import EwItem
 from .backend.slimeoid import EwSlimeoid
 #from .hunting import find_enemy, delete_all_enemies, EwEnemy, EwOperationData, spawn_enemy, delete_enemy
-from .statuseffects import EwStatusEffect
-from .statuseffects import EwEnemyStatusEffect
+from .backend.status import EwStatusEffect
+from .backend.status import EwEnemyStatusEffect
 from .backend.district import EwDistrict
 from .backend.worldevent import EwWorldEvent
 from .backend.hunting import EwEnemy, EwOperationData

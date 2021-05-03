@@ -20,7 +20,7 @@ from .market import EwMarket
 from .player import EwPlayer
 from .district import EwDistrict
 from .slimeoid import EwSlimeoid
-from ..statuseffects import EwEnemyStatusEffect
+from .status import EwEnemyStatusEffect
 from ..model.hunting import EwEnemyEffectContainer
 
 """ Enemy data model for database persistence """

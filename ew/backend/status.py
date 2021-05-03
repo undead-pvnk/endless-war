@@ -1,9 +1,9 @@
 import time
 import math
 
-from .static import cfg as ewcfg
-from . import utils as ewutils
-from .backend import core as bknd_core
+from ..static import cfg as ewcfg
+from .. import utils as ewutils
+from . import core as bknd_core
 
 class EwStatusEffect:
 	id_server = -1

@@ -13,7 +13,6 @@ from . import item as ewitem
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
-from . import statuseffects as ewstatuseffects
 from . import hunting as ewhunting
 from .backend import item as bknd_item
 
@@ -24,8 +23,8 @@ from .backend.slimeoid import EwSlimeoid
 from .backend.district import EwDistrict
 from .backend.player import EwPlayer
 #from .hunting import EwEnemy
-from .statuseffects import EwStatusEffect
-from .statuseffects import EwEnemyStatusEffect
+from .backend.status import EwStatusEffect
+from .backend.status import EwEnemyStatusEffect
 from .backend.dungeons import EwGamestate
 from .backend.hunting import EwEnemy
 
