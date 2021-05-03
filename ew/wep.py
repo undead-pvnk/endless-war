@@ -22,7 +22,7 @@ from .backend.item import EwItem
 from .backend.market import EwMarket
 from .slimeoid import EwSlimeoid
 from .backend.district import EwDistrict
-from .player import EwPlayer
+from .backend.player import EwPlayer
 #from .hunting import EwEnemy
 from .statuseffects import EwStatusEffect
 from .statuseffects import EwEnemyStatusEffect

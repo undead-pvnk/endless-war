@@ -13,7 +13,7 @@ import ew.static.cfg as ewcfg
 import ew.backend.core as bknd_core
 
 from ew.user import EwUser
-from ew.player import EwPlayer
+from ew.backend.player import EwPlayer
 
 def faction(faction, life_state):
 	url = "<img src=/img/icons/{}.png style=\"height: 1em;\"> "

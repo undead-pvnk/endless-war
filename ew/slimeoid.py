@@ -19,7 +19,7 @@ from .backend import item as bknd_item
 from .user import EwUser
 from .backend.market import EwMarket
 from .backend.district import EwDistrict
-from .player import EwPlayer
+from .backend.player import EwPlayer
 from .backend.item import EwItem
 from .backend.quadrants import EwQuadrant
 

@@ -17,7 +17,7 @@ from . import item as bknd_item
 from ..user import EwUser
 from .item import EwItem
 from .market import EwMarket
-from ..player import EwPlayer
+from .player import EwPlayer
 from .district import EwDistrict
 from ..slimeoid import EwSlimeoid
 from ..statuseffects import EwEnemyStatusEffect

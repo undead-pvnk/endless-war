@@ -16,7 +16,7 @@ from .backend import core as bknd_core
 from .backend import item as bknd_item
 
 from .backend.market import EwMarket
-from .player import EwPlayer
+from .backend.player import EwPlayer
 
 from .user import EwUser
 from .statuseffects import EwStatusEffect

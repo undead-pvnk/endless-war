@@ -8,7 +8,7 @@ from .backend import item as bknd_item
 from .user import EwUser
 from .backend.market import EwMarket
 from .backend.item import EwItem
-from .player import EwPlayer
+from .backend.player import EwPlayer
 from .backend.book import EwBook, EwBookSale
 
 readers = {}

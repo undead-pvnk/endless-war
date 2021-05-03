@@ -8,7 +8,7 @@ from . import utils as ewutils
 from . import move as ewmap
 
 from .user import EwUser
-from .player import EwPlayer
+from .backend.player import EwPlayer
 from .backend.district import EwDistrict
 
 sb_count = 0

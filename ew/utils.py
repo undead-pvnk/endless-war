@@ -34,7 +34,7 @@ from .backend import item as bknd_item
 
 from .user import EwUser
 from .backend.district import EwDistrict
-from .player import EwPlayer
+from .backend.player import EwPlayer
 from .backend.hunting import EwEnemy, EwOperationData
 from .backend.market import EwMarket
 from .statuseffects import EwStatusEffect

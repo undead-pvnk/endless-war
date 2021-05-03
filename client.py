@@ -35,7 +35,7 @@ import ew.juviecmd as ewjuviecmd
 import ew.market as ewmarket
 import ew.spooky as ewspooky
 import ew.kingpin as ewkingpin
-import ew.player as ewplayer
+import ew.backend.player as bknd_player
 import ew.server as ewserver
 import ew.item as ewitem
 import ew.move as ewmap
@@ -71,7 +71,7 @@ import ew.backend.item as bknd_item
 
 from ew.backend.item import EwItem
 from ew.user import EwUser
-from ew.player import EwPlayer
+from ew.backend.player import EwPlayer
 from ew.backend.market import EwMarket
 from ew.backend.market import EwStock
 from ew.backend.district import EwDistrict
@@ -1415,7 +1415,7 @@ async def on_ready():
 async def on_member_join(member):
 	ewutils.logMsg("New member \"{}\" joined. Configuring default roles / permissions now.".format(member.display_name))
 	await ewrolemgr.updateRoles(client = client, member = member)
-	ewplayer.player_update(
+	bknd_player.player_update(
 		member = member,
 		server = member.guild
 	)
@@ -1452,7 +1452,7 @@ async def on_message(message):
 		active_map[message.author.id] = True
 
 		# Update player information.
-		ewplayer.player_update(
+		bknd_player.player_update(
 			member = message.author,
 			server = message.guild
 		)
@@ -1533,7 +1533,7 @@ async def on_message(message):
 		mentions = message.mentions
 		mentions_count = len(mentions)
 
-		playermodel = ewplayer.EwPlayer(id_user=message.author.id)
+		playermodel = EwPlayer(id_user=message.author.id)
 		
 		if message.guild == None:
 			guild_used = ewcfg.server_list[playermodel.id_server]
@@ -1622,7 +1622,7 @@ async def on_message(message):
 			Handle direct messages.
 		"""
 		if message.guild == None:
-			playermodel = ewplayer.EwPlayer(id_user = message.author.id)
+			playermodel = EwPlayer(id_user = message.author.id)
 			usermodel = EwUser(id_user=message.author.id, id_server= playermodel.id_server)
 			poi = poi_static.id_to_poi.get(usermodel.poi)
 			cmd_obj.guild = ewcfg.server_list[playermodel.id_server]
