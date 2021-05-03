@@ -18,7 +18,7 @@ from .backend import item as bknd_item
 from .backend.market import EwMarket
 from .backend.player import EwPlayer
 
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.status import EwStatusEffect
 from .backend.district import EwDistrict
 from .backend.item import EwItem

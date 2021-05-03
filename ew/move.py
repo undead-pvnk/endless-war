@@ -18,7 +18,7 @@ from .backend import core as bknd_core
 from .backend import ads as bknd_ads
 
 
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.district import EwDistrict
 from .backend.transport import EwTransport
 from .backend.market import EwMarket

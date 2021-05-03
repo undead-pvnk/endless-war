@@ -12,7 +12,7 @@ from ew import cmd as ewcmd
 import ew.static.cfg as ewcfg
 import ew.backend.core as bknd_core
 
-from ew.user import EwUser
+from ew.backend.user import EwUser
 from ew.backend.player import EwPlayer
 
 def faction(faction, life_state):

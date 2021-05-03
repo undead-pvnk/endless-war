@@ -10,7 +10,7 @@ from . import item as ewitem
 from . import utils as ewutils
 from .backend import item as bknd_item
 
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.item import EwItem
 
 # Smelting command. It's like other games call "crafting"... but BETTER and for FREE!!

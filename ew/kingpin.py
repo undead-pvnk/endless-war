@@ -10,7 +10,7 @@ from . import rolemgr as ewrolemgr
 from . import move as ewmap
 from .backend import item as bknd_item
 
-from .user import EwUser
+from .backend.user import EwUser
 import re
 
 """

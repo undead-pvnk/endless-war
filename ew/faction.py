@@ -7,7 +7,7 @@ from . import item as ewitem
 from .backend import item as bknd_item
 
 from .backend.item import EwItem
-from .user import EwUser
+from .backend.user import EwUser
 
 """allow a juvie to join your gang"""
 async def vouch(cmd):

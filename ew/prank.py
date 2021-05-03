@@ -3,7 +3,7 @@ import time
 from . import utils as ewutils
 from .backend import core as bknd_core
 
-from .user import EwUser
+from .backend.user import EwUser
 #from .player import EwPlayer
 
 response_timer = 6 # How long does it take for a response item to send out its attacks

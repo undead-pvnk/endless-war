@@ -11,7 +11,7 @@ from . import item as ewitem
 from . import cmd as ewcmd
 from .backend import item as bknd_item
 
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.market import EwMarket
 from .backend.district import EwDistrict
 

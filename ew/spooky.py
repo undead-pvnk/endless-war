@@ -22,7 +22,7 @@ from . import stats as ewstats
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.market import EwMarket
 from .backend.slimeoid import EwSlimeoid
 from .backend.quadrants import EwQuadrant

@@ -16,7 +16,7 @@ from . import stats as ewstats
 from . import hunting as ewhunting
 from .backend import item as bknd_item
 
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.item import EwItem
 from .backend.market import EwMarket
 from .backend.slimeoid import EwSlimeoid

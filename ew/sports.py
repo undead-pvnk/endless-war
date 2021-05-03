@@ -7,7 +7,7 @@ from .static import poi as poi_static
 from . import utils as ewutils
 from . import move as ewmap
 
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.player import EwPlayer
 from .backend.district import EwDistrict
 

@@ -11,7 +11,7 @@ from . import utils as ewutils
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.item import EwItem
 
 

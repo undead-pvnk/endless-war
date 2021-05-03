@@ -9,7 +9,7 @@ from . import stats as ewstats
 from . import utils as ewutils
 from . import rolemgr as ewrolemgr
 
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.district import EwDistrict
 
 

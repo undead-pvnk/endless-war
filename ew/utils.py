@@ -32,7 +32,7 @@ from .static import status as se_static
 from . import wep as ewwep
 from .backend import item as bknd_item
 
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.district import EwDistrict
 from .backend.player import EwPlayer
 from .backend.hunting import EwEnemy, EwOperationData

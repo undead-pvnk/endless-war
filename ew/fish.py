@@ -16,7 +16,7 @@ from .backend import fish as bknd_fish
 from .backend import item as bknd_item
 
 from .backend.market import EwMarket
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.item import EwItem
 from .backend.district import EwDistrict
 from .backend.fish import EwOffer

@@ -11,7 +11,7 @@ from . import rolemgr as ewrolemgr
 from . import item as ewitem
 from .backend import item as bknd_item
 
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.district import EwDistrict
 from .backend.item import EwItem
 

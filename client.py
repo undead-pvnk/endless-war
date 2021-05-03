@@ -69,7 +69,7 @@ import ew.backend.fish as bknd_fish
 import ew.backend.item as bknd_item
 
 from ew.backend.item import EwItem
-from ew.user import EwUser
+from ew.backend.user import EwUser
 from ew.backend.player import EwPlayer
 from ew.backend.market import EwMarket
 from ew.backend.market import EwStock

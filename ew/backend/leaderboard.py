@@ -5,7 +5,7 @@ from ..static import poi as poi_static
 from .. import utils as ewutils
 from . import core as bknd_core
 
-from ..user import EwUser
+from .user import EwUser
 from .player import EwPlayer
 from .market import EwMarket, EwStock
 from .district import EwDistrict

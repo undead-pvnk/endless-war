@@ -10,7 +10,7 @@ from .. import hunting as ewhunting
 from . import core as bknd_core
 from . import item as bknd_item
 
-from ..user import EwUser
+from .user import EwUser
 from .market import EwMarket
 from .player import EwPlayer
 from .district import EwDistrict

@@ -16,7 +16,7 @@ from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from .backend import item as bknd_item
 
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.player import EwPlayer
 from .backend.market import EwMarket, EwCompany, EwStock
 from .backend.item import EwItem

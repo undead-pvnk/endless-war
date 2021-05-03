@@ -22,7 +22,7 @@ from .backend import worldevent as bknd_worldevent
 from .backend import item as bknd_item
 
 from .backend.item import EwItem
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.market import EwMarket
 from .backend.district import EwDistrict
 from .backend.worldevent import EwWorldEvent

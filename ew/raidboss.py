@@ -6,7 +6,7 @@ from . import utils as ewutils
 from .static import cfg as ewcfg
 from . import cmd as ewcmd
 from .backend import core as bknd_core
-from .user import EwUser
+from .backend.user import EwUser
 
 """
 	Commands for raid bosses only.

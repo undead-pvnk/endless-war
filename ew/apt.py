@@ -31,7 +31,7 @@ from .backend import item as bknd_item
 from .backend.item import EwItem
 from .backend.district import EwDistrict
 from .backend.player import EwPlayer
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.apt import EwApartment
 from .backend.market import EwMarket, EwStock
 from .backend.slimeoid import EwSlimeoid

@@ -6,7 +6,7 @@ from .static import poi as poi_static
 from . import utils as ewutils
 from . import rolemgr as ewrolemgr
 
-from .user import EwUser
+from .backend.user import EwUser
 
 
 # maps users to where they are in the tutorial

@@ -16,7 +16,7 @@ from . import quadrants as ewquadrants
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.market import EwMarket
 from .backend.district import EwDistrict
 from .backend.player import EwPlayer

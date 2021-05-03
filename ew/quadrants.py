@@ -7,14 +7,14 @@ from .static import cfg as ewcfg
 from .static import quadrants as quad_static
 from . import stats as ewstats
 from . import utils as ewutils
-from . import user as ew
 from .backend.quadrants import EwQuadrant
+from .backend.user import EwUser
 
 async def add_quadrant(cmd):
 	response = ""
 	author = cmd.message.author
 	quadrant = None
-	user_data = ew.EwUser(id_user=author.id, id_server=author.guild.id)
+	user_data = EwUser(id_user=author.id, id_server=author.guild.id)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -68,7 +68,7 @@ async def clear_quadrant(cmd):
 	response = ""
 	author = cmd.message.author
 	quadrant = None
-	user_data = ew.EwUser(id_user=author.id, id_server=author.guild.id)
+	user_data = EwUser(id_user=author.id, id_server=author.guild.id)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -125,7 +125,7 @@ async def get_quadrants(cmd):
 		else:
 			response = response.format("Your")
 
-	user_data = ew.EwUser(id_user=member.id, id_server=member.guild.id)
+	user_data = EwUser(id_user=member.id, id_server=member.guild.id)
 	if user_data.has_soul == 0:
 		response = "{} can't truly form any bonds without {} soul."
 		if cmd.mentions_count > 0:

@@ -28,7 +28,7 @@ from . import hunting as ewhunting
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 
-from .user import EwUser
+from .backend.user import EwUser
 from .backend.market import EwMarket
 from .backend.item import EwItem
 from .backend.slimeoid import EwSlimeoid

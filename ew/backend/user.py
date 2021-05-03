@@ -2,22 +2,22 @@ import time
 import random
 import asyncio
 
-from . import utils as ewutils
-from .static import cfg as ewcfg
-from .static import weapons as static_weapons
-from .static import poi as poi_static
-from .static import mutations as static_mutations
-from .static import hue as hue_static
-from .static import status as se_static
-from . import stats as ewstats
-from . import item as ewitem
-from . import district as ewdistrict
-from . import rolemgr  as ewrolemgr 
-from .backend import core as bknd_core
-from .backend import item as bknd_item
+from .. import utils as ewutils
+from ..static import cfg as ewcfg
+from ..static import weapons as static_weapons
+from ..static import poi as poi_static
+from ..static import mutations as static_mutations
+from ..static import hue as hue_static
+from ..static import status as se_static
+from .. import stats as ewstats
+from .. import item as ewitem
+from .. import district as ewdistrict
+from .. import rolemgr  as ewrolemgr 
+from . import core as bknd_core
+from . import item as bknd_item
 
-from .backend.item import EwItem
-from .backend.status import EwStatusEffect
+from .item import EwItem
+from .status import EwStatusEffect
 
 """ User model for database persistence """
 class EwUser:
