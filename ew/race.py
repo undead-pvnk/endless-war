@@ -12,7 +12,7 @@ from . import cmd as ewcmd
 from .backend import item as bknd_item
 
 from .user import EwUser
-from .market import EwMarket
+from .backend.market import EwMarket
 from .backend.district import EwDistrict
 
 async def set_race(cmd):

@@ -72,8 +72,8 @@ import ew.backend.item as bknd_item
 from ew.backend.item import EwItem
 from ew.user import EwUser
 from ew.player import EwPlayer
-from ew.market import EwMarket
-from ew.market import EwStock
+from ew.backend.market import EwMarket
+from ew.backend.market import EwStock
 from ew.backend.district import EwDistrict
 from ew.statuseffects import EwStatusEffect
 

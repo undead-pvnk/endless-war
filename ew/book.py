@@ -6,7 +6,7 @@ from .backend import core as bknd_core
 from .backend import item as bknd_item
 
 from .user import EwUser
-from .market import EwMarket
+from .backend.market import EwMarket
 from .backend.item import EwItem
 from .player import EwPlayer
 from .backend.book import EwBook, EwBookSale

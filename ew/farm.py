@@ -15,7 +15,7 @@ from . import rolemgr as ewrolemgr
 from .backend import item as bknd_item
 
 from .user import EwUser
-from .market import EwMarket
+from .backend.market import EwMarket
 from .backend.item import EwItem
 from .slimeoid import EwSlimeoid
 from .backend.district import EwDistrict

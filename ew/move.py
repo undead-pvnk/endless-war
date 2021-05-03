@@ -21,7 +21,7 @@ from .backend import ads as bknd_ads
 from .user import EwUser
 from .backend.district import EwDistrict
 from .transport import EwTransport
-from .market import EwMarket
+from .backend.market import EwMarket
 from .mutation import EwMutation
 from .slimeoid import EwSlimeoid
 from .player import EwPlayer

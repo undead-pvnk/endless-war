@@ -7,7 +7,7 @@ from . import core as bknd_core
 
 from ..user import EwUser
 from ..player import EwPlayer
-from ..market import EwMarket, EwStock
+from .market import EwMarket, EwStock
 from .district import EwDistrict
 
 

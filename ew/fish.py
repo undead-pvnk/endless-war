@@ -15,7 +15,7 @@ from . import rolemgr as ewrolemgr
 from .backend import fish as bknd_fish
 from .backend import item as bknd_item
 
-from .market import EwMarket
+from .backend.market import EwMarket
 from .user import EwUser
 from .backend.item import EwItem
 from .backend.district import EwDistrict

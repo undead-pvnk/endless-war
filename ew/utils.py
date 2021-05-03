@@ -36,7 +36,7 @@ from .user import EwUser
 from .backend.district import EwDistrict
 from .player import EwPlayer
 from .backend.hunting import EwEnemy, EwOperationData
-from .market import EwMarket
+from .backend.market import EwMarket
 from .statuseffects import EwStatusEffect
 from .statuseffects import EwEnemyStatusEffect
 from .backend.dungeons import EwGamestate

@@ -15,7 +15,7 @@ from . import rolemgr as ewrolemgr
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 
-from .market import EwMarket
+from .backend.market import EwMarket
 from .player import EwPlayer
 
 from .user import EwUser

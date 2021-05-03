@@ -11,7 +11,7 @@ from . import core as bknd_core
 from . import item as bknd_item
 
 from ..user import EwUser
-from ..market import EwMarket
+from .market import EwMarket
 from ..player import EwPlayer
 from .district import EwDistrict
 from ..slimeoid import EwSlimeoid
