@@ -11,7 +11,7 @@ from ..static import hue as hue_static
 from ..static import status as se_static
 from .. import stats as ewstats
 from .. import item as ewitem
-from .. import district as ewdistrict
+from . import district as bknd_district
 from .. import rolemgr  as ewrolemgr 
 from . import core as bknd_core
 from . import item as bknd_item
@@ -248,7 +248,7 @@ class EwUser:
 			if ewcfg.mutation_id_spontaneouscombustion in self.get_mutations():
 				user_hasCombustion = True
 				explode_damage = ewutils.slime_bylevel(self.slimelevel) / 5
-				explode_district = ewdistrict.EwDistrict(district = self.poi, id_server = self.id_server)
+				explode_district = bknd_district.EwDistrict(district = self.poi, id_server = self.id_server)
 				explode_poi_channel = poi_static.id_to_poi.get(self.poi).channel
 
 		if self.life_state == ewcfg.life_state_corpse:

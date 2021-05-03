@@ -1,9 +1,10 @@
 from .static import cfg as ewcfg
 from .static import poi as poi_static
-from . import utils as ewutils
-from . import item as ewitem
+
 from .backend import core as bknd_core
 from .backend import item as bknd_item
+
+from . import utils as ewutils
 
 from .backend.user import EwUser
 from .backend.market import EwMarket

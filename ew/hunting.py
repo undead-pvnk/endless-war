@@ -7,26 +7,19 @@ from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import items as static_items
 from .static import weapons as static_weapons
-from .static import hunting as hunt_static
 from .static import food as static_food
 from .static import poi as poi_static
-from .static import status as se_static
-from . import utils as ewutils
-from . import item as ewitem
-from . import rolemgr as ewrolemgr
-from . import stats as ewstats
-from . import wep as ewwep
+
 from .backend import core as bknd_core
 from .backend import item as bknd_item
+
+from . import utils as ewutils
+from . import item as ewitem
 
 from .backend.user import EwUser
 from .backend.item import EwItem
 from .backend.market import EwMarket
-from .backend.player import EwPlayer
 from .backend.district import EwDistrict
-from .backend.slimeoid import EwSlimeoid
-from .backend.status import EwEnemyStatusEffect
-from .model.hunting import EwEnemyEffectContainer
 from .backend.hunting import EwEnemy, EwOperationData
 
 # Debug command. Could be used for events, perhaps?

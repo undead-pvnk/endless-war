@@ -1,8 +1,6 @@
 import random
 import asyncio
 import time
-import builtins
-import collections
 
 from .static import cfg as ewcfg
 from .static import cosmetics
@@ -14,25 +12,23 @@ from .static import mutations as static_mutations
 from .static import hue as hue_static
 from .static import status as se_static
 from .static import fish as static_fish
+
+from .backend import worldevent as bknd_worldevent
+from .backend import core as bknd_core
+from .backend import item as bknd_item
+
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
-from . import move as ewmap
-from . import slimeoid as ewslimeoid
 from . import faction as ewfaction
-from . import apt as ewapt
 from . import prank as ewprank
-from .backend import worldevent as bknd_worldevent
 from . import hunting as ewhunting
-from .backend import core as bknd_core
-from .backend import item as bknd_item
 
 from .backend.user import EwUser
 from .backend.market import EwMarket
 from .backend.item import EwItem
 from .backend.slimeoid import EwSlimeoid
-#from .hunting import find_enemy, delete_all_enemies, EwEnemy, EwOperationData, spawn_enemy, delete_enemy
 from .backend.status import EwStatusEffect
 from .backend.status import EwEnemyStatusEffect
 from .backend.district import EwDistrict
@@ -1314,7 +1310,7 @@ async def accept(cmd):
 			ewutils.active_target_map[challenger.id_user] = user.id_user
 			slimeoid_data = EwSlimeoid(member = cmd.message.author)
 			response = ""
-			if user.poi == ewcfg.poi_id_arena and ewslimeoid.active_slimeoidbattles.get(slimeoid_data.id_slimeoid):
+			if user.poi == ewcfg.poi_id_arena and ewutils.active_slimeoidbattles.get(slimeoid_data.id_slimeoid):
 				response = "You accept the challenge! Both of your Slimeoids ready themselves for combat!"
 			elif user.poi == ewcfg.poi_id_thecasino and ewutils.active_restrictions[challenger.id_user] == 1:
 				response = "You accept the challenge! Both of you head out back behind the casino and load a bullet into the gun."

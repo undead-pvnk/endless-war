@@ -1,5 +1,5 @@
-from . import utils as ewutils
 from .static import cfg as ewcfg
+
 from . import stats as ewstats
 from . import item as ewitem
 

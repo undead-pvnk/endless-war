@@ -7,10 +7,9 @@
 import sys
 import html
 
-from ew import utils as ewutils
-from ew import cmd as ewcmd
 import ew.static.cfg as ewcfg
 import ew.backend.core as bknd_core
+import ew.cmd as ewcmd
 
 from ew.backend.user import EwUser
 from ew.backend.player import EwPlayer

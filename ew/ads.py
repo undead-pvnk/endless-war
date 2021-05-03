@@ -2,8 +2,10 @@ import time
 
 from .static import cfg as ewcfg
 from .static import poi as poi_static
-from . import utils as ewutils
+
 from .backend import ads as bnkd_ads
+
+from . import utils as ewutils
 
 from .backend.user import EwUser
 from .backend.player import EwPlayer

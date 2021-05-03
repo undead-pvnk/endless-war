@@ -1,7 +1,6 @@
 import sys
 import traceback
 import collections
-
 import datetime
 import time
 import re
@@ -9,14 +8,6 @@ import random
 import string
 import asyncio
 import math
-
-from .backend import core as bknd_core
-
-from . import stats as ewstats
-from . import item as ewitem
-from . import hunting as ewhunting
-from . import rolemgr as ewrolemgr
-from . import move as ewmap
 
 import discord
 
@@ -29,20 +20,26 @@ from .static import poi as poi_static
 from .static import mutations as static_mutations
 from .static import hue as hue_static
 from .static import status as se_static
-from . import wep as ewwep
+
+from .backend import core as bknd_core
 from .backend import item as bknd_item
+
+from . import wep as ewwep
+from . import stats as ewstats
+from . import item as ewitem
+from . import hunting as ewhunting
+from . import rolemgr as ewrolemgr
+from . import move as ewmap
 
 from .backend.user import EwUser
 from .backend.district import EwDistrict
 from .backend.player import EwPlayer
-from .backend.hunting import EwEnemy, EwOperationData
+from .backend.hunting import EwEnemy
 from .backend.market import EwMarket
 from .backend.status import EwStatusEffect
 from .backend.status import EwEnemyStatusEffect
 from .backend.dungeons import EwGamestate
 from .backend.item import EwItem
-from .backend.hunting import EwEnemy
-#from .prank import calculate_gambit_exchange
 
 TERMINATE = False
 DEBUG = False

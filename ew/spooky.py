@@ -5,22 +5,20 @@
 import time
 import random
 import re
-import asyncio
 
-from . import cmd as ewcmd
 from .static import cfg as ewcfg
 from .static import items as static_items
 from .static import weather as weather_static
 from .static import poi as poi_static
+
+from .backend import core as bknd_core
+from .backend import item as bknd_item
+
 from . import utils as ewutils
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import slimeoid as ewslimeoid
-from . import item as ewitem
-from . import quadrants as ewquadrants
 from . import stats as ewstats
-from .backend import core as bknd_core
-from .backend import item as bknd_item
 
 from .backend.user import EwUser
 from .backend.market import EwMarket
@@ -204,7 +202,7 @@ async def haunt(cmd):
 				# vitriol as virtue
 				list_ids = []
 				for quadrant in ewcfg.quadrant_ids:
-					quadrant_data = ewquadrants.EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
+					quadrant_data = EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
 					if quadrant_data.id_target != -1 and quadrant_data.check_if_onesided() is False:
 						list_ids.append(quadrant_data.id_target)
 					if quadrant_data.id_target2 != -1 and quadrant_data.check_if_onesided() is False:

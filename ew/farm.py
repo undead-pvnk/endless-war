@@ -1,6 +1,5 @@
 import time
 import random
-import asyncio
 
 from .static import cfg as ewcfg
 from .static import vendors
@@ -8,11 +7,12 @@ from .static import weapons as static_weapons
 from .static import food as static_food
 from .static import poi as poi_static
 from .static import farm as farm_static
-from .static import status as se_static
+
+from .backend import item as bknd_item
+
 from . import item as ewitem
 from . import utils as ewutils
 from . import rolemgr as ewrolemgr
-from .backend import item as bknd_item
 
 from .backend.user import EwUser
 from .backend.market import EwMarket

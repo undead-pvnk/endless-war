@@ -1,8 +1,10 @@
 import time
 
 from .static import cfg as ewcfg
+
 from . import utils as ewutils
 from . import stats as ewstats
+
 from .backend.user import EwUser
 
 # Returns a user's life state/gang color as a discord.Colour object

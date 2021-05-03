@@ -1,11 +1,14 @@
 import asyncio
 import time
 
+from .static import cfg as ewcfg
+
+from .backend import core as bknd_core
+
 from . import rolemgr as ewrolemgr
 from . import utils as ewutils
-from .static import cfg as ewcfg
 from . import cmd as ewcmd
-from .backend import core as bknd_core
+
 from .backend.user import EwUser
 
 """

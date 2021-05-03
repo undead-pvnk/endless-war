@@ -7,14 +7,15 @@ from .static import cfg as ewcfg
 from .static import weapons as static_weapons
 from .static import poi as poi_static
 from .static import status as se_static
+
+from .backend import item as bknd_item
+
 from . import captcha as ewcaptcha
 from . import utils as ewutils
-from . import item as ewitem
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
 from . import hunting as ewhunting
-from .backend import item as bknd_item
 
 from .backend.user import EwUser
 from .backend.item import EwItem
@@ -22,7 +23,6 @@ from .backend.market import EwMarket
 from .backend.slimeoid import EwSlimeoid
 from .backend.district import EwDistrict
 from .backend.player import EwPlayer
-#from .hunting import EwEnemy
 from .backend.status import EwStatusEffect
 from .backend.status import EwEnemyStatusEffect
 from .backend.dungeons import EwGamestate

@@ -1,20 +1,19 @@
-import math
 import time
 import asyncio
 import random
 
 from .static import cfg as ewcfg
-from .static import cosmetics
 from .static import vendors
 from .static import items as static_items
 from .static import weapons as static_weapons
 from .static import food as static_food
 from .static import poi as poi_static
+
+from .backend import item as bknd_item
+
 from . import item as ewitem
 from . import utils as ewutils
 from . import move as ewmap
-from . import rolemgr as ewrolemgr
-from .backend import item as bknd_item
 
 from .backend.user import EwUser
 from .backend.player import EwPlayer

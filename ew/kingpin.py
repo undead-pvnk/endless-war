@@ -1,17 +1,20 @@
 """
 	Commands for kingpins only.
 """
-from . import item as ewitem
-from . import utils as ewutils
+import re
+
 from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import poi as poi_static
-from . import rolemgr as ewrolemgr
-from . import move as ewmap
+
 from .backend import item as bknd_item
 
+from . import item as ewitem
+from . import utils as ewutils
+from . import rolemgr as ewrolemgr
+from . import move as ewmap
+
 from .backend.user import EwUser
-import re
 
 """
 	Release the specified player from their commitment to their faction.

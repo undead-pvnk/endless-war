@@ -3,13 +3,15 @@ import random
 import time
 import math
 
-from . import cmd as ewcmd
-from . import utils as ewutils
 from .static import cfg as ewcfg
 from .static import poi as poi_static
+
+from .backend import item as bknd_item
+
+from . import cmd as ewcmd
+from . import utils as ewutils
 from . import rolemgr as ewrolemgr
 from . import item as ewitem
-from .backend import item as bknd_item
 
 from .backend.user import EwUser
 from .backend.district import EwDistrict

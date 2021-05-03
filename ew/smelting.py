@@ -1,14 +1,15 @@
 import random
-import time
 
 from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import vendors
 from .static import smelting
 from .static import items as static_items
+
+from .backend import item as bknd_item
+
 from . import item as ewitem
 from . import utils as ewutils
-from .backend import item as bknd_item
 
 from .backend.user import EwUser
 from .backend.item import EwItem

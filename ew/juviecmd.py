@@ -11,15 +11,14 @@ from .static import items as static_items
 from .static import weapons as static_weapons
 from .static import food as static_food
 from .static import poi as poi_static
-from .static import status as se_static
-from . import utils as ewutils
-from . import cmd as ewcmd
-from . import item as ewitem
-from . import move as ewmap
-from . import rolemgr as ewrolemgr
-from . import stats as ewstats
+
 from .backend import worldevent as bknd_worldevent
 from .backend import item as bknd_item
+
+from . import utils as ewutils
+from . import item as ewitem
+from . import rolemgr as ewrolemgr
+from . import stats as ewstats
 
 from .backend.item import EwItem
 from .backend.user import EwUser

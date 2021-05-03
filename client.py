@@ -18,7 +18,6 @@ import os
 import shlex
 import logging
 
-import ew.utils as ewutils
 import ew.static.cfg as ewcfg
 import ew.static.vendors as vendors
 import ew.static.cosmetics as cosmetics
@@ -26,6 +25,19 @@ import ew.static.items as static_items
 import ew.static.weather as weather_static
 import ew.static.food as static_food
 import ew.static.poi as poi_static
+
+import ew.backend.core as bknd_core
+import ew.backend.ads as bknd_ads
+import ew.backend.farm as bknd_farm
+import ew.backend.fish as bknd_fish
+import ew.backend.item as bknd_item
+import ew.backend.player as bknd_player
+import ew.backend.server as bknd_server
+import ew.backend.leaderboard as bknd_leaderboard
+import ew.backend.weather as bknd_weather
+import ew.backend.worldevent as bknd_worldevent
+
+import ew.utils as ewutils
 import ew.farm as ewfarm
 import ew.cmd as ewcmd
 import ew.casino as ewcasino
@@ -35,13 +47,9 @@ import ew.juviecmd as ewjuviecmd
 import ew.market as ewmarket
 import ew.spooky as ewspooky
 import ew.kingpin as ewkingpin
-import ew.backend.player as bknd_player
-import ew.backend.server as bknd_server
 import ew.item as ewitem
 import ew.move as ewmap
 import ew.rolemgr as ewrolemgr
-import ew.raidboss as ewraidboss
-import ew.backend.leaderboard as ewleaderboard
 import ew.cosmeticitem as ewcosmeticitem
 import ew.slimeoid as ewslimeoid
 import ew.district as ewdistrict
@@ -50,11 +58,9 @@ import ew.quadrants as ewquadrants
 import ew.transport as ewtransport
 import ew.smelting as ewsmelting
 import ew.hunting as ewhunting
-import ew.fish as  ewfish
+import ew.fish as ewfish
 import ew.faction as ewfaction
 import ew.apt as ewapt
-import ew.backend.weather as bknd_weather
-import ew.backend.worldevent as bknd_worldevent
 import ew.dungeons as ewdungeons
 import ew.ads as ewads
 import ew.book as ewbook
@@ -62,11 +68,6 @@ import ew.sports as ewsports
 import ew.race as ewrace
 import ew.slimetwitter as ewslimetwitter
 import ew.debug as ewdebug
-import ew.backend.core as bknd_core
-import ew.backend.ads as bknd_ads
-import ew.backend.farm as bknd_farm
-import ew.backend.fish as bknd_fish
-import ew.backend.item as bknd_item
 
 from ew.backend.item import EwItem
 from ew.backend.user import EwUser
@@ -1360,7 +1361,7 @@ async def on_ready():
 
 					# Post leaderboards at 6am NLACakaNM time.
 					if market_data.clock == 6:
-						await ewleaderboard.post_leaderboards(client = client, server = server)
+						await bknd_leaderboard.post_leaderboards(client = client, server = server)
 
 		except:
 			ewutils.logMsg('An error occurred in the scheduled slime market update task:')
@@ -2093,7 +2094,7 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'postleaderboard'):
 			try:
 				for server in client.guilds:
-					await ewleaderboard.post_leaderboards(client=client, server=server)
+					await bknd_leaderboard.post_leaderboards(client=client, server=server)
 			except:
 				pass
 			

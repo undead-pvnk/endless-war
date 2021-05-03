@@ -1,15 +1,14 @@
-import math
-import random
 import asyncio
 
 from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import items as static_items
 from .static import hue as hue_static
-from . import item as ewitem
-from . import utils as ewutils
+
 from .backend import core as bknd_core
 from .backend import item as bknd_item
+
+from . import utils as ewutils
 
 from .backend.user import EwUser
 from .backend.item import EwItem

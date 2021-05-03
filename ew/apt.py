@@ -1,10 +1,7 @@
 import asyncio
-
 import random
 import time
 
-from . import cmd as ewcmd
-from . import utils as ewutils
 from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import items as static_items
@@ -12,6 +9,12 @@ from .static import weapons as static_weapons
 from .static import food as static_food
 from .static import poi as poi_static
 from .static import hue as hue_static
+
+from .backend import core as bknd_core
+from .backend import item as bknd_item
+
+from . import cmd as ewcmd
+from . import utils as ewutils
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import market as ewmarket
@@ -25,8 +28,6 @@ from . import wep as ewwep
 from . import quadrants as ewquadrants
 from . import district as ewdistrict
 from . import mutation as ewmutation
-from .backend import core as bknd_core
-from .backend import item as bknd_item
 
 from .backend.item import EwItem
 from .backend.district import EwDistrict

@@ -1,30 +1,30 @@
-import math
 import time
 import random
 import asyncio
+import re
+
 import discord
 
-
-from . import utils as ewutils
 from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import items as static_items
 from .static import weapons as static_weapons
 from .static import poi as poi_static
 from .static import hue as hue_static
-from . import stats as ewstats
-from . import district as ewdistrict
+
+from .backend import core as bknd_core
+from .backend import item as bknd_item
+
+from . import utils as ewutils
 from . import rolemgr as ewrolemgr
 from . import smelting as ewsmelting
 from . import prank as ewprank
 from . import debug as ewdebug
-from .backend import core as bknd_core
-from .backend import item as bknd_item
 
 from .backend.user import EwUser
 from .backend.player import EwPlayer
 from .backend.item import EwItem
-import re
+from .backend.district import EwDistrict
 """
     Drop item into current district.
 """
@@ -1184,7 +1184,7 @@ async def squeeze(cmd):
                 targetmodel.change_slimes(n=penalty, source=ewcfg.source_haunted)
                 targetmodel.persist()
 
-                district_data = ewdistrict.EwDistrict(district=targetmodel.poi, id_server=cmd.guild.id)
+                district_data = EwDistrict(district=targetmodel.poi, id_server=cmd.guild.id)
                 district_data.change_slimes(n= -penalty, source=ewcfg.source_squeeze)
                 district_data.persist()
 

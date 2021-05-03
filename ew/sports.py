@@ -1,11 +1,10 @@
-import time
 import random
 import asyncio
 
 from .static import cfg as ewcfg
 from .static import poi as poi_static
+
 from . import utils as ewutils
-from . import move as ewmap
 
 from .backend.user import EwUser
 from .backend.player import EwPlayer

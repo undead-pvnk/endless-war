@@ -6,15 +6,13 @@ from .static import cfg as ewcfg
 from .static import slimeoid as sl_static
 from .static import poi as poi_static
 from .static import hue as hue_static
-from . import utils as ewutils
-from . import item as ewitem
-from . import rolemgr as ewrolemgr
-from . import stats as ewstats
-from . import move as ewmap
-from . import casino as ewcasino
-from . import quadrants as ewquadrants
+
 from .backend import core as bknd_core
 from .backend import item as bknd_item
+
+from . import utils as ewutils
+from . import item as ewitem
+from . import casino as ewcasino
 
 from .backend.user import EwUser
 from .backend.market import EwMarket
@@ -469,7 +467,7 @@ async def petslimeoid(cmd):
 		list_ids = []
 
 		for quadrant in ewcfg.quadrant_ids:
-			quadrant_data = ewquadrants.EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
+			quadrant_data = EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
 			if quadrant_data.id_target != -1 and quadrant_data.check_if_onesided() is False:
 				list_ids.append(quadrant_data.id_target)
 			if quadrant_data.id_target2 != -1 and quadrant_data.check_if_onesided() is False:
@@ -537,7 +535,7 @@ async def abuseslimeoid(cmd):
 		list_ids = []
 
 		for quadrant in ewcfg.quadrant_ids:
-			quadrant_data = ewquadrants.EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
+			quadrant_data = EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
 			if quadrant_data.id_target != -1 and quadrant_data.check_if_onesided() is False:
 				list_ids.append(quadrant_data.id_target)
 			if quadrant_data.id_target2 != -1 and quadrant_data.check_if_onesided() is False:

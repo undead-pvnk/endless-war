@@ -1,12 +1,10 @@
-import asyncio
 import random
-
-import discord
 
 from .static import cfg as ewcfg
 from .static import quadrants as quad_static
-from . import stats as ewstats
+
 from . import utils as ewutils
+
 from .backend.quadrants import EwQuadrant
 from .backend.user import EwUser
 

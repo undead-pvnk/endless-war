@@ -5,6 +5,7 @@ import discord
 
 from .static import cfg as ewcfg
 from .static import poi as poi_static
+
 from . import stats as ewstats
 from . import utils as ewutils
 from . import rolemgr as ewrolemgr

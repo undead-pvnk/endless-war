@@ -7,16 +7,16 @@ import discord
 
 from copy import deepcopy
 
-from . import utils as ewutils
-from . import rolemgr as ewrolemgr
 from .static import cfg as ewcfg
 from .static import poi as poi_static
-from . import apt as ewapt
-from . import ads as ewads
-from . import hunting as ewhunting
+
 from .backend import core as bknd_core
 from .backend import ads as bknd_ads
 
+from . import utils as ewutils
+from . import rolemgr as ewrolemgr
+from . import apt as ewapt
+from . import ads as ewads
 
 from .backend.user import EwUser
 from .backend.district import EwDistrict
@@ -28,8 +28,6 @@ from .backend.player import EwPlayer
 from .backend.ads import EwAd
 from .backend.item import EwItem
 from .backend.dungeons import EwGamestate
-
-#from .hunting import EwEnemy
 from .backend.hunting import EwEnemy
 from .backend.worldevent import get_void_connection_pois
 
