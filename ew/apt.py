@@ -33,6 +33,7 @@ from .backend.district import EwDistrict
 from .player import EwPlayer
 from .user import EwUser
 from .backend.apt import EwApartment
+from .backend.market import EwMarket, EwStock
 
 async def consult(cmd):
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -328,9 +329,9 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 def getPriceBase(cmd):
 	#based on stock success
 	user_data = EwUser(member=cmd.message.author) #market rates average to 1000. This fomula calculates prices to specification based on that amount.
-	kfc = ewmarket.EwStock(stock='kfc', id_server = user_data.id_server)
-	tcb = ewmarket.EwStock(stock='tacobell', id_server=user_data.id_server)
-	hut = ewmarket.EwStock(stock='pizzahut', id_server=user_data.id_server)
+	kfc = EwStock(stock='kfc', id_server = user_data.id_server)
+	tcb = EwStock(stock='tacobell', id_server=user_data.id_server)
+	hut = EwStock(stock='pizzahut', id_server=user_data.id_server)
 	if abs(kfc.market_rate - 1000) > abs(tcb.market_rate - 1000) and abs(kfc.market_rate - 1000) > abs(hut.market_rate - 1000):
 		return kfc.market_rate * 201
 	elif abs(tcb.market_rate - 1000) > abs(hut.market_rate - 1000):
@@ -2155,7 +2156,7 @@ async def setOffAlarms(id_server = None):
 	if id_server != None:
 		client = ewutils.get_client()
 		server = client.get_guild(id_server)
-		time_current = ewmarket.EwMarket(id_server=id_server).clock
+		time_current = EwMarket(id_server=id_server).clock
 		if time_current <= 12:
 			displaytime = str(time_current)
 			ampm = 'am'
