@@ -2462,6 +2462,11 @@ col_hue_fullcomp_2 = "hue_fullcomp_2"
 col_bit = "state_bit"
 col_id_state = "id_state"
 
+#SWILLDERMUK
+col_id_user_pranker = 'id_user_pranker'
+col_id_user_pranked = 'id_user_pranked'
+col_prank_count = 'prank_count'
+		
 
 
 
