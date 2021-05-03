@@ -34,6 +34,7 @@ from .backend.player import EwPlayer
 from .user import EwUser
 from .backend.apt import EwApartment
 from .backend.market import EwMarket, EwStock
+from .backend.slimeoid import EwSlimeoid
 
 async def consult(cmd):
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -1134,7 +1135,7 @@ def check(str):
 async def freeze(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	usermodel = EwUser(id_server= playermodel.id_server, id_user=cmd.message.author.id)
-	ew_slime_model = ewslimeoid.EwSlimeoid(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	ew_slime_model = EwSlimeoid(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
 	if usermodel.visiting != ewcfg.location_id_empty and ew_slime_model.name != "":
 		response = "Your slimeoid, sensing you're trying to abandon them in someone else's freezer, begins to pout. Dammit, you can't refuse a face like that."
@@ -1174,10 +1175,10 @@ async def unfreeze(cmd):
 	slimeoid_search = slimeoid_search[:-1]
 	id_slimeoid = ewslimeoid.find_slimeoid(id_user=str(cmd.message.author.id) + "freeze", id_server=playermodel.id_server, slimeoid_search=slimeoid_search)
 	if id_slimeoid != None:
-		ew_slime_model = ewslimeoid.EwSlimeoid(id_user=str(cmd.message.author.id) + "freeze", id_slimeoid=id_slimeoid , id_server=playermodel.id_server)
+		ew_slime_model = EwSlimeoid(id_user=str(cmd.message.author.id) + "freeze", id_slimeoid=id_slimeoid , id_server=playermodel.id_server)
 	else:
-		ew_slime_model = ewslimeoid.EwSlimeoid(id_user=str(cmd.message.author.id) + "freeze", slimeoid_name=slimeoid_search, id_server=playermodel.id_server)
-	yourslimeoid = ewslimeoid.EwSlimeoid(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+		ew_slime_model = EwSlimeoid(id_user=str(cmd.message.author.id) + "freeze", slimeoid_name=slimeoid_search, id_server=playermodel.id_server)
+	yourslimeoid = EwSlimeoid(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
 	if usermodel.visiting != ewcfg.location_id_empty:
 		response = "The freezer's stuck! Well you're a guest, anyhow. You probably shouldn't steal any slimeoids."
@@ -2006,7 +2007,7 @@ async def wash(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 	slimeoid_search = ewslimeoid.find_slimeoid(slimeoid_search=item_search, id_server=playermodel.id_server, id_user=playermodel.id_user)
-	slimeoid = ewslimeoid.EwSlimeoid(id_slimeoid=slimeoid_search, id_server=playermodel.id_server, id_user=playermodel.id_user)
+	slimeoid = EwSlimeoid(id_slimeoid=slimeoid_search, id_server=playermodel.id_server, id_user=playermodel.id_user)
 	if usermodel.visiting != ewcfg.location_id_empty:
 		usermodel = EwUser(id_user=usermodel.visiting, id_server=playermodel.id_server)
 

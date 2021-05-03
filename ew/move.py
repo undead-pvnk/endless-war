@@ -23,7 +23,7 @@ from .backend.district import EwDistrict
 from .transport import EwTransport
 from .backend.market import EwMarket
 from .backend.mutation import EwMutation
-from .slimeoid import EwSlimeoid
+from .backend.slimeoid import EwSlimeoid
 from .backend.player import EwPlayer
 from .backend.ads import EwAd
 from .backend.item import EwItem

@@ -20,7 +20,7 @@ from .backend import item as bknd_item
 from .user import EwUser
 from .backend.item import EwItem
 from .backend.market import EwMarket
-from .slimeoid import EwSlimeoid
+from .backend.slimeoid import EwSlimeoid
 from .backend.district import EwDistrict
 from .backend.player import EwPlayer
 #from .hunting import EwEnemy

@@ -68,6 +68,8 @@ clenched = {}
 #When using SSOD, adjusted paths are listed here.
 path_ssod = {}
 
+active_slimeoidbattles = {}
+
 class Message:
 	# Send the message to this exact channel by name.
 	channel = None

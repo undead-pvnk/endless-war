@@ -17,7 +17,7 @@ from .backend import item as bknd_item
 from .user import EwUser
 from .backend.market import EwMarket
 from .backend.item import EwItem
-from .slimeoid import EwSlimeoid
+from .backend.slimeoid import EwSlimeoid
 from .backend.district import EwDistrict
 from .backend.farm import EwFarm
 

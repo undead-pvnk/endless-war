@@ -32,7 +32,7 @@ from .backend import item as bknd_item
 from .user import EwUser
 from .backend.market import EwMarket
 from .backend.item import EwItem
-from .slimeoid import EwSlimeoid
+from .backend.slimeoid import EwSlimeoid
 #from .hunting import find_enemy, delete_all_enemies, EwEnemy, EwOperationData, spawn_enemy, delete_enemy
 from .statuseffects import EwStatusEffect
 from .statuseffects import EwEnemyStatusEffect
