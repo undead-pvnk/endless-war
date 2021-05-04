@@ -5,6 +5,8 @@ from .. import utils as ewutils
 from ..static import cfg as ewcfg
 from ..static import cosmetics
 from ..static import items as static_items
+from ..static import weapons as static_weapons
+from ..static import hue as hue_static
 from .. import stats as ewstats
 from . import core as bknd_core
 
@@ -948,3 +950,192 @@ def remove_from_trades(id_item):
                 return
 
 
+def equip(user_data, weapon_item = None):
+
+	weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "Ghosts can't equip weapons."
+	elif user_data.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in weapon.classes:
+		response = "Juvies can't equip weapons."
+	elif user_data.life_state == ewcfg.life_state_shambler:
+		response = "Shamblers can't equip weapons."
+	elif user_data.weaponmarried == True:
+		current_weapon = EwItem(id_item = user_data.weapon)
+		if weapon_item.item_props.get("married") == user_data.id_user:
+			response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
+			user_data.weapon = weapon_item.id_item
+
+			if ewcfg.weapon_class_captcha in weapon.classes:
+				captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=user_data.id_user, id_server=user_data.id_server)
+				weapon_item.item_props["captcha"] = captcha
+				response += "\nSecurity code: **{}**".format(ewutils.text_to_regional_indicator(captcha))
+		else:
+			partner_name = current_weapon.item_props.get("weapon_name")
+			if partner_name in [None, ""]:
+				partner_name = "partner"
+			response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(partner_name)
+	else:
+
+		response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name")) + "."
+		user_data.weapon = weapon_item.id_item
+
+		if user_data.sidearm == user_data.weapon:
+			user_data.sidearm = -1
+
+		if ewcfg.weapon_class_captcha in weapon.classes:
+			captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=user_data.id_user, id_server=user_data.id_server)
+			weapon_item.item_props["captcha"] = captcha
+			response += "\nSecurity code: **{}**".format(ewutils.text_to_regional_indicator(captcha))
+
+
+	return response
+
+def equip_sidearm(user_data, sidearm_item = None):
+	
+	sidearm = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "Ghosts can't equip weapons."
+	elif user_data.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in sidearm.classes:
+		response = "Juvies can't equip weapons."
+	elif user_data.weaponmarried == True and sidearm_item.item_props.get("married") == user_data.id_user:
+		current_weapon = EwItem(id_item = user_data.weapon)
+		partner_name = current_weapon.item_props.get("weapon_name")
+		if partner_name in [None, ""]:
+			partner_name = "partner"
+		response = "Your {} is motionless in your hand, frothing with jealousy. You can't sidearm it like one of your side ho pickaxes.".format(partner_name)
+	else:
+
+
+		response = "You sidearm your " + (sidearm_item.item_props.get("weapon_type") if len(sidearm_item.item_props.get("weapon_name")) == 0 else sidearm_item.item_props.get("weapon_name")) + "."
+		user_data.sidearm = sidearm_item.id_item
+
+		if user_data.weapon == user_data.sidearm:
+			user_data.weapon = -1
+
+	return response
+
+def get_fashion_stats(user_data):
+
+	cosmetics = bknd_item.inventory(
+		id_user=user_data.id_user,
+		id_server=user_data.id_server,
+		item_type_filter=ewcfg.it_cosmetic
+	)
+	
+	result = [0] * 3
+
+	cosmetic_items = []
+	for cosmetic in cosmetics:
+		cosmetic_items.append(EwItem(id_item=cosmetic.get('id_item')))
+
+	for cos in cosmetic_items:
+		if cos.item_props['adorned'] == 'true':
+			
+			cosmetic_count = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['cosmetic_name'] == cos.item_props['cosmetic_name'] 
+							and cosmetic.item_props['adorned'] == 'true')
+			
+			if cos.item_props.get('attack') == None:
+				print('Failed to get attack stat for cosmetic with props: {}'.format(cos.item_props))
+							
+			result[0] += int( int(cos.item_props['attack']) / cosmetic_count )
+			result[1] += int( int(cos.item_props['defense']) / cosmetic_count )
+			result[2] += int( int(cos.item_props['speed']) / cosmetic_count )
+	
+	return result
+
+def get_freshness(user_data):
+	cosmetics = bknd_item.inventory(
+		id_user=user_data.id_user,
+		id_server=user_data.id_server,
+		item_type_filter=ewcfg.it_cosmetic
+	)
+
+	cosmetic_items = []
+	for cosmetic in cosmetics:
+		cosmetic_items.append(EwItem(id_item=cosmetic.get('id_item')))
+
+	adorned_cosmetics = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['adorned'] == 'true')
+
+	mutations = user_data.get_mutations()
+	bonus_freshness = 500 if ewcfg.mutation_id_unnaturalcharisma in mutations else 0
+
+	if len(cosmetic_items) == 0 or adorned_cosmetics < 2:
+		return bonus_freshness
+
+	base_freshness = 0
+	hue_count = {}
+	style_count = {}
+
+	#get base freshness, hue and style counts
+	for cos in cosmetic_items:
+		if cos.item_props['adorned'] == 'true':
+			
+			cosmetic_count = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['cosmetic_name'] == cos.item_props['cosmetic_name'] 
+							and cosmetic.item_props['adorned'] == 'true')
+
+			base_freshness += int(cos.item_props['freshness']) / cosmetic_count
+
+			hue = hue_static.hue_map.get(cos.item_props.get('hue'))
+			if hue is not None:
+				if hue_count.get(hue):
+					hue_count[hue] += 1
+				else:
+					hue_count[hue] = 1
+
+			style = cos.item_props['fashion_style']
+			if style_count.get(style):
+				style_count[style] += 1
+			else:
+				style_count[style] = 1
+
+
+
+	#calc hue modifier
+	hue_mod = 1
+	if len(hue_count) > 0:
+
+		complimentary_hue_count = 0
+		dominant_hue = max(hue_count, key=lambda key: hue_count[key])
+
+		for hue in hue_count:
+			if hue.id_hue == dominant_hue.id_hue or hue.id_hue in dominant_hue.effectiveness or hue.is_neutral:
+				complimentary_hue_count += hue_count[hue]
+
+		if hue_count[dominant_hue] / adorned_cosmetics >= 0.6 and complimentary_hue_count == adorned_cosmetics:
+			hue_mod = 5
+
+	#calc style modifier
+	style_mod = 1
+	dominant_style = max(style_count, key=lambda key: style_count[key])
+
+	if style_count[dominant_style] / adorned_cosmetics >= 0.6:
+		style_mod = style_count[dominant_style] / adorned_cosmetics * 10
+
+
+
+	return int(base_freshness * hue_mod * style_mod) + bonus_freshness
+
+def get_weaponskill(user_data):
+	# Get the skill for the user's current weapon.
+	if user_data.weapon != None and user_data.weapon >= 0:
+		skills = ewutils.weaponskills_get(
+			id_server = id_server,
+			id_user = id_user
+		)
+
+		weapon_item = EwItem(id_item = user_data.weapon)
+
+		skill_data = skills.get(weapon_item.item_props.get("weapon_type"))
+		if skill_data != None:
+			weaponskill = skill_data['skill']
+		else:
+			weaponskill = 0
+
+		if weaponskill == None:
+			weaponskill = 0
+	else:
+		weaponskill = 0
+
+	return weaponskill

@@ -1,7 +1,9 @@
 import time
 import math
+import random
 
 from ..static import cfg as ewcfg
+from ..static import status as se_static
 from .. import utils as ewutils
 from . import core as bknd_core
 
@@ -249,3 +251,55 @@ class EwEnemyStatusEffect:
 			cursor.close()
 			bknd_core.databaseClose(conn_info)
 
+
+
+def applyStatus(user_data, id_status = None, value = 0, source = "", multiplier = 1, id_target = -1):
+	response = ""
+	if id_status != None:
+		status = None
+
+		status = se_static.status_effects_def_map.get(id_status)
+		time_expire = status.time_expire * multiplier
+
+		if status != None:
+			statuses = user_data.getStatusEffects()
+
+			status_effect = EwStatusEffect(id_status=id_status, user_data=user_data, time_expire= time_expire, value=value, source=source, id_target = id_target)
+			
+			if id_status in statuses:
+				status_effect.value = value
+
+				if status.time_expire > 0 and id_status in ewcfg.stackable_status_effects:
+					status_effect.time_expire += time_expire
+					response = status.str_acquire
+
+				status_effect.persist()
+			else:
+				response = status.str_acquire
+				
+
+	return response
+
+def apply_injury(user_data, id_injury, severity, source):
+	statuses = user_data.getStatusEffects()
+
+	if id_injury in statuses:
+		status_data = EwStatusEffect(id_status = id_injury, user_data = user_data)
+		
+		try:
+			value_int = int(status_data.value)
+
+			if value_int > severity:
+				if random.randrange(value_int) < severity:
+					status_data.value = value_int + 1
+			else:
+				status_data.value = severity
+		except:
+			status_data.value = severity
+
+		status_data.source = source
+
+		status_data.persist()
+
+	else:
+		user_data.applyStatus(id_status = id_injury, value = severity, source = source)

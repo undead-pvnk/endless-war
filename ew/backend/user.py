@@ -1,23 +1,18 @@
 import time
 import random
-import asyncio
 
 from .. import utils as ewutils
 from ..static import cfg as ewcfg
 from ..static import weapons as static_weapons
 from ..static import poi as poi_static
 from ..static import mutations as static_mutations
-from ..static import hue as hue_static
-from ..static import status as se_static
 from .. import stats as ewstats
 from .. import item as ewitem
 from . import district as bknd_district
-from .. import rolemgr  as ewrolemgr 
+from .. import rolemgr as ewrolemgr 
 from . import core as bknd_core
 from . import item as bknd_item
-
-from .item import EwItem
-from .status import EwStatusEffect
+from . import status as bknd_status
 
 """ User model for database persistence """
 class EwUser:
@@ -656,70 +651,10 @@ class EwUser:
 
 
 	def equip(self, weapon_item = None):
-
-		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-
-		if self.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts can't equip weapons."
-		elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in weapon.classes:
-			response = "Juvies can't equip weapons."
-		elif self.life_state == ewcfg.life_state_shambler:
-			response = "Shamblers can't equip weapons."
-		elif self.weaponmarried == True:
-			current_weapon = EwItem(id_item = self.weapon)
-			if weapon_item.item_props.get("married") == self.id_user:
-				response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
-				self.weapon = weapon_item.id_item
-
-				if ewcfg.weapon_class_captcha in weapon.classes:
-					captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=self.id_user, id_server=self.id_server)
-					weapon_item.item_props["captcha"] = captcha
-					response += "\nSecurity code: **{}**".format(ewutils.text_to_regional_indicator(captcha))
-			else:
-				partner_name = current_weapon.item_props.get("weapon_name")
-				if partner_name in [None, ""]:
-					partner_name = "partner"
-				response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(partner_name)
-		else:
-
-			response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name")) + "."
-			self.weapon = weapon_item.id_item
-
-			if self.sidearm == self.weapon:
-				self.sidearm = -1
-
-			if ewcfg.weapon_class_captcha in weapon.classes:
-				captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=self.id_user, id_server=self.id_server)
-				weapon_item.item_props["captcha"] = captcha
-				response += "\nSecurity code: **{}**".format(ewutils.text_to_regional_indicator(captcha))
-
-
-		return response
+		return bknd_item.equip(user_data, weapon_item)
 
 	def equip_sidearm(self, sidearm_item = None):
-		
-		sidearm = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
-
-		if self.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts can't equip weapons."
-		elif self.life_state == ewcfg.life_state_juvenile and ewcfg.weapon_class_juvie not in sidearm.classes:
-			response = "Juvies can't equip weapons."
-		elif self.weaponmarried == True and sidearm_item.item_props.get("married") == self.id_user:
-			current_weapon = EwItem(id_item = self.weapon)
-			partner_name = current_weapon.item_props.get("weapon_name")
-			if partner_name in [None, ""]:
-				partner_name = "partner"
-			response = "Your {} is motionless in your hand, frothing with jealousy. You can't sidearm it like one of your side ho pickaxes.".format(partner_name)
-		else:
-
-
-			response = "You sidearm your " + (sidearm_item.item_props.get("weapon_type") if len(sidearm_item.item_props.get("weapon_name")) == 0 else sidearm_item.item_props.get("weapon_name")) + "."
-			self.sidearm = sidearm_item.id_item
-
-			if self.weapon == self.sidearm:
-				self.weapon = -1
-
-		return response
+		return bknd_item.equip_sidearm(user_data, sidearm_item)	
 
 	def getStatusEffects(self):
 		values = []
@@ -743,31 +678,8 @@ class EwUser:
 			return values
 
 	def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = -1):
-		response = ""
-		if id_status != None:
-			status = None
-
-			status = se_static.status_effects_def_map.get(id_status)
-			time_expire = status.time_expire * multiplier
-
-			if status != None:
-				statuses = self.getStatusEffects()
-
-				status_effect = EwStatusEffect(id_status=id_status, user_data=self, time_expire= time_expire, value=value, source=source, id_target = id_target)
-				
-				if id_status in statuses:
-					status_effect.value = value
-
-					if status.time_expire > 0 and id_status in ewcfg.stackable_status_effects:
-						status_effect.time_expire += time_expire
-						response = status.str_acquire
-
-					status_effect.persist()
-				else:
-					response = status.str_acquire
-					
-
-		return response		
+		
+		return bknd_status.applyStatus(self, id_status, value, source, multiplier, id_target)
 
 	def clear_status(self, id_status = None):
 		if id_status != None:
@@ -807,29 +719,8 @@ class EwUser:
 		
 
 	def apply_injury(self, id_injury, severity, source):
-		statuses = self.getStatusEffects()
+		return bknd_status.apply_injury(self, id_injury, severity, source)
 
-		if id_injury in statuses:
-			status_data = EwStatusEffect(id_status = id_injury, user_data = self)
-			
-			try:
-				value_int = int(status_data.value)
-
-				if value_int > severity:
-					if random.randrange(value_int) < severity:
-						status_data.value = value_int + 1
-				else:
-					status_data.value = severity
-			except:
-				status_data.value = severity
-
-			status_data.source = source
-
-			status_data.persist()
-
-		else:
-			self.applyStatus(id_status = id_injury, value = severity, source = source)
-		
 	def get_weapon_capacity(self):
 		mutations = self.get_mutations()
 		base_capacity = ewutils.weapon_carry_capacity_bylevel(self.slimelevel)
@@ -1037,105 +928,10 @@ class EwUser:
 		)
 
 	def get_fashion_stats(self):
-
-		cosmetics = bknd_item.inventory(
-			id_user=self.id_user,
-			id_server=self.id_server,
-			item_type_filter=ewcfg.it_cosmetic
-		)
-		
-		result = [0] * 3
-
-		cosmetic_items = []
-		for cosmetic in cosmetics:
-			cosmetic_items.append(EwItem(id_item=cosmetic.get('id_item')))
-
-		for cos in cosmetic_items:
-			if cos.item_props['adorned'] == 'true':
-				
-				cosmetic_count = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['cosmetic_name'] == cos.item_props['cosmetic_name'] 
-								and cosmetic.item_props['adorned'] == 'true')
-				
-				if cos.item_props.get('attack') == None:
-					print('Failed to get attack stat for cosmetic with props: {}'.format(cos.item_props))
-								
-				result[0] += int( int(cos.item_props['attack']) / cosmetic_count )
-				result[1] += int( int(cos.item_props['defense']) / cosmetic_count )
-				result[2] += int( int(cos.item_props['speed']) / cosmetic_count )
-		
-		return result
+		return bknd_item.get_fashion_stats(self)
 
 	def get_freshness(self):
-		cosmetics = bknd_item.inventory(
-			id_user=self.id_user,
-			id_server=self.id_server,
-			item_type_filter=ewcfg.it_cosmetic
-		)
-
-		cosmetic_items = []
-		for cosmetic in cosmetics:
-			cosmetic_items.append(EwItem(id_item=cosmetic.get('id_item')))
-
-		adorned_cosmetics = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['adorned'] == 'true')
-
-		mutations = self.get_mutations()
-		bonus_freshness = 500 if ewcfg.mutation_id_unnaturalcharisma in mutations else 0
-
-		if len(cosmetic_items) == 0 or adorned_cosmetics < 2:
-			return bonus_freshness
-
-		base_freshness = 0
-		hue_count = {}
-		style_count = {}
-
-		#get base freshness, hue and style counts
-		for cos in cosmetic_items:
-			if cos.item_props['adorned'] == 'true':
-				
-				cosmetic_count = sum(1 for cosmetic in cosmetic_items if cosmetic.item_props['cosmetic_name'] == cos.item_props['cosmetic_name'] 
-								and cosmetic.item_props['adorned'] == 'true')
-
-				base_freshness += int(cos.item_props['freshness']) / cosmetic_count
-
-				hue = hue_static.hue_map.get(cos.item_props.get('hue'))
-				if hue is not None:
-					if hue_count.get(hue):
-						hue_count[hue] += 1
-					else:
-						hue_count[hue] = 1
-
-				style = cos.item_props['fashion_style']
-				if style_count.get(style):
-					style_count[style] += 1
-				else:
-					style_count[style] = 1
-
-
-
-		#calc hue modifier
-		hue_mod = 1
-		if len(hue_count) > 0:
-
-			complimentary_hue_count = 0
-			dominant_hue = max(hue_count, key=lambda key: hue_count[key])
-
-			for hue in hue_count:
-				if hue.id_hue == dominant_hue.id_hue or hue.id_hue in dominant_hue.effectiveness or hue.is_neutral:
-					complimentary_hue_count += hue_count[hue]
-
-			if hue_count[dominant_hue] / adorned_cosmetics >= 0.6 and complimentary_hue_count == adorned_cosmetics:
-				hue_mod = 5
-
-		#calc style modifier
-		style_mod = 1
-		dominant_style = max(style_count, key=lambda key: style_count[key])
-
-		if style_count[dominant_style] / adorned_cosmetics >= 0.6:
-			style_mod = style_count[dominant_style] / adorned_cosmetics * 10
-
-
-
-		return int(base_freshness * hue_mod * style_mod) + bonus_freshness
+		return bknd_item.get_freshness(self)
 
 	def get_festivity(self):
 		data = bknd_core.execute_sql_query(
@@ -1361,25 +1157,8 @@ class EwUser:
 				if (self.time_joined == 0) and (member != None) and (member.joined_at != None):
 					self.time_joined = int(member.joined_at.timestamp())
 
-				# Get the skill for the user's current weapon.
-				if self.weapon != None and self.weapon >= 0:
-					skills = ewutils.weaponskills_get(
-						id_server = id_server,
-						id_user = id_user
-					)
 
-					weapon_item = EwItem(id_item = self.weapon)
-
-					skill_data = skills.get(weapon_item.item_props.get("weapon_type"))
-					if skill_data != None:
-						self.weaponskill = skill_data['skill']
-					else:
-						self.weaponskill = 0
-
-					if self.weaponskill == None:
-						self.weaponskill = 0
-				else:
-					self.weaponskill = 0
+				self.weaponskill = bknd_item.get_weaponskill(self)
 
 				if data_level > 0:
 					result = self.get_fashion_stats()
