@@ -2529,7 +2529,14 @@ async def create_item(cmd):
 		if item != None:
 			item_id = item.id_fish
 			name = item.str_name
-			
+
+	if item == None:
+		item = ewcfg.relic_map.get(value)
+		item_type = ewcfg.it_relic
+		if item != None:
+			item_id = item.id_relic
+			name = item.str_name
+
 	if item != None:
 		
 		item_props = ewitem.gen_item_props(item)
@@ -2542,8 +2549,10 @@ async def create_item(cmd):
 			stack_size=0,
 			item_props=item_props
 		)
-		
-		response = "Created item **{}** with id **{}** for **{}**".format(name, generated_item_id, item_recipient)
+		if generated_item_id is not None:
+			response = "Created item **{}** with id **{}** for **{}**".format(name, generated_item_id, item_recipient)
+		else:
+			response = "Could not create item."
 	else:
 		response = "Could not find item."
 
@@ -4240,3 +4249,5 @@ def item_commands(cmd):
 		return response
 	else:
 		return ""
+
+

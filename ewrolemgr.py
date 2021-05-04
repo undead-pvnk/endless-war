@@ -135,7 +135,7 @@ async def hideRoleNames(cmd):
 			pass
 		elif poi.is_district:
 			pass
-		elif poi.id_poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+		elif poi.id_poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines, "themuseum"]:
 			pass
 		else:
 			continue
@@ -357,7 +357,6 @@ async def updateRoles(
 	remove_or_apply_flag = None
 ):
 	time_now = int(time.time())
-
 	if server_default != None:
 		user_data = EwUser(id_user=member.id, id_server = server_default)
 	else:
@@ -372,7 +371,7 @@ async def updateRoles(
 	roles_map_user = ewutils.getRoleIdMap(member.roles)
 
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
-
+	print(user_poi.id_poi)
 	if user_data.life_state != ewcfg.life_state_kingpin and ewcfg.role_kingpin in roles_map_user:
 		# Fix the life_state of kingpins, if somehow it wasn't set.
 		user_data.life_state = ewcfg.life_state_kingpin
@@ -460,7 +459,6 @@ async def updateRoles(
 	for poi in ewcfg.poi_list:
 		if poi.permissions != None and poi.permissions != poi_permissions:
 			poi_permissions_remove.append(poi.id_poi)
-
 	poi_roles_remove = []
 	for poi in ewcfg.poi_list:
 		if poi.major_role != None and poi.major_role != poi_major_role:
@@ -493,6 +491,7 @@ async def updateRoles(
 			roleName = role_data.name
 			if roleName != None and roleName not in faction_roles_remove and roleName not in misc_roles_remove and roleName not in poi_roles_remove and role_data.id_role != '':
 				role_ids.append(int(role_data.id_role))
+				print(role_data.name)
 		except:
 			ewutils.logMsg('error: couldn\'t find role with id {}'.format(role_id))
 
@@ -537,6 +536,7 @@ async def updateRoles(
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
 		ewutils.logMsg('error: couldn\'t find major role {}'.format(poi_major_role))
+
 
 	#try:
 	#	minor_role_data = EwRole(id_server = id_server, name = poi_minor_role)
@@ -584,6 +584,7 @@ async def updateRoles(
 			# ewutils.logMsg('found role {} with id {}'.format(role.name, role.id))
 			replacement_roles.append(role)
 
+	print(replacement_roles)
 	#ewutils.logMsg('found {} roles to replace'.format(len(replacement_roles)))
 	
 	try:
@@ -634,6 +635,15 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 						if wall_channel is not None:
 							for i in range(ewcfg.permissions_tries):
 								await wall_channel.set_permissions(used_member, overwrite=None)
+
+					if poi.id_poi == 'themuseum':
+						channel_list = ['relic-exhibits', 'art-exhibits', 'aquarium']
+						for channel in channel_list:
+							channel_obj = ewutils.get_channel(server, channel)
+							if channel_obj is not None:
+								for i in range(ewcfg.permissions_tries):
+									await channel_obj.set_permissions(used_member, overwrite = None)
+
 				except:
 					ewutils.logMsg("Failed to remove permissions for {} in channel {}.".format(used_member.display_name, channel.name))
 
@@ -675,6 +685,16 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 							overwrite.read_messages = True
 							for i in range(ewcfg.permissions_tries):
 								await wall_channel.set_permissions(used_member, overwrite=overwrite)
+					elif correct_poi.id_poi == 'themuseum':
+						channel_list = ['relic-exhibits', 'art-exhibits', 'aquarium']
+						for channel in channel_list:
+							mus_channel = ewutils.get_channel(server, channel)
+							if mus_channel is not None:
+								overwrite = discord.PermissionOverwrite()
+								overwrite.read_messages = True
+								overwrite.send_messages = False
+								for i in range(ewcfg.permissions_tries):
+									await mus_channel.set_permissions(used_member, overwrite=overwrite)
 				except:
 					ewutils.logMsg("Failed to add permissions to {} in channel {}.".format(used_member.display_name, channel.name))
 

@@ -295,14 +295,20 @@ class EwUser:
 					food_fraction = 2
 					cosmetic_fraction = 2
 
+				relic_fraction = 1
+
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_item, fraction = item_fraction, rigor=rigor) # Drop a random fraction of your items on the ground.
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_food, fraction = food_fraction, rigor=rigor) # Drop a random fraction of your food on the ground.
 
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_cosmetic, fraction = cosmetic_fraction, rigor=rigor) # Drop a random fraction of your unadorned cosmetics on the ground.
 				ewitem.item_dedorn_cosmetics(id_server = self.id_server, id_user = self.id_user) # Unadorn all of your adorned hats.
 
+				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_relic, fraction = 1, rigor=rigor) # Drop random fraction of your unequipped relics on the ground.
+
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_weapon, fraction = 1, rigor=rigor) # Drop random fraction of your unequipped weapons on the ground.
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_max_onrevive)
+
+
 
 			try:
 				ewutils.execute_sql_query(

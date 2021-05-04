@@ -1121,7 +1121,7 @@
             "og"
         ],
         "str_name": "Ooze Gardens",
-        "str_desc": "Walking paths connect dozens of greenhouses and gardens featuring rare, exotic, and irradiated flora. This district is really just one big park, broken up into several sections hosting different types of botanical attractions, as well as several museums and even the city\u2019s zoo. Musical concerts are often held in one of the several outdoor amphitheatres that are scattered across the district. Truly, an amusement park for lovers of nature and culture.\nOoze Gardens is a clear cultural outlier of the city. The residents of this district are largely pacifist, choosing music, love, and psychedelic drugs over violent crime. They make you sick.\n\nThis area contains the Ooze Gardens Farms. To the North is Krak Bay. To the Northeast is Poudrin Alley. To the East is Cratersville. To the West is South Sleezeborough. To the South is South Outskirts Edge.",
+        "str_desc": "Walking paths connect dozens of greenhouses and gardens featuring rare, exotic, and irradiated flora. This district is really just one big park, broken up into several sections hosting different types of botanical attractions, as well as several museums and even the city\u2019s zoo. Musical concerts are often held in one of the several outdoor amphitheatres that are scattered across the district. Truly, an amusement park for lovers of nature and culture.\nOoze Gardens is a clear cultural outlier of the city. The residents of this district are largely pacifist, choosing music, love, and psychedelic drugs over violent crime. They make you sick.\n\nThis area contains the Ooze Gardens Farms and The Museum. To the North is Krak Bay. To the Northeast is Poudrin Alley. To the East is Cratersville. To the West is South Sleezeborough. To the South is South Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1174,7 +1174,8 @@
             "poudrinalley": 60,
             "cratersville": 60,
             "oozegardensfarms": 20,
-            "southoutskirtsedge": 120
+            "southoutskirtsedge": 120,
+            "themuseum": 20
         },
         "topic": "A quiet and scenic district. Only slightly more dense with ooze than the rest of NLACakaNM.",
         "wikipage": "https://rfck.miraheze.org/wiki/Ooze_Gardens"
@@ -3899,8 +3900,7 @@
     "oozegardensstreetc": {
         "id_poi": "oozegardensstreetc",
         "alias": [
-            "museumrow",
-            "museum"
+            "museumrow"
         ],
         "str_name": "Museum Row",
         "str_desc": "This row of museums sits on the edge of Ooze Garden\u2019s largest public park. You\u2019ll find museums dedicated to all manner of humanities and sciences, as well as art galleries and, of course, souvenir shops. You think knowledge is actually lowkey kinda gay, so you\u2019re not going to be stepping inside one anytime soon. You\u2019re just looking forward to blasting someone\u2019s greymatter across all these beautiful facades. This street connects back into Ooze Gardens. This street is connected to Skewer Road, Wine Gardens, and NLACakaNM Zoo. This street also exits into The Ooze Gardens Farms, and The Ooze Gardens Subway Station.",
@@ -16539,7 +16539,6 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "securityforcetunnel": 30,
             "n11office": 20
         },
         "topic": "",
@@ -17952,8 +17951,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "downtown": 20,
-            "slimecorptunnel": 20
+            "downtown": 20
         },
         "topic": "",
         "wikipage": ""
@@ -18911,30 +18909,33 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "slimecorphotel":20,
-            "slimecorptunnel": 20
+            "slimecorphotel":20
         },
         "topic": "",
         "wikipage": ""
     },
-     "slimecorptunnel": {
-        "id_poi": "slimecorptunnel",
+     "themuseum": {
+        "id_poi": "themuseum",
         "alias": [
-            "corridor",
-            "tunnel"
+            "ogm",
+            "oozegardensmuseum",
+            "mus",
+            "relic",
+            "museumofnaturalhistory",
+            "museum"
         ],
-        "str_name": "Slimecorp Hidden Tunnel",
-        "str_desc": "You feel a cold breeze through this dark, steel corridor. It's pitch black, and you can hear faint, unknown sounds in the distance. It's unbelievably long, too, maybe 3 or 4 miles. The only exit goes back to the Lobby Backroom.",
+        "str_name": "NLACakaNM Museum of History",
+        "str_desc": "It's a place",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "slimecorp-tunnel",
-        "role": null,
-        "major_role": "nullmajorrole",
-        "minor_role": "nullminorrole",
+        "channel": "the-museum",
+        "role": "The Museum",
+        "major_role": "oozegardens_major",
+        "minor_role": "themuseum_minor",
         "permissions": {
-            "slimecorptunnel": [
+            "themuseum": [
                 "read",
                 "send",
                 "connect"
@@ -18946,7 +18947,7 @@
         "closed": false,
         "str_closed": null,
         "vendors": [],
-        "property_class": "A",
+        "property_class": "",
         "is_district": false,
         "is_gangbase": false,
         "is_capturable": false,
@@ -18954,7 +18955,7 @@
         "is_apartment": false,
         "is_street": false,
         "mother_districts": [
-
+            "oozegardens"
         ],
         "father_district": "",
         "is_transport": false,
@@ -18971,8 +18972,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "lobbybackroom":20
-
+            "oozegardens":20
         },
         "topic": "",
         "wikipage": ""

@@ -329,6 +329,7 @@ def item_create(
     item_props = None
 ):
     item_def = ewcfg.item_def_map.get(item_type)
+    badRelic = 0
 
     if item_def == None:
         ewutils.logMsg('Tried to create invalid item_type: {}'.format(item_type))
@@ -349,6 +350,10 @@ def item_create(
         template_id = item_props.get("id_furniture ", "bad furniture id")
     elif item_type == ewcfg.it_book:
         template_id = item_props.get("id_food", "bad food id")
+    elif item_type == ewcfg.it_relic:
+        if ewutils.canCreateRelic(item_props.get('id_relic'), id_server) != 1:
+            badRelic = 1
+        template_id = item_props.get("id_relic", "bad relic id")
     elif item_type == ewcfg.it_medal:
         template_id = "MEDAL ITEM????" #p sure these are fake news
     elif item_type == ewcfg.it_questitem:
@@ -356,56 +361,56 @@ def item_create(
     else:
         template_id = "-1";
 
-    try:
-        # Get database handles if they weren't passed.
-        conn_info = ewutils.databaseConnect()
-        conn = conn_info.get('conn')
-        cursor = conn.cursor()
+    if badRelic == 0:
+        try:
+            # Get database handles if they weren't passed.
+            conn_info = ewutils.databaseConnect()
+            conn = conn_info.get('conn')
+            cursor = conn.cursor()
 
-        # Create the item in the database.
+            # Create the item in the database.
 
-        cursor.execute("INSERT INTO items({}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
-            ewcfg.col_item_type,
-            ewcfg.col_id_user,
-            ewcfg.col_id_server,
-            ewcfg.col_soulbound,
-            ewcfg.col_stack_max,
-            ewcfg.col_stack_size,
-            ewcfg.col_template
-        ), (
-            item_type,
-            id_user,
-            id_server,
-            (1 if item_def.soulbound else 0),
-            stack_max,
-            stack_size,
-            template_id,
-        ))
+            cursor.execute("INSERT INTO items({}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
+                ewcfg.col_item_type,
+                ewcfg.col_id_user,
+                ewcfg.col_id_server,
+                ewcfg.col_soulbound,
+                ewcfg.col_stack_max,
+                ewcfg.col_stack_size,
+                ewcfg.col_template
+            ), (
+                item_type,
+                id_user,
+                id_server,
+                (1 if item_def.soulbound else 0),
+                stack_max,
+                stack_size,
+                template_id,
+            ))
 
-        item_id = cursor.lastrowid
-        conn.commit()
-
-        if item_id > 0:
-            # If additional properties are specified in the item definition or in this create call, create and persist them.
-            if item_props != None or item_def.item_props != None:
-                item_inst = EwItem(id_item = item_id)
-
-                if item_def.item_props != None:
-                    item_inst.item_props.update(item_def.item_props)
-
-                if item_props != None:
-                    item_inst.item_props.update(item_props)
-
-                item_inst.persist()
-
+            item_id = cursor.lastrowid
             conn.commit()
-    finally:
-        # Clean up the database handles.
-        cursor.close()
-        ewutils.databaseClose(conn_info)
 
+            if item_id > 0:
+                # If additional properties are specified in the item definition or in this create call, create and persist them.
+                if item_props != None or item_def.item_props != None:
+                    item_inst = EwItem(id_item = item_id)
 
-    return item_id
+                    if item_def.item_props != None:
+                        item_inst.item_props.update(item_def.item_props)
+
+                    if item_props != None:
+                        item_inst.item_props.update(item_props)
+
+                    item_inst.persist()
+
+                conn.commit()
+        finally:
+            # Clean up the database handles.
+            cursor.close()
+            ewutils.databaseClose(conn_info)
+        return item_id
+    return None
 
 """
     Drop all of a player's non-soulbound items into their district
@@ -1964,6 +1969,13 @@ def gen_item_props(item):
             'time_fridged': item.time_fridged,
             'perishable': item.perishable,
         }
+    elif item.item_type == ewcfg.it_relic:
+        item_props = {
+            'id_relic': item.id_relic,
+            'relic_name': item.str_name,
+            'relic_desc': item.str_desc,
+            'acquisition': item.acquisition
+        }
     elif item.item_type == ewcfg.it_item:
         item_props = {
             'id_item': item.id_item,
@@ -2512,3 +2524,8 @@ async def zuck(cmd):
 
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def pass_relics(id_shooter = None, id_shootee = None, id_server = None):
+    items = inventory(id_user=id_shootee, id_server=id_server, item_type_filter=ewcfg.it_relic)
+
+    for item in items:
+        give_item(id_item = item.get('id_item'), id_server=id_server, id_user=id_shooter)

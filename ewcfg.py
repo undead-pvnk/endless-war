@@ -3,6 +3,7 @@ import random
 import ewutils
 import ewstats
 import ewitem
+import ewdebugrelics
 import random
 import json
 import os
@@ -2547,6 +2548,7 @@ it_weapon = "weapon"
 it_cosmetic = 'cosmetic'
 it_furniture = 'furniture'
 it_book = 'book'
+it_relic = 'relic'
 
 # Cosmetic item rarities
 rarity_plebeian = "Plebeian"
@@ -7291,6 +7293,13 @@ furniture_shitty = []
 furniture_instrument = []
 furniture_specialhue = []
 
+
+relic_list = ewdebugrelics.relic_list
+relic_map = {}
+relic_names = []
+
+
+
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
 	'**5 6 7 0 9**',
@@ -7446,6 +7455,16 @@ item_def_list = [
 			"book_desc": "A book by AUTHOR, published on DAY."
 		}
 	),
+	EwItemDef(
+		item_type=it_relic,
+		str_name="{relic_name}",
+		str_desc="{relic_desc}",
+		soulbound=False,
+		item_props={
+			"relic_name": "Old",
+			"relic_desc": "Relic Item"
+		}
+	),
 ]
 
 # A map of item_type to EwItemDef objects.
@@ -7539,6 +7558,7 @@ streets = []
 tutorial_pois = []
 zine_mother_districts = []
 
+
 for poi in poi_list:
 
 	# Assign permissions for all locations in the poi list.
@@ -7548,7 +7568,7 @@ for poi in poi_list:
 	# Assign all the correct major and minor roles.
 	
 	# Districts and streets need their minor roles to see (read-only) all of their subzones.
-	if poi.is_district or poi.is_street or poi.id_poi in [poi_id_mine, poi_id_cv_mines, poi_id_tt_mines]:
+	if poi.is_district or poi.is_street or poi.id_poi in [poi_id_mine, poi_id_cv_mines, poi_id_tt_mines, "themuseum"]:
 		poi.minor_role = '{}_minor'.format(poi.id_poi)
 
 	# Districts need their major roles for their specific LAN (voice/text) channels.
@@ -7656,7 +7676,6 @@ for poi in poi_list:
 	if poi.minor_role == None:
 		#print('Null Minor Role give to {}'.format(poi.str_name))
 		poi.minor_role = role_null_minor_role
-	
 	# poi coords cause json import problems because poi.coords imports as a list type 
 	#if poi.coord != None:
 	#	# Populate the map of coordinates to their point of interest, for looking up from the map.
@@ -12192,6 +12211,16 @@ for cosmetic in cosmetic_items_list:
 
 		vendor_list.append(cosmetic.id_cosmetic)
 
+for relic in relic_list:
+	relic_map[relic.id_relic] = relic
+	relic_names.append(relic.id_relic)
+	for vendor in relic.vendors:
+		vendor_list = vendor_inv.get(vendor)
+		if vendor_list == None:
+			vendor_list = []
+			vendor_inv[vendor] = vendor_list
+
+		vendor_list.append(relic.id_relic)
 
 for furniture in furniture_list:
 	furniture_map[furniture.id_furniture] = furniture

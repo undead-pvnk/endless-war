@@ -539,7 +539,7 @@ def canCap(cmd, capture_type, roomba_loop = 0):
 
 
 
-async def attack(cmd, n1_die = None):
+async def attack(cmd):
 
 	time_now_float = time.time()
 	time_now = int(time_now_float)
@@ -589,8 +589,8 @@ async def attack(cmd, n1_die = None):
 		#todo Created a weapon object to cover my bases, check if this is necessary. Also see if you can move this somewhere else
 
 
-	if n1_die is None:
-		response = canAttack(cmd=cmd, amb_switch=amb_switch)
+
+	response = canAttack(cmd=cmd, amb_switch=amb_switch)
 
 	if response == "":
 		# Get shooting player's info
@@ -599,22 +599,17 @@ async def attack(cmd, n1_die = None):
 			user_data.persist()
 
 		# Get target's info.
-		if n1_die is None:
-			member = cmd.mentions[0]
-			if member.id == cmd.message.author.id:
-				response = "Try {}.".format(ewcfg.cmd_suicide)
-				resp_cont.add_channel_response(cmd.message.channel.name, response)
-				return await resp_cont.post()
-			else:
-				shootee_data = EwUser(member = member, data_level = 1)
-			shootee_slimeoid = EwSlimeoid(member = member)
-			shootee_name = member.display_name
+
+		member = cmd.mentions[0]
+		if member.id == cmd.message.author.id:
+			response = "Try {}.".format(ewcfg.cmd_suicide)
+			resp_cont.add_channel_response(cmd.message.channel.name, response)
+			return await resp_cont.post()
 		else:
-			member = cmd.guild.get_member(n1_die)
-			shootee_data = EwUser(id_server=cmd.guild.id, id_user=n1_die, data_level=1)
-			shootee_slimeoid = EwSlimeoid(id_user=n1_die, id_server = cmd.guild.id)
-			shootee_player = EwPlayer(id_user=n1_die, id_server = cmd.guild.id)
-			shootee_name = shootee_player.display_name
+			shootee_data = EwUser(member = member, data_level = 1)
+		shootee_slimeoid = EwSlimeoid(member = member)
+		shootee_name = member.display_name
+
 
 
 		shootee_weapon = None
@@ -1075,6 +1070,7 @@ async def attack(cmd, n1_die = None):
 					district_data.persist()
 					# Player was killed.
 					shootee_data.id_killer = user_data.id_user
+					ewitem.passRelics(id_shooter = cmd.message.author.id, id_shootee = shootee_data.id_user, id_server = shootee_data.id_server)
 					die_resp = shootee_data.die(cause = ewcfg.cause_killing)
 					#shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 
@@ -1144,8 +1140,7 @@ async def attack(cmd, n1_die = None):
 					if coinbounty > 0:
 						response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, cmd.message.author.display_name)
 
-					if "n1" in shootee_data.getStatusEffects():
-						response += "\n\n But N1 doesn't die!"
+
 
 					weapon_possession = user_data.get_possession('weapon')
 					if weapon_possession:
