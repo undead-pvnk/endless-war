@@ -4,6 +4,7 @@ twitch_client_id
 msgqueue
 vcs.xml
 ewdebug.py
+ew/debug.py
 cfg_exporter.py
 .idea
 .idea/workspace.xml
