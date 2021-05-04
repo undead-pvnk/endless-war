@@ -15,7 +15,7 @@ from .static import hue as hue_static
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 
-from . import utils as ewutils
+from .utils import core as ewutils
 from . import rolemgr as ewrolemgr
 from . import smelting as ewsmelting
 from . import prank as ewprank

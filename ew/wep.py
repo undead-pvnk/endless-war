@@ -11,7 +11,7 @@ from .static import status as se_static
 from .backend import item as bknd_item
 
 from . import captcha as ewcaptcha
-from . import utils as ewutils
+from .utils import core as ewutils
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
@@ -949,7 +949,7 @@ async def attack(cmd, n1_die = None):
 							response += "\n" + weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
 						if ewcfg.weapon_class_captcha in weapon.classes:
-							new_captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=user_data.id_user, id_server=user_data.id_server)
+							new_captcha = ewutils.generate_captcha(length = weapon.captcha_length, user_data = user_data)
 							response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 							weapon_item.item_props['captcha'] = new_captcha
 							weapon_item.persist()
@@ -1038,7 +1038,7 @@ async def attack(cmd, n1_die = None):
 							response += "\n"+weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
 						if ewcfg.weapon_class_captcha in weapon.classes:
-							new_captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=user_data.id_user, id_server=user_data.id_server)
+							new_captcha = ewutils.generate_captcha(length = weapon.captcha_length, user_data = user_data)
 							response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 							weapon_item.item_props['captcha'] = new_captcha
 							weapon_item.persist()
@@ -2395,7 +2395,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					name_player=cmd.message.author.display_name)
 
 			if ewcfg.weapon_class_captcha in weapon.classes:
-				new_captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=user_data.id_user, id_server=user_data.id_server)
+				new_captcha = ewutils.generate_captcha(length = weapon.captcha_length, user_data = user_data)
 				response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 				weapon_item.item_props['captcha'] = new_captcha
 				weapon_item.persist()
@@ -2478,7 +2478,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					name_player=cmd.message.author.display_name)
 
 			if ewcfg.weapon_class_captcha in weapon.classes:
-				new_captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=user_data.id_user, id_server=user_data.id_server)
+				new_captcha = ewutils.generate_captcha(length = weapon.captcha_length, user_data = user_data)
 				response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 				weapon_item.item_props['captcha'] = new_captcha
 				weapon_item.persist()
@@ -2727,7 +2727,7 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 
 	# Organic fursuit
 	if ewcfg.mutation_id_organicfursuit in user_mutations and (
-		ewutils.check_fursuit_active(user_data.id_server)
+		ewutils.check_fursuit_active(market_data)
 	):
 		damage_mod *= 2
 
@@ -2763,7 +2763,7 @@ def damage_mod_defend(shootee_data, shootee_mutations, market_data, shootee_weap
 
 	damage_mod = 1
 	if ewcfg.mutation_id_organicfursuit in shootee_mutations and (
-		ewutils.check_fursuit_active(shootee_data.id_server)
+		ewutils.check_fursuit_active(market_data)
 	):
 		damage_mod *= 0.1
 
@@ -3048,7 +3048,7 @@ async def spray(cmd):
 
 					if (ewcfg.weapon_class_captcha in weapon.classes) and roomba_loop == 0:
 						if weapon.id_weapon != ewcfg.weapon_id_paintgun:
-							new_captcha_low = ewutils.generate_captcha(length = weapon.captcha_length, id_user=user_data.id_user, id_server=user_data.id_server)
+							new_captcha_low = ewutils.generate_captcha(length = weapon.captcha_length, user_data = user_data)
 							new_captcha = ewutils.text_to_regional_indicator(new_captcha_low)
 							#new_loc = new_loc.replace(new_captcha_low, new_captcha)
 							response += "\nNew captcha is {}.".format(new_captcha)

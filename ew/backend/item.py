@@ -1,7 +1,7 @@
 import time
 import random
 
-from .. import utils as ewutils
+from ..utils import core as ewutils
 from ..static import cfg as ewcfg
 from ..static import cosmetics
 from ..static import items as static_items
@@ -967,7 +967,7 @@ def equip(user_data, weapon_item = None):
 			user_data.weapon = weapon_item.id_item
 
 			if ewcfg.weapon_class_captcha in weapon.classes:
-				captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=user_data.id_user, id_server=user_data.id_server)
+				captcha = ewutils.generate_captcha(length = weapon.captcha_length, user_data = user_data)
 				weapon_item.item_props["captcha"] = captcha
 				response += "\nSecurity code: **{}**".format(ewutils.text_to_regional_indicator(captcha))
 		else:
@@ -984,7 +984,7 @@ def equip(user_data, weapon_item = None):
 			user_data.sidearm = -1
 
 		if ewcfg.weapon_class_captcha in weapon.classes:
-			captcha = ewutils.generate_captcha(length = weapon.captcha_length, id_user=user_data.id_user, id_server=user_data.id_server)
+			captcha = ewutils.generate_captcha(length = weapon.captcha_length, user_data = user_data)
 			weapon_item.item_props["captcha"] = captcha
 			response += "\nSecurity code: **{}**".format(ewutils.text_to_regional_indicator(captcha))
 

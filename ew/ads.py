@@ -5,7 +5,7 @@ from .static import poi as poi_static
 
 from .backend import ads as bnkd_ads
 
-from . import utils as ewutils
+from .utils import core as ewutils
 
 from .backend.user import EwUser
 from .backend.player import EwPlayer

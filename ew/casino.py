@@ -9,7 +9,7 @@ from .static import poi as poi_static
 from .backend import item as bknd_item
 
 from . import cmd as ewcmd
-from . import utils as ewutils
+from .utils import core as ewutils
 from . import rolemgr as ewrolemgr
 from . import item as ewitem
 

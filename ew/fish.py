@@ -13,7 +13,7 @@ from .static import status as se_static
 
 from .backend import item as bknd_item
 
-from . import utils as ewutils
+from .utils import core as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
 

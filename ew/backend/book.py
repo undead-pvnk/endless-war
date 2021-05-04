@@ -1,6 +1,6 @@
 from . import core as bknd_core
 from ..static import cfg as ewcfg
-from .. import utils as ewutils
+from ..utils import core as ewutils
 
 class EwBook:
 	id_book = 0

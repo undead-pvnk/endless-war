@@ -17,7 +17,7 @@ from .backend import worldevent as bknd_worldevent
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 
-from . import utils as ewutils
+from .utils import core as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
@@ -957,9 +957,9 @@ async def swearjar(cmd):
 
 """ time and weather information """
 async def weather(cmd):
-	response = ewutils.weather_txt(cmd.guild.id)
-
 	market_data = EwMarket(id_server=cmd.guild.id)
+	response = ewutils.weather_txt(market_data)
+
 	time_current = market_data.clock
 	if 3 <= time_current <= 10:
 		response += "\n\nThe police are probably all asleep, the lazy fucks. It's a good time for painting the town!"
@@ -1606,7 +1606,7 @@ async def fursuit(cmd):
 		else:
 			response = "With a basic hairy palm reading, you determine that you'll be particularly powerful in {} day{}.".format(days_until, "s" if days_until is not 1 else "")
 
-		if ewutils.check_fursuit_active(user_data.id_server):
+		if ewutils.check_fursuit_active(market_data):
 			response = "The full moon shines above! Now's your chance to strike!"
 			
 	else:
@@ -3819,7 +3819,7 @@ async def gvs_searchforbrainz(cmd):
 	event_props = {}
 	event_props['id_user'] = cmd.message.author.id
 	event_props['brains_grabbed'] = 1
-	event_props['captcha'] = ewutils.generate_captcha(length=1, id_user=user_data.id_user, id_server=user_data.id_server)
+	event_props['captcha'] = ewutils.generate_captcha(length=1, user_data = user_data)
 	event_props['channel'] = cmd.message.author.id
 
 	# DM user
@@ -3876,7 +3876,7 @@ async def gvs_grabbrainz(cmd):
 				if event_data.event_props.get('captcha').lower() == captcha:
 					event_data.event_props['brains_grabbed'] = int(event_data.event_props['brains_grabbed']) + 1 
 					captcha_length = int(event_data.event_props['brains_grabbed'])
-					event_data.event_props['captcha'] = ewutils.generate_captcha(length=captcha_length if captcha_length < 8 else 8, id_user=user_data.id_user, id_server=user_data.id_server)
+					event_data.event_props['captcha'] = ewutils.generate_captcha(length=captcha_length if captcha_length < 8 else 8, user_data = user_data)
 					event_data.persist()
 
 					user_data.gvs_currency += ewcfg.brainz_per_grab
@@ -3886,7 +3886,7 @@ async def gvs_grabbrainz(cmd):
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				else:
-					event_data.event_props['captcha'] = ewutils.generate_captcha(length=int(event_data.event_props['brains_grabbed']), id_user=user_data.id_user, id_server=user_data.id_server)
+					event_data.event_props['captcha'] = ewutils.generate_captcha(length=int(event_data.event_props['brains_grabbed']), user_data = user_data)
 					event_data.persist()
 					response = "Missed! That was pretty cringe dude... New captcha: " + ewutils.text_to_regional_indicator(event_data.event_props['captcha'])
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

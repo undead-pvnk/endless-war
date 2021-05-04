@@ -10,7 +10,7 @@ from .static import hue as hue_static
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 
-from . import utils as ewutils
+from .utils import core as ewutils
 from . import item as ewitem
 from . import casino as ewcasino
 
@@ -2798,6 +2798,7 @@ async def bottleslimeoid(cmd):
 
 async def dress_slimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	market_data = EwMarket(id_server = user_data.id_server)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if user_data.life_state == ewcfg.life_state_corpse:
@@ -2841,7 +2842,7 @@ async def dress_slimeoid(cmd):
 					if cos.item_props.get('slimeoid') == 'true':
 						already_adorned = True
 					elif cos.item_props.get("context") == 'costume':
-						if not ewutils.check_fursuit_active(cos.id_server):
+						if not ewutils.check_fursuit_active(market_data):
 							response = "You can't dress your slimeoid with your costume right now."
 							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 						else:

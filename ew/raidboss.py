@@ -6,7 +6,7 @@ from .static import cfg as ewcfg
 from .backend import core as bknd_core
 
 from . import rolemgr as ewrolemgr
-from . import utils as ewutils
+from .utils import core as ewutils
 from . import cmd as ewcmd
 
 from .backend.user import EwUser

@@ -7,7 +7,7 @@ from ..static import weapons as static_weapons
 from ..static import hunting as hunt_static
 from ..static import poi as poi_static
 from ..static import status as se_static
-from .. import utils as ewutils
+from ..utils import core as ewutils
 from .. import item as ewitem
 from .. import rolemgr as ewrolemgr
 from .. import wep as ewwep

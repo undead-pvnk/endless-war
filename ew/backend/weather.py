@@ -3,7 +3,7 @@ import random
 
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
-from .. import utils as ewutils
+from ..utils import core as ewutils
 from .. import rolemgr as ewrolemgr
 from .. import item as ewitem
 from .. import hunting as ewhunting

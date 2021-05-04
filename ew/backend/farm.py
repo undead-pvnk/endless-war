@@ -5,7 +5,7 @@ import asyncio
 from . import core as bknd_core
 from ..static import cfg as ewcfg
 from ..static import farm as farm_static
-from .. import utils as ewutils
+from ..utils import core as ewutils
 
 class EwFarm:
 	id_server = -1

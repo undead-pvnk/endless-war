@@ -1,6 +1,6 @@
 import time
 
-from . import utils as ewutils
+from .utils import core as ewutils
 
 from .backend.user import EwUser
 

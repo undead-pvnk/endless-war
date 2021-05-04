@@ -13,7 +13,7 @@ from .static import poi as poi_static
 from .backend import core as bknd_core
 from .backend import ads as bknd_ads
 
-from . import utils as ewutils
+from .utils import core as ewutils
 from . import rolemgr as ewrolemgr
 from . import apt as ewapt
 from . import ads as ewads
@@ -1148,7 +1148,7 @@ async def look(cmd):
     poi = poi_static.id_to_poi.get(user_data.poi)
 
     district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
-
+    market_data = EwMarket(id_server = id_server)
     degrade_resp = ""
     if district_data.degradation >= poi.max_degradation:
         degrade_resp = ewcfg.str_zone_degraded.format(poi = poi.str_name) + "\n\n"
@@ -1224,7 +1224,7 @@ async def look(cmd):
                 enemies_resp,
                 soul_resp,
                 ("\n\n{}".format(
-                    ewutils.weather_txt(cmd.guild.id)
+                    ewutils.weather_txt(market_data)
                 ) if cmd.guild != None else ""),
                 ad_formatting
             ) #+ get_random_prank_item(user_data, district_data) # SWILLDERMUK
@@ -1238,6 +1238,7 @@ async def look(cmd):
 async def survey(cmd):
     user_data = EwUser(member=cmd.message.author)
     district_data = EwDistrict(district=user_data.poi, id_server=user_data.id_server)
+    market_data = EwMarket(id_server = id_server)
     poi = poi_static.id_to_poi.get(user_data.poi)
 
     slimes_resp = get_slimes_resp(district_data)
@@ -1264,7 +1265,7 @@ async def survey(cmd):
                 slimeoids_resp,
                 enemies_resp,
                 ("\n\n{}".format(
-                    ewutils.weather_txt(cmd.guild.id)
+                    ewutils.weather_txt(market_data)
                 ) if cmd.guild != None else "")
             ) #+ get_random_prank_item(user_data, district_data) # SWILLDERMUK
         ))

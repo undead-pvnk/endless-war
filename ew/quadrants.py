@@ -3,7 +3,7 @@ import random
 from .static import cfg as ewcfg
 from .static import quadrants as quad_static
 
-from . import utils as ewutils
+from .utils import core as ewutils
 
 from .backend.quadrants import EwQuadrant
 from .backend.user import EwUser

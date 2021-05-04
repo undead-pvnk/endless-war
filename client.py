@@ -37,7 +37,7 @@ import ew.backend.leaderboard as bknd_leaderboard
 import ew.backend.weather as bknd_weather
 import ew.backend.worldevent as bknd_worldevent
 
-import ew.utils as ewutils
+import ew.utils.core as ewutils
 import ew.farm as ewfarm
 import ew.cmd as ewcmd
 import ew.casino as ewcasino
@@ -1299,7 +1299,7 @@ async def on_ready():
 					ewutils.logMsg('The time is now {}.'.format(market_data.clock))
 
 
-					if not ewutils.check_fursuit_active(market_data.id_server):
+					if not ewutils.check_fursuit_active(market_data):
 						ewcosmeticitem.dedorn_all_costumes()
 
 					if market_data.clock == 6 and market_data.day % 8 == 0:
@@ -2070,7 +2070,7 @@ async def on_message(message):
 
 			response = "Time has progressed 1 day forward manually."
 			
-			if ewutils.check_fursuit_active(market_data.id_server):
+			if ewutils.check_fursuit_active(market_data):
 				response += "\nIt's a full moon!"
 				
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
@@ -2085,7 +2085,7 @@ async def on_message(message):
 				market_data.day += 1
 				response += "\nMidnight has come. 1 day progressed forward."
 				
-			if ewutils.check_fursuit_active(market_data.id_server):
+			if ewutils.check_fursuit_active(market_data):
 				response += "\nIt's a full moon!"
 				
 			market_data.persist()

@@ -15,7 +15,7 @@ from .static import poi as poi_static
 from .backend import worldevent as bknd_worldevent
 from .backend import item as bknd_item
 
-from . import utils as ewutils
+from .utils import core as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
@@ -747,7 +747,7 @@ async def scavenge(cmd):
 				if scavenge_combos.get(user_data.id_user) > 0 and (time_now - user_data.time_lastscavenge) < 60:
 					if scavenge_captchas.get(user_data.id_user).lower() == item_search.lower():
 						scavenge_combos[user_data.id_user] += 1
-						new_captcha = gen_scavenge_captcha(n=scavenge_combos.get(user_data.id_user), id_user=user_data.id_user, id_server=user_data.id_server)
+						new_captcha = gen_scavenge_captcha(n=scavenge_combos.get(user_data.id_user), user_data = user_data)
 						response += "New captcha: **" + ewutils.text_to_regional_indicator(new_captcha) + "**"
 						if ewcfg.mutation_id_webbedfeet in mutations:
 							response += "\nYour flippers pick up {:,} slime.".format(scavenge_yield)
@@ -786,7 +786,7 @@ async def scavenge(cmd):
 						response += loot_resp +"\n\n"
 
 				scavenge_combos[user_data.id_user] = 1
-				new_captcha = gen_scavenge_captcha(n=1, id_user=user_data.id_user, id_server=user_data.id_server)
+				new_captcha = gen_scavenge_captcha(n=1, user_data = user_data)
 				response += "New captcha: **" + ewutils.text_to_regional_indicator(new_captcha) + "**"
 				if ewcfg.mutation_id_webbedfeet in mutations:
 					response += "\nYour flippers pick up {:,} slime.".format(scavenge_yield)
@@ -1585,7 +1585,7 @@ def create_mining_event(cmd):
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
-			event_props['captcha'] = ewutils.generate_captcha(length = 8, id_user=user_data.id_user ,id_server=user_data.id_server)
+			event_props['captcha'] = ewutils.generate_captcha(length = 8, user_data = user_data)
 			event_props['channel'] = cmd.message.channel.name
 			return bknd_worldevent.create_world_event(
 				id_server = cmd.guild.id,
@@ -1641,10 +1641,10 @@ def create_mining_event(cmd):
 			)
 		"""
 
-def gen_scavenge_captcha(n = 0, id_user = 0, id_server = 0):
+def gen_scavenge_captcha(n = 0, user_data = None):
 	captcha_length = math.ceil(n / 3)
 
-	return ewutils.generate_captcha(length=captcha_length, id_server=id_server, id_user=id_user)
+	return ewutils.generate_captcha(length=captcha_length, user_data = user_data)
 
 
 async def juviemode(cmd):

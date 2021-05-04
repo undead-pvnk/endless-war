@@ -8,7 +8,7 @@ from .static import poi as poi_static
 
 from .backend import item as bknd_item
 
-from . import utils as ewutils
+from .utils import core as ewutils
 from . import cmd as ewcmd
 
 from .backend.user import EwUser

@@ -2,7 +2,7 @@ import time
 
 from .static import cfg as ewcfg
 
-from . import utils as ewutils
+from .utils import core as ewutils
 from . import stats as ewstats
 
 from .backend.user import EwUser

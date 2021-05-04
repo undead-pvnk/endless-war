@@ -14,7 +14,7 @@ from .backend import core as bknd_core
 from .backend import item as bknd_item
 
 from . import cmd as ewcmd
-from . import utils as ewutils
+from .utils import core as ewutils
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import market as ewmarket
@@ -484,7 +484,8 @@ async def apt_look(cmd):
 		furn_response = "SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP.\n\n"
 
 
-	clock_data = ewutils.weather_txt(id_server=playermodel.id_server)
+	market_data = EwMarket(id_server = playermodel.id_server)
+	clock_data = ewutils.weather_txt(market_data)
 	clock_data = clock_data[16:20]
 	furn_response = furn_response.format(time = clock_data)
 	resp_cont.add_channel_response(cmd.message.channel, furn_response)

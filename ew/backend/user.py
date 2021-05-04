@@ -1,7 +1,7 @@
 import time
 import random
 
-from .. import utils as ewutils
+from ..utils import core as ewutils
 from ..static import cfg as ewcfg
 from ..static import weapons as static_weapons
 from ..static import poi as poi_static

@@ -9,7 +9,7 @@ from .static import items as static_items
 from .backend import item as bknd_item
 
 from . import item as ewitem
-from . import utils as ewutils
+from .utils import core as ewutils
 
 from .backend.user import EwUser
 from .backend.item import EwItem

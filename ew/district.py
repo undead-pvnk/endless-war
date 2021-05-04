@@ -7,7 +7,7 @@ from .static import cfg as ewcfg
 from .static import poi as poi_static
 
 from . import stats as ewstats
-from . import utils as ewutils
+from .utils import core as ewutils
 from . import rolemgr as ewrolemgr
 
 from .backend.user import EwUser

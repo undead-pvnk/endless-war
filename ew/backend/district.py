@@ -6,7 +6,7 @@ import discord
 from . import core as bknd_core
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
-from .. import utils as ewutils
+from ..utils import core as ewutils
 
 """
 	district data model for database persistence

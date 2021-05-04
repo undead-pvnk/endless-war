@@ -5,7 +5,7 @@ import discord
 from .static import cfg as ewcfg
 from .static import poi as poi_static
 
-from . import utils as ewutils
+from .utils import core as ewutils
 
 from .backend.user import EwUser
 from .backend.role import EwRole

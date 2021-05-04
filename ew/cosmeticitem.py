@@ -8,14 +8,16 @@ from .static import hue as hue_static
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 
-from . import utils as ewutils
+from .utils import core as ewutils
 
 from .backend.user import EwUser
 from .backend.item import EwItem
+from .backend.market import EwMarket
 
 
 async def adorn(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	market_data = EwMarket(id_server = user_data.id_server)
 
 	# Check to see if you even have the item you want to repair
 	item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -58,7 +60,7 @@ async def adorn(cmd):
 				if i.item_props.get("adorned") == 'true':
 					already_adorned = True
 				elif i.item_props.get("context") == 'costume':
-					if not ewutils.check_fursuit_active(i.id_server):
+					if not ewutils.check_fursuit_active(market_data):
 						response = "You can't adorn your costume right now."
 				else:
 					item_sought = i

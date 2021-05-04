@@ -1,4 +1,4 @@
-from .. import utils as ewutils
+from ..utils import core as ewutils
 from ..static import cfg as ewcfg
 from . import core as bknd_core
 
