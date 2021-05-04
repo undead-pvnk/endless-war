@@ -18,53 +18,59 @@ import os
 import shlex
 import logging
 
-import ewutils
-import ewcfg
-import ewfarm
-import ewcmd
-import ewcasino
-import ewfood
-import ewwep
-import ewjuviecmd
-import ewmarket
-import ewspooky
-import ewkingpin
-import ewplayer
-import ewserver
-import ewitem
-import ewmap
-import ewrolemgr
-import ewraidboss
-import ewleaderboard
-import ewcosmeticitem
-import ewslimeoid
-import ewdistrict
-import ewmutation
-import ewquadrants
-import ewtransport
-import ewstatuseffects
-import ewsmelting
-import ewhunting
-import ewfish
-import ewfaction
-import ewapt
-import ewweather
-import ewworldevent
-import ewdungeons
-import ewads
-import ewbook
-import ewsports
-import ewrace
-import ewslimetwitter
-import ewdebug
+import ew.utils as ewutils
+import ew.static.cfg as ewcfg
+import ew.static.vendors as vendors
+import ew.static.cosmetics as cosmetics
+import ew.static.items as static_items
+import ew.static.weather as weather_static
+import ew.static.food as static_food
+import ew.static.poi as poi_static
+import ew.farm as ewfarm
+import ew.cmd as ewcmd
+import ew.casino as ewcasino
+import ew.food as ewfood
+import ew.wep as ewwep
+import ew.juviecmd as ewjuviecmd
+import ew.market as ewmarket
+import ew.spooky as ewspooky
+import ew.kingpin as ewkingpin
+import ew.player as ewplayer
+import ew.server as ewserver
+import ew.item as ewitem
+import ew.move as ewmap
+import ew.rolemgr as ewrolemgr
+import ew.raidboss as ewraidboss
+import ew.leaderboard as ewleaderboard
+import ew.cosmeticitem as ewcosmeticitem
+import ew.slimeoid as ewslimeoid
+import ew.district as ewdistrict
+import ew.mutation as ewmutation
+import ew.quadrants as ewquadrants
+import ew.transport as ewtransport
+import ew.statuseffects as ewstatuseffects
+import ew.smelting as ewsmelting
+import ew.hunting as ewhunting
+import ew.fish as  ewfish
+import ew.faction as ewfaction
+import ew.apt as ewapt
+import ew.weather as ewweather
+import ew.worldevent as ewworldevent
+import ew.dungeons as ewdungeons
+import ew.ads as ewads
+import ew.book as ewbook
+import ew.sports as ewsports
+import ew.race as ewrace
+import ew.slimetwitter as ewslimetwitter
+import ew.debug as ewdebug
 
-from ewitem import EwItem
-from ew import EwUser
-from ewplayer import EwPlayer
-from ewmarket import EwMarket
-from ewmarket import EwStock
-from ewdistrict import EwDistrict
-from ewstatuseffects import EwStatusEffect
+from ew.item import EwItem
+from ew.user import EwUser
+from ew.player import EwPlayer
+from ew.market import EwMarket
+from ew.market import EwStock
+from ew.district import EwDistrict
+from ew.statuseffects import EwStatusEffect
 
 
 ewutils.logMsg('Starting up...')
@@ -927,7 +933,7 @@ async def on_member_remove(member):
 		user_data = EwUser(member = member)
 
 		# don't kill players who haven't cleared the tutorial yet
-		if user_data.poi in ewcfg.tutorial_pois:
+		if user_data.poi in poi_static.tutorial_pois:
 			return
 
 		user_data.trauma = ewcfg.trauma_id_suicide
@@ -965,7 +971,7 @@ async def on_ready():
 	# Flatten role names to all lowercase, no spaces.
 	fake_observer = EwUser()
 	fake_observer.life_state = ewcfg.life_state_observer
-	for poi in ewcfg.poi_list:
+	for poi in poi_static.poi_list:
 		if poi.role != None:
 			poi.role = ewutils.mapRoleName(poi.role)
 		if poi.major_role != None:
@@ -979,18 +985,18 @@ async def on_ready():
 		if len(poi.neighbors.keys()) > 0:
 			neighbors = ewmap.path_to(poi_start = poi.id_poi, user_data = fake_observer)
 		#elif poi.id_poi == ewcfg.poi_id_thesewers:
-		#	neighbors = ewcfg.poi_list
+		#	neighbors = poi_static.poi_list
 
 		if neighbors != None:
 			
 			for neighbor in neighbors:
 				neighbor_ids.append(neighbor.id_poi)
 
-		ewcfg.poi_neighbors[poi.id_poi] = set(neighbor_ids)
-		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
+		poi_static.poi_neighbors[poi.id_poi] = set(neighbor_ids)
+		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, poi_static.poi_neighbors[poi.id_poi]))
 
 
-	for id_poi in ewcfg.landmark_pois:
+	for id_poi in poi_static.landmark_pois:
 		ewutils.logMsg("beginning landmark precomputation for " + id_poi)
 		ewmap.landmarks[id_poi] = ewmap.score_map_from(
 			poi_start = id_poi,
@@ -1058,7 +1064,7 @@ async def on_ready():
 					ewutils.logMsg("• found channel for slime twitter: {}".format(channel.name))
 		ewdebug.initialize_gamestate(id_server=server.id)
 		# create all the districts in the database
-		for poi_object in ewcfg.poi_list:
+		for poi_object in poi_static.poi_list:
 			poi = poi_object.id_poi
 			# call the constructor to create an entry if it doesnt exist yet
 			dist = EwDistrict(id_server = server.id, district = poi)
@@ -1224,17 +1230,17 @@ async def on_ready():
 						bazaar_general_items = []
 						bazaar_furniture = []
 
-						for item in ewcfg.vendor_inv.get(ewcfg.vendor_bazaar):
-							if item in ewcfg.item_names:
+						for item in vendors.vendor_inv.get(ewcfg.vendor_bazaar):
+							if item in static_items.item_names:
 								bazaar_general_items.append(item)
 
-							elif item in ewcfg.food_names:
+							elif item in static_food.food_names:
 								bazaar_foods.append(item)
 
-							elif item in ewcfg.cosmetic_names:
+							elif item in cosmetics.cosmetic_names:
 								bazaar_cosmetics.append(item)
 
-							elif item in ewcfg.furniture_names:
+							elif item in static_items.furniture_names:
 								bazaar_furniture.append(item)
 
 						market_data.bazaar_wares['slimecorp1'] = ewcfg.weapon_id_umbrella
@@ -1308,7 +1314,7 @@ async def on_ready():
 					market_data = EwMarket(id_server = server.id)
 
 					if random.randrange(3) == 0:
-						pattern_count = len(ewcfg.weather_list)
+						pattern_count = len(weather_static.weather_list)
 
 						if pattern_count > 1:
 							weather_old = market_data.weather
@@ -1318,8 +1324,8 @@ async def on_ready():
 
 							# Randomly select a new weather pattern. Try again if we get the same one we currently have.
 							while market_data.weather == weather_old:
-								pick = random.randrange(len(ewcfg.weather_list))
-								market_data.weather = ewcfg.weather_list[pick].name
+								pick = random.randrange(len(weather_static.weather_list))
+								market_data.weather = weather_static.weather_list[pick].name
 
 						# Log message for statistics tracking.
 						ewutils.logMsg("The weather changed. It's now {}.".format(market_data.weather))
@@ -1371,7 +1377,7 @@ async def on_ready():
 					msg_channel_names.append(msg.channel)
 
 				if msg.poi != None:
-					poi = ewcfg.id_to_poi.get(msg.poi)
+					poi = poi_static.id_to_poi.get(msg.poi)
 					if poi != None:
 						if poi.channel != None and len(poi.channel) > 0:
 							msg_channel_names.append(poi.channel)
@@ -1410,7 +1416,7 @@ async def on_member_join(member):
 	)
 	user_data = EwUser(member = member)
 
-	if user_data.poi in ewcfg.tutorial_pois:
+	if user_data.poi in poi_static.tutorial_pois:
 		await ewdungeons.begin_tutorial(member)
 
 @client.event
@@ -1613,7 +1619,7 @@ async def on_message(message):
 		if message.guild == None:
 			playermodel = ewplayer.EwPlayer(id_user = message.author.id)
 			usermodel = EwUser(id_user=message.author.id, id_server= playermodel.id_server)
-			poi = ewcfg.id_to_poi.get(usermodel.poi)
+			poi = poi_static.id_to_poi.get(usermodel.poi)
 			cmd_obj.guild = ewcfg.server_list[playermodel.id_server]
 			cmd_obj.message.author = cmd_obj.guild.get_member(playermodel.id_user)
 
@@ -1688,7 +1694,7 @@ async def on_message(message):
 			if content_tolower in ewdebug.act_pois.get(user_data.poi).keys():
 				return await ewdebug.act(cmd_obj, user_data.poi, content_tolower)
 
-		if user_data.poi in ewcfg.tutorial_pois:	
+		if user_data.poi in poi_static.tutorial_pois:	
 			return await ewdungeons.tutorial_cmd(cmd_obj)
 
 		elif cmd_fn != None:
@@ -1825,7 +1831,7 @@ async def on_message(message):
 
 			items = []
 
-			for cosmetic in ewcfg.cosmetic_items_list:
+			for cosmetic in cosmetics.cosmetic_items_list:
 				if patrician and cosmetic.rarity == ewcfg.rarity_patrician:
 					items.append(cosmetic)
 				elif not patrician and cosmetic.rarity == ewcfg.rarity_plebeian:
@@ -1850,7 +1856,7 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Hat created."))
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createfood'):
-			item = ewcfg.food_list[random.randint(0, len(ewcfg.food_list) - 1)]
+			item = static_food.food_list[random.randint(0, len(static_food.food_list) - 1)]
 
 			item_id = ewitem.item_create(
 				item_type = ewcfg.it_food,
@@ -1874,7 +1880,7 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Food created."))
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createdye'):
-			item = ewcfg.dye_list[random.randint(0, len(ewcfg.dye_list) - 1)]
+			item = static_items.dye_list[random.randint(0, len(ewcfg.dye_list) - 1)]
 
 			item_props = ewitem.gen_item_props(item)
 
@@ -1897,7 +1903,7 @@ async def on_message(message):
 
 			cosmetics_list = []
 
-			for result in ewcfg.cosmetic_items_list:
+			for result in cosmetics.cosmetic_items_list:
 				if result.acquisition == ewcfg.acquisition_smelting:
 					cosmetics_list.append(result)
 				else:

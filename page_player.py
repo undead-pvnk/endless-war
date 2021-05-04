@@ -7,12 +7,12 @@
 import sys
 import html
 
-import ewutils
-import ewcmd
-import ewcfg
+from ew import utils as ewutils
+from ew import cmd as ewcmd
+import ew.static.cfg as ewcfg
 
-from ew import EwUser
-from ewplayer import EwPlayer
+from ew.user import EwUser
+from ew.player import EwPlayer
 
 def faction(faction, life_state):
 	url = "<img src=/img/icons/{}.png style=\"height: 1em;\"> "
