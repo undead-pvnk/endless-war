@@ -90,7 +90,7 @@ for poi in poi_list:
 	# Assign all the correct major and minor roles.
 	
 	# Districts and streets need their minor roles to see (read-only) all of their subzones.
-	if poi.is_district or poi.is_street or poi.id_poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+	if poi.is_district or poi.is_street or poi.id_poi in ["themines", "cratersvillemines", "toxingtonmines"]:
 		poi.minor_role = '{}_minor'.format(poi.id_poi)
 
 	# Districts need their major roles for their specific LAN (voice/text) channels.

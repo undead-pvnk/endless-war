@@ -1,8 +1,4 @@
-import random
-
 import ewutils
-import ewstats
-import ewitem
 import ewdebugrelics
 import random
 import json
@@ -30,7 +26,7 @@ from ewprank import EwPrankItem
 from ewmarket import EwMarket
 from ewhunting import EwSeedPacket, EwTombstone
 
-import ewdebug
+from ew import ewdebug
 
 # Global configuration options.
 
