@@ -8,7 +8,8 @@ from .static import poi as poi_static
 
 from .backend import item as bknd_item
 
-from .utils import core as ewutils
+from .utils import frontend as fe_utils
+
 from . import cmd as ewcmd
 
 from .backend.user import EwUser
@@ -77,7 +78,7 @@ async def set_race(cmd):
 	else:
 		response = "You have either changed your race recently, or just used your racial ability. Try again later, race traitor."
 	
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def exist(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -96,7 +97,7 @@ async def exist(cmd):
 	else:
 		response = "You people are not allowed to do that."
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def ree(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -108,10 +109,10 @@ async def ree(cmd):
 			response += "https://youtu.be/cBkWhkAZ9ds"
 		else:
 			response += "**R{}**".format(random.randrange(200, 500) * "E")
-		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 	else:
 		response = "You people are not allowed to do that."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def autocannibalize(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -128,7 +129,7 @@ async def autocannibalize(cmd):
 			response = "You're too full of yourself right now, try again later."
 	else:
 		response = "You people are not allowed to do that."
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def rattle(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -167,7 +168,7 @@ async def rattle(cmd):
 			response = "You rattle your bones."
 	else:
 		response = "You people are not allowed to do that."
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def beep(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -196,20 +197,20 @@ async def beep(cmd):
 		else:
 			resp = await ewcmd.start(cmd = cmd)
 			response = "```CRITICAL ERROR: 'life_state' NOT FOUND\nINITIATING LIFECYCLE TERMINATION SEQUENCE IN "
-			await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response + "10 SECONDS...```"))
+			await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response + "10 SECONDS...```"))
 			for i in range(10, 0, -1):
 				await asyncio.sleep(1)
-				await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response + "{} SECONDS...```".format(i)))
+				await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response + "{} SECONDS...```".format(i)))
 			await asyncio.sleep(1)
-			await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response + "0 SECONDS...```"))
+			await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response + "0 SECONDS...```"))
 			await asyncio.sleep(1)
-			await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response + "0 SECONDS...\nERROR: 'reboot' not in function library in ewrobot.py ln 459```"))
+			await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response + "0 SECONDS...\nERROR: 'reboot' not in function library in ewrobot.py ln 459```"))
 			return
 		response = random.choice(responses)
 	else:
 		response = "You people are not allowed to do that."
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def yiff(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -242,7 +243,7 @@ async def yiff(cmd):
 	else:
 		response = "You people are not allowed to do that."
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def hiss(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -251,10 +252,10 @@ async def hiss(cmd):
 		response = "*{}* lets out a piercing hiss.\n".format(cmd.message.author.display_name)
 		sssss = random.randrange(200, 500) * "s" # sssssssss
 		response += "**HIS{}**".format(''.join(random.choice((str.upper, str.lower))(s) for s in sssss))
-		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 	else:
 		response = "You people are not allowed to do that."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def jiggle(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -286,7 +287,7 @@ async def jiggle(cmd):
 	else:
 		response = "You people are not allowed to do that."
 		
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def request_petting(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -299,7 +300,7 @@ async def request_petting(cmd):
 		if cmd.mentions_count == 1:
 			target_member = cmd.mentions[0]
 			proposal_response = "You rub against {}'s leg and look at them expectantly. Will they **{}** and give you a rub, or do they **{}** your affection?".format(target_member.display_name, ewcfg.cmd_accept, ewcfg.cmd_refuse)
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, proposal_response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, proposal_response))
     
 			accepted = False
 			try:
@@ -322,13 +323,13 @@ async def request_petting(cmd):
 					"{target} gets on the floor and starts petting the heck out of {user}!",
 				]
 				accepted_response = random.choice(responses).format(user = cmd.message.author.display_name, target = target_member.display_name)
-				await ewutils.send_message(cmd.client, cmd.message.channel, accepted_response)
+				await fe_utils.send_message(cmd.client, cmd.message.channel, accepted_response)
 			else:
 				response = "The pain of rejection will only make you stronger, {}.".format(cmd.message.author.display_name)
 	else:
 		response = "You people are not allowed to do that."
 	if response:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def rampage(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -345,7 +346,7 @@ async def rampage(cmd):
 	else:
 		response = "You people are not allowed to do that."
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def flutter(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -396,7 +397,7 @@ async def flutter(cmd):
 	else:
 		response = "You people are not allowed to do that."
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def entomize(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -415,7 +416,7 @@ async def entomize(cmd):
 	else:
 		response = "You people are not allowed to do that."
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def confuse(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -445,7 +446,7 @@ async def confuse(cmd):
 	else:
 		response = "You people are not allowed to do that."
 		
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def shamble(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -463,4 +464,4 @@ async def shamble(cmd):
 		response = random.choice(responses)
 	else:
 		response = "You people are not allowed to do that."
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

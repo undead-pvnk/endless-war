@@ -1,6 +1,7 @@
 import time
 
 from .utils import core as ewutils
+from .utils import frontend as fe_utils
 
 from .backend.user import EwUser
 
@@ -155,9 +156,9 @@ async def prank_item_effect_response(cmd, item):
 				except:
 					pass
 				
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), chosen_response))
-				#prank_feed_channel = ewutils.get_channel(cmd.guild, 'prank-feed')
-				#await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (chosen_response+"\n`-------------------------`")))
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), chosen_response))
+				#prank_feed_channel = fe_utils.get_channel(cmd.guild, 'prank-feed')
+				#await fe_utils.send_message(cmd.client, prank_feed_channel, fe_utils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (chosen_response+"\n`-------------------------`")))
 
 				# The longer time goes on without the pranked person typing in the command, the more gambit they lose
 				pranker_data = EwUser(member=cmd.message.author)

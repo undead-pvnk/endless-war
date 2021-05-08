@@ -12,6 +12,9 @@ from .backend import item as bknd_item
 
 from . import item as ewitem
 from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils import item as itm_utils
+from .utils import poi as poi_utils
 from . import rolemgr as ewrolemgr
 
 from .backend.user import EwUser
@@ -29,7 +32,7 @@ async def reap(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	
 	forcereap = False
 	if cmd.tokens[0] == ewcfg.cmd_reap_alt:
@@ -42,7 +45,7 @@ async def reap(cmd):
 	response = ""
 	levelup_response = ""
 	mutations = user_data.get_mutations()
-	cosmetic_abilites = ewutils.get_cosmetic_abilities(id_user = cmd.message.author.id, id_server = cmd.guild.id)
+	cosmetic_abilites = itm_utils.get_cosmetic_abilities(id_user = cmd.message.author.id, id_server = cmd.guild.id)
 	poi = poi_static.id_to_poi.get(user_data.poi)
 
 	# check if the user has a farming tool equipped
@@ -64,7 +67,7 @@ async def reap(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		if user_data.poi == ewcfg.poi_id_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
 		elif user_data.poi == ewcfg.poi_id_og_farms:
@@ -96,7 +99,7 @@ async def reap(cmd):
 
 					slime_gain = farm.slimes_onreap
 
-					controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
+					controlling_faction = poi_utils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
 					if controlling_faction != "" and controlling_faction == user_data.faction:
 						slime_gain *= 2
@@ -227,7 +230,7 @@ async def reap(cmd):
 						await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 """
@@ -237,7 +240,7 @@ async def sow(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	# check if the user has a farming tool equipped
 	weapon_item = EwItem(id_item=user_data.weapon)
@@ -260,7 +263,7 @@ async def sow(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		if user_data.poi == ewcfg.poi_id_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
 		elif user_data.poi == ewcfg.poi_id_og_farms:
@@ -311,20 +314,20 @@ async def sow(cmd):
 						
 					else:
 						response = "The soil has enough toxins without you burying your trash here."
-						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 				elif item_data.item_type == ewcfg.it_food:
 					food_id = item_data.item_props.get("id_food")
 					vegetable = static_food.food_map.get(food_id)
 					if ewcfg.vendor_farm not in vegetable.vendors:
 						response = "It sure would be nice if {}s grew on trees, but alas they do not. Idiot.".format(item_sought.get("name"))
-						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 					elif user_data.life_state != ewcfg.life_state_juvenile:
 						response = "You lack the knowledge required to grow {}.".format(item_sought.get("name"))
-						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 				else:
 					response = "The soil has enough toxins without you burying your trash here."
-					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 				mutations = user_data.get_mutations()
 				growth_time = ewcfg.crops_time_to_grow
@@ -358,13 +361,13 @@ async def sow(cmd):
 
 				farm.persist()
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def mill(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -385,7 +388,7 @@ async def mill(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		items = []
 		vegetable = EwItem(id_item = item_sought.get('id_item'))
 
@@ -433,13 +436,13 @@ async def mill(cmd):
 		else:
 			response = "Mill which item? (check **!inventory**)"
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def check_farm(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	response = ""
 	levelup_response = ""
@@ -456,7 +459,7 @@ async def check_farm(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		if user_data.poi == ewcfg.poi_id_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
 		elif user_data.poi == ewcfg.poi_id_og_farms:
@@ -492,7 +495,7 @@ async def check_farm(cmd):
 			farm_action = farm_static.id_to_farm_action.get(farm.action_required)
 			response = farm_action.str_check
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def cultivate(cmd):
@@ -500,7 +503,7 @@ async def cultivate(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	response = ""
 	levelup_response = ""
@@ -517,7 +520,7 @@ async def cultivate(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		if user_data.poi == ewcfg.poi_id_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
 		elif user_data.poi == ewcfg.poi_id_og_farms:
@@ -549,5 +552,5 @@ async def cultivate(cmd):
 			farm.action_required = ewcfg.farm_action_none
 			farm.persist()
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 

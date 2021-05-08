@@ -16,6 +16,9 @@ from .backend import core as bknd_core
 from .backend import item as bknd_item
 
 from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils import loop as loop_utils
+from .utils import poi as poi_utils
 from . import rolemgr as ewrolemgr
 from . import smelting as ewsmelting
 from . import prank as ewprank
@@ -153,10 +156,10 @@ async def inventory_print(cmd):
     if cmd.tokens[0].lower() == ewcfg.cmd_communitychest:
         if poi.community_chest == None:
             response = "There is no community chest here."
-            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         elif cmd.message.channel.name != poi.channel:
             response = "You can't see the community chest from here."
-            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         community_chest = True
         can_message_user = False
         inventory_source = poi.community_chest
@@ -252,10 +255,10 @@ async def inventory_print(cmd):
     msg_handle = None
     try:
         if can_message_user:
-            msg_handle = await ewutils.send_message(cmd.client, cmd.message.author, response)
+            msg_handle = await fe_utils.send_message(cmd.client, cmd.message.author, response)
     except discord.errors.Forbidden:
         response = "You'll have to allow Endless War to send you DMs to check your inventory!"
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     except:
         can_message_user = False
 
@@ -263,7 +266,7 @@ async def inventory_print(cmd):
         can_message_user = False
 
     if not can_message_user:
-        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if sort_by_name:
         items = sorted(items, key=lambda item: item.get('name').lower())
@@ -294,9 +297,9 @@ async def inventory_print(cmd):
 
             if not stacking and len(response) + len(response_part) > 1492:
                 if can_message_user:
-                    await ewutils.send_message(cmd.client, cmd.message.author, response)
+                    await fe_utils.send_message(cmd.client, cmd.message.author, response)
                 else:
-                    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
                 response = ""
 
@@ -318,17 +321,17 @@ async def inventory_print(cmd):
 
                 if len(response) + len(response_part) > 1492:
                     if can_message_user:
-                        await ewutils.send_message(cmd.client, cmd.message.author, response)
+                        await fe_utils.send_message(cmd.client, cmd.message.author, response)
                     else:
-                        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
                     response = ""
                 response += response_part
 
         if can_message_user:
-            await ewutils.send_message(cmd.client, cmd.message.author, response)
+            await fe_utils.send_message(cmd.client, cmd.message.author, response)
         else:
-            await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 
@@ -538,7 +541,7 @@ async def item_look(cmd):
 
             response = name + (" x{:,}".format(item.stack_size) if (item.stack_size >= 1) else "") + "\n\n" + response
 
-            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(player, response))
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(player, response))
         else:
             if iterate == len(item_dest) and response == "":
                 if item_search:  # if they didnt forget to specify an item and it just wasn't found
@@ -546,7 +549,7 @@ async def item_look(cmd):
                 else:
                     response = "Inspect which item? (check **!inventory**)"
 
-                await ewutils.send_message(cmd.client, cmd.message.channel,ewutils.formatMessage(cmd.message.author, response))
+                await fe_utils.send_message(cmd.client, cmd.message.channel,fe_utils.formatMessage(cmd.message.author, response))
 
 # this is basically just the item_look command with some other stuff at the bottom
 async def item_use(cmd):
@@ -569,7 +572,7 @@ async def item_use(cmd):
         if item.item_type == ewcfg.it_food:
             response = user_data.eat(item)
             user_data.persist()
-            asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
+            asyncio.ensure_future(loop_utils.decrease_food_multiplier(user_data.id_user))
 
         if item.item_type == ewcfg.it_weapon:
             response = user_data.equip(item)
@@ -632,8 +635,8 @@ async def item_use(cmd):
 
                     if item_action == "delete":
                         bknd_item.item_delete(item.id_item)
-                        #prank_feed_channel = ewutils.get_channel(cmd.guild, ewcfg.channel_prankfeed)
-                        #await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response+"\n`-------------------------`")))
+                        #prank_feed_channel = fe_utils.get_channel(cmd.guild, ewcfg.channel_prankfeed)
+                        #await fe_utils.send_message(cmd.client, prank_feed_channel, fe_utils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response+"\n`-------------------------`")))
 
                     elif item_action == "drop":
                         bknd_item.give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)
@@ -672,7 +675,7 @@ async def item_use(cmd):
 
 
 
-        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
         await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
     else:
@@ -681,7 +684,7 @@ async def item_use(cmd):
         else:
             response = "Use which item? (check **!inventory**)"
 
-        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 def soulbind(id_item):
@@ -766,14 +769,14 @@ async def give(cmd):
         recipient = cmd.mentions[0]
     else:
         response = "You have to specify the recipient of the item."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     user_data = EwUser(member = author)
     recipient_data = EwUser(member = recipient)
 
     if user_data.poi != recipient_data.poi:
         response = "You must be in the same location as the person you want to gift your item to, bitch."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     item_sought = bknd_item.find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
@@ -800,7 +803,7 @@ async def give(cmd):
 
             if len(food_items) >= recipient_data.get_food_capacity():
                 response = "They can't carry any more food items."
-                return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         elif item_sought.get('item_type') == ewcfg.it_weapon:
             weapons_held = bknd_item.inventory(
@@ -811,13 +814,13 @@ async def give(cmd):
 
             if user_data.weaponmarried and user_data.weapon == item_sought.get('id_item'):
                 response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('name'))
-                return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             elif recipient_data.life_state == ewcfg.life_state_corpse:
                 response = "Ghosts can't hold weapons."
-                return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             elif len(weapons_held) >= recipient_data.get_weapon_capacity():
                 response  = "They can't carry any more weapons."
-                return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         else:
             # inventory limits for items that aren't food or weapons
             other_items = bknd_item.inventory(
@@ -828,7 +831,7 @@ async def give(cmd):
 
             if len(other_items) >= ewcfg.generic_inv_limit:
                 response = "They can't carry any more of those."
-                return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         if item_sought.get('item_type') == ewcfg.it_cosmetic:
             item_data = EwItem(id_item = item_sought.get('id_item'))
@@ -857,7 +860,7 @@ async def give(cmd):
 
             await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     else:
         if item_search:  # if they didnt forget to specify an item and it just wasn't found
@@ -865,7 +868,7 @@ async def give(cmd):
         else:
             response = "Give which item? (check **!inventory**)"
 
-        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 """
     Throw away an item
@@ -886,7 +889,7 @@ async def discard(cmd):
                 if user_data.weaponmarried and item.item_props.get('married') == user_data.id_user:
                     weapon = static_weapons.weapon_map.get(item.item_props.get("weapon_type"))
                     response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
-                    return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                 else:
                     user_data.weapon = -1
                     user_data.persist()
@@ -896,7 +899,7 @@ async def discard(cmd):
                 if user_data.weaponmarried and item.item_props.get('married') == user_data.id_user:
                     weapon = static_weapons.weapon_map.get(item.item_props.get("weapon_type"))
                     response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
-                    return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                 else:
                     user_data.sidearm = -1
                     user_data.persist()
@@ -906,7 +909,7 @@ async def discard(cmd):
             # 	# Prevent the item from being dropped if it is adorned
             # 	if item_sought.get("adorned") == 'true':
             # 		response = "You need to !dedorn your {} first, before you can throw it away.".format(item_sought.get("name"))
-            # 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            # 		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
             response = "You throw away your " + item_sought.get("name")
@@ -922,7 +925,7 @@ async def discard(cmd):
         else:
             response = "Discard which item? (check **!inventory**)"
 
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 def gen_item_props(item):
     item_props = {}
@@ -1083,7 +1086,7 @@ async def soulextract(cmd):
         response = "Now's not the time to be playing with your soul, dumbass! You have to focus on pointing the gun at your head!"
     else:
         response = "There's nothing left in you to extract. You already spent the soul you had."
-    return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def returnsoul(cmd):
     usermodel = EwUser(member=cmd.message.author)
@@ -1113,7 +1116,7 @@ async def returnsoul(cmd):
             response = "Nice try, but your mortal coil recognizes a fake soul when it sees it."
     else:
         response = "You don't have a soul to absorb. Hopelessness is no fun, but don't get all delusional on us now."
-    return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def squeeze(cmd):
     usermodel = EwUser(member=cmd.message.author)
@@ -1121,15 +1124,15 @@ async def squeeze(cmd):
 
     if usermodel.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if usermodel.life_state == ewcfg.life_state_corpse:
         response = "Alas, you lack the mortal appendages required to wring the slime out of someone's soul."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if cmd.mentions_count <= 0:
         response = "Specify a soul you want to squeeze the life out of."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     target = cmd.mentions[0]
     if target.id == cmd.message.author.id:
@@ -1189,12 +1192,12 @@ async def squeeze(cmd):
                 district_data.persist()
 
             if receivingreport != "":
-                loc_channel = ewutils.get_channel(cmd.guild, poi.channel)
-                await ewutils.send_message(cmd.client, loc_channel, ewutils.formatMessage(target, receivingreport))
+                loc_channel = fe_utils.get_channel(cmd.guild, poi.channel)
+                await fe_utils.send_message(cmd.client, loc_channel, fe_utils.formatMessage(target, receivingreport))
 
             response = "You tightly squeeze {}'s soul in your hand, jeering into it as you do so. This thing was worth every penny.".format(playermodel.display_name)
 
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 
@@ -1209,11 +1212,11 @@ async def makecostume(cmd):
 
     if not costumekit:
         response = "You don't know how to make one, bitch."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if len(cmd.tokens) != 3:
         response = 'Usage: !makecostume "[name]" "[description]".\nExample: !makecostume "Ghost Costume" "A bedsheet with holes for eyes."'
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     bknd_item.item_delete(id_item=costumekit.get('id_item'))
 
@@ -1236,7 +1239,7 @@ async def makecostume(cmd):
     )
 
     response = "You fashion your **{}** Double Halloween costume using the creation kit.".format(item_name)
-    return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 
@@ -1261,7 +1264,7 @@ async def trash(cmd):
     else:
         response = "Are you sure you have that item?"
 
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 def surrendersoul(giver = None, receiver = None, id_server=None):
 
@@ -1363,9 +1366,9 @@ async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
 
         direct_message = "You are now manually breathing.\nYou are now manually blinking.\nYour tounge is now uncomfortable inside your mouth.\nYou just lost THE GAME."
         try:
-            await ewutils.send_message(cmd.client, target_member, direct_message)
+            await fe_utils.send_message(cmd.client, target_member, direct_message)
         except:
-            await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.guild, cmd.message.channel), ewutils.formatMessage(target_member, direct_message))
+            await fe_utils.send_message(cmd.client, fe_utils.get_channel(cmd.guild, cmd.message.channel), fe_utils.formatMessage(target_member, direct_message))
 
     return response
 
@@ -1401,7 +1404,7 @@ async def manually_edit_item_properties(cmd):
     else:
         response = 'Invalid number of options entered.\nProper usage is: !editprop [item ID] [name] [value], where [value] is in quotation marks if it is longer than one word.'
 
-    await ewutils.send_message(cmd.client, cmd.message.channel, response)
+    await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 
 
 async def longdrop(cmd):
@@ -1424,7 +1427,7 @@ async def longdrop(cmd):
         response = "You don't have that item."
     elif dest_poi == None:
         response = "Never heard of it."
-    elif ewutils.inaccessible(user_data = user_data, poi = dest_poi) or dest_poi.is_street:
+    elif poi_utils.inaccessible(user_data = user_data, poi = dest_poi) or dest_poi.is_street:
         response = "Your arm hits a wall before it can make the drop off. Shit, probably can't take it over there."
     elif user_data.poi not in dest_poi.neighbors.keys() and dest_poi.id_poi not in poi.mother_districts:
         response = "You can't take it that far. What if a bird or car runs into your hand?"
@@ -1436,7 +1439,7 @@ async def longdrop(cmd):
             if user_data.weaponmarried:
                 weapon = static_weapons.weapon_map.get(item_obj.item_props.get("weapon_type"))
                 response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
-                return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             else:
                 user_data.weapon = -1
                 user_data.persist()
@@ -1444,7 +1447,7 @@ async def longdrop(cmd):
         item_drop(id_item=item_sought.get('id_item'), other_poi=dest_poi.id_poi)
         response = "You stretch your arms and drop your " + item_sought.get("name") + ' into {}.'.format(dest_poi.str_name)
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def skullbash(cmd):
@@ -1464,14 +1467,14 @@ async def skullbash(cmd):
         else:
             ewutils.active_restrictions[user_data.id_user] = 2
             response = "You suck in your gut and mentally prepare to lose a few brain cells. 3...2...1...WHACK! Ugh. You're gonna need a minute."
-            await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             await asyncio.sleep(600)
             ewutils.active_restrictions[user_data.id_user] = 0
             response = "The stars slowly begin to fade from your vision. Looks like you're lucid again."
     else:
         response = "You don't have a hard enough brick to bash your head in."
 
-    return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def zuck(cmd):
@@ -1486,5 +1489,5 @@ async def zuck(cmd):
     else:
         response = "You'll need a corpse and the zuck syringe before you can do that."
 
-    return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 

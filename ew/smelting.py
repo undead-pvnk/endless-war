@@ -5,11 +5,13 @@ from .static import cosmetics
 from .static import vendors
 from .static import smelting
 from .static import items as static_items
+from .static import cosmetics as static_cosmetics
 
 from .backend import item as bknd_item
 
 from . import item as ewitem
 from .utils import core as ewutils
+from .utils import frontend as fe_utils
 
 from .backend.user import EwUser
 from .backend.item import EwItem
@@ -19,7 +21,7 @@ async def smelt(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 
@@ -73,7 +75,7 @@ async def smelt(cmd):
 					
 					if not bknd_item.check_inv_capacity(user_data = user_data, item_type = ewcfg.it_cosmetic):
 						response = "You can't carry anymore cosmetic items."
-						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 					
 					patrician_rarity = 100
 					patrician_smelted = random.randint(1, patrician_rarity)
@@ -95,7 +97,7 @@ async def smelt(cmd):
 					else:
 						style = ewcfg.style_cool
 
-					for result in ewcfg.cosmetic_items_list:
+					for result in static_cosmetics.cosmetic_items_list:
 						if result.style == style and result.acquisition == ewcfg.acquisition_smelting:
 							cosmetics_list.append(result)
 						else:
@@ -156,7 +158,7 @@ async def smelt(cmd):
 
 					if not bknd_item.check_inv_capacity(user_data = user_data, item_type = item.item_type):
 						response = "You can't carry any more {}s.".format(item.item_type)
-						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 					item_props = ewitem.gen_item_props(item)
 
@@ -195,7 +197,7 @@ async def smelt(cmd):
 		response = "Please specify a desired smelt result."
 
 	# Send response
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def smeltsoul(cmd):
 	item = bknd_item.find_item(item_search="reanimatedcorpse", id_user=cmd.message.author.id, id_server=cmd.guild.id)
@@ -212,7 +214,7 @@ async def smeltsoul(cmd):
 				response = "You reach for the soul in the reanimated corpse, but your hands are full of cosmetics! Get rid of a few, freak."
 		else:
 			response = "That's not a reanimated corpse. It only looks like one. Get rid of the fake shit and we'll get started."
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 # "wcim", "whatcanimake", "whatmake", "usedfor" command - finds the item the player is asking for and tells them all smelting recipes that use that item 
 # added by huck on 9/3/2020
@@ -220,7 +222,7 @@ async def find_recipes_by_item(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	
 	used_recipe = None
 	
@@ -300,7 +302,7 @@ async def find_recipes_by_item(cmd):
 	
 	
 	# send response to player
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 def unwrap(id_user = None, id_server = None, item = None):
 	response = "You eagerly rip open a pack of Secreatures™ trading cards!!"
@@ -314,7 +316,7 @@ def unwrap(id_user = None, id_server = None, item = None):
 
 	if slimexodia == True:
 		# If there are multiple possible products, randomly select one.
-		slimexodia_item = random.choice(ewcfg.slimexodia_parts)
+		slimexodia_item = random.choice(static_items.slimexodia_parts)
 
 		response += " There’s a single holographic card poking out of the swathes of repeats and late edition cards..."
 		response += " ***...What’s this?! It’s the legendary card {}!! If you’re able to collect the remaining pieces of Slimexodia, you might be able to smelt something incomprehensibly powerful!!***".format(slimexodia_item.str_name)

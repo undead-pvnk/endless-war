@@ -5,12 +5,15 @@ from .backend import core as bknd_core
 from .backend import item as bknd_item
 
 from .utils import core as ewutils
+from .utils import frontend as fe_utils
 
 from .backend.user import EwUser
 from .backend.market import EwMarket
 from .backend.item import EwItem
 from .backend.player import EwPlayer
 from .backend.book import EwBook, EwBookSale
+
+from .utils.frontend import EwResponseContainer
 
 readers = {}
 
@@ -31,7 +34,7 @@ async def begin_manuscript(cmd = None, dm = False):
 
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	cost = 20000
 
@@ -68,14 +71,14 @@ async def begin_manuscript(cmd = None, dm = False):
 
 			response = "You exchange 20,000 slime for a shoddily-bound manuscript. You scrawl the name \"{} by {}\" into the cover.".format(book.title, book.author)
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def set_pen_name(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
 
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	poi = poi_static.id_to_poi.get(user_data.poi)
 
@@ -99,13 +102,13 @@ async def set_pen_name(cmd = None, dm = False):
 		else:
 			response = "If you would like to change your pen name, you must change your nickname."
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def set_genre(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	genre = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
@@ -137,13 +140,13 @@ async def set_genre(cmd = None, dm = False):
 
 			response = "You scribble {} onto the back cover.".format(genre)
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def set_length(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	poi = poi_static.id_to_poi.get(user_data.poi)
 
@@ -190,7 +193,7 @@ async def set_length(cmd = None, dm = False):
 					page_list = ewutils.formatNiceList(pages_with_content)
 					response = "There is writing on these pages: {}. If you change the number of pages to {}, you will cut these pages out. Will you still do it? **!accept** or **!refuse**".format(page_list, length)
 
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 					try:
 						message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
@@ -223,13 +226,13 @@ async def set_length(cmd = None, dm = False):
 
 					book.persist()
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def set_title(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	title = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
@@ -258,13 +261,13 @@ async def set_title(cmd = None, dm = False):
 
 		response = "You scratch out the title and scrawl \"{}\" over it.".format(book.title)
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def edit_page(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	response = ""
 
@@ -316,7 +319,7 @@ async def edit_page(cmd = None, dm = False):
 					accepted = False
 					response = "There is already writing on this page. Are you sure you want to overwrite it? **!accept** or **!refuse**"
 
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 					try:
 						message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
@@ -337,13 +340,13 @@ async def edit_page(cmd = None, dm = False):
 					book.persist()
 					response = "You spend some time contemplating your ideas before scribbling them onto the page."
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def view_page(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	poi = poi_static.id_to_poi.get(user_data.poi)
 
@@ -378,13 +381,13 @@ async def view_page(cmd = None, dm = False):
 			else:
 				response = '"{}"'.format(content)
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def check_manuscript(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	poi = poi_static.id_to_poi.get(user_data.poi)
 
@@ -414,13 +417,13 @@ async def check_manuscript(cmd = None, dm = False):
 
 		response = "{} by {}. It is {} pages and {:,} characters long.{}".format(title, author, pages, length, cover_text)
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def publish_manuscript(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	market_data = EwMarket(id_server = user_data.id_server)
 
@@ -450,7 +453,7 @@ async def publish_manuscript(cmd = None, dm = False):
 
 			response = "Are you sure you want to publish your manuscript? This cannot be undone. **!accept** or **!refuse**"
 
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 			try:
 				message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
@@ -500,7 +503,7 @@ async def publish_manuscript(cmd = None, dm = False):
 
 				response = "You've published your manuscript! Anybody can now buy your creation and you'll get royalties!"
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 def get_page(id_book, page):
 	book = EwBook(id_book = id_book)
@@ -511,7 +514,7 @@ async def read_book(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 	if not dm:
@@ -544,7 +547,7 @@ async def read_book(cmd = None, dm = False):
 				accepted = False
 				response = "ENDLESS WAR sees you about to open up a porn zine and wants to make sure you're 18 years or older. Use **!accept** to open or **!refuse** to abstain."
 
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 				try:
 					message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
@@ -590,13 +593,13 @@ async def read_book(cmd = None, dm = False):
 		else:
 			response = "You don't have that zine. Make sure you use **!read [zine title] [page]**"
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def next_page(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 	if not dm:
@@ -633,14 +636,14 @@ async def next_page(cmd = None, dm = False):
 	else:
 		response = "You haven't opened a zine yet!"
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def previous_page(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 	if not dm:
@@ -676,7 +679,7 @@ async def previous_page(cmd = None, dm = False):
 	else:
 		response = "You haven't opened a zine yet!"
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 def int_is_zine(id_book = None, id_server = None, negative = False):
 	direction = '>'
@@ -723,12 +726,12 @@ async def browse_zines(cmd):
 	if not poi.write_manuscript:
 		response = "You can't browse for zines here! Try going to the cafe. If you're looking for educational zines, try the colleges. If you can't read, then you might want to try the comic shop."
 
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	else:
 		if not sort_token.isdigit():
 			book_list = []
-			resp_cont = ewutils.EwResponseContainer(id_server=cmd.guild.id)
+			resp_cont = EwResponseContainer(id_server=cmd.guild.id)
 			query_suffix = ""
 			query_sort = "id_book"
 			more_selects = ""
@@ -866,7 +869,7 @@ async def browse_zines(cmd):
 			else:
 				response = "There aren't any zines in circulation at the moment."
 
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		else:
 			id_book = int(sort_token)
 
@@ -910,13 +913,13 @@ async def browse_zines(cmd):
 			else:
 				response = "That's not a valid zine ID."
 
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def order_zine(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	poi = poi_static.id_to_poi.get(user_data.poi)
 
@@ -940,7 +943,7 @@ async def order_zine(cmd):
 					accepted = False
 					response = "THIS ZINE IS PORNOGRAPHY. CONFIRM THAT YOU ARE AT LEAST 18 YEARS OLD. **!accept** or **!refuse**"
 
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 					try:
 						message = await cmd.client.wait_for('message', timeout=20, check=lambda message: message.author == cmd.message.author and 
@@ -960,7 +963,7 @@ async def order_zine(cmd):
 				elif accepted:
 					if book.genre != 10 and poi.id_poi == ewcfg.poi_id_clinicofslimoplasty:
 						response = "Specify a zine to purchase. Find zine IDs with !browse."
-						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 					user_data = EwUser(member=cmd.message.author)
 
@@ -1020,7 +1023,7 @@ async def order_zine(cmd):
 		else:
 			response = "Specify a zine to purchase. Find zine IDs with !browse."
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def rate_zine(cmd):
 	if len(cmd.tokens) < 2:
@@ -1110,7 +1113,7 @@ async def rate_zine(cmd):
 		else:
 			response = "How many fucks do you want to give the zine? (1-5)"
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def take_down_zine(cmd):
 	if len(cmd.tokens) < 2:
@@ -1148,7 +1151,7 @@ async def take_down_zine(cmd):
 		else:
 			response = "Invalid Zine ID."
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def untake_down_zine(cmd):
 	if len(cmd.tokens) < 2:
@@ -1189,7 +1192,7 @@ async def untake_down_zine(cmd):
 		else:
 			response = "Invalid Zine ID."
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def zine_dm_commands(cmd):
 	tokens_count = len(cmd.tokens)

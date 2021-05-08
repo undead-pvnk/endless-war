@@ -8,11 +8,12 @@ from .static import poi as poi_static
 
 from . import stats as ewstats
 from .utils import core as ewutils
+from .utils import frontend as fe_utils
 from . import rolemgr as ewrolemgr
 
 from .backend.user import EwUser
 from .backend.district import EwDistrict
-
+from .utils.frontend import EwResponseContainer
 
 
 """
@@ -27,7 +28,7 @@ async def capture_progress(cmd):
 
 	if not user_data.poi in poi_static.capturable_districts:
 		response += "This zone cannot be captured."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	district_data = EwDistrict(id_server=user_data.id_server, district=user_data.poi)
 
@@ -47,14 +48,14 @@ async def capture_progress(cmd):
 
 
 		#response += "\nThis district cannot be captured currently. It will unlock in {}.".format(ewutils.formatNiceTime(seconds = district_data.time_unlock, round_to_minutes = True))
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 """async def annex(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	response = ""
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.guild.id)
@@ -65,39 +66,39 @@ async def capture_progress(cmd):
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You ineffectively try shaking your can of spraypaint to whip up some sick graffiti. Alas, you’re all outta slime. " \
                    "They should really make these things compatible with ectoplasm."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if not (len(user_data.faction) > 0 and user_data.life_state == ewcfg.life_state_enlisted):
 		response = "Juveniles are too chickenshit to make graffiti and risk getting busted by the cops. Fuckin’ losers."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if user_data.poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
 		response = "There’s no point, the rest of your gang has already covered this place in spraypaint. Focus on exporting your graffiti instead."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if user_data.poi == ewcfg.poi_id_juviesrow:
 		response = "Nah, the Rowdys and Killers have both agreed this is neutral ground. You don’t want to start a diplomatic crisis, " \
                    "just stick to spraying down sick graffiti and splattering your rival gang across the pavement in the other districts."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if not user_data.poi in poi_static.capturable_districts:
 		response = "This zone cannot be captured."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	district_data = EwDistrict(id_server = user_data.id_server, district = user_data.poi)
 
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	if district_data.time_unlock > 0:
 		response = "You can’t spray graffiti here yet, it’s too soon after your rival gang extended their own cultural dominance over it. Try again in {}.".format(ewutils.formatNiceTime(seconds = district_data.time_unlock, round_to_minutes = True))
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if district_data.all_neighbors_friendly():
 		response = "What the hell are you doing, dude? You can’t put down any graffiti here, it’s been completely overrun by your rival gang. " \
                    "You can only spray districts that have at least one unfriendly neighbor, duh!"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	
 	users_in_district = district_data.get_players_in_district(
 		life_states = [ewcfg.life_state_enlisted],
@@ -114,7 +115,7 @@ async def capture_progress(cmd):
 
 	if len(users_in_district) > len(allies_in_district):
 		response = "Holy shit, deal with your rival gangsters first! You can’t spray graffiti while they’re on the prowl!"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	mutations = user_data.get_mutations()
 
@@ -134,14 +135,14 @@ async def capture_progress(cmd):
 
 	if slimes_spent == None:
 		response = "How much slime do you want to spend on spraying graffiti in this district?"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if slimes_spent < 0:
 		slimes_spent = user_data.slimes
 
 	if slimes_spent > user_data.slimes:
 		response = "You don't have that much slime, retard."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	num_lock = len(allies_in_district)
 	if user_data.time_expirpvp < time_now:
@@ -184,10 +185,10 @@ async def shamble(cmd):
 
 	if user_data.life_state != ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_assaultflatsbeach:
 		response = "You have too many higher brain functions left to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	elif user_data.life_state in [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted] and user_data.poi == ewcfg.poi_id_assaultflatsbeach:
 		response = "You feel an overwhelming sympathy for the plight of the Shamblers and decide to join their ranks."
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 		await asyncio.sleep(5)
 		
@@ -202,12 +203,12 @@ async def shamble(cmd):
 		
 		member = cmd.message.author
 		
-		base_poi_channel = ewutils.get_channel(cmd.message.guild, 'nuclear-beach-edge')
+		base_poi_channel = fe_utils.get_channel(cmd.message.guild, 'nuclear-beach-edge')
 
 		response = 'You arrive inside the facility and are injected with a unique strain of the Modelovirus. Not long after, a voice on the intercom chimes in.\n**"Welcome, {}. Welcome to Downpour Laboratories. It\'s safer here. Please treat all machines and facilities with respect, they are precious to our cause."**'.format(member.display_name)
 
 		await ewrolemgr.updateRoles(client=cmd.client, member=member)
-		return await ewutils.send_message(cmd.client, base_poi_channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, base_poi_channel, fe_utils.formatMessage(cmd.message.author, response))
 	
 	else:
 		pass
@@ -218,23 +219,23 @@ async def shamble(cmd):
 	# 	return
 	# elif not poi.is_district:
 	# 	response = "This doesn't seem like an important place to be shambling. Try a district zone instead."
-	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	# elif poi.id_poi == ewcfg.poi_id_oozegardens:
 	# 	response = "The entire district is covered in Brightshades! You have no business shambling this part of town!"
-	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	# 
 	# in_operation, op_poi = ewutils.gvs_check_if_in_operation(user_data)
 	# if in_operation:
 	# 	if op_poi != user_data.poi:
 	# 		response = "You aren't allowed to !shamble this district, per Dr. Downpour's orders.\n(**!goto {}**)".format(op_poi)
-	# 		return await ewutils.send_message(cmd.client, cmd.message.channel,  ewutils.formatMessage(cmd.message.author, response))
+	# 		return await fe_utils.send_message(cmd.client, cmd.message.channel,  fe_utils.formatMessage(cmd.message.author, response))
 	# else:
 	# 	response = "You aren't even in a Graveyard Op yet!\n(**!joinops [tombstone]**)"
-	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	# 
 	# if (time_now - user_data.time_lasthaunt) < ewcfg.cd_shambler_shamble:
 	# 	response = "You know, you really just don't have the energy to shamble this place right now. Try again in {} seconds.".format(int(ewcfg.cd_shambler_shamble-(time_now-user_data.time_lasthaunt)))
-	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	# 
 	# district_data = EwDistrict(district = poi.id_poi, id_server = cmd.guild.id)
 	# 
@@ -246,21 +247,21 @@ async def shamble(cmd):
 	# 	user_data.persist()
 	# 	
 	# 	response = "You shamble {}.".format(poi.str_name)
-	# 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	# 
 	# 	if district_data.degradation == poi.max_degradation:
 	# 		response = ewcfg.str_zone_degraded.format(poi = poi.str_name)
-	# 		await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	# 		await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 
 async def rejuvenate(cmd):
 	user_data = EwUser(member=cmd.message.author)
 
 	if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_oozegardens:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	elif user_data.life_state == ewcfg.life_state_shambler and user_data.poi == ewcfg.poi_id_oozegardens:
 		response = "You decide to change your ways and become one of the Garden Gankers in order to overthrow your old master."
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 		await asyncio.sleep(5)
 
@@ -278,12 +279,12 @@ async def rejuvenate(cmd):
 		server = client.get_guild(user_data.id_server)
 		member = server.get_member(user_data.id_user)
 		
-		base_poi_channel = ewutils.get_channel(cmd.message.guild, ewcfg.channel_og_farms)
+		base_poi_channel = fe_utils.get_channel(cmd.message.guild, ewcfg.channel_og_farms)
 
 		response = "You enter into Atomic Forest inside the farms of Ooze Gardens and are sterilized of the Modelovirus. Hortisolis gives you a big hug and says he's glad you've overcome your desire for vengeance in pursuit of deposing Downpour."
 
 		await ewrolemgr.updateRoles(client=cmd.client, member=member)
-		return await ewutils.send_message(cmd.client, base_poi_channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, base_poi_channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	else:
 		pass
@@ -298,7 +299,7 @@ async def capture_tick(id_server):
 	cursor = None
 	conn_info = None
 
-	resp_cont_capture_tick = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = id_server)
+	resp_cont_capture_tick = EwResponseContainer(client = ewutils.get_client(), id_server = id_server)
 
 	all_districts = poi_static.capturable_districts
 
@@ -444,10 +445,10 @@ async def capture_tick_loop(id_server):
 	Gives both kingpins the appropriate amount of slime for how many districts they own and lowers the capture_points property of each district by a certain amount, turning them neutral after a while
 """
 async def give_kingpins_slime_and_decay_capture_points(id_server):
-	resp_cont_decay_loop = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = id_server)
+	resp_cont_decay_loop = EwResponseContainer(client = ewutils.get_client(), id_server = id_server)
 
 	for kingpin_role in [ewcfg.role_rowdyfucker, ewcfg.role_copkiller]:
-		kingpin = ewutils.find_kingpin(id_server = id_server, kingpin_role = kingpin_role)
+		kingpin = fe_utils.find_kingpin(id_server = id_server, kingpin_role = kingpin_role)
 
 		if kingpin is not None:
 			total_slimegain = 0
@@ -492,7 +493,7 @@ async def change_spray(cmd):
 		user_data.spray = newspray
 		user_data.persist()
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def tag(cmd):
@@ -502,6 +503,6 @@ async def tag(cmd):
 		response = user_data.spray
 	else:
 		response = "Save the spraying for the gangsters. You're either too gay or dead to participate in this sort of thing."
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 

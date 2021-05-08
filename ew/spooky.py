@@ -10,11 +10,13 @@ from .static import cfg as ewcfg
 from .static import items as static_items
 from .static import weather as weather_static
 from .static import poi as poi_static
+from .static import slimeoid as sl_static
 
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 
 from .utils import core as ewutils
+from .utils import frontend as fe_utils
 from . import move as ewmap
 from . import rolemgr as ewrolemgr
 from . import slimeoid as ewslimeoid
@@ -25,6 +27,7 @@ from .backend.market import EwMarket
 from .backend.slimeoid import EwSlimeoid
 from .backend.quadrants import EwQuadrant
 from .backend.district import EwDistrict
+from .utils.frontend import EwResponseContainer
 
 """ revive yourself from the dead. """
 async def revive(cmd):
@@ -41,7 +44,7 @@ async def revive(cmd):
 		
 		if time_until_revive > 0:
 			response = "ENDLESS WAR is not ready to {} you yet ({}s).".format(cmd.tokens[0], time_until_revive)
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 		slimeoid = EwSlimeoid(member = cmd.message.author)
 
@@ -118,28 +121,28 @@ async def revive(cmd):
 			response = 'You\'re not dead just yet.'
 
 	#	deathreport = "You were {} by {}. {}".format(kill_descriptor, cmd.message.author.display_name, ewcfg.emote_slimeskull)
-	#	deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(member, deathreport)
+	#	deathreport = "{} ".format(ewcfg.emote_slimeskull) + fe_utils.formatMessage(member, deathreport)
 
 		if slimeoid.life_state == ewcfg.slimeoid_state_active:
 			reunite = ""
-			brain = ewcfg.brain_map.get(slimeoid.ai)
+			brain = sl_static.brain_map.get(slimeoid.ai)
 			reunite += brain.str_revive.format(
 			slimeoid_name = slimeoid.name
 			)
 			new_poi = poi_static.id_to_poi.get(player_data.poi)
-			revivechannel = ewutils.get_channel(cmd.guild, new_poi.channel)
-			reunite = ewutils.formatMessage(cmd.message.author, reunite)
-			await ewutils.send_message(cmd.client, revivechannel, reunite)
+			revivechannel = fe_utils.get_channel(cmd.guild, new_poi.channel)
+			reunite = fe_utils.formatMessage(cmd.message.author, reunite)
+			await fe_utils.send_message(cmd.client, revivechannel, reunite)
 
 	# Send the response to the player.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 """ haunt living players to steal slime """
 async def haunt(cmd):
 	time_now = int(time.time())
 	response = ""
-	resp_cont = ewutils.EwResponseContainer(id_server = cmd.guild.id)
+	resp_cont = EwResponseContainer(id_server = cmd.guild.id)
 
 	if cmd.mentions_count > 1:
 		response = "You can only spook one person at a time. Who do you think you are, the Lord of Ghosts?"
@@ -283,7 +286,7 @@ async def haunt(cmd):
 				if ewcfg.mutation_id_coleblooded in target_mutations:
 					haunt_message += " The ghost that did it wails in agony as their ectoplasm boils in your coleslaw blood!"
 
-				haunt_message = ewutils.formatMessage(member, haunt_message)
+				haunt_message = fe_utils.formatMessage(member, haunt_message)
 				resp_cont.add_channel_response(haunted_channel, haunt_message)
 		else:
 			# No mentions, or mentions we didn't understand.
@@ -292,23 +295,23 @@ async def haunt(cmd):
 	# Send the response to the player.
 	resp_cont.add_channel_response(cmd.message.channel.name, response)
 	await resp_cont.post()
-	#await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	#await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def negapool(cmd):
 	# Add persisted negative slime.
 	market_data = EwMarket(id_server = cmd.guild.id)
 	negaslime = market_data.negaslime
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The dead have a total of {:,} negative slime at their disposal for summoning.".format(negaslime)))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "The dead have a total of {:,} negative slime at their disposal for summoning.".format(negaslime)))
 
 async def negaslime(cmd):
 	total = bknd_core.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes < 0 AND id_server = '{}'".format(cmd.guild.id))
 	total_negaslimes = total[0][0]
 	
 	if total_negaslimes:
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The dead have amassed {:,} negative slime.".format(total_negaslimes)))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "The dead have amassed {:,} negative slime.".format(total_negaslimes)))
 	else:
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "There is no negative slime in this world."))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "There is no negative slime in this world."))
 
 
 async def summon_negaslimeoid(cmd):
@@ -316,11 +319,11 @@ async def summon_negaslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state != ewcfg.life_state_corpse:
 		response = "Only the dead have the occult knowledge required to summon a cosmic horror."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if user_data.poi not in poi_static.capturable_districts:
 		response = "You can't conduct the ritual here."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	name = None
 	if cmd.tokens_count > 1:
@@ -328,12 +331,12 @@ async def summon_negaslimeoid(cmd):
 		slimeoid = EwSlimeoid(member = cmd.message.author, sltype = ewcfg.sltype_nega)
 		if slimeoid.life_state != ewcfg.slimeoid_state_none:
 			response = "You already have an active negaslimeoid."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		negaslimeoid_name = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
 		if len(negaslimeoid_name) > 32:
 			response = "That name is too long. ({:,}/32)".format(len(negaslimeoid_name))
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		market_data = EwMarket(id_server = cmd.message.author.guild.id)
 
 		if market_data.negaslime >= 0:
@@ -351,13 +354,13 @@ async def summon_negaslimeoid(cmd):
 			slimeoid.id_server = user_data.id_server
 			slimeoid.poi = user_data.poi
 			slimeoid.name = negaslimeoid_name
-			slimeoid.body = random.choice(ewcfg.body_names)
-			slimeoid.head = random.choice(ewcfg.head_names)
-			slimeoid.legs = random.choice(ewcfg.mobility_names)
-			slimeoid.armor = random.choice(ewcfg.defense_names)
-			slimeoid.weapon = random.choice(ewcfg.offense_names)
-			slimeoid.special = random.choice(ewcfg.special_names)
-			slimeoid.ai = random.choice(ewcfg.brain_names)
+			slimeoid.body = random.choice(sl_static.body_names)
+			slimeoid.head = random.choice(sl_static.head_names)
+			slimeoid.legs = random.choice(sl_static.mobility_names)
+			slimeoid.armor = random.choice(sl_static.defense_names)
+			slimeoid.weapon = random.choice(sl_static.offense_names)
+			slimeoid.special = random.choice(sl_static.special_names)
+			slimeoid.ai = random.choice(sl_static.brain_names)
 			for i in range(level):
 				rand = random.randrange(3)
 				if rand == 0:
@@ -379,7 +382,7 @@ async def summon_negaslimeoid(cmd):
 
 	else:
 		response = "To summon a negaslimeoid you must first know its name."
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 def generate_negaslimeoid_name():
 	titles = ["Angel", "Emissary", "Gaping Maw", "Apostle", "Nemesis", "Harbinger", "Reaper", "Incarnation", "Wanderer", "Berserker", "Outcast", "Monarch", "Anomaly"]
@@ -459,7 +462,7 @@ async def inhabit(cmd):
 		else:
 			response = "Your spookiness is appreciated, but ENDLESS WAR didn\'t understand that name."
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def let_go(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -474,7 +477,7 @@ async def let_go(cmd):
 		user_data.remove_inhabitation()
 		response = "You let go of the soul you've been tormenting."
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def possess_weapon(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -499,7 +502,7 @@ async def possess_weapon(cmd):
 			proposal_response = "You propose a trade to {}.\n" \
 				"You will possess their weapon to empower it, and in return they'll sacrifice a fifth of their slime to your name upon their next kill.\n" \
 				"Will they **{}** this exchange, or **{}** it?".format(inhabitee_name, ewcfg.cmd_accept, ewcfg.cmd_refuse)
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, proposal_response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, proposal_response))
     
 			accepted = False
 			try:
@@ -527,12 +530,12 @@ async def possess_weapon(cmd):
 				user_data.change_slimes(n = -ewcfg.slimes_to_possess_weapon, source = ewcfg.source_ghost_contract)
 				user_data.persist()
 				accepted_response = "You feel a metallic taste in your mouth as you sign {}'s spectral contract. You see them bind themselves to your weapon, which now bears their mark. It feels cold to the touch.".format(cmd.message.author.display_name)
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(inhabitee_member, accepted_response))
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(inhabitee_member, accepted_response))
 			else:
 				response = "You should've known better, why would anyone ever trust you?"
 	
 	if response:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def possess_fishing_rod(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -555,7 +558,7 @@ async def possess_fishing_rod(cmd):
 			proposal_response = "You propose a trade to {}.\n" \
 				"You will possess their fishing rod to enhance it, making it more attractive to fish. In exchange, you will corrupt away all of the fish's slime, and absorb it as antislime.\n" \
 				"Both of you will need to reel the fish in together, and failing to do so will nullify this contract.\nWill they **{}** this exchange, or **{}** it?".format(inhabitee_name, ewcfg.cmd_accept, ewcfg.cmd_refuse)
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, proposal_response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, proposal_response))
     
 			accepted = False
 			try:
@@ -583,12 +586,12 @@ async def possess_fishing_rod(cmd):
 				user_data.change_slimes(n = -ewcfg.slimes_to_possess_fishing_rod, source = ewcfg.source_ghost_contract)
 				user_data.persist()
 				accepted_response = "You feel a metallic taste in your mouth as you sign {}'s spectral contract. Their ghastly arms superpose yours, enhancing your grip and causing shadowy tendrils to appear near your rod's hook.".format(cmd.message.author.display_name)
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(inhabitee_member, accepted_response))
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(inhabitee_member, accepted_response))
 			else:
 				response = "You should've known better, why would anyone ever trust you?"
 	
 	if response:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def crystalize_negapoudrin(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -612,4 +615,4 @@ async def crystalize_negapoudrin(cmd):
 		user_data.change_slimes(n = -ewcfg.slimes_to_crystalize_negapoudrin, source = ewcfg.source_spending)
 		user_data.persist()
 		response = "The cathedral's bells toll in the distance, and a rumbling {} can be heard echoing from deep within the sewers. A negapoudrin has formed.".format(ewcfg.cmd_boo)
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

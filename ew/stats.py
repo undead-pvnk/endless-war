@@ -20,7 +20,7 @@ def get_stat(id_server = None, id_user = None, user = None, metric = None):
 	try:
 		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
-		cursor = conn.cursor();
+		cursor = conn.cursor()
 
 		cursor.execute("SELECT {value} FROM stats WHERE {metric} = %s AND {id_server} = %s AND {id_user} = %s".format(
 			value = ewcfg.col_stat_value,
@@ -59,7 +59,7 @@ def set_stat(id_server = None, id_user = None, user = None, metric = None, value
 	try:
 		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
-		cursor = conn.cursor();
+		cursor = conn.cursor()
 
 		cursor.execute("REPLACE INTO stats({id_server}, {id_user}, {metric}, {value}) VALUES(%s, %s, %s, %s)".format(
 			id_server = ewcfg.col_id_server,
@@ -111,7 +111,7 @@ def track_maximum(id_server = None, id_user = None, user = None, metric = None, 
 	try:
 		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
-		cursor = conn.cursor();
+		cursor = conn.cursor()
 
 		old_value = get_stat(id_server = id_server, id_user = id_user, metric = metric)
 		if old_value < value: 
@@ -128,7 +128,7 @@ def clear_on_death(id_server = None, id_user = None):
 		try:
 			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
 			for metric in ewcfg.stats_clear_on_death:
 				cursor.execute("REPLACE INTO stats({id_server}, {id_user}, {metric}, {value}) VALUES(%s, %s, %s, %s)".format(

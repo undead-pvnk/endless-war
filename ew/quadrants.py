@@ -3,7 +3,7 @@ import random
 from .static import cfg as ewcfg
 from .static import quadrants as quad_static
 
-from .utils import core as ewutils
+from .utils import frontend as fe_utils
 
 from .backend.quadrants import EwQuadrant
 from .backend.user import EwUser
@@ -15,7 +15,7 @@ async def add_quadrant(cmd):
 	user_data = EwUser(id_user=author.id, id_server=author.guild.id)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 	for token in cmd.tokens[1:]:
@@ -26,15 +26,15 @@ async def add_quadrant(cmd):
 	
 	if quadrant is None:
 		response = "Please select a quadrant for your romantic feelings."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if cmd.mentions_count == 0:
 		response = "Please select a target for your romantic feelings."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if user_data.has_soul == 0:
 		response = "A soulless juvie can only desperately reach for companionship, they will never find it."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	target = cmd.mentions[0].id
 	target2 = None
@@ -60,7 +60,7 @@ async def add_quadrant(cmd):
 	response = "{} {}".format(resp_add, comment)
 
 		
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def clear_quadrant(cmd):
 	response = ""
@@ -69,7 +69,7 @@ async def clear_quadrant(cmd):
 	user_data = EwUser(id_user=author.id, id_server=author.guild.id)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	for token in cmd.tokens[1:]:
 		if token.lower() in quad_static.quadrants_map:
@@ -79,7 +79,7 @@ async def clear_quadrant(cmd):
 
 	if quadrant is None:
 		response = "Please select a quadrant for your romantic feelings."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	
 	quadrant_data = EwQuadrant(id_server=author.guild.id, id_user=author.id, quadrant=quadrant.id_quadrant)
 	
@@ -100,7 +100,7 @@ async def clear_quadrant(cmd):
 	else:
 		response = "You haven't filled out that quadrant, bitch."
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def get_quadrants(cmd):
 	response = ""
@@ -131,27 +131,27 @@ async def get_quadrants(cmd):
 		else:
 			response = response.format("You", "your")
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def get_sloshed(cmd):
 	response = get_quadrant(cmd, ewcfg.quadrant_sloshed)
 		
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def get_roseate(cmd):
 	response = get_quadrant(cmd, ewcfg.quadrant_roseate)
 		
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def get_violacious(cmd):
 	response = get_quadrant(cmd, ewcfg.quadrant_violacious)
 		
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def get_policitous(cmd):
 	response = get_quadrant(cmd, ewcfg.quadrant_policitous)
 		
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 def get_quadrant(cmd, id_quadrant):
 

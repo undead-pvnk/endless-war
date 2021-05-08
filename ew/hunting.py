@@ -9,12 +9,15 @@ from .static import items as static_items
 from .static import weapons as static_weapons
 from .static import food as static_food
 from .static import poi as poi_static
+from .static import cosmetics as static_cosmetics
 
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 from .backend import hunting as bknd_hunt
 
 from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils import hunting as hunt_utils
 from . import item as ewitem
 
 from .backend.user import EwUser
@@ -22,6 +25,7 @@ from .backend.item import EwItem
 from .backend.market import EwMarket
 from .backend.district import EwDistrict
 from .backend.hunting import EwEnemy, EwOperationData
+from .utils.frontend import EwResponseContainer
 
 # Debug command. Could be used for events, perhaps?
 async def summonenemy(cmd):
@@ -87,7 +91,7 @@ async def summonenemy(cmd):
 		
 	else:
 		response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING / LOCATION. ADDITIONAL OPTIONS ARE SLIME / LEVEL / COORD / DISPLAYNAME"
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def summongvsenemy(cmd):
@@ -112,7 +116,7 @@ async def summongvsenemy(cmd):
 		poi = poi_static.id_to_poi.get(user_data.poi)
 	else:
 		response = "Correct usage: !summongvsenemy [type] [coord] [joybean status ('yes', otherwise false)]"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		
 	if enemytype != None and poi != None and joybean_status != None and coord != None:
 		props = None
@@ -195,7 +199,7 @@ async def enemy_perform_action(id_server):
 	for row in enemydata:
 		enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
 		enemy_statuses = enemy.getStatusEffects()
-		resp_cont = ewutils.EwResponseContainer(id_server=id_server)
+		resp_cont = EwResponseContainer(id_server=id_server)
 
 		# If an enemy is marked for death or has been alive too long, delete it
 		if enemy.life_state == ewcfg.enemy_lifestate_dead or (enemy.expiration_date < time_now):
@@ -242,7 +246,7 @@ async def enemy_perform_action(id_server):
 
 					#TODO: Edit the countdown message instead of deleting and reposting
 					last_messages = await resp_cont.post()
-					asyncio.ensure_future(ewutils.delete_last_message(client, last_messages, ewcfg.enemy_attack_tick_length))
+					asyncio.ensure_future(fe_utils.delete_last_message(client, last_messages, ewcfg.enemy_attack_tick_length))
 					resp_cont = None
 
 				elif any([ewcfg.status_evasive_id, ewcfg.status_aiming_id]) not in enemy_statuses and random.randrange(10) == 0:
@@ -303,7 +307,7 @@ async def enemy_perform_action_gvs(id_server):
 			continue
 		
 		server = client.get_guild(id_server)
-		channel = ewutils.get_channel(server, ch_name)
+		channel = fe_utils.get_channel(server, ch_name)
 
 		# This function returns a false value if that enemy can't act on that turn.
 		if not check_enemy_can_act(enemy):
@@ -312,7 +316,7 @@ async def enemy_perform_action_gvs(id_server):
 		# Go through turn counters unrelated to the prevention of acting on that turn. 
 		turn_timer_response = handle_turn_timers(enemy)
 		if turn_timer_response != None and turn_timer_response != "":
-			await ewutils.send_message(client, channel, turn_timer_response)
+			await fe_utils.send_message(client, channel, turn_timer_response)
 
 		enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
 		
@@ -320,7 +324,7 @@ async def enemy_perform_action_gvs(id_server):
 		if enemy.attacktype == ewcfg.enemy_attacktype_unarmed:
 			continue
 		
-		resp_cont = ewutils.EwResponseContainer(id_server=id_server)
+		resp_cont = EwResponseContainer(id_server=id_server)
 
 		# If an enemy is marked for death or has been alive too long, delete it
 		if enemy.life_state == ewcfg.enemy_lifestate_dead or (enemy.expiration_date < time_now):
@@ -365,7 +369,7 @@ async def enemy_perform_action_gvs(id_server):
 				# TODO: Edit the countdown message instead of deleting and reposting
 				last_messages = await resp_cont.post()
 				asyncio.ensure_future(
-					ewutils.delete_last_message(client, last_messages, ewcfg.enemy_attack_tick_length))
+					fe_utils.delete_last_message(client, last_messages, ewcfg.enemy_attack_tick_length))
 				resp_cont = None
 			else:
 				district_data = EwDistrict(district = enemy.poi, id_server = enemy.id_server)
@@ -419,7 +423,7 @@ def spawn_enemy(
 	time_now = int(time.time())
 	response = ""
 	ch_name = ""
-	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+	resp_cont = EwResponseContainer(id_server = id_server)
 	chosen_poi = ""
 	potential_chosen_poi = ""
 	threat_level = ""
@@ -692,7 +696,7 @@ def find_enemy(enemy_search=None, user_data=None):
 # Drops items into the district when an enemy dies.
 def drop_enemy_loot(enemy_data, district_data):
 	loot_poi = poi_static.id_to_poi.get(district_data.name)
-	loot_resp_cont = ewutils.EwResponseContainer(id_server=enemy_data.id_server)
+	loot_resp_cont = EwResponseContainer(id_server=enemy_data.id_server)
 	response = ""
 
 	item_counter = 0
@@ -766,7 +770,7 @@ def drop_enemy_loot(enemy_data, district_data):
 				item_type = ewcfg.it_cosmetic
 
 				cosmetics_list = []
-				for result in ewcfg.cosmetic_items_list:
+				for result in static_cosmetics.cosmetic_items_list:
 					if result.ingredients == "":
 						cosmetics_list.append(result)
 					else:
@@ -955,7 +959,7 @@ async def gvs_update_gamestate(id_server):
 		op_poi = poi_static.id_to_poi.get(district)
 		client = ewutils.get_client()
 		server = client.get_guild(id_server)
-		channel = ewutils.get_channel(server, op_poi.channel)
+		channel = fe_utils.get_channel(server, op_poi.channel)
 		
 		if len(bot_garden_ops) > 0:
 			if random.randrange(25) == 0:
@@ -983,7 +987,7 @@ async def gvs_update_gamestate(id_server):
 					chosen_type = random.choice(possible_bot_types)
 					chosen_coord = random.choice(possible_bot_coords)
 				
-					existing_gaias = ewutils.gvs_get_gaias_from_coord(district, chosen_coord)
+					existing_gaias = hunt_utils.gvs_get_gaias_from_coord(district, chosen_coord)
 				
 					# If the coordinate is completely empty, spawn a gaiaslimeoid there.
 					# Otherwise, make up to 5 attempts when choosing random coordinates
@@ -1094,7 +1098,7 @@ async def gvs_update_gamestate(id_server):
 
 			bknd_core.execute_sql_query("DELETE FROM gvs_ops_choices WHERE district = '{}'".format(district))			
 			await delete_all_enemies(cmd=None, query_suffix="AND poi = '{}'".format(district), id_server_sent=id_server)
-			return await ewutils.send_message(client, channel, response)
+			return await fe_utils.send_message(client, channel, response)
 
 # Certain conditions may prevent a shambler from acting.
 def check_enemy_can_act(enemy_data):
