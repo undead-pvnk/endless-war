@@ -616,8 +616,11 @@ async def donate(cmd):
 
     time_now = round(time.time())
 
-    if user_data.poi == ewcfg.poi_id_slimecorphq:
+    if user_data.poi == ewcfg.poi_id_themuseum:
+        pass
+    elif user_data.poi == ewcfg.poi_id_slimecorphq:
         poi = poi_static.id_to_poi.get(user_data.poi)
+
         district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
         if district_data.is_degraded():

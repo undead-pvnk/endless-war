@@ -4,6 +4,7 @@ from . import items as static_items
 from . import weapons
 from . import food as static_food
 from . import fish as static_fish
+from . import relic as static_relic
 
 # A map of vendor names to their items.
 vendor_inv = {}
@@ -77,6 +78,17 @@ for weapon in weapons.weapon_list:
 			vendor_inv[vendor] = vendor_list
 
 		vendor_list.append(weapon.id_weapon)
+
+#Populate relic map
+for relic in static_relic.relic_list:
+	for vendor in relic.vendors:
+		vendor_list = vendor_inv.get(vendor)
+
+		if vendor_list == None:
+			vendor_list = []
+			vendor_inv[vendor] = vendor_list
+
+		vendor_list.append(relic.id_relic)
 
 # List of items you can obtain via milling.
 mill_results = []

@@ -326,7 +326,6 @@ def item_create(
                         item_inst.item_props.update(item_props)
 
                     item_inst.persist()
-
                 conn.commit()
         finally:
             # Clean up the database handles.

@@ -14,6 +14,8 @@ from .static import mutations as static_mutations
 from .static import hue as hue_static
 from .static import status as se_static
 from .static import fish as static_fish
+from .static import food as static_food
+from .static import relic as static_relic
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
@@ -2469,7 +2471,7 @@ async def create_item(cmd):
 
 	# Finds the item if it's an EwFood item.
 	if item == None:
-		item = ewcfg.food_map.get(value)
+		item = static_food.food_map.get(value)
 		item_type = ewcfg.it_food
 		if item != None:
 			item_id = item.id_food
@@ -2507,7 +2509,7 @@ async def create_item(cmd):
 			name = item.str_name
 
 	if item == None:
-		item = ewcfg.relic_map.get(value)
+		item = static_relic.relic_map.get(value)
 		item_type = ewcfg.it_relic
 		if item != None:
 			item_id = item.id_relic

@@ -1,5 +1,3 @@
-import ewcfg
-
 class EwRelic:
     item_type = "relic"
 

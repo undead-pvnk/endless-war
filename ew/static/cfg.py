@@ -136,6 +136,7 @@ poi_id_basedhardware = "basedhardware"
 poi_id_clinicofslimoplasty = "clinicofslimoplasty"
 poi_id_thebreakroom = "thebreakroom"
 poi_id_underworld = "underworld"
+poi_id_themuseum = "themuseum"
 
 poi_id_sc_n12_office = "n12office"
 poi_id_sc_n10_office = "n10office"
@@ -2466,6 +2467,8 @@ it_weapon = "weapon"
 it_cosmetic = 'cosmetic'
 it_furniture = 'furniture'
 it_book = 'book'
+it_relic = 'relic'
+
 
 # Cosmetic item rarities
 rarity_plebeian = "Plebeian"
@@ -3155,6 +3158,15 @@ fish_size_average = "average"
 fish_size_big = "big"
 fish_size_huge = "huge"
 fish_size_colossal = "colossal"
+
+fish_size_median = {
+	fish_size_miniscule:6,
+	fish_size_small:15,
+	fish_size_average:25,
+	fish_size_big: 46,
+	fish_size_huge: 66,
+	fish_size_colossal: 100
+}
 
 bully_responses = [
 	"You push {target_name} into a puddle of sludge, laughing at how hopelessly dirty they are.",

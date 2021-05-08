@@ -135,6 +135,16 @@ item_def_list = [
 			"book_desc": "A book by AUTHOR, published on DAY."
 		}
 	),
+	EwItemDef(
+		item_type=ewcfg.it_relic,
+		str_name="{relic_name}",
+		str_desc="{relic_desc}",
+		soulbound=False,
+		item_props={
+			"relic_name": "Old",
+			"relic_desc": "Relic Item"
+		}
+	),
 ]
 
 # A map of item_type to EwItemDef objects.

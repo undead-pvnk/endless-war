@@ -3248,6 +3248,7 @@ def is_player_inventory(id_inventory, id_server):
 	else:
 		return False
 
+
 def weather_txt(id_server):
 	response = ""
 	market_data = EwMarket(id_server = id_server)
@@ -3282,3 +3283,15 @@ def weather_txt(id_server):
 
 	response += "It is currently {}{} in NLACakaNM.{}".format(displaytime, ampm, (' ' + flair))
 	return response
+
+def canCreateRelic(item, id_server):
+	state = EwGamestate(id_server=id_server, id_state=item)
+	if state.bit is not None:
+		return None
+	else:
+		state.bit = 1
+		state.value = ""
+		state.persist()
+		return 1
+
+

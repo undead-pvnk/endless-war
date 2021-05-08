@@ -2,6 +2,8 @@ from . import utils as ewutils
 from .static import cfg as ewcfg
 from . import event as ewevent
 
+
+
 """
 	Utility functions for recording statistics in the database
 """

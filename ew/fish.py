@@ -12,11 +12,15 @@ from .static import status as se_static
 from . import utils as ewutils
 from . import item as ewitem
 from . import rolemgr as ewrolemgr
+from . import debug as ewdebug
+
 
 from .market import EwMarket
 from .user import EwUser
 from .item import EwItem
 from .district import EwDistrict
+
+
 
 class EwFisher:
 	fishing = False
@@ -727,6 +731,8 @@ async def award_fish(fisher, cmd, user_data):
 
 		slime_gain = max(0, round(slime_gain))
 
+		fish_length = ewdebug.calc_fish_length(median=ewcfg.fish_size_median[fisher.current_size])
+
 		ewitem.item_create(
 			id_user = actual_fisherman or cmd.message.author.id,
 			id_server = cmd.guild.id,
@@ -743,7 +749,8 @@ async def award_fish(fisher, cmd, user_data):
 				'time_fridged': 0,
 				'acquisition': ewcfg.acquisition_fishing,
 				'value': value,
-				'noslime': 'false' #if not actual_fisherman_data.juviemode else 'true'
+				'noslime': 'false', #if not actual_fisherman_data.juviemode else 'true'
+				'length': fish_length
 			}
 		)
 
