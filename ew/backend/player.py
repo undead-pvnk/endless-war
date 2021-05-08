@@ -37,7 +37,7 @@ class EwPlayer:
 					ewcfg.col_avatar,
 					ewcfg.col_display_name
 				), (self.id_user, ))
-				result = cursor.fetchone();
+				result = cursor.fetchone()
 
 				if result != None:
 					# Record found: apply the data to this object.

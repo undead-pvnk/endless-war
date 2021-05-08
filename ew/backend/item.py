@@ -58,7 +58,7 @@ class EwItem:
                 ), (
                     self.id_item,
                 ))
-                result = cursor.fetchone();
+                result = cursor.fetchone()
 
                 if result != None:
                     # Record found: apply the data to this object.
@@ -240,7 +240,7 @@ def item_create(
     elif item_type == ewcfg.it_questitem:
         template_id = "QUEST ITEM????"
     else:
-        template_id = "-1";
+        template_id = "-1"
 
     try:
         # Get database handles if they weren't passed.
@@ -442,7 +442,7 @@ def item_loot(
         for row in data:
             item_data = EwItem(id_item = row[0])
             item_data.item_props["adorned"] = 'false'
-            item_data.id_owner = id_user_target
+            item_data.id_owner = target_data.id_user
             item_data.persist()
 
 
@@ -1018,7 +1018,7 @@ def equip_sidearm(user_data, sidearm_item = None):
 
 def get_fashion_stats(user_data):
 
-	cosmetics = bknd_item.inventory(
+	cosmetics = inventory(
 		id_user=user_data.id_user,
 		id_server=user_data.id_server,
 		item_type_filter=ewcfg.it_cosmetic
@@ -1046,7 +1046,7 @@ def get_fashion_stats(user_data):
 	return result
 
 def get_freshness(user_data):
-	cosmetics = bknd_item.inventory(
+	cosmetics = inventory(
 		id_user=user_data.id_user,
 		id_server=user_data.id_server,
 		item_type_filter=ewcfg.it_cosmetic
@@ -1121,8 +1121,8 @@ def get_weaponskill(user_data):
 	# Get the skill for the user's current weapon.
 	if user_data.weapon != None and user_data.weapon >= 0:
 		skills = ewutils.weaponskills_get(
-			id_server = id_server,
-			id_user = id_user
+			id_server = user_data.id_server,
+			id_user = user_data.id_user
 		)
 
 		weapon_item = EwItem(id_item = user_data.weapon)

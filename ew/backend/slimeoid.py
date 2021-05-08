@@ -9,6 +9,8 @@ from .user import EwUser
 from .market import EwMarket
 from .player import EwPlayer
 
+from ..utils.frontend import EwResponseContainer
+
 """ Slimeoid data model for database persistence """
 class EwSlimeoid:
 	id_slimeoid = 0
@@ -72,7 +74,7 @@ class EwSlimeoid:
 			try:
 				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
-				cursor = conn.cursor();
+				cursor = conn.cursor()
 
 				# Retrieve object
 				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM slimeoids{}".format(
@@ -100,7 +102,7 @@ class EwSlimeoid:
 					ewcfg.col_poi,
 					query_suffix
 				))
-				result = cursor.fetchone();
+				result = cursor.fetchone()
 
 				if result != None:
 					# Record found: apply the data to this object.
@@ -138,7 +140,7 @@ class EwSlimeoid:
 		try:
 			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
 			# Save the object.
 			cursor.execute("REPLACE INTO slimeoids({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
@@ -208,7 +210,7 @@ class EwSlimeoid:
 		))
 	
 	def haunt(self):
-		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
+		resp_cont = EwResponseContainer(id_server = self.id_server)
 		if (self.sltype != ewcfg.sltype_nega) or ewutils.active_slimeoidbattles.get(self.id_slimeoid):
 			return resp_cont
 		market_data = EwMarket(id_server = self.id_server)
@@ -245,7 +247,7 @@ class EwSlimeoid:
 		return resp_cont
 
 	def move(self):
-		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
+		resp_cont = EwResponseContainer(id_server = self.id_server)
 		if ewutils.active_slimeoidbattles.get(self.id_slimeoid):
 			return resp_cont
 		try:

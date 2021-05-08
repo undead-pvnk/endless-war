@@ -13,12 +13,14 @@ from .. import item as ewitem
 from .. import hunting as ewhunting
 
 from . import core as ewutils
+from . import frontend as fe_utils
 
 from ..backend.user import EwUser
 from ..backend.player import EwPlayer
 from ..backend.hunting import EwEnemy
 from ..backend.market import EwMarket
 from ..backend.item import EwItem
+from .frontend import EwResponseContainer
 
 """ Damage all players in a district """
 def explode(damage = 0, district_data = None, market_data = None):
@@ -157,7 +159,7 @@ async def activate_trap_items(district, id_server, id_user):
 	try:
 		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
-		cursor = conn.cursor();
+		cursor = conn.cursor()
 
 		district_channel_name = poi_static.id_to_poi.get(district).channel
 
@@ -167,7 +169,7 @@ async def activate_trap_items(district, id_server, id_user):
 		
 		member = server.get_member(id_user)
 
-		district_channel = get_channel(server=server, channel_name=district_channel_name)
+		district_channel = fe_utils.get_channel(server=server, channel_name=district_channel_name)
 		
 		searched_id = district + '_trap'
 		
@@ -223,7 +225,7 @@ async def activate_trap_items(district, id_server, id_user):
 		# Clean up the database handles.
 		cursor.close()
 		bknd_core.databaseClose(conn_info)
-	await send_message(client, district_channel, formatMessage(member, response))
+	await fe_utils.send_message(client, district_channel, fe_utils.formatMessage(member, response))
 	
 	# if not trap_was_dud:
 	# 	client = ewutils.get_client()
@@ -241,11 +243,11 @@ async def assign_status_effect(cmd = None, status_name = None, user_id = None, s
 		response = user_data.applyStatus(id_status=status_name, source = user_id, id_target = user_id)
 	else:
 		if not cmd.message.author.guild_permissions.administrator or cmd.mentions_count == 0:
-			return await fake_failed_command(cmd)
+			return await fe_utils.fake_failed_command(cmd)
 		target = cmd.mentions[0]
 		status_name = ewutils.flattenTokenListToString(cmd.tokens[2:])
 		user_data = EwUser(member=target)
 		response = user_data.applyStatus(id_status=status_name, source=user_data.id_user, id_target=user_data.id_user)
-	return await send_message(cmd.client, cmd.message.channel, formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 

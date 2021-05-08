@@ -1,8 +1,7 @@
-import datetime
-
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
 from ..utils import core as ewutils
+from ..utils import frontend as fe_utils
 from . import core as bknd_core
 
 from .user import EwUser
@@ -13,45 +12,45 @@ from .district import EwDistrict
 
 
 async def post_leaderboards(client = None, server = None):
-	leaderboard_channel = ewutils.get_channel(server = server, channel_name = ewcfg.channel_leaderboard)
+	leaderboard_channel = fe_utils.get_channel(server = server, channel_name = ewcfg.channel_leaderboard)
 
 	market = EwMarket(id_server = server.id)
 	time = "day {}".format(market.day) 
 
-	await ewutils.send_message(client, leaderboard_channel, "▓▓{} **STATE OF THE CITY:** {} {}▓▓".format(ewcfg.emote_theeye, time, ewcfg.emote_theeye))
+	await fe_utils.send_message(client, leaderboard_channel, "▓▓{} **STATE OF THE CITY:** {} {}▓▓".format(ewcfg.emote_theeye, time, ewcfg.emote_theeye))
 
 	kingpins = make_kingpin_board(server = server, title = ewcfg.leaderboard_kingpins)
-	await ewutils.send_message(client, leaderboard_channel, kingpins)
+	await fe_utils.send_message(client, leaderboard_channel, kingpins)
 	districts = make_district_control_board(id_server = server.id, title = ewcfg.leaderboard_districts)
-	await ewutils.send_message(client, leaderboard_channel, districts)
+	await fe_utils.send_message(client, leaderboard_channel, districts)
 	topslimes = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_slimes)
-	await ewutils.send_message(client, leaderboard_channel, topslimes)
+	await fe_utils.send_message(client, leaderboard_channel, topslimes)
 	#topcoins = make_userdata_board(server = server, category = ewcfg.col_slimecoin, title = ewcfg.leaderboard_slimecoin)
 	ewutils.logMsg("starting net worth calc")
 	topcoins = make_stocks_top_board(server = server)
 	ewutils.logMsg("finished net worth calc")
-	await ewutils.send_message(client, leaderboard_channel, topcoins)
+	await fe_utils.send_message(client, leaderboard_channel, topcoins)
 	topghosts = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_ghosts, lowscores = True, rows = 3)
-	await ewutils.send_message(client, leaderboard_channel, topghosts)
+	await fe_utils.send_message(client, leaderboard_channel, topghosts)
 	topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty, divide_by = ewcfg.slimecoin_exchangerate)
-	await ewutils.send_message(client, leaderboard_channel, topbounty)
+	await fe_utils.send_message(client, leaderboard_channel, topbounty)
 	#topfashion = make_userdata_board(server = server, category = ewcfg.col_freshness, title = ewcfg.leaderboard_fashion)
 	ewutils.logMsg("starting freshness calc")
 	topfashion = make_freshness_top_board(server = server)
 	ewutils.logMsg("finished freshness calc")
-	await ewutils.send_message(client, leaderboard_channel, topfashion)
+	await fe_utils.send_message(client, leaderboard_channel, topfashion)
 	topdonated = make_userdata_board(server = server, category = ewcfg.col_splattered_slimes, title = ewcfg.leaderboard_donated)
-	await ewutils.send_message(client, leaderboard_channel, topdonated)
+	await fe_utils.send_message(client, leaderboard_channel, topdonated)
 	#topdegraded = make_userdata_board(server = server, category = ewcfg.col_degradation, title = ewcfg.leaderboard_degradation)
 	#await ewutils.send_message(client, leaderboard_channel, topdegraded)
 	#topshamblerkills = make_statdata_board(server = server, category = ewcfg.stat_shamblers_killed, title = ewcfg.leaderboard_shamblers_killed)
 	#await ewutils.send_message(client, leaderboard_channel, topshamblerkills)
 	topslimeoids = make_slimeoids_top_board(server = server)
-	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
+	await fe_utils.send_message(client, leaderboard_channel, topslimeoids)
 	#topfestivity = make_slimernalia_board(server = server, title = ewcfg.leaderboard_slimernalia)
 	#await ewutils.send_message(client, leaderboard_channel, topfestivity)
 	topzines = make_zines_top_board(server=server)
-	await ewutils.send_message(client, leaderboard_channel, topzines)
+	await fe_utils.send_message(client, leaderboard_channel, topzines)
 	#topgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_high)
 	#await ewutils.send_message(client, leaderboard_channel, topgambit)
 	#bottomgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_low)

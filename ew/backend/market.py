@@ -46,7 +46,7 @@ class EwMarket:
             try:
                 conn_info = bknd_core.databaseConnect()
                 conn = conn_info.get('conn')
-                cursor = conn.cursor();
+                cursor = conn.cursor()
 
                 # Retrieve object
                 cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}, {winner} FROM markets WHERE id_server = %s".format(
@@ -67,7 +67,7 @@ class EwMarket:
                     winner = ewcfg.col_winner
 
                 ), (self.id_server, ))
-                result = cursor.fetchone();
+                result = cursor.fetchone()
 
                 if result != None:
                     # Record found: apply the data to this object.
@@ -117,7 +117,7 @@ class EwMarket:
         try:
             conn_info = bknd_core.databaseConnect()
             conn = conn_info.get('conn')
-            cursor = conn.cursor();
+            cursor = conn.cursor()
 
             # Save the object.
             cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}, {winner}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(

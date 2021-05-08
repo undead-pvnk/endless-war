@@ -29,7 +29,7 @@ class EwMutation:
 			try:
 				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
-				cursor = conn.cursor();
+				cursor = conn.cursor()
 
 				# Retrieve object
 				cursor.execute("SELECT {data}, {mutation_counter}, {tier}, {artificial} FROM mutations WHERE id_user = %s AND id_server = %s AND {id_mutation} = %s".format(
@@ -43,7 +43,7 @@ class EwMutation:
 					id_server,
 					id_mutation,
 				))
-				result = cursor.fetchone();
+				result = cursor.fetchone()
 
 				if result != None:
 					# Record found: apply the data to this object.
@@ -64,8 +64,7 @@ class EwMutation:
 			# Get database handles if they weren't passed.
 			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
-
+			cursor = conn.cursor()
 
 			# Save the object.
 			cursor.execute("REPLACE INTO mutations(id_user, id_server, {id_mutation}, {data}, {mutation_counter}, {tier}, {artificial}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(

@@ -7,6 +7,8 @@ from . import core as bknd_core
 
 from .district import EwDistrict
 
+from ..utils.frontend import EwResponseContainer
+
 """
 	Database Object for public transportation vehicles, such as ferries or subway trains
 """
@@ -96,7 +98,7 @@ class EwTransport:
 			# Grab EwTransportLine object for current line
 			transport_line = poi_static.id_to_transport_line[self.current_line]
 			client = ewutils.get_client()
-			resp_cont = ewutils.EwResponseContainer(client = client, id_server = self.id_server)
+			resp_cont = EwResponseContainer(client = client, id_server = self.id_server)
 
 			# If the train is at its last stop, switch to the opposite direction
 			if self.current_stop == transport_line.last_stop:

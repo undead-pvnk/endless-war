@@ -35,7 +35,7 @@ class EwPrankIndex:
 				self.id_user_pranked,
 				self.id_server,
 			))
-			result = cursor.fetchone();
+			result = cursor.fetchone()
 
 			if result != None:
 				# Record found: apply the data to this object.

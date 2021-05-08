@@ -2,6 +2,9 @@ import time
 import random
 
 from ..utils import core as ewutils
+from ..utils import frontend as fe_utils
+from ..utils import poi as poi_utils
+from ..utils import event as evt_utils
 from ..static import cfg as ewcfg
 from ..static import weapons as static_weapons
 from ..static import poi as poi_static
@@ -13,6 +16,8 @@ from .. import rolemgr as ewrolemgr
 from . import core as bknd_core
 from . import item as bknd_item
 from . import status as bknd_status
+
+from ..utils.frontend import EwResponseContainer
 
 """ User model for database persistence """
 class EwUser:
@@ -210,7 +215,7 @@ class EwUser:
 
 		ewutils.end_trade(self.id_user)
 
-		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
+		resp_cont = EwResponseContainer(id_server = self.id_server)
 
 
 
@@ -223,7 +228,7 @@ class EwUser:
 		self.remove_inhabitation()
 
 		# Make The death report
-		deathreport = ewutils.create_death_report(cause = cause, user_data = self)
+		deathreport = fe_utils.create_death_report(cause = cause, user_data = self)
 		resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 
 
@@ -353,7 +358,7 @@ class EwUser:
 				ewutils.logMsg("")
 				resp_cont.add_channel_response(explode_poi_channel, explode_resp)
 
-				explosion = ewutils.explode(damage = explode_damage, district_data = explode_district)
+				explosion = evt_utils.explode(damage = explode_damage, district_data = explode_district)
 				resp_cont.add_response_container(explosion)
 
 		#bknd_item.item_destroyall(id_server = self.id_server, id_user = self.id_user)
@@ -651,10 +656,10 @@ class EwUser:
 
 
 	def equip(self, weapon_item = None):
-		return bknd_item.equip(user_data, weapon_item)
+		return bknd_item.equip(self, weapon_item)
 
 	def equip_sidearm(self, sidearm_item = None):
-		return bknd_item.equip_sidearm(user_data, sidearm_item)	
+		return bknd_item.equip_sidearm(self, sidearm_item)
 
 	def getStatusEffects(self):
 		values = []
@@ -1169,7 +1174,7 @@ class EwUser:
 					if data_level > 1:
 						self.freshness = self.get_freshness()
 
-					self.move_speed = ewutils.get_move_speed(self)
+					self.move_speed = poi_utils.get_move_speed(self)
 
 				self.limit_fix()
 			finally:

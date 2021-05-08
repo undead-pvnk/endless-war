@@ -3,7 +3,6 @@ import time
 
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
-from ..static import status as se_static
 
 from ..backend import core as bknd_core
 

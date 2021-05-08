@@ -19,6 +19,7 @@ from .. import hunting as ewhunting
 from .. import rolemgr as ewrolemgr
 
 from . import core as ewutils
+from . import frontend as fe_utils
 
 from ..backend.user import EwUser
 from ..backend.district import EwDistrict
@@ -27,6 +28,7 @@ from ..backend.hunting import EwEnemy
 from ..backend.market import EwMarket
 from ..backend.status import EwStatusEffect
 from ..backend.status import EwEnemyStatusEffect
+from .frontend import EwResponseContainer
 
 """ Decay slime totals for all users, with the exception of Kingpins"""
 def decaySlimes(id_server = None):
@@ -34,7 +36,7 @@ def decaySlimes(id_server = None):
 		try:
 			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
 			cursor.execute("SELECT id_user, life_state FROM users WHERE id_server = %s AND {slimes} > 1 AND NOT {life_state} = {life_state_kingpin}".format(
 				slimes = ewcfg.col_slimes,
@@ -147,7 +149,7 @@ async def flag_outskirts(id_server = None):
 			server = client.get_guild(id_server)
 			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
 			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND poi IN %s".format(
 			), (
@@ -231,7 +233,7 @@ async def bleedSlimes(id_server = None):
 			server = client.get_guild(id_server)
 			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
 			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND {bleed_storage} > 1".format(
 				bleed_storage = ewcfg.col_bleed_storage
@@ -305,7 +307,7 @@ async def enemyBleedSlimes(id_server = None):
 		try:
 			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
 			cursor.execute("SELECT id_enemy FROM enemies WHERE id_server = %s AND {bleed_storage} > 1".format(
 				bleed_storage = ewcfg.col_enemy_bleed_storage
@@ -354,7 +356,7 @@ def pushupServerHunger(id_server = None):
 		try:
 			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
 			# Save data
 			cursor.execute("UPDATE users SET {hunger} = {hunger} + {tick} WHERE life_state > 0 AND id_server = %s AND hunger < {limit}".format(
@@ -381,7 +383,7 @@ def pushdownServerInebriation(id_server = None):
 		try:
 			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
 			# Save data
 			cursor.execute("UPDATE users SET {inebriation} = {inebriation} - {tick} WHERE id_server = %s AND {inebriation} > {limit}".format(
@@ -732,7 +734,7 @@ async def spawn_prank_items(id_server):
 			try:
 				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
-				cursor = conn.cursor();
+				cursor = conn.cursor()
 
 				cursor.execute(
 					"SELECT id_user FROM users WHERE id_server = %s AND {poi} in %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) AND {time_last_action} > %s".format(
@@ -777,7 +779,7 @@ async def spawn_prank_items(id_server):
 		
 		server = client.get_guild(id_server)
 	
-		district_channel = get_channel(server=server, channel_name=district_channel_name)
+		district_channel = fe_utils.get_channel(server=server, channel_name=district_channel_name)
 		
 		pie_or_prank = random.randrange(3)
 		
@@ -796,7 +798,7 @@ async def spawn_prank_items(id_server):
 			#print('{} with id {} spawned in {}!'.format(swilldermuk_food_item.str_name, swilldermuk_food_item_id, district_id))
 
 			response = "That smell... it's unmistakeable!! Someone's left a fresh {} on the ground!".format(swilldermuk_food_item.str_name)
-			await send_message(client, district_channel, response)
+			await fe_utils.send_message(client, district_channel, response)
 		else:
 			rarity_roll = random.randrange(10)
 			
@@ -822,7 +824,7 @@ async def spawn_prank_items(id_server):
 			# print('{} with id {} spawned in {}!'.format(prank_item.str_name, prank_item_id, district_id))
 	
 			response = "An ominous wind blows through the streets. You think you hear someone drop a {} on the ground nearby...".format(prank_item.str_name)
-			await send_message(client, district_channel, response)
+			await fe_utils.send_message(client, district_channel, response)
 
 	except:
 		ewutils.logMsg("An error occured in spawn prank items tick for server {}".format(id_server))
@@ -845,7 +847,7 @@ async def generate_credence(id_server):
 		try:
 			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 	
 			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND {poi} in %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) AND {time_last_action} > %s".format(
 				life_state = ewcfg.col_life_state,

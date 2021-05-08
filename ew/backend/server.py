@@ -1,4 +1,3 @@
-from ..utils import core as ewutils
 from ..static import cfg as ewcfg
 from . import core as bknd_core
 
@@ -29,7 +28,7 @@ class EwServer:
 					ewcfg.col_name,
 					ewcfg.col_icon
 				), (self.id_server, ))
-				result = cursor.fetchone();
+				result = cursor.fetchone()
 
 				if result != None:
 					# Record found: apply the data to this object.

@@ -12,6 +12,7 @@ from .static import poi as poi_static
 
 from .backend import core as bknd_core
 from .backend import item as bknd_item
+from .backend import hunting as bknd_hunt
 
 from .utils import core as ewutils
 from . import item as ewitem
@@ -198,7 +199,7 @@ async def enemy_perform_action(id_server):
 
 		# If an enemy is marked for death or has been alive too long, delete it
 		if enemy.life_state == ewcfg.enemy_lifestate_dead or (enemy.expiration_date < time_now):
-			delete_enemy(enemy)
+			bknd_hunt.delete_enemy(enemy)
 		else:
 			# If an enemy is an activated raid boss, it has a 1/20 chance to move between districts.
 			if enemy.enemytype in ewcfg.enemy_movers and enemy.life_state == ewcfg.enemy_lifestate_alive and check_raidboss_movecooldown(enemy):
@@ -213,7 +214,7 @@ async def enemy_perform_action(id_server):
 				ch_name = poi_static.id_to_poi.get(enemy.poi).channel 
 
 				# Check if the enemy can do anything right now
-				if enemy.life_state == ewcfg.enemy_lifestate_unactivated and check_raidboss_countdown(enemy):
+				if enemy.life_state == ewcfg.enemy_lifestate_unactivated and bknd_hunt.check_raidboss_countdown(enemy):
 					# Raid boss has activated!
 					response = "*The ground quakes beneath your feet as slime begins to pool into one hulking, solidified mass...*" \
 							"\n{} **{} has arrived! It's level {} and has {} slime!** {}\n".format(
@@ -230,7 +231,7 @@ async def enemy_perform_action(id_server):
 					enemy.persist()
 
 				# If a raid boss is currently counting down, delete the previous countdown message to reduce visual clutter.
-				elif check_raidboss_countdown(enemy) == False:
+				elif bknd_hunt.check_raidboss_countdown(enemy) == False:
 					timer = (enemy.raidtimer - (int(time.time())) + ewcfg.time_raidcountdown)
 
 					if timer < ewcfg.enemy_attack_tick_length and timer != 0:
@@ -323,7 +324,7 @@ async def enemy_perform_action_gvs(id_server):
 
 		# If an enemy is marked for death or has been alive too long, delete it
 		if enemy.life_state == ewcfg.enemy_lifestate_dead or (enemy.expiration_date < time_now):
-			delete_enemy(enemy)
+			bknd_hunt.delete_enemy(enemy)
 		else:
 			# The GvS raidboss has pre-determined pathfinding
 			if enemy.enemytype in ewcfg.raid_bosses and enemy.life_state == ewcfg.enemy_lifestate_alive and check_raidboss_movecooldown(enemy):
@@ -334,7 +335,7 @@ async def enemy_perform_action_gvs(id_server):
 			# If an enemy is alive, make it perform the kill (or cannibalize) function.
 
 			# Check if the enemy can do anything right now
-			if enemy.life_state == ewcfg.enemy_lifestate_unactivated and check_raidboss_countdown(enemy):
+			if enemy.life_state == ewcfg.enemy_lifestate_unactivated and bknd_hunt.check_raidboss_countdown(enemy):
 				# Raid boss has activated!
 				response = "*The dreaded creature of Dr. Downpour claws its way into {}.*" \
 						   "\n{} **{} has arrived! It's level {} and has {} slime. Good luck.** {}\n".format(
@@ -352,7 +353,7 @@ async def enemy_perform_action_gvs(id_server):
 				enemy.persist()
 
 			# If a raid boss is currently counting down, delete the previous countdown message to reduce visual clutter.
-			elif check_raidboss_countdown(enemy) == False:
+			elif bknd_hunt.check_raidboss_countdown(enemy) == False:
 				timer = (enemy.raidtimer - (int(time.time())) + ewcfg.time_raidcountdown)
 
 				if timer < ewcfg.enemy_attack_tick_length and timer != 0:
@@ -387,7 +388,7 @@ async def enemy_perform_action_gvs(id_server):
 						if len(district_data.get_enemies_in_district(classes = [ewcfg.enemy_class_gaiaslimeoid])) > 0:
 							await enemy.cannibalize()
 						else:
-							await sh_move(enemy)
+							await bknd_hunt.sh_move(enemy)
 				else:
 					continue
 				
@@ -687,16 +688,6 @@ def find_enemy(enemy_search=None, user_data=None):
 
 	return enemy_found
 
-# Deletes an enemy the database.
-def delete_enemy(enemy_data):
-	# print("DEBUG - {} - {} DELETED".format(enemy_data.id_enemy, enemy_data.display_name))
-	enemy_data.clear_allstatuses()
-	bknd_core.execute_sql_query("DELETE FROM enemies WHERE {id_enemy} = %s".format(
-		id_enemy=ewcfg.col_id_enemy
-	), (
-		enemy_data.id_enemy,
-	))
-	
 
 # Drops items into the district when an enemy dies.
 def drop_enemy_loot(enemy_data, district_data):
@@ -845,15 +836,6 @@ def drop_enemy_loot(enemy_data, district_data):
 def level_byslime(slime):
 	return int(abs(slime) ** 0.25)
 
-		
-
-# Check if an enemy is dead. Implemented to prevent enemy data from being recreated when not necessary.
-def check_death(enemy_data):
-	if enemy_data.slimes <= 0 or enemy_data.life_state == ewcfg.enemy_lifestate_dead:
-		# delete_enemy(enemy_data)
-		return True
-	else:
-		return False
 
 # Assigns enemies most of their necessary attributes based on their type.
 def get_enemy_data(enemy_type):
@@ -901,159 +883,6 @@ def get_enemy_data(enemy_type):
 		enemy.slimes *= 2
 
 	return enemy
-
-
-# Selects which non-ghost user to attack based on certain parameters.
-def get_target_by_ai(enemy_data, cannibalize = False):
-
-	target_data = None
-	group_attack = False
-
-	time_now = int(time.time())
-
-	# If a player's time_lastenter is less than this value, it can be attacked.
-	targettimer = time_now - ewcfg.time_enemyaggro
-	raidbossaggrotimer = time_now - ewcfg.time_raidbossaggro
-
-	if not cannibalize:
-		if enemy_data.ai == ewcfg.enemy_ai_defender:
-			if enemy_data.id_target != -1:
-				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server, data_level = 1)
-	
-		elif enemy_data.ai == ewcfg.enemy_ai_attacker_a:
-			users = bknd_core.execute_sql_query(
-				#"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({level} > {safe_level} OR {life_state} != {life_state_juvenile}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {time_lastenter} ASC".format(
-				"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({life_state} != {life_state_juvenile}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {time_lastenter} ASC".format(
-					id_user = ewcfg.col_id_user,
-					life_state = ewcfg.col_life_state,
-					time_lastenter = ewcfg.col_time_lastenter,
-					poi = ewcfg.col_poi,
-					id_server = ewcfg.col_id_server,
-					targettimer = targettimer,
-					life_state_corpse = ewcfg.life_state_corpse,
-					life_state_kingpin = ewcfg.life_state_kingpin,
-					life_state_juvenile = ewcfg.life_state_juvenile,
-					repel_status = ewcfg.status_repelled_id,
-					slimes = ewcfg.col_slimes,
-					#safe_level = ewcfg.max_safe_level,
-					level = ewcfg.col_slimelevel
-				), (
-					enemy_data.poi,
-					enemy_data.id_server
-				))
-			if len(users) > 0:
-				target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level = 1)
-	
-		elif enemy_data.ai == ewcfg.enemy_ai_attacker_b:
-			users = bknd_core.execute_sql_query(
-				#"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({level} > {safe_level} OR {life_state} != {life_state_juvenile}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {slimes} DESC".format(
-				"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({life_state} != {life_state_juvenile}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {slimes} DESC".format(
-					id_user = ewcfg.col_id_user,
-					life_state = ewcfg.col_life_state,
-					slimes = ewcfg.col_slimes,
-					poi = ewcfg.col_poi,
-					id_server = ewcfg.col_id_server,
-					time_lastenter = ewcfg.col_time_lastenter,
-					targettimer = targettimer,
-					life_state_corpse = ewcfg.life_state_corpse,
-					life_state_kingpin = ewcfg.life_state_kingpin,
-					life_state_juvenile = ewcfg.life_state_juvenile,
-					repel_status = ewcfg.status_repelled_id,
-					#safe_level = ewcfg.max_safe_level,
-					level = ewcfg.col_slimelevel
-				), (
-					enemy_data.poi,
-					enemy_data.id_server
-				))
-			if len(users) > 0:
-				target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level = 1)
-				
-		elif enemy_data.ai == ewcfg.enemy_ai_gaiaslimeoid:
-			
-			users = bknd_core.execute_sql_query(
-				"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({life_state} = {life_state_shambler}) ORDER BY {slimes} DESC".format(
-					id_user=ewcfg.col_id_user,
-					life_state=ewcfg.col_life_state,
-					slimes=ewcfg.col_slimes,
-					poi=ewcfg.col_poi,
-					id_server=ewcfg.col_id_server,
-					time_lastenter=ewcfg.col_time_lastenter,
-					targettimer=targettimer,
-					life_state_shambler=ewcfg.life_state_shambler,
-					time_now=time_now,
-				), (
-					enemy_data.poi,
-					enemy_data.id_server
-				))
-			if len(users) > 0:
-				target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level=1)
-				
-		elif enemy_data.ai == ewcfg.enemy_ai_shambler:
-
-			users = bknd_core.execute_sql_query(
-				"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT ({life_state} = {life_state_shambler} OR {life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) ORDER BY {slimes} DESC".format(
-					id_user=ewcfg.col_id_user,
-					life_state=ewcfg.col_life_state,
-					slimes=ewcfg.col_slimes,
-					poi=ewcfg.col_poi,
-					id_server=ewcfg.col_id_server,
-					time_lastenter=ewcfg.col_time_lastenter,
-					targettimer=targettimer,
-					life_state_shambler=ewcfg.life_state_shambler,
-					life_state_corpse=ewcfg.life_state_corpse,
-					life_state_kingpin=ewcfg.life_state_kingpin,
-				), (
-					enemy_data.poi,
-					enemy_data.id_server
-				))
-			if len(users) > 0:
-				target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server, data_level=1)
-				
-		# If an enemy is a raidboss, don't let it attack until some time has passed when entering a new district.
-		if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter > raidbossaggrotimer:
-			target_data = None
-			
-	elif cannibalize:
-		if enemy_data.ai == ewcfg.enemy_ai_gaiaslimeoid:
-			
-			range = 1 if enemy_data.enemy_props.get('range') == None else int(enemy_data.enemy_props.get('range'))
-			direction = 'right' if enemy_data.enemy_props.get('direction') == None else enemy_data.enemy_props.get('direction')
-			piercing = 'false' if enemy_data.enemy_props.get('piercing') == None else enemy_data.enemy_props.get('piercing')
-			splash = 'false' if enemy_data.enemy_props.get('splash') == None else enemy_data.enemy_props.get('splash')
-			pierceamount = '0' if enemy_data.enemy_props.get('pierceamount') == None else enemy_data.enemy_props.get('pierceamount')
-			singletilepierce = 'false' if enemy_data.enemy_props.get('singletilepierce') == None else enemy_data.enemy_props.get('singletilepierce')
-			
-			enemies = ga_check_coord_for_shambler(enemy_data, range, direction, piercing, splash, pierceamount, singletilepierce)
-			if len(enemies) > 1:
-				group_attack = True
-				
-			target_data = enemies
-				
-		elif enemy_data.ai == ewcfg.enemy_ai_shambler:
-			range = 1 if enemy_data.enemy_props.get('range') == None else int(enemy_data.enemy_props.get('range'))
-			direction = 'left' if enemy_data.enemy_props.get('direction') == None else enemy_data.enemy_props.get('direction')
-			
-			enemies = sh_check_coord_for_gaia(enemy_data, range, direction)
-			if len(enemies) > 0:
-				target_data = EwEnemy(id_enemy=enemies[0], id_server=enemy_data.id_server)
-		
-		# If an enemy is a raidboss, don't let it attack until some time has passed when entering a new district.
-		if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter > raidbossaggrotimer:
-			target_data = None
-
-	return target_data, group_attack
-
-# Check if raidboss is ready to attack / be attacked
-def check_raidboss_countdown(enemy_data):
-	time_now = int(time.time())
-
-	# Wait for raid bosses
-	if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.raidtimer <= time_now - ewcfg.time_raidcountdown:
-		# Raid boss has activated!
-		return True
-	elif enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.raidtimer > time_now - ewcfg.time_raidcountdown:
-		# Raid boss hasn't activated.
-		return False
 
 def check_raidboss_movecooldown(enemy_data):
 	time_now = int(time.time())
@@ -1103,346 +932,6 @@ def set_identifier(poi, id_server):
 				continue
 
 	return new_identifier
-
-async def sh_move(enemy_data):
-	current_coord = enemy_data.gvs_coord
-	has_moved = False
-	index = None
-	row = None
-	new_coord = None
-
-	if current_coord in ewcfg.gvs_coords_start and enemy_data.enemytype == ewcfg.enemy_type_juvieshambler:
-		delete_enemy(enemy_data)
-	
-	if current_coord not in ewcfg.gvs_coords_end:
-		for row in ewcfg.gvs_valid_coords_shambler:
-
-			if current_coord in row:
-				index = row.index(current_coord)
-				new_coord = row[index - 1]
-				# print(new_coord)
-				break
-				
-		if new_coord == None:
-			return
-				
-		enemy_data.gvs_coord = new_coord
-		enemy_data.persist()
-		
-		for gaia_row in ewcfg.gvs_valid_coords_gaia:
-			if new_coord in gaia_row and index != None and row != None:
-				poi_channel = poi_static.id_to_poi.get(enemy_data.poi).channel
-				
-				try:
-					previous_gaia_coord = row[index - 2]
-				except:
-					break
-					
-				response = "The {} moved from {} to {}!".format(enemy_data.display_name, new_coord, previous_gaia_coord)
-				client = ewutils.get_client()
-				server = client.get_guild(enemy_data.id_server)
-				channel = ewutils.get_channel(server, poi_channel)
-				
-				await ewutils.send_message(client, channel, response)
-
-		# print('shambler moved from {} to {} in {}.'.format(current_coord, new_coord, enemy_data.poi))
-
-
-	return has_moved
-
-def sh_check_coord_for_gaia(enemy_data, sh_range, direction):
-	current_coord = enemy_data.gvs_coord
-	gaias_in_coord = []
-
-	if current_coord not in ewcfg.gvs_coords_end:
-		
-		for sh_row in ewcfg.gvs_valid_coords_shambler:
-
-			if current_coord in sh_row:
-				index = sh_row.index(current_coord)
-				checked_coord = gvs_grid_gather_coords(enemy_data.enemyclass, sh_range, direction, sh_row, index)[0]
-
-				for gaia_row in ewcfg.gvs_valid_coords_gaia:
-					if checked_coord in gaia_row:
-						# Check coordinate for gaiaslimeoids in front of the shambler.
-						gaia_data = bknd_core.execute_sql_query(
-							"SELECT {id_enemy}, {enemytype} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} = %s AND {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_dead})".format(
-								id_enemy=ewcfg.col_id_enemy,
-								enemyclass=ewcfg.col_enemy_class,
-								enemytype=ewcfg.col_enemy_type,
-								gvs_coord=ewcfg.col_enemy_gvs_coord,
-								poi=ewcfg.col_poi,
-								id_server=ewcfg.col_id_server,
-								life_state=ewcfg.col_life_state,
-								life_state_dead=ewcfg.enemy_lifestate_dead,
-							), (
-								ewcfg.enemy_class_gaiaslimeoid,
-								checked_coord,
-								enemy_data.poi,
-								enemy_data.id_server
-							))
-						
-						#print(len(gaia_data))
-						if len(gaia_data) > 0:
-							
-							low_attack_priority = [ewcfg.enemy_type_gaia_rustealeaves]
-							high_attack_priority = [ewcfg.enemy_type_gaia_steelbeans]
-							mid_attack_priority = []
-							for enemy_id in ewcfg.gvs_enemies_gaiaslimeoids:
-								if enemy_id not in low_attack_priority and enemy_id not in high_attack_priority:
-									mid_attack_priority.append(enemy_id)
-							
-							gaia_types = {}
-							for gaia in gaia_data:
-								gaia_types[gaia[1]] = gaia[0]
-							
-							# Rustea Leaves only have a few opposing shamblers that can damage them
-							if ewcfg.enemy_type_gaia_rustealeaves in gaia_types.keys() and enemy_data.enemytype not in [ewcfg.enemy_type_gigashambler, ewcfg.enemy_type_shambonidriver, ewcfg.enemy_type_ufoshambler]:
-								del gaia_types[ewcfg.enemy_type_gaia_rustealeaves]
-
-							for target in high_attack_priority:
-								if target in gaia_types.keys():
-									gaias_in_coord.append(gaia_types[target])
-									
-							for target in mid_attack_priority:
-								if target in gaia_types.keys():
-									gaias_in_coord.append(gaia_types[target])
-									
-							for target in low_attack_priority:
-								if target in gaia_types.keys():
-									gaias_in_coord.append(gaia_types[target])
-
-							# print('shambler in coord {} found gaia in coord {} in {}.'.format(current_coord, checked_coord, enemy_data.poi))
-	
-	return gaias_in_coord
-
-def ga_check_coord_for_shambler(enemy_data, ga_range, direction, piercing, splash, pierceamount, singletilepierce):
-	current_coord = enemy_data.gvs_coord
-	detected_shamblers = {}
-	
-	for sh_row in ewcfg.gvs_valid_coords_shambler:
-
-		if current_coord in sh_row:
-			index = sh_row.index(current_coord)
-			checked_coords = gvs_grid_gather_coords(enemy_data.enemyclass, int(ga_range), direction, sh_row, index)
-			
-			# print('GAIA -- CHECKED COORDS FOR {} WITH ID {}: {}'.format(enemy_data.enemytype, enemy_data.id_enemy, checked_coords))
-
-			
-			# Check coordinate for shamblers in range of gaiaslimeoid.
-			shambler_data = bknd_core.execute_sql_query(
-				"SELECT {id_enemy}, {enemytype} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} IN %s AND {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_dead} OR {life_state} = {life_state_unactivated})".format(
-					id_enemy=ewcfg.col_id_enemy,
-					enemyclass=ewcfg.col_enemy_class,
-					enemytype=ewcfg.col_enemy_type,
-					gvs_coord=ewcfg.col_enemy_gvs_coord,
-					poi=ewcfg.col_poi,
-					id_server=ewcfg.col_id_server,
-					life_state=ewcfg.col_life_state,
-					life_state_dead=ewcfg.enemy_lifestate_dead,
-					life_state_unactivated=ewcfg.enemy_lifestate_unactivated,
-				), (
-					ewcfg.enemy_class_shambler,
-					tuple(checked_coords),
-					enemy_data.poi,
-					enemy_data.id_server
-				))
-
-			#print(len(shambler_data))
-			if len(shambler_data) > 0:
-
-				for shambler in shambler_data:
-
-					current_shambler_data = EwEnemy(id_enemy=shambler[0], id_server=enemy_data.id_server)
-					detected_shamblers[current_shambler_data.id_enemy] = current_shambler_data.gvs_coord
-
-					if shambler[1] in [ewcfg.enemy_type_juvieshambler] and current_shambler_data.enemy_props.get('underground') == 'true':
-						del detected_shamblers[current_shambler_data.id_enemy]
-
-				if piercing == 'false':
-					detected_shamblers = gvs_find_nearest_shambler(checked_coords, detected_shamblers)
-				elif int(pierceamount) > 0:
-					detected_shamblers = gvs_find_nearest_shambler(checked_coords, detected_shamblers, pierceamount, singletilepierce)
-				
-				# print('gaia in coord {} found shambler in coords {} in {}.'.format(current_coord, checked_coords, enemy_data.poi))
-
-			if splash == 'true':
-				
-				if detected_shamblers == {}:
-					checked_splash_coords = checked_coords
-				else:
-					checked_splash_coords = []
-					for shambler in detected_shamblers.keys():
-						checked_splash_coords.append(detected_shamblers[shambler])
-				
-				splash_coords = gvs_get_splash_coords(checked_splash_coords)
-
-				splash_shambler_data = bknd_core.execute_sql_query(
-					"SELECT {id_enemy}, {enemytype}, {gvs_coord} FROM enemies WHERE {enemyclass} = %s AND {gvs_coord} IN %s AND {poi} = %s AND {id_server} = %s".format(
-						id_enemy=ewcfg.col_id_enemy,
-						enemyclass=ewcfg.col_enemy_class,
-						enemytype=ewcfg.col_enemy_type,
-						gvs_coord=ewcfg.col_enemy_gvs_coord,
-						poi=ewcfg.col_poi,
-						id_server=ewcfg.col_id_server,
-					), (
-						ewcfg.enemy_class_shambler,
-						tuple(splash_coords),
-						enemy_data.poi,
-						enemy_data.id_server
-					))
-				
-				for splashed_shambler in splash_shambler_data:
-					detected_shamblers[splashed_shambler[0]] = splashed_shambler[2]			
-			break
-
-	return detected_shamblers
-
-def gvs_grid_gather_coords(enemyclass, gr_range, direction, row, index):
-	checked_coords = []
-	
-	if enemyclass == ewcfg.enemy_class_shambler:
-		index_change = -2
-		if direction == 'right':
-			index_change *= -1
-			
-		try:
-			checked_coords.append(row[index + index_change])
-		except:
-			pass
-		
-	else:
-		
-		index_changes = []
-		
-		# Default if range is 1, only reaches 0.5 and 1 full tile ahead
-		for i in range(gr_range):
-			index_changes.append(i + 1)
-			
-		# If it reaches backwards with a range of 1, reflect current index changes
-		if direction == 'left':
-			new_index_changes = []
-			
-			for change in index_changes:
-				change *= -1
-				new_index_changes.append(change)
-				
-			index_changes = new_index_changes
-			
-		# If it reaches both directions with a range of 1, add in opposite tiles.
-		elif direction == 'frontandback':
-			new_index_changes = []
-			
-			for change in index_changes:
-				change *= -1
-				new_index_changes.append(change)
-
-			index_changes += new_index_changes
-			
-		# If it attacks in a ring formation around itself, there are no coord changes.
-		# The proper coordinates will be fetched later as 'splash' damage.
-		elif direction == 'ring':
-			index_changes = [0]
-			
-		# Catch exceptions when necessary
-		for index_change in index_changes:
-			try:
-				checked_coords.append(row[index + index_change])
-			except:
-				pass
-	
-		# print(index_changes)
-		
-	# print(gr_range)
-	# print(checked_coords)
-	# print(enemyclass)
-	
-	return checked_coords
-
-def gvs_find_nearest_shambler(checked_coords, detected_shamblers, pierceamount = 1, singletilepierce = 'false'):
-	pierceattempts = 0
-	current_dict = {}
-	chosen_coord = ''
-	
-	for coord in checked_coords:
-		for shambler in detected_shamblers.keys():
-			if detected_shamblers[shambler] == coord:
-				current_dict[shambler] = coord
-				
-				if singletilepierce == 'true':
-					chosen_coord = coord
-					for shambler in detected_shamblers.keys():
-						if detected_shamblers[shambler] == chosen_coord:
-							current_dict[shambler] = chosen_coord
-						pierceattempts += 1
-						if pierceattempts == pierceamount:
-							return current_dict
-					
-			pierceattempts += 1
-			if pierceattempts == pierceamount:
-				return current_dict
-			
-def gvs_get_splash_coords(checked_splash_coords):
-	# Grab any random coordinate from the supplied splash coordinates, then get the row that it's in.
-	plucked_coord = checked_splash_coords[0]
-	plucked_row = plucked_coord[0]
-	top_row = None
-	middle_row = None
-	bottom_row = None
-	
-	extra_top_row = None # Joybean Pawpaw
-	extra_bottom_row = None # Joybean Pawpaw
-	row_range = 5 # Joybean Dankwheat = 9
-	row_backpedal = 2 # Joybean Dankwheat = 4
-	
-	current_index = 0
-	
-	all_splash_coords = []
-	if plucked_row == 'A':
-		middle_row = 0
-		bottom_row = 1
-	elif plucked_row == 'B':
-		top_row = 0
-		middle_row = 1
-		bottom_row = 2
-	elif plucked_row == 'C':
-		top_row = 1
-		middle_row = 2
-		bottom_row = 3
-	elif plucked_row == 'D':
-		top_row = 2
-		middle_row = 3
-		bottom_row = 4
-	elif plucked_row == 'E':
-		top_row = 3
-		middle_row = 4
-	
-	for coord in checked_splash_coords:
-		for sh_row in ewcfg.gvs_valid_coords_shambler:
-			if coord in sh_row:
-				current_index = sh_row.index(coord)
-				break
-		
-		if top_row != None:
-			for i in range(row_range):
-				try:
-					all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[top_row][current_index - row_backpedal + i])
-				except:
-					pass
-		if bottom_row != None:
-			for i in range(row_range):
-				try:
-					all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[bottom_row][current_index - row_backpedal + i])
-				except:
-					pass
-				
-		for i in range(row_range):
-			try:
-				all_splash_coords.append(ewcfg.gvs_valid_coords_shambler[middle_row][current_index - row_backpedal + i])
-			except:
-				pass
-			
-	return all_splash_coords
 
 # This function takes care of all win conditions within Gankers Vs. Shamblers.
 # It also handles turn counters, including gaiaslime generation, as well as spawning in shamblers

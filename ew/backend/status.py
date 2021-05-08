@@ -1,10 +1,8 @@
 import time
-import math
 import random
 
 from ..static import cfg as ewcfg
 from ..static import status as se_static
-from ..utils import core as ewutils
 from . import core as bknd_core
 
 class EwStatusEffect:

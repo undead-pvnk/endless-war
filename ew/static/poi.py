@@ -85,7 +85,7 @@ for poi in poi_list:
 
 	# Assign permissions for all locations in the poi list.
 	if poi.permissions == None:
-		poi.permissions = {('{}'.format(poi.id_poi)): permissions_general}
+		poi.permissions = {('{}'.format(poi.id_poi)): ewcfg.permissions_general}
 
 	# Assign all the correct major and minor roles.
 	
@@ -194,10 +194,10 @@ for poi in poi_list:
 		
 	if poi.major_role == None:
 		#print('Null Major Role give to {}'.format(poi.id_poi))
-		poi.major_role = role_null_major_role
+		poi.major_role = ewcfg.role_null_major_role
 	if poi.minor_role == None:
 		#print('Null Minor Role give to {}'.format(poi.str_name))
-		poi.minor_role = role_null_minor_role
+		poi.minor_role = ewcfg.role_null_minor_role
 	
 	# poi coords cause json import problems because poi.coords imports as a list type 
 	#if poi.coord != None:

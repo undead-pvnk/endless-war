@@ -83,7 +83,7 @@ class EwBook:
 				ewcfg.col_pages,
 				query_suffix,
 			))
-			result = cursor.fetchone();
+			result = cursor.fetchone()
 
 			if result != None:
 				# Record found: apply the data to this object.
@@ -223,7 +223,7 @@ class EwBookSale:
 				self.id_user,
 				self.id_server,
 			))
-			result = cursor.fetchone();
+			result = cursor.fetchone()
 
 			if result != None:
 				# Record found: apply the data to this object.

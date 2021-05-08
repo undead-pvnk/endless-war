@@ -4,11 +4,9 @@ import random
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
 from ..utils import core as ewutils
-from .. import rolemgr as ewrolemgr
-from .. import item as ewitem
-from .. import hunting as ewhunting
 from . import core as bknd_core
 from . import item as bknd_item
+from . import hunting as bknd_hunt
 
 from .user import EwUser
 from .market import EwMarket
@@ -17,6 +15,7 @@ from .district import EwDistrict
 from .slimeoid import EwSlimeoid
 from .hunting import EwEnemy
 from .item import EwItem
+from ..utils.frontend import EwResponseContainer
 
 """
 	Coroutine that continually calls weather_tick; is called once per server, and not just once globally
@@ -84,7 +83,7 @@ async def weather_tick(id_server = None):
 			))
 
 			deathreport = ""
-			resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+			resp_cont = EwResponseContainer(id_server = id_server)
 			for user in users:
 				user_data = EwUser(id_user = user[0], id_server = id_server)
 				if user_data.life_state == ewcfg.life_state_kingpin:
@@ -199,7 +198,7 @@ async def weather_tick(id_server = None):
 				response = "{name} takes {slimeloss:,} damage from the bicarbonate rain.".format(name = enemy_data.display_name, slimeloss = slimes_to_erase)
 				resp_cont.add_channel_response(enemy_poi.channel, response)
 				if enemy_data.slimes <= 0:
-					ewhunting.delete_enemy(enemy_data)
+					bknd_hunt.delete_enemy(enemy_data)
 					deathreport = "{skull} {name} is dissolved by the bicarbonate rain. {skull}".format(skull = ewcfg.emote_slimeskull, name = enemy_data.display_name)
 					resp_cont.add_channel_response(enemy_poi.channel, deathreport)
 

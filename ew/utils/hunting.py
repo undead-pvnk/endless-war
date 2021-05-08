@@ -5,8 +5,6 @@ from ..backend import core as bknd_core
 
 from .. import hunting as ewhunting
 
-from . import core as ewutils
-
 from ..backend.user import EwUser
 from ..backend.hunting import EwEnemy
 

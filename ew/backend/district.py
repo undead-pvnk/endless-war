@@ -7,6 +7,10 @@ from . import core as bknd_core
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
 from ..utils import core as ewutils
+from ..utils import poi as poi_utils
+from ..utils import frontend as fe_utils
+
+from ..utils.frontend import EwResponseContainer
 
 """
 	district data model for database persistence
@@ -166,7 +170,7 @@ class EwDistrict:
 		return True
 
 	def all_streets_taken(self):
-		street_name_list = ewutils.get_street_list(self.name)
+		street_name_list = poi_utils.get_street_list(self.name)
 		
 		if self.name == ewcfg.poi_id_rowdyroughhouse:
 			return ewcfg.faction_rowdys
@@ -286,7 +290,7 @@ class EwDistrict:
 		return filtered_enemies
 
 	def decay_capture_points(self):
-		resp_cont_decay = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
+		resp_cont_decay = EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
 		if self.capture_points > 0:
 				#and self.time_unlock == 0:
 
@@ -334,14 +338,14 @@ class EwDistrict:
 		return resp_cont_decay
 
 	def change_capture_lock(self, progress):
-		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
+		resp_cont = EwResponseContainer(id_server = self.id_server)
 
 		progress_before = self.time_unlock
 
 		self.time_unlock += progress
 
 		if self.time_unlock < 0:
-			self.time_unlock == 0
+			self.time_unlock = 0
 
 		progress_after = self.time_unlock
 
@@ -395,7 +399,7 @@ class EwDistrict:
 
 		self.capture_points += progress
 
-		resp_cont_change_cp = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
+		resp_cont_change_cp = EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
 
 		# ensures that the value doesn't exceed the bounds
 		if self.capture_points < 0:
@@ -549,14 +553,14 @@ class EwDistrict:
 		Change who controls the district. Can be used to update the channel topic by passing the already controlling faction as an arg.
 	"""
 	def change_ownership(self, new_owner, actor, client = None):  # actor can either be a faction, "decay", or "init"
-		resp_cont_owner = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
+		resp_cont_owner = EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
 
 		factions = ["", ewcfg.faction_killers, ewcfg.faction_rowdys]
 
 		if new_owner in factions:
 			server = ewcfg.server_list[self.id_server]
 			channel_str = poi_static.id_to_poi[self.name].channel
-			channel = ewutils.get_channel(server = server, channel_name = channel_str)
+			channel = fe_utils.get_channel(server = server, channel_name = channel_str)
 
 			if channel is not None and channel.topic:  # tests if the topic is neither None nor empty
 				initialized = False

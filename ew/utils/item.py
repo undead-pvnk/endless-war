@@ -9,8 +9,6 @@ from ..backend import item as bknd_item
 
 from .. import item as ewitem
 
-from . import core as ewutils
-
 def get_fingernail_item(cmd):
 	item = static_weapons.weapon_map.get(ewcfg.weapon_id_fingernails)
 	item_props = ewitem.gen_item_props(item)

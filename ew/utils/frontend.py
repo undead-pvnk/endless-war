@@ -10,6 +10,7 @@ import discord
 from ..static import cfg as ewcfg
 from ..static import weapons as static_weapons
 from ..static import hunting as hunt_static
+from ..static import poi as poi_static
 
 from ..backend import core as bknd_core
 
@@ -342,10 +343,10 @@ async def send_response(response_text, cmd = None, delete_after = None, name = N
 		# TODO: experiment with allow_mentions argument. Might get rid of the need to filter "@"s
 		return await channel.send(content = response_text, delete_after = delete_after, allowed_mentions = allowed_mentions)
 	except discord.errors.Forbidden:
-		ewutils.logMsg('Could not message user: {}\n{}'.format(channel, text))
+		ewutils.logMsg('Could not message user: {}\n{}'.format(channel, response_text))
 		raise
 	except:
-		ewutils.logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
+		ewutils.logMsg('Failed to send message to channel: {}\n{}'.format(channel, response_text))
 
 
 """
