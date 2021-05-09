@@ -4,7 +4,6 @@ from ew.backend.transport import EwTransportBase
 from ew.utils import core as ewutils
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
-
 from ew.utils.district import EwDistrict
 
 from ew.utils.frontend import EwResponseContainer

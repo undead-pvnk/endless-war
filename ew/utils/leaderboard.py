@@ -7,7 +7,7 @@ from ew.backend import core as bknd_core
 from ew.utils.user import EwUser
 from ew.backend.player import EwPlayer
 from ew.backend.market import EwMarket, EwStock
-from ew.utils.district import EwDistrict
+from ew.backend.district import EwDistrictBase as EwDistrict
 
 
 

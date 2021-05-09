@@ -1,8 +1,8 @@
-from .static import cfg as ewcfg
+from ew.static import cfg as ewcfg
 
-from .backend import core as bknd_core
+from ew.backend import core as bknd_core
 
-from . import event as ewevent
+from . import event as evt_utils
 
 """
 	Utility functions for recording statistics in the database
@@ -79,7 +79,7 @@ def set_stat(id_server = None, id_user = None, user = None, metric = None, value
 		cursor.close()
 		bknd_core.databaseClose(conn_info)
 
-	ewevent.process_stat_change(id_server = id_server, id_user = id_user, metric = metric, value = value)
+	evt_utils.process_stat_change(id_server = id_server, id_user = id_user, metric = metric, value = value)
 
 """ Increase/Decrease a stat by a given value """
 def change_stat(id_server = None, id_user = None, user = None, metric = None, n = 0):

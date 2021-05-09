@@ -8,7 +8,7 @@ from ..static import poi as poi_static
 from . import core as ewutils
 from . import frontend as fe_utils
 
-from ew.utils.user import EwUser
+from ..backend.user import EwUserBase as EwUser
 from ..backend.role import EwRole
 
 """

@@ -13,9 +13,9 @@ from ..backend import core as bknd_core
 
 from . import core as ewutils, rolemgr as ewrolemgr
 
-from ew.utils.user import EwUser
+from ..backend.user import EwUserBase as EwUser
 from ..backend.player import EwPlayer
-from ..backend.hunting import EwEnemy
+from ..backend.hunting import EwEnemyBase as EwEnemy
 from ..backend.item import EwItem
 
 class Message:

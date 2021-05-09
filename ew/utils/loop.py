@@ -14,9 +14,7 @@ from ..backend import core as bknd_core
 from ..backend import item as bknd_item
 from ..backend import hunting as bknd_hunt
 
-from .. import stats as ewstats
-
-from . import core as ewutils, rolemgr as ewrolemgr
+from . import core as ewutils, rolemgr as ewrolemgr, stats as ewstats
 from . import frontend as fe_utils
 from . import item as itm_utils
 from . import hunting as hunt_utils
@@ -24,7 +22,7 @@ from . import hunting as hunt_utils
 from ew.utils.user import EwUser
 from ew.utils.district import EwDistrict
 from ..backend.player import EwPlayer
-from ..backend.hunting import EwEnemy
+from .hunting import EwEnemy
 from ..backend.market import EwMarket
 from ..backend.status import EwStatusEffect
 from ..backend.status import EwEnemyStatusEffect

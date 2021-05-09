@@ -308,7 +308,7 @@ class EwUserBase:
 			# Save the object.
 
 			cursor.execute(
-				"REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+				"REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 					ewcfg.col_id_user,
 					ewcfg.col_id_server,
 					ewcfg.col_slimes,
@@ -317,7 +317,6 @@ class EwUserBase:
 					ewcfg.col_totaldamage,
 					ewcfg.col_bounty,
 					ewcfg.col_weapon,
-					ewcfg.col_weaponskill,
 					ewcfg.col_trauma,
 					ewcfg.col_slimecoin,
 					ewcfg.col_time_lastkill,
@@ -380,7 +379,6 @@ class EwUserBase:
 					self.totaldamage,
 					self.bounty,
 					self.weapon,
-					self.weaponskill,
 					self.trauma,
 					self.slimecoin,
 					self.time_lastkill,
@@ -467,3 +465,27 @@ class EwUserBase:
 
 		finally:
 			return result
+
+	def has_gellphone(self):
+		"""
+		gellphones = ewitem.find_item_all(item_search = ewcfg.item_id_gellphone, id_user = self.id_user, id_server = self.id_server, item_type_filter = ewcfg.it_item)
+
+		for phone in gellphones:
+			phone_data = EwItem(id_item = phone.get('id_item'))
+			if phone_data.item_props.get('active') == 'true':
+				return True
+		"""
+		data = bknd_core.execute_sql_query(
+		"SELECT it.* FROM items it INNER JOIN items_prop itp ON it.id_item = itp.id_item WHERE it.{id_user} = '%s' AND itp.{name} = %s AND itp.{value} = %s".format(
+			id_user = ewcfg.col_id_user,
+			id_item = ewcfg.col_id_item,
+			name = ewcfg.col_name,
+			value = ewcfg.col_value
+		),(
+			self.id_user,
+			"gellphoneactive",
+			"true"
+		))
+
+		return len(data) > 0
+

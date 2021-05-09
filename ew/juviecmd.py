@@ -15,12 +15,11 @@ from .static import poi as poi_static
 from .backend import worldevent as bknd_worldevent
 from .backend import item as bknd_item
 
-from .utils import core as ewutils, rolemgr as ewrolemgr
+from .utils import core as ewutils, rolemgr as ewrolemgr, stats as ewstats
 from .utils import frontend as fe_utils
 from .utils import poi as poi_utils
 from .utils import item as itm_utils
 from . import item as ewitem
-from . import stats as ewstats
 
 from .backend.item import EwItem
 from ew.utils.user import EwUser

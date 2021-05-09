@@ -2,14 +2,13 @@ import time
 import random
 
 from ew.backend.user import EwUserBase
-from ew.utils import core as ewutils, rolemgr as ewrolemgr, district as bknd_district
+from ew.utils import core as ewutils, rolemgr as ewrolemgr, district as bknd_district, stats as ewstats
 from ew.utils import frontend as fe_utils
 from ew.utils import event as evt_utils
 from ew.static import cfg as ewcfg
 from ew.static import weapons as static_weapons
 from ew.static import poi as poi_static
 from ew.static import mutations as static_mutations
-from ew import stats as ewstats
 from ew import item as ewitem
 from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
@@ -851,29 +850,6 @@ class EwUser(EwUserBase):
 			res = row[0]
 
 		return res
-
-	def has_gellphone(self):
-		"""
-		gellphones = ewitem.find_item_all(item_search = ewcfg.item_id_gellphone, id_user = self.id_user, id_server = self.id_server, item_type_filter = ewcfg.it_item)
-
-		for phone in gellphones:
-			phone_data = EwItem(id_item = phone.get('id_item'))
-			if phone_data.item_props.get('active') == 'true':
-				return True
-		"""
-		data = bknd_core.execute_sql_query(
-		"SELECT it.* FROM items it INNER JOIN items_prop itp ON it.id_item = itp.id_item WHERE it.{id_user} = '%s' AND itp.{name} = %s AND itp.{value} = %s".format(
-			id_user = ewcfg.col_id_user,
-			id_item = ewcfg.col_id_item,
-			name = ewcfg.col_name,
-			value = ewcfg.col_value
-		),(
-			self.id_user,
-			"gellphoneactive",
-			"true"
-		))
-
-		return len(data) > 0
 
 
 def get_move_speed(user_data):

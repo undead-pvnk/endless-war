@@ -15,11 +15,10 @@ from .static import slimeoid as sl_static
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 
-from .utils import core as ewutils, rolemgr as ewrolemgr
+from .utils import core as ewutils, rolemgr as ewrolemgr, stats as ewstats
 from .utils import frontend as fe_utils
 from . import move as ewmap
 from . import slimeoid as ewslimeoid
-from . import stats as ewstats
 
 from ew.utils.user import EwUser
 from .backend.market import EwMarket

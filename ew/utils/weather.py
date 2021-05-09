@@ -13,7 +13,7 @@ from ew.backend.market import EwMarket
 from ew.backend.player import EwPlayer
 from ew.utils.district import EwDistrict
 from ew.utils.slimeoid import EwSlimeoid
-from ew.backend.hunting import EwEnemy
+from ew.utils.hunting import EwEnemy
 from ew.backend.item import EwItem
 from ew.utils.frontend import EwResponseContainer
 

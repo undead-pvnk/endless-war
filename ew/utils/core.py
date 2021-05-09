@@ -271,7 +271,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 		try:
 			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
 			cursor.execute("SELECT {weapon}, {weaponskill} FROM weaponskills WHERE {id_server} = %s AND {id_user} = %s".format(
 				weapon = ewcfg.col_weapon,
@@ -306,7 +306,7 @@ def weaponskills_set(id_server = None, id_user = None, member = None, weapon = N
 		try:
 			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
 			cursor.execute("REPLACE INTO weaponskills({id_server}, {id_user}, {weapon}, {weaponskill}) VALUES(%s, %s, %s, %s)".format(
 				id_server = ewcfg.col_id_server,
@@ -336,7 +336,7 @@ def weaponskills_clear(id_server = None, id_user = None, member = None, weaponsk
 		try:
 			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
 			# Clear any records that might exist.
 			cursor.execute("UPDATE weaponskills SET {weaponskill} = %s WHERE {weaponskill} > %s AND {id_server} = %s AND {id_user} = %s".format(

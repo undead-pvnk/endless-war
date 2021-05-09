@@ -6,8 +6,7 @@ import discord
 from .static import cfg as ewcfg
 from .static import poi as poi_static
 
-from . import stats as ewstats
-from .utils import core as ewutils, rolemgr as ewrolemgr
+from .utils import core as ewutils, rolemgr as ewrolemgr, stats as ewstats
 from .utils import frontend as fe_utils
 
 from ew.utils.user import EwUser

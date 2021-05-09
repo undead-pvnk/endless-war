@@ -1,5 +1,7 @@
 
 import random
+import asyncio
+import time
 
 from ..static import cfg as ewcfg
 from ..static import weapons as static_weapons
@@ -7,19 +9,126 @@ from ..static import poi as poi_static
 
 from ..backend import core as bknd_core
 from ..backend import item as bknd_item
+from ..backend import worldevent as bknd_event
 
 from . import core as ewutils
 from . import frontend as fe_utils
 from . import combat as cmbt_utils
 from . import item as itm_utils
 from . import hunting as hunt_utils
+from . import stats as ewstats
 
-from ew.utils.user import EwUser
+from .user import EwUser
+from .hunting import EwEnemy
+from .frontend import EwResponseContainer
 from ..backend.player import EwPlayer
-from ..backend.hunting import EwEnemy
 from ..backend.market import EwMarket
 from ..backend.item import EwItem
-from .frontend import EwResponseContainer
+from ..backend.worldevent import EwWorldEvent
+
+
+"""
+	Database persistence object describing some discrete event. Player
+	death/resurrection, item discovery, etc.
+"""
+class EwEvent:
+	id_server = -1
+
+	event_type = None
+
+	id_user = None
+	id_target = None
+
+	def __init__(
+		self,
+		id_server = -1,
+		event_type = None,
+		id_user = None,
+		id_target = None
+	):
+		self.id_server = id_server
+		self.event_type = event_type
+		self.id_user = id_user
+		self.id_target = id_target
+
+	"""
+		Write event to the database.
+	"""
+	def persist(self):
+		# TODO
+		pass
+
+stat_fn_map = {}
+fns_initialized = False
+
+def init_stat_function_map():
+	global stat_fn_map
+	stat_fn_map = {
+		ewcfg.stat_slimesmined: process_slimesmined,
+		ewcfg.stat_max_slimesmined: process_max_slimesmined,
+		ewcfg.stat_slimesfromkills: process_slimesfromkills,
+		ewcfg.stat_max_slimesfromkills: process_max_slimesfromkills,
+		ewcfg.stat_kills: process_kills,
+		ewcfg.stat_max_kills: process_max_kills,
+		ewcfg.stat_ghostbusts: process_ghostbusts,
+		ewcfg.stat_max_ghostbusts: process_max_ghostbusts,
+		ewcfg.stat_poudrins_looted: process_poudrins_looted,
+                ewcfg.stat_slimesfarmed: process_slimesfarmed,
+                ewcfg.stat_slimesscavenged: process_slimesscavenged
+	}
+	global fns_initialized
+	fns_initialized = True
+
+def process_stat_change(id_server = None, id_user = None, metric = None, value = None):
+	if fns_initialized == False:
+		init_stat_function_map()
+
+	fn = stat_fn_map.get(metric)
+
+	if fn != None:
+		fn(id_server = id_server, id_user = id_user, value = value)
+
+def process_slimesmined(id_server = None, id_user = None, value = None):
+	ewstats.track_maximum(id_server = id_server, id_user = id_user, metric = ewcfg.stat_max_slimesmined, value = value)
+
+def process_max_slimesmined(id_server = None, id_user = None, value = None):
+	# TODO give apropriate medal
+	pass
+
+def process_slimesfromkills(id_server = None, id_user = None, value = None):
+	ewstats.track_maximum(id_server = id_server, id_user = id_user, metric = ewcfg.stat_max_slimesfromkills, value = value)
+
+def process_max_slimesfromkills(id_server = None, id_user = None, value = None):
+	# TODO give apropriate medal
+	pass
+
+def process_slimesfarmed(id_server = None, id_user = None, value = None):
+	ewstats.track_maximum(id_server = id_server, id_user = id_user, metric = ewcfg.stat_max_slimesfarmed, value = value)
+
+def process_slimesscavenged(id_server = None, id_user = None, value = None):
+	ewstats.track_maximum(id_server = id_server, id_user = id_user, metric = ewcfg.stat_max_slimesscavenged, value = value)
+
+def process_kills(id_server = None, id_user = None, value = None):
+	ewstats.track_maximum(id_server = id_server, id_user = id_user, metric = ewcfg.stat_max_kills, value = value)
+	ewstats.increment_stat(id_server = id_server, id_user = id_user, metric = ewcfg.stat_lifetime_kills)
+
+def process_max_kills(id_server = None, id_user = None, value = None):
+	# TODO give apropriate medal
+	pass
+
+def process_ghostbusts(id_server = None, id_user = None, value = None):
+	ewstats.track_maximum(id_server = id_server, id_user = id_user, metric = ewcfg.stat_max_ghostbusts, value = value)
+	ewstats.increment_stat(id_server = id_server, id_user = id_user, metric = ewcfg.stat_lifetime_ghostbusts)
+
+def process_max_ghostbusts(id_server = None, id_user = None, value = None):
+	# TODO give apropriate medal
+	pass
+
+def process_poudrins_looted(id_server = None, id_user = None, value = None):
+	poudrin_amount = itm_utils.find_poudrin(id_user = id_user, id_server = id_user)
+
+	ewstats.track_maximum(id_user = id_user, id_server = id_server, metric = ewcfg.stat_max_poudrins, value = poudrin_amount)
+	ewstats.change_stat(id_user = id_user, id_server = id_server, metric = ewcfg.stat_lifetime_poudrins, n = value)
 
 """ Damage all players in a district """
 def explode(damage = 0, district_data = None, market_data = None):
@@ -238,14 +347,14 @@ async def activate_trap_items(district, id_server, id_user):
 
 async def event_tick_loop(id_server):
 	# initialise void connections
-	void_connections = get_void_connection_pois(id_server)
+	void_connections = bknd_event.get_void_connection_pois(id_server)
 	void_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
 	for connection_poi in void_connections:
 		# add the existing connections as neighbors for the void
 		void_poi.neighbors[connection_poi] = ewcfg.travel_time_district
 	for _ in range(3 - len(void_connections)):
 		# create any missing connections
-		create_void_connection(id_server)
+		bknd_event.create_void_connection(id_server)
 	ewutils.logMsg("initialised void connections, current links are: {}".format(tuple(void_poi.neighbors.keys())))
 
 	interval = ewcfg.event_tick_length
@@ -299,7 +408,7 @@ async def event_tick(id_server):
 				elif event_data.event_type == ewcfg.event_type_voidconnection:
 					void_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
 					void_poi.neighbors.pop(event_data.event_props.get('poi'), "")
-					create_void_connection(id_server)
+					bknd_event.create_void_connection(id_server)
 
 				if len(response) > 0:
 					poi = event_data.event_props.get('poi')
@@ -321,7 +430,7 @@ async def event_tick(id_server):
 						for ch in ewcfg.hideout_channels:
 							resp_cont.add_channel_response(ch, response)
 
-				delete_world_event(event_data.id_event)
+				bknd_event.delete_world_event(event_data.id_event)
 			except:
 				ewutils.logMsg("Error in event tick for server {}".format(id_server))
 
