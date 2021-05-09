@@ -15,7 +15,7 @@ from .utils import frontend as fe_utils
 from . import item as ewitem
 from . import casino as ewcasino
 
-from ew.utils.user import EwUser
+from .utils.combat import EwUser
 from .backend.market import EwMarket
 from ew.utils.district import EwDistrict
 from .backend.player import EwPlayer

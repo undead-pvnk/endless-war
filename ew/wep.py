@@ -18,14 +18,13 @@ from .utils import item as itm_utils
 from .utils import combat as cmbt_utils
 from . import move as ewmap
 
-from ew.utils.user import EwUser
 from .backend.item import EwItem
 from .backend.market import EwMarket
 from ew.utils.slimeoid import EwSlimeoid
 from ew.utils.district import EwDistrict
 from .backend.player import EwPlayer
 from .backend.dungeons import EwGamestate
-from .utils.combat import EwEnemy
+from .utils.combat import EwEnemy, EwUser
 
 from .utils.frontend import EwResponseContainer
 

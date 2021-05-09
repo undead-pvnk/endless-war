@@ -31,7 +31,6 @@ from . import faction as ewfaction
 from . import prank as ewprank
 from . import wep as ewwep
 
-from ew.utils.user import EwUser
 from .backend.market import EwMarket
 from .backend.item import EwItem
 from ew.utils.slimeoid import EwSlimeoid
@@ -41,7 +40,7 @@ from ew.utils.district import EwDistrict
 from .backend.worldevent import EwWorldEvent
 from .backend.hunting import EwOperationData
 from .utils.frontend import EwResponseContainer
-from .utils.combat import EwEnemy
+from .utils.combat import EwEnemy, EwUser
 
 """ wrapper for discord members """
 class EwId:

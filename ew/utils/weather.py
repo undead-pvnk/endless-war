@@ -8,12 +8,11 @@ from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
 from ew.backend import hunting as bknd_hunt
 
-from ew.utils.user import EwUser
 from ew.backend.market import EwMarket
 from ew.backend.player import EwPlayer
 from ew.utils.district import EwDistrict
 from ew.utils.slimeoid import EwSlimeoid
-from ew.utils.hunting import EwEnemy
+from ew.utils.combat import EwEnemy, EwUser
 from ew.backend.item import EwItem
 from ew.utils.frontend import EwResponseContainer
 

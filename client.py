@@ -74,7 +74,7 @@ import ew.slimetwitter as ewslimetwitter
 import ew.debug as ewdebug
 
 from ew.backend.item import EwItem
-from ew.utils.user import EwUser
+from ew.utils.combat import EwUser
 from ew.backend.player import EwPlayer
 from ew.backend.market import EwMarket
 from ew.backend.market import EwStock

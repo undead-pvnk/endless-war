@@ -19,11 +19,11 @@ from . import core as ewutils, rolemgr as ewrolemgr, stats as ewstats
 from . import frontend as fe_utils
 from . import item as itm_utils
 from . import hunting as hunt_utils
+from . import combat as cmbt_utils
 
-from ew.utils.user import EwUser
 from ew.utils.district import EwDistrict
 from ..backend.player import EwPlayer
-from .hunting import EwEnemy
+from .combat import EwEnemy, EwUser
 from ..backend.market import EwMarket
 from ..backend.status import EwStatusEffect
 from ..backend.status import EwEnemyStatusEffect
@@ -669,7 +669,7 @@ async def enemyBurnSlimes(id_server):
 				resp_cont.add_channel_response(poi_static.id_to_poi.get(enemy_data.poi).channel, response)
 				
 				district_data = EwDistrict(id_server = id_server, district = enemy_data.poi)
-				resp_cont.add_response_container(hunt_utils.drop_enemy_loot(enemy_data, district_data))
+				resp_cont.add_response_container(cmbt_utils.drop_enemy_loot(enemy_data, district_data))
 			else:
 				enemy_data.change_slimes(n = -slimes_to_burn, source=ewcfg.source_damage)
 				enemy_data.persist()
@@ -791,10 +791,10 @@ async def enemy_action_tick_loop(id_server):
 		await asyncio.sleep(interval)
 		# resp_cont = EwResponseContainer(id_server=id_server)
 		if ewcfg.gvs_active:
-			await hunt_utils.enemy_perform_action_gvs(id_server)
+			await cmbt_utils.enemy_perform_action_gvs(id_server)
 
 		else:
-			await hunt_utils.enemy_perform_action(id_server)
+			await cmbt_utils.enemy_perform_action(id_server)
 
 async def gvs_gamestate_tick_loop(id_server):
 	interval = ewcfg.gvs_gamestate_tick_length

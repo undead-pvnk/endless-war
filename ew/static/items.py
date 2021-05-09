@@ -1523,7 +1523,7 @@ EwGeneralItem(
 		id_item=ewcfg.item_id_civilianscalp,
 		str_name="civilian's scalp",
 		str_desc="It's the discarded scalp of an innocent NLACakaNM resident. You always wanted to kill one of these guys."
-	),\
+	),
 	EwGeneralItem(
 		id_item = "key",
 		str_name = "Cabinet Key",

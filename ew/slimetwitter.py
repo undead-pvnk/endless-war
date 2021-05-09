@@ -4,7 +4,8 @@ from .static import cfg as ewcfg
 
 from .utils import frontend as fe_utils, stats as ewstats
 
-from ew.utils.user import EwUser
+from .utils.combat import EwUser
+
 
 # Returns a user's life state/gang color as a discord.Colour object
 def get_tweet_color(user_data):

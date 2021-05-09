@@ -10,7 +10,7 @@ from .backend import item as bknd_item
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
 
-from ew.utils.user import EwUser
+from .utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from .backend.item import EwItem
 from .backend.mutation import EwMutation

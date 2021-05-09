@@ -15,7 +15,7 @@ from .utils import frontend as fe_utils
 from .utils import item as itm_utils
 from .utils import poi as poi_utils
 
-from ew.utils.user import EwUser
+from .utils.combat import EwUser
 from .backend.market import EwMarket
 from .backend.item import EwItem
 from ew.utils.slimeoid import EwSlimeoid

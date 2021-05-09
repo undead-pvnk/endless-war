@@ -84,6 +84,8 @@ class EwUserBase:
 	# twitter
 	verified = False
 
+	move_speed = 1 # not a database column
+
 	""" fix data in this object if it's out of acceptable ranges """
 	def limit_fix(self):
 		if self.hunger > self.get_hunger_max():

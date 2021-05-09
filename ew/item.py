@@ -22,7 +22,7 @@ from . import smelting as ewsmelting
 from . import prank as ewprank
 from . import debug as ewdebug
 
-from ew.utils.user import EwUser
+from .utils.combat import EwUser
 from .backend.player import EwPlayer
 from .backend.item import EwItem
 from ew.utils.district import EwDistrict

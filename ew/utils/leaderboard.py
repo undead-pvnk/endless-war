@@ -4,7 +4,7 @@ from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.backend import core as bknd_core
 
-from ew.utils.user import EwUser
+from ew.utils.combat import EwUser
 from ew.backend.player import EwPlayer
 from ew.backend.market import EwMarket, EwStock
 from ew.backend.district import EwDistrictBase as EwDistrict

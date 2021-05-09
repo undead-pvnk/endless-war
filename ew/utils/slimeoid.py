@@ -6,7 +6,7 @@ from ew.static import poi as poi_static
 from ew.utils import core as ewutils
 from ew.backend import core as bknd_core
 
-from ew.utils.user import EwUser
+from ew.utils.combat import EwUser
 from ew.backend.market import EwMarket
 from ew.backend.player import EwPlayer
 

@@ -16,7 +16,7 @@ from .utils import item as itm_utils
 from . import move as ewmap
 from . import cmd as ewcmd
 
-from ew.utils.user import EwUser
+from .utils.combat import EwUser
 
 """
 	Release the specified player from their commitment to their faction.

@@ -20,7 +20,6 @@ from .utils import poi as poi_utils
 from . import apt as ewapt
 from . import ads as ewads
 
-from ew.utils.user import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.transport import EwTransport
 from .backend.market import EwMarket
@@ -30,7 +29,7 @@ from .backend.player import EwPlayer
 from .backend.ads import EwAd
 from .backend.item import EwItem
 from .backend.dungeons import EwGamestate
-from .utils.combat import EwEnemy
+from .utils.combat import EwEnemy, EwUser
 from .backend.worldevent import get_void_connection_pois
 from .utils.frontend import EwResponseContainer
 

@@ -12,7 +12,7 @@ from .utils import frontend as fe_utils
 
 from . import cmd as ewcmd
 
-from ew.utils.user import EwUser
+from .utils.combat import EwUser
 from .backend.market import EwMarket
 from ew.utils.district import EwDistrict
 

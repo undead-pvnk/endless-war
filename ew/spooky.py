@@ -20,7 +20,7 @@ from .utils import frontend as fe_utils
 from . import move as ewmap
 from . import slimeoid as ewslimeoid
 
-from ew.utils.user import EwUser
+from .utils.combat import EwUser
 from .backend.market import EwMarket
 from ew.utils.slimeoid import EwSlimeoid
 from .backend.quadrants import EwQuadrant

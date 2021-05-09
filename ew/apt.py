@@ -34,7 +34,7 @@ from . import mutation as ewmutation
 from .backend.item import EwItem
 from ew.utils.district import EwDistrict
 from .backend.player import EwPlayer
-from ew.utils.user import EwUser
+from .utils.combat import EwUser
 from .backend.apt import EwApartment
 from .backend.market import EwMarket, EwStock
 from ew.utils.slimeoid import EwSlimeoid

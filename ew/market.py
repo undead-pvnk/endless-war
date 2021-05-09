@@ -11,7 +11,7 @@ from .backend import item as bknd_item
 from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
 
-from ew.utils.user import EwUser
+from .utils.combat import EwUser
 from .backend.player import EwPlayer
 from ew.utils.district import EwDistrict
 from .backend.dungeons import EwGamestate

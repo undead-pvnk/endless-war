@@ -6,7 +6,7 @@ from .static import poi as poi_static
 from .utils import frontend as fe_utils
 from .utils import hunting as hunt_utils
 
-from ew.utils.user import EwUser
+from .utils.combat import EwUser
 
 
 # Debug command. Could be used for events, perhaps?

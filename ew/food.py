@@ -18,7 +18,7 @@ from .utils import poi as poi_utils
 from .utils import loop as loop_utils
 from .utils import item as itm_utils
 
-from ew.utils.user import EwUser
+from .utils.combat import EwUser
 from .backend.player import EwPlayer
 from .backend.market import EwMarket, EwCompany, EwStock
 from .backend.item import EwItem

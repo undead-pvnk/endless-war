@@ -11,7 +11,7 @@ from .utils import frontend as fe_utils
 from .utils import district as dist_utils
 from . import move as ewmap
 
-from ew.utils.user import EwUser
+from .utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.transport import EwTransport
 from .utils.frontend import EwResponseContainer

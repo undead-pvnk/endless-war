@@ -3,7 +3,7 @@ import time
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
 
-from ew.utils.user import EwUser
+from .utils.combat import EwUser
 
 response_timer = 6 # How long does it take for a response item to send out its attacks
 afk_timer = 60 * 60 * 2 # 2 hours
