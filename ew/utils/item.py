@@ -205,30 +205,6 @@ def get_style_freshness_rating(user_data, dominant_style = None):
 	return response
 
 
-"""
-    Finds the amount of Slime Poudrins inside your inventory.
-"""
-def find_poudrin(id_user = None, id_server = None):
-
-    items = bknd_item.inventory(
-        id_user = id_user,
-        id_server = id_server,
-        item_type_filter = ewcfg.it_item
-    )
-
-    poudrins = []
-
-    for poudrin in items:
-        name = poudrin.get('name')
-        if name != "Slime Poudrin":
-            pass
-        else:
-            poudrins.append(poudrin)
-
-    poudrins_amount = len(poudrins)
-
-    return poudrins_amount
-
 def gen_item_props(item):
     item_props = {}
     if not hasattr(item, "item_type"):

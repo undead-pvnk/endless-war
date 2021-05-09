@@ -429,6 +429,34 @@ class EwOperationData:
 			bknd_core.databaseClose(conn_info)
 
 
+
+async def delete_all_enemies(cmd=None, query_suffix="", id_server_sent=""):
+	if cmd != None:
+		author = cmd.message.author
+
+		if not author.guild_permissions.administrator:
+			return
+
+		id_server = cmd.message.guild.id
+
+		bknd_core.execute_sql_query("DELETE FROM enemies WHERE id_server = {id_server}".format(
+			id_server=id_server
+		))
+
+		ewutils.logMsg("Deleted all enemies from database connected to server {}".format(id_server))
+
+	else:
+		id_server = id_server_sent
+
+		bknd_core.execute_sql_query("DELETE FROM enemies WHERE id_server = {} {}".format(
+			id_server,
+			query_suffix
+		))
+
+		ewutils.logMsg(
+			"Deleted all enemies from database connected to server {}. Query suffix was '{}'".format(id_server,
+																									 query_suffix))
+
 # Check if raidboss is ready to attack / be attacked
 def check_raidboss_countdown(enemy_data):
 	time_now = int(time.time())
