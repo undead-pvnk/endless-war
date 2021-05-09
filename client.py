@@ -38,6 +38,7 @@ import ew.backend.weather as bknd_weather
 import ew.backend.worldevent as bknd_worldevent
 
 import ew.utils.core as ewutils
+import ew.utils.item as itm_utils
 import ew.farm as ewfarm
 import ew.cmd as ewcmd
 import ew.casino as ewcasino
@@ -49,7 +50,7 @@ import ew.spooky as ewspooky
 import ew.kingpin as ewkingpin
 import ew.item as ewitem
 import ew.move as ewmap
-import ew.rolemgr as ewrolemgr
+import ew.utils.rolemgr as ewrolemgr
 import ew.cosmeticitem as ewcosmeticitem
 import ew.slimeoid as ewslimeoid
 import ew.district as ewdistrict
@@ -1844,7 +1845,7 @@ async def on_message(message):
 
 			item = items[random.randint(0, len(items) - 1)]
 
-			item_props = ewitem.gen_item_props(item)
+			item_props = itm_utils.gen_item_props(item)
 
 			item_id = bknd_item.item_create(
 				item_type = item.item_type,
@@ -1887,7 +1888,7 @@ async def on_message(message):
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createdye'):
 			item = static_items.dye_list[random.randint(0, len(ewcfg.dye_list) - 1)]
 
-			item_props = ewitem.gen_item_props(item)
+			item_props = itm_utils.gen_item_props(item)
 
 			bknd_item.item_create(
 				item_type = item.item_type,

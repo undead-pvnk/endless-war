@@ -8,10 +8,9 @@ from ..static import hunting as hunt_static
 from ..static import poi as poi_static
 from ..static import status as se_static
 from ..static import slimeoid as sl_static
-from ..utils import core as ewutils
+from ..utils import core as ewutils, rolemgr as ewrolemgr
 from ..utils import frontend as fe_utils
 from ..utils import hunting as hunt_utils
-from .. import rolemgr as ewrolemgr
 from .. import wep as ewwep
 from . import core as bknd_core
 from . import item as bknd_item

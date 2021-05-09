@@ -8,12 +8,11 @@ from ..static import poi as poi_static
 from ..backend import core as bknd_core
 from ..backend import item as bknd_item
 
-from .. import wep as ewwep
-from .. import item as ewitem
-from .. import hunting as ewhunting
-
 from . import core as ewutils
 from . import frontend as fe_utils
+from . import combat as cmbt_utils
+from . import item as itm_utils
+from . import hunting as hunt_utils
 
 from ..backend.user import EwUser
 from ..backend.player import EwPlayer
@@ -54,7 +53,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 			user_weapon = static_weapons.weapon_map.get(user_weapon_item.item_props.get("weapon_type"))
 
 		# apply defensive mods
-		slimes_damage_target = damage * ewwep.damage_mod_defend(
+		slimes_damage_target = damage * cmbt_utils.damage_mod_defend(
 			shootee_data = user_data,
 			shootee_mutations = mutations,
 			shootee_weapon = user_weapon,
@@ -125,7 +124,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 			# explode_damage = ewutils.slime_bylevel(enemy_data.level)
 
 			response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(enemy_data.display_name)
-			resp_cont.add_response_container(ewhunting.drop_enemy_loot(enemy_data, district_data))
+			resp_cont.add_response_container(hunt_utils.drop_enemy_loot(enemy_data, district_data))
 			resp_cont.add_channel_response(channel, response)
 
 			enemy_data.life_state = ewcfg.enemy_lifestate_dead
@@ -211,7 +210,7 @@ async def activate_trap_items(district, id_server, id_user):
 			side_effect = trap_item_data.item_props.get('side_effect')
 
 			if side_effect != None:
-				response += await ewitem.perform_prank_item_side_effect(side_effect, member=member)
+				response += await itm_utils.perform_prank_item_side_effect(side_effect, member=member)
 			
 			#calculate_gambit_exchange(pranker_data, pranked_data, trap_item_data, trap_used=True)
 		else:
@@ -236,18 +235,5 @@ async def activate_trap_items(district, id_server, id_user):
 	# 	response += "\n`-------------------------`"
 	# 	await send_message(client, prank_feed_channel, formatMessage(member, response))
 
-
-async def assign_status_effect(cmd = None, status_name = None, user_id = None, server_id = None):
-	if status_name is not None:
-		user_data = EwUser(id_server=server_id, id_user = user_id)
-		response = user_data.applyStatus(id_status=status_name, source = user_id, id_target = user_id)
-	else:
-		if not cmd.message.author.guild_permissions.administrator or cmd.mentions_count == 0:
-			return await fe_utils.fake_failed_command(cmd)
-		target = cmd.mentions[0]
-		status_name = ewutils.flattenTokenListToString(cmd.tokens[2:])
-		user_data = EwUser(member=target)
-		response = user_data.applyStatus(id_status=status_name, source=user_data.id_user, id_target=user_data.id_user)
-	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 

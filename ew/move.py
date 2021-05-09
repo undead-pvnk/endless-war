@@ -13,10 +13,9 @@ from .static import poi as poi_static
 from .backend import core as bknd_core
 from .backend import ads as bknd_ads
 
-from .utils import core as ewutils
+from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
 from .utils import event as evt_utils
-from . import rolemgr as ewrolemgr
 from . import apt as ewapt
 from . import ads as ewads
 
@@ -532,23 +531,6 @@ def inaccessible(user_data = None, poi = None):
         return True
     else:
         return False
-
-def retrieve_locked_districts(id_server):
-    locked_districts_list = []
-
-    locked_districts = bknd_core.execute_sql_query(
-        "SELECT {district} FROM global_locks WHERE id_server = %s AND {locked_status} = %s".format(
-            district=ewcfg.col_district,
-            locked_status=ewcfg.col_locked_status
-        ), (
-            id_server,
-            'true'
-        ))
-    for district in locked_districts:
-        locked_districts_list.append(district[0])
-
-    return locked_districts_list
-
 
 
 """

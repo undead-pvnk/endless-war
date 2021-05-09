@@ -17,6 +17,7 @@ from .utils import core as ewutils
 from .utils import frontend as fe_utils
 from .utils import poi as poi_utils
 from .utils import loop as loop_utils
+from .utils import item as itm_utils
 
 from .backend.user import EwUser
 from .backend.player import EwPlayer
@@ -423,7 +424,7 @@ async def order(cmd):
 							response = ewcfg.str_generic_inv_limit.format(item_type)
 							return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-					item_props = ewitem.gen_item_props(item)
+					item_props = itm_utils.gen_item_props(item)
 
 					customtext = cmd.message.content[(len(cmd.tokens[0]) + len(cmd.tokens[1]) + 2):]
 

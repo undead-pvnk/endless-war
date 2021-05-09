@@ -14,11 +14,11 @@ from .backend import core as bknd_core
 from .backend import item as bknd_item
 
 from . import cmd as ewcmd
-from .utils import core as ewutils
+from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
 from .utils import event as evt_utils
+from .utils import item as itm_utils
 from . import move as ewmap
-from . import rolemgr as ewrolemgr
 from . import market as ewmarket
 from . import item as ewitem
 from . import farm as ewfarm
@@ -222,7 +222,7 @@ async def signlease(cmd):
 
 			for value in ewcfg.fuck_energies:
 				item = static_food.food_map.get(value)
-				item_props = ewitem.gen_item_props(item)
+				item_props = itm_utils.gen_item_props(item)
 				id_item = bknd_item.item_create(
 					item_type=ewcfg.it_food,
 					id_user= '{}{}'.format(cmd.message.author.id, 'fridge'),
@@ -1448,7 +1448,7 @@ async def trickortreat(cmd = None):
 				ewutils.active_target_map[user_data.id_user] = ""
 				
 				item = random.choice(static_food.trickortreat_results)
-				item_props = ewitem.gen_item_props(item)
+				item_props = itm_utils.gen_item_props(item)
 				if item is not None:
 					bknd_item.item_create(
 						item_type=item.item_type,
@@ -1549,7 +1549,7 @@ async def trickortreat(cmd = None):
 
 			if treat:
 				item = random.choice(class_based_treats)
-				item_props = ewitem.gen_item_props(item)
+				item_props = itm_utils.gen_item_props(item)
 				if item is not None:
 					bknd_item.item_create(
 						item_type=item.item_type,

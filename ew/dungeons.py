@@ -4,9 +4,8 @@ import random
 from .static import cfg as ewcfg
 from .static import poi as poi_static
 
-from .utils import core as ewutils
+from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
-from . import rolemgr as ewrolemgr
 
 from .backend.user import EwUser
 

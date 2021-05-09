@@ -12,14 +12,14 @@ from ..static import status as se_static
 
 from ..backend import core as bknd_core
 from ..backend import item as bknd_item
+from ..backend import hunting as bknd_hunt
 
 from .. import stats as ewstats
-from .. import item as ewitem
-from .. import hunting as ewhunting
-from .. import rolemgr as ewrolemgr
 
-from . import core as ewutils
+from . import core as ewutils, rolemgr as ewrolemgr
 from . import frontend as fe_utils
+from . import item as itm_utils
+from . import hunting as hunt_utils
 
 from ..backend.user import EwUser
 from ..backend.district import EwDistrict
@@ -341,7 +341,7 @@ async def enemyBleedSlimes(id_server = None):
 					total_bled += slimes_to_bleed
 
 					if enemy_data.slimes <= 0:
-						ewhunting.delete_enemy(enemy_data)
+						bknd_hunt.delete_enemy(enemy_data)
 
 			await resp_cont.post()
 			conn.commit()
@@ -559,7 +559,7 @@ async def enemyBurnSlimes(id_server):
 				ewstats.change_stat(user = killer_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_to_burn)
 
 			if enemy_data.slimes - slimes_to_burn <= 0:
-				ewhunting.delete_enemy(enemy_data)
+				bknd_hunt.delete_enemy(enemy_data)
 
 				if used_status_id == ewcfg.status_burning_id:
 					response = "{} has burned to death.".format(enemy_data.display_name)
@@ -572,7 +572,7 @@ async def enemyBurnSlimes(id_server):
 				resp_cont.add_channel_response(poi_static.id_to_poi.get(enemy_data.poi).channel, response)
 				
 				district_data = EwDistrict(id_server = id_server, district = enemy_data.poi)
-				resp_cont.add_response_container(ewhunting.drop_enemy_loot(enemy_data, district_data))
+				resp_cont.add_response_container(hunt_utils.drop_enemy_loot(enemy_data, district_data))
 			else:
 				enemy_data.change_slimes(n = -slimes_to_burn, source=ewcfg.source_damage)
 				enemy_data.persist()
@@ -665,7 +665,7 @@ async def spawn_enemies(id_server = None):
 			if random.randrange(3) < 2:
 				weathertype = ewcfg.enemy_weathertype_rainresist
 		
-		resp_cont = ewhunting.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype)
+		resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype)
 
 		await resp_cont.post()
 
@@ -694,17 +694,17 @@ async def enemy_action_tick_loop(id_server):
 		await asyncio.sleep(interval)
 		# resp_cont = EwResponseContainer(id_server=id_server)
 		if ewcfg.gvs_active:
-			await ewhunting.enemy_perform_action_gvs(id_server)
+			await hunt_utils.enemy_perform_action_gvs(id_server)
 
 		else:
-			await ewhunting.enemy_perform_action(id_server)
+			await hunt_utils.enemy_perform_action(id_server)
 
 async def gvs_gamestate_tick_loop(id_server):
 	interval = ewcfg.gvs_gamestate_tick_length
 	# Causes various events to occur during a Garden or Graveyard ops in Gankers Vs. Shamblers
 	while not ewutils.TERMINATE:
 		await asyncio.sleep(interval)
-		await ewhunting.gvs_update_gamestate(id_server)
+		await hunt_utils.gvs_update_gamestate(id_server)
 
 
 async def spawn_prank_items_tick_loop(id_server):
@@ -786,7 +786,7 @@ async def spawn_prank_items(id_server):
 		if pie_or_prank == 0:
 			swilldermuk_food_item = random.choice(static_items.swilldermuk_food)
 
-			item_props = ewitem.gen_item_props(swilldermuk_food_item)
+			item_props = itm_utils.gen_item_props(swilldermuk_food_item)
 
 			swilldermuk_food_item_id = bknd_item.item_create(
 				item_type=swilldermuk_food_item.item_type,
@@ -812,7 +812,7 @@ async def spawn_prank_items(id_server):
 			#Debug
 			#prank_item = static_items.prank_items_heinous[1] # Chinese Finger Trap
 		
-			item_props = ewitem.gen_item_props(prank_item)
+			item_props = itm_utils.gen_item_props(prank_item)
 		
 			prank_item_id = bknd_item.item_create(
 				item_type=prank_item.item_type,

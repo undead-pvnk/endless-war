@@ -8,8 +8,7 @@ from .static import poi as poi_static
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 
-from . import rolemgr as ewrolemgr
-from .utils import core as ewutils
+from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
 
 from .backend.user import EwUser

@@ -10,9 +10,9 @@ from .static import poi as poi_static
 from .backend import item as bknd_item
 
 from . import item as ewitem
-from .utils import core as ewutils
+from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
-from . import rolemgr as ewrolemgr
+from .utils import item as itm_utils
 from . import move as ewmap
 
 from .backend.user import EwUser
@@ -193,7 +193,7 @@ async def exalt(cmd):
 			pass
  
 	medallion = medallion_results[0]
-	medallion_props = ewitem.gen_item_props(medallion)
+	medallion_props = itm_utils.gen_item_props(medallion)
 
 	medallion_id = bknd_item.item_create(
 		item_type=medallion.item_type,
@@ -221,7 +221,7 @@ async def exalt(cmd):
 # 				pass
 # 
 # 		mask = mask_results[0]
-# 		mask_props = ewitem.gen_item_props(mask)
+# 		mask_props = itm_utils.gen_item_props(mask)
 # 
 # 		mask_id = bknd_item.item_create(
 # 			item_type=mask.item_type,
@@ -244,7 +244,7 @@ async def exalt(cmd):
 # 				pass
 # 
 # 		sword = sword_results[0]
-# 		sword_props = ewitem.gen_item_props(sword)
+# 		sword_props = itm_utils.gen_item_props(sword)
 # 
 # 		sword_id = bknd_item.item_create(
 # 			item_type=sword.item_type,

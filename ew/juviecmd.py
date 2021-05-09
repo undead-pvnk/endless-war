@@ -15,12 +15,11 @@ from .static import poi as poi_static
 from .backend import worldevent as bknd_worldevent
 from .backend import item as bknd_item
 
-from .utils import core as ewutils
+from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
 from .utils import poi as poi_utils
 from .utils import item as itm_utils
 from . import item as ewitem
-from . import rolemgr as ewrolemgr
 from . import stats as ewstats
 
 from .backend.item import EwItem
@@ -396,7 +395,7 @@ async def mine(cmd):
 
 				if bknd_item.check_inv_capacity(user_data = user_data, item_type = item.item_type):
 
-					item_props = ewitem.gen_item_props(item)
+					item_props = itm_utils.gen_item_props(item)
 
 					for creation in range(unearthed_item_amount):
 						bknd_item.item_create(
@@ -877,7 +876,7 @@ async def crush(cmd):
 			new_item_type = ewcfg.it_item
 			if new_item != None:
 				new_name = new_item.str_name
-				new_item_props = ewitem.gen_item_props(new_item)
+				new_item_props = itm_utils.gen_item_props(new_item)
 			else:
 				ewutils.logMsg("ERROR: !crunch failed to retrieve proper cosmetic material for crop {}.".format(item_data.item_props.get("id_food")))
 				new_name = None
@@ -909,7 +908,7 @@ async def crush(cmd):
 				while gristcount < gristnum:
 
 					grist = static_items.item_map.get(ewcfg.item_id_doublehalloweengrist)
-					grist_props = ewitem.gen_item_props(grist)
+					grist_props = itm_utils.gen_item_props(grist)
 
 					bknd_item.item_create(
 						item_type=grist.item_type,

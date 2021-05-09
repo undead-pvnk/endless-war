@@ -13,11 +13,11 @@ from .static import status as se_static
 
 from .backend import item as bknd_item
 
-from .utils import core as ewutils
+from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
 from .utils import poi as poi_utils
+from .utils import item as itm_utils
 from . import item as ewitem
-from . import rolemgr as ewrolemgr
 
 from .backend.market import EwMarket
 from .backend.user import EwUser
@@ -525,7 +525,7 @@ async def award_fish(fisher, cmd, user_data):
 			#else:
 			unearthed_item_amount = (random.randrange(5) + 8) # anywhere from 8-12 drops
 
-			item_props = ewitem.gen_item_props(item)
+			item_props = itm_utils.gen_item_props(item)
 
 			# Ensure item limits are enforced, including food since this isn't the fish section
 			if bknd_item.check_inv_capacity(user_data = actual_fisherman_data, item_type = item.item_type):
@@ -1045,7 +1045,7 @@ async def barter(cmd):
 							response += "\n\n"
 
 					else:
-						item_props = ewitem.gen_item_props(item)	
+						item_props = itm_utils.gen_item_props(item)	
 
 						bknd_item.item_create(
 							item_type = item.item_type,
@@ -1185,7 +1185,7 @@ async def barter_all(cmd):
 
 		if len(offer_items):
 			for item in offer_items:
-				item_props = ewitem.gen_item_props(item)	
+				item_props = itm_utils.gen_item_props(item)	
 
 				bknd_item.item_create(
 					item_type = item.item_type,

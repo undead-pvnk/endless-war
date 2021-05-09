@@ -7,9 +7,8 @@ from .static import cfg as ewcfg
 from .static import poi as poi_static
 
 from . import stats as ewstats
-from .utils import core as ewutils
+from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
-from . import rolemgr as ewrolemgr
 
 from .backend.user import EwUser
 from .backend.district import EwDistrict

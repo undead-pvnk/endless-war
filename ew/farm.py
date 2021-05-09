@@ -10,12 +10,10 @@ from .static import farm as farm_static
 
 from .backend import item as bknd_item
 
-from . import item as ewitem
-from .utils import core as ewutils
+from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
 from .utils import item as itm_utils
 from .utils import poi as poi_utils
-from . import rolemgr as ewrolemgr
 
 from .backend.user import EwUser
 from .backend.market import EwMarket
@@ -138,7 +136,7 @@ async def reap(cmd):
 						# If there are multiple possible products, randomly select one.
 						item = random.choice(vendors.mine_results)
 
-						item_props = ewitem.gen_item_props(item)
+						item_props = itm_utils.gen_item_props(item)
 
 						if item is not None:
 
@@ -160,7 +158,7 @@ async def reap(cmd):
 					if vegetable is None:
 						vegetable = random.choice(static_food.vegetable_list)
 
-					item_props = ewitem.gen_item_props(vegetable)
+					item_props = itm_utils.gen_item_props(vegetable)
 
 					#  Create and give a bushel of whatever crop was grown, unless it's a metal crop.
 					if item_props.get('id_food') in [ewcfg.item_id_metallicaps, ewcfg.item_id_steelbeans, ewcfg.item_id_aushucks]:
@@ -409,7 +407,7 @@ async def mill(cmd):
 		if len(items) > 0:
 			item = random.choice(items)
 
-			item_props = ewitem.gen_item_props(item)
+			item_props = itm_utils.gen_item_props(item)
 			
 			bknd_item.item_create(
 				item_type = item.item_type,

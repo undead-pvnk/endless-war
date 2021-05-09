@@ -1,17 +1,25 @@
 
 import collections
+import time
+import random
 
 from ..static import cfg as ewcfg
 from ..static import weapons as static_weapons
 from ..static import hue as hue_static
+from ..static import items as static_items
 
 from ..backend import item as bknd_item
 
-from .. import item as ewitem
+from . import core as ewutils
+from . import frontend as fe_utils
+
+from ..backend.user import EwUser
+
+
 
 def get_fingernail_item(cmd):
 	item = static_weapons.weapon_map.get(ewcfg.weapon_id_fingernails)
-	item_props = ewitem.gen_item_props(item)
+	item_props = gen_item_props(item)
 	id_item = bknd_item.item_create(
 		item_type=ewcfg.it_weapon,
 		id_user=cmd.message.author.id,
@@ -139,4 +147,222 @@ def get_style_freshness_rating(user_data, dominant_style = None):
 				response += " It is almost kowai how kawaii you are right now. Your legions of fans slobber all over each new post on Instragrime and leave very strange comments. You’re stopped for autographs in public now, and there hasn’t been a selfie taken with you that hasn’t featured a hover hand."
 
 	return response
+
+
+"""
+    Finds the amount of Slime Poudrins inside your inventory.
+"""
+def find_poudrin(id_user = None, id_server = None):
+
+    items = bknd_item.inventory(
+        id_user = id_user,
+        id_server = id_server,
+        item_type_filter = ewcfg.it_item
+    )
+
+    poudrins = []
+
+    for poudrin in items:
+        name = poudrin.get('name')
+        if name != "Slime Poudrin":
+            pass
+        else:
+            poudrins.append(poudrin)
+
+    poudrins_amount = len(poudrins)
+
+    return poudrins_amount
+
+def gen_item_props(item):
+    item_props = {}
+    if not hasattr(item, "item_type"):
+        return item_props
+    if item.acquisition == ewcfg.acquisition_fishing and item.item_type == ewcfg.it_food:
+        item_props = {
+            'id_food': item.id_fish,
+            'food_name': item.str_name,
+            'food_desc': item.str_desc,
+            'recover_hunger': 20,
+            'str_eat': ewcfg.str_eat_raw_material.format(item.str_name),
+            'time_expir': int(time.time()) + ewcfg.std_food_expir,
+            'time_fridged': 0,
+            'perishable': item.perishable,
+            'acquisition': ewcfg.acquisition_fishing,
+        }
+    elif item.item_type == ewcfg.it_food:
+        item_props = {
+            'id_food': item.id_food,
+            'food_name': item.str_name,
+            'food_desc': item.str_desc,
+            'recover_hunger': item.recover_hunger,
+            'inebriation': item.inebriation,
+            'str_eat': item.str_eat,
+            'time_expir': int(time.time()) + item.time_expir,
+            'time_fridged': item.time_fridged,
+            'perishable': item.perishable,
+        }
+    elif item.item_type == ewcfg.it_item:
+        item_props = {
+            'id_item': item.id_item,
+            'context': item.context,
+            'item_name': item.str_name,
+            'item_desc': item.str_desc,
+            'ingredients': item.ingredients if type(item.ingredients) == str else item.ingredients[0],
+            'acquisition': item.acquisition,
+        }
+        if item.context == ewcfg.context_slimeoidfood:
+            item_props["increase"] = item.increase
+            item_props["decrease"] = item.decrease
+        if item.context == ewcfg.context_prankitem:
+            item_props["prank_type"] = item.prank_type
+            item_props["prank_desc"] = item.prank_desc
+            item_props["rarity"] = item.rarity
+            item_props["gambit"] = item.gambit
+            # Response items
+            item_props["response_command"] = item.response_command
+            item_props["response_desc_1"] = item.response_desc_1
+            item_props["response_desc_2"] = item.response_desc_2
+            item_props["response_desc_3"] = item.response_desc_3
+            item_props["response_desc_4"] = item.response_desc_4
+            # Trap items
+            item_props["trap_chance"] = item.trap_chance
+            item_props["trap_stored_credence"] = item.trap_stored_credence
+            item_props["trap_user_id"] = item.trap_user_id
+            # Some prank items have nifty side effects
+            item_props["side_effect"] = item.side_effect
+        if item.context == ewcfg.context_seedpacket:
+            item_props["cooldown"] = item.cooldown
+            item_props["cost"] = item.cost
+            item_props["time_nextuse"] = item.time_nextuse
+            item_props["enemytype"] = item.enemytype
+        if item.context == ewcfg.context_tombstone:
+            item_props["brainpower"] = item.brainpower
+            item_props["cost"] = item.cost
+            item_props["stock"] = item.stock
+            item_props["enemytype"] = item.enemytype
+
+        try:
+            item_props["durability"] = item.durability
+        except:
+            pass
+
+
+    elif item.item_type == ewcfg.it_weapon:
+        captcha = ""
+        if ewcfg.weapon_class_captcha in item.classes:
+            captcha = ewutils.generate_captcha(length = item.captcha_length)
+
+        item_props = {
+            "weapon_type": item.id_weapon,
+            "weapon_name": "",
+            "weapon_desc": item.str_description,
+            "married": "",
+            "ammo": item.clip_size,
+            "captcha": captcha,
+            "is_tool" : item.is_tool
+        }
+
+    elif item.item_type == ewcfg.it_cosmetic:
+        item_props = {
+            'id_cosmetic': item.id_cosmetic,
+            'cosmetic_name': item.str_name,
+            'cosmetic_desc': item.str_desc,
+            'str_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
+            'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
+            'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
+            'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
+            'attack': item.stats[ewcfg.stat_attack] if ewcfg.stat_attack in item.stats.keys() else 0,
+            'defense': item.stats[ewcfg.stat_defense] if ewcfg.stat_defense in item.stats.keys() else 0,
+            'speed': item.stats[ewcfg.stat_speed] if ewcfg.stat_speed in item.stats.keys() else 0,
+            'ability': item.ability if item.ability else None,
+            'durability': item.durability if item.durability else ewcfg.base_durability,
+            'size': item.size if item.size else 1,
+            'fashion_style': item.style if item.style else ewcfg.style_cool,
+            'freshness': item.freshness if item.freshness else 5,
+            'adorned': 'false',
+            'hue': ""
+        }
+    elif item.item_type == ewcfg.it_furniture:
+        item_props = {
+            'id_furniture': item.id_furniture,
+            'furniture_name': item.str_name,
+            'furniture_desc': item.str_desc,
+            'rarity': item.rarity,
+            'furniture_place_desc': item.furniture_place_desc,
+            'furniture_look_desc': item.furniture_look_desc,
+            'acquisition': item.acquisition
+        }
+
+    return item_props
+
+# SWILLDERMUK
+async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
+    response = ""
+
+    if side_effect == "bungisbeam_effect":
+
+        target_member = cmd.mentions[0]
+        client = cmd.client
+
+        current_nickname = target_member.display_name
+        new_nickname = current_nickname + ' (Bungis)'
+
+        if len(new_nickname) > 32:
+            # new nickname is too long, cut out some parts of original nickname
+            new_nickname = current_nickname[:20]
+            new_nickname += '... (Bungis)'
+
+        await target_member.edit(nick=new_nickname)
+
+        response = "\n\nYou are now known as {}!".format(target_member.display_name)
+
+    elif side_effect == "cumjar_effect":
+
+        target_member = cmd.mentions[0]
+        target_data = EwUser(member=target_member)
+
+        if random.randrange(2) == 0:
+
+            figurine_id = random.choice(static_items.furniture_pony)
+
+            #print(figurine_id)
+            item = static_items.furniture_map.get(figurine_id)
+
+            item_props = gen_item_props(item)
+
+            #print(item_props)
+
+            bknd_item.item_create(
+                id_user=target_data.id_user,
+                id_server=target_data.id_server,
+                item_type=ewcfg.it_furniture,
+                item_props=item_props,
+            )
+
+            response = "\n\n*{}*: What's this? It looks like a pony figurine was inside the Cum Jar all along! You stash it in your inventory quickly.".format(target_member.display_name)
+
+    elif side_effect == "bensaintsign_effect":
+
+        target_member = member
+        client = ewutils.get_client()
+
+        new_nickname = 'Ben Saint'
+
+        await target_member.edit(nick=new_nickname)
+
+        response = "\n\nYou are now Ben Saint.".format(target_member.display_name)
+
+    elif side_effect == "bodynotifier_effect":
+        target_member = cmd.mentions[0]
+
+        direct_message = "You are now manually breathing.\nYou are now manually blinking.\nYour tounge is now uncomfortable inside your mouth.\nYou just lost THE GAME."
+        try:
+            await fe_utils.send_message(cmd.client, target_member, direct_message)
+        except:
+            await fe_utils.send_message(cmd.client, fe_utils.get_channel(cmd.guild, cmd.message.channel), fe_utils.formatMessage(target_member, direct_message))
+
+    return response
+
+
+
 

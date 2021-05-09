@@ -12,6 +12,7 @@ from .backend import item as bknd_item
 from . import item as ewitem
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
+from .utils import item as itm_utils
 
 from .backend.user import EwUser
 from .backend.item import EwItem
@@ -113,7 +114,7 @@ async def smelt(cmd):
 
 					item = items[random.randint(0, len(items) - 1)]
 
-					item_props = ewitem.gen_item_props(item)
+					item_props = itm_utils.gen_item_props(item)
 
 					bknd_item.item_create(
 						item_type = item.item_type,
@@ -160,7 +161,7 @@ async def smelt(cmd):
 						response = "You can't carry any more {}s.".format(item.item_type)
 						return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-					item_props = ewitem.gen_item_props(item)
+					item_props = itm_utils.gen_item_props(item)
 
 					newitem_id = bknd_item.item_create(
 						item_type = item.item_type,
@@ -321,7 +322,7 @@ def unwrap(id_user = None, id_server = None, item = None):
 		response += " There’s a single holographic card poking out of the swathes of repeats and late edition cards..."
 		response += " ***...What’s this?! It’s the legendary card {}!! If you’re able to collect the remaining pieces of Slimexodia, you might be able to smelt something incomprehensibly powerful!!***".format(slimexodia_item.str_name)
 
-		item_props = ewitem.gen_item_props(slimexodia_item)
+		item_props = itm_utils.gen_item_props(slimexodia_item)
 
 		bknd_item.item_create(
 			item_type = slimexodia_item.item_type,
@@ -346,7 +347,7 @@ def popcapsule(id_user = None, id_server = None, item = None):
 	else:
 		prank_item = random.choice(static_items.prank_items_forbidden)
 
-	item_props = ewitem.gen_item_props(prank_item)
+	item_props = itm_utils.gen_item_props(prank_item)
 
 	prank_item_id = bknd_item.item_create(
 		item_type=prank_item.item_type,
