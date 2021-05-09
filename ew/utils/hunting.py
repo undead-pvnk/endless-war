@@ -23,8 +23,6 @@ from . import frontend as fe_utils
 from . import rolemgr as ewrolemgr
 from . import combat as cmbt_utils
 
-from .. import wep as ewwep
-
 from ..model.hunting import EwEnemyEffectContainer
 from .user import EwUser
 from .district import EwDistrict
@@ -171,13 +169,13 @@ class EwEnemy(EwEnemyBase):
 
 			# Weaponized flavor text.
 			# randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
-			hitzone = ewwep.get_hitzone()
+			hitzone = cmbt_utils.get_hitzone()
 			randombodypart = hitzone.name
 			if random.random() < 0.5:
 				randombodypart = random.choice(hitzone.aliases)
 
-			shooter_status_mods = ewwep.get_shooter_status_mods(enemy_data, target_data, hitzone)
-			shootee_status_mods = ewwep.get_shootee_status_mods(target_data, enemy_data, hitzone)
+			shooter_status_mods = cmbt_utils.get_shooter_status_mods(enemy_data, target_data, hitzone)
+			shootee_status_mods = cmbt_utils.get_shootee_status_mods(target_data, enemy_data, hitzone)
 
 			hit_chance_mod += round(shooter_status_mods['hit_chance'] + shootee_status_mods['hit_chance'], 2)
 			crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)

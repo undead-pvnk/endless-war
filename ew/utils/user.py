@@ -5,11 +5,11 @@ from ew.backend.user import EwUserBase
 from ew.utils import core as ewutils, rolemgr as ewrolemgr, district as bknd_district, stats as ewstats
 from ew.utils import frontend as fe_utils
 from ew.utils import event as evt_utils
+from ew.utils import item as itm_utils
 from ew.static import cfg as ewcfg
 from ew.static import weapons as static_weapons
 from ew.static import poi as poi_static
 from ew.static import mutations as static_mutations
-from ew import item as ewitem
 from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
 from ew.backend import status as bknd_status
@@ -216,13 +216,13 @@ class EwUser(EwUserBase):
 					food_fraction = 2
 					cosmetic_fraction = 2
 
-				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_item, fraction = item_fraction, rigor=rigor) # Drop a random fraction of your items on the ground.
-				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_food, fraction = food_fraction, rigor=rigor) # Drop a random fraction of your food on the ground.
+				itm_utils.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_item, fraction = item_fraction, rigor=rigor) # Drop a random fraction of your items on the ground.
+				itm_utils.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_food, fraction = food_fraction, rigor=rigor) # Drop a random fraction of your food on the ground.
 
-				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_cosmetic, fraction = cosmetic_fraction, rigor=rigor) # Drop a random fraction of your unadorned cosmetics on the ground.
+				itm_utils.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_cosmetic, fraction = cosmetic_fraction, rigor=rigor) # Drop a random fraction of your unadorned cosmetics on the ground.
 				bknd_item.item_dedorn_cosmetics(id_server = self.id_server, id_user = self.id_user) # Unadorn all of your adorned hats.
 
-				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_weapon, fraction = 1, rigor=rigor) # Drop random fraction of your unequipped weapons on the ground.
+				itm_utils.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_weapon, fraction = 1, rigor=rigor) # Drop random fraction of your unequipped weapons on the ground.
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_max_onrevive)
 
 			try:

@@ -15,7 +15,62 @@ from . import core as ewutils, stats as ewstats
 from . import frontend as fe_utils
 
 from ..backend.user import EwUserBase as EwUser
+from ..backend.item import EwItem
 
+
+"""
+    Drop some of a player's non-soulbound items into their district.
+"""
+def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fraction = None, rigor = False):
+    #try:
+    user_data = EwUser(id_server = id_server, id_user = id_user)
+    items = bknd_item.inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
+    mutations = user_data.get_mutations()
+
+    drop_candidates = []
+    #safe_items = [ewcfg.item_id_gameguide]
+
+    # Filter out Soulbound items.
+    for item in items:
+        item_obj = EwItem(id_item = item.get('id_item'))
+        if item_obj.item_props.get('context') in ["corpse", "droppable"]:
+            bknd_item.give_item(id_user=user_data.poi, id_server=id_server, id_item=item_obj.id_item)
+        if item.get('soulbound') == False and not (rigor == True and item_obj.item_props.get('preserved') ==  user_data.id_user) and item_obj.item_props.get('context') != 'gellphone':
+            drop_candidates.append(item)
+
+
+    filtered_items = []
+
+    if item_type_filter == ewcfg.it_item or item_type_filter == ewcfg.it_food:
+        filtered_items = drop_candidates
+    if item_type_filter == ewcfg.it_cosmetic:
+        for item in drop_candidates:
+            cosmetic_id = item.get('id_item')
+            cosmetic_item = EwItem(id_item = cosmetic_id)
+            if cosmetic_item.item_props.get('adorned') != "true" and cosmetic_item.item_props.get('slimeoid') != "true":
+                filtered_items.append(item)
+
+    if item_type_filter == ewcfg.it_weapon:
+        for item in drop_candidates:
+            if item.get('id_item') != user_data.weapon and item.get('id_item') != user_data.sidearm:
+                filtered_items.append(item)
+            else:
+                pass
+
+    number_of_filtered_items = len(filtered_items)
+
+    number_of_items_to_drop = int(number_of_filtered_items / fraction)
+
+    if number_of_items_to_drop >= 2:
+        random.shuffle(filtered_items)
+        for drop in range(number_of_items_to_drop):
+            for item in filtered_items:
+                id_item = item.get('id_item')
+                bknd_item.give_item(id_user = user_data.poi, id_server = id_server, id_item = id_item)
+                filtered_items.pop(0)
+                break
+    #except:
+    #	ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
 
 
 def get_fingernail_item(cmd):

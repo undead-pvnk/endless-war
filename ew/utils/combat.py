@@ -2,11 +2,113 @@ import math
 
 from ..static import cfg as ewcfg
 from ..static import weapons as static_weapons
+from ..static import status as se_static
 
 from . import core as ewutils
 
 from ..backend.item import EwItem
+from ..backend.status import EwStatusEffect, EwEnemyStatusEffect
+from ..backend.user import EwUserBase as EwUser
 
+def get_hitzone(injury_map = None):
+	if injury_map == None:
+		injury_map = ewcfg.injury_weights
+
+	injury = ewutils.weightedChoice(injury_map)
+
+	hitzone = se_static.hitzone_map.get(injury)
+
+	return hitzone
+
+
+# Returns the total modifier of all statuses of a certain type and target of a given player
+def get_shooter_status_mods(user_data = None, shootee_data = None, hitzone = None):
+	mods = {
+		'dmg': 0,
+		'crit': 0,
+		'hit_chance': 0
+	}
+
+	user_statuses = user_data.getStatusEffects()
+
+	for status in user_statuses:
+		status_flavor = se_static.status_effects_def_map.get(status)
+
+		# check target for targeted status effects
+		if status in [ewcfg.status_taunted_id, ewcfg.status_aiming_id, ewcfg.status_evasive_id]:
+			if user_data.combatant_type == "player":
+				status_data = EwStatusEffect(id_status = status, user_data = user_data)
+			else:
+				status_data = EwEnemyStatusEffect(id_status = status, enemy_data = user_data)
+
+			if status_data.id_target != -1:
+				if status == ewcfg.status_taunted_id:
+					if shootee_data.combatant_type == ewcfg.combatant_type_player and shootee_data.id_user == status_data.id_target:
+						continue
+					elif shootee_data.combatant_type == ewcfg.combatant_type_enemy and shootee_data.id_enemy == status_data.id_target:
+						continue
+				elif status == ewcfg.status_aiming_id:
+					if shootee_data.combatant_type == ewcfg.combatant_type_player and shootee_data.id_user != status_data.id_target:
+						continue
+					elif shootee_data.combatant_type == ewcfg.combatant_type_enemy and shootee_data.id_enemy != status_data.id_target:
+						continue
+
+		if status_flavor is not None:
+			if status == ewcfg.status_taunted_id:
+				# taunting has decreased effectiveness the lower the taunter's level is compared to the tauntee
+				taunter = EwUser(id_user=status_data.source, id_server=user_data.id_server)
+
+				if taunter.slimelevel < user_data.slimelevel:
+					mods['hit_chance'] += round(status_flavor.hit_chance_mod_self / (user_data.slimelevel / taunter.slimelevel), 2)
+				else:
+					mods['hit_chance'] += status_flavor.hit_chance_mod_self
+
+			else:
+				mods['hit_chance'] += status_flavor.hit_chance_mod_self
+			mods['crit'] += status_flavor.crit_mod_self
+
+			mods['dmg'] += status_flavor.dmg_mod_self
+
+	return mods
+
+# Returns the total modifier of all statuses of a certain type and target of a given player
+def get_shootee_status_mods(user_data = None, shooter_data = None, hitzone = None):
+
+	mods = {
+		'dmg': 0,
+		'crit': 0,
+		'hit_chance': 0
+	}
+
+	user_statuses = user_data.getStatusEffects()
+	for status in user_statuses:
+		status_flavor = se_static.status_effects_def_map.get(status)
+
+		# check target for targeted status effects
+		if status in [ewcfg.status_evasive_id]:
+			if user_data.combatant_type == "player":
+				status_data = EwStatusEffect(id_status = status, user_data = user_data)
+			else:
+				status_data = EwEnemyStatusEffect(id_status = status, enemy_data = user_data)
+
+			if status_data.id_target != -1:
+				if shooter_data.id_user != status_data.id_target:
+					continue
+
+		if status_flavor is not None:
+
+			mods['hit_chance'] += status_flavor.hit_chance_mod
+			mods['crit'] += status_flavor.crit_mod
+			mods['dmg'] += status_flavor.dmg_mod
+
+	#apply trauma mods
+	#if user_data.combatant_type == 'player':
+	#	trauma = se_static.trauma_map.get(user_data.trauma)
+
+	#	if trauma != None and trauma.trauma_class == ewcfg.trauma_class_accuracy:
+	#		mods['miss'] -= 0.2 * user_data.degradation / 100
+
+	return mods
 
 def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 	damage_mod = 1
