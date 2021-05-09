@@ -15,7 +15,7 @@ from .utils import frontend as fe_utils
 from .utils import item as itm_utils
 from . import move as ewmap
 
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 
 """
 	Release the specified player from their commitment to their faction.

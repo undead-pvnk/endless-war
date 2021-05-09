@@ -7,7 +7,7 @@ from .utils import core as ewutils
 from .utils import frontend as fe_utils
 
 from .backend.item import EwItem
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 
 """allow a juvie to join your gang"""
 async def vouch(cmd):

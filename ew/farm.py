@@ -15,11 +15,11 @@ from .utils import frontend as fe_utils
 from .utils import item as itm_utils
 from .utils import poi as poi_utils
 
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 from .backend.market import EwMarket
 from .backend.item import EwItem
-from .backend.slimeoid import EwSlimeoid
-from .backend.district import EwDistrict
+from ew.utils.slimeoid import EwSlimeoid
+from ew.utils.district import EwDistrict
 from .backend.farm import EwFarm
 
 

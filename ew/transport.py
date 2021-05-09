@@ -11,9 +11,9 @@ from .utils import frontend as fe_utils
 from .utils import event as evt_utils
 from . import move as ewmap
 
-from .backend.user import EwUser
-from .backend.district import EwDistrict
-from .backend.transport import EwTransport
+from ew.utils.user import EwUser
+from ew.utils.district import EwDistrict
+from ew.utils.transport import EwTransport
 from .utils.frontend import EwResponseContainer
 
 """ Starts movement of all transports. Called once at client startup """

@@ -13,7 +13,7 @@ from ..backend import core as bknd_core
 
 from . import core as ewutils, rolemgr as ewrolemgr
 
-from ..backend.user import EwUser
+from ew.utils.user import EwUser
 from ..backend.player import EwPlayer
 from ..backend.hunting import EwEnemy
 from ..backend.item import EwItem

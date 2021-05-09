@@ -23,9 +23,9 @@ from . import item as ewitem
 from . import stats as ewstats
 
 from .backend.item import EwItem
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 from .backend.market import EwMarket
-from .backend.district import EwDistrict
+from ew.utils.district import EwDistrict
 from .backend.worldevent import EwWorldEvent
 from .utils.frontend import EwResponseContainer
 

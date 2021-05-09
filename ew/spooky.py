@@ -21,11 +21,11 @@ from . import move as ewmap
 from . import slimeoid as ewslimeoid
 from . import stats as ewstats
 
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 from .backend.market import EwMarket
-from .backend.slimeoid import EwSlimeoid
+from ew.utils.slimeoid import EwSlimeoid
 from .backend.quadrants import EwQuadrant
-from .backend.district import EwDistrict
+from ew.utils.district import EwDistrict
 from .utils.frontend import EwResponseContainer
 
 """ revive yourself from the dead. """

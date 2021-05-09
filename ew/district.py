@@ -10,8 +10,8 @@ from . import stats as ewstats
 from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
 
-from .backend.user import EwUser
-from .backend.district import EwDistrict
+from ew.utils.user import EwUser
+from ew.utils.district import EwDistrict
 from .utils.frontend import EwResponseContainer
 
 

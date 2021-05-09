@@ -32,12 +32,12 @@ from . import district as ewdistrict
 from . import mutation as ewmutation
 
 from .backend.item import EwItem
-from .backend.district import EwDistrict
+from ew.utils.district import EwDistrict
 from .backend.player import EwPlayer
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 from .backend.apt import EwApartment
 from .backend.market import EwMarket, EwStock
-from .backend.slimeoid import EwSlimeoid
+from ew.utils.slimeoid import EwSlimeoid
 from .utils.frontend import EwResponseContainer
 
 async def consult(cmd):

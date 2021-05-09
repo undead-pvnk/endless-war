@@ -22,10 +22,10 @@ from . import smelting as ewsmelting
 from . import prank as ewprank
 from . import debug as ewdebug
 
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 from .backend.player import EwPlayer
 from .backend.item import EwItem
-from .backend.district import EwDistrict
+from ew.utils.district import EwDistrict
 """
     Drop item into current district.
 """

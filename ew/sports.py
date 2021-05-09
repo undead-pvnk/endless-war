@@ -7,9 +7,9 @@ from .static import poi as poi_static
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
 
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 from .backend.player import EwPlayer
-from .backend.district import EwDistrict
+from ew.utils.district import EwDistrict
 from .utils.frontend import EwResponseContainer
 
 sb_count = 0

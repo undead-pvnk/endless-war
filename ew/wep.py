@@ -20,11 +20,11 @@ from . import move as ewmap
 from . import stats as ewstats
 from . import hunting as ewhunting
 
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 from .backend.item import EwItem
 from .backend.market import EwMarket
-from .backend.slimeoid import EwSlimeoid
-from .backend.district import EwDistrict
+from ew.utils.slimeoid import EwSlimeoid
+from ew.utils.district import EwDistrict
 from .backend.player import EwPlayer
 from .backend.status import EwStatusEffect
 from .backend.status import EwEnemyStatusEffect

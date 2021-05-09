@@ -9,7 +9,7 @@ from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
 from . import cmd as ewcmd
 
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 
 """
 	Commands for raid bosses only.

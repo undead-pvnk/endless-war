@@ -33,8 +33,8 @@ import ew.backend.fish as bknd_fish
 import ew.backend.item as bknd_item
 import ew.backend.player as bknd_player
 import ew.backend.server as bknd_server
-import ew.backend.leaderboard as bknd_leaderboard
-import ew.backend.weather as bknd_weather
+import ew.utils.leaderboard as bknd_leaderboard
+import ew.utils.weather as bknd_weather
 import ew.backend.worldevent as bknd_worldevent
 
 import ew.utils.core as ewutils
@@ -71,11 +71,11 @@ import ew.slimetwitter as ewslimetwitter
 import ew.debug as ewdebug
 
 from ew.backend.item import EwItem
-from ew.backend.user import EwUser
+from ew.utils.user import EwUser
 from ew.backend.player import EwPlayer
 from ew.backend.market import EwMarket
 from ew.backend.market import EwStock
-from ew.backend.district import EwDistrict
+from ew.utils.district import EwDistrict
 from ew.backend.status import EwStatusEffect
 
 

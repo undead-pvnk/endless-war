@@ -6,7 +6,7 @@ from .static import quadrants as quad_static
 from .utils import frontend as fe_utils
 
 from .backend.quadrants import EwQuadrant
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 
 async def add_quadrant(cmd):
 	response = ""

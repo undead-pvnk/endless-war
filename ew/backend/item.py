@@ -1,5 +1,4 @@
 import time
-import random
 
 from ..utils import core as ewutils
 from ..static import cfg as ewcfg
@@ -7,7 +6,6 @@ from ..static import cosmetics
 from ..static import items as static_items
 from ..static import weapons as static_weapons
 from ..static import hue as hue_static
-from .. import stats as ewstats
 from . import core as bknd_core
 
 """
@@ -336,51 +334,6 @@ def item_dedorn_cosmetics(
     except:
         ewutils.logMsg('Failed to dedorn cosmetics for user with id {}'.format(id_user))
 
-
-"""
-    Transfer a random item from district inventory to player inventory
-"""
-def item_lootrandom(user_data):
-    response = ""
-
-    try:
-
-        items_in_poi = bknd_core.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
-                id_item = ewcfg.col_id_item,
-                id_owner = ewcfg.col_id_user,
-                id_server = ewcfg.col_id_server
-            ),(
-                user_data.poi,
-                user_data.id_server
-            ))
-
-        if len(items_in_poi) > 0:
-            id_item = random.choice(items_in_poi)[0]
-
-            item_sought = find_item(item_search = str(id_item), id_user = user_data.poi, id_server = user_data.id_server)
-
-            response += "You found a {}!".format(item_sought.get('name'))
-
-            if check_inv_capacity(user_data = user_data, item_type = item_sought.get('item_type')):
-                if item_sought.get('name') == "Slime Poudrin":
-                    ewstats.change_stat(
-                        id_server=user_data.id_server,
-                        id_user=user_data.id_user,
-                        metric=ewcfg.stat_poudrins_looted,
-                        n=1
-                    )
-                give_item(id_user=user_data.id_user, id_server=user_data.id_server, id_item=id_item)
-            else:
-                response += " But you couldn't carry any more {}s, so you tossed it back.".format(item_sought.get('item_type'))
-
-        else:
-            response += "You found a... oh, nevermind, it's just a piece of trash."
-
-    except:
-        ewutils.logMsg("Failed to loot random item")
-
-    finally:
-        return response
 
 
 """

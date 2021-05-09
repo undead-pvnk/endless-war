@@ -20,9 +20,9 @@ from .utils import item as itm_utils
 from . import item as ewitem
 
 from .backend.market import EwMarket
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 from .backend.item import EwItem
-from .backend.district import EwDistrict
+from ew.utils.district import EwDistrict
 from .backend.fish import EwOffer
 
 class EwFisher:

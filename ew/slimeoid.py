@@ -15,13 +15,13 @@ from .utils import frontend as fe_utils
 from . import item as ewitem
 from . import casino as ewcasino
 
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 from .backend.market import EwMarket
-from .backend.district import EwDistrict
+from ew.utils.district import EwDistrict
 from .backend.player import EwPlayer
 from .backend.item import EwItem
 from .backend.quadrants import EwQuadrant
-from .backend.slimeoid import EwSlimeoid
+from ew.utils.slimeoid import EwSlimeoid
 from .utils.frontend import EwResponseContainer
 
 # manages a slimeoid's combat stats during a slimeoid battle

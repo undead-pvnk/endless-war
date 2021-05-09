@@ -21,8 +21,8 @@ from . import frontend as fe_utils
 from . import item as itm_utils
 from . import hunting as hunt_utils
 
-from ..backend.user import EwUser
-from ..backend.district import EwDistrict
+from ew.utils.user import EwUser
+from ew.utils.district import EwDistrict
 from ..backend.player import EwPlayer
 from ..backend.hunting import EwEnemy
 from ..backend.market import EwMarket

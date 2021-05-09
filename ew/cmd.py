@@ -32,13 +32,13 @@ from . import prank as ewprank
 from . import hunting as ewhunting
 from . import wep as ewwep
 
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 from .backend.market import EwMarket
 from .backend.item import EwItem
-from .backend.slimeoid import EwSlimeoid
+from ew.utils.slimeoid import EwSlimeoid
 from .backend.status import EwStatusEffect
 from .backend.status import EwEnemyStatusEffect
-from .backend.district import EwDistrict
+from ew.utils.district import EwDistrict
 from .backend.worldevent import EwWorldEvent
 from .backend.hunting import EwEnemy, EwOperationData
 from .utils.frontend import EwResponseContainer

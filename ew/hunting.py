@@ -1,32 +1,12 @@
 import time
-import random
-import math
-import asyncio
 
 from .static import cfg as ewcfg
-from .static import cosmetics
-from .static import items as static_items
-from .static import weapons as static_weapons
-from .static import food as static_food
 from .static import poi as poi_static
-from .static import cosmetics as static_cosmetics
 
-from .backend import core as bknd_core
-from .backend import item as bknd_item
-from .backend import hunting as bknd_hunt
-
-from .utils import core as ewutils
 from .utils import frontend as fe_utils
-from .utils import hunting as hunt_utils
-from .utils import item as itm_utils
-from . import item as ewitem
 
-from .backend.user import EwUser
-from .backend.item import EwItem
-from .backend.market import EwMarket
-from .backend.district import EwDistrict
-from .backend.hunting import EwEnemy, EwOperationData
-from .utils.frontend import EwResponseContainer
+from ew.utils.user import EwUser
+
 
 # Debug command. Could be used for events, perhaps?
 async def summonenemy(cmd):

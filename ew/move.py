@@ -19,12 +19,12 @@ from .utils import event as evt_utils
 from . import apt as ewapt
 from . import ads as ewads
 
-from .backend.user import EwUser
-from .backend.district import EwDistrict
-from .backend.transport import EwTransport
+from ew.utils.user import EwUser
+from ew.utils.district import EwDistrict
+from ew.utils.transport import EwTransport
 from .backend.market import EwMarket
 from .backend.mutation import EwMutation
-from .backend.slimeoid import EwSlimeoid
+from ew.utils.slimeoid import EwSlimeoid
 from .backend.player import EwPlayer
 from .backend.ads import EwAd
 from .backend.item import EwItem

@@ -1,21 +1,21 @@
 import asyncio
 import random
 
-from ..static import cfg as ewcfg
-from ..static import poi as poi_static
-from ..utils import core as ewutils
-from . import core as bknd_core
-from . import item as bknd_item
-from . import hunting as bknd_hunt
+from ew.static import cfg as ewcfg
+from ew.static import poi as poi_static
+from ew.utils import core as ewutils
+from ew.backend import core as bknd_core
+from ew.backend import item as bknd_item
+from ew.backend import hunting as bknd_hunt
 
-from .user import EwUser
-from .market import EwMarket
-from .player import EwPlayer
-from .district import EwDistrict
-from .slimeoid import EwSlimeoid
-from .hunting import EwEnemy
-from .item import EwItem
-from ..utils.frontend import EwResponseContainer
+from ew.utils.user import EwUser
+from ew.backend.market import EwMarket
+from ew.backend.player import EwPlayer
+from ew.utils.district import EwDistrict
+from ew.utils.slimeoid import EwSlimeoid
+from ew.backend.hunting import EwEnemy
+from ew.backend.item import EwItem
+from ew.utils.frontend import EwResponseContainer
 
 """
 	Coroutine that continually calls weather_tick; is called once per server, and not just once globally

@@ -12,9 +12,9 @@ from .utils import frontend as fe_utils
 
 from . import cmd as ewcmd
 
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 from .backend.market import EwMarket
-from .backend.district import EwDistrict
+from ew.utils.district import EwDistrict
 
 async def set_race(cmd):
 	response = ""

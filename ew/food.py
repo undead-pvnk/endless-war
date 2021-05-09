@@ -12,18 +12,17 @@ from .static import cosmetics as static_cosmetics
 
 from .backend import item as bknd_item
 
-from . import item as ewitem
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
 from .utils import poi as poi_utils
 from .utils import loop as loop_utils
 from .utils import item as itm_utils
 
-from .backend.user import EwUser
+from ew.utils.user import EwUser
 from .backend.player import EwPlayer
 from .backend.market import EwMarket, EwCompany, EwStock
 from .backend.item import EwItem
-from .backend.district import EwDistrict
+from ew.utils.district import EwDistrict
 
 
 

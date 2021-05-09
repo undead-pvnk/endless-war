@@ -1,13 +1,13 @@
-from ..static import cfg as ewcfg
-from ..static import poi as poi_static
-from ..utils import core as ewutils
-from ..utils import frontend as fe_utils
-from . import core as bknd_core
+from ew.static import cfg as ewcfg
+from ew.static import poi as poi_static
+from ew.utils import core as ewutils
+from ew.utils import frontend as fe_utils
+from ew.backend import core as bknd_core
 
-from .user import EwUser
-from .player import EwPlayer
-from .market import EwMarket, EwStock
-from .district import EwDistrict
+from ew.utils.user import EwUser
+from ew.backend.player import EwPlayer
+from ew.backend.market import EwMarket, EwStock
+from ew.utils.district import EwDistrict
 
 
 
