@@ -1,5 +1,4 @@
 import time
-import random
 import asyncio
 import re
 
@@ -18,6 +17,7 @@ from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
 from .utils import loop as loop_utils
 from .utils import poi as poi_utils
+from .utils import item as itm_utils
 from . import smelting as ewsmelting
 from . import prank as ewprank
 from . import debug as ewdebug
@@ -567,12 +567,12 @@ async def item_use(cmd):
                     if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
                         item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_instantuse(cmd, item)
                         if side_effect != "":
-                            response += await perform_prank_item_side_effect(side_effect, cmd=cmd)
+                            response += await itm_utils.perform_prank_item_side_effect(side_effect, cmd=cmd)
 
                     elif item.item_props['prank_type'] == ewcfg.prank_type_response:
                         item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_response(cmd, item)
                         if side_effect != "":
-                            response += await perform_prank_item_side_effect(side_effect, cmd=cmd)
+                            response += await itm_utils.perform_prank_item_side_effect(side_effect, cmd=cmd)
 
                     elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
                         item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_trap(cmd, item)

@@ -779,7 +779,7 @@ async def scavenge(cmd):
 				if ewcfg.mutation_id_dumpsterdiver in mutations:
 					loot_chance *= 10
 				if random.random() < loot_chance:
-					loot_resp = bknd_item.item_lootrandom(
+					loot_resp = itm_utils.item_lootrandom(
 						user_data
 					)
 					

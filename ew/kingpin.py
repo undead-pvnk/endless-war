@@ -14,6 +14,7 @@ from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
 from .utils import item as itm_utils
 from . import move as ewmap
+from . import cmd as ewcmd
 
 from ew.utils.user import EwUser
 
@@ -263,7 +264,7 @@ async def exalt(cmd):
 async def pa_command(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if not cmd.message.author.guild_permissions.administrator and user_data.life_state != ewcfg.life_state_executive:
-		return await fe_utils.fake_failed_command(cmd)
+		return await ewcmd.fake_failed_command(cmd)
 	else:
 		if cmd.tokens_count >= 3:
 			poi = ewutils.flattenTokenListToString(cmd.tokens[1])
@@ -287,7 +288,7 @@ async def pa_command(cmd):
 
 async def hogtie(cmd):
 	if not cmd.message.author.guild_permissions.administrator:
-		return await fe_utils.fake_failed_command(cmd)
+		return await ewcmd.fake_failed_command(cmd)
 	else:
 		if cmd.mentions_count == 1:
 			target_data = EwUser(member = cmd.mentions[0])

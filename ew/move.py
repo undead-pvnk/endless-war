@@ -15,7 +15,8 @@ from .backend import ads as bknd_ads
 
 from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
-from .utils import event as evt_utils
+from .utils import district as dist_utils
+from .utils import poi as poi_utils
 from . import apt as ewapt
 from . import ads as ewads
 
@@ -29,7 +30,7 @@ from .backend.player import EwPlayer
 from .backend.ads import EwAd
 from .backend.item import EwItem
 from .backend.dungeons import EwGamestate
-from .backend.hunting import EwEnemy
+from .utils.combat import EwEnemy
 from .backend.worldevent import get_void_connection_pois
 from .utils.frontend import EwResponseContainer
 
@@ -510,7 +511,7 @@ def inaccessible(user_data = None, poi = None):
     bans = user_data.get_bans()
     vouchers = user_data.get_vouchers()
 
-    locked_districts_list = retrieve_locked_districts(user_data.id_server)
+    locked_districts_list = poi_utils.retrieve_locked_districts(user_data.id_server)
 
     if(
         len(poi.factions) > 0 and
@@ -924,7 +925,7 @@ async def move(cmd=None, isApt=False):
                     msg_walk_start = await send_arrival_response(cmd, poi_current, channel)
 
                     # SWILLDERMUK
-                    await evt_utils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
+                    await dist_utils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
 
                     if poi_current.has_ads:
                         ads = bknd_ads.get_ads(id_server=user_data.id_server)
@@ -1064,7 +1065,7 @@ async def teleport(cmd):
             await resp_cont.post()
 
             # SWILLDERMUK
-            await evt_utils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
+            await dist_utils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
 
             return
         else:
@@ -1697,7 +1698,7 @@ async def loop(cmd):
 			user_data.persist()
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 			await user_data.move_inhabitants(id_poi=dest_poi_obj.id_poi)
-			await evt_utils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, user_data.id_user)
+			await dist_utils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, user_data.id_user)
 			return await fe_utils.send_message(cmd.client, fe_utils.get_channel(cmd.guild, dest_poi_obj.channel), fe_utils.formatMessage(cmd.message.author,"**-OIIIIP!!!**\n\n{} jumps out of a wormhole!".format(cmd.message.author.display_name)))
 		else:
 			pass
@@ -1785,7 +1786,7 @@ async def slap(cmd):
             await ewrolemgr.updateRoles(client=ewutils.get_client(), member=cmd.mentions[0])
             await user_data.move_inhabitants(id_poi=dest_poi_obj.id_poi)
 
-            await evt_utils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, target_data.id_user)
+            await dist_utils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, target_data.id_user)
 
             await fe_utils.send_message(cmd.client, cmd.mentions[0], fe_utils.formatMessage(cmd.mentions[0], dm_response))
             await fe_utils.send_message(cmd.client, fe_utils.get_channel(server=cmd.mentions[0].guild, channel_name=dest_poi_obj.channel), fe_utils.formatMessage(cmd.mentions[0], target_response))

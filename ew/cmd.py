@@ -24,11 +24,11 @@ from .utils import core as ewutils, rolemgr as ewrolemgr, stats as ewstats
 from .utils import frontend as fe_utils
 from .utils import item as itm_utils
 from .utils import hunting as hunt_utils
+from .utils import combat as cmbt_utils
 
 from . import item as ewitem
 from . import faction as ewfaction
 from . import prank as ewprank
-from . import hunting as ewhunting
 from . import wep as ewwep
 
 from ew.utils.user import EwUser
@@ -39,8 +39,9 @@ from .backend.status import EwStatusEffect
 from .backend.status import EwEnemyStatusEffect
 from ew.utils.district import EwDistrict
 from .backend.worldevent import EwWorldEvent
-from .backend.hunting import EwEnemy, EwOperationData
+from .backend.hunting import EwOperationData
 from .utils.frontend import EwResponseContainer
+from .utils.combat import EwEnemy
 
 """ wrapper for discord members """
 class EwId:
@@ -152,7 +153,7 @@ def gen_score_text(ew_id):
 
 	items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
 
-	poudrin_amount = itm_utils.find_poudrin(id_user = user_data.id_user, id_server = user_data.id_server)
+	poudrin_amount = bknd_item.find_poudrin(id_user = user_data.id_user, id_server = user_data.id_server)
 
 	if user_data.life_state == ewcfg.life_state_grandfoe:
 		# Can't see a raid boss's slime score.
@@ -183,7 +184,7 @@ async def score(cmd):
 	# self slime check
 	elif target_type == "self":
 		user_data = EwUser(ew_id = cmd.author_id)
-		poudrin_amount = itm_utils.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.guild.id)
+		poudrin_amount = bknd_item.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.guild.id)
 
 		# return my score
 		response = "You currently have {:,} {}{}.".format(user_data.slimes, "slime" if skune is False else "skune", (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
@@ -420,7 +421,7 @@ async def data(cmd):
 		user_data = EwUser(member=cmd.message.author)
 
 		soughtenemy = " ".join(cmd.tokens[1:]).lower()
-		enemy = ewhunting.find_enemy(soughtenemy, user_data)
+		enemy = cmbt_utils.find_enemy(soughtenemy, user_data)
 		if enemy != None:
 			if enemy.attacktype != ewcfg.enemy_attacktype_unarmed:
 				response = "{} is a level {} enemy. They have {:,} slime and attack with their {}. ".format(enemy.display_name, enemy.level, enemy.slimes, enemy.attacktype)
@@ -2680,14 +2681,14 @@ async def prank(cmd):
 				if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
 					item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_instantuse(cmd, item)
 					if side_effect != "":
-						response += await ewitem.perform_prank_item_side_effect(side_effect, cmd=cmd)
+						response += await itm_utils.perform_prank_item_side_effect(side_effect, cmd=cmd)
 						
 					response = pluck_response + response
 
 				elif item.item_props['prank_type'] == ewcfg.prank_type_response:
 					item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_response(cmd, item)
 					if side_effect != "":
-						response += await ewitem.perform_prank_item_side_effect(side_effect, cmd=cmd)
+						response += await itm_utils.perform_prank_item_side_effect(side_effect, cmd=cmd)
 
 					response = pluck_response + response
 
@@ -3316,7 +3317,7 @@ async def gvs_leave_operation(cmd):
 		
 		items = bknd_core.execute_sql_query("SELECT id_item FROM gvs_ops_choices WHERE id_user = '{}'".format(user_data.id_user))
 		bknd_core.execute_sql_query("DELETE FROM gvs_ops_choices WHERE id_user = '{}'".format(user_data.id_user))
-		await ewhunting.delete_all_enemies(cmd=None, query_suffix="AND owner = '{}' AND poi = '{}'".format(user_data.id_user, user_data.poi), id_server_sent=user_data.id_server)
+		await bknd_hunt.delete_all_enemies(cmd=None, query_suffix="AND owner = '{}' AND poi = '{}'".format(user_data.id_user, user_data.poi), id_server_sent=user_data.id_server)
 		
 		response = "You drop out of your {} Op in {}.".format('Garden' if faction == ewcfg.psuedo_faction_gankers else 'Graveyard', op_poi)
 		
@@ -3502,7 +3503,7 @@ async def gvs_plant_gaiaslimeoid(cmd):
 					district_data.gaiaslime -= cost
 					district_data.persist()
 
-					resp_cont = ewhunting.spawn_enemy(
+					resp_cont = hunt_utils.spawn_enemy(
 						id_server=user_data.id_server,
 						pre_chosen_type=enemytype,
 						pre_chosen_level=50,
@@ -3525,7 +3526,7 @@ async def gvs_plant_gaiaslimeoid(cmd):
 						district_data.gaiaslime -= cost
 						district_data.persist()
 						
-						resp_cont = ewhunting.spawn_enemy(
+						resp_cont = hunt_utils.spawn_enemy(
 							id_server = user_data.id_server,
 							pre_chosen_type=enemytype,
 							pre_chosen_level=50,

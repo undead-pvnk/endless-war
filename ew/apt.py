@@ -16,8 +16,9 @@ from .backend import item as bknd_item
 from . import cmd as ewcmd
 from .utils import core as ewutils, rolemgr as ewrolemgr
 from .utils import frontend as fe_utils
-from .utils import event as evt_utils
 from .utils import item as itm_utils
+from .utils import district as dist_utils
+from .utils import hunting as hunt_utils
 from . import move as ewmap
 from . import market as ewmarket
 from . import item as ewitem
@@ -25,7 +26,6 @@ from . import farm as ewfarm
 from . import smelting as ewsmelting
 from . import cosmeticitem as ewcosmeticitem
 from . import slimeoid as ewslimeoid
-from . import hunting as ewhunting
 from . import wep as ewwep
 from . import quadrants as ewquadrants
 from . import district as ewdistrict
@@ -326,7 +326,7 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 			await fe_utils.send_message(cmd.client, fe_utils.get_channel(server, poi_dest.channel), fe_utils.formatMessage(cmd.message.author, response))
 
 			# SWILLDERMUK
-			await evt_utils.activate_trap_items(poi_dest.id_poi, user_data.id_server, user_data.id_user)
+			await dist_utils.activate_trap_items(poi_dest.id_poi, user_data.id_server, user_data.id_user)
 			
 			return
 
@@ -891,7 +891,7 @@ async def watch(cmd):
 
 		poi = poi_static.id_to_poi.get(user_model.poi)
 		
-		await ewhunting.spawn_enemy(id_server=cmd.message.guild.id, pre_chosen_type=ewcfg.enemy_type_megaslime, pre_chosen_poi=poi.mother_districts[0], pre_chosen_slimes=ewcfg.tv_set_slime, pre_chosen_level=ewcfg.tv_set_level, pre_chosen_displayname="The Slime")
+		await hunt_utils.spawn_enemy(id_server=cmd.message.guild.id, pre_chosen_type=ewcfg.enemy_type_megaslime, pre_chosen_poi=poi.mother_districts[0], pre_chosen_slimes=ewcfg.tv_set_slime, pre_chosen_level=ewcfg.tv_set_level, pre_chosen_displayname="The Slime")
 		response = ""
 
 	user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)

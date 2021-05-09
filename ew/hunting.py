@@ -4,6 +4,7 @@ from .static import cfg as ewcfg
 from .static import poi as poi_static
 
 from .utils import frontend as fe_utils
+from .utils import hunting as hunt_utils
 
 from ew.utils.user import EwUser
 
@@ -52,10 +53,10 @@ async def summonenemy(cmd):
 			data_level = 2
 			
 		if data_level == 1:
-			resp_cont = spawn_enemy(id_server=cmd.message.guild.id, pre_chosen_type=enemytype, pre_chosen_poi=poi.id_poi, manual_spawn=True)
+			resp_cont = hunt_utils.spawn_enemy(id_server=cmd.message.guild.id, pre_chosen_type=enemytype, pre_chosen_poi=poi.id_poi, manual_spawn=True)
 		elif data_level == 2:
 			
-			resp_cont = spawn_enemy(
+			resp_cont = hunt_utils.spawn_enemy(
 				id_server=cmd.message.guild.id,
 				pre_chosen_type=enemytype, 
 				pre_chosen_poi=poi.id_poi, 
@@ -110,7 +111,7 @@ async def summongvsenemy(cmd):
 		except:
 			pass
 
-		resp_cont = spawn_enemy(
+		resp_cont = hunt_utils.spawn_enemy(
 			id_server=cmd.message.guild.id, 
 			pre_chosen_type=enemytype, 
 			pre_chosen_poi=poi.id_poi,

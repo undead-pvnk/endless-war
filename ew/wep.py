@@ -6,7 +6,6 @@ import math
 from .static import cfg as ewcfg
 from .static import weapons as static_weapons
 from .static import poi as poi_static
-from .static import status as se_static
 from .static import slimeoid as sl_static
 
 from .backend import item as bknd_item
@@ -16,8 +15,8 @@ from . import captcha as ewcaptcha
 from .utils import core as ewutils, rolemgr as ewrolemgr, stats as ewstats
 from .utils import frontend as fe_utils
 from .utils import item as itm_utils
+from .utils import combat as cmbt_utils
 from . import move as ewmap
-from . import hunting as ewhunting
 
 from ew.utils.user import EwUser
 from .backend.item import EwItem
@@ -25,10 +24,8 @@ from .backend.market import EwMarket
 from ew.utils.slimeoid import EwSlimeoid
 from ew.utils.district import EwDistrict
 from .backend.player import EwPlayer
-from .backend.status import EwStatusEffect
-from .backend.status import EwEnemyStatusEffect
 from .backend.dungeons import EwGamestate
-from .backend.hunting import EwEnemy
+from .utils.combat import EwEnemy
 
 from .utils.frontend import EwResponseContainer
 
@@ -186,7 +183,7 @@ def canAttack(cmd, amb_switch = 0):
 		# converts ['THE', 'Lost', 'juvie'] into 'the lost juvie'
 		huntedenemy = " ".join(cmd.tokens[1:]).lower()
 
-		enemy_data = ewhunting.find_enemy(huntedenemy, user_data)
+		enemy_data = cmbt_utils.find_enemy(huntedenemy, user_data)
 
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
@@ -478,13 +475,13 @@ async def attack(cmd, n1_die = None):
 		#sap_ignored = 0
 
 		# Weaponized flavor text.
-		hitzone = get_hitzone()
+		hitzone = cmbt_utils.get_hitzone()
 		randombodypart = hitzone.name
 		if random.random() < 0.5:
 			randombodypart = random.choice(hitzone.aliases)
 
-		shooter_status_mods = get_shooter_status_mods(user_data, shootee_data, hitzone)
-		shootee_status_mods = get_shootee_status_mods(shootee_data, user_data, hitzone)
+		shooter_status_mods = cmbt_utils.get_shooter_status_mods(user_data, shootee_data, hitzone)
+		shootee_status_mods = cmbt_utils.get_shootee_status_mods(shootee_data, user_data, hitzone)
 
 
 		hit_chance_mod += round(shooter_status_mods['hit_chance'] + shootee_status_mods['hit_chance'], 2)
@@ -682,7 +679,7 @@ async def attack(cmd, n1_die = None):
 			user_data.time_lastrevive = 0
 
 			# apply attacker damage mods
-			slimes_damage *= damage_mod_attack(
+			slimes_damage *= cmbt_utils.damage_mod_attack(
 				user_data = user_data,
 				user_mutations = user_mutations,
 				market_data = market_data,
@@ -690,7 +687,7 @@ async def attack(cmd, n1_die = None):
 			)
 
 			# apply defender damage mods
-			slimes_damage *= damage_mod_defend(
+			slimes_damage *= cmbt_utils.damage_mod_defend(
 				shootee_data = shootee_data,
 				shootee_mutations = shootee_mutations,
 				market_data = market_data,
@@ -1270,7 +1267,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 
 
 				# apply defensive mods
-				slimes_damage_target = slimes_damage * damage_mod_defend(
+				slimes_damage_target = slimes_damage * cmbt_utils.damage_mod_defend(
 					shootee_data = target_data,
 					shootee_mutations = target_data.get_mutations(),
 					shootee_weapon = target_weapon,
@@ -1457,7 +1454,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					bknd_hunt.delete_enemy(target_enemy_data)
 
 					response += "{} was killed by an explosion during your fight with {}!".format(target_enemy_data.display_name, shootee_player.display_name)
-					resp_cont.add_response_container(ewhunting.drop_enemy_loot(target_enemy_data, district_data))
+					resp_cont.add_response_container(cmbt_utils.drop_enemy_loot(target_enemy_data, district_data))
 					resp_cont.add_channel_response(channel, response)
 
 				# Survived the explosion
@@ -1942,7 +1939,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	# Get target's info.
 	huntedenemy = " ".join(cmd.tokens[1:]).lower()
-	enemy_data = ewhunting.find_enemy(huntedenemy, user_data)
+	enemy_data = cmbt_utils.find_enemy(huntedenemy, user_data)
 
 	sandbag_mode = False
 	if enemy_data.enemytype == ewcfg.enemy_type_sandbag:
@@ -1984,13 +1981,13 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	#sap_ignored = 0
 
 	# Weaponized flavor text.
-	hitzone = get_hitzone()
+	hitzone = cmbt_utils.get_hitzone()
 	randombodypart = hitzone.name
 	if random.random() < 0.5:
 		randombodypart = random.choice(hitzone.aliases)
 
-	shooter_status_mods = get_shooter_status_mods(user_data, enemy_data, hitzone)
-	shootee_status_mods = get_shootee_status_mods(enemy_data, user_data, hitzone)
+	shooter_status_mods = cmbt_utils.get_shooter_status_mods(user_data, enemy_data, hitzone)
+	shootee_status_mods = cmbt_utils.get_shootee_status_mods(enemy_data, user_data, hitzone)
 
 	hit_chance_mod += round(shooter_status_mods['hit_chance'] + shootee_status_mods['hit_chance'], 2)
 	crit_mod += round(shooter_status_mods['crit'] + shootee_status_mods['crit'], 2)
@@ -2171,7 +2168,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	user_data.time_lastrevive = 0
 
 	# apply attacker damage mods
-	slimes_damage *= damage_mod_attack(
+	slimes_damage *= cmbt_utils.damage_mod_attack(
 		user_data = user_data,
 		user_mutations = user_mutations,
 		market_data = market_data,
@@ -2326,7 +2323,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		old_response = response
 
 		# give player item for defeating an enemy
-		resp_cont.add_response_container(ewhunting.drop_enemy_loot(enemy_data, district_data))
+		resp_cont.add_response_container(cmbt_utils.drop_enemy_loot(enemy_data, district_data))
 
 		if slimeoid.life_state == ewcfg.slimeoid_state_active:
 			brain = sl_static.brain_map.get(slimeoid.ai)
@@ -2478,7 +2475,7 @@ async def dodge(cmd):
 		target_data = EwUser(member = target)
 	else:
 		huntedenemy = " ".join(cmd.tokens[1:]).lower()
-		target_data = target = ewhunting.find_enemy(enemy_search=huntedenemy, user_data=user_data)
+		target_data = target = cmbt_utils.find_enemy(enemy_search=huntedenemy, user_data=user_data)
 
 	if target_data == None:
 		response = "ENDLESS WAR didn't understand that name."
@@ -2531,7 +2528,7 @@ async def taunt(cmd):
 		target_data = EwUser(member = target)
 	else:
 		huntedenemy = " ".join(cmd.tokens[1:]).lower()
-		target_data = target = ewhunting.find_enemy(enemy_search=huntedenemy, user_data=user_data)
+		target_data = target = cmbt_utils.find_enemy(enemy_search=huntedenemy, user_data=user_data)
 
 	if target_data == None:
 		response = "ENDLESS WAR didn't understand that name."
@@ -2588,7 +2585,7 @@ async def aim(cmd):
 		target_data = EwUser(member = target)
 	else:
 		huntedenemy = " ".join(cmd.tokens[1:]).lower()
-		target_data = target = ewhunting.find_enemy(enemy_search=huntedenemy, user_data=user_data)
+		target_data = target = cmbt_utils.find_enemy(enemy_search=huntedenemy, user_data=user_data)
 
 	if target_data == None:
 		response = "ENDLESS WAR didn't understand that name."
@@ -2687,7 +2684,7 @@ async def spray(cmd):
 
 			weapon.fn_effect = static_weapons.weapon_type_convert.get(weapon.id_weapon)
 
-			shooter_status_mods = get_shooter_status_mods(user_data, None, None)
+			shooter_status_mods = cmbt_utils.get_shooter_status_mods(user_data, None, None)
 
 			hit_chance_mod += round(shooter_status_mods['hit_chance'], 2)
 			crit_mod += round(shooter_status_mods['crit'], 2)
@@ -2764,7 +2761,7 @@ async def spray(cmd):
 				user_data.time_lastrevive = 0
 				market_data = EwMarket(id_server=cmd.guild.id)
 				# apply attacker damage mods
-				slimes_damage *= damage_mod_cap(
+				slimes_damage *= cmbt_utils.damage_mod_cap(
 					user_data=user_data,
 					user_mutations=user_mutations,
 					market_data=market_data,
@@ -2955,7 +2952,7 @@ async def sanitize(cmd):
 
 			weapon.fn_effect = static_weapons.weapon_type_convert.get(weapon.id_weapon)
 
-			shooter_status_mods = get_shooter_status_mods(user_data, None, None)
+			shooter_status_mods = cmbt_utils.get_shooter_status_mods(user_data, None, None)
 
 			hit_chance_mod += round(shooter_status_mods['hit_chance'], 2)
 			crit_mod += round(shooter_status_mods['crit'], 2)
@@ -3036,7 +3033,7 @@ async def sanitize(cmd):
 				user_data.time_lastrevive = 0
 				market_data = EwMarket(id_server=cmd.guild.id)
 				# apply attacker damage mods
-				slimes_damage *= damage_mod_attack(
+				slimes_damage *= cmbt_utils.damage_mod_attack(
 					user_data=user_data,
 					user_mutations=user_mutations,
 					market_data=market_data,
