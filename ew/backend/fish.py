@@ -3,6 +3,7 @@ import time
 from . import core as bknd_core
 from ..static import cfg as ewcfg
 
+
 class EwOffer:
 	id_server = -1
 	id_user = -1

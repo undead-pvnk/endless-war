@@ -1,22 +1,20 @@
 import asyncio
-import random
-import time
 import math
+import random
 import shlex
-
-from .static import cfg as ewcfg
-from .static import poi as poi_static
-
-from .backend import item as bknd_item
+import time
 
 from . import cmd as ewcmd
-from .utils import core as ewutils, rolemgr as ewrolemgr
-from .utils import frontend as fe_utils
 from . import item as ewitem
-
-from .utils.combat import EwUser
-from ew.utils.district import EwDistrict
+from .backend import item as bknd_item
 from .backend.item import EwItem
+from .static import cfg as ewcfg
+from .static import poi as poi_static
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils import rolemgr as ewrolemgr
+from .utils.combat import EwUser
+from .utils.district import EwDistrict
 
 # Map containing user IDs and the last time in UTC seconds since the pachinko
 # machine was used.

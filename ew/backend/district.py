@@ -1,6 +1,6 @@
-from ..static import poi as poi_static
-from ..static import cfg as ewcfg
 from . import core as bknd_core
+from ..static import cfg as ewcfg
+from ..static import poi as poi_static
 
 
 class EwDistrictBase:

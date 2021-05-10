@@ -1,8 +1,7 @@
 from . import cfg as ewcfg
-
+from ..model.status import EwHitzone
 from ..model.status import EwStatusEffectDef
-from ..model.status import EwTrauma, EwHitzone
-
+from ..model.status import EwTrauma
 
 status_effect_list = [
 	EwStatusEffectDef(

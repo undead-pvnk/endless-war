@@ -1,17 +1,14 @@
 import random
 
-
-from ew.static import cfg as ewcfg
-from ew.static import poi as poi_static
-from ew.utils import core as ewutils
-from ew.backend import core as bknd_core
-
-from ew.utils.combat import EwUser
-from ew.backend.market import EwMarket
-from ew.backend.player import EwPlayer
-
-from ew.utils.frontend import EwResponseContainer
-from ew.backend.slimeoid import EwSlimeoidBase
+from . import core as ewutils
+from .combat import EwUser
+from .frontend import EwResponseContainer
+from ..backend import core as bknd_core
+from ..backend.market import EwMarket
+from ..backend.player import EwPlayer
+from ..backend.slimeoid import EwSlimeoidBase
+from ..static import cfg as ewcfg
+from ..static import poi as poi_static
 
 """ Slimeoid data model for database persistence """
 class EwSlimeoid(EwSlimeoidBase):

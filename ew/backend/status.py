@@ -1,9 +1,10 @@
-import time
 import random
+import time
 
+from . import core as bknd_core
 from ..static import cfg as ewcfg
 from ..static import status as se_static
-from . import core as bknd_core
+
 
 class EwStatusEffect:
 	id_server = -1

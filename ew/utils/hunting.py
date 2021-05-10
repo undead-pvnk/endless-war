@@ -7,7 +7,8 @@ from .district import EwDistrict
 from .frontend import EwResponseContainer
 from ..backend import core as bknd_core
 from ..backend import hunting as bknd_hunt
-from ..backend.hunting import EwEnemyBase as EwEnemy, EwOperationData
+from ..backend.hunting import EwEnemyBase as EwEnemy
+from ..backend.hunting import EwOperationData
 from ..backend.market import EwMarket
 from ..static import cfg as ewcfg
 from ..static import items as static_items

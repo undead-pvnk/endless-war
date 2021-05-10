@@ -1,8 +1,8 @@
 import time
 
-from ..utils import core as ewutils
-from ..static import cfg as ewcfg
 from . import core as bknd_core
+from ..static import cfg as ewcfg
+from ..utils import core as ewutils
 
 
 class EwMarket:

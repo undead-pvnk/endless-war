@@ -1,22 +1,21 @@
 import math
-import time
 import random
+import time
 
 import discord
 
-from ew.backend import core as bknd_core
-from ew.backend import item as bknd_item
-from ew.static import cfg as ewcfg
-from ew.static import poi as poi_static
-from ew.utils import core as ewutils
-from ew.utils import poi as poi_utils
-from ew.utils import frontend as fe_utils
-from ew.utils import item as itm_utils
-
-from ew.utils.frontend import EwResponseContainer
-from ew.backend.district import EwDistrictBase
-from ew.backend.user import EwUserBase as EwUser
-from ew.backend.item import EwItem
+from . import core as ewutils
+from . import frontend as fe_utils
+from . import item as itm_utils
+from . import poi as poi_utils
+from .frontend import EwResponseContainer
+from ..backend import core as bknd_core
+from ..backend import item as bknd_item
+from ..backend.district import EwDistrictBase
+from ..backend.item import EwItem
+from ..backend.user import EwUserBase as EwUser
+from ..static import cfg as ewcfg
+from ..static import poi as poi_static
 
 """
 	district data model for database persistence

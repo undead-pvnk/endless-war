@@ -1,19 +1,16 @@
 import asyncio
 
-from .static import cfg as ewcfg
-from .static import poi as poi_static
-from .static import mutations as static_mutations
-
 from .backend import core as bknd_core
 from .backend import item as bknd_item
-
-from .utils import core as ewutils
-from .utils import frontend as fe_utils
-
-from .utils.combat import EwUser
-from ew.utils.district import EwDistrict
 from .backend.item import EwItem
 from .backend.mutation import EwMutation
+from .static import cfg as ewcfg
+from .static import mutations as static_mutations
+from .static import poi as poi_static
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils.combat import EwUser
+from .utils.district import EwDistrict
 
 
 async def reroll_last_mutation(cmd):

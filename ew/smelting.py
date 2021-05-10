@@ -1,21 +1,19 @@
 import random
 
+from . import item as ewitem
+from .backend import item as bknd_item
+from .backend.item import EwItem
 from .static import cfg as ewcfg
 from .static import cosmetics
-from .static import vendors
-from .static import smelting
-from .static import items as static_items
 from .static import cosmetics as static_cosmetics
-
-from .backend import item as bknd_item
-
-from . import item as ewitem
+from .static import items as static_items
+from .static import smelting
+from .static import vendors
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
 from .utils import item as itm_utils
-
 from .utils.combat import EwUser
-from .backend.item import EwItem
+
 
 # Smelting command. It's like other games call "crafting"... but BETTER and for FREE!!
 async def smelt(cmd):

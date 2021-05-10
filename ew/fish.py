@@ -1,29 +1,28 @@
-import random
 import asyncio
+import random
 import time
 
+from . import item as ewitem
+from .backend import item as bknd_item
+from .backend.fish import EwOffer
+from .backend.item import EwItem
+from .backend.market import EwMarket
 from .static import cfg as ewcfg
+from .static import fish as static_fish
+from .static import food as static_food
+from .static import poi as poi_static
+from .static import status as se_static
 from .static import vendors
 from .static import weapons as static_weapons
 from .static import weather as weather_static
-from .static import food as static_food
-from .static import poi as poi_static
-from .static import fish as static_fish
-from .static import status as se_static
-
-from .backend import item as bknd_item
-
-from .utils import core as ewutils, rolemgr as ewrolemgr
+from .utils import core as ewutils
 from .utils import frontend as fe_utils
-from .utils import poi as poi_utils
 from .utils import item as itm_utils
-from . import item as ewitem
-
-from .backend.market import EwMarket
+from .utils import poi as poi_utils
+from .utils import rolemgr as ewrolemgr
 from .utils.combat import EwUser
-from .backend.item import EwItem
-from ew.utils.district import EwDistrict
-from .backend.fish import EwOffer
+from .utils.district import EwDistrict
+
 
 class EwFisher:
 	fishing = False

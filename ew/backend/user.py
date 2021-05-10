@@ -1,9 +1,10 @@
 import random
 import time
 
+from . import core as bknd_core
 from ..static import cfg as ewcfg
 from ..utils import core as ewutils
-from . import core as bknd_core
+
 
 class EwUserBase:
 	id_user = -1

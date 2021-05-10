@@ -1,19 +1,16 @@
 import asyncio
 
-from .static import cfg as ewcfg
-from .static import cosmetics
-from .static import items as static_items
-from .static import hue as hue_static
-
 from .backend import core as bknd_core
 from .backend import item as bknd_item
-
-from .utils import core as ewutils
-from .utils import frontend as fe_utils
-
-from .utils.combat import EwUser
 from .backend.item import EwItem
 from .backend.market import EwMarket
+from .static import cfg as ewcfg
+from .static import cosmetics
+from .static import hue as hue_static
+from .static import items as static_items
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils.combat import EwUser
 
 
 async def adorn(cmd):

@@ -1,20 +1,18 @@
 import asyncio
 
-from .static import cfg as ewcfg
-from .static import poi as poi_static
-
+from . import move as ewmap
 from .backend import core as bknd_core
 from .backend import item as bknd_item
-
-from .utils import core as ewutils, rolemgr as ewrolemgr
-from .utils import frontend as fe_utils
+from .static import cfg as ewcfg
+from .static import poi as poi_static
+from .utils import core as ewutils
 from .utils import district as dist_utils
-from . import move as ewmap
-
+from .utils import frontend as fe_utils
+from .utils import rolemgr as ewrolemgr
 from .utils.combat import EwUser
-from ew.utils.district import EwDistrict
-from ew.utils.transport import EwTransport
+from .utils.district import EwDistrict
 from .utils.frontend import EwResponseContainer
+from .utils.transport import EwTransport
 
 """ Starts movement of all transports. Called once at client startup """
 async def init_transports(id_server = None):

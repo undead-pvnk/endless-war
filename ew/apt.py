@@ -2,43 +2,43 @@ import asyncio
 import random
 import time
 
-from .static import cfg as ewcfg
-from .static import cosmetics
-from .static import items as static_items
-from .static import weapons as static_weapons
-from .static import food as static_food
-from .static import poi as poi_static
-from .static import hue as hue_static
-
+from . import cmd as ewcmd
+from . import cosmeticitem as ewcosmeticitem
+from . import district as ewdistrict
+from . import farm as ewfarm
+from . import item as ewitem
+from . import market as ewmarket
+from . import move as ewmap
+from . import mutation as ewmutation
+from . import quadrants as ewquadrants
+from . import slimeoid as ewslimeoid
+from . import smelting as ewsmelting
+from . import wep as ewwep
 from .backend import core as bknd_core
 from .backend import item as bknd_item
-
-from . import cmd as ewcmd
-from .utils import core as ewutils, rolemgr as ewrolemgr
-from .utils import frontend as fe_utils
-from .utils import item as itm_utils
-from .utils import district as dist_utils
-from .utils import hunting as hunt_utils
-from . import move as ewmap
-from . import market as ewmarket
-from . import item as ewitem
-from . import farm as ewfarm
-from . import smelting as ewsmelting
-from . import cosmeticitem as ewcosmeticitem
-from . import slimeoid as ewslimeoid
-from . import wep as ewwep
-from . import quadrants as ewquadrants
-from . import district as ewdistrict
-from . import mutation as ewmutation
-
-from .backend.item import EwItem
-from ew.utils.district import EwDistrict
-from .backend.player import EwPlayer
-from .utils.combat import EwUser
 from .backend.apt import EwApartment
-from .backend.market import EwMarket, EwStock
-from ew.utils.slimeoid import EwSlimeoid
+from .backend.item import EwItem
+from .backend.market import EwMarket
+from .backend.market import EwStock
+from .backend.player import EwPlayer
+from .static import cfg as ewcfg
+from .static import cosmetics
+from .static import food as static_food
+from .static import hue as hue_static
+from .static import items as static_items
+from .static import poi as poi_static
+from .static import weapons as static_weapons
+from .utils import core as ewutils
+from .utils import district as dist_utils
+from .utils import frontend as fe_utils
+from .utils import hunting as hunt_utils
+from .utils import item as itm_utils
+from .utils import rolemgr as ewrolemgr
+from .utils.combat import EwUser
+from .utils.district import EwDistrict
 from .utils.frontend import EwResponseContainer
+from .utils.slimeoid import EwSlimeoid
+
 
 async def consult(cmd):
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])

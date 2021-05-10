@@ -1,18 +1,15 @@
-from .static import cfg as ewcfg
-from .static import poi as poi_static
-
 from .backend import core as bknd_core
 from .backend import item as bknd_item
-
+from .backend.book import EwBook
+from .backend.book import EwBookSale
+from .backend.item import EwItem
+from .backend.market import EwMarket
+from .backend.player import EwPlayer
+from .static import cfg as ewcfg
+from .static import poi as poi_static
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
-
 from .utils.combat import EwUser
-from .backend.market import EwMarket
-from .backend.item import EwItem
-from .backend.player import EwPlayer
-from .backend.book import EwBook, EwBookSale
-
 from .utils.frontend import EwResponseContainer
 
 readers = {}

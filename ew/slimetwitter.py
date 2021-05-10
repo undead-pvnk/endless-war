@@ -1,9 +1,8 @@
 import time
 
 from .static import cfg as ewcfg
-
-from .utils import frontend as fe_utils, stats as ewstats
-
+from .utils import frontend as fe_utils
+from .utils import stats as ewstats
 from .utils.combat import EwUser
 
 

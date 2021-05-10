@@ -1,6 +1,7 @@
 
-from ..static import cfg as ewcfg
 from . import core as bknd_core
+from ..static import cfg as ewcfg
+
 
 class EwApartment:
 	id_user = -1

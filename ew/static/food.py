@@ -1,8 +1,7 @@
-import os
 import json
+import os
 
 from . import cfg as ewcfg
-
 from ..model.food import EwFood
 
 food_list = []

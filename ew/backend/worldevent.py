@@ -1,10 +1,10 @@
-import time
 import random
+import time
 
+from . import core as bknd_core
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
 from ..utils import core as ewutils
-from . import core as bknd_core
 
 
 class EwWorldEvent:

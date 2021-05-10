@@ -1,31 +1,30 @@
 """
 	Commands and utilities related to Juveniles.
 """
-import time
-import random
 import math
+import random
+import time
 
-from .static import cfg as ewcfg
-from .static import vendors
-from .static import items as static_items
-from .static import weapons as static_weapons
-from .static import food as static_food
-from .static import poi as poi_static
-
-from .backend import worldevent as bknd_worldevent
-from .backend import item as bknd_item
-
-from .utils import core as ewutils, rolemgr as ewrolemgr, stats as ewstats
-from .utils import frontend as fe_utils
-from .utils import poi as poi_utils
-from .utils import item as itm_utils
 from . import item as ewitem
-
+from .backend import item as bknd_item
+from .backend import worldevent as bknd_worldevent
 from .backend.item import EwItem
-from .utils.combat import EwUser
 from .backend.market import EwMarket
-from ew.utils.district import EwDistrict
 from .backend.worldevent import EwWorldEvent
+from .static import cfg as ewcfg
+from .static import food as static_food
+from .static import items as static_items
+from .static import poi as poi_static
+from .static import vendors
+from .static import weapons as static_weapons
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils import item as itm_utils
+from .utils import poi as poi_utils
+from .utils import rolemgr as ewrolemgr
+from .utils import stats as ewstats
+from .utils.combat import EwUser
+from .utils.district import EwDistrict
 from .utils.frontend import EwResponseContainer
 
 # Map of user ID to a map of recent miss-mining time to count. If the count

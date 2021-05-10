@@ -1,5 +1,6 @@
-import MySQLdb
 import time
+
+import MySQLdb
 
 from ..static import cfg as ewcfg
 

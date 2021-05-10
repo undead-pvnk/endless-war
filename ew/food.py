@@ -1,30 +1,27 @@
-import time
 import asyncio
 import random
-
-from .static import cfg as ewcfg
-from .static import vendors
-from .static import items as static_items
-from .static import weapons as static_weapons
-from .static import food as static_food
-from .static import poi as poi_static
-from .static import cosmetics as static_cosmetics
+import time
 
 from .backend import item as bknd_item
-
+from .backend.item import EwItem
+from .backend.market import EwCompany
+from .backend.market import EwMarket
+from .backend.market import EwStock
+from .backend.player import EwPlayer
+from .static import cfg as ewcfg
+from .static import cosmetics as static_cosmetics
+from .static import food as static_food
+from .static import items as static_items
+from .static import poi as poi_static
+from .static import vendors
+from .static import weapons as static_weapons
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
-from .utils import poi as poi_utils
-from .utils import loop as loop_utils
 from .utils import item as itm_utils
-
+from .utils import loop as loop_utils
+from .utils import poi as poi_utils
 from .utils.combat import EwUser
-from .backend.player import EwPlayer
-from .backend.market import EwMarket, EwCompany, EwStock
-from .backend.item import EwItem
-from ew.utils.district import EwDistrict
-
-
+from .utils.district import EwDistrict
 
 """ show all available food items """
 async def menu(cmd):

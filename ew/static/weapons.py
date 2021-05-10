@@ -1,10 +1,9 @@
 import random
 
 from . import cfg as ewcfg
-
+from ..model.weapon import EwWeapon
 from ..utils import core as ewutils
 
-from ..model.weapon import EwWeapon
 
 def get_weapon_type_stats(weapon_type):
 	types = {

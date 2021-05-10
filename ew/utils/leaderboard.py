@@ -1,14 +1,13 @@
-from ew.static import cfg as ewcfg
-from ew.static import poi as poi_static
-from ew.utils import core as ewutils
-from ew.utils import frontend as fe_utils
-from ew.backend import core as bknd_core
-
-from ew.utils.combat import EwUser
-from ew.backend.player import EwPlayer
-from ew.backend.market import EwMarket, EwStock
-from ew.backend.district import EwDistrictBase as EwDistrict
-
+from . import core as ewutils
+from . import frontend as fe_utils
+from .combat import EwUser
+from ..backend import core as bknd_core
+from ..backend.district import EwDistrictBase as EwDistrict
+from ..backend.market import EwMarket
+from ..backend.market import EwStock
+from ..backend.player import EwPlayer
+from ..static import cfg as ewcfg
+from ..static import poi as poi_static
 
 
 async def post_leaderboards(client = None, server = None):

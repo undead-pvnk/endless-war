@@ -5,14 +5,13 @@ import discord
 
 from .static import cfg as ewcfg
 from .static import poi as poi_static
-
-from .utils import core as ewutils, rolemgr as ewrolemgr, stats as ewstats
+from .utils import core as ewutils
 from .utils import frontend as fe_utils
-
+from .utils import rolemgr as ewrolemgr
+from .utils import stats as ewstats
 from .utils.combat import EwUser
-from ew.utils.district import EwDistrict
+from .utils.district import EwDistrict
 from .utils.frontend import EwResponseContainer
-
 
 """
 	Informs the player about their current zone's capture progress

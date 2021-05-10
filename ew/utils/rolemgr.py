@@ -1,15 +1,14 @@
 import asyncio
 import time
-import discord
 
-from ..static import cfg as ewcfg
-from ..static import poi as poi_static
+import discord
 
 from . import core as ewutils
 from . import frontend as fe_utils
-
-from ..backend.user import EwUserBase as EwUser
 from ..backend.role import EwRole
+from ..backend.user import EwUserBase as EwUser
+from ..static import cfg as ewcfg
+from ..static import poi as poi_static
 
 """
 	Find relevant roles and save them to the database.

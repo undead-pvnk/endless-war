@@ -1,12 +1,11 @@
 import asyncio
 
-from ew.backend.transport import EwTransportBase
-from ew.utils import core as ewutils
-from ew.static import cfg as ewcfg
-from ew.static import poi as poi_static
-from ew.utils.district import EwDistrict
-
-from ew.utils.frontend import EwResponseContainer
+from . import core as ewutils
+from .district import EwDistrict
+from .frontend import EwResponseContainer
+from ..backend.transport import EwTransportBase
+from ..static import cfg as ewcfg
+from ..static import poi as poi_static
 
 """
 	Database Object for public transportation vehicles, such as ferries or subway trains

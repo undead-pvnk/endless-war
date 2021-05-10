@@ -3,19 +3,17 @@
 """
 import re
 
+from . import cmd as ewcmd
+from . import item as ewitem
+from . import move as ewmap
+from .backend import item as bknd_item
 from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import poi as poi_static
-
-from .backend import item as bknd_item
-
-from . import item as ewitem
-from .utils import core as ewutils, rolemgr as ewrolemgr
+from .utils import core as ewutils
 from .utils import frontend as fe_utils
 from .utils import item as itm_utils
-from . import move as ewmap
-from . import cmd as ewcmd
-
+from .utils import rolemgr as ewrolemgr
 from .utils.combat import EwUser
 
 """

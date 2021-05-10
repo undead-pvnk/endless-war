@@ -1,37 +1,36 @@
 import asyncio
-import time
-import math
 import heapq
+import math
 import random
-import discord
-
+import time
 from copy import deepcopy
 
-from .static import cfg as ewcfg
-from .static import poi as poi_static
+import discord
 
-from .backend import core as bknd_core
-from .backend import ads as bknd_ads
-
-from .utils import core as ewutils, rolemgr as ewrolemgr
-from .utils import frontend as fe_utils
-from .utils import district as dist_utils
-from .utils import poi as poi_utils
-from . import apt as ewapt
 from . import ads as ewads
-
-from ew.utils.district import EwDistrict
-from ew.utils.transport import EwTransport
+from . import apt as ewapt
+from .backend import ads as bknd_ads
+from .backend import core as bknd_core
+from .backend.ads import EwAd
+from .backend.dungeons import EwGamestate
+from .backend.item import EwItem
 from .backend.market import EwMarket
 from .backend.mutation import EwMutation
-from ew.utils.slimeoid import EwSlimeoid
 from .backend.player import EwPlayer
-from .backend.ads import EwAd
-from .backend.item import EwItem
-from .backend.dungeons import EwGamestate
-from .utils.combat import EwEnemy, EwUser
 from .backend.worldevent import get_void_connection_pois
+from .static import cfg as ewcfg
+from .static import poi as poi_static
+from .utils import core as ewutils
+from .utils import district as dist_utils
+from .utils import frontend as fe_utils
+from .utils import poi as poi_utils
+from .utils import rolemgr as ewrolemgr
+from .utils.combat import EwEnemy
+from .utils.combat import EwUser
+from .utils.district import EwDistrict
 from .utils.frontend import EwResponseContainer
+from .utils.slimeoid import EwSlimeoid
+from .utils.transport import EwTransport
 
 move_counter = 0
 

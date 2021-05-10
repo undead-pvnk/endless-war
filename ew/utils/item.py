@@ -1,22 +1,19 @@
 
 import collections
-import time
 import random
+import time
 
-from ..static import cfg as ewcfg
-from ..static import weapons as static_weapons
-from ..static import hue as hue_static
-from ..static import items as static_items
-
+from . import core as ewutils
+from . import frontend as fe_utils
+from . import stats as ewstats
 from ..backend import core as bknd_core
 from ..backend import item as bknd_item
-
-from . import core as ewutils, stats as ewstats
-from . import frontend as fe_utils
-
-from ..backend.user import EwUserBase as EwUser
 from ..backend.item import EwItem
-
+from ..backend.user import EwUserBase as EwUser
+from ..static import cfg as ewcfg
+from ..static import hue as hue_static
+from ..static import items as static_items
+from ..static import weapons as static_weapons
 
 """
     Drop some of a player's non-soulbound items into their district.

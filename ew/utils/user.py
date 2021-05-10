@@ -1,10 +1,8 @@
 import time
 
-from ew.utils import core as ewutils
-from ew.static import cfg as ewcfg
-
-from ew.backend.market import EwMarket
-
+from . import core as ewutils
+from ..backend.market import EwMarket
+from ..static import cfg as ewcfg
 
 
 def get_move_speed(user_data):

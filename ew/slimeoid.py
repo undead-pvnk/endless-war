@@ -1,28 +1,26 @@
-import random
 import asyncio
+import random
 import time
 
-from .static import cfg as ewcfg
-from .static import slimeoid as sl_static
-from .static import poi as poi_static
-from .static import hue as hue_static
-
+from . import casino as ewcasino
+from . import item as ewitem
 from .backend import core as bknd_core
 from .backend import item as bknd_item
-
+from .backend.item import EwItem
+from .backend.market import EwMarket
+from .backend.player import EwPlayer
+from .backend.quadrants import EwQuadrant
+from .static import cfg as ewcfg
+from .static import hue as hue_static
+from .static import poi as poi_static
+from .static import slimeoid as sl_static
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
-from . import item as ewitem
-from . import casino as ewcasino
-
 from .utils.combat import EwUser
-from .backend.market import EwMarket
-from ew.utils.district import EwDistrict
-from .backend.player import EwPlayer
-from .backend.item import EwItem
-from .backend.quadrants import EwQuadrant
-from ew.utils.slimeoid import EwSlimeoid
+from .utils.district import EwDistrict
 from .utils.frontend import EwResponseContainer
+from .utils.slimeoid import EwSlimeoid
+
 
 # manages a slimeoid's combat stats during a slimeoid battle
 class EwSlimeoidCombatData:

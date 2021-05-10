@@ -3,17 +3,20 @@ import math
 import random
 import time
 
-from . import core as ewutils, stats as ewstats, district as bknd_district
+from . import core as ewutils
+from . import district as bknd_district
 from . import frontend as fe_utils
 from . import hunting as hunt_utils
 from . import item as itm_utils
 from . import rolemgr as ewrolemgr
+from . import stats as ewstats
 from .district import EwDistrict
 from .frontend import EwResponseContainer
 from .user import get_move_speed
-from ..backend import core as bknd_core, status as bknd_status
+from ..backend import core as bknd_core
 from ..backend import hunting as bknd_hunt
 from ..backend import item as bknd_item
+from ..backend import status as bknd_status
 from ..backend.hunting import EwEnemyBase
 from ..backend.item import EwItem
 from ..backend.market import EwMarket
@@ -23,11 +26,12 @@ from ..backend.status import EwEnemyStatusEffect
 from ..backend.status import EwStatusEffect
 from ..backend.user import EwUserBase
 from ..model.hunting import EwEnemyEffectContainer
-from ..static import cfg as ewcfg, mutations as static_mutations
+from ..static import cfg as ewcfg
 from ..static import cosmetics as static_cosmetics
 from ..static import food as static_food
 from ..static import hunting as hunt_static
 from ..static import items as static_items
+from ..static import mutations as static_mutations
 from ..static import poi as poi_static
 from ..static import slimeoid as sl_static
 from ..static import status as se_static

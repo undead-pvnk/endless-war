@@ -1,17 +1,14 @@
 import time
 
+from .backend import ads as bknd_ads
+from .backend.ads import EwAd
+from .backend.player import EwPlayer
 from .static import cfg as ewcfg
 from .static import poi as poi_static
-
-from .backend import ads as bknd_ads
-
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
-
 from .utils.combat import EwUser
-from .backend.player import EwPlayer
-from ew.utils.district import EwDistrict
-from .backend.ads import EwAd
+from .utils.district import EwDistrict
 
 
 def format_ad_response(ad_data):

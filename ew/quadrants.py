@@ -1,11 +1,9 @@
 import random
 
+from .backend.quadrants import EwQuadrant
 from .static import cfg as ewcfg
 from .static import quadrants as quad_static
-
 from .utils import frontend as fe_utils
-
-from .backend.quadrants import EwQuadrant
 from .utils.combat import EwUser
 
 

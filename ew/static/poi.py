@@ -1,11 +1,11 @@
-import os
 import json
+import os
 
 from . import cfg as ewcfg
-
-from ..model.poi import EwPoi, EwTransportLine
-from ..model.poi import EwEventDef
 from ..model.poi import EwDungeonScene
+from ..model.poi import EwEventDef
+from ..model.poi import EwPoi
+from ..model.poi import EwTransportLine
 
 #load EwPois from json to poi_list
 poi_list = []

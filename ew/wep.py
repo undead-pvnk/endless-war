@@ -1,33 +1,31 @@
 import asyncio
-import time
-import random
 import math
-
-from .static import cfg as ewcfg
-from .static import weapons as static_weapons
-from .static import poi as poi_static
-from .static import slimeoid as sl_static
-
-from .backend import item as bknd_item
-from .backend import hunting as bknd_hunt
+import random
+import time
 
 from . import captcha as ewcaptcha
-from .utils import core as ewutils, rolemgr as ewrolemgr, stats as ewstats
-from .utils import frontend as fe_utils
-from .utils import item as itm_utils
-from .utils import combat as cmbt_utils
 from . import move as ewmap
-
+from .backend import hunting as bknd_hunt
+from .backend import item as bknd_item
+from .backend.dungeons import EwGamestate
 from .backend.item import EwItem
 from .backend.market import EwMarket
-from ew.utils.slimeoid import EwSlimeoid
-from ew.utils.district import EwDistrict
 from .backend.player import EwPlayer
-from .backend.dungeons import EwGamestate
-from .utils.combat import EwEnemy, EwUser
-
+from .static import cfg as ewcfg
+from .static import poi as poi_static
+from .static import slimeoid as sl_static
+from .static import weapons as static_weapons
+from .utils import combat as cmbt_utils
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils import item as itm_utils
+from .utils import rolemgr as ewrolemgr
+from .utils import stats as ewstats
+from .utils.combat import EwEnemy
+from .utils.combat import EwUser
+from .utils.district import EwDistrict
 from .utils.frontend import EwResponseContainer
-
+from .utils.slimeoid import EwSlimeoid
 
 """ A data-moving class which holds references to objects we want to modify with weapon effects. """
 class EwEffectContainer:

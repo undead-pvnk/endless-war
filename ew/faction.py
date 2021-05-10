@@ -1,12 +1,10 @@
-from .static import cfg as ewcfg
-from .static import weapons as static_weapons
-from .static import poi as poi_static
 from .backend import item as bknd_item
-
+from .backend.item import EwItem
+from .static import cfg as ewcfg
+from .static import poi as poi_static
+from .static import weapons as static_weapons
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
-
-from .backend.item import EwItem
 from .utils.combat import EwUser
 
 """allow a juvie to join your gang"""

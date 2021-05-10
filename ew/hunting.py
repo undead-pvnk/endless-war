@@ -2,10 +2,8 @@ import time
 
 from .static import cfg as ewcfg
 from .static import poi as poi_static
-
 from .utils import frontend as fe_utils
 from .utils import hunting as hunt_utils
-
 from .utils.combat import EwUser
 
 

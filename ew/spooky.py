@@ -2,30 +2,29 @@
 """
 	Commands and utilities related to dead players.
 """
-import time
 import random
 import re
+import time
 
-from .static import cfg as ewcfg
-from .static import items as static_items
-from .static import weather as weather_static
-from .static import poi as poi_static
-from .static import slimeoid as sl_static
-
-from .backend import core as bknd_core
-from .backend import item as bknd_item
-
-from .utils import core as ewutils, rolemgr as ewrolemgr, stats as ewstats
-from .utils import frontend as fe_utils
 from . import move as ewmap
 from . import slimeoid as ewslimeoid
-
-from .utils.combat import EwUser
+from .backend import core as bknd_core
+from .backend import item as bknd_item
 from .backend.market import EwMarket
-from ew.utils.slimeoid import EwSlimeoid
 from .backend.quadrants import EwQuadrant
-from ew.utils.district import EwDistrict
+from .static import cfg as ewcfg
+from .static import items as static_items
+from .static import poi as poi_static
+from .static import slimeoid as sl_static
+from .static import weather as weather_static
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils import rolemgr as ewrolemgr
+from .utils import stats as ewstats
+from .utils.combat import EwUser
+from .utils.district import EwDistrict
 from .utils.frontend import EwResponseContainer
+from .utils.slimeoid import EwSlimeoid
 
 """ revive yourself from the dead. """
 async def revive(cmd):

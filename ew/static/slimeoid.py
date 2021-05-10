@@ -1,7 +1,13 @@
 import random
 
 from . import cfg as ewcfg
-from ..model.slimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain
+from ..model.slimeoid import EwBody
+from ..model.slimeoid import EwBrain
+from ..model.slimeoid import EwDefense
+from ..model.slimeoid import EwHead
+from ..model.slimeoid import EwMobility
+from ..model.slimeoid import EwOffense
+from ..model.slimeoid import EwSpecial
 
 # All body attributes in the game.
 body_list = [

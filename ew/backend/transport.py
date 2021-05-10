@@ -1,7 +1,8 @@
 from . import core as bknd_core
-from ..utils import core as ewutils
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
+from ..utils import core as ewutils
+
 
 class EwTransportBase:
 	# server id

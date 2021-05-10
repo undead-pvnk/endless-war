@@ -1,16 +1,15 @@
 import datetime
-import time
-import re
-import random
-import string
 import math
-
-from ..static import cfg as ewcfg
-from ..static import weather as weather_static
-from ..static import poi as poi_static
-from ..static import mutations as static_mutations
+import random
+import re
+import string
+import time
 
 from ..backend import core as bknd_core
+from ..static import cfg as ewcfg
+from ..static import mutations as static_mutations
+from ..static import poi as poi_static
+from ..static import weather as weather_static
 
 TERMINATE = False
 DEBUG = False

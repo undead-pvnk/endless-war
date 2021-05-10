@@ -1,15 +1,13 @@
-import random
 import asyncio
+import random
 
+from .backend.player import EwPlayer
 from .static import cfg as ewcfg
 from .static import poi as poi_static
-
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
-
 from .utils.combat import EwUser
-from .backend.player import EwPlayer
-from ew.utils.district import EwDistrict
+from .utils.district import EwDistrict
 from .utils.frontend import EwResponseContainer
 
 sb_count = 0

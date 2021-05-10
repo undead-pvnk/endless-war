@@ -1,22 +1,21 @@
+import asyncio
 import sys
 import traceback
-import asyncio
 
 import discord
 
-from ..static import cfg as ewcfg
-from ..static import weapons as static_weapons
-from ..static import hunting as hunt_static
-from ..static import poi as poi_static
-
+from . import core as ewutils
+from . import rolemgr as ewrolemgr
 from ..backend import core as bknd_core
-
-from . import core as ewutils, rolemgr as ewrolemgr
-
-from ..backend.user import EwUserBase as EwUser
-from ..backend.player import EwPlayer
 from ..backend.hunting import EwEnemyBase as EwEnemy
 from ..backend.item import EwItem
+from ..backend.player import EwPlayer
+from ..backend.user import EwUserBase as EwUser
+from ..static import cfg as ewcfg
+from ..static import hunting as hunt_static
+from ..static import poi as poi_static
+from ..static import weapons as static_weapons
+
 
 class Message:
 	# Send the message to this exact channel by name.

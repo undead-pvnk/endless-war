@@ -3,10 +3,9 @@ import random
 
 from .static import cfg as ewcfg
 from .static import poi as poi_static
-
-from .utils import core as ewutils, rolemgr as ewrolemgr
+from .utils import core as ewutils
 from .utils import frontend as fe_utils
-
+from .utils import rolemgr as ewrolemgr
 from .utils.combat import EwUser
 
 # maps users to where they are in the tutorial

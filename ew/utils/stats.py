@@ -1,8 +1,6 @@
-from ew.static import cfg as ewcfg
-
-from ew.backend import core as bknd_core
-
 from . import event as evt_utils
+from ..backend import core as bknd_core
+from ..static import cfg as ewcfg
 
 """
 	Utility functions for recording statistics in the database

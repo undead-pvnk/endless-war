@@ -1,31 +1,30 @@
-import time
 import asyncio
 import re
+import time
 
 import discord
 
-from .static import cfg as ewcfg
-from .static import cosmetics
-from .static import weapons as static_weapons
-from .static import poi as poi_static
-from .static import hue as hue_static
-
+from . import debug as ewdebug
+from . import prank as ewprank
+from . import smelting as ewsmelting
 from .backend import core as bknd_core
 from .backend import item as bknd_item
-
-from .utils import core as ewutils, rolemgr as ewrolemgr
+from .backend.item import EwItem
+from .backend.player import EwPlayer
+from .static import cfg as ewcfg
+from .static import cosmetics
+from .static import hue as hue_static
+from .static import poi as poi_static
+from .static import weapons as static_weapons
+from .utils import core as ewutils
 from .utils import frontend as fe_utils
+from .utils import item as itm_utils
 from .utils import loop as loop_utils
 from .utils import poi as poi_utils
-from .utils import item as itm_utils
-from . import smelting as ewsmelting
-from . import prank as ewprank
-from . import debug as ewdebug
-
+from .utils import rolemgr as ewrolemgr
 from .utils.combat import EwUser
-from .backend.player import EwPlayer
-from .backend.item import EwItem
-from ew.utils.district import EwDistrict
+from .utils.district import EwDistrict
+
 """
     Drop item into current district.
 """

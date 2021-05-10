@@ -1,12 +1,12 @@
 import time
 
-from ..utils import core as ewutils
+from . import core as bknd_core
 from ..static import cfg as ewcfg
 from ..static import cosmetics
+from ..static import hue as hue_static
 from ..static import items as static_items
 from ..static import weapons as static_weapons
-from ..static import hue as hue_static
-from . import core as bknd_core
+from ..utils import core as ewutils
 
 """
     EwItem is the instance of an item (described by EwItemDef, linked by

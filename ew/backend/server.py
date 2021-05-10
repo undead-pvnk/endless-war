@@ -1,5 +1,5 @@
-from ..static import cfg as ewcfg
 from . import core as bknd_core
+from ..static import cfg as ewcfg
 
 """
 	EwServer is a representation of a server, if the name of the server or

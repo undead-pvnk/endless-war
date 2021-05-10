@@ -5,82 +5,79 @@
 #
 # a chat bot for the RFCK discord server
 
-import discord
 import asyncio
+import json
+import logging
+import os
 import random
+import re
+import shlex
+import subprocess
 import sys
 import time
-import json
-import subprocess
 import traceback
-import re
-import os
-import shlex
-import logging
 
-import ew.static.cfg as ewcfg
-import ew.static.vendors as vendors
-import ew.static.cosmetics as cosmetics
-import ew.static.items as static_items
-import ew.static.weather as weather_static
-import ew.static.food as static_food
-import ew.static.poi as poi_static
+import discord
 
-import ew.backend.core as bknd_core
+import ew.ads as ewads
+import ew.apt as ewapt
 import ew.backend.ads as bknd_ads
+import ew.backend.core as bknd_core
 import ew.backend.farm as bknd_farm
 import ew.backend.fish as bknd_fish
+import ew.backend.hunting as bknd_hunt
 import ew.backend.item as bknd_item
 import ew.backend.player as bknd_player
 import ew.backend.server as bknd_server
-import ew.utils.leaderboard as bknd_leaderboard
-import ew.utils.weather as bknd_weather
-import ew.backend.hunting as bknd_hunt
-
-import ew.utils.core as ewutils
-import ew.utils.item as itm_utils
-import ew.utils.frontend as fe_utils
-import ew.utils.poi as poi_utils
-import ew.utils.loop as loop_utils
-import ew.farm as ewfarm
-import ew.cmd as ewcmd
+import ew.book as ewbook
 import ew.casino as ewcasino
-import ew.food as ewfood
-import ew.wep as ewwep
-import ew.juviecmd as ewjuviecmd
-import ew.market as ewmarket
-import ew.spooky as ewspooky
-import ew.kingpin as ewkingpin
-import ew.item as ewitem
-import ew.move as ewmap
-import ew.utils.rolemgr as ewrolemgr
+import ew.cmd as ewcmd
 import ew.cosmeticitem as ewcosmeticitem
-import ew.slimeoid as ewslimeoid
+import ew.debug as ewdebug
 import ew.district as ewdistrict
+import ew.dungeons as ewdungeons
+import ew.faction as ewfaction
+import ew.farm as ewfarm
+import ew.fish as ewfish
+import ew.food as ewfood
+import ew.hunting as ewhunting
+import ew.item as ewitem
+import ew.juviecmd as ewjuviecmd
+import ew.kingpin as ewkingpin
+import ew.market as ewmarket
+import ew.move as ewmap
 import ew.mutation as ewmutation
 import ew.quadrants as ewquadrants
-import ew.transport as ewtransport
-import ew.smelting as ewsmelting
-import ew.hunting as ewhunting
-import ew.fish as ewfish
-import ew.faction as ewfaction
-import ew.apt as ewapt
-import ew.dungeons as ewdungeons
-import ew.ads as ewads
-import ew.book as ewbook
-import ew.sports as ewsports
 import ew.race as ewrace
+import ew.slimeoid as ewslimeoid
 import ew.slimetwitter as ewslimetwitter
-import ew.debug as ewdebug
-
+import ew.smelting as ewsmelting
+import ew.spooky as ewspooky
+import ew.sports as ewsports
+import ew.static.cfg as ewcfg
+import ew.static.cosmetics as cosmetics
+import ew.static.food as static_food
+import ew.static.items as static_items
+import ew.static.poi as poi_static
+import ew.static.vendors as vendors
+import ew.static.weather as weather_static
+import ew.transport as ewtransport
+import ew.utils.core as ewutils
+import ew.utils.frontend as fe_utils
+import ew.utils.item as itm_utils
+import ew.utils.leaderboard as bknd_leaderboard
+import ew.utils.loop as loop_utils
+import ew.utils.poi as poi_utils
+import ew.utils.rolemgr as ewrolemgr
+import ew.utils.weather as bknd_weather
+import ew.wep as ewwep
 from ew.backend.item import EwItem
-from ew.utils.combat import EwUser
-from ew.backend.player import EwPlayer
 from ew.backend.market import EwMarket
 from ew.backend.market import EwStock
-from ew.utils.district import EwDistrict
+from ew.backend.player import EwPlayer
 from ew.backend.status import EwStatusEffect
-
+from ew.utils.combat import EwUser
+from ew.utils.district import EwDistrict
 
 ewutils.logMsg('Starting up...')
 init_complete = False

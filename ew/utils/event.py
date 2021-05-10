@@ -1,7 +1,6 @@
 from . import stats as ewstats
-from ..static import cfg as ewcfg
-
 from ..backend import item as bknd_item
+from ..static import cfg as ewcfg
 
 """
 	Database persistence object describing some discrete event. Player

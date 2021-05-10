@@ -1,12 +1,10 @@
+from . import core as ewutils
+from ..backend import core as bknd_core
+from ..backend.district import EwDistrictBase as EwDistrict
+from ..backend.dungeons import EwGamestate
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
 
-from ..backend import core as bknd_core
-
-from . import core as ewutils
-
-from ..backend.district import EwDistrictBase as EwDistrict
-from ..backend.dungeons import EwGamestate
 
 def get_subzone_controlling_faction(subzone_id, id_server):
 	
