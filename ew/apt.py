@@ -310,6 +310,7 @@ async def signlease(cmd):
 			for value in ewcfg.fuck_energies:
 				item = static_food.food_map.get(value)
 				item_props = ewitem.gen_item_props(item)
+				item_props["time_fridged"] = str(int(time.time()))
 				id_item = ewitem.item_create(
 					item_type=ewcfg.it_food,
 					id_user= '{}{}'.format(cmd.message.author.id, 'fridge'),
@@ -838,7 +839,10 @@ async def remove_item(cmd, dest):
 
 		if item_sought.get('item_type') == ewcfg.it_food and destination == ewcfg.compartment_id_fridge:
 			#the formula is: expire time = expire time + current time - time frozen
-			item.item_props['time_expir'] = str(int(float(item.item_props.get('time_expir'))) + (int(time.time()) - int(float(item.item_props.get('time_fridged')))))
+			if int(float(item.item_props.get('time_fridged'))) != 0:
+				item.item_props['time_expir'] = str(int(float(item.item_props.get('time_expir'))) + (int(time.time()) - int(float(item.item_props.get('time_fridged')))))
+			else:
+				item.item_props['time_expir'] = str(int(float(item.item_props.get('time_fridged'))) + 43200)
 			item.time_expir = int(float(item.item_props.get('time_expir')))
 			item.item_props['time_fridged'] = '0'
 			item.persist()
@@ -2341,7 +2345,10 @@ def toss_items(id_user = None, id_server = None, poi = None):
 			stuffing = ewitem.EwItem(id_item=stuff.get('id_item'))
 			stuffing.id_owner = poi.id_poi
 			if stuff.get('item_type') == ewcfg.it_food and id_user[-6:] == ewcfg.compartment_id_fridge:
-				stuffing.item_props['time_expir'] = str(int(float(stuffing.item_props.get('time_expir'))) + (int(time.time()) - int(float(stuffing.item_props.get('time_fridged')))))
+				if int(float(stuffing.item_props.get('time_fridged'))) != 0:
+					stuffing.item_props['time_expir'] = str(int(float(stuffing.item_props.get('time_expir'))) + (int(time.time()) - int(float(stuffing.item_props.get('time_fridged')))))
+				else:
+					stuffing.item_props['time_expir'] = str(int(float(stuffing.item_props.get('time_fridged'))) + 43200)
 				stuffing.time_expir = int(float(stuffing.item_props.get('time_expir')))
 				stuffing.item_props['time_fridged'] = '0'
 			stuffing.persist()

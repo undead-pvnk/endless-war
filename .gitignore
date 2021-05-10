@@ -3,6 +3,7 @@ __pycache__
 twitch_client_id
 msgqueue
 vcs.xml
+debug.py
 ewdebug.py
 ew/debug.py
 cfg_exporter.py
