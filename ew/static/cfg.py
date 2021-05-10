@@ -1,4 +1,4 @@
-from .. import debug as ewdebug
+
 
 # Global configuration options.
 
@@ -1388,15 +1388,7 @@ cmd_synctopics = cmd_prefix + 'synctopics'
 cmd_shutdownbot = cmd_prefix + 'shutdownbot'
 cmd_checkbot = cmd_prefix + 'checkbot'
 cmd_degradedistricts = cmd_prefix + 'degradedistricts'
-cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
-cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
-cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
-cmd_debug4 = cmd_prefix + ewdebug.cmd_debug4
-#debug5 = ewdebug.debug5
-cmd_debug6 = cmd_prefix + ewdebug.cmd_debug6
-cmd_debug7 = cmd_prefix + ewdebug.cmd_debug7
-cmd_debug8 = cmd_prefix + ewdebug.cmd_debug8
-cmd_debug9 = cmd_prefix + ewdebug.cmd_debug9
+
 
 cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
 cmd_clear_mutations = cmd_prefix + 'sterilizemutations'
@@ -3325,11 +3317,7 @@ moans = [
 
 	
 
-debugroom = ewdebug.debugroom
-debugroom_short = ewdebug.debugroom_short
-debugpiers = ewdebug.debugpiers
-debugfish_response = ewdebug.debugfish_response
-debugfish_goal = ewdebug.debugfish_goal
+
 
 time_movesubway = 10
 time_embark = 2
@@ -5512,8 +5500,21 @@ def set_client(cl):
 #     scream += "A"
 #     
 # print(scream)
-
-
+from .. import debug as ewdebug
+debugroom = ewdebug.debugroom
+debugroom_short = ewdebug.debugroom_short
+debugpiers = ewdebug.debugpiers
+debugfish_response = ewdebug.debugfish_response
+debugfish_goal = ewdebug.debugfish_goal
+cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
+cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
+cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
+cmd_debug4 = cmd_prefix + ewdebug.cmd_debug4
+#debug5 = ewdebug.debug5
+cmd_debug6 = cmd_prefix + ewdebug.cmd_debug6
+cmd_debug7 = cmd_prefix + ewdebug.cmd_debug7
+cmd_debug8 = cmd_prefix + ewdebug.cmd_debug8
+cmd_debug9 = cmd_prefix + ewdebug.cmd_debug9
 """    /*"rpcity": {
         "id_poi": "rpcity",
         "alias": [
