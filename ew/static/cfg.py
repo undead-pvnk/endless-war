@@ -2254,6 +2254,12 @@ col_festivity_from_slimecoin = 'festivity_from_slimecoin'
 col_slimernalia_coin_gambled = 'slimernalia_coin_gambled'
 col_slimernalia_kingpin = 'slimernalia_kingpin'
 
+#Database columns for fishing records
+col_record_type = "record_type"
+col_record_amount = "record_amount"
+col_legality = "legality"
+col_id_post = "id_post"
+
 # SWILLDERMUK
 col_gambit = 'gambit'
 col_credence = 'credence'

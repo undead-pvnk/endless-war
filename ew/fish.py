@@ -138,6 +138,91 @@ class EwOffer:
 		))
 
 
+class EwRecord:
+	# ID of the server
+	id_server = -1
+
+	# ID of the record holder
+	id_user = -1
+
+	# The item length being set
+	record_type = ""
+
+	# The length/record amount
+	record_amount = 0.0
+
+	# whether the submission is legal or not
+	legality = 1
+
+	# the ID of the post in the server
+	id_post = ""
+
+	def __init__(
+			self,
+			id_server=None,
+			record_type=None
+	):
+		if (record_type != None) and (id_server != None):
+			self.id_server = id_server
+			self.record_type = record_type
+
+			try:
+				conn_info = ewutils.databaseConnect()
+				conn = conn_info.get('conn')
+				cursor = conn.cursor()
+
+				# Retrieve object
+
+				cursor.execute(
+					"SELECT {}, {}, {}, {} FROM records WHERE record_type = %s AND id_server = %s".format(
+						ewcfg.col_id_user,
+						ewcfg.col_record_amount,
+						ewcfg.col_legality,
+						ewcfg.col_id_post
+					),(
+						self.record_type,
+						self.id_server
+					))
+				result = cursor.fetchone()
+
+				if result != None:
+					# Record found: apply the data to this object.
+					self.id_user = result[0]
+					self.record_amount = result[1]
+					self.legality = result[2]
+					self.id_post = result[3]
+			finally:
+				# Clean up the database handles.
+				cursor.close()
+				ewutils.databaseClose(conn_info)
+
+	def persist(self):
+		try:
+			conn_info = ewutils.databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			# Save the object.
+			cursor.execute(
+				"REPLACE INTO records({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+					ewcfg.col_id_server,
+					ewcfg.col_record_type,
+					ewcfg.col_record_amount,
+					ewcfg.col_id_user,
+					ewcfg.col_legality,
+					ewcfg.col_id_post
+				), (
+					self.id_server,
+					self.record_type,
+					self.record_amount,
+					self.id_user,
+					self.legality,
+					self.id_post
+				))
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			ewutils.databaseClose(conn_info)
 
 
 # Randomly generates a fish.

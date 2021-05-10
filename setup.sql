@@ -533,3 +533,13 @@ CREATE TABLE gamestates (
     PRIMARY KEY (id_server, id_state)
 );
 
+create table records(
+    id_server BIGINT NOT NULL DEFAULT -1,
+    record_type VARCHAR(100) NOT NULL,
+    record_amount DECIMAL(9, 2) NOT NULL DEFAULT 0.0,
+    id_user BIGINT NOT NULL DEFAULT -1,
+    id_post VARCHAR(500) NOT NULL DEFAULT '',
+    legality SMALLINT NOT NULL DEFAULT 0
+
+    PRIMARY KEY(id_server, record_type)
+);

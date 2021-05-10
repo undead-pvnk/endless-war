@@ -97,6 +97,9 @@ active_users_map = {}
 # Map of server ID to slime twitter channels
 channels_slimetwitter = {}
 
+#Map of comm serv channels
+channels_communityservice = {}
+
 # Map of all command words in the game to their implementing function.
 cmd_map = {
 	# Attack another player
@@ -1062,6 +1065,11 @@ async def on_ready():
 				elif(channel.name == ewcfg.channel_slimetwitter):
 					channels_slimetwitter[server.id] = channel
 					ewutils.logMsg("• found channel for slime twitter: {}".format(channel.name))
+
+				elif (channel.name == ewcfg.channel_communityservice):
+					channels_communityservice[server.id] = channel
+					ewutils.logMsg("• found channel for community service: {}".format(channel.name))
+
 		ewdebug.initialize_gamestate(id_server=server.id)
 		# create all the districts in the database
 		for poi_object in poi_static.poi_list:
@@ -2146,6 +2154,10 @@ async def on_raw_reaction_add(payload):
 
 				if (str(payload.emoji) == ewcfg.emote_delete_tweet):
 					await message.delete()
+	elif (payload.guild_id is not None # not a dm
+		and channels_communityservice[payload.guild_id] is not None # server has a slime twitter channel
+		and payload.channel_id == channels_communityservice[payload.guild_id].id):
+		pass
 
 
 # find our REST API token

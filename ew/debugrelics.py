@@ -1,3 +1,6 @@
+from .user import EwUser
+import ew.utils as ewutils
+
 class EwRelic:
     item_type = "relic"
 
@@ -57,6 +60,7 @@ class EwRelic:
         self.amount_yield = amount_yield
 
 relic_list = [
+
     EwRelic(
         id_relic = "greenankh",
         str_name = "Green Ankh",
@@ -118,3 +122,11 @@ relic_list = [
         amount_yield=500
     ),
 ]
+
+
+
+
+
+
+
+

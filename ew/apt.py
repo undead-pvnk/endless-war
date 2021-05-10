@@ -2155,7 +2155,23 @@ async def frame(cmd):
 		item.persist()
 		response = "You slip the photo into a frame."
 	elif len(namechange) < 3:
-		response = "You try to put the nothing you have into the frame, but then you realize that's fucking stupid. Put an image link in there"
+		response = "You try to put the nothing you have into the frame, but then you realize that's fucking stupid. Put an image link in there."
+	else:
+		response = "You don't have a frame."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def frame_title(cmd):
+	playermodel = EwPlayer(id_user=cmd.message.author.id)
+	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+	namechange = cmd.message.content[(len(ewcfg.cmd_frame)):].strip()
+
+	if ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server, item_type_filter = ewcfg.it_furniture):
+		item_sought = ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server, item_type_filter = ewcfg.it_furniture)
+		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
+		item.item_props['title'] = namechange
+		item.persist()
+		response = "You title the image: {}.".format(namechange)
 	else:
 		response = "You don't have a frame."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
