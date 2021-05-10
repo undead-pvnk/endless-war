@@ -1,34 +1,34 @@
-import math
-import time
 import asyncio
-
-from .static import cfg as ewcfg
-from .static import cosmetics
-from .static import vendors
-from .static import items as static_items
-from .static import weapons as static_weapons
-from .static import food as static_food
-from .static import poi as poi_static
-from . import item as ewitem
-from . import utils as ewutils
-from . import move as ewmap
 import random
-from . import rolemgr as ewrolemgr
-from . import statuseffects as ewstatuseffects
-from .user import EwUser
-from .player import EwPlayer
-from .market import EwMarket, EwCompany, EwStock
-from .item import EwItem
-from .district import EwDistrict
+import time
 
-
+from .backend import item as bknd_item
+from .backend.item import EwItem
+from .backend.market import EwCompany
+from .backend.market import EwMarket
+from .backend.market import EwStock
+from .backend.player import EwPlayer
+from .static import cfg as ewcfg
+from .static import cosmetics as static_cosmetics
+from .static import food as static_food
+from .static import items as static_items
+from .static import poi as poi_static
+from .static import vendors
+from .static import weapons as static_weapons
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils import item as itm_utils
+from .utils import loop as loop_utils
+from .utils import poi as poi_utils
+from .utils.combat import EwUser
+from .utils.district import EwDistrict
 
 """ show all available food items """
 async def menu(cmd):
 	user_data = EwUser(member = cmd.message.author, data_level = 2)
 	if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	market_data = EwMarket(id_server = cmd.guild.id)
 	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
@@ -67,10 +67,10 @@ async def menu(cmd):
 				shambler_multiplier = 4
 			else:
 				response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-		controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
+		controlling_faction = poi_utils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
 		response = "{} Menu:\n\n".format(poi.str_name)
 
@@ -89,7 +89,7 @@ async def menu(cmd):
 			for item_name in vendor_inv:
 				item_item = static_items.item_map.get(item_name)
 				food_item = static_food.food_map.get(item_name)
-				cosmetic_item = ewcfg.cosmetic_map.get(item_name)
+				cosmetic_item = static_cosmetics.cosmetic_map.get(item_name)
 				furniture_item = static_items.furniture_map.get(item_name)
 				weapon_item = static_weapons.weapon_map.get(item_name)
 
@@ -176,7 +176,7 @@ async def menu(cmd):
 					response += "\n\nYour mere presence in here ruins the cheery atmosphere."
 
 	# Send the response to the player.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 # Buy items.
 async def order(cmd):
@@ -184,7 +184,7 @@ async def order(cmd):
 	mutations = user_data.get_mutations()
 	if user_data.life_state == ewcfg.life_state_shambler and user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	market_data = EwMarket(id_server = cmd.guild.id)
 	currency_used = 'slime'
@@ -206,7 +206,7 @@ async def order(cmd):
 				shambler_multiplier = 4
 			else:
 				response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		#value = ewutils.flattenTokenListToString(cmd.tokens[1:2])
 
 		#if cmd.tokens_count > 1:
@@ -249,7 +249,7 @@ async def order(cmd):
 
 		# Finds the item if it's an EwCosmeticItem.
 		if item == None:
-			item = ewcfg.cosmetic_map.get(value)
+			item = static_cosmetics.cosmetic_map.get(value)
 			item_type = ewcfg.it_cosmetic
 			if item != None:
 				item_id = item.id_cosmetic
@@ -307,11 +307,11 @@ async def order(cmd):
 
 					if ewcfg.cd_premium_purchase > (int(time.time()) - user_data.time_lastpremiumpurchase):
 						response = "That item is in very limited stock! The vendor asks that you refrain from purchasing it for a day or two."
-						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 					elif ewcfg.cd_new_player > (int(time.time()) - user_data.time_joined):
 						response = "You've only been in the city for a few days. The vendor doesn't trust you with that item very much..."
-						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 				stock_data = None
 				company_data = None
@@ -325,7 +325,7 @@ async def order(cmd):
 				if stock_data is not None:
 					value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
 
-				controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
+				controlling_faction = poi_utils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
 				if controlling_faction != "" and poi.id_poi != ewcfg.poi_id_nuclear_beach_edge:
 					# prices are halved for the controlling gang
@@ -365,7 +365,7 @@ async def order(cmd):
 					if item_type == ewcfg.it_food:
 						food_ordered = True
 
-						food_items = ewitem.inventory(
+						food_items = bknd_item.inventory(
 							id_user = cmd.message.author.id,
 							id_server = cmd.guild.id,
 							item_type_filter = ewcfg.it_food
@@ -383,18 +383,18 @@ async def order(cmd):
 							target_data = EwUser(member=target)
 							if target_data.life_state == ewcfg.life_state_corpse and target_data.get_possession():
 								response = "How are you planning to feed them while they're possessing you?"
-								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+								return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 							elif target_data.poi != user_data.poi:
 								response = "You can't order anything for them because they aren't here!"
-								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+								return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 						if len(food_items) >= user_data.get_food_capacity() and target_data == None and togo:
 							# user_data never got persisted so the player won't lose money unnecessarily
 							response = "You can't carry any more food than that."
-							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+							return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 					elif item_type == ewcfg.it_weapon:
-						weapons_held = ewitem.inventory(
+						weapons_held = bknd_item.inventory(
 							id_user = user_data.id_user,
 							id_server = cmd.guild.id,
 							item_type_filter = ewcfg.it_weapon
@@ -402,15 +402,15 @@ async def order(cmd):
 
 						if len(weapons_held) >= user_data.get_weapon_capacity():
 							response = "You can't carry any more weapons."
-							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+							return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 						elif user_data.life_state == ewcfg.life_state_corpse:
 							response = "Ghosts can't hold weapons."
-							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+							return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 					else:
-						other_items_held = ewitem.inventory(
+						other_items_held = bknd_item.inventory(
 							id_user = user_data.id_user,
 							id_server = cmd.guild.id,
 							item_type_filter = item_type
@@ -418,16 +418,16 @@ async def order(cmd):
 
 						if len(other_items_held) >= ewcfg.generic_inv_limit:
 							response = ewcfg.str_generic_inv_limit.format(item_type)
-							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+							return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-					item_props = ewitem.gen_item_props(item)
+					item_props = itm_utils.gen_item_props(item)
 
 					customtext = cmd.message.content[(len(cmd.tokens[0]) + len(cmd.tokens[1]) + 2):]
 
 					if item.item_type == ewcfg.it_furniture and "custom" in item_props.get('id_furniture'):
 						if customtext == "":
 							response = "You need to specify the customization text before buying a custom item. Come on, isn't that self-evident?"
-							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+							return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 					# Only food should have the value multiplied. If someone togo orders a non-food item by mistake, lower it back down.
 					if not food_ordered and togo:
@@ -453,7 +453,7 @@ async def order(cmd):
 							item.str_name = item.str_name.format(custom = customtext)
 
 
-					id_item = ewitem.item_create(
+					id_item = bknd_item.item_create(
 						item_type = item_type,
 						id_user = cmd.message.author.id,
 						id_server = cmd.guild.id,
@@ -482,7 +482,7 @@ async def order(cmd):
 
 							response += "\n\n*{}*: ".format(target_player_data.display_name) + target_data.eat(item_data)
 							target_data.persist()
-							asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
+							asyncio.ensure_future(loop_utils.decrease_food_multiplier(user_data.id_user))
 						else:
 
 							if value == 0:
@@ -494,7 +494,7 @@ async def order(cmd):
 
 							response += "\n\n*{}*: ".format(user_player_data.display_name) + user_data.eat(item_data)
 							user_data.persist()
-							asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
+							asyncio.ensure_future(loop_utils.decrease_food_multiplier(user_data.id_user))
 
 					if premium_purchase:
 						user_data.time_lastpremiumpurchase = int(time.time())
@@ -505,13 +505,13 @@ async def order(cmd):
 			response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
 
 	# Send the response to the player.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def devour(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(id_server=cmd.message.guild.id, id_user=cmd.message.author.id, item_search=item_search)
+	item_sought = bknd_item.find_item(id_server=cmd.message.guild.id, id_user=cmd.message.author.id, item_search=item_search)
 	mutations = user_data.get_mutations()
 	is_brick = 0
 
@@ -565,7 +565,7 @@ async def devour(cmd):
 
 				if item_has_expired and not (user_has_spoiled_appetite or item_is_non_perishable):
 					response = "You realize that the food you were trying to eat is already spoiled. Ugh, not eating that."
-					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 					# ewitem.item_drop(food_item.id_item)
 
 				recover_hunger = item_obj.item_props.get('recover_hunger')
@@ -591,7 +591,7 @@ async def devour(cmd):
 		response = "Devour what?"
 	else:
 		response = "Are you sure you have that item?"
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def eat_item(cmd):
@@ -604,17 +604,17 @@ async def eat_item(cmd):
 
 	# look for a food item if a name was given
 	if item_search:
-		item_sought = ewitem.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)
+		item_sought = bknd_item.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)
 		if item_sought:
 			food_item = EwItem(id_item = item_sought.get('id_item'))
 		else:
-			item_sought = ewitem.find_item(item_search=item_search, id_user=user_data.id_user, id_server=user_data.id_server)
+			item_sought = bknd_item.find_item(item_search=item_search, id_user=user_data.id_user, id_server=user_data.id_server)
 			if item_sought and ewcfg.mutation_id_trashmouth in mutations:
 				return await devour(cmd=cmd)
 
 	# otherwise find the first useable food
 	else:
-		food_inv = ewitem.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)
+		food_inv = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_food)
 
 		for food in food_inv:
 			food_item = EwItem(id_item = food.get('id_item'))
@@ -634,7 +634,7 @@ async def eat_item(cmd):
 		else:
 			response = "You don't have anything to eat."
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 #does this have anything to do with markets? yes. how do you think wall street gets its nutrients when there are no nearby food stands?
@@ -649,4 +649,4 @@ def brickeat(item_obj):
 	digestion = '{}brickshit'.format(item_obj.id_owner)
 	print(digestion)
 	item_obj.persist()
-	ewitem.give_item(id_item=id_item, id_user=digestion, id_server=item_obj.id_server)
+	bknd_item.give_item(id_item=id_item, id_user=digestion, id_server=item_obj.id_server)

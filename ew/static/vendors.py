@@ -1,9 +1,9 @@
 from . import cfg as ewcfg
 from . import cosmetics
+from . import fish as static_fish
+from . import food as static_food
 from . import items as static_items
 from . import weapons
-from . import food as static_food
-from . import fish as static_fish
 
 # A map of vendor names to their items.
 vendor_inv = {}

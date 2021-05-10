@@ -1,15 +1,20 @@
 """
 	Commands for kingpins only.
 """
+import re
+
+from . import cmd as ewcmd
 from . import item as ewitem
-from . import utils as ewutils
+from . import move as ewmap
+from .backend import item as bknd_item
 from .static import cfg as ewcfg
 from .static import cosmetics
 from .static import poi as poi_static
-from . import rolemgr as ewrolemgr
-from . import move as ewmap
-from .user import EwUser
-import re
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils import item as itm_utils
+from .utils import rolemgr as ewrolemgr
+from .utils.combat import EwUser
 
 """
 	Release the specified player from their commitment to their faction.
@@ -51,7 +56,7 @@ async def pardon(cmd):
 			member_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def banish(cmd):
@@ -88,7 +93,7 @@ async def banish(cmd):
 			response = "{} has been banned from enlisting in the {}".format(member.display_name, user_data.faction)
 			await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 """ Destroy a megaslime of your own for lore reasons. """
 async def deadmega(cmd):
@@ -109,7 +114,7 @@ async def deadmega(cmd):
 			response = "Alas, poor megaslime. You have {:,} slime remaining.".format(user_data.slimes)
 
 	# Send the response to the player.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 """
 	Command that creates a princeps cosmetic item
@@ -118,11 +123,11 @@ async def create(cmd):
 	#if not cmd.message.author.guild_permissions.administrator:
 	if EwUser(member = cmd.message.author).life_state != ewcfg.life_state_kingpin and not cmd.message.author.guild_permissions.administrator:
 		response = 'Lowly Non-Kingpins cannot hope to create items with their bare hands.'
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if len(cmd.tokens) not in [4, 5, 6]:
 		response = 'Usage: !create "<item_name>" "<item_desc>" <recipient> <rarity(optional)>, <context>(optional)'
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	item_name = cmd.tokens[1]
 	item_desc = cmd.tokens[2]
@@ -133,7 +138,7 @@ async def create(cmd):
 		recipient = cmd.mentions[0]
 	else:
 		response = 'You need to specify a recipient. Usage: !create "<item_name>" "<item_desc>" <recipient>'
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	item_props = {
 		"cosmetic_name": item_name,
@@ -145,7 +150,7 @@ async def create(cmd):
 
 
 
-	new_item_id = ewitem.item_create(
+	new_item_id = bknd_item.item_create(
 		id_server = cmd.guild.id,
 		id_user = recipient.id,
 		item_type = ewcfg.it_cosmetic,
@@ -155,7 +160,7 @@ async def create(cmd):
 	ewitem.soulbind(new_item_id)
 
 	response = 'Item "{}" successfully created.'.format(item_name)
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 """
 	Command that grants someone a specific cosmetic for an event.
@@ -166,13 +171,13 @@ async def exalt(cmd):
 
 	if not author.guild_permissions.administrator and user_data.life_state != ewcfg.life_state_kingpin:
 		response = "You do not have the power within you worthy of !exalting another player."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if cmd.mentions_count > 0:
 		recipient = cmd.mentions[0]
 	else:
 		response = 'You need to specify a recipient. Usage: !exalt @[recipient].'
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	recipient_data = EwUser(member=recipient)
 
@@ -187,9 +192,9 @@ async def exalt(cmd):
 			pass
  
 	medallion = medallion_results[0]
-	medallion_props = ewitem.gen_item_props(medallion)
+	medallion_props = itm_utils.gen_item_props(medallion)
 
-	medallion_id = ewitem.item_create(
+	medallion_id = bknd_item.item_create(
 		item_type=medallion.item_type,
 		id_user=recipient.id,
 		id_server=cmd.guild.id,
@@ -215,9 +220,9 @@ async def exalt(cmd):
 # 				pass
 # 
 # 		mask = mask_results[0]
-# 		mask_props = ewitem.gen_item_props(mask)
+# 		mask_props = itm_utils.gen_item_props(mask)
 # 
-# 		mask_id = ewitem.item_create(
+# 		mask_id = bknd_item.item_create(
 # 			item_type=mask.item_type,
 # 			id_user=recipient.id,
 # 			id_server=cmd.guild.id,
@@ -238,9 +243,9 @@ async def exalt(cmd):
 # 				pass
 # 
 # 		sword = sword_results[0]
-# 		sword_props = ewitem.gen_item_props(sword)
+# 		sword_props = itm_utils.gen_item_props(sword)
 # 
-# 		sword_id = ewitem.item_create(
+# 		sword_id = bknd_item.item_create(
 # 			item_type=sword.item_type,
 # 			id_user=recipient.id,
 # 			id_server=cmd.guild.id,
@@ -251,13 +256,13 @@ async def exalt(cmd):
 # 
 # 		response = "In response to their unparalleled ability to let everything go to shit and be the laughingstock of all of NLACakaNM, {} recieves the SWORD OF SEETHING! God help us all...".format(recipient.display_name)
 # 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def pa_command(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if not cmd.message.author.guild_permissions.administrator and user_data.life_state != ewcfg.life_state_executive:
-		return await ewutils.fake_failed_command(cmd)
+		return await ewcmd.fake_failed_command(cmd)
 	else:
 		if cmd.tokens_count >= 3:
 			poi = ewutils.flattenTokenListToString(cmd.tokens[1])
@@ -268,20 +273,20 @@ async def pa_command(cmd):
 			else:
 				channel = poi_obj.channel
 
-			loc_channel = ewutils.get_channel(cmd.guild, channel)
+			loc_channel = fe_utils.get_channel(cmd.guild, channel)
 
 			if poi is not None:
 				patext = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])+len(cmd.tokens[1])+1):]).strip()
 				if len(patext) > 500:
 					patext = patext[:-500]
-				return await ewutils.send_message(cmd.client, loc_channel, patext)
+				return await fe_utils.send_message(cmd.client, loc_channel, patext)
 
 
 
 
 async def hogtie(cmd):
 	if not cmd.message.author.guild_permissions.administrator:
-		return await ewutils.fake_failed_command(cmd)
+		return await ewcmd.fake_failed_command(cmd)
 	else:
 		if cmd.mentions_count == 1:
 			target_data = EwUser(member = cmd.mentions[0])
@@ -289,9 +294,9 @@ async def hogtie(cmd):
 			if ewcfg.status_hogtied_id in target_status:
 				target_data.clear_status(id_status=ewcfg.status_hogtied_id)
 				response = "Whew-whee! She's buckin' so we gotta let 'er go."
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 			else:
 				target_data.applyStatus(ewcfg.status_hogtied_id)
 				response = "Boy howdy! Looks like we lasso'd up a real heifer there! A dang ol' big'un."
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 

@@ -1,6 +1,6 @@
-from . import utils as ewutils
-from .static import cfg as ewcfg
-from . import event as ewevent
+from . import event as evt_utils
+from ..backend import core as bknd_core
+from ..static import cfg as ewcfg
 
 """
 	Utility functions for recording statistics in the database
@@ -16,9 +16,9 @@ def get_stat(id_server = None, id_user = None, user = None, metric = None):
 	result = None
 
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
-		cursor = conn.cursor();
+		cursor = conn.cursor()
 
 		cursor.execute("SELECT {value} FROM stats WHERE {metric} = %s AND {id_server} = %s AND {id_user} = %s".format(
 			value = ewcfg.col_stat_value,
@@ -43,7 +43,7 @@ def get_stat(id_server = None, id_user = None, user = None, metric = None):
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 	return result
 
@@ -55,9 +55,9 @@ def set_stat(id_server = None, id_user = None, user = None, metric = None, value
 				id_user = user.id_user
 
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
-		cursor = conn.cursor();
+		cursor = conn.cursor()
 
 		cursor.execute("REPLACE INTO stats({id_server}, {id_user}, {metric}, {value}) VALUES(%s, %s, %s, %s)".format(
 			id_server = ewcfg.col_id_server,
@@ -75,9 +75,9 @@ def set_stat(id_server = None, id_user = None, user = None, metric = None, value
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
-	ewevent.process_stat_change(id_server = id_server, id_user = id_user, metric = metric, value = value)
+	evt_utils.process_stat_change(id_server = id_server, id_user = id_user, metric = metric, value = value)
 
 """ Increase/Decrease a stat by a given value """
 def change_stat(id_server = None, id_user = None, user = None, metric = None, n = 0):
@@ -107,9 +107,9 @@ def track_maximum(id_server = None, id_user = None, user = None, metric = None, 
 				id_user = user.id_user
 
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
-		cursor = conn.cursor();
+		cursor = conn.cursor()
 
 		old_value = get_stat(id_server = id_server, id_user = id_user, metric = metric)
 		if old_value < value: 
@@ -119,14 +119,14 @@ def track_maximum(id_server = None, id_user = None, user = None, metric = None, 
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 """ Set to zero stats that need to clear on death """
 def clear_on_death(id_server = None, id_user = None):
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
-			cursor = conn.cursor();
+			cursor = conn.cursor()
 
 			for metric in ewcfg.stats_clear_on_death:
 				cursor.execute("REPLACE INTO stats({id_server}, {id_user}, {metric}, {value}) VALUES(%s, %s, %s, %s)".format(
@@ -145,4 +145,4 @@ def clear_on_death(id_server = None, id_user = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)

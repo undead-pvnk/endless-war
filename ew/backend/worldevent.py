@@ -1,13 +1,11 @@
-import asyncio
-import time
 import random
+import time
 
-from .static import cfg as ewcfg
-from .static import poi as poi_static
-from . import utils as ewutils
+from . import core as bknd_core
+from ..static import cfg as ewcfg
+from ..static import poi as poi_static
+from ..utils import core as ewutils
 
-from .user import EwUser
-from .player import EwPlayer
 
 class EwWorldEvent:
 	id_event = -1
@@ -29,7 +27,7 @@ class EwWorldEvent:
 
 			try:
 				# Retrieve object
-				result = ewutils.execute_sql_query("SELECT {}, {}, {}, {} FROM world_events WHERE id_event = %s".format(
+				result = bknd_core.execute_sql_query("SELECT {}, {}, {}, {} FROM world_events WHERE id_event = %s".format(
 					ewcfg.col_id_server,
 					ewcfg.col_event_type,
 					ewcfg.col_time_activate,
@@ -48,7 +46,7 @@ class EwWorldEvent:
 					self.time_expir = result[3]
 
 					# Retrieve additional properties
-					props = ewutils.execute_sql_query("SELECT {}, {} FROM world_events_prop WHERE id_event = %s".format(
+					props = bknd_core.execute_sql_query("SELECT {}, {} FROM world_events_prop WHERE id_event = %s".format(
 						ewcfg.col_name,
 						ewcfg.col_value
 					), (
@@ -73,7 +71,7 @@ class EwWorldEvent:
 	def persist(self):
 		try:
 			# Save the object.
-			ewutils.execute_sql_query("REPLACE INTO world_events({}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s)".format(
+			bknd_core.execute_sql_query("REPLACE INTO world_events({}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_event,
 				ewcfg.col_id_server,
 				ewcfg.col_event_type,
@@ -88,7 +86,7 @@ class EwWorldEvent:
 			))
 
 			# Remove all existing property rows.
-			ewutils.execute_sql_query("DELETE FROM world_events_prop WHERE {} = %s".format(
+			bknd_core.execute_sql_query("DELETE FROM world_events_prop WHERE {} = %s".format(
 				ewcfg.col_id_event
 			), (
 				self.id_event,
@@ -96,7 +94,7 @@ class EwWorldEvent:
 
 			# Write out all current property rows.
 			for name in self.event_props:
-				ewutils.execute_sql_query("INSERT INTO world_events_prop({}, {}, {}) VALUES(%s, %s, %s)".format(
+				bknd_core.execute_sql_query("INSERT INTO world_events_prop({}, {}, {}) VALUES(%s, %s, %s)".format(
 					ewcfg.col_id_event,
 					ewcfg.col_name,
 					ewcfg.col_value
@@ -121,7 +119,7 @@ def get_world_events(id_server = None, active_only = True):
 		query_suffix = " AND {col_time_activate} <= {time_now} AND ({col_time_expir} >= {time_now} OR {col_time_expir} < 0)"
 		query += query_suffix
 
-	data = ewutils.execute_sql_query(query.format(
+	data = bknd_core.execute_sql_query(query.format(
 		col_id_event = ewcfg.col_id_event,
 		col_event_type = ewcfg.col_event_type,
 		col_time_activate = ewcfg.col_time_activate,
@@ -147,7 +145,7 @@ def create_world_event(
 		return -1
 	try:
 		# Get database handles if they weren't passed.
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
@@ -180,14 +178,14 @@ def create_world_event(
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 
 	return event_id
 
 def delete_world_event(id_event):
 	try:
-		ewutils.execute_sql_query("DELETE FROM world_events WHERE {id_event} = %s".format(
+		bknd_core.execute_sql_query("DELETE FROM world_events WHERE {id_event} = %s".format(
 			id_event = ewcfg.col_id_event,
 		),(
 			id_event,
@@ -195,94 +193,6 @@ def delete_world_event(id_event):
 	except:
 		ewutils.logMsg("Error while deleting world event {}".format(id_event))
 
-async def event_tick_loop(id_server):
-	# initialise void connections
-	void_connections = get_void_connection_pois(id_server)
-	void_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
-	for connection_poi in void_connections:
-		# add the existing connections as neighbors for the void
-		void_poi.neighbors[connection_poi] = ewcfg.travel_time_district
-	for _ in range(3 - len(void_connections)):
-		# create any missing connections
-		create_void_connection(id_server)
-	ewutils.logMsg("initialised void connections, current links are: {}".format(tuple(void_poi.neighbors.keys())))
-
-	interval = ewcfg.event_tick_length
-	while not ewutils.TERMINATE:
-		await asyncio.sleep(interval)
-		await event_tick(id_server)
-
-async def event_tick(id_server):
-	time_now = int(time.time())
-	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
-	try:
-		data = ewutils.execute_sql_query("SELECT {id_event} FROM world_events WHERE {time_expir} <= %s AND {time_expir} > 0 AND id_server = %s".format(
-			id_event = ewcfg.col_id_event,
-			time_expir = ewcfg.col_time_expir,
-		),(
-			time_now,
-			id_server,
-		))
-
-		for row in data:
-			try:
-				event_data = EwWorldEvent(id_event = row[0])
-				event_def = poi_static.event_type_to_def.get(event_data.event_type)
-
-				response = event_def.str_event_end if event_def else ""
-				if event_data.event_type == ewcfg.event_type_minecollapse:
-					user_data = EwUser(id_user = event_data.event_props.get('id_user'), id_server = id_server)
-					mutations = user_data.get_mutations()
-					if user_data.poi == event_data.event_props.get('poi'):
-
-						player_data = EwPlayer(id_user=user_data.id_user)
-						response = "*{}*: You have lost an arm and a leg in a mining accident. Tis but a scratch.".format(player_data.display_name)
-
-						if random.randrange(4) == 0:
-							response = "*{}*: Big John arrives just in time to save you from your mining accident!\nhttps://cdn.discordapp.com/attachments/431275470902788107/743629505876197416/mine2.jpg".format(player_data.display_name)
-						else:
-
-							if ewcfg.mutation_id_lightminer in mutations:
-								response = "*{}*: You instinctively jump out of the way of the collapsing shaft, not a scratch on you. Whew, really gets your blood pumping.".format(player_data.display_name)
-							else:
-								user_data.change_slimes(n = -(user_data.slimes * 0.5))
-								user_data.persist()
-
-
-				# check if any void connections have expired, if so pop it and create a new one
-				elif event_data.event_type == ewcfg.event_type_voidconnection:
-					void_poi = poi_static.id_to_poi.get(ewcfg.poi_id_thevoid)
-					void_poi.neighbors.pop(event_data.event_props.get('poi'), "")
-					create_void_connection(id_server)
-
-				if len(response) > 0:
-					poi = event_data.event_props.get('poi')
-					channel = event_data.event_props.get('channel')
-					if channel != None:
-
-						# in shambaquarium the event happens in the user's DMs
-						if event_data.event_type == ewcfg.event_type_shambaquarium:
-							client = ewutils.get_client()
-							channel = client.get_guild(id_server).get_member(int(channel))
-
-						resp_cont.add_channel_response(channel, response)
-					elif poi != None:
-						poi_def = poi_static.id_to_poi.get(poi)
-						if poi_def != None:
-							resp_cont.add_channel_response(poi_def.channel, response)
-
-					else:
-						for ch in ewcfg.hideout_channels:
-							resp_cont.add_channel_response(ch, response)
-
-				delete_world_event(event_data.id_event)
-			except:
-				ewutils.logMsg("Error in event tick for server {}".format(id_server))
-
-		await resp_cont.post()
-					
-	except:
-		ewutils.logMsg("Error in event tick for server {}".format(id_server))
 
 def create_void_connection(id_server): 
 	existing_connections = get_void_connection_pois(id_server)
@@ -310,7 +220,7 @@ def create_void_connection(id_server):
 
 def get_void_connection_pois(id_server):
 	# in hindsight, doing this in python using get_world_events would've been easier and more future-proof
-	return sum(ewutils.execute_sql_query("SELECT {value} FROM world_events_prop WHERE {name} = 'poi' AND {id_event} IN (SELECT {id_event} FROM world_events WHERE {event_type} = %s AND {id_server} = %s)".format(
+	return sum(bknd_core.execute_sql_query("SELECT {value} FROM world_events_prop WHERE {name} = 'poi' AND {id_event} IN (SELECT {id_event} FROM world_events WHERE {event_type} = %s AND {id_server} = %s)".format(
 			value = ewcfg.col_value,
 			name = ewcfg.col_name,
 			id_event = ewcfg.col_id_event,

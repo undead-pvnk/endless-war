@@ -1,7 +1,13 @@
 import random
 
 from . import cfg as ewcfg
-from ..model.slimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
+from ..model.slimeoid import EwBody
+from ..model.slimeoid import EwBrain
+from ..model.slimeoid import EwDefense
+from ..model.slimeoid import EwHead
+from ..model.slimeoid import EwMobility
+from ..model.slimeoid import EwOffense
+from ..model.slimeoid import EwSpecial
 
 # All body attributes in the game.
 body_list = [
@@ -765,11 +771,11 @@ def get_strat_a(combat_data, in_range, first_turn, active):
 
 	strat = random.randrange(weight_attack + weight_evade + weight_block)
 	if strat < weight_attack:
-		strat_used = slimeoid_strat_attack
+		strat_used = ewcfg.slimeoid_strat_attack
 	elif strat < weight_attack + weight_evade:
-		strat_used = slimeoid_strat_evade
+		strat_used = ewcfg.slimeoid_strat_evade
 	else:
-		strat_used = slimeoid_strat_block
+		strat_used = ewcfg.slimeoid_strat_block
 
 	if first_turn:
 		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.8))) + 1
@@ -808,11 +814,11 @@ def get_strat_b(combat_data, in_range, first_turn, active):
 
 	strat = random.randrange(weight_attack + weight_evade + weight_block)
 	if strat < weight_attack:
-		strat_used = slimeoid_strat_attack
+		strat_used = ewcfg.slimeoid_strat_attack
 	elif strat < weight_attack + weight_evade:
-		strat_used = slimeoid_strat_evade
+		strat_used = ewcfg.slimeoid_strat_evade
 	else:
-		strat_used = slimeoid_strat_block
+		strat_used = ewcfg.slimeoid_strat_block
 
 	if first_turn:
 		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.65))) + 1
@@ -849,11 +855,11 @@ def get_strat_c(combat_data, in_range, first_turn, active):
 
 	strat = random.randrange(weight_attack + weight_evade + weight_block)
 	if strat < weight_attack:
-		strat_used = slimeoid_strat_attack
+		strat_used = ewcfg.slimeoid_strat_attack
 	elif strat < weight_attack + weight_evade:
-		strat_used = slimeoid_strat_evade
+		strat_used = ewcfg.slimeoid_strat_evade
 	else:
-		strat_used = slimeoid_strat_block
+		strat_used = ewcfg.slimeoid_strat_block
 
 	if first_turn:
 		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.8))) + 1
@@ -890,11 +896,11 @@ def get_strat_d(combat_data, in_range, first_turn, active):
 
 	strat = random.randrange(weight_attack + weight_evade + weight_block)
 	if strat < weight_attack:
-		strat_used = slimeoid_strat_attack
+		strat_used = ewcfg.slimeoid_strat_attack
 	elif strat < weight_attack + weight_evade:
-		strat_used = slimeoid_strat_evade
+		strat_used = ewcfg.slimeoid_strat_evade
 	else:
-		strat_used = slimeoid_strat_block
+		strat_used = ewcfg.slimeoid_strat_block
 
 	if first_turn:
 		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.35))) + 1
@@ -931,11 +937,11 @@ def get_strat_e(combat_data, in_range, first_turn, active):
 
 	strat = random.randrange(weight_attack + weight_evade + weight_block)
 	if strat < weight_attack:
-		strat_used = slimeoid_strat_attack
+		strat_used = ewcfg.slimeoid_strat_attack
 	elif strat < weight_attack + weight_evade:
-		strat_used = slimeoid_strat_evade
+		strat_used = ewcfg.slimeoid_strat_evade
 	else:
-		strat_used = slimeoid_strat_block
+		strat_used = ewcfg.slimeoid_strat_block
 
 	if first_turn:
 		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.65))) + 1
@@ -975,11 +981,11 @@ def get_strat_f(combat_data, in_range, first_turn, active):
 
 	strat = random.randrange(weight_attack + weight_evade + weight_block)
 	if strat < weight_attack:
-		strat_used = slimeoid_strat_attack
+		strat_used = ewcfg.slimeoid_strat_attack
 	elif strat < weight_attack + weight_evade:
-		strat_used = slimeoid_strat_evade
+		strat_used = ewcfg.slimeoid_strat_evade
 	else:
-		strat_used = slimeoid_strat_block
+		strat_used = ewcfg.slimeoid_strat_block
 
 	if first_turn:
 		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.35))) + 1
@@ -1014,11 +1020,11 @@ def get_strat_g(combat_data, in_range, first_turn, active):
 
 	strat = random.randrange(weight_attack + weight_evade + weight_block)
 	if strat < weight_attack:
-		strat_used = slimeoid_strat_attack
+		strat_used = ewcfg.slimeoid_strat_attack
 	elif strat < weight_attack + weight_evade:
-		strat_used = slimeoid_strat_evade
+		strat_used = ewcfg.slimeoid_strat_evade
 	else:
-		strat_used = slimeoid_strat_block
+		strat_used = ewcfg.slimeoid_strat_block
 
 	if first_turn:
 		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.2))) + 1

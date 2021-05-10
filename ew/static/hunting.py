@@ -1,8 +1,8 @@
 import random
 
 from . import cfg as ewcfg
-
 from ..model.hunting import EwAttackType
+
 
 # Attacking type effects
 def atf_fangs(ctn = None):

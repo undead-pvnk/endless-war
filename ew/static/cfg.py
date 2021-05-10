@@ -199,7 +199,6 @@ poi_id_pa_subway_station = "poudrinalleysubwaystation"
 poi_id_og_subway_station = "oozegardenssubwaystation"
 poi_id_cl_subway_station = "crooklinesubwaystation"
 poi_id_lc_subway_station = "littlechernobylsubwaystation"
-poi_id_bd_subway_station = "brawldensubwaystation"
 poi_id_nny_subway_station = "newnewyonkerssubwaystation"
 
 
@@ -1475,7 +1474,6 @@ cmd_rampage = cmd_prefix + 'rampage'
 cmd_flutter = cmd_prefix + 'flutter'
 cmd_entomize = cmd_prefix + 'entomize'
 cmd_confuse = cmd_prefix + 'confuse'
-cmd_shamble = cmd_prefix + 'shamble'
 
 cmd_hogtie = cmd_prefix + 'hogtie'
 
@@ -1490,7 +1488,6 @@ cmd_display_states = cmd_prefix + 'displaystates'
 cmd_press_button = cmd_prefix + 'press'
 cmd_call_elevator = cmd_prefix + 'callelevator'
 cmd_addstatuseffect = cmd_prefix + 'addstatuseffect'
-cmd_getattire = cmd_prefix + 'getattire'
 #SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
@@ -2281,11 +2278,9 @@ col_body = 'body'
 col_head = 'head'
 col_legs = 'legs'
 col_armor = 'armor'
-col_weapon = 'weapon'
 col_special = 'special'
 col_ai = 'ai'
 col_type = 'type'
-col_name = 'name'
 col_atk = 'atk'
 col_defense = 'defense'
 col_intel = 'intel'
@@ -2454,6 +2449,11 @@ col_hue_fullcomp_2 = "hue_fullcomp_2"
 col_bit = "state_bit"
 col_id_state = "id_state"
 
+#SWILLDERMUK
+col_id_user_pranker = 'id_user_pranker'
+col_id_user_pranked = 'id_user_pranked'
+col_prank_count = 'prank_count'
+		
 
 
 
@@ -2583,7 +2583,6 @@ stat_lifetime_pve_kills = 'lifetime_pve_kills'
 stat_lifetime_pve_takedowns = 'lifetime_pve_takedowns'
 stat_lifetime_pve_ganks = 'lifetime_pve_ganks'
 stat_lifetime_pve_deaths = 'lifetime_pve_deaths'
-stat_capture_points_contributed = 'capture_points_contributed'
 stat_shamblers_killed = 'shamblers_killed'
 
 stat_revolver_kills = 'revolver_kills'
@@ -5484,7 +5483,8 @@ client_ref = None
 
 def get_client():
 	global client_ref
-	return client_ref;
+	return client_ref
+
 
 """
 	save the discord client of this bot

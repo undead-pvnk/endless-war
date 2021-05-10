@@ -1,54 +1,55 @@
-import datetime
-
-from .static import cfg as ewcfg
-from .static import poi as poi_static
-from . import utils as ewutils
-from .user import EwUser
-from .player import EwPlayer
-from .market import EwMarket, EwStock
-from .district import EwDistrict
+from . import core as ewutils
+from . import frontend as fe_utils
+from .combat import EwUser
+from ..backend import core as bknd_core
+from ..backend.district import EwDistrictBase as EwDistrict
+from ..backend.market import EwMarket
+from ..backend.market import EwStock
+from ..backend.player import EwPlayer
+from ..static import cfg as ewcfg
+from ..static import poi as poi_static
 
 
 async def post_leaderboards(client = None, server = None):
-	leaderboard_channel = ewutils.get_channel(server = server, channel_name = ewcfg.channel_leaderboard)
+	leaderboard_channel = fe_utils.get_channel(server = server, channel_name = ewcfg.channel_leaderboard)
 
 	market = EwMarket(id_server = server.id)
 	time = "day {}".format(market.day) 
 
-	await ewutils.send_message(client, leaderboard_channel, "▓▓{} **STATE OF THE CITY:** {} {}▓▓".format(ewcfg.emote_theeye, time, ewcfg.emote_theeye))
+	await fe_utils.send_message(client, leaderboard_channel, "▓▓{} **STATE OF THE CITY:** {} {}▓▓".format(ewcfg.emote_theeye, time, ewcfg.emote_theeye))
 
 	kingpins = make_kingpin_board(server = server, title = ewcfg.leaderboard_kingpins)
-	await ewutils.send_message(client, leaderboard_channel, kingpins)
+	await fe_utils.send_message(client, leaderboard_channel, kingpins)
 	districts = make_district_control_board(id_server = server.id, title = ewcfg.leaderboard_districts)
-	await ewutils.send_message(client, leaderboard_channel, districts)
+	await fe_utils.send_message(client, leaderboard_channel, districts)
 	topslimes = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_slimes)
-	await ewutils.send_message(client, leaderboard_channel, topslimes)
+	await fe_utils.send_message(client, leaderboard_channel, topslimes)
 	#topcoins = make_userdata_board(server = server, category = ewcfg.col_slimecoin, title = ewcfg.leaderboard_slimecoin)
 	ewutils.logMsg("starting net worth calc")
 	topcoins = make_stocks_top_board(server = server)
 	ewutils.logMsg("finished net worth calc")
-	await ewutils.send_message(client, leaderboard_channel, topcoins)
+	await fe_utils.send_message(client, leaderboard_channel, topcoins)
 	topghosts = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_ghosts, lowscores = True, rows = 3)
-	await ewutils.send_message(client, leaderboard_channel, topghosts)
+	await fe_utils.send_message(client, leaderboard_channel, topghosts)
 	topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty, divide_by = ewcfg.slimecoin_exchangerate)
-	await ewutils.send_message(client, leaderboard_channel, topbounty)
+	await fe_utils.send_message(client, leaderboard_channel, topbounty)
 	#topfashion = make_userdata_board(server = server, category = ewcfg.col_freshness, title = ewcfg.leaderboard_fashion)
 	ewutils.logMsg("starting freshness calc")
 	topfashion = make_freshness_top_board(server = server)
 	ewutils.logMsg("finished freshness calc")
-	await ewutils.send_message(client, leaderboard_channel, topfashion)
+	await fe_utils.send_message(client, leaderboard_channel, topfashion)
 	topdonated = make_userdata_board(server = server, category = ewcfg.col_splattered_slimes, title = ewcfg.leaderboard_donated)
-	await ewutils.send_message(client, leaderboard_channel, topdonated)
+	await fe_utils.send_message(client, leaderboard_channel, topdonated)
 	#topdegraded = make_userdata_board(server = server, category = ewcfg.col_degradation, title = ewcfg.leaderboard_degradation)
 	#await ewutils.send_message(client, leaderboard_channel, topdegraded)
 	#topshamblerkills = make_statdata_board(server = server, category = ewcfg.stat_shamblers_killed, title = ewcfg.leaderboard_shamblers_killed)
 	#await ewutils.send_message(client, leaderboard_channel, topshamblerkills)
 	topslimeoids = make_slimeoids_top_board(server = server)
-	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
+	await fe_utils.send_message(client, leaderboard_channel, topslimeoids)
 	#topfestivity = make_slimernalia_board(server = server, title = ewcfg.leaderboard_slimernalia)
 	#await ewutils.send_message(client, leaderboard_channel, topfestivity)
 	topzines = make_zines_top_board(server=server)
-	await ewutils.send_message(client, leaderboard_channel, topzines)
+	await fe_utils.send_message(client, leaderboard_channel, topzines)
 	#topgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_high)
 	#await ewutils.send_message(client, leaderboard_channel, topgambit)
 	#bottomgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_low)
@@ -57,7 +58,7 @@ async def post_leaderboards(client = None, server = None):
 def make_stocks_top_board(server = None):
 	entries = []
 	try:
-		players_coin = ewutils.execute_sql_query((
+		players_coin = bknd_core.execute_sql_query((
 			"SELECT pl.display_name, u.life_state, u.faction, u.slimecoin, IFNULL(sh_kfc.shares, 0), IFNULL(sh_tb.shares, 0), IFNULL(sh_ph.shares, 0), u.id_user " +
 			"FROM users AS u " +
 			"INNER JOIN players AS pl ON u.id_user = pl.id_user " +
@@ -100,7 +101,7 @@ def make_stocks_top_board(server = None):
 def make_freshness_top_board(server = None):
 	entries = []
 	try:
-		all_adorned = ewutils.execute_sql_query("SELECT id_item FROM items WHERE id_server = %s " + 
+		all_adorned = bknd_core.execute_sql_query("SELECT id_item FROM items WHERE id_server = %s " + 
 			"AND id_item IN (SELECT id_item FROM items_prop WHERE name = 'adorned' AND value = 'true')",
 			( server.id, )
 		)
@@ -110,12 +111,12 @@ def make_freshness_top_board(server = None):
 		if len(all_adorned) == 0:
 			return format_board(entries = entries, title = ewcfg.leaderboard_fashion)
 
-		all_basefresh = ewutils.execute_sql_query("SELECT id_item, value FROM items_prop WHERE name = 'freshness' " + 
+		all_basefresh = bknd_core.execute_sql_query("SELECT id_item, value FROM items_prop WHERE name = 'freshness' " + 
 			"AND id_item IN %s",
 			( all_adorned, )
 		)
 
-		all_users = ewutils.execute_sql_query("SELECT id_item, id_user FROM items WHERE id_item IN %s", ( all_adorned, ))
+		all_users = bknd_core.execute_sql_query("SELECT id_item, id_user FROM items WHERE id_item IN %s", ( all_adorned, ))
 
 
 		fresh_map = {}
@@ -176,7 +177,7 @@ def make_slimeoids_top_board(server = None):
 	)
 
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
@@ -202,7 +203,7 @@ def make_slimeoids_top_board(server = None):
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 	return board
 
@@ -212,7 +213,7 @@ def make_zines_top_board(server = None):
 	)
 
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
@@ -237,14 +238,14 @@ def make_zines_top_board(server = None):
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 	return board
 
 def make_userdata_board(server = None, category = "", title = "", lowscores = False, rows = 5, divide_by = 1):
 	entries = []
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
@@ -273,14 +274,14 @@ def make_userdata_board(server = None, category = "", title = "", lowscores = Fa
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 	return format_board(entries = entries, title = title, divide_by = divide_by)
 
 def make_statdata_board(server = None, category = "", title = "", lowscores = False, rows = 5, divide_by = 1):
 	entries = []
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
@@ -311,13 +312,13 @@ def make_statdata_board(server = None, category = "", title = "", lowscores = Fa
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 	return format_board(entries = entries, title = title, divide_by = divide_by)
 def make_kingpin_board(server = None, title = ""):
 	entries = []
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
@@ -339,7 +340,7 @@ def make_kingpin_board(server = None, title = ""):
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 	return format_board(entries = entries, title = title)
 
@@ -374,7 +375,7 @@ def make_district_control_board(id_server, title):
 #SLIMERNALIA
 def make_slimernalia_board(server, title):
 	entries = []
-	data = ewutils.execute_sql_query(
+	data = bknd_core.execute_sql_query(
 		"SELECT {display_name}, {state}, {faction}, FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) as total_festivity FROM users "\
 		"LEFT JOIN (SELECT id_user, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}) f on users.{id_user} = f.{id_user}, players "\
 		"WHERE users.{id_server} = %s AND users.{id_user} = players.{id_user} ORDER BY total_festivity DESC LIMIT 5".format(
@@ -411,7 +412,7 @@ def make_gambit_leaderboard(server, title, rows = 3):
 		lowgambit = True
 	
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 	
@@ -441,7 +442,7 @@ def make_gambit_leaderboard(server, title, rows = 3):
 	finally:
 		# Clean up the database handles.
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 	return format_board(entries=entries, title=title)
 
