@@ -230,6 +230,13 @@ def gen_item_props(item):
             'time_fridged': item.time_fridged,
             'perishable': item.perishable,
         }
+    elif item.item_type == ewcfg.it_relic:
+        item_props = {
+            'id_relic': item.id_relic,
+            'relic_name': item.str_name,
+            'relic_desc': item.str_desc,
+            'acquisition': item.acquisition
+        }
     elif item.item_type == ewcfg.it_item:
         item_props = {
             'id_item': item.id_item,
