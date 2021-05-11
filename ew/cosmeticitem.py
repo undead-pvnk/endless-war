@@ -1,20 +1,21 @@
-import math
-import random
-
-from .static import cfg as ewcfg
-from .static import cosmetics
-from .static import items as static_items
-from .static import hue as hue_static
-from . import item as ewitem
-from . import utils as ewutils
 import asyncio
 
-from .user import EwUser
-from .item import EwItem
+from .backend import core as bknd_core
+from .backend import item as bknd_item
+from .backend.item import EwItem
+from .backend.market import EwMarket
+from .static import cfg as ewcfg
+from .static import cosmetics
+from .static import hue as hue_static
+from .static import items as static_items
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils.combat import EwUser
 
 
 async def adorn(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	market_data = EwMarket(id_server = user_data.id_server)
 
 	# Check to see if you even have the item you want to repair
 	item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -27,7 +28,7 @@ async def adorn(cmd):
 	if item_id is not None and len(item_id) > 0:
 		response = "You don't have one."
 
-		cosmetic_items = ewitem.inventory(
+		cosmetic_items = bknd_item.inventory(
 			id_user = cmd.message.author.id,
 			id_server = cmd.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
@@ -57,7 +58,7 @@ async def adorn(cmd):
 				if i.item_props.get("adorned") == 'true':
 					already_adorned = True
 				elif i.item_props.get("context") == 'costume':
-					if not ewutils.check_fursuit_active(i.id_server):
+					if not ewutils.check_fursuit_active(market_data):
 						response = "You can't adorn your costume right now."
 				else:
 					item_sought = i
@@ -96,9 +97,9 @@ async def adorn(cmd):
 		elif already_adorned:
 			response = "You already have that garment adorned!"
 
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	else:
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Adorn which cosmetic? Check your **!inventory**.'))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Adorn which cosmetic? Check your **!inventory**.'))
 
 async def dedorn(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -115,7 +116,7 @@ async def dedorn(cmd):
 	if item_id is not None and len(item_id) > 0:
 		response = "You don't have one."
 
-		cosmetic_items = ewitem.inventory(
+		cosmetic_items = bknd_item.inventory(
 			id_user = cmd.message.author.id,
 			id_server = cmd.guild.id,
 			item_type_filter = ewcfg.it_cosmetic
@@ -154,9 +155,9 @@ async def dedorn(cmd):
 			else:
 				response = "You haven't adorned that garment in the first place! How can you dedorn something you haven't adorned? You disgust me."
 
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	else:
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Adorn which cosmetic? Check your **!inventory**.'))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Adorn which cosmetic? Check your **!inventory**.'))
 
 
 async def dye(cmd):
@@ -176,7 +177,7 @@ async def dye(cmd):
 	if hat_id != None and len(hat_id) > 0 and dye_id != None and len(dye_id) > 0:
 		response = "You don't have one."
 
-		items = ewitem.inventory(
+		items = bknd_item.inventory(
 			id_user = cmd.message.author.id,
 			id_server = cmd.guild.id,
 		)
@@ -207,22 +208,22 @@ async def dye(cmd):
 				cosmetic_item.item_props['hue'] = hue.id_hue
 
 				cosmetic_item.persist()
-				ewitem.item_delete(id_item=dye.get('id_item'))
+				bknd_item.item_delete(id_item=dye.get('id_item'))
 			else:
 				response = 'Use which dye? Check your **!inventory**.'
 		else:
 			response = 'Dye which cosmetic? Check your **!inventory**.'
 		
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	else:
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'You need to specify which cosmetic you want to paint and which dye you want to use! Check your **!inventory**.'))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'You need to specify which cosmetic you want to paint and which dye you want to use! Check your **!inventory**.'))
 
 async def smoke(cmd):
 	usermodel = EwUser(member=cmd.message.author)
-	#item_sought = ewitem.find_item(item_search="cigarette", id_user=cmd.message.author.id, id_server=usermodel.id_server)
+	#item_sought = bknd_item.find_item(item_search="cigarette", id_user=cmd.message.author.id, id_server=usermodel.id_server)
 	item_sought = None
 	space_adorned = 0
-	item_stash = ewitem.inventory(id_user=cmd.message.author.id, id_server=usermodel.id_server)
+	item_stash = bknd_item.inventory(id_user=cmd.message.author.id, id_server=usermodel.id_server)
 	for item_piece in item_stash:
 		item = EwItem(id_item=item_piece.get('id_item'))
 		if item.item_props.get('adorned') == 'true':
@@ -247,7 +248,7 @@ async def smoke(cmd):
 			usermodel.persist()
 
 
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 			await asyncio.sleep(60)
 			item = EwItem(id_item=item_sought.get('id_item'))
 
@@ -277,7 +278,7 @@ async def smoke(cmd):
 
 			usermodel.persist()
 
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 			await asyncio.sleep(300)
 			item = EwItem(id_item=item_sought.get('id_item'))
 
@@ -295,11 +296,11 @@ async def smoke(cmd):
 			response = "You can't smoke that."
 	else:
 		response = "There aren't any usable cigarettes or cigars in your inventory."
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 def dedorn_all_costumes():
-	costumes = ewutils.execute_sql_query("SELECT id_item FROM items_prop WHERE name = 'context' AND value = 'costume' AND id_item IN (SELECT id_item FROM items_prop WHERE (name = 'adorned' OR name = 'slimeoid') AND value = 'true')")
+	costumes = bknd_core.execute_sql_query("SELECT id_item FROM items_prop WHERE name = 'context' AND value = 'costume' AND id_item IN (SELECT id_item FROM items_prop WHERE (name = 'adorned' OR name = 'slimeoid') AND value = 'true')")
 	costume_count = 0
 
 	for costume_id in costumes:
@@ -330,7 +331,7 @@ async def sew(cmd):
 		if item_id != None and len(item_id) > 0:
 			response = "You don't have one."
 
-			cosmetic_items = ewitem.inventory(
+			cosmetic_items = bknd_item.inventory(
 				id_user = cmd.message.author.id,
 				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_cosmetic
@@ -395,7 +396,7 @@ async def sew(cmd):
 							response ='"Let’s see, all told… including tax… plus gratuity… and a hefty tip, of course… your total comes out to {}, sir."'.format(cost_ofrepair)
 							response += "\n**!accept** or **!refuse** the deal."
 
-							await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+							await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 							# Wait for an answer
 							accepted = False
@@ -442,7 +443,7 @@ async def sew(cmd):
 	else:
 		response = "Heh, yeah right. What kind of self-respecting juvenile delinquent knows how to sew? Sewing totally fucking lame, everyone knows that! Even people who sew know that! You’re gonna have to find some nerd to do it for you."
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def retrofit(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -460,7 +461,7 @@ async def retrofit(cmd):
 		if item_id != None and len(item_id) > 0:
 			response = "You don't have one."
 
-			cosmetic_items = ewitem.inventory(
+			cosmetic_items = bknd_item.inventory(
 				id_user = cmd.message.author.id,
 				id_server = cmd.guild.id,
 				item_type_filter = ewcfg.it_cosmetic
@@ -503,7 +504,7 @@ async def retrofit(cmd):
 					
 					if desired_item == None:
 						response = "The hipster behind the counter doesn't really know what to do with that cosmetic, it's simply too outdated and worn out. He thinks you should just take it home and stuff it inside a box as a souvenir."
-						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 					desired_item_stats = {}
 
@@ -525,7 +526,7 @@ async def retrofit(cmd):
 							response = '"Let’s see, all told… including tax… plus gratuity… and a hefty tip, of course… your total comes out to {}, sir."'.format(cost_ofretrofit)
 							response += "\n**!accept** or **!refuse** the deal."
 
-							await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+							await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 							# Wait for an answer
 							accepted = False
@@ -577,7 +578,7 @@ async def retrofit(cmd):
 	else:
 		response = "Heh, yeah right. What kind of self-respecting juvenile delinquent knows how to sew? Sewing totally lame, everyone knows that! Even people who sew know that! Looks like you’re gonna have to find some nerd to do it for you."
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 def update_hues():
@@ -623,7 +624,7 @@ def update_hues():
 
 
 
-		ewutils.execute_sql_query("REPLACE INTO hues ({}, {}, {}, {}, {}, {}, {}, {}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)".format(
+		bknd_core.execute_sql_query("REPLACE INTO hues ({}, {}, {}, {}, {}, {}, {}, {}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)".format(
 			ewcfg.col_id_hue,
 			ewcfg.col_is_neutral,
 			ewcfg.col_hue_analogous_1,

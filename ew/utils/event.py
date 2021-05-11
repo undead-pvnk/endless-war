@@ -1,7 +1,6 @@
-from . import utils as ewutils
-from .static import cfg as ewcfg
 from . import stats as ewstats
-from . import item as ewitem
+from ..backend import item as bknd_item
+from ..static import cfg as ewcfg
 
 """
 	Database persistence object describing some discrete event. Player
@@ -101,7 +100,8 @@ def process_max_ghostbusts(id_server = None, id_user = None, value = None):
 	pass
 
 def process_poudrins_looted(id_server = None, id_user = None, value = None):
-	poudrin_amount = ewitem.find_poudrin(id_user = id_user, id_server = id_user)
+	poudrin_amount = bknd_item.find_poudrin(id_user = id_user, id_server = id_user)
 
 	ewstats.track_maximum(id_user = id_user, id_server = id_server, metric = ewcfg.stat_max_poudrins, value = poudrin_amount)
 	ewstats.change_stat(id_user = id_user, id_server = id_server, metric = ewcfg.stat_lifetime_poudrins, n = value)
+

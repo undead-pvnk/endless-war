@@ -1,72 +1,14 @@
 import asyncio
 import time
+
 import discord
 
-from .static import cfg as ewcfg
-from .static import poi as poi_static
-
-from . import utils as ewutils
-from . import item as ewitem
-
-from .user import EwUser
-
-class EwRole:
-	id_server = -1
-	id_role = -1
-	name = ""
-
-	def __init__(self, id_server = None, name = None, id_role = None):
-		if id_server is not None and name is not None:
-			self.id_server = id_server
-			self.name = name
-
-
-			data = ewutils.execute_sql_query("SELECT {id_role} FROM roles WHERE id_server = %s AND {name} = %s".format(
-				id_role = ewcfg.col_id_role,
-				name = ewcfg.col_role_name
-			), (
-				id_server,
-				name
-			))
-
-			if len(data) > 0:  # if data is not empty, i.e. it found an entry
-				# data is always a two-dimensional array and if we only fetch one row, we have to type data[0][x]
-				self.id_role = data[0][0]
-			else:  # create new entry
-				ewutils.execute_sql_query("REPLACE INTO roles ({id_server}, {name}) VALUES (%s, %s)".format(
-					id_server = ewcfg.col_id_server,
-					name = ewcfg.col_role_name
-				), (
-					id_server,
-					name
-				))
-		elif id_server is not None and id_role is not None:
-			self.id_server = id_server
-			self.id_role = id_role
-
-
-			data = ewutils.execute_sql_query("SELECT {name} FROM roles WHERE id_server = %s AND {id_role} = %s".format(
-				id_role = ewcfg.col_id_role,
-				name = ewcfg.col_role_name
-			), (
-				id_server,
-				id_role
-			))
-
-			if len(data) > 0:  # if data is not empty, i.e. it found an entry
-				# data is always a two-dimensional array and if we only fetch one row, we have to type data[0][x]
-				self.name = data[0][0]
-
-	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO roles (id_server, {id_role}, {name}) VALUES(%s, %s, %s)".format(
-			id_role = ewcfg.col_id_role,
-			name = ewcfg.col_role_name
-		), (
-			self.id_server,
-			self.id_role,
-			self.name
-		))
-			
+from . import core as ewutils
+from . import frontend as fe_utils
+from ..backend.role import EwRole
+from ..backend.user import EwUserBase as EwUser
+from ..static import cfg as ewcfg
+from ..static import poi as poi_static
 
 """
 	Find relevant roles and save them to the database.
@@ -615,11 +557,11 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 
 	if not startup:
 		for poi in poi_static.poi_list:
-			channel = ewutils.get_channel(server, poi.channel)
+			channel = fe_utils.get_channel(server, poi.channel)
 			if channel == None:
 				#ewutils.logMsg('Error: In refresh_user_perms, could not get channel for {}'.format(poi.channel))
 				# Second try
-				channel = ewutils.get_channel(server, poi.channel)
+				channel = fe_utils.get_channel(server, poi.channel)
 				if channel == None:
 					continue
 					
@@ -635,7 +577,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 
 					# Handle mine walls
 					if poi.id_poi in ewcfg.mines_wall_map:
-						wall_channel = ewutils.get_channel(server, ewcfg.mines_wall_map[poi.id_poi])
+						wall_channel = fe_utils.get_channel(server, ewcfg.mines_wall_map[poi.id_poi])
 						if wall_channel is not None:
 							for i in range(ewcfg.permissions_tries):
 								await wall_channel.set_permissions(used_member, overwrite=None)
@@ -663,7 +605,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 					print('User {} has invalid POI of {}'.format(user_data.id_user, user_data.poi))
 					correct_poi = poi_static.id_to_poi.get(ewcfg.poi_id_downtown)
 				
-				correct_channel = ewutils.get_channel(server, correct_poi.channel)
+				correct_channel = fe_utils.get_channel(server, correct_poi.channel)
 				#correct_lan_channel = "{}-LAN-connection".format(correct_channel)
 
 				if correct_channel == None:
@@ -683,7 +625,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 
 					# Handle mine walls
 					if correct_poi.id_poi in ewcfg.mines_wall_map:
-						wall_channel = ewutils.get_channel(server, ewcfg.mines_wall_map[correct_poi.id_poi])
+						wall_channel = fe_utils.get_channel(server, ewcfg.mines_wall_map[correct_poi.id_poi])
 						if wall_channel is not None:
 							overwrite = discord.PermissionOverwrite()
 							overwrite.read_messages = True
@@ -724,7 +666,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 
 			#print(user_data.poi)
 			
-			correct_channel = ewutils.get_channel(server, correct_poi.channel)
+			correct_channel = fe_utils.get_channel(server, correct_poi.channel)
 			if correct_channel == None:
 				ewutils.logMsg("Channel {} not found".format(correct_poi.channel))
 				return
@@ -753,7 +695,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	# if startup:
 	# 	# On startup, give out permissions where necessary. This should only need to be done once, when the update goes live.
 	# 	
-	# 	conn_info = ewutils.databaseConnect()
+	# 	conn_info = bknd_core.databaseConnect()
 	# 	conn = conn_info.get('conn')
 	# 	cursor = conn.cursor();
 	# 
@@ -794,10 +736,10 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	# 
 	# 			for poi in poi_static.poi_list:
 	# 
-	# 				channel = ewutils.get_channel(server, poi.channel)
+	# 				channel = fe_utils.get_channel(server, poi.channel)
 	# 				if channel == None:
 	# 					# Second try
-	# 					channel = ewutils.get_channel(server, poi.channel)
+	# 					channel = fe_utils.get_channel(server, poi.channel)
 	# 					if channel == None:
 	# 						continue
 	# 
@@ -841,7 +783,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	# 			else:
 	# 				continue
 	# 			
-	# 			correct_channel = ewutils.get_channel(server, correct_poi.channel)
+	# 			correct_channel = fe_utils.get_channel(server, correct_poi.channel)
 	# 			#correct_lan_channel = "{}-LAN-connection".format(correct_channel)
 	# 
 	# 			#print(user_data.poi)
@@ -880,11 +822,11 @@ async def remove_user_overwrites(cmd):
 		
 		searched_channel = poi.channel
 		
-		channel = ewutils.get_channel(server, searched_channel)
+		channel = fe_utils.get_channel(server, searched_channel)
 		
 		if channel == None:
 			# Second try
-			channel = ewutils.get_channel(server, searched_channel)
+			channel = fe_utils.get_channel(server, searched_channel)
 			if channel == None:
 				continue
 				
@@ -901,4 +843,4 @@ async def remove_user_overwrites(cmd):
 		
 
 	response = "DEBUG: ALL USER OVERWRITES DELETED."
-	return await ewutils.send_message(client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

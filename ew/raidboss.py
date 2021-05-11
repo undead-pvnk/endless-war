@@ -1,11 +1,13 @@
 import asyncio
 import time
 
-from . import rolemgr as ewrolemgr
-from . import utils as ewutils
-from .static import cfg as ewcfg
 from . import cmd as ewcmd
-from .user import EwUser
+from .backend import core as bknd_core
+from .static import cfg as ewcfg
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils import rolemgr as ewrolemgr
+from .utils.combat import EwUser
 
 """
 	Commands for raid bosses only.
@@ -19,7 +21,7 @@ async def writhe(cmd):
 
 	if user_data.life_state != ewcfg.life_state_grandfoe:
 		response = "Only the NEGASLIME {} can do that.".format(ewcfg.emote_negaslime)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	else:
 		# play animation
 		he = ewcfg.emote_he
@@ -48,7 +50,7 @@ async def writhe(cmd):
 
 		for writhing in writhings:
 			cur_time = time.time()
-			await ewutils.edit_message(cmd.client, resp, writhing)
+			await fe_utils.edit_message(cmd.client, resp, writhing)
 			elapsed = time.time() - cur_time
 			await asyncio.sleep(2.0 - elapsed)
 
@@ -58,7 +60,7 @@ async def writhe(cmd):
 		# search for players in the negaslime's location in database and put them in a list
 		if id_server != None:
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor()
 
@@ -78,7 +80,7 @@ async def writhe(cmd):
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 		victim_list = []
 
@@ -91,8 +93,8 @@ async def writhe(cmd):
 				user_data_target.die(cause = ewcfg.cause_grandfoe)
 				user_data_target.persist()
 				await ewrolemgr.updateRoles(client = cmd.client, member = target)
-				sewerchannel = ewutils.get_channel(cmd.guild, ewcfg.channel_sewers)
-				await ewutils.send_message(cmd.client, sewerchannel, "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(target, "You have been crushed by tendrils. {}".format(ewcfg.emote_slimeskull)))
+				sewerchannel = fe_utils.get_channel(cmd.guild, ewcfg.channel_sewers)
+				await fe_utils.send_message(cmd.client, sewerchannel, "{} ".format(ewcfg.emote_slimeskull) + fe_utils.formatMessage(target, "You have been crushed by tendrils. {}".format(ewcfg.emote_slimeskull)))
 
 				victim_list.append(target)
 
@@ -103,4 +105,4 @@ async def writhe(cmd):
 		else:
 			response = "Your tendrils didn't kill anyone :("
 
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

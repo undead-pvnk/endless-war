@@ -1,8 +1,9 @@
 import random
 
 from . import cfg as ewcfg
-
 from ..model.weapon import EwWeapon
+from ..utils import core as ewutils
+
 
 def get_weapon_type_stats(weapon_type):
 	types = {
@@ -163,9 +164,9 @@ def wef_garrote(ctn = None):
 		#Stop movement
 		ewutils.moves_active[ctn.user_data.id_user] = 0
 		#Stun player for 5 seconds
-		ctn.user_data.applyStatus(id_status=status_stunned_id, value=(int(ctn.time_now) + 5))
+		ctn.user_data.applyStatus(id_status=ewcfg.status_stunned_id, value=(int(ctn.time_now) + 5))
 		#Start strangling target
-		ctn.shootee_data.applyStatus(id_status=status_strangled_id, source=ctn.user_data.id_user)
+		ctn.shootee_data.applyStatus(id_status=ewcfg.status_strangled_id, source=ctn.user_data.id_user)
 
 # weapon effect function for "Eldritch Staff"
 def wef_staff(ctn = None):
@@ -182,7 +183,7 @@ def wef_staff(ctn = None):
 		lambda ctn: (ctn.user_data.salary_credits <= -50000) or (ctn.shootee_data.salary_credits == 0),
 		lambda ctn: (ctn.user_data.poi_death == ctn.user_data.poi) or (ctn.shootee_data.poi_death == ctn.shootee_data.poi),
 		lambda ctn: (ctn.user_data.id_killer == ctn.shootee_data.id_user) or (ctn.user_data.id_user == ctn.shootee_data.id_killer),
-		lambda ctn: (ctn.shootee_data.life_state == life_state_juvenile) or (ctn.shootee_data.life_state == life_state_enlisted and ctn.shootee_data.faction == ctn.user_data.faction),
+		lambda ctn: (ctn.shootee_data.life_state == ewcfg.life_state_juvenile) or (ctn.shootee_data.life_state == ewcfg.life_state_enlisted and ctn.shootee_data.faction == ctn.user_data.faction),
 	}
 	for condition in conditions:
 		try:

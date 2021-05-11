@@ -1,16 +1,20 @@
 import asyncio
-import random
-import time
 import math
+import random
+import shlex
+import time
 
 from . import cmd as ewcmd
-from . import utils as ewutils
+from . import item as ewitem
+from .backend import item as bknd_item
+from .backend.item import EwItem
 from .static import cfg as ewcfg
 from .static import poi as poi_static
-from . import rolemgr as ewrolemgr
-from . import item as ewitem
-from .user import EwUser
-from .district import EwDistrict
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils import rolemgr as ewrolemgr
+from .utils.combat import EwUser
+from .utils.district import EwDistrict
 
 # Map containing user IDs and the last time in UTC seconds since the pachinko
 # machine was used.
@@ -63,12 +67,12 @@ async def pachinko(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		last_pachinkoed_times[cmd.message.author.id] = time_now
 		user_data = EwUser(member = cmd.message.author)
 		if user_data.life_state == ewcfg.life_state_shambler:
 			response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 		
 		if currency_used == ewcfg.currency_slimecoin:
@@ -76,7 +80,7 @@ async def pachinko(cmd):
 			
 			if value > user_data.slimecoin:
 				response = "You don't have enough SlimeCoin to play. You need {} but only have {}.".format(value, user_data.slimecoin)
-				return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+				return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 
 			# subtract costs
 			user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
@@ -87,11 +91,11 @@ async def pachinko(cmd):
 			value = ewcfg.slimes_perpachinko * ewcfg.slimecoin_exchangerate
 
 			if user_data.life_state == ewcfg.life_state_corpse:
-				return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_machine))
+				return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_machine))
 
 			if value > user_data.slimes:
 				response = "You don't have enough slime to play. You need {} but only have {}.".format(value, user_data.slimes)
-				return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+				return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 			
 			# subtract costs
 			user_data.change_slimes(n = -value, source = ewcfg.source_casino)
@@ -100,7 +104,7 @@ async def pachinko(cmd):
 		
 		user_data.persist()
 
-		await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, "You insert {:,} {}. Balls begin to drop!".format(value, currency_used)))
+		await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, "You insert {:,} {}. Balls begin to drop!".format(value, currency_used)))
 		await asyncio.sleep(3)
 
 		ball_count = 10
@@ -126,7 +130,7 @@ async def pachinko(cmd):
 				response += " ... **ding!**"
 				winballs += 1
 
-			await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+			await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 			await asyncio.sleep(1)
 
 		winnings = int(winballs * value / 2)
@@ -155,7 +159,7 @@ async def pachinko(cmd):
 		last_pachinkoed_times[cmd.message.author.id] = 0
 
 	# Send the response to the player.
-	await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 	# gangsters don't need their roles updated
 	if user_data.life_state == ewcfg.life_state_juvenile:
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -190,7 +194,7 @@ async def craps(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		last_crapsed_times[cmd.message.author.id] = time_now
 		value = None
 		winnings = 0
@@ -204,7 +208,7 @@ async def craps(cmd):
 			user_data = EwUser(member = cmd.message.author)
 			if user_data.life_state == ewcfg.life_state_shambler:
 				response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 			
 			if currency_used == ewcfg.currency_slimecoin:
@@ -213,41 +217,41 @@ async def craps(cmd):
 
 				elif value > user_data.slimecoin:
 					response = "You don't have that much SlimeCoin to bet with."
-					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 			elif currency_used == ewcfg.currency_soul:
 				if cmd.mentions_count > 0:
 					correct_soul = 0
-					user_inv = ewitem.inventory(id_server=user_data.id_server, id_user=user_data.id_user)
+					user_inv = bknd_item.inventory(id_server=user_data.id_server, id_user=user_data.id_user)
 					for item_sought in user_inv:
 						if "soul" in item_sought.get("name"):
-							item = ewitem.EwItem(id_item=item_sought.get('id_item'))
+							item = EwItem(id_item=item_sought.get('id_item'))
 							if str(cmd.mentions[0].id) == item.item_props.get("user_id"):
 								correct_soul = item.id_item
 					if correct_soul == 0:
 						response = "You don't have that soul."
-						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 					else:
-						ewitem.give_item(id_item=correct_soul, id_user="casinosouls_wait", id_server=user_data.id_server)
+						bknd_item.give_item(id_item=correct_soul, id_user="casinosouls_wait", id_server=user_data.id_server)
 						soul_id = correct_soul
 				elif user_data.has_soul == 0:
 					response = "You don't have a soul to bet."
-					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 				else:
 					soul_id = ewitem.surrendersoul(receiver=user_data.id_user, giver=user_data.id_user, id_server=user_data.id_server)
-					ewitem.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
+					bknd_item.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
 					user_data = EwUser(member=cmd.message.author)
 
 			else:
 				if user_data.life_state == ewcfg.life_state_corpse:
-					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
+					return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
 				
 				if value == -1:
 					value = user_data.slimes
 
 				elif value > user_data.slimes:
 					response = "You don't have that much slime to bet with."
-					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 			roll1 = random.randint(1,6)
 			roll2 = random.randint(1,6)
@@ -268,14 +272,14 @@ async def craps(cmd):
 
 				if currency_used == ewcfg.currency_soul:
 					currency_used = ewcfg.currency_slimecoin
-					if not ewitem.give_item(id_item=soul_id, member=cmd.message.author):
-						ewitem.give_item(id_item=soul_id, id_user=ewcfg.poi_id_thecasino, id_server=user_data.id_server)
+					if not bknd_item.give_item(id_item=soul_id, member=cmd.message.author):
+						bknd_item.give_item(id_item=soul_id, id_user=ewcfg.poi_id_thecasino, id_server=user_data.id_server)
 						response += "\n\nThe dealer hands you the soul, but you're holding too many cosmetics and you drop it on the floor."
 				response += "\n\n**You rolled a 7! It's your lucky day. You won {:,} {currency}.**".format(winnings, currency = currency_used)
 			else:
 				response += "\n\nYou didn't roll 7. You lost your {}.".format(currency_used)
 				if currency_used == ewcfg.currency_soul:
-					ewitem.give_item(id_item=soul_id, id_user="casinosouls", id_server=cmd.guild.id)
+					bknd_item.give_item(id_item=soul_id, id_user="casinosouls", id_server=cmd.guild.id)
 
 			# add winnings/subtract losses
 			if currency_used == ewcfg.currency_slimecoin:
@@ -296,7 +300,7 @@ async def craps(cmd):
 			response = "Specify how much {} you will wager.".format(currency_used)
 
 	# Send the response to the player.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	# gangsters don't need their roles updated
 	if user_data.life_state == ewcfg.life_state_juvenile:
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -331,20 +335,20 @@ async def slots(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		last_slotsed_times[cmd.message.author.id] = time_now
 
 		user_data = EwUser(member = cmd.message.author)
 		if user_data.life_state == ewcfg.life_state_shambler:
 			response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 		if currency_used == ewcfg.currency_slimecoin:
 			value = ewcfg.slimes_perslot
 
 			if value > user_data.slimecoin:
 				response = "You don't have enough SlimeCoin. You need {} but only have {}.".format(value, user_data.slimecoin)
-				return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+				return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 			
 			# subtract costs
 			user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
@@ -356,11 +360,11 @@ async def slots(cmd):
 			value = ewcfg.slimes_perslot * ewcfg.slimecoin_exchangerate
 
 			if user_data.life_state == ewcfg.life_state_corpse:
-				return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_machine))
+				return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_machine))
 
 			if value > user_data.slimes:
 				response = "You don't have enough slime. You need {} but only have {}.".format(value, user_data.slimes)
-				return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+				return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 
 			# subtract costs
 			user_data.change_slimes(n = -value, source = ewcfg.source_casino)
@@ -371,7 +375,7 @@ async def slots(cmd):
 		user_data.persist()
 			
 		# Add some suspense...
-		await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, "You insert {:,} {} and pull the handle...".format(value, currency_used)))
+		await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, "You insert {:,} {} and pull the handle...".format(value, currency_used)))
 		await asyncio.sleep(3)
 
 		slots = [
@@ -389,7 +393,7 @@ async def slots(cmd):
 		# Roll those tumblers!
 		spins = 3
 		while spins > 0:
-			await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, "{} {} {}".format(
+			await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, "{} {} {}".format(
 				slots[random.randrange(0, slots_len)],
 				slots[random.randrange(0, slots_len)],
 				slots[random.randrange(0, slots_len)]
@@ -489,7 +493,7 @@ async def slots(cmd):
 		last_slotsed_times[cmd.message.author.id] = 0
 
 	# Send the response to the player.
-	await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 	# gangsters don't need their roles updated
 	if user_data.life_state == ewcfg.life_state_juvenile:
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -533,7 +537,7 @@ async def roulette(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		last_rouletted_times[cmd.message.author.id] = time_now
 		value = None
 
@@ -548,7 +552,7 @@ async def roulette(cmd):
 			user_data = EwUser(member = cmd.message.author)
 			if user_data.life_state == ewcfg.life_state_shambler:
 				response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 			if currency_used == ewcfg.currency_slimecoin:
@@ -557,7 +561,7 @@ async def roulette(cmd):
 
 				if value > user_data.slimecoin:
 					response = "You don't have enough SlimeCoin."
-					return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+					return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 
 				# subtract costs
 				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
@@ -568,14 +572,14 @@ async def roulette(cmd):
 				pass
 			else:
 				if user_data.life_state == ewcfg.life_state_corpse:
-					return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
+					return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
 
 				if value == -1:
 					value = user_data.slimes
 				
 				if value > user_data.slimes:
 					response = "You don't have enough slime."
-					return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+					return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 
 				# subtract costs
 				user_data.change_slimes(n = -value, source = ewcfg.source_casino)
@@ -590,30 +594,30 @@ async def roulette(cmd):
 				if currency_used == ewcfg.currency_soul:
 					if cmd.mentions_count > 0:
 						correct_soul = 0
-						user_inv = ewitem.inventory(id_server=user_data.id_server, id_user=user_data.id_user)
+						user_inv = bknd_item.inventory(id_server=user_data.id_server, id_user=user_data.id_user)
 						for item_sought in user_inv:
 							if "soul" in item_sought.get("name"):
-								item = ewitem.EwItem(id_item = item_sought.get('id_item'))
+								item = EwItem(id_item = item_sought.get('id_item'))
 								if str(cmd.mentions[0].id) == item.item_props.get("user_id"):
 									correct_soul = item.id_item
 						if correct_soul == 0:
 							response = "You don't have that soul."
-							return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+							return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 						else:
-							ewitem.give_item(id_item=correct_soul, id_user="casinosouls_wait", id_server=user_data.id_server)
+							bknd_item.give_item(id_item=correct_soul, id_user="casinosouls_wait", id_server=user_data.id_server)
 							soul_id = correct_soul
 					elif user_data.has_soul == 0:
 						response = "You don't have a soul to bet."
-						return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+						return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 					else:
 						soul_id = ewitem.surrendersoul(receiver=user_data.id_user, giver=user_data.id_user, id_server=user_data.id_server)
-						ewitem.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
+						bknd_item.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
 						user_data = EwUser(member = cmd.message.author)
 
 
 				user_data.persist()
 
-				await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(
+				await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(
 					cmd.message.author,
 					img_base + "sr.gif"
 				))
@@ -673,12 +677,12 @@ async def roulette(cmd):
 
 				response = "The ball landed on {}!\n".format(roll)
 				if currency_used == ewcfg.currency_soul and winnings > 0:
-					if not ewitem.give_item(id_item=soul_id, id_user=user_data.id_user, id_server=user_data.id_server):
-						ewitem.give_item(id_item=soul_id, id_user=ewcfg.poi_id_thecasino, id_server=user_data.id_server)
+					if not bknd_item.give_item(id_item=soul_id, id_user=user_data.id_user, id_server=user_data.id_server):
+						bknd_item.give_item(id_item=soul_id, id_user=ewcfg.poi_id_thecasino, id_server=user_data.id_server)
 						response += " The dealer hands you the soul, but you're holding too many cosmetics and you drop it on the floor.\n"
 					currency_used = ewcfg.currency_slimecoin
 				else:
-					ewitem.give_item(id_item=soul_id, id_user="casinosouls", id_server=user_data.id_server)
+					bknd_item.give_item(id_item=soul_id, id_user="casinosouls", id_server=user_data.id_server)
 				if winnings > 0:
 
 
@@ -706,7 +710,7 @@ async def roulette(cmd):
 			response = "Specify how much {} you will wager.".format(currency_used)
 
 	# Send the response to the player.
-	await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 	# gangsters don't need their roles updated
 	if user_data.life_state == ewcfg.life_state_juvenile:
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -741,7 +745,7 @@ async def baccarat(cmd):
 	elif cmd.message.channel.name != ewcfg.channel_casino:
 		# Only allowed in the slime casino.
 		response = "You must go to the Casino to gamble your {}.".format(currency_used)
-		await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+		await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 		await asyncio.sleep(1)
 	else:
 		poi = poi_static.id_to_poi.get(user_data.poi)
@@ -749,7 +753,7 @@ async def baccarat(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		last_rouletted_times[cmd.message.author.id] = time_now
 		value = None
 
@@ -764,7 +768,7 @@ async def baccarat(cmd):
 			user_data = EwUser(member = cmd.message.author)
 			if user_data.life_state == ewcfg.life_state_shambler:
 				response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 			if currency_used == ewcfg.currency_slimecoin:
@@ -773,7 +777,7 @@ async def baccarat(cmd):
 
 				if value > user_data.slimecoin:
 					response = "You don't have enough SlimeCoin."
-					return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+					return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 
 				#subtract costs
 				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
@@ -784,14 +788,14 @@ async def baccarat(cmd):
 				pass
 			else:
 				if user_data.life_state == ewcfg.life_state_corpse:
-					return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
+					return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
 
 				if value == -1:
 					value = user_data.slimes
 
 				if value > user_data.slimes:
 					response = "You don't have enough slime."
-					return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+					return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 
 				#subtract costs
 				user_data.change_slimes(n = -value, source = ewcfg.source_casino)
@@ -801,32 +805,32 @@ async def baccarat(cmd):
 
 			if len(bet) == 0:
 				response = "You must specify what hand you are betting on. Options are {}.".format(ewutils.formatNiceList(names = all_bets), img_base)
-				await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(1)
 
 			elif bet not in all_bets:
 				response = "The dealer didn't understand your wager. Options are {}.".format(ewutils.formatNiceList(names = all_bets), img_base)
-				await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(1)
 
 			else:
 				if currency_used == ewcfg.currency_soul:
 					if cmd.mentions_count > 0:
 						correct_soul = 0
-						user_inv = ewitem.inventory(id_server=user_data.id_server, id_user=user_data.id_user)
+						user_inv = bknd_item.inventory(id_server=user_data.id_server, id_user=user_data.id_user)
 						for item_sought in user_inv:
 							if "soul" in item_sought.get("name"):
-								item = ewitem.EwItem(id_item = item_sought.get('id_item'))
+								item = EwItem(id_item = item_sought.get('id_item'))
 								if str(cmd.mentions[0].id) == item.item_props.get("user_id"):
 									correct_soul = item.id_item
 						if correct_soul == 0:
 							response = "You don't have that soul."
-							return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+							return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 						else:
 							soul_id = correct_soul
 					elif user_data.has_soul == 0:
 						response = "You don't have a soul to bet."
-						return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+						return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 					else:
 						soul_id = ewitem.surrendersoul(receiver=user_data.id_user, giver=user_data.id_user, id_server=user_data.id_server)
 						user_data = EwUser(member = cmd.message.author)
@@ -835,18 +839,18 @@ async def baccarat(cmd):
 				
 				response = "You bet {} {} on {}. The dealer shuffles the deck, then begins to deal.".format(str(value), currency_used, str(bet))
 				if currency_used == ewcfg.currency_soul:
-					ewitem.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
+					bknd_item.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
 					response = "You bet your soul on {}. The dealer shuffles the deck, then begins to deal.".format(str(bet))
 
 				resp_d = await ewcmd.start(cmd = cmd)
 				resp_f = await ewcmd.start(cmd = cmd)
 				
-				await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(1)
 
 				response += "\nThe dealer deals you your first card..."
 
-				await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(3)
 
 				winnings = 0
@@ -920,10 +924,10 @@ async def baccarat(cmd):
 				response += str_ranksuit.format(rank, suit)
 				response += img_base + lastcard + ".png"
 
-				await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(1)
 				response += "\nThe dealer deals you your second card..."
-				await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(3)
 
 				while True:
@@ -994,14 +998,14 @@ async def baccarat(cmd):
 				response += str_ranksuit.format(rank, suit)
 				response += img_base + lastcard + ".png"
 
-				await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(1)
 
 				responsesave = response
 
 				response = "\nThe dealer deals the house its first card..."
 
-				await ewutils.edit_message(cmd.client, resp_d, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.edit_message(cmd.client, resp_d, fe_utils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(3)
 
 				while True:
@@ -1072,10 +1076,10 @@ async def baccarat(cmd):
 				response += str_ranksuit.format(rank, suit)
 				response += img_base + lastcard + ".png"
 
-				await ewutils.edit_message(cmd.client, resp_d, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.edit_message(cmd.client, resp_d, fe_utils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(1)
 				response += "\nThe dealer deals the house its second card..."
-				await ewutils.edit_message(cmd.client, resp_d, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.edit_message(cmd.client, resp_d, fe_utils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(3)
 
 				while True:
@@ -1146,7 +1150,7 @@ async def baccarat(cmd):
 				response += str_ranksuit.format(rank, suit)
 				response += img_base + lastcard + ".png"
 
-				await ewutils.edit_message(cmd.client, resp_d, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.edit_message(cmd.client, resp_d, fe_utils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(1)
 				responsesave_d = response
 
@@ -1159,7 +1163,7 @@ async def baccarat(cmd):
 					response = responsesave
 					response += "\nThe dealer deals you another card..."
 
-					await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+					await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 					await asyncio.sleep(3)
 
 					phit = True
@@ -1231,14 +1235,14 @@ async def baccarat(cmd):
 					response += str_ranksuit.format(rank, suit)
 					response += img_base + lastcard + ".png"
 
-					await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+					await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 					await asyncio.sleep(1)
 
 				if ((phit != True and d <= 5) or (phit == True and ((d <= 2) or (d == 3 and drawp3 not in ["8", "21", "34", "47"]) or (d == 4 and drawp3 in ["2", "15", "28", "41", "3", "16", "29", "42", "4", "17", "30", "43", "5", "18", "31", "44", "6", "19", "32", "45", "7", "20", "33", "46"]) or (d == 5 and drawp3 in ["4", "17", "30", "43", "5", "18", "31", "44", "6", "19", "32", "45", "7", "20", "33", "46"]) or (d == 6 and drawp3 in ["6", "19", "32", "45", "7", "20", "33", "46"])))) and (d != 7) and (end != True):
 					
 					response = responsesave_d
 					response += "\nThe dealer deals the house another card..."
-					await ewutils.edit_message(cmd.client, resp_d, ewutils.formatMessage(cmd.message.author, response))
+					await fe_utils.edit_message(cmd.client, resp_d, fe_utils.formatMessage(cmd.message.author, response))
 					await asyncio.sleep(3)
 					
 					while True:
@@ -1309,7 +1313,7 @@ async def baccarat(cmd):
 					response += str_ranksuit.format(rank, suit)
 					response += img_base + lastcard + ".png"
 
-					await ewutils.edit_message(cmd.client, resp_d, ewutils.formatMessage(cmd.message.author, response))
+					await fe_utils.edit_message(cmd.client, resp_d, fe_utils.formatMessage(cmd.message.author, response))
 					await asyncio.sleep(2)
 
 				if p > 9:
@@ -1336,8 +1340,8 @@ async def baccarat(cmd):
 
 
 					if currency_used == ewcfg.currency_soul:
-						if not ewitem.give_item(id_item=soul_id, id_user=cmd.message.author.id, id_server=user_data.id_server):
-							ewitem.give_item(id_item=soul_id, id_user=ewcfg.poi_id_thecasino, id_server=user_data.id_server)
+						if not bknd_item.give_item(id_item=soul_id, id_user=cmd.message.author.id, id_server=user_data.id_server):
+							bknd_item.give_item(id_item=soul_id, id_user=ewcfg.poi_id_thecasino, id_server=user_data.id_server)
 							response += "\n\nThe dealer hands you the soul, but you're holding too many cosmetics and you drop it on the floor."
 						currency_used = ewcfg.currency_slimecoin
 
@@ -1346,7 +1350,7 @@ async def baccarat(cmd):
 					response += "\n\n*You lost your bet.*"
 
 					if currency_used == ewcfg.currency_soul:
-						ewitem.give_item(id_item=soul_id, id_user="casinosouls", id_server=user_data.id_server)
+						bknd_item.give_item(id_item=soul_id, id_user="casinosouls", id_server=user_data.id_server)
 
 
 				# add winnings
@@ -1360,14 +1364,14 @@ async def baccarat(cmd):
 						response += "\n\n" + levelup_response
 
 				user_data.persist()
-				await ewutils.edit_message(cmd.client, resp_f, ewutils.formatMessage(cmd.message.author, response))
+				await fe_utils.edit_message(cmd.client, resp_f, fe_utils.formatMessage(cmd.message.author, response))
 				# gangsters don't need their roles updated
 				if user_data.life_state == ewcfg.life_state_juvenile:
 					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 		else:
 			response = "Specify how much {} you will wager.".format(currency_used)
-			await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+			await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def russian_roulette(cmd):
@@ -1382,18 +1386,18 @@ async def russian_roulette(cmd):
 	if user_data.poi != ewcfg.poi_id_thecasino:
 		#Only at the casino
 		response = "You can only play russian roulette at the casino."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	poi = poi_static.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	if cmd.mentions_count != 1:
 		#Must mention only one player
 		response = "Mention the player you want to challenge."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	author = cmd.message.author
 	member = cmd.mentions[0]
@@ -1409,32 +1413,32 @@ async def russian_roulette(cmd):
 
 	if last_used_author + ewcfg.cd_rr > time_now or last_used_member + ewcfg.cd_rr > time_now:
 		response = "**ENOUGH**"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if author.id == member.id:
 		response = "You might be looking for !suicide."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	challenger = EwUser(member = author)
 	challengee = EwUser(member = member)
 
 	if challenger.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	#Players have been challenged
 	if ewutils.active_target_map.get(challenger.id_user) != None and ewutils.active_target_map.get(challenger.id_user) != "":
 		response = "You are already in the middle of a challenge."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	if ewutils.active_target_map.get(challengee.id_user) != None and ewutils.active_target_map.get(challengee.id_user) != "":
 		response = "{} is already in the middle of a challenge.".format(member.display_name).replace("@", "\{at\}")
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	if challenger.poi != challengee.poi:
 		#Challangee must be in the casino
 		response = "Both players must be in the casino."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	challenger_mutations = challenger.get_mutations()
 	challengee_mutations = challengee.get_mutations()
@@ -1444,28 +1448,28 @@ async def russian_roulette(cmd):
 	if challenger.life_state not in playable_life_states or challengee.life_state not in playable_life_states:
 		if challenger.life_state == ewcfg.life_state_corpse:
 			response = "You try to grab the gun, but it falls through your hands. Ghosts can't hold weapons.".format(author.display_name).replace("@", "\{at\}")
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 		elif challengee.life_state == ewcfg.life_state_corpse:
 			response = "{} tries to grab the gun, but it falls through their hands. Ghosts can't hold weapons.".format(member.display_name).replace("@", "\{at\}")
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 		elif challenger.life_state == ewcfg.life_state_kingpin:
 			response = "Throwing all of your gang's hard earned slime on the line strikes you as a bad idea..."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 		elif challengee.life_state == ewcfg.life_state_kingpin:
 			response = "They think about accepting for a moment, but then back away, remembering all the hard work their gangsters have put forth. Bummer..."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 		else:
 			response = "Juveniles are too cowardly to gamble their lives."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 	elif (challenger.has_soul == 0 or challengee.has_soul == 0) and soulstake:
 		response = "A soul game of russian roulette can't be played unless both players have souls planted firmly in their body."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 	elif (challenger.life_state == ewcfg.life_state_juvenile and ewcfg.mutation_id_nervesofsteel not in challenger_mutations):
 		response = "Juveniles are usually too cowardly to gamble their lives."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 	elif (challengee.life_state == ewcfg.life_state_juvenile and ewcfg.mutation_id_nervesofsteel not in challengee_mutations):
 		response = "Juveniles are usually too cowardly to gamble their lives."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	#Assign a challenger so players can't be challenged
 	ewutils.active_target_map[challenger.id_user] = challengee.id_user
@@ -1477,7 +1481,7 @@ async def russian_roulette(cmd):
 	response = "You have been challenged by {} to a game of russian roulette. Do you !accept or !refuse?".format(author.display_name).replace("@", "\{at\}")
 	if soulstake:
 		response = "You have been challenged by {} to a game of russian roulette. Your soul is on the line in this game. Do you !accept or !refuse?".format(author.display_name).replace("@", "\{at\}")
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(member, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(member, response))
 
 	#Wait for an answer
 	accepted = False
@@ -1521,12 +1525,12 @@ async def russian_roulette(cmd):
 				player = member
 
 			response = "You put the gun to your head and pull the trigger..."
-			res = await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(player, response))
+			res = await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(player, response))
 			await asyncio.sleep(wait_time)
 
 			#Player dies
 			if random.randint(1, (7 - spin)) == 1:
-				await ewutils.edit_message(cmd.client, res, ewutils.formatMessage(player, (response + " **BANG**")))
+				await fe_utils.edit_message(cmd.client, res, fe_utils.formatMessage(player, (response + " **BANG**")))
 				response = "You return to the Casino with {}'s slime.".format(player.display_name).replace("@", "\{at\}")
 				if soulstake:
 					response = "You return to the Casino with {}'s soul.".format(player.display_name).replace("@", "\{at\}")
@@ -1573,7 +1577,7 @@ async def russian_roulette(cmd):
 				challenger.persist()
 				challengee.persist()
 
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(winner, response))
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(winner, response))
 
 				await ewrolemgr.updateRoles(client = cmd.client, member = author)
 				await ewrolemgr.updateRoles(client = cmd.client, member = member)
@@ -1582,13 +1586,13 @@ async def russian_roulette(cmd):
 
 			#Or survives
 			else:
-				await ewutils.edit_message(cmd.client, res, ewutils.formatMessage(player, (response + " but it's empty")))
+				await fe_utils.edit_message(cmd.client, res, fe_utils.formatMessage(player, (response + " but it's empty")))
 				await asyncio.sleep(wait_time)
 
 	#Or cancel the challenge
 	else:
 		response = "{} was too cowardly to accept your challenge.".format(member.display_name).replace("@", "\{at\}")
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 		last_russianrouletted_times[author.id] = time_now - 540
 		last_russianrouletted_times[member.id] = time_now - 540
 
@@ -1614,62 +1618,62 @@ async def duel(cmd):
 	if cmd.mentions_count != 1:
 		# Must mention only one player
 		response = "Mention the player you want to challenge."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	author = cmd.message.author
 	member = cmd.mentions[0]
 
 	if author.id == member.id:
 		response = "You might be looking for !suicide."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	challenger = EwUser(member=author)
 	challengee = EwUser(member=member)
 
 	if challenger.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	elif challengee.life_state == ewcfg.life_state_shambler:
 		response = "They lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	
 	challenger_poi = poi_static.id_to_poi.get(challenger.poi)
 	challengee_poi = poi_static.id_to_poi.get(challengee.poi)
 	if not challenger_poi.is_district or not challengee_poi.is_district:
 		response = "Both participants need to be in a district zone."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	# Players have been challenged
 	if ewutils.active_target_map.get(challenger.id_user) != None and ewutils.active_target_map.get(challenger.id_user) != "":
 		response = "You are already in the middle of a challenge."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	if ewutils.active_target_map.get(challengee.id_user) != None and ewutils.active_target_map.get(challengee.id_user) != "":
 		response = "{} is already in the middle of a challenge.".format(member.display_name).replace("@", "\{at\}")
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	if challenger.poi != challengee.poi:
 		response = "Both duelers must be in the same location."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	# Players have to be enlisted
 	playable_life_states = [ewcfg.life_state_enlisted, ewcfg.life_state_lucky, ewcfg.life_state_executive]
 	if challenger.life_state not in playable_life_states or challengee.life_state not in playable_life_states:
 		if challenger.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't duel people. Alas, they can only watch from afar and !haunt."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 		elif challengee.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't duel people. Alas, they can only watch from afar and !haunt."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 		elif challenger.life_state == ewcfg.life_state_kingpin:
 			response = "Throwing all of your gang's hard earned slime on the line strikes you as a bad idea..."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 		elif challengee.life_state == ewcfg.life_state_kingpin:
 			response = "They think about accepting for a moment, but then back away, remembering all the hard work their gangsters have put forth. Bummer..."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 		# else:
 		# 	response = "Juveniles are too cowardly to throw their lives away in a duel."
-		# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		# 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	# Assign a challenger so players can't be challenged
 	ewutils.active_target_map[challenger.id_user] = challengee.id_user
@@ -1680,7 +1684,7 @@ async def duel(cmd):
 	ewutils.active_restrictions[challengee.id_user] = 2
 
 	response = "You have been challenged by {} to a duel. Do you !accept or !refuse?".format(author.display_name).replace("@", "\{at\}")
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(member, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(member, response))
 
 	# Wait for an answer
 	accepted = False
@@ -1715,7 +1719,7 @@ async def duel(cmd):
 				ewutils.active_restrictions[challengee.id_user] = 0
 				
 				response = "The duel is over before it even began."
-				return await ewutils.send_message(cmd.client, cmd.message.channel, response)
+				return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 			
 			if countdown > 8:
 				text_mod = ""
@@ -1732,7 +1736,7 @@ async def duel(cmd):
 				countdown_resp = "{}{}{}".format(text_mod, countdown, text_mod)
 				
 			countdown -= 1
-			await ewutils.send_message(cmd.client, cmd.message.channel, countdown_resp)
+			await fe_utils.send_message(cmd.client, cmd.message.channel, countdown_resp)
 			await asyncio.sleep(1)
 			challenger = EwUser(member=author)
 			challengee = EwUser(member=member)
@@ -1741,7 +1745,7 @@ async def duel(cmd):
 		ewutils.active_restrictions[challengee.id_user] = 2
 			
 		response = "{}***DRAW!***{}".format(ewcfg.emote_slimegun, ewcfg.emote_slimegun)
-		await ewutils.send_message(cmd.client, cmd.message.channel, response)
+		await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 
 		await ewrolemgr.updateRoles(client=cmd.client, member=author)
 		await ewrolemgr.updateRoles(client=cmd.client, member=member)
@@ -1767,19 +1771,19 @@ async def duel(cmd):
 		if challenger.slimes <= 0:
 			# challenger lost
 			response = "**{} has won the duel!!**".format(member.display_name).replace("@","\{at\}")
-			await ewutils.send_message(cmd.client, cmd.message.channel, response)
+			await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 			challengee = EwUser(member=member)
 
 		elif challengee.slimes <= 0:
 			# challengee lost
 			response = "**{} has won the duel!!**".format(author.display_name).replace("@","\{at\}")
-			await ewutils.send_message(cmd.client, cmd.message.channel, response)
+			await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 			challenger = EwUser(member=author)
 
 		else:
 			# timer stall
 			response = "**Neither dueler was bloodthirsty enough to finish the job in time! The duel is over!**"
-			await ewutils.send_message(cmd.client, cmd.message.channel, response)
+			await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 
 		await ewrolemgr.updateRoles(client=cmd.client, member=author)
 		await ewrolemgr.updateRoles(client=cmd.client, member=member)
@@ -1788,7 +1792,7 @@ async def duel(cmd):
 	# Or cancel the challenge
 	else:
 		response = "{} was too cowardly to accept your challenge.".format(member.display_name).replace("@", "\{at\}")
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	challenger = EwUser(member=author)
 	challengee = EwUser(member=member)
@@ -2106,7 +2110,7 @@ async def skat(cmd):
 	if cmd.message.channel.name != ewcfg.channel_casino:
 		#Only at the casino
 		response = "You can only play slime skat at the casino."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	user_data = EwUser(member=cmd.message.author)
 	poi = poi_static.id_to_poi.get(user_data.poi)
@@ -2114,11 +2118,11 @@ async def skat(cmd):
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	if cmd.mentions_count != 2:
 		#Must mention exactly 2 players
 		response = "Mention the two players you want to invite."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	author = cmd.message.author
 	member = cmd.mentions[0]
@@ -2137,11 +2141,11 @@ async def skat(cmd):
 
 	#if last_used_author + ewcfg.cd_rr > time_now or last_used_member + ewcfg.cd_rr > time_now:
 	#	response = "**ENOUGH**"
-	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	#	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if author.id == member.id or author.id == member2.id:
 		response = "This is not solitaire, you dumbass."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	challenger = EwUser(member = author)
 	challengee = EwUser(member = member)
@@ -2150,7 +2154,7 @@ async def skat(cmd):
 
 	if challenger.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	gellphone_active_challengee1 = False
 	if challengee.has_gellphone():
@@ -2163,38 +2167,38 @@ async def skat(cmd):
 	#Players have been challenged
 	if ewutils.active_target_map.get(challenger.id_user) != None and ewutils.active_target_map.get(challenger.id_user) != "":
 		response = "You are already in the middle of a challenge."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	if ewutils.active_target_map.get(challengee.id_user) != None and ewutils.active_target_map.get(challengee.id_user) != "":
 		response = "{} is already in the middle of a challenge.".format(member.display_name).replace("@", "\{at\}")
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	if ewutils.active_target_map.get(challengee2.id_user) != None and ewutils.active_target_map.get(challengee2.id_user) != "":
 		response = "{} is already in the middle of a challenge.".format(member2.display_name).replace("@", "\{at\}")
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	if not (challengee.poi == ewcfg.poi_id_greenlightdistrict or gellphone_active_challengee1) or not (challengee2.poi == ewcfg.poi_id_greenlightdistrict or gellphone_active_challengee2):
 		#Challangees must be in the casino
 		response = "All players must be in the casino."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	#Players must have sufficient slimecoin for the game
 	if challenger.slimecoin < maxgame:
 		response = "You don't have enough slimecoin to cover your potential loss. Try lowering the multiplier."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 	if challengee.slimecoin < maxgame:
 		response = "{} doesn't have enough slimecoin to cover their potential loss. Try lowering the multiplier.".format(member.display_name).replace("@", "\{at\}")
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 	if challengee2.slimecoin < maxgame:
 		response = "{} doesn't have enough slimecoin to cover their potential loss. Try lowering the multiplier.".format(member2.display_name).replace("@", "\{at\}")
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
 	for m in members:
 		ewuser = EwUser(member = m)
 		ewutils.active_target_map[ewuser.id_user] = ""
 
 	response = "You have been invited by {} to a game of slime skat. Do you {} or {}?".format(author.display_name,ewcfg.cmd_slimeskat_join,ewcfg.cmd_slimeskat_decline).replace("@", "\{at\}")
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(member, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(member, response))
 
 	#Wait for an answer
 	accepted = False
@@ -2210,7 +2214,7 @@ async def skat(cmd):
 	
 	if accepted == False:	    
 		response = "{}'s brain was too small to understand slime skat.".format(member.display_name).replace("@", "\{at\}")
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 		for m in members:
 			ewuser = EwUser(member = m)
 			ewutils.active_target_map[ewuser.id_user] = ""
@@ -2218,7 +2222,7 @@ async def skat(cmd):
 		return
 		
 	response = "You have been invited by {} to a round of slime skat. Do you {} or {}?".format(author.display_name,ewcfg.cmd_slimeskat_join,ewcfg.cmd_slimeskat_decline).replace("@", "\{at\}")
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(member2, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(member2, response))
 
 	#Wait for an answer
 	accepted = False
@@ -2234,7 +2238,7 @@ async def skat(cmd):
 				
 	if accepted == False:	
 		response = "{}'s brain was too small to understand slime skat.".format(member2.display_name).replace("@", "\{at\}")
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 		for m in members:
 			ewuser = EwUser(member = m)
 			ewutils.active_target_map[ewuser.id_user] = ""
@@ -2253,7 +2257,7 @@ async def skat(cmd):
 				for m in members:
 					ewuser = EwUser(member = m)
 					ewutils.active_target_map[ewuser.id_user] = ""
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[i], response))
+				return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[i], response))
 
 		front_idx = (round_num + 0) % 3
 		mid_idx = (round_num + 1) % 3
@@ -2275,7 +2279,7 @@ async def skat(cmd):
 			hands.append(hand)
 			hand3parts = printhand(hand)
 			for part in hand3parts:
-				handle = await ewutils.send_message(cmd.client, mem, ewutils.formatMessage(mem, part))
+				handle = await fe_utils.send_message(cmd.client, mem, fe_utils.formatMessage(mem, part))
 				handles.append(handle)
 			handles_table.append(handles)
 
@@ -2292,7 +2296,7 @@ async def skat(cmd):
 			bid = -1
 			
 			response = "Please {} an amount greater than {} or {}".format(ewcfg.cmd_slimeskat_bid,maxbid,ewcfg.cmd_slimeskat_pass)
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[mid_idx],response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[mid_idx],response))
 			try:
 				msg = await cmd.client.wait_for('message', timeout = bidding_timeout, check=lambda message: members[mid_idx] == cmd.message.author and 
 														message.content.lower().startswith(ewcfg.cmd_slimeskat_bid) or 
@@ -2302,7 +2306,7 @@ async def skat(cmd):
 				if msg != None:
 					bid = check_skat_bid(msg)
 			except:
-				bid == -1
+				bid = -1
 			if bid > maxbid:
 				maxbid = bid
 				response = "You are bidding {} points.".format(bid)
@@ -2310,13 +2314,13 @@ async def skat(cmd):
 				passed = True
 				active_idx = front_idx
 				response = "You are passing."
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[mid_idx],response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[mid_idx],response))
 			if passed == True:
 				break
 
 			called = -1
 			response = "Please {} or {}".format(ewcfg.cmd_slimeskat_call,ewcfg.cmd_slimeskat_pass)
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[front_idx],response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[front_idx],response))
 			try:
 				msg = await cmd.client.wait_for('message', timeout = bidding_timeout, check=lambda message: members[front_idx] == cmd.message.author and 
 														message.content.lower().startswith(ewcfg.cmd_slimeskat_bid) or 
@@ -2334,7 +2338,7 @@ async def skat(cmd):
 				response = "You are passing."
 				passed = True
 				active_idx = mid_idx
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[front_idx],response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[front_idx],response))
 
 		#round 2
 		passed = False
@@ -2342,7 +2346,7 @@ async def skat(cmd):
 			bid = -1
 			
 			response = "Please {} an amount greater than {} or {}".format(ewcfg.cmd_slimeskat_bid,maxbid,ewcfg.cmd_slimeskat_pass)
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[back_idx],response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[back_idx],response))
 			try:
 				msg = await cmd.client.wait_for('message', timeout = bidding_timeout, check=lambda message: members[back_idx] == cmd.message.author and 
 														message.content.lower().startswith(ewcfg.cmd_slimeskat_bid) or 
@@ -2352,20 +2356,20 @@ async def skat(cmd):
 				if msg != None:
 					bid = check_skat_bid(msg)
 			except:
-				bid == -1
+				bid = -1
 			if bid > maxbid:
 				maxbid = bid
 				response = "You are bidding {} points.".format(bid)
 			else:
 				passed = True
 				response = "You are passing."
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[back_idx],response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[back_idx],response))
 			if passed == True:
 				break
 
 			called = -1
 			response = "Please {} or {}".format(ewcfg.cmd_slimeskat_call,ewcfg.cmd_slimeskat_pass)
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx],response))
 			try:
 				msg = await cmd.client.wait_for('message', timeout = bidding_timeout, check=lambda message: members[mid_idx] == cmd.message.author and 
 														message.content.lower().startswith(ewcfg.cmd_slimeskat_bid) or 
@@ -2382,7 +2386,7 @@ async def skat(cmd):
 			else:
 				response = "You are passing."
 				passed = True
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx],response))
 			if passed == True:
 				active_idx = back_idx
 
@@ -2391,7 +2395,7 @@ async def skat(cmd):
 			bid = -1
 			
 			response = "Please {} an amount greater than {} or {}".format(ewcfg.cmd_slimeskat_bid,maxbid,ewcfg.cmd_slimeskat_pass)
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx],response))
 			try:
 				msg = await cmd.client.wait_for('message', timeout = bidding_timeout, check=lambda message: members[active_idx] == cmd.message.author and 
 														message.content.lower().startswith(ewcfg.cmd_slimeskat_bid) or 
@@ -2401,14 +2405,14 @@ async def skat(cmd):
 				if msg != None:
 					bid = check_skat_bid(msg)
 			except:
-				bid == -1
+				bid = -1
 			if bid > maxbid:
 				maxbid = bid
 				response = "You are bidding {} points.".format(bid)
 			else:
 				passed = True
 				response = "You are passing."
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx],response))
 			
 
 		if maxbid >= 18:
@@ -2418,7 +2422,7 @@ async def skat(cmd):
 			game_multiplier = 1
 			response = "Please {} the skat or play {}".format(ewcfg.cmd_slimeskat_take,ewcfg.cmd_slimeskat_hand)
 			hand = -1
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx],response))
 			try:
 				msg = await cmd.client.wait_for('message', timeout = hand_timeout, check=lambda message: members[active_idx] == cmd.message.author and 
 														message.content.lower().startswith(ewcfg.cmd_slimeskat_hand) or 
@@ -2436,7 +2440,7 @@ async def skat(cmd):
 			if hand == 1:
 				response = "You are playing hand."
 				game_multiplier += 1
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx],response))
 
 			else:
 				active_hand.extend(skat)
@@ -2446,14 +2450,14 @@ async def skat(cmd):
 				hand3parts = printhand(active_hand)
 				handles = handles_table[active_idx]
 				for i in range(len(hand3parts)):					
-					await ewutils.edit_message(cmd.client, handles[i], ewutils.formatMessage(members[active_idx], hand3parts[i]))
+					await fe_utils.edit_message(cmd.client, handles[i], fe_utils.formatMessage(members[active_idx], hand3parts[i]))
 				response = "You take the skat. Please {} two cards from your hand to put back into the skat.".format(ewcfg.cmd_slimeskat_choose)
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx],response))
 				while len(active_hand) > 10:
 					putback = False
 					try:
 						msg = await cmd.client.wait_for('message', timeout = hand_timeout, check=lambda message: members[active_idx] == cmd.message.author and 
-														message.content.lower().startswith(ewcfg.cmd_slimeskat_choice))
+														message.content.lower().startswith(ewcfg.cmd_slimeskat_choose))
 						if msg != None:
 							putback = skat_putback(msg, active_hand, skat)
 					except:
@@ -2465,7 +2469,7 @@ async def skat(cmd):
 					hand3parts = printhand(active_hand)
 					handles = handles_table[active_idx]
 					for i in range(len(hand3parts)):					
-						await ewutils.edit_message(cmd.client, handles[i], ewutils.formatMessage(members[active_idx], hand3parts[i]))
+						await fe_utils.edit_message(cmd.client, handles[i], fe_utils.formatMessage(members[active_idx], hand3parts[i]))
 
 			
 
@@ -2475,7 +2479,7 @@ async def skat(cmd):
 			basevalue = 24
 			trumps = ["24","50","11","37"]
 			response = "Please declare what kind of game you are going to play (options are {}, {}, {}, {}, {} and {})".format(ewcfg.cmd_slimeskat_slugs,ewcfg.cmd_slimeskat_shields,ewcfg.cmd_slimeskat_hearts,ewcfg.cmd_slimeskat_hats,ewcfg.cmd_slimeskat_grand,ewcfg.cmd_slimeskat_null)
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx],response))
 
 			try:
 				msg = await cmd.client.wait_for('message', timeout = declare_timeout, check=lambda message: members[active_idx] == cmd.message.author and 
@@ -2524,7 +2528,7 @@ async def skat(cmd):
 					basevalue = 35
 					game_multiplier = 1
 			response = "**Playing a {} type game with a base value of {}.**".format(gametype,basevalue)
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx],response))
 
 			#game loop
 			trick_take_idx = front_idx
@@ -2538,7 +2542,7 @@ async def skat(cmd):
 				trick = []
 				for idx in idxs:
 					response = "It's your turn, {} a card.".format(ewcfg.cmd_slimeskat_play)
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[idx],response))
+					await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[idx],response))
 					legalplay = False
 					while not legalplay:
 
@@ -2560,10 +2564,10 @@ async def skat(cmd):
 							legalplay = checkiflegal(hands[idx],play,trick[0],trumps)
 						if not legalplay:
 							response = "You have to follow suit! Try again."
-							await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[idx], response))
+							await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[idx], response))
 					
 					response = "You play" + printcard(hands[idx][play])
-					msg = await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[idx],response))
+					msg = await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[idx],response))
 					trick.append(hands[idx].pop(play))
 					if idx == front_idx:
 						for tm in trick_msgs:
@@ -2574,11 +2578,11 @@ async def skat(cmd):
 					hand3parts = printhand(hands[idx])
 					handles = handles_table[idx]
 					for i in range(len(hand3parts)):					
-						await ewutils.edit_message(cmd.client, handles[i], ewutils.formatMessage(members[idx], hand3parts[i]))
+						await fe_utils.edit_message(cmd.client, handles[i], fe_utils.formatMessage(members[idx], hand3parts[i]))
 
 				trick_take_idx = idxs[determine_trick_taker(trick, gametype, trumps)]
 				response = "**{} takes the trick.**".format(members[trick_take_idx].display_name)
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx],response))
 				if trick_take_idx == active_idx:
 					if gametype == "null":
 						score = 1
@@ -2605,11 +2609,11 @@ async def skat(cmd):
 					if score == 0:
 						game_multiplier += 1
 				response = "You got {} points in your tricks.".format(score)
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx],response))
 			totalvalue = basevalue * game_multiplier
 			if totalvalue < maxbid:
 				response = "You overbid your hand! Your game was worth {} points, but you bid {} points.".format(totalvalue, maxbid)
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx],response))
 				while totalvalue < maxbid:
 					win = False
 					totalvalue += basevalue
@@ -2632,7 +2636,7 @@ async def skat(cmd):
 			
 
 				
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx],response))
 
 			for i in range(3):
 				player = EwUser(member = members[i])
@@ -2648,7 +2652,7 @@ async def skat(cmd):
 		onemore = True
 		for mem in members:
 			response = "Game ended. Will you {} for another round or will you {}?".format(ewcfg.cmd_slimeskat_join,ewcfg.cmd_slimeskat_decline)
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(mem,response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(mem,response))
 			try:
 				msg = await cmd.client.wait_for('message', timeout = join_timeout, check=lambda message: mem == cmd.message.author and 
 														message.content.lower().startswith(ewcfg.cmd_slimeskat_join) or 
@@ -2666,12 +2670,12 @@ async def skat(cmd):
 
 		if onemore:
 			response = "Everyone is in. Let's go for another round!"
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx], response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx], response))
 		else:
 			break
 
 	response = "No more. Your puny brains can't handle this intellectual challenge any longer."
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx], response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(members[active_idx], response))
 	for m in members:
 		ewuser = EwUser(member = m)
 		ewutils.active_target_map[ewuser.id_user] = ""
@@ -2741,10 +2745,10 @@ async def skat_choose(cmd):
 
 async def betsoul(cmd):
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
-	user_inv = ewitem.inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
+	user_inv = bknd_item.inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if cmd.mentions_count == 1:
 		mention_target = cmd.mentions[0]
@@ -2754,7 +2758,7 @@ async def betsoul(cmd):
 	item_select = None
 
 	for item in user_inv:
-		item_object = ewitem.EwItem(item.get('id_item'))
+		item_object = EwItem(item.get('id_item'))
 		if item_object.item_props.get('id_cosmetic') == "soul":
 			if not mention_target:
 				item_select = item_object
@@ -2775,20 +2779,20 @@ async def betsoul(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		ewitem.give_item(id_user="casinosouls", id_server=cmd.guild.id, id_item=item_select.id_item)
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+		bknd_item.give_item(id_user="casinosouls", id_server=cmd.guild.id, id_item=item_select.id_item)
 		user_data.change_slimecoin(coinsource=ewcfg.coinsource_spending, n=ewcfg.soulprice) #current price for souls is 500 mil slimecoin
 		user_data.persist()
 		response = "You hand over {} for {:,} slimecoin.".format(item_select.item_props.get('cosmetic_name'), ewcfg.soulprice)
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def buysoul(cmd):
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	casino_inv = ewitem.inventory(id_user="casinosouls", id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
+	casino_inv = bknd_item.inventory(id_user="casinosouls", id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
 
 	if cmd.mentions_count == 1:
 		mention_target = cmd.mentions[0]
@@ -2797,7 +2801,7 @@ async def buysoul(cmd):
 
 	selected_item = None
 	for item_sought in casino_inv:
-		item_object = ewitem.EwItem(item_sought.get('id_item'))
+		item_object = EwItem(item_sought.get('id_item'))
 		selected_item = item_object
 		if item_object.item_props.get('user_id') == cmd.message.author.id:
 			if not mention_target:
@@ -2820,14 +2824,14 @@ async def buysoul(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		if ewitem.give_item(id_user=cmd.message.author.id, id_server=cmd.guild.id, id_item=selected_item.id_item):
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+		if bknd_item.give_item(id_user=cmd.message.author.id, id_server=cmd.guild.id, id_item=selected_item.id_item):
 			user_data.change_slimecoin(coinsource=ewcfg.coinsource_spending, n= -ewcfg.soulprice)  # current price for souls is 500 mil slimecoin
 			user_data.persist()
 			response = "You buy {} off the casino. This will be fun.".format(selected_item.item_props.get('cosmetic_name'))
 		else:
 			response = "How do you expect to buy a soul when you cant even hold it? Dump some cosmetics weirdo."
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 def slimecorp_collectfee(winnings):
 	slimecorp_fee = int(winnings * 0.2)

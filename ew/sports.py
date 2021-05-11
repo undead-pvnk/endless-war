@@ -1,15 +1,14 @@
-import time
-import random
 import asyncio
+import random
 
+from .backend.player import EwPlayer
 from .static import cfg as ewcfg
 from .static import poi as poi_static
-from . import utils as ewutils
-from . import move as ewmap
-
-from .user import EwUser
-from .player import EwPlayer
-from .district import EwDistrict
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils.combat import EwUser
+from .utils.district import EwDistrict
+from .utils.frontend import EwResponseContainer
 
 sb_count = 0
 
@@ -62,7 +61,7 @@ class EwSlimeballPlayer:
 
 
 	def move(self):
-		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
+		resp_cont = EwResponseContainer(id_server = self.id_server)
 		abs_x = abs(self.velocity[0])
 		abs_y = abs(self.velocity[1])
 		abs_sum = abs_x + abs_y
@@ -216,7 +215,7 @@ class EwSlimeballGame:
 		return player
 
 	def move_ball(self):
-		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
+		resp_cont = EwResponseContainer(id_server = self.id_server)
 		abs_x = abs(self.ball_velocity[0])
 		abs_y = abs(self.ball_velocity[1])
 		abs_sum = abs_x + abs_y
@@ -332,7 +331,7 @@ async def slimeball_tick_loop(id_server):
 		
 
 async def slimeball_tick(id_server):
-	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+	resp_cont = EwResponseContainer(id_server = id_server)
 
 	for id_game in sb_games:
 		game = sb_games.get(id_game)
@@ -388,17 +387,17 @@ async def slimeball(cmd):
 
 	if not ewutils.channel_name_is_poi(cmd.message.channel.name):
 		response = "You have to go into the city to play Slimeball."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	poi_data = poi_static.id_to_poi.get(user_data.poi)
 
 	if poi_data.id_poi != ewcfg.poi_id_vandalpark:
 		response = "You have to go Vandal Park to play {}.".format(cmd.cmd[1:])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if poi_data.is_subzone or poi_data.is_transport:
 		response = "This place is too cramped for playing {}. Go outside!".format(cmd.cmd[1:])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	district_data = EwDistrict(district = poi_data.id_poi, id_server = cmd.message.guild.id)
 
@@ -425,7 +424,7 @@ async def slimeball(cmd):
 		team = ewutils.flattenTokenListToString(cmd.tokens[1:])
 		if team not in ["purple", "pink"]:
 			response = "Please choose if you want to play on the pink team or the purple team."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 		if game_data == None:
 			game_data = EwSlimeballGame(poi_data.id_poi, cmd.message.guild.id)
@@ -447,7 +446,7 @@ async def slimeball(cmd):
 		   	score_purple = game_data.score_purple,
 		   	score_pink = game_data.score_pink
 	)
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def slimeballgo(cmd):
 
@@ -456,11 +455,11 @@ async def slimeballgo(cmd):
 
 	if slimeball_player == None:
 		response = "You have to join a game using {} first.".format(cmd.cmd[1:-2])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if not ewutils.channel_name_is_poi(cmd.message.channel.name):
 		response = "You have to go into the city to play Slimeball."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	global sb_games
 	game_data = sb_games.get(slimeball_player.id_game)
@@ -470,14 +469,14 @@ async def slimeballgo(cmd):
 	if poi_data.id_poi != game_data.poi:
 		game_poi = poi_static.chname_to_poi.get(cmd.message.channel.name)
 		response = "Your Slimeball game is happening in the #{} channel.".format(game_poi.channel)
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 	target_coords = get_coords(cmd.tokens[1:])
 
 	if len(target_coords) != 2:
 		response = "Specify where you want to {} to.".format(cmd.cmd)
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	target_vector = ewutils.EwVector2D(target_coords)
 	current_vector = ewutils.EwVector2D(slimeball_player.coords)
@@ -498,11 +497,11 @@ async def slimeballstop(cmd):
 
 	if slimeball_player == None:
 		response = "You have to join a game using {} first.".format(cmd.cmd[1:-4])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if not ewutils.channel_name_is_poi(cmd.message.channel.name):
 		response = "You have to go into the city to play Slimeball."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	global sb_games
 	game_data = sb_games.get(slimeball_player.id_game)
@@ -512,7 +511,7 @@ async def slimeballstop(cmd):
 	if poi_data.id_poi != game_data.poi:
 		game_poi = poi_static.id_to_poi.get(game_data.poi)
 		response = "Your {} game is happening in the #{} channel.".format(cmd.cmd[1:-4], game_poi.channel)
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	slimeball_player.velocity = [0, 0]
 
@@ -522,7 +521,7 @@ async def slimeballleave(cmd):
 
 	if slimeball_player == None:
 		response = "You have to join a game using {} first.".format(cmd.cmd[1:-5])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	global sb_games
 	game_data = sb_games.get(slimeball_player.id_game)
@@ -531,4 +530,4 @@ async def slimeballleave(cmd):
 	slimeball_player.id_game = -1
 
 	response = "You quit the game of {}.".format(cmd.cmd[1:-5])
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

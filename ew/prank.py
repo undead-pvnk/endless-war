@@ -1,90 +1,9 @@
-#import asyncio
 import time
-from . import utils as ewutils
 
-from .user import EwUser
-#from .player import EwPlayer
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils.combat import EwUser
 
-# A bit of a hack, but at the time I couldn't really import cfg without causing other issues, so here these go. 
-# It's really the only place they get used anyways.
-
-#SWILLDERMUK
-col_id_user_pranker = 'id_user_pranker'
-col_id_user_pranked = 'id_user_pranked'
-col_prank_count = 'prank_count'
-col_id_server = 'id_server'
-		
-class PrankIndex:
-	id_server = -1
-	id_user_pranker = -1
-	id_user_pranked = -1
-	prank_count = 0 # How many times has user 1 (pranker) pranked user 2 (pranked)?
-	
-	def __init__(
-		self,
-		id_server = -1,
-		id_user_pranker = -1,
-		id_user_pranked = -1,
-		prank_count = 0,
-	):
-		self.id_server = id_server
-		self.id_user_pranker = id_user_pranker
-		self.id_user_pranked = id_user_pranked
-		self.prank_count = prank_count
-
-		try:
-			conn_info = ewutils.databaseConnect()
-			conn = conn_info.get('conn')
-			cursor = conn.cursor()
-
-			# Retrieve object
-			cursor.execute("SELECT {count} FROM swilldermuk_prank_index WHERE {id_user_pranker} = %s AND {id_user_pranked} = %s AND {id_server} = %s".format(
-				count=col_prank_count,
-				id_user_pranker=col_id_user_pranker,
-				id_user_pranked=col_id_user_pranked,
-				id_server=col_id_server,
-			), (
-				self.id_user_pranker,
-				self.id_user_pranked,
-				self.id_server,
-			))
-			result = cursor.fetchone();
-
-			if result != None:
-				# Record found: apply the data to this object.
-				self.prank_count = result[0]
-
-		finally:
-			# Clean up the database handles.
-			cursor.close()
-			ewutils.databaseClose(conn_info)
-
-	def persist(self):
-		try:
-			conn_info = ewutils.databaseConnect()
-			conn = conn_info.get('conn')
-			cursor = conn.cursor()
-
-			# Save the object.
-			cursor.execute(
-				"REPLACE INTO swilldermuk_prank_index({}, {}, {}, {}) VALUES(%s, %s, %s, %s)".format(
-					col_id_server,
-					col_id_user_pranker,
-					col_id_user_pranked,
-					col_prank_count,
-				), (
-					self.id_server,
-					self.id_user_pranker,
-					self.id_user_pranked,
-					self.prank_count,
-				))
-
-			conn.commit()
-		finally:
-			# Clean up the database handles.
-			cursor.close()
-			ewutils.databaseClose(conn_info)
-			
 response_timer = 6 # How long does it take for a response item to send out its attacks
 afk_timer = 60 * 60 * 2 # 2 hours
 
@@ -236,9 +155,9 @@ async def prank_item_effect_response(cmd, item):
 				except:
 					pass
 				
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), chosen_response))
-				#prank_feed_channel = ewutils.get_channel(cmd.guild, 'prank-feed')
-				#await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (chosen_response+"\n`-------------------------`")))
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), chosen_response))
+				#prank_feed_channel = fe_utils.get_channel(cmd.guild, 'prank-feed')
+				#await fe_utils.send_message(cmd.client, prank_feed_channel, fe_utils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (chosen_response+"\n`-------------------------`")))
 
 				# The longer time goes on without the pranked person typing in the command, the more gambit they lose
 				pranker_data = EwUser(member=cmd.message.author)

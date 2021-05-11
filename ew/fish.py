@@ -1,24 +1,30 @@
-import random
 import asyncio
+import random
 import time
+
+from . import item as ewitem
+from . import debug as ewdebug
+from .backend import item as bknd_item
+from .backend.fish import EwOffer
+from .backend.item import EwItem
+from .backend.market import EwMarket
 from .static import cfg as ewcfg
+from .static import fish as static_fish
+from .static import food as static_food
+from .static import poi as poi_static
+from .static import status as se_static
 from .static import vendors
 from .static import weapons as static_weapons
 from .static import weather as weather_static
-from .static import food as static_food
-from .static import poi as poi_static
-from .static import fish as static_fish
-from .static import status as se_static
-from . import utils as ewutils
-from . import item as ewitem
-from . import rolemgr as ewrolemgr
-from . import debug as ewdebug
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils import item as itm_utils
+from .utils import poi as poi_utils
+from .utils import rolemgr as ewrolemgr
+from .utils.combat import EwUser
+from .utils.district import EwDistrict
 
 
-from .market import EwMarket
-from .user import EwUser
-from .item import EwItem
-from .district import EwDistrict
 
 
 
@@ -51,178 +57,9 @@ class EwFisher:
 fishers = {}
 fishing_counter = 0
 
-class EwOffer:
-	id_server = -1
-	id_user = -1
-	offer_give = 0
-	offer_receive = ""
-	time_sinceoffer = 0
-
-	def __init__(
-		self,
-		id_server = None,
-		id_user = None,
-		offer_give = None,
-
-	):
-		if id_server is not None and id_user is not None and offer_give is not None:
-			self.id_server = id_server
-			self.id_user = id_user
-			self.offer_give = offer_give
-
-			data = ewutils.execute_sql_query(
-				"SELECT {time_sinceoffer} FROM offers WHERE id_server = %s AND id_user = %s AND {col_offer_give} = %s".format(
-					time_sinceoffer = ewcfg.col_time_sinceoffer,
-					col_offer_give = ewcfg.col_offer_give,
-				), (
-					id_server,
-					id_user,
-					offer_give,
-				)
-			)
-
-			if len(data) > 0:  # if data is not empty, i.e. it found an entry
-				# data is always a two-dimensional array and if we only fetch one row, we have to type data[0][x]
-				self.time_sinceoffer = data[0][0]
-
-			data = ewutils.execute_sql_query(
-				"SELECT {col_offer_receive} FROM offers WHERE id_server = %s AND id_user = %s AND {col_offer_give} = %s".format(
-					col_offer_receive = ewcfg.col_offer_receive,
-					col_offer_give = ewcfg.col_offer_give,
-				), (
-					id_server,
-					id_user,
-					offer_give,
-				)
-			)
-
-			if len(data) > 0:  # if data is not empty, i.e. it found an entry
-				# data is always a two-dimensional array and if we only fetch one row, we have to type data[0][x]
-				self.offer_receive = data[0][0]
-
-			else:  # create new entry
-				ewutils.execute_sql_query(
-					"REPLACE INTO offers(id_server, id_user, {col_offer_give}) VALUES (%s, %s, %s)".format(
-						col_offer_give = ewcfg.col_offer_give,
-					), (
-						id_server,
-						id_user,
-						offer_give,
-					)
-				)
-
-	def persist(self):
-		ewutils.execute_sql_query(
-			"REPLACE INTO offers(id_server, id_user, {col_offer_give}, {col_offer_receive}, {col_time_sinceoffer}) VALUES (%s, %s, %s, %s, %s)".format(
-				col_offer_give = ewcfg.col_offer_give,
-				col_offer_receive = ewcfg.col_offer_receive,
-				col_time_sinceoffer = ewcfg.col_time_sinceoffer
-			), (
-				self.id_server,
-				self.id_user,
-				self.offer_give,
-				self.offer_receive,
-				self.time_sinceoffer
-			)
-		)
-
-	def deal(self):
-		ewutils.execute_sql_query("DELETE FROM offers WHERE {id_user} = %s AND {id_server} = %s AND {col_offer_give} = %s".format(
-			id_user = ewcfg.col_id_user,
-			id_server = ewcfg.col_id_server,
-			col_offer_give = ewcfg.col_offer_give,
-		),(
-			self.id_user,
-			self.id_server,
-			self.offer_give
-		))
 
 
-class EwRecord:
-	# ID of the server
-	id_server = -1
 
-	# ID of the record holder
-	id_user = -1
-
-	# The item length being set
-	record_type = ""
-
-	# The length/record amount
-	record_amount = 0.0
-
-	# whether the submission is legal or not
-	legality = 1
-
-	# the ID of the post in the server
-	id_post = ""
-
-	def __init__(
-			self,
-			id_server=None,
-			record_type=None
-	):
-		if (record_type != None) and (id_server != None):
-			self.id_server = id_server
-			self.record_type = record_type
-
-			try:
-				conn_info = ewutils.databaseConnect()
-				conn = conn_info.get('conn')
-				cursor = conn.cursor()
-
-				# Retrieve object
-
-				cursor.execute(
-					"SELECT {}, {}, {}, {} FROM records WHERE record_type = %s AND id_server = %s".format(
-						ewcfg.col_id_user,
-						ewcfg.col_record_amount,
-						ewcfg.col_legality,
-						ewcfg.col_id_post
-					),(
-						self.record_type,
-						self.id_server
-					))
-				result = cursor.fetchone()
-
-				if result != None:
-					# Record found: apply the data to this object.
-					self.id_user = result[0]
-					self.record_amount = result[1]
-					self.legality = result[2]
-					self.id_post = result[3]
-			finally:
-				# Clean up the database handles.
-				cursor.close()
-				ewutils.databaseClose(conn_info)
-
-	def persist(self):
-		try:
-			conn_info = ewutils.databaseConnect()
-			conn = conn_info.get('conn')
-			cursor = conn.cursor()
-
-			# Save the object.
-			cursor.execute(
-				"REPLACE INTO records({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
-					ewcfg.col_id_server,
-					ewcfg.col_record_type,
-					ewcfg.col_record_amount,
-					ewcfg.col_id_user,
-					ewcfg.col_legality,
-					ewcfg.col_id_post
-				), (
-					self.id_server,
-					self.record_type,
-					self.record_amount,
-					self.id_user,
-					self.legality,
-					self.id_post
-				))
-		finally:
-			# Clean up the database handles.
-			cursor.close()
-			ewutils.databaseClose(conn_info)
 
 
 # Randomly generates a fish.
@@ -376,10 +213,10 @@ async def cast(cmd):
 	mutations = user_data.get_mutations()
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	market_data = EwMarket(id_server = cmd.message.author.guild.id)
 	statuses = user_data.getStatusEffects()
@@ -408,7 +245,7 @@ async def cast(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		elif user_data.hunger >= user_data.get_hunger_max():
 			response = "You're too hungry to fish right now."
 		elif (not fisher.inhabitant_id) and (poi.id_poi == ewcfg.poi_id_blackpond):
@@ -439,7 +276,7 @@ async def cast(cmd):
 			author = cmd.message.author
 			server = cmd.guild
 
-			item_sought = ewitem.find_item(item_search = item_search, id_user = author.id, id_server = server.id)
+			item_sought = bknd_item.find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
 			if item_sought:
 				item = EwItem(id_item = item_sought.get('id_item'))
@@ -490,7 +327,7 @@ async def cast(cmd):
 					elif float(item.time_expir if item.time_expir is not None else 0) < time.time():
 						if random.randrange(2) == 1:
 							fisher.current_fish = "plebefish"
-					ewitem.item_delete(item_sought.get('id_item'))
+					bknd_item.item_delete(item_sought.get('id_item'))
 
 			if fisher.current_fish == "item":
 				fisher.current_size = "item"
@@ -514,7 +351,7 @@ async def cast(cmd):
 			user_data.hunger += ewcfg.hunger_perfish * ewutils.hunger_cost_mod(user_data.slimelevel)
 			user_data.persist()
 			
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	
 			bite_text = gen_bite_text(fisher.current_size)
 			
@@ -567,7 +404,7 @@ async def cast(cmd):
 					return
 
 				if damp > 10:
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, random.choice(ewcfg.void_fishing_text if fisher.pier.pier_type == ewcfg.fish_slime_void else ewcfg.normal_fishing_text)))
+					await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, random.choice(ewcfg.void_fishing_text if fisher.pier.pier_type == ewcfg.fish_slime_void else ewcfg.normal_fishing_text)))
 					fun -= 2
 					bun += 1
 					if bun >= 5:
@@ -580,7 +417,7 @@ async def cast(cmd):
 
 
 			fisher.bite = True
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, bite_text))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, bite_text))
 
 			await asyncio.sleep(8)
 
@@ -588,7 +425,7 @@ async def cast(cmd):
 				response = "The fish got away..."
 				response += cancel_rod_possession(fisher, user_data)
 				fisher.stop()
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 			else:
 				has_reeled = True
 
@@ -597,7 +434,7 @@ async def cast(cmd):
 	
 	# Don't send out a response if the user actually reeled in a fish, since that gets sent by the reel command instead.
 	if has_reeled == False:
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		
 
 """ Reels in the fishing line.. """
@@ -605,10 +442,10 @@ async def reel(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	if cmd.message.author.id not in fishers.keys():
 		fishers[cmd.message.author.id] = EwFisher()
@@ -644,7 +481,7 @@ async def reel(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		# Players who haven't cast a line cannot reel.
 		if fisher.fishing == False:
 			response = "You haven't cast your hook yet. Try !cast."
@@ -670,7 +507,7 @@ async def reel(cmd):
 	else:
 		response = "You cast your fishing rod unto a sidewalk. That is to say, you've accomplished nothing. Go to a pier if you want to fish."
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	# gangsters don't need their roles updated
 	if user_data.life_state == ewcfg.life_state_juvenile:
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -685,7 +522,7 @@ async def award_fish(fisher, cmd, user_data):
 		actual_fisherman_data = EwUser(id_user=actual_fisherman, id_server=cmd.guild.id)
 
 	if fisher.current_fish in ["item", "seaitem"]:
-		slimesea_inventory = ewitem.inventory(id_server = cmd.guild.id, id_user = ewcfg.poi_id_slimesea)			
+		slimesea_inventory = bknd_item.inventory(id_server = cmd.guild.id, id_user = ewcfg.poi_id_slimesea)			
 
 		if (fisher.pier.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.2) and fisher.current_fish == "item":
 
@@ -696,12 +533,12 @@ async def award_fish(fisher, cmd, user_data):
 			#else:
 			unearthed_item_amount = (random.randrange(5) + 8) # anywhere from 8-12 drops
 
-			item_props = ewitem.gen_item_props(item)
+			item_props = itm_utils.gen_item_props(item)
 
 			# Ensure item limits are enforced, including food since this isn't the fish section
-			if ewitem.check_inv_capacity(id_user = actual_fisherman or cmd.message.author.id, id_server = cmd.guild.id, item_type = item.item_type):
+			if bknd_item.check_inv_capacity(user_data = actual_fisherman_data, item_type = item.item_type):
 				for creation in range(unearthed_item_amount):
-					ewitem.item_create(
+					bknd_item.item_create(
 						item_type = item.item_type,
 						id_user = actual_fisherman or cmd.message.author.id,
 						id_server = cmd.guild.id,
@@ -715,7 +552,7 @@ async def award_fish(fisher, cmd, user_data):
 		else:
 			item = random.choice(slimesea_inventory)
 
-			if ewitem.give_item(id_item = item.get('id_item'), member = cmd.message.author):
+			if bknd_item.give_item(id_item = item.get('id_item'), member = cmd.message.author):
 				response = "You reel in a {}!".format(item.get('name'))
 			else:
 				response = "You woulda reeled in a {}, but your back gave out under the weight of the rest of your {}s.".format(item.str_name, item.item_type)
@@ -801,7 +638,7 @@ async def award_fish(fisher, cmd, user_data):
 			slime_gain = ewcfg.fish_gain * .5
 			value = 10
 			
-		controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
+		controlling_faction = poi_utils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
 		if controlling_faction != "" and controlling_faction == user_data.faction:
 			slime_gain *= 2
@@ -818,7 +655,7 @@ async def award_fish(fisher, cmd, user_data):
 
 		fish_length = ewdebug.calc_fish_length(median=ewcfg.fish_size_median[fisher.current_size])
 
-		ewitem.item_create(
+		bknd_item.item_create(
 			id_user = actual_fisherman or cmd.message.author.id,
 			id_server = cmd.guild.id,
 			item_type = ewcfg.it_food,
@@ -884,15 +721,15 @@ async def appraise(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
-	payment = ewitem.find_item(item_search = "manhattanproject", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_food)
+	item_sought = bknd_item.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+	payment = bknd_item.find_item(item_search = "manhattanproject", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_food)
 
 	# Checking availability of appraisal
 	#if market_data.clock < 8 or market_data.clock > 17:
@@ -910,7 +747,7 @@ async def appraise(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		name = item_sought.get('name')
 		fish = EwItem(id_item = item_sought.get('id_item'))
 		item_props = fish.item_props
@@ -986,7 +823,7 @@ async def appraise(cmd):
 				if value >= 100:
 					response += 'is the most magnificent specimen I’ve ever seen!"'
 
-				ewitem.item_delete(id_item = payment.get('id_item'))
+				bknd_item.item_delete(id_item = payment.get('id_item'))
 
 				user_data.persist()
 	else:
@@ -996,7 +833,7 @@ async def appraise(cmd):
 		else:
 			response = "Ask Captain Albert Alexander to appraise which fish? (check **!inventory**)"
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def barter(cmd):
@@ -1004,14 +841,14 @@ async def barter(cmd):
 	mutations = user_data.get_mutations()
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+	item_sought = bknd_item.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 
 	# Checking availability of appraisal
 	#if market_data.clock < 8 or market_data.clock > 17:
@@ -1029,7 +866,7 @@ async def barter(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		name = item_sought.get('name')
 		fish = EwItem(id_item = item_sought.get('id_item'))
 		id_fish = fish.id_item
@@ -1125,7 +962,7 @@ async def barter(cmd):
 
 					response += "\n**!accept** or **!refuse** Captain Albert Alexander's deal."
 
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 				else:
 					# Random choice between 0, 1, and 2
@@ -1160,7 +997,7 @@ async def barter(cmd):
 
 					response += "\n**!accept** or **!refuse** Captain Albert Alexander's deal."
 
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 				# Wait for an answer
 				accepted = False
@@ -1219,9 +1056,9 @@ async def barter(cmd):
 							response += "\n\n"
 
 					else:
-						item_props = ewitem.gen_item_props(item)	
+						item_props = itm_utils.gen_item_props(item)	
 
-						ewitem.item_create(
+						bknd_item.item_create(
 							item_type = item.item_type,
 							id_user = cmd.message.author.id,
 							id_server = cmd.guild.id,
@@ -1229,7 +1066,7 @@ async def barter(cmd):
 						)
 
 
-					ewitem.item_delete(id_item = item_sought.get('id_item'))
+					bknd_item.item_delete(id_item = item_sought.get('id_item'))
 
 					user_data.persist()
 
@@ -1246,7 +1083,7 @@ async def barter(cmd):
 		else:
 			response = "Offer Captain Albert Alexander which fish? (check **!inventory**)"
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def barter_all(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -1254,11 +1091,11 @@ async def barter_all(cmd):
 	#if shambler, break
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	#if non-zone channel, break
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	#if not in speakeasy, break
 	if cmd.message.channel.name != ewcfg.channel_speakeasy:
@@ -1267,9 +1104,9 @@ async def barter_all(cmd):
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
 
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	food_items = ewitem.inventory(id_user = user_data.id_user, id_server = user_data.id_server,item_type_filter = ewcfg.it_food)
+	food_items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server,item_type_filter = ewcfg.it_food)
 	offer_items = [] #list of items to create when offer goes through
 	offer_slime = 0 #slime to give player when offer goes through
 	fish_ids_to_remove = [] #list of fish to delete when offer goes through
@@ -1319,7 +1156,7 @@ async def barter_all(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		
 		
 		response = "You approach a man of particularly swashbuckling appearance, adorned in an old sea captain's uniform and bicorne cap, and surrounded by empty glass steins. You ask him if he is Captain Albert Alexander and he replies that he hasn’t heard that name in a long time. You drop all of your fish at his feet"
@@ -1338,7 +1175,7 @@ async def barter_all(cmd):
 		offer_desc = "{}{}{}".format((str(offer_slime) + " slime") if (offer_slime > 0) else "", " and " if (offer_slime > 0 and len(items_desc) > 0) else "", items_desc if (len(items_desc) > 0) else "")
 		response += ' \n"Hm, alright… for your fish... I’ll trade you {}!"'.format(offer_desc)
 
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		
 
 		response = ""
@@ -1359,9 +1196,9 @@ async def barter_all(cmd):
 
 		if len(offer_items):
 			for item in offer_items:
-				item_props = ewitem.gen_item_props(item)	
+				item_props = itm_utils.gen_item_props(item)	
 
-				ewitem.item_create(
+				bknd_item.item_create(
 					item_type = item.item_type,
 					id_user = cmd.message.author.id,
 					id_server = cmd.guild.id,
@@ -1369,7 +1206,7 @@ async def barter_all(cmd):
 				)
 
 		for id in fish_ids_to_remove:
-			ewitem.item_delete(id_item = id)
+			bknd_item.item_delete(id_item = id)
 
 		user_data.persist()
 
@@ -1381,7 +1218,7 @@ async def barter_all(cmd):
 	else:
 		response = "You need some fish to barter with Captain Albert Alexander. Get out there and do some fishing!"
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def debug_create_random_fish(cmd):
 	
@@ -1440,7 +1277,7 @@ async def debug_create_random_fish(cmd):
 	if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
 		value += 40
 
-	ewitem.item_create(
+	bknd_item.item_create(
 		id_user = cmd.message.author.id,
 		id_server = cmd.guild.id,
 		item_type = ewcfg.it_food,
@@ -1461,25 +1298,15 @@ async def debug_create_random_fish(cmd):
 
 
 
-def kill_dead_offers(id_server):
-	time_now = int(time.time() / 60)
-	ewutils.execute_sql_query("DELETE FROM offers WHERE {id_server} = %s AND {time_sinceoffer} < %s".format(
-		id_server = ewcfg.col_id_server,
-		time_sinceoffer = ewcfg.col_time_sinceoffer,
-	),(
-		id_server,
-		time_now - ewcfg.fish_offer_timeout,
-	))
-
 async def embiggen(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+	item_sought = bknd_item.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "How are you going to embiggen your fish on the side of the street? You’ve got to see a professional for this, man. Head to the SlimeCorp Laboratory, they’ve got dozens of modern day magic potions ‘n shit over there."
@@ -1490,7 +1317,7 @@ async def embiggen(cmd):
 
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		name = item_sought.get('name')
 		fish = EwItem(id_item = item_sought.get('id_item'))
 		acquisition = fish.item_props.get('acquisition')
@@ -1505,7 +1332,7 @@ async def embiggen(cmd):
 			else:
 				for delete in range(2):
 					poudrin = poudrins_owned.pop()
-					ewitem.item_delete(id_item = poudrin.get("id_item"))
+					bknd_item.item_delete(id_item = poudrin.get("id_item"))
 				fish.item_props['id_furniture'] = "colossalsingingfishplaque"
 				fish.item_props['furniture_look_desc'] = "There's a fake fish mounted on the wall. Hoo boy, it's a whopper."
 				fish.item_props['furniture_place_desc'] = "You take a nail gun to the wall to force it to hold this fish. Christ,  this thing is your fucking Ishmael. Er, Moby Dick. Whatever."
@@ -1565,7 +1392,7 @@ async def embiggen(cmd):
 
 				for delete in range(poudrin_cost):
 					poudrin = poudrins_owned.pop()
-					ewitem.item_delete(id_item = poudrin.get("id_item"))
+					bknd_item.item_delete(id_item = poudrin.get("id_item"))
 
 				market_data.donated_poudrins += poudrin_cost
 				market_data.persist()
@@ -1580,7 +1407,7 @@ async def embiggen(cmd):
 		else:
 			response = "Embiggen which fish? (check **!inventory**)"
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 def cancel_rod_possession(fisher, user_data):
 	response = ''

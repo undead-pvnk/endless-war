@@ -1,5 +1,6 @@
-from . import utils as ewutils
-from .static import cfg as ewcfg
+from . import core as bknd_core
+from ..static import cfg as ewcfg
+from ..utils import core as ewutils
 
 """
 	EwPlayer is a representation of an actual player discord account. There is
@@ -26,7 +27,7 @@ class EwPlayer:
 			self.id_server = id_server
 
 			try:
-				conn_info = ewutils.databaseConnect()
+				conn_info = bknd_core.databaseConnect()
 				conn = conn_info.get('conn')
 				cursor = conn.cursor()
 
@@ -36,7 +37,7 @@ class EwPlayer:
 					ewcfg.col_avatar,
 					ewcfg.col_display_name
 				), (self.id_user, ))
-				result = cursor.fetchone();
+				result = cursor.fetchone()
 
 				if result != None:
 					# Record found: apply the data to this object.
@@ -57,12 +58,12 @@ class EwPlayer:
 			finally:
 				# Clean up the database handles.
 				cursor.close()
-				ewutils.databaseClose(conn_info)
+				bknd_core.databaseClose(conn_info)
 
 	""" Save user data object to the database. """
 	def persist(self):
 		try:
-			conn_info = ewutils.databaseConnect()
+			conn_info = bknd_core.databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
@@ -83,7 +84,7 @@ class EwPlayer:
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			ewutils.databaseClose(conn_info)
+			bknd_core.databaseClose(conn_info)
 
 
 """ update the player record with the current data. """
@@ -91,7 +92,7 @@ def player_update(member = None, server = None):
 	id_server_old = ""
 
 	try:
-		conn_info = ewutils.databaseConnect()
+		conn_info = bknd_core.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
@@ -113,7 +114,7 @@ def player_update(member = None, server = None):
 		conn.commit()
 	finally:
 		cursor.close()
-		ewutils.databaseClose(conn_info)
+		bknd_core.databaseClose(conn_info)
 
 	# Log server changes
 	if(server.id != int(id_server_old)):

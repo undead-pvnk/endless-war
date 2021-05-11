@@ -1,9 +1,10 @@
 import time
 
 from .static import cfg as ewcfg
-from . import utils as ewutils
-from . import stats as ewstats
-from .user import EwUser
+from .utils import frontend as fe_utils
+from .utils import stats as ewstats
+from .utils.combat import EwUser
+
 
 # Returns a user's life state/gang color as a discord.Colour object
 def get_tweet_color(user_data):
@@ -13,9 +14,9 @@ def get_tweet_color(user_data):
         color = ewcfg.tweet_color_by_faction.get(user_data.faction)
 
     if color is None:   
-        color = ewutils.discord.Embed.Empty
+        color = fe_utils.discord.Embed.Empty
     else:
-        color = ewutils.discord.Colour(int(color, 16))
+        color = fe_utils.discord.Colour(int(color, 16))
 
     return color
 
@@ -27,15 +28,15 @@ async def tweet(cmd):
 
         if cmd.tokens_count < 2:
             response = "Tweet what?"
-            return await ewutils.send_response(response, cmd)
+            return await fe_utils.send_response(response, cmd)
 
         tweet_content = ' '.join("`{}`".format(token) if token.startswith("#") else token for token in cmd.tokens[1:])
         # embed limits
         if len(tweet_content) > 280:
             response = "Alright there bud, slow down a bit. No one's gonna read all that ({}/280).".format(len(tweet_content))
-            return await ewutils.send_response(response, cmd)
+            return await fe_utils.send_response(response, cmd)
 
-        tweet = ewutils.discord.Embed()
+        tweet = fe_utils.discord.Embed()
 
         tweet.set_thumbnail(url = cmd.message.author.avatar_url)
         # we use the description to set the author since members cannot be mentioned from the author field
@@ -51,13 +52,13 @@ async def tweet(cmd):
         if len(cmd.message.attachments) > 0:
             tweet.set_image(url=cmd.message.attachments[0].url)
 
-        channel = ewutils.get_channel(server=cmd.guild, channel_name=ewcfg.channel_slimetwitter)
+        channel = fe_utils.get_channel(server=cmd.guild, channel_name=ewcfg.channel_slimetwitter)
 
-        await ewutils.send_message(cmd.client, channel, embed=tweet)
+        await fe_utils.send_message(cmd.client, channel, embed=tweet)
 
     else:
         response = "You need to have a gellphone to !tweet."
-        return await ewutils.send_response(response, cmd)
+        return await fe_utils.send_response(response, cmd)
 
 async def verification(cmd):
 
@@ -67,7 +68,7 @@ async def verification(cmd):
 
         if user_data.verified:
             response = "*Huh? You're already verified! Get outta here you goofster!*"
-            return await ewutils.send_response(response, cmd)
+            return await fe_utils.send_response(response, cmd)
 
         time_now = int(time.time())
         time_in_server = time_now - user_data.time_joined
@@ -99,4 +100,4 @@ async def verification(cmd):
         else:
             response = "Only the Slimecorp employees at the HQ can get you verified on Slime Twitter."
 
-    return await ewutils.send_response(response, cmd)
+    return await fe_utils.send_response(response, cmd)

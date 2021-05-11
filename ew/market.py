@@ -1,358 +1,28 @@
-import time
 import random
-import math
+import time
 from copy import deepcopy
-
-# import cmd as ewcmd
-from . import item as ewitem
-from . import rolemgr as ewrolemgr
-from . import utils as ewutils
-from . import debug as ewdebug
-from .static import relic as relic_static
+from .backend import core as bknd_core
+from .backend import item as bknd_item
+from .backend.dungeons import EwGamestate
+from .backend.item import EwItem
+from .backend.market import EwCompany
+from .backend.market import EwMarket
+from .backend.market import EwStock
+from .backend.player import EwPlayer
 from .static import cfg as ewcfg
 from .static import poi as poi_static
-from . import stats as ewstats
-from .user import EwUser
-from .player import EwPlayer
-from .district import EwDistrict
-from .dungeons import EwGamestate
-from .fish import EwRecord
-
-class EwMarket:
-    id_server = -1
-
-    clock = 0
-    weather = 'sunny'
-    day = 0
-
-    slimes_casino = 0
-    slimes_revivefee = 0
-
-    market_rate = 1000
-    exchange_rate = 1000000
-    boombust = 0
-    time_lasttick = 0
-    negaslime = 0
-    decayed_slimes = 0
-    donated_slimes = 0
-    donated_poudrins = 0
-    caught_fish = 0
-    splattered_slimes = 0
-    global_swear_jar = 0
-
-    # Double halloween
-    horseman_deaths = 0
-    horseman_timeofdeath = 0
-
-    # slimefest
-    winner = ''
-
-    # Dict of bazaar items available for purchase
-    bazaar_wares = None
-
-    """ Load the market data for this server from the database. """
-    def __init__(self, id_server = None):
-        if(id_server != None):
-            self.id_server = id_server
-            self.bazaar_wares = {}
-
-            try:
-                conn_info = ewutils.databaseConnect()
-                conn = conn_info.get('conn')
-                cursor = conn.cursor();
-
-                # Retrieve object
-                cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}, {winner} FROM markets WHERE id_server = %s".format(
-                    time_lasttick = ewcfg.col_time_lasttick,
-                    slimes_revivefee = ewcfg.col_slimes_revivefee,
-                    negaslime = ewcfg.col_negaslime,
-                    clock = ewcfg.col_clock,
-                    weather = ewcfg.col_weather,
-                    day = ewcfg.col_day,
-                    decayed_slimes = ewcfg.col_decayed_slimes,
-                    donated_slimes = ewcfg.col_donated_slimes,
-                    donated_poudrins = ewcfg.col_donated_poudrins,
-                    caught_fish = ewcfg.col_caught_fish,
-                    splattered_slimes = ewcfg.col_splattered_slimes,
-                    global_swear_jar = ewcfg.col_global_swear_jar,
-                    horseman_deaths = ewcfg.col_horseman_deaths,
-                    horseman_timeofdeath = ewcfg.col_horseman_timeofdeath,
-                    winner = ewcfg.col_winner
-
-                ), (self.id_server, ))
-                result = cursor.fetchone();
-
-                if result != None:
-                    # Record found: apply the data to this object.
-                    self.time_lasttick = result[0]
-                    self.slimes_revivefee = result[1]
-                    self.negaslime = result[2]
-                    self.clock = result[3]
-                    self.weather = result[4]
-                    self.day = result[5]
-                    self.decayed_slimes = result[6]
-                    self.donated_slimes = result[7]
-                    self.donated_poudrins = result[8]
-                    self.caught_fish = result[9]
-                    self.splattered_slimes = result[10]
-                    self.global_swear_jar = result[11]
-                    self.horseman_deaths = result[12]
-                    self.horseman_timeofdeath = result[13]
-                    self.winner = result[14]
-
-                    cursor.execute("SELECT {}, {} FROM bazaar_wares WHERE {} = %s".format(
-                        ewcfg.col_name,
-                        ewcfg.col_value,
-                        ewcfg.col_id_server,
-                    ), (
-                        self.id_server,
-                    ))
-
-                    for row in cursor:
-                        # this try catch is only necessary as long as extraneous props exist in the table
-                        try:
-                            self.bazaar_wares[row[0]] = row[1]
-                        except:
-                            ewutils.logMsg("extraneous bazaar item row detected.")
-
-                else:
-                    # Create a new database entry if the object is missing.
-                    cursor.execute("REPLACE INTO markets(id_server) VALUES(%s)", (id_server, ))
-
-                    conn.commit()
-            finally:
-                # Clean up the database handles.
-                cursor.close()
-                ewutils.databaseClose(conn_info)
-
-    """ Save market data object to the database. """
-    def persist(self):
-        try:
-            conn_info = ewutils.databaseConnect()
-            conn = conn_info.get('conn')
-            cursor = conn.cursor();
-
-            # Save the object.
-            cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}, {winner}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
-                id_server = ewcfg.col_id_server,
-                time_lasttick = ewcfg.col_time_lasttick,
-                slimes_revivefee = ewcfg.col_slimes_revivefee,
-                negaslime = ewcfg.col_negaslime,
-                clock = ewcfg.col_clock,
-                weather = ewcfg.col_weather,
-                day = ewcfg.col_day,
-                decayed_slimes = ewcfg.col_decayed_slimes,
-                donated_slimes = ewcfg.col_donated_slimes,
-                donated_poudrins = ewcfg.col_donated_poudrins,
-                caught_fish = ewcfg.col_caught_fish,
-                splattered_slimes = ewcfg.col_splattered_slimes,
-                global_swear_jar = ewcfg.col_global_swear_jar,
-                horseman_deaths = ewcfg.col_horseman_deaths,
-                horseman_timeofdeath = ewcfg.col_horseman_timeofdeath,
-                winner = ewcfg.col_winner
-            ), (
-                self.id_server,
-                self.time_lasttick,
-                self.slimes_revivefee,
-                self.negaslime,
-                self.clock,
-                self.weather,
-                self.day,
-                self.decayed_slimes,
-                self.donated_slimes,
-                self.donated_poudrins,
-                self.caught_fish,
-                self.splattered_slimes,
-                self.global_swear_jar,
-                self.horseman_deaths,
-                self.horseman_timeofdeath,
-                self.winner
-            ))
-
-            cursor.execute("DELETE FROM bazaar_wares WHERE {} = %s".format(
-                ewcfg.col_id_server,
-            ), (
-                self.id_server,
-            ))
-
-            # Write out all current item rows.
-            for name in self.bazaar_wares:
-                cursor.execute("INSERT INTO bazaar_wares({}, {}, {}) VALUES(%s, %s, %s)".format(
-                    ewcfg.col_id_server,
-                    ewcfg.col_name,
-                    ewcfg.col_value,
-                ), (
-                    self.id_server,
-                    name,
-                    self.bazaar_wares[name],
-                ))
-
-            conn.commit()
-        finally:
-            # Clean up the database handles.
-            cursor.close()
-            ewutils.databaseClose(conn_info)
-
-class EwStock:
-    id_server = -1
-
-    # The stock's identifying string
-    id_stock = ""
-
-    market_rate = 1000
-
-    exchange_rate = 1000000
-
-    boombust = 0
-
-    total_shares = 0
-
-    timestamp = 0
-
-    previous_entry = 0
-
-    def limit_fix(self):
-        data = ewutils.execute_sql_query("SELECT SUM({shares}) FROM shares WHERE {stock} = %s".format(
-            shares = ewcfg.col_shares,
-            stock = ewcfg.col_stock,
-        ),(
-            self.id_stock,
-        ))
-
-        self.total_shares = data[0][0]
-
-        if self.total_shares == None or self.total_shares < 0:
-            self.total_shares = 0
-
-        # quick fix for shares going past the integer cap
-        elif self.total_shares >= 9223372036854775807:
-            self.total_shares = 9223372036854775807
-
-    def __init__(self, id_server = None, stock = None, timestamp = None):
-        if id_server is not None and stock is not None:
-            self.id_server = id_server
-            self.id_stock = stock
-
-            # get stock data at specified timestamp
-            if timestamp is not None:
-                data = ewutils.execute_sql_query("SELECT {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp} FROM stocks WHERE id_server = %s AND {stock} = %s AND {timestamp} = %s".format(
-                    stock = ewcfg.col_stock,
-                    market_rate = ewcfg.col_market_rate,
-                    exchange_rate = ewcfg.col_exchange_rate,
-                    boombust = ewcfg.col_boombust,
-                    total_shares = ewcfg.col_total_shares,
-                    timestamp = ewcfg.col_timestamp
-                ), (
-                    id_server,
-                    stock,
-                    timestamp
-                ))
-            # otherwise get most recent data
-            else:
-
-                data = ewutils.execute_sql_query("SELECT {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp} FROM stocks WHERE id_server = %s AND {stock} = %s ORDER BY {timestamp} DESC".format(
-                    stock = ewcfg.col_stock,
-                    market_rate = ewcfg.col_market_rate,
-                    exchange_rate = ewcfg.col_exchange_rate,
-                    boombust = ewcfg.col_boombust,
-                    total_shares = ewcfg.col_total_shares,
-                    timestamp = ewcfg.col_timestamp,
-                ), (
-                    id_server,
-                    stock
-                ))
-
-            # slimecoin_total = ewutils.execute_sql_query()
-
-            if len(data) > 0:  # if data is not empty, i.e. it found an entry
-                # data is always a two-dimensional array and if we only fetch one row, we have to type data[0][x]
-                self.id_stock = data[0][0]
-                self.market_rate = data[0][1]
-                self.exchange_rate = data[0][2]
-                self.boombust = data[0][3]
-                self.total_shares = data[0][4]
-                self.timestamp = data[0][5]
-                self.previous_entry = data[1] if len(data) > 1 else 0 #gets the previous stock
-            else:  # create new entry
-                self.timestamp = time.time()
-                self.market_rate = ewcfg.default_stock_market_rate
-                self.exchange_rate = ewcfg.default_stock_exchange_rate
-                self.persist()
-
-    def persist(self):
-        self.limit_fix()
-
-        ewutils.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
-            id_server = ewcfg.col_id_server,
-            stock = ewcfg.col_stock,
-            market_rate = ewcfg.col_market_rate,
-            exchange_rate = ewcfg.col_exchange_rate,
-            boombust = ewcfg.col_boombust,
-            total_shares = ewcfg.col_total_shares,
-            timestamp = ewcfg.col_timestamp
-        ), (
-            self.id_server,
-            self.id_stock,
-            self.market_rate,
-            self.exchange_rate,
-            self.boombust,
-            self.total_shares,
-            self.timestamp
-        ))
-
-class EwCompany:
-    id_server = -1
-
-    id_stock = ""
-
-    recent_profits = 0
-
-    total_profits = 0
-
-    """ Load the Company data from the database. """
-    def __init__(self, id_server = None, stock = None):
-        if id_server is not None and stock is not None:
-            self.id_server = id_server
-            self.id_stock = stock
-
-            try:
-                # Retrieve object
-                result = ewutils.execute_sql_query("SELECT {recent_profits}, {total_profits} FROM companies WHERE {id_server} = %s AND {stock} = %s".format(
-                    recent_profits = ewcfg.col_recent_profits,
-                    total_profits = ewcfg.col_total_profits,
-                    id_server = ewcfg.col_id_server,
-                    stock = ewcfg.col_stock
-                ), (self.id_server, self.id_stock))
-
-                if len(result) > 0:
-                    # Record found: apply the data to this object.
-                    self.recent_profits = result[0][0]
-                    self.total_profits = result[0][1]
-                else:
-                    # Create a new database entry if the object is missing.
-                    self.persist()
-            except:
-                ewutils.logMsg("Failed to retrieve company {} from database.".format(self.id_stock))
-
-
-    """ Save company data object to the database. """
-    def persist(self):
-        try:
-            ewutils.execute_sql_query("REPLACE INTO companies({recent_profits}, {total_profits}, {id_server}, {stock}) VALUES(%s,%s,%s,%s)".format(
-                recent_profits = ewcfg.col_recent_profits,
-                total_profits = ewcfg.col_total_profits,
-                id_server = ewcfg.col_id_server,
-                stock = ewcfg.col_stock
-                ), (self.recent_profits, self.total_profits, self.id_server, self.id_stock ))
-        except:
-            ewutils.logMsg("Failed to save company {} to the database.".format(self.id_stock))
+from .utils import core as ewutils
+from .utils import frontend as fe_utils
+from .utils import rolemgr as ewrolemgr
+from .utils.combat import EwUser
+from .utils.district import EwDistrict
 
 """ player invests slimecoin in the market """
 async def invest(cmd):
     user_data = EwUser(member = cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     time_now = round(time.time())
     market_data = EwMarket(id_server = cmd.message.author.guild.id)
@@ -360,33 +30,33 @@ async def invest(cmd):
     if cmd.message.channel.name != ewcfg.channel_stockexchange: # or user_data.poi != ewcfg.poi_id_downtown:
         # Only allowed in the stock exchange.
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "invest")
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     poi = poi_static.id_to_poi.get(user_data.poi)
     district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
     if district_data.is_degraded():
         response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if market_data.clock < 6 or market_data.clock >= 20:
         response = ewcfg.str_exchange_closed
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
         # Limit frequency of investments.
         response = ewcfg.str_exchange_busy.format(action = "invest")
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if user_data.life_state == ewcfg.life_state_corpse:
         # Disallow invests from ghosts.
         response = "Your slimebroker can't confirm your identity while you're dead."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if user_data.life_state == ewcfg.life_state_kingpin:
         # Disallow investments by RF and CK kingpins.
         response = "You need that money to buy more videogames."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     else:
         value = None
@@ -455,7 +125,7 @@ async def invest(cmd):
             response = ewcfg.str_exchange_specify.format(currency = "SlimeCoin", action = "invest")
 
     # Send the response to the player.
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 """ player withdraws slimecoin from the market """
@@ -463,31 +133,31 @@ async def withdraw(cmd):
     user_data = EwUser(member = cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     time_now = round(time.time())
     market_data = EwMarket(id_server = cmd.message.author.guild.id)
 
     if market_data.clock < 6 or market_data.clock >= 20:
         response = ewcfg.str_exchange_closed
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if cmd.message.channel.name != ewcfg.channel_stockexchange:  #or user_data.poi != ewcfg.poi_id_downtown:
         # Only allowed in the stock exchange.
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "withdraw")
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     poi = poi_static.id_to_poi.get(user_data.poi)
     district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
     if district_data.is_degraded():
         response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if user_data.life_state == ewcfg.life_state_corpse:
         # Disallow withdraws from ghosts.
         response = "Your slimebroker can't confirm your identity while you're dead."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     else:
         value = None
@@ -543,21 +213,21 @@ async def withdraw(cmd):
             response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(names = ewcfg.stocks))
 
 
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 """ player turns slimecoin into slime """
 async def redeem(cmd):
     user_data = EwUser(member = cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     time_now = round(time.time())
     market_data = EwMarket(id_server = cmd.message.author.guild.id)
 
     if market_data.clock < 6 or market_data.clock >= 20:
         response = ewcfg.str_exchange_closed
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
         response = ewcfg.str_exchange_busy.format(action = "redeem")
@@ -565,19 +235,19 @@ async def redeem(cmd):
     if cmd.message.channel.name != ewcfg.channel_stockexchange:  #or user_data.poi != ewcfg.poi_id_downtown:
         # Only allowed in the stock exchange.
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "redeem")
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     poi = poi_static.id_to_poi.get(user_data.poi)
     district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
     if district_data.is_degraded():
         response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if user_data.life_state == ewcfg.life_state_corpse:
         # Disallow withdraws from ghosts.
         response = "Your slimebroker can't confirm your identity while you're dead."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     else:
         slimecoin_exchange_rate = 25000000000000 # 25 trillion slime
@@ -593,7 +263,7 @@ async def redeem(cmd):
             if user_data.life_state == ewcfg.life_state_enlisted:
                 response = "After you dot all the i’s and cross all the t’s, you immediately send your Kingpin half of your earnings."
                 role_boss = (ewcfg.role_copkiller if user_data.faction == ewcfg.faction_killers else ewcfg.role_rowdyfucker)
-                kingpin = ewutils.find_kingpin(id_server = cmd.guild.id, kingpin_role = role_boss)
+                kingpin = fe_utils.find_kingpin(id_server = cmd.guild.id, kingpin_role = role_boss)
                 if kingpin:
                     kingpin.change_slimes(n = int(redeem_value / 2))
                     kingpin.persist()
@@ -606,14 +276,14 @@ async def redeem(cmd):
             user_data.slimecoin = round(user_data.slimecoin % slimecoin_exchange_rate)
             user_data.persist()
 
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 """ donate slime to slimecorp in exchange for slimecoin """
 async def donate(cmd):
     user_data = EwUser(member = cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     market_data = EwMarket(id_server = user_data.id_server)
 
@@ -628,7 +298,7 @@ async def donate(cmd):
 
         if district_data.is_degraded():
             response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         value = None
         if cmd.tokens_count > 1:
@@ -680,15 +350,15 @@ async def donate(cmd):
 
         if district_data.is_degraded():
             response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-        poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
+        poudrins = bknd_item.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
 
         if poudrins == None:
             response = "You have to own a poudrin in order to donate a poudrin. Duh."
 
         else:
-            ewitem.item_delete(id_item = poudrins.get('id_item'))  # Remove Poudrins
+            bknd_item.item_delete(id_item = poudrins.get('id_item'))  # Remove Poudrins
             market_data.donated_poudrins += 1
             market_data.persist()
             user_data.poudrin_donations += 1
@@ -700,7 +370,7 @@ async def donate(cmd):
         response = "To donate slime, go to the SlimeCorp HQ in Downtown. To donate poudrins, go to the N.L.A.C.U. Lab in Brawlden."
 
     # Send the response to the player.
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def museum_donate(cmd):
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -828,35 +498,35 @@ async def xfer(cmd):
     user_data = EwUser(member = cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
     if cmd.message.channel.name != ewcfg.channel_stockexchange:
         # Only allowed in the stock exchange.
         response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "transfer")
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     poi = poi_static.id_to_poi.get(user_data.poi)
     district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
     if district_data.is_degraded():
         response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if cmd.mentions_count != 1:
         # Must have exactly one target to send to.
         response = "Mention the player you want to send SlimeCoin to."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
         # Limit frequency of transfers
         response = ewcfg.str_exchange_busy.format(action = "transfer slimecoin")
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     if user_data.life_state == ewcfg.life_state_corpse:
         # Disallow transfers from ghosts.
         response = "Your slimebroker can't confirm your identity while you're dead."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     member = cmd.mentions[0]
     target_data = EwUser(member = member)
@@ -864,7 +534,7 @@ async def xfer(cmd):
     if target_data.life_state == ewcfg.life_state_kingpin:
         # Disallow transfers to RF and CK kingpins.
         response = "You can't transfer SlimeCoin to a known criminal warlord."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     market_data = EwMarket(id_server = cmd.message.author.guild.id)
 
@@ -890,7 +560,7 @@ async def xfer(cmd):
         user_data.die(cause = ewcfg.cause_suicide)
         user_data.persist()
 
-        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Gaming the slimeconomy is punishable by death. SlimeCorp soldiers execute you immediately."))
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "Gaming the slimeconomy is punishable by death. SlimeCorp soldiers execute you immediately."))
         await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
         return
 
@@ -926,7 +596,7 @@ async def xfer(cmd):
         response = ewcfg.str_exchange_specify.format(currency = "SlimeCoin", action = "transfer")
 
     # Send the response to the player.
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 """ show the current market exchange rate """
@@ -934,14 +604,14 @@ async def rate(cmd):
     user_data = EwUser(member = cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     response = ""
 
     if cmd.message.channel.name != ewcfg.channel_stockexchange:
         # Only allowed in the stock exchange.
         response = "You must go to the Slime Stock Exchange to check the current stock exchange rates ."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     else:
         poi = poi_static.id_to_poi.get(user_data.poi)
@@ -949,7 +619,7 @@ async def rate(cmd):
 
         if district_data.is_degraded():
             response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         stock = ""
 
@@ -968,14 +638,14 @@ async def rate(cmd):
             response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
 
         # Send the response to the player.
-        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 """ show player's shares in a stock """
 async def shares(cmd):
     user_data = EwUser(member = cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     stock = ""
     response = ""
@@ -995,20 +665,20 @@ async def shares(cmd):
         response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
 
     # Send the response to the player.
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 """ show all interactable stocks in the market """
 async def stocks(cmd):
     user_data = EwUser(member = cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
     if cmd.message.channel.name != ewcfg.channel_stockexchange:
         # Only allowed in the stock exchange.
         response = "You must go to the Slime Stock Exchange to check the currently available stocks."
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     else:
         poi = poi_static.id_to_poi.get(user_data.poi)
@@ -1016,12 +686,12 @@ async def stocks(cmd):
 
         if district_data.is_degraded():
             response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         response = "Here are the currently available stocks: {}".format(ewutils.formatNiceList(ewcfg.stocks))
 
     # Send the response to the player.
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 """ show player's slimecoin balance """
 async def slimecoin(cmd):
@@ -1049,7 +719,7 @@ async def slimecoin(cmd):
             response += "."
 
     # Send the response to the player.
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 """ update stock values according to market activity """
 def market_tick(stock_data, id_server):
@@ -1208,7 +878,7 @@ def getRecentTotalShares(id_server=None, stock=None, count=2):
         try:
 
             count = round(count)
-            data = ewutils.execute_sql_query("SELECT {total_shares} FROM stocks WHERE {id_server} = %s AND {stock} = %s ORDER BY {timestamp} DESC LIMIT %s".format(
+            data = bknd_core.execute_sql_query("SELECT {total_shares} FROM stocks WHERE {id_server} = %s AND {stock} = %s ORDER BY {timestamp} DESC LIMIT %s".format(
                 stock = ewcfg.col_stock,
                 total_shares = ewcfg.col_total_shares,
                 id_server = ewcfg.col_id_server,
@@ -1243,7 +913,7 @@ def getUserTotalShares(id_server=None, stock=None, id_user=None):
 
         try:
 
-            data = ewutils.execute_sql_query("SELECT {shares} FROM shares WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
+            data = bknd_core.execute_sql_query("SELECT {shares} FROM shares WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
                 stock = ewcfg.col_stock,
                 shares = ewcfg.col_shares,
                 id_server = ewcfg.col_id_server,
@@ -1268,7 +938,7 @@ def updateUserTotalShares(id_server=None, stock=None, id_user=None, shares=0):
 
         try:
 
-            ewutils.execute_sql_query("REPLACE INTO shares({id_server}, {id_user}, {stock}, {shares}) VALUES(%s, %s, %s, %s)".format(
+            bknd_core.execute_sql_query("REPLACE INTO shares({id_server}, {id_user}, {stock}, {shares}) VALUES(%s, %s, %s, %s)".format(
                 stock = ewcfg.col_stock,
                 shares = ewcfg.col_shares,
                 id_server = ewcfg.col_id_server,
@@ -1306,7 +976,7 @@ def get_majority_shareholder(id_server = None, stock = None):
     if id_server is not None and stock is not None:
         try:
 
-            data = ewutils.execute_sql_query("SELECT {id_user}, {shares} FROM shares WHERE {id_server} = %s AND {stock} = %s ORDER BY {shares} DESC LIMIT 1".format(
+            data = bknd_core.execute_sql_query("SELECT {id_user}, {shares} FROM shares WHERE {id_server} = %s AND {stock} = %s ORDER BY {shares} DESC LIMIT 1".format(
                 stock = ewcfg.col_stock,
                 shares = ewcfg.col_shares,
                 id_server = ewcfg.col_id_server,
@@ -1330,7 +1000,7 @@ async def trade(cmd):
     user_data = EwUser(member=cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     user_trade = ewutils.active_trades.get(user_data.id_user)
 
@@ -1353,7 +1023,7 @@ async def trade(cmd):
                     response_part = "{id_item}: {name} {quantity}\n".format(id_item=item.get("id_item"), name=item.get("name"), quantity=(" x{:,}".format(item.get("quantity")) if (item.get("quantity") > 1) else ""))
 
                     if len(response) + len(response_part) > 1492:
-                        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                         response = ""
 
                     response += response_part
@@ -1378,7 +1048,7 @@ async def trade(cmd):
                     )
 
                     if len(response) + len(response_part) > 1492:
-                        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                         response = ""
 
                     response += response_part
@@ -1387,12 +1057,12 @@ async def trade(cmd):
                 response_part = "**You are ready to complete the trade.**"
 
                 if len(response) + len(response_part) > 1492:
-                    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                     response = ""
 
                 response += response_part
 
-            await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             #print partner's offers
             stacked_item_map = {}
@@ -1404,7 +1074,7 @@ async def trade(cmd):
                     response_part = "{id_item}: {name} {quantity}\n".format(id_item=item.get("id_item"), name=item.get("name"), quantity=(" x{:,}".format(item.get("quantity")) if (item.get("quantity") > 1) else ""))
 
                     if len(response) + len(response_part) > 1492:
-                        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                         response = ""
 
                     response += response_part
@@ -1429,7 +1099,7 @@ async def trade(cmd):
                     )
 
                     if len(response) + len(response_part) > 1492:
-                        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                         response = ""
 
                     response += response_part
@@ -1438,35 +1108,35 @@ async def trade(cmd):
                 response_part = '**They are ready to complete the trade.**'
 
                 if len(response) + len(response_part) > 1492:
-                    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                     response = ""
 
                 response += response_part
 
-            await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     else:
         if cmd.mentions_count == 0:
-            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Who do you want to trade with?"))
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "Who do you want to trade with?"))
 
         if cmd.mentions_count > 1:
-            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can only trade with one person at a time."))
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You can only trade with one person at a time."))
 
         trade_partner = EwUser(member=cmd.mentions[0])
 
         if user_data.id_user == trade_partner.id_user:
-            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Huh?"))
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "Huh?"))
 
         if user_data.poi != trade_partner.poi:
-            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must be in the same location as someone to trade with them."))
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must be in the same location as someone to trade with them."))
 
         if ewutils.active_trades.get(trade_partner.id_user) != None and len(ewutils.active_trades.get(trade_partner.id_user)) > 0:
-            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Wait for them to finish their business before trying to trade with them."))
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "Wait for them to finish their business before trying to trade with them."))
 
         ewutils.active_trades[user_data.id_user] = {"state": ewcfg.trade_state_proposed, "trader": trade_partner.id_user}
         ewutils.active_trades[trade_partner.id_user] = {"state": ewcfg.trade_state_proposed, "trader": user_data.id_user}
 
-        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.mentions[0], "{user} wants to trade with you. Do you {accept} or {refuse}?".format(user=cmd.message.author.display_name, accept=ewcfg.cmd_accept, refuse=ewcfg.cmd_refuse)))
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.mentions[0], "{user} wants to trade with you. Do you {accept} or {refuse}?".format(user=cmd.message.author.display_name, accept=ewcfg.cmd_accept, refuse=ewcfg.cmd_refuse)))
 
         accepted = False
 
@@ -1495,13 +1165,13 @@ async def trade(cmd):
             ewutils.active_trades[trade_partner.id_user] = {}
             response = "They didn't respond in time."
 
-        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def offer_item(cmd):
     user_data = EwUser(member=cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     user_trade = ewutils.active_trades.get(user_data.id_user)
 
@@ -1516,7 +1186,7 @@ async def offer_item(cmd):
         if item_search != None and len(item_search) > 0:
             item_sought = None
 
-            inventory = ewitem.inventory(
+            inventory = bknd_item.inventory(
                 id_user=user_data.id_user,
                 id_server=user_data.id_server
             )
@@ -1527,13 +1197,13 @@ async def offer_item(cmd):
                     item_sought = item
 
             if item_sought:
-                item = ewitem.EwItem(id_item=item_sought.get("id_item"))
+                item = EwItem(id_item=item_sought.get("id_item"))
 
-                if not item.soulbound or ewitem.EwItem(id_item = item_sought.get('id_item')).item_props.get("context") == "housekey":
+                if not item.soulbound or EwItem(id_item = item_sought.get('id_item')).item_props.get("context") == "housekey":
 
                     if item.id_item == user_data.weapon and user_data.weaponmarried:
                         response = "Unfortunately for you, the contract you signed before won't let you trade your partner away. You'll have to get your cuckoldry fix from somewhere else."
-                        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
                     ewutils.trading_offers[user_data.id_user].append(item_sought)
                     response = "You add a {} to your offers.".format(item_sought.get("name"))
@@ -1551,13 +1221,13 @@ async def offer_item(cmd):
     else:
         response = "You need to be trading with someone to offer an item."
 
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def remove_offer(cmd):
     user_data = EwUser(member=cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     user_trade = ewutils.active_trades.get(user_data.id_user)
 
@@ -1572,7 +1242,7 @@ async def remove_offer(cmd):
         if item_search != None and len(item_search) > 0:
             item_sought = None
 
-            inventory = ewitem.inventory(
+            inventory = bknd_item.inventory(
                 id_user=user_data.id_user,
                 id_server=user_data.id_server
             )
@@ -1583,7 +1253,7 @@ async def remove_offer(cmd):
                     item_sought = item
 
             if item_sought:
-                item = ewitem.EwItem(id_item=item_sought.get("id_item"))
+                item = EwItem(id_item=item_sought.get("id_item"))
 
                 ewutils.trading_offers[user_data.id_user].remove(item_sought)
                 response = "You remove {} from your offers.".format(item_sought.get("name"))
@@ -1599,13 +1269,13 @@ async def remove_offer(cmd):
     else:
         response = "You need to be trading with someone to remove an offer."
 
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def complete_trade(cmd):
     user_data = EwUser(member=cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
         response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     user_trade = ewutils.active_trades.get(user_data.id_user)
 
@@ -1641,7 +1311,7 @@ async def complete_trade(cmd):
             # check items currently held + items being given to the player - items the player is giving
             # check other user's inventory capacity
             for item_type in items_offered:
-                it_held = ewitem.inventory(
+                it_held = bknd_item.inventory(
                     id_user = trade_partner.id_user,
                     id_server = trade_partner.id_server,
                     item_type_filter = item_type
@@ -1650,19 +1320,19 @@ async def complete_trade(cmd):
                 if item_type == ewcfg.it_food:
                     if (len(it_held) + items_offered[ewcfg.it_food] - trader_items_offered.get(ewcfg.it_food, 0)) > trade_partner.get_food_capacity():
                         response = "They can't carry any more food items."
-                        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                 elif item_type == ewcfg.it_weapon:
                     if (len(it_held) + items_offered[ewcfg.it_weapon] - trader_items_offered.get(ewcfg.it_weapon, 0)) > trade_partner.get_weapon_capacity():
                         response = "They can't carry any more weapon items."
-                        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                 else:
                     if (len(it_held) + items_offered[item_type] - trader_items_offered.get(item_type, 0)) > ewcfg.generic_inv_limit:
                         response = "They can't carry any more {}s.".format(item_type)
-                        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             # check own user's inventory capacity
             for item_type in trader_items_offered:
-                it_held = ewitem.inventory(
+                it_held = bknd_item.inventory(
                     id_user = user_data.id_user,
                     id_server = user_data.id_server,
                     item_type_filter = item_type
@@ -1671,15 +1341,15 @@ async def complete_trade(cmd):
                 if item_type == ewcfg.it_food:
                     if (len(it_held) + trader_items_offered[ewcfg.it_food] - items_offered.get(ewcfg.it_food, 0)) > user_data.get_food_capacity():
                         response = "You can't carry any more food items."
-                        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                 elif item_type == ewcfg.it_weapon:
                     if (len(it_held) + trader_items_offered[ewcfg.it_weapon] - items_offered.get(ewcfg.it_weapon, 0)) > user_data.get_weapon_capacity():
                         response = "You can't carry any more weapon items."
-                        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                 else:
                     if (len(it_held) + trader_items_offered.get(item_type) - items_offered.get(item_type, 0)) > ewcfg.generic_inv_limit:
                         response = "You can't carry any more {}s.".format(item_type)
-                        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             for item in list(ewutils.trading_offers.get(user_data.id_user)):
                 if item.get("id_item") == user_data.weapon:
@@ -1689,12 +1359,12 @@ async def complete_trade(cmd):
                     user_data.sidearm = -1
                     user_data.persist()
                 elif item.get("item_type") == ewcfg.it_cosmetic:
-                    cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
+                    cosmetic = EwItem(id_item=item.get("id_item"))
                     cosmetic.item_props["adorned"] = 'false'
                     cosmetic.item_props["slimeoid"] = 'false'
                     cosmetic.persist()
 
-                ewitem.give_item(id_item=item.get("id_item"), id_user=trade_partner.id_user, id_server=trade_partner.id_server)
+                bknd_item.give_item(id_item=item.get("id_item"), id_user=trade_partner.id_user, id_server=trade_partner.id_server)
 
             for item in list(ewutils.trading_offers.get(trade_partner.id_user)):
                 if item.get("id_item") == trade_partner.weapon:
@@ -1704,12 +1374,12 @@ async def complete_trade(cmd):
                     trade_partner.sidearm = -1
                     user_data.persist()
                 elif item.get("item_type") == ewcfg.it_cosmetic:
-                    cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
+                    cosmetic = EwItem(id_item=item.get("id_item"))
                     cosmetic.item_props["adorned"] = 'false'
                     cosmetic.item_props["slimeoid"] = 'false'
                     cosmetic.persist()
 
-                ewitem.give_item(id_item=item.get("id_item"), id_user=user_data.id_user, id_server=user_data.id_server)
+                bknd_item.give_item(id_item=item.get("id_item"), id_user=user_data.id_user, id_server=user_data.id_server)
 
             ewutils.active_trades[user_data.id_user] = {}
             ewutils.active_trades[trade_partner.id_user] = {}
@@ -1721,14 +1391,14 @@ async def complete_trade(cmd):
     else:
         response = "You're not trading with anyone right now."
 
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def cancel_trade(cmd):
     user_trade = ewutils.active_trades.get(cmd.message.author.id)
 
     #if user_data.life_state == ewcfg.life_state_shambler:
     #	response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-    #	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    #	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
     if user_trade != None and len(user_trade) > 0 and user_trade.get("state") > ewcfg.trade_state_proposed:
@@ -1737,6 +1407,6 @@ async def cancel_trade(cmd):
     else:
         response = "You're not trading with anyone right now."
 
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
