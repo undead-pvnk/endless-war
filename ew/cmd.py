@@ -1610,7 +1610,7 @@ async def fursuit(cmd):
 		if days_until == 0:
 			response = "Hair is beginning to grow on the surface of your skin rapidly. Your canine instincts will take over soon!"
 		else:
-			response = "With a basic hairy palm reading, you determine that you'll be particularly powerful in {} day{}.".format(days_until, "s" if days_until is not 1 else "")
+			response = "With a basic hairy palm reading, you determine that you'll be particularly powerful in {} day{}.".format(days_until, "s" if days_until != 1 else "")
 
 		if ewutils.check_fursuit_active(market_data):
 			response = "The full moon shines above! Now's your chance to strike!"
@@ -4253,7 +4253,7 @@ async def make_bp(cmd):
 		recipient = cmd.mentions[0]
 	else:
 		response = 'who?'
-		return await send_message(cmd.client, cmd.message.channel, formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	bp_role = None
 	for role in cmd.guild.roles:
