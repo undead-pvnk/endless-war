@@ -4221,68 +4221,6 @@ def item_commands(cmd):
 	else:
 		return ""
 
-	async def shut_down_bot(cmd):
-
-		if not cmd.message.author.guild_permissions.administrator:
-			return await ewwep.suicide(cmd=cmd)
-
-		ewutils.logMsg('Goodbye!')
-		await asyncio.sleep(2)
-
-		while True:
-			sys.exit()
-
-	async def check_bot(cmd):
-		if not cmd.message.author.guild_permissions.administrator:
-			return
-
-		ewutils.logMsg('TERMINATE is currently: {}'.format(ewutils.TERMINATE))
-
-		return
-		sys.exit()
-
-	# Give Brimstone Programmer role to a member
-	async def make_bp(cmd):
-		return
-		if EwUser(member=cmd.message.author).life_state != ewcfg.life_state_kingpin and not cmd.author_id.admin:
-			return
-
-		if cmd.mentions_count > 0:
-			recipient = cmd.mentions[0]
-		else:
-			response = 'who?'
-			return await send_message(cmd.client, cmd.message.channel, formatMessage(cmd.message.author, response))
-
-		bp_role = None
-		for role in cmd.guild.roles:
-			if role.name == "Brimstone Programmer":
-				bp_role = role
-				break
-
-		if bp_role:
-			await recipient.add_roles(bp_role)
-		else:
-			ewutils.logMsg("Could not find Brimstone Programmer role.")
-
-	# Used when you have a secret command you only want seen under certain conditions.
-
-	async def fake_failed_command(cmd):
-		client = ewutils.get_client()
-		randint = random.randint(1, 3)
-		msg_mistake = "ENDLESS WAR is growing frustrated."
-		if randint == 2:
-			msg_mistake = "ENDLESS WAR denies you his favor."
-		elif randint == 3:
-			msg_mistake = "ENDLESS WAR pays you no mind."
-
-		msg = await fe_utils.send_message(client, cmd.message.channel, msg_mistake)
-		await asyncio.sleep(2)
-		try:
-			await msg.delete()
-			pass
-		except:
-			pass
-
 
 async def shut_down_bot(cmd):
 	if not cmd.message.author.guild_permissions.administrator:
