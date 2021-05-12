@@ -32,6 +32,7 @@ class EwSlimeoidBase:
 	""" Load the slimeoid data for this user from the database. """
 	def __init__(self, member = None, id_slimeoid = None, life_state = None, id_user = None, id_server = None, sltype = "Lab", slimeoid_name = None):
 		query_suffix = ""
+		suffix_values = []
 		user_data = None
 		if member != None:
 			id_user = str(member.id)
