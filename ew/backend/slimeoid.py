@@ -46,17 +46,22 @@ class EwSlimeoidBase:
 		#		id_slimeoid = user_data.active_slimeoid
 
 		if id_slimeoid != None:
-			query_suffix = " WHERE id_slimeoid = '{}'".format(id_slimeoid)
+			query_suffix = " WHERE id_slimeoid = %s"
+			suffix_values.append(id_slimeoid)
 		else:
 
 			if id_user != None and id_server != None:
-				query_suffix = " WHERE id_user = '{}' AND id_server = '{}'".format(id_user, id_server)
+				query_suffix = " WHERE id_user = %s AND id_server = %s"
+				suffix_values.extend([id_user, id_server])
 				if life_state != None:
-					query_suffix += " AND life_state = '{}'".format(life_state)
+					query_suffix += " AND life_state = %s"
+					suffix_values.append(life_state)
 				if sltype != None:
-					query_suffix += " AND type = '{}'".format(sltype)
+					query_suffix += " AND type = %s"
+					suffix_values.append(sltype)
 				if slimeoid_name != None:
-					query_suffix += " AND name = '{}'".format(slimeoid_name)
+					query_suffix += " AND NAME = %s"
+					suffix_values.append(slimeoid_name)
 
 
 		if query_suffix != "":
@@ -90,7 +95,9 @@ class EwSlimeoidBase:
 					ewcfg.col_coating,
 					ewcfg.col_poi,
 					query_suffix
-				))
+				),
+				suffix_values
+				)
 				result = cursor.fetchone()
 
 				if result != None:
