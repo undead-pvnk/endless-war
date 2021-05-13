@@ -1687,7 +1687,7 @@ async def loop(cmd):
 			
 		if time_lastuse + 180*60 > time_now:
 			response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 180*60 - time_now)/60))
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		
 		global move_counter
 		move_counter += 1
@@ -1708,7 +1708,7 @@ async def loop(cmd):
 			ewutils.end_trade(user_data.id_user)
 			user_data.poi = dest_poi
 			user_data.persist()
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "**VOIIII-**".format(dest_poi_obj.str_name)))
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "**VOIIII-**".format(dest_poi_obj.str_name)))
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 			await user_data.move_inhabitants(id_poi=dest_poi_obj.id_poi)
 			await dist_utils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, user_data.id_user)
