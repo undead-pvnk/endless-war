@@ -248,7 +248,7 @@ def get_channel(server = None, channel_name = ""):
 		if chan.name == channel_name:
 			channel = chan
 	
-	if channel == None:
+	if channel == None and not ewutils.DEBUG:
 		ewutils.logMsg('Error: In get_channel(), could not find channel using channel_name "{}"'.format(channel_name))
 
 	return channel

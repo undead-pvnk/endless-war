@@ -551,6 +551,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	has_overrides = False
 
 	user_data = EwUser(member=used_member)
+	user_poi_obj = poi_static.id_to_poi.get(user_data.poi)
 
 	if not startup:
 		for poi in poi_static.poi_list:
@@ -587,6 +588,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 				try:
 
 					# Set permissions for the user's current poi
+
 					for chname in poi.permissions:
 						ch = fe_utils.get_channel(server, chname)
 						if ch != None:
@@ -599,8 +601,8 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 						else:
 							ewutils.logMsg("Channel {} not found".format(chname))
 
-				except:
-					ewutils.logMsg("Failed to add permissions to {} in channel {}.".format(used_member.display_name, channel.name))
+				except Exception as e:
+					ewutils.logMsg("Failed to add permissions to {} in channel {}:{}.".format(used_member.display_name, channel.name, str(e)))
 
 
 				has_overrides = True
@@ -622,15 +624,18 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 			try:
 
 				# Set permissions for the user's current poi
-				for chname in poi.permissions:
+				for chname in correct_poi.permissions:
 					ch = fe_utils.get_channel(server, chname)
 					if ch != None:
-						permissions_dict = poi.permissions[chname]
+
+						permissions_dict = correct_poi.permissions[chname]
 						overwrite = discord.PermissionOverwrite()
+
 						overwrite.read_messages = True if ewcfg.permission_read_messages in permissions_dict else False
 						overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict else False
 						overwrite.connect = True if ewcfg.permission_connect_to_voice in permissions_dict else False
 						await ch.set_permissions(used_member, overwrite=overwrite)
+						
 					else:
 						ewutils.logMsg("Channel {} not found".format(chname))
 
