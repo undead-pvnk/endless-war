@@ -850,7 +850,7 @@ async def barter(cmd):
 	
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = 'Captain Albert Alexander hits the table with his glass and shouts "Nay laddy, you can fool me once but not twice! I dont do deals with spirits, get out of my sight!"'
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	elif item_sought:
 		poi = poi_static.id_to_poi.get(user_data.poi)
@@ -1101,7 +1101,7 @@ async def barter_all(cmd):
 	#if corpse, break
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = 'Captain Albert Alexander hits the table with his glass and shouts "Nay laddy, you can fool me once but not twice! I dont do deals with spirits, get out of my sight!"'
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	food_items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server,item_type_filter = ewcfg.it_food)
 	offer_items = [] #list of items to create when offer goes through
