@@ -901,6 +901,8 @@ channel_greenlightdistrict_street_c = "green-light-district-street-c"
 channel_slimesend_street_a = "slimes-end-street-a"
 
 channel_slimetwitter = "slime-twitter"
+channel_artexhibits = "art-exhibits"
+channel_deviantsplaart = "deviant-splaart"
 
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown, channel_breakroom]
 hideout_by_faction = {
@@ -911,7 +913,7 @@ hideout_by_faction = {
 
 
 # Commands
-cmd_prefix = '!'
+cmd_prefix = '~'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'

@@ -1,4 +1,4 @@
-from .user import EwUser
+from ew.utils.combat import EwUser
 import ew.utils as ewutils
 
 class EwRelic:

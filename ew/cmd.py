@@ -24,6 +24,7 @@ from .static import food as static_food
 from .static import hue as hue_static
 from .static import items as static_items
 from .static import mutations as static_mutations
+from .static import relic as static_relic
 from .static import poi as poi_static
 from .static import status as se_static
 from .static import vendors

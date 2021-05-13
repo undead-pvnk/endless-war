@@ -104,7 +104,9 @@ active_users_map = {}
 channels_slimetwitter = {}
 
 #Map of comm serv channels
-channels_communityservice = {}
+channels_deviantsplaart = {}
+
+channels_artexhibits = {}
 
 # Map of all command words in the game to their implementing function.
 cmd_map = {
@@ -1071,10 +1073,13 @@ async def on_ready():
 					channels_slimetwitter[server.id] = channel
 					ewutils.logMsg("• found channel for slime twitter: {}".format(channel.name))
 
-				elif (channel.name == ewcfg.channel_communityservice):
-					channels_communityservice[server.id] = channel
-					ewutils.logMsg("• found channel for community service: {}".format(channel.name))
+				elif (channel.name == ewcfg.channel_deviantsplaart):
+					channels_deviantsplaart[server.id] = channel
+					ewutils.logMsg("• found channel for DeviantSPLAART: {}".format(channel.name))
 
+				elif (channel.name == ewcfg.channel_artexhibits):
+					channels_artexhibits[server.id] = channel
+					ewutils.logMsg("• found channel for art exhibits: {}".format(channel.name))
 		ewdebug.initialize_gamestate(id_server=server.id)
 		# create all the districts in the database
 		for poi_object in poi_static.poi_list:
@@ -2160,9 +2165,19 @@ async def on_raw_reaction_add(payload):
 				if (str(payload.emoji) == ewcfg.emote_delete_tweet):
 					await message.delete()
 	elif (payload.guild_id is not None # not a dm
-		and channels_communityservice[payload.guild_id] is not None # server has a slime twitter channel
-		and payload.channel_id == channels_communityservice[payload.guild_id].id):
+		and channels_deviantsplaart[payload.guild_id] is not None # server has a slime twitter channel
+		and payload.channel_id == channels_deviantsplaart[payload.guild_id].id):
 		pass
+		message = await channels_slimetwitter[payload.guild_id].fetch_message(payload.message_id)
+		if payload.emoji.name == "":
+			channel = client.get_channel(payload.channel_id)
+			reaction = discord.utils.get(message.reactions, emoji=payload.emoji.name)
+			if reaction and reaction.count > 10:
+				msgtext = message.content
+				art_channel = channels_artexhibits[payload.guild_id]
+				await fe_utils.send_message(client, art_channel, msgtext)
+
+
 
 
 # find our REST API token

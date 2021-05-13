@@ -1,6 +1,7 @@
 import random
 import time
 from copy import deepcopy
+from . import debug as ewdebug
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 from .backend.dungeons import EwGamestate
@@ -9,8 +10,10 @@ from .backend.market import EwCompany
 from .backend.market import EwMarket
 from .backend.market import EwStock
 from .backend.player import EwPlayer
+from .backend.fish import EwRecord
 from .static import cfg as ewcfg
 from .static import poi as poi_static
+from .static import relic as relic_static
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
 from .utils import rolemgr as ewrolemgr
@@ -374,11 +377,11 @@ async def donate(cmd):
 
 async def museum_donate(cmd):
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-    item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
 
     if item_sought:
-        item_obj = ewitem.EwItem(id_item=item_sought.get("id_item"))
-        if item_obj.item_type ==ewcfg.it_relic or item_obj.item_props.get('relic') is not None:
+        item_obj = EwItem(id_item=item_sought.get("id_item"))
+        if item_obj.item_type == ewcfg.it_relic or item_obj.item_props.get('relic') is not None:
             response = await relic_donate(item_obj.id_item, cmd.guild)
         elif item_obj.item_props.get('acquisition') == ewcfg.acquisition_fishing:
             response = await fish_donate(item_obj.id_item, cmd.guild)
@@ -390,11 +393,11 @@ async def museum_donate(cmd):
         response = "You don't have that item."
 
 
-    return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def fish_donate(id_item, cmd):
-    item_obj = ewitem.EwItem(id_item=id_item)
+    item_obj = EwItem(id_item=id_item)
     length = float(item_obj.item_props.get('length'))
     id_fish = item_obj.item_props.get('id_food')
     if length is None:
@@ -405,7 +408,7 @@ async def fish_donate(id_item, cmd):
     if current_record.record_amount > length:
         response = "\"That's a...rather small specimen, wouldn't you say? We only store the largest aquatic fauna in our exhibit.\""
     else:
-        aquarium = ewutils.get_channel(server = cmd.guild, channel_name='aquarium')
+        aquarium = fe_utils.get_channel(server = cmd.guild, channel_name='aquarium')
         if current_record.id_post != "" and current_record.id_post is not None:
             old_message = await aquarium.fetch_message(int(current_record.id_post))
             await old_message.delete()
@@ -418,7 +421,7 @@ async def fish_donate(id_item, cmd):
 
         player = EwPlayer(id_user=item_obj.id_owner, id_server=cmd.guild.id)
         museum_text = "\n{}\nDonated by {}\n\nLENGTH:{} INCHES\n{}".format(item_obj.item_props.get('food_name').upper(), player.display_name, item_obj.item_props.get('length'), item_obj.item_props.get('food_desc'))
-        sent_message = await ewutils.send_message(cmd.client, aquarium, museum_text)
+        sent_message = await fe_utils.send_message(cmd.client, aquarium, museum_text)
         current_record.id_post = sent_message.id
         current_record.persist()
 
@@ -428,13 +431,13 @@ async def fish_donate(id_item, cmd):
 
 
         response = "The curator is taken aback by the sheer girth of your {}! But, without missing a beat he swipes your fish from you and runs behind the tanks to drop it right in with the rest of them. After a few minutes, he returns with the old record-setting fish impaled through the gills by harpoon gun.\"They can't all be winners, eh? Oh yeah, here's your tip.\"\n\nYou got 500,000 slime!".format(item_obj.item_props.get('food_name'))
-        ewitem.item_delete(id_item = id_item)
+        bknd_item.item_delete(id_item = id_item)
 
     return response
 
 
 async def relic_donate(id_item, cmd):
-    item_obj = ewitem.EwItem(id_item=id_item)
+    item_obj = EwItem(id_item=id_item)
     if item_obj.item_props.get('donated') is not None and item_obj.item_props.get('donated') != 0:
         response = "\"You already had me appraise this. Do you take me for some slime bovine you can just milk to your heart's content?\""
     else:
@@ -447,8 +450,8 @@ async def relic_donate(id_item, cmd):
 
         museum_text = "{}\nDiscovered by {}\n\n{}".format(relic_obj.str_desc, player.display_name, relic_obj.str_museum)
 
-        relic_channel = ewutils.get_channel(server=cmd.guild, channel_name='relic-exhibits')
-        sent_message = await ewutils.send_message(cmd.client, relic_channel, museum_text)
+        relic_channel = fe_utils.get_channel(server=cmd.guild, channel_name='relic-exhibits')
+        sent_message = await fe_utils.send_message(cmd.client, relic_channel, museum_text)
 
         new_record = EwRecord(id_server=cmd.guild.id, record_type=item_obj.item_props.get('id_relic'))
         new_record.id_user = cmd.message.author.id
@@ -466,7 +469,7 @@ async def relic_donate(id_item, cmd):
 
 
 async def art_donate(id_item, cmd):
-    item_obj = ewitem.EwItem(id_item=id_item)
+    item_obj = EwItem(id_item=id_item)
 
     if item_obj.item_props.get('furniture_desc') == 'https://cdn11.bigcommerce.com/s-cece8/images/stencil/1280x1280/products/305/1506/010420__10394.1343058001.jpg?c=2&imbypass=on':
         response = "\"Suuuuuuure. Pictures of spoons. We've never gotten that one before... But seriously. Get out of here.\""
@@ -475,13 +478,13 @@ async def art_donate(id_item, cmd):
         if gamestate is not None:
             if item_obj.item_props.get('title') is not None:
 
-                ewitem.give_item(id_item=id_item, id_user=gamestate.value, id_server=item_obj.id_server)
+                bknd_item.give_item(id_item=id_item, id_user=gamestate.value, id_server=item_obj.id_server)
                 response = '"OK, thank you for your donation. We\'ll probably maybe add it to our collection once our appraisers get to it. Go along now. Shoo."'
 
                 player_obj = EwPlayer(id_user=item_obj.id_owner, id_server=cmd.guild.id)
-                commserv = ewutils.get_channel(server=cmd.guild, channel_name='community-service')
-                post_text = "ART MUSEUM DONATION\n{}\nBy {}\n\n{}".format(item_obj.item_props.get('title'), player_obj.display_name, item_obj.item_props.get('furniture_desc'))
-                await ewutils.send_message(cmd.client, commserv, post_text)
+                artserv = fe_utils.get_channel(server=cmd.guild, channel_name='deviant-splaart')
+                post_text = "{}\nBy {}\n\n{}".format(item_obj.item_props.get('title'), player_obj.display_name, item_obj.item_props.get('furniture_desc'))
+                await fe_utils.send_message(cmd.client, artserv, post_text)
 
             else:
                 response = "\"Bah, it doesn't have a title! Just because you're disposable doesn't mean your art is.\""

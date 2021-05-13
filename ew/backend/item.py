@@ -7,6 +7,7 @@ from ..static import hue as hue_static
 from ..static import items as static_items
 from ..static import weapons as static_weapons
 from ..utils import core as ewutils
+from ..utils import relic as ewrelicutils
 
 """
     EwItem is the instance of an item (described by EwItemDef, linked by
@@ -237,6 +238,7 @@ def item_create(
     item_props = None
 ):
     item_def = static_items.item_def_map.get(item_type)
+    badRelic = 0
 
     if item_def == None:
         ewutils.logMsg('Tried to create invalid item_type: {}'.format(item_type))
@@ -255,6 +257,10 @@ def item_create(
         template_id = item_props.get("id_cosmetic", "bad food id")
     elif item_type == ewcfg.it_furniture:
         template_id = item_props.get("id_furniture ", "bad furniture id")
+    elif item_type == ewcfg.it_relic:
+        if ewrelicutils.canCreateRelic(item_props.get('id_relic'), id_server) != 1:
+            badRelic = 1
+        template_id = item_props.get("id_relic", "bad relic id")
     elif item_type == ewcfg.it_book:
         template_id = item_props.get("id_food", "bad food id")
     elif item_type == ewcfg.it_medal:
@@ -263,57 +269,56 @@ def item_create(
         template_id = "QUEST ITEM????"
     else:
         template_id = "-1"
+    if badRelic == 0:
+        try:
+            # Get database handles if they weren't passed.
+            conn_info = bknd_core.databaseConnect()
+            conn = conn_info.get('conn')
+            cursor = conn.cursor()
 
-    try:
-        # Get database handles if they weren't passed.
-        conn_info = bknd_core.databaseConnect()
-        conn = conn_info.get('conn')
-        cursor = conn.cursor()
+            # Create the item in the database.
 
-        # Create the item in the database.
+            cursor.execute("INSERT INTO items({}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
+                ewcfg.col_item_type,
+                ewcfg.col_id_user,
+                ewcfg.col_id_server,
+                ewcfg.col_soulbound,
+                ewcfg.col_stack_max,
+                ewcfg.col_stack_size,
+                ewcfg.col_template
+            ), (
+                item_type,
+                id_user,
+                id_server,
+                (1 if item_def.soulbound else 0),
+                stack_max,
+                stack_size,
+                template_id,
+            ))
 
-        cursor.execute("INSERT INTO items({}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
-            ewcfg.col_item_type,
-            ewcfg.col_id_user,
-            ewcfg.col_id_server,
-            ewcfg.col_soulbound,
-            ewcfg.col_stack_max,
-            ewcfg.col_stack_size,
-            ewcfg.col_template
-        ), (
-            item_type,
-            id_user,
-            id_server,
-            (1 if item_def.soulbound else 0),
-            stack_max,
-            stack_size,
-            template_id,
-        ))
-
-        item_id = cursor.lastrowid
-        conn.commit()
-
-        if item_id > 0:
-            # If additional properties are specified in the item definition or in this create call, create and persist them.
-            if item_props != None or item_def.item_props != None:
-                item_inst = EwItem(id_item = item_id)
-
-                if item_def.item_props != None:
-                    item_inst.item_props.update(item_def.item_props)
-
-                if item_props != None:
-                    item_inst.item_props.update(item_props)
-
-                item_inst.persist()
-
+            item_id = cursor.lastrowid
             conn.commit()
-    finally:
-        # Clean up the database handles.
-        cursor.close()
-        bknd_core.databaseClose(conn_info)
 
+            if item_id > 0:
+                # If additional properties are specified in the item definition or in this create call, create and persist them.
+                if item_props != None or item_def.item_props != None:
+                    item_inst = EwItem(id_item = item_id)
 
-    return item_id
+                    if item_def.item_props != None:
+                        item_inst.item_props.update(item_def.item_props)
+
+                    if item_props != None:
+                        item_inst.item_props.update(item_props)
+
+                    item_inst.persist()
+
+                conn.commit()
+        finally:
+            # Clean up the database handles.
+            cursor.close()
+            bknd_core.databaseClose(conn_info)
+        return item_id
+    return None
 
 """
     Drop all of a player's non-soulbound items into their district

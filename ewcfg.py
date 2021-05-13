@@ -932,6 +932,7 @@ channel_slimetwitter = "slime-twitter"
 
 channel_communityservice = "community-service"
 
+
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown, channel_breakroom]
 hideout_by_faction = {
 	faction_rowdys: channel_rowdyroughhouse,
