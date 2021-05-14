@@ -1,6 +1,6 @@
 name: Python Package using Conda
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build-linux:
@@ -31,4 +31,5 @@ jobs:
     - name: Test with pytest
       run: |
         conda install pytest
-        pytest
+        conda install pytest-cov
+        pytest --doctest-modules --junitxml=junit/test-results.xml --cov=ew --cov-report=xml --cov-report=html
