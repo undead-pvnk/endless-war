@@ -85,7 +85,7 @@ for poi in poi_list:
 
 	# Assign permissions for all locations in the poi list.
 	if poi.permissions == None:
-		poi.permissions = {('{}'.format(poi.id_poi)): ewcfg.permissions_general}
+		poi.permissions = {('{}'.format(poi.channel)): ewcfg.permissions_general}
 
 	# Assign all the correct major and minor roles.
 	

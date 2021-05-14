@@ -1060,6 +1060,7 @@ async def attack(cmd):
 			if user_data.faction != shootee_data.faction and user_data.life_state not in (ewcfg.life_state_shambler, ewcfg.life_state_juvenile) and user_data.faction != ewcfg.faction_slimecorp:
 				# Give slimes to the boss if possible.
 				kingpin = fe_utils.find_kingpin(id_server = cmd.guild.id, kingpin_role = role_boss)
+				kingpin = EwUser(id_server=cmd.guild.id, id_user=kingpin.id_user)
 
 				if kingpin:
 					if ewcfg.mutation_id_handyman in user_mutations and weapon.is_tool == 1:
@@ -1369,7 +1370,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				if user_data.faction != target_data.faction and user_data.faction != ewcfg.faction_slimecorp and user_data.life_state != ewcfg.life_state_juvenile:
 					# Give slimes to the boss if possible.
 					kingpin = fe_utils.find_kingpin(id_server = server.id, kingpin_role = role_boss)
-
+					kingpin = EwUser(id_server=server.id, id_user=kingpin.id_user)
 					if kingpin:
 
 						kingpin.change_slimes(n = boss_slimes)
