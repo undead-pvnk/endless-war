@@ -977,7 +977,7 @@ async def teleport(cmd):
         else:
             time_lastuse = 0
 
-        if time_lastuse + 180*60 > time_now:
+        if time_lastuse + 60*60 > time_now:
             response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 180*60 - time_now)/60))
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -1685,7 +1685,7 @@ async def loop(cmd):
 		else:
 			time_lastuse = 0
 			
-		if time_lastuse + 180*60 > time_now:
+		if time_lastuse + 60*60 > time_now:
 			response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 180*60 - time_now)/60))
 			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		
@@ -1693,7 +1693,7 @@ async def loop(cmd):
 		move_counter += 1
 		move_current = ewutils.moves_active[cmd.message.author.id] = move_counter
 		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You start looping to {}.".format(dest_poi_obj.str_name)))
-		await asyncio.sleep(60)
+		await asyncio.sleep(20)
 
 		if move_current == ewutils.moves_active[cmd.message.author.id]:
 			mutation_data = EwMutation(id_mutation=ewcfg.mutation_id_landlocked, id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
