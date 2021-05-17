@@ -1309,19 +1309,19 @@ async def leaderboard(cmd):
 	Link to the current GitHub repository.
 """
 async def github(cmd):
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Current Rowdy Fuckers Cop Killers GitHub repository: https://github.com/aristotlepenguin/endless-war'))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Current Rowdy Fuckers Cop Killers GitHub repository: https://github.com/aristotlepenguin/endless-war'))
 
 """
 	Link to the current pull requests in the GitHub repository.
 """
 async def pulls(cmd):
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Current pull requests in the GitHub repository: https://github.com/aristotlepenguin/endless-war/pulls'))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Current pull requests in the GitHub repository: https://github.com/aristotlepenguin/endless-war/pulls'))
 
 """
 	Link to the Gameplay category in the RFCK wiki
 """
 async def tutorial(cmd):
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'In-depth tutorial of all the gameplay mechanics in the Endless War: https://rfck.miraheze.org/wiki/Category:Gameplay'))
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'In-depth tutorial of all the gameplay mechanics in the Endless War: https://rfck.miraheze.org/wiki/Category:Gameplay'))
 
 """ Accept a russian roulette challenge """
 async def accept(cmd):
