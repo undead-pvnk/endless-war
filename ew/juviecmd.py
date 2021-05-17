@@ -118,6 +118,7 @@ async def enlist(cmd):
 		elif ewcfg.faction_killers not in vouchers and user_data.faction != ewcfg.faction_killers:
 			response = "You need a current gang member's permission to join the {}.".format(ewcfg.faction_killers)
 			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+		
 		elif user_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_kingpin] and user_data.faction == ewcfg.faction_killers:
 			response = "You are already enlisted in the {}! Look, your name is purple! Get a clue, idiot.".format(user_data.faction)
 			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -125,6 +126,10 @@ async def enlist(cmd):
 		elif user_data.faction == ewcfg.faction_rowdys or user_data.faction == ewcfg.faction_slimecorp:
 			response = "Traitor! You can only {} in the {}, you treacherous cretin. Ask for a {} if you're that weak-willed.".format(ewcfg.cmd_enlist, user_data.faction, ewcfg.cmd_pardon)
 			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+		elif user_data.poi not in [ewcfg.poi_id_copkilltown]:
+            		response = "How do you want to enlist in a gang's forces without even being in their headquarters? Get going to Cop Killtown, bitch."
+            		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		else:
 			response = "Enlisting in the {}.".format(ewcfg.faction_killers)
@@ -141,6 +146,7 @@ async def enlist(cmd):
 		if ewcfg.faction_rowdys in bans:
 			response = "You are banned from enlisting in the {}.".format(ewcfg.faction_rowdys)
 			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+		
 		if ewcfg.faction_rowdys not in vouchers and user_data.faction != ewcfg.faction_rowdys:
 			response = "You need a current gang member's permission to join the {}.".format(ewcfg.faction_rowdys)
 			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -152,6 +158,10 @@ async def enlist(cmd):
 		elif user_data.faction == ewcfg.faction_killers or user_data.faction == ewcfg.faction_slimecorp:
 			response = "Traitor! You can only {} in the {}, you treacherous cretin. Ask for a {} if you're that weak-willed.".format(ewcfg.cmd_enlist, user_data.faction, ewcfg.cmd_pardon)
 			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+		elif user_data.poi not in [ewcfg.poi_id_rowdyroughhouse]:
+            		response = "How do you want to enlist in a gang's forces without even being in their headquarters? Get going to the Rowdy Roughhouse, bitch."
+            		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		else:
 			response = "Enlisting in the {}.".format(ewcfg.faction_rowdys)
