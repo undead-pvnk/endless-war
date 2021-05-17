@@ -909,7 +909,11 @@ cmd_map = {
 	ewcfg.cmd_getattire: ewcmd.get_attire,
 	ewcfg.cmd_pacommand: ewkingpin.pa_command,
 	ewcfg.cmd_surveil: ewmap.surveil,
-	ewcfg.cmd_hogtie: ewkingpin.hogtie
+	ewcfg.cmd_hogtie: ewkingpin.hogtie,
+
+	# SAFARIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+	ewcfg.cmd_safaripower: ewhunting.safari_power,
+	ewcfg.cmd_safari_handin: ewhunting.safari_submit
 
 }
 

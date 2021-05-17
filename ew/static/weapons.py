@@ -89,6 +89,13 @@ def get_weapon_type_stats(weapon_type):
 			"crit_multiplier": 1.8,
 			"hit_chance": 0.9,
 		},
+		"ultraheavy": {
+			"damage_multiplier": 3,
+			"cost_multiplier": 1.6,
+			"crit_chance": 0,
+			"crit_multiplier": 1,
+			"hit_chance": 1,
+		}
 	}
 
 	return types[weapon_type]
@@ -1334,7 +1341,7 @@ weapon_list = [
 		# str_backfire="You roomba turns on you! Its shitty AI thinks your feet are its prey, and it sucks away some precious slime!",
 		vendors=[ewcfg.vendor_basedhardware],
 		classes=[ewcfg.weapon_class_paint, ewcfg.weapon_class_captcha],
-		stat=ewcfg.stat_fingernails_kills,
+		stat=ewcfg.stat_roomba_kills,
 		# sap_cost = 3,
 		captcha_length=8,
 		tool_props = {
@@ -1403,6 +1410,63 @@ EwWeapon( # 37
 		stat = ewcfg.stat_chainsaw_kills,
 		captcha_length = 4
 	),
+EwWeapon( # 38
+		id_weapon = ewcfg.weapon_id_huntingrifle,
+		alias = [
+			"hrifle",
+			"boltaction",
+			"oldrifle"
+		],
+		str_crit = "**Critical hit!!** {name_target}'s skull gains another hole! Good show!!",
+		str_miss = "**You missed!!** {name_player} misses {name_target} by a barn door and a half. Phooey!",
+		str_equip = "You equip the hunting rifle.",
+		str_name = "hunting rifle",
+		str_weapon = "a hunting rifle",
+		str_weaponmaster_self = "You are a rank {rank} gentleman of the hunting rifle.",
+		str_weaponmaster = "They are a rank {rank} gentleman of the hunting rifle.",
+		str_kill = "**360 NOSCOPED!!** {name_player} spins and fires! {name_target}'s head subsequently explodes! Get wr3ck3d, my good sir! {emote_skull}",
+		str_killdescriptor = "d3s7r0y3d",
+		str_damage = "{name_players} sneakes a few shots into {name_target}’s {hitzone}!!",
+		str_duel = "**...** {name_player} and {name_target} spin around like idiots, firing wildly and sipping tea.",
+		str_description = "It's a hunting rifle, lovingly repaired.",
+		str_reload = "You carefully dip each bullet in a cup of tea before loading them into the gun.",
+		str_reload_warning = "**OH, BOTHER!** {name_player}’s hunting rifle just ran out bullets!!",
+		str_scalp = "A single, clean hole pierces the scalp. Ahhh, the thrill of the hunt...",
+		fn_effect = get_normal_attack(weapon_type = 'precision'),
+		classes= [ewcfg.weapon_class_ammo],
+		stat = ewcfg.stat_huntingrifle_kills,
+		clip_size= 6,
+	),
+	EwWeapon( # 38
+		id_weapon = ewcfg.weapon_id_harpoon,
+		alias = [
+			"harpoon",
+			"whitewhale",
+			"harpoongun"
+		],
+		str_crit = "**Critical hit!!** {name_target}'s totally hooked!!",
+		str_miss = "**You missed!!** {name_player} misses {name_target}! They start frantically re-winding the harpoon!",
+		str_equip = "You equip the harpoon gun.",
+		str_name = "harpoon gun",
+		str_weapon = "a harpoon gun",
+		str_weaponmaster_self = "You are a rank {rank} salty seaman of the harpoon gun.",
+		str_weaponmaster = "They are a rank {rank} salty seaman of the harpoon gun.",
+		str_kill = "**YARRR!!** {name_player} fires a harpoon right into {name_target}'s heart! {name_target} is dragged up on deck, vanquished. {emote_skull}",
+		str_killdescriptor = "harpooned",
+		str_damage = "{name_players} harpoons {name_target}’s {hitzone}!!",
+		str_duel = "**...** {name_player} and {name_target} dock their vessels next to one another, locked in a stern gaze. Suddenly, harpoons erupt from either vessel, smashing through timber and flesh alike",
+		str_description = "It's a harpoon gun, seemingly ripped right from the deck of a whaling vessel.",
+		str_reload = "You frantically start reeling the harpoon back. Oh shit oh fuck oh shit oh fuck!!!",
+		str_reload_warning = "**AVAST!** {name_player}’s harpoon be layin' on the ground!!",
+		str_scalp = "The scalp is drenched in a salty brine. It emanates a feeling of satisfaction",
+		fn_effect = get_normal_attack(weapon_type = 'ultraheavy'),
+		classes= [ewcfg.weapon_class_ammo],
+		stat = ewcfg.stat_harpoon_kills,
+		clip_size= 1,
+		cooldown = 2
+	),
+
+
 
 ]
 

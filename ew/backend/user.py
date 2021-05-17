@@ -85,6 +85,9 @@ class EwUserBase:
 	# twitter
 	verified = False
 
+	# SAFARI TIIIIIIIIIME
+	safari_power = 0
+
 	move_speed = 1 # not a database column
 
 	""" fix data in this object if it's out of acceptable ranges """
@@ -142,7 +145,7 @@ class EwUserBase:
 				# Retrieve object
 
 				cursor.execute(
-					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 						ewcfg.col_slimes,
 						ewcfg.col_slimelevel,
@@ -203,6 +206,7 @@ class EwUserBase:
 						ewcfg.col_rand_seed,
 						ewcfg.col_time_lasthit,
 						ewcfg.col_verified,
+						ewcfg.col_safari_power
 					), (
 						id_user,
 						id_server
@@ -270,6 +274,7 @@ class EwUserBase:
 					self.rand_seed = result[54]
 					self.time_lasthit = result[55]
 					self.verified = result[56]
+					self.safari_power = result [57]
 
 				else:
 					self.poi = ewcfg.poi_id_downtown
@@ -311,7 +316,7 @@ class EwUserBase:
 			# Save the object.
 
 			cursor.execute(
-				"REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+				"REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 					ewcfg.col_id_user,
 					ewcfg.col_id_server,
 					ewcfg.col_slimes,
@@ -373,6 +378,7 @@ class EwUserBase:
 					ewcfg.col_rand_seed,
 					ewcfg.col_time_lasthit,
 					ewcfg.col_verified,
+					ewcfg.col_safari_power
 				), (
 					self.id_user,
 					self.id_server,
@@ -434,7 +440,8 @@ class EwUserBase:
 					self.gvs_time_lastshambaquarium,
 					self.rand_seed,
 					self.time_lasthit,
-					self.verified
+					self.verified,
+					self.safari_power
 				))
 
 			conn.commit()

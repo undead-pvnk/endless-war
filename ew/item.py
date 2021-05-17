@@ -538,6 +538,8 @@ async def item_use(cmd):
                     elif context == 'maxrepel':
                         response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=4)
                     bknd_item.item_delete(item.id_item)
+            elif context == 'pheromones':
+                response = user_data.applyStatus(ewcfg.status_pheromones_id)
             elif context == ewcfg.item_id_gellphone:
 
                 if user_data.has_gellphone():

@@ -141,7 +141,17 @@ def atf_body(ctn=None):
 	if aim == 10:
 		ctn.crit = True
 		ctn.slimes_damage *= 2
-		
+def atf_smallclaws(ctn=None):
+	chance = random.randrange(3)
+	if chance <= 1:
+		ctn.miss = True
+	if chance == 2:
+		strikes = random.randrange(5)
+		ctn.strikes = strikes
+		ctn.slimes_damage *= 0.05
+	if chance == 3:
+		ctn.slimes_damage *= 0.3
+		ctn.crit = True
 def atf_gvs_basic(ctn=None):
 	pass
 
@@ -290,6 +300,98 @@ enemy_attack_type_list = [
 		str_killdescriptor="disintegrated",
 		str_damage="{name_enemy} swings it's car width legs full speed into {name_target}! N6 laughs and watches you eat shit on the pavement!",
 		fn_effect=atf_tusks
+	),
+	EwAttackType(  # 12
+		id_type="gnash",
+		str_crit="**GNASH GNASH GNASH!!!** The {name_enemy} opens it's mouth as wide it can go and chomps down on {name_target}! OOF!",
+		str_miss="**MISS!** {name_target} barely sidesteps the {name_enemy}'s lunging bite!",
+		str_kill="**GNASH!!!** The {name_enemy} catches you in it's mouth and flails you around a little, for effect. The world fades from view as the venom takes over. {emote_skull}",
+		str_killdescriptor="gnashed",
+		str_damage="{name_enemy} chomps into {name_target}! {name_target} is looking a little woozy!",
+		fn_effect=atf_fangs
+	),
+	EwAttackType(  # 13
+		id_type="rifle",
+		str_crit="**PEW PEW PEW!!!** The {name_enemy} readies and fires the bolt-action rifle again and again, sending dozens of bullets into {name_target}!",
+		str_miss="**PING!** {name_target}'s shot ricochets off of {name_enemy}'s pinky!",
+		str_kill="**PEW PEW!!!** The {name_enemy} has you in it's sights. With a single, well-placed shot, {name_target}'s brains make a surprise trip across the floor. {emote_skull}",
+		str_killdescriptor="sniped",
+		str_damage="{name_enemy} fires at {name_target}! That looks like that hurt!",
+		fn_effect=atf_armcannon
+	),
+	EwAttackType(  # 14
+		id_type="beak",
+		str_crit="**PECK PECK PECK!!!** The {name_enemy} covers {name_target} in wounds!",
+		str_miss="**SWOOSH!** {name_target} barely misses {name_enemy} and swoops around for another shot!",
+		str_kill="**PECK PECK!!!** The {name_enemy} swoops at you with malice in it's eyes. {name_target} never had a chance as their skin is ripped off, piece by piece. {emote_skull}",
+		str_killdescriptor="pecked",
+		str_damage="{name_enemy} pecks at {name_target}! They draw blood!",
+		fn_effect=atf_talons
+	),
+	EwAttackType(  # 15
+		id_type="claws",
+		str_crit="**SCRIIIIIIITCH!!!** {name_enemy} rakes their claws down {name_target}'s entire body, causing massive bleeding damage!",
+		str_miss="**MISS!** {name_target}'s paw goes wide!",
+		str_kill="**ME-OWWW!!!** {name_enemy} has had enough. In a split second, {name_target} is erased from this place of existence. {emote_skull}",
+		str_killdescriptor="banished",
+		str_damage="{name_enemy} meows at {name_target}! Ahh! Psychic damage!",
+		fn_effect=atf_fangs
+	),
+	EwAttackType(  # 16
+		id_type="kicks",
+		str_crit="**POW!!!** {name_enemy} with a single kick, {name_target} is sent sprawling!",
+		str_miss="**PHEW!** {name_target}'s leg crashes into the ground next to {name_enemy}!",
+		str_kill="**CRUNCH!!!** The force of {name_enemy}'s kick shatters your *everything* bone. You needed that!. {emote_skull}",
+		str_killdescriptor="kicked",
+		str_damage="{name_enemy} kicks {name_target} in the ribs! They didn't need those, anyways!",
+		fn_effect=atf_axe
+	),
+	EwAttackType(  # 17
+		id_type="shadowclaws",
+		str_crit="**BRRRRRR!!!** {name_enemy}'s claws rip a hole in {name_target}'s space-time!",
+		str_miss="**AHHH!** The air molecules next to {name_target} just ceased to exist!",
+		str_kill="**BRRRRRRRRRRRR!!!** {name_enemy} rips through the fabric of reality that made up {name_target}. They implode in a fit of improbability. {emote_skull}",
+		str_killdescriptor="erased",
+		str_damage="{name_enemy} claws at the air! {name_target}'s childhood memories are cast into the void!",
+		fn_effect=atf_talons
+	),
+	EwAttackType(  # 18
+		id_type="prairieking",
+		str_crit="**BONK!!!** The {name_enemy} brings down the full force of the tiny scepter on {name_target}'s head!",
+		str_miss="**THEORETICAL DEBATE!** {name_target} starts to really doubt this whole monarchy business! {name_enemy} reels!",
+		str_kill="**BEHEADED!!!** The {name_enemy} sentences you to death! {name_target} lays down in the guillotine, finally understanding French nobility!. {emote_skull}",
+		str_killdescriptor="beheaded",
+		str_damage="{name_enemy} extolls the virtues of feudalism! {name_target}'s confidence wavers!",
+		fn_effect=atf_armcannon
+	),
+	EwAttackType(  # 19
+		id_type="tinyclaws",
+		str_crit="**YOWCH!!!** The {name_enemy} claws at {name_target} in a vulnerable spot!",
+		str_miss="**BLAST!** {name_target}'s tiny claws can't make a dent in {name_enemy}!",
+		str_kill="**VICTORY??!!!** The {name_enemy} somehow manages to strike an artery! {name_target} couldn't stop the bleeding! {emote_skull}",
+		str_killdescriptor="stuck",
+		str_damage="{name_enemy} claws feebly at {name_target}! {name_target} pretends to be hurt!",
+		fn_effect=atf_smallclaws
+	),
+	EwAttackType(  # 20
+		id_type="whale",
+		str_crit="**WEEEEE-WOOOOO!!!** {name_enemy}'s beautiful whale-song pops {name_target}'s ear drums!",
+		str_miss="**GASP!** {name_enemy} is totally out of their element up here!",
+		str_kill="**SMOOSH!!!** {name_enemy} manages to roll over, crushing {name_target} to death!. {emote_skull}",
+		str_killdescriptor="crushed",
+		str_damage="{name_enemy} thrashes about! {name_target} gets smacked by it's tail!",
+		fn_effect=atf_hooves
+	),
+	EwAttackType(  # 21
+		id_type="phoenix",
+		str_crit="**CA-CAWWWW!!!** The {name_enemy} divebombs {name_target}, totally scorching them, bro!",
+		str_miss="**OOO!** {name_enemy} circles overhead, menacingly.",
+		# str_trauma_self = "Your have deep bruising on your torso.",
+		# str_trauma = "They have deep bruising on their torso.",
+		str_kill="**CA-CAWWWWWWWWWW!!!** {name_enemy} crashes to the ground like a meteor! {name_target} is a nice looking crater. {emote_skull}",
+		str_killdescriptor="divebombed",
+		str_damage="{name_enemy} clips {name_target} with their flaming hot wing! Gonna need some sunscreen for that one!",
+		fn_effect=atf_talons
 	),
 	# If str_trauma and str_trauma_self make a return, consider filling GvS attacktypes out in these attributes.
 	EwAttackType( # GvS - 1
