@@ -913,7 +913,7 @@ hideout_by_faction = {
 
 
 # Commands
-cmd_prefix = '~'
+cmd_prefix = '!'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -1887,6 +1887,7 @@ emote_pizzahut = "<:pizzahut:431273890355085323>"
 emote_kfc = "<:kfc:431273890216673281>"
 emote_moon = "<:moon:499614945609252865>"
 emote_111 = "<:111:431547758181220377>"
+emote_111_debug = "<:111:720412882143150241>"
 
 emote_copkiller = "<:copkiller:431275071945048075>"
 emote_rowdyfucker = "<:rowdyfucker:431275088076079105>"
@@ -2259,6 +2260,7 @@ col_record_type = "record_type"
 col_record_amount = "record_amount"
 col_legality = "legality"
 col_id_post = "id_post"
+col_id_image = "id_image"
 
 # SWILLDERMUK
 col_gambit = 'gambit'

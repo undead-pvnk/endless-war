@@ -1968,6 +1968,7 @@ emote_kfc = "<:kfc:431273890216673281>"
 emote_moon = "<:moon:499614945609252865>"
 emote_111 = "<:111:431547758181220377>"
 
+
 emote_copkiller = "<:copkiller:431275071945048075>"
 emote_rowdyfucker = "<:rowdyfucker:431275088076079105>"
 emote_ck = "<:ck:504173691488305152>"

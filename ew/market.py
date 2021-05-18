@@ -477,6 +477,7 @@ async def art_donate(id_item, cmd):
     else:
         gamestate = EwGamestate(id_server=item_obj.id_server, id_state='artplayer')
         if gamestate is not None:
+
             if item_obj.item_props.get('title') is not None:
 
                 bknd_item.give_item(id_item=id_item, id_user=gamestate.value, id_server=item_obj.id_server)
@@ -494,6 +495,16 @@ async def art_donate(id_item, cmd):
     return response
 
 
+def check_art_for_duplicates(link):
+    try:
+        result = bknd_core.execute_sql_query("SELECT {}, {} FROM world_events WHERE id_event = %s".format(
+            ewcfg.col_record_type,
+            ewcfg.col_id_image
+        ), (
+            link
+        ))
+    except:
+        ewutils.logMsg("Error while checking for duplicates.")
 
 
 """ transfer slimecoin between players """

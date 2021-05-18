@@ -2167,15 +2167,13 @@ async def on_raw_reaction_add(payload):
 	elif (payload.guild_id is not None # not a dm
 		and channels_deviantsplaart[payload.guild_id] is not None # server has a slime twitter channel
 		and payload.channel_id == channels_deviantsplaart[payload.guild_id].id):
-		pass
-		message = await channels_slimetwitter[payload.guild_id].fetch_message(payload.message_id)
-		if payload.emoji.name == "":
-			channel = client.get_channel(payload.channel_id)
-			reaction = discord.utils.get(message.reactions, emoji=payload.emoji.name)
-			if reaction and reaction.count > 10:
-				msgtext = message.content
-				art_channel = channels_artexhibits[payload.guild_id]
-				await fe_utils.send_message(client, art_channel, msgtext)
+		message = await channels_deviantsplaart[payload.guild_id].fetch_message(payload.message_id)
+		if str(payload.emoji) == ewcfg.emote_111 or str(payload.emoji) == ewcfg.emote_111_debug:
+			for react in message.reactions:
+				if react.count >= 2 and react.emoji.id in [720412882143150241, 431547758181220377]:
+					msgtext = message.content
+					art_channel = channels_artexhibits[payload.guild_id]
+					await fe_utils.send_message(client, art_channel, msgtext)
 
 
 

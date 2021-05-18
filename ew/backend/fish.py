@@ -119,6 +119,9 @@ class EwRecord:
 	# the ID of the post in the server
 	id_post = ""
 
+	#an associated image with the work
+	id_image = "*--*"
+
 	def __init__(
 			self,
 			id_server=None,
@@ -136,11 +139,12 @@ class EwRecord:
 				# Retrieve object
 
 				cursor.execute(
-					"SELECT {}, {}, {}, {} FROM records WHERE record_type = %s AND id_server = %s".format(
+					"SELECT {}, {}, {}, {}, {} FROM records WHERE record_type = %s AND id_server = %s".format(
 						ewcfg.col_id_user,
 						ewcfg.col_record_amount,
 						ewcfg.col_legality,
-						ewcfg.col_id_post
+						ewcfg.col_id_post,
+						ewcfg.col_id_image
 					),(
 						self.record_type,
 						self.id_server
@@ -153,6 +157,7 @@ class EwRecord:
 					self.record_amount = result[1]
 					self.legality = result[2]
 					self.id_post = result[3]
+					self.id_image = result[4]
 			finally:
 				# Clean up the database handles.
 				cursor.close()
@@ -166,20 +171,22 @@ class EwRecord:
 
 			# Save the object.
 			cursor.execute(
-				"REPLACE INTO records({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+				"REPLACE INTO records({}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
 					ewcfg.col_id_server,
 					ewcfg.col_record_type,
 					ewcfg.col_record_amount,
 					ewcfg.col_id_user,
 					ewcfg.col_legality,
-					ewcfg.col_id_post
+					ewcfg.col_id_post,
+					ewcfg.col_id_image,
 				), (
 					self.id_server,
 					self.record_type,
 					self.record_amount,
 					self.id_user,
 					self.legality,
-					self.id_post
+					self.id_post,
+					self.id_image
 				))
 		finally:
 			# Clean up the database handles.
