@@ -2077,7 +2077,7 @@ async def jump(cmd):
 						return
 
 	elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
-		roll = random.randrange(50)
+		roll = random.randrange(25)
 			if roll == 0:
 				response = "You start running and taking momentum to then make the fucking highest jump you've ever done. When you reach the ground, you somehow manage to do a sommersault landing. Damn, guess you were good at parkour in the end!"
 			else:
