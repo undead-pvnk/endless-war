@@ -127,9 +127,9 @@ async def enlist(cmd):
 			response = "Traitor! You can only {} in the {}, you treacherous cretin. Ask for a {} if you're that weak-willed.".format(ewcfg.cmd_enlist, user_data.faction, ewcfg.cmd_pardon)
 			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-		elif user_data.poi not in [ewcfg.poi_id_copkilltown]:
-            		response = "How do you want to enlist in a gang's forces without even being in their headquarters? Get going to Cop Killtown, bitch."
-            		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+		#elif user_data.poi not in [ewcfg.poi_id_copkilltown]:
+            	#	response = "How do you want to enlist in a gang's forces without even being in their headquarters? Get going to Cop Killtown, bitch."
+            	#	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 		else:
 			response = "Enlisting in the {}.".format(ewcfg.faction_killers)
@@ -159,9 +159,9 @@ async def enlist(cmd):
 			response = "Traitor! You can only {} in the {}, you treacherous cretin. Ask for a {} if you're that weak-willed.".format(ewcfg.cmd_enlist, user_data.faction, ewcfg.cmd_pardon)
 			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-		elif user_data.poi not in [ewcfg.poi_id_rowdyroughhouse]:
-            		response = "How do you want to enlist in a gang's forces without even being in their headquarters? Get going to the Rowdy Roughhouse, bitch."
-            		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+		#elif user_data.poi not in [ewcfg.poi_id_rowdyroughhouse]:
+            	#	response = "How do you want to enlist in a gang's forces without even being in their headquarters? Get going to the Rowdy Roughhouse, bitch."
+            	#	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 		else:
 			response = "Enlisting in the {}.".format(ewcfg.faction_rowdys)
