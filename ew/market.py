@@ -294,7 +294,7 @@ async def donate(cmd):
     time_now = round(time.time())
 
     if user_data.poi == ewcfg.poi_id_themuseum:
-       response = museum_donate(cmd=cmd)
+       response = await museum_donate(cmd=cmd)
     elif user_data.poi == ewcfg.poi_id_slimecorphq:
         poi = poi_static.id_to_poi.get(user_data.poi)
 
@@ -382,19 +382,22 @@ async def museum_donate(cmd):
 
     if item_sought:
         item_obj = EwItem(id_item=item_sought.get("id_item"))
+        print(ewcfg.it_relic)
+        print(item_obj.item_type)
         if item_obj.item_type == ewcfg.it_relic or item_obj.item_props.get('relic') is not None:
-            response = await relic_donate(item_obj.id_item, cmd.guild)
+            response = await relic_donate(item_obj.id_item, cmd)
         elif item_obj.item_props.get('acquisition') == ewcfg.acquisition_fishing:
-            response = await fish_donate(item_obj.id_item, cmd.guild)
+            response = await fish_donate(item_obj.id_item, cmd)
         elif item_obj.item_props.get('id_furniture') == 'pictureframe':
-            response = await art_donate(item_obj.id_item, cmd.guild)
+
+            response = await art_donate(item_obj.id_item, cmd)
         else:
             response = "The curator turns his nose at your offering and sneers. Guess the pompous prick only takes relics, fish, and framed pictures."
     else:
         response = "You don't have that item."
 
-
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    #fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    return response
 
 
 async def fish_donate(id_item, cmd):
@@ -449,7 +452,7 @@ async def relic_donate(id_item, cmd):
         payout = relic_obj.amount_yield
         player = EwPlayer(id_user=item_obj.id_owner, id_server=cmd.guild.id)
 
-        museum_text = "{}\nDiscovered by {}\n\n{}".format(relic_obj.str_desc, player.display_name, relic_obj.str_museum)
+        museum_text = "{}\nDiscovered by {}\n\n{}".format(relic_obj.str_name, player.display_name, relic_obj.str_museum)
 
         relic_channel = fe_utils.get_channel(server=cmd.guild, channel_name='relic-exhibits')
         sent_message = await fe_utils.send_message(cmd.client, relic_channel, museum_text)
@@ -462,7 +465,7 @@ async def relic_donate(id_item, cmd):
         user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
         user_data.change_slimes(n=payout)
         user_data.persist()
-        response = "The curator takes the {} and excitedly jaunts into his backroom. Just when you suspect he's about to steal it, he bursts out the door with your relic in hand and gives it right back, along with {:,} slime.\n\n\"I made a replica for the museum. Don't tell anybody, but you can have this one back. You dregs would just steal the blasted thing otherwise.\"".format(relic_obj.str_desc, payout)
+        response = "The curator takes the {} and excitedly jaunts into his backroom. Just when you suspect he's about to steal it, he bursts out the door with your relic in hand and gives it right back, along with {:,} slime.\n\n\"I made a replica for the museum. Don't tell anybody, but you can have this one back. You dregs would just steal the blasted thing otherwise.\"".format(relic_obj.str_str_name, payout)
 
     return response
 
@@ -474,6 +477,7 @@ async def art_donate(id_item, cmd):
 
     if item_obj.item_props.get('furniture_desc') == 'https://cdn11.bigcommerce.com/s-cece8/images/stencil/1280x1280/products/305/1506/010420__10394.1343058001.jpg?c=2&imbypass=on':
         response = "\"Suuuuuuure. Pictures of spoons. We've never gotten that one before... But seriously. Get out of here.\""
+        print('third')
     else:
         gamestate = EwGamestate(id_server=item_obj.id_server, id_state='artplayer')
         if gamestate is not None:

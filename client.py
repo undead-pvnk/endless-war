@@ -699,6 +699,7 @@ cmd_map = {
 	ewcfg.cmd_setpenname_alt_1: ewbook.set_pen_name,
 	ewcfg.cmd_settitle: ewbook.set_title,
 	ewcfg.cmd_settitle_alt_1: ewbook.set_title,
+	ewcfg.cmd_titleframe: ewapt.frame_title,
 	ewcfg.cmd_setgenre: ewbook.set_genre,
 	ewcfg.cmd_editpage: ewbook.edit_page,
 	ewcfg.cmd_viewpage: ewbook.view_page,
