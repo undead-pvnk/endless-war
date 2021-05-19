@@ -145,13 +145,14 @@ async def cmd_moan(cmd):
 	await fe_utils.send_response(response, cmd)
 
 
-def gen_score_text(ew_id):
+def gen_score_text(ew_id, skune):
 
 	user_data = EwUser(ew_id = ew_id)
 
 	items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
 
 	poudrin_amount = bknd_item.find_poudrin(id_user = user_data.id_user, id_server = user_data.id_server)
+
 
 	if user_data.life_state == ewcfg.life_state_grandfoe:
 		# Can't see a raid boss's slime score.
@@ -190,7 +191,7 @@ async def score(cmd):
 	# other user slime check
 	else:
 		member = cmd.mentions[0] # for ewrolemgr
-		response = gen_score_text(ew_id = cmd.mention_ids[0])
+		response = gen_score_text(ew_id = cmd.mention_ids[0], skune = skune)
 
 	time_now_msg_start = int(time.time())
 	# Send the response to the player.
