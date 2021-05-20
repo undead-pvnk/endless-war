@@ -321,7 +321,7 @@ enemy_attack_type_list = [
 	),
 	EwAttackType(  # 14
 		id_type="beak",
-		str_crit="**PECK PECK PECK!!!** The {name_enemy} covers {name_target} in wounds!",
+		str_crit="**TIPPITY-TAP!!!** The {name_enemy} brings the downpour with a dance! {name_target} is pummeled by falling droplets!",
 		str_miss="**SWOOSH!** {name_target} barely misses {name_enemy} and swoops around for another shot!",
 		str_kill="**PECK PECK!!!** The {name_enemy} swoops at you with malice in it's eyes. {name_target} never had a chance as their skin is ripped off, piece by piece. {emote_skull}",
 		str_killdescriptor="pecked",
