@@ -135,7 +135,7 @@ item_def_list = [
 			"id_book": 69,
 			"book_desc": "A book by AUTHOR, published on DAY."
 		}
-	),
+	)
 ]
 
 # A map of item_type to EwItemDef objects.
@@ -1663,6 +1663,12 @@ EwGeneralItem(
 		str_desc = "A hunting trophy snatched from the wings of a Gull. Ahhh, the thrill of the hunt..."
 	),
 	EwGeneralItem(
+		id_item = ewcfg.item_id_rainwing,
+		str_name = "Rain Wing",
+		str_desc = "A feather obtained from a Gull. Folklore says this can be used to herald rain.",
+		context  = "rain"
+	),
+	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_garfield,
 		str_name = "Garfield Trophy",
 		str_desc = "A hunting trophy sliced from the paws of Garfield. Ahhh, the thrill of the hunt..."
@@ -1675,12 +1681,12 @@ EwGeneralItem(
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_styx,
 		str_name = "Styx Trophy",
-		str_desc = "A hunting trophy wrested from Styx. Ahhh, the thrill of the hunt..."
+		str_desc = "A hunting trophy shaved from Styx. Ahhh, the thrill of the hunt..."
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_prairieking,
 		str_name = "Prairie King Trophy",
-		str_desc = "A hunting trophy nabbed from the hands of the Prarie King. Ahhh, the thrill of the hunt..."
+		str_desc = "A hunting trophy nabbed from the itty bitty hands of the Prarie King. Ahhh, the thrill of the hunt..."
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_wailord,
@@ -1693,10 +1699,17 @@ EwGeneralItem(
 		str_desc = "A hunting trophy swept up from the ashes of the Phoenix. Ahhh, the thrill of the hunt..."
 	),
 	EwGeneralItem(
+		id_item = ewcfg.item_id_phoenixdown,
+		str_name = "Phoenix Down",
+		str_desc = "A feather plucked from a mythical Phoenix. Can be used to revive fallen slimeoids.",
+		context = "slimeoidrevive"
+	),
+	EwGeneralItem(
 		id_item = ewcfg.item_id_pheromones,
 		str_name = "Kinkfish Pheromones",
 		str_desc = "A spray-on bottle of Kinkfish pheromones. Apparently, it attracts all sorts of things despite smelling like shit.",
 		acquisition = ewcfg.acquisition_smelting,
+		context = "pheromones",
 		price = 10000,
 		vendors = [ewcfg.vendor_safari]
 	),

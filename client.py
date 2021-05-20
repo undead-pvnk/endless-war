@@ -1105,6 +1105,9 @@ async def on_ready():
 		# SWILLDERMUK
 		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
+
+		# SAFARI
+		asyncio.ensure_future(loop_utils.safari_tick_loop(id_server = server.id))
 		
 		if ewcfg.gvs_active:
 			asyncio.ensure_future(loop_utils.gvs_gamestate_tick_loop(id_server=server.id))

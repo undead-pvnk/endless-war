@@ -540,6 +540,12 @@ async def item_use(cmd):
                     bknd_item.item_delete(item.id_item)
             elif context == 'pheromones':
                 response = user_data.applyStatus(ewcfg.status_pheromones_id)
+                bknd_item.item_delete(item.id_item)
+
+            elif context == 'rain':
+                # TODO : Rain dance code (this joke is that all this stuff is junk)
+                response = "You begin the rain dance, jumping about with the feather as you perform the ancient ritual. The skys darken and grow heavy with the burden of moisture. Finally, in a final flourish to unleash the downpour, you fucking trip and fall flat on your face. Good job, dumbass!"
+                
             elif context == ewcfg.item_id_gellphone:
 
                 if user_data.has_gellphone():
@@ -609,8 +615,13 @@ async def item_use(cmd):
 
                 user_data.degradation = 0
                 user_data.persist()
-
+            
                 bknd_item.item_delete(item.id_item)
+
+            elif context == "revive":
+                # TODO Slimeoid revive code
+                # Expect another argument after the context, being the name of the slimeoid to be revived
+                response = "You try to \"revive\" your fallen Slimeoid. Too bad this ain't a video game, or it might have worked!"
 
             elif ewcfg.item_id_key in context and context != 'housekey':
                 if user_data.poi == "room102" and context == 'reelkey':

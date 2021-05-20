@@ -1,4 +1,4 @@
-
+import datetime
 
 # Global configuration options.
 
@@ -1738,8 +1738,9 @@ bleed_half_life = 60 * 5 #five minutes
 bleed_tick_length = 10
 
 # how often to decide whether or not to spawn an enemy
-enemy_spawn_tick_length = 60 * 3 # Three minutes
+# enemy_spawn_tick_length = 60 * 3 # Three minutes
 #enemy_spawn_tick_length = 1
+enemy_spawn_tick_length = 30
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 5
 
@@ -2462,6 +2463,7 @@ col_prank_count = 'prank_count'
 		
 #SAFARI
 col_total_safari_power = 'total_safari_power'
+col_current_safari_boss = 'current_safari_boss'
 
 # Item type names
 it_item = "item"
@@ -2498,7 +2500,7 @@ leaderboard_shamblers_killed = "MOST SHAMBLER KILLS"
 leaderboard_gambit_high = "HIGHEST GAMBIT"
 leaderboard_gambit_low = "LOWEST GAMBIT"
 # SAFARI
-leaderboard_safari = "SAFARI-EST CONSERVATIONISTS"
+leaderboard_safari = "APEX PREDATORS"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -2792,6 +2794,8 @@ item_id_carpotoxin = "carpotoxin"
 item_id_moonrock = "moonrock"
 item_id_bustedrifle = "bustedrifle"
 item_id_repairkit = "fieldrepairkit"
+item_id_phoenixdown = "phoenixdown"
+item_id_rainwing = "rainwing"
 item_id_dyesolution = "dyesolution"
 item_id_textiles = "textiles"
 item_id_foodbase = "foodbase"
@@ -4294,6 +4298,24 @@ enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_gre
 
 safari_bosses = [enemy_type_gull, enemy_type_garfield, enemy_type_n400, enemy_type_styx, enemy_type_prairieking, enemy_type_wailord, enemy_type_phoenix]
 
+safari_day_one = datetime.date(2021, 5, 20)
+safari_day_two = datetime.date(2021, 5, 21)
+safari_day_three = datetime.date(2021, 5, 22)
+safari_day_four = datetime.date(2021, 5, 23)
+safari_day_five = datetime.date(2021, 5, 24)
+safari_day_six = datetime.date(2021, 5, 25)
+safari_day_seven = datetime.date(2021, 5, 26)
+
+safari_boss_date_map = {
+	safari_day_one : enemy_type_gull,
+	safari_day_two : enemy_type_garfield,
+	safari_day_three : enemy_type_n400,
+	safari_day_four : enemy_type_styx,
+	safari_day_five : enemy_type_prairieking,
+	safari_day_six : enemy_type_wailord,
+	safari_day_seven : enemy_type_phoenix
+}
+
 # List of enemies that spawn in the Nuclear Beach
 pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
 
@@ -4305,6 +4327,7 @@ safari_trophy_values = {
 	item_id_trophy_slimeofgreed: 1,
 	item_id_trophy_desertraider: 1,
 	item_id_trophy_mammoslime: 1,
+	item_id_trophy_spacecarp: 1,
 	item_id_trophy_megaslime: 5,
 	item_id_trophy_srex: 5,
 	item_id_trophy_dragon: 10,
@@ -4520,31 +4543,38 @@ enemy_drop_tables = {
 	],
 	enemy_type_gull: [
 		{item_id_slimepoudrin: [100, 3, 7]},
-		{item_id_trophy_gull: [100, 1, 1]}
+		{item_id_trophy_gull: [100, 1, 1]},
+		{'rainwing': [100, 1, 1]}
 	],
 	enemy_type_garfield: [
 		{item_id_slimepoudrin: [100, 3, 7]},
-		{item_id_trophy_garfield: [100, 1, 1]}
+		{item_id_trophy_garfield: [100, 1, 1]},
+		{'garfieldtail': [100, 1, 1]}
 	],
 	enemy_type_n400: [
 		{item_id_slimepoudrin: [100, 3, 7]},
-		{item_id_trophy_n400: [100, 1, 1]}
+		{item_id_trophy_n400: [100, 1, 1]},
+		{'normalplume': [100, 1, 1]}
 	],
 	enemy_type_styx: [
 		{item_id_slimepoudrin: [100, 3, 7]},
-		{item_id_trophy_styx: [100, 1, 1]}
+		{item_id_trophy_styx: [100, 1, 1]},
+		{'ominousslippers': [100, 1, 1]}
 	],
 	enemy_type_prairieking: [
 		{item_id_slimepoudrin: [100, 3, 7]},
-		{item_id_trophy_prairieking: [100, 1, 1]}
+		{item_id_trophy_prairieking: [100, 1, 1]},
+		{'guillotinecharm': [100, 1, 1]}
 	],
 	enemy_type_wailord: [
 		{item_id_slimepoudrin: [100, 3, 7]},
-		{item_id_trophy_wailord: [100, 1, 1]}
+		{item_id_trophy_wailord: [100, 1, 1]},
+		{'navaluniform': [100, 1, 1]}
 	],
 	enemy_type_phoenix: [
 		{item_id_slimepoudrin: [100, 3, 7]},
-		{item_id_trophy_phoenix: [100, 1, 1]}
+		{item_id_trophy_phoenix: [100, 1, 1]},
+		{'phoenixdown': [50, 1, 1]}
 	]
 }
 for enemy in gvs_enemies:
@@ -4681,7 +4711,7 @@ enemy_data_table = {
 		"aliases": ["n6", "mutatedtitanoslime", "mutated", "titanoslime", "bigtitano"]
 	},
 	enemy_type_piloslime: {
-		"slimerange": [30000, 40000],
+		"slimerange": [20000, 30000],
 		"ai": enemy_ai_attacker_a,
 		"attacktype": enemy_attacktype_tusks,
 		"displayname": "Piloslime",
@@ -4713,7 +4743,7 @@ enemy_data_table = {
 		"aliases": ["mammoswinebull", "swinebull", "mammobull", "apex", "apexmammoslime"]
 	},
 	enemy_type_gull: {
-		"slimerange": [100000, 100000],
+		"slimerange": [3500000, 3500000],
 		"ai": enemy_ai_attacker_a,
 		"attacktype": enemy_attacktype_beak,
 		"displayname": "The Gull",
@@ -4721,7 +4751,7 @@ enemy_data_table = {
 		"aliases": ["seagull", "thegull", "seabird", "cgull", "landgull"]
 	},
 	enemy_type_garfield: {
-		"slimerange": [100000, 100000],
+		"slimerange": [3500000, 3500000],
 		"ai": enemy_ai_attacker_a,
 		"attacktype": enemy_attacktype_claws,
 		"displayname": "Garfield",
@@ -4729,7 +4759,7 @@ enemy_data_table = {
 		"aliases": ["orangecat", "cat", "slimefield", "dakat"]
 	},
 	enemy_type_n400: {
-		"slimerange": [1000000, 1000000],
+		"slimerange": [3500000, 3500000],
 		"ai": enemy_ai_attacker_a,
 		"attacktype": enemy_attacktype_kicks,
 		"displayname": "N400",
@@ -4737,7 +4767,7 @@ enemy_data_table = {
 		"aliases": ["secretarybird", "secretary", "nfourhundred", "n40000", "n40k"]
 	},
 	enemy_type_styx: {
-		"slimerange": [1000000, 1000000],
+		"slimerange": [3500000, 3500000],
 		"ai": enemy_ai_attacker_a,
 		"attacktype": enemy_attacktype_shadowclaws,
 		"displayname": "Styx",
@@ -4745,7 +4775,7 @@ enemy_data_table = {
 		"aliases": ["topdog", "dog", "manedwolf", "hound", "killerdog"]
 	},
 	enemy_type_prairieking: {
-		"slimerange": [1000000, 1000000],
+		"slimerange": [3500000, 3500000],
 		"ai": enemy_ai_attacker_a,
 		"attacktype": enemy_attacktype_prairieking,
 		"displayname": "The Prairie King",
@@ -4761,7 +4791,7 @@ enemy_data_table = {
 		"aliases": ["prairiep", "prairiedog", "pdog", "pawn", "rook"]
 	},
 	enemy_type_wailord: {
-		"slimerange": [1000000, 1000000],
+		"slimerange": [3500000, 3500000],
 		"ai": enemy_ai_attacker_a,
 		"attacktype": enemy_attacktype_whale,
 		"displayname": "Wailord",
@@ -4769,7 +4799,7 @@ enemy_data_table = {
 		"aliases": ["whale", "fish", "lord", "wail", "whalelord"]
 	},
 	enemy_type_phoenix: {
-		"slimerange": [1000000, 1000000],
+		"slimerange": [3500000, 3500000],
 		"ai": enemy_ai_attacker_a,
 		"attacktype": enemy_attacktype_phoenix,
 		"displayname": "Phoenix",

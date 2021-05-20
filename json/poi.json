@@ -1795,7 +1795,7 @@
             "ch"
         ],
         "str_name": "Charcoal Park",
-        "str_desc": "A completely unremarkable, quiet retirement community. The citizens are fed up with slime, honestly. Pathetic little gardens rest in front of the uneven parking lots of corporate complexes housing dentists, fortune-tellers, real estate agencies, and other equally dull and pointless ventures.\nCharcoal Park is where boring people go to die. No one is happy to be here.\n\nTo the East is Toxington. To the South is Polonium Hill. To the Northwest is Northwest Outskirts Edge.",
+        "str_desc": "A completely unremarkable, quiet retirement community. The citizens are fed up with slime, honestly. Pathetic little gardens rest in front of the uneven parking lots of corporate complexes housing dentists, fortune-tellers, real estate agencies, and other equally dull and pointless ventures.\nCharcoal Park is where boring people go to die. No one is happy to be here.\n\nA couple of small gazebos are set up outside a shitty apartment complex for the NLACakaNM Wildlife Safari Hunt. A volunteer is manning a small gift shop selling hunting essentials and other doodads.\n\nTo the East is Toxington. To the South is Polonium Hill. To the Northwest is Northwest Outskirts Edge.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": [
@@ -1819,7 +1819,9 @@
         "life_states": [],
         "closed": false,
         "str_closed": null,
-        "vendors": [],
+        "vendors": [
+            "Safari Gift Shop"
+        ],
         "property_class": "c",
         "is_district": true,
         "is_gangbase": false,
@@ -17101,12 +17103,10 @@
             "nbe",
             "downpourlab",
             "dplab",
-            "brainz",
-            "safaritent",
-            "safari"
+            "brainz"
         ],
         "str_name": "Nuclear Beach Edge",
-        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. The ruins of a great laboratory lay here. A few large tents have recently sprung up for the Animal Facts Wildlife Conservation Safari. The officiator of the event stands eager under his over-sized and broad-brimmed hat to receive the trophies of the hunters. A small tent housing a gift shop stocks a number of knick-knacks and doo-dads essential for any hunter worth their salt. To the South is Assault Flats Beach.",
+        "str_desc": "It's a small patch of desert on the edge of town. Go any further and you're just asking for trouble. The ruins of a great laboratory lay here. To the South is Assault Flats Beach.",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
@@ -17127,9 +17127,7 @@
         "life_states": [],
         "closed": false,
         "str_closed": null,
-        "vendors": [
-            "Safari Gift Shop"
-        ],
+        "vendors": [],
         "property_class": "",
         "is_district": false,
         "is_gangbase": false,
@@ -17144,7 +17142,7 @@
         "default_line": "",
         "default_stop": "",
         "is_transport_stop": false,
-        "is_outskirts": false,
+        "is_outskirts": true,
         "community_chest": null,
         "is_pier": false,
         "pier_type": null,

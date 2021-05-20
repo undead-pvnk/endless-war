@@ -124,26 +124,30 @@ async def summongvsenemy(cmd):
 	
 		await resp_cont.post()
 
-# SAFARI ADVENTURE KILL-A-THON CONSERVATION CODE FUCK YEAH
+# SAFARI ADVENTURE KILL-A-THON CODE FUCK YEAH
 
-# Check thee conservationist power level
+# Check thee safari power level
 async def safari_power(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	market_data = EwMarket(id_server = user_data.id_server)
 	safari_power = user_data.safari_power
 	total_safari_power = market_data.total_safari_power
-	response = "Hark! A tranquilizer dart bearing a message rains down from the heavens and strikes you in the leg. You tentatively remove it and open the message. It readeth: \n'Thou hast {} safari power, and thou city's power is {}'".format(safari_power, total_safari_power)
-	
+	if user_data.poi != ewcfg.poi_id_charcoalpark:
+		response = "You get out your trust messenger boomerang and lob it towards Charcoal Park. It returns, bearing a hastily-scribbled message: \n'Thou hast {} safari power, and thou city's power is {}'".format(safari_power, total_safari_power)
+	else: 
+		response = "You ask a volunteer about how it's going. They launch into a lengthy discussion about their recent divorce, medical problems and overall disatisfaction with the status quo. Not wanting to interrupt, you let them continue their spiel before asking about how the ***SAFARI*** is going.\n They respond: 'You have {} safari power, and the city's power is {}.'".format(safari_power, total_safari_power)
 	return await fe_utils.send_response(response, cmd)
 
 # Submit your trophies to the Safari Gods, and let ye be judg-ed
 async def safari_submit(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	market_data = EwMarket(id_server = user_data.id_server)
-	if user_data.poi != ewcfg.poi_id_nuclear_beach_edge:
-		response = "You try to hand in your hunting trophies to a random passerby. They politely point you towards the Safari Tent in Nuclear Beach Edge before sprinting away."
-	elif user_data.life_state == ewcfg.life_state_corpse:
-		response = "The Officiator brandishes a comically over-sized revolver at you and tells you he's had enough of this spooky ghost business and that you should skedaddle. Better do what he wants"
+	if user_data.poi != ewcfg.poi_id_charcoalpark:
+		response = "You try to hand in your hunting trophies to a random passerby. They politely point you towards Charcoal Park before sprinting away."
+	elif user_data.life_state == ewcfg.life_state_corpse or user_data.life_state == ewcfg.life_state_shambler:
+		response = "The volunteer responds in a meek voice that ghosts and the undead aren't allowed in the contest. They seem scared shitless."
+	elif user_data.life_state == ewcfg.life_state_kingpin:
+		response = "The volunteer nearly faints upon seeing the visage of a **KINGPIN**. Their teeth chatter uncontrollably, their knees rapidly loss strength and their sweater breaks out into spaghetti stains. 'U-h-hh-h-h-h-h-h-h-' is all they can utter before they collapse."
 	else:	
 		power_gain = 0
 		trophy_count = 0
@@ -154,9 +158,7 @@ async def safari_submit(cmd):
 		
 		for item in inv_items:
 			trophy = EwItem(id_item = item.get('id_item'))
-			
 			if trophy.item_props.get('acquisition') == ewcfg.acquisition_huntingtrophy:
-				
 				trophies_to_remove.append(trophy.id_item)
 				trophy_type = trophy.item_props.get('id_item')
 				trophy_value = ewcfg.safari_trophy_values[trophy_type]
@@ -164,7 +166,7 @@ async def safari_submit(cmd):
 				trophy_count += 1
 		
 		if trophy_count > 0:
-			# Add the value to the player's profile
+			# Add the value to the player's profile and to the total
 			user_data.safari_power += power_gain
 			market_data.total_safari_power += power_gain
 
@@ -176,8 +178,8 @@ async def safari_submit(cmd):
 			market_data.persist()
 
 			# Tell the user how many trophies they just handed in, and how many points they got
-			response = "You hand over your trophies and receive {} levels of safari power. The Officiator seems pleased with this offering.".format(power_gain)
+			response = "You hand over your trophies and receive {} levels of safari power. The volunteer smiles a weary smile.".format(power_gain)
 		else:
-			response = 'The Officiator blinks.\n"Huh? Sorry, I could\'ve sworn someone without any hunting trophies just tried to hand some in. Must\'ve been the wind."'
+			response = 'The volunteer blinks.\n"Huh? Sorry, I could\'ve sworn someone without any hunting trophies just tried to hand some in. Must\'ve been the wind."'
 
 	return await fe_utils.send_response(response, cmd)
