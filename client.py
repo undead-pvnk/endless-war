@@ -909,7 +909,11 @@ cmd_map = {
 	ewcfg.cmd_getattire: ewcmd.get_attire,
 	ewcfg.cmd_pacommand: ewkingpin.pa_command,
 	ewcfg.cmd_surveil: ewmap.surveil,
-	ewcfg.cmd_hogtie: ewkingpin.hogtie
+	ewcfg.cmd_hogtie: ewkingpin.hogtie,
+
+	# SAFARIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+	ewcfg.cmd_safaripower: ewhunting.safari_power,
+	ewcfg.cmd_safari_handin: ewhunting.safari_submit
 
 }
 
@@ -1101,6 +1105,9 @@ async def on_ready():
 		# SWILLDERMUK
 		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
+
+		# SAFARI
+		asyncio.ensure_future(loop_utils.safari_tick_loop(id_server = server.id))
 		
 		if ewcfg.gvs_active:
 			asyncio.ensure_future(loop_utils.gvs_gamestate_tick_loop(id_server=server.id))

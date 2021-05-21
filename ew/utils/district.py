@@ -173,6 +173,29 @@ class EwDistrict(EwDistrictBase):
 
 		return filtered_enemies
 
+
+# Check if a type of enemy is in a district, e.g. if a Mammoslime is in Downtown. Returns bool.
+
+	def enemy_type_in_district(self,
+			search_type = ""):
+		answer = False
+		
+		enemies = bknd_core.execute_sql_query("SELECT {enemy_type} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1".format(
+			enemy_type = ewcfg.col_enemy_type,
+			poi = ewcfg.col_enemy_poi,
+			life_state = ewcfg.col_enemy_life_state
+		),(
+			self.id_server,
+			self.name
+		))
+		
+		if search_type != "":
+			for enemy_type_column in enemies:
+				enemy_type = enemy_type_column[0]
+				if search_type == enemy_type:
+					answer = True
+		return answer
+
 	def decay_capture_points(self):
 		resp_cont_decay = EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
 		if self.capture_points > 0:
