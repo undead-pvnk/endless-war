@@ -100,10 +100,18 @@ def get_weapon_type_stats(weapon_type):
 
 	return types[weapon_type]
 
-def get_normal_attack(weapon_type = "normal", cost_multiplier = None):
+def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_multiplier = None, crit_chance = None, crit_multiplier = None, hit_chance = None):
 	weapon_stats = get_weapon_type_stats(weapon_type)
 	if cost_multiplier:
 		weapon_stats["cost_multiplier"] = cost_multiplier
+	if damage_multiplier:
+		weapon_stats["damage_multiplier"] = damage_multiplier
+	if crit_chance:
+		weapon_stats["crit_chance"] = crit_chance
+	if crit_multiplier:
+		weapon_stats["crit_multiplier"] = crit_multiplier
+	if hit_chance:
+		weapon_stats["hit_chance"] = hit_chance
 
 	def get_hit_damage(ctn):
 		hit_damage = 0
