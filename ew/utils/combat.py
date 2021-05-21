@@ -951,6 +951,7 @@ class EwEnemy(EwEnemyBase):
 		try:
 			# Raid bosses can move into other parts of the outskirts as well as the city, including district zones.
 			destinations = set(poi_static.poi_neighbors.get(self.poi))
+			all_destinations = set(destinations)
 
 			if self.enemytype in ewcfg.gvs_enemies:
 				path = [ewcfg.poi_id_assaultflatsbeach, ewcfg.poi_id_vagrantscorner, ewcfg.poi_id_greenlightdistrict,
@@ -968,7 +969,7 @@ class EwEnemy(EwEnemyBase):
 
 			# Filter subzones and gang bases out.
 			# Nudge raidbosses into the city.
-			for destination in destinations:
+			for destination in all_destinations:
 
 				destination_poi_data = poi_static.id_to_poi.get(destination)
 				if destination_poi_data.is_subzone or destination_poi_data.is_gangbase:
