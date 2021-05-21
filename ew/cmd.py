@@ -1,4 +1,5 @@
 import asyncio
+from ew.backend import server
 import random
 import sys
 import time
@@ -35,6 +36,7 @@ from .utils import hunting as hunt_utils
 from .utils import item as itm_utils
 from .utils import rolemgr as ewrolemgr
 from .utils import stats as ewstats
+from .utils import leaderboard as bknd_leaderboard
 from .utils.combat import EwEnemy
 from .utils.combat import EwUser
 from .utils.district import EwDistrict
@@ -4361,4 +4363,16 @@ async def assign_status_effect(cmd = None, status_name = None, user_id = None, s
 		user_data = EwUser(member=target)
 		response = user_data.applyStatus(id_status=status_name, source=user_data.id_user, id_target=user_data.id_user)
 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+async def post_leaderboard(cmd):
+	author = cmd.message.author
+	if not author.guild_permissions.administrator:
+		return
+	user_data = EwUser(member = author)
+	client = cmd.client
+	server = client.get_guild(user_data.id_server)
+	# Check for permissions
+	await bknd_leaderboard.post_leaderboards(client=client, server=server)
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, "Yee-haw! Just refreshed that their leaderboard for ya sonny!")
+
 
