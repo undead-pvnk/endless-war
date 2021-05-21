@@ -4028,15 +4028,17 @@ async def get_attire(cmd):
 
 
 async def check_mastery(cmd):
-	message_line = "You are a rank {} master of the {}. \n"
 	message = "\nYou close your eyes for a moment, recalling your masteries. \n"
 	if cmd.mentions_count > 0:
 		response = "You can only recall your own weapon masteries!"
 	else:
 		wepskills = ewutils.weaponskills_get(member=cmd.message.author)
 		for skill, level in wepskills.items():
+			# Now actually grabs the mastery string! Rejoice!
+			weapon_response = (static_weapons.weapon_map[skill]).str_weaponmaster_self + '\n'
+			# Only print masteries at 1 or above
 			if level.get("skill") >= 5:
-				message += message_line.format(level["skill"]-4, skill.lower())
+				message += weapon_response.format(rank = level["skill"]-4)
 		response = message
 
 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

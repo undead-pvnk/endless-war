@@ -272,6 +272,18 @@ def wef_fingernails(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
+def wef_harpoon(ctn = None):
+	aim = 100
+	#GNNNNRHRRRHHRHRHRHRHH I NEED BOTH ME HANDS TO WIELD THIS SUNUVABITCH!
+	if ctn.user_data.sidearm != -1:
+		aim = (random.randrange(11) + 1)
+	ctn.slimes_damage = int(ctn.slimes_damage * 3)
+	aim *= ctn.hit_chance_mod
+	if aim >= 10:
+		ctn.miss = False
+	else:
+		ctn.miss = True
+
 # All weapons in the game.
 weapon_list = [
 	EwWeapon( # 1
@@ -1453,25 +1465,25 @@ EwWeapon( # 38
 			"harpoongun"
 		],
 		str_crit = "**Critical hit!!** {name_target}'s totally hooked!!",
-		str_miss = "**You missed!!** {name_player} misses {name_target}! They start frantically re-winding the harpoon!",
+		str_miss = "**You missed!!** {name_player} misses {name_target}! FUCK!!",
 		str_equip = "You equip the harpoon gun.",
 		str_name = "harpoon gun",
 		str_weapon = "a harpoon gun",
 		str_weaponmaster_self = "You are a rank {rank} salty seaman of the harpoon gun.",
 		str_weaponmaster = "They are a rank {rank} salty seaman of the harpoon gun.",
-		str_kill = "**YARRR!!** {name_player} fires a harpoon right into {name_target}'s heart! {name_target} is dragged up on deck, vanquished. {emote_skull}",
+		str_kill = "**YARRR!!** {name_player} fires a harpoon right into {name_target}! {name_target} is dragged up on deck, vanquished. {emote_skull}",
 		str_killdescriptor = "harpooned",
-		str_damage = "{name_players} harpoons {name_target}’s {hitzone}!!",
+		str_damage = "{name_player} harpoons {name_target}’s {hitzone}!!",
 		str_duel = "**...** {name_player} and {name_target} dock their vessels next to one another, locked in a stern gaze. Suddenly, harpoons erupt from either vessel, smashing through timber and flesh alike",
-		str_description = "It's a harpoon gun, seemingly ripped right from the deck of a whaling vessel.",
-		str_reload = "You frantically start reeling the harpoon back. Oh shit oh fuck oh shit oh fuck!!!",
-		str_reload_warning = "**AVAST!** {name_player}’s harpoon be layin' on the ground!!",
-		str_scalp = "The scalp is drenched in a salty brine. It emanates a feeling of satisfaction",
-		fn_effect = get_normal_attack(weapon_type = 'ultraheavy'),
+		str_description = "It's a harpoon gun, seemingly ripped right from the deck of a whaling vessel. You're going to need both hands free to wield this thing properly, that means no sidearms, you shmuck!",
+		str_reload = "...aaaaand reloaded! The harpoon is ready to fire again!",
+		str_reload_warning = "**AVAST!** {name_player}’s harpoon is laying on the ground!!",
+		str_scalp = "The scalp is drenched in a salty brine.",
+		fn_effect = wef_harpoon,
 		classes= [ewcfg.weapon_class_ammo],
 		stat = ewcfg.stat_harpoon_kills,
-		clip_size= 1,
-		cooldown = 2
+		# YOU EITHER KILL 'EM OR YOU DON'T, BROTHER
+		clip_size= 1
 	),
 
 

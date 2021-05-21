@@ -1904,6 +1904,19 @@ async def reload(cmd):
 		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 		if ewcfg.weapon_class_ammo in weapon.classes:
+			if weapon.id_weapon == ewcfg.weapon_id_harpoon:
+				# Because this takes so long, we check a couple times if the player has died
+				response = "You start frantically reloading the harpoon gun..."
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+				await asyncio.sleep(2)
+				if user_data.life_state == ewcfg.life_state_corpse:
+					return
+				response = "...oh god oh fuck oh fuck oh god oh fuck oh shit..."
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+				await asyncio.sleep(3)
+				if user_data.life_state == ewcfg.life_state_corpse:
+					return
+
 			weapon_item.item_props["ammo"] = weapon.clip_size
 			weapon_item.persist()
 			response = weapon.str_reload
@@ -1913,7 +1926,7 @@ async def reload(cmd):
 		sidearm_item = EwItem(id_item=user_data.sidearm)
 		sidearm = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
 
-		if ewcfg.weapon_class_ammo in sidearm.classes:
+		if ewcfg.weapon_class_ammo in sidearm.classes and sidearm.id_weapon != ewcfg.weapon_id_harpoon:
 			sidearm_item.item_props["ammo"] = sidearm.clip_size
 			sidearm_item.persist()
 			if response != "":
