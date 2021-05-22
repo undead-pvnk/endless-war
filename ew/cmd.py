@@ -1271,7 +1271,6 @@ async def help(cmd):
 	# Send the response to the player.
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-
 """
 	Link to the world map.
 """
@@ -1303,12 +1302,29 @@ async def booru(cmd):
 async def bandcamp(cmd):
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Rowdy Fuckers Cop Killers Bandcamp: https://rowdyfuckerscopkillers.bandcamp.com/releases'))
 
-
 """
 	Link to the leaderboards on ew.krakissi.net.
 """
 async def leaderboard(cmd):
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Live leaderboards: https://ew.krakissi.net/stats/'))
+
+"""
+	Link to the current GitHub repository.
+"""
+async def github(cmd):
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Current Rowdy Fuckers Cop Killers GitHub repository: https://github.com/aristotlepenguin/endless-war'))
+
+"""
+	Link to the current pull requests in the GitHub repository.
+"""
+async def pulls(cmd):
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Current pull requests in the GitHub repository: https://github.com/aristotlepenguin/endless-war/pulls'))
+
+"""
+	Link to the Gameplay category in the RFCK wiki
+"""
+async def tutorial(cmd):
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'In-depth tutorial of all the gameplay mechanics in the Endless War: https://rfck.miraheze.org/wiki/Category:Gameplay'))
 
 """ Accept a russian roulette challenge """
 async def accept(cmd):
@@ -2064,7 +2080,11 @@ async def jump(cmd):
 						return
 
 	elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
-		response = "You jump. Nope. Still not good at parkour."
+		roll = random.randrange(25)
+			if roll == 0:
+				response = "You start running and taking momentum to then make the fucking highest jump you've ever done. When you reach the ground, you somehow manage to do a sommersault landing. Damn, guess you were good at parkour in the end!"
+			else:
+				response = "You jump. Nope. Still not good at parkour."
 	elif user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're already dead. You'd just ghost hover above the cliff."
 	elif user_data.life_state == ewcfg.life_state_kingpin:
