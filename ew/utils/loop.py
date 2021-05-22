@@ -11,6 +11,7 @@ from . import hunting as hunt_utils
 from . import item as itm_utils
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
+from .. import debugrelics as debugrel
 from .combat import EwEnemy
 from .combat import EwUser
 from .district import EwDistrict
@@ -146,7 +147,7 @@ def decaySlimes(id_server = None):
 
 			for user in users:
 				user_data = EwUser(id_user = user[0], id_server = id_server)
-				slimes_to_decay = user_data.slimes - (user_data.slimes * (.5 ** (ewcfg.update_market / ewcfg.slime_half_life)))
+				slimes_to_decay = user_data.slimes - (user_data.slimes * (.5 ** (ewcfg.update_market / debugrel.calc_half_life(id_server=id_server, slime=user_data.slimes))))
 
 				#round up or down, randomly weighted
 				remainder = slimes_to_decay - int(slimes_to_decay)

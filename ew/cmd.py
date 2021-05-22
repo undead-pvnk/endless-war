@@ -2560,11 +2560,14 @@ async def manual_soulbind(cmd):
 		await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 	else:
 		return
-	
+
+
+
 #Debug
 async def set_slime(cmd):
 	if not cmd.message.author.guild_permissions.administrator:
 		return
+
 	
 	response = ""
 	target = None

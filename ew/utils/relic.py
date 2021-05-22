@@ -5,7 +5,7 @@ def canCreateRelic(item, id_server):
     if state.bit is not None:
         return None
     else:
-        state.bit = 1
+        state.bit = 0
         state.value = ""
         state.persist()
         return 1

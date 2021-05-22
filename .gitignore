@@ -7,6 +7,7 @@ ewdebugrelics.py
 debug.py
 ewdebug.py
 ew/debug.py
+ew/debugrelics.py
 cfg_exporter.py
 .idea
 .idea/workspace.xml
@@ -14,3 +15,6 @@ cfg_exporter.py
 .vs
 *.lnk
 *.g5r~
+ew/debugrelics.py
+ew/debugrelics.py
+ew/static/relic.py

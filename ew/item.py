@@ -7,6 +7,7 @@ import discord
 from . import debug as ewdebug
 from . import prank as ewprank
 from . import smelting as ewsmelting
+from . import debugrelics as ewdebugrelics
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 from .backend.item import EwItem
@@ -16,6 +17,7 @@ from .static import cosmetics
 from .static import hue as hue_static
 from .static import poi as poi_static
 from .static import weapons as static_weapons
+from .static import relic as static_relic
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
 from .utils import item as itm_utils
@@ -521,6 +523,12 @@ async def item_use(cmd):
         if item.item_type == ewcfg.it_weapon:
             response = user_data.equip(item)
             user_data.persist()
+
+        if item.item_type == ewcfg.it_relic:
+            id = item.item_props.get('id_relic')
+            function = static_relic.relic_functions.get(id)
+            if function is not None:
+                return await function(cmd=cmd)
 
         if item.item_type == ewcfg.it_item:
             name = item_sought.get('name')

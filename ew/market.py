@@ -392,7 +392,7 @@ async def museum_donate(cmd):
 
             response = await art_donate(item_obj.id_item, cmd)
         else:
-            response = "The curator turns his nose at your offering and sneers. Guess the pompous prick only takes relics, fish, and framed pictures."
+            response = "The curator turns his nose at your offering. Guess the prick only takes relics, fish, and framed pictures."
     else:
         response = "You don't have that item."
 
@@ -424,7 +424,7 @@ async def fish_donate(id_item, cmd):
         current_record.id_user = cmd.message.author.id
 
         player = EwPlayer(id_user=item_obj.id_owner, id_server=cmd.guild.id)
-        museum_text = "\n{}\nDonated by {}\n\nLENGTH:{} INCHES\n{}".format(item_obj.item_props.get('food_name').upper(), player.display_name, item_obj.item_props.get('length'), item_obj.item_props.get('food_desc'))
+        museum_text = "\n{}\nDonated by {}\n*...*\nLENGTH:{} INCHES\n{}".format(item_obj.item_props.get('food_name').upper(), player.display_name, item_obj.item_props.get('length'), item_obj.item_props.get('food_desc'))
         sent_message = await fe_utils.send_message(cmd.client, aquarium, museum_text)
         current_record.id_post = sent_message.id
         current_record.persist()
@@ -452,7 +452,7 @@ async def relic_donate(id_item, cmd):
         payout = relic_obj.amount_yield
         player = EwPlayer(id_user=item_obj.id_owner, id_server=cmd.guild.id)
 
-        museum_text = "{}\nDiscovered by {}\n\n{}".format(relic_obj.str_name, player.display_name, relic_obj.str_museum)
+        museum_text = "{}\nDiscovered by {}\n*...*\n{}\n-------------------------------------------------".format(relic_obj.str_name, player.display_name, relic_obj.str_museum)
 
         relic_channel = fe_utils.get_channel(server=cmd.guild, channel_name='relic-exhibits')
         sent_message = await fe_utils.send_message(cmd.client, relic_channel, museum_text)
@@ -476,24 +476,36 @@ async def art_donate(id_item, cmd):
     item_obj = EwItem(id_item=id_item)
 
     if item_obj.item_props.get('furniture_desc') == 'https://cdn11.bigcommerce.com/s-cece8/images/stencil/1280x1280/products/305/1506/010420__10394.1343058001.jpg?c=2&imbypass=on':
-        response = "\"Suuuuuuure. Pictures of spoons. We've never gotten that one before... But seriously. Get out of here.\""
-        print('third')
+        response = "\"Suuuuuuure. Pictures of spoons. That's nice... Uh...How about you go play outside? I don't think you belong here.\""
+
     else:
         gamestate = EwGamestate(id_server=item_obj.id_server, id_state='artplayer')
         if gamestate is not None:
 
             if item_obj.item_props.get('title') is not None:
+                new_record = EwRecord(id_server=cmd.guild_id, record_type = item_obj.item_props.get('title'))
+                if new_record.id_user != -1:
+                    return "\"Sorry, it looks like that title is already taken. I'll assume that isn't a forgery and just uh...look the other way.\""
+                elif "::" in item_obj.item_props.get('title'):
+                    return "\"Are you trying to commit fraud? Don't put so many colons in the title.\""
+                else:
+                    new_record.id_user = item_obj.id_owner
+                    new_record.legality  = 1
+                    new_record.id_image = item_obj.item_props.get('furniture_desc')
+                    new_record.persist()
+
 
                 bknd_item.give_item(id_item=id_item, id_user=gamestate.value, id_server=item_obj.id_server)
-                response = '"OK, thank you for your donation. We\'ll probably maybe add it to our collection once our appraisers get to it. Go along now. Shoo."'
+                response = '"OK, thank you for your donation. We\'ll probably maybe add it to our collection once our appraisers get to it. Go along now."'
+
 
                 player_obj = EwPlayer(id_user=item_obj.id_owner, id_server=cmd.guild.id)
                 artserv = fe_utils.get_channel(server=cmd.guild, channel_name='deviant-splaart')
-                post_text = "{}\nBy {}\n\n{}".format(item_obj.item_props.get('title'), player_obj.display_name, item_obj.item_props.get('furniture_desc'))
+                post_text = "{}::\nBy {}\n\n{}".format(item_obj.item_props.get('title'), player_obj.display_name, item_obj.item_props.get('furniture_desc'))
                 await fe_utils.send_message(cmd.client, artserv, post_text)
 
             else:
-                response = "\"Bah, it doesn't have a title! Just because you're disposable doesn't mean your art is.\""
+                response = "\"It doesn't have a title! Get one and I'll add it after that.\" "
         else:
             response = '\"Sorry, we\'re not collecting donations from your kind at this time. Please refrain from stinking up the general vicinity.\"'
     return response
