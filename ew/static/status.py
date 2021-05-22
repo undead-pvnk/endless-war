@@ -247,6 +247,13 @@ status_effect_list = [
 		str_acquire= "They're tied up like a hog on a summer sunday.",
 		str_describe_self= "You're tied up like a hog on a summer sunday."
 	),
+	EwStatusEffectDef(
+		id_status = ewcfg.status_pheromones_id,
+		time_expire = ewcfg.time_expire_repel_base,
+		str_acquire = "You spray yourself with Kinkfish pheromones.",
+		str_describe = "They smell horrible, but strangely... alluring?",
+		str_describe_self = "You smell horrible, but strangely... alluring?"
+	)
 ]
 
 status_effects_def_map = {}

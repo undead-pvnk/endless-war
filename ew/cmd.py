@@ -1,4 +1,5 @@
 import asyncio
+from ew.backend import server
 import random
 import sys
 import time
@@ -35,6 +36,7 @@ from .utils import hunting as hunt_utils
 from .utils import item as itm_utils
 from .utils import rolemgr as ewrolemgr
 from .utils import stats as ewstats
+from .utils import leaderboard as bknd_leaderboard
 from .utils.combat import EwEnemy
 from .utils.combat import EwUser
 from .utils.district import EwDistrict
@@ -145,7 +147,7 @@ async def cmd_moan(cmd):
 	await fe_utils.send_response(response, cmd)
 
 
-def gen_score_text(ew_id):
+def gen_score_text(ew_id, skune):
 
 	user_data = EwUser(ew_id = ew_id)
 
@@ -153,12 +155,13 @@ def gen_score_text(ew_id):
 
 	poudrin_amount = bknd_item.find_poudrin(id_user = user_data.id_user, id_server = user_data.id_server)
 
+
 	if user_data.life_state == ewcfg.life_state_grandfoe:
 		# Can't see a raid boss's slime score.
 		response = "{}'s power is beyond your understanding.".format(ew_id.display_name)
 	else:
 		# return somebody's score
-		response = "{} currently has {:,} slime{}.".format(ew_id.display_name, user_data.slimes, (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
+		response = "{} currently has {:,} {}{}.".format(ew_id.display_name, user_data.slimes, "slime" if skune is False else "skune", (" and {} {} poudrin{}".format(poudrin_amount, "slime" if skune is False else "skune", ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
 
 	return response
 
@@ -185,12 +188,12 @@ async def score(cmd):
 		poudrin_amount = bknd_item.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.guild.id)
 
 		# return my score
-		response = "You currently have {:,} {}{}.".format(user_data.slimes, "slime" if skune is False else "skune", (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
+		response = "You currently have {:,} {}{}.".format(user_data.slimes, "slime" if skune is False else "skune", (" and {} {} poudrin{}".format(poudrin_amount, "slime" if skune is False else "skune", ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
 	
 	# other user slime check
 	else:
 		member = cmd.mentions[0] # for ewrolemgr
-		response = gen_score_text(ew_id = cmd.mention_ids[0])
+		response = gen_score_text(ew_id = cmd.mention_ids[0], skune = skune)
 
 	time_now_msg_start = int(time.time())
 	# Send the response to the player.
@@ -1268,7 +1271,6 @@ async def help(cmd):
 	# Send the response to the player.
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-
 """
 	Link to the world map.
 """
@@ -1300,12 +1302,17 @@ async def booru(cmd):
 async def bandcamp(cmd):
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Rowdy Fuckers Cop Killers Bandcamp: https://rowdyfuckerscopkillers.bandcamp.com/releases'))
 
-
 """
 	Link to the leaderboards on ew.krakissi.net.
 """
 async def leaderboard(cmd):
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Live leaderboards: https://ew.krakissi.net/stats/'))
+
+"""
+	Link to the Gameplay category in the RFCK wiki
+"""
+async def tutorial(cmd):
+	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'In-depth tutorial of all the gameplay mechanics in the Endless War: https://rfck.miraheze.org/wiki/Category:Gameplay'))
 
 """ Accept a russian roulette challenge """
 async def accept(cmd):
@@ -2061,7 +2068,11 @@ async def jump(cmd):
 						return
 
 	elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
-		response = "You jump. Nope. Still not good at parkour."
+		roll = random.randrange(25)
+		if roll == 0:
+			response = "You start running and taking momentum to then make the fucking highest jump you've ever done. When you reach the ground, you somehow manage to do a sommersault landing. Damn, guess you were good at parkour in the end!"
+		else:
+			response = "You jump. Nope. Still not good at parkour."
 	elif user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're already dead. You'd just ghost hover above the cliff."
 	elif user_data.life_state == ewcfg.life_state_kingpin:
@@ -4025,15 +4036,19 @@ async def get_attire(cmd):
 
 
 async def check_mastery(cmd):
-	message_line = "You are a rank {} master of the {}. \n"
 	message = "\nYou close your eyes for a moment, recalling your masteries. \n"
 	if cmd.mentions_count > 0:
 		response = "You can only recall your own weapon masteries!"
 	else:
 		wepskills = ewutils.weaponskills_get(member=cmd.message.author)
 		for skill, level in wepskills.items():
+			# Now actually grabs the mastery string! Rejoice!
+			weapon_response = (static_weapons.weapon_map[skill]).str_weaponmaster_self + '\n'
+			if weapon_response == "\n":
+				continue
+			# Only print masteries at 1 or above
 			if level.get("skill") >= 5:
-				message += message_line.format(level["skill"]-4, skill.lower())
+				message += weapon_response.format(rank = level["skill"]-4)
 		response = message
 
 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -4298,4 +4313,16 @@ async def assign_status_effect(cmd = None, status_name = None, user_id = None, s
 		user_data = EwUser(member=target)
 		response = user_data.applyStatus(id_status=status_name, source=user_data.id_user, id_target=user_data.id_user)
 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+async def post_leaderboard(cmd):
+	author = cmd.message.author
+	if not author.guild_permissions.administrator:
+		return
+	user_data = EwUser(member = author)
+	client = cmd.client
+	server = client.get_guild(user_data.id_server)
+	# Check for permissions
+	await bknd_leaderboard.post_leaderboards(client=client, server=server)
+	return await fe_utils.send_message(cmd.client, cmd.message.channel, "Yee-haw! Just refreshed that their leaderboard for ya sonny!")
+
 

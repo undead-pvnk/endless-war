@@ -3,6 +3,7 @@ import asyncio
 import math
 import random
 import time
+import datetime
 
 from . import combat as cmbt_utils
 from . import core as ewutils
@@ -751,10 +752,9 @@ async def decrease_food_multiplier(id_user):
 		ewutils.food_multiplier[id_user] = max(0, ewutils.food_multiplier.get(id_user) - 1)
 
 async def spawn_enemies(id_server = None):
+	market_data = EwMarket(id_server=id_server)
 	if random.randrange(3) == 0:
 		weathertype = ewcfg.enemy_weathertype_normal
-		market_data = EwMarket(id_server=id_server)
-		
 		# If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
 		if market_data.weather == ewcfg.weather_bicarbonaterain:
 			if random.randrange(3) < 2:
@@ -763,7 +763,7 @@ async def spawn_enemies(id_server = None):
 		resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype)
 
 		await resp_cont.post()
-
+		
 	# TODO remove after double halloween
 	#market_data = EwMarket(id_server=id_server)
 	#underworld_district = EwDistrict(district=ewcfg.poi_id_underworld, id_server=id_server)
@@ -1024,3 +1024,46 @@ async def pay_salary(id_server=None):
 		cursor.close()
 		bknd_core.databaseClose(conn_info)
 
+async def safari_tick_loop(id_server):
+	# DEBUG
+	# interval = 10
+
+	while not ewutils.TERMINATE:
+		interval = 120  # every two minutes, we don't need to do this that often
+		await asyncio.sleep(interval)
+		await safari_checkboss(id_server)
+		await safari_spawnboss(id_server)
+
+async def safari_checkboss(id_server):
+	current_date = datetime.date.today()
+	market_data = EwMarket(id_server)
+	safari_date_map = ewcfg.safari_boss_date_map
+	# Check what the current date is, check if there is a safari boss for that date, and then update that to market_data
+	# We also do another check to see if we need to update it (or if the value is already correct) to save on .persist() calls
+	if current_date in safari_date_map:
+		if market_data.current_safari_boss != safari_date_map[current_date]:
+			market_data.current_safari_boss = safari_date_map[current_date]
+			market_data.persist()
+		else:
+			return
+	else:
+		if market_data.current_safari_boss != "":
+			market_data.current_safari_boss = ""
+			market_data.persist()
+
+async def safari_spawnboss(id_server):
+	market_data = EwMarket(id_server)
+	client = ewcfg.get_client()
+		# TODO remove after safari event
+	# Every 4 in-game hours the safari bosses will try to respawn
+	# They won't spawn if any safari bosses are still alive
+	safari_district  = EwDistrict(id_server=id_server, district=ewcfg.poi_id_downtown)
+	# Check if any of the safari bosses are already active
+	if not (safari_district.enemy_type_in_district(market_data.current_safari_boss)):
+		if market_data.clock == 0 or market_data.clock % 4 == 0:
+			sb_resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_type=market_data.current_safari_boss, pre_chosen_poi=ewcfg.poi_id_downtown, manual_spawn=True)
+			await sb_resp_cont.post()
+			announce_response = "**Attention all hunters! Reports of a strange beast in Downtown! Get down there!**"
+			for channel in ewcfg.hideout_channels:
+				await fe_utils.send_message(client, channel, text=announce_response)
+	

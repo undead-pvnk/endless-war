@@ -866,8 +866,8 @@ def spawn_enemy(
 			sub_enemy_list_item_count = 0
 
 			while sub_enemy_list_item_count < sub_enemies_list_item_max:
-				sub_enemy_type = sub_enemies_list[sub_enemy_list_item_count][0]
-				sub_enemy_spawning_max = sub_enemies_list[sub_enemy_list_item_count][1]
+				sub_enemy_type = sub_enemies_list[0]
+				sub_enemy_spawning_max = sub_enemies_list[1]
 				sub_enemy_spawning_count = 0
 
 				sub_enemy_list_item_count += 1

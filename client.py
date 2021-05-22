@@ -262,6 +262,7 @@ cmd_map = {
 
 	ewcfg.cmd_toss: ewcmd.toss_off_cliff,
 	ewcfg.cmd_jump: ewcmd.jump,
+	ewcfg.cmd_jump_alt1: ewcmd.jump,
 	ewcfg.cmd_push: ewcmd.push,
 	ewcfg.cmd_push_alt_1: ewcmd.push,
 	ewcfg.cmd_push_alt_2: ewcmd.push,
@@ -327,6 +328,11 @@ cmd_map = {
 	ewcfg.cmd_possess_fishing_rod_alt3: ewspooky.possess_fishing_rod,
 	ewcfg.cmd_possess_fishing_rod_alt4: ewspooky.possess_fishing_rod,
 
+	# ghosts can dissolve this contract if they want to
+	ewcfg.cmd_unpossess_fishing_rod: ewspooky.unpossess_fishing_rod,
+	ewcfg.cmd_unpossess_fishing_rod_alt1: ewspooky.unpossess_fishing_rod,
+	ewcfg.cmd_unpossess_fishing_rod_alt2: ewspooky.unpossess_fishing_rod,
+	
 	# ghosts can turn their negaslime into negapoudrins
 	ewcfg.cmd_crystalize_negapoudrin: ewspooky.crystalize_negapoudrin,
 	ewcfg.cmd_crystalize_negapoudrin_alt1: ewspooky.crystalize_negapoudrin,
@@ -335,21 +341,27 @@ cmd_map = {
 	
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
+	ewcfg.cmd_slimepachinko_alt1: ewcasino.pachinko,
 
 	# Toss the dice at slime craps!
 	ewcfg.cmd_slimecraps: ewcasino.craps,
+    	ewcfg.cmd_slimecraps_alt1: ewcasino.craps,
 
 	# Pull the lever on a slot machine!
 	ewcfg.cmd_slimeslots: ewcasino.slots,
+	ewcfg.cmd_slimeslots_alt1: ewcasino.slots,
 
 	# Play slime roulette!
 	ewcfg.cmd_slimeroulette: ewcasino.roulette,
+    	ewcfg.cmd_slimeroulette_alt1: ewcasino.roulette,
 
 	# Play slime baccarat!
 	ewcfg.cmd_slimebaccarat: ewcasino.baccarat,
+    	ewcfg.cmd_slimebaccarat_alt1: ewcasino.baccarat,
 
 	# Play slime skat!
 	ewcfg.cmd_slimeskat: ewcasino.skat,
+    	ewcfg.cmd_slimeskat_alt1: ewcasino.skat,
 	ewcfg.cmd_slimeskat_join: ewcasino.skat_join,
 	ewcfg.cmd_slimeskat_decline: ewcasino.skat_decline,
 	ewcfg.cmd_slimeskat_bid: ewcasino.skat_bid,
@@ -599,6 +611,7 @@ cmd_map = {
 	ewcfg.cmd_wiki: ewcmd.wiki,
 	ewcfg.cmd_booru: ewcmd.booru,
 	ewcfg.cmd_bandcamp: ewcmd.bandcamp,
+	ewcfg.cmd_tutorial: ewcmd.tutorial,
 	ewcfg.cmd_leaderboard: ewcmd.leaderboard,
 	ewcfg.cmd_leaderboard_alt1: ewcmd.leaderboard,
 
@@ -771,6 +784,9 @@ cmd_map = {
 	ewcfg.cmd_release_alt1: ewcmd.release,
 	ewcfg.cmd_balance_cosmetics: ewcmd.balance_cosmetics,
 
+	# force print the leaderboard
+	ewcfg.cmd_post_leaderboard: ewcmd.post_leaderboard,
+
 	# grant slimecorp executive status
 	ewcfg.cmd_promote: ewcmd.promote,
 	
@@ -909,7 +925,11 @@ cmd_map = {
 	ewcfg.cmd_getattire: ewcmd.get_attire,
 	ewcfg.cmd_pacommand: ewkingpin.pa_command,
 	ewcfg.cmd_surveil: ewmap.surveil,
-	ewcfg.cmd_hogtie: ewkingpin.hogtie
+	ewcfg.cmd_hogtie: ewkingpin.hogtie,
+
+	# SAFARIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+	ewcfg.cmd_safaripower: ewhunting.safari_power,
+	ewcfg.cmd_safari_handin: ewhunting.safari_submit
 
 }
 
@@ -1101,6 +1121,9 @@ async def on_ready():
 		# SWILLDERMUK
 		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
+
+		# SAFARI
+		asyncio.ensure_future(loop_utils.safari_tick_loop(id_server = server.id))
 		
 		if ewcfg.gvs_active:
 			asyncio.ensure_future(loop_utils.gvs_gamestate_tick_loop(id_server=server.id))

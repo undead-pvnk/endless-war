@@ -135,7 +135,7 @@ item_def_list = [
 			"id_book": 69,
 			"book_desc": "A book by AUTHOR, published on DAY."
 		}
-	),
+	)
 ]
 
 # A map of item_type to EwItemDef objects.
@@ -494,7 +494,7 @@ item_list = [
 		],
 		str_name="Juvie Grade FUCK ENERGY Body Spray",
 		str_desc="A canister of perfume. Somehow doubles as a slime beast repellant. The label on the back says it lasts for three hours.",
-		vendors=[ewcfg.vendor_glocksburycomics],
+		vendors=[ewcfg.vendor_glocksburycomics, ewcfg.vendor_safari],
 		price=10000,
 	),
 	EwGeneralItem(
@@ -1552,7 +1552,183 @@ EwGeneralItem(
 		ingredients=[ewcfg.item_id_poketubereyes],
 		enemytype="poketubers"
 	),
-
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_juvie,
+		str_name = "Juvie Hunting Trophy",
+		str_desc = "A hunting trophy flayed from the flesh of a still-living Juvenile. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_dinoslime,
+		str_name = "Dinoslime Hunting Trophy",
+		str_desc = "A hunting trophy pried from the sticky jaws of a Dinoslime. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_slimeadactyl,
+		str_name = "Slimeadactyl Hunting Trophy",
+		str_desc = "A hunting trophy ripped from the wing of a Slimeadactyl. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_microslime,
+		str_name = "Microslime Hunting Trophy",
+		str_desc = "A hunting trophy sampled from the body of a Microslime. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_slimeofgreed,
+		str_name = "Slime of Greed Hunting Trophy",
+		str_desc = "A hunting trophy found within the depths of a Slime of Greed. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_desertraider,
+		str_name = "Desert Raider Hunting Trophy",
+		str_desc = "A hunting trophy scalped from the head of a Desert Raider. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_mammoslime,
+		str_name = "Mammoslime Hunting Trophy",
+		str_desc = "A hunting trophy sawed from the tusk of a fallen Mammoslime. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_megaslime,
+		str_name = "Megaslime Hunting Trophy",
+		str_desc = "A hunting trophy extracted from the core of a Megaslime. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_srex,
+		str_name = "Slimeasaurus Rex Hunting Trophy",
+		str_desc = "A hunting trophy plucked from the toes of a vanquished Slimeasaurus Rex. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_dragon,
+		str_name = "Green Eyes Slime Dragon Hunting Trophy",
+		str_desc = "A hunting trophy sawed from the tusk of a fallen Mammoslime. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_ufo,
+		str_name = "UFO Hunting Trophy",
+		str_desc = "A ███████ trophy ████ed from the ██████ of a UFO. Ahhh, the thrill of the ████...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_mammoslimebull,
+		str_name = "Mammoslime Bull Trophy",
+		str_desc = "A hunting trophy carved from the tusk of a fallen Mammoslime Bull. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_rivalhunter,
+		str_name = "Rival Hunter Trophy",
+		str_desc = "A hunting trophy \"borrowed\" from the head of a Rival Hunter. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_bustedrifle,
+		str_name = "Busted Rifle",
+		str_desc = "A hunting rifle snapped in twain. If only you could repair it somehow..."
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_repairkit,
+		str_name = "Field Repair Kit",
+		alias = ["repairkit", "fieldrepair"],
+		str_desc = "A field repair kit for pantaloons, brunches, spyglasses and manners. Could be used to repair a hunting rifle too, in a pinch.",
+		price = 500000,
+		vendors = [ewcfg.vendor_safari]
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_spacecarp,
+		str_name = "Space Carp Trophy",
+		str_desc = "A hunting trophy wrenched from the mouth of a Space Carp. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_carpotoxin,
+		str_name = "Carpotoxin",
+		str_desc = "This stuff is incredibly poisonous. Good thing you're not going to drink it, hahah..."
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_moonrock,
+		str_name = "Moon Rock",
+		str_desc = "A piece of the Moon, now in your grubby little hands.",
+		price = 100000
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_gull,
+		str_name = "Gull Trophy",
+		str_desc = "A hunting trophy snatched from the wings of a Gull. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_rainwing,
+		str_name = "Rain Wing",
+		str_desc = "A feather obtained from a gull. Folklore says this can be used to herald rain.",
+		context  = "rain"
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_garfield,
+		str_name = "Garfield Trophy",
+		str_desc = "A hunting trophy sliced from the paws of Garfield. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_n400,
+		str_name = "N400 Trophy",
+		str_desc = "A hunting trophy requisitioned from N400. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_styx,
+		str_name = "Styx Trophy",
+		str_desc = "A hunting trophy shaved from Styx. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_prairieking,
+		str_name = "Prairie King Trophy",
+		str_desc = "A hunting trophy nabbed from the itty bitty hands of the Prarie King. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_wailord,
+		str_name = "Wailord Trophy",
+		str_desc = "A hunting trophy dredged from Wailord's blubber. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_phoenix,
+		str_name = "Phoenix Trophy",
+		str_desc = "A hunting trophy swept up from the ashes of the Phoenix. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_phoenixdown,
+		str_name = "Phoenix Down",
+		str_desc = "A feather plucked from a mythical Phoenix. Can be used to revive fallen slimeoids.",
+		context = "slimeoidrevive"
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_pheromones,
+		str_name = "Kinkfish Pheromones",
+		str_desc = "A spray-on bottle of Kinkfish pheromones. Apparently, it attracts all sorts of things despite smelling like shit.",
+		acquisition = ewcfg.acquisition_smelting,
+		context = "pheromones",
+		price = 10000,
+		vendors = [ewcfg.vendor_safari]
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_microgull,
+		str_name = "Micro Gull Trophy",
+		str_desc = "A miniscule hunting trophy snatched from the wings of a Micro Gull. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
 	# EwSeedPacket(
 	# 	id_item=ewcfg.item_id_gaiaseedpack_pulpgourds,
 	# 	cooldown=45,

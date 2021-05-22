@@ -590,6 +590,21 @@ async def possess_fishing_rod(cmd):
 	if response:
 		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+async def unpossess_fishing_rod(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state != ewcfg.life_state_corpse:
+        response = "You have no idea what you're doing."
+    elif not user_data.get_inhabitee():
+        response = "You're not {}ing anyone right now.".format(ewcfg.cmd_inhabit)
+    elif not user_data.get_possession('rod'):
+        response = "You want to unpossess a fishing rod you aren't possessing?\n" \
+                   "Huh, curious.\n" \
+                   "ARE YOU RETARDED?"
+    else:
+        response = "You let go the fishing rod so your fishing partner doesn't need your help anymore, the tendrils near their hook begin to dissappear into a grey fog."
+        user_data.cancel_possession()
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 async def crystalize_negapoudrin(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""

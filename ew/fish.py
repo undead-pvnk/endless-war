@@ -31,6 +31,7 @@ class EwFisher:
 	current_size = ""
 	pier = ""
 	bait = False
+	bait_id = 0
 	high = False
 	fishing_id = 0
 	inhabitant_id = None
@@ -43,7 +44,10 @@ class EwFisher:
 		self.current_fish = ""
 		self.current_size = ""
 		self.pier = ""
+		if self.bait == True and self.bait_id != 0:
+			bknd_item.item_delete(self.bait_id)	
 		self.bait = False
+		self.bait_id = 0
 		self.high = False
 		self.fishing_id = 0
 		self.inhabitant_id = None
@@ -254,6 +258,7 @@ async def cast(cmd):
 				fisher.high = True
 			fisher.fishing = True
 			fisher.bait = False
+			fisher.bait_id = 0
 			fisher.pier = poi
 			fisher.current_fish = gen_fish(market_data, fisher, has_fishingrod)
 			
@@ -318,7 +323,7 @@ async def cast(cmd):
 					elif float(item.time_expir if item.time_expir is not None else 0) < time.time():
 						if random.randrange(2) == 1:
 							fisher.current_fish = "plebefish"
-					bknd_item.item_delete(item_sought.get('id_item'))
+					fisher.bait_id = item_sought.get('id_item')
 
 			if fisher.current_fish == "item":
 				fisher.current_size = "item"
@@ -847,6 +852,10 @@ async def barter(cmd):
 			response = 'You ask a nearby fisherman if he wants to trade you anything for this fish you just caught. He tells you to fuck off, but also helpfully informs you that there’s an old sea captain that frequents the Speakeasy that might be able to help you. What an inexplicably helpful/grouchy fisherman!'
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
+	
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = 'Captain Albert Alexander hits the table with his glass and shouts "Nay laddy, you can fool me once but not twice! I dont do deals with spirits, get out of my sight!"'
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	elif item_sought:
 		poi = poi_static.id_to_poi.get(user_data.poi)
@@ -1092,6 +1101,11 @@ async def barter_all(cmd):
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
 
+		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+	
+	#if corpse, break
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = 'Captain Albert Alexander hits the table with his glass and shouts "Nay laddy, you can fool me once but not twice! I dont do deals with spirits, get out of my sight!"'
 		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	food_items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server,item_type_filter = ewcfg.it_food)
