@@ -611,8 +611,6 @@ cmd_map = {
 	ewcfg.cmd_wiki: ewcmd.wiki,
 	ewcfg.cmd_booru: ewcmd.booru,
 	ewcfg.cmd_bandcamp: ewcmd.bandcamp,
-	ewcfg.cmd_github: ewcmd.github,
-	ewcfg.cmd_pulls: ewcmd.pulls,
 	ewcfg.cmd_tutorial: ewcmd.tutorial,
 	ewcfg.cmd_leaderboard: ewcmd.leaderboard,
 	ewcfg.cmd_leaderboard_alt1: ewcmd.leaderboard,

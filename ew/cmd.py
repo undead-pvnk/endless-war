@@ -1309,18 +1309,6 @@ async def leaderboard(cmd):
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Live leaderboards: https://ew.krakissi.net/stats/'))
 
 """
-	Link to the current GitHub repository.
-"""
-async def github(cmd):
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Current Rowdy Fuckers Cop Killers GitHub repository: https://github.com/aristotlepenguin/endless-war'))
-
-"""
-	Link to the current pull requests in the GitHub repository.
-"""
-async def pulls(cmd):
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, 'Current pull requests in the GitHub repository: https://github.com/aristotlepenguin/endless-war/pulls'))
-
-"""
 	Link to the Gameplay category in the RFCK wiki
 """
 async def tutorial(cmd):
