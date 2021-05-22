@@ -490,3 +490,666 @@
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Crookline#Perdio_Valley"
     },
+
+"securityforcetunnel": {
+    "id_poi": "securityforcetunnel",
+    "alias": [
+        "sftunnel",
+        "sft"
+    ],
+    "str_name": "SlimeCorp Security Force Tunnel",
+    "str_desc": "This place must be miles long, and the higher-ups must've decided to save on lighting here since it's pitch black, too. Good thing it's linear if that's the case. \n\nExits are Nuclear Beach Outskirts and The Breakroom.",
+    "str_in": "in",
+    "str_enter": "enter",
+    "coord": null,
+    "coord_alias": [],
+    "channel": "security-force-tunnel",
+    "role": null,
+    "major_role": "nullmajorrole",
+    "minor_role": "nullminorrole",
+    "permissions": {
+        "security-force-tunnel": [
+            "read",
+            "send",
+            "connect"
+        ]
+    },
+    "pvp": false,
+    "factions": [
+        "slimecorp"
+    ],
+    "life_states": [],
+    "closed": false,
+    "str_closed": null,
+    "vendors": [],
+    "property_class": "",
+    "is_district": false,
+    "is_gangbase": true,
+    "is_capturable": false,
+    "is_subzone": false,
+    "is_apartment": false,
+    "is_street": false,
+    "mother_districts": [],
+    "father_district": "",
+    "is_transport": false,
+    "transport_type": "",
+    "default_line": "",
+    "default_stop": "",
+    "is_transport_stop": false,
+    "is_outskirts": true,
+    "community_chest": null,
+    "is_pier": false,
+    "pier_type": null,
+    "is_tutorial": false,
+    "has_ads": false,
+    "write_manuscript": false,
+    "max_degradation": 10000,
+    "neighbors": {
+        "nuclearbeachdepths": 360,
+        "thebreakroom": 360
+    },
+    "topic": "",
+    "wikipage": ""
+},
+"n12office": {
+    "id_poi": "n12office",
+    "alias": [
+        "hqlab",
+        "undergroundlab",
+        "zuck",
+        "schqresearchlab",
+        "facility",
+        "undergroundresearchfacility"
+    ],
+    "str_name": "Underground Research Facility",
+    "str_desc": "You hear a droning hum as you enter this dark basement laboratory. What little light you have is coming from the **COMPUTER** screen opened to its desktop at the far end of the room, and the status lights on several large cyndrilical **TANKS** lining down it. Tank #1000 looks pretty dented up, but the others appear nearly untouched. There's a door on the opposite end that leads to Slimecorp Offices 1F.",
+    "str_in": "in",
+    "str_enter": "enter",
+    "coord": null,
+    "coord_alias": [],
+    "channel": "underground-research-facility",
+    "role": null,
+    "major_role": "downtown_major",
+    "minor_role": "nullminorrole",
+    "permissions": {
+        "underground-research-facility": [
+            "read",
+            "send",
+            "connect"
+        ]
+    },
+    "pvp": true,
+    "factions": [],
+    "life_states": [],
+    "closed": false,
+    "str_closed": null,
+    "vendors": [],
+    "property_class": "A",
+    "is_district": false,
+    "is_gangbase": false,
+    "is_capturable": false,
+    "is_subzone": true,
+    "is_apartment": false,
+    "is_street": false,
+    "mother_districts": [
+
+    ],
+    "father_district": "",
+    "is_transport": false,
+    "transport_type": "",
+    "default_line": "",
+    "default_stop": "",
+    "is_transport_stop": false,
+    "is_outskirts": false,
+    "community_chest": null,
+    "is_pier": false,
+    "pier_type": null,
+    "is_tutorial": false,
+    "has_ads": false,
+    "write_manuscript": false,
+    "max_degradation": 10000,
+    "neighbors": {
+        "downtown": 20
+    },
+    "topic": "",
+    "wikipage": ""
+},
+"n10office": {
+    "id_poi": "n10office",
+    "alias": [
+        "slimecorpoffices1f",
+        "offices1f",
+        "1f"
+    ],
+    "str_name": "Slimecorp Offices **1F**",
+    "str_desc": "The 1st floor corporate office of Slimecorp is awfully quiet now that you've barged in. The wagecucks are all hiding under their **DESKS** hoping you'll go away. Ha, sick. There's no time to lose, though. You're pretty sure a secretary already called 911.\n\nYou notice N10 works here. His desk is a real dust trap, but it's well organized. Maybe he doesn't use it much? Anyhow, looks like you can log into his **COMPUTER**. You also notice the **DOOR** to Slimecorp HQ unlocks from this side. You also find M@'s **LAPTOP** on a desk right next to his. Exits into Downtown.",
+    "str_in": "in",
+    "str_enter": "enter",
+    "coord": null,
+    "coord_alias": [],
+    "channel": "slimecorp-offices-1f",
+    "role": null,
+    "major_role": "downtown_major",
+    "minor_role": "nullminorrole",
+    "permissions": {
+        "slimecorp-offices-1f": [
+            "read",
+            "send",
+            "connect"
+        ]
+    },
+    "pvp": true,
+    "factions": [],
+    "life_states": [],
+    "closed": false,
+    "str_closed": null,
+    "vendors": [],
+    "property_class": "A",
+    "is_district": false,
+    "is_gangbase": false,
+    "is_capturable": false,
+    "is_subzone": true,
+    "is_apartment": false,
+    "is_street": false,
+    "mother_districts": [
+
+    ],
+    "father_district": "",
+    "is_transport": false,
+    "transport_type": "",
+    "default_line": "",
+    "default_stop": "",
+    "is_transport_stop": false,
+    "is_outskirts": false,
+    "community_chest": null,
+    "is_pier": false,
+    "pier_type": null,
+    "is_tutorial": false,
+    "has_ads": false,
+    "write_manuscript": false,
+    "max_degradation": 10000,
+    "neighbors": {
+        "downtown": 20
+    },
+    "topic": "",
+    "wikipage": ""
+},
+"n4office": {
+    "id_poi": "n4office",
+    "alias": [
+        "elevator"
+    ],
+    "str_name": "the Elevator",
+    "str_desc": "The fancy elevator, now completely covered in burn marks and smelling of gasoline, still appears to be playing elevator music and working perfectly well. You see a handful of elevator **BUTTONS**, most are unlit but a few are still accessible. If you squint hard enough you think you can see small **PIPES** poking out through the metal lattice on the ceiling.",
+    "str_in": "in",
+    "str_enter": "enter",
+    "coord": null,
+    "coord_alias": [],
+    "channel": "elevator",
+    "role": null,
+    "major_role": "downtown_major",
+    "minor_role": "nullminorrole",
+    "permissions": {
+        "elevator": [
+            "read",
+            "send",
+            "connect"
+        ]
+    },
+    "pvp": true,
+    "factions": [],
+    "life_states": [],
+    "closed": false,
+    "str_closed": null,
+    "vendors": [],
+    "property_class": "A",
+    "is_district": false,
+    "is_gangbase": false,
+    "is_capturable": false,
+    "is_subzone": true,
+    "is_apartment": false,
+    "is_street": false,
+    "mother_districts": [
+
+    ],
+    "father_district": "",
+    "is_transport": false,
+    "transport_type": "",
+    "default_line": "",
+    "default_stop": "",
+    "is_transport_stop": false,
+    "is_outskirts": false,
+    "community_chest": null,
+    "is_pier": false,
+    "pier_type": null,
+    "is_tutorial": false,
+    "has_ads": false,
+    "write_manuscript": false,
+    "max_degradation": 10000,
+    "neighbors": {
+        "downtown": 20
+    },
+    "topic": "",
+    "wikipage": ""
+},
+"n13office": {
+    "id_poi": "n13office",
+    "alias": [
+        "office3f",
+        "investmentsandaccounting",
+        "3f"
+    ],
+    "str_name": "Slimecorp **3F**: Investments and Accounting",
+    "str_desc": "Your eyes are bombarded with **SCREENS** on all sides, full of seizure-inducing levels of stock-based data. The only surface not completely covered in the stuff is N13's **DESK**. Kept neat and tidy, the only thing you see that pops out is the **COMPUTER**.\n\nExits into Downtown.",
+    "str_in": "in",
+    "str_enter": "enter",
+    "coord": null,
+    "coord_alias": [],
+    "channel": "slimecorp-offices-3f",
+    "role": null,
+    "major_role": "downtown_major",
+    "minor_role": "nullminorrole",
+    "permissions": {
+        "slimecorp-offices-3f": [
+            "read",
+            "send",
+            "connect"
+        ]
+    },
+    "pvp": true,
+    "factions": [],
+    "life_states": [],
+    "closed": false,
+    "str_closed": null,
+    "vendors": [],
+    "property_class": "A",
+    "is_district": false,
+    "is_gangbase": false,
+    "is_capturable": false,
+    "is_subzone": true,
+    "is_apartment": false,
+    "is_street": false,
+    "mother_districts": [
+
+    ],
+    "father_district": "",
+    "is_transport": false,
+    "transport_type": "",
+    "default_line": "",
+    "default_stop": "",
+    "is_transport_stop": false,
+    "is_outskirts": false,
+    "community_chest": null,
+    "is_pier": false,
+    "pier_type": null,
+    "is_tutorial": false,
+    "has_ads": false,
+    "write_manuscript": false,
+    "max_degradation": 10000,
+    "neighbors": {
+        "downtown": 20
+    },
+    "topic": "",
+    "wikipage": ""
+},
+"n2office": {
+    "id_poi": "n2office",
+    "alias": [
+        "marketing",
+        "8f",
+        "n2"
+    ],
+    "str_name": "Slimecorp **8F**: Marketing",
+    "str_desc": "An entire wall of this huge office is taken up by a **WHITEBOARD**, chock full of works in progress and scrapped ideas. They're messily scrawled all over it, not unlike the rest of this shithole. Snack food wrappers cover the floor and **DESK**, and the large **FILING CABINET** in the corner has seen inhumane levels of wear and tear.\n\nExits into Downtown.",
+    "str_in": "in",
+    "str_enter": "enter",
+    "coord": null,
+    "coord_alias": [],
+    "channel": "slimecorp-offices-8f",
+    "role": null,
+    "major_role": "downtown_major",
+    "minor_role": "nullminorrole",
+    "permissions": {
+        "slimecorp-offices-8f": [
+            "read",
+            "send",
+            "connect"
+        ]
+    },
+    "pvp": true,
+    "factions": [],
+    "life_states": [],
+    "closed": false,
+    "str_closed": null,
+    "vendors": [],
+    "property_class": "A",
+    "is_district": false,
+    "is_gangbase": false,
+    "is_capturable": false,
+    "is_subzone": true,
+    "is_apartment": false,
+    "is_street": false,
+    "mother_districts": [
+
+    ],
+    "father_district": "",
+    "is_transport": false,
+    "transport_type": "",
+    "default_line": "",
+    "default_stop": "",
+    "is_transport_stop": false,
+    "is_outskirts": false,
+    "community_chest": null,
+    "is_pier": false,
+    "pier_type": null,
+    "is_tutorial": false,
+    "has_ads": false,
+    "write_manuscript": false,
+    "max_degradation": 10000,
+    "neighbors": {
+        "downtown": 20
+    },
+    "topic": "",
+    "wikipage": ""
+},
+"n8office": {
+    "id_poi": "n8office",
+    "alias": [
+        "n8",
+        "emptyoffice",
+        "20f"
+    ],
+    "str_name": "Slimecorp **20F**: Currently Vacant",
+    "str_desc": "The room is perfectly empty. The **DESK** is tidy, save for a layer of dust and a few packs of those sticky note things.\n\nExits into Downtown.",
+    "str_in": "in",
+    "str_enter": "enter",
+    "coord": null,
+    "coord_alias": [],
+    "channel": "slimecorp-offices-20f",
+    "role": null,
+    "major_role": "downtown_major",
+    "minor_role": "nullminorrole",
+    "permissions": {
+        "slimecorp-offices-20f": [
+            "read",
+            "send",
+            "connect"
+        ]
+    },
+    "pvp": true,
+    "factions": [],
+    "life_states": [],
+    "closed": false,
+    "str_closed": null,
+    "vendors": [],
+    "property_class": "A",
+    "is_district": false,
+    "is_gangbase": false,
+    "is_capturable": false,
+    "is_subzone": true,
+    "is_apartment": false,
+    "is_street": false,
+    "mother_districts": [
+
+    ],
+    "father_district": "",
+    "is_transport": false,
+    "transport_type": "",
+    "default_line": "",
+    "default_stop": "",
+    "is_transport_stop": false,
+    "is_outskirts": false,
+    "community_chest": null,
+    "is_pier": false,
+    "pier_type": null,
+    "is_tutorial": false,
+    "has_ads": false,
+    "write_manuscript": false,
+    "max_degradation": 10000,
+    "neighbors": {
+        "downtown": 20
+    },
+    "topic": "",
+    "wikipage": ""
+},
+"n5office": {
+    "id_poi": "n5office",
+    "alias": [
+        "n5",
+        "103f",
+        "filestorage"
+    ],
+    "str_name": "Slimecorp **103F**: File Storage",
+    "str_desc": "The shutters are closed in here, and it takes a few minutes to find the light switch. The office is pretty normal, save for being filled to the brim with various bullshit: **CLEANING SUPPLIES**, **FILING CABINETS**, what looks like a high-end **COFFEE MACHINE**, and a big laminated **SIGN** staring at you when you walk in. \n\nExits into Downtown.",
+    "str_in": "in",
+    "str_enter": "enter",
+    "coord": null,
+    "coord_alias": [],
+    "channel": "slimecorp-offices-103f",
+    "role": null,
+    "major_role": "downtown_major",
+    "minor_role": "nullminorrole",
+    "permissions": {
+        "slimecorp-offices-103f": [
+            "read",
+            "send",
+            "connect"
+        ]
+    },
+    "pvp": true,
+    "factions": [],
+    "life_states": [],
+    "closed": false,
+    "str_closed": null,
+    "vendors": [],
+    "property_class": "A",
+    "is_district": false,
+    "is_gangbase": false,
+    "is_capturable": false,
+    "is_subzone": true,
+    "is_apartment": false,
+    "is_street": false,
+    "mother_districts": [
+
+    ],
+    "father_district": "",
+    "is_transport": false,
+    "transport_type": "",
+    "default_line": "",
+    "default_stop": "",
+    "is_transport_stop": false,
+    "is_outskirts": false,
+    "community_chest": null,
+    "is_pier": false,
+    "pier_type": null,
+    "is_tutorial": false,
+    "has_ads": false,
+    "write_manuscript": false,
+    "max_degradation": 10000,
+    "neighbors": {
+        "downtown": 20
+    },
+    "topic": "",
+    "wikipage": ""
+},
+"n3office": {
+    "id_poi": "n3office",
+    "alias": [
+        "n3",
+        "administration",
+        "5280f"
+    ],
+    "str_name": "Slimecorp **528F0**: Administration",
+    "str_desc": "You smell smoke. You would think N3 keeps a clean house, but there's a pile of **SOOT** overflowing from a metal wastebasket beside her desk. Apart from that, the whole place is cleaned out.\n\nExits into Downtown.",
+    "str_in": "in",
+    "str_enter": "enter",
+    "coord": null,
+    "coord_alias": [],
+    "channel": "slimecorp-offices-5280f",
+    "role": null,
+    "major_role": "downtown_major",
+    "minor_role": "nullminorrole",
+    "permissions": {
+        "slimecorp-offices-5280f": [
+            "read",
+            "send",
+            "connect"
+        ]
+    },
+    "pvp": true,
+    "factions": [],
+    "life_states": [],
+    "closed": false,
+    "str_closed": null,
+    "vendors": [],
+    "property_class": "A",
+    "is_district": false,
+    "is_gangbase": false,
+    "is_capturable": false,
+    "is_subzone": true,
+    "is_apartment": false,
+    "is_street": false,
+    "mother_districts": [
+
+    ],
+    "father_district": "",
+    "is_transport": false,
+    "transport_type": "",
+    "default_line": "",
+    "default_stop": "",
+    "is_transport_stop": false,
+    "is_outskirts": false,
+    "community_chest": null,
+    "is_pier": false,
+    "pier_type": null,
+    "is_tutorial": false,
+    "has_ads": false,
+    "write_manuscript": false,
+    "max_degradation": 10000,
+    "neighbors": {
+        "downtown": 20
+    },
+    "topic": "",
+    "wikipage": ""
+},
+"n7office": {
+    "id_poi": "n7office",
+    "alias": [
+        "n7",
+        "77777f",
+        "executiveassistance"
+    ],
+    "str_name": "Slimecorp **77777F**: Executive Assistance",
+    "str_desc": "There's a real soothing vibe in here, if you didn't know any better you'd drop in a beanbag chair and doze off. There's a **CORKBOARD** full of exotic tourist photos hanging on the wall as you walk in, and her desk has an assortment of beanie babies on it. N7's **LAPTOP** sits open on the desk, but it's in sleep mode.\n\nExits into Downtown.",
+    "str_in": "in",
+    "str_enter": "enter",
+    "coord": null,
+    "coord_alias": [],
+    "channel": "slimecorp-offices-77777f",
+    "role": null,
+    "major_role": "downtown_major",
+    "minor_role": "nullminorrole",
+    "permissions": {
+        "slimecorp-offices-77777f": [
+            "read",
+            "send",
+            "connect"
+        ]
+    },
+    "pvp": true,
+    "factions": [],
+    "life_states": [],
+    "closed": false,
+    "str_closed": null,
+    "vendors": [],
+    "property_class": "A",
+    "is_district": false,
+    "is_gangbase": false,
+    "is_capturable": false,
+    "is_subzone": true,
+    "is_apartment": false,
+    "is_street": false,
+    "mother_districts": [
+
+    ],
+    "father_district": "",
+    "is_transport": false,
+    "transport_type": "",
+    "default_line": "",
+    "default_stop": "",
+    "is_transport_stop": false,
+    "is_outskirts": false,
+    "community_chest": null,
+    "is_pier": false,
+    "pier_type": null,
+    "is_tutorial": false,
+    "has_ads": false,
+    "write_manuscript": false,
+    "max_degradation": 10000,
+    "neighbors": {
+        "downtown": 20
+    },
+    "topic": "",
+    "wikipage": ""
+},
+
+"n9office": {
+    "id_poi": "n9office",
+    "alias": [
+        "1000000f",
+        "n9",
+        "penthouse"
+    ],
+    "str_name": "Slimecorp **Penthouse**: Executive Suite",
+    "str_desc": "Now that it's broken off from the rest of the building, gravity has you standing on the penthouse's walls. You're on the top floor of the Slimecorp building standing on the wall, which is actually the wall this time. Looking into the penthouse, you see the still-recovering shambles of Downtown out of the glass floor.\n\nThe inside of the room is completely torn apart, luxury furniture broken, all plumbing burst open and leaking into the cracks of the glass. N1's **LAPTOP** somehow survived the ruckus, too. Exits into Downtown.",
+    "str_in": "in",
+    "str_enter": "enter",
+    "coord": null,
+    "coord_alias": [],
+    "channel": "slimecorp-penthouse",
+    "role": null,
+    "major_role": "downtown_major",
+    "minor_role": "nullminorrole",
+    "permissions": {
+        "slimecorp-penthouse": [
+            "read",
+            "send",
+            "connect"
+        ]
+    },
+    "pvp": true,
+    "factions": [],
+    "life_states": [],
+    "closed": false,
+    "str_closed": null,
+    "vendors": [],
+    "property_class": "A",
+    "is_district": false,
+    "is_gangbase": false,
+    "is_capturable": false,
+    "is_subzone": true,
+    "is_apartment": false,
+    "is_street": false,
+    "mother_districts": [
+
+    ],
+    "father_district": "",
+    "is_transport": false,
+    "transport_type": "",
+    "default_line": "",
+    "default_stop": "",
+    "is_transport_stop": false,
+    "is_outskirts": false,
+    "community_chest": null,
+    "is_pier": false,
+    "pier_type": null,
+    "is_tutorial": false,
+    "has_ads": false,
+    "write_manuscript": false,
+    "max_degradation": 10000,
+    "neighbors": {
+        "downtown": 20
+    },
+    "topic": "",
+    "wikipage": ""
+},
