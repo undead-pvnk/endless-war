@@ -31,6 +31,7 @@ class EwFisher:
 	current_size = ""
 	pier = ""
 	bait = False
+	bait_id = 0
 	high = False
 	fishing_id = 0
 	inhabitant_id = None
@@ -43,7 +44,10 @@ class EwFisher:
 		self.current_fish = ""
 		self.current_size = ""
 		self.pier = ""
+		if self.bait == True and self.bait_id != 0:
+			bknd_item.item_delete(self.bait_id)	
 		self.bait = False
+		self.bait_id = 0
 		self.high = False
 		self.fishing_id = 0
 		self.inhabitant_id = None
@@ -254,6 +258,7 @@ async def cast(cmd):
 				fisher.high = True
 			fisher.fishing = True
 			fisher.bait = False
+			fisher.bait_id = 0
 			fisher.pier = poi
 			fisher.current_fish = gen_fish(market_data, fisher, has_fishingrod)
 			
@@ -318,7 +323,7 @@ async def cast(cmd):
 					elif float(item.time_expir if item.time_expir is not None else 0) < time.time():
 						if random.randrange(2) == 1:
 							fisher.current_fish = "plebefish"
-					bknd_item.item_delete(item_sought.get('id_item'))
+					fisher.bait_id = item_sought.get('id_item')
 
 			if fisher.current_fish == "item":
 				fisher.current_size = "item"
