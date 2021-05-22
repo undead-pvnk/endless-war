@@ -392,6 +392,7 @@ async def mine(cmd):
 					str_event_start = event_def.str_event_start
 					if event_data.event_type == ewcfg.event_type_minecollapse:
 						str_event_start = str_event_start.format(cmd = ewcfg.cmd_mine, captcha = ewutils.text_to_regional_indicator(event_data.event_props.get('captcha')))
+						event_data.time_expir = time_now + 60
 					response += str_event_start + "\n"
 
 			if random.random() < unearthed_item_chance:
@@ -1601,7 +1602,6 @@ def create_mining_event(cmd):
 				id_server = cmd.guild.id,
 				event_type = ewcfg.event_type_minecollapse,
 				time_activate = time_now,
-				time_expir = time_now + 60,
 				event_props = event_props
 			)
 		# 10 second poudrin frenzy
