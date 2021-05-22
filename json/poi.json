@@ -17026,7 +17026,7 @@
         "neighbors": {
             "westoutskirtsedge": 60,
             "northwestoutskirts": 60,
-            "northoutskirts": 60,
+            "northoutskirtsedge": 60,
             "charcoalpark": 60,
             "toxington": 60,
             "maimridge": 60
@@ -17087,7 +17087,7 @@
         "max_degradation": 10000,
         "neighbors": {
             "northwestoutskirtsedge": 60,
-            "northwestoutskirts": 60,
+            "northoutskirts": 60,
             "nuclearbeachedge": 60,
             "arsonbrook": 60,
             "brawlden": 60,
@@ -17444,10 +17444,10 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "northwestoutskirts": 60,
-            "northwestoutskirtsdepths": 60,
-            "northwestoutskirtsedge": 60,
-            "westoutskirts": 60
+            "northoutskirtsedge": 60,
+            "northoutskirtsdepths": 60,
+            "nuclearbeach": 60,
+            "northwestoutskirts": 60
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Outskirts"
