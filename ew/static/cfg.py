@@ -3030,6 +3030,7 @@ item_id_trophy_styx = "styxtrophy"
 item_id_trophy_prairieking = "prairiekingtrophy"
 item_id_trophy_wailord = "wailordtrophy"
 item_id_trophy_phoenix = "phoenixtrophy"
+item_id_trophy_microgull = "microgulltrophy"
 
 #weapon ids
 weapon_id_revolver = 'revolver'
@@ -4200,6 +4201,7 @@ enemy_type_rivalhunter = 'rivalhunter'
 enemy_type_microslime = 'microslime'
 enemy_type_mammoslimebull = 'mammoslimebull'
 enemy_type_slimeofgreed = 'slimeofgreed'
+enemy_type_microgullswarm = 'microgullswarm'
 # Raid bosses
 enemy_type_megaslime = 'megaslime'
 enemy_type_slimeasaurusrex = 'slimeasaurusrex'
@@ -4292,7 +4294,7 @@ enemy_class_shambler = 'shambler'
 # List of enemies sorted by their spawn rarity.
 common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime]
 uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime, enemy_type_rivalhunter, enemy_type_spacecarp]
-rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed, enemy_type_mammoslimebull]
+rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed, enemy_type_mammoslimebull, enemy_type_microgull]
 raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator, enemy_type_titanoslime]
 
 enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
@@ -4325,6 +4327,7 @@ safari_trophy_values = {
 	item_id_trophy_dinoslime: 1,
 	item_id_trophy_slimeadactyl: 1,
 	item_id_trophy_microslime: 1,
+	item_id_trophy_microgull: 1,
 	item_id_trophy_slimeofgreed: 1,
 	item_id_trophy_desertraider: 1,
 	item_id_trophy_mammoslime: 1,
@@ -4576,6 +4579,10 @@ enemy_drop_tables = {
 		{item_id_slimepoudrin: [100, 3, 7]},
 		{item_id_trophy_phoenix: [100, 1, 1]},
 		{'phoenixdown': [50, 1, 1]}
+	],
+	enemy_type_microgullswarm: [
+		{item_id_trophy_microgull: [100, 1, 1]},
+		{item_id_rainwing: [5, 1, 1]}
 	]
 }
 for enemy in gvs_enemies:
@@ -4806,6 +4813,14 @@ enemy_data_table = {
 		"displayname": "Phoenix",
 		"raredisplayname": "Foenicks",
 		"aliases": ["firebird", "pheonix", "redovenbird", "foenicks", "foenix"]
+	},
+	enemy_type_microgullswarm: {
+		"slimerange": [100000, 100000],
+		"ai": enemy_ai_attacker_a,
+		"attacktype": enemy_attacktype_beak,
+		"displayname": "Micro Gull Swarm",
+		"raredisplayname": "Micro Gull Cloud",
+		"aliases": ["microgull", "smallgull", "birdswarm", "gullcloud", "gullswarm"]
 	},
 enemy_type_civilian: {
 		"slimerange": [100001, 100001],

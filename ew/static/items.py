@@ -1,3 +1,4 @@
+from ew.cmd import accept
 import json
 import os
 
@@ -1669,7 +1670,7 @@ EwGeneralItem(
 	EwGeneralItem(
 		id_item = ewcfg.item_id_rainwing,
 		str_name = "Rain Wing",
-		str_desc = "A feather obtained from a Gull. Folklore says this can be used to herald rain.",
+		str_desc = "A feather obtained from a gull. Folklore says this can be used to herald rain.",
 		context  = "rain"
 	),
 	EwGeneralItem(
@@ -1722,6 +1723,12 @@ EwGeneralItem(
 		context = "pheromones",
 		price = 10000,
 		vendors = [ewcfg.vendor_safari]
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_microgull,
+		str_name = "Micro Gull Trophy",
+		str_desc = "A miniscule hunting trophy snatched from the wings of a Micro Gull. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
 	),
 	# EwSeedPacket(
 	# 	id_item=ewcfg.item_id_gaiaseedpack_pulpgourds,
