@@ -2069,10 +2069,10 @@ async def jump(cmd):
 
 	elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
 		roll = random.randrange(25)
-			if roll == 0:
-				response = "You start running and taking momentum to then make the fucking highest jump you've ever done. When you reach the ground, you somehow manage to do a sommersault landing. Damn, guess you were good at parkour in the end!"
-			else:
-				response = "You jump. Nope. Still not good at parkour."
+		if roll == 0:
+			response = "You start running and taking momentum to then make the fucking highest jump you've ever done. When you reach the ground, you somehow manage to do a sommersault landing. Damn, guess you were good at parkour in the end!"
+		else:
+			response = "You jump. Nope. Still not good at parkour."
 	elif user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're already dead. You'd just ghost hover above the cliff."
 	elif user_data.life_state == ewcfg.life_state_kingpin:
