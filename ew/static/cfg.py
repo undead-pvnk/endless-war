@@ -4321,7 +4321,7 @@ safari_boss_date_map = {
 
 # List of enemies that spawn in the Nuclear Beach
 pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
-
+ 
 safari_trophy_values = {
 	item_id_trophy_juvie: 1,
 	item_id_trophy_dinoslime: 1,
@@ -4332,6 +4332,10 @@ safari_trophy_values = {
 	item_id_trophy_desertraider: 1,
 	item_id_trophy_mammoslime: 1,
 	item_id_trophy_spacecarp: 1,
+	item_id_trophy_mammoslimebull: 1,
+	item_id_trophy_rivalhunter: 1,
+	item_id_trophy_spacecarp: 1,
+	item_id_trophy_microgull: 1,
 	item_id_trophy_megaslime: 5,
 	item_id_trophy_srex: 5,
 	item_id_trophy_dragon: 10,
