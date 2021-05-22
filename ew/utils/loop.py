@@ -772,7 +772,6 @@ async def spawn_enemies(id_server = None):
 	if not (safari_district.enemy_type_in_district(market_data.current_safari_boss)):
 		if market_data.clock == 0 or market_data.clock % 4 == 0:
 			sb_resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_type=market_data.current_safari_boss, pre_chosen_poi=ewcfg.poi_id_downtown, manual_spawn=True)
-			ewutils.logMsg("Spawned Safari Boss: {} successfully.")
 			await sb_resp_cont.post()
 		
 	# TODO remove after double halloween

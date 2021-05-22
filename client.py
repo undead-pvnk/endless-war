@@ -771,6 +771,9 @@ cmd_map = {
 	ewcfg.cmd_release_alt1: ewcmd.release,
 	ewcfg.cmd_balance_cosmetics: ewcmd.balance_cosmetics,
 
+	# force print the leaderboard
+	ewcfg.cmd_post_leaderboard: ewcmd.post_leaderboard,
+
 	# grant slimecorp executive status
 	ewcfg.cmd_promote: ewcmd.promote,
 	
