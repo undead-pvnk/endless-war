@@ -1029,7 +1029,7 @@ async def safari_tick_loop(id_server):
 	# interval = 10
 
 	while not ewutils.TERMINATE:
-		interval = 120  # every two minutes, we don't need to do this that often
+		interval = 450 - 1  # every seven and a half minutes (minus one second), we don't need to do this that often
 		await asyncio.sleep(interval)
 		await safari_checkboss(id_server)
 		await safari_spawnboss(id_server)
