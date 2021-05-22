@@ -1,4 +1,3 @@
-from ew.cmd import accept
 import json
 import os
 
