@@ -1,3 +1,4 @@
+from ew.cmd import accept
 import json
 import os
 
@@ -1621,12 +1622,14 @@ EwGeneralItem(
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_mammoslimebull,
 		str_name = "Mammoslime Bull Trophy",
-		str_desc = "A hunting trophy carved from the tusk of a fallen Mammoslime Bull. Ahhh, the thrill of the hunt..."
+		str_desc = "A hunting trophy carved from the tusk of a fallen Mammoslime Bull. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_rivalhunter,
-		str_name = "Mammoslime Bull Trophy",
-		str_desc = "A hunting trophy \"borrowed\" from the head of a Rival Hunter. Ahhh, the thrill of the hunt..."
+		str_name = "Rival Hunter Trophy",
+		str_desc = "A hunting trophy \"borrowed\" from the head of a Rival Hunter. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_bustedrifle,
@@ -1644,7 +1647,8 @@ EwGeneralItem(
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_spacecarp,
 		str_name = "Space Carp Trophy",
-		str_desc = "A hunting trophy wrenched from the mouth of a Space Carp. Ahhh, the thrill of the hunt..."
+		str_desc = "A hunting trophy wrenched from the mouth of a Space Carp. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_carpotoxin,
@@ -1660,43 +1664,50 @@ EwGeneralItem(
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_gull,
 		str_name = "Gull Trophy",
-		str_desc = "A hunting trophy snatched from the wings of a Gull. Ahhh, the thrill of the hunt..."
+		str_desc = "A hunting trophy snatched from the wings of a Gull. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_rainwing,
 		str_name = "Rain Wing",
-		str_desc = "A feather obtained from a Gull. Folklore says this can be used to herald rain.",
+		str_desc = "A feather obtained from a gull. Folklore says this can be used to herald rain.",
 		context  = "rain"
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_garfield,
 		str_name = "Garfield Trophy",
-		str_desc = "A hunting trophy sliced from the paws of Garfield. Ahhh, the thrill of the hunt..."
+		str_desc = "A hunting trophy sliced from the paws of Garfield. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_n400,
 		str_name = "N400 Trophy",
-		str_desc = "A hunting trophy requisitioned from N400. Ahhh, the thrill of the hunt..."
+		str_desc = "A hunting trophy requisitioned from N400. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_styx,
 		str_name = "Styx Trophy",
-		str_desc = "A hunting trophy shaved from Styx. Ahhh, the thrill of the hunt..."
+		str_desc = "A hunting trophy shaved from Styx. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_prairieking,
 		str_name = "Prairie King Trophy",
-		str_desc = "A hunting trophy nabbed from the itty bitty hands of the Prarie King. Ahhh, the thrill of the hunt..."
+		str_desc = "A hunting trophy nabbed from the itty bitty hands of the Prarie King. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_wailord,
 		str_name = "Wailord Trophy",
-		str_desc = "A hunting trophy dredged from Wailord's blubber. Ahhh, the thrill of the hunt..."
+		str_desc = "A hunting trophy dredged from Wailord's blubber. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_phoenix,
 		str_name = "Phoenix Trophy",
-		str_desc = "A hunting trophy swept up from the ashes of the Phoenix. Ahhh, the thrill of the hunt..."
+		str_desc = "A hunting trophy swept up from the ashes of the Phoenix. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_phoenixdown,
@@ -1712,6 +1723,12 @@ EwGeneralItem(
 		context = "pheromones",
 		price = 10000,
 		vendors = [ewcfg.vendor_safari]
+	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_trophy_microgull,
+		str_name = "Micro Gull Trophy",
+		str_desc = "A miniscule hunting trophy snatched from the wings of a Micro Gull. Ahhh, the thrill of the hunt...",
+		acquisition = ewcfg.acquisition_huntingtrophy
 	),
 	# EwSeedPacket(
 	# 	id_item=ewcfg.item_id_gaiaseedpack_pulpgourds,

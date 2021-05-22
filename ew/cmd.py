@@ -4036,6 +4036,8 @@ async def check_mastery(cmd):
 		for skill, level in wepskills.items():
 			# Now actually grabs the mastery string! Rejoice!
 			weapon_response = (static_weapons.weapon_map[skill]).str_weaponmaster_self + '\n'
+			if weapon_response == "\n":
+				continue
 			# Only print masteries at 1 or above
 			if level.get("skill") >= 5:
 				message += weapon_response.format(rank = level["skill"]-4)
