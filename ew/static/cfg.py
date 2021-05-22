@@ -3,7 +3,7 @@ import datetime
 # Global configuration options.
 
 
-version = "v4.002epilogue"
+version = "v4.0069 Safari"
 
 
 
