@@ -332,7 +332,7 @@ enemy_attack_type_list = [
 		id_type="claws",
 		str_crit="**SCRIIIIIIITCH!!!** {name_enemy} rakes their claws down {name_target}'s entire body, causing massive bleeding damage!",
 		str_miss="**MISS!** {name_target}'s paw goes wide!",
-		str_kill="**ME-OWWW!!!** {name_enemy} has had enough. In a split second, {name_target} is erased from this place of existence. {emote_skull}",
+		str_kill="**ME-OWWW!!!** {name_enemy} has had enough. In a split second, {name_target} is erased from this plane of existence. {emote_skull}",
 		str_killdescriptor="banished",
 		str_damage="{name_enemy} meows at {name_target}! Ahh! Psychic damage!",
 		fn_effect=atf_fangs
@@ -379,7 +379,7 @@ enemy_attack_type_list = [
 		str_miss="**GASP!** {name_enemy} is totally out of their element up here!",
 		str_kill="**SMOOSH!!!** {name_enemy} manages to roll over, crushing {name_target} to death!. {emote_skull}",
 		str_killdescriptor="crushed",
-		str_damage="{name_enemy} thrashes about! {name_target} gets smacked by it's tail!",
+		str_damage="{name_enemy} thrashes about! {name_target} is smacked by its tail!",
 		fn_effect=atf_hooves
 	),
 	EwAttackType(  # 21
