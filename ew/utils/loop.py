@@ -1053,16 +1053,15 @@ async def safari_checkboss(id_server):
 
 async def safari_spawnboss(id_server):
 	market_data = EwMarket(id_server)
-	client = ewcfg.get_client()
 		# TODO remove after safari event
 	# Every 4 in-game hours the safari bosses will try to respawn
 	# They won't spawn if any safari bosses are still alive
-	safari_district  = EwDistrict(id_server=id_server, district=ewcfg.poi_id_downtown)
+	safari_district  = EwDistrict(id_server=id_server, district=ewcfg.poi_id_nuclear_beach)
 	# Check if any of the safari bosses are already active
 	if not (safari_district.enemy_type_in_district(market_data.current_safari_boss)):
 		if market_data.clock == 0 or market_data.clock % 4 == 0:
-			sb_resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_type=market_data.current_safari_boss, pre_chosen_poi=ewcfg.poi_id_downtown, manual_spawn=True)
-			announce_response = "**Attention all hunters! Reports of a strange beast in Downtown!**"
+			sb_resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_type=market_data.current_safari_boss, pre_chosen_poi=ewcfg.poi_id_nuclear_beach, manual_spawn=True)
+			announce_response = "**Attention all hunters! Reports of a strange beast in Nuclear Beach!**"
 			for channel in ewcfg.hideout_channels:
 				sb_resp_cont.add_channel_response(channel, announce_response)
 			await sb_resp_cont.post()
