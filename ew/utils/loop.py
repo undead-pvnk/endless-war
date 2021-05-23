@@ -1059,7 +1059,8 @@ async def safari_spawnboss(id_server):
 	safari_district  = EwDistrict(id_server=id_server, district=ewcfg.poi_id_nuclear_beach)
 	# Check if any of the safari bosses are already active
 	if not (safari_district.enemy_type_in_district(market_data.current_safari_boss)):
-		if market_data.clock == 0 or market_data.clock % 4 == 0:
+		spawn_times = [0, 4, 8, 12, 16, 20]
+		if market_data.clock in spawn_times:
 			sb_resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_type=market_data.current_safari_boss, pre_chosen_poi=ewcfg.poi_id_nuclear_beach, manual_spawn=True)
 			announce_response = "**Attention all hunters! Reports of a strange beast in Nuclear Beach!**"
 			for channel in ewcfg.hideout_channels:
