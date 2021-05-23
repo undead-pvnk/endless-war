@@ -1062,8 +1062,8 @@ async def safari_spawnboss(id_server):
 	if not (safari_district.enemy_type_in_district(market_data.current_safari_boss)):
 		if market_data.clock == 0 or market_data.clock % 4 == 0:
 			sb_resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_type=market_data.current_safari_boss, pre_chosen_poi=ewcfg.poi_id_downtown, manual_spawn=True)
-			await sb_resp_cont.post()
-			announce_response = "**Attention all hunters! Reports of a strange beast in Downtown! Get down there!**"
+			announce_response = "**Attention all hunters! Reports of a strange beast in Downtown!**"
 			for channel in ewcfg.hideout_channels:
-				await fe_utils.send_message(client, channel, text=announce_response)
+				sb_resp_cont.add_channel_response(channel, announce_response)
+			await sb_resp_cont.post()
 	
