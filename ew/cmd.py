@@ -2154,6 +2154,9 @@ async def toss_off_cliff(cmd):
 				return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 			else:
 				return await ewitem.discard(cmd=cmd)
+		else:
+			response = "You don't have that item."
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	elif item_sought:
 		item_obj = EwItem(id_item=item_sought.get('id_item'))

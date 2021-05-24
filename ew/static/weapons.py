@@ -1456,6 +1456,7 @@ EwWeapon( # 38
 		classes= [ewcfg.weapon_class_ammo],
 		stat = ewcfg.stat_huntingrifle_kills,
 		clip_size= 6,
+		acquisition = ewcfg.acquisition_smelting
 	),
 	EwWeapon( # 38
 		id_weapon = ewcfg.weapon_id_harpoon,
