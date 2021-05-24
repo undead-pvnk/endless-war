@@ -939,7 +939,7 @@ def equip(user_data, weapon_item = None):
 		response = "Shamblers can't equip weapons."
 	elif user_data.weaponmarried == True:
 		current_weapon = EwItem(id_item = user_data.weapon)
-		if int(weapon_item.item_props.get("married")) == user_data.id_user:
+		if weapon_item.item_props.get("married") == str(user_data.id_user):
 			response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
 			user_data.weapon = weapon_item.id_item
 
