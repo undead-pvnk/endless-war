@@ -422,13 +422,6 @@ async def order(cmd):
 
 					item_props = itm_utils.gen_item_props(item)
 
-					customtext = cmd.message.content[(len(cmd.tokens[0]) + len(cmd.tokens[1]) + 2):]
-
-					if item.item_type == ewcfg.it_furniture and "custom" in item_props.get('id_furniture'):
-						if customtext == "":
-							response = "You need to specify the customization text before buying a custom item. Come on, isn't that self-evident?"
-							return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
 					# Only food should have the value multiplied. If someone togo orders a non-food item by mistake, lower it back down.
 					if not food_ordered and togo:
 						value = int(value/1.5)
@@ -446,12 +439,26 @@ async def order(cmd):
 						item_props['furniture_desc'] = random.choice(ewcfg.cabinets_list)
 					elif item.item_type == ewcfg.it_furniture:
 						if "custom" in item_props.get('id_furniture'):
-							item_props['furniture_name'] = item_props['furniture_name'].format(custom = customtext)
-							item_props['furniture_desc'] = item_props['furniture_desc'].format(custom=customtext)
-							item_props['furniture_look_desc'] = item_props['furniture_look_desc'].format(custom=customtext)
-							item_props['furniture_place_desc'] = item_props['furniture_place_desc'].format(custom=customtext)
-							item.str_name = item.str_name.format(custom = customtext)
+							if cmd.tokens_count < 4 or cmd.tokens[2] == "" or cmd.tokens[3] == "":
+								response = "You need to specify the customization text before buying a custom item. Come on, isn't that self-evident? (!order [custom item] \"custom name\" \"custom description\")"
+								return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+							else:
+								customname = cmd.tokens[2]
 
+								if len(customname) > 32:
+									response = "That name is too long. ({:,}/32)".format(len(customname))
+									return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+								customdesc = cmd.tokens[3]
+
+								if len(customdesc) > 500:
+									response = "That description is too long. ({:,}/500)".format(len(customdesc))
+									return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+								name = item_props['furniture_name'] = item_props['furniture_name'].format(custom=customname)
+								item_props['furniture_desc'] = customdesc
+								item_props['furniture_look_desc'] = item_props['furniture_look_desc'].format(custom=customname)
+								item_props['furniture_place_desc'] = item_props['furniture_place_desc'].format(custom=customname)
 
 					id_item = bknd_item.item_create(
 						item_type = item_type,
@@ -463,9 +470,9 @@ async def order(cmd):
 					)
 
 					if value == 0:
-						response = "You swipe a {} from the counter at {}.".format(item.str_name, current_vendor)
+						response = "You swipe a {} from the counter at {}.".format(name, current_vendor)
 					else:
-						response = "You slam {:,} {} down on the counter at {} for {}.".format(value, currency_used, current_vendor, item.str_name)
+						response = "You slam {:,} {} down on the counter at {} for {}.".format(value, currency_used, current_vendor, name)
 
 					if food_ordered and not togo:
 						item_data = EwItem(id_item=id_item)
@@ -476,9 +483,9 @@ async def order(cmd):
 							target_player_data = EwPlayer(id_user=target_data.id_user)
 
 							if value == 0:
-								response = "You swipe a {} from the counter at {} and give it to {}.".format(item.str_name, current_vendor, target_player_data.display_name)
+								response = "You swipe a {} from the counter at {} and give it to {}.".format(name, current_vendor, target_player_data.display_name)
 							else:
-								response = "You slam {:,} slime down on the counter at {} for {} and give it to {}.".format(value, current_vendor, item.str_name, target_player_data.display_name)
+								response = "You slam {:,} slime down on the counter at {} for {} and give it to {}.".format(value, current_vendor, name, target_player_data.display_name)
 
 							response += "\n\n*{}*: ".format(target_player_data.display_name) + target_data.eat(item_data)
 							target_data.persist()
@@ -486,9 +493,9 @@ async def order(cmd):
 						else:
 
 							if value == 0:
-								response = "You swipe a {} from the counter at {} and eat it right on the spot.".format(item.str_name, current_vendor)
+								response = "You swipe a {} from the counter at {} and eat it right on the spot.".format(name, current_vendor)
 							else:
-								response = "You slam {:,} slime down on the counter at {} for {} and eat it right on the spot.".format(value, current_vendor, item.str_name)
+								response = "You slam {:,} slime down on the counter at {} for {} and eat it right on the spot.".format(value, current_vendor, name)
 
 							user_player_data = EwPlayer(id_user=user_data.id_user)
 

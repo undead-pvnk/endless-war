@@ -1068,6 +1068,9 @@ async def teleport(cmd):
             user_data.poi = poi.id_poi
             user_data.time_lastenter = int(time.time())
 
+            if poi.id_poi == ewcfg.poi_id_thesewers:
+                user_data.die(cause=ewcfg.cause_suicide)
+
             user_data.persist()
 
             await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
