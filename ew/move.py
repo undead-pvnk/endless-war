@@ -978,7 +978,7 @@ async def teleport(cmd):
             time_lastuse = 0
 
         if time_lastuse + 60*60 > time_now:
-            response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 180*60 - time_now)/60))
+            response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 60*60 - time_now)/60))
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         if cmd.tokens_count < 2 and not blj_used:
@@ -1686,7 +1686,7 @@ async def loop(cmd):
 			time_lastuse = 0
 			
 		if time_lastuse + 60*60 > time_now:
-			response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 180*60 - time_now)/60))
+			response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 60*60 - time_now)/60))
 			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 		
 		global move_counter
