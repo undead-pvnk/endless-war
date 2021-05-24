@@ -1,5 +1,9 @@
-from ew.utils.combat import EwUser
-import ew.utils as ewutils
+from .utils.combat import EwUser
+import ew.utils.frontend as fe_utils
+from .utils import core as ewutils
+from .static import cfg as ewcfg
+from ew.backend.dungeons import EwGamestate
+import ew.backend.item as bknd_item
 
 class EwRelic:
     item_type = "relic"
@@ -106,7 +110,7 @@ relic_list = [
         vendors=[],
         acquisition="",
         str_museum="Human sacrifice was commonplace in ancient NLACakaNM, actually. They would prepare two victims each ceremony, and they would fight to the death with these. Reading the tablets detailing such events, you get the impression the whole 'religious offering' part was kind of an afterthought, and the stabbing part was the real attraction.\n\nThe glyphs there translate to FyhACZGnyj.\nhttps://discord.gg/FyhACZGnyj",
-        str_use="",
+        str_use="weapon",
         amount_yield=5000000
     ),
     EwRelic(
@@ -123,6 +127,82 @@ relic_list = [
     ),
 ]
 
+
+
+async def greenankh(cmd):
+    response = ""
+    target = None
+
+    if cmd.mentions_count != 1:
+        response = "Invalid use of command. Example: !setslime @player 100"
+        return await fe_utils.send_message(cmd.client, cmd.message.channel,
+                                           fe_utils.formatMessage(cmd.message.author, response))
+    else:
+        target = cmd.mentions[0]
+
+    target_user_data = EwUser(id_user=target.id, id_server=cmd.guild.id)
+
+    if len(cmd.tokens) > 3:
+        new_slime = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
+        if new_slime == None:
+            response = "Invalid number entered."
+            return await fe_utils.send_message(cmd.client, cmd.message.channel,
+                                               fe_utils.formatMessage(cmd.message.author, response))
+
+        new_slime -= target_user_data.slimes
+    else:
+        return
+
+    if target_user_data != None:
+
+        user_initial_level = target_user_data.slimelevel
+        levelup_response = target_user_data.change_slimes(n=new_slime)
+
+        was_levelup = True if user_initial_level < target_user_data.slimelevel else False
+
+        if was_levelup:
+            response += " {}".format(levelup_response)
+        target_user_data.persist()
+
+        response = "Set {}'s slime to {}.".format(target.display_name, target_user_data.slimes)
+    else:
+        return
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel,
+                                       fe_utils.formatMessage(cmd.message.author, response))
+
+from .static import relic
+async def use_endless_rock(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
+    item_obj = bknd_item.EwItem(id_item=item_sought.get('id_item'))
+
+    mapped_item = relic.relic_map.get(item_obj.item_props.get('id_relic'))
+
+    if user_data.poi != ewcfg.poi_id_endlesswar:
+        response = "You need to be at the base of ENDLESS WAR to make an offering."
+    else:
+        current_state = EwGamestate(id_server=cmd.guild.id, id_state=item_obj.item_props.get('id_relic'))
+        if current_state.bit == 1:
+            response = "ENDLESS WAR has already consumed its properties."
+        else:
+            current_state.bit = 1
+            current_state.persist()
+            response = mapped_item.str_use
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+debug1 = 'endlesspumice'
+
+
+#for use with endless pumice
+def calc_half_life(id_server, slime):
+    pumice = EwGamestate(id_state='endlesspumice', id_server=id_server)
+    if pumice.bit == 1 and slime > 7000000:
+        return ewcfg.slime_half_life * (3/14)
+    else:
+        return ewcfg.slime_half_life
 
 
 
