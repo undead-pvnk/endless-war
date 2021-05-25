@@ -946,7 +946,7 @@ async def move(cmd=None, isApt=False):
                             await fe_utils.send_message(cmd.client, channel,
                                                        fe_utils.formatMessage(cmd.message.author, ad_response))
 
-        if intoApt:
+        if intoApt and ewutils.moves_active[cmd.message.author.id] == move_current:
             await ewapt.retire(cmd=cmd, isGoto=True, movecurrent=move_current)
         await asyncio.sleep(30)
         try:
