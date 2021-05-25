@@ -1810,6 +1810,10 @@ async def slap(cmd):
             mutation_data.data = str(time_now)
             mutation_data.persist()
 
+            if target_data.poi == ewcfg.poi_id_thesewers:
+                target_data.die(cause=ewcfg.cause_suicide)
+                target_response += " But you hit your head really hard! Your precious little dome explodes into bits and pieces and you die!"
+
             user_data.persist()
             target_data.persist()
 
