@@ -48,4 +48,3 @@ dependencies:
     - multidict==5.1.0
     - typing-extensions==3.10.0.0
     - yarl==1.6.3
-prefix: /home/marc-andre/miniconda3/envs/ew
