@@ -1609,7 +1609,7 @@ EwGeneralItem(
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_dragon,
 		str_name = "Green Eyes Slime Dragon Hunting Trophy",
-		str_desc = "A hunting trophy sawed from the tusk of a fallen Mammoslime. Ahhh, the thrill of the hunt...",
+		str_desc = "A hunting trophy yoinked from the talons of a fallen Green Eyes Slime Dragon. Ahhh, the thrill of the hunt...",
 		acquisition = ewcfg.acquisition_huntingtrophy
 	),
 	EwGeneralItem(

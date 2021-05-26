@@ -24,12 +24,12 @@ async def vouch(cmd):
 		response = "Vouch for whom?"
 		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+	member = cmd.mentions[0]
+	vouchee_data = EwUser(member = member)
+	
 	if vouchee_data.poi != user_data.poi:
         	response = "How do you pretend to vouch for that juvenile if you aren't with them, using a carrier pigeon? Go find them, dumbfuck!"
         	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-	member = cmd.mentions[0]
-	vouchee_data = EwUser(member = member)
 
 	if vouchee_data.faction == user_data.faction:
 		response = "{} has already joined your faction.".format(member.display_name)

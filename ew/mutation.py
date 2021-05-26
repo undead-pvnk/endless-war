@@ -372,7 +372,7 @@ async def clench(cmd):
 	response = "You clench your butt cheeks together..."
 	ewutils.clenched[user_data.id_user] = 1
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-	await asyncio.sleep(5)
+	await asyncio.sleep(15)
 	ewutils.clenched[user_data.id_user] = 0
 
 async def preserve(cmd):

@@ -1284,7 +1284,7 @@ weapon_list = [
 	),
 	EwWeapon( # 34 
 		id_weapon = ewcfg.weapon_id_slimeringcan,
-		str_miss = "**MISS!!** Spouts of slime from {name_players} Slimering Can fly everywhere!",
+		str_miss = "**MISS!!** Spouts of slime from {name_player}'s Slimering Can fly everywhere!",
 		str_damage = "{name_player} pours slime onto {name_target}'s {hitzone}. What the fuck is that going to accomplish?",
 		str_crit = "**CRITIAL HIT!!** {name_player} pours slime onto {name_target}'s eyes! How unsanitary!",
 		str_kill = "{name_player} rams their Slimering Can down {name_target}'s throat. {name_target} chokes to death on slime.",
@@ -1446,7 +1446,7 @@ EwWeapon( # 38
 		str_weaponmaster = "They are a rank {rank} gentleman of the hunting rifle.",
 		str_kill = "**360 NOSCOPED!!** {name_player} spins and fires! {name_target}'s head subsequently explodes! Get wr3ck3d, my good sir! {emote_skull}",
 		str_killdescriptor = "d3s7r0y3d",
-		str_damage = "{name_players} sneakes a few shots into {name_target}’s {hitzone}!!",
+		str_damage = "{name_player} sneaks a few shots into {name_target}’s {hitzone}!!",
 		str_duel = "**...** {name_player} and {name_target} spin around like idiots, firing wildly and sipping tea.",
 		str_description = "It's a hunting rifle, lovingly repaired.",
 		str_reload = "You carefully dip each bullet in a cup of tea before loading them into the gun.",
@@ -1456,6 +1456,7 @@ EwWeapon( # 38
 		classes= [ewcfg.weapon_class_ammo],
 		stat = ewcfg.stat_huntingrifle_kills,
 		clip_size= 6,
+		acquisition = ewcfg.acquisition_smelting
 	),
 	EwWeapon( # 38
 		id_weapon = ewcfg.weapon_id_harpoon,

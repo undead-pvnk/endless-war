@@ -188,12 +188,12 @@ async def inventory_print(cmd):
         if len(items) == 0:
             response = "The community chest is empty."
         else:
-            response = "The community chest contains:"
+            response = "__The community chest contains:__"
     else:
         if len(items) == 0:
             response = "You don't have anything."
         else:
-            response = "You are holding:"
+            response = "__You are holding:__"
 
     msg_handle = None
     try:
@@ -217,6 +217,7 @@ async def inventory_print(cmd):
     if len(items) > 0:
 
         response = ""
+        current_type = ""
 
         for item in items:
             id_item = item.get('id_item')
@@ -229,6 +230,12 @@ async def inventory_print(cmd):
                     soulbound_style = ("**" if item.get('soulbound') else ""),
                     quantity = (" x{:,}".format(quantity) if (quantity > 1) else "")
                 )
+
+                # Print item type labels if sorting by type and showing a new type of items
+                if sort_by_type:
+                    if current_type != item.get('item_type'):
+                        current_type = item.get('item_type')
+                        response_part = "\n**=={}==**".format(current_type.upper()) + response_part
             else:
 
                 item_name = item.get('name')
@@ -250,6 +257,7 @@ async def inventory_print(cmd):
                 response += response_part
 
         if stacking:
+            current_type = ""
             item_names = stacked_item_map.keys()
             if sort_by_name:
                 item_names = sorted(item_names)
@@ -261,6 +269,12 @@ async def inventory_print(cmd):
                     soulbound_style=("**" if item.get('soulbound') else ""),
                     quantity=(" **x{:,}**".format(quantity) if (quantity > 0) else "")
                 )
+
+                # Print item type labels if sorting by type and showing a different type of items
+                if sort_by_type:
+                    if current_type != item.get('item_type'):
+                        current_type = item.get('item_type')
+                        response_part = "\n**=={}==**".format(current_type.upper()) + response_part
 
                 if len(response) + len(response_part) > 1492:
                     if can_message_user:

@@ -133,9 +133,9 @@ async def safari_power(cmd):
 	safari_power = user_data.safari_power
 	total_safari_power = market_data.total_safari_power
 	if user_data.poi != ewcfg.poi_id_charcoalpark:
-		response = "You get out your trust messenger boomerang and lob it towards Charcoal Park. It returns, bearing a hastily-scribbled message: \n'Thou hast {} safari power, and thou city's power is {}'".format(safari_power, total_safari_power)
+		response = "You get out your trusty messenger boomerang and lob it towards Charcoal Park. It returns, bearing a hastily-scribbled message: \n'Thou hast {} safari power, and thou city's power is {}'".format(safari_power, total_safari_power)
 	else: 
-		response = "You ask a volunteer about how it's going. They launch into a lengthy discussion about their recent divorce, medical problems and overall disatisfaction with the status quo. Not wanting to interrupt, you let them continue their spiel before asking about how the ***SAFARI*** is going.\n They respond: 'You have {} safari power, and the city's power is {}.'".format(safari_power, total_safari_power)
+		response = "You ask a volunteer about how it's going. They launch into a lengthy discussion about their recent divorce, medical problems and overall dissatisfaction with the status quo. Not wanting to interrupt, you let them continue their spiel before asking about how the ***SAFARI*** is going.\n They respond: 'You have {} safari power, and the city's power is {}.'".format(safari_power, total_safari_power)
 	return await fe_utils.send_response(response, cmd)
 
 # Submit your trophies to the Safari Gods, and let ye be judg-ed

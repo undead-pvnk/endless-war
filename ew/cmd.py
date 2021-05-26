@@ -1115,6 +1115,7 @@ async def help(cmd):
 	response = ""
 	topic = None
 	user_data = EwUser(member = cmd.message.author)
+	resp_cont = EwResponseContainer(id_server = cmd.guild.id)
 
 	# help only checks for districts while in game channels
 
@@ -1157,6 +1158,8 @@ async def help(cmd):
 				if weapon_topic_counter == 5:
 					weapon_topic_counter = 0
 					response += "\n"
+
+			resp_cont.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 				
 		else:
 			topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -1166,11 +1169,16 @@ async def help(cmd):
 					mutations = user_data.get_mutations()
 					if len(mutations) == 0:
 						response += "\nWait... you don't have any!"
+						resp_cont.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 					else:
+						resp_cont.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 						for mutation in mutations:
-							response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
+							response = "**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
+							resp_cont.add_channel_response(cmd.message.channel, response)
+							
 			else:
 				response = 'ENDLESS WAR questions your belief in the existence of such a topic. Try referring to the topics list again by using just !help.'
+				resp_cont.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	else:
 		# user not in college, check what help message would apply to the subzone they are in
 
@@ -1267,9 +1275,12 @@ async def help(cmd):
 		else:
 			# catch-all response for when user isn't in a sub-zone with a help response
 			response = ewcfg.generic_help_response
+
+		resp_cont.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 				
 	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+	await resp_cont.post()
+	#await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 """
 	Link to the world map.
@@ -2154,6 +2165,9 @@ async def toss_off_cliff(cmd):
 				return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 			else:
 				return await ewitem.discard(cmd=cmd)
+		else:
+			response = "You don't have that item."
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 	elif item_sought:
 		item_obj = EwItem(id_item=item_sought.get('id_item'))
