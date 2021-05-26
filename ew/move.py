@@ -946,7 +946,7 @@ async def move(cmd=None, isApt=False):
                             await fe_utils.send_message(cmd.client, channel,
                                                        fe_utils.formatMessage(cmd.message.author, ad_response))
 
-        if intoApt:
+        if intoApt and ewutils.moves_active[cmd.message.author.id] == move_current:
             await ewapt.retire(cmd=cmd, isGoto=True, movecurrent=move_current)
         await asyncio.sleep(30)
         try:
@@ -1067,6 +1067,9 @@ async def teleport(cmd):
             ewutils.moves_active[cmd.message.author.id] = 0
             user_data.poi = poi.id_poi
             user_data.time_lastenter = int(time.time())
+
+            if poi.id_poi == ewcfg.poi_id_thesewers:
+                user_data.die(cause=ewcfg.cause_suicide)
 
             user_data.persist()
 
@@ -1806,6 +1809,10 @@ async def slap(cmd):
 
             mutation_data.data = str(time_now)
             mutation_data.persist()
+
+            if target_data.poi == ewcfg.poi_id_thesewers:
+                target_data.die(cause=ewcfg.cause_suicide)
+                target_response += " But you hit your head really hard! Your precious little dome explodes into bits and pieces and you die!"
 
             user_data.persist()
             target_data.persist()
