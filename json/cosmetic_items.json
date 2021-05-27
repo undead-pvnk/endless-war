@@ -1987,7 +1987,7 @@
         "durability": 250000,
         "size": 0,
         "style": "cute",
-        "freshness": 20,
+        "freshness": 10,
         "ingredients": "",
         "acquisition": "Safari",
         "price": 1000000,
@@ -2006,7 +2006,7 @@
         "durability": 250000,
         "size": 0,
         "style": "beautiful",
-        "freshness": 20,
+        "freshness": 10,
         "ingredients": "",
         "acquisition": "Safari",
         "price": 1000000,
@@ -2025,7 +2025,7 @@
         "durability": 250000,
         "size": 0,
         "style": "tough",
-        "freshness": 20,
+        "freshness": 10,
         "ingredients": "",
         "acquisition": "Safari",
         "price": 1000000,
@@ -2044,7 +2044,7 @@
         "durability": 250000,
         "size": 0,
         "style": "cute",
-        "freshness": 20,
+        "freshness": 10,
         "ingredients": "",
         "acquisition": "Safari",
         "price": 1000000,
@@ -2063,7 +2063,7 @@
         "durability": 250000,
         "size": 0,
         "style": "smart",
-        "freshness": 20,
+        "freshness": 10,
         "ingredients": "",
         "acquisition": "Safari",
         "price": 1000000,
@@ -2087,7 +2087,7 @@
         "acquisition": "",
         "price": 50000,
         "vendors": [
-            "Safari Gift Shop"
+            "bazaar"
         ],
         "is_hat": true
     }

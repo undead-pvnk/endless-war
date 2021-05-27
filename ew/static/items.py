@@ -494,7 +494,7 @@ item_list = [
 		],
 		str_name="Juvie Grade FUCK ENERGY Body Spray",
 		str_desc="A canister of perfume. Somehow doubles as a slime beast repellant. The label on the back says it lasts for three hours.",
-		vendors=[ewcfg.vendor_glocksburycomics, ewcfg.vendor_safari],
+		vendors=[ewcfg.vendor_glocksburycomics],
 		price=10000,
 	),
 	EwGeneralItem(
@@ -1641,7 +1641,7 @@ EwGeneralItem(
 		alias = ["repairkit", "fieldrepair"],
 		str_desc = "A field repair kit for pantaloons, brunches, spyglasses and manners. Could be used to repair a hunting rifle too, in a pinch.",
 		price = 500000,
-		vendors = [ewcfg.vendor_safari]
+		vendors = [ewcfg.vendor_bazaar]
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_spacecarp,
@@ -1720,8 +1720,7 @@ EwGeneralItem(
 		str_desc = "A spray-on bottle of Kinkfish pheromones. Apparently, it attracts all sorts of things despite smelling like shit.",
 		acquisition = ewcfg.acquisition_smelting,
 		context = "pheromones",
-		price = 10000,
-		vendors = [ewcfg.vendor_safari]
+		price = 10000
 	),
 	EwGeneralItem(
 		id_item = ewcfg.item_id_trophy_microgull,
