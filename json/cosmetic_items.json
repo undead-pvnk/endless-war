@@ -2090,5 +2090,24 @@
             "bazaar"
         ],
         "is_hat": true
+    },
+    "safaribadge": {
+        "id_cosmetic": "safaribadge",
+        "str_name": "Safari Badge",
+        "str_desc": "A cardboard \"badge\" with \"Safari\" scrawled on it in crayon. It's even got double-sided tape instead of a safety pin! They didn't spare *any* expense!",
+        "str_onadorn": "You stick the Safari Badge to yourself. You feel a portion of your lost safari power return to you...",
+        "str_unadorn": "You unstick the Safari Badge from yourself. You feel drained of safari power.",
+        "str_onbreak":"Whaaaa-? The Safari Badge distintegrates before your very eyes. Thanks for the memories, little friend!",
+        "rarity": "Safari",
+        "ability": "safaripower",
+        "durability": 250000,
+        "size": 0,
+        "style": "cool",
+        "freshness": 10,
+        "ingredients": "",
+        "acquisition": "",
+        "price": 50000,
+        "vendors": [],
+        "is_hat": false
     }
 }
