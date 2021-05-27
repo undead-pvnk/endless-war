@@ -3,7 +3,6 @@ import asyncio
 import math
 import random
 import time
-import datetime
 
 from . import combat as cmbt_utils
 from . import core as ewutils

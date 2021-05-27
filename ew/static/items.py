@@ -1728,6 +1728,12 @@ EwGeneralItem(
 		str_desc = "A miniscule hunting trophy snatched from the wings of a Micro Gull. Ahhh, the thrill of the hunt...",
 		acquisition = ewcfg.acquisition_huntingtrophy
 	),
+	EwGeneralItem(
+		id_item = ewcfg.item_id_feather,
+		str_name = "Regular Feather",
+		str_desc = "A perfectly normal feather. Nothing suspicious about this, nossir.",
+		acquisition = ewcfg.acquisition_huntingtrophy
+	),
 	# EwSeedPacket(
 	# 	id_item=ewcfg.item_id_gaiaseedpack_pulpgourds,
 	# 	cooldown=45,

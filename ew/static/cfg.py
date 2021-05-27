@@ -1,5 +1,3 @@
-import datetime
-
 # Global configuration options.
 
 
@@ -2785,6 +2783,7 @@ item_id_string = "string"
 item_id_tincan = "tincan"
 item_id_oldboot = "oldboot"
 item_id_leather = "leather"
+item_id_feather = "feather"
 item_id_ironingot = "ironingot"
 item_id_bloodstone = "bloodstone"
 item_id_tanningknife = "tanningknife"
@@ -4465,7 +4464,7 @@ enemy_drop_tables = {
 		{item_id_moonrock: [50, 1, 1]},
 	],
 	enemy_type_microgullswarm: [
-		{item_id_rainwing: [5, 1, 1]}
+		{item_id_feather: [5, 1, 1]}
 	]
 }
 for enemy in gvs_enemies:
