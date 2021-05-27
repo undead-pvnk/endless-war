@@ -80,18 +80,7 @@
             "theslimestockexchange": 20,
             "endlesswar": 20,
             "slimecorphq": 20,
-            "downtownsubwaystation": 20,
-            "n10office": 20,
-            "n9office": 20,
-            "n8office": 20,
-            "n7office": 20,
-            "n5office": 20,
-            "n4office": 20,
-            "n3office": 20,
-            "n11office": 20,
-            "n13office": 20,
-            "n2office": 20,
-            "n12office": 20
+            "downtownsubwaystation": 20
         },
         "topic": "The Heart of New Los Angeles City, aka Neo Milwaukee. Site of the Slime Stock Exchange, the corporate headquarters of Slimecorp and Yum! Brands, and ENDLESS WAR itself.",
         "wikipage": "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM"
@@ -6765,8 +6754,7 @@
         "neighbors": {
             "astatineheights": 20,
             "astatineheightsstreetb": 20,
-            "astatineheightsstreetd": 20,
-            "maimridgestreeta": 20
+            "astatineheightsstreetd": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Astatine_Heights#Mountain_Condos"
@@ -9443,8 +9431,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "downtown": 20,
-            "n10office": 20
+            "downtown": 20
         },
         "topic": "https://ew.krakissi.net/market/",
         "wikipage": "https://rfck.miraheze.org/wiki/Downtown_NLACakaNM#Slime_Stock_Exchange"
@@ -16386,7 +16373,7 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "n11office": 20
+            "downtown": 20
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/SlimeCorp"
@@ -17673,9 +17660,7 @@
         "max_degradation": 10000,
         "neighbors": {
             "nuclearbeach": 60,
-            "northoutskirtsdepths": 60,
-            "slimecorphotel": 60,
-            "securityforcetunnel": 30
+            "northoutskirtsdepths": 60
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Outskirts#Depths"
@@ -17813,7 +17798,7 @@
         "wikipage": ""
     },
     "limecorp3f": {
-    "id_poi": "n11office",
+    "id_poi": "limecorp3f",
     "alias": [
         "809231f",
         "n11",
@@ -17857,7 +17842,7 @@
     "mother_districts": [
 
     ],
-    "father_district": "",
+    "father_district": "downtown",
     "is_transport": false,
     "transport_type": "",
     "default_line": "",
@@ -17919,7 +17904,7 @@
     "mother_districts": [
 
     ],
-    "father_district": "",
+    "father_district": "downtown",
     "is_transport": false,
     "transport_type": "",
     "default_line": "",
@@ -17985,7 +17970,7 @@
     "mother_districts": [
 
     ],
-    "father_district": "",
+    "father_district": "downtown",
     "is_transport": false,
     "transport_type": "",
     "default_line": "",
@@ -18007,7 +17992,7 @@
     "wikipage": ""
 },
     "maimridgestreeta": {
-        "id_poi": "thesummit",
+        "id_poi": "maimridgestreeta",
         "alias": [
             "thesummit",
             "summit",
@@ -18045,7 +18030,7 @@
         "is_apartment": false,
         "is_street": true,
         "mother_districts": [],
-        "father_district": "",
+        "father_district": "maimridge",
         "is_transport": false,
         "transport_type": "",
         "default_line": "",
@@ -18103,7 +18088,7 @@
         "is_apartment": false,
         "is_street": true,
         "mother_districts": [],
-        "father_district": "",
+        "father_district": "maimridge",
         "is_transport": false,
         "transport_type": "",
         "default_line": "",
@@ -18183,23 +18168,22 @@
         "wikipage": "https://rfck.miraheze.org/wiki/Maimridge#Colloid_Springs"
     },
         "temple": {
-        "id_poi": "maimridgestreetc",
+        "id_poi": "temple",
         "alias": [
-            "colloidsprings",
-            "colloid"
+            "mountaintemple"
         ],
-        "str_name": "Colloid Springs",
-        "str_desc": "These natural hot springs can be found throughout Maimridge, both inside and outside a set of cave systems that they occupy halfway up the mountain. You don\u2019t have to be an archaeologist to know that these things were a major attraction, even in the past, judging by the staggering amount of ancient ruins that surround them. It\u2019s not surprising that they\u2019ve ended up as another one of Maimridge\u2019s tourist traps, but there are rumors of patrons taking a dip and not coming back up. Perhaps something sinister lurks within them\u2026 This street connects back into Maimridge, and goes up the mountain into the Ski Lodges.",
+        "str_name": "Mountain Temple",
+        "str_desc": "",
         "str_in": "in",
         "str_enter": "enter",
         "coord": null,
         "coord_alias": [],
-        "channel": "colloid-springs",
+        "channel": "temple",
         "role": null,
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "colloid-springs": [
+            "temple": [
                 "read",
                 "send",
                 "connect"
@@ -18234,10 +18218,9 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "maimridge": 20,
-            "maimridgestreetb": 20
+            "maimridgestreeta": 20
         },
         "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Maimridge#Colloid_Springs"
+        "wikipage": ""
     }
 }

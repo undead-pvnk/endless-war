@@ -391,7 +391,6 @@ def path_to(
             num_neighbors = len(neighs)
             i = 0
             for i in range(num_neighbors):
-
                 neigh = poi_static.id_to_poi.get(neighs[i])
                 neigh_cost = step_last.neighbors.get(neigh.id_poi)
 

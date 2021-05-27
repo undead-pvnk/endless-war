@@ -1384,18 +1384,20 @@ async def embiggen(cmd):
 			else:
 				if size == ewcfg.fish_size_miniscule:
 					fish.item_props['size'] = ewcfg.fish_size_small
-
+					fish.item_props['length'] = ewcfg.fish_size_median[ewcfg.fish_size_small]
 				if size == ewcfg.fish_size_small:
 					fish.item_props['size'] = ewcfg.fish_size_average
-
+					fish.item_props['length'] = ewcfg.fish_size_median[ewcfg.fish_size_average]
 				if size == ewcfg.fish_size_average:
 					fish.item_props['size'] = ewcfg.fish_size_big
-
+					fish.item_props['length'] = ewcfg.fish_size_median[ewcfg.fish_size_big]
 				if size == ewcfg.fish_size_big:
 					fish.item_props['size'] = ewcfg.fish_size_huge
-
+					fish.item_props['length'] = ewcfg.fish_size_median[ewcfg.fish_size_huge]
 				if size == ewcfg.fish_size_huge:
 					fish.item_props['size'] = ewcfg.fish_size_colossal
+					fish.item_props['length'] = ewcfg.fish_size_median[ewcfg.fish_size_colossal]
+				fish.item_props['embiggened'] = 'illegal'
 
 				fish.persist()
 

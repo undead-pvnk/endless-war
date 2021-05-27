@@ -523,6 +523,30 @@ def check_art_for_duplicates(link):
         ewutils.logMsg("Error while checking for duplicates.")
 
 
+async def populate_image(cmd):
+    if cmd.message.author.guild_permissions.administrator:
+        if cmd.message.tokens_count != 4:
+            response = ""
+        else:
+            type = cmd.tokens[1]
+            item = cmd.tokens[2]
+            link = cmd.tokens[3]
+
+            if type == "art":
+                channel = fe_utils.get_channel(server=cmd.guild.id, channel_name='art-exhibits')
+            elif type == "fish":
+                channel = fe_utils.get_channel(server=cmd.guild.id, channel_name='aquarium')
+            else:
+                response = "Invalid command. Try !addart <fish/art> <title> <link>"
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+            record = EwRecord(id_server=cmd.guild.id, record_type=item)
+            message = channel.fetch_message(record.id_post)
+            message.edit(content = message.content.replace('*...*', link))
+            response = "Added an image to the message."
+
+
+
 """ transfer slimecoin between players """
 async def xfer(cmd):
     time_now = round(time.time())

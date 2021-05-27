@@ -260,6 +260,7 @@ cmd_map = {
 	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
 
 	ewcfg.cmd_frame: ewapt.frame,
+	ewcfg.cmd_addart: ewmarket.populate_image,
 	ewcfg.cmd_extractsoul: ewitem.soulextract,
 	ewcfg.cmd_returnsoul: ewitem.returnsoul,
 	ewcfg.cmd_betsoul: ewcasino.betsoul,
