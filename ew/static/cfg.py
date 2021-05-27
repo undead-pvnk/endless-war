@@ -4275,7 +4275,7 @@ enemy_class_gaiaslimeoid = 'gaiaslimeoid'
 enemy_class_shambler = 'shambler'
 
 # List of enemies sorted by their spawn rarity.
-common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime, enemy_type_rivalhunter]
+common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime]
 uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime, enemy_type_spacecarp]
 rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed, enemy_type_mammoslimebull, enemy_type_microgullswarm]
 raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator, enemy_type_titanoslime]
