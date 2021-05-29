@@ -1545,6 +1545,19 @@ smelting_recipe_list = [
 			ewcfg.item_id_repairkit: 1
 		},
 		products=[ewcfg.weapon_id_huntingrifle]
+	),
+	EwSmeltingRecipe(
+		id_recipe="phoenixdownpillow",
+		str_name="phoenix down pillow",
+		alias = [
+			'phoenixpillow',
+			'downpillow',
+			'pheonixpillow'
+		],
+		ingredients={
+			ewcfg.item_id_phoenixdown: 5
+		},
+		products=['phoenixdownpillow']
 	)
 	# TODO remove after double halloween
 	#EwSmeltingRecipe(

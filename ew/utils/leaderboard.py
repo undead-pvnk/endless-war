@@ -54,8 +54,6 @@ async def post_leaderboards(client = None, server = None):
 	#await ewutils.send_message(client, leaderboard_channel, topgambit)
 	#bottomgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_low)
 	#await ewutils.send_message(client, leaderboard_channel, bottomgambit)
-	topsafari = make_userdata_board(server = server, category = ewcfg.col_safari_power, title = ewcfg.leaderboard_safari)
-	await fe_utils.send_message(client, leaderboard_channel, topsafari)
 
 def make_stocks_top_board(server = None):
 	entries = []
@@ -518,10 +516,6 @@ def board_header(title):
 
 	elif title == ewcfg.leaderboard_fashion:
 		emote = ewcfg.emote_111
-		bar += " "
-	
-	elif title == ewcfg.leaderboard_safari:
-		emote = ewcfg.emote_slime1
 		bar += " "
 	
 	if emote == None and emote2 == None:

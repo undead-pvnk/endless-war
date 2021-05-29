@@ -62,7 +62,6 @@ CREATE TABLE users (
 	time_lasthit int NOT NULL DEFAULT '0',
 	rand_seed bigint NOT NULL DEFAULT '0',
 	verified boolean NOT NULL DEFAULT '0',
-	safari_power int NOT NULL DEFAULT '0'
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
@@ -93,8 +92,6 @@ CREATE TABLE markets (
 	horseman_deaths int NOT NULL DEFAULT '0',
 	horseman_timeofdeath int NOT NULL DEFAULT '0',
 	winner varchar(32) NOT NULL DEFAULT '',
-	total_safari_power int NOT NULL DEFAULT '0',
-	current_safari_boss varchar(64) NOT NULL DEFAULT ''
 
 	PRIMARY KEY (id_server)
 );
