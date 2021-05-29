@@ -1165,13 +1165,13 @@ async def help(cmd):
 			topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			if topic in ewcfg.help_responses:
 				response = ewcfg.help_responses[topic]
+				resp_cont.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 				if topic == 'mymutations':
 					mutations = user_data.get_mutations()
 					if len(mutations) == 0:
-						response += "\nWait... you don't have any!"
+						response = "\nWait... you don't have any!"
 						resp_cont.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 					else:
-						resp_cont.add_channel_response(cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 						for mutation in mutations:
 							response = "**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
 							resp_cont.add_channel_response(cmd.message.channel, response)
