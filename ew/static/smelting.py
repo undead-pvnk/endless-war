@@ -1519,6 +1519,45 @@ smelting_recipe_list = [
 			ewcfg.item_id_slimepoudrin: 2,  # lifeforce
 		},
 		products=["ferroslimeoid"]
+	),
+	EwSmeltingRecipe(
+		id_recipe="pheromones",
+		str_name="a bottle of pheromones",
+		alias = [
+			'kinkfishpheromones',
+			'antirepel'
+		],
+		ingredients={
+			'kinkfish': 1
+		},
+		products=['pheromones']
+	),
+	EwSmeltingRecipe(
+		id_recipe="huntingrifle",
+		str_name="a hunting rifle",
+		alias = [
+			'hrifle',
+			'huntersrifle',
+			'huntergun'
+		],
+		ingredients={
+			ewcfg.item_id_bustedrifle: 1,
+			ewcfg.item_id_repairkit: 1
+		},
+		products=[ewcfg.weapon_id_huntingrifle]
+	),
+	EwSmeltingRecipe(
+		id_recipe="phoenixdownpillow",
+		str_name="phoenix down pillow",
+		alias = [
+			'phoenixpillow',
+			'downpillow',
+			'pheonixpillow'
+		],
+		ingredients={
+			ewcfg.item_id_phoenixdown: 5
+		},
+		products=['phoenixdownpillow']
 	)
 	# TODO remove after double halloween
 	#EwSmeltingRecipe(

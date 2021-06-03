@@ -237,19 +237,21 @@ async def signlease(cmd):
 		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-async def retire(cmd):
+async def retire(cmd=None, isGoto = False, movecurrent=None):
 	user_data = EwUser(member=cmd.message.author)
 	poi = poi_static.id_to_poi.get(user_data.poi)
 	poi_dest = poi_static.id_to_poi.get(ewcfg.poi_id_apt + user_data.apt_zone) #there isn't an easy way to change this, apologies for being a little hacky
 
 
 	owner_user = None
-	if cmd.mentions_count == 0 and cmd.tokens_count > 1:
+	if cmd.mentions_count == 0 and cmd.tokens_count > 1 and isGoto == False:
 		server = cmd.guild
 		member_object = server.get_member(ewutils.getIntToken(cmd.tokens))
 		owner_user = EwUser(member = member_object)
 	elif cmd.mentions_count == 1:
 		owner_user = EwUser(member = cmd.mentions[0])
+
+
 
 	if owner_user:
 		return await usekey(cmd, owner_user)
@@ -262,9 +264,12 @@ async def retire(cmd):
 		response = "You don't own an apartment here."
 		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	else:
-		ewmap.move_counter += 1
-		move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
-		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You start walking toward your apartment."))
+		if isGoto:
+			move_current = movecurrent
+		else:
+			ewmap.move_counter += 1
+			move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You start walking toward your apartment."))
 		await asyncio.sleep(20)
 
 		if move_current == ewutils.moves_active[cmd.message.author.id]:

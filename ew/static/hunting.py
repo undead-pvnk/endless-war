@@ -141,7 +141,17 @@ def atf_body(ctn=None):
 	if aim == 10:
 		ctn.crit = True
 		ctn.slimes_damage *= 2
-		
+def atf_smallclaws(ctn=None):
+	chance = random.randrange(3)
+	if chance <= 1:
+		ctn.miss = True
+	if chance == 2:
+		strikes = random.randrange(5)
+		ctn.strikes = strikes
+		ctn.slimes_damage *= 0.05
+	if chance == 3:
+		ctn.slimes_damage *= 0.3
+		ctn.crit = True
 def atf_gvs_basic(ctn=None):
 	pass
 
@@ -290,6 +300,24 @@ enemy_attack_type_list = [
 		str_killdescriptor="disintegrated",
 		str_damage="{name_enemy} swings it's car width legs full speed into {name_target}! N6 laughs and watches you eat shit on the pavement!",
 		fn_effect=atf_tusks
+	),
+	EwAttackType(  # 12
+		id_type="gnash",
+		str_crit="**GNASH GNASH GNASH!!!** The {name_enemy} opens it's mouth as wide it can go and chomps down on {name_target}! OOF!",
+		str_miss="**MISS!** {name_target} barely sidesteps the {name_enemy}'s lunging bite!",
+		str_kill="**GNASH!!!** The {name_enemy} catches you in it's mouth and flails you around a little, for effect. The world fades from view as the venom takes over. {emote_skull}",
+		str_killdescriptor="gnashed",
+		str_damage="{name_enemy} chomps into {name_target}! {name_target} is looking a little woozy!",
+		fn_effect=atf_fangs
+	),
+	EwAttackType(  # 13
+		id_type="beak",
+		str_crit="**PECK PECK PECK!!!** The {name_enemy} rips you to shreds! {name_target} is bleeding profusely!",
+		str_miss="**SWOOSH!** {name_target} barely misses {name_enemy} and swoops around for another shot!",
+		str_kill="**PECK PECK!!!** The {name_enemy} swoops at you with malice in their eyes. {name_target} never had a chance as their skin is ripped off, piece by piece. {emote_skull}",
+		str_killdescriptor="pecked",
+		str_damage="{name_enemy} pecks at {name_target}! They draw blood!",
+		fn_effect=atf_talons
 	),
 	# If str_trauma and str_trauma_self make a return, consider filling GvS attacktypes out in these attributes.
 	EwAttackType( # GvS - 1

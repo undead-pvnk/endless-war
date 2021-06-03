@@ -1,5 +1,8 @@
 import time
 
+from .backend import item as bknd_item 
+from .backend.item import EwItem
+from .backend.market import EwMarket
 from .static import cfg as ewcfg
 from .static import poi as poi_static
 from .utils import frontend as fe_utils
@@ -120,4 +123,3 @@ async def summongvsenemy(cmd):
 		)
 	
 		await resp_cont.post()
-

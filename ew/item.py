@@ -191,12 +191,12 @@ async def inventory_print(cmd):
         if len(items) == 0:
             response = "The community chest is empty."
         else:
-            response = "The community chest contains:"
+            response = "__The community chest contains:__"
     else:
         if len(items) == 0:
             response = "You don't have anything."
         else:
-            response = "You are holding:"
+            response = "__You are holding:__"
 
     msg_handle = None
     try:
@@ -220,6 +220,7 @@ async def inventory_print(cmd):
     if len(items) > 0:
 
         response = ""
+        current_type = ""
 
         for item in items:
             id_item = item.get('id_item')
@@ -232,6 +233,12 @@ async def inventory_print(cmd):
                     soulbound_style = ("**" if item.get('soulbound') else ""),
                     quantity = (" x{:,}".format(quantity) if (quantity > 1) else "")
                 )
+
+                # Print item type labels if sorting by type and showing a new type of items
+                if sort_by_type:
+                    if current_type != item.get('item_type'):
+                        current_type = item.get('item_type')
+                        response_part = "\n**=={}==**".format(current_type.upper()) + response_part
             else:
 
                 item_name = item.get('name')
@@ -253,6 +260,7 @@ async def inventory_print(cmd):
                 response += response_part
 
         if stacking:
+            current_type = ""
             item_names = stacked_item_map.keys()
             if sort_by_name:
                 item_names = sorted(item_names)
@@ -264,6 +272,12 @@ async def inventory_print(cmd):
                     soulbound_style=("**" if item.get('soulbound') else ""),
                     quantity=(" **x{:,}**".format(quantity) if (quantity > 0) else "")
                 )
+
+                # Print item type labels if sorting by type and showing a different type of items
+                if sort_by_type:
+                    if current_type != item.get('item_type'):
+                        current_type = item.get('item_type')
+                        response_part = "\n**=={}==**".format(current_type.upper()) + response_part
 
                 if len(response) + len(response_part) > 1492:
                     if can_message_user:
@@ -547,6 +561,14 @@ async def item_use(cmd):
                     elif context == 'maxrepel':
                         response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=4)
                     bknd_item.item_delete(item.id_item)
+            elif context == 'pheromones':
+                response = user_data.applyStatus(ewcfg.status_pheromones_id)
+                bknd_item.item_delete(item.id_item)
+
+            elif context == 'rain':
+                # TODO : Rain dance code (this joke is that all this stuff is junk)
+                response = "You begin the rain dance, jumping about with the feather as you perform the ancient ritual. The skys darken and grow heavy with the burden of moisture. Finally, in a final flourish to unleash the downpour, you fucking trip and fall flat on your face. Good job, dumbass!"
+                
             elif context == ewcfg.item_id_gellphone:
 
                 if user_data.has_gellphone():
@@ -616,8 +638,13 @@ async def item_use(cmd):
 
                 user_data.degradation = 0
                 user_data.persist()
-
+            
                 bknd_item.item_delete(item.id_item)
+
+            elif context == "revive":
+                # TODO Slimeoid revive code
+                # Expect another argument after the context, being the name of the slimeoid to be revived
+                response = "You try to \"revive\" your fallen Slimeoid. Too bad this ain't a video game, or it might have worked!"
 
             elif ewcfg.item_id_key in context and context != 'housekey':
                 if user_data.poi == "room102" and context == 'reelkey':
