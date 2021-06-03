@@ -1,9 +1,7 @@
-import datetime
-
 # Global configuration options.
 
 
-version = "v4.0069 Safari"
+version = "v4.0070 No Safari"
 
 
 
@@ -1503,10 +1501,6 @@ cmd_addstatuseffect = cmd_prefix + 'addstatuseffect'
 #SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
-# SAFARi
-cmd_safaripower = cmd_prefix + 'safari'
-cmd_safari_handin = cmd_prefix + 'handin'
-
 offline_cmds = [
 	cmd_move,
 	cmd_move_alt1,
@@ -2257,7 +2251,6 @@ col_race = 'race'
 col_time_racialability = 'time_racialability'
 col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
 col_verified = 'verified'
-col_safari_power = 'safari_power'
 
 col_attack = 'attack'
 col_speed = 'speed'
@@ -2472,10 +2465,6 @@ col_id_state = "id_state"
 col_id_user_pranker = 'id_user_pranker'
 col_id_user_pranked = 'id_user_pranked'
 col_prank_count = 'prank_count'
-		
-#SAFARI
-col_total_safari_power = 'total_safari_power'
-col_current_safari_boss = 'current_safari_boss'
 
 # Item type names
 it_item = "item"
@@ -2511,8 +2500,6 @@ leaderboard_shamblers_killed = "MOST SHAMBLER KILLS"
 #SWILLDERKMUK
 leaderboard_gambit_high = "HIGHEST GAMBIT"
 leaderboard_gambit_low = "LOWEST GAMBIT"
-# SAFARI
-leaderboard_safari = "APEX PREDATORS"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -2746,7 +2733,6 @@ vendor_atomicforest = "Atomic Forest Stockpile" # Storage of atomic forest
 vendor_downpourlaboratory = "Downpour Armament Vending Machines" # Store for shamblers to get stuff
 vendor_breakroom = "The Breakroom" # Security officers can order items here for free.
 vendor_rpcity = "RP City" # Double halloween costume store
-vendor_safari = "Safari Gift Shop" # Safari Gift Shop
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_negapoudrin = 'negapoudrin'
@@ -2797,6 +2783,7 @@ item_id_string = "string"
 item_id_tincan = "tincan"
 item_id_oldboot = "oldboot"
 item_id_leather = "leather"
+item_id_feather = "feather"
 item_id_ironingot = "ironingot"
 item_id_bloodstone = "bloodstone"
 item_id_tanningknife = "tanningknife"
@@ -3019,7 +3006,7 @@ item_id_paint_gold = "goldpaint"
 
 fuck_energies = ['khaotickilliflowerfuckenergy', 'rampagingrowddishfuckenergy', 'direappleciderfuckenergy', 'ultimateurinefuckenergy', 'superwaterfuckenergy', 'justcumfuckenergy', 'goonshinefuckenergy', 'liquidcoffeegroundsfuckenergy', 'joybeanjavafuckenergy', 'krakacolafuckenergy', 'drfuckerfuckenergy']
 
-# Hunting trophy ids for safari event
+# Hunting trophy ids from safari event
 item_id_trophy_juvie = "juvietrophy"
 item_id_trophy_dinoslime = "dinoslimetrophy"
 item_id_trophy_slimeadactyl = "slimeadactlytrophy"
@@ -3700,7 +3687,6 @@ status_injury_legs_id = "injury_legs"
 status_kevlarattire_id = "kevlarattire"
 status_hogtied_id = "hogtied"
 
-# SAFARIIIII
 status_pheromones_id = "pheromones"
 
 time_expire_burn = 12
@@ -4219,21 +4205,6 @@ enemy_type_slimeasaurusrex = 'slimeasaurusrex'
 enemy_type_greeneyesslimedragon = 'greeneyesslimedragon'
 enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 
-# Daily Hunt-a-thon bosses
-# Day 1 - Seagull
-enemy_type_gull = 'gull'
-# Day 2 - Manul
-enemy_type_garfield = 'garfield'
-# Day 3 - Secretary Birds
-enemy_type_n400 = 'n400'
-# Day 4 - Maned Wolf
-enemy_type_styx = 'styx'
-# Day 5 - Praire Dogs
-enemy_type_prairieking = 'prairieking'
-# Day 6 - Bowhead Whales
-enemy_type_wailord = 'wailord'
-# Day 7 - Red Ovenbird
-enemy_type_phoenix = 'phoenix'
 
 enemy_type_civilian = 'civilian'
 enemy_type_civilian_innocent = 'innocent'
@@ -4303,62 +4274,17 @@ enemy_class_gaiaslimeoid = 'gaiaslimeoid'
 enemy_class_shambler = 'shambler'
 
 # List of enemies sorted by their spawn rarity.
-common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime, enemy_type_rivalhunter]
+common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime]
 uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime, enemy_type_spacecarp]
 rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed, enemy_type_mammoslimebull, enemy_type_microgullswarm]
 raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator, enemy_type_titanoslime]
 
 enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
 
-safari_bosses = [enemy_type_gull, enemy_type_garfield, enemy_type_n400, enemy_type_styx, enemy_type_prairieking, enemy_type_wailord, enemy_type_phoenix]
-
-safari_day_one = datetime.date(2021, 5, 20)
-safari_day_two = datetime.date(2021, 5, 21)
-safari_day_three = datetime.date(2021, 5, 22)
-safari_day_four = datetime.date(2021, 5, 23)
-safari_day_five = datetime.date(2021, 5, 24)
-safari_day_six = datetime.date(2021, 5, 25)
-safari_day_seven = datetime.date(2021, 5, 26)
-
-safari_boss_date_map = {
-	safari_day_one : enemy_type_gull,
-	safari_day_two : enemy_type_garfield,
-	safari_day_three : enemy_type_n400,
-	safari_day_four : enemy_type_styx,
-	safari_day_five : enemy_type_prairieking,
-	safari_day_six : enemy_type_wailord,
-	safari_day_seven : enemy_type_phoenix
-}
 
 # List of enemies that spawn in the Nuclear Beach
 pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
  
-safari_trophy_values = {
-	item_id_trophy_juvie: 1,
-	item_id_trophy_dinoslime: 1,
-	item_id_trophy_slimeadactyl: 1,
-	item_id_trophy_microslime: 1,
-	item_id_trophy_microgull: 1,
-	item_id_trophy_slimeofgreed: 1,
-	item_id_trophy_desertraider: 1,
-	item_id_trophy_mammoslime: 1,
-	item_id_trophy_spacecarp: 1,
-	item_id_trophy_mammoslimebull: 1,
-	item_id_trophy_rivalhunter: 1,
-	item_id_trophy_spacecarp: 1,
-	item_id_trophy_microgull: 1,
-	item_id_trophy_megaslime: 5,
-	item_id_trophy_srex: 5,
-	item_id_trophy_dragon: 10,
-	item_id_trophy_ufo: 5,
-	item_id_trophy_gull: 10,
-	item_id_trophy_garfield: 10,
-	item_id_trophy_n400: 10,
-	item_id_trophy_styx: 10,
-	item_id_trophy_prairieking: 10,
-	item_id_trophy_wailord: 10,
-	item_id_trophy_phoenix: 10
-}
 
 # List of enemies used in the Gankers Vs. Shamblers event
 gvs_enemies_gaiaslimeoids = [
@@ -4424,13 +4350,12 @@ raid_boss_tiers = {
 overkill_enemies = [enemy_type_doubleheadlessdoublehorseman, enemy_type_doublehorse]
 
 # List of enemies that have other enemies spawn with them
-enemy_group_leaders = [enemy_type_doubleheadlessdoublehorseman, enemy_type_mammoslimebull, enemy_type_prairieking]
+enemy_group_leaders = [enemy_type_doubleheadlessdoublehorseman, enemy_type_mammoslimebull]
 
 # Dict of enemy spawn groups. The leader is the key, which correspond to which enemies to spawn, and how many.
 enemy_spawn_groups = {
 	enemy_type_doubleheadlessdoublehorseman: [enemy_type_doublehorse, 1],
-	enemy_type_mammoslimebull: [enemy_type_piloslime, 2],
-	enemy_type_prairieking: [enemy_type_prairiepawn, 4]
+	enemy_type_mammoslimebull: [enemy_type_piloslime, 2]
 }
 
 # Enemy drop tables. Values are sorted by the chance to the drop an item, and then the minimum and maximum amount of times to drop that item.
@@ -4443,40 +4368,33 @@ enemy_drop_tables = {
 		{rarity_plebeian: [5, 1, 1]}, 
 		{"crop": [30, 1, 1]}, 
 		{item_id_tradingcardpack: [20, 1, 1]},
-		{item_id_trophy_juvie: [100, 1, 1]}
 	],
 	enemy_type_dinoslime: [
 		{item_id_slimepoudrin: [100, 2, 4]}, 
 		{rarity_plebeian: [10, 1, 1]},  
 		{item_id_dinoslimemeat: [33, 1, 2]}, 
 		{item_id_monsterbones: [100, 3, 5]},
-		{item_id_trophy_dinoslime: [100, 1, 1]}
 	],
 	enemy_type_slimeadactyl: [
 		{item_id_slimepoudrin: [100, 3, 5]}, 
 		{rarity_plebeian: [10, 1, 1]}, 
 		{item_id_monsterbones: [100, 3, 5]},
-		{item_id_trophy_slimeadactyl: [100, 1, 1]}
 	],
 	enemy_type_microslime: [
 		{rarity_patrician: [100, 1, 1]},
-		{item_id_trophy_microslime: [100, 1, 1]}
 	],
 	enemy_type_slimeofgreed: [
 		{item_id_slimepoudrin: [100, 2, 2]},
-		{item_id_trophy_slimeofgreed: [100, 2, 2]}
 	],
 	enemy_type_desertraider: [
 		{item_id_slimepoudrin: [100, 1, 2]}, 
 		{rarity_plebeian: [50, 1, 1]},  
 		{"crop": [50, 3, 6]},
-		{item_id_trophy_desertraider: [100, 1, 1]}
 	],
 	enemy_type_mammoslime: [
 		{item_id_slimepoudrin: [75, 5, 6]},  
 		{rarity_patrician: [20, 1, 1]},
 		{item_id_monsterbones: [100, 1, 3]},
-		{item_id_trophy_mammoslime: [100, 1, 1]}
 	],
 	enemy_type_doubleheadlessdoublehorseman: [
 		{item_id_slimepoudrin: [100, 22, 22]}, 
@@ -4493,7 +4411,6 @@ enemy_drop_tables = {
 		{item_id_slimepoudrin: [100, 4, 8]}, 
 		{rarity_plebeian: [80, 1, 2]}, 
 		{rarity_patrician: [30, 1, 1]},
-		{item_id_trophy_megaslime: [100, 1, 1]}
 	],
 	enemy_type_slimeasaurusrex: [
 		{item_id_slimepoudrin: [100, 8, 15]}, 
@@ -4501,21 +4418,18 @@ enemy_drop_tables = {
 		{rarity_patrician: [20, 1, 2]},  
 		{item_id_dinoslimemeat: [100, 3, 4]}, 
 		{item_id_monsterbones: [100, 3, 5]},
-		{item_id_trophy_srex: [100, 1, 1]}
 	],
 	enemy_type_greeneyesslimedragon: [
 		{item_id_dragonsoul: [100, 1, 1]},
 		{item_id_slimepoudrin: [100, 15, 20]}, 
 		{rarity_patrician: [100, 1, 1]}, 
 		{item_id_monsterbones: [100, 5, 10]},
-		{item_id_trophy_dragon: [100, 1, 1]}
 	],
 	enemy_type_unnervingfightingoperator: [
 		{item_id_slimepoudrin: [100, 1, 1]}, 
 		{"crop": [100, 1, 1]}, 
 		{item_id_dinoslimemeat: [100, 1, 1]}, 
 		{item_id_tradingcardpack: [100, 1, 1]},
-		{item_id_trophy_ufo: [100, 1, 1]}
 	],
 	enemy_type_civilian: [
 		{item_id_slimepoudrin: [20, 1, 1]},
@@ -4539,65 +4453,18 @@ enemy_drop_tables = {
 		{item_id_slimepoudrin: [75, 6, 8]},  
 		{rarity_patrician: [20, 1, 1]},
 		{item_id_monsterbones: [100, 2, 4]},
-		{item_id_trophy_mammoslimebull: [100, 1, 1]}
 	],
 	enemy_type_piloslime: [
 		{item_id_slimepoudrin: [10, 1, 1]},
 		{item_id_monsterbones: [50, 1, 2]}
 	],
-	enemy_type_rivalhunter: [
-		{item_id_slimepoudrin: [100, 1, 1]},
-		{rarity_patrician: [30, 1, 1]},
-		{item_id_bustedrifle: [10, 1, 1]},
-		{item_id_trophy_rivalhunter: [100, 1, 1]},
-		{item_id_trophy_mammoslime: [20, 1, 1]},
-		{item_id_trophy_juvie: [20, 1, 1]},
-		{item_id_pheromones: [5, 1, 1]}
-	],
 	enemy_type_spacecarp: [
 		{item_id_slimepoudrin: [60, 1, 1]},
 		{item_id_carpotoxin: [50, 1, 1]},
 		{item_id_moonrock: [50, 1, 1]},
-		{item_id_trophy_spacecarp: [100, 1, 1]}
-	],
-	enemy_type_gull: [
-		{item_id_slimepoudrin: [100, 3, 7]},
-		{item_id_trophy_gull: [100, 1, 1]},
-		{'rainwing': [100, 1, 1]}
-	],
-	enemy_type_garfield: [
-		{item_id_slimepoudrin: [100, 3, 7]},
-		{item_id_trophy_garfield: [100, 1, 1]},
-		{'garfieldtail': [100, 1, 1]}
-	],
-	enemy_type_n400: [
-		{item_id_slimepoudrin: [100, 3, 7]},
-		{item_id_trophy_n400: [100, 1, 1]},
-		{'normalplume': [100, 1, 1]}
-	],
-	enemy_type_styx: [
-		{item_id_slimepoudrin: [100, 3, 7]},
-		{item_id_trophy_styx: [100, 1, 1]},
-		{'ominousslippers': [100, 1, 1]}
-	],
-	enemy_type_prairieking: [
-		{item_id_slimepoudrin: [100, 3, 7]},
-		{item_id_trophy_prairieking: [100, 1, 1]},
-		{'guillotinecharm': [100, 1, 1]}
-	],
-	enemy_type_wailord: [
-		{item_id_slimepoudrin: [100, 3, 7]},
-		{item_id_trophy_wailord: [100, 1, 1]},
-		{'navaluniform': [100, 1, 1]}
-	],
-	enemy_type_phoenix: [
-		{item_id_slimepoudrin: [100, 3, 7]},
-		{item_id_trophy_phoenix: [100, 1, 1]},
-		{'phoenixdown': [50, 1, 1]}
 	],
 	enemy_type_microgullswarm: [
-		{item_id_trophy_microgull: [100, 1, 1]},
-		{item_id_rainwing: [5, 1, 1]}
+		{item_id_feather: [5, 1, 1]}
 	]
 }
 for enemy in gvs_enemies:
@@ -4749,14 +4616,6 @@ enemy_data_table = {
 		"raredisplayname": "Space Patriarch",
 		"aliases": ["carp", "space", "spacedad", "spacepatriarch", "ss13"]
 	},
-	enemy_type_rivalhunter: {
-		"slimerange": [100000, 100000],
-		"ai": enemy_ai_attacker_a,
-		"attacktype": enemy_attacktype_rifle,
-		"displayname": "Rival Hunter",
-		"raredisplayname": "Sir Lemmingway",
-		"aliases": ["rival", "hunter", "sir", "lemmingway", "rhunter"]
-	},
 	enemy_type_mammoslimebull: {
 		"slimerange": [100000, 100000],
 		"ai": enemy_ai_attacker_a,
@@ -4764,70 +4623,6 @@ enemy_data_table = {
 		"displayname": "Mammoslime Bull",
 		"raredisplayname": "Apex Mammoslime",
 		"aliases": ["mammoswinebull", "swinebull", "mammobull", "apex", "apexmammoslime"]
-	},
-	enemy_type_gull: {
-		"slimerange": [3500000, 3500000],
-		"ai": enemy_ai_attacker_a,
-		"attacktype": enemy_attacktype_beak,
-		"displayname": "The Gull",
-		"raredisplayname": "The Land-Gull",
-		"aliases": ["seagull", "thegull", "seabird", "cgull", "landgull"]
-	},
-	enemy_type_garfield: {
-		"slimerange": [3500000, 3500000],
-		"ai": enemy_ai_attacker_a,
-		"attacktype": enemy_attacktype_claws,
-		"displayname": "Garfield",
-		"raredisplayname": "Slimefield",
-		"aliases": ["orangecat", "cat", "slimefield", "dakat"]
-	},
-	enemy_type_n400: {
-		"slimerange": [3500000, 3500000],
-		"ai": enemy_ai_attacker_a,
-		"attacktype": enemy_attacktype_kicks,
-		"displayname": "N400",
-		"raredisplayname": "N40,000",
-		"aliases": ["secretarybird", "secretary", "nfourhundred", "n40000", "n40k"]
-	},
-	enemy_type_styx: {
-		"slimerange": [3500000, 3500000],
-		"ai": enemy_ai_attacker_a,
-		"attacktype": enemy_attacktype_shadowclaws,
-		"displayname": "Styx",
-		"raredisplayname": "Top Dog",
-		"aliases": ["topdog", "dog", "manedwolf", "hound", "killerdog"]
-	},
-	enemy_type_prairieking: {
-		"slimerange": [3500000, 3500000],
-		"ai": enemy_ai_attacker_a,
-		"attacktype": enemy_attacktype_prairieking,
-		"displayname": "The Prairie King",
-		"raredisplayname": "President Prairie",
-		"aliases": ["prairiek", "kingprairie", "king", "president", "presidentprairie"]
-	},
-	enemy_type_prairiepawn: {
-		"slimerange": [10000, 10000],
-		"ai": enemy_ai_attacker_a,
-		"attacktype": enemy_attacktype_tinyclaws,
-		"displayname": "Prairie Pawn",
-		"raredisplayname": "Prairie Rook",
-		"aliases": ["prairiep", "prairiedog", "pdog", "pawn", "rook"]
-	},
-	enemy_type_wailord: {
-		"slimerange": [3500000, 3500000],
-		"ai": enemy_ai_attacker_a,
-		"attacktype": enemy_attacktype_whale,
-		"displayname": "Wailord",
-		"raredisplayname": "Whale Lord",
-		"aliases": ["whale", "fish", "lord", "wail", "whalelord"]
-	},
-	enemy_type_phoenix: {
-		"slimerange": [3500000, 3500000],
-		"ai": enemy_ai_attacker_a,
-		"attacktype": enemy_attacktype_phoenix,
-		"displayname": "Phoenix",
-		"raredisplayname": "Foenicks",
-		"aliases": ["firebird", "pheonix", "redovenbird", "foenicks", "foenix"]
 	},
 	enemy_type_microgullswarm: {
 		"slimerange": [100000, 100000],
