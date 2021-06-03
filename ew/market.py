@@ -443,7 +443,7 @@ async def fish_donate(id_item, cmd):
 async def relic_donate(id_item, cmd):
     item_obj = EwItem(id_item=id_item)
     if item_obj.item_props.get('donated') is not None and item_obj.item_props.get('donated') != 0:
-        response = "\"You already had me appraise this. Do you take me for some slime bovine you can just milk to your heart's content?\""
+        response = "\"You already had me appraise this. Eheheh, I can't give you slime for this again. Sorry!\""
     else:
         item_obj.item_props['donated'] = 1
         item_obj.persist()
@@ -451,6 +451,13 @@ async def relic_donate(id_item, cmd):
         relic_obj = relic_static.relic_map.get(item_obj.item_props.get('id_relic'))
         payout = relic_obj.amount_yield
         player = EwPlayer(id_user=item_obj.id_owner, id_server=cmd.guild.id)
+
+        if relic_obj.str_use == relic_static.debug1:
+            artplayer_obj = EwGamestate(id_server=cmd.guild.id, id_state='artplayer')
+            id_artplayer = int(artplayer_obj.value)
+            bknd_item.give_item(id_server=cmd.guild.id, id_user=id_artplayer, id_item=item_obj.id_item)
+            return relic_obj.str_museum
+
 
         museum_text = "{}\nDiscovered by {}\n*...*\n{}\n-------------------------------------------------".format(relic_obj.str_name, player.display_name, relic_obj.str_museum)
 
@@ -465,10 +472,9 @@ async def relic_donate(id_item, cmd):
         user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
         user_data.change_slimes(n=payout)
         user_data.persist()
-        response = "The curator takes the {} and excitedly jaunts into his backroom. Just when you suspect he's about to steal it, he bursts out the door with your relic in hand and gives it right back, along with {:,} slime.\n\n\"I made a replica for the museum. Don't tell anybody, but you can have this one back. You dregs would just steal the blasted thing otherwise.\"".format(relic_obj.str_str_name, payout)
+        response = "The curator takes the {} and excitedly jaunts into his backroom. Just when you suspect he's about to steal it, he bursts out the door with your relic in hand and gives it right back, along with {:,} slime.\n\n\"I made a replica for the museum. Don't tell anybody, but you can have this one back. A promise is a promise, haha.\"".format(relic_obj.str_str_name, payout)
 
     return response
-
 
 
 

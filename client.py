@@ -35,6 +35,7 @@ import ew.cmd as ewcmd
 import ew.cosmeticitem as ewcosmeticitem
 import ew.debug as ewdebug
 import ew.district as ewdistrict
+import ew.debugrelics as ewdebugrelics
 import ew.dungeons as ewdungeons
 import ew.faction as ewfaction
 import ew.farm as ewfarm
@@ -554,7 +555,7 @@ cmd_map = {
 	ewcfg.cmd_createitem: ewcmd.create_item,
 	ewcfg.cmd_manualsoulbind: ewcmd.manual_soulbind,
 	ewcfg.cmd_editprops: ewitem.manually_edit_item_properties,
-	ewcfg.cmd_setslime: ewcmd.set_slime,
+	ewcfg.cmd_setslime: ewdebugrelics.set_slime,
 	ewcfg.cmd_checkstats: ewcmd.check_stats,
 	ewcfg.cmd_makebp : ewcmd.make_bp,
 	#ewcfg.cmd_exalt: ewkingpin.exalt,
