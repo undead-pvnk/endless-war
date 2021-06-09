@@ -724,6 +724,7 @@ async def attack(cmd, n1_die = None):
 			if user_data.faction != shootee_data.faction and user_data.life_state not in (ewcfg.life_state_shambler, ewcfg.life_state_juvenile) and user_data.faction != ewcfg.faction_slimecorp:
 				# Give slimes to the boss if possible.
 				kingpin = fe_utils.find_kingpin(id_server = cmd.guild.id, kingpin_role = role_boss)
+				kingpin = EwUser(id_server=cmd.guild.id, id_user=kingpin.id_user)
 
 				if kingpin:
 					if ewcfg.mutation_id_handyman in user_mutations and weapon.is_tool == 1:
@@ -802,6 +803,19 @@ async def reload(cmd):
 		weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 		if ewcfg.weapon_class_ammo in weapon.classes:
+			if weapon.id_weapon == ewcfg.weapon_id_harpoon:
+				# Because this takes so long, we check a couple times if the player has died
+				response = "You start frantically reloading the harpoon gun..."
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+				await asyncio.sleep(2)
+				if user_data.life_state == ewcfg.life_state_corpse:
+					return
+				response = "...oh god oh fuck oh fuck oh god oh fuck oh shit..."
+				await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+				await asyncio.sleep(3)
+				if user_data.life_state == ewcfg.life_state_corpse:
+					return
+
 			weapon_item.item_props["ammo"] = weapon.clip_size
 			weapon_item.persist()
 			response = weapon.str_reload
@@ -811,7 +825,7 @@ async def reload(cmd):
 		sidearm_item = EwItem(id_item=user_data.sidearm)
 		sidearm = static_weapons.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
 
-		if ewcfg.weapon_class_ammo in sidearm.classes:
+		if ewcfg.weapon_class_ammo in sidearm.classes and sidearm.id_weapon != ewcfg.weapon_id_harpoon:
 			sidearm_item.item_props["ammo"] = sidearm.clip_size
 			sidearm_item.persist()
 			if response != "":
@@ -1305,6 +1319,8 @@ async def divorce(cmd):
 	# Checks to make sure you're in the dojo.
 	elif user_data.poi != ewcfg.poi_id_dojo:
 		response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
+	elif user_data.life_state == ewcfg.life_state_juvenile:
+		response = "The Dojo Master offers annulment services to paying customers only. Enlist in a gang and he'll consider removing you from your hellish facade of a relationship."
 	else:
 		poi = poi_static.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
