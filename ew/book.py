@@ -1,3 +1,4 @@
+from . import apt_package as ewapt
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 from .backend.book import EwBook
@@ -719,6 +720,9 @@ async def browse_zines(cmd):
 
 	user_data = EwUser(member=cmd.message.author)
 	poi = poi_static.id_to_poi.get(user_data.poi)
+
+	if poi.is_apartment:
+		return await ewapt.cmds.browse(cmd)
 
 	if not poi.write_manuscript:
 		response = "You can't browse for zines here! Try going to the cafe. If you're looking for educational zines, try the colleges. If you can't read, then you might want to try the comic shop."

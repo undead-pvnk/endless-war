@@ -7,6 +7,7 @@ from . import faction as ewfaction
 from . import item as ewitem
 from . import prank as ewprank
 from . import wep as ewwep
+from . import apt_package as ewapt
 from .backend import core as bknd_core
 from .backend import hunting as bknd_hunt
 from .backend import item as bknd_item
@@ -1261,6 +1262,8 @@ async def help(cmd):
 		elif user_data.poi in poi_static.outskirts:
 			# hunting help
 			response = ewcfg.help_responses['hunting']
+		elif poi_static.id_to_poi.get(user_data.poi).is_apartment:
+			response = "This is your apartment, your home away from home. You can store items here, but if you can't pay rent they will be ejected to the curb. You can store slimeoids here, too, but eviction sends them back to the real estate agency. You can only access them once you rent another apartment. Rent is charged every two IRL days, and if you can't afford the charge, you are evicted. \n\nHere's a command list. \n!depart: Leave your apartment. !goto commands work also.\n!look: look at your apartment, including all its items.\n!inspect <item>: Examine an item in the room or in your inventory.\n!stow <item>: Place an item in the room.\n!fridge/!closet/!decorate <item>: Place an item in a specific spot.\n!snag <item>: Take an item from storage.\n!unfridge/!uncloset/!undecorate <item>: Take an item from a specific spot.\n!freeze/!unfreeze <slimeoid name>: Deposit and withdraw your slimeoids. You can have 3 created at a time.\n!aptname <new name>:Change the apartment's name.\n!aptdesc <new name>: Change the apartment's base description.\n!bootall: Kick out any unwanted visitors in your apartment.\n!shelve <zine>:Store zines on your bookshelf.\n!unshelve <zine>: Take zines out of your bookshelf"
 		else:
 			# catch-all response for when user isn't in a sub-zone with a help response
 			response = ewcfg.generic_help_response
@@ -1885,7 +1888,8 @@ async def store_item(cmd):
 	if poi.community_chest != None:
 		return await ewfaction.store(cmd)
 	elif poi.is_apartment:
-		response = "Try that in a DM to ENDLESS WAR."
+		return await ewapt.cmds.store_item(cmd)
+		#response = "Try that in a DM to ENDLESS WAR."
 	else:
 		response = "There is no storage here, public or private."
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -1897,7 +1901,8 @@ async def remove_item(cmd):
 	if poi.community_chest != None:
 		return await ewfaction.take(cmd)
 	elif poi.is_apartment:
-		response = "Try that in a DM to ENDLESS WAR."
+		return await ewapt.cmds.remove_item(cmd)
+		#response = "Try that in a DM to ENDLESS WAR."
 	else:
 		response = "There is no storage here, public or private."
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

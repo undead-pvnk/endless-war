@@ -8,7 +8,7 @@ from copy import deepcopy
 import discord
 
 from . import ads as ewads
-from . import apt as ewapt
+from . import apt_package as ewapt
 from .backend import ads as bknd_ads
 from .backend import core as bknd_core
 from .backend.ads import EwAd
@@ -670,7 +670,7 @@ async def move(cmd=None, isApt=False):
         return await fe_utils.send_message(cmd.client, cmd.message.channel,
                                           fe_utils.formatMessage(cmd.message.author, "You're already there, bitch."))
     elif isApt and poi.id_poi == user_data.poi[3:]:
-        return await ewapt.depart(cmd=cmd)
+        return await ewapt.cmds.depart(cmd=cmd)
     flamestate = EwGamestate(id_server=user_data.id_server, id_state='flamethrower')
     if 'n4office' == poi.id_poi and flamestate.bit == 1:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You open the elevator, and are immediately met with fire spitting out of the elevator. Over the crackling flames you can hear a woman screaming \"AAAAAAAAGH FUCK YOU DIE DIE DIE DIE!!!!!\". You're guessing entering now is a bad idea."))
@@ -757,7 +757,7 @@ async def move(cmd=None, isApt=False):
         msg_walk_start = await fe_utils.send_message(cmd.client, cmd.message.channel,
                                                     fe_utils.formatMessage(cmd.message.author, walk_response))
         if isApt:
-            await ewapt.depart(cmd=cmd, isGoto=True, movecurrent=move_current)
+            await ewapt.cmds.depart(cmd=cmd, isGoto=True, movecurrent=move_current)
 
     time_move_end = int(time.time())
 
@@ -1139,7 +1139,7 @@ async def look(cmd):
     void_resp = get_void_connections_resp(poi.id_poi, user_data.id_server)
 
     if poi.is_apartment:
-        return await ewapt.apt_look(cmd=cmd)
+        return await ewapt.apt_look(cmd)
 
     if poi.is_subzone or poi.id_poi == ewcfg.poi_id_thevoid: # Triggers if you input the command in the void or a sub-zone.
         wikichar = '<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''

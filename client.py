@@ -20,7 +20,7 @@ import traceback
 import discord
 
 import ew.ads as ewads
-import ew.apt as ewapt
+import ew.apt_package as ewapt
 import ew.backend.ads as bknd_ads
 import ew.backend.core as bknd_core
 import ew.backend.farm as bknd_farm
@@ -71,6 +71,7 @@ import ew.utils.poi as poi_utils
 import ew.utils.rolemgr as ewrolemgr
 import ew.utils.weather as bknd_weather
 import ew.wep as ewwep
+import ew.wep_package as wep
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.market import EwStock
@@ -106,45 +107,45 @@ channels_slimetwitter = {}
 # Map of all command words in the game to their implementing function.
 cmd_map = {
 	# Attack another player
-	ewcfg.cmd_kill: ewwep.attack,
-	ewcfg.cmd_shoot: ewwep.attack,
-	ewcfg.cmd_shoot_alt1: ewwep.attack,
-	ewcfg.cmd_shoot_alt2: ewwep.attack,
-	ewcfg.cmd_shoot_alt3: ewwep.attack,
-	ewcfg.cmd_shoot_alt4: ewwep.attack,
-	ewcfg.cmd_shoot_alt5: ewwep.attack,
-	ewcfg.cmd_shoot_alt6: ewwep.attack,
-	ewcfg.cmd_shoot_alt7: ewwep.attack,
-	ewcfg.cmd_shoot_alt8: ewwep.attack,
-	ewcfg.cmd_attack: ewwep.attack,
+	#ewcfg.cmd_kill: ewwep.attack,
+	#ewcfg.cmd_shoot: ewwep.attack,
+	#ewcfg.cmd_shoot_alt1: ewwep.attack,
+	#ewcfg.cmd_shoot_alt2: ewwep.attack,
+	#ewcfg.cmd_shoot_alt3: ewwep.attack,
+	#ewcfg.cmd_shoot_alt4: ewwep.attack,
+	#ewcfg.cmd_shoot_alt5: ewwep.attack,
+	#ewcfg.cmd_shoot_alt6: ewwep.attack,
+	#ewcfg.cmd_shoot_alt7: ewwep.attack,
+	#ewcfg.cmd_shoot_alt8: ewwep.attack,
+	#ewcfg.cmd_attack: ewwep.attack,
 
 	# Reload
-	ewcfg.cmd_reload: ewwep.reload,
-	ewcfg.cmd_reload_alt1: ewwep.reload,
+	#ewcfg.cmd_reload: ewwep.reload,
+	#ewcfg.cmd_reload_alt1: ewwep.reload,
 	
 
 	# Choose your weapon
-	ewcfg.cmd_equip: ewwep.equip,
-	ewcfg.cmd_arm: ewwep.equip,
-	ewcfg.cmd_arsenalize: ewwep.equip,
-	ewcfg.cmd_sidearm: ewwep.sidearm,
+	#ewcfg.cmd_equip: ewwep.equip,
+	#ewcfg.cmd_arm: ewwep.equip,
+	#ewcfg.cmd_arsenalize: ewwep.equip,
+	#ewcfg.cmd_sidearm: ewwep.sidearm,
 	
 	# Kill yourself
-	ewcfg.cmd_suicide: ewwep.suicide,
-	ewcfg.cmd_suicide_alt1: ewwep.suicide,
-	ewcfg.cmd_suicide_alt2: ewwep.suicide,
-	ewcfg.cmd_haveastroke:ewapt.nothing,
-	ewcfg.cmd_moonhurtingbeam:ewapt.nothing,
+	#ewcfg.cmd_suicide: ewwep.suicide,
+	#ewcfg.cmd_suicide_alt1: ewwep.suicide,
+	#ewcfg.cmd_suicide_alt2: ewwep.suicide,
+	#ewcfg.cmd_haveastroke:ewapt.nothing,
+	#ewcfg.cmd_moonhurtingbeam:ewapt.nothing,
 	# Spar with an ally
-	ewcfg.cmd_spar: ewwep.spar,
+	#ewcfg.cmd_spar: ewwep.spar,
 
 	# Name your current weapon.
-	ewcfg.cmd_annoint: ewwep.annoint,
-	ewcfg.cmd_annoint_alt1: ewwep.annoint,
+	#ewcfg.cmd_annoint: ewwep.annoint,
+	#ewcfg.cmd_annoint_alt1: ewwep.annoint,
 
 	# Marry and divorce your current weapon.
-	ewcfg.cmd_marry: ewwep.marry,
-	ewcfg.cmd_divorce: ewwep.divorce,
+	#ewcfg.cmd_marry: ewwep.marry,
+	#ewcfg.cmd_divorce: ewwep.divorce,
 	
 	# Crush a poudrin to get some slime.
 	ewcfg.cmd_crush: ewjuviecmd.crush,
@@ -174,11 +175,11 @@ cmd_map = {
 	ewcfg.cmd_mutations_alt_1: ewcmd.mutations,
 	
 	# combat commands
-	ewcfg.cmd_taunt: ewwep.taunt,
-	ewcfg.cmd_aim: ewwep.aim,
-	ewcfg.cmd_dodge: ewwep.dodge,
-	ewcfg.cmd_dodge_alt1: ewwep.dodge,
-	ewcfg.cmd_dodge_alt2: ewwep.dodge,
+	#ewcfg.cmd_taunt: ewwep.taunt,
+	#ewcfg.cmd_aim: ewwep.aim,
+	#ewcfg.cmd_dodge: ewwep.dodge,
+	#ewcfg.cmd_dodge_alt1: ewwep.dodge,
+	#ewcfg.cmd_dodge_alt2: ewwep.dodge,
 
 	# Check how hungry you are.
 	ewcfg.cmd_hunger: ewcmd.hunger,
@@ -220,7 +221,7 @@ cmd_map = {
 	ewcfg.cmd_endlesswar: ewcmd.endlesswar,
 	
 	# Slimefest
-	ewcfg.cmd_win: ewwep.attack,
+	#ewcfg.cmd_win: ewwep.attack,
 	ewcfg.cmd_slimefest: ewcmd.slimefest,
 
 	# Show the number of swears in the global swear jar.
@@ -229,31 +230,31 @@ cmd_map = {
 	# Display the progress towards the current Quarterly Goal.
 	#ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
 	ewcfg.cmd_paspeaker: ewkingpin.pa_command,
-	ewcfg.cmd_retire: ewapt.retire,
-	ewcfg.cmd_depart: ewapt.depart,
-	ewcfg.cmd_consult: ewapt.consult,
+	#ewcfg.cmd_retire: ewapt.retire,
+	#ewcfg.cmd_depart: ewapt.depart,
+	#ewcfg.cmd_consult: ewapt.consult,
 	#ewcfg.cmd_rent_cycle: ewapt.rent_cycle,
-	ewcfg.cmd_sign_lease: ewapt.signlease,
-	ewcfg.cmd_apartment: ewapt.apartment,
-	ewcfg.cmd_rip: ewapt.nothing,
-	ewcfg.cmd_sign: ewapt.nothing,
-	ewcfg.cmd_upgrade: ewapt.upgrade,
-	ewcfg.cmd_knock: ewapt.knock,
-	ewcfg.cmd_trickortreat: ewapt.trickortreat,
-	ewcfg.cmd_breaklease: ewapt.cancel,
+	#ewcfg.cmd_sign_lease: ewapt.signlease,
+	#ewcfg.cmd_apartment: ewapt.apartment,
+	#ewcfg.cmd_rip: ewapt.nothing,
+	#ewcfg.cmd_sign: ewapt.nothing,
+	#ewcfg.cmd_upgrade: ewapt.upgrade,
+	#ewcfg.cmd_knock: ewapt.knock,
+	#ewcfg.cmd_trickortreat: ewapt.trickortreat,
+	#ewcfg.cmd_breaklease: ewapt.cancel,
 
 
-	ewcfg.cmd_pot: ewapt.flowerpot,
+	#ewcfg.cmd_pot: ewapt.flowerpot,
 
-	ewcfg.cmd_aquarium: ewapt.lobbywarning,
-	ewcfg.cmd_propstand: ewapt.lobbywarning,
+	#ewcfg.cmd_aquarium: ewapt.lobbywarning,
+	#ewcfg.cmd_propstand: ewapt.lobbywarning,
 
-	ewcfg.cmd_releaseprop: ewapt.releaseprop,
-	ewcfg.cmd_releasefish: ewapt.releasefish,
-	ewcfg.cmd_unpot: ewapt.unpot,
+	#ewcfg.cmd_releaseprop: ewapt.releaseprop,
+	#ewcfg.cmd_releasefish: ewapt.releasefish,
+	#ewcfg.cmd_unpot: ewapt.unpot,
 	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
 
-	ewcfg.cmd_frame: ewapt.frame,
+	#ewcfg.cmd_frame: ewapt.frame,
 	ewcfg.cmd_extractsoul: ewitem.soulextract,
 	ewcfg.cmd_returnsoul: ewitem.returnsoul,
 	ewcfg.cmd_betsoul: ewcasino.betsoul,
@@ -267,30 +268,30 @@ cmd_map = {
 	ewcfg.cmd_push_alt_2: ewcmd.push,
 
 
-	ewcfg.cmd_dyefurniture: ewapt.dyefurniture,
+	#ewcfg.cmd_dyefurniture: ewapt.dyefurniture,
 
 	ewcfg.cmd_purify: ewcmd.purify,
 
 	ewcfg.cmd_store: ewcmd.store_item,
 	ewcfg.cmd_take: ewcmd.remove_item,
 
-	ewcfg.cmd_fridge: ewapt.lobbywarning,
-	ewcfg.cmd_closet: ewapt.lobbywarning,
-	ewcfg.cmd_decorate: ewapt.lobbywarning,
-	ewcfg.cmd_shelve: ewapt.lobbywarning,
-	ewcfg.cmd_shelve_alt_1: ewapt.lobbywarning,
-	ewcfg.cmd_unfridge: ewapt.lobbywarning,
-	ewcfg.cmd_uncloset: ewapt.lobbywarning,
-	ewcfg.cmd_undecorate: ewapt.lobbywarning,
-	ewcfg.cmd_unshelve: ewapt.lobbywarning,
-	ewcfg.cmd_unshelve_alt_1: ewapt.lobbywarning,
-	ewcfg.cmd_freeze: ewapt.lobbywarning,
-	ewcfg.cmd_aptname: ewapt.lobbywarning,
-	ewcfg.cmd_aptdesc: ewapt.lobbywarning,
-	ewcfg.cmd_addkey: ewapt.add_key,
-	ewcfg.cmd_changelocks: ewapt.manual_changelocks,
-	ewcfg.cmd_setalarm: ewapt.set_alarm,
-	ewcfg.cmd_jam: ewapt.jam,
+	#ewcfg.cmd_fridge: ewapt.lobbywarning,
+	#ewcfg.cmd_closet: ewapt.lobbywarning,
+	#ewcfg.cmd_decorate: ewapt.lobbywarning,
+	#ewcfg.cmd_shelve: ewapt.lobbywarning,
+	#ewcfg.cmd_shelve_alt_1: ewapt.lobbywarning,
+	#ewcfg.cmd_unfridge: ewapt.lobbywarning,
+	#ewcfg.cmd_uncloset: ewapt.lobbywarning,
+	#ewcfg.cmd_undecorate: ewapt.lobbywarning,
+	#ewcfg.cmd_unshelve: ewapt.lobbywarning,
+	#ewcfg.cmd_unshelve_alt_1: ewapt.lobbywarning,
+	#ewcfg.cmd_freeze: ewapt.lobbywarning,
+	#ewcfg.cmd_aptname: ewapt.lobbywarning,
+	#ewcfg.cmd_aptdesc: ewapt.lobbywarning,
+	#ewcfg.cmd_addkey: ewapt.add_key,
+	#ewcfg.cmd_changelocks: ewapt.manual_changelocks,
+	#ewcfg.cmd_setalarm: ewapt.set_alarm,
+	#ewcfg.cmd_jam: ewapt.jam,
 	ewcfg.cmd_checkflag: ewcmd.check_flag,
 
 
@@ -497,9 +498,9 @@ cmd_map = {
 	# Change your current POI capture progress
 
 	#ewcfg.cmd_annex: ewdistrict.annex,
-	ewcfg.cmd_spray: ewwep.spray,
+	#ewcfg.cmd_spray: ewwep.spray,
 	#ewcfg.cmd_annex_alt1: ewdistrict.annex,
-	ewcfg.cmd_spray_alt1: ewwep.spray,
+	#ewcfg.cmd_spray_alt1: ewwep.spray,
 	ewcfg.cmd_changespray:ewdistrict.change_spray,
 	ewcfg.cmd_tag:ewdistrict.tag,
 
@@ -681,7 +682,7 @@ cmd_map = {
 	ewcfg.cmd_print_map_data: ewmap.print_map_data,
 	ewcfg.cmd_ping_me: ewcmd.ping_me,
 	ewcfg.cmd_boot: ewmap.boot,
-	ewcfg.cmd_bootall:ewapt.lobbywarning,
+	#ewcfg.cmd_bootall:ewapt.lobbywarning,
 
 	ewcfg.cmd_piss: ewcmd.piss,
 	ewcfg.cmd_fursuit: ewcmd.fursuit,
@@ -777,7 +778,7 @@ cmd_map = {
 	# SlimeCorp commands
 	ewcfg.cmd_clockin: ewmap.clockin,
 	ewcfg.cmd_clockout: ewmap.clockout,
-	ewcfg.cmd_sanitize: ewwep.sanitize,
+	#ewcfg.cmd_sanitize: ewwep.sanitize,
 	ewcfg.cmd_paycheck: ewcmd.paycheck,
 	ewcfg.cmd_payday: ewcmd.payday,
 
@@ -806,8 +807,8 @@ cmd_map = {
 	ewcfg.cmd_flushstreets: ewmap.flush_streets,
 
 	#swap weapons
-	ewcfg.cmd_switch: ewwep.switch_weapon,
-	ewcfg.cmd_switch_alt_1: ewwep.switch_weapon,
+	#ewcfg.cmd_switch: ewwep.switch_weapon,
+	#ewcfg.cmd_switch_alt_1: ewwep.switch_weapon,
 	ewcfg.cmd_debug9: ewdebug.debug9,
 
 	# Slimernalia
@@ -912,6 +913,44 @@ cmd_map = {
 	ewcfg.cmd_hogtie: ewkingpin.hogtie
 
 }
+
+dm_cmd_map = {
+
+	# !help
+	ewcfg.cmd_help: ewcmd.help,
+	ewcfg.cmd_help_alt3: ewcmd.help,
+
+	# !inv
+	# show player inventory
+	ewcfg.cmd_inventory: ewitem.inventory_print,
+	ewcfg.cmd_inventory_alt1: ewitem.inventory_print,
+	ewcfg.cmd_inventory_alt2: ewitem.inventory_print,
+	ewcfg.cmd_inventory_alt3: ewitem.inventory_print,
+	ewcfg.cmd_communitychest: ewitem.inventory_print,
+
+	# !inspect
+	ewcfg.cmd_inspect: ewitem.item_look,
+	ewcfg.cmd_inspect_alt1: ewitem.item_look,
+
+	# !tweet
+	ewcfg.cmd_tweet: ewslimetwitter.tweet,
+
+
+}
+
+cmd_modules = [wep, ewapt]
+
+for mod in cmd_modules:
+	try:
+		for cmd_name in mod.cmd_map:
+			cmd_map[cmd_name] = mod.cmd_map[cmd_name]
+	except:
+		pass
+	try:
+		for cmd_name in mod.dm_cmd_map:
+			dm_cmd_map[cmd_name] = mod.dm_cmd_map[cmd_name]
+	except:
+		pass
 
 debug = False
 db_prefix = '--db='
@@ -1629,16 +1668,13 @@ async def on_message(message):
 			cmd_obj.message.author = cmd_obj.guild.get_member(playermodel.id_user)
 
 			# Direct message the player their inventory.
-			if ewitem.cmd_is_inventory(cmd):
-				return await ewitem.inventory_print(cmd_obj)
-			elif cmd == ewcfg.cmd_inspect:
-				return await ewitem.item_look(cmd_obj)
-			elif cmd == ewcfg.cmd_tweet:
-				return await ewslimetwitter.tweet(cmd_obj)
+			if cmd in dm_cmd_map:
+				return await dm_cmd_map.get(cmd)(cmd_obj)
 			elif cmd in ewcfg.zine_commands:
 				return await ewbook.zine_dm_commands(cmd=cmd_obj)
-			elif poi.is_apartment:
-				return await ewapt.aptCommands(cmd=cmd_obj)
+			#elif poi.is_apartment:
+				#apt_dm_cmd_map.get(cmd)(cmd_obj)
+				#return await ewapt.aptCommands(cmd=cmd_obj)
 			elif ewcfg.cmd_gvs_grabbrainz in cmd_obj.message.content.lower():
 				return await ewcmd.gvs_grabbrainz(cmd_obj)
 			else:
