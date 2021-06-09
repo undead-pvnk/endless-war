@@ -159,7 +159,7 @@ mutations = [
 		str_describe_self = "You’ve got nothing of note below the belt due to **Quantum Legs**.",
 		str_describe_other = "They’ve got nothing of note below the belt due to **Quantum Legs**.",
 		str_acquire = "Before you can even register it’s happening, your legs simply evaporate into a light mist that dissolves into the atmosphere. You ungracefully fall to the ground in pure shock, horror, and unrivaled agony. You are now literally half the person you used to be. What the hell are you supposed to do now? You scramble to try and find someone that can help you, moving to a nearby phone booth. Wait… how did you just do that? You have developed the mutation **Quantum Legs**. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you after an uninterrupted 15 second running start, with a cooldown of 3 hours.",
-        tier=5,
+        tier=6,
         str_transplant="Dr. Dusttrap places you under hypnosis, using the power of psychological suggestion to convince you your legs aren't real. She then covers your lower half in a tarp and sets up an elaborate poison injection system that places your legs in a superposition of life and death. When the tarp comes off, your legs are gone. You hop off the table and somehow walk back to the waiting room.\n\nYou have developed the mutation **Quantum Legs**. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you after an uninterrupted 15 second running start, with a cooldown of 3 hours.",
     ),
 	EwMutationFlavor(
@@ -358,7 +358,7 @@ mutations = [
 		str_describe_self = "You feel trapped in a loop due to **Landlocked**.",
 		str_describe_other = "They feel trapped in a loop due to due to **Landlocked**.",
 		str_acquire = "You start to feel lightheaded, and your vision blurs. When you're lucid again, you notice that the sky is filled with amorphous neon patches. They look like dimensional rifts, don't they? Whatever the case, it seems like you're able to see them now. Wonder what happens if you charge right in? You have developed the mutation **Landlocked**. Use !loop at a street bordering the outskirts to warp to the opposite side.",
-        tier=8,
+        tier=7,
         str_transplant= "Dusttrap somehow manages to pull out a Slimecorp teleportation core from her little box of tricks. Christ, it's the size of a dinner plate... She plugs it into her computer and does a bit of finagling with the GPS, when replaces your appendix with it. What a deal, you got an appendix removal out of the surgery!\n\nYou have developed the mutation **Landlocked**. Use !loop at a street bordering the outskirts to warp to the opposite side.",
     ),
 	EwMutationFlavor(

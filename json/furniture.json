@@ -1830,5 +1830,33 @@
         "furn_set": "",
         "hue": "",
         "num_keys": 0
+    },
+    "animalfactstrophy": {
+        "id_furniture": "animalfactstrophy",
+        "str_name": "animal facts safari trophy",
+        "str_desc": "A plastic trophy awarded to the biggest predator in NLACakaNM. \"For Science!\" is scrawled on with a sharpie. Worth it.",
+        "rarity": "Patrician",
+        "acquisition": "",
+        "price": 0,
+        "vendors": [],
+        "furniture_place_desc": "You place down the plastic trophy, the cheap gold paint coming off on your hands. Worth it.",
+        "furniture_look_desc": "A particularly cheap-looking Animal Facts Safari trophy gathers dust. Worth it.",
+        "furn_set": "",
+        "hue": "",
+        "num_keys": 0
+    },
+    "phoenixdownpillow": {
+        "id_furniture": "phoenixdownpillow",
+        "str_name": "phoenix down pillow",
+        "str_desc": "A pillow stuffed with the feathers of a particularly warm bird. You couldn't think of a single better use for those. Nope, not a one.",
+        "rarity": "Patrician",
+        "acquisition": "smelting",
+        "price": 0,
+        "vendors": [],
+        "furniture_place_desc": "You chuck the pillow on your bedding of choice. You're going to sleep *damn* well tonight.",
+        "furniture_look_desc": "A pillow stuffed with red glowing feathers magnificently rests upon their bed.",
+        "furn_set": "",
+        "hue": "",
+        "num_keys": 0
     }
 }

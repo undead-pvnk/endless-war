@@ -192,7 +192,7 @@
         "major_role": "copkilltown_major",
         "minor_role": "copkilltown_minor",
         "permissions": {
-            "copkilltown": [
+            "cop-killtown": [
                 "read",
                 "send",
                 "connect"
@@ -258,7 +258,7 @@
         "major_role": "krakbay_major",
         "minor_role": "krakbay_minor",
         "permissions": {
-            "krakbay": [
+            "krak-bay": [
                 "read",
                 "send",
                 "connect"
@@ -327,7 +327,7 @@
         "major_role": "poudrinalley_major",
         "minor_role": "poudrinalley_minor",
         "permissions": {
-            "poudrinalley": [
+            "poudrin-alley": [
                 "read",
                 "send",
                 "connect"
@@ -398,7 +398,7 @@
         "major_role": "rowdyroughhouse_major",
         "minor_role": "rowdyroughhouse_minor",
         "permissions": {
-            "rowdyroughhouse": [
+            "rowdy-roughhouse": [
                 "read",
                 "send",
                 "connect"
@@ -463,7 +463,7 @@
         "major_role": "greenlightdistrict_major",
         "minor_role": "greenlightdistrict_minor",
         "permissions": {
-            "greenlightdistrict": [
+            "green-light-district": [
                 "read",
                 "send",
                 "connect"
@@ -526,7 +526,7 @@
         "major_role": "oldnewyonkers_major",
         "minor_role": "oldnewyonkers_minor",
         "permissions": {
-            "oldnewyonkers": [
+            "old-new-yonkers": [
                 "read",
                 "send",
                 "connect"
@@ -593,7 +593,7 @@
         "major_role": "littlechernobyl_major",
         "minor_role": "littlechernobyl_minor",
         "permissions": {
-            "littlechernobyl": [
+            "little-chernobyl": [
                 "read",
                 "send",
                 "connect"
@@ -724,7 +724,7 @@
         "major_role": "astatineheights_major",
         "minor_role": "astatineheights_minor",
         "permissions": {
-            "astatineheights": [
+            "astatine-heights": [
                 "read",
                 "send",
                 "connect"
@@ -860,7 +860,7 @@
         "major_role": "vandalpark_major",
         "minor_role": "vandalpark_minor",
         "permissions": {
-            "vandalpark": [
+            "vandal-park": [
                 "read",
                 "send",
                 "connect"
@@ -996,7 +996,7 @@
         "major_role": "northsleezeborough_major",
         "minor_role": "northsleezeborough_minor",
         "permissions": {
-            "northsleezeborough": [
+            "north-sleezeborough": [
                 "read",
                 "send",
                 "connect"
@@ -1067,7 +1067,7 @@
         "major_role": "southsleezeborough_major",
         "minor_role": "southsleezeborough_minor",
         "permissions": {
-            "southsleezeborough": [
+            "south-sleezeborough": [
                 "read",
                 "send",
                 "connect"
@@ -1134,7 +1134,7 @@
         "major_role": "oozegardens_major",
         "minor_role": "oozegardens_minor",
         "permissions": {
-            "oozegardens": [
+            "ooze-gardens": [
                 "read",
                 "send",
                 "connect"
@@ -1334,7 +1334,7 @@
         "major_role": "juviesrow_major",
         "minor_role": "juviesrow_minor",
         "permissions": {
-            "juviesrow": [
+            "juvies-row": [
                 "read",
                 "send",
                 "connect"
@@ -1401,7 +1401,7 @@
         "major_role": "slimesend_major",
         "minor_role": "slimesend_minor",
         "permissions": {
-            "slimesend": [
+            "slimes-end": [
                 "read",
                 "send",
                 "connect"
@@ -1464,7 +1464,7 @@
         "major_role": "vagrantscorner_major",
         "minor_role": "vagrantscorner_minor",
         "permissions": {
-            "vagrantscorner": [
+            "vagrants-corner": [
                 "read",
                 "send",
                 "connect"
@@ -1536,7 +1536,7 @@
         "major_role": "assaultflatsbeach_major",
         "minor_role": "assaultflatsbeach_minor",
         "permissions": {
-            "assaultflatsbeach": [
+            "assault-flats-beach": [
                 "read",
                 "send",
                 "connect"
@@ -1603,7 +1603,7 @@
         "major_role": "newnewyonkers_major",
         "minor_role": "newnewyonkers_minor",
         "permissions": {
-            "newnewyonkers": [
+            "new-new-yonkers": [
                 "read",
                 "send",
                 "connect"
@@ -1808,7 +1808,7 @@
         "major_role": "charcoalpark_major",
         "minor_role": "charcoalpark_minor",
         "permissions": {
-            "charcoalpark": [
+            "charcoal-park": [
                 "read",
                 "send",
                 "connect"
@@ -1872,7 +1872,7 @@
         "major_role": "poloniumhill_major",
         "minor_role": "poloniumhill_minor",
         "permissions": {
-            "poloniumhill": [
+            "polonium-hill": [
                 "read",
                 "send",
                 "connect"
@@ -1941,7 +1941,7 @@
         "major_role": "westglocksbury_major",
         "minor_role": "westglocksbury_minor",
         "permissions": {
-            "westglocksbury": [
+            "west-glocksbury": [
                 "read",
                 "send",
                 "connect"
@@ -2010,7 +2010,7 @@
         "major_role": "jaywalkerplain_major",
         "minor_role": "jaywalkerplain_minor",
         "permissions": {
-            "jaywalkerplain": [
+            "jaywalker-plain": [
                 "read",
                 "send",
                 "connect"
@@ -2271,7 +2271,7 @@
         "major_role": "thevoid_major",
         "minor_role": "thevoid_minor",
         "permissions": {
-            "thevoid": [
+            "the-void": [
                 "read",
                 "send",
                 "connect"
@@ -2323,7 +2323,7 @@
             "ghosts",
             "ts",
             "s",
-	    "brazil",
+	        "brazil",
             "loser"
         ],
         "str_name": "The Sewers",
@@ -2337,7 +2337,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "thesewers": [
+            "the-sewers": [
                 "read",
                 "send",
                 "connect"
@@ -2396,7 +2396,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "underworld": [
+            "the-underworld": [
                 "read",
                 "send",
                 "connect"
@@ -3419,7 +3419,7 @@
         "major_role": "poudrinalley_major",
         "minor_role": "draintrench_minor",
         "permissions": {
-            "draintrench": [
+            "drain-trench": [
                 "read",
                 "send",
                 "connect"
@@ -9461,7 +9461,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "endlesswar": [
+            "endless-war": [
                 "read",
                 "send",
                 "connect"
@@ -9521,7 +9521,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "slimecorphq": [
+            "slimecorp-hq": [
                 "read",
                 "send",
                 "connect"
@@ -9588,7 +9588,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "theslimestockexchange": [
+            "slime-stock-exchange": [
                 "read",
                 "send",
                 "connect"
@@ -9651,7 +9651,7 @@
         "major_role": "smogsburg_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "thebazaar": [
+            "bazaar": [
                 "read",
                 "send",
                 "connect"
@@ -9717,9 +9717,13 @@
         "major_role": "astatineheights_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "nlacakanmcinemas": [
+            "nlacakanm-cinemas": [
                 "read",
                 "send",
+                "connect"
+            ],
+            "MOVIE NIGHT": [
+                "read",
                 "connect"
             ]
         },
@@ -9784,7 +9788,7 @@
         "major_role": "krakbay_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "thefoodcourt": [
+            "food-court": [
                 "read",
                 "send",
                 "connect"
@@ -9852,7 +9856,7 @@
         "major_role": "gatlingsdale_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "newlosangelescityuniversity": [
+            "nlac-university": [
                 "read",
                 "send",
                 "connect"
@@ -9916,10 +9920,17 @@
         "major_role": "vandalpark_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "thebattlearena": [
+            "battle-arena": [
                 "read",
                 "send",
                 "connect"
+            ],
+            "Virtual Bleachers": [
+                "read",
+                "connect"
+            ],
+            "Virtual Kingpins' Box": [
+                "read"
             ]
         },
         "pvp": false,
@@ -9979,7 +9990,7 @@
         "major_role": "southsleezeborough_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "thedojo": [
+            "the-dojo": [
                 "read",
                 "send",
                 "connect"
@@ -10048,7 +10059,7 @@
         "major_role": "vagrantscorner_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "thekingswifessonspeakeasy": [
+            "speakeasy": [
                 "read",
                 "send",
                 "connect"
@@ -10114,7 +10125,7 @@
         "major_role": "poudrinalley_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "outsidethe711": [
+            "outside-the-7-11": [
                 "read",
                 "send",
                 "connect"
@@ -10186,7 +10197,7 @@
         "major_role": "brawlden_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "slimecorpslimeoidlaboratory": [
+            "nlacu-labs": [
                 "read",
                 "send",
                 "connect"
@@ -10250,7 +10261,7 @@
         "major_role": "juviesrow_major",
         "minor_role": "themines_minor",
         "permissions": {
-            "themines": [
+            "the-mines": [
                 "read",
                 "send",
                 "connect"
@@ -10312,10 +10323,13 @@
         "major_role": "juviesrow_major",
         "minor_role": "themines_minor",
         "permissions": {
-            "theminessweeper": [
+            "the-mines-minesweeper": [
                 "read",
                 "send",
                 "connect"
+            ],
+            "the-mines-wall-minesweeper": [
+                "read"
             ]
         },
         "pvp": false,
@@ -10373,10 +10387,13 @@
         "major_role": "juviesrow_major",
         "minor_role": "themines_minor",
         "permissions": {
-            "theminesbubble": [
+            "the-mines-bubble-breaker": [
                 "read",
                 "send",
                 "connect"
+            ],
+            "the-mines-wall-bubble-breaker": [
+                "read"
             ]
         },
         "pvp": false,
@@ -10437,7 +10454,7 @@
         "major_role": "greenlightdistrict_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "thecasino": [
+            "the-casino": [
                 "read",
                 "send",
                 "connect"
@@ -10501,7 +10518,7 @@
         "major_role": "cratersville_major",
         "minor_role": "cratersvillemines_minor",
         "permissions": {
-            "cratersvillemines": [
+            "cratersville-mines": [
                 "read",
                 "send",
                 "connect"
@@ -10565,10 +10582,13 @@
         "major_role": "cratersville_major",
         "minor_role": "cratersvillemines_minor",
         "permissions": {
-            "cratersvilleminessweeper": [
+            "cratersville-mines-minesweeper": [
                 "read",
                 "send",
                 "connect"
+            ],
+            "cratersville-mines-wall-minesweeper": [
+                "read"
             ]
         },
         "pvp": false,
@@ -10631,10 +10651,13 @@
         "major_role": "cratersville_major",
         "minor_role": "cratersvillemines_minor",
         "permissions": {
-            "cratersvilleminesbubble": [
+            "cratersville-mines-bubble-breaker": [
                 "read",
                 "send",
                 "connect"
+            ],
+            "cratersville-mines-wall-bubble-breaker": [
+                "read"
             ]
         },
         "pvp": false,
@@ -10694,7 +10717,7 @@
         "major_role": "toxington_major",
         "minor_role": "toxingtonmines_minor",
         "permissions": {
-            "toxingtonmines": [
+            "toxington-mines": [
                 "read",
                 "send",
                 "connect"
@@ -10760,10 +10783,13 @@
         "major_role": "toxington_major",
         "minor_role": "toxingtonmines_minor",
         "permissions": {
-            "toxingtonminessweeper": [
+            "toxington-mines-minesweeper": [
                 "read",
                 "send",
                 "connect"
+            ],
+            "toxington-mines-wall-minesweeper": [
+                "read"
             ]
         },
         "pvp": false,
@@ -10831,10 +10857,13 @@
         "major_role": "toxington_major",
         "minor_role": "toxingtonmines_minor",
         "permissions": {
-            "toxingtonminesbubble": [
+            "toxington-mines-bubble-breaker": [
                 "read",
                 "send",
                 "connect"
+            ],
+            "toxington-mines-wall-bubble-breaker": [
+                "read"
             ]
         },
         "pvp": false,
@@ -10896,7 +10925,7 @@
         "major_role": "wreckington_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "smokerscough": [
+            "smokers-cough": [
                 "read",
                 "send",
                 "connect"
@@ -10962,7 +10991,7 @@
         "major_role": "astatineheights_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "redmobster": [
+            "red-mobster": [
                 "read",
                 "send",
                 "connect"
@@ -11028,7 +11057,7 @@
         "major_role": "juviesrow_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "juviesrowfarms": [
+            "juvies-row-farms": [
                 "read",
                 "send",
                 "connect"
@@ -11099,7 +11128,7 @@
         "major_role": "oozegardens_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "oozegardensfarms": [
+            "ooze-gardens-farms": [
                 "read",
                 "send",
                 "connect"
@@ -11166,7 +11195,7 @@
         "major_role": "arsonbrook_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "arsonbrookfarms": [
+            "arsonbrook-farms": [
                 "read",
                 "send",
                 "connect"
@@ -11227,7 +11256,7 @@
         "major_role": "northsleezeborough_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "neomilwaukeestate": [
+            "neo-milwaukee-state": [
                 "read",
                 "send",
                 "connect"
@@ -11288,7 +11317,7 @@
         "major_role": "assaultflatsbeach_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "thebeachresort": [
+            "the-resort": [
                 "read",
                 "send",
                 "connect"
@@ -11350,7 +11379,7 @@
         "major_role": "dreadford_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "thecountryclub": [
+            "the-country-club": [
                 "read",
                 "send",
                 "connect"
@@ -11414,7 +11443,7 @@
         "major_role": "smogsburg_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "recyclingplant": [
+            "recycling-plant": [
                 "read",
                 "send",
                 "connect"
@@ -11474,7 +11503,7 @@
         "major_role": "toxington_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "toxingtonpier": [
+            "toxington-pier": [
                 "read",
                 "send",
                 "connect"
@@ -11534,7 +11563,7 @@
         "major_role": "jaywalkerplain_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "jaywalkerplainpier": [
+            "jaywalker-plain-pier": [
                 "read",
                 "send",
                 "connect"
@@ -11594,7 +11623,7 @@
         "major_role": "crookline_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "crooklinepier": [
+            "crookline-pier": [
                 "read",
                 "send",
                 "connect"
@@ -11654,7 +11683,7 @@
         "major_role": "assaultflatsbeach_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "assaultflatsbeachpier": [
+            "assault-flats-beach-pier": [
                 "read",
                 "send",
                 "connect"
@@ -11714,7 +11743,7 @@
         "major_role": "juviesrow_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "juviesrowpier": [
+            "juvies-row-pier": [
                 "read",
                 "send",
                 "connect"
@@ -11774,7 +11803,7 @@
         "major_role": "slimesend_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "slimesendpier": [
+            "slimes-end-pier": [
                 "read",
                 "send",
                 "connect"
@@ -11830,7 +11859,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "slimesea": [
+            "slime-sea": [
                 "read",
                 "send",
                 "connect"
@@ -11890,7 +11919,7 @@
         "major_role": "wreckington_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "wreckingtonport": [
+            "wreckington-port": [
                 "read",
                 "send",
                 "connect"
@@ -11955,7 +11984,7 @@
         "major_role": "vagrantscorner_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "vagrantscornerport": [
+            "vagrants-corner-port": [
                 "read",
                 "send",
                 "connect"
@@ -12025,7 +12054,7 @@
         "major_role": "toxington_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "toxingtonsubwaystation": [
+            "toxington-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -12095,7 +12124,7 @@
         "major_role": "astatineheights_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "astatineheightssubwaystation": [
+            "astatine-heights-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -12165,7 +12194,7 @@
         "major_role": "gatlingsdale_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "gatlingsdalesubwaystation": [
+            "gatlingsdale-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -12235,7 +12264,7 @@
         "major_role": "arsonbrook_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "arsonbrooksubwaystation": [
+            "arsonbrook-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -12306,7 +12335,7 @@
         "major_role": "copkilltown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "copkilltownsubwaystation": [
+            "cop-killtown-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -12376,7 +12405,7 @@
         "major_role": "smogsburg_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "smogsburgsubwaystation": [
+            "smogsburg-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -12441,7 +12470,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "downtownsubwaystation": [
+            "downtown-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -12511,7 +12540,7 @@
         "major_role": "krakbay_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "krakbaysubwaystation": [
+            "krak-bay-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -12581,7 +12610,7 @@
         "major_role": "glocksbury_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "glocksburysubwaystation": [
+            "glocksbury-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -12651,7 +12680,7 @@
         "major_role": "westglocksbury_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "westglocksburysubwaystation": [
+            "west-glocksbury-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -12721,7 +12750,7 @@
         "major_role": "jaywalkerplain_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "jaywalkerplainsubwaystation": [
+            "jaywalker-plain-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -12792,7 +12821,7 @@
         "major_role": "northsleezeborough_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "northsleezesubwaystation": [
+            "north-sleeze-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -12863,7 +12892,7 @@
         "major_role": "southsleezeborough_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "southsleezesubwaystation": [
+            "south-sleeze-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -12933,7 +12962,7 @@
         "major_role": "cratersville_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "cratersvillesubwaystation": [
+            "cratersville-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -13003,7 +13032,7 @@
         "major_role": "wreckington_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "wreckingtonsubwaystation": [
+            "wreckington-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -13072,7 +13101,7 @@
         "major_role": "rowdyroughhouse_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "rowdyroughhousesubwaystation": [
+            "rowdy-roughhouse-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -13143,7 +13172,7 @@
         "major_role": "greenlightdistrict_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "greenlightsubwaystation": [
+            "green-light-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -13213,7 +13242,7 @@
         "major_role": "juviesrow_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "juviesrowsubwaystation": [
+            "juvies-row-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -13283,7 +13312,7 @@
         "major_role": "vagrantscorner_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "vagrantscornersubwaystation": [
+            "vagrants-corner-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -13358,7 +13387,7 @@
         "major_role": "assaultflatsbeach_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "assaultflatssubwaystation": [
+            "assault-flats-beach-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -13417,7 +13446,7 @@
         "major_role": "assaultflatsbeach_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "underworldsubwaystation": [
+            "underworld-subway-station": [
                 "read",
                 "send",
                 "connect"
@@ -13483,7 +13512,7 @@
         "major_role": "dreadford_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "dreadfordblimptower": [
+            "dreadford-blimp-tower": [
                 "read",
                 "send",
                 "connect"
@@ -13552,7 +13581,7 @@
         "major_role": "assaultflatsbeach_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "assaultflatsblimptower": [
+            "assault-flats-blimp-tower": [
                 "read",
                 "send",
                 "connect"
@@ -13616,7 +13645,7 @@
         "major_role": "oldnewyonkers_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "realestateagency": [
+            "real-estate-agency": [
                 "read",
                 "send",
                 "connect"
@@ -13680,7 +13709,7 @@
         "major_role": "glocksbury_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "glocksburycomics": [
+            "glocksbury-comics": [
                 "read",
                 "send",
                 "connect"
@@ -13746,7 +13775,7 @@
         "major_role": "newnewyonkers_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "slimypersuits": [
+            "slimy-persuits": [
                 "read",
                 "send",
                 "connect"
@@ -13810,7 +13839,7 @@
         "major_role": "littlechernobyl_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "greencakecafe": [
+            "green-cake-cafe": [
                 "read",
                 "send",
                 "connect"
@@ -13874,7 +13903,7 @@
         "major_role": "krakbay_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "sodafountain": [
+            "the-bicarbonate-soda-fountain": [
                 "read",
                 "send",
                 "connect"
@@ -13985,7 +14014,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwayred01": [
+            "subway-train-red-01": [
                 "read",
                 "send",
                 "connect"
@@ -14037,7 +14066,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwayred02": [
+            "subway-train-red-02": [
                 "read",
                 "send",
                 "connect"
@@ -14089,7 +14118,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwayyellow01": [
+            "subway-train-yellow-01": [
                 "read",
                 "send",
                 "connect"
@@ -14141,7 +14170,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwayyellow02": [
+            "subway-train-yellow-02": [
                 "read",
                 "send",
                 "connect"
@@ -14193,7 +14222,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwaygreen01": [
+            "subway-train-green-01": [
                 "read",
                 "send",
                 "connect"
@@ -14245,7 +14274,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwaygreen02": [
+            "subway-train-green-02": [
                 "read",
                 "send",
                 "connect"
@@ -14297,7 +14326,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwayblue01": [
+            "subway-train-blue-01": [
                 "read",
                 "send",
                 "connect"
@@ -14349,7 +14378,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwayblue02": [
+            "subway-train-blue-02": [
                 "read",
                 "send",
                 "connect"
@@ -14401,7 +14430,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "subwaywhite01": [
+            "subway-train-white-01": [
                 "read",
                 "send",
                 "connect"
@@ -14508,7 +14537,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptdowntown": [
+            "downtown-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -14562,7 +14591,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptsmogsburg": [
+            "smogsburg-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -14616,7 +14645,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptkrakbay": [
+            "krak-bay-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -14670,7 +14699,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptpoudrinalley": [
+            "poudrin-alley-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -14724,7 +14753,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptgreenlightdistrict": [
+            "green-light-district-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -14778,7 +14807,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptoldnewyonkers": [
+            "old-new-yonkers-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -14832,7 +14861,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptlittlechernobyl": [
+            "little-chernobyl-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -14886,7 +14915,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptarsonbrook": [
+            "arsonbrook-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -14940,7 +14969,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptastatineheights": [
+            "astatine-heights-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -14994,7 +15023,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptgatlingsdale": [
+            "gatlingsdale-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15048,7 +15077,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptvandalpark": [
+            "vandal-park-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15102,7 +15131,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptglocksbury": [
+            "glocksbury-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15156,7 +15185,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptnorthsleezeborough": [
+            "north-sleezeborough-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15210,7 +15239,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptsouthsleezeborough": [
+            "south-sleezeborough-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15264,7 +15293,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptoozegardens": [
+            "ooze-gardens-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15318,7 +15347,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptcratersville": [
+            "cratersville-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15372,7 +15401,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptwreckington": [
+            "wreckington-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15426,7 +15455,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptslimesend": [
+            "slimes-end-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15480,7 +15509,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptvagrantscorner": [
+            "vagrants-corner-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15534,7 +15563,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptassaultflatsbeach": [
+            "assault-flats-beach-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15588,7 +15617,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptnewnewyonkers": [
+            "new-new-yonkers-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15642,7 +15671,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptbrawlden": [
+            "brawlden-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15696,7 +15725,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "apttoxington": [
+            "toxington-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15750,7 +15779,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptcharcoalpark": [
+            "charcoal-park-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15804,7 +15833,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptpoloniumhill": [
+            "polonium-hill-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15858,7 +15887,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptwestglocksbury": [
+            "west-glocksbury-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15912,7 +15941,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptjaywalkerplain": [
+            "jaywalker-plain-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -15966,7 +15995,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptcrookline": [
+            "crookline-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -16020,7 +16049,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptdreadford": [
+            "dreadford-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -16074,7 +16103,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "aptmaimridge": [
+            "maimridge-apartments": [
                 "read",
                 "send",
                 "connect"
@@ -16133,7 +16162,7 @@
         "major_role": "slimesend_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "slimesendcliffs": [
+            "slimes-end-cliffs": [
                 "read",
                 "send",
                 "connect"
@@ -16376,7 +16405,7 @@
         "major_role": "westglocksbury_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "basedhardware": [
+            "based-hardware": [
                 "read",
                 "send",
                 "connect"
@@ -16440,7 +16469,7 @@
         "major_role": "crookline_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "clinicofslimoplasty": [
+            "clinic-of-slimoplasty": [
                 "read",
                 "send",
                 "connect"
@@ -16499,7 +16528,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "thebreakroom": [
+            "the-breakroom": [
                 "read",
                 "send",
                 "connect"
@@ -16663,7 +16692,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "ghostcontainment": [
+            "ghost-containment": [
                 "read",
                 "send",
                 "connect"
@@ -16718,7 +16747,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "thesphere": [
+            "the-sphere": [
                 "read",
                 "send",
                 "connect"
@@ -16773,7 +16802,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "southoutskirtsedge": [
+            "south-outskirts-edge": [
                 "read",
                 "send",
                 "connect"
@@ -16834,7 +16863,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "southwestoutskirtsedge": [
+            "southwest-outskirts-edge": [
                 "read",
                 "send",
                 "connect"
@@ -16896,7 +16925,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "westoutskirtsedge": [
+            "west-outskirts-edge": [
                 "read",
                 "send",
                 "connect"
@@ -16958,7 +16987,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "northwestoutskirtsedge": [
+            "northwest-outskirts-edge": [
                 "read",
                 "send",
                 "connect"
@@ -16995,7 +17024,7 @@
         "neighbors": {
             "westoutskirtsedge": 60,
             "northwestoutskirts": 60,
-            "northoutskirts": 60,
+            "northoutskirtsedge": 60,
             "charcoalpark": 60,
             "toxington": 60,
             "maimridge": 60
@@ -17020,7 +17049,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "northoutskirtsedge": [
+            "north-outskirts-edge": [
                 "read",
                 "send",
                 "connect"
@@ -17056,7 +17085,7 @@
         "max_degradation": 10000,
         "neighbors": {
             "northwestoutskirtsedge": 60,
-            "northwestoutskirts": 60,
+            "northoutskirts": 60,
             "nuclearbeachedge": 60,
             "arsonbrook": 60,
             "brawlden": 60,
@@ -17085,7 +17114,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "nuclearbeachedge": [
+            "nuclear-beach-edge": [
                 "read",
                 "send",
                 "connect"
@@ -17143,7 +17172,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "southoutskirts": [
+            "south-outskirts": [
                 "read",
                 "send",
                 "connect"
@@ -17201,7 +17230,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "southwestoutskirts": [
+            "southwest-outskirts": [
                 "read",
                 "send",
                 "connect"
@@ -17260,7 +17289,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "westoutskirts": [
+            "west-outskirts": [
                 "read",
                 "send",
                 "connect"
@@ -17319,7 +17348,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "northwestoutskirts": [
+            "northwest-outskirts": [
                 "read",
                 "send",
                 "connect"
@@ -17378,7 +17407,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "northoutskirts": [
+            "north-outskirts": [
                 "read",
                 "send",
                 "connect"
@@ -17413,10 +17442,10 @@
         "write_manuscript": false,
         "max_degradation": 10000,
         "neighbors": {
-            "northwestoutskirts": 60,
-            "northwestoutskirtsdepths": 60,
-            "northwestoutskirtsedge": 60,
-            "westoutskirts": 60
+            "northoutskirtsedge": 60,
+            "northoutskirtsdepths": 60,
+            "nuclearbeach": 60,
+            "northwestoutskirts": 60
         },
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Outskirts"
@@ -17438,7 +17467,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "nuclearbeach": [
+            "nuclear-beach": [
                 "read",
                 "send",
                 "connect"
@@ -17497,7 +17526,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "southoutskirtsdepths": [
+            "south-outskirts-depths": [
                 "read",
                 "send",
                 "connect"
@@ -17555,7 +17584,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "southwestoutskirtsdepths": [
+            "southwest-outskirts-depths": [
                 "read",
                 "send",
                 "connect"
@@ -17614,7 +17643,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "westoutskirtsdepths": [
+            "west-outskirts-depths": [
                 "read",
                 "send",
                 "connect"
@@ -17673,7 +17702,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "northwestoutskirtsdepths": [
+            "northwest-outskirts-depths": [
                 "read",
                 "send",
                 "connect"
@@ -17732,7 +17761,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "northoutskirtsdepths": [
+            "north-outskirts-depths": [
                 "read",
                 "send",
                 "connect"
@@ -17791,7 +17820,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "nuclearbeachdepths": [
+            "nuclear-beach-depths": [
                 "read",
                 "send",
                 "connect"
@@ -17851,7 +17880,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "securityforcetunnel": [
+            "security-force-tunnel": [
                 "read",
                 "send",
                 "connect"
@@ -17915,7 +17944,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "n12office": [
+            "underground-research-facility": [
                 "read",
                 "send",
                 "connect"
@@ -17976,7 +18005,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "n10office": [
+            "slimecorp-offices-1f": [
                 "read",
                 "send",
                 "connect"
@@ -18018,7 +18047,7 @@
         "topic": "",
         "wikipage": ""
     },
-        "n4office": {
+    "n4office": {
         "id_poi": "n4office",
         "alias": [
             "elevator"
@@ -18034,7 +18063,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "n4office": [
+            "elevator": [
                 "read",
                 "send",
                 "connect"
@@ -18094,7 +18123,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "n13office": [
+            "slimecorp-offices-3f": [
                 "read",
                 "send",
                 "connect"
@@ -18154,7 +18183,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "n2office": [
+            "slimecorp-offices-8f": [
                 "read",
                 "send",
                 "connect"
@@ -18214,7 +18243,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "n8office": [
+            "slimecorp-offices-20f": [
                 "read",
                 "send",
                 "connect"
@@ -18274,7 +18303,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "n5office": [
+            "slimecorp-offices-103f": [
                 "read",
                 "send",
                 "connect"
@@ -18334,7 +18363,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "n3office": [
+            "slimecorp-offices-5280f": [
                 "read",
                 "send",
                 "connect"
@@ -18394,7 +18423,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "n7office": [
+            "slimecorp-offices-77777f": [
                 "read",
                 "send",
                 "connect"
@@ -18454,7 +18483,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "n11office": [
+            "slimecorp-offices-809231f": [
                 "read",
                 "send",
                 "connect"
@@ -18514,7 +18543,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "n9office": [
+            "slimecorp-penthouse": [
                 "read",
                 "send",
                 "connect"
@@ -18574,7 +18603,7 @@
         "major_role": "downtown_major",
         "minor_role": "nullminorrole",
         "permissions": {
-            "themoon": [
+            "the-moon": [
                 "read",
                 "send",
                 "connect"
@@ -18615,7 +18644,7 @@
         "topic": "",
         "wikipage": ""
     },
-     "slimecorphotel": {
+    "slimecorphotel": {
         "id_poi": "slimecorphotel",
         "alias": [
             "schotel",
@@ -18637,7 +18666,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "slimecorphotel": [
+            "hotel-lobby": [
                 "read",
                 "send",
                 "connect"
@@ -18683,7 +18712,7 @@
         "topic": "",
         "wikipage": ""
     },
-         "room102": {
+    "room102": {
         "id_poi": "room102",
         "alias": [
             "102"
@@ -18699,7 +18728,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "room102": [
+            "room-102": [
                 "read",
                 "send",
                 "connect"
@@ -18741,7 +18770,7 @@
         "topic": "",
         "wikipage": ""
     },
-     "room103": {
+    "room103": {
         "id_poi": "room103",
         "alias": [
             "103"
@@ -18757,7 +18786,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "room103": [
+            "room-103": [
                 "read",
                 "send",
                 "connect"
@@ -18799,7 +18828,7 @@
         "topic": "",
         "wikipage": ""
     },
-     "room104": {
+    "room104": {
         "id_poi": "room104",
         "alias": [
             "104"
@@ -18815,7 +18844,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "room104": [
+            "room-104": [
                 "read",
                 "send",
                 "connect"
@@ -18857,7 +18886,7 @@
         "topic": "",
         "wikipage": ""
     },
-         "lobbybackroom": {
+    "lobbybackroom": {
         "id_poi": "lobbybackroom",
         "alias": [
             "backroom",
@@ -18874,7 +18903,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "lobbybackroom": [
+            "lobby-backroom": [
                 "read",
                 "send",
                 "connect"
@@ -18917,7 +18946,7 @@
         "topic": "",
         "wikipage": ""
     },
-     "slimecorptunnel": {
+    "slimecorptunnel": {
         "id_poi": "slimecorptunnel",
         "alias": [
             "corridor",
@@ -18934,7 +18963,7 @@
         "major_role": "nullmajorrole",
         "minor_role": "nullminorrole",
         "permissions": {
-            "slimecorptunnel": [
+            "slimecorp-tunnel": [
                 "read",
                 "send",
                 "connect"

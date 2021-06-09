@@ -591,6 +591,7 @@ async def move(cmd=None, isApt=False):
     user_data = EwUser(id_user=cmd.message.author.id, id_server=player_data.id_server, data_level=1)
     poi_current = poi_static.id_to_poi.get(user_data.poi)
 
+
     time_move_start = int(time.time())
 
     if isApt == False and ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
@@ -613,6 +614,12 @@ async def move(cmd=None, isApt=False):
     poi = poi_static.id_to_poi.get(target_name)
     if poi_current.is_apartment == True:
         isApt = True
+    if target_name in['apt', 'apartment']:
+        intoApt = True
+        poi = poi_static.id_to_poi.get(user_data.apt_zone)
+        target_name = user_data.apt_zone
+    else:
+        intoApt = False
     server_data = ewcfg.server_list[user_data.id_server]
     client = ewutils.get_client()
     member_object = server_data.get_member(user_data.id_user)
@@ -704,7 +711,7 @@ async def move(cmd=None, isApt=False):
     if path == None:
         return await fe_utils.send_message(cmd.client, cmd.message.channel,
                                           fe_utils.formatMessage(cmd.message.author, "You don't know how to get there."))
-    if isApt:
+    if isApt or intoApt:
         path.cost += 20
     global move_counter
 
@@ -732,9 +739,14 @@ async def move(cmd=None, isApt=False):
     else:
         walk_text = "hopelessly trudging"
 
+    if intoApt:
+        aptText = " Apartments"
+    else:
+        aptText = ""
+
+
     if movement_method == "descending":
-        msg_walk_start = await fe_utils.send_message(cmd.client, cmd.message.channel,
-                                                    fe_utils.formatMessage(cmd.message.author,
+        msg_walk_start = await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author,
                                                                           "You press the button labeled {}. You will arrive in {} seconds.".format(
                                                                               poi.str_name, seconds)))
     else:
@@ -753,7 +765,7 @@ async def move(cmd=None, isApt=False):
                 walk_response = "You begin your descent to {}.{}\nI'm sure you've heard, but people who go down there don't come back alive. You still have time to **{}**, if you'd like.".format(
                     poi.str_name, distance_text, ewcfg.cmd_halt_alt1)
         else:
-            walk_response = "You begin {} to {}.{}".format(walk_text, poi.str_name, distance_text)
+            walk_response = "You begin {} to {}{}.{}".format(walk_text, poi.str_name, aptText, distance_text)
         msg_walk_start = await fe_utils.send_message(cmd.client, cmd.message.channel,
                                                     fe_utils.formatMessage(cmd.message.author, walk_response))
         if isApt:
@@ -934,6 +946,8 @@ async def move(cmd=None, isApt=False):
                             await fe_utils.send_message(cmd.client, channel,
                                                        fe_utils.formatMessage(cmd.message.author, ad_response))
 
+        if intoApt and ewutils.moves_active[cmd.message.author.id] == move_current:
+            await ewapt.retire(cmd=cmd, isGoto=True, movecurrent=move_current)
         await asyncio.sleep(30)
         try:
             await msg_walk_start.delete()
@@ -977,8 +991,8 @@ async def teleport(cmd):
         else:
             time_lastuse = 0
 
-        if time_lastuse + 180*60 > time_now:
-            response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 180*60 - time_now)/60))
+        if time_lastuse + 60*60 > time_now:
+            response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 60*60 - time_now)/60))
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         if cmd.tokens_count < 2 and not blj_used:
@@ -1053,6 +1067,9 @@ async def teleport(cmd):
             ewutils.moves_active[cmd.message.author.id] = 0
             user_data.poi = poi.id_poi
             user_data.time_lastenter = int(time.time())
+
+            if poi.id_poi == ewcfg.poi_id_thesewers:
+                user_data.die(cause=ewcfg.cause_suicide)
 
             user_data.persist()
 
@@ -1678,14 +1695,28 @@ async def loop(cmd):
 		response = "You need to be on the edge of the map to !loop through it. Try a district bordering an outskirt, the ferry, or Slime's End Cliffs."
 		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 	else:
+		mutation_data = EwMutation(id_mutation=ewcfg.mutation_id_landlocked, id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
+		
+		if len(mutation_data.data) > 0:
+			time_lastuse = int(mutation_data.data)
+		else:
+			time_lastuse = 0
+			
+		if time_lastuse + 60*60 > time_now:
+			response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 60*60 - time_now)/60))
+			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+		
 		global move_counter
 		move_counter += 1
 		move_current = ewutils.moves_active[cmd.message.author.id] = move_counter
 		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You start looping to {}.".format(dest_poi_obj.str_name)))
-		await asyncio.sleep(60)
+		await asyncio.sleep(20)
 
 		if move_current == ewutils.moves_active[cmd.message.author.id]:
-			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "**VOIIII-**".format(dest_poi_obj.str_name)))
+			mutation_data = EwMutation(id_mutation=ewcfg.mutation_id_landlocked, id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
+			
+			mutation_data.data = str(time_now)
+			mutation_data.persist()
 
 			user_data = EwUser(member=cmd.message.author)
 			ewutils.moves_active[cmd.message.author.id] = 0
@@ -1694,6 +1725,7 @@ async def loop(cmd):
 			ewutils.end_trade(user_data.id_user)
 			user_data.poi = dest_poi
 			user_data.persist()
+			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "**VOIIII-**".format(dest_poi_obj.str_name)))
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 			await user_data.move_inhabitants(id_poi=dest_poi_obj.id_poi)
 			await dist_utils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, user_data.id_user)
@@ -1777,6 +1809,10 @@ async def slap(cmd):
 
             mutation_data.data = str(time_now)
             mutation_data.persist()
+
+            if target_data.poi == ewcfg.poi_id_thesewers:
+                target_data.die(cause=ewcfg.cause_suicide)
+                target_response += " But you hit your head really hard! Your precious little dome explodes into bits and pieces and you die!"
 
             user_data.persist()
             target_data.persist()

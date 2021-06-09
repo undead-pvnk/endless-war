@@ -202,7 +202,7 @@ class EwUserBase:
 						ewcfg.col_gvs_time_lastshambaquarium,
 						ewcfg.col_rand_seed,
 						ewcfg.col_time_lasthit,
-						ewcfg.col_verified,
+						ewcfg.col_verified
 					), (
 						id_user,
 						id_server
@@ -372,7 +372,7 @@ class EwUserBase:
 					ewcfg.col_gvs_time_lastshambaquarium,
 					ewcfg.col_rand_seed,
 					ewcfg.col_time_lasthit,
-					ewcfg.col_verified,
+					ewcfg.col_verified
 				), (
 					self.id_user,
 					self.id_server,

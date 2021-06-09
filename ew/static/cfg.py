@@ -1,9 +1,7 @@
-
-
 # Global configuration options.
 
 
-version = "v4.002epilogue"
+version = "v4.0070 No Safari"
 
 
 
@@ -970,6 +968,9 @@ cmd_possess_fishing_rod_alt1 = cmd_prefix + 'possessrod'
 cmd_possess_fishing_rod_alt2 = cmd_prefix + 'processrod'
 cmd_possess_fishing_rod_alt3 = cmd_prefix + 'seizerod'
 cmd_possess_fishing_rod_alt4 = cmd_prefix + 'boostrod'
+cmd_unpossess_fishing_rod = cmd_prefix + 'unpossessfishingrod'
+cmd_unpossess_fishing_rod_alt1 = cmd_prefix + 'unpossessrod'
+cmd_unpossess_fishing_rod_alt2 = cmd_prefix + 'unpossess'
 cmd_crystalize_negapoudrin = cmd_prefix + 'crystalizenegapoudrin'
 cmd_crystalize_negapoudrin_alt1 = cmd_prefix + 'smeltnegapoudrin'
 cmd_crystalize_negapoudrin_alt2 = cmd_prefix + 'crystallise'
@@ -986,11 +987,17 @@ cmd_battlenegaslimeoid_alt1 = cmd_prefix + 'negaslimeoidbattle'
 cmd_battlenegaslimeoid_alt2 = cmd_prefix + 'battlenega'
 cmd_battlenegaslimeoid_alt3 = cmd_prefix + 'negabattle'
 cmd_slimepachinko = cmd_prefix + 'slimepachinko'
+cmd_slimepachinko_alt1 = cmd_prefix + 'pachinko'
 cmd_slimeslots = cmd_prefix + 'slimeslots'
+cmd_slimeslots_alt1 = cmd_prefix + 'slots'
 cmd_slimecraps = cmd_prefix + 'slimecraps'
+cmd_slimecraps_alt1 = cmd_prefix + 'craps'
 cmd_slimeroulette = cmd_prefix + 'slimeroulette'
+cmd_slimeroulette_alt1 = cmd_prefix + 'roulette'
 cmd_slimebaccarat = cmd_prefix + 'slimebaccarat'
+cmd_slimebaccarat_alt1 = cmd_prefix + 'baccarat'
 cmd_slimeskat = cmd_prefix + 'slimeskat'
+cmd_slimeskat_alt1 = cmd_prefix + 'skat'
 cmd_slimeskat_join = cmd_prefix + 'skatjoin'
 cmd_slimeskat_decline = cmd_prefix + 'skatdecline'
 cmd_slimeskat_bid = cmd_prefix + 'skatbid'
@@ -1086,6 +1093,7 @@ cmd_transportmap = cmd_prefix + 'transportmap'
 cmd_wiki = cmd_prefix + 'wiki'
 cmd_booru = cmd_prefix + 'booru'
 cmd_bandcamp = cmd_prefix + 'bandcamp'
+cmd_tutorial = cmd_prefix + 'tutorial'
 cmd_pardon = cmd_prefix + 'pardon'
 cmd_banish = cmd_prefix + 'banish'
 cmd_vouch = cmd_prefix + 'vouch'
@@ -1219,6 +1227,7 @@ cmd_bleedout = cmd_prefix + 'bleedout'
 cmd_skullbash = cmd_prefix + 'skullbash'
 cmd_juviemode = cmd_prefix + 'legallimit'
 cmd_manual_unban = cmd_prefix + 'unban'
+cmd_post_leaderboard = cmd_prefix + 'postleaderboard'
 
 cmd_switch = cmd_prefix + 'switch'
 cmd_switch_alt_1 = cmd_prefix + 's'
@@ -1298,6 +1307,7 @@ cmd_push = cmd_prefix + 'push'
 cmd_push_alt_1 = cmd_prefix + 'bully'
 cmd_push_alt_2 = cmd_prefix + 'troll'
 cmd_jump = cmd_prefix + 'jump'
+cmd_jump_alt1 = cmd_prefix + 'parkour'
 cmd_toss = cmd_prefix + 'toss'
 cmd_dyefurniture = cmd_prefix + 'dyefurniture'
 cmd_watch = cmd_prefix + 'watch'
@@ -1590,6 +1600,7 @@ acquisition_fishing = "fishing"
 acquisition_bartering = "bartering"
 acquisition_trickortreating = "trickortreating"
 acquisition_bazaar = "bazaar"
+acquisition_huntingtrophy = "huntingtrophy"
 
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
@@ -1733,8 +1744,9 @@ bleed_half_life = 60 * 5 #five minutes
 bleed_tick_length = 10
 
 # how often to decide whether or not to spawn an enemy
-enemy_spawn_tick_length = 60 * 3 # Three minutes
+# enemy_spawn_tick_length = 60 * 3 # Three minutes
 #enemy_spawn_tick_length = 1
+enemy_spawn_tick_length = 30
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 5
 
@@ -2453,9 +2465,6 @@ col_id_state = "id_state"
 col_id_user_pranker = 'id_user_pranker'
 col_id_user_pranked = 'id_user_pranked'
 col_prank_count = 'prank_count'
-		
-
-
 
 # Item type names
 it_item = "item"
@@ -2623,6 +2632,8 @@ stat_fingernails_kills = 'fingernails_kills'
 stat_roomba_kills = 'roomba_kills'
 stat_chainsaw_kills = 'chainsaw_kills'
 stat_megachainsaw_kills = 'megachainsaw_kills'
+stat_huntingrifle_kills = 'huntingrifle_kills'
+stat_harpoon_kills = 'harpoon_kills'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -2740,6 +2751,7 @@ item_id_gameguide = "gameguide"
 item_id_juviegradefuckenergybodyspray = "juviegradefuckenergybodyspray"
 item_id_superduperfuckenergybodyspray = "superduperfuckenergybodyspray"
 item_id_gmaxfuckenergybodyspray = "gmaxfuckenergybodyspray"
+item_id_pheromones = "pheromones"
 item_id_costumekit = "costumekit"
 item_id_doublehalloweengrist = "doublehalloweengrist"
 item_id_whitelineticket = "ticket"
@@ -2771,11 +2783,18 @@ item_id_string = "string"
 item_id_tincan = "tincan"
 item_id_oldboot = "oldboot"
 item_id_leather = "leather"
+item_id_feather = "feather"
 item_id_ironingot = "ironingot"
 item_id_bloodstone = "bloodstone"
 item_id_tanningknife = "tanningknife"
 item_id_dinoslimemeat = "dinoslimemeat"
 item_id_dinoslimesteak = "dinoslimesteak"
+item_id_carpotoxin = "carpotoxin"
+item_id_moonrock = "moonrock"
+item_id_bustedrifle = "bustedrifle"
+item_id_repairkit = "fieldrepairkit"
+item_id_phoenixdown = "phoenixdown"
+item_id_rainwing = "rainwing"
 item_id_dyesolution = "dyesolution"
 item_id_textiles = "textiles"
 item_id_foodbase = "foodbase"
@@ -2987,6 +3006,29 @@ item_id_paint_gold = "goldpaint"
 
 fuck_energies = ['khaotickilliflowerfuckenergy', 'rampagingrowddishfuckenergy', 'direappleciderfuckenergy', 'ultimateurinefuckenergy', 'superwaterfuckenergy', 'justcumfuckenergy', 'goonshinefuckenergy', 'liquidcoffeegroundsfuckenergy', 'joybeanjavafuckenergy', 'krakacolafuckenergy', 'drfuckerfuckenergy']
 
+# Hunting trophy ids from safari event
+item_id_trophy_juvie = "juvietrophy"
+item_id_trophy_dinoslime = "dinoslimetrophy"
+item_id_trophy_slimeadactyl = "slimeadactlytrophy"
+item_id_trophy_microslime = "microslimetrophy"
+item_id_trophy_slimeofgreed = "slimeofgreedtrophy"
+item_id_trophy_desertraider = "desertraidertrophy"
+item_id_trophy_mammoslime = "mammoslimetrophy"
+item_id_trophy_megaslime = "megaslimetrophy"
+item_id_trophy_srex = "srextrophy"
+item_id_trophy_dragon = "dragontrophy"
+item_id_trophy_ufo = "ufotrophy"
+item_id_trophy_mammoslimebull = "mammoslimebulltrophy"
+item_id_trophy_rivalhunter = "rivalhuntertrophy"
+item_id_trophy_spacecarp = "spacecarptrophy"
+item_id_trophy_gull = "gulltrophy"
+item_id_trophy_garfield = "garfieldtrophy"
+item_id_trophy_n400 = "n400trophy"
+item_id_trophy_styx = "styxtrophy"
+item_id_trophy_prairieking = "prairiekingtrophy"
+item_id_trophy_wailord = "wailordtrophy"
+item_id_trophy_phoenix = "phoenixtrophy"
+item_id_trophy_microgull = "microgulltrophy"
 
 #weapon ids
 weapon_id_revolver = 'revolver'
@@ -3015,6 +3057,8 @@ weapon_id_dclaw = 'dclaw'
 weapon_id_staff = 'staff'
 weapon_id_laywaster = 'laywaster'
 weapon_id_chainsaw = 'chainsaw'
+weapon_id_huntingrifle = 'huntingrifle'
+weapon_id_harpoon = 'harpoon'
 
 weapon_id_spraycan = 'spraycan'
 weapon_id_paintgun = 'paintgun'
@@ -3643,6 +3687,8 @@ status_injury_legs_id = "injury_legs"
 status_kevlarattire_id = "kevlarattire"
 status_hogtied_id = "hogtied"
 
+status_pheromones_id = "pheromones"
+
 time_expire_burn = 12
 time_expire_high = 30 * 60 # 30 minutes
 
@@ -3658,6 +3704,7 @@ stackable_status_effects = [
 	status_baked_id,
 	status_repelled_id,
 	status_repelaftereffects_id,
+	status_pheromones_id 
 ]
 # Status effects that cause users/enemies to take damage.
 harmful_status_effects = [
@@ -3829,8 +3876,8 @@ help_responses = {
 	weapon_id_watercolors: "**Watercolors** are a paint tool for sale at Based Hardware. It does a set 4000 influence per shot. It has a captcha length of 3, a miss chance of 10% and a .1% chance for a crit, which zeros out the whole district regardless of owner.",
 	weapon_id_thinnerbomb: "**Thinner bombs** are a paint tool for sale at Based Hardware. It has a capping modifier of 0.15 and a spray cost mod of 2. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence. When you cap with a thinner bomb, it is used up, and you have to buy more. When decapping, damage is multiplied by 10.",
         
-	weapon_id_hoe: "**The Hoe** is a farming tool for sale at The Ooze Gardens Farms. It can be equipped by both juvies and gangsters to give a 1.5 modifier of slime gain on a !reap command.",
-	weapon_id_pitchfork: "**The Pitchfork** is a farming tool for sale at The Ooze Gardens Farms. It can be equipped by both juvies and gangsters to multiply your crops on a !reap command by 2.",
+	weapon_id_hoe: "**The Hoe** is a farming tool for sale at The Ooze Gardens Farms. It can be equipped by juvies to give a 1.5 modifier of slime gain on a !reap command.",
+	weapon_id_pitchfork: "**The Pitchfork** is a farming tool for sale at The Ooze Gardens Farms. It can be equipped by juvies to multiply your crops on a !reap command by 2.",
 	weapon_id_pickaxe: "**The Pickaxe** is a mining tool acquired via mining. Equipping the pickaxe as a gangster gives you double and a 1.5x chance of unearthing slime poudrins whilst mining.",
 	weapon_id_fishingrod: "**The Fishingrod** is a fishing tool acquired via smelting. The fishing rod when equipped doubles your slimegain from a !reel command.",
 	# "otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
@@ -3957,16 +4004,16 @@ consult_responses = {
 basic_commands = "!slime: Check your slime.\n!look: Look at your surroundings.\n!survey: Get a shortened version of !look.\n!goto <district>: Move to a new area.\n!halt: Stop moving.\n!data: Check your current status.\n!slimecoin: Check your slimecoin.\n!eat: Eat food.\n!use: Use an item.\n!scavenge <captcha>: Scavenge slime off the ground.\n!map: Pull up the map.\n!scout <district>: Check for enemies in an adjacent district."
 juvenile_commands = "!dance: Dance, monkey.\n!enlist <gang>: Enlist in the Rowdys or the Killers.\n!legallimit: Juvies below 100,000 slime can cap their slime at that amount. They can't be killed below Level 18, so this makes them invulnerable."
 enlisted_commands = "!kill <player>: Kill your enemies. Depending on your weapon, you need to enter a captcha after this.\n!equip <tool/weapon>: Equip a tool or weapon.\n!sidearm: Sidearm a tool or weapon into a secondary slot.\n!switch: Switch weapons between your weapon and sidearm slots.\n!suicide: Nah, I'm not telling you what this does.\n!vouch: If a Juvie isn't affiliated, you can !vouch for them to join your gang."
-corpse_commands = "!boo: Become way too scary.\n!haunt <player>: You can haunt active players to rob them of some slime and get antislime.\n!inhabit <player>: Inhabit another player.\n!letgo: Stop inhabiting someone.\n!possessweapon: Possess the weapon of someone you're inhabiting.\n!possessfishingrod: Possess someone's fishing rod in the same way.\n!summonnegaslimeoid <name>:Summon a negaslimeoid to the surface.\n!negaslimeoid <name>: Check on a specific negaslimeoid.\n!crystalizenegapoudrin: Create a negapoudrin with negaslime."
+corpse_commands = "!boo: Become way too scary.\n!haunt <player>: You can haunt active players to rob them of some slime and get antislime.\n!inhabit <player>: Inhabit another player.\n!letgo: Stop inhabiting someone.\n!possessweapon: Possess the weapon of someone you're inhabiting.\n!possessfishingrod: Possess someone's fishing rod in the same way.\n!unpossessfishingrod: Stop possessing the fishing rod.\n!summonnegaslimeoid <name>:Summon a negaslimeoid to the surface.\n!negaslimeoid <name>: Check on a specific negaslimeoid.\n!crystalizenegapoudrin: Create a negapoudrin with negaslime."
 player_info_commands = "!data <player>: Check basic player info. Excluding <player> shows your own data.\n!slime <player>:Same as !data, but shows slime count.\n!slimecoin <player>: Same as the above two, but shows SlimeCoin.\n!hunger: Displays hunger.\n!mutations: Check mutations. Add 'level' to the end to display by mutation level.\n!fashion: Displays fashion info.\n!inv: Displays inventory. Add keywords after the command to filter or sort items. Keywords are: type, name, id, stack, search.\n!inv search <contents>: Display all items that contain <contents>.\n!apartment: Check your apartment.\n!mastery: Check weapon mastery."
-external_link_commands = "!map: Pull up the world map.\n!time: Get the latest RFCK time and weather.\n!transportmap: Pull a transportation map of the city.\n!patchnotes: See the latest patchnotes.\n!booru: Get a link to the RFCK Booru.\n!wiki: Get a link to the wiki.\n!leaderboard: Get a link to the online leaderboard.\n!bandcamp: Links to the bandcamp."
+external_link_commands = "!map: Pull up the world map.\n!time: Get the latest RFCK time and weather.\n!transportmap: Pull a transportation map of the city.\n!patchnotes: See the latest patchnotes.\n!booru: Get a link to the RFCK Booru.\n!wiki: Get a link to the wiki.\n!leaderboard: Get a link to the online leaderboard.\n!bandcamp: Links to the RFCK Bandcamp.\n!tutorial: Gives a more in-depth view of Endless War Gameplay."
 combat_commands = "!kill <player>: Kill your enemies. Depending on your weapon, you need to enter a captcha after this.\n!equip <tool/weapon>: Equip a tool or weapon.\n!sidearm: Sidearm a tool or weapon into a secondary slot.\n!switch: Switch weapons between your weapon and sidearm slots.\n!aim <player>: Increase accuracy toward a target.\n!taunt <player>: Decrease you opponent's accuracy.\n!dodge <player>: Increase evasion for a short time.\n!reload: Some weapons have limited ammo and need to reload."
 capping_commands = "!spray <captcha>: Spray the district in your gang's paint.\n!progress: Displays capture progress in your current district.\n!tag: Spray your tagged image.\n!changespray <tag>:Change the image link that displays on a !tag."
 item_commands="!inv: Displays inventory. Add keywords after the command to filter or sort items. Keywords are: type, name, id, stack, search, general, food, cosmetic, furniture, weapon.\n!inv search <contents>: Display all items that contain <contents>.\n!inspect <item>: Inspect an item in your inventory.\n!discard <item>: Discard an item.\n!use <item>: Some items can be used.\n!trade <player>: Open a trade with a player.\n!offer <item>: Add an item to a trade.\n!removeoffer <item>:Remove an item from the trade.\n!completetrade: Finish the trade.\n!canceltrade:Cancel a trade.\n!smelt <item>: Smelt an item form ingredients.\n!whatcanimake <item>:Shows what you can smelt with an item."
 cosmetics_dyes_commands = "!adorn <cosmetic>: Wear a cosmetic\n!dedorn <cosmetic>: Take a cosmetic off.\n!dyecosmetic <cosmetic> <dye>: Dye a cosmetic using dyes in your inventory.\n!dyefurniture <furniture> <dye>: Change the color of furniture with dye.\n!saturateslimeoid <dye>: Dye your slimeoid."
 miscellaneous_commands = "!quarterlyreport: Display the current quarterly goal.\n!scrutinize <object>: Examine specific objects in an area. Usually reserved for dungeons and ARGs.\n!shakeoff: If someone with the One Eye Open mutation is following you, use this to shake them off.\n!extractsoul: Remove your soul. from your body and bottle it.\n!returnsoul: Return your soul to your body, only if you have it in your inventory.\n!squeezesoul <soul>: Squeeze a soul. The soul's owner will vomit 1/4 of their slime on the ground.\n!ads: View ads in a district.\n!knock <player>: Knock on a player's apartment door, if you're in the district.\n!endlesswar: Check the total ammassed slime of all players.\n!negaslime: Check total amassed antislime.\n!negaslimeoidbattle <negaslimeoid name>: Fight your slimeoid against a negaslimeoid."
 flavor_commands = "Command list: !salute\n!unsalute\n!hurl\n!howl\n!moan\n!pot\n!bully <target>\n!lol\n!jam <instrument>"
-slimeoid_commands = "!slimeoid: Check your slimeoid.\n!saturateslimeoid <dye>: Dye your slimeoid.\n!bottleslimeoid:Put your slimeoid in a bottle, turning them into an item.\n!unbottleslimeoid: Unbottle a slimeoid.\n!feedslimeoid <food>: Feed your slimeoid stat modifying candy.\n!dressslimeoid <cosmetic>: Dress up your slimeoid.\n!undressslimeoid: Take cosmetics off your slimeoid.\n!slimeoidbattle <player>: Challenge another player to a slimeoid battle.\n!playfetch, !petslimeoid, !abuseslimeoid, !walkslimeoid, !observeslimeoid: You can interact with your slimeoid in various ways."
+slimeoid_commands = "!slimeoid: Check your or another player's slimeoid.\n!saturateslimeoid <dye>: Dye your slimeoid.\n!bottleslimeoid:Put your slimeoid in a bottle, turning them into an item.\n!unbottleslimeoid: Unbottle a slimeoid.\n!feedslimeoid <food>: Feed your slimeoid stat modifying candy.\n!dressslimeoid <cosmetic>: Dress up your slimeoid.\n!undressslimeoid: Take cosmetics off your slimeoid.\n!slimeoidbattle <player>: Challenge another player to a slimeoid battle.\n!playfetch, !petslimeoid, !abuseslimeoid, !walkslimeoid, !observeslimeoid: You can interact with your slimeoid in various ways."
 trading_commands = "!trade <player>: Open a trade with a player.\n!offer <item>: Add an item to a trade.\n!removeoffer <item>:Remove an item from the trade.\n!completetrade: Finish the trade.\n!canceltrade:Cancel a trade."
 smelting_commands = "!smelt <item>: Smelt an item form ingredients.\n!whatcanimake <item>:Shows what you can smelt with an item."
 quadrant_commands = "!addquadrant <quadrant> <player>: Add a player to your quadrants.\n!clearquadrant <quadrant>: Break up with someone in your quadrants.\n!quadrants: Displays a full list of quadrants.\n!sloshed, !roseate, !violacious, !policitous: Check on one of the four specific quadrants."
@@ -4094,6 +4141,16 @@ enemy_attacktype_hooves = 'hooves'
 enemy_attacktype_body = 'body'
 enemy_attacktype_stomp = 'stomp'
 enemy_attacktype_stomp_n6 = 'stompn6'
+enemy_attacktype_gnash = 'gnash'
+enemy_attacktype_rifle = 'rifle'
+enemy_attacktype_beak = 'beak'
+enemy_attacktype_claws = 'claws'
+enemy_attacktype_kicks = 'kicks'
+enemy_attacktype_shadowclaws = 'shadowclaws'
+enemy_attacktype_prairieking = 'prairieking'
+enemy_attacktype_tinyclaws = 'tinyclaws'
+enemy_attacktype_whale = 'whale'
+enemy_attacktype_phoenix = 'phoenix'
 
 
 enemy_attacktype_amateur = 'amateur'
@@ -4125,22 +4182,29 @@ enemy_weathertype_normal = 'normal'
 enemy_weathertype_rainresist = 'rainresist'
 
 # Enemy types
+# Goon enemies (only spawn with a leader present)
+enemy_type_piloslime = 'piloslime'
+enemy_type_prairiepawn = 'prairiepawn'
 # Common enemies
 enemy_type_juvie = 'juvie'
 enemy_type_dinoslime = 'dinoslime'
-
+enemy_type_spacecarp = 'spacecarp'
 # Uncommon enemies
 enemy_type_slimeadactyl = 'slimeadactyl'
 enemy_type_desertraider = 'desertraider'
 enemy_type_mammoslime = 'mammoslime'
+enemy_type_rivalhunter = 'rivalhunter'
 # Rare enemies
 enemy_type_microslime = 'microslime'
+enemy_type_mammoslimebull = 'mammoslimebull'
 enemy_type_slimeofgreed = 'slimeofgreed'
+enemy_type_microgullswarm = 'microgullswarm'
 # Raid bosses
 enemy_type_megaslime = 'megaslime'
 enemy_type_slimeasaurusrex = 'slimeasaurusrex'
 enemy_type_greeneyesslimedragon = 'greeneyesslimedragon'
 enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
+
 
 enemy_type_civilian = 'civilian'
 enemy_type_civilian_innocent = 'innocent'
@@ -4211,14 +4275,16 @@ enemy_class_shambler = 'shambler'
 
 # List of enemies sorted by their spawn rarity.
 common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime]
-uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime]
-rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed]
+uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime, enemy_type_spacecarp]
+rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed, enemy_type_mammoslimebull, enemy_type_microgullswarm]
 raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator, enemy_type_titanoslime]
 
 enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
 
+
 # List of enemies that spawn in the Nuclear Beach
 pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
+ 
 
 # List of enemies used in the Gankers Vs. Shamblers event
 gvs_enemies_gaiaslimeoids = [
@@ -4284,11 +4350,12 @@ raid_boss_tiers = {
 overkill_enemies = [enemy_type_doubleheadlessdoublehorseman, enemy_type_doublehorse]
 
 # List of enemies that have other enemies spawn with them
-enemy_group_leaders = [enemy_type_doubleheadlessdoublehorseman]
+enemy_group_leaders = [enemy_type_doubleheadlessdoublehorseman, enemy_type_mammoslimebull]
 
 # Dict of enemy spawn groups. The leader is the key, which correspond to which enemies to spawn, and how many.
 enemy_spawn_groups = {
-	enemy_type_doubleheadlessdoublehorseman: [[enemy_type_doublehorse, 1]]
+	enemy_type_doubleheadlessdoublehorseman: [enemy_type_doublehorse, 1],
+	enemy_type_mammoslimebull: [enemy_type_piloslime, 2]
 }
 
 # Enemy drop tables. Values are sorted by the chance to the drop an item, and then the minimum and maximum amount of times to drop that item.
@@ -4300,34 +4367,34 @@ enemy_drop_tables = {
 		{item_id_slimepoudrin: [50, 1, 2]}, 
 		{rarity_plebeian: [5, 1, 1]}, 
 		{"crop": [30, 1, 1]}, 
-		{item_id_tradingcardpack: [20, 1, 1]}
+		{item_id_tradingcardpack: [20, 1, 1]},
 	],
 	enemy_type_dinoslime: [
 		{item_id_slimepoudrin: [100, 2, 4]}, 
 		{rarity_plebeian: [10, 1, 1]},  
 		{item_id_dinoslimemeat: [33, 1, 2]}, 
-		{item_id_monsterbones: [100, 3, 5]}
+		{item_id_monsterbones: [100, 3, 5]},
 	],
 	enemy_type_slimeadactyl: [
 		{item_id_slimepoudrin: [100, 3, 5]}, 
 		{rarity_plebeian: [10, 1, 1]}, 
-		{item_id_monsterbones: [100, 3, 5]}
+		{item_id_monsterbones: [100, 3, 5]},
 	],
 	enemy_type_microslime: [
-		{rarity_patrician: [100, 1, 1]}
+		{rarity_patrician: [100, 1, 1]},
 	],
 	enemy_type_slimeofgreed: [
-		{item_id_slimepoudrin: [100, 2, 2]}
+		{item_id_slimepoudrin: [100, 2, 2]},
 	],
 	enemy_type_desertraider: [
 		{item_id_slimepoudrin: [100, 1, 2]}, 
 		{rarity_plebeian: [50, 1, 1]},  
-		{"crop": [50, 3, 6]}
+		{"crop": [50, 3, 6]},
 	],
 	enemy_type_mammoslime: [
 		{item_id_slimepoudrin: [75, 5, 6]},  
 		{rarity_patrician: [20, 1, 1]},
-		{item_id_monsterbones: [100, 1, 3]}
+		{item_id_monsterbones: [100, 1, 3]},
 	],
 	enemy_type_doubleheadlessdoublehorseman: [
 		{item_id_slimepoudrin: [100, 22, 22]}, 
@@ -4343,26 +4410,26 @@ enemy_drop_tables = {
 	enemy_type_megaslime: [
 		{item_id_slimepoudrin: [100, 4, 8]}, 
 		{rarity_plebeian: [80, 1, 2]}, 
-		{rarity_patrician: [30, 1, 1]}
+		{rarity_patrician: [30, 1, 1]},
 	],
 	enemy_type_slimeasaurusrex: [
 		{item_id_slimepoudrin: [100, 8, 15]}, 
 		{rarity_plebeian: [50, 1, 2]}, 
 		{rarity_patrician: [20, 1, 2]},  
 		{item_id_dinoslimemeat: [100, 3, 4]}, 
-		{item_id_monsterbones: [100, 3, 5]}
+		{item_id_monsterbones: [100, 3, 5]},
 	],
 	enemy_type_greeneyesslimedragon: [
 		{item_id_dragonsoul: [100, 1, 1]},
 		{item_id_slimepoudrin: [100, 15, 20]}, 
 		{rarity_patrician: [100, 1, 1]}, 
-		{item_id_monsterbones: [100, 5, 10]}
+		{item_id_monsterbones: [100, 5, 10]},
 	],
 	enemy_type_unnervingfightingoperator: [
 		{item_id_slimepoudrin: [100, 1, 1]}, 
 		{"crop": [100, 1, 1]}, 
 		{item_id_dinoslimemeat: [100, 1, 1]}, 
-		{item_id_tradingcardpack: [100, 1, 1]}
+		{item_id_tradingcardpack: [100, 1, 1]},
 	],
 	enemy_type_civilian: [
 		{item_id_slimepoudrin: [20, 1, 1]},
@@ -4382,6 +4449,23 @@ enemy_drop_tables = {
 		{'n6corpse': [100, 1, 1]},
 		{item_id_monsterbones: [100, 5, 10]}
 	],
+	enemy_type_mammoslimebull: [
+		{item_id_slimepoudrin: [75, 6, 8]},  
+		{rarity_patrician: [20, 1, 1]},
+		{item_id_monsterbones: [100, 2, 4]},
+	],
+	enemy_type_piloslime: [
+		{item_id_slimepoudrin: [10, 1, 1]},
+		{item_id_monsterbones: [50, 1, 2]}
+	],
+	enemy_type_spacecarp: [
+		{item_id_slimepoudrin: [60, 1, 1]},
+		{item_id_carpotoxin: [50, 1, 1]},
+		{item_id_moonrock: [50, 1, 1]},
+	],
+	enemy_type_microgullswarm: [
+		{item_id_feather: [5, 1, 1]}
+	]
 }
 for enemy in gvs_enemies:
 	enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}]
@@ -4515,6 +4599,38 @@ enemy_data_table = {
 		"displayname": "N6 on a Mutated Titanoslime",
 		"raredisplayname": "Miscreated Mutated Titanoslime",
 		"aliases": ["n6", "mutatedtitanoslime", "mutated", "titanoslime", "bigtitano"]
+	},
+	enemy_type_piloslime: {
+		"slimerange": [20000, 30000],
+		"ai": enemy_ai_attacker_a,
+		"attacktype": enemy_attacktype_tusks,
+		"displayname": "Piloslime",
+		"raredisplayname": "Shiny Piloslime",
+		"aliases": ["piloswine", "mammoslimejr", "pleboslime", "shinypiloslime"]
+	},
+	enemy_type_spacecarp: {
+		"slimerange": [100000, 100000],
+		"ai": enemy_ai_attacker_a,
+		"attacktype": enemy_attacktype_gnash,
+		"displayname": "Space Carp",
+		"raredisplayname": "Space Patriarch",
+		"aliases": ["carp", "space", "spacedad", "spacepatriarch", "ss13"]
+	},
+	enemy_type_mammoslimebull: {
+		"slimerange": [100000, 100000],
+		"ai": enemy_ai_attacker_a,
+		"attacktype": enemy_attacktype_tusks,
+		"displayname": "Mammoslime Bull",
+		"raredisplayname": "Apex Mammoslime",
+		"aliases": ["mammoswinebull", "swinebull", "mammobull", "apex", "apexmammoslime"]
+	},
+	enemy_type_microgullswarm: {
+		"slimerange": [100000, 100000],
+		"ai": enemy_ai_attacker_a,
+		"attacktype": enemy_attacktype_beak,
+		"displayname": "Micro Gull Swarm",
+		"raredisplayname": "Micro Gull Cloud",
+		"aliases": ["microgull", "smallgull", "birdswarm", "gullcloud", "gullswarm"]
 	},
 enemy_type_civilian: {
 		"slimerange": [100001, 100001],

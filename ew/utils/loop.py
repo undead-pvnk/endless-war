@@ -751,10 +751,9 @@ async def decrease_food_multiplier(id_user):
 		ewutils.food_multiplier[id_user] = max(0, ewutils.food_multiplier.get(id_user) - 1)
 
 async def spawn_enemies(id_server = None):
+	market_data = EwMarket(id_server=id_server)
 	if random.randrange(3) == 0:
 		weathertype = ewcfg.enemy_weathertype_normal
-		market_data = EwMarket(id_server=id_server)
-		
 		# If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
 		if market_data.weather == ewcfg.weather_bicarbonaterain:
 			if random.randrange(3) < 2:
@@ -763,7 +762,7 @@ async def spawn_enemies(id_server = None):
 		resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype)
 
 		await resp_cont.post()
-
+		
 	# TODO remove after double halloween
 	#market_data = EwMarket(id_server=id_server)
 	#underworld_district = EwDistrict(district=ewcfg.poi_id_underworld, id_server=id_server)
@@ -1023,4 +1022,3 @@ async def pay_salary(id_server=None):
 	finally:
 		cursor.close()
 		bknd_core.databaseClose(conn_info)
-

@@ -34,6 +34,7 @@ class EwMarket:
     # slimefest
     winner = ''
 
+
     # Dict of bazaar items available for purchase
     bazaar_wares = None
 

@@ -446,8 +446,8 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 
 	for kingpin_role in [ewcfg.role_rowdyfucker, ewcfg.role_copkiller]:
 		kingpin = fe_utils.find_kingpin(id_server = id_server, kingpin_role = kingpin_role)
-
 		if kingpin is not None:
+			kingpin = EwUser(id_server=id_server, id_user=kingpin.id_user)
 			total_slimegain = 0
 			for id_district in poi_static.capturable_districts:
 

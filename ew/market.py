@@ -265,6 +265,7 @@ async def redeem(cmd):
                 response = "After you dot all the i’s and cross all the t’s, you immediately send your Kingpin half of your earnings."
                 role_boss = (ewcfg.role_copkiller if user_data.faction == ewcfg.faction_killers else ewcfg.role_rowdyfucker)
                 kingpin = fe_utils.find_kingpin(id_server = cmd.guild.id, kingpin_role = role_boss)
+                kingpin = EwUser(id_server=cmd.guild.id, id_user=kingpin.id_user)
                 if kingpin:
                     kingpin.change_slimes(n = int(redeem_value / 2))
                     kingpin.persist()
