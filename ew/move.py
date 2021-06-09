@@ -947,7 +947,7 @@ async def move(cmd=None, isApt=False):
                                                        fe_utils.formatMessage(cmd.message.author, ad_response))
 
         if intoApt and ewutils.moves_active[cmd.message.author.id] == move_current:
-            await ewapt.retire(cmd=cmd, isGoto=True, movecurrent=move_current)
+            await ewapt.cmds.retire(cmd=cmd, isGoto=True, movecurrent=move_current)
         await asyncio.sleep(30)
         try:
             await msg_walk_start.delete()

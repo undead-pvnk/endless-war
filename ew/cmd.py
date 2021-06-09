@@ -7,7 +7,7 @@ import time
 from . import faction as ewfaction
 from . import item as ewitem
 from . import prank as ewprank
-from . import wep as ewwep
+from . import wep_package as ewwep
 from . import apt_package as ewapt
 from .backend import core as bknd_core
 from .backend import hunting as bknd_hunt
@@ -4258,7 +4258,7 @@ def item_commands(cmd):
 
 async def shut_down_bot(cmd):
 	if not cmd.message.author.guild_permissions.administrator:
-		return await ewwep.suicide(cmd=cmd)
+		return await ewwep.cmds.suicide(cmd=cmd)
 
 	ewutils.logMsg('Goodbye!')
 	await asyncio.sleep(2)
