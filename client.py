@@ -1128,7 +1128,7 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_longdrop: ewitem.longdrop,
 }
 
-cmd_modules = [wep, ewapt, ewbook, ewitem]
+cmd_modules = [wep, ewapt, ewbook, ewitem, ewcmd]
 
 for mod in cmd_modules:
 	try:
