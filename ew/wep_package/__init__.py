@@ -65,3 +65,23 @@ cmd_map = {
 	cfg.cmd_switch: cmds.switch_weapon,
 	cfg.cmd_switch_alt_1: cmds.switch_weapon
 }
+
+apt_dm_cmd_map = {
+	# Name your current weapon.
+	cfg.cmd_annoint: cmds.annoint,
+	cfg.cmd_annoint_alt1: cmds.annoint,
+
+	# !equip
+	cfg.cmd_equip: cmds.equip,
+	cfg.cmd_arm: cmds.equip,
+	cfg.cmd_arsenalize: cmds.equip,
+
+	# !switch
+	cfg.cmd_switch: cmds.switch_weapon,
+	cfg.cmd_switch_alt_1: cmds.switch_weapon,
+
+	# !sidearm
+	cfg.cmd_sidearm: cmds.sidearm,
+
+
+}

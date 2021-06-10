@@ -110,7 +110,7 @@ cmd_map = {
 
 }
 
-dm_cmd_map = {
+apt_dm_cmd_map = {
     # put your fish in your !aquarium
     cfg.cmd_aquarium: cmds.aquarium,
 
@@ -152,5 +152,40 @@ dm_cmd_map = {
 
     # !bootall
     ewcfg.cmd_bootall: cmds.bootall,
+
+    # !depart and !retire for some reason
+    ewcfg.cmd_depart: cmds.depart,
+    ewcfg.cmd_retire: cmds.depart,
+
+    # !aptupgrade
+    ewcfg.cmd_upgrade: cmds.upgrade,
+
+    # !breaklease
+    ewcfg.cmd_breaklease: cmds.cancel,
+
+    # !look
+    ewcfg.cmd_look: apt_look,
+
+    # !knock
+    ewcfg.cmd_knock: cmds.knock,
+
+    # !trickortreat
+    ewcfg.cmd_trickortreat: cmds.trickortreat,
+
+    # !pot and !unpot
+    ewcfg.cmd_pot: cmds.flowerpot,
+    ewcfg.cmd_unpot: cmds.unpot,
+
+    # !releaseprop (This literally cant be used in dms but I'm just porting what I see)
+    cfg.cmd_releaseprop: cmds.releaseprop,
+
+    # !releasefish
+    ewcfg.cmd_releasefish: cmds.releasefish,
+
+    # !apartment
+    ewcfg.cmd_apartment: cmds.apartment,
+
+    # !setalarm
+    cfg.cmd_setalarm: cmds.set_alarm,
 
 }

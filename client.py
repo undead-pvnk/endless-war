@@ -29,7 +29,7 @@ import ew.backend.hunting as bknd_hunt
 import ew.backend.item as bknd_item
 import ew.backend.player as bknd_player
 import ew.backend.server as bknd_server
-import ew.book as ewbook
+import ew.book_package as ewbook
 import ew.casino as ewcasino
 import ew.cmd as ewcmd
 import ew.cosmeticitem as ewcosmeticitem
@@ -701,39 +701,39 @@ cmd_map = {
 	ewcfg.cmd_fursuit: ewcmd.fursuit,
 
 	# BOOK COMMANDS OH YEAH
-	ewcfg.cmd_beginmanuscript: ewbook.begin_manuscript,
-	ewcfg.cmd_beginmanuscript_alt_1: ewbook.begin_manuscript,
-	ewcfg.cmd_beginmanuscript_alt_2: ewbook.begin_manuscript,
-	ewcfg.cmd_setpenname: ewbook.set_pen_name,
-	ewcfg.cmd_setpenname_alt_1: ewbook.set_pen_name,
-	ewcfg.cmd_settitle: ewbook.set_title,
-	ewcfg.cmd_settitle_alt_1: ewbook.set_title,
-	ewcfg.cmd_setgenre: ewbook.set_genre,
-	ewcfg.cmd_editpage: ewbook.edit_page,
-	ewcfg.cmd_viewpage: ewbook.view_page,
-	ewcfg.cmd_checkmanuscript: ewbook.check_manuscript,
-	ewcfg.cmd_publishmanuscript: ewbook.publish_manuscript,
-	ewcfg.cmd_readbook: ewbook.read_book,
-	ewcfg.cmd_nextpage: ewbook.next_page,
-	ewcfg.cmd_nextpage_alt_1: ewbook.next_page,
-	ewcfg.cmd_previouspage: ewbook.previous_page,
-	ewcfg.cmd_previouspage_alt_1: ewbook.previous_page,
-	ewcfg.cmd_previouspage_alt_2: ewbook.previous_page,
-	ewcfg.cmd_browsezines: ewbook.browse_zines,
-	ewcfg.cmd_buyzine: ewbook.order_zine,
-	ewcfg.cmd_buyzine_alt_1: ewbook.order_zine,
-	ewcfg.cmd_rate: ewbook.rate_zine,
-	ewcfg.cmd_rate_alt_1: ewbook.rate_zine,
-	ewcfg.cmd_rate_alt_2: ewbook.rate_zine,
-	ewcfg.cmd_setpages: ewbook.set_length,
-	ewcfg.cmd_setpages_alt_1: ewbook.set_length,
-	ewcfg.cmd_setpages_alt_2: ewbook.set_length,
-	ewcfg.cmd_takedown: ewbook.take_down_zine,
-	ewcfg.cmd_takedown_alt_1: ewbook.take_down_zine,
-	ewcfg.cmd_takedown_alt_2: ewbook.take_down_zine,
-	ewcfg.cmd_untakedown: ewbook.untake_down_zine,
-	ewcfg.cmd_untakedown_alt_1: ewbook.untake_down_zine,
-	ewcfg.cmd_untakedown_alt_2: ewbook.untake_down_zine,
+	#ewcfg.cmd_beginmanuscript: ewbook.begin_manuscript,
+	#ewcfg.cmd_beginmanuscript_alt_1: ewbook.begin_manuscript,
+	#ewcfg.cmd_beginmanuscript_alt_2: ewbook.begin_manuscript,
+	#ewcfg.cmd_setpenname: ewbook.set_pen_name,
+	#ewcfg.cmd_setpenname_alt_1: ewbook.set_pen_name,
+	#ewcfg.cmd_settitle: ewbook.set_title,
+	#ewcfg.cmd_settitle_alt_1: ewbook.set_title,
+	#ewcfg.cmd_setgenre: ewbook.set_genre,
+	#ewcfg.cmd_editpage: ewbook.edit_page,
+	#ewcfg.cmd_viewpage: ewbook.view_page,
+	#ewcfg.cmd_checkmanuscript: ewbook.check_manuscript,
+	#ewcfg.cmd_publishmanuscript: ewbook.publish_manuscript,
+	#ewcfg.cmd_readbook: ewbook.read_book,
+	#ewcfg.cmd_nextpage: ewbook.next_page,
+	#ewcfg.cmd_nextpage_alt_1: ewbook.next_page,
+	#ewcfg.cmd_previouspage: ewbook.previous_page,
+	#ewcfg.cmd_previouspage_alt_1: ewbook.previous_page,
+	#ewcfg.cmd_previouspage_alt_2: ewbook.previous_page,
+	#ewcfg.cmd_browsezines: ewbook.browse_zines,
+	#ewcfg.cmd_buyzine: ewbook.order_zine,
+	#ewcfg.cmd_buyzine_alt_1: ewbook.order_zine,
+	#ewcfg.cmd_rate: ewbook.rate_zine,
+	#ewcfg.cmd_rate_alt_1: ewbook.rate_zine,
+	#ewcfg.cmd_rate_alt_2: ewbook.rate_zine,
+	#ewcfg.cmd_setpages: ewbook.set_length,
+	#ewcfg.cmd_setpages_alt_1: ewbook.set_length,
+	#ewcfg.cmd_setpages_alt_2: ewbook.set_length,
+	#ewcfg.cmd_takedown: ewbook.take_down_zine,
+	#ewcfg.cmd_takedown_alt_1: ewbook.take_down_zine,
+	#ewcfg.cmd_takedown_alt_2: ewbook.take_down_zine,
+	#ewcfg.cmd_untakedown: ewbook.untake_down_zine,
+	#ewcfg.cmd_untakedown_alt_1: ewbook.untake_down_zine,
+	#ewcfg.cmd_untakedown_alt_2: ewbook.untake_down_zine,
 
 	# LOL
 	ewcfg.cmd_lol: ewcmd.lol,
@@ -930,6 +930,7 @@ cmd_map = {
 
 }
 
+# Map of commands always allowed in dms
 dm_cmd_map = {
 
 	# !help
@@ -954,17 +955,193 @@ dm_cmd_map = {
 
 }
 
-cmd_modules = [wep, ewapt]
+# Map of commands only allowed in dms while in an apartment
+apt_dm_cmd_map = {
+
+	# !goto. Navigate the world map.
+	ewcfg.cmd_move: ewmap.move,
+	ewcfg.cmd_move_alt1: ewmap.move,
+	ewcfg.cmd_move_alt2: ewmap.move,
+	ewcfg.cmd_move_alt3: ewmap.move,
+	ewcfg.cmd_move_alt4: ewmap.move,
+	ewcfg.cmd_move_alt5: ewmap.move,
+	ewcfg.cmd_move_alt6: ewmap.move,
+
+	# !use
+	ewcfg.cmd_use: ewitem.item_use,
+
+	# !extract/returnsoul
+	ewcfg.cmd_extractsoul: ewitem.soulextract,
+	ewcfg.cmd_returnsoul: ewitem.returnsoul,
+
+	# !stop, Cancel all moves in progress.
+	ewcfg.cmd_halt: ewmap.halt,
+	ewcfg.cmd_halt_alt1: ewmap.halt,
+
+	# !howl
+	ewcfg.cmd_howl: ewcmd.cmd_howl,
+	ewcfg.cmd_howl_alt1: ewcmd.cmd_howl,
+
+	# !moan
+	ewcfg.cmd_moan: ewcmd.cmd_moan,
+
+	# Show a player's combat data.
+	ewcfg.cmd_data: ewcmd.data,
+
+	# Check how hungry you are.
+	ewcfg.cmd_hunger: ewcmd.hunger,
+
+	# Show the player's slime coin.
+	ewcfg.cmd_slimecoin: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt1: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt2: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt3: ewmarket.slimecoin,
+
+	# Show the current slime score of a player.
+	ewcfg.cmd_score: ewcmd.score,
+	ewcfg.cmd_score_alt1: ewcmd.score,
+	ewcfg.cmd_score_alt2: ewcmd.score,
+	ewcfg.cmd_score_alt3: ewcmd.score,
+
+	# !slimeoid, get its data
+	ewcfg.cmd_slimeoid: ewslimeoid.slimeoid,
+
+	# !adorn and !dedorn
+	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
+	ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
+	ewcfg.cmd_dedorn_alt1: ewcosmeticitem.dedorn,
+
+	# !smelt
+	ewcfg.cmd_smelt: ewsmelting.smelt,
+
+	# !dressslimeoid
+	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
+	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
+
+	# interact with the slimeoid
+	ewcfg.cmd_petslimeoid: ewslimeoid.petslimeoid,
+	ewcfg.cmd_abuseslimeoid: ewslimeoid.abuseslimeoid,
+	ewcfg.cmd_playfetch: ewslimeoid.playfetch,
+	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
+	ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
+
+	# !wiki
+	ewcfg.cmd_wiki: ewcmd.wiki,
+
+	# !unsalute
+	ewcfg.cmd_unsalute: ewcmd.unsalute,
+
+	# check what time it is, and the weather
+	ewcfg.cmd_time: ewcmd.weather,
+	ewcfg.cmd_clock: ewcmd.weather,
+	ewcfg.cmd_weather: ewcmd.weather,
+
+	# troll romance
+	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
+	ewcfg.cmd_clear_quadrant: ewquadrants.clear_quadrant,
+	ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
+	ewcfg.cmd_get_sloshed: ewquadrants.get_sloshed,
+	ewcfg.cmd_get_sloshed_alt1: ewquadrants.get_sloshed,
+	ewcfg.cmd_get_roseate: ewquadrants.get_roseate,
+	ewcfg.cmd_get_roseate_alt1: ewquadrants.get_roseate,
+	ewcfg.cmd_get_violacious: ewquadrants.get_violacious,
+	ewcfg.cmd_get_violacious_alt1: ewquadrants.get_violacious,
+	ewcfg.cmd_get_policitous: ewquadrants.get_policitous,
+	ewcfg.cmd_get_policitous_alt1: ewquadrants.get_policitous,
+
+	# !booru
+	ewcfg.cmd_booru: ewcmd.booru,
+
+	# dye your clothes
+	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
+	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
+	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
+	ewcfg.cmd_dyecosmetic_alt3: ewcosmeticitem.dye,
+
+	# give an item to another player
+	ewcfg.cmd_give: ewitem.give,
+
+	# throw up?
+	ewcfg.cmd_hurl: ewcmd.hurl,
+
+	# link to the world map
+	ewcfg.cmd_map: ewcmd.map,
+
+	# Check patchnotes
+	ewcfg.cmd_news: ewcmd.patchnotes,
+	ewcfg.cmd_patchnotes: ewcmd.patchnotes,
+
+	# !salute
+	ewcfg.cmd_salute: ewcmd.salute,
+
+	# !harvest
+	ewcfg.cmd_harvest: ewcmd.harvest,
+
+	# !checkfarm
+	ewcfg.cmd_check_farm: ewfarm.check_farm,
+
+	# slimeoid storage
+	ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
+	ewcfg.cmd_bottleslimeoid_alt1: ewslimeoid.bottleslimeoid,
+	ewcfg.cmd_unbottleslimeoid: ewslimeoid.unbottleslimeoid,
+	ewcfg.cmd_unbottleslimeoid_alt1: ewslimeoid.unbottleslimeoid,
+
+	# !piss
+	ewcfg.cmd_piss: ewcmd.piss,
+
+	# Look around an adjacent POI
+	ewcfg.cmd_scout: ewmap.scout,
+	ewcfg.cmd_scout_alt1: ewmap.scout,
+
+	# !smoke cause you're cool
+	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
+
+	# !squeeze
+	ewcfg.cmd_squeeze: ewitem.squeeze,
+
+	# !commands
+	ewcfg.cmd_commands_alt1: ewcmd.commands,
+	ewcfg.cmd_commands: ewcmd.commands,
+
+	# something with capping
+	ewcfg.cmd_changespray: ewdistrict.change_spray,
+	ewcfg.cmd_tag: ewdistrict.tag,
+
+	# !stink
+	ewcfg.cmd_stink: ewmutation.waft,
+
+	# !bleedout
+	ewcfg.cmd_bleedout: ewmutation.bleedout,
+
+	# something with oeo I think
+	ewcfg.cmd_thirdeye: ewmap.tracker,
+
+	# more oeo
+	ewcfg.cmd_track: ewmutation.track_oneeyeopen,
+
+	# preserve
+	ewcfg.cmd_preserve: ewmutation.preserve,
+
+	# clench your cheeks
+	ewcfg.cmd_clench: ewmutation.clench,
+
+	# drop something but really far away
+	ewcfg.cmd_longdrop: ewitem.longdrop,
+}
+
+cmd_modules = [wep, ewapt, ewbook]
 
 for mod in cmd_modules:
 	try:
-		for cmd_name in mod.cmd_map:
-			cmd_map[cmd_name] = mod.cmd_map[cmd_name]
+		cmd_map.update(mod.cmd_map)
 	except:
 		pass
 	try:
-		for cmd_name in mod.dm_cmd_map:
-			dm_cmd_map[cmd_name] = mod.dm_cmd_map[cmd_name]
+		dm_cmd_map.update(mod.dm_cmd_map)
+	except:
+		pass
+	try:
+		apt_dm_cmd_map.update(mod.apt_dm_cmd_map)
 	except:
 		pass
 
@@ -1689,10 +1866,10 @@ async def on_message(message):
 			# Direct message the player their inventory.
 			if cmd in dm_cmd_map:
 				return await dm_cmd_map.get(cmd)(cmd_obj)
-			elif cmd in ewcfg.zine_commands:
-				return await ewbook.zine_dm_commands(cmd=cmd_obj)
-			#elif poi.is_apartment:
-				#apt_dm_cmd_map.get(cmd)(cmd_obj)
+			#elif cmd in ewcfg.zine_commands:
+				#return await ewbook.zine_dm_commands(cmd=cmd_obj)
+			elif poi.is_apartment:
+				apt_dm_cmd_map.get(cmd)(cmd_obj)
 				#return await ewapt.aptCommands(cmd=cmd_obj)
 			elif ewcfg.cmd_gvs_grabbrainz in cmd_obj.message.content.lower():
 				return await ewcmd.gvs_grabbrainz(cmd_obj)
