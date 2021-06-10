@@ -2,7 +2,7 @@ import asyncio
 import random
 import time
 
-from . import cmd as ewcmd
+from . import cmd_package as ewcmd
 from .backend import item as bknd_item
 from .backend.market import EwMarket
 from .static import cfg as ewcfg

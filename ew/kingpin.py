@@ -3,7 +3,7 @@
 """
 import re
 
-from . import cmd as ewcmd
+from . import cmd_package as ewcmd
 from . import item_package as ewitem
 from . import move as ewmap
 from .backend import item as bknd_item

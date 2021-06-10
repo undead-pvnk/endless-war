@@ -31,7 +31,7 @@ import ew.backend.player as bknd_player
 import ew.backend.server as bknd_server
 import ew.book_package as ewbook
 import ew.casino as ewcasino #32
-import ew.cmd as ewcmd #124
+import ew.cmd_package as ewcmd #124
 import ew.cosmeticitem as ewcosmeticitem #21
 import ew.debug as ewdebug # 9
 import ew.district as ewdistrict #11
@@ -162,16 +162,16 @@ cmd_map = {
 	ewcfg.cmd_flag: ewjuviecmd.flag,
 
 	# Show the current slime score of a player.
-	ewcfg.cmd_score: ewcmd.score,
-	ewcfg.cmd_score_alt1: ewcmd.score,
-	ewcfg.cmd_score_alt2: ewcmd.score,
-	ewcfg.cmd_score_alt3: ewcmd.score,
+	#ewcfg.cmd_score: ewcmd.score,
+	#ewcfg.cmd_score_alt1: ewcmd.score,
+	#ewcfg.cmd_score_alt2: ewcmd.score,
+	#ewcfg.cmd_score_alt3: ewcmd.score,
 	# Show a player's combat data.
-	ewcfg.cmd_data: ewcmd.data,
+	#ewcfg.cmd_data: ewcmd.data,
 
 	# Show a player's mutations.
-	ewcfg.cmd_mutations: ewcmd.mutations,
-	ewcfg.cmd_mutations_alt_1: ewcmd.mutations,
+	#ewcfg.cmd_mutations: ewcmd.mutations,
+	#ewcfg.cmd_mutations_alt_1: ewcmd.mutations,
 	
 	# combat commands
 	#ewcfg.cmd_taunt: ewwep.taunt,
@@ -181,31 +181,31 @@ cmd_map = {
 	#ewcfg.cmd_dodge_alt2: ewwep.dodge,
 
 	# Check how hungry you are.
-	ewcfg.cmd_hunger: ewcmd.hunger,
+	#ewcfg.cmd_hunger: ewcmd.hunger,
 
 	#check what time it is, and the weather
-	ewcfg.cmd_time: ewcmd.weather,
-	ewcfg.cmd_clock: ewcmd.weather,
-	ewcfg.cmd_weather: ewcmd.weather,
+	#ewcfg.cmd_time: ewcmd.weather,
+	#ewcfg.cmd_clock: ewcmd.weather,
+	#ewcfg.cmd_weather: ewcmd.weather,
 
 	# Rowdys thrash and Killers dab.
-	ewcfg.cmd_thrash: ewcmd.thrash,
-	ewcfg.cmd_dab: ewcmd.dab,
+	#ewcfg.cmd_thrash: ewcmd.thrash,
+	#ewcfg.cmd_dab: ewcmd.dab,
 	
 	# Ghosts can BOO 
-	ewcfg.cmd_boo: ewcmd.boo,
+	#ewcfg.cmd_boo: ewcmd.boo,
 	#TODO remove after double halloween
 	#ewcfg.cmd_spook: ewcmd.spook,
 	
 	# Juvies can dance
-	ewcfg.cmd_dance: ewcmd.dance,
-	ewcfg.cmd_dance_alt: ewcmd.dance,
+	#ewcfg.cmd_dance: ewcmd.dance,
+	#ewcfg.cmd_dance_alt: ewcmd.dance,
 	
 	# SlimeCorp security officers can post propaganda
 	#ewcfg.cmd_propaganda: ewcmd.propaganda,
 	
 	# Terezi Gang can flip coins
-	ewcfg.cmd_coinflip: ewcmd.coinflip,
+	#ewcfg.cmd_coinflip: ewcmd.coinflip,
     
 	# Make a costume for Double Halloween
 	#ewcfg.cmd_makecostume: ewitem.makecostume,
@@ -217,11 +217,11 @@ cmd_map = {
 	ewcfg.cmd_negaslime: ewspooky.negaslime,
 	
 	# Show the total of positive slime in the world.
-	ewcfg.cmd_endlesswar: ewcmd.endlesswar,
+	#ewcfg.cmd_endlesswar: ewcmd.endlesswar,
 	
 	# Slimefest
 	#ewcfg.cmd_win: ewwep.attack,
-	ewcfg.cmd_slimefest: ewcmd.slimefest,
+	#ewcfg.cmd_slimefest: ewcmd.slimefest,
 
 	# Show the number of swears in the global swear jar.
 	# ewcfg.cmd_swear_jar: ewcmd.swearjar,
@@ -260,20 +260,20 @@ cmd_map = {
 	ewcfg.cmd_buysoul: ewcasino.buysoul,
 	#ewcfg.cmd_squeeze: ewitem.squeeze,
 
-	ewcfg.cmd_toss: ewcmd.toss_off_cliff,
-	ewcfg.cmd_jump: ewcmd.jump,
-	ewcfg.cmd_jump_alt1: ewcmd.jump,
-	ewcfg.cmd_push: ewcmd.push,
-	ewcfg.cmd_push_alt_1: ewcmd.push,
-	ewcfg.cmd_push_alt_2: ewcmd.push,
+	#ewcfg.cmd_toss: ewcmd.toss_off_cliff,
+	#ewcfg.cmd_jump: ewcmd.jump,
+	#ewcfg.cmd_jump_alt1: ewcmd.jump,
+	#ewcfg.cmd_push: ewcmd.push,
+	#ewcfg.cmd_push_alt_1: ewcmd.push,
+	#ewcfg.cmd_push_alt_2: ewcmd.push,
 
 
 	#ewcfg.cmd_dyefurniture: ewapt.dyefurniture,
 
-	ewcfg.cmd_purify: ewcmd.purify,
+	#ewcfg.cmd_purify: ewcmd.purify,
 
-	ewcfg.cmd_store: ewcmd.store_item,
-	ewcfg.cmd_take: ewcmd.remove_item,
+	#ewcfg.cmd_store: ewcmd.store_item,
+	#ewcfg.cmd_take: ewcmd.remove_item,
 
 	#ewcfg.cmd_fridge: ewapt.lobbywarning,
 	#ewcfg.cmd_closet: ewapt.lobbywarning,
@@ -292,7 +292,7 @@ cmd_map = {
 	#ewcfg.cmd_changelocks: ewapt.manual_changelocks,
 	#ewcfg.cmd_setalarm: ewapt.set_alarm,
 	#ewcfg.cmd_jam: ewapt.jam,
-	ewcfg.cmd_checkflag: ewcmd.check_flag,
+	#ewcfg.cmd_checkflag: ewcmd.check_flag,
 
 
 	# revive yourself as a juvenile after having been killed.
@@ -381,8 +381,8 @@ cmd_map = {
 
 	# Russian Roulette
 	ewcfg.cmd_russian: ewcasino.russian_roulette,
-	ewcfg.cmd_accept: ewcmd.accept,
-	ewcfg.cmd_refuse: ewcmd.refuse,
+	#ewcfg.cmd_accept: ewcmd.accept,
+	#ewcfg.cmd_refuse: ewcmd.refuse,
 	
 	# Dueling
 	ewcfg.cmd_duel: ewcasino.duel,
@@ -436,8 +436,8 @@ cmd_map = {
 	# ads
 	ewcfg.cmd_advertise: ewads.advertise,
 	ewcfg.cmd_ads: ewads.ads_look,
-	ewcfg.cmd_confirm: ewcmd.confirm,
-	ewcfg.cmd_cancel: ewcmd.cancel,
+	#ewcfg.cmd_confirm: ewcmd.confirm,
+	#ewcfg.cmd_cancel: ewcmd.cancel,
 
 	# show player inventory
 	#ewcfg.cmd_inventory: ewitem.inventory_print,
@@ -516,8 +516,8 @@ cmd_map = {
 	ewcfg.cmd_tag:ewdistrict.tag,
 
 	# link to the world map
-	ewcfg.cmd_map: ewcmd.map,
-	ewcfg.cmd_transportmap: ewcmd.transportmap,
+	#ewcfg.cmd_map: ewcmd.map,
+	#ewcfg.cmd_transportmap: ewcmd.transportmap,
 
 	#farming
 	ewcfg.cmd_sow: ewfarm.sow,
@@ -551,17 +551,17 @@ cmd_map = {
 	ewcfg.cmd_dedorn_alt1: ewcosmeticitem.dedorn,
 	ewcfg.cmd_sew: ewcosmeticitem.sew,
 	ewcfg.cmd_retrofit: ewcosmeticitem.retrofit,
-	ewcfg.cmd_fashion: ewcmd.fashion,
-	ewcfg.cmd_fashion_alt1: ewcmd.fashion,
+	#ewcfg.cmd_fashion: ewcmd.fashion,
+	#ewcfg.cmd_fashion_alt1: ewcmd.fashion,
 
 	ewcfg.cmd_create: ewkingpin.create,
-	ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
-	ewcfg.cmd_createitem: ewcmd.create_item,
-	ewcfg.cmd_manualsoulbind: ewcmd.manual_soulbind,
+	#ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
+	#ewcfg.cmd_createitem: ewcmd.create_item,
+	#ewcfg.cmd_manualsoulbind: ewcmd.manual_soulbind,
 	#ewcfg.cmd_editprops: ewitem.manually_edit_item_properties,
-	ewcfg.cmd_setslime: ewcmd.set_slime,
-	ewcfg.cmd_checkstats: ewcmd.check_stats,
-	ewcfg.cmd_makebp : ewcmd.make_bp,
+	#ewcfg.cmd_setslime: ewcmd.set_slime,
+	#ewcfg.cmd_checkstats: ewcmd.check_stats,
+	#ewcfg.cmd_makebp : ewcmd.make_bp,
 	#ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
@@ -586,34 +586,34 @@ cmd_map = {
 	#ewcfg.cmd_trash: ewitem.trash,
 
 	# recycle your trash at the slimecorp recycling plant
-	ewcfg.cmd_recycle: ewcmd.recycle,
-	ewcfg.cmd_recycle_alt1: ewcmd.recycle,
+	#ewcfg.cmd_recycle: ewcmd.recycle,
+	#ewcfg.cmd_recycle_alt1: ewcmd.recycle,
 
 	# kill all players in your district; could be re-used for a future raid boss
 	#ewcfg.cmd_writhe: ewraidboss.writhe,
 
 	# Link to the guide.
-	ewcfg.cmd_help: ewcmd.help,
-	ewcfg.cmd_commands_alt1: ewcmd.commands,
-	ewcfg.cmd_commands: ewcmd.commands,
-	ewcfg.cmd_help_alt3: ewcmd.help,
+	#ewcfg.cmd_help: ewcmd.help,
+	#ewcfg.cmd_commands_alt1: ewcmd.commands,
+	#ewcfg.cmd_commands: ewcmd.commands,
+	#ewcfg.cmd_help_alt3: ewcmd.help,
 
 	# Misc
-	ewcfg.cmd_howl: ewcmd.cmd_howl,
-	ewcfg.cmd_howl_alt1: ewcmd.cmd_howl,
-	ewcfg.cmd_moan: ewcmd.cmd_moan,
-	ewcfg.cmd_harvest: ewcmd.harvest,
-	ewcfg.cmd_salute: ewcmd.salute,
-	ewcfg.cmd_unsalute: ewcmd.unsalute,
-	ewcfg.cmd_hurl: ewcmd.hurl,
-	ewcfg.cmd_news: ewcmd.patchnotes,
-	ewcfg.cmd_patchnotes: ewcmd.patchnotes,
-	ewcfg.cmd_wiki: ewcmd.wiki,
-	ewcfg.cmd_booru: ewcmd.booru,
-	ewcfg.cmd_bandcamp: ewcmd.bandcamp,
-	ewcfg.cmd_tutorial: ewcmd.tutorial,
-	ewcfg.cmd_leaderboard: ewcmd.leaderboard,
-	ewcfg.cmd_leaderboard_alt1: ewcmd.leaderboard,
+	#ewcfg.cmd_howl: ewcmd.cmd_howl,
+	#ewcfg.cmd_howl_alt1: ewcmd.cmd_howl,
+	#ewcfg.cmd_moan: ewcmd.cmd_moan,
+	#ewcfg.cmd_harvest: ewcmd.harvest,
+	#ewcfg.cmd_salute: ewcmd.salute,
+	#ewcfg.cmd_unsalute: ewcmd.unsalute,
+	#ewcfg.cmd_hurl: ewcmd.hurl,
+	#ewcfg.cmd_news: ewcmd.patchnotes,
+	#ewcfg.cmd_patchnotes: ewcmd.patchnotes,
+	#ewcfg.cmd_wiki: ewcmd.wiki,
+	#ewcfg.cmd_booru: ewcmd.booru,
+	#ewcfg.cmd_bandcamp: ewcmd.bandcamp,
+	#ewcfg.cmd_tutorial: ewcmd.tutorial,
+	#ewcfg.cmd_leaderboard: ewcmd.leaderboard,
+	#ewcfg.cmd_leaderboard_alt1: ewcmd.leaderboard,
 
 
 	# Slimeoids
@@ -692,12 +692,12 @@ cmd_map = {
 	ewcfg.cmd_teleport_alt1: ewmap.teleport,
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
 	ewcfg.cmd_print_map_data: ewmap.print_map_data,
-	ewcfg.cmd_ping_me: ewcmd.ping_me,
+	#ewcfg.cmd_ping_me: ewcmd.ping_me,
 	ewcfg.cmd_boot: ewmap.boot,
 	#ewcfg.cmd_bootall:ewapt.lobbywarning,
 
-	ewcfg.cmd_piss: ewcmd.piss,
-	ewcfg.cmd_fursuit: ewcmd.fursuit,
+	#ewcfg.cmd_piss: ewcmd.piss,
+	#ewcfg.cmd_fursuit: ewcmd.fursuit,
 
 	# BOOK COMMANDS OH YEAH
 	#ewcfg.cmd_beginmanuscript: ewbook.begin_manuscript,
@@ -735,7 +735,7 @@ cmd_map = {
 	#ewcfg.cmd_untakedown_alt_2: ewbook.untake_down_zine,
 
 	# LOL
-	ewcfg.cmd_lol: ewcmd.lol,
+	#ewcfg.cmd_lol: ewcmd.lol,
 
 	#ewcfg.cmd_zuck : ewitem.zuck,
 	# restores poi roles to their proper names, only usable by admins
@@ -760,10 +760,10 @@ cmd_map = {
 	ewcfg.cmd_synctopics: fe_utils.sync_topics,
 	
 	# Shuts down the bot with sys.exit()
-	ewcfg.cmd_shutdownbot: ewcmd.shut_down_bot,
+	#ewcfg.cmd_shutdownbot: ewcmd.shut_down_bot,
 	
 	# Checks the status of ewutils.TERMINATE
-	ewcfg.cmd_checkbot: ewcmd.check_bot,
+	#ewcfg.cmd_checkbot: ewcmd.check_bot,
 	
 	# Sets degradation values for GvS
 	ewcfg.cmd_degradedistricts: poi_utils.degrade_districts,
@@ -779,23 +779,23 @@ cmd_map = {
 	# ewcfg.cmd_debug8: ewdebug.debug8,
 
 	# ban a player from using commands
-	ewcfg.cmd_arrest: ewcmd.arrest,
-	ewcfg.cmd_release: ewcmd.release,
-	ewcfg.cmd_release_alt1: ewcmd.release,
-	ewcfg.cmd_balance_cosmetics: ewcmd.balance_cosmetics,
+	#ewcfg.cmd_arrest: ewcmd.arrest,
+	#ewcfg.cmd_release: ewcmd.release,
+	#ewcfg.cmd_release_alt1: ewcmd.release,
+	#ewcfg.cmd_balance_cosmetics: ewcmd.balance_cosmetics,
 
 	# force print the leaderboard
-	ewcfg.cmd_post_leaderboard: ewcmd.post_leaderboard,
+	#ewcfg.cmd_post_leaderboard: ewcmd.post_leaderboard,
 
 	# grant slimecorp executive status
-	ewcfg.cmd_promote: ewcmd.promote,
+	#ewcfg.cmd_promote: ewcmd.promote,
 	
 	# SlimeCorp commands
 	ewcfg.cmd_clockin: ewmap.clockin,
 	ewcfg.cmd_clockout: ewmap.clockout,
 	#ewcfg.cmd_sanitize: ewwep.sanitize,
-	ewcfg.cmd_paycheck: ewcmd.paycheck,
-	ewcfg.cmd_payday: ewcmd.payday,
+	#ewcfg.cmd_paycheck: ewcmd.paycheck,
+	#ewcfg.cmd_payday: ewcmd.payday,
 
 	# trading
 	ewcfg.cmd_trade: ewmarket.trade,
@@ -805,7 +805,7 @@ cmd_map = {
 	ewcfg.cmd_canceltrade: ewmarket.cancel_trade,
 
 	# Praying at the base of ENDLESS WAR.
-	ewcfg.cmd_pray: ewcmd.pray,
+	#ewcfg.cmd_pray: ewcmd.pray,
 
 	# Gankers Vs. Shamblers gang swapping
 	# ewcfg.cmd_shamble: ewdistrict.shamble,
@@ -832,7 +832,7 @@ cmd_map = {
 	# Wrap a gift
 	#ewcfg.cmd_wrap: ewcmd.wrap,
 	# Unwrap a gift
-	ewcfg.cmd_unwrap: ewcmd.unwrap,
+	#ewcfg.cmd_unwrap: ewcmd.unwrap,
 	# Yo, Slimernalia
 	#ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia,
 	
@@ -843,7 +843,7 @@ cmd_map = {
 	# ewcfg.cmd_reset_prank_stats: ewcmd.reset_prank_stats, #debug
 	# ewcfg.cmd_set_gambit: ewcmd.set_gambit, #debug
 	# ewcfg.cmd_pointandlaugh: ewcmd.point_and_laugh,
-	ewcfg.cmd_prank: ewcmd.prank,
+	#ewcfg.cmd_prank: ewcmd.prank,
 	
 	# Gankers Vs. Shamblers
 	# ewcfg.cmd_gvs_printgrid: ewcmd.gvs_print_grid,
@@ -855,7 +855,7 @@ cmd_map = {
 	# ewcfg.cmd_gvs_leaveoperation: ewcmd.gvs_leave_operation,
 	# ewcfg.cmd_gvs_checkoperation: ewcmd.gvs_check_operations,
 	# ewcfg.cmd_gvs_plantgaiaslimeoid: ewcmd.gvs_plant_gaiaslimeoid,
-	ewcfg.cmd_gvs_almanac: ewcmd.almanac,
+	#ewcfg.cmd_gvs_almanac: ewcmd.almanac,
 	# ewcfg.cmd_gvs_searchforbrainz: ewcmd.gvs_searchforbrainz,
 	# ewcfg.cmd_gvs_grabbrainz: ewcmd.gvs_grabbrainz,
 	# ewcfg.cmd_gvs_dive: ewcmd.gvs_dive,
@@ -905,7 +905,7 @@ cmd_map = {
 	#ewcfg.cmd_skullbash: ewitem.skullbash,
 	ewcfg.cmd_juviemode: ewjuviecmd.juviemode,
 
-	ewcfg.cmd_manual_unban:ewcmd.unban_manual,
+	#ewcfg.cmd_manual_unban:ewcmd.unban_manual,
 
 	# Slime Twitter
 	ewcfg.cmd_tweet: ewslimetwitter.tweet,
@@ -914,15 +914,15 @@ cmd_map = {
 	ewcfg.cmd_display_states: ewdebug.display_states,
 	#ewcfg.cmd_press_button: ewdebug.elevator_press,
 	#ewcfg.cmd_call_elevator: ewdebug.elevator_call,
-	ewcfg.cmd_addstatuseffect: ewcmd.assign_status_effect,
+	#ewcfg.cmd_addstatuseffect: ewcmd.assign_status_effect,
 
 	ewcfg.cmd_verification: ewslimetwitter.verification,
 	ewcfg.cmd_verification_alt: ewslimetwitter.verification,
 
 	# Check your weapon masteries
 
-	ewcfg.cmd_mastery: ewcmd.check_mastery,
-	ewcfg.cmd_getattire: ewcmd.get_attire,
+	#ewcfg.cmd_mastery: ewcmd.check_mastery,
+	#ewcfg.cmd_getattire: ewcmd.get_attire,
 	ewcfg.cmd_pacommand: ewkingpin.pa_command,
 	ewcfg.cmd_surveil: ewmap.surveil,
 	ewcfg.cmd_hogtie: ewkingpin.hogtie
@@ -933,8 +933,8 @@ cmd_map = {
 dm_cmd_map = {
 
 	# !help
-	ewcfg.cmd_help: ewcmd.help,
-	ewcfg.cmd_help_alt3: ewcmd.help,
+	#ewcfg.cmd_help: ewcmd.help,
+	#ewcfg.cmd_help_alt3: ewcmd.help,
 
 	# !inv
 	# show player inventory
@@ -978,17 +978,17 @@ apt_dm_cmd_map = {
 	ewcfg.cmd_halt_alt1: ewmap.halt,
 
 	# !howl
-	ewcfg.cmd_howl: ewcmd.cmd_howl,
-	ewcfg.cmd_howl_alt1: ewcmd.cmd_howl,
+	#ewcfg.cmd_howl: ewcmd.cmd_howl,
+	#ewcfg.cmd_howl_alt1: ewcmd.cmd_howl,
 
 	# !moan
-	ewcfg.cmd_moan: ewcmd.cmd_moan,
+	#ewcfg.cmd_moan: ewcmd.cmd_moan,
 
 	# Show a player's combat data.
-	ewcfg.cmd_data: ewcmd.data,
+	#ewcfg.cmd_data: ewcmd.data,
 
 	# Check how hungry you are.
-	ewcfg.cmd_hunger: ewcmd.hunger,
+	#ewcfg.cmd_hunger: ewcmd.hunger,
 
 	# Show the player's slime coin.
 	ewcfg.cmd_slimecoin: ewmarket.slimecoin,
@@ -997,10 +997,10 @@ apt_dm_cmd_map = {
 	ewcfg.cmd_slimecoin_alt3: ewmarket.slimecoin,
 
 	# Show the current slime score of a player.
-	ewcfg.cmd_score: ewcmd.score,
-	ewcfg.cmd_score_alt1: ewcmd.score,
-	ewcfg.cmd_score_alt2: ewcmd.score,
-	ewcfg.cmd_score_alt3: ewcmd.score,
+	#ewcfg.cmd_score: ewcmd.score,
+	#ewcfg.cmd_score_alt1: ewcmd.score,
+	#ewcfg.cmd_score_alt2: ewcmd.score,
+	#ewcfg.cmd_score_alt3: ewcmd.score,
 
 	# !slimeoid, get its data
 	ewcfg.cmd_slimeoid: ewslimeoid.slimeoid,
@@ -1025,15 +1025,15 @@ apt_dm_cmd_map = {
 	ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
 
 	# !wiki
-	ewcfg.cmd_wiki: ewcmd.wiki,
+	#ewcfg.cmd_wiki: ewcmd.wiki,
 
 	# !unsalute
-	ewcfg.cmd_unsalute: ewcmd.unsalute,
+	#ewcfg.cmd_unsalute: ewcmd.unsalute,
 
 	# check what time it is, and the weather
-	ewcfg.cmd_time: ewcmd.weather,
-	ewcfg.cmd_clock: ewcmd.weather,
-	ewcfg.cmd_weather: ewcmd.weather,
+	#ewcfg.cmd_time: ewcmd.weather,
+	#ewcfg.cmd_clock: ewcmd.weather,
+	#ewcfg.cmd_weather: ewcmd.weather,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -1049,7 +1049,7 @@ apt_dm_cmd_map = {
 	ewcfg.cmd_get_policitous_alt1: ewquadrants.get_policitous,
 
 	# !booru
-	ewcfg.cmd_booru: ewcmd.booru,
+	#ewcfg.cmd_booru: ewcmd.booru,
 
 	# dye your clothes
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
@@ -1060,21 +1060,21 @@ apt_dm_cmd_map = {
 	# give an item to another player
 	#ewcfg.cmd_give: ewitem.give,
 
-	# throw up?
-	ewcfg.cmd_hurl: ewcmd.hurl,
+	# vomit
+	#ewcfg.cmd_hurl: ewcmd.hurl,
 
 	# link to the world map
-	ewcfg.cmd_map: ewcmd.map,
+	#ewcfg.cmd_map: ewcmd.map,
 
 	# Check patchnotes
-	ewcfg.cmd_news: ewcmd.patchnotes,
-	ewcfg.cmd_patchnotes: ewcmd.patchnotes,
+	#ewcfg.cmd_news: ewcmd.patchnotes,
+	#ewcfg.cmd_patchnotes: ewcmd.patchnotes,
 
 	# !salute
-	ewcfg.cmd_salute: ewcmd.salute,
+	#ewcfg.cmd_salute: ewcmd.salute,
 
 	# !harvest
-	ewcfg.cmd_harvest: ewcmd.harvest,
+	#ewcfg.cmd_harvest: ewcmd.harvest,
 
 	# !checkfarm
 	ewcfg.cmd_check_farm: ewfarm.check_farm,
@@ -1086,7 +1086,7 @@ apt_dm_cmd_map = {
 	ewcfg.cmd_unbottleslimeoid_alt1: ewslimeoid.unbottleslimeoid,
 
 	# !piss
-	ewcfg.cmd_piss: ewcmd.piss,
+	#ewcfg.cmd_piss: ewcmd.piss,
 
 	# Look around an adjacent POI
 	ewcfg.cmd_scout: ewmap.scout,
@@ -1099,8 +1099,8 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_squeeze: ewitem.squeeze,
 
 	# !commands
-	ewcfg.cmd_commands_alt1: ewcmd.commands,
-	ewcfg.cmd_commands: ewcmd.commands,
+	#ewcfg.cmd_commands_alt1: ewcmd.commands,
+	#ewcfg.cmd_commands: ewcmd.commands,
 
 	# something with capping
 	ewcfg.cmd_changespray: ewdistrict.change_spray,
@@ -1871,7 +1871,7 @@ async def on_message(message):
 				apt_dm_cmd_map.get(cmd)(cmd_obj)
 				#return await ewapt.aptCommands(cmd=cmd_obj)
 			elif ewcfg.cmd_gvs_grabbrainz in cmd_obj.message.content.lower():
-				return await ewcmd.gvs_grabbrainz(cmd_obj)
+				return await ewcmd.cmds.gvs_grabbrainz(cmd_obj)
 			else:
 				
 				# Only send the help response once every thirty seconds. There's no need to spam it.
@@ -2223,9 +2223,9 @@ async def on_message(message):
 
 		# AWOOOOO
 		elif re_awoo.match(cmd):
-			return await ewcmd.cmd_howl(cmd_obj)
+			return await ewcmd.cmds.cmd_howl(cmd_obj)
 		elif re_moan.match(cmd):
-			return await ewcmd.cmd_moan(cmd_obj)
+			return await ewcmd.cmds.cmd_moan(cmd_obj)
 
 		# Debug command to override the role of a user
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'setrole'):
@@ -2351,13 +2351,13 @@ async def on_message(message):
 
 	elif content_tolower.find(ewcfg.cmd_howl) >= 0 or content_tolower.find(ewcfg.cmd_howl_alt1) >= 0 or re_awoo.match(content_tolower):
 		""" Howl if !howl is in the message at all. """
-		return await ewcmd.cmd_howl(ewcmd.EwCmd(
+		return await ewcmd.cmds.cmd_howl(ewcmd.EwCmd(
 			message = message,
 			client = client,
 			guild = message.guild
 		))
 	elif content_tolower.find(ewcfg.cmd_moan) >= 0 or re_moan.match(content_tolower):
-		return await ewcmd.cmd_moan(ewcmd.EwCmd(
+		return await ewcmd.cmds.cmd_moan(ewcmd.EwCmd(
 			message=message,
 			client=client,
 			guild = message.guild

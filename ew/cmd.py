@@ -1049,8 +1049,8 @@ async def propaganda(cmd):
 	user_data = EwUser(ew_id = cmd.author_id)
 	
 	if (user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_slimecorp) or user_data.life_state == ewcfg.life_state_executive:
-		response = random.choice(ewcfg.propaganda)
-		await fe_utils.send_response(response, cmd, format_name=False)
+		response = random.choice("ur bad")
+		await fe_utils.send_response(response, cmd)
 
 """
 	Ghosts BOO

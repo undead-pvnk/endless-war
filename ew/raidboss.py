@@ -1,7 +1,7 @@
 import asyncio
 import time
 
-from . import cmd as ewcmd
+from . import cmd_package as ewcmd
 from .backend import core as bknd_core
 from .static import cfg as ewcfg
 from .utils import core as ewutils
