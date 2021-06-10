@@ -3,7 +3,7 @@ import random
 import time
 
 from . import casino as ewcasino
-from . import item as ewitem
+from . import item_package as ewitem
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 from .backend.item import EwItem

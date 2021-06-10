@@ -296,8 +296,6 @@ async def inventory_print(cmd):
 """
     Dump out the visual description of an item.
 """
-
-
 async def item_look(cmd):
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
     author = cmd.message.author

@@ -19,7 +19,7 @@ import traceback
 
 import discord
 
-import ew.ads as ewads
+import ew.ads as ewads # 3
 import ew.apt_package as ewapt
 import ew.backend.ads as bknd_ads
 import ew.backend.core as bknd_core
@@ -30,30 +30,30 @@ import ew.backend.item as bknd_item
 import ew.backend.player as bknd_player
 import ew.backend.server as bknd_server
 import ew.book_package as ewbook
-import ew.casino as ewcasino
-import ew.cmd as ewcmd
-import ew.cosmeticitem as ewcosmeticitem
-import ew.debug as ewdebug
-import ew.district as ewdistrict
-import ew.dungeons as ewdungeons
-import ew.faction as ewfaction
-import ew.farm as ewfarm
-import ew.fish as ewfish
-import ew.food as ewfood
-import ew.hunting as ewhunting
-import ew.item as ewitem
-import ew.juviecmd as ewjuviecmd
-import ew.kingpin as ewkingpin
-import ew.market as ewmarket
-import ew.move as ewmap
-import ew.mutation as ewmutation
-import ew.quadrants as ewquadrants
-import ew.race as ewrace
-import ew.slimeoid as ewslimeoid
-import ew.slimetwitter as ewslimetwitter
-import ew.smelting as ewsmelting
-import ew.spooky as ewspooky
-import ew.sports as ewsports
+import ew.casino as ewcasino #32
+import ew.cmd as ewcmd #124
+import ew.cosmeticitem as ewcosmeticitem #21
+import ew.debug as ewdebug # 9
+import ew.district as ewdistrict #11
+import ew.dungeons as ewdungeons #3
+import ew.faction as ewfaction #2
+import ew.farm as ewfarm #11
+import ew.fish as ewfish #7
+import ew.food as ewfood #9
+import ew.hunting as ewhunting #3
+import ew.item_package as ewitem #40
+import ew.juviecmd as ewjuviecmd #11
+import ew.kingpin as ewkingpin #8
+import ew.market as ewmarket #37
+import ew.move as ewmap #50
+import ew.mutation as ewmutation #16
+import ew.quadrants as ewquadrants #23
+import ew.race as ewrace #19
+import ew.slimeoid as ewslimeoid #55
+import ew.slimetwitter as ewslimetwitter #5
+import ew.smelting as ewsmelting #7
+import ew.spooky as ewspooky #34
+import ew.sports as ewsports #6
 import ew.static.cfg as ewcfg
 import ew.static.cosmetics as cosmetics
 import ew.static.food as static_food
@@ -61,7 +61,7 @@ import ew.static.items as static_items
 import ew.static.poi as poi_static
 import ew.static.vendors as vendors
 import ew.static.weather as weather_static
-import ew.transport as ewtransport
+import ew.transport as ewtransport #7
 import ew.utils.core as ewutils
 import ew.utils.frontend as fe_utils
 import ew.utils.item as itm_utils
@@ -70,7 +70,6 @@ import ew.utils.loop as loop_utils
 import ew.utils.poi as poi_utils
 import ew.utils.rolemgr as ewrolemgr
 import ew.utils.weather as bknd_weather
-import ew.wep as ewwep
 import ew.wep_package as wep
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
@@ -255,11 +254,11 @@ cmd_map = {
 	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
 
 	#ewcfg.cmd_frame: ewapt.frame,
-	ewcfg.cmd_extractsoul: ewitem.soulextract,
-	ewcfg.cmd_returnsoul: ewitem.returnsoul,
+	#ewcfg.cmd_extractsoul: ewitem.soulextract,
+	#ewcfg.cmd_returnsoul: ewitem.returnsoul,
 	ewcfg.cmd_betsoul: ewcasino.betsoul,
 	ewcfg.cmd_buysoul: ewcasino.buysoul,
-	ewcfg.cmd_squeeze: ewitem.squeeze,
+	#ewcfg.cmd_squeeze: ewitem.squeeze,
 
 	ewcfg.cmd_toss: ewcmd.toss_off_cliff,
 	ewcfg.cmd_jump: ewcmd.jump,
@@ -441,19 +440,19 @@ cmd_map = {
 	ewcfg.cmd_cancel: ewcmd.cancel,
 
 	# show player inventory
-	ewcfg.cmd_inventory: ewitem.inventory_print,
-	ewcfg.cmd_inventory_alt1: ewitem.inventory_print,
-	ewcfg.cmd_inventory_alt2: ewitem.inventory_print,
-	ewcfg.cmd_inventory_alt3: ewitem.inventory_print,
-	ewcfg.cmd_communitychest: ewitem.inventory_print,
+	#ewcfg.cmd_inventory: ewitem.inventory_print,
+	#ewcfg.cmd_inventory_alt1: ewitem.inventory_print,
+	#ewcfg.cmd_inventory_alt2: ewitem.inventory_print,
+	#ewcfg.cmd_inventory_alt3: ewitem.inventory_print,
+	#ewcfg.cmd_communitychest: ewitem.inventory_print,
 
 
 	# get an item's description
-	ewcfg.cmd_inspect: ewitem.item_look,
-	ewcfg.cmd_inspect_alt1: ewitem.item_look,
+	#ewcfg.cmd_inspect: ewitem.item_look,
+	#ewcfg.cmd_inspect_alt1: ewitem.item_look,
 
 	# use an item
-	ewcfg.cmd_use: ewitem.item_use,
+	#ewcfg.cmd_use: ewitem.item_use,
 
 	# eat a food item from a player's inventory
 	ewcfg.cmd_eat: ewfood.eat_item,
@@ -559,7 +558,7 @@ cmd_map = {
 	ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
 	ewcfg.cmd_createitem: ewcmd.create_item,
 	ewcfg.cmd_manualsoulbind: ewcmd.manual_soulbind,
-	ewcfg.cmd_editprops: ewitem.manually_edit_item_properties,
+	#ewcfg.cmd_editprops: ewitem.manually_edit_item_properties,
 	ewcfg.cmd_setslime: ewcmd.set_slime,
 	ewcfg.cmd_checkstats: ewcmd.check_stats,
 	ewcfg.cmd_makebp : ewcmd.make_bp,
@@ -577,14 +576,14 @@ cmd_map = {
 	ewcfg.cmd_wcim_alt3: ewsmelting.find_recipes_by_item,
 
 	#give an item to another player
-	ewcfg.cmd_give: ewitem.give,
+	#ewcfg.cmd_give: ewitem.give,
 
 	# drop item into your current district
-	ewcfg.cmd_discard: ewitem.discard,
-	ewcfg.cmd_discard_alt1: ewitem.discard,
+	#ewcfg.cmd_discard: ewitem.discard,
+	#ewcfg.cmd_discard_alt1: ewitem.discard,
 	
 	# delete a food item from your inventory
-	ewcfg.cmd_trash: ewitem.trash,
+	#ewcfg.cmd_trash: ewitem.trash,
 
 	# recycle your trash at the slimecorp recycling plant
 	ewcfg.cmd_recycle: ewcmd.recycle,
@@ -738,7 +737,7 @@ cmd_map = {
 	# LOL
 	ewcfg.cmd_lol: ewcmd.lol,
 
-	ewcfg.cmd_zuck : ewitem.zuck,
+	#ewcfg.cmd_zuck : ewitem.zuck,
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 	
@@ -894,7 +893,7 @@ cmd_map = {
 	ewcfg.cmd_stink: ewmutation.waft,
 	ewcfg.cmd_slap: ewmap.slap,
 	ewcfg.cmd_track: ewmutation.track_oneeyeopen,
-	ewcfg.cmd_longdrop: ewitem.longdrop,
+	#ewcfg.cmd_longdrop: ewitem.longdrop,
 	ewcfg.cmd_shakeoff: ewmutation.shakeoff,
 	ewcfg.cmd_clench: ewmutation.clench,
 	ewcfg.cmd_thirdeye: ewmap.tracker,
@@ -903,7 +902,7 @@ cmd_map = {
 	ewcfg.cmd_chemo: ewmutation.chemo,
 	ewcfg.cmd_graft: ewmutation.graft,
 	ewcfg.cmd_bleedout: ewmutation.bleedout,
-	ewcfg.cmd_skullbash: ewitem.skullbash,
+	#ewcfg.cmd_skullbash: ewitem.skullbash,
 	ewcfg.cmd_juviemode: ewjuviecmd.juviemode,
 
 	ewcfg.cmd_manual_unban:ewcmd.unban_manual,
@@ -939,15 +938,15 @@ dm_cmd_map = {
 
 	# !inv
 	# show player inventory
-	ewcfg.cmd_inventory: ewitem.inventory_print,
-	ewcfg.cmd_inventory_alt1: ewitem.inventory_print,
-	ewcfg.cmd_inventory_alt2: ewitem.inventory_print,
-	ewcfg.cmd_inventory_alt3: ewitem.inventory_print,
-	ewcfg.cmd_communitychest: ewitem.inventory_print,
+	#ewcfg.cmd_inventory: ewitem.inventory_print,
+	#ewcfg.cmd_inventory_alt1: ewitem.inventory_print,
+	#ewcfg.cmd_inventory_alt2: ewitem.inventory_print,
+	#ewcfg.cmd_inventory_alt3: ewitem.inventory_print,
+	#ewcfg.cmd_communitychest: ewitem.inventory_print,
 
 	# !inspect
-	ewcfg.cmd_inspect: ewitem.item_look,
-	ewcfg.cmd_inspect_alt1: ewitem.item_look,
+	#ewcfg.cmd_inspect: ewitem.item_look,
+	#ewcfg.cmd_inspect_alt1: ewitem.item_look,
 
 	# !tweet
 	ewcfg.cmd_tweet: ewslimetwitter.tweet,
@@ -968,11 +967,11 @@ apt_dm_cmd_map = {
 	ewcfg.cmd_move_alt6: ewmap.move,
 
 	# !use
-	ewcfg.cmd_use: ewitem.item_use,
+	#ewcfg.cmd_use: ewitem.item_use,
 
 	# !extract/returnsoul
-	ewcfg.cmd_extractsoul: ewitem.soulextract,
-	ewcfg.cmd_returnsoul: ewitem.returnsoul,
+	#ewcfg.cmd_extractsoul: ewitem.soulextract,
+	#ewcfg.cmd_returnsoul: ewitem.returnsoul,
 
 	# !stop, Cancel all moves in progress.
 	ewcfg.cmd_halt: ewmap.halt,
@@ -1059,7 +1058,7 @@ apt_dm_cmd_map = {
 	ewcfg.cmd_dyecosmetic_alt3: ewcosmeticitem.dye,
 
 	# give an item to another player
-	ewcfg.cmd_give: ewitem.give,
+	#ewcfg.cmd_give: ewitem.give,
 
 	# throw up?
 	ewcfg.cmd_hurl: ewcmd.hurl,
@@ -1097,7 +1096,7 @@ apt_dm_cmd_map = {
 	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
 
 	# !squeeze
-	ewcfg.cmd_squeeze: ewitem.squeeze,
+	#ewcfg.cmd_squeeze: ewitem.squeeze,
 
 	# !commands
 	ewcfg.cmd_commands_alt1: ewcmd.commands,
@@ -1126,7 +1125,7 @@ apt_dm_cmd_map = {
 	ewcfg.cmd_clench: ewmutation.clench,
 
 	# drop something but really far away
-	ewcfg.cmd_longdrop: ewitem.longdrop,
+	#ewcfg.cmd_longdrop: ewitem.longdrop,
 }
 
 cmd_modules = [wep, ewapt, ewbook]

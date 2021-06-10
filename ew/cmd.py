@@ -5,7 +5,7 @@ import sys
 import time
 
 from . import faction as ewfaction
-from . import item as ewitem
+from . import item_package as ewitem
 from . import prank as ewprank
 from . import wep_package as ewwep
 from . import apt_package as ewapt
@@ -2169,7 +2169,7 @@ async def toss_off_cliff(cmd):
 					response = "There's nobody here."
 				return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 			else:
-				return await ewitem.discard(cmd=cmd)
+				return await ewitem.cmds.discard(cmd=cmd)
 		else:
 			response = "You don't have that item."
 			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

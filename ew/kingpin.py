@@ -4,7 +4,7 @@
 import re
 
 from . import cmd as ewcmd
-from . import item as ewitem
+from . import item_package as ewitem
 from . import move as ewmap
 from .backend import item as bknd_item
 from .static import cfg as ewcfg
