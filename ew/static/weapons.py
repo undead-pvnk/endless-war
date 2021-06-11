@@ -811,7 +811,6 @@ weapon_list = [
 		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		str_description = "It's a pickaxe.",
 		acquisition = ewcfg.acquisition_smelting,
-		classes = [ewcfg.weapon_class_juvie],
 		stat = ewcfg.stat_pickaxe_kills,
 		is_tool = 1
 	),
@@ -842,7 +841,6 @@ weapon_list = [
 		fn_effect = get_normal_attack(weapon_type = 'tool'),
 		str_description = "It's a super fishing rod.",
 		acquisition = ewcfg.acquisition_smelting,
-		classes = [ewcfg.weapon_class_juvie],
 		stat = ewcfg.stat_fishingrod_kills,
 		is_tool = 1
 	),

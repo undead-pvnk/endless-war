@@ -335,7 +335,7 @@ async def mine(cmd):
 			if user_data.weapon >= 0:
 				weapon_item = EwItem(id_item = user_data.weapon)
 				weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-				if weapon.id_weapon == ewcfg.weapon_id_pickaxe: # and user_data.life_state != ewcfg.life_state_juvenile:
+				if weapon.id_weapon == ewcfg.weapon_id_pickaxe and user_data.life_state != ewcfg.life_state_juvenile:
 					has_pickaxe = True
 			#if user_data.sidearm >= 0:
 			#	sidearm_item = EwItem(id_item=user_data.sidearm)
@@ -352,7 +352,7 @@ async def mine(cmd):
 			unearthed_item_chance = 1 / ewcfg.unearthed_item_rarity
 			if user_data.life_state == ewcfg.life_state_juvenile: #and not user_data.juviemode:
 				unearthed_item_chance *= 2
-			if has_pickaxe == True: # and user_data.life_state != ewcfg.life_state_juvenile: #and not user_data.juviemode:
+			if has_pickaxe == True: #and not user_data.juviemode:
 				unearthed_item_chance *= 1.5
 			if ewcfg.mutation_id_lucky in mutations: #and not user_data.juviemode:
 				unearthed_item_chance *= 1.33
