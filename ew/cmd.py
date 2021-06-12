@@ -4339,4 +4339,15 @@ async def post_leaderboard(cmd):
 	await bknd_leaderboard.post_leaderboards(client=client, server=server)
 	return await fe_utils.send_message(cmd.client, cmd.message.channel, "Yee-haw! Just refreshed that their leaderboard for ya sonny!")
 
+async def update_bazaar(cmd):
+	author = cmd.message.author
+	if not author.guild_permissions.administrator:
+		return
+	user_data = EwUser(member = author)
+	client = cmd.client
+	server = client.get_guild(user_data.id_server)
+	market_data = EwMarket(id_server = server.id)
+	market_data.updateBazaar()
+	market_data.persist()
+	return await fe_utils.send_response("Successfully updated the bazaar for ya!", cmd)
 

@@ -59,7 +59,6 @@ import ew.static.cosmetics as cosmetics
 import ew.static.food as static_food
 import ew.static.items as static_items
 import ew.static.poi as poi_static
-import ew.static.vendors as vendors
 import ew.static.weather as weather_static
 import ew.transport as ewtransport
 import ew.utils.core as ewutils
@@ -786,6 +785,7 @@ cmd_map = {
 
 	# force print the leaderboard
 	ewcfg.cmd_post_leaderboard: ewcmd.post_leaderboard,
+	ewcfg.cmd_update_bazaar: ewcmd.update_bazaar,
 
 	# grant slimecorp executive status
 	ewcfg.cmd_promote: ewcmd.promote,
@@ -1244,74 +1244,7 @@ async def on_ready():
 
 					if market_data.clock == 6:
 						# Update the list of available bazaar items by clearing the current list and adding the new items
-						market_data.bazaar_wares.clear()
-
-						bazaar_foods = []
-						bazaar_cosmetics = []
-						bazaar_general_items = []
-						bazaar_furniture = []
-
-						for item in vendors.vendor_inv.get(ewcfg.vendor_bazaar):
-							if item in static_items.item_names:
-								bazaar_general_items.append(item)
-
-							elif item in static_food.food_names:
-								bazaar_foods.append(item)
-
-							elif item in cosmetics.cosmetic_names:
-								bazaar_cosmetics.append(item)
-
-							elif item in static_items.furniture_names:
-								bazaar_furniture.append(item)
-
-						market_data.bazaar_wares['slimecorp1'] = ewcfg.weapon_id_umbrella
-						market_data.bazaar_wares['slimecorp2'] = ewcfg.cosmetic_id_raincoat
-
-						market_data.bazaar_wares['generalitem'] = random.choice(bazaar_general_items)
-
-						market_data.bazaar_wares['food1'] = random.choice(bazaar_foods)
-						# Don't add repeated foods
-						bw_food2 = None
-						while bw_food2 is None or bw_food2 in market_data.bazaar_wares.values():
-							bw_food2 = random.choice(bazaar_foods)
-
-						market_data.bazaar_wares['food2'] = bw_food2
-
-						market_data.bazaar_wares['cosmetic1'] = random.choice(bazaar_cosmetics)
-						# Don't add repeated cosmetics
-						bw_cosmetic2 = None
-						while bw_cosmetic2 is None or bw_cosmetic2 in market_data.bazaar_wares.values():
-							bw_cosmetic2 = random.choice(bazaar_cosmetics)
-
-						market_data.bazaar_wares['cosmetic2'] = bw_cosmetic2
-
-						bw_cosmetic3 = None
-						while bw_cosmetic3 is None or bw_cosmetic3 in market_data.bazaar_wares.values():
-							bw_cosmetic3 = random.choice(bazaar_cosmetics)
-
-						market_data.bazaar_wares['cosmetic3'] = bw_cosmetic3
-
-						market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
-
-						bw_furniture2 = None
-						while bw_furniture2 is None or bw_furniture2 in market_data.bazaar_wares.values():
-							bw_furniture2 = random.choice(bazaar_furniture)
-
-						market_data.bazaar_wares['furniture2'] = bw_furniture2
-
-						bw_furniture3 = None
-						while bw_furniture3 is None or bw_furniture3 in market_data.bazaar_wares.values():
-							bw_furniture3 = random.choice(bazaar_furniture)
-
-						market_data.bazaar_wares['furniture3'] = bw_furniture3
-
-
-						if random.random() < 0.05: # 1 / 20
-							market_data.bazaar_wares['minigun'] = ewcfg.weapon_id_minigun
-
-						if random.random() < 0.05: # 1 / 20
-							market_data.bazaar_wares['bustedrifle'] = ewcfg.item_id_bustedrifle
-
+						market_data.updateBazaar()
 
 					market_data.persist()
 
