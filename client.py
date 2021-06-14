@@ -19,7 +19,7 @@ import traceback
 
 import discord
 
-import ew.ads_package as ewads # 3
+import ew.ads_package as ewads
 import ew.apt_package as ewapt
 import ew.backend.ads as bknd_ads
 import ew.backend.core as bknd_core
@@ -30,7 +30,7 @@ import ew.backend.item as bknd_item
 import ew.backend.player as bknd_player
 import ew.backend.server as bknd_server
 import ew.book_package as ewbook
-import ew.casino as ewcasino #32
+import ew.casino_package as ewcasino
 import ew.cmd_package as ewcmd
 import ew.cosmeticitem as ewcosmeticitem #21
 import ew.debug as ewdebug # 9
@@ -256,8 +256,8 @@ cmd_map = {
 	#ewcfg.cmd_frame: ewapt.frame,
 	#ewcfg.cmd_extractsoul: ewitem.soulextract,
 	#ewcfg.cmd_returnsoul: ewitem.returnsoul,
-	ewcfg.cmd_betsoul: ewcasino.betsoul,
-	ewcfg.cmd_buysoul: ewcasino.buysoul,
+	#ewcfg.cmd_betsoul: ewcasino.betsoul,
+	#ewcfg.cmd_buysoul: ewcasino.buysoul,
 	#ewcfg.cmd_squeeze: ewitem.squeeze,
 
 	#ewcfg.cmd_toss: ewcmd.toss_off_cliff,
@@ -340,52 +340,52 @@ cmd_map = {
 	ewcfg.cmd_crystalize_negapoudrin_alt3: ewspooky.crystalize_negapoudrin,
 	
 	# Play slime pachinko!
-	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
-	ewcfg.cmd_slimepachinko_alt1: ewcasino.pachinko,
+	#ewcfg.cmd_slimepachinko: ewcasino.pachinko,
+	#ewcfg.cmd_slimepachinko_alt1: ewcasino.pachinko,
 
 	# Toss the dice at slime craps!
-	ewcfg.cmd_slimecraps: ewcasino.craps,
-    	ewcfg.cmd_slimecraps_alt1: ewcasino.craps,
+	#ewcfg.cmd_slimecraps: ewcasino.craps,
+    #	ewcfg.cmd_slimecraps_alt1: ewcasino.craps,
 
 	# Pull the lever on a slot machine!
-	ewcfg.cmd_slimeslots: ewcasino.slots,
-	ewcfg.cmd_slimeslots_alt1: ewcasino.slots,
+	#ewcfg.cmd_slimeslots: ewcasino.slots,
+	#ewcfg.cmd_slimeslots_alt1: ewcasino.slots,
 
 	# Play slime roulette!
-	ewcfg.cmd_slimeroulette: ewcasino.roulette,
-    	ewcfg.cmd_slimeroulette_alt1: ewcasino.roulette,
+	#ewcfg.cmd_slimeroulette: ewcasino.roulette,
+    #	ewcfg.cmd_slimeroulette_alt1: ewcasino.roulette,
 
 	# Play slime baccarat!
-	ewcfg.cmd_slimebaccarat: ewcasino.baccarat,
-    	ewcfg.cmd_slimebaccarat_alt1: ewcasino.baccarat,
+	#ewcfg.cmd_slimebaccarat: ewcasino.baccarat,
+    #	ewcfg.cmd_slimebaccarat_alt1: ewcasino.baccarat,
 
 	# Play slime skat!
-	ewcfg.cmd_slimeskat: ewcasino.skat,
-    	ewcfg.cmd_slimeskat_alt1: ewcasino.skat,
-	ewcfg.cmd_slimeskat_join: ewcasino.skat_join,
-	ewcfg.cmd_slimeskat_decline: ewcasino.skat_decline,
-	ewcfg.cmd_slimeskat_bid: ewcasino.skat_bid,
-	ewcfg.cmd_slimeskat_call: ewcasino.skat_call,
-	ewcfg.cmd_slimeskat_pass: ewcasino.skat_pass,
-	ewcfg.cmd_slimeskat_play: ewcasino.skat_play,
-	ewcfg.cmd_slimeskat_hearts: ewcasino.skat_hearts,
-	ewcfg.cmd_slimeskat_slugs: ewcasino.skat_slugs,
-	ewcfg.cmd_slimeskat_hats: ewcasino.skat_hats,
-	ewcfg.cmd_slimeskat_shields: ewcasino.skat_shields,
-	ewcfg.cmd_slimeskat_grand: ewcasino.skat_grand,
-	ewcfg.cmd_slimeskat_null: ewcasino.skat_null,
-	ewcfg.cmd_slimeskat_take: ewcasino.skat_take,
-	ewcfg.cmd_slimeskat_hand: ewcasino.skat_hand,
-	ewcfg.cmd_slimeskat_choose: ewcasino.skat_choose,
+	#ewcfg.cmd_slimeskat: ewcasino.skat,
+    #	ewcfg.cmd_slimeskat_alt1: ewcasino.skat,
+	#ewcfg.cmd_slimeskat_join: ewcasino.skat_join,
+	#ewcfg.cmd_slimeskat_decline: ewcasino.skat_decline,
+	#ewcfg.cmd_slimeskat_bid: ewcasino.skat_bid,
+	#ewcfg.cmd_slimeskat_call: ewcasino.skat_call,
+	#ewcfg.cmd_slimeskat_pass: ewcasino.skat_pass,
+	#ewcfg.cmd_slimeskat_play: ewcasino.skat_play,
+	#ewcfg.cmd_slimeskat_hearts: ewcasino.skat_hearts,
+	#ewcfg.cmd_slimeskat_slugs: ewcasino.skat_slugs,
+	#ewcfg.cmd_slimeskat_hats: ewcasino.skat_hats,
+	#ewcfg.cmd_slimeskat_shields: ewcasino.skat_shields,
+	#ewcfg.cmd_slimeskat_grand: ewcasino.skat_grand,
+	#ewcfg.cmd_slimeskat_null: ewcasino.skat_null,
+	#ewcfg.cmd_slimeskat_take: ewcasino.skat_take,
+	#ewcfg.cmd_slimeskat_hand: ewcasino.skat_hand,
+	#ewcfg.cmd_slimeskat_choose: ewcasino.skat_choose,
 
 
 	# Russian Roulette
-	ewcfg.cmd_russian: ewcasino.russian_roulette,
+	#ewcfg.cmd_russian: ewcasino.russian_roulette,
 	#ewcfg.cmd_accept: ewcmd.accept,
 	#ewcfg.cmd_refuse: ewcmd.refuse,
 	
 	# Dueling
-	ewcfg.cmd_duel: ewcasino.duel,
+	#ewcfg.cmd_duel: ewcasino.duel,
 
 
 	# See what's for sale in the Food Court.
@@ -1128,7 +1128,7 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_longdrop: ewitem.longdrop,
 }
 
-cmd_modules = [wep, ewapt, ewbook, ewitem, ewcmd, ewads]
+cmd_modules = [wep, ewapt, ewbook, ewitem, ewcmd, ewads, ewcasino]
 
 for mod in cmd_modules:
 	try:
