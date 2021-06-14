@@ -80,7 +80,7 @@ hue_list = [
 		],
 		str_saturate = "It turns a vivid magenta!",
 		str_name = "magenta",
-		str_desc = "It’s vivid magenta that fills you with energy and excitement every time you see it.",
+		str_desc = "Its vivid magenta hue fills you with energy and excitement every time you see it.",
 		effectiveness = {
 			ewcfg.hue_id_pink: ewcfg.hue_analogous,
 			ewcfg.hue_id_purple: ewcfg.hue_analogous,
@@ -99,7 +99,7 @@ hue_list = [
 		],
 		str_saturate = "It turns a dark purple!",
 		str_name = "purple",
-		str_desc = "Its dark purple hue gives it a brooding, edgy appearance. It will huff and groan when given orders, like a teenage rebelling against his mom in the most flaccid way possible.",
+		str_desc = "Its dark purple hue gives it a brooding, edgy appearance. It will huff and groan when given orders, like a teenager rebelling against his mom in the most flaccid way possible.",
 		effectiveness = {
 			ewcfg.hue_id_blue: ewcfg.hue_analogous,
 			ewcfg.hue_id_magenta: ewcfg.hue_analogous,
@@ -152,7 +152,7 @@ hue_list = [
 			"tealdye",
 			"sludgeberries"
 		],
-		str_saturate = "It looks so purdy now!",
+		str_saturate = "It turns a deep teal! It looks so purdy now!",
 		str_name = "teal",
 		str_desc = "Its caliginous teal hue gives you a sudden lust for prosecuting criminals in the legal system, before coming to your senses and realizing there is no legal system here.",
 		effectiveness = {
@@ -180,7 +180,7 @@ hue_list = [
 			"pinkdye",
 			"pinkrowddishes"
 		],
-		str_saturate = "It turns a vibrant shade of  pink!",
+		str_saturate = "It turns a vibrant shade of pink!",
 		str_name = "pink",
 		str_desc = "Its vibrant pink hue imbues the Slimeoid with an uncontrollable lust for destruction. You will often see it flailing about happily, before knocking down a mailbox or kicking some adult in the shin.",
 		effectiveness = {
@@ -256,9 +256,9 @@ hue_list = [
 			"cyandye",
 			"direapples"
 		],
-		str_saturate = "It turned a light cyan!",
+		str_saturate = "It turns a light cyan!",
 		str_name = "cyan",
-		str_desc = "Its light cyan hue imbues it with a slightly anxious demeanor, it is sure to avoid sewer manholes when walking down the street.",
+		str_desc = "Its light cyan hue imbues it with a slightly anxious demeanor. It is sure to avoid sewer manholes when walking down the street.",
 		effectiveness = {
 			ewcfg.hue_id_teal: ewcfg.hue_analogous,
 			ewcfg.hue_id_cobalt: ewcfg.hue_analogous,
@@ -273,7 +273,7 @@ hue_list = [
 		alias = [
 			"browndye",
 		],
-		str_saturate = "It turned an earthly brown!",
+		str_saturate = "It turns an earthly brown!",
 		str_name = "brown",
 		str_desc = "Its earthly brown hue imbues it with a humble, down-to-earth personality.",
 		is_neutral = True,
