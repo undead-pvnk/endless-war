@@ -19,7 +19,7 @@ import traceback
 
 import discord
 
-import ew.ads as ewads # 3
+import ew.ads_package as ewads # 3
 import ew.apt_package as ewapt
 import ew.backend.ads as bknd_ads
 import ew.backend.core as bknd_core
@@ -31,7 +31,7 @@ import ew.backend.player as bknd_player
 import ew.backend.server as bknd_server
 import ew.book_package as ewbook
 import ew.casino as ewcasino #32
-import ew.cmd_package as ewcmd #124
+import ew.cmd_package as ewcmd
 import ew.cosmeticitem as ewcosmeticitem #21
 import ew.debug as ewdebug # 9
 import ew.district as ewdistrict #11
@@ -41,7 +41,7 @@ import ew.farm as ewfarm #11
 import ew.fish as ewfish #7
 import ew.food as ewfood #9
 import ew.hunting as ewhunting #3
-import ew.item_package as ewitem #40
+import ew.item_package as ewitem
 import ew.juviecmd as ewjuviecmd #11
 import ew.kingpin as ewkingpin #8
 import ew.market as ewmarket #37
@@ -434,8 +434,8 @@ cmd_map = {
 	ewcfg.cmd_stocks: ewmarket.stocks,
 
 	# ads
-	ewcfg.cmd_advertise: ewads.advertise,
-	ewcfg.cmd_ads: ewads.ads_look,
+	#ewcfg.cmd_advertise: ewads.advertise,
+	#ewcfg.cmd_ads: ewads.ads_look,
 	#ewcfg.cmd_confirm: ewcmd.confirm,
 	#ewcfg.cmd_cancel: ewcmd.cancel,
 
@@ -1128,7 +1128,7 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_longdrop: ewitem.longdrop,
 }
 
-cmd_modules = [wep, ewapt, ewbook, ewitem, ewcmd]
+cmd_modules = [wep, ewapt, ewbook, ewitem, ewcmd, ewads]
 
 for mod in cmd_modules:
 	try:
@@ -1862,18 +1862,18 @@ async def on_message(message):
 			cmd_obj.guild = ewcfg.server_list[playermodel.id_server]
 			cmd_obj.message.author = cmd_obj.guild.get_member(playermodel.id_user)
 
-			# Direct message the player their inventory.
+			# Handle DM compatible commands
 			if cmd in dm_cmd_map:
-				return await dm_cmd_map.get(cmd)(cmd_obj)
-			#elif cmd in ewcfg.zine_commands:
-				#return await ewbook.zine_dm_commands(cmd=cmd_obj)
-			elif poi.is_apartment:
-				apt_dm_cmd_map.get(cmd)(cmd_obj)
-				#return await ewapt.aptCommands(cmd=cmd_obj)
+				cmd_fnc = dm_cmd_map.get(cmd)
+				if cmd_fnc:
+					return await cmd_fnc(cmd_obj)
+			elif poi.is_apartment and cmd in apt_dm_cmd_map:
+				cmd_fnc = apt_dm_cmd_map.get(cmd)
+				if cmd_fnc:
+					return await cmd_fnc(cmd_obj)
 			elif ewcfg.cmd_gvs_grabbrainz in cmd_obj.message.content.lower():
 				return await ewcmd.cmds.gvs_grabbrainz(cmd_obj)
 			else:
-				
 				# Only send the help response once every thirty seconds. There's no need to spam it.
 				# Also, don't send out response if the user doesn't actually type a command.
 				if message.content.startswith(ewcfg.cmd_prefix):

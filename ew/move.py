@@ -7,7 +7,7 @@ from copy import deepcopy
 
 import discord
 
-from . import ads as ewads
+from . import ads_package as ewads
 from . import apt_package as ewapt
 from .backend import ads as bknd_ads
 from .backend import core as bknd_core
