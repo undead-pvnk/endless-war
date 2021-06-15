@@ -35,7 +35,7 @@ import ew.cmd_package as ewcmd
 import ew.cosmeticitem_package as ewcosmeticitem
 import ew.debug_package as ewdebug
 import ew.district_package as ewdistrict
-import ew.dungeons as ewdungeons #3
+import ew.dungeons_package as ewdungeons
 import ew.faction as ewfaction #2
 import ew.farm as ewfarm #11
 import ew.fish as ewfish #7
@@ -48,7 +48,7 @@ import ew.market_package as ewmarket
 import ew.move_package as ewmap
 import ew.mutation_package as ewmutation
 import ew.quadrants_package as ewquadrants
-import ew.race_package as ewrace #19
+import ew.race_package as ewrace
 import ew.slimeoid_package as ewslimeoid
 import ew.slimetwitter as ewslimetwitter #5
 import ew.smelting as ewsmelting #7
