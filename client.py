@@ -34,7 +34,7 @@ import ew.casino_package as ewcasino
 import ew.cmd_package as ewcmd
 import ew.cosmeticitem_package as ewcosmeticitem
 import ew.debug_package as ewdebug
-import ew.district_package as ewdistrict #11
+import ew.district_package as ewdistrict
 import ew.dungeons as ewdungeons #3
 import ew.faction as ewfaction #2
 import ew.farm as ewfarm #11
@@ -46,8 +46,8 @@ import ew.juviecmd as ewjuviecmd #11
 import ew.kingpin as ewkingpin #8
 import ew.market_package as ewmarket
 import ew.move_package as ewmap
-import ew.mutation as ewmutation #16
-import ew.quadrants_package as ewquadrants #23
+import ew.mutation_package as ewmutation #16
+import ew.quadrants_package as ewquadrants
 import ew.race as ewrace #19
 import ew.slimeoid_package as ewslimeoid
 import ew.slimetwitter as ewslimetwitter #5
@@ -685,8 +685,8 @@ cmd_map = {
 	#ewcfg.cmd_get_policitous_alt1: ewquadrants.get_policitous,
 
 	# mutations
-	ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
-	ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
+	#ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
+	#ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
 
 	#ewcfg.cmd_teleport: ewmap.teleport,
 	#ewcfg.cmd_teleport_alt1: ewmap.teleport,
@@ -889,19 +889,19 @@ cmd_map = {
 	ewcfg.cmd_shamble: ewrace.shamble,
 
 	# Mutations
-	ewcfg.cmd_preserve: ewmutation.preserve,
-	ewcfg.cmd_stink: ewmutation.waft,
+	#ewcfg.cmd_preserve: ewmutation.preserve,
+	#ewcfg.cmd_stink: ewmutation.waft,
 	#ewcfg.cmd_slap: ewmap.slap,
-	ewcfg.cmd_track: ewmutation.track_oneeyeopen,
+	#ewcfg.cmd_track: ewmutation.track_oneeyeopen,
 	#ewcfg.cmd_longdrop: ewitem.longdrop,
-	ewcfg.cmd_shakeoff: ewmutation.shakeoff,
-	ewcfg.cmd_clench: ewmutation.clench,
+	#ewcfg.cmd_shakeoff: ewmutation.shakeoff,
+	#ewcfg.cmd_clench: ewmutation.clench,
 	#ewcfg.cmd_thirdeye: ewmap.tracker,
 	#ewcfg.cmd_loop: ewmap.loop,
 	ewcfg.cmd_devour: ewfood.devour,
-	ewcfg.cmd_chemo: ewmutation.chemo,
-	ewcfg.cmd_graft: ewmutation.graft,
-	ewcfg.cmd_bleedout: ewmutation.bleedout,
+	#ewcfg.cmd_chemo: ewmutation.chemo,
+	#ewcfg.cmd_graft: ewmutation.graft,
+	#ewcfg.cmd_bleedout: ewmutation.bleedout,
 	#ewcfg.cmd_skullbash: ewitem.skullbash,
 	ewcfg.cmd_juviemode: ewjuviecmd.juviemode,
 
@@ -1107,43 +1107,45 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_tag: ewdistrict.tag,
 
 	# !stink
-	ewcfg.cmd_stink: ewmutation.waft,
+	#ewcfg.cmd_stink: ewmutation.waft,
 
 	# !bleedout
-	ewcfg.cmd_bleedout: ewmutation.bleedout,
+	#ewcfg.cmd_bleedout: ewmutation.bleedout,
 
 	# something with oeo I think
 	#ewcfg.cmd_thirdeye: ewmap.tracker,
 
 	# more oeo
-	ewcfg.cmd_track: ewmutation.track_oneeyeopen,
+	#ewcfg.cmd_track: ewmutation.track_oneeyeopen,
 
 	# preserve
-	ewcfg.cmd_preserve: ewmutation.preserve,
+	#ewcfg.cmd_preserve: ewmutation.preserve,
 
 	# clench your cheeks
-	ewcfg.cmd_clench: ewmutation.clench,
+	#ewcfg.cmd_clench: ewmutation.clench,
 
 	# drop something but really far away
 	#ewcfg.cmd_longdrop: ewitem.longdrop,
 }
 
-cmd_modules = [wep,
-			   ewapt,
-			   ewbook,
-			   ewitem,
-			   ewcmd,
-			   ewads,
-			   ewcasino,
-			   ewcosmeticitem,
-			   ewdebug,
-			   ewdistrict,
-			   ewslimeoid,
-			   ewmap,
-			   ewmarket,
-			   ewspooky,
-			   ewtransport,
-			   ewquadrants,
+cmd_modules = [
+	wep,
+	ewapt,
+	ewbook,
+	ewitem,
+	ewcmd,
+	ewads,
+	ewcasino,
+	ewcosmeticitem,
+	ewdebug,
+	ewdistrict,
+	ewslimeoid,
+	ewmap,
+	ewmarket,
+	ewspooky,
+	ewtransport,
+	ewquadrants,
+	ewmutation,
 ]
 
 for mod in cmd_modules:
