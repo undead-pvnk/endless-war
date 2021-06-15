@@ -50,7 +50,7 @@ import ew.mutation_package as ewmutation
 import ew.quadrants_package as ewquadrants
 import ew.race_package as ewrace
 import ew.slimeoid_package as ewslimeoid
-import ew.slimetwitter as ewslimetwitter #5
+import ew.slimetwitter_package as ewslimetwitter
 import ew.smelting as ewsmelting #7
 import ew.spooky_package as ewspooky
 import ew.sports as ewsports #6
@@ -908,7 +908,7 @@ cmd_map = {
 	#ewcfg.cmd_manual_unban:ewcmd.unban_manual,
 
 	# Slime Twitter
-	ewcfg.cmd_tweet: ewslimetwitter.tweet,
+	#ewcfg.cmd_tweet: ewslimetwitter.tweet,
 
 	#ewcfg.cmd_changegamestate: ewdebug.change_gamestate,
 	#ewcfg.cmd_display_states: ewdebug.display_states,
@@ -916,8 +916,8 @@ cmd_map = {
 	#ewcfg.cmd_call_elevator: ewdebug.elevator_call,
 	#ewcfg.cmd_addstatuseffect: ewcmd.assign_status_effect,
 
-	ewcfg.cmd_verification: ewslimetwitter.verification,
-	ewcfg.cmd_verification_alt: ewslimetwitter.verification,
+	#ewcfg.cmd_verification: ewslimetwitter.verification,
+	#ewcfg.cmd_verification_alt: ewslimetwitter.verification,
 
 	# Check your weapon masteries
 
@@ -949,7 +949,7 @@ dm_cmd_map = {
 	#ewcfg.cmd_inspect_alt1: ewitem.item_look,
 
 	# !tweet
-	ewcfg.cmd_tweet: ewslimetwitter.tweet,
+	#ewcfg.cmd_tweet: ewslimetwitter.tweet,
 
 
 }
@@ -1154,6 +1154,7 @@ cmd_modules = [
 	ewjuviecmd,
 	ewhunting,
 	ewkingpin,
+	ewslimetwitter,
 ]
 
 for mod in cmd_modules:
