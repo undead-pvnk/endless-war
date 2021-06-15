@@ -53,7 +53,7 @@ import ew.slimeoid_package as ewslimeoid
 import ew.slimetwitter_package as ewslimetwitter
 import ew.smelting_package as ewsmelting
 import ew.spooky_package as ewspooky
-import ew.sports as ewsports #6
+import ew.sports_package as ewsports
 import ew.static.cfg as ewcfg
 import ew.static.cosmetics as cosmetics
 import ew.static.food as static_food
@@ -812,10 +812,10 @@ cmd_map = {
 	# ewcfg.cmd_rejuvenate: ewdistrict.rejuvenate,
 	
 	# slimeball
-	ewcfg.cmd_slimeball: ewsports.slimeball,
-	ewcfg.cmd_slimeballgo: ewsports.slimeballgo,
-	ewcfg.cmd_slimeballstop: ewsports.slimeballstop,
-	ewcfg.cmd_slimeballleave: ewsports.slimeballleave,
+	#ewcfg.cmd_slimeball: ewsports.slimeball,
+	#ewcfg.cmd_slimeballgo: ewsports.slimeballgo,
+	#ewcfg.cmd_slimeballstop: ewsports.slimeballstop,
+	#ewcfg.cmd_slimeballleave: ewsports.slimeballleave,
 
 	# flush items and slime from subzones into their mother district
 	#ewcfg.cmd_flushsubzones: ewmap.flush_subzones,
@@ -1156,6 +1156,7 @@ cmd_modules = [
 	ewkingpin,
 	ewslimetwitter,
 	ewsmelting,
+	ewsports
 ]
 
 for mod in cmd_modules:
