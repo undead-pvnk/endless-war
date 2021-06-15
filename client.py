@@ -86,17 +86,13 @@ active_users_map = {}
 channels_slimetwitter = {}
 
 # Map of all command words in the game to their implementing function.
-cmd_map = {}
+cmd_map = cmds.cmd_map
 
 # Map of commands always allowed in dms
-dm_cmd_map = {}
+dm_cmd_map = cmds.dm_cmd_map
 
 # Map of commands only allowed in dms while in an apartment
-apt_dm_cmd_map = {}
-
-cmd_map.update(cmds.cmd_map)
-dm_cmd_map.update(cmds.dm_cmd_map)
-apt_dm_cmd_map.update(cmds.apt_dm_cmd_map)
+apt_dm_cmd_map = cmds.apt_dm_cmd_map
 
 debug = False
 db_prefix = '--db='
