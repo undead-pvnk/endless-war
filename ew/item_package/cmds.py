@@ -7,7 +7,7 @@ import discord
 from .utils import find_item_all, item_drop
 from .. import debug_package as ewdebug
 from .. import prank as ewprank
-from .. import smelting as ewsmelting
+from .. import smelting_package as ewsmelting
 from ..backend import core as bknd_core
 from ..backend import item as bknd_item
 from ..backend.item import EwItem

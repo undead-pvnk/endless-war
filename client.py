@@ -51,7 +51,7 @@ import ew.quadrants_package as ewquadrants
 import ew.race_package as ewrace
 import ew.slimeoid_package as ewslimeoid
 import ew.slimetwitter_package as ewslimetwitter
-import ew.smelting as ewsmelting #7
+import ew.smelting_package as ewsmelting
 import ew.spooky_package as ewspooky
 import ew.sports as ewsports #6
 import ew.static.cfg as ewcfg
@@ -569,11 +569,11 @@ cmd_map = {
 	#ewcfg.cmd_dyecosmetic_alt3: ewcosmeticitem.dye,
 
 	#smelting
-	ewcfg.cmd_smelt: ewsmelting.smelt,
-	ewcfg.cmd_wcim: ewsmelting.find_recipes_by_item,
-	ewcfg.cmd_wcim_alt1: ewsmelting.find_recipes_by_item,
-	ewcfg.cmd_wcim_alt2: ewsmelting.find_recipes_by_item,
-	ewcfg.cmd_wcim_alt3: ewsmelting.find_recipes_by_item,
+	#ewcfg.cmd_smelt: ewsmelting.smelt,
+	#ewcfg.cmd_wcim: ewsmelting.find_recipes_by_item,
+	#ewcfg.cmd_wcim_alt1: ewsmelting.find_recipes_by_item,
+	#ewcfg.cmd_wcim_alt2: ewsmelting.find_recipes_by_item,
+	#ewcfg.cmd_wcim_alt3: ewsmelting.find_recipes_by_item,
 
 	#give an item to another player
 	#ewcfg.cmd_give: ewitem.give,
@@ -1011,7 +1011,7 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_dedorn_alt1: ewcosmeticitem.dedorn,
 
 	# !smelt
-	ewcfg.cmd_smelt: ewsmelting.smelt,
+	#ewcfg.cmd_smelt: ewsmelting.smelt,
 
 	# !dressslimeoid
 	#ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
@@ -1155,6 +1155,7 @@ cmd_modules = [
 	ewhunting,
 	ewkingpin,
 	ewslimetwitter,
+	ewsmelting,
 ]
 
 for mod in cmd_modules:
