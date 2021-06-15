@@ -36,8 +36,8 @@ import ew.cosmeticitem_package as ewcosmeticitem
 import ew.debug_package as ewdebug
 import ew.district_package as ewdistrict
 import ew.dungeons_package as ewdungeons
-import ew.faction as ewfaction #2
-import ew.farm_package as ewfarm #11
+import ew.faction_package as ewfaction
+import ew.farm_package as ewfarm
 import ew.fish as ewfish #7
 import ew.food as ewfood #9
 import ew.hunting as ewhunting #3
@@ -153,7 +153,7 @@ cmd_map = {
 	# move from juvenile to one of the armies (rowdys or killers)
 	ewcfg.cmd_enlist: ewjuviecmd.enlist,
 	ewcfg.cmd_renounce: ewjuviecmd.renounce,
-	ewcfg.cmd_vouch: ewfaction.vouch,
+	#ewcfg.cmd_vouch: ewfaction.vouch,
 
 	# gives slime to the miner (message.author)
 	ewcfg.cmd_mine: ewjuviecmd.mine,
@@ -1148,6 +1148,7 @@ cmd_modules = [
 	ewmutation,
 	ewrace,
 	ewfarm,
+	ewfaction,
 ]
 
 for mod in cmd_modules:

@@ -11,7 +11,7 @@ from .utils import location_commands
 from .utils import mutation_commands
 from .utils import item_commands
 from .utils import fake_failed_command
-from .. import faction as ewfaction
+from .. import faction_package as ewfaction
 from .. import item_package as ewitem
 from .. import prank as ewprank
 from .. import wep_package as ewwep
@@ -904,7 +904,7 @@ async def store_item(cmd):
 	poi = poi_static.id_to_poi.get(user_data.poi)
 
 	if poi.community_chest != None:
-		return await ewfaction.store(cmd)
+		return await ewfaction.cmds.store(cmd)
 	elif poi.is_apartment:
 		return await ewapt.cmds.store_item(cmd)
 		#response = "Try that in a DM to ENDLESS WAR."
@@ -917,7 +917,7 @@ async def remove_item(cmd):
 	poi = poi_static.id_to_poi.get(user_data.poi)
 
 	if poi.community_chest != None:
-		return await ewfaction.take(cmd)
+		return await ewfaction.cmds.take(cmd)
 	elif poi.is_apartment:
 		return await ewapt.cmds.remove_item(cmd)
 		#response = "Try that in a DM to ENDLESS WAR."
