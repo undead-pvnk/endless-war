@@ -37,7 +37,7 @@ import ew.debug_package as ewdebug
 import ew.district_package as ewdistrict
 import ew.dungeons_package as ewdungeons
 import ew.faction as ewfaction #2
-import ew.farm as ewfarm #11
+import ew.farm_package as ewfarm #11
 import ew.fish as ewfish #7
 import ew.food as ewfood #9
 import ew.hunting as ewhunting #3
@@ -520,15 +520,15 @@ cmd_map = {
 	#ewcfg.cmd_transportmap: ewcmd.transportmap,
 
 	#farming
-	ewcfg.cmd_sow: ewfarm.sow,
-	ewcfg.cmd_reap: ewfarm.reap,
-	ewcfg.cmd_reap_alt: ewfarm.reap,
-	ewcfg.cmd_check_farm: ewfarm.check_farm,
-	ewcfg.cmd_irrigate: ewfarm.cultivate,
-	ewcfg.cmd_weed: ewfarm.cultivate,
-	ewcfg.cmd_fertilize: ewfarm.cultivate,
-	ewcfg.cmd_pesticide: ewfarm.cultivate,
-	ewcfg.cmd_mill: ewfarm.mill,
+	#ewcfg.cmd_sow: ewfarm.sow,
+	#ewcfg.cmd_reap: ewfarm.reap,
+	#ewcfg.cmd_reap_alt: ewfarm.reap,
+	#ewcfg.cmd_check_farm: ewfarm.check_farm,
+	#ewcfg.cmd_irrigate: ewfarm.cultivate,
+	#ewcfg.cmd_weed: ewfarm.cultivate,
+	#ewcfg.cmd_fertilize: ewfarm.cultivate,
+	#ewcfg.cmd_pesticide: ewfarm.cultivate,
+	#ewcfg.cmd_mill: ewfarm.mill,
 
 	# Fishing
 	ewcfg.cmd_cast: ewfish.cast,
@@ -1077,7 +1077,7 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_harvest: ewcmd.harvest,
 
 	# !checkfarm
-	ewcfg.cmd_check_farm: ewfarm.check_farm,
+	#ewcfg.cmd_check_farm: ewfarm.check_farm,
 
 	# slimeoid storage
 	#ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
@@ -1147,6 +1147,7 @@ cmd_modules = [
 	ewquadrants,
 	ewmutation,
 	ewrace,
+	ewfarm,
 ]
 
 for mod in cmd_modules:
