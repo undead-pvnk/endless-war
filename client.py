@@ -39,7 +39,7 @@ import ew.dungeons_package as ewdungeons
 import ew.faction_package as ewfaction
 import ew.farm_package as ewfarm
 import ew.fish_package as ewfish
-import ew.food as ewfood #9
+import ew.food_package as ewfood
 import ew.hunting as ewhunting #3
 import ew.item_package as ewitem
 import ew.juviecmd as ewjuviecmd #11
@@ -389,13 +389,13 @@ cmd_map = {
 
 
 	# See what's for sale in the Food Court.
-	ewcfg.cmd_menu: ewfood.menu,
-	ewcfg.cmd_menu_alt1: ewfood.menu,
-	ewcfg.cmd_menu_alt2: ewfood.menu,
+	#ewcfg.cmd_menu: ewfood.menu,
+	#ewcfg.cmd_menu_alt1: ewfood.menu,
+	#ewcfg.cmd_menu_alt2: ewfood.menu,
 
 	# Order refreshing food and drinks!
-	ewcfg.cmd_order: ewfood.order,
-	ewcfg.cmd_buy: ewfood.order,
+	#ewcfg.cmd_order: ewfood.order,
+	#ewcfg.cmd_buy: ewfood.order,
 
 	# Transfer slime between players. Shares a cooldown with investments.
 	#ewcfg.cmd_transfer: ewmarket.xfer,
@@ -455,8 +455,8 @@ cmd_map = {
 	#ewcfg.cmd_use: ewitem.item_use,
 
 	# eat a food item from a player's inventory
-	ewcfg.cmd_eat: ewfood.eat_item,
-	ewcfg.cmd_eat_alt1: ewfood.eat_item,
+	#ewcfg.cmd_eat: ewfood.eat_item,
+	#ewcfg.cmd_eat_alt1: ewfood.eat_item,
 
 	# Remove a megaslime (1 mil slime) from a general.
 	ewcfg.cmd_deadmega: ewkingpin.deadmega,
@@ -898,7 +898,7 @@ cmd_map = {
 	#ewcfg.cmd_clench: ewmutation.clench,
 	#ewcfg.cmd_thirdeye: ewmap.tracker,
 	#ewcfg.cmd_loop: ewmap.loop,
-	ewcfg.cmd_devour: ewfood.devour,
+	#ewcfg.cmd_devour: ewfood.devour,
 	#ewcfg.cmd_chemo: ewmutation.chemo,
 	#ewcfg.cmd_graft: ewmutation.graft,
 	#ewcfg.cmd_bleedout: ewmutation.bleedout,
@@ -1150,6 +1150,7 @@ cmd_modules = [
 	ewfarm,
 	ewfaction,
 	ewfish,
+	ewfood,
 ]
 
 for mod in cmd_modules:
