@@ -44,7 +44,7 @@ import ew.hunting as ewhunting #3
 import ew.item_package as ewitem
 import ew.juviecmd as ewjuviecmd #11
 import ew.kingpin as ewkingpin #8
-import ew.market as ewmarket #37
+import ew.market_package as ewmarket
 import ew.move_package as ewmap
 import ew.mutation as ewmutation #16
 import ew.quadrants as ewquadrants #23
@@ -398,40 +398,40 @@ cmd_map = {
 	ewcfg.cmd_buy: ewfood.order,
 
 	# Transfer slime between players. Shares a cooldown with investments.
-	ewcfg.cmd_transfer: ewmarket.xfer,
-	ewcfg.cmd_transfer_alt1: ewmarket.xfer,
+	#ewcfg.cmd_transfer: ewmarket.xfer,
+	#ewcfg.cmd_transfer_alt1: ewmarket.xfer,
 
 	# Redeem slime with SlimeCoin
 	# ewcfg.cmd_redeem: ewmarket.redeem,
 
 	# Show the player's slime coin.
-	ewcfg.cmd_slimecoin: ewmarket.slimecoin,
-	ewcfg.cmd_slimecoin_alt1: ewmarket.slimecoin,
-	ewcfg.cmd_slimecoin_alt2: ewmarket.slimecoin,
-	ewcfg.cmd_slimecoin_alt3: ewmarket.slimecoin,
+	#ewcfg.cmd_slimecoin: ewmarket.slimecoin,
+	#ewcfg.cmd_slimecoin_alt1: ewmarket.slimecoin,
+	#ewcfg.cmd_slimecoin_alt2: ewmarket.slimecoin,
+	#ewcfg.cmd_slimecoin_alt3: ewmarket.slimecoin,
 
 	# Donate your slime to SlimeCorp in exchange for SlimeCoin.
-	ewcfg.cmd_donate: ewmarket.donate,
+	#ewcfg.cmd_donate: ewmarket.donate,
 
 	# Invest slimecoin into a stock
-	ewcfg.cmd_invest: ewmarket.invest,
+	#ewcfg.cmd_invest: ewmarket.invest,
 
 	# Withdraw slimecoin from your shares
-	ewcfg.cmd_withdraw: ewmarket.withdraw,
+	#ewcfg.cmd_withdraw: ewmarket.withdraw,
 
 	# show the exchange rate of a given stock
-	ewcfg.cmd_exchangerate: ewmarket.rate,
-	ewcfg.cmd_exchangerate_alt1: ewmarket.rate,
-	ewcfg.cmd_exchangerate_alt2: ewmarket.rate,
-	ewcfg.cmd_exchangerate_alt3: ewmarket.rate,
-	ewcfg.cmd_exchangerate_alt4: ewmarket.rate,
+	#ewcfg.cmd_exchangerate: ewmarket.rate,
+	#ewcfg.cmd_exchangerate_alt1: ewmarket.rate,
+	#ewcfg.cmd_exchangerate_alt2: ewmarket.rate,
+	#ewcfg.cmd_exchangerate_alt3: ewmarket.rate,
+	#ewcfg.cmd_exchangerate_alt4: ewmarket.rate,
 
 	# show player's current shares in a compant
-	ewcfg.cmd_shares: ewmarket.shares,
-	ewcfg.cmd_shares_alt1: ewmarket.shares,
+	#ewcfg.cmd_shares: ewmarket.shares,
+	#ewcfg.cmd_shares_alt1: ewmarket.shares,
 
 	# check available stocks
-	ewcfg.cmd_stocks: ewmarket.stocks,
+	#ewcfg.cmd_stocks: ewmarket.stocks,
 
 	# ads
 	#ewcfg.cmd_advertise: ewads.advertise,
@@ -798,11 +798,11 @@ cmd_map = {
 	#ewcfg.cmd_payday: ewcmd.payday,
 
 	# trading
-	ewcfg.cmd_trade: ewmarket.trade,
-	ewcfg.cmd_offer: ewmarket.offer_item,
-	ewcfg.cmd_remove_offer: ewmarket.remove_offer,
-	ewcfg.cmd_completetrade: ewmarket.complete_trade,
-	ewcfg.cmd_canceltrade: ewmarket.cancel_trade,
+	#ewcfg.cmd_trade: ewmarket.trade,
+	#ewcfg.cmd_offer: ewmarket.offer_item,
+	#ewcfg.cmd_remove_offer: ewmarket.remove_offer,
+	#ewcfg.cmd_completetrade: ewmarket.complete_trade,
+	#ewcfg.cmd_canceltrade: ewmarket.cancel_trade,
 
 	# Praying at the base of ENDLESS WAR.
 	#ewcfg.cmd_pray: ewcmd.pray,
@@ -991,10 +991,10 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_hunger: ewcmd.hunger,
 
 	# Show the player's slime coin.
-	ewcfg.cmd_slimecoin: ewmarket.slimecoin,
-	ewcfg.cmd_slimecoin_alt1: ewmarket.slimecoin,
-	ewcfg.cmd_slimecoin_alt2: ewmarket.slimecoin,
-	ewcfg.cmd_slimecoin_alt3: ewmarket.slimecoin,
+	#ewcfg.cmd_slimecoin: ewmarket.slimecoin,
+	#ewcfg.cmd_slimecoin_alt1: ewmarket.slimecoin,
+	#ewcfg.cmd_slimecoin_alt2: ewmarket.slimecoin,
+	#ewcfg.cmd_slimecoin_alt3: ewmarket.slimecoin,
 
 	# Show the current slime score of a player.
 	#ewcfg.cmd_score: ewcmd.score,
@@ -1128,7 +1128,20 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_longdrop: ewitem.longdrop,
 }
 
-cmd_modules = [wep, ewapt, ewbook, ewitem, ewcmd, ewads, ewcasino, ewcosmeticitem, ewdebug, ewdistrict, ewslimeoid, ewmap]
+cmd_modules = [wep,
+			   ewapt,
+			   ewbook,
+			   ewitem,
+			   ewcmd,
+			   ewads,
+			   ewcasino,
+			   ewcosmeticitem,
+			   ewdebug,
+			   ewdistrict,
+			   ewslimeoid,
+			   ewmap,
+			   ewmarket,
+]
 
 for mod in cmd_modules:
 	try:
