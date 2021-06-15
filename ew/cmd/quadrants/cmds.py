@@ -7,6 +7,7 @@ from ew.static import quadrants as quad_static
 from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
 
+
 async def add_quadrant(cmd):
     response = ""
     author = cmd.message.author

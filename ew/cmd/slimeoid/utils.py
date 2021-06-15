@@ -974,41 +974,6 @@ def get_slimeoid_count(user_id = None, server_id = None):
             return count
 
 
-def get_slimeoid_look_string(user_id = None, server_id = None):
-    if user_id != None and server_id != None:
-        finalString = ""
-        slimeoid_data = EwSlimeoid(id_user=user_id, id_server=server_id)
-
-        if slimeoid_data:
-
-            try:
-                conn_info = bknd_core.databaseConnect()
-                conn = conn_info.get('conn')
-                cursor = conn.cursor()
-
-                sql = "SELECT {} FROM slimeoids WHERE {} = %s"
-                cursor.execute(sql.format(ewcfg.col_name, ewcfg.col_id_user), [user_id])
-                if cursor.rowcount > 0:
-                    iterate = 0
-                    finalString += "\n\nIn the freezer, you hear "
-                    for sloid in cursor:
-                        if iterate > 0:
-                            finalString += ", "
-                        if iterate >= cursor.rowcount - 1 and cursor.rowcount > 1:
-                            finalString += "and "
-                        finalString += sloid[0]
-                        iterate += 1
-                    finalString += " cooing to themselves."
-
-
-            finally:
-                # Clean up the database handles.
-                cursor.close()
-                bknd_core.databaseClose(conn_info)
-
-                return finalString
-
-
 def find_slimeoid(slimeoid_search = None, id_user = None, id_server = None):
     slimeoid_sought = None
 

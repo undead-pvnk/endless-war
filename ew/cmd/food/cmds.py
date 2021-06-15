@@ -24,7 +24,6 @@ from ew.utils import poi as poi_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 
-
 """ show all available food items """
 async def menu(cmd):
 	user_data = EwUser(member = cmd.message.author, data_level = 2)
@@ -644,4 +643,3 @@ async def devour(cmd):
 	else:
 		response = "Are you sure you have that item?"
 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-

@@ -25,6 +25,7 @@ from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 
+
 async def soulextract(cmd):
     usermodel = EwUser(member=cmd.message.author)
     playermodel = EwPlayer(id_user=cmd.message.author.id, id_server=cmd.guild.id)
@@ -63,6 +64,7 @@ async def soulextract(cmd):
         response = "There's nothing left in you to extract. You already spent the soul you had."
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def returnsoul(cmd):
     usermodel = EwUser(member=cmd.message.author)
     #soul = bknd_item.find_item(item_search="soul", id_user=cmd.message.author.id, id_server=cmd.guild.id)
@@ -92,6 +94,7 @@ async def returnsoul(cmd):
     else:
         response = "You don't have a soul to absorb. Hopelessness is no fun, but don't get all delusional on us now."
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def squeeze(cmd):
     usermodel = EwUser(member=cmd.message.author)
@@ -742,6 +745,7 @@ async def item_use(cmd):
 
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def manually_edit_item_properties(cmd):
 
     if not cmd.message.author.guild_permissions.administrator:
@@ -965,6 +969,7 @@ async def trash(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def zuck(cmd):
     user_data = EwUser(member=cmd.message.author)
 
@@ -978,6 +983,7 @@ async def zuck(cmd):
         response = "You'll need a corpse and the zuck syringe before you can do that."
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def longdrop(cmd):
     user_data = EwUser(member=cmd.message.author)
@@ -1021,6 +1027,7 @@ async def longdrop(cmd):
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def skullbash(cmd):
     user_data = EwUser(member = cmd.message.author)
     item_stash = bknd_item.inventory(id_user=cmd.message.author.id, id_server=user_data.id_server)
@@ -1046,6 +1053,7 @@ async def skullbash(cmd):
         response = "You don't have a hard enough brick to bash your head in."
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def makecostume(cmd):
     costumekit = bknd_item.find_item(item_search="costumekit", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)

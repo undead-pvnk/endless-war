@@ -12,6 +12,7 @@ from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 
+
 async def set_race(cmd):
     response = ""
     user_data = EwUser(member=cmd.message.author)

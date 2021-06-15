@@ -20,8 +20,6 @@ from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.slimeoid import EwSlimeoid
 
-# ---- Slimeoid Creation ---- #
-
 # Create a slimeoid
 async def incubateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -994,9 +992,6 @@ async def dissolveslimeoid(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-# ---- ----------------- ---- #
-
-
 # Show a player's slimeoid data.
 async def slimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -1965,7 +1960,7 @@ async def undress_slimeoid(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-# Show a player's slimeoid data.
+# Check if a negaslimoid exists and describe it
 async def negaslimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)
     response = ""
@@ -2128,4 +2123,3 @@ async def negaslimeoidbattle(cmd):
     finally:
         ewutils.active_slimeoidbattles[challenger_slimeoid.id_slimeoid] = False
         ewutils.active_slimeoidbattles[challengee_slimeoid.id_slimeoid] = False
-

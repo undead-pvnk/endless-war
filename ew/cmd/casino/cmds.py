@@ -23,7 +23,6 @@ from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 
-
 # Map containing user IDs and the last time in UTC seconds since the pachinko
 # machine was used.
 last_pachinkoed_times = {}
@@ -43,6 +42,7 @@ last_rouletted_times = {}
 # Map containing user IDs and the last time in UTC seconds since the player
 # played russian roulette.
 last_russianrouletted_times = {}
+
 
 async def betsoul(cmd):
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
@@ -86,6 +86,7 @@ async def betsoul(cmd):
 		user_data.persist()
 		response = "You hand over {} for {:,} slimecoin.".format(item_select.item_props.get('cosmetic_name'), ewcfg.soulprice)
 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def buysoul(cmd):
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
@@ -133,6 +134,7 @@ async def buysoul(cmd):
 		else:
 			response = "How do you expect to buy a soul when you cant even hold it? Dump some cosmetics weirdo."
 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def pachinko(cmd):
     resp = await ewcmd.start(cmd=cmd)
@@ -259,6 +261,7 @@ async def pachinko(cmd):
     # gangsters don't need their roles updated
     if user_data.life_state == ewcfg.life_state_juvenile:
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+
 
 async def craps(cmd):
     time_now = int(time.time())
@@ -398,6 +401,7 @@ async def craps(cmd):
     # gangsters don't need their roles updated
     if user_data.life_state == ewcfg.life_state_juvenile:
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+
 
 async def slots(cmd):
     resp = await ewcmd.start(cmd=cmd)
@@ -573,6 +577,7 @@ async def slots(cmd):
     # gangsters don't need their roles updated
     if user_data.life_state == ewcfg.life_state_juvenile:
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+
 
 async def roulette(cmd):
     resp = await ewcmd.start(cmd=cmd)
@@ -786,6 +791,7 @@ async def roulette(cmd):
     # gangsters don't need their roles updated
     if user_data.life_state == ewcfg.life_state_juvenile:
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+
 
 async def baccarat(cmd):
     resp = await ewcmd.start(cmd=cmd)
@@ -1443,6 +1449,7 @@ async def baccarat(cmd):
             response = "Specify how much {} you will wager.".format(currency_used)
             await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def skat(cmd):
     time_now = int(time.time())
     multiplier = 1
@@ -2036,6 +2043,7 @@ async def skat(cmd):
 async def skat_play(cmd):
     return
 
+
 async def russian_roulette(cmd):
     time_now = int(time.time())
     soulstake = False
@@ -2271,6 +2279,7 @@ async def russian_roulette(cmd):
     challengee.persist()
 
     return
+
 
 async def duel(cmd):
     time_now = int(time.time())

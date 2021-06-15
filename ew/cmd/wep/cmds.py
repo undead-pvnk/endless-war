@@ -1349,6 +1349,7 @@ async def divorce(cmd):
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def taunt(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
@@ -1406,6 +1407,7 @@ async def taunt(cmd):
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def aim(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
@@ -1458,6 +1460,7 @@ async def aim(cmd):
 	response = "You aim at {}'s weak spot.".format(target.display_name)
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def dodge(cmd):
 	user_data = EwUser(member = cmd.message.author)

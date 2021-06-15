@@ -5,12 +5,14 @@ from ew.backend.book import EwBook
 from ew.backend.book import EwBookSale
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
+from ew.cmd.apt import cmds as apt_cmds
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
 from ew.utils.frontend import EwResponseContainer
+
 
 async def begin_manuscript(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -57,6 +59,7 @@ async def begin_manuscript(cmd):
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def set_pen_name(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
@@ -87,6 +90,7 @@ async def set_pen_name(cmd):
 			response = "If you would like to change your pen name, you must change your nickname."
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def set_title(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -122,6 +126,7 @@ async def set_title(cmd):
 		response = "You scratch out the title and scrawl \"{}\" over it.".format(book.title)
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def set_genre(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -160,6 +165,7 @@ async def set_genre(cmd):
 			response = "You scribble {} onto the back cover.".format(genre)
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def edit_page(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -240,6 +246,7 @@ async def edit_page(cmd):
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def view_page(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
@@ -281,6 +288,7 @@ async def view_page(cmd):
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def check_manuscript(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
@@ -316,6 +324,7 @@ async def check_manuscript(cmd):
 		response = "{} by {}. It is {} pages and {:,} characters long.{}".format(title, author, pages, length, cover_text)
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def publish_manuscript(cmd):
 	user_data = EwUser(member=cmd.message.author)
@@ -403,6 +412,7 @@ async def publish_manuscript(cmd):
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def read_book(cmd):
 	dm = cmd.message.guild is None
 	
@@ -489,6 +499,7 @@ async def read_book(cmd):
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def next_page(cmd):
 	dm = cmd.message.guild is None
 	
@@ -534,6 +545,7 @@ async def next_page(cmd):
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def previous_page(cmd):
 	dm = cmd.message.guild is None
 	
@@ -578,6 +590,7 @@ async def previous_page(cmd):
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def browse_zines(cmd):
 	if len(cmd.tokens) > 1:
 		sort_token = cmd.tokens[1].replace("_", "")
@@ -589,7 +602,7 @@ async def browse_zines(cmd):
 	poi = poi_static.id_to_poi.get(user_data.poi)
 
 	if poi.is_apartment:
-		return await ew.cmd.apt_package.cmds.browse(cmd)
+		return await apt_cmds.browse(cmd)
 
 	if not poi.write_manuscript:
 		response = "You can't browse for zines here! Try going to the cafe. If you're looking for educational zines, try the colleges. If you can't read, then you might want to try the comic shop."
@@ -783,6 +796,7 @@ async def browse_zines(cmd):
 
 			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def order_zine(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
@@ -893,6 +907,7 @@ async def order_zine(cmd):
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def rate_zine(cmd):
 	if len(cmd.tokens) < 2:
 		response = "What zine do you want to rate?"
@@ -983,6 +998,7 @@ async def rate_zine(cmd):
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def set_length(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	if user_data.life_state == ewcfg.life_state_shambler:
@@ -1069,6 +1085,7 @@ async def set_length(cmd):
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def take_down_zine(cmd):
 	if len(cmd.tokens) < 2:
 		response = "Specify a zine you want to delete."
@@ -1106,6 +1123,7 @@ async def take_down_zine(cmd):
 			response = "Invalid Zine ID."
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def untake_down_zine(cmd):
 	if len(cmd.tokens) < 2:

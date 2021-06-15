@@ -8,7 +8,6 @@ from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 
-
 """
 	Informs the player about their current zone's capture progress
 """
@@ -173,6 +172,7 @@ async def capture_progress(cmd):
 	return await resp_cont.post()
 """
 
+
 async def change_spray(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	newspray = cmd.message.content[(len(ewcfg.cmd_changespray)):].strip()
@@ -199,8 +199,9 @@ async def tag(cmd):
 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-# GVS commands
-
+"""
+    GVS COMMANDS
+"""
 async def shamble(cmd):
     user_data = EwUser(member=cmd.message.author)
 
@@ -275,6 +276,7 @@ async def shamble(cmd):
 # 		response = ewcfg.str_zone_degraded.format(poi = poi.str_name)
 # 		await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 
+
 async def rejuvenate(cmd):
     user_data = EwUser(member=cmd.message.author)
 
@@ -310,4 +312,3 @@ async def rejuvenate(cmd):
 
     else:
         pass
-

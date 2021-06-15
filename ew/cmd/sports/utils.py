@@ -306,7 +306,6 @@ class EwSlimeballGame:
 
     def kill(self):
         global sb_games
-        global sb_poi_to_gamemap
 
         sb_games[self.id_game] = None
         gamemap = sb_idserver_to_gamemap.get(self.id_server)

@@ -27,7 +27,6 @@ from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 
-
 """ Casts a line into the Slime Sea """
 async def cast(cmd):
     time_now = round(time.time())

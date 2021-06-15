@@ -2,7 +2,6 @@ import asyncio
 import random
 import time
 
-from ew.cmd import item as ewitem, move as ewmap, slimeoid as ewslimeoid
 from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
 from ew.backend.apt import EwApartment
@@ -10,6 +9,7 @@ from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.market import EwStock
 from ew.backend.player import EwPlayer
+from ew.cmd import item as ewitem, move as ewmap
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
 from ew.static import hue as hue_static
@@ -20,6 +20,7 @@ from ew.utils import frontend as fe_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.frontend import EwResponseContainer
+from ew.utils.slimeoid import get_slimeoid_look_string
 
 
 async def rent_time(id_server = None):
@@ -218,7 +219,7 @@ async def apt_look(cmd):
 
 	resp_cont.add_channel_response(cmd.message.channel, response)
 
-	freezeList = ewslimeoid.get_slimeoid_look_string(user_id=lookObject+'freeze', server_id = playermodel.id_server)
+	freezeList = get_slimeoid_look_string(user_id=lookObject + 'freeze', server_id = playermodel.id_server)
 
 	resp_cont.add_channel_response(cmd.message.channel, freezeList)
 	return await resp_cont.post(channel=cmd.message.channel)
@@ -379,7 +380,6 @@ async def usekey(cmd, owner_user):
 				await fe_utils.send_message(cmd.client, cmd.message.author, response)
 			except:
 				await fe_utils.send_message(cmd.client, fe_utils.get_channel(cmd.guild, poi_dest.channel), fe_utils.formatMessage(cmd.message.author, response))
-
 
 # returns a price based on the stock with the biggest change
 def getPriceBase(cmd):

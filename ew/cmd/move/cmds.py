@@ -37,7 +37,6 @@ from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.transport import EwTransport
 
-
 """
     Player command to move themselves from one place to another.
 """
@@ -132,7 +131,7 @@ async def move(cmd=None, isApt=False):
         return await fe_utils.send_message(cmd.client, cmd.message.channel,
                                           fe_utils.formatMessage(cmd.message.author, "You're already there, bitch."))
     elif isApt and poi.id_poi == user_data.poi[3:]:
-        return await ew.cmd.apt_package.cmds.depart(cmd=cmd)
+        return await ewapt.cmds.depart(cmd=cmd)
     flamestate = EwGamestate(id_server=user_data.id_server, id_state='flamethrower')
     if 'n4office' == poi.id_poi and flamestate.bit == 1:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You open the elevator, and are immediately met with fire spitting out of the elevator. Over the crackling flames you can hear a woman screaming \"AAAAAAAAGH FUCK YOU DIE DIE DIE DIE!!!!!\". You're guessing entering now is a bad idea."))
@@ -224,7 +223,7 @@ async def move(cmd=None, isApt=False):
         msg_walk_start = await fe_utils.send_message(cmd.client, cmd.message.channel,
                                                     fe_utils.formatMessage(cmd.message.author, walk_response))
         if isApt:
-            await ew.cmd.apt_package.cmds.depart(cmd=cmd, isGoto=True, movecurrent=move_current)
+            await ewapt.cmds.depart(cmd=cmd, isGoto=True, movecurrent=move_current)
 
     time_move_end = int(time.time())
 
@@ -402,14 +401,13 @@ async def move(cmd=None, isApt=False):
                                                        fe_utils.formatMessage(cmd.message.author, ad_response))
 
         if intoApt and ewutils.moves_active[cmd.message.author.id] == move_current:
-            await ew.cmd.apt_package.cmds.retire(cmd=cmd, isGoto=True, movecurrent=move_current)
+            await ewapt.cmds.retire(cmd=cmd, isGoto=True, movecurrent=move_current)
         await asyncio.sleep(30)
         try:
             await msg_walk_start.delete()
             pass
         except:
             pass
-
 
 """
     Go down the rabbit hole
@@ -460,14 +458,12 @@ async def descend(cmd):
     else:
         return await move(cmd)
 
-
 """
     Cancel any in progress move.
 """
 async def halt(cmd):
     ewutils.moves_active[cmd.message.author.id] = 0
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You {} dead in your tracks.".format(cmd.cmd[1:])))
-
 
 """
     Dump out the visual description of the area you're in.
@@ -565,6 +561,7 @@ async def look(cmd):
                 ad_resp
             ))
 
+
 async def survey(cmd):
     user_data = EwUser(member=cmd.message.author)
     district_data = EwDistrict(district=user_data.poi, id_server=user_data.id_server)
@@ -599,7 +596,6 @@ async def survey(cmd):
                 ) if cmd.guild != None else "")
             ) #+ get_random_prank_item(user_data, district_data) # SWILLDERMUK
         ))
-
 
 """
     Get information about an adjacent zone.
@@ -941,7 +937,6 @@ async def teleport_player(cmd):
 
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-
 """
     Get information about all the pois in the poi list
 """
@@ -1014,7 +1009,6 @@ async def print_map_data(cmd):
     # 	print(name)
 
     print("\n\nPOI LIST STATISTICS:\n{} districts\n{} subzones\n{} apartments\n{} outskirts\n{} streets\n{} transports\n\n".format(districts_count, subzones_count, apartments_count, outskirts_count, streets_count, transports_count))
-
 
 """
     Command that moves everyone from one district to another
@@ -1113,6 +1107,7 @@ async def clockin(cmd):
 
             await fe_utils.send_message(cmd.client, fe_utils.get_channel(server, poi_dest.channel), fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def clockout(cmd):
     user_data = EwUser(member=cmd.message.author)
     # poi = poi_static.id_to_poi.get(user_data.poi)
@@ -1184,6 +1179,7 @@ async def flush_subzones(cmd):
 
         district_data.persist()
         subzone_data.persist()
+
 
 async def flush_streets(cmd):
 

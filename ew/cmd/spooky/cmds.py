@@ -21,6 +21,7 @@ from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
 
+
 async def negapool(cmd):
     # Add persisted negative slime.
     market_data = EwMarket(id_server=cmd.guild.id)

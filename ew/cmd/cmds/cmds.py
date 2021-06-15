@@ -12,6 +12,9 @@ from .utils import mutation_commands
 from .utils import item_commands
 from .utils import fake_failed_command
 from .. import item as ewitem
+from ..apt import cmds as apt_cmds
+from ..faction import cmds as faction_cmds
+from ..wep import cmds as wep_cmds
 from ew import prank as ewprank
 from ew.backend import core as bknd_core
 from ew.backend import hunting as bknd_hunt
@@ -501,6 +504,7 @@ async def boo(cmd):
     # await resp_cont.post()
 # await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + '\n' + ewcfg.emote_ghost + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_ghost + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank))
 
+
 async def spook(cmd):
 	#user_data = EwUser(member=cmd.message.author)
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, '\n' "***SPOOKED YA!***" + '\n' + "https://www.youtube.com/watch?v=T-dtcIXZo4s"))
@@ -555,11 +559,13 @@ async def coinflip(cmd):
 
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def endlesswar(cmd):
 	total = bknd_core.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
 	totalslimes = total[0][0]
 	response = "ENDLESS WAR has amassed {:,} slime.".format(totalslimes)
 	return await fe_utils.send_response(response, cmd)
+
 
 async def slimefest(cmd):
     market_data = EwMarket(id_server=cmd.guild.id)
@@ -571,6 +577,7 @@ async def slimefest(cmd):
     #	response = "Rowdys are winning Slimefest."
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def swearjar(cmd):
     market_data = EwMarket(id_server=cmd.guild.id)
@@ -590,6 +597,7 @@ async def swearjar(cmd):
         response = "\nThe city is rife with mischief and vulgarity, though that's hardly a surprise when it's inhabited by lowlifes and sinners across the board."
 
     return await fe_utils.send_response(response, cmd)
+
 
 async def toss_off_cliff(cmd):
 	user_data = EwUser(member=cmd.message.author)
@@ -635,7 +643,7 @@ async def toss_off_cliff(cmd):
 					response = "There's nobody here."
 				return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 			else:
-				return await ew.cmd.item_package.cmds.discard(cmd=cmd)
+				return await ewitem.cmds.discard(cmd=cmd)
 		else:
 			response = "You don't have that item."
 			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -661,6 +669,7 @@ async def toss_off_cliff(cmd):
 	else:
 		response = "You don't have that item."
 		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def jump(cmd):
 	user_data = EwUser(member=cmd.message.author)
@@ -736,6 +745,7 @@ async def jump(cmd):
 		if die_resp != EwResponseContainer(id_server = cmd.guild.id):
 			await die_resp.post()
 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def push(cmd):
     time_now = int(time.time())
@@ -859,6 +869,7 @@ async def push(cmd):
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def purify(cmd):
     user_data = EwUser(member=cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
@@ -896,31 +907,34 @@ async def purify(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def store_item(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = poi_static.id_to_poi.get(user_data.poi)
 
 	if poi.community_chest != None:
-		return await ew.cmd.faction_package.cmds.store(cmd)
+		return await faction_cmds.store(cmd)
 	elif poi.is_apartment:
-		return await ew.cmd.apt_package.cmds.store_item(cmd)
+		return await apt_cmds.store_item(cmd)
 		#response = "Try that in a DM to ENDLESS WAR."
 	else:
 		response = "There is no storage here, public or private."
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def remove_item(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = poi_static.id_to_poi.get(user_data.poi)
 
 	if poi.community_chest != None:
-		return await ew.cmd.faction_package.cmds.take(cmd)
+		return await faction_cmds.take(cmd)
 	elif poi.is_apartment:
-		return await ew.cmd.apt_package.cmds.remove_item(cmd)
+		return await apt_cmds.remove_item(cmd)
 		#response = "Try that in a DM to ENDLESS WAR."
 	else:
 		response = "There is no storage here, public or private."
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def check_flag(cmd):
 
@@ -974,8 +988,10 @@ async def refuse(cmd):
 			ewutils.active_target_map[challenger.id_user] = ""
 			ewutils.active_restrictions[challenger.id_user] = 0
 
+
 async def confirm(cmd):
 	return
+
 
 async def cancel(cmd):
 	return
@@ -1416,6 +1432,7 @@ async def help(cmd):
     await resp_cont.post()
 # await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def commands(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	response   = ""
@@ -1527,6 +1544,7 @@ async def cmd_howl(cmd):
 		response += "\n{} howls along with you! {}".format(str(slimeoid.name), ewcfg.howls[random.randrange(len(ewcfg.howls))])
 
 	await fe_utils.send_response(response, cmd)
+
 
 async def cmd_moan(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -1673,9 +1691,11 @@ async def fursuit(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def lol(cmd):
 	response = 'You laugh out loud!'
 	await fe_utils.send_response(response, cmd)
+
 
 async def paycheck(cmd):
     user_data = EwUser(member=cmd.message.author)
@@ -1690,6 +1710,7 @@ async def paycheck(cmd):
             response += " They can be exchanged for {:,} slime with !payday at SlimeCorp HQ.".format(int(credits / 10000))
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def payday(cmd):
     user_data = EwUser(member=cmd.message.author)
@@ -1716,6 +1737,7 @@ async def payday(cmd):
         response = "You cash in all of your salary credits for {:,} slime.".format(slime_added)
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def pray(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -1892,6 +1914,7 @@ async def pray(cmd):
 
 	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def check_mastery(cmd):
 	message = "\nYou close your eyes for a moment, recalling your masteries. \n"
 	if cmd.mentions_count > 0:
@@ -1909,6 +1932,7 @@ async def check_mastery(cmd):
 		response = message
 
 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def get_attire(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -2077,6 +2101,7 @@ async def unwrap(cmd):
 async def yoslimernalia(cmd):
 	await fe_utils.send_message(cmd.client, cmd.message.channel, '@everyone Yo, Slimernalia!', filter_everyone = False)
 
+
 """
     SWILLDERMUK COMMANDS
 """
@@ -2172,6 +2197,7 @@ async def prank(cmd):
                 break
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
+
 
 """
     GVS COMMANDS
@@ -2297,6 +2323,7 @@ async def gvs_print_grid(cmd):
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, full_grid_response))
 
+
 async def gvs_print_lane(cmd):
     author = cmd.message.author
     user_data = EwUser(member=author)
@@ -2357,6 +2384,7 @@ async def gvs_print_lane(cmd):
                 response += ") "
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def gvs_incubate_gaiaslimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)
@@ -2420,6 +2448,7 @@ async def gvs_incubate_gaiaslimeoid(cmd):
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def gvs_fabricate_tombstone(cmd):
     user_data = EwUser(member=cmd.message.author)
 
@@ -2477,6 +2506,7 @@ async def gvs_fabricate_tombstone(cmd):
                     return ewutils.logMsg("ERROR: Could not produce tombstone for tombstone ID {}.".format(generated_tombstone_id))
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def gvs_join_operation(cmd):
     seedpackets = static_items.seedpacket_ids
@@ -2689,6 +2719,7 @@ async def gvs_join_operation(cmd):
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def gvs_leave_operation(cmd):
     user_data = EwUser(member=cmd.message.author)
 
@@ -2754,6 +2785,7 @@ async def gvs_leave_operation(cmd):
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def gvs_check_operations(cmd):
     if cmd.tokens_count == 1:
         operations = bknd_core.execute_sql_query("SELECT district, faction FROM gvs_ops_choices GROUP BY district;")
@@ -2789,6 +2821,7 @@ async def gvs_check_operations(cmd):
                 response = "There aren't any operations going on in that district."
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def gvs_plant_gaiaslimeoid(cmd):
     seedpackets = static_items.seedpacket_ids
@@ -2949,6 +2982,7 @@ async def gvs_plant_gaiaslimeoid(cmd):
             response = "Are you sure you have that seed packet? Try using **!inv**"
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 async def almanac(cmd):
     if not cmd.tokens_count > 1:
@@ -3274,6 +3308,7 @@ async def dig(cmd):  # TODO  zen garden functionality
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def gvs_progress(cmd):
     op_districts = []
     response = ""
@@ -3327,6 +3362,7 @@ async def gvs_progress(cmd):
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def gvs_gaiaslime(cmd):
     user_data = EwUser(member=cmd.message.author)
 
@@ -3338,6 +3374,7 @@ async def gvs_gaiaslime(cmd):
         response = "There is no gaiaslime to be found here."
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 async def gvs_brainz(cmd):
     user_data = EwUser(member=cmd.message.author)
 
@@ -3345,11 +3382,9 @@ async def gvs_brainz(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-""" ################## |||
-|||   Debug Commands   |||
-|||                    |||
-""" ################## |||
-
+""" 
+    DEBUG COMMANDS
+"""
 async def forge_master_poudrin(cmd):
 	if not cmd.message.author.guild_permissions.administrator:
 		return
@@ -3601,15 +3636,17 @@ async def ping_me(cmd):
         response = user_data.get_mention()
         return await fe_utils.send_message(cmd.client, channel, response)
 
+
 async def shut_down_bot(cmd):
 	if not cmd.message.author.guild_permissions.administrator:
-		return await ew.cmd.wep_package.cmds.suicide(cmd=cmd)
+		return await wep_cmds.suicide(cmd=cmd)
 
 	ewutils.logMsg('Goodbye!')
 	await asyncio.sleep(2)
 
 	while True:
 		sys.exit()
+
 
 async def check_bot(cmd):
 	if not cmd.message.author.guild_permissions.administrator:
@@ -3811,6 +3848,7 @@ async def balance_cosmetics(cmd):
 
 	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "Success!"))
 
+
 async def post_leaderboard(cmd):
 	author = cmd.message.author
 	if not author.guild_permissions.administrator:
@@ -3840,6 +3878,7 @@ async def promote(cmd):
 
         await ewrolemgr.updateRoles(client=cmd.client, member=member)
 
+
 async def unban_manual(cmd):
 	if not cmd.message.author.guild_permissions.administrator:
 		return
@@ -3851,6 +3890,7 @@ async def unban_manual(cmd):
 	else:
 		response = "Failure {}".format(len(cmd.mentions))
 	await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
 
 async def assign_status_effect(cmd = None, status_name = None, user_id = None, server_id = None):
 	if status_name is not None:

@@ -9,6 +9,7 @@ from ew.utils import frontend as fe_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 
+
 async def tutorial_cmd(cmd):
     user_data = EwUser(member=cmd.message.author)
     client = cmd.client
