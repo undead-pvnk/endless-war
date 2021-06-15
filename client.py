@@ -43,7 +43,7 @@ import ew.food_package as ewfood
 import ew.hunting_package as ewhunting
 import ew.item_package as ewitem
 import ew.juviecmd_package as ewjuviecmd
-import ew.kingpin as ewkingpin #8
+import ew.kingpin_package as ewkingpin
 import ew.market_package as ewmarket
 import ew.move_package as ewmap
 import ew.mutation_package as ewmutation
@@ -228,7 +228,7 @@ cmd_map = {
 
 	# Display the progress towards the current Quarterly Goal.
 	#ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
-	ewcfg.cmd_paspeaker: ewkingpin.pa_command,
+	#ewcfg.cmd_paspeaker: ewkingpin.pa_command,
 	#ewcfg.cmd_retire: ewapt.retire,
 	#ewcfg.cmd_depart: ewapt.depart,
 	#ewcfg.cmd_consult: ewapt.consult,
@@ -459,11 +459,11 @@ cmd_map = {
 	#ewcfg.cmd_eat_alt1: ewfood.eat_item,
 
 	# Remove a megaslime (1 mil slime) from a general.
-	ewcfg.cmd_deadmega: ewkingpin.deadmega,
+	#ewcfg.cmd_deadmega: ewkingpin.deadmega,
 
 	# Release a player from their faction.
-	ewcfg.cmd_pardon: ewkingpin.pardon,
-	ewcfg.cmd_banish: ewkingpin.banish,
+	#ewcfg.cmd_pardon: ewkingpin.pardon,
+	#ewcfg.cmd_banish: ewkingpin.banish,
 
 
 	# Navigate the world map.
@@ -554,7 +554,7 @@ cmd_map = {
 	#ewcfg.cmd_fashion: ewcmd.fashion,
 	#ewcfg.cmd_fashion_alt1: ewcmd.fashion,
 
-	ewcfg.cmd_create: ewkingpin.create,
+	#ewcfg.cmd_create: ewkingpin.create,
 	#ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
 	#ewcfg.cmd_createitem: ewcmd.create_item,
 	#ewcfg.cmd_manualsoulbind: ewcmd.manual_soulbind,
@@ -923,9 +923,9 @@ cmd_map = {
 
 	#ewcfg.cmd_mastery: ewcmd.check_mastery,
 	#ewcfg.cmd_getattire: ewcmd.get_attire,
-	ewcfg.cmd_pacommand: ewkingpin.pa_command,
+	#ewcfg.cmd_pacommand: ewkingpin.pa_command,
 	#ewcfg.cmd_surveil: ewmap.surveil,
-	ewcfg.cmd_hogtie: ewkingpin.hogtie
+	#ewcfg.cmd_hogtie: ewkingpin.hogtie
 
 }
 
@@ -1153,6 +1153,7 @@ cmd_modules = [
 	ewfood,
 	ewjuviecmd,
 	ewhunting,
+	ewkingpin,
 ]
 
 for mod in cmd_modules:
