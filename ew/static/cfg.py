@@ -1228,7 +1228,6 @@ cmd_skullbash = cmd_prefix + 'skullbash'
 cmd_juviemode = cmd_prefix + 'legallimit'
 cmd_manual_unban = cmd_prefix + 'unban'
 cmd_post_leaderboard = cmd_prefix + 'postleaderboard'
-cmd_update_bazaar = cmd_prefix + 'updatebazaar'
 
 cmd_switch = cmd_prefix + 'switch'
 cmd_switch_alt_1 = cmd_prefix + 's'
