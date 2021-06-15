@@ -1,13 +1,13 @@
-from . import utils
-from .utils import EwSlimeballGame
-from .utils import EwSlimeballPlayer
-from .utils import get_coords
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
+from . import utils
+from .utils import EwSlimeballGame
+from .utils import EwSlimeballPlayer
+from .utils import get_coords
 
 
 async def slimeball(cmd):
@@ -29,13 +29,13 @@ async def slimeball(cmd):
 
     district_data = EwDistrict(district=poi_data.id_poi, id_server=cmd.message.guild.id)
 
-    #global sb_userid_to_player
+    # global sb_userid_to_player
     slimeball_player = utils.sb_userid_to_player.get(cmd.message.author.id)
 
     game_data = None
 
     if slimeball_player != None:
-        #global sb_games
+        # global sb_games
         game_data = utils.sb_games.get(slimeball_player.id_game)
 
         if game_data != None and game_data.poi != poi_data.id_poi:
@@ -43,7 +43,7 @@ async def slimeball(cmd):
             game_data = None
 
     if game_data == None:
-        #global sb_idserver_to_gamemap
+        # global sb_idserver_to_gamemap
 
         gamemap = utils.sb_idserver_to_gamemap.get(cmd.guild.id)
         if gamemap != None:
@@ -78,7 +78,7 @@ async def slimeball(cmd):
 
 
 async def slimeballgo(cmd):
-    #global sb_userid_to_player
+    # global sb_userid_to_player
     slimeball_player = utils.sb_userid_to_player.get(cmd.message.author.id)
 
     if slimeball_player == None:
@@ -89,7 +89,7 @@ async def slimeballgo(cmd):
         response = "You have to go into the city to play Slimeball."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-    #global sb_games
+    # global sb_games
     game_data = utils.sb_games.get(slimeball_player.id_game)
 
     poi_data = poi_static.chname_to_poi.get(cmd.message.channel.name)
@@ -120,7 +120,7 @@ async def slimeballgo(cmd):
 
 
 async def slimeballstop(cmd):
-    #global sb_userid_to_player
+    # global sb_userid_to_player
     slimeball_player = utils.sb_userid_to_player.get(cmd.message.author.id)
 
     if slimeball_player == None:
@@ -131,7 +131,7 @@ async def slimeballstop(cmd):
         response = "You have to go into the city to play Slimeball."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-    #global sb_games
+    # global sb_games
     game_data = utils.sb_games.get(slimeball_player.id_game)
 
     poi_data = poi_static.chname_to_poi.get(cmd.message.channel.name)
@@ -145,14 +145,14 @@ async def slimeballstop(cmd):
 
 
 async def slimeballleave(cmd):
-    #global sb_userid_to_player
+    # global sb_userid_to_player
     slimeball_player = utils.sb_userid_to_player.get(cmd.message.author.id)
 
     if slimeball_player == None:
         response = "You have to join a game using {} first.".format(cmd.cmd[1:-5])
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-    #global sb_games
+    # global sb_games
     game_data = utils.sb_games.get(slimeball_player.id_game)
 
     game_data.players.remove(slimeball_player)

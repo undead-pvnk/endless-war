@@ -1,10 +1,10 @@
 import time
 
-from .utils import get_tweet_color
 from ew.static import cfg as ewcfg
 from ew.utils import frontend as fe_utils
 from ew.utils import stats as ewstats
 from ew.utils.combat import EwUser
+from .utils import get_tweet_color
 
 
 async def tweet(cmd):

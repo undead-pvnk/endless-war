@@ -13,84 +13,77 @@ from ew.utils.combat import EwUser
 
 
 async def smoke(cmd):
-	usermodel = EwUser(member=cmd.message.author)
-	#item_sought = bknd_item.find_item(item_search="cigarette", id_user=cmd.message.author.id, id_server=usermodel.id_server)
-	item_sought = None
-	space_adorned = 0
-	item_stash = bknd_item.inventory(id_user=cmd.message.author.id, id_server=usermodel.id_server)
-	for item_piece in item_stash:
-		item = EwItem(id_item=item_piece.get('id_item'))
-		if item.item_props.get('adorned') == 'true':
-			space_adorned += int(item.item_props.get('size'))
+    usermodel = EwUser(member=cmd.message.author)
+    # item_sought = bknd_item.find_item(item_search="cigarette", id_user=cmd.message.author.id, id_server=usermodel.id_server)
+    item_sought = None
+    space_adorned = 0
+    item_stash = bknd_item.inventory(id_user=cmd.message.author.id, id_server=usermodel.id_server)
+    for item_piece in item_stash:
+        item = EwItem(id_item=item_piece.get('id_item'))
+        if item.item_props.get('adorned') == 'true':
+            space_adorned += int(item.item_props.get('size'))
 
-		if item_piece.get('item_type') == ewcfg.it_cosmetic and (item.item_props.get('id_cosmetic') == "cigarette" or item.item_props.get('id_cosmetic') == "cigar") and "lit" not in item.item_props.get('cosmetic_desc'):
-			item_sought = item_piece
+        if item_piece.get('item_type') == ewcfg.it_cosmetic and (item.item_props.get('id_cosmetic') == "cigarette" or item.item_props.get('id_cosmetic') == "cigar") and "lit" not in item.item_props.get('cosmetic_desc'):
+            item_sought = item_piece
 
+    if item_sought:
+        item = EwItem(id_item=item_sought.get('id_item'))
+        if item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigarette":
+            if int(item.item_props.get('size')) > 0:
+                space_adorned += int(item.item_props.get('size'))
 
-	if item_sought:
-		item = EwItem(id_item=item_sought.get('id_item'))
-		if item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigarette":
-			if int(item.item_props.get('size')) > 0:
-				space_adorned += int(item.item_props.get('size'))
+            response = "You light a cig and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
+            item.item_props['cosmetic_desc'] = "A single lit cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool."
+            if space_adorned < ewutils.max_adornspace_bylevel(usermodel.slimelevel):
+                item.item_props['adorned'] = "true"
+            item.persist()
+            usermodel.persist()
 
+            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            await asyncio.sleep(60)
+            item = EwItem(id_item=item_sought.get('id_item'))
 
-			response = "You light a cig and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
-			item.item_props['cosmetic_desc'] = "A single lit cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool."
-			if space_adorned < ewutils.max_adornspace_bylevel(usermodel.slimelevel):
-				item.item_props['adorned'] = "true"
-			item.persist()
-			usermodel.persist()
+            response = "The cigarette fizzled out."
 
+            item.item_props['cosmetic_desc'] = "It's a cigarette butt. What kind of hoarder holds on to these?"
+            item.item_props['adorned'] = "false"
+            item.item_props['id_cosmetic'] = "cigarettebutt"
+            item.item_props['cosmetic_name'] = "cigarette butt"
+            item.persist()
 
-			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-			await asyncio.sleep(60)
-			item = EwItem(id_item=item_sought.get('id_item'))
+            usermodel.persist()
 
-			response = "The cigarette fizzled out."
+        elif item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigar":
+            if int(item.item_props['size']) > 0:
+                space_adorned += int(item.item_props['size'])
 
-			item.item_props['cosmetic_desc'] = "It's a cigarette butt. What kind of hoarder holds on to these?"
-			item.item_props['adorned'] = "false"
-			item.item_props['id_cosmetic'] = "cigarettebutt"
-			item.item_props['cosmetic_name'] = "cigarette butt"
-			item.persist()
+            response = "You light up your stogie and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
+            item.item_props['cosmetic_desc'] = "A single lit cigar sticking out of your mouth. These thing take their time to kick in, but it's all worth it to look like a supreme gentleman."
+            if space_adorned < ewutils.max_adornspace_bylevel(usermodel.slimelevel):
+                item.item_props['adorned'] = "true"
 
+            item.persist()
 
-			usermodel.persist()
+            usermodel.persist()
 
-		elif item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigar":
-			if int(item.item_props['size']) > 0:
-				space_adorned += int(item.item_props['size'])
+            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            await asyncio.sleep(300)
+            item = EwItem(id_item=item_sought.get('id_item'))
 
+            response = "The cigar fizzled out."
 
-			response = "You light up your stogie and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
-			item.item_props['cosmetic_desc'] = "A single lit cigar sticking out of your mouth. These thing take their time to kick in, but it's all worth it to look like a supreme gentleman."
-			if space_adorned < ewutils.max_adornspace_bylevel(usermodel.slimelevel):
-				item.item_props['adorned'] = "true"
+            item.item_props['cosmetic_desc'] = "It's a cigar stump. It's seen better days."
+            item.item_props['adorned'] = "false"
+            item.item_props['id_cosmetic'] = "cigarstump"
+            item.item_props['cosmetic_name'] = "cigar stump"
+            item.persist()
 
-			item.persist()
-
-
-			usermodel.persist()
-
-			await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-			await asyncio.sleep(300)
-			item = EwItem(id_item=item_sought.get('id_item'))
-
-			response = "The cigar fizzled out."
-
-			item.item_props['cosmetic_desc'] = "It's a cigar stump. It's seen better days."
-			item.item_props['adorned'] = "false"
-			item.item_props['id_cosmetic'] = "cigarstump"
-			item.item_props['cosmetic_name'] = "cigar stump"
-			item.persist()
-
-
-			usermodel.persist()
-		else:
-			response = "You can't smoke that."
-	else:
-		response = "There aren't any usable cigarettes or cigars in your inventory."
-	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            usermodel.persist()
+        else:
+            response = "You can't smoke that."
+    else:
+        response = "There aren't any usable cigarettes or cigars in your inventory."
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def adorn(cmd):

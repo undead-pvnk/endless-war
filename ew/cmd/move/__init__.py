@@ -1,6 +1,5 @@
 from . import cmds
 from .utils import *
-from ew.static import cfg as ewcfg
 
 cmd_map = {
 
@@ -60,7 +59,7 @@ cmd_map = {
 
     # This one seriously 
     ewcfg.cmd_thirdeye: cmds.tracker,
-   
+
 }
 
 apt_dm_cmd_map = {
@@ -84,5 +83,5 @@ apt_dm_cmd_map = {
 
     # something with oeo I think
     ewcfg.cmd_thirdeye: cmds.tracker,
-    
+
 }

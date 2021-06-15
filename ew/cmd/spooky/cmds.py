@@ -2,11 +2,11 @@ import random
 import re
 import time
 
-from ew.cmd import move as ewmap, slimeoid as ewslimeoid
 from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
 from ew.backend.market import EwMarket
 from ew.backend.quadrants import EwQuadrant
+from ew.cmd import move as ewmap, slimeoid as ewslimeoid
 from ew.static import cfg as ewcfg
 from ew.static import items as static_items
 from ew.static import poi as poi_static
@@ -39,7 +39,10 @@ async def negaslime(cmd):
     else:
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "There is no negative slime in this world."))
 
+
 """ revive yourself from the dead. """
+
+
 async def revive(cmd):
     time_now = int(time.time())
     response = ""
@@ -144,7 +147,10 @@ async def revive(cmd):
     # Send the response to the player.
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 """ haunt living players to steal slime """
+
+
 async def haunt(cmd):
     time_now = int(time.time())
     response = ""
@@ -300,9 +306,13 @@ async def haunt(cmd):
     # Send the response to the player.
     resp_cont.add_channel_response(cmd.message.channel.name, response)
     await resp_cont.post()
+
+
 # await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 """ allows ghosts to hook on to living players and follow them around """
+
+
 async def inhabit(cmd):
     user_data = EwUser(member=cmd.message.author)
     response = ""
@@ -533,71 +543,69 @@ async def crystalize_negapoudrin(cmd):
 
 
 async def summon_negaslimeoid(cmd):
-	response = ""
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state != ewcfg.life_state_corpse:
-		response = "Only the dead have the occult knowledge required to summon a cosmic horror."
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    response = ""
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state != ewcfg.life_state_corpse:
+        response = "Only the dead have the occult knowledge required to summon a cosmic horror."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	if user_data.poi not in poi_static.capturable_districts:
-		response = "You can't conduct the ritual here."
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    if user_data.poi not in poi_static.capturable_districts:
+        response = "You can't conduct the ritual here."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	name = None
-	if cmd.tokens_count > 1:
-		#value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True, negate = True)
-		slimeoid = EwSlimeoid(member = cmd.message.author, sltype = ewcfg.sltype_nega)
-		if slimeoid.life_state != ewcfg.slimeoid_state_none:
-			response = "You already have an active negaslimeoid."
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		negaslimeoid_name = cmd.message.content[(len(cmd.tokens[0])):].strip()
+    name = None
+    if cmd.tokens_count > 1:
+        # value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True, negate = True)
+        slimeoid = EwSlimeoid(member=cmd.message.author, sltype=ewcfg.sltype_nega)
+        if slimeoid.life_state != ewcfg.slimeoid_state_none:
+            response = "You already have an active negaslimeoid."
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        negaslimeoid_name = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
-		if len(negaslimeoid_name) > 32:
-			response = "That name is too long. ({:,}/32)".format(len(negaslimeoid_name))
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		market_data = EwMarket(id_server = cmd.message.author.guild.id)
+        if len(negaslimeoid_name) > 32:
+            response = "That name is too long. ({:,}/32)".format(len(negaslimeoid_name))
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        market_data = EwMarket(id_server=cmd.message.author.guild.id)
 
-		if market_data.negaslime >= 0:
-			response = "The dead haven't amassed any negaslime yet."
-		else:
-			max_level = min(len(str(user_data.slimes)) - 1, len(str(market_data.negaslime)) - 1)
-			level = random.randint(1, max_level)
-			value = 10 ** (level - 1)
-			#user_data.change_slimes(n = int(value/10))
-			market_data.negaslime += value
-			slimeoid.sltype = ewcfg.sltype_nega
-			slimeoid.life_state = ewcfg.slimeoid_state_active
-			slimeoid.level = level
-			slimeoid.id_user = str(user_data.id_user)
-			slimeoid.id_server = user_data.id_server
-			slimeoid.poi = user_data.poi
-			slimeoid.name = negaslimeoid_name
-			slimeoid.body = random.choice(sl_static.body_names)
-			slimeoid.head = random.choice(sl_static.head_names)
-			slimeoid.legs = random.choice(sl_static.mobility_names)
-			slimeoid.armor = random.choice(sl_static.defense_names)
-			slimeoid.weapon = random.choice(sl_static.offense_names)
-			slimeoid.special = random.choice(sl_static.special_names)
-			slimeoid.ai = random.choice(sl_static.brain_names)
-			for i in range(level):
-				rand = random.randrange(3)
-				if rand == 0:
-					slimeoid.atk += 1
-				elif rand == 1:
-					slimeoid.defense += 1
-				else:
-					slimeoid.intel += 1
+        if market_data.negaslime >= 0:
+            response = "The dead haven't amassed any negaslime yet."
+        else:
+            max_level = min(len(str(user_data.slimes)) - 1, len(str(market_data.negaslime)) - 1)
+            level = random.randint(1, max_level)
+            value = 10 ** (level - 1)
+            # user_data.change_slimes(n = int(value/10))
+            market_data.negaslime += value
+            slimeoid.sltype = ewcfg.sltype_nega
+            slimeoid.life_state = ewcfg.slimeoid_state_active
+            slimeoid.level = level
+            slimeoid.id_user = str(user_data.id_user)
+            slimeoid.id_server = user_data.id_server
+            slimeoid.poi = user_data.poi
+            slimeoid.name = negaslimeoid_name
+            slimeoid.body = random.choice(sl_static.body_names)
+            slimeoid.head = random.choice(sl_static.head_names)
+            slimeoid.legs = random.choice(sl_static.mobility_names)
+            slimeoid.armor = random.choice(sl_static.defense_names)
+            slimeoid.weapon = random.choice(sl_static.offense_names)
+            slimeoid.special = random.choice(sl_static.special_names)
+            slimeoid.ai = random.choice(sl_static.brain_names)
+            for i in range(level):
+                rand = random.randrange(3)
+                if rand == 0:
+                    slimeoid.atk += 1
+                elif rand == 1:
+                    slimeoid.defense += 1
+                else:
+                    slimeoid.intel += 1
 
+            user_data.persist()
+            slimeoid.persist()
+            market_data.persist()
 
+            response = "You have summoned **{}**, a {}-foot-tall Negaslimeoid.".format(slimeoid.name, slimeoid.level)
+            desc = ewslimeoid.slimeoid_describe(slimeoid)
+            response += desc
 
-			user_data.persist()
-			slimeoid.persist()
-			market_data.persist()
-
-			response = "You have summoned **{}**, a {}-foot-tall Negaslimeoid.".format(slimeoid.name, slimeoid.level)
-			desc = ewslimeoid.slimeoid_describe(slimeoid)
-			response += desc
-
-	else:
-		response = "To summon a negaslimeoid you must first know its name."
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    else:
+        response = "To summon a negaslimeoid you must first know its name."
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

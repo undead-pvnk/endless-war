@@ -1,46 +1,46 @@
 async def debug1(cmd):
-	return
+    return
 
 
 async def debug2(cmd):
-	return
+    return
 
 
 async def debug3(cmd):
-	return
+    return
 
 
 async def debug4(cmd):
-	return
+    return
 
 
 async def debug5(cmd):
-	return
+    return
 
 
 async def debug6(cmd):
-	return
+    return
 
 
 async def debug7(cmd):
-	return
+    return
 
 
 async def debug8(cmd):
-	return
+    return
 
 
 async def debug9(cmd):
-	return
+    return
 
 
 async def scrutinize(cmd):
-	return
+    return
 
 
 async def change_gamestate(cmd):
-	return
+    return
 
 
 async def display_states(cmd):
-	return
+    return

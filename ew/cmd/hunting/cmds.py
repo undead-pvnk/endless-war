@@ -6,6 +6,7 @@ from ew.utils import frontend as fe_utils
 from ew.utils import hunting as hunt_utils
 from ew.utils.combat import EwUser
 
+
 # Debug command. Could be used for events, perhaps?
 async def summonenemy(cmd):
     author = cmd.message.author

@@ -1,7 +1,8 @@
-import shlex
 import math
+import shlex
 
 from ew.static import cfg as ewcfg
+
 
 def printcard(card):
     img_base = "https://ew.krakissi.net/img/cas/sb/"
@@ -121,12 +122,14 @@ def checkiflegal(hand, play, first, trump):
                         canfollow = True
                 return not canfollow
 
+
 # Unused?
 def check_skat_join(message):
     content = message.content.lower()
     if content.startswith(ewcfg.cmd_slimeskat_join) or content.startswith(ewcfg.cmd_slimeskat_decline):
         return True
     return False
+
 
 # Unused?
 def check_skat_bidding(message):
@@ -177,12 +180,14 @@ def check_skat_call(message):
             return 1
     return -1
 
+
 # Unused?
 def check_skat_hand(message):
     content = message.content.lower()
     if content.startswith(ewcfg.cmd_slimeskat_hand) or content.startswith(ewcfg.cmd_slimeskat_take):
         return True
     return False
+
 
 # Unused?
 def check_skat_choice(message):
@@ -217,12 +222,14 @@ def skat_putback(message, hand, skat):
         hand.remove("remove")
     return putback
 
+
 # Unused?
 def check_skat_declare(message):
     content = message.content.lower()
     if content.startswith(ewcfg.cmd_slimeskat_slugs) or content.startswith(ewcfg.cmd_slimeskat_shields) or content.startswith(ewcfg.cmd_slimeskat_hearts) or content.startswith(ewcfg.cmd_slimeskat_hats) or content.startswith(ewcfg.cmd_slimeskat_grand) or content.startswith(ewcfg.cmd_slimeskat_null):
         return True
     return False
+
 
 # Unused?
 def check_skat_play(message):

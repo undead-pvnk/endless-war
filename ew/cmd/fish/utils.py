@@ -398,15 +398,15 @@ async def award_fish(fisher, cmd, user_data):
 
 
 def cancel_rod_possession(fisher, user_data):
-	response = ''
-	if fisher.inhabitant_id:
-		user_data.cancel_possession()
-		response += '\n'
-		if fisher.fleshling_reeled:
-			response += "Fucking ghosts, can't rely on them for anything."
-		elif fisher.ghost_reeled:
-			response += "You can't trust the living even for the simplest shit, I guess."
-		else:
-			response += "Are you two even trying?"
-		response += ' Your contract is dissolved.'
-	return response
+    response = ''
+    if fisher.inhabitant_id:
+        user_data.cancel_possession()
+        response += '\n'
+        if fisher.fleshling_reeled:
+            response += "Fucking ghosts, can't rely on them for anything."
+        elif fisher.ghost_reeled:
+            response += "You can't trust the living even for the simplest shit, I guess."
+        else:
+            response += "Are you two even trying?"
+        response += ' Your contract is dissolved.'
+    return response

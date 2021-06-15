@@ -8,6 +8,8 @@ from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
 
 """ allow a juvie to join your gang """
+
+
 async def vouch(cmd):
     user_data = EwUser(member=cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
@@ -46,9 +48,12 @@ async def vouch(cmd):
     response = "You place your undying trust in {}.".format(member.display_name)
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 # Not directly referenced. Cmd directs these commands to the apt or chest version
 # Maybe these should be moved to item cmds
 """store items in a communal chest in your gang base"""
+
+
 async def store(cmd):
     user_data = EwUser(member=cmd.message.author)
     response = ""
@@ -104,7 +109,10 @@ async def store(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 """retrieve items from a communal chest in your gang base"""
+
+
 async def take(cmd):
     user_data = EwUser(member=cmd.message.author)
     response = ""
@@ -169,4 +177,3 @@ async def take(cmd):
             response = "{} which item? (check **{}**)".format(cmd.tokens[0], ewcfg.cmd_communitychest)
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-

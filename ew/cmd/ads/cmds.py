@@ -1,6 +1,5 @@
 import time
 
-from .utils import format_ad_response
 from ew.backend import ads as bknd_ads
 from ew.backend.ads import EwAd
 from ew.static import cfg as ewcfg
@@ -9,6 +8,7 @@ from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
+from .utils import format_ad_response
 
 
 async def advertise(cmd):

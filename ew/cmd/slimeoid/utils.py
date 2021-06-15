@@ -14,6 +14,7 @@ from ew.utils import frontend as fe_utils
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
 
+
 # manages a slimeoid's combat stats during a slimeoid battle
 class EwSlimeoidCombatData:
     # slimeoid name
@@ -363,6 +364,8 @@ class EwSlimeoidCombatData:
 """
 	Describe the specified slimeoid. Used for the !slimeoid command and while it's being created.
 """
+
+
 def slimeoid_describe(slimeoid):
     response = ""
 
@@ -487,30 +490,33 @@ def slimeoid_describe(slimeoid):
 
     return response
 
+
 # Slimeoids lose more clout for losing at higher levels.
 def calculate_clout_loss(clout):
-	if clout >= 100:
-		clout -= 6
-	elif clout >= 40:
-		clout -= 5
-	elif clout >= 30:
-		clout -= 4
-	elif clout >= 20:
-		clout -= 3
-	elif clout >= 10:
-		clout -= 2
-	elif clout >= 1:
-		clout -= 1
+    if clout >= 100:
+        clout -= 6
+    elif clout >= 40:
+        clout -= 5
+    elif clout >= 30:
+        clout -= 4
+    elif clout >= 20:
+        clout -= 3
+    elif clout >= 10:
+        clout -= 2
+    elif clout >= 1:
+        clout -= 1
 
-	return clout
+    return clout
+
 
 def calculate_clout_gain(clout):
-	clout += 2
+    clout += 2
 
-	if clout > 100:
-		clout = 100
+    if clout > 100:
+        clout = 100
 
-	return clout
+    return clout
+
 
 # Run the battle for a pair of slimeoids
 async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
@@ -912,33 +918,35 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
         await asyncio.sleep(2)
     return result
 
+
 # do whatever needs to constantly be done to slimeoids
 async def slimeoid_tick_loop(id_server):
-	while not ewutils.TERMINATE:
-		await asyncio.sleep(ewcfg.slimeoid_tick_length)
-		await slimeoid_tick(id_server)
+    while not ewutils.TERMINATE:
+        await asyncio.sleep(ewcfg.slimeoid_tick_length)
+        await slimeoid_tick(id_server)
+
 
 async def slimeoid_tick(id_server):
-	data = bknd_core.execute_sql_query("SELECT {id_slimeoid} FROM slimeoids WHERE {sltype} = %s AND {id_server} = %s".format(
-		id_slimeoid = ewcfg.col_id_slimeoid,
-		sltype = ewcfg.col_type,
-		id_server = ewcfg.col_id_server
-	),(
-		ewcfg.sltype_nega,
-		id_server
-	))
+    data = bknd_core.execute_sql_query("SELECT {id_slimeoid} FROM slimeoids WHERE {sltype} = %s AND {id_server} = %s".format(
+        id_slimeoid=ewcfg.col_id_slimeoid,
+        sltype=ewcfg.col_type,
+        id_server=ewcfg.col_id_server
+    ), (
+        ewcfg.sltype_nega,
+        id_server
+    ))
 
-	resp_cont = EwResponseContainer(id_server = id_server)
-	for row in data:
-		slimeoid_data = EwSlimeoid(id_slimeoid = row[0])
-		haunt_resp = slimeoid_data.haunt()
-		resp_cont.add_response_container(haunt_resp)
-		if random.random() < 0.1:
-			move_resp = slimeoid_data.move()
-			resp_cont.add_response_container(move_resp)
-		slimeoid_data.persist()
+    resp_cont = EwResponseContainer(id_server=id_server)
+    for row in data:
+        slimeoid_data = EwSlimeoid(id_slimeoid=row[0])
+        haunt_resp = slimeoid_data.haunt()
+        resp_cont.add_response_container(haunt_resp)
+        if random.random() < 0.1:
+            move_resp = slimeoid_data.move()
+            resp_cont.add_response_container(move_resp)
+        slimeoid_data.persist()
 
-	await resp_cont.post()
+    await resp_cont.post()
 
 
 def get_slimeoid_count(user_id = None, server_id = None):

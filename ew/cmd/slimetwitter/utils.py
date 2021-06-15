@@ -1,6 +1,7 @@
 from ew.static import cfg as ewcfg
 from ew.utils import frontend as fe_utils
 
+
 # Returns a user's life state/gang color as a discord.Colour object
 def get_tweet_color(user_data):
     if user_data.life_state < 2:

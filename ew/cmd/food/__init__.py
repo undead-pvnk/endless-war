@@ -1,6 +1,6 @@
+from ew.static import cfg as ewcfg
 from . import cmds
 from .utils import *
-from ew.static import cfg as ewcfg
 
 cmd_map = {
 
@@ -16,7 +16,7 @@ cmd_map = {
     # eat a food item from a player's inventory
     ewcfg.cmd_eat: cmds.eat_item,
     ewcfg.cmd_eat_alt1: cmds.eat_item,
-    
+
     # Eat a non food item. put this is mutations dammit
     ewcfg.cmd_devour: cmds.devour,
 

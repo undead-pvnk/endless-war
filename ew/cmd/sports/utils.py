@@ -7,7 +7,6 @@ from ew.static import poi as poi_static
 from ew.utils import core as ewutils
 from ew.utils.frontend import EwResponseContainer
 
-
 sb_count = 0
 
 sb_games = {}

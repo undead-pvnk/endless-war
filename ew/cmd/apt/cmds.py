@@ -2,7 +2,6 @@ import asyncio
 import random
 import time
 
-from .. import move as ewmap, slimeoid as ewslimeoid
 from ew.backend import item as bknd_item
 from ew.backend.apt import EwApartment
 from ew.backend.item import EwItem
@@ -24,20 +23,20 @@ from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
-
-from .utils import usekey
+from .utils import apt_look
 from .utils import getPriceBase
-from .utils import toss_squatters
 from .utils import letter_up
 from .utils import toss_items
-from .utils import apt_look
+from .utils import toss_squatters
+from .utils import usekey
+from .. import move as ewmap, slimeoid as ewslimeoid
 
 
 async def nothing(cmd):  # for an accept, refuse, sign or rip
     return 0
 
 
-async def retire(cmd=None, isGoto = False, movecurrent=None):
+async def retire(cmd = None, isGoto = False, movecurrent = None):
     user_data = EwUser(member=cmd.message.author)
     poi = poi_static.id_to_poi.get(user_data.poi)
     poi_dest = poi_static.id_to_poi.get(ewcfg.poi_id_apt + user_data.apt_zone)  # there isn't an easy way to change this, apologies for being a little hacky
@@ -1315,6 +1314,7 @@ async def aquarium(cmd):
             response = "Are you sure you have that item?"
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 # Location Check Added
 async def propstand(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
@@ -1390,6 +1390,7 @@ async def propstand(cmd):
             response = "Are you sure you have that item?"
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 # LCA
 async def wash(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
@@ -1439,6 +1440,7 @@ async def wash(cmd):
         response = "You don't have a washing machine."
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 # LCA
 async def browse(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
@@ -1453,6 +1455,7 @@ async def browse(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     else:
         await apt_look(cmd=cmd)
+
 
 # LCA
 async def store_item(cmd):
@@ -1588,6 +1591,7 @@ async def store_item(cmd):
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 # LCA
 async def remove_item(cmd):
     cmd_text = cmd.tokens[0].lower() if len(cmd.tokens) >= 1 else ""
@@ -1715,6 +1719,7 @@ async def remove_item(cmd):
         response = "Are you sure you have that item?"
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 # LCA
 async def watch(cmd):
     player_model = EwPlayer(id_user=cmd.message.author.id)
@@ -1777,6 +1782,7 @@ async def watch(cmd):
     user_model.persist()
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 # slimeoid storage works just like regular item storage. Just add "freeze" to the owner's name to store it.
 # LCA
 async def freeze(cmd):
@@ -1809,6 +1815,7 @@ async def freeze(cmd):
         response = "You don't have a slimeoid for that."
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # LCA
 async def unfreeze(cmd):
@@ -1859,6 +1866,7 @@ async def unfreeze(cmd):
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 # LCA
 async def customize(cmd):
     cmd_text = cmd.tokens[0].lower() if len(cmd.tokens) >= 1 else ""
@@ -1901,6 +1909,7 @@ async def customize(cmd):
         apt_model.persist()
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # LCA
 async def bootall(cmd):

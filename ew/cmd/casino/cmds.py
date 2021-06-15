@@ -2,17 +2,6 @@ import asyncio
 import random
 import time
 
-from .utils import printhand
-from .utils import check_skat_bid
-from .utils import check_skat_call
-from .utils import skat_putback
-from .utils import evaluatehand
-from .utils import checkiflegal
-from .utils import get_skat_play
-from .utils import printcard
-from .utils import determine_trick_taker
-from .utils import evaluatetrick
-from .. import cmds as ewcmd, item as ewitem
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
 from ew.static import cfg as ewcfg
@@ -22,6 +11,17 @@ from ew.utils import frontend as fe_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
+from .utils import check_skat_bid
+from .utils import check_skat_call
+from .utils import checkiflegal
+from .utils import determine_trick_taker
+from .utils import evaluatehand
+from .utils import evaluatetrick
+from .utils import get_skat_play
+from .utils import printcard
+from .utils import printhand
+from .utils import skat_putback
+from .. import cmds as ewcmd, item as ewitem
 
 # Map containing user IDs and the last time in UTC seconds since the pachinko
 # machine was used.
@@ -45,95 +45,95 @@ last_russianrouletted_times = {}
 
 
 async def betsoul(cmd):
-	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
-	user_inv = bknd_item.inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
+    user_inv = bknd_item.inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	if cmd.mentions_count == 1:
-		mention_target = cmd.mentions[0]
-	else:
-		mention_target = None
+    if cmd.mentions_count == 1:
+        mention_target = cmd.mentions[0]
+    else:
+        mention_target = None
 
-	item_select = None
+    item_select = None
 
-	for item in user_inv:
-		item_object = EwItem(item.get('id_item'))
-		if item_object.item_props.get('id_cosmetic') == "soul":
-			if not mention_target:
-				item_select = item_object
-				break
-			elif mention_target.id == item_object.item_props.get('user_id'):
-				item_select = item_object
-				break
+    for item in user_inv:
+        item_object = EwItem(item.get('id_item'))
+        if item_object.item_props.get('id_cosmetic') == "soul":
+            if not mention_target:
+                item_select = item_object
+                break
+            elif mention_target.id == item_object.item_props.get('user_id'):
+                item_select = item_object
+                break
 
-	if user_data.poi != ewcfg.poi_id_thecasino:
-		response = "If you want to exchange your soul for SlimeCoin you have to be in the casino first."
-	elif mention_target and item_select == None:
-		response = "Sorry, you don't have that soul."
-	elif item_select == None:
-		response = "You don't have any souls in your inventory. !extractsoul if you want to do this properly."
-	else:
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+    if user_data.poi != ewcfg.poi_id_thecasino:
+        response = "If you want to exchange your soul for SlimeCoin you have to be in the casino first."
+    elif mention_target and item_select == None:
+        response = "Sorry, you don't have that soul."
+    elif item_select == None:
+        response = "You don't have any souls in your inventory. !extractsoul if you want to do this properly."
+    else:
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		bknd_item.give_item(id_user="casinosouls", id_server=cmd.guild.id, id_item=item_select.id_item)
-		user_data.change_slimecoin(coinsource=ewcfg.coinsource_spending, n=ewcfg.soulprice) #current price for souls is 500 mil slimecoin
-		user_data.persist()
-		response = "You hand over {} for {:,} slimecoin.".format(item_select.item_props.get('cosmetic_name'), ewcfg.soulprice)
-	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        bknd_item.give_item(id_user="casinosouls", id_server=cmd.guild.id, id_item=item_select.id_item)
+        user_data.change_slimecoin(coinsource=ewcfg.coinsource_spending, n=ewcfg.soulprice)  # current price for souls is 500 mil slimecoin
+        user_data.persist()
+        response = "You hand over {} for {:,} slimecoin.".format(item_select.item_props.get('cosmetic_name'), ewcfg.soulprice)
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def buysoul(cmd):
-	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.guild.id)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	casino_inv = bknd_item.inventory(id_user="casinosouls", id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
+    casino_inv = bknd_item.inventory(id_user="casinosouls", id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
 
-	if cmd.mentions_count == 1:
-		mention_target = cmd.mentions[0]
-	else:
-		mention_target = None
+    if cmd.mentions_count == 1:
+        mention_target = cmd.mentions[0]
+    else:
+        mention_target = None
 
-	selected_item = None
-	for item_sought in casino_inv:
-		item_object = EwItem(item_sought.get('id_item'))
-		selected_item = item_object
-		if item_object.item_props.get('user_id') == cmd.message.author.id:
-			if not mention_target:
-				break
-		if mention_target:
-			if mention_target.id == item_object.item_props.get('user_id'):
-				break
+    selected_item = None
+    for item_sought in casino_inv:
+        item_object = EwItem(item_sought.get('id_item'))
+        selected_item = item_object
+        if item_object.item_props.get('user_id') == cmd.message.author.id:
+            if not mention_target:
+                break
+        if mention_target:
+            if mention_target.id == item_object.item_props.get('user_id'):
+                break
 
-	if user_data.poi != ewcfg.poi_id_thecasino:
-		response = "If you want to buy people's souls you have to be in the casino first."
-	elif mention_target and selected_item == None:
-		response = "That soul isn't available. Go torment someone else."
-	elif selected_item == None:
-		response = "Sorry, no souls on the market today."
-	elif user_data.slimecoin < ewcfg.soulprice:
-		response = "Tough luck. You can't afford a soul. Poor you."
-	else:
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+    if user_data.poi != ewcfg.poi_id_thecasino:
+        response = "If you want to buy people's souls you have to be in the casino first."
+    elif mention_target and selected_item == None:
+        response = "That soul isn't available. Go torment someone else."
+    elif selected_item == None:
+        response = "Sorry, no souls on the market today."
+    elif user_data.slimecoin < ewcfg.soulprice:
+        response = "Tough luck. You can't afford a soul. Poor you."
+    else:
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		if bknd_item.give_item(id_user=cmd.message.author.id, id_server=cmd.guild.id, id_item=selected_item.id_item):
-			user_data.change_slimecoin(coinsource=ewcfg.coinsource_spending, n= -ewcfg.soulprice)  # current price for souls is 500 mil slimecoin
-			user_data.persist()
-			response = "You buy {} off the casino. This will be fun.".format(selected_item.item_props.get('cosmetic_name'))
-		else:
-			response = "How do you expect to buy a soul when you cant even hold it? Dump some cosmetics weirdo."
-	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        if bknd_item.give_item(id_user=cmd.message.author.id, id_server=cmd.guild.id, id_item=selected_item.id_item):
+            user_data.change_slimecoin(coinsource=ewcfg.coinsource_spending, n=-ewcfg.soulprice)  # current price for souls is 500 mil slimecoin
+            user_data.persist()
+            response = "You buy {} off the casino. This will be fun.".format(selected_item.item_props.get('cosmetic_name'))
+        else:
+            response = "How do you expect to buy a soul when you cant even hold it? Dump some cosmetics weirdo."
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def pachinko(cmd):
@@ -2039,7 +2039,10 @@ async def skat(cmd):
 
     return
 
+
 """ nullifies commands sent in response to skat plays """
+
+
 async def skat_play(cmd):
     return
 

@@ -4,6 +4,7 @@ from ew.static import cfg as ewcfg
 from ew.static import hue as hue_static
 from ew.utils import core as ewutils
 
+
 def dedorn_all_costumes():
     costumes = bknd_core.execute_sql_query("SELECT id_item FROM items_prop WHERE name = 'context' AND value = 'costume' AND id_item IN (SELECT id_item FROM items_prop WHERE (name = 'adorned' OR name = 'slimeoid') AND value = 'true')")
     costume_count = 0

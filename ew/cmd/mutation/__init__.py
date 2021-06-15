@@ -1,5 +1,5 @@
-from . import cmds
 from ew.static import cfg as ewcfg
+from . import cmds
 
 cmd_map = {
 
@@ -16,7 +16,7 @@ cmd_map = {
     ewcfg.cmd_shakeoff: cmds.shakeoff,
     ewcfg.cmd_clench: cmds.clench,
     ewcfg.cmd_bleedout: cmds.bleedout,
-    
+
 }
 
 apt_dm_cmd_map = {
@@ -26,7 +26,7 @@ apt_dm_cmd_map = {
 
     # !bleedout
     ewcfg.cmd_bleedout: cmds.bleedout,
-    
+
     # more oeo
     ewcfg.cmd_track: cmds.track_oneeyeopen,
 
@@ -35,5 +35,5 @@ apt_dm_cmd_map = {
 
     # clench your cheeks
     ewcfg.cmd_clench: cmds.clench,
-    
+
 }

@@ -24,10 +24,11 @@ from ew.utils.slimeoid import EwSlimeoid
 
 move_counter = 0
 
-
 """
     Returns true if the specified point of interest is a PvP zone.
 """
+
+
 def poi_is_pvp(poi_name = None):
     poi = poi_static.id_to_poi.get(poi_name)
 
@@ -40,6 +41,8 @@ def poi_is_pvp(poi_name = None):
 """
     Returns data for POI if it isn't on the map.
 """
+
+
 def fetch_poi_if_coordless(channel_name):
     if channel_name != None:
         poi = poi_static.chname_to_poi.get(channel_name)
@@ -53,6 +56,8 @@ def fetch_poi_if_coordless(channel_name):
 """
     Returns the fancy display name of the specified POI.
 """
+
+
 def poi_id_to_display_name(poi_name = None):
     poi = poi_static.id_to_poi.get(poi_name)
 
@@ -65,56 +70,56 @@ def poi_id_to_display_name(poi_name = None):
 
 
 map_world = [
-    [ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #0
-    [ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #1
-    [ -1, -1, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,120, -3, -3, -3, -3, -2,120,  0,  0,  0,  0,  0,  0,  0,  0,120, -3, -3, -3, -3, -2,120,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #2
-    [ -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 60, -1, 60, -1, 60, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 60, -1, 60, -1, 60, -1, -1,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #3
-    [ -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0,  0,  0,  0,  0,  0,  0,  0, -1,  0, -1,  0, -1, -1, -1,  0,  0,  0,  0,  0,  0,  0,  0, -1,  0, -1,  0, -1, -1, -1, -1, -1, -1,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1 ], #4
-    [ -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1,  0, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1,120, -1, -1, -1, -1, -1, -1, -1 ], #5
-    [ -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, 60, -1, -1,  0,  0,  0,  0,  0,  0,  0, -1,  0, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1,  0,  0,  0, -1,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1 ], #6
-    [ -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, 60, -1, -1, -1, -1, -1, -1, 60, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1 ], #7
-    [ -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, 60, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -2, 30,  0,  0,  0,  0, 30, -2, 30,  0,  0,  0,  0, -1, -1, 60, -1, -1, -1, -1, -1, 60, -1, -1, -1, -1, -1, -1, -1 ], #8
-    [ -1, -1, -1,120, -1, -1, -1, -1, -1, -1, -1,  0,  0, 30, -2, 30,  0,  0,  0,  0,  0, -1,  0, -1, -1, -1, 30, -1, -1, -1,  0, -1, -1, 30, -1, -1, -1, -1,  0,  0, 30, -2, 30,  0,  0,  0, -1,  0, -1, -1, -1, -1, -1, -1, -1 ], #9
-    [ -1, -1, -1, -2, 60,  0,  0,  0,  0,  0, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, 60, -1,  0,  0,  0,  0, -1, -1,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, 30, -1,  0, -1, -1, -1, -1, -1, -1, -1 ], #10
-    [ -1, -1, -1, -3, -1, -1, -1, -1, -1,  0, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1,  0, 30, -2, 30,  0, -1, -1,  0, -1, -1, 30, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -2, 60,  0, -1, -1, -1, -1, -1, -1, -1 ], #11
-    [ -1, -1, -1, -3, 60,  0,  0,  0, -1,  0, -1,  0, -1, -1, -1, -1, -1, -1,  0,  0,  0, -1, 30, -1, -1, -1, -1,  0, -1, -1, -2, 30,  0,  0,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #12
-    [ -1, -1, -1, -3, -1, -1, -1,  0, -1,  0, -1, 30, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1,  0, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #13
-    [ -1, -1, -1, -3, 60,  0, -1,  0, -1,  0, 60, -2, 30,  0,  0,  0,  0, 30, -2, -1, -1, -1,  0, -1, -1, -1, -1,  0,  0, -1, -1, -1, -1, -1,  0,  0, 30, -2, 30,  0,  0,  0,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #14
-    [ -1, -1, -1,120, -1,  0, -1,  0, -1, -1, -1, 30, -1, -1, -1,  0, -1, -1, 30, -1, -1, -1,  0, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, 30, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #15
-    [ -1, -1, -1,  0, -1,  0, -1,  0, -1, -1, -1,  0, -1, -1, -1, 30, -1, -1,  0, -1, -1, -1,  0,  0,  0,  0,  0, 30, -2, 30,  0,  0,  0,  0,  0,  0,  0,  0, -1,  0,  0, 30, -2, 30,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #16
-    [ -1, -1, -1,  0, -1,  0, -1,  0, -1,  0,  0,  0,  0,  0, 30, -2, -1, -1,  0, -1, -1, -1, 30, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #17
-    [ -1, -1, -1,  0, -1,  0, -1,  0, -1, 30, -1, -1, -1, -1, -1, 30, -1, -1,  0,  0,  0, 30, -2, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #18
-    [ -1, -1, -1,  0, -1,  0, -1,  0, 60, -2, -1, -1, -1, -1,  0,  0, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1,  0, -1,  0,  0,  0, 30, -2, 30,  0,  0,  0,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #19
-    [ -1, -1, -1,  0, -1,  0, -1, -1, -1, 30, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, 30, -1, 30, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #20
-    [ -1, -1, -1,  0, -1,  0, -1, -1, -1,  0,  0,  0,  0, 30, -2, 30,  0,  0,  0,  0, -1, -1,  0,  0,  0,  0,  0, 30, -2, -3, -3, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1,  0,  0, 30, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #21
-    [ -1, -1, -1,  0, -1,  0, -1, -1, -1,  0, -1, -1, -1, -1, 30, -1,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, -3, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #22
-    [ -1, -1, -1,  0, -1,  0, -1, -1, -1,  0, -1, -1, -1, -1,  0, -1, 30, -1, -1,  0, -1, -1, -1, -1,  0,  0,  0,  0,  0, -1, -3, -1, -1, -1, -1, -1, 30, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #23
-    [ -1, -1, -1,  0, -1,  0, -1, -1, -1, 30, 30,  0,  0,  0,  0, 30, -2, -1, -1,  0, 30, -2, 30,  0,  0, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #24
-    [ -1, -1, -1,  0, -1,  0,  0,  0, 60, -2, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, 30, -1, -1,  0, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #25
-    [ -1, -1, -1,  0, -1, -1, -1, -1, -1, 30,  0,  0,  0, 30, -2, 30,  0, 30, -1, -1, -1,  0, -1, -1,  0, -1, -1, -1, -1, -1, -2, 30,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #26
-    [ -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, 60, -1, -1, -2, 30,  0,  0,  0, -1, -1, 30, -1,  0,  0,  0,  0, 30, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #27
-    [ -1, -1, -1,  0, -1, -1,  0,  0,  0, 60, -2, -1, -1, -1,  0, -1, -1, 60, -1,  0, -1, -1,  0, 30, -2, 30,  0, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #28
-    [ -1, -1, -1,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1,  0, -1, 30, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, 60,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #29
-    [ -1, -1, -1,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1,  0, -1, -2, 30,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #30
-    [ -1, -1, -1,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1,  0, -1, 60, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #31
-    [ -1, -1, -1,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1,  0, -1,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #32
-    [ -1, -1, -1,  0, -1, -1,  0, -1,  0,  0,  0,  0,  0,  0,  0, -1, -1,  0, -1,  0, -1, -1,  0, 30, -2, 30,  0,  0,  0,  0,  0,  0,  0, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #33
-    [ -1, -1, -1,  0, -1, -1,  0, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1,  0, -1, -1, -1, -1, 60, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #34
-    [ -1, -1, -1,  0, -1, -1,  0, -1,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0, -1,  0, -1,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #35
-    [ -1, -1, -1,  0, -1, -1, 60, -1, 60, -1, 60, -1, -1, -1, -1, -1, -1, -1, -1, 60, -1, 60, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #36
-    [ -1, -1, -1,  0,  0,120, -2, -3, -3, -3, -3,120,  0,  0,  0,  0,  0,  0,120, -2, -3, -3, 60,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #37
-    [ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #38
-    [ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2 ], #39
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 0
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 1
+    [-1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 120, -3, -3, -3, -3, -2, 120, 0, 0, 0, 0, 0, 0, 0, 0, 120, -3, -3, -3, -3, -2, 120, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 2
+    [-1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 60, -1, 60, -1, 60, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 60, -1, 60, -1, 60, -1, -1, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 3
+    [-1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1],  # 4
+    [-1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, 0, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, 120, -1, -1, -1, -1, -1, -1, -1],  # 5
+    [-1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, 60, -1, -1, 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1],  # 6
+    [-1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, 60, -1, -1, -1, -1, -1, -1, 60, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1],  # 7
+    [-1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, 60, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, -2, 30, 0, 0, 0, 0, 30, -2, 30, 0, 0, 0, 0, -1, -1, 60, -1, -1, -1, -1, -1, 60, -1, -1, -1, -1, -1, -1, -1],  # 8
+    [-1, -1, -1, 120, -1, -1, -1, -1, -1, -1, -1, 0, 0, 30, -2, 30, 0, 0, 0, 0, 0, -1, 0, -1, -1, -1, 30, -1, -1, -1, 0, -1, -1, 30, -1, -1, -1, -1, 0, 0, 30, -2, 30, 0, 0, 0, -1, 0, -1, -1, -1, -1, -1, -1, -1],  # 9
+    [-1, -1, -1, -2, 60, 0, 0, 0, 0, 0, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, 60, -1, 0, 0, 0, 0, -1, -1, 0, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, 30, -1, 0, -1, -1, -1, -1, -1, -1, -1],  # 10
+    [-1, -1, -1, -3, -1, -1, -1, -1, -1, 0, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, 0, 30, -2, 30, 0, -1, -1, 0, -1, -1, 30, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, -2, 60, 0, -1, -1, -1, -1, -1, -1, -1],  # 11
+    [-1, -1, -1, -3, 60, 0, 0, 0, -1, 0, -1, 0, -1, -1, -1, -1, -1, -1, 0, 0, 0, -1, 30, -1, -1, -1, -1, 0, -1, -1, -2, 30, 0, 0, 0, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 12
+    [-1, -1, -1, -3, -1, -1, -1, 0, -1, 0, -1, 30, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, 0, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 13
+    [-1, -1, -1, -3, 60, 0, -1, 0, -1, 0, 60, -2, 30, 0, 0, 0, 0, 30, -2, -1, -1, -1, 0, -1, -1, -1, -1, 0, 0, -1, -1, -1, -1, -1, 0, 0, 30, -2, 30, 0, 0, 0, 0, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 14
+    [-1, -1, -1, 120, -1, 0, -1, 0, -1, -1, -1, 30, -1, -1, -1, 0, -1, -1, 30, -1, -1, -1, 0, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, 30, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 15
+    [-1, -1, -1, 0, -1, 0, -1, 0, -1, -1, -1, 0, -1, -1, -1, 30, -1, -1, 0, -1, -1, -1, 0, 0, 0, 0, 0, 30, -2, 30, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 30, -2, 30, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 16
+    [-1, -1, -1, 0, -1, 0, -1, 0, -1, 0, 0, 0, 0, 0, 30, -2, -1, -1, 0, -1, -1, -1, 30, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 17
+    [-1, -1, -1, 0, -1, 0, -1, 0, -1, 30, -1, -1, -1, -1, -1, 30, -1, -1, 0, 0, 0, 30, -2, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 18
+    [-1, -1, -1, 0, -1, 0, -1, 0, 60, -2, -1, -1, -1, -1, 0, 0, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, 0, -1, 0, 0, 0, 30, -2, 30, 0, 0, 0, 0, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 19
+    [-1, -1, -1, 0, -1, 0, -1, -1, -1, 30, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, 30, -1, 30, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 20
+    [-1, -1, -1, 0, -1, 0, -1, -1, -1, 0, 0, 0, 0, 30, -2, 30, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, 0, 30, -2, -3, -3, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, 0, 0, 30, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 21
+    [-1, -1, -1, 0, -1, 0, -1, -1, -1, 0, -1, -1, -1, -1, 30, -1, 0, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, -3, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 22
+    [-1, -1, -1, 0, -1, 0, -1, -1, -1, 0, -1, -1, -1, -1, 0, -1, 30, -1, -1, 0, -1, -1, -1, -1, 0, 0, 0, 0, 0, -1, -3, -1, -1, -1, -1, -1, 30, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 23
+    [-1, -1, -1, 0, -1, 0, -1, -1, -1, 30, 30, 0, 0, 0, 0, 30, -2, -1, -1, 0, 30, -2, 30, 0, 0, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 24
+    [-1, -1, -1, 0, -1, 0, 0, 0, 60, -2, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, 30, -1, -1, 0, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 25
+    [-1, -1, -1, 0, -1, -1, -1, -1, -1, 30, 0, 0, 0, 30, -2, 30, 0, 30, -1, -1, -1, 0, -1, -1, 0, -1, -1, -1, -1, -1, -2, 30, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 26
+    [-1, -1, -1, 0, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, 60, -1, -1, -2, 30, 0, 0, 0, -1, -1, 30, -1, 0, 0, 0, 0, 30, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 27
+    [-1, -1, -1, 0, -1, -1, 0, 0, 0, 60, -2, -1, -1, -1, 0, -1, -1, 60, -1, 0, -1, -1, 0, 30, -2, 30, 0, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 28
+    [-1, -1, -1, 0, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, 0, -1, 30, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, 60, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 29
+    [-1, -1, -1, 0, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, 0, -1, -2, 30, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 30
+    [-1, -1, -1, 0, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, 0, -1, 60, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 31
+    [-1, -1, -1, 0, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, 0, -1, 0, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 32
+    [-1, -1, -1, 0, -1, -1, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, -1, 0, -1, -1, 0, 30, -2, 30, 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 33
+    [-1, -1, -1, 0, -1, -1, 0, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, 0, -1, -1, -1, -1, 60, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 34
+    [-1, -1, -1, 0, -1, -1, 0, -1, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 35
+    [-1, -1, -1, 0, -1, -1, 60, -1, 60, -1, 60, -1, -1, -1, -1, -1, -1, -1, -1, 60, -1, 60, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 36
+    [-1, -1, -1, 0, 0, 120, -2, -3, -3, -3, -3, 120, 0, 0, 0, 0, 0, 0, 120, -2, -3, -3, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 37
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],  # 38
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2],  # 39
 ]
 map_width = len(map_world[0])
 map_height = len(map_world)
-
 
 sem_wall = -1
 sem_city = -2
 sem_city_alias = -3
 
 landmarks = {}
+
 
 def pairToString(pair):
     return "({},{})".format("{}".format(pair[0]).rjust(2), "{}".format(pair[1]).ljust(2))
@@ -123,6 +128,8 @@ def pairToString(pair):
 """
     Find the cost to move through ortho-adjacent cells.
 """
+
+
 def neighbors(coord):
     neigh = []
 
@@ -142,6 +149,8 @@ def neighbors(coord):
 """
     Directions and cost from coord to arrive at a destination.
 """
+
+
 class EwPath:
     visited = None
     steps = None
@@ -150,12 +159,12 @@ class EwPath:
     pois_visited = None
 
     def __init__(
-        self,
-        path_from = None,
-        steps = [],
-        cost = 0,
-        visited = {},
-        pois_visited = None
+            self,
+            path_from = None,
+            steps = [],
+            cost = 0,
+            visited = {},
+            pois_visited = None
     ):
         if path_from != None:
             self.steps = deepcopy(path_from.steps)
@@ -175,21 +184,21 @@ class EwPath:
 """
     Add coord_next to the path.
 """
-def path_step(path, poi_next, cost_next,  user_data, poi_end, landmark_mode = False):
 
 
+def path_step(path, poi_next, cost_next, user_data, poi_end, landmark_mode = False):
     next_poi = poi_next
 
-    if inaccessible(user_data = user_data, poi = next_poi):
-            return False
+    if inaccessible(user_data=user_data, poi=next_poi):
+        return False
     else:
         # check if we already got the movement bonus/malus for this district
         if not poi_next.id_poi in path.pois_visited:
             path.pois_visited.add(next_poi.id_poi)
             if len(user_data.faction) > 0 and next_poi.id_poi != poi_end.id_poi and next_poi.id_poi != path.steps[0].id_poi:
                 district = EwDistrict(
-                    id_server = user_data.id_server,
-                    district = next_poi.id_poi
+                    id_server=user_data.id_server,
+                    district=next_poi.id_poi
                 )
 
                 if district != None and len(district.controlling_faction) > 0:
@@ -199,10 +208,9 @@ def path_step(path, poi_next, cost_next,  user_data, poi_end, landmark_mode = Fa
                         cost_next += ewcfg.territory_time_gain
                 # Slimecorp gets a bonus in unclaimed territory
                 elif user_data.faction == ewcfg.faction_slimecorp:
-                        cost_next -= ewcfg.territory_time_gain
+                    cost_next -= ewcfg.territory_time_gain
 
     path.steps.append(poi_next)
-
 
     if landmark_mode and cost_next > ewcfg.territory_time_gain:
         cost_next -= ewcfg.territory_time_gain
@@ -215,18 +223,21 @@ def path_step(path, poi_next, cost_next,  user_data, poi_end, landmark_mode = Fa
 """
     Returns a new path including all of path_base, with the next step coord_next.
 """
+
+
 def path_branch(path_base, poi_next, cost_next, user_data, poi_end, landmark_mode = False):
-    path_next = EwPath(path_from = path_base)
+    path_next = EwPath(path_from=path_base)
 
     if path_step(path_next, poi_next, cost_next, user_data, poi_end, landmark_mode) == False:
         return None
 
     return path_next
 
+
 def score_map_from(
-    poi_start = None,
-    user_data = None,
-    landmark_mode = False
+        poi_start = None,
+        user_data = None,
+        landmark_mode = False
 ):
     score_golf = math.inf
     score_map = {}
@@ -240,13 +251,11 @@ def score_map_from(
     poi_end = None
     poi_end = None
 
-
     path_base = EwPath(
-        steps = [ poi_start ],
-        cost = 0,
-        pois_visited ={poi_start.id_poi},
+        steps=[poi_start],
+        cost=0,
+        pois_visited={poi_start.id_poi},
     )
-
 
     paths_walking.append(path_base)
 
@@ -265,7 +274,6 @@ def score_map_from(
             score_map[step_last.id_poi] = path.cost
 
             step_penult = path.steps[-2] if len(path.steps) >= 2 else None
-
 
             path_base = path
             neighs = list(step_last.neighbors.keys())
@@ -291,17 +299,17 @@ def score_map_from(
                     if path_step(path_base, neigh, neigh_cost, user_data, poi_end, landmark_mode):
                         paths_walking_new.append(path_base)
 
-
         paths_walking = paths_walking_new
 
     return score_map
 
+
 def path_to(
-    poi_start = None,
-    poi_end = None,
-    user_data = None
+        poi_start = None,
+        poi_end = None,
+        user_data = None
 ):
-    #ewutils.logMsg("beginning pathfinding")
+    # ewutils.logMsg("beginning pathfinding")
     score_golf = math.inf
     score_map = {}
     for poi in poi_static.poi_list:
@@ -315,13 +323,11 @@ def path_to(
     poi_start = poi_static.id_to_poi.get(poi_start)
     poi_end = poi_static.id_to_poi.get(poi_end)
 
-
     path_base = EwPath(
-        steps = [ poi_start ],
-        cost = 0,
-        pois_visited ={poi_start.id_poi},
+        steps=[poi_start],
+        cost=0,
+        pois_visited={poi_start.id_poi},
     )
-
 
     path_id = 0
     heapq.heappush(paths_walking, (path_base.cost + landmark_heuristic(path_base, poi_end), path_id, path_base))
@@ -348,10 +354,9 @@ def path_to(
                 continue
 
             score_map[step_last.id_poi] = path.cost
-            #ewutils.logMsg("visiting " + str(step_last))
+            # ewutils.logMsg("visiting " + str(step_last))
 
             step_penult = path.steps[-2] if len(path.steps) >= 2 else None
-
 
             if poi_end != None:
                 # Arrived at the actual destination?
@@ -369,7 +374,6 @@ def path_to(
                 poi_adjacent = step_last
 
                 if poi_adjacent.id_poi != poi_start.id_poi:
-
                     pois_adjacent.append(poi_adjacent)
                     continue
 
@@ -399,8 +403,7 @@ def path_to(
                         heapq.heappush(paths_walking, (path_base.cost + landmark_heuristic(path_base, poi_end), path_id, path_base))
                         path_id += 1
 
-
-    #ewutils.logMsg("finished pathfinding")
+    # ewutils.logMsg("finished pathfinding")
 
     if poi_end != None:
         path_true = None
@@ -429,13 +432,15 @@ def landmark_heuristic(path, poi_end):
         return max(scores)
 
 
-
 def replace_with_inf(n):
     return math.inf
+
 
 """
     Debug method to draw the map, optionally with a path/route on it.
 """
+
+
 def map_draw(path = None, coord = None):
     y = 0
     for row in map_world:
@@ -474,8 +479,8 @@ def map_draw(path = None, coord = None):
         print(outstr)
         y += 1
 
-def inaccessible(user_data = None, poi = None):
 
+def inaccessible(user_data = None, poi = None):
     if poi == None or user_data == None:
         return True
 
@@ -487,8 +492,7 @@ def inaccessible(user_data = None, poi = None):
 
     source_poi = poi_static.id_to_poi.get(user_data.poi)
 
-
-    #locks that inhibit a POI
+    # locks that inhibit a POI
     for lock in ewcfg.region_lock_states:
         if poi.id_poi == lock:
             for state in ewcfg.region_lock_states.get(lock):
@@ -496,25 +500,24 @@ def inaccessible(user_data = None, poi = None):
                 if gamestate.bit == 0:
                     return True
 
-
     bans = user_data.get_bans()
     vouchers = user_data.get_vouchers()
 
     locked_districts_list = poi_utils.retrieve_locked_districts(user_data.id_server)
 
-    if(
-        len(poi.factions) > 0 and
-        (set(vouchers).isdisjoint(set(poi.factions)) or user_data.faction != "") and
-        user_data.faction not in poi.factions
+    if (
+            len(poi.factions) > 0 and
+            (set(vouchers).isdisjoint(set(poi.factions)) or user_data.faction != "") and
+            user_data.faction not in poi.factions
     ) or (
-        len(poi.life_states) > 0 and
-        user_data.life_state not in poi.life_states
+            len(poi.life_states) > 0 and
+            user_data.life_state not in poi.life_states
     ):
         return True
-    elif(
-        len(poi.factions) > 0 and
-        len(bans) > 0 and
-        set(poi.factions).issubset(set(bans))
+    elif (
+            len(poi.factions) > 0 and
+            len(bans) > 0 and
+            set(poi.factions).issubset(set(bans))
     ):
         return True
     elif poi.id_poi in locked_districts_list and user_data.life_state not in [ewcfg.life_state_executive, ewcfg.life_state_lucky]:
@@ -522,16 +525,19 @@ def inaccessible(user_data = None, poi = None):
     else:
         return False
 
+
 """
     Kicks idle players from subzones. Called every 15 minutes.
 """
+
+
 async def kick(id_server):
     # Gets data for all living players from the database
     all_living_players = bknd_core.execute_sql_query("SELECT {poi}, {id_user} FROM users WHERE id_server = %s AND {life_state} > 0 AND {time_last_action} < %s".format(
-        poi = ewcfg.col_poi,
-        id_user = ewcfg.col_id_user,
-        time_last_action = ewcfg.col_time_last_action,
-        life_state = ewcfg.col_life_state
+        poi=ewcfg.col_poi,
+        id_user=ewcfg.col_id_user,
+        time_last_action=ewcfg.col_time_last_action,
+        life_state=ewcfg.col_life_state
     ), (
         id_server,
         (int(time.time()) - ewcfg.time_kickout)
@@ -543,7 +549,7 @@ async def kick(id_server):
         try:
             poi = poi_static.id_to_poi[player[0]]
             id_user = player[1]
-            user_data = EwUser(id_user = id_user, id_server = id_server)
+            user_data = EwUser(id_user=id_user, id_server=id_server)
 
             # checks if the player should be kicked from the subzone and kicks them if they should.
             if poi.is_subzone and poi.id_poi not in [ewcfg.poi_id_thesphere, ewcfg.poi_id_thebreakroom]:
@@ -567,13 +573,14 @@ async def kick(id_server):
                         user_data.poi = mother_district_chosen
                         user_data.time_lastenter = int(time.time())
                         user_data.persist()
-                        await ewrolemgr.updateRoles(client = client, member = member_object)
+                        await ewrolemgr.updateRoles(client=client, member=member_object)
                         await user_data.move_inhabitants(id_poi=mother_district_chosen)
                         mother_district_channel = fe_utils.get_channel(server, poi_static.id_to_poi[mother_district_chosen].channel)
                         response = "You have been kicked out for loitering! You can only stay in a sub-zone and twiddle your thumbs for 1 hour at a time."
                         await fe_utils.send_message(client, mother_district_channel, fe_utils.formatMessage(member_object, response))
         except:
             ewutils.logMsg('failed to move inactive player out of subzone with poi {}: {}'.format(player[0], player[1]))
+
 
 def get_slimes_resp(district_data):
     # get information about slime levels in the district
@@ -591,6 +598,7 @@ def get_slimes_resp(district_data):
         slimes_resp += "There are large heaps of slime shoveled into piles to clear the way for cars and pedestrians on the slime-soaked city streets."
 
     return slimes_resp
+
 
 def get_players_look_resp(user_data, district_data):
     # get information about players in the district
@@ -619,6 +627,7 @@ def get_players_look_resp(user_data, district_data):
 
     return players_resp
 
+
 def get_enemies_look_resp(user_data, district_data):
     # lists off enemies in district
 
@@ -642,7 +651,8 @@ def get_enemies_look_resp(user_data, district_data):
         else:
             identifier_text = ""
 
-        if found_enemy_data.ai == ewcfg.enemy_ai_coward or found_enemy_data.ai == ewcfg.enemy_ai_sandbag or (found_enemy_data.ai == ewcfg.enemy_ai_defender and found_enemy_data.id_target != user_data.id_user) or (found_enemy_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler) or (found_enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state != ewcfg.life_state_shambler):
+        if found_enemy_data.ai == ewcfg.enemy_ai_coward or found_enemy_data.ai == ewcfg.enemy_ai_sandbag or (found_enemy_data.ai == ewcfg.enemy_ai_defender and found_enemy_data.id_target != user_data.id_user) or (found_enemy_data.enemyclass == ewcfg.enemy_class_shambler and user_data.life_state == ewcfg.life_state_shambler) or (
+                found_enemy_data.enemyclass == ewcfg.enemy_class_gaiaslimeoid and user_data.life_state != ewcfg.life_state_shambler):
             threat_emote = ewcfg.emote_slimeheart
         else:
             threat_emote = ewcfg.emote_slimeskull
@@ -675,7 +685,7 @@ def get_enemies_look_resp(user_data, district_data):
             if not ewcfg.gvs_active:
                 identifier_text = " {}".format(":regional_indicator_{}:".format(final_enemy_data.identifier.lower()))
             else:
-                identifier_text = " {}, ({})".format( ":regional_indicator_{}:".format(final_enemy_data.identifier.lower()), final_enemy_data.gvs_coord)
+                identifier_text = " {}, ({})".format(":regional_indicator_{}:".format(final_enemy_data.identifier.lower()), final_enemy_data.gvs_coord)
         else:
             identifier_text = ""
 
@@ -688,6 +698,7 @@ def get_enemies_look_resp(user_data, district_data):
 
     return enemies_resp
 
+
 def get_slimeoids_resp(id_server, poi):
     slimeoids_resp = ""
 
@@ -699,6 +710,7 @@ def get_slimeoids_resp(id_server, poi):
             slimeoids_resp += "\n{} is here.".format(slimeoid_data.name)
 
     return slimeoids_resp
+
 
 # SWILLDERMUK
 def get_random_prank_item(user_data, district_data):
@@ -739,6 +751,7 @@ def get_random_prank_item(user_data, district_data):
 
     return response
 
+
 def get_void_connections_resp(poi, id_server):
     response = ""
     void_connections = get_void_connection_pois(id_server)
@@ -749,8 +762,8 @@ def get_void_connections_resp(poi, id_server):
         response = "There's also a well lit staircase leading underground, but it looks too clean to be an entrance to the subway."
     return response
 
-async def one_eye_dm(id_user=None, id_server=None, poi=None):
 
+async def one_eye_dm(id_user = None, id_server = None, poi = None):
     poi_obj = poi_static.id_to_poi.get(poi)
     client = ewutils.get_client()
     server = client.get_guild(id_server)
@@ -759,9 +772,7 @@ async def one_eye_dm(id_user=None, id_server=None, poi=None):
 
     server = client.get_guild(int(id_server))
 
-
     id_player = EwPlayer(id_user=id_user, id_server=id_server)
-
 
     if poi_obj.pvp:
         try:
@@ -786,21 +797,23 @@ async def one_eye_dm(id_user=None, id_server=None, poi=None):
         except:
             ewutils.logMsg("Failed to do OEO notificaitons for {}.".format(id_user))
 
+
 async def send_arrival_response(cmd, poi, channel):
     response = "You {} {}.".format(poi.str_enter, poi.str_name)
     if poi.id_poi in get_void_connection_pois(cmd.guild.id):
         response += "\nYou notice an underground passage that wasn't there last time you came here."
 
     return await fe_utils.send_message(cmd.client,
-            channel,
-            fe_utils.formatMessage(
-                cmd.message.author,
-                response
-            )
-        )
+                                       channel,
+                                       fe_utils.formatMessage(
+                                           cmd.message.author,
+                                           response
+                                       )
+                                       )
+
 
 async def send_gangbase_messages(server_id, clock):
-    #this can be added onto for events and such
+    # this can be added onto for events and such
     lucky_lucy = 0
     casino_response = "**Lucky Lucy has arrived!** Now's the time to make your fortune!"
     casino_end = "Aww, Lucy left."

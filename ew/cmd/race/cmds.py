@@ -2,9 +2,9 @@ import asyncio
 import random
 import time
 
-from ew.cmd import cmds as ewcmd
 from ew.backend import item as bknd_item
 from ew.backend.market import EwMarket
+from ew.cmd import cmds as ewcmd
 from ew.static import cfg as ewcfg
 from ew.static import items as static_items
 from ew.static import poi as poi_static
@@ -296,55 +296,55 @@ async def jiggle(cmd):
 
 
 async def flutter(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.race == ewcfg.races["avian"]:
-		district_data = EwDistrict(district = user_data.poi, id_server = cmd.guild.id)
-		market_data = EwMarket(id_server=cmd.guild.id)
-		response = "You flap your wings in an attempt to fly, but "
-		excuses = []
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.race == ewcfg.races["avian"]:
+        district_data = EwDistrict(district=user_data.poi, id_server=cmd.guild.id)
+        market_data = EwMarket(id_server=cmd.guild.id)
+        response = "You flap your wings in an attempt to fly, but "
+        excuses = []
 
-		if market_data.weather == ewcfg.weather_lightning:
-			excuses.append("the current weather would make that a bit dangerous, so you decide not to.")
-		if ewcfg.mutation_id_bigbones in user_data.get_mutations():
-			excuses.append("your bones are too big for you to get off the ground.")
-		if ewcfg.mutation_id_lightasafeather in user_data.get_mutations():
-			excuses.append("your wings are too skinny to generate enough lift.")
+        if market_data.weather == ewcfg.weather_lightning:
+            excuses.append("the current weather would make that a bit dangerous, so you decide not to.")
+        if ewcfg.mutation_id_bigbones in user_data.get_mutations():
+            excuses.append("your bones are too big for you to get off the ground.")
+        if ewcfg.mutation_id_lightasafeather in user_data.get_mutations():
+            excuses.append("your wings are too skinny to generate enough lift.")
 
-		if 6 <= market_data.clock >= 20:
-			excuses.append("it's not safe to fly at night, so you decide not to.")
-		else:
-			excuses.append("flying in plain daylight might get you shot off the sky, so you decide not to.")
+        if 6 <= market_data.clock >= 20:
+            excuses.append("it's not safe to fly at night, so you decide not to.")
+        else:
+            excuses.append("flying in plain daylight might get you shot off the sky, so you decide not to.")
 
-		if user_data.slimes > 1000000:
-			excuses.append("you have too much slime on you, so you don't even get off the ground.")
-		else:
-			excuses.append("you're too weak for this right now, gonna need to get more slime.")
+        if user_data.slimes > 1000000:
+            excuses.append("you have too much slime on you, so you don't even get off the ground.")
+        else:
+            excuses.append("you're too weak for this right now, gonna need to get more slime.")
 
-		if user_data.life_state == ewcfg.life_state_corpse:
-			excuses.append("your incorporeal wings generate no lift.")
-		elif user_data.life_state == ewcfg.life_state_juvenile:
-			excuses.append("you lack the moral fiber to do so.")
-		else:
-			if user_data.faction == ewcfg.faction_rowdys:
-				excuses.append("you end up thrashing with your wings in an unorganized fashion.")
-			if user_data.faction == ewcfg.faction_killers:
-				excuses.append("you end up doing rapid dabs instead.")
+        if user_data.life_state == ewcfg.life_state_corpse:
+            excuses.append("your incorporeal wings generate no lift.")
+        elif user_data.life_state == ewcfg.life_state_juvenile:
+            excuses.append("you lack the moral fiber to do so.")
+        else:
+            if user_data.faction == ewcfg.faction_rowdys:
+                excuses.append("you end up thrashing with your wings in an unorganized fashion.")
+            if user_data.faction == ewcfg.faction_killers:
+                excuses.append("you end up doing rapid dabs instead.")
 
-		if len(district_data.get_players_in_district()) > 1:
-			excuses.append("it's embarassing to do so with other people around.")
-		else:
-			excuses.append("you can't be bothered if there's no one here to see you do it.")
+        if len(district_data.get_players_in_district()) > 1:
+            excuses.append("it's embarassing to do so with other people around.")
+        else:
+            excuses.append("you can't be bothered if there's no one here to see you do it.")
 
-		if user_data.hunger / user_data.get_hunger_max() < 0.5:
-			excuses.append("you're too hungry, and end up looking for worms instead.")
-		else:
-			excuses.append("you're too full from your last meal for such vigorous exercise.")
+        if user_data.hunger / user_data.get_hunger_max() < 0.5:
+            excuses.append("you're too hungry, and end up looking for worms instead.")
+        else:
+            excuses.append("you're too full from your last meal for such vigorous exercise.")
 
-		response += random.choice(excuses)
-	else:
-		response = "You people are not allowed to do that."
+        response += random.choice(excuses)
+    else:
+        response = "You people are not allowed to do that."
 
-	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def request_petting(cmd):

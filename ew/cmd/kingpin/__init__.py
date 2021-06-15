@@ -2,8 +2,8 @@
 	Commands for kingpins only.
 """
 
-from . import cmds
 from ew.static import cfg as ewcfg
+from . import cmds
 
 cmd_map = {
 
@@ -17,11 +17,11 @@ cmd_map = {
     # Release a player from their faction.
     ewcfg.cmd_pardon: cmds.pardon,
     ewcfg.cmd_banish: cmds.banish,
-    
+
     # Create soulbound items
     ewcfg.cmd_create: cmds.create,
     # ewcfg.cmd_exalt: cmds.exalt,
-    
+
     # Stop a player from speaking out of game
     ewcfg.cmd_hogtie: cmds.hogtie
 

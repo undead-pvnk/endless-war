@@ -17,70 +17,74 @@ from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.slimeoid import EwSlimeoid
 
-""" wrapper for discord members """ # Doesn't really sound like a cmd related class
+""" wrapper for discord members """  # Doesn't really sound like a cmd related class
+
+
 class EwId:
-	user = -1
-	guild = -1
-	display_name = ""
-	admin = False
+    user = -1
+    guild = -1
+    display_name = ""
+    admin = False
 
-	def __init__(self, user, guild, display_name, admin):
-		self.user = user
-		self.guild = guild
-		self.display_name = display_name
-		self.admin = admin
+    def __init__(self, user, guild, display_name, admin):
+        self.user = user
+        self.guild = guild
+        self.display_name = display_name
+        self.admin = admin
 
-	def __repr__(self): #print() support
-		return "<EwId - {}>".format(self.display_name)
+    def __repr__(self):  # print() support
+        return "<EwId - {}>".format(self.display_name)
+
 
 """ class to send general data about an interaction to a command """
+
+
 class EwCmd:
-	cmd = ""
-	tokens = []
-	tokens_count = 0
-	message = None
-	client = None
-	mentions = []
-	mentions_count = 0
-	guild = None
+    cmd = ""
+    tokens = []
+    tokens_count = 0
+    message = None
+    client = None
+    mentions = []
+    mentions_count = 0
+    guild = None
 
-	#EwId system
-	client_id = None
-	author_id = None
-	mention_ids = []
+    # EwId system
+    client_id = None
+    author_id = None
+    mention_ids = []
 
+    def __init__(
+            self,
+            tokens = [],
+            message = None,
+            client = None,
+            mentions = [],
+            guild = None,
+            admin = False,
+    ):
+        self.tokens = tokens
+        self.message = message
+        self.client = client
+        self.guild = guild
 
-	def __init__(
-		self,
-		tokens = [],
-		message = None,
-		client = None,
-		mentions = [],
-		guild = None,
-		admin = False,
-	):
-		self.tokens = tokens
-		self.message = message
-		self.client = client
-		self.guild = guild
+        if len(tokens) >= 1:
+            self.tokens_count = len(tokens)
+            self.cmd = tokens[0]
 
-		if len(tokens) >= 1:
-			self.tokens_count = len(tokens)
-			self.cmd = tokens[0]
+        # Endless War's EwId
+        self.client_id = EwId(client.user.id, self.guild.id, client.user.name, admin=admin)
+        # Author's EwId
+        self.author_id = EwId(message.author.id, self.guild.id, message.author.display_name, admin=admin)
+        # List of mentions' EwIds
+        self.mention_ids = []
+        for user in mentions:
+            self.mention_ids.append(EwId(user.id, self.guild.id, user.display_name, user.guild_permissions.administrator))
+        # print(EwId(user.id, user.guild.id, user.display_name, user.guild_permissions.administrator))
 
-		#Endless War's EwId
-		self.client_id = EwId(client.user.id, self.guild.id, client.user.name, admin = admin)
-		#Author's EwId
-		self.author_id = EwId(message.author.id, self.guild.id, message.author.display_name, admin = admin)
-		#List of mentions' EwIds
-		self.mention_ids = []
-		for user in mentions:
-			self.mention_ids.append(EwId(user.id, self.guild.id, user.display_name, user.guild_permissions.administrator))
-			# print(EwId(user.id, user.guild.id, user.display_name, user.guild_permissions.administrator))
-
-		# remove mentions to us for commands that dont yet handle Endless War mentions with EwIds
-		self.mentions = list(filter(lambda user : user.id != client.user.id, mentions))
-		self.mentions_count = len(self.mentions)
+        # remove mentions to us for commands that dont yet handle Endless War mentions with EwIds
+        self.mentions = list(filter(lambda user: user.id != client.user.id, mentions))
+        self.mentions_count = len(self.mentions)
 
 
 def gen_data_text(
@@ -275,165 +279,173 @@ def gen_data_text(
 
     return response
 
+
 def gen_score_text(ew_id, skune):
+    user_data = EwUser(ew_id=ew_id)
 
-	user_data = EwUser(ew_id = ew_id)
+    items = bknd_item.inventory(id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
 
-	items = bknd_item.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
+    poudrin_amount = bknd_item.find_poudrin(id_user=user_data.id_user, id_server=user_data.id_server)
 
-	poudrin_amount = bknd_item.find_poudrin(id_user = user_data.id_user, id_server = user_data.id_server)
+    if user_data.life_state == ewcfg.life_state_grandfoe:
+        # Can't see a raid boss's slime score.
+        response = "{}'s power is beyond your understanding.".format(ew_id.display_name)
+    else:
+        # return somebody's score
+        response = "{} currently has {:,} {}{}.".format(ew_id.display_name, user_data.slimes, "slime" if skune is False else "skune", (" and {} {} poudrin{}".format(poudrin_amount, "slime" if skune is False else "skune", ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
 
+    return response
 
-	if user_data.life_state == ewcfg.life_state_grandfoe:
-		# Can't see a raid boss's slime score.
-		response = "{}'s power is beyond your understanding.".format(ew_id.display_name)
-	else:
-		# return somebody's score
-		response = "{} currently has {:,} {}{}.".format(ew_id.display_name, user_data.slimes, "slime" if skune is False else "skune", (" and {} {} poudrin{}".format(poudrin_amount, "slime" if skune is False else "skune", ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
-
-	return response
 
 """ Send an initial message you intend to edit later while processing the command. Returns handle to the message. """
+
+
 async def start(cmd = None, message = '...', channel = None, client = None):
-	if cmd != None:
-		channel = cmd.message.channel
-		client = cmd.client
+    if cmd != None:
+        channel = cmd.message.channel
+        client = cmd.client
 
-	if client != None and channel != None:
-		return await fe_utils.send_message(client, channel, message)
+    if client != None and channel != None:
+        return await fe_utils.send_message(client, channel, message)
 
-	return None
+    return None
+
 
 def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
-	item_obj = EwItem(id_item=id_item)
-	districtmodel = EwDistrict(id_server=id_server, district=ewcfg.poi_id_slimesendcliffs)
-	slimetotal = 0
+    item_obj = EwItem(id_item=id_item)
+    districtmodel = EwDistrict(id_server=id_server, district=ewcfg.poi_id_slimesendcliffs)
+    slimetotal = 0
 
-	if item_obj.item_props.get('id_furniture') == 'sord':
-		response = "You toss the sord off the cliff, but for whatever reason, the damn thing won't go down. It just keeps going up and up, as though gravity itself blocked this piece of shit jpeg artifact on Twitter. It eventually goes out of sight, where you assume it flies into the sun."
-		bknd_item.item_delete(id_item=id_item)
-	elif random.randrange(500) < 125 or item_obj.item_type == ewcfg.it_questitem or item_obj.item_type == ewcfg.it_medal or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand":
-		response = "You toss the {} off the cliff. It sinks into the ooze disappointingly.".format(item_name)
-		bknd_item.give_item(id_item=id_item, id_server=id_server, id_user=ewcfg.poi_id_slimesea)
+    if item_obj.item_props.get('id_furniture') == 'sord':
+        response = "You toss the sord off the cliff, but for whatever reason, the damn thing won't go down. It just keeps going up and up, as though gravity itself blocked this piece of shit jpeg artifact on Twitter. It eventually goes out of sight, where you assume it flies into the sun."
+        bknd_item.item_delete(id_item=id_item)
+    elif random.randrange(500) < 125 or item_obj.item_type == ewcfg.it_questitem or item_obj.item_type == ewcfg.it_medal or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand":
+        response = "You toss the {} off the cliff. It sinks into the ooze disappointingly.".format(item_name)
+        bknd_item.give_item(id_item=id_item, id_server=id_server, id_user=ewcfg.poi_id_slimesea)
 
-	elif random.randrange(500) < 498:
-		response = "You toss the {} off the cliff. A nearby kraken swoops in and chomps it down with the cephalapod's equivalent of a smile. Your new friend kicks up some sea slime for you. Sick!".format(item_name)
-		slimetotal = 2000 + random.randrange(10000)
-		bknd_item.item_delete(id_item=id_item)
+    elif random.randrange(500) < 498:
+        response = "You toss the {} off the cliff. A nearby kraken swoops in and chomps it down with the cephalapod's equivalent of a smile. Your new friend kicks up some sea slime for you. Sick!".format(item_name)
+        slimetotal = 2000 + random.randrange(10000)
+        bknd_item.item_delete(id_item=id_item)
 
-	else:
-		response = "{} Oh fuck. FEEDING FRENZY!!! Sea monsters lurch down on the spoils like it's fucking christmas, and a ridiculous level of slime debris covers the ground. {}".format(ewcfg.emote_slime1, ewcfg.emote_slime1)
-		slimetotal = 100000 + random.randrange(900000)
+    else:
+        response = "{} Oh fuck. FEEDING FRENZY!!! Sea monsters lurch down on the spoils like it's fucking christmas, and a ridiculous level of slime debris covers the ground. {}".format(ewcfg.emote_slime1, ewcfg.emote_slime1)
+        slimetotal = 100000 + random.randrange(900000)
 
-		bknd_item.item_delete(id_item=id_item)
+        bknd_item.item_delete(id_item=id_item)
 
-	districtmodel.change_slimes(n=slimetotal)
-	districtmodel.persist()
-	return response
+    districtmodel.change_slimes(n=slimetotal)
+    districtmodel.persist()
+    return response
+
 
 async def exec_mutations(cmd):
-	user_data = EwUser(member = cmd.message.author)
+    user_data = EwUser(member=cmd.message.author)
 
-	if cmd.mentions_count == 1:
-		user_data = EwUser(member = cmd.mentions[0])
+    if cmd.mentions_count == 1:
+        user_data = EwUser(member=cmd.mentions[0])
 
-	status = user_data.getStatusEffects()
+    status = user_data.getStatusEffects()
 
-	if ewcfg.status_n1 in status:
-		response = "They fight without expending themselves due to **Perfection**. They're precise even without a target due to **Indiscriminate Rage**. They're hard to fell and cut deep due to **Monolith Body**. They are immaculate and unaging due to **Immortality**."
-	elif ewcfg.status_n2 in status:
-		response = "They have unparalleled coordination, speed and reaction time due to **Fucked Out**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
-	elif ewcfg.status_n4 in status:
-		response = "They are capable of murder by machine due to **Napalm Hacker**. Their hiding spot evades you due to **Super Amnesia**."
-	elif ewcfg.status_n8 in status:
-		response = "They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
-	elif ewcfg.status_n11 in status:
-		response = "They command a crowd through fear and punishment due to **Unnatural Intimidation**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
-	elif ewcfg.status_n12 in status:
-		response = "Their body holds untold numbers of quirks and perks due to **Full Aberrant**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
-	elif ewcfg.status_n13 in status:
-		response = "They are prone to explosive entries due to **Tantrum**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
-	elif user_data.life_state == ewcfg.life_state_lucky:
-		response = "They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. "
-	else:
-		response = "Slimecorp hasn't issued them mutations in their current position."
-	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    if ewcfg.status_n1 in status:
+        response = "They fight without expending themselves due to **Perfection**. They're precise even without a target due to **Indiscriminate Rage**. They're hard to fell and cut deep due to **Monolith Body**. They are immaculate and unaging due to **Immortality**."
+    elif ewcfg.status_n2 in status:
+        response = "They have unparalleled coordination, speed and reaction time due to **Fucked Out**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
+    elif ewcfg.status_n4 in status:
+        response = "They are capable of murder by machine due to **Napalm Hacker**. Their hiding spot evades you due to **Super Amnesia**."
+    elif ewcfg.status_n8 in status:
+        response = "They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
+    elif ewcfg.status_n11 in status:
+        response = "They command a crowd through fear and punishment due to **Unnatural Intimidation**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
+    elif ewcfg.status_n12 in status:
+        response = "Their body holds untold numbers of quirks and perks due to **Full Aberrant**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
+    elif ewcfg.status_n13 in status:
+        response = "They are prone to explosive entries due to **Tantrum**. They take advantage of your moments of weakness due to **Opportunist**. They prioritize best-in-breed productivity and physical enhancement synergy due to **Market Efficiency**. They can take the heat due to **Kevlar Attire**."
+    elif user_data.life_state == ewcfg.life_state_lucky:
+        response = "They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. They are extremely fortunate due to **Lucky**. "
+    else:
+        response = "Slimecorp hasn't issued them mutations in their current position."
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 def location_commands(cmd, search_poi = None):
-	user_data = EwUser(member=cmd.message.author)
-	if search_poi is not None:
-		poi = search_poi
-	else:
-		poi = user_data.poi
-	poi_obj = poi_static.id_to_poi.get(poi)
-	response = "\n**THIS LOCATION:**\n"
-	if poi in [ewcfg.poi_id_mine, ewcfg.poi_id_mine_sweeper, ewcfg.poi_id_mine_bubble, ewcfg.poi_id_tt_mines,
-			   ewcfg.poi_id_tt_mines_sweeper, ewcfg.poi_id_tt_mines_bubble, ewcfg.poi_id_cv_mines,
-			   ewcfg.poi_id_cv_mines_sweeper, ewcfg.poi_id_cv_mines_bubble]:
-		response += ewcfg.mine_commands
-	if poi_obj.is_pier == True:
-		response += ewcfg.pier_commands
-	if poi_obj.is_transport_stop == True or poi_obj.is_transport == True:
-		response += ewcfg.transport_commands
-	if poi_obj.is_apartment:
-		response += ewcfg.apartment_commands
-	if poi in [ewcfg.poi_id_greencakecafe, ewcfg.poi_id_nlacu, ewcfg.poi_id_neomilwaukeestate,
-			   ewcfg.poi_id_glocksburycomics]:
-		response += ewcfg.zine_writing_places_commands
-	if poi in [ewcfg.poi_id_ab_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_jr_farms]:
-		response += ewcfg.farm_commands
-	if poi in [ewcfg.poi_id_nlacu, ewcfg.poi_id_neomilwaukeestate]:
-		response += "\n" + ewcfg.universities_commands
-	if len(poi_obj.vendors) != 0:
-		response += "\n" +  ewcfg.shop_commands
-	if ewcfg.district_unique_commands.get(poi) is not None:
-		response += "\n" + ewcfg.district_unique_commands.get(poi)
-	if response != "\n**THIS LOCATION:**\n":
-		return response
-	else:
-		return ""
+    user_data = EwUser(member=cmd.message.author)
+    if search_poi is not None:
+        poi = search_poi
+    else:
+        poi = user_data.poi
+    poi_obj = poi_static.id_to_poi.get(poi)
+    response = "\n**THIS LOCATION:**\n"
+    if poi in [ewcfg.poi_id_mine, ewcfg.poi_id_mine_sweeper, ewcfg.poi_id_mine_bubble, ewcfg.poi_id_tt_mines,
+               ewcfg.poi_id_tt_mines_sweeper, ewcfg.poi_id_tt_mines_bubble, ewcfg.poi_id_cv_mines,
+               ewcfg.poi_id_cv_mines_sweeper, ewcfg.poi_id_cv_mines_bubble]:
+        response += ewcfg.mine_commands
+    if poi_obj.is_pier == True:
+        response += ewcfg.pier_commands
+    if poi_obj.is_transport_stop == True or poi_obj.is_transport == True:
+        response += ewcfg.transport_commands
+    if poi_obj.is_apartment:
+        response += ewcfg.apartment_commands
+    if poi in [ewcfg.poi_id_greencakecafe, ewcfg.poi_id_nlacu, ewcfg.poi_id_neomilwaukeestate,
+               ewcfg.poi_id_glocksburycomics]:
+        response += ewcfg.zine_writing_places_commands
+    if poi in [ewcfg.poi_id_ab_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_jr_farms]:
+        response += ewcfg.farm_commands
+    if poi in [ewcfg.poi_id_nlacu, ewcfg.poi_id_neomilwaukeestate]:
+        response += "\n" + ewcfg.universities_commands
+    if len(poi_obj.vendors) != 0:
+        response += "\n" + ewcfg.shop_commands
+    if ewcfg.district_unique_commands.get(poi) is not None:
+        response += "\n" + ewcfg.district_unique_commands.get(poi)
+    if response != "\n**THIS LOCATION:**\n":
+        return response
+    else:
+        return ""
+
 
 def mutation_commands(cmd):
-	response = "\n**CURRENT MUTATIONS:**"
-	user_data = EwUser(member=cmd.message.author)
-	mutations = user_data.get_mutations()
-	for mutation in mutations:
-		if ewcfg.mutation_unique_commands.get(mutation) is not None:
-			response += "\n" + ewcfg.mutation_unique_commands.get(mutation)
+    response = "\n**CURRENT MUTATIONS:**"
+    user_data = EwUser(member=cmd.message.author)
+    mutations = user_data.get_mutations()
+    for mutation in mutations:
+        if ewcfg.mutation_unique_commands.get(mutation) is not None:
+            response += "\n" + ewcfg.mutation_unique_commands.get(mutation)
 
-	if response != "\n**CURRENT MUTATIONS:**":
-		return response
-	else:
-		return ""
+    if response != "\n**CURRENT MUTATIONS:**":
+        return response
+    else:
+        return ""
+
 
 def item_commands(cmd):
-	response = "\n**IN YOUR INVENTORY:**"
-	items_to_find = ewcfg.item_unique_commands.keys()
-	user_data = EwUser(member=cmd.message.author)
+    response = "\n**IN YOUR INVENTORY:**"
+    items_to_find = ewcfg.item_unique_commands.keys()
+    user_data = EwUser(member=cmd.message.author)
 
-	for lookup in items_to_find:
-		item_sought = bknd_item.find_item(item_search=lookup, id_user=user_data.id_user, id_server=user_data.id_server)
-		if item_sought:
-			response += "\n" + ewcfg.item_unique_commands.get(lookup)
-	if response != "\n**IN YOUR INVENTORY:**":
-		return response
-	else:
-		return ""
+    for lookup in items_to_find:
+        item_sought = bknd_item.find_item(item_search=lookup, id_user=user_data.id_user, id_server=user_data.id_server)
+        if item_sought:
+            response += "\n" + ewcfg.item_unique_commands.get(lookup)
+    if response != "\n**IN YOUR INVENTORY:**":
+        return response
+    else:
+        return ""
+
 
 # Used when you have a secret command you only want seen under certain conditions.
 async def fake_failed_command(cmd):
-	client = ewutils.get_client()
-	randint = random.randint(1, 3)
-	msg_mistake = "ENDLESS WAR is growing frustrated."
-	if randint == 2:
-		msg_mistake = "ENDLESS WAR denies you his favor."
-	elif randint == 3:
-		msg_mistake = "ENDLESS WAR pays you no mind."
+    client = ewutils.get_client()
+    randint = random.randint(1, 3)
+    msg_mistake = "ENDLESS WAR is growing frustrated."
+    if randint == 2:
+        msg_mistake = "ENDLESS WAR denies you his favor."
+    elif randint == 3:
+        msg_mistake = "ENDLESS WAR pays you no mind."
 
-	msg = await fe_utils.send_message(client, cmd.message.channel, msg_mistake)
-	await asyncio.sleep(2)
-	try:
-		await msg.delete()
-		pass
-	except:
-		pass
+    msg = await fe_utils.send_message(client, cmd.message.channel, msg_mistake)
+    await asyncio.sleep(2)
+    try:
+        await msg.delete()
+        pass
+    except:
+        pass

@@ -1,12 +1,12 @@
-from .utils import *
-from . import cmds
 from ew.static import cfg
+from . import cmds
+from .utils import *
 
 cmd_map = {
 
     # Used for !accept/!refuse (put somewhere more general than apt?)
     cfg.cmd_haveastroke: cmds.nothing,
-	cfg.cmd_moonhurtingbeam: cmds.nothing,
+    cfg.cmd_moonhurtingbeam: cmds.nothing,
     cfg.cmd_rip: cmds.nothing,
     cfg.cmd_sign: cmds.nothing,
 

@@ -1,5 +1,5 @@
-from . import cmds
 from ew.static import cfg as ewcfg
+from . import cmds
 
 cmd_map = {
 

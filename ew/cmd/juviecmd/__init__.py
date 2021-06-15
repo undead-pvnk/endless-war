@@ -1,6 +1,5 @@
 from . import cmds
 from .utils import *
-from ew.static import cfg as ewcfg
 
 cmd_map = {
 
@@ -22,7 +21,7 @@ cmd_map = {
     ewcfg.cmd_scavenge: cmds.scavenge,
     ewcfg.cmd_scavenge_alt1: cmds.scavenge,
     ewcfg.cmd_scavenge_alt2: cmds.scavenge,
-    
+
     # LOL
     ewcfg.cmd_juviemode: cmds.juviemode,
 

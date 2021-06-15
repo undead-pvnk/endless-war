@@ -73,6 +73,8 @@ class EwMineGrid:
 	Mining in the wrong channel or while exhausted.
 	This is deprecated anyway but let's sorta keep it around in case we need it.
 """
+
+
 async def mismine(cmd, user_data, cause):
     time_now = int(time.time())
     global last_mismined_times
@@ -402,6 +404,7 @@ def get_cell_symbol_pokemine(cell):
         cell_str = "X"
     return cell_str
 
+
 # for bubblebreaker
 def apply_gravity(grid):
     cells_to_check = []
@@ -413,6 +416,7 @@ def apply_gravity(grid):
                 cells_to_check.append(new_coords)
 
     return cells_to_check
+
 
 # for bubblebreaker
 def bubble_fall(grid, coords):
@@ -427,6 +431,7 @@ def bubble_fall(grid, coords):
     grid[coords[0]][coords[1]] = ewcfg.cell_bubble_empty
     grid[row][col] = falling_bubble
     return (row, col)
+
 
 # for bubblebreaker
 def check_and_explode(grid, cells_to_check):
@@ -458,6 +463,7 @@ def check_and_explode(grid, cells_to_check):
 
     return slime_yield
 
+
 # for bubblebreaker
 def neighbors(grid, coords):
     neighs = []
@@ -472,6 +478,7 @@ def neighbors(grid, coords):
     if col + 1 < len(grid[row]):
         neighs.append((row, col + 1))
     return neighs
+
 
 # for bubblebreaker
 def add_row(grid):
@@ -490,6 +497,7 @@ def add_row(grid):
         new_row.append(cell)
     grid.insert(0, new_row)
     return grid.pop(-1)
+
 
 # for bubblebreaker
 def get_height(grid):

@@ -2,14 +2,6 @@ import asyncio
 import random
 import time
 
-from . import utils
-from .utils import EwFisher
-from .utils import gen_fish
-from .utils import gen_fish_size
-from .utils import gen_bite_text
-from .utils import cancel_rod_possession
-from .utils import award_fish
-from .. import item as ewitem
 from ew.backend import item as bknd_item
 from ew.backend.fish import EwOffer
 from ew.backend.item import EwItem
@@ -26,8 +18,18 @@ from ew.utils import item as itm_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
+from . import utils
+from .utils import EwFisher
+from .utils import award_fish
+from .utils import cancel_rod_possession
+from .utils import gen_bite_text
+from .utils import gen_fish
+from .utils import gen_fish_size
+from .. import item as ewitem
 
 """ Casts a line into the Slime Sea """
+
+
 async def cast(cmd):
     time_now = round(time.time())
     has_reeled = False
@@ -91,7 +93,7 @@ async def cast(cmd):
 
             high_value_bait_used = False
 
-            #global fishing_counter
+            # global fishing_counter
             utils.fishing_counter += 1
             current_fishing_id = fisher.fishing_id = utils.fishing_counter
 
@@ -257,7 +259,10 @@ async def cast(cmd):
     if has_reeled == False:
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 """ Reels in the fishing line.. """
+
+
 async def reel(cmd):
     user_data = EwUser(member=cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
@@ -705,115 +710,116 @@ async def barter(cmd):
 
 
 async def embiggen(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	market_data = EwMarket(id_server = user_data.id_server)
-	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = bknd_item.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+    market_data = EwMarket(id_server=user_data.id_server)
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "How are you going to embiggen your fish on the side of the street? You’ve got to see a professional for this, man. Head to the SlimeCorp Laboratory, they’ve got dozens of modern day magic potions ‘n shit over there."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "How are you going to embiggen your fish on the side of the street? You’ve got to see a professional for this, man. Head to the SlimeCorp Laboratory, they’ve got dozens of modern day magic potions ‘n shit over there."
 
-	elif item_sought:
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+    elif item_sought:
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		name = item_sought.get('name')
-		fish = EwItem(id_item = item_sought.get('id_item'))
-		acquisition = fish.item_props.get('acquisition')
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        name = item_sought.get('name')
+        fish = EwItem(id_item=item_sought.get('id_item'))
+        acquisition = fish.item_props.get('acquisition')
 
-		if fish.item_props.get('id_furniture') == "singingfishplaque":
+        if fish.item_props.get('id_furniture') == "singingfishplaque":
 
-			poudrins_owned = ewitem.find_item_all(item_search="slimepoudrin", id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
-			poudrin_amount = len(poudrins_owned)
+            poudrins_owned = ewitem.find_item_all(item_search="slimepoudrin", id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
+            poudrin_amount = len(poudrins_owned)
 
-			if poudrin_amount < 2:
-				response = "You don't have the poudrins for it."
-			else:
-				for delete in range(2):
-					poudrin = poudrins_owned.pop()
-					bknd_item.item_delete(id_item = poudrin.get("id_item"))
-				fish.item_props['id_furniture'] = "colossalsingingfishplaque"
-				fish.item_props['furniture_look_desc'] = "There's a fake fish mounted on the wall. Hoo boy, it's a whopper."
-				fish.item_props['furniture_place_desc'] = "You take a nail gun to the wall to force it to hold this fish. Christ,  this thing is your fucking Ishmael. Er, Moby Dick. Whatever."
-				fish.item_props['furniture_name'] = "colossal singing fish plaque"
-				fish.item_props['furniture_desc'] = "You press the button on your gigantic plaque.\n***" + fish.item_props.get('furniture_desc')[38:-87].upper().replace(":NOTES:", ":notes:") + "***\nYou abruptly turn the fish off before you rupture an eardrum."
-				fish.persist()
-				response = "The elevator ride down to the embiggening ward feels like an eterninty. Are they going to find out the fish you're embiggening is fake? God, you hope not. But eventually, you make it down, and place the plaque in the usual reclined surgeon's chair. A stray spark from one of the defibrilators nearly gives you a heart attack. But even so, the embiggening process begins like usual. You sign the contract, and they take a butterfly needle to your beloved wall prop. And sure enough, it begins to grow. You hear the sounds of cracked plastic and grinding electronics, and catch a whiff of burnt wires. It's growing. It's 6 feet, no, 10 feet long. Good god. You were hoping for growth, but science has gone too far. Eventually, it stops. Although you raise a few eyebrows with ths anomaly, you still get back the colossal fish plaque without a hitch."
-		elif acquisition != ewcfg.acquisition_fishing:
-			response = "You can only embiggen fishes, dummy. Otherwise everyone would be walking around with colossal nunchucks and huge chicken buckets. Actually, that gives me an idea..."
+            if poudrin_amount < 2:
+                response = "You don't have the poudrins for it."
+            else:
+                for delete in range(2):
+                    poudrin = poudrins_owned.pop()
+                    bknd_item.item_delete(id_item=poudrin.get("id_item"))
+                fish.item_props['id_furniture'] = "colossalsingingfishplaque"
+                fish.item_props['furniture_look_desc'] = "There's a fake fish mounted on the wall. Hoo boy, it's a whopper."
+                fish.item_props['furniture_place_desc'] = "You take a nail gun to the wall to force it to hold this fish. Christ,  this thing is your fucking Ishmael. Er, Moby Dick. Whatever."
+                fish.item_props['furniture_name'] = "colossal singing fish plaque"
+                fish.item_props['furniture_desc'] = "You press the button on your gigantic plaque.\n***" + fish.item_props.get('furniture_desc')[38:-87].upper().replace(":NOTES:", ":notes:") + "***\nYou abruptly turn the fish off before you rupture an eardrum."
+                fish.persist()
+                response = "The elevator ride down to the embiggening ward feels like an eterninty. Are they going to find out the fish you're embiggening is fake? God, you hope not. But eventually, you make it down, and place the plaque in the usual reclined surgeon's chair. A stray spark from one of the defibrilators nearly gives you a heart attack. But even so, the embiggening process begins like usual. You sign the contract, and they take a butterfly needle to your beloved wall prop. And sure enough, it begins to grow. You hear the sounds of cracked plastic and grinding electronics, and catch a whiff of burnt wires. It's growing. It's 6 feet, no, 10 feet long. Good god. You were hoping for growth, but science has gone too far. Eventually, it stops. Although you raise a few eyebrows with ths anomaly, you still get back the colossal fish plaque without a hitch."
+        elif acquisition != ewcfg.acquisition_fishing:
+            response = "You can only embiggen fishes, dummy. Otherwise everyone would be walking around with colossal nunchucks and huge chicken buckets. Actually, that gives me an idea..."
 
-		else:
-			size = fish.item_props.get('size')
+        else:
+            size = fish.item_props.get('size')
 
-			poudrin_cost = 0
+            poudrin_cost = 0
 
-			if size == ewcfg.fish_size_miniscule:
-				poudrin_cost = 2
+            if size == ewcfg.fish_size_miniscule:
+                poudrin_cost = 2
 
-			if size == ewcfg.fish_size_small:
-				poudrin_cost = 4
+            if size == ewcfg.fish_size_small:
+                poudrin_cost = 4
 
-			if size == ewcfg.fish_size_average:
-				poudrin_cost = 8
+            if size == ewcfg.fish_size_average:
+                poudrin_cost = 8
 
-			if size == ewcfg.fish_size_big:
-				poudrin_cost = 16
+            if size == ewcfg.fish_size_big:
+                poudrin_cost = 16
 
-			if size == ewcfg.fish_size_huge:
-				poudrin_cost = 32
+            if size == ewcfg.fish_size_huge:
+                poudrin_cost = 32
 
-			poudrins_owned = ewitem.find_item_all(item_search = "slimepoudrin", id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
-			poudrin_amount = len(poudrins_owned)
+            poudrins_owned = ewitem.find_item_all(item_search="slimepoudrin", id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
+            poudrin_amount = len(poudrins_owned)
 
-			if poudrin_cost == 0:
-				response = "Your {} is already as colossal as a fish can get!".format(name)
+            if poudrin_cost == 0:
+                response = "Your {} is already as colossal as a fish can get!".format(name)
 
-			elif poudrin_amount < poudrin_cost:
-				response = "You need {} poudrins to embiggen your {}, but you only have {}!!".format(poudrin_cost, name, poudrin_amount)
+            elif poudrin_amount < poudrin_cost:
+                response = "You need {} poudrins to embiggen your {}, but you only have {}!!".format(poudrin_cost, name, poudrin_amount)
 
-			else:
-				if size == ewcfg.fish_size_miniscule:
-					fish.item_props['size'] = ewcfg.fish_size_small
+            else:
+                if size == ewcfg.fish_size_miniscule:
+                    fish.item_props['size'] = ewcfg.fish_size_small
 
-				if size == ewcfg.fish_size_small:
-					fish.item_props['size'] = ewcfg.fish_size_average
+                if size == ewcfg.fish_size_small:
+                    fish.item_props['size'] = ewcfg.fish_size_average
 
-				if size == ewcfg.fish_size_average:
-					fish.item_props['size'] = ewcfg.fish_size_big
+                if size == ewcfg.fish_size_average:
+                    fish.item_props['size'] = ewcfg.fish_size_big
 
-				if size == ewcfg.fish_size_big:
-					fish.item_props['size'] = ewcfg.fish_size_huge
+                if size == ewcfg.fish_size_big:
+                    fish.item_props['size'] = ewcfg.fish_size_huge
 
-				if size == ewcfg.fish_size_huge:
-					fish.item_props['size'] = ewcfg.fish_size_colossal
+                if size == ewcfg.fish_size_huge:
+                    fish.item_props['size'] = ewcfg.fish_size_colossal
 
-				fish.persist()
+                fish.persist()
 
-				for delete in range(poudrin_cost):
-					poudrin = poudrins_owned.pop()
-					bknd_item.item_delete(id_item = poudrin.get("id_item"))
+                for delete in range(poudrin_cost):
+                    poudrin = poudrins_owned.pop()
+                    bknd_item.item_delete(id_item=poudrin.get("id_item"))
 
-				market_data.donated_poudrins += poudrin_cost
-				market_data.persist()
-				user_data.poudrin_donations += poudrin_cost
-				user_data.persist()
+                market_data.donated_poudrins += poudrin_cost
+                market_data.persist()
+                user_data.poudrin_donations += poudrin_cost
+                user_data.persist()
 
-				response = "After several minutes long elevator descents, in the depths of some basement level far below the laboratory's lobby, you lay down your {} on a reclined medical chair. A SlimeCorp employee finishes the novel length terms of service they were reciting and asks you if you have any questions. You weren’t listening so you just tell them to get on with it so you can go back to haggling prices with Captain Albert Alexander. They oblige.\nThey grab a butterfly needle and carefully stab your fish with it, injecting filled with some bizarre, multi-colored serum you’ve never seen before. Sick, it’s bigger now!!".format(name)
+                response = "After several minutes long elevator descents, in the depths of some basement level far below the laboratory's lobby, you lay down your {} on a reclined medical chair. A SlimeCorp employee finishes the novel length terms of service they were reciting and asks you if you have any questions. You weren’t listening so you just tell them to get on with it so you can go back to haggling prices with Captain Albert Alexander. They oblige.\nThey grab a butterfly needle and carefully stab your fish with it, injecting filled with some bizarre, multi-colored serum you’ve never seen before. Sick, it’s bigger now!!".format(
+                    name)
 
-	else:
-		if item_search:  # If they didn't forget to specify an item and it just wasn't found.
-			response = "You don't have one."
-		else:
-			response = "Embiggen which fish? (check **!inventory**)"
+    else:
+        if item_search:  # If they didn't forget to specify an item and it just wasn't found.
+            response = "You don't have one."
+        else:
+            response = "Embiggen which fish? (check **!inventory**)"
 
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def barter_all(cmd):

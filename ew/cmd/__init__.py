@@ -29,34 +29,34 @@ from . import transport
 from . import wep
 
 cmd_modules = [
-	wep,
-	apt,
-	book,
-	item,
-	cmds,
-	ads,
-	casino,
-	cosmeticitem,
-	debug,
-	district,
-	slimeoid,
-	move,
-	market,
-	spooky,
-	transport,
-	quadrants,
-	mutation,
-	race,
-	farm,
-	faction,
-	fish,
-	food,
-	juviecmd,
-	hunting,
-	kingpin,
-	slimetwitter,
-	smelting,
-	sports
+    wep,
+    apt,
+    book,
+    item,
+    cmds,
+    ads,
+    casino,
+    cosmeticitem,
+    debug,
+    district,
+    slimeoid,
+    move,
+    market,
+    spooky,
+    transport,
+    quadrants,
+    mutation,
+    race,
+    farm,
+    faction,
+    fish,
+    food,
+    juviecmd,
+    hunting,
+    kingpin,
+    slimetwitter,
+    smelting,
+    sports
 ]
 
 cmd_map = {}
@@ -64,15 +64,15 @@ dm_cmd_map = {}
 apt_dm_cmd_map = {}
 
 for mod in cmd_modules:
-	try:
-		cmd_map.update(mod.cmd_map)
-	except:
-		pass
-	try:
-		dm_cmd_map.update(mod.dm_cmd_map)
-	except:
-		pass
-	try:
-		apt_dm_cmd_map.update(mod.apt_dm_cmd_map)
-	except:
-		pass
+    try:
+        cmd_map.update(mod.cmd_map)
+    except:
+        pass
+    try:
+        dm_cmd_map.update(mod.dm_cmd_map)
+    except:
+        pass
+    try:
+        apt_dm_cmd_map.update(mod.apt_dm_cmd_map)
+    except:
+        pass

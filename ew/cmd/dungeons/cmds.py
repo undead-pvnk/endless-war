@@ -1,13 +1,13 @@
 import asyncio
 import random
 
-from . import utils
-from .utils import format_tutorial_response
-from .utils import begin_tutorial
 from ew.static import poi as poi_static
 from ew.utils import frontend as fe_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
+from . import utils
+from .utils import begin_tutorial
+from .utils import format_tutorial_response
 
 
 async def tutorial_cmd(cmd):

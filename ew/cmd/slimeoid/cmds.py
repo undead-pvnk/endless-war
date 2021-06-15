@@ -1,15 +1,12 @@
 import random
 import time
 
-from .utils import get_slimeoid_count
-from .utils import slimeoid_describe
-from .utils import battle_slimeoids
-from ew.cmd import casino as ewcasino, item as ewitem
 from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.quadrants import EwQuadrant
+from ew.cmd import casino as ewcasino, item as ewitem
 from ew.static import cfg as ewcfg
 from ew.static import hue as hue_static
 from ew.static import poi as poi_static
@@ -19,910 +16,931 @@ from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.slimeoid import EwSlimeoid
+from .utils import battle_slimeoids
+from .utils import get_slimeoid_count
+from .utils import slimeoid_describe
+
 
 # Create a slimeoid
 async def incubateslimeoid(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	#roles_map_user = ewutils.getRoleMap(message.author.roles)
+    # roles_map_user = ewutils.getRoleMap(message.author.roles)
 
-	poudrin = bknd_item.find_item(item_search = ewcfg.item_id_slimepoudrin, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
-	slimeoid_count = get_slimeoid_count(user_id=cmd.message.author.id, server_id=cmd.guild.id)
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    poudrin = bknd_item.find_item(item_search=ewcfg.item_id_slimepoudrin, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_item)
+    slimeoid_count = get_slimeoid_count(user_id=cmd.message.author.id, server_id=cmd.guild.id)
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-		response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif poudrin is None:
-		response = "You need a slime poudrin."
+    elif poudrin is None:
+        response = "You need a slime poudrin."
 
-	elif slimeoid_count >= 3:
-		response = "You have too many slimeoids."
+    elif slimeoid_count >= 3:
+        response = "You have too many slimeoids."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		value = None
-		if cmd.tokens_count > 1:
-			value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
-		if value != None:
-			user_data = EwUser(member = cmd.message.author)
-			slimeoid = EwSlimeoid(member = cmd.message.author)
-			market_data = EwMarket(id_server = cmd.message.author.guild.id)
-			if value == -1:
-				value = user_data.slimes
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        value = None
+        if cmd.tokens_count > 1:
+            value = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
+        if value != None:
+            user_data = EwUser(member=cmd.message.author)
+            slimeoid = EwSlimeoid(member=cmd.message.author)
+            market_data = EwMarket(id_server=cmd.message.author.guild.id)
+            if value == -1:
+                value = user_data.slimes
 
-			if slimeoid.life_state == ewcfg.slimeoid_state_active:
-				response = "You have already created a Slimeoid. Dissolve your current slimeoid before incubating a new one."
+            if slimeoid.life_state == ewcfg.slimeoid_state_active:
+                response = "You have already created a Slimeoid. Dissolve your current slimeoid before incubating a new one."
 
-			elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
-				response = "You are already in the process of incubating a Slimeoid."
+            elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
+                response = "You are already in the process of incubating a Slimeoid."
 
-			elif value > user_data.slimes:
-				response = "You do not have that much slime to sacrifice."
+            elif value > user_data.slimes:
+                response = "You do not have that much slime to sacrifice."
 
-			else:
-				# delete a slime poudrin from the player's inventory
-				bknd_item.item_delete(id_item = poudrin.get('id_item'))
+            else:
+                # delete a slime poudrin from the player's inventory
+                bknd_item.item_delete(id_item=poudrin.get('id_item'))
 
-				level = len(str(value))
-				user_data.change_slimes(n = -value)
-				slimeoid.life_state = ewcfg.slimeoid_state_forming
-				slimeoid.level = level
-				slimeoid.id_user = str(user_data.id_user)
-				slimeoid.id_server = user_data.id_server
+                level = len(str(value))
+                user_data.change_slimes(n=-value)
+                slimeoid.life_state = ewcfg.slimeoid_state_forming
+                slimeoid.level = level
+                slimeoid.id_user = str(user_data.id_user)
+                slimeoid.id_server = user_data.id_server
 
-				user_data.persist()
-				slimeoid.persist()
+                user_data.persist()
+                slimeoid.persist()
 
-				response = "You place a poudrin into a small opening on the console. As you do, a needle shoots up and pricks your finger, intravenously extracting {} slime from your body. The poudrin is then dropped into the gestation tank. Looking through the observation window, you see what was once your slime begin to seep into the tank and accrete around the poudrin. The incubation of a new Slimeoid has begun! {}".format(str(value), ewcfg.emote_slime2)
+                response = "You place a poudrin into a small opening on the console. As you do, a needle shoots up and pricks your finger, intravenously extracting {} slime from your body. The poudrin is then dropped into the gestation tank. Looking through the observation window, you see what was once your slime begin to seep into the tank and accrete around the poudrin. The incubation of a new Slimeoid has begun! {}".format(
+                    str(value), ewcfg.emote_slime2)
 
-		else:
-			response = "You must contribute some of your own slime to create a Slimeoid. Specify how much slime you will sacrifice."
+        else:
+            response = "You must contribute some of your own slime to create a Slimeoid. Specify how much slime you will sacrifice."
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # shape your slimeoid's body
 async def growbody(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You must begin incubating a new slimeoid first."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You must begin incubating a new slimeoid first."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "Your slimeoid is already fully formed."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+        response = "Your slimeoid is already fully formed."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		value = None
-		if cmd.tokens_count > 1:
-			value = cmd.tokens[1]
-			value = value.lower()
-			body = sl_static.body_map.get(value)
-			if body != None:
-				if value in ["a", "b", "c", "d", "e", "f", "g"]:
-					response = " {}".format(body.str_create)
-					slimeoid.body = body.id_body
-					slimeoid.persist()
-				else:
-					response = "Choose an option from the buttons on the body console labelled A through G."
-			else:
-				response = "Choose an option from the buttons on the body console labelled A through G."
-		else:
-			response = "You must specify a body type. Choose an option from the buttons on the body console labelled A through G."
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        value = None
+        if cmd.tokens_count > 1:
+            value = cmd.tokens[1]
+            value = value.lower()
+            body = sl_static.body_map.get(value)
+            if body != None:
+                if value in ["a", "b", "c", "d", "e", "f", "g"]:
+                    response = " {}".format(body.str_create)
+                    slimeoid.body = body.id_body
+                    slimeoid.persist()
+                else:
+                    response = "Choose an option from the buttons on the body console labelled A through G."
+            else:
+                response = "Choose an option from the buttons on the body console labelled A through G."
+        else:
+            response = "You must specify a body type. Choose an option from the buttons on the body console labelled A through G."
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # shape your slimeoid's head
 async def growhead(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You must begin incubating a new slimeoid first."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You must begin incubating a new slimeoid first."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "Your slimeoid is already fully formed."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+        response = "Your slimeoid is already fully formed."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		value = None
-		if cmd.tokens_count > 1:
-			value = cmd.tokens[1]
-			value = value.lower()
-			head = sl_static.head_map.get(value)
-			if head != None:
-				if value in ["a", "b", "c", "d", "e", "f", "g"]:
-					response = " {}".format(head.str_create)
-					slimeoid.head = head.id_head
-					slimeoid.persist()
-				else:
-					response = "Choose an option from the buttons on the head console labelled A through G."
-			else:
-				response = "Choose an option from the buttons on the head console labelled A through G."
-		else:
-			response = "You must specify a head type. Choose an option from the buttons on the head console labelled A through G."
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        value = None
+        if cmd.tokens_count > 1:
+            value = cmd.tokens[1]
+            value = value.lower()
+            head = sl_static.head_map.get(value)
+            if head != None:
+                if value in ["a", "b", "c", "d", "e", "f", "g"]:
+                    response = " {}".format(head.str_create)
+                    slimeoid.head = head.id_head
+                    slimeoid.persist()
+                else:
+                    response = "Choose an option from the buttons on the head console labelled A through G."
+            else:
+                response = "Choose an option from the buttons on the head console labelled A through G."
+        else:
+            response = "You must specify a head type. Choose an option from the buttons on the head console labelled A through G."
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # shape your slimeoid's legs
 async def growlegs(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You must begin incubating a new slimeoid first."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You must begin incubating a new slimeoid first."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "Your slimeoid is already fully formed."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+        response = "Your slimeoid is already fully formed."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		value = None
-		if cmd.tokens_count > 1:
-			value = cmd.tokens[1]
-			value = value.lower()
-			mobility = sl_static.mobility_map.get(value)
-			if mobility != None:
-				if value in ["a", "b", "c", "d", "e", "f", "g"]:
-					response = " {}".format(mobility.str_create)
-					slimeoid.legs = mobility.id_mobility
-					slimeoid.persist()
-				else:
-					response = "Choose an option from the buttons on the mobility console labelled A through G."
-			else:
-				response = "Choose an option from the buttons on the mobility console labelled A through G."
-		else:
-			response = "You must specify means of locomotion. Choose an option from the buttons on the mobility console labelled A through G."
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        value = None
+        if cmd.tokens_count > 1:
+            value = cmd.tokens[1]
+            value = value.lower()
+            mobility = sl_static.mobility_map.get(value)
+            if mobility != None:
+                if value in ["a", "b", "c", "d", "e", "f", "g"]:
+                    response = " {}".format(mobility.str_create)
+                    slimeoid.legs = mobility.id_mobility
+                    slimeoid.persist()
+                else:
+                    response = "Choose an option from the buttons on the mobility console labelled A through G."
+            else:
+                response = "Choose an option from the buttons on the mobility console labelled A through G."
+        else:
+            response = "You must specify means of locomotion. Choose an option from the buttons on the mobility console labelled A through G."
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # shape your slimeoid's weapon
 async def growweapon(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You must begin incubating a new slimeoid first."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You must begin incubating a new slimeoid first."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "Your slimeoid is already fully formed."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+        response = "Your slimeoid is already fully formed."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		value = None
-		if cmd.tokens_count > 1:
-			value = cmd.tokens[1]
-			value = value.lower()
-			offense = sl_static.offense_map.get(value)
-			if offense != None:
-				if value in ["a", "b", "c", "d", "e", "f", "g"]:
-					response = " {}".format(offense.str_create)
-					slimeoid.weapon = offense.id_offense
-					slimeoid.persist()
-				else:
-					response = "Choose an option from the buttons on the weapon console labelled A through G."
-			else:
-				response = "Choose an option from the buttons on the weapon console labelled A through G."
-		else:
-			response = "You must specify a means of attack. Choose an option from the buttons on the weapon console labelled A through G."
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        value = None
+        if cmd.tokens_count > 1:
+            value = cmd.tokens[1]
+            value = value.lower()
+            offense = sl_static.offense_map.get(value)
+            if offense != None:
+                if value in ["a", "b", "c", "d", "e", "f", "g"]:
+                    response = " {}".format(offense.str_create)
+                    slimeoid.weapon = offense.id_offense
+                    slimeoid.persist()
+                else:
+                    response = "Choose an option from the buttons on the weapon console labelled A through G."
+            else:
+                response = "Choose an option from the buttons on the weapon console labelled A through G."
+        else:
+            response = "You must specify a means of attack. Choose an option from the buttons on the weapon console labelled A through G."
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # shape your slimeoid's armor
 async def growarmor(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You must begin incubating a new slimeoid first."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You must begin incubating a new slimeoid first."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "Your slimeoid is already fully formed."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+        response = "Your slimeoid is already fully formed."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		value = None
-		if cmd.tokens_count > 1:
-			value = cmd.tokens[1]
-			value = value.lower()
-			defense = sl_static.defense_map.get(value)
-			if defense != None:
-				if value in ["a", "b", "c", "d", "e", "f", "g"]:
-					response = " {}".format(defense.str_create)
-					slimeoid.armor = defense.id_defense
-					slimeoid.persist()
-				else:
-					response = "Choose an option from the buttons on the armor console labelled A through G."
-			else:
-				response = "Choose an option from the buttons on the armor console labelled A through G."
-		else:
-			response = "You must specify a method of protection. Choose an option from the buttons on the armor console labelled A through G."
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        value = None
+        if cmd.tokens_count > 1:
+            value = cmd.tokens[1]
+            value = value.lower()
+            defense = sl_static.defense_map.get(value)
+            if defense != None:
+                if value in ["a", "b", "c", "d", "e", "f", "g"]:
+                    response = " {}".format(defense.str_create)
+                    slimeoid.armor = defense.id_defense
+                    slimeoid.persist()
+                else:
+                    response = "Choose an option from the buttons on the armor console labelled A through G."
+            else:
+                response = "Choose an option from the buttons on the armor console labelled A through G."
+        else:
+            response = "You must specify a method of protection. Choose an option from the buttons on the armor console labelled A through G."
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # shape your slimeoid's special ability
 async def growspecial(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You must begin incubating a new slimeoid first."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You must begin incubating a new slimeoid first."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "Your slimeoid is already fully formed."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+        response = "Your slimeoid is already fully formed."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		value = None
-		if cmd.tokens_count > 1:
-			value = cmd.tokens[1]
-			value = value.lower()
-			special = sl_static.special_map.get(value)
-			if special != None:
-				if value in ["a", "b", "c", "d", "e", "f", "g"]:
-					response = " {}".format(special.str_create)
-					slimeoid.special = special.id_special
-					slimeoid.persist()
-				else:
-					response = "Choose an option from the buttons on the special attack console labelled A through G."
-			else:
-				response = "Choose an option from the buttons on the special attack console labelled A through G."
-		else:
-			response = "You must specify a special attack type. Choose an option from the buttons on the special attack console labelled A through G."
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        value = None
+        if cmd.tokens_count > 1:
+            value = cmd.tokens[1]
+            value = value.lower()
+            special = sl_static.special_map.get(value)
+            if special != None:
+                if value in ["a", "b", "c", "d", "e", "f", "g"]:
+                    response = " {}".format(special.str_create)
+                    slimeoid.special = special.id_special
+                    slimeoid.persist()
+                else:
+                    response = "Choose an option from the buttons on the special attack console labelled A through G."
+            else:
+                response = "Choose an option from the buttons on the special attack console labelled A through G."
+        else:
+            response = "You must specify a special attack type. Choose an option from the buttons on the special attack console labelled A through G."
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # shape your slimeoid's brain.
 async def growbrain(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You must begin incubating a new slimeoid first."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You must begin incubating a new slimeoid first."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "Your slimeoid is already fully formed."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+        response = "Your slimeoid is already fully formed."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		value = None
-		if cmd.tokens_count > 1:
-			value = cmd.tokens[1]
-			value = value.lower()
-			brain = sl_static.brain_map.get(value)
-			if brain != None:
-				if value in ["a", "b", "c", "d", "e", "f", "g"]:
-					response = " {}".format(brain.str_create)
-					slimeoid.ai = brain.id_brain
-					slimeoid.persist()
-				else:
-					response = "Choose an option from the buttons on the brain console labelled A through G."
-			else:
-				response = "Choose an option from the buttons on the brain console labelled A through G."
-		else:
-			response = "You must specify a brain structure. Choose an option from the buttons on the brain console labelled A through G."
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        value = None
+        if cmd.tokens_count > 1:
+            value = cmd.tokens[1]
+            value = value.lower()
+            brain = sl_static.brain_map.get(value)
+            if brain != None:
+                if value in ["a", "b", "c", "d", "e", "f", "g"]:
+                    response = " {}".format(brain.str_create)
+                    slimeoid.ai = brain.id_brain
+                    slimeoid.persist()
+                else:
+                    response = "Choose an option from the buttons on the brain console labelled A through G."
+            else:
+                response = "Choose an option from the buttons on the brain console labelled A through G."
+        else:
+            response = "You must specify a brain structure. Choose an option from the buttons on the brain console labelled A through G."
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # Name your slimeoid.
 async def nameslimeoid(cmd):
-	name = ""
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    name = ""
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You must begin incubating a new slimeoid first."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You must begin incubating a new slimeoid first."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "Your slimeoid already has a name."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+        response = "Your slimeoid already has a name."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-		if cmd.tokens_count < 2:
-			response = "You must specify a name."
-		else:
-			name = cmd.message.content[(len(ewcfg.cmd_nameslimeoid)):].strip()
+        if cmd.tokens_count < 2:
+            response = "You must specify a name."
+        else:
+            name = cmd.message.content[(len(ewcfg.cmd_nameslimeoid)):].strip()
 
-			if len(name) > 32:
-				response = "That name is too long. ({:,}/32)".format(len(name))
+            if len(name) > 32:
+                response = "That name is too long. ({:,}/32)".format(len(name))
 
-			else:
-				slimeoid.name = str(name)
+            else:
+                slimeoid.name = str(name)
 
-				user_data.persist()
-				slimeoid.persist()
+                user_data.persist()
+                slimeoid.persist()
 
-				response = "You enter the name {} into the console.".format(str(name))
+                response = "You enter the name {} into the console.".format(str(name))
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-#allocate a point to ATK
+
+# allocate a point to ATK
 async def raisemoxie(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You must begin incubating a new slimeoid first."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You must begin incubating a new slimeoid first."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "Your slimeoid is already fully formed."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+        response = "Your slimeoid is already fully formed."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-		if ((slimeoid.atk + slimeoid.defense + slimeoid.intel) >= (slimeoid.level)):
-			response = "You have allocated all of your Slimeoid's potential. Try !lowering some of its attributes first."
-			response += "\nMoxie: {}".format(str(slimeoid.atk))
-			response += "\nGrit: {}".format(str(slimeoid.defense))
-			response += "\nChutzpah: {}".format(str(slimeoid.intel))
+        if ((slimeoid.atk + slimeoid.defense + slimeoid.intel) >= (slimeoid.level)):
+            response = "You have allocated all of your Slimeoid's potential. Try !lowering some of its attributes first."
+            response += "\nMoxie: {}".format(str(slimeoid.atk))
+            response += "\nGrit: {}".format(str(slimeoid.defense))
+            response += "\nChutzpah: {}".format(str(slimeoid.intel))
 
-		else:
-			slimeoid.atk += 1
-			points = (slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel)
+        else:
+            slimeoid.atk += 1
+            points = (slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel)
 
-			user_data.persist()
-			slimeoid.persist()
+            user_data.persist()
+            slimeoid.persist()
 
-			response = "Your gestating slimeoid gains more moxie."
-			response += "\nMoxie: {}".format(str(slimeoid.atk))
-			response += "\nGrit: {}".format(str(slimeoid.defense))
-			response += "\nChutzpah: {}".format(str(slimeoid.intel))
-			response += "\nPoints remaining: {}".format(str(points))
+            response = "Your gestating slimeoid gains more moxie."
+            response += "\nMoxie: {}".format(str(slimeoid.atk))
+            response += "\nGrit: {}".format(str(slimeoid.defense))
+            response += "\nChutzpah: {}".format(str(slimeoid.intel))
+            response += "\nPoints remaining: {}".format(str(points))
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-#allocate a point to ATK
+
+# allocate a point to ATK
 async def lowermoxie(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You must begin incubating a new slimeoid first."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You must begin incubating a new slimeoid first."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "Your slimeoid is already fully formed."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+        response = "Your slimeoid is already fully formed."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-		if (slimeoid.atk <= 0):
-			response = "You cannot reduce your slimeoid's moxie any further."
-			response += "\nMoxie: {}".format(str(slimeoid.atk))
-			response += "\nGrit: {}".format(str(slimeoid.defense))
-			response += "\nChutzpah: {}".format(str(slimeoid.intel))
+        if (slimeoid.atk <= 0):
+            response = "You cannot reduce your slimeoid's moxie any further."
+            response += "\nMoxie: {}".format(str(slimeoid.atk))
+            response += "\nGrit: {}".format(str(slimeoid.defense))
+            response += "\nChutzpah: {}".format(str(slimeoid.intel))
 
-		else:
-			slimeoid.atk -= 1
-			points = (slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel)
+        else:
+            slimeoid.atk -= 1
+            points = (slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel)
 
-			user_data.persist()
-			slimeoid.persist()
+            user_data.persist()
+            slimeoid.persist()
 
-			response = "Your gestating slimeoid loses some moxie."
-			response += "\nMoxie: {}".format(str(slimeoid.atk))
-			response += "\nGrit: {}".format(str(slimeoid.defense))
-			response += "\nChutzpah: {}".format(str(slimeoid.intel))
-			response += "\nPoints remaining: {}".format(str(points))
+            response = "Your gestating slimeoid loses some moxie."
+            response += "\nMoxie: {}".format(str(slimeoid.atk))
+            response += "\nGrit: {}".format(str(slimeoid.defense))
+            response += "\nChutzpah: {}".format(str(slimeoid.intel))
+            response += "\nPoints remaining: {}".format(str(points))
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-#allocate a point to DEF
+
+# allocate a point to DEF
 async def raisegrit(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You must begin incubating a new slimeoid first."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You must begin incubating a new slimeoid first."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "Your slimeoid is already fully formed."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+        response = "Your slimeoid is already fully formed."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-		if ((slimeoid.atk + slimeoid.defense + slimeoid.intel) >= (slimeoid.level)):
-			response = "You have allocated all of your Slimeoid's potential. Try !lowering some of its attributes first."
-			response += "\nMoxie: {}".format(str(slimeoid.atk))
-			response += "\nGrit: {}".format(str(slimeoid.defense))
-			response += "\nChutzpah: {}".format(str(slimeoid.intel))
+        if ((slimeoid.atk + slimeoid.defense + slimeoid.intel) >= (slimeoid.level)):
+            response = "You have allocated all of your Slimeoid's potential. Try !lowering some of its attributes first."
+            response += "\nMoxie: {}".format(str(slimeoid.atk))
+            response += "\nGrit: {}".format(str(slimeoid.defense))
+            response += "\nChutzpah: {}".format(str(slimeoid.intel))
 
-		else:
-			slimeoid.defense += 1
-			points = (slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel)
+        else:
+            slimeoid.defense += 1
+            points = (slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel)
 
-			user_data.persist()
-			slimeoid.persist()
+            user_data.persist()
+            slimeoid.persist()
 
-			response = "Your gestating slimeoid gains more grit."
-			response += "\nMoxie: {}".format(str(slimeoid.atk))
-			response += "\nGrit: {}".format(str(slimeoid.defense))
-			response += "\nChutzpah: {}".format(str(slimeoid.intel))
-			response += "\nPoints remaining: {}".format(str(points))
+            response = "Your gestating slimeoid gains more grit."
+            response += "\nMoxie: {}".format(str(slimeoid.atk))
+            response += "\nGrit: {}".format(str(slimeoid.defense))
+            response += "\nChutzpah: {}".format(str(slimeoid.intel))
+            response += "\nPoints remaining: {}".format(str(points))
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-#allocate a point to ATK
+
+# allocate a point to ATK
 async def lowergrit(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You must begin incubating a new slimeoid first."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You must begin incubating a new slimeoid first."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "Your slimeoid is already fully formed."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+        response = "Your slimeoid is already fully formed."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-		if (slimeoid.defense <= 0):
-			response = "You cannot reduce your slimeoid's grit any further."
-			response += "\nMoxie: {}".format(str(slimeoid.atk))
-			response += "\nGrit: {}".format(str(slimeoid.defense))
-			response += "\nChutzpah: {}".format(str(slimeoid.intel))
+        if (slimeoid.defense <= 0):
+            response = "You cannot reduce your slimeoid's grit any further."
+            response += "\nMoxie: {}".format(str(slimeoid.atk))
+            response += "\nGrit: {}".format(str(slimeoid.defense))
+            response += "\nChutzpah: {}".format(str(slimeoid.intel))
 
-		else:
-			slimeoid.defense -= 1
-			points = (slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel)
+        else:
+            slimeoid.defense -= 1
+            points = (slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel)
 
-			user_data.persist()
-			slimeoid.persist()
+            user_data.persist()
+            slimeoid.persist()
 
-			response = "Your gestating slimeoid loses some grit."
-			response += "\nMoxie: {}".format(str(slimeoid.atk))
-			response += "\nGrit: {}".format(str(slimeoid.defense))
-			response += "\nChutzpah: {}".format(str(slimeoid.intel))
-			response += "\nPoints remaining: {}".format(str(points))
+            response = "Your gestating slimeoid loses some grit."
+            response += "\nMoxie: {}".format(str(slimeoid.atk))
+            response += "\nGrit: {}".format(str(slimeoid.defense))
+            response += "\nChutzpah: {}".format(str(slimeoid.intel))
+            response += "\nPoints remaining: {}".format(str(points))
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-#allocate a point to DEF
+
+# allocate a point to DEF
 async def raisechutzpah(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You must begin incubating a new slimeoid first."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You must begin incubating a new slimeoid first."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "Your slimeoid is already fully formed."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+        response = "Your slimeoid is already fully formed."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-		if ((slimeoid.atk + slimeoid.defense + slimeoid.intel) >= (slimeoid.level)):
-			response = "You have allocated all of your Slimeoid's potential. Try !lowering some of its attributes first."
-			response += "\nMoxie: {}".format(str(slimeoid.atk))
-			response += "\nGrit: {}".format(str(slimeoid.defense))
-			response += "\nChutzpah: {}".format(str(slimeoid.intel))
+        if ((slimeoid.atk + slimeoid.defense + slimeoid.intel) >= (slimeoid.level)):
+            response = "You have allocated all of your Slimeoid's potential. Try !lowering some of its attributes first."
+            response += "\nMoxie: {}".format(str(slimeoid.atk))
+            response += "\nGrit: {}".format(str(slimeoid.defense))
+            response += "\nChutzpah: {}".format(str(slimeoid.intel))
 
-		else:
-			slimeoid.intel += 1
-			points = (slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel)
+        else:
+            slimeoid.intel += 1
+            points = (slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel)
 
-			user_data.persist()
-			slimeoid.persist()
+            user_data.persist()
+            slimeoid.persist()
 
-			response = "Your gestating slimeoid gains more chutzpah."
-			response += "\nMoxie: {}".format(str(slimeoid.atk))
-			response += "\nGrit: {}".format(str(slimeoid.defense))
-			response += "\nChutzpah: {}".format(str(slimeoid.intel))
-			response += "\nPoints remaining: {}".format(str(points))
+            response = "Your gestating slimeoid gains more chutzpah."
+            response += "\nMoxie: {}".format(str(slimeoid.atk))
+            response += "\nGrit: {}".format(str(slimeoid.defense))
+            response += "\nChutzpah: {}".format(str(slimeoid.intel))
+            response += "\nPoints remaining: {}".format(str(points))
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-#allocate a point to ATK
+
+# allocate a point to ATK
 async def lowerchutzpah(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You must begin incubating a new slimeoid first."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You must begin incubating a new slimeoid first."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "Your slimeoid is already fully formed."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+        response = "Your slimeoid is already fully formed."
 
 
-	else:
+    else:
 
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-		if (slimeoid.intel <= 0):
-			response = "You cannot reduce your slimeoid's chutzpah any further."
-			response += "\nMoxie: {}".format(str(slimeoid.atk))
-			response += "\nGrit: {}".format(str(slimeoid.defense))
-			response += "\nChutzpah: {}".format(str(slimeoid.intel))
+        if (slimeoid.intel <= 0):
+            response = "You cannot reduce your slimeoid's chutzpah any further."
+            response += "\nMoxie: {}".format(str(slimeoid.atk))
+            response += "\nGrit: {}".format(str(slimeoid.defense))
+            response += "\nChutzpah: {}".format(str(slimeoid.intel))
 
-		else:
-			slimeoid.intel -= 1
-			points = (slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel)
+        else:
+            slimeoid.intel -= 1
+            points = (slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel)
 
-			user_data.persist()
-			slimeoid.persist()
+            user_data.persist()
+            slimeoid.persist()
 
-			response = "Your gestating slimeoid loses some chutzpah."
-			response += "\nMoxie: {}".format(str(slimeoid.atk))
-			response += "\nGrit: {}".format(str(slimeoid.defense))
-			response += "\nChutzpah: {}".format(str(slimeoid.intel))
-			response += "\nPoints remaining: {}".format(str(points))
+            response = "Your gestating slimeoid loses some chutzpah."
+            response += "\nMoxie: {}".format(str(slimeoid.atk))
+            response += "\nGrit: {}".format(str(slimeoid.defense))
+            response += "\nChutzpah: {}".format(str(slimeoid.intel))
+            response += "\nPoints remaining: {}".format(str(points))
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # complete a slimeoid
 async def spawnslimeoid(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state == ewcfg.life_state_shambler:
-		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	slimeoid = EwSlimeoid(member = cmd.message.author)
-	response = ""
-	#roles_map_user = ewutils.getRoleMap(message.author.roles)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
+    response = ""
+    # roles_map_user = ewutils.getRoleMap(message.author.roles)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
-
-
-	else:
-
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
-
-		if district_data.is_degraded():
-			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-		if slimeoid.life_state == ewcfg.slimeoid_state_active:
-			response = "You have already created a Slimeoid. Dissolve your current slimeoid before incubating a new one."
-
-		elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You have not yet begun incubating a slimeoid."
-
-		else:
-			needsbody = False
-			needshead = False
-			needslegs = False
-			needsarmor = False
-			needsweapon = False
-			needsspecial = False
-			needsbrain = False
-			needsname = False
-			needsstats = False
-			incomplete = False
-
-			if (slimeoid.body == ""):
-				needsbody = True
-				incomplete = True
-			if (slimeoid.head == ""):
-				needshead = True
-				incomplete = True
-			if (slimeoid.legs == ""):
-				needslegs = True
-				incomplete = True
-			if (slimeoid.armor == ""):
-				needsarmor = True
-				incomplete = True
-			if (slimeoid.weapon == ""):
-				needsweapon = True
-				incomplete = True
-			if (slimeoid.special == ""):
-				needsspecial = True
-				incomplete = True
-			if (slimeoid.ai == ""):
-				needsbrain = True
-				incomplete = True
-			if (slimeoid.name == ""):
-				needsname = True
-				incomplete = True
-			if ((slimeoid.atk + slimeoid.defense + slimeoid.intel) < (slimeoid.level)):
-				needsstats = True
-				incomplete = True
-
-			if incomplete == True:
-				response = "Your slimeoid is not yet ready to be spawned from the gestation vat."
-				if needsbody == True:
-					response += "\nIts body has not yet been given a distinct form."
-				if needshead == True:
-					response += "\nIt does not yet have a head."
-				if needslegs == True:
-					response += "\nIt has no means of locomotion."
-				if needsarmor == True:
-					response += "\nIt lacks any form of protection."
-				if needsweapon == True:
-					response += "\nIt lacks a means of attack."
-				if needsspecial == True:
-					response += "\nIt lacks a special ability."
-				if needsbrain == True:
-					response += "\nIt does not yet have a brain."
-				if needsstats == True:
-					response += "\nIt still has potential that must be distributed between Moxie, Grit and Chutzpah."
-				if needsname == True:
-					response += "\nIt needs a name."
-			else:
-				slimeoid.life_state = ewcfg.slimeoid_state_active
-				response = "You press the big red button labelled 'SPAWN'. The console lights up and there is a rush of mechanical noise as the fluid drains rapidly out of the gestation tube. The newly born Slimeoid within writhes in confusion before being sucked down an ejection chute and spat out messily onto the laboratory floor at your feet. Happy birthday, {} the Slimeoid!! {}".format(slimeoid.name, ewcfg.emote_slimeheart)
+    elif user_data.life_state == ewcfg.life_state_corpse:
+        response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
 
-				response += "\n\n{} is a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
-				response += slimeoid_describe(slimeoid)
+    else:
 
-				brain = sl_static.brain_map.get(slimeoid.ai)
-				response += "\n\n" + brain.str_spawn.format(
-					slimeoid_name = slimeoid.name
-				)
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
 
-			user_data.persist()
-			slimeoid.persist()
+        if district_data.is_degraded():
+            response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        if slimeoid.life_state == ewcfg.slimeoid_state_active:
+            response = "You have already created a Slimeoid. Dissolve your current slimeoid before incubating a new one."
+
+        elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+            response = "You have not yet begun incubating a slimeoid."
+
+        else:
+            needsbody = False
+            needshead = False
+            needslegs = False
+            needsarmor = False
+            needsweapon = False
+            needsspecial = False
+            needsbrain = False
+            needsname = False
+            needsstats = False
+            incomplete = False
+
+            if (slimeoid.body == ""):
+                needsbody = True
+                incomplete = True
+            if (slimeoid.head == ""):
+                needshead = True
+                incomplete = True
+            if (slimeoid.legs == ""):
+                needslegs = True
+                incomplete = True
+            if (slimeoid.armor == ""):
+                needsarmor = True
+                incomplete = True
+            if (slimeoid.weapon == ""):
+                needsweapon = True
+                incomplete = True
+            if (slimeoid.special == ""):
+                needsspecial = True
+                incomplete = True
+            if (slimeoid.ai == ""):
+                needsbrain = True
+                incomplete = True
+            if (slimeoid.name == ""):
+                needsname = True
+                incomplete = True
+            if ((slimeoid.atk + slimeoid.defense + slimeoid.intel) < (slimeoid.level)):
+                needsstats = True
+                incomplete = True
+
+            if incomplete == True:
+                response = "Your slimeoid is not yet ready to be spawned from the gestation vat."
+                if needsbody == True:
+                    response += "\nIts body has not yet been given a distinct form."
+                if needshead == True:
+                    response += "\nIt does not yet have a head."
+                if needslegs == True:
+                    response += "\nIt has no means of locomotion."
+                if needsarmor == True:
+                    response += "\nIt lacks any form of protection."
+                if needsweapon == True:
+                    response += "\nIt lacks a means of attack."
+                if needsspecial == True:
+                    response += "\nIt lacks a special ability."
+                if needsbrain == True:
+                    response += "\nIt does not yet have a brain."
+                if needsstats == True:
+                    response += "\nIt still has potential that must be distributed between Moxie, Grit and Chutzpah."
+                if needsname == True:
+                    response += "\nIt needs a name."
+            else:
+                slimeoid.life_state = ewcfg.slimeoid_state_active
+                response = "You press the big red button labelled 'SPAWN'. The console lights up and there is a rush of mechanical noise as the fluid drains rapidly out of the gestation tube. The newly born Slimeoid within writhes in confusion before being sucked down an ejection chute and spat out messily onto the laboratory floor at your feet. Happy birthday, {} the Slimeoid!! {}".format(
+                    slimeoid.name, ewcfg.emote_slimeheart)
+
+                response += "\n\n{} is a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
+                response += slimeoid_describe(slimeoid)
+
+                brain = sl_static.brain_map.get(slimeoid.ai)
+                response += "\n\n" + brain.str_spawn.format(
+                    slimeoid_name=slimeoid.name
+                )
+
+            user_data.persist()
+            slimeoid.persist()
+
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # Destroy a slimeoid
 async def dissolveslimeoid(cmd):
@@ -992,338 +1010,338 @@ async def dissolveslimeoid(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 # Show a player's slimeoid data.
 async def slimeoid(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	member = None
-	selfcheck = True
-	response = ""
+    user_data = EwUser(member=cmd.message.author)
+    member = None
+    selfcheck = True
+    response = ""
 
-	if cmd.mentions_count == 0:
-		selfcheck = True
-		slimeoid = EwSlimeoid(member = cmd.message.author)
-	else:
-		selfcheck = False
-		member = cmd.mentions[0]
-		user_data = EwUser(member = member)
-		slimeoid = EwSlimeoid(member = member)
+    if cmd.mentions_count == 0:
+        selfcheck = True
+        slimeoid = EwSlimeoid(member=cmd.message.author)
+    else:
+        selfcheck = False
+        member = cmd.mentions[0]
+        user_data = EwUser(member=member)
+        slimeoid = EwSlimeoid(member=member)
 
-	if user_data.life_state == ewcfg.life_state_corpse:
-		response = "Slimeoids don't fuck with ghosts."
+    if user_data.life_state == ewcfg.life_state_corpse:
+        response = "Slimeoids don't fuck with ghosts."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-		if selfcheck == True:
-			response = "You have not yet created a slimeoid."
-		else:
-			response = "{} has not yet created a slimeoid.".format(member.display_name)
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        if selfcheck == True:
+            response = "You have not yet created a slimeoid."
+        else:
+            response = "{} has not yet created a slimeoid.".format(member.display_name)
 
-	else:
-		if slimeoid.life_state == ewcfg.slimeoid_state_forming:
-			if selfcheck == True:
-				response = "Your Slimeoid is still forming in the gestation vat. It is about {} feet from end to end.".format(str(slimeoid.level))
-			else:
-				response = "{}'s Slimeoid is still forming in the gestation vat. It is about {} feet from end to end.".format(member.display_name, str(slimeoid.level))
-		elif slimeoid.life_state == ewcfg.slimeoid_state_active:
-			if selfcheck == True:
-				response = "You are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
-			else:
-				response = "{} is accompanied by {}, a {}-foot-tall Slimeoid.".format(member.display_name, slimeoid.name, str(slimeoid.level))
+    else:
+        if slimeoid.life_state == ewcfg.slimeoid_state_forming:
+            if selfcheck == True:
+                response = "Your Slimeoid is still forming in the gestation vat. It is about {} feet from end to end.".format(str(slimeoid.level))
+            else:
+                response = "{}'s Slimeoid is still forming in the gestation vat. It is about {} feet from end to end.".format(member.display_name, str(slimeoid.level))
+        elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+            if selfcheck == True:
+                response = "You are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
+            else:
+                response = "{} is accompanied by {}, a {}-foot-tall Slimeoid.".format(member.display_name, slimeoid.name, str(slimeoid.level))
 
-		response += slimeoid_describe(slimeoid)
+        response += slimeoid_describe(slimeoid)
 
-		cosmetics = bknd_item.inventory(
-			id_user = user_data.id_user,
-			id_server = cmd.guild.id,
-			item_type_filter = ewcfg.it_cosmetic
-		)
+        cosmetics = bknd_item.inventory(
+            id_user=user_data.id_user,
+            id_server=cmd.guild.id,
+            item_type_filter=ewcfg.it_cosmetic
+        )
 
-		# get the cosmetics worn by the slimeoid
-		adorned_cosmetics = []
-		for item in cosmetics:
-			cos = EwItem(id_item = item.get('id_item'))
-			if cos.item_props.get('slimeoid') == 'true':
-				hue = hue_static.hue_map.get(cos.item_props.get('hue'))
-				adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cos.item_props.get('cosmetic_name'))
+        # get the cosmetics worn by the slimeoid
+        adorned_cosmetics = []
+        for item in cosmetics:
+            cos = EwItem(id_item=item.get('id_item'))
+            if cos.item_props.get('slimeoid') == 'true':
+                hue = hue_static.hue_map.get(cos.item_props.get('hue'))
+                adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cos.item_props.get('cosmetic_name'))
 
-		if len(adorned_cosmetics) > 0:
-			response += "\n\nIt has {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, "and"))
+        if len(adorned_cosmetics) > 0:
+            response += "\n\nIt has {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, "and"))
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # read the instructions
 async def instructions(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	#roles_map_user = ewutils.getRoleMap(message.author.roles)
+    user_data = EwUser(member=cmd.message.author)
+    # roles_map_user = ewutils.getRoleMap(message.author.roles)
 
-	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
-		response = "There's no instructions to read here."
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "There's no instructions to read here."
 
-	else:
-		response = "Welcome to SlimeCorp's Brawlden Laboratory Facilities."
-		response += "\n\nThis facility specializes in the emerging technology of Slimeoids, or slime-based artificial lifeforms. Research into the properties of Slimeoids is ongoing, but already great advancements in the field have been made and we are proud to be the first to make them commercially available."
-		response += "\n\nThis laboratory is equipped with everything required for the creation of a Slimeoid from scratch. To create a Slimeoid, you will need to supply one (1) Slime Poudrin, which will serve as the locus around which your Slimeoid will be based. You will also need to supply some Slime. You may supply as much or as little slime as you like, but greater Slime contribution will lead to superior Slimeoid genesis. To begin the Slimeoid creation process, use **!incubateslimeoid** followed by the amount of slime you wish to use."
-		response += "\n\nAfter beginning incubation, you will need to use the console to adjust your Slimeoid's features while it is still forming. Use **!growbody**, **!growhead**, **!growlegs**, **!growweapon**, **!growarmor**, **!growspecial**, or **!growbrain** followed by a letter (A - G) to choose the appearance, abilities, and temperament of your Slimeoid. You will also need to give youe Slimeoid a name. Use **!nameslimeoid** followed by your desired name. These traits may be changed at any time before the incubation is completed."
-		response += "\n\nIn addition to physical features, you will need to allocate your Slimeoid's attributes. Your Slimeoid will have a different amount of potential depending on how much slime you invested in its creation. You must distribute this potential across the three Slimeoid attributes, Moxie, Grit, and Chutzpah. Use **!raisemoxie**, **!lowermoxie**, **!raisegrit**, **!lowergrit**, **!raisechutzpah**, and **!lowerchutzpah** to adjust your Slimeoid's attributes to your liking."
-		await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		response = "\n\nWhen all of your Slimeoid's traits are confirmed, use **!spawnslimeoid** to end the incubation and eject your Slimeoid from the gestation vat. Be aware that once spawned, the Slimeoid's traits are finalized and cannot be changed, so be sure you are happy with your Slimeoid's construction before spawning. Additionally, be aware that you may only have one Slimeoid at a time, meaning should you ever want a new Slimeoid, you will need to euthanise your old one with **!dissolveslimeoid**. SlimeCorp assumes no responsibility for accidents, injuries, infections, physical disabilities, or ideological radicalizations that may occur due to prolonged contact with slime-based lifeforms."
-		response += "\n\nYou can read a full description of your or someone else's Slimeoid with the **!slimeoid** command. Note that your Slimeoid, having been made out of slime extracted from your body, will recognize you as its master and follow you until such time as you choose to dispose of it. It will react to your actions, including when you kill an opponent, when you are killed, when you return from the dead, and when you !howl. In addition, you can also perform activities with your Slimeoid. Try **!observeslimeoid**, **!petslimeoid**, **!walkslimeoid**, and **!playfetch** and see what happens."
-		response += "\n\nSlimeoid research is ongoing, and the effects of a Slimeoid's physical makeup, brain structure, and attribute allocation on its abilities are a rapidly advancing field. Field studies into the effects of these variables on one-on-one Slimeoid battles are set to begin in the near future. In the meantime, report any unusual findings or behaviors to the Cop Killer and Rowdy Fucker, who have much fewer important things to spend their time on than SlimeCorp employees."
-		response += "\n\nThank you for choosing SlimeCorp.{}".format(ewcfg.emote_slimecorp)
+    else:
+        response = "Welcome to SlimeCorp's Brawlden Laboratory Facilities."
+        response += "\n\nThis facility specializes in the emerging technology of Slimeoids, or slime-based artificial lifeforms. Research into the properties of Slimeoids is ongoing, but already great advancements in the field have been made and we are proud to be the first to make them commercially available."
+        response += "\n\nThis laboratory is equipped with everything required for the creation of a Slimeoid from scratch. To create a Slimeoid, you will need to supply one (1) Slime Poudrin, which will serve as the locus around which your Slimeoid will be based. You will also need to supply some Slime. You may supply as much or as little slime as you like, but greater Slime contribution will lead to superior Slimeoid genesis. To begin the Slimeoid creation process, use **!incubateslimeoid** followed by the amount of slime you wish to use."
+        response += "\n\nAfter beginning incubation, you will need to use the console to adjust your Slimeoid's features while it is still forming. Use **!growbody**, **!growhead**, **!growlegs**, **!growweapon**, **!growarmor**, **!growspecial**, or **!growbrain** followed by a letter (A - G) to choose the appearance, abilities, and temperament of your Slimeoid. You will also need to give youe Slimeoid a name. Use **!nameslimeoid** followed by your desired name. These traits may be changed at any time before the incubation is completed."
+        response += "\n\nIn addition to physical features, you will need to allocate your Slimeoid's attributes. Your Slimeoid will have a different amount of potential depending on how much slime you invested in its creation. You must distribute this potential across the three Slimeoid attributes, Moxie, Grit, and Chutzpah. Use **!raisemoxie**, **!lowermoxie**, **!raisegrit**, **!lowergrit**, **!raisechutzpah**, and **!lowerchutzpah** to adjust your Slimeoid's attributes to your liking."
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        response = "\n\nWhen all of your Slimeoid's traits are confirmed, use **!spawnslimeoid** to end the incubation and eject your Slimeoid from the gestation vat. Be aware that once spawned, the Slimeoid's traits are finalized and cannot be changed, so be sure you are happy with your Slimeoid's construction before spawning. Additionally, be aware that you may only have one Slimeoid at a time, meaning should you ever want a new Slimeoid, you will need to euthanise your old one with **!dissolveslimeoid**. SlimeCorp assumes no responsibility for accidents, injuries, infections, physical disabilities, or ideological radicalizations that may occur due to prolonged contact with slime-based lifeforms."
+        response += "\n\nYou can read a full description of your or someone else's Slimeoid with the **!slimeoid** command. Note that your Slimeoid, having been made out of slime extracted from your body, will recognize you as its master and follow you until such time as you choose to dispose of it. It will react to your actions, including when you kill an opponent, when you are killed, when you return from the dead, and when you !howl. In addition, you can also perform activities with your Slimeoid. Try **!observeslimeoid**, **!petslimeoid**, **!walkslimeoid**, and **!playfetch** and see what happens."
+        response += "\n\nSlimeoid research is ongoing, and the effects of a Slimeoid's physical makeup, brain structure, and attribute allocation on its abilities are a rapidly advancing field. Field studies into the effects of these variables on one-on-one Slimeoid battles are set to begin in the near future. In the meantime, report any unusual findings or behaviors to the Cop Killer and Rowdy Fucker, who have much fewer important things to spend their time on than SlimeCorp employees."
+        response += "\n\nThank you for choosing SlimeCorp.{}".format(ewcfg.emote_slimecorp)
 
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 # play with your slimeoid
 async def playfetch(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	slimeoid = EwSlimeoid(member = cmd.message.author)
-	time_now = int(time.time())
+    user_data = EwUser(member=cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
+    time_now = int(time.time())
 
-	if user_data.life_state == ewcfg.life_state_corpse:
-			response = "Slimeoids don't fuck with ghosts."
+    if user_data.life_state == ewcfg.life_state_corpse:
+        response = "Slimeoids don't fuck with ghosts."
 
-	elif user_data.has_soul == 0:
-		response = "You reel back to throw the stick, but your motivation wears thin halfway through. You drop it on the ground with a sigh."
+    elif user_data.has_soul == 0:
+        response = "You reel back to throw the stick, but your motivation wears thin halfway through. You drop it on the ground with a sigh."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You do not have a Slimeoid to play fetch with."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You do not have a Slimeoid to play fetch with."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
-			response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
+        response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
 
-	elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-			response = "{} is too beat up from its last battle to play fetch right now.".format(slimeoid.name)
+    elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
+        response = "{} is too beat up from its last battle to play fetch right now.".format(slimeoid.name)
 
-	else:
-		head = sl_static.head_map.get(slimeoid.head)
-		response = head.str_fetch.format(
-			slimeoid_name = slimeoid.name
-		)
+    else:
+        head = sl_static.head_map.get(slimeoid.head)
+        response = head.str_fetch.format(
+            slimeoid_name=slimeoid.name
+        )
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def petslimeoid(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	slimeoid = EwSlimeoid(member = cmd.message.author)
-	time_now = int(time.time())
-	target = None
-	target_data = None
-	list_ids = None
+    user_data = EwUser(member=cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
+    time_now = int(time.time())
+    target = None
+    target_data = None
+    list_ids = None
 
-	#mentions[0]
-	if cmd.mentions_count > 0:
-		target = cmd.mentions[0]
-		target_data = EwUser(member=target)
+    # mentions[0]
+    if cmd.mentions_count > 0:
+        target = cmd.mentions[0]
+        target_data = EwUser(member=target)
 
-		list_ids = []
+        list_ids = []
 
-		for quadrant in ewcfg.quadrant_ids:
-			quadrant_data = EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
-			if quadrant_data.id_target != -1 and quadrant_data.check_if_onesided() is False:
-				list_ids.append(quadrant_data.id_target)
-			if quadrant_data.id_target2 != -1 and quadrant_data.check_if_onesided() is False:
-				list_ids.append(quadrant_data.id_target2)
+        for quadrant in ewcfg.quadrant_ids:
+            quadrant_data = EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
+            if quadrant_data.id_target != -1 and quadrant_data.check_if_onesided() is False:
+                list_ids.append(quadrant_data.id_target)
+            if quadrant_data.id_target2 != -1 and quadrant_data.check_if_onesided() is False:
+                list_ids.append(quadrant_data.id_target2)
 
+        if target_data.poi != user_data.poi:
+            response = "You can't pet them because they aren't here."
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        elif target_data.id_user not in list_ids:
+            response = "You try to pet {}'s slimeoid, but you're not close enough for them to trust you. Better whip out those quadrants...".format(target.display_name)
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        elif target_data.life_state == ewcfg.life_state_corpse:
+            response = "Slimeoids don't fuck with ghosts.".format(target.display_name)
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        else:
+            slimeoid = EwSlimeoid(member=target)
 
-		if target_data.poi != user_data.poi:
-			response = "You can't pet them because they aren't here."
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		elif target_data.id_user not in list_ids:
-			response = "You try to pet {}'s slimeoid, but you're not close enough for them to trust you. Better whip out those quadrants...".format(target.display_name)
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		elif target_data.life_state == ewcfg.life_state_corpse:
-			response = "Slimeoids don't fuck with ghosts.".format(target.display_name)
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		else:
-			slimeoid = EwSlimeoid(member=target)
+    if user_data.life_state == ewcfg.life_state_corpse:
+        response = "Slimeoids don't fuck with ghosts."
 
-	if user_data.life_state == ewcfg.life_state_corpse:
-			response = "Slimeoids don't fuck with ghosts."
+    elif cmd.mentions_count > 1:
+        response = "Getting a bit too touchy-feely with these slimeoids, eh? You can only pet one at a time."
 
-	elif cmd.mentions_count > 1:
-		response = "Getting a bit too touchy-feely with these slimeoids, eh? You can only pet one at a time."
+    elif user_data.has_soul == 0:
+        response = "The idea doesn't even occur to you because your soul is missing."
 
-	elif user_data.has_soul == 0:
-		response = "The idea doesn't even occur to you because your soul is missing."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You do not have a Slimeoid to pet."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You do not have a Slimeoid to pet."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
+        response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
-			response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+    elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
+        response = "{} whimpers. It's still recovering from being beaten up.".format(slimeoid.name)
 
-	elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-			response = "{} whimpers. It's still recovering from being beaten up.".format(slimeoid.name)
+    else:
 
-	else:
+        armor = sl_static.defense_map.get(slimeoid.armor)
+        response = armor.str_pet.format(
+            slimeoid_name=slimeoid.name
+        )
+        response += " "
+        brain = sl_static.brain_map.get(slimeoid.ai)
+        response += brain.str_pet.format(
+            slimeoid_name=slimeoid.name
+        )
 
-		armor = sl_static.defense_map.get(slimeoid.armor)
-		response = armor.str_pet.format(
-			slimeoid_name = slimeoid.name
-		)
-		response += " "
-		brain = sl_static.brain_map.get(slimeoid.ai)
-		response += brain.str_pet.format(
-			slimeoid_name = slimeoid.name
-		)
-
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def abuseslimeoid(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	slimeoid = EwSlimeoid(member = cmd.message.author)
-	time_now = int(time.time())
-	target = None
-	target_data = None
-	list_ids = None
+    user_data = EwUser(member=cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
+    time_now = int(time.time())
+    target = None
+    target_data = None
+    list_ids = None
 
-	#mentions[0]
-	if cmd.mentions_count > 0:
-		target = cmd.mentions[0]
-		target_data = EwUser(member=target)
+    # mentions[0]
+    if cmd.mentions_count > 0:
+        target = cmd.mentions[0]
+        target_data = EwUser(member=target)
 
-		list_ids = []
+        list_ids = []
 
-		for quadrant in ewcfg.quadrant_ids:
-			quadrant_data = EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
-			if quadrant_data.id_target != -1 and quadrant_data.check_if_onesided() is False:
-				list_ids.append(quadrant_data.id_target)
-			if quadrant_data.id_target2 != -1 and quadrant_data.check_if_onesided() is False:
-				list_ids.append(quadrant_data.id_target2)
+        for quadrant in ewcfg.quadrant_ids:
+            quadrant_data = EwQuadrant(id_server=cmd.guild.id, id_user=cmd.message.author.id, quadrant=quadrant)
+            if quadrant_data.id_target != -1 and quadrant_data.check_if_onesided() is False:
+                list_ids.append(quadrant_data.id_target)
+            if quadrant_data.id_target2 != -1 and quadrant_data.check_if_onesided() is False:
+                list_ids.append(quadrant_data.id_target2)
 
+        if target_data.poi != user_data.poi:
+            response = "You can't beat them up them because they aren't here."
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        elif target_data.id_user not in list_ids:
+            response = "You try to lynch {}'s slimeoid, but you're not close enough for them to trust you. Better whip out those quadrants...".format(target.display_name)
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        elif target_data.life_state == ewcfg.life_state_corpse:
+            response = "Slimeoids don't fuck with ghosts.".format(target.display_name)
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        else:
+            slimeoid = EwSlimeoid(member=target)
 
-		if target_data.poi != user_data.poi:
-			response = "You can't beat them up them because they aren't here."
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		elif target_data.id_user not in list_ids:
-			response = "You try to lynch {}'s slimeoid, but you're not close enough for them to trust you. Better whip out those quadrants...".format(target.display_name)
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		elif target_data.life_state == ewcfg.life_state_corpse:
-			response = "Slimeoids don't fuck with ghosts.".format(target.display_name)
-			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-		else:
-			slimeoid = EwSlimeoid(member=target)
+    if user_data.life_state == ewcfg.life_state_corpse:
+        response = "Slimeoids don't fuck with ghosts."
 
-	if user_data.life_state == ewcfg.life_state_corpse:
-			response = "Slimeoids don't fuck with ghosts."
+    elif cmd.mentions_count > 1:
+        response = "Control your anger! Everybody knows it's more efficient to inflict trauma on one slimeoid at a time."
 
-	elif cmd.mentions_count > 1:
-		response = "Control your anger! Everybody knows it's more efficient to inflict trauma on one slimeoid at a time."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You do not have a Slimeoid to hurt."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You do not have a Slimeoid to hurt."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
+        response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
-			response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+    # elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
+    #		response = "{} whimpers. It's still recovering from being beaten up.".format(slimeoid.name)
 
-	#elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-	#		response = "{} whimpers. It's still recovering from being beaten up.".format(slimeoid.name)
+    else:
 
-	else:
-
-		armor = sl_static.defense_map.get(slimeoid.armor)
-		response = armor.str_abuse.format(
-			slimeoid_name = slimeoid.name
-		)
-		response += " "
-		brain = sl_static.brain_map.get(slimeoid.ai)
-		response += brain.str_abuse.format(
-			slimeoid_name = slimeoid.name
-		)
-		slimeoid.time_defeated = time_now
-		slimeoid.persist()
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        armor = sl_static.defense_map.get(slimeoid.armor)
+        response = armor.str_abuse.format(
+            slimeoid_name=slimeoid.name
+        )
+        response += " "
+        brain = sl_static.brain_map.get(slimeoid.ai)
+        response += brain.str_abuse.format(
+            slimeoid_name=slimeoid.name
+        )
+        slimeoid.time_defeated = time_now
+        slimeoid.persist()
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def walkslimeoid(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	slimeoid = EwSlimeoid(member = cmd.message.author)
-	time_now = int(time.time())
+    user_data = EwUser(member=cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
+    time_now = int(time.time())
 
-	if user_data.life_state == ewcfg.life_state_corpse:
-			response = "Slimeoids don't fuck with ghosts."
+    if user_data.life_state == ewcfg.life_state_corpse:
+        response = "Slimeoids don't fuck with ghosts."
 
-	elif user_data.has_soul == 0:
-		response = "Why take it on a walk? It's not like it understands your needs."
+    elif user_data.has_soul == 0:
+        response = "Why take it on a walk? It's not like it understands your needs."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You do not have a Slimeoid to take for a walk."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You do not have a Slimeoid to take for a walk."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
-			response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
+        response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
 
-	elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-			response = "{} can barely move. It's still recovering from its injuries.".format(slimeoid.name)
+    elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
+        response = "{} can barely move. It's still recovering from its injuries.".format(slimeoid.name)
 
-	else:
-		brain = sl_static.brain_map.get(slimeoid.ai)
-		response = brain.str_walk.format(
-			slimeoid_name = slimeoid.name
-		)
-		poi = poi_static.id_to_poi.get(user_data.poi)
-		response += " With that done, you go for a leisurely stroll around {}, while ".format(poi.str_name)
-		legs = sl_static.mobility_map.get(slimeoid.legs)
-		response += legs.str_walk.format(
-			slimeoid_name = slimeoid.name
-		)
+    else:
+        brain = sl_static.brain_map.get(slimeoid.ai)
+        response = brain.str_walk.format(
+            slimeoid_name=slimeoid.name
+        )
+        poi = poi_static.id_to_poi.get(user_data.poi)
+        response += " With that done, you go for a leisurely stroll around {}, while ".format(poi.str_name)
+        legs = sl_static.mobility_map.get(slimeoid.legs)
+        response += legs.str_walk.format(
+            slimeoid_name=slimeoid.name
+        )
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def observeslimeoid(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	slimeoid = EwSlimeoid(member = cmd.message.author)
-	time_now = int(time.time())
+    user_data = EwUser(member=cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
+    time_now = int(time.time())
 
-	if user_data.life_state == ewcfg.life_state_corpse:
-			response = "Slimeoids don't fuck with ghosts."
+    if user_data.life_state == ewcfg.life_state_corpse:
+        response = "Slimeoids don't fuck with ghosts."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-			response = "You do not have a Slimeoid to observe."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+        response = "You do not have a Slimeoid to observe."
 
-	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
-			response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+    elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
+        response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
 
-	elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-			response = "{} lies totally inert, recuperating from being recently pulverized.".format(slimeoid.name)
+    elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
+        response = "{} lies totally inert, recuperating from being recently pulverized.".format(slimeoid.name)
 
-	else:
-		options = [
-			'body',
-			'weapon',
-			'special',
-			'brain',
-		]
+    else:
+        options = [
+            'body',
+            'weapon',
+            'special',
+            'brain',
+        ]
 
-		roll = random.randrange(len(options))
-		result = options[roll]
+        roll = random.randrange(len(options))
+        result = options[roll]
 
-		if result == 'body':
-			part = sl_static.body_map.get(slimeoid.body)
+        if result == 'body':
+            part = sl_static.body_map.get(slimeoid.body)
 
-		if result == 'weapon':
-			part = sl_static.offense_map.get(slimeoid.weapon)
+        if result == 'weapon':
+            part = sl_static.offense_map.get(slimeoid.weapon)
 
-		if result == 'special':
-			part = sl_static.special_map.get(slimeoid.special)
+        if result == 'special':
+            part = sl_static.special_map.get(slimeoid.special)
 
-		if result == 'brain':
-			part = sl_static.brain_map.get(slimeoid.ai)
+        if result == 'brain':
+            part = sl_static.brain_map.get(slimeoid.ai)
 
-		response = part.str_observe.format(
-			slimeoid_name = slimeoid.name
-		)
+        response = part.str_observe.format(
+            slimeoid_name=slimeoid.name
+        )
 
-	# Send the response to the player.
-	await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def slimeoidbattle(cmd):
@@ -1959,6 +1977,7 @@ async def undress_slimeoid(cmd):
             response = 'Dedorn which cosmetic? Check your **!inventory**.'
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # Check if a negaslimoid exists and describe it
 async def negaslimeoid(cmd):

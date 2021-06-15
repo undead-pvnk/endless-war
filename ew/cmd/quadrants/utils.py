@@ -2,6 +2,7 @@ from ew.backend.quadrants import EwQuadrant
 from ew.static import cfg as ewcfg
 from ew.static import quadrants as quad_static
 
+
 def get_quadrant(cmd, id_quadrant):
     author = cmd.message.author
     quadrant = quad_static.quadrants_map[id_quadrant]

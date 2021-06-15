@@ -19,24 +19,24 @@ debugroom_short = "debugroom"
 debugfish_response = ""
 debugfish_goal = 99999999999
 
-
 theforbiddenoneoneone_desc = "slimexodia"
 forbiddenstuffedcrust_eat = "it's a pizza. whatever."
 forbiddenstuffedcrust_desc = "this sure looks like a pizza."
 
 act_pois = {}
 
+
 def initialize_gamestate(id_server):
-	return
+    return
 
 
 def reel_code():
-	return None
+    return None
 
 
 def debug_code():
-	return None
+    return None
 
 
 def act(cmd_obj, poi, content_tolower):
-	return None
+    return None

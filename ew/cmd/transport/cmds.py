@@ -1,8 +1,7 @@
 import asyncio
 
-from .utils import get_transports_at_stop
-from ew.cmd import move as ewmap
 from ew.backend import item as bknd_item
+from ew.cmd import move as ewmap
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
@@ -13,8 +12,11 @@ from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.transport import EwTransport
+from .utils import get_transports_at_stop
 
 """ Enter a transport vehicle from a transport stop """
+
+
 async def embark(cmd):
     # can only use movement commands in location channels
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
@@ -127,7 +129,10 @@ async def embark(cmd):
         response = "No transport vehicles stop here. Try going to a subway station or a ferry port."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 """ Exit a transport vehicle into its current stop """
+
+
 async def disembark(cmd):
     # can only use movement commands in location channels
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:

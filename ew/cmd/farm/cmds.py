@@ -21,6 +21,8 @@ from ew.utils.district import EwDistrict
 from ew.utils.slimeoid import EwSlimeoid
 
 """ Sow seeds that may eventually be !reaped. """
+
+
 async def sow(cmd):
     user_data = EwUser(member=cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
@@ -148,7 +150,10 @@ async def sow(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 """ Reap planted crops. """
+
+
 async def reap(cmd):
     user_data = EwUser(member=cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:

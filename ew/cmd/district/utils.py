@@ -1,5 +1,6 @@
 import asyncio
 import time
+
 import discord
 
 from ew.static import cfg as ewcfg
@@ -11,10 +12,11 @@ from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 
-
 """
 	Updates/Increments the capture_points values of all districts every time it's called
 """
+
+
 async def capture_tick(id_server):
     # the variables might apparently be accessed before assignment if i didn't declare them here
     cursor = None
@@ -142,12 +144,16 @@ async def capture_tick(id_server):
                         resp_cont_capture_tick.add_response_container(responses)
 
                     dist.persist()
+
+
 # await resp_cont_capture_tick.post()
 
 
 """
 	Coroutine that continually calls capture_tick; is called once per server, and not just once globally
 """
+
+
 async def capture_tick_loop(id_server):
     interval = ewcfg.capture_tick_length
     # causes a capture tick to happen exactly every 10 seconds (the "elapsed" thing might be unnecessary, depending on how long capture_tick ends up taking on average)
@@ -161,6 +167,8 @@ async def capture_tick_loop(id_server):
 """
 	Gives both kingpins the appropriate amount of slime for how many districts they own and lowers the capture_points property of each district by a certain amount, turning them neutral after a while
 """
+
+
 async def give_kingpins_slime_and_decay_capture_points(id_server):
     resp_cont_decay_loop = EwResponseContainer(client=ewutils.get_client(), id_server=id_server)
 

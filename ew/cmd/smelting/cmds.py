@@ -1,9 +1,8 @@
 import random
 
-from .utils import smeltsoul
-from ew.cmd import item as ewitem
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
+from ew.cmd import item as ewitem
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
 from ew.static import cosmetics as static_cosmetics
@@ -13,6 +12,8 @@ from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
 from ew.utils.combat import EwUser
+from .utils import smeltsoul
+
 
 # Smelting command. It's like other games call "crafting"... but BETTER and for FREE!!
 async def smelt(cmd):
@@ -192,6 +193,7 @@ async def smelt(cmd):
 
     # Send response
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # "wcim", "whatcanimake", "whatmake", "usedfor" command - finds the item the player is asking for and tells them all smelting recipes that use that item
 # added by huck on 9/3/2020

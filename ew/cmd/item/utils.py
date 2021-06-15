@@ -8,13 +8,15 @@ from ew.utils.combat import EwUser
 """
     Drop item into current district.
 """
+
+
 def item_drop(
-    id_item = None,
-    other_poi = None
+        id_item = None,
+        other_poi = None
 ):
     try:
-        item_data = EwItem(id_item = id_item)
-        user_data = EwUser(id_user = item_data.id_owner, id_server = item_data.id_server)
+        item_data = EwItem(id_item=id_item)
+        user_data = EwUser(id_user=item_data.id_owner, id_server=item_data.id_server)
         if other_poi == None:
             dest = user_data.poi
         else:
@@ -23,41 +25,46 @@ def item_drop(
         if item_data.item_type == ewcfg.it_cosmetic:
             item_data.item_props["adorned"] = "false"
         item_data.persist()
-        bknd_item.give_item(id_user = dest, id_server = item_data.id_server, id_item = item_data.id_item)
+        bknd_item.give_item(id_user=dest, id_server=item_data.id_server, id_item=item_data.id_item)
     except:
         ewutils.logMsg("Failed to drop item {}.".format(id_item))
+
 
 def item_lootspecific(id_server = None, id_user = None, item_search = None):
     response = ""
     if id_server is not None and id_user is not None:
-        user_data = EwUser(id_user = id_user, id_server = id_server)
+        user_data = EwUser(id_user=id_user, id_server=id_server)
         item_sought = bknd_item.find_item(
-            item_search = item_search,
-            id_server = user_data.id_server,
-            id_user = user_data.poi
+            item_search=item_search,
+            id_server=user_data.id_server,
+            id_user=user_data.poi
         )
         if item_sought is not None:
             item_type = item_sought.get("item_type")
             response += "You found a {}!".format(item_sought.get("name"))
-            can_loot = bknd_item.check_inv_capacity(user_data = user_data, item_type = item_type)
+            can_loot = bknd_item.check_inv_capacity(user_data=user_data, item_type=item_type)
             if can_loot:
                 bknd_item.give_item(
-                    id_item = item_sought.get("id_item"),
-                    id_user = user_data.id_user,
-                    id_server = user_data.id_server
+                    id_item=item_sought.get("id_item"),
+                    id_user=user_data.id_user,
+                    id_server=user_data.id_server
                 )
             else:
                 response += " But you couldn't carry any more {}s, so you tossed it back.".format(item_type)
     return response
 
+
 def soulbind(id_item):
-    item = EwItem(id_item = id_item)
+    item = EwItem(id_item=id_item)
     item.soulbound = True
     item.persist()
+
 
 """
     Find every item matching the search in the player's inventory (returns a list of (non-EwItem) item)
 """
+
+
 def find_item_all(item_search = None, id_user = None, id_server = None, item_type_filter = None, exact_search = True, search_names = False):
     items_sought = []
     props_to_search = [
@@ -80,11 +87,11 @@ def find_item_all(item_search = None, id_user = None, id_server = None, item_typ
         ]
 
     if item_search:
-        items = bknd_item.inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
+        items = bknd_item.inventory(id_user=id_user, id_server=id_server, item_type_filter=item_type_filter)
 
         # find the first (i.e. the oldest) item that matches the search
         for item in items:
-            item_data = EwItem(id_item = item.get('id_item'))
+            item_data = EwItem(id_item=item.get('id_item'))
             for prop in props_to_search:
                 if prop in item_data.item_props and (ewutils.flattenTokenListToString(item_data.item_props.get(prop)) == item_search or (exact_search == False and item_search in ewutils.flattenTokenListToString(item_data.item_props.get(prop)))):
                     items_sought.append(item)
@@ -92,8 +99,8 @@ def find_item_all(item_search = None, id_user = None, id_server = None, item_typ
 
     return items_sought
 
-def surrendersoul(giver = None, receiver = None, id_server=None):
 
+def surrendersoul(giver = None, receiver = None, id_server = None):
     if giver != None and receiver != None:
         receivermodel = EwUser(id_server=id_server, id_user=receiver)
         givermodel = EwUser(id_server=id_server, id_user=giver)
@@ -129,6 +136,7 @@ def surrendersoul(giver = None, receiver = None, id_server=None):
             )
 
             return item_id
+
 
 async def lower_durability(general_item):
     general_item_data = EwItem(id_item=general_item.get('id_item'))

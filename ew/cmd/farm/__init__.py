@@ -1,5 +1,5 @@
-from . import cmds
 from ew.static import cfg as ewcfg
+from . import cmds
 
 cmd_map = {
 
@@ -13,7 +13,7 @@ cmd_map = {
     ewcfg.cmd_fertilize: cmds.cultivate,
     ewcfg.cmd_pesticide: cmds.cultivate,
     ewcfg.cmd_mill: cmds.mill,
-    
+
 }
 
 apt_dm_cmd_map = {
@@ -21,5 +21,5 @@ apt_dm_cmd_map = {
     # !checkfarm
     # Why was this in here btw? it doesnt even work
     ewcfg.cmd_check_farm: cmds.check_farm,
-    
+
 }

@@ -1,6 +1,5 @@
 from . import cmds
 from .utils import *
-from ew.static import cfg as ewcfg
 
 cmd_map = {
 
@@ -10,7 +9,7 @@ cmd_map = {
     # Change your current POI capture progress
     # ewcfg.cmd_annex: cmds.annex,
     # ewcfg.cmd_annex_alt1: cmds.annex,
-    
+
     # Change and use your graffiti signature
     ewcfg.cmd_changespray: cmds.change_spray,
     ewcfg.cmd_tag: cmds.tag,

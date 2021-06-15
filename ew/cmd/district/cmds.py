@@ -11,36 +11,38 @@ from ew.utils.district import EwDistrict
 """
 	Informs the player about their current zone's capture progress
 """
+
+
 async def capture_progress(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	response = ""
+    user_data = EwUser(member=cmd.message.author)
+    response = ""
 
-	poi = poi_static.id_to_poi.get(user_data.poi)
-	response += "**{}**: ".format(poi.str_name)
+    poi = poi_static.id_to_poi.get(user_data.poi)
+    response += "**{}**: ".format(poi.str_name)
 
-	if not user_data.poi in poi_static.capturable_districts:
-		response += "This zone cannot be captured."
-		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    if not user_data.poi in poi_static.capturable_districts:
+        response += "This zone cannot be captured."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-	district_data = EwDistrict(id_server=user_data.id_server, district=user_data.poi)
+    district_data = EwDistrict(id_server=user_data.id_server, district=user_data.poi)
 
-	if district_data.controlling_faction != "":
-		response += "{} control this district. ".format(district_data.controlling_faction.capitalize())
-	elif district_data.capturing_faction != "" and district_data.cap_side != district_data.capturing_faction:
-		response += "{} are de-capturing this district. ".format(district_data.capturing_faction.capitalize())
-	elif district_data.capturing_faction != "":
-		response += "{} are capturing this district. ".format(district_data.capturing_faction.capitalize())
-	else:
-		response += "Nobody has staked a claim to this district yet."
+    if district_data.controlling_faction != "":
+        response += "{} control this district. ".format(district_data.controlling_faction.capitalize())
+    elif district_data.capturing_faction != "" and district_data.cap_side != district_data.capturing_faction:
+        response += "{} are de-capturing this district. ".format(district_data.capturing_faction.capitalize())
+    elif district_data.capturing_faction != "":
+        response += "{} are capturing this district. ".format(district_data.capturing_faction.capitalize())
+    else:
+        response += "Nobody has staked a claim to this district yet."
 
-	response += "\n\n**Current influence: {:,}**\nMinimum influence: {:,}\nMaximum influence: {:,}\nPercentage to maximum influence: {:,}%".format(abs(district_data.capture_points), int(ewcfg.min_influence[district_data.property_class]), int(ewcfg.limit_influence[district_data.property_class]), round((abs(district_data.capture_points) * 100/(ewcfg.limit_influence[district_data.property_class])), 1))
+    response += "\n\n**Current influence: {:,}**\nMinimum influence: {:,}\nMaximum influence: {:,}\nPercentage to maximum influence: {:,}%".format(abs(district_data.capture_points), int(ewcfg.min_influence[district_data.property_class]), int(ewcfg.limit_influence[district_data.property_class]),
+                                                                                                                                                   round((abs(district_data.capture_points) * 100 / (ewcfg.limit_influence[district_data.property_class])), 1))
 
+    # if district_data.time_unlock > 0:
 
-	#if district_data.time_unlock > 0:
+    # response += "\nThis district cannot be captured currently. It will unlock in {}.".format(ewutils.formatNiceTime(seconds = district_data.time_unlock, round_to_minutes = True))
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-
-		#response += "\nThis district cannot be captured currently. It will unlock in {}.".format(ewutils.formatNiceTime(seconds = district_data.time_unlock, round_to_minutes = True))
-	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 # Old capping CMD
 """async def annex(cmd):
@@ -174,34 +176,36 @@ async def capture_progress(cmd):
 
 
 async def change_spray(cmd):
-	user_data = EwUser(member=cmd.message.author)
-	newspray = cmd.message.content[(len(ewcfg.cmd_changespray)):].strip()
+    user_data = EwUser(member=cmd.message.author)
+    newspray = cmd.message.content[(len(ewcfg.cmd_changespray)):].strip()
 
-	if newspray == "":
-		response = "You need to add an image link to change your spray."
-	elif len(newspray) > 400:
-		response = "Fucking christ, are you painting the Sistine Chapel? Use a shorter link."
-	else:
-		response = "Got it. Spray set."
-		user_data.spray = newspray
-		user_data.persist()
+    if newspray == "":
+        response = "You need to add an image link to change your spray."
+    elif len(newspray) > 400:
+        response = "Fucking christ, are you painting the Sistine Chapel? Use a shorter link."
+    else:
+        response = "Got it. Spray set."
+        user_data.spray = newspray
+        user_data.persist()
 
-	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def tag(cmd):
-	user_data = EwUser(member=cmd.message.author)
+    user_data = EwUser(member=cmd.message.author)
 
-	if user_data.life_state in(ewcfg.life_state_enlisted, ewcfg.life_state_kingpin):
-		response = user_data.spray
-	else:
-		response = "Save the spraying for the gangsters. You're either too gay or dead to participate in this sort of thing."
-	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    if user_data.life_state in (ewcfg.life_state_enlisted, ewcfg.life_state_kingpin):
+        response = user_data.spray
+    else:
+        response = "Save the spraying for the gangsters. You're either too gay or dead to participate in this sort of thing."
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 """
     GVS COMMANDS
 """
+
+
 async def shamble(cmd):
     user_data = EwUser(member=cmd.message.author)
 

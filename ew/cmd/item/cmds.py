@@ -4,13 +4,12 @@ import time
 
 import discord
 
-from .utils import find_item_all, item_drop
-from ew.cmd import debug as ewdebug, smelting as ewsmelting
 from ew import prank as ewprank
 from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
 from ew.backend.player import EwPlayer
+from ew.cmd import debug as ewdebug, smelting as ewsmelting
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
 from ew.static import hue as hue_static
@@ -24,6 +23,7 @@ from ew.utils import poi as poi_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
+from .utils import find_item_all, item_drop
 
 
 async def soulextract(cmd):
@@ -34,7 +34,7 @@ async def soulextract(cmd):
             id_user=cmd.message.author.id,
             id_server=cmd.guild.id,
             item_type=ewcfg.it_cosmetic,
-            item_props = {
+            item_props={
                 'id_cosmetic': "soul",
                 'cosmetic_name': "{}'s soul".format(playermodel.display_name),
                 'cosmetic_desc': "The immortal soul of {}. It dances with a vivacious energy inside its jar.\n If you listen to it closely you can hear it whispering numbers: {}.".format(playermodel.display_name, cmd.message.author.id),
@@ -67,7 +67,7 @@ async def soulextract(cmd):
 
 async def returnsoul(cmd):
     usermodel = EwUser(member=cmd.message.author)
-    #soul = bknd_item.find_item(item_search="soul", id_user=cmd.message.author.id, id_server=cmd.guild.id)
+    # soul = bknd_item.find_item(item_search="soul", id_user=cmd.message.author.id, id_server=cmd.guild.id)
     user_inv = bknd_item.inventory(id_user=cmd.message.author.id, id_server=cmd.guild.id, item_type_filter=ewcfg.it_cosmetic)
     soul_item = None
     soul = None
@@ -125,13 +125,11 @@ async def squeeze(cmd):
     else:
 
         playermodel = EwPlayer(id_user=targetmodel.id_user)
-        receivingreport = "" #the receiver of the squeeze gets this in their channel
+        receivingreport = ""  # the receiver of the squeeze gets this in their channel
 
         squeezetext = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
         if len(squeezetext) > 500:
             squeezetext = squeezetext[:-500]
-
-
 
         poi = None
         target_item = None
@@ -161,12 +159,12 @@ async def squeeze(cmd):
             usermodel.persist()
 
             if targetmodel.life_state != ewcfg.life_state_shambler:
-                penalty = (targetmodel.slimes* -0.25)
+                penalty = (targetmodel.slimes * -0.25)
                 targetmodel.change_slimes(n=penalty, source=ewcfg.source_haunted)
                 targetmodel.persist()
 
                 district_data = EwDistrict(district=targetmodel.poi, id_server=cmd.guild.id)
-                district_data.change_slimes(n= -penalty, source=ewcfg.source_squeeze)
+                district_data.change_slimes(n=-penalty, source=ewcfg.source_squeeze)
                 district_data.persist()
 
             if receivingreport != "":
@@ -177,20 +175,22 @@ async def squeeze(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 """
     Dump out a player's inventory.
 """
-async def inventory_print(cmd):
 
+
+async def inventory_print(cmd):
     community_chest = False
     can_message_user = True
     item_type = None
 
     inventory_source = cmd.message.author.id
 
-    player = EwPlayer(id_user = cmd.message.author.id)
+    player = EwPlayer(id_user=cmd.message.author.id)
 
-    user_data = EwUser(id_user = cmd.message.author.id, id_server = player.id_server)
+    user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
     poi = poi_static.id_to_poi.get(user_data.poi)
     if cmd.tokens[0].lower() == ewcfg.cmd_communitychest:
         if poi.community_chest == None:
@@ -253,21 +253,21 @@ async def inventory_print(cmd):
 
     if sort_by_id:
         items = bknd_item.inventory(
-            id_user = inventory_source,
-            id_server = player.id_server,
+            id_user=inventory_source,
+            id_server=player.id_server,
             item_sorting_method='id',
-            item_type_filter = item_type
+            item_type_filter=item_type
         )
     elif sort_by_type:
         items = bknd_item.inventory(
             id_user=inventory_source,
             id_server=player.id_server,
             item_sorting_method='type',
-            item_type_filter = item_type
+            item_type_filter=item_type
         )
     elif search == True:
         items = find_item_all(
-            item_search = ewutils.flattenTokenListToString(cmd.tokens[2:]),
+            item_search=ewutils.flattenTokenListToString(cmd.tokens[2:]),
             id_server=player.id_server,
             id_user=inventory_source,
             exact_search=False,
@@ -277,7 +277,7 @@ async def inventory_print(cmd):
         items = bknd_item.inventory(
             id_user=inventory_source,
             id_server=player.id_server,
-            item_type_filter = item_type
+            item_type_filter=item_type
         )
 
     if community_chest:
@@ -321,10 +321,10 @@ async def inventory_print(cmd):
 
             if not stacking:
                 response_part = "\n{id_item}: {soulbound_style}{name}{soulbound_style}{quantity}".format(
-                    id_item = item.get('id_item'),
-                    name = item.get('name'),
-                    soulbound_style = ("**" if item.get('soulbound') else ""),
-                    quantity = (" x{:,}".format(quantity) if (quantity > 1) else "")
+                    id_item=item.get('id_item'),
+                    name=item.get('name'),
+                    soulbound_style=("**" if item.get('soulbound') else ""),
+                    quantity=(" x{:,}".format(quantity) if (quantity > 1) else "")
                 )
 
                 # Print item type labels if sorting by type and showing a new type of items
@@ -386,9 +386,12 @@ async def inventory_print(cmd):
         else:
             await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 """
     Dump out the visual description of an item.
 """
+
+
 async def item_look(cmd):
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
     author = cmd.message.author
@@ -411,12 +414,12 @@ async def item_look(cmd):
 
     if poi.is_apartment:
         item_sought_closet = bknd_item.find_item(item_search=item_search,
-                                       id_user=str(user_data.id_user) + ewcfg.compartment_id_closet, id_server=server)
+                                                 id_user=str(user_data.id_user) + ewcfg.compartment_id_closet, id_server=server)
         item_sought_fridge = bknd_item.find_item(item_search=item_search,
-                                       id_user=str(user_data.id_user) + ewcfg.compartment_id_fridge, id_server=server)
+                                                 id_user=str(user_data.id_user) + ewcfg.compartment_id_fridge, id_server=server)
         item_sought_decorate = bknd_item.find_item(item_search=item_search,
-                                         id_user=str(user_data.id_user) + ewcfg.compartment_id_decorate,
-                                         id_server=server)
+                                                   id_user=str(user_data.id_user) + ewcfg.compartment_id_decorate,
+                                                   id_server=server)
 
         item_dest.append(item_sought_closet)
         item_dest.append(item_sought_fridge)
@@ -597,7 +600,8 @@ async def item_look(cmd):
                 else:
                     response = "Inspect which item? (check **!inventory**)"
 
-                await fe_utils.send_message(cmd.client, cmd.message.channel,fe_utils.formatMessage(cmd.message.author, response))
+                await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
 
 # this is basically just the item_look command with some other stuff at the bottom
 async def item_use(cmd):
@@ -747,7 +751,6 @@ async def item_use(cmd):
 
 
 async def manually_edit_item_properties(cmd):
-
     if not cmd.message.author.guild_permissions.administrator:
         return
 
@@ -757,14 +760,14 @@ async def manually_edit_item_properties(cmd):
         column_value = cmd.tokens[3]
 
         bknd_core.execute_sql_query("REPLACE INTO items_prop({}, {}, {}) VALUES(%s, %s, %s)".format(
-                ewcfg.col_id_item,
-                ewcfg.col_name,
-                ewcfg.col_value
-            ), (
-                item_id,
-                column_name,
-                column_value
-            ))
+            ewcfg.col_id_item,
+            ewcfg.col_name,
+            ewcfg.col_value
+        ), (
+            item_id,
+            column_name,
+            column_value
+        ))
 
         response = "Edited item with ID {}. It's {} value has been set to {}.".format(item_id, column_name, column_value)
 
@@ -773,9 +776,12 @@ async def manually_edit_item_properties(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, response)
 
+
 """
     Command that lets players !give others items
 """
+
+
 async def give(cmd):
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
     author = cmd.message.author
@@ -886,25 +892,29 @@ async def give(cmd):
 
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 """
     Throw away an item
 """
+
+
 async def discard(cmd):
-    user_data = EwUser(member = cmd.message.author)
+    user_data = EwUser(member=cmd.message.author)
     response = ""
 
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-    item_sought = bknd_item.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None)
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
 
     if item_sought:
-        item = EwItem(id_item = item_sought.get("id_item"))
+        item = EwItem(id_item=item_sought.get("id_item"))
 
         if not item.soulbound:
             if item.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item.id_item == user_data.weapon:
                 if user_data.weaponmarried and item.item_props.get('married') == user_data.id_user:
                     weapon = static_weapons.weapon_map.get(item.item_props.get("weapon_type"))
-                    response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
+                    response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(
+                        weapon.str_weapon)
                     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                 else:
                     user_data.weapon = -1
@@ -914,12 +924,12 @@ async def discard(cmd):
             elif item.item_type == ewcfg.it_weapon and user_data.sidearm >= 0 and item.id_item == user_data.sidearm:
                 if user_data.weaponmarried and item.item_props.get('married') == user_data.id_user:
                     weapon = static_weapons.weapon_map.get(item.item_props.get("weapon_type"))
-                    response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
+                    response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(
+                        weapon.str_weapon)
                     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                 else:
                     user_data.sidearm = -1
                     user_data.persist()
-
 
             # elif item.item_type == ewcfg.it_cosmetic:
             # 	# Prevent the item from being dropped if it is adorned
@@ -927,11 +937,10 @@ async def discard(cmd):
             # 		response = "You need to !dedorn your {} first, before you can throw it away.".format(item_sought.get("name"))
             # 		return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-
             response = "You throw away your " + item_sought.get("name")
-            item_drop(id_item = item.id_item)
+            item_drop(id_item=item.id_item)
 
-            await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+            await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
         else:
             response = "You can't throw away soulbound items."
@@ -943,9 +952,12 @@ async def discard(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 """
     Deletes a food item instead of dropping
 """
+
+
 async def trash(cmd):
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
     author = cmd.message.author
@@ -994,8 +1006,7 @@ async def longdrop(cmd):
     dest_poi = poi_static.id_to_poi.get(destination)
 
     item_search = ewutils.flattenTokenListToString(cmd.tokens[2:])
-    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id,  id_server=user_data.id_server)
-
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=user_data.id_server)
 
     if ewcfg.mutation_id_longarms not in mutations:
         response = "As if anything on you was long enough to do that."
@@ -1005,7 +1016,7 @@ async def longdrop(cmd):
         response = "You don't have that item."
     elif dest_poi == None:
         response = "Never heard of it."
-    elif poi_utils.inaccessible(user_data = user_data, poi = dest_poi) or dest_poi.is_street:
+    elif poi_utils.inaccessible(user_data=user_data, poi=dest_poi) or dest_poi.is_street:
         response = "Your arm hits a wall before it can make the drop off. Shit, probably can't take it over there."
     elif user_data.poi not in dest_poi.neighbors.keys() and dest_poi.id_poi not in poi.mother_districts:
         response = "You can't take it that far. What if a bird or car runs into your hand?"
@@ -1016,7 +1027,8 @@ async def longdrop(cmd):
         elif item_obj.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item_obj.id_item == user_data.weapon:
             if user_data.weaponmarried:
                 weapon = static_weapons.weapon_map.get(item_obj.item_props.get("weapon_type"))
-                response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
+                response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(
+                    weapon.str_weapon)
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             else:
                 user_data.weapon = -1
@@ -1029,7 +1041,7 @@ async def longdrop(cmd):
 
 
 async def skullbash(cmd):
-    user_data = EwUser(member = cmd.message.author)
+    user_data = EwUser(member=cmd.message.author)
     item_stash = bknd_item.inventory(id_user=cmd.message.author.id, id_server=user_data.id_server)
     item_sought = None
     for item_piece in item_stash:
@@ -1056,7 +1068,7 @@ async def skullbash(cmd):
 
 
 async def makecostume(cmd):
-    costumekit = bknd_item.find_item(item_search="costumekit", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
+    costumekit = bknd_item.find_item(item_search="costumekit", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_item)
 
     user_data = EwUser(member=cmd.message.author)
 
@@ -1085,10 +1097,10 @@ async def makecostume(cmd):
     }
 
     new_item_id = bknd_item.item_create(
-        id_server = id_server,
-        id_user = id_user,
-        item_type = ewcfg.it_cosmetic,
-        item_props = item_props
+        id_server=id_server,
+        id_user=id_user,
+        item_type=ewcfg.it_cosmetic,
+        item_props=item_props
     )
 
     response = "You fashion your **{}** Double Halloween costume using the creation kit.".format(item_name)

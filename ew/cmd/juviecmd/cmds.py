@@ -5,19 +5,12 @@ import math
 import random
 import time
 
-from . import utils
-from .utils import mismine
-from .utils import init_grid
-from .utils import get_mining_yield_by_grid_type
-from .utils import print_grid
-from .utils import create_mining_event
-from .utils import gen_scavenge_captcha
-from ew.cmd import item as ewitem
 from ew.backend import item as bknd_item
 from ew.backend import worldevent as bknd_worldevent
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.worldevent import EwWorldEvent
+from ew.cmd import item as ewitem
 from ew.static import cfg as ewcfg
 from ew.static import food as static_food
 from ew.static import items as static_items
@@ -32,6 +25,13 @@ from ew.utils import rolemgr as ewrolemgr
 from ew.utils import stats as ewstats
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
+from . import utils
+from .utils import create_mining_event
+from .utils import gen_scavenge_captcha
+from .utils import get_mining_yield_by_grid_type
+from .utils import init_grid
+from .utils import mismine
+from .utils import print_grid
 
 
 async def crush(cmd):
@@ -144,7 +144,10 @@ async def crush(cmd):
     # Send the response to the player.
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 """ player enlists in a faction/gang """
+
+
 async def enlist(cmd):
     user_data = EwUser(member=cmd.message.author)
     if user_data.life_state == ewcfg.life_state_shambler:
@@ -279,7 +282,10 @@ async def renounce(cmd):
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 """ mine for slime (or endless rocks) """
+
+
 async def mine(cmd):
     market_data = EwMarket(id_server=cmd.message.author.guild.id)
     user_data = EwUser(member=cmd.message.author)
@@ -546,7 +552,10 @@ async def mine(cmd):
     if len(response) > 0:
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 """ mine for slime (or endless rocks) """
+
+
 async def flag(cmd):
     market_data = EwMarket(id_server=cmd.message.author.guild.id)
     user_data = EwUser(member=cmd.message.author)
@@ -667,7 +676,10 @@ async def flag(cmd):
     if len(response) > 0:
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+
 """ scavenge for slime """
+
+
 async def scavenge(cmd):
     market_data = EwMarket(id_server=cmd.message.author.guild.id)
     user_data = EwUser(member=cmd.message.author)
@@ -812,20 +824,23 @@ async def scavenge(cmd):
     else:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You'll find no slime here, this place has been picked clean. Head into the city to try and scavenge some slime."))
 
+
 """ LOL """
+
+
 async def juviemode(cmd):
-	#user_data = EwUser(member = cmd.message.author)
-	response = "What law? Juvies die, bitch."
-	#if user_data.juviemode == 1:
-	#	user_data.juviemode = 0
-	#	user_data.persist()
-	#	response = "You can't fucking take anymore. Slime. You need slime. SLIME. **SLLLLLLLLIIIIIIIIIMMMMMMMEEEEE!!!!!!!**"
-	#elif user_data.life_state != ewcfg.life_state_juvenile:
-	#	response = "You think anyone but a cowardly ass Juvie would follow the law? You're not cut out for that life."
-	#elif user_data.slimelevel > ewcfg.max_safe_level:
-	#	response = "You need to be level 18 and under. You're too plump with slime to start following the law now. Get dead, kid."
-	#else:
-	#	user_data.juviemode = 1
-	#	user_data.persist()
-	#	response = "You summon forth all the cowardice in your heart, to forgo even slime, the most basic joy. You vow to carry no more than 100,000, the NLACakaNM's legal limit, on your person at any time."
-	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    # user_data = EwUser(member = cmd.message.author)
+    response = "What law? Juvies die, bitch."
+    # if user_data.juviemode == 1:
+    #	user_data.juviemode = 0
+    #	user_data.persist()
+    #	response = "You can't fucking take anymore. Slime. You need slime. SLIME. **SLLLLLLLLIIIIIIIIIMMMMMMMEEEEE!!!!!!!**"
+    # elif user_data.life_state != ewcfg.life_state_juvenile:
+    #	response = "You think anyone but a cowardly ass Juvie would follow the law? You're not cut out for that life."
+    # elif user_data.slimelevel > ewcfg.max_safe_level:
+    #	response = "You need to be level 18 and under. You're too plump with slime to start following the law now. Get dead, kid."
+    # else:
+    #	user_data.juviemode = 1
+    #	user_data.persist()
+    #	response = "You summon forth all the cowardice in your heart, to forgo even slime, the most basic joy. You vow to carry no more than 100,000, the NLACakaNM's legal limit, on your person at any time."
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

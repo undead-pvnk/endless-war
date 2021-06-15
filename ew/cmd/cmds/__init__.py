@@ -1,6 +1,5 @@
 from . import cmds
 from .utils import *
-from ew.static import cfg as ewcfg
 
 cmd_map = {
 
@@ -48,11 +47,11 @@ cmd_map = {
     # Slimefest
     ewcfg.cmd_slimefest: cmds.slimefest,
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
     # up till this point it was    #
     # a good spread of general     #
     # purpose cmds. RIP            #
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
     # Show the number of swears in the global swear jar.
     # ewcfg.cmd_swear_jar: cmds.swearjar,
@@ -231,9 +230,9 @@ cmd_map = {
 
 dm_cmd_map = {
 
-	# !help
-	ewcfg.cmd_help: cmds.help,
-	ewcfg.cmd_help_alt3: cmds.help,
+    # !help
+    ewcfg.cmd_help: cmds.help,
+    ewcfg.cmd_help_alt3: cmds.help,
 
     # !commands
     ewcfg.cmd_commands_alt1: cmds.commands,
