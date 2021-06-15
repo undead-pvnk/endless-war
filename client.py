@@ -47,7 +47,7 @@ import ew.kingpin as ewkingpin #8
 import ew.market_package as ewmarket
 import ew.move_package as ewmap
 import ew.mutation as ewmutation #16
-import ew.quadrants as ewquadrants #23
+import ew.quadrants_package as ewquadrants #23
 import ew.race as ewrace #19
 import ew.slimeoid_package as ewslimeoid
 import ew.slimetwitter as ewslimetwitter #5
@@ -61,7 +61,7 @@ import ew.static.items as static_items
 import ew.static.poi as poi_static
 import ew.static.vendors as vendors
 import ew.static.weather as weather_static
-import ew.transport_package as ewtransport #7
+import ew.transport_package as ewtransport
 import ew.utils.core as ewutils
 import ew.utils.frontend as fe_utils
 import ew.utils.item as itm_utils
@@ -672,17 +672,17 @@ cmd_map = {
 	ewcfg.cmd_summongvsenemy: ewhunting.summongvsenemy,
 
 	# troll romance
-	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
-	ewcfg.cmd_clear_quadrant: ewquadrants.clear_quadrant,
-	ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
-	ewcfg.cmd_get_sloshed: ewquadrants.get_sloshed,
-	ewcfg.cmd_get_sloshed_alt1: ewquadrants.get_sloshed,
-	ewcfg.cmd_get_roseate: ewquadrants.get_roseate,
-	ewcfg.cmd_get_roseate_alt1: ewquadrants.get_roseate,
-	ewcfg.cmd_get_violacious: ewquadrants.get_violacious,
-	ewcfg.cmd_get_violacious_alt1: ewquadrants.get_violacious,
-	ewcfg.cmd_get_policitous: ewquadrants.get_policitous,
-	ewcfg.cmd_get_policitous_alt1: ewquadrants.get_policitous,
+	#ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
+	#ewcfg.cmd_clear_quadrant: ewquadrants.clear_quadrant,
+	#ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
+	#ewcfg.cmd_get_sloshed: ewquadrants.get_sloshed,
+	#ewcfg.cmd_get_sloshed_alt1: ewquadrants.get_sloshed,
+	#ewcfg.cmd_get_roseate: ewquadrants.get_roseate,
+	#ewcfg.cmd_get_roseate_alt1: ewquadrants.get_roseate,
+	#ewcfg.cmd_get_violacious: ewquadrants.get_violacious,
+	#ewcfg.cmd_get_violacious_alt1: ewquadrants.get_violacious,
+	#ewcfg.cmd_get_policitous: ewquadrants.get_policitous,
+	#ewcfg.cmd_get_policitous_alt1: ewquadrants.get_policitous,
 
 	# mutations
 	ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
@@ -1036,17 +1036,17 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_weather: ewcmd.weather,
 
 	# troll romance
-	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
-	ewcfg.cmd_clear_quadrant: ewquadrants.clear_quadrant,
-	ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
-	ewcfg.cmd_get_sloshed: ewquadrants.get_sloshed,
-	ewcfg.cmd_get_sloshed_alt1: ewquadrants.get_sloshed,
-	ewcfg.cmd_get_roseate: ewquadrants.get_roseate,
-	ewcfg.cmd_get_roseate_alt1: ewquadrants.get_roseate,
-	ewcfg.cmd_get_violacious: ewquadrants.get_violacious,
-	ewcfg.cmd_get_violacious_alt1: ewquadrants.get_violacious,
-	ewcfg.cmd_get_policitous: ewquadrants.get_policitous,
-	ewcfg.cmd_get_policitous_alt1: ewquadrants.get_policitous,
+	#ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
+	#ewcfg.cmd_clear_quadrant: ewquadrants.clear_quadrant,
+	#ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
+	#ewcfg.cmd_get_sloshed: ewquadrants.get_sloshed,
+	#ewcfg.cmd_get_sloshed_alt1: ewquadrants.get_sloshed,
+	#ewcfg.cmd_get_roseate: ewquadrants.get_roseate,
+	#ewcfg.cmd_get_roseate_alt1: ewquadrants.get_roseate,
+	#ewcfg.cmd_get_violacious: ewquadrants.get_violacious,
+	#ewcfg.cmd_get_violacious_alt1: ewquadrants.get_violacious,
+	#ewcfg.cmd_get_policitous: ewquadrants.get_policitous,
+	#ewcfg.cmd_get_policitous_alt1: ewquadrants.get_policitous,
 
 	# !booru
 	#ewcfg.cmd_booru: ewcmd.booru,
@@ -1143,6 +1143,7 @@ cmd_modules = [wep,
 			   ewmarket,
 			   ewspooky,
 			   ewtransport,
+			   ewquadrants,
 ]
 
 for mod in cmd_modules:
