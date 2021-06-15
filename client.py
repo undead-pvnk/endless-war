@@ -32,7 +32,7 @@ import ew.backend.server as bknd_server
 import ew.book_package as ewbook
 import ew.casino_package as ewcasino
 import ew.cmd_package as ewcmd
-import ew.cosmeticitem as ewcosmeticitem #21
+import ew.cosmeticitem_package as ewcosmeticitem
 import ew.debug as ewdebug # 9
 import ew.district as ewdistrict #11
 import ew.dungeons as ewdungeons #3
@@ -251,7 +251,7 @@ cmd_map = {
 	#ewcfg.cmd_releaseprop: ewapt.releaseprop,
 	#ewcfg.cmd_releasefish: ewapt.releasefish,
 	#ewcfg.cmd_unpot: ewapt.unpot,
-	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
+	#ewcfg.cmd_smoke: ewcosmeticitem.smoke,
 
 	#ewcfg.cmd_frame: ewapt.frame,
 	#ewcfg.cmd_extractsoul: ewitem.soulextract,
@@ -546,11 +546,11 @@ cmd_map = {
 	ewcfg.cmd_scavenge_alt2: ewjuviecmd.scavenge,
 
 	#cosmetics
-	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
-	ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
-	ewcfg.cmd_dedorn_alt1: ewcosmeticitem.dedorn,
-	ewcfg.cmd_sew: ewcosmeticitem.sew,
-	ewcfg.cmd_retrofit: ewcosmeticitem.retrofit,
+	#ewcfg.cmd_adorn: ewcosmeticitem.adorn,
+	#ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
+	#ewcfg.cmd_dedorn_alt1: ewcosmeticitem.dedorn,
+	#ewcfg.cmd_sew: ewcosmeticitem.sew,
+	#ewcfg.cmd_retrofit: ewcosmeticitem.retrofit,
 	#ewcfg.cmd_fashion: ewcmd.fashion,
 	#ewcfg.cmd_fashion_alt1: ewcmd.fashion,
 
@@ -563,10 +563,10 @@ cmd_map = {
 	#ewcfg.cmd_checkstats: ewcmd.check_stats,
 	#ewcfg.cmd_makebp : ewcmd.make_bp,
 	#ewcfg.cmd_exalt: ewkingpin.exalt,
-	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
-	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
-	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
-	ewcfg.cmd_dyecosmetic_alt3: ewcosmeticitem.dye,
+	#ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
+	#ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
+	#ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
+	#ewcfg.cmd_dyecosmetic_alt3: ewcosmeticitem.dye,
 
 	#smelting
 	ewcfg.cmd_smelt: ewsmelting.smelt,
@@ -1006,9 +1006,9 @@ apt_dm_cmd_map = {
 	ewcfg.cmd_slimeoid: ewslimeoid.slimeoid,
 
 	# !adorn and !dedorn
-	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
-	ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
-	ewcfg.cmd_dedorn_alt1: ewcosmeticitem.dedorn,
+	#ewcfg.cmd_adorn: ewcosmeticitem.adorn,
+	#ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
+	#ewcfg.cmd_dedorn_alt1: ewcosmeticitem.dedorn,
 
 	# !smelt
 	ewcfg.cmd_smelt: ewsmelting.smelt,
@@ -1052,10 +1052,10 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_booru: ewcmd.booru,
 
 	# dye your clothes
-	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
-	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
-	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
-	ewcfg.cmd_dyecosmetic_alt3: ewcosmeticitem.dye,
+	#ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
+	#ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
+	#ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
+	#ewcfg.cmd_dyecosmetic_alt3: ewcosmeticitem.dye,
 
 	# give an item to another player
 	#ewcfg.cmd_give: ewitem.give,
@@ -1093,7 +1093,7 @@ apt_dm_cmd_map = {
 	ewcfg.cmd_scout_alt1: ewmap.scout,
 
 	# !smoke cause you're cool
-	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
+	#ewcfg.cmd_smoke: ewcosmeticitem.smoke,
 
 	# !squeeze
 	#ewcfg.cmd_squeeze: ewitem.squeeze,
@@ -1128,7 +1128,7 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_longdrop: ewitem.longdrop,
 }
 
-cmd_modules = [wep, ewapt, ewbook, ewitem, ewcmd, ewads, ewcasino]
+cmd_modules = [wep, ewapt, ewbook, ewitem, ewcmd, ewads, ewcasino, ewcosmeticitem]
 
 for mod in cmd_modules:
 	try:
