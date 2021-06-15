@@ -40,7 +40,7 @@ import ew.faction_package as ewfaction
 import ew.farm_package as ewfarm
 import ew.fish_package as ewfish
 import ew.food_package as ewfood
-import ew.hunting as ewhunting #3
+import ew.hunting_package as ewhunting
 import ew.item_package as ewitem
 import ew.juviecmd_package as ewjuviecmd
 import ew.kingpin as ewkingpin #8
@@ -667,9 +667,9 @@ cmd_map = {
 	#ewcfg.cmd_battlenegaslimeoid_alt3: ewslimeoid.negaslimeoidbattle,
 
 	# Enemies
-	ewcfg.cmd_summonenemy: ewhunting.summonenemy,
+	#ewcfg.cmd_summonenemy: ewhunting.summonenemy,
 	ewcfg.cmd_deleteallenemies: bknd_hunt.delete_all_enemies,
-	ewcfg.cmd_summongvsenemy: ewhunting.summongvsenemy,
+	#ewcfg.cmd_summongvsenemy: ewhunting.summongvsenemy,
 
 	# troll romance
 	#ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -1152,6 +1152,7 @@ cmd_modules = [
 	ewfish,
 	ewfood,
 	ewjuviecmd,
+	ewhunting,
 ]
 
 for mod in cmd_modules:
