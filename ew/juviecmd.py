@@ -5,7 +5,7 @@ import math
 import random
 import time
 
-from . import item_package as ewitem
+from .cmd import item as ewitem
 from .backend import item as bknd_item
 from .backend import worldevent as bknd_worldevent
 from .backend.item import EwItem

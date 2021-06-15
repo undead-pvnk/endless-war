@@ -7,8 +7,7 @@ from copy import deepcopy
 
 import discord
 
-from . import ads_package as ewads
-from . import apt_package as ewapt
+from .cmd import ads as ewads, apt as ewapt
 from .backend import ads as bknd_ads
 from .backend import core as bknd_core
 from .backend.ads import EwAd
@@ -677,7 +676,7 @@ async def move(cmd=None, isApt=False):
         return await fe_utils.send_message(cmd.client, cmd.message.channel,
                                           fe_utils.formatMessage(cmd.message.author, "You're already there, bitch."))
     elif isApt and poi.id_poi == user_data.poi[3:]:
-        return await ewapt.cmds.depart(cmd=cmd)
+        return await ew.cmd.apt_package.cmds.depart(cmd=cmd)
     flamestate = EwGamestate(id_server=user_data.id_server, id_state='flamethrower')
     if 'n4office' == poi.id_poi and flamestate.bit == 1:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You open the elevator, and are immediately met with fire spitting out of the elevator. Over the crackling flames you can hear a woman screaming \"AAAAAAAAGH FUCK YOU DIE DIE DIE DIE!!!!!\". You're guessing entering now is a bad idea."))
@@ -769,7 +768,7 @@ async def move(cmd=None, isApt=False):
         msg_walk_start = await fe_utils.send_message(cmd.client, cmd.message.channel,
                                                     fe_utils.formatMessage(cmd.message.author, walk_response))
         if isApt:
-            await ewapt.cmds.depart(cmd=cmd, isGoto=True, movecurrent=move_current)
+            await ew.cmd.apt_package.cmds.depart(cmd=cmd, isGoto=True, movecurrent=move_current)
 
     time_move_end = int(time.time())
 
@@ -947,7 +946,7 @@ async def move(cmd=None, isApt=False):
                                                        fe_utils.formatMessage(cmd.message.author, ad_response))
 
         if intoApt and ewutils.moves_active[cmd.message.author.id] == move_current:
-            await ewapt.cmds.retire(cmd=cmd, isGoto=True, movecurrent=move_current)
+            await ew.cmd.apt_package.cmds.retire(cmd=cmd, isGoto=True, movecurrent=move_current)
         await asyncio.sleep(30)
         try:
             await msg_walk_start.delete()

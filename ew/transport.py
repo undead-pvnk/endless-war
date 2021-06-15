@@ -1,6 +1,6 @@
 import asyncio
 
-from . import move_package as ewmap
+from .cmd import move as ewmap
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 from .static import cfg as ewcfg

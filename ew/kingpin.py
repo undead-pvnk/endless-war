@@ -3,9 +3,7 @@
 """
 import re
 
-from . import cmd_package as ewcmd
-from . import item_package as ewitem
-from . import move_package as ewmap
+from .cmd import cmds as ewcmd, item as ewitem, move as ewmap
 from .backend import item as bknd_item
 from .static import cfg as ewcfg
 from .static import cosmetics

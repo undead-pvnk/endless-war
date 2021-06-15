@@ -5616,7 +5616,8 @@ def set_client(cl):
 #     scream += "A"
 #     
 # print(scream)
-from .. import debug_package as ewdebug
+from ..cmd import debug as ewdebug
+
 debugroom = ewdebug.debugroom
 debugroom_short = ewdebug.debugroom_short
 debugpiers = ewdebug.debugpiers

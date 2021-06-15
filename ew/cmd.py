@@ -1,14 +1,11 @@
 import asyncio
-from ew.backend import server
 import random
 import sys
 import time
 
 from . import faction as ewfaction
-from . import item_package as ewitem
+from ew.cmd import item as ewitem
 from . import prank as ewprank
-from . import wep_package as ewwep
-from . import apt_package as ewapt
 from .backend import core as bknd_core
 from .backend import hunting as bknd_hunt
 from .backend import item as bknd_item
@@ -1906,7 +1903,7 @@ async def store_item(cmd):
 	if poi.community_chest != None:
 		return await ewfaction.store(cmd)
 	elif poi.is_apartment:
-		return await ewapt.cmds.store_item(cmd)
+		return await ew.cmd.apt_package.cmds.store_item(cmd)
 		#response = "Try that in a DM to ENDLESS WAR."
 	else:
 		response = "There is no storage here, public or private."
@@ -1919,7 +1916,7 @@ async def remove_item(cmd):
 	if poi.community_chest != None:
 		return await ewfaction.take(cmd)
 	elif poi.is_apartment:
-		return await ewapt.cmds.remove_item(cmd)
+		return await ew.cmd.apt_package.cmds.remove_item(cmd)
 		#response = "Try that in a DM to ENDLESS WAR."
 	else:
 		response = "There is no storage here, public or private."
@@ -2169,7 +2166,7 @@ async def toss_off_cliff(cmd):
 					response = "There's nobody here."
 				return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 			else:
-				return await ewitem.cmds.discard(cmd=cmd)
+				return await ew.cmd.item_package.cmds.discard(cmd=cmd)
 		else:
 			response = "You don't have that item."
 			return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -4258,7 +4255,7 @@ def item_commands(cmd):
 
 async def shut_down_bot(cmd):
 	if not cmd.message.author.guild_permissions.administrator:
-		return await ewwep.cmds.suicide(cmd=cmd)
+		return await ew.cmd.wep_package.cmds.suicide(cmd=cmd)
 
 	ewutils.logMsg('Goodbye!')
 	await asyncio.sleep(2)

@@ -1,6 +1,6 @@
 import random
 
-from . import item_package as ewitem
+from .cmd import item as ewitem
 from .backend import item as bknd_item
 from .backend.item import EwItem
 from .static import cfg as ewcfg

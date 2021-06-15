@@ -19,8 +19,8 @@ import traceback
 
 import discord
 
-import ew.ads_package as ewads
-import ew.apt_package as ewapt
+import ew.cmd as cmds
+import ew.cmd.apt as ewapt
 import ew.backend.ads as bknd_ads
 import ew.backend.core as bknd_core
 import ew.backend.farm as bknd_farm
@@ -29,31 +29,16 @@ import ew.backend.hunting as bknd_hunt
 import ew.backend.item as bknd_item
 import ew.backend.player as bknd_player
 import ew.backend.server as bknd_server
-import ew.book_package as ewbook
-import ew.casino_package as ewcasino
-import ew.cmd_package as ewcmd
-import ew.cosmeticitem_package as ewcosmeticitem
-import ew.debug_package as ewdebug
-import ew.district_package as ewdistrict
-import ew.dungeons_package as ewdungeons
-import ew.faction_package as ewfaction
-import ew.farm_package as ewfarm
-import ew.fish_package as ewfish
-import ew.food_package as ewfood
-import ew.hunting_package as ewhunting
-import ew.item_package as ewitem
-import ew.juviecmd_package as ewjuviecmd
-import ew.kingpin_package as ewkingpin
-import ew.market_package as ewmarket
-import ew.move_package as ewmap
-import ew.mutation_package as ewmutation
-import ew.quadrants_package as ewquadrants
-import ew.race_package as ewrace
-import ew.slimeoid_package as ewslimeoid
-import ew.slimetwitter_package as ewslimetwitter
-import ew.smelting_package as ewsmelting
-import ew.spooky_package as ewspooky
-import ew.sports_package as ewsports
+import ew.cmd.cmds as ewcmd
+import ew.cmd.cosmeticitem as ewcosmeticitem
+import ew.cmd.debug as ewdebug
+import ew.cmd.district as ewdistrict
+import ew.cmd.dungeons as ewdungeons
+import ew.cmd.item as ewitem
+import ew.cmd.market as ewmarket
+import ew.cmd.move as ewmap
+import ew.cmd.slimeoid as ewslimeoid
+import ew.cmd.sports as ewsports
 import ew.static.cfg as ewcfg
 import ew.static.cosmetics as cosmetics
 import ew.static.food as static_food
@@ -61,7 +46,7 @@ import ew.static.items as static_items
 import ew.static.poi as poi_static
 import ew.static.vendors as vendors
 import ew.static.weather as weather_static
-import ew.transport_package as ewtransport
+import ew.cmd.transport as ewtransport
 import ew.utils.core as ewutils
 import ew.utils.frontend as fe_utils
 import ew.utils.item as itm_utils
@@ -70,7 +55,6 @@ import ew.utils.loop as loop_utils
 import ew.utils.poi as poi_utils
 import ew.utils.rolemgr as ewrolemgr
 import ew.utils.weather as bknd_weather
-import ew.wep_package as wep
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.market import EwStock
@@ -144,50 +128,9 @@ dm_cmd_map = {}
 # Map of commands only allowed in dms while in an apartment
 apt_dm_cmd_map = {}
 
-cmd_modules = [
-	wep,
-	ewapt,
-	ewbook,
-	ewitem,
-	ewcmd,
-	ewads,
-	ewcasino,
-	ewcosmeticitem,
-	ewdebug,
-	ewdistrict,
-	ewslimeoid,
-	ewmap,
-	ewmarket,
-	ewspooky,
-	ewtransport,
-	ewquadrants,
-	ewmutation,
-	ewrace,
-	ewfarm,
-	ewfaction,
-	ewfish,
-	ewfood,
-	ewjuviecmd,
-	ewhunting,
-	ewkingpin,
-	ewslimetwitter,
-	ewsmelting,
-	ewsports
-]
-
-for mod in cmd_modules:
-	try:
-		cmd_map.update(mod.cmd_map)
-	except:
-		pass
-	try:
-		dm_cmd_map.update(mod.dm_cmd_map)
-	except:
-		pass
-	try:
-		apt_dm_cmd_map.update(mod.apt_dm_cmd_map)
-	except:
-		pass
+cmd_map.update(cmds.cmd_map)
+dm_cmd_map.update(cmds.dm_cmd_map)
+apt_dm_cmd_map.update(cmds.apt_dm_cmd_map)
 
 debug = False
 db_prefix = '--db='
@@ -917,7 +860,7 @@ async def on_message(message):
 				if cmd_fnc:
 					return await cmd_fnc(cmd_obj)
 			elif ewcfg.cmd_gvs_grabbrainz in cmd_obj.message.content.lower():
-				return await ewcmd.cmds.gvs_grabbrainz(cmd_obj)
+				return await ew.cmd.cmd_package.cmds.gvs_grabbrainz(cmd_obj)
 			else:
 				# Only send the help response once every thirty seconds. There's no need to spam it.
 				# Also, don't send out response if the user doesn't actually type a command.
@@ -1268,9 +1211,9 @@ async def on_message(message):
 
 		# AWOOOOO
 		elif re_awoo.match(cmd):
-			return await ewcmd.cmds.cmd_howl(cmd_obj)
+			return await ew.cmd.cmd_package.cmds.cmd_howl(cmd_obj)
 		elif re_moan.match(cmd):
-			return await ewcmd.cmds.cmd_moan(cmd_obj)
+			return await ew.cmd.cmd_package.cmds.cmd_moan(cmd_obj)
 
 		# Debug command to override the role of a user
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'setrole'):
@@ -1396,13 +1339,13 @@ async def on_message(message):
 
 	elif content_tolower.find(ewcfg.cmd_howl) >= 0 or content_tolower.find(ewcfg.cmd_howl_alt1) >= 0 or re_awoo.match(content_tolower):
 		""" Howl if !howl is in the message at all. """
-		return await ewcmd.cmds.cmd_howl(ewcmd.EwCmd(
+		return await ew.cmd.cmd_package.cmds.cmd_howl(ewcmd.EwCmd(
 			message = message,
 			client = client,
 			guild = message.guild
 		))
 	elif content_tolower.find(ewcfg.cmd_moan) >= 0 or re_moan.match(content_tolower):
-		return await ewcmd.cmds.cmd_moan(ewcmd.EwCmd(
+		return await ew.cmd.cmd_package.cmds.cmd_moan(ewcmd.EwCmd(
 			message=message,
 			client=client,
 			guild = message.guild

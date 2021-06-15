@@ -4,8 +4,7 @@ import random
 import shlex
 import time
 
-from . import cmd_package as ewcmd
-from . import item_package as ewitem
+from .cmd import cmds as ewcmd, item as ewitem
 from .backend import item as bknd_item
 from .backend.item import EwItem
 from .static import cfg as ewcfg

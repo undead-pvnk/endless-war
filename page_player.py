@@ -9,7 +9,7 @@ import html
 
 import ew.static.cfg as ewcfg
 import ew.backend.core as bknd_core
-import ew.cmd_package as ewcmd
+import ew.cmd.cmds as ewcmd
 
 from ew.utils.combat import EwUser
 from ew.backend.player import EwPlayer

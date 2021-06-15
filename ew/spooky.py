@@ -6,8 +6,7 @@ import random
 import re
 import time
 
-from . import move_package as ewmap
-from . import slimeoid_package as ewslimeoid
+from .cmd import move as ewmap, slimeoid as ewslimeoid
 from .backend import core as bknd_core
 from .backend import item as bknd_item
 from .backend.market import EwMarket
