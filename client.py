@@ -46,9 +46,9 @@ import ew.juviecmd as ewjuviecmd #11
 import ew.kingpin as ewkingpin #8
 import ew.market_package as ewmarket
 import ew.move_package as ewmap
-import ew.mutation_package as ewmutation #16
+import ew.mutation_package as ewmutation
 import ew.quadrants_package as ewquadrants
-import ew.race as ewrace #19
+import ew.race_package as ewrace #19
 import ew.slimeoid_package as ewslimeoid
 import ew.slimetwitter as ewslimetwitter #5
 import ew.smelting as ewsmelting #7
@@ -869,24 +869,24 @@ cmd_map = {
 	# ewcfg.cmd_gvs_brainz: ewcmd.gvs_brainz,
 
 	# race
-	ewcfg.cmd_set_race: ewrace.set_race,
-	ewcfg.cmd_set_race_alt1: ewrace.set_race,
-	ewcfg.cmd_exist: ewrace.exist,
-	ewcfg.cmd_ree: ewrace.ree,
-	ewcfg.cmd_autocannibalize: ewrace.autocannibalize,
-	ewcfg.cmd_autocannibalize_alt1: ewrace.autocannibalize,
-	ewcfg.cmd_rattle: ewrace.rattle,
-	ewcfg.cmd_beep: ewrace.beep,
-	ewcfg.cmd_yiff: ewrace.yiff,
-	ewcfg.cmd_hiss: ewrace.hiss,
-	ewcfg.cmd_jiggle: ewrace.jiggle,
-	ewcfg.cmd_flutter: ewrace.flutter,
-	ewcfg.cmd_request_petting: ewrace.request_petting,
-	ewcfg.cmd_request_petting_alt1: ewrace.request_petting,
-	ewcfg.cmd_rampage: ewrace.rampage,
-	ewcfg.cmd_entomize: ewrace.entomize,
-	ewcfg.cmd_confuse: ewrace.confuse,
-	ewcfg.cmd_shamble: ewrace.shamble,
+	#ewcfg.cmd_set_race: ewrace.set_race,
+	#ewcfg.cmd_set_race_alt1: ewrace.set_race,
+	#ewcfg.cmd_exist: ewrace.exist,
+	#ewcfg.cmd_ree: ewrace.ree,
+	#ewcfg.cmd_autocannibalize: ewrace.autocannibalize,
+	#ewcfg.cmd_autocannibalize_alt1: ewrace.autocannibalize,
+	#ewcfg.cmd_rattle: ewrace.rattle,
+	#ewcfg.cmd_beep: ewrace.beep,
+	#ewcfg.cmd_yiff: ewrace.yiff,
+	#ewcfg.cmd_hiss: ewrace.hiss,
+	#ewcfg.cmd_jiggle: ewrace.jiggle,
+	#ewcfg.cmd_flutter: ewrace.flutter,
+	#ewcfg.cmd_request_petting: ewrace.request_petting,
+	#ewcfg.cmd_request_petting_alt1: ewrace.request_petting,
+	#ewcfg.cmd_rampage: ewrace.rampage,
+	#ewcfg.cmd_entomize: ewrace.entomize,
+	#ewcfg.cmd_confuse: ewrace.confuse,
+	#ewcfg.cmd_shamble: ewrace.shamble,
 
 	# Mutations
 	#ewcfg.cmd_preserve: ewmutation.preserve,
@@ -1146,6 +1146,7 @@ cmd_modules = [
 	ewtransport,
 	ewquadrants,
 	ewmutation,
+	ewrace,
 ]
 
 for mod in cmd_modules:
