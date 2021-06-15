@@ -1,4 +1,5 @@
 import shlex
+import math
 
 from ..static import cfg as ewcfg
 

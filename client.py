@@ -34,7 +34,7 @@ import ew.casino_package as ewcasino
 import ew.cmd_package as ewcmd
 import ew.cosmeticitem_package as ewcosmeticitem
 import ew.debug_package as ewdebug
-import ew.district as ewdistrict #11
+import ew.district_package as ewdistrict #11
 import ew.dungeons as ewdungeons #3
 import ew.faction as ewfaction #2
 import ew.farm as ewfarm #11
@@ -504,7 +504,7 @@ cmd_map = {
 	ewcfg.cmd_scout_alt1: ewmap.scout,
 
 	# Check your current POI capture progress
-	ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
+	#ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
 
 	# Change your current POI capture progress
 
@@ -512,8 +512,8 @@ cmd_map = {
 	#ewcfg.cmd_spray: ewwep.spray,
 	#ewcfg.cmd_annex_alt1: ewdistrict.annex,
 	#ewcfg.cmd_spray_alt1: ewwep.spray,
-	ewcfg.cmd_changespray:ewdistrict.change_spray,
-	ewcfg.cmd_tag:ewdistrict.tag,
+	#ewcfg.cmd_changespray:ewdistrict.change_spray,
+	#ewcfg.cmd_tag:ewdistrict.tag,
 
 	# link to the world map
 	#ewcfg.cmd_map: ewcmd.map,
@@ -1103,8 +1103,8 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_commands: ewcmd.commands,
 
 	# something with capping
-	ewcfg.cmd_changespray: ewdistrict.change_spray,
-	ewcfg.cmd_tag: ewdistrict.tag,
+	#ewcfg.cmd_changespray: ewdistrict.change_spray,
+	#ewcfg.cmd_tag: ewdistrict.tag,
 
 	# !stink
 	ewcfg.cmd_stink: ewmutation.waft,
@@ -1128,7 +1128,7 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_longdrop: ewitem.longdrop,
 }
 
-cmd_modules = [wep, ewapt, ewbook, ewitem, ewcmd, ewads, ewcasino, ewcosmeticitem]
+cmd_modules = [wep, ewapt, ewbook, ewitem, ewcmd, ewads, ewcasino, ewcosmeticitem, ewdebug, ewdistrict]
 
 for mod in cmd_modules:
 	try:
