@@ -3,6 +3,7 @@ from .utils import *
 from ..static import cfg as ewcfg
 
 cmd_map = {
+
     # BOOK COMMANDS OH YEAH
 	ewcfg.cmd_beginmanuscript: cmds.begin_manuscript,
 	ewcfg.cmd_beginmanuscript_alt_1: cmds.begin_manuscript,
@@ -37,9 +38,11 @@ cmd_map = {
 	ewcfg.cmd_untakedown: cmds.untake_down_zine,
 	ewcfg.cmd_untakedown_alt_1: cmds.untake_down_zine,
 	ewcfg.cmd_untakedown_alt_2: cmds.untake_down_zine,
+
 }
 
 dm_cmd_map = {
+
     ewcfg.cmd_beginmanuscript: cmds.begin_manuscript,
 	ewcfg.cmd_beginmanuscript_alt_1: cmds.begin_manuscript,
 	ewcfg.cmd_beginmanuscript_alt_2: cmds.begin_manuscript,
@@ -66,4 +69,5 @@ dm_cmd_map = {
 	ewcfg.cmd_setpages: cmds.set_length,
 	ewcfg.cmd_setpages_alt_1: cmds.set_length,
 	ewcfg.cmd_setpages_alt_2: cmds.set_length,
+
 }

@@ -26,11 +26,11 @@ from ..utils.district import EwDistrict
 from ..utils.frontend import EwResponseContainer
 from ..utils.slimeoid import EwSlimeoid
 
-from .abstractions import usekey
-from .abstractions import getPriceBase
-from .abstractions import toss_squatters
-from .abstractions import letter_up
-from .abstractions import toss_items
+from .utils import usekey
+from .utils import getPriceBase
+from .utils import toss_squatters
+from .utils import letter_up
+from .utils import toss_items
 from .utils import apt_look
 
 

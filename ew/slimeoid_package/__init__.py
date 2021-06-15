@@ -3,6 +3,7 @@ from .utils import *
 from ..static import cfg as ewcfg
 
 cmd_map = {
+
     # Making slimeoids
     ewcfg.cmd_incubateslimeoid: cmds.incubateslimeoid,
     ewcfg.cmd_growbody: cmds.growbody,
@@ -53,6 +54,7 @@ cmd_map = {
 }
 
 apt_dm_cmd_map = {
+
     # !slimeoid, get its data
     ewcfg.cmd_slimeoid: cmds.slimeoid,
 
@@ -72,6 +74,5 @@ apt_dm_cmd_map = {
     ewcfg.cmd_bottleslimeoid_alt1: cmds.bottleslimeoid,
     ewcfg.cmd_unbottleslimeoid: cmds.unbottleslimeoid,
     ewcfg.cmd_unbottleslimeoid_alt1: cmds.unbottleslimeoid,
-
 
 }

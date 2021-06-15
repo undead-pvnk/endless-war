@@ -4,6 +4,7 @@ from .utils import *
 from ..static import cfg as ewcfg
 
 cmd_map = {
+
     # Fiddle with souls
     ewcfg.cmd_extractsoul: cmds.soulextract,
 	ewcfg.cmd_returnsoul: cmds.returnsoul,
@@ -42,9 +43,14 @@ cmd_map = {
     # Why aren't these in mutations
     ewcfg.cmd_longdrop: cmds.longdrop,
     ewcfg.cmd_skullbash: cmds.skullbash,
+
+	# Make a costume for Double Halloween
+	# ewcfg.cmd_makecostume: ewitem.makecostume,
+
 }
 
 dm_cmd_map = {
+
     # show player !inventory
 	ewcfg.cmd_inventory: cmds.inventory_print,
 	ewcfg.cmd_inventory_alt1: cmds.inventory_print,
@@ -55,9 +61,11 @@ dm_cmd_map = {
 	# !inspect
 	ewcfg.cmd_inspect: cmds.item_look,
 	ewcfg.cmd_inspect_alt1: cmds.item_look,
+
 }
 
 apt_dm_cmd_map = {
+
     # !use
 	ewcfg.cmd_use: cmds.item_use,
 
@@ -73,4 +81,5 @@ apt_dm_cmd_map = {
 
     # drop something but really far away
     ewcfg.cmd_longdrop: cmds.longdrop,
+
 }

@@ -3,6 +3,7 @@ from .utils import *
 from ..static import cfg as ewcfg
 
 cmd_map = {
+
     # Try to start going somewhere
     ewcfg.cmd_move: cmds.move,
     ewcfg.cmd_move_alt1: cmds.move,
@@ -63,6 +64,7 @@ cmd_map = {
 }
 
 apt_dm_cmd_map = {
+
     # !goto. Navigate the world map.
     ewcfg.cmd_move: cmds.move,
     ewcfg.cmd_move_alt1: cmds.move,

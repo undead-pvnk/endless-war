@@ -3,6 +3,7 @@ from .utils import *
 from ..static import cfg as ewcfg
 
 cmd_map = {
+
     # Crush a poudrin to get some slime.
     ewcfg.cmd_crush: cmds.crush,
     ewcfg.cmd_crush_alt1: cmds.crush,
@@ -24,4 +25,5 @@ cmd_map = {
     
     # LOL
     ewcfg.cmd_juviemode: cmds.juviemode,
+
 }

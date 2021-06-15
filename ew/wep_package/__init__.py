@@ -1,4 +1,5 @@
 from . import cmds
+from .utils import *
 from ..static import cfg
 
 cmd_map = {
@@ -16,6 +17,8 @@ cmd_map = {
 	cfg.cmd_shoot_alt8: cmds.attack,
 	cfg.cmd_attack: cmds.attack,
 	cfg.cmd_win: cmds.attack,
+	# Slimefest
+	# ewcfg.cmd_win: ewwep.attack,
 
     # !reload
     cfg.cmd_reload: cmds.reload,
@@ -64,9 +67,11 @@ cmd_map = {
 	# !switch
 	cfg.cmd_switch: cmds.switch_weapon,
 	cfg.cmd_switch_alt_1: cmds.switch_weapon
+
 }
 
 apt_dm_cmd_map = {
+
 	# Name your current weapon.
 	cfg.cmd_annoint: cmds.annoint,
 	cfg.cmd_annoint_alt1: cmds.annoint,
@@ -82,6 +87,5 @@ apt_dm_cmd_map = {
 
 	# !sidearm
 	cfg.cmd_sidearm: cmds.sidearm,
-
 
 }

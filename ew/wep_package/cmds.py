@@ -23,13 +23,13 @@ from ..utils.district import EwDistrict
 from ..utils.frontend import EwResponseContainer
 from ..utils.slimeoid import EwSlimeoid
 
-from .abstractions import EwEffectContainer
-from .abstractions import burn_bystanders
-from .abstractions import weapon_explosion
-from .abstractions import fulfill_ghost_weapon_contract
-from .abstractions import canAttack
-from .abstractions import attackEnemy
-from .abstractions import canCap
+from .utils import EwEffectContainer
+from .utils import burn_bystanders
+from .utils import weapon_explosion
+from .utils import fulfill_ghost_weapon_contract
+from .utils import canAttack
+from .utils import attackEnemy
+from .utils import canCap
 
 """ Player attacks a target """
 async def attack(cmd, n1_die = None):

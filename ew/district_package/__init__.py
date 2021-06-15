@@ -3,6 +3,7 @@ from .utils import *
 from ..static import cfg as ewcfg
 
 cmd_map = {
+
     # Check your current POI capture progress
     ewcfg.cmd_capture_progress: cmds.capture_progress,
 
@@ -17,13 +18,13 @@ cmd_map = {
     # Gankers Vs. Shamblers gang swapping
     # ewcfg.cmd_shamble: cmds.shamble,
     # ewcfg.cmd_rejuvenate: cmds.rejuvenate,
-    
-    
-    
+
 }
 
 apt_dm_cmd_map = {
+
     # something with capping
     ewcfg.cmd_changespray: cmds.change_spray,
     ewcfg.cmd_tag: cmds.tag,
+
 }

@@ -3,6 +3,7 @@ from .utils import *
 from ..static import cfg as ewcfg
 
 cmd_map = {
+
     # Smoke a cosmetic. preferably a cigarette
     ewcfg.cmd_smoke: cmds.smoke,
 
@@ -24,6 +25,7 @@ cmd_map = {
 }
 
 apt_dm_cmd_map = {
+
     # Smoke a cosmetic. preferably a cigarette
     ewcfg.cmd_smoke: cmds.smoke,
 
@@ -37,4 +39,5 @@ apt_dm_cmd_map = {
     ewcfg.cmd_dyecosmetic_alt1: cmds.dye,
     ewcfg.cmd_dyecosmetic_alt2: cmds.dye,
     ewcfg.cmd_dyecosmetic_alt3: cmds.dye,
+
 }

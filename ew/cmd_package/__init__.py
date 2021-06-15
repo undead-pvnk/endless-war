@@ -3,6 +3,7 @@ from .utils import *
 from ..static import cfg as ewcfg
 
 cmd_map = {
+
     # Show the current slime score of a player.
     ewcfg.cmd_score: cmds.score,
     ewcfg.cmd_score_alt1: cmds.score,
@@ -222,6 +223,10 @@ cmd_map = {
     # Check your weapon masteries
     ewcfg.cmd_mastery: cmds.check_mastery,
     ewcfg.cmd_getattire: cmds.get_attire,
+
+    # SlimeCorp security officers can post propaganda
+    # ewcfg.cmd_propaganda: ewcmd.propaganda,
+
 }
 
 dm_cmd_map = {
@@ -237,6 +242,7 @@ dm_cmd_map = {
 }
 
 apt_dm_cmd_map = {
+
     # !howl
     ewcfg.cmd_howl: cmds.cmd_howl,
     ewcfg.cmd_howl_alt1: cmds.cmd_howl,
@@ -286,10 +292,13 @@ apt_dm_cmd_map = {
     # gives +10Gigaslime
     ewcfg.cmd_harvest: cmds.harvest,
 
+    # show what commands are currently available
+    ewcfg.cmd_commands_alt1: cmds.commands,
+    ewcfg.cmd_commands: cmds.commands,
+
     # I will cry and piss my pants about this
     # put the mutation commands in ewmutaion
     # I am literally begging
     ewcfg.cmd_piss: cmds.piss,
-    
-    
+
 }

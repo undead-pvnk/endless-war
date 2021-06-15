@@ -18,7 +18,7 @@ cmd_map = {
     ewcfg.cmd_pardon: cmds.pardon,
     ewcfg.cmd_banish: cmds.banish,
     
-    # Not sure yet
+    # Create soulbound items
     ewcfg.cmd_create: cmds.create,
     # ewcfg.cmd_exalt: cmds.exalt,
     

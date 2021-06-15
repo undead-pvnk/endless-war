@@ -3,6 +3,7 @@ from .utils import *
 from ..static import cfg as ewcfg
 
 cmd_map = {
+
     # Inspect objects in a POI
     ewcfg.cmd_scrutinize: cmds.scrutinize,
 
@@ -22,6 +23,5 @@ cmd_map = {
     ewcfg.cmd_display_states: cmds.display_states,
     # ewcfg.cmd_press_button: cmds.elevator_press,
     # ewcfg.cmd_call_elevator: cmds.elevator_call,
-    
-    
+
 }

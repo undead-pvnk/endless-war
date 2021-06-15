@@ -53,4 +53,5 @@ cmd_map = {
     # Dueling
     # This isn't done in the casino. maybe move to wep
     ewcfg.cmd_duel: cmds.duel,
+
 }

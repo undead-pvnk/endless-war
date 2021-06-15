@@ -3,6 +3,7 @@ from . import cmds
 from ..static import cfg
 
 cmd_map = {
+
     # Used for !accept/!refuse (put somewhere more general than apt?)
     cfg.cmd_haveastroke:cmds.nothing,
 	cfg.cmd_moonhurtingbeam:cmds.nothing,
@@ -42,7 +43,6 @@ cmd_map = {
     # In server parsing of DM only commands.
     # This should be in a more general file,
     # maybe make a module (and separate map) for dm commands?
-
 
     # !releaseprop (isnt this a bazaar thing?)
     cfg.cmd_releaseprop: cmds.releaseprop,
@@ -111,6 +111,7 @@ cmd_map = {
 }
 
 apt_dm_cmd_map = {
+
     # put your fish in your !aquarium
     cfg.cmd_aquarium: cmds.aquarium,
 
