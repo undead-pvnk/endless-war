@@ -49,7 +49,7 @@ import ew.move as ewmap #50
 import ew.mutation as ewmutation #16
 import ew.quadrants as ewquadrants #23
 import ew.race as ewrace #19
-import ew.slimeoid as ewslimeoid #55
+import ew.slimeoid_package as ewslimeoid #55
 import ew.slimetwitter as ewslimetwitter #5
 import ew.smelting as ewsmelting #7
 import ew.spooky as ewspooky #34
@@ -618,53 +618,53 @@ cmd_map = {
 
 	# Slimeoids
 
-	ewcfg.cmd_incubateslimeoid: ewslimeoid.incubateslimeoid,
-	ewcfg.cmd_growbody: ewslimeoid.growbody,
-	ewcfg.cmd_growhead: ewslimeoid.growhead,
-	ewcfg.cmd_growlegs: ewslimeoid.growlegs,
-	ewcfg.cmd_growweapon: ewslimeoid.growweapon,
-	ewcfg.cmd_growarmor: ewslimeoid.growarmor,
-	ewcfg.cmd_growspecial: ewslimeoid.growspecial,
-	ewcfg.cmd_growbrain: ewslimeoid.growbrain,
-	ewcfg.cmd_nameslimeoid: ewslimeoid.nameslimeoid,
-	ewcfg.cmd_raisemoxie: ewslimeoid.raisemoxie,
-	ewcfg.cmd_lowermoxie: ewslimeoid.lowermoxie,
-	ewcfg.cmd_raisegrit: ewslimeoid.raisegrit,
-	ewcfg.cmd_lowergrit: ewslimeoid.lowergrit,
-	ewcfg.cmd_raisechutzpah: ewslimeoid.raisechutzpah,
-	ewcfg.cmd_lowerchutzpah: ewslimeoid.lowerchutzpah,
-	ewcfg.cmd_spawnslimeoid: ewslimeoid.spawnslimeoid,
-	ewcfg.cmd_dissolveslimeoid: ewslimeoid.dissolveslimeoid,
-	ewcfg.cmd_slimeoid: ewslimeoid.slimeoid,
-	ewcfg.cmd_instructions: ewslimeoid.instructions,
-	ewcfg.cmd_playfetch: ewslimeoid.playfetch,
-	ewcfg.cmd_petslimeoid: ewslimeoid.petslimeoid,
-	ewcfg.cmd_abuseslimeoid: ewslimeoid.abuseslimeoid,
-	ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
-	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
-	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
-	ewcfg.cmd_saturateslimeoid: ewslimeoid.saturateslimeoid,
-	ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
-	ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
-	ewcfg.cmd_bottleslimeoid_alt1: ewslimeoid.bottleslimeoid,
-	ewcfg.cmd_unbottleslimeoid: ewslimeoid.unbottleslimeoid,
-	ewcfg.cmd_unbottleslimeoid_alt1: ewslimeoid.unbottleslimeoid,
-	ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid,
-	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
-	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
-	ewcfg.cmd_undress_slimeoid: ewslimeoid.undress_slimeoid,
-	ewcfg.cmd_undress_slimeoid_alt1: ewslimeoid.undress_slimeoid,
+	#ewcfg.cmd_incubateslimeoid: ewslimeoid.incubateslimeoid,
+	#ewcfg.cmd_growbody: ewslimeoid.growbody,
+	#ewcfg.cmd_growhead: ewslimeoid.growhead,
+	#ewcfg.cmd_growlegs: ewslimeoid.growlegs,
+	#ewcfg.cmd_growweapon: ewslimeoid.growweapon,
+	#ewcfg.cmd_growarmor: ewslimeoid.growarmor,
+	#ewcfg.cmd_growspecial: ewslimeoid.growspecial,
+	#ewcfg.cmd_growbrain: ewslimeoid.growbrain,
+	#ewcfg.cmd_nameslimeoid: ewslimeoid.nameslimeoid,
+	#ewcfg.cmd_raisemoxie: ewslimeoid.raisemoxie,
+	#ewcfg.cmd_lowermoxie: ewslimeoid.lowermoxie,
+	#ewcfg.cmd_raisegrit: ewslimeoid.raisegrit,
+	#ewcfg.cmd_lowergrit: ewslimeoid.lowergrit,
+	#ewcfg.cmd_raisechutzpah: ewslimeoid.raisechutzpah,
+	#ewcfg.cmd_lowerchutzpah: ewslimeoid.lowerchutzpah,
+	#ewcfg.cmd_spawnslimeoid: ewslimeoid.spawnslimeoid,
+	#ewcfg.cmd_dissolveslimeoid: ewslimeoid.dissolveslimeoid,
+	#ewcfg.cmd_slimeoid: ewslimeoid.slimeoid,
+	#ewcfg.cmd_instructions: ewslimeoid.instructions,
+	#ewcfg.cmd_playfetch: ewslimeoid.playfetch,
+	#ewcfg.cmd_petslimeoid: ewslimeoid.petslimeoid,
+	#ewcfg.cmd_abuseslimeoid: ewslimeoid.abuseslimeoid,
+	#ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
+	#ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
+	#ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
+	#ewcfg.cmd_saturateslimeoid: ewslimeoid.saturateslimeoid,
+	#ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
+	#ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
+	#ewcfg.cmd_bottleslimeoid_alt1: ewslimeoid.bottleslimeoid,
+	#ewcfg.cmd_unbottleslimeoid: ewslimeoid.unbottleslimeoid,
+	#ewcfg.cmd_unbottleslimeoid_alt1: ewslimeoid.unbottleslimeoid,
+	#ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid,
+	#ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
+	#ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
+	#ewcfg.cmd_undress_slimeoid: ewslimeoid.undress_slimeoid,
+	#ewcfg.cmd_undress_slimeoid_alt1: ewslimeoid.undress_slimeoid,
 
 	# Negaslimeoids
 
-	ewcfg.cmd_negaslimeoid: ewslimeoid.negaslimeoid,
+	#ewcfg.cmd_negaslimeoid: ewslimeoid.negaslimeoid,
 	ewcfg.cmd_summonnegaslimeoid: ewspooky.summon_negaslimeoid,
 	ewcfg.cmd_summonnegaslimeoid_alt1: ewspooky.summon_negaslimeoid,
 	ewcfg.cmd_summonnegaslimeoid_alt2: ewspooky.summon_negaslimeoid,
-	ewcfg.cmd_battlenegaslimeoid: ewslimeoid.negaslimeoidbattle,
-	ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
-	ewcfg.cmd_battlenegaslimeoid_alt2: ewslimeoid.negaslimeoidbattle,
-	ewcfg.cmd_battlenegaslimeoid_alt3: ewslimeoid.negaslimeoidbattle,
+	#ewcfg.cmd_battlenegaslimeoid: ewslimeoid.negaslimeoidbattle,
+	#ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
+	#ewcfg.cmd_battlenegaslimeoid_alt2: ewslimeoid.negaslimeoidbattle,
+	#ewcfg.cmd_battlenegaslimeoid_alt3: ewslimeoid.negaslimeoidbattle,
 
 	# Enemies
 	ewcfg.cmd_summonenemy: ewhunting.summonenemy,
@@ -1003,7 +1003,7 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_score_alt3: ewcmd.score,
 
 	# !slimeoid, get its data
-	ewcfg.cmd_slimeoid: ewslimeoid.slimeoid,
+	#ewcfg.cmd_slimeoid: ewslimeoid.slimeoid,
 
 	# !adorn and !dedorn
 	#ewcfg.cmd_adorn: ewcosmeticitem.adorn,
@@ -1014,15 +1014,15 @@ apt_dm_cmd_map = {
 	ewcfg.cmd_smelt: ewsmelting.smelt,
 
 	# !dressslimeoid
-	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
-	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
+	#ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
+	#ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
 
 	# interact with the slimeoid
-	ewcfg.cmd_petslimeoid: ewslimeoid.petslimeoid,
-	ewcfg.cmd_abuseslimeoid: ewslimeoid.abuseslimeoid,
-	ewcfg.cmd_playfetch: ewslimeoid.playfetch,
-	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
-	ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
+	#ewcfg.cmd_petslimeoid: ewslimeoid.petslimeoid,
+	#ewcfg.cmd_abuseslimeoid: ewslimeoid.abuseslimeoid,
+	#ewcfg.cmd_playfetch: ewslimeoid.playfetch,
+	#ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
+	#ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
 
 	# !wiki
 	#ewcfg.cmd_wiki: ewcmd.wiki,
@@ -1080,10 +1080,10 @@ apt_dm_cmd_map = {
 	ewcfg.cmd_check_farm: ewfarm.check_farm,
 
 	# slimeoid storage
-	ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
-	ewcfg.cmd_bottleslimeoid_alt1: ewslimeoid.bottleslimeoid,
-	ewcfg.cmd_unbottleslimeoid: ewslimeoid.unbottleslimeoid,
-	ewcfg.cmd_unbottleslimeoid_alt1: ewslimeoid.unbottleslimeoid,
+	#ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
+	#wcfg.cmd_bottleslimeoid_alt1: ewslimeoid.bottleslimeoid,
+	#ewcfg.cmd_unbottleslimeoid: ewslimeoid.unbottleslimeoid,
+	#ewcfg.cmd_unbottleslimeoid_alt1: ewslimeoid.unbottleslimeoid,
 
 	# !piss
 	#ewcfg.cmd_piss: ewcmd.piss,
@@ -1128,7 +1128,7 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_longdrop: ewitem.longdrop,
 }
 
-cmd_modules = [wep, ewapt, ewbook, ewitem, ewcmd, ewads, ewcasino, ewcosmeticitem, ewdebug, ewdistrict]
+cmd_modules = [wep, ewapt, ewbook, ewitem, ewcmd, ewads, ewcasino, ewcosmeticitem, ewdebug, ewdistrict, ewslimeoid]
 
 for mod in cmd_modules:
 	try:

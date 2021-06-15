@@ -3,7 +3,7 @@ import random
 import time
 
 from .. import move as ewmap
-from .. import slimeoid as ewslimeoid
+from .. import slimeoid_package as ewslimeoid
 from ..backend import item as bknd_item
 from ..backend.apt import EwApartment
 from ..backend.item import EwItem

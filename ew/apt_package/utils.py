@@ -1,7 +1,7 @@
 import random
 
 from .. import item_package as ewitem
-from .. import slimeoid as ewslimeoid
+from .. import slimeoid_package as ewslimeoid
 from ..backend import core as bknd_core
 from ..backend import item as bknd_item
 from ..backend.apt import EwApartment
