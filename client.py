@@ -33,7 +33,7 @@ import ew.book_package as ewbook
 import ew.casino_package as ewcasino
 import ew.cmd_package as ewcmd
 import ew.cosmeticitem_package as ewcosmeticitem
-import ew.debug as ewdebug # 9
+import ew.debug_package as ewdebug
 import ew.district as ewdistrict #11
 import ew.dungeons as ewdungeons #3
 import ew.faction as ewfaction #2
@@ -497,7 +497,7 @@ cmd_map = {
 	ewcfg.cmd_survey_alt1: ewmap.survey,
 	
 	# Inspect objects in a POI
-	ewcfg.cmd_scrutinize: ewdebug.scrutinize,
+	#ewcfg.cmd_scrutinize: ewdebug.scrutinize,
 
 	# Look around an adjacent POI
 	ewcfg.cmd_scout: ewmap.scout,
@@ -824,7 +824,7 @@ cmd_map = {
 	#swap weapons
 	#ewcfg.cmd_switch: ewwep.switch_weapon,
 	#ewcfg.cmd_switch_alt_1: ewwep.switch_weapon,
-	ewcfg.cmd_debug9: ewdebug.debug9,
+	#ewcfg.cmd_debug9: ewdebug.debug9,
 
 	# Slimernalia
 	# Check your current festivity
@@ -910,8 +910,8 @@ cmd_map = {
 	# Slime Twitter
 	ewcfg.cmd_tweet: ewslimetwitter.tweet,
 
-	ewcfg.cmd_changegamestate: ewdebug.change_gamestate,
-	ewcfg.cmd_display_states: ewdebug.display_states,
+	#ewcfg.cmd_changegamestate: ewdebug.change_gamestate,
+	#ewcfg.cmd_display_states: ewdebug.display_states,
 	#ewcfg.cmd_press_button: ewdebug.elevator_press,
 	#ewcfg.cmd_call_elevator: ewdebug.elevator_call,
 	#ewcfg.cmd_addstatuseffect: ewcmd.assign_status_effect,
