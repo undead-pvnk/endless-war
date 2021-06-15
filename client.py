@@ -61,7 +61,7 @@ import ew.static.items as static_items
 import ew.static.poi as poi_static
 import ew.static.vendors as vendors
 import ew.static.weather as weather_static
-import ew.transport as ewtransport #7
+import ew.transport_package as ewtransport #7
 import ew.utils.core as ewutils
 import ew.utils.frontend as fe_utils
 import ew.utils.item as itm_utils
@@ -483,11 +483,11 @@ cmd_map = {
 	#ewcfg.cmd_halt_alt1: ewmap.halt,
 
 	# public transportation
-	ewcfg.cmd_embark: ewtransport.embark,
-	ewcfg.cmd_embark_alt1: ewtransport.embark,
-	ewcfg.cmd_disembark: ewtransport.disembark,
-	ewcfg.cmd_disembark_alt1: ewtransport.disembark,
-	ewcfg.cmd_checkschedule: ewtransport.check_schedule,
+	#ewcfg.cmd_embark: ewtransport.embark,
+	#ewcfg.cmd_embark_alt1: ewtransport.embark,
+	#ewcfg.cmd_disembark: ewtransport.disembark,
+	#ewcfg.cmd_disembark_alt1: ewtransport.disembark,
+	#ewcfg.cmd_checkschedule: ewtransport.check_schedule,
 
 	# Look around the POI you find yourself in.
 	#ewcfg.cmd_look: ewmap.look,
@@ -1142,6 +1142,7 @@ cmd_modules = [wep,
 			   ewmap,
 			   ewmarket,
 			   ewspooky,
+			   ewtransport,
 ]
 
 for mod in cmd_modules:
