@@ -42,7 +42,7 @@ import ew.fish_package as ewfish
 import ew.food_package as ewfood
 import ew.hunting as ewhunting #3
 import ew.item_package as ewitem
-import ew.juviecmd as ewjuviecmd #11
+import ew.juviecmd_package as ewjuviecmd
 import ew.kingpin as ewkingpin #8
 import ew.market_package as ewmarket
 import ew.move_package as ewmap
@@ -147,19 +147,19 @@ cmd_map = {
 	#ewcfg.cmd_divorce: ewwep.divorce,
 	
 	# Crush a poudrin to get some slime.
-	ewcfg.cmd_crush: ewjuviecmd.crush,
-	ewcfg.cmd_crush_alt1: ewjuviecmd.crush,
+	#ewcfg.cmd_crush: ewjuviecmd.crush,
+	#ewcfg.cmd_crush_alt1: ewjuviecmd.crush,
 
 	# move from juvenile to one of the armies (rowdys or killers)
-	ewcfg.cmd_enlist: ewjuviecmd.enlist,
-	ewcfg.cmd_renounce: ewjuviecmd.renounce,
+	#ewcfg.cmd_enlist: ewjuviecmd.enlist,
+	#ewcfg.cmd_renounce: ewjuviecmd.renounce,
 	#ewcfg.cmd_vouch: ewfaction.vouch,
 
 	# gives slime to the miner (message.author)
-	ewcfg.cmd_mine: ewjuviecmd.mine,
+	#ewcfg.cmd_mine: ewjuviecmd.mine,
 
 	# flags a vein as dangerous
-	ewcfg.cmd_flag: ewjuviecmd.flag,
+	#ewcfg.cmd_flag: ewjuviecmd.flag,
 
 	# Show the current slime score of a player.
 	#ewcfg.cmd_score: ewcmd.score,
@@ -541,9 +541,9 @@ cmd_map = {
 	# ewcfg.cmd_createfish: ewfish.debug_create_random_fish,
 
 	#scavenging
-	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
-	ewcfg.cmd_scavenge_alt1: ewjuviecmd.scavenge,
-	ewcfg.cmd_scavenge_alt2: ewjuviecmd.scavenge,
+	#ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
+	#ewcfg.cmd_scavenge_alt1: ewjuviecmd.scavenge,
+	#ewcfg.cmd_scavenge_alt2: ewjuviecmd.scavenge,
 
 	#cosmetics
 	#ewcfg.cmd_adorn: ewcosmeticitem.adorn,
@@ -903,7 +903,7 @@ cmd_map = {
 	#ewcfg.cmd_graft: ewmutation.graft,
 	#ewcfg.cmd_bleedout: ewmutation.bleedout,
 	#ewcfg.cmd_skullbash: ewitem.skullbash,
-	ewcfg.cmd_juviemode: ewjuviecmd.juviemode,
+	#ewcfg.cmd_juviemode: ewjuviecmd.juviemode,
 
 	#ewcfg.cmd_manual_unban:ewcmd.unban_manual,
 
@@ -1151,6 +1151,7 @@ cmd_modules = [
 	ewfaction,
 	ewfish,
 	ewfood,
+	ewjuviecmd,
 ]
 
 for mod in cmd_modules:
