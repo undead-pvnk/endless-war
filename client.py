@@ -25,7 +25,6 @@ import ew.backend.ads as bknd_ads
 import ew.backend.core as bknd_core
 import ew.backend.farm as bknd_farm
 import ew.backend.fish as bknd_fish
-import ew.backend.hunting as bknd_hunt
 import ew.backend.item as bknd_item
 import ew.backend.player as bknd_player
 import ew.backend.server as bknd_server
@@ -52,7 +51,6 @@ import ew.utils.frontend as fe_utils
 import ew.utils.item as itm_utils
 import ew.utils.leaderboard as bknd_leaderboard
 import ew.utils.loop as loop_utils
-import ew.utils.poi as poi_utils
 import ew.utils.rolemgr as ewrolemgr
 import ew.utils.weather as bknd_weather
 from ew.backend.item import EwItem
@@ -88,39 +86,7 @@ active_users_map = {}
 channels_slimetwitter = {}
 
 # Map of all command words in the game to their implementing function.
-cmd_map = {
-
-	# kill all players in your district; could be re-used for a future raid boss
-	#ewcfg.cmd_writhe: ewraidboss.writhe,
-
-	# Enemies
-	ewcfg.cmd_deleteallenemies: bknd_hunt.delete_all_enemies,
-
-	# restores poi roles to their proper names, only usable by admins
-	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
-	
-	# hides all poi role names, only usable by admins
-	ewcfg.cmd_hiderolenames: ewrolemgr.hideRoleNames,
-	
-	# recreates all hidden poi roles in the server in case restoreRoleNames doesnt work, only usable by admins
-	ewcfg.cmd_recreateroles: ewrolemgr.recreateRoles,
-	
-	# deletes all roles in the server of a particular type
-	ewcfg.cmd_deleteroles: ewrolemgr.deleteRoles,
-		
-	# removes all user overwrites in the server's poi channels
-	ewcfg.cmd_removeuseroverwrites: ewrolemgr.remove_user_overwrites,
-	
-	# Collects all channel topics.
-	ewcfg.cmd_collectopics: fe_utils.collect_topics,
-	
-	# Changes those channel topics according to what's in their EwPoi definition
-	ewcfg.cmd_synctopics: fe_utils.sync_topics,
-	
-	# Sets degradation values for GvS
-	ewcfg.cmd_degradedistricts: poi_utils.degrade_districts,
-
-}
+cmd_map = {}
 
 # Map of commands always allowed in dms
 dm_cmd_map = {}
