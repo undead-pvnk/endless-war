@@ -52,7 +52,7 @@ import ew.race as ewrace #19
 import ew.slimeoid_package as ewslimeoid
 import ew.slimetwitter as ewslimetwitter #5
 import ew.smelting as ewsmelting #7
-import ew.spooky as ewspooky #34
+import ew.spooky_package as ewspooky
 import ew.sports as ewsports #6
 import ew.static.cfg as ewcfg
 import ew.static.cosmetics as cosmetics
@@ -211,10 +211,10 @@ cmd_map = {
 	#ewcfg.cmd_makecostume: ewitem.makecostume,
 
 	# Show the total of negative slime in the market.
-	ewcfg.cmd_negapool: ewspooky.negapool,
+	#ewcfg.cmd_negapool: ewspooky.negapool,
 	
 	# Show the total of negative slime in the world.
-	ewcfg.cmd_negaslime: ewspooky.negaslime,
+	#ewcfg.cmd_negaslime: ewspooky.negaslime,
 	
 	# Show the total of positive slime in the world.
 	#ewcfg.cmd_endlesswar: ewcmd.endlesswar,
@@ -296,48 +296,48 @@ cmd_map = {
 
 
 	# revive yourself as a juvenile after having been killed.
-	ewcfg.cmd_revive: ewspooky.revive,
+	#ewcfg.cmd_revive: ewspooky.revive,
 
 	# Ghosts can haunt enlisted players to reduce their slime score.
-	ewcfg.cmd_haunt: ewspooky.haunt,
-	ewcfg.cmd_haunt_alt1: ewspooky.haunt,
-	ewcfg.cmd_haunt_alt2: ewspooky.haunt,
-	ewcfg.cmd_haunt_alt3: ewspooky.haunt,
-	ewcfg.cmd_haunt_alt4: ewspooky.haunt,
-	ewcfg.cmd_haunt_alt5: ewspooky.haunt,
-	ewcfg.cmd_haunt_alt6: ewspooky.haunt,
+	#ewcfg.cmd_haunt: ewspooky.haunt,
+	#ewcfg.cmd_haunt_alt1: ewspooky.haunt,
+	#ewcfg.cmd_haunt_alt2: ewspooky.haunt,
+	#ewcfg.cmd_haunt_alt3: ewspooky.haunt,
+	#ewcfg.cmd_haunt_alt4: ewspooky.haunt,
+	#ewcfg.cmd_haunt_alt5: ewspooky.haunt,
+	#ewcfg.cmd_haunt_alt6: ewspooky.haunt,
 
 	# ghosts can inhabit players to follow them around
-	ewcfg.cmd_inhabit: ewspooky.inhabit,
-	ewcfg.cmd_inhabit_alt1: ewspooky.inhabit,
-	ewcfg.cmd_inhabit_alt2: ewspooky.inhabit,
-	ewcfg.cmd_inhabit_alt3: ewspooky.inhabit,
+	#ewcfg.cmd_inhabit: ewspooky.inhabit,
+	#ewcfg.cmd_inhabit_alt1: ewspooky.inhabit,
+	#ewcfg.cmd_inhabit_alt2: ewspooky.inhabit,
+	#ewcfg.cmd_inhabit_alt3: ewspooky.inhabit,
 
 	# remove inhabitted status
-	ewcfg.cmd_letgo: ewspooky.let_go,
+	#ewcfg.cmd_letgo: ewspooky.let_go,
 
 	# ghosts can empower the weapon of the player they're inhabiting
-	ewcfg.cmd_possess_weapon: ewspooky.possess_weapon,
-	ewcfg.cmd_possess_weapon_alt1: ewspooky.possess_weapon,
-	ewcfg.cmd_possess_weapon_alt2: ewspooky.possess_weapon,
+	#ewcfg.cmd_possess_weapon: ewspooky.possess_weapon,
+	#ewcfg.cmd_possess_weapon_alt1: ewspooky.possess_weapon,
+	#ewcfg.cmd_possess_weapon_alt2: ewspooky.possess_weapon,
 
 	# ghosts can enhance fishing for the player they're inhabiting
-	ewcfg.cmd_possess_fishing_rod: ewspooky.possess_fishing_rod,
-	ewcfg.cmd_possess_fishing_rod_alt1: ewspooky.possess_fishing_rod,
-	ewcfg.cmd_possess_fishing_rod_alt2: ewspooky.possess_fishing_rod,
-	ewcfg.cmd_possess_fishing_rod_alt3: ewspooky.possess_fishing_rod,
-	ewcfg.cmd_possess_fishing_rod_alt4: ewspooky.possess_fishing_rod,
+	#ewcfg.cmd_possess_fishing_rod: ewspooky.possess_fishing_rod,
+	#ewcfg.cmd_possess_fishing_rod_alt1: ewspooky.possess_fishing_rod,
+	#ewcfg.cmd_possess_fishing_rod_alt2: ewspooky.possess_fishing_rod,
+	#ewcfg.cmd_possess_fishing_rod_alt3: ewspooky.possess_fishing_rod,
+	#ewcfg.cmd_possess_fishing_rod_alt4: ewspooky.possess_fishing_rod,
 
 	# ghosts can dissolve this contract if they want to
-	ewcfg.cmd_unpossess_fishing_rod: ewspooky.unpossess_fishing_rod,
-	ewcfg.cmd_unpossess_fishing_rod_alt1: ewspooky.unpossess_fishing_rod,
-	ewcfg.cmd_unpossess_fishing_rod_alt2: ewspooky.unpossess_fishing_rod,
+	#ewcfg.cmd_unpossess_fishing_rod: ewspooky.unpossess_fishing_rod,
+	#ewcfg.cmd_unpossess_fishing_rod_alt1: ewspooky.unpossess_fishing_rod,
+	#ewcfg.cmd_unpossess_fishing_rod_alt2: ewspooky.unpossess_fishing_rod,
 	
 	# ghosts can turn their negaslime into negapoudrins
-	ewcfg.cmd_crystalize_negapoudrin: ewspooky.crystalize_negapoudrin,
-	ewcfg.cmd_crystalize_negapoudrin_alt1: ewspooky.crystalize_negapoudrin,
-	ewcfg.cmd_crystalize_negapoudrin_alt2: ewspooky.crystalize_negapoudrin,
-	ewcfg.cmd_crystalize_negapoudrin_alt3: ewspooky.crystalize_negapoudrin,
+	#ewcfg.cmd_crystalize_negapoudrin: ewspooky.crystalize_negapoudrin,
+	#ewcfg.cmd_crystalize_negapoudrin_alt1: ewspooky.crystalize_negapoudrin,
+	#ewcfg.cmd_crystalize_negapoudrin_alt2: ewspooky.crystalize_negapoudrin,
+	#ewcfg.cmd_crystalize_negapoudrin_alt3: ewspooky.crystalize_negapoudrin,
 	
 	# Play slime pachinko!
 	#ewcfg.cmd_slimepachinko: ewcasino.pachinko,
@@ -658,9 +658,9 @@ cmd_map = {
 	# Negaslimeoids
 
 	#ewcfg.cmd_negaslimeoid: ewslimeoid.negaslimeoid,
-	ewcfg.cmd_summonnegaslimeoid: ewspooky.summon_negaslimeoid,
-	ewcfg.cmd_summonnegaslimeoid_alt1: ewspooky.summon_negaslimeoid,
-	ewcfg.cmd_summonnegaslimeoid_alt2: ewspooky.summon_negaslimeoid,
+	#ewcfg.cmd_summonnegaslimeoid: ewspooky.summon_negaslimeoid,
+	#ewcfg.cmd_summonnegaslimeoid_alt1: ewspooky.summon_negaslimeoid,
+	#ewcfg.cmd_summonnegaslimeoid_alt2: ewspooky.summon_negaslimeoid,
 	#ewcfg.cmd_battlenegaslimeoid: ewslimeoid.negaslimeoidbattle,
 	#ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
 	#ewcfg.cmd_battlenegaslimeoid_alt2: ewslimeoid.negaslimeoidbattle,
@@ -1141,6 +1141,7 @@ cmd_modules = [wep,
 			   ewslimeoid,
 			   ewmap,
 			   ewmarket,
+			   ewspooky,
 ]
 
 for mod in cmd_modules:
