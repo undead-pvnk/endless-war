@@ -38,7 +38,7 @@ import ew.district_package as ewdistrict
 import ew.dungeons_package as ewdungeons
 import ew.faction_package as ewfaction
 import ew.farm_package as ewfarm
-import ew.fish as ewfish #7
+import ew.fish_package as ewfish
 import ew.food as ewfood #9
 import ew.hunting as ewhunting #3
 import ew.item_package as ewitem
@@ -531,13 +531,13 @@ cmd_map = {
 	#ewcfg.cmd_mill: ewfarm.mill,
 
 	# Fishing
-	ewcfg.cmd_cast: ewfish.cast,
-	ewcfg.cmd_reel: ewfish.reel,
-	ewcfg.cmd_appraise: ewfish.appraise,
-	ewcfg.cmd_barter: ewfish.barter,
-	ewcfg.cmd_embiggen: ewfish.embiggen,
+	#ewcfg.cmd_cast: ewfish.cast,
+	#ewcfg.cmd_reel: ewfish.reel,
+	#ewcfg.cmd_appraise: ewfish.appraise,
+	#ewcfg.cmd_barter: ewfish.barter,
+	#ewcfg.cmd_embiggen: ewfish.embiggen,
 
-	ewcfg.cmd_barterall: ewfish.barter_all,
+	#ewcfg.cmd_barterall: ewfish.barter_all,
 	# ewcfg.cmd_createfish: ewfish.debug_create_random_fish,
 
 	#scavenging
@@ -1149,6 +1149,7 @@ cmd_modules = [
 	ewrace,
 	ewfarm,
 	ewfaction,
+	ewfish,
 ]
 
 for mod in cmd_modules:
