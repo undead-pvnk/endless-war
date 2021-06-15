@@ -2,7 +2,7 @@ import asyncio
 import random
 import time
 
-from .. import move as ewmap
+from .. import move_package as ewmap
 from .. import slimeoid_package as ewslimeoid
 from ..backend import item as bknd_item
 from ..backend.apt import EwApartment

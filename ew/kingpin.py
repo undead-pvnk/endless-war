@@ -5,7 +5,7 @@ import re
 
 from . import cmd_package as ewcmd
 from . import item_package as ewitem
-from . import move as ewmap
+from . import move_package as ewmap
 from .backend import item as bknd_item
 from .static import cfg as ewcfg
 from .static import cosmetics

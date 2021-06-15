@@ -3,7 +3,7 @@ import math
 import random
 import time
 
-from .. import move as ewmap
+from .. import move_package as ewmap
 from ..backend import hunting as bknd_hunt
 from ..backend.dungeons import EwGamestate
 from ..backend.item import EwItem

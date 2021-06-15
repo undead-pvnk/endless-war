@@ -45,11 +45,11 @@ import ew.item_package as ewitem
 import ew.juviecmd as ewjuviecmd #11
 import ew.kingpin as ewkingpin #8
 import ew.market as ewmarket #37
-import ew.move as ewmap #50
+import ew.move_package as ewmap
 import ew.mutation as ewmutation #16
 import ew.quadrants as ewquadrants #23
 import ew.race as ewrace #19
-import ew.slimeoid_package as ewslimeoid #55
+import ew.slimeoid_package as ewslimeoid
 import ew.slimetwitter as ewslimetwitter #5
 import ew.smelting as ewsmelting #7
 import ew.spooky as ewspooky #34
@@ -467,20 +467,20 @@ cmd_map = {
 
 
 	# Navigate the world map.
-	ewcfg.cmd_move: ewmap.move,
-	ewcfg.cmd_move_alt1: ewmap.move,
-	ewcfg.cmd_move_alt2: ewmap.move,
-	ewcfg.cmd_move_alt3: ewmap.move,
-	ewcfg.cmd_move_alt4: ewmap.move,
-	ewcfg.cmd_move_alt5: ewmap.move,
-	ewcfg.cmd_move_alt6: ewmap.move,
+	#ewcfg.cmd_move: ewmap.move,
+	#ewcfg.cmd_move_alt1: ewmap.move,
+	#ewcfg.cmd_move_alt2: ewmap.move,
+	#ewcfg.cmd_move_alt3: ewmap.move,
+	#ewcfg.cmd_move_alt4: ewmap.move,
+	#ewcfg.cmd_move_alt5: ewmap.move,
+	#ewcfg.cmd_move_alt6: ewmap.move,
 
 	# go down
-	ewcfg.cmd_descend: ewmap.descend,
+	#ewcfg.cmd_descend: ewmap.descend,
 
 	# Cancel all moves in progress.
-	ewcfg.cmd_halt: ewmap.halt,
-	ewcfg.cmd_halt_alt1: ewmap.halt,
+	#ewcfg.cmd_halt: ewmap.halt,
+	#ewcfg.cmd_halt_alt1: ewmap.halt,
 
 	# public transportation
 	ewcfg.cmd_embark: ewtransport.embark,
@@ -490,18 +490,18 @@ cmd_map = {
 	ewcfg.cmd_checkschedule: ewtransport.check_schedule,
 
 	# Look around the POI you find yourself in.
-	ewcfg.cmd_look: ewmap.look,
+	#ewcfg.cmd_look: ewmap.look,
 	
 	# Look around the POI, but do not obtain the district's description (reduces clutter and response time).
-	ewcfg.cmd_survey: ewmap.survey,
-	ewcfg.cmd_survey_alt1: ewmap.survey,
+	#ewcfg.cmd_survey: ewmap.survey,
+	#ewcfg.cmd_survey_alt1: ewmap.survey,
 	
 	# Inspect objects in a POI
 	#ewcfg.cmd_scrutinize: ewdebug.scrutinize,
 
 	# Look around an adjacent POI
-	ewcfg.cmd_scout: ewmap.scout,
-	ewcfg.cmd_scout_alt1: ewmap.scout,
+	#ewcfg.cmd_scout: ewmap.scout,
+	#ewcfg.cmd_scout_alt1: ewmap.scout,
 
 	# Check your current POI capture progress
 	#ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
@@ -688,12 +688,12 @@ cmd_map = {
 	ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
 	ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
 
-	ewcfg.cmd_teleport: ewmap.teleport,
-	ewcfg.cmd_teleport_alt1: ewmap.teleport,
-	ewcfg.cmd_teleport_player: ewmap.teleport_player,
-	ewcfg.cmd_print_map_data: ewmap.print_map_data,
+	#ewcfg.cmd_teleport: ewmap.teleport,
+	#ewcfg.cmd_teleport_alt1: ewmap.teleport,
+	#ewcfg.cmd_teleport_player: ewmap.teleport_player,
+	#ewcfg.cmd_print_map_data: ewmap.print_map_data,
 	#ewcfg.cmd_ping_me: ewcmd.ping_me,
-	ewcfg.cmd_boot: ewmap.boot,
+	#ewcfg.cmd_boot: ewmap.boot,
 	#ewcfg.cmd_bootall:ewapt.lobbywarning,
 
 	#ewcfg.cmd_piss: ewcmd.piss,
@@ -791,8 +791,8 @@ cmd_map = {
 	#ewcfg.cmd_promote: ewcmd.promote,
 	
 	# SlimeCorp commands
-	ewcfg.cmd_clockin: ewmap.clockin,
-	ewcfg.cmd_clockout: ewmap.clockout,
+	#ewcfg.cmd_clockin: ewmap.clockin,
+	#ewcfg.cmd_clockout: ewmap.clockout,
 	#ewcfg.cmd_sanitize: ewwep.sanitize,
 	#ewcfg.cmd_paycheck: ewcmd.paycheck,
 	#ewcfg.cmd_payday: ewcmd.payday,
@@ -818,8 +818,8 @@ cmd_map = {
 	ewcfg.cmd_slimeballleave: ewsports.slimeballleave,
 
 	# flush items and slime from subzones into their mother district
-	ewcfg.cmd_flushsubzones: ewmap.flush_subzones,
-	ewcfg.cmd_flushstreets: ewmap.flush_streets,
+	#ewcfg.cmd_flushsubzones: ewmap.flush_subzones,
+	#ewcfg.cmd_flushstreets: ewmap.flush_streets,
 
 	#swap weapons
 	#ewcfg.cmd_switch: ewwep.switch_weapon,
@@ -891,13 +891,13 @@ cmd_map = {
 	# Mutations
 	ewcfg.cmd_preserve: ewmutation.preserve,
 	ewcfg.cmd_stink: ewmutation.waft,
-	ewcfg.cmd_slap: ewmap.slap,
+	#ewcfg.cmd_slap: ewmap.slap,
 	ewcfg.cmd_track: ewmutation.track_oneeyeopen,
 	#ewcfg.cmd_longdrop: ewitem.longdrop,
 	ewcfg.cmd_shakeoff: ewmutation.shakeoff,
 	ewcfg.cmd_clench: ewmutation.clench,
-	ewcfg.cmd_thirdeye: ewmap.tracker,
-	ewcfg.cmd_loop: ewmap.loop,
+	#ewcfg.cmd_thirdeye: ewmap.tracker,
+	#ewcfg.cmd_loop: ewmap.loop,
 	ewcfg.cmd_devour: ewfood.devour,
 	ewcfg.cmd_chemo: ewmutation.chemo,
 	ewcfg.cmd_graft: ewmutation.graft,
@@ -924,7 +924,7 @@ cmd_map = {
 	#ewcfg.cmd_mastery: ewcmd.check_mastery,
 	#ewcfg.cmd_getattire: ewcmd.get_attire,
 	ewcfg.cmd_pacommand: ewkingpin.pa_command,
-	ewcfg.cmd_surveil: ewmap.surveil,
+	#ewcfg.cmd_surveil: ewmap.surveil,
 	ewcfg.cmd_hogtie: ewkingpin.hogtie
 
 }
@@ -958,13 +958,13 @@ dm_cmd_map = {
 apt_dm_cmd_map = {
 
 	# !goto. Navigate the world map.
-	ewcfg.cmd_move: ewmap.move,
-	ewcfg.cmd_move_alt1: ewmap.move,
-	ewcfg.cmd_move_alt2: ewmap.move,
-	ewcfg.cmd_move_alt3: ewmap.move,
-	ewcfg.cmd_move_alt4: ewmap.move,
-	ewcfg.cmd_move_alt5: ewmap.move,
-	ewcfg.cmd_move_alt6: ewmap.move,
+	#ewcfg.cmd_move: ewmap.move,
+	#ewcfg.cmd_move_alt1: ewmap.move,
+	#ewcfg.cmd_move_alt2: ewmap.move,
+	#ewcfg.cmd_move_alt3: ewmap.move,
+	#ewcfg.cmd_move_alt4: ewmap.move,
+	#ewcfg.cmd_move_alt5: ewmap.move,
+	#ewcfg.cmd_move_alt6: ewmap.move,
 
 	# !use
 	#ewcfg.cmd_use: ewitem.item_use,
@@ -974,8 +974,8 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_returnsoul: ewitem.returnsoul,
 
 	# !stop, Cancel all moves in progress.
-	ewcfg.cmd_halt: ewmap.halt,
-	ewcfg.cmd_halt_alt1: ewmap.halt,
+	#ewcfg.cmd_halt: ewmap.halt,
+	#ewcfg.cmd_halt_alt1: ewmap.halt,
 
 	# !howl
 	#ewcfg.cmd_howl: ewcmd.cmd_howl,
@@ -1089,8 +1089,8 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_piss: ewcmd.piss,
 
 	# Look around an adjacent POI
-	ewcfg.cmd_scout: ewmap.scout,
-	ewcfg.cmd_scout_alt1: ewmap.scout,
+	#ewcfg.cmd_scout: ewmap.scout,
+	#ewcfg.cmd_scout_alt1: ewmap.scout,
 
 	# !smoke cause you're cool
 	#ewcfg.cmd_smoke: ewcosmeticitem.smoke,
@@ -1113,7 +1113,7 @@ apt_dm_cmd_map = {
 	ewcfg.cmd_bleedout: ewmutation.bleedout,
 
 	# something with oeo I think
-	ewcfg.cmd_thirdeye: ewmap.tracker,
+	#ewcfg.cmd_thirdeye: ewmap.tracker,
 
 	# more oeo
 	ewcfg.cmd_track: ewmutation.track_oneeyeopen,
@@ -1128,7 +1128,7 @@ apt_dm_cmd_map = {
 	#ewcfg.cmd_longdrop: ewitem.longdrop,
 }
 
-cmd_modules = [wep, ewapt, ewbook, ewitem, ewcmd, ewads, ewcasino, ewcosmeticitem, ewdebug, ewdistrict, ewslimeoid]
+cmd_modules = [wep, ewapt, ewbook, ewitem, ewcmd, ewads, ewcasino, ewcosmeticitem, ewdebug, ewdistrict, ewslimeoid, ewmap]
 
 for mod in cmd_modules:
 	try:
