@@ -2,12 +2,11 @@ import asyncio
 import random
 
 from ew.static import poi as poi_static
+from ew.utils import dungeons as dungeon_utils
 from ew.utils import frontend as fe_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from . import utils
-from .utils import begin_tutorial
-from .utils import format_tutorial_response
 
 
 async def tutorial_cmd(cmd):
@@ -18,7 +17,7 @@ async def tutorial_cmd(cmd):
         return
 
     if user_data.id_user not in utils.user_to_tutorial_state:
-        return await begin_tutorial(cmd.message.author)
+        return await dungeon_utils.begin_tutorial(cmd.message.author)
 
     tutorial_state = utils.user_to_tutorial_state.get(user_data.id_user)
 
@@ -43,7 +42,7 @@ async def tutorial_cmd(cmd):
 
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
-        response = format_tutorial_response(scene)
+        response = dungeon_utils.format_tutorial_response(scene)
 
         poi_def = poi_static.id_to_poi.get(user_data.poi)
         channels = [poi_def.channel]
@@ -65,7 +64,7 @@ async def tutorial_cmd(cmd):
 
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
-        response = format_tutorial_response(scene)
+        response = dungeon_utils.format_tutorial_response(scene)
 
         poi_def = poi_static.id_to_poi.get(user_data.poi)
         channels = [poi_def.channel]
@@ -90,6 +89,6 @@ async def tutorial_cmd(cmd):
         except:
             pass
 
-        # response = format_tutorial_response(tutorial_scene)
+        # response = dungeon_utils.format_tutorial_response(tutorial_scene)
         # return await fe_utils.send_message(client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         return

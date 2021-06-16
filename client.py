@@ -29,7 +29,6 @@ import ew.backend.player as bknd_player
 import ew.backend.server as bknd_server
 import ew.cmd.cmds as ewcmd
 import ew.cmd.debug as ewdebug
-import ew.cmd.district as ewdistrict
 import ew.cmd.dungeons as ewdungeons
 import ew.cmd.item as ewitem
 import ew.cmd.market as ewmarket
@@ -49,6 +48,7 @@ import ew.utils.cmd as cmd_utils
 import ew.utils.core as ewutils
 import ew.utils.cosmeticitem as cosmetic_utils
 import ew.utils.district as district_utils
+import ew.utils.dungeons as dungeon_utils
 import ew.utils.frontend as fe_utils
 import ew.utils.item as itm_utils
 import ew.utils.leaderboard as bknd_leaderboard
@@ -608,7 +608,7 @@ async def on_member_join(member):
 	user_data = EwUser(member = member)
 
 	if user_data.poi in poi_static.tutorial_pois:
-		await ewdungeons.begin_tutorial(member)
+		await dungeon_utils.begin_tutorial(member)
 
 @client.event
 async def on_message_delete(message):
