@@ -1,8 +1,9 @@
 from ..static import cfg as ewcfg
 
 """ A weapon object which adds flavor text to kill/shoot. """
-class EwWeapon:
 
+
+class EwWeapon:
 	item_type = "weapon"
 
 	# A unique name for the weapon. This is used in the database and typed by
@@ -10,7 +11,7 @@ class EwWeapon:
 	id_weapon = ""
 
 	# An array of names that might be used to identify this weapon by the player.
-	alias = None#[]
+	alias = None  # []
 
 	# Displayed when !equip-ping this weapon
 	str_equip = ""
@@ -47,7 +48,7 @@ class EwWeapon:
 	str_duel = ""
 
 	# Function that applies the special effect for this weapon.
-	fn_effect = None#[]
+	fn_effect = None  # []
 
 	# Displayed when a weapon effect causes a critical hit.
 	str_crit = ""
@@ -77,10 +78,10 @@ class EwWeapon:
 	cooldown = 0
 
 	# Vendor
-	vendors = None#[]
+	vendors = None  # []
 
 	# Classes the weapon belongs to
-	classes = None#[]
+	classes = None  # []
 
 	acquisition = "dojo"
 
@@ -88,51 +89,51 @@ class EwWeapon:
 	stat = ""
 
 	# sap needed to fire
-	#sap_cost = 0
+	# sap_cost = 0
 
 	# length of captcha you need to solve to fire
 	captcha_length = 0
 
-	#whether the weapon is a tool
+	# whether the weapon is a tool
 	is_tool = 0
 
-	#an array for storing extra string data for different tools
+	# an array for storing extra string data for different tools
 	tool_props = {}
 
 	def __init__(
-		self,
-		id_weapon = "",
-		alias =   [],
-		str_equip = "",
-		str_kill = "",
-		str_killdescriptor = "",
-		str_trauma = "",
-		str_trauma_self = "",
-		str_name = "",
-		str_weapon = "",
-		str_weapon_self = "",
-		str_damage = "",
-		str_duel = "",
-		str_weaponmaster = "",
-		str_weaponmaster_self = "",
-		fn_effect = None,
-		str_crit = "",
-		str_miss = "",
-		str_description = "",
-		str_reload = "",
-		str_reload_warning = "",
-		str_scalp = "",
-		clip_size = 0,
-		price = 0,
-		cooldown = 0,
-		vendors = [],
-		classes = [],
-		acquisition = "dojo",
-		stat = "",
-		#sap_cost = 0,
-		captcha_length = 0,
-		is_tool = 0,
-		tool_props = None
+			self,
+			id_weapon = "",
+			alias = [],
+			str_equip = "",
+			str_kill = "",
+			str_killdescriptor = "",
+			str_trauma = "",
+			str_trauma_self = "",
+			str_name = "",
+			str_weapon = "",
+			str_weapon_self = "",
+			str_damage = "",
+			str_duel = "",
+			str_weaponmaster = "",
+			str_weaponmaster_self = "",
+			fn_effect = None,
+			str_crit = "",
+			str_miss = "",
+			str_description = "",
+			str_reload = "",
+			str_reload_warning = "",
+			str_scalp = "",
+			clip_size = 0,
+			price = 0,
+			cooldown = 0,
+			vendors = [],
+			classes = [],
+			acquisition = "dojo",
+			stat = "",
+			# sap_cost = 0,
+			captcha_length = 0,
+			is_tool = 0,
+			tool_props = None
 	):
 		self.item_type = ewcfg.it_weapon
 
@@ -164,10 +165,8 @@ class EwWeapon:
 		self.classes = classes
 		self.acquisition = acquisition
 		self.stat = stat
-		#self.sap_cost = sap_cost
+		# self.sap_cost = sap_cost
 		self.captcha_length = captcha_length
 		self.is_tool = is_tool
 		self.tool_props = tool_props,
-		#self.str_name = self.str_weapon,
-
-
+# self.str_name = self.str_weapon,
