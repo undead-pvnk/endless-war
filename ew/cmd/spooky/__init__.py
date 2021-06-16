@@ -4,7 +4,6 @@
 
 from ew.static import cfg as ewcfg
 from . import cmds
-from .utils import *
 
 cmd_map = {
 

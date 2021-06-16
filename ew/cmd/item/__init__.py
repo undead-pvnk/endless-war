@@ -1,6 +1,6 @@
+from ew.static import cfg as ewcfg
 from . import cmds
 from .cmds import item_look
-from .utils import *
 
 cmd_map = {
 

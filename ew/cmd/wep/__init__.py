@@ -1,6 +1,5 @@
 from ew.static import cfg
 from . import cmds
-from .utils import *
 
 cmd_map = {
 
