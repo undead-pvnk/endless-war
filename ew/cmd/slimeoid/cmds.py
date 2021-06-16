@@ -6,7 +6,6 @@ from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.quadrants import EwQuadrant
-from ew.cmd import item as ewitem
 from ew.static import cfg as ewcfg
 from ew.static import hue as hue_static
 from ew.static import poi as poi_static
@@ -14,6 +13,7 @@ from ew.static import slimeoid as sl_static
 from ew.utils import casino as casino_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
+from ew.utils import item as item_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.slimeoid import EwSlimeoid
@@ -1561,7 +1561,7 @@ async def saturateslimeoid(cmd):
                     bknd_item.item_delete(id_item=item_sought.get('id_item'))
                     response += "\nThe paint bucket is consumed in the process."
                 else:
-                    await ewitem.lower_durability(item_sought)
+                    await item_utils.lower_durability(item_sought)
                 user_data.persist()
             else:
                 response = "You saturate your {} with the {} dye! {}".format(slimeoid.name, hue.str_name, hue.str_saturate)

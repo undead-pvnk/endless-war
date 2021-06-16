@@ -3536,7 +3536,7 @@ async def forge_master_poudrin(cmd):
 
     ewutils.logMsg("Master poudrin created. Slime stored: {}, Cosmetic ID = {}".format(user_data.slimes, new_item_id))
 
-    ewitem.soulbind(new_item_id)
+    itm_utils.soulbind(new_item_id)
 
     user_data.slimes = 0
     user_data.persist()

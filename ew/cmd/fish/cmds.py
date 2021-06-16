@@ -25,7 +25,6 @@ from .utils import cancel_rod_possession
 from .utils import gen_bite_text
 from .utils import gen_fish
 from .utils import gen_fish_size
-from .. import item as ewitem
 
 """ Casts a line into the Slime Sea """
 
@@ -735,7 +734,7 @@ async def embiggen(cmd):
 
         if fish.item_props.get('id_furniture') == "singingfishplaque":
 
-            poudrins_owned = ewitem.find_item_all(item_search="slimepoudrin", id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
+            poudrins_owned = itm_utils.find_item_all(item_search="slimepoudrin", id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
             poudrin_amount = len(poudrins_owned)
 
             if poudrin_amount < 2:
@@ -774,7 +773,7 @@ async def embiggen(cmd):
             if size == ewcfg.fish_size_huge:
                 poudrin_cost = 32
 
-            poudrins_owned = ewitem.find_item_all(item_search="slimepoudrin", id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
+            poudrins_owned = itm_utils.find_item_all(item_search="slimepoudrin", id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
             poudrin_amount = len(poudrins_owned)
 
             if poudrin_cost == 0:

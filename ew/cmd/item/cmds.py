@@ -23,7 +23,7 @@ from ew.utils import poi as poi_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
-from .utils import find_item_all, item_drop
+from .utils import item_drop
 
 
 async def soulextract(cmd):
@@ -266,7 +266,7 @@ async def inventory_print(cmd):
             item_type_filter=item_type
         )
     elif search == True:
-        items = find_item_all(
+        items = itm_utils.find_item_all(
             item_search=ewutils.flattenTokenListToString(cmd.tokens[2:]),
             id_server=player.id_server,
             id_user=inventory_source,
@@ -658,7 +658,7 @@ async def item_use(cmd):
             elif context == ewcfg.item_id_gellphone:
 
                 if user_data.has_gellphone():
-                    gellphones = find_item_all(item_search=ewcfg.item_id_gellphone, id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
+                    gellphones = itm_utils.find_item_all(item_search=ewcfg.item_id_gellphone, id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
 
                     for phone in gellphones:
                         phone_data = EwItem(id_item=phone.get('id_item'))

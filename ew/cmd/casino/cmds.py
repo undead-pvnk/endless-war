@@ -9,6 +9,7 @@ from ew.static import poi as poi_static
 from ew.utils import cmd as cmd_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
+from ew.utils import item as item_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
@@ -22,7 +23,6 @@ from .utils import get_skat_play
 from .utils import printcard
 from .utils import printhand
 from .utils import skat_putback
-from .. import item as ewitem
 
 # Map containing user IDs and the last time in UTC seconds since the pachinko
 # machine was used.
@@ -336,7 +336,7 @@ async def craps(cmd):
                     response = "You don't have a soul to bet."
                     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
                 else:
-                    soul_id = ewitem.surrendersoul(receiver=user_data.id_user, giver=user_data.id_user, id_server=user_data.id_server)
+                    soul_id = item_utils.surrendersoul(receiver=user_data.id_user, giver=user_data.id_user, id_server=user_data.id_server)
                     bknd_item.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
                     user_data = EwUser(member=cmd.message.author)
 
@@ -691,7 +691,7 @@ async def roulette(cmd):
                         response = "You don't have a soul to bet."
                         return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
                     else:
-                        soul_id = ewitem.surrendersoul(receiver=user_data.id_user, giver=user_data.id_user, id_server=user_data.id_server)
+                        soul_id = item_utils.surrendersoul(receiver=user_data.id_user, giver=user_data.id_user, id_server=user_data.id_server)
                         bknd_item.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
                         user_data = EwUser(member=cmd.message.author)
 
@@ -910,7 +910,7 @@ async def baccarat(cmd):
                         response = "You don't have a soul to bet."
                         return await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
                     else:
-                        soul_id = ewitem.surrendersoul(receiver=user_data.id_user, giver=user_data.id_user, id_server=user_data.id_server)
+                        soul_id = item_utils.surrendersoul(receiver=user_data.id_user, giver=user_data.id_user, id_server=user_data.id_server)
                         user_data = EwUser(member=cmd.message.author)
 
                 user_data.persist()
@@ -2223,7 +2223,7 @@ async def russian_roulette(cmd):
                     challenger.die(cause=ewcfg.cause_suicide)
 
                     if soulstake:
-                        ewitem.surrendersoul(giver=challenger.id_user, receiver=challengee.id_user, id_server=challenger.id_server)
+                        item_utils.surrendersoul(giver=challenger.id_user, receiver=challengee.id_user, id_server=challenger.id_server)
                         challenger.has_soul = 0
 
                 # Challengee dies
@@ -2239,7 +2239,7 @@ async def russian_roulette(cmd):
                     challenger.trauma = ewcfg.trauma_id_suicide
                     challengee.die(cause=ewcfg.cause_suicide)
                     if soulstake:
-                        ewitem.surrendersoul(giver=challengee.id_user, receiver=challenger.id_user, id_server=challenger.id_server)
+                        item_utils.surrendersoul(giver=challengee.id_user, receiver=challenger.id_user, id_server=challenger.id_server)
                         challengee.has_soul = 0
 
                 ewutils.active_target_map[challenger.id_user] = ""

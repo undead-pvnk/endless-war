@@ -10,7 +10,6 @@ from ew.backend import worldevent as bknd_worldevent
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.worldevent import EwWorldEvent
-from ew.cmd import item as ewitem
 from ew.static import cfg as ewcfg
 from ew.static import food as static_food
 from ew.static import items as static_items
@@ -772,7 +771,7 @@ async def scavenge(cmd):
                         utils.scavenge_combos[user_data.id_user] = 0
 
                 if not has_comboed:
-                    loot_resp = ewitem.item_lootspecific(
+                    loot_resp = itm_utils.item_lootspecific(
                         id_server=user_data.id_server,
                         id_user=user_data.id_user,
                         item_search=item_search

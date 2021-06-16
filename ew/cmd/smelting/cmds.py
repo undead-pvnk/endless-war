@@ -2,7 +2,6 @@ import random
 
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
-from ew.cmd import item as ewitem
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
 from ew.static import cosmetics as static_cosmetics
@@ -47,7 +46,7 @@ async def smelt(cmd):
                     necessary_str += "s"
                 necessary_ingredients_list.append(necessary_str)
 
-                sought_items = ewitem.find_item_all(item_search=matched_item, id_user=user_data.id_user, id_server=user_data.id_server)
+                sought_items = itm_utils.find_item_all(item_search=matched_item, id_user=user_data.id_user, id_server=user_data.id_server)
                 missing_items = necessary_items - len(sought_items)
                 if missing_items > 0:
                     missing_str = "{} {}".format(missing_items, matched_item)

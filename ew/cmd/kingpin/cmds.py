@@ -1,7 +1,7 @@
 import re
 
 from ew.backend import item as bknd_item
-from ew.cmd import item as ewitem, move as ewmap
+from ew.cmd import move as ewmap
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
 from ew.static import poi as poi_static
@@ -183,7 +183,7 @@ async def create(cmd):
         item_props=item_props
     )
 
-    ewitem.soulbind(new_item_id)
+    itm_utils.soulbind(new_item_id)
 
     response = 'Item "{}" successfully created.'.format(item_name)
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -232,7 +232,7 @@ async def exalt(cmd):
 
     # Soulbind the medallion. A player can get at most twice, but later on a new command could be added to destroy them/trade them in.
     # I imagine this would be something similar to how players can destroy Australium Wrenches in TF2, which broadcasts a message to everyone in the game, or something.
-    ewitem.soulbind(medallion_id)
+    itm_utils.soulbind(medallion_id)
 
     response = "**{} has been gifted the Double Halloween Medallion!!**\n".format(recipient.display_name)
     #

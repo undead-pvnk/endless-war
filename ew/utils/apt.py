@@ -6,11 +6,11 @@ from ew.backend.apt import EwApartment
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.player import EwPlayer
-from ew.cmd import item as ewitem
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
+from ew.utils import item as item_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 
@@ -98,8 +98,8 @@ async def setOffAlarms(id_server = None):
 
         item_search = "alarm clock set to {}{}".format(displaytime, ampm)
         item_search_brick = "brick{:02d}".format(time_current)
-        clockinv = ewitem.find_item_all(item_search="alarmclock", id_server=id_server, item_type_filter=ewcfg.it_furniture)
-        brickinv = ewitem.find_item_all(item_search=item_search_brick, id_server=id_server, item_type_filter=ewcfg.it_furniture, search_names=True)
+        clockinv = item_utils.find_item_all(item_search="alarmclock", id_server=id_server, item_type_filter=ewcfg.it_furniture)
+        brickinv = item_utils.find_item_all(item_search=item_search_brick, id_server=id_server, item_type_filter=ewcfg.it_furniture, search_names=True)
 
         for clock in clockinv:
             isFurnished = False
