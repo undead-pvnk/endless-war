@@ -31,7 +31,6 @@ import ew.cmd.cmds as ewcmd
 import ew.cmd.debug as ewdebug
 import ew.cmd.dungeons as ewdungeons
 import ew.cmd.item as ewitem
-import ew.cmd.market as ewmarket
 import ew.cmd.move as ewmap
 import ew.cmd.slimeoid as ewslimeoid
 import ew.cmd.sports as ewsports
@@ -53,6 +52,7 @@ import ew.utils.frontend as fe_utils
 import ew.utils.item as itm_utils
 import ew.utils.leaderboard as bknd_leaderboard
 import ew.utils.loop as loop_utils
+import ew.utils.market as market_utils
 import ew.utils.rolemgr as ewrolemgr
 import ew.utils.weather as bknd_weather
 from ew.backend.item import EwItem
@@ -396,7 +396,7 @@ async def on_ready():
 						# or when shamblers have degraded it
 						if s.timestamp != 0 and not exchange_data.is_degraded():
 							s.timestamp = time_now
-							market_response = ewmarket.market_tick(s, server.id)
+							market_response = market_utils.market_tick(s, server.id)
 							await fe_utils.send_message(client, channels_stockmarket.get(server.id), market_response)
 
 					market_data = EwMarket(id_server = server.id)

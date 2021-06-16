@@ -10,12 +10,11 @@ from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
+from ew.utils import market as market_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
-from .utils import getUserTotalShares
 from .utils import get_user_shares_str
-from .utils import updateUserTotalShares
 
 """ transfer slimecoin between players """
 
@@ -406,9 +405,9 @@ async def invest(cmd):
 
                 else:
                     user_data.change_slimecoin(n=-cost_total, coinsource=ewcfg.coinsource_invest)
-                    shares = getUserTotalShares(id_server=user_data.id_server, stock=stock.id_stock, id_user=user_data.id_user)
+                    shares = market_utils.getUserTotalShares(id_server=user_data.id_server, stock=stock.id_stock, id_user=user_data.id_user)
                     shares += net_shares
-                    updateUserTotalShares(id_server=user_data.id_server, stock=stock.id_stock, id_user=user_data.id_user, shares=shares)
+                    market_utils.updateUserTotalShares(id_server=user_data.id_server, stock=stock.id_stock, id_user=user_data.id_user, shares=shares)
                     user_data.time_lastinvest = time_now
 
                     stock.total_shares += net_shares
@@ -476,7 +475,7 @@ async def withdraw(cmd):
         if stock != None:
             stock = EwStock(id_server=cmd.guild.id, stock=stock)
 
-            total_shares = getUserTotalShares(id_server=user_data.id_server, stock=stock.id_stock, id_user=user_data.id_user)
+            total_shares = market_utils.getUserTotalShares(id_server=user_data.id_server, stock=stock.id_stock, id_user=user_data.id_user)
 
             if value != None:
                 if value < 0:
@@ -505,7 +504,7 @@ async def withdraw(cmd):
                         user_data.persist()
                         stock.timestamp = round(time.time())
                         stock.persist()
-                        updateUserTotalShares(id_server=user_data.id_server, stock=stock.id_stock, id_user=user_data.id_user, shares=total_shares)
+                        market_utils.updateUserTotalShares(id_server=user_data.id_server, stock=stock.id_stock, id_user=user_data.id_user, shares=total_shares)
                 else:
                     response = "You don't have that many shares in {stock} to exchange.".format(stock=ewcfg.stock_names.get(stock.id_stock))
             else:
