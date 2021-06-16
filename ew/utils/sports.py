@@ -7,6 +7,7 @@ from ew.utils.frontend import EwResponseContainer
 
 sb_games = {}
 
+
 async def slimeball_tick_loop(id_server):
     global sb_games
     while not ewutils.TERMINATE:
@@ -36,4 +37,3 @@ async def slimeball_tick(id_server):
                 game.kill()
 
     await resp_cont.post()
-

@@ -16,7 +16,6 @@ from ew.utils import stats as ewstats
 from ew.utils.combat import EwUser
 from ew.utils.slimeoid import EwSlimeoid
 
-
 """ wrapper for discord members """  # Doesn't really sound like a cmd related class
 
 

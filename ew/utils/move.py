@@ -16,7 +16,6 @@ from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 
-
 move_counter = 0
 
 map_world = [
@@ -69,7 +68,6 @@ sem_city = -2
 sem_city_alias = -3
 
 landmarks = {}
-
 
 """
     Returns true if the specified point of interest is a PvP zone.
@@ -171,7 +169,6 @@ def path_branch(path_base, poi_next, cost_next, user_data, poi_end, landmark_mod
         return None
 
     return path_next
-
 
 
 def score_map_from(
@@ -550,6 +547,7 @@ async def send_gangbase_messages(server_id, clock):
 """
     Find the cost to move through ortho-adjacent cells.
 """
+
 
 # unused
 def neighbors(coord):

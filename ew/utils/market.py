@@ -8,7 +8,6 @@ from ew.backend.market import EwStock
 from ew.backend.player import EwPlayer
 from ew.static import cfg as ewcfg
 
-
 """ update stock values according to market activity """
 
 
