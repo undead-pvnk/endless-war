@@ -13,10 +13,10 @@ from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwEnemy
 from ew.utils.slimeoid import EwSlimeoid
 
-
 """
     Returns data for POI if it isn't on the map.
 """
+
 
 # Unused
 def fetch_poi_if_coordless(channel_name):
@@ -32,6 +32,7 @@ def fetch_poi_if_coordless(channel_name):
 """
     Returns the fancy display name of the specified POI.
 """
+
 
 # Unused
 def poi_id_to_display_name(poi_name = None):

@@ -4,7 +4,6 @@ from ew.static import cfg as ewcfg
 from ew.utils import core as ewutils
 from ew.utils.combat import EwUser
 
-
 """
     Drop item into current district.
 """

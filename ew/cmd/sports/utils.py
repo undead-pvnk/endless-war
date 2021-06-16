@@ -38,7 +38,7 @@ class EwSlimeballPlayer:
         self.id_player = sb_count
         sb_count += 1
 
-        #global sb_games
+        # global sb_games
 
         self.velocity = [0, 0]
 
@@ -71,7 +71,7 @@ class EwSlimeballPlayer:
 
         destination_vector = position_vector.add(move_vector)
 
-        #global sb_games
+        # global sb_games
         game_data = sports_utils.sb_games.get(self.id_game)
 
         player_data = EwPlayer(id_user=self.id_user)
@@ -142,7 +142,7 @@ class EwSlimeballGame:
 
         sb_count += 1
 
-        #global sb_games
+        # global sb_games
         sports_utils.sb_games[self.id_game] = self
 
         global sb_idserver_to_gamemap
@@ -302,7 +302,7 @@ class EwSlimeballGame:
         return resp_cont
 
     def kill(self):
-        #global sb_games
+        # global sb_games
 
         sports_utils.sb_games[self.id_game] = None
         gamemap = sb_idserver_to_gamemap.get(self.id_server)

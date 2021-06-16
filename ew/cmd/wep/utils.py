@@ -81,6 +81,8 @@ class EwEffectContainer:
         self.hit_chance_mod = hit_chance_mod
         self.crit_mod = crit_mod
         self.market_data = market_data
+
+
 # self.sap_damage = sap_damage
 # self.sap_ignored = sap_ignored
 
@@ -1092,7 +1094,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
         await killfeed_resp_cont.post()
 
     # Send the response to the player.
-
 
     else:
         resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)

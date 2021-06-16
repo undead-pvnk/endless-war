@@ -1384,7 +1384,6 @@ async def apt_look(cmd):
     return await resp_cont.post(channel=cmd.message.channel)
 
 
-
 # Used to be dms only
 # -------------------------------------------------------------------
 # Ensure these commands get a location check before moving out of DMS

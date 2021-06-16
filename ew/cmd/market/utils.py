@@ -4,8 +4,8 @@ from ew.static import cfg as ewcfg
 from ew.utils import market as market_utils
 from ew.utils.combat import EwUser
 
-
 """ Returns an array of the most recent counts of all invested slime coin, from newest at 0 to oldest. """
+
 
 # Unused
 def getRecentTotalShares(id_server = None, stock = None, count = 2):

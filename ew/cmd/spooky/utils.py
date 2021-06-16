@@ -2,6 +2,7 @@ import random
 
 from ew.utils import core as ewutils
 
+
 # Unused
 def generate_negaslimeoid_name():
     titles = ["Angel", "Emissary", "Gaping Maw", "Apostle", "Nemesis", "Harbinger", "Reaper", "Incarnation", "Wanderer", "Berserker", "Outcast", "Monarch", "Anomaly"]

@@ -9,7 +9,7 @@ from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
 from ew.backend.player import EwPlayer
-from ew.cmd import debug as ewdebug, smelting as ewsmelting
+from ew.cmd import debug as ewdebug
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
 from ew.static import hue as hue_static
