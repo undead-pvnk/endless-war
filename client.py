@@ -48,6 +48,7 @@ import ew.utils.apt as apt_utils
 import ew.utils.cmd as cmd_utils
 import ew.utils.core as ewutils
 import ew.utils.cosmeticitem as cosmetic_utils
+import ew.utils.district as district_utils
 import ew.utils.frontend as fe_utils
 import ew.utils.item as itm_utils
 import ew.utils.leaderboard as bknd_leaderboard
@@ -273,7 +274,7 @@ async def on_ready():
 		# kill people who left the server while the bot was offline
 		#ewutils.kill_quitters(server.id) #FIXME function get_member doesn't find users reliably
 
-		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
+		asyncio.ensure_future(district_utils.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(loop_utils.bleed_tick_loop(id_server = server.id))
 		asyncio.ensure_future(loop_utils.enemy_action_tick_loop(id_server=server.id))
 		asyncio.ensure_future(loop_utils.burn_tick_loop(id_server = server.id))
@@ -540,7 +541,7 @@ async def on_ready():
 					# kill advertisements that have timed out
 					bknd_ads.delete_expired_ads(id_server = server.id)
 
-					await ewdistrict.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
+					await district_utils.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
 					await ewmap.send_gangbase_messages(server.id, market_data.clock)
 					await ewmap.kick(server.id)
 
