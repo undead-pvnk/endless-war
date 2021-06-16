@@ -1,15 +1,13 @@
-import asyncio
 import random
 
 from ew.backend.player import EwPlayer
-from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
+from ew.utils import sports as sports_utils
 from ew.utils.frontend import EwResponseContainer
 
 sb_count = 0
 
-sb_games = {}
 sb_idserver_to_gamemap = {}
 
 sb_slimeballerid_to_player = {}
@@ -40,11 +38,11 @@ class EwSlimeballPlayer:
         self.id_player = sb_count
         sb_count += 1
 
-        global sb_games
+        #global sb_games
 
         self.velocity = [0, 0]
 
-        game_data = sb_games.get(id_game)
+        game_data = sports_utils.sb_games.get(id_game)
         while not game_data.coords_free(self.coords):
             self.coords = get_starting_position(self.team)
 
@@ -73,8 +71,8 @@ class EwSlimeballPlayer:
 
         destination_vector = position_vector.add(move_vector)
 
-        global sb_games
-        game_data = sb_games.get(self.id_game)
+        #global sb_games
+        game_data = sports_utils.sb_games.get(self.id_game)
 
         player_data = EwPlayer(id_user=self.id_user)
         response = ""
@@ -144,8 +142,8 @@ class EwSlimeballGame:
 
         sb_count += 1
 
-        global sb_games
-        sb_games[self.id_game] = self
+        #global sb_games
+        sports_utils.sb_games[self.id_game] = self
 
         global sb_idserver_to_gamemap
         gamemap = sb_idserver_to_gamemap.get(self.id_server)
@@ -304,42 +302,11 @@ class EwSlimeballGame:
         return resp_cont
 
     def kill(self):
-        global sb_games
+        #global sb_games
 
-        sb_games[self.id_game] = None
+        sports_utils.sb_games[self.id_game] = None
         gamemap = sb_idserver_to_gamemap.get(self.id_server)
         gamemap[self.poi] = None
-
-
-async def slimeball_tick_loop(id_server):
-    global sb_games
-    while not ewutils.TERMINATE:
-        await slimeball_tick(id_server)
-        await asyncio.sleep(ewcfg.slimeball_tick_length)
-
-
-async def slimeball_tick(id_server):
-    resp_cont = EwResponseContainer(id_server=id_server)
-
-    for id_game in sb_games:
-        game = sb_games.get(id_game)
-        if game == None:
-            continue
-        if game.id_server == id_server:
-            if len(game.players) > 0:
-                for player in game.players:
-                    resp_cont.add_response_container(player.move())
-
-                resp_cont.add_response_container(game.move_ball())
-
-            else:
-                poi_data = poi_static.id_to_poi.get(game.poi)
-                response = "Slimeball game ended with score purple {} : {} pink.".format(game.score_purple, game.score_pink)
-                resp_cont.add_channel_response(poi_data.channel, response)
-
-                game.kill()
-
-    await resp_cont.post()
 
 
 def get_starting_position(team):

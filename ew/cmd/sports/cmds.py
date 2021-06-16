@@ -2,6 +2,7 @@ from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
+from ew.utils import sports as sports_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from . import utils
@@ -36,7 +37,7 @@ async def slimeball(cmd):
 
     if slimeball_player != None:
         # global sb_games
-        game_data = utils.sb_games.get(slimeball_player.id_game)
+        game_data = sports_utils.sb_games.get(slimeball_player.id_game)
 
         if game_data != None and game_data.poi != poi_data.id_poi:
             game_data.players.remove(slimeball_player)
@@ -90,7 +91,7 @@ async def slimeballgo(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     # global sb_games
-    game_data = utils.sb_games.get(slimeball_player.id_game)
+    game_data = sports_utils.sb_games.get(slimeball_player.id_game)
 
     poi_data = poi_static.chname_to_poi.get(cmd.message.channel.name)
 
@@ -132,7 +133,7 @@ async def slimeballstop(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     # global sb_games
-    game_data = utils.sb_games.get(slimeball_player.id_game)
+    game_data = sports_utils.sb_games.get(slimeball_player.id_game)
 
     poi_data = poi_static.chname_to_poi.get(cmd.message.channel.name)
 
@@ -153,7 +154,7 @@ async def slimeballleave(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     # global sb_games
-    game_data = utils.sb_games.get(slimeball_player.id_game)
+    game_data = sports_utils.sb_games.get(slimeball_player.id_game)
 
     game_data.players.remove(slimeball_player)
     slimeball_player.id_game = -1
