@@ -9,6 +9,7 @@ from . import core as ewutils
 from . import frontend as fe_utils
 from . import item as itm_utils
 from . import poi as poi_utils
+from . import stats as ewstats
 from .frontend import EwResponseContainer
 from ..backend import core as bknd_core
 from ..backend import item as bknd_item
