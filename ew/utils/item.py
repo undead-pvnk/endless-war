@@ -553,3 +553,60 @@ async def lower_durability(general_item):
     current_durability = general_item_data.item_props.get('durability')
     general_item_data.item_props['durability'] = (int(current_durability) - 1)
     general_item_data.persist()
+
+
+def unwrap(id_user = None, id_server = None, item = None):
+    response = "You eagerly rip open a pack of Secreatures™ trading cards!!"
+    bknd_item.item_delete(item.id_item)
+    slimexodia = False
+
+    slimexodia_chance = 1 / 1000
+
+    if random.random() < slimexodia_chance:
+        slimexodia = True
+
+    if slimexodia == True:
+        # If there are multiple possible products, randomly select one.
+        slimexodia_item = random.choice(static_items.slimexodia_parts)
+
+        response += " There’s a single holographic card poking out of the swathes of repeats and late edition cards..."
+        response += " ***...What’s this?! It’s the legendary card {}!! If you’re able to collect the remaining pieces of Slimexodia, you might be able to smelt something incomprehensibly powerful!!***".format(slimexodia_item.str_name)
+
+        item_props = gen_item_props(slimexodia_item)
+
+        bknd_item.item_create(
+            item_type=slimexodia_item.item_type,
+            id_user=id_user.id,
+            id_server=id_server.id,
+            item_props=item_props
+        )
+
+    else:
+        response += " But… it’s mostly just repeats and late edition cards. You toss them away."
+
+    return response
+
+
+def popcapsule(id_user = None, id_server = None, item = None):
+    rarity_roll = random.randrange(10)
+    bknd_item.item_delete(item.id_item)
+
+    if rarity_roll > 3:
+        prank_item = random.choice(static_items.prank_items_heinous)
+    elif rarity_roll > 0:
+        prank_item = random.choice(static_items.prank_items_scandalous)
+    else:
+        prank_item = random.choice(static_items.prank_items_forbidden)
+
+    item_props = gen_item_props(prank_item)
+
+    prank_item_id = bknd_item.item_create(
+        item_type=prank_item.item_type,
+        id_user=id_user.id,
+        id_server=id_server.id,
+        item_props=item_props
+    )
+
+    response = "You pop open the Prank Capsule to reveal a {}! Whoa, sick!!".format(prank_item.str_name)
+
+    return response

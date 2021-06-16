@@ -634,7 +634,7 @@ async def item_use(cmd):
             name = item_sought.get('name')
             context = item.item_props.get('context')
             if name == "Trading Cards":
-                response = ewsmelting.unwrap(id_user=author, id_server=server, item=item)
+                response = itm_utils.unwrap(id_user=author, id_server=server, item=item)
             elif (context == 'repel' or context == 'superrepel' or context == 'maxrepel'):
                 statuses = user_data.getStatusEffects()
                 if ewcfg.status_repelaftereffects_id in statuses:
@@ -709,7 +709,7 @@ async def item_use(cmd):
             # 	response = ewdebug.last_words
 
             elif context == "prankcapsule":
-                response = ewsmelting.popcapsule(id_user=author, id_server=server, item=item)
+                response = itm_utils.popcapsule(id_user=author, id_server=server, item=item)
 
             elif context == ewcfg.item_id_modelovaccine:
 
