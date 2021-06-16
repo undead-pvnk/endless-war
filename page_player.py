@@ -9,8 +9,8 @@ import html
 
 import ew.static.cfg as ewcfg
 import ew.backend.core as bknd_core
-import ew.cmd.cmds as ewcmd
 
+from ew.utils import cmd as cmd_utils
 from ew.utils.combat import EwUser
 from ew.backend.player import EwPlayer
 
@@ -69,7 +69,7 @@ print("<header><h2>{faction}<a href=player.html?pl={id_user}>{display_name}</a><
 # Main body
 print("<div>")
 
-print("<p>{}</p>".format(html.escape("".join(ewcmd.gen_data_text(
+print("<p>{}</p>".format(html.escape("".join(cmd_utils.gen_data_text(
 	id_user = id_user,
 	id_server = id_server,
 	display_name = player.display_name

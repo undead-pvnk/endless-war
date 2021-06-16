@@ -4,10 +4,10 @@ import time
 
 from ew.backend import item as bknd_item
 from ew.backend.market import EwMarket
-from ew.cmd import cmds as ewcmd
 from ew.static import cfg as ewcfg
 from ew.static import items as static_items
 from ew.static import poi as poi_static
+from ew.utils import cmd as cmd_utils
 from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
@@ -197,7 +197,7 @@ async def beep(cmd):
                 "https://youtu.be/Gb2jGy76v0Y"
             ]
         else:
-            resp = await ewcmd.start(cmd=cmd)
+            resp = await cmd_utils.start(cmd=cmd)
             response = "```CRITICAL ERROR: 'life_state' NOT FOUND\nINITIATING LIFECYCLE TERMINATION SEQUENCE IN "
             await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response + "10 SECONDS...```"))
             for i in range(10, 0, -1):

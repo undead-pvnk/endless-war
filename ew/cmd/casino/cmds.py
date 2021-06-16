@@ -6,6 +6,7 @@ from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
+from ew.utils import cmd as cmd_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import rolemgr as ewrolemgr
@@ -21,7 +22,7 @@ from .utils import get_skat_play
 from .utils import printcard
 from .utils import printhand
 from .utils import skat_putback
-from .. import cmds as ewcmd, item as ewitem
+from .. import item as ewitem
 
 # Map containing user IDs and the last time in UTC seconds since the pachinko
 # machine was used.
@@ -137,7 +138,7 @@ async def buysoul(cmd):
 
 
 async def pachinko(cmd):
-    resp = await ewcmd.start(cmd=cmd)
+    resp = await cmd_utils.start(cmd=cmd)
     time_now = int(time.time())
 
     user_data = EwUser(member=cmd.message.author)
@@ -404,7 +405,7 @@ async def craps(cmd):
 
 
 async def slots(cmd):
-    resp = await ewcmd.start(cmd=cmd)
+    resp = await cmd_utils.start(cmd=cmd)
     time_now = int(time.time())
 
     global last_slotsed_times
@@ -580,7 +581,7 @@ async def slots(cmd):
 
 
 async def roulette(cmd):
-    resp = await ewcmd.start(cmd=cmd)
+    resp = await cmd_utils.start(cmd=cmd)
     time_now = int(time.time())
     bet = ""
     soul_id = None
@@ -794,7 +795,7 @@ async def roulette(cmd):
 
 
 async def baccarat(cmd):
-    resp = await ewcmd.start(cmd=cmd)
+    resp = await cmd_utils.start(cmd=cmd)
     time_now = int(time.time())
     bet = ""
     all_bets = ["player", "dealer", "tie"]
@@ -919,8 +920,8 @@ async def baccarat(cmd):
                     bknd_item.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
                     response = "You bet your soul on {}. The dealer shuffles the deck, then begins to deal.".format(str(bet))
 
-                resp_d = await ewcmd.start(cmd=cmd)
-                resp_f = await ewcmd.start(cmd=cmd)
+                resp_d = await cmd_utils.start(cmd=cmd)
+                resp_f = await cmd_utils.start(cmd=cmd)
 
                 await fe_utils.edit_message(cmd.client, resp, fe_utils.formatMessage(cmd.message.author, response))
                 await asyncio.sleep(1)

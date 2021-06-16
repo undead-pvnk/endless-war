@@ -46,6 +46,7 @@ import ew.static.vendors as vendors
 import ew.static.weather as weather_static
 import ew.cmd.transport as ewtransport
 import ew.utils.apt as apt_utils
+import ew.utils.cmd as cmd_utils
 import ew.utils.core as ewutils
 import ew.utils.frontend as fe_utils
 import ew.utils.item as itm_utils
@@ -727,7 +728,7 @@ async def on_message(message):
 			admin_permissions = message.author.guild_permissions.administrator
 
 		# Create command object
-		cmd_obj = ewcmd.EwCmd(
+		cmd_obj = cmd_utils.EwCmd(
 			tokens = tokens,
 			message = message,
 			client = client,
@@ -1301,13 +1302,13 @@ async def on_message(message):
 
 	elif content_tolower.find(ewcfg.cmd_howl) >= 0 or content_tolower.find(ewcfg.cmd_howl_alt1) >= 0 or re_awoo.match(content_tolower):
 		""" Howl if !howl is in the message at all. """
-		return await ewcmd.cmds.cmd_howl(ewcmd.EwCmd(
+		return await ewcmd.cmds.cmd_howl(cmd_utils.EwCmd(
 			message = message,
 			client = client,
 			guild = message.guild
 		))
 	elif content_tolower.find(ewcfg.cmd_moan) >= 0 or re_moan.match(content_tolower):
-		return await ewcmd.cmds.cmd_moan(ewcmd.EwCmd(
+		return await ewcmd.cmds.cmd_moan(cmd_utils.EwCmd(
 			message=message,
 			client=client,
 			guild = message.guild

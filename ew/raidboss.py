@@ -1,9 +1,9 @@
 import asyncio
 import time
 
-from .cmd import cmds as ewcmd
 from .backend import core as bknd_core
 from .static import cfg as ewcfg
+from .utils import cmd as cmd_utils
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
 from .utils import rolemgr as ewrolemgr
@@ -15,7 +15,7 @@ from .utils.combat import EwUser
 
 
 async def writhe(cmd):
-	resp = await ewcmd.start(cmd = cmd)
+	resp = await cmd_utils.start(cmd = cmd)
 	response = ""
 	user_data = EwUser(member = cmd.message.author)
 

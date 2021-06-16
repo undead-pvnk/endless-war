@@ -25,6 +25,7 @@ from ew.static import poi as poi_static
 from ew.static import status as se_static
 from ew.static import vendors
 from ew.static import weapons as static_weapons
+from ew.utils import cmd as cmd_utils
 from ew.utils import combat as cmbt_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
@@ -39,8 +40,6 @@ from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
 from .utils import exec_mutations
-from .utils import fake_failed_command
-from .utils import gen_data_text
 from .utils import gen_score_text
 from .utils import item_commands
 from .utils import item_off
@@ -382,7 +381,7 @@ async def data(cmd):
     # other data check
     else:
         member = cmd.mentions[0]
-        response = gen_data_text(
+        response = cmd_utils.gen_data_text(
             id_user=member.id,
             id_server=member.guild.id,
             display_name=member.display_name,
@@ -4040,7 +4039,7 @@ async def assign_status_effect(cmd = None, status_name = None, user_id = None, s
         response = user_data.applyStatus(id_status=status_name, source=user_id, id_target=user_id)
     else:
         if not cmd.message.author.guild_permissions.administrator or cmd.mentions_count == 0:
-            return await fake_failed_command(cmd)
+            return await cmd_utils.fake_failed_command(cmd)
         target = cmd.mentions[0]
         status_name = ewutils.flattenTokenListToString(cmd.tokens[2:])
         user_data = EwUser(member=target)

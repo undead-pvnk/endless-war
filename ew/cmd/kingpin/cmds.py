@@ -1,10 +1,11 @@
 import re
 
 from ew.backend import item as bknd_item
-from ew.cmd import cmds as ewcmd, item as ewitem, move as ewmap
+from ew.cmd import item as ewitem, move as ewmap
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
 from ew.static import poi as poi_static
+from ew.utils import cmd as cmd_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
@@ -15,7 +16,7 @@ from ew.utils.combat import EwUser
 async def pa_command(cmd):
     user_data = EwUser(member=cmd.message.author)
     if not cmd.message.author.guild_permissions.administrator and user_data.life_state != ewcfg.life_state_executive:
-        return await ewcmd.fake_failed_command(cmd)
+        return await cmd_utils.fake_failed_command(cmd)
     else:
         if cmd.tokens_count >= 3:
             poi = ewutils.flattenTokenListToString(cmd.tokens[1])
@@ -289,7 +290,7 @@ async def exalt(cmd):
 
 async def hogtie(cmd):
     if not cmd.message.author.guild_permissions.administrator:
-        return await ewcmd.fake_failed_command(cmd)
+        return await cmd_utils.fake_failed_command(cmd)
     else:
         if cmd.mentions_count == 1:
             target_data = EwUser(member=cmd.mentions[0])
