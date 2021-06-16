@@ -1,11 +1,9 @@
-import asyncio
 import random
 
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
-from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
