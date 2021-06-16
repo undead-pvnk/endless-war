@@ -1163,3 +1163,7 @@ async def untake_down_zine(cmd):
             response = "Invalid Zine ID."
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+def null_cmd():
+    return

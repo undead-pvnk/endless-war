@@ -5,6 +5,7 @@ from ew.static import cfg as ewcfg
 readers = {}
 
 
+# Unused
 def bought_check(bought):
     if bought == 0:
         return False
@@ -12,6 +13,7 @@ def bought_check(bought):
         return True
 
 
+# Unused
 def check(str):
     if str.content.lower() == ewcfg.cmd_accept or str.content.lower() == ewcfg.cmd_refuse:
         return True
@@ -54,7 +56,3 @@ def int_is_zine(id_book = None, id_server = None, negative = False):
         return True
     else:
         return False
-
-
-def fake_cmd():
-    return
