@@ -31,7 +31,6 @@ import ew.cmd.cmds as ewcmd
 import ew.cmd.debug as ewdebug
 import ew.cmd.dungeons as ewdungeons
 import ew.cmd.item as ewitem
-import ew.cmd.slimeoid as ewslimeoid
 import ew.cmd.sports as ewsports
 import ew.static.cfg as ewcfg
 import ew.static.cosmetics as cosmetics
@@ -54,6 +53,7 @@ import ew.utils.loop as loop_utils
 import ew.utils.market as market_utils
 import ew.utils.move as move_utils
 import ew.utils.rolemgr as ewrolemgr
+import ew.utils.slimeoid as slimeoid_utils
 import ew.utils.weather as bknd_weather
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
@@ -294,7 +294,7 @@ async def on_ready():
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
 			asyncio.ensure_future(bknd_weather.weather_tick_loop(id_server = server.id))
-		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
+		asyncio.ensure_future(slimeoid_utils.slimeoid_tick_loop(id_server = server.id))
 		asyncio.ensure_future(bknd_farm.farm_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewsports.slimeball_tick_loop(id_server = server.id))
 		

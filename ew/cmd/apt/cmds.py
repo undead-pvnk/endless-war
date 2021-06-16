@@ -22,12 +22,12 @@ from ew.utils import hunting as hunt_utils
 from ew.utils import item as itm_utils
 from ew.utils import move as move_utils
 from ew.utils import rolemgr as ewrolemgr
+from ew.utils import slimeoid as slimeoid_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid, get_slimeoid_look_string
 from .utils import getPriceBase, letter_up, usekey
-from .. import slimeoid as ewslimeoid
 
 
 async def nothing(cmd):  # for an accept, refuse, sign or rip
@@ -1535,7 +1535,7 @@ async def wash(cmd):
 
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
-    slimeoid_search = ewslimeoid.find_slimeoid(slimeoid_search=item_search, id_server=playermodel.id_server, id_user=playermodel.id_user)
+    slimeoid_search = slimeoid_utils.find_slimeoid(slimeoid_search=item_search, id_server=playermodel.id_server, id_user=playermodel.id_user)
     slimeoid = EwSlimeoid(id_slimeoid=slimeoid_search, id_server=playermodel.id_server, id_user=playermodel.id_user)
     if usermodel.visiting != ewcfg.location_id_empty:
         usermodel = EwUser(id_user=usermodel.visiting, id_server=playermodel.id_server)
@@ -1970,7 +1970,7 @@ async def unfreeze(cmd):
             slimeoid_search += token + " "
 
     slimeoid_search = slimeoid_search[:-1]
-    id_slimeoid = ewslimeoid.find_slimeoid(id_user=str(cmd.message.author.id) + "freeze", id_server=playermodel.id_server, slimeoid_search=slimeoid_search)
+    id_slimeoid = slimeoid_utils.find_slimeoid(id_user=str(cmd.message.author.id) + "freeze", id_server=playermodel.id_server, slimeoid_search=slimeoid_search)
     if id_slimeoid != None:
         ew_slime_model = EwSlimeoid(id_user=str(cmd.message.author.id) + "freeze", id_slimeoid=id_slimeoid, id_server=playermodel.id_server)
     else:

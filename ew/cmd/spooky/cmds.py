@@ -6,7 +6,7 @@ from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
 from ew.backend.market import EwMarket
 from ew.backend.quadrants import EwQuadrant
-from ew.cmd import move as ewmap, slimeoid as ewslimeoid
+from ew.cmd import move as ewmap
 from ew.static import cfg as ewcfg
 from ew.static import items as static_items
 from ew.static import poi as poi_static
@@ -16,6 +16,7 @@ from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import move as move_utils
 from ew.utils import rolemgr as ewrolemgr
+from ew.utils import slimeoid as slimeoid_utils
 from ew.utils import stats as ewstats
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
@@ -604,7 +605,7 @@ async def summon_negaslimeoid(cmd):
             market_data.persist()
 
             response = "You have summoned **{}**, a {}-foot-tall Negaslimeoid.".format(slimeoid.name, slimeoid.level)
-            desc = ewslimeoid.slimeoid_describe(slimeoid)
+            desc = slimeoid_utils.slimeoid_describe(slimeoid)
             response += desc
 
     else:

@@ -14,12 +14,12 @@ from ew.utils import casino as casino_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as item_utils
+from ew.utils import slimeoid as slimeoid_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.slimeoid import EwSlimeoid
 from .utils import battle_slimeoids
 from .utils import get_slimeoid_count
-from .utils import slimeoid_describe
 
 
 # Create a slimeoid
@@ -929,7 +929,7 @@ async def spawnslimeoid(cmd):
                     slimeoid.name, ewcfg.emote_slimeheart)
 
                 response += "\n\n{} is a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
-                response += slimeoid_describe(slimeoid)
+                response += slimeoid_utils.slimeoid_describe(slimeoid)
 
                 brain = sl_static.brain_map.get(slimeoid.ai)
                 response += "\n\n" + brain.str_spawn.format(
@@ -1049,7 +1049,7 @@ async def slimeoid(cmd):
             else:
                 response = "{} is accompanied by {}, a {}-foot-tall Slimeoid.".format(member.display_name, slimeoid.name, str(slimeoid.level))
 
-        response += slimeoid_describe(slimeoid)
+        response += slimeoid_utils.slimeoid_describe(slimeoid)
 
         cosmetics = bknd_item.inventory(
             id_user=user_data.id_user,
@@ -2011,7 +2011,7 @@ async def negaslimeoid(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
     response = "{} is a {}-foot-tall Negaslimeoid.".format(negaslimeoid.name, negaslimeoid.level)
-    response += slimeoid_describe(negaslimeoid)
+    response += slimeoid_utils.slimeoid_describe(negaslimeoid)
 
     # Send the response to the player.
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
