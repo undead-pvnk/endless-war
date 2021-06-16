@@ -6,7 +6,7 @@ from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
 from ew.backend.market import EwMarket
 from ew.backend.quadrants import EwQuadrant
-from ew.cmd import move as ewmap
+from ew.backend.worldevent import get_void_connection_pois
 from ew.static import cfg as ewcfg
 from ew.static import items as static_items
 from ew.static import poi as poi_static
@@ -233,7 +233,7 @@ async def haunt(cmd):
                 # places of power.
                 if haunted_data.poi in [ewcfg.poi_id_thevoid, ewcfg.poi_id_wafflehouse, ewcfg.poi_id_blackpond]:
                     haunt_power_multiplier *= 2
-                elif haunted_data.poi in ewmap.get_void_connection_pois(cmd.guild.id):
+                elif haunted_data.poi in get_void_connection_pois(cmd.guild.id):
                     haunt_power_multiplier *= 1.25
 
                 # glory to the vanquished
