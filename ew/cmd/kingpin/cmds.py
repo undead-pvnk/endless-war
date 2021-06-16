@@ -1,7 +1,6 @@
 import re
 
 from ew.backend import item as bknd_item
-from ew.cmd import move as ewmap
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
 from ew.static import poi as poi_static
@@ -9,6 +8,7 @@ from ew.utils import cmd as cmd_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
+from ew.utils import move as move_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 
@@ -97,7 +97,7 @@ async def pardon(cmd):
                 response = "{} has been released from their association with the {}.".format(member.display_name, faction_old)
 
             member_poi = poi_static.id_to_poi.get(member_data.poi)
-            if ewmap.inaccessible(user_data=member_data, poi=member_poi):
+            if move_utils.inaccessible(user_data=member_data, poi=member_poi):
                 member_data.poi = ewcfg.poi_id_downtown
             member_data.persist()
             await ewrolemgr.updateRoles(client=cmd.client, member=member)
@@ -133,7 +133,7 @@ async def banish(cmd):
                     member_data.life_state = ewcfg.life_state_juvenile
 
             member_poi = poi_static.id_to_poi.get(member_data.poi)
-            if ewmap.inaccessible(user_data=member_data, poi=member_poi):
+            if move_utils.inaccessible(user_data=member_data, poi=member_poi):
                 member_data.poi = ewcfg.poi_id_downtown
             member_data.persist()
             response = "{} has been banned from enlisting in the {}".format(member.display_name, user_data.faction)

@@ -20,13 +20,14 @@ from ew.utils import district as dist_utils
 from ew.utils import frontend as fe_utils
 from ew.utils import hunting as hunt_utils
 from ew.utils import item as itm_utils
+from ew.utils import move as move_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid, get_slimeoid_look_string
 from .utils import getPriceBase, letter_up, usekey
-from .. import move as ewmap, slimeoid as ewslimeoid
+from .. import slimeoid as ewslimeoid
 
 
 async def nothing(cmd):  # for an accept, refuse, sign or rip
@@ -60,8 +61,8 @@ async def retire(cmd = None, isGoto = False, movecurrent = None):
         if isGoto:
             move_current = movecurrent
         else:
-            ewmap.move_counter += 1
-            move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
+            move_utils.move_counter += 1
+            move_current = ewutils.moves_active[cmd.message.author.id] = move_utils.move_counter
             await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You start walking toward your apartment."))
         await asyncio.sleep(20)
 
@@ -99,8 +100,8 @@ async def depart(cmd = None, isGoto = False, movecurrent = None):
             move_current = movecurrent
         else:
             await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You exit the apartment."))
-            ewmap.move_counter += 1
-            move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
+            move_utils.move_counter += 1
+            move_current = ewutils.moves_active[cmd.message.author.id] = move_utils.move_counter
         await asyncio.sleep(20)
         if move_current == ewutils.moves_active[cmd.message.author.id]:
             user_data = EwUser(id_user=player.id_user, id_server=player.id_server)

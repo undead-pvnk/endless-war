@@ -14,6 +14,7 @@ from ew.static import slimeoid as sl_static
 from ew.static import weather as weather_static
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
+from ew.utils import move as move_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils import stats as ewstats
 from ew.utils.combat import EwUser
@@ -86,7 +87,7 @@ async def revive(cmd):
                 player_data.change_slimes(n=0.5 * ewcfg.slimes_shambler)
                 player_data.trauma = ""
                 poi_death = poi_static.id_to_poi.get(player_data.poi_death)
-                if ewmap.inaccessible(poi=poi_death, user_data=player_data):
+                if move_utils.inaccessible(poi=poi_death, user_data=player_data):
                     player_data.poi = ewcfg.poi_id_endlesswar
                 else:
                     player_data.poi = poi_death.id_poi
@@ -342,7 +343,7 @@ async def inhabit(cmd):
             elif target_data.life_state == ewcfg.life_state_corpse:
                 # Can't target ghosts
                 response = "You can't do that to your fellow ghost."
-            elif ewmap.poi_is_pvp(target_data.poi) == False:
+            elif move_utils.poi_is_pvp(target_data.poi) == False:
                 response = "You can't torment the living here."
             else:
                 # cancel the ghost's movement

@@ -1,12 +1,12 @@
 import asyncio
 
 from ew.backend import item as bknd_item
-from ew.cmd import move as ewmap
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
 from ew.utils import district as dist_utils
 from ew.utils import frontend as fe_utils
+from ew.utils import move as move_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
@@ -93,8 +93,8 @@ async def embark(cmd):
                 wait_task = asyncio.ensure_future(asyncio.sleep(ewcfg.time_embark))
 
                 # Take control of the move for this player.
-                ewmap.move_counter += 1
-                move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
+                move_utils.move_counter += 1
+                move_current = ewutils.moves_active[cmd.message.author.id] = move_utils.move_counter
                 await message_task
                 await wait_task
 
@@ -155,7 +155,7 @@ async def disembark(cmd):
         # if stop_poi.is_subzone:
         # 	stop_poi = poi_static.id_to_poi.get(stop_poi.mother_district)
 
-        if ewmap.inaccessible(user_data=user_data, poi=stop_poi):
+        if move_utils.inaccessible(user_data=user_data, poi=stop_poi):
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
 
         # schedule tasks for concurrent execution
@@ -163,8 +163,8 @@ async def disembark(cmd):
         wait_task = asyncio.ensure_future(asyncio.sleep(ewcfg.time_embark))
 
         # Take control of the move for this player.
-        ewmap.move_counter += 1
-        move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
+        move_utils.move_counter += 1
+        move_current = ewutils.moves_active[cmd.message.author.id] = move_utils.move_counter
         await message_task
         await wait_task
 
@@ -236,7 +236,7 @@ async def disembark(cmd):
             # if stop_poi.is_subzone:
             # 	stop_poi = poi_static.id_to_poi.get(stop_poi.mother_district)
 
-            if ewmap.inaccessible(user_data=user_data, poi=stop_poi):
+            if move_utils.inaccessible(user_data=user_data, poi=stop_poi):
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
 
             user_data.poi = stop_poi.id_poi

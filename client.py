@@ -31,7 +31,6 @@ import ew.cmd.cmds as ewcmd
 import ew.cmd.debug as ewdebug
 import ew.cmd.dungeons as ewdungeons
 import ew.cmd.item as ewitem
-import ew.cmd.move as ewmap
 import ew.cmd.slimeoid as ewslimeoid
 import ew.cmd.sports as ewsports
 import ew.static.cfg as ewcfg
@@ -53,6 +52,7 @@ import ew.utils.item as itm_utils
 import ew.utils.leaderboard as bknd_leaderboard
 import ew.utils.loop as loop_utils
 import ew.utils.market as market_utils
+import ew.utils.move as move_utils
 import ew.utils.rolemgr as ewrolemgr
 import ew.utils.weather as bknd_weather
 from ew.backend.item import EwItem
@@ -153,8 +153,8 @@ async def on_ready():
 	ewcfg.set_client(client)
 	ewutils.logMsg('Logged in as {} ({}).'.format(client.user.name, client.user.id))
 
-	ewutils.logMsg("Loaded NLACakaNM world map. ({}x{})".format(ewmap.map_width, ewmap.map_height))
-	ewmap.map_draw()
+	ewutils.logMsg("Loaded NLACakaNM world map. ({}x{})".format(move_utils.map_width, move_utils.map_height))
+	move_utils.map_draw()
 
 	# Flatten role names to all lowercase, no spaces.
 	fake_observer = EwUser()
@@ -171,7 +171,7 @@ async def on_ready():
 		neighbor_ids = []
 		#if poi.coord != None:
 		if len(poi.neighbors.keys()) > 0:
-			neighbors = ewmap.path_to(poi_start = poi.id_poi, user_data = fake_observer)
+			neighbors = move_utils.path_to(poi_start = poi.id_poi, user_data = fake_observer)
 		#elif poi.id_poi == ewcfg.poi_id_thesewers:
 		#	neighbors = poi_static.poi_list
 
@@ -186,7 +186,7 @@ async def on_ready():
 
 	for id_poi in poi_static.landmark_pois:
 		ewutils.logMsg("beginning landmark precomputation for " + id_poi)
-		ewmap.landmarks[id_poi] = ewmap.score_map_from(
+		move_utils.landmarks[id_poi] = move_utils.score_map_from(
 			poi_start = id_poi,
 			user_data = fake_observer,
 			landmark_mode = True
@@ -542,8 +542,8 @@ async def on_ready():
 					bknd_ads.delete_expired_ads(id_server = server.id)
 
 					await district_utils.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
-					await ewmap.send_gangbase_messages(server.id, market_data.clock)
-					await ewmap.kick(server.id)
+					await move_utils.send_gangbase_messages(server.id, market_data.clock)
+					await move_utils.kick(server.id)
 
 					# Post leaderboards at 6am NLACakaNM time.
 					if market_data.clock == 6:
@@ -574,7 +574,7 @@ async def on_ready():
 							msg_channel_names.append(poi.channel)
 
 						if msg.reverb == True:
-							pois_adjacent = ewmap.path_to(poi_start = msg.poi)
+							pois_adjacent = move_utils.path_to(poi_start = msg.poi)
 
 							for poi_adjacent in pois_adjacent:
 								if poi_adjacent.channel != None and len(poi_adjacent.channel) > 0:

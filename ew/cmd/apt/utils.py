@@ -4,11 +4,11 @@ from ew.backend import item as bknd_item
 from ew.backend.apt import EwApartment
 from ew.backend.item import EwItem
 from ew.backend.market import EwStock
-from ew.cmd import move as ewmap
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
+from ew.utils import move as move_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 
@@ -91,8 +91,8 @@ async def usekey(cmd, owner_user):
         response = "Your key doesn't match an apartment here."
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     else:
-        ewmap.move_counter += 1
-        move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
+        move_utils.move_counter += 1
+        move_current = ewutils.moves_active[cmd.message.author.id] = move_utils.move_counter
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You start walking toward the apartment."))
 
         await asyncio.sleep(20)

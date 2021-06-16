@@ -8,7 +8,6 @@ from ew.backend.dungeons import EwGamestate
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.player import EwPlayer
-from ew.cmd import move as ewmap
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.static import slimeoid as sl_static
@@ -16,6 +15,7 @@ from ew.static import weapons as static_weapons
 from ew.utils import combat as cmbt_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
+from ew.utils import move as move_utils
 from ew.utils import stats as ewstats
 from ew.utils.combat import EwEnemy
 from ew.utils.combat import EwUser
@@ -528,7 +528,7 @@ def canAttack(cmd, amb_switch = 0):
         elif shootee_data.poi != user_data.poi:
             response = "You can't reach them from where you are."
 
-        elif ewmap.poi_is_pvp(shootee_data.poi) == False:
+        elif move_utils.poi_is_pvp(shootee_data.poi) == False:
             response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
         elif user_isshambler == True and len(district_data.get_enemies_in_district(classes=[ewcfg.enemy_class_gaiaslimeoid])) > 0:

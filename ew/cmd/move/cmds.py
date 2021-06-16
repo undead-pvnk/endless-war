@@ -19,23 +19,21 @@ from ew.static import poi as poi_static
 from ew.utils import core as ewutils
 from ew.utils import district as dist_utils
 from ew.utils import frontend as fe_utils
+from ew.utils import move as move_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.ads import format_ad_response
 from ew.utils.combat import EwEnemy
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
+from ew.utils.move import EwPath
 from ew.utils.transport import EwTransport
-from . import utils
-from .utils import EwPath
 from .utils import get_enemies_look_resp
 from .utils import get_players_look_resp
 from .utils import get_slimeoids_resp
 from .utils import get_slimes_resp
 from .utils import get_void_connections_resp
-from .utils import inaccessible
 from .utils import one_eye_dm
-from .utils import path_to
 from .utils import send_arrival_response
 
 """
@@ -138,7 +136,7 @@ async def move(cmd = None, isApt = False):
     if 'n4office' == poi.id_poi and flamestate.bit == 1:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You open the elevator, and are immediately met with fire spitting out of the elevator. Over the crackling flames you can hear a woman screaming \"AAAAAAAAGH FUCK YOU DIE DIE DIE DIE!!!!!\". You're guessing entering now is a bad idea."))
 
-    if inaccessible(user_data=user_data, poi=poi):
+    if move_utils.inaccessible(user_data=user_data, poi=poi):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author,
                                                                                                    "You're not allowed to go there (bitch)."))
 
@@ -154,7 +152,7 @@ async def move(cmd = None, isApt = False):
     elif len(poi.neighbors.keys()) == 0 or poi_current == None or len(poi_current.neighbors.keys()) == 0:
         path = None
     else:
-        path = path_to(
+        path = move_utils.path_to(
             poi_start=poi_current.id_poi,
             poi_end=target_name,
             user_data=user_data
@@ -172,10 +170,10 @@ async def move(cmd = None, isApt = False):
 
     # Check if we're already moving. If so, cancel move and change course. If not, register this course.
     move_current = ewutils.moves_active.get(cmd.message.author.id)
-    utils.move_counter += 1
+    move_utils.move_counter += 1
 
     # Take control of the move for this player.
-    move_current = ewutils.moves_active[cmd.message.author.id] = utils.move_counter
+    move_current = ewutils.moves_active[cmd.message.author.id] = move_utils.move_counter
 
     # Hard lock path costs to not be lower than 5 seconds.
     path.cost = max(path.cost, 5)
@@ -427,8 +425,8 @@ async def descend(cmd):
 
         # global move_counter
         move_current = ewutils.moves_active.get(cmd.message.author.id)
-        utils.move_counter += 1
-        move_current = ewutils.moves_active[cmd.message.author.id] = utils.move_counter
+        move_utils.move_counter += 1
+        move_current = ewutils.moves_active[cmd.message.author.id] = move_utils.move_counter
 
         life_state = user_data.life_state
         faction = user_data.faction
@@ -818,7 +816,7 @@ async def teleport(cmd):
         if poi.id_poi == user_data.poi:
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You're already there, bitch."))
 
-        if inaccessible(user_data=user_data, poi=poi):
+        if move_utils.inaccessible(user_data=user_data, poi=poi):
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
 
         valid_destinations = set()
@@ -1105,8 +1103,8 @@ async def clockin(cmd):
     else:
         # global move_counter
 
-        utils.move_counter += 1
-        move_current = ewutils.moves_active[cmd.message.author.id] = utils.move_counter
+        move_utils.move_counter += 1
+        move_current = ewutils.moves_active[cmd.message.author.id] = move_utils.move_counter
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You start walking towards the breakroom."))
         await asyncio.sleep(20)
 
@@ -1142,8 +1140,8 @@ async def clockout(cmd):
     else:
         # global move_counter
 
-        utils.move_counter += 1
-        move_current = ewutils.moves_active[cmd.message.author.id] = utils.move_counter
+        move_utils.move_counter += 1
+        move_current = ewutils.moves_active[cmd.message.author.id] = move_utils.move_counter
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You start walking towards the lobby of SlimeCorp HQ."))
         await asyncio.sleep(20)
 
@@ -1290,7 +1288,7 @@ async def slap(cmd):
 
         if dest_poi_obj.id_poi not in user_poi.neighbors.keys():
             response = "You can't hit them that far."
-        elif inaccessible(user_data=target_data, poi=dest_poi_obj):
+        elif move_utils.inaccessible(user_data=target_data, poi=dest_poi_obj):
             response = "That place is locked up good. You can't get a good launch angle to send them there."
         # elif time_lastuse + 180 * 60 > time_now:
         # response = "Your arm is spent from the last time you obliterated someone. Try again in {} minutes.".format(math.ceil((time_lastuse + 180*60 - time_now)/60))
@@ -1383,8 +1381,8 @@ async def loop(cmd):
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
         # global move_counter
-        utils.move_counter += 1
-        move_current = ewutils.moves_active[cmd.message.author.id] = utils.move_counter
+        move_utils.move_counter += 1
+        move_current = ewutils.moves_active[cmd.message.author.id] = move_utils.move_counter
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You start looping to {}.".format(dest_poi_obj.str_name)))
         await asyncio.sleep(20)
 
