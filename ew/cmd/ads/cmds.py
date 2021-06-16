@@ -6,9 +6,9 @@ from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
+from ew.utils.ads import format_ad_response
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
-from .utils import format_ad_response
 
 
 async def advertise(cmd):

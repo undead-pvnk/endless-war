@@ -13,13 +13,14 @@ from ew.backend.market import EwMarket
 from ew.backend.mutation import EwMutation
 from ew.backend.player import EwPlayer
 from ew.backend.worldevent import get_void_connection_pois
-from ew.cmd import ads as ewads, apt as ewapt
+from ew.cmd import apt as ewapt
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
 from ew.utils import district as dist_utils
 from ew.utils import frontend as fe_utils
 from ew.utils import rolemgr as ewrolemgr
+from ew.utils.ads import format_ad_response
 from ew.utils.combat import EwEnemy
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
@@ -395,7 +396,7 @@ async def move(cmd = None, isApt = False):
                         if len(ads) > 0:
                             id_ad = random.choice(ads)
                             ad_data = EwAd(id_ad=id_ad)
-                            ad_response = ewads.format_ad_response(ad_data)
+                            ad_response = format_ad_response(ad_data)
                             await fe_utils.send_message(cmd.client, channel,
                                                         fe_utils.formatMessage(cmd.message.author, ad_response))
 
@@ -528,7 +529,7 @@ async def look(cmd):
         if len(ads) > 0:
             id_ad = random.choice(ads)
             ad_data = EwAd(id_ad=id_ad)
-            ad_resp = ewads.format_ad_response(ad_data)
+            ad_resp = format_ad_response(ad_data)
             ad_formatting = "\n\n..."
 
     # post result to channel
