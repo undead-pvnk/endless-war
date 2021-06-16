@@ -294,13 +294,7 @@ def determine_trick_taker(trick, gametype, trump):
     return ranks.index(min(ranks))
 
 
-def slimecorp_collectfee(winnings):
-    slimecorp_fee = int(winnings * 0.2)
-    new_winnings = int(winnings * 0.8)
-
-    return slimecorp_fee, new_winnings
-
-
+# Unused
 def slimecoin_to_festivity(value, festivity_old):
     try:
         old_value = 1.00044 ** festivity_old

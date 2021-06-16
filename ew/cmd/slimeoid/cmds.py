@@ -6,11 +6,12 @@ from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.quadrants import EwQuadrant
-from ew.cmd import casino as ewcasino, item as ewitem
+from ew.cmd import item as ewitem
 from ew.static import cfg as ewcfg
 from ew.static import hue as hue_static
 from ew.static import poi as poi_static
 from ew.static import slimeoid as sl_static
+from ew.utils import casino as casino_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
@@ -1482,7 +1483,7 @@ async def slimeoidbattle(cmd):
         challengee.persist()
         challenger.persist()
 
-        slimecorp_fee, winnings = ewcasino.slimecorp_collectfee(bet * 2)
+        slimecorp_fee, winnings = casino_utils.slimecorp_collectfee(bet * 2)
 
         result = await battle_slimeoids(id_s1=challengee_slimeoid.id_slimeoid, id_s2=challenger_slimeoid.id_slimeoid, channel=cmd.message.channel, battle_type=ewcfg.battle_type_arena)
         if result == -1:
