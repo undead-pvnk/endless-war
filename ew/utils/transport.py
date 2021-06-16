@@ -119,4 +119,12 @@ class EwTransport(EwTransportBase):
 				last_messages = await resp_cont.post()
 
 
+""" Starts movement of all transports. Called once at client startup """
+
+
+async def init_transports(id_server = None):
+    if id_server is not None:
+        for poi in poi_static.transports:
+            transport_data = EwTransport(id_server=id_server, poi=poi)
+            asyncio.ensure_future(transport_data.move_loop())
 

@@ -1,20 +1,6 @@
-import asyncio
-
 from ew.backend import core as bknd_core
 from ew.static import cfg as ewcfg
-from ew.static import poi as poi_static
 from ew.utils import core as ewutils
-from ew.utils.transport import EwTransport
-
-""" Starts movement of all transports. Called once at client startup """
-
-
-async def init_transports(id_server = None):
-    if id_server is not None:
-        for poi in poi_static.transports:
-            transport_data = EwTransport(id_server=id_server, poi=poi)
-            asyncio.ensure_future(transport_data.move_loop())
-
 
 """ Returns a list of Poi IDs """
 

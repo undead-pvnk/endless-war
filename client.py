@@ -38,7 +38,6 @@ import ew.static.items as static_items
 import ew.static.poi as poi_static
 import ew.static.vendors as vendors
 import ew.static.weather as weather_static
-import ew.cmd.transport as ewtransport
 import ew.utils.apt as apt_utils
 import ew.utils.cmd as cmd_utils
 import ew.utils.core as ewutils
@@ -54,6 +53,7 @@ import ew.utils.move as move_utils
 import ew.utils.rolemgr as ewrolemgr
 import ew.utils.slimeoid as slimeoid_utils
 import ew.utils.sports as sports_utils
+import ew.utils.transport as transport_utils
 import ew.utils.weather as bknd_weather
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
@@ -292,7 +292,7 @@ async def on_ready():
 			asyncio.ensure_future(loop_utils.spawn_enemies_tick_loop(id_server=server.id))
 
 		if not debug:
-			await ewtransport.init_transports(id_server = server.id)
+			await transport_utils.init_transports(id_server = server.id)
 			asyncio.ensure_future(bknd_weather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(slimeoid_utils.slimeoid_tick_loop(id_server = server.id))
 		asyncio.ensure_future(bknd_farm.farm_tick_loop(id_server = server.id))
