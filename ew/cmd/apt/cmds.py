@@ -5,6 +5,7 @@ import time
 from ew.backend import item as bknd_item
 from ew.backend.apt import EwApartment
 from ew.backend.item import EwItem
+from ew.backend.market import EwMarket
 from ew.backend.player import EwPlayer
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
@@ -13,6 +14,7 @@ from ew.static import hue as hue_static
 from ew.static import items as static_items
 from ew.static import poi as poi_static
 from ew.static import weapons as static_weapons
+from ew.utils import apt as apt_utils
 from ew.utils import core as ewutils
 from ew.utils import district as dist_utils
 from ew.utils import frontend as fe_utils
@@ -22,13 +24,8 @@ from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
-from ew.utils.slimeoid import EwSlimeoid
-from .utils import apt_look
-from .utils import getPriceBase
-from .utils import letter_up
-from .utils import toss_items
-from .utils import toss_squatters
-from .utils import usekey
+from ew.utils.slimeoid import EwSlimeoid, get_slimeoid_look_string
+from .utils import getPriceBase, letter_up, usekey
 from .. import move as ewmap, slimeoid as ewslimeoid
 
 
@@ -323,7 +320,7 @@ async def signlease(cmd):
                     item_props=item_props
                 )
 
-        await toss_squatters(user_data.id_user, user_data.id_server)
+        await apt_utils.toss_squatters(user_data.id_user, user_data.id_server)
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
@@ -792,9 +789,9 @@ async def cancel(cmd):
             response = "You cancel your {} apartment for {:,} SlimeCoin.".format(poi.str_name, aptmodel.rent * 4)
             inv_toss_closet = bknd_item.inventory(id_user=str(usermodel.id_user) + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
 
-            toss_items(id_user=str(usermodel.id_user) + ewcfg.compartment_id_closet, id_server=playermodel.id_server, poi=poi)
-            toss_items(id_user=str(usermodel.id_user) + ewcfg.compartment_id_fridge, id_server=playermodel.id_server, poi=poi)
-            toss_items(id_user=str(usermodel.id_user) + ewcfg.compartment_id_decorate, id_server=playermodel.id_server, poi=poi)
+            apt_utils.toss_items(id_user=str(usermodel.id_user) + ewcfg.compartment_id_closet, id_server=playermodel.id_server, poi=poi)
+            apt_utils.toss_items(id_user=str(usermodel.id_user) + ewcfg.compartment_id_fridge, id_server=playermodel.id_server, poi=poi)
+            apt_utils.toss_items(id_user=str(usermodel.id_user) + ewcfg.compartment_id_decorate, id_server=playermodel.id_server, poi=poi)
 
             usermodel.apt_zone = ewcfg.location_id_empty
             usermodel.change_slimecoin(n=aptmodel.rent * -4, coinsource=ewcfg.coinsource_spending)
@@ -804,7 +801,7 @@ async def cancel(cmd):
             usermodel.persist()
             aptmodel.persist()
 
-            await toss_squatters(cmd.message.author.id, cmd.guild.id)
+            await apt_utils.toss_squatters(cmd.message.author.id, cmd.guild.id)
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
@@ -1250,6 +1247,141 @@ async def jam(cmd):
         response = "Are you sure you have that item?"
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def apt_look(cmd):
+    playermodel = EwPlayer(id_user=cmd.message.author.id)
+    usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
+    apt_model = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+    poi = poi_static.id_to_poi.get(apt_model.poi)
+    lookObject = str(cmd.message.author.id)
+    isVisiting = False
+    resp_cont = EwResponseContainer(id_server=playermodel.id_server)
+
+    if usermodel.visiting != ewcfg.location_id_empty:
+        apt_model = EwApartment(id_user=usermodel.visiting, id_server=playermodel.id_server)
+        poi = poi_static.id_to_poi.get(apt_model.poi)
+        lookObject = str(usermodel.visiting)
+        isVisiting = True
+
+    response = "You stand in {}, your flat in {}.\n\n{}\n\n".format(apt_model.name, poi.str_name, apt_model.description)
+
+    if isVisiting:
+        response = response.replace("your", "a")
+
+    resp_cont.add_channel_response(cmd.message.channel, response)
+
+    furns = bknd_item.inventory(id_user=lookObject + ewcfg.compartment_id_decorate, id_server=playermodel.id_server, item_type_filter=ewcfg.it_furniture)
+
+    has_hat_stand = False
+
+    furniture_id_list = []
+    furn_response = ""
+    for furn in furns:
+        i = EwItem(furn.get('id_item'))
+
+        furn_response += "{} ".format(i.item_props['furniture_look_desc'])
+
+        furniture_id_list.append(i.item_props['id_furniture'])
+        if i.item_props.get('id_furniture') == "hatstand":
+            has_hat_stand = True
+
+        hue = hue_static.hue_map.get(i.item_props.get('hue'))
+        if hue != None and i.item_props.get('id_furniture') not in static_items.furniture_specialhue:
+            furn_response += " It's {}. ".format(hue.str_name)
+        elif i.item_props.get('id_furniture') in static_items.furniture_specialhue:
+            if hue != None:
+                furn_response = furn_response.replace("-*HUE*-", hue.str_name)
+            else:
+                furn_response = furn_response.replace("-*HUE*-", "white")
+
+    furn_response += "\n\n"
+
+    if all(elem in furniture_id_list for elem in static_items.furniture_lgbt):
+        furn_response += "This is the most homosexual room you could possibly imagine. Everything is painted rainbow. A sign on your bedroom door reads \"FORNICATION ZONE\". There's so much love in the air that some dust mites set up a gay bar in your closet. It's amazing.\n\n"
+    if all(elem in furniture_id_list for elem in static_items.furniture_haunted):
+        furn_response += "One day, on a whim, you decided to say \"Levy Jevy\" 3 times into the mirror. Big mistake. Not only did it summon several staydeads, but they're so enamored with your decoration that they've been squatting here ever since.\n\n"
+    if all(elem in furniture_id_list for elem in static_items.furniture_highclass):
+        furn_response += "This place is loaded. Marble fountains, fully stocked champagne fridges, complementary expensive meats made of bizarre unethical ingredients, it's a treat for the senses. You wonder if there's any higher this place can go. Kind of depressing, really.\n\n"
+    if all(elem in furniture_id_list for elem in static_items.furniture_leather):
+        furn_response += "34 innocent lives. 34 lives were taken to build the feng shui in this one room. Are you remorseful about that? Obsessed? Nobody has the base antipathy needed to peer into your mind and pick at your decisions. The leather finish admittedly does look fantastic, however. Nice work.\n\n"
+    if all(elem in furniture_id_list for elem in static_items.furniture_church):
+        furn_response += random.choice(ewcfg.bible_verses) + "\n\n"
+    if all(elem in furniture_id_list for elem in static_items.furniture_pony):
+        furn_response += "When the Mane 6 combine their powers, kindness, generosity, loyalty, honesty, magic, and the other one, they combine to form the most powerful force known to creation: friendship. Except for slime. That's still stronger.\n\n"
+    if all(elem in furniture_id_list for elem in static_items.furniture_blackvelvet):
+        furn_response += "Looking around just makes you want to loosen your tie a bit and pull out an expensive cigar. Nobody in this city of drowned rats and slimeless rubes can stop you now. You commit homicide...in style. Dark, velvety smooth style.\n\n"
+    if all(elem in furniture_id_list for elem in static_items.furniture_seventies):
+        furn_response += "Look at all this vintage furniture. Didn't the counterculture that created all this shit advocate for 'peace and love'? Yuck. I hope you didn't theme your bachelor pad around that kind of shit and just bought everything for its retro aesthetic.\n\n"
+    if all(elem in furniture_id_list for elem in static_items.furniture_shitty):
+        furn_response += "You're never gonna make it. Look at all this furniture you messed up, do you think someday you can escape this? You're never gonna have sculptures like Stradivarius, or paintings as good as that one German guy. You're deluded and sitting on splinters. Grow up. \n\n"
+    if all(elem in furniture_id_list for elem in static_items.furniture_instrument):
+        furn_response += "You assembled the instruments. Now all you have to do is form a soopa groop and play loudly over other people acts next Slimechella. It's high time the garage bands of this city take over, with fresh homemade shredding and murders most foul. The world's your oyster. As soon as you can trust them with all this expensive equipment.\n\n"
+    if all(elem in furniture_id_list for elem in static_items.furniture_slimecorp):
+        furn_response = "SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP. SUBMIT TO SLIMECORP.\n\n"
+
+    market_data = EwMarket(id_server=playermodel.id_server)
+    clock_data = ewutils.weather_txt(market_data)
+    clock_data = clock_data[16:20]
+    furn_response = furn_response.format(time=clock_data)
+    resp_cont.add_channel_response(cmd.message.channel, furn_response)
+
+    response = ""
+    iterate = 0
+    frids = bknd_item.inventory(id_user=lookObject + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
+
+    if (len(frids) > 0):
+        response += "\n\nThe fridge contains: "
+        fridge_pile = []
+        for frid in frids:
+            fridge_pile.append(frid.get('name'))
+        response += ewutils.formatNiceList(fridge_pile)
+        response = response + '.'
+    closets = bknd_item.inventory(id_user=lookObject + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
+
+    resp_cont.add_channel_response(cmd.message.channel, response)
+    response = ""
+
+    if (len(closets) > 0):
+        closet_pile = []
+        hatstand_pile = []
+        for closet in closets:
+            closet_obj = EwItem(id_item=closet.get('id_item'))
+            map_obj = cosmetics.cosmetic_map.get(closet_obj.item_props.get('id_cosmetic'))
+            if has_hat_stand and map_obj and map_obj.is_hat == True:
+                hatstand_pile.append(closet.get('name'))
+            else:
+                closet_pile.append(closet.get('name'))
+        if len(closet_pile) > 0:
+            response += "\n\nThe closet contains: "
+            response += ewutils.formatNiceList(closet_pile)
+            response = response + '.'
+            resp_cont.add_channel_response(cmd.message.channel, response)
+
+        if len(hatstand_pile) > 0:
+            response = "\n\nThe hat stand holds: "
+            response += ewutils.formatNiceList(hatstand_pile)
+            response = response + '.'
+            resp_cont.add_channel_response(cmd.message.channel, response)
+
+    shelves = bknd_item.inventory(id_user=lookObject + ewcfg.compartment_id_bookshelf, id_server=playermodel.id_server)
+
+    response = ""
+    if (len(shelves) > 0):
+        response += "\n\nThe bookshelf holds: "
+        shelf_pile = []
+        for shelf in shelves:
+            shelf_pile.append(shelf.get('name'))
+        response += ewutils.formatNiceList(shelf_pile)
+        response = response + '.'
+
+    resp_cont.add_channel_response(cmd.message.channel, response)
+
+    freezeList = get_slimeoid_look_string(user_id=lookObject + 'freeze', server_id=playermodel.id_server)
+
+    resp_cont.add_channel_response(cmd.message.channel, freezeList)
+    return await resp_cont.post(channel=cmd.message.channel)
+
 
 
 # Used to be dms only
@@ -1920,7 +2052,7 @@ async def bootall(cmd):
     if not (check_poi.is_apartment and (cmd.message.guild is None or check_poi.channel == cmd.message.channel.name)):
         return await lobbywarning(cmd)
 
-    await toss_squatters(user_id=usermodel.id_user, server_id=usermodel.id_server, keepKeys=True)
+    await apt_utils.toss_squatters(user_id=usermodel.id_user, server_id=usermodel.id_server, keepKeys=True)
 
     response = "You throw a furious tantrum and shoo all the undesirables out. It's only you and your roommates now."
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

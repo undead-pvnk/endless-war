@@ -490,7 +490,7 @@ async def look(cmd):
     void_resp = get_void_connections_resp(poi.id_poi, user_data.id_server)
 
     if poi.is_apartment:
-        return await ewapt.apt_look(cmd)
+        return await ewapt.cmds.apt_look(cmd)
 
     if poi.is_subzone or poi.id_poi == ewcfg.poi_id_thevoid:  # Triggers if you input the command in the void or a sub-zone.
         wikichar = '<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''

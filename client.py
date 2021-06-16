@@ -20,7 +20,6 @@ import traceback
 import discord
 
 import ew.cmd as cmds
-import ew.cmd.apt as ewapt
 import ew.backend.ads as bknd_ads
 import ew.backend.core as bknd_core
 import ew.backend.farm as bknd_farm
@@ -46,6 +45,7 @@ import ew.static.poi as poi_static
 import ew.static.vendors as vendors
 import ew.static.weather as weather_static
 import ew.cmd.transport as ewtransport
+import ew.utils.apt as apt_utils
 import ew.utils.core as ewutils
 import ew.utils.frontend as fe_utils
 import ew.utils.item as itm_utils
@@ -487,7 +487,7 @@ async def on_ready():
 						ewcosmeticitem.dedorn_all_costumes()
 
 					if market_data.clock == 6 and market_data.day % 8 == 0:
-						await ewapt.rent_time(id_server=server.id)
+						await apt_utils.rent_time(id_server=server.id)
 						await loop_utils.pay_salary(id_server=server.id)
 
 					market_data = EwMarket(id_server=server.id)
@@ -522,7 +522,7 @@ async def on_ready():
 					# Persist new data.
 					market_data.persist()
 
-					await ewapt.setOffAlarms(id_server = server.id)
+					await apt_utils.setOffAlarms(id_server = server.id)
 
 					# Decay slime totals
 					loop_utils.decaySlimes(id_server = server.id)
@@ -1005,7 +1005,7 @@ async def on_message(message):
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'weathertick'):
 
-			await ewapt.setOffAlarms(id_server=message.guild.id)
+			await apt_utils.setOffAlarms(id_server=message.guild.id)
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createhat'):
 			patrician_rarity = 20
