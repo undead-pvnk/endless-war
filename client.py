@@ -28,7 +28,6 @@ import ew.backend.item as bknd_item
 import ew.backend.player as bknd_player
 import ew.backend.server as bknd_server
 import ew.cmd.cmds as ewcmd
-import ew.cmd.cosmeticitem as ewcosmeticitem
 import ew.cmd.debug as ewdebug
 import ew.cmd.district as ewdistrict
 import ew.cmd.dungeons as ewdungeons
@@ -48,6 +47,7 @@ import ew.cmd.transport as ewtransport
 import ew.utils.apt as apt_utils
 import ew.utils.cmd as cmd_utils
 import ew.utils.core as ewutils
+import ew.utils.cosmeticitem as cosmetic_utils
 import ew.utils.frontend as fe_utils
 import ew.utils.item as itm_utils
 import ew.utils.leaderboard as bknd_leaderboard
@@ -191,7 +191,7 @@ async def on_ready():
 			landmark_mode = True
 		)
 
-	ewcosmeticitem.update_hues()
+	cosmetic_utils.update_hues()
 
 	ewutils.logMsg("finished landmark precomputation")
 
@@ -485,7 +485,7 @@ async def on_ready():
 
 
 					if not ewutils.check_fursuit_active(market_data):
-						ewcosmeticitem.dedorn_all_costumes()
+						cosmetic_utils.dedorn_all_costumes()
 
 					if market_data.clock == 6 and market_data.day % 8 == 0:
 						await apt_utils.rent_time(id_server=server.id)
