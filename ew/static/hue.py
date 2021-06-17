@@ -99,7 +99,8 @@ hue_list = [
         ],
         str_saturate="It turns a dark purple!",
         str_name="purple",
-        str_desc="Its dark purple hue gives it a brooding, edgy appearance. It will huff and groan when given orders, like a teenager rebelling against his mom in the most flaccid way possible.",        effectiveness={
+        str_desc="Its dark purple hue gives it a brooding, edgy appearance. It will huff and groan when given orders, like a teenager rebelling against his mom in the most flaccid way possible.",
+        effectiveness={
             ewcfg.hue_id_blue: ewcfg.hue_analogous,
             ewcfg.hue_id_magenta: ewcfg.hue_analogous,
             ewcfg.hue_id_green: ewcfg.hue_atk_complementary,
