@@ -18,6 +18,7 @@ cmd_map = {
     ewcfg.cmd_bleedout: cmds.bleedout,
     ewcfg.cmd_piss: cmds.piss,
     ewcfg.cmd_fursuit: cmds.fursuit,
+    ewcfg.cmd_devour: cmds.devour,
 
 }
 

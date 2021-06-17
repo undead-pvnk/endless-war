@@ -16,7 +16,4 @@ cmd_map = {
     ewcfg.cmd_eat: cmds.eat_item,
     ewcfg.cmd_eat_alt1: cmds.eat_item,
 
-    # Eat a non food item. put this is mutations dammit
-    ewcfg.cmd_devour: cmds.devour,
-
 }
