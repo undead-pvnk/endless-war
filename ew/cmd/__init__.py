@@ -1,8 +1,3 @@
-import ew.backend.hunting as bknd_hunt
-import ew.static.cfg as ewcfg
-import ew.utils.frontend as fe_utils
-import ew.utils.poi as poi_utils
-import ew.utils.rolemgr as ewrolemgr
 from . import ads
 from . import apt
 from . import book
@@ -32,6 +27,14 @@ from . import spooky
 from . import sports
 from . import transport
 from . import wep
+
+import ew.utils.frontend as fe_utils
+import ew.utils.poi as poi_utils
+import ew.utils.rolemgr as ewrolemgr
+
+import ew.backend.hunting as bknd_hunt
+
+import ew.static.cfg as ewcfg
 
 cmd_modules = [
     wep,

@@ -15,11 +15,11 @@ from ew.static import items as static_items
 from ew.static import poi as poi_static
 from ew.utils import apt as apt_utils
 from ew.utils import core as ewutils
-from ew.utils import district as dist_utils
 from ew.utils import frontend as fe_utils
 from ew.utils import hunting as hunt_utils
 from ew.utils import item as itm_utils
 from ew.utils import move as move_utils
+from ew.utils import prank as prank_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils import slimeoid as slimeoid_utils
 from ew.utils.combat import EwUser
@@ -124,7 +124,7 @@ async def depart(cmd = None, isGoto = False, movecurrent = None):
             await fe_utils.send_message(cmd.client, fe_utils.get_channel(server, poi_dest.channel), fe_utils.formatMessage(cmd.message.author, response))
 
             # SWILLDERMUK
-            await dist_utils.activate_trap_items(poi_dest.id_poi, user_data.id_server, user_data.id_user)
+            await prank_utils.activate_trap_items(poi_dest.id_poi, user_data.id_server, user_data.id_user)
 
             return
 

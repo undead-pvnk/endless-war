@@ -15,11 +15,11 @@ from ew.static import mutations as static_mutations
 from ew.static import poi as poi_static
 from ew.static import weapons as static_weapons
 from ew.utils import core as ewutils
-from ew.utils import district as dist_utils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
 from ew.utils import move as move_utils
 from ew.utils import poi as poi_utils
+from ew.utils import prank as prank_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
@@ -811,7 +811,7 @@ async def slap(cmd):
             await ewrolemgr.updateRoles(client=ewutils.get_client(), member=cmd.mentions[0])
             await user_data.move_inhabitants(id_poi=dest_poi_obj.id_poi)
 
-            await dist_utils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, target_data.id_user)
+            await prank_utils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, target_data.id_user)
 
             await fe_utils.send_message(cmd.client, cmd.mentions[0], fe_utils.formatMessage(cmd.mentions[0], dm_response))
             await fe_utils.send_message(cmd.client, fe_utils.get_channel(server=cmd.mentions[0].guild, channel_name=dest_poi_obj.channel), fe_utils.formatMessage(cmd.mentions[0], target_response))

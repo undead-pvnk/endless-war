@@ -4,9 +4,9 @@ from ew.backend import item as bknd_item
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
-from ew.utils import district as dist_utils
 from ew.utils import frontend as fe_utils
 from ew.utils import move as move_utils
+from ew.utils import prank as prank_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
@@ -247,7 +247,7 @@ async def disembark(cmd):
             await fe_utils.send_message(cmd.client, fe_utils.get_channel(cmd.guild, stop_poi.channel), fe_utils.formatMessage(cmd.message.author, response))
 
             # SWILLDERMUK
-            await dist_utils.activate_trap_items(stop_poi.id_poi, user_data.id_server, user_data.id_user)
+            await prank_utils.activate_trap_items(stop_poi.id_poi, user_data.id_server, user_data.id_user)
 
             return
         return await resp_cont.post()

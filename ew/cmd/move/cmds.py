@@ -17,9 +17,9 @@ from ew.cmd import apt as ewapt
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
-from ew.utils import district as dist_utils
 from ew.utils import frontend as fe_utils
 from ew.utils import move as move_utils
+from ew.utils import prank as prank_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.ads import format_ad_response
 from ew.utils.combat import EwEnemy
@@ -387,7 +387,7 @@ async def move(cmd = None, isApt = False):
                     msg_walk_start = await send_arrival_response(cmd, poi_current, channel)
 
                     # SWILLDERMUK
-                    await dist_utils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
+                    await prank_utils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
 
                     if poi_current.has_ads:
                         ads = bknd_ads.get_ads(id_server=user_data.id_server)
@@ -886,7 +886,7 @@ async def teleport(cmd):
             await resp_cont.post()
 
             # SWILLDERMUK
-            await dist_utils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
+            await prank_utils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
 
             return
         else:
@@ -1290,7 +1290,7 @@ async def loop(cmd):
             await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "**VOIIII-**".format(dest_poi_obj.str_name)))
             await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
             await user_data.move_inhabitants(id_poi=dest_poi_obj.id_poi)
-            await dist_utils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, user_data.id_user)
+            await prank_utils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, user_data.id_user)
             return await fe_utils.send_message(cmd.client, fe_utils.get_channel(cmd.guild, dest_poi_obj.channel), fe_utils.formatMessage(cmd.message.author, "**-OIIIIP!!!**\n\n{} jumps out of a wormhole!".format(cmd.message.author.display_name)))
         else:
             pass

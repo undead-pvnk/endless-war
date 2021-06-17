@@ -19,31 +19,14 @@ import traceback
 
 import discord
 
-# Reformat wants to rearrange imports, don't let it
-# cmds MUST be imported first for... some reason.
-# It won't start otherwise
-import ew.cmd as cmds
-import ew.backend.ads as bknd_ads
-import ew.backend.core as bknd_core
-import ew.backend.farm as bknd_farm
-import ew.backend.fish as bknd_fish
-import ew.backend.item as bknd_item
-import ew.backend.player as bknd_player
-import ew.backend.server as bknd_server
+from ew.cmd import cmd_map, dm_cmd_map, apt_dm_cmd_map
 import ew.cmd.cmds as ewcmd
 import ew.cmd.debug as ewdebug
 import ew.cmd.dungeons as ewdungeons
 import ew.cmd.item as ewitem
-import ew.static.cfg as ewcfg
-import ew.static.cosmetics as cosmetics
-import ew.static.food as static_food
-import ew.static.items as static_items
-import ew.static.poi as poi_static
-import ew.static.vendors as vendors
-import ew.static.weather as weather_static
+
 import ew.utils.apt as apt_utils
 import ew.utils.cmd as cmd_utils
-import ew.utils.core as ewutils
 import ew.utils.cosmeticitem as cosmetic_utils
 import ew.utils.dungeons as dungeon_utils
 import ew.utils.frontend as fe_utils
@@ -57,13 +40,33 @@ import ew.utils.slimeoid as slimeoid_utils
 import ew.utils.sports as sports_utils
 import ew.utils.transport as transport_utils
 import ew.utils.weather as bknd_weather
+from ew.utils.combat import EwUser
+from ew.utils.district import EwDistrict
+
+import ew.backend.ads as bknd_ads
+import ew.backend.core as bknd_core
+import ew.backend.farm as bknd_farm
+import ew.backend.fish as bknd_fish
+import ew.backend.item as bknd_item
+import ew.backend.player as bknd_player
+import ew.backend.server as bknd_server
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.market import EwStock
 from ew.backend.player import EwPlayer
 from ew.backend.status import EwStatusEffect
-from ew.utils.combat import EwUser
-from ew.utils.district import EwDistrict
+
+import ew.utils.core as ewutils
+
+import ew.static.cosmetics as cosmetics
+import ew.static.food as static_food
+import ew.static.items as static_items
+import ew.static.poi as poi_static
+import ew.static.vendors as vendors
+import ew.static.weather as weather_static
+
+import ew.static.cfg as ewcfg
+
 
 ewutils.logMsg('Starting up...')
 init_complete = False
@@ -90,13 +93,13 @@ active_users_map = {}
 channels_slimetwitter = {}
 
 # Map of all command words in the game to their implementing function.
-cmd_map = cmds.cmd_map
+#cmd_map = cmds.cmd_map
 
 # Map of commands always allowed in dms
-dm_cmd_map = cmds.dm_cmd_map
+#dm_cmd_map = cmds.dm_cmd_map
 
 # Map of commands only allowed in dms while in an apartment
-apt_dm_cmd_map = cmds.apt_dm_cmd_map
+#apt_dm_cmd_map = cmds.apt_dm_cmd_map
 
 debug = False
 db_prefix = '--db='
@@ -867,7 +870,7 @@ async def on_message(message):
             return
 
         # Check the main command map for the requested command.
-        global cmd_map
+        #global cmd_map
         cmd_fn = cmd_map.get(cmd)
 
         if user_data.poi in ewdebug.act_pois.keys():
