@@ -823,8 +823,6 @@ async def on_message(message):
                 cmd_fnc = apt_dm_cmd_map.get(cmd)
                 if cmd_fnc:
                     return await cmd_fnc(cmd_obj)
-            elif ewcfg.cmd_gvs_grabbrainz in cmd_obj.message.content.lower():
-                return await ewcmd.cmds.gvs_grabbrainz(cmd_obj)
             else:
                 # Only send the help response once every thirty seconds. There's no need to spam it.
                 # Also, don't send out response if the user doesn't actually type a command.

@@ -220,6 +220,9 @@ dm_cmd_map = {
     ewcfg.cmd_commands_alt1: cmds.commands,
     ewcfg.cmd_commands: cmds.commands,
 
+    # For GVS
+    # ewcfg.cmd_gvs_grabbrainz: cmds.gvs_grabbrainz,
+
 }
 
 apt_dm_cmd_map = {
