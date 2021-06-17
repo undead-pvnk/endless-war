@@ -3,9 +3,7 @@ from . import cmds
 
 cmd_map = {
 
-    # Used for !accept/!refuse (put somewhere more general than apt?)
-    ewcfg.cmd_haveastroke: cmds.nothing,
-    ewcfg.cmd_moonhurtingbeam: cmds.nothing,
+    # Used for accepting contracts
     ewcfg.cmd_rip: cmds.nothing,
     ewcfg.cmd_sign: cmds.nothing,
 
@@ -36,26 +34,10 @@ cmd_map = {
     # !breaklease
     ewcfg.cmd_breaklease: cmds.cancel,
 
-    # !pot (shouldn't this be with farming?)
-    ewcfg.cmd_pot: cmds.flowerpot,
-
-    # In server parsing of DM only commands.
-    # This should be in a more general file,
-    # maybe make a module (and separate map) for dm commands?
-
-    # !releaseprop (isnt this a bazaar thing?)
-    ewcfg.cmd_releaseprop: cmds.releaseprop,
-
-    # !releasefish (why is it dm only to aquarium them anyway?)
-    ewcfg.cmd_releasefish: cmds.releasefish,
-
-    # !unpot (this can be done anywhere. why store in apt?)
-    ewcfg.cmd_unpot: cmds.unpot,
-
-    # !frame (consistency, cmon, why isnt this dm only too?)
+    # !frame -- flavors item, move to item?
     ewcfg.cmd_frame: cmds.frame,
 
-    # !dyefurniture
+    # !dyefurniture -- flavors item, move to item?
     ewcfg.cmd_dyefurniture: cmds.dyefurniture,
 
     # !addkey
@@ -64,17 +46,8 @@ cmd_map = {
     # !changelocks
     ewcfg.cmd_changelocks: cmds.manual_changelocks,
 
-    # !setalarm
+    # !setalarm -- What do alarms have to do with apt specifically?
     ewcfg.cmd_setalarm: cmds.set_alarm,
-
-    # !jam (This is bassed on your current weapon. What does it have to do with apt?)
-    ewcfg.cmd_jam: cmds.jam,
-
-    # put your fish in your !aquarium
-    ewcfg.cmd_aquarium: cmds.aquarium,
-
-    # !propstand
-    ewcfg.cmd_propstand: cmds.propstand,
 
     # !wash your clothes
     ewcfg.cmd_wash: cmds.wash,
@@ -110,12 +83,6 @@ cmd_map = {
 }
 
 apt_dm_cmd_map = {
-
-    # put your fish in your !aquarium
-    ewcfg.cmd_aquarium: cmds.aquarium,
-
-    # !propstand
-    ewcfg.cmd_propstand: cmds.propstand,
 
     # !wash your clothes
     ewcfg.cmd_wash: cmds.wash,
@@ -171,16 +138,6 @@ apt_dm_cmd_map = {
 
     # !trickortreat
     ewcfg.cmd_trickortreat: cmds.trickortreat,
-
-    # !pot and !unpot
-    ewcfg.cmd_pot: cmds.flowerpot,
-    ewcfg.cmd_unpot: cmds.unpot,
-
-    # !releaseprop (This literally cant be used in dms but I'm just porting what I see)
-    ewcfg.cmd_releaseprop: cmds.releaseprop,
-
-    # !releasefish
-    ewcfg.cmd_releasefish: cmds.releasefish,
 
     # !apartment
     ewcfg.cmd_apartment: cmds.apartment,

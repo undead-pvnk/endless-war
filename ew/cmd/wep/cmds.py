@@ -2096,3 +2096,7 @@ async def switch_weapon(cmd):
     else:
         response = ""
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def null_cmd(cmd):
+    return

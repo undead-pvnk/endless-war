@@ -201,3 +201,15 @@ async def toss_squatters(user_id = None, server_id = None, keepKeys = False):
             # Clean up the database handles.
             cursor.close()
             bknd_core.databaseClose(conn_info)
+
+
+async def lobbywarning(cmd):
+    playermodel = EwPlayer(id_user=cmd.message.author.id)
+    usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
+
+    poi = poi_static.id_to_poi.get(usermodel.poi)
+    if poi.is_apartment:
+        response = "Try that in a DM to ENDLESS WAR or in your apartment."
+    else:
+        response = "You're not in an apartment."
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

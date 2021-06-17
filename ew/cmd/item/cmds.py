@@ -1,4 +1,5 @@
 import asyncio
+import random
 import re
 import time
 
@@ -12,9 +13,11 @@ from ew.backend.player import EwPlayer
 from ew.cmd import debug as ewdebug
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
+from ew.static import food as static_food
 from ew.static import hue as hue_static
 from ew.static import poi as poi_static
 from ew.static import weapons as static_weapons
+from ew.utils import apt as apt_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
@@ -1104,4 +1107,300 @@ async def makecostume(cmd):
     )
 
     response = "You fashion your **{}** Double Halloween costume using the creation kit.".format(item_name)
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def flowerpot(cmd):
+    playermodel = EwPlayer(id_user=cmd.message.author.id)
+    usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+    if not bknd_item.check_inv_capacity(user_data=usermodel, item_type=ewcfg.it_furniture):
+        response = "You don't have room for any more furniture items."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    if item_sought:
+        item = EwItem(id_item=item_sought.get('id_item'))
+        vegetable = static_food.food_map.get(item.item_props.get('id_food'))
+        if vegetable and ewcfg.vendor_farm in vegetable.vendors:
+
+            if float(item.item_props.get('time_expir')) < time.time():
+                response = "Whoops. The stink lines on these {} have developed sentience and are screaming in agony. Must've kept them in your pocket too long. Well, whatever. It'll air out with enough slime. You shove the {} into a pot.".format(item_sought.get('name'), item_sought.get('name'))
+            else:
+                response = "You remove the freshly picked {} from your inventory and shove them into some nearby earthenware. Ah, the circle of life. Maybe with enough time you'll be able to !harvest them after they fully grow. LOL, just kidding. We all know that doesn't work.".format(item_sought.get('name'))
+
+            fname = "Pot of {}".format(item.item_props.get('food_name'))
+            fdesc = "You gaze at your well-tended {}. {}".format(item.item_props.get('food_name'), item.item_props.get('food_desc'))
+            lookdesc = "A pot of {} sits on a shelf.".format(item.item_props.get('food_name'))
+            placedesc = "You take your flowerpot full of {} and place it on the windowsill.".format(item.item_props.get('food_name'))
+            bknd_item.item_create(
+                id_user=cmd.message.author.id,
+                id_server=cmd.guild.id,
+                item_type=ewcfg.it_furniture,
+                item_props={
+                    'furniture_name': fname,
+                    'id_furniture': "flowerpot",
+                    'furniture_desc': fdesc,
+                    'rarity': ewcfg.rarity_plebeian,
+                    'acquisition': "{}".format(item_sought.get('id_item')),
+                    'furniture_place_desc': placedesc,
+                    'furniture_look_desc': lookdesc
+                }
+            )
+
+            bknd_item.give_item(id_item=item_sought.get('id_item'), id_user=str(cmd.message.author.id) + "flo", id_server=cmd.guild.id)
+        # bknd_item.item_delete(id_item=item_sought.get('id_item'))
+
+        else:
+            response = "You put a {} in the flowerpot. You then senselessly break the pot, dropping it on the ground, because {} is not a real plant and you're a knuckledragging retard.".format(item_sought.get('name'), item_sought.get('name'))
+    else:
+        if item_search == "" or item_search == None:
+            rand1 = random.randrange(100)
+            rand2 = random.randrange(5)
+            response = ""
+            if rand1 > 80:
+                response = "**"
+            for x in range(rand2 + 1):
+                response += "Y"
+            for x in range(rand2 + 1):
+                response += "E"
+            for x in range(rand2 + 1):
+                response += "A"
+            for x in range(rand2 + 1):
+                response += "H"
+            response += " BRO!"
+            if rand1 > 80:
+                response += "**"
+        else:
+            response = "Are you sure you have that item?"
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def unpot(cmd):
+    playermodel = EwPlayer(id_user=cmd.message.author.id)
+    usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+    if item_sought:
+        item = EwItem(id_item=item_sought.get('id_item'))
+        if item.item_type == ewcfg.it_furniture:
+            if item.item_props.get('id_furniture') == "flowerpot" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
+                if bknd_item.give_item(id_item=item.item_props.get('acquisition'), id_user=cmd.message.author.id, id_server=cmd.guild.id):
+                    response = "You yank the foliage out of the pot."
+                    bknd_item.item_delete(id_item=item_sought.get('id_item'))
+                else:
+                    response = "You try to yank at the foliage, but your hands are already full of food!"
+            else:
+                response = "Get the pot before you unpot it."
+        else:
+            response = "Get the pot before you unpot it."
+    else:
+        response = "Are you sure you have that plant?"
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def propstand(cmd):
+    playermodel = EwPlayer(id_user=cmd.message.author.id)
+    usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
+
+    check_poi = poi_static.id_to_poi.get(usermodel.poi)
+    if not (check_poi.is_apartment and (cmd.message.guild is None or check_poi.channel == cmd.message.channel.name)):
+        return await apt_utils.lobbywarning(cmd)
+
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+    if not bknd_item.check_inv_capacity(user_data=usermodel, item_type=ewcfg.it_furniture):
+        response = "You don't have room for any more furniture items."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    if item_sought:
+        item = EwItem(id_item=item_sought.get('id_item'))
+        if item.item_type == ewcfg.it_furniture:
+            if item.item_props.get('id_furniture') == "propstand":
+                response = "It's already on a prop stand."
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+        if item.soulbound:
+            response = "Cool idea, but no. If you tried to mount a soulbound item above the fireplace you'd be stuck there too."
+        else:
+            if item.item_type == ewcfg.it_weapon and usermodel.weapon >= 0 and item.id_item == usermodel.weapon:
+                if usermodel.weaponmarried:
+                    weapon = static_weapons.weapon_map.get(item.item_props.get("weapon_type"))
+                    response = "Your dearly beloved? Put on a propstand? At least have the decency to get a divorce at the dojo first, you cretin.".format(weapon.str_weapon)
+                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+                else:
+                    usermodel.weapon = -1
+                    usermodel.persist()
+            elif item.item_type == ewcfg.it_cosmetic:
+                item.item_props["adorned"] = "false"
+                item.item_props["slimeoid"] = 'false'
+                item.persist()
+
+            fname = "{} stand".format(item_sought.get('name'))
+            response = "You affix the {} to a wooden mount. You know this priceless trophy will last thousands of years, so you spray it down with formaldehyde to preserve it forever. Or at least until you decide to remove it.".format(item_sought.get('name'))
+            lookdesc = "A {} is mounted on the wall.".format(item_sought.get('name'))
+            placedesc = "You mount the {} on the wall. God damn magnificent.".format(item_sought.get('name'))
+            fdesc = item_sought.get('item_def').str_desc
+            if fdesc.find('{') >= 0:
+                fdesc = fdesc.format_map(item.item_props)
+
+                if fdesc.find('{') >= 0:
+                    fdesc = fdesc.format_map(item.item_props)
+            fdesc += " It's preserved on a mount."
+
+            bknd_item.item_create(
+                id_user=cmd.message.author.id,
+                id_server=cmd.guild.id,
+                item_type=ewcfg.it_furniture,
+                item_props={
+                    'furniture_name': fname,
+                    'id_furniture': "propstand",
+                    'furniture_desc': fdesc,
+                    'rarity': ewcfg.rarity_plebeian,
+                    'acquisition': "{}".format(item_sought.get('id_item')),
+                    'furniture_place_desc': placedesc,
+                    'furniture_look_desc': lookdesc
+                }
+            )
+            bknd_item.give_item(id_item=item_sought.get('id_item'), id_user=str(cmd.message.author.id) + "stand", id_server=cmd.guild.id)
+    # bknd_item.item_delete(id_item=item_sought.get('id_item'))
+
+    else:
+        if item_search == "" or item_search == None:
+            response = "Specify the item you want to put on the stand."
+        else:
+            response = "Are you sure you have that item?"
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def releaseprop(cmd):
+    playermodel = EwPlayer(id_user=cmd.message.author.id)
+    user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+    if user_data.poi != ewcfg.poi_id_bazaar:
+        response = "You need to see a specialist at The Bazaar to do that."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    poi = poi_static.id_to_poi.get(user_data.poi)
+    district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
+
+    if district_data.is_degraded():
+        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+    if item_sought:
+        item = EwItem(id_item=item_sought.get('id_item'))
+        if item.item_type == ewcfg.it_furniture:
+            if item.item_props.get('id_furniture') == "propstand" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
+                if bknd_item.give_item(id_item=item.item_props.get('acquisition'), id_user=cmd.message.author.id, id_server=cmd.guild.id):
+                    response = "After a bit of tugging, you and the mysterious individual running the prop release stall pry the item of its stand."
+                    bknd_item.item_delete(id_item=item_sought.get('id_item'))
+                else:
+                    stood_item = EwItem(id_item=item.item_props.get('acquisition'))
+                    response = "You can't carry any more {}s, so this is staying on the stand.".format(stood_item.item_type)
+            elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
+                response = "Uh oh. This one's not coming out. "
+            else:
+                response = "Don't try to unstand that which is not a stand."
+        else:
+            response = "Don't try to unstand that which is not a stand."
+    else:
+        response = "Are you sure you have that item?"
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def aquarium(cmd):
+    playermodel = EwPlayer(id_user=cmd.message.author.id)
+    usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
+
+    check_poi = poi_static.id_to_poi.get(usermodel.poi)
+    if not (check_poi.is_apartment and (cmd.message.guild is None or check_poi.channel == cmd.message.channel.name)):
+        return await apt_utils.lobbywarning(cmd)
+
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+    if not bknd_item.check_inv_capacity(user_data=usermodel, item_type=ewcfg.it_furniture):
+        response = "You don't have room for any more furniture items."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    if item_sought:
+        item = EwItem(id_item=item_sought.get('id_item'))
+        if item.item_props.get('acquisition') == ewcfg.acquisition_fishing:
+
+            if float(item.item_props.get('time_expir')) < time.time():
+                response = "Uh oh. This thing's been rotting for awhile. You give the fish mouth to mouth in order to revive it. Somehow this works, and a few minutes later it's swimming happily in a tank."
+            else:
+                response = "You gently pull the flailing, sopping fish from your back pocket, dropping it into an aquarium. It looks a little less than alive after being deprived of oxygen for so long, so you squirt a bit of your slime in the tank to pep it up."
+
+            fname = "{}'s aquarium".format(item.item_props.get('food_name'))
+            fdesc = "You look into the tank to admire your {}. {}".format(item.item_props.get('food_name'), item.item_props.get('food_desc'))
+            lookdesc = "A {} tank sits on a shelf.".format(item.item_props.get('food_name'))
+            placedesc = "You carefully place the aquarium on your shelf. The {} inside silently heckles you each time your clumsy ass nearly drops it.".format(item.item_props.get('food_name'))
+            bknd_item.item_create(
+                id_user=cmd.message.author.id,
+                id_server=cmd.guild.id,
+                item_type=ewcfg.it_furniture,
+                item_props={
+                    'furniture_name': fname,
+                    'id_furniture': "aquarium",
+                    'furniture_desc': fdesc,
+                    'rarity': ewcfg.rarity_plebeian,
+                    'acquisition': "{}".format(item_sought.get('id_item')),
+                    'furniture_place_desc': placedesc,
+                    'furniture_look_desc': lookdesc
+                }
+            )
+
+            bknd_item.give_item(id_item=item_sought.get('id_item'), id_user=str(cmd.message.author.id) + "aqu", id_server=cmd.guild.id)
+        # bknd_item.item_delete(id_item=item_sought.get('id_item'))
+
+        else:
+            response = "That's not a fish. You're not going to find a fancy tank with filters and all that just to drop a damn {} in it.".format(item_sought.get('name'))
+    else:
+        if item_search == "" or item_search == None:
+            response = "Specify a fish. You're not allowed to put yourself into an aquarium."
+        else:
+            response = "Are you sure you have that item?"
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def releasefish(cmd):
+    playermodel = EwPlayer(id_user=cmd.message.author.id)
+    usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+    if usermodel.poi != ewcfg.poi_id_bazaar:
+        response = "You need to see a specialist at The Bazaar to do that."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    poi = poi_static.id_to_poi.get(usermodel.poi)
+    district_data = EwDistrict(district=poi.id_poi, id_server=usermodel.id_server)
+
+    if district_data.is_degraded():
+        response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+    if item_sought:
+        item = EwItem(id_item=item_sought.get('id_item'))
+        if item.item_type == ewcfg.it_furniture:
+            if item.item_props.get('id_furniture') == "aquarium" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
+                if bknd_item.give_item(id_item=item.item_props.get('acquisition'), id_user=cmd.message.author.id, id_server=cmd.guild.id):
+                    response = "The mysterious individual running the fish luring stall helps you coax the fish out of its tank."
+                    bknd_item.item_delete(id_item=item_sought.get('id_item'))
+                else:
+                    response = "The individual running the fish luring stall coaxes the fish out of the tank, but you can't hold it, so they put it back and berate you for wasting their time."
+            elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
+                response = "Uh oh. This one's not coming out. "
+            else:
+                response = "Don't try to conjure a fish out of just anything. Find an aquarium."
+        else:
+            response = "Don't try to conjure a fish out of just anything. Find an aquarium."
+    else:
+        response = "Are you sure you have that fish?"
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

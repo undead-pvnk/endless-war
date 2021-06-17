@@ -593,6 +593,38 @@ async def coinflip(cmd):
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
+"""
+    Bass weilders JAM OUT
+"""
+
+
+async def jam(cmd):
+    # def leppard and pearl jam? meet def jam. this is what the refrance, fuck yeah.
+    item_found = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    item_sought = bknd_item.find_item(item_search=item_found, id_user=cmd.message.author.id, id_server=cmd.guild.id)
+
+    if item_sought:
+        item = EwItem(id_item=item_sought.get('id_item'))
+        if item.item_props.get("id_furniture") in static_items.furniture_instrument or item.item_props.get("weapon_type") == ewcfg.weapon_id_bass:
+            cycle = random.randrange(20)
+            response = ""
+            if random.randint(0, 10) == 0:
+                if item.item_props.get("id_furniture") == None:
+                    item_key = "bass"
+                else:
+                    item_key = item.item_props.get("id_furniture")
+                response = random.choice(ewcfg.jam_tunes[item_key])
+            else:
+                for x in range(1, cycle):
+                    response += random.choice([":musical_note:", ":notes:"])
+        else:
+            response = "You place your mouth on the {} but it makes no noise. Either that's not an instrument or you aren't good enough.".format(item_sought.get('name'))
+    else:
+        response = "Are you sure you have that item?"
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
 async def endlesswar(cmd):
     total = bknd_core.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
     totalslimes = total[0][0]

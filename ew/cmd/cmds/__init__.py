@@ -41,6 +41,9 @@ cmd_map = {
     # Terezi Gang can flip coins
     ewcfg.cmd_coinflip: cmds.coinflip,
 
+    # Bass weilders can jam out
+    ewcfg.cmd_jam: cmds.jam,
+
     # Show the total of positive slime in the world.
     ewcfg.cmd_endlesswar: cmds.endlesswar,
 

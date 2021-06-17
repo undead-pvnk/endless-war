@@ -35,6 +35,9 @@ cmd_map = {
     cfg.cmd_suicide: cmds.suicide,
     cfg.cmd_suicide_alt1: cmds.suicide,
     cfg.cmd_suicide_alt2: cmds.suicide,
+    # Used to be suicide aliases
+    cfg.cmd_haveastroke: cmds.null_cmd,
+    cfg.cmd_moonhurtingbeam: cmds.null_cmd,
 
     # !spar
     cfg.cmd_spar: cmds.spar,

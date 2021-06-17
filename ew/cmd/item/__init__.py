@@ -43,6 +43,14 @@ cmd_map = {
     ewcfg.cmd_longdrop: cmds.longdrop,
     ewcfg.cmd_skullbash: cmds.skullbash,
 
+    # Retype items
+    ewcfg.cmd_pot: cmds.flowerpot,
+    ewcfg.cmd_unpot: cmds.unpot,
+    ewcfg.cmd_propstand: cmds.propstand,
+    ewcfg.cmd_releaseprop: cmds.releaseprop,
+    ewcfg.cmd_aquarium: cmds.aquarium,
+    ewcfg.cmd_releasefish: cmds.releasefish,
+
     # Make a costume for Double Halloween
     # ewcfg.cmd_makecostume: ewitem.makecostume,
 
@@ -80,5 +88,13 @@ apt_dm_cmd_map = {
 
     # drop something but really far away
     ewcfg.cmd_longdrop: cmds.longdrop,
+
+    # Retype items
+    ewcfg.cmd_pot: cmds.flowerpot,
+    ewcfg.cmd_unpot: cmds.unpot,
+    ewcfg.cmd_propstand: cmds.propstand,
+    ewcfg.cmd_releaseprop: cmds.releaseprop,
+    ewcfg.cmd_aquarium: cmds.aquarium,
+    ewcfg.cmd_releasefish: cmds.releasefish,
 
 }
