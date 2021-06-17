@@ -1635,7 +1635,8 @@ item_list = [
         str_name="Busted Rifle",
         str_desc="A hunting rifle snapped in twain. If only you could repair it somehow...",
         price=100000,
-        vendors=[ewcfg.vendor_bazaar]    ),
+        vendors=[ewcfg.vendor_bazaar]
+    ),
     EwGeneralItem(
         id_item=ewcfg.item_id_repairkit,
         str_name="Field Repair Kit",
