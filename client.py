@@ -45,7 +45,6 @@ import ew.utils.apt as apt_utils
 import ew.utils.cmd as cmd_utils
 import ew.utils.core as ewutils
 import ew.utils.cosmeticitem as cosmetic_utils
-import ew.utils.district as district_utils
 import ew.utils.dungeons as dungeon_utils
 import ew.utils.frontend as fe_utils
 import ew.utils.item as itm_utils
