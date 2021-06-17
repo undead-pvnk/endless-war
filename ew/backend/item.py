@@ -360,7 +360,7 @@ def item_dedorn_cosmetics(
                 id_user=ewcfg.col_id_user,
                 id_server=ewcfg.col_id_server
             ), (
-                id_user,
+                str(id_user),
                 id_server
             ))
 

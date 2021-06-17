@@ -31,10 +31,10 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 
     # Filter out Soulbound items.
     for item in items:
-        item_obj = EwItem(id_item=item.get('id_item'))
-        if item_obj.item_props.get('context') in ["corpse", "droppable"]:
-            bknd_item.give_item(id_user=user_data.poi, id_server=id_server, id_item=item_obj.id_item)
-        if item.get('soulbound') == False and not (rigor == True and item_obj.item_props.get('preserved') == user_data.id_user) and item_obj.item_props.get('context') != 'gellphone':
+        item_props = item.get('item_props')
+        if item_props.get('context') in ["corpse", "droppable"]:
+            bknd_item.give_item(id_user=user_data.poi, id_server=id_server, id_item=item.get('id_item'))
+        if item.get('soulbound') == False and not (rigor == True and item_props.get('preserved') ==  user_data.id_user) and item_props.get('context') != 'gellphone':
             drop_candidates.append(item)
 
     filtered_items = []
@@ -505,9 +505,9 @@ def find_item_all(item_search = None, id_user = None, id_server = None, item_typ
 
         # find the first (i.e. the oldest) item that matches the search
         for item in items:
-            item_data = EwItem(id_item=item.get('id_item'))
+            # item_data = EwItem(id_item=item.get('id_item'))
             for prop in props_to_search:
-                if prop in item_data.item_props and (ewutils.flattenTokenListToString(item_data.item_props.get(prop)) == item_search or (exact_search == False and item_search in ewutils.flattenTokenListToString(item_data.item_props.get(prop)))):
+                if prop in item.get('item_props') and (ewutils.flattenTokenListToString(item.get('item_props')[prop]) == item_search or (exact_search == False and item_search in ewutils.flattenTokenListToString(item.get('item_props'[prop])))):
                     items_sought.append(item)
                     break
 
