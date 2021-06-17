@@ -4,7 +4,6 @@ import random
 import time
 
 from . import core as ewutils
-from . import district as bknd_district
 from . import frontend as fe_utils
 from . import hunting as hunt_utils
 from . import item as itm_utils
@@ -2404,7 +2403,7 @@ class EwUser(EwUserBase):
             if ewcfg.mutation_id_spontaneouscombustion in self.get_mutations():
                 user_hasCombustion = True
                 explode_damage = ewutils.slime_bylevel(self.slimelevel) / 5
-                explode_district = bknd_district.EwDistrict(district=self.poi, id_server=self.id_server)
+                explode_district = EwDistrict(district=self.poi, id_server=self.id_server)
                 explode_poi_channel = poi_static.id_to_poi.get(self.poi).channel
 
         if self.life_state == ewcfg.life_state_corpse:
