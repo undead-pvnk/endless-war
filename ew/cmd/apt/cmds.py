@@ -1179,14 +1179,6 @@ async def apt_look(cmd):
     return await resp_cont.post(channel=cmd.message.channel)
 
 
-# Used to be dms only
-# -------------------------------------------------------------------
-# Ensure these commands get a location check before moving out of DMS
-# Also put them in the dm_cmd_map, don't remove functionality
-# -------------------------------------------------------------------
-
-
-# LCA
 async def wash(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
@@ -1236,7 +1228,6 @@ async def wash(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-# LCA
 async def browse(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
@@ -1252,7 +1243,6 @@ async def browse(cmd):
         await apt_look(cmd=cmd)
 
 
-# LCA
 async def store_item(cmd):
     cmd_text = cmd.tokens[0].lower() if len(cmd.tokens) >= 1 else ""
 
@@ -1387,7 +1377,6 @@ async def store_item(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-# LCA
 async def remove_item(cmd):
     cmd_text = cmd.tokens[0].lower() if len(cmd.tokens) >= 1 else ""
 
@@ -1515,7 +1504,6 @@ async def remove_item(cmd):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-# LCA
 async def watch(cmd):
     player_model = EwPlayer(id_user=cmd.message.author.id)
     user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
@@ -1579,7 +1567,6 @@ async def watch(cmd):
 
 
 # slimeoid storage works just like regular item storage. Just add "freeze" to the owner's name to store it.
-# LCA
 async def freeze(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
@@ -1612,7 +1599,6 @@ async def freeze(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-# LCA
 async def unfreeze(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
@@ -1662,7 +1648,6 @@ async def unfreeze(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-# LCA
 async def customize(cmd):
     cmd_text = cmd.tokens[0].lower() if len(cmd.tokens) >= 1 else ""
     isDesc = True if cmd_text == ewcfg.cmd_aptdesc else False
@@ -1706,7 +1691,6 @@ async def customize(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
-# LCA
 async def bootall(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
