@@ -52,7 +52,7 @@ cmd_map = {
     # !wash your clothes
     ewcfg.cmd_wash: cmds.wash,
 
-    # !stow's aprtment variations, though !stow itself will call the version in cmd.py
+    # !stow's aprtment variations, though !stow itself will call the version in item.py
     ewcfg.cmd_fridge: cmds.store_item,
     ewcfg.cmd_closet: cmds.store_item,
     ewcfg.cmd_decorate: cmds.store_item,
@@ -90,7 +90,7 @@ apt_dm_cmd_map = {
     # !browse your bookshelf, or apartment
     ewcfg.cmd_browse: cmds.browse,
 
-    # !stow's aprtment variations, though !stow itself will call the version in cmd.py outside of dms
+    # !stow and it's apt exclusive variants
     ewcfg.cmd_store: cmds.store_item,
     ewcfg.cmd_fridge: cmds.store_item,
     ewcfg.cmd_closet: cmds.store_item,
@@ -98,7 +98,7 @@ apt_dm_cmd_map = {
     ewcfg.cmd_shelve: cmds.store_item,
     ewcfg.cmd_shelve_alt_1: cmds.store_item,
 
-    # !snag's apartment variations. Same deal as stow
+    # !snag and it's apt exclusive variants
     ewcfg.cmd_take: cmds.remove_item,
     ewcfg.cmd_uncloset: cmds.remove_item,
     ewcfg.cmd_unfridge: cmds.remove_item,
