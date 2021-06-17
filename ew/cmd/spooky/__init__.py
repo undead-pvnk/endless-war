@@ -59,8 +59,8 @@ cmd_map = {
     ewcfg.cmd_crystalize_negapoudrin_alt3: cmds.crystalize_negapoudrin,
 
     # Ghosts can spawn a (mostly) randomly generated negaslimeoid
-    ewcfg.cmd_summonnegaslimeoid: cmds.summon_negaslimeoid,
-    ewcfg.cmd_summonnegaslimeoid_alt1: cmds.summon_negaslimeoid,
-    ewcfg.cmd_summonnegaslimeoid_alt2: cmds.summon_negaslimeoid,
+    #ewcfg.cmd_summonnegaslimeoid: cmds.summon_negaslimeoid,
+    #ewcfg.cmd_summonnegaslimeoid_alt1: cmds.summon_negaslimeoid,
+    #ewcfg.cmd_summonnegaslimeoid_alt2: cmds.summon_negaslimeoid,
 
 }

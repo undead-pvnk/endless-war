@@ -50,6 +50,11 @@ cmd_map = {
     ewcfg.cmd_battlenegaslimeoid_alt2: cmds.negaslimeoidbattle,
     ewcfg.cmd_battlenegaslimeoid_alt3: cmds.negaslimeoidbattle,
 
+    # Ghosts can spawn a (mostly) randomly generated negaslimeoid
+    ewcfg.cmd_summonnegaslimeoid: cmds.summon_negaslimeoid,
+    ewcfg.cmd_summonnegaslimeoid_alt1: cmds.summon_negaslimeoid,
+    ewcfg.cmd_summonnegaslimeoid_alt2: cmds.summon_negaslimeoid,
+
 }
 
 apt_dm_cmd_map = {
