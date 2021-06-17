@@ -1,8 +1,5 @@
 from ew.backend import core as bknd_core
-from ew.backend.market import EwStock
 from ew.static import cfg as ewcfg
-from ew.utils import market as market_utils
-from ew.utils.combat import EwUser
 
 """ Returns an array of the most recent counts of all invested slime coin, from newest at 0 to oldest. """
 
