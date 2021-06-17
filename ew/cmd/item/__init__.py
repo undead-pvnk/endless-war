@@ -39,10 +39,6 @@ cmd_map = {
     # delete a person
     ewcfg.cmd_zuck: cmds.zuck,
 
-    # Why aren't these in mutations
-    ewcfg.cmd_longdrop: cmds.longdrop,
-    ewcfg.cmd_skullbash: cmds.skullbash,
-
     # Retype items
     ewcfg.cmd_pot: cmds.flowerpot,
     ewcfg.cmd_unpot: cmds.unpot,
@@ -97,9 +93,6 @@ apt_dm_cmd_map = {
 
     # !squeeze
     ewcfg.cmd_squeeze: cmds.squeeze,
-
-    # drop something but really far away
-    ewcfg.cmd_longdrop: cmds.longdrop,
 
     # Retype items
     ewcfg.cmd_pot: cmds.flowerpot,

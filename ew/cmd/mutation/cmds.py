@@ -12,8 +12,12 @@ from ew.static import hue as hue_static
 from ew.static import items as static_items
 from ew.static import mutations as static_mutations
 from ew.static import poi as poi_static
+from ew.static import weapons as static_weapons
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
+from ew.utils import item as itm_utils
+from ew.utils import poi as poi_utils
+from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.slimeoid import EwSlimeoid
@@ -642,4 +646,74 @@ async def devour(cmd):
         response = "Devour what?"
     else:
         response = "Are you sure you have that item?"
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def longdrop(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    mutations = user_data.get_mutations()
+    poi = poi_static.id_to_poi.get(user_data.poi)
+
+    destination = ewutils.flattenTokenListToString(cmd.tokens[1])
+    dest_poi = poi_static.id_to_poi.get(destination)
+
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[2:])
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=user_data.id_server)
+
+    if ewcfg.mutation_id_longarms not in mutations:
+        response = "As if anything on you was long enough to do that."
+    elif cmd.tokens_count == 1:
+        response = "You'll need for information that that. Try !longdrop <location> <item>."
+    elif not item_sought:
+        response = "You don't have that item."
+    elif dest_poi == None:
+        response = "Never heard of it."
+    elif poi_utils.inaccessible(user_data=user_data, poi=dest_poi) or dest_poi.is_street:
+        response = "Your arm hits a wall before it can make the drop off. Shit, probably can't take it over there."
+    elif user_data.poi not in dest_poi.neighbors.keys() and dest_poi.id_poi not in poi.mother_districts:
+        response = "You can't take it that far. What if a bird or car runs into your hand?"
+    else:
+        item_obj = EwItem(item_sought.get('id_item'))
+        if item_obj.soulbound == True and item_obj.item_props.get('context') != 'housekey':
+            response = "You still can't drop a soulbound item. Having really long arms doesn't grant you that ability."
+        elif item_obj.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item_obj.id_item == user_data.weapon:
+            if user_data.weaponmarried:
+                weapon = static_weapons.weapon_map.get(item_obj.item_props.get("weapon_type"))
+                response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(
+                    weapon.str_weapon)
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            else:
+                user_data.weapon = -1
+                user_data.persist()
+
+        itm_utils.item_drop(id_item=item_sought.get('id_item'), other_poi=dest_poi.id_poi)
+        response = "You stretch your arms and drop your " + item_sought.get("name") + ' into {}.'.format(dest_poi.str_name)
+        await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def skullbash(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    item_stash = bknd_item.inventory(id_user=cmd.message.author.id, id_server=user_data.id_server)
+    item_sought = None
+    for item_piece in item_stash:
+        item = EwItem(id_item=item_piece.get('id_item'))
+        if item_piece.get('item_type') == ewcfg.it_furniture and item.item_props.get('id_furniture') == "brick":
+            item_sought = item_piece
+
+    if item_sought:
+        if user_data.life_state == ewcfg.life_state_corpse:
+            response = "Your head is too incorporeal to do that."
+        elif user_data.life_state == ewcfg.life_state_shambler:
+            response = "Your head is too soft and malleable to do that."
+        else:
+            ewutils.active_restrictions[user_data.id_user] = 2
+            response = "You suck in your gut and mentally prepare to lose a few brain cells. 3...2...1...WHACK! Ugh. You're gonna need a minute."
+            await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            await asyncio.sleep(600)
+            ewutils.active_restrictions[user_data.id_user] = 0
+            response = "The stars slowly begin to fade from your vision. Looks like you're lucid again."
+    else:
+        response = "You don't have a hard enough brick to bash your head in."
+
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

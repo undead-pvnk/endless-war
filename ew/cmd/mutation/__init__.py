@@ -19,6 +19,8 @@ cmd_map = {
     ewcfg.cmd_piss: cmds.piss,
     ewcfg.cmd_fursuit: cmds.fursuit,
     ewcfg.cmd_devour: cmds.devour,
+    ewcfg.cmd_longdrop: cmds.longdrop,
+    ewcfg.cmd_skullbash: cmds.skullbash,
 
 }
 
@@ -41,5 +43,7 @@ apt_dm_cmd_map = {
 
     # piss on the floor
     ewcfg.cmd_piss: cmds.piss,
+
+    ewcfg.cmd_longdrop: cmds.longdrop,
 
 }
