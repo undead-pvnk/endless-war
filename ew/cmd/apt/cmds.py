@@ -13,7 +13,6 @@ from ew.static import food as static_food
 from ew.static import hue as hue_static
 from ew.static import items as static_items
 from ew.static import poi as poi_static
-from ew.static import weapons as static_weapons
 from ew.utils import apt as apt_utils
 from ew.utils import core as ewutils
 from ew.utils import district as dist_utils
