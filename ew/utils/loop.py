@@ -1218,3 +1218,46 @@ async def capture_tick_loop(id_server):
         # ewutils.logMsg("Capture tick happened on server %s." % id_server + " Timestamp: %d" % int(time.time()))
 
         await asyncio.sleep(interval)
+
+
+"""
+	Gives both kingpins the appropriate amount of slime for how many districts they own and lowers the capture_points property of each district by a certain amount, turning them neutral after a while
+"""
+
+
+# Used in the market loop, trying to get EwUser out of district utils so this can go here
+async def give_kingpins_slime_and_decay_capture_points(id_server):
+    resp_cont_decay_loop = EwResponseContainer(client=ewutils.get_client(), id_server=id_server)
+
+    for kingpin_role in [ewcfg.role_rowdyfucker, ewcfg.role_copkiller]:
+        kingpin = fe_utils.find_kingpin(id_server=id_server, kingpin_role=kingpin_role)
+        if kingpin is not None:
+            kingpin = EwUser(id_server=id_server, id_user=kingpin.id_user)
+            total_slimegain = 0
+            for id_district in poi_static.capturable_districts:
+
+                district = EwDistrict(id_server=id_server, district=id_district)
+
+                # if the kingpin is controlling this district give the kingpin slime based on the district's property class
+                if district.controlling_faction == (ewcfg.faction_killers if kingpin.faction == ewcfg.faction_killers else ewcfg.faction_rowdys):
+                    poi = poi_static.id_to_poi.get(id_district)
+
+                    slimegain = ewcfg.district_control_slime_yields[poi.property_class]
+
+                    # increase slimeyields by 10 percent per friendly neighbor
+                    friendly_mod = 1 + 0.1 * district.get_number_of_friendly_neighbors()
+                    total_slimegain += slimegain * friendly_mod
+
+            kingpin.change_slimes(n=total_slimegain)
+            kingpin.persist()
+
+            ewutils.logMsg(kingpin_role + " just received %d" % total_slimegain + " slime for their captured districts.")
+
+    # Decay capture points.
+    for id_district in poi_static.capturable_districts:
+        district = EwDistrict(id_server=id_server, district=id_district)
+
+        responses = district.decay_capture_points()
+        resp_cont_decay_loop.add_response_container(responses)
+        district.persist()
+# await resp_cont_decay_loop.post()

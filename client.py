@@ -542,7 +542,7 @@ async def on_ready():
                     # kill advertisements that have timed out
                     bknd_ads.delete_expired_ads(id_server=server.id)
 
-                    await district_utils.give_kingpins_slime_and_decay_capture_points(id_server=server.id)
+                    await loop_utils.give_kingpins_slime_and_decay_capture_points(id_server=server.id)
                     await move_utils.send_gangbase_messages(server.id, market_data.clock)
                     await move_utils.kick(server.id)
 
