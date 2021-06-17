@@ -1,7 +1,8 @@
-
 """
     Point of Interest (POI) data model
 """
+
+
 class EwPoi:
     # The typable single-word ID of this location.
     id_poi = ""
@@ -73,7 +74,7 @@ class EwPoi:
     # If it's a subzone
     is_subzone = False
 
-    #If it's an apartment
+    # If it's an apartment
     is_apartment = False
 
     # if this zone is a street within a district
@@ -137,52 +138,52 @@ class EwPoi:
     wikipage = ""
 
     def __init__(
-        self,
-        id_poi = "unknown",
-        alias = [],
-        str_name = "Unknown",
-        str_desc = "...",
-        str_in = "in",
-        str_enter = "enter",
-        coord = None,
-        coord_alias = [],
-        channel = "",
-        role = None,
-        major_role = None,
-        minor_role = None,
-        permissions = None,
-        pvp = True,
-        factions = [],
-        life_states = [],
-        closed = False,
-        str_closed = None,
-        vendors = [],
-        property_class = "",
-        is_district = False,
-        is_gangbase = False,
-        is_capturable = False,
-        is_subzone = False,
-        is_apartment = False,
-        is_street = False,
-        mother_districts = [],
-        father_district = "",
-        is_transport = False,
-        transport_type = "",
-        default_line = "",
-        default_stop = "",
-        is_transport_stop = False,
-        transport_lines = None,
-        is_outskirts = False,
-        community_chest = None,
-        is_pier = False,
-        pier_type = None,
-        is_tutorial = False,
-        has_ads = False,
-        write_manuscript = False,
-        max_degradation = 10000,
-        neighbors = None,
-        topic = "",
-        wikipage = "",
+            self,
+            id_poi = "unknown",
+            alias = [],
+            str_name = "Unknown",
+            str_desc = "...",
+            str_in = "in",
+            str_enter = "enter",
+            coord = None,
+            coord_alias = [],
+            channel = "",
+            role = None,
+            major_role = None,
+            minor_role = None,
+            permissions = None,
+            pvp = True,
+            factions = [],
+            life_states = [],
+            closed = False,
+            str_closed = None,
+            vendors = [],
+            property_class = "",
+            is_district = False,
+            is_gangbase = False,
+            is_capturable = False,
+            is_subzone = False,
+            is_apartment = False,
+            is_street = False,
+            mother_districts = [],
+            father_district = "",
+            is_transport = False,
+            transport_type = "",
+            default_line = "",
+            default_stop = "",
+            is_transport_stop = False,
+            transport_lines = None,
+            is_outskirts = False,
+            community_chest = None,
+            is_pier = False,
+            pier_type = None,
+            is_tutorial = False,
+            has_ads = False,
+            write_manuscript = False,
+            max_degradation = 10000,
+            neighbors = None,
+            topic = "",
+            wikipage = "",
     ):
         self.id_poi = id_poi
         self.alias = alias
@@ -235,91 +236,91 @@ class EwPoi:
 
 
 """ Object that defines a public transportation line """
+
+
 class EwTransportLine:
+    # name of the transport line
+    id_line = ""
 
-	# name of the transport line
-	id_line = ""
+    # alternative names
+    alias = []
 
-	# alternative names
-	alias = []
+    # Nice name for output
+    str_name = ""
 
-	# Nice name for output
-	str_name = ""
+    # which stop the line starts at
+    first_stop = ""
 
-	# which stop the line starts at
-	first_stop = ""
+    # which stop the line ends at
+    last_stop = ""
 
-	# which stop the line ends at
-	last_stop = ""
+    # which line transports switch to after the last stop
+    next_line = ""
 
-	# which line transports switch to after the last stop
-	next_line = ""
+    # how long to stay at each stop, and which stop follows
+    schedule = {}
 
-	# how long to stay at each stop, and which stop follows
-	schedule = {}
+    def __init__(self,
+                 id_line = "",
+                 alias = [],
+                 str_name = "",
+                 first_stop = "",
+                 last_stop = "",
+                 next_line = "",
+                 schedule = {}
+                 ):
+        self.id_line = id_line
+        self.alias = alias
+        self.str_name = str_name
+        self.first_stop = first_stop
+        self.last_stop = last_stop
+        self.next_line = next_line
+        self.schedule = schedule
 
-	def __init__(self,
-		id_line = "",
-		alias = [],
-		str_name = "",
-		first_stop = "",
-		last_stop = "",
-		next_line = "",
-		schedule = {}
-		):
-		self.id_line = id_line
-		self.alias = alias
-		self.str_name = str_name
-		self.first_stop = first_stop
-		self.last_stop = last_stop
-		self.next_line = next_line
-		self.schedule = schedule
 
 class EwEventDef:
-	event_type = ""
-	
-	str_event_start = ""
-	str_event_end = ""
+    event_type = ""
 
-	def __init__(
-		self,
-		event_type = "",
-		str_event_start = "",
-		str_event_end = "",
-	):
-		self.event_type = event_type
-		self.str_event_start = str_event_start
-		self.str_event_end = str_event_end
-		
+    str_event_start = ""
+    str_event_end = ""
+
+    def __init__(
+            self,
+            event_type = "",
+            str_event_start = "",
+            str_event_end = "",
+    ):
+        self.event_type = event_type
+        self.str_event_start = str_event_start
+        self.str_event_end = str_event_end
+
 
 class EwDungeonScene:
+    # The text sent when a scene starts
+    text = ""
 
-	# The text sent when a scene starts
-	text = ""
+    # Whether or not the dungeon is active
+    dungeon_state = True
 
-	# Whether or not the dungeon is active
-	dungeon_state = True
+    # Where the scene is taking place
+    poi = None
 
-	# Where the scene is taking place
-	poi = None
+    # life state to assign for this scene
+    life_state = None
 
-	# life state to assign for this scene
-	life_state = None
+    # Commands that can be used in a scene, and what scene ID that leads to
+    options = {}
 
-	# Commands that can be used in a scene, and what scene ID that leads to
-	options = {}
-
-	def __init__(
-			self,
-			text="",
-			dungeon_state=True,
-			options={},
-			poi=None,
-			life_state=None,
-	):
-		self.text = text
-		self.dungeon_state = dungeon_state
-		self.options = options
-		self.poi = poi
-		self.life_state = life_state
-
+    def __init__(
+            self,
+            text = "",
+            dungeon_state = True,
+            options = {},
+            poi = None,
+            life_state = None,
+    ):
+        self.text = text
+        self.dungeon_state = dungeon_state
+        self.options = options
+        self.poi = poi
+        self.life_state = life_state
