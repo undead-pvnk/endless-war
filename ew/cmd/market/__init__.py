@@ -13,13 +13,6 @@ cmd_map = {
     # Redeem slime with SlimeCoin
     # ewcfg.cmd_redeem: cmds.redeem,
 
-    # Show the player's slime coin.
-    # Feel like this should be in cmd with !slime and !data
-    ewcfg.cmd_slimecoin: cmds.slimecoin,
-    ewcfg.cmd_slimecoin_alt1: cmds.slimecoin,
-    ewcfg.cmd_slimecoin_alt2: cmds.slimecoin,
-    ewcfg.cmd_slimecoin_alt3: cmds.slimecoin,
-
     # Donate your slime to SlimeCorp in exchange for SlimeCoin.
     ewcfg.cmd_donate: cmds.donate,
 
@@ -36,11 +29,6 @@ cmd_map = {
     ewcfg.cmd_exchangerate_alt3: cmds.rate,
     ewcfg.cmd_exchangerate_alt4: cmds.rate,
 
-    # show player's current shares in a company
-    # Again feel like this could definitely be with !slime in cmd
-    ewcfg.cmd_shares: cmds.shares,
-    ewcfg.cmd_shares_alt1: cmds.shares,
-
     # check available stocks
     ewcfg.cmd_stocks: cmds.stocks,
 
@@ -50,15 +38,5 @@ cmd_map = {
     ewcfg.cmd_remove_offer: cmds.remove_offer,
     ewcfg.cmd_completetrade: cmds.complete_trade,
     ewcfg.cmd_canceltrade: cmds.cancel_trade,
-
-}
-
-apt_dm_cmd_map = {
-
-    # Show the player's slime coin.
-    ewcfg.cmd_slimecoin: cmds.slimecoin,
-    ewcfg.cmd_slimecoin_alt1: cmds.slimecoin,
-    ewcfg.cmd_slimecoin_alt2: cmds.slimecoin,
-    ewcfg.cmd_slimecoin_alt3: cmds.slimecoin,
 
 }

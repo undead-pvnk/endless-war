@@ -198,6 +198,16 @@ cmd_map = {
     # SlimeCorp security officers can post propaganda
     # ewcfg.cmd_propaganda: ewcmd.propaganda,
 
+    # Show the player's slime coin.
+    ewcfg.cmd_slimecoin: cmds.slimecoin,
+    ewcfg.cmd_slimecoin_alt1: cmds.slimecoin,
+    ewcfg.cmd_slimecoin_alt2: cmds.slimecoin,
+    ewcfg.cmd_slimecoin_alt3: cmds.slimecoin,
+
+    # show player's current shares in a company
+    ewcfg.cmd_shares: cmds.shares,
+    ewcfg.cmd_shares_alt1: cmds.shares,
+
 }
 
 dm_cmd_map = {
@@ -267,9 +277,10 @@ apt_dm_cmd_map = {
     ewcfg.cmd_commands_alt1: cmds.commands,
     ewcfg.cmd_commands: cmds.commands,
 
-    # I will cry and piss my pants about this
-    # put the mutation commands in ewmutaion
-    # I am literally begging
-    #ewcfg.cmd_piss: cmds.piss,
+    # Show the player's slime coin.
+    ewcfg.cmd_slimecoin: cmds.slimecoin,
+    ewcfg.cmd_slimecoin_alt1: cmds.slimecoin,
+    ewcfg.cmd_slimecoin_alt2: cmds.slimecoin,
+    ewcfg.cmd_slimecoin_alt3: cmds.slimecoin,
 
 }

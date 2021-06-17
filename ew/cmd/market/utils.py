@@ -42,24 +42,3 @@ def getRecentTotalShares(id_server = None, stock = None, count = 2):
             pass
         finally:
             return values
-
-
-""" used for !shares """
-
-
-def get_user_shares_str(id_server = None, stock = None, id_user = None):
-    response = ""
-    if id_server != None and stock != None and id_user != None:
-        user_data = EwUser(id_server=id_server, id_user=id_user)
-        stock = EwStock(id_server=id_server, stock=stock)
-        shares = market_utils.getUserTotalShares(id_server=user_data.id_server, stock=stock.id_stock, id_user=user_data.id_user)
-        shares_value = round(shares * (stock.exchange_rate / 1000.0))
-
-        response = "You have {shares:,} shares in {stock}".format(shares=shares, stock=ewcfg.stock_names.get(stock.id_stock))
-
-        # if user_data.poi == ewcfg.poi_id_downtown:
-        response += ", currently valued at {coin:,} SlimeCoin.".format(coin=shares_value)
-        # else:
-        #	response += "."
-
-    return response

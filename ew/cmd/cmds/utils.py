@@ -2,9 +2,11 @@ import random
 
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
+from ew.backend.market import EwStock
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import frontend as fe_utils
+from ew.utils import market as market_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 
@@ -145,3 +147,24 @@ def item_commands(cmd):
         return response
     else:
         return ""
+
+
+""" used for !shares """
+
+
+def get_user_shares_str(id_server = None, stock = None, id_user = None):
+    response = ""
+    if id_server != None and stock != None and id_user != None:
+        user_data = EwUser(id_server=id_server, id_user=id_user)
+        stock = EwStock(id_server=id_server, stock=stock)
+        shares = market_utils.getUserTotalShares(id_server=user_data.id_server, stock=stock.id_stock, id_user=user_data.id_user)
+        shares_value = round(shares * (stock.exchange_rate / 1000.0))
+
+        response = "You have {shares:,} shares in {stock}".format(shares=shares, stock=ewcfg.stock_names.get(stock.id_stock))
+
+        # if user_data.poi == ewcfg.poi_id_downtown:
+        response += ", currently valued at {coin:,} SlimeCoin.".format(coin=shares_value)
+        # else:
+        #	response += "."
+
+    return response

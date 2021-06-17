@@ -38,6 +38,7 @@ from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
 from .utils import exec_mutations
 from .utils import gen_score_text
+from .utils import get_user_shares_str
 from .utils import item_commands
 from .utils import item_off
 from .utils import location_commands
@@ -2108,6 +2109,67 @@ async def wrap(cmd):
 
 async def yoslimernalia(cmd):
     await fe_utils.send_message(cmd.client, cmd.message.channel, '@everyone Yo, Slimernalia!', filter_everyone=False)
+
+
+""" show player's slimecoin balance """
+
+
+async def slimecoin(cmd):
+    if cmd.mentions_count == 0:
+        user_data = EwUser(member=cmd.message.author)
+        coins = user_data.slimecoin
+        credits = user_data.salary_credits
+        response = "You have {:,} SlimeCoin".format(coins)
+
+        if credits != 0:
+            response += " and {:,} SlimeCorp Salary Credits.".format(credits)
+        else:
+            response += "."
+
+    else:
+        member = cmd.mentions[0]
+        user_data = EwUser(member=member)
+        coins = user_data.slimecoin
+        credits = user_data.salary_credits
+        response = "{} has {:,} SlimeCoin".format(member.display_name, coins)
+
+        if credits != 0:
+            response += " and {:,} SlimeCorp Salary Credits.".format(credits)
+        else:
+            response += "."
+
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+""" show player's shares in a stock """
+
+
+async def shares(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.life_state == ewcfg.life_state_shambler:
+        response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    stock = ""
+    response = ""
+
+    if cmd.tokens_count > 0:
+        stock = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+    if stock in ewcfg.stocks:
+        response = get_user_shares_str(id_server=user_data.id_server, id_user=user_data.id_user, stock=stock)
+
+    elif stock == "":
+        for stock in ewcfg.stocks:
+            response += "\n"
+            response += get_user_shares_str(id_server=user_data.id_server, id_user=user_data.id_user, stock=stock)
+
+    else:
+        response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
+
+    # Send the response to the player.
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 """
