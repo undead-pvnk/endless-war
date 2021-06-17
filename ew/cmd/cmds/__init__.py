@@ -50,23 +50,18 @@ cmd_map = {
     # Slimefest
     ewcfg.cmd_slimefest: cmds.slimefest,
 
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-    # up till this point it was    #
-    # a good spread of general     #
-    # purpose cmds. RIP            #
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-
     # Show the number of swears in the global swear jar.
     # ewcfg.cmd_swear_jar: cmds.swearjar,
 
     # throw an item off the cliff
+    # TODO -- Find out how to put this in item cmds without circular imports
     ewcfg.cmd_toss: cmds.toss_off_cliff,
 
     # throw yourself off the cliff
     ewcfg.cmd_jump: cmds.jump,
     ewcfg.cmd_jump_alt1: cmds.jump,
 
-    # throw someone else off the cliff
+    # throw someone else off the cliff -- could be in wep
     ewcfg.cmd_push: cmds.push,
     ewcfg.cmd_push_alt_1: cmds.push,
     ewcfg.cmd_push_alt_2: cmds.push,
@@ -74,14 +69,11 @@ cmd_map = {
     # drink from the fountain
     ewcfg.cmd_purify: cmds.purify,
 
-    # stow/snag
-    ewcfg.cmd_store: cmds.store_item,
-    ewcfg.cmd_take: cmds.remove_item,
-
     # look at the flag
     ewcfg.cmd_checkflag: cmds.check_flag,
 
-    # for russianroulette apparently. I think every package has a copy of these
+    # TODO - adapt these for every challenge/confrimation
+    # Used in russianroulette and slimeoidbattle.
     ewcfg.cmd_accept: cmds.accept,
     ewcfg.cmd_refuse: cmds.refuse,
 
@@ -89,34 +81,22 @@ cmd_map = {
     ewcfg.cmd_confirm: cmds.confirm,
     ewcfg.cmd_cancel: cmds.cancel,
 
-    # TODO - Create a universal accept system
-    # implement checks on everything that awaits
-    # acceptance to make sure queues dont stack
-    # Cause I am fortelling of bugs with all these
-
-    # link to the world map
+    # link to the world maps
     ewcfg.cmd_map: cmds.map,
     ewcfg.cmd_transportmap: cmds.transportmap,
 
     # Check your fashion ratings
-    # debatably could go in cosmetic
-    # but it fits with hunger/data/slime
     ewcfg.cmd_fashion: cmds.fashion,
     ewcfg.cmd_fashion_alt1: cmds.fashion,
 
-    # admins manipulate/make items. Feels like these should be in
-    # the item_package with the prop editor
-    ewcfg.cmd_forgemasterpoudrin: cmds.forge_master_poudrin,
-    ewcfg.cmd_createitem: cmds.create_item,
-    ewcfg.cmd_manualsoulbind: cmds.manual_soulbind,
-    ewcfg.cmd_balance_cosmetics: cmds.balance_cosmetics,
-
-    # more debug commands. feel wrong here
+    # Admin/debug commands
     ewcfg.cmd_setslime: cmds.set_slime,
     ewcfg.cmd_checkstats: cmds.check_stats,
     ewcfg.cmd_makebp: cmds.make_bp,
     ewcfg.cmd_ping_me: cmds.ping_me,
     ewcfg.cmd_addstatuseffect: cmds.assign_status_effect,
+    ewcfg.cmd_promote: cmds.promote,
+    ewcfg.cmd_checkbot: cmds.check_bot,
 
     # force print the leaderboard
     ewcfg.cmd_post_leaderboard: cmds.post_leaderboard,
@@ -125,11 +105,7 @@ cmd_map = {
     ewcfg.cmd_arrest: cmds.arrest,
     ewcfg.cmd_release: cmds.release,
     ewcfg.cmd_release_alt1: cmds.release,
-
     ewcfg.cmd_manual_unban: cmds.unban_manual,
-
-    # grant slimecorp executive status
-    ewcfg.cmd_promote: cmds.promote,
 
     # recycle your trash at the slimecorp recycling plant
     ewcfg.cmd_recycle: cmds.recycle,
@@ -141,7 +117,7 @@ cmd_map = {
     ewcfg.cmd_commands: cmds.commands,
     ewcfg.cmd_commands_alt1: cmds.commands,
 
-    # Misc (this whole map is misc)
+    # Pure flavor response
     ewcfg.cmd_howl: cmds.cmd_howl,
     ewcfg.cmd_howl_alt1: cmds.cmd_howl,
     ewcfg.cmd_moan: cmds.cmd_moan,
@@ -149,6 +125,8 @@ cmd_map = {
     ewcfg.cmd_salute: cmds.salute,
     ewcfg.cmd_unsalute: cmds.unsalute,
     ewcfg.cmd_hurl: cmds.hurl,
+
+    # Link to various external things
     ewcfg.cmd_news: cmds.patchnotes,
     ewcfg.cmd_patchnotes: cmds.patchnotes,
     ewcfg.cmd_wiki: cmds.wiki,
@@ -158,19 +136,12 @@ cmd_map = {
     ewcfg.cmd_leaderboard: cmds.leaderboard,
     ewcfg.cmd_leaderboard_alt1: cmds.leaderboard,
 
-    # WHY ARE THE MUTATION COMMANDS EVERYWHERE BUT EW/MUTATIONS
-    ewcfg.cmd_piss: cmds.piss,
-    ewcfg.cmd_fursuit: cmds.fursuit,
-
     # LOL
     ewcfg.cmd_lol: cmds.lol,
 
     # Shuts down the bot with sys.exit()
     # or kills non admins
     ewcfg.cmd_shutdownbot: cmds.shut_down_bot,
-
-    # Checks the status of ewutils.TERMINATE
-    ewcfg.cmd_checkbot: cmds.check_bot,
 
     # for the filth
     ewcfg.cmd_paycheck: cmds.paycheck,
@@ -179,17 +150,15 @@ cmd_map = {
     # Praying at the base of ENDLESS WAR.
     ewcfg.cmd_pray: cmds.pray,
 
-    # Slimernalia
+    # Slimernalia -- Moved unwrap to item cmds. Please move wrap upon reimplementation
     # Check your current festivity
     # ewcfg.cmd_festivity: cmds.festivity,
     # Wrap a gift -- ewitem maybe?
     # ewcfg.cmd_wrap: cmds.wrap,
-    # Unwrap a gift -- ewitem maybe?
-    ewcfg.cmd_unwrap: cmds.unwrap,
     # Yo, Slimernalia
     # ewcfg.cmd_yoslimernalia: cmds.yoslimernalia,
 
-    # Swilldermuk
+    # Swilldermuk -- Please make swilldermuk specific cmd/util files on reimplementation
     # ewcfg.cmd_gambit: cmds.gambit,
     # ewcfg.cmd_credence: cmds.credence, #debug
     # ewcfg.cmd_get_credence: cmds.get_credence, #debug
@@ -198,7 +167,7 @@ cmd_map = {
     # ewcfg.cmd_pointandlaugh: cmds.point_and_laugh,
     ewcfg.cmd_prank: cmds.prank,
 
-    # Gankers Vs. Shamblers
+    # Gankers Vs. Shamblers -- Please make GvS specific cmd/util files on reimplementation
     # Maybe shoulda had its own file
     # ewcfg.cmd_gvs_printgrid: cmds.gvs_print_grid,
     # ewcfg.cmd_gvs_printgrid_alt1: cmds.gvs_print_grid,
@@ -301,6 +270,6 @@ apt_dm_cmd_map = {
     # I will cry and piss my pants about this
     # put the mutation commands in ewmutaion
     # I am literally begging
-    ewcfg.cmd_piss: cmds.piss,
+    #ewcfg.cmd_piss: cmds.piss,
 
 }

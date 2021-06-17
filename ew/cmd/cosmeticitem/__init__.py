@@ -21,6 +21,9 @@ cmd_map = {
     ewcfg.cmd_dyecosmetic_alt2: cmds.dye,
     ewcfg.cmd_dyecosmetic_alt3: cmds.dye,
 
+    # admins manipulate/make items
+    ewcfg.cmd_balance_cosmetics: cmds.balance_cosmetics,
+
 }
 
 apt_dm_cmd_map = {

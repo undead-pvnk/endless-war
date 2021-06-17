@@ -51,8 +51,20 @@ cmd_map = {
     ewcfg.cmd_aquarium: cmds.aquarium,
     ewcfg.cmd_releasefish: cmds.releasefish,
 
+    # stow/snag for chests and apartment storage
+    ewcfg.cmd_store: cmds.store_item,
+    ewcfg.cmd_take: cmds.remove_item,
+
     # Make a costume for Double Halloween
     # ewcfg.cmd_makecostume: ewitem.makecostume,
+
+    # Admin/Debug cmds
+    ewcfg.cmd_forgemasterpoudrin: cmds.forge_master_poudrin,
+    ewcfg.cmd_createitem: cmds.create_item,
+    ewcfg.cmd_manualsoulbind: cmds.manual_soulbind,
+
+    # SLIMERNALIA
+    ewcfg.cmd_unwrap: cmds.unwrap,
 
 }
 

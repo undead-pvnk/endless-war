@@ -16,6 +16,8 @@ cmd_map = {
     ewcfg.cmd_shakeoff: cmds.shakeoff,
     ewcfg.cmd_clench: cmds.clench,
     ewcfg.cmd_bleedout: cmds.bleedout,
+    ewcfg.cmd_piss: cmds.piss,
+    ewcfg.cmd_fursuit: cmds.fursuit,
 
 }
 
@@ -35,5 +37,8 @@ apt_dm_cmd_map = {
 
     # clench your cheeks
     ewcfg.cmd_clench: cmds.clench,
+
+    # piss on the floor
+    ewcfg.cmd_piss: cmds.piss,
 
 }

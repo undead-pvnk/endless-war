@@ -10,11 +10,13 @@ from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
 from ew.backend.player import EwPlayer
-from ew.cmd import debug as ewdebug
+from ew.cmd import debug as ewdebug, faction, apt
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
+from ew.static import fish as static_fish
 from ew.static import food as static_food
 from ew.static import hue as hue_static
+from ew.static import items as static_items
 from ew.static import poi as poi_static
 from ew.static import weapons as static_weapons
 from ew.utils import apt as apt_utils
@@ -1404,3 +1406,231 @@ async def releasefish(cmd):
     else:
         response = "Are you sure you have that fish?"
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def store_item(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    poi = poi_static.id_to_poi.get(user_data.poi)
+
+    if poi.community_chest != None:
+        return await faction.cmds.store(cmd)
+    elif poi.is_apartment:
+        return await apt.cmds.store_item(cmd)
+    # response = "Try that in a DM to ENDLESS WAR."
+    else:
+        response = "There is no storage here, public or private."
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def remove_item(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    poi = poi_static.id_to_poi.get(user_data.poi)
+
+    if poi.community_chest != None:
+        return await faction.cmds.take(cmd)
+    elif poi.is_apartment:
+        return await apt.cmds.remove_item(cmd)
+    # response = "Try that in a DM to ENDLESS WAR."
+    else:
+        response = "There is no storage here, public or private."
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def unwrap(cmd):
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id)
+    if item_sought:
+        item = EwItem(id_item=item_sought.get('id_item'))
+        if item.item_type == ewcfg.it_item:
+            if item.item_props.get('id_item') == "gift":
+                if bknd_item.give_item(id_item=item.item_props.get('acquisition'), id_user=cmd.message.author.id, id_server=cmd.guild.id):
+                    gifted_item = EwItem(id_item=item.item_props.get('acquisition'))
+
+                    gift_name_type = ''
+                    if gifted_item.item_type == ewcfg.it_item:
+                        gift_name_type = 'item_name'
+                    elif gifted_item.item_type == ewcfg.it_medal:
+                        gift_name_type = 'medal_name'
+                    elif gifted_item.item_type == ewcfg.it_questitem:
+                        gift_name_type = 'qitem_name'
+                    elif gifted_item.item_type == ewcfg.it_food:
+                        gift_name_type = 'food_name'
+                    elif gifted_item.item_type == ewcfg.it_weapon:
+                        gift_name_type = 'weapon_name'
+                    elif gifted_item.item_type == ewcfg.it_cosmetic:
+                        gift_name_type = 'cosmetic_name'
+                    elif gifted_item.item_type == ewcfg.it_furniture:
+                        gift_name_type = 'furniture_name'
+                    elif gifted_item.item_type == ewcfg.it_book:
+                        gift_name_type = 'title'
+
+                    gifted_item_name = gifted_item.item_props.get('{}'.format(gift_name_type))
+                    gifted_item_message = item.item_props.get('context')
+
+                    # user_data = EwUser(member=cmd.message.author)
+                    # user_data.festivity += ewcfg.festivity_on_gift_wrapping
+                    # user_data.persist()
+
+                    response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)
+                    bknd_item.item_delete(id_item=item_sought.get('id_item'))
+                else:
+                    response = "Whatever's inside, you can't hold anymore!"
+            else:
+                response = "You can't unwrap something that isn't a gift, bitch."
+        else:
+            response = "You can't unwrap something that isn't a gift, bitch."
+    else:
+        response = "Are you sure you have that item?"
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+""" 
+    DEBUG COMMANDS
+"""
+
+
+async def forge_master_poudrin(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+
+    if cmd.mentions_count == 1:
+        member = cmd.mentions[0]
+        user_data = EwUser(member=member)
+    else:
+        return
+
+    item_props = {
+        "cosmetic_name": (ewcfg.emote_masterpoudrin + " Master Poudrin " + ewcfg.emote_masterpoudrin),
+        "cosmetic_desc": "One poudrin to rule them all... or something like that. It's wrapped in twine, fit to wear as a necklace. There's a fuck ton of slime on the inside, but you're not nearly powerful enough on your own to !crush it.",
+        "adorned": "false",
+        "rarity": "princeps",
+        "context": user_data.slimes,
+        "id_cosmetic": "masterpoudrin",
+    }
+
+    new_item_id = bknd_item.item_create(
+        id_server=cmd.guild.id,
+        id_user=user_data.id_user,
+        item_type=ewcfg.it_cosmetic,
+        item_props=item_props
+    )
+
+    ewutils.logMsg("Master poudrin created. Slime stored: {}, Cosmetic ID = {}".format(user_data.slimes, new_item_id))
+
+    itm_utils.soulbind(new_item_id)
+
+    user_data.slimes = 0
+    user_data.persist()
+
+    response = "A pillar of light envelops {}! All of their slime is condensed into one, all-powerful Master Poudrin!\nDon't !crush it all in one place, kiddo.".format(
+        member.display_name)
+    await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+
+# A debug function designed to generate almost any kind of item within the game. Can be used to give items to users.
+async def create_item(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+
+    if len(cmd.tokens) > 1:
+        value = cmd.tokens[1]
+    else:
+        return
+
+    item_recipient = None
+    if cmd.mentions_count == 1:
+        item_recipient = cmd.mentions[0]
+    else:
+        item_recipient = cmd.message.author
+
+    # The proper usage is !createitem [item id] [recipient]. The opposite order is invalid.
+    if '<@' in value:  # Triggers if the 2nd command token is a mention
+        response = "Proper usage of !createitem: **!createitem [item id] [recipient]**."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+    item = static_items.item_map.get(value)
+
+    item_type = ewcfg.it_item
+    if item != None:
+        item_id = item.id_item
+        name = item.str_name
+
+    # Finds the item if it's an EwFood item.
+    if item == None:
+        item = static_food.food_map.get(value)
+        item_type = ewcfg.it_food
+        if item != None:
+            item_id = item.id_food
+            name = item.str_name
+
+    # Finds the item if it's an EwCosmeticItem.
+    if item == None:
+        item = cosmetics.cosmetic_map.get(value)
+        item_type = ewcfg.it_cosmetic
+        if item != None:
+            item_id = item.id_cosmetic
+            name = item.str_name
+
+    if item == None:
+        item = static_items.furniture_map.get(value)
+        item_type = ewcfg.it_furniture
+        if item != None:
+            item_id = item.id_furniture
+            name = item.str_name
+            if item_id in static_items.furniture_pony:
+                item.vendors = [ewcfg.vendor_bazaar]
+
+    if item == None:
+        item = static_weapons.weapon_map.get(value)
+        item_type = ewcfg.it_weapon
+        if item != None:
+            item_id = item.id_weapon
+            name = item.str_weapon
+
+    if item == None:
+        item = static_fish.fish_map.get(value)
+        item_type = ewcfg.it_food
+        if item != None:
+            item_id = item.id_fish
+            name = item.str_name
+
+    if item != None:
+
+        item_props = itm_utils.gen_item_props(item)
+
+        generated_item_id = bknd_item.item_create(
+            item_type=item_type,
+            id_user=item_recipient.id,
+            id_server=cmd.guild.id,
+            stack_max=-1,
+            stack_size=0,
+            item_props=item_props
+        )
+
+        response = "Created item **{}** with id **{}** for **{}**".format(name, generated_item_id, item_recipient)
+    else:
+        response = "Could not find item."
+
+    await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+
+# Debug
+async def manual_soulbind(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+
+    if len(cmd.tokens) > 1:
+        id_item = cmd.tokens[1]
+    else:
+        return
+
+    item = EwItem(id_item=id_item)
+
+    if item != None:
+        item.soulbound = True
+        item.persist()
+
+        response = "Soulbound item **{}**.".format(id_item)
+        await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+    else:
+        return

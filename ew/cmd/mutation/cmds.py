@@ -1,16 +1,20 @@
 import asyncio
+import random
 
 from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
+from ew.backend.market import EwMarket
 from ew.backend.mutation import EwMutation
 from ew.static import cfg as ewcfg
+from ew.static import hue as hue_static
 from ew.static import mutations as static_mutations
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
+from ew.utils.slimeoid import EwSlimeoid
 
 
 async def reroll_last_mutation(cmd):
@@ -479,3 +483,74 @@ async def bleedout(cmd):
 #		response = "You can't do that. That's cringe."
 #
 #	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+""" !piss """
+
+
+async def piss(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    mutations = user_data.get_mutations()
+
+    if ewcfg.mutation_id_enlargedbladder in mutations:
+        if cmd.mentions_count == 0:
+            response = "You unzip your dick and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love pissing so much."
+            if random.randint(1, 100) < 2:
+                slimeoid = EwSlimeoid(member=cmd.message.author)
+                if slimeoid.life_state == ewcfg.slimeoid_state_active:
+                    hue = hue_static.hue_map.get("yellow")
+                    response = "CONGRATULATIONS. You suddenly lose control of your HUGE COCK and saturate your {} with your PISS. {}".format(slimeoid.name, hue.str_saturate)
+                    slimeoid.hue = (hue_static.hue_map.get("yellow")).id_hue
+                    slimeoid.persist()
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+        if cmd.mentions_count == 1:
+            target_member = cmd.mentions[0]
+            target_user_data = EwUser(member=target_member)
+
+            if user_data.id_user == target_user_data.id_user:
+                response = "Your love for piss knows no bounds. You aim your urine stream sky high, causing it to land right back into your own mouth. Mmmm, tasty~!"
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+            if user_data.poi == target_user_data.poi:
+
+                if target_user_data.life_state == ewcfg.life_state_corpse:
+                    response = "You piss right through them! Their ghostly form ripples as the stream of urine pours endlessly unto them."
+                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+                response = "You piss HARD and FAST right onto {}!!".format(target_member.display_name)
+            else:
+                response = "You can't !piss on someone who isn't there! Moron!"
+
+        elif cmd.mentions_count > 1:
+            response = "Whoa, one water-sports fetishist at a time, pal!"
+
+    else:
+        response = "You lack the moral fiber necessary for urination."
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+"""find out how many days are left until the 31st"""
+
+
+async def fursuit(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    mutations = user_data.get_mutations()
+    market_data = EwMarket(id_server=cmd.guild.id)
+
+    if ewcfg.mutation_id_organicfursuit in mutations:
+        days_until = -market_data.day % 31
+
+        if days_until == 0:
+            response = "Hair is beginning to grow on the surface of your skin rapidly. Your canine instincts will take over soon!"
+        else:
+            response = "With a basic hairy palm reading, you determine that you'll be particularly powerful in {} day{}.".format(days_until, "s" if days_until != 1 else "")
+
+        if ewutils.check_fursuit_active(market_data):
+            response = "The full moon shines above! Now's your chance to strike!"
+
+    else:
+        response = "You're about as hairless as an egg, my friend."
+
+    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
