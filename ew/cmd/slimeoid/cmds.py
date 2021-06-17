@@ -2144,6 +2144,7 @@ async def negaslimeoidbattle(cmd):
         ewutils.active_slimeoidbattles[challenger_slimeoid.id_slimeoid] = False
         ewutils.active_slimeoidbattles[challengee_slimeoid.id_slimeoid] = False
 
+
 async def summon_negaslimeoid(cmd):
     response = ""
     user_data = EwUser(member=cmd.message.author)

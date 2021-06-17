@@ -52,7 +52,7 @@ cmd_map = {
     ewcfg.cmd_take: cmds.remove_item,
 
     ewcfg.cmd_scrawl: cmds.add_message,
-	ewcfg.cmd_strip: cmds.strip_message,
+    ewcfg.cmd_strip: cmds.strip_message,
 
     # Make a costume for Double Halloween
     # ewcfg.cmd_makecostume: ewitem.makecostume,

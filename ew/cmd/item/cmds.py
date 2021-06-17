@@ -404,7 +404,6 @@ async def item_look(cmd):
     poi = poi_static.id_to_poi.get(user_data.poi)
     mutations = user_data.get_mutations()
 
-
     if user_data.visiting != ewcfg.location_id_empty:
         user_data = EwUser(id_user=user_data.visiting, id_server=server)
 
@@ -1417,7 +1416,6 @@ async def unwrap(cmd):
 
 
 async def add_message(cmd):
-
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1])
 
     message_text = ' '.join(word for word in cmd.tokens[2:])
@@ -1439,7 +1437,6 @@ async def add_message(cmd):
 
 
 async def strip_message(cmd):
-
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1])
     message_text = cmd.tokens[2:]
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
