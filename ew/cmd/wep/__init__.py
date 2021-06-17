@@ -68,7 +68,10 @@ cmd_map = {
 
     # !switch
     cfg.cmd_switch: cmds.switch_weapon,
-    cfg.cmd_switch_alt_1: cmds.switch_weapon
+    cfg.cmd_switch_alt_1: cmds.switch_weapon,
+
+    # Dueling
+    cfg.cmd_duel: cmds.duel,
 
 }
 

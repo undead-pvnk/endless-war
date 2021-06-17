@@ -50,7 +50,7 @@ cmd_map = {
     ewcfg.cmd_russian: cmds.russian_roulette,
 
     # Dueling
-    # This isn't done in the casino. maybe move to wep
-    ewcfg.cmd_duel: cmds.duel,
+    # This isn't done in the casino. --moved
+    #ewcfg.cmd_duel: cmds.duel,
 
 }
