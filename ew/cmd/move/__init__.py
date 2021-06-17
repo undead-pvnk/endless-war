@@ -46,19 +46,10 @@ cmd_map = {
     # ---- -------------- ---- #
 
     # SlimeCorp commands
-    # I get this is how they got into base
-    # But do these really need to be here?
     ewcfg.cmd_clockin: cmds.clockin,
     ewcfg.cmd_clockout: cmds.clockout,
     # Isn't this dead?
     ewcfg.cmd_surveil: cmds.surveil,
-
-    # So this one moves someone. but seriously
-    # can't mutation commands be in mutations?
-    ewcfg.cmd_slap: cmds.slap,
-
-    # This one seriously 
-    ewcfg.cmd_thirdeye: cmds.tracker,
 
 }
 
@@ -80,8 +71,5 @@ apt_dm_cmd_map = {
     # Look around an adjacent POI
     ewcfg.cmd_scout: cmds.scout,
     ewcfg.cmd_scout_alt1: cmds.scout,
-
-    # something with oeo I think
-    ewcfg.cmd_thirdeye: cmds.tracker,
 
 }

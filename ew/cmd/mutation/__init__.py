@@ -21,6 +21,8 @@ cmd_map = {
     ewcfg.cmd_devour: cmds.devour,
     ewcfg.cmd_longdrop: cmds.longdrop,
     ewcfg.cmd_skullbash: cmds.skullbash,
+    ewcfg.cmd_slap: cmds.slap,
+    ewcfg.cmd_thirdeye: cmds.tracker,
 
 }
 
@@ -45,5 +47,7 @@ apt_dm_cmd_map = {
     ewcfg.cmd_piss: cmds.piss,
 
     ewcfg.cmd_longdrop: cmds.longdrop,
+
+    ewcfg.cmd_thirdeye: cmds.tracker,
 
 }

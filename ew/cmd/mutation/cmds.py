@@ -7,6 +7,7 @@ from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.mutation import EwMutation
+from ew.backend.player import EwPlayer
 from ew.static import cfg as ewcfg
 from ew.static import hue as hue_static
 from ew.static import items as static_items
@@ -14,12 +15,15 @@ from ew.static import mutations as static_mutations
 from ew.static import poi as poi_static
 from ew.static import weapons as static_weapons
 from ew.utils import core as ewutils
+from ew.utils import district as dist_utils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
+from ew.utils import move as move_utils
 from ew.utils import poi as poi_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
+from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
 from .utils import brickeat
 
@@ -715,5 +719,117 @@ async def skullbash(cmd):
             response = "The stars slowly begin to fade from your vision. Looks like you're lucid again."
     else:
         response = "You don't have a hard enough brick to bash your head in."
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def slap(cmd):
+    if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
+    time_now = int(time.time())
+    user_data = EwUser(member=cmd.message.author)
+
+    user_poi = poi_static.id_to_poi.get(user_data.poi)
+
+    target_data = -1
+
+    mutations = user_data.get_mutations()
+    resp_cont = EwResponseContainer(id_server=cmd.guild.id)
+
+    if cmd.tokens_count < 3:
+        response = "You'll need to specify who and where you're slapping. Try !slap <target> <location>."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    dest_poi = cmd.tokens[2].lower()
+    dest_poi_obj = poi_static.id_to_poi.get(dest_poi)
+
+    response = ""
+
+    if cmd.mentions_count == 0:
+        response = "Who are you slapping?"
+    elif cmd.mentions_count > 1:
+        response = "Nobody's that good at slapping. Do it to one person at a time."
+    else:
+        target_data = EwUser(member=cmd.mentions[0])
+
+    if response != "":
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    if target_data.poi != user_data.poi:
+        response = "Not right now. You can't slap what you can't see."
+    elif user_data.id_user == target_data.id_user:
+        response = "Stop hitting yourself."
+    elif ewutils.active_restrictions.get(target_data.id_user) != None and ewutils.active_restrictions.get(target_data.id_user) > 0:
+        response = "They're in the middle of something, be patient."
+    elif target_data.life_state == ewcfg.life_state_corpse:
+        response = "You give {} a good whack. They're a ghost though, so your hand passes straight through.".format(cmd.mentions[0].display_name)
+    elif ewcfg.mutation_id_ditchslap not in mutations:
+        response = "You wind up your good arm and tacoom {} hard in the {}. The air gets knocked out of them but they stay firmly in place.".format(cmd.mentions[0].display_name, random.choice(['face', 'face', 'face', 'ass']))
+    else:
+        mutation_data = EwMutation(id_mutation=ewcfg.mutation_id_ditchslap, id_user=cmd.message.author.id, id_server=cmd.message.guild.id)
+
+        if len(mutation_data.data) > 0:
+            time_lastuse = int(mutation_data.data)
+        else:
+            time_lastuse = 0
+
+        if dest_poi_obj.id_poi not in user_poi.neighbors.keys():
+            response = "You can't hit them that far."
+        elif move_utils.inaccessible(user_data=target_data, poi=dest_poi_obj):
+            response = "That place is locked up good. You can't get a good launch angle to send them there."
+        # elif time_lastuse + 180 * 60 > time_now:
+        # response = "Your arm is spent from the last time you obliterated someone. Try again in {} minutes.".format(math.ceil((time_lastuse + 180*60 - time_now)/60))
+        elif user_data.faction != target_data.faction:
+            response = "You try to slap {}, but they realize what you're doing and jump back. Welp, back to the drawing board.".format(cmd.mentions[0].display_name)
+        elif user_poi.id_poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown] or user_poi.is_apartment:
+            response = "They're currently in their room. You'd have to carry {} out of it to slap them, which would be gay.".format(cmd.mentions[0].display_name)
+        elif ewcfg.status_slapped_id in target_data.getStatusEffects():
+            response = "Don't turn this into domestic abuse now. Can't you see they're still reeling from the last time?"
+        elif (ewutils.clenched.get(target_data.id_user) == None or ewutils.clenched.get(target_data.id_user) == 0) and (user_poi.is_subzone or user_poi.is_district):
+            response = "You wind up your slappin' hand and take a swing, but {} is all relaxed and you can't get a good angle. They end up flying into the wall. Better not touch people who aren't prepared to get hit...".format(cmd.mentions[0].display_name)
+        else:
+            response = "You wind up your slap. This one's gonna hurt. Steady as she goes...WHAM! {} is sent flying helplessly into {}!".format(cmd.mentions[0].display_name, dest_poi_obj.str_name)
+            target_data.applyStatus(id_status=ewcfg.status_slapped_id)
+            dm_response = "WHAP! {} smacked you into {}!".format(cmd.message.author.display_name, dest_poi_obj.str_name)
+            target_response = "**CRAAAAAAAAAAAASH!** You arrive in {}!".format(dest_poi_obj.str_name)
+            ewutils.moves_active[cmd.message.author.id] = 0
+            target_data.poi = dest_poi_obj.id_poi
+            user_data.time_lastenter = int(time.time())
+
+            mutation_data.data = str(time_now)
+            mutation_data.persist()
+
+            if target_data.poi == ewcfg.poi_id_thesewers:
+                target_data.die(cause=ewcfg.cause_suicide)
+                target_response += " But you hit your head really hard! Your precious little dome explodes into bits and pieces and you die!"
+
+            user_data.persist()
+            target_data.persist()
+
+            await ewrolemgr.updateRoles(client=ewutils.get_client(), member=cmd.mentions[0])
+            await user_data.move_inhabitants(id_poi=dest_poi_obj.id_poi)
+
+            await dist_utils.activate_trap_items(dest_poi_obj.id_poi, user_data.id_server, target_data.id_user)
+
+            await fe_utils.send_message(cmd.client, cmd.mentions[0], fe_utils.formatMessage(cmd.mentions[0], dm_response))
+            await fe_utils.send_message(cmd.client, fe_utils.get_channel(server=cmd.mentions[0].guild, channel_name=dest_poi_obj.channel), fe_utils.formatMessage(cmd.mentions[0], target_response))
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def tracker(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    mutations = user_data.get_mutations()
+
+    if ewcfg.mutation_id_oneeyeopen not in mutations:
+        response = "Your third eye is tucked snugly into your forehead. Actually, who are you fooling? You don't have a third eye. What, are you stupid?"
+    else:
+        mutation = EwMutation(id_server=cmd.message.guild.id, id_user=cmd.message.author.id, id_mutation=ewcfg.mutation_id_oneeyeopen)
+        if mutation.data == "":
+            response = "Your third eye isn't tracking anyone right now."
+        else:
+            target = EwPlayer(id_server=cmd.message.guild.id, id_user=mutation.data)
+            response = "You're tracking {} right now. LOL, they're lookin pretty dumb over there.".format(target.display_name)
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
