@@ -29,8 +29,8 @@ weather_list = [
         name=ewcfg.weather_lightning,
         sunrise="An ill-omened morning dawns as lighting streaks across the sky in the sunrise.",
         day="Flashes of bright lightning and peals of thunder periodically startle the citizens out of their usual stupor.",
-        sunset="Bluish white arcs of electricity tear through the deep red dusky sky.",
-        night="The dark night periodically lit with bright whitish-green bolts that flash off the metal and glass of the skyscrapers."
+        sunset="Bluish white arcs of electricity tear through the dusky, deep-red sky.",
+        night="The dark night periodically lights with bright whitish-green bolts that flash off the metal and glass of skyscrapers."
     ),
     EwWeather(
         name=ewcfg.weather_cloudy,
@@ -41,15 +41,15 @@ weather_list = [
     ),
     EwWeather(
         name=ewcfg.weather_snow,
-        sunrise="The morning sun glints off the thin layer or powdery snow that blankets the city.",
-        day="Flakes of snow clump together and whip through the bitter cold air in the winder wind.",
-        sunset="The cold air grows colder as the sky darkens and the snow piles higher in the streets.",
+        sunrise="The morning sun glints off the thin layer of powdery snow that blankets the city.",
+        day="Flakes of snow clump together and whip through the bitter cold air in the winter wind.",
+        sunset="The chilly air grows colder as the sky darkens and snow piles higher in the streets.",
         night="Icy winds whip through the city, white snowflakes glittering in the black of night."
     ),
     EwWeather(
         name=ewcfg.weather_foggy,
         sunrise="Fog hangs thick in the air, stubbornly refusing to dissipate as the sun clears the horizon.",
-        day="You can barely see to the next block in the sickly greenish NLAC smog.",
+        day="You can barely see to the next block in the sickly greenish NLACakaNM smog.",
         sunset="Visibility only grows worse in the fog as the sun sets and the daylight fades.",
         night="Everything is obscured by the darkness of night and the thick city smog."
     ),

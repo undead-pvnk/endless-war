@@ -66,7 +66,7 @@
     "fedora": {
         "id_cosmetic": "fedora",
         "str_name": "fedora",
-        "str_desc": "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of it\u2019s time.",
+         "str_desc": "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of its time.",
         "str_onadorn": "",
         "str_unadorn": "",
         "str_onbreak": "",
@@ -173,7 +173,7 @@
         "id_cosmetic": "cigarette",
         "str_name": "cigarette",
         "str_desc": "A single cigarette sticking out of your mouth. You huff these things down in seconds but you\u2019re never seen without one. Everyone thinks you\u2019re really, really cool.",
-        "str_onadorn": "You stick the cigarette in your mouth, swave as a baby's bottom. You wonder how many of these could fit in your mouth.",
+        "str_onadorn": "You stick the cigarette in your mouth, suave as a baby's bottom. You wonder how many of these could fit in your mouth.",
         "str_unadorn": "",
         "str_onbreak": "",
         "rarity": "Plebeian",
@@ -1683,7 +1683,7 @@
     "firefightershelmet": {
         "id_cosmetic": "firefightershelmet",
         "str_name": "Firefighter's Helmet",
-        "str_desc": "A old NLACakaNM wide brimmed red firefighter's helmet. No one knows what happened to the firefighters of Endless War.",
+        "str_desc": "A old NLACakaNM wide-brimmed red firefighter's helmet. No one knows what happened to the firefighters of Endless War.",
         "str_onadorn": "",
         "str_unadorn": "",
         "str_onbreak": "",
@@ -1780,7 +1780,7 @@
     "chickenmask": {
         "id_cosmetic": "chickenmask",
         "str_name": "Chicken Mask",
-        "str_desc": "The rubber chicken mask gives you a strange vibe, it stinks of sweat and dried blood.",
+        "str_desc": "The rubber chicken mask gives you a strange vibe. It stinks of sweat and dried blood.",
         "str_onadorn": "",
         "str_unadorn": "",
         "str_onbreak": "",
@@ -1799,7 +1799,7 @@
     "mountiehat": {
         "id_cosmetic": "mountiehat",
         "str_name": "Mountie Hat",
-        "str_desc": "A hat that's mostly used by canada's royal mounted police, but how did it get here? Did it float down the slime river?",
+        "str_desc": "A hat that's mostly used by Canada's royal mounted police, but how did it get here? Did it float down the slime river?",
         "str_onadorn": "",
         "str_unadorn": "",
         "str_onbreak": "",
@@ -1856,7 +1856,7 @@
     "militaryberet": {
         "id_cosmetic": "militaryberet",
         "str_name": "Military Beret",
-        "str_desc": "A good soldier needs good headwear,and that\u2019s where this beret comes in.",
+        "str_desc": "A good soldier needs good headwear, and that\u2019s where this beret comes in.",
         "str_onadorn": "",
         "str_unadorn": "",
         "str_onbreak": "",
