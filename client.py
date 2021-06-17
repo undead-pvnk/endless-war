@@ -278,7 +278,7 @@ async def on_ready():
         # kill people who left the server while the bot was offline
         # ewutils.kill_quitters(server.id) #FIXME function get_member doesn't find users reliably
 
-        asyncio.ensure_future(district_utils.capture_tick_loop(id_server=server.id))
+        asyncio.ensure_future(loop_utils.capture_tick_loop(id_server=server.id))
         asyncio.ensure_future(loop_utils.bleed_tick_loop(id_server=server.id))
         asyncio.ensure_future(loop_utils.enemy_action_tick_loop(id_server=server.id))
         asyncio.ensure_future(loop_utils.burn_tick_loop(id_server=server.id))
