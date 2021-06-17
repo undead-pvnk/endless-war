@@ -404,6 +404,7 @@ async def item_look(cmd):
     poi = poi_static.id_to_poi.get(user_data.poi)
     mutations = user_data.get_mutations()
 
+
     if user_data.visiting != ewcfg.location_id_empty:
         user_data = EwUser(id_user=user_data.visiting, id_server=server)
 
@@ -432,6 +433,8 @@ async def item_look(cmd):
         iterate += 1
         if item_sought:
             item = EwItem(id_item=item_sought.get('id_item'))
+
+            message = item.item_props.get('item_message')
 
             id_item = item.id_item
             name = item_sought.get('name')
@@ -594,7 +597,8 @@ async def item_look(cmd):
                         response += " It has about {} uses left.".format(durability)
 
             response = name + (" x{:,}".format(item.stack_size) if (item.stack_size >= 1) else "") + "\n\n" + response
-
+            if message is not None and message != "":
+                response += "\n\nIt has a message attatched: " + message
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(player, response))
         else:
             if iterate == len(item_dest) and response == "":
@@ -1407,6 +1411,49 @@ async def unwrap(cmd):
                 response = "You can't unwrap something that isn't a gift, bitch."
         else:
             response = "You can't unwrap something that isn't a gift, bitch."
+    else:
+        response = "Are you sure you have that item?"
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def add_message(cmd):
+
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1])
+
+    message_text = ' '.join(word for word in cmd.tokens[2:])
+
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+
+    if item_sought:
+        item_obj = EwItem(id_item=item_sought.get('id_item'))
+        has_message = item_obj.item_props.get('item_message')
+        item_obj.item_props['item_message'] = message_text
+        item_obj.persist()
+        if has_message == None or has_message == "":
+            response = "You scrawl out a little note and put it on the {}.\n\n{}".format(item_sought.get('name'), message_text)
+        else:
+            response = "You rip out the old message and scrawl another one on the {}.\n\n{}".format(item_sought.get('name'), message_text)
+    else:
+        response = "Are you sure you have that item?"
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def strip_message(cmd):
+
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1])
+    message_text = cmd.tokens[2:]
+    item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+
+    if item_sought:
+        item_obj = EwItem(id_item=item_sought.get('id_item'))
+        has_message = item_obj.item_props.get('item_message')
+
+        if has_message == None or has_message == "":
+            response = "There is no message. Quit reading into everything."
+        else:
+            item_obj.item_props['item_message'] = ""
+            item_obj.persist()
+            response = "You rip out the old message. Nobody will ever know what they wrote here.".format(item_sought.get('name'), message_text)
     else:
         response = "Are you sure you have that item?"
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
