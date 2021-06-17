@@ -11,6 +11,7 @@ from . import ads as ewads
 from . import apt as ewapt
 from .backend import ads as bknd_ads
 from .backend import core as bknd_core
+from .backend import item as bknd_item
 from .backend.ads import EwAd
 from .backend.dungeons import EwGamestate
 from .backend.item import EwItem
@@ -20,6 +21,7 @@ from .backend.player import EwPlayer
 from .backend.worldevent import get_void_connection_pois
 from .static import cfg as ewcfg
 from .static import poi as poi_static
+from .static import relic as relic_static
 from .utils import core as ewutils
 from .utils import district as dist_utils
 from .utils import frontend as fe_utils
@@ -1147,12 +1149,20 @@ async def look(cmd):
 
     poi = poi_static.id_to_poi.get(user_data.poi)
 
+
     district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
     market_data = EwMarket(id_server = user_data.id_server)
     degrade_resp = ""
+    item_response = ""
     if district_data.degradation >= poi.max_degradation:
         degrade_resp = ewcfg.str_zone_degraded.format(poi = poi.str_name) + "\n\n"
     void_resp = get_void_connections_resp(poi.id_poi, user_data.id_server)
+
+    ground_items = bknd_item.inventory(id_server=cmd.guild.id, id_user=poi.id_poi, item_type_filter=ewcfg.it_relic)
+    for item in ground_items:
+        item_obj = EwItem(id_item=item.get('id_item'))
+        if item_obj.item_props.get('acquisition') == 'datatext':
+            item_response = relic_static.datatext_relic.get(item_obj.item_props.get('id_relic'))
 
     if poi.is_apartment:
         return await ewapt.apt_look(cmd=cmd)
@@ -1160,13 +1170,14 @@ async def look(cmd):
     if poi.is_subzone or poi.id_poi == ewcfg.poi_id_thevoid: # Triggers if you input the command in the void or a sub-zone.
         wikichar = '<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author,
-            "You stand {} {}.\n\n{}\n\n{}\n{}\n\n{}".format(
+            "You stand {} {}.\n\n{}\n\n{}\n{}\n\n{}{}".format(
                 poi.str_in,
                 poi.str_name,
                 poi.str_desc,
                 wikichar,
                 void_resp,
                 degrade_resp,
+                item_response
             )
         ))
 
@@ -1202,13 +1213,14 @@ async def look(cmd):
         wikichar = '<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(
             cmd.message.author,
-            "You stand {} {}.\n\n{}\n\n{}\n{}\n\n{}...".format(
+            "You stand {} {}.\n\n{}\n\n{}\n{}\n\n{}{}...".format(
                 poi.str_in,
                 poi.str_name,
                 poi.str_desc,
                 wikichar,
                 void_resp,
                 degrade_resp,
+                item_response
             )
         ))
 
@@ -1217,7 +1229,7 @@ async def look(cmd):
 
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(
             cmd.message.author,
-            "{}{}{}{}{}{}{}".format(
+            "{}{}{}{}{}{}{}{}".format(
                 slimes_resp,
                 players_resp,
                 slimeoids_resp,
@@ -1226,7 +1238,8 @@ async def look(cmd):
                 ("\n\n{}".format(
                     ewutils.weather_txt(market_data)
                 ) if cmd.guild != None else ""),
-                ad_formatting
+                ad_formatting,
+                item_response
             ) #+ get_random_prank_item(user_data, district_data) # SWILLDERMUK
         ))
         if len(ad_resp) > 0:

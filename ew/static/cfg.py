@@ -1099,6 +1099,7 @@ cmd_bandcamp = cmd_prefix + 'bandcamp'
 cmd_tutorial = cmd_prefix + 'tutorial'
 cmd_pardon = cmd_prefix + 'pardon'
 cmd_banish = cmd_prefix + 'banish'
+cmd_moveitem = cmd_prefix + 'moveitem'
 cmd_vouch = cmd_prefix + 'vouch'
 cmd_writhe = cmd_prefix + 'writhe'
 cmd_use = cmd_prefix + 'use'
@@ -3216,12 +3217,12 @@ fish_size_huge = "huge"
 fish_size_colossal = "colossal"
 
 fish_size_median = {
-	fish_size_miniscule:6,
-	fish_size_small:15,
-	fish_size_average:25,
-	fish_size_big: 46,
-	fish_size_huge: 66,
-	fish_size_colossal: 100
+	fish_size_miniscule:[5, 5],
+	fish_size_small:[15, 5],
+	fish_size_average:[25, 5],
+	fish_size_big: [40, 10],
+	fish_size_huge: [60, 10],
+	fish_size_colossal:[80, 20]
 }
 
 bully_responses = [
@@ -5658,7 +5659,7 @@ cmd_debug6 = cmd_prefix + ewdebug.cmd_debug6
 cmd_debug7 = cmd_prefix + ewdebug.cmd_debug7
 cmd_debug8 = cmd_prefix + ewdebug.cmd_debug8
 cmd_debug9 = cmd_prefix + ewdebug.cmd_debug9
-
+cmd_debug11 = cmd_prefix + ewdebug.cmd_debug11
 
 
 """    /*"rpcity": {

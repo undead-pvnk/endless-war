@@ -472,6 +472,7 @@ cmd_map = {
 	# Release a player from their faction.
 	ewcfg.cmd_pardon: ewkingpin.pardon,
 	ewcfg.cmd_banish: ewkingpin.banish,
+	ewcfg.cmd_moveitem: ewitem.manual_transfer,
 
 
 	# Navigate the world map.
@@ -834,6 +835,8 @@ cmd_map = {
 	ewcfg.cmd_switch: ewwep.switch_weapon,
 	ewcfg.cmd_switch_alt_1: ewwep.switch_weapon,
 	ewcfg.cmd_debug9: ewdebug.debug9,
+	ewcfg.cmd_debug11:ewdebugrelics.debug11,
+
 
 	# Slimernalia
 	# Check your current festivity
@@ -1733,7 +1736,8 @@ async def on_message(message):
 
 		if user_data.poi in ewdebug.act_pois.keys():
 			if content_tolower in ewdebug.act_pois.get(user_data.poi).keys():
-				return await ewdebug.act(cmd_obj, user_data.poi, content_tolower)
+				function = ewdebug.act_pois.get(user_data.poi).get(content_tolower)
+				return await function(cmd=cmd)
 
 		if user_data.poi in poi_static.tutorial_pois:	
 			return await ewdungeons.tutorial_cmd(cmd_obj)

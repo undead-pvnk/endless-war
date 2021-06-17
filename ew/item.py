@@ -1258,7 +1258,31 @@ async def zuck(cmd):
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 async def pass_relics(id_shooter = None, id_shootee = None, id_server = None):
-    items = inventory(id_user=id_shootee, id_server=id_server, item_type_filter=ewcfg.it_relic)
+    items = bknd_item.inventory(id_user=id_shootee, id_server=id_server, item_type_filter=ewcfg.it_relic)
 
     for item in items:
-        give_item(id_item = item.get('id_item'), id_server=id_server, id_user=id_shooter)
+        bknd_item.give_item(id_item = item.get('id_item'), id_server=id_server, id_user=id_shooter)
+
+
+async def manual_transfer(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+
+    item_id = cmd.tokens[1]
+    destination = cmd.tokens[2]
+    print(destination)
+    print(item_id)
+    if cmd.mentions_count == 1:
+        target = EwUser(member=cmd.mentions[0])
+        destination = str(target.id_user)
+
+    item_sought = EwItem(id_item=item_id)
+    print(item_sought.item_props)
+    if item_sought:
+        item_sought.id_owner = destination
+        response = "OK, item moved."
+        item_sought.persist()
+    else:
+        response = "Can't move that. It's !moveitem <item id> <destination>"
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

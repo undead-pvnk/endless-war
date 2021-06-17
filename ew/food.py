@@ -86,6 +86,10 @@ async def menu(cmd):
 			items = []
 			# If the vendor is the bazaar get the current rotation of items from the market_data
 			vendor_inv = vendors.vendor_inv[vendor] if vendor != ewcfg.vendor_bazaar else market_data.bazaar_wares.values()
+			extra_wares = bknd_item.inventory(
+							id_user = vendor + 'stock',
+							id_server = cmd.guild.id
+						)
 			for item_name in vendor_inv:
 				item_item = static_items.item_map.get(item_name)
 				food_item = static_food.food_map.get(item_name)
@@ -142,6 +146,8 @@ async def menu(cmd):
 					items.append('{} ({:,})'.format(item_name, value))
 				else:
 					items.append(item_name)
+
+
 
 			response += "**{}**: *{}*\n".format(vendor, ewutils.formatNiceList(names = items))
 

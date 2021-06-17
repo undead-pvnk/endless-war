@@ -392,7 +392,7 @@ async def museum_donate(cmd):
 
             response = await art_donate(item_obj.id_item, cmd)
         else:
-            response = "The curator turns his nose at your offering. Guess the prick only takes relics, fish, and framed pictures."
+            response = "The curator turns her nose at your offering. Guess the prick only takes relics, fish, and framed pictures."
     else:
         response = "You don't have that item."
 
@@ -404,6 +404,8 @@ async def fish_donate(id_item, cmd):
     item_obj = EwItem(id_item=id_item)
     length = float(item_obj.item_props.get('length'))
     id_fish = item_obj.item_props.get('id_food')
+    user_data = EwUser(member=cmd.message.author)
+
     if length is None:
         length = ewdebug.calc_fish_length(median=ewcfg.fish_size_median[item_obj.item_props.get('size')])
         item_obj.item_props['length'] = length
@@ -411,6 +413,11 @@ async def fish_donate(id_item, cmd):
     current_record = EwRecord(id_server=cmd.guild.id, record_type=id_fish)
     if current_record.record_amount > length:
         response = "\"That's a...rather small specimen, wouldn't you say? We only store the largest aquatic fauna in our exhibit.\""
+    elif id_fish in user_data.get_bans():
+        response = "\"Sorry. We can't let you contribute that type of fish anymore. You went against Angler's Guild regulation.\""
+    elif item_obj.item_props.get('embiggened') == 'illegal' and random.choice([0, 1]) == 0:
+        response = "\"H-hey! You can't donate that! It's been artificially embiggened! I'm afraid we'll have to ban you from setting records with this fish. Angler's guild stuff, as you might guess.\""
+        user_data.ban(faction=id_fish)
     else:
         aquarium = fe_utils.get_channel(server = cmd.guild, channel_name='aquarium')
         if current_record.id_post != "" and current_record.id_post is not None:
@@ -424,7 +431,7 @@ async def fish_donate(id_item, cmd):
         current_record.id_user = cmd.message.author.id
 
         player = EwPlayer(id_user=item_obj.id_owner, id_server=cmd.guild.id)
-        museum_text = "\n{}\nDonated by {}\n*...*\nLENGTH:{} INCHES\n{}".format(item_obj.item_props.get('food_name').upper(), player.display_name, item_obj.item_props.get('length'), item_obj.item_props.get('food_desc'))
+        museum_text = "\n{}\nDonated by {}\n{}\nLENGTH:{} INCHES\n{}".format(item_obj.item_props.get('food_name').upper(), player.display_name, current_record.id_image, item_obj.item_props.get('length'), item_obj.item_props.get('food_desc'))
         sent_message = await fe_utils.send_message(cmd.client, aquarium, museum_text)
         current_record.id_post = sent_message.id
         current_record.persist()
@@ -434,7 +441,7 @@ async def fish_donate(id_item, cmd):
         user_data.persist()
 
 
-        response = "The curator is taken aback by the sheer girth of your {}! But, without missing a beat he swipes your fish from you and runs behind the tanks to drop it right in with the rest of them. After a few minutes, he returns with the old record-setting fish impaled through the gills by harpoon gun.\"They can't all be winners, eh? Oh yeah, here's your tip.\"\n\nYou got 500,000 slime!".format(item_obj.item_props.get('food_name'))
+        response = "The curator is taken aback by the sheer girth of your {}! But, without missing a beat she swipes your fish from you and runs behind the tanks to drop it right in with the rest of them. After a few minutes, he returns with the old record-setting fish impaled through the gills by harpoon gun.\"They can't all be winners, eh? Oh yeah, here's your tip.\"\n\nYou got 500,000 slime!".format(item_obj.item_props.get('food_name'))
         bknd_item.item_delete(id_item = id_item)
 
     return response
@@ -459,7 +466,7 @@ async def relic_donate(id_item, cmd):
             return relic_obj.str_museum
 
 
-        museum_text = "{}\nDiscovered by {}\n*...*\n{}\n-------------------------------------------------".format(relic_obj.str_name, player.display_name, relic_obj.str_museum)
+        museum_text = "{}\nDiscovered by {}\n-...-\n{}\n-------------------------------------------------".format(relic_obj.str_name, player.display_name, relic_obj.str_museum)
 
         relic_channel = fe_utils.get_channel(server=cmd.guild, channel_name='relic-exhibits')
         sent_message = await fe_utils.send_message(cmd.client, relic_channel, museum_text)
@@ -531,25 +538,30 @@ def check_art_for_duplicates(link):
 
 async def populate_image(cmd):
     if cmd.message.author.guild_permissions.administrator:
-        if cmd.message.tokens_count != 4:
-            response = ""
+        if cmd.tokens_count != 4:
+            response = "Invalid command. Try !addart <fish/art> <title> <link>."
         else:
             type = cmd.tokens[1]
             item = cmd.tokens[2]
             link = cmd.tokens[3]
 
             if type == "art":
-                channel = fe_utils.get_channel(server=cmd.guild.id, channel_name='art-exhibits')
+                channel = fe_utils.get_channel(server=cmd.guild, channel_name='art-exhibits')
             elif type == "fish":
-                channel = fe_utils.get_channel(server=cmd.guild.id, channel_name='aquarium')
+                channel = fe_utils.get_channel(server=cmd.guild, channel_name='aquarium')
             else:
                 response = "Invalid command. Try !addart <fish/art> <title> <link>"
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
             record = EwRecord(id_server=cmd.guild.id, record_type=item)
-            message = channel.fetch_message(record.id_post)
-            message.edit(content = message.content.replace('*...*', link))
+
+            record.id_image = link
+            record.persist()
+
+            message = await channel.fetch_message(int(record.id_post))
+            await message.edit(content = message.content.replace('-...-', link))
             response = "Added an image to the message."
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 
