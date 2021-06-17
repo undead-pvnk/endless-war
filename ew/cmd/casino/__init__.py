@@ -49,8 +49,4 @@ cmd_map = {
     # Russian Roulette
     ewcfg.cmd_russian: cmds.russian_roulette,
 
-    # Dueling
-    # This isn't done in the casino. --moved
-    #ewcfg.cmd_duel: cmds.duel,
-
 }
