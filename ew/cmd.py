@@ -4176,7 +4176,7 @@ async def commands(cmd):
 		response += "\n\n"
 		for item in ewcfg.mutation_unique_commands.keys():
 			response += "\n" + ewcfg.mutation_unique_commands.get(item)
-	if response == "":
+	if response == "" or '!' not in response:
 		response = "No commands found."
 
 	messageArray = ewutils.messagesplit(stringIn=response)

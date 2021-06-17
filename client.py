@@ -121,7 +121,8 @@ cmd_map = {
 	# Reload
 	ewcfg.cmd_reload: ewwep.reload,
 	ewcfg.cmd_reload_alt1: ewwep.reload,
-	
+	ewcfg.cmd_scrawl: ewitem.add_message,
+	ewcfg.cmd_strip: ewitem.strip_message,
 
 	# Choose your weapon
 	ewcfg.cmd_equip: ewwep.equip,
