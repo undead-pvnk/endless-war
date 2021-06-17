@@ -34,7 +34,7 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
         item_props = item.get('item_props')
         if item_props.get('context') in ["corpse", "droppable"]:
             bknd_item.give_item(id_user=user_data.poi, id_server=id_server, id_item=item.get('id_item'))
-        if item.get('soulbound') == False and not (rigor == True and item_props.get('preserved') ==  user_data.id_user) and item_props.get('context') != 'gellphone':
+        if item.get('soulbound') == False and not (rigor == True and item_props.get('preserved') == user_data.id_user) and item_props.get('context') != 'gellphone':
             drop_candidates.append(item)
 
     filtered_items = []
