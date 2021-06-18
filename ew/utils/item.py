@@ -444,10 +444,9 @@ def item_lootrandom(user_data):
         return response
 
 
-def item_lootspecific(id_server = None, id_user = None, item_search = None):
+def item_lootspecific(user_data = None, item_search = None):
     response = ""
-    if id_server is not None and id_user is not None:
-        user_data = EwUser(id_user=id_user, id_server=id_server)
+    if user_data is not None:
         item_sought = bknd_item.find_item(
             item_search=item_search,
             id_server=user_data.id_server,

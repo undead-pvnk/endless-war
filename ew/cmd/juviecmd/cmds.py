@@ -772,8 +772,7 @@ async def scavenge(cmd):
 
                 if not has_comboed:
                     loot_resp = itm_utils.item_lootspecific(
-                        id_server=user_data.id_server,
-                        id_user=user_data.id_user,
+                        user_data=user_data,
                         item_search=item_search
                     )
 
