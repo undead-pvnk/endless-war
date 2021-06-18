@@ -3,7 +3,6 @@ import math
 import random
 import time
 
-from ew import captcha as ewcaptcha
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
@@ -1749,7 +1748,7 @@ async def spray(cmd):
                             weapon_item.item_props['captcha'] = new_captcha_low
                         # new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
                         else:
-                            riflearray = ewcaptcha.riflecap
+                            riflearray = ewcfg.riflecap
                             direction = str(random.choice(riflearray))
                             weapon_item.item_props['captcha'] = direction
                             new_captcha_gun = ewutils.text_to_regional_indicator(direction)
@@ -2033,7 +2032,7 @@ async def sanitize(cmd):
                             weapon_item.item_props['captcha'] = new_captcha_low
                         # new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
                         else:
-                            riflearray = ewcaptcha.riflecap
+                            riflearray = ewcfg.riflecap
                             direction = str(random.choice(riflearray))
                             weapon_item.item_props['captcha'] = direction
                             new_captcha_gun = ewutils.text_to_regional_indicator(direction)

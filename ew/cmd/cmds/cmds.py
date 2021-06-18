@@ -3,7 +3,6 @@ import random
 import sys
 import time
 
-from ew import prank as ewprank
 from ew.backend import core as bknd_core
 from ew.backend import hunting as bknd_hunt
 from ew.backend import item as bknd_item
@@ -29,6 +28,7 @@ from ew.utils import frontend as fe_utils
 from ew.utils import hunting as hunt_utils
 from ew.utils import item as itm_utils
 from ew.utils import leaderboard as bknd_leaderboard
+from ew.utils import prank as prank_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils import stats as ewstats
 from ew.utils.combat import EwEnemy
@@ -2240,21 +2240,21 @@ async def prank(cmd):
                 pluck_response = "With the power of the Janus Mask, {} plucks a prank item from the ether!\n".format(cmd.message.author.display_name)
 
                 if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
-                    item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_instantuse(cmd, item)
+                    item_action, response, use_mention_displayname, side_effect = await prank_utils.prank_item_effect_instantuse(cmd, item)
                     if side_effect != "":
                         response += await itm_utils.perform_prank_item_side_effect(side_effect, cmd=cmd)
 
                     response = pluck_response + response
 
                 elif item.item_props['prank_type'] == ewcfg.prank_type_response:
-                    item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_response(cmd, item)
+                    item_action, response, use_mention_displayname, side_effect = await prank_utils.prank_item_effect_response(cmd, item)
                     if side_effect != "":
                         response += await itm_utils.perform_prank_item_side_effect(side_effect, cmd=cmd)
 
                     response = pluck_response + response
 
                 elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
-                    item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_trap(cmd, item)
+                    item_action, response, use_mention_displayname, side_effect = await prank_utils.prank_item_effect_trap(cmd, item)
 
                     response = pluck_response + response
 

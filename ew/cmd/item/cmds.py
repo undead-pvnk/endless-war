@@ -5,7 +5,6 @@ import time
 
 import discord
 
-from ew import prank as ewprank
 from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
@@ -24,6 +23,7 @@ from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
 from ew.utils import loop as loop_utils
+from ew.utils import prank as prank_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
@@ -687,17 +687,17 @@ async def item_use(cmd):
                     response = "You need to be on the city streets to unleash that prank item's full potential."
                 else:
                     if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
-                        item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_instantuse(cmd, item)
+                        item_action, response, use_mention_displayname, side_effect = await prank_utils.prank_item_effect_instantuse(cmd, item)
                         if side_effect != "":
                             response += await itm_utils.perform_prank_item_side_effect(side_effect, cmd=cmd)
 
                     elif item.item_props['prank_type'] == ewcfg.prank_type_response:
-                        item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_response(cmd, item)
+                        item_action, response, use_mention_displayname, side_effect = await prank_utils.prank_item_effect_response(cmd, item)
                         if side_effect != "":
                             response += await itm_utils.perform_prank_item_side_effect(side_effect, cmd=cmd)
 
                     elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
-                        item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_trap(cmd, item)
+                        item_action, response, use_mention_displayname, side_effect = await prank_utils.prank_item_effect_trap(cmd, item)
 
                     if item_action == "delete":
                         bknd_item.item_delete(item.id_item)

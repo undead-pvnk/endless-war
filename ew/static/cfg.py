@@ -5501,6 +5501,8 @@ captcha_dict = [
     'DRAGONCLAW',
 ]
 
+riflecap = ['UP', 'DOWN', 'LEFT', 'RIGHT']
+
 races = {
     'humanoid': 'humanoid',
     'amphibian': 'amphibian',
