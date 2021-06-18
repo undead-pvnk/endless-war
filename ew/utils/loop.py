@@ -3,6 +3,8 @@ import math
 import random
 import time
 
+import discord
+
 from . import combat as cmbt_utils
 from . import core as ewutils
 from . import frontend as fe_utils
