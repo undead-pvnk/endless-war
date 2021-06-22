@@ -18,3 +18,5 @@ cfg_exporter.py
 ew/debugrelics.py
 ew/debugrelics.py
 ew/static/relic.py
+ew/debugrelics.py
+ew/static/relic.py
