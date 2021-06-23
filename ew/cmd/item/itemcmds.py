@@ -9,7 +9,11 @@ from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
 from ew.backend.player import EwPlayer
-from ew.cmd import debug as ewdebug, faction, apt
+from ew.cmd import faction, apt
+try:
+    from ew.cmd import debug as ewdebug
+except:
+    from ew.cmd import debug_dummy as ewdebug
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics
 from ew.static import fish as static_fish

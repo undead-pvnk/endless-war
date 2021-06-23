@@ -5,6 +5,7 @@ msgqueue
 vcs.xml
 debug.py
 ewdebug.py
+ew/debug.py
 cfg_exporter.py
 .idea
 .idea/workspace.xml
