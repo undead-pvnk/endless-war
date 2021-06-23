@@ -4,7 +4,10 @@ from . import book
 from . import casino
 from . import cmds
 from . import cosmeticitem
-from . import debug
+try:
+    from . import debug as ewdebug
+except:
+    from . import debug_dummy as ewdebug
 from . import district
 from . import dungeons
 from . import faction
@@ -45,7 +48,7 @@ cmd_modules = [
     ads,
     casino,
     cosmeticitem,
-    debug,
+    ewdebug,
     district,
     slimeoid,
     move,

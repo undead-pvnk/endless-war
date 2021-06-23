@@ -5536,7 +5536,7 @@ tweet_color_by_faction = {
 server_list = {}
 
 """
-	store a server in a dictionary
+    store a server in a dictionary
 """
 
 
@@ -5553,7 +5553,7 @@ def get_client():
 
 
 """
-	save the discord client of this bot
+    save the discord client of this bot
 """
 
 
@@ -5570,9 +5570,9 @@ def set_client(cl):
 #     
 # print(scream)
 try:
-	from ..cmd import debug as ewdebug
+    from ew.cmd import debug as ewdebug
 except:
-	from ..cmd import debug_dummy as ewdebug
+    from ew.cmd import debug_dummy as ewdebug
 debugroom = ewdebug.debugroom
 debugroom_short = ewdebug.debugroom_short
 debugpiers = ewdebug.debugpiers

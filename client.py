@@ -21,7 +21,10 @@ import discord
 
 from ew.cmd import cmd_map, dm_cmd_map, apt_dm_cmd_map
 import ew.cmd.cmds as ewcmd
-import ew.cmd.debug as ewdebug
+try:
+    from ew.cmd import debug as ewdebug
+except:
+    from ew.cmd import debug_dummy as ewdebug
 import ew.cmd.dungeons as ewdungeons
 import ew.cmd.item as ewitem
 
