@@ -4,7 +4,10 @@ import time
 
 import discord
 
-from . import debug as ewdebug
+try:
+    from . import debug as ewdebug
+except:
+    from . import debug_dummy as ewdebug
 from . import prank as ewprank
 from . import smelting as ewsmelting
 from .backend import core as bknd_core

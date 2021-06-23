@@ -5619,7 +5619,10 @@ def set_client(cl):
 #     scream += "A"
 #     
 # print(scream)
-from .. import debug as ewdebug
+try:
+	from .. import debug as ewdebug
+except:
+	from .. import debug_dummy as ewdebug
 debugroom = ewdebug.debugroom
 debugroom_short = ewdebug.debugroom_short
 debugpiers = ewdebug.debugpiers

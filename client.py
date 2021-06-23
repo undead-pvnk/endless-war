@@ -33,7 +33,10 @@ import ew.book as ewbook
 import ew.casino as ewcasino
 import ew.cmd as ewcmd
 import ew.cosmeticitem as ewcosmeticitem
-import ew.debug as ewdebug
+try:
+	import ew.debug as ewdebug
+except:
+	import ew.debug_dummy as ewdebug
 import ew.district as ewdistrict
 import ew.dungeons as ewdungeons
 import ew.faction as ewfaction
