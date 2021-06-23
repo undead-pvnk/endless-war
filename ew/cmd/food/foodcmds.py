@@ -8,7 +8,7 @@ from ew.backend.market import EwCompany
 from ew.backend.market import EwMarket
 from ew.backend.market import EwStock
 from ew.backend.player import EwPlayer
-from ew.cmd.mutation.cmds import devour
+from ew.cmd.mutation.mutationcmds import devour
 from ew.static import cfg as ewcfg
 from ew.static import cosmetics as static_cosmetics
 from ew.static import food as static_food

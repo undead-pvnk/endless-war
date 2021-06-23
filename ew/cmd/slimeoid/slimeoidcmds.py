@@ -18,8 +18,8 @@ from ew.utils import slimeoid as slimeoid_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.slimeoid import EwSlimeoid
-from .utils import battle_slimeoids
-from .utils import get_slimeoid_count
+from .slimeoidutils import battle_slimeoids
+from .slimeoidutils import get_slimeoid_count
 
 
 # Create a slimeoid

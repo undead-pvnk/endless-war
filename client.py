@@ -1170,9 +1170,9 @@ async def on_message(message):
 
         # AWOOOOO
         elif re_awoo.match(cmd):
-            return await ewcmd.cmds.cmd_howl(cmd_obj)
+            return await ewcmd.cmdcmds.cmd_howl(cmd_obj)
         elif re_moan.match(cmd):
-            return await ewcmd.cmds.cmd_moan(cmd_obj)
+            return await ewcmd.cmdcmds.cmd_moan(cmd_obj)
 
         # Debug command to override the role of a user
         elif debug == True and cmd == (ewcfg.cmd_prefix + 'setrole'):
@@ -1298,13 +1298,13 @@ async def on_message(message):
 
     elif content_tolower.find(ewcfg.cmd_howl) >= 0 or content_tolower.find(ewcfg.cmd_howl_alt1) >= 0 or re_awoo.match(content_tolower):
         """ Howl if !howl is in the message at all. """
-        return await ewcmd.cmds.cmd_howl(cmd_utils.EwCmd(
+        return await ewcmd.cmdcmds.cmd_howl(cmd_utils.EwCmd(
             message=message,
             client=client,
             guild=message.guild
         ))
     elif content_tolower.find(ewcfg.cmd_moan) >= 0 or re_moan.match(content_tolower):
-        return await ewcmd.cmds.cmd_moan(cmd_utils.EwCmd(
+        return await ewcmd.cmdcmds.cmd_moan(cmd_utils.EwCmd(
             message=message,
             client=client,
             guild=message.guild

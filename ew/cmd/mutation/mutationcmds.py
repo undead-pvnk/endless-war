@@ -25,7 +25,7 @@ from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
-from .utils import brickeat
+from .mutationutils import brickeat
 
 
 async def reroll_last_mutation(cmd):

@@ -4,14 +4,14 @@ from ew.backend.book import EwBook
 from ew.backend.book import EwBookSale
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
-from ew.cmd.apt import cmds as apt_cmds
+from ew.cmd.apt import aptcmds as apt_cmds
 from ew.static import cfg as ewcfg
 from ew.static import poi as poi_static
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
 from ew.utils.frontend import EwResponseContainer
-from .utils import readers, get_page, int_is_zine
+from .bookutils import readers, get_page, int_is_zine
 
 
 async def begin_manuscript(cmd):

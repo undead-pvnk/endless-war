@@ -1,1 +1,1 @@
-from .cmds import tutorial_cmd
+from .dungeoncmds import tutorial_cmd

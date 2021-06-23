@@ -5,10 +5,10 @@ from ew.utils import frontend as fe_utils
 from ew.utils import sports as sports_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
-from . import utils
-from .utils import EwSlimeballGame
-from .utils import EwSlimeballPlayer
-from .utils import get_coords
+from . import sportsutils
+from .sportsutils import EwSlimeballGame
+from .sportsutils import EwSlimeballPlayer
+from .sportsutils import get_coords
 
 
 async def slimeball(cmd):
@@ -31,7 +31,7 @@ async def slimeball(cmd):
     district_data = EwDistrict(district=poi_data.id_poi, id_server=cmd.message.guild.id)
 
     # global sb_userid_to_player
-    slimeball_player = utils.sb_userid_to_player.get(cmd.message.author.id)
+    slimeball_player = sportsutils.sb_userid_to_player.get(cmd.message.author.id)
 
     game_data = None
 
@@ -46,7 +46,7 @@ async def slimeball(cmd):
     if game_data == None:
         # global sb_idserver_to_gamemap
 
-        gamemap = utils.sb_idserver_to_gamemap.get(cmd.guild.id)
+        gamemap = sportsutils.sb_idserver_to_gamemap.get(cmd.guild.id)
         if gamemap != None:
             game_data = gamemap.get(poi_data.id_poi)
 
@@ -80,7 +80,7 @@ async def slimeball(cmd):
 
 async def slimeballgo(cmd):
     # global sb_userid_to_player
-    slimeball_player = utils.sb_userid_to_player.get(cmd.message.author.id)
+    slimeball_player = sportsutils.sb_userid_to_player.get(cmd.message.author.id)
 
     if slimeball_player == None:
         response = "You have to join a game using {} first.".format(cmd.cmd[1:-2])
@@ -122,7 +122,7 @@ async def slimeballgo(cmd):
 
 async def slimeballstop(cmd):
     # global sb_userid_to_player
-    slimeball_player = utils.sb_userid_to_player.get(cmd.message.author.id)
+    slimeball_player = sportsutils.sb_userid_to_player.get(cmd.message.author.id)
 
     if slimeball_player == None:
         response = "You have to join a game using {} first.".format(cmd.cmd[1:-4])
@@ -147,7 +147,7 @@ async def slimeballstop(cmd):
 
 async def slimeballleave(cmd):
     # global sb_userid_to_player
-    slimeball_player = utils.sb_userid_to_player.get(cmd.message.author.id)
+    slimeball_player = sportsutils.sb_userid_to_player.get(cmd.message.author.id)
 
     if slimeball_player == None:
         response = "You have to join a game using {} first.".format(cmd.cmd[1:-5])

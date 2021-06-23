@@ -36,17 +36,17 @@ from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
-from .utils import exec_mutations
-from .utils import gen_score_text
-from .utils import get_user_shares_str
-from .utils import item_commands
-from .utils import item_off
-from .utils import location_commands
-from .utils import mutation_commands
+from .cmdsutils import exec_mutations
+from .cmdsutils import gen_score_text
+from .cmdsutils import get_user_shares_str
+from .cmdsutils import item_commands
+from .cmdsutils import item_off
+from .cmdsutils import location_commands
+from .cmdsutils import mutation_commands
 from .. import item as ewitem
-from ..apt import cmds as apt_cmds
-from ..faction import cmds as faction_cmds
-from ..wep import cmds as wep_cmds
+from ..apt import aptcmds as apt_cmds
+from ..faction import factioncmds as faction_cmds
+from ..wep import wepcmds as wep_cmds
 
 """ show player's slime score """
 
@@ -706,7 +706,7 @@ async def toss_off_cliff(cmd):
                     response = "There's nobody here."
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             else:
-                return await ewitem.cmds.discard(cmd=cmd)
+                return await ewitem.itemcmds.discard(cmd=cmd)
         else:
             response = "You don't have that item."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

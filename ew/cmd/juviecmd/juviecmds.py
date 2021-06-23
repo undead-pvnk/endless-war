@@ -24,13 +24,13 @@ from ew.utils import rolemgr as ewrolemgr
 from ew.utils import stats as ewstats
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
-from . import utils
-from .utils import create_mining_event
-from .utils import gen_scavenge_captcha
-from .utils import get_mining_yield_by_grid_type
-from .utils import init_grid
-from .utils import mismine
-from .utils import print_grid
+from . import juviecmdutils
+from .juviecmdutils import create_mining_event
+from .juviecmdutils import gen_scavenge_captcha
+from .juviecmdutils import get_mining_yield_by_grid_type
+from .juviecmdutils import init_grid
+from .juviecmdutils import mismine
+from .juviecmdutils import print_grid
 
 
 async def crush(cmd):
@@ -355,21 +355,21 @@ async def mine(cmd):
                         else:
                             return await mismine(cmd, user_data, ewcfg.event_type_minecollapse)
 
-            if user_data.poi not in utils.mines_map:
+            if user_data.poi not in juviecmdutils.mines_map:
                 response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-            elif user_data.id_server not in utils.mines_map.get(user_data.poi):
+            elif user_data.id_server not in juviecmdutils.mines_map.get(user_data.poi):
                 init_grid(user_data.poi, user_data.id_server)
                 printgrid = True
 
-            grid_cont = utils.mines_map.get(user_data.poi).get(user_data.id_server)
+            grid_cont = juviecmdutils.mines_map.get(user_data.poi).get(user_data.id_server)
             grid = grid_cont.grid
 
             grid_type = ewcfg.grid_type_by_mining_type.get(mining_type)
             if grid_type != grid_cont.grid_type:
                 init_grid(user_data.poi, user_data.id_server)
                 printgrid = True
-                grid_cont = utils.mines_map.get(user_data.poi).get(user_data.id_server)
+                grid_cont = juviecmdutils.mines_map.get(user_data.poi).get(user_data.id_server)
                 grid = grid_cont.grid
 
             # minesweeper = True
@@ -606,21 +606,21 @@ async def flag(cmd):
                 response = "What do you think you can flag here?"
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-            if user_data.poi not in utils.mines_map:
+            if user_data.poi not in juviecmdutils.mines_map:
                 response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-            elif user_data.id_server not in utils.mines_map.get(user_data.poi):
+            elif user_data.id_server not in juviecmdutils.mines_map.get(user_data.poi):
                 init_grid(user_data.poi, user_data.id_server)
                 printgrid = True
 
-            grid_cont = utils.mines_map.get(user_data.poi).get(user_data.id_server)
+            grid_cont = juviecmdutils.mines_map.get(user_data.poi).get(user_data.id_server)
             grid = grid_cont.grid
 
             grid_type = ewcfg.grid_type_by_mining_type.get(mining_type)
             if grid_type != grid_cont.grid_type:
                 init_grid(user_data.poi, user_data.id_server)
                 printgrid = True
-                grid_cont = utils.mines_map.get(user_data.poi).get(user_data.id_server)
+                grid_cont = juviecmdutils.mines_map.get(user_data.poi).get(user_data.id_server)
                 grid = grid_cont.grid
 
             row = -1
@@ -712,10 +712,10 @@ async def scavenge(cmd):
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You are too exhausted to scrounge up scraps of slime off the street! Go get some grub!"))
         else:
 
-            if utils.scavenge_combos.get(user_data.id_user) == None:
-                utils.scavenge_combos[user_data.id_user] = 0
+            if juviecmdutils.scavenge_combos.get(user_data.id_user) == None:
+                juviecmdutils.scavenge_combos[user_data.id_user] = 0
 
-            combo = utils.scavenge_combos.get(user_data.id_user)
+            combo = juviecmdutils.scavenge_combos.get(user_data.id_user)
 
             district_data = EwDistrict(district=user_data.poi, id_server=cmd.message.author.guild.id)
 
@@ -753,14 +753,14 @@ async def scavenge(cmd):
                 item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
                 has_comboed = False
 
-                if utils.scavenge_combos.get(user_data.id_user) > 0 and (time_now - user_data.time_lastscavenge) < 60:
-                    if utils.scavenge_captchas.get(user_data.id_user).lower() == item_search.lower():
-                        utils.scavenge_combos[user_data.id_user] += 1
-                        new_captcha = gen_scavenge_captcha(n=utils.scavenge_combos.get(user_data.id_user), user_data=user_data)
+                if juviecmdutils.scavenge_combos.get(user_data.id_user) > 0 and (time_now - user_data.time_lastscavenge) < 60:
+                    if juviecmdutils.scavenge_captchas.get(user_data.id_user).lower() == item_search.lower():
+                        juviecmdutils.scavenge_combos[user_data.id_user] += 1
+                        new_captcha = gen_scavenge_captcha(n=juviecmdutils.scavenge_combos.get(user_data.id_user), user_data=user_data)
                         response += "New captcha: **" + ewutils.text_to_regional_indicator(new_captcha) + "**"
                         if ewcfg.mutation_id_webbedfeet in mutations:
                             response += "\nYour flippers pick up {:,} slime.".format(scavenge_yield)
-                        utils.scavenge_captchas[user_data.id_user] = new_captcha
+                        juviecmdutils.scavenge_captchas[user_data.id_user] = new_captcha
                         has_comboed = True
 
                         if ewcfg.mutation_id_dumpsterdiver in mutations:
@@ -768,7 +768,7 @@ async def scavenge(cmd):
                             item_search = item_search[random.randrange(len(item_search))]
 
                     else:
-                        utils.scavenge_combos[user_data.id_user] = 0
+                        juviecmdutils.scavenge_combos[user_data.id_user] = 0
 
                 if not has_comboed:
                     loot_resp = itm_utils.item_lootspecific(
@@ -792,12 +792,12 @@ async def scavenge(cmd):
                     if loot_resp != "":
                         response += loot_resp + "\n\n"
 
-                utils.scavenge_combos[user_data.id_user] = 1
+                juviecmdutils.scavenge_combos[user_data.id_user] = 1
                 new_captcha = gen_scavenge_captcha(n=1, user_data=user_data)
                 response += "New captcha: **" + ewutils.text_to_regional_indicator(new_captcha) + "**"
                 if ewcfg.mutation_id_webbedfeet in mutations:
                     response += "\nYour flippers pick up {:,} slime.".format(scavenge_yield)
-                utils.scavenge_captchas[user_data.id_user] = new_captcha
+                juviecmdutils.scavenge_captchas[user_data.id_user] = new_captcha
 
             # Fatigue the scavenger.
             hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)

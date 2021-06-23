@@ -26,7 +26,7 @@ from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid, get_slimeoid_look_string
-from .utils import getPriceBase, letter_up, usekey
+from .aptutils import getPriceBase, letter_up, usekey
 
 
 async def nothing(cmd):  # for an accept, refuse, sign or rip

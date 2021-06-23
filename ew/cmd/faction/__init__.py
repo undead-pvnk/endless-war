@@ -1,9 +1,9 @@
 from ew.static import cfg as ewcfg
-from . import cmds
+from . import factioncmds
 
 cmd_map = {
 
     # Allow people to enlist
-    ewcfg.cmd_vouch: cmds.vouch,
+    ewcfg.cmd_vouch: factioncmds.vouch,
 
 }

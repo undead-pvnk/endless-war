@@ -1,18 +1,18 @@
 from ew.static import cfg as ewcfg
-from . import cmds
+from . import farmcmds
 
 cmd_map = {
 
     # farming
-    ewcfg.cmd_sow: cmds.sow,
-    ewcfg.cmd_reap: cmds.reap,
-    ewcfg.cmd_reap_alt: cmds.reap,
-    ewcfg.cmd_check_farm: cmds.check_farm,
-    ewcfg.cmd_irrigate: cmds.cultivate,
-    ewcfg.cmd_weed: cmds.cultivate,
-    ewcfg.cmd_fertilize: cmds.cultivate,
-    ewcfg.cmd_pesticide: cmds.cultivate,
-    ewcfg.cmd_mill: cmds.mill,
+    ewcfg.cmd_sow: farmcmds.sow,
+    ewcfg.cmd_reap: farmcmds.reap,
+    ewcfg.cmd_reap_alt: farmcmds.reap,
+    ewcfg.cmd_check_farm: farmcmds.check_farm,
+    ewcfg.cmd_irrigate: farmcmds.cultivate,
+    ewcfg.cmd_weed: farmcmds.cultivate,
+    ewcfg.cmd_fertilize: farmcmds.cultivate,
+    ewcfg.cmd_pesticide: farmcmds.cultivate,
+    ewcfg.cmd_mill: farmcmds.mill,
 
 }
 
@@ -20,6 +20,6 @@ apt_dm_cmd_map = {
 
     # !checkfarm
     # Why was this in here btw? it doesnt even work
-    ewcfg.cmd_check_farm: cmds.check_farm,
+    ewcfg.cmd_check_farm: farmcmds.check_farm,
 
 }

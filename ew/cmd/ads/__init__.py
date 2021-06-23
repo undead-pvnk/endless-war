@@ -1,10 +1,10 @@
 from ew.static import cfg as ewcfg
-from . import cmds
+from . import adscmds
 
 cmd_map = {
 
     # ads
-    ewcfg.cmd_advertise: cmds.advertise,
-    ewcfg.cmd_ads: cmds.ads_look,
+    ewcfg.cmd_advertise: adscmds.advertise,
+    ewcfg.cmd_ads: adscmds.ads_look,
 
 }

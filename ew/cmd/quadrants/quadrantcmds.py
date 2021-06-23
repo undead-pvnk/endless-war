@@ -5,7 +5,7 @@ from ew.static import cfg as ewcfg
 from ew.static import quadrants as quad_static
 from ew.utils import frontend as fe_utils
 from ew.utils.combat import EwUser
-from .utils import get_quadrant
+from .quadrantutils import get_quadrant
 
 
 async def add_quadrant(cmd):

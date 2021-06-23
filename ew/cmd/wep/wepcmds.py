@@ -21,13 +21,13 @@ from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
-from .utils import EwEffectContainer
-from .utils import attackEnemy
-from .utils import burn_bystanders
-from .utils import canAttack
-from .utils import canCap
-from .utils import fulfill_ghost_weapon_contract
-from .utils import weapon_explosion
+from .weputils import EwEffectContainer
+from .weputils import attackEnemy
+from .weputils import burn_bystanders
+from .weputils import canAttack
+from .weputils import canCap
+from .weputils import fulfill_ghost_weapon_contract
+from .weputils import weapon_explosion
 
 """ Player attacks a target """
 

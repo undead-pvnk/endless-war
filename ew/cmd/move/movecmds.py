@@ -28,13 +28,13 @@ from ew.utils.district import EwDistrict
 from ew.utils.frontend import EwResponseContainer
 from ew.utils.move import EwPath
 from ew.utils.transport import EwTransport
-from .utils import get_enemies_look_resp
-from .utils import get_players_look_resp
-from .utils import get_slimeoids_resp
-from .utils import get_slimes_resp
-from .utils import get_void_connections_resp
-from .utils import one_eye_dm
-from .utils import send_arrival_response
+from .moveutils import get_enemies_look_resp
+from .moveutils import get_players_look_resp
+from .moveutils import get_slimeoids_resp
+from .moveutils import get_slimes_resp
+from .moveutils import get_void_connections_resp
+from .moveutils import one_eye_dm
+from .moveutils import send_arrival_response
 
 """
     Player command to move themselves from one place to another.
@@ -131,7 +131,7 @@ async def move(cmd = None, isApt = False):
         return await fe_utils.send_message(cmd.client, cmd.message.channel,
                                            fe_utils.formatMessage(cmd.message.author, "You're already there, bitch."))
     elif isApt and poi.id_poi == user_data.poi[3:]:
-        return await ewapt.cmds.depart(cmd=cmd)
+        return await ewapt.aptcmds.depart(cmd=cmd)
     flamestate = EwGamestate(id_server=user_data.id_server, id_state='flamethrower')
     if 'n4office' == poi.id_poi and flamestate.bit == 1:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You open the elevator, and are immediately met with fire spitting out of the elevator. Over the crackling flames you can hear a woman screaming \"AAAAAAAAGH FUCK YOU DIE DIE DIE DIE!!!!!\". You're guessing entering now is a bad idea."))
@@ -221,7 +221,7 @@ async def move(cmd = None, isApt = False):
         msg_walk_start = await fe_utils.send_message(cmd.client, cmd.message.channel,
                                                      fe_utils.formatMessage(cmd.message.author, walk_response))
         if isApt:
-            await ewapt.cmds.depart(cmd=cmd, isGoto=True, movecurrent=move_current)
+            await ewapt.aptcmds.depart(cmd=cmd, isGoto=True, movecurrent=move_current)
 
     time_move_end = int(time.time())
 
@@ -399,7 +399,7 @@ async def move(cmd = None, isApt = False):
                                                         fe_utils.formatMessage(cmd.message.author, ad_response))
 
         if intoApt and ewutils.moves_active[cmd.message.author.id] == move_current:
-            await ewapt.cmds.retire(cmd=cmd, isGoto=True, movecurrent=move_current)
+            await ewapt.aptcmds.retire(cmd=cmd, isGoto=True, movecurrent=move_current)
         await asyncio.sleep(30)
         try:
             await msg_walk_start.delete()
@@ -488,7 +488,7 @@ async def look(cmd):
     void_resp = get_void_connections_resp(poi.id_poi, user_data.id_server)
 
     if poi.is_apartment:
-        return await ewapt.cmds.apt_look(cmd)
+        return await ewapt.aptcmds.apt_look(cmd)
 
     if poi.is_subzone or poi.id_poi == ewcfg.poi_id_thevoid:  # Triggers if you input the command in the void or a sub-zone.
         wikichar = '<{}>'.format(poi.wikipage) if poi.wikipage != '' else ''

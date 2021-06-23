@@ -13,16 +13,16 @@ from ew.utils import item as item_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
-from .utils import check_skat_bid
-from .utils import check_skat_call
-from .utils import checkiflegal
-from .utils import determine_trick_taker
-from .utils import evaluatehand
-from .utils import evaluatetrick
-from .utils import get_skat_play
-from .utils import printcard
-from .utils import printhand
-from .utils import skat_putback
+from .casinoutils import check_skat_bid
+from .casinoutils import check_skat_call
+from .casinoutils import checkiflegal
+from .casinoutils import determine_trick_taker
+from .casinoutils import evaluatehand
+from .casinoutils import evaluatetrick
+from .casinoutils import get_skat_play
+from .casinoutils import printcard
+from .casinoutils import printhand
+from .casinoutils import skat_putback
 
 # Map containing user IDs and the last time in UTC seconds since the pachinko
 # machine was used.

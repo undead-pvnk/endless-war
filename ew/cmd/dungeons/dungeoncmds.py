@@ -6,7 +6,7 @@ from ew.utils import dungeons as dungeon_utils
 from ew.utils import frontend as fe_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
-from . import utils
+from . import dungeonutils
 
 
 async def tutorial_cmd(cmd):
@@ -16,10 +16,10 @@ async def tutorial_cmd(cmd):
     if user_data.poi not in poi_static.tutorial_pois:
         return
 
-    if user_data.id_user not in utils.user_to_tutorial_state:
+    if user_data.id_user not in dungeonutils.user_to_tutorial_state:
         return await dungeon_utils.begin_tutorial(cmd.message.author)
 
-    tutorial_state = utils.user_to_tutorial_state.get(user_data.id_user)
+    tutorial_state = dungeonutils.user_to_tutorial_state.get(user_data.id_user)
 
     tutorial_scene = poi_static.dungeon_tutorial[tutorial_state]
 
@@ -28,7 +28,7 @@ async def tutorial_cmd(cmd):
     # Administrators can skip the tutorial
     if cmd_content == "skiptutorial" and cmd.message.author.guild_permissions.administrator:
         new_state = 20
-        utils.user_to_tutorial_state[user_data.id_user] = new_state
+        dungeonutils.user_to_tutorial_state[user_data.id_user] = new_state
 
         scene = poi_static.dungeon_tutorial[new_state]
 
@@ -50,7 +50,7 @@ async def tutorial_cmd(cmd):
 
     if cmd_content in tutorial_scene.options:
         new_state = tutorial_scene.options.get(cmd_content)
-        utils.user_to_tutorial_state[user_data.id_user] = new_state
+        dungeonutils.user_to_tutorial_state[user_data.id_user] = new_state
 
         scene = poi_static.dungeon_tutorial[new_state]
 

@@ -1344,9 +1344,9 @@ async def store_item(cmd):
     poi = poi_static.id_to_poi.get(user_data.poi)
 
     if poi.community_chest != None:
-        return await faction.cmds.store(cmd)
+        return await faction.factioncmds.store(cmd)
     elif poi.is_apartment:
-        return await apt.cmds.store_item(cmd)
+        return await apt.aptcmds.store_item(cmd)
     # response = "Try that in a DM to ENDLESS WAR."
     else:
         response = "There is no storage here, public or private."
@@ -1358,9 +1358,9 @@ async def remove_item(cmd):
     poi = poi_static.id_to_poi.get(user_data.poi)
 
     if poi.community_chest != None:
-        return await faction.cmds.take(cmd)
+        return await faction.factioncmds.take(cmd)
     elif poi.is_apartment:
-        return await apt.cmds.remove_item(cmd)
+        return await apt.aptcmds.remove_item(cmd)
     # response = "Try that in a DM to ENDLESS WAR."
     else:
         response = "There is no storage here, public or private."

@@ -1,45 +1,45 @@
 from ew.static import cfg as ewcfg
-from . import cmds
+from . import cosmeticcmds
 
 cmd_map = {
 
     # Smoke a cosmetic. preferably a cigarette
-    ewcfg.cmd_smoke: cmds.smoke,
+    ewcfg.cmd_smoke: cosmeticcmds.smoke,
 
     # Wearing cosmetics
-    ewcfg.cmd_adorn: cmds.adorn,
-    ewcfg.cmd_dedorn: cmds.dedorn,
-    ewcfg.cmd_dedorn_alt1: cmds.dedorn,
+    ewcfg.cmd_adorn: cosmeticcmds.adorn,
+    ewcfg.cmd_dedorn: cosmeticcmds.dedorn,
+    ewcfg.cmd_dedorn_alt1: cosmeticcmds.dedorn,
 
     # Reworking/fixing
-    ewcfg.cmd_sew: cmds.sew,
-    ewcfg.cmd_retrofit: cmds.retrofit,
+    ewcfg.cmd_sew: cosmeticcmds.sew,
+    ewcfg.cmd_retrofit: cosmeticcmds.retrofit,
 
     # Dyeing
-    ewcfg.cmd_dyecosmetic: cmds.dye,
-    ewcfg.cmd_dyecosmetic_alt1: cmds.dye,
-    ewcfg.cmd_dyecosmetic_alt2: cmds.dye,
-    ewcfg.cmd_dyecosmetic_alt3: cmds.dye,
+    ewcfg.cmd_dyecosmetic: cosmeticcmds.dye,
+    ewcfg.cmd_dyecosmetic_alt1: cosmeticcmds.dye,
+    ewcfg.cmd_dyecosmetic_alt2: cosmeticcmds.dye,
+    ewcfg.cmd_dyecosmetic_alt3: cosmeticcmds.dye,
 
     # admins manipulate/make items
-    ewcfg.cmd_balance_cosmetics: cmds.balance_cosmetics,
+    ewcfg.cmd_balance_cosmetics: cosmeticcmds.balance_cosmetics,
 
 }
 
 apt_dm_cmd_map = {
 
     # Smoke a cosmetic. preferably a cigarette
-    ewcfg.cmd_smoke: cmds.smoke,
+    ewcfg.cmd_smoke: cosmeticcmds.smoke,
 
     # Wearing cosmetics
-    ewcfg.cmd_adorn: cmds.adorn,
-    ewcfg.cmd_dedorn: cmds.dedorn,
-    ewcfg.cmd_dedorn_alt1: cmds.dedorn,
+    ewcfg.cmd_adorn: cosmeticcmds.adorn,
+    ewcfg.cmd_dedorn: cosmeticcmds.dedorn,
+    ewcfg.cmd_dedorn_alt1: cosmeticcmds.dedorn,
 
     # Dyeing
-    ewcfg.cmd_dyecosmetic: cmds.dye,
-    ewcfg.cmd_dyecosmetic_alt1: cmds.dye,
-    ewcfg.cmd_dyecosmetic_alt2: cmds.dye,
-    ewcfg.cmd_dyecosmetic_alt3: cmds.dye,
+    ewcfg.cmd_dyecosmetic: cosmeticcmds.dye,
+    ewcfg.cmd_dyecosmetic_alt1: cosmeticcmds.dye,
+    ewcfg.cmd_dyecosmetic_alt2: cosmeticcmds.dye,
+    ewcfg.cmd_dyecosmetic_alt3: cosmeticcmds.dye,
 
 }

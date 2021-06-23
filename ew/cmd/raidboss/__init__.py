@@ -1,4 +1,4 @@
-from . import cmds
+from . import raidbosscmds
 
 cmd_map = {
 

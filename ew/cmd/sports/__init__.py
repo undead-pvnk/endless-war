@@ -1,12 +1,12 @@
 from ew.static import cfg as ewcfg
-from . import cmds
+from . import sportscmds
 
 cmd_map = {
 
     # slimeball
-    ewcfg.cmd_slimeball: cmds.slimeball,
-    ewcfg.cmd_slimeballgo: cmds.slimeballgo,
-    ewcfg.cmd_slimeballstop: cmds.slimeballstop,
-    ewcfg.cmd_slimeballleave: cmds.slimeballleave,
+    ewcfg.cmd_slimeball: sportscmds.slimeball,
+    ewcfg.cmd_slimeballgo: sportscmds.slimeballgo,
+    ewcfg.cmd_slimeballstop: sportscmds.slimeballstop,
+    ewcfg.cmd_slimeballleave: sportscmds.slimeballleave,
 
 }

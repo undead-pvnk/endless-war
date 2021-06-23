@@ -18,13 +18,13 @@ from ew.utils import item as itm_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
-from . import utils
-from .utils import EwFisher
-from .utils import award_fish
-from .utils import cancel_rod_possession
-from .utils import gen_bite_text
-from .utils import gen_fish
-from .utils import gen_fish_size
+from . import fishutils
+from .fishutils import EwFisher
+from .fishutils import award_fish
+from .fishutils import cancel_rod_possession
+from .fishutils import gen_bite_text
+from .fishutils import gen_fish
+from .fishutils import gen_fish_size
 
 """ Casts a line into the Slime Sea """
 
@@ -44,10 +44,10 @@ async def cast(cmd):
     market_data = EwMarket(id_server=cmd.message.author.guild.id)
     statuses = user_data.getStatusEffects()
 
-    if cmd.message.author.id not in utils.fishers.keys():
-        utils.fishers[cmd.message.author.id] = EwFisher()
+    if cmd.message.author.id not in fishutils.fishers.keys():
+        fishutils.fishers[cmd.message.author.id] = EwFisher()
 
-    fisher = utils.fishers[cmd.message.author.id]
+    fisher = fishutils.fishers[cmd.message.author.id]
 
     # Ghosts cannot fish.
     if user_data.life_state == ewcfg.life_state_corpse:
@@ -93,8 +93,8 @@ async def cast(cmd):
             high_value_bait_used = False
 
             # global fishing_counter
-            utils.fishing_counter += 1
-            current_fishing_id = fisher.fishing_id = utils.fishing_counter
+            fishutils.fishing_counter += 1
+            current_fishing_id = fisher.fishing_id = fishutils.fishing_counter
 
             item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
             author = cmd.message.author
@@ -271,16 +271,16 @@ async def reel(cmd):
     if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
-    if cmd.message.author.id not in utils.fishers.keys():
-        utils.fishers[cmd.message.author.id] = EwFisher()
-    fisher = utils.fishers[cmd.message.author.id]
+    if cmd.message.author.id not in fishutils.fishers.keys():
+        fishutils.fishers[cmd.message.author.id] = EwFisher()
+    fisher = fishutils.fishers[cmd.message.author.id]
     poi = poi_static.id_to_poi.get(user_data.poi)
 
     if user_data.life_state == ewcfg.life_state_corpse:
         valid_possession = user_data.get_possession('rod')
         if valid_possession:
             inhabitee = user_data.get_inhabitee()
-            fisher = utils.fishers[inhabitee] if inhabitee in utils.fishers.keys() else None
+            fisher = fishutils.fishers[inhabitee] if inhabitee in fishutils.fishers.keys() else None
             if fisher:
                 if fisher.bite == False:
                     fisher.fleshling_reeled = True

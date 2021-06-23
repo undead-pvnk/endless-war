@@ -11,7 +11,7 @@ from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
 from ew.utils.combat import EwUser
-from .utils import smeltsoul
+from .smeltingutils import smeltsoul
 
 
 # Smelting command. It's like other games call "crafting"... but BETTER and for FREE!!

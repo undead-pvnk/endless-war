@@ -1,5 +1,5 @@
 from ew.static import cfg as ewcfg
-from . import cmds
+from . import marketcmds
 
 cmd_map = {
 
@@ -7,36 +7,36 @@ cmd_map = {
     # ewcfg.cmd_quarterlyreport: cmds.quarterlyreport,
 
     # Transfer slimecoin between players. Shares a cooldown with investments.
-    ewcfg.cmd_transfer: cmds.xfer,
-    ewcfg.cmd_transfer_alt1: cmds.xfer,
+    ewcfg.cmd_transfer: marketcmds.xfer,
+    ewcfg.cmd_transfer_alt1: marketcmds.xfer,
 
     # Redeem slime with SlimeCoin
     # ewcfg.cmd_redeem: cmds.redeem,
 
     # Donate your slime to SlimeCorp in exchange for SlimeCoin.
-    ewcfg.cmd_donate: cmds.donate,
+    ewcfg.cmd_donate: marketcmds.donate,
 
     # Invest slimecoin into a stock
-    ewcfg.cmd_invest: cmds.invest,
+    ewcfg.cmd_invest: marketcmds.invest,
 
     # Withdraw slimecoin from your shares
-    ewcfg.cmd_withdraw: cmds.withdraw,
+    ewcfg.cmd_withdraw: marketcmds.withdraw,
 
     # show the exchange rate of a given stock
-    ewcfg.cmd_exchangerate: cmds.rate,
-    ewcfg.cmd_exchangerate_alt1: cmds.rate,
-    ewcfg.cmd_exchangerate_alt2: cmds.rate,
-    ewcfg.cmd_exchangerate_alt3: cmds.rate,
-    ewcfg.cmd_exchangerate_alt4: cmds.rate,
+    ewcfg.cmd_exchangerate: marketcmds.rate,
+    ewcfg.cmd_exchangerate_alt1: marketcmds.rate,
+    ewcfg.cmd_exchangerate_alt2: marketcmds.rate,
+    ewcfg.cmd_exchangerate_alt3: marketcmds.rate,
+    ewcfg.cmd_exchangerate_alt4: marketcmds.rate,
 
     # check available stocks
-    ewcfg.cmd_stocks: cmds.stocks,
+    ewcfg.cmd_stocks: marketcmds.stocks,
 
     # trading
-    ewcfg.cmd_trade: cmds.trade,
-    ewcfg.cmd_offer: cmds.offer_item,
-    ewcfg.cmd_remove_offer: cmds.remove_offer,
-    ewcfg.cmd_completetrade: cmds.complete_trade,
-    ewcfg.cmd_canceltrade: cmds.cancel_trade,
+    ewcfg.cmd_trade: marketcmds.trade,
+    ewcfg.cmd_offer: marketcmds.offer_item,
+    ewcfg.cmd_remove_offer: marketcmds.remove_offer,
+    ewcfg.cmd_completetrade: marketcmds.complete_trade,
+    ewcfg.cmd_canceltrade: marketcmds.cancel_trade,
 
 }
