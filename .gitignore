@@ -6,6 +6,7 @@ vcs.xml
 debug.py
 ewdebug.py
 ew/debug.py
+ew/cmd/debug
 cfg_exporter.py
 .idea
 .idea/workspace.xml
