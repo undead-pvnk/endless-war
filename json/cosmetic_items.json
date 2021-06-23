@@ -66,7 +66,7 @@
     "fedora": {
         "id_cosmetic": "fedora",
         "str_name": "fedora",
-        "str_desc": "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of its time.",
+         "str_desc": "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of its time.",
         "str_onadorn": "",
         "str_unadorn": "",
         "str_onbreak": "",
