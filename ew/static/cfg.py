@@ -3905,7 +3905,7 @@ mutation_descriptions = {
     mutation_id_napalmsnot: "You do some burn damage when attacking with any weapon, in addition to its normal damage. You also gain immunity to burn damage.",
     mutation_id_ditchslap: "Use !slap @user <location> on an ally to instantly launch them to an adjacent district. If you are in a safe zone, the target must use !clench before they can be hit. Any given ally can't be slapped again for a 5 minute cooldown.",
     mutation_id_greenfingers: "Farming wait time is decreased by 33%, and yields are increased by 20%.",
-    mutation_id_lightminer: "You can mine at any time of day. You are also immune to mineshaft collapses.",
+    mutation_id_lightminer: "You are immune to mineshaft collapses.",
     mutation_id_longarms: "You can !longdrop <destination> <item> to drop an item in an adjacent district.",
     mutation_id_lethalfingernails: "If you have no weapon, you will use your fingernails instead. They do the same damage as a level 6 revolver with no miss.",
     mutation_id_davyjoneskeister: "When making deals with Captain Albert Alexander, you only receive offers for slime, not items.",
