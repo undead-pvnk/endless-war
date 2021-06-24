@@ -25,6 +25,22 @@ with open(os.path.join('json', 'fish.json')) as f:
 # A map of id_fish to EwFish objects.
 fish_map = {}
 
+common_fish = []
+uncommon_fish = []
+rare_fish = []
+promo_fish = []
+
+rainy_fish = []
+night_fish = []
+day_fish = []
+
+rarity_to_list = {
+    "common": common_fish,
+    "uncommon": uncommon_fish,
+    "rare": rare_fish,
+    "promo": promo_fish
+}
+
 # A list of fish names.
 fish_names = []
 
@@ -32,6 +48,13 @@ fish_names = []
 for fish in fish_list:
     fish_map[fish.id_fish] = fish
     fish_names.append(fish.id_fish)
-
+    # Categorize fish into their rarities
+    rarity_to_list[fish.rarity].append(fish)
+    if fish.catch_weather == "rainy":
+        rainy_fish.append(fish)
+    if fish.catch_time == "night":
+        night_fish.append(fish)
+    elif fish.catch_time == "day":
+        day_fish.append(fish)
     for alias in fish.alias:
         fish_map[alias] = fish

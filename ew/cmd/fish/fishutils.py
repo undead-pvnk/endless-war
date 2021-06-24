@@ -50,7 +50,7 @@ fishing_counter = 0
 
 
 # Randomly generates a fish.
-def gen_fish(x, fisher, has_fishingrod):
+def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None):
     fish_pool = []
 
     rarity_number = random.randint(0, 100)
@@ -59,70 +59,52 @@ def gen_fish(x, fisher, has_fishingrod):
     # fragments when any of that shit has any use beyond making staves.
     # just ctrl+f the variable below and remove anything to do with it
     voidfishing = fisher.pier.pier_type == ewcfg.fish_slime_void
-    if has_fishingrod == True:
-        if rarity_number >= 0 and rarity_number < 21 and not voidfishing:  # 20%
-            fish = "item"
-            return fish
+    if rarity is None:
+        if has_fishingrod:
+            if rarity_number >= 0 and rarity_number < 21 and not voidfishing:  # 20%
+                rarity = "item"
 
-        elif voidfishing or rarity_number >= 21 and rarity_number < 31:  # 10%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_common:
-                    fish_pool.append(fish)
+            elif voidfishing or rarity_number >= 21 and rarity_number < 31:  # 10%
+                rarity = "common"
 
-        elif rarity_number >= 31 and rarity_number < 71:  # 40%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_uncommon:
-                    fish_pool.append(fish)
+            elif rarity_number >= 31 and rarity_number < 71:  # 40%
+                rarity = "uncommon"
 
-        elif rarity_number >= 71 and rarity_number < 91:  # 20%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_rare:
-                    fish_pool.append(fish)
-        else:  # 10%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
-                    fish_pool.append(fish)
+            elif rarity_number >= 71 and rarity_number < 91:  # 20%
+                rarity = "rare"
 
+            else:  # 10%
+                rarity = "promo"
+
+        else:
+            if rarity_number >= 0 and rarity_number < 11 and not voidfishing:  # 10%
+                rarity = "item"
+
+            elif rarity_number >= 11 and rarity_number < 61:  # 50%
+                rarity = "common"
+
+            elif voidfishing or rarity_number >= 61 and rarity_number < 91:  # 30%
+                rarity = "uncommon"
+
+            elif rarity_number >= 91 and rarity_number < 100:  # 9%
+                rarity = "rare"
+
+            else:  # 1%
+                rarity = "promo"
+    
+    if rarity == "item":
+        fish = "item"
+        return fish
     else:
-        if rarity_number >= 0 and rarity_number < 11 and not voidfishing:  # 10%
-            fish = "item"
-            return fish
+        fish_pool.extend(static_fish.rarity_to_list[rarity])
 
-        elif rarity_number >= 11 and rarity_number < 61:  # 50%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_common:
-                    fish_pool.append(fish)
-
-        elif voidfishing or rarity_number >= 61 and rarity_number < 91:  # 30%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_uncommon:
-                    fish_pool.append(fish)
-
-        elif rarity_number >= 91 and rarity_number < 100:  # 9%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_rare:
-                    fish_pool.append(fish)
-        else:  # 1%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
-                    fish_pool.append(fish)
-
-    market_data = x  # todo ?
-    weather_data = weather_static.weather_map.get(market_data.weather)
-
-    if weather_data.name != "rainy":
-        for fish in fish_pool:
-            if static_fish.fish_map[fish].catch_time == ewcfg.fish_catchtime_rain:
-                fish_pool.remove(fish)
+    if market_data.weather != "rainy":
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.rainy_fish]
 
     if 5 < market_data.clock < 20:
-        for fish in fish_pool:
-            if static_fish.fish_map[fish].catch_time == ewcfg.fish_catchtime_night:
-                fish_pool.remove(fish)
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.night_fish]
     elif market_data.clock < 8 or market_data.clock > 17:
-        for fish in fish_pool:
-            if static_fish.fish_map[fish].catch_time == ewcfg.fish_catchtime_day:
-                fish_pool.remove(fish)
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.day_fish]
     else:
         for fish in fish_pool:
             if static_fish.fish_map[fish].catch_time != None:
