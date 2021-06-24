@@ -1118,9 +1118,9 @@ def get_weaponskill(user_data):
 
         weapon_item = EwItem(id_item=user_data.weapon)
 
-        skill_data = skills.get(weapon_item.item_props.get("weapon_type"))
+        skill_data = skills[weapon_item.item_props.get("weapon_type")]
         if skill_data != None:
-            weaponskill = skill_data['skill']
+            weaponskill = skill_data
         else:
             weaponskill = 0
 
