@@ -17,6 +17,8 @@ class EwMutationFlavor:
     # The level of the mutation
     tier = 0
 
+    incompatible = {}
+
     # String used when you transplant a mutation
     str_transplant = ""
 
@@ -30,6 +32,7 @@ class EwMutationFlavor:
                  str_describe_other = "",
                  str_acquire = "",
                  tier = 1,
+                 incompatible = {},
                  str_transplant = "",
                  alias = None):
 
@@ -52,6 +55,8 @@ class EwMutationFlavor:
         if tier == "":
             tier = 5
         self.tier = tier
+
+        self.incompatible = incompatible
 
         if str_transplant == "":
             str_transplant = "Auntie Dusttrap injects a syringe full of carcinogens into your back. You got the {} mutation!".format(self.id_mutation)

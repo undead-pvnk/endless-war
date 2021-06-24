@@ -81,6 +81,9 @@ mutations = [
         str_describe_other="Their anorexic, frail physique causes even light breezes to blow them off course due to **Light As A Feather**.",
         str_acquire="Your body fat begins to dissolve right before your eyes, turning into a foul-smelling liquid that drenches the floor beneath you. You quickly pass conventionally attractive weights and turn into a hideous near-skeleton. The only thing resting between your bones and your skin is a thin layer of muscles that resemble lunch meat slices. You have developed the mutation **Light As A Feather**. Double movement speed while weather is windy.",
         tier=3,
+        incompatible = {
+            ewcfg.mutation_id_airlock : '"Nope, you already have that mutation, its even got a little extra tacked on."'
+        },
         str_transplant="You decide to get the liposuction deluxe package. Once in the OR, you are prodded on all sides with a surgical vacuum, sucking out whatever looks unneccesary. She takes a couple kidneys and you gallbladder though, so maybe the word necessary is a bit subjective. All is forgiven though; your new flabby frame gives flying squirrels a run for their money.\n\nYou have developed the mutation **Light As A Feather**. Double movement speed while weather is windy.",
     ),
     EwMutationFlavor(
@@ -91,6 +94,9 @@ mutations = [
         str_describe_other="Their bleached white, peeling skin is surely the envy of lesser races due to **White Nationalist**.",
         str_acquire="Every pore on your skin suddenly feels like it’s being punctured by a rusty needle. Your skin’s pigment rapidly desaturates to the point of pure #ffffff whiteness. You suddenly love country music, too. Wow, that was a really stupid joke. You have developed the mutation **White Nationalist**. Scavenge bonus and cannot be scouted while weather is snowy.",
         tier=1,
+        incompatible = {
+            ewcfg.mutation_id_airlock : '"Nope, you already have that mutation, its even got a little extra tacked on."'
+        },
         str_transplant="You are led to the clinic's basement, where you find an empty laptop sitting on the dark cement floor. The keyboard and mouse are broken, and it's got Richard Spencer tirades on autoplay. All of a sudden, the door locks. You spend an indefinite amount of time slowly falling in love with his dreamy soft-serve flip haircut, and as you waste away you eventually grow deathly pale, too.\n\nYou have developed the mutation **White Nationalist**. Scavenge bonus and cannot be scouted while weather is snowy.",
     ),
     EwMutationFlavor(
@@ -299,6 +305,9 @@ mutations = [
         str_describe_other="Their ass is tailor made for the high seas due to **Davy Jones' Keister**.",
         str_acquire="You begin to feel a crawling sensation on your hindquarters. Layers of skin built for long hours on the tavern bench slowly creep upward along your ass and up your back. Your mind surges with an unfounded confidence as you recall every close call with a secreature and tussle with a gangster. Never have you been on the high seas, not a day in your life, and you're somehow still a sea dog to the bone. For some reason your mind jumps to your conversations with that old fellow at the tavern. Wonder how he's doing? You have developed the mutation **Davy Jones' Keister**. No trash deals when bartering with Albert Alexander.",
         tier=4,
+        incompatible = {
+            ewcfg.mutation_id_onemansjunk: '"Well waddya need that for? Ya got just the opposite! It ain\'t pretty when they clash, kid."'
+        },
         str_transplant="You are taken into the OR, where you're shown a number of asses in a catalogue. It takes awhile, but you find the \"Old Sea Captain\" model, and she goes to work. You don't know exactly what old Dusttrap did since your back was turned, but when you sit down you think she might've put in some memory foam. Eh, why complain? It's the exact size you ordered.\n\nYou have developed the mutation **Davy Jones' Keister**. No trash deals when bartering with Albert Alexander.",
     ),
     EwMutationFlavor(
@@ -309,6 +318,9 @@ mutations = [
         str_describe_other="They can spot the trashiest of deals thanks to **One man's Junk**.",
         str_acquire="Your head starts to throb and you feel your eyes focus on the shining rubbish piled on the streets around you. As the headache fades your mind also begins to focus on this trash. You can't believe anyone would just drop this! You have developed the mutation **One Man's Junk**. Only receive items when bartering with Albert Alexander.",
         tier=4,
+        incompatible = {
+            ewcfg.mutation_id_davyjoneskeister: '"Well waddya need that for? Ya got just the opposite! It ain\'t pretty when they clash, kid."'
+        },
         str_transplant="You request the ability to pick out deals exclusively for trash. Dusttrap gives you a sideways look for a solid minute. \"Well, go ahead and start with the crap in the basement. I'm sure there's plenty for you to work with down there.\" After a light misting with some extra radioactive slime and a few hours picking up only the worst of the garbage from her basement, you can now spot a string in a storm drain from two districts over.\n\nYou have developed the mutation One Man's Junk. Only receive items when bartering with Albert Alexander.",
     ),
     EwMutationFlavor(
@@ -419,6 +431,10 @@ mutations = [
         str_describe_other="The weather is their bitch due to **Airlock**.",
         str_acquire="Without thinking you take a deep breath. The air is so clean! You feel like this is your first taste of oxygen in years. A droplet falls on you from above, but it just runs off you, rolling down your face with a refreshing coolness. For once, the quantum wind has shown mercy. You have developed the mutation **Air Lock**. Gain the effects of White Nationalist and Light as a Feather. These effects do not stack with those mutations.",
         tier=4,
+        incompatible = {
+            ewcfg.mutation_id_whitenationalist: '"Nope, you already have that mutation, or half of it anyway. They don\'t multiply, you know."',
+            ewcfg.mutation_id_lightasafeather: '"Nope, you already have that mutation, or half of it anyway. They don\'t multiply, you know."'
+        },
         str_transplant="Dr. Dusttrap straps a small, high-grade air purifier around your neck, and runs a cord through your nose and into your stomach. The cords take somme getting used to, but this procedure was shockingly painless.\n\nYou have developed the mutation **Air Lock**. Gain the effects of White Nationalist and Light as a Feather. These effects do not stack with those mutations.",
     ),
     EwMutationFlavor(
