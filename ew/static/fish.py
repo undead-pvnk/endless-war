@@ -1,5 +1,6 @@
 import json
 import os
+from re import M
 
 from ..model.fish import EwFish
 
@@ -33,6 +34,22 @@ promo_fish = []
 rainy_fish = []
 night_fish = []
 day_fish = []
+
+size_to_reward = {
+    "miniscule": 1,
+    "small": 2,
+    "average": 3,
+    "big": 4,
+    "huge": 5,
+    "colossal": 6
+}
+
+rarity_to_reward = {
+    "common": 1,
+    "uncommon": 2,
+    "rare": 3,
+    "promo": 4
+}
 
 rarity_to_list = {
     "common": common_fish,
