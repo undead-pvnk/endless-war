@@ -49,12 +49,12 @@ for fish in fish_list:
     fish_map[fish.id_fish] = fish
     fish_names.append(fish.id_fish)
     # Categorize fish into their rarities
-    rarity_to_list[fish.rarity].append(fish)
+    rarity_to_list[fish.rarity].append(fish.id_fish)
     if fish.catch_weather == "rainy":
-        rainy_fish.append(fish)
+        rainy_fish.append(fish.id_fish)
     if fish.catch_time == "night":
-        night_fish.append(fish)
+        night_fish.append(fish.id_fish)
     elif fish.catch_time == "day":
-        day_fish.append(fish)
+        day_fish.append(fish.id_fish)
     for alias in fish.alias:
         fish_map[alias] = fish
