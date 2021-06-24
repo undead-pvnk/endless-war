@@ -306,19 +306,19 @@ async def signlease(cmd):
         if had_old_place:
             response += " The receptionist calls up a moving crew, who quickly move your stuff to your new place. "
         else:
-
-            for value in ewcfg.fuck_energies:
-                item = static_food.food_map.get(value)
-                item_props = itm_utils.gen_item_props(item)
-                item_props["time_fridged"] = str(int(time.time()))
-                id_item = bknd_item.item_create(
-                    item_type=ewcfg.it_food,
-                    id_user='{}{}'.format(cmd.message.author.id, 'fridge'),
-                    id_server=cmd.guild.id,
-                    stack_max=-1,
-                    stack_size=0,
-                    item_props=item_props
-                )
+            # FUCK ENERGY stock has plummeted, so the real estate agency can't afford to give out so many!
+            value = random.choice(ewcfg.fuck_energies)
+            item = static_food.food_map.get(value)
+            item_props = itm_utils.gen_item_props(item)
+            item_props["time_fridged"] = str(int(time.time()))
+            id_item = bknd_item.item_create(
+                item_type=ewcfg.it_food,
+                id_user='{}{}'.format(cmd.message.author.id, 'fridge'),
+                id_server=cmd.guild.id,
+                stack_max=-1,
+                stack_size=0,
+                item_props=item_props
+            )
 
         await apt_utils.toss_squatters(user_data.id_user, user_data.id_server)
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
