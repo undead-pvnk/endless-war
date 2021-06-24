@@ -3161,7 +3161,6 @@ fish_rarity_uncommon = "uncommon"
 fish_rarity_rare = "rare"
 fish_rarity_promo = "promo"
 
-fish_catchtime_rain = "rain"
 fish_catchtime_night = "night"
 fish_catchtime_day = "day"
 
