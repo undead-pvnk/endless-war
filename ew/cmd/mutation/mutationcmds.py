@@ -320,7 +320,7 @@ async def graft(cmd):
     for mutation in mutations:
         mutation = static_mutations.mutations_map[mutation]
         if target in mutation.incompatible:
-            response = mutation.incompatible[mutation]
+            response = mutation.incompatible[target]
             incompatible = True
             break
 
