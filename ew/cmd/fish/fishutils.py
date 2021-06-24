@@ -64,7 +64,7 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None):
             if rarity_number >= 0 and rarity_number < 21 and not voidfishing:  # 20%
                 rarity = "item"
 
-            elif voidfishing or rarity_number >= 21 and rarity_number < 31:  # 10%
+            elif rarity_number >= 21 and rarity_number < 31:  # 10%
                 rarity = "common"
 
             elif rarity_number >= 31 and rarity_number < 71:  # 40%
@@ -83,7 +83,7 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None):
             elif rarity_number >= 11 and rarity_number < 61:  # 50%
                 rarity = "common"
 
-            elif voidfishing or rarity_number >= 61 and rarity_number < 91:  # 30%
+            elif rarity_number >= 61 and rarity_number < 91:  # 30%
                 rarity = "uncommon"
 
             elif rarity_number >= 91 and rarity_number < 100:  # 9%
