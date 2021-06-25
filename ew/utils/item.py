@@ -1,4 +1,3 @@
-
 import collections
 import random
 import time
@@ -9,6 +8,7 @@ from . import stats as ewstats
 from ..backend import core as bknd_core
 from ..backend import item as bknd_item
 from ..backend.item import EwItem
+from ..backend.player import EwPlayer
 from ..backend.user import EwUserBase as EwUser
 from ..static import cfg as ewcfg
 from ..static import hue as hue_static
@@ -18,23 +18,24 @@ from ..static import weapons as static_weapons
 """
     Drop some of a player's non-soulbound items into their district.
 """
+
+
 def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fraction = None, rigor = False):
-    #try:
-    user_data = EwUser(id_server = id_server, id_user = id_user)
-    items = bknd_item.inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
+    # try:
+    user_data = EwUser(id_server=id_server, id_user=id_user)
+    items = bknd_item.inventory(id_user=id_user, id_server=id_server, item_type_filter=item_type_filter)
     mutations = user_data.get_mutations()
 
     drop_candidates = []
-    #safe_items = [ewcfg.item_id_gameguide]
+    # safe_items = [ewcfg.item_id_gameguide]
 
     # Filter out Soulbound items.
     for item in items:
-        item_obj = EwItem(id_item = item.get('id_item'))
-        if item_obj.item_props.get('context') in ["corpse", "droppable"]:
-            bknd_item.give_item(id_user=user_data.poi, id_server=id_server, id_item=item_obj.id_item)
-        if item.get('soulbound') == False and not (rigor == True and item_obj.item_props.get('preserved') ==  user_data.id_user) and item_obj.item_props.get('context') != 'gellphone':
+        item_props = item.get('item_props')
+        if item_props.get('context') in ["corpse", "droppable"]:
+            bknd_item.give_item(id_user=user_data.poi, id_server=id_server, id_item=item.get('id_item'))
+        if item.get('soulbound') == False and not (rigor == True and item_props.get('preserved') == user_data.id_user) and item_props.get('context') != 'gellphone':
             drop_candidates.append(item)
-
 
     filtered_items = []
 
@@ -43,7 +44,7 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
     if item_type_filter == ewcfg.it_cosmetic:
         for item in drop_candidates:
             cosmetic_id = item.get('id_item')
-            cosmetic_item = EwItem(id_item = cosmetic_id)
+            cosmetic_item = EwItem(id_item=cosmetic_id)
             if cosmetic_item.item_props.get('adorned') != "true" and cosmetic_item.item_props.get('slimeoid') != "true":
                 filtered_items.append(item)
 
@@ -63,10 +64,10 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
         for drop in range(number_of_items_to_drop):
             for item in filtered_items:
                 id_item = item.get('id_item')
-                bknd_item.give_item(id_user = user_data.poi, id_server = id_server, id_item = id_item)
+                bknd_item.give_item(id_user=user_data.poi, id_server=id_server, id_item=id_item)
                 filtered_items.pop(0)
                 break
-    #except:
+    # except:
     #	ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
 
 
@@ -89,9 +90,10 @@ def get_cosmetic_abilities(id_user, id_server):
     active_abilities = []
 
     cosmetic_items = bknd_item.inventory(
-        id_user = id_user,
-        id_server = id_server,
-        item_type_filter = ewcfg.it_cosmetic
+        id_user=id_user,
+        id_server=id_server,
+        item_type_filter=ewcfg.it_cosmetic
+
     )
 
     for item in cosmetic_items:
@@ -101,13 +103,16 @@ def get_cosmetic_abilities(id_user, id_server):
         else:
             pass
 
+
     return active_abilities
+
 
 def get_outfit_info(id_user, id_server, wanted_info = None):
     cosmetic_items = bknd_item.inventory(
-        id_user = id_user,
-        id_server = id_server,
-        item_type_filter = ewcfg.it_cosmetic
+        id_user=id_user,
+        id_server=id_server,
+        item_type_filter=ewcfg.it_cosmetic
+
     )
 
     adorned_cosmetics = []
@@ -139,12 +144,14 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
         # Assess if there's a cohesive style
         if len(adorned_styles) != 0:
             counted_styles = collections.Counter(adorned_styles)
-            dominant_style = max(counted_styles, key = counted_styles.get)
+
+            dominant_style = max(counted_styles, key=counted_styles.get)
 
             relative_style_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
             # If the outfit has a dominant style
             if relative_style_amount >= 60:
-                total_freshness *= int(relative_style_amount / 10) # If relative amount is 60 --> multiply by 6. 70 --> 7, 80 --> 8, etc. Rounds down, so 69 --> 6.
+
+                total_freshness *= int(relative_style_amount / 10)  # If relative amount is 60 --> multiply by 6. 70 --> 7, 80 --> 8, etc. Rounds down, so 69 --> 6.
 
     if wanted_info is not None and wanted_info == "dominant_style" and dominant_style is not None:
         return dominant_style
@@ -156,6 +163,7 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
             'total_freshness': total_freshness
         }
         return outfit_map
+
 
 def get_style_freshness_rating(user_data, dominant_style = None):
     if dominant_style == None:
@@ -286,7 +294,7 @@ def gen_item_props(item):
     elif item.item_type == ewcfg.it_weapon:
         captcha = ""
         if ewcfg.weapon_class_captcha in item.classes:
-            captcha = ewutils.generate_captcha(length = item.captcha_length)
+            captcha = ewutils.generate_captcha(length=item.captcha_length)
 
         item_props = {
             "weapon_type": item.id_weapon,
@@ -295,7 +303,7 @@ def gen_item_props(item):
             "married": "",
             "ammo": item.clip_size,
             "captcha": captcha,
-            "is_tool" : item.is_tool
+            "is_tool": item.is_tool
         }
 
     elif item.item_type == ewcfg.it_cosmetic:
@@ -331,8 +339,9 @@ def gen_item_props(item):
 
     return item_props
 
+
 # SWILLDERMUK
-async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
+async def perform_prank_item_side_effect(side_effect, cmd = None, member = None):
     response = ""
 
     if side_effect == "bungisbeam_effect":
@@ -358,15 +367,14 @@ async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
         target_data = EwUser(member=target_member)
 
         if random.randrange(2) == 0:
-
             figurine_id = random.choice(static_items.furniture_pony)
 
-            #print(figurine_id)
+            # print(figurine_id)
             item = static_items.furniture_map.get(figurine_id)
 
             item_props = gen_item_props(item)
 
-            #print(item_props)
+            # print(item_props)
 
             bknd_item.item_create(
                 id_user=target_data.id_user,
@@ -403,28 +411,30 @@ async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
 """
     Transfer a random item from district inventory to player inventory
 """
+
+
 def item_lootrandom(user_data):
     response = ""
 
     try:
 
         items_in_poi = bknd_core.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
-                id_item = ewcfg.col_id_item,
-                id_owner = ewcfg.col_id_user,
-                id_server = ewcfg.col_id_server
-            ),(
-                user_data.poi,
-                user_data.id_server
-            ))
+            id_item=ewcfg.col_id_item,
+            id_owner=ewcfg.col_id_user,
+            id_server=ewcfg.col_id_server
+        ), (
+            user_data.poi,
+            user_data.id_server
+        ))
 
         if len(items_in_poi) > 0:
             id_item = random.choice(items_in_poi)[0]
 
-            item_sought = bknd_item.find_item(item_search = str(id_item), id_user = user_data.poi, id_server = user_data.id_server)
+            item_sought = bknd_item.find_item(item_search=str(id_item), id_user=user_data.poi, id_server=user_data.id_server)
 
             response += "You found a {}!".format(item_sought.get('name'))
 
-            if bknd_item.check_inv_capacity(user_data = user_data, item_type = item_sought.get('item_type')):
+            if bknd_item.check_inv_capacity(user_data=user_data, item_type=item_sought.get('item_type')):
                 if item_sought.get('name') == "Slime Poudrin":
                     ewstats.change_stat(
                         id_server=user_data.id_server,
@@ -446,5 +456,200 @@ def item_lootrandom(user_data):
         return response
 
 
+def item_lootspecific(user_data = None, item_search = None):
+    response = ""
+    if user_data is not None:
+        item_sought = bknd_item.find_item(
+            item_search=item_search,
+            id_server=user_data.id_server,
+            id_user=user_data.poi
+        )
+        if item_sought is not None:
+            item_type = item_sought.get("item_type")
+            response += "You found a {}!".format(item_sought.get("name"))
+            can_loot = bknd_item.check_inv_capacity(user_data=user_data, item_type=item_type)
+            if can_loot:
+                bknd_item.give_item(
+                    id_item=item_sought.get("id_item"),
+                    id_user=user_data.id_user,
+                    id_server=user_data.id_server
+                )
+            else:
+                response += " But you couldn't carry any more {}s, so you tossed it back.".format(item_type)
+    return response
 
+
+def soulbind(id_item):
+    item = EwItem(id_item=id_item)
+    item.soulbound = True
+    item.persist()
+
+
+"""
+    Find every item matching the search in the player's inventory (returns a list of (non-EwItem) item)
+"""
+
+
+def find_item_all(item_search = None, id_user = None, id_server = None, item_type_filter = None, exact_search = True, search_names = False):
+    items_sought = []
+    props_to_search = [
+        'weapon_type',
+        'id_item',
+        'id_food',
+        'id_cosmetic',
+        'id_furniture'
+    ]
+
+    if search_names == True:
+        props_to_search = [
+            'cosmetic_name',
+            'furniture_name',
+            'food_name',
+            'title',
+            'weapon_type',
+            'weapon_name',
+            'item_name'
+        ]
+
+    if item_search:
+        items = bknd_item.inventory(id_user=id_user, id_server=id_server, item_type_filter=item_type_filter)
+
+        # find the first (i.e. the oldest) item that matches the search
+        for item in items:
+            # item_data = EwItem(id_item=item.get('id_item'))
+            for prop in props_to_search:
+                if prop in item.get('item_props') and (ewutils.flattenTokenListToString(item.get('item_props')[prop]) == item_search or (exact_search == False and item_search in ewutils.flattenTokenListToString(item.get('item_props'[prop])))):
+                    items_sought.append(item)
+                    break
+
+    return items_sought
+
+
+def surrendersoul(giver = None, receiver = None, id_server = None):
+    if giver != None and receiver != None:
+        receivermodel = EwUser(id_server=id_server, id_user=receiver)
+        givermodel = EwUser(id_server=id_server, id_user=giver)
+        giverplayer = EwPlayer(id_user=givermodel.id_user)
+        if givermodel.has_soul == 1:
+            givermodel.has_soul = 0
+            givermodel.persist()
+
+            item_id = bknd_item.item_create(
+                id_user=receivermodel.id_user,
+                id_server=id_server,
+                item_type=ewcfg.it_cosmetic,
+                item_props={
+                    'id_cosmetic': "soul",
+                    'cosmetic_name': "{}'s soul".format(giverplayer.display_name),
+                    'cosmetic_desc': "The immortal soul of {}. It dances with a vivacious energy inside its jar.\n If you listen to it closely you can hear it whispering numbers: {}.".format(
+                        giverplayer.display_name, givermodel.id_user),
+                    'str_onadorn': ewcfg.str_generic_onadorn,
+                    'str_unadorn': ewcfg.str_generic_unadorn,
+                    'str_onbreak': ewcfg.str_generic_onbreak,
+                    'rarity': ewcfg.rarity_patrician,
+                    'attack': 6,
+                    'defense': 6,
+                    'speed': 6,
+                    'ability': None,
+                    'durability': None,
+                    'size': 6,
+                    'fashion_style': ewcfg.style_cool,
+                    'freshness': 10,
+                    'adorned': 'false',
+                    'user_id': givermodel.id_user
+                }
+            )
+
+            return item_id
+
+
+async def lower_durability(general_item):
+    general_item_data = EwItem(id_item=general_item.get('id_item'))
+
+    current_durability = general_item_data.item_props.get('durability')
+    general_item_data.item_props['durability'] = (int(current_durability) - 1)
+    general_item_data.persist()
+
+
+def unwrap(id_user = None, id_server = None, item = None):
+    response = "You eagerly rip open a pack of Secreatures™ trading cards!!"
+    bknd_item.item_delete(item.id_item)
+    slimexodia = False
+
+    slimexodia_chance = 1 / 1000
+
+    if random.random() < slimexodia_chance:
+        slimexodia = True
+
+    if slimexodia == True:
+        # If there are multiple possible products, randomly select one.
+        slimexodia_item = random.choice(static_items.slimexodia_parts)
+
+        response += " There’s a single holographic card poking out of the swathes of repeats and late edition cards..."
+        response += " ***...What’s this?! It’s the legendary card {}!! If you’re able to collect the remaining pieces of Slimexodia, you might be able to smelt something incomprehensibly powerful!!***".format(slimexodia_item.str_name)
+
+        item_props = gen_item_props(slimexodia_item)
+
+        bknd_item.item_create(
+            item_type=slimexodia_item.item_type,
+            id_user=id_user.id,
+            id_server=id_server.id,
+            item_props=item_props
+        )
+
+    else:
+        response += " But… it’s mostly just repeats and late edition cards. You toss them away."
+
+    return response
+
+
+
+def popcapsule(id_user = None, id_server = None, item = None):
+    rarity_roll = random.randrange(10)
+    bknd_item.item_delete(item.id_item)
+
+    if rarity_roll > 3:
+        prank_item = random.choice(static_items.prank_items_heinous)
+    elif rarity_roll > 0:
+        prank_item = random.choice(static_items.prank_items_scandalous)
+    else:
+        prank_item = random.choice(static_items.prank_items_forbidden)
+
+    item_props = gen_item_props(prank_item)
+
+    prank_item_id = bknd_item.item_create(
+        item_type=prank_item.item_type,
+        id_user=id_user.id,
+        id_server=id_server.id,
+        item_props=item_props
+    )
+
+    response = "You pop open the Prank Capsule to reveal a {}! Whoa, sick!!".format(prank_item.str_name)
+
+    return response
+
+
+"""
+    Drop item into current district.
+"""
+
+
+def item_drop(
+        id_item = None,
+        other_poi = None
+):
+    try:
+        item_data = EwItem(id_item=id_item)
+        user_data = EwUser(id_user=item_data.id_owner, id_server=item_data.id_server)
+        if other_poi == None:
+            dest = user_data.poi
+        else:
+            dest = other_poi
+
+        if item_data.item_type == ewcfg.it_cosmetic:
+            item_data.item_props["adorned"] = "false"
+        item_data.persist()
+        bknd_item.give_item(id_user=dest, id_server=item_data.id_server, id_item=item_data.id_item)
+    except:
+        ewutils.logMsg("Failed to drop item {}.".format(id_item))
 

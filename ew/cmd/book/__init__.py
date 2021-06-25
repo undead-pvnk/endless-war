@@ -1,0 +1,72 @@
+from ew.static import cfg as ewcfg
+from . import bookcmds
+
+cmd_map = {
+
+    # BOOK COMMANDS OH YEAH
+    ewcfg.cmd_beginmanuscript: bookcmds.begin_manuscript,
+    ewcfg.cmd_beginmanuscript_alt_1: bookcmds.begin_manuscript,
+    ewcfg.cmd_beginmanuscript_alt_2: bookcmds.begin_manuscript,
+    ewcfg.cmd_setpenname: bookcmds.set_pen_name,
+    ewcfg.cmd_setpenname_alt_1: bookcmds.set_pen_name,
+    ewcfg.cmd_settitle: bookcmds.set_title,
+    ewcfg.cmd_settitle_alt_1: bookcmds.set_title,
+    ewcfg.cmd_setgenre: bookcmds.set_genre,
+    ewcfg.cmd_editpage: bookcmds.edit_page,
+    ewcfg.cmd_viewpage: bookcmds.view_page,
+    ewcfg.cmd_checkmanuscript: bookcmds.check_manuscript,
+    ewcfg.cmd_publishmanuscript: bookcmds.publish_manuscript,
+    ewcfg.cmd_readbook: bookcmds.read_book,
+    ewcfg.cmd_nextpage: bookcmds.next_page,
+    ewcfg.cmd_nextpage_alt_1: bookcmds.next_page,
+    ewcfg.cmd_previouspage: bookcmds.previous_page,
+    ewcfg.cmd_previouspage_alt_1: bookcmds.previous_page,
+    ewcfg.cmd_previouspage_alt_2: bookcmds.previous_page,
+    ewcfg.cmd_browsezines: bookcmds.browse_zines,
+    ewcfg.cmd_buyzine: bookcmds.order_zine,
+    ewcfg.cmd_buyzine_alt_1: bookcmds.order_zine,
+    ewcfg.cmd_rate: bookcmds.rate_zine,
+    ewcfg.cmd_rate_alt_1: bookcmds.rate_zine,
+    ewcfg.cmd_rate_alt_2: bookcmds.rate_zine,
+    ewcfg.cmd_setpages: bookcmds.set_length,
+    ewcfg.cmd_setpages_alt_1: bookcmds.set_length,
+    ewcfg.cmd_setpages_alt_2: bookcmds.set_length,
+    ewcfg.cmd_takedown: bookcmds.take_down_zine,
+    ewcfg.cmd_takedown_alt_1: bookcmds.take_down_zine,
+    ewcfg.cmd_takedown_alt_2: bookcmds.take_down_zine,
+    ewcfg.cmd_untakedown: bookcmds.untake_down_zine,
+    ewcfg.cmd_untakedown_alt_1: bookcmds.untake_down_zine,
+    ewcfg.cmd_untakedown_alt_2: bookcmds.untake_down_zine,
+
+}
+
+dm_cmd_map = {
+
+    ewcfg.cmd_beginmanuscript: bookcmds.begin_manuscript,
+    ewcfg.cmd_beginmanuscript_alt_1: bookcmds.begin_manuscript,
+    ewcfg.cmd_beginmanuscript_alt_2: bookcmds.begin_manuscript,
+    ewcfg.cmd_setpenname: bookcmds.set_pen_name,
+    ewcfg.cmd_setpenname_alt_1: bookcmds.set_pen_name,
+    ewcfg.cmd_settitle: bookcmds.set_title,
+    ewcfg.cmd_settitle_alt_1: bookcmds.set_title,
+    ewcfg.cmd_setgenre: bookcmds.set_genre,
+    ewcfg.cmd_editpage: bookcmds.edit_page,
+    ewcfg.cmd_viewpage: bookcmds.view_page,
+    ewcfg.cmd_checkmanuscript: bookcmds.check_manuscript,
+    ewcfg.cmd_publishmanuscript: bookcmds.publish_manuscript,
+    ewcfg.cmd_readbook: bookcmds.read_book,
+    ewcfg.cmd_nextpage: bookcmds.next_page,
+    ewcfg.cmd_nextpage_alt_1: bookcmds.next_page,
+    ewcfg.cmd_previouspage: bookcmds.previous_page,
+    ewcfg.cmd_previouspage_alt_1: bookcmds.previous_page,
+    ewcfg.cmd_previouspage_alt_2: bookcmds.previous_page,
+    ewcfg.cmd_rate: bookcmds.rate_zine,
+    ewcfg.cmd_rate_alt_1: bookcmds.rate_zine,
+    ewcfg.cmd_rate_alt_2: bookcmds.rate_zine,
+    ewcfg.cmd_accept: bookcmds.null_cmd,
+    ewcfg.cmd_refuse: bookcmds.null_cmd,
+    ewcfg.cmd_setpages: bookcmds.set_length,
+    ewcfg.cmd_setpages_alt_1: bookcmds.set_length,
+    ewcfg.cmd_setpages_alt_2: bookcmds.set_length,
+
+}

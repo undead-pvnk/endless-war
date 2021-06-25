@@ -34,13 +34,13 @@ class EwMarket:
     # slimefest
     winner = ''
 
-
     # Dict of bazaar items available for purchase
     bazaar_wares = None
 
     """ Load the market data for this server from the database. """
+
     def __init__(self, id_server = None):
-        if(id_server != None):
+        if (id_server != None):
             self.id_server = id_server
             self.bazaar_wares = {}
 
@@ -51,23 +51,23 @@ class EwMarket:
 
                 # Retrieve object
                 cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}, {winner} FROM markets WHERE id_server = %s".format(
-                    time_lasttick = ewcfg.col_time_lasttick,
-                    slimes_revivefee = ewcfg.col_slimes_revivefee,
-                    negaslime = ewcfg.col_negaslime,
-                    clock = ewcfg.col_clock,
-                    weather = ewcfg.col_weather,
-                    day = ewcfg.col_day,
-                    decayed_slimes = ewcfg.col_decayed_slimes,
-                    donated_slimes = ewcfg.col_donated_slimes,
-                    donated_poudrins = ewcfg.col_donated_poudrins,
-                    caught_fish = ewcfg.col_caught_fish,
-                    splattered_slimes = ewcfg.col_splattered_slimes,
-                    global_swear_jar = ewcfg.col_global_swear_jar,
-                    horseman_deaths = ewcfg.col_horseman_deaths,
-                    horseman_timeofdeath = ewcfg.col_horseman_timeofdeath,
-                    winner = ewcfg.col_winner
+                    time_lasttick=ewcfg.col_time_lasttick,
+                    slimes_revivefee=ewcfg.col_slimes_revivefee,
+                    negaslime=ewcfg.col_negaslime,
+                    clock=ewcfg.col_clock,
+                    weather=ewcfg.col_weather,
+                    day=ewcfg.col_day,
+                    decayed_slimes=ewcfg.col_decayed_slimes,
+                    donated_slimes=ewcfg.col_donated_slimes,
+                    donated_poudrins=ewcfg.col_donated_poudrins,
+                    caught_fish=ewcfg.col_caught_fish,
+                    splattered_slimes=ewcfg.col_splattered_slimes,
+                    global_swear_jar=ewcfg.col_global_swear_jar,
+                    horseman_deaths=ewcfg.col_horseman_deaths,
+                    horseman_timeofdeath=ewcfg.col_horseman_timeofdeath,
+                    winner=ewcfg.col_winner
 
-                ), (self.id_server, ))
+                ), (self.id_server,))
                 result = cursor.fetchone()
 
                 if result != None:
@@ -105,7 +105,7 @@ class EwMarket:
 
                 else:
                     # Create a new database entry if the object is missing.
-                    cursor.execute("REPLACE INTO markets(id_server) VALUES(%s)", (id_server, ))
+                    cursor.execute("REPLACE INTO markets(id_server) VALUES(%s)", (id_server,))
 
                     conn.commit()
             finally:
@@ -114,6 +114,7 @@ class EwMarket:
                 bknd_core.databaseClose(conn_info)
 
     """ Save market data object to the database. """
+
     def persist(self):
         try:
             conn_info = bknd_core.databaseConnect()
@@ -122,22 +123,22 @@ class EwMarket:
 
             # Save the object.
             cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}, {horseman_deaths}, {horseman_timeofdeath}, {winner}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
-                id_server = ewcfg.col_id_server,
-                time_lasttick = ewcfg.col_time_lasttick,
-                slimes_revivefee = ewcfg.col_slimes_revivefee,
-                negaslime = ewcfg.col_negaslime,
-                clock = ewcfg.col_clock,
-                weather = ewcfg.col_weather,
-                day = ewcfg.col_day,
-                decayed_slimes = ewcfg.col_decayed_slimes,
-                donated_slimes = ewcfg.col_donated_slimes,
-                donated_poudrins = ewcfg.col_donated_poudrins,
-                caught_fish = ewcfg.col_caught_fish,
-                splattered_slimes = ewcfg.col_splattered_slimes,
-                global_swear_jar = ewcfg.col_global_swear_jar,
-                horseman_deaths = ewcfg.col_horseman_deaths,
-                horseman_timeofdeath = ewcfg.col_horseman_timeofdeath,
-                winner = ewcfg.col_winner
+                id_server=ewcfg.col_id_server,
+                time_lasttick=ewcfg.col_time_lasttick,
+                slimes_revivefee=ewcfg.col_slimes_revivefee,
+                negaslime=ewcfg.col_negaslime,
+                clock=ewcfg.col_clock,
+                weather=ewcfg.col_weather,
+                day=ewcfg.col_day,
+                decayed_slimes=ewcfg.col_decayed_slimes,
+                donated_slimes=ewcfg.col_donated_slimes,
+                donated_poudrins=ewcfg.col_donated_poudrins,
+                caught_fish=ewcfg.col_caught_fish,
+                splattered_slimes=ewcfg.col_splattered_slimes,
+                global_swear_jar=ewcfg.col_global_swear_jar,
+                horseman_deaths=ewcfg.col_horseman_deaths,
+                horseman_timeofdeath=ewcfg.col_horseman_timeofdeath,
+                winner=ewcfg.col_winner
             ), (
                 self.id_server,
                 self.time_lasttick,
@@ -181,6 +182,7 @@ class EwMarket:
             cursor.close()
             bknd_core.databaseClose(conn_info)
 
+
 class EwStock:
     id_server = -1
 
@@ -201,9 +203,9 @@ class EwStock:
 
     def limit_fix(self):
         data = bknd_core.execute_sql_query("SELECT SUM({shares}) FROM shares WHERE {stock} = %s".format(
-            shares = ewcfg.col_shares,
-            stock = ewcfg.col_stock,
-        ),(
+            shares=ewcfg.col_shares,
+            stock=ewcfg.col_stock,
+        ), (
             self.id_stock,
         ))
 
@@ -224,12 +226,12 @@ class EwStock:
             # get stock data at specified timestamp
             if timestamp is not None:
                 data = bknd_core.execute_sql_query("SELECT {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp} FROM stocks WHERE id_server = %s AND {stock} = %s AND {timestamp} = %s".format(
-                    stock = ewcfg.col_stock,
-                    market_rate = ewcfg.col_market_rate,
-                    exchange_rate = ewcfg.col_exchange_rate,
-                    boombust = ewcfg.col_boombust,
-                    total_shares = ewcfg.col_total_shares,
-                    timestamp = ewcfg.col_timestamp
+                    stock=ewcfg.col_stock,
+                    market_rate=ewcfg.col_market_rate,
+                    exchange_rate=ewcfg.col_exchange_rate,
+                    boombust=ewcfg.col_boombust,
+                    total_shares=ewcfg.col_total_shares,
+                    timestamp=ewcfg.col_timestamp
                 ), (
                     id_server,
                     stock,
@@ -239,12 +241,12 @@ class EwStock:
             else:
 
                 data = bknd_core.execute_sql_query("SELECT {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp} FROM stocks WHERE id_server = %s AND {stock} = %s ORDER BY {timestamp} DESC".format(
-                    stock = ewcfg.col_stock,
-                    market_rate = ewcfg.col_market_rate,
-                    exchange_rate = ewcfg.col_exchange_rate,
-                    boombust = ewcfg.col_boombust,
-                    total_shares = ewcfg.col_total_shares,
-                    timestamp = ewcfg.col_timestamp,
+                    stock=ewcfg.col_stock,
+                    market_rate=ewcfg.col_market_rate,
+                    exchange_rate=ewcfg.col_exchange_rate,
+                    boombust=ewcfg.col_boombust,
+                    total_shares=ewcfg.col_total_shares,
+                    timestamp=ewcfg.col_timestamp,
                 ), (
                     id_server,
                     stock
@@ -260,7 +262,7 @@ class EwStock:
                 self.boombust = data[0][3]
                 self.total_shares = data[0][4]
                 self.timestamp = data[0][5]
-                self.previous_entry = data[1] if len(data) > 1 else 0 #gets the previous stock
+                self.previous_entry = data[1] if len(data) > 1 else 0  # gets the previous stock
             else:  # create new entry
                 self.timestamp = time.time()
                 self.market_rate = ewcfg.default_stock_market_rate
@@ -271,13 +273,13 @@ class EwStock:
         self.limit_fix()
 
         bknd_core.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
-            id_server = ewcfg.col_id_server,
-            stock = ewcfg.col_stock,
-            market_rate = ewcfg.col_market_rate,
-            exchange_rate = ewcfg.col_exchange_rate,
-            boombust = ewcfg.col_boombust,
-            total_shares = ewcfg.col_total_shares,
-            timestamp = ewcfg.col_timestamp
+            id_server=ewcfg.col_id_server,
+            stock=ewcfg.col_stock,
+            market_rate=ewcfg.col_market_rate,
+            exchange_rate=ewcfg.col_exchange_rate,
+            boombust=ewcfg.col_boombust,
+            total_shares=ewcfg.col_total_shares,
+            timestamp=ewcfg.col_timestamp
         ), (
             self.id_server,
             self.id_stock,
@@ -287,6 +289,7 @@ class EwStock:
             self.total_shares,
             self.timestamp
         ))
+
 
 class EwCompany:
     id_server = -1
@@ -298,6 +301,7 @@ class EwCompany:
     total_profits = 0
 
     """ Load the Company data from the database. """
+
     def __init__(self, id_server = None, stock = None):
         if id_server is not None and stock is not None:
             self.id_server = id_server
@@ -306,10 +310,10 @@ class EwCompany:
             try:
                 # Retrieve object
                 result = bknd_core.execute_sql_query("SELECT {recent_profits}, {total_profits} FROM companies WHERE {id_server} = %s AND {stock} = %s".format(
-                    recent_profits = ewcfg.col_recent_profits,
-                    total_profits = ewcfg.col_total_profits,
-                    id_server = ewcfg.col_id_server,
-                    stock = ewcfg.col_stock
+                    recent_profits=ewcfg.col_recent_profits,
+                    total_profits=ewcfg.col_total_profits,
+                    id_server=ewcfg.col_id_server,
+                    stock=ewcfg.col_stock
                 ), (self.id_server, self.id_stock))
 
                 if len(result) > 0:
@@ -322,16 +326,15 @@ class EwCompany:
             except:
                 ewutils.logMsg("Failed to retrieve company {} from database.".format(self.id_stock))
 
-
     """ Save company data object to the database. """
+
     def persist(self):
         try:
             bknd_core.execute_sql_query("REPLACE INTO companies({recent_profits}, {total_profits}, {id_server}, {stock}) VALUES(%s,%s,%s,%s)".format(
-                recent_profits = ewcfg.col_recent_profits,
-                total_profits = ewcfg.col_total_profits,
-                id_server = ewcfg.col_id_server,
-                stock = ewcfg.col_stock
-                ), (self.recent_profits, self.total_profits, self.id_server, self.id_stock ))
+                recent_profits=ewcfg.col_recent_profits,
+                total_profits=ewcfg.col_total_profits,
+                id_server=ewcfg.col_id_server,
+                stock=ewcfg.col_stock
+            ), (self.recent_profits, self.total_profits, self.id_server, self.id_stock))
         except:
             ewutils.logMsg("Failed to save company {} to the database.".format(self.id_stock))
-

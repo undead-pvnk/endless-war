@@ -30,13 +30,14 @@ active_target_map = {}
 # Map of users to their restriction level, typically in a mini-game. This prevents people from moving, teleporting, boarding, retiring, or suiciding in Russian Roulette/Duels
 active_restrictions = {}
 
-#Map of users that have their butthole clenched
+# Map of users that have their butthole clenched
 clenched = {}
 
-#When using SSOD, adjusted paths are listed here.
+# When using SSOD, adjusted paths are listed here.
 path_ssod = {}
 
 active_slimeoidbattles = {}
+
 
 class EwVector2D:
     vector = [0, 0]
@@ -86,13 +87,19 @@ class EwVector2D:
 
         return EwVector2D(result)
 
+
 """ Write the string to stdout with a timestamp. """
+
+
 def logMsg(string):
     print("[{}] {}".format(datetime.datetime.now(), string))
 
     return string
 
+
 """ read a file named fname and return its contents as a string """
+
+
 def getValueFromFileContents(fname):
     token = ""
 
@@ -112,15 +119,24 @@ def getValueFromFileContents(fname):
 
     return token
 
+
 """ get the Discord API token from the config file on disk """
+
+
 def getToken():
     return getValueFromFileContents("token")
 
+
 """ get the Twitch client ID from the config file on disk """
+
+
 def getTwitchClientId():
     return getValueFromFileContents("twitch_client_id")
 
+
 """ print a list of strings with nice comma-and grammar """
+
+
 def formatNiceList(names = [], conjunction = "and"):
     l = len(names)
 
@@ -131,6 +147,7 @@ def formatNiceList(names = [], conjunction = "and"):
         return names[0]
 
     return ', '.join(names[0:-1]) + '{comma} {conj} '.format(comma = (',' if l > 2 else ''), conj = conjunction) + names[-1]
+
 
 def formatNiceTime(seconds = 0, round_to_minutes = False, round_to_hours = False):
     try:
@@ -163,6 +180,7 @@ def formatNiceTime(seconds = 0, round_to_minutes = False, round_to_hours = False
             time_tokens.append("0 hours")
         return formatNiceList(names = time_tokens, conjunction = "and")
 
+
     if minutes > 0:
         if minutes == 1:
             token_mins = "1 minute"
@@ -175,6 +193,7 @@ def formatNiceTime(seconds = 0, round_to_minutes = False, round_to_hours = False
             time_tokens.append("0 minutes")
         return formatNiceList(names = time_tokens, conjunction = "and")
 
+
     if seconds > 0:
         if seconds == 1:
             token_secs = "1 second"
@@ -186,7 +205,10 @@ def formatNiceTime(seconds = 0, round_to_minutes = False, round_to_hours = False
         time_tokens.append("0 seconds")
     return formatNiceList(names = time_tokens, conjunction = "and")
 
+
 """ weighted choice. takes a dict of element -> weight and returns a random element """
+
+
 def weightedChoice(weight_map):
     weight_sum = 0
     elem_list = []
@@ -203,16 +225,23 @@ def weightedChoice(weight_map):
         if rand < weight:
             return elem_list[i]
 
+
 """ turn a list of Users into a list of their respective names """
+
+
 def userListToNameString(list_user):
     names = []
+
 
     for user in list_user:
         names.append(user.display_name)
 
     return formatNiceList(names)
 
+
 """ turn a list of Roles into a map of name = >Role """
+
+
 def getRoleMap(roles):
     roles_map = {}
 
@@ -220,8 +249,9 @@ def getRoleMap(roles):
         roles_map[mapRoleName(role.name)] = role
 
     return roles_map
-
 """ turn a list of Roles into a map of id = >Role """
+
+
 def getRoleIdMap(roles):
     roles_map = {}
 
@@ -230,7 +260,10 @@ def getRoleIdMap(roles):
 
     return roles_map
 
+
 """ canonical lowercase no space name for a role """
+
+
 def mapRoleName(roleName):
     if type(roleName) == int:
         return roleName
@@ -238,6 +271,8 @@ def mapRoleName(roleName):
 
 
 """ Parse a list of tokens and return an integer value. If allow_all, return -1 if the word 'all' is present. """
+
+
 def getIntToken(tokens = [], allow_all = False, negate = False):
     value = None
 
@@ -259,7 +294,10 @@ def getIntToken(tokens = [], allow_all = False, negate = False):
 
     return value
 
+
 """ Get the map of weapon skills for the specified player. """
+
+
 def weaponskills_get(id_server = None, id_user = None, member = None):
     weaponskills = {}
 
@@ -274,10 +312,11 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
             cursor = conn.cursor()
 
             cursor.execute("SELECT {weapon}, {weaponskill} FROM weaponskills WHERE {id_server} = %s AND {id_user} = %s".format(
-                weapon = ewcfg.col_weapon,
-                weaponskill = ewcfg.col_weaponskill,
-                id_server = ewcfg.col_id_server,
-                id_user = ewcfg.col_id_user
+
+                weapon=ewcfg.col_weapon,
+                weaponskill=ewcfg.col_weaponskill,
+                id_server=ewcfg.col_id_server,
+                id_user=ewcfg.col_id_user
             ), (
                 id_server,
                 id_user
@@ -296,7 +335,10 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 
     return weaponskills
 
+
 """ Set an individual weapon skill value for a player. """
+
+
 def weaponskills_set(id_server = None, id_user = None, member = None, weapon = None, weaponskill = 0):
     if member != None:
         id_server = member.guild.id
@@ -327,6 +369,8 @@ def weaponskills_set(id_server = None, id_user = None, member = None, weapon = N
             bknd_core.databaseClose(conn_info)
 
 """ Clear all weapon skills for a player (probably called on death). """
+
+
 def weaponskills_clear(id_server = None, id_user = None, member = None, weaponskill = None):
     if member != None:
         id_server = member.guild.id
@@ -343,6 +387,7 @@ def weaponskills_clear(id_server = None, id_user = None, member = None, weaponsk
                 weaponskill = ewcfg.col_weaponskill,
                 id_server = ewcfg.col_id_server,
                 id_user = ewcfg.col_id_user
+
             ), (
                 weaponskill,
                 weaponskill,
@@ -356,11 +401,13 @@ def weaponskills_clear(id_server = None, id_user = None, member = None, weaponsk
             cursor.close()
             bknd_core.databaseClose(conn_info)
 
+
 re_flattener = re.compile("[ '\"!@#$%^&*().,/?{}\[\];:]")
 
 """
     Turn an array of tokens into a single word (no spaces or punctuation) with all lowercase letters.
 """
+
 def flattenTokenListToString(tokens):
     global re_flattener
     target_name = ""
@@ -379,6 +426,8 @@ def flattenTokenListToString(tokens):
 """
     Return the role name of a user's faction. Takes user data object or life_state and faction tag
 """
+
+
 def get_faction(user_data = None, life_state = 0, faction = ""):
     life_state = life_state
     faction = faction
@@ -421,6 +470,7 @@ def get_faction(user_data = None, life_state = 0, faction = ""):
 
     return faction_role
 
+
 def get_faction_symbol(faction = "", faction_raw = ""):
     result = None
 
@@ -452,6 +502,8 @@ def get_faction_symbol(faction = "", faction_raw = ""):
 """
     Calculate the slime amount needed to reach a certain level
 """
+
+
 def slime_bylevel(slimelevel):
     return int(slimelevel ** 4)
 
@@ -459,6 +511,8 @@ def slime_bylevel(slimelevel):
 """
     Calculate what level the player should be at, given their slime amount
 """
+
+
 def level_byslime(slime):
     return int(abs(slime) ** 0.25)
 
@@ -466,12 +520,16 @@ def level_byslime(slime):
 """
     Calculate the maximum sap amount a player can have at their given slime level
 """
+
+
 def sap_max_bylevel(slimelevel):
     return int(1.6 * slimelevel ** 0.75)
 
 """
     Calculate the maximum hunger level at the player's slimelevel
 """
+
+
 def hunger_max_bylevel(slimelevel, has_bottomless_appetite = 0):
     # note that when you change this formula, you'll also have to adjust its sql equivalent in pushupServerHunger
     mult = 1
@@ -483,6 +541,8 @@ def hunger_max_bylevel(slimelevel, has_bottomless_appetite = 0):
 """
     Calculate how much more stamina activities should cost
 """
+
+
 def hunger_cost_mod(slimelevel):
     return hunger_max_bylevel(slimelevel) / 200
 
@@ -490,12 +550,17 @@ def hunger_cost_mod(slimelevel):
 """
     Calculate how much food the player can carry
 """
+
+
 def food_carry_capacity_bylevel(slimelevel):
     return math.ceil(slimelevel / ewcfg.max_food_in_inv_mod)
+
 
 """
     Calculate how many weapons the player can carry
 """
+
+
 def weapon_carry_capacity_bylevel(slimelevel):
     return math.floor(slimelevel / ewcfg.max_weapon_mod) + 1
 
@@ -503,13 +568,17 @@ def max_adornspace_bylevel(slimelevel):
     if slimelevel < 4:
         adorn_space = 0
     else:
-        adorn_space = math.floor(math.sqrt(slimelevel- 2) - 0.40)
+
+        adorn_space = math.floor(math.sqrt(slimelevel - 2) - 0.40)
 
     return adorn_space
+
 
 """
     gets the discord client the bot is running on
 """
+
+
 def get_client():
     return ewcfg.get_client()
 
@@ -517,14 +586,16 @@ def get_client():
 """
     Returns a list of slimeoid ids in the district
 """
+
+
 def get_slimeoids_in_poi(id_server = None, poi = None, sltype = None):
     slimeoids = []
     if id_server is None:
         return slimeoids
 
     query = "SELECT {id_slimeoid} FROM slimeoids WHERE {id_server} = %s".format(
-        id_slimeoid = ewcfg.col_id_slimeoid,
-        id_server = ewcfg.col_id_server
+        id_slimeoid=ewcfg.col_id_slimeoid,
+        id_server=ewcfg.col_id_server
     )
 
     if sltype is not None:
@@ -533,7 +604,7 @@ def get_slimeoids_in_poi(id_server = None, poi = None, sltype = None):
     if poi is not None:
         query += " AND {} = '{}'".format(ewcfg.col_poi, poi)
 
-    data = bknd_core.execute_sql_query(query,(
+    data = bknd_core.execute_sql_query(query, (
         id_server,
     ))
 
@@ -542,6 +613,8 @@ def get_slimeoids_in_poi(id_server = None, poi = None, sltype = None):
 
     return slimeoids
 
+
+
 def number_civilians(id_server):
     query = bknd_core.execute_sql_query("SELECT COUNT(*) from enemies where enemytype in ('civilian', 'innocent') and id_server = id_server")
     for counts in query:
@@ -549,6 +622,7 @@ def number_civilians(id_server):
             return 1
         else:
             return 0
+
 
 def is_otp(user_data):
     poi = poi_static.id_to_poi.get(user_data.poi)
@@ -559,17 +633,21 @@ def check_accept_or_refuse(string):
     if string.content.lower() == ewcfg.cmd_accept or string.content.lower() == ewcfg.cmd_refuse:
         return True
 
+
 def check_confirm_or_cancel(string):
     if string.content.lower() == ewcfg.cmd_confirm or string.content.lower() == ewcfg.cmd_cancel:
         return True
+
 
 def check_trick_or_treat(string):
     if string.content.lower() == ewcfg.cmd_treat or string.content.lower() == ewcfg.cmd_trick:
         return True
 
+
 def check_is_command(string):
     if string.content.startswith(ewcfg.cmd_prefix):
         return True
+
 
 def end_trade(id_user):
     # Cancel an ongoing trade
@@ -582,16 +660,21 @@ def end_trade(id_user):
         trading_offers[trader] = []
         trading_offers[id_user] = []
 
+
+
 def text_to_regional_indicator(text):
-    # note that inside the quotes below is a zero-width space,
+    #  note that inside the quotes below is a zero-width space,
     # used to prevent the regional indicators from turning into flags
     # also note that this only works for digits and english letters
-  
+
     ###return "‎".join([chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
     return "‎".join([c + '\ufe0f\u20e3' if c.isdigit() else chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
 
+
 def generate_captcha_random(length = 4):
     return "".join([random.choice(ewcfg.alphabet) for _ in range(length)]).upper()
+
+
 
 def generate_captcha(length = 4, user_data = None):
     length_final = length
@@ -604,12 +687,16 @@ def generate_captcha(length = 4, user_data = None):
     except:
         return generate_captcha_random(length=length_final)
 
+
+
 def check_fursuit_active(market_data):
     if (market_data.day % 31 == 0 and market_data.clock >= 20
-    or market_data.day % 31 == 1 and market_data.clock < 6):
+            or market_data.day % 31 == 1 and market_data.clock < 6):
         return True
     else:
         return False
+
+
 
 # Get the current kingpin of slimernalia
 def get_slimernalia_kingpin(server):
@@ -624,7 +711,9 @@ def get_slimernalia_kingpin(server):
     if len(data) > 0:
         return data[0][0]
 
+
     return None
+
 
 # Get the player with the most festivity
 def get_most_festive(server):
@@ -647,27 +736,36 @@ def get_most_festive(server):
 
     return data[0][0]
 
+
 """ Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
+
+
 def calculatePvpTimer(current_time_expirpvp, timer, enlisted = False):
     if enlisted:
         timer *= 1
         #timer *= 4
+
 
     desired_time_expirpvp = int(time.time()) + timer
 
     if desired_time_expirpvp > current_time_expirpvp:
         return desired_time_expirpvp
 
+
     return current_time_expirpvp
+
 
 """
     Returns true if the specified name is used by any POI.
 """
+
+
 def channel_name_is_poi(channel_name):
     if channel_name != None:
         return channel_name in poi_static.chname_to_poi
 
     return False
+
 
 def mention_type(cmd, ew_id):
     if cmd.client_id.user == ew_id.user:
@@ -689,6 +787,7 @@ def get_mutation_alias(name):
                     return mutation
         return 0
 
+
 def messagesplit(stringIn, whitespace = '\n'):
     currentMessage = stringIn
     messagearray = []
@@ -700,11 +799,14 @@ def messagesplit(stringIn, whitespace = '\n'):
     messagearray.append(currentMessage)
     return messagearray
 
+
 """
     Return true if inventory has associated User table entry
     and a member object from selected server.
     Member ensures they are present in game.
 """
+
+
 def is_player_inventory(id_inventory, id_server):
     if id_server == None or id_inventory == None:
         return False
@@ -775,5 +877,3 @@ def weather_txt(market_data):
 
     response += "It is currently {}{} in NLACakaNM.{}".format(displaytime, ampm, (' ' + flair))
     return response
-
-
