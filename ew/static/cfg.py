@@ -1,7 +1,7 @@
 # Global configuration options.
 
 
-version = "v4.0070 No Safari"
+version = "v4.0080 Cyberhell"
 
 dir_msgqueue = 'msgqueue'
 
