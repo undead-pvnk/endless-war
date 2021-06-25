@@ -7,6 +7,8 @@ debug.py
 ewdebug.py
 ew/debug.py
 ew/cmd/debug
+ew/cmd/debugr
+ew/static/debugr.py
 cfg_exporter.py
 .idea
 .idea/workspace.xml
