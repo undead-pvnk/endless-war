@@ -19,7 +19,7 @@ cfg_exporter.py
 
 ew/static/relic.py
 ew/debugrelics.py
-
+ew/cmd/debugr
 .pytest_cache
 /.coverage
 /htmlcov/

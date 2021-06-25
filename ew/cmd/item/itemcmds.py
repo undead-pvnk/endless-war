@@ -31,7 +31,6 @@ from ew.utils import prank as prank_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
-from import debugrelics as ewdebugrelics
 from ew.static import relic as static_relic
 
 

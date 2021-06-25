@@ -1340,26 +1340,26 @@ async def on_raw_reaction_add(payload):
             embed = message.embeds[0]
             userid = "<@!{}>".format(payload.user_id)
 
-		if embed.description.startswith(userid):
+            if embed.description.startswith(userid):
 
-			if (str(payload.emoji) == ewcfg.emote_delete_tweet):
-				await message.delete()
-	elif (payload.guild_id is not None # not a dm
-		and channels_deviantsplaart[payload.guild_id] is not None # server has a slime twitter channel
-		and payload.channel_id == channels_deviantsplaart[payload.guild_id].id):
-		message = await channels_deviantsplaart[payload.guild_id].fetch_message(payload.message_id)
-		if str(payload.emoji) == ewcfg.emote_111 or str(payload.emoji) == ewcfg.emote_111_debug:
-			for react in message.reactions:
-				if react.count >= 10 and react.emoji.id in [720412882143150241, 431547758181220377]:
-					msgtext = message.content
-					title = msgtext.split('::', 1)
-					current_record = EwRecord(id_server=payload.guild_id, record_type=title)
-					current_record.legality = 0
-					current_record.persist()
+                if (str(payload.emoji) == ewcfg.emote_delete_tweet):
+                    await message.delete()
+    elif (payload.guild_id is not None # not a dm
+        and channels_deviantsplaart[payload.guild_id] is not None # server has a slime twitter channel
+        and payload.channel_id == channels_deviantsplaart[payload.guild_id].id):
+        message = await channels_deviantsplaart[payload.guild_id].fetch_message(payload.message_id)
+        if str(payload.emoji) == ewcfg.emote_111 or str(payload.emoji) == ewcfg.emote_111_debug:
+            for react in message.reactions:
+                if react.count >= 10 and react.emoji.id in [720412882143150241, 431547758181220377]:
+                    msgtext = message.content
+                    title = msgtext.split('::', 1)
+                    current_record = EwRecord(id_server=payload.guild_id, record_type=title)
+                    current_record.legality = 0
+                    current_record.persist()
 
-					art_channel = channels_artexhibits[payload.guild_id]
-					await fe_utils.send_message(client, art_channel, msgtext)
-					await message.delete()
+                    art_channel = channels_artexhibits[payload.guild_id]
+                    await fe_utils.send_message(client, art_channel, msgtext)
+                    await message.delete()
 
 
 # find our REST API token

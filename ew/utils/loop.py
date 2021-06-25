@@ -12,7 +12,6 @@ from . import hunting as hunt_utils
 from . import item as itm_utils
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
-from .. import debugrelics as debugrel
 from .combat import EwEnemy
 from .combat import EwUser
 from .district import EwDistrict
