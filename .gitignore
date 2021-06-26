@@ -18,3 +18,4 @@ cfg_exporter.py
 /htmlcov/
 /junit/
 /coverage.xml
+/json_revert
