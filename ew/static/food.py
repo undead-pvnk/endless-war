@@ -526,7 +526,7 @@ food_list = [
         price = 900,
         str_name = "two chicken strips and a waffle",
         vendors = ["Smoker's Cough", 'bazaar'],
-        str_eat = "You promptly seperate the two chicken strips and waffle on to separate plates, quarantining them off completely from one another. You dip the chicken strips into some ketchup and drizzle some syrup onto the waffles, making sure to NEVER combine the two bitter rivals and to cleanse your palette before switching between them. Ah, the life of a picky eater. It�s hard and no one understands.",
+        str_eat = "You promptly separate the two chicken strips and waffle on to separate plates, quarantining them off completely from one another. You dip the chicken strips into some ketchup and drizzle some syrup onto the waffles, making sure to NEVER combine the two bitter rivals and to cleanse your palette before switching between them. Ah, the life of a picky eater. It�s hard and no one understands.",
         str_desc = "Waffles are the perfect test subject. Whether it�s a good waffle or a bad waffle, they�re all going to hover around the same average quality. So, whenever you�re in a new town and you wanna judge the quality of any given breakfast diner, order the waffle and rest easy knowing that even the worst waffle isn�t really that bad. Oh, this waffle? It�s terrible. At least you have two chicken strips that were clearly frozen and only heated up a couple of minutes before you received them. For all of the loss in quality and flavor, you can't fuck up microwaving something.",
         time_expir = 43200,
     ),
