@@ -6,7 +6,7 @@ vcs.xml
 debug.py
 ewdebug.py
 ew/debug.py
-ew/cmd/debug
+ew/cmd/debug/debug.py
 ew/cmd/debugr
 ew/static/debugr.py
 cfg_exporter.py
