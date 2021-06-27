@@ -30,6 +30,7 @@ from . import spooky
 from . import sports
 from . import transport
 from . import wep
+from . import debugr
 
 import ew.utils.frontend as fe_utils
 import ew.utils.poi as poi_utils
@@ -67,7 +68,8 @@ cmd_modules = [
     kingpin,
     slimetwitter,
     smelting,
-    sports
+    sports,
+    debugr
 ]
 
 cmd_map = {

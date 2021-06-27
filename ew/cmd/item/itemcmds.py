@@ -1577,6 +1577,13 @@ async def create_item(cmd):
             item_id = item.id_fish
             name = item.str_name
 
+    if item == None:
+        item = static_relic.relic_map.get(value)
+        item_type = ewcfg.it_relic
+        if item != None:
+            item_id = item.id_relic
+            name = item.str_name
+
     if item != None:
 
         item_props = itm_utils.gen_item_props(item)

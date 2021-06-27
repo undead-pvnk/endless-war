@@ -5601,11 +5601,9 @@ try:
 except:
     from ew.cmd import debug_dummy as ewdebug
 
+
 debugroom = ewdebug.debugroom
 debugroom_short = ewdebug.debugroom_short
-debugpiers = ewdebug.debugpiers
-debugfish_response = ewdebug.debugfish_response
-debugfish_goal = ewdebug.debugfish_goal
 
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2

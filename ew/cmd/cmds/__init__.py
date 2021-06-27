@@ -90,7 +90,6 @@ cmd_map = {
     ewcfg.cmd_fashion_alt1: cmdcmds.fashion,
 
     # Admin/debug commands
-    ewcfg.cmd_setslime: cmdcmds.set_slime,
     ewcfg.cmd_checkstats: cmdcmds.check_stats,
     ewcfg.cmd_makebp: cmdcmds.make_bp,
     ewcfg.cmd_ping_me: cmdcmds.ping_me,
