@@ -504,6 +504,7 @@ async def netrun(cmd):
     if user_data.race == ewcfg.race_cyborg:
         
         target_name = ""
+        responses = []
 
         if cmd.mentions_count == 1:
             target_name = cmd.mentions[0].display_name
@@ -513,7 +514,6 @@ async def netrun(cmd):
             ]
         else:
             roll = random.randrange(50)
-            responses = []
 
             if roll < 5: #rare response
                 responses = [
@@ -551,49 +551,55 @@ async def strike_deal(cmd):
 
             #propose deal
             target_member = cmd.mentions[0]
-            proposal_response = "*{target}:* {user} is proposing a deal with the devil. Will you **{accept}** or **{refuse}** their offer?".format(target=target_member.display_name, user=cmd.message.author.display_name, accept=ewcfg.cmd_accept, refuse=ewcfg.cmd_refuse)
-            await fe_utils.send_response(proposal_response, cmd, format_name=False)
+            if (target_member.id == cmd.message.author.id):
+                
+                response = "You can't strike a deal with yourself."
+                return await fe_utils.send_response(response, cmd)
+            else:
 
-            #wait for response
-            accepted = False
-            try:
-                msg = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == target_member and
-                                                                                             message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
-                if msg != None:
-                    if msg.content.lower() == ewcfg.cmd_accept:
-                        accepted = True
-                    elif msg.content.lower() == ewcfg.cmd_refuse:
-                        accepted = False
-            except:
+                proposal_response = "*{target}:* {user} is proposing a deal with the devil. Will you **{accept}** or **{refuse}** their offer?".format(target=target_member.display_name, user=cmd.message.author.display_name, accept=ewcfg.cmd_accept, refuse=ewcfg.cmd_refuse)
+                await fe_utils.send_response(proposal_response, cmd, format_name=False)
+
+                #wait for response
                 accepted = False
+                try:
+                    msg = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == target_member and
+                                                                                                message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
+                    if msg != None:
+                        if msg.content.lower() == ewcfg.cmd_accept:
+                            accepted = True
+                        elif msg.content.lower() == ewcfg.cmd_refuse:
+                            accepted = False
+                except:
+                    accepted = False
 
+                response = ""
+                #deal accepted response
+                if accepted:
+                    target_data = EwUser(member=target_member)
+                    responses = []
+                    #if target has no soul
+                    if target_data.has_soul == 0: 
+                        responses = [
+                            "*{target}:* {user} dances around in excitement before realizing you don’t have a soul. They shout obscenities at you for wasting their time.",
+                        ] 
+                    else:
+                        responses = [
+                            "*{target}:* {user} cackles maniacally as magic ethereal chains bind you from the depths of hell. It’s a good thing mist can’t prevent you from going about your buisness.",
+                            "*{target}:* {user} presents the contract on an ancient looking piece of parchment. Oddly enough it looks like a printer did most of the writing. Locating the fine print, you see it’s so small that it’s basically a pixel smudge. You sign the deal knowing it’ll never hold up in any court.",
+                            "*{user}:* {target} accepts your deal with bold enthusiasm. They begin listing off all the rewards they’d dream of receiving ranging from game updates to funny hats. Maybe you shouldn’t tell them it’ll cost them their soul... \n\nyet.",
+                        ]
 
-            #deal accepted response
-            if accepted:
-                target_data = EwUser(member=target_member)
+                    response = random.choice(responses).format(user=cmd.message.author.display_name, target=target_member.display_name)
+        
 
-                #if target has no soul
-                if target_data.has_soul == 0: 
-                   responses = [
-                       "*{target}:* {user} dances around in excitement before realizing you don’t have a soul. They shout obscenities at you for wasting their time.",
-                   ] 
+                #deal refused response
                 else:
                     responses = [
-                        "*{target}:* {user} cackles maniacally as magic ethereal chains bind you from the depths of hell. It’s a good thing mist can’t prevent you from going about your buisness.",
-                        "*{target}:* {user} presents the contract on an ancient looking piece of parchment. Oddly enough it looks like a printer did most of the writing. Locating the fine print, you see it’s so small that it’s basically a pixel smudge. You sign the deal knowing it’ll never hold up in any court.",
-                        "*{user}:* {target} accepts your deal with bold enthusiasm. They begin listing off all the rewards they’d dream of receiving ranging from game updates to funny hats. Maybe you shouldn’t tell them it’ll cost them their soul... \n\nyet.",
+                        "*{user}:* Offput by the deal's sinister vibes and your pushiness, {target} declines your offer. ",
+                        "*{target}:* {user} grinds their teeth at your refusal. They try and play it cool but it’s pretty obvious when a demon is seething"
                     ]
-
-                response = random.choice(responses).format(user=cmd.message.author.display_name, target=target_member.display_name)
-    
-
-            #deal refused response
-            else:
-                responses = [
-                    "*{user}:* Offput by the deal's sinister vibes and your pushiness, {target} declines your offer. ",
-                    "*{target}:* {user} grinds their teeth at your refusal. They try and play it cool but it’s pretty obvious when a demon is seething"
-                ]
-                response = random.choice(responses).format(user=cmd.message.author.display_name, target=target_member.display_name)
+                    response = random.choice(responses).format(user=cmd.message.author.display_name, target=target_member.display_name)
 
 
         return await fe_utils.send_response(response, cmd, format_name=False)
