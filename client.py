@@ -110,6 +110,10 @@ while sys.argv:
     arg_lower = sys.argv[0].lower()
     if arg_lower == '--debug':
         debug = True
+    elif arg_lower == '--debugallon': #set all debug option true at startup
+        debug = True
+        for option in ewutils.DEBUG_OPTIONS:
+            ewutils.DEBUG_OPTIONS[option] = True
     elif arg_lower.startswith(db_prefix):
         ewcfg.database = arg_lower[len(db_prefix):]
 

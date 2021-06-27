@@ -14,6 +14,10 @@ from ..static import weather as weather_static
 TERMINATE = False
 DEBUG = False
 
+DEBUG_OPTIONS = {
+    'no_race_cooldown': False,
+}
+
 # Map of user IDs to their course ID.
 moves_active = {}
 
