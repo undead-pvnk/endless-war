@@ -4061,6 +4061,7 @@ race_unique_commands = {
     "avian": "!flutter: Flap your wings. Show off.",
     "insectoid": "!entomize: Time to do insect things.",
     "shambler": "!shamble: BBBBRRRRRAAAAIIIIINNNNZZZZ.",
+    
     "other": "!confuse: Not too hard to do with this crowd."
 }
 
