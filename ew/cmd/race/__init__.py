@@ -27,4 +27,7 @@ cmd_map = {
     # Fuck Shamblers
     ewcfg.cmd_shamble: racecmds.shamble,
 
+    ewcfg.cmd_netrun: racecmds.netrun,
+    ewcfg.cmd_strike_deal: racecmds.strike_deal,
+
 }
