@@ -160,6 +160,12 @@ async def on_member_update(before, after):
 
 @client.event
 async def on_ready():
+
+    try:
+        await client.change_presence(activity=discord.Game(name="EW " + ewcfg.version))
+    except:
+        ewutils.logMsg("Failed to change_presence!")
+
     global init_complete
     if init_complete:
         return
@@ -209,10 +215,6 @@ async def on_ready():
 
     ewutils.logMsg("finished landmark precomputation")
 
-    try:
-        await client.change_presence(activity=discord.Game(name="EW " + ewcfg.version))
-    except:
-        ewutils.logMsg("Failed to change_presence!")
 
     # Look for a Twitch client_id on disk.
     # FIXME debug - temporarily disable Twitch integration
