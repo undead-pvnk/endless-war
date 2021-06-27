@@ -9,9 +9,7 @@ ewdebug.py
 ew/debug.py
 
 ew/cmd/debug
-ew/cmd/debug/__init__.py
 ew/cmd/debugr
-ew/cmd/debugr/__init__.py
 ew/static/debugr.py
 cfg_exporter.py
 .idea

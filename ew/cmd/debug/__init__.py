@@ -1,5 +1,5 @@
 from ew.static import cfg as ewcfg
-from . import debug
+from .debug import *
 
 cmd_map = {
 
