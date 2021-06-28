@@ -1,7 +1,7 @@
 # Global configuration options.
 
 
-version = "v4.0070 No Safari"
+version = "v4.0080 Cyberhell"
 
 dir_msgqueue = 'msgqueue'
 
@@ -1200,7 +1200,6 @@ cmd_flushstreets = cmd_prefix + 'flushstreets'
 cmd_wrap = cmd_prefix + 'wrap'
 cmd_unwrap = cmd_prefix + 'unwrap'
 cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
-cmd_shamble = cmd_prefix + 'shamble'
 cmd_rejuvenate = cmd_prefix + 'rejuvenate'
 cmd_clockin = cmd_prefix + 'clockin'
 cmd_clockout = cmd_prefix + 'clockout'
@@ -1396,6 +1395,7 @@ cmd_synctopics = cmd_prefix + 'synctopics'
 cmd_shutdownbot = cmd_prefix + 'shutdownbot'
 cmd_checkbot = cmd_prefix + 'checkbot'
 cmd_degradedistricts = cmd_prefix + 'degradedistricts'
+cmd_set_debug_option = cmd_prefix + 'debugoption'
 
 
 cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
@@ -1482,6 +1482,9 @@ cmd_rampage = cmd_prefix + 'rampage'
 cmd_flutter = cmd_prefix + 'flutter'
 cmd_entomize = cmd_prefix + 'entomize'
 cmd_confuse = cmd_prefix + 'confuse'
+cmd_shamble = cmd_prefix + 'shamble'
+cmd_netrun = cmd_prefix + 'netrun'
+cmd_strike_deal = cmd_prefix + 'strikedeal'
 
 cmd_hogtie = cmd_prefix + 'hogtie'
 
@@ -4087,7 +4090,9 @@ race_unique_commands = {
     "avian": "!flutter: Flap your wings. Show off.",
     "insectoid": "!entomize: Time to do insect things.",
     "shambler": "!shamble: BBBBRRRRRAAAAIIIIINNNNZZZZ.",
-    "other": "!confuse: Not too hard to do with this crowd."
+    "demon":"!strikedeal <player>: Set up a contract with some unsuspecting sap.",
+    "cyborg":"!netrun <player>: We do a little hacking here.",
+    "other":"!confuse: Not too hard to do with this crowd."
 }
 
 # !ads, look for possible ads
@@ -5529,21 +5534,129 @@ captcha_dict = [
 
 riflecap = ['UP', 'DOWN', 'LEFT', 'RIGHT']
 
-races = {
-    'humanoid': 'humanoid',
-    'amphibian': 'amphibian',
-    'food': 'food',
-    'skeleton': 'skeleton',
-    'robot': 'robot',
-    'furry': 'furry',
-    'scalie': 'scalie',
-    'slime-derived': 'slime-derived',
-    'monster': 'monster',
-    'critter': 'critter',
-    'avian': 'avian',
-    'insectoid': 'insectoid',
-    'other': 'other',
-    'shambler': 'shambler'
+
+race_humanoid = 'humanoid'
+race_amphibian = 'amphibian'
+race_food = 'food'
+race_skeleton = 'skeleton'
+race_robot = 'robot'
+race_furry = 'furry'
+race_scalie = 'scalie'
+race_slimederived = 'slime-derived'
+race_monster = 'monster'
+race_critter = 'critter'
+race_avian = 'avian'
+race_insectoid = 'insectoid'
+race_other = 'other'
+race_forbidden = 'forbidden'
+race_shambler = 'shambler'
+race_cyborg = 'cyborg'
+race_demon = 'demon'
+
+
+# define race info in one place
+defined_races = {
+    race_humanoid: {
+        "race_prefix": "lame-ass ",
+        "race_suffix": "",
+        "acknowledgement_str": "ENDLESS WAR acknowledges you as a boring humanoid. Your lame and uninspired figure allows you to do nothing but **{cmd}**.",
+        "racial_cmd": cmd_exist,
+    },
+    race_amphibian: {
+        "race_prefix": "slippery ",
+        "race_suffix": "amphibious ",
+        "acknowledgement_str": "ENDLESS WAR acknowledges you as some denomination of amphibian. You may now **{cmd}** to let the world hear your fury.",
+        "racial_cmd": cmd_ree
+    },
+    race_food: {
+        "race_prefix": "",
+        "race_suffix": "edible ",
+        "acknowledgement_str": "ENDLESS WAR acknowledges you as a member of the food race. If you must, you may now give in to your deepest desires, and **{cmd}**.",
+        "racial_cmd": cmd_autocannibalize
+    },
+    race_skeleton: {
+        "race_prefix": "",
+        "race_suffix": "skele",
+        "acknowledgement_str": "ENDLESS WAR acknowledges you as a being of bone. You may now **{cmd}** to intimidate your enemies or soothe yourself.",
+        "racial_cmd": cmd_rattle
+    },
+    race_robot: {
+        "race_prefix": "silicon-based ",
+        "race_suffix": "robo",
+        "acknowledgement_str": '\n```python\nplayer_data.race = "robot"	#todo: change to an ID\nplayer_data.unlock_command("{cmd}")```',
+        "racial_cmd": cmd_beep
+    },
+    race_furry: {
+        "race_prefix": "furry ",
+        "race_suffix": "",
+        "acknowledgement_str": "ENDLESS WAR reluctantly acknowledges you as a furry. Yes, you can **{cmd}** now, but please do it in private.",
+        "racial_cmd": cmd_yiff
+    },
+    race_scalie: {
+        "race_prefix": "scaly ",
+        "race_suffix": "",
+        "acknowledgement_str": "ENDLESS WAR acknowledges you as a scalie. You may now **{cmd}** at your enemies as a threat.",
+        "racial_cmd": cmd_hiss
+    },
+    race_slimederived: {
+        "race_prefix": "goopy ",
+        "race_suffix": "",
+        "acknowledgement_str": "ENDLESS WAR acknowledges you as some sort of slime-derived lifeform. **{cmd}** to your heart's content, you goopy bastard.",
+        "racial_cmd": cmd_jiggle
+    },
+    race_monster: {
+        "race_prefix": "monstrous ",
+        "race_suffix": "",
+        "acknowledgement_str": "ENDLESS WAR acknowledges you as a monstrosity. Go on a **{cmd}**, you absolute beast.",
+        "racial_cmd": cmd_rampage
+    },
+    race_critter: {
+        "race_prefix": "small ",
+        "race_suffix": "",
+        "acknowledgement_str": "ENDLESS WAR acknowledges you as a little critter. You may **{cmd}**s from others now. Adorable.",
+        "racial_cmd": cmd_request_petting
+    },
+    race_avian: {
+        "race_prefix": "feathery ",
+        "race_suffix": "",
+        "acknowledgement_str": "ENDLESS WAR acknowledges you as some kind of bird creature. You can now **{cmd}** to fly away for a quick escape.",
+        "racial_cmd": cmd_flutter
+    },
+    race_insectoid: {
+        "race_prefix": "chitinny ",
+        "race_suffix": "",
+        "acknowledgement_str": 'ENDLESS WAR acknowledges you as an insectoid lifeform. You may now **{cmd}** alongside other creepy-crawlies of your ilk.',
+        "racial_cmd": cmd_entomize
+    },
+    race_other: {
+        "race_prefix": "peculiar ",
+        "race_suffix": "",
+        "acknowledgement_str": 'ENDLESS WAR struggles to categorize you, and files you under "other". Your peculiar form can be used to **{cmd}** those around you.',
+        "racial_cmd": cmd_confuse
+    },
+    race_shambler: {
+        "race_prefix": "",
+        "race_suffix": "",
+        "acknowledgement_str": 'ENDLESS WAR acknowledges you as one of the dead, is disturbed by your presence. You may now **{cmd}** in the hordes of those like you',
+        "racial_cmd": cmd_shamble
+    },
+    race_forbidden: {
+        "race_prefix": "mouthbreathing ",
+        "race_suffix": "",
+        "acknowledgement_str": 'In its infinite wisdom, ENDLESS WAR sees past your attempt at being funny and acknowledges you for what you _truly_ are: **a fucking idiot**.'
+    },
+    race_cyborg: {
+        "race_prefix": "",
+        "race_suffix": "cybernetic ",
+        "acknowledgement_str": "ENDLESS WAR reluctantly acknowledges your biological trancendence. You can now **{cmd}**. ",
+        "racial_cmd": cmd_netrun
+    },
+    race_demon: {
+        "race_prefix": "",
+        "race_suffix": "demonic ",
+        "acknowledgement_str": "ENDLESS WAR acknowledges you as the hellspawn you are. You can now **{cmd}**. ",
+        "racial_cmd": cmd_strike_deal
+    }
 }
 
 # slime twitter stuff

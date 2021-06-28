@@ -142,6 +142,8 @@ cmd_map = {
     # or kills non admins
     ewcfg.cmd_shutdownbot: cmdcmds.shut_down_bot,
 
+    ewcfg.cmd_set_debug_option: cmdcmds.set_debug_option,
+
     # for the filth
     ewcfg.cmd_paycheck: cmdcmds.paycheck,
     ewcfg.cmd_payday: cmdcmds.payday,
