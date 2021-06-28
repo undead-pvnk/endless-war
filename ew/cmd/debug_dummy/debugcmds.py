@@ -33,6 +33,8 @@ async def debug8(cmd):
 async def debug9(cmd):
     return
 
+async def debug11(cmd):
+    return
 
 async def scrutinize(cmd):
     return

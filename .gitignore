@@ -12,7 +12,7 @@ ew/debug.py
 ew/cmd/debug
 
 ew/cmd/debug/debug.py
-
+ew/static/rstatic.py
 ew/cmd/debugr
 ew/static/debugr.py
 cfg_exporter.py
