@@ -177,38 +177,17 @@ async def data(cmd):
         if poi != None:
             response = "You find yourself {} {}. ".format(poi.str_in, poi.str_name)
 
-        # return my data
-        race_suffix = race_prefix = ""
-        if user_data.race == ewcfg.races["humanoid"]:
-            race_prefix = "lame-ass "
-        elif user_data.race == ewcfg.races["amphibian"]:
-            race_prefix = "slippery "
-            race_suffix = "amphibious "
-        elif user_data.race == ewcfg.races["food"]:
-            race_suffix = "edible "
-        elif user_data.race == ewcfg.races["skeleton"]:
-            race_suffix = "skele"
-        elif user_data.race == ewcfg.races["robot"]:
-            race_prefix = "silicon-based "
-            race_suffix = "robo"
-        elif user_data.race == ewcfg.races["furry"]:
-            race_prefix = "furry "
-        elif user_data.race == ewcfg.races["scalie"]:
-            race_prefix = "scaly "
-        elif user_data.race == ewcfg.races["slime-derived"]:
-            race_prefix = "goopy "
-        elif user_data.race == ewcfg.races["critter"]:
-            race_prefix = "small "
-        elif user_data.race == ewcfg.races["monster"]:
-            race_prefix = "monstrous "
-        elif user_data.race == ewcfg.races["avian"]:
-            race_prefix = "feathery "
-        elif user_data.race == ewcfg.races["insectoid"]:
-            race_prefix = "chitinny "
-        elif user_data.race == ewcfg.races["other"]:
-            race_prefix = "peculiar "
-        elif user_data.race != "":
-            race_prefix = "mouthbreathing "
+
+        #get race flavor text
+        player_race = ewcfg.defined_races.get(user_data.race)
+        if player_race != None:
+            race_prefix = player_race.get("race_prefix", "")
+            race_suffix = player_race.get("race_suffix", "")
+        else:
+            race_prefix = ""
+            race_suffix = ""
+
+
 
         if user_data.life_state == ewcfg.life_state_corpse:
             response += "You are a {}level {} {}deadboi.".format(race_prefix, user_data.slimelevel, race_suffix)
@@ -3599,6 +3578,37 @@ async def shut_down_bot(cmd):
 
     while True:
         sys.exit()
+
+async def set_debug_option(cmd):
+    response = ""
+    if ewutils.DEBUG == True:
+        if len(cmd.tokens) == 3:
+            option = cmd.tokens[1]
+            value = cmd.tokens[2]
+
+            ewutils.DEBUG_OPTIONS.get(option)
+            if option != None:
+                if value == 'true':
+                    ewutils.DEBUG_OPTIONS[option] = True
+                    response = "{option} = {value}".format(option=option, value=value)
+
+                elif value == 'false':
+                    ewutils.DEBUG_OPTIONS[option] = False
+                    response = "{option} = {value}".format(option=option, value=value)
+
+                else:
+                    response = "State whether debug option should be true or false."
+            else:
+                response = "Invalid debug option."
+        else:
+            response = "Command format: {} [option] [true/false]".format(ewcfg.cmd_set_debug_option)
+    else:
+        response = "ENDLESS WAR pays you no mind."
+        
+    return await fe_utils.send_response(response, cmd)
+
+
+
 
 
 async def check_bot(cmd):

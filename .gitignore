@@ -6,6 +6,9 @@ vcs.xml
 debug.py
 ewdebug.py
 ew/debug.py
+ew/cmd/debug/debug.py
+ew/cmd/debugr
+ew/static/debugr.py
 cfg_exporter.py
 .idea
 .idea/workspace.xml
@@ -18,3 +21,4 @@ cfg_exporter.py
 /htmlcov/
 /junit/
 /coverage.xml
+/json_revert

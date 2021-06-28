@@ -218,7 +218,7 @@ class EwPoi:
         self.default_line = default_line
         self.default_stop = default_stop
         self.is_transport_stop = is_transport_stop
-        self.transport_lines = transport_lines
+        self.transport_lines = set()
         self.is_outskirts = is_outskirts
         self.community_chest = community_chest
         self.is_pier = is_pier

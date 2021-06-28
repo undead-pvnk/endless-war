@@ -110,6 +110,10 @@ while sys.argv:
     arg_lower = sys.argv[0].lower()
     if arg_lower == '--debug':
         debug = True
+    elif arg_lower == '--debugallon': #set all debug option true at startup
+        debug = True
+        for option in ewutils.DEBUG_OPTIONS:
+            ewutils.DEBUG_OPTIONS[option] = True
     elif arg_lower.startswith(db_prefix):
         ewcfg.database = arg_lower[len(db_prefix):]
 
@@ -156,6 +160,12 @@ async def on_member_update(before, after):
 
 @client.event
 async def on_ready():
+
+    try:
+        await client.change_presence(activity=discord.Game(name="EW " + ewcfg.version))
+    except:
+        ewutils.logMsg("Failed to change_presence!")
+
     global init_complete
     if init_complete:
         return
@@ -205,10 +215,6 @@ async def on_ready():
 
     ewutils.logMsg("finished landmark precomputation")
 
-    try:
-        await client.change_presence(activity=discord.Game(name="EW " + ewcfg.version))
-    except:
-        ewutils.logMsg("Failed to change_presence!")
 
     # Look for a Twitch client_id on disk.
     # FIXME debug - temporarily disable Twitch integration
