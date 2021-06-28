@@ -15,6 +15,7 @@ ew/cmd/debug/debug.py
 ew/static/rstatic.py
 ew/cmd/debugr
 ew/static/debugr.py
+ew/utils/rutils.py
 cfg_exporter.py
 .idea
 .idea/workspace.xml

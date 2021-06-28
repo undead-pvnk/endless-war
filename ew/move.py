@@ -21,7 +21,7 @@ from .backend.player import EwPlayer
 from .backend.worldevent import get_void_connection_pois
 from .static import cfg as ewcfg
 from .static import poi as poi_static
-from .static import relic as relic_static
+from .static import rstatic as relic_static
 from .utils import core as ewutils
 from .utils import district as dist_utils
 from .utils import frontend as fe_utils

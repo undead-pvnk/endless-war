@@ -31,7 +31,7 @@ from ew.utils import prank as prank_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
-from ew.static import relic as static_relic
+from ew.static import rstatic as static_relic
 
 
 async def soulextract(cmd):
