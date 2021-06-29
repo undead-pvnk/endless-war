@@ -59,7 +59,7 @@ async def set_race(cmd):
             race_list.remove("forbidden")
             response = "Please select a race from the following: {race_list}.".format(race_list = ", ".join(["**{}**".format(race) for race in race_list]))
     else:
-        response = "You have either changed your race recently. Try again later, race traitor."
+        response = "You have changed your race recently. Try again later, race traitor."
 
 
 

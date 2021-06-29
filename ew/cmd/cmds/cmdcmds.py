@@ -1619,7 +1619,7 @@ async def cmd_moan(cmd):
     slimeoid = EwSlimeoid(member=cmd.message.author)
     response = ewcfg.moans[random.randrange(len(ewcfg.moans))]
 
-    if user_data.life_state != ewcfg.life_state_shambler and user_data.race != ewcfg.races["shambler"]:
+    if user_data.life_state != ewcfg.life_state_shambler and user_data.race != ewcfg.race_shambler:
         response = "You're not really feeling it... Maybe if you lacked cognitive function, you'd be more inclined to moan, about brains, perhaps."
         return await fe_utils.send_response(response, cmd)
 
