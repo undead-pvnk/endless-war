@@ -1,8 +1,46 @@
 
+# Print lab instructions
+async def instructions(cmd):
+
+    if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+        response = "There's no instructions to read here."
+        return await fe_utils.send_response(response, cmd)
+
+    else:
+        response = "Welcome to NLACU's Brawlden Laboratory Facilities."
+
+        response += "\n\nThis facility specializes in the emerging technology of Slimeoids, or slime-based artificial lifeforms. Research into the properties of Slimeoids is ongoing, but already great advancements in the field have been made and we are proud to continue providing public access to Slimeoid creation."
+
+        # Explain incubation
+        response += "\n\nThis laboratory is equipped with everything required for the creation of a Slimeoid from scratch. To create a Slimeoid, you will need to supply one (1) Slime Poudrin, which will serve as the locus around which your Slimeoid will be based. You will also need to supply some Slime. You may supply as much or as little slime as you like, but greater Slime contribution will lead to superior Slimeoid genesis. To begin the Slimeoid creation process, use **!incubateslimeoid** followed by the amount of slime you wish to use."
+
+
+        # Explain grow body commands
+        response += "\n\nAfter beginning incubation, you will need to use the console to adjust your Slimeoid's features while it is still forming. Use **!growbody**, **!growhead**, **!growlegs**, **!growweapon**, **!growarmor**, **!growspecial**, or **!growbrain** followed by a letter (A - G) to choose the appearance, abilities, and temperament of your Slimeoid. You will also need to give youe Slimeoid a name. Use **!nameslimeoid** followed by your desired name. These traits may be changed at any time before the incubation is completed."
+
+        # Explain add stat commands
+        response += "\n\nIn addition to physical features, you will need to allocate your Slimeoid's attributes. Your Slimeoid will have a different amount of potential depending on how much slime you invested in its creation. You must distribute this potential across the three Slimeoid attributes, Moxie, Grit, and Chutzpah. Use **!raisemoxie**, **!lowermoxie**, **!raisegrit**, **!lowergrit**, **!raisechutzpah**, and **!lowerchutzpah** to adjust your Slimeoid's attributes to your liking."
+        
+        # Send half of instructions here becasuse this is a lot of text
+        await fe_utils.send_response(response, cmd)
+        
+
+        # Spawn slimeoid and explain one active slimeoid limit 
+        response = "\n\nWhen all of your Slimeoid's traits are confirmed, use **!spawnslimeoid** to end the incubation and eject your Slimeoid from the gestation vat. Be aware that once spawned, the Slimeoid's traits are not easy to change, so be sure you are happy with your Slimeoid's construction before spawning. Additionally, be aware that you may only have Slimeoid roaming free at a time, meaning should you ever want to make a new Slimeoid, you will need to **!bottleslimeoid** or euthanise your old one with **!dissolveslimeoid**."
+
+        # Commands that can be done with your slimeoid
+        response += "\n\nYou can read a full description of your or someone else's Slimeoid with the **!slimeoid** command. It will react to your actions, including when you kill an opponent, when you are killed, when you return from the dead, and when you !howl. In addition, you can also perform activities with your Slimeoid. Try **!observeslimeoid**, **!petslimeoid**, **!walkslimeoid**, and **!playfetch** and see what happens."
+
+        # Pls report bugs
+        response += "\n\nSlimeoid research is ongoing, and the effects of a Slimeoid's physical makeup, brain structure, and attribute allocation on its abilities are a rapidly advancing field. Please report any unusual findings or behaviors to a NLACU lab technician."
+
+        # Send the response to the player.
+        return await fe_utils.send_response(response, cmd, format_name = False)
+
 """
     Initialize incubation process
 """
-async def incubateslimeoid(cmd):
+async def incubate_slimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)
     slimeoid_data = EwSlimeoid(member=cmd.message.author)
 
@@ -177,53 +215,6 @@ async def change_body_part(cmd):
                 
 
 """
-    Name slimeoid during incubation process
-"""
-async def name_slimeoid(cmd):
-    user_data = EwUser(member=cmd.message.author)
-    slimeoid = EwSlimeoid(member=cmd.message.author)
-
-    # Check if player is in the labs and has a slimeoid incubating
-    response = basic_slimeoid_incubation_checks(channel_name = cmd.message.channel.name, user_data = user_data, slimeoid_data = slimeoid_data)
-    # If response returns None go to final response
-
-
-    if reponse is None: # Slimeoid is incubating
-
-
-        # Check if player has specified a name
-        if cmd.tokens_count < 2:
-            response = "You must specify a name."
-            # Go to final response
-
-
-        else:
-
-            # Turn entire message minus "!nameslimeoid" in to name variable
-            name = cmd.message.content[(len(ewcfg.cmd_nameslimeoid)):].strip()
-
-            # Limit name length to 32 characters
-            if len(name) > 32:
-                response = "That name is too long. ({:,}/32)".format(len(name))
-                # Go to final response
-
-
-            else:
-                # Save slimeoid name
-                slimeoid.name = str(name)
-
-                user_data.persist()
-                slimeoid.persist()
-
-                response = "You enter the name {} into the console.".format(str(name))
-                # Go to final response
-
-
-    # Final response
-    await fe_utils.send_response(response, cmd)
-
-
-"""
     Handle all raise and lower stat commands during slimeoid incubation
 """
 async def change_stat(cmd):
@@ -330,9 +321,56 @@ async def change_stat(cmd):
 
 
 """
+    Name slimeoid during incubation process
+"""
+async def name_slimeoid(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    slimeoid = EwSlimeoid(member=cmd.message.author)
+
+    # Check if player is in the labs and has a slimeoid incubating
+    response = basic_slimeoid_incubation_checks(channel_name = cmd.message.channel.name, user_data = user_data, slimeoid_data = slimeoid_data)
+    # If response returns None go to final response
+
+
+    if reponse is None: # Slimeoid is incubating
+
+
+        # Check if player has specified a name
+        if cmd.tokens_count < 2:
+            response = "You must specify a name."
+            # Go to final response
+
+
+        else:
+
+            # Turn entire message minus "!nameslimeoid" in to name variable
+            name = cmd.message.content[(len(ewcfg.cmd_nameslimeoid)):].strip()
+
+            # Limit name length to 32 characters
+            if len(name) > 32:
+                response = "That name is too long. ({:,}/32)".format(len(name))
+                # Go to final response
+
+
+            else:
+                # Save slimeoid name
+                slimeoid.name = str(name)
+
+                user_data.persist()
+                slimeoid.persist()
+
+                response = "You enter the name {} into the console.".format(str(name))
+                # Go to final response
+
+
+    # Final response
+    await fe_utils.send_response(response, cmd)
+
+
+"""
     Check if all parts have been added and complete the incubation processs
 """
-async def spawnslimeoid(cmd):
+async def spawn_slimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)
     slimeoid = EwSlimeoid(member=cmd.message.author)
 

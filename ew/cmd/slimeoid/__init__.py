@@ -3,28 +3,44 @@ from . import slimeoidcmds
 
 cmd_map = {
 
+
+
     # Making slimeoids
-    ewcfg.cmd_incubateslimeoid: slimeoidcmds.incubateslimeoid,
-    ewcfg.cmd_growbody: slimeoidcmds.growbody,
-    ewcfg.cmd_growhead: slimeoidcmds.growhead,
-    ewcfg.cmd_growlegs: slimeoidcmds.growlegs,
-    ewcfg.cmd_growweapon: slimeoidcmds.growweapon,
-    ewcfg.cmd_growarmor: slimeoidcmds.growarmor,
-    ewcfg.cmd_growspecial: slimeoidcmds.growspecial,
-    ewcfg.cmd_growbrain: slimeoidcmds.growbrain,
-    ewcfg.cmd_nameslimeoid: slimeoidcmds.nameslimeoid,
-    ewcfg.cmd_raisemoxie: slimeoidcmds.raisemoxie,
-    ewcfg.cmd_lowermoxie: slimeoidcmds.lowermoxie,
-    ewcfg.cmd_raisegrit: slimeoidcmds.raisegrit,
-    ewcfg.cmd_lowergrit: slimeoidcmds.lowergrit,
-    ewcfg.cmd_raisechutzpah: slimeoidcmds.raisechutzpah,
-    ewcfg.cmd_lowerchutzpah: slimeoidcmds.lowerchutzpah,
-    ewcfg.cmd_spawnslimeoid: slimeoidcmds.spawnslimeoid,
-    ewcfg.cmd_dissolveslimeoid: slimeoidcmds.dissolveslimeoid,
+    ewcfg.cmd_instructions: slimeoid_creation.instructions,
+
+    # Incubation
+    ewcfg.cmd_incubateslimeoid:  slimeoid_creation.incubate_slimeoid,
+
+    # Grow body parts
+    ewcfg.cmd_growbody:  slimeoid_creation.change_body_part,
+    ewcfg.cmd_growhead:  slimeoid_creation.change_body_part,
+    ewcfg.cmd_growlegs:  slimeoid_creation.change_body_part,
+    ewcfg.cmd_growweapon:  slimeoid_creation.change_body_part,
+    ewcfg.cmd_growarmor:  slimeoid_creation.change_body_part,
+    ewcfg.cmd_growspecial:  slimeoid_creation.change_body_part,
+    ewcfg.cmd_growbrain:  slimeoid_creation.change_body_part,
+    
+    # Change Stats
+    ewcfg.cmd_raisemoxie:  slimeoid_creation.change_stat,
+    ewcfg.cmd_lowermoxie:  slimeoid_creation.change_stat,
+    ewcfg.cmd_raisegrit:  slimeoid_creation.change_stat,
+    ewcfg.cmd_lowergrit:  slimeoid_creation.change_stat,
+    ewcfg.cmd_raisechutzpah:  slimeoid_creation.change_stat,
+    ewcfg.cmd_lowerchutzpah:  slimeoid_creation.change_stat,
+
+    # Name slimeoid
+    ewcfg.cmd_nameslimeoid:  slimeoid_creation.name_slimeoid,
+
+    # Finish slimeoid creation
+    ewcfg.cmd_spawnslimeoid:  slimeoid_creation.spawn_slimeoid,
+
+
+
+    
 
     # Interacting with slimeoids
+    ewcfg.cmd_dissolveslimeoid: slimeoidcmds.dissolveslimeoid,
     ewcfg.cmd_slimeoid: slimeoidcmds.slimeoid,
-    ewcfg.cmd_instructions: slimeoidcmds.instructions,
     ewcfg.cmd_playfetch: slimeoidcmds.playfetch,
     ewcfg.cmd_petslimeoid: slimeoidcmds.petslimeoid,
     ewcfg.cmd_abuseslimeoid: slimeoidcmds.abuseslimeoid,
