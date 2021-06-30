@@ -10,7 +10,6 @@ from ew.backend import item as bknd_item
 from ew.utils import core as ewutils
 
 # Import classes
-# Why utils? I would've expected ew.model
 from ew.utils.combat import EwUser
 from ew.utils.slimeoid import EwSlimeoid
 
