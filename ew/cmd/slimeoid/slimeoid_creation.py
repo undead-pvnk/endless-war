@@ -1,10 +1,25 @@
+# Import cfg constants
+from ew.static import cfg as ewcfg
+from ew.static import slimeoid as sl_static
+
+# Import util function
+from ew.utils.frontend import send_response
+from ew.cmd.slimeoid.slimeoidutils import get_slimeoid_count
+from ew.utils import slimeoid as slimeoid_utils
+from ew.backend import item as bknd_item
+from ew.utils import core as ewutils
+
+# Import classes
+# Why utils? I would've expected ew.model
+from ew.utils.combat import EwUser
+from ew.utils.slimeoid import EwSlimeoid
 
 # Print lab instructions
 async def instructions(cmd):
 
     if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
         response = "There's no instructions to read here."
-        return await fe_utils.send_response(response, cmd)
+        return await send_response(response, cmd)
 
     else:
         response = "Welcome to NLACU's Brawlden Laboratory Facilities."
@@ -22,7 +37,7 @@ async def instructions(cmd):
         response += "\n\nIn addition to physical features, you will need to allocate your Slimeoid's attributes. Your Slimeoid will have a different amount of potential depending on how much slime you invested in its creation. You must distribute this potential across the three Slimeoid attributes, Moxie, Grit, and Chutzpah. Use **!raisemoxie**, **!lowermoxie**, **!raisegrit**, **!lowergrit**, **!raisechutzpah**, and **!lowerchutzpah** to adjust your Slimeoid's attributes to your liking."
         
         # Send half of instructions here becasuse this is a lot of text
-        await fe_utils.send_response(response, cmd)
+        await send_response(response, cmd)
         
 
         # Spawn slimeoid and explain one active slimeoid limit 
@@ -35,7 +50,7 @@ async def instructions(cmd):
         response += "\n\nSlimeoid research is ongoing, and the effects of a Slimeoid's physical makeup, brain structure, and attribute allocation on its abilities are a rapidly advancing field. Please report any unusual findings or behaviors to a NLACU lab technician."
 
         # Send the response to the player.
-        return await fe_utils.send_response(response, cmd, format_name = False)
+        return await send_response(response, cmd, format_name = False)
 
 """
     Initialize incubation process
@@ -55,7 +70,7 @@ async def incubate_slimeoid(cmd):
     #TODO: change this because player can have more than one slimeoid now
     # this is fucking brutal. poor slimeoid
     elif slimeoid_data.life_state == ewcfg.slimeoid_state_active:
-        response = "You have already created a Slimeoid. Dissolve your current slimeoid before incubating a new one."
+        response = "You have already created a Slimeoid. Bottle or dissolve your current slimeoid before incubating a new one."
         # Go to final response
 
     elif slimeoid_data.life_state == ewcfg.slimeoid_state_forming:
@@ -104,18 +119,20 @@ async def incubate_slimeoid(cmd):
 
                     # Remove slime
                     user_data.change_slimes(n=-injected_slime)
-                    user_data.persist()
 
                     # Setup gestating slimeoid
                     level = len(str(injected_slime))
-                    slimeoid.life_state = ewcfg.slimeoid_state_forming
-                    slimeoid.level = level
-                    slimeoid.id_user = str(user_data.id_user)
-                    slimeoid.id_server = user_data.id_server
-                    slimeoid.persist()
+                    slimeoid_data.life_state = ewcfg.slimeoid_state_forming
+                    slimeoid_data.level = level
+                    slimeoid_data.id_user = str(user_data.id_user)
+                    slimeoid_data.id_server = user_data.id_server
 
-                    response = "You place a poudrin into a small opening on the console. As you do, a needle shoots up and pricks your finger, intravenously extracting {injected_slime} slime from your body. The poudrin is then dropped into the gestation tank. Looking through the observation window, you see what was once your slime begin to seep into the tank and accrete around the poudrin. The incubation of a new Slimeoid has begun! {slime_emote}".format(
-                        injected_slime = str(injected_slime), 
+                    # Save changes
+                    slimeoid_data.persist()
+                    user_data.persist()
+
+                    response = "You place a poudrin into a small opening on the console. As you do, a needle shoots up and pricks your finger, intravenously extracting {injected_slime:,} slime from your body. The poudrin is then dropped into the gestation tank. Looking through the observation window, you see what was once your slime begin to seep into the tank and accrete around the poudrin. The incubation of a new Slimeoid has begun! {slime_emote}".format(
+                        injected_slime = injected_slime, 
                         slime_emote = ewcfg.emote_slime2
                     )
                     # Go to final response
@@ -123,7 +140,7 @@ async def incubate_slimeoid(cmd):
 
 
     # Final response
-    await fe_utils.send_response(response, cmd)
+    await send_response(response, cmd)
 
 
 """
@@ -131,38 +148,39 @@ async def incubate_slimeoid(cmd):
 """
 async def change_body_part(cmd):
     user_data = EwUser(member=cmd.message.author)
-    slimeoid = EwSlimeoid(member=cmd.message.author)
+    slimeoid_data = EwSlimeoid(member=cmd.message.author)
 
     # Check if player is in the labs and has a slimeoid incubating
     response = basic_slimeoid_incubation_checks(channel_name = cmd.message.channel.name, user_data = user_data, slimeoid_data = slimeoid_data)
     # If response returns None go to final response
 
 
-    if reponse is None: # Slimeoid is incubating
+    if response is None: # Slimeoid is incubating
 
         button_pressed = None
 
-        # If player does not provide an argument for the button they pressed
+        # If player does not provide an argument for the button they pressed# Interperate which part player is trying to grow by command name
+
+        cmd_to_change_type = {
+            ewcfg.cmd_growbody: ("body", sl_static.body_map),
+            ewcfg.cmd_growhead: ("head", sl_static.head_map),
+            ewcfg.cmd_growlegs: ("leg", sl_static.mobility_map),
+            ewcfg.cmd_growweapon: ("weapon", sl_static.offense_map),
+            ewcfg.cmd_growarmor: ("armor", sl_static.defense_map),
+            ewcfg.cmd_growspecial: ("special", sl_static.special_map),
+            ewcfg.cmd_growbrain: ("brain", sl_static.brain_map),
+        }
+
+        # Gets part_map based on command used
+        desired_change, part_map = cmd_to_change_type.get(cmd.tokens[0])
+
         if cmd.tokens_count == 1:
-            response = "You must specify a body type. Choose an option from the buttons on the body console labelled A through G."
+            response = f"You must specify a {desired_change} type. Choose an option from the buttons on the body console labelled A through G."
             # Go to final response
 
         else:
             
-            # Interperate which part player is trying to grow by command name
-
-            cmd_to_change_type = {
-                ewcfg.cmd_growbody: ("change body", sl_static.body_map),
-                ewcfg.cmd_growhead: ("change head", sl_static.head_map),
-                ewcfg.cmd_growlegs: ("change legs", sl_static.mobility_map),
-                ewcfg.cmd_growweapon: ("change weapon", sl_static.offense_map),
-                ewcfg.cmd_growarmor: ("change armor", sl_static.defense_map),
-                ewcfg.cmd_growspecial: ("change special", sl_static.special_map),
-                ewcfg.cmd_growbrain: ("change brain", sl_static.brain_map),
-            }
-
-            # Gets part_map based on command used
-            desired_change, part_map = cmd_to_change_type.get(cmd.tokens[0])
+            
             pressed_button = cmd.tokens[1].lower()
 
             # Check if desired part is in part map 
@@ -178,40 +196,40 @@ async def change_body_part(cmd):
 
                 #TODO: this could be simplified if slimeoid part id variables to one name
                 # e.g. EwSlimeoidBody.id_body and EwSlimeoidBody.id_head were called EwSlimeoidBody.part_id and EwSlimeoidBody.part_id instead
-                if desired_change == "change body":
-                    slimeoid.body = part.id_body
+                if desired_change == "body":
+                    slimeoid_data.body = part.id_body
 
-                elif desired_change == "change head":
-                    slimeoid.head = part.id_head
+                elif desired_change == "head":
+                    slimeoid_data.head = part.id_head
 
-                elif desired_change == "change legs":
-                    slimeoid.legs = part.id_mobility
+                elif desired_change == "leg":
+                    slimeoid_data.legs = part.id_mobility
 
-                elif desired_change == "change weapon":
-                    slimeoid.weapon = part.id_offense
+                elif desired_change == "weapon":
+                    slimeoid_data.weapon = part.id_offense
 
-                elif desired_change == "change armor":
-                    slimeoid.armor = part.id_defense
+                elif desired_change == "armor":
+                    slimeoid_data.armor = part.id_defense
 
-                elif desired_change == "change special":
-                    slimeoid.special = part.id_special
+                elif desired_change == "special":
+                    slimeoid_data.special = part.id_special
 
-                elif desired_change == "change brain":
-                    slimeoid.ai = part.id_brain
+                elif desired_change == "brain":
+                    slimeoid_data.ai = part.id_brain
 
                 else:
                     response = f"Some thing when wrong with {cmd.tokens[0]} command. Please report bug." # something when wrong in cmd_to_change_type
-                    return await fe_utils.send_response(response, cmd)
+                    return await send_response(response, cmd)
                     # Break out of command early because of error
 
                 
-                slimeoid.persist()
+                slimeoid_data.persist()
                 response = "{}".format(part.str_create)
                 # Go to final response
 
 
     # Final response
-    await fe_utils.send_response(response, cmd)
+    await send_response(response, cmd)
                 
 
 """
@@ -219,105 +237,104 @@ async def change_body_part(cmd):
 """
 async def change_stat(cmd):
     user_data = EwUser(member=cmd.message.author)
-    slimeoid = EwSlimeoid(member=cmd.message.author)
+    slimeoid_data = EwSlimeoid(member=cmd.message.author)
 
     # Check if player is in the labs and has a slimeoid incubating
     response = basic_slimeoid_incubation_checks(channel_name = cmd.message.channel.name, user_data = user_data, slimeoid_data = slimeoid_data)
     # If response returns None go to final response
 
 
-    if reponse is None: # Slimeoid is incubating
+    if response is None: # Slimeoid is incubating
 
-        available_points = slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel
+        # Interperate which stat player is trying to change by command name
+
+        cmd_to_change_type = {
+            ewcfg.cmd_raisemoxie: "+ moxie",
+            ewcfg.cmd_raisegrit: "+ grit",
+            ewcfg.cmd_raisechutzpah: "+ chutzpah",
+            ewcfg.cmd_lowermoxie: "- moxie",
+            ewcfg.cmd_lowergrit: "- grit",
+            ewcfg.cmd_lowerchutzpah: "- chutzpah",
+        }
+        desired_change = cmd_to_change_type.get(cmd.tokens[0])
+
+        moxie_mod = 0
+        grit_mod = 0
+        chutzpah_mod = 0
+        
+        # Plus one stat
+        if desired_change == "+ moxie":
+            moxie_mod = 1
+            changed_stat = "moxie"
+
+        elif desired_change == "+ grit":
+            grit_mod = 1
+            changed_stat = "grit"
+
+        elif desired_change == "+ chutzpah":
+            chutzpah_mod = 1
+            changed_stat = "chutzpah"
+
+        # Minus one stat
+        elif desired_change == "- moxie":
+            moxie_mod = -1
+            changed_stat = "moxie"
+
+        elif desired_change == "- grit":
+            grit_mod = -1
+            changed_stat = "grit"
+
+        elif desired_change == "- chutzpah":
+            chutzpah_mod = -1
+            changed_stat = "chutzpah"
+
+        else:
+            response = f"Some thing when wrong with {cmd.tokens[0]} command. Please report bug." # something when wrong in cmd_to_change_type
+            return await send_response(response, cmd)
+            # Break out of command early because of error
+
+
+        # Now that we no what stat is trying to be changed do the final checks
+
+
+        available_points = slimeoid_data.level - (slimeoid_data.atk + moxie_mod) - (slimeoid_data.defense + grit_mod) - (slimeoid_data.intel + chutzpah_mod)
 
         # Check if stat points are available
-        if (available_points >= slimeoid.level):
+        if (available_points < 0):
             response = "You have allocated all of your Slimeoid's potential. Try !lowering some of its attributes first."
-            response += stat_breakdown_str(slimeoid.atk, slimeoid.defense, slimeoid.intel, available_points)
+            response += stat_breakdown_str(slimeoid_data.atk, slimeoid_data.defense, slimeoid_data.intel, available_points + 1)
+            # Go to final response
+
+        # Check if player is trying to lower a stat below zero
+        #if ((slimeoid_data.atk + moxie_mod < 0) or (slimeoid_data.defense + grit_mod < 0) or (slimeoid_data.intel + chutzpah_mod < 0)):
+        elif (available_points >= slimeoid_data.level):
+            response = f"You cannot reduce your slimeoid's {changed_stat} any further."
+            response += stat_breakdown_str(slimeoid_data.atk, slimeoid_data.defense, slimeoid_data.intel, available_points - 1)
             # Go to final response
 
 
+        # Command successful
         else:
-
-            # Interperate which stat player is trying to change by command name
-
-            cmd_to_change_type = {
-                ewcfg.cmd_raisemoxie: "+ moxie",
-                ewcfg.cmd_raisegrit: "+ grit",
-                ewcfg.cmd_raisechutzpah: "+ chutzpah",
-                ewcfg.cmd_lowermoxie: "- moxie",
-                ewcfg.cmd_lowergrit: "- grit",
-                ewcfg.cmd_lowerchutzpah: "- chutzpah",
-            }
-            desired_change = cmd_to_change_type.get(cmd.tokens[0])
-
-            moxie_mod = 0
-            grit_mod = 0
-            chutzpah_mod = 0
             
-            # Plus one stat
-            if desired_change == "+ moxie":
-                moxie_mod = 1
-                changed_stat = "moxie"
+            # Change slimeoid stats
+            slimeoid_data.atk += moxie_mod 
+            slimeoid_data.defense += grit_mod 
+            slimeoid_data.intel += chutzpah_mod
+            # Save changes
+            slimeoid_data.persist()
 
-            elif desired_change == "+ grit":
-                grit_mod = 1
-                changed_stat = "grit"
-
-            elif desired_change == "+ chutzpah":
-                chutzpah_mod = 1
-                changed_stat = "chutzpah"
-
-            # Minus one stat
-            elif desired_change == "- moxie":
-                moxie_mod = -1
-                changed_stat = "moxie"
-
-            elif desired_change == "- grit":
-                grit_mod = -1
-                changed_stat = "grit"
-
-            elif desired_change == "- chutzpah":
-                mox_mod = -1
-                chutzpah_mod = "chutzpah"
-
+            # Generate response
+            if (moxie_mod + grit_mod + chutzpah_mod > 0):
+                response = f"Your gestating slimeoid gains more {changed_stat}."
             else:
-                response = f"Some thing when wrong with {cmd.tokens[0]} command. Please report bug." # something when wrong in cmd_to_change_type
-                return await fe_utils.send_response(response, cmd)
-                # Break out of command early because of error
-
-
-            # Now that we no what stat is trying to be changed do the final checks
-
-            # Check if player is trying to lower a stat below zero
-            if ((slimeoid.atk + moxie_mod < 0) or (slimeoid.defense + grit_mod < 0) or (slimeoid.intel + chutzpah_mod < 0))
-                response = f"You cannot reduce your slimeoid's {changed_stat} any further."
-                response += stat_breakdown_str(slimeoid.atk, slimeoid.defense, slimeoid.intel, available_points)
-                # Go to final response
-
-
-            # Command successful
-            else:
-                
-                # Change slimeoid stats
-                slimeoid.atk + moxie_mod 
-                slimeoid.defense + grit_mod 
-                slimeoid.intel + chutzpah_mod
-                # Save changes
-                slimeoid.persist()
-
-                # Generate response
-                if (moxie_mod + grit_mod + chuzpah_mod > 0)
-                    response = f"Your gestating slimeoid gains more {changed_stat}."
-                else:
-                    response = f"Your gestating slimeoid loses some {changed_stat}."
-                response += stat_breakdown_str(slimeoid.atk, slimeoid.defense, slimeoid.intel, available_points)
-                # Go to final response
+                response = f"Your gestating slimeoid loses some {changed_stat}."
+            response += stat_breakdown_str(slimeoid_data.atk, slimeoid_data.defense, slimeoid_data.intel, available_points)
+            # Go to final response
 
 
 
     # Final response
-    await fe_utils.send_response(response, cmd)
+    await send_response(response, cmd)
 
 
 """
@@ -325,14 +342,14 @@ async def change_stat(cmd):
 """
 async def name_slimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)
-    slimeoid = EwSlimeoid(member=cmd.message.author)
+    slimeoid_data = EwSlimeoid(member=cmd.message.author)
 
     # Check if player is in the labs and has a slimeoid incubating
     response = basic_slimeoid_incubation_checks(channel_name = cmd.message.channel.name, user_data = user_data, slimeoid_data = slimeoid_data)
     # If response returns None go to final response
 
 
-    if reponse is None: # Slimeoid is incubating
+    if response is None: # Slimeoid is incubating
 
 
         # Check if player has specified a name
@@ -354,17 +371,17 @@ async def name_slimeoid(cmd):
 
             else:
                 # Save slimeoid name
-                slimeoid.name = str(name)
+                slimeoid_data.name = str(name)
 
                 user_data.persist()
-                slimeoid.persist()
+                slimeoid_data.persist()
 
                 response = "You enter the name {} into the console.".format(str(name))
                 # Go to final response
 
 
     # Final response
-    await fe_utils.send_response(response, cmd)
+    await send_response(response, cmd)
 
 
 """
@@ -372,55 +389,55 @@ async def name_slimeoid(cmd):
 """
 async def spawn_slimeoid(cmd):
     user_data = EwUser(member=cmd.message.author)
-    slimeoid = EwSlimeoid(member=cmd.message.author)
+    slimeoid_data = EwSlimeoid(member=cmd.message.author)
 
     # Check if player is in the labs and has a slimeoid incubating
     response = basic_slimeoid_incubation_checks(channel_name = cmd.message.channel.name, user_data = user_data, slimeoid_data = slimeoid_data)
     # If response returns None go to final response
 
 
-    if reponse is None: # Slimeoid is incubating
+    if response is None: # Slimeoid is incubating
             incomplete = False
             required_parts_explanation = ""
 
 
             # Check if parts are missing 
             # Bold missing part names for visual clarity
-            if (slimeoid.body == ""):
+            if (slimeoid_data.body == ""):
                 incomplete = True
                 required_parts_explanation += "\nIts **BODY** has not yet been given a distinct form."
 
-            if (slimeoid.head == ""):
+            if (slimeoid_data.head == ""):
                 incomplete = True
                 required_parts_explanation += "\nIt does not yet have a **HEAD**."
 
-            if (slimeoid.legs == ""):
+            if (slimeoid_data.legs == ""):
                 incomplete = True
-                required_parts_explanation = += "\nIt has no **LEGS** or means of locomotion."
+                required_parts_explanation += "\nIt has no **LEGS** or means of locomotion."
 
-            if (slimeoid.weapon == ""):
+            if (slimeoid_data.weapon == ""):
                 incomplete = True
-                required_parts_explanation = += "\nIt lacks a means of **WEAPON**."
+                required_parts_explanation += "\nIt lacks a means of **WEAPON**."
 
-            if (slimeoid.armor == ""):
+            if (slimeoid_data.armor == ""):
                 incomplete = True
-                required_parts_explanation = += "\nIt lacks any form of **ARMOR**."
+                required_parts_explanation += "\nIt lacks any form of **ARMOR**."
 
-            if (slimeoid.special == ""):
+            if (slimeoid_data.special == ""):
                 incomplete = True
-                required_parts_explanation = += "\nIt lacks a **SPECIAL** ability."
+                required_parts_explanation += "\nIt lacks a **SPECIAL** ability."
 
-            if (slimeoid.ai == ""):
+            if (slimeoid_data.ai == ""):
                 incomplete = True
-                required_parts_explanation = "\nIt does not yet have a **BRAIN**."
+                required_parts_explanation += "\nIt does not yet have a **BRAIN**."
 
-            if ((slimeoid.atk + slimeoid.defense + slimeoid.intel) < (slimeoid.level)):
+            if ((slimeoid_data.atk + slimeoid_data.defense + slimeoid_data.intel) < (slimeoid_data.level)):
                 incomplete = True
-                required_parts_explanation = "\nIt still has potential that must be distributed between **MOXIE**, **GRIT** and **CHUTZPAH**."
+                required_parts_explanation += "\nIt still has potential that must be distributed between **MOXIE**, **GRIT** and **CHUTZPAH**."
 
-            if (slimeoid.name == ""):
+            if (slimeoid_data.name == ""):
                 incomplete = True
-                required_parts_explanation = "\nIt needs a **NAME**."
+                required_parts_explanation += "\nIt needs a **NAME**."
 
             if incomplete:
                 # Add explanation of which parts need to be added
@@ -430,32 +447,32 @@ async def spawn_slimeoid(cmd):
             
             else: 
                 # Set slimeoid as active
-                slimeoid.life_state = ewcfg.slimeoid_state_active
+                slimeoid_data.life_state = ewcfg.slimeoid_state_active
                 # Save slimeoid
-                slimeoid.persist()
+                slimeoid_data.persist()
 
                 # Generate spawning flavor text
                 response = "You press the big red button labelled 'SPAWN'. The console lights up and there is a rush of mechanical noise as the fluid drains rapidly out of the gestation tube. The newly born Slimeoid within writhes in confusion before being sucked down an ejection chute and spat out messily onto the laboratory floor at your feet. Happy birthday, {slimeoid_name} the Slimeoid!! {slime_heart_emote}".format(
-                    slimeoid_name = slimeoid.name, 
+                    slimeoid_name = slimeoid_data.name, 
                     slime_heart_emote = ewcfg.emote_slimeheart
                 )
 
 
                 # Add slimeoid description
-                response += "\n\n{} is a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
-                response += slimeoid_utils.slimeoid_describe(slimeoid)
+                response += "\n\n{} is a {}-foot-tall Slimeoid.".format(slimeoid_data.name, str(slimeoid_data.level))
+                response += slimeoid_utils.slimeoid_describe(slimeoid_data)
 
 
                 # Add slimeoid's reaction based on brain type
-                brain = sl_static.brain_map.get(slimeoid.ai)
+                brain = sl_static.brain_map.get(slimeoid_data.ai)
                 response += "\n\n" + brain.str_spawn.format(
-                    slimeoid_name=slimeoid.name
+                    slimeoid_name=slimeoid_data.name
                 )
                 # Go to final response
 
 
     # Final response
-    await fe_utils.send_response(response, cmd)
+    await send_response(response, cmd)
 
 
 ###
@@ -466,7 +483,7 @@ async def spawn_slimeoid(cmd):
     Does some of the basic checks all slimeoid growing commands do
     Returns response string if there is a reason the player can't do the command
 """
-def basic_slimeoid_incubation_checks(channel_name, user_data, slimeoid_data)
+def basic_slimeoid_incubation_checks(channel_name, user_data, slimeoid_data):
     # Check if player in labs and is not a ghost 
     if channel_name != ewcfg.channel_slimeoidlab:
         return "You must go to the NLACU Laboratories in Brawlden to create a Slimeoid."
@@ -475,15 +492,15 @@ def basic_slimeoid_incubation_checks(channel_name, user_data, slimeoid_data)
      
     # Check for incubating slimeoid
     # TODO: other checks for slimeoid lifestates?
-    elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+    elif slimeoid_data.life_state == ewcfg.slimeoid_state_none:
         return "You must begin incubating a new slimeoid first."
-    elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+    elif slimeoid_data.life_state == ewcfg.slimeoid_state_active:
         return "Your slimeoid is already fully formed."
 
     else:
         return None
 
-def stat_breakdown_str(moxie, grit, chuzpah, available_points = None):
+def stat_breakdown_str(moxie, grit, chuzpah, available_points = None): #VERIFIED
     response = f"\nMoxie: {moxie}"
     response += f"\nGrit: {grit}"
     response += f"\nChutzpah: {chuzpah}"

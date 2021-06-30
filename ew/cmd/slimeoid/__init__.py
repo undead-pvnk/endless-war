@@ -1,9 +1,8 @@
 from ew.static import cfg as ewcfg
 from . import slimeoidcmds
+from . import slimeoid_creation
 
 cmd_map = {
-
-
 
     # Making slimeoids
     ewcfg.cmd_instructions: slimeoid_creation.instructions,
