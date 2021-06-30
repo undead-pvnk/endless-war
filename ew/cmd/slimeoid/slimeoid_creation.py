@@ -499,7 +499,7 @@ def basic_slimeoid_incubation_checks(channel_name, user_data, slimeoid_data):
     else:
         return None
 
-def stat_breakdown_str(moxie, grit, chuzpah, available_points = None): #VERIFIED
+def stat_breakdown_str(moxie, grit, chuzpah, available_points = None):
     response = f"\nMoxie: {moxie}"
     response += f"\nGrit: {grit}"
     response += f"\nChutzpah: {chuzpah}"
