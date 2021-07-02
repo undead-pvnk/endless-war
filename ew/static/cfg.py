@@ -1,7 +1,7 @@
 # Global configuration options.
 
 
-version = "v4.0080 Cyberhell"
+version = "v4.0085 Cybersmell"
 
 dir_msgqueue = 'msgqueue'
 
