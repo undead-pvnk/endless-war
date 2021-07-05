@@ -145,7 +145,7 @@ async def crush(cmd):
                 levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
                 user_data.persist()
 
-                response = "You {} your hard-earned slime crystal with your bare teeth.\nAs the nerve endings in your teeth explode, you realize you bit into negapoudrin! You writhe on the ground as slime gushes from all of your orifices.".format(command)
+                response = "You {} your hard-earned slime crystal with your bare teeth.\nAs the nerve endings in your teeth explode, you realize you bit into a negapoudrin! You writhe on the ground as slime gushes from all of your orifices.".format(command)
             
                 if len(levelup_response) > 0:
                     response += "\n\n" + levelup_response	
