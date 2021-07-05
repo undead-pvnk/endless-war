@@ -55,7 +55,7 @@ async def score(cmd):
     time_now_cmd_start = int(time.time())
     user_data = None
     member = None
-    skune = True if ewutils.flattenTokenListToString(cmd.tokens[0]) == 'skune' else False
+    slime_alias = ewutils.flattenTokenListToString(cmd.tokens[0])
     if len(cmd.mention_ids) == 0:
         target_type = "self"
     else:
@@ -65,7 +65,7 @@ async def score(cmd):
     if target_type == "ew":
         total = bknd_core.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.guild.id))
         totalslimes = total[0][0]
-        response = "ENDLESS WAR has amassed {:,} slime.".format(totalslimes)
+        response = "ENDLESS WAR has amassed {:,} {}.".format(totalslimes, slime_alias)
 
     # self slime check
     elif target_type == "self":
@@ -73,12 +73,12 @@ async def score(cmd):
         poudrin_amount = bknd_item.find_poudrin(id_user=cmd.message.author.id, id_server=cmd.guild.id)
 
         # return my score
-        response = "You currently have {:,} {}{}.".format(user_data.slimes, "slime" if skune is False else "skune", (" and {} {} poudrin{}".format(poudrin_amount, "slime" if skune is False else "skune", ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
+        response = "You currently have {:,} {}{}.".format(user_data.slimes, slime_alias, (" and {} {} poudrin{}".format(poudrin_amount, slime_alias, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
 
     # other user slime check
     else:
         member = cmd.mentions[0]  # for ewrolemgr
-        response = gen_score_text(ew_id=cmd.mention_ids[0], skune=skune)
+        response = gen_score_text(ew_id=cmd.mention_ids[0], slime_alias=slime_alias)
 
     time_now_msg_start = int(time.time())
     # Send the response to the player.
