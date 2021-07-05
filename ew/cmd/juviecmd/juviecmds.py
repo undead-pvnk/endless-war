@@ -133,6 +133,22 @@ async def crush(cmd):
                     )
 
                     gristcount += 1
+        elif item_data.item_props.get("id_item") == ewcfg.item_id_negapoudrin:
+            # delete a negapoudrin from the player's inventory
+            bknd_item.item_delete(id_item=sought_id)
+            crush_slimes = -1000000
+            # kill player if they have less than 1 million slime
+            if user_data.slimes < 1000000:
+                user_data.die(cause=ewcfg.cause_suicide)
+            # remove 1 million slime from the player
+            else:
+                levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
+                user_data.persist()
+
+                response = "You {} your hard-earned slime crystal with your bare teeth.\nAs the nerve endings in your teeth explode, you realize you bit into negapoudrin! You writhe on the ground as slime gushes from all of your orifices.".format(command)
+            
+                if len(levelup_response) > 0:
+                    response += "\n\n" + levelup_response	
 
     else:
         if item_search:  # if they didnt forget to specify an item and it just wasn't found

@@ -3213,7 +3213,7 @@ cabinets_list = [
     "This is a Peasant's Quest arcade cabinet.\nThe struggles of the main guy here are a lot like what juvies go through: a rise to greatness, false hope, and inevitable worthless destruction. Onward!\nhttp://homestarrunner.com/disk4of12.html",
     "This is a Super Mario 63 arcade cabinet.\nSince Reggie Fils-Amie is too fucking cowardly to set foot in NLACakaNM, we have to resort to bootleg merchandise. Relatively good bootlegs, but bootlegs nonetheless.\nhttps://www.newgrounds.com/portal/view/498969",
     "This is a World's Hardest Game arcade cabinet.\nThere were countless stories of moms getting bankrupted because their kids dumped their money into these.\nhttps://www.coolmathgames.com/0-worlds-hardest-game",
-	"This is an Endless Warcade: Endless Climber arcade cabinet.\nCreated by **Sceptrai**, countless hours have been wasted by the citizens of NLACakaNM attempting to summit ENDLESS WAR itself.\nhttps://blastedheath.itch.io/endless-warcade-endless-climber",
+	"This is an Endless Warcade: Endless Climber arcade cabinet.\nCreated by **Sceptrai**, countless hours have been wasted by the citizens of NLACakaNM attempting to summit ENDLESS WAR itself.\nhttps://blastedheath.itch.io/endless-warcade-endless-climber"
 ]
 
 browse_list = [
