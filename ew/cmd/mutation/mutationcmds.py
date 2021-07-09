@@ -302,28 +302,30 @@ async def graft(cmd):
     target = ewutils.get_mutation_alias(target_name)
 
     mutations = user_data.get_mutations()
+    incompatible = False
 
     if target == 0:
         response = '"What? My ears aren\'t what they used to be. I thought you suggested I give you {}. Only braindead squicks would say that."'.format(' '.join(cmd.tokens[1:]))
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        incompatible = True
     elif target in mutations:
         response = '"Nope, you already have that mutation. Hey, I thought I was supposed to be the senile one here!"'
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        incompatible = True
     elif user_data.get_mutation_level() + static_mutations.mutations_map[target].tier > min([user_data.slimelevel, 50]):
         response = '"Your body\'s already full of mutations. Your sentient tumors will probably start bitin\' once I take out my scalpel."\n\nLevel:{}/50\nMutation Levels Added:{}/{}'.format(user_data.slimelevel, user_data.get_mutation_level(), min(user_data.slimelevel, 50))
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        incompatible = True
     elif static_mutations.mutations_map.get(target).tier * 10000 > user_data.slimes:
         response = '"We\'re not selling gumballs here. It\'s cosmetic surgery. It\'ll cost at least {} slime, ya idjit!"'.format(static_mutations.mutations_map.get(target).tier * 10000)
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif (target == ewcfg.mutation_id_davyjoneskeister and ewcfg.mutation_id_onemansjunk in mutations) or (target == ewcfg.mutation_id_onemansjunk and ewcfg.mutation_id_davyjoneskeister in mutations):
-        response = '"Well waddya need that for? Ya got just the opposite! It ain\'t pretty when they clash kid."'
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif target == ewcfg.mutation_id_airlock and (ewcfg.mutation_id_whitenationalist in mutations or ewcfg.mutation_id_lightasafeather in mutations):
-        response = '"Nope, you already have that mutation, or half of it anyway. They dont multiply y\'know."'
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-    elif (target == ewcfg.mutation_id_whitenationalist or target == ewcfg.mutation_id_lightasafeather) and (ewcfg.mutation_id_airlock in mutations):
-        response = '"Nope, you already have that mutation, its even got a little extra tacked on."'
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        incompatible = True
+
+    for mutation in mutations:
+        mutation = static_mutations.mutations_map[mutation]
+        if target in mutation.incompatible:
+            response = mutation.incompatible[target]
+            incompatible = True
+            break
+
+    if incompatible:
+        return await fe_utils.send_response(response, cmd)
     else:
         price = static_mutations.mutations_map.get(target).tier * 10000
         user_data.change_slimes(n=-price, source=ewcfg.source_spending)

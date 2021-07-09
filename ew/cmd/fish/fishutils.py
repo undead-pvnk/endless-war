@@ -50,7 +50,7 @@ fishing_counter = 0
 
 
 # Randomly generates a fish.
-def gen_fish(x, fisher, has_fishingrod):
+def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None):
     fish_pool = []
 
     rarity_number = random.randint(0, 100)
@@ -59,70 +59,52 @@ def gen_fish(x, fisher, has_fishingrod):
     # fragments when any of that shit has any use beyond making staves.
     # just ctrl+f the variable below and remove anything to do with it
     voidfishing = fisher.pier.pier_type == ewcfg.fish_slime_void
-    if has_fishingrod == True:
-        if rarity_number >= 0 and rarity_number < 21 and not voidfishing:  # 20%
-            fish = "item"
-            return fish
+    if rarity is None:
+        if has_fishingrod:
+            if rarity_number >= 0 and rarity_number < 21 and not voidfishing:  # 20%
+                rarity = "item"
 
-        elif voidfishing or rarity_number >= 21 and rarity_number < 31:  # 10%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_common:
-                    fish_pool.append(fish)
+            elif rarity_number >= 21 and rarity_number < 31:  # 10%
+                rarity = "common"
 
-        elif rarity_number >= 31 and rarity_number < 71:  # 40%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_uncommon:
-                    fish_pool.append(fish)
+            elif rarity_number >= 31 and rarity_number < 71:  # 40%
+                rarity = "uncommon"
 
-        elif rarity_number >= 71 and rarity_number < 91:  # 20%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_rare:
-                    fish_pool.append(fish)
-        else:  # 10%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
-                    fish_pool.append(fish)
+            elif rarity_number >= 71 and rarity_number < 91:  # 20%
+                rarity = "rare"
 
+            else:  # 10%
+                rarity = "promo"
+
+        else:
+            if rarity_number >= 0 and rarity_number < 11 and not voidfishing:  # 10%
+                rarity = "item"
+
+            elif rarity_number >= 11 and rarity_number < 61:  # 50%
+                rarity = "common"
+
+            elif rarity_number >= 61 and rarity_number < 91:  # 30%
+                rarity = "uncommon"
+
+            elif rarity_number >= 91 and rarity_number < 100:  # 9%
+                rarity = "rare"
+
+            else:  # 1%
+                rarity = "promo"
+    
+    if rarity == "item":
+        fish = "item"
+        return fish
     else:
-        if rarity_number >= 0 and rarity_number < 11 and not voidfishing:  # 10%
-            fish = "item"
-            return fish
+        fish_pool.extend(static_fish.rarity_to_list[rarity])
 
-        elif rarity_number >= 11 and rarity_number < 61:  # 50%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_common:
-                    fish_pool.append(fish)
-
-        elif voidfishing or rarity_number >= 61 and rarity_number < 91:  # 30%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_uncommon:
-                    fish_pool.append(fish)
-
-        elif rarity_number >= 91 and rarity_number < 100:  # 9%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_rare:
-                    fish_pool.append(fish)
-        else:  # 1%
-            for fish in static_fish.fish_names:
-                if static_fish.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
-                    fish_pool.append(fish)
-
-    market_data = x  # todo ?
-    weather_data = weather_static.weather_map.get(market_data.weather)
-
-    if weather_data.name != "rainy":
-        for fish in fish_pool:
-            if static_fish.fish_map[fish].catch_time == ewcfg.fish_catchtime_rain:
-                fish_pool.remove(fish)
+    if market_data.weather != "rainy":
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.rainy_fish]
 
     if 5 < market_data.clock < 20:
-        for fish in fish_pool:
-            if static_fish.fish_map[fish].catch_time == ewcfg.fish_catchtime_night:
-                fish_pool.remove(fish)
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.night_fish]
     elif market_data.clock < 8 or market_data.clock > 17:
-        for fish in fish_pool:
-            if static_fish.fish_map[fish].catch_time == ewcfg.fish_catchtime_day:
-                fish_pool.remove(fish)
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.day_fish]
     else:
         for fish in fish_pool:
             if static_fish.fish_map[fish].catch_time != None:
@@ -139,36 +121,21 @@ def gen_fish(x, fisher, has_fishingrod):
 
 
 # Determines the size of the fish
-def gen_fish_size(has_fishingrod):
-    size_number = random.randint(0, 100)
+def gen_fish_size(mastery_bonus = 0):
+    size_number = random.randint(mastery_bonus * 5, 100)
 
-    if has_fishingrod == True:
-        if size_number >= 0 and size_number < 6:  # 5%
-            size = ewcfg.fish_size_miniscule
-        elif size_number >= 6 and size_number < 11:  # 5%
-            size = ewcfg.fish_size_small
-        elif size_number >= 11 and size_number < 31:  # 20%
-            size = ewcfg.fish_size_average
-        elif size_number >= 31 and size_number < 71:  # 40%
-            size = ewcfg.fish_size_big
-        elif size_number >= 71 and size_number < 91:  # 20
-            size = ewcfg.fish_size_huge
-        else:  # 10%
-            size = ewcfg.fish_size_colossal
-
-    else:
-        if size_number >= 0 and size_number < 6:  # 5%
-            size = ewcfg.fish_size_miniscule
-        elif size_number >= 6 and size_number < 21:  # 15%
-            size = ewcfg.fish_size_small
-        elif size_number >= 21 and size_number < 71:  # 50%
-            size = ewcfg.fish_size_average
-        elif size_number >= 71 and size_number < 86:  # 15%
-            size = ewcfg.fish_size_big
-        elif size_number >= 86 and size_number < 100:  # 4
-            size = ewcfg.fish_size_huge
-        else:  # 1%
-            size = ewcfg.fish_size_colossal
+    if size_number >= 0 and size_number < 6:  # 5%
+        size = ewcfg.fish_size_miniscule
+    elif size_number >= 6 and size_number < 21:  # 15%
+        size = ewcfg.fish_size_small
+    elif size_number >= 21 and size_number < 71:  # 50%
+        size = ewcfg.fish_size_average
+    elif size_number >= 71 and size_number < 86:  # 15%
+        size = ewcfg.fish_size_big
+    elif size_number >= 86 and size_number < 100:  # 4
+        size = ewcfg.fish_size_huge
+    else:  # 1%
+        size = ewcfg.fish_size_colossal
 
     return size
 
@@ -258,56 +225,27 @@ async def award_fish(fisher, cmd, user_data):
 
         value = 0
 
-        if fisher.current_size == ewcfg.fish_size_miniscule:
-            slime_gain = ewcfg.fish_gain * 1
-            value += 10
+        # Rewards from the fish's size
+        slime_gain = ewcfg.fish_gain * static_fish.size_to_reward[fisher.current_size]
+        value += 10 * static_fish.size_to_reward[fisher.current_size]
 
-        elif fisher.current_size == ewcfg.fish_size_small:
-            slime_gain = ewcfg.fish_gain * 2
-
-            value += 20
-
-        elif fisher.current_size == ewcfg.fish_size_average:
-            slime_gain = ewcfg.fish_gain * 3
-            value += 30
-
-        elif fisher.current_size == ewcfg.fish_size_big:
-            slime_gain = ewcfg.fish_gain * 4
-            value += 40
-
-        elif fisher.current_size == ewcfg.fish_size_huge:
-            slime_gain = ewcfg.fish_gain * 5
-            value += 50
-
-        else:
-            slime_gain = ewcfg.fish_gain * 6
-            value += 60
-
-        if static_fish.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_common:
-            value += 10
-
-        if static_fish.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_uncommon:
-            value += 20
-
-        if static_fish.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_rare:
-            value += 30
-
-        if static_fish.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_promo:
-            value += 40
+        # Rewards from the fish's rarity
+        value += 10 * static_fish.rarity_to_reward[static_fish.fish_map[fisher.current_fish].rarity]
 
         if user_data.life_state == 2:
-            if static_fish.fish_map[fisher.current_fish].catch_time == ewcfg.fish_catchtime_day and user_data.faction == ewcfg.faction_rowdys:
+            if fisher.current_fish in static_fish.day_fish and user_data.faction == ewcfg.faction_rowdys:
                 gang_bonus = True
                 slime_gain = slime_gain * 1.5
                 value += 20
 
-            if static_fish.fish_map[fisher.current_fish].catch_time == ewcfg.fish_catchtime_night and user_data.faction == ewcfg.faction_killers:
+            if fisher.current_fish in static_fish.night_fish and user_data.faction == ewcfg.faction_killers:
                 gang_bonus = True
                 slime_gain = slime_gain * 1.5
                 value += 20
 
-        if has_fishingrod == True:
-            slime_gain = slime_gain * 2
+        # Disabled while I try out the new mastery fishing
+        #if has_fishingrod == True:
+        #    slime_gain = slime_gain * 2
 
         # trauma = se_static.trauma_map.get(user_data.trauma)
         # if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:

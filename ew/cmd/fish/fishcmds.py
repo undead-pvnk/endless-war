@@ -157,7 +157,17 @@ async def cast(cmd):
                 fisher.current_size = "item"
 
             else:
-                fisher.current_size = gen_fish_size(has_fishingrod)
+                mastery_bonus = 0
+                # Git gud.
+                if has_fishingrod:
+                    mastery_bonus += user_data.weaponskill - 4 #
+                else:
+                    mastery_bonus += -4
+                
+                if rod_possession:
+                    mastery_bonus += 1
+
+                fisher.current_size = gen_fish_size(mastery_bonus)
 
             if fisher.bait == False:
                 response = "You cast your fishing line into the "

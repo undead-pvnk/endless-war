@@ -7,7 +7,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "propellerhat",
         str_name = "propeller hat",
-        str_desc = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile�s youth.",
+        str_desc = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile's youth.",
         str_onbreak = "Your hat takes a hit, detatching the propeller and sending it twirling into the stratosphere. Looks like you'll never see it again.",
         rarity = "Plebeian",
         durability = 2500000,
@@ -63,7 +63,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "baseballcap",
         str_name = "baseball cap",
-        str_desc = "A classic baseball cap. A staple of American culture and subsequently freedom from tyranny. If you don�t own at least one of these hats you might as well have hopped the fence from Tijuana last night. Yeah, I�m racist, that going to be a problem for you??",
+        str_desc = "A classic baseball cap. A staple of American culture and subsequently freedom from tyranny. If you don't own at least one of these hats you might as well have hopped the fence from Tijuana last night. Yeah, I'm racist, that going to be a problem for you??",
         rarity = "Plebeian",
         durability = 2500000,
         style = "cool",
@@ -75,7 +75,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "backwardsbaseballcap",
         str_name = "backwards baseball cap",
-        str_desc = "A classic baseball cap� with an urban twist! Heh, 'sup dawg? Nothing much, man. You know me, just mining some goddamn slime. Word 'n shit. Hell yeah.",
+        str_desc = "A classic baseball cap' with an urban twist! Heh, 'sup dawg? Nothing much, man. You know me, just mining some goddamn slime. Word 'n shit. Hell yeah.",
         str_onadorn = "You whip out your baseball cap and apply it...backwards. Fuck, now we're getting serious.",
         rarity = "Plebeian",
         durability = 2500000,
@@ -89,7 +89,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "piratehat",
         str_name = "pirate hat",
-        str_desc = "A swashbuckling buccaneer�s tricorne, stylized with a jolly roger on the front.",
+        str_desc = "A swashbuckling buccaneer's tricorne, stylized with a jolly roger on the front.",
         str_onadorn = "Y'ARRRRRRR! You adorn ye' tricorne and spit at a nearby pedestrian.",
         str_onbreak = "You hat is torn to shreds. Welp, no more shivering timbers.",
         rarity = "Plebeian",
@@ -117,7 +117,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "cigarette",
         str_name = "cigarette",
-        str_desc = "A single cigarette sticking out of your mouth. You huff these things down in seconds but you�re never seen without one. Everyone thinks you�re really, really cool.",
+        str_desc = "A single cigarette sticking out of your mouth. You huff these things down in seconds but you're never seen without one. Everyone thinks you're really, really cool.",
         str_onadorn = "You stick the cigarette in your mouth, suave as a baby's bottom. You wonder how many of these could fit in your mouth.",
         rarity = "Plebeian",
         durability = 2500000,
@@ -202,7 +202,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "scarf",
         str_name = "scarf",
-        str_desc = "A very thick striped wool scarf, in case 110� degrees is too nippy for you.",
+        str_desc = "A very thick striped wool scarf, in case 110' degrees is too nippy for you.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "smart",
@@ -227,7 +227,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "bomberhat",
         str_name = "bomber hat",
-        str_desc = "A thick fur and leather aviator�s hat.",
+        str_desc = "A thick fur and leather aviator's hat.",
         rarity = "Plebeian",
         durability = 3750000.0,
         style = "tough",
@@ -240,7 +240,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "tuxedo",
         str_name = "tuxedo",
-        str_desc = "A classy, semi-formal suit for dashing rogues you can�t help but love. Instant charisma granted upon each !adorn.",
+        str_desc = "A classy, semi-formal suit for dashing rogues you can't help but love. Instant charisma granted upon each !adorn.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "beautiful",
@@ -326,7 +326,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "fez",
         str_name = "fez",
-        str_desc = "A short fez with a tassel attached to the top. Fezzes are cool. Or, are bowties cool? You forget, and frankly you�re embarrassed you remember either one of them.",
+        str_desc = "A short fez with a tassel attached to the top. Fezzes are cool. Or, are bowties cool? You forget, and frankly you're embarrassed you remember either one of them.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "smart",
@@ -339,7 +339,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "bowtie",
         str_name = "bowtie",
-        str_desc = "A quite dapper, neatly tied butterfly bowtie. Bowties are cool. Or, are fezzes cool? You forget, and frankly you�re embarrassed you remember either one of them.",
+        str_desc = "A quite dapper, neatly tied butterfly bowtie. Bowties are cool. Or, are fezzes cool? You forget, and frankly you're embarrassed you remember either one of them.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "smart",
@@ -401,7 +401,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "karategi",
         str_name = "karategi",
-        str_desc = "A traditional Japanese karateka�s outfiit, complete with a belt with extended ends that easily flow in the wind for dramatic effect.",
+        str_desc = "A traditional Japanese karateka's outfiit, complete with a belt with extended ends that easily flow in the wind for dramatic effect.",
         rarity = "Plebeian",
         style = "tough",
         freshness = 7,
@@ -475,7 +475,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "fursuit",
         str_name = "fursuit",
-        str_desc = "A fursuit. Custom-made and complete with high quality faux fur, padded digitigrade legs, follow-me eyes, adjustable facial expressions, and a fan in the head. It is modeled off your original character, also known as your fursona. Some would call its character design �ugly� or �embarrassing,� but you think it's perfect.",
+        str_desc = "A fursuit. Custom-made and complete with high quality faux fur, padded digitigrade legs, follow-me eyes, adjustable facial expressions, and a fan in the head. It is modeled off your original character, also known as your fursona. Some would call its character design 'ugly' or 'embarrassing,' but you think it's perfect.",
         rarity = "Patrician",
         durability = 10000000,
         size = 2,
@@ -537,7 +537,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "nursesoutfit",
         str_name = "nurse's outfit",
-        str_desc = "A disturbingly revealing nurse�s outfit that shows off your lumpy, fleshy visage. No one likes that you wear this. Theming bonus for responding to people�s crackpot ideas in the nurse�s office, though.",
+        str_desc = "A disturbingly revealing nurse's outfit that shows off your lumpy, fleshy visage. No one likes that you wear this. Theming bonus for responding to people's crackpot ideas in the nurse's office, though.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "beautiful",
@@ -549,7 +549,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "heartboxers",
         str_name = "heart boxers",
-        str_desc = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren�t hilariously ripped or unadorned while you�re wearing these, how embarrassing! Hahaha! We like to have fun here.",
+        str_desc = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren't hilariously ripped or unadorned while you're wearing these, how embarrassing! Hahaha! We like to have fun here.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "cute",
@@ -601,7 +601,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "bowlerhat",
         str_name = "Bowler Hat",
-        str_desc = "A simply traditional billyock. You�re gonna be the talk of the toy box with this dashing felt cosmetic! Now you just have to work on the moustache.",
+        str_desc = "A simply traditional billyock. You're gonna be the talk of the toy box with this dashing felt cosmetic! Now you just have to work on the moustache.",
         durability = 2500000,
         style = "smart",
         freshness = 6,
@@ -637,7 +637,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "copbadge",
         str_name = "Cop Badge",
-        str_desc = "What the fuck are you doing with this thing? Are you TRYING to make the sewers your permanent residence? Acquaint yourself with the !drop command and FAST, before you don�t have a body to wear the badge on.",
+        str_desc = "What the fuck are you doing with this thing? Are you TRYING to make the sewers your permanent residence? Acquaint yourself with the !drop command and FAST, before you don't have a body to wear the badge on.",
         durability = 2500000,
         style = "smart",
         freshness = 2,
@@ -655,7 +655,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "cosplayhorns",
         str_name = "Cosplay Horns",
-        str_desc = "You�re not entirely sure what these things are, but they sort of look like brightly painted, candy corn colored, paper mache horns that are hot glued onto a black headband. Their purpose is mysterious, but for some reason you are inclined to adorn them� perhaps you understood their importance in a past life.",
+        str_desc = "You're not entirely sure what these things are, but they sort of look like brightly painted, candy corn colored, paper mache horns that are hot glued onto a black headband. Their purpose is mysterious, but for some reason you are inclined to adorn them' perhaps you understood their importance in a past life.",
         durability = 2500000,
         style = "cute",
         freshness = 6,
@@ -664,7 +664,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "yourfavoritehat",
         str_name = "***Your Favorite Hat***",
-        str_desc = "***It fits perfectly, and it�s just your style! You love wearing this cosmetic far more than any other, it�s simply the best.***",
+        str_desc = "***It fits perfectly, and it's just your style! You love wearing this cosmetic far more than any other, it's simply the best.***",
         durability = 2500000,
         style = "cute",
         freshness = 10,
@@ -691,7 +691,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "flowercrown",
         str_name = "Flower Crown",
-        str_desc = "A lovingly handcrafted crown of flowers, connected by a string. You�re gonna be famous on Pinterest with a look like this!",
+        str_desc = "A lovingly handcrafted crown of flowers, connected by a string. You're gonna be famous on Pinterest with a look like this!",
         durability = 2500000,
         style = "cute",
         freshness = 7,
@@ -700,7 +700,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "spikedbracelets",
         str_name = "Spiked Bracelets",
-        str_desc = "Hilariously unrealistic spiked bracelets, ala Bowser, King of the Koopas. You�re hyper aware of these fashion disasters whenever you�re walking, making sure to swing them as far away from your body as possible.",
+        str_desc = "Hilariously unrealistic spiked bracelets, ala Bowser, King of the Koopas. You're hyper aware of these fashion disasters whenever you're walking, making sure to swing them as far away from your body as possible.",
         durability = 2500000,
         style = "tough",
         acquisition = "smelting",
@@ -708,7 +708,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "slimecorppin",
         str_name = "SlimeCorp Pin",
-        str_desc = "An enamel pin of the SlimeCorp logo, a badge of loyalty to your favorite charismatic megacorporation. Dude, like, *�Follow He Who Turns The Wheels�*, bro!!",
+        str_desc = "An enamel pin of the SlimeCorp logo, a badge of loyalty to your favorite charismatic megacorporation. Dude, like, *'Follow He Who Turns The Wheels'*, bro!!",
         durability = 2500000,
         style = "smart",
         freshness = 10,
@@ -942,7 +942,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "duncecap",
         str_name = "Dunce Cap",
-        str_desc = "It�s a pointy cap that says dunce on it, duh! You�re a real smartie aren't you?",
+        str_desc = "It's a pointy cap that says dunce on it, duh! You're a real smartie aren't you?",
         rarity = "Plebeian",
         durability = 2500000,
         style = "cute",
@@ -966,7 +966,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "blindfold",
         str_name = "Blindfold",
-        str_desc = "Ok now you�re just bragging. Walking around with a blindfold of all things? How ridiculous!",
+        str_desc = "Ok now you're just bragging. Walking around with a blindfold of all things? How ridiculous!",
         rarity = "Plebeian",
         durability = 2500000,
         style = "tough",
@@ -996,7 +996,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "bearskinhat",
         str_name = "Bearskin Hat",
-        str_desc = "A towering fuzzy hat that�s commonly worn by guards of the british royal guard.",
+        str_desc = "A towering fuzzy hat that's commonly worn by guards of the british royal guard.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "smart",
@@ -1017,7 +1017,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "militaryberet",
         str_name = "Military Beret",
-        str_desc = "A good soldier needs good headwear, and that�s where this beret comes in.",
+        str_desc = "A good soldier needs good headwear, and that's where this beret comes in.",
         rarity = "Plebeian",
         durability = 2500000,
         style = "beautiful",
@@ -1030,7 +1030,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
         id_cosmetic = "felinehat",
         str_name = "Feline Hat",
-        str_desc = "A hat striped with red and white is quite right for a fanciful fight! It�s a funny hat at that, and it looks like it�s been worn by a cat!",
+        str_desc = "A hat striped with red and white is quite right for a fanciful fight! It's a funny hat at that, and it looks like it's been worn by a cat!",
         rarity = "Plebeian",
         durability = 100,
         style = "cute",

@@ -1952,14 +1952,14 @@ async def check_mastery(cmd):
         response = "You can only recall your own weapon masteries!"
     else:
         wepskills = ewutils.weaponskills_get(member=cmd.message.author)
-        for skill, level in wepskills.items():
+        for skill in wepskills:
             # Now actually grabs the mastery string! Rejoice!
             weapon_response = (static_weapons.weapon_map[skill]).str_weaponmaster_self + '\n'
             if weapon_response == "\n":
                 continue
             # Only print masteries at 1 or above
-            if level.get("skill") >= 5:
-                message += weapon_response.format(rank=level["skill"] - 4)
+            if wepskills[skill] >= 5:
+                message += weapon_response.format(rank=wepskills[skill] - 4)
         response = message
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
