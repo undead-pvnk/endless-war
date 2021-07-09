@@ -1,5 +1,6 @@
 from ew.static import cfg as ewcfg
 from .debug import *
+from ew.static import poi as poi_static
 
 cmd_map = {
 
@@ -24,3 +25,10 @@ cmd_map = {
     # ewcfg.cmd_call_elevator: cmds.elevator_call,
 
 }
+
+for poi in poi_static.poi_list:
+    if poi.id_poi == 'southoutskirtsdepths':
+        poi.neighbors['thecaverns'] = 20
+
+for poi in debugpois:
+    poi_static.poi_list.append(poi)

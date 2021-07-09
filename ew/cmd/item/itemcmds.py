@@ -31,7 +31,7 @@ from ew.utils import prank as prank_utils
 from ew.utils import rolemgr as ewrolemgr
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
-from ew.static import rstatic as static_relic
+from ew.cmd import debugr as debugr
 
 
 async def soulextract(cmd):
@@ -643,7 +643,7 @@ async def item_use(cmd):
 
         if item.item_type == ewcfg.it_relic:
             id = item.item_props.get('id_relic')
-            function = static_relic.relic_functions.get(id)
+            function = debugr.relic_functions.get(id)
             if function is not None:
                 return await function(cmd=cmd)
 

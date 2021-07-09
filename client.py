@@ -770,6 +770,7 @@ async def on_message(message):
             Punish the user for swearing.
             The swear_jar attribute has been repurposed for SlimeCorp security officers
         """
+        await ewdebug.contentCheck(cmd=cmd_obj, line=content_tolower)
         if (any(swear in content_tolower for swear in ewcfg.curse_words.keys())):
             # print(content_tolower_list)
             swear_multiplier = 0
