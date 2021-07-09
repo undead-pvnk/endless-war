@@ -326,9 +326,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
             data = cursor.fetchall()
             if data != None:
                 for row in data:
-                    weaponskills[row[0]] = {
-                        'skill': row[1]
-                    }
+                    weaponskills[row[0]] = row[1]
         finally:
             # Clean up the database handles.
             cursor.close()
