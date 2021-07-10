@@ -20,7 +20,7 @@ fish_list = [
         str_name = "Mold Fish",
         rarity = "common",
         catch_time = None,
-        catch_weather = "ewcfg.weather_foggy",
+        catch_weather = "foggy",
         str_desc = "It's said to have the memory capacity of 16 GB.",
         slime = None,
     ),
@@ -47,7 +47,7 @@ fish_list = [
         str_name = "Slimekoi",
         rarity = "common",
         catch_time = None,
-        catch_weather = "ewcfg.weather_sunny",
+        catch_weather = "sunny",
         str_desc = "Slimekoi is a level 3 slimeboi.",
         slime = None,
     ),
@@ -74,7 +74,7 @@ fish_list = [
         str_name = "Hard Boiled Turtle",
         rarity = "common",
         catch_time = None,
-        catch_weather = "ewcfg.weather_rainy",
+        catch_weather = "rainy",
         str_desc = "This radical dude doesn't take shit from anyone.",
         slime = None,
     ),
@@ -227,7 +227,7 @@ fish_list = [
         str_name = "Snakehead Trout",
         rarity = "common",
         catch_time = "night",
-        catch_weather = "ewcfg.weather_sunny",
+        catch_weather = "sunny",
         str_desc = "It has the body of a trout and the head of a snake. Heavy fuckin' metal.",
         slime = "freshwater",
     ),
@@ -290,7 +290,7 @@ fish_list = [
         str_name = "Lee",
         rarity = "uncommon",
         catch_time = None,
-        catch_weather = "ewcfg.weather_sunny",
+        catch_weather = "sunny",
         str_desc = "Oh shit, it's Lee!",
         slime = None,
     ),
@@ -326,7 +326,7 @@ fish_list = [
         str_name = "Torrentfish",
         rarity = "uncommon",
         catch_time = None,
-        catch_weather = "ewcfg.weather_foggy",
+        catch_weather = "foggy",
         str_desc = "This fish looks like it doesn't pay for ANY of its anime.",
         slime = None,
     ),
@@ -371,7 +371,7 @@ fish_list = [
         str_name = "Arctic Blue Lip",
         rarity = "uncommon",
         catch_time = None,
-        catch_weather = "ewcfg.weather_snow",
+        catch_weather = "snow",
         str_desc = "Holy shit, this fish is cold.",
         slime = None,
     ),
@@ -380,7 +380,7 @@ fish_list = [
         str_name = "Neo-Milwaukian Mitten Crab",
         rarity = "uncommon",
         catch_time = None,
-        catch_weather = "ewcfg.weather_snow",
+        catch_weather = "snow",
         str_desc = "Known for their furry claws, Mitten Crabs were considered an invasive species, but eventually people stopped caring about that because they had bigger fish to fry (metaphorically, of course).",
         slime = None,
     ),
@@ -398,7 +398,7 @@ fish_list = [
         str_name = "Nuclear Bream",
         rarity = "uncommon",
         catch_time = None,
-        catch_weather = "ewcfg.weather_sunny",
+        catch_weather = "sunny",
         str_desc = "Not to be confused with BREEAM, although this fish looks like its in the mood for assessing shit.",
         slime = None,
     ),
@@ -452,7 +452,7 @@ fish_list = [
         str_name = "Iridescent Snapper",
         rarity = "uncommon",
         catch_time = None,
-        catch_weather = "ewcfg.weather_sunny",
+        catch_weather = "sunny",
         str_desc = "Its scales change color if you shake it. Fun.",
         slime = "freshwater",
     ),
@@ -533,7 +533,7 @@ fish_list = [
         str_name = "Arijuana",
         rarity = "uncommon",
         catch_time = None,
-        catch_weather = "ewcfg.weather_sunny",
+        catch_weather = "sunny",
         str_desc = "These fish are banned from the USA.",
         slime = "saltwater",
     ),
@@ -560,7 +560,7 @@ fish_list = [
         str_name = "Galaxy Frog",
         rarity = "rare",
         catch_time = None,
-        catch_weather = "ewcfg.weather_rainy",
+        catch_weather = "rainy",
         str_desc = "It's a big fuckin' color-changing frog.",
         slime = None,
     ),
@@ -623,7 +623,7 @@ fish_list = [
         str_name = "Mertwink",
         rarity = "rare",
         catch_time = None,
-        catch_weather = "ewcfg.weather_snow",
+        catch_weather = "snow",
         str_desc = "Rejoice, horndogs.",
         slime = None,
     ),
@@ -632,7 +632,7 @@ fish_list = [
         str_name = "Grand Clam",
         rarity = "rare",
         catch_time = None,
-        catch_weather = "ewcfg.weather_snow",
+        catch_weather = "snow",
         str_desc = "This clam has a sporty look to it.",
         slime = None,
     ),
@@ -650,7 +650,7 @@ fish_list = [
         str_name = "Solar Frog",
         rarity = "rare",
         catch_time = "day",
-        catch_weather = "ewcfg.weather_sunny",
+        catch_weather = "sunny",
         str_desc = "Don't stare at it!",
         slime = None,
     ),
@@ -668,7 +668,7 @@ fish_list = [
         str_name = "Lunar Frog",
         rarity = "rare",
         catch_time = "night",
-        catch_weather = "ewcfg.weather_sunny",
+        catch_weather = "sunny",
         str_desc = "It's said to control the waves of the Slime Sea.",
         slime = None,
     ),
@@ -677,7 +677,7 @@ fish_list = [
         str_name = "Angerfish",
         rarity = "rare",
         catch_time = None,
-        catch_weather = "ewcfg.weather_sunny",
+        catch_weather = "sunny",
         str_desc = "It doesn't look very happy to be here.",
         slime = "freshwater",
     ),
@@ -704,7 +704,7 @@ fish_list = [
         str_name = "Stunfisk",
         rarity = "rare",
         catch_time = None,
-        catch_weather = "ewcfg.weather_rainy",
+        catch_weather = "rainy",
         str_desc = "Its hide is so tough it can be stepped on by a pink whale without being injured.",
         slime = "freshwater",
     ),
@@ -713,7 +713,7 @@ fish_list = [
         str_name = "Relicanth",
         rarity = "rare",
         catch_time = None,
-        catch_weather = "ewcfg.weather_rainy",
+        catch_weather = "rainy",
         str_desc = "It doesn't have teeth.",
         slime = "saltwater",
     ),
@@ -767,7 +767,7 @@ fish_list = [
         str_name = "Angler Shark",
         rarity = "rare",
         catch_time = "night",
-        catch_weather = "ewcfg.weather_foggy",
+        catch_weather = "foggy",
         str_desc = "It has a little poudrin on its head.",
         slime = "saltwater",
     ),
@@ -803,7 +803,7 @@ fish_list = [
         str_name = "Universe Frog",
         rarity = "promo",
         catch_time = None,
-        catch_weather = "ewcfg.weather_sunny",
+        catch_weather = "sunny",
         str_desc = "It's a huge fuckin' color-changing frog.",
         slime = None,
     ),
@@ -812,7 +812,7 @@ fish_list = [
         str_name = "Regiarapaima",
         rarity = "promo",
         catch_time = None,
-        catch_weather = "ewcfg.weather_rainy",
+        catch_weather = "rainy",
         str_desc = "Regigigas sends his regards.",
         slime = None,
     ),
@@ -848,7 +848,7 @@ fish_list = [
         str_name = "Bathyphysahead Shark",
         rarity = "promo",
         catch_time = None,
-        catch_weather = "ewcfg.weather_foggy",
+        catch_weather = "foggy",
         str_desc = "This one looks fucking terrifying. I'm serious",
         slime = "saltwater",
     ),
@@ -1016,6 +1016,9 @@ rare_fish = []
 promo_fish = []
 
 rainy_fish = []
+sunny_fish = []
+foggy_fish = []
+snow_fish = []
 night_fish = []
 day_fish = []
 
@@ -1053,6 +1056,12 @@ for fish in fish_list:
     rarity_to_list[fish.rarity].append(fish.id_fish)
     if fish.catch_weather == "rainy":
         rainy_fish.append(fish.id_fish)
+    elif fish.catch_weather == "sunny":
+        sunny_fish.append(fish.id_fish)
+    elif fish.catch_weather == "foggy":
+        foggy_fish.append(fish.id_fish)
+    elif fish.catch_weather == "snow":
+        snow_fish.append(fish.id_fish)
     if fish.catch_time == "night":
         night_fish.append(fish.id_fish)
     elif fish.catch_time == "day":
