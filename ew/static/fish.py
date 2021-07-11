@@ -1014,6 +1014,7 @@ common_fish = []
 uncommon_fish = []
 rare_fish = []
 promo_fish = []
+secret_fish = []
 
 rainy_fish = []
 sunny_fish = []
@@ -1035,14 +1036,16 @@ rarity_to_reward = {
     "common": 1,
     "uncommon": 2,
     "rare": 3,
-    "promo": 4
+    "promo": 4,
+    "secret": 8,
 }
 
 rarity_to_list = {
     "common": common_fish,
     "uncommon": uncommon_fish,
     "rare": rare_fish,
-    "promo": promo_fish
+    "promo": promo_fish,
+    "secret": secret_fish,
 }
 
 # A list of fish names.
