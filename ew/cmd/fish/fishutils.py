@@ -50,7 +50,7 @@ fishing_counter = 0
 
 
 # Randomly generates a fish.
-def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None):
+def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_unlocked = False):
     fish_pool = []
 
     rarity_number = random.randint(0, 100)
@@ -122,6 +122,11 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None):
     # Get fucked
     if fisher.pier.id_poi == ewcfg.poi_id_juviesrow_pier:
         fish = 'plebefish'
+
+    #TODO you can unlock the secret fish by catching all the other ones
+    # secret fish
+    if secret_unlocked and random.randint(0, 1000) == 69:
+        fish = 'mermaid'
 
     return fish
 
