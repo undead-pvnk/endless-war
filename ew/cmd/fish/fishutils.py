@@ -100,6 +100,12 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None):
 
     if market_data.weather != "rainy":
         fish_pool = [fish for fish in fish_pool if fish not in static_fish.rainy_fish]
+    if market_data.weather != "sunny":
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.sunny_fish]
+    if market_data.weather != "foggy":
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.foggy_fish]
+    if market_data.weather != "snow":
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.snow_fish]
 
     if 5 < market_data.clock < 20:
         fish_pool = [fish for fish in fish_pool if fish not in static_fish.night_fish]
