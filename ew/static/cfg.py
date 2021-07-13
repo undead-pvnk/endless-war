@@ -1985,6 +1985,18 @@ emote_delete_tweet = emote_blank
 # Slime twitter verified checkmark
 emote_verified = "<:slime_checkmark:797234128398319626>"
 
+# Emotes for !thrash and !dab variants
+emote_benkart = "<a:benkart:644520407734550529>"
+emote_munchykart = "<a:munchykart:644520408002854913>"
+emote_taasenchamp = "<:TaasenChamp:804369420583567392>"
+emote_freaker = "<a:FREAKER:638902310814220296>"
+emote_hellaben = "<:hellaben:431418525530456064>"
+emote_sweetmunch = "<:sweetmunch:431418525593108490>"
+emote_phantomhorn = "<:phantomhorn:431282111534858244>"
+emote_strawberrymilk = "<:strawberrymilk:431282128421126144>"
+emote_dab = "<a:dab:805341290220093450>"
+emote_thrash = "<a:thrash:805341344331202620>"
+
 # mining types
 mining_type_minesweeper = "minesweeper"
 mining_type_pokemine = "pokemine"
