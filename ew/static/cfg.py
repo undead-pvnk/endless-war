@@ -5311,8 +5311,8 @@ dance_responses = [
     "{} does a triple backflip! Hot diggedy!",
     "{} performs a double Cartwheel! Not really a dance move, but we'll take it!",
     "{} starts a Conga line! The party's over here!",
-    "{} does a moonwalk! They're smooth as heck!",
-    "{} does the robot! They manage to pull it off in a way that doesn't seem totally autistic!",
+    "{} does a moonwalk! They're smooth as heck! https://en.wikipedia.org/wiki/Moonwalk_(dance)",
+    "{} does the robot! They manage to pull it off in a way that doesn't seem totally idiotic!",
     "{} does the carlton! It's anything BUT unusual!",
     "{} starts tap dancing! They really start puttin' on the ritz for sure!",
     "{} pumps their fist in the air over and over!",
@@ -5325,6 +5325,13 @@ dance_responses = [
     "{} gets the urge to !thrash, but holds back with all their might.",
     "{} just kind of stands there, awkwardly. What did you expect?",
     "{} makes a complete fool of themselves. Everyone gets secondhand embarrassment...",
+    "{} does the Renegade! https://www.youtube.com/watch?v=p8OctG2KWX0",
+    "{} does the Say So! https://www.youtube.com/watch?v=vXqcKCv8U78",
+    "{} does the Cannibal! https://www.youtube.com/watch?v=bn17Hr_EE9A",
+    "{} does the Good 4 U! https://www.youtube.com/watch?v=Zxcu_3hRq0E",
+    "{} does the Build a Bitch! https://www.youtube.com/watch?v=VIKktIQcx-A",
+    "{} does the Lock It! https://www.youtube.com/watch?v=0Mu9jJWx2Ts",
+    "{} does the WAP! https://www.youtube.com/watch?v=x69gQVuReVk"
 ]
 
 # links to SlimeCorp propaganda
