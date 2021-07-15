@@ -52,6 +52,10 @@ cmd_map = {
     # !divorce
     cfg.cmd_divorce: wepcmds.divorce,
 
+    # !object to a marriage
+    cfg.cmd_object: wepcmds.object,
+    cfg.cmd_object_alt1: wepcmds.object,
+
     # combat commands
     cfg.cmd_taunt: wepcmds.taunt,
     cfg.cmd_aim: wepcmds.aim,
