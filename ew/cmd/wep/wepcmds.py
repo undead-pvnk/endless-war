@@ -1343,23 +1343,41 @@ async def divorce(cmd):
             response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-        # Unpreform the ceremony
-        response = "You decide it’s finally time to end the frankly obviously retarded farce that is your marriage with your {}. Things were good at first, you both wanted the same things out of life. But, that was then and this is now. You reflect briefly on your myriad of woes; the constant bickering, the mundanity of your everyday routine, the total lack of communication. You’re a slave. But, a slave you will be no longer! You know what you must do." \
-                   "\nYou approach the Dojo Master yet again, and explain to him your troubles. He solemnly nods along to every beat of your explanation. Luckily, he has a quick solution. He rips apart the marriage paperwork he forged last flavor text, and just like that you’re divorced from {}. It receives half of your SlimeCoin in the settlement, a small price to pay for your freedom. You hand over what used to be your most beloved possession and partner to the old man, probably to be pawned off to whatever bumfuck juvie waddles into the Dojo next. You don’t care, you just don’t want it in your data. " \
-                   "So, yeah. You’re divorced. Damn, that sucks.".format(weapon.str_weapon, weapon_name)
+        response = "Are you sure you want to divorce {}? The Dojo Master will take back weapon after the proceedings and it will be gone. **Forever**. Oh yeah, and your slimecoin will probably be halved in the divorce courts.\n**!accept to continue, or !refuse to back out**".format(weapon.str_weapon)
+        await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+        try:
+            accepted = False
+            message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and
+                                                                                             message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
-        # You divorce your weapon, discard it, lose it's rank, and loose half your SlimeCoin in the aftermath.
-        user_data.weaponmarried = False
-        user_data.weapon = -1
-        ewutils.weaponskills_set(member=cmd.message.author, weapon=weapon_item.item_props.get("weapon_type"), weaponskill=0)
+            if message != None:
+                if message.content.lower() == ewcfg.cmd_accept:
+                    accepted = True
+                if message.content.lower() == ewcfg.cmd_refuse:
+                    accepted = False
+        except:
+            accepted = False
+        
+        if not accepted:
+            response = "You hastily decide that maybe this dumpster fire of a relationship is worth saving after all. Probably. Maybe."
+        else:
+            # Unpreform the ceremony
+            response = "You decide it’s finally time to end the frankly obviously retarded farce that is your marriage with your {}. Things were good at first, you both wanted the same things out of life. But, that was then and this is now. You reflect briefly on your myriad of woes; the constant bickering, the mundanity of your everyday routine, the total lack of communication. You’re a slave. But, a slave you will be no longer! You know what you must do." \
+                        "\nYou approach the Dojo Master yet again, and explain to him your troubles. He solemnly nods along to every beat of your explanation. Luckily, he has a quick solution. He rips apart the marriage paperwork he forged last flavor text, and just like that you’re divorced from {}. It receives half of your SlimeCoin in the settlement, a small price to pay for your freedom. You hand over what used to be your most beloved possession and partner to the old man, probably to be pawned off to whatever bumfuck juvie waddles into the Dojo next. You don’t care, you just don’t want it in your data. " \
+                        "So, yeah. You’re divorced. Damn, that sucks.".format(weapon.str_weapon, weapon_name)
 
-        fee = (user_data.slimecoin / 2)
-        user_data.change_slimecoin(n=-fee, coinsource=ewcfg.coinsource_revival)
+            # You divorce your weapon, discard it, lose it's rank, and loose half your SlimeCoin in the aftermath.
+            user_data.weaponmarried = False
+            user_data.weapon = -1
+            ewutils.weaponskills_set(member=cmd.message.author, weapon=weapon_item.item_props.get("weapon_type"), weaponskill=0)
 
-        user_data.persist()
+            fee = (user_data.slimecoin / 2)
+            user_data.change_slimecoin(n=-fee, coinsource=ewcfg.coinsource_revival)
 
-        # delete weapon item
-        bknd_item.item_delete(id_item=weapon_item.id_item)
+            user_data.persist()
+
+            # delete weapon item
+            bknd_item.item_delete(id_item=weapon_item.id_item)
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
