@@ -3558,6 +3558,8 @@ mutation_id_amnesia = "amnesia"
 
 mutation_milestones = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
 
+bingeeater_cap = 5
+
 quadrant_sloshed = "flushed"
 quadrant_roseate = "pale"
 quadrant_violacious = "caliginous"
