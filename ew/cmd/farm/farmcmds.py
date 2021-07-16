@@ -253,7 +253,10 @@ async def reap(cmd):
                     unearthed_item_chance = 50 / ewcfg.unearthed_item_rarity  # 1 in 30 chance
 
                     if ewcfg.mutation_id_lucky in mutations or ewcfg.cosmeticAbility_id_lucky in cosmetic_abilites:
-                        unearthed_item_chance *= 1.33
+                        unearthed_item_chance *= 1.33              # 1 in 22.5 chance
+                    
+                    if has_tool and weapon.id_weapon == ewcfg.weapon_id_shovel:   # 1 in 2 chance (~2 in 3 chance with Lucky)
+                        unearthed_item_chance *= 15
 
                     if random.random() < unearthed_item_chance:
                         unearthed_item = True
