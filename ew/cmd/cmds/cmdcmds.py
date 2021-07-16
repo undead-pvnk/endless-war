@@ -1949,7 +1949,11 @@ async def pray(cmd):
 
 
 async def check_mastery(cmd):
-    message = "\nYou close your eyes for a moment, recalling your masteries. \n"
+    user_data = EwUser(member=cmd.message.author)
+    weapon_item = EwItem(user_data.weapon)
+    equipped_type = weapon_item.item_props.get("weapon_type")
+
+    message = "\nYou close your eyes for a moment, recalling your masteries: \n"
     if cmd.mentions_count > 0:
         response = "You can only recall your own weapon masteries!"
     else:
@@ -1959,10 +1963,10 @@ async def check_mastery(cmd):
             master_weapon_response = (static_weapons.weapon_map[skill]).str_weaponmaster_self + '\n'
             if master_weapon_response == "\n":
                 continue
-            # Only print masteries at 1 or above
+            # Prints masteries above the mastery threshold as "master" skills, whereas those below are "rookie" skills
             if wepskills[skill] >= 5:
                 message += master_weapon_response.format(rank=wepskills[skill] - 4, title="master")
-            if wepskills[skill] < 5:
+            if wepskills[skill] < 5 and (wepskills[skill] > 0 or skill == equipped_type):
                 message += master_weapon_response.format(rank=wepskills[skill], title="rookie")
         response = message
 
