@@ -975,7 +975,7 @@ fish_list = [
         rarity = "rare",
         catch_time = None,
         catch_weather = None,
-        str_desc = "Despite its seemingly young age",
+        str_desc = "Despite its seemingly young age, this eel has seen many eons pass. Treat it with respect.",
         slime = "void",
     ),
     EwFish(
