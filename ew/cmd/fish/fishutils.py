@@ -98,6 +98,7 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_
     else:
         fish_pool.extend(static_fish.rarity_to_list[rarity])
 
+    # Weather exclusive fish
     if market_data.weather != "rainy":
         fish_pool = [fish for fish in fish_pool if fish not in static_fish.rainy_fish]
     if market_data.weather != "sunny":
@@ -107,6 +108,7 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_
     if market_data.weather != "snow":
         fish_pool = [fish for fish in fish_pool if fish not in static_fish.snow_fish]
 
+    # Time exclusive fish
     if 5 < market_data.clock < 20:
         fish_pool = [fish for fish in fish_pool if fish not in static_fish.night_fish]
     elif market_data.clock < 8 or market_data.clock > 17:
@@ -116,8 +118,15 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_
             if static_fish.fish_map[fish].catch_time != None:
                 fish_pool.remove(fish)
 
-    # Filter out fish from other pier types
-    fish = random.choice([fish for fish in fish_pool if static_fish.fish_map[fish].slime == fisher.pier.pier_type])
+    # Pier type exclusive fish
+    if fisher.pier.pier_type == "freshwater":
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.salt_fish and fish not in static_fish.void_fish]
+    elif fisher.pier.pier_type == "saltwater":
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.fresh_fish and fish not in static_fish.void_fish]
+    elif fisher.pier.pier_type == "void":
+        fish_pool = [fish for fish in fish_pool if fish in static_fish.void_fish]
+
+    fish = random.choice(fish_pool)
 
     # Get fucked
     if fisher.pier.id_poi == ewcfg.poi_id_juviesrow_pier:

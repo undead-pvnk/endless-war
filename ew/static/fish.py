@@ -1023,6 +1023,10 @@ snow_fish = []
 night_fish = []
 day_fish = []
 
+salt_fish = []
+fresh_fish = []
+void_fish = []
+
 size_to_reward = {
     "miniscule": 1,
     "small": 2,
@@ -1069,5 +1073,11 @@ for fish in fish_list:
         night_fish.append(fish.id_fish)
     elif fish.catch_time == "day":
         day_fish.append(fish.id_fish)
+    if fish.slime == "freshwater":
+        fresh_fish.append(fish.id_fish)
+    elif fish.slime == "saltwater":
+        salt_fish.append(fish.id_fish)
+    elif fish.slime == "void":
+        void_fish.append(fish.id_fish)
     for alias in fish.alias:
         fish_map[alias] = fish
