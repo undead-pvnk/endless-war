@@ -190,10 +190,10 @@ async def chemo(cmd):
             finalprice += static_mutations.mutations_map.get(mutation).tier * 5000
 
         if finalprice > user_data.slimes:
-            response = '"We\'re not selling gumballs here. It\'s chemotherapy. It\'ll cost at least {:,} slime, \'ya idjit!"'.format(finalprice)
+            response = '"We\'re not selling gumballs here. It\'s chemotherapy. It\'ll cost at least {:,} slime, ya idjit!"'.format(finalprice)
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         else:
-            response = "\"Sure you got the slime for that, whelp? It's {:,}.\"\n**Accept** or **refuse**?".format(finalprice)
+            response = "\"Sure you got the slime for that, whelp? It's {:,}.\"\n**Accept** or **refuse?**".format(finalprice)
             await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             try:
                 accepted = False
@@ -234,7 +234,7 @@ async def chemo(cmd):
                         except:
                             ewutils.logMsg("Failed to clear mutations for user {}.".format(user_data.id_user))
                 user_data.persist()
-                response = '"Everything, eh? All right then. This might hurt a lottle!" Auntie Dusttrap takes a specialized shop vac and sucks the slime out of you. While you\'re reeling in slimeless existential dread, she runs it through a filtration process that gets rid of the carcinogens that cause mutation. She grabs the now-purified canister and haphazardly dumps it back into you. You feel pure, energized, and ready to dirty up your slime some more!'
+                response = '"Everything, eh? All right then. This might hurt a lottle!" Auntie Dusttrap takes a specialized shop vac and sucks the slime out of you. While you\'re reeling in slimeless existential dread, she runs it through a filtration process that gets rid of the carcinogens that cause mutation. She grabs the now purified canister and haphazardly dumps it back into you. You feel pure, energized, and ready to dirty up your slime some more!'
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     else:
         target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -248,10 +248,10 @@ async def chemo(cmd):
             response = '"Oy vey, another hypochondriac. You don\'t have that mutation, so I can\'t remove it."'
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         elif static_mutations.mutations_map.get(target).tier * 5000 > user_data.slimes:
-            response = '"We\'re not selling gumballs here. It\'s chemotherapy. It\'ll cost at least {} slime, \'ya idjit!"'.format(static_mutations.mutations_map.get(target).tier * 5000)
+            response = '"We\'re not selling gumballs here. It\'s chemotherapy. It\'ll cost at least {} slime, ya idjit!"'.format(static_mutations.mutations_map.get(target).tier * 5000)
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         elif mutation_obj.artificial == 1:
-            response = '"Hey, didn\'t I do that to \'ya? Well no refunds!"\n\nGuess you can\'t get rid of artificial mutations with chemo.'
+            response = '"Hey, didn\'t I do that to ya? Well no refunds!"\n\nGuess you can\'t get rid of artificial mutations with chemo.'
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         else:
             price = static_mutations.mutations_map.get(target).tier * 5000
@@ -270,7 +270,7 @@ async def chemo(cmd):
                 ))
             except:
                 ewutils.logMsg("Failed to clear mutations for user {}.".format(user_data.id_user))
-            response = '"Alright, dearie, let\'s get you purged." You enter a dingy-looking operating room, with slime strewn all over the floor. Dr. Dusttrap pulls out a needle the size of your bicep and injects it into odd places on your body. After a few minutes of this, you get fatigued and go under.\n\n You wake up and {} is gone. Nice! \nMutation Levels Added:{}/{}'.format(
+            response = '"Alright, dearie, let\'s get you purged." You enter a dingy looking operating room, with slime strewn all over the floor. Dr. Dusttrap pulls out a needle the size of your bicep and injects into odd places on your body. After a few minutes of this, you get fatigued and go under.\n\n You wake up and {} is gone. Nice! \nMutation Levels Added:{}/{}'.format(
                 static_mutations.mutations_map.get(target).str_name, user_data.get_mutation_level(), min(user_data.slimelevel, 50))
             await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
@@ -292,7 +292,7 @@ async def graft(cmd):
         response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     elif user_data.life_state == ewcfg.life_state_corpse:
-        response = '"You get out of here. We don\'t serve your kind." \n\n Auntie Dusttrap threatingly flails a jar of cole slaw at you. Looks like you need a body to mutate a body.'
+        response = '"You get out of here, dirty nega. We don\'t serve your kind." \n\n Auntie Dusttrap threatingly flails a jar of cole slaw at you. Looks like you need a body to mutate a body.'
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     elif len(cmd.tokens) <= 1:
         response = '"What, just anything? I love a good improv surgery! I had to leave town the last one I did though, so you\'ll have to pick an actual surgical procedure. Sorry, sonny."'
@@ -313,16 +313,16 @@ async def graft(cmd):
         response = '"Your body\'s already full of mutations. Your sentient tumors will probably start bitin\' once I take out my scalpel."\n\nLevel:{}/50\nMutation Levels Added:{}/{}'.format(user_data.slimelevel, user_data.get_mutation_level(), min(user_data.slimelevel, 50))
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     elif static_mutations.mutations_map.get(target).tier * 10000 > user_data.slimes:
-        response = '"We\'re not selling gumballs here. It\'s cosmetic surgery. It\'ll cost at least {} slime, \'ya idjit!"'.format(static_mutations.mutations_map.get(target).tier * 10000)
+        response = '"We\'re not selling gumballs here. It\'s cosmetic surgery. It\'ll cost at least {} slime, ya idjit!"'.format(static_mutations.mutations_map.get(target).tier * 10000)
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     elif (target == ewcfg.mutation_id_davyjoneskeister and ewcfg.mutation_id_onemansjunk in mutations) or (target == ewcfg.mutation_id_onemansjunk and ewcfg.mutation_id_davyjoneskeister in mutations):
-        response = '"Well whaddya need that for? \'Ya got just the opposite! It ain\'t pretty when they clash, kid."'
+        response = '"Well waddya need that for? Ya got just the opposite! It ain\'t pretty when they clash kid."'
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     elif target == ewcfg.mutation_id_airlock and (ewcfg.mutation_id_whitenationalist in mutations or ewcfg.mutation_id_lightasafeather in mutations):
-        response = '"Nope, you already have that mutation, or half of it anyway. They dont multiply, y\'know."'
+        response = '"Nope, you already have that mutation, or half of it anyway. They dont multiply y\'know."'
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     elif (target == ewcfg.mutation_id_whitenationalist or target == ewcfg.mutation_id_lightasafeather) and (ewcfg.mutation_id_airlock in mutations):
-        response = '"Nope, you already have that mutation. It\'s even got a little extra tacked on."'
+        response = '"Nope, you already have that mutation, its even got a little extra tacked on."'
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
     else:
         price = static_mutations.mutations_map.get(target).tier * 10000
@@ -371,7 +371,7 @@ async def preserve(cmd):
                 num = int(rigor.data)
 
             if num >= 5:
-                response = "Your body's dried up. It's lost its ability to preserve objects."
+                response = "Your body's dried up, it's lost its ability to preserve objects."
             else:
                 response = "You take the {} and embrace it with all your might. As you squeeze, it slowly but surely begins to phase inside your body. That won't get stolen anytime soon!".format(item_sought.get('name'))
                 num += 1
@@ -444,7 +444,7 @@ async def shakeoff(cmd):
                     ewcfg.mutation_id_oneeyeopen,
                     target_data.id_user
                 ))
-            response = "You search high and low for {}'s third eye, shouting a bit to give it a good scare. If it **was** stalking you it certainly isn't now.".format(cmd.mentions[0].display_name)
+            response = "You search high and low for {}'s third eye, shouting a bit to give it a good scare. If it was stalking you it certainly isn't now.".format(cmd.mentions[0].display_name)
         except:
             ewutils.logMsg("Failed to undo tracking for {}.".format(user_data.id_user))
             response = ""
@@ -583,7 +583,7 @@ async def devour(cmd):
         if (item_obj.item_type not in [ewcfg.it_cosmetic, ewcfg.it_furniture, ewcfg.it_food] and item_obj.item_props.get('id_item') != 'slimepoudrin') or item_obj.item_props.get('id_cosmetic') == 'soul':
             response = "You swallow the {} whole, but after realizing this might be a mistake, you cough it back up.".format(item_sought.get('name'))
         elif item_obj.soulbound == True:
-            response = "You attempt to consume the {}, but you realize it's soulbound and that you were about to eat your own existence. Your life flashes before your eyes, so you decide to stop.".format(item_sought.get('name'))
+            response = "You attempt to consume the {}, but you realize it's soulbound and that you were about to eat your own existnece. Your life flashes before your eyes, so you decide to stop.".format(item_sought.get('name'))
         else:
 
             str_eat = "You unhinge your gaping maw and shove the {} right down, no chewing or anything. It's about as nutritious as you'd expect.".format(item_sought.get('name'))
@@ -668,7 +668,7 @@ async def longdrop(cmd):
     if ewcfg.mutation_id_longarms not in mutations:
         response = "As if anything on you was long enough to do that."
     elif cmd.tokens_count == 1:
-        response = "You'll need for information that that. Try !longdrop <location> <item>." # DONT EVER FIX THIS IT'S SO FUCKING FUNNY
+        response = "You'll need for information that that. Try !longdrop <location> <item>."
     elif not item_sought:
         response = "You don't have that item."
     elif dest_poi == None:
@@ -713,7 +713,7 @@ async def skullbash(cmd):
             response = "Your head is too soft and malleable to do that."
         else:
             ewutils.active_restrictions[user_data.id_user] = 2
-            response = "You suck in your gut and mentally prepare to lose a few brain cells. 3...2...1...**WHACK!** Ugh. You're gonna need a minute."
+            response = "You suck in your gut and mentally prepare to lose a few brain cells. 3...2...1...WHACK! Ugh. You're gonna need a minute."
             await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
             await asyncio.sleep(600)
             ewutils.active_restrictions[user_data.id_user] = 0
@@ -790,7 +790,7 @@ async def slap(cmd):
         elif (ewutils.clenched.get(target_data.id_user) == None or ewutils.clenched.get(target_data.id_user) == 0) and (user_poi.is_subzone or user_poi.is_district):
             response = "You wind up your slappin' hand and take a swing, but {} is all relaxed and you can't get a good angle. They end up flying into the wall. Better not touch people who aren't prepared to get hit...".format(cmd.mentions[0].display_name)
         else:
-            response = "You wind up your slap. This one's gonna hurt. Steady as she goes...**WHAM**! {} is sent flying helplessly into {}!".format(cmd.mentions[0].display_name, dest_poi_obj.str_name)
+            response = "You wind up your slap. This one's gonna hurt. Steady as she goes...WHAM! {} is sent flying helplessly into {}!".format(cmd.mentions[0].display_name, dest_poi_obj.str_name)
             target_data.applyStatus(id_status=ewcfg.status_slapped_id)
             dm_response = "WHAP! {} smacked you into {}!".format(cmd.message.author.display_name, dest_poi_obj.str_name)
             target_response = "**CRAAAAAAAAAAAASH!** You arrive in {}!".format(dest_poi_obj.str_name)
