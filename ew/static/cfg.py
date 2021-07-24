@@ -3304,6 +3304,7 @@ jams_guitar = ["https://www.youtube.com/watch?v=hNRHHRjep3E&ab_channel=rtwodtwo5
 jams_maracas = ["https://www.youtube.com/watch?v=etYb-p8uhWA&ab_channel=GilvaSunner", "https://www.youtube.com/watch?v=EstIvN0_hcg&ab_channel=Cz%C5%82owiekDrzewo", "https://www.youtube.com/watch?v=l8R_OQz_BtU&ab_channel=majabsalu"]
 jams_cornet = ["https://www.youtube.com/watch?v=mPP65UcGxq0&ab_channel=Ham_", "https://www.youtube.com/watch?v=FJrUBEtoNQU&ab_channel=ropa79", "https://www.youtube.com/watch?v=KxibMBV3nFo&ab_channel=TheJazzplaylist"]
 jams_trombone = ["https://www.youtube.com/watch?v=WEWLuBB7_FE&ab_channel=mixablemusic", "https://www.youtube.com/watch?v=lqngnNy1_Cg&ab_channel=DaveYama", "https://www.youtube.com/watch?v=1ZGeYR8b-mg&ab_channel=AllThatJazzDonKaart"]
+jams_otamatone = ["https://www.youtube.com/watch?v=tADkFuime_g&ab_channel=TheRealSullyG","https://www.youtube.com/watch?v=guSESFWNrOY&ab_channel=TheRealSullyG","https://www.youtube.com/watch?v=JtOy2gf_JrA&ab_channel=TheRealSullyG","https://www.youtube.com/watch?v=2wEtVERXQWE","https://www.youtube.com/watch?v=x8hCe3j8CqU"]
 
 jam_tunes = {
     "solidpoudringuitar": jams_guitar,
@@ -3315,7 +3316,8 @@ jam_tunes = {
     "beastskindrums": jams_drums,
     "bass": jams_bass,
     "trombone": jams_trombone,
-    "cornet": jams_cornet
+    "cornet": jams_cornet,
+    "ferroslimeoidotamatone": jams_otamatone
 }
 
 howls = [

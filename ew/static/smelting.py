@@ -738,6 +738,23 @@ smelting_recipe_list = [
         products=['trombone']
     ),
     EwSmeltingRecipe(
+        id_recipe="ferroslimeoidotamatone",
+        str_name="a ferroslimeoid Otamatone",
+        alias=[
+            "otamatone",
+            "otamatone DX",
+            "ferroslimeoidotamatone"
+        ],
+        ingredients={
+            'ferroslimeoid': 1,
+            ewcfg.item_id_metallicapheads: 1,
+            ewcfg.item_id_ironingot: 1,
+            ewcfg.item_id_cute_material: 5,
+            ewcfg.item_id_aushuckstalks: 1
+        },
+        products=['ferroslimeoidotamatone']
+    ),
+    EwSmeltingRecipe(
         id_recipe="whitedye",
         str_name="a vial of White Dye",
         alias=[

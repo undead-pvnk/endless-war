@@ -3421,6 +3421,17 @@ furniture_list = [
         furn_set = "instrument",
     ),
     EwFurniture(
+        id_furniture = "ferroslimeoidotamatone",
+        str_name = "ferroidslimeoid Otamatone",
+        str_desc = "An Otamatone, powered by the metallic voice of a ferroslimeoid.",
+        rarity = "Patrician",
+        acquisition = "smelting",
+        price = 100000000,
+        furniture_place_desc = "You place your ferroslimeoid Otamatone on your shelf. The ferroslimeoid inside is a touch insulted by this, but at least it's not being eaten.",
+        furniture_look_desc = "A ferroslimeoid Otamatone hums on the shelf.",
+        furn_set = "instrument",
+    ),    
+    EwFurniture(
         id_furniture = "humanskeleton",
         str_name = "human skeleton",
         str_desc = "A hyper-realistic real-life video-game human skeleton! Scary!!!",
