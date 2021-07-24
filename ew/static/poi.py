@@ -2873,7 +2873,7 @@ poi_list = [
     ),
     EwPoi(
         id_poi = "thecountryclub",
-        alias = ['country', 'club', 'cc'],
+        alias = ['country', 'club', 'cc', 'countryclub'],
         str_name = "The Country Club",
         str_desc = "On top of a grassy hill, behind several wired/electric fences, lies Dreadford�s famous country club. The lodge itself is a huge, old wooden lodge from the 1800s, with hundreds of knick-knacks, hunting trophies, and historic photos hung up on the wall, and tacky rugs and furniture around a roaring fire in its center. Sprawling out from the club itself is the complex�s signature golf course, where all the pompous rich assholes go to waste their time and chit-chat with each other about cheating on their wives.\n\nExits into Dreadford.",
         channel = "the-country-club",
