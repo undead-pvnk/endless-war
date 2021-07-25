@@ -3850,7 +3850,7 @@ help_responses = {
 
     weapon_id_hoe: "**The Hoe** is a farming tool for sale at the Atomic Forest. It can be equipped by juvies to give a 1.5x modifier of slime gain on a !reap command.",
     weapon_id_pitchfork: "**The Pitchfork** is a farming tool for sale at the Atomic Forest. It can be equipped by juvies to multiply your crops on a !reap command by 2.",
-    weapon_id_shovel: "**The Shovel** is a farming tool for sale at the Atomic Forest. It can be equipped by juvies to increase the chance of a poudrin upon a !reap command from 1/30 to 1/2.",
+    weapon_id_shovel: "**The Shovel** is a farming tool for sale at the Atomic Forest. It can be equipped by juvies to increase the chance of a poudrin upon a !reap command from 1/30 to 1/6.",
     weapon_id_pickaxe: "**The Pickaxe** is a mining tool acquired via smelting. Equipping the pickaxe as a gangster gives you double slimegain and a 1.5x chance of unearthing slime poudrins whilst mining.",
     weapon_id_fishingrod: "**The Fishingrod** is a fishing tool acquired via smelting. When equipped and fully anointed, the fishing rod increases the chance for rare fish upon a !reel.",
     # "otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
