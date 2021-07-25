@@ -50,7 +50,7 @@ fishing_counter = 0
 
 
 # Randomly generates a fish.
-def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None):
+def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None, secret_unlocked = False):
     fish_pool = []
 
     rarity_number = random.randint(0, 100)
@@ -98,9 +98,17 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None):
     else:
         fish_pool.extend(static_fish.rarity_to_list[rarity])
 
+    # Weather exclusive fish
     if market_data.weather != "rainy":
         fish_pool = [fish for fish in fish_pool if fish not in static_fish.rainy_fish]
+    if market_data.weather != "sunny":
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.sunny_fish]
+    if market_data.weather != "foggy":
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.foggy_fish]
+    if market_data.weather != "snow":
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.snow_fish]
 
+    # Time exclusive fish
     if 5 < market_data.clock < 20:
         fish_pool = [fish for fish in fish_pool if fish not in static_fish.night_fish]
     elif market_data.clock < 8 or market_data.clock > 17:
@@ -110,12 +118,24 @@ def gen_fish(market_data, fisher, has_fishingrod = False, rarity = None):
             if static_fish.fish_map[fish].catch_time != None:
                 fish_pool.remove(fish)
 
-    # Filter out fish from other pier types
-    fish = random.choice([fish for fish in fish_pool if static_fish.fish_map[fish].slime == fisher.pier.pier_type])
+    # Pier type exclusive fish
+    if fisher.pier.pier_type == "freshwater":
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.salt_fish and fish not in static_fish.void_fish]
+    elif fisher.pier.pier_type == "saltwater":
+        fish_pool = [fish for fish in fish_pool if fish not in static_fish.fresh_fish and fish not in static_fish.void_fish]
+    elif fisher.pier.pier_type == "void":
+        fish_pool = [fish for fish in fish_pool if fish in static_fish.void_fish]
+
+    fish = random.choice(fish_pool)
 
     # Get fucked
     if fisher.pier.id_poi == ewcfg.poi_id_juviesrow_pier:
         fish = 'plebefish'
+
+    #TODO you can unlock the secret fish by catching all the other ones
+    # secret fish
+    if secret_unlocked and random.randint(0, 1000) == 69:
+        fish = 'mermaid'
 
     return fish
 
