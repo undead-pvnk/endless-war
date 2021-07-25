@@ -259,7 +259,7 @@ async def reap(cmd):
                         unearthed_item_chance *= 1.33   # 1 in ~17 chance with both
 
                     if has_tool and weapon.id_weapon == ewcfg.weapon_id_shovel:   # 1 in 2 chance (~2 in 3 chance with Lucky, ~10 in 11 chance with both Luckys)
-                        unearthed_item_chance *= 15
+                        unearthed_item_chance *= 5
 
                     if random.random() < unearthed_item_chance:
                         unearthed_item = True
