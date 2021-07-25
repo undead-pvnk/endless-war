@@ -16,11 +16,13 @@ from ew.static import items as static_items
 from ew.static import poi as poi_static
 from ew.static import vendors
 from ew.static import weapons as static_weapons
+from ew.static import debugr as static_relic
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as itm_utils
 from ew.utils import loop as loop_utils
 from ew.utils import poi as poi_utils
+from ew.utils import rutils as relic_utils
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
 
@@ -94,6 +96,10 @@ async def menu(cmd):
                 cosmetic_item = static_cosmetics.cosmetic_map.get(item_name)
                 furniture_item = static_items.furniture_map.get(item_name)
                 weapon_item = static_weapons.weapon_map.get(item_name)
+                relic_item = static_relic.relic_map.get(item_name)
+
+                if relic_utils.canCreateRelic(item_name, cmd.guild.id) == None:
+                    relic_item = None
 
                 # increase profits for the stock market
                 stock_data = None
@@ -117,6 +123,9 @@ async def menu(cmd):
 
                 if weapon_item:
                     value = weapon_item.price
+
+                if relic_item:
+                    value = relic_item.price
 
                 if stock_data != None:
                     value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
@@ -271,6 +280,14 @@ async def order(cmd):
             if item != None:
                 item_id = item.id_weapon
                 name = item.str_weapon
+
+        if item == None:
+            item = static_relic.relic_map.get(value)
+            item_type = ewcfg.it_relic
+            if item != None and relic_utils.canCreateRelic(item.id_relic, cmd.guild.id):
+                item_id = item.id_relic
+                name = item.str_relic
+
 
         if item != None:
             item_type = item.item_type

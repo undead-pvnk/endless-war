@@ -266,7 +266,7 @@ def item_create(
     elif item_type == ewcfg.it_furniture:
         template_id = item_props.get("id_furniture ", "bad furniture id")
     elif item_type == ewcfg.it_relic:
-        if ewrelicutils.canCreateRelic(item_props.get('id_relic'), id_server) != 1:
+        if ewrelicutils.canCreateRelic(item_props.get('id_relic'), id_server, 1) != 1:
             badRelic = 1
         template_id = item_props.get("id_relic", "bad relic id")
     elif item_type == ewcfg.it_book:

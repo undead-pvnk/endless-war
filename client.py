@@ -45,6 +45,7 @@ import ew.utils.transport as transport_utils
 import ew.utils.weather as bknd_weather
 from ew.utils.combat import EwUser
 from ew.utils.district import EwDistrict
+import ew.utils.rutils as relic_utils
 
 import ew.backend.ads as bknd_ads
 import ew.backend.core as bknd_core
@@ -70,6 +71,7 @@ import ew.static.items as static_items
 import ew.static.poi as poi_static
 import ew.static.vendors as vendors
 import ew.static.weather as weather_static
+import ew.static.rstatic as static_relic
 
 
 import ew.static.cfg as ewcfg
@@ -202,6 +204,7 @@ async def on_ready():
         neighbor_ids = []
         # if poi.coord != None:
         if len(poi.neighbors.keys()) > 0:
+            print(poi.id_poi)
             neighbors = move_utils.path_to(poi_start=poi.id_poi, user_data=fake_observer)
         # elif poi.id_poi == ewcfg.poi_id_thesewers:
         #	neighbors = poi_static.poi_list
@@ -437,12 +440,17 @@ async def on_ready():
 
                     if market_data.clock == 6:
                         # Update the list of available bazaar items by clearing the current list and adding the new items
+
+
                         market_data.bazaar_wares.clear()
+
+
 
                         bazaar_foods = []
                         bazaar_cosmetics = []
                         bazaar_general_items = []
                         bazaar_furniture = []
+                        bazaar_relics = []
 
                         for item in vendors.vendor_inv.get(ewcfg.vendor_bazaar):
                             if item in static_items.item_names:
@@ -456,6 +464,13 @@ async def on_ready():
 
                             elif item in static_items.furniture_names:
                                 bazaar_furniture.append(item)
+
+                            elif item in static_relic.relic_names and relic_utils.canCreateRelic(item=item, id_server=server.id) is not None:
+                                bazaar_furniture.append(item)
+
+                        if ewdebug.bazaarTurnout() == 1:
+                            market_data.bazaar_wares['relic1'] = random.choice(bazaar_relics)
+
 
                         market_data.bazaar_wares['slimecorp1'] = ewcfg.weapon_id_umbrella
                         market_data.bazaar_wares['slimecorp2'] = ewcfg.cosmetic_id_raincoat
@@ -896,7 +911,8 @@ async def on_message(message):
 
         if user_data.poi in ewdebug.act_pois.keys():
             if content_tolower in ewdebug.act_pois.get(user_data.poi).keys():
-                return await ewdebug.act(cmd_obj, user_data.poi, content_tolower)
+                function = ewdebug.act_pois.get(user_data.poi).get(content_tolower)
+                return await function(cmd=cmd_obj)
 
         if user_data.poi in poi_static.tutorial_pois:
             return await ewdungeons.tutorial_cmd(cmd_obj)

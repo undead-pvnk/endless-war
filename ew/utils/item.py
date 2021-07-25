@@ -7,6 +7,7 @@ from . import frontend as fe_utils
 from . import stats as ewstats
 from ..backend import core as bknd_core
 from ..backend import item as bknd_item
+from . import rutils as relic_utils
 from ..backend.item import EwItem
 from ..backend.player import EwPlayer
 from ..backend.user import EwUserBase as EwUser
@@ -14,6 +15,8 @@ from ..static import cfg as ewcfg
 from ..static import hue as hue_static
 from ..static import items as static_items
 from ..static import weapons as static_weapons
+from ..static import rstatic as relic_static
+
 
 """
     Drop some of a player's non-soulbound items into their district.
@@ -497,7 +500,8 @@ def find_item_all(item_search = None, id_user = None, id_server = None, item_typ
         'id_item',
         'id_food',
         'id_cosmetic',
-        'id_furniture'
+        'id_furniture',
+        'id_relic'
     ]
 
     if search_names == True:
@@ -508,7 +512,8 @@ def find_item_all(item_search = None, id_user = None, id_server = None, item_typ
             'title',
             'weapon_type',
             'weapon_name',
-            'item_name'
+            'item_name',
+            'id_relic'
         ]
 
     if item_search:
@@ -575,11 +580,16 @@ def unwrap(id_user = None, id_server = None, item = None):
     response = "You eagerly rip open a pack of Secreatures™ trading cards!!"
     bknd_item.item_delete(item.id_item)
     slimexodia = False
-
+    new_card_chance = False
     slimexodia_chance = 1 / 1000
+
+    new_card_chance = 1/500
 
     if random.random() < slimexodia_chance:
         slimexodia = True
+
+    if random.random() < new_card_chance and relic_utils.canCreateRelic(item=relic_static.debug3, id_server=id_server):
+        new_card_chance = True
 
     if slimexodia == True:
         # If there are multiple possible products, randomly select one.
@@ -596,7 +606,19 @@ def unwrap(id_user = None, id_server = None, item = None):
             id_server=id_server.id,
             item_props=item_props
         )
+    elif new_card_chance == True:
+        item_map_obj = relic_static.relic_map.get('petrifiedsecreaturescard')
 
+        response += "  Huh? This one's sorta rigid. Heavy, too. You shrug and open it up anyway. Turns out this pack has been at the back of the storefront for so long that it petrified itself. \n\nYou got the Petrified Secreatures Card!"
+
+        item_props = gen_item_props(item_map_obj)
+
+        bknd_item.item_create(
+            item_type=item_map_obj.item_type,
+            id_user=id_user.id,
+            id_server=id_server.id,
+            item_props=item_props
+        )
     else:
         response += " But… it’s mostly just repeats and late edition cards. You toss them away."
 

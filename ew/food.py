@@ -15,6 +15,7 @@ from .static import items as static_items
 from .static import poi as poi_static
 from .static import vendors
 from .static import weapons as static_weapons
+from .static import debugr as static_relic
 from .utils import core as ewutils
 from .utils import frontend as fe_utils
 from .utils import item as itm_utils
@@ -269,6 +270,13 @@ async def order(cmd):
 				name = item.str_name
 				if item_id in static_items.furniture_pony:
 					item.vendors = [ewcfg.vendor_bazaar]
+
+		if item == None:
+			item = static_relic.relic_map.get(value)
+			item_type = ewcfg.it_relic
+			if item != None:
+				item_id = item.id_relic
+				name = item.str_name
 
 		if item == None:
 			item = static_weapons.weapon_map.get(value)

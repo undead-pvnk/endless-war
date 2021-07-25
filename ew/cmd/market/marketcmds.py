@@ -386,8 +386,6 @@ async def museum_donate(cmd):
 
     if item_sought:
         item_obj = EwItem(id_item=item_sought.get("id_item"))
-        print(ewcfg.it_relic)
-        print(item_obj.item_type)
         if item_obj.item_type == ewcfg.it_relic or item_obj.item_props.get('relic') is not None:
             response = await relic_donate(item_obj.id_item, cmd)
         elif item_obj.item_props.get('acquisition') == ewcfg.acquisition_fishing:

@@ -22,6 +22,7 @@ from ew.static import hue as hue_static
 from ew.static import items as static_items
 from ew.static import poi as poi_static
 from ew.static import weapons as static_weapons
+from ew.static import rstatic as static_relic
 from ew.utils import apt as apt_utils
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
@@ -251,6 +252,9 @@ async def inventory_print(cmd):
 
         if 'food' in lower_token_list:
             item_type = ewcfg.it_food
+
+        if 'relic' in lower_token_list:
+            item_type = ewcfg.it_relic
 
         if 'search' in lower_token_list:
             stacking = False

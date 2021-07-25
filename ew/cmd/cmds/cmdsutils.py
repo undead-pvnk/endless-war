@@ -36,7 +36,7 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
     if item_obj.item_props.get('id_furniture') == 'sord':
         response = "You toss the sord off the cliff, but for whatever reason, the damn thing won't go down. It just keeps going up and up, as though gravity itself blocked this piece of shit jpeg artifact on Twitter. It eventually goes out of sight, where you assume it flies into the sun."
         bknd_item.item_delete(id_item=id_item)
-    elif random.randrange(500) < 125 or item_obj.item_type == ewcfg.it_questitem or item_obj.item_type == ewcfg.it_medal or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand":
+    elif random.randrange(500) < 125 or item_obj.item_type in([ewcfg.it_questitem, item_obj.item_type == ewcfg.it_medal, ewcfg.it_relic])  or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand" :
         response = "You toss the {} off the cliff. It sinks into the ooze disappointingly.".format(item_name)
         bknd_item.give_item(id_item=id_item, id_server=id_server, id_user=ewcfg.poi_id_slimesea)
 
