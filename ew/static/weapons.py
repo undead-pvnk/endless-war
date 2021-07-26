@@ -1416,7 +1416,7 @@ weapon_list = [
             "ripper",
             "motoraxe"
         ],
-        str_crit="**Critical hit!!** The jagged teeth of the chainsaw rest within {name_target}, body as the slime flies!!",
+        str_crit="**Critical hit!!** The jagged teeth of the chainsaw rest within {name_target}'s body as the slime flies!!",
         str_miss="**You missed!!** In {name_player}’s excitement and desperation neither chain nor saw hits {name_target}!",
         str_equip="You equip the chainsaw.",
         str_name="chainsaw",
@@ -1425,7 +1425,7 @@ weapon_list = [
         str_weaponmaster="They are a rank {rank} wielder of the chainsaw.",
         # str_trauma_self = "Your body runs jagged with large chunks missing and patches of skin torn up.",
         # str_trauma = "Their body runs jagged with large chunks missing and patches of skin torn up.",
-        str_kill="**REEERNREERN!!** {name_player} revs up their chainsaw and carves up {name_target}’s torso, cutting through the guts,bile,viscera, and slime; sending it all flying. They’ve been cut down to size. {emote_skull}",
+        str_kill="**REEERNREERN!!** {name_player} revs up their chainsaw and carves up {name_target}’s torso, cutting through the guts, bile, viscera, and slime, sending it all flying. They’ve been cut down to size. {emote_skull}",
         str_killdescriptor="chainsaw’d",
         str_damage="The numerous finely tooth blades tear at {name_target}’s {hitzone}!!",
         str_duel="**...** {name_player} and {name_target} clash with each other chainsaw blow for chainsaw blow like badasses.",
