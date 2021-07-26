@@ -1658,3 +1658,92 @@ async def pass_relics(id_shooter = None, id_shootee = None, id_server = None):
     for item in items:
         bknd_item.give_item(id_item = item.get('id_item'), id_server=id_server, id_user=id_shooter)
 
+
+async def create_multi(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+
+    if len(cmd.tokens) > 2:
+        number = int(cmd.tokens[1])
+        value = cmd.tokens[2]
+    else:
+        return
+
+    item_recipient = None
+    if cmd.mentions_count == 1:
+        item_recipient = cmd.mentions[0]
+    else:
+        item_recipient = cmd.message.author
+
+    # The proper usage is !createitem [item id] [recipient]. The opposite order is invalid.
+    if '<@' in value:  # Triggers if the 2nd command token is a mention
+        response = "Proper usage of !createitem: **!createitem [item id] [recipient]**."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+    item = static_items.item_map.get(value)
+
+    item_type = ewcfg.it_item
+    if item != None:
+        item_id = item.id_item
+        name = item.str_name
+
+    # Finds the item if it's an EwFood item.
+    if item == None:
+        item = static_food.food_map.get(value)
+        item_type = ewcfg.it_food
+        if item != None:
+            item_id = item.id_food
+            name = item.str_name
+
+    # Finds the item if it's an EwCosmeticItem.
+    if item == None:
+        item = cosmetics.cosmetic_map.get(value)
+        item_type = ewcfg.it_cosmetic
+        if item != None:
+            item_id = item.id_cosmetic
+            name = item.str_name
+
+    if item == None:
+        item = static_items.furniture_map.get(value)
+        item_type = ewcfg.it_furniture
+        if item != None:
+            item_id = item.id_furniture
+            name = item.str_name
+            if item_id in static_items.furniture_pony:
+                item.vendors = [ewcfg.vendor_bazaar]
+
+    if item == None:
+        item = static_weapons.weapon_map.get(value)
+        item_type = ewcfg.it_weapon
+        if item != None:
+            item_id = item.id_weapon
+            name = item.str_weapon
+
+    if item == None:
+        item = static_fish.fish_map.get(value)
+        item_type = ewcfg.it_food
+        if item != None:
+            item_id = item.id_fish
+            name = item.str_name
+
+    if item != None:
+        for x in range(number):
+            item_props = itm_utils.gen_item_props(item)
+
+            generated_item_id = bknd_item.item_create(
+                item_type=item_type,
+                id_user=item_recipient.id,
+                id_server=cmd.guild.id,
+                stack_max=-1,
+                stack_size=0,
+                item_props=item_props
+            )
+
+        response = "Created {} items **{}** for **{}**".format(number, name, item_recipient)
+    else:
+        response = "Could not find item."
+
+    await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+
+

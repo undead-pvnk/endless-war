@@ -121,37 +121,14 @@ def gen_data_text(
     else:
 
         # return somebody's score
-        race_suffix = race_prefix = ""
-        if user_data.race == ewcfg.races["humanoid"]:
-            race_prefix = "lame-ass "
-        elif user_data.race == ewcfg.races["amphibian"]:
-            race_prefix = "slippery "
-            race_suffix = "amphibious "
-        elif user_data.race == ewcfg.races["food"]:
-            race_suffix = "edible "
-        elif user_data.race == ewcfg.races["skeleton"]:
-            race_suffix = "skele"
-        elif user_data.race == ewcfg.races["robot"]:
-            race_prefix = "silicon-based "
-            race_suffix = "robo"
-        elif user_data.race == ewcfg.races["furry"]:
-            race_prefix = "furry "
-        elif user_data.race == ewcfg.races["scalie"]:
-            race_prefix = "scaly "
-        elif user_data.race == ewcfg.races["slime-derived"]:
-            race_prefix = "goopy "
-        elif user_data.race == ewcfg.races["critter"]:
-            race_prefix = "small "
-        elif user_data.race == ewcfg.races["monster"]:
-            race_prefix = "monstrous "
-        elif user_data.race == ewcfg.races["avian"]:
-            race_prefix = "feathery "
-        elif user_data.race == ewcfg.races["insectoid"]:
-            race_prefix = "chitinny "
-        elif user_data.race == ewcfg.races["other"]:
-            race_prefix = "peculiar "
-        elif user_data.race != "":
-            race_prefix = "mouthbreathing "
+        # get race flavor text
+        player_race = ewcfg.defined_races.get(user_data.race)
+        if player_race != None:
+            race_prefix = player_race.get("race_prefix", "")
+            race_suffix = player_race.get("race_suffix", "")
+        else:
+            race_prefix = ""
+            race_suffix = ""
 
         if user_data.life_state == ewcfg.life_state_corpse:
             response = "{} is a {}level {} {}deadboi.".format(display_name, race_prefix, user_data.slimelevel, race_suffix)

@@ -178,7 +178,7 @@ async def menu(cmd):
                     response += "\n\nThe cashier here tries to start up a conversation about life being worth living. You're having none of it."
                 elif vendor == ewcfg.vendor_basedhardware:
                     response += "\n\nSo many industrial metals here... You contemplate which you could use to kill yourself..."
-                elif vendor == ewcfg.vendor_basedhardware:
+                elif vendor == ewcfg.vendor_wafflehouse:
                     response += "\n\nNot even waffles could hope to make your emptiness go away."
                 elif vendor == ewcfg.vendor_greencakecafe:
                     response += "\n\nThe barista behind the counter pauses to look at your soulless misery for a second, but decides you're not worth it and gets back to work."
