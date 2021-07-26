@@ -1495,7 +1495,7 @@ item_list = [
     EwGeneralItem(
         id_item=ewcfg.item_id_rustealeafblades,
         str_name="Rustea Leaf Blades",
-        str_desc="The razor-sharp blades attatched to the stems of Rustea Leaves.",
+        str_desc="The razor-sharp blades attached to the stems of Rustea Leaves.",
         acquisition=ewcfg.acquisition_milling,
         ingredients=[ewcfg.item_id_rustealeaves],
     ),

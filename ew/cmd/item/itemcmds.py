@@ -601,7 +601,7 @@ async def item_look(cmd):
 
             response = name + (" x{:,}".format(item.stack_size) if (item.stack_size >= 1) else "") + "\n\n" + response
             if message is not None and message != "":
-                response += "\n\nIt has a message attatched: " + message
+                response += "\n\nIt has a message attached: " + message
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(player, response))
         else:
             if iterate == len(item_dest) and response == "":
