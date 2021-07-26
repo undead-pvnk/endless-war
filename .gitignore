@@ -8,8 +8,10 @@ ewdebug.py
 ew/debug.py
 ew/cmd/debug/debug.py
 ew/cmd/debugr
-ew/static/rstatic
-ew/utils/rutils
+ew/cmd/debug
+ew/cmd/rstatic.py
+ew/static/rstatic.py
+ew/utils/rutils.py
 ew/static/debugr.py
 cfg_exporter.py
 .idea
