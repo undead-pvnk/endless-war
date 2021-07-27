@@ -222,7 +222,7 @@ async def data(cmd):
                     "" if len(weapon_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
                         weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
             if user_data.weaponskill >= 5:
-                response += " {}".format(weapon.str_weaponmaster_self.format(rank=(user_data.weaponskill - 4), title="master")),
+                response += " {}".format(weapon.str_weaponmaster_self.format(rank=(user_data.weaponskill - 4), title="master"))
             else:
                 response += " {}".format(weapon.str_weaponmaster_self.format(rank=(user_data.weaponskill), title="rookie"))
 
