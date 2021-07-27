@@ -1344,11 +1344,11 @@ async def divorce(cmd):
 
     weapon_item = EwItem(id_item=user_data.weapon)
     weapon = static_weapons.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-    if weapon != None:
-        weapon_name = weapon_item.item_props.get("weapon_name") if len(weapon_item.item_props.get("weapon_name")) > 0 else weapon.str_weapon
 
+    if weapon is None:
+        response = "Divorce what? You ain't even holding a weapon, buddy."
     # Makes sure you have a partner to divorce.
-    if user_data.weaponmarried == False:
+    elif user_data.weaponmarried == False:
         response = "I appreciate your forward thinking attitude, but how do you expect to get a divorce when you haven’t even gotten married yet? Throw your life away first, then we can talk."
     # Checks to make sure you're in the dojo.
     elif user_data.poi != ewcfg.poi_id_dojo:
@@ -1359,17 +1359,17 @@ async def divorce(cmd):
     else:
         poi = poi_static.id_to_poi.get(user_data.poi)
         district_data = EwDistrict(district=poi.id_poi, id_server=user_data.id_server)
+        weapon_name = weapon_item.item_props.get("weapon_name") if len(weapon_item.item_props.get("weapon_name")) > 0 else weapon.str_weapon
 
         if district_data.is_degraded():
             response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-        response = "Are you sure you want to divorce {}? The Dojo Master will take back weapon after the proceedings and it will be gone. **Forever**. Oh yeah, and your slimecoin will probably be halved in the divorce courts.\n**!accept to continue, or !refuse to back out**".format(weapon.str_weapon)
+        response = "Are you sure you want to divorce {}? The Dojo Master will take back weapon after the proceedings and it will be gone. **Forever**. Oh yeah, and the divorce courts around here are pretty harsh so expect to kiss at least half of your slimecoin goodbye.\n**!accept to continue, or !refuse to back out**".format(weapon.str_weapon)
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
         try:
             accepted = False
-            message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and
-                                                                                             message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
+            message = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == cmd.message.author and message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
             if message != None:
                 if message.content.lower() == ewcfg.cmd_accept:
