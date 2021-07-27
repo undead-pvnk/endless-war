@@ -2612,7 +2612,7 @@ class EwUser(EwUserBase):
             hunger_restored = int(item_props['recover_hunger'])
             if self.id_user in ewutils.food_multiplier and ewutils.food_multiplier.get(self.id_user) > 0:
                 if ewcfg.mutation_id_bingeeater in mutations:
-                    hunger_restored *= ewutils.food_multiplier.get(self.id_user)
+                    hunger_restored *= max(ewutils.food_multiplier.get(self.id_user), 1)
                     if ewutils.food_multiplier.get(self.id_user) >= 5 and ewcfg.status_foodcoma_id not in self.getStatusEffects():
                         self.applyStatus(id_status=ewcfg.status_foodcoma_id, source=self.id_user, id_target=self.id_user)
                 ewutils.food_multiplier[self.id_user] = min(ewutils.food_multiplier[self.id_user] + 1, ewcfg.bingeeater_cap)
