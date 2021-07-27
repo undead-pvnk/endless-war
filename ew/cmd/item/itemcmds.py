@@ -634,7 +634,6 @@ async def item_use(cmd):
         if item.item_type == ewcfg.it_food:
             response = user_data.eat(item)
             user_data.persist()
-            asyncio.ensure_future(loop_utils.decrease_food_multiplier(user_data.id_user))
 
         if item.item_type == ewcfg.it_weapon:
             response = user_data.equip(item)

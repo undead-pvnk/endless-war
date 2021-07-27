@@ -1155,6 +1155,8 @@ cmd_leaderboard = cmd_prefix + 'leaderboard'
 cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
 cmd_divorce = cmd_prefix + 'divorce'
+cmd_object = cmd_prefix + 'object'
+cmd_object_alt1 = cmd_prefix + 'protest'
 cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_scavenge_alt1 = cmd_prefix + 'lookbetweenthecushions'
 cmd_scavenge_alt2 = cmd_prefix + 'dumpsterdive'
@@ -3371,6 +3373,21 @@ time_embark = 2
 #    poi_id_charcoalpark_street_b:poi_id_cratersville_street_a, #Veteran->Endline
 # }
 
+# Marriage Ceremony Text
+marriage_ceremony_text = [
+    "You decide it’s finally time to take your relationship with your {weapon_name} to the next level. You approach the Dojo Master with your plight, requesting his help to circumvent the legal issues of marrying your weapon. He takes a moment to unfurl his brow before letting out a raspy chuckle. He hasn’t been asked to do something like this for a long time, or so he says. You scroll up to the last instance of this flavor text and conclude he must have Alzheimer's or something. Regardless, he agrees.",
+    "Departing from the main floor of the Dojo, he rounds a corner and disappears for a few minutes before returning with illegally doctor marriage paperwork and cartoonish blotches of ink on his face and hands to visually communicate the hard work he’s put into the forgeries. You see, this is a form of visual shorthand that artists utilize so they don’t have to explain every beat of their narrative explicitly, but I digress.",
+    "You express your desire to get things done as soon as possible so that you can stop reading this boring wall of text and return to your busy agenda of murder, and so he prepares to officiate immediately. You stand next to your darling {weapon_name}, the only object of your affection in this godforsaken city. You shiver with anticipation for the most anticipated in-game event of your ENDLESS WAR career. A crowd of enemy and allied gangsters alike forms around you three as the Dojo Master begins the ceremony...",
+    "\"We are gathered here today to witness the combined union of {display_name} and {weapon_name}.",
+    "Two of the greatest threats in the current metagame. No greater partners, no worse adversaries.",
+    "Through thick and thin, these two have stood together, fought together, and gained experience points--otherwise known as “EXP”--together.",
+    "It was not through hours mining or stock exchanges that this union was forged, but through iron and slime.",
+    "Without the weapon, the wielder would be defenseless, and without the wielder, the weapon would have no purpose.",
+    "It is this union that we are here today to officially-illegally affirm.\"",
+    "He takes a pregnant pause to increase the drama, and allow for onlookers to press 1 in preparation.",
+    "“I now pronounce you juvenile and armament!! You may anoint the {weapon_type}”",
+    "You begin to tear up, fondly regarding your last kill with your {weapon_name} that you love so much. You lean down and kiss your new spouse on the handle, anointing an extra two mastery ranks with pure love. It remains completely motionless, because it is an inanimate object. The Dojo Master does a karate chop midair to bookend the entire experience. Sick, you’re married now!"
+]
 
 # Fashion styles for cosmetics
 style_cool = "cool"
@@ -3540,6 +3557,8 @@ mutation_id_lightminer = "lightminer"
 mutation_id_amnesia = "amnesia"
 
 mutation_milestones = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+
+bingeeater_cap = 5
 
 quadrant_sloshed = "flushed"
 quadrant_roseate = "pale"
@@ -5255,6 +5274,7 @@ event_type_minecollapse = "minecollapse"
 event_type_voidhole = "voidhole"
 event_type_voidconnection = "voidconnection"
 event_type_shambaquarium = "shambaquarium"
+event_type_marriageceremony = "marriageceremony"
 
 halloween_tricks_tricker = [
     "You open the door and give {} a hearty '!SPOOK'. They lose {} slime!",
