@@ -1950,8 +1950,11 @@ async def pray(cmd):
 
 async def check_mastery(cmd):
     user_data = EwUser(member=cmd.message.author)
-    weapon_item = EwItem(user_data.weapon)
-    equipped_type = weapon_item.item_props.get("weapon_type")
+    if user_data.weapon != -1:
+        weapon_item = EwItem(user_data.weapon)
+        equipped_type = weapon_item.item_props.get("weapon_type")
+    else:
+        equipped_type = "unarmed"
 
     message = "\nYou close your eyes for a moment, recalling your masteries: \n"
     if cmd.mentions_count > 0:
@@ -1960,6 +1963,9 @@ async def check_mastery(cmd):
         wepskills = ewutils.weaponskills_get(member=cmd.message.author)
         for skill in wepskills:
             # Now actually grabs the mastery string! Rejoice!
+            # In case someone somehow got a fucked up weapon, just skip it and don't think about it
+            if static_weapons.weapon_map.get(skill) is None:
+                continue
             master_weapon_response = (static_weapons.weapon_map[skill]).str_weaponmaster_self + '\n'
             if master_weapon_response == "\n":
                 continue
