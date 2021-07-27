@@ -1421,10 +1421,14 @@ async def unwrap(cmd):
 
 async def add_message(cmd):
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1])
-
+    outofspace = False
     message_text = ' '.join(word for word in cmd.tokens[2:])
 
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+
+    if len(message_text) > 1000:
+        outofspace = True
+        message_text = message_text[:1000]
 
     if item_sought:
         item_obj = EwItem(id_item=item_sought.get('id_item'))
@@ -1435,6 +1439,9 @@ async def add_message(cmd):
             response = "You scrawl out a little note and put it on the {}.\n\n{}".format(item_sought.get('name'), message_text)
         else:
             response = "You rip out the old message and scrawl another one on the {}.\n\n{}".format(item_sought.get('name'), message_text)
+        if outofspace is True:
+            response += "\nOh. Shit, looks like you ran out of space."
+
     else:
         response = "Are you sure you have that item?"
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

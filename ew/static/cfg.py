@@ -3048,6 +3048,7 @@ weapon_id_laywaster = 'laywaster'
 weapon_id_chainsaw = 'chainsaw'
 weapon_id_huntingrifle = 'huntingrifle'
 weapon_id_harpoon = 'harpoon'
+weapon_id_model397 = 'model397'
 
 weapon_id_spraycan = 'spraycan'
 weapon_id_paintgun = 'paintgun'

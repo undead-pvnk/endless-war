@@ -1495,6 +1495,34 @@ weapon_list = [
         # YOU EITHER KILL 'EM OR YOU DON'T, BROTHER
         clip_size=1
     ),
+    EwWeapon(  # 38
+        id_weapon=ewcfg.weapon_id_model397,
+        alias=[
+            "anomalousrifle",
+            "gatling",
+            "megarifle"
+        ],
+        str_crit="**Critical hit!!** {name_target}'s skull gains another hole! Good show!!",
+        str_miss="**You missed!!** {name_player} misses {name_target} by a barn door and a half. Phooey!",
+        str_equip="You equip the model 397 hunting rifle.",
+        str_name="model 397 hunting rifle",
+        str_weapon="a model 397 hunting rifle",
+        str_weaponmaster_self="You are a rank {rank} gentleman of the model 397 hunting rifle.",
+        str_weaponmaster="They are a rank {rank} gentleman of the model 397  hunting rifle.",
+        str_kill="**360 NOSCOPED!!** {name_player} spins and fires! {name_target}'s head subsequently explodes! Get wr3ck3d, my good sir! {emote_skull}",
+        str_killdescriptor="d3s7r0y3d",
+        str_damage="{name_player} sneaks a few shots into {name_target}’s {hitzone}!!",
+        str_duel="**...** {name_player} and {name_target} spin around like idiots, firing wildly and sipping tea.",
+        str_description="It's a hunting rifle, modified to contain enough rounds to kill whole animal populations. Non-endangered ones, even!\n\nSoliss handed this to you in a back alley, you never learned quite why she fobbed it off on you. Maybe it's because no matter how much of the ammo you fire out of the clip it's heavy as two jet engines.\nhttps://imgur.com/a/O4MkWMl",
+        str_reload="Oh. Fuck. You didn't think you'd even need to reload this. You detatch the two cylinders from the gun, making sure not to drop the massive weight on your toes. In goes the ammo! It's about 4x over capacity, but you somehow manage to get everything put back together in pretty good time.",
+        str_reload_warning="**OH, BOTHER!** {name_player}’s hunting rifle just ran out bullets!!",
+        str_scalp="A single, clean hole pierces the scalp. Ahhh, the thrill of the hunt...",
+        fn_effect=get_normal_attack(weapon_type='precision'),
+        classes=[ewcfg.weapon_class_ammo],
+        stat=ewcfg.stat_huntingrifle_kills,
+        clip_size=1000,
+        acquisition=ewcfg.acquisition_smelting
+    ),
 
 ]
 
