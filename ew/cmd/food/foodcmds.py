@@ -505,7 +505,7 @@ async def order(cmd):
 
                             response += "\n\n*{}*: ".format(target_player_data.display_name) + target_data.eat(item_data)
                             target_data.persist()
-                            asyncio.ensure_future(loop_utils.decrease_food_multiplier(user_data.id_user))
+                            
                         else:
 
                             if value == 0:
@@ -517,7 +517,6 @@ async def order(cmd):
 
                             response += "\n\n*{}*: ".format(user_player_data.display_name) + user_data.eat(item_data)
                             user_data.persist()
-                            asyncio.ensure_future(loop_utils.decrease_food_multiplier(user_data.id_user))
 
                     if premium_purchase:
                         user_data.time_lastpremiumpurchase = int(time.time())

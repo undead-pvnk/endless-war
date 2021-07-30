@@ -1431,11 +1431,23 @@ async def unwrap(cmd):
 
 
 async def add_message(cmd):
-    item_search = ewutils.flattenTokenListToString(cmd.tokens[1])
+    if cmd.tokens_count == 1:
+        response = "Scrawl what? Do you even know what that means?"
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    elif cmd.tokens_count == 2:
+        response = "Try !scrawl <item> <description>."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1])
+    outofspace = False
     message_text = ' '.join(word for word in cmd.tokens[2:])
 
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+
+
+    if len(message_text) > 1000:
+        outofspace = True
+        message_text = message_text[:1000]
 
     if item_sought:
         item_obj = EwItem(id_item=item_sought.get('id_item'))
@@ -1446,14 +1458,19 @@ async def add_message(cmd):
             response = "You scrawl out a little note and put it on the {}.\n\n{}".format(item_sought.get('name'), message_text)
         else:
             response = "You rip out the old message and scrawl another one on the {}.\n\n{}".format(item_sought.get('name'), message_text)
+        if outofspace is True:
+            response += "\nOh. Shit, looks like you ran out of space."
     else:
         response = "Are you sure you have that item?"
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def strip_message(cmd):
-    item_search = ewutils.flattenTokenListToString(cmd.tokens[1])
-    message_text = cmd.tokens[2:]
+    if cmd.tokens_count == 1:
+        response = "You heard 'em. *Strip.*"
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
 
     if item_sought:
@@ -1465,7 +1482,7 @@ async def strip_message(cmd):
         else:
             item_obj.item_props['item_message'] = ""
             item_obj.persist()
-            response = "You rip out the old message. Nobody will ever know what they wrote here.".format(item_sought.get('name'), message_text)
+            response = "You rip out the old message. Nobody will ever know what they wrote here."
     else:
         response = "Are you sure you have that item?"
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
