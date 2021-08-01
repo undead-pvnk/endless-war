@@ -923,9 +923,12 @@ async def teleport_player(cmd):
     if cmd.mentions_count == 1:
         target = cmd.mentions[0]
     else:
-        return
+        target = author
 
-    destination = cmd.tokens[2].lower()
+    if target.id == author.id:
+        destination = cmd.tokens[1].lower()
+    else:
+        destination = cmd.tokens[2].lower()
 
     new_poi = poi_static.id_to_poi.get(destination)
 

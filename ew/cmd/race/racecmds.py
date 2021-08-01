@@ -489,8 +489,8 @@ async def shamble(cmd):
             "You run a decaying hand across the street, remembering what was.",
             "You gnaw on the buildings, trying to relive the glory days.",
             "You groan and walk about.",
-            "You remember when all the city was shambled, damn those gankers ruined it all...",  # thanks dakat for this one
-            "It was a graveyard smash"
+            "You remember when all the city was shambled. Damn, those gankers ruined it all...",  # thanks dakat for this one
+            "It was a graveyard smash!"
         ]
         response = random.choice(responses)
     else:
@@ -512,8 +512,14 @@ async def netrun(cmd):
         if cmd.mentions_count == 1:
             target_name = cmd.mentions[0].display_name
             responses = [
-                "You decryped {target}'s harddrive and delete system32.",
-                "You hack into {target}'s Instagrime and delete their most liked picture. You monster.",
+                "You decrypt {target}'s hard drive and delete system32. Whoops!",
+                "You hack into {target}'s Instagrime and delete their most liked picture. You monster!",
+                "Whipping on your **HACKER GLASSES**, you decipher {target}'s Slime Twitter profile name. Hack'd.",
+                "{target} suddenly trips! You deleted their legs in the cyberspace. **pwn'd**.",
+                "Scanning {target}, you use your **haker skilz** to determine their Discord User ID. Right Click -> Copy ID -> Ctrl+V. **doxxed**",
+                "You attempt to cyber-rob {target}'s bank info, but your Gellphone dies! Guess you'll have to find a charger...",
+                "Yu try t cnnect t the netscape t hack {target}, but yur  key is brken!!! Prbably shuldn't have chsen such a cmpliated passwrd.", # Would be cool to remove any O's from {target}, but alas, I am not "good" at coding
+                "You break into {target}'s mecha-dick and turn off their cum. Take that!",
             ]
         else:
             roll = random.randrange(50)
@@ -522,14 +528,18 @@ async def netrun(cmd):
                 responses = [
                     "https://www.youtube.com/watch?v=rlfwXNOG0eI",
                     "You become the hacker known only as 4chan. Your hands fly across the keyboard as you write an algorithm to steal passwords, credit card information and bank statements. \n```\meranojijn\n   fuvfeourfevrflaerfk;erbperibfeprifaerifaer\n   eifahbniaio\n   eofajpm\neraijnamkmekopkk,\n```",
+                    "You netrun ***so fast*** your own physical limitations stop you. Damn it! If only you could download more RAM...",
                 ]
             else: #common response
                 responses = [
                     "***WHOA DUDE!*** You're walking on the internet.",
                     "As you run through the netscape, you dodge ads for **HOT SLIMEGIRLS IN YOUR AREA**.",
                     "\*Hacker voice\* I'm in.",
-                    "A holographic interfaces surround you, the hardlight constucts coming from your cybernetics. You use various arm gestures and hand motions to make seemingly meaningful beeps boops.",
+                    "**connecting...** https://www.youtube.com/watch?v=cpf9SKnMsEg",
+                    "You edit the Cyclostomata Wikipedia page, swapping the directional gonad development of hagfishes and lampreys. **Totally ruined a biologist's day!!!**",
+                    "Holographic interfaces surround you, the hardlight constructs coming from your cybernetics. You use various arm gestures and hand motions to make seemingly meaningful beeps and boops.",
                     '*bzzt* **"Subvert all world governments"** *kzchhh* **"Ship everything to China"**',
+                    "Netrunning your SlimeCorp bank account, you successfully add 5 SlimeCoin to your account. Your slimebroker takes his nominal fee of 5 SlimeCoin.",
                 ]
             
         response = random.choice(responses).format(target = target_name)
@@ -585,12 +595,16 @@ async def strike_deal(cmd):
                     if target_data.has_soul == 0: 
                         responses = [
                             "*{target}:* {user} dances around in excitement before realizing you don’t have a soul. They shout obscenities at you for wasting their time.",
+                            "*{target}:* {user} dances around in excitement before realizing you don’t have a soul. They flick brimstone towards you, before stomping away angrily.",
+                            "*{target}:* {user} chuckles and disappears momentarily, before reappearing with the shit kicked out of them. Apparently it's \"BAD\" and \"AN INSULT TO SATAN\" to make deals with soulless husks."
                         ] 
                     else:
                         responses = [
                             "*{target}:* {user} cackles maniacally as magic ethereal chains bind you from the depths of hell. It’s a good thing mist can’t prevent you from going about your buisness.",
-                            "*{target}:* {user} presents the contract on an ancient looking piece of parchment. Oddly enough it looks like a printer did most of the writing. Locating the fine print, you see it’s so small that it’s basically a pixel smudge. You sign the deal knowing it’ll never hold up in any court.",
-                            "*{user}:* {target} accepts your deal with bold enthusiasm. They begin listing off all the rewards they’d dream of receiving ranging from game updates to funny hats. Maybe you shouldn’t tell them it’ll cost them their soul... \n\nyet.",
+                            "*{target}:* {user} presents the contract on an ancient-looking piece of parchment. Oddly enough, it looks like a printer did most of the writing. Locating the fine print, you see it’s so small that it’s basically a pixel smudge. You sign the deal knowing it’ll never hold up in any court.",
+                            "*{user}:* {target} accepts your deal with bold enthusiasm. They begin listing off all the rewards they’d dream of receiving, ranging from game updates to funny hats. Maybe you shouldn’t tell them it’ll cost them their soul... \n\nyet.",
+                            "*{user}:* {target} signs off on the deal without reading a word. Can you believe that? Another fucker going **straight** to Hell. You call up Satan on your Gellphone to arrange some servant imps, because I **guess** you need to hold up your end of the bargain.",
+                            "*{target}:* The moment you sign the deal, {user} lunges at you with a Satanic Knife:tm:! They stop an inch from your face, before cackling loudly. What a bitch! You make a mental note to never associate with them again."
                         ]
 
                     response = random.choice(responses).format(user=cmd.message.author.display_name, target=target_member.display_name)
@@ -600,7 +614,9 @@ async def strike_deal(cmd):
                 else:
                     responses = [
                         "*{user}:* Offput by the deal's sinister vibes and your pushiness, {target} declines your offer. ",
-                        "*{target}:* {user} grinds their teeth at your refusal. They try and play it cool but it’s pretty obvious when a demon is seething"
+                        "*{target}:* {user} grinds their teeth at your refusal. They try and play it cool but it’s pretty obvious when a demon is seething",
+                        "*{target}:* You awkwardly say 'no thanks', and limply hand the paper back. 'We can still be friends', you weakly say. {user} grimaces, before forcing a smile. 'Yeah, ok.' You both know you'll never talk to each other again.",
+                        "*{user}:* {target} fucking declines your deal! What the hell! This is **not** what they taught you in demon school."
                     ]
                     response = random.choice(responses).format(user=cmd.message.author.display_name, target=target_member.display_name)
 

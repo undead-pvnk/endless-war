@@ -2612,10 +2612,10 @@ class EwUser(EwUserBase):
             hunger_restored = int(item_props['recover_hunger'])
             if self.id_user in ewutils.food_multiplier and ewutils.food_multiplier.get(self.id_user) > 0:
                 if ewcfg.mutation_id_bingeeater in mutations:
-                    hunger_restored *= ewutils.food_multiplier.get(self.id_user)
+                    hunger_restored *= max(ewutils.food_multiplier.get(self.id_user), 1)
                     if ewutils.food_multiplier.get(self.id_user) >= 5 and ewcfg.status_foodcoma_id not in self.getStatusEffects():
                         self.applyStatus(id_status=ewcfg.status_foodcoma_id, source=self.id_user, id_target=self.id_user)
-                ewutils.food_multiplier[self.id_user] += 1
+                ewutils.food_multiplier[self.id_user] = min(ewutils.food_multiplier[self.id_user] + 1, ewcfg.bingeeater_cap)
             else:
                 ewutils.food_multiplier[self.id_user] = 1
 
@@ -2711,7 +2711,7 @@ class EwUser(EwUserBase):
         # random.seed(self.rand_seed + mutation_dat)
 
         except:
-            ewutils.logMsg("Failed to fetch mutations for user {}.".format(self.id_user))
+            ewutils.logMsg("Failed to get mutation level for user {}.".format(self.id_user))
 
         finally:
             return result
@@ -2753,27 +2753,20 @@ class EwUser(EwUserBase):
 
             for x in range(1000):
                 result = random.choice(list(static_mutations.mutation_ids))
+                result_mutation = static_mutations.mutations_map[result]
 
-                if result == ewcfg.mutation_id_airlock:
-                    if ewcfg.mutation_id_whitenationalist in current_mutations or ewcfg.mutation_id_lightasafeather in current_mutations:
-                        continue
-                if result in [ewcfg.mutation_id_lightasafeather, ewcfg.mutation_id_whitenationalist]:
-                    if ewcfg.mutation_id_airlock in current_mutations:
-                        continue
-                if result == ewcfg.mutation_id_onemansjunk:
-                    if ewcfg.mutation_id_davyjoneskeister in current_mutations:
-                        continue
-                if result == ewcfg.mutation_id_davyjoneskeister:
-                    if ewcfg.mutation_id_onemansjunk in current_mutations:
+                for mutation in current_mutations:
+                    mutation = static_mutations.mutations_map[mutation]
+                    if result in mutation.incompatible:
                         continue
 
-                if result not in current_mutations and static_mutations.mutations_map[result].tier + self.get_mutation_level() <= 50:
+                if result not in current_mutations and result_mutation.tier + self.get_mutation_level() <= 50:
                     return result
 
             result = ""
 
         except:
-            ewutils.logMsg("Failed to fetch mutations for user {}.".format(self.id_user))
+            ewutils.logMsg("Failed to get next mutations for user {}.".format(self.id_user))
 
         finally:
             return result

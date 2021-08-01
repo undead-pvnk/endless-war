@@ -1,7 +1,7 @@
 # Global configuration options.
 
 
-version = "v4.0080 Cyberhell"
+version = "v4.0085 Cybersmell"
 
 dir_msgqueue = 'msgqueue'
 
@@ -1140,6 +1140,7 @@ cmd_dyecosmetic_alt3 = cmd_prefix + 'saturatehat'
 cmd_create = cmd_prefix + 'create'
 cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
 cmd_createitem = cmd_prefix + 'createitem'
+cmd_createmulti = cmd_prefix + 'createmulti'
 cmd_manualsoulbind = cmd_prefix + 'soulbind'
 cmd_editprops = cmd_prefix + 'editprops'
 cmd_setslime = cmd_prefix + 'setslime'
@@ -1154,6 +1155,8 @@ cmd_leaderboard = cmd_prefix + 'leaderboard'
 cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
 cmd_divorce = cmd_prefix + 'divorce'
+cmd_object = cmd_prefix + 'object'
+cmd_object_alt1 = cmd_prefix + 'protest'
 cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_scavenge_alt1 = cmd_prefix + 'lookbetweenthecushions'
 cmd_scavenge_alt2 = cmd_prefix + 'dumpsterdive'
@@ -2726,7 +2729,7 @@ vendor_slimypersuits = "Slimy Persuits"  # You can buy candy from here
 vendor_greencakecafe = "Green Cake Cafe"  # Brunch foods
 vendor_bodega = "Bodega"  # Clothing store in Krak Bay
 vendor_secretbodega = "Secret Bodega"  # The secret clothing store in Krak Bay
-vendor_wafflehouse = "Waffle House"  # waffle house in the void, sells non-perishable foods, 100 slime to 1 hunger
+vendor_wafflehouse = "Waffle House"  # waffle house in the void, sells non-perishable foods, 50 slime to 1 hunger
 vendor_basedhardware = "Based Hardware"  # Hardware store in West Glocksbury
 vendor_lab = "Lab"  # Slimecorp products
 vendor_atomicforest = "Atomic Forest Stockpile"  # Storage of atomic forest
@@ -3059,6 +3062,7 @@ weapon_id_laywaster = 'laywaster'
 weapon_id_chainsaw = 'chainsaw'
 weapon_id_huntingrifle = 'huntingrifle'
 weapon_id_harpoon = 'harpoon'
+weapon_id_model397 = 'model397'
 
 weapon_id_spraycan = 'spraycan'
 weapon_id_paintgun = 'paintgun'
@@ -3176,7 +3180,6 @@ fish_rarity_uncommon = "uncommon"
 fish_rarity_rare = "rare"
 fish_rarity_promo = "promo"
 
-fish_catchtime_rain = "rain"
 fish_catchtime_night = "night"
 fish_catchtime_day = "day"
 
@@ -3386,6 +3389,21 @@ time_embark = 2
 #    poi_id_charcoalpark_street_b:poi_id_cratersville_street_a, #Veteran->Endline
 # }
 
+# Marriage Ceremony Text
+marriage_ceremony_text = [
+    "You decide it’s finally time to take your relationship with your {weapon_name} to the next level. You approach the Dojo Master with your plight, requesting his help to circumvent the legal issues of marrying your weapon. He takes a moment to unfurl his brow before letting out a raspy chuckle. He hasn’t been asked to do something like this for a long time, or so he says. You scroll up to the last instance of this flavor text and conclude he must have Alzheimer's or something. Regardless, he agrees.",
+    "Departing from the main floor of the Dojo, he rounds a corner and disappears for a few minutes before returning with illegally doctor marriage paperwork and cartoonish blotches of ink on his face and hands to visually communicate the hard work he’s put into the forgeries. You see, this is a form of visual shorthand that artists utilize so they don’t have to explain every beat of their narrative explicitly, but I digress.",
+    "You express your desire to get things done as soon as possible so that you can stop reading this boring wall of text and return to your busy agenda of murder, and so he prepares to officiate immediately. You stand next to your darling {weapon_name}, the only object of your affection in this godforsaken city. You shiver with anticipation for the most anticipated in-game event of your ENDLESS WAR career. A crowd of enemy and allied gangsters alike forms around you three as the Dojo Master begins the ceremony...",
+    "\"We are gathered here today to witness the combined union of {display_name} and {weapon_name}.",
+    "Two of the greatest threats in the current metagame. No greater partners, no worse adversaries.",
+    "Through thick and thin, these two have stood together, fought together, and gained experience points--otherwise known as “EXP”--together.",
+    "It was not through hours mining or stock exchanges that this union was forged, but through iron and slime.",
+    "Without the weapon, the wielder would be defenseless, and without the wielder, the weapon would have no purpose.",
+    "It is this union that we are here today to officially-illegally affirm.\"",
+    "He takes a pregnant pause to increase the drama, and allow for onlookers to press 1 in preparation.",
+    "“I now pronounce you juvenile and armament!! You may anoint the {weapon_type}”",
+    "You begin to tear up, fondly regarding your last kill with your {weapon_name} that you love so much. You lean down and kiss your new spouse on the handle, anointing an extra two mastery ranks with pure love. It remains completely motionless, because it is an inanimate object. The Dojo Master does a karate chop midair to bookend the entire experience. Sick, you’re married now!"
+]
 
 # Fashion styles for cosmetics
 style_cool = "cool"
@@ -3555,6 +3573,8 @@ mutation_id_lightminer = "lightminer"
 mutation_id_amnesia = "amnesia"
 
 mutation_milestones = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+
+bingeeater_cap = 5
 
 quadrant_sloshed = "flushed"
 quadrant_roseate = "pale"
@@ -3925,7 +3945,7 @@ mutation_descriptions = {
     mutation_id_napalmsnot: "You do some burn damage when attacking with any weapon, in addition to its normal damage. You also gain immunity to burn damage.",
     mutation_id_ditchslap: "Use !slap @user <location> on an ally to instantly launch them to an adjacent district. If you are in a safe zone, the target must use !clench before they can be hit. Any given ally can't be slapped again for a 5 minute cooldown.",
     mutation_id_greenfingers: "Farming wait time is decreased by 33%, and yields are increased by 20%.",
-    mutation_id_lightminer: "You can mine at any time of day. You are also immune to mineshaft collapses.",
+    mutation_id_lightminer: "You are immune to mineshaft collapses.",
     mutation_id_longarms: "You can !longdrop <destination> <item> to drop an item in an adjacent district.",
     mutation_id_lethalfingernails: "If you have no weapon, you will use your fingernails instead. They do the same damage as a level 6 revolver with no miss.",
     mutation_id_davyjoneskeister: "When making deals with Captain Albert Alexander, you only receive offers for slime, not items.",
@@ -4039,7 +4059,7 @@ district_unique_commands = {
     "slimecorpslimeoidlaboratory": "SLIMEOID LAB\n!embiggen:Make a fish real big.\n!restoreslimeoid <slimeoid>: Restore a Slimeoid from a slimeoid heart.\n!instructions: Go over the many commands used to make a slimeoid.",
     "thecasino": "CASINO\n!slimecraps <amount> <currency>: Gamble at the craps table. Gambling types include slimecoin, slime, and your soul.\n!slimeroulette <amount> <bet> <type>:Gamble at the roulette wheel. Types are same as above, bet options are shown by typing !slimeroulette <amount>.\n!slimeslots <type>: Bet a fixed amount in slots. Accepts Slime and SlimeCoin.\n!slimepachinko <type> Same as above, but in pachinko.\n!slimebaccarat <amount> <currency> <hand>: Bet slime, slimecoin, or souls on baccarat. The hand is either 'player' or 'dealer'.\n!slimeskat <player> <player>: Challenge two players to a game of slimeskat. You bet Slimecoin once the game has started.\n!russianroulette <player>: Challenge your opponent to russian roulette. Add 'soul' to the end of the command to gamble souls.\n!betsoul: Exchange your soul for {} SlimeCoin.\n!buysoul <player>: Buy a soul off the casino for {} SlimeCoin, if one is in stock.".format(
         soulprice, soulprice),
-    "thedojo": "DOJO\n!spar <player>: Spar with someone to increase your weapon level.\n!marry: Marry your weapon.\n!divorce: The inevitable, after marrying your weapon.",
+    "thedojo": "DOJO\n!spar <player>: Spar with someone to increase your weapon level.\n!marry: Marry your weapon.\n!divorce: The inevitable, after marrying your weapon.\n!object: Interrupt a marriage as it's going. ",
     "thebattlearena": "BATTLE ARENA\n!slimeoidbattle <player>: Challenge a player to a slimeoid battle. They can !accept or !decline.",
     "slimecorphq": "SLIMECORP HQ\n!donate <amount>: Donate slime to Slimecorp and exchange it for SlimeCoin.\n!requestverification: Acquire a verified checkmark for Slime Twitter.\n!advertise <content>: Advertise something.\n!clockin: If you're in the Slimecorp Security Force, you enter the breakroom this way.\n!payday: Slimecorp can get slime for salary credits here.",
     "slimesendcliffs": "CLIFFS\n!push <player>: Push a player off the cliff.\n!jump: Jump off the cliff.\n!toss <item>: Toss an item off the cliff.",
@@ -5271,6 +5291,7 @@ event_type_minecollapse = "minecollapse"
 event_type_voidhole = "voidhole"
 event_type_voidconnection = "voidconnection"
 event_type_shambaquarium = "shambaquarium"
+event_type_marriageceremony = "marriageceremony"
 
 halloween_tricks_tricker = [
     "You open the door and give {} a hearty '!SPOOK'. They lose {} slime!",

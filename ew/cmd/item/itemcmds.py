@@ -634,7 +634,6 @@ async def item_use(cmd):
         if item.item_type == ewcfg.it_food:
             response = user_data.eat(item)
             user_data.persist()
-            asyncio.ensure_future(loop_utils.decrease_food_multiplier(user_data.id_user))
 
         if item.item_type == ewcfg.it_weapon:
             response = user_data.equip(item)
@@ -1420,11 +1419,23 @@ async def unwrap(cmd):
 
 
 async def add_message(cmd):
-    item_search = ewutils.flattenTokenListToString(cmd.tokens[1])
+    if cmd.tokens_count == 1:
+        response = "Scrawl what? Do you even know what that means?"
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+    elif cmd.tokens_count == 2:
+        response = "Try !scrawl <item> <description>."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1])
+    outofspace = False
     message_text = ' '.join(word for word in cmd.tokens[2:])
 
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
+
+
+    if len(message_text) > 1000:
+        outofspace = True
+        message_text = message_text[:1000]
 
     if item_sought:
         item_obj = EwItem(id_item=item_sought.get('id_item'))
@@ -1435,14 +1446,19 @@ async def add_message(cmd):
             response = "You scrawl out a little note and put it on the {}.\n\n{}".format(item_sought.get('name'), message_text)
         else:
             response = "You rip out the old message and scrawl another one on the {}.\n\n{}".format(item_sought.get('name'), message_text)
+        if outofspace is True:
+            response += "\nOh. Shit, looks like you ran out of space."
     else:
         response = "Are you sure you have that item?"
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
 
 async def strip_message(cmd):
-    item_search = ewutils.flattenTokenListToString(cmd.tokens[1])
-    message_text = cmd.tokens[2:]
+    if cmd.tokens_count == 1:
+        response = "You heard 'em. *Strip.*"
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+    item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
     item_sought = bknd_item.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None)
 
     if item_sought:
@@ -1454,7 +1470,7 @@ async def strip_message(cmd):
         else:
             item_obj.item_props['item_message'] = ""
             item_obj.persist()
-            response = "You rip out the old message. Nobody will ever know what they wrote here.".format(item_sought.get('name'), message_text)
+            response = "You rip out the old message. Nobody will ever know what they wrote here."
     else:
         response = "Are you sure you have that item?"
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
@@ -1588,6 +1604,95 @@ async def create_item(cmd):
         response = "Could not find item."
 
     await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+
+async def create_multi(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return
+
+    if len(cmd.tokens) > 2:
+        number = int(cmd.tokens[1])
+        value = cmd.tokens[2]
+    else:
+        return
+
+    item_recipient = None
+    if cmd.mentions_count == 1:
+        item_recipient = cmd.mentions[0]
+    else:
+        item_recipient = cmd.message.author
+
+    # The proper usage is !createitem [item id] [recipient]. The opposite order is invalid.
+    if '<@' in value:  # Triggers if the 2nd command token is a mention
+        response = "Proper usage of !createitem: **!createitem [item id] [recipient]**."
+        return await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+    item = static_items.item_map.get(value)
+
+    item_type = ewcfg.it_item
+    if item != None:
+        item_id = item.id_item
+        name = item.str_name
+
+    # Finds the item if it's an EwFood item.
+    if item == None:
+        item = static_food.food_map.get(value)
+        item_type = ewcfg.it_food
+        if item != None:
+            item_id = item.id_food
+            name = item.str_name
+
+    # Finds the item if it's an EwCosmeticItem.
+    if item == None:
+        item = cosmetics.cosmetic_map.get(value)
+        item_type = ewcfg.it_cosmetic
+        if item != None:
+            item_id = item.id_cosmetic
+            name = item.str_name
+
+    if item == None:
+        item = static_items.furniture_map.get(value)
+        item_type = ewcfg.it_furniture
+        if item != None:
+            item_id = item.id_furniture
+            name = item.str_name
+            if item_id in static_items.furniture_pony:
+                item.vendors = [ewcfg.vendor_bazaar]
+
+    if item == None:
+        item = static_weapons.weapon_map.get(value)
+        item_type = ewcfg.it_weapon
+        if item != None:
+            item_id = item.id_weapon
+            name = item.str_weapon
+
+    if item == None:
+        item = static_fish.fish_map.get(value)
+        item_type = ewcfg.it_food
+        if item != None:
+            item_id = item.id_fish
+            name = item.str_name
+
+    if item != None:
+        for x in range(number):
+            item_props = itm_utils.gen_item_props(item)
+
+            generated_item_id = bknd_item.item_create(
+                item_type=item_type,
+                id_user=item_recipient.id,
+                id_server=cmd.guild.id,
+                stack_max=-1,
+                stack_size=0,
+                item_props=item_props
+            )
+
+        response = "Created {} items **{}** for **{}**".format(number, name, item_recipient)
+    else:
+        response = "Could not find item."
+
+    await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+
 
 
 # Debug

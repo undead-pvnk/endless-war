@@ -60,6 +60,8 @@ cmd_map = {
     # Admin/Debug cmds
     ewcfg.cmd_forgemasterpoudrin: itemcmds.forge_master_poudrin,
     ewcfg.cmd_createitem: itemcmds.create_item,
+    ewcfg.cmd_createmulti: itemcmds.create_multi,
+
     ewcfg.cmd_manualsoulbind: itemcmds.manual_soulbind,
 
     # SLIMERNALIA
