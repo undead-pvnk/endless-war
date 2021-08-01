@@ -5456,6 +5456,49 @@ curse_responses = [  # scold the player for swearing
     # "You know, don't, say, s-swears."
 ]
 
+male_genders = [  # Genders that give you a DICK
+    'boy',
+    'boi',
+    'male',
+    'dick',
+    'penis',
+    'fart',
+    'guy',
+    'dude',
+    'he',
+    'he/him',
+    'him',
+    'man',
+    'gentleman',
+    'bussy',
+    'Mr'
+]
+
+female_genders = [  # Genders that give you a PUSSY
+    'girl',
+    'gorl',
+    'female',
+    'vagina',
+    'pussy',
+    'meow',
+    'meowmeow',
+    'vag',
+    'gal',
+    'dudette',
+    'lady',
+    'gussy',
+    'she',
+    'she/her',
+    'her',
+    'woman',
+    'shit',
+    'damsel',
+    'mademoiselle',
+    'Ms',
+    'Mrs',
+    'Fister' # Female Mister
+]
+
 captcha_dict = [
     # 3
     'GOO', 'MUD', 'DIE', 'WAR', 'BEN',

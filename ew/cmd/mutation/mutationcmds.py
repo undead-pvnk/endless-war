@@ -507,7 +507,7 @@ async def piss(cmd):
     mutations = user_data.get_mutations()
 
     if ewcfg.mutation_id_enlargedbladder in mutations:
-        if cmd.mentions_count == 0:
+        if cmd.mentions_count == 0 and user_data.gender in ewcfg.male_genders:
             response = "You unzip your dick and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love pissing so much."
             if random.randint(1, 100) < 2:
                 slimeoid = EwSlimeoid(member=cmd.message.author)
@@ -518,6 +518,28 @@ async def piss(cmd):
                     slimeoid.persist()
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+        if cmd.mentions_count == 0 and user_data.gender in ewcfg.male_genders:
+            response = "You unzip your pussy and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love pissing so much."
+            if random.randint(1, 100) < 2:
+                slimeoid = EwSlimeoid(member=cmd.message.author)
+                if slimeoid.life_state == ewcfg.slimeoid_state_active:
+                    hue = hue_static.hue_map.get("yellow")
+                    response = "CONGRATULATIONS. You suddenly lose control of your HUGE PUSSY and saturate your {} with your PISS. {}".format(slimeoid.name, hue.str_saturate)
+                    slimeoid.hue = (hue_static.hue_map.get("yellow")).id_hue
+                    slimeoid.persist()
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+        if cmd.mentions_count == 0 and user_data.gender not in ewcfg.male_genders and user_data.gender not in ewcfg.male_genders:
+            response = "You unzip your pants and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love pissing so much."
+            if random.randint(1, 100) < 2:
+                slimeoid = EwSlimeoid(member=cmd.message.author)
+                if slimeoid.life_state == ewcfg.slimeoid_state_active:
+                    hue = hue_static.hue_map.get("yellow")
+                    response = "CONGRATULATIONS. You suddenly lose control of your HUGE BLADDER and saturate your {} with your PISS. {}".format(slimeoid.name, hue.str_saturate)
+                    slimeoid.hue = (hue_static.hue_map.get("yellow")).id_hue
+                    slimeoid.persist()
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            
         if cmd.mentions_count == 1:
             target_member = cmd.mentions[0]
             target_user_data = EwUser(member=target_member)
@@ -535,7 +557,6 @@ async def piss(cmd):
                 response = "You piss HARD and FAST right onto {}!!".format(target_member.display_name)
             else:
                 response = "You can't !piss on someone who isn't there! Moron!"
-
         elif cmd.mentions_count > 1:
             response = "Whoa, one water-sports fetishist at a time, pal!"
 
