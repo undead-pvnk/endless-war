@@ -504,25 +504,15 @@ def pushupServerHunger(id_server = None):
 def pushdownServerInebriation(id_server = None):
     if id_server != None:
         try:
-            conn_info = bknd_core.databaseConnect()
-            conn = conn_info.get('conn')
-            cursor = conn.cursor()
-
-            # Save data
-            cursor.execute("UPDATE users SET {inebriation} = {inebriation} - {tick} WHERE id_server = %s AND {inebriation} > {limit}".format(
+            bknd_core.execute_sql_query("UPDATE users SET {inebriation} = {inebriation} - {tick} WHERE id_server = %s AND {inebriation} > {limit}".format(
                 inebriation=ewcfg.col_inebriation,
                 tick=ewcfg.inebriation_pertick,
                 limit=0
             ), (
                 id_server,
             ))
-
-            conn.commit()
-        finally:
-            # Clean up the database handles.
-            cursor.close()
-            bknd_core.databaseClose(conn_info)
-
+        except:
+            ewutils.logMsg("Failed to pushdown server inebriation.")     
 
 """
 	Coroutine that continually calls burnSlimes; is called once per server, and not just once globally
@@ -785,10 +775,16 @@ def enemyRemoveExpiredStatuses(id_server = None):
                         enemy_data.clear_status(id_status=status)
 
 
-async def decrease_food_multiplier(id_user):
-    await asyncio.sleep(5)
-    if id_user in ewutils.food_multiplier:
-        ewutils.food_multiplier[id_user] = max(0, ewutils.food_multiplier.get(id_user) - 1)
+async def decrease_food_multiplier():
+    while not ewutils.TERMINATE:
+        for user in ewutils.food_multiplier:
+            # If the food multi is empty, then just remove the user from the list
+            if ewutils.food_multipler[user] == 0:
+                ewutils.food_multiplier.pop(user)
+            # Reduce it down
+            ewutils.food_multiplier[user] = max(0, ewutils.food_multiplier.get(user) - 1)
+            
+        await asyncio.sleep(5)
 
 
 async def spawn_enemies(id_server = None):

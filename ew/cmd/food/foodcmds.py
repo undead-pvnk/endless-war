@@ -169,7 +169,7 @@ async def menu(cmd):
                     response += "\n\nThe cashier here tries to start up a conversation about life being worth living. You're having none of it."
                 elif vendor == ewcfg.vendor_basedhardware:
                     response += "\n\nSo many industrial metals here... You contemplate which you could use to kill yourself..."
-                elif vendor == ewcfg.vendor_basedhardware:
+                elif vendor == ewcfg.vendor_wafflehouse:
                     response += "\n\nNot even waffles could hope to make your emptiness go away."
                 elif vendor == ewcfg.vendor_greencakecafe:
                     response += "\n\nThe barista behind the counter pauses to look at your soulless misery for a second, but decides you're not worth it and gets back to work."
@@ -488,7 +488,7 @@ async def order(cmd):
 
                             response += "\n\n*{}*: ".format(target_player_data.display_name) + target_data.eat(item_data)
                             target_data.persist()
-                            asyncio.ensure_future(loop_utils.decrease_food_multiplier(user_data.id_user))
+                            
                         else:
 
                             if value == 0:
@@ -500,7 +500,6 @@ async def order(cmd):
 
                             response += "\n\n*{}*: ".format(user_player_data.display_name) + user_data.eat(item_data)
                             user_data.persist()
-                            asyncio.ensure_future(loop_utils.decrease_food_multiplier(user_data.id_user))
 
                     if premium_purchase:
                         user_data.time_lastpremiumpurchase = int(time.time())

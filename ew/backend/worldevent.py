@@ -201,6 +201,7 @@ def create_void_connection(id_server):
                                         if poi.is_district
                                         and not poi.is_gangbase
                                         and poi.id_poi != ewcfg.poi_id_thevoid
+                                        and poi.id_poi != ewcfg.poi_id_underworld
                                         and poi.id_poi not in existing_connections
                                         ])
 
