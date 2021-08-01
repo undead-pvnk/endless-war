@@ -1,7 +1,7 @@
 # Global configuration options.
 
 
-version = "v4.0085 Cybersmell"
+version = "v4.0086 Gender Update"
 
 dir_msgqueue = 'msgqueue'
 
@@ -1158,6 +1158,8 @@ cmd_divorce = cmd_prefix + 'divorce'
 cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_scavenge_alt1 = cmd_prefix + 'lookbetweenthecushions'
 cmd_scavenge_alt2 = cmd_prefix + 'dumpsterdive'
+cmd_scavenge_alt3 = cmd_prefix + 'pickupleaves'
+cmd_scavenge_alt4 = cmd_prefix + 'rake'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
 cmd_spray = cmd_prefix + 'annex'
@@ -1205,6 +1207,8 @@ cmd_paycheck = cmd_prefix + 'paycheck'
 cmd_payday = cmd_prefix + 'payday'
 cmd_win = cmd_prefix + 'win'
 cmd_slimefest = cmd_prefix + 'slimefest'
+cmd_identify = cmd_prefix + 'identify'
+cmd_setteeth = cmd_prefix + 'setteeth'
 
 cmd_preserve = cmd_prefix + 'preserve'
 cmd_stink = cmd_prefix + 'stink'

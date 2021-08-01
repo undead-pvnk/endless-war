@@ -49,6 +49,8 @@ class EwUserBase:
     spray = "https://img.booru.org/rfck//images/3/a69d72cf29cb750882de93b4640a175a88cdfd70.png"
     salary_credits = 0
     degradation = 0
+    gender = ""
+    teeth = 0
 
     # SWILLDERMUK
     gambit = 0
@@ -372,7 +374,9 @@ class EwUserBase:
                     ewcfg.col_gvs_time_lastshambaquarium,
                     ewcfg.col_rand_seed,
                     ewcfg.col_time_lasthit,
-                    ewcfg.col_verified
+                    ewcfg.col_verified,
+                    ewcfg.col_gender,
+                    ewcfg.col_teeth
                 ), (
                     self.id_user,
                     self.id_server,
@@ -434,7 +438,10 @@ class EwUserBase:
                     self.gvs_time_lastshambaquarium,
                     self.rand_seed,
                     self.time_lasthit,
-                    self.verified
+                    self.verified,
+                    self.gender,
+                    self.teeth
+                    
                 ))
 
             conn.commit()

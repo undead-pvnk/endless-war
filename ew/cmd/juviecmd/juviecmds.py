@@ -842,3 +842,48 @@ async def juviemode(cmd):
     #	user_data.persist()
     #	response = "You summon forth all the cowardice in your heart, to forgo even slime, the most basic joy. You vow to carry no more than 100,000, the NLACakaNM's legal limit, on your person at any time."
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+""" Gender :3 """
+
+async def identify(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    gender = cmd.message.content[(len(ewcfg.cmd_identify)):].strip()
+
+
+
+    if gender == "":
+        response = "You need a gender, dumbass. Unless that's not your thing, which is cool. Then just, like, enter 'shart' or something."
+    elif len(gender) > 16:
+        response = "Fucking god, your gender **CANNOT** be longer than that. Sorry, them's the rules."
+    elif gender == "boy":
+        response = "Radical! Enjoy your gender, slimegirl."
+        user_data.gender = "girl"
+        user_data.persist()
+    else:
+        response = "Radical! Enjoy your gender, slime{}.".format(gender)
+        user_data.gender = gender
+        user_data.persist()
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+""" Teeth :D """
+
+async def setteeth(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    teethnumber = cmd.message.content[(len(ewcfg.cmd_setteeth)):].strip()
+
+    if teethnumber == "":
+        response = "Just say '0', dumbass."
+    elif int(teethnumber) > 1000000000:
+        response = "Are you stupid? It's common knowledge that nobody can have more than a billion teeth. Knock some out, then !setteeth."
+    elif int(teethnumber) == 0:
+        response = "Radical. Your mouth configures to have no teeth."
+        user_data.teeth = teethnumber
+        user_data.persist()
+    else:
+        response = "Radical. Your mouth configures to have {} teeth.".format(teethnumber)
+        user_data.teeth = teethnumber
+        user_data.persist()        
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

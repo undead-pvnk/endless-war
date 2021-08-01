@@ -21,8 +21,15 @@ cmd_map = {
     ewcfg.cmd_scavenge: juviecmds.scavenge,
     ewcfg.cmd_scavenge_alt1: juviecmds.scavenge,
     ewcfg.cmd_scavenge_alt2: juviecmds.scavenge,
+    ewcfg.cmd_scavenge_alt3: juviecmds.scavenge,    
+    ewcfg.cmd_scavenge_alt4: juviecmds.scavenge,
 
     # LOL
     ewcfg.cmd_juviemode: juviecmds.juviemode,
 
+    # gender??? OMG???
+    ewcfg.cmd_identify: juviecmds.identify,
+
+    # teeth :D
+    ewcfg.cmd_setteeth: juviecmds.setteeth
 }

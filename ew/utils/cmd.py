@@ -131,11 +131,11 @@ def gen_data_text(
             race_suffix = ""
 
         if user_data.life_state == ewcfg.life_state_corpse:
-            response = "{} is a {}level {} {}deadboi.".format(display_name, race_prefix, user_data.slimelevel, race_suffix)
+            response = "{} is a {}level {} {}dead{}.".format(display_name, race_prefix, user_data.slimelevel, race_suffix, user_data.gender)
         elif user_data.life_state == ewcfg.life_state_shambler:
             response = "{} is a {}level {} {}shambler.".format(display_name, race_prefix, user_data.slimelevel, race_suffix)
         else:
-            response = "{} is a {}level {} {}slimeboi.".format(display_name, race_prefix, user_data.slimelevel, race_suffix)
+            response = "{} is a {}level {} {}slime{}.".format(display_name, race_prefix, user_data.slimelevel, race_suffix, user_data.teeth)
             if user_data.degradation < 20:
                 pass
             elif user_data.degradation < 40:
@@ -169,6 +169,9 @@ def gen_data_text(
             response += " They have sidearmed {}{}.".format((
                 "" if len(sidearm_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
                     sidearm_item.item_props.get("weapon_name"))), sidearm.str_weapon)
+
+        if user_data.teeth != None:
+            response += "They have {} teeth.".format(user_data.teeth)
 
         trauma = se_static.trauma_map.get(user_data.trauma)
 
