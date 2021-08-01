@@ -222,7 +222,9 @@ async def data(cmd):
                     "" if len(weapon_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
                         weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
             if user_data.weaponskill >= 5:
-                response += " {}".format(weapon.str_weaponmaster_self.format(rank=(user_data.weaponskill - 4)))
+                response += " {}".format(weapon.str_weaponmaster_self.format(rank=(user_data.weaponskill - 4), title="master"))
+            else:
+                response += " {}".format(weapon.str_weaponmaster_self.format(rank=(user_data.weaponskill), title="rookie"))
 
         trauma = se_static.trauma_map.get(user_data.trauma)
 
@@ -1950,19 +1952,31 @@ async def pray(cmd):
 
 
 async def check_mastery(cmd):
-    message = "\nYou close your eyes for a moment, recalling your masteries. \n"
+    user_data = EwUser(member=cmd.message.author)
+    if user_data.weapon != -1:
+        weapon_item = EwItem(user_data.weapon)
+        equipped_type = weapon_item.item_props.get("weapon_type")
+    else:
+        equipped_type = "unarmed"
+
+    message = "\nYou close your eyes for a moment, recalling your masteries: \n"
     if cmd.mentions_count > 0:
         response = "You can only recall your own weapon masteries!"
     else:
         wepskills = ewutils.weaponskills_get(member=cmd.message.author)
         for skill in wepskills:
             # Now actually grabs the mastery string! Rejoice!
-            weapon_response = (static_weapons.weapon_map[skill]).str_weaponmaster_self + '\n'
-            if weapon_response == "\n":
+            # In case someone somehow got a fucked up weapon, just skip it and don't think about it
+            if static_weapons.weapon_map.get(skill) is None:
                 continue
-            # Only print masteries at 1 or above
+            master_weapon_response = (static_weapons.weapon_map[skill]).str_weaponmaster_self + '\n'
+            if master_weapon_response == "\n":
+                continue
+            # Prints masteries above the mastery threshold as "master" skills, whereas those below are "rookie" skills
             if wepskills[skill] >= 5:
-                message += weapon_response.format(rank=wepskills[skill] - 4)
+                message += master_weapon_response.format(rank=wepskills[skill] - 4, title="master")
+            if wepskills[skill] < 5 and (wepskills[skill] > 0 or skill == equipped_type):
+                message += master_weapon_response.format(rank=wepskills[skill], title="rookie")
         response = message
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

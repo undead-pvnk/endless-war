@@ -509,14 +509,14 @@ async def netrun(cmd):
         if cmd.mentions_count == 1:
             target_name = cmd.mentions[0].display_name
             responses = [
-                "You decrypt {target}'s hard drive and delete system32. Whoops ○( ＾皿＾)っ",
+                "You decrypt {target}'s hard drive and delete system32. Whoops!",
                 "You hack into {target}'s Instagrime and delete their most liked picture. You monster!",
-                "Whipping on your **HACKER GLASSES**, you decipher {target}'s Slime Twitter profile name. Hack'd 😎",
-                "{target} suddenly trips! You deleted their legs in the cyberspace. **pwn'd** (lll￢ω￢)",
+                "Whipping on your **HACKER GLASSES**, you decipher {target}'s Slime Twitter profile name. Hack'd.",
+                "{target} suddenly trips! You deleted their legs in the cyberspace. **pwn'd**.",
                 "Scanning {target}, you use your **haker skilz** to determine their Discord User ID. Right Click -> Copy ID -> Ctrl+V. **doxxed**",
-                "You attempt to cyber-rob {target}'s bank info, but your Gellphone dies! Guess you'll have to find a charger... (T_T)",
-                "Yu try t cnnect t the netscape t hack {target}, but yur  key is brken!!! Prbably shuldn't have chsen such a cmpliated passwrd. 😔", # Would be cool to remove any O's from {target}, but alas, I am not "good" at coding 😔
-                "You break into {target}'s mecha-dick and turn off their cum. Take that! (^///^)",
+                "You attempt to cyber-rob {target}'s bank info, but your Gellphone dies! Guess you'll have to find a charger...",
+                "Yu try t cnnect t the netscape t hack {target}, but yur  key is brken!!! Prbably shuldn't have chsen such a cmpliated passwrd.", # Would be cool to remove any O's from {target}, but alas, I am not "good" at coding
+                "You break into {target}'s mecha-dick and turn off their cum. Take that!",
             ]
         else:
             roll = random.randrange(50)
@@ -533,7 +533,7 @@ async def netrun(cmd):
                     "As you run through the netscape, you dodge ads for **HOT SLIMEGIRLS IN YOUR AREA**.",
                     "\*Hacker voice\* I'm in.",
                     "**connecting...** https://www.youtube.com/watch?v=cpf9SKnMsEg",
-                    "You edit the Cyclostomata Wikipedia page, swapping the directional gonad development of hagfishes and lampreys. **Totally ruined a biologist's day!!!** 😎",
+                    "You edit the Cyclostomata Wikipedia page, swapping the directional gonad development of hagfishes and lampreys. **Totally ruined a biologist's day!!!**",
                     "Holographic interfaces surround you, the hardlight constructs coming from your cybernetics. You use various arm gestures and hand motions to make seemingly meaningful beeps and boops.",
                     '*bzzt* **"Subvert all world governments"** *kzchhh* **"Ship everything to China"**',
                     "Netrunning your SlimeCorp bank account, you successfully add 5 SlimeCoin to your account. Your slimebroker takes his nominal fee of 5 SlimeCoin.",
@@ -600,7 +600,7 @@ async def strike_deal(cmd):
                             "*{target}:* {user} cackles maniacally as magic ethereal chains bind you from the depths of hell. It’s a good thing mist can’t prevent you from going about your buisness.",
                             "*{target}:* {user} presents the contract on an ancient-looking piece of parchment. Oddly enough, it looks like a printer did most of the writing. Locating the fine print, you see it’s so small that it’s basically a pixel smudge. You sign the deal knowing it’ll never hold up in any court.",
                             "*{user}:* {target} accepts your deal with bold enthusiasm. They begin listing off all the rewards they’d dream of receiving, ranging from game updates to funny hats. Maybe you shouldn’t tell them it’ll cost them their soul... \n\nyet.",
-                            "*{user}:* {target} signs off on the deal without reading a word. Can you believe that? Another fucker going **straight** to Hell. You call up Satan on your Gellphone to arrange some servant imps, because I **guess** you need to hold up your end of the bargain 🙄.",
+                            "*{user}:* {target} signs off on the deal without reading a word. Can you believe that? Another fucker going **straight** to Hell. You call up Satan on your Gellphone to arrange some servant imps, because I **guess** you need to hold up your end of the bargain.",
                             "*{target}:* The moment you sign the deal, {user} lunges at you with a Satanic Knife:tm:! They stop an inch from your face, before cackling loudly. What a bitch! You make a mental note to never associate with them again."
                         ]
 

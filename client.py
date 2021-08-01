@@ -296,6 +296,8 @@ async def on_ready():
         asyncio.ensure_future(loop_utils.remove_status_loop(id_server=server.id))
         asyncio.ensure_future(loop_utils.event_tick_loop(id_server=server.id))
 
+        asyncio.ensure_future(loop_utils.decrease_food_multiplier())
+
         # SWILLDERMUK
         # asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
         # asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
