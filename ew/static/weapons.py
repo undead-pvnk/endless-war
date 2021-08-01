@@ -202,6 +202,8 @@ def wef_staff(ctn = None):
         lambda ctn: (ctn.user_data.poi_death == ctn.user_data.poi) or (ctn.shootee_data.poi_death == ctn.shootee_data.poi),
         lambda ctn: (ctn.user_data.id_killer == ctn.shootee_data.id_user) or (ctn.user_data.id_user == ctn.shootee_data.id_killer),
         lambda ctn: (ctn.shootee_data.life_state == ewcfg.life_state_juvenile) or (ctn.shootee_data.life_state == ewcfg.life_state_enlisted and ctn.shootee_data.faction == ctn.user_data.faction),
+        lambda ctn: (ctn.shootee_data.teeth == ctn.user_data.teeth), # STAB, or Same Teeth Attack Bonus
+        lambda ctn: (ctn.shootee_data.gender == ctn.user_data.gender), # SGAB, or Same Gender Attack Bonus
     }
     for condition in conditions:
         try:

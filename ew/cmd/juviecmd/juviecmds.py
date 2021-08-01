@@ -852,13 +852,17 @@ async def identify(cmd):
 
 
     if gender == "":
-        response = "You need a gender, dumbass. Unless that's not your thing, which is cool. Then just, like, enter 'shart' or something."
+        response = "Um... cool. Noted. Enjoy your lack of gender, slime."
+        user_data.gender = ""
+        user_data.persist()
     elif len(gender) > 16:
         response = "Fucking god, your gender **CANNOT** be longer than that. Sorry, them's the rules."
     elif gender == "boy":
-        response = "Radical! Enjoy your gender, slimegirl."
-        user_data.gender = "girl"
+        response = "Radical! Enjoy your gender, slimeboi."
+        user_data.gender = "boi"
         user_data.persist()
+    elif gender == "death furnace":
+        response = "You can't have that gender."
     else:
         response = "Radical! Enjoy your gender, slime{}.".format(gender)
         user_data.gender = gender
@@ -881,6 +885,8 @@ async def setteeth(cmd):
         response = "Radical. Your mouth configures to have no teeth."
         user_data.teeth = teethnumber
         user_data.persist()
+    elif int(teethnumber) == 69 or int(teethnumber) == 420:
+        response = "Haha. You're so funny, you little goober. Fuck off."
     else:
         response = "Radical. Your mouth configures to have {} teeth.".format(teethnumber)
         user_data.teeth = teethnumber

@@ -62,7 +62,7 @@ CREATE TABLE users (
 	time_lasthit int NOT NULL DEFAULT '0',
 	rand_seed bigint NOT NULL DEFAULT '0',
 	verified boolean NOT NULL DEFAULT '0',	
-	gender varchar(16) NOT NULL DEFAULT '',
+	gender varchar(16) NOT NULL DEFAULT 'boi',
 	teeth int NOT NULL DEFAULT '32',
 
 

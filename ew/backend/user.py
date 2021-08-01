@@ -49,8 +49,8 @@ class EwUserBase:
     spray = "https://img.booru.org/rfck//images/3/a69d72cf29cb750882de93b4640a175a88cdfd70.png"
     salary_credits = 0
     degradation = 0
-    gender = ""
-    teeth = 0
+    gender = "boi"
+    teeth = 32
 
     # SWILLDERMUK
     gambit = 0
