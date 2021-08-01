@@ -198,7 +198,7 @@ mutations = [
     EwMutationFlavor(
         id_mutation=ewcfg.mutation_id_threesashroud,
         str_name="Three's a Shroud",
-        alias=['3s', 'shroud', '3as'],
+        alias=['3s', 'shroud', '3as', 'tas'],
         str_describe_self="You tend to blend into the crowd due to **Three’s A Shroud**.",
         str_describe_other="They tend to blend into the crowd due to **Three’s A Shroud**.",
         str_acquire="A distinct sense of loneliness pervades your entire body. You’re reduced to the verge of tears without really knowing why. You suddenly feel very conscious of how utterly useless you are. You want to fade away so badly, you’d give anything just to be invisible. Everyone would like it better that way. You have developed the mutation **Three’s A Shroud**. Cannot be scouted and crit rate doubled if there are more than 3 allies in your district.",
