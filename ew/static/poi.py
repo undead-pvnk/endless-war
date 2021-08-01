@@ -4506,12 +4506,13 @@ poi_list = [
         is_subzone = True,
         father_district = "downtown",
         neighbors = {'limecorp2f': 20},
+        isSplit= 'limecorp1f'
     ),
     EwPoi(
         id_poi = "limecorp2f",
         alias = ['limecorp2f', '2f', 'lc2f', 'floor2', 'limecorpfloor2'],
         str_name = "Limecorp Offices 2f",
-        str_desc = "Limecorp Floor 2 hasn't been looted quite so thoroughly yet. Most people are afraid to come up here; since this building has no foundation it would probably tip over pretty easily. More knocked-over cubicles and Windows 7 licenses for you then! It's a tragedy, but since Slimecorp more or less died, most of these scattered documents aren't valuable anymore. And you're not about to lawyer up and find the ones that are. Maybe you can sift through the wreckage and do some office work? Nah, that's stupid.",
+        str_desc = "Limecorp Floor 2 hasn't been looted quite so thoroughly yet. Most people are afraid to come up here; since this building has no foundation it would probably tip over pretty easily. More knocked-over cubicles and Windows 7 licenses for you then! It's a tragedy, but since Slimecorp more or less died, most of these scattered documents aren't valuable anymore. And you're not about to lawyer up and find the ones that are. Maybe you can **sift** through the wreckage and do some office work? Nah, that's stupid.",
         channel = "limecorp-2f",
         major_role = "nullmajorrole",
         minor_role = "nullminorrole",
@@ -4520,6 +4521,7 @@ poi_list = [
         is_subzone = True,
         father_district = "downtown",
         neighbors = {'limecorp3f': 20, 'limecorp1f': 20},
+        isSplit= 'limecorp1f'
     ),
     EwPoi(
         id_poi = "limecorp1f",
@@ -4534,48 +4536,55 @@ poi_list = [
         is_subzone = True,
         father_district = "downtown",
         neighbors = {'limecorp2f': 20, 'downtown': 20},
+        isSplit= ''
     ),
     EwPoi(
         id_poi = "maimridgestreeta",
         alias = ['thesummit', 'summit', 'mtsxrek', 'sxrek'],
         str_name = "The Summit",
-        str_desc = "This is the highest peak in the county. You can see the entire city from here, large swathes of the outskirts, and of course the eye-searing slime sea. You think you can even make out the light pollution from other settlements on the sea in the distance, but they're too far away to tell for sure. Intriguing, huh? You should ask a merchant in Vagrant's Corner just who it is they're trading with all the time and what their cities are like. Do they have rampant gang violence too? Who am I kidding, of course they do. This area connects into the Ski Lodges and The Temple.",
+        str_desc = "This is the highest peak in the county. You can see the entire city from here, large swathes of the outskirts, and of course the eye-searing slime sea. You think you can even make out the light pollution from other settlements on the sea in the distance, but they're too far away to tell for sure. Intriguing, huh? You should ask a merchant in Vagrant's Corner just who it is they're trading with all the time and what their cities are like. Do they have rampant gang violence too? Who am I kidding, of course they do.",
         channel = "the-summit",
         major_role = "nullmajorrole",
         minor_role = "nullminorrole",
         permissions = {'the-summit': ['read', 'send', 'connect']},
         father_district = "maimridge",
+        mother_districts = [],
         is_outskirts = True,
         neighbors = {'temple': 20, 'maimridgestreetb': 20},
         wikipage = "https://rfck.miraheze.org/wiki/Maimridge#The_Summit",
+        isSplit= 'maimridgestreetc'
     ),
     EwPoi(
         id_poi = "maimridgestreetb",
         alias = ['skilodges', 'ski'],
         str_name = "Ski Lodges",
-        str_desc = "This cozy community of ski lodges and other warm buildings is the perfect respite from the cold, rugged mountainside. Of course, you can't let your enemies take advantage of this hospitality, so you gotta stand guard outside and bash their skull in before they can take their shoes off inside. In other words, you're rejuvenating them first. This area connects to The Summit and Colloid Springs.",
+        str_desc = "This cozy community of ski lodges and other warm buildings is the perfect respite from the cold, rugged mountainside. Of course, you can't let your enemies take advantage of this hospitality, so you gotta stand guard outside and bash their skull in before they can take their shoes off inside. In other words, you're rejuvenating them first. ",
         channel = "ski-lodges",
         major_role = "nullmajorrole",
         minor_role = "nullminorrole",
         permissions = {'ski-lodges': ['read', 'send', 'connect']},
         father_district = "maimridge",
+        mother_districts = ['maimridgestreetc'],
         is_outskirts = True,
         neighbors = {'maimridgestreeta': 20, 'maimridgestreetc': 20},
         wikipage = "https://rfck.miraheze.org/wiki/Maimridge#Ski_Lodges",
+        isSplit= 'maimridgestreetc'
     ),
     EwPoi(
         id_poi = "maimridgestreetc",
         alias = ['colloidsprings', 'colloid'],
         str_name = "Colloid Springs",
-        str_desc = "These natural hot springs can be found throughout Maimridge, both inside and outside a set of cave systems that they occupy halfway up the mountain. You don't have to be an archaeologist to know that these things were a major attraction, even in the past, judging by the staggering amount of ancient ruins that surround them. It's not surprising that they've ended up as another one of Maimridge's tourist traps, but there are rumors of patrons taking a dip and not coming back up. Perhaps something sinister lurks within them… This street connects back into Maimridge, and goes up the mountain into the Ski Lodges.",
+        str_desc = "These natural hot springs can be found throughout Maimridge, both inside and outside a set of cave systems that they occupy halfway up the mountain. You don't have to be an archaeologist to know that these things were a major attraction, even in the past, judging by the staggering amount of ancient ruins that surround them. It's not surprising that they've ended up as another one of Maimridge's tourist traps, but there are rumors of patrons taking a dip and not coming back up. Perhaps something sinister lurks within them…",
         channel = "colloid-springs",
         major_role = "nullmajorrole",
         minor_role = "nullminorrole",
         permissions = {'colloid-springs': ['read', 'send', 'connect']},
         father_district = "maimridge",
+        mother_districts = ['maimridge'],
         is_outskirts = True,
         neighbors = {'maimridge': 20, 'maimridgestreetb': 20},
         wikipage = "https://rfck.miraheze.org/wiki/Maimridge#Colloid_Springs",
+        isSplit= ''
     ),
     EwPoi(
         id_poi = "temple",
@@ -4586,9 +4595,11 @@ poi_list = [
         major_role = "nullmajorrole",
         minor_role = "nullminorrole",
         permissions = {'temple': ['read', 'send', 'connect']},
+        mother_districts = ['maimridgestreeta'],
         father_district = "maimridge",
-        is_outskirts = True,
+        is_outskirts = False,
         neighbors = {'maimridgestreeta': 20},
+        isSplit= 'maimridgestreetc'
     ),
 ]
 

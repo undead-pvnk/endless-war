@@ -679,10 +679,6 @@ async def move(cmd=None, isApt=False):
                                           fe_utils.formatMessage(cmd.message.author, "You're already there, bitch."))
     elif isApt and poi.id_poi == user_data.poi[3:]:
         return await ewapt.depart(cmd=cmd)
-    flamestate = EwGamestate(id_server=user_data.id_server, id_state='flamethrower')
-    if 'n4office' == poi.id_poi and flamestate.bit == 1:
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You open the elevator, and are immediately met with fire spitting out of the elevator. Over the crackling flames you can hear a woman screaming \"AAAAAAAAGH FUCK YOU DIE DIE DIE DIE!!!!!\". You're guessing entering now is a bad idea."))
-
 
     if inaccessible(user_data=user_data, poi=poi):
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author,
@@ -1114,16 +1110,13 @@ async def teleport_player(cmd):
         pass
     else:
         return
-
     if cmd.mentions_count == 1:
         target = cmd.mentions[0]
     else:
         return
-
     destination = cmd.tokens[2].lower()
 
     new_poi = poi_static.id_to_poi.get(destination)
-
     if target != None and new_poi != None:
         target_user = EwUser(member=target)
         target_player = EwPlayer(id_user=target_user.id_user)

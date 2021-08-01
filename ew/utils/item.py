@@ -15,7 +15,6 @@ from ..static import cfg as ewcfg
 from ..static import hue as hue_static
 from ..static import items as static_items
 from ..static import weapons as static_weapons
-from ..static import rstatic as relic_static
 
 
 """
@@ -588,7 +587,7 @@ def unwrap(id_user = None, id_server = None, item = None):
     if random.random() < slimexodia_chance:
         slimexodia = True
 
-    if random.random() < new_card_chance and relic_utils.canCreateRelic(item=relic_static.debug3, id_server=id_server):
+    if random.random() < new_card_chance and relic_utils.canCreateRelic(item=relic_utils.debug3, id_server=id_server):
         new_card_chance = True
 
     if slimexodia == True:
@@ -607,17 +606,14 @@ def unwrap(id_user = None, id_server = None, item = None):
             item_props=item_props
         )
     elif new_card_chance == True:
-        item_map_obj = relic_static.relic_map.get('petrifiedsecreaturescard')
 
         response += "  Huh? This one's sorta rigid. Heavy, too. You shrug and open it up anyway. Turns out this pack has been at the back of the storefront for so long that it petrified itself. \n\nYou got the Petrified Secreatures Card!"
 
-        item_props = gen_item_props(item_map_obj)
-
         bknd_item.item_create(
-            item_type=item_map_obj.item_type,
+            item_type='relic',
             id_user=id_user.id,
             id_server=id_server.id,
-            item_props=item_props
+            item_props=relic_utils.debug4
         )
     else:
         response += " But… it’s mostly just repeats and late edition cards. You toss them away."

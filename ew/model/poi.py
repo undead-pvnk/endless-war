@@ -137,6 +137,9 @@ class EwPoi:
     # The wiki page associated with that poi
     wikipage = ""
 
+    #check to split POI
+    isSplit = ""
+
     def __init__(
             self,
             id_poi = "unknown",
@@ -184,6 +187,7 @@ class EwPoi:
             neighbors = None,
             topic = "",
             wikipage = "",
+            isSplit = ""
     ):
         self.id_poi = id_poi
         self.alias = alias
@@ -229,6 +233,7 @@ class EwPoi:
         self.max_degradation = max_degradation
         self.topic = topic
         self.wikipage = wikipage
+        self.isSplit = isSplit
 
         self.neighbors = neighbors
         if self.neighbors == None:

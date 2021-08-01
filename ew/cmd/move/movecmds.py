@@ -41,12 +41,13 @@ from .moveutils import send_arrival_response
 """
 
 
-async def move(cmd = None, isApt = False):
+async def move(cmd = None, isApt = False, isSplit = 0):
     player_data = EwPlayer(id_user=cmd.message.author.id)
     user_data = EwUser(id_user=cmd.message.author.id, id_server=player_data.id_server, data_level=1)
     poi_current = poi_static.id_to_poi.get(user_data.poi)
 
     time_move_start = int(time.time())
+
 
     if isApt == False and ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
         channelid = fe_utils.get_channel(cmd.guild, poi_current.channel)
@@ -57,6 +58,7 @@ async def move(cmd = None, isApt = False):
                                                                                                            channelid.id))))
 
     target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
     if target_name == None or len(target_name) == 0:
         return await fe_utils.send_message(cmd.client, cmd.message.channel,
                                            fe_utils.formatMessage(cmd.message.author, "Where to?"))
@@ -151,6 +153,18 @@ async def move(cmd = None, isApt = False):
         path = EwPath(cost=60)
     elif len(poi.neighbors.keys()) == 0 or poi_current == None or len(poi_current.neighbors.keys()) == 0:
         path = None
+    elif poi.isSplit != "" and isSplit == False:
+        cmd_swap = cmd.tokens
+        cmd.tokens = ['!goto', poi.isSplit]
+        await move(cmd=cmd, isSplit=1)
+        cmd.tokens = cmd_swap
+        return await move(cmd=cmd, isSplit=2)
+    elif poi_current.isSplit != "" and isSplit == False:
+        cmd_swap = cmd.tokens
+        cmd.tokens = ['!goto', poi_current.isSplit]
+        await move(cmd=cmd, isSplit=1)
+        cmd.tokens = cmd_swap
+        return await move(cmd=cmd, isSplit=2)
     else:
         path = move_utils.path_to(
             poi_start=poi_current.id_poi,
@@ -161,6 +175,7 @@ async def move(cmd = None, isApt = False):
         if path != None:
             path.cost = int(path.cost / user_data.move_speed)
 
+    print(cmd.tokens)
     if path == None:
         return await fe_utils.send_message(cmd.client, cmd.message.channel,
                                            fe_utils.formatMessage(cmd.message.author, "You don't know how to get there."))
@@ -197,6 +212,11 @@ async def move(cmd = None, isApt = False):
     else:
         aptText = ""
 
+    if isSplit == 1:
+        aptText = ""
+        poi.str_name = "your destination"
+        distance_text = ""
+
     if movement_method == "descending":
         msg_walk_start = await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author,
                                                                                                              "You press the button labeled {}. You will arrive in {} seconds.".format(
@@ -218,8 +238,11 @@ async def move(cmd = None, isApt = False):
                     poi.str_name, distance_text, ewcfg.cmd_halt_alt1)
         else:
             walk_response = "You begin {} to {}{}.{}".format(walk_text, poi.str_name, aptText, distance_text)
-        msg_walk_start = await fe_utils.send_message(cmd.client, cmd.message.channel,
-                                                     fe_utils.formatMessage(cmd.message.author, walk_response))
+
+
+        if isSplit != 2:
+            msg_walk_start = await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, walk_response))
+
         if isApt:
             await ewapt.aptcmds.depart(cmd=cmd, isGoto=True, movecurrent=move_current)
 
@@ -265,14 +288,14 @@ async def move(cmd = None, isApt = False):
                 break
 
         msg_walk_enter = await send_arrival_response(cmd, poi, channel)
-
-        try:
-            await msg_walk_start.delete()
-            await asyncio.sleep(30)
-            await msg_walk_enter.delete()
-            pass
-        except:
-            pass
+        if isSplit == 0:
+            try:
+                await msg_walk_start.delete()
+                await asyncio.sleep(30)
+                await msg_walk_enter.delete()
+                pass
+            except:
+                pass
 
     else:
         boost = 0
@@ -400,12 +423,13 @@ async def move(cmd = None, isApt = False):
 
         if intoApt and ewutils.moves_active[cmd.message.author.id] == move_current:
             await ewapt.aptcmds.retire(cmd=cmd, isGoto=True, movecurrent=move_current)
-        await asyncio.sleep(30)
-        try:
-            await msg_walk_start.delete()
-            pass
-        except:
-            pass
+        if isSplit == 0:
+            await asyncio.sleep(30)
+            try:
+                await msg_walk_start.delete()
+                pass
+            except:
+                pass
 
 
 """
@@ -925,12 +949,14 @@ async def teleport_player(cmd):
     else:
         target = author
 
-    if target.id == author.id:
+    if target.id == author.id and cmd.mentions_count != 1:
         destination = cmd.tokens[1].lower()
     else:
         destination = cmd.tokens[2].lower()
 
+
     new_poi = poi_static.id_to_poi.get(destination)
+
 
     if target != None and new_poi != None:
         target_user = EwUser(member=target)
