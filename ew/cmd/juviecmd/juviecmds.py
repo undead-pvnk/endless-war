@@ -852,9 +852,11 @@ async def identify(cmd):
 
 
     if gender == "":
-        response = "Um... cool. Noted. Enjoy your lack of gender, slime."
+        response = "Cool. Noted. Enjoy your lack of gender, slime."
         user_data.gender = ""
         user_data.persist()
+    elif gender in ewcfg.curse_words:
+        response = "Hey, no matter what, you're still juvenile. **NO SWEARS**."
     elif len(gender) > 16:
         response = "Fucking god, your gender **CANNOT** be longer than that. Sorry, them's the rules."
     elif gender == "boy":
@@ -862,7 +864,7 @@ async def identify(cmd):
         user_data.gender = "boi"
         user_data.persist()
     elif gender == "death furnace":
-        response = "You can't have that gender."
+        response = "You can't have that gender. It's mine."
     else:
         response = "Radical! Enjoy your gender, slime{}.".format(gender)
         user_data.gender = gender
