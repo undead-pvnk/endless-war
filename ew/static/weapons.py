@@ -1517,11 +1517,10 @@ weapon_list = [
         str_reload="Oh. Fuck. You didn't think you'd even need to reload this. You detatch the two cylinders from the gun, making sure not to drop the massive weight on your toes. In goes the ammo! It's about 4x over capacity, but you somehow manage to get everything put back together in pretty good time.",
         str_reload_warning="**OH, BOTHER!** {name_player}’s hunting rifle just ran out bullets!!",
         str_scalp="A single, clean hole pierces the scalp. Ahhh, the thrill of the hunt...",
-        fn_effect=get_normal_attack(weapon_type='precision'),
+        fn_effect=get_normal_attack(cost_multiplier=0.7, weapon_type='burst_fire'),
         classes=[ewcfg.weapon_class_ammo],
         stat=ewcfg.stat_huntingrifle_kills,
-        clip_size=1000,
-        acquisition=ewcfg.acquisition_smelting
+        clip_size=1000
     ),
 
 ]

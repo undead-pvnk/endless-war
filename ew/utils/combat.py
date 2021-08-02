@@ -1802,7 +1802,7 @@ async def enemy_perform_action(id_server):
                 if random.randrange(20) == 0:
                     resp_cont = enemy.move()
                     if resp_cont != None:
-                        await resp_cont.post()
+                        await resp_cont.post(delete_after=120)
 
             # If an enemy is alive and not a sandbag, make it perform the kill function.
             if enemy.enemytype != ewcfg.enemy_type_sandbag:
@@ -1929,7 +1929,7 @@ async def enemy_perform_action_gvs(id_server):
                     enemy):
                 resp_cont = enemy.move()
                 if resp_cont != None:
-                    await resp_cont.post()
+                    await resp_cont.post(delete_after=120)
 
             # If an enemy is alive, make it perform the kill (or cannibalize) function.
 

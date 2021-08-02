@@ -216,17 +216,20 @@ def gen_item_props(item):
     item_props = {}
     if not hasattr(item, "item_type"):
         return item_props
-    if item.acquisition == ewcfg.acquisition_fishing and item.item_type == ewcfg.it_food:
+    if item.item_type == ewcfg.it_food and hasattr(item, 'id_fish'):
         item_props = {
             'id_food': item.id_fish,
             'food_name': item.str_name,
             'food_desc': item.str_desc,
             'recover_hunger': 20,
             'str_eat': ewcfg.str_eat_raw_material.format(item.str_name),
-            'time_expir': int(time.time()) + ewcfg.std_food_expir,
+            'rarity': item.rarity,
+            'size': ewcfg.fish_size_average,
+            'time_expir': time.time() + ewcfg.std_food_expir,
             'time_fridged': 0,
-            'perishable': item.perishable,
             'acquisition': ewcfg.acquisition_fishing,
+            'value': 3,
+            'noslime': 'false'  # if not actual_fisherman_data.juviemode else 'true'
         }
     elif item.item_type == ewcfg.it_food:
         item_props = {
