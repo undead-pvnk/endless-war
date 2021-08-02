@@ -153,6 +153,14 @@ async def move(cmd = None, isApt = False, isSplit = 0):
         path = EwPath(cost=60)
     elif len(poi.neighbors.keys()) == 0 or poi_current == None or len(poi_current.neighbors.keys()) == 0:
         path = None
+    elif  poi_current.isSplit and poi.isSplit != "" and isSplit == False:
+        cmd_swap = cmd.tokens
+        cmd.tokens = ['!goto', poi_current.isSplit]
+        await move(cmd=cmd, isSplit=1)
+        cmd.tokens = ['!goto', poi.isSplit]
+        await move(cmd=cmd, isSplit=2)
+        cmd.tokens = cmd_swap
+        return await move(cmd=cmd, isSplit=2)
     elif poi.isSplit != "" and isSplit == False:
         cmd_swap = cmd.tokens
         cmd.tokens = ['!goto', poi.isSplit]
@@ -212,10 +220,7 @@ async def move(cmd = None, isApt = False, isSplit = 0):
     else:
         aptText = ""
 
-    if isSplit == 1:
-        aptText = ""
-        poi.str_name = "your destination"
-        distance_text = ""
+
 
     if movement_method == "descending":
         msg_walk_start = await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author,
@@ -229,15 +234,22 @@ async def move(cmd = None, isApt = False, isSplit = 0):
         ) if minutes > 0 else (" It's {} seconds away.".format(seconds) if seconds > 4 else ""))
         walk_response = None
 
+        location = poi.str_name
+
+        if isSplit == 1:
+            aptText = ""
+            location = "your destination"
+            distance_text = ""
+
         if walking_into_sewers:
             if user_data.life_state == ewcfg.life_state_corpse:
                 walk_response = "You begin to sink through the earth, retreating to your corpse deep in {}.{}".format(
                     poi.str_name, distance_text)
             else:
                 walk_response = "You begin your descent to {}.{}\nI'm sure you've heard, but people who go down there don't come back alive. You still have time to **{}**, if you'd like.".format(
-                    poi.str_name, distance_text, ewcfg.cmd_halt_alt1)
+                    location, distance_text, ewcfg.cmd_halt_alt1)
         else:
-            walk_response = "You begin {} to {}{}.{}".format(walk_text, poi.str_name, aptText, distance_text)
+            walk_response = "You begin {} to {}{}.{}".format(walk_text, location, aptText, distance_text)
 
 
         if isSplit != 2:

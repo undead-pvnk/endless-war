@@ -1652,8 +1652,7 @@ async def manual_transfer(cmd):
 
     item_id = cmd.tokens[1]
     destination = cmd.tokens[2]
-    print(destination)
-    print(item_id)
+
     if cmd.mentions_count == 1:
         target = EwUser(member=cmd.mentions[0])
         destination = str(target.id_user)
