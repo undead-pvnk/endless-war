@@ -7,8 +7,15 @@ from ..static import cfg as ewcfg
 db_pool = {}
 db_pool_id = 0
 
-""" connect to the database """
+cached_db = {
+    #'table-name': {
+    #   'idserverasnumber~entryidasnumber': {
+    #       ewcfg.col_id: entry
+    #   }
+    # }
+}
 
+""" connect to the database """
 
 def databaseConnect():
     conn_info = None
@@ -85,3 +92,33 @@ def execute_sql_query(sql_query = None, sql_replacements = None):
         databaseClose(conn_info)
 
     return data
+
+
+""" Check the cached_db for data, return the data like a sql query if found, otherwise return false"""
+
+
+def get_cache_result(table = None, id_server = None, id_entry = None):
+    # Check inputs
+    if table != None and id_server != None and id_entry != None:
+        # See if table is cached
+        cached_table = cached_db.get(table)
+        if cached_table is not None:
+            # Attempt to grab the entry
+            entry_key = "{}~{}".format(id_server, id_entry)
+            entry = cached_table.get(entry_key)
+            # Return if entry found
+            if entry is not None:
+                return entry
+
+    return False
+
+
+""" Add a row to the cached database """
+def cache_object(table = None, id_server = None, id_entry = None, obj = None):
+    # Create entry
+    entry = {
+        "{}~{}".format(id_server, id_entry): obj
+    }
+
+    # Update Cache
+    cached_db.update({table: entry})

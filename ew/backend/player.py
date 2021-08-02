@@ -29,6 +29,15 @@ class EwPlayer:
             self.id_server = id_server
 
             try:
+                result = bknd_core.get_cache_result(table="players", id_server=id_server, id_entry=id_user)
+
+                if result is not False:
+                    self.__dict__ = result.__dict__
+            finally:
+                ewutils.logMsg("Player {} was initialized from cache.".format(id_user))
+
+            try:
+
                 conn_info = bknd_core.databaseConnect()
                 conn = conn_info.get('conn')
                 cursor = conn.cursor()
@@ -65,6 +74,11 @@ class EwPlayer:
     """ Save user data object to the database. """
 
     def persist(self):
+        try:
+            bknd_core.cache_object(table="players", id_server=self.id_server, id_entry=self.id_user, obj=self)
+        finally:
+            pass
+
         try:
             conn_info = bknd_core.databaseConnect()
             conn = conn_info.get('conn')
