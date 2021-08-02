@@ -539,6 +539,31 @@ async def piss(cmd):
         elif cmd.mentions_count > 1:
             response = "Whoa, one water-sports fetishist at a time, pal!"
 
+    if user_data.life_state == ewcfg.life_state_corpse:
+        if cmd.mentions_count == 0:
+            response = "You grow a ghost dick, unzip it, and just start ghost pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love ghost pissing so much."
+            if random.randint(1, 100) < 2:
+                response = "You grow a gussy, unzip it, and just start ghost pissing all over the goddamn fucking floor. God, you've waited so long for this moment, and it's just as perfect as you could have possibly imagined. You love ghost pissing so much."
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+        if cmd.mentions_count == 1:
+            target_member = cmd.mentions[0]
+            target_user_data = EwUser(member=target_member)
+
+            if user_data.id_user == target_user_data.id_user:
+                response = "Your love for negapiss knows no bounds. You aim your antiurine stream sky high, causing it to land right back into your own ghastly mouth. Mmmm, tasty~!"
+                return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+            if user_data.poi == target_user_data.poi:
+
+                if target_user_data.life_state == ewcfg.life_state_corpse:
+                    response = "You ghost piss HARD and FAST right onto {}!!".format(target_member.display_name)
+                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+                response = "Your ghost piss passes right through them! {} seems annoyed at the negapiss you're streaming at them, but they're entirely unaffected.".format(target_member.display_name)
+            else:
+                response = "You can't !piss on someone who isn't there! Moron!"
+
     else:
         response = "You lack the moral fiber necessary for urination."
 
