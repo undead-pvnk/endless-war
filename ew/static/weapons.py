@@ -1461,11 +1461,12 @@ weapon_list = [
         str_reload="You carefully dip each bullet in a cup of tea before loading them into the gun.",
         str_reload_warning="**OH, BOTHER!** {name_player}’s hunting rifle just ran out bullets!!",
         str_scalp="A single, clean hole pierces the scalp. Ahhh, the thrill of the hunt...",
-        fn_effect=get_normal_attack(weapon_type='precision'),
-        classes=[ewcfg.weapon_class_ammo],
+        fn_effect=get_normal_attack(cost_multiplier=1.2, weapon_type='precision'),
+        classes=[ewcfg.weapon_class_ammo, ewcfg.weapon_class_captcha],
         stat=ewcfg.stat_huntingrifle_kills,
         clip_size=6,
-        acquisition=ewcfg.acquisition_smelting
+        acquisition=ewcfg.acquisition_smelting,
+        captcha_length=4
     ),
     EwWeapon(  # 38
         id_weapon=ewcfg.weapon_id_harpoon,
@@ -1519,7 +1520,7 @@ weapon_list = [
         str_scalp="A single, clean hole pierces the scalp. Ahhh, the thrill of the hunt...",
         fn_effect=get_normal_attack(cost_multiplier=0.7, weapon_type='burst_fire'),
         classes=[ewcfg.weapon_class_ammo],
-        stat=ewcfg.stat_huntingrifle_kills,
+        stat=ewcfg.stat_rifle_kills,
         clip_size=1000
     ),
 
