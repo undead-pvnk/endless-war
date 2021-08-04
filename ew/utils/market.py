@@ -240,6 +240,7 @@ def get_majority_shareholder(id_server = None, stock = None):
         finally:
             return result
 
+""" Update all the stocks currently available in the Stock Exchange """
 
 async def update_stocks(id_server = None):
     if id_server:
@@ -258,6 +259,7 @@ async def update_stocks(id_server = None):
 
 
 """ Clear the bazaar and then refresh stock. """
+
 async def refresh_bazaar(id_server = None):
     if id_server:
         # Update the list of available bazaar items by clearing the current list and adding the new items
