@@ -70,7 +70,7 @@ status_effect_list = [
     EwStatusEffectDef(
         id_status=ewcfg.status_repelaftereffects_id,
         time_expire=2,
-        str_acquire='You try and shake off the body spray, but its stench still lingers, if only for a brief moment.',
+        str_acquire='You try and shake off the foul smell, but its stench still lingers, if only for a brief moment.',
         str_describe='Their surroundings give off a slightly foul odor.',
         str_describe_self='Your surroundings give off a slightly foul odor.'
     ),
