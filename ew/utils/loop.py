@@ -1329,7 +1329,7 @@ async def clock_tick_loop(id_server = None, force_active = False):
                         response = ' The SlimeCorp Stock Exchange is now open for business.'
                         await fe_utils.send_message(client, ewcfg.channel_stockexchange, response)
                         ewutils.logMsg("Started bazaar refresh...")
-                        await market_utils.refresh_bazaar(market_data)
+                        await market_utils.refresh_bazaar(id_server)
                         ewutils.logMsg("...finished bazaar refresh.")
                         
                         await leaderboard_utils.post_leaderboards(client=client, server=id_server)
