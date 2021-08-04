@@ -15,6 +15,7 @@ from . import apt as apt_utils
 from . import cosmeticitem as cosmetic_utils
 from . import move as move_utils
 from . import leaderboard as leaderboard_utils
+from . import weather as weather_utils
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
 from .combat import EwEnemy
@@ -1296,8 +1297,10 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     
                     await market_utils.update_stocks(id_server)
 
+                    await weather_utils.weather_cycle(id_server)
+
                     if not ewutils.check_fursuit_active(market_data):
-                        cosmetic_utils.dedorn_all_costumes()
+                        await cosmetic_utils.dedorn_all_costumes()
 
                     await apt_utils.setOffAlarms(id_server)
 
