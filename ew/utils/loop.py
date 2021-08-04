@@ -10,6 +10,11 @@ from . import core as ewutils
 from . import frontend as fe_utils
 from . import hunting as hunt_utils
 from . import item as itm_utils
+from . import market as market_utils
+from . import apt as apt_utils
+from . import cosmeticitem as cosmetic_utils
+from . import move as move_utils
+from . import leaderboard as leaderboard_utils
 from . import rolemgr as ewrolemgr
 from . import stats as ewstats
 from .combat import EwEnemy
@@ -20,6 +25,8 @@ from ..backend import core as bknd_core
 from ..backend import hunting as bknd_hunt
 from ..backend import item as bknd_item
 from ..backend import worldevent as bknd_event
+from ..backend import fish as bknd_fish
+from ..backend import ads as bknd_ads
 from ..backend.market import EwMarket
 from ..backend.player import EwPlayer
 from ..backend.status import EwEnemyStatusEffect
@@ -130,7 +137,7 @@ async def event_tick(id_server):
 """ Decay slime totals for all users, with the exception of Kingpins"""
 
 
-def decaySlimes(id_server = None):
+async def decaySlimes(id_server = None):
     if id_server != None:
         try:
             conn_info = bknd_core.databaseConnect()
@@ -1259,3 +1266,81 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
         resp_cont_decay_loop.add_response_container(responses)
         district.persist()
 # await resp_cont_decay_loop.post()
+
+""" Good ol' Clock Tick Loop. Handles everything that has to occur on an in-game hour. (15 minutes)"""
+
+async def clock_tick_loop(id_server = None, force_active = False):
+    try:
+        if id_server:
+            while not ewutils.TERMINATE:
+                time_now = int(time.time())
+                # Load the market from the database
+                market_data = EwMarket(id_server)
+                client = ewcfg.get_client()
+
+                # Check when the last recorded tick was in the database, just to make sure we don't double up when the bot restarts.
+                if market_data.time_lasttick + ewcfg.update_market <= time_now or force_active:
+
+                    # Advance the time and potentially change weather.
+                    market_data.clock += 1
+
+                    if market_data.clock >= 24 or market_data.clock < 0:
+                        market_data.clock = 0
+                        market_data.day += 1
+
+                    market_data.time_lasttick = time_now
+
+                    ewutils.logMsg('The time is now {}.'.format(market_data.clock))
+
+                    market_data.persist()
+                    
+                    await market_utils.update_stocks(id_server)
+
+                    if not ewutils.check_fursuit_active(market_data):
+                        cosmetic_utils.dedorn_all_costumes()
+
+                    await apt_utils.setOffAlarms(id_server)
+
+                    # Decay slime totals
+                    await decaySlimes(id_server)
+
+                    # Increase hunger for all players below the max.
+                    # ewutils.pushupServerHunger(id_server = server.id)
+
+                    # Decrease inebriation for all players above min (0).
+                    pushdownServerInebriation(id_server)
+
+                    # Remove fish offers which have timed out
+                    bknd_fish.kill_dead_offers(id_server)
+
+                    # kill advertisements that have timed out
+                    bknd_ads.delete_expired_ads(id_server)
+
+                    await give_kingpins_slime_and_decay_capture_points(id_server)
+                    await move_utils.send_gangbase_messages(id_server, market_data.clock)
+                    await move_utils.kick(id_server)
+
+                    ewutils.logMsg("Finished clock tick.")  
+
+                    if market_data.clock == 6:
+                        response = ' The SlimeCorp Stock Exchange is now open for business.'
+                        await fe_utils.send_message(client, ewcfg.channel_stockexchange, response)
+                        ewutils.logMsg("Started bazaar refresh...")
+                        await market_utils.refresh_bazaar(market_data)
+                        ewutils.logMsg("...finished bazaar refresh.")
+                        
+                        await leaderboard_utils.post_leaderboards(client=client, server=id_server)
+                        
+                        if market_data.clock % 8 == 0:
+                            ewutils.logMsg("Started rent calc...")
+                            apt_utils.rent_time(id_server)
+                            pay_salary(id_server)
+                            ewutils.logMsg("...finished rent calc.")
+
+                    elif market_data.clock == 20:
+                        response = ' The SlimeCorp Stock Exchange has closed for the night.'
+                        await fe_utils.send_message(client, ewcfg.channel_stockexchange, response)
+                  
+                await asyncio.sleep(60)
+    except:
+        ewutils.logMsg('An error occurred in the scheduled slime market update task. Fix that.')
