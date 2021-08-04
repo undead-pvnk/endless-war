@@ -1043,7 +1043,7 @@ async def generate_credence(id_server):
 
 # Pay out salaries. SlimeCoin can be taken away or given depending on if the user has positive or negative credits.
 async def pay_salary(id_server = None):
-    print('paying salary...')
+    ewutils.logMsg('Paying salary...')
 
     try:
         conn_info = bknd_core.databaseConnect()
@@ -1263,8 +1263,8 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
     for id_district in poi_static.capturable_districts:
         district = EwDistrict(id_server=id_server, district=id_district)
 
-        responses = district.decay_capture_points()
-        resp_cont_decay_loop.add_response_container(responses)
+        district.decay_capture_points()
+        # resp_cont_decay_loop.add_response_container(responses)
         district.persist()
 # await resp_cont_decay_loop.post()
 
@@ -1278,6 +1278,7 @@ async def clock_tick_loop(id_server = None, force_active = False):
                 # Load the market from the database
                 market_data = EwMarket(id_server)
                 client = ewcfg.get_client()
+                server = ewcfg.server_list[id_server]
 
                 # Check when the last recorded tick was in the database, just to make sure we don't double up when the bot restarts.
                 if market_data.time_lasttick + ewcfg.update_market <= time_now or force_active:
@@ -1294,9 +1295,10 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     ewutils.logMsg('The time is now {}.'.format(market_data.clock))
 
                     market_data.persist()
-                    
+                    ewutils.logMsg("Updating stocks...")
                     await market_utils.update_stocks(id_server)
-
+                    
+                    ewutils.logMsg("Handling weather cycle...")
                     await weather_utils.weather_cycle(id_server)
 
                     if not ewutils.check_fursuit_active(market_data):
@@ -1305,39 +1307,46 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     await apt_utils.setOffAlarms(id_server)
 
                     # Decay slime totals
+                    ewutils.logMsg("Decaying slimes...")
                     await decaySlimes(id_server)
 
                     # Increase hunger for all players below the max.
                     # ewutils.pushupServerHunger(id_server = server.id)
 
                     # Decrease inebriation for all players above min (0).
+                    ewutils.logMsg("Handling inebriation...")
                     await pushdownServerInebriation(id_server)
 
+                    ewutils.logMsg("Killing offers...")
                     # Remove fish offers which have timed out
                     bknd_fish.kill_dead_offers(id_server)
 
+                    ewutils.logMsg("Deleting old ads...")
                     # kill advertisements that have timed out
                     bknd_ads.delete_expired_ads(id_server)
 
+                    ewutils.logMsg("Handling capture points...")
                     await give_kingpins_slime_and_decay_capture_points(id_server)
+                    ewutils.logMsg("Sending gangbase messages...")
                     await move_utils.send_gangbase_messages(id_server, market_data.clock)
+                    ewutils.logMsg("Kicking AFK players...")
                     await move_utils.kick(id_server)
 
                     ewutils.logMsg("Finished clock tick.")  
 
-                    if market_data.clock == 6:
+                    if market_data.clock == 6 or force_active:
                         response = ' The SlimeCorp Stock Exchange is now open for business.'
                         await fe_utils.send_message(client, ewcfg.channel_stockexchange, response)
                         ewutils.logMsg("Started bazaar refresh...")
                         await market_utils.refresh_bazaar(id_server)
                         ewutils.logMsg("...finished bazaar refresh.")
                         
-                        await leaderboard_utils.post_leaderboards(client=client, server=id_server)
+                        await leaderboard_utils.post_leaderboards(client=client, server=server)
                         
-                        if market_data.clock % 8 == 0:
+                        if market_data.clock % 8 == 0 or force_active:
                             ewutils.logMsg("Started rent calc...")
-                            apt_utils.rent_time(id_server)
-                            pay_salary(id_server)
+                            await apt_utils.rent_time(id_server)
+                            await pay_salary(id_server)
                             ewutils.logMsg("...finished rent calc.")
 
                     elif market_data.clock == 20:

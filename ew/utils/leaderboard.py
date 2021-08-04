@@ -12,46 +12,46 @@ from ..static import poi as poi_static
 
 
 async def post_leaderboards(client = None, server = None):
+    ewutils.logMsg("Started leaderboard calcs...")
     leaderboard_channel = fe_utils.get_channel(server=server, channel_name=ewcfg.channel_leaderboard)
     resp_cont = EwResponseContainer(client, id_server = server.id)
 
-    ewutils.logMsg("Started leaderboard calcs...")
     market = EwMarket(id_server=server.id)
     time = "day {}".format(market.day)
 
     resp_cont.add_channel_response(leaderboard_channel, "▓▓{} **STATE OF THE CITY:** {} {}▓▓".format(ewcfg.emote_theeye, time, ewcfg.emote_theeye))
 
-    kingpins = make_kingpin_board(server=server, title=ewcfg.leaderboard_kingpins)
+    kingpins = make_kingpin_board(server=server.id, title=ewcfg.leaderboard_kingpins)
     resp_cont.add_channel_response(leaderboard_channel, kingpins)
 
     districts = make_district_control_board(id_server=server.id, title=ewcfg.leaderboard_districts)
     resp_cont.add_channel_response(leaderboard_channel, districts)
 
-    topslimes = make_userdata_board(server=server, category=ewcfg.col_slimes, title=ewcfg.leaderboard_slimes)
+    topslimes = make_userdata_board(server=server.id, category=ewcfg.col_slimes, title=ewcfg.leaderboard_slimes)
     resp_cont.add_channel_response(leaderboard_channel, topslimes)
 
-    topcoins = make_stocks_top_board(server=server)
+    topcoins = make_stocks_top_board(server=server.id)
     resp_cont.add_channel_response(leaderboard_channel, topcoins)
 
-    topghosts = make_userdata_board(server=server, category=ewcfg.col_slimes, title=ewcfg.leaderboard_ghosts, lowscores=True, rows=3)
+    topghosts = make_userdata_board(server=server.id, category=ewcfg.col_slimes, title=ewcfg.leaderboard_ghosts, lowscores=True, rows=3)
     resp_cont.add_channel_response(leaderboard_channel, topghosts)
 
-    topbounty = make_userdata_board(server=server, category=ewcfg.col_bounty, title=ewcfg.leaderboard_bounty, divide_by=ewcfg.slimecoin_exchangerate)
+    topbounty = make_userdata_board(server=server.id, category=ewcfg.col_bounty, title=ewcfg.leaderboard_bounty, divide_by=ewcfg.slimecoin_exchangerate)
     resp_cont.add_channel_response(leaderboard_channel, topbounty)
 
-    topfashion = make_freshness_top_board(server=server)
+    topfashion = make_freshness_top_board(server=server.id)
     resp_cont.add_channel_response(leaderboard_channel, topfashion)
 
-    topdonated = make_userdata_board(server=server, category=ewcfg.col_splattered_slimes, title=ewcfg.leaderboard_donated)
+    topdonated = make_userdata_board(server=server.id, category=ewcfg.col_splattered_slimes, title=ewcfg.leaderboard_donated)
     resp_cont.add_channel_response(leaderboard_channel, topdonated)
     
-    topslimeoids = make_slimeoids_top_board(server=server)
+    topslimeoids = make_slimeoids_top_board(server=server.id)
     resp_cont.add_channel_response(leaderboard_channel, topslimeoids)
 
-    # topfestivity = make_slimernalia_board(server = server, title = ewcfg.leaderboard_slimernalia)
-    # await ewutils.send_message(client, leaderboard_channel, topfestivity)
+    # topfestivity = make_slimernalia_board(server = serve.id, title = ewcfg.leaderboard_slimernalia)
+    # resp_cont.add_channel_response(leaderboard_channel, topfestivity)
 
-    topzines = make_zines_top_board(server=server)
+    topzines = make_zines_top_board(server=server.id)
     resp_cont.add_channel_response(leaderboard_channel, topzines)
 
     await resp_cont.post()
@@ -71,12 +71,12 @@ def make_stocks_top_board(server = None):
                 "WHERE u.id_server = %(id_server)s " +
                 "ORDER BY u.slimecoin DESC"
         ), {
-            "id_server": server.id,
+            "id_server": server,
         })
 
-        stock_kfc = EwStock(id_server=server.id, stock='kfc')
-        stock_tb = EwStock(id_server=server.id, stock='tacobell')
-        stock_ph = EwStock(id_server=server.id, stock='pizzahut')
+        stock_kfc = EwStock(id_server=server, stock='kfc')
+        stock_tb = EwStock(id_server=server, stock='tacobell')
+        stock_ph = EwStock(id_server=server, stock='pizzahut')
 
         shares_value = lambda shares, stock: round(shares * (stock.exchange_rate / 1000.0))
 
@@ -105,7 +105,7 @@ def make_freshness_top_board(server = None):
     try:
         all_adorned = bknd_core.execute_sql_query("SELECT id_item FROM items WHERE id_server = %s " +
                                                   "AND id_item IN (SELECT id_item FROM items_prop WHERE name = 'adorned' AND value = 'true')",
-                                                  (server.id,)
+                                                  (server,)
                                                   )
 
         all_adorned = tuple(map(lambda a: a[0], all_adorned))
@@ -145,7 +145,7 @@ def make_freshness_top_board(server = None):
         max_fresh = lambda base: base * 50 + 100
 
         while len(user_ids) > 0 and (len(top_five) < 5 or top_five[-1].freshness < max_fresh(user_fresh.get(user_ids[0]))):
-            current_user = EwUser(id_user=user_ids.pop(0), id_server=server.id, data_level=2)
+            current_user = EwUser(id_user=user_ids.pop(0), id_server=server, data_level=2)
 
             top_five.append(current_user)
 
@@ -187,7 +187,7 @@ def make_slimeoids_top_board(server = None):
                 "WHERE sl.id_server = %s AND sl.life_state = 2 " +
                 "ORDER BY sl.clout DESC LIMIT 3"
         ), (
-            server.id,
+            server,
         ))
 
         data = cursor.fetchall()
@@ -223,7 +223,7 @@ def make_zines_top_board(server = None):
                 "WHERE b.id_server = %s AND b.book_state = 1 " +
                 "ORDER BY b.sales DESC LIMIT 5"
         ), (
-            server.id,
+            server,
         ))
 
         data = cursor.fetchall()
@@ -260,7 +260,7 @@ def make_userdata_board(server = None, category = "", title = "", lowscores = Fa
             order=('DESC' if lowscores == False else 'ASC'),
             limit=rows
         ), (
-            server.id,
+            server,
         ))
         i = 0
         row = cursor.fetchone()
@@ -297,7 +297,7 @@ def make_statdata_board(server = None, category = "", title = "", lowscores = Fa
             order=('DESC' if lowscores == False else 'ASC'),
             limit=rows
         ), (
-            server.id,
+            server,
             category
         ))
 
@@ -333,7 +333,7 @@ def make_kingpin_board(server = None, title = ""):
             category=ewcfg.col_slimes,
             id_user=ewcfg.col_id_user
         ), (
-            server.id,
+            server,
             ewcfg.life_state_kingpin
         ))
 
@@ -397,7 +397,7 @@ def make_slimernalia_board(server, title):
         ), (
             "id_furniture",
             ewcfg.item_id_sigillaria,
-            server.id
+            server
         )
     )
 
@@ -432,7 +432,7 @@ def make_gambit_leaderboard(server, title, rows = 3):
                 order=('DESC' if lowgambit == False else 'ASC'),
                 limit=rows
             ), (
-                server.id,
+                server,
             ))
 
         i = 0
