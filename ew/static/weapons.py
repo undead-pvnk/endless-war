@@ -73,6 +73,7 @@ def get_weapon_type_stats(weapon_type):
             "crit_chance": 0.1,
             "crit_multiplier": 2,
             "hit_chance": 0.9,
+            "mass_apply_status": ewcfg.status_burning_id
         },
         "explosive": {
             "damage_multiplier": 0.5,
@@ -101,7 +102,7 @@ def get_weapon_type_stats(weapon_type):
     return types[weapon_type]
 
 
-def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_multiplier = None, crit_chance = None, crit_multiplier = None, hit_chance = None):
+def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_multiplier = None, crit_chance = None, crit_multiplier = None, hit_chance = None, apply_status = None, mass_apply_status = None):
     weapon_stats = get_weapon_type_stats(weapon_type)
     if cost_multiplier:
         weapon_stats["cost_multiplier"] = cost_multiplier
@@ -113,6 +114,10 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
         weapon_stats["crit_multiplier"] = crit_multiplier
     if hit_chance:
         weapon_stats["hit_chance"] = hit_chance
+    if apply_status:
+        weapon_stats["apply_status"] = apply_status
+    if mass_apply_status:
+        weapon_stats["mass_apply_status"] = mass_apply_status
 
     def get_hit_damage(ctn):
         hit_damage = 0
@@ -134,6 +139,9 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
                 hit_damage *= weapon_stats["crit_multiplier"]
                 if not ("shots" in weapon_stats):
                     ctn.crit = True
+
+            ctn.apply_status = weapon_stats.get("apply_status")
+            ctn.apply_bystander_status = weapon_stats.get("mass_apply_status")
 
         return hit_damage
 
@@ -1328,8 +1336,6 @@ weapon_list = [
         str_scalp=" Multiple slash marks run across it.",
         fn_effect=get_normal_attack(weapon_type="normal", hit_chance=-1),
         price=0,
-        vendors=[],
-        classes=[],
         stat=ewcfg.stat_fingernails_kills,
         # sap_cost = 3,
         captcha_length=8

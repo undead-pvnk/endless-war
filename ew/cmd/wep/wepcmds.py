@@ -25,7 +25,7 @@ from ew.utils.frontend import EwResponseContainer
 from ew.utils.slimeoid import EwSlimeoid
 from .weputils import EwEffectContainer
 from .weputils import attackEnemy
-from .weputils import burn_bystanders
+from .weputils import apply_status_bystanders
 from .weputils import canAttack
 from .weputils import canCap
 from .weputils import fulfill_ghost_weapon_contract
@@ -300,20 +300,23 @@ async def attack(cmd, n1_die = None):
                 life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_shambler]
                 factions = ["", shootee_data.faction]
 
-                # Burn players in district
-                if ewcfg.weapon_class_burning in weapon.classes:
+                # Apply status to everyone in the district
+                if ctn.mass_apply_status:
                     if not miss:
-                        resp = burn_bystanders(user_data=user_data, burn_dmg=bystander_damage, life_states=life_states, factions=factions, district_data=district_data)
+                        resp = apply_status_bystanders(user_data=user_data, status=ewcfg.status_burning_id, value=bystander_damage, life_states=life_states, factions=factions, district_data=district_data)
                         resp_cont.add_response_container(resp)
 
-                elif ewcfg.weapon_class_exploding in weapon.classes:
+                # Explodes
+                if ctn.explode:
                     if not miss:
                         resp = weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, market_data=market_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, time_now=time_now, target_enemy=False)
                         resp_cont.add_response_container(resp)
-
-                elif ewcfg.mutation_id_napalmsnot in user_mutations and ewcfg.mutation_id_napalmsnot not in shootee_mutations and not (ewcfg.mutation_id_airlock in shootee_mutations and market_data.weather == ewcfg.weather_rainy):
-                    resp = "**HCK-PTOOO!** " + shootee_data.applyStatus(id_status=ewcfg.status_burning_id, value=bystander_damage * .5, source=user_data.id_user).format(name_player=cmd.mentions[0].display_name)
-                    resp_cont.add_channel_response(cmd.message.channel.name, resp)
+                
+                # Apply status to target
+                if ctn.apply_status:
+                    if ctn.apply_status == ewcfg.status_burning_id and ewcfg.mutation_id_napalmsnot in user_mutations and ewcfg.mutation_id_napalmsnot not in shootee_mutations and not (ewcfg.mutation_id_airlock in shootee_mutations and market_data.weather == ewcfg.weather_rainy):
+                        resp = "**HCK-PTOOO!** " + shootee_data.applyStatus(id_status=ewcfg.status_burning_id, value=bystander_damage * .5, source=user_data.id_user).format(name_player=cmd.mentions[0].display_name)
+                        resp_cont.add_channel_response(cmd.message.channel.name, resp)
 
             # can't hit lucky lucy
             if shootee_data.life_state == ewcfg.life_state_lucky or ewcfg.status_n4 in shootee_data.getStatusEffects():
