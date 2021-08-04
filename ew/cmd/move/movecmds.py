@@ -153,7 +153,7 @@ async def move(cmd = None, isApt = False, isSplit = 0):
         path = EwPath(cost=60)
     elif len(poi.neighbors.keys()) == 0 or poi_current == None or len(poi_current.neighbors.keys()) == 0:
         path = None
-    elif  poi_current.isSplit and poi.isSplit != "" and isSplit == False:
+    elif  poi_current.isSplit  != "" and poi.isSplit != "" and poi_current.isSplit != poi.isSplit and isSplit == False:
         cmd_swap = cmd.tokens
         cmd.tokens = ['!goto', poi_current.isSplit]
         await move(cmd=cmd, isSplit=1)
@@ -161,13 +161,13 @@ async def move(cmd = None, isApt = False, isSplit = 0):
         await move(cmd=cmd, isSplit=2)
         cmd.tokens = cmd_swap
         return await move(cmd=cmd, isSplit=2)
-    elif poi.isSplit != "" and isSplit == False:
+    elif poi.isSplit != "" and isSplit == False and poi_current.isSplit != poi.isSplit:
         cmd_swap = cmd.tokens
         cmd.tokens = ['!goto', poi.isSplit]
         await move(cmd=cmd, isSplit=1)
         cmd.tokens = cmd_swap
         return await move(cmd=cmd, isSplit=2)
-    elif poi_current.isSplit != "" and isSplit == False:
+    elif poi_current.isSplit != "" and isSplit == False and poi_current.isSplit != poi.isSplit:
         cmd_swap = cmd.tokens
         cmd.tokens = ['!goto', poi_current.isSplit]
         await move(cmd=cmd, isSplit=1)
