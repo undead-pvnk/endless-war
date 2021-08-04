@@ -509,7 +509,7 @@ def pushupServerHunger(id_server = None):
 """ Reduce inebriation for every player in the server. """
 
 
-def pushdownServerInebriation(id_server = None):
+async def pushdownServerInebriation(id_server = None):
     if id_server != None:
         try:
             bknd_core.execute_sql_query("UPDATE users SET {inebriation} = {inebriation} - {tick} WHERE id_server = %s AND {inebriation} > {limit}".format(
@@ -1311,7 +1311,7 @@ async def clock_tick_loop(id_server = None, force_active = False):
                     # ewutils.pushupServerHunger(id_server = server.id)
 
                     # Decrease inebriation for all players above min (0).
-                    pushdownServerInebriation(id_server)
+                    await pushdownServerInebriation(id_server)
 
                     # Remove fish offers which have timed out
                     bknd_fish.kill_dead_offers(id_server)
