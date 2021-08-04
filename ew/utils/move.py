@@ -482,11 +482,14 @@ async def kick(id_server):
         try:
             poi = poi_static.id_to_poi[player[0]]
             id_user = player[1]
-            user_data = EwUser(id_user=id_user, id_server=id_server)
+            
 
             # checks if the player should be kicked from the subzone and kicks them if they should.
             if poi.is_subzone and poi.id_poi not in [ewcfg.poi_id_thesphere, ewcfg.poi_id_thebreakroom]:
-
+                
+                # Don't load the user until we know that we need to
+                user_data = EwUser(id_user=id_user, id_server=id_server)
+                
                 # Some subzones could potentially have multiple mother districts.
                 # Make sure to get one that's accessible before attempting a proper kickout.
                 mother_district_chosen = random.choice(poi.mother_districts)
