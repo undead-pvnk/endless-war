@@ -1738,9 +1738,9 @@ bleed_half_life = 60 * 5  # five minutes
 bleed_tick_length = 10
 
 # how often to decide whether or not to spawn an enemy
-# enemy_spawn_tick_length = 60 * 3 # Three minutes
+enemy_spawn_tick_length = 60 * 3 # Three minutes
 # enemy_spawn_tick_length = 1
-enemy_spawn_tick_length = 30
+# enemy_spawn_tick_length = 30
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 5
 
