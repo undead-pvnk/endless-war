@@ -29,7 +29,4 @@ cmd_map = {
 
     # gender??? OMG???
     ewcfg.cmd_identify: juviecmds.identify,
-
-    # teeth :D
-    ewcfg.cmd_setteeth: juviecmds.setteeth
 }

@@ -236,9 +236,6 @@ async def data(cmd):
                 "" if len(sidearm_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
                     sidearm_item.item_props.get("weapon_name"))), sidearm.str_weapon)
 
-        if user_data.teeth != None:
-            response += "You have {} teeth.".format(user_data.teeth)
-
         if trauma != None:
             response += " {}".format(trauma.str_trauma_self)
 

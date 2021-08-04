@@ -849,8 +849,6 @@ async def identify(cmd):
     user_data = EwUser(member=cmd.message.author)
     gender = cmd.message.content[(len(ewcfg.cmd_identify)):].strip()
 
-
-
     if gender == "":
         response = "Cool. Noted. Enjoy your lack of gender, slime."
         user_data.gender = ""
@@ -869,29 +867,5 @@ async def identify(cmd):
         response = "Radical! Enjoy your gender, slime{}.".format(gender)
         user_data.gender = gender
         user_data.persist()
-
-    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
-
-""" Teeth :D """
-
-async def setteeth(cmd):
-    user_data = EwUser(member=cmd.message.author)
-    teethnumber = cmd.message.content[(len(ewcfg.cmd_setteeth)):].strip()
-
-    if teethnumber == "":
-        response = "Just say '0', dumbass."
-    elif int(teethnumber) > 1000000000:
-        response = "Are you stupid? It's common knowledge that nobody can have more than a billion teeth. Knock some out, then !setteeth."
-    elif int(teethnumber) == 0:
-        response = "Radical. Your mouth configures to have no teeth."
-        user_data.teeth = teethnumber
-        user_data.persist()
-    elif int(teethnumber) == 69 or int(teethnumber) == 420:
-        response = "Haha. You're so funny, you little goober. Fuck off."
-    else:
-        response = "Radical. Your mouth configures to have {} teeth.".format(teethnumber)
-        user_data.teeth = teethnumber
-        user_data.persist()        
 
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

@@ -1210,7 +1210,6 @@ cmd_payday = cmd_prefix + 'payday'
 cmd_win = cmd_prefix + 'win'
 cmd_slimefest = cmd_prefix + 'slimefest'
 cmd_identify = cmd_prefix + 'identify'
-cmd_setteeth = cmd_prefix + 'setteeth'
 
 cmd_preserve = cmd_prefix + 'preserve'
 cmd_stink = cmd_prefix + 'stink'

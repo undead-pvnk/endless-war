@@ -50,7 +50,6 @@ class EwUserBase:
     salary_credits = 0
     degradation = 0
     gender = "boi"
-    teeth = 32
 
     # SWILLDERMUK
     gambit = 0
@@ -204,7 +203,8 @@ class EwUserBase:
                         ewcfg.col_gvs_time_lastshambaquarium,
                         ewcfg.col_rand_seed,
                         ewcfg.col_time_lasthit,
-                        ewcfg.col_verified
+                        ewcfg.col_verified,
+                        ewcfg.col_gender
                     ), (
                         id_user,
                         id_server
@@ -272,6 +272,7 @@ class EwUserBase:
                     self.rand_seed = result[54]
                     self.time_lasthit = result[55]
                     self.verified = result[56]
+                    self.gender = result[57]
 
                 else:
                     self.poi = ewcfg.poi_id_downtown
@@ -375,8 +376,7 @@ class EwUserBase:
                     ewcfg.col_rand_seed,
                     ewcfg.col_time_lasthit,
                     ewcfg.col_verified,
-                    ewcfg.col_gender,
-                    ewcfg.col_teeth
+                    ewcfg.col_gender
                 ), (
                     self.id_user,
                     self.id_server,
@@ -439,8 +439,7 @@ class EwUserBase:
                     self.rand_seed,
                     self.time_lasthit,
                     self.verified,
-                    self.gender,
-                    self.teeth
+                    self.gender
                     
                 ))
 
