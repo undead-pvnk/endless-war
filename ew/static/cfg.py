@@ -2246,6 +2246,7 @@ col_race = 'race'
 col_time_racialability = 'time_racialability'
 col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
 col_verified = 'verified'
+col_gender = 'gender'
 
 col_attack = 'attack'
 col_speed = 'speed'
