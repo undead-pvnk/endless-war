@@ -122,7 +122,7 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
         hit_roll = min(random.random(), random.random()) if player_has_sharptoother else random.random()
         guarantee_crit = (weapon_type == "precision" and ctn.user_data.sidearm == -1)
 
-        ignore_hitchance = hit_chance == -1
+        ignore_hitchance = weapon_stats["hit_chance"] == -1
 
         if (hit_roll < (weapon_stats["hit_chance"] + ctn.hit_chance_mod)) or ignore_hitchance:
             effective_multiplier = weapon_stats["damage_multiplier"]
