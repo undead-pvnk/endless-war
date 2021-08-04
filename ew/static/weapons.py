@@ -122,7 +122,9 @@ def get_normal_attack(weapon_type = "normal", cost_multiplier = None, damage_mul
         hit_roll = min(random.random(), random.random()) if player_has_sharptoother else random.random()
         guarantee_crit = (weapon_type == "precision" and ctn.user_data.sidearm == -1)
 
-        if hit_roll < (weapon_stats["hit_chance"] + ctn.hit_chance_mod):
+        ignore_hitchance = hit_chance == -1
+
+        if (hit_roll < (weapon_stats["hit_chance"] + ctn.hit_chance_mod)) or ignore_hitchance:
             effective_multiplier = weapon_stats["damage_multiplier"]
             if "variable_damage_multiplier" in weapon_stats:
                 effective_multiplier += random.random() * weapon_stats["variable_damage_multiplier"]
@@ -266,18 +268,6 @@ def wef_watercolors(ctn = None):
     elif aim == 1000:
         ctn.crit = True
         ctn.slimes_damage *= 1
-
-
-def wef_fingernails(ctn = None):
-    ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
-    aim = (random.randrange(10) + 1)
-    user_mutations = ctn.user_data.get_mutations()
-    # ctn.sap_damage = 2
-    ctn.miss = False
-
-    if aim >= (10 - int(10 * ctn.crit_mod)):
-        ctn.crit = True
-        ctn.slimes_damage *= 2
 
 
 def wef_harpoon(ctn = None):
@@ -1336,7 +1326,7 @@ weapon_list = [
         str_duel="",
         str_description="",
         str_scalp=" Multiple slash marks run across it.",
-        fn_effect=wef_fingernails,
+        fn_effect=get_normal_attack(weapon_type="normal", hit_chance=-1),
         price=0,
         vendors=[],
         classes=[],
