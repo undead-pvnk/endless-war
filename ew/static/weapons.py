@@ -319,7 +319,7 @@ weapon_list = [
         str_reload="You swing out the revolver’s chamber, knocking the used shells out onto the floor before hastily slamming fresh bullets back into it.",
         str_reload_warning="**BANG--** *tk tk...* **SHIT!!** {name_player} just spent the last of the ammo in their revolver’s chamber; it’s out of bullets!!",
         str_scalp=" It has a bullet hole in it.",
-        fn_effect=get_normal_attack(cost_multiplier=0.8),
+        fn_effect=get_normal_attack(cost_multiplier=0.9),
         price=10000,
         clip_size=6,
         vendors=[ewcfg.vendor_dojo, ewcfg.vendor_breakroom],
