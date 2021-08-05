@@ -625,6 +625,14 @@ trauma_list = [
         str_trauma="They can still feel the circular scar inside their throat. Embarrassing...",
         trauma_class=ewcfg.trauma_class_accuracy,
     ),
+    EwTrauma(  # 17
+        id_trauma='whistle',
+        str_trauma_self="You hesitate to even acknowledge your own slimeoid.",
+        str_trauma="They hesitate to even acknowledge their own slimeoid.",
+        trauma_class=ewcfg.trauma_class_accuracy,
+    ),
+
+
 ]
 
 trauma_map = {}
