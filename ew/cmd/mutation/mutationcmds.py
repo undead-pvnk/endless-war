@@ -564,6 +564,9 @@ async def piss(cmd):
             else:
                 response = "You can't !piss on someone who isn't there! Moron!"
 
+        elif cmd.mentions_count > 1:
+            response = "Whoa, one necrophiliac at a time, pal!"
+
     else:
         response = "You lack the moral fiber necessary for urination."
 
