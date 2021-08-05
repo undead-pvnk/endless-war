@@ -432,7 +432,25 @@ async def cultivate(cmd):
     mutations = user_data.get_mutations()
 
     # Checking availability of irrigate action
-    if user_data.life_state != ewcfg.life_state_juvenile:
+
+    if cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms] and cmd.tokens[0].lower() == '!weed':
+        rand1 = random.randrange(100)
+        rand2 = random.randrange(5)
+        response = ""
+        if rand1 > 80:
+            response = "**"
+        for x in range(rand2 + 1):
+            response += "Y"
+        for x in range(rand2 + 1):
+            response += "E"
+        for x in range(rand2 + 1):
+            response += "A"
+        for x in range(rand2 + 1):
+            response += "H"
+        response += " BRO!"
+        if rand1 > 80:
+            response += "**"
+    elif user_data.life_state != ewcfg.life_state_juvenile:
         response = "Only Juveniles of pure heart and with nothing better to do can tend to their crops."
     elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
         response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."

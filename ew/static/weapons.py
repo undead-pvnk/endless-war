@@ -1518,14 +1518,42 @@ weapon_list = [
         str_reload="Oh. Fuck. You didn't think you'd even need to reload this. You detatch the two cylinders from the gun, making sure not to drop the massive weight on your toes. In goes the ammo! It's about 4x over capacity, but you somehow manage to get everything put back together in pretty good time.",
         str_reload_warning="**OH, BOTHER!** {name_player}’s hunting rifle just ran out bullets!!",
         str_scalp="A single, clean hole pierces the scalp. Ahhh, the thrill of the hunt...",
-        fn_effect=get_normal_attack(weapon_type='precision'),
+        fn_effect=get_normal_attack(cost_multiplier=0.7, weapon_type='burst_fire'),
         classes=[ewcfg.weapon_class_ammo],
         stat=ewcfg.stat_huntingrifle_kills,
-        clip_size=1000,
+        clip_size=1000
+    ),
+    EwWeapon(  # 39
+        id_weapon=ewcfg.weapon_id_slimeoidwhistle,
+        alias=[
+            "slimeoidwhistle",
+            "swhistle",
+            "sw"
+        ],
+        str_crit="Your whistle makes a triumphant call!! {slimeoid_name} psyches itself up and unleashes {slimeoid_crit} upon {name_target} for a devastating and lethal blow!!",
+        str_miss="Your whistle makes an awful screech! {slimeoid_name} is wandering around aimlessly before looking at you with confusion.",
+        str_equip="You equip the whistle.",
+        str_name="slimeoid whistle",
+        str_weapon="a slimeoid whistle",
+        str_weaponmaster_self="You are a rank {rank} trainer of the slimeoid whistle.",
+        str_weaponmaster="They are a rank {rank} trainer of the the slimeoid whistle.",
+        str_kill="{name_player}’s shrill screech overpowers {name_target}'s screams. {slimeoid_name} {slimeoid_kill} They enjoy a nice fleshy snack after the deed is done. {emote_skull}",
+        str_killdescriptor="sicced on",
+        str_damage="{name_target} is {slimeoid_dmg} by {slimeoid_name}!!",
+        str_duel="[ ! ] {name_player} challenges {name_target} to a ‘slimeoid battle’. They summon their slimeoids and begin attacking each other.",
+        str_description="It's a little whistle. It's loud as hell, and every second you blow it it adds a couple zeroes to the ol' geiger counter.",
+        str_scalp="It’s drenched in slimeoid bile.",
+        fn_effect=get_normal_attack(cost_multiplier=0.7, weapon_type='burst_fire'),
+        classes=[],
+        stat=ewcfg.stat_whistle_kills,
         acquisition=ewcfg.acquisition_smelting
     ),
 
 ]
+
+
+
+
 
 # A map of id_weapon to EwWeapon objects.
 weapon_map = {}
@@ -1549,4 +1577,50 @@ weapon_type_convert = {
     ewcfg.weapon_id_paintgun: wef_paintgun,
     ewcfg.weapon_id_paintbrush: get_normal_attack(weapon_type='small_game'),
     ewcfg.weapon_id_roomba: get_normal_attack()
+}
+
+slimeoid_weapon_type_convert = {
+    -1: get_normal_attack(weapon_type='tool'),
+    0:  get_normal_attack(weapon_type='tool'),
+    1:  get_normal_attack(weapon_type='tool'),
+    2:  get_normal_attack(weapon_type='small_game'),
+    3:  get_normal_attack(weapon_type='small_game'),
+    4:  get_normal_attack(),
+    5:  get_normal_attack(),
+    6:  get_normal_attack(weapon_type='variable_damage'),
+    7:  get_normal_attack(weapon_type='variable_damage'),
+    8:  get_normal_attack(weapon_type='heavy'),
+    9:  get_normal_attack(weapon_type='heavy'),
+    10: get_normal_attack(weapon_type='minigun'),
+}
+
+slimeoid_dmg_text = {
+    "blades":"slashed cleanly across the chest",
+    "teeth":"impaled by numerous sharp teeth",
+    "grip":"being deprived of oxygen",
+    "bludgeon":"struck hard in the skull",
+    "spikes":"skewered by a volley of jagged spikes",
+    "electricity":"tazed by a continuous arc of electricity",
+    "slam":"crushed under a massive weight"
+}
+
+slimeoid_kill_text = {
+    "blades":"unleashes a flurry of strikes too fast for the eye to see. After a few heartbeats, slices slowly slide apart like fresh cut salami.",
+    "teeth":"clenches their prey in its powerful jaws. Ripping and tearing the head from its body until there’s nothing left but a stump.",
+    "grip":"has a tight stranglehold on their prey, squeezing until their brain bursts out of their skull like a cyst filled with grey matter.",
+    "bludgeon":"swiftly bashes their prey with force of a semi truck. Their bones are flung out of their body before vaporizing against a nearby building.",
+    "spikes":"slings a hail of gnarled spikes, pinning their victim against the wall like a carnival act. It eagerly picks off meat chunks of its prey to feast on like skewered BBQ.",
+    "electricity":"filled with unlimited power, charges up for a massive powerful arc, unleashing a blinding lightning strike. The taste of metal fills the static-charged atmosphere before its prey is struck with 80 jigawats of power.",
+    "slam":"jumps high into the air. With the force of an atomic warhead they crash down through the stratosphere and obliterate their prey below, painting the district green. "
+}
+
+
+slimeoid_crit_text = {
+"spit":"a rain of high velocity corrosive acid",
+"laser":"a searing white hot photon beam",
+"spines":"a hail of massive jagged spikes",
+"throw":"its unmatched strength and throws a car",
+"TK":"a brain blast of psychic waves",
+"fire":"a torrent of unrelenting dragon-like flames",
+"webs":"a high pressure string shot of sticky webs"
 }

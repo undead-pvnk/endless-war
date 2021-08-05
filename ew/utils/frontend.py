@@ -93,7 +93,7 @@ class EwResponseContainer:
             for i in range(len(self.channel_responses[channel])):
                 self.channel_responses[channel][i] = formatMessage(member, self.channel_responses[channel][i])
 
-    async def post(self, channel = None):
+    async def post(self, channel = None, delete_after = None):
         self.client = ewutils.get_client()
         messages = []
 
@@ -122,19 +122,19 @@ class EwResponseContainer:
                     if len(self.channel_responses[ch][0]) > ewcfg.discord_message_length_limit:
                         response += "\n" + self.channel_responses[ch].pop(0)
                         length = len(response)
-
+                        #client, channel, text = None, embed = None, delete_after = None, filter_everyone = True
                         split_list = [(response[i:i + 2000]) for i in range(0, length, 2000)]
                         for blurb in split_list:
-                            message = await send_message(self.client, current_channel, blurb)
+                            message = await send_message(client = self.client, channel=current_channel, text = blurb, delete_after=delete_after)
                             messages.append(message)
                         response = ""
                     elif len(response) == 0 or len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
                         response += "\n" + self.channel_responses[ch].pop(0)
                     else:
-                        message = await send_message(self.client, current_channel, response)
+                        message = await send_message(client = self.client, channel=current_channel, text =response, delete_after=delete_after)
                         messages.append(message)
                         response = ""
-                message = await send_message(self.client, current_channel, response)
+                message = await send_message(client = self.client, channel=current_channel, text = response, delete_after=delete_after)
                 messages.append(message)
             except:
                 ewutils.logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
