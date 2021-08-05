@@ -1544,7 +1544,8 @@ weapon_list = [
         str_scalp="It’s drenched in slimeoid bile.",
         fn_effect=get_normal_attack(cost_multiplier=0.7, weapon_type='burst_fire'),
         classes=[],
-        stat=ewcfg.stat_whistle_kills
+        stat=ewcfg.stat_whistle_kills,
+        acquisition=ewcfg.acquisition_smelting
     ),
 
 ]

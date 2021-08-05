@@ -383,11 +383,10 @@ smelting_recipe_list = [
         ],
         ingredients={
             ewcfg.item_id_cute_material: 3,
-            ewcfg.item_id_slimepoudrin: 1,
+            ewcfg.item_id_slimepoudrin: 1
         },
         products=[ewcfg.weapon_id_slimeoidwhistle]
     ),
-
     EwSmeltingRecipe(
         id_recipe="leathercouch",
         str_name="a leather couch",
