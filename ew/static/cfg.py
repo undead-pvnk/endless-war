@@ -2624,6 +2624,7 @@ stat_roomba_kills = 'roomba_kills'
 stat_chainsaw_kills = 'chainsaw_kills'
 stat_megachainsaw_kills = 'megachainsaw_kills'
 stat_huntingrifle_kills = 'huntingrifle_kills'
+stat_whistle_kills = 'whistle_kills'
 stat_harpoon_kills = 'harpoon_kills'
 
 # Categories of events that change your slime total, for statistics tracking
@@ -3051,6 +3052,8 @@ weapon_id_chainsaw = 'chainsaw'
 weapon_id_huntingrifle = 'huntingrifle'
 weapon_id_harpoon = 'harpoon'
 weapon_id_model397 = 'model397'
+weapon_id_slimeoidwhistle = 'whistle'
+
 
 weapon_id_spraycan = 'spraycan'
 weapon_id_paintgun = 'paintgun'
