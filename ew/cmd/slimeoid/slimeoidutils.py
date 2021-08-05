@@ -12,6 +12,8 @@ from ew.static import slimeoid as sl_static
 from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils.slimeoid import EwSlimeoid
+from ew.utils.combat import EwUser
+from ew.utils.combat import EwEnemy
 
 
 # manages a slimeoid's combat stats during a slimeoid battle
@@ -388,14 +390,10 @@ def calculate_clout_gain(clout):
 
 
 # Run the battle for a pair of slimeoids
-async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
+async def battle_slimeoids(id_s1, id_s2, challengee_name, challenger_name, channel, battle_type):
     # fetch slimeoid data
     challengee_slimeoid = EwSlimeoid(id_slimeoid=id_s1)
     challenger_slimeoid = EwSlimeoid(id_slimeoid=id_s2)
-
-    # fetch player data
-    challengee = EwPlayer(id_user=int(challengee_slimeoid.id_user))
-    challenger = EwPlayer(id_user=int(challenger_slimeoid.id_user))
 
     client = ewutils.get_client()
 
@@ -425,7 +423,7 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
         sapmax=s1sapmax,
         sap=s1sapmax,
         slimeoid=challengee_slimeoid,
-        owner=challengee,
+        owner=challengee_name,
     )
 
     # initialize combat data for challenger
@@ -446,7 +444,7 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
         sapmax=s2sapmax,
         sap=s2sapmax,
         slimeoid=challenger_slimeoid,
-        owner=challenger,
+        owner=challenger_name,
     )
 
     s1_combat_data.apply_weapon_matchup(s2_combat_data)
@@ -468,10 +466,10 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 
     # flavor text for arena battles
     if battle_type == ewcfg.battle_type_arena:
-        response = "**{} sends {} out into the Battle Arena!**".format(challenger.display_name, s2_combat_data.name)
+        response = "**{} sends {} out into the Battle Arena!**".format(challenger_name, s2_combat_data.name)
         await fe_utils.send_message(client, channel, response)
         await asyncio.sleep(1)
-        response = "**{} sends {} out into the Battle Arena!**".format(challengee.display_name, s1_combat_data.name)
+        response = "**{} sends {} out into the Battle Arena!**".format(challengee_name, s1_combat_data.name)
         await fe_utils.send_message(client, channel, response)
         await asyncio.sleep(1)
         response = "\nThe crowd erupts into cheers! The battle between {} and {} has begun! :crossed_swords:".format(s1_combat_data.name, s2_combat_data.name)
@@ -733,7 +731,7 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 
         await asyncio.sleep(2)
 
-    # the challengee has lost
+    # the challenger has lost
     if s1_combat_data.hp <= 0:
         result = -1
         response = "\n" + s1_combat_data.legs.str_defeat.format(
@@ -759,7 +757,7 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 
         await fe_utils.send_message(client, channel, response)
         await asyncio.sleep(2)
-    # the challenger has lost
+    # the challengee has lost
     else:
         result = 1
         response = "\n" + s2_combat_data.legs.str_defeat.format(
@@ -819,3 +817,77 @@ def get_slimeoid_count(user_id = None, server_id = None):
             cursor.close()
             bknd_core.databaseClose(conn_info)
             return count
+
+""" Check whether a slimeoid battle is possible. 
+challenger: A discord member representing the player doing the !slimeoidbattle command
+challengee: A discord member or EwEnemy object representing the one being challenged
+challenger_slimeoid: An EwSlimeoid object in case you already have it initialised
+challengee_slimeoid: An EwSlimeoid object in case you already have it initialised
+bet: The slime bet on the battle. Only PvP matches have bets.
+"""
+
+async def can_slimeoid_battle(challenger = None, challengee = None, challenger_slimeoid = None, challengee_slimeoid = None, bet = 0):
+    response = ""
+    time_now = int(time.time())
+    # Gotta have a challenger, otherwise do nothing
+    if challenger:
+        challenger_data = EwUser(member=challenger)
+        ally_slimeoid = None
+        target_slimeoid = None
+
+        # If supplied a slimeoid, use that - otherwise we just grab it
+        if challenger_slimeoid:
+            ally_slimeoid = challenger_slimeoid
+        else:
+            ally_slimeoid = EwSlimeoid(member=challenger)
+
+        # Challenger
+
+        if ally_slimeoid.life_state != ewcfg.slimeoid_state_active:
+            response = "You do not have a Slimeoid ready to battle with!"
+
+        elif challenger_data.life_state == ewcfg.life_state_corpse:
+            response = "Your Slimeoid won't battle for you while you're dead."
+
+        elif (time_now - ally_slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
+            time_until = ewcfg.cd_slimeoiddefeated - (time_now - ally_slimeoid.time_defeated)
+            response = "Your Slimeoid is still recovering from its last defeat! It'll be ready in {} seconds.".format(int(time_until))
+
+        elif ewutils.active_slimeoidbattles.get(ally_slimeoid.id_slimeoid):
+            response = "You are already in the middle of a challenge."
+        
+        elif challengee:
+            if isinstance(challengee, EwEnemy):
+                challengee_data = challengee
+                is_pvp = False
+            else:
+                challengee_data = EwUser(member=challengee)
+
+            if challengee_slimeoid:
+                target_slimeoid = challengee_slimeoid
+            else:
+                target_slimeoid = EwSlimeoid(member=challengee)
+
+            
+            if target_slimeoid.life_state != ewcfg.slimeoid_state_active:
+                response = "{} does not have a Slimeoid ready to battle with!".format(challengee.display_name)
+            
+            elif challenger_data.poi != challengee_data.poi:
+                response = "Both slimeoid trainers must be in the same place."
+            
+            elif challenger_data.slimes < bet:
+                response = "You don't have enough slime!"
+            elif challengee_data.slimes < bet:
+                response = "They don't have enough slime!"
+
+            elif challengee_data.life_state == ewcfg.life_state_corpse:
+                response = "{}'s Slimeoid won't battle for them while they're dead.".format(challengee.display_name).replace("@", "\{at\}")
+
+            elif (time_now - target_slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
+                time_until = ewcfg.cd_slimeoiddefeated - (time_now - target_slimeoid.time_defeated)
+                response = "{}'s Slimeoid is still recovering from its last defeat! It'll be ready in {} seconds.".format(challengee.display_name, int(time_until))
+
+            elif ewutils.active_slimeoidbattles.get(target_slimeoid.id_slimeoid):
+                response = "They are already in the middle of a challenge."
+
+        return response

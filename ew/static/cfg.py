@@ -4184,6 +4184,9 @@ enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 enemy_type_civilian = 'civilian'
 enemy_type_civilian_innocent = 'innocent'
 
+enemy_type_slimeoidtrainer = 'slimeoidtrainer'
+enemy_type_ug_slimeoidtrainer = 'undergroundslimeoidtrainer'
+
 # Gankers Vs. Shamblers enemies
 enemy_type_gaia_poketubers = "poketubers"
 enemy_type_gaia_pulpgourds = "pulpgourds"
@@ -4242,6 +4245,7 @@ enemy_ai_attacker_b = 'Attacker-B'
 enemy_ai_defender = 'Defender'
 enemy_ai_gaiaslimeoid = 'Gaiaslimeoid'
 enemy_ai_shambler = 'Shambler'
+enemy_ai_slimeoidtrainer = 'Slimeoid-Trainer'
 
 # Enemy classes. For now this is only used for Gankers Vs. Shamblers
 enemy_class_normal = 'normal'
@@ -4258,6 +4262,8 @@ enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_gre
 
 # List of enemies that spawn in the Nuclear Beach
 pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
+
+slimeoid_trainers = [enemy_type_slimeoidtrainer, enemy_type_ug_slimeoidtrainer]
 
 # List of enemies used in the Gankers Vs. Shamblers event
 gvs_enemies_gaiaslimeoids = [
@@ -4442,6 +4448,8 @@ enemy_drop_tables = {
 }
 for enemy in gvs_enemies:
     enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}]
+for enemy in slimeoid_trainers:
+    enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}]
 
 # When making a new enemy, make sure to fill out slimerange, ai, attacktype, displayname, raredisplayname, and aliases.
 # Enemy data tables. Slime is stored as a range from min to max possible slime upon spawning.
@@ -4620,6 +4628,22 @@ enemy_data_table = {
         "displayname": "Innocent Civilian",
         "raredisplayname": "Puppy-Eyed Youth",
         "aliases": ["townsfolk", "citizen", "civilian", "innocent", "person"]
+    },
+    enemy_type_slimeoidtrainer: {
+        "slimerange": [100001, 100001],
+        "ai": enemy_ai_slimeoidtrainer,
+        "attacktype": enemy_attacktype_amateur,
+        "displayname": "Slimeoid Trainer",
+        "raredisplayname": "Slimeoid Champion",
+        "aliases": ["slimeoidt", "st", "strainer", "champ", "trainer"]
+    },
+    enemy_type_ug_slimeoidtrainer: {
+        "slimerange": [100001, 100001],
+        "ai": enemy_ai_slimeoidtrainer,
+        "attacktype": enemy_attacktype_amateur,
+        "displayname": "Suspicious Slimeoid Trainer",
+        "raredisplayname": "Villainous Slimeoid Champion",
+        "aliases": ["slimeoidt", "sst", "sstrainer", "champ", "sustrainer", "villain"]
     },
     enemy_type_gaia_poketubers: {
         "slimerange": [100, 100],

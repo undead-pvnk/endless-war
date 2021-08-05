@@ -3,6 +3,7 @@ import time
 
 from . import core as ewutils
 from . import frontend as fe_utils
+from . import slimeoid as slimeoid_utils
 from .district import EwDistrict
 from .frontend import EwResponseContainer
 from ..backend import core as bknd_core
@@ -878,6 +879,18 @@ def spawn_enemy(
                                                 pre_chosen_poi=chosen_poi, manual_spawn=True)
 
                     resp_cont.add_response_container(sub_resp_cont)
+
+        if enemytype in ewcfg.slimeoid_trainers:
+            sl_level = 1
+            spawn_hue = False
+            if enemy.rare_status:
+                sl_level = random.randint(7, 10)
+            else:
+                sl_level = random.randint(1, 6)
+            if random.randint(0, 5) == 5:
+                spawn_hue = True
+            
+            slimeoid_utils.generate_slimeoid(id_owner=enemy.id_enemy, id_server=id_server, hue=spawn_hue, level=sl_level, persist=True)
 
         if enemytype not in ewcfg.raid_bosses:
 
