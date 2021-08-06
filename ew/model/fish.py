@@ -29,6 +29,8 @@ class EwFish:
     # List of the vendors selling this item. (This will basically exclusively be none.)
     vendors = []
 
+    item_type = 'food'
+
     def __init__(
             self,
             id_fish = "",
