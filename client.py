@@ -1119,6 +1119,26 @@ async def on_message(message):
                     await bknd_leaderboard.post_leaderboards(client=client, server=server)
             except:
                 pass
+        
+        elif debug == True and cmd == (ewcfg.cmd_prefix + 'genslimeoid'):
+            user_data = EwUser(member=message.author)
+            if user_data.active_slimeoid == -1:
+                slimeoid_utils.generate_slimeoid(id_owner=user_data.id_user, id_server=user_data.id_server, persist=True)
+                return await fe_utils.send_message(client, message.channel, "Generated slimeoid for user. Take care of them!")
+            else:
+                return await fe_utils.send_message(client, message.channel, "You already have a slimeoid, bub!")
+        
+        elif debug == True and cmd == (ewcfg.cmd_prefix + 'massgenslimeoidnames'):
+            response = ""
+            for sl in range(10):
+                new_sl = slimeoid_utils.generate_slimeoid()
+                if new_sl.hue != "":
+                    hue_str = " **" + new_sl.hue + "** "
+                else:
+                    hue_str = ""
+                response += ("\n" + hue_str + new_sl.name)
+            return await fe_utils.send_message(client, message.channel, response)
+
 
 
         # didn't match any of the command words.

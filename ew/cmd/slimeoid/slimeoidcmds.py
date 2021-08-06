@@ -463,7 +463,7 @@ async def slimeoidbattle(cmd):
         bet = 0
 
     # Check if you can throw down
-    response = can_slimeoid_battle(author, member, challenger_slimeoid, challengee_slimeoid, bet)
+    response = can_slimeoid_battle(challenger, challengee, challenger_slimeoid, challengee_slimeoid, bet)
     if response != "":
         return await fe_utils.send_response(response, cmd)
 
@@ -526,7 +526,7 @@ async def slimeoidbattle(cmd):
 
             winnings = bet * 2
 
-        if pvp_battle:
+        if not pvp_battle:
             winnings = 10000 * challengee_slimeoid.level
 
         # The actual battle goes here
@@ -552,7 +552,7 @@ async def slimeoidbattle(cmd):
             slimeoid_name = winner_slimeoid_name,
             trainer_name = winner_trainer_name
             )
-        if winnings != 0:
+        if winnings != 0 and isinstance(winner, EwUser):
             response += "\nThey recieve {:,} slime!".format(winnings)
 
         if challengee_slimeoid.coating != '' and pvp_battle:

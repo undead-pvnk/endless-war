@@ -3,9 +3,9 @@ import random
 import time
 
 from . import core as ewutils
-from .combat import EwUser
 from .frontend import EwResponseContainer
 from ..backend import core as bknd_core
+from ..backend.user import EwUserBase as EwUser
 from ..backend.market import EwMarket
 from ..backend.player import EwPlayer
 from ..backend.slimeoid import EwSlimeoidBase
@@ -336,7 +336,7 @@ def find_slimeoid(slimeoid_search = None, id_user = None, id_server = None):
 
     return slimeoid_sought
 
-async def generate_slimeoid(id_owner = None, id_server = None, name = None, hue = None, level = None, persist = False):
+def generate_slimeoid(id_owner = None, id_server = None, name = None, hue = None, level = None, persist = False, force_hue = False):
     new_slimeoid = EwSlimeoid()
     
     if id_owner:
@@ -348,29 +348,32 @@ async def generate_slimeoid(id_owner = None, id_server = None, name = None, hue 
     if name:
         new_slimeoid.name = name
     else:
-        sl_name_prefix = [
-            "Dr. ", "Mr. ", "Mrs. ", "King ", "Queen ", "Sir ", "Xx_", "Lil' ", "Xr. "
-        ]
-        sl_name_suffix = [
-            "the Destroyer", "the Wise", "III", "II", "IV", "_xX",
-        ]
-        new_name = random.choice(ewcfg.captcha_dict).capitalize()
-        if random.randint(0, 10) <= 5:
-            new_name = random.choice(sl_name_prefix) + new_name
-        if random.randint(0, 10) >= 5:
-            new_name = new_name + random.choice(sl_name_suffix)
-        
-        new_slimeoid.name = new_name
-    
+        while new_slimeoid.name == "" or len(new_slimeoid.name) >= 32:
+            sl_name_prefix = [
+                "Dr. ", "Mr. ", "Mrs. ", "King ", "Queen ", "Sir ", "Xx_", "Lil' ", "Xr. ",
+                "Wet ", "Dry ", "Spicy ", "Sweet ", "Bitter ", "Sour ", "Savoury ", "Lord "
+            ]
+            sl_name_suffix = [
+                " the Destroyer", " the Wise", " III", " II", " IV", "_xX",
+            ]
+            new_name = random.choice(ewcfg.captcha_dict).capitalize()
+            if random.randint(0, 10) <= 2:
+                new_name = new_name + "-" + random.choice(ewcfg.captcha_dict).capitalize()
+            if random.randint(0, 10) <= 5:
+                new_name = random.choice(sl_name_prefix) + new_name
+            if random.randint(0, 10) >= 5:
+                new_name = new_name + random.choice(sl_name_suffix)
+            
+            new_slimeoid.name = new_name
     if hue:
         new_slimeoid.hue = hue
     else:    
-        new_slimeoid.hue = random.choice(hue_static.hue_list)
-    
+        if random.randint(0, 2) == 0 or force_hue:
+            new_slimeoid.hue = random.choice(hue_static.hue_list).id_hue
     if level:
         new_slimeoid.level = level
     else:
-        new_slimeoid.level = random.randint(0, 10)
+        new_slimeoid.level = random.randint(1, 10)
 
     for lvl in range(new_slimeoid.level):
         choice = random.randint(0, 2)
@@ -389,6 +392,8 @@ async def generate_slimeoid(id_owner = None, id_server = None, name = None, hue 
     new_slimeoid.weapon = random.choice(sl_static.offense_names)
     new_slimeoid.special = random.choice(sl_static.special_names)
     new_slimeoid.ai = random.choice(sl_static.brain_names)
+
+    new_slimeoid.life_state = 2 # Finally, bring your creation to life!
 
     if persist:
         new_slimeoid.persist()

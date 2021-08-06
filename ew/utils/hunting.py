@@ -887,10 +887,7 @@ def spawn_enemy(
                 sl_level = random.randint(7, 10)
             else:
                 sl_level = random.randint(1, 6)
-            if random.randint(0, 5) == 5:
-                spawn_hue = True
-            
-            slimeoid_utils.generate_slimeoid(id_owner=enemy.id_enemy, id_server=id_server, hue=spawn_hue, level=sl_level, persist=True)
+            slimeoid_utils.generate_slimeoid(id_owner=enemy.id_enemy, id_server=id_server, level=sl_level, persist=True)
 
         if enemytype not in ewcfg.raid_bosses:
 

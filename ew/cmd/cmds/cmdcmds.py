@@ -146,6 +146,12 @@ async def data(cmd):
 
                     if status_flavor is not None:
                         response += status_flavor.str_describe.format_map(format_status) + " "
+
+            if enemy.enemytype in ewcfg.slimeoid_trainers:
+                enemy_slimeoid = EwSlimeoid(id_user=enemy.id_enemy, id_server=cmd.message.guild.id)
+                
+                response += "\n\nThey are accompanied by {}, a {}-foot-tall Slimeoid. ".format(enemy_slimeoid.name, str(enemy_slimeoid.level))
+        
         else:
             response = "ENDLESS WAR didn't understand that name."
 
