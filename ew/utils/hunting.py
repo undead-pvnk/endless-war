@@ -887,7 +887,7 @@ def spawn_enemy(
                 sl_level = random.randint(7, 10)
             else:
                 sl_level = random.randint(1, 6)
-            slimeoid_utils.generate_slimeoid(id_owner=enemy.id_enemy, id_server=id_server, level=sl_level, persist=True)
+            new_sl = slimeoid_utils.generate_slimeoid(id_owner=enemy.id_enemy, id_server=id_server, level=sl_level, persist=True)
 
         if enemytype not in ewcfg.raid_bosses:
 
@@ -905,14 +905,19 @@ def spawn_enemy(
             elif enemytype == ewcfg.enemy_type_doublehorse:
                 response = "***HARK!!!***  Clopping echoes throughout the cave! The {} has arrived with {} slime, and {} levels. And on top of him rides...".format(
                     enemy.display_name, enemy.slimes, enemy.level)
-
+            
+            elif enemytype == ewcfg.enemy_type_sandbag:
+                    response = "A new {} just got sent in. It's level {}, and has {} slime.\n*'Don't hold back!'*, the Dojo Master cries out from afar.".format(
+                        enemy.display_name, enemy.level, enemy.slimes)
+            
+            elif enemytype in ewcfg.slimeoid_trainers:
+                response = "A {} is looking for a challenge! They are accompanied by {}, a {}-foot tall {}Slimeoid.".format(
+                    enemy.display_name, new_sl.name, new_sl.level, "" if new_sl.hue == "" else new_sl.hue + " ")
             else:
                 response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level,
                                                                                                     enemy.display_name,
                                                                                                     enemy.slimes)
-                if enemytype == ewcfg.enemy_type_sandbag:
-                    response = "A new {} just got sent in. It's level {}, and has {} slime.\n*'Don't hold back!'*, the Dojo Master cries out from afar.".format(
-                        enemy.display_name, enemy.level, enemy.slimes)
+                
 
         ch_name = poi_static.id_to_poi.get(enemy.poi).channel
 
