@@ -82,6 +82,9 @@ async def attack(cmd, n1_die = None):
 
     # todo Created a weapon object to cover my bases, check if this is necessary. Also see if you can move this somewhere else
 
+    if weapon.id_weapon == ewcfg.weapon_id_slimeoidwhistle:
+        slimeoid = EwSlimeoid(member=cmd.message.author)
+
     if n1_die is None:
         response = canAttack(cmd=cmd, amb_switch=amb_switch)
 
@@ -157,8 +160,7 @@ async def attack(cmd, n1_die = None):
 
 
 
-        if weapon.id_weapon == ewcfg.weapon_id_slimeoidwhistle:
-            slimeoid = EwSlimeoid(member=cmd.message.author)
+
 
         slimes_spent = int(ewutils.slime_bylevel(capped_level) / 30)
 
