@@ -14,6 +14,7 @@ cmd_map = {
     cfg.cmd_shoot_alt6: wepcmds.attack,
     cfg.cmd_shoot_alt7: wepcmds.attack,
     cfg.cmd_shoot_alt8: wepcmds.attack,
+    cfg.cmd_shoot_alt9: wepcmds.attack,
     cfg.cmd_attack: wepcmds.attack,
     cfg.cmd_win: wepcmds.attack,
     # Slimefest
