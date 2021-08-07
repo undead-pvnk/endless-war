@@ -323,9 +323,42 @@ item_list = [
             "pack"
         ],
         str_name="Trading Cards",
-        str_desc="A pack of trading cards",
+        str_desc="A pack of Secreatures TCG trading cards. Mostly filled with common crap, legends tell of a legendary evil trapped in only the rarest of cards...",
         price=50000,
+        context= "cardpack",
         vendors=[ewcfg.vendor_bazaar, ewcfg.vendor_glocksburycomics],
+    ),
+    EwGeneralItem(
+        id_item=ewcfg.item_id_promotradingcardpack,
+        alias=[
+            "promotcp",
+            "tcppromo",
+            "raretcp",
+            "rarepack",
+            "rarecardpack",
+            "rarecards"
+        ],
+        str_name="Promo Trading Cards",
+        str_desc="A limited-edition promo pack of Secreatures TCG trading cards. Signed by Maximpostion Megasus himself, these generally contain rarer cards.",
+        price=100000,
+        context= "promocardpack",
+        vendors=[ewcfg.vendor_bazaar]
+    ),
+    EwGeneralItem(
+        id_item=ewcfg.item_id_tcgboosterbox,
+        alias = [
+            "tcpbox",
+            "tcpboosterbox",
+            "boosterbox",
+            "cardbox",
+            "box o' cards",
+            "bulktcg"
+        ],
+        str_name="Trading Card Booster Box",
+        str_desc="A Secreatures TCG Booster Box containing 36 packs of cardboard crap! These things cost a fortune!",
+        price=1800000,
+        context = "boosterbox",
+        vendors=[ewcfg.vendor_bazaar, ewcfg.vendor_glocksburycomics]
     ),
     EwGeneralItem(
         id_item="rightleg",
