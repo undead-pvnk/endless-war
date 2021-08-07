@@ -590,12 +590,15 @@ async def jam(cmd):
 
     if item_sought:
         item = EwItem(id_item=item_sought.get('id_item'))
-        if item.item_props.get("id_furniture") in static_items.furniture_instrument or item.item_props.get("weapon_type") == ewcfg.weapon_id_bass:
+        if item.item_props.get("id_furniture") in static_items.furniture_instrument or item.item_props.get("weapon_type") in [ewcfg.weapon_id_bass, ewcfg.weapon_id_slimeoidwhistle]:
             cycle = random.randrange(20)
             response = ""
             if random.randint(0, 10) == 0:
                 if item.item_props.get("id_furniture") == None:
-                    item_key = "bass"
+                    if item.item_props.get("weapon_type") != ewcfg.weapon_id_slimeoidwhistle:
+                        item_key = "bass"
+                    else:
+                        item_key = "whistle"
                 else:
                     item_key = item.item_props.get("id_furniture")
                 response = random.choice(ewcfg.jam_tunes[item_key])

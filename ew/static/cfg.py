@@ -3298,6 +3298,7 @@ jams_guitar = ["https://www.youtube.com/watch?v=hNRHHRjep3E&ab_channel=rtwodtwo5
 jams_maracas = ["https://www.youtube.com/watch?v=etYb-p8uhWA&ab_channel=GilvaSunner", "https://www.youtube.com/watch?v=EstIvN0_hcg&ab_channel=Cz%C5%82owiekDrzewo", "https://www.youtube.com/watch?v=l8R_OQz_BtU&ab_channel=majabsalu"]
 jams_cornet = ["https://www.youtube.com/watch?v=mPP65UcGxq0&ab_channel=Ham_", "https://www.youtube.com/watch?v=FJrUBEtoNQU&ab_channel=ropa79", "https://www.youtube.com/watch?v=KxibMBV3nFo&ab_channel=TheJazzplaylist"]
 jams_trombone = ["https://www.youtube.com/watch?v=WEWLuBB7_FE&ab_channel=mixablemusic", "https://www.youtube.com/watch?v=lqngnNy1_Cg&ab_channel=DaveYama", "https://www.youtube.com/watch?v=1ZGeYR8b-mg&ab_channel=AllThatJazzDonKaart"]
+jams_whistle = ["https://www.youtube.com/watch?v=JcJDLg_U7tg", "https://www.youtube.com/watch?v=XSwxO95nEZE", "https://www.youtube.com/watch?v=zEYTE1QNSkk"]
 
 jam_tunes = {
     "solidpoudringuitar": jams_guitar,
@@ -3309,7 +3310,8 @@ jam_tunes = {
     "beastskindrums": jams_drums,
     "bass": jams_bass,
     "trombone": jams_trombone,
-    "cornet": jams_cornet
+    "cornet": jams_cornet,
+    "whistle": jams_whistle
 }
 
 howls = [
@@ -4249,7 +4251,6 @@ enemy_ai_attacker_b = 'Attacker-B'
 enemy_ai_defender = 'Defender'
 enemy_ai_gaiaslimeoid = 'Gaiaslimeoid'
 enemy_ai_shambler = 'Shambler'
-enemy_ai_slimeoidtrainer = 'Slimeoid-Trainer'
 
 # Enemy classes. For now this is only used for Gankers Vs. Shamblers
 enemy_class_normal = 'normal'
@@ -4634,16 +4635,16 @@ enemy_data_table = {
         "aliases": ["townsfolk", "citizen", "civilian", "innocent", "person"]
     },
     enemy_type_slimeoidtrainer: {
-        "slimerange": [100001, 100001],
-        "ai": enemy_ai_slimeoidtrainer,
+        "slimerange": [10001, 10001],
+        "ai": enemy_ai_defender,
         "attacktype": enemy_attacktype_amateur,
         "displayname": "Slimeoid Trainer",
         "raredisplayname": "Slimeoid Champion",
         "aliases": ["slimeoidt", "st", "strainer", "champ", "trainer"]
     },
     enemy_type_ug_slimeoidtrainer: {
-        "slimerange": [100001, 100001],
-        "ai": enemy_ai_slimeoidtrainer,
+        "slimerange": [10001, 10001],
+        "ai": enemy_ai_defender,
         "attacktype": enemy_attacktype_amateur,
         "displayname": "Suspicious Slimeoid Trainer",
         "raredisplayname": "Villainous Slimeoid Champion",
