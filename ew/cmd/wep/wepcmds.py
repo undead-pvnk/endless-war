@@ -82,7 +82,7 @@ async def attack(cmd, n1_die = None):
 
     # todo Created a weapon object to cover my bases, check if this is necessary. Also see if you can move this somewhere else
 
-    if weapon.id_weapon == ewcfg.weapon_id_slimeoidwhistle:
+    if weapon and weapon.id_weapon == ewcfg.weapon_id_slimeoidwhistle:
         slimeoid = EwSlimeoid(member=cmd.message.author)
 
     if n1_die is None:
@@ -665,11 +665,11 @@ async def attack(cmd, n1_die = None):
                     if shootee_data.faction != "" and shootee_data.faction == user_data.faction:
                         shootee_data.trauma = ewcfg.trauma_id_betrayal
 
-                    if slimeoid.life_state == ewcfg.slimeoid_state_active:
+                    if slimeoid and slimeoid.life_state == ewcfg.slimeoid_state_active:
                         brain = sl_static.brain_map.get(slimeoid.ai)
                         response += "\n\n" + brain.str_kill.format(slimeoid_name=slimeoid.name)
 
-                    if shootee_slimeoid.life_state == ewcfg.slimeoid_state_active:
+                    if shootee_slimeoid and shootee_slimeoid.life_state == ewcfg.slimeoid_state_active:
                         brain = sl_static.brain_map.get(shootee_slimeoid.ai)
                         response += "\n\n" + brain.str_death.format(slimeoid_name=shootee_slimeoid.name)
 
@@ -767,9 +767,9 @@ async def attack(cmd, n1_die = None):
             if user_data.faction != shootee_data.faction and user_data.life_state not in (ewcfg.life_state_shambler, ewcfg.life_state_juvenile) and user_data.faction != ewcfg.faction_slimecorp:
                 # Give slimes to the boss if possible.
                 kingpin = fe_utils.find_kingpin(id_server=cmd.guild.id, kingpin_role=role_boss)
-                kingpin = EwUser(id_server=cmd.guild.id, id_user=kingpin.id_user)
-
+                
                 if kingpin:
+                    kingpin = EwUser(id_server=cmd.guild.id, id_user=kingpin.id_user)
                     if ewcfg.mutation_id_handyman in user_mutations and weapon.is_tool == 1:
                         boss_slimes *= 2
                     kingpin.change_slimes(n=boss_slimes)
@@ -1196,53 +1196,54 @@ async def spar(cmd):
 
 async def annoint(cmd):
     response = ""
+    user_data = EwUser(member=cmd.message.author)
+    weapon_item = EwItem(id_item=user_data.weapon)
 
     if cmd.tokens_count < 2:
-        response = "Specify a name for your weapon!"
+        annoint_name = weapon_item.item_props.get("weapon_name")
     else:
         annoint_name = cmd.message.content[(len(ewcfg.cmd_annoint)):].strip()
 
-        if len(annoint_name) > 32:
-            response = "That name is too long. ({:,}/32)".format(len(annoint_name))
-        else:
-            user_data = EwUser(member=cmd.message.author)
-            if user_data.life_state == ewcfg.life_state_shambler:
-                response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+    if len(annoint_name) > 32:
+        response = "That name is too long. ({:,}/32)".format(len(annoint_name))
+    else:
+        user_data = EwUser(member=cmd.message.author)
+        if user_data.life_state == ewcfg.life_state_shambler:
+            response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+        poudrin = bknd_item.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_item)
+
+        all_weapons = bknd_item.inventory(
+            id_server=cmd.guild.id,
+            item_type_filter=ewcfg.it_weapon
+        )
+        for weapon in all_weapons:
+            if weapon.get("name") == annoint_name and weapon.get("id_item") != user_data.weapon:
+                response = "**ORIGINAL WEAPON NAME DO NOT STEAL.**"
                 return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
-            poudrin = bknd_item.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.guild.id if cmd.guild is not None else None, item_type_filter=ewcfg.it_item)
+        if poudrin is None:
+            response = "You need a slime poudrin."
+        elif user_data.slimes < 100:
+            response = "You need more slime."
+        elif user_data.weapon < 0:
+            response = "Equip a weapon first."
+        else:
+            # Perform the ceremony.
+            user_data.change_slimes(n=-100, source=ewcfg.source_spending)
+            weapon_item.item_props["weapon_name"] = annoint_name
+            weapon_item.persist()
 
-            all_weapons = bknd_item.inventory(
-                id_server=cmd.guild.id,
-                item_type_filter=ewcfg.it_weapon
-            )
-            for weapon in all_weapons:
-                if weapon.get("name") == annoint_name and weapon.get("id_item") != user_data.weapon:
-                    response = "**ORIGINAL WEAPON NAME DO NOT STEAL.**"
-                    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+            if user_data.weaponskill < 10:
+                user_data.add_weaponskill(n=1, weapon_type=weapon_item.item_props.get("weapon_type"))
 
-            if poudrin is None:
-                response = "You need a slime poudrin."
-            elif user_data.slimes < 100:
-                response = "You need more slime."
-            elif user_data.weapon < 0:
-                response = "Equip a weapon first."
-            else:
-                # Perform the ceremony.
-                user_data.change_slimes(n=-100, source=ewcfg.source_spending)
-                weapon_item = EwItem(id_item=user_data.weapon)
-                weapon_item.item_props["weapon_name"] = annoint_name
-                weapon_item.persist()
+            # delete a slime poudrin from the player's inventory
+            bknd_item.item_delete(id_item=poudrin.get('id_item'))
 
-                if user_data.weaponskill < 10:
-                    user_data.add_weaponskill(n=1, weapon_type=weapon_item.item_props.get("weapon_type"))
+            user_data.persist()
 
-                # delete a slime poudrin from the player's inventory
-                bknd_item.item_delete(id_item=poudrin.get('id_item'))
-
-                user_data.persist()
-
-                response = "You place your weapon atop the poudrin and annoint it with slime. It is now known as {}!\n\nThe name draws you closer to your weapon. The poudrin was destroyed in the process.".format(annoint_name)
+            response = "You place your weapon atop the poudrin and annoint it with slime. It is now known as {}!\n\nThe name draws you closer to your weapon. The poudrin was destroyed in the process.".format(annoint_name)
 
     # Send the response to the player.
     await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

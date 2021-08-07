@@ -1004,7 +1004,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
         # give player item for defeating an enemy
         resp_cont.add_response_container(cmbt_utils.drop_enemy_loot(enemy_data, district_data))
 
-        if slimeoid.life_state == ewcfg.slimeoid_state_active:
+        if slimeoid and slimeoid.life_state == ewcfg.slimeoid_state_active:
             brain = sl_static.brain_map.get(slimeoid.ai)
             response += "\n" + brain.str_kill.format(slimeoid_name=slimeoid.name)
 
