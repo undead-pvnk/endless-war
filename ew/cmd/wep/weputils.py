@@ -899,6 +899,23 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
     sewer_data.change_slimes(n=slimes_drained)
     sewer_data.persist()
 
+    slimeoid_name = ""
+    slimeoid_kill = ""
+    slimeoid_crit = ""
+    slimeoid_dmg = ""
+
+    if weapon.id_weapon == ewcfg.weapon_id_slimeoidwhistle:
+        if slimeoid.life_state == ewcfg.slimeoid_state_none:
+            slimeoid_name = cmd.message.author.display_name
+            slimeoid_kill = 'goes full child gorilla and tears their victim to hideous chunks, before wailing a ferocious battle cry.'
+            slimeoid_crit = 'a full speed donkey kick'
+            slimeoid_dmg = 'knocked upside the head'
+        else:
+            slimeoid_name = slimeoid.name
+            slimeoid_kill = static_weapons.slimeoid_kill_text.get(slimeoid.weapon)
+            slimeoid_crit = static_weapons.slimeoid_crit_text.get(slimeoid.special)
+            slimeoid_dmg = static_weapons.slimeoid_dmg_text.get(slimeoid.weapon)
+
     if was_killed:
         # adjust statistics
         ewstats.increment_stat(user=user_data, metric=ewcfg.stat_pve_kills)
@@ -943,6 +960,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
                 name_player=cmd.message.author.display_name,
                 name_target=enemy_data.display_name,
                 hitzone=randombodypart,
+                slimeoid_name=slimeoid_name,
+                slimeoid_dmg=slimeoid_dmg
             )
             kill_descriptor = weapon.str_killdescriptor
             if crit:
@@ -950,12 +969,16 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
                     name_player=cmd.message.author.display_name,
                     name_target=enemy_data.display_name,
                     hitzone=randombodypart,
+                    slimeoid_name=slimeoid_name,
+                    slimeoid_crit=slimeoid_crit
                 ))
 
             response += "\n\n{}".format(weapon.str_kill.format(
                 name_player=cmd.message.author.display_name,
                 name_target=enemy_data.display_name,
-                emote_skull=ewcfg.emote_slimeskull
+                emote_skull=ewcfg.emote_slimeskull,
+                slimeoid_name=slimeoid_name,
+                slimeoid_kill=slimeoid_kill
             ))
 
             if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
@@ -1010,19 +1033,24 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
             if miss:
                 response = "{}".format(weapon.str_miss.format(
                     name_player=cmd.message.author.display_name,
-                    name_target=enemy_data.display_name
+                    name_target=enemy_data.display_name,
+                    slimeoid_name=slimeoid_name
                 ))
             else:
                 response = weapon.str_damage.format(
                     name_player=cmd.message.author.display_name,
                     name_target=enemy_data.display_name,
                     hitzone=randombodypart,
+                    slimeoid_name=slimeoid_name,
+                    slimeoid_dmg=slimeoid_dmg
                 )
                 if crit:
                     response += " {}".format(weapon.str_crit.format(
                         name_player=cmd.message.author.display_name,
                         name_target=enemy_data.display_name,
                         hitzone=randombodypart,
+                        slimeoid_name=slimeoid_name,
+                        slimeoid_crit=slimeoid_crit
                     ))
 
                 # sap_response = ""

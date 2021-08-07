@@ -1539,7 +1539,7 @@ weapon_list = [
         str_duel="[ ! ] {name_player} challenges {name_target} to a ‘slimeoid battle’. They summon their slimeoids and begin attacking each other.",
         str_description="It's a little whistle. It's loud as hell, and every second you blow it it adds a couple zeroes to the ol' geiger counter.",
         str_scalp="It’s drenched in slimeoid bile.",
-        fn_effect=get_normal_attack(cost_multiplier=0.7, weapon_type='burst_fire'),
+        fn_effect=get_normal_attack(weapon_type='burst_fire'),
         classes=[],
         stat=ewcfg.stat_whistle_kills,
         acquisition=ewcfg.acquisition_smelting
@@ -1587,7 +1587,7 @@ slimeoid_weapon_type_convert = {
     7:  get_normal_attack(weapon_type='variable_damage'),
     8:  get_normal_attack(weapon_type='heavy'),
     9:  get_normal_attack(weapon_type='heavy'),
-    10: get_normal_attack(weapon_type='minigun'),
+    10: get_normal_attack(weapon_type='burst_fire'),
 }
 
 slimeoid_dmg_text = {
