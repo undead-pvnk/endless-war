@@ -542,7 +542,7 @@ async def piss(cmd):
     if user_data.life_state == ewcfg.life_state_corpse:
         if cmd.mentions_count == 0:
             response = "You grow a ghost dick, unzip it, and just start ghost pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love ghost pissing so much."
-            if random.randint(1, 100) < 2:
+            if random.randint(1, 100) < 99:
                 response = "You grow a gussy, unzip it, and just start ghost pissing all over the goddamn fucking floor. God, you've waited so long for this moment, and it's just as perfect as you could have possibly imagined. You love ghost pissing so much."
             return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
