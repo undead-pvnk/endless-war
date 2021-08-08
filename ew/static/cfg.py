@@ -5786,3 +5786,10 @@ cmd_debug9 = cmd_prefix + ewdebug.cmd_debug9
         "topic": "",
         "wikipage": "https://rfck.miraheze.org/wiki/Little_Chernobyl#RP_City"
     },*/"""
+
+all_globals = dir()
+all_item_ids = []
+for varname in all_globals:
+    if varname.startswith("item_id_") or varname.startswith("weapon_id_"):
+        all_item_ids.append(eval(varname))
+

@@ -210,6 +210,9 @@ cmd_map = {
     ewcfg.cmd_shares: cmdcmds.shares,
     ewcfg.cmd_shares_alt1: cmdcmds.shares,
 
+    # Replies to admins with the current cache
+    '!cache': cmdcmds.print_cache,
+
 }
 
 dm_cmd_map = {

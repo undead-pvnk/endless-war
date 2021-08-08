@@ -1,3 +1,6 @@
+import sys
+
+from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
 from ew.backend.item import EwItem
 from ew.static import cfg as ewcfg

@@ -12,7 +12,11 @@ cached_db = {
     #   'idserverasnumber~entryidasnumber': {
     #       ewcfg.col_id: entry
     #   }
-    # }
+    # },
+    #'inventories': {
+    #   '169282450621595648': [2, 6, 9, 25],
+    #   'owner_id': [all item id's belonging to them]
+    #}
 }
 
 """ connect to the database """
@@ -99,12 +103,15 @@ def execute_sql_query(sql_query = None, sql_replacements = None):
 
 def get_cache_result(table = None, id_server = None, id_entry = None):
     # Check inputs
-    if table != None and id_server != None and id_entry != None:
+    if table != None and id_entry != None:
         # See if table is cached
         cached_table = cached_db.get(table)
         if cached_table is not None:
             # Attempt to grab the entry
-            entry_key = "{}~{}".format(id_server, id_entry)
+            if id_server != None:
+                entry_key = "{}~{}".format(id_server, id_entry)
+            else:
+                entry_key = str(id_entry)
             entry = cached_table.get(entry_key)
             # Return if entry found
             if entry is not None:
@@ -114,11 +121,29 @@ def get_cache_result(table = None, id_server = None, id_entry = None):
 
 
 """ Add a row to the cached database """
-def cache_object(table = None, id_server = None, id_entry = None, obj = None):
+def cache_data(table = None, id_server = None, id_entry = None, data = None):
     # Create entry
-    entry = {
-        "{}~{}".format(id_server, id_entry): obj
-    }
+    if id_server is not None:
+        entry = {
+            "{}~{}".format(id_server, id_entry): data
+        }
+    else:
+        entry = {
+            str(id_entry): data
+        }
 
-    # Update Cache
-    cached_db.update({table: entry})
+    # Check for table
+    if cached_db.__contains__(table):
+        cached_db.get(table).update(entry)
+    else:
+        cached_db.update({table: entry})
+
+
+""" Removes an entry, from the cache """
+def remove_entry(table = None, id_server = None, id_entry = None):
+    # Determine Identifier
+    entry = "{}~{}".format(id_server, id_entry) if id_server is not None else str(id_entry)
+
+    # Remove if it exists
+    if cached_db.__contains__(table) and cached_db.get(table).__contains__(entry):
+        cached_db.get(table).pop(entry)
