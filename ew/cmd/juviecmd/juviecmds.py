@@ -867,7 +867,7 @@ async def identify(cmd):
         response = "Radical! Enjoy your gender, slimegorl."
         user_data.gender = "gorl"
         user_data.persist()
-    elif gender == "death furnace":
+    elif gender == "ancient obelisk":
         response = "You can't have that gender. It's mine."
     else:
         response = "Radical! Enjoy your gender, slime{}.".format(gender)
