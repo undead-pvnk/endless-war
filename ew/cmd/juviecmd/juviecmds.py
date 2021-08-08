@@ -853,7 +853,7 @@ async def identify(cmd):
         response = "Cool. Noted. Enjoy your lack of gender, slime."
         user_data.gender = ""
         user_data.persist()
-    elif gender in ewcfg.curse_words:
+    elif ewcfg.curse_words in gender:
         response = "Hey, no matter what, you're still a juvenile. **NO SWEARS**."
     elif "\n" in gender:
         response = "No fucking line breaks! WTF!"    
