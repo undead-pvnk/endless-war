@@ -855,7 +855,7 @@ async def identify(cmd):
         user_data.persist()
     elif gender in ewcfg.curse_words:
         response = "Hey, no matter what, you're still a juvenile. **NO SWEARS**."
-    elif (any("mamas")):
+    elif (any("\n" in content_tolower)):
         response = "No fucking line breaks! WTF!"    
     elif len(gender) > 16:
         response = "Fucking god, your gender **CANNOT** be longer than that. Sorry, them's the rules."
