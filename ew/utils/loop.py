@@ -785,12 +785,13 @@ def enemyRemoveExpiredStatuses(id_server = None):
 
 async def decrease_food_multiplier():
     while not ewutils.TERMINATE:
-        for user in ewutils.food_multiplier:
+        for user in ewutils.food_multiplier.copy():
             # If the food multi is empty, then just remove the user from the list
             if ewutils.food_multiplier[user] == 0:
                 ewutils.food_multiplier.pop(user)
             # Reduce it down
-            ewutils.food_multiplier[user] = max(0, ewutils.food_multiplier.get(user) - 1)
+            if ewutils.food_multiplier.get(user):
+                ewutils.food_multiplier[user] = max(0, ewutils.food_multiplier.get(user) - 1)
             
         await asyncio.sleep(5)
 
