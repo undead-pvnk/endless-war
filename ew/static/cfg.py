@@ -5752,33 +5752,3 @@ cmd_debug6 = cmd_prefix + ewdebug.cmd_debug6
 cmd_debug7 = cmd_prefix + ewdebug.cmd_debug7
 cmd_debug8 = cmd_prefix + ewdebug.cmd_debug8
 cmd_debug9 = cmd_prefix + ewdebug.cmd_debug9
-        "property_class": "",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": true,
-        "is_apartment": false,
-        "is_street": false,
-        "mother_districts": [
-            "littlechernobyl"
-        ],
-        "father_district": "",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": false,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": true,
-        "max_degradation": 10000,
-        "neighbors": {
-            "littlechernobyl": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Little_Chernobyl#RP_City"
-    },*/"""
