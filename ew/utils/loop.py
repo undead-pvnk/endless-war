@@ -798,6 +798,8 @@ async def decrease_food_multiplier():
 
 async def spawn_enemies(id_server = None):
     market_data = EwMarket(id_server=id_server)
+    resp_list = []
+    # One in 3 chance of spawning a regular enemy in the outskirts
     if random.randrange(3) == 0:
         weathertype = ewcfg.enemy_weathertype_normal
         # If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
@@ -805,9 +807,17 @@ async def spawn_enemies(id_server = None):
             if random.randrange(3) < 2:
                 weathertype = ewcfg.enemy_weathertype_rainresist
 
-        resp_cont = hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype)
-
-        await resp_cont.post()
+        resp_list.append(hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_weather=weathertype))
+    # One in two chance of spawning a slimeoid trainer in either the Battle Arena or Subway
+    # Why did I make this into incredibly hacky code? Because.
+    if random.randrange(2) == 0:
+            if random.randrange(2) == 0:
+                resp_list.append(hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_slimeoidtrainer))
+            else:
+                resp_list.append(hunt_utils.spawn_enemy(id_server=id_server, pre_chosen_type=ewcfg.enemy_type_ug_slimeoidtrainer))
+    
+    for cont in resp_list:
+        await cont.post()
 
 
 # TODO remove after double halloween

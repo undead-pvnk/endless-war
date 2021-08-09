@@ -784,6 +784,13 @@ def spawn_enemy(
             # Sand bags only spawn in the dojo
             if enemytype == ewcfg.enemy_type_sandbag:
                 potential_chosen_poi = ewcfg.poi_id_dojo
+            # Slimeoid Trainers only spawn in the Arena
+            elif enemytype == ewcfg.enemy_type_slimeoidtrainer:
+                potential_chosen_poi = ewcfg.poi_id_arena
+            # Underground Trainers only spawn in the Subway
+            elif enemytype == ewcfg.enemy_type_ug_slimeoidtrainer:
+                potential_chosen_poi = random.choice(poi_static.transports)
+            # Everything else spawns in the outskrits TODO: Make this code not shit
             else:
                 potential_chosen_poi = random.choice(poi_static.outskirts)
 
