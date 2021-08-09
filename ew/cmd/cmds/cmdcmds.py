@@ -3740,3 +3740,18 @@ async def assign_status_effect(cmd = None, status_name = None, user_id = None, s
         user_data = EwUser(member=target)
         response = user_data.applyStatus(id_status=status_name, source=user_data.id_user, id_target=user_data.id_user)
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+
+async def print_cache(cmd):
+    if not cmd.message.author.guild_permissions.administrator:
+        return await cmd_utils.fake_failed_command(cmd)
+
+    cache_dict = bknd_core.cached_db
+    response = "Current dict entries: \n\n"
+    for table in cache_dict.keys():
+        response += "Table `{}` contains: \n".format(table)
+        table_dict = cache_dict.get(table)
+        for entry_id in table_dict.keys():
+            response += "    ID: `{}`, Data: `{}`\n".format(entry_id, table_dict.get(entry_id))
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

@@ -5,6 +5,9 @@ import re
 import string
 import time
 
+from sys import getsizeof, stderr
+from itertools import chain
+
 from ..backend import core as bknd_core
 from ..static import cfg as ewcfg
 from ..static import mutations as static_mutations
@@ -870,3 +873,37 @@ def weather_txt(market_data):
 
     response += "It is currently {}{} in NLACakaNM.{}".format(displaytime, ampm, (' ' + flair))
     return response
+
+
+
+def total_size(o, verbose=False):
+    """ Returns the approximate memory footprint an object and all of its contents.
+    Automatically finds the contents of the following builtin containers and
+    their subclasses:  tuple, list, dict, set and frozenset.
+    """
+    dict_handler = lambda d: chain.from_iterable(d.items())
+    all_handlers = {tuple: iter,
+                    list: iter,
+                    dict: dict_handler,
+                    set: iter,
+                    frozenset: iter,
+                   }
+    seen = set()                      # track which object id's have already been seen
+    default_size = getsizeof(0)       # estimate sizeof object without __sizeof__
+
+    def sizeof(o):
+        if id(o) in seen:       # do not double count the same object
+            return 0
+        seen.add(id(o))
+        s = getsizeof(o, default_size)
+
+        if verbose:
+            print(s, type(o), repr(o), file=stderr)
+
+        for typ, handler in all_handlers.items():
+            if isinstance(o, typ):
+                s += sum(map(sizeof, handler(o)))
+                break
+        return s
+
+    return sizeof(o)

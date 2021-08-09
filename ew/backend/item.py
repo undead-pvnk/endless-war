@@ -40,67 +40,78 @@ class EwItem:
             # the item props don't reset themselves automatically which is why the items_prop table had tons of extraneous rows (like food items having medal_names)
             # self.item_props.clear()
 
-            try:
-                conn_info = bknd_core.databaseConnect()
-                conn = conn_info.get('conn')
-                cursor = conn.cursor()
+            cache_result = bknd_core.get_cache_result(table="items", id_entry=id_item)
+            if cache_result is not False:
+                self.__dict__ = cache_result
+                ewutils.logMsg("Item {} loaded from cache.".format(id_item))
+            else:
+                try:
+                    conn_info = bknd_core.databaseConnect()
+                    conn = conn_info.get('conn')
+                    cursor = conn.cursor()
 
-                # Retrieve object
-                cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {} FROM items WHERE id_item = %s".format(
-                    ewcfg.col_id_server,
-                    ewcfg.col_id_user,
-                    ewcfg.col_item_type,
-                    ewcfg.col_time_expir,
-                    ewcfg.col_stack_max,
-                    ewcfg.col_stack_size,
-                    ewcfg.col_soulbound,
-                    ewcfg.col_template
-                ), (
-                    self.id_item,
-                ))
-                result = cursor.fetchone()
-
-                if result != None:
-                    # Record found: apply the data to this object.
-                    self.id_server = result[0]
-                    self.id_owner = result[1]
-                    self.item_type = result[2]
-                    self.time_expir = result[3]
-                    self.stack_max = result[4]
-                    self.stack_size = result[5]
-                    self.soulbound = (result[6] != 0)
-                    self.template = result[7]
-
-                    # Retrieve additional properties
-                    cursor.execute("SELECT {}, {} FROM items_prop WHERE id_item = %s".format(
-                        ewcfg.col_name,
-                        ewcfg.col_value
+                    # Retrieve object
+                    cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {} FROM items WHERE id_item = %s".format(
+                        ewcfg.col_id_server,
+                        ewcfg.col_id_user,
+                        ewcfg.col_item_type,
+                        ewcfg.col_time_expir,
+                        ewcfg.col_stack_max,
+                        ewcfg.col_stack_size,
+                        ewcfg.col_soulbound,
+                        ewcfg.col_template
                     ), (
                         self.id_item,
                     ))
+                    result = cursor.fetchone()
 
-                    for row in cursor:
-                        # this try catch is only necessary as long as extraneous props exist in the table
-                        try:
-                            self.item_props[row[0]] = row[1]
-                        except:
-                            ewutils.logMsg("extraneous item_prop row detected.")
+                    if result != None:
+                        ewutils.logMsg("Item {} loaded from database.".format(id_item))
+                        # Record found: apply the data to this object.
+                        self.id_server = result[0]
+                        self.id_owner = result[1]
+                        self.item_type = result[2]
+                        self.time_expir = result[3]
+                        self.stack_max = result[4]
+                        self.stack_size = result[5]
+                        self.soulbound = (result[6] != 0)
+                        self.template = result[7]
 
-                else:
-                    # Item not found.
-                    self.id_item = -1
+                        # Retrieve additional properties
+                        cursor.execute("SELECT {}, {} FROM items_prop WHERE id_item = %s".format(
+                            ewcfg.col_name,
+                            ewcfg.col_value
+                        ), (
+                            self.id_item,
+                        ))
 
-                if self.template == "-2":
-                    self.persist()
+                        for row in cursor:
+                            # this try catch is only necessary as long as extraneous props exist in the table
+                            try:
+                                self.item_props[row[0]] = row[1]
+                            except:
+                                ewutils.logMsg("extraneous item_prop row detected.")
 
-            finally:
-                # Clean up the database handles.
-                cursor.close()
-                bknd_core.databaseClose(conn_info)
+                    else:
+                        ewutils.logMsg("Item {} not found in cache or db".format(id_item))
+                        # Item not found.
+                        self.id_item = -1
+
+                    if self.template == "-2":
+                        self.persist()
+
+                    bknd_core.cache_data(table="items", id_entry=self.id_item, data=self.__dict__)
+
+                finally:
+                    # Clean up the database handles.
+                    cursor.close()
+                    bknd_core.databaseClose(conn_info)
 
     """ Save item data object to the database. """
 
     def persist(self):
+
+        bknd_core.cache_data(table="items", id_entry=self.id_item, data=self.__dict__)
 
         if self.template == "-2":
             if self.item_type == ewcfg.it_item:
@@ -201,13 +212,17 @@ def find_poudrin(id_user = None, id_server = None):
 
 
 """
-	Delete the specified item by ID. Also deletes all items_prop values.
+    Delete the specified item by ID. Also deletes all items_prop values.
 """
 
 
 def item_delete(
         id_item = None
 ):
+    bknd_core.remove_entry(table="items", id_entry=id_item)
+
+    update_inventory_cache(id_item=id_item)
+
     try:
         conn_info = bknd_core.databaseConnect()
         conn = conn_info.get('conn')
@@ -230,9 +245,9 @@ def item_delete(
 
 
 """
-	Create a new item and give it to a player.
+    Create a new item and give it to a player.
 
-	Returns the unique database ID of the newly created item.
+    Returns the unique database ID of the newly created item.
 """
 
 
@@ -481,7 +496,15 @@ def get_inventory_size(owner = None, id_server = None):
 	inserted into SQL without validation/sanitation.
 """
 
-
+# Hey future frog, you will want to rewrite most of this tbh. It's gonna suck but I gotta sleep. Good luck
+# Sorting and filtering will need to be moved out of the SQL to make it so ram can't intentionally be wasted by
+# forcing caching of the same huge inventory more than once with different broad filters
+# check cache for inv of id_user, if not there, select id item from items where id_user = id_user
+# for row in cursor, inv_list.append row[0]
+# sort/filter inv list from here
+# optimization could be done depending on what this needs to return
+# instead of loading the entire item from the cache, just retrieve necessary things
+# and if the item is not in the cache, all those optimizations already exist with the current sql, but could use some cleaning
 def inventory(
         id_user = None,
         id_server = None,
@@ -847,6 +870,9 @@ def give_item(
                 id_item
             )
         )
+
+        update_inventory_cache(id_item=id_item, prev_id=item.id_owner, cur_id=id_user)
+
         remove_from_trades(id_item)
 
         # Reset the weapon's damage modifying stats
@@ -1125,3 +1151,45 @@ def get_weaponskill(user_data):
         weaponskill = 0
 
     return weaponskill
+
+
+""" finds the given item in cached inventories and moves it """
+
+
+def update_inventory_cache(id_item=None, prev_id=None, cur_id=None):
+    # Just stop now if there arent even inventories to update
+    if "inventories" not in bknd_core.cached_db.keys():
+        return
+
+    # Ensure it was passed an id
+    if id_item is not None:
+        inv_cache = bknd_core.cached_db.get("inventories")
+        quick_success = False
+
+        # If given a previous owner, dont search the entire inventory cache
+        if prev_id is not None and prev_id in inv_cache.keys():
+            prev_inv = inv_cache.get(prev_id)
+
+            # Ensure the item is in the inventory so removing can't error out
+            if id_item in prev_inv:
+                prev_inv.remove(id_item)
+                quick_success = True
+
+        # Only check through all inventories if it wasn't where it should've been
+        # Or if not given anywhere to search
+        if not quick_success:
+            # Loop through all cached inventories
+            for inv_id, inv in inv_cache.items():
+                # delete the item from any inventory that isn't the new owner's
+                if id_item in inv and not inv_id == cur_id:
+                    inv.remove(id_item)
+
+        # Update the inventory of the new owner, if it is cached
+        if cur_id is not None and cur_id in inv_cache.keys():
+            cur_inv = inv_cache.get(cur_id)
+
+            # Ensure you arent reporting the same item twice in an inventory
+            if id_item not in cur_inv:
+                cur_inv.append(id_item)
+
+    return
