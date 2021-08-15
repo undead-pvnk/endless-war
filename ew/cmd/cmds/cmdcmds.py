@@ -196,11 +196,11 @@ async def data(cmd):
 
 
         if user_data.life_state == ewcfg.life_state_corpse:
-            response += "You are a {}level {} {}deadboi.".format(race_prefix, user_data.slimelevel, race_suffix)
+            response += "You are a {}level {} {}dead{}.".format(race_prefix, user_data.slimelevel, race_suffix, user_data.gender)
         elif user_data.life_state == ewcfg.life_state_shambler:
             response += "You are a {}level {} {}shambler.".format(race_prefix, user_data.slimelevel, race_suffix)
         else:
-            response += "You are a {}level {} {}slimeboi.".format(race_prefix, user_data.slimelevel, race_suffix)
+            response += "You are a {}level {} {}slime{}.".format(race_prefix, user_data.slimelevel, race_suffix, user_data.gender)
             if user_data.degradation < 20:
                 pass
             elif user_data.degradation < 40:
