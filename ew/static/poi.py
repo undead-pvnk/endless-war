@@ -174,7 +174,7 @@ poi_list = [
         property_class = "c",
         is_district = True,
         is_capturable = True,
-        neighbors = {'arsonbrook': 60, 'brawlden': 60, 'oldnewyonkers': 60, 'greencakecafe': 20},
+        neighbors = {'arsonbrook': 60, 'brawlden': 60, 'oldnewyonkers': 60, 'greencakecafe': 20, 'rpcity': 20},
         topic = "Home to the R&D headquarters of many a small business and international conglomerate alike. Don't drink the water.",
         wikipage = "https://rfck.miraheze.org/wiki/Little_Chernobyl",
     ),
@@ -4764,6 +4764,31 @@ poi_list = [
         property_class = "A",
         is_subzone = True,
         neighbors = {'lobbybackroom': 20},
+    ),
+    EwPoi(
+        id_poi = "rpcity",
+        alias = [
+            "rp",
+            "rp city",
+            "roleplay city",
+            "rpc",
+            "costumestore",
+            "costume"
+        ],
+        str_name = "RP City",
+        str_desc = "This place gives you the fucking creeps. A run-down shell of its former self, the RP City store has been long forgotten by most of the residents of NLACakaNM, but every Double Halloween, it somehow comes crawling back. All the amenities and costumes are ragged and decrepit, but it seems there's still a fresh supply of costume creation kits. Oh yeah, the register is also manned by a ghost, because why wouldn't it be. He doesn't seem to mind you browsing though, you figure he's just here to collect a paycheck. Such is life... er... the afterlife, rather.",
+        channel = "rp-city",
+        major_role="littlechernobyl_major",
+        minor_role="nullminorrole",
+        permissions= {"rp-city": ["read", "send", "connect"]},
+        pvp = False,
+        closed = True, #TODO: Change this when Double Halloween comes around you fuckin nerds
+        str_closed = "RP City is closed outside of Double Halloween. Come back when it's a little... spookier.",
+        vendors = ["RP City"],
+        is_subzone = True,
+        mother_districts = [ "littlechernobyl" ],
+        neighbors = { "littlechernobyl": 20},
+        wikipage = "https://rfck.miraheze.org/wiki/Little_Chernobyl#RP_City"
     ),
 ]
 

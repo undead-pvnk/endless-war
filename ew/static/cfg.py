@@ -916,6 +916,7 @@ cmd_shoot_alt5 = cmd_prefix + 'curbstomp'
 cmd_shoot_alt6 = cmd_prefix + 'hug'
 cmd_shoot_alt7 = cmd_prefix + 'stab'
 cmd_shoot_alt8 = cmd_prefix + 'murder'
+cmd_shoot_alt9 = cmd_prefix + 'bust'
 cmd_attack = cmd_prefix + 'attack'
 cmd_reload = cmd_prefix + 'reload'
 cmd_reload_alt1 = cmd_prefix + 'loadthegun'
@@ -1738,9 +1739,9 @@ bleed_half_life = 60 * 5  # five minutes
 bleed_tick_length = 10
 
 # how often to decide whether or not to spawn an enemy
-# enemy_spawn_tick_length = 60 * 3 # Three minutes
+enemy_spawn_tick_length = 60 * 3 # Three minutes
 # enemy_spawn_tick_length = 1
-enemy_spawn_tick_length = 30
+# enemy_spawn_tick_length = 30
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 5
 
@@ -2750,6 +2751,8 @@ item_id_quattuorsexagintuplestuffedcrust = "quattuorsexagintuplestuffedcrust"
 item_id_forbiddenstuffedcrust = "theforbiddenstuffedcrust"
 item_id_forbidden111 = "theforbiddenoneoneone"
 item_id_tradingcardpack = "tradingcardpack"
+item_id_promotradingcardpack = "promotradingcardpack"
+item_id_tcgboosterbox = "tcgboosterbox"
 item_id_stick = "stick"
 item_id_gameguide = "gameguide"
 item_id_juviegradefuckenergybodyspray = "juviegradefuckenergybodyspray"
@@ -3311,6 +3314,7 @@ jams_maracas = ["https://www.youtube.com/watch?v=etYb-p8uhWA&ab_channel=GilvaSun
 jams_cornet = ["https://www.youtube.com/watch?v=mPP65UcGxq0&ab_channel=Ham_", "https://www.youtube.com/watch?v=FJrUBEtoNQU&ab_channel=ropa79", "https://www.youtube.com/watch?v=KxibMBV3nFo&ab_channel=TheJazzplaylist"]
 jams_trombone = ["https://www.youtube.com/watch?v=WEWLuBB7_FE&ab_channel=mixablemusic", "https://www.youtube.com/watch?v=lqngnNy1_Cg&ab_channel=DaveYama", "https://www.youtube.com/watch?v=1ZGeYR8b-mg&ab_channel=AllThatJazzDonKaart"]
 jams_otamatone = ["https://www.youtube.com/watch?v=tADkFuime_g&ab_channel=TheRealSullyG","https://www.youtube.com/watch?v=guSESFWNrOY&ab_channel=TheRealSullyG","https://www.youtube.com/watch?v=JtOy2gf_JrA&ab_channel=TheRealSullyG","https://www.youtube.com/watch?v=2wEtVERXQWE","https://www.youtube.com/watch?v=x8hCe3j8CqU"]
+jams_whistle = ["https://www.youtube.com/watch?v=JcJDLg_U7tg", "https://www.youtube.com/watch?v=XSwxO95nEZE", "https://www.youtube.com/watch?v=zEYTE1QNSkk"]
 
 jam_tunes = {
     "solidpoudringuitar": jams_guitar,
@@ -3323,7 +3327,8 @@ jam_tunes = {
     "bass": jams_bass,
     "trombone": jams_trombone,
     "cornet": jams_cornet,
-    "ferroslimeoidotamatone": jams_otamatone
+    "ferroslimeoidotamatone": jams_otamatone,
+    "whistle": jams_whistle
 }
 
 howls = [
@@ -4203,6 +4208,9 @@ enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 enemy_type_civilian = 'civilian'
 enemy_type_civilian_innocent = 'innocent'
 
+enemy_type_slimeoidtrainer = 'slimeoidtrainer'
+enemy_type_ug_slimeoidtrainer = 'undergroundslimeoidtrainer'
+
 # Gankers Vs. Shamblers enemies
 enemy_type_gaia_poketubers = "poketubers"
 enemy_type_gaia_pulpgourds = "pulpgourds"
@@ -4277,6 +4285,8 @@ enemy_movers = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_gre
 
 # List of enemies that spawn in the Nuclear Beach
 pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
+
+slimeoid_trainers = [enemy_type_slimeoidtrainer, enemy_type_ug_slimeoidtrainer]
 
 # List of enemies used in the Gankers Vs. Shamblers event
 gvs_enemies_gaiaslimeoids = [
@@ -4461,6 +4471,8 @@ enemy_drop_tables = {
 }
 for enemy in gvs_enemies:
     enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}]
+for enemy in slimeoid_trainers:
+    enemy_drop_tables[enemy] = [{item_id_slimepoudrin: [100, 1, 1]}]
 
 # When making a new enemy, make sure to fill out slimerange, ai, attacktype, displayname, raredisplayname, and aliases.
 # Enemy data tables. Slime is stored as a range from min to max possible slime upon spawning.
@@ -4639,6 +4651,22 @@ enemy_data_table = {
         "displayname": "Innocent Civilian",
         "raredisplayname": "Puppy-Eyed Youth",
         "aliases": ["townsfolk", "citizen", "civilian", "innocent", "person"]
+    },
+    enemy_type_slimeoidtrainer: {
+        "slimerange": [10001, 10001],
+        "ai": enemy_ai_defender,
+        "attacktype": enemy_attacktype_amateur,
+        "displayname": "Slimeoid Trainer",
+        "raredisplayname": "Slimeoid Champion",
+        "aliases": ["slimeoidt", "st", "strainer", "champ", "trainer"]
+    },
+    enemy_type_ug_slimeoidtrainer: {
+        "slimerange": [10001, 10001],
+        "ai": enemy_ai_defender,
+        "attacktype": enemy_attacktype_amateur,
+        "displayname": "Suspicious Slimeoid Trainer",
+        "raredisplayname": "Villainous Slimeoid Champion",
+        "aliases": ["slimeoidt", "sst", "sstrainer", "champ", "sustrainer", "villain"]
     },
     enemy_type_gaia_poketubers: {
         "slimerange": [100, 100],
@@ -5748,68 +5776,3 @@ cmd_debug6 = cmd_prefix + ewdebug.cmd_debug6
 cmd_debug7 = cmd_prefix + ewdebug.cmd_debug7
 cmd_debug8 = cmd_prefix + ewdebug.cmd_debug8
 cmd_debug9 = cmd_prefix + ewdebug.cmd_debug9
-"""    /*"rpcity": {
-        "id_poi": "rpcity",
-        "alias": [
-            "rp",
-            "rp city",
-            "roleplay city",
-            "rpc",
-            "costumestore",
-            "costume"
-        ],
-        "str_name": "RP City",
-        "str_desc": "This place gives you the fucking creeps. A run-down shell of its former self, the RP City store has been long forgotten by most of the residents of NLACakaNM, but every Double Halloween, it somehow comes crawling back. All the amenities and costumes are ragged and decrepit, but it seems there's still a fresh supply of costume creation kits. Oh yeah, the register is also manned by a ghost, because why wouldn't it be. He doesn't seem to mind you browsing though, you figure he's just here to collect a paycheck. Such is life... er... the afterlife, rather.",
-        "str_in": "in",
-        "str_enter": "enter",
-        "coord": null,
-        "coord_alias": [],
-        "channel": "rp-city",
-        "role": "RP City",
-        "major_role": "littlechernobyl_major",
-        "minor_role": "nullminorrole",
-        "permissions": {
-            "rpcity": [
-                "read",
-                "send",
-                "connect"
-            ]
-        },
-        "pvp": false,
-        "factions": [],
-        "life_states": [],
-        "closed": false,
-        "str_closed": null,
-        "vendors": [
-            "RP City"
-        ],
-        "property_class": "",
-        "is_district": false,
-        "is_gangbase": false,
-        "is_capturable": false,
-        "is_subzone": true,
-        "is_apartment": false,
-        "is_street": false,
-        "mother_districts": [
-            "littlechernobyl"
-        ],
-        "father_district": "",
-        "is_transport": false,
-        "transport_type": "",
-        "default_line": "",
-        "default_stop": "",
-        "is_transport_stop": false,
-        "is_outskirts": false,
-        "community_chest": null,
-        "is_pier": false,
-        "pier_type": null,
-        "is_tutorial": false,
-        "has_ads": false,
-        "write_manuscript": true,
-        "max_degradation": 10000,
-        "neighbors": {
-            "littlechernobyl": 20
-        },
-        "topic": "",
-        "wikipage": "https://rfck.miraheze.org/wiki/Little_Chernobyl#RP_City"
-    },*/"""

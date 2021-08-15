@@ -642,8 +642,14 @@ async def item_use(cmd):
         if item.item_type == ewcfg.it_item:
             name = item_sought.get('name')
             context = item.item_props.get('context')
-            if name == "Trading Cards":
-                response = itm_utils.unwrap(id_user=author, id_server=server, item=item)
+            if (context == "cardpack" or context == "promocardpack" or context == "boosterbox"):
+                repeats = 0
+                rarity = 1000
+                if context == "promocardpack":
+                    rarity = 500
+                elif context == "boosterbox":
+                    repeats = 36
+                response = itm_utils.unwrap(id_user=author, id_server=server, item=item, repeats=repeats, rarity=rarity)
             elif (context == 'repel' or context == 'superrepel' or context == 'maxrepel'):
                 statuses = user_data.getStatusEffects()
                 if ewcfg.status_repelaftereffects_id in statuses:
@@ -680,6 +686,8 @@ async def item_use(cmd):
                     response = "You turn on your gellphone."
                     item.item_props['gellphoneactive'] = 'true'
                     item.persist()
+                
+                await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
 
             elif context == ewcfg.context_prankitem:
@@ -733,6 +741,7 @@ async def item_use(cmd):
 
                 user_data.degradation = 0
                 user_data.persist()
+                await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
                 bknd_item.item_delete(item.id_item)
 
@@ -748,7 +757,6 @@ async def item_use(cmd):
                     response = ewdebug.debug_code
 
         await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
-        await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
     else:
         if item_search:  # if they didnt forget to specify an item and it just wasn't found

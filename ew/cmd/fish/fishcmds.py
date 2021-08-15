@@ -875,7 +875,7 @@ async def barter_all(cmd):
 
             if (offer_decision != 2 or ewcfg.mutation_id_davyjoneskeister in mutations) and fish.item_props.get('noslime') != "true" and ewcfg.mutation_id_onemansjunk not in mutations:  # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
                 max_value = value * 6000  # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
-                min_value = max_value / 10  # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
+                min_value = max_value / 5  # 120,000 slime for a colossal promo fish, 24,000 for a miniscule common fish.
 
                 slime_gain = round(random.triangular(min_value, max_value, min_value * 2))
 

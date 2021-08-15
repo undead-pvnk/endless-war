@@ -625,21 +625,24 @@ async def devour(cmd):
                 acquisition = None
                 if furn is not None:
                     acquisition = furn.acquisition
-                if furn.id_furniture == 'brick':
-                    brickeat(item_obj=item_obj)
-                    is_brick = 1
-                    recover_hunger = 50
-                    response = str_eat
-                elif acquisition != ewcfg.acquisition_bazaar:
-                    recover_hunger = 100
-                elif furn.price < 500:
-                    recover_hunger = 0
-                elif furn.price < 5000:
-                    recover_hunger = 50
-                elif furn.price < 1000000:
-                    recover_hunger = 320
+                    if furn.id_furniture == 'brick':
+                        brickeat(item_obj=item_obj)
+                        is_brick = 1
+                        recover_hunger = 50
+                        response = str_eat
+                    elif acquisition != ewcfg.acquisition_bazaar:
+                        recover_hunger = 100
+                    elif furn.price < 500:
+                        recover_hunger = 0
+                    elif furn.price < 5000:
+                        recover_hunger = 50
+                    elif furn.price < 1000000:
+                        recover_hunger = 320
+                    else:
+                        recover_hunger = 16000
                 else:
-                    recover_hunger = 16000
+                    # This only happens in the case of propstanded items, so we just set it to the lowest possible
+                    recover_hunger = 50
             elif item_obj.item_type == ewcfg.it_food:
                 if item_obj.item_props.get('perishable') != None:
                     perishable_status = item_obj.item_props.get('perishable')

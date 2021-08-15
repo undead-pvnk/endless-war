@@ -6,56 +6,57 @@ from ..backend.district import EwDistrictBase as EwDistrict
 from ..backend.market import EwMarket
 from ..backend.market import EwStock
 from ..backend.player import EwPlayer
+from ..utils.frontend import EwResponseContainer
 from ..static import cfg as ewcfg
 from ..static import poi as poi_static
 
 
 async def post_leaderboards(client = None, server = None):
+    ewutils.logMsg("Started leaderboard calcs...")
     leaderboard_channel = fe_utils.get_channel(server=server, channel_name=ewcfg.channel_leaderboard)
+    resp_cont = EwResponseContainer(client, id_server = server.id)
 
     market = EwMarket(id_server=server.id)
     time = "day {}".format(market.day)
 
-    await fe_utils.send_message(client, leaderboard_channel, "▓▓{} **STATE OF THE CITY:** {} {}▓▓".format(ewcfg.emote_theeye, time, ewcfg.emote_theeye))
+    resp_cont.add_channel_response(leaderboard_channel, "▓▓{} **STATE OF THE CITY:** {} {}▓▓".format(ewcfg.emote_theeye, time, ewcfg.emote_theeye))
 
-    kingpins = make_kingpin_board(server=server, title=ewcfg.leaderboard_kingpins)
-    await fe_utils.send_message(client, leaderboard_channel, kingpins)
+    kingpins = make_kingpin_board(server=server.id, title=ewcfg.leaderboard_kingpins)
+    resp_cont.add_channel_response(leaderboard_channel, kingpins)
+
     districts = make_district_control_board(id_server=server.id, title=ewcfg.leaderboard_districts)
-    await fe_utils.send_message(client, leaderboard_channel, districts)
-    topslimes = make_userdata_board(server=server, category=ewcfg.col_slimes, title=ewcfg.leaderboard_slimes)
-    await fe_utils.send_message(client, leaderboard_channel, topslimes)
-    # topcoins = make_userdata_board(server = server, category = ewcfg.col_slimecoin, title = ewcfg.leaderboard_slimecoin)
-    ewutils.logMsg("starting net worth calc")
-    topcoins = make_stocks_top_board(server=server)
-    ewutils.logMsg("finished net worth calc")
-    await fe_utils.send_message(client, leaderboard_channel, topcoins)
-    topghosts = make_userdata_board(server=server, category=ewcfg.col_slimes, title=ewcfg.leaderboard_ghosts, lowscores=True, rows=3)
-    await fe_utils.send_message(client, leaderboard_channel, topghosts)
-    topbounty = make_userdata_board(server=server, category=ewcfg.col_bounty, title=ewcfg.leaderboard_bounty, divide_by=ewcfg.slimecoin_exchangerate)
-    await fe_utils.send_message(client, leaderboard_channel, topbounty)
-    # topfashion = make_userdata_board(server = server, category = ewcfg.col_freshness, title = ewcfg.leaderboard_fashion)
-    ewutils.logMsg("starting freshness calc")
-    topfashion = make_freshness_top_board(server=server)
-    ewutils.logMsg("finished freshness calc")
-    await fe_utils.send_message(client, leaderboard_channel, topfashion)
-    topdonated = make_userdata_board(server=server, category=ewcfg.col_splattered_slimes, title=ewcfg.leaderboard_donated)
-    await fe_utils.send_message(client, leaderboard_channel, topdonated)
-    # topdegraded = make_userdata_board(server = server, category = ewcfg.col_degradation, title = ewcfg.leaderboard_degradation)
-    # await ewutils.send_message(client, leaderboard_channel, topdegraded)
-    # topshamblerkills = make_statdata_board(server = server, category = ewcfg.stat_shamblers_killed, title = ewcfg.leaderboard_shamblers_killed)
-    # await ewutils.send_message(client, leaderboard_channel, topshamblerkills)
-    topslimeoids = make_slimeoids_top_board(server=server)
-    await fe_utils.send_message(client, leaderboard_channel, topslimeoids)
-    # topfestivity = make_slimernalia_board(server = server, title = ewcfg.leaderboard_slimernalia)
-    # await ewutils.send_message(client, leaderboard_channel, topfestivity)
-    topzines = make_zines_top_board(server=server)
-    await fe_utils.send_message(client, leaderboard_channel, topzines)
+    resp_cont.add_channel_response(leaderboard_channel, districts)
 
+    topslimes = make_userdata_board(server=server.id, category=ewcfg.col_slimes, title=ewcfg.leaderboard_slimes)
+    resp_cont.add_channel_response(leaderboard_channel, topslimes)
 
-# topgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_high)
-# await ewutils.send_message(client, leaderboard_channel, topgambit)
-# bottomgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_low)
-# await ewutils.send_message(client, leaderboard_channel, bottomgambit)
+    topcoins = make_stocks_top_board(server=server.id)
+    resp_cont.add_channel_response(leaderboard_channel, topcoins)
+
+    topghosts = make_userdata_board(server=server.id, category=ewcfg.col_slimes, title=ewcfg.leaderboard_ghosts, lowscores=True, rows=3)
+    resp_cont.add_channel_response(leaderboard_channel, topghosts)
+
+    topbounty = make_userdata_board(server=server.id, category=ewcfg.col_bounty, title=ewcfg.leaderboard_bounty, divide_by=ewcfg.slimecoin_exchangerate)
+    resp_cont.add_channel_response(leaderboard_channel, topbounty)
+
+    topfashion = make_freshness_top_board(server=server.id)
+    resp_cont.add_channel_response(leaderboard_channel, topfashion)
+
+    topdonated = make_userdata_board(server=server.id, category=ewcfg.col_splattered_slimes, title=ewcfg.leaderboard_donated)
+    resp_cont.add_channel_response(leaderboard_channel, topdonated)
+    
+    topslimeoids = make_slimeoids_top_board(server=server.id)
+    resp_cont.add_channel_response(leaderboard_channel, topslimeoids)
+
+    # topfestivity = make_slimernalia_board(server = serve.id, title = ewcfg.leaderboard_slimernalia)
+    # resp_cont.add_channel_response(leaderboard_channel, topfestivity)
+
+    topzines = make_zines_top_board(server=server.id)
+    resp_cont.add_channel_response(leaderboard_channel, topzines)
+
+    await resp_cont.post()
+
+    ewutils.logMsg("...finished leaderboard calcs.")
 
 def make_stocks_top_board(server = None):
     entries = []
@@ -70,12 +71,12 @@ def make_stocks_top_board(server = None):
                 "WHERE u.id_server = %(id_server)s " +
                 "ORDER BY u.slimecoin DESC"
         ), {
-            "id_server": server.id,
+            "id_server": server,
         })
 
-        stock_kfc = EwStock(id_server=server.id, stock='kfc')
-        stock_tb = EwStock(id_server=server.id, stock='tacobell')
-        stock_ph = EwStock(id_server=server.id, stock='pizzahut')
+        stock_kfc = EwStock(id_server=server, stock='kfc')
+        stock_tb = EwStock(id_server=server, stock='tacobell')
+        stock_ph = EwStock(id_server=server, stock='pizzahut')
 
         shares_value = lambda shares, stock: round(shares * (stock.exchange_rate / 1000.0))
 
@@ -104,7 +105,7 @@ def make_freshness_top_board(server = None):
     try:
         all_adorned = bknd_core.execute_sql_query("SELECT id_item FROM items WHERE id_server = %s " +
                                                   "AND id_item IN (SELECT id_item FROM items_prop WHERE name = 'adorned' AND value = 'true')",
-                                                  (server.id,)
+                                                  (server,)
                                                   )
 
         all_adorned = tuple(map(lambda a: a[0], all_adorned))
@@ -144,7 +145,7 @@ def make_freshness_top_board(server = None):
         max_fresh = lambda base: base * 50 + 100
 
         while len(user_ids) > 0 and (len(top_five) < 5 or top_five[-1].freshness < max_fresh(user_fresh.get(user_ids[0]))):
-            current_user = EwUser(id_user=user_ids.pop(0), id_server=server.id, data_level=2)
+            current_user = EwUser(id_user=user_ids.pop(0), id_server=server, data_level=2)
 
             top_five.append(current_user)
 
@@ -186,13 +187,13 @@ def make_slimeoids_top_board(server = None):
                 "WHERE sl.id_server = %s AND sl.life_state = 2 " +
                 "ORDER BY sl.clout DESC LIMIT 3"
         ), (
-            server.id,
+            server,
         ))
 
         data = cursor.fetchall()
         if data != None:
             for row in data:
-                board += "{} `{:_>3} | {}'s {}`\n".format(
+                board += "{} `{:_>3} | {}'s {}`".format(
                     ewcfg.emote_blank,
                     row[2],
                     row[0].replace("`", ""),
@@ -207,7 +208,7 @@ def make_slimeoids_top_board(server = None):
 
 
 def make_zines_top_board(server = None):
-    board = "{zine} ▓▓▓▓▓ BESTSELLING ZINES ▓▓▓▓▓ {zine}\n".format(
+    board = "{zine} ▓▓▓▓▓ BESTSELLING ZINES ▓▓▓▓▓ {zine}".format(
         zine="<:zine:655854388761460748>"
     )
 
@@ -222,7 +223,7 @@ def make_zines_top_board(server = None):
                 "WHERE b.id_server = %s AND b.book_state = 1 " +
                 "ORDER BY b.sales DESC LIMIT 5"
         ), (
-            server.id,
+            server,
         ))
 
         data = cursor.fetchall()
@@ -259,7 +260,7 @@ def make_userdata_board(server = None, category = "", title = "", lowscores = Fa
             order=('DESC' if lowscores == False else 'ASC'),
             limit=rows
         ), (
-            server.id,
+            server,
         ))
         i = 0
         row = cursor.fetchone()
@@ -296,7 +297,7 @@ def make_statdata_board(server = None, category = "", title = "", lowscores = Fa
             order=('DESC' if lowscores == False else 'ASC'),
             limit=rows
         ), (
-            server.id,
+            server,
             category
         ))
 
@@ -332,7 +333,7 @@ def make_kingpin_board(server = None, title = ""):
             category=ewcfg.col_slimes,
             id_user=ewcfg.col_id_user
         ), (
-            server.id,
+            server,
             ewcfg.life_state_kingpin
         ))
 
@@ -396,7 +397,7 @@ def make_slimernalia_board(server, title):
         ), (
             "id_furniture",
             ewcfg.item_id_sigillaria,
-            server.id
+            server
         )
     )
 
@@ -431,7 +432,7 @@ def make_gambit_leaderboard(server, title, rows = 3):
                 order=('DESC' if lowgambit == False else 'ASC'),
                 limit=rows
             ), (
-                server.id,
+                server,
             ))
 
         i = 0
@@ -529,11 +530,11 @@ def board_header(title):
 
     if emote == None and emote2 == None:
         bar += "▓▓"
-        return bar + title + bar + "\n"
+        return bar + title + bar
     if emote2 != None:
-        return emote + bar + title + bar + emote2 + "\n"
+        return emote + bar + title + bar + emote2
     else:
-        return emote + bar + title + bar + emote + "\n"
+        return emote + bar + title + bar + emote
 
 
 def board_entry(entry, entry_type, divide_by):
@@ -550,7 +551,7 @@ def board_entry(entry, entry_type, divide_by):
         else:
             num_str = "{:,}".format(number)
 
-        result = "{} `{:_>15} | {}`\n".format(
+        result = "\n{} `{:_>15} | {}`".format(
             faction_symbol,
             num_str,
             entry[0].replace("`", "")
@@ -561,7 +562,7 @@ def board_entry(entry, entry_type, divide_by):
         districts = entry[1]
         faction_symbol = ewutils.get_faction_symbol(faction.lower())
 
-        result = "{} `{:_>15} | {}`\n".format(
+        result = "\n{} `{:_>15} | {}`".format(
             faction_symbol,
             faction,
             districts

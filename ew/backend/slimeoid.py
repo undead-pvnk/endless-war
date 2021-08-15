@@ -194,3 +194,10 @@ class EwSlimeoidBase:
             # Clean up the database handles.
             cursor.close()
             bknd_core.databaseClose(conn_info)
+        
+    def delete(self):
+            bknd_core.execute_sql_query("DELETE FROM slimeoids WHERE {id_slimeoid} = %s".format(
+                id_slimeoid=ewcfg.col_id_slimeoid
+            ), (
+                self.id_slimeoid,
+            ))

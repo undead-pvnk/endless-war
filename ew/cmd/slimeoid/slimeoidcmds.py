@@ -3,6 +3,7 @@ import time
 
 from ew.backend import core as bknd_core
 from ew.backend import item as bknd_item
+from ew.backend import hunting as bknd_hunting
 from ew.backend.item import EwItem
 from ew.backend.market import EwMarket
 from ew.backend.quadrants import EwQuadrant
@@ -15,10 +16,13 @@ from ew.utils import core as ewutils
 from ew.utils import frontend as fe_utils
 from ew.utils import item as item_utils
 from ew.utils import slimeoid as slimeoid_utils
+from ew.utils import combat as cmbt_utils
 from ew.utils.combat import EwUser
+from ew.utils.combat import EwEnemy
 from ew.utils.district import EwDistrict
 from ew.utils.slimeoid import EwSlimeoid
 from .slimeoidutils import battle_slimeoids
+from .slimeoidutils import can_slimeoid_battle
 from .slimeoidutils import get_slimeoid_count
 
 
@@ -406,175 +410,177 @@ async def slimeoidbattle(cmd):
     #	response = "You can only have Slimeoid Battles at the Battle Arena."
     #	return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
 
+    pvp_battle = False
+    response = ""
+    user_name = "" # get it, like a username!
+    target_name = ""
+
     if ewutils.channel_name_is_poi(str(cmd.message.channel)) is False:
         return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
-    if cmd.mentions_count != 1:
-        # Must mention only one player
-        response = "Mention the player you want to challenge."
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
-
+    if cmd.mentions_count > 1:
+        response = "Slow down there, bucko! You can only challenge one person to a slimeoid battle at a time."
+        return await fe_utils.send_response(response, cmd)
+    elif cmd.mentions_count == 1:
+        pvp_battle = True
+    
     author = cmd.message.author
-    member = cmd.mentions[0]
-
-    if author.id == member.id:
-        response = "You can't challenge yourself, dumbass."
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
-
+    user_name = author.display_name
     challenger = EwUser(member=author)
     challenger_slimeoid = EwSlimeoid(member=author)
-    challengee = EwUser(member=member)
-    challengee_slimeoid = EwSlimeoid(member=member)
+    
+    if pvp_battle:
+        member = cmd.mentions[0]
+        target_name = member.display_name
 
-    bet = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
+        if author.id == member.id:
+            response = "You can't challenge yourself, dumbass."
+            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
 
-    if bet == None or challenger.poi != ewcfg.poi_id_arena:
+        challengee = EwUser(member=member)
+        challengee_slimeoid = EwSlimeoid(member=member)
+
+        bet = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
+
+        if bet == None or challenger.poi != ewcfg.poi_id_arena:
+            bet = 0
+        
+        if bet == -1:
+            bet = challenger.slimes
+    else:
+        
+        # Try to find an enemy by the name / indicator given
+        targetenemy = " ".join(cmd.tokens[1:]).lower()
+        challengee = cmbt_utils.find_enemy(targetenemy, EwUser())
+        
+        if challengee is None:
+            response = "Huh? Who do you want to challenge?"
+            return await fe_utils.send_response(response, cmd)
+        
+        target_name = challengee.display_name
+        challengee_slimeoid = EwSlimeoid(id_user=challengee.id_enemy, id_server=cmd.message.guild.id)
+        
         bet = 0
-    if bet == -1:
-        bet = challenger.slimes
 
-    # Players have been challenged
-    if ewutils.active_slimeoidbattles.get(challenger_slimeoid.id_slimeoid):
-        response = "You are already in the middle of a challenge."
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
+    # Check if you can throw down
+    response = can_slimeoid_battle(challenger, challengee, challenger_slimeoid, challengee_slimeoid, bet)
+    if response != "":
+        return await fe_utils.send_response(response, cmd)
 
-    if ewutils.active_slimeoidbattles.get(challengee_slimeoid.id_slimeoid):
-        response = "{} is already in the middle of a challenge.".format(member.display_name).replace("@", "\{at\}")
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
-
-    if challenger.poi != challengee.poi:
-        # Challangee must be in the arena
-        response = "Both players must be in the same place."
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
-
-    if challenger_slimeoid.life_state != ewcfg.slimeoid_state_active:
-        response = "You do not have a Slimeoid ready to battle with!"
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
-    if challengee_slimeoid.life_state != ewcfg.slimeoid_state_active:
-        response = "{} does not have a Slimeoid ready to battle with!".format(member.display_name)
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
-
-    if challenger.slimes < bet:
-        response = "You don't have enough slime!"
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
-    if challengee.slimes < bet:
-        response = "They don't have enough slime!"
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
-
-    time_now = int(time.time())
-
-    if (time_now - challenger_slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-        time_until = ewcfg.cd_slimeoiddefeated - (time_now - challenger_slimeoid.time_defeated)
-        response = "Your Slimeoid is still recovering from its last defeat! It'll be ready in {} seconds.".format(int(time_until))
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
-
-    if (time_now - challengee_slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-        time_until = ewcfg.cd_slimeoiddefeated - (time_now - challengee_slimeoid.time_defeated)
-        response = "{}'s Slimeoid is still recovering from its last defeat! It'll be ready in {} seconds.".format(member.display_name, time_until)
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
-
-    # Players have to be enlisted
-    if challenger.life_state == ewcfg.life_state_corpse or challengee.life_state == ewcfg.life_state_corpse:
-        if challenger.life_state == ewcfg.life_state_corpse:
-            response = "Your Slimeoid won't battle for you while you're dead.".format(author.display_name).replace("@", "\{at\}")
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
-
-        elif challengee.life_state == ewcfg.life_state_corpse:
-            response = "{}'s Slimeoid won't battle for them while they're dead.".format(member.display_name).replace("@", "\{at\}")
-            return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
-
-    # Assign a challenger so players can't be challenged
+    # Assign a challenger so partipants can't be challenged again
     challenger_slimeoid_id = challenger_slimeoid.id_slimeoid
     challengee_slimeoid_id = challengee_slimeoid.id_slimeoid
     ewutils.active_slimeoidbattles[challenger_slimeoid_id] = True
     ewutils.active_slimeoidbattles[challengee_slimeoid_id] = True
 
-    ewutils.active_target_map[challengee.id_user] = challenger.id_user
+    if pvp_battle:
+        ewutils.active_target_map[challengee.id_user] = challenger.id_user
+        response = "You have been challenged by {} to a Slimeoid Battle. Do you !accept or !refuse?".format(user_name).replace("@", "\{at\}")
+        await fe_utils.send_response(response, cmd)
 
-    challengee.persist()
-
-    response = "You have been challenged by {} to a Slimeoid Battle. Do you !accept or !refuse?".format(author.display_name).replace("@", "\{at\}")
-    await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(member, response))
-
-    # Wait for an answer
-    accepted = 0
-    try:
-        msg = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == member and
-                                                                                     message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
-
-        if msg != None:
-            if msg.content == ewcfg.cmd_accept:
-                accepted = 1
-    except:
+        # Wait for an answer
         accepted = 0
+        try:
+            msg = await cmd.client.wait_for('message', timeout=30, check=lambda message: message.author == member and message.content.lower() in [ewcfg.cmd_accept, ewcfg.cmd_refuse])
 
-    challengee = EwUser(member=member)
-    challengee_slimeoid = EwSlimeoid(member=member)
-    challenger = EwUser(member=author)
-    challengee_slimeoid = EwSlimeoid(member=member)
+            if msg != None:
+                if msg.content == ewcfg.cmd_accept:
+                    accepted = 1
+        except:
+            accepted = 0
 
-    ewutils.active_target_map[challengee.id_user] = ""
-    ewutils.active_target_map[challenger.id_user] = ""
+        # Load information again in case it changed while we were awaiting the challenge
+        challengee = EwUser(member=member)
+        challengee_slimeoid = EwSlimeoid(member=member)
+        challenger = EwUser(member=author)
+        challengee_slimeoid = EwSlimeoid(member=member)
 
-    # challengee.persist()
-    # challenger.persist()
+        ewutils.active_target_map[challengee.id_user] = ""
+        ewutils.active_target_map[challenger.id_user] = ""
 
-    if challenger_slimeoid.life_state != ewcfg.slimeoid_state_active:
-        ewutils.active_slimeoidbattles[challenger_slimeoid_id] = False
-        ewutils.active_slimeoidbattles[challengee_slimeoid_id] = False
-        response = "You do not have a Slimeoid ready to battle with!"
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
-    if challengee_slimeoid.life_state != ewcfg.slimeoid_state_active:
-        ewutils.active_slimeoidbattles[challenger_slimeoid_id] = False
-        ewutils.active_slimeoidbattles[challengee_slimeoid_id] = False
-        response = "{} does not have a Slimeoid ready to battle with!".format(member.display_name)
-        return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(author, response))
+        # Double check to make sure nothing has happened in the mean time
+
+        if challenger_slimeoid.life_state != ewcfg.slimeoid_state_active:
+            ewutils.active_slimeoidbattles[challenger_slimeoid_id] = False
+            ewutils.active_slimeoidbattles[challengee_slimeoid_id] = False
+            response = "You do not have a Slimeoid ready to battle with!"
+            return await fe_utils.send_response(response, cmd)
+
+        if challengee_slimeoid.life_state != ewcfg.slimeoid_state_active:
+            ewutils.active_slimeoidbattles[challenger_slimeoid_id] = False
+            ewutils.active_slimeoidbattles[challengee_slimeoid_id] = False
+            response = "{} does not have a Slimeoid ready to battle with!".format(target_name)
+            return await fe_utils.send_response(response, cmd)
+    else:
+        accepted = 1
 
     # Start game
     if accepted == 1:
-        challengee.change_slimes(n=-bet, source=ewcfg.source_slimeoid_betting)
-        challenger.change_slimes(n=-bet, source=ewcfg.source_slimeoid_betting)
+        # Don't change slimes unless we realllllyyyyyy have to
+        if bet != 0:
+            challengee.change_slimes(n=-bet, source=ewcfg.source_slimeoid_betting)
+            challenger.change_slimes(n=-bet, source=ewcfg.source_slimeoid_betting)
 
-        challengee.persist()
-        challenger.persist()
+            challengee.persist()
+            challenger.persist()
 
-        slimecorp_fee, winnings = casino_utils.slimecorp_collectfee(bet * 2)
+            winnings = bet * 2
 
-        result = await battle_slimeoids(id_s1=challengee_slimeoid.id_slimeoid, id_s2=challenger_slimeoid.id_slimeoid, channel=cmd.message.channel, battle_type=ewcfg.battle_type_arena)
-        if result == -1:
-            response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:{}".format(challenger_slimeoid.name, challenger_slimeoid.name, author.display_name, "" if bet == 0 else "\nThey recieve {:,} slime! The remaining {:,} slime goes to SlimeCorp.".format(winnings, slimecorp_fee))
+        if not pvp_battle:
+            winnings = 10000 * challengee_slimeoid.level
 
-            if challengee_slimeoid.coating != '':
-                response += "\n{} coating has been tarnished by battle.".format(challengee_slimeoid.name, challengee_slimeoid.coating)
-                challengee_slimeoid.coating = ''
-                challengee_slimeoid.persist()
-            if challenger_slimeoid.coating != '':
-                response += "\n{} coating has been tarnished by battle.".format(challenger_slimeoid.name, challenger_slimeoid.coating)
-                challenger_slimeoid.coating = ''
-                challenger_slimeoid.persist()
+        # The actual battle goes here
+        result = await battle_slimeoids(
+            id_s1=challengee_slimeoid.id_slimeoid,
+            id_s2=challenger_slimeoid.id_slimeoid,
+            channel=cmd.message.channel,
+            battle_type=ewcfg.battle_type_arena,
+            challengee_name=target_name,
+            challenger_name=user_name
+        )
 
-            await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+        # Challenger won
+        if result ==  1:
+            winner = challenger
+            winner_slimeoid_name = challenger_slimeoid.name
+            winner_trainer_name = user_name
+        else:
+            winner = challengee
+            winner_slimeoid_name = challengee_slimeoid.name
+            winner_trainer_name = target_name
+        response = "\n**{slimeoid_name} has won the Slimeoid battle!! The crowd erupts into cheers for {slimeoid_name} and {trainer_name}!!** :tada:".format(
+            slimeoid_name = winner_slimeoid_name,
+            trainer_name = winner_trainer_name
+            )
+        if winnings != 0 and isinstance(winner, EwUser):
+            response += "\nThey recieve {:,} slime!".format(winnings)
+
+        if challengee_slimeoid.coating != '' and pvp_battle:
+            response += "\n{} coating has been tarnished by battle.".format(challengee_slimeoid.name, challengee_slimeoid.coating)
+            challengee_slimeoid.coating = ''
+            challengee_slimeoid.persist()
+        
+        if challenger_slimeoid.coating != '':
+            response += "\n{} coating has been tarnished by battle.".format(challenger_slimeoid.name, challenger_slimeoid.coating)
+            challenger_slimeoid.coating = ''
+            challenger_slimeoid.persist()
+        
+        await fe_utils.send_message(cmd.client, cmd.message.channel, response)
+
+        if pvp_battle or not isinstance(winner, EwEnemy):
+            # Update the winner's state one last time, then give 'em their winnings!
             challenger = EwUser(member=author)
-            if challenger.life_state != ewcfg.life_state_corpse:
+            if winner.life_state != ewcfg.life_state_corpse and pvp_battle:
                 challenger.change_slimes(n=winnings)
                 challenger.persist()
-        elif result == 1:
-            response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:{}".format(challengee_slimeoid.name, challengee_slimeoid.name, member.display_name, "" if bet == 0 else "\nThey recieve {:,} slime! The remaining {:,} slime goes to SlimeCorp.".format(winnings, slimecorp_fee))
-
-            if challengee_slimeoid.coating != '':
-                challengee_slimeoid.coating = ''
-                response += "\n{} sheds its {} coating.".format(challengee_slimeoid.name, challengee_slimeoid.coating)
-                challengee_slimeoid.persist()
-            if challenger_slimeoid.coating != '':
-                challenger_slimeoid.coating = ''
-                response += "\n{} sheds its {} coating.".format(challenger_slimeoid.name, challenger_slimeoid.coating)
-                challenger_slimeoid.persist()
-
+        
+        if not pvp_battle and not isinstance(winner, EwEnemy):
+            # Fucking delete 'em if they lose!
+            response = "{name} is out of useable Slimeoids! {name} blacked out!".format(challengee.display_name)
             await fe_utils.send_message(cmd.client, cmd.message.channel, response)
-            challengee = EwUser(member=member)
-            if challengee.life_state != ewcfg.life_state_corpse:
-                challengee.change_slimes(n=winnings)
-                challengee.persist()
+            
+            bknd_hunting.delete_enemy(challengee)
+            challengee_slimeoid.delete()
     else:
         response = "{} was too cowardly to accept your challenge.".format(member.display_name).replace("@", "\{at\}")
 
