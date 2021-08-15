@@ -131,11 +131,11 @@ def gen_data_text(
             race_suffix = ""
 
         if user_data.life_state == ewcfg.life_state_corpse:
-            response = "{} is a {}level {} {}deadboi.".format(display_name, race_prefix, user_data.slimelevel, race_suffix)
+            response = "{} is a {}level {} {}dead{}.".format(display_name, race_prefix, user_data.slimelevel, race_suffix, user_data.gender)
         elif user_data.life_state == ewcfg.life_state_shambler:
             response = "{} is a {}level {} {}shambler.".format(display_name, race_prefix, user_data.slimelevel, race_suffix)
         else:
-            response = "{} is a {}level {} {}slimeboi.".format(display_name, race_prefix, user_data.slimelevel, race_suffix)
+            response = "{} is a {}level {} {}slime{}.".format(display_name, race_prefix, user_data.slimelevel, race_suffix, user_data.gender)
             if user_data.degradation < 20:
                 pass
             elif user_data.degradation < 40:

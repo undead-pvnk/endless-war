@@ -842,3 +842,36 @@ async def juviemode(cmd):
     #	user_data.persist()
     #	response = "You summon forth all the cowardice in your heart, to forgo even slime, the most basic joy. You vow to carry no more than 100,000, the NLACakaNM's legal limit, on your person at any time."
     return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))
+
+""" Gender :3 """
+
+async def identify(cmd):
+    user_data = EwUser(member=cmd.message.author)
+    gender = cmd.message.content[(len(ewcfg.cmd_identify)):].strip()
+
+    if gender == "":
+        response = "Cool. Noted. Enjoy your lack of gender, slime."
+        user_data.gender = ""
+        user_data.persist()
+    elif gender in ewcfg.curse_words:
+        response = "Hey, no matter what, you're still a juvenile. **NO SWEARS**."
+    elif "\n" in gender:
+        response = "No fucking line breaks! WTF!"    
+    elif len(gender) > 16:
+        response = "Fucking god, your gender **CANNOT** be longer than that. Sorry, them's the rules."
+    elif gender == "boy":
+        response = "Radical! Enjoy your gender, slimeboi."
+        user_data.gender = "boi"
+        user_data.persist()
+    elif gender == "girl":
+        response = "Radical! Enjoy your gender, slimegorl."
+        user_data.gender = "gorl"
+        user_data.persist()
+    elif gender == "ancient obelisk":
+        response = "You can't have that gender. It's mine."
+    else:
+        response = "Radical! Enjoy your gender, slime{}.".format(gender)
+        user_data.gender = gender
+        user_data.persist()
+
+    return await fe_utils.send_message(cmd.client, cmd.message.channel, fe_utils.formatMessage(cmd.message.author, response))

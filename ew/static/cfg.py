@@ -1,7 +1,7 @@
 # Global configuration options.
 
 
-version = "v4.0085 Cybersmell"
+version = "v4.0086 Gender Update"
 
 dir_msgqueue = 'msgqueue'
 
@@ -1208,6 +1208,7 @@ cmd_paycheck = cmd_prefix + 'paycheck'
 cmd_payday = cmd_prefix + 'payday'
 cmd_win = cmd_prefix + 'win'
 cmd_slimefest = cmd_prefix + 'slimefest'
+cmd_identify = cmd_prefix + 'identify'
 
 cmd_preserve = cmd_prefix + 'preserve'
 cmd_stink = cmd_prefix + 'stink'
@@ -2244,6 +2245,7 @@ col_race = 'race'
 col_time_racialability = 'time_racialability'
 col_time_lastpremiumpurchase = 'time_lastpremiumpurchase'
 col_verified = 'verified'
+col_gender = 'gender'
 
 col_attack = 'attack'
 col_speed = 'speed'

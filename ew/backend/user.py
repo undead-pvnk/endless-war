@@ -49,6 +49,7 @@ class EwUserBase:
     spray = "https://img.booru.org/rfck//images/3/a69d72cf29cb750882de93b4640a175a88cdfd70.png"
     salary_credits = 0
     degradation = 0
+    gender = "boi"
 
     # SWILLDERMUK
     gambit = 0
@@ -142,7 +143,7 @@ class EwUserBase:
                 # Retrieve object
 
                 cursor.execute(
-                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
                         ewcfg.col_slimes,
                         ewcfg.col_slimelevel,
@@ -202,7 +203,8 @@ class EwUserBase:
                         ewcfg.col_gvs_time_lastshambaquarium,
                         ewcfg.col_rand_seed,
                         ewcfg.col_time_lasthit,
-                        ewcfg.col_verified
+                        ewcfg.col_verified,
+                        ewcfg.col_gender
                     ), (
                         id_user,
                         id_server
@@ -270,6 +272,7 @@ class EwUserBase:
                     self.rand_seed = result[54]
                     self.time_lasthit = result[55]
                     self.verified = result[56]
+                    self.gender = result[57]
 
                 else:
                     self.poi = ewcfg.poi_id_downtown
@@ -311,7 +314,7 @@ class EwUserBase:
             # Save the object.
 
             cursor.execute(
-                "REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+                "REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
                     ewcfg.col_id_user,
                     ewcfg.col_id_server,
                     ewcfg.col_slimes,
@@ -372,7 +375,8 @@ class EwUserBase:
                     ewcfg.col_gvs_time_lastshambaquarium,
                     ewcfg.col_rand_seed,
                     ewcfg.col_time_lasthit,
-                    ewcfg.col_verified
+                    ewcfg.col_verified,
+                    ewcfg.col_gender
                 ), (
                     self.id_user,
                     self.id_server,
@@ -434,7 +438,9 @@ class EwUserBase:
                     self.gvs_time_lastshambaquarium,
                     self.rand_seed,
                     self.time_lasthit,
-                    self.verified
+                    self.verified,
+                    self.gender
+                    
                 ))
 
             conn.commit()
